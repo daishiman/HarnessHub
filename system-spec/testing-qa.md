@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-108 |
+| Web (web) | 確定 | 確定質疑: qa-109 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -37,6 +37,22 @@ serves_goals: [G1, G2, G5]
 【3. production acceptance】repository 内の test 合格だけで P13 を完了扱いにせず、production Worker、DB、R2 に対する S1〜S6、channel_busy、R2 hash、audit chain を実測する。自動 smoke の entrypoint と必須 action 集合も静的・単体テストで固定する。
 
 【4. 証跡】system-plan P01〜P13 の validator violations 0、対象 package test/typecheck/lint、boundary/security gate、文書 line limit、artifact placement、diff check を PR 前に再実行し、結果と既知の非 blocker follow-up を受領書、release record、Beads notes へ残す。
+
+### qa-109 (対応セル: web)
+
+**質問**: 既存のテスト戦略・品質保証契約を維持しながら、plugin-local Chromium を使う slide-report-generator の受入試験を、ローカルだけでなく GitHub Actions から必ず到達可能にするには何を必須としますか?
+
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108 の既存契約を全面維持し、plugin-local browser acceptance の CI 到達契約を追補する。
+
+【1. テスト戦略】task 仕様書は単体・結合・境界値・既存回帰の4レベル、既定80%のカバレッジ目標、層別方針、実装詳細へ密結合しない保守性制約を持つ。実ブラウザを使う処理は、文字列・mock だけの単体試験で代替せず、Chromium 起動と生成物観測を結合／受入証拠に含める。
+
+【2. CI 到達】plugin の EVALS や npm test に受入試験を列挙するだけで完了としない。plugin または専用 workflow の変更を trigger とする GitHub Actions job から、plugin-local runtime 復元、同じ npm test、runtime の read-only check を順番に実行する。install/test/check のいずれかが失敗した場合は job を非0で停止する。
+
+【3. 再現可能な runtime】Node/Playwright 依存と OS/CPU 別 Chromium は plugin 配下へ復元し、利用者や runner の global browser cache を正本にしない。cache は高速化だけに使い、最終 check で Playwright version、実行ファイルの存在、plugin-local path への包含を再検証する。依存が無い clean runner でも install が npm ci と Chromium 復元へ収束する。
+
+【4. 回帰と証拠】Python 契約テストは workflow の path trigger、working-directory、install→npm test→check の配線を検査する。Node 受入試験は plugin-local Chromium を実起動し、16:9 検査と複数 slide screenshot の実在を確認する。EVALS、npm test、workflow の三経路に test-verify-slides を到達させ、宣言だけ・ローカルだけ・CIだけの片肺を許さない。
+
+【5. platform と境界】GitHub Actions は testing-qa.web の CI 実行基盤として扱い、作者の desktop platform と混同しない。本契約は repository 内の slide-report-generator 品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 
