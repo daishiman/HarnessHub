@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-08-01T12:29:53Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"50006262f86ccfe1603373b05f220f0816278dbefb0b8b7df31483f72aaa7f26","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"5e1ce5ab6e76bd234f47c59f6f91e54c0bb2c682602098cca8598c1c50245575","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T11:54:39Z","origin_kind":"system-spec-harness","source_digest":"5e1ce5ab6e76bd234f47c59f6f91e54c0bb2c682602098cca8598c1c50245575","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -46,6 +46,8 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
+
+
 
 # Harness Hub security アーキテクチャ (system-spec 取込)
 
@@ -126,3 +128,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## Risks and verification
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-111・qa-115)**:
+
+- 共有 callback へ tenant を運ぶ `state` は HS256、10 分 TTL、token type、
+  tenant id/slug、CSRF binding hash を持つ。binding 平文は
+  HttpOnly/Secure/SameSite=Lax/`__Host-` cookie にだけ置き、署名・期限・cookie を
+  DB lookup より先に検証する。
+- PKCE S256 と nonce を維持し、Auth.js が署名・issuer・audience・nonce を検証した
+  Google ID token の `hd` を許可 Workspace domain と完全一致させる。
+  authorization parameter の `hd` は表示ヒントであり認可境界ではない。
+- 共有 secret は Cloudflare Worker の環境 secret 1 件に限定し、tenant DB 行、
+  構造化ログ、API response、Git、GitHub Secretsへ複製しない。
+- 未知 mode、Google 以外の shared issuer、空 allow-list、片方だけの環境 credential は
+  fail-closed とし、顧客方式・共有方式のどちらにも暗黙 fallback しない。
+- 詳細は [AD-10](../docs/features/feat-auth-tenancy/architecture-decision-record-shared-google-oidc.md)
+  と [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。

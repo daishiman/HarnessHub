@@ -12,7 +12,7 @@ iteration: null
 title: "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-08-01T12:29:53Z"
 status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P10"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
@@ -47,6 +47,8 @@ completion_evidence: {"completed_at":"2026-07-25T00:47:04Z","evidence_refs":["is
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
+
+
 # エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約
 
 > task projection (P11 / parent: feat-auth-tenancy)。実装要件の正本は下記の content-addressed published task spec であり、このファイルは実行入口だけを保持する。
@@ -79,3 +81,19 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 記録: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
 - 検証: task spec validator、認証/DB 集中テスト、`pnpm verify` の結果を最終レビュー記録へ集約する。
 - 最終レビュー補正: Auth.js request body の stream 維持と DB write scope の要求分離を回帰テストへ追加した。
+
+## 2026-08-01 追加エビデンス
+
+- 実装 issue: `HarnessHub-fnej`
+- dev-graph node: `issue-auth-tenancy-shared-google-oidc-20260729`
+- 変更: 共有 Google OAuth client、共通 callback、署名付き tenant state、
+  Workspace `hd` 強制、credential mode、migration、rollout/rollback。
+- 仕様反映: system-spec `qa-110`〜`qa-115`、仕様 wrapper、architecture 3 件、
+  feature、task、docs を正規 writer で同期する。
+- 最終レビュー: task plan validator、system-spec coverage/source citation、
+  認証/DB/tenant isolation/secret/type/lint/build、line limit、artifact placement、
+  branch diff を再実行し、結果を
+  [仕様反映受領書](../../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  に集約する。
+- 完了条件: draft PR の merge と default branch reconciliation までは
+  Beads と dev-graph を `in_progress` に維持する。

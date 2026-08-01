@@ -12,11 +12,11 @@ iteration: null
 title: "HarnessHub共通Google OAuthクライアント方式を実装する"
 owners: ["daishiman"]
 created_at: "2026-07-28T23:10:15Z"
-updated_at: "2026-07-28T23:16:50.690748Z"
+updated_at: "2026-08-01T12:29:53Z"
 status: "active"
 depends_on: ["SYS-AUTH-TENANCY-P13"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
-resource_scope: ["apps/hub/src/lib/auth/","apps/hub/src/app/api/auth/","packages/schemas/auth-tenancy/","packages/db/schema/core/identity.ts","packages/db/repository/","packages/db/migrations/","docs/features/feat-auth-tenancy/"]
+resource_scope: ["apps/hub/src/lib/auth/","apps/hub/src/app/api/auth/","apps/hub/tests/auth-tenancy/","packages/schemas/auth-tenancy/","packages/db/schema/core/identity.ts","packages/db/repository/","packages/db/migrations/","packages/db/__tests__/","system-spec/","specs/harness-hub-system-specification.md","architecture/harness-hub-security.md","architecture/harness-hub-backend.md","architecture/harness-hub-infrastructure.md","features/feat-auth-tenancy.md","tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md","docs/features/feat-auth-tenancy/"]
 purpose: "新規テナントごとにGoogle CloudでOAuth clientとtenant固有callbackを追加する運用を、HarnessHub所有の共通Google OAuth clientを利用できる選択肢へ拡張する"
 goal: "共通方式を選んだ新規テナントはGoogle OAuth clientを新規作成せず、HarnessHub上のtenant policy登録と必要なWorkspace管理者承認だけで安全にGoogleログインを開始できる"
 scope_in: ["共有credentialと顧客credentialを切り替えられるOIDC credential source abstractionを定義する","共通callbackへtenant contextを署名付きstateで束縛し、別tenantへの差し替えを拒否する","Google ID tokenのhd claimをtenantの許可Workspace domainと厳密照合し、欠落・不一致を拒否する","共有client ID/secretを環境単位で一度だけ安全に保管し、tenant行へsecretを複製しない","既存のテナント別credential方式を壊さない移行・rollback・回帰テストを用意する"]
@@ -46,6 +46,8 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-28T23:10:15Z","missing_sections":[],"status":"complete"}
 ---
+
+
 
 # 概要
 
@@ -158,3 +160,17 @@ Google公式は、一般的なGoogleログイン用OAuth clientを不正利用�
 - 実装時のtest logを`docs/features/feat-auth-tenancy/`配下の品質記録へ保存する。
 - Google制約: https://developers.google.com/identity/protocols/oauth2/resources/best-practices
 - `hd`仕様: https://developers.google.com/identity/openid-connect/reference
+
+## 実装・最終レビュー追補 (2026-08-01)
+
+- 共有 credential resolver、固定 callback、署名付き tenant state、
+  Workspace `hd` 検証、DB mode/allow-list、migration、段階 rollout/rollback を実装した。
+- 実 Auth.js と署名済み fake ID token を使う往復試験で、PKCE・nonce・state・`hd`・
+  JIT/session・顧客方式の非回帰を検証する。
+- 仕様・設計影響は **あり**。system-spec の auth/backend/security/database/
+  infrastructure/maintenance-ops を R4-reopen し、`qa-110`〜`qa-115` として再確定した。
+- 反映対応、品質ゲート、500 行分割判断は
+  [共有 Google OIDC 仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  に集約する。
+- completion policy は manual。draft PR の merge と default branch reconciliation までは
+  Beads `HarnessHub-fnej` と本 node を active/in_progress に維持する。

@@ -45,8 +45,18 @@ const HERE = dirname(fileURLToPath(import.meta.url));
  */
 const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', 'packages', 'db', 'migrations');
 
-/** 適用順。drizzle の journal と同じ順序を明示する (glob で拾うと順序が環境依存になる)。 */
-const MIGRATIONS = ['0000_baseline-core-domain.sql', '0001_auth-tenancy-device-flow-contract.sql'];
+/**
+ * 適用順。drizzle の journal と同じ順序を明示する (glob で拾うと順序が環境依存になる)。
+ *
+ * 0002 (hearing intake) は認証に関わる表を触らないので載せない。ここは認証 port の足場であり、
+ * 無関係な migration を足すと「この harness が何を前提にしているか」が読めなくなる。
+ * 0003 は `idp_connections` に列を足すので必須。
+ */
+const MIGRATIONS = [
+  '0000_baseline-core-domain.sql',
+  '0001_auth-tenancy-device-flow-contract.sql',
+  '0003_auth-tenancy-shared-google-oidc.sql',
+];
 
 export interface RealDbHarness {
   readonly repositories: CoreRepositories;

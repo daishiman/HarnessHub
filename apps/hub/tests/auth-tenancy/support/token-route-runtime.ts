@@ -26,6 +26,7 @@ import {
   createSequentialIds,
   createTestPorts,
   directoryUser,
+  oidcConnection,
   TENANT_A,
   type TestPorts,
   WORKSPACE_A1,
@@ -59,14 +60,12 @@ export function createTokenRouteHarness(options: { readonly authRoute?: AuthRout
   const ports = createTestPorts({
     users: [testUser(OWNER_ID), adminUser(), testUser(STRANGER_ID)],
     oidcConnections: [
-      {
+      oidcConnection({
         tenantId: TENANT_A,
         tenantSlug: TENANT_SLUG,
-        issuer: 'https://idp.example.com',
         clientId: 'client-acme',
         displayName: 'Acme ID',
-        enabled: true,
-      },
+      }),
     ],
   });
   ports.clock.set(NOW);

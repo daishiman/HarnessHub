@@ -52,6 +52,8 @@ describe('T-SESS-01〜03: 数値・cookie・claims の契約 (QC-7)', () => {
       accessTokenTtlSeconds: 900, // 15 分
       refreshTokenTtlSeconds: 7_776_000, // 90 日
       revocationCacheTtlSeconds: 60,
+      // 共有 client 方式の署名付き state の寿命。認可要求の往復に要る時間だけを与える
+      sharedOidcStateTtlSeconds: 600, // 10 分
     });
   });
 
