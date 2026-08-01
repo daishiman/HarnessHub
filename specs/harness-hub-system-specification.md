@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T13:25:47Z"
+updated_at: "2026-08-01T12:29:53Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"}
-source_lineage: {"imported_at":"2026-07-24T12:35:34Z","origin_kind":"system-spec-harness","source_digest":"190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b","source_path":"system-spec/00-requirements-definition.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T12:29:53Z","origin_kind":"system-spec-harness","source_digest":"1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -46,6 +46,8 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
+
+
 
 # Harness Hub システム要件仕様 (system-spec 取込)
 
@@ -400,3 +402,25 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
+
+## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
+
+- `idp_connections.credential_mode` は `customer_google` と `shared_google` を明示し、
+  未知値・設定不備を別方式へフォールバックさせない。既存行は
+  `customer_google` を既定にして従来の tenant 別 callback と暗号化 secret を維持する。
+- 共有方式は環境単位の Google client 1 組と固定 callback
+  `/api/auth/shared/callback/tenant-oidc` を使う。tenant は 10 分 TTL の署名付き
+  `state` と HttpOnly binding cookie で復元し、PKCE S256 と nonce は Auth.js に残す。
+- Auth.js が検証した Google ID token の `hd` を tenant の
+  `allowed_workspace_domains` と完全一致させる。欠落、別 Workspace、
+  サブドメイン、tenant 差し替えでは JIT 利用者・session を作らない。
+- 共有 client ID/secret は tenant DB 行、ログ、response、Git、GitHub Secretsへ
+  複製しない。Cloudflare Worker の環境 secret とし、共有方式を使わない環境の未設定は許す。
+- migration `0003_auth-tenancy-shared-google-oidc.sql` は列追加のみ。rollback は
+  shared tenant を customer mode へ戻して旧 callback を確認してから Worker code を戻す。
+- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
+  [security](../system-spec/security.md)、[database](../system-spec/database.md)、
+  [infrastructure](../system-spec/infrastructure.md)、
+  [maintenance-ops](../system-spec/maintenance-ops.md)。判断と検証は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。

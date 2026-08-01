@@ -17,6 +17,7 @@ import {
   createSequentialIds,
   createTestPorts,
   directoryUser,
+  oidcConnection,
   TENANT_A,
   type TestPorts,
   WORKSPACE_A1,
@@ -44,14 +45,12 @@ export function createDeviceRouteHarness(): DeviceRouteHarness {
   const ports = createTestPorts({
     users: [directoryUser({ id: USER_ID, tenantId: TENANT_A, workspaceIds: [WORKSPACE_A1] })],
     oidcConnections: [
-      {
+      oidcConnection({
         tenantId: TENANT_A,
         tenantSlug: TENANT_SLUG,
-        issuer: 'https://idp.example.com',
         clientId: 'client-a',
         displayName: 'Acme IdP',
-        enabled: true,
-      },
+      }),
     ],
   });
   ports.clock.set(NOW);

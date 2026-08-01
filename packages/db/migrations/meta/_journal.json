@@ -22,6 +22,13 @@
       "when": 1785275491061,
       "tag": "0002_hearing-intake-ai-queue",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1785560854975,
+      "tag": "0003_auth-tenancy-shared-google-oidc",
+      "breakpoints": true
     }
   ]
 }

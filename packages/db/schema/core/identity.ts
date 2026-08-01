@@ -25,9 +25,35 @@ export const idpConnections = sqliteTable(
     tenantId: text('tenant_id').notNull(),
     issuerUrl: text('issuer_url').notNull(),
     clientId: text('client_id').notNull(),
+    /**
+     * 封筒暗号化済み client_secret。
+     *
+     * `credential_mode='shared_google'` の行では **空文字**になる。共有 client の secret は
+     * 環境単位の Secret に 1 組だけ置き、テナント行へは複製しない
+     * (issue-auth-tenancy-shared-google-oidc-20260729 受入条件 4)。
+     * NULL 許容へ緩めないのは、それが SQLite では表再作成 = 破壊的 DDL になるため。
+     * 「空文字 = 共有方式なので行に secret を持たない」を repository 側の型で強制する。
+     */
     clientSecretEnc: text('client_secret_enc').notNull(),
     scopes: text('scopes').notNull(),
     createdAt: integer('created_at').notNull(),
+    /**
+     * credential の出所 (`customer_google` / `shared_google`)。
+     *
+     * DB 既定値を `customer_google` にするのは、**この列を足す前に存在した行が実際に
+     * 顧客持ち込み方式だから**であって「不明なら顧客方式とみなす」という意味ではない。
+     * アプリ層は不明・未知の値を共有方式へ落とさず拒否する (fail-closed / AD-5 と同じ姿勢)。
+     */
+    credentialMode: text('credential_mode', { enum: ['customer_google', 'shared_google'] })
+      .notNull()
+      .default('customer_google'),
+    /**
+     * このテナントで受理する Google Workspace ドメインの JSON 配列 (`["example.com"]`)。
+     *
+     * NULL = 未設定。共有方式は `aud` がテナント識別子にならないため、未設定の共有方式接続は
+     * 解決自体を拒否する。顧客方式では NULL のとき従来どおり `hd` を検査しない (後方互換)。
+     */
+    allowedWorkspaceDomains: text('allowed_workspace_domains'),
   },
   (t) => [uniqueIndex('idp_connections_tenant_issuer_uq').on(t.tenantId, t.issuerUrl)],
 );
