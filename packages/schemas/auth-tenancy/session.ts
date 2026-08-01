@@ -50,6 +50,20 @@ export const oidcIdTokenClaimsSchema = z.object({
   /** `true` 以外 (false / 欠落) は受理しない。 */
   email_verified: z.boolean().optional(),
   name: z.string().min(1).optional(),
+  /**
+   * Google Workspace のホストドメイン (Google 固有 claim)。
+   *
+   * 共通 OAuth client 方式では `aud` が全テナント共通になるため、`aud` はテナント識別子として
+   * 機能しない。そこで「どの Workspace の利用者か」を **ID token 側で**確かめる唯一の手掛かりが `hd` になる。
+   *
+   * schema では optional にする — 個人 Google アカウントは `hd` を持たないため、
+   * 「型として無い」ことと「あるべきなのに欠落している」ことは別の層で判定する。
+   * 後者 (許可 Workspace domain を持つテナントでの欠落) は `verifyOidcIdToken` が拒否する。
+   *
+   * 注意: 認可要求の `hd` **パラメータ**はアカウント選択画面のヒントに過ぎず境界ではない。
+   * 境界になるのは ID token に載って署名されたこの claim だけ。
+   */
+  hd: z.string().min(1).optional(),
 });
 export type OidcIdTokenClaims = z.output<typeof oidcIdTokenClaimsSchema>;
 

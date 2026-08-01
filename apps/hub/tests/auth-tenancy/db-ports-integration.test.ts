@@ -113,9 +113,14 @@ describe('2 テナント OIDC (AC-1 / AC-4)', () => {
 
   it('client_secret は封筒暗号化から復号され、テナントごとに別の値になる', async () => {
     const resolve = createDbClientSecretResolver({ repositories: harness.repositories });
+    // 解決器の入力は接続そのもの。tenantId 文字列ではなく接続を渡すのは、
+    // credential の出所 (共有 / 顧客持ち込み) が接続の属性だから
+    const alpha = await harness.ports.oidcConnections.findByTenantSlug('tenant-alpha');
+    const beta = await harness.ports.oidcConnections.findByTenantSlug('tenant-beta');
+    if (alpha === null || beta === null) throw new Error('seed した接続が引けていない');
 
-    expect(await resolve(tenantA.tenantId)).toBe('secret-alpha');
-    expect(await resolve(tenantB.tenantId)).toBe('secret-beta');
+    expect(await resolve(alpha)).toBe('secret-alpha');
+    expect(await resolve(beta)).toBe('secret-beta');
   });
 
   it('停止テナントは enabled=false になる (認証の入口で閉じる)', async () => {

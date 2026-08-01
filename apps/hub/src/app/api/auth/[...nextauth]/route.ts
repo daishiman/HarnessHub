@@ -11,6 +11,12 @@
  *
  * URL は `/api/auth/{tenant_slug}/{action}` の形。テナントを path で運ぶので、
  * IdP へ飛んで戻ってくる間もテナントが URL に残る (cookie へ退避する追加状態を持たない / AD-5)。
+ *
+ * 例外は共通 Google OAuth client 方式の callback だけで、こちらは
+ * `/api/auth/shared/callback/tenant-oidc` の固定 1 本 (AD-10)。slug が入らないので
+ * テナントは署名付き `state` から復元する。この 1 本を Google Cloud Console へ登録すれば
+ * テナントを増やすたびの redirect URI 追加が要らなくなる、というのが共通方式の目的。
+ * どちらも同じ catch-all がハンドルし、振り分けは `authjs-handler.ts` が path から行う。
  */
 
 import { authRuntime } from '../../../../lib/authz/index.js';

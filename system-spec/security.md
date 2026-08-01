@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-104 |
+| Web (web) | 確定 | 確定質疑: qa-111 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,19 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-104 (対応セル: web)
+### qa-111 (対応セル: web)
 
-**質問**: Publisher Bearer、tenant 分離、package 検査を security.web の既存契約へどう統合しますか?
+**質問**: 共有 Google OAuth client の信頼境界を security.web の既存契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-098 までの security.web 契約を全面維持し、公開パイプラインの信頼境界を追加確定する。
+**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-104 の二段階認証認可、tenant 非開示、secret scan、append-only 監査を全面維持し、共有 OIDC の境界を追加確定する。
 
-【1. 二段階認証認可】Authorization: Bearer がある要求は edge middleware で access token の署名、期限、tenant_id、workspace_id を fail-closed に検証する。無効 Bearer から有効 session cookie へ fallback しない。route の withAuthz は scope、Project 所有者、credential 種別、token 失効を最終判定する。
+【1. state 防御】tenant を運ぶ state は session secret による HS256、10分 TTL、token type、tenant id/slug、ランダム binding の SHA-256 を持つ。平文 binding は HttpOnly/Secure/SameSite=Lax/__Host- cookie にだけ置き、署名不正、期限切れ、cookie 欠落・不一致を一般化した拒否応答で閉じる。
 
-【2. tenant 非開示と権限】全資源解決は principal の tenant/workspace と repository row scope を一致させ、cross-tenant 資源は存在を漏らさない 404 とする。approve は workspace-admin、owner 操作は当該 Project owner に限定し、role 判定表を publish route 側へ複製しない。
+【2. IdP 防御】PKCE S256 と nonce を必須のまま維持する。Google ID token は Auth.js/oauth4webapi が issuer、署名、audience、nonce を検証し、その検証済み claims の hd を tenant 許可リストへ完全一致させる。authorization の hd parameter は表示ヒントであり認可境界に使わない。
 
-【3. package 防御】ZIP は size/content-type と archive path を検証し、static validation、secret scan、policy の共有 pipeline を必ず通す。Green 以外を stable へ昇格させず、secret を含む bundle は Release と package registry を作らない。検査結線と DB schema 境界は CI の負例付き静的 gate で遮断する。
+【3. secret 境界】共有 client_secret は Worker 環境 secret に1件だけ置き、tenant DB 行、ログ、API response、Git、GitHub Secretsへ複製しない。credential object は JSON 化時に secret を伏せ、shared 行への tenant secret 復号要求は明示エラーにする。
 
-【4. 監査】公開、承認、取消、昇格、rollback、停止、deployment 登録を append-only hash chain へ記録し、認証情報や package 内 secret をログへ残さない。監査 failure は公開成功として扱わない。
+【4. fail closed】unknown credential_mode、Google 以外の shared issuer、空の許可ドメイン、共有環境 secret の片方欠落では認可を開始しない。customer_google へも shared_google へも暗黙 fallback しない。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 
