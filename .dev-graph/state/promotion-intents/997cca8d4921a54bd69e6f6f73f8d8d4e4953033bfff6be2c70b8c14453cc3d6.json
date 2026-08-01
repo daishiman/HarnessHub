@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/mmk3-publish-pipeline-v12",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/5551807f37878ef863e2d913aaf85878223a12bcc886bfd0d96378e9baefd6de",
+  "digest": "sha256:5551807f37878ef863e2d913aaf85878223a12bcc886bfd0d96378e9baefd6de",
+  "feature_package_id": "feature-package/feat-publish-pipeline",
+  "package_slug": "feature-package-feat-publish-pipeline",
+  "generation_id": "5551807f37878ef863e2d913aaf85878223a12bcc886bfd0d96378e9baefd6de",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+    "published_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/5551807f37878ef863e2d913aaf85878223a12bcc886bfd0d96378e9baefd6de/atomic-promotion-receipt.json",
+  "completed_at": "2026-07-30T11:43:36Z"
+}

@@ -5,6 +5,8 @@
 // contract-registry (OpenAPI drift 検査の入力) には登録しない — 登録簿の責務は共通契約までのため。
 export * from '../auth-tenancy/index.js';
 export * from '../hearing-intake/index.js';
+// feat-publish-pipeline の契約 schema。auth-tenancy と同じ理由でここから再エクスポートする。
+export * from '../publish-pipeline/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,

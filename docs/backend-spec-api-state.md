@@ -94,10 +94,10 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 | Method Path | 認証/最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/publish` | session or Bearer / owner | PublishRequest 作成 (project, target, visibility)。Idempotency-Key 必須。直列化違反は 409。session は S01/S02 Web ウィザード、Bearer は Publisher CLI |
+| `POST /api/v1/publish` | session or Bearer / owner | Draft PublishRequest 作成 (project, target, visibility)。Idempotency-Key 必須。Draft は channel を占有しない。session は S01/S02 Web ウィザード、Bearer は Publisher CLI |
 | `GET /api/v1/publish` | session or Bearer | PublishRequest 一覧 (filter: project/channel/status, cursor)。owner = 自 Project のみ、workspace-admin = Workspace 全体。S03 (公開状態) の進行中 request 発見と S05 (承認キュー = status=approval_pending) の供給元 (frontend-spec §3.4 の additive 追加要求。qa-040。状態機械・直列化 (qa-009) は不変) |
 | `PUT /api/v1/publish/:id/package` | session or Bearer / owner | package upload (multipart) → R2 staging + content hash。サイズ/種別制限 (SEC7)。session は CSRF token も必須 |
-| `POST /api/v1/publish/:id/submit` | session or Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録 |
+| `POST /api/v1/publish/:id/submit` | session or Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録。同一 TargetChannel に別の非終端 request があれば 409 `channel_busy` |
 | `GET /api/v1/publish/:id` | Bearer or session | 状態 polling (Publisher/Hub Web 共用, qa-009) |
 | `POST /api/v1/publish/:id/approve` | session / workspace-admin | Yellow 承認 (Stage 2 approval queue)。監査 event |
 | `POST /api/v1/publish/:id/cancel` | Bearer / owner | 非終端のみ→Draft 差戻し |
@@ -174,7 +174,7 @@ Draft → Validating ├─ Needs Fix → Draft (差戻し)
 ```
 
 - MVP サブセット: Yellow/Red 相当は `Needs Fix` 差戻し。`Approval Pending` は Stage 2 まで到達しない。
-- 同一 TargetChannel の直列化: 先行が終端 (`Published/Failed/Draft` 差戻し) になるまで後続は `Draft` に留める。
+- 同一 TargetChannel の直列化: Draft は編集可能な待機状態として複数作成できるが channel を占有しない。先行が終端 (`Published/Failed/Draft` 差戻し) になるまで、後続の `POST /publish/:id/submit` (`Draft→Validating`) は 409 `channel_busy` とし Draft に留める。
 
 ### 5.2 HearingSheet
 
