@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-106 |
+| Web (web) | 確定 | 確定質疑: qa-113 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,19 +24,19 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-106 (対応セル: web)
+### qa-113 (対応セル: web)
 
-**質問**: Cloudflare Worker と R2 上の publish pipeline を infrastructure.web の既存配備契約へどう統合しますか?
+**質問**: 共有 Google OAuth client を infrastructure.web の既存 Cloudflare 配備契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-099 までの infrastructure.web 契約を全面維持し、公開パイプラインの本番契約を追加確定する。
+**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-106 の Cloudflare Worker、GitHub Actions、health、rollback、R2 契約を全面維持し、認証配備差分を追加確定する。
 
-【1. runtime 境界】apps/hub は Cloudflare Worker 上で実行し、package object は R2 binding を通じて content-addressed key packages/<sha256> へ保存する。Worker 内から Cloudflare REST API を使って R2 を操作せず、DB repository と object storage port の境界を維持する。
+【1. OAuth 登録】環境ごとに Google OAuth client を1件作り、承認済み redirect URI は AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc の1本とする。tenant 追加のたびに Google Cloud Console の client/URI を増やさない。
 
-【2. 配備と実測】production deploy は GitHub Actions を正本とし、緊急時の手動 Wrangler 操作は release record へ version、配信率、直前 version、rollback command を記録する。本番 health は runtime-config、db、r2 を fail-closed に確認し、S1〜S6 で create、upload/inspection、secret 拒否、公開、promote/rollback、audit hash chain を実測する。
+【2. secret】SHARED_GOOGLE_OAUTH_CLIENT_ID と SHARED_GOOGLE_OAUTH_CLIENT_SECRET は Cloudflare Worker の環境 secret/secret binding として投入し、repository と GitHub Actions Secrets を受渡し元にしない。共有方式を使わない環境では未設定を許し、その場合は shared tenant だけ fail closed にする。
 
-【3. R2 整合】Green package は API content hash、DB packages.content_hash、R2 再取得 SHA-256 が一致することを確認する。Secret 入り package は R2 registry へ登録しない。Release と参照中 object は証跡・参照整合のため rollback で削除せず、Worker code version だけを既知安定版へ戻す。
+【3. 配備順序】DB backup・migration dry-run、0003 apply、Worker secret 投入、共有対応 Worker deploy、対象 tenant の shared_google 化、実ログイン smoke の順で段階導入する。customer tenant を canary 対照として残し、callback、hd、audit、secret 非露出を確認する。
 
-【4. 再実行】smoke:publish-production は環境変数で本番対象を受け取り、12 API 操作、旧 stable 維持、Release 非生成、必須監査 action 9 種を fail-closed に検査する。短命 token は実行後に失効・削除する。
+【4. rollback/rotation】障害時は tenant 行を customer_google へ戻して旧 callback/credential を確認してから旧 Worker version へ戻す。共有 secret rotation は新 secret 投入、Worker 反映、ログイン確認、旧 secret revoke の順とし、DB rollback と証跡削除は行わない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
@@ -60,13 +60,3 @@ serves_goals: [G1, G4, G5, G2]
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
-
-## P13 CI 再実行の実装反映 (2026-08-01 / `HarnessHub-o2i.13`)
-
-- qa-034 / qa-038 / qa-106 の「production deploy は GitHub Actions が正本」を維持する。
-- 通常は main merge の push で自動配備する。path filter 対象外の docs-only merge で run が発火しない場合だけ、
-  main の `workflow_dispatch` から同じ `static-gates → test → deploy → post-deploy smoke` を再実行できる。
-- dispatch は手動 Wrangler 操作でも承認 gate でもない。main 以外では deploy せず、全ゲート・secret 境界・
-  migration・rollback 契約を短絡しない。
-- 製品 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。詳細と実測は
-  `docs/infrastructure-spec.md` §7 と P13 仕様反映受領書を正とする。

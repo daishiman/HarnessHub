@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-30T04:40:19Z"
+updated_at: "2026-08-01T11:54:39Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"}
-source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"cff4f0f1635e3c595933f1e8ba707b23639b33fbf3f2eb0517cf75559b99a321","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"1bdfccdf45a9b21f05a75804ce1764dceffe34da48ecce8d8564bae5db477f35","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T11:54:39Z","origin_kind":"system-spec-harness","source_digest":"1bdfccdf45a9b21f05a75804ce1764dceffe34da48ecce8d8564bae5db477f35","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # Harness Hub infrastructure アーキテクチャ (system-spec 取込)
 
@@ -203,3 +204,21 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   G14で全action×role・非owner・cross-tenantを名指し再検証する。
 - PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
   repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。
+
+**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-113・qa-114)**:
+
+- 環境ごとに Google OAuth client を 1 件作り、redirect URI は
+  `AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc` の 1 本に固定する。
+  tenant 追加ごとの client/URI 登録は行わない。
+- `SHARED_GOOGLE_OAUTH_CLIENT_ID` と `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` は
+  Cloudflare Worker の環境 secret とし、repository と GitHub Actions Secrets を
+  受渡し元にしない。共有 tenant がない環境では未設定を許す。
+- rollout は backup/dry-run → migration 0003 → secret 投入 → Worker deploy →
+  tenant mode 変更 → 共有/顧客両方式 smoke の順。個人 Google、別 Workspace、
+  tenant state 差し替えの拒否も確認する。
+- rollback は tenant を customer mode へ戻し、旧 callback の成功を確認してから
+  Worker code を戻す。DB migration と証跡は自動で戻さない。
+- secret rotation は新 secret 投入 → Worker 反映 → login 確認 → 旧 secret revoke。
+  手順と証跡は
+  [rollout runbook](../docs/features/feat-auth-tenancy/runbook-shared-google-oidc-rollout.md)
+  を正とする。

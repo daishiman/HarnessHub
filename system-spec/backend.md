@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-103 |
+| Web (web) | 確定 | 確定質疑: qa-110 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,19 +24,19 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-103 (対応セル: web)
+### qa-110 (対応セル: web)
 
-**質問**: SYS-PUBLISH-PIPELINE-P01〜P13 で確定した公開 API・状態機械・認証境界を、backend.web の既存契約へどう統合しますか?
+**質問**: 共有 callback と credential resolver を backend.web の既存 API/runtime 契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-082 までの backend.web 契約を全面維持し、PublishRequest パイプラインを次のとおり追加確定する。
+**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-103 の API、principal、状態機械、監査、冪等性契約を全面維持し、認証 adapter の runtime 契約を追加確定する。
 
-【1. API と principal】POST /publish、GET /publish、GET /publish/:id、PUT /publish/:id/package、POST /publish/:id/submit は session と短命 Bearer の dual principal を受理する。session の変更系は Origin/CSRF を必須とし、Bearer は CSRF 非該当とする。approve と Project release 一覧は session/workspace-admin、cancel、channel promote/rollback、deployment 登録は Bearer/Project owner の契約を維持し、全 route は共有 withAuthz と zod schema を通す。
+【1. route dispatch】/api/auth/shared/callback/tenant-oidc は専用入口で処理し、state を先に検証して tenant を復元する。shared tenant の tenant 別 callback は 404、customer tenant を共通 callback へ向けた要求と予約 slug は 400 とし、曖昧な route fallback を作らない。
 
-【2. 状態機械と直列化】POST /publish は編集可能な Draft を作るだけで TargetChannel を占有しない。PUT package で R2 staging と検査対象を準備し、POST submit の Draft→Validating 時に同一 channel の非終端 request を検出した場合は 409 channel_busy として Draft に留める。Green は Ready→Publishing→Published を進み、Yellow/Red は Needs Fix へ戻し旧 stable を変更しない。
+【2. config resolution】TenantOidcConnectionPort は credential_mode と allowed_workspace_domains を返す。credential resolver は customer_google だけ tenant 行の暗号文を復号し、shared_google だけ環境 credential を返す。issuer/mode/設定の不一致と未知 mode は null として認可開始前に閉じる。
 
-【3. 公開と監査】PublishRequest、inspection verdict、immutable Release、TargetChannel stable pointer、content-addressed Package を service と repository port で調停し、promote/rollback を transaction 内で行う。publish.request、package_upload、submit、approve、cancel、channel.promote、channel.rollback、release.suspend、deployment.register は append-only 監査 event へ記録する。
+【3. callback order】state 検証、tenant 接続一致、Auth.js の code exchange・署名・PKCE・nonce、Workspace hd、既存利用者/JIT、session 発行の順を守る。Workspace 拒否は user insert より前で、binding cookie は成功・拒否の callback 後に使い切る。
 
-【4. 冪等性と境界】変更系は tenant と endpoint に束縛した Idempotency-Key を使い、同一 key の payload 不一致は 422 とする。package 検査は packages/inspection の共有純関数を使い、apps/hub が packages/db の schema 内部へ直接依存しない。Publisher クライアント UI とカタログ UI は本差分の対象外とする。
+【4. 互換性】customer_google の basePath、redirect_uri、Auth.js state cookie、secret 復号、session claims は変更しない。provider adapter の外へ Auth.js 型を漏らさない。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 
