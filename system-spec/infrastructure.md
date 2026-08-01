@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-106 |
+| Web (web) | 確定 | 確定質疑: qa-110 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,19 +24,21 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-106 (対応セル: web)
+### qa-110 (対応セル: web)
 
-**質問**: Cloudflare Worker と R2 上の publish pipeline を infrastructure.web の既存配備契約へどう統合しますか?
+**質問**: qa-019 / qa-106 の SLO 契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-099 までの infrastructure.web 契約を全面維持し、公開パイプラインの本番契約を追加確定する。
+**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-019 / qa-106 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。
 
-【1. runtime 境界】apps/hub は Cloudflare Worker 上で実行し、package object は R2 binding を通じて content-addressed key packages/<sha256> へ保存する。Worker 内から Cloudflare REST API を使って R2 を操作せず、DB repository と object storage port の境界を維持する。
+【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。
 
-【2. 配備と実測】production deploy は GitHub Actions を正本とし、緊急時の手動 Wrangler 操作は release record へ version、配信率、直前 version、rollback command を記録する。本番 health は runtime-config、db、r2 を fail-closed に確認し、S1〜S6 で create、upload/inspection、secret 拒否、公開、promote/rollback、audit hash chain を実測する。
+【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。
 
-【3. R2 整合】Green package は API content hash、DB packages.content_hash、R2 再取得 SHA-256 が一致することを確認する。Secret 入り package は R2 registry へ登録しない。Release と参照中 object は証跡・参照整合のため rollback で削除せず、Worker code version だけを既知安定版へ戻す。
+【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。
 
-【4. 再実行】smoke:publish-production は環境変数で本番対象を受け取り、12 API 操作、旧 stable 維持、Release 非生成、必須監査 action 9 種を fail-closed に検査する。短命 token は実行後に失効・削除する。
+【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。
+
+【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

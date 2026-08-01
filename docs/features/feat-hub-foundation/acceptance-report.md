@@ -21,7 +21,7 @@ measured_at: "2026-07-21"
 |---|---|---|---|
 | A1 CI が test→deploy を完走 | blocked | **合格（2026-07-25 / P13）** | main への push で run **[30143422049](https://github.com/daishiman/HarnessHub/actions/runs/30143422049)**（`ec0f3e45`）が 3 job すべて success。deploy job は `needs: [static-gates, test]` により両ゲート success を経由しなければ起動しないため、「同一 run 内で test → deploy が success」を満たす。証跡 `evidence/ci-run.md` §確定 run / `evidence/deploy-2026-07-25.json` |
 | A2 bundle 3MiB 以内 | 合格 | **合格（維持）** | 本番アップロード時の実測は gzip **1034.27 KiB（約 1.010 MiB）**。P07 時点の dry-run 実測 0.952 MiB より約 6% 大きいが、いずれも 3 MiB 予算内。CI の G5 ゲートも success |
-| A3 SLO 99.5% の計測と /health 稼働 | 部分達成（blocked） | **部分達成（未達のまま）** | `/health` は 2026-07-28 に HTTP 200・依存 3 件 ok を再確認。Better Stack の 4 資源と `CRON_HEARTBEAT_URL` は適用済みだが、公開 status page の個別 resource が `not_monitored`（underlying monitor paused）で時系列は未取得。適用器を設定差分の `PATCH` 対応へ是正し、`slo-dashboard.json` は `collection_blocked` とした。フォローアップ `HarnessHub-37h.15` で追跡する |
+| A3 SLO 99.5% の計測と /health 稼働 | 部分達成（blocked） | **部分達成（観測は稼働・時間ゲート未了）** | `/health` は 2026-08-01 に HTTP 200・依存 3 件 ok を再確認。Better Stack の 4 資源と `CRON_HEARTBEAT_URL` は適用済み。**2026-08-01T12:07:18Z の公開 status page 実測（token 不要）で monitor は `operational` / 30 日 `availability: 0.988579` と確認**し、2026-07-28 の「monitor paused」判断は誤読と確定した（`not_monitored` は無データ日を指し、HTML アイコンは 30 日履歴の代表）。観測済みは **6 日 / 必要 30 日**、`slo-dashboard.json` は `collecting`。30 日到達後も Workers Analytics の 5xx 率が揃うまで pass にしない（§9 / qa-019）。**エラーバジェット運用の適用状況**: 観測済み窓での外形 downtime は `6312.31` 秒 ＝ 30 日許容 `12960` 秒に対し **48.7% 消費**で、警告閾値 70% / 凍結閾値 100% のいずれにも未達のため **発動中の措置なし**（`triggered_actions: []`）。証跡は [evidence/slo-observation.json](evidence/slo-observation.json)。フォローアップ `HarnessHub-37h.15` で追跡する |
 | A4 共通層の単一実装 | 条件付き合格 | **条件付き合格（維持）** | 実 consumer 未結線 5 層の状態は変わっていない（§2.1） |
 
 - A1 の証跡には限定条件がある。**deploy job のみ再実行しており、3 job を一度の連続実行で通したわけではない**（同一 sha に対する再実行のため検査対象コードは同一）。詳細は `evidence/ci-run.md` §証跡の性質。
@@ -62,7 +62,8 @@ measured_at: "2026-07-21"
 | HF-A2-BUNDLE-001 | 実 bundle ≤ 3 MiB | pass（0.952 MiB） | `evidence/bundle-report.json` |
 | HF-A2-BUNDLE-002 | 予算超過で非ゼロ終了 | pass | `evidence/test-run.log` |
 | HF-A3-HEALTH-001/002/003 | /health 200・契約・異常時 status | pass（8 件）＋**本番実測でも 200 / 全依存 ok** | `evidence/test-run.log` / `evidence/health-response.json` |
-| HF-A3-SLO-001/002 | 外形監視で 99.5% 算定 / 適用器契約 | **ローカル 32 件 pass。本番 `/health` と外部資源・secret は確認済みだが monitor paused のため実計測は blocked** | `apps/hub/tests/monitoring/*.test.ts` / `apps/hub/monitoring/*.json` / `evidence/monitoring-applied.json` |
+| HF-A3-SLO-001/002 | 外形監視で 99.5% 算定 / 適用器契約 | **ローカル 41 件 pass。本番 `/health` と外部資源・secret は確認済み** | `apps/hub/tests/monitoring/*.test.ts` / `apps/hub/monitoring/*.json` / `evidence/monitoring-applied.json` |
+| HF-A3-SLO-003 | 観測状態の実測と `verdict` 突合 | **ローカル 24 件 pass。公開 status page の実測で観測済み 6 日 / 30 日、`verdict: collecting` と一致（exit 0）。gate liveness は 3 変異すべてで exit 1 を確認** | `apps/hub/tests/monitoring/verify-slo-observation.test.ts` / `apps/hub/scripts/verify-slo-observation.mjs` / `evidence/slo-observation.json` |
 | HF-A4-OWNER-001 | owner 未定義 0 件 | pass | `evidence/shared-layer-ownership.json` |
 | HF-A4-CONTRACT-001〜004 ほか | 全 12 層の consumer contract（§2.1 の 5 層は fixture 1 系統のため未達扱い） | pass（実行分は全件） | `evidence/test-run.log` |
 | HF-A4-DUP-001 | 重複・境界違反 0 件 | pass（200 ファイル走査、登録 12 層 + 4 運用機構） | `evidence/duplicate-scan.json` |
@@ -87,7 +88,8 @@ measured_at: "2026-07-21"
 ## 4. A1 / A3 を pass にしない理由（fail-closed の適用）
 
 - **A1**: feature branch の CI は test まで成功しているが、acceptance の判定条件は「**GitHub Actions の単一 workflow run 内で** test job → deploy job が success 終了」。deploy は main push 限定で skip のため、条件を満たした証跡がない。
-- **A3**: `/health` の production 稼働、Better Stack の 4 資源、Worker secret は確認済みだが、判定条件は「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」。2026-07-28 の公開 status page 実測で個別 resource が `not_monitored`（monitor paused）だったため、**資源の存在を計測の稼働に読み替えない**。
+- **A3**: `/health` の production 稼働、Better Stack の 4 資源、Worker secret は確認済みで、2026-08-01 の実測で外形監視も稼働している。それでも pass にしないのは、判定条件が「外形監視が 3 分間隔で計測し **月次可用性 99.5% を算定できる時系列**が取得できること」であり、観測済みが **6 日 / 必要 30 日**にとどまるため。加えて §9 の算定式は外形 downtime と Workers の 5xx 率の両方を要求するので、30 日が揃っても外形単独では確定しない。**資源の存在も、監視の稼働も、計測の完了に読み替えない**。
+  - 2026-07-28 に「個別 resource が `not_monitored` ＝ monitor paused」と記録したのは誤読で、2026-08-01T12:07:18Z の `/index.json` 実測（`status: operational` / `availability: 0.988579`）で否定された。`not_monitored` は無データ日を指し、status page の HTML アイコンは 30 日履歴全体の代表である。以後この判断は散文ではなく `verify:slo-observation` の exit code を正本とする。
 
 いずれも **P13（本番リリース）完了後に再判定が必要**。本報告は P13 前の中間裁定である。
 
@@ -98,8 +100,12 @@ measured_at: "2026-07-21"
 | 1 | ~~`feat/wt-2` を push し GitHub Actions を起動~~ → **完了**（最新確認済み run 29795485968 success） | 完了 |
 | 2 | GitHub Secrets: `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`、variable `HUB_HEALTH_URL` | **ユーザー** |
 | 3 | `wrangler login` と Cloudflare アカウント準備 | **ユーザー** |
-| 4 | Uptime API token で適用器を再実行し monitor を `paused:false` に戻し、公開 resource の `operational` を確認（追跡 `HarnessHub-37h.15`） | **ユーザー** |
-| 5 | 次回日次 cron の heartbeat 着信を確認し、monitor 再開後 30 日分の可用性時系列で A3 を確定 | 時間ゲート |
+| 4 | ~~Uptime API token で適用器を再実行し monitor を `paused:false` に戻す~~ → **不要**（2026-08-01 実測で monitor は `operational` と判明。追跡 `HarnessHub-37h.15`） | 完了 |
+| 5 | `pnpm --filter @harness-hub/hub run verify:slo-observation` が観測済み 30 日を報告するまで待つ（2026-08-01 時点 6 日、初回判定期日 `2026-08-26T20:46:37.686Z`） | 時間ゲート |
+| 6 | Cloudflare Workers Analytics の 5xx 率を収集し §9 の算定式を完成させる（外形監視単独では A3 を確定しない） | **ユーザー** |
+| 7 | ~~`BACKUP_HEARTBEAT_URL` の投入と backup の初回成功~~ → **完了**（2026-08-01 `--live` exit 0、backup run 30686023662 success で heartbeat ping 2xx。`HarnessHub-fnzl` / `HarnessHub-dbx6` クローズ） | 完了 |
+| 8 | Worker cron (`CRON_HEARTBEAT_URL`) 側の heartbeat 着信実測（heartbeat 資源は公開 status page に露出しないため、確認には Better Stack API token が必要） | **ユーザー** |
+| 9 | `apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat` へ `external_id` / `applied_at` を書き戻す（外部は適用済みなのに正本は `pending_credentials` のままで drift している。runbook §1 の警告を参照） | **ユーザー** |
 
 ## 6. 裁定の限界
 

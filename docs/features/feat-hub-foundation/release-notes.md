@@ -10,7 +10,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 
 # feat-hub-foundation 本番リリース記録 (P13)
 
-> **状態**: CI の単一 workflow run 内で test → deploy が success で完走し（A1 達成）、cron トリガーの登録も解決した。外部死活監視の資源作成と Worker secret 投入までは完了したが、2026-07-28 の実測で既存 monitor が paused と判明し、SLO 収集はまだ開始していない。要求内容の正本と再適用手段は `apps/hub/monitoring/`・`apps/hub/scripts/apply-better-stack-monitoring.mjs`。完了判定は §6 を参照。
+> **状態**: CI の単一 workflow run 内で test → deploy が success で完走し（A1 達成）、cron トリガー登録、Better Stack の 4 資源、Worker secret まで適用済み。2026-08-01T12:07:18Z の公開実測で monitor は `operational`、観測済みは 6 日 / 必要 30 日の `collecting` と確認した。30 日到達後も Workers Analytics 5xx 率が揃うまで A3 は確定しない。実測正本は `apps/hub/scripts/verify-slo-observation.mjs`、完了判定は §6 を参照。
 
 ## 1. デプロイ結果（CI 経由・確定値）
 
@@ -50,7 +50,7 @@ deployed_at: "2026-07-25T09:59:09Z"
 | 名前 | 種別 | 用途 |
 |---|---|---|
 | `CLOUDFLARE_API_TOKEN` | secret | `wrangler deploy` / rollback 専用。`Workers Scripts Edit`、R2 write なし |
-| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。repository 配線済み、実投入待ち |
+| `CLOUDFLARE_R2_API_TOKEN` | secret | backup / production smoke の R2 object 操作専用。account-scoped `Workers R2 Storage Write`、Workers Scripts なし。repository 配線・実投入済み |
 | `CLOUDFLARE_ACCOUNT_ID` | secret | デプロイ先アカウント |
 | `HUB_HEALTH_URL` | variable | デプロイ後 `/health` 疎通確認の宛先 |
 
@@ -117,7 +117,7 @@ Deployed harness-hub triggers (0.59 sec)
 |---|---|---|
 | **A1** CI が単一 workflow run 内で test → deploy を success で完走 | **達成** | run [30143422049](https://github.com/daishiman/HarnessHub/actions/runs/30143422049)（`main` / `ec0f3e45`）で 3 job すべて success。§4.1 |
 | **A2** Worker bundle が gzip 後 3 MiB 以内 | **達成** | gzip 1034.27 KiB（約 1.01 MiB）。CI の G5 bundle 予算ゲートも success |
-| **A3** SLO 99.5% の計測と `/health` 稼働 | **未達** | `/health` は 2026-07-28 に HTTP 200・依存 3 件 ok を再確認。Better Stack の 4 資源と Worker secret は適用済みだが、公開 status page の個別 resource が `not_monitored`（underlying monitor paused）で時系列収集は未開始。適用器を正本との差分 `PATCH` 対応へ是正済み。§5 |
+| **A3** SLO 99.5% の計測と `/health` 稼働 | **部分達成（時間ゲート未了）** | `/health` は HTTP 200・依存 3 件 ok。Better Stack 4 資源と Worker secret は適用済みで、2026-08-01T12:07:18Z の公開実測は `operational`、観測 6 日 / 30 日、`verdict: collecting`。外形 downtime は 6,312.31 秒、30 日許容 12,960 秒の 48.7% で警告 70% 未満。30 日到達と Workers Analytics 5xx 率の収集まで未完了。§5 |
 
 ### 4.1 A1 の証跡
 
@@ -137,23 +137,23 @@ run 30143422049（branch `main` / event `push` / sha `ec0f3e45dfa2e72da6d6a24c08
 
 | # | 項目 | 状態 | 影響 |
 |---|---|---|---|
-| 1 | 外部死活監視（Better Stack） | **4 資源は適用済み・monitor 再開待ち**（monitor `4724920` / resource `8978911` は `not_monitored`） | A3 が未達。Uptime API token で適用器を再実行し `paused:false` を適用する |
-| 2 | SLO ダッシュボード | **算定式と閾値は確定済み・計測は未開始**（`verdict: collection_blocked`） | monitor が `operational` になった時点から 30 日を数える |
-| 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **投入済み** | 次回日次 cron（2026-07-28T15:00:00Z）後の heartbeat 着信は未確認 |
+| 1 | 外部死活監視（Better Stack） | **4 資源適用済み・稼働中**（monitor `4724920` / resource `8978911` は公開実測で `operational`） | 設定再適用は不要。30 日時間ゲートを継続する |
+| 2 | SLO ダッシュボード | **計測中**（`verdict: collecting`、観測 6 日 / 30 日） | 30 日到達後に Workers Analytics 5xx 率と複合算定する |
+| 3 | `CRON_HEARTBEAT_URL`（Worker secret） | **投入済み** | Worker 日次 cron の heartbeat 着信を Better Stack 側で実測する |
 | 4 | 独自ドメイン（`hub.<domain>`） | **未設定** | 現状は workers.dev サブドメイン。運用上の必須要件ではない |
-| 5 | 日次 backup の初回成功 | **未達**（run 30321679596 / 30293639238 / 30213823182 が 3 回連続で export step 失敗）| R2 に成果物が 1 つも無く、RPO ≤ 24h を実際には満たしていない。原因は secret 不足ではなく「データ行 0 を不採用」とする判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正済み（未 land）。[evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json) |
+| 5 | 日次 backup の初回成功 | **達成**（run 30686023662 success） | export 19 テーブル 64 行、R2 往復一致、backup heartbeat ping 2xx を確認済み |
 
-> **2026-07-28 時点の GitHub Actions 設定**は、未参照だった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` を削除し、`node scripts/ci/check-actions-secrets.mjs --live` が exit 0（当時の台帳 9 件と workflow 参照 9 件が一致）だった。2026-07-29 の最小権限分離で required secret `CLOUDFLARE_R2_API_TOKEN` を追加したため、現在の repository 台帳との `--live` 検査と workflow 完走は再実行待ちである。
+> **2026-08-01 時点の GitHub Actions 設定**は `node scripts/ci/check-actions-secrets.mjs --live` が exit 0（workflow 参照 13 件と台帳 13 件が一致し required secret を実投入済み）。日次 backup は run 30686023662 で初回成功し、R2 再取得と heartbeat ping 2xx まで確認した。
 
 ### 5.1 監視設定の正本（2026-07-25 追加）
 
 | ファイル | 役割 | 適用状態 |
 |---|---|---|
 | `apps/hub/monitoring/better-stack.monitors.json` | `/health` 3 分監視・日次 cron heartbeat（86,400s / 猶予 3,600s）・30 日履歴 status page の API 要求内容 | `applied`（4 資源の `external_id` を記録済み） |
-| `apps/hub/monitoring/slo-dashboard.json` | 月次可用性 99.5%・許容停止 12,960 秒/30 日・算定式（外形 downtime + Worker 5xx）・エラーバジェット 70% 警告 / 100% 凍結 | `verdict: collection_blocked` |
-| `apps/hub/tests/monitoring/*.test.ts` | 状態機械、秘密非保存、重複防止、設定 drift の `PATCH` 是正 | 32 件 pass（2026-07-28） |
+| `apps/hub/monitoring/slo-dashboard.json` | 月次可用性 99.5%・許容停止 12,960 秒/30 日・算定式（外形 downtime + Worker 5xx）・エラーバジェット 70% 警告 / 100% 凍結 | `verdict: collecting`（観測 6 日 / 30 日） |
+| `apps/hub/tests/monitoring/*.test.ts` | 状態機械、秘密非保存、重複防止、公開実測、CLI の fail-closed 境界 | 67 件 pass（2026-08-01） |
 
-> **外部 ID の存在を「監視稼働」と読み替えない。** 今回は資源が存在しても monitor が paused なら status page resource は `not_monitored` になり、時系列を収集できないことを実測した。`operational` の確認と 30 日の時系列が揃うまで A3 は未達のままである。
+> **外部 ID の存在を「監視稼働」と読み替えない。** 稼働判定は公開 status page の `/index.json` を読む `verify:slo-observation` の exit code を正本とする。`not_monitored` は無データ日であり paused の同義ではない。2026-08-01 の実測は `operational` だが、30 日の時系列と Workers Analytics 5xx 率が揃うまで A3 は未達のままである。
 > API token と heartbeat URL は設定ファイルに保存しない。token は投入時のみ環境変数、heartbeat URL は Worker secret `CRON_HEARTBEAT_URL` として渡す。
 
 ### 運用上の注意（今回の実行で判明）
@@ -171,7 +171,7 @@ task spec (`phase-13-release-deploy.md`) の記述は 2 か所で食い違って
 | 出典 | 要求 | 充足 |
 |---|---|---|
 | §Verification and evidence の Required evidence | release-notes.md にデプロイ日時・Worker バージョン・本番 URL・/health 初回応答・bundle サイズ最終値が記録されていること | **5 項目すべて §1〜§2 に記録済み** |
-| §目的 および Workstream applicability の Operations | 外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする | **未充足**（外部資源と secret は適用済みだが monitor paused のため収集未開始） |
+| §目的 および Workstream applicability の Operations | 外部死活監視と SLO ダッシュボードが本番稼働を計測している状態にする | **部分充足**（外部監視は稼働、SLO は 6 日 / 30 日の収集中。最終判定は `HarnessHub-37h.15`） |
 
 前者（Required evidence）を採る。理由は 3 点。
 
@@ -183,8 +183,7 @@ task spec (`phase-13-release-deploy.md`) の記述は 2 か所で食い違って
 
 ## 7. 次の手順
 
-1. Uptime API token を環境変数で渡して適用器を再実行し、monitor `4724920` を `paused:false` へ是正する（ダッシュボードで独自の値へ変更しない）
-2. 公開 status page の個別 resource が `operational` になったことを確認し、その時刻を 30 日観測の開始として証跡へ記録する
-3. 次回日次 cron 後に heartbeat `475650` の着信を確認する（heartbeat URL はファイル・ログへ残さない）
-4. 30 日分の可用性時系列を取得して A3 を判定する
-5. （任意）独自ドメイン `hub.<domain>` を割り当てる
+1. `verify:slo-observation` を継続実行し、観測済み 30 日へ到達した証跡を保存する
+2. Workers Analytics の 5xx 率を同じ月次窓で収集し、外形 downtime と複合して A3 を確定する
+3. Worker 日次 cron 後に heartbeat `475650` の着信を確認する（heartbeat URL はファイル・ログへ残さない）
+4. （任意）独自ドメイン `hub.<domain>` を割り当てる

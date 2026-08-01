@@ -12,13 +12,15 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 
-## 1. 初回セットアップ（**外部資源は適用済み・monitor 再開待ち**）
+## 1. 初回セットアップ（**外部資源は適用済み・30 日観測を収集中**）
 
 > **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
 
-> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。しかし、同日 `21:38:14Z` の公開 status page 再確認で個別 resource が `not_monitored`（Better Stack 公式仕様では underlying monitor が paused）と判明した。適用器は既存資源の設定差分を `PATCH` するよう是正済みであり、Uptime API token を渡して同じ適用コマンドを再実行し、resource が `operational` になった時点から 30 日観測を開始する。現在の `slo-dashboard.json` は `collection_blocked` であり、99.5% 達成を主張しない。証跡は [evidence/monitoring-applied.json](evidence/monitoring-applied.json) と [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は **2026-07-28 に削除し、`--live` は exit 0 になった**（証跡は [evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json)）。同日その状態で日次 backup を実起動したところ、**secret とは別の原因**で失敗している（§7 U-1）。以下の手順は再構築時のために残す。
+> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。**2026-08-01T12:07:18Z に公開 status page の `/index.json` を token なしで実測し、monitor は稼働中（`status: operational` / 直近 30 日 `availability: 0.988579`）と確認した**。2026-07-28 に「resource が `not_monitored` ＝ monitor が paused」と記録したのは **誤読**である。`not_monitored` は「その日は監視対象が存在せずデータが無い」を表し、status page の HTML アイコンは**現在状態ではなく 30 日履歴全体の代表**なので、resource 作成直後は必ずこの見た目になる。実測の正本は `pnpm --filter @harness-hub/hub run verify:slo-observation`（[scripts/verify-slo-observation.mjs](../../../apps/hub/scripts/verify-slo-observation.mjs)）で、公開 JSON から観測済み日数を数え `slo-dashboard.json` の `verdict` と突合する（一致 exit 0 / 不一致 exit 1 / 実測不能 exit 2）。現在の実測値は **観測済み 6 日 / 必要 30 日**、外形 downtime `6312.31` 秒（30 日許容 `12960` 秒に対しエラーバジェット消費 **48.7%**、warn 閾値 70% 未満）であり、`slo-dashboard.json` は `collecting`（観測開始 `2026-07-27T20:46:37.686Z` / 初回月次判定 `2026-08-26T20:46:37.686Z`）。**30 日揃っても外形監視だけでは A3 を pass にしない**（infrastructure-spec §9 / qa-019 のとおり Workers Analytics の 5xx 率が別途必要）。証跡は [evidence/slo-observation.json](evidence/slo-observation.json) と [evidence/monitoring-applied.json](evidence/monitoring-applied.json)、[evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は **2026-07-28 に削除し、`--live` は exit 0 になった**（証跡は [evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json)）。**2026-08-01 時点で `--live` は exit 0（workflow 参照 13 件と台帳 13 件が一致し、実投入も確認済み）** であり、`BACKUP_HEARTBEAT_URL` を含む required はすべて投入済みである。日次 backup も **run 30686023662 で初回成功**した（§7 U-1）。以下の手順は再構築時のために残す。
 >
-> **backup heartbeat の分離判断 (HarnessHub-dbx6)**: Worker の日次 cron (`0 15 * * *`) と GitHub Actions の日次 backup (`0 17 * * *`) は、同じ heartbeat 資源を**共用しない**。共用すると Worker 側の成功 ping が backup 側の失敗・不発を上書きし、backup が取れていなくても監視が正常に見えるためである。backup 専用資源 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、JST 2:00 の予定 run が完走しなければ、おおむね JST 3:00 までに異常化する。`BACKUP_HEARTBEAT_URL` はこの検知経路に必須なので台帳上 `required` とし、未投入なら backup workflow 自体も前提確認で fail-closed（失敗として停止）する。ローカル正本への宣言は 2026-07-29 に追加済みだが、`apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat.provisioning_state` が `pending_credentials` の間は外部適用・着信実測が未完了である。
+> **backup heartbeat の分離判断 (HarnessHub-dbx6)**: Worker の日次 cron (`0 15 * * *`) と GitHub Actions の日次 backup (`0 17 * * *`) は、同じ heartbeat 資源を**共用しない**。共用すると Worker 側の成功 ping が backup 側の失敗・不発を上書きし、backup が取れていなくても監視が正常に見えるためである。backup 専用資源 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、JST 2:00 の予定 run が完走しなければ、おおむね JST 3:00 までに異常化する。`BACKUP_HEARTBEAT_URL` はこの検知経路に必須なので台帳上 `required` とし、未投入なら backup workflow 自体も前提確認で fail-closed（失敗として停止）する。外部適用と着信実測は 2026-08-01 に完了した（`HarnessHub-dbx6` クローズ。`BACKUP_HEARTBEAT_URL` 投入済みで `--live` exit 0、backup run 30686023662 success で heartbeat ping が 2xx 受理）。
+>
+> ⚠️ **正本の書き戻しが未 land（`HarnessHub-dbx6` のクローズ後に判明・未起票）**: 上記のとおり外部資源は存在するのに、`apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat` は `provisioning_state: pending_credentials` / `external_id: null` のままである（全 branch を検索しても書き戻し commit が無い）。これは §9 が禁じる「外部の実態と設定正本の乖離」であり、この状態で適用器を流すと既存資源を `reused` で拾えず**重複作成**を試みうる。**書き戻しが land するまで、適用器の再実行は `--only-backup-heartbeat` を含む形で行わないこと。**
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -167,6 +169,29 @@ curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 - **消費 100%**: **新規公開機能の変更を凍結**し、信頼性回復を最優先にする
 - ユーザー影響のある障害は blame-free ポストモーテムを issue 化し、再発防止を自動化候補へ接続する
 
+**観測状態と消費率の確認（token 不要・いつでも安全に実行できる）**:
+
+```bash
+# 実測して slo-dashboard.json の verdict と突合する（読み取りのみ）
+pnpm --filter @harness-hub/hub run verify:slo-observation
+
+# 証跡を残す場合
+pnpm --filter @harness-hub/hub run verify:slo-observation \
+  --json docs/features/feat-hub-foundation/evidence/slo-observation.json
+
+# 実測に合わせて verdict を書き換える（実測と食い違ったときだけ）
+pnpm --filter @harness-hub/hub run verify:slo-observation --write
+```
+
+| exit code | 意味 | 対応 |
+|---|---|---|
+| `0` | 実測と `slo-dashboard.json` の `verdict` が一致 | なし |
+| `1` | 食い違い（例: 監視が止まっているのに `collecting` のまま） | 原因を確認し、実測が正しければ `--write` で収束させる |
+| `2` | **実測できなかった**（status page 応答なし・JSON でない・resource 不在） | 「問題なし」と読まない。status page 側の設定を確認する |
+
+- 公開 status page の `/index.json` を読むだけなので **API token を必要としない**。判断は必ずこのコマンドの出力で行い、status page の見た目（HTML のアイコン）で判断しない — アイコンは**現在状態ではなく 30 日履歴全体の代表**であり、`not_monitored`（＝その日はデータが無い）を「監視停止」と誤読した実例がある。
+- 観測が 30 日に達しても verdict は `observation_complete_pending_application_error_rate` にとどまる。**Workers analytics の 5xx 率が揃うまで 99.5% 達成を主張しない**（算定式の片側しか埋まっていないため）。
+
 ## 6. バックアップと restore drill（RPO ≤ 24h / RTO ≤ 4h）
 
 **手順**:
@@ -182,7 +207,7 @@ curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 
 | # | 未実装 | 影響 | 必要な作業 |
 |---|---|---|---|
-| U-1 | ~~backup workflow 未実装~~ → 実装済み (`.github/workflows/backup.yml`)。ただし**初回成功はまだ取れていない** | R2 に成果物が 1 つも無く、RPO ≤ 24h を実際には満たしていない | 2026-07-28 の実起動 (run 30321679596) と直前 2 回の cron はいずれも export step で失敗していた。原因は secret ではなく「データ行が 0 なら不採用」という判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正済み。**main へ land 後に workflow_dispatch で再実行し、`db-export/<year>/<stamp>.jsonl.gz` を確認すること** |
+| ~~U-1~~ | ~~backup workflow 未実装 / 初回成功が取れていない~~ → **解決** (`.github/workflows/backup.yml` 実装済み・初回成功取得済み) | — | 2026-07-28 の実起動 (run 30321679596) と直前 2 回の cron は export step で失敗していた。原因は secret ではなく「データ行が 0 なら不採用」という判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正し、**2026-08-01 の run 30686023662 で初回成功**（export 19 テーブル 64 行・R2 往復一致・heartbeat ping 2xx）。R2 成果物は run と独立にローカルで再取得し `verify-export-artifact.ts` で `ok=true` を確認済み（`HarnessHub-fnzl` / `HarnessHub-dbx6` クローズ）。ただし §1 のとおり **backup heartbeat の外部適用結果が設定正本へ書き戻されていない** drift が残る |
 | ~~U-2~~ | ~~scheduled handler 未実装~~ → **実装済み** (`apps/hub/src/worker.ts` + `src/worker/cron.ts`) | ジョブ本体は空 (id は登録済み)。各ドメイン feature が中身を実装する | — |
 | ~~U-3~~ | ~~G6 / G8 未配線~~ → **配線済み**。実効性も実測 | — | — |
 | U-4 | 未 wrap route の静的検出 | 認可 fail-open のリスクが残る | detector 拡張 |
