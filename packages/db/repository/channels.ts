@@ -26,6 +26,17 @@ export interface TargetChannelsRepo {
   ): Promise<TargetChannelRow>;
   findById(context: RepositoryContext, id: string): Promise<TargetChannelRow | null>;
   /**
+   * (project, target) から channel を引く。`target_channels_project_target_uq` があるため 0 件か 1 件。
+   *
+   * 公開要求の作成時に client へ channel_id を選ばせないために必要 (backend-spec §4.6)。
+   * client が channel_id を直接指定できると、他 project の channel を指す要求を作れてしまう。
+   */
+  findByProjectTarget(
+    context: RepositoryContext,
+    projectId: string,
+    target: 'skill' | 'web_app',
+  ): Promise<TargetChannelRow | null>;
+  /**
    * stable pointer の atomic 切替 (公開・更新・rollback の共通経路)。
    * releaseId は同一 tenant・同一 channel の release であることを事前検証する。
    */
@@ -56,6 +67,21 @@ export function createTargetChannelsRepo(adapter: CoreAdapter): TargetChannelsRe
         .select()
         .from(targetChannels)
         .where(and(eq(targetChannels.tenantId, context.tenantId), eq(targetChannels.id, id)))
+        .limit(1);
+      return (rows[0] as TargetChannelRow | undefined) ?? null;
+    },
+
+    async findByProjectTarget(context, projectId, target) {
+      const rows = await adapter.client
+        .select()
+        .from(targetChannels)
+        .where(
+          and(
+            eq(targetChannels.tenantId, context.tenantId),
+            eq(targetChannels.projectId, projectId),
+            eq(targetChannels.target, target),
+          ),
+        )
         .limit(1);
       return (rows[0] as TargetChannelRow | undefined) ?? null;
     },

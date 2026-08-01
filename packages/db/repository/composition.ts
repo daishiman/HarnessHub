@@ -19,7 +19,14 @@
  * 暗号化列の鍵を扱う層が package の外へ増える。外へ出すのは「鍵の文字列」ではなく「鍵を渡す 1 箇所」。
  */
 
+import { deploymentReferences, projects } from '../schema/core/catalog';
 import { type AuditRepo, createAuditRepo } from './audit';
+import {
+  createTargetChannelsRepo,
+  type TargetChannelRow as TargetChannelRowShape,
+  type TargetChannelsRepo,
+} from './channels';
+import { createScopedCrud, type ScopedCrudRepo } from './crud';
 import { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
 import {
@@ -42,7 +49,24 @@ import {
   type IdpConnectionRow as IdpConnectionRowShape,
   type IdpConnectionsRepo,
 } from './idp';
-import { createSessionRevocationsRepo, type SessionRevocationsRepo } from './misc';
+import {
+  createIdempotencyLedgerRepo,
+  createSessionRevocationsRepo,
+  type IdempotencyLedgerRepo,
+  type SessionRevocationsRepo,
+} from './misc';
+import { createPackagesRepo, type PackageRefRow as PackageRefRowShape, type PackagesRepo } from './packages';
+import {
+  createPublishRequestsRepo,
+  type PublishRequestRow as PublishRequestRowShape,
+  type PublishRequestsRepo,
+} from './publish-requests';
+import {
+  createPublishSmokeDbProbe as createPublishSmokeDbProbeLeaf,
+  type PublishSmokeDbProbe as PublishSmokeDbProbeShape,
+  type PublishSmokeEvidence as PublishSmokeEvidenceShape,
+} from './publish-smoke';
+import { createReleasesRepo, type ReleaseRow as ReleaseRowShape, type ReleasesRepo } from './releases';
 import { createTenantsRepo, type TenantRow as TenantRowShape, type TenantsRepo } from './tenants';
 import { createUsersRepo, type UserRow as UserRowShape, type UsersRepo } from './users';
 import { createUserWorkspacesRepo, type UserWorkspacesRepo } from './workspaces';
@@ -58,10 +82,21 @@ export type AiJobRow = AiJobRowShape;
 export type HearingSheetRow = HearingSheetRowShape;
 export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
+export type PublishRequestRow = PublishRequestRowShape;
+export type ReleaseRow = ReleaseRowShape;
+export type TargetChannelRow = TargetChannelRowShape;
+export type PackageRefRow = PackageRefRowShape;
+export type PublishSmokeDbProbe = PublishSmokeDbProbeShape;
+export type PublishSmokeEvidence = PublishSmokeEvidenceShape;
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
   return createHearingIntakeRepositoryLeaf(adapter);
+}
+
+/** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */
+export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {
+  return createPublishSmokeDbProbeLeaf(adapter);
 }
 
 /**
@@ -77,6 +112,22 @@ export interface CoreRepositories {
   readonly deviceAuthorizations: DeviceAuthorizationsRepo;
   readonly publisherTokens: PublisherTokensRepo;
   readonly audit: AuditRepo;
+  // ---- publish pipeline 系 (ADR AD-9)。factory は既存だったが合成点から到達できなかったため追加。
+  readonly publishRequests: PublishRequestsRepo;
+  readonly releases: ReleasesRepo;
+  readonly channels: TargetChannelsRepo;
+  readonly packages: PackagesRepo;
+  readonly idempotency: IdempotencyLedgerRepo;
+  /**
+   * projects は owner_user_id を認可資源へ投影するためにも使う。
+   * tenant 条件を必ず注入する汎用 scoped CRUD へ閉じ、route から schema を直接読ませない。
+   */
+  readonly projects: ScopedCrudRepo;
+  /**
+   * deployment_references は id PK + tenant_id を持つ素直な表なので汎用 scoped CRUD で足りる。
+   * 専用 repository を足さないのは、この表に固有の不変条件 (immutable / hash chain / CAS) が無いため。
+   */
+  readonly deploymentReferences: ScopedCrudRepo;
 }
 
 export interface CoreRepositoriesInput {
@@ -107,5 +158,12 @@ export function createCoreRepositories(input: CoreRepositoriesInput): CoreReposi
     deviceAuthorizations: createDeviceAuthorizationsRepo(adapter),
     publisherTokens: createPublisherTokensRepo(adapter),
     audit: createAuditRepo(adapter),
+    publishRequests: createPublishRequestsRepo(adapter),
+    releases: createReleasesRepo(adapter),
+    channels: createTargetChannelsRepo(adapter),
+    packages: createPackagesRepo(adapter),
+    idempotency: createIdempotencyLedgerRepo(adapter),
+    projects: createScopedCrud(adapter, projects),
+    deploymentReferences: createScopedCrud(adapter, deploymentReferences),
   };
 }

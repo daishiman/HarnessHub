@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1050,
+  "graph_revision": 1069,
   "nodes": [
     {
       "acceptance": [
@@ -299,9 +299,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-26T06:10:00Z",
+        "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "0ec0f8b86acd29ef4fa98c2e6b93c6d7b9ee9d31dbcb0b36259a2d52df8f3f44",
+        "source_digest": "6381665fef864065b67525652cc87bcbcb23db18c7f7c3157e7573aee1111f8b",
         "source_path": "system-spec/backend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -405,9 +405,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-26T08:35:00Z",
+        "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "44731a240f143b9e386d165ca8706ebda887262bbd634d02681d2f06ec3a6239",
+        "source_digest": "5a4d5439793d391f019e66e49f4baf7684bc361b3bbfe15c08fd5cdc3e1fd83d",
         "source_path": "system-spec/database.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -512,9 +512,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T04:40:19Z",
+        "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "4c4572235580b8a6916f7d3a2203801a50cd51f71055f4df2358de207f1db477",
+        "source_digest": "50006262f86ccfe1603373b05f220f0816278dbefb0b8b7df31483f72aaa7f26",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T04:40:19Z",
+        "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "7d41dd5eec8e690b938df18bd37eff64a493355fd8aab2dacec182319dc69d8f",
+        "source_digest": "cff4f0f1635e3c595933f1e8ba707b23639b33fbf3f2eb0517cf75559b99a321",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -1125,9 +1125,9 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:38:30Z",
@@ -1181,9 +1181,9 @@
         "カタログ UI"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T22:35:48Z",
+        "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "349125ae4533b71860acb69a161d1ec53efcf1eabcc88f2492d25a1c71b893fe",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1200,7 +1200,7 @@
       "template_version": "1.0.0",
       "title": "PublishRequest パイプライン (状態機械・検査・promote/rollback)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:17:23Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
@@ -16116,7 +16116,7 @@
     },
     {
       "acceptance": [
-        "docs/features/feat-publish-pipeline/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 8 件が過不足なく転記されている",
+        "docs/features/feat-publish-pipeline/requirements-baseline.md に goal-spec acceptance 3 件と quality_constraints 9 件が過不足なく転記されている",
         "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP01責務として追跡し、未割当0件である",
         "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
       ],
@@ -16127,11 +16127,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.1",
-        "linked_at": "2026-07-18T16:04:16Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16150,12 +16146,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
@@ -16203,10 +16199,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-01-requirements.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-01-requirements.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16220,10 +16216,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T13:52:26.136966Z"
     },
     {
       "acceptance": [
@@ -16238,11 +16234,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.2",
-        "linked_at": "2026-07-18T16:04:17Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16261,12 +16253,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P01"
       ],
@@ -16316,10 +16308,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-02-architecture.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-02-architecture.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16333,10 +16325,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
@@ -16351,11 +16343,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.3",
-        "linked_at": "2026-07-18T16:04:18Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16374,12 +16362,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P02"
       ],
@@ -16429,10 +16417,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-03-design-review.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-03-design-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16446,14 +16434,14 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
-        "test-design.md に quality_constraints 8 件と acceptance 3 件全てに対応するテストケースが記載され、apps/hub/src/__tests__/publish-pipeline/ と packages/inspection/src/__tests__/ にスタブが作成されている",
+        "test-design.md に quality_constraints 9 件と acceptance 3 件全てに対応するテストケースが記載され、apps/hub/tests/publish-pipeline/ と packages/inspection/src/ に実行可能なテストが作成されている",
         "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP04責務として追跡し、未割当0件である",
         "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
       ],
@@ -16464,11 +16452,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.4",
-        "linked_at": "2026-07-18T16:04:19Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16477,7 +16461,7 @@
         }
       ],
       "classification_confidence": 0.87,
-      "classification_reason": "quality_constraints 8 件 (状態機械 property test・検査 pipeline 挙動同値・Green/Yellow/Red 判定・immutable Release/atomic rollback・R2 consumer・append-only 監査・REST zod/認可・TargetChannel 直列化) をテストケースへ写像する P04 テストファースト設計タスク",
+      "classification_reason": "quality_constraints 9 件 (状態機械 property test・検査 pipeline 挙動同値・Green/Yellow/Red 判定・immutable Release/atomic rollback・R2 consumer・append-only 監査・REST zod/認可・TargetChannel 直列化・dual principal/CSRF 境界) をテストケースへ写像する P04 テストファースト設計タスク",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -16487,12 +16471,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P03"
       ],
@@ -16533,11 +16517,11 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
-        "apps/hub/src/__tests__/publish-pipeline/",
+        "apps/hub/tests/publish-pipeline/",
         "apps/hub/src/app/api/v1/publish/",
         "apps/hub/src/lib/publish/auth-principal.ts",
         "docs/features/feat-publish-pipeline/test-design.md",
-        "packages/inspection/src/__tests__/",
+        "packages/inspection/src/",
         "packages/schemas/publish-pipeline/"
       ],
       "scope_in": [
@@ -16552,10 +16536,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-04-test-design.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-04-test-design.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16569,10 +16553,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T13:52:48.250425Z"
     },
     {
       "acceptance": [
@@ -16587,11 +16571,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.5",
-        "linked_at": "2026-07-18T16:04:21Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16610,12 +16590,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P04"
       ],
@@ -16681,10 +16661,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-05-implementation.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-05-implementation.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16698,14 +16678,14 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
-        "test-run-results.md に quality_constraints 8 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
+        "test-run-results.md に quality_constraints 9 件全ての pass 結果が記録されている (fail が残る場合は差し戻し理由が明記されている)",
         "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP06責務として追跡し、未割当0件である",
         "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
       ],
@@ -16716,11 +16696,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.6",
-        "linked_at": "2026-07-18T16:04:22Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16729,7 +16705,7 @@
         }
       ],
       "classification_confidence": 0.86,
-      "classification_reason": "P05 の実装に対して P04 のテストスタブを実行し quality_constraints 8 件の充足状況を機械的に確認する P06 テスト実行タスク",
+      "classification_reason": "P05 の実装に対して P04 のテストを実行し quality_constraints 9 件の充足状況を機械的に確認する P06 テスト実行タスク",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -16739,12 +16715,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P05"
       ],
@@ -16785,7 +16761,7 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
-        "apps/hub/src/__tests__/publish-pipeline/",
+        "apps/hub/tests/publish-pipeline/",
         "apps/hub/src/app/api/v1/publish/",
         "apps/hub/src/lib/publish/auth-principal.ts",
         "docs/features/feat-publish-pipeline/test-run-results.md",
@@ -16802,10 +16778,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-06-test-run.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-06-test-run.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16819,10 +16795,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T13:53:04.708092Z"
     },
     {
       "acceptance": [
@@ -16837,11 +16813,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.7",
-        "linked_at": "2026-07-18T16:04:23Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16860,12 +16832,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P06"
       ],
@@ -16915,10 +16887,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-07-acceptance.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-07-acceptance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -16932,10 +16904,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
@@ -16949,11 +16921,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.8",
-        "linked_at": "2026-07-18T16:04:24Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16972,12 +16940,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P07"
       ],
@@ -17017,11 +16985,12 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
-        "apps/hub/src/app/api/v1/publish/",
-        "apps/hub/src/lib/publish/auth-principal.ts",
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts/check-db-schema-boundary.mjs",
+        "apps/hub/scripts/check-publish-boundary-gates.mjs",
+        "apps/hub/scripts/check-publish-inspection-gate.mjs",
         "docs/features/feat-publish-pipeline/refactoring-migration-note.md",
-        "packages/inspection/",
-        "packages/schemas/publish-pipeline/"
+        "packages/inspection/"
       ],
       "scope_in": [
         "apps/hub/src/app/api/v1/publish/",
@@ -17034,10 +17003,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-08-refactoring-migration.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-08-refactoring-migration.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17051,10 +17020,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
@@ -17068,11 +17037,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.9",
-        "linked_at": "2026-07-18T16:04:25Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17091,12 +17056,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P08"
       ],
@@ -17136,11 +17101,12 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
-        "apps/hub/scripts/",
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts/check-db-schema-boundary.mjs",
+        "apps/hub/scripts/check-publish-boundary-gates.mjs",
+        "apps/hub/scripts/check-publish-inspection-gate.mjs",
         "apps/hub/src/app/api/v1/publish/",
-        "apps/hub/src/lib/publish/auth-principal.ts",
-        "docs/features/feat-publish-pipeline/quality-assurance-report.md",
-        "packages/schemas/publish-pipeline/"
+        "docs/features/feat-publish-pipeline/quality-assurance-report.md"
       ],
       "scope_in": [
         "apps/hub/scripts/",
@@ -17153,10 +17119,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-09-quality-assurance.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-09-quality-assurance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17170,14 +17136,14 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
-        "final-review-record.md に quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断 3 件全ての最終確認結果 (問題なし) が記載されている",
+        "final-review-record.md に quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断 3 件全ての最終確認結果 (問題なし) が記載されている",
         "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP10責務として追跡し、未割当0件である",
         "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
       ],
@@ -17188,11 +17154,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.10",
-        "linked_at": "2026-07-18T16:04:27Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17201,7 +17163,7 @@
         }
       ],
       "classification_confidence": 0.86,
-      "classification_reason": "P03 の設計時レビューとは独立して、実装完了後の quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断を最終確認する P10 独立最終レビュータスク",
+      "classification_reason": "P03 の設計時レビューとは独立して、実装完了後の quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断を最終確認する P10 独立最終レビュータスク",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -17211,12 +17173,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P09"
       ],
@@ -17249,7 +17211,7 @@
       "priority": null,
       "project_id": "feature-package-feat-publish-pipeline",
       "pull_request_linkages": [],
-      "purpose": "feat-publish-pipeline の P10 を実行する: 独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+      "purpose": "feat-publish-pipeline の P10 を実行する: 独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認",
       "related_nodes": [
         "feat-publish-pipeline",
         "arch-harness-hub-backend",
@@ -17266,10 +17228,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-10-final-review.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-10-final-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17283,14 +17245,14 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
-      "title": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+      "template_version": "1.1.0",
+      "title": "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T13:53:46.505526Z"
     },
     {
       "acceptance": [
-        "evidence-summary.md に quality_constraints 8 件それぞれの再現コマンド列と対応する結果が記載されている",
+        "evidence-summary.md に quality_constraints 9 件それぞれの再現コマンド列と対応する結果が記載されている",
         "現行feature context sha256:7a4625914be99dd47f51c4c92698737ad8fe431319995457a6cadc5fd39d2f41のscope_in/acceptance全件をP11責務として追跡し、未割当0件である",
         "Normative closure: endpoint別認証を固定する。POST /publish・PUT /publish/:id/package・POST /publish/:id/submit はsession(Web)+Bearer(CLI)のdual principal、session state-changing経路はOrigin/CSRF必須、BearerはCSRF非該当。GET list/idもdual。approveはsession/workspace-admin、cancelとprojects/:id/deploymentはBearer/owner。全経路が同一tenant/owner判定、zod contract、状態機械、Idempotency-Key/直列化を共有する。 Evidence: session/Bearer parity、session CSRF欠落403、Bearerでcookie/CSRF非依存、cross-tenant拒否、role matrix、状態遷移/property test、P12 runbookとP13 smokeを必須とする。"
       ],
@@ -17300,11 +17262,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.11",
-        "linked_at": "2026-07-18T16:04:28Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17323,12 +17281,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P10"
       ],
@@ -17377,10 +17335,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-11-evidence.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-11-evidence.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17394,10 +17352,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T13:53:21.882018Z"
     },
     {
       "acceptance": [
@@ -17411,11 +17369,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.12",
-        "linked_at": "2026-07-18T16:04:29Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17434,12 +17388,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P11"
       ],
@@ -17488,10 +17442,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-12-documentation-operations.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-12-documentation-operations.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17505,10 +17459,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
@@ -17523,11 +17477,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm.13",
-        "linked_at": "2026-07-18T16:04:31Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17546,12 +17496,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
+        "evaluated_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:17:23Z",
+      "created_at": "2026-07-30T12:25:36Z",
       "depends_on": [
         "SYS-PUBLISH-PIPELINE-P12"
       ],
@@ -17592,10 +17542,14 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
-        "apps/hub/src/app/api/v1/publish/",
-        "apps/hub/src/lib/publish/auth-principal.ts",
-        "docs/features/feat-publish-pipeline/release-record.md",
-        "packages/schemas/publish-pipeline/"
+        "apps/hub/package.json",
+        "apps/hub/scripts/smoke-production-publish.ts",
+        "apps/hub/tests/publish-pipeline/production-smoke-script.test.ts",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-security.md",
+        "docs/backend-spec.md",
+        "docs/backend-spec-api-state.md",
+        "docs/features/feat-publish-pipeline/release-record.md"
       ],
       "scope_in": [
         "apps/hub/src/app/api/v1/publish/",
@@ -17607,10 +17561,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:17:23Z",
+        "imported_at": "2026-07-30T12:25:36Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/task-specs/phase-13-release-deploy.md",
+        "source_digest": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/task-specs/phase-13-release-deploy.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -17624,10 +17578,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-07-30T12:25:36Z"
     },
     {
       "acceptance": [
