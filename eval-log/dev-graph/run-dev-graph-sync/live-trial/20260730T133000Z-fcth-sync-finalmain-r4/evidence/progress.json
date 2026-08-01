@@ -1,0 +1,106 @@
+{
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "status": "PASS",
+  "completed_at": "2026-07-30T13:35:41Z",
+  "checklist": [
+    {
+      "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+      "status": "PASS",
+      "evidence": "dry-run pass1 produced 1 import (title, remote-only) and 1 export (status, local_to_project). Each classified in 3-way plan with snapshot digests. graph_sha256=7860c6..., snapshot_sha256=37e836..."
+    },
+    {
+      "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      "status": "PASS",
+      "evidence": "LT-TASK-001 tracker_binding=github. No beads nodes in fixture. Authority is single-path github/C12."
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "PASS",
+      "evidence": "Pass 1 dry-run: write_count=0, graph/remote/snapshot SHA unchanged before=after. Pass 3 verification dry-run: write_count=0."
+    },
+    {
+      "item": "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+      "status": "PASS",
+      "evidence": "Title: remote-only change imported. Status: local_to_project exported (Backlog→In Progress). No both-changed fields, conflicts=[]."
+    },
+    {
+      "item": "close/delete は graph_node_id を保持した tombstone/status transition になる",
+      "status": "PASS",
+      "evidence": "No close/delete in this fixture. Regression test test_sync_three_way_apply_second_pass_zero_and_tombstone covers tombstone behavior and PASSED."
+    },
+    {
+      "item": "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+      "status": "PASS",
+      "evidence": "LT-TASK-001 completion_evidence.status=in_progress, no PR merged. Regression tests test_lifecycle_all_policy_waits_for_every_linked_pr and test_lifecycle_all_policy_and_beads_gate_fallback PASSED."
+    },
+    {
+      "item": "同一状態の二回目 sync の imports/exports/Project item add が0件である",
+      "status": "PASS",
+      "evidence": "Pass 3 verification dry-run: changes=0, imports=[], exports=[], converged=true, write_count=0."
+    }
+  ],
+  "criteria": [
+    {
+      "id": "IN1",
+      "status": "PASS",
+      "evidence": "Pass 1 dry-run executed validate-graph-schema check implicitly via sync-graph.py schema validation. ok=true, no missing keys. Test test_sync_normalizes_null_beads_dependencies_and_rejects_invalid_shape confirms schema validation."
+    },
+    {
+      "id": "OUT1",
+      "status": "PASS",
+      "evidence": "Live trial: pass2 apply changes=2 (1 import + 1 export). Pass3 verify dry-run: changes=0, imports=[], exports=[], converged=true. Digests stable: graph=403ff981, remote=891ed6e0, snapshot=ae94bd6d."
+    },
+    {
+      "id": "OUT2",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED — verifies updated_at tiebreak, GitHub priority on same-timestamp, and manual confirmation flag."
+    },
+    {
+      "id": "OUT3",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_three_way_apply_second_pass_zero_and_tombstone PASSED — verifies tombstone/status transition on close/delete, no physical deletion."
+    },
+    {
+      "id": "OUT4",
+      "status": "PASS",
+      "evidence": "Live trial pass 1 and pass 3 dry-run: write_count=0. Regression test test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED — confirms dry-run write zero."
+    },
+    {
+      "id": "OUT5",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED — confirms manual confirmation flag resolution on re-sync."
+    },
+    {
+      "id": "OUT6",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_project_item_is_stable_and_alias_failure_is_pending_retry PASSED — confirms item_id stability, no duplicates, alias-scoped 1 item."
+    },
+    {
+      "id": "OUT7",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED — covers 3-way field conflict detection; test_sync_project_unset_field_and_stale_item_identity_fail_safe PASSED — covers one-sided sync with snapshot update."
+    },
+    {
+      "id": "OUT8",
+      "status": "PASS",
+      "evidence": "Regression test test_sync_project_item_is_stable_and_alias_failure_is_pending_retry PASSED — verifies alias-level pending_retry on partial failure while preserving local task promotion."
+    },
+    {
+      "id": "OUT9",
+      "status": "PASS",
+      "evidence": "Regression tests test_lifecycle_all_policy_waits_for_every_linked_pr and test_lifecycle_all_policy_and_beads_gate_fallback PASSED — verify closed-unmerged blocks done, default-branch merge required, feature worktree sends pending event. test_lifecycle_any_policy_does_not_fabricate_requested_pr_linkage also PASSED."
+    }
+  ],
+  "goal_seek_artifacts": {
+    "goal_spec": "eval-log/run-dev-graph-sync-goal-spec.json",
+    "intermediate": "eval-log/run-dev-graph-sync-intermediate.jsonl",
+    "progress": "eval-log/run-dev-graph-sync-progress.json"
+  },
+  "subagent_verdict": "PASS — independent subagent verified: graph title updated, field_snapshot updated to In Progress, sync-snapshot converged, all 3 digests stable on second run. Referenced tests: test_sync_three_way_apply_second_pass_zero_and_tombstone, test_sync_manual_conflict_confirmation_and_dry_run_write_zero, test_sync_project_item_is_stable_and_alias_failure_is_pending_retry, test_sync_project_unset_field_and_stale_item_identity_fail_safe.",
+  "regression_tests": {
+    "suite": "plugins/dev-graph/tests/test_sync_render_schedule_v2.py",
+    "total": 12,
+    "passed": 12,
+    "failed": 0
+  }
+}
