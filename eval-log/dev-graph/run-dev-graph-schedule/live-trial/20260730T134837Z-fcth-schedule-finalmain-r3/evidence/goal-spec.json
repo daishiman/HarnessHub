@@ -1,0 +1,19 @@
+{
+  "original_goal": "グラフの依存関係・完了状態・active worktree leaseから次に着手すべきready-setと、リソーススコープ/lease重複のない複数worktree向け並列バッチを算出・提示した状態になっている",
+  "scenario": "C15-OUT1-positive-ready-set-r16",
+  "checklist": [
+    "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なしを満たす",
+    "feature ready と task ready が別々の ready-set/batch に出力される",
+    "同一 parallel batch の resource_scope.touches 重複 pair が0件である",
+    "各 task の suggested_branch が devgraph/<graph_node_id> で claim command が public CLI 形式である",
+    "実行前後の graph/tracker/lease digest が同一である",
+    "lease pathがgit common-dirの正本と一致する",
+    "LT-SCHED-005 が dependency_unsatisfied で ready-set から除外される"
+  ],
+  "observations": [
+    "the overlapping resource_scope pair is never placed in the same batch",
+    "the blocked task is excluded from the ready set and the reason is reported",
+    "the active lease suppresses its task while the stale lease is reclaimed",
+    "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique"
+  ]
+}
