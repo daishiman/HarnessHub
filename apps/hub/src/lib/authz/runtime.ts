@@ -22,7 +22,8 @@ import { type AuditSink, createAuditLogger, type RecordedAuditEvent } from '../.
 import { type AuthRouteHandler, createAuthjsHandler } from '../auth/adapter/index.js';
 import { createDbAuthPorts, createDbClientSecretResolver } from '../auth/db-ports.js';
 import { createDeviceFlowService, type DeviceFlowService } from '../auth/device-flow/index.js';
-import type { AuthPorts } from '../auth/ports.js';
+import type { AuthPorts, TenantOidcConnection } from '../auth/ports.js';
+import { readSharedGoogleCredentials } from '../auth/shared-credentials.js';
 import { createRevocationChecker } from './revocation.js';
 import type { AuthzRuntimeDeps } from './with-authz.js';
 
@@ -53,11 +54,14 @@ export interface AuthRuntimeInput {
   readonly auditSink: AuditSink;
   readonly env: AuthRuntimeEnv;
   /**
-   * テナントの OIDC client_secret を取る関数。
+   * 解決済み接続の OIDC client_secret を取る関数。
    * `AuthPorts` に含めないのは、平文 secret を port の戻り値に載せると
    * port を受け取る全ての層 (device flow・認可判定) が触れる位置に置かれるため。
+   *
+   * 引数が接続そのものなのは、secret の出所 (テナント行の暗号化列 / 環境単位の共有 Secret) を
+   * `credentialMode` で選ぶため。分岐の実体は `lib/auth/shared-credentials.ts` に閉じている。
    */
-  readonly clientSecretFor: (tenantId: string) => Promise<string | null>;
+  readonly clientSecretFor: (connection: TenantOidcConnection) => Promise<string | null>;
 }
 
 export function createAuthRuntime(input: AuthRuntimeInput): AuthRuntime {
@@ -201,10 +205,16 @@ export function createProductionAuthRuntime(source: Record<string, string | unde
     kekBase64: required(source, 'ENCRYPTION_KEK'),
   });
 
+  // 共有 Google OAuth client は環境単位で 1 組。未設定なら共有方式のテナントが解決されないだけで、
+  // 顧客持ち込み方式のテナントは従来どおり動く (issue-auth-tenancy-shared-google-oidc-20260729)
+  const sharedGoogle = readSharedGoogleCredentials(source);
+
   return createAuthRuntime({
-    ports: createDbAuthPorts({ repositories }),
+    // ports と resolver へ同じ値を渡す。片方だけに渡すと
+    // 「client_id は解決できるが secret が無い」テナントが生まれる
+    ports: createDbAuthPorts({ repositories, sharedGoogle }),
     auditSink: createDbAuditSink(repositories.audit),
-    clientSecretFor: createDbClientSecretResolver({ repositories }),
+    clientSecretFor: createDbClientSecretResolver({ repositories, sharedGoogle }),
     env,
   });
 }
