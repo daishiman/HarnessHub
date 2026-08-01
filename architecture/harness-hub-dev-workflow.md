@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-30T12:17:32.466586Z"
+updated_at: "2026-07-30T13:37:07Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"56c091cfa8bb285b4e591376387d1806085ae18ccb0f47290e91cad97428ada7","evaluator":"assign-system-spec-completeness-evaluator + fresh C19 external evaluator + merge-reconciliation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md"}
-source_lineage: {"imported_at":"2026-07-30T12:05:00Z","origin_kind":"system-spec-harness","source_digest":"56c091cfa8bb285b4e591376387d1806085ae18ccb0f47290e91cad97428ada7","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-07-30T13:37:07Z","origin_kind":"system-spec-harness","source_digest":"dadd50e82509a1814c6cf9ccf05b7bc37a58f3fc0745364b28e7e799835f064b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -288,13 +288,12 @@ fake tmux と実 tmux の sibling 生存テストを設計境界の回帰証拠�
 ### 差分追記 (2026-07-29): C02/C11 の安全境界
 
 - C11 は frontmatter・見出し・placeholder だけの artifact を incomplete として後段を止める ([受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md))。
-- C02 は stale full snapshot による lifecycle 後退を無変更で拒否する ([受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
+- C02 は stale full snapshot による lifecycle 後退を無変更で拒否し、重複報告 `HarnessHub-j66m` は既存 node `issue-c02-upsert-lifecycle-regression-20260729` へ統合する ([受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md))。
 - workflow step guard は対象 directory 不在・対象 0 件を既定で拒否し、明示 `--allow-empty` だけを許可する ([受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md))。
 - いずれも repository 内の開発管理・品質ゲートに限定し、製品 runtime 契約は変更しない。
 
 ### 差分追記 (2026-07-30): CI-local parity の集合契約
-
-CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。
+CI blocking invocation を local hard gate または理由付き exact allowlist へ束縛する。引数を保持した集合包含、fail-closed 境界、3 入口への結線は [設計受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md) §4 を正とする。`HarnessHub-pyb3` は同じ入口の G4 を `workspaceConcurrency: 1` で安定化した。詳細は [受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)。
 
 ### 差分追記 (2026-07-30): C02 document parity と live-trial session 環境隔離
 - `qa-102` は C02 の本文保持・schema/lint parity と、tmux global environment を routing 正本にせず `new-session -e` で trial 固有の監査台帳 path を上書きする境界を確定した。詳細は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md)。

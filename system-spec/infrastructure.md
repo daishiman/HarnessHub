@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-099 |
+| Web (web) | 確定 | 確定質疑: qa-106 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-099 (対応セル: web)
+### qa-106 (対応セル: web)
 
-**質問**: production Worker の認証bindingと現行1テナントrolloutを、infrastructure.web の既存運用契約へどう統合しますか?
+**質問**: Cloudflare Worker と R2 上の publish pipeline を infrastructure.web の既存配備契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 のbackup/heartbeat、token分離、RPO/RTO、外部実測境界を全面維持し、production authの差分を次のとおり追加確定する。(1) `apps/hub/wrangler.jsonc`は秘密でない`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、`AUTH_DEVICE_VERIFICATION_URI`をproduction varsの正本とする。(2) production runtimeの必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件とし、値は設定・source・文書へ保存しない。OIDC client secretや`IDP_SECRET_<tenant_slug>`をWorker Secretへ追加しない。(3) 現行rolloutの外部受入対象はGoogle / HarnessHub 1テナントである。二つ目のproduction tenantはP13完了条件にしないが、複数テナント分離試験と将来方式のtaskは維持する。(4) rolloutはbinding確認、deploy、health/provider/CSRF/sign-in、JIT、workspace membership、Device Flow token/refresh/reuse失効、session revocationをR1〜R5で実測し、証跡とrollback先をrelease recordへ残す。repository内実装だけで外部受入を完了扱いにしない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-099 までの infrastructure.web 契約を全面維持し、公開パイプラインの本番契約を追加確定する。
+
+【1. runtime 境界】apps/hub は Cloudflare Worker 上で実行し、package object は R2 binding を通じて content-addressed key packages/<sha256> へ保存する。Worker 内から Cloudflare REST API を使って R2 を操作せず、DB repository と object storage port の境界を維持する。
+
+【2. 配備と実測】production deploy は GitHub Actions を正本とし、緊急時の手動 Wrangler 操作は release record へ version、配信率、直前 version、rollback command を記録する。本番 health は runtime-config、db、r2 を fail-closed に確認し、S1〜S6 で create、upload/inspection、secret 拒否、公開、promote/rollback、audit hash chain を実測する。
+
+【3. R2 整合】Green package は API content hash、DB packages.content_hash、R2 再取得 SHA-256 が一致することを確認する。Secret 入り package は R2 registry へ登録しない。Release と参照中 object は証跡・参照整合のため rollback で削除せず、Worker code version だけを既知安定版へ戻す。
+
+【4. 再実行】smoke:publish-production は環境変数で本番対象を受け取り、12 API 操作、旧 stable 維持、Release 非生成、必須監査 action 9 種を fail-closed に検査する。短命 token は実行後に失効・削除する。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

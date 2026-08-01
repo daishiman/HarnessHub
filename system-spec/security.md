@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-098 |
+| Web (web) | 確定 | 確定質疑: qa-104 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,19 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-098 (対応セル: web)
+### qa-104 (対応セル: web)
 
-**質問**: 本番 Google OIDC の client_secret と CSRF を、security.web の秘密管理・要求検証契約へどう統合しますか?
+**質問**: Publisher Bearer、tenant 分離、package 検査を security.web の既存契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-075 までの security.web 契約を全面維持し、次を追加確定する。(1) Google `client_secret` の復元可能な運用原本と安全な受渡し元は1Passwordとし、登録処理中だけmasked `op run`で展開する。値を文書、ログ、issue、PR、GitHub Secrets、テナント別Cloudflare Worker Secretsへ置かない。(2) repository経由でpurpose別DEKにより暗号化し、production DB `idp_connections.client_secret_enc`へ保存する。Workerは要求時にDBを読み、Cloudflare Worker Secretの共通`ENCRYPTION_KEK`で復号する。Workerは実行時に1Passwordを参照しない。(3) sign-in CSRFはtenant別basePathのcookie/token対を要求し、取得失敗・不一致・空値をfail-closedにする。別slugのcookie/tokenを混用しない。(4) Device FlowのCAS、refresh rotation/reuse検知、runtime binding再読込はqa-075を維持する。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-098 までの security.web 契約を全面維持し、公開パイプラインの信頼境界を追加確定する。
+
+【1. 二段階認証認可】Authorization: Bearer がある要求は edge middleware で access token の署名、期限、tenant_id、workspace_id を fail-closed に検証する。無効 Bearer から有効 session cookie へ fallback しない。route の withAuthz は scope、Project 所有者、credential 種別、token 失効を最終判定する。
+
+【2. tenant 非開示と権限】全資源解決は principal の tenant/workspace と repository row scope を一致させ、cross-tenant 資源は存在を漏らさない 404 とする。approve は workspace-admin、owner 操作は当該 Project owner に限定し、role 判定表を publish route 側へ複製しない。
+
+【3. package 防御】ZIP は size/content-type と archive path を検証し、static validation、secret scan、policy の共有 pipeline を必ず通す。Green 以外を stable へ昇格させず、secret を含む bundle は Release と package registry を作らない。検査結線と DB schema 境界は CI の負例付き静的 gate で遮断する。
+
+【4. 監査】公開、承認、取消、昇格、rollback、停止、deployment 登録を append-only hash chain へ記録し、認証情報や package 内 secret をログへ残さない。監査 failure は公開成功として扱わない。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-094 |
+| Web (web) | 確定 | 確定質疑: qa-107 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-094 (対応セル: web)
+### qa-107 (対応セル: web)
 
-**質問**: qa-093 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?
+**質問**: 公開パイプラインの runbook、rollback、完了収束を maintenance-ops.web の既存契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-093 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。
+**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 までの maintenance-ops.web 契約を全面維持し、publish 運用を追加確定する。
+
+【1. runbook】事前条件、短命 Publisher token、使い捨て Project/TargetChannel、S1〜S6、TargetChannel 409、R2 hash、audit chain、後処理を一つの runbook で再現する。smoke は途中失敗を成功扱いにせず、作成した一時 token を失効する。
+
+【2. rollback】Worker code 障害は記録済み直前 version へ 100% rollback し、rollback 中は既知の認証制約を明示して Publisher API を一時停止扱いにする。Release、R2 object、監査 event は immutable/append-only の履歴として保持し、DB を巻き戻して証跡を消さない。
+
+【3. 観測と証跡】health dependency、bundle size、test/gate 件数、Worker version、stable Release、audit chain event 数、R2 content hash を release record へ記録する。確認していない再実行を実測済みと書かず、ローカル契約検証と本番実測を分離する。
+
+【4. 完了収束】実装・本番 acceptance が完了しても、Draft PR の merge と default branch reconciliation までは Beads P01〜P13 と親 epic を in_progress に維持する。merge 後に dev-graph、Beads、default branch を正規 sync して完了へ収束する。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

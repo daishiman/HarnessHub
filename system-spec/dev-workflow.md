@@ -92,6 +92,15 @@ Cloudflare deploy unit は変更しない。判断と最終検証は
 `docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
 を正とする。
 
+### 実装反映注記 (2026-07-30 / `HarnessHub-pyb3`)
+
+qa-088【2】と qa-096【2】の CI / local 共通ゲートを具体化し、`pnpm -r test` の入口を
+変えずに `pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間だけを直列化する。
+各 package が持つ Vitest worker pool の同時起動による RPC timeout を防ぎ、設定欠落・値変更は
+`pnpm check:pnpm` の正負テストで fail-closed に拒否する。製品 API、DB schema、認証認可、
+UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。反映と検証は
+`docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md` を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。
