@@ -27,9 +27,9 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260730T040300Z-wt13-ci-node-r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260801T121510Z-wt28-w7n7-node/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260730T040300Z-wt13-ci-node-r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260801T121510Z-wt28-w7n7-node/verdict.json",
         "eval-log/dev-graph/run-dev-graph-node/live-trial/20260730T040300Z-wt13-ci-node-r3/transcript.jsonl",
         "independent: eval-log/dev-graph/run-dev-graph-node/live-trial/20260730T040300Z-wt13-ci-node-r3/independent-verification.json"
       ],

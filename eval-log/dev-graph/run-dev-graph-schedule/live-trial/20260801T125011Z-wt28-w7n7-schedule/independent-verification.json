@@ -1,0 +1,23 @@
+{
+  "evaluator": "fresh-agent-c15-live-trial",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "scope_separation": {
+      "result": "PASS",
+      "evidence": "LT-SCHED-001 and LT-SCHED-002 share src/alpha.py and were placed in different batches."
+    },
+    "dependency_block": {
+      "result": "PASS",
+      "evidence": "LT-SCHED-005 was excluded and reported as dependency_unsatisfied with blocking_depends_on=[LT-SCHED-001]."
+    },
+    "lease_handling": {
+      "result": "PASS",
+      "evidence": "The active lease suppressed LT-SCHED-004 while the expired LT-SCHED-006 lease was reclaimed and the task became ready."
+    },
+    "parallel_and_claims": {
+      "result": "PASS",
+      "evidence": "All batches respected max_parallel=2, and every ready task had a unique devgraph/<graph_node_id> branch and claim command."
+    }
+  }
+}

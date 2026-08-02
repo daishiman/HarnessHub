@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T15:28:45Z"
+updated_at: "2026-08-02T02:10:41.843662Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T15:28:45Z","origin_kind":"system-spec-harness","source_digest":"f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T02:09:36Z","origin_kind":"system-spec-harness","source_digest":"dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -396,6 +396,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
+
+**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
+
+- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
+  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
+- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
+  `architecture/harness-hub-dev-workflow.md`、判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+  とする。
 
 ## 未決事項
 
