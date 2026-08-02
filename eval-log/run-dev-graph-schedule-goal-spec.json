@@ -4,7 +4,7 @@
  "scope": "feat-dev-pipeline-improvement",
  "max_parallel": 4,
  "created_at": "2026-07-22T04:37:00Z",
-  "last_invoked_at": "2026-08-02T07:57:31Z",
+  "last_invoked_at": "2026-08-02T08:18:33Z",
   "current_directive": "HarnessHub-uk2i final review: R3-import lineage revalidation and schedule receipt refresh",
  "current_scope": null,
  "current_max_parallel": [
@@ -17,6 +17,6 @@
   ],
  "current_parity_manifest": "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json",
  "current_ready_json": "eval-log/run-dev-graph-schedule-beads-ready.json",
- "current_source_graph_digest": "sha256:7070564d14be5392cea70ad29bbe5bb67c02a820a91d4ddc6749d4dc25d32519",
+ "current_source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3",
  "current_claim_executed": false
 }

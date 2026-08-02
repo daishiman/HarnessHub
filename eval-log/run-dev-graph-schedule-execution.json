@@ -16,16 +16,16 @@
   },
   "conflict_pairs": [],
   "conflicts": [],
-  "executed_at": "2026-08-02T07:57:31.833982Z",
-  "graph_sha256_after": "0edb738cfbec1d918bfe3ffd523bbd727e266978f85539237f221502b72c4777",
-  "graph_sha256_before": "0edb738cfbec1d918bfe3ffd523bbd727e266978f85539237f221502b72c4777",
+  "executed_at": "2026-08-02T08:19:13.052337Z",
+  "graph_sha256_after": "785745fbc7e20c46a5606284b846e59b000550a3e02a90a1231968bc8a634046",
+  "graph_sha256_before": "785745fbc7e20c46a5606284b846e59b000550a3e02a90a1231968bc8a634046",
   "lease_sha256_after": "851530beda9b628b078bc7e5d29e7aba60d08c4318dcd2e3a5f5fcf51ea0320d",
   "lease_sha256_before": "851530beda9b628b078bc7e5d29e7aba60d08c4318dcd2e3a5f5fcf51ea0320d",
   "lease_source": "git_common_dir",
   "max_parallel": null,
   "parity_provenance": {
-    "generated_at": "2026-08-02T07:56:34Z",
-    "source_graph_digest": "sha256:7070564d14be5392cea70ad29bbe5bb67c02a820a91d4ddc6749d4dc25d32519"
+    "generated_at": "2026-08-02T08:18:33Z",
+    "source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3"
   },
   "read_only": true,
   "ready_set": {
@@ -53,19 +53,37 @@
     "mvp_established": {},
     "policy": "mvp-first/v1"
   },
-  "tracker_sha256_after": "9c231c6ddfb9346ad5bb3fd231df3a3d9ce6908df8a1ceaad0acc7d2b9bd6b04",
-  "tracker_sha256_before": "9c231c6ddfb9346ad5bb3fd231df3a3d9ce6908df8a1ceaad0acc7d2b9bd6b04",
+  "tracker_sha256_after": "6843489e262817fd6b0952ee569396cf7d15c19ea721913c63184089840cd1d8",
+  "tracker_sha256_before": "6843489e262817fd6b0952ee569396cf7d15c19ea721913c63184089840cd1d8",
   "unmapped": [
-    {
-      "bd_issue_id": "HarnessHub-9cgb",
-      "external_ref": "issue-hub-cwv-auth-required-route-unmeasurable-20260802",
-      "reason": "graph_node_missing",
-      "source": "bd-bridge"
-    },
     {
       "bd_issue_id": "HarnessHub-fdw4",
       "external_ref": null,
       "reason": "external_ref_absent",
+      "source": "bd-bridge"
+    },
+    {
+      "bd_issue_id": "HarnessHub-jgj2",
+      "external_ref": "feat-web-only-publish-journey",
+      "reason": "graph_node_missing",
+      "source": "bd-bridge"
+    },
+    {
+      "bd_issue_id": "HarnessHub-f91a",
+      "external_ref": "feat-workspace-switch-ux",
+      "reason": "graph_node_missing",
+      "source": "bd-bridge"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj.1",
+      "external_ref": "SYS-POST-SIGNIN-SCOPE-P01",
+      "reason": "graph_node_missing",
+      "source": "bd-bridge"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj",
+      "external_ref": "feat-post-signin-scope-routing",
+      "reason": "graph_node_missing",
       "source": "bd-bridge"
     },
     {

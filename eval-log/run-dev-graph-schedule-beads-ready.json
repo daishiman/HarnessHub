@@ -1,6 +1,6 @@
 {
   "bd_version": "1.1.0",
-  "candidate_count": 44,
+  "candidate_count": 47,
   "conflicts": [
     {
       "bd_issue_id": "HarnessHub-6ib",
@@ -10,8 +10,8 @@
   ],
   "op": "ready",
   "parity_provenance": {
-    "generated_at": "2026-08-02T07:56:34Z",
-    "source_graph_digest": "sha256:7070564d14be5392cea70ad29bbe5bb67c02a820a91d4ddc6749d4dc25d32519"
+    "generated_at": "2026-08-02T08:18:33Z",
+    "source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3"
   },
   "ready_set": [
     {
@@ -422,7 +422,7 @@
     }
   ],
   "result": {
-    "candidate_count": 44,
+    "candidate_count": 47,
     "conflicts": [
       {
         "bd_issue_id": "HarnessHub-6ib",
@@ -431,8 +431,8 @@
       }
     ],
     "parity_provenance": {
-      "generated_at": "2026-08-02T07:56:34Z",
-      "source_graph_digest": "sha256:7070564d14be5392cea70ad29bbe5bb67c02a820a91d4ddc6749d4dc25d32519"
+      "generated_at": "2026-08-02T08:18:33Z",
+      "source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3"
     },
     "ready_set": [
       {
@@ -844,14 +844,29 @@
     ],
     "unmapped": [
       {
-        "bd_issue_id": "HarnessHub-9cgb",
-        "external_ref": "issue-hub-cwv-auth-required-route-unmeasurable-20260802",
-        "reason": "graph_node_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-fdw4",
         "external_ref": null,
         "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-jgj2",
+        "external_ref": "feat-web-only-publish-journey",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-f91a",
+        "external_ref": "feat-workspace-switch-ux",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3sjj.1",
+        "external_ref": "SYS-POST-SIGNIN-SCOPE-P01",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3sjj",
+        "external_ref": "feat-post-signin-scope-routing",
+        "reason": "graph_node_missing"
       },
       {
         "bd_issue_id": "HarnessHub-xi8v",
@@ -936,20 +951,35 @@
     ],
     "unmapped_summary": {
       "external_ref_absent": 11,
-      "graph_node_missing": 6,
+      "graph_node_missing": 9,
       "parity_manifest_missing": 1
     }
   },
   "unmapped": [
     {
-      "bd_issue_id": "HarnessHub-9cgb",
-      "external_ref": "issue-hub-cwv-auth-required-route-unmeasurable-20260802",
-      "reason": "graph_node_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-fdw4",
       "external_ref": null,
       "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-jgj2",
+      "external_ref": "feat-web-only-publish-journey",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-f91a",
+      "external_ref": "feat-workspace-switch-ux",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj.1",
+      "external_ref": "SYS-POST-SIGNIN-SCOPE-P01",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj",
+      "external_ref": "feat-post-signin-scope-routing",
+      "reason": "graph_node_missing"
     },
     {
       "bd_issue_id": "HarnessHub-xi8v",
@@ -1034,7 +1064,7 @@
   ],
   "unmapped_summary": {
     "external_ref_absent": 11,
-    "graph_node_missing": 6,
+    "graph_node_missing": 9,
     "parity_manifest_missing": 1
   },
   "workspace_identity": {

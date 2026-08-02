@@ -102,6 +102,12 @@ worktree の `node_modules` に macOS 用 Biome 実行ファイルが欠けて�
 - 最終レビュー: task-spec 13 phase、system-spec coverage / foundation / citation、knowledge /
   required-info / doctrine / cross、dev-graph schema、R3 source digest / evidence reference、
   doc line limit、artifact placement: 全て pass
+- PR #635 を取り込んだ後の再実行: `CI=1 pnpm verify` exit 0。Hub 87 files / 1060 tests、
+  DB 32 files / 258 tests、UI 12 files / 266 tests、schemas 6 files / 86 tests、inspection 9 files /
+  151 tests、estimation 3 files / 40 tests、tenant isolation 12 tests が全て pass。secret scan は
+  546 files / findings 0、Worker bundle は 1.332 MiB / 3.000 MiB、`/settings/auth` client bundle は
+  113.3 KiB / 120.0 KiB だった。最初の全体実行で hearing-intake の `--help` テストが 30 秒で一度だけ
+  timeout したが、単体 5/5 と再実行の全体 suite では再現せず合格した。
 
 ## 7. main 同期受領結果
 
