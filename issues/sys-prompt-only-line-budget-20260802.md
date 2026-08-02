@@ -88,9 +88,9 @@ implementation_readiness: {"checked_at":"2026-08-02T09:05:17Z","missing_sections
 ## 検証証跡
 
 - `pytest` focused suite: 186 passed
-- 全22 pluginのpackage check / completeness: blocking failure 0
+- 全23 pluginのpackage check / completeness: blocking failure 0
 - 全plugin skill tree実走査: exit 0
-- `lint-doc-line-limit.py`: 490文書、違反0
+- `lint-doc-line-limit.py`: 506文書、違反0
 - system-spec coverage matrix: 未収集0、foundation trace適合
 - dev-graph schema: valid、violation 0
 - `lint-script-naming.py`: VIOLATION 0
