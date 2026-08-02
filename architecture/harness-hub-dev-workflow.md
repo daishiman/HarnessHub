@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-01T12:00:37Z"
+updated_at: "2026-08-02T03:30:25.218607Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T12:00:37Z","origin_kind":"system-spec-harness","source_digest":"7ad8bf3544003c105398ce4933bb1dc770636df94feb00dadf64844385c99ce0","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"50e388f30141d32bbdd03995c19fc5d655939cd3a9f1580f96fbad511857982c","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-02T03:24:50Z","origin_kind":"system-spec-harness","source_digest":"50e388f30141d32bbdd03995c19fc5d655939cd3a9f1580f96fbad511857982c","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `25b8ff760035…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `50e388f30141…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json`)
-- 取込日時: 2026-07-23T04:45:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `codex-final-review + merge-reconciliation` → **PASS** ([dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md))
+- 取込日時: 2026-08-02T03:24:50Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -109,6 +109,16 @@ CLI adapter が呼出時に実行関数を解決する。この境界により�
 
 詳細な責務、互換性、不変条件、検証証拠は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+を正とする。
+
+## Beads 自由フィールドの書込境界 (2026-08-02)
+
+`priority`、`assignee`、`labels` は Dev Graph parity の対象外だが、書込 authority は
+他の mutation と同じ C28 bridge に限定する。C10 guard は直接 `bd update` を一律遮断し、
+CLI adapter は引数解析と receipt、`bd_bridge_contracts.py` は許可 exact-set・priority と
+labels の正規化を担う。labels は `--set-labels` への全置換だけを許し、順序依存の
+add/remove を契約面から排除する。設計判断と検証証拠は
+[dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
 を正とする。
 
 > **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は

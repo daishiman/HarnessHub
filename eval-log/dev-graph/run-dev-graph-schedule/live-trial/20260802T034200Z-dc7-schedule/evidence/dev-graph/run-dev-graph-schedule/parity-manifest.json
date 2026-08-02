@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-08-02T04:13:14Z",
+  "graph_node_ids": [
+    "LT-SCHED-001",
+    "LT-SCHED-002",
+    "LT-SCHED-003",
+    "LT-SCHED-004",
+    "LT-SCHED-005",
+    "LT-SCHED-006"
+  ],
+  "nodes": [],
+  "schema_version": "1.1",
+  "source_graph_digest": "sha256:d11208c409db4e59d1800b397785394744489c6b916b72bb825ef2984aaa3711"
+}

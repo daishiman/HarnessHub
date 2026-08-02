@@ -1,0 +1,9 @@
+Fresh live-trial final pane capture (2026-08-02):
+
+- C17 independent verifier: PASS on all eight checks.
+- goal-seek verification: PASS.
+- status marker: {"status":"PASS","scenario":"C15-OUT1-positive-ready-set-r16"}
+- final response: DONE: PASS.
+- elapsed in Claude Code: 8m 27s.
+
+The complete primary record is transcript.jsonl; fixture outputs are copied under evidence/.

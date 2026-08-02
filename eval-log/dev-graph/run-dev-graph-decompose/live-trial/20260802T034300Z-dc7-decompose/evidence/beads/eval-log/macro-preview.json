@@ -1,0 +1,482 @@
+{
+  "graph_revision": 5,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "frontend",
+        "backend",
+        "infrastructure",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "Macro-level system architecture for small web app",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T11:00:00Z",
+      "depends_on": [],
+      "domain": "web-application",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-webapp-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-webapp-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "webapp-minimal",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "authentication",
+        "dashboard",
+        "email-notification",
+        "admin-panel"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "小規模 Web アプリケーション基盤",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "新規ユーザーが有効なメールとパスワードで登録後ログイン可能",
+        "不正ログイン試行は拒否される",
+        "ログイン後セッション維持"
+      ],
+      "architecture_refs": [
+        "arch-webapp-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "Core feature for user registration and login",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T11:00:00Z",
+      "depends_on": [],
+      "domain": "web-application",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-user-auth-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "登録したユーザーがメールアドレスとパスワードでログインでき、セッションを通じて認証状態が維持される状態",
+      "graph_node_id": "feat-user-auth-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "webapp-minimal",
+      "pull_request_linkages": [],
+      "purpose": "ユーザーがメールアドレスとパスワードで登録・ログイン可能にし、アプリケーションへのアクセス制御を実現する",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/auth",
+        "src/backend/models/user"
+      ],
+      "scope_in": [
+        "ユーザー登録画面",
+        "ログイン画面",
+        "パスワードハッシング・セッション管理",
+        "エラーハンドリング"
+      ],
+      "scope_out": [
+        "パスワードリセット",
+        "ソーシャルログイン",
+        "二要素認証"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T11:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "user-authentication",
+        "registration",
+        "login"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ユーザー登録とログイン",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "ログイン済みユーザーがダッシュボードにアクセス可能",
+        "利用統計が正確に表示される",
+        "未ログイン状態ではアクセス拒否"
+      ],
+      "architecture_refs": [
+        "arch-webapp-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "User-facing dashboard feature for usage statistics",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T11:00:00Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "web-application",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-dashboard-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "認証済みユーザーがダッシュボード画面で自分の利用統計を確認できる状態",
+      "graph_node_id": "feat-dashboard-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "webapp-minimal",
+      "pull_request_linkages": [],
+      "purpose": "ログイン後のユーザーが自分の利用状況を可視化できるようにする",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/frontend/components/dashboard",
+        "src/backend/routes/dashboard"
+      ],
+      "scope_in": [
+        "利用統計データの収集・格納",
+        "ダッシュボードUI実装",
+        "バックエンドAPI集計",
+        "アクセス制御"
+      ],
+      "scope_out": [
+        "リアルタイム通知",
+        "管理者向けレポート",
+        "AI予測"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T11:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dashboard",
+        "usage-tracking"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ダッシュボードで利用状況確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "登録直後に確認メールが送信される",
+        "重要な設定変更時に通知メールが送信される",
+        "送信失敗時に再試行を実施"
+      ],
+      "architecture_refs": [
+        "arch-webapp-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "Email notification feature for user lifecycle events",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T11:00:00Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "web-application",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-notification-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ユーザー登録完了時と重要な変更時に自動でメール通知が送信される状態",
+      "graph_node_id": "feat-notification-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "webapp-minimal",
+      "pull_request_linkages": [],
+      "purpose": "ユーザーが重要なイベントを確認できるようにメール通知で情報を届ける",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/backend/services/email",
+        "src/backend/templates/emails"
+      ],
+      "scope_in": [
+        "登録完了時メール送信",
+        "重要変更イベント検出",
+        "メールテンプレート実装",
+        "SMTP統合"
+      ],
+      "scope_out": [
+        "メール配信SLA管理",
+        "SPF/DKIM設定",
+        "SMS通知"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T11:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "notifications",
+        "email"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "通知メール",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "管理者ロール認証成功時のみアクセス可能",
+        "全ユーザー集計統計が表示される",
+        "CSVエクスポート可能"
+      ],
+      "architecture_refs": [
+        "arch-webapp-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1.0,
+      "classification_reason": "Admin-facing analytics feature for operational oversight",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-30T11:00:00Z",
+      "depends_on": [
+        "feat-user-auth-001"
+      ],
+      "domain": "web-application",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-admin-report-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "管理者ロールを持つユーザーが専用レポート画面で全ユーザーの集計統計を確認できる状態",
+      "graph_node_id": "feat-admin-report-001",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "webapp-minimal",
+      "pull_request_linkages": [],
+      "purpose": "運営者が全ユーザーの利用状況を一元的に集計・可視化でき、運営判断に活用できるようにする",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/frontend/components/admin-report",
+        "src/backend/routes/admin"
+      ],
+      "scope_in": [
+        "管理者ロール判定・アクセス制御",
+        "全ユーザー利用統計集計",
+        "レポート画面UI実装",
+        "集計API"
+      ],
+      "scope_out": [
+        "個別ユーザー強制停止",
+        "全件ログダウンロード",
+        "ML異常検知"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-30T11:00:00Z",
+        "origin_kind": "generated",
+        "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+        "source_path": "docs/want.md",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "admin-panel",
+        "reporting",
+        "analytics"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "運営者向けレポート画面",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-30T11:00:00Z"
+    }
+  ]
+}
