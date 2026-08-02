@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-123",
+        "qa_ref": "qa-131",
         "serves_goals": [
           "G1",
           "G4",
@@ -395,7 +395,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-130",
+        "qa_ref": "qa-132",
         "serves_goals": [
           "G1",
           "G2",
@@ -1077,6 +1077,16 @@
       "id": "qa-130",
       "question": "顧客持ち込み Google OAuth 管理機能の品質保証を testing-qa.web の現行契約へどう追加しますか?",
       "answer": "qa-119 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡契約を全面維持し、次を追加確定する。【実 DB 結合】libSQL と既存封筒暗号化を使い、pending/tested/active/disabled、無停止 rotation、取消、disabled 再登録、現行再テスト時刻、暗号文 CAS 競合、migration 0004 の旧 writer 互換を検査する。【認可・境界】provider-admin/workspace-admin/member/未認証、CSRF、tenant A/B 越境、Google 以外 issuer の非列挙・操作拒否を route test で固定する。【非露出】応答全文、監査 payload、DOM、エラー経路、repository secret scan に secret 全値が無いことを負例で確認する。【UI】実画面と同じ h1→h2→h3 骨格で axe-core の違反0、password/autocomplete、rotation の現行継続表示、Workspace ドメイン正規化を検査する。【ゲートと残余】pnpm verify、auth/tenant/secret/bundle/client-bundle、task plan/dev-graph/system-spec validator を PR 前に再実行する。Google 実 OAuth client による probe とブラウザ login、Playwright 実操作、production migration は repository test で代替せず残課題に明示する。"
+    },
+    {
+      "id": "qa-131",
+      "question": "既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?",
+      "answer": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。\n\n【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。\n\n【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。\n\n【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。\n\n【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。\n\n【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。"
+    },
+    {
+      "id": "qa-132",
+      "question": "Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 / qa-130 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。\n\n【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。\n\n【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。\n\n【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。\n\n【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。\n\n【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。"
     }
   ],
   "approval_log": [
@@ -1167,6 +1177,10 @@
     {
       "id": "appr-023",
       "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks 更新、Beads 更新、main 統合後の commit・push・draft PR』および Beads に記録済みの HarnessHub-37h.14 / HarnessHub-37h.15 追加対応不要判断を明示承認として記録。SLO 運用契約を維持したまま delivery closure と operational verdict を qa-123 で分離する。"
+    },
+    {
+      "id": "appr-024",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、remote main→local main→task branch の統合、commit・push・draft PR、Beads 更新』を明示承認として記録。latest main の qa-124〜qa-130 を保持し、HarnessHub-o2i.13 の production acceptance 契約を qa-131 / qa-132 へ統合する。"
     }
   ],
   "reopen_log": [
@@ -2080,6 +2094,18 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "認可、CAS、非露出、a11y、残余ゲートを正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "latest main の qa-124〜qa-130 を保持した上で、HarnessHub-o2i.13 の Worker Secret 実投入ゲートと hearing production acceptance 契約を統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "latest main の qa-130 を保持した上で、HarnessHub-o2i.13 の secret gate・本番 E2E/SEC8 smoke・未実測境界を統合するため",
       "from": "確定"
     }
   ],
