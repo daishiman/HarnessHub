@@ -5,7 +5,7 @@
 # inputs: ["argv: register --package/--graph/--output/--receipt", "argv: execution-context --graph/--graph-node-id/--context-json", "argv: preflight"]
 # outputs: ["stdout: JSON preview/receipt/preflight report"]
 # requires-python = ">=3.10"
-# dependencies: [_common.py]
+# dependencies: [_common.py, ../lib/registration_projection.py]
 # contexts: [A, B, C, E]
 # network: false
 # write-scope: explicitly selected dev-graph output and immutable receipt
@@ -28,6 +28,9 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
+_LIB_DIR = str(Path(__file__).resolve().parents[1] / "lib")
+if _LIB_DIR not in sys.path:
+    sys.path.insert(0, _LIB_DIR)
 from registration_projection import carry_projection_fields, matches_registered_state
 
 HERE = Path(__file__).resolve().parent

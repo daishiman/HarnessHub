@@ -4,7 +4,7 @@ layer: feature-spec-reflection
 feature_id: feat-dev-pipeline-improvement
 graph_node_id: issue-register-package-projection-idempotency-drift-20260728
 beads_id: HarnessHub-cvli
-updated: 2026-08-02
+updated: 2026-08-03
 spec_impact: reflected-internal-design
 ---
 
@@ -40,7 +40,7 @@ spec_impact: reflected-internal-design
 
 ## 4. 技術者向けの説明
 
-- `registration_projection.py` は C02 projection 所有の `purpose`、`goal`、`scope_in`、
+- `plugins/dev-graph/lib/registration_projection.py` は C02 projection 所有の `purpose`、`goal`、`scope_in`、
   `scope_out`、`acceptance`、`architecture_refs` だけを copy する小さな helper である。
 - `register-package.py` は existing exact-13 node の比較前・supersede 時の置換前に helper を
   適用する。manifest が値を明示した場合は copy しないため、意図した変更は drift として検出する。
@@ -91,12 +91,18 @@ receipt 不変条件の実装不足を直すもので、requirements / approval 
 - `python3 -m unittest ...test_register_package.py ...test_register_package_projection_idempotency.py`: 39 passed
 - `python3 -m pytest plugins/dev-graph/tests/test_register_package_completion_policy.py -q`: 5 passed
 - `python3 -m pytest plugins/dev-graph/tests/test_skill_criteria_evidence.py -q`: 22 passed
+- 最終再実行の上記二つの pytest は合算 27 passed。
 - `python3 -m pytest plugins/dev-graph/tests -q`: 760 tests collected、失敗記録なし
 - `python3 -m pytest plugins/system-spec-harness/tests -q`: 218 passed
+- `validate-system-plan.py --feature-package feature-package/feat-dev-pipeline-improvement`:
+  P01–P13 exact-13、違反 0。`validate-generation-lineage.py` と
+  `build-task-projection-rerun.py --check` もそれぞれ違反 0、13 task 全件更新不要。
 - graph schema、registered source digest、exact-13 P01–P13、system-spec coverage matrix、
   artifact placement、300 行制限、plugin package、content review: PASS
-- C14 fresh live trial `20260802T101500Z-cvli-decompose-r7`: beads / none の両系列で PASS、
-  behavior closure `5bfe6072…f06f069f`。C02/C03 の fresh live trial も現行 closure として保持した。
+- C02 fresh live trial `20260803T070000Z-cvli-merge-node-r2`、C03 fresh live trial
+  `20260802T205600Z-cvli-merge-sync`、C14 fresh live trial
+  `20260802T214000Z-cvli-merge-decompose-r9` は、現在の branch の closure で PASS。
+  C14 は beads / none の両系列を確認し、behavior closure は `3e32c8c1…0aabc08fa`。
 - `git diff --check`: PASS（対象を stage した後の最終確認済み）。
 
 `specs/` には製品仕様変更がないため反映しない判断を再確認した。これは「未反映」ではなく、

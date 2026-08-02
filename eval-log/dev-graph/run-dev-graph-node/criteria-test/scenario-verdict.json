@@ -27,13 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T205555Z-cvli-merge-node/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260803T070000Z-cvli-merge-node-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T205555Z-cvli-merge-node/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T205555Z-cvli-merge-node/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T205555Z-cvli-merge-node/evidence/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260803T070000Z-cvli-merge-node-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260803T070000Z-cvli-merge-node-r2/transcript.jsonl"
       ],
-      "observed": "2026-08-02 fresh live trial (20260802T205555Z-cvli-merge-node) は overall=PASS、nudge=0、gate=0。task 読込直後に qualified Skill を起動し、fresh Agent による独立検証は全3 criterion PASS を記録した。mixed artifact 5件の canonical path、連続更新後の frontmatter/path 一致、C14 以外の feature 作成0件を確認し、current behavior closure digest=797f0dbf47928b1b8de23402b356c770b4af78a3f854f9f7416fe3833e9104df。"
+      "observed": "2026-08-03 fresh live trial (20260803T070000Z-cvli-merge-node-r2) は overall=PASS、nudge=0、gate=0。task 読込直後に qualified Skill を起動し、fresh Agent による独立検証は全3 criterion PASS を記録した。mixed artifact 5件の canonical path、連続更新後の frontmatter/path 一致、C14 以外の feature 作成0件を確認し、current behavior closure digest=e4115b4dfb0241b513afe7fc51dff0b556bd192c426ab09bcdf19e0436846d43。"
     },
     "OUT2": {
       "status": "PASS",
