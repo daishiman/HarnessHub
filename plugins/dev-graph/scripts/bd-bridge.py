@@ -13,7 +13,7 @@
 """Beads 操作の単一決定的 CLI。argv 解析・bd 実行・receipt 出力だけをここに置く。
 
 判定ロジックは責務ごとに ``plugins/dev-graph/lib/bd_bridge_*.py`` へ分離した
-(HarnessHub-w7n7: 1 ファイル 500 行上限)。
+(HarnessHub-w7n7: Beads mutation と純粋判定の責務境界)。
 
   bd_bridge_contracts    受理語彙の exact-set と、外部 I/O を持たない純粋判定
   bd_bridge_graph        canonical graph / parity manifest / spec markdown の read-only 解決

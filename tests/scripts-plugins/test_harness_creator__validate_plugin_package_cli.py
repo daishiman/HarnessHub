@@ -2,7 +2,7 @@
 
 package_mode ごとの not_applicable 分岐 (run_checks)、subprocess 起動での exit code /
 JSON 出力 / 引数エラー (--check 不正・plugin 不在)、および sys.argv monkeypatch による
-main() 本体行の直接カバーを担当する (500 行上限による分割)。
+main() 本体行の直接カバーを担当する (CLI 責務の分離)。
 
 sub-check 単体の検証は test_harness_creator__validate_plugin_package.py (純関数・PKG-002〜005)
 と test_harness_creator__validate_plugin_package_s2.py (PKG-006〜014) が担当する。

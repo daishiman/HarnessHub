@@ -5,7 +5,7 @@ hook」と一致することを、hooks/hooks.json・ディスク上のファイ
 検査対象は scripts/validate-plugin-completeness.py ではなく repo そのものの状態のため、
 同スクリプトの機能テスト (test_root__validate_plugin_completeness*.py) から分離してある。
 
-hook 本体が 500 行上限で分割されると import 専用の support module が hooks/ に現れる。
+hook 本体を責務分割すると import 専用の support module が hooks/ に現れる。
 「hooks/ の .py 一覧 = entry point」という代理指標はこれを未宣言違反として誤検出するため、
 本ファイルは hooks.json の登録内容を正とし、残りが本当に import 専用かまで検査する。
 """
@@ -19,8 +19,8 @@ def _registered_hook_stems(plugin_dir: Path) -> set[str]:
     """hooks/hooks.json が Claude Code へ entry point として登録している hook の stem。
 
     package-contract の宣言と突合すべき「実際の entry point」は、hooks/ に存在する
-    ファイル一覧ではなく hooks.json の command が起動するファイルである。hook 本体が
-    500 行制限で分割されると import 専用の support module が hooks/ に現れるため、
+    ファイル一覧ではなく hooks.json の command が起動するファイルである。hook 本体を
+    責務分割すると import 専用の support module が hooks/ に現れるため、
     ファイル一覧を entry point の代理指標として使うと未宣言として誤検出される。
     """
     hooks_json = plugin_dir / "hooks" / "hooks.json"

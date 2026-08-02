@@ -356,7 +356,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-122",
+        "qa_ref": "qa-134",
         "serves_goals": [
           "G1",
           "G4",
@@ -1092,6 +1092,11 @@
       "id": "qa-132",
       "question": "Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?",
       "answer": "ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 / qa-130 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。\n\n【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。\n\n【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。\n\n【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。\n\n【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。\n\n【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。"
+    },
+    {
+      "id": "qa-134",
+      "question": "qa-122 の開発品質契約を維持しながら、一般コードとプロンプト成果物に混在した500行ルールをどの境界へ訂正しますか?",
+      "answer": "ユーザーの 2026-08-02 指示を明示承認として、qa-122 の契約を維持する。ただし、qa-096 由来の一般コードに対する500行分割条件だけは本回答で明示的に廃止し、行数ゲートをプロンプト成果物へ限定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠と行数ゲートの境界】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。ソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性を根拠に判断する。実行時 context へ入る `SKILL.md` は本文 300 行、skill の `prompts/*.md|yaml` は 500 行を上限として機械検査する。qa-070 の正規文書 300 行ゲートは別契約として維持する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。\n\n【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【8. 削除と移設】廃止済みの外部参考層は directory 単位で削除し、現在も利用する外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は外部原本と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【10. 追加検証と製品境界】active code/plugin/docs からの旧実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、qa-070 の文書行数、`SKILL.md` と `prompts/` の行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -2139,6 +2144,12 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "latest main の qa-130 を保持した上で、HarnessHub-o2i.13 の secret gate・本番 E2E/SEC8 smoke・未実測境界を統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "ユーザーが一般コードの500行確認は不要で、プロンプト成果物の行数確認だけが必要と明示したため",
       "from": "確定"
     }
   ],

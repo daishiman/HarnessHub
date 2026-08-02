@@ -1,8 +1,8 @@
 """PKG-005〜008 / PKG-014 の runtime-oriented package checks.
 
 ``validate-plugin-package.py`` は CLI、frontmatter parser、PKG-002〜004 を
-所有する。ここは実行時の wiring 検査だけを分離し、500 行上限を保つ。
-``configure`` で同じ正本ヘルパを注入するため、解析や finding 形式を複製しない。
+所有する。ここは実行時の wiring 検査という責務を分離し、親側の正本の解析と
+finding 形式を使う。``configure`` で同じ正本ヘルパを注入するため、複製しない。
 """
 
 import json

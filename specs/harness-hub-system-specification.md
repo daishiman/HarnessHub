@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T09:55:09.611895Z"
+updated_at: "2026-08-02T12:11:02.626818Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-08-02T10:00:00Z","origin_kind":"system-spec-harness","source_digest":"8734263d5f297806bea6a5e7b4f6fa9f30730d55351d33f5e5176424dde86920","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"91be7202b09f11ff000badbf3161ee42c12f6fb2556c57aad6480ac8e76bbcef","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T12:10:49Z","origin_kind":"system-spec-harness","source_digest":"91be7202b09f11ff000badbf3161ee42c12f6fb2556c57aad6480ac8e76bbcef","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]

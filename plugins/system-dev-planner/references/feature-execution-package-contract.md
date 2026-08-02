@@ -74,7 +74,7 @@ C12 の検査内容は強化されうるが、promote 済み package は content
 
 feature が frontmatter `tags` に `qa-NNN` を宣言したら、その QA で確定した要件は goal-spec と exact 13 task spec の**本文へ意味として届いていなければならない**。`1.2.0` はこれを機械検査する。tag と系譜だけで「反映済み」と主張できる状態は、確定回答が下流の実行契約に届いていないのに緑になる fail-open であり、qa-071 の実運用で実際に発生した。
 
-- 検査は `scripts/validate-qa-semantic-coverage.py` が担当し、`validate-system-plan.py` から呼ばれる。契約 version・JSON Schema サブセット・QA 被覆を 1 ファイルに同居させない (§4.3 の責務分離と 500 行制限)。
+- 検査は `scripts/validate-qa-semantic-coverage.py` が担当し、`validate-system-plan.py` から呼ばれる。契約 version・JSON Schema サブセット・QA 被覆は異なる変更理由を持つため、1 ファイルに同居させない (§4.3 の責務分離)。一般コードのファイル行数は分割条件にしない。
 - 三軸で検証する。(a) **登録**: 宣言された `qa-NNN` が `system-spec/spec-state.json` の `qa_log` に存在する (`qa-ref-unregistered`)。(b) **goal 被覆**: goal-spec の `purpose`/`goal`/`scope_in`/`scope_out`/`acceptance` のいずれかに現れる (`qa-semantic-coverage`)。(c) **task trace**: exact 13 task spec の全件に現れる (`qa-task-trace`)。1 件でも欠ければ違反。
 - goal-spec が `quality_constraints[].id == "semantic-coverage-not-tag-only"` を宣言した QA については、`qa_log` の確定回答から `【N. 見出し】` 形式の要件見出しを抽出し、その**見出し語が goal-spec と 13 task spec の本文に現れること**まで要求する。ID 参照だけでは通らない。見出しを抽出できない確定回答は違反として報告する (検査不能を pass にしない)。
 - feature の `tags` が JSON として壊れている場合は `qa-tags-unparsable` で落とす。読めない宣言を「宣言なし」と解釈すると、壊れた tags を置くだけで検査を回避できる。
