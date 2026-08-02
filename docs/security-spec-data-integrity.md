@@ -94,6 +94,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | binding 名 | 内容 | 用途 | ローテーション |
 |---|---|---|---|
 | `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` | Auth.js session / Publisher access token の用途分離 JWT 署名鍵 | §2.1 / §2.2 | 年 1 回 (前者は全 session 失効、後者は全 Publisher access token の再発行を伴う) |
+| `CWV_PROBE_SECRET` / `CWV_PROBE_TENANT_ID` / `CWV_PROBE_WORKSPACE_ID` | protected `/catalog` の CWV 実測専用。最大 5 分の ticket を固定した読み取り専用 tenant/workspace へ束縛し、通常の session / access token には使わない | security-spec-authentication §2.1.1 | 漏えい疑いまたは代表 scope 変更時。secret / ticket 値はログ・artifact・DB へ残さない |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK | §4.1 | 年 1 回 (DEK re-wrap のみ) |
 | `TURSO_DATABASE_URL` | Turso **DB 接続 URL**。token と組で接続が成立するため var ではなく secret で投入する (2026-07-28 追記。実装は起動時必須) | DB | DB 移設時 |
 | `TURSO_AUTH_TOKEN` | Turso **DB 接続** token。CI の migrate/smoke も同名を使う。Platform API token (`TURSO_API_TOKEN`・`backup.yml` 専用) とは別物で相互流用しない | DB | 年 1 回 |

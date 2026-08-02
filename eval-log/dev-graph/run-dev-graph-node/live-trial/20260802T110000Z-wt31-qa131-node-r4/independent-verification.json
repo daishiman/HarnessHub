@@ -1,0 +1,56 @@
+{
+  "reviewer_id": "codex-independent-evaluator-eval_node_trial_r4-20260802",
+  "verdict": "PASS",
+  "blockers": [],
+  "recoverable_nonblockers": [
+    {
+      "issue": "consecutive update の初回 dry-run を fixture cwd から実行して script path 解決に失敗",
+      "classification": "recoverable_nonblocker",
+      "reason": "Python 起動前に終了して書込みはなく、正しい cwd で再実行後に preview/apply が成功"
+    },
+    {
+      "issue": "required_observations 検証用 Python の f-string に余分な波括弧があり SyntaxError",
+      "classification": "recoverable_nonblocker",
+      "reason": "検証処理開始前の構文エラーで永続状態への影響はなく、修正版で全観測が PASS"
+    }
+  ],
+  "required_observations": {
+    "O1": {
+      "result": "PASS",
+      "evidence": "5 nodes exactly: issue→issues/, task→tasks/, specification→specs/, architecture→architecture/, document→docs/"
+    },
+    "O2": {
+      "result": "PASS",
+      "evidence": "連続 update で graph_revision 5→6。issue の graph/frontmatter は artifact_kind=issue、file_path=issues/session-timeout-not-enforced.md で一致"
+    },
+    "O3": {
+      "result": "PASS",
+      "evidence": "5 入力はすべて通常 artifact として処理され、feature upsert は0回。最終 graph の feature node は0件、features/ は .gitkeep のみ"
+    }
+  },
+  "contract_checks": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "skill_invoked": "PASS",
+    "no_user_intervention_or_nudge": "PASS",
+    "status_marker": "PASS: out/status.json is the only out file and declares PASS for C02-OUT1-positive-mixed-artifacts",
+    "exact_five_kind_routing": "PASS",
+    "consecutive_update_integrity": "PASS",
+    "c14_feature_guard_zero_feature_writes": "PASS",
+    "schema_validation": "PASS: valid=true, violations=[], implementation_readiness=complete",
+    "goal_seek_artifacts": "PASS",
+    "goal_hash_consistency": "PASS: declared, recomputed, and intermediate hash are eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+    "goal_drift": "PASS: delta_from_original=none and drift_signal=none",
+    "final_report": "PASS: DONE: PASS"
+  },
+  "evidence_paths": [
+    "task.md",
+    "transcript.jsonl",
+    "out/status.json",
+    "../../../live-trial-fixtures/wt31-qa131-node-r4/.dev-graph/state/graph.json",
+    "../../../live-trial-fixtures/wt31-qa131-node-r4/eval-log/run-dev-graph-node-goal-spec.json",
+    "../../../live-trial-fixtures/wt31-qa131-node-r4/eval-log/run-dev-graph-node-progress.json",
+    "../../../live-trial-fixtures/wt31-qa131-node-r4/eval-log/run-dev-graph-node-intermediate.jsonl"
+  ]
+}

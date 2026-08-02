@@ -1,0 +1,20 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "validate-source-digest.py checked only the 13 task nodes and omitted F-LIVE-001 and LT-ARCH-001 from the 15-node feature/architecture closure"
+  ],
+  "observations": {
+    "exact_13_handoff": {
+      "result": "PASS",
+      "evidence": "A capability-build task-graph handoff was emitted for the exact-13 package"
+    },
+    "feature_and_digest_binding": {
+      "result": "FAIL",
+      "evidence": "The handoff carried the feature and package digest, but the full source-lineage closure was not validated"
+    },
+    "no_implementation_source": {
+      "result": "PASS",
+      "evidence": "No implementation source file was generated"
+    }
+  }
+}

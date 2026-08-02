@@ -7,7 +7,7 @@ marketplace 検査 (MK-001/002/003) と distributable:false 逆ガード (MK-004
 
 登録の予防層 (register_missing / --fix) と main()/CLI は
 test_root__validate_plugin_completeness_s2.py、実 repo の hooks entry point 契約は
-test_root__plugin_hooks_entry_point_contract.py が担当する (500 行上限による分割)。
+test_root__plugin_hooks_entry_point_contract.py が担当する (entry point 契約の責務分離)。
 擬似 plugin ツリーの構築ヘルパは _plugin_completeness_fixtures.py で共有する。
 network/keychain/Notion 等の外部 I/O は一切なし (純粋なファイル検査スクリプト)。
 """

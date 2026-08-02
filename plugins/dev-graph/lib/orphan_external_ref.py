@@ -60,7 +60,7 @@ Exit codes:
   2  違反検出 / beads 解決不能 (fail-closed)
 
 CLI と出力処理は ``scripts/lint-orphan-external-ref.py`` に分離する。この module は入力解決と
-突合・分類だけを担い、500 行上限と単一責務を維持する。
+突合・分類だけを担い、単一責務を維持する。
 """
 from __future__ import annotations
 

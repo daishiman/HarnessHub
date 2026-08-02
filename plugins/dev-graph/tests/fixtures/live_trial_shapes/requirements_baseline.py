@@ -95,6 +95,10 @@ def declared_inputs() -> dict[str, str]:
     inputs: dict[str, str] = {
         ".dev-graph/config.json": "C01/C24 の repo 骨格 (被験 skill の起動前提)",
         ".dev-graph/state/graph.json": "C02 register-package.py が exact-13 を登録し終えた graph",
+        ".dev-graph/plan-state/current/feature-package-F-LIVE-001.json": (
+            "system-dev-planner C11 の promotion 後 current pointer。C04 が "
+            "validate-system-plan.py --feature-package で published package を解決する入力"
+        ),
         ARCHITECTURE_REL: "feature.architecture_refs の参照先 artifact (C11:288-295 が実在を要求)",
         f"features/{FEATURE_ID.lower()}.md": "C02 が保存した macro feature node の artifact 実体",
         SYSTEM_SPEC_INDEX_REL: "C19 が取り込んだ system-spec-harness 確定成果物 (要件の引用元)",

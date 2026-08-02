@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-02T05:27:08Z"
+updated_at: "2026-08-02T08:40:06.768354Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"system-spec/dev-workflow.md"}
-source_lineage: {"imported_at":"2026-08-02T05:27:08Z","origin_kind":"system-spec-harness","source_digest":"f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T08:30:40Z","origin_kind":"system-spec-harness","source_digest":"ca851fe9a8af91e23f60a23f3c9f67564fabf49b53f25b1553d78bf48e6a10ea","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -106,7 +106,8 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 `contracts` と `graph` は Beads へ書かず、`audit` も read-only、書込投影は
 `projection` だけが担う。外部 I/O を持つ関数は `bd=` / `git=` を注入され、
 CLI adapter が呼出時に実行関数を解決する。この境界により、単一チョークポイントを
-維持したまま各ファイルを 500 行以下へ保つ。
+維持したまま責務ごとの変更容易性を保つ。一般コードには一律の数値行数上限を設けない。
+行数ゲートは実行時 context へ入る `SKILL.md` と skill の `prompts/` に限定する。
 
 詳細な責務、互換性、不変条件、検証証拠は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)

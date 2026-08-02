@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T07:35:52.300205Z"
+updated_at: "2026-08-02T11:50:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T07:35:20Z","origin_kind":"system-spec-harness","source_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -54,10 +54,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 正本 (source of truth)
 
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `58d85cb5ff4c828f…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `1a85072d10ea2bc…`)
 
-- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（最新 main の qa-122 を保持し、SLO 運用契約と delivery closure を qa-123 で分離。evaluated_digest `6fd5a0fecc55d6ef…`）
-- 取込日時: 2026-08-02T05:37:45Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS**（最新 main の qa-123〜qa-133 を保持し、qa-134 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `767a7d11af2c05a…`）
+- 取込日時: 2026-08-02T11:50:05Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -442,6 +442,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `feat-hub-foundation` は exact-13 と release 証跡を delivery closure とし、ユーザーが追加対応不要とした `HarnessHub-37h.14` / `.15` は `not_applicable` で閉じる。waiver は SLO PASS ではない。
 - `feat-domain-model-db` は schema / immutable Release / R2 registry / export-restore の固有受入で独立して閉じる。
 - 外部 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。判断と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
+
+## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-134)
+
+- promotion 前は system-dev-planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。
+- contract 1.3.0 は、task spec の fenced/inline code にある `--staging`、`--feature-package` 欠落、別 package id を fail-closed に拒否する。backtick/tilde fence、行継続、未閉じ fence も検査し、散文はコマンドと誤認しない。
+- 既存の content-addressed package は immutable のため 1.2.0 以前の契約で再検証し、本文 digest と再現可能性を維持する。
+- 影響は repository 内の task spec 生成・検証契約に限定され、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正本は [testing-qa](../system-spec/testing-qa.md)、設計と証跡は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) を参照する。
 
 ## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
 

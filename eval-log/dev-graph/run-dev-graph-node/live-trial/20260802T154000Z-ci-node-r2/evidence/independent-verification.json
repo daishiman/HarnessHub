@@ -1,0 +1,25 @@
+{
+  "verifier": "independent-agent",
+  "verified_at": "2026-08-03T06:12:00Z",
+  "criteria": [
+    {
+      "id": "V1",
+      "description": "all five artifacts routed to canonical kind paths",
+      "status": "PASS",
+      "evidence": "graph.json contains 5 nodes: (1) artifact_kind=issue, file_path=issues/login-session-timeout-not-enforced.md; (2) artifact_kind=task, file_path=tasks/implement-rate-limiting-for-public-api.md; (3) artifact_kind=specification, file_path=specs/rest-api-v2-migration.md; (4) artifact_kind=architecture, file_path=architecture/order-processing-backend-security.md; (5) artifact_kind=document, file_path=docs/dev-environment-setup-guide.md. All five match the canonical content root mapping (issue->issues/, task->tasks/, specification->specs/, architecture->architecture/, document->docs/) and all five files physically exist on disk."
+    },
+    {
+      "id": "V2",
+      "description": "frontmatter kind and stored path agree after consecutive update",
+      "status": "PASS",
+      "evidence": "Checked 3 artifact files. (1) issues/login-session-timeout-not-enforced.md frontmatter: artifact_kind='issue', file_path='issues/login-session-timeout-not-enforced.md' — matches graph node. (2) tasks/implement-rate-limiting-for-public-api.md frontmatter: artifact_kind='task', file_path='tasks/implement-rate-limiting-for-public-api.md' — matches graph node. (3) specs/rest-api-v2-migration.md frontmatter: artifact_kind='specification', file_path='specs/rest-api-v2-migration.md' — matches graph node. In all cases artifact_kind and file_path in frontmatter agree with the corresponding graph.json node."
+    },
+    {
+      "id": "V3",
+      "description": "no feature created outside C14 macro-feature contract",
+      "status": "PASS",
+      "evidence": "No node in graph.json has artifact_kind='feature'. All five artifact_kind values are: issue, task, specification, architecture, document. The features/ directory contains only .gitkeep (empty). No feature artifacts were created outside the C14 macro-feature decomposition contract."
+    }
+  ],
+  "overall": "PASS"
+}

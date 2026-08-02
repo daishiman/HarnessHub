@@ -2,6 +2,7 @@
 """Build .claude symlinks from plugin-owned source trees."""
 
 import argparse
+import hashlib
 import json
 import os
 import secrets
@@ -10,6 +11,7 @@ from pathlib import Path
 
 
 VALID_KINDS = ("agents", "skills", "commands")
+SHARED_SKILL_NAMES = frozenset({"run-skill-feedback"})
 USAGE = """build-claude-symlinks.py [-h]
                                 [--plugins-dir PLUGINS_DIR]
                                 [--target-dir TARGET_DIR]
@@ -108,6 +110,43 @@ def read_skill_frontmatter_name(skill_dir):
     return None
 
 
+def directory_tree_digest(directory):
+    """Return a stable digest for a distributable skill directory.
+
+    ``run-skill-feedback`` is intentionally copied into each distributable
+    plugin so that marketplace bundles remain self-contained.  The generated
+    global ``.claude/skills`` surface only needs one entry when those copies
+    are byte-identical, while a divergent copy must remain a name conflict.
+    """
+    digest = hashlib.sha256()
+    for path in sorted(directory.rglob("*")):
+        relative = path.relative_to(directory).as_posix().encode("utf-8")
+        if path.is_symlink():
+            digest.update(b"L\\0" + relative + b"\\0" + os.readlink(path).encode("utf-8") + b"\\0")
+        elif path.is_file():
+            digest.update(b"F\\0" + relative + b"\\0" + path.read_bytes() + b"\\0")
+        elif path.is_dir():
+            digest.update(b"D\\0" + relative + b"\\0")
+    return digest.digest()
+
+
+def is_equivalent_shared_skill_group(group):
+    """Whether a duplicate group is an identical copy of a shared skill."""
+    if not group or group[0]["kind"] != "skills":
+        return False
+    if group[0]["src"].name not in SHARED_SKILL_NAMES:
+        return False
+    return len({directory_tree_digest(entry["src"]) for entry in group}) == 1
+
+
+def is_equivalent_shared_skill_sources(sources, name):
+    """Equivalent alias check for a frontmatter identity group."""
+    return (
+        name in SHARED_SKILL_NAMES
+        and len({directory_tree_digest(Path(source)) for source in sources}) == 1
+    )
+
+
 def desired_entries(plugins_dir, target_dir, kinds, exclude_plugins=None):
     raw_entries = []
     identifiers = {}
@@ -152,15 +191,24 @@ def desired_entries(plugins_dir, target_dir, kinds, exclude_plugins=None):
             if canonical is None:
                 canonical = next((e for e in group if e["src"] == canonical_real), group[0])
             entries.append(canonical)
+        elif is_equivalent_shared_skill_group(group):
+            canonical = next(
+                (e for e in group if e["src"].parent.parent.name == "harness-creator"),
+                group[0],
+            )
+            entries.append(canonical)
         else:
             for e in group:
                 entries.append(e)
                 conflicts.add(e["src"])
 
-    for sources in identifiers.values():
+    for (kind, name), sources in identifiers.items():
         if len(sources) > 1:
             realpaths = {Path(s).resolve(strict=False) for s in sources}
-            if len(realpaths) > 1:
+            if (
+                len(realpaths) > 1
+                and not (kind == "skills" and is_equivalent_shared_skill_sources(sources, name))
+            ):
                 conflicts.update(sources)
 
     return entries, conflicts

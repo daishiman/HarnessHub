@@ -2,7 +2,7 @@
 
 validate-coverage-matrix.py の --require-foundation から呼ばれる (単体では CLI を持たない
 import-only support module)。上位概念がブレると仕様が整ってもブレるため、収集を上位概念へ
-機械的に結び付ける検証をここへ分離した (validate-coverage-matrix.py の 500 行上限対応)。
+機械的に結び付ける検証をここへ分離した (foundation 検証という独立した変更理由)。
 """
 from __future__ import annotations
 

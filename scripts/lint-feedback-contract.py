@@ -85,6 +85,30 @@ def _load_baseline() -> set[str]:
     return {str(e) for e in data.get("exempt", [])}
 
 
+def _is_equivalent_feedback_copy(plugin: str, skill: str) -> bool:
+    """Whether a distributable feedback copy is byte-identical to its SSOT.
+
+    ``run-skill-feedback`` is copied into distributable plugin bundles so that
+    an installed bundle never depends on a sibling plugin.  It is not a new
+    independently designed live skill, therefore D7 must evaluate the
+    harness-creator source once.  Any copied body that diverges remains a
+    distinct skill and is subject to the normal live-trial ratchet.
+    """
+    if plugin == "harness-creator" or skill != "run-skill-feedback":
+        return False
+    source_dir = PLUGINS_DIR / "harness-creator" / "skills" / skill
+    copied_dir = PLUGINS_DIR / plugin / "skills" / skill
+    if not source_dir.is_dir() or not copied_dir.is_dir():
+        return False
+    source_files = sorted(path for path in source_dir.rglob("*") if path.is_file())
+    copied_files = sorted(path for path in copied_dir.rglob("*") if path.is_file())
+    return [
+        (path.relative_to(source_dir), path.read_bytes()) for path in source_files
+    ] == [
+        (path.relative_to(copied_dir), path.read_bytes()) for path in copied_files
+    ]
+
+
 def _git_changed_skills(base: str) -> set[tuple[str, str]]:
     try:
         diff = subprocess.check_output(
@@ -158,6 +182,8 @@ def _live_trial_ratchet(
     skill_dir = PLUGINS_DIR / plugin / "skills" / skill
     has_hooks = bool(list(skill_dir.glob("scripts/hook-*.py")))
     if derive_acceptance_tier(kind, has_hooks, _read_allowed_tools(text)) != "live":
+        return [], []
+    if _is_equivalent_feedback_copy(plugin, skill):
         return [], []
     criteria = fc.get("criteria")
     if not isinstance(criteria, list):

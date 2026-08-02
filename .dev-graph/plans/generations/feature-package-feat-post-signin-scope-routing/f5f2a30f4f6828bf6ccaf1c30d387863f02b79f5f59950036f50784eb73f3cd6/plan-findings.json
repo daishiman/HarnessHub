@@ -1,0 +1,227 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/final-review-postsignin-qa-20260802",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "task-specs/phase-01..13 の 13 ファイルを全文精読し、goal-spec.json との矛盾は検出されなかった。(1) 本 agent が Python で goal-spec.json と features/feat-post-signin-scope-routing.context.json の purpose / goal / scope_in / scope_out / acceptance を逐語比較し、5 フィールドすべてで完全一致 (差分 0、scope_in 10 件・scope_out 6 件・acceptance 8 件) を確認した。context.json の sha256 は d2f1b1eafc3773a672b279d784dbe1fec10902d32a31643edd8d0bf8379cfcfb で、goal-spec.json の feature_context_digest および .dev-graph/locks/system-dev-plan-lock.json の feature_digest と一致した。(2) さらに 13 spec の『Current canonical feature baseline』節から Purpose / Goal / Scope in / Scope out / Acceptance を機械抽出して goal-spec の値と突合し、13/13 spec で purpose・goal が一致、scope_in 10 件・scope_out 6 件・acceptance 8 件が順序込みで完全一致 (不一致 0 件) であることを確認した。(3) acceptance 8 件の写像経路は P04 (目的『goal-spec acceptance 8 件のそれぞれに検証手段を割り当てる』、Required evidence『acceptance 8 件すべてに 1 件以上のテスト ID が対応づけられていること』) → P06 (『P04 が定義した全テスト ID を実行』、回帰 0 件) → P07 (『acceptance 8 件を、P06 が実行した証跡だけを根拠に判定』) → P10 (『P06・P07・P09 の実行済み証跡のみを根拠に』) → P11 (source digest と P06・P09 再実行コマンドの保存) で連結しており、途中で件数が減る箇所は無かった。(4) scope_out『authorize() の判定順・role 判定・deny-by-default そのものの変更』について、P05 は Workstream applicability(API) で『apps/hub/src/middleware/authz.ts の authorize() が受け取る scope 解決入力を拡張する。判定順・reason・status は変更しない』、背景で『authorize() 側の分岐 (missing_tenant_scope / tenant_mismatch / workspace_not_member) は変更しない』と明記し、P02 は合流点を『authorize() の外側 (scope 解決関数の内部)』と決定、P08 は『整理の前後で deny-by-default と open redirect 防止の挙動が同一であること』に限定しており、実装 phase による scope_out 侵犯は検出されなかった (現行 apps/hub/src/middleware/authz.ts との突合結果は findings 参照)。(5) quality_constraints 6 件は id 文字列としては P01 のみに出現し P02 以降は散文で継承されるが、これは参考実装 feature-package-feat-dual-catalog-web (7 件すべて P01 のみ出現) と同一の様式であり、逸脱ではない。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#Current canonical feature baseline (goal-spec と context.json の逐語一致を本 agent が Python で独立検証、差分 0。13 spec の同節も機械抽出比較で 13/13 一致)",
+        "task-specs/phase-04-test-design.md#Verification and evidence (acceptance 8 件すべてに 1 件以上のテスト ID を対応づける要求)",
+        "task-specs/phase-07-acceptance.md#目的 (acceptance 8 件を P06 実行済み証跡のみで判定)",
+        "task-specs/phase-05-implementation.md#Workstream applicability (判定順・reason・status を変更しない旨の明記、scope_out 非侵犯)",
+        "task-specs/phase-13-release-deploy.md#スコープ外 (authorize() 判定順・role 判定は owner=feat-auth-tenancy として再掲)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "本 agent が決定論ゲート python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-11 --staging .dev-graph/staging/final-review-postsignin-qa-20260802 を独立実行し、exit_code=0 / status=pass / violations=[] / contract_version=1.2.0 / test_strategy_contract.mode=enforced / contract_baseline_exemption=false / stderr 空 を実測した。exact-13 は複数正本の突合で確認した: feature-package.json は task_count=13・phase_refs 13 件・task_spec_paths 13 件・task_node_ids 13 件、task-graph.json は nodes 13 件 (phase_ref 一意 13・id 一意 13)、workstream-inventory.json は tasks 13 件 (phase_ref 一意 13)、system-build-handoff.json は execution_tasks 13 件、staging-manifest.json#files 17 件のうち task-specs/ が 13 件、ディスク上の task-specs/*.md も 13 件で、P01..P13 が各 1 件・重複 0・14 件目なし。id 集合は feature-package.json#task_node_ids = task-graph.json#nodes[].id = workstream-inventory.json#tasks[].id = system-build-handoff.json#execution_tasks[].task_id (SYS-POST-SIGNIN-SCOPE-P01..P13) で完全一致した。単一 skill への退化・空疎な phase は検出されなかった: 13 spec の『## 目的』冒頭文は 13/13 が相異なり、workstream-inventory.json の write_scope も 13/13 が相異なる集合であった (共有 write_scope 0 件)。workstream_kind は documentation 5 / quality 5 / frontend 2 / infrastructure 1 に分散する。特に指摘のあった P08 は『二重化した scope 解決分岐の単一関数への集約・既定着地定数の一本化・整理前後で P06 結果が同一であることの確認』という具体作業を持ち、P11 は『source digest と P06・P09 の再実行コマンドを再現可能な形で保存し、参照先がリポジトリ相対 path であること』を要求しており、いずれも埋め草ではなかった。文書のみでの緑化 (Goodhart) 余地についても、P07『P06 が実行した証跡だけを根拠に判定』、P10『文書化された計画や、実装予定の記述は根拠にしない』、P09『検査を無効化した変異版でゲートが反転することまで確認する』、P13『本番反映後に業務画面 6 種の到達を実測する』、および 13 spec 共通の Trace rule『P12 と P13 は不足する実装や証跡を文書や計画で代替しない』により構造的に塞がれていることを確認した。",
+      "evidence": [
+        "gate:deterministic-validation#exit_code=0/violations=0 (本 agent 独立実行、contract_version=1.2.0、test_strategy_contract.mode=enforced)",
+        "feature-package.json#task_count (13、phase_refs/task_spec_paths/task_node_ids いずれも 13 件、P01..P13 各 1 件)",
+        "task-graph.json#nodes (13 件、id/phase_ref とも一意 13)",
+        "workstream-inventory.json#tasks (13 件、write_scope 13/13 が相異なる、workstream_kind は documentation 5・quality 5・frontend 2・infrastructure 1)",
+        "task-specs/phase-08-refactoring-migration.md#目的 (scope 解決分岐の集約と既定着地定数の一本化という具体作業を保有、空疎化なし)",
+        "task-specs/phase-10-final-review.md#背景 (文書化された計画・実装予定の記述をリリース根拠にしない旨の明記)"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "identity 4 項目の突合と digest の独立再計算を実施し、不整合は検出されなかった。repository_id=github:daishiman/HarnessHub は system-build-handoff.json#identity / workstream-inventory.json#repo_context.repo_identity / .dev-graph/config.json / .dev-graph/locks/system-dev-plan-lock.json の 4 箇所で一致。feature_package_id=feature-package/feat-post-signin-scope-routing と parent_feature=feat-post-signin-scope-routing は feature-package.json / workstream-inventory.json / task-graph.json (全 13 node) / system-build-handoff.json / staging-manifest.json で一致 (validator の mixed-task-package / mixed-node-package 検査も違反 0)。source_feature_digest=sha256:d2f1b1eafc3773a672b279d784dbe1fec10902d32a31643edd8d0bf8379cfcfb は feature-package.json / system-build-handoff.json#identity / goal-spec.json#feature_context_digest / .dev-graph/locks/system-dev-plan-lock.json#feature_digest (feature_id=feat-post-signin-scope-routing, run_id=run-20260802-0535-post-signin-scope-routing) の 4 箇所で一致し、本 agent が features/feat-post-signin-scope-routing.context.json を独立に sha256 再計算した値とも一致した。canonical digest は本 agent が正準アルゴリズム (staging-manifest.json#files の 17 件を rel path 昇順に、sha256 へ rel + \\0 + content + \\0 を順次投入) を Python で独自実装して再計算し、sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6 を得た。これは (1) 本 agent の再計算値、(2) staging-manifest.json#canonical_digest、(3) validator の validated_digest、(4) 依頼指定の期待値 の 4 者で完全一致した。staging-manifest.json#files 17 件それぞれの sha256 も本 agent が個別に再計算し、不一致 0 件を確認した (manifest 記載値と実バイト列が全件一致)。manifest に列挙されながら存在しないファイルは 0 件。handoff の自己参照規約も整合していた: system-build-handoff.json#source_inputs は 16 件 (自身を除く 17-1) で全件 sha256 一致、source_manifest.canonical_digest_before_handoff=sha256:3c837f8ac339bcd794b466f3f09fefd9b659b7d64c68604b79c2b79fd1f65ddc は staging-manifest.json#handoff_contract.source_canonical_digest と一致し、handoff 自身の sha256 (0163828e6c6667be3acdfcc41cc31401b85ab65cd5c1b3e9f7fdd8667f2b241b) は manifest 側にのみ記録されていた。registration_request は promotion_receipt / registration_receipt とも produced_by_this_component=false・status=not-emitted・status=deferred-until-promotion であり、未生成の受領書を生成済みと詐称する記述は無かった。",
+      "evidence": [
+        "gate:deterministic-validation#validated_digest (staging-manifest.json の canonical_digest・本 agent 独自再実装による再計算値・依頼指定の期待値 との 4 者一致)",
+        "staging-manifest.json#files (17 件、本 agent が全件 sha256 独立再計算し不一致 0 件)",
+        "feature-package.json#source_feature_digest (handoff identity / goal-spec feature_context_digest / lock feature_digest との 4 箇所一致、context.json の独立 sha256 再計算とも一致)",
+        "system-build-handoff.json#identity (repository_id=github:daishiman/HarnessHub が .dev-graph/config.json・lock・workstream-inventory と一致)",
+        "system-build-handoff.json#source_inputs (16 件、self-reference policy どおり handoff 自身を除外し全件 sha256 一致)",
+        "workstream-inventory.json#repo_context (repo_identity 一致、root_resolution_source=explicit-cli)"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json#nodes の depends_on を全 13 件機械検査し、P01:[] / P02:[P01] / P03:[P02] / P04:[P03] / P05:[P04] / P06:[P05] / P07:[P06] / P08:[P07] / P09:[P08] / P10:[P09] / P11:[P10] / P12:[P11] / P13:[P12] の単純前方線形鎖であることを確認した。全 edge について (a) 参照先が本 feature の node 集合内に存在、(b) 参照先の宣言順位が参照元より厳密に前方、(c) id prefix が SYS-POST-SIGNIN-SCOPE- で本 feature 内、の 3 条件を検査し違反 0 件で、後方参照・自己参照・分岐参照は無く acyclic である。system-build-handoff.json#execution_tasks の depends_on も同一の線形鎖で、task-graph.json と完全一致した。cross-feature 依存の混入は検出されなかった: feat-auth-tenancy / feat-dual-catalog-web / feat-workspace-switch-ux / feat-web-only-publish-journey の 4 id を task-graph.json・feature-package.json・system-build-handoff.json の全文で検索した結果、出現 0 件であった。workstream-inventory.json には 1 箇所のみ出現するが、それは P01 の acceptance 文字列『feat-auth-tenancy (authorize 判定順の owner) と feat-dual-catalog-web (業務画面本体の owner) との境界が P02 必須解消事項として明記されている』という散文であり、depends_on フィールドではない。13 task spec 本文でも 4 feature は一貫して『owner=他 feature、本 feature は消費のみ・所有しない』という帰属記述として現れるのみで (例: P05・P10・P12・P13 の背景節『本 feature は authorize() の判定規則そのものを所有しない (owner=feat-auth-tenancy)。業務画面本体も所有しない (owner=feat-dual-catalog-web)。Workspace 選択画面の UI は feat-workspace-switch-ux、Web 公開ウィザードの導線は feat-web-only-publish-journey が所有する』)、依存 edge としては表現されていない。validator の non-forward-edge / cross-feature-or-missing-edge 検査も違反 0 件だった。",
+      "evidence": [
+        "task-graph.json#nodes (13 件の depends_on を機械検査、前方線形鎖・acyclic・feature 内 edge のみ、違反 0 件)",
+        "system-build-handoff.json#execution_tasks (task-graph.json と同一の depends_on 線形鎖)",
+        "gate:deterministic-validation#non-forward-edge,cross-feature-or-missing-edge (検査で violations=[]、本 agent 独立実行)",
+        "workstream-inventory.json#tasks (cross-feature 4 id の出現は P01 acceptance の散文 1 箇所のみ、depends_on への混入 0 件)",
+        "task-specs/phase-05-implementation.md#背景 (4 feature を owner 帰属として言及するのみ、依存 edge として表現せず)"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/private/tmp/harnesshub-postsignin-review.xkds65",
+        "--staging",
+        ".dev-graph/staging/final-review-postsignin-qa-20260802"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"schema_version\":\"1.0.0\",\"status\":\"pass\",\"validated_digest\":\"sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6\",\"feature_package_id\":\"feature-package/feat-post-signin-scope-routing\",\"parent_feature\":\"feat-post-signin-scope-routing\",\"phase_refs\":[\"P01\",\"P02\",\"P03\",\"P04\",\"P05\",\"P06\",\"P07\",\"P08\",\"P09\",\"P10\",\"P11\",\"P12\",\"P13\"],\"contract_version\":\"1.2.0\",\"contract_baseline_exemption\":false,\"test_strategy_contract\":{\"mode\":\"enforced\",\"contract_version\":\"1.2.0\",\"enforced_from\":\"1.2.0\"},\"violations\":[]}",
+      "stderr": "",
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ]
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "2ebf8c153808f5284c1a9378da1b4a4bf33ea59c6b0fbee9a53742c2e45d5366"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "d65658eaa3014404c291b8b4e68c18a40e21ebb5a8f70f127e005185fb65a837"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "54744ed2a5f2321361ff83635206455bffd954b3d484b4648461e90581233d91"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "a95e6ed9d88f658d73bf28f569f8389bfa5f71e0cff9951bf67f5f1bbd400344"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "8eab0b43a1621ae1faaac175851e6f602d1748ec151b6892f5b3d0799661eb22"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "7d9d53bc9aa01bd6f4eff8eac109cc4934254f97c3efa4ec6b06bebd68e403ff"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "a896f4dbe2b14ba73ae74c0c5254f238b6af9f0b7b56a47e8b2f933bd19d631a"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "de65c8e211b912a4edb3a9233b00616500692d801eaf4f9bb7db38d1eec99148"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "7f149c369e317928e6eb61a96ae1b7cd6ab28eaaf71e0fc5654d9afe07bc9798"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "b86b3d874f51b1a9ed611be9f0e5797d00d7e82265144096f35931930d307b49"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "dd1133b6ce96914b24e9a522e26c0b0ecfa55f27972841cfc54aba94f355a13a"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "12b30b959ce78e8ab43f5f4f98e75e05ddf3311a86577803163a12c5c2ba7d9f"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "b24f24dc3cacce8ced29296f6111b3510aac4107e602e5e2ce731820c38a16ad"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "58935b1e39b8cb2aef815122420b24ca13ee594667a0a62e76becd70845aa403"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e8eea3dbd337d9b516ac0a66b69691986bcaaa46b72f6ed9fd84e32fffee52f4"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "9a0dc60ff6a65bfaf6cd943261d37ecb7e5921eac11dda4fe903ad6bbd1e966c"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "b60f053ec854a0c8eae7002b89b489aa6a2008e47e9b7bdde8db566c05a8ecae"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "a82233e8d51c634cf1cb626f1f82e1821fa13eb6f639230aa6c35482f94e7776"
+    }
+  ],
+  "staleness_rule": "本 findings は evaluated_digest=sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6 に束縛される。promotion 時点で staging 配下の現在バイト列から canonical digest を再計算し、この値と一致しない場合、または evaluated_inputs 17 件のいずれかの sha256 が現在バイト列と一致しない場合、本 findings は stale であり promotion の根拠として使用してはならない (再評価必須)。evaluated_inputs は staging-manifest.json#files の exact-set であり、canonical digest の被覆外にある goal-spec.json (評価時 sha256=2805ea20742daf535c36a5465e2afd315e3c2e15a8faac2217783beb3b1a17af) と staging-manifest.json 自身 (評価時 sha256=c8da688ff99250ecf3545da8e262cb1942fc94154cbcd8d2f60d795df0fd5234) は digest 束縛の対象外であるため、promotion 時にはこの 2 ファイルの sha256 も併せて再確認すること。",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/independent-fork",
+      "observation": "確認記録: 独立 fork context (proposer≠approver) で以下を実測した。(1) task-specs/phase-01..13 の 13 ファイルを全文精読 (要約・sampling なし)。(2) validate-system-plan.py を本 agent が独立実行し exit_code=0 / status=pass / violations=[] / stderr 空を測定。(3) canonical digest を正準アルゴリズムの独自 Python 実装で再計算し sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6 を得て、manifest 値 / validator 値 / 依頼指定値との 4 者一致を確認。(4) staging-manifest.json#files 17 件の sha256 を全件独立再計算し不一致 0 件。(5) goal-spec.json と features/feat-post-signin-scope-routing.context.json の 5 フィールド (purpose / goal / scope_in 10 件 / scope_out 6 件 / acceptance 8 件) を Python で逐語比較し差分 0。(6) 13 spec の baseline 節から同 5 フィールドを機械抽出し goal-spec と 13/13 一致。(7) task-graph.json の depends_on 13 件を機械検査し前方線形鎖・acyclic・cross-feature edge 0 件。(8) 現行 apps/hub/src/middleware/authz.ts と突合し scope_out 非侵犯を確認。high severity の blocking finding は無い。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "staging-manifest.json",
+        "feature-package.json",
+        "task-graph.json",
+        "workstream-inventory.json"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "scope-boundary/authz-decision-order",
+      "observation": "scope_out『authorize() の判定順・role 判定・deny-by-default そのものの変更』に対する P05 / P08 の適合を、現行実装 apps/hub/src/middleware/authz.ts と突合して確認した。結論は非侵犯である: ambiguous_scope は既存の reason (AuthzDecision の reason union と authorize() 内の分岐に既に存在) であり本 feature が新設するものではなく、既存の判定順は public 判定 → 認証 → scope 一意性 (ambiguous_scope) → tenant 一致 (missing_tenant_scope / tenant_mismatch) → workspace 所属 (workspace_not_member) として実装コメントにも明記されている。P05 が宣言する変更は resolveRequestedScope への第 2 入力 (session 由来 active tenant-workspace) の追加のみで、authorize() の分岐そのものは『変更しない』と明記されており、write_scope に authz.ts が含まれるのは呼び出し側の入力拡張に閉じる。ただし残存リスクとして、判定順が変わっていないことを固定する順序専用の assertion (branch order の snapshot 等) はどの phase にも定義されておらず、非退行の担保は P04 の scope 解決 4 組合せ真理値表 + P06 の回帰 0 件 + P09 の変異検査 (検査を無効化した変異版でゲート反転を確認) の 3 層に依存する。実装時にこの 3 層のいずれかが省略されると判定順の退行が検出できなくなるため、P04 のテスト ID 定義時に 4 reason の発火順序を含めることを推奨する。",
+      "evidence": [
+        "task-specs/phase-05-implementation.md#Workstream applicability",
+        "task-specs/phase-02-architecture.md#背景",
+        "task-specs/phase-04-test-design.md#Verification and evidence",
+        "task-specs/phase-09-quality-assurance.md#目的"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "integrity/digest-scope",
+      "observation": "goal-spec.json は staging 配下に存在するが staging-manifest.json#files (17 件) に含まれず、canonical_digest の被覆外である (ディスク上 18 ファイル中、manifest 非収録は goal-spec.json と staging-manifest.json 自身の 2 件)。13 task spec すべての Consumed artifacts と workstream-inventory.json の全 task の source_lineage が goal-spec.json を参照しているため、canonical_digest を変えずに goal-spec.json だけを差し替えることが構造上は可能であり、evaluated_digest による束縛が C1 の判定根拠まで到達していない。参考実装 feature-package-feat-dual-catalog-web も同一構造 (17 件・goal-spec.json 非収録) であるため本 package 固有の欠陥ではなく plugin 規約由来だが、認可に触れる feature である本件では影響が相対的に大きい。本評価では緩和として goal-spec.json の実測 sha256 (2805ea20742daf535c36a5465e2afd315e3c2e15a8faac2217783beb3b1a17af) と staging-manifest.json 自身の実測 sha256 (c8da688ff99250ecf3545da8e262cb1942fc94154cbcd8d2f60d795df0fd5234) を staleness_rule に記録し、promotion 時の再確認対象とした。",
+      "evidence": [
+        "staging-manifest.json",
+        "task-specs/phase-01-requirements.md#成果物",
+        "workstream-inventory.json#tasks"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "coverage/evidence-granularity",
+      "observation": "acceptance 8 件の写像は P04 (テスト ID 割当) → P06 (全 ID 実行) → P07 (8 件の判定) → P10 (リリース可否) までは項目単位で連結しているが、P11 (証跡) の Required evidence は『source digest と再実行コマンドが記録され、参照先がリポジトリ相対 path であり絶対 path を含まないこと』であり、acceptance 8 件を項目単位で列挙・参照する要求にはなっていない。項目単位のトレースは P07 の acceptance-record.md と P10 の final-review.md が保持し、P11 は再現性 (digest + 再実行コマンド) を担保する分担で、依頼で指定された 5 phase の経路そのものは成立している。ただし P07 / P10 の成果物が失われた場合、P11 単独では acceptance 8 件単位のトレースを復元できない。P11 の evidence-record.md に acceptance 8 件と証跡ファイルの対応表を含めるよう Required evidence を強化する余地がある。",
+      "evidence": [
+        "task-specs/phase-11-evidence.md#Verification and evidence",
+        "task-specs/phase-07-acceptance.md#Verification and evidence",
+        "task-specs/phase-10-final-review.md#Verification and evidence"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "operability/verification-command",
+      "observation": "13 task spec の Verification and evidence と workstream-inventory.json の全 task の verification は、決定論ゲートを `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-post-signin-scope-routing` の形式で宣言している。本 agent がこの形式を実行したところ、`current pointer が無い: .dev-graph/state/current/feature-package-feat-post-signin-scope-routing.json` として exit_code=2 で fail-closed した (.dev-graph/published/ は空)。--feature-package は feature 別 current pointer から promotion 済み package を解決する引数であり、task spec は promotion 後に実行される文書であることから実行時点では妥当だが、promotion 前 (現在の staging 状態) では再現できない。参考実装 feature-package-feat-dual-catalog-web は同じ箇所を --staging 形式で宣言しており様式が異なる。本評価で C2 / C3 / C4 の根拠に用いたのは --staging 形式の実行結果 (exit_code=0) である。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#Verification and evidence",
+        "workstream-inventory.json#tasks",
+        "gate:deterministic-validation"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "goodhart-resistance/structure",
+      "observation": "『実装せず文書だけで緑化できる構造か』を個別に検査した結果、構造的な緑化余地は検出されなかった。根拠は 5 点である: (1) 13 spec 共通の Trace rule が『P12 と P13 は不足する実装や証跡を文書や計画で代替しない』と明記、(2) P07 が『P06 が実行した証跡だけを根拠に判定』と限定、(3) P10 の背景が『文書化された計画や、実装予定の記述は根拠にしない』『deny-by-default 非退行の証跡が欠けている場合はリリース不可』と明記、(4) P09 が『検査を無効化した変異版でゲートが反転することまで確認する』という gate liveness 検査を要求、(5) P13 が本番デプロイ後の実測 (業務画面 6 種の到達・deny-by-default 維持・open redirect 不成立) を完了条件に含め、P07 の acceptance『業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない』も結合レベルの実測証跡を要求する。ただし本 package の決定論ゲート (validate-system-plan.py) が検査するのは plan 構造のみであり、上記 5 点が実際に守られたかは実行時の証跡でしか判定できない。これは plan 評価の射程外であり本 findings の PASS はその範囲に限定される。",
+      "evidence": [
+        "task-specs/phase-10-final-review.md#背景",
+        "task-specs/phase-09-quality-assurance.md#目的",
+        "task-specs/phase-13-release-deploy.md#Rollout and rollback",
+        "task-specs/phase-07-acceptance.md#目的"
+      ]
+    }
+  ]
+}

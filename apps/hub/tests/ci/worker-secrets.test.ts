@@ -62,6 +62,14 @@ describe('worker secret 台帳の実データ', () => {
     expect(target?.degrades).toContain('401');
   });
 
+  it('CWV probe の 3 secret を required として持つ (9cgb の台帳回帰固定)', () => {
+    for (const name of ['CWV_PROBE_SECRET', 'CWV_PROBE_TENANT_ID', 'CWV_PROBE_WORKSPACE_ID']) {
+      const target = parsed.entries.find((entry) => entry.name === name);
+      expect(target?.requirement).toBe('required');
+      expect(target?.degrades).toContain('fail-closed');
+    }
+  });
+
   it('static 実行が合格する', () => {
     const stdout = execFileSync('node', [SCRIPT], { cwd: REPO_ROOT, encoding: 'utf8' });
     expect(stdout).toContain('[worker-secrets] OK');

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-122 |
+| Web (web) | 確定 | 確定質疑: qa-134 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-122 (対応セル: web)
+### qa-134 (対応セル: web)
 
-**質問**: qa-096 の開発品質契約を情報欠落なく維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web の自己完結した現行契約としてどう確定しますか?
+**質問**: qa-122 の開発品質契約を維持しながら、一般コードとプロンプト成果物に混在した500行ルールをどの境界へ訂正しますか?
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。
+**回答**: ユーザーの 2026-08-02 指示を明示承認として、qa-122 の契約を維持する。ただし、qa-096 由来の一般コードに対する500行分割条件だけは本回答で明示的に廃止し、行数ゲートをプロンプト成果物へ限定する。
 
 【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。
 
@@ -36,7 +36,7 @@ serves_goals: [G1, G4, G5]
 
 【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。
 
-【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。
+【4. 回帰証拠と行数ゲートの境界】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。ソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性を根拠に判断する。実行時 context へ入る `SKILL.md` は本文 300 行、skill の `prompts/*.md|yaml` は 500 行を上限として機械検査する。qa-070 の正規文書 300 行ゲートは別契約として維持する。
 
 【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。
 
@@ -44,11 +44,11 @@ serves_goals: [G1, G4, G5]
 
 【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。
 
-【8. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。
+【8. 削除と移設】廃止済みの外部参考層は directory 単位で削除し、現在も利用する外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。部分コピーを残して二重正本にしない。
 
-【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。
+【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は外部原本と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。
 
-【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。
+【10. 追加検証と製品境界】active code/plugin/docs からの旧実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、qa-070 の文書行数、`SKILL.md` と `prompts/` の行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。
 
 ### qa-088 (対応セル: desktop-windows)
 
@@ -83,67 +83,6 @@ serves_goals: [G1, G4, G5]
 【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。
 
 【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
-
-qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
-具体化した。GitHub Actions が repository root から実行する
-`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
-local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
-allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
-など静的に境界を確定できない入力は fail-closed とする。
-
-local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
-working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
-`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
-Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-07-30 / `HarnessHub-pyb3`)
-
-qa-088【2】と qa-096【2】の CI / local 共通ゲートを具体化し、`pnpm -r test` の入口を
-変えずに `pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間だけを直列化する。
-各 package が持つ Vitest worker pool の同時起動による RPC timeout を防ぎ、設定欠落・値変更は
-`pnpm check:pnpm` の正負テストで fail-closed に拒否する。製品 API、DB schema、認証認可、
-UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。反映と検証は
-`docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md` を正とする。
-
-### 実装反映注記 (2026-08-01 / `HarnessHub-w7n7`)
-
-Beads 操作の単一チョークポイント（書き込みを必ず通す一本の入口）である
-`plugins/dev-graph/scripts/bd-bridge.py` は、CLI 引数解析、preflight、Beads 実行、
-receipt 出力だけを保持する。判定処理は次の四責務へ分離する。
-
-- `bd_bridge_contracts.py`: exact-set 語彙と外部 I/O を持たない純粋判定
-- `bd_bridge_graph.py`: canonical graph、manifest、artifact の read-only 解決
-- `bd_bridge_projection.py`: graph node から Beads issue への投影
-- `bd_bridge_audit.py`: orphan 棚卸しと node 削除 preflight の read-only 監査
-
-分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
-Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
-注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
-変更対象の手書きファイルは 500 行以下に保ち、分割先は harness coverage の scripts 分母へ
-追加しない `plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
-UI、Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-08-02 / `HarnessHub-dc7`)
-
-`plugins/dev-graph/references/execution-tracker-contract.md` §2 の Beads mutation
-単一チョークポイントを維持し、Dev Graph parity の対象外である
-`priority`、`assignee`、`labels` も書き込み経路だけは C28
-`bd-bridge.py` に限定する。「自由領域」は graph と完全一致させないという意味であり、
-guard を迂回して直接更新できるという意味ではない。
-
-bridge は三フィールドを `bd update` の `--priority`、`--assignee`、`--set-labels` へ
-転送する。priority は create と共通の正規化を使い、labels は再実行可能な置換だけを許す。
-直接 `bd update` の遮断は緩めず、空 labels、更新値なし、別 operation への更新専用引数は
-fail-closed に拒否する。これは既存の開発管理契約を実行可能にする内部実装具体化であり、
-確定済み QA 回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-判断と検証は `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
-を正とする。
 
 ## 上流指針 (doctrine anchor)
 

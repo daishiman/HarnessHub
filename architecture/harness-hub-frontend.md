@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub frontend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T08:12:28Z"
+updated_at: "2026-08-02T12:48:16.841716Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
+related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","spec-post-signin-workspace-scope"]
 resource_scope: ["architecture/harness-hub-frontend.md"]
 purpose: "Hub Web の frontend 構成 (Next.js App Router) と UI/UX 品質要件 (WCAG 2.2 AA / Core Web Vitals good / HIG 快適性原則) の正本参照"
 goal: "qa-018 の品質要件と qa-007 の技術構成に適合する frontend 実装の指針を提供する"
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"d44652f33f2ca180abf614c1bc7b280c26583c4bd1168e625aaa2cf84fe84000","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T08:12:28Z","origin_kind":"system-spec-harness","source_digest":"d44652f33f2ca180abf614c1bc7b280c26583c4bd1168e625aaa2cf84fe84000","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T12:15:00Z","origin_kind":"system-spec-harness","source_digest":"48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-frontend.md","confidence":0.95}]
@@ -114,3 +114,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   カンマ/改行区切りを小文字化・空白除去・重複排除して API へ渡す。
 - 公開 enum だけを固定文言へ写し、未知 error・例外・入力値を画面へ流さない。
   正本は [system-spec/frontend.md](../system-spec/frontend.md) の `qa-127`。
+
+## 2026-08-02 サインイン後スコープと Web 完結導線
+
+- サインイン後の遷移先は、保存済みの安全な相対 path、なければ単一の既定値 `/sheets` の順で
+  解決する。外部 URL と protocol-relative path は既定値へ落とし、解決後にも既存の
+  `authorize()` を通す。
+- ブラウザ業務画面の tenant/workspace scope は session の active 値から server 側で解決する。
+  API/機械クライアントの明示ヘッダーと併存して不一致なら拒否し、いずれの経路も認可規則を
+  複製せず同じ resolver へ収束させる。
+- Workspace 選択・切替と S01 Web 公開は共通シェルおよび既存の検査 pipeline に接続する。
+  scope 未解決では旧データを描画せず、利用者には Workspace 選択へ戻れる ErrorState を示す。
+- 正本は [frontend](../system-spec/frontend.md) の `qa-135`、
+  [UI-UX](../system-spec/ui-ux.md) の `qa-136`、認可境界は
+  [auth](../system-spec/auth.md) の `qa-137` を参照する。

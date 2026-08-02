@@ -31,6 +31,9 @@ describe('production auth bindings', () => {
         // readAuthRuntimeEnv が required() で読む = 欠けると Worker の該当経路が起動しない
         'AUTH_ACCESS_TOKEN_SECRET',
         'AUTH_SESSION_SECRET',
+        'CWV_PROBE_SECRET',
+        'CWV_PROBE_TENANT_ID',
+        'CWV_PROBE_WORKSPACE_ID',
         'ENCRYPTION_KEK',
         'TURSO_AUTH_TOKEN',
         'TURSO_DATABASE_URL',

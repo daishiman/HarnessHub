@@ -45,6 +45,11 @@ def violation_codes(text: str, *, enforced: bool = True) -> list[str]:
     return [code for code, _ in VALIDATOR.test_strategy_violations(text, enforced=enforced)]
 
 
+def version_tuple(value: str) -> tuple[int, ...]:
+    """契約 version の大小比較。文字列比較では `1.10.0 < 1.2.0` と誤判定する。"""
+    return tuple(int(part) for part in value.split("."))
+
+
 class LayerDerivationTests(unittest.TestCase):
     """applicable な workstream から必須層を導き、方針の欠落を拒否する。"""
 
@@ -158,15 +163,18 @@ class IdempotencyAndContractTests(unittest.TestCase):
         for version, expected in (("1.0.0", False), ("1.1.0", False), (CONTRACT_VERSION, True)):
             with self.subTest(version=version):
                 self.assertEqual(VALIDATOR.CONTRACT_VERSIONS[version]["test_strategy"], expected)
-        self.assertEqual(VALIDATOR.CONTRACT_VERSION_LATEST, CONTRACT_VERSION)
+        # latest が閾値と同値なのは契約が追加されるまでの偶然なので、主張するのは
+        # 「latest は閾値以上」かつ「latest でも テスト戦略 は必須」の方。1.3.0 で
+        # 世代非依存 rerun command が加わり両者は分離した (HarnessHub-ji8y)。
+        latest = VALIDATOR.CONTRACT_VERSION_LATEST
+        self.assertGreaterEqual(version_tuple(latest), version_tuple(CONTRACT_VERSION))
+        self.assertTrue(VALIDATOR.CONTRACT_VERSIONS[latest]["test_strategy"])
         baseline = {"sha256:known": "1.1.0"}
         self.assertEqual(VALIDATOR.resolve_contract_version("sha256:known", baseline), "1.1.0")
         for unknown in ("sha256:" + "0" * 64, None):
             with self.subTest(digest=unknown):
-                self.assertEqual(
-                    VALIDATOR.resolve_contract_version(unknown, baseline), CONTRACT_VERSION
-                )
-        self.assertEqual(VALIDATOR.resolve_contract_version("sha256:known", {}), CONTRACT_VERSION)
+                self.assertEqual(VALIDATOR.resolve_contract_version(unknown, baseline), latest)
+        self.assertEqual(VALIDATOR.resolve_contract_version("sha256:known", {}), latest)
 
     def test_existing_generation_shape_stays_passing(self):
         """TS-B10: 15 section のみの既存形状は台帳免除下で pass のまま (AC-7 の実装側根拠)。"""
