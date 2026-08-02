@@ -115,6 +115,11 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
 を正とする。
 
+`HarnessHub-dc7` では Beads 自由フィールドの書込経路を単一 bridge へ統一した。
+製品仕様は変えず、内部設計と検証は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
+を正とする。
+
 ## アーキテクチャ参照・機能間依存
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)

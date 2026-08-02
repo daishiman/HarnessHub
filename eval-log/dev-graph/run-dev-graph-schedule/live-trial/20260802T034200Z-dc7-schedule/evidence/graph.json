@@ -1,0 +1,577 @@
+{
+  "graph_revision": 1,
+  "nodes": [
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "454730905cd964314b88f1d8d068e33c0e003eced05294e9005da63e30ee4aca",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-001.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/alpha.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "ready なタスク (scope 重複ペアの一方)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-002.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d4d5efd01f54e34ba2a14f5e77e250d9443c41062b15b4aac1065497c7ed6115",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-002.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-002.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-002",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/alpha.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "ready なタスク (scope 重複ペアの他方)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-003.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d2d179c2358b6f2dec6c33e9663ad9c39cdee2bf680a20dbfa0bb4ca30ff6553",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-003.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-003.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-003",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/beta.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "ready で scope 重複を持たないタスク",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-004.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "10c0daeb7cc4305e01bd5c1de3936bcc4749cdc1f1004a02a4a4124e49733e72",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-004.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-004.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-004",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/gamma.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "active lease に抑止されるタスク",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-005.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1109eab7b7a2b1be606ea291c46312ed7fe4444756fbd0701d0310667b486082",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-005.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-SCHED-001"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-005.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-005",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/epsilon.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "未充足依存で blocked なタスク",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-sched-006.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a5777122a22402564726eaa60d89aa94b09c91260f8ae845333e2434c0667eba",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-sched-006.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-sched-006.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-SCHED-006",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [
+        "src/delta.py"
+      ],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "stale lease が失効して回収されるタスク",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    }
+  ]
+}

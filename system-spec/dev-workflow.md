@@ -129,6 +129,22 @@ UI、Cloudflare deploy unit は変更しない。判断と最終検証は
 `docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
 を正とする。
 
+### 実装反映注記 (2026-08-02 / `HarnessHub-dc7`)
+
+`plugins/dev-graph/references/execution-tracker-contract.md` §2 の Beads mutation
+単一チョークポイントを維持し、Dev Graph parity の対象外である
+`priority`、`assignee`、`labels` も書き込み経路だけは C28
+`bd-bridge.py` に限定する。「自由領域」は graph と完全一致させないという意味であり、
+guard を迂回して直接更新できるという意味ではない。
+
+bridge は三フィールドを `bd update` の `--priority`、`--assignee`、`--set-labels` へ
+転送する。priority は create と共通の正規化を使い、labels は再実行可能な置換だけを許す。
+直接 `bd update` の遮断は緩めず、空 labels、更新値なし、別 operation への更新専用引数は
+fail-closed に拒否する。これは既存の開発管理契約を実行可能にする内部実装具体化であり、
+確定済み QA 回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+判断と検証は `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
+を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。
