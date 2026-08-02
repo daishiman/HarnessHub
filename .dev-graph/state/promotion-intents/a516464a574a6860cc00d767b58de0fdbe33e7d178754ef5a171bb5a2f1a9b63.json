@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-post-signin-scope-routing",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "digest": "sha256:bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "package_slug": "feature-package-feat-post-signin-scope-routing",
+  "generation_id": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "supersedes": null,
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/atomic-promotion-receipt.json",
+  "completed_at": "2026-08-02T06:25:14Z"
+}

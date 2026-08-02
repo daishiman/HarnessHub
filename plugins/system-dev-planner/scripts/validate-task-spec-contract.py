@@ -83,10 +83,20 @@ _WORKSTREAM_LINE = re.compile(
     re.MULTILINE,
 )
 
-CONTRACT_VERSION_LATEST = "1.2.0"
+# --- 世代非依存 rerun command (HarnessHub-ji8y) --------------------------
+RERUN_SCRIPT = "validate-system-plan.py"
+# fenced block と inline code span だけを「実行されるコマンド」とみなす。
+_FENCE_OPEN = re.compile(r"^[ \t]{0,3}(`{3,}|~{3,})[^\n]*$")
+_INLINE_CODE = re.compile(r"`+([^`\n]+)`+")
+_LINE_CONTINUATION = re.compile(r"\\\n[ \t]*")
+_STAGING_FLAG = re.compile(r"(?<![\w-])--staging(?![\w-])")
+_FEATURE_PACKAGE_FLAG = re.compile(r"(?<![\w-])--feature-package[= \t]+[\"']?([^\s`\"']+)")
+
+CONTRACT_VERSION_LATEST = "1.3.0"
 # テスト戦略 section と qa semantic coverage は並行ブランチで同じ 1.2.0 として
 # 導入されたため、統合後の 1.2.0 は両方を必須にする。
 TEST_STRATEGY_CONTRACT_FROM = "1.2.0"
+RERUN_COMMAND_CONTRACT_FROM = "1.3.0"
 CONTRACT_VERSIONS: dict[str, dict] = {
     # 2026-07-22T13:53:21Z (367ba5c) 以前に promote された content-addressed package が
     # 準拠していた検査集合。digest 不変ゆえ後追い修正できないため、当時の契約で再検証する。
@@ -96,6 +106,7 @@ CONTRACT_VERSIONS: dict[str, dict] = {
         "p13_writeback": False,
         "test_strategy": False,
         "qa_semantic_coverage": False,
+        "rerun_command": False,
     },
     # 367ba5c で導入された task-spec 本文契約。qa semantic coverage gate の導入前に
     # promote された package を再検証できるよう、当時の検査集合を独立 version として残す。
@@ -105,8 +116,9 @@ CONTRACT_VERSIONS: dict[str, dict] = {
         "p13_writeback": True,
         "test_strategy": False,
         "qa_semantic_coverage": False,
+        "rerun_command": False,
     },
-    # テスト戦略必須化と qa-071 enforcement tooling 導入後の現行契約。新規生成
+    # テスト戦略必須化と qa-071 enforcement tooling 導入後の契約。新規生成
     # package はテスト戦略 4 項目に加え、feature tag、spec-state lineage、
     # goal-spec の意味被覆、exact-13 task trace も fail-closed で検証する。
     "1.2.0": {
@@ -115,6 +127,19 @@ CONTRACT_VERSIONS: dict[str, dict] = {
         "p13_writeback": True,
         "test_strategy": True,
         "qa_semantic_coverage": True,
+        "rerun_command": False,
+    },
+    # 世代非依存 rerun command を必須化した現行契約 (HarnessHub-ji8y)。task spec 本文が
+    # validate-system-plan を呼ぶ場合、promotion の atomic rename で消滅する --staging では
+    # なく --feature-package <自 package> を要求する。1.2.0 以前は task spec 本文が
+    # `--staging .` を書いたまま promote 済みで digest 不変ゆえ修正できないため免除する。
+    "1.3.0": {
+        "required_sections": REQUIRED_TASK_SPEC_SECTIONS,
+        "inner_goal_seek": True,
+        "p13_writeback": True,
+        "test_strategy": True,
+        "qa_semantic_coverage": True,
+        "rerun_command": True,
     },
 }
 
@@ -253,4 +278,90 @@ def task_spec_violations(text: str, required_sections: tuple[str, ...] = REQUIRE
         body = text[start:end].strip()
         if not body:
             errors.append(("task-spec-section-empty", name))
+    return errors
+
+
+def _split_fenced_blocks(text: str) -> tuple[list[str], str]:
+    """CommonMark の backtick/tilde fence を本文と外側テキストへ分ける。"""
+    blocks: list[str] = []
+    outside: list[str] = []
+    body: list[str] | None = None
+    fence_char = ""
+    fence_length = 0
+    for line in text.splitlines():
+        if body is None:
+            opening = _FENCE_OPEN.match(line)
+            if opening is None:
+                outside.append(line)
+                continue
+            marker = opening.group(1)
+            fence_char, fence_length = marker[0], len(marker)
+            body = []
+            outside.append("")
+            continue
+        closing = re.fullmatch(
+            rf"[ \t]{{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
+            line,
+        )
+        if closing is None:
+            body.append(line)
+            continue
+        blocks.append("\n".join(body))
+        body = None
+    # CommonMark では閉じ fence が無い場合も EOF まで code block として扱う。
+    if body is not None:
+        blocks.append("\n".join(body))
+    return blocks, "\n".join(outside)
+
+
+def _command_lines(text: str) -> list[str]:
+    """Markdown が「実行するコマンド」として提示している断片だけを取り出す。
+
+    散文中の script 名への言及 (「validate-system-plan.py 実行時に --repo-root を明示する」)
+    までコマンド扱いすると、運用説明を書いただけで fail-closed になる。実際に promote 済みの
+    package がその形の説明文を持っているため、fenced block と inline code span に絞る。
+    fenced block 内の `\\` 継続行は 1 コマンドへ畳んでから行単位へ分解する。
+    """
+    commands: list[str] = []
+    blocks, outside = _split_fenced_blocks(text)
+    for block in blocks:
+        commands.extend(_LINE_CONTINUATION.sub(" ", block).splitlines())
+    # fenced block を除いた残りから inline code を拾う (同じ断片を二重に数えない)。
+    commands.extend(match.group(1) for match in _INLINE_CODE.finditer(outside))
+    return [command.strip() for command in commands if command.strip()]
+
+
+def rerun_command_violations(text: str, package_id: str | None = None) -> list[tuple[str, str]]:
+    """task spec が書く validate-system-plan 再実行コマンドが解決可能かを検証する。
+
+    promotion は staging generation を content-addressed path へ atomic rename するため、
+    `--staging .` は promotion 後に指す先が無く、記載どおり実行すると必ず失敗する
+    (`references/feature-execution-package-contract.md` §2.3)。generation id の直書きも
+    再計画のたびに stale になる。したがって feature 別 current pointer から現行世代を
+    解決する `--feature-package <自 package>` だけを正本形式として受理する。
+
+    package_id を渡すと、他 package の id をコピーした再実行 (別 package を検証して
+    緑になる fail-open) も拒否する。
+    """
+    errors: list[tuple[str, str]] = []
+    for command in _command_lines(text):
+        if RERUN_SCRIPT not in command:
+            continue
+        if _STAGING_FLAG.search(command):
+            errors.append((
+                "task-spec-rerun-staging-path",
+                f"--staging は promotion の atomic rename 後に解決できない: {command}",
+            ))
+            continue
+        found = _FEATURE_PACKAGE_FLAG.search(command)
+        if found is None:
+            errors.append((
+                "task-spec-rerun-package-missing",
+                f"世代非依存の `--feature-package <feature_package_id>` が必要: {command}",
+            ))
+        elif package_id is not None and found.group(1) != package_id:
+            errors.append((
+                "task-spec-rerun-package-mismatch",
+                f"expected={package_id} actual={found.group(1)}",
+            ))
     return errors

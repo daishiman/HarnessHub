@@ -1,0 +1,42 @@
+{
+  "graph_node_id": "feat-post-signin-scope-routing",
+  "artifact_kind": "feature",
+  "purpose": "ログインは成功するのに業務画面 (/sheets /catalog 系) が 403 missing_tenant_scope で開けない実装未結線を、認可の判定順と deny-by-default を変えずに解消する。原因はサインイン後の戻り先が / 固定であること、/ が稼働確認しか表示しないこと、通常のブラウザ遷移では認可が要求するテナント情報が付与されないことの 3 点であり、利用者の操作誤りではない",
+  "goal": "scope の入力系統 2 系統 (明示ヘッダー / session の active tenant-workspace) とサインイン後の着地先解決が結線され、業務画面 6 種 (/sheets /sheets/new /sheets/{id} /catalog /catalog/releases /catalog/{projectId}) へ通常のブラウザ操作で到達できる状態",
+  "scope_in": [
+    "scope 解決の 2 系統: 明示ヘッダー (API / 機械クライアント) と session の active tenant/workspace (ブラウザ通常遷移) を server 側で解決する",
+    "両方が存在して不一致なら ambiguous_scope で拒否し、どちらかを黙って優先しない",
+    "両方とも存在しない場合は従来どおり missing_tenant_scope とする (deny-by-default 非退行)",
+    "両経路を同一の authorize() へ収束させ、判定を二重実装しない",
+    "session への active workspace 束縛と、切替のたびの所属再検証",
+    "サインイン後の着地先解決: callbackUrl の固定値 \"/\" を廃止し、遷移元 path -> 既定着地 /sheets の順で解決する",
+    "既定着地を単一定数から解決し、画面ごとに散らさない",
+    "戻り先を同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative (//) は既定着地へ落とす (open redirect 防止)",
+    "戻り先の解決結果にも通常の authorize() を適用し、redirect を認可の迂回路にしない",
+    "/ の扱い: 未認証時は稼働確認表示を維持し、認証済み session がある場合は既定着地へ redirect する"
+  ],
+  "scope_out": [
+    "authorize() の判定順・role 判定・deny-by-default そのものの変更",
+    "catalog / sheets API 実装と DB schema の変更",
+    "Workspace 選択画面の UI 実装 (feat-workspace-switch-ux が所有)",
+    "Web 公開ウィザードの導線 (feat-web-only-publish-journey が所有)",
+    "サイドバー 9 項目の段階表示契約の変更 (docs/frontend-spec.md §10)",
+    "Device Flow 確認コード制約の変更 (現行維持)"
+  ],
+  "acceptance": [
+    "遷移元が無いサインイン成功で /sheets に着地し、/ に留まらない",
+    "戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる",
+    "認証済み session で / を開くと既定着地へ redirect される",
+    "業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない",
+    "明示ヘッダーと session scope が併存し不一致のとき ambiguous_scope で拒否される",
+    "どちらの scope 入力も無い場合は missing_tenant_scope のままである (deny-by-default 非退行)",
+    "principal の所属検証を通らない workspace は session へ束縛されない",
+    "戻り先の解決結果に対しても authorize() が適用される"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-frontend.md",
+    "architecture/harness-hub-security.md",
+    "specs/harness-hub-post-signin-workspace-scope-addendum.md"
+  ],
+  "updated_at": "2026-08-02T05:35:00Z"
+}

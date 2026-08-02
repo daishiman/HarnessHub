@@ -69,12 +69,15 @@ TEST_STRATEGY_SECTION = CONTRACTS.TEST_STRATEGY_SECTION
 TEST_STRATEGY_ITEMS = CONTRACTS.TEST_STRATEGY_ITEMS
 TEST_STRATEGY_SCHEMA = CONTRACTS.TEST_STRATEGY_SCHEMA
 TEST_STRATEGY_PLACEMENT = CONTRACTS.TEST_STRATEGY_PLACEMENT
+RERUN_COMMAND_CONTRACT_FROM = CONTRACTS.RERUN_COMMAND_CONTRACT_FROM
+RERUN_SCRIPT = CONTRACTS.RERUN_SCRIPT
 _task_spec_sections = CONTRACTS._task_spec_sections
 parse_test_strategy = CONTRACTS.parse_test_strategy
 derive_required_layers = CONTRACTS.derive_required_layers
 load_contract_baseline = CONTRACTS.load_contract_baseline
 resolve_contract_version = CONTRACTS.resolve_contract_version
 task_spec_violations = CONTRACTS.task_spec_violations
+rerun_command_violations = CONTRACTS.rerun_command_violations
 
 # JSON Schema サブセット検証器の正本は validate-json-schema-subset.py (責務分離)。C14 が
 # 同等実装を別に持つ理由は当該 module の docstring を参照する。
@@ -304,6 +307,13 @@ def validate(
                 fail(code, rel, section)
             for code, detail in test_strategy_violations(text, enforced=contract["test_strategy"]):
                 fail(code, rel, detail)
+            if contract["rerun_command"]:
+                # package_id が str でない場合は schema 検査が別途落とす。ここで id 一致を
+                # 主張すると誤った期待値を detail に出すので、形式検査だけへ縮退させる。
+                for code, detail in rerun_command_violations(
+                    text, package_id if isinstance(package_id, str) else None
+                ):
+                    fail(code, rel, detail)
             if contract["inner_goal_seek"] and (METHODOLOGY_MARKER not in text or GOAL_SEEK_PASS_MARKER not in text):
                 fail(
                     "inner-goal-seek-contract",
@@ -417,6 +427,11 @@ def validate(
                 "mode": "enforced" if contract["test_strategy"] else "legacy",
                 "contract_version": contract_version,
                 "enforced_from": TEST_STRATEGY_CONTRACT_FROM,
+            },
+            "rerun_command_contract": {
+                "mode": "enforced" if contract["rerun_command"] else "legacy",
+                "contract_version": contract_version,
+                "enforced_from": RERUN_COMMAND_CONTRACT_FROM,
             },
             "violations": violations}
 

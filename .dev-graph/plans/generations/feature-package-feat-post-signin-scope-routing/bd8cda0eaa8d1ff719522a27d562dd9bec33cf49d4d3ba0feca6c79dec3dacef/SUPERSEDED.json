@@ -1,0 +1,24 @@
+{
+  "current_pointer": ".dev-graph/state/current/feature-package-feat-post-signin-scope-routing.json",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "notice": "この directory は supersede 済みの旧世代であり、正本ではない。実装要件の正本は superseded_by.published_path 配下の content-addressed generation を読むこと。旧世代は byte-for-byte 不変で保持されるため、この directory の中身を編集して現行世代へ追随させてはならない。さらに世代が進んだ場合は current_pointer から再解決すること。",
+  "published_digest": "sha256:bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "schema_version": "1.0.0",
+  "status": "superseded",
+  "superseded_by": {
+    "generation_id": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+    "published_digest": "sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/atomic-promotion-receipt.json"
+  },
+  "superseded_receipts": {
+    "promotion": {
+      "path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/atomic-promotion-receipt.json",
+      "sha256": "sha256:1dfc12524340cb36bc5cc56da331147ea496d397e477fef707a2f8c039235574"
+    },
+    "registration": {
+      "path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/dev-graph-registration-receipt.json",
+      "sha256": "sha256:92b892ce242da8c594390020d8f2e3bf3add714237303bf8c38dd1a9c319b6fa"
+    }
+  }
+}
