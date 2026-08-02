@@ -249,3 +249,11 @@ export function listSheets(ctx: TenantCtx, cursor?: string): Promise<Sheet[]>  /
 | 認可拒否・**同一テナント内**のリソース | `403` (RFC 9457) | 存在は既知でよい |
 | 認可拒否・**他テナント**のリソース | **`404`** | ID の存在有無を漏らさない (T3 の情報源にしない) |
 | scope 不足 (token) | `403` + `detail` に必要 scope | CLI 側で再認可を促す |
+
+### 3.7.1 CWV probe の最小権限境界（qa-133）
+
+`credential='cwv_probe'` は role の近道ではない。`harnesses.read` だけが session と共用でき、edge と route の両方で次を満たす場合に限り許可する。
+
+- HTTP method は `GET` または `HEAD`、path は `/catalog`、`/marketplace.json`、または catalog が読む明示 allowlist の API のみ。
+- tenant/workspace は ticket の署名済み claim と一致する必要がある。catalog 初回画面で header を送れないときだけ、検証済み claim を既存 single authorization layer へ合成する。query/header の任意値を trust して scope を昇格させない。
+- `harnesses.install` を含む全書込み・未登録 action・admin endpoint は action 規則か path/method のいずれかで拒否する。probe は user session ではないため `session_revocations` DB read をせず、短命 expiry と署名鍵 rotation で失効させる。

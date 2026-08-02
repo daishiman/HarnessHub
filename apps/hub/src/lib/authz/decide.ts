@@ -70,7 +70,7 @@ export function decide(input: AuthzDecisionInput): AuthzOutcome {
 
   if (input.sessionRevoked) return { allowed: false, reason: 'revoked_session' };
 
-  if (rule.credential !== 'either' && input.principal.credential !== rule.credential) {
+  if (!credentialAllowed(rule.credential, input.principal.credential)) {
     return { allowed: false, reason: 'credential_not_allowed' };
   }
 
@@ -100,4 +100,13 @@ export function decide(input: AuthzDecisionInput): AuthzOutcome {
   }
 
   return { allowed: true, effectiveRole };
+}
+
+function credentialAllowed(
+  required: 'session' | 'access_token' | 'either' | 'session_or_cwv_probe',
+  actual: AuthzPrincipal['credential'],
+): boolean {
+  if (required === 'either') return actual === 'session' || actual === 'access_token';
+  if (required === 'session_or_cwv_probe') return actual === 'session' || actual === 'cwv_probe';
+  return actual === required;
 }

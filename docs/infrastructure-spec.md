@@ -60,6 +60,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | libSQL 接続 | token 失効時・年 1 回 |
 | `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
 | `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
+| `CWV_PROBE_SECRET` / `CWV_PROBE_TENANT_ID` / `CWV_PROBE_WORKSPACE_ID` | protected `/catalog` の CWV 実測専用。最大 5 分の ticket 署名鍵と、読み取り専用の固定 tenant/workspace を束縛する。通常 session / access token の鍵と共有しない。未投入時は計測だけを fail-closed で停止する | 署名鍵は漏えい疑い・年 1 回、固定 scope は代表環境を変更するとき |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK (base64 32 byte)。**1 本のみでテナント数に依存しない**。`users.salary` (purpose=`salary`) と `idp_connections.client_secret_enc` (purpose=`idp_secret`) の DEK を wrap して `encryption_keys` へ保存する (security-spec-data-integrity §4.1/§4.3) | 年 1 回。**DEK の re-wrap のみで列の再暗号化は不要** |
 | `SHARED_GOOGLE_OAUTH_CLIENT_ID` / `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` | 共有 Google OAuth client (環境単位で 1 組)。名前の正本は `apps/hub/src/lib/auth/shared-credentials.ts`。**Worker の起動要件ではない** (未投入でも顧客持ち込み方式のテナントは動き、片方欠落は `readSharedGoogleCredentials` が null に倒す) が、**2026-08-02 に本番投入済み**のため runbook S-02 に従い `secrets.required` へ宣言し、消失を deploy 前に検知する対象とする | 年 1 回 |
 | `RESEND_API_KEY` | メール送信 (SEC9)。**2026-08-02 時点で実装からの参照が無い** (planned)。投入しても効果が無く用途不明の credential を増やすだけなので、実装と同じ変更で required へ移すまで投入しない | 年 1 回 |
@@ -137,6 +138,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 |---|---|---|
 | `ci.yml` | PR / push (main・feature branch) / `workflow_dispatch` | **静的ゲート → install → test → bundle → deploy を単一 workflow 内で連鎖**（下記）。deploy job は main の push または main を明示した dispatch だけで実行され、全ゲート通過が前提 |
 | `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
+| `cwv.yml` | 週次 cron / 手動 dispatch | `HUB_PUBLIC_URL` の同一 HTTPS origin に固定した protected `/catalog` を Lighthouse で計測。通常 session ではなく短命 read-only ticket を使い、未設定・計測不能を good と数えない |
 
 - **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
 - **成果物の採否判定は `verify-export-artifact.ts` に一本化する (2026-07-28 実装反映 / `HarnessHub-vns9`)**: workflow の shell で header を `grep` したり行数を `awk` で数えたりしない。判定の実体は `parseExportArtifact` (`packages/db/backup/export.ts`) で、header 形式・`format_version`・`coreTables` 19 テーブルとの**集合一致**・header 宣言行数と実際の行数の一致まで fail-closed に見る。workflow 側に弱い検査を二重に置くと、**弱い方が先に判定してしまう**。実際、旧実装の「データ行 0 なら不採用」がこれに当たり、migration 済みだがまだ利用の無い本番 DB を 3 夜連続で失敗させていた (詳細は §10)。
@@ -164,6 +166,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **Worker 成果物の生成は G4 より前**に行う。`check:bundle` と bundle contract test は `.open-next` を前提とするため、G4 の後に生成していた旧構成では bundle 検査が CI で常時 skip されていた (P10 F-15)。
 - `pnpm --filter <pkg> run <script>` は **script 不在でも exit 0 になり得る**ため、G6 / G7 / G8 は実行前に `scripts/ci/check-required-package-script.mjs` で package.json 上の script 実在を fail-closed 検査する。ゲートの「緑」が「検査した結果の緑」であることを構造的に担保する。
 - **Actions 設定台帳の突合**: `scripts/ci/actions-secrets-registry.json` を用途・種類・必須度・利用 workflow の正本とし、`scripts/ci/check-actions-secrets.mjs` が workflow の実参照と双方向で照合する。静的ゲートでは構造 drift を、手動 `--live` では GitHub 上の実投入状況も fail-closed で検査する。
+- **G11 protected route の測定境界 (2026-08-02 / qa-133)**: `cwv.yml` は任意 URL を受け取らず、`HUB_PUBLIC_URL` の `/catalog` に限定する。GitHub Actions は通常の `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` を持たず、`HUB_CWV_PROBE_*` から最大 5 分の署名 ticket を発行する。Worker は同じ secret と固定 tenant/workspace で検証し、URL から ticket を除去して `__Host-` / HttpOnly / Secure / SameSite=Strict Cookie へ移す。ticket・secret は Actions log、Lighthouse JSON、CWV report、artifact に保存しない。Worker/GitHub secret の投入、本番 deploy、初回実測は外部状態なので、投入前は workflow を失敗させ未計測として扱う。詳細と手順は [CWV probe 仕様反映受領書](features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) と feature runbook §1.1 を正とする。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
 - **main の明示再実行 (2026-08-01 / `HarnessHub-o2i.13`)**: 通常経路は main merge による push のまま維持する。docs-only merge など、`on.push.paths` の対象外で deploy run が起動しなかった場合だけ、`workflow_dispatch` で main の同一 commit を再配備できる。dispatch も `static-gates` と `test` を省略せず、feature branch では deploy しない。これは手元の Wrangler 操作や手動承認 gate を追加するものではなく、同じ CI の再実行経路である。

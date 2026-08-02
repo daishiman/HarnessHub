@@ -84,7 +84,7 @@ run "validate-harness-coverage --ratchet"  python3 scripts/validate-harness-cove
 run "validate-harness-coverage --self-test" python3 scripts/validate-harness-coverage.py --self-test
 run "check-scripts-drift"                  bash scripts/check-scripts-drift.sh
 run "build-plugins-from-harness --check-only" python3 scripts/build-plugins-from-harness.py --check-only
-run "build-claude-symlinks --check"        python3 scripts/build-claude-symlinks.py --check
+run "native-surfaces-check"                 make native-surfaces-check
 # ── discovery 派生台帳 parity (roster / llm-coverage が discovery と一致するか) ──
 # governance-check.yml と対称。この2つが run-ci-checks 非包含だと改名/skill 変更時に
 # pre-push を素通りして CI で初めて露見する (2026-07-02 harness-creator 改名で criteria

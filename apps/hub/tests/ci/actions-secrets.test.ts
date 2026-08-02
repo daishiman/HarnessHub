@@ -225,6 +225,24 @@ describe('Actions secret / variable 台帳の突合', () => {
     expect(runbook).not.toContain('gh secret set TURSO_DATABASE_NAME');
   });
 
+  it('CWV 専用 credential は台帳・workflow・runbook で同じ 3 Secret を追跡する', () => {
+    const registry = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, 'scripts/ci/actions-secrets-registry.json'), 'utf8'),
+    ) as { entries: RegistryEntry[] };
+    const workflow = readFileSync(path.join(REPO_ROOT, '.github/workflows/cwv.yml'), 'utf8');
+    const runbook = readFileSync(path.join(REPO_ROOT, 'docs/features/feat-hub-foundation/runbook.md'), 'utf8');
+    const names = ['HUB_CWV_PROBE_SECRET', 'HUB_CWV_PROBE_TENANT_ID', 'HUB_CWV_PROBE_WORKSPACE_ID'];
+
+    for (const name of names) {
+      const entry = registry.entries.find((item) => item.name === name);
+      expect(entry).toMatchObject({ kind: 'secret', requirement: 'required', workflows: ['cwv.yml'] });
+      expect(workflow).toContain(`secrets.${name}`);
+      expect(runbook).toContain(`gh secret set ${name}`);
+    }
+    expect(workflow).not.toContain('secrets.AUTH_SESSION_SECRET');
+    expect(workflow).not.toContain('secrets.AUTH_ACCESS_TOKEN_SECRET');
+  });
+
   it('Workers deploy token と R2 write token を workflow の役割ごとに分離する', () => {
     const backup = readFileSync(path.join(REPO_ROOT, '.github/workflows/backup.yml'), 'utf8');
     const ci = readFileSync(path.join(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');

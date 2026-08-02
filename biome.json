@@ -7,6 +7,7 @@
       "packages/**/*.ts",
       "packages/**/*.tsx",
       "apps/hub/scripts/**/*.mjs",
+      "apps/publisher/scripts/**/*.mjs",
       "scripts/ci/**/*.mjs",
       "!**/node_modules",
       "!**/.next",

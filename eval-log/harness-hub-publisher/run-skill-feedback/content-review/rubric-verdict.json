@@ -1,0 +1,28 @@
+{
+  "target": {
+    "plugin": "harness-hub-publisher",
+    "skill": "run-skill-feedback",
+    "skill_md_sha256": "fe6d8fdb17f5effe8f102d583c11d63503fe36ed267a9e9bfd2f69c5f31aadd5"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "codex-final-review",
+  "reviewed_at": "2026-08-02T17:35:00+09:00",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "IN2", "IN3", "OUT1", "OUT2"],
+    "positive_feedback": [
+      "完全性: feedback protocolの周知、実体配備、inner/outer criteria、content-review記録、criteria rosterを揃え、strict lintを通過した。",
+      "一貫性: Publisher固有の実行Skillと改善要望Skillを分離し、要望収集がpublish/デプロイを自動実行しない責務境界を維持する。",
+      "検証可能性: lint-feedback-protocol --strict、lint-feedback-contract、content-review、criteria roster、llm coverageを再実行可能な形式で残す。"
+    ],
+    "negative_feedback": [],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual-final-review",
+    "next_action": "none"
+  },
+  "notes": "配布面の設計・検証可能性はPASS。外部Notion操作の実走受入は、この配布静的レビューとは別の証跡が必要。"
+}

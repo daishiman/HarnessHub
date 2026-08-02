@@ -8,6 +8,7 @@
 import { accessTokenClaimsSchema } from '@harness-hub/schemas';
 
 import { SESSION_COOKIE_NAME } from '../auth/config.js';
+import { CWV_PROBE_COOKIE_NAME, type CwvProbeConfig, resolveCwvProbePrincipal } from '../auth/cwv-probe.js';
 import { verifyJwt } from '../auth/jwt.js';
 import { readCookie, verifySessionToken } from '../auth/session.js';
 import type { AuthzPrincipal } from './types.js';
@@ -16,6 +17,8 @@ export interface PrincipalResolverDeps {
   readonly sessionSecret: string;
   readonly accessTokenSecret: string;
   readonly nowSeconds: number;
+  /** CWV 専用 credential の設定。未設定なら通常の認証経路だけを使う。 */
+  readonly cwvProbe?: CwvProbeConfig | undefined;
 }
 
 export type AccessTokenPrincipalResolverDeps = Pick<PrincipalResolverDeps, 'accessTokenSecret' | 'nowSeconds'>;
@@ -28,6 +31,14 @@ export async function resolveRequestPrincipal(
   request: Request,
   deps: PrincipalResolverDeps,
 ): Promise<AuthzPrincipal | null> {
+  // 短命 probe cookie が提示された要求は、改ざん時に session/Bearer へ fallback しない。
+  // fallback すると cookie を付け替えた攻撃者が別 credential の経路へ滑り込む余地ができる。
+  if (deps.cwvProbe !== undefined && readCookie(request.headers.get('cookie'), CWV_PROBE_COOKIE_NAME) !== null) {
+    // claim と設定値の照合だけでは、同一 Worker に紐づく別 custom domain まで使えてしまう。
+    // route を middleware を通さず unit/integration 実行しても同じ境界を守るため、ここでも request origin を固定する。
+    if (new URL(request.url).origin !== deps.cwvProbe.origin) return null;
+    return resolveCwvProbePrincipal(request.headers.get('cookie'), deps.cwvProbe, deps.nowSeconds);
+  }
   const bearer = readBearerToken(request.headers.get('authorization'));
   if (bearer !== null) return resolveAccessTokenPrincipal(bearer, deps);
   return resolveFromSession(request.headers.get('cookie'), deps);
