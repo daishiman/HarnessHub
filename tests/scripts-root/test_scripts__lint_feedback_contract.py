@@ -313,6 +313,29 @@ def test_ratchet_live_tier_missing_criteria_in_baseline_warns(tmp_path, monkeypa
     assert "baseline 免除中" in out
 
 
+def test_ratchet_identical_feedback_copy_uses_canonical_evaluation(tmp_path, monkeypatch):
+    """Marketplace-safe feedback copies are not separate D7 live skills."""
+    pdir = tmp_path / "plugins"
+    text = _skill_md("run", _VALID_FC, _LIVE_TOOLS)
+    _write_skill(pdir, "harness-creator", "run-skill-feedback", text)
+    copied = _write_skill(pdir, "publisher", "run-skill-feedback", text)
+    source_manifest = pdir / "harness-creator" / "skills" / "run-skill-feedback" / "workflow-manifest.json"
+    copied_manifest = copied / "workflow-manifest.json"
+    source_manifest.write_text('{"version": 1}\n', encoding="utf-8")
+    copied_manifest.write_text('{"version": 1}\n', encoding="utf-8")
+    monkeypatch.setattr(MOD, "PLUGINS_DIR", pdir)
+    fc = MOD.FC.extract_frontmatter_feedback_contract(text)
+
+    assert MOD._live_trial_ratchet("publisher", "run-skill-feedback", "run", text, fc, set()) == ([], [])
+
+    copied_manifest.write_text('{"version": 2}\n', encoding="utf-8")
+    violations, warnings = MOD._live_trial_ratchet(
+        "publisher", "run-skill-feedback", "run", text, fc, set()
+    )
+    assert len(violations) == 1
+    assert warnings == []
+
+
 def test_ratchet_non_live_tier_not_checked(tmp_path, monkeypatch, capsys):
     # 非 live: hooks/live ツールなし (fork 導出) は live-trial criteria 不要 => PASS。
     pdir = tmp_path / "plugins"

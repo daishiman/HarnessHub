@@ -29,7 +29,7 @@ graph_node_id: feat-publisher-plugin
 | tasks | `tasks/feat-publisher-plugin/sys-publisher-plugin-p01.md`〜`p13.md` | content-addressed task spec は「両 OS 実機 E2E」と「初回 publish 15 分実測」を既に要求しており、変更せずに適用する |
 | docs | `docs/features/feat-publisher-plugin/` | P07/P10/P11/P13 の誤った合格・close-out 表記を訂正し、実サービスを使う両 OS の証跡が必要と記録した |
 | 配布登録簿 | `.claude-plugin/marketplace.json`、`.claude-plugin/bundles.json` | 新 plugin が CI の配布完全性ゲートを通るための append-only 登録。draft PR の未マージ状態を保ち、A1/A3 未達の間は公開開始に使わない |
-| 開発用ショートカット | `scripts/build-claude-symlinks.py`、`.claude/` | 各配布 plugin に実体コピーする `run-skill-feedback` が正本と完全一致するときだけ、開発用のグローバル入口を harness-creator 正本へ集約する。異なる内容は従来どおり name conflict として fail-closed（不一致時に必ず止まる）にするため、製品 API・認可・配備契約は変わらない |
+| 開発用ショートカット | `scripts/build-claude-symlinks.py`、`.claude/` | 各配布 plugin に実体コピーする `run-skill-feedback` が正本と完全一致するときだけ、開発用のグローバル入口、D7 live-trial 判定、PKG-003 所有判定を harness-creator 正本へ集約する。異なる内容は従来どおり name conflict・新規 live 判定・名前衝突として fail-closed（不一致時に必ず止まる）にするため、製品 API・認可・配備契約は変わらない |
 
 ## 反映した実行状態
 
@@ -37,6 +37,8 @@ graph_node_id: feat-publisher-plugin
 - pre-check と Hub 検査の同値性（A2）は充足した。
 - fake I/O テストと Windows 手順書は、実サービスを使う E2E や 15 分実測の代替ではない。したがって A1/A3 は未達であり、marketplace 登録依頼を保留する。
 - feedback skill の配布コピーを追加したことで発見した開発用ショートカット生成器の不整合は、正本と完全一致する実体コピーだけを集約し、差異を検出した場合は失敗にするよう修正した。これは既存の配布自己完結性を守る品質修正であり、`system-spec/`・`specs/`・`architecture/`・`features/`・`tasks/` の規範的仕様変更を必要としない。
+- 変更した package validator は 500 行上限に合わせ、PKG-005〜008/014 の実行時検査を `validate-plugin-package-runtime-checks.py` へ分離した。CLI と findings 形式は維持し、回帰テストで同じ検査結果を確認した。
+- 今回の実装・検査・文書ファイルは 500 行以下である。`pnpm-lock.yaml` と `eval-log/llm-coverage.json` は各生成器が単一ファイルを正本とする機械生成台帳のため、内容を手作業で分割しない。
 
 ## 再開条件
 

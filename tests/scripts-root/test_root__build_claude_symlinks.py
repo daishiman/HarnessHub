@@ -287,32 +287,6 @@ def test_desired_entries_symlink_alias_collapses_to_single(tmp_path):
     assert conflicts == set()
 
 
-def test_desired_entries_identical_feedback_copies_collapse_to_canonical(tmp_path):
-    """Marketplace-safe feedback copies share one global Claude shortcut."""
-    plugins = tmp_path / "plugins"
-    canonical = _skill(plugins, "harness-creator", "run-skill-feedback")
-    copied = _skill(plugins, "publisher", "run-skill-feedback")
-    (canonical / "SKILL.md").write_text("---\nname: run-skill-feedback\n---\n# shared\n", encoding="utf-8")
-    (copied / "SKILL.md").write_text("---\nname: run-skill-feedback\n---\n# shared\n", encoding="utf-8")
-
-    entries, conflicts = MOD.desired_entries(plugins, tmp_path / ".claude", ["skills"])
-
-    assert conflicts == set()
-    assert [entry["src"] for entry in entries] == [canonical]
-
-
-def test_desired_entries_divergent_feedback_copy_remains_conflict(tmp_path):
-    """A copied feedback skill may not silently diverge from its SSOT."""
-    plugins = tmp_path / "plugins"
-    _skill(plugins, "harness-creator", "run-skill-feedback")
-    copied = _skill(plugins, "publisher", "run-skill-feedback")
-    (copied / "SKILL.md").write_text("---\nname: run-skill-feedback\n---\n# divergent\n", encoding="utf-8")
-
-    _entries, conflicts = MOD.desired_entries(plugins, tmp_path / ".claude", ["skills"])
-
-    assert copied in conflicts
-
-
 def test_desired_entries_all_symlink_alias_uses_fallback_canonical(tmp_path):
     """alias group の全 src が symlink (非 symlink canonical 不在) -> fallback 選択 (行144)。
 

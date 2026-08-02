@@ -221,6 +221,26 @@ def test_pkg_003_symlink_not_owner(tmp_path):
     assert MOD.check_pkg_003(a) == []
 
 
+def test_pkg_003_identical_feedback_copy_is_source_owned(tmp_path):
+    """Distributable feedback copies share the canonical namespace owner."""
+    source_plugin = _plugin(tmp_path, "harness-creator")
+    copied_plugin = _plugin(tmp_path, "publisher")
+    _write_plugin_json(source_plugin, {"name": "harness-creator"})
+    _write_plugin_json(copied_plugin, {"name": "publisher"})
+    source = _write_skill(source_plugin, "run-skill-feedback", _full_required_fm())
+    copied = _write_skill(copied_plugin, "run-skill-feedback", _full_required_fm())
+    (source.parent / "workflow-manifest.json").write_text('{"version": 1}\n', encoding="utf-8")
+    (copied.parent / "workflow-manifest.json").write_text('{"version": 1}\n', encoding="utf-8")
+
+    assert MOD.check_pkg_003(source_plugin) == []
+    assert MOD.check_pkg_003(copied_plugin) == []
+
+    (copied.parent / "workflow-manifest.json").write_text('{"version": 2}\n', encoding="utf-8")
+    findings = MOD.check_pkg_003(copied_plugin)
+    assert len(findings) == 1
+    assert "run-skill-feedback" in findings[0]["evidence"]
+
+
 def test_pkg_003_agent_name_collision(tmp_path):
     a = _plugin(tmp_path, "demo")
     b = _plugin(tmp_path, "other")
@@ -360,5 +380,3 @@ def test_pkg_005_all_declared_present(tmp_path):
     fm = _full_required_fm() + "\nsubagent_refs:\n  - judge"
     _write_skill(p, "sk", fm)
     assert MOD.check_pkg_005(p) == []
-
-
