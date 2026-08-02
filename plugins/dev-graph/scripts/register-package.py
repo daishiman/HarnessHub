@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
+from registration_projection import carry_projection_fields, matches_registered_state
 
 HERE = Path(__file__).resolve().parent
 _PREFLIGHT_HELPER = runpy.run_path(str(HERE / "validate-registration-preflight.py"))
@@ -313,9 +314,13 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
         if not isinstance(revision_before, int) or revision_before < 0: raise ContractError("invalid graph_revision")
         supersedes_source_digest: str | None = None
         operation = "registered"
+        persisted = copy.deepcopy(resolved)
         if len(present) == 13:
             actual = [_find_node(existing, node_id) for node_id in incoming_ids]
-            if actual == resolved:
+            for index, (node, saved) in enumerate(zip(persisted, actual)):
+                carry_projection_fields(node, saved)
+                _validate_schema(node, node_schema, node_schema, f"persisted_nodes[{index}]")
+            if all(matches_registered_state(saved, node) for saved, node in zip(actual, persisted)):
                 if not receipt_path.is_file(): raise ContractError("registered nodes exist without immutable receipt")
                 receipt = _json_object(receipt_path)
                 _validate_schema(receipt, receipt_schema, receipt_schema, "registration-receipt")
@@ -350,8 +355,8 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
             operation = "superseded"
         if receipt_path.exists(): raise ContractError("immutable receipt exists before graph registration")
         proposed = copy.deepcopy(current)
-        replacements = {node["graph_node_id"]: node for node in resolved}
-        projected_parent = _project_parent_feature(parent, package, resolved)
+        replacements = {node["graph_node_id"]: node for node in persisted}
+        projected_parent = _project_parent_feature(parent, package, persisted)
         _validate_schema(projected_parent, node_schema, node_schema, "projected_parent_feature")
         replacements[package["parent_feature"]] = projected_parent
         proposed["nodes"] = [
@@ -359,7 +364,7 @@ def _register(args: argparse.Namespace) -> dict[str, Any]:
             for node in existing
         ]
         if not present:
-            proposed["nodes"] = [*proposed["nodes"], *resolved]
+            proposed["nodes"] = [*proposed["nodes"], *persisted]
         proposed["graph_revision"] = revision_before + 1
         graph_digest = _canonical_digest(proposed)
         receipt = {

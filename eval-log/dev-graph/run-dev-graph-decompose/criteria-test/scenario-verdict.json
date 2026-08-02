@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "eval_c14_fcth_finalmain_r14; OUT1 refresh=independent-claude-opus-dc7-20260802",
+  "reviewer": "codex-final-review; OUT1 refresh=isolated-claude-opus-cvli-20260802",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,19 +27,18 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/evidence/beads/eval-log/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/evidence/none/eval-log/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/evidence/beads/eval-log/run-dev-graph-decompose-progress.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/evidence/none/eval-log/run-dev-graph-decompose-progress.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T034300Z-dc7-decompose/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/beads/eval-log/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/none/eval-log/decompose-audit.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/beads/eval-log/run-dev-graph-decompose-progress.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/none/eval-log/run-dev-graph-decompose-progress.json",
         "plugins/dev-graph/tests/test_decompose_live_trial_audit.py"
       ],
-      "observed": "2026-08-02 fresh paired replay live trial (20260802T034300Z-dc7-decompose) は actual_model=claude-opus-4-6、nudge=0、gate=0、poll_exit=DONE で PASS。初期 node 0 の beads / none fixture で target Skill を各2回、read-only Explore Task を各1回実行し、各 Skill②後の node writer は0。両系列は architecture 1 + feature 4 + task 0、3 edge、acyclic、最大依存1、系列別 tracker binding を満たした。両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f。fresh evaluator は transient command failure 3 件が直後に修復され最終証拠を破損していないことを含めて PASS / blockers=[] と判定した。goal-seek violations=0、required observations 7/7、args/task contract 一致、current behavior closure digest=5d1d3ad2626615af0b2e9b8684dd6d4868026d350b6610d6845a049c4e88a3ce。"
+      "observed": "2026-08-02 fresh paired replay live trial (20260802T101500Z-cvli-decompose-r7) は actual_model=claude-opus-4-6、nudge=0、gate=0、poll_exit=DONE で PASS。初期 node 0 の beads / none fixture で target Skill を各2回、read-only Explore Task を各1回実行し、各 Skill②後の node writer は0。両系列は architecture 1 + feature 4 + task 0、3 edge、acyclic、最大依存1、系列別 tracker binding を満たした。両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f。goal-seek violations=0、required observations 7/7、args/task contract 一致、current behavior closure digest=5bfe6072a9e346d5b720770809adc08b5a83d54150bf45f46fa52a26f06f069f。"
     },
     "OUT2": {
       "status": "PASS",

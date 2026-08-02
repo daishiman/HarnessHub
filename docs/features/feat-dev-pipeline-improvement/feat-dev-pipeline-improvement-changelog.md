@@ -220,3 +220,13 @@ close した。
 - labels は冪等な `--set-labels` 置換、priority は create/update 共通正規化を使う。
 - 契約・設計・検証結果は
   [仕様反映受領書](dc7-bd-free-field-write-route-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-02 追記: exact-13 再登録と task projection の冪等性
+
+- `HarnessHub-cvli` で、registration manifest が省略する task frontmatter 六項目を
+  C02 投影済み node から限定的に保持し、同じ generation の再登録を安全な no-op にした。
+- manifest の明示値は優先し、`updated_at` の前進以外、時刻後退、不正時刻、他フィールド差分は
+  drift として fail-closed にする。exact-13、source digest、immutable receipt は従来どおり保護する。
+- 変更は repository 内の開発管理契約に限定され、製品 API・DB・認証認可・UI・deploy unit は非変更。
+  層別の判断と検証は
+  [仕様反映受領書](register-package-projection-idempotency-spec-reflection-receipt.md) を正とする。

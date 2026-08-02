@@ -145,6 +145,21 @@ fail-closed に拒否する。これは既存の開発管理契約を実行可�
 判断と検証は `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
 を正とする。
 
+### 実装反映注記 (2026-08-02 / `HarnessHub-cvli`)
+
+system route の exact-13 package は、registration manifest が持つ generation・source digest・
+immutable receipt と、C02 が task Markdown に投影する `purpose`、`goal`、`scope_in`、
+`scope_out`、`acceptance`、`architecture_refs` を別の責務として扱う。再登録では、manifest が
+省略する後者六項目だけを保存済み node から保持し、明示値は manifest を優先する。これにより
+同じ generation の register → upsert → register dry-run は idempotent になる。
+
+`updated_at` は投影で前進し得るため同値比較では保存済み時刻が同時刻以降であることを確認する。
+時刻の後退・不正値・他フィールド差分は受理せず fail-closed とし、exact-13、source digest、
+receipt の不変条件を維持する。これは repository 内の開発管理契約の実装具体化であり、製品 API、
+DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。判断と検証は
+`docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md`
+を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

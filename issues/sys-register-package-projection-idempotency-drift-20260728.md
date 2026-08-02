@@ -12,11 +12,11 @@ iteration: null
 title: "register-package 再実行が projection 6 項目差で同一 digest を拒否する"
 owners: ["daishiman"]
 created_at: "2026-07-27T21:24:33.65077Z"
-updated_at: "2026-07-27T21:24:33.65077Z"
-status: "draft"
+updated_at: "2026-08-03T00:00:00Z"
+status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
-resource_scope: ["plugins/dev-graph/scripts/register-package.py","plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/tests/test_register_package.py","issues/sys-register-package-projection-idempotency-drift-20260728.md"]
+resource_scope: ["plugins/dev-graph/scripts/register-package.py","plugins/dev-graph/scripts/registration_projection.py","plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/tests/test_register_package.py","plugins/dev-graph/tests/register_package_test_support.py","plugins/dev-graph/tests/test_register_package_projection_idempotency.py","issues/sys-register-package-projection-idempotency-drift-20260728.md","docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"]
 purpose: "exact-13 package の登録と task Markdown 投影が同じ node 契約へ収束し、同一 generation の再登録を安全な no-op にする"
 goal: "register-package → upsert-node 後に同じ generation を dry-run すると idempotent=true で成功し、必須 frontmatter 6 項目と receipt 不変性も維持される状態"
 mvp_alignment: null
@@ -30,10 +30,10 @@ phase_ref: null
 file_path: "issues/sys-register-package-projection-idempotency-drift-20260728.md"
 template_id: "issue"
 template_version: "1.0.0"
-confirmation_status: "draft"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-27T21:24:33.65077Z","origin_kind":"generated","source_digest":"5fc84a3f1c4517692cd2f4b6d4b115c07debcf5285d00354fd5ccdc2f7134d68","source_path":"plugins/dev-graph/scripts/register-package.py","source_plugin":"dev-graph","source_version":null}
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"61dbf0084dcf0e7fdfde26554da3aaec90a47b265753244b16c2f97a4ecd6aab","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"generated","source_digest":"ee3f270cf2564a6425d078b1db5f63f9f3b74ce2d57bbbf45a2a215a54fef575","source_path":"plugins/dev-graph/scripts/register-package.py","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.98
 classification_reason: "HarnessHub-8wo 最終レビューで正規 register → upsert → register dry-run を再現し、同一 source digest の内容差エラーを実測したため"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-register-package-projection-idempotency-drift-20260728.md","confidence":0.98}]
@@ -76,6 +76,19 @@ frontmatter で必須となる次の 6 項目がない。
 3. 6 項目を削って見かけ上そろえず、task frontmatter 契約を維持する。
 4. exact-13、graph schema、source digest、generation receipt の不変条件を
    回帰テストで固定する。
+
+## 実装・検証状況 (2026-08-02)
+
+`registration_projection.py` に、C02 projection が所有する六項目の限定保持と
+`updated_at` の単調性比較を分離した。`register-package.py` は同一 generation の既存
+node を確認するとき、この六項目だけを保存済み node から補い、明示 manifest 値は優先する。
+時刻後退・不正時刻・他フィールド差分は従来どおり drift として拒否する。
+
+正例（register → task projection → 同 generation register dry-run）、supersede、明示値、
+時刻後退・不正時刻の負例を回帰テストで固定した。仕様・設計への反映と最終品質ゲートの
+受領は
+[`register-package-projection-idempotency-spec-reflection-receipt.md`](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md)
+を正とする。linked PR が main へ merge されるまでは本 issue の completion を確定しない。
 
 ## 検出条件
 

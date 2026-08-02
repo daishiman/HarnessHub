@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1121,
+  "graph_revision": 1126,
   "nodes": [
     {
       "acceptance": [
@@ -12998,9 +12998,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
-        "evaluator": "codex-final-review + merge-reconciliation",
-        "evidence_ref": "system-spec/dev-workflow.md"
+        "evaluated_digest": "cc2d1de02a99f8e3093f01fbdbcbdc3fc8f8eddaabecb1e1741d356023ab3dae",
+        "evaluator": "codex-final-review (HarnessHub-cvli)",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13055,9 +13055,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T05:27:08Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
+        "source_digest": "cc2d1de02a99f8e3093f01fbdbcbdc3fc8f8eddaabecb1e1741d356023ab3dae",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13073,7 +13073,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T05:27:08Z"
+      "updated_at": "2026-08-02T09:01:36.321262Z"
     },
     {
       "acceptance": [
@@ -25356,7 +25356,8 @@
         "issue-audit-followups-20260717",
         "issue-c02-upsert-lifecycle-regression-20260729",
         "issue-id-uniqueness-gate-generalization-20260728",
-        "issue-doc-line-limit-followup-mfh7-20260728"
+        "issue-doc-line-limit-followup-mfh7-20260728",
+        "issue-register-package-projection-idempotency-drift-20260728"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25400,7 +25401,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:00:37Z"
+      "updated_at": "2026-08-02T08:59:21.636169Z"
     },
     {
       "acceptance": [
@@ -26802,7 +26803,8 @@
       "purpose": "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
-        "arch-harness-hub-dev-workflow"
+        "arch-harness-hub-dev-workflow",
+        "issue-register-package-projection-idempotency-drift-20260728"
       ],
       "resource_scope": [
         "eval-log/dev-graph/pipeline-improvement/release-receipt.json"
@@ -26838,7 +26840,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T11:57:56Z"
+      "updated_at": "2026-08-02T09:02:49.053809Z"
     },
     {
       "acceptance": [
@@ -39403,15 +39405,15 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "61dbf0084dcf0e7fdfde26554da3aaec90a47b265753244b16c2f97a4ecd6aab",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-27T21:24:33.65077Z",
       "depends_on": [],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-register-package-projection-idempotency-drift-20260728.md",
@@ -39446,9 +39448,13 @@
       ],
       "resource_scope": [
         "plugins/dev-graph/scripts/register-package.py",
+        "plugins/dev-graph/scripts/registration_projection.py",
         "plugins/dev-graph/scripts/upsert-node.py",
         "plugins/dev-graph/tests/test_register_package.py",
-        "issues/sys-register-package-projection-idempotency-drift-20260728.md"
+        "plugins/dev-graph/tests/register_package_test_support.py",
+        "plugins/dev-graph/tests/test_register_package_projection_idempotency.py",
+        "issues/sys-register-package-projection-idempotency-drift-20260728.md",
+        "docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"
       ],
       "scope_in": [
         "register-package と task projection の所有フィールド統一",
@@ -39461,15 +39467,15 @@
         "task frontmatter 必須 6 項目の削除"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-27T21:24:33.65077Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "generated",
-        "source_digest": "5fc84a3f1c4517692cd2f4b6d4b115c07debcf5285d00354fd5ccdc2f7134d68",
+        "source_digest": "ee3f270cf2564a6425d078b1db5f63f9f3b74ce2d57bbbf45a2a215a54fef575",
         "source_path": "plugins/dev-graph/scripts/register-package.py",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "active",
       "tags": [
         "dev-graph",
         "register-package",
@@ -39482,7 +39488,7 @@
       "template_version": "1.0.0",
       "title": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-27T21:24:33.65077Z"
+      "updated_at": "2026-08-03T00:00:00Z"
     },
     {
       "acceptance": [
