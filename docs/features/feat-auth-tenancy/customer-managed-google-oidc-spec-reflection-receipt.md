@@ -105,16 +105,15 @@ worktree の `node_modules` に macOS 用 Biome 実行ファイルが欠けて�
 
 ## 7. main 同期受領結果
 
-- `origin/main`: `3e34b78f0f891c9f3427e9af6fde27172ab5aeb9`（PR #634 の merge commit）
-- local `main`: `3e34b78f0f891c9f3427e9af6fde27172ab5aeb9`
-- feature branch への local `main` 反映: `git merge --ff-only main` により同じ commit へ前進
+- `origin/main`: `ce874d467900a38d3707c42eac062a446e2aa296`（PR #635 を含む current main）
+- local `main`: `ce874d467900a38d3707c42eac062a446e2aa296`
+- feature branch への local `main` 反映: PR #635 到着後に merge し、main 側の変更を保持
 - `git merge-base --is-ancestor origin/main HEAD`: pass
 
 リモート main をローカル main へ同期した後、その local main を feature branch へ反映した。
-PR #634 はすでに main へ merge 済みであり、今回の反映は fast-forward（履歴を枝分かれさせず
-既存 commit へ進める更新）で完了した。`system-spec/spec-state.json` では main 側の Hub 基盤
-closeout `qa-123` を維持し、今回分は `qa-124`〜`qa-130` として正規 writer の reopen → confirm →
-set-serves と compiler を通して確定済みである。
+PR #634 は `3e34b78f` で main へ merge 済みであり、その後に到着した PR #635 まで取り込んだ。
+`system-spec/spec-state.json` では main 側の Hub 基盤 closeout `qa-123` を維持し、今回分は
+`qa-124`〜`qa-130` として正規 writer の reopen → confirm → set-serves と compiler を通して確定済みである。
 
 ## 8. 500 行制約
 
@@ -137,8 +136,8 @@ set-serves と compiler を通して確定済みである。
 
 - `git status` と `git diff` を確認し、main へ確定済みの仕様書に対して architecture wrapper の
   source digest が古いことを検出した。C02 正規 writer で backend / data / frontend / security /
-  infrastructure / testing-qa の 6 node を再取込した。本文は保持し、frontmatter と graph の来歴だけを
-  現行正本へ再束縛した。
+  testing-qa を再取込し、main 側で更新された infrastructure wrapper も含めて 6 node を再検証した。
+  本文は保持し、frontmatter と graph の来歴だけを現行正本へ再束縛した。
 - この最終レビューによる **新規の仕様・設計影響はなし**と判定した。理由は、API、認可、状態遷移、DB
   schema、秘密値の露出方針、運用手順、テスト受入条件はすべて qa-124〜qa-130 として PR #634 前に
   system-spec 正規フローで確定済みであり、今回行ったのは確定正本への参照来歴更新だけだからである。
@@ -149,6 +148,9 @@ set-serves と compiler を通して確定済みである。
 - C15 schedule（着手可能な作業の算出）は新しい graph digest で再計算し、変更前後の graph / tracker /
   lease digest 一致、resource conflict 0 を受領した。今回の認証機能 node が shared Google OIDC node の
   完了待ちと表示される既存依存は、本最終レビューでは状態遷移を変更しない。
+- PR #635 が更新した infrastructure / testing-qa 正本は、今回の認証機能の API・認可・状態遷移・DB・
+  secret 方針を変更しない。main の変更を取り込んだうえで来歴再検証だけを行い、認証タスクに対する
+  新規仕様反映は不要と判断した。
 
 ## 11. 受領結論
 

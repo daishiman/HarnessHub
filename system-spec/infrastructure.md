@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-123 |
+| Web (web) | 確定 | 確定質疑: qa-131 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,21 +24,21 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-123 (対応セル: web)
+### qa-131 (対応セル: web)
 
-**質問**: qa-019 / qa-116 の SLO 99.5% と公開実測契約を維持しながら、feat-hub-foundation と関連 Beads をどの完了境界で閉じ、未完了の観測リスクをどう残しますか?
+**質問**: 既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映・Beads 更新指示、および同日 Beads に記録済みの『HarnessHub-37h.14 / HarnessHub-37h.15 は追加対応不要』という明示判断を承認根拠として、qa-019 / qa-116 の SLO 99.5%・公開実測・エラーバジェット契約を全面維持し、delivery closure と operational verdict を次のとおり分離する。
+**回答**: ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。
 
-【1. 運用品質契約の維持】Better Stack 公開 status page の実測、完了 UTC 日だけを数える 30 日観測窓、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結を変更しない。観測 6 日 / 30 日で collecting、外形単独判定 null、Workers 5xx 率未取得という 2026-08-01 時点の証跡を保持し、99.5% 達成を主張しない。
+【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。
 
-【2. feature の完了境界】feat-hub-foundation は exact-13 の P01〜P13、CI test→deploy、本番 /health、bundle 予算、共通層、release / runbook 証跡の完了を delivery closure とする。SLO 30 日観測と旧 token revoke 確認は独立した運用 follow-up であり、ユーザーが HarnessHub-37h.14 / HarnessHub-37h.15 を追加対応不要として completion_evidence.status=not_applicable で閉じたため、feat-hub-foundation と後続 feature を block しない。HarnessHub-37h.13 は P13 デプロイ責務の完了として閉じる。
+【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。
 
-【3. waiver の意味】not_applicable は PASS や目標達成ではなく、今回の delivery closure に対する追跡免除である。将来、観測判定や token revoke 確認を再開する場合は既存 issue を reopen するか新 issue を起票し、qa-116 の CLI / runbook / 生データ契約で再検証する。
+【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。
 
-【4. domain model の独立完了】feat-domain-model-db / HarnessHub-u6q は、SQLite 方言互換 schema、Release immutable 強制、content-addressed R2 registry、export / restore 証跡という固有受入の完了を根拠に閉じる。Hub 基盤の waived follow-up を domain model の未完了へ読み替えない。
+【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。
 
-【5. 非影響範囲】外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit、SLO 目標値、計測式、秘密管理境界は変更しない。本反映は lifecycle と acceptance governance の変更に限定する。
+【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

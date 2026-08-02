@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T07:43:48Z"
+updated_at: "2026-08-02T08:12:28Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"d2333481227822b7c9b6655523305677d6972c60e3ab3bb992e4177e86ea977d","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T07:43:48Z","origin_kind":"system-spec-harness","source_digest":"d2333481227822b7c9b6655523305677d6972c60e3ab3bb992e4177e86ea977d","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T08:12:28Z","origin_kind":"system-spec-harness","source_digest":"d2333481227822b7c9b6655523305677d6972c60e3ab3bb992e4177e86ea977d","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -57,7 +57,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - [system-spec/auth.md](../system-spec/auth.md) (sha256: `14439efdbbce8f2b…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
-- 再取込日時: 2026-08-02T07:43:48Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 

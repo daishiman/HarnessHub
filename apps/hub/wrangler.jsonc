@@ -56,7 +56,12 @@
       "AUTH_ACCESS_TOKEN_SECRET",
       "TURSO_DATABASE_URL",
       "TURSO_AUTH_TOKEN",
-      "ENCRYPTION_KEK"
+      "ENCRYPTION_KEK",
+      // 2026-08-02 に本番へ投入したので runbook S-02 の指示どおりここへ載せる。実装 land 時点で載せなかったのは、
+      // 共有方式のテナントが 0 件の環境で「必須」と宣言すると未投入がデプロイ前検査の恒常的な赤になり、
+      // 本当に足りない Secret の検知が鈍るため。Worker の起動要件ではなく「消えたら落とす」対象として宣言する。
+      "SHARED_GOOGLE_OAUTH_CLIENT_ID",
+      "SHARED_GOOGLE_OAUTH_CLIENT_SECRET"
     ]
   }
   // preview は PR ごとの使い捨て (infrastructure-spec §6)。常設しないため設定ファイルに環境定義を持たせず、

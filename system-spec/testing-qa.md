@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-130 |
+| Web (web) | 確定 | 確定質疑: qa-132 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -23,6 +23,22 @@ serves_goals: [G1, G2, G5]
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-095 |
 
 ## 確定内容 (質疑録)
+
+### qa-132 (対応セル: web)
+
+**質問**: Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?
+
+**回答**: ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 / qa-130 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。
+
+【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。
+
+【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。
+
+【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。
+
+【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。
+
+【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。
 
 ### qa-130 (対応セル: web)
 
