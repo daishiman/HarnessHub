@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G2, G3, G4, G5]
+serves_goals: [G1, G2, G5]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-131 |
+| Web (web) | 確定 | 確定質疑: qa-133 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-131 (対応セル: web)
+### qa-133 (対応セル: web)
 
 **質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
 
 【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
 

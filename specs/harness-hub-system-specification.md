@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T07:37:35Z"
+updated_at: "2026-08-02T10:39:21Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"d113263ed4f6c381eb97db0a2e253c439948f3c3eb747883eb6da9a26b18f9cb","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T07:37:35Z","origin_kind":"system-spec-harness","source_digest":"d113263ed4f6c381eb97db0a2e253c439948f3c3eb747883eb6da9a26b18f9cb","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"42994bc64a70161b4ad0d5ec88ae88e9f98818b02ee4d6bf33633b17ad3302b4","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T10:39:21Z","origin_kind":"system-spec-harness","source_digest":"42994bc64a70161b4ad0d5ec88ae88e9f98818b02ee4d6bf33633b17ad3302b4","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -54,10 +54,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 正本 (source of truth)
 
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `f195b0ee9ded4f2…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `58d85cb5ff4c828…`)
 
-- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（最新 main の qa-123〜qa-130 を保持し、qa-131 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `d113263ed4f6c381…`）
-- 取込日時: 2026-08-02T07:37:35Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS**（最新 main の qa-123〜qa-132 を保持し、qa-133 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `42994bc64a70161b…`）
+- 取込日時: 2026-08-02T10:39:21Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -397,6 +397,23 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
+**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-131〜132)**:
+
+- migration より前に、Worker Secret の機械可読台帳、`wrangler.jsonc` の required 宣言、
+  本番 Worker の実投入名を三方向で突合する。値は保存せず、認証不足・通信不能・解析不能・
+  未投入・台帳外投入を fail-closed（検査できない場合も安全側で停止）にする。
+- post-deploy 検証の末尾へ hearing 実データ E2E / SEC8 スモークを追加する。**新しい secret を
+  要求せず**、既存の `TURSO_*` と `vars.HUB_PUBLIC_URL` だけで成立させる。
+- session 専用の提出経路は route と同じ repository → service 合成を server 側で実行し、TOKEN 資格の
+  AI キュー API は本番 URL へ実 HTTP で送る。Device Flow の `code` / `token` が認証不要 endpoint で
+  あるという既存契約を使い、署名鍵を CI へ配らずに本物の access token を得る。
+- 検証用の使い捨て tenant は fixture 全体を 1 transaction（途中失敗なら全取り消し）で作り、
+  `finally` の削除も 1 transaction で行う。全対象表の**残行数 0 でなければ失敗**とする。
+- 認可契約そのものは変更しない。SEC5（年収非保存）、SEC8（tenant 分離・claim token 束縛）、
+  session 専用の提出契約を**本番実挙動として観測する**手段を追加する差分である。
+  他 tenant の header を騙る負例は、資源の存在を伏せる既存契約どおり `404 tenant_mismatch`
+  を期待し、`403` への退行も検出する。
+
 **開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
 
 - Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
@@ -426,7 +443,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `feat-domain-model-db` は schema / immutable Release / R2 registry / export-restore の固有受入で独立して閉じる。
 - 外部 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。判断と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
 
-## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-131)
+## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-133)
 
 - promotion 前は system-dev-planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。
 - contract 1.3.0 は、task spec の fenced/inline code にある `--staging`、`--feature-package` 欠落、別 package id を fail-closed に拒否する。backtick/tilde fence、行継続、未閉じ fence も検査し、散文はコマンドと誤認しない。

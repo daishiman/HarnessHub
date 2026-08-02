@@ -1,51 +1,21 @@
 {
   "bd_version": "1.1.0",
-  "candidate_count": 45,
+  "candidate_count": 47,
   "conflicts": [
     {
-      "bd_issue_id": "HarnessHub-nq2",
-      "graph_node_id": "issue-c08-audit-primary-get-capability-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-5kh",
-      "graph_node_id": "issue-features-source-digest-drift-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-ntj",
-      "graph_node_id": "issue-security-web-qaref-chain-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-3d8",
-      "graph_node_id": "issue-doc-granularity-remediation-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-4z0",
-      "graph_node_id": "issue-hearing-trace-followups-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-yg3",
-      "graph_node_id": "issue-scenario-verdict-stale-live-trial-ref-20260721",
-      "reason": "unsupported graph status in parity manifest: draft"
-    },
-    {
-      "bd_issue_id": "HarnessHub-e2u",
-      "graph_node_id": "issue-source-freshness-ops-20260722",
-      "reason": "unsupported graph status in parity manifest: draft"
+      "bd_issue_id": "HarnessHub-6ib",
+      "graph_node_id": "issue-completeness-report-session-id-migration-20260723",
+      "reason": "Beads parity conflict: {\"actual_depends_on\": [\"HarnessHub-x4o\"], \"actual_status\": \"open\", \"confirmed\": false, \"expected_depends_on\": [], \"expected_status\": \"open\", \"missing_edges\": [], \"unexpected_edges\": [\"HarnessHub-x4o\"]}"
     }
   ],
   "op": "ready",
   "parity_provenance": {
-    "generated_at": "2026-07-25T03:03:23Z",
-    "source_graph_digest": "sha256:0c493eef8534ec42644d42de0e49e421793efab3de327febf2e3827d1d952ea5"
+    "generated_at": "2026-08-02T08:18:33Z",
+    "source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3"
   },
   "ready_set": [
     {
-      "bd_issue_id": "HarnessHub-a4ks.1",
+      "bd_issue_id": "HarnessHub-2mor",
       "edge_parity": {
         "actual_depends_on": [],
         "actual_status": "open",
@@ -55,13 +25,13 @@
         "missing_edges": [],
         "unexpected_edges": []
       },
-      "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+      "external_ref": "issue-500-line-split-dilutes-harness-coverage-20260728",
       "graph_depends_on": [],
-      "graph_status": "active",
+      "graph_status": "draft",
       "mvp_fit": null
     },
     {
-      "bd_issue_id": "HarnessHub-a4ks",
+      "bd_issue_id": "HarnessHub-rzc",
       "edge_parity": {
         "actual_depends_on": [],
         "actual_status": "open",
@@ -71,58 +41,402 @@
         "missing_edges": [],
         "unexpected_edges": []
       },
-      "external_ref": "feat-task-spec-test-strategy",
+      "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
       "graph_depends_on": [],
-      "graph_status": "active",
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-ifo",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-devgraph-decompose-inline-dag-check-20260721",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-5kh",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-features-source-digest-drift-20260722",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-11qt",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-governance-lint-local-entry-20260725",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-f84o",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-guard-graph-schema-inline-python-variable-path-20260726",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-l1ru",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-guard-graph-schema-newline-segment-split-20260728",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-kzth",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-guard-script-file-indirection-20260726",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-zrn",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-harness-creator-entry-points-under-declared-20260721",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-4z0",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-hearing-trace-followups-20260722",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-vf66",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-hooks-entry-point-parity-generalization-20260728",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-0jzd",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-init-closure-doc-debts-20260725",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-31k5",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-live-trial-observation-tautology-inventory-20260728",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-r65n",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-live-trial-verdict-staleness-hook-closure-20260726",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-936",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-7ui",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-planner-script-line-limit-20260724",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-dxfe",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-qa070-qa-log-entry-missing-20260726",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-85z0",
+      "edge_parity": {
+        "actual_depends_on": [
+          "HarnessHub-4t9g"
+        ],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [
+          "HarnessHub-4t9g"
+        ],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-required-heading-presence-validation-20260729",
+      "graph_depends_on": [
+        "issue-implementation-readiness-body-validation-20260728"
+      ],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-ldq",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-resource-map-deep-cards-20260722",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-883",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-yg3",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-scenario-verdict-stale-live-trial-ref-20260721",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-ntj",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-security-web-qaref-chain-20260722",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-42g",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-shared-layers-registry-baseline-drift-20260724",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-d15",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
+      "graph_depends_on": [],
+      "graph_status": "draft",
+      "mvp_fit": null
+    },
+    {
+      "bd_issue_id": "HarnessHub-yhc3",
+      "edge_parity": {
+        "actual_depends_on": [],
+        "actual_status": "open",
+        "confirmed": true,
+        "expected_depends_on": [],
+        "expected_status": "open",
+        "missing_edges": [],
+        "unexpected_edges": []
+      },
+      "external_ref": "issue-verify-local-gate-parity-20260725",
+      "graph_depends_on": [],
+      "graph_status": "draft",
       "mvp_fit": null
     }
   ],
   "result": {
-    "candidate_count": 45,
+    "candidate_count": 47,
     "conflicts": [
       {
-        "bd_issue_id": "HarnessHub-nq2",
-        "graph_node_id": "issue-c08-audit-primary-get-capability-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-5kh",
-        "graph_node_id": "issue-features-source-digest-drift-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-ntj",
-        "graph_node_id": "issue-security-web-qaref-chain-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-3d8",
-        "graph_node_id": "issue-doc-granularity-remediation-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-4z0",
-        "graph_node_id": "issue-hearing-trace-followups-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-yg3",
-        "graph_node_id": "issue-scenario-verdict-stale-live-trial-ref-20260721",
-        "reason": "unsupported graph status in parity manifest: draft"
-      },
-      {
-        "bd_issue_id": "HarnessHub-e2u",
-        "graph_node_id": "issue-source-freshness-ops-20260722",
-        "reason": "unsupported graph status in parity manifest: draft"
+        "bd_issue_id": "HarnessHub-6ib",
+        "graph_node_id": "issue-completeness-report-session-id-migration-20260723",
+        "reason": "Beads parity conflict: {\"actual_depends_on\": [\"HarnessHub-x4o\"], \"actual_status\": \"open\", \"confirmed\": false, \"expected_depends_on\": [], \"expected_status\": \"open\", \"missing_edges\": [], \"unexpected_edges\": [\"HarnessHub-x4o\"]}"
       }
     ],
     "parity_provenance": {
-      "generated_at": "2026-07-25T03:03:23Z",
-      "source_graph_digest": "sha256:0c493eef8534ec42644d42de0e49e421793efab3de327febf2e3827d1d952ea5"
+      "generated_at": "2026-08-02T08:18:33Z",
+      "source_graph_digest": "sha256:b14f34f395a0765038cb3d032253e16c2184e8d68321698ce444906d10edf0c3"
     },
     "ready_set": [
       {
-        "bd_issue_id": "HarnessHub-a4ks.1",
+        "bd_issue_id": "HarnessHub-2mor",
         "edge_parity": {
           "actual_depends_on": [],
           "actual_status": "open",
@@ -132,13 +446,13 @@
           "missing_edges": [],
           "unexpected_edges": []
         },
-        "external_ref": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+        "external_ref": "issue-500-line-split-dilutes-harness-coverage-20260728",
         "graph_depends_on": [],
-        "graph_status": "active",
+        "graph_status": "draft",
         "mvp_fit": null
       },
       {
-        "bd_issue_id": "HarnessHub-a4ks",
+        "bd_issue_id": "HarnessHub-rzc",
         "edge_parity": {
           "actual_depends_on": [],
           "actual_status": "open",
@@ -148,132 +462,461 @@
           "missing_edges": [],
           "unexpected_edges": []
         },
-        "external_ref": "feat-task-spec-test-strategy",
+        "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
         "graph_depends_on": [],
-        "graph_status": "active",
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-ifo",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-devgraph-decompose-inline-dag-check-20260721",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-5kh",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-features-source-digest-drift-20260722",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-11qt",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-governance-lint-local-entry-20260725",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-f84o",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-guard-graph-schema-inline-python-variable-path-20260726",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-l1ru",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-guard-graph-schema-newline-segment-split-20260728",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-kzth",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-guard-script-file-indirection-20260726",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-zrn",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-harness-creator-entry-points-under-declared-20260721",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-4z0",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-hearing-trace-followups-20260722",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-vf66",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-hooks-entry-point-parity-generalization-20260728",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-0jzd",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-init-closure-doc-debts-20260725",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-31k5",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-live-trial-observation-tautology-inventory-20260728",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-r65n",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-live-trial-verdict-staleness-hook-closure-20260726",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-936",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-7ui",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-planner-script-line-limit-20260724",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-dxfe",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-qa070-qa-log-entry-missing-20260726",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-85z0",
+        "edge_parity": {
+          "actual_depends_on": [
+            "HarnessHub-4t9g"
+          ],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [
+            "HarnessHub-4t9g"
+          ],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-required-heading-presence-validation-20260729",
+        "graph_depends_on": [
+          "issue-implementation-readiness-body-validation-20260728"
+        ],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-ldq",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-resource-map-deep-cards-20260722",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-883",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-yg3",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-scenario-verdict-stale-live-trial-ref-20260721",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-ntj",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-security-web-qaref-chain-20260722",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-42g",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-shared-layers-registry-baseline-drift-20260724",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-d15",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
+        "graph_depends_on": [],
+        "graph_status": "draft",
+        "mvp_fit": null
+      },
+      {
+        "bd_issue_id": "HarnessHub-yhc3",
+        "edge_parity": {
+          "actual_depends_on": [],
+          "actual_status": "open",
+          "confirmed": true,
+          "expected_depends_on": [],
+          "expected_status": "open",
+          "missing_edges": [],
+          "unexpected_edges": []
+        },
+        "external_ref": "issue-verify-local-gate-parity-20260725",
+        "graph_depends_on": [],
+        "graph_status": "draft",
         "mvp_fit": null
       }
     ],
     "unmapped": [
       {
-        "bd_issue_id": "HarnessHub-5u5k",
-        "external_ref": "issue-governance-notion-steps-always-skipped-20260725",
+        "bd_issue_id": "HarnessHub-fdw4",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-jgj2",
+        "external_ref": "feat-web-only-publish-journey",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-f91a",
+        "external_ref": "feat-workspace-switch-ux",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3sjj.1",
+        "external_ref": "SYS-POST-SIGNIN-SCOPE-P01",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3sjj",
+        "external_ref": "feat-post-signin-scope-routing",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-xi8v",
+        "external_ref": null,
+        "reason": "external_ref_absent"
+      },
+      {
+        "bd_issue_id": "HarnessHub-ntip",
+        "external_ref": "issue-shared-script-refs-closure-coupling-20260729",
         "reason": "parity_manifest_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-vns9",
-        "external_ref": "issue-actions-secrets-provisioning-evidence-20260725",
-        "reason": "parity_manifest_missing"
+        "bd_issue_id": "HarnessHub-fonh",
+        "external_ref": null,
+        "reason": "external_ref_absent"
       },
       {
-        "bd_issue_id": "HarnessHub-hwlm",
-        "external_ref": "issue-c03-live-trial-closure-stale-after-merge-20260725",
-        "reason": "parity_manifest_missing"
+        "bd_issue_id": "HarnessHub-n0ff",
+        "external_ref": "https://github.com/daishiman/HarnessHub/issues/146",
+        "reason": "graph_node_missing"
       },
       {
-        "bd_issue_id": "HarnessHub-6in4",
-        "external_ref": "issue-guard-graph-schema-timeout-fail-open-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-mfh7",
-        "external_ref": "issue-bd-external-ref-orphan-nodes-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-wdpq",
-        "external_ref": "issue-lint-open-residue-ci-red-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-b7ng",
-        "external_ref": "issue-auth-tenancy-production-adapter-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-1f28",
-        "external_ref": "issue-auth-tenancy-ci-wiring-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-x2x9",
-        "external_ref": "issue-worker-secret-ledger-conflict-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-7tn1",
-        "external_ref": "issue-claude-hooks-project-link-unverified-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-l2g9",
-        "external_ref": "issue-auth-tenancy-spec-delta-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-mvdc",
-        "external_ref": "issue-auth-tenancy-plan-goalseek-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-9hj",
-        "external_ref": "issue-test-coverage-enforcement-20260724",
-        "reason": "parity_manifest_missing"
+        "bd_issue_id": "HarnessHub-r8cz",
+        "external_ref": "https://github.com/daishiman/HarnessHub/issues/166",
+        "reason": "graph_node_missing"
       },
       {
         "bd_issue_id": "HarnessHub-5rb",
-        "external_ref": "issue-qa070-lineage-restoration-20260724",
-        "reason": "parity_manifest_missing"
+        "external_ref": "https://github.com/daishiman/HarnessHub/issues/225",
+        "reason": "graph_node_missing"
       },
       {
         "bd_issue_id": "HarnessHub-nk5",
-        "external_ref": null,
-        "reason": "external_ref_absent"
-      },
-      {
-        "bd_issue_id": "HarnessHub-6ib",
-        "external_ref": "issue-completeness-report-session-id-migration-20260723",
-        "reason": "parity_manifest_missing"
+        "external_ref": "https://github.com/daishiman/HarnessHub/issues/244",
+        "reason": "graph_node_missing"
       },
       {
         "bd_issue_id": "HarnessHub-419",
+        "external_ref": "https://github.com/daishiman/HarnessHub/issues/250",
+        "reason": "graph_node_missing"
+      },
+      {
+        "bd_issue_id": "HarnessHub-3vcz",
         "external_ref": null,
         "reason": "external_ref_absent"
       },
       {
-        "bd_issue_id": "HarnessHub-936",
-        "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-d15",
-        "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-zrn",
-        "external_ref": "issue-harness-creator-entry-points-under-declared-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-7dw",
-        "external_ref": "issue-guard-hook-block-latency-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-0jzd",
-        "external_ref": "issue-init-closure-doc-debts-20260725",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-7ui",
-        "external_ref": "issue-planner-script-line-limit-20260724",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-42g",
-        "external_ref": "issue-shared-layers-registry-baseline-drift-20260724",
-        "reason": "parity_manifest_missing"
+        "bd_issue_id": "HarnessHub-ov4u",
+        "external_ref": null,
+        "reason": "external_ref_absent"
       },
       {
         "bd_issue_id": "HarnessHub-vnr",
@@ -291,42 +934,12 @@
         "reason": "external_ref_absent"
       },
       {
-        "bd_issue_id": "HarnessHub-ldq",
-        "external_ref": "issue-resource-map-deep-cards-20260722",
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-x44",
         "external_ref": null,
         "reason": "external_ref_absent"
       },
       {
-        "bd_issue_id": "HarnessHub-4d8",
-        "external_ref": "issue-aggregate-completeness-file-split-20260722",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-rzc",
-        "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-883",
-        "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
-        "reason": "parity_manifest_missing"
-      },
-      {
         "bd_issue_id": "HarnessHub-cza",
-        "external_ref": null,
-        "reason": "external_ref_absent"
-      },
-      {
-        "bd_issue_id": "HarnessHub-ifo",
-        "external_ref": "issue-devgraph-decompose-inline-dag-check-20260721",
-        "reason": "parity_manifest_missing"
-      },
-      {
-        "bd_issue_id": "HarnessHub-dc7",
         "external_ref": null,
         "reason": "external_ref_absent"
       },
@@ -337,130 +950,86 @@
       }
     ],
     "unmapped_summary": {
-      "external_ref_absent": 9,
-      "parity_manifest_missing": 27
+      "external_ref_absent": 11,
+      "graph_node_missing": 9,
+      "parity_manifest_missing": 1
     }
   },
   "unmapped": [
     {
-      "bd_issue_id": "HarnessHub-5u5k",
-      "external_ref": "issue-governance-notion-steps-always-skipped-20260725",
+      "bd_issue_id": "HarnessHub-fdw4",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-jgj2",
+      "external_ref": "feat-web-only-publish-journey",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-f91a",
+      "external_ref": "feat-workspace-switch-ux",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj.1",
+      "external_ref": "SYS-POST-SIGNIN-SCOPE-P01",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3sjj",
+      "external_ref": "feat-post-signin-scope-routing",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-xi8v",
+      "external_ref": null,
+      "reason": "external_ref_absent"
+    },
+    {
+      "bd_issue_id": "HarnessHub-ntip",
+      "external_ref": "issue-shared-script-refs-closure-coupling-20260729",
       "reason": "parity_manifest_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-vns9",
-      "external_ref": "issue-actions-secrets-provisioning-evidence-20260725",
-      "reason": "parity_manifest_missing"
+      "bd_issue_id": "HarnessHub-fonh",
+      "external_ref": null,
+      "reason": "external_ref_absent"
     },
     {
-      "bd_issue_id": "HarnessHub-hwlm",
-      "external_ref": "issue-c03-live-trial-closure-stale-after-merge-20260725",
-      "reason": "parity_manifest_missing"
+      "bd_issue_id": "HarnessHub-n0ff",
+      "external_ref": "https://github.com/daishiman/HarnessHub/issues/146",
+      "reason": "graph_node_missing"
     },
     {
-      "bd_issue_id": "HarnessHub-6in4",
-      "external_ref": "issue-guard-graph-schema-timeout-fail-open-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-mfh7",
-      "external_ref": "issue-bd-external-ref-orphan-nodes-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-wdpq",
-      "external_ref": "issue-lint-open-residue-ci-red-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-b7ng",
-      "external_ref": "issue-auth-tenancy-production-adapter-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-1f28",
-      "external_ref": "issue-auth-tenancy-ci-wiring-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-x2x9",
-      "external_ref": "issue-worker-secret-ledger-conflict-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-7tn1",
-      "external_ref": "issue-claude-hooks-project-link-unverified-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-l2g9",
-      "external_ref": "issue-auth-tenancy-spec-delta-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-mvdc",
-      "external_ref": "issue-auth-tenancy-plan-goalseek-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-9hj",
-      "external_ref": "issue-test-coverage-enforcement-20260724",
-      "reason": "parity_manifest_missing"
+      "bd_issue_id": "HarnessHub-r8cz",
+      "external_ref": "https://github.com/daishiman/HarnessHub/issues/166",
+      "reason": "graph_node_missing"
     },
     {
       "bd_issue_id": "HarnessHub-5rb",
-      "external_ref": "issue-qa070-lineage-restoration-20260724",
-      "reason": "parity_manifest_missing"
+      "external_ref": "https://github.com/daishiman/HarnessHub/issues/225",
+      "reason": "graph_node_missing"
     },
     {
       "bd_issue_id": "HarnessHub-nk5",
-      "external_ref": null,
-      "reason": "external_ref_absent"
-    },
-    {
-      "bd_issue_id": "HarnessHub-6ib",
-      "external_ref": "issue-completeness-report-session-id-migration-20260723",
-      "reason": "parity_manifest_missing"
+      "external_ref": "https://github.com/daishiman/HarnessHub/issues/244",
+      "reason": "graph_node_missing"
     },
     {
       "bd_issue_id": "HarnessHub-419",
+      "external_ref": "https://github.com/daishiman/HarnessHub/issues/250",
+      "reason": "graph_node_missing"
+    },
+    {
+      "bd_issue_id": "HarnessHub-3vcz",
       "external_ref": null,
       "reason": "external_ref_absent"
     },
     {
-      "bd_issue_id": "HarnessHub-936",
-      "external_ref": "issue-pkg-contract-skill-dependencies-undefined-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-d15",
-      "external_ref": "issue-spec-state-writer-implicit-contracts-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-zrn",
-      "external_ref": "issue-harness-creator-entry-points-under-declared-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-7dw",
-      "external_ref": "issue-guard-hook-block-latency-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-0jzd",
-      "external_ref": "issue-init-closure-doc-debts-20260725",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-7ui",
-      "external_ref": "issue-planner-script-line-limit-20260724",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-42g",
-      "external_ref": "issue-shared-layers-registry-baseline-drift-20260724",
-      "reason": "parity_manifest_missing"
+      "bd_issue_id": "HarnessHub-ov4u",
+      "external_ref": null,
+      "reason": "external_ref_absent"
     },
     {
       "bd_issue_id": "HarnessHub-vnr",
@@ -478,42 +1047,12 @@
       "reason": "external_ref_absent"
     },
     {
-      "bd_issue_id": "HarnessHub-ldq",
-      "external_ref": "issue-resource-map-deep-cards-20260722",
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-x44",
       "external_ref": null,
       "reason": "external_ref_absent"
     },
     {
-      "bd_issue_id": "HarnessHub-4d8",
-      "external_ref": "issue-aggregate-completeness-file-split-20260722",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-rzc",
-      "external_ref": "issue-contract-s10-unmappable-status-overstated-20260722",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-883",
-      "external_ref": "issue-run-skill-feedback-ref-format-unify-20260722",
-      "reason": "parity_manifest_missing"
-    },
-    {
       "bd_issue_id": "HarnessHub-cza",
-      "external_ref": null,
-      "reason": "external_ref_absent"
-    },
-    {
-      "bd_issue_id": "HarnessHub-ifo",
-      "external_ref": "issue-devgraph-decompose-inline-dag-check-20260721",
-      "reason": "parity_manifest_missing"
-    },
-    {
-      "bd_issue_id": "HarnessHub-dc7",
       "external_ref": null,
       "reason": "external_ref_absent"
     },
@@ -524,8 +1063,9 @@
     }
   ],
   "unmapped_summary": {
-    "external_ref_absent": 9,
-    "parity_manifest_missing": 27
+    "external_ref_absent": 11,
+    "graph_node_missing": 9,
+    "parity_manifest_missing": 1
   },
   "workspace_identity": {
     "attributes": {
