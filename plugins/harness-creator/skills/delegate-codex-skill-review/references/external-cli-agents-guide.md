@@ -79,33 +79,37 @@ gemini "テストを実行して" --sandbox -o text
 | -------------- | ----------------------------------------------- |
 | コマンド       | `codex`                                         |
 | インストール確認 | `which codex && codex --version`              |
-| 認証方式       | OpenAI API Key（OPENAI_API_KEY環境変数）        |
-| 非インタラクティブ | `codex --prompt "..." --output-format text` |
+| 認証方式       | 保存済み ChatGPT / API key 認証。単発 API key は `CODEX_API_KEY` |
+| 非インタラクティブ | `codex exec [OPTIONS] [PROMPT]`              |
 
 #### 呼び出しパターン
 
 ```bash
 # 基本: プロンプトで実行
-codex --prompt "このバグを修正してください" --output-format text
+codex exec "このバグを修正してください"
 
-# コンテキストファイル付き
-codex --prompt "分析してください" --context-file context.md
+# stdin を追加コンテキストとして渡す
+codex exec "分析してください" < context.md
 
-# 出力先指定
-codex --prompt "タスク内容" --output codex-output/
+# 最終メッセージをファイルにも保存
+codex exec -o codex-output.md "タスク内容"
 
-# 承認モード指定
-codex --prompt "タスク内容" --approval-mode yolo
+# 機械処理向け JSONL と、編集を許す明示 sandbox
+codex exec --json "repository を要約してください"
+codex exec --sandbox workspace-write "タスク内容"
 ```
 
+`codex exec` は既定で read-only sandbox を使う。`danger-full-access` は隔離済みの CI runner
+など、外側で安全境界を確保した環境に限定する。
+
 #### 強み
-- GPT-5.2の処理能力
+- 現在の Codex 設定で選択されたモデルのコード理解・生成能力
 - コード生成に特化
 - Claudeと異なる視点
 
 #### 弱み
-- OpenAI API Key 必要
-- ファイル編集に制約あり
+- 認証方式に応じて ChatGPT 利用枠または API 課金が必要
+- ファイル編集には `workspace-write` などの明示的な sandbox 設定が必要
 - 依存パッケージの問題（要再インストールの場合あり）
 
 ---
@@ -274,7 +278,7 @@ echo "$RESULT" > .tmp/external-cli-result.json
 
 ## スキル生成時の組み込み
 
-skill-creator で新規スキルを生成する際に、外部CLIエージェント連携を組み込む方法:
+harness-creator で新規スキルを生成する際に、外部CLIエージェント連携を組み込む方法:
 
 ### SKILL.md への記述テンプレート
 
@@ -332,7 +336,7 @@ writeFileSync(tmpFile, input, 'utf-8');
 // エージェント別の引数配列（シェル解釈なし）
 const agentConfigs = {
   gemini:  { bin: 'gemini', args: ['-o', 'text'],                         stdin: true },
-  codex:   { bin: 'codex',  args: ['--prompt', input, '--output-format', 'text'], stdin: false },
+  codex:   { bin: 'codex',  args: ['exec', input],                              stdin: false },
   claude:  { bin: 'claude', args: ['-p', input, '--output-format', 'text'],       stdin: false },
   aider:   { bin: 'aider',  args: ['--message', input, '--yes'],                  stdin: false },
 };
@@ -375,6 +379,7 @@ try {
 
 | Version | Date       | Changes                                      |
 | ------- | ---------- | -------------------------------------------- |
+| 1.3.0   | 2026-08-02 | Codex の現行 `exec`・sandbox・認証契約へ更新 |
 | 1.2.0   | 2026-02-13 | CLIバージョン管理セクション追加（バージョン取得方法・記録方法） |
 | 1.1.0   | 2026-02-13 | セキュリティ修正、正規化マッピング、MCP検討追加 |
 | 1.0.0   | 2026-02-13 | 初版作成                                     |
