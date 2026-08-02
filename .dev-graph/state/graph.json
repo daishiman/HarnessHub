@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1157,
+  "graph_revision": 1176,
   "nodes": [
     {
       "acceptance": [
@@ -732,7 +732,7 @@
       "source_lineage": {
         "imported_at": "2026-07-30T04:33:46Z",
         "origin_kind": "generated",
-        "source_digest": "349c4c0d32dd9afdf1eccc27b9948ed14bb4e4cc6e1bbc4412f8f88d4aa9f0c0",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -749,7 +749,7 @@
       "template_version": "1.0.0",
       "title": "Stage 0: 配布経路 technical gate (H7) 検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T04:34:28.070146Z"
+      "updated_at": "2026-08-02T20:56:33.453288Z"
     },
     {
       "acceptance": [
@@ -851,7 +851,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -868,7 +868,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T06:25:39.927001Z"
+      "updated_at": "2026-08-02T20:53:41.905305Z"
     },
     {
       "acceptance": [
@@ -967,7 +967,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -984,7 +984,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T06:25:41.177574Z"
+      "updated_at": "2026-08-02T20:51:47.946447Z"
     },
     {
       "acceptance": [
@@ -1079,7 +1079,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1096,7 +1096,7 @@
       "template_version": "1.0.0",
       "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:29:53Z"
+      "updated_at": "2026-08-02T20:47:57.685957Z"
     },
     {
       "acceptance": [
@@ -1192,7 +1192,7 @@
       "source_lineage": {
         "imported_at": "2026-07-30T13:30:00Z",
         "origin_kind": "generated",
-        "source_digest": "349125ae4533b71860acb69a161d1ec53efcf1eabcc88f2492d25a1c71b893fe",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1209,7 +1209,7 @@
       "template_version": "1.0.0",
       "title": "PublishRequest パイプライン (状態機械・検査・promote/rollback)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-02T20:55:27.042241Z"
     },
     {
       "acceptance": [
@@ -1304,7 +1304,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1321,7 +1321,7 @@
       "template_version": "1.0.0",
       "title": "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:18:12Z"
+      "updated_at": "2026-08-02T20:56:00.450300Z"
     },
     {
       "acceptance": [
@@ -1416,7 +1416,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1433,7 +1433,7 @@
       "template_version": "1.0.0",
       "title": "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:13:14Z"
+      "updated_at": "2026-08-02T20:52:37.353128Z"
     },
     {
       "acceptance": [
@@ -1528,7 +1528,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -1545,7 +1545,7 @@
       "template_version": "1.0.0",
       "title": "Stage 2: Workspace ガバナンス (approval queue / RBAC / audit log)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:21:39Z"
+      "updated_at": "2026-08-02T20:57:31.799398Z"
     },
     {
       "acceptance": [
@@ -3368,7 +3368,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3385,7 +3385,7 @@
       "template_version": "1.0.0",
       "title": "Studio: ユーザー管理・アカウント設定 (role 統合・係数設定・PII ガード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:20:53Z"
+      "updated_at": "2026-08-02T20:57:08.713980Z"
     },
     {
       "acceptance": [
@@ -3484,7 +3484,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3501,7 +3501,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:16:35Z"
+      "updated_at": "2026-08-02T20:54:14.294507Z"
     },
     {
       "acceptance": [
@@ -3712,7 +3712,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3729,7 +3729,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 構築パイプライン可視化 (7 工程ボード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:10:56Z"
+      "updated_at": "2026-08-02T20:48:29.790996Z"
     },
     {
       "acceptance": [
@@ -3826,7 +3826,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3843,7 +3843,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:14:11Z"
+      "updated_at": "2026-08-02T20:53:25.998215Z"
     },
     {
       "acceptance": [
@@ -3939,7 +3939,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T22:35:48Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3956,7 +3956,7 @@
       "template_version": "1.0.0",
       "title": "Studio: ドキュメント CMS (common/tenant スコープ・AI 下書き)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:11:41Z"
+      "updated_at": "2026-08-02T20:51:00.109559Z"
     },
     {
       "acceptance": [
@@ -19279,7 +19279,7 @@
       "source_lineage": {
         "imported_at": "2026-07-18T16:20:35Z",
         "origin_kind": "generated",
-        "source_digest": "5b591475b2b95dc3cbdc76b1c9ab3bc585b1c70baad75311f2420884cf013214",
+        "source_digest": "fa2924a1c1430e37138e539024949ee9507f4cdcf5c7db753cd5a4e3c8b3dae7",
         "source_path": "docs/features/feat-domain-model-db/requirements-baseline.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -19296,7 +19296,7 @@
       "template_version": "1.0.0",
       "title": "テナント業務データ保管 (C4 改訂: R2 封筒暗号化・即時完全削除)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:19:56Z"
+      "updated_at": "2026-08-02T20:56:49.635746Z"
     },
     {
       "acceptance": [
@@ -25382,7 +25382,7 @@
       "source_lineage": {
         "imported_at": "2026-07-30T12:05:00Z",
         "origin_kind": "generated",
-        "source_digest": "56c091cfa8bb285b4e591376387d1806085ae18ccb0f47290e91cad97428ada7",
+        "source_digest": "ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25401,7 +25401,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:00:37Z"
+      "updated_at": "2026-08-02T20:49:05.376000Z"
     },
     {
       "acceptance": [
@@ -27717,13 +27717,13 @@
       "source_lineage": {
         "imported_at": "2026-07-22T01:25:08Z",
         "origin_kind": "generated",
-        "source_digest": "0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf",
+        "source_digest": "ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "dev-pipeline",
@@ -27735,7 +27735,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-22T02:47:44Z"
+      "updated_at": "2026-08-02T20:49:55.234469Z"
     },
     {
       "acceptance": [
@@ -29690,9 +29690,9 @@
     },
     {
       "acceptance": [
-        "features 14 件の source_digest が実測値と一致するか、再 import 差し戻しの記録がある",
+        "18 件の source_digest が実測値と一致するか、再 import 差し戻しの記録がある",
         "digest 更新は upsert-node.py patch 経由のみで行われている",
-        "意味影響の判定根拠が本 issue に記録されている"
+        "意味影響の判定根拠と仕様反映要否が本 issue に記録されている"
       ],
       "architecture_refs": [],
       "artifact_kind": "issue",
@@ -29712,12 +29712,15 @@
       "classification_confidence": 0.95,
       "classification_reason": "HarnessHub-t9q の lineage 調査 (2026-07-22、全 215 artifact 突合) で観測した features 14 件の source_digest 既存 drift を追跡する follow-up issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T21:08:14Z",
+        "evidence_refs": [
+          "issues/sys-features-source-digest-drift-20260722.md",
+          "https://github.com/daishiman/HarnessHub/pull/643"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T21:08:14Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -29739,7 +29742,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "features 14 件の source_lineage が現行 source 実体へ追随済みで、source 変更が feature の意味に影響する場合は再 import 経路へ差し戻されている",
+      "goal": "18 件の source_lineage が現行 source 実体へ追随済みであり、source 変更が feature の意味に影響する場合だけ再 import 経路へ差し戻されている。",
       "graph_node_id": "issue-features-source-digest-drift-20260722",
       "implementation_readiness": {
         "checked_at": "2026-07-22T23:04:59Z",
@@ -29755,8 +29758,21 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "features/feat-*.md 14 件の source_lineage.source_digest (a4c26b6d…) が import 時点の specs/harness-hub-system-specification.md の姿のまま残り、現行実体 digest (56c60159…) と不一致の既存 drift になっている。validate-source-digest.py は registered_this_run のみ検査するため既存 node の drift は検出されず、lineage の追跡性が劣化している。",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-features-source-digest-drift-20260722",
+          "linked_at": "2026-08-02T21:08:14Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 643,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/643"
+        }
+      ],
+      "purpose": "features/feat-*.md 18 件の source_lineage.source_digest が source 実体と不一致になった既存 drift を、意味影響を判定したうえで正規 writer により追随させ、由来追跡を回復する。",
       "related_nodes": [
         "spec-harness-hub-requirements"
       ],
@@ -29766,7 +29782,7 @@
         "plugins/dev-graph/scripts/validate-source-digest.py"
       ],
       "scope_in": [
-        "source (specs/harness-hub-system-specification.md) の変更内容が各 feature の意味に影響するかの判定",
+        "4 source ファイルの変更内容が各 feature の意味に影響するかの判定",
         "影響なしの feature の lineage refresh (source_digest 実測更新) を正規 writer upsert-node.py patch で実施",
         "影響ありの feature の再 import 経路への差し戻し"
       ],
@@ -29784,7 +29800,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "source-lineage",
@@ -29793,9 +29809,9 @@
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
+      "title": "features 18 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-02T21:09:14.112561Z"
     },
     {
       "acceptance": [
@@ -29998,13 +30014,13 @@
       "source_lineage": {
         "imported_at": "2026-07-23T05:00:00Z",
         "origin_kind": "generated",
-        "source_digest": "43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86",
+        "source_digest": "ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "dev-workflow",
@@ -30017,7 +30033,7 @@
       "template_version": "1.0.0",
       "title": "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-23T09:50:00Z"
+      "updated_at": "2026-08-02T20:54:50.702859Z"
     },
     {
       "acceptance": [
