@@ -31,7 +31,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | §6–§7 | [security-spec-request-controls.md](security-spec-request-controls.md) | 入力検査、CSP、rate limit、CSRF |
 | §8–§10 | [security-spec-assurance.md](security-spec-assurance.md) | テスト、監視、incident、確定記録 |
 
-`/catalog` の protected CWV 計測用 credential は [authentication §2.1.1](security-spec-authentication.md#211-protected-cwv-probe運用専用人のログインではない) と [authorization §3.7.1](security-spec-authorization.md#371-cwv-probe-の最小権限境界qa-131) を正本とする。
+`/catalog` の protected CWV 計測用 credential は [authentication §2.1.1](security-spec-authentication.md#211-protected-cwv-probe運用専用人のログインではない) と [authorization §3.7.1](security-spec-authorization.md#371-cwv-probe-の最小権限境界qa-133) を正本とする。
 
 ## 参照規約
 

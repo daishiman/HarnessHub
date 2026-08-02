@@ -37,6 +37,9 @@ const authAdapter =
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const context = toAuthRequestContext(request);
   const nowSeconds = systemAuthClock.nowSeconds();
+  // ticket claim だけでなく実際の Host も固定する。同一 Worker に別 custom domain が
+  // 紐づいた場合も、canonical origin 向けに発行した credential を横展開させない。
+  const isCwvProbeOrigin = cwvProbeConfig !== undefined && request.nextUrl.origin === cwvProbeConfig.origin;
 
   // `/catalog` の bootstrap ticket は 1 回だけ URL で受け、署名済み scope を Cookie 化してから
   // ticket を含まない URL へ遷移する。以後の画像/JS などへ query credential を送らない。
@@ -47,6 +50,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     const workspace = request.nextUrl.searchParams.getAll('workspace');
     const principal =
       cwvProbeConfig === undefined ||
+      !isCwvProbeOrigin ||
       request.method !== 'GET' ||
       request.nextUrl.pathname !== '/catalog' ||
       ticketCount !== 1
@@ -87,7 +91,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   const cwvCookie = hasCwvProbeCookie(context.headers.get('cookie') ?? null);
   if (cwvProbeConfig !== undefined && cwvCookie) {
-    const resolved = await resolveCwvProbePrincipal(context.headers.get('cookie') ?? null, cwvProbeConfig, nowSeconds);
+    const resolved = isCwvProbeOrigin
+      ? await resolveCwvProbePrincipal(context.headers.get('cookie') ?? null, cwvProbeConfig, nowSeconds)
+      : null;
     principal =
       resolved === null
         ? null

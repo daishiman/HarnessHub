@@ -141,6 +141,13 @@ describe('CWV probe credential: read-only の到達境界', () => {
     const response = await route(request);
     expect(response.status).toBe(200);
     expect(revocation.isRevoked).not.toHaveBeenCalled();
+
+    const crossOriginResponse = await route(
+      new Request('https://other.example/api/v1/harnesses', {
+        headers: { cookie: `${CWV_PROBE_COOKIE_NAME}=${await ticket()}` },
+      }),
+    );
+    expect(crossOriginResponse.status).toBe(401);
   });
 
   it('route wrapper は同じ ticket でも catalog 外の read を credential_not_allowed で拒否する', async () => {
