@@ -1,0 +1,12 @@
+{
+  "checklist": [
+    {"id": "CL-01", "description": "全 read/write realpath が resolved repo root 内で repository_id が一致する", "status": "PASS", "evidence": "C24 resolve-repo-context.py --mode write の receipt で repo_root と repository_id 一致を確認"},
+    {"id": "CL-02", "description": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ", "status": "PASS", "evidence": "全5件の confidence >= 0.80 かつ margin >= 0.15 で自動確定。issue=0.95, task=0.90, specification=0.95, architecture=0.95, document=0.92"},
+    {"id": "CL-03", "description": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する", "status": "PASS", "evidence": "validate-graph-schema.py が valid=true, violations=[] を返却。全5 artifact が正規 content root に配置済み"},
+    {"id": "CL-04", "description": "package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である", "status": "not_applicable", "evidence": "通常 artifact 5件の処理。package 登録は含まない"},
+    {"id": "CL-05", "description": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する", "status": "PASS", "evidence": "graph_revision=5, 5 nodes registered. 全 receipt の graph_revision_after が commit 後 graph と一致"},
+    {"id": "CL-06", "description": "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる", "status": "PASS", "evidence": "全5件の upsert で recovered_interrupted_transaction=false。連続更新で idempotent=true, operation=noop を確認"}
+  ],
+  "overall_status": "PASS",
+  "completed_at": "2026-08-03T00:44:00Z"
+}
