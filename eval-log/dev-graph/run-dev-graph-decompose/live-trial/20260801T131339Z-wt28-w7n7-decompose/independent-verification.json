@@ -1,0 +1,39 @@
+{
+  "evaluator": "fresh-agent-c14-paired-live-trial",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "dag_and_granularity": {
+      "result": "PASS",
+      "evidence": "Each run produced one architecture and four features, three inter-feature edges, an acyclic DAG, and max depends_on=1 against threshold 3."
+    },
+    "draft_publication_gate": {
+      "result": "PASS",
+      "evidence": "Both real-write audits retained draft features with zero publication and explicit draft-gate reasons."
+    },
+    "sole_candidate": {
+      "result": "PASS",
+      "evidence": "feat-user-auth-001 alone advanced to confirmed/evaluation-pass/readiness-complete while the remaining draft features stayed excluded."
+    },
+    "binding_routes": {
+      "result": "PASS",
+      "evidence": "Separate beads and none runs persisted different tracker bindings and publication routes; the audit recorded github as schema-unreachable for this macro-only state."
+    },
+    "measured_writes": {
+      "result": "PASS",
+      "evidence": "Canonical audits derived local and external write counts from pre/post snapshots, and preview validation used the stdin graph path."
+    },
+    "confirmation_digest": {
+      "result": "PASS",
+      "evidence": "Both promoted nodes recomputed confirmation_evidence.evaluated_digest from final persisted content excluding only confirmation_evidence and matched the declared digest."
+    },
+    "negative_controls": {
+      "result": "PASS",
+      "evidence": "The canonical audit rejected synthesized readiness and publication gate violations from each final graph."
+    },
+    "paired_execution": {
+      "result": "PASS",
+      "evidence": "The transcript contains four target Skill invocations and two read-only Explore forks; both audit implementation digests equal be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f."
+    }
+  }
+}

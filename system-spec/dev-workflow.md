@@ -101,6 +101,26 @@ qa-088【2】と qa-096【2】の CI / local 共通ゲートを具体化し、`p
 UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。反映と検証は
 `docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md` を正とする。
 
+### 実装反映注記 (2026-08-01 / `HarnessHub-w7n7`)
+
+Beads 操作の単一チョークポイント（書き込みを必ず通す一本の入口）である
+`plugins/dev-graph/scripts/bd-bridge.py` は、CLI 引数解析、preflight、Beads 実行、
+receipt 出力だけを保持する。判定処理は次の四責務へ分離する。
+
+- `bd_bridge_contracts.py`: exact-set 語彙と外部 I/O を持たない純粋判定
+- `bd_bridge_graph.py`: canonical graph、manifest、artifact の read-only 解決
+- `bd_bridge_projection.py`: graph node から Beads issue への投影
+- `bd_bridge_audit.py`: orphan 棚卸しと node 削除 preflight の read-only 監査
+
+分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
+Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
+注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
+変更対象の手書きファイルは 500 行以下に保ち、分割先は harness coverage の scripts 分母へ
+追加しない `plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
+UI、Cloudflare deploy unit は変更しない。判断と最終検証は
+`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
+を正とする。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

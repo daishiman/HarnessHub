@@ -1,0 +1,72 @@
+# feat-dual-catalog-web の品質ゲート。
+# 設計正本: docs/features/feat-dual-catalog-web/architecture-decision-record.md §4 / design-review-notes.md R8
+#
+# **既存 ci.yml の G9 (axe) / G13 (client JS 予算) を再実装しない。**
+# 同じ検査を 2 か所に書くと、片方だけ更新された時点で「緑だが実際には検査していない」状態になる。
+# ここに置くのは catalog 固有の検査だけで、共通ゲートは ci.yml が唯一の実装を持つ。
+#
+# 本 workflow に continue-on-error を置かないこと。落ちても赤にならないゲートは
+# リリース条件として機能せず、存在するだけで「検査済み」という誤った安心を生む (DC-CI-04)。
+name: hub-web-quality-gate
+
+on:
+  push:
+    branches: ["main", "devgraph/**", "feat/**"]
+    paths:
+      - "apps/hub/src/app/(workspace)/catalog/**"
+      - "apps/hub/src/app/marketplace.json/**"
+      - "apps/hub/src/components/catalog/**"
+      - "apps/hub/src/lib/catalog/**"
+      - "apps/hub/src/__tests__/dual-catalog-web/**"
+      - "packages/schemas/dual-catalog-web/**"
+      - ".github/workflows/hub-web-quality-gate.yml"
+  pull_request:
+    paths:
+      - "apps/hub/src/app/(workspace)/catalog/**"
+      - "apps/hub/src/app/marketplace.json/**"
+      - "apps/hub/src/components/catalog/**"
+      - "apps/hub/src/lib/catalog/**"
+      - "apps/hub/src/__tests__/dual-catalog-web/**"
+      - "packages/schemas/dual-catalog-web/**"
+      - ".github/workflows/hub-web-quality-gate.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: hub-web-quality-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  catalog-gate:
+    name: catalog 固有ゲート (契約テスト / client JS 予算)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: enable corepack (pnpm pin)
+        run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      # DC-CI-02: catalog の契約テスト。vitest を直接呼ぶのは、package.json に
+      # feature 専用 script を増やすと feature が増えるたび script が積み上がるため。
+      - name: catalog 契約テスト (ポーリング / 縮退 / marketplace / テナント分離 / a11y)
+        run: pnpm --filter @harness-hub/hub exec vitest run src/__tests__/dual-catalog-web
+      # client JS 予算は build 成果物 (.next の manifest) を読むため、先に build する
+      # ci.yml と同じ `pnpm -r build` を使う。hub 単体だと packages/ui・packages/schemas の
+      # ビルド成果物が無く、ここだけ別条件で測ることになる
+      - name: build
+        run: pnpm -r build
+      # DC-CI-03: catalog route を含む client JS 予算。ci.yml G13 と同一 script を呼ぶ
+      # (別実装を作らない)。catalog 配下の変更で先に落とすためにここでも実行する。
+      - name: client JS 予算 (route ごと First Load JS gzip 後 120KiB / qa-018)
+        run: pnpm --filter @harness-hub/hub run check:client-bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dual-catalog-web-evidence
+          path: apps/hub/artifacts/
+          if-no-files-found: warn
