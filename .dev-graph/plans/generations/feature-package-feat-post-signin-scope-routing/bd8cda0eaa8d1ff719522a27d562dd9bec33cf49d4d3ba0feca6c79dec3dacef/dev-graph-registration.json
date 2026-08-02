@@ -1,0 +1,1229 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "parent_feature": "feat-post-signin-scope-routing",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-POST-SIGNIN-SCOPE-P01": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P02": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P03": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P04": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P05": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P06": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P07": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P08": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P09": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P10": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P11": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P12": "beads",
+    "SYS-POST-SIGNIN-SCOPE-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "documentation",
+        "phase-p01"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p01.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P01 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "documentation",
+        "phase-p02"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P01"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/architecture-decision.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p02.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P02 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "documentation",
+        "phase-p03"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P02"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/design-review.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p03.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P03 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P03"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/test-design.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p04.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P04 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "frontend",
+        "phase-p05"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P04"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/authz/resource.ts",
+        "apps/hub/src/lib/authz/types.ts",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
+        "apps/hub/src/app/page.tsx"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p05.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P05 の単一責務 (frontend) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P05"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "apps/hub/test/authz/scope-resolution.test.ts",
+        "apps/hub/test/routing/post-signin-landing.test.ts",
+        "apps/hub/test/auth/session-workspace-binding.test.ts"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p06.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P06 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "quality",
+        "phase-p07"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P06"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/acceptance-record.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p07.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P07 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "frontend",
+        "phase-p08"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P07"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "apps/hub/src/lib/authz/resource.ts",
+        "apps/hub/src/lib/authz/types.ts",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
+        "apps/hub/src/app/page.tsx",
+        "docs/features/feat-post-signin-scope-routing/refactoring-record.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p08.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P08 の単一責務 (frontend) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P08"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/quality-assurance-record.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p09.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P09 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "quality",
+        "phase-p10"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P09"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/final-review.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p10.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P10 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "証跡固定 — source digest と再実行コマンドの保存",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P10"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/evidence-record.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p11.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P11 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P11"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/frontend-spec.md",
+        "docs/user-journeys.md",
+        "docs/features/feat-post-signin-scope-routing/operations-runbook.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p12.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P12 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
+      "project_id": "feature-package-feat-post-signin-scope-routing",
+      "domain": "infrastructure",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-post-signin-scope-routing",
+        "macro-feature",
+        "infrastructure",
+        "phase-p13"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-02T06:25:14Z",
+      "updated_at": "2026-08-02T06:25:14Z",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P12"
+      ],
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "docs/features/feat-post-signin-scope-routing/release-record.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-security.md",
+        "specs/harness-hub-post-signin-workspace-scope-addendum.md"
+      ],
+      "parent_feature": "feat-post-signin-scope-routing",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/plan-findings.json",
+        "evaluated_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+        "imported_at": "2026-08-02T06:25:14Z"
+      },
+      "classification_confidence": 0.92,
+      "classification_reason": "goal-spec.json を入力に P13 の単一責務 (infrastructure) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.92,
+          "candidate_path": "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-02T05:45:00Z"
+      }
+    }
+  ]
+}
