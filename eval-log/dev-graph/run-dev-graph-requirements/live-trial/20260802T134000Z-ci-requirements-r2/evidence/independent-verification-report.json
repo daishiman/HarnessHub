@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "blockers": [],
+  "observations": [
+    {
+      "criterion": "capability-build task-graph handoff emitted for exact-13 package",
+      "result": "PASS",
+      "evidence": "eval-log/capability-build-handoff.json exists. handoff_type='capability-build/task-graph', exact_13_package.task_count=13, task_ids=['SYS-LIVE-001-P01',...,'SYS-LIVE-001-P13'] (13 entries, P01..P13 complete set). File: /Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-ci-rerun-r2-20260802/eval-log/capability-build-handoff.json"
+    },
+    {
+      "criterion": "handoff remains bound to feature and source digest",
+      "result": "PASS",
+      "evidence": "feature_id='F-LIVE-001', feature_package_id='feature-package/F-LIVE-001' confirmed in handoff. validate-source-digest.py --registered F-LIVE-001,LT-ARCH-001,SYS-LIVE-001-P01..P13 (15 nodes): exit 0, checked=15, registered_mismatch=[]. validate-system-plan.py --feature-package 'feature-package/F-LIVE-001': exit 0, status=pass, violations=[]. graph_snapshot_digest sha256:1c66ca975690dd1007827b924e7215358a52d18e61727dd3bb8479c91eaf5631 equals fresh SHA256(json.dumps(graph, ensure_ascii=False, sort_keys=True)) of .dev-graph/state/graph.json (canonical digest algorithm per register-package.py._canonical_digest). Note: raw file SHA256 (e040e0a3...) differs because the canonical digest serializes the object with sort_keys=True, not the raw bytes."
+    },
+    {
+      "criterion": "requirements skill generates no implementation source file",
+      "result": "PASS",
+      "evidence": "eval-log/ contains exactly 5 files: capability-build-handoff.json, requirements-document.json, run-dev-graph-requirements-goal-spec.json, run-dev-graph-requirements-intermediate.jsonl, run-dev-graph-requirements-progress.json. find with extensions .py .ts .js .go .rs .java .rb returned 0 results."
+    }
+  ]
+}

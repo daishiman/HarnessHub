@@ -5,7 +5,7 @@ plugin.json 必須キー (PKG-002)・skill/agent 名前衝突 (PKG-003)・SKILL.
 (PKG-004)・subagent_refs 整合 (PKG-005) を担当する。
 
 PKG-006〜014 は test_harness_creator__validate_plugin_package_s2.py、run_checks と main
-は test_harness_creator__validate_plugin_package_cli.py が担当する (500 行上限による分割)。
+は test_harness_creator__validate_plugin_package_cli.py が担当する (検査責務の分離)。
 共有 fixture は _validate_plugin_package_fixtures.py に集約している。
 
 実 repo の plugins は一切書き換えず、全 fixture は tmp_path 配下に構築する。

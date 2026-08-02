@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "blocker": null,
+  "observations": {
+    "obs1_first_sync_applied_expected": {
+      "pass": true,
+      "evidence": "graph.json line 114 shows title = \"Validate isolated live trial (updated remotely r7)\" (import confirmed). remote.json line 57-59 shows Status field value = \"In Progress\" with updated_at 2026-08-02T13:38:04.153055Z (export confirmed). graph.json github_project_linkages field_snapshot also records status = \"In Progress\". Both the import (title from remote) and export (project status Backlog -> In Progress from local->project mapping) are reflected in the post-apply state of the fixture files at /Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/sync-ci-rerun-20260802/.dev-graph/state/graph.json and /Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/sync-ci-rerun-20260802/.dev-graph/remote.json."
+    },
+    "obs2_second_sync_changes_zero": {
+      "pass": true,
+      "evidence": "Independent dry-run of sync-graph.py returned: changes=0, converged=true, imports=[], exports=[], applied=[], conflicts=[], write_count=0, ok=true. sync-snapshot.json confirms local/remote parity for both title (\"Validate isolated live trial (updated remotely r7)\" on both sides) and project status (\"In Progress\" on both sides), confirming no further deltas exist at /Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/sync-ci-rerun-20260802/.dev-graph/state/sync-snapshot.json."
+    },
+    "obs3_stable_ids_snapshots": {
+      "pass": true,
+      "evidence": "The dry-run output shows graph_sha256_before == graph_sha256_after (both = \"cf931855cc36b0e7d2fa99df9106a5fe14d0b6776e7af0b7f5226a8fb667823b\"), snapshot_sha256_before == snapshot_sha256_after (both = \"ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f\"), and remote_sha256_before == remote_sha256_after (both = \"daf28c7f92054b53b91b15aff4805bbc9edc261912c07b191eb141afc86f9cca\"). No file mutations occurred. graph_node_id \"LT-TASK-001\" and source_digest \"bbbb...bbbb\" are stable in graph.json."
+    }
+  }
+}

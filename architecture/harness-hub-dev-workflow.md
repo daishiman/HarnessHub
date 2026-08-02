@@ -106,7 +106,8 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 `contracts` と `graph` は Beads へ書かず、`audit` も read-only、書込投影は
 `projection` だけが担う。外部 I/O を持つ関数は `bd=` / `git=` を注入され、
 CLI adapter が呼出時に実行関数を解決する。この境界により、単一チョークポイントを
-維持したまま各ファイルを 500 行以下へ保つ。
+維持したまま責務ごとの変更容易性を保つ。一般コードには一律の数値行数上限を設けない。
+行数ゲートは実行時 context へ入る `SKILL.md` と skill の `prompts/` に限定する。
 
 詳細な責務、互換性、不変条件、検証証拠は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)

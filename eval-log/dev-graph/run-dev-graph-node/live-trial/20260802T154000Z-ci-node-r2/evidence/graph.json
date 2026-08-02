@@ -1,0 +1,507 @@
+{
+  "graph_revision": 5,
+  "nodes": [
+    {
+      "acceptance": [
+        "上限を過ぎたセッションが失効しログイン画面へ誘導される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/login-session-timeout-not-enforced.md",
+          "confidence": 0.95
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/login-session-timeout-not-enforced.md",
+          "confidence": 0.15
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "バグ報告形式。現在の挙動/期待する挙動/再現手順を持ち、tags に bug を含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:40:00Z",
+      "depends_on": [],
+      "domain": "session-management",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/login-session-timeout-not-enforced.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "設定したタイムアウトを過ぎたセッションは失効し、ログイン画面へ誘導される状態にする",
+      "graph_node_id": "node-issue-login-session-timeout",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": "セッションタイムアウトが強制されないバグを追跡し修正する",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "セッション期限判定ロジック",
+        "最終アクセス時刻の更新"
+      ],
+      "scope_out": [
+        "認証方式自体の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "bug",
+        "security",
+        "session-management"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ログインセッションのタイムアウトが強制されない",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "上限を超えた呼び出しが 429 を返す",
+        "API key ごとにカウンタが独立している"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/implement-rate-limiting-for-public-api.md",
+          "confidence": 0.9
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/implement-rate-limiting-for-public-api.md",
+          "confidence": 0.2
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "実装タスク形式。入力と前提条件/出力と成果物/実行手順/受入条件セクションを持つ",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:40:00Z",
+      "depends_on": [],
+      "domain": "api",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/implement-rate-limiting-for-public-api.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "上限を超えた呼び出しが 429 を返し API key ごとにカウンタが独立している状態",
+      "graph_node_id": "node-task-rate-limiting",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": "公開 API にレートリミットを導入し過剰リクエストによる劣化を防ぐ",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "token bucket カウンタ実装",
+        "middleware 組込み",
+        "上限値の設定外部化"
+      ],
+      "scope_out": [
+        "内部 API エンドポイント"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "backend",
+        "api",
+        "rate-limiting"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "公開 API エンドポイントへレートリミットを実装する",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "v2 が一貫したページネーション封筒を返す",
+        "v1 と v2 が移行期間中に併存する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/rest-api-v2-migration.md",
+          "confidence": 0.95
+        },
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/rest-api-v2-migration.md",
+          "confidence": 0.1
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "仕様文書形式。API契約/機能要件/互換性・移行セクションを持ち tags に specification を含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:40:00Z",
+      "depends_on": [],
+      "domain": "api",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/rest-api-v2-migration.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "v2 は一貫したページネーション封筒を返し v1 と v2 が移行期間中に併存する状態",
+      "graph_node_id": "node-spec-rest-api-v2",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": "REST API v1 から v2 へ移行し既存クライアントが期限内に破壊的変更へ追従できる状態にする",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "公開 REST API の users/orders/sessions 系エンドポイント"
+      ],
+      "scope_out": [
+        "内部管理用エンドポイント"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "api",
+        "specification",
+        "migration",
+        "breaking-change"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "REST API v2 移行仕様",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "saga による決済・在庫の調停が定義されている",
+        "認証・認可・データ保護・監査が設計されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/order-processing-backend-security.md",
+          "confidence": 0.95
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/order-processing-backend-security.md",
+          "confidence": 0.1
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "アーキテクチャ文書形式。Context/Container view/Subtype architecture セクションを持ち tags に architecture を含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:40:00Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/order-processing-backend-security.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "決済と在庫を跨ぐ更新を不整合にせず個人情報保護要件を満たすアーキテクチャを確立する",
+      "graph_node_id": "node-arch-order-processing",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": "注文処理パイプラインのバックエンド構成とセキュリティ制御を定義する",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "注文処理パイプライン",
+        "決済・在庫連携",
+        "セキュリティ制御"
+      ],
+      "scope_out": [
+        "フロントエンド実装"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "architecture",
+        "backend",
+        "security",
+        "infrastructure"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T00:40:00Z"
+    },
+    {
+      "acceptance": [
+        "開発環境が起動できる手順が文書化されている"
+      ],
+      "architecture_refs": [
+        "node-arch-order-processing"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/dev-environment-setup-guide.md",
+          "confidence": 0.92
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/dev-environment-setup-guide.md",
+          "confidence": 0.12
+        }
+      ],
+      "classification_confidence": 0.92,
+      "classification_reason": "ドキュメント形式。対象読者/要約/手順セクションを持ち tags に documentation を含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:40:00Z",
+      "depends_on": [],
+      "domain": "onboarding",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/dev-environment-setup-guide.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "開発者がリポジトリ clone から開発サーバ起動までを完了できる状態",
+      "graph_node_id": "node-doc-dev-environment-setup",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "onboarding",
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": "新しく参加した開発者が自分の端末で開発環境を立ち上げられるようにする",
+      "related_nodes": [
+        "node-arch-order-processing"
+      ],
+      "resource_scope": [],
+      "scope_in": [
+        "依存サービスのコンテナ起動",
+        "環境変数設定",
+        "開発サーバ起動"
+      ],
+      "scope_out": [
+        "本番環境の構築"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:40:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "documentation",
+        "onboarding",
+        "developer-guide"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "開発環境セットアップの手引き",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T00:40:00Z"
+    }
+  ]
+}
