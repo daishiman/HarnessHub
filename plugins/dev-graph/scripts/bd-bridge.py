@@ -248,7 +248,7 @@ def _ready_with_parity(root: Path, raw: Any, manifest: dict[str, Any] | None) ->
 
 def main() -> int:
     p = argparse.ArgumentParser(); p.add_argument("--op", required=True, choices=("create", "update", "dep-add", "dep-remove", "close", "ready", "show", "claim", "github-push", "gate-add", "gate-check", "orphan-audit", "removal-preflight"))
-    p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--notes"); p.add_argument("--append-notes"); p.add_argument("--design"); p.add_argument("--priority"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--repo-root", default="."); p.add_argument("--graph-node-id"); p.add_argument("--bd-issue-id"); p.add_argument("--depends-on"); p.add_argument("--expected-depends-on", action="append", default=[]); p.add_argument("--expected-status"); p.add_argument("--expected-workspace-id"); p.add_argument("--verify-parity", action="store_true"); p.add_argument("--title"); p.add_argument("--description"); p.add_argument("--notes"); p.add_argument("--append-notes"); p.add_argument("--design"); p.add_argument("--priority"); p.add_argument("--assignee"); p.add_argument("--labels", help="update: カンマ区切りの label 集合。bd --set-labels へ置換転送する"); p.add_argument("--status"); p.add_argument("--reason"); p.add_argument("--pr", type=int); p.add_argument("--dry-run", action="store_true")
     p.add_argument("--parity-manifest"); p.add_argument("--projection-manifest"); p.add_argument("--feature-rollup-manifest"); p.add_argument("--artifact-kind", choices=("feature", "task"))
     # 既定 off。全 ref の graph を読むため作業ツリー限定より重く、CI の常時実行には向かない。
     # 一方 merge_pending の判定はこれ無しでは不可能なので、処分を決める棚卸しでは必ず付ける。
@@ -258,6 +258,11 @@ def main() -> int:
     p.add_argument("--disposition-manifest")
     a = p.parse_args(); root = Path(a.repo_root).resolve(strict=True)
     pf = preflight(root, a.expected_workspace_id) if a.expected_workspace_id else preflight(root)
+    stray = [flag for flag, value in (("--assignee", a.assignee), ("--labels", a.labels)) if value is not None]
+    if a.op != "update" and stray:
+        raise ContractError(f"{', '.join(stray)} is accepted only by --op update")
+    if a.op not in {"create", "update"} and a.priority is not None:
+        raise ContractError("--priority is accepted only by --op create or --op update")
     create_priority: str | None = None
     if a.op == "create" and a.priority is not None:
         if a.projection_manifest:
@@ -287,7 +292,8 @@ def main() -> int:
             preview["registration"] = _registration_status(root, [a.graph_node_id])
         if a.op == "update":
             # preview でも同じ受理判定を通し、不正な update 要求を書込前に落とす。
-            _, preview["applied_fields"] = _update_argv(a)
+            _, preview["applied_fields"], normalized_preview = _update_argv(a)
+            preview.update(normalized_preview)
         if a.op == "close" and a.artifact_kind == "feature":
             manifest = _load_manifest(a.feature_rollup_manifest, root, label="feature rollup")
             if not a.bd_issue_id or manifest is None: raise ContractError("feature close dry-run requires issue and rollup manifest")
@@ -310,7 +316,7 @@ def main() -> int:
         current = _issue(shown, issue)
         edge_parity = verify_parity(current, a.expected_status, a.expected_depends_on) if a.verify_parity else None
         if a.op == "update":
-            flags, applied_fields = _update_argv(a)
+            flags, applied_fields, _ = _update_argv(a)
             result = bd(["update", issue, *flags, "--json"], cwd=root)
         elif a.op == "close":
             rollup = None

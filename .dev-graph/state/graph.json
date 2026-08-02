@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1110,
+  "graph_revision": 1111,
   "nodes": [
     {
       "acceptance": [
@@ -12954,8 +12954,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573",
-        "evaluator": "validate-coverage-matrix.py",
+        "evaluated_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
+        "evaluator": "codex-final-review + merge-reconciliation",
         "evidence_ref": "system-spec/dev-workflow.md"
       },
       "confirmation_status": "confirmed",
@@ -13011,9 +13011,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T04:26:39Z",
+        "imported_at": "2026-08-02T05:27:08Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573",
+        "source_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13029,7 +13029,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T04:26:39Z"
+      "updated_at": "2026-08-02T05:27:08Z"
     },
     {
       "acceptance": [
@@ -44598,6 +44598,135 @@
       "title": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-02T04:39:00Z"
+    },
+    {
+      "acceptance": [
+        "priority、assignee、labels を bd-bridge update から更新できる",
+        "直接 bd update は自由フィールドを含め引き続き遮断される",
+        "labels は置換型 set-labels に正規化され、空入力と操作外引数を fail-closed に拒否する",
+        "契約文書、guard 案内、UPDATE_FIELDS の三者一致を contract test が固定する",
+        "task 仕様品質ゲートと repository 品質ゲートが統合後 tree で成功する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dc7",
+        "linked_at": "2026-08-02T03:24:50Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-bd-free-field-write-route-20260721.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "Beads HarnessHub-dc7 の実装・検証・仕様反映を追跡する repository development tooling issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "feefe87306cadc6bc7406c3a6e22796c591088c92d5c7fdfb005d58f60046e69",
+        "evaluator": "beads-design-review + codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T01:21:36Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-bd-free-field-write-route-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "guard、実行契約、bd-bridge が自由フィールドの扱いで一致し、直接更新を許可せずに bridge 経由で決定論的に更新できる",
+      "graph_node_id": "issue-bd-free-field-write-route-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T03:24:50Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "priority、assignee、labels を Beads 側の突合対象外に保ちながら、更新経路だけは単一チョークポイントへ統一し、到達不能な契約を解消する",
+      "related_nodes": [
+        "issue-bd-bridge-notes-passthrough-20260721",
+        "issue-doc-line-limit-followup-mfh7-20260728",
+        "arch-harness-hub-dev-workflow",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "plugins/dev-graph/lib/bd_bridge_contracts.py",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py",
+        "plugins/dev-graph/tests/test_bd_free_field_write_route.py",
+        "issues/sys-bd-free-field-write-route-20260721.md",
+        "docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md",
+        "docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+      ],
+      "scope_in": [
+        "bd-bridge update への priority、assignee、labels の追加",
+        "priority と labels の正規化および dry-run receipt への反映",
+        "guard、契約文書、bridge の三者一致を固定する回帰テスト",
+        "仕様・設計・feature・task への実装反映と受領書"
+      ],
+      "scope_out": [
+        "guard の直接 bd update 遮断の緩和",
+        "Beads CLI 本体の変更",
+        "priority、assignee、labels の graph parity 管理",
+        "先行して main へ統合済みの bd-bridge 責務分割そのもの"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T03:24:50Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "bd-bridge",
+        "choke-point",
+        "dev-graph",
+        "beads"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Beads 自由フィールドの正規更新経路を bd-bridge に統一する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:24:50Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

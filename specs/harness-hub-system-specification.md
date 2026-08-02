@@ -382,9 +382,9 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   `pnpm check:pnpm` の正負テストで非ゼロ終了させる。
 - qa-038 の G4、qa-088 / qa-096 の CI-local 同値と fail-closed 契約を実装具体化する
   もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
-- 反映先と検証は
-  [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
-  を正とする。
+- 反映先と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
+
+**開発管理の実装反映 (2026-08-02 / `HarnessHub-dc7`)**: Beads の `priority`、`assignee`、`labels` は graph parity 対象外のまま、書込経路を `bd-bridge.py` に一本化した。guard の直接更新遮断、置換型 labels、共通 priority 正規化を維持し、製品 API・DB・認証認可・UI・deploy unit・確定済み QA 回答は変更しない。正本は `system-spec/dev-workflow.md`、設計と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md) とする。
 
 **P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
 

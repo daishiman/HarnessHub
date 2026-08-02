@@ -1,0 +1,63 @@
+{
+  "scenario": "C15-OUT1-positive-ready-set-r16",
+  "checklist": [
+    {
+      "item": "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なしを満たす",
+      "status": "PASS",
+      "evidence": "ready_set.tasks=[LT-SCHED-001,002,003,006] は全て confirmed/pass/complete、depends_on=[] (or all done)、active lease なし。LT-SCHED-004 は active lease (2099) で除外、LT-SCHED-005 は dependency_unsatisfied で除外。"
+    },
+    {
+      "item": "feature ready と task ready が別々の ready-set/batch に出力される",
+      "status": "PASS",
+      "evidence": "batches.features=[], batches.tasks=[[001,003],[002,006]]。feature node は 0 件のため空配列。task と混在なし。"
+    },
+    {
+      "item": "同一 parallel batch の resource_scope.touches 重複 pair が0件である",
+      "status": "PASS",
+      "evidence": "Batch0: {src/alpha.py}∩{src/beta.py}=∅, Batch1: {src/alpha.py}∩{src/delta.py}=∅。conflict_pairs にて 001-002 は ready_pair として報告されるが別 batch に分離済み。"
+    },
+    {
+      "item": "各 task の suggested_branch が devgraph/<graph_node_id> で claim command が public CLI 形式である",
+      "status": "PASS",
+      "evidence": "assignment_hints: 4 エントリ全て devgraph/<id> 形式、重複なし。claim_command は /dev-graph worktree claim <id> --branch devgraph/<id> --session-id <session> 形式。"
+    },
+    {
+      "item": "実行前後の graph/tracker/lease digest が同一である",
+      "status": "PASS",
+      "evidence": "graph_sha256_before==after=e4d17190..., lease_sha256_before==after=b10e1c16..., tracker_sha256=null (none binding), read_only=true"
+    },
+    {
+      "item": "lease pathがgit common-dirの正本と一致し、Beads receiptのstatus/depends_on exact-setが現在graphに一致する",
+      "status": "PASS",
+      "evidence": "lease_source=git_common_dir。tracker_binding=none のため Beads receipt は N/A (parity_provenance=null)。"
+    },
+    {
+      "item": "C17独立verifierがready/batch/lease authorityを再計算してPASSしている",
+      "status": "PASS",
+      "evidence": "dev-graph-parallel-safety-verifier が全 8 チェック (ready-set eligibility, batch scope overlap, max-parallel, dependency exclusion, active lease suppression, stale lease reclaim, branch uniqueness, digest integrity) を独立に再計算し PASS を返した。"
+    }
+  ],
+  "required_observations": [
+    {
+      "observation": "the overlapping resource_scope pair is never placed in the same batch",
+      "status": "PASS",
+      "evidence": "LT-SCHED-001 と LT-SCHED-002 は共に src/alpha.py を持つが、Batch0=[001,003]、Batch1=[002,006] に分離。conflict_pairs で ready_pair として報告。"
+    },
+    {
+      "observation": "the blocked task is excluded from the ready set and the reason is reported",
+      "status": "PASS",
+      "evidence": "LT-SCHED-005 は unmapped に reason=dependency_unsatisfied, blocking_depends_on=[LT-SCHED-001] として報告。ready_set には含まれない。"
+    },
+    {
+      "observation": "the active lease suppresses its task while the stale lease is reclaimed",
+      "status": "PASS",
+      "evidence": "LT-SCHED-004: active lease (expires 2099) → conflicts=[LT-SCHED-004], conflict_pairs に lease conflict。LT-SCHED-006: stale lease (expired 2020) → ready_set に含まれ、batch1 に配置。"
+    },
+    {
+      "observation": "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique",
+      "status": "PASS",
+      "evidence": "max_parallel=2, Batch0 size=2, Batch1 size=2。4 branches は全て devgraph/<id> で一意。"
+    }
+  ],
+  "overall": "PASS"
+}
