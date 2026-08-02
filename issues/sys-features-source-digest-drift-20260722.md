@@ -12,8 +12,8 @@ iteration: null
 title: "features 18 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
 owners: ["daishiman"]
 created_at: "2026-07-22T23:04:59Z"
-updated_at: "2026-08-02T21:01:01.522652Z"
-status: "draft"
+updated_at: "2026-08-02T21:09:14.112561Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
 resource_scope: ["features/","plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/scripts/validate-source-digest.py"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-5kh","linked_at":"2026-07-23T10:11:37Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-features-source-digest-drift-20260722","linked_at":"2026-08-02T21:08:14Z","merge_commit_sha":null,"merged_at":null,"pr_number":643,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/643"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-02T21:08:14Z","evidence_refs":["issues/sys-features-source-digest-drift-20260722.md","https://github.com/daishiman/HarnessHub/pull/643"],"policy":"manual","reconciled_at":"2026-08-02T21:08:14Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-22T23:04:59Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -146,4 +146,9 @@ feature 19 件中 一致 1 件 (feat-hearing-intake) / 不一致 18 件 (2026-07
 
 **本 branch の仕様・設計影響はなし。** この変更は既存 feature node の source_lineage（由来の hash）と lifecycle 投影を実体に合わせるだけであり、製品の API、DB schema、認証認可、UI、Cloudflare deploy、task requirements を変更しない。そのため `docs/`、`features/`、`system-spec/`、`architecture/`、`tasks/` に追加の製品仕様文書を作らない。
 
-上流 main に含まれる qa-134（task spec の世代非依存 rerun command）は仕様影響を持つが、これは base branch 側で既に `feat-task-spec-test-strategy` へ system-spec-harness が正規取込済みであり、[rerun-command-spec-reflection-receipt](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) に受領済みである。本 branch はその仕様を変更・再反映しない。今回の no-impact 受領書は commit 後に `build-spec-reflection-receipt.py --spec-impact none` で記録する。
+上流 main に含まれる qa-134（task spec の世代非依存 rerun command）は仕様影響を持つが、これは base branch 側で既に `feat-task-spec-test-strategy` へ system-spec-harness が正規取込済みであり、[rerun-command-spec-reflection-receipt](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) に受領済みである。本 branch はその仕様を変更・再反映しない。今回の no-impact 受領書は `build-spec-reflection-receipt.py --spec-impact none` により commit `bcaebad0` へ紐付けて記録済みである。
+
+### 公開状態 (2026-08-03)
+
+- draft PR: [#643](https://github.com/daishiman/HarnessHub/pull/643)（base: `main`、head: `devgraph/issue-features-source-digest-drift-20260722`）
+- Beads: `HarnessHub-5kh` を完了へ更新。PR は draft のため、マージ済みを示す証跡には扱わない。

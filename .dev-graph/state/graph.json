@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1175,
+  "graph_revision": 1176,
   "nodes": [
     {
       "acceptance": [
@@ -29712,12 +29712,15 @@
       "classification_confidence": 0.95,
       "classification_reason": "HarnessHub-t9q の lineage 調査 (2026-07-22、全 215 artifact 突合) で観測した features 14 件の source_digest 既存 drift を追跡する follow-up issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T21:08:14Z",
+        "evidence_refs": [
+          "issues/sys-features-source-digest-drift-20260722.md",
+          "https://github.com/daishiman/HarnessHub/pull/643"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T21:08:14Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -29755,7 +29758,20 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-features-source-digest-drift-20260722",
+          "linked_at": "2026-08-02T21:08:14Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 643,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/643"
+        }
+      ],
       "purpose": "features/feat-*.md 18 件の source_lineage.source_digest が source 実体と不一致になった既存 drift を、意味影響を判定したうえで正規 writer により追随させ、由来追跡を回復する。",
       "related_nodes": [
         "spec-harness-hub-requirements"
@@ -29784,7 +29800,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "dev-graph",
         "source-lineage",
@@ -29795,7 +29811,7 @@
       "template_version": "1.0.0",
       "title": "features 18 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T21:01:01.522652Z"
+      "updated_at": "2026-08-02T21:09:14.112561Z"
     },
     {
       "acceptance": [
