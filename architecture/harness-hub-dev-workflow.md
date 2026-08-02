@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-30T13:37:07Z"
+updated_at: "2026-08-01T12:00:37Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T13:37:07Z","origin_kind":"system-spec-harness","source_digest":"dadd50e82509a1814c6cf9ccf05b7bc37a58f3fc0745364b28e7e799835f064b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-01T12:00:37Z","origin_kind":"system-spec-harness","source_digest":"7ad8bf3544003c105398ce4933bb1dc770636df94feb00dadf64844385c99ce0","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -97,6 +97,19 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 ## Risks and verification
 
 正本章 (system-spec/dev-workflow.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Beads bridge の内部コンポーネント境界 (2026-08-01)
+
+`bd-bridge.py` は Beads mutation の唯一の CLI 境界として残し、内部ロジックを
+`contracts` / `graph` / `projection` / `audit` の四 component へ分離する。
+`contracts` と `graph` は Beads へ書かず、`audit` も read-only、書込投影は
+`projection` だけが担う。外部 I/O を持つ関数は `bd=` / `git=` を注入され、
+CLI adapter が呼出時に実行関数を解決する。この境界により、単一チョークポイントを
+維持したまま各ファイルを 500 行以下へ保つ。
+
+詳細な責務、互換性、不変条件、検証証拠は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+を正とする。
 
 > **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は
 > [harness-hub-dev-workflow-changelog.md](../docs/features/feat-dev-pipeline-improvement/harness-hub-dev-workflow-changelog.md)
