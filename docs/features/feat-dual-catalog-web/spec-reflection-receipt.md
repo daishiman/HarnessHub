@@ -46,6 +46,25 @@ R4 reopen → confirm で `qa-117`〜`qa-119` へ再登録した。質問・回�
 coverage matrix、source citation、compile、Dev Graph source digest の各ゲートで、
 共有 OAuth と dual catalog の両仕様が同時に保持されていることを受領した。
 
+### 2.2 本番反映後の CWV 計測不能 (2026-08-02)
+
+PR #628 の main 反映と deploy 成功後、`hub-cwv` を `/catalog` 指定で実行したが、run
+`30736055772` は HTTP 401 により Lighthouse 実行で停止した。401 は既存の
+deny-by-default（認証情報が無い要求を既定で拒否する設計）どおりであり、catalog の認可、
+CWV の閾値、P13 の受入条件を変更する新しい製品仕様ではない。
+
+このため、本追加記録の仕様・設計影響は **なし** と判断した。`system-spec/`、`specs/`、
+`architecture/`、`features/`、`tasks/` の正本は更新しない。既存の feature / P13 task は
+すでに「CWV は実測値でのみ pass」と定めており、未計測を good としない契約も維持される。
+計測用セッション、専用 preview route、認証済みブラウザ実行のいずれを採るかは未決定で、
+ここでいずれかを記載すると未承認の設計判断を正本化してしまう。
+
+事実と後続の責務は `docs/features/feat-dual-catalog-web/` の release / QA 記録、および
+Beads `HarnessHub-9cgb`（dev-graph node
+`issue-hub-cwv-auth-required-route-unmeasurable-20260802`）へ記録した。後続課題で計測経路を
+選定・実装するときは、影響する確定セルを R4 reopen し、compile を通して
+`system-spec/`・`specs/`・`architecture/`・feature / task projection を同期する。
+
 ## 3. 反映先
 
 - `system-spec/`: `spec-state.json` と security / frontend / testing-qa

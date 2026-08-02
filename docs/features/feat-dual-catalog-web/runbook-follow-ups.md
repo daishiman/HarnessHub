@@ -27,7 +27,7 @@ layer: feature-runbook
 |---|---|---|---|
 | 1 | **低品質報告導線** | I4 が本 feature の責務として列挙するが**未実装**。S02 詳細へ `/feedback?harness=<projectId>` 相当の導線を追加する | S14 (`/feedback`) の実装 (feat-feedback-loop, P3)。リンク先が無い今追加すると 404 になるため保留 (P10 §4.3) |
 | 2 | **SLO への CWV 反映** | `apps/hub/monitoring/slo-dashboard.json` に CWV panel が無い。`cwv-evidence` を入力とする panel と閾値を追加する | 本 feature の Write scope 外。feat-hub-foundation 所管 |
-| 3 | **CWV 実測** | acceptance 2 は**未達 (未計測)**。catalog route の本番反映後に `cwv.yml` を実行し、P07/P10 を更新する | 旧版を測って good と記録しないこと |
+| 3 | **CWV 計測経路の欠落** | 本番反映後に `cwv.yml` を `/catalog` 指定で実行したが、**未認証で 401 のため Lighthouse が読めず計測不能** (2026-08-02 / run `30736055772`)。`cwv.yml` に認証済みセッションを与えるか、計測可能な到達経路を用意しないと acceptance 2 は永久に未達 | `cwv.yml` は feat-hub-foundation 所管で本 feature の Write scope 外。旧版を測って good と記録しないこと |
 | 4 | **E2E (Playwright)** | 画面遷移・タブ切替・縮退時の導線を通しで検証する | 導入は Write scope 外 |
 | 5 | **route 命名の drift** | `frontend-spec.md` は `/harnesses`、実装は `/catalog`。どちらかへ寄せる | frontend-spec の更新権限 |
 | 6 | **push 型 update 通知** | 本 feature には存在しない。Stage 2 で実装する | feat-workspace-governance / feat-feedback-loop |
