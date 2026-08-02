@@ -186,7 +186,9 @@ self_evaluation_checklist: [...]
 
 ## § 8 参考実装との比較
 
-| 観点 | `doc/参考Skill/harness-creator/` | 本章が定める prefix 駆動型 |
+比較対象だった `doc/参考Skill/` 配下の外部由来参考実装は、`aiworkflow-requirements` 依存の除去に伴い 2026-08-02 に repo から削除済み。以下は削除時点の特性を記録として残したもので、実体を参照する必要はない(原本は `xl-skills` と git 履歴。対象パスと削除根拠は [クリーンアップ計画.md](../マルチ企業展開/クリーンアップ計画.md) §1-D)。
+
+| 観点 | 参考実装(`doc/参考Skill/` 配下・2026-08-02 削除済み) | 本章が定める prefix 駆動型 |
 |---|---|---|
 | 構造単位 | 単一スキル内マルチ責務（1 SKILL.md に build / lint / eval が同居） | 横展開 + 内部規約（prefix 別 Skill に分離し、内部は非対称） |
 | contract の置き場 | SKILL.md 散文 + scripts/ の README | `workflow-manifest.json` + `schemas/` + `prompts/<R-id>.yaml` の三層 |

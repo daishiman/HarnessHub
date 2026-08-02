@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T15:28:45Z"
+updated_at: "2026-08-02T04:26:39Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T15:28:45Z","origin_kind":"system-spec-harness","source_digest":"f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T04:26:39Z","origin_kind":"system-spec-harness","source_digest":"f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -397,6 +397,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
+**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
+
+- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
+  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
+- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
+  `architecture/harness-hub-dev-workflow.md`、判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+  とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
@@ -428,4 +439,15 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure](../system-spec/infrastructure.md)、
   [maintenance-ops](../system-spec/maintenance-ops.md)。判断と検証は
   [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+
+## 外部参考 Skill の所有境界 (2026-08-02 / `HarnessHub-ym9h` / qa-122)
+
+- `doc/参考Skill/` は外部由来の比較・移管記録であり、能動 plugin の契約正本にしない。
+- `aiworkflow-requirements` を前提にする参考コピーは directory 単位で削除し、利用中の
+  外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。
+- 変更は repository の開発文書・plugin reference 所有に限定され、製品 UI、外部 API、
+  DB schema、認証認可、Cloudflare deploy unit は変更しない。
+- 正本は [dev-workflow](../system-spec/dev-workflow.md) の `qa-122`、判断・検証・復元経路は
+  [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
   を参照する。
