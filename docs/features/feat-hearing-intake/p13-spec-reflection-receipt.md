@@ -44,7 +44,7 @@ cleanup 対象へ登録できないため、部分行が本番 DB に残り得�
 | 反映先 | 確認対象 | 判断 |
 |---|---|---|
 | `docs/` | `docs/features/feat-hearing-intake/release-notes.md`、`runbook.md`、`docs/infrastructure-spec.md` | P13 実測に加え、main push を通常経路、main dispatch を path-filter 非発火時の再実行経路として §7 へ反映する。2026-08-02 に deploy job の post-deploy 列へ hearing 本番スモークを追記した |
-| `system-spec/` | `spec-state.json`、`infrastructure.md`、`testing-qa.md` | `infrastructure.web` と `testing-qa.web` を R4-reopen し、main の `qa-123` / 既存 `qa-119` を保持した上で、`appr-024` を承認証跡として `qa-124` / `qa-125` へ再確定した。API・DB schema・認証認可・UI は不変のため他セルは再オープンしない |
+| `system-spec/` | `spec-state.json`、`infrastructure.md`、`testing-qa.md` | `infrastructure.web` と `testing-qa.web` を R4-reopen し、latest main の `qa-124〜qa-130` と既存履歴を保持した上で、`appr-024` を承認証跡として `qa-131` / `qa-132` へ再確定した。API・DB schema・認証認可・UI は不変のため他セルは再オープンしない |
 | `specs/` | `specs/harness-hub-system-specification.md` | Secret 三方向突合、transactional fixture/cleanup、本番 SEC5/SEC8 観測、未実測境界を投影し、C02 writer で `spec-harness-hub-requirements` の lineage を現行 spec-state digest へ更新した |
 | `architecture/` | `architecture/harness-hub-infrastructure.md` | pipeline 順序、migration 前停止境界、post-deploy rollback 入力、fixture/cleanup transaction を反映し、C02 writer で `arch-harness-hub-infrastructure` を更新した |
 | `features/` | `features/feat-hearing-intake.md` | P13 本番受入節を追加し、main 後の deploy run まで未完了であることを機能単位で明記。C02 writer で `feat-hearing-intake` を更新した |
@@ -54,7 +54,7 @@ cleanup 対象へ登録できないため、部分行が本番 DB に残り得�
 
 deploy pipeline と testing gate の確定契約に意味差分があるため、`system-spec/spec-state.json` は
 `infrastructure.web` と `testing-qa.web` を正規の R4-reopen で再ヒアリング対象へ戻した。その後、既存の
-qa-034 / qa-038 / qa-106 / qa-116 / qa-123 と qa-076 / qa-108 / qa-119 を全面維持した回答を `qa-124` / `qa-125`
+qa-034 / qa-038 / qa-106 / qa-116 / qa-123 と qa-076 / qa-108 / qa-119 / qa-130 を全面維持した回答を `qa-131` / `qa-132`
 として登録し、`appr-024` を承認証跡に再確定した。`validate-coverage-matrix.py --require-complete` は未収集 0 で
 PASS し、system-spec compiler で章を再生成した。SEC8 の規則そのものは変えていないため security cell は維持した。
 
@@ -69,8 +69,8 @@ PASS し、system-spec compiler で章を再生成した。SEC8 の規則その�
 
 ## 最終レビュー記録（2026-08-02）
 
-- origin/main `7bab5a2f` をローカル main へ取り込み、そのローカル main を本 branch へ merge した。
-- `pnpm verify` は 6 パッケージ 143 files / 1804 tests、lint、typecheck、build、tenant 分離、secret scan、
+- origin/main `3e34b78f` をローカル main へ取り込み、そのローカル main を本 branch へ merge した。
+- `pnpm verify` は 6 パッケージ 149 files / 1861 tests、lint、typecheck、build、tenant 分離、secret scan、
   schema drift、Worker / client bundle 予算をすべて通過した。
 - task 仕様 validator、system-spec coverage、dev-graph schema / source digest、成果物配置、文書行数、
   `git diff --check` を最終 commit 前に再確認する。

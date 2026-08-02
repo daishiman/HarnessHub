@@ -149,21 +149,21 @@ deploy job が起動した（sha `f303274045ec35df284a0ba72629c811d78d6ce6`）�
 
 ## 6. リリース前ゲートの再実行（2026-08-02・ローカル）
 
-origin/main `7bab5a2f` をローカル main へ取り込み、そのローカル main を本ブランチへ merge した状態で再実行した。
+origin/main `3e34b78f` をローカル main へ取り込み、そのローカル main を本ブランチへ merge した状態で再実行した。
 
 `pnpm verify` は最終ゲートの `check:client-bundle` まで `&&` チェーンを完走した。
 
 | ゲート | 実測 |
 |---|---|
 | `validate-system-plan.py --feature-package feature-package/feat-hearing-intake` | **pass** / `violations: []` / `validated_digest` が task 仕様の `dev_graph_source_digest`（`sha256:61fac79f…`）と一致 |
-| Biome lint | **467 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
+| Biome lint | **489 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
 | typecheck（6 パッケージ） | pass |
 | build / build:worker | pass |
-| test（全パッケージ） | **143 files / 1804 tests 全 pass**（hub 1021 / ui 266 / db 240 / inspection 151 / schemas 86 / estimation 40） |
+| test（全パッケージ） | **149 files / 1861 tests 全 pass**（hub 1060 / ui 266 / db 258 / inspection 151 / schemas 86 / estimation 40） |
 | test（今回追加した名指し検査） | **22 tests 全 pass**（DB fixture transaction 2 / Worker secret・本番 smoke 構造 20） |
 | tenant 分離 / secret scan / OpenAPI・zod drift | pass |
 | Worker secret 三方向突合 | **台帳 10 件 / Worker 宣言 7 件**を静的に確認（live 検査は deploy 前に実行） |
-| Worker bundle 予算 | **gzip 1.306 MiB** / 3.000 MiB（wrangler dry-run 計測） |
+| Worker bundle 予算 | **gzip 1.330 MiB** / 3.000 MiB（wrangler dry-run 計測） |
 | client bundle 予算（本 feature の 3 画面） | `/sheets/new` **116.4 KiB** / `/sheets/[id]` **116.1 KiB** / `/sheets` **111.9 KiB**（予算 120.0 KiB） |
 
 client bundle は 3 画面とも予算内だが、`/sheets/new` は残り 3.6 KiB（約 3%）である。S10 に client component を

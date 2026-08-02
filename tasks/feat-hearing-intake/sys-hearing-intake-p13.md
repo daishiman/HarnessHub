@@ -122,5 +122,5 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 本番 smoke の tenant header 詐称は当初 `403` を期待していたが、既存の存在秘匿契約と矛盾するため
   `404 tenant_mismatch` へ修正し、静的契約テストで `403` への退行も検出するよう固定した。
 - 仕様影響ありとして `infrastructure.web` / `testing-qa.web` を R4-reopen し、main の確定履歴を保持して
-  `appr-024` を根拠に `qa-124` / `qa-125` へ再確定した。C02 writer で specification / infrastructure architecture /
+  `appr-024` を根拠に `qa-131` / `qa-132` へ再確定した。C02 writer で specification / infrastructure architecture /
   feature / 本 task projection を更新し、公開済み content-addressed task spec 自体は変更していない。

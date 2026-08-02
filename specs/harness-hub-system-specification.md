@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T07:02:16.153905Z"
+updated_at: "2026-08-02T07:35:52.300205Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"7262362bc0640fea8972127976a9a6f220663912ebc69b95a44705d9c8b36067","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T07:01:52Z","origin_kind":"system-spec-harness","source_digest":"7262362bc0640fea8972127976a9a6f220663912ebc69b95a44705d9c8b36067","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T07:35:20Z","origin_kind":"system-spec-harness","source_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -397,7 +397,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
-**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-124〜125)**:
+**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-131〜132)**:
 
 - migration より前に、Worker Secret の機械可読台帳、`wrangler.jsonc` の required 宣言、
   本番 Worker の実投入名を三方向で突合する。値は保存せず、認証不足・通信不能・解析不能・
@@ -474,4 +474,23 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   DB schema、認証認可、Cloudflare deploy unit は変更しない。
 - 正本は [dev-workflow](../system-spec/dev-workflow.md) の `qa-122`、判断・検証・復元経路は
   [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+  を参照する。
+
+## 顧客持ち込み Google OAuth client 管理 (2026-08-02 / `HarnessHub-uk2i` / qa-124〜qa-130)
+
+- `provider-admin` は `/settings/auth` と Google 専用管理 API から、顧客所有 client の
+  登録、接続テスト、有効化、無停止 rotation、取消、無効化、安全な再開を行える。
+- lifecycle は `pending → tested → active → disabled`。認証解決は `active` のみで、
+  disabled からは新 credential を staging して pending テストを通さない限り復帰できない。
+- client ID・secret・方式・許可 Workspace ドメインは 1 テナント 1 Google 行の staging に
+  一式保存し、暗号文 CAS（比較一致時だけ更新）で同時昇格する。昇格前と取消後は現行ログインを維持する。
+- secret 全値は応答、ログ、監査、DOM、エラー、snapshot へ出さず、暗号化保存と last4 表示に限定する。
+  管理 API は tenant scope・同一 origin・Google issuer・provider-admin を fail-closed で強制する。
+- 不正 code の token probe は discovery と client credential の疎通確認であり、redirect URI 一致は
+  証明しない。有効化後の Google 実ブラウザ login を運用上の別ゲートとする。
+- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
+  [database](../system-spec/database.md)、[frontend](../system-spec/frontend.md)、
+  [security](../system-spec/security.md)、[maintenance-ops](../system-spec/maintenance-ops.md)、
+  [testing-qa](../system-spec/testing-qa.md)。反映と検証は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
   を参照する。

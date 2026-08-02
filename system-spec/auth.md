@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-115 |
+| Web (web) | 確定 | 確定質疑: qa-124 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,11 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-115 (対応セル: web)
+### qa-124 (対応セル: web)
 
-**質問**: HarnessHub-fnej の共有 Google OAuth client 方式を、auth.web の既存認証契約を維持しながらどう統合しますか?
+**質問**: 顧客持ち込み Google OAuth client の管理 lifecycle を、共有方式を含む auth.web の現行認証契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-097 の production Google OIDC、JIT、session、Device Flow 契約を全面維持し、次を追加確定する。
-
-【1. credential mode】idp connection は customer_google と shared_google を明示し、未知値や共有設定不備を既定方式へ fallback させない。既存行は customer_google を既定にして従来の tenant 別 issuer/client/secret と callback path を維持する。
-
-【2. 共有認可開始】shared_google は issuer を https://accounts.google.com に固定し、環境単位の client_id/client_secret を使う。認可開始は tenant path から行うが、Google へ渡す redirect_uri は /api/auth/shared/callback/tenant-oidc の1本に集約する。state には tenant id/slug、発行・期限、CSRF binding hash を HMAC 署名して載せ、PKCE と nonce は Auth.js の検査を維持する。
-
-【3. callback と帰属】共通 callback は署名・期限・binding cookie を DB lookup より先に検証し、復元した tenant id/slug と実接続を完全一致させる。Auth.js が署名・nonce 検証した Google ID token の hd を、tenant の allowed_workspace_domains と大文字小文字を正規化した完全一致で照合する。hd 欠落、別 Workspace、サブドメイン、tenant 差し替えでは session/JIT 行を作らない。
-
-【4. principal 分離】同じ Google sub でも principal は tenant_id と sub の組で束縛し、共有 client を tenant identity として使わない。shared は callback 用予約 slug として tenant route で拒否する。
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-115 の production OIDC・共有 Google OAuth・JIT・session・Device Flow 契約を全面維持し、顧客持ち込み方式の管理 lifecycle を追加確定する。【状態】管理 API の新規登録は pending、現行 credential の接続テスト合格は pending のとき tested、明示的な有効化だけが active、無効化は disabled とする。認証解決対象は active のみで、顧客方式の失敗・無効化から共有方式へ暗黙 fallback しない。【再開】disabled の古い credential を直接 active に戻さない。新しい client ID / secret / 許可 Workspace ドメインを staging すると pending へ戻り、pending テスト合格後の有効化でのみ active へ進む。【切替】1 テナント 1 Google 行の制約を維持し、client ID・secret・方式・許可ドメインを staging へ一式保存して、テスト済みの一式を同一更新で昇格する。昇格前と取消後は現行 credential でログインを継続する。【検証境界】token endpoint の不正 code probe は discovery と client ID / secret の疎通確認であり、Google Console の redirect URI 一致は証明しない。有効化後の実ブラウザ login を別の完了ゲートとする。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

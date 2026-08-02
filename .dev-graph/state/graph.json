@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1117,
+  "graph_revision": 1121,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "7262362bc0640fea8972127976a9a6f220663912ebc69b95a44705d9c8b36067",
+        "evaluated_digest": "0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a",
         "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T07:01:52Z",
+        "imported_at": "2026-08-02T07:35:20Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "7262362bc0640fea8972127976a9a6f220663912ebc69b95a44705d9c8b36067",
+        "source_digest": "0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T07:02:16.153905Z"
+      "updated_at": "2026-08-02T07:35:52.300205Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "7262362bc0640fea8972127976a9a6f220663912ebc69b95a44705d9c8b36067",
+        "evaluated_digest": "0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a",
         "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T07:01:52Z",
+        "imported_at": "2026-08-02T07:35:20Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "1f1467b40afe8049394f2227318e59e810e548f75f61f020cb5fb41993f3a88d",
+        "source_digest": "6353c77f4220f9c4a9a07dcea41476822ae339e02c948a7603dc9c41102a6b57",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T07:02:49.681006Z"
+      "updated_at": "2026-08-02T07:36:12.924712Z"
     },
     {
       "acceptance": [
@@ -3595,9 +3595,9 @@
         "構築工程の進行管理 (feat-build-pipeline-board)"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T07:01:52Z",
+        "imported_at": "2026-08-02T07:35:20Z",
         "origin_kind": "generated",
-        "source_digest": "f1f12e86a6da97c152010f3f28cb3c2dbb991e98dbd499295575e2798d6951d6",
+        "source_digest": "0765accae21008ccc3e06b5ebe88659b72e7aa08d86ecf3da17af993a7228dd9",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3614,7 +3614,7 @@
       "template_version": "1.0.0",
       "title": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T07:03:53.895404Z"
+      "updated_at": "2026-08-02T07:37:57.233774Z"
     },
     {
       "acceptance": [
