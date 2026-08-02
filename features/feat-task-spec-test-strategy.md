@@ -4,7 +4,7 @@ artifact_kind: "feature"
 artifact_subtypes: []
 project_id: "harness-hub"
 domain: "testing-qa"
-tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","qa-133","decision-d8"]
+tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","qa-134","decision-d8"]
 priority: "high"
 start_date: null
 target_date: null
@@ -12,7 +12,7 @@ iteration: null
 title: "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T20:58:52Z"
-updated_at: "2026-08-02T10:39:21Z"
+updated_at: "2026-08-02T11:52:52.665067Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","feat-doc-governance-portability","feat-mvp-first-scheduling"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T10:39:21Z","origin_kind":"generated","source_digest":"b1dac50f4548b867f0c126cde30145a3ae6e08315a893ac6514ab7752735ea14","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 testing-qa 章 qa-076/qa-078/qa-079/qa-081 と D8 から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-task-spec-test-strategy.md","confidence":0.9}]

@@ -121,6 +121,14 @@
       "version": "0.2.0",
       "category": "Productivity",
       "tags": ["extraction", "blueprint", "mermaid", "documentation"]
+    },
+    {
+      "name": "harness-hub-publisher",
+      "source": "./plugins/harness-hub-publisher",
+      "description": "skills-package を Harness Hub へ publish したいとき、Device Flow 認証・pre-check・wrangler デプロイまでを一括で実行したいときに使う。業務ロジックは持たず apps/publisher CLI (@harness-hub/publisher) を呼び出すだけの薄いラッパー。",
+      "version": "0.1.0",
+      "category": "productivity",
+      "tags": ["publisher", "harness-hub", "device-flow", "wrangler", "cli"]
     }
   ]
 }

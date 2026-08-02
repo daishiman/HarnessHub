@@ -21,7 +21,7 @@ C12 検証コマンドを、promotion（生成物を正式版へ昇格する処�
 
 ## 結論
 
-仕様・設計影響は **あり**。確定仕様を `testing-qa.web` の qa-133 として
+仕様・設計影響は **あり**。確定仕様を `testing-qa.web` の qa-134 として
 reopen → re-confirm し、task spec contract 1.3.0 に世代非依存 rerun command の
 fail-closed gate（条件を確認できなければ失敗にする検査）を追加した。
 
@@ -49,7 +49,7 @@ fail-closed gate（条件を確認できなければ失敗にする検査）を�
 
 ## 正規フローの受領
 
-- 仕様正本: `system-spec/spec-state.json` に `qa-133` / `appr-025` を単一 writer の
+- 仕様正本: `system-spec/spec-state.json` に `qa-134` / `appr-026` を単一 writer の
   `apply-spec-transition.py` で記録し、`system-spec/testing-qa.md` を compiler で再生成した。
 - 統合仕様: `specs/harness-hub-system-specification.md` に lifecycle、互換性、影響境界を反映した。
 - 設計: `architecture/harness-hub-testing-qa.md` に current pointer 解決と versioned contract を反映した。
@@ -57,6 +57,13 @@ fail-closed gate（条件を確認できなければ失敗にする検査）を�
   `tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md` に実装フィードバックを反映した。
 - issue/dev-graph: `issue-task-spec-validate-command-unrunnable-20260725` を
   `HarnessHub-ji8y` に結び、受入条件を pre/post-promotion lifecycle に合わせた。
+
+## 最新 main 統合時の再採番
+
+PR 作成後の最新 `main` では、別機能の CWV（ページ表示の速さを測る指標）契約が
+`qa-133` / `appr-025` を使用していた。既存の確定質疑を上書きしないため、本件は
+`qa-134` / `appr-026` として再採番し、single transition writer から `testing-qa.web` を
+reopen → re-confirm した。これにより両方の確定仕様を保持したまま、PR のマージ衝突を解消した。
 
 ## 変更境界
 
@@ -88,5 +95,5 @@ repository 全体の `lint-live-trial-verdict.py --all --enforce` は、最新 m
 - Beads ID: `HarnessHub-ji8y`
 - dev-graph node ID: `issue-task-spec-validate-command-unrunnable-20260725`
 - feature package: `feature-package/feat-task-spec-test-strategy`
-- specification: `qa-133`
-- approval: `appr-025`
+- specification: `qa-134`
+- approval: `appr-026`

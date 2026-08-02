@@ -54,7 +54,7 @@ export interface AuthzPrincipal {
    */
   readonly scope: readonly PublisherTokenScope[] | null;
   /** 主体の由来。監査記録に残す。 */
-  readonly credential: 'session' | 'access_token';
+  readonly credential: 'session' | 'access_token' | 'cwv_probe';
   /** access token の保存行 ID。session では null。AI job の claim 者照合に使う。 */
   readonly tokenId?: string | null;
 }

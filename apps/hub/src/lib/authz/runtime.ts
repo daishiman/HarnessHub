@@ -25,6 +25,7 @@ import {
   type RecordedAuditEvent,
 } from '../../shared/audit/index.js';
 import { type AuthRouteHandler, createAuthjsHandler } from '../auth/adapter/index.js';
+import { readCwvProbeConfig } from '../auth/cwv-probe.js';
 import { createDbAuthPorts, createDbClientSecretResolver } from '../auth/db-ports.js';
 import { createDeviceFlowService, type DeviceFlowService } from '../auth/device-flow/index.js';
 import {
@@ -50,6 +51,8 @@ export interface AuthRuntimeEnv {
    * OIDC の callback URL はここから組む。Host ヘッダから組むと Host 偽装で callback を差し替えられる。
    */
   readonly canonicalOrigin: string;
+  /** 設定済みのときだけ protected CWV 計測を許可する最小権限 credential。 */
+  readonly cwvProbe?: ReturnType<typeof readCwvProbeConfig>;
 }
 
 export interface AuthRuntime {
@@ -99,6 +102,7 @@ export function createAuthRuntime(input: AuthRuntimeInput): AuthRuntime {
       revocation: createRevocationChecker(input.ports.sessionRevocations, input.ports.clock),
       sessionSecret: input.env.sessionSecret,
       accessTokenSecret: input.env.accessTokenSecret,
+      cwvProbe: input.env.cwvProbe,
       allowedOrigins: input.env.allowedOrigins,
     },
     deviceFlow: createDeviceFlowService({
@@ -160,6 +164,8 @@ export function createDbAuditSink(auditRepo: CoreRepositories['audit']): AuditSi
 
 /** 環境変数から設定を読む。欠けている値は既定へ落とさず例外にする (fail-closed)。 */
 export function readAuthRuntimeEnv(source: Record<string, string | undefined> = process.env): AuthRuntimeEnv {
+  const canonicalOrigin = requiredOrigin(source, 'AUTH_CANONICAL_ORIGIN');
+  const cwvProbe = readCwvProbeConfig(source, canonicalOrigin);
   return {
     sessionSecret: required(source, 'AUTH_SESSION_SECRET'),
     accessTokenSecret: required(source, 'AUTH_ACCESS_TOKEN_SECRET'),
@@ -168,7 +174,8 @@ export function readAuthRuntimeEnv(source: Record<string, string | undefined> = 
       .map((origin) => origin.trim())
       .filter((origin) => origin.length > 0),
     verificationUri: required(source, 'AUTH_DEVICE_VERIFICATION_URI'),
-    canonicalOrigin: requiredOrigin(source, 'AUTH_CANONICAL_ORIGIN'),
+    canonicalOrigin,
+    ...(cwvProbe === undefined ? {} : { cwvProbe }),
   };
 }
 
@@ -178,6 +185,9 @@ const AUTH_RUNTIME_SOURCE_KEYS = [
   'AUTH_ALLOWED_ORIGINS',
   'AUTH_DEVICE_VERIFICATION_URI',
   'AUTH_CANONICAL_ORIGIN',
+  'CWV_PROBE_SECRET',
+  'CWV_PROBE_TENANT_ID',
+  'CWV_PROBE_WORKSPACE_ID',
   'TURSO_DATABASE_URL',
   'TURSO_AUTH_TOKEN',
   'ENCRYPTION_KEK',

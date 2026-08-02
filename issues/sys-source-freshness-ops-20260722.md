@@ -12,7 +12,7 @@ iteration: null
 title: "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-30T02:19:59.351983Z"
+updated_at: "2026-08-02T08:44:44.224882Z"
 status: "closed"
 depends_on: []
 related_nodes: ["feat-stage0-distribution-gate","issue-h7-git-subdir-revalidation-20260730"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-30T00:24:25Z","origin_kind":"manual","source_digest":"58d85cb5ff4c828f6fbf75ec093fa059f41c4cb4fa65c125ed46056d7dbcdc36","source_path":"system-spec/index.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T08:30:40Z","origin_kind":"manual","source_digest":"1a85072d10ea2bc792ab2c7833d28b78f5038cb8dafd53daf7955024d654e72c","source_path":"system-spec/index.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "C08 出典鮮度監査 (2026-07-22) の low findings 3 件 (追随運用の示唆) を追跡する issue"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-source-freshness-ops-20260722.md","confidence":0.95}]

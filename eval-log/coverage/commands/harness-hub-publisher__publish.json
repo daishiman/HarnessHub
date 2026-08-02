@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/harness-hub-publisher/commands/publish.md",
+  "type": "commands",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "最終レビューで確認。frontmatterのname/description/kind/version/owner/argument-hint/allowed-toolsはcommand契約を満たす。run-publisher-publish Skillは実在し、同じ必須引数とweb_app時のwrangler-config要件をCLIのdispatchPublishまで追跡できる。commandはSkillを起動するだけの薄い入口で、package収集・認証・Hub API・Wranglerの業務ロジックを再実装しない。実サービスE2Eは未達と明示され、local fake I/Oを成功証跡に誤用しない。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "reference-existence",
+    "argument-contract",
+    "owner-flow",
+    "placement-invariant",
+    "side-effect-safety"
+  ]
+}

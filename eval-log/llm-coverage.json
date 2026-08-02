@@ -1,6 +1,6 @@
 {
   "threshold": 80.0,
-  "skills_measured": 67,
+  "skills_measured": 69,
   "below_threshold": 0,
   "average_coverage_pct": 100.0,
   "reports": [
@@ -544,6 +544,41 @@
       "under_derived": true,
       "coverage_pct": 100.0,
       "since": "2026-05-18"
+    },
+    {
+      "plugin": "harness-hub-publisher",
+      "skill": "run-publisher-publish",
+      "criteria_total": 4,
+      "criteria_covered": 4,
+      "covered_ids": [
+        "IN1",
+        "IN2",
+        "OUT1",
+        "OUT2"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 0,
+      "under_derived": false,
+      "coverage_pct": 100.0,
+      "since": "2026-08-02"
+    },
+    {
+      "plugin": "harness-hub-publisher",
+      "skill": "run-skill-feedback",
+      "criteria_total": 5,
+      "criteria_covered": 5,
+      "covered_ids": [
+        "IN1",
+        "IN2",
+        "IN3",
+        "OUT1",
+        "OUT2"
+      ],
+      "uncovered_ids": [],
+      "checklist_items": 8,
+      "under_derived": true,
+      "coverage_pct": 100.0,
+      "since": "2026-05-25"
     },
     {
       "plugin": "mf-kessai-invoice-check",

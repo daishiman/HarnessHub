@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub Dual Catalog cache・認可境界追補"
 owners: ["daishiman"]
 created_at: "2026-08-01T09:00:00Z"
-updated_at: "2026-08-01T09:00:00Z"
+updated_at: "2026-08-02T08:46:51.546374Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-security","arch-harness-hub-frontend","arch-harness-hub-testing-qa"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c","evaluator":"system-spec-harness-final-review","evidence_ref":"docs/features/feat-dual-catalog-web/spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T09:00:00Z","origin_kind":"system-spec-harness","source_digest":"c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T08:30:40Z","origin_kind":"system-spec-harness","source_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.99
 classification_reason: "qa-110..112 の確定契約を横断参照する製品仕様追補"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-dual-catalog-cache-addendum.md","confidence":0.99},{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.52}]
