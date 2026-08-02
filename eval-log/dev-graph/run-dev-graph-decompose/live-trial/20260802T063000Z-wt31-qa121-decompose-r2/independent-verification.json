@@ -1,0 +1,11 @@
+{
+  "reviewer": "root-runtime-gate",
+  "result": "FAIL",
+  "blockers": [
+    "The session stopped at an interactive continuation prompt after the beads binding and before the beads audit and none binding completed; the no-intervention paired scenario was therefore not completed."
+  ],
+  "observed": [
+    "The beads binding reached a second Skill invocation and reported C02 noop/write_count=0 convergence.",
+    "No valid final status marker was emitted by the trial session before it stopped for continuation input."
+  ]
+}

@@ -12,11 +12,11 @@ iteration: null
 title: "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能"
 owners: ["daishiman"]
 created_at: "2026-07-25T13:00:00Z"
-updated_at: "2026-08-02T03:20:01.245542Z"
+updated_at: "2026-08-02T10:26:42Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-task-spec-test-strategy"]
-resource_scope: ["architecture/harness-hub-testing-qa.md","docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md","features/feat-task-spec-test-strategy.md","issues/sys-task-spec-validate-command-unrunnable-20260725.md","plugin-plans/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/agents/system-dev-plan-architect.md","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","plugins/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/scripts/validate-task-spec-contract.py","plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md","plugins/system-dev-planner/tests/test_task_spec_rerun_command.py","plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py","specs/harness-hub-system-specification.md","system-spec/spec-state.json","system-spec/testing-qa.md","tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"]
+resource_scope: ["architecture/harness-hub-testing-qa.md","docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T060000Z-wt31-qa121-decompose","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T063000Z-wt31-qa121-decompose-r2","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T071500Z-wt31-qa121-decompose-r3","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T083000Z-wt31-qa121-decompose-r4","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T091500Z-wt31-qa121-decompose-r5","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T094500Z-wt31-qa121-decompose-r6","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-wt31-qa121-decompose-r7","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T104500Z-wt31-qa121-decompose-r8","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T121500Z-wt31-qa131-decompose-r9","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T171500Z-wt31-qa131-decompose-r10","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T184500Z-wt31-qa131-decompose-r11","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T190000Z-wt31-qa131-decompose-r12","eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T031500Z-wt31-qa121-node","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T041500Z-wt31-qa121-node-r2","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T110000Z-wt31-qa131-node-r4","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T113000Z-wt31-qa131-node-r5","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124500Z-wt31-qa131-node-r6","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T141500Z-wt31-qa131-node-r7","eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T144500Z-wt31-qa131-node-r8","eval-log/dev-graph/run-dev-graph-requirements/content-review/elegance-verdict.json","eval-log/dev-graph/run-dev-graph-requirements/content-review/rubric-verdict.json","eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T031500Z-wt31-qa121-requirements","eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T041500Z-wt31-qa121-requirements-r2","eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3","eval-log/llm-coverage.json","features/feat-task-spec-test-strategy.md","issues/sys-task-spec-validate-command-unrunnable-20260725.md","plugin-plans/dev-graph/component-inventory.json","plugin-plans/system-dev-planner/references/system-task-spec-template.md","plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md","plugins/dev-graph/skills/run-dev-graph-requirements/prompts/R2b-readiness.md","plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py","plugins/dev-graph/tests/fixtures/build_decompose_promotion_patch.py","plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","plugins/dev-graph/tests/fixtures/live_trial_shapes/requirements_baseline.py","plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_requirements.py","plugins/dev-graph/tests/test_decompose_live_trial_integrity.py","plugins/dev-graph/tests/test_live_trial_fixture_builders.py","plugins/dev-graph/tests/test_validate_source_digest.py","plugins/system-dev-planner/agents/system-dev-plan-architect.md","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","plugins/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/scripts/validate-task-spec-contract.py","plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md","plugins/system-dev-planner/tests/test_task_spec_rerun_command.py","plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py","specs/harness-hub-system-specification.md","system-spec/spec-state.json","system-spec/testing-qa.md","tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"]
 purpose: "task spec に書かれた検証手順を promotion 後も無改変で再実行できるようにし、別 package を誤検証した成功を防ぐ"
 goal: "新規 task spec の validate-system-plan 再実行コマンドが自 package の current pointer を使う世代非依存形になり、C12 が不正形を promotion 前に fail-closed で拒否する状態"
 scope_in: ["R3-emit prompt と task spec template の再実行コマンド契約","C12 契約 v1.3.0 と staging・欠落・package 不一致の検査","旧 promoted package の digest 不変性と契約 version 免除","CommonMark backtick/tilde fence と inline code span の回帰検査"]
@@ -44,7 +44,7 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
-implementation_readiness: {"checked_at":"2026-08-02T02:19:33Z","missing_sections":[],"status":"complete"}
+implementation_readiness: {"checked_at":"2026-08-02T06:14:02Z","missing_sections":[],"status":"complete"}
 ---
 
 ## 背景
@@ -88,11 +88,11 @@ task spec が長期的な再実行手順として `--staging` を保存する設
 
 ## 受入条件
 
-- [ ] R3-emit と正本 template が、自 package の `--feature-package` 形だけを再実行手順として生成する。
-- [ ] C12 v1.3.0 が staging path、package flag 欠落、package id 不一致を fail-closed で拒否する。
-- [ ] CommonMark の backtick/tilde fence、未閉鎖 fence、inline code span で検査を迂回できない。
-- [ ] v1.2.0 以前の registered package は legacy mode で従来どおり再検証でき、digest は不変である。
-- [ ] 現行 package の C12、system-dev-planner 全回帰、task projection、仕様反映ゲートが通る。
+- [x] R3-emit と正本 template が、自 package の `--feature-package` 形だけを再実行手順として生成する。
+- [x] C12 v1.3.0 が staging path、package flag 欠落、package id 不一致を fail-closed で拒否する。
+- [x] CommonMark の backtick/tilde fence、未閉鎖 fence、inline code span で検査を迂回できない。
+- [x] v1.2.0 以前の registered package は legacy mode で従来どおり再検証でき、digest は不変である。
+- [x] 現行 package の C12、system-dev-planner 全回帰、task projection、仕様反映ゲートが通る。
 
 ## 検証証跡
 
@@ -100,6 +100,10 @@ task spec が長期的な再実行手順として `--staging` を保存する設
 - plugin regression: `python3 -m pytest -q plugins/system-dev-planner`
 - task package: `validate-system-plan.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy`
 - projection: `build-task-projection-rerun.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy --check`
+- downstream C04: `run-dev-graph-requirements` が選択 feature、`architecture_refs`、P01..P13 の
+  15-node closure を検証し、同じ `--feature-package` current pointer 契約を使う。
+- downstream C14: paired beads/none live trial が schema、promotion digest、idempotent resend、
+  run-binding audit、goal-seek evidence を独立評価込みで再確認する。
 - 仕様反映受領書: `docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md`
 
 ## 関連

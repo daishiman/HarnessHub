@@ -1,0 +1,48 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "The session stopped for continuation input before the paired no-intervention scenario completed.",
+      "ゴールシーク配線の実体検証に失敗: progress-missing: run-dev-graph-decompose-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [
+    "progress.json"
+  ],
+  "goal_seek_evidence_violations": [
+    "progress-missing: run-dev-graph-decompose-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "33a2988db3b8a9b5514d1a48ec61981caadced1cdf93c705ffe6c74b016dd45a",
+  "transcript_sha256": "2ba62850e8641aa38b44c820ff72a5ec388b11088475c190aeb64adb8e77b314",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": null,
+    "wall_clock_s": null
+  }
+}

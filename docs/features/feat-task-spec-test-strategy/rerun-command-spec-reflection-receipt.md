@@ -1,3 +1,14 @@
+---
+status: confirmed
+layer: feature-evidence
+beads_ids:
+  - HarnessHub-ji8y
+dev_graph_node_id: issue-task-spec-validate-command-unrunnable-20260725
+feature_node_id: feat-task-spec-test-strategy
+spec_impact: reflected
+reviewed_at: 2026-08-02
+---
+
 # C12 世代非依存 rerun command 仕様反映受領書
 
 ## 目的と背景
@@ -31,6 +42,10 @@ fail-closed gate（条件を確認できなければ失敗にする検査）を�
 4. contract 1.3.0 では `--staging`、flag 欠落、package mismatch を拒否する。
    1.2.0 以前の promote 済み package は content-addressed で immutable のため、
    当時の contract で再検証して digest を変えない。
+5. downstream consumer（後段の利用側）である `run-dev-graph-requirements` も
+   `--feature-package` を使い、選択 feature・`architecture_refs`・task 13 件からなる
+   15-node lineage closure（引用元まで含む関係ノード集合）を source-digest gate へ渡す。
+   positive live-trial fixture は promotion receipt と current pointer を開始前から持つ。
 
 ## 正規フローの受領
 
@@ -45,14 +60,28 @@ fail-closed gate（条件を確認できなければ失敗にする検査）を�
 
 ## 変更境界
 
-影響は system-dev-planner の task spec 生成・検証契約と repository 内の品質証拠に限定する。
+影響は system-dev-planner の task spec 生成・検証契約、dev-graph C04 consumer と
+live-trial fixture、repository 内の品質証拠に限定する。
 Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit には影響しない。
 
 ## 品質ゲート記録
 
-最終コマンド・件数・結果は Draft PR の検証結果と Beads notes に記録する。
-本受領書は、focused test、plugin 全テスト、実 feature package 検証、projection check、
-system-spec / dev-graph / 文書 lint、repository CI gate がすべて PASS した時点で受領済みとする。
+- task spec 再検証: `--feature-package feature-package/feat-task-spec-test-strategy` で
+  P01〜P13 の正確に 13 phase、legacy contract 免除、違反 0 を確認した。
+- projection / lineage: task projection 13 件すべて配線済み、current generation 1 件の
+  marker 違反 0、書込み 0 を確認した。
+- plugin 回帰: system-dev-planner `197 passed / 86 subtests passed`、dev-graph
+  `755 passed / 2 skipped / 5 subtests passed`。
+- repository 回帰: `make test` で root pytest `7643 passed / 5 skipped`、
+  LLM coverage 67 Skill 平均 100%、phase 0 gate 33 Skill PASS。
+- live acceptance: requirements r3、node r8、decompose r12 を current behavior closure として
+  再利用可能と確認した。decompose r12 は nudge 0 / gate 0、独立評価 O1〜O7 全件 PASS。
+- 仕様・文書: coverage matrix、公式出典、source digest 3 node、root graph schema、
+  artifact placement、content review、300 行 lint、dev-graph live-trial lint が PASS。
+
+repository 全体の `lint-live-trial-verdict.py --all --enforce` は、最新 main にも存在する
+別 plugin 6 Skill の未収集 verdict を報告する。一方、本変更対象の dev-graph は
+9 verdict / missing 0 で PASS しており、この既存横断課題を本 task の成果へ混在させない。
 
 ## トレーサビリティ
 

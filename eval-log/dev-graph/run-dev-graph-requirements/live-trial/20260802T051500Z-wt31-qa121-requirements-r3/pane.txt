@@ -1,0 +1,48 @@
+      1 {"original_goal":"system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/task-graph buildへ実装をhandoffした状態
+        になっている","original_goal_hash":"04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96","current_goal_snapshot":"resolve repo context and identify 15-node lineage closure","delta_from_origina
+        l":"none","merged_directive_for_next":"run C11, source digest, system plan validators","drift_signal":"none"}
+      2 {"original_goal":"system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/task-graph buildへ実装をhandoffした状態
+        になっている","original_goal_hash":"04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96","current_goal_snapshot":"all 4 gates PASS: C11 valid, source digest 15/15 exit 0, system plan pass, rea
+        diness complete","delta_from_original":"none","merged_directive_for_next":"emit requirements document and capability-build handoff","drift_signal":"none"}
+      3 {"original_goal":"system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/task-graph buildへ実装をhandoffした状態
+        になっている","original_goal_hash":"04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96","current_goal_snapshot":"requirements document and capability-build handoff emitted, 0 implementation c
+        ode files, current pointer byte-unchanged","delta_from_original":"none","merged_directive_for_next":"complete - all checklist items satisfied","drift_signal":"none"}
+
+⏺ Now write the progress file and run the goal-seek verification script.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements-r3/eval-log/run-dev-graph-requirements-progress.json)
+  ⎿  Wrote 12 lines to eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements-r3/eval-log/run-dev-graph-requirements-progress.json
+       1 {
+       2   "checklist": {
+       3     "lineage_closure_complete": {"status": "PASS", "evidence": "15/15 nodes in scope, 0 missing"},
+       4     "c11_report_matches_readiness": {"status": "PASS", "evidence": "validate-graph-schema.py valid=true, all 15 nodes impl_readiness=complete, eval=pass, confirm=confirmed"},
+       5     "source_digest_exit_0": {"status": "PASS", "evidence": "validate-source-digest.py checked=15, registered_mismatch=[], exit 0"},
+       6     "system_plan_pass": {"status": "PASS", "evidence": "validate-system-plan.py status=pass, P01..P13 exact-13, 0 violations, --feature-package used"},
+       7     "missing_sections_surfaced": {"status": "PASS", "evidence": "0 incomplete/pending/fail/stale nodes"},
+       8     "handoff_emitted_with_digest": {"status": "PASS", "evidence": "docs/capability-build-handoff-F-LIVE-001.json emitted with graph_snapshot_digest sha256:66124cbcc48b3214cc4004f655fb049e8e1f6876eca992b87
+         27f9010675d6167"},
+       9     "no_implementation_code": {"status": "PASS", "evidence": "0 implementation source files generated"}
+      10   },
+     … +2 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements-r3"
+      python3 - "$DEV_GRAPH_ROOT/eval-lo…)
+  ⎿  goal-seek verification: PASS
+
+⏺ All verifications pass. Now write the final status.json and update the intermediate evidence.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3/out/status.json
+      1 {"status":"PASS","scenario":"C04-OUT1-positive-ready-handoff"}
+
+⏺ DONE: PASS
+
+✻ Crunched for 6m 44s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 残りの live-trial run も同様に実行して
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

@@ -37,6 +37,7 @@ BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
 CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
 SOURCE_DIGEST_VALIDATOR = PLUGIN / "scripts" / "validate-source-digest.py"
+SYSTEM_PLAN_VALIDATOR = PLUGIN.parent / "system-dev-planner" / "scripts" / "validate-system-plan.py"
 
 
 def _load_builder():
@@ -283,6 +284,40 @@ def test_requirements_fixture_scope_closure_passes_source_digest(
     report = json.loads(proc.stdout)
     assert report["registered_mismatch"] == []
     assert report["checked"] == len(graph["nodes"])
+
+
+def test_requirements_fixture_resolves_published_package_from_current_pointer(
+    built: dict[str, Path],
+) -> None:
+    """C04 の promotion 後入口は --feature-package で current pointer を解決できる。"""
+    out = built["requirements"]
+    pointer = (
+        out
+        / ".dev-graph"
+        / "plan-state"
+        / "current"
+        / "feature-package-F-LIVE-001.json"
+    )
+    payload = json.loads(pointer.read_text(encoding="utf-8"))
+    assert payload["feature_package_id"] == "feature-package/F-LIVE-001"
+    assert payload["published_path"] == "system-plan/F-LIVE-001"
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SYSTEM_PLAN_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--feature-package",
+            "feature-package/F-LIVE-001",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["status"] == "pass"
 
 
 def test_status_fixture_exposes_a_dependency_edge(built: dict[str, Path]) -> None:

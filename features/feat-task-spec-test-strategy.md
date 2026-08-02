@@ -12,7 +12,7 @@ iteration: null
 title: "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T20:58:52Z"
-updated_at: "2026-08-02T03:22:07.527953Z"
+updated_at: "2026-08-02T07:37:35Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","feat-doc-governance-portability","feat-mvp-first-scheduling"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T03:17:38Z","origin_kind":"generated","source_digest":"02bd8e84f9cff2d775a8a91bb940b95d499dbf4111b34ff38f43f38c4007407b","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T07:37:35Z","origin_kind":"generated","source_digest":"5abdaaca61d6fc04dc0a576be2fe4017801f8fb13ba3195cad0a028485849e6f","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 testing-qa 章 qa-076/qa-078/qa-079/qa-081 と D8 から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-task-spec-test-strategy.md","confidence":0.9}]

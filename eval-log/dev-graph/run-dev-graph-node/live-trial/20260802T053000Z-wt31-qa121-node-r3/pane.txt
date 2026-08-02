@@ -1,0 +1,48 @@
+       4       "id": "containment",
+       5       "description": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+       6       "status": "PASS",
+       7       "evidence": "resolve-repo-context.py --mode write receipt: repo_root matches content_roots.repository, repository_id=local:sha256:13901994512790f2a06f9ed6da49ab16dc67ea78ef972964ccf6f21a2d90e358"
+       8     },
+       9     {
+      10       "id": "classification_decision",
+     … +55 lines (ctrl+o to expand)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now running the goal-seek verification and computing the correct hash.
+
+⏺ Bash(python3 -c "
+      import hashlib, json…)
+  ⎿  expected hash: eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2
+
+⏺ Update(eval-log/dev-graph/live-trial-fixtures/wt31-qa121-node-r3/eval-log/run-dev-graph-node-intermediate.jsonl)
+  ⎿  Added 1 line, removed 1 line
+      1 -{"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ","
+        -original_goal_hash":"b41a4c2df3503c26e1a7e9bdb3316003eaec3f3e41aa2c0d6c6d5f46e8e2fbc0","current_goal_snapshot":"5 mixed artifacts routed to canonical kind paths, consecutive update verified, no feature cr
+        -eated outside C14 contract","delta_from_original":"scenario C02-OUT1-positive-mixed-artifacts focuses on normal artifact routing subset of the full goal","merged_directive_for_next":"all 3 required_observ
+        -ations PASS, IN1 PASS, OUT1 PASS — goal-seek complete for this scenario","drift_signal":"none"}
+      1 +{"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ","
+        +original_goal_hash":"eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2","current_goal_snapshot":"5 mixed artifacts routed to canonical kind paths, consecutive update verified, no feature cr
+        +eated outside C14 contract","delta_from_original":"scenario C02-OUT1-positive-mixed-artifacts focuses on normal artifact routing subset of the full goal","merged_directive_for_next":"all 3 required_observ
+        +ations PASS, IN1 PASS, OUT1 PASS — goal-seek complete for this scenario","drift_signal":"none"}
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-node-r3 && python3 - "$DEV_GRAPH_ROOT/eval-log/run-d…)
+  ⎿  goal-seek verification PASSED
+
+⏺ All checks pass. Writing the status.json completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3/out/status.json
+      1 {"status":"PASS","scenario":"C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Cooked for 11m 55s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 他の live-trial タスクも同じように実行して
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code
