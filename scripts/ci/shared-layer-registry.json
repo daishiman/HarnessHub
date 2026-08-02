@@ -19,7 +19,8 @@
       "package_name": "@harness-hub/schemas",
       "consumers": [
         "apps/hub",
-        "apps/hub/tests/fixtures/consumer-a"
+        "apps/hub/tests/fixtures/consumer-a",
+        "apps/publisher"
       ]
     },
     {
@@ -29,7 +30,8 @@
       "package_name": "@harness-hub/inspection",
       "consumers": [
         "apps/hub",
-        "apps/hub/tests/fixtures/consumer-a"
+        "apps/hub/tests/fixtures/consumer-a",
+        "apps/publisher"
       ]
     },
     {

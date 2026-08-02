@@ -1,0 +1,37 @@
+{
+  "target": {
+    "plugin": "harness-hub-publisher",
+    "skill": "run-publisher-publish",
+    "skill_md_sha256": "b1b4b7726a88f08fe1418487639e4743d746259fc8c1cf82f1cccac5353d9821"
+  },
+  "review_kind": "elegance",
+  "verdict": "PASS",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "reviewer": "codex-final-review",
+  "reviewed_at": "2026-08-02T17:20:00+09:00",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2"],
+    "positive_feedback": [
+      "run-publisher-publish.sh は repository root を自力で解決し、apps/publisher/bin/harness-publisher.mjs の publish サブコマンドへ exec するだけの薄い接続である。package収集、Device Flow、Hub API、Wrangler の実装は CLI 側へ一意に置かれ、二重実装がない。",
+      "command、Skill、CLI の argument-hint は package-dir、Hub 接続情報、tenant/project/target/visibility/origin と web_app 時だけ必要な wrangler-config を同じ意味で伝えている。CLI は必須引数・未知サブコマンドを非0で停止し、近似実行しない。",
+      "OS資格情報域への refresh token 保存、access token 非保存、packages/inspection の共有pre-check、実サービスの両OS E2E未達を、Skillと関連記録が区別しており、ローカルfake I/Oを受入証拠へ読み替えていない。"
+    ],
+    "negative_feedback": [
+      "初回レビューで、WranglerがURL出力後に非0終了した場合のdeployment登録漏れを検出した。CLI実装とテストを修正済みで、URLとexit codeをorphan_candidateとしてHubへ登録する経路を確認した。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual-final-review",
+    "next_action": "none"
+  },
+  "notes": "静的な設計・責務レビューのPASSであり、Hub、ブラウザ認可、Wranglerを含むmacOS/Windows実機E2Eや15分実測のPASSを主張しない。A1/A3はP06/P07/P10/P11/P13で実機証跡を得るまで未達のまま。"
+}

@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/harness-creator/skills/assign-plugin-package-evaluator/scripts/validate-plugin-package-runtime-checks.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 86,
+    "notes": "PKG-005〜008/014 の runtime 検査を CLI・frontmatter 解析から分離し、configure で正本ヘルパだけを注入する。PKG-003 と無関係の既存検査ロジックを複製せず、ファイル I/O は検査対象 plugin の読み取りだけ。198 件の validator/feedback/symlink 回帰テストと py_compile を通過。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "file-size-limit"
+  ]
+}
