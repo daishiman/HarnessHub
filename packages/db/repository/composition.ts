@@ -45,6 +45,13 @@ import {
   type TenantCoefficientRow as TenantCoefficientRowShape,
 } from './hearing-intake';
 import {
+  createHearingSmokeDbProbe as createHearingSmokeDbProbeLeaf,
+  type HearingSmokeDbProbe as HearingSmokeDbProbeShape,
+  type HearingSmokeJobSnapshot as HearingSmokeJobSnapshotShape,
+  type HearingSmokeSheetSnapshot as HearingSmokeSheetSnapshotShape,
+  type HearingSmokeTenantFixture as HearingSmokeTenantFixtureShape,
+} from './hearing-smoke';
+import {
   createIdpConnectionsRepo,
   type IdpConnectionRow as IdpConnectionRowShape,
   type IdpConnectionsRepo,
@@ -88,6 +95,10 @@ export type TargetChannelRow = TargetChannelRowShape;
 export type PackageRefRow = PackageRefRowShape;
 export type PublishSmokeDbProbe = PublishSmokeDbProbeShape;
 export type PublishSmokeEvidence = PublishSmokeEvidenceShape;
+export type HearingSmokeDbProbe = HearingSmokeDbProbeShape;
+export type HearingSmokeTenantFixture = HearingSmokeTenantFixtureShape;
+export type HearingSmokeSheetSnapshot = HearingSmokeSheetSnapshotShape;
+export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
@@ -97,6 +108,11 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */
 export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {
   return createPublishSmokeDbProbeLeaf(adapter);
+}
+
+/** feat-hearing-intake P13 smoke の schema 非公開 DB probe。同上の理由でこの facade を通す。 */
+export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbProbe {
+  return createHearingSmokeDbProbeLeaf(adapter);
 }
 
 /**

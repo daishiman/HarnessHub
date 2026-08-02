@@ -12,7 +12,7 @@ iteration: "Studio 拡張"
 title: "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-07-19T14:14:59Z"
+updated_at: "2026-08-02T06:48:44.259095Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hearing-intake/61fac79fec00ca6a6788ee4aa0ed2152e1ded2451ce3d8633e88c09149c96db5/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T06:32:16Z","origin_kind":"generated","source_digest":"eb6cfcffba06d2fcfd7675a337bfed924c3bec67fba928d55b4d9becdb8d2dcf","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (Studio mockup 反映で確定した U7 拡張スコープ + I10-I14 から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hearing-intake.md","confidence":0.9}]
@@ -94,6 +94,19 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - feat-hub-foundation
 - feat-domain-model-db
 - feat-auth-tenancy
+
+## P13 本番受入（2026-08-02 / `HarnessHub-o2i.13`）
+
+- main の deploy では、migration より前に Worker Secret の台帳・required 宣言・本番実投入名を
+  三方向で突合し、未投入や未検査のまま本番を前進させない（`qa-121`）。
+- post-deploy では Device Flow で本番 Worker が署名した access token を取得し、受付番号発番、
+  D5 pull / complete、SEC5（年収非保存）、SEC8（tenant 分離・claim token 束縛）、session 専用
+  API の TOKEN 拒否を実データで確認する（`qa-121` / `qa-122`）。
+  tenant header 詐称は他 tenant の資源存在を伏せる既存契約に従い `404 tenant_mismatch` で検証する。
+- 使い捨て tenant は作成・削除を transaction（途中失敗時にまとめて取り消す単位）にし、
+  全対象表の残行数が 0 でなければ受入を失敗させる。
+- repository 内のテスト合格だけでは P13 完了にしない。本変更が main へ反映された後の deploy run で
+  本番 smoke が成功し、run ID・時刻・結果を release notes と Beads へ記録するまで未完了とする。
 
 ## Handoff
 

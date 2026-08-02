@@ -200,7 +200,7 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-116",
+        "qa_ref": "qa-121",
         "serves_goals": [
           "G1",
           "G4",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-119",
+        "qa_ref": "qa-122",
         "serves_goals": [
           "G1",
           "G2",
@@ -1026,6 +1026,16 @@
       "id": "qa-120",
       "question": "main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?",
       "answer": "ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。\n\n【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。\n\n【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。\n\n【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。\n\n【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。"
+    },
+    {
+      "id": "qa-121",
+      "question": "既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?",
+      "answer": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。\n\n【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。\n\n【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。\n\n【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。\n\n【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。\n\n【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。"
+    },
+    {
+      "id": "qa-122",
+      "question": "Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。\n\n【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。\n\n【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。\n\n【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。\n\n【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。\n\n【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。"
     }
   ],
   "approval_log": [
@@ -1108,6 +1118,10 @@
     {
       "id": "appr-020",
       "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として記録。feat-publish-pipeline の API、状態機械、R2、認証、運用、品質契約を qa-103〜qa-108 へ反映する。"
+    },
+    {
+      "id": "appr-022",
+      "note": "ユーザーの 2026-08-02 最終レビュー指示を明示承認として、HarnessHub-o2i.13 / SYS-HEARING-INTAKE-P13 の Worker Secret 実投入ゲート、本番 hearing E2E/SEC8 smoke、transactional fixture/cleanup、CI 配置と未実測境界を qa-121 / qa-122 へ反映する。docs/・features/・system-spec/・specs/・architecture/・tasks/ と仕様反映受領書を同一変更で更新する。"
     }
   ],
   "reopen_log": [
@@ -1961,6 +1975,18 @@
       "category": "security",
       "platform": "web",
       "reason": "2026-08-02 main integration: qa-111 shared Google OAuth and qa-117 dual catalog cache are both confirmed and require one current security.web integration anchor",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-o2i.13 で Worker Secret の宣言と本番実投入が乖離し得ること、および hearing 本番 E2E / SEC8 smoke を deploy pipeline へ常設する設計影響が判明したため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "HarnessHub-o2i.13 の Worker Secret 三方向突合・transactional fixture・production smoke の正負例と CI 到達、未実測境界を既存品質契約へ追補するため",
       "from": "確定"
     }
   ],
@@ -3202,7 +3228,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

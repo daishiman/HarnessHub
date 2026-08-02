@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1097,
+  "graph_revision": 1102,
   "nodes": [
     {
       "acceptance": [
@@ -28,8 +28,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
-        "evaluator": "validate-coverage-matrix.py",
+        "evaluated_digest": "e8915088f07642b4516cbffbe64059eb10e5d6af557ad36a33517baa833533b9",
+        "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T02:09:36Z",
+        "imported_at": "2026-08-02T06:32:16Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
+        "source_digest": "e8915088f07642b4516cbffbe64059eb10e5d6af557ad36a33517baa833533b9",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T02:10:41.843662Z"
+      "updated_at": "2026-08-02T06:33:36.147701Z"
     },
     {
       "acceptance": [
@@ -561,8 +561,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
-        "evaluator": "validate-coverage-matrix.py",
+        "evaluated_digest": "e8915088f07642b4516cbffbe64059eb10e5d6af557ad36a33517baa833533b9",
+        "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T06:32:16Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "source_digest": "a7d48c9347acbb0cd0e93f0566428e3d9c328e8b270fcbedcec0977c76ea7a2b",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T06:37:11.735876Z"
     },
     {
       "acceptance": [
@@ -3587,9 +3587,9 @@
         "構築工程の進行管理 (feat-build-pipeline-board)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T22:35:48Z",
+        "imported_at": "2026-08-02T06:32:16Z",
         "origin_kind": "generated",
-        "source_digest": "a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d",
+        "source_digest": "eb6cfcffba06d2fcfd7675a337bfed924c3bec67fba928d55b4d9becdb8d2dcf",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -3606,7 +3606,7 @@
       "template_version": "1.0.0",
       "title": "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-19T14:14:59Z"
+      "updated_at": "2026-08-02T06:48:44.259095Z"
     },
     {
       "acceptance": [
@@ -6952,16 +6952,60 @@
         "arch-harness-hub-data"
       ],
       "resource_scope": [
-        "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
-        "docs/features/feat-hearing-intake/release-notes.md"
+        ".dev-graph/state/graph.json",
+        ".github/workflows/ci.yml",
+        "apps/hub/package.json",
+        "apps/hub/scripts/smoke-production-hearing-support.ts",
+        "apps/hub/scripts/smoke-production-hearing.ts",
+        "apps/hub/tests/auth-tenancy/wrangler-production-auth-config.test.ts",
+        "apps/hub/tests/ci/worker-secrets.test.ts",
+        "apps/hub/tests/hearing-intake/production-smoke-script.test.ts",
+        "apps/hub/wrangler.jsonc",
+        "architecture/harness-hub-infrastructure.md",
+        "docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md",
+        "docs/features/feat-hearing-intake/release-notes.md",
+        "docs/infrastructure-spec.md",
+        "features/feat-hearing-intake.md",
+        "package.json",
+        "packages/db/__tests__/hearing-smoke.test.ts",
+        "packages/db/repository/composition.ts",
+        "packages/db/repository/hearing-smoke.ts",
+        "packages/db/src/index.ts",
+        "scripts/ci/check-worker-secrets.mjs",
+        "scripts/ci/worker-secrets-registry.json",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/infrastructure.md",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "tasks/feat-hearing-intake/sys-hearing-intake-p13.md"
       ],
       "scope_in": [
-        "apps/hub/src/app/api/v1/sheets/",
-        "apps/hub/src/features/hearing-intake/ai-job-adapter/",
-        "apps/hub/src/features/hearing-intake/estimation-adapter/",
-        "docs/features/feat-hearing-intake/release-notes.md"
+        ".dev-graph/state/graph.json",
+        ".github/workflows/ci.yml",
+        "apps/hub/package.json",
+        "apps/hub/scripts/smoke-production-hearing-support.ts",
+        "apps/hub/scripts/smoke-production-hearing.ts",
+        "apps/hub/tests/auth-tenancy/wrangler-production-auth-config.test.ts",
+        "apps/hub/tests/ci/worker-secrets.test.ts",
+        "apps/hub/tests/hearing-intake/production-smoke-script.test.ts",
+        "apps/hub/wrangler.jsonc",
+        "architecture/harness-hub-infrastructure.md",
+        "docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md",
+        "docs/features/feat-hearing-intake/release-notes.md",
+        "docs/infrastructure-spec.md",
+        "features/feat-hearing-intake.md",
+        "package.json",
+        "packages/db/__tests__/hearing-smoke.test.ts",
+        "packages/db/repository/composition.ts",
+        "packages/db/repository/hearing-smoke.ts",
+        "packages/db/src/index.ts",
+        "scripts/ci/check-worker-secrets.mjs",
+        "scripts/ci/worker-secrets-registry.json",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/infrastructure.md",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "tasks/feat-hearing-intake/sys-hearing-intake-p13.md"
       ],
       "scope_out": [
         "published task spec の『スコープ外』節を正本とする"
@@ -6987,7 +7031,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-02T06:38:39.904388Z"
     },
     {
       "acceptance": [
