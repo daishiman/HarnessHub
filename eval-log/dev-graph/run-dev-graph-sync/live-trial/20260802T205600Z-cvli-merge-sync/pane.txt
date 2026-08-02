@@ -1,0 +1,165 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-30
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/task.md
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Skill(dev-graph:run-dev-graph-sync)
+  ⎿  Successfully loaded skill · 7 tools allowed
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-30/plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/HarnessH…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +26 lines (ctrl+o to expand)
+
+⏺ Read 5 files (ctrl+o to expand)
+
+⏺ Now I understand the fixture. Let me set up the goal-seek artifacts and run the 3 sync passes.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && mkdir -p "$DEV_GRAPH_ROOT/eval-lo…)
+  ⎿  dev-graph
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/eval-log/run-dev-graph-sync-goal-spec.json)
+  ⎿  Wrote 13 lines to eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/eval-log/run-dev-graph-sync-goal-spec.json
+       1 {
+       2   "original_goal": "tracker_binding別のauthorityに従いローカルtask graphとBeadsまたはGitHub Issues/PRを同期し、Projects Statusはローカルから一方向投影、merged evidenceとworktree eventはdefault branch側tas
+         k仕様へ収束した状態になっている",
+       3   "scenario": "C03-OUT1-positive-second-sync-zero",
+       4   "checklist": [
+       5     "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+       6     "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+       7     "--dry-run の local/Beads/GitHub/Projects write count が0である",
+       8     "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+       9     "close/delete は graph_node_id を保持した tombstone/status transition になる",
+      10     "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+     … +3 lines (ctrl+o to expand)
+
+⏺ Now run pass 1: --dry-run.
+
+⏺ Bash(python3 plugins/dev-graph/scripts/sync-graph.py --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "GitHub Issue read LT-TASK-001 failed (1): command failed (1): gh issue view 1 --repo example/dev-graph-live-trial --json id,number,title,state,url,updatedAt: GraphQL: Could not resolve to a Repository
+     with the name 'example/dev-graph-live-trial'. (repository)",
+       "ok": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "GitHub Issue read LT-TASK-001 failed (1): command failed (1): gh issue view 1 --repo example/dev-graph-live-trial --json id,number,title,state,url,updatedAt: GraphQL: Could not resolve to a Repository
+     with the name 'example/dev-graph-live-trial'. (repository)",
+       "ok": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ The script tried to call live GitHub. I need to use the --remote-state fixture adapter.
+
+⏺ Bash(python3 plugins/dev-graph/scripts/sync-graph.py --help 2>&1)
+  ⎿  usage: sync-graph.py [-h] [--repo-root REPO_ROOT] [--graph GRAPH]
+                          [--remote-state REMOTE_STATE] [--snapshot SNAPSHOT]
+                          (--dry-run | --apply) [--confirm CONFIRM]
+     … +22 lines (ctrl+o to expand)
+
+⏺ Now let me take a snapshot of graph.json and sync-snapshot.json before running, then run all 3 passes.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && cp "$DEV_GRAPH_ROOT/.dev-graph/st…)
+  ⎿  Error: PreToolUse:Bash hook error: [python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard-graph-schema.py" --repo-root "${CLAUDE_PROJECT_DIR}"]: [guard-graph-schema] BLOCKED: graph/schema の直接破壊操作は C02 atomic writer
+     を迂回できない (.dev-graph/config.json は scripts/build-repo-config.py、初期 graph は scripts/build-graph-store.py 経由で書く)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && shasum -a 256 "$DEV_GRAPH_ROOT/.d…)
+  ⎿  7860c6108b0194741f25ea11a48dafda7ca16e383885b7816996c46d1d16ebd8  /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/.dev-graph/state/graph.json
+     37e836e6813a911ac4f3cb1d86beb9b9d21cc96e9aca35a6e67c2eba98025387  /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/.dev-graph/state/sync-snapshot.json
+
+⏺ Good. Pre-sync checksums captured. Now run pass 1: dry-run with --remote-state.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && python3 plugins/dev-graph/scripts…)
+  ⎿  {
+       "applied": [],
+       "changes": 2,
+     … +40 lines (ctrl+o to expand)
+
+⏺ Dry-run pass 1 shows:
+  - 1 import: title update from remote ("Validate isolated live trial" → "Validate isolated live trial (updated remotely r7)")
+  - 1 export: Status field from local "active" → "In Progress" to Project
+  - write_count: 0 (correct for dry-run)
+  - Graph/snapshot checksums unchanged (correct for dry-run)
+
+  Now pass 2: apply.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && python3 plugins/dev-graph/scripts…)
+  ⎿  {
+       "applied": [
+         {
+     … +70 lines (ctrl+o to expand)
+
+⏺ Apply pass succeeded:
+  - Import applied: title updated to "Validate isolated live trial (updated remotely r7)"
+  - Export applied: Status field → "In Progress" to Project
+  - Parity manifest: generated successfully
+  - Graph, snapshot, remote all updated
+
+  Now pass 3: verification dry-run (second sync should show changes=0).
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && python3 plugins/dev-graph/scripts…)
+  ⎿  {
+       "applied": [],
+       "changes": 0,
+     … +18 lines (ctrl+o to expand)
+
+⏺ Pass 3 confirmed: changes=0, imports=[], exports=[], converged=true, write_count=0. All checksums stable.
+
+  Now write the goal-seek progress, intermediate JSONL, and run independent verification.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/eval-log/run-dev-graph-sync-progress.json)
+  ⎿  Wrote 41 lines to eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802/eval-log/run-dev-graph-sync-progress.json
+       1 {
+       2   "checklist": [
+       3     {
+       4       "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+       5       "status": "PASS",
+       6       "evidence": "dry-run pass 1 showed 1 import (title) + 1 export (Status), each with snapshot digests"
+       7     },
+       8     {
+       9       "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      10       "status": "PASS",
+     … +31 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && python3 -c "
+      import hashlib, json…)
+  ⎿  JSONL written
+
+⏺ Now run the goal-seek verification script and launch independent verification agent.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-sync-20260802" && python3 - "$DEV_GRAPH_ROOT/eval-l…)
+  ⎿  goal-seek verification PASSED
+
+⏺ Now launch the independent verification agent.
+
+⏺ dev-graph:dev-graph-sync-conflict-verifier(Independent sync verification)
+  ⎿  Done (16 tool uses · 21.0k tokens · 1m 36s)
+  (ctrl+o to expand)
+
+⏺ Independent verification: PASS. All 3 observations confirmed with fresh checksums.
+
+  Now write the completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/out 2>&1)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/out/status.json
+      1 {"status":"PASS","scenario":"C03-OUT1-positive-second-sync-zero"}
+
+⏺ DONE: PASS
+
+✻ Cooked for 5m 39s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code
+

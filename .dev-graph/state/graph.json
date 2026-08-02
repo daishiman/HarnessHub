@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1158,
+  "graph_revision": 1159,
   "nodes": [
     {
       "acceptance": [
@@ -12999,7 +12999,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "cc2d1de02a99f8e3093f01fbdbcbdc3fc8f8eddaabecb1e1741d356023ab3dae",
+        "evaluated_digest": "25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4",
         "evaluator": "codex-final-review (HarnessHub-cvli)",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"
       },
@@ -13056,9 +13056,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T00:00:00Z",
+        "imported_at": "2026-08-03T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "cc2d1de02a99f8e3093f01fbdbcbdc3fc8f8eddaabecb1e1741d356023ab3dae",
+        "source_digest": "25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13074,7 +13074,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T09:01:36.321262Z"
+      "updated_at": "2026-08-03T00:00:00Z"
     },
     {
       "acceptance": [
