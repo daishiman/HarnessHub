@@ -4,7 +4,8 @@
   "plugin_name": "harness-hub-publisher",
   "entry_points": {
     "skills": [
-      "run-publisher-publish"
+      "run-publisher-publish",
+      "run-skill-feedback"
     ],
     "agents": [],
     "commands": [
@@ -26,6 +27,8 @@
       "cli"
     ]
   },
-  "depends_on": [],
+  "depends_on": [
+    "harness-creator"
+  ],
   "pkg_checks": {}
 }
