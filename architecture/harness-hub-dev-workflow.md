@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-01T12:00:37Z"
+updated_at: "2026-08-02T04:26:39Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート境界を情報欠落なく提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T12:00:37Z","origin_kind":"system-spec-harness","source_digest":"7ad8bf3544003c105398ce4933bb1dc770636df94feb00dadf64844385c99ce0","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/dev-workflow.md"}
+source_lineage: {"imported_at":"2026-08-02T04:26:39Z","origin_kind":"system-spec-harness","source_digest":"73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -114,3 +114,12 @@ CLI adapter が呼出時に実行関数を解決する。この境界により�
 > **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は
 > [harness-hub-dev-workflow-changelog.md](../docs/features/feat-dev-pipeline-improvement/harness-hub-dev-workflow-changelog.md)
 > へ分割済み (300 行上限超過による remediation)。新規の差分追記は同ファイルへ追記する。
+
+## 外部参考層と能動 plugin の所有境界 (2026-08-02)
+
+`doc/参考Skill/` は比較・移管用の参考層とし、実行時に使う契約は consumer plugin の
+`references/` と resource map が所有する。旧参考 Skill を削除するときは、利用中の契約を
+所有先へ履歴付きで移し、能動参照 0 件・到達可能性・復元経路を同じ変更で検証する。
+製品 runtime の component 境界は変えない。詳細は `system-spec/dev-workflow.md` の
+`qa-122` と [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+を正とする。

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1097,
+  "graph_revision": 1102,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
+        "evaluated_digest": "f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T02:09:36Z",
+        "imported_at": "2026-08-02T04:26:39Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
+        "source_digest": "f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T02:10:41.843662Z"
+      "updated_at": "2026-08-02T04:26:39Z"
     },
     {
       "acceptance": [
@@ -12946,9 +12946,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1",
-        "evaluator": "codex-final-review + merge-reconciliation",
-        "evidence_ref": "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"
+        "evaluated_digest": "73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/dev-workflow.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12967,7 +12967,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12984,7 +12984,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13003,9 +13003,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T12:00:37Z",
+        "imported_at": "2026-08-02T04:26:39Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "7ad8bf3544003c105398ce4933bb1dc770636df94feb00dadf64844385c99ce0",
+        "source_digest": "73f6c521a64769f2058bd8a94cae7a035df54638baf742032ebb9d4e48d1f573",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13021,7 +13021,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T12:00:37Z"
+      "updated_at": "2026-08-02T04:26:39Z"
     },
     {
       "acceptance": [
@@ -44458,6 +44458,136 @@
       "title": "Harness Hub Dual Catalog cache・認可境界追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-01T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "doc/参考Skill/skill-creator の追跡ファイルが 0 件になる",
+        "active code/plugin/docs から削除 path と aiworkflow-requirements への実行依存が 0 件になる",
+        "external-cli-agents-guide.md が consumer plugin 配下に存在し codex-connection.md と resource-map.yaml から到達できる",
+        "system-spec/specs/architecture/features/tasks/docs と仕様反映受領書が同じ影響境界を記録する",
+        "対象品質ゲートと repository CI が blocking failure 0 で完了する",
+        "手書き変更ファイルが 500 行以下で repository Markdown の 300 行制約を満たす"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ym9h",
+        "linked_at": "2026-08-02T04:09:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "外部参考コピーの削除と唯一の有効参照移設を一つの rollback 単位で完了する repository maintenance task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b901921ef649ea9ef2e36b838e56bfb7ffa68835ce17be4465468b9480a5cdee",
+        "evaluator": "codex-task-intake",
+        "evidence_ref": "tasks/task-remove-aiworkflow-reference-skill-20260802.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-02T03:57:41Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "doc/参考Skill/skill-creator の追跡ファイル 0、有効な dangling reference 0、consumer plugin から外部 CLI 契約へ到達可能、全仕様層と Beads の判断一致を同時に成立させる",
+      "graph_node_id": "task-remove-aiworkflow-reference-skill-20260802",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T03:57:41Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "UBM 由来の aiworkflow-requirements を前提にした外部参考コピーを除去し、現在も利用する外部 CLI 契約だけを consumer plugin の所有 path へ移して、能動コードから凍結参考層への依存をなくす",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow",
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "doc/参考Skill/skill-creator/",
+        "plugins/harness-creator/skills/delegate-codex-skill-review/references/",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/references/phase-lifecycle.md",
+        "doc/マルチ企業展開/クリーンアップ計画.md",
+        "doc/マルチ企業展開/移管計画.md",
+        "doc/ClaudeCodeスキルの設計書/23a-prefix-driven-internal-structure.md",
+        "scripts/lint-legacy-plugin-name.py",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-doc-governance-portability.md",
+        "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+        "docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "doc/参考Skill/skill-creator のディレクトリ単位削除",
+        "external-cli-agents-guide.md の delegate-codex-skill-review 配下への移設",
+        "cleanup/transfer 計画と legacy name allowlist の整合",
+        "dev-workflow の system-spec/spec/architecture/feature/task/docs 反映と受領書",
+        "task spec、dev-graph、plugin、document、repository 品質ゲート再実行"
+      ],
+      "scope_out": [
+        "Harness Hub の UI/API/DB/auth/deploy runtime 変更",
+        "eval-log の凍結履歴削除",
+        "xl-skills 原本の変更",
+        "外部 CLI 実行方式そのものの再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T03:57:41Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-02",
+      "status": "active",
+      "tags": [
+        "documentation",
+        "portability",
+        "reference-cleanup",
+        "aiworkflow"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T04:39:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
