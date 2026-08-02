@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1108,
+  "graph_revision": 1115,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "6a1daca4cd56763a817cafe6b0a39dea1a82a16c82a467001f647f627186d2b9",
+        "evaluated_digest": "d113263ed4f6c381eb97db0a2e253c439948f3c3eb747883eb6da9a26b18f9cb",
         "evaluator": "validate-coverage-matrix.py",
-        "evidence_ref": "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T06:14:02Z",
+        "imported_at": "2026-08-02T07:37:35Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "6a1daca4cd56763a817cafe6b0a39dea1a82a16c82a467001f647f627186d2b9",
+        "source_digest": "d113263ed4f6c381eb97db0a2e253c439948f3c3eb747883eb6da9a26b18f9cb",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T06:14:02Z"
+      "updated_at": "2026-08-02T07:37:35Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "evaluated_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T05:37:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "source_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T05:41:06.531373Z"
     },
     {
       "acceptance": [
@@ -782,12 +782,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:06Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/acceptance-report.md",
+          "docs/features/feat-hub-foundation/release-notes.md",
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:06Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
@@ -844,15 +848,15 @@
         "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:27:46Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -863,7 +867,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:01:55.324015Z"
+      "updated_at": "2026-08-02T06:25:39.927001Z"
     },
     {
       "acceptance": [
@@ -893,12 +897,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:36Z",
+        "evidence_refs": [
+          "docs/features/feat-domain-model-db/acceptance-record.md",
+          "docs/features/feat-domain-model-db/evidence-summary.md",
+          "docs/features/feat-domain-model-db/release-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:36Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
@@ -956,15 +964,15 @@
         "UI"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-25T21:18:40Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -975,7 +983,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T21:18:40Z"
+      "updated_at": "2026-08-02T06:25:41.177574Z"
     },
     {
       "acceptance": [
@@ -3139,7 +3147,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -3151,7 +3159,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-02T05:46:07.491153Z"
     },
     {
       "acceptance": [
@@ -33960,7 +33968,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "b695a04912bbbea3b924e0ebe67795fdb0b3493e16404fa72507d82e015a7bfc",
+        "evaluated_digest": "5abdaaca61d6fc04dc0a576be2fe4017801f8fb13ba3195cad0a028485849e6f",
         "evaluator": "codex-final-review",
         "evidence_ref": "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"
       },
@@ -33981,7 +33989,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-119/qa-123 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する",
+      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-119/qa-130/qa-131 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -33998,7 +34006,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅 (単体・結合・境界値・回帰)、カバレッジ 80% 品質ゲートと改善ループ、FE/BE/インフラ層別テスト方針、behavior ベースの保守しやすい UI テスト、タスク仕様書へのテスト戦略の冪等組込 — を dev-graph から参照する",
+      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅、カバレッジ 80% 品質ゲート、層別テスト方針、task 仕様書のテスト戦略と世代非依存 rerun command — を dev-graph から参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -34018,9 +34026,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T06:14:02Z",
+        "imported_at": "2026-08-02T07:37:35Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "b695a04912bbbea3b924e0ebe67795fdb0b3493e16404fa72507d82e015a7bfc",
+        "source_digest": "5abdaaca61d6fc04dc0a576be2fe4017801f8fb13ba3195cad0a028485849e6f",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34036,7 +34044,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T06:14:02Z"
+      "updated_at": "2026-08-02T07:37:35Z"
     },
     {
       "acceptance": [
@@ -34140,9 +34148,9 @@
         "P01..P13 exact-13 契約そのものの変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T06:14:02Z",
+        "imported_at": "2026-08-01T04:59:08Z",
         "origin_kind": "generated",
-        "source_digest": "b695a04912bbbea3b924e0ebe67795fdb0b3493e16404fa72507d82e015a7bfc",
+        "source_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -34158,7 +34166,6 @@
         "qa-078",
         "qa-079",
         "qa-081",
-        "qa-123",
         "decision-d8"
       ],
       "target_date": null,
@@ -34166,7 +34173,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T06:14:02Z"
+      "updated_at": "2026-08-01T05:05:39.390012Z"
     },
     {
       "acceptance": [
@@ -35788,31 +35795,23 @@
     },
     {
       "acceptance": [
-        "R3-emit と正本 template が promotion 後の再実行に --feature-package <自 package id> を要求し --staging を書かない",
-        "C12 契約 1.3.0 が --staging・--feature-package 欠落・他 package id を fenced/inline command から fail-closed で拒否する",
-        "promotion 前は C12 が --staging <実 generation path> を検証し、promotion 後は task spec の --feature-package が current pointer から同 package を検証する lifecycle 境界が証跡化される",
-        "1.2.0 以前に promote 済み package の canonical digest と再検証結果が不変である"
+        "新規生成される task spec の Verification 節が `--feature-package <feature_package_id>` 形 (または staging 実 path) を持つ",
+        "生成直後の staging 段階と promotion 後の双方で、記載コマンドが無改変で exit 0 になることを実測記録する",
+        "既存 promoted 世代の validated_digest が不変であること (遡及書き換えをしない)"
       ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow",
-        "arch-harness-hub-testing-qa"
-      ],
+      "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-ji8y",
-        "linked_at": "2026-07-25T14:24:19Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "issue",
           "candidate_path": "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
-          "confidence": 0.98
+          "confidence": 0.9
         }
       ],
-      "classification_confidence": 0.98,
-      "classification_reason": "feat-task-spec-test-strategy P10 の D-2 で実測された生成側欠陥を C12 promotion gate まで含めて解消する follow-up issue",
+      "classification_confidence": 0.9,
+      "classification_reason": "feat-task-spec-test-strategy P10 最終レビューが記録済み逸脱 D-2 として申し送った生成側欠陥",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -35841,12 +35840,12 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "新規 task spec の validate-system-plan 再実行コマンドが自 package の current pointer を使う世代非依存形になり、C12 が不正形を promotion 前に fail-closed で拒否する状態",
+      "goal": "R3-emit が出力する検証コマンドが、生成された task spec を読んだだけで無改変に実行でき、promotion 後も有効な世代非依存形になっている",
       "graph_node_id": "issue-task-spec-validate-command-unrunnable-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-08-02T06:14:02Z",
+        "checked_at": "2026-07-25T13:00:00Z",
         "missing_sections": [],
-        "status": "complete"
+        "status": "incomplete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -35858,60 +35857,19 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "task spec に書かれた検証手順を promotion 後も無改変で再実行できるようにし、別 package を誤検証した成功を防ぐ",
+      "purpose": "R3-emit が生成する全 task spec の Verification 節が `validate-system-plan.py --staging .` を列挙するが、`--staging` は staging generation path を要求するためカレントディレクトリ `.` では解決できず、記載どおりに実行すると必ず失敗する。promotion 後は staging path 自体が消滅するため構造的にも不適切。feat-task-spec-test-strategy の P05..P13 実行時に実測で判明し、世代非依存形 `--feature-package <id>` へ読み替えて証跡を取得した (final-review.md D-2)。",
       "related_nodes": [
         "feat-task-spec-test-strategy"
       ],
       "resource_scope": [
-        "architecture/harness-hub-testing-qa.md",
-        "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md",
-        "eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T060000Z-wt31-qa121-decompose",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T063000Z-wt31-qa121-decompose-r2",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T071500Z-wt31-qa121-decompose-r3",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T083000Z-wt31-qa121-decompose-r4",
-        "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3",
-        "eval-log/dev-graph/run-dev-graph-requirements/content-review/elegance-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/content-review/rubric-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3",
-        "features/feat-task-spec-test-strategy.md",
-        "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
-        "plugin-plans/dev-graph/component-inventory.json",
-        "plugin-plans/system-dev-planner/references/system-task-spec-template.md",
-        "plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md",
-        "plugins/dev-graph/skills/run-dev-graph-requirements/prompts/R2b-readiness.md",
-        "plugins/dev-graph/tests/fixtures/build_decompose_promotion_patch.py",
-        "plugins/dev-graph/tests/fixtures/live_trial_shapes/requirements_baseline.py",
-        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_requirements.py",
-        "plugins/dev-graph/tests/test_decompose_live_trial_integrity.py",
-        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py",
-        "plugins/dev-graph/tests/test_validate_source_digest.py",
-        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
-        "plugins/system-dev-planner/assets/validation-contract-baseline.json",
-        "plugins/system-dev-planner/references/feature-execution-package-contract.md",
-        "plugins/system-dev-planner/references/system-task-spec-template.md",
-        "plugins/system-dev-planner/scripts/validate-system-plan.py",
-        "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
-        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
-        "plugins/system-dev-planner/tests/test_task_spec_rerun_command.py",
-        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py",
-        "specs/harness-hub-system-specification.md",
-        "system-spec/spec-state.json",
-        "system-spec/testing-qa.md",
-        "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"
+        "issues/sys-task-spec-validate-command-unrunnable-20260725.md"
       ],
       "scope_in": [
-        "R3-emit prompt と task spec template の再実行コマンド契約",
-        "C12 契約 v1.3.0 と staging・欠落・package 不一致の検査",
-        "旧 promoted package の digest 不変性と契約 version 免除",
-        "CommonMark backtick/tilde fence と inline code span の回帰検査"
+        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
+        "plugins/system-dev-planner/references/system-task-spec-template.md"
       ],
       "scope_out": [
-        "既に promoted 済み task spec 本文の遡及書き換え",
-        "promotion 前の C12 staging 検証入口の廃止",
-        "P01..P13 exact-13 と 13-node DAG 契約の変更"
+        "既に promoted 済み世代の task spec 本文の遡及書き換え"
       ],
       "source_lineage": {
         "imported_at": "2026-07-23T13:51:02Z",
@@ -35926,15 +35884,14 @@
       "tags": [
         "system-dev-planner",
         "task-spec",
-        "validator",
-        "quality-gate"
+        "validator"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能",
+      "title": "R3-emit が生成する task spec の C12 検証コマンド `--staging .` が実行不能",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T06:14:02Z"
+      "updated_at": "2026-07-25T13:00:00Z"
     },
     {
       "acceptance": [
@@ -38925,12 +38882,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:42:33Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-02T03:42:33Z",
+        "source": "manual",
+        "status": "not_applicable"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -39011,7 +38970,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "slo",
@@ -39024,7 +38983,7 @@
       "template_version": "1.0.0",
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:11:25.870970Z"
+      "updated_at": "2026-08-02T05:46:51.338346Z"
     },
     {
       "acceptance": [

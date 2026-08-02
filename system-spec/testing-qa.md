@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G2, G5]
+serves_goals: [G1, G2, G3, G4, G5]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-121 |
+| Web (web) | 確定 | 確定質疑: qa-131 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-121 (対応セル: web)
+### qa-131 (対応セル: web)
 
 **質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
 
 【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
 
@@ -37,52 +37,6 @@ serves_goals: [G1, G2, G5]
 【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。
 
 【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。
-
-### qa-119 (対応セル: web)
-
-**質問**: dual catalog の認可 cache 境界と絞り込み要求数を、既存 testing-qa.web 契約へどう追加しますか?
-
-**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-109 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡の契約を全面維持し、dual catalog の検証束を追加確定する。
-
-【1. 認可 cache 回帰】成功応答を描画した後に 403 を返す順序付きテストを一覧・詳細・Release 履歴へ置き、以前の内容と table が消えることを検査する。初期詳細を渡した経路も 403 後に消えることを含める。
-
-【2. scope と縮退の直積】同一 scope の成功→503 では DegradedBanner と以前の内容を維持し、tenant/workspace 切替の成功→503 では旧 tenant の識別可能な内容が 0 件であることを検査する。HTTP adapter の全 request が tenant/workspace header を送る既存検査と組み合わせる。
-
-【3. 配布応答】認証済み `/marketplace.json` が private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を返すことを route test で固定し、public cache への退行を拒否する。
-
-【4. 通信回数】一覧のキーワード入力中は request 数が増えず、submit で 1 回だけ増え、適用 query が送られることを component test で固定する。
-
-【5. CI と未実測境界】catalog 固有 Vitest は GitHub Actions から fail-closed に到達させ、axe 違反 0 と bundle 予算を維持する。production URL 上の LCP/INP/CLS と 2 社同時運用は repository test で代替せず P13 の外部実測として未完了を明示する。
-
-### qa-108 (対応セル: web)
-
-**質問**: PublishRequest パイプラインの受入を testing-qa.web の既存品質契約へどう統合しますか?
-
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076 までの testing-qa.web 契約を全面維持し、公開パイプラインの品質ゲートを追加確定する。
-
-【1. 振る舞い】状態遷移の許可・拒否直積、Green/Yellow/Red 写像、旧 stable 維持、immutable Release、TargetChannel 直列化、idempotency の replay/payload mismatch、tenant/workspace/role matrix を自動テストで固定する。
-
-【2. 結線と境界】共有 inspection が secret scan を含むことだけでなく Hub がその bundle を実際に使うことを静的 gate で検査する。apps/hub から packages/db schema subpath への依存を禁止し、各 detector は意図的な bypass を拒否できる負例テストを持つ。検査対象 0 件を成功にしない。
-
-【3. production acceptance】repository 内の test 合格だけで P13 を完了扱いにせず、production Worker、DB、R2 に対する S1〜S6、channel_busy、R2 hash、audit chain を実測する。自動 smoke の entrypoint と必須 action 集合も静的・単体テストで固定する。
-
-【4. 証跡】system-plan P01〜P13 の validator violations 0、対象 package test/typecheck/lint、boundary/security gate、文書 line limit、artifact placement、diff check を PR 前に再実行し、結果と既知の非 blocker follow-up を受領書、release record、Beads notes へ残す。
-
-### qa-109 (対応セル: web)
-
-**質問**: 既存のテスト戦略・品質保証契約を維持しながら、plugin-local Chromium を使う slide-report-generator の受入試験を、ローカルだけでなく GitHub Actions から必ず到達可能にするには何を必須としますか?
-
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108 の既存契約を全面維持し、plugin-local browser acceptance の CI 到達契約を追補する。
-
-【1. テスト戦略】task 仕様書は単体・結合・境界値・既存回帰の4レベル、既定80%のカバレッジ目標、層別方針、実装詳細へ密結合しない保守性制約を持つ。実ブラウザを使う処理は、文字列・mock だけの単体試験で代替せず、Chromium 起動と生成物観測を結合／受入証拠に含める。
-
-【2. CI 到達】plugin の EVALS や npm test に受入試験を列挙するだけで完了としない。plugin または専用 workflow の変更を trigger とする GitHub Actions job から、plugin-local runtime 復元、同じ npm test、runtime の read-only check を順番に実行する。install/test/check のいずれかが失敗した場合は job を非0で停止する。
-
-【3. 再現可能な runtime】Node/Playwright 依存と OS/CPU 別 Chromium は plugin 配下へ復元し、利用者や runner の global browser cache を正本にしない。cache は高速化だけに使い、最終 check で Playwright version、実行ファイルの存在、plugin-local path への包含を再検証する。依存が無い clean runner でも install が npm ci と Chromium 復元へ収束する。
-
-【4. 回帰と証拠】Python 契約テストは workflow の path trigger、working-directory、install→npm test→check の配線を検査する。Node 受入試験は plugin-local Chromium を実起動し、16:9 検査と複数 slide screenshot の実在を確認する。EVALS、npm test、workflow の三経路に test-verify-slides を到達させ、宣言だけ・ローカルだけ・CIだけの片肺を許さない。
-
-【5. platform と境界】GitHub Actions は testing-qa.web の CI 実行基盤として扱い、作者の desktop platform と混同しない。本契約は repository 内の slide-report-generator 品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 
@@ -99,48 +53,6 @@ serves_goals: [G1, G2, G5]
 【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### qa-100 (横断追補: web, desktop-windows, desktop-macos)
-
-**質問**: qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?
-
-**回答**: `verify_by=live-trial` は正準 positive scenario と非省略の `scenario_contract` を必須とし、legacy schema 上で field が optional でも欠落を不合格にする。scenario ID、required observations と observed の同数・同順、`unobserved=[]`、実行引数、宣言済み task 契約、run 内に包含された evidence ref の実在を受領側で再照合する。旧受領書は field や digest の手編集で追認せず、現行 scenario と挙動閉包で fresh live-trial を実走して更新する。影響は repository の開発品質ゲートに限定し、schedule skill 本体と製品 API・DB・認証認可・UI・deploy unit は変更しない。判断と検証は `docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md` を正とする。
-
-## 実装フィードバック (2026-07-30 / HarnessHub-ory6)
-
-qa-076 / qa-081 の「境界値・異常系を task spec と機械ゲートで再現可能にする」
-確定要件を、repository 内 validator の ID 一意性へ具体化した。入力要素を
-`set` / `dict`（集合・辞書）へ変換する validator は、変換前に同一 ID の
-重複を検査し、重複した別要素が 1 件へ畳み込まれる偽陽性を許可しない。
-
-- task graph は task node ID と component ID を別々に検査する。
-- consult transcript は user solution の provenance（根拠となる発話）を
-  照合する前に turn ID の重複を検査する。
-- route build handoff は route/complete の両モードで route ID の重複を
-  検査する。
-- 各経路は正常な入力を exit 0 のまま維持し、重複 ID の負例 fixture では
-  CLI を非 0 終了させる。検査件数 0 を合格根拠にせず、違反を実際に投入して
-  gate の反転を確認する。
-
-この追記は既存 QA の実装フィードバックであり、確定回答、製品 API、DB schema、
-認証認可、UI、Cloudflare deploy unit は変更しない。内部 validation contract
-（検証契約＝不正な入力をどこで拒否するか）の設計影響だけを反映する。
-
-## 実装フィードバック (2026-07-30 / HarnessHub-35ai)
-
-qa-076 / qa-089 の「異常系を機械ゲートで再現し、証拠の由来を束縛する」
-確定要件を、Dev Graph renderer の登録検証表示へ具体化した。
-
-- `--registration-receipt` があり、件数・node ID・graph digest・source digest の
-  検証を通過した場合だけ `registration_verification.status=verified` とする。
-- receipt が無い探索表示は `not_performed` とし、子 task が偶然 13 件でも
-  登録成功の証拠として扱わない。
-- 判定は CLI receipt、HTML の可視 banner、埋込み `render-metadata` の
-  3 箇所で同じ状態を返し、正例と receipt 無しの負例を回帰テストで固定する。
-
-この追記は確定回答を変えず、repository 内の開発品質ゲートを具体化する
-実装フィードバックである。製品 API、DB schema、認証認可、UI、
-Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 

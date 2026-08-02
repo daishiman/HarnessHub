@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-02T03:21:08.169118Z"
+updated_at: "2026-08-02T07:37:35Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
 resource_scope: ["architecture/harness-hub-testing-qa.md"]
 purpose: "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅、カバレッジ 80% 品質ゲート、層別テスト方針、task 仕様書のテスト戦略と世代非依存 rerun command — を dev-graph から参照する"
-goal: "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-119/qa-121 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する"
+goal: "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-119/qa-130/qa-131 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する"
 scope_in: ["system-spec/testing-qa.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"02bd8e84f9cff2d775a8a91bb940b95d499dbf4111b34ff38f43f38c4007407b","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-02T03:17:38Z","origin_kind":"system-spec-harness","source_digest":"02bd8e84f9cff2d775a8a91bb940b95d499dbf4111b34ff38f43f38c4007407b","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"5abdaaca61d6fc04dc0a576be2fe4017801f8fb13ba3195cad0a028485849e6f","evaluator":"codex-final-review","evidence_ref":"docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-02T07:37:35Z","origin_kind":"system-spec-harness","source_digest":"5abdaaca61d6fc04dc0a576be2fe4017801f8fb13ba3195cad0a028485849e6f","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `02bd8e84f9cf…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `5abdaaca61d6…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md`)
-- 取込日時: 2026-08-02T03:17:38Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-02T07:37:35Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -71,7 +71,7 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **受領側の非省略境界 (qa-100)**: `verify_by=live-trial` の criteria-test は `scenario_contract` の存在を必須にし、required/observed の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を再照合する。schema の後方互換性と acceptance の合格条件を分離し、旧受領書は fresh run で更新する。
 - **変更境界 (qa-100)**: 変更は証拠を受領するテスト層に閉じる。C15 schedule の新規 run は現行動作の再観測であり、scheduler、公開 API、DB、認証認可、UI、deploy unit の構造は変えない。
 - **一時生成物の境界 (qa-095)**: skill 構造 lint は dot directory、`__pycache__`、`.pyc` を test tool の生成物として構造判定から除外し、通常の nested directory 違反は維持する。root / plugin 実装の byte parity と per-plugin → repository の実行順序回帰を固定する。
-- **世代非依存 rerun command (qa-121)**: promotion 前は planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。contract 1.3.0 は `--staging`、flag 欠落、別 package id を fail-closed に拒否し、1.2.0 以前の immutable package は当時の契約で再検証する。
+- **世代非依存 rerun command (qa-131)**: promotion 前は planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。contract 1.3.0 は `--staging`、flag 欠落、別 package id を fail-closed に拒否し、1.2.0 以前の immutable package は当時の契約で再検証する。
 
 ## 2026-07-29 実装反映
 
@@ -163,3 +163,12 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 ## 上流指針 (doctrine anchor)
 
 - reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。
+
+## 2026-08-02 顧客持ち込み Google OAuth 回帰設計
+
+- 実 libSQL と封筒暗号化で lifecycle、rotation、取消、disabled 再開、現行再テスト、
+  暗号文 CAS、migration 旧 writer 互換を検査する。
+- route test は role 4 種、CSRF、tenant A/B、Google 以外 issuer、secret 非露出を含む。
+- UI は実見出し階層で axe-core 違反 0、password/autocomplete、Workspace domain 正規化を検査する。
+  Google 実 client、Playwright、production migration は別の外部実測として残す。
+- 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-130`。

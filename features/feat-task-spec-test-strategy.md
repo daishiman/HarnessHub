@@ -4,7 +4,7 @@ artifact_kind: "feature"
 artifact_subtypes: []
 project_id: "harness-hub"
 domain: "testing-qa"
-tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","qa-121","decision-d8"]
+tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","qa-131","decision-d8"]
 priority: "high"
 start_date: null
 target_date: null

@@ -84,51 +84,6 @@ serves_goals: [G1, G4, G5]
 
 【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
-
-qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
-具体化した。GitHub Actions が repository root から実行する
-`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
-local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
-allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
-など静的に境界を確定できない入力は fail-closed とする。
-
-local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
-working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
-`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
-Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-07-30 / `HarnessHub-pyb3`)
-
-qa-088【2】と qa-096【2】の CI / local 共通ゲートを具体化し、`pnpm -r test` の入口を
-変えずに `pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間だけを直列化する。
-各 package が持つ Vitest worker pool の同時起動による RPC timeout を防ぎ、設定欠落・値変更は
-`pnpm check:pnpm` の正負テストで fail-closed に拒否する。製品 API、DB schema、認証認可、
-UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。反映と検証は
-`docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md` を正とする。
-
-### 実装反映注記 (2026-08-01 / `HarnessHub-w7n7`)
-
-Beads 操作の単一チョークポイント（書き込みを必ず通す一本の入口）である
-`plugins/dev-graph/scripts/bd-bridge.py` は、CLI 引数解析、preflight、Beads 実行、
-receipt 出力だけを保持する。判定処理は次の四責務へ分離する。
-
-- `bd_bridge_contracts.py`: exact-set 語彙と外部 I/O を持たない純粋判定
-- `bd_bridge_graph.py`: canonical graph、manifest、artifact の read-only 解決
-- `bd_bridge_projection.py`: graph node から Beads issue への投影
-- `bd_bridge_audit.py`: orphan 棚卸しと node 削除 preflight の read-only 監査
-
-分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
-Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
-注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
-変更対象の手書きファイルは 500 行以下に保ち、分割先は harness coverage の scripts 分母へ
-追加しない `plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
-UI、Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
-を正とする。
-
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

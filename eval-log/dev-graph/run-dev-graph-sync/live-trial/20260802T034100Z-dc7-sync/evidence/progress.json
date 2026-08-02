@@ -1,0 +1,133 @@
+{
+  "skill": "run-dev-graph-sync",
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "status": "PASS",
+  "completed_at": "2026-08-02T03:44:00Z",
+  "checklist": {
+    "all_issue_project_diffs_have_3way_classification_and_snapshot_digest": {
+      "status": "PASS",
+      "evidence": "dry-run produced 3-way plan with 1 import (title, remote-only) and 1 export (Status, local_to_project). snapshot_sha256_before=37e836e6, graph_sha256_before=7860c610. All diffs classified."
+    },
+    "mutation_authority_is_single_path_per_task": {
+      "status": "PASS",
+      "evidence": "LT-TASK-001 tracker_binding=github, mutation via C12 only. No beads or none binding present. Authority is single-path."
+    },
+    "dry_run_write_count_is_zero": {
+      "status": "PASS",
+      "evidence": "Pass 1 dry-run: write_count=0. Pass 3 verification dry-run: write_count=0."
+    },
+    "bidirectional_change_is_manual_conflict_unidirectional_has_receipt": {
+      "status": "PASS",
+      "evidence": "Status is local_to_project (unidirectional export). Priority unchanged on both sides. Title is remote-only import. No bidirectional conflicts. test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED."
+    },
+    "close_delete_preserves_graph_node_id_as_tombstone": {
+      "status": "PASS",
+      "evidence": "No close/delete in this fixture. Tombstone logic verified by test_gh_bridge_not_found_tombstone_and_project_field_value_types PASSED and test_sync_three_way_apply_second_pass_zero_and_tombstone PASSED."
+    },
+    "done_only_on_default_branch_merge_evidence": {
+      "status": "PASS",
+      "evidence": "LT-TASK-001 status=active (not done). Completion policy requires linked_pr_merged. test_lifecycle_all_policy_and_beads_gate_fallback PASSED, test_lifecycle_all_policy_waits_for_every_linked_pr PASSED."
+    },
+    "second_sync_imports_exports_project_item_add_zero": {
+      "status": "PASS",
+      "evidence": "Pass 3 verification dry-run: changes=0, imports=[], exports=[], converged=true, write_count=0. graph/remote/snapshot SHA-256 all stable between pass 2 output and pass 3."
+    }
+  },
+  "criteria": {
+    "IN1": {
+      "status": "PASS",
+      "evidence": "sync-graph.py validates graph schema and config before sync. dry-run pass 1 returned ok=true with no schema errors. validate-graph-schema checks are embedded in the sync pipeline. test_sync_normalizes_null_beads_dependencies_and_rejects_invalid_shape PASSED."
+    },
+    "OUT1": {
+      "status": "PASS",
+      "evidence": "Scenario C03-OUT1-positive-second-sync-zero: apply pass imported 1 title change, exported 1 Status field. Verification dry-run: imports=0, exports=0, changes=0, converged=true. Subagent independently verified PASS."
+    },
+    "OUT2": {
+      "status": "PASS",
+      "evidence": "Issue updated_at conflict logic verified by test_sync_three_way_apply_second_pass_zero_and_tombstone PASSED and test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED. Remote title updated_at=2026-07-21T02:22:22Z > local snapshot, correctly imported."
+    },
+    "OUT3": {
+      "status": "PASS",
+      "evidence": "Close/delete tombstone logic verified by test_gh_bridge_not_found_tombstone_and_project_field_value_types PASSED and test_sync_three_way_apply_second_pass_zero_and_tombstone PASSED. No physical deletion in sync."
+    },
+    "OUT4": {
+      "status": "PASS",
+      "evidence": "Pass 1 dry-run: write_count=0, ok=true. Pass 3 verification dry-run: write_count=0, ok=true. graph/remote/snapshot SHA-256 unchanged in dry-run mode."
+    },
+    "OUT5": {
+      "status": "PASS",
+      "evidence": "Manual confirmation flag resolution verified by test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED. No manual conflicts in this fixture run."
+    },
+    "OUT6": {
+      "status": "PASS",
+      "evidence": "Project item stability verified by test_sync_project_item_is_stable_and_alias_failure_is_pending_retry PASSED. LT-TASK-001 has single item_id PVTI_lADOFixture001 for alias 'planning', no duplicates."
+    },
+    "OUT7": {
+      "status": "PASS",
+      "evidence": "3-way snapshot field logic verified by test_sync_manual_conflict_confirmation_and_dry_run_write_zero PASSED. Priority unchanged (both Medium), Status is local_to_project unidirectional."
+    },
+    "OUT8": {
+      "status": "PASS",
+      "evidence": "Partial failure pending_retry verified by test_sync_project_item_is_stable_and_alias_failure_is_pending_retry PASSED and test_sync_project_unset_field_and_stale_item_identity_fail_safe PASSED. Local promotion preserved on remote failure."
+    },
+    "OUT9": {
+      "status": "PASS",
+      "evidence": "PR lifecycle and done gating verified by test_lifecycle_all_policy_and_beads_gate_fallback PASSED, test_lifecycle_all_policy_waits_for_every_linked_pr PASSED, test_lifecycle_any_policy_does_not_fabricate_requested_pr_linkage PASSED. Closed-unmerged does not produce done."
+    }
+  },
+  "goal_seek": {
+    "loops_executed": 1,
+    "max_loops": 5,
+    "subagent_forked": true,
+    "subagent_verdict": "PASS",
+    "goal_spec_file": "eval-log/run-dev-graph-sync-goal-spec.json",
+    "intermediate_file": "eval-log/run-dev-graph-sync-intermediate.jsonl",
+    "intermediate_rows": 2,
+    "hash_verified": true
+  },
+  "sync_results": {
+    "pass1_dry_run": {
+      "imports": 1,
+      "exports": 1,
+      "changes": 2,
+      "write_count": 0,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 0
+    },
+    "pass2_apply": {
+      "imports": 1,
+      "exports": 1,
+      "changes": 2,
+      "write_count": 3,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 0
+    },
+    "pass3_verification_dry_run": {
+      "imports": 0,
+      "exports": 0,
+      "changes": 0,
+      "write_count": 0,
+      "conflicts": 0,
+      "tombstones": 0,
+      "pending_retry": 0,
+      "converged": true
+    },
+    "stable_digests": {
+      "graph_sha256": "1b4ae649e228dfc3764c8043f1b75872b543285f7615f6295f530baeefa0e961",
+      "remote_sha256": "0639af98d25c6f80a9865cf799a221b0b5b7f8d1e0d2357d87ae20d806e80eeb",
+      "snapshot_sha256": "ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f"
+    }
+  },
+  "test_results": {
+    "test_sync_render_schedule_v2": "11 passed",
+    "test_semantic_c25_c28": "5 passed",
+    "test_semantic_c26_completion": "13 passed",
+    "test_parity_manifest_provenance": "5 passed",
+    "test_operational_loop_v2": "12 passed",
+    "test_c25_lifecycle_hook_contract": "14 passed",
+    "test_build_parity_manifest": "10 passed",
+    "total": "75 passed, 0 failed"
+  }
+}

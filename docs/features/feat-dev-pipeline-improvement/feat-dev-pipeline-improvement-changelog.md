@@ -212,3 +212,11 @@ close した。
   500 行以下へ収束させた。
 - 仕様・設計反映と検証結果は
   [仕様反映受領書](w7n7-bd-bridge-split-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-02 追記: Beads 自由フィールドの正規更新経路
+
+- `HarnessHub-dc7` で `priority`、`assignee`、`labels` の更新を `bd-bridge.py` へ追加した。
+- guard の全直接更新遮断は維持し、「自由」は graph parity 対象外という意味に明確化した。
+- labels は冪等な `--set-labels` 置換、priority は create/update 共通正規化を使う。
+- 契約・設計・検証結果は
+  [仕様反映受領書](dc7-bd-free-field-write-route-spec-reflection-receipt.md) を正とする。

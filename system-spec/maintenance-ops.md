@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-114 |
+| Web (web) | 確定 | 確定質疑: qa-129 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,19 +24,11 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-114 (対応セル: web)
+### qa-129 (対応セル: web)
 
-**質問**: 共有 OAuth client の rollout・rollback・完了収束を maintenance-ops.web の既存運用契約へどう統合しますか?
+**質問**: 顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-107 の runbook、rollback、観測、default branch 収束契約を全面維持し、共有 OIDC の運用を追加確定する。
-
-【1. runbook】事前条件、Google Console の固定 callback、Cloudflare secret、DB backup/migration、tenant 登録、共有/顧客両方式の smoke、個人 Google・別 Workspace 拒否、ログ/response/DB の secret 非露出を1つの再実行可能な runbook にする。
-
-【2. 監視】認可開始失敗、state 拒否、Workspace 拒否、JIT/session 発行を値を漏らさない分類で観測し、tenant id/slug と secret、token、binding の平文をログへ出さない。拒否理由の細分を外部応答に露出しない。
-
-【3. rollback と回復】shared tenant の方式を戻し、customer callback が成功することを確認後に Worker をrollbackする。Google client 削除、secret revoke、migration down は最後に判断し、先に行って復旧経路を失わない。
-
-【4. 完了収束】ローカル品質ゲート、仕様 writer/compiler、dev-graph validator、対象差分 commit、draft PR までを証跡化する。draft PR の merge と default branch reconciliation までは HarnessHub-fnej と node を in_progress に維持し、merge 後に Beads、dev-graph、default branch を正規 sync して閉じる。
+**回答**: qa-114 の共有 OAuth rollout/rollback、観測、完了収束、既存 runbook 契約を全面維持し、顧客持ち込み方式の運用を追加確定する。【責任境界】Google Cloud Console の client 作成、redirect URI、同意画面、secret 追加/失効は顧客の手作業、Hub の登録・テスト・有効化・無効化は provider-admin の操作とする。【通常手順】callback URL 確認→Google client 準備→Hub 登録→probe 合格→有効化→実ブラウザ login の順を gate 化する。rotation は Google で新 secret 追加、Hub staging、pending テスト、昇格、実 login、Google で旧 secret 失効の順とし、昇格前は取消可能にする。【停止と再開】無効化は共有方式へ fallback せずログインを止める。再開は新 credential を登録して pending→tested→active を再実行し、古い credential の直接復帰を禁止する。【証跡】secret 全値を issue/PR/chat/screenshot に残さず last4 のみ記録し、runbook、検証結果、仕様反映受領書、Beads notes、draft PR に実施結果と Google 実環境/Playwright/production migration の残課題を分離する。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 
