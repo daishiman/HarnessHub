@@ -147,31 +147,27 @@ deploy job が起動した（sha `f303274045ec35df284a0ba72629c811d78d6ce6`）�
 | OIDC smoke | O1-O4 すべて `ok: true` |
 | DB・R2 smoke | §4.2 の 6 項目すべて pass（`dedupeOk: true` / `invariantOk: true`） |
 
-## 6. リリース前ゲートの再実行（2026-08-01・ローカル）
+## 6. リリース前ゲートの再実行（2026-08-02・ローカル）
 
-main を本ブランチへ取り込んだ状態で再実行した。
+origin/main `7bab5a2f` をローカル main へ取り込み、そのローカル main を本ブランチへ merge した状態で再実行した。
 
 `pnpm verify` は最終ゲートの `check:client-bundle` まで `&&` チェーンを完走した。
 
 | ゲート | 実測 |
 |---|---|
 | `validate-system-plan.py --feature-package feature-package/feat-hearing-intake` | **pass** / `violations: []` / `validated_digest` が task 仕様の `dev_graph_source_digest`（`sha256:61fac79f…`）と一致 |
-| Biome lint | **423 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
+| Biome lint | **467 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
 | typecheck（6 パッケージ） | pass |
 | build / build:worker | pass |
-| test（全パッケージ） | **128 files / 1619 tests 全 pass**（hub 845 / ui 266 / db 231 / inspection 151 / schemas 86 / estimation 40） |
-| test（本 feature 名指し） | **8 files / 101 tests 全 pass**（`apps/hub/tests/hearing-intake`） |
+| test（全パッケージ） | **143 files / 1804 tests 全 pass**（hub 1021 / ui 266 / db 240 / inspection 151 / schemas 86 / estimation 40） |
+| test（今回追加した名指し検査） | **22 tests 全 pass**（DB fixture transaction 2 / Worker secret・本番 smoke 構造 20） |
 | tenant 分離 / secret scan / OpenAPI・zod drift | pass |
-| Worker bundle 予算 | **gzip 1.225 MiB** / 3.000 MiB（wrangler dry-run 計測） |
-| client bundle 予算（本 feature の 3 画面） | `/sheets/new` **116.2 KiB** / `/sheets/[id]` **115.9 KiB** / `/sheets` **111.7 KiB**（予算 120.0 KiB） |
+| Worker secret 三方向突合 | **台帳 10 件 / Worker 宣言 7 件**を静的に確認（live 検査は deploy 前に実行） |
+| Worker bundle 予算 | **gzip 1.306 MiB** / 3.000 MiB（wrangler dry-run 計測） |
+| client bundle 予算（本 feature の 3 画面） | `/sheets/new` **116.4 KiB** / `/sheets/[id]` **116.1 KiB** / `/sheets` **111.9 KiB**（予算 120.0 KiB） |
 
-client bundle は 3 画面とも予算内だが、`/sheets/new` は残り 3.8 KiB（約 3%）である。S10 に client component を
+client bundle は 3 画面とも予算内だが、`/sheets/new` は残り 3.6 KiB（約 3%）である。S10 に client component を
 追加する変更では、この余裕が先に尽きる点を留意する。
-
-> **ローカル実行時の注意**: 既定の `node` が x64（Rosetta）で解決されるため、`@biomejs/cli-darwin-x64` /
-> `@libsql/darwin-x64` / `@next/swc-darwin-x64` が見つからず lint・build が落ちる。これは環境要因であり
-> コードの欠陥ではない。arm64 の Node（`/opt/homebrew/bin/node`、同一 v22.21.1）を PATH 先頭に置いて
-> 実行すること。CI は ubuntu-latest のため影響を受けない。
 
 ### 6.1 CI 側のゲート実績（同一コードに対する正本）
 

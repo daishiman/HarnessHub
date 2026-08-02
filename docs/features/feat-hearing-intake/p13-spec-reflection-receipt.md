@@ -67,6 +67,17 @@ PASS し、system-spec compiler で章を再生成した。SEC8 の規則その�
 - main 反映後の実データ E2E smoke と SEC8 本番確認を release notes へ追記し、最終 commit でも
   同じ仕様影響判定を再確認すること。
 
+## 最終レビュー記録（2026-08-02）
+
+- origin/main `7bab5a2f` をローカル main へ取り込み、そのローカル main を本 branch へ merge した。
+- `pnpm verify` は 6 パッケージ 143 files / 1804 tests、lint、typecheck、build、tenant 分離、secret scan、
+  schema drift、Worker / client bundle 予算をすべて通過した。
+- task 仕様 validator、system-spec coverage、dev-graph schema / source digest、成果物配置、文書行数、
+  `git diff --check` を最終 commit 前に再確認する。
+- 手書きの変更ファイルはすべて 500 行以下である。500 行を超える `.dev-graph/state/graph.json` と
+  `system-spec/spec-state.json` は writer が生成し validator が単一 JSON として読む正本のため、分割すると
+  正規フローを壊す。この 2 件だけは生成物の構造を維持する。
+
 ## 現在の境界
 
 本受領書は main 反映前のレビュー判断である。P13 の完了は、CI 本番反映、実データ E2E smoke、SEC8
