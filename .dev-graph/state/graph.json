@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1114,
+  "graph_revision": 1124,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T05:37:45Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
+        "source_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T05:40:02.373839Z"
+      "updated_at": "2026-08-02T08:30:01.122253Z"
     },
     {
       "acceptance": [
@@ -135,7 +135,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "1f9b092a0745dd2c31b3ed27aace2dc7242664fb5440afeea1f7cb3602b79ad8",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -193,9 +193,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T16:23:40Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "1f9b092a0745dd2c31b3ed27aace2dc7242664fb5440afeea1f7cb3602b79ad8",
+        "source_digest": "d44652f33f2ca180abf614c1bc7b280c26583c4bd1168e625aaa2cf84fe84000",
         "source_path": "system-spec/frontend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -211,7 +211,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T16:23:40Z"
+      "updated_at": "2026-08-02T08:33:53.116091Z"
     },
     {
       "acceptance": [
@@ -242,7 +242,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -299,9 +299,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T11:54:39Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe",
+        "source_digest": "a8ca02bed90d95d3646428342d09fd92c7bf813b3d166873cfdcd22d168c1aa5",
         "source_path": "system-spec/backend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -317,7 +317,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub backend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T11:54:39Z"
+      "updated_at": "2026-08-02T08:33:26.831948Z"
     },
     {
       "acceptance": [
@@ -348,9 +348,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -405,9 +405,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:30:00Z",
+        "imported_at": "2026-08-02T08:30:40Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "5a4d5439793d391f019e66e49f4baf7684bc361b3bbfe15c08fd5cdc3e1fd83d",
+        "source_digest": "9ee58696d797a2fc235f290c4bdc77c3f16001080b39d341dd0cc8778eebafcb",
         "source_path": "system-spec/database.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -423,7 +423,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub data アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-26T08:35:00Z"
+      "updated_at": "2026-08-02T08:39:13.986013Z"
     },
     {
       "acceptance": [
@@ -454,7 +454,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -512,9 +512,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T16:30:33Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2",
+        "source_digest": "ce6433762cc19d322f14f7d6cce44c025442664e2ea7fea74f46f6d81026f98f",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -530,7 +530,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T16:30:33Z"
+      "updated_at": "2026-08-02T08:32:54.342375Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T05:37:45Z",
+        "imported_at": "2026-08-02T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
+        "source_digest": "fe2ef626f06de681c39979e67255940fa0f57832b017378c0e929edcea7c1b07",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T05:41:06.531373Z"
+      "updated_at": "2026-08-02T08:32:31.653436Z"
     },
     {
       "acceptance": [
@@ -12954,9 +12954,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
-        "evaluator": "codex-final-review + merge-reconciliation",
-        "evidence_ref": "system-spec/dev-workflow.md"
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13011,9 +13011,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T05:27:08Z",
+        "imported_at": "2026-08-02T08:30:40Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
+        "source_digest": "ca851fe9a8af91e23f60a23f3c9f67564fabf49b53f25b1553d78bf48e6a10ea",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13029,7 +13029,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T05:27:08Z"
+      "updated_at": "2026-08-02T08:40:06.768354Z"
     },
     {
       "acceptance": [
@@ -27455,9 +27455,9 @@
         "E2E 未完了のまま Stage 1 gate を解除すること"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T00:24:25Z",
+        "imported_at": "2026-08-02T08:30:40Z",
         "origin_kind": "manual",
-        "source_digest": "58d85cb5ff4c828f6fbf75ec093fa059f41c4cb4fa65c125ed46056d7dbcdc36",
+        "source_digest": "1a85072d10ea2bc792ab2c7833d28b78f5038cb8dafd53daf7955024d654e72c",
         "source_path": "system-spec/index.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -27474,7 +27474,7 @@
       "template_version": "1.0.0",
       "title": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:19:59.351983Z"
+      "updated_at": "2026-08-02T08:44:44.224882Z"
     },
     {
       "acceptance": [
@@ -33968,7 +33968,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93",
+        "evaluated_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -34026,9 +34026,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T16:30:33Z",
+        "imported_at": "2026-08-02T08:30:40Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93",
+        "source_digest": "9c043274014aacca268dc56950483ec01fefe8af4bcedbfc642a613f6c1dea0b",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34044,7 +34044,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T16:30:33Z"
+      "updated_at": "2026-08-02T08:43:54.827312Z"
     },
     {
       "acceptance": [
@@ -44446,9 +44446,9 @@
         "PublishRequest 状態機械と role 判定 owner の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T09:00:00Z",
+        "imported_at": "2026-08-02T08:30:40Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c",
+        "source_digest": "ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -44467,7 +44467,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub Dual Catalog cache・認可境界追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T09:00:00Z"
+      "updated_at": "2026-08-02T08:46:51.546374Z"
     },
     {
       "acceptance": [

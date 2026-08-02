@@ -19,7 +19,7 @@ export interface ActionRule {
    */
   readonly requiredScope: PublisherTokenScope | null;
   /** この action を呼べる資格情報。用途外 token を role だけで通さない。 */
-  readonly credential: 'session' | 'access_token' | 'either';
+  readonly credential: 'session' | 'access_token' | 'either' | 'session_or_cwv_probe';
   /**
    * 自分が所有する資源に限るか。
    * `workspace-admin` 以上は管理操作として他人の資源にも及ぶ (`decide` 側で判定)。
@@ -30,6 +30,7 @@ export interface ActionRule {
 const SESSION = 'session';
 const TOKEN = 'access_token';
 const EITHER = 'either';
+const SESSION_OR_CWV_PROBE = 'session_or_cwv_probe';
 
 /**
  * security-spec §3.4 の action 語彙を機械可読にした正本。
@@ -48,7 +49,9 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'builds.stage_change': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.create': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.update': { minRole: 'owner', requiredScope: null, credential: SESSION, selfOnly: false },
-  'harnesses.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  // CWV probe は `/catalog` と同 UI が読む read endpoint だけを middleware で許可し、
+  // route 側でもこの action 以外へは到達できない。通常 session の権限は変えない。
+  'harnesses.read': { minRole: 'member', requiredScope: null, credential: SESSION_OR_CWV_PROBE, selfOnly: false },
   'harnesses.install': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'publish.request': { minRole: 'owner', requiredScope: 'publish:write', credential: EITHER, selfOnly: false },
   'publish.approve': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },

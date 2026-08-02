@@ -84,3 +84,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - P13 の責務は本番 release / deploy と再実行可能な証跡の確立までとして完了した。
 - SLO 30 日観測は独立 follow-up `HarnessHub-37h.15` へ分離済みで、ユーザー判断により `not_applicable` で閉じた。これは SLO PASS ではなく、P13 と feature の delivery closure を阻害しないという受入境界の決定である。
 - task 仕様書の再検証は `validate-system-plan.py --feature-package feature-package/feat-hub-foundation` を使い、結果を [feature closeout 仕様反映受領書](../../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) に残す。
+
+## post-release CWV hardening (2026-08-02 / `HarnessHub-9cgb`)
+
+- P13 で確立した G11 定期測定を、実際に認証が必要な `/catalog` へ拡張する。通常の session/access token を CI に複製せず、最大 5 分・固定 tenant/workspace・GET/HEAD catalog read 専用の `CWV_PROBE_*` credential を使う。
+- repository 内の実装・secret 台帳・artifact sanitizer・負例テストは本変更で完了する。Worker/GitHub secret 投入、main deploy、初回 Lighthouse 実測は外部状態変更のため `HarnessHub-9cgb` を open のまま追跡する。
+- 仕様正本は `system-spec/*` の qa-131、詳細手順と受領書は [CWV probe 仕様反映受領書](../../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) を参照する。

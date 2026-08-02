@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T16:30:33Z"
+updated_at: "2026-08-02T08:32:54.342375Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T16:30:33Z","origin_kind":"system-spec-harness","source_digest":"8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"ce6433762cc19d322f14f7d6cce44c025442664e2ea7fea74f46f6d81026f98f","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -118,6 +118,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   最終判定する。edge と route の二段階は防御の重複ではなく、到達可否と資源操作可否の責務分離である。
 - 本番 smoke の結果と rollback 判断は
   [feat-publish-pipeline release record](../docs/features/feat-publish-pipeline/release-record.md) を証跡正本とする。
+
+**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-131)**:
+
+- protected `/catalog` の CWV runner は、通常 session / access token と鍵を共有しない
+  5 分以下の HS256 ticket を使う。`typ`、audience、HTTPS origin、tenant/workspace、発行・期限を
+  Worker で検証し、改ざん・期限切れ・scope 不一致は通常 credential へ fallback せず拒否する。
+- ticket は最初の `GET /catalog` で URL から除去し、`__Host-`、HttpOnly、Secure、SameSite=Strict、
+  Path=/ の Cookie に移す。edge と route は GET/HEAD の catalog read allowlist と
+  `harnesses.read` の credential 規則を二段で検査する。
+- 秘密値・ticket は source、文書、log、Lighthouse artifact に保存しない。設計の受領と
+  外部実測の残課題は
+  [CWV probe credential 仕様反映受領書](../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md)
+  を正とする。
 
 ## Delivery, migration and rollback
 

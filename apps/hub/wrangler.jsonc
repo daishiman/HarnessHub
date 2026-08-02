@@ -54,6 +54,9 @@
     "required": [
       "AUTH_SESSION_SECRET",
       "AUTH_ACCESS_TOKEN_SECRET",
+      "CWV_PROBE_SECRET",
+      "CWV_PROBE_TENANT_ID",
+      "CWV_PROBE_WORKSPACE_ID",
       "TURSO_DATABASE_URL",
       "TURSO_AUTH_TOKEN",
       "ENCRYPTION_KEK"

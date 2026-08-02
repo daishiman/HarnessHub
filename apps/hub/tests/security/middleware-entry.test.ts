@@ -12,6 +12,10 @@ const SESSION_SECRET = 'middleware-entry-test-secret';
 const ACCESS_TOKEN_SECRET = 'middleware-entry-access-token-secret';
 const ORIGINAL_SECRET = process.env.AUTH_SESSION_SECRET;
 const ORIGINAL_ACCESS_TOKEN_SECRET = process.env.AUTH_ACCESS_TOKEN_SECRET;
+const ORIGINAL_CANONICAL_ORIGIN = process.env.AUTH_CANONICAL_ORIGIN;
+const ORIGINAL_CWV_PROBE_SECRET = process.env.CWV_PROBE_SECRET;
+const ORIGINAL_CWV_PROBE_TENANT_ID = process.env.CWV_PROBE_TENANT_ID;
+const ORIGINAL_CWV_PROBE_WORKSPACE_ID = process.env.CWV_PROBE_WORKSPACE_ID;
 
 const USER: DirectoryUser = {
   id: 'user-1',
@@ -37,6 +41,15 @@ async function loadMiddleware(
   else process.env.AUTH_SESSION_SECRET = secret;
   if (accessTokenSecret === undefined) delete process.env.AUTH_ACCESS_TOKEN_SECRET;
   else process.env.AUTH_ACCESS_TOKEN_SECRET = accessTokenSecret;
+  return import('../../src/middleware.js');
+}
+
+async function loadCwvProbeMiddleware(): Promise<MiddlewareModule> {
+  vi.resetModules();
+  process.env.AUTH_CANONICAL_ORIGIN = 'https://hub.example.com';
+  process.env.CWV_PROBE_SECRET = 'cwv-probe-secret';
+  process.env.CWV_PROBE_TENANT_ID = USER.tenantId;
+  process.env.CWV_PROBE_WORKSPACE_ID = USER.workspaceIds[0] ?? '';
   return import('../../src/middleware.js');
 }
 
@@ -217,5 +230,70 @@ describe('middleware の matcher', () => {
     expect(matcher.test('/_next/image')).toBe(false);
     expect(matcher.test('/api/documents')).toBe(true);
     expect(matcher.test('/acme/signin')).toBe(true);
+  });
+});
+
+describe('CWV 専用 credential の bootstrap', () => {
+  it('ticket を URL から除去して __Host Cookie 化し、catalog の GET だけを通す', async () => {
+    const now = Math.floor(Date.now() / 1000);
+    const cwvTicket = await signJwt(
+      {
+        typ: 'cwv_probe',
+        aud: 'harness-hub-cwv',
+        origin: 'https://hub.example.com',
+        tenant_id: USER.tenantId,
+        workspace_id: USER.workspaceIds[0],
+        iat: now,
+        exp: now + 300,
+      },
+      'cwv-probe-secret',
+    );
+
+    try {
+      const cwv = await loadCwvProbeMiddleware();
+      const bootstrap = await cwv.middleware(
+        requestFor(`/catalog?tenant=${USER.tenantId}&workspace=${USER.workspaceIds[0]}&__cwv_probe=${cwvTicket}`),
+      );
+      expect(bootstrap.status).toBe(307);
+      expect(bootstrap.headers.get('location')).not.toContain('__cwv_probe');
+      expect(bootstrap.headers.get('cache-control')).toBe('no-store');
+      expect(bootstrap.headers.get('referrer-policy')).toBe('no-referrer');
+      const setCookie = bootstrap.headers.get('set-cookie') ?? '';
+      expect(setCookie).toContain('__Host-harness-hub.cwv-probe=');
+      expect(setCookie).toContain('HttpOnly');
+      expect(setCookie).toContain('Secure');
+      expect(setCookie).toContain('SameSite=strict');
+      expect(setCookie).toContain('Path=/');
+
+      const catalog = await cwv.middleware(
+        requestFor(`/catalog?tenant=${USER.tenantId}&workspace=${USER.workspaceIds[0]}`, { cookie: setCookie }),
+      );
+      expect(catalog.status).toBe(200);
+      expect(catalog.headers.get('x-middleware-next')).toBe('1');
+
+      const publicPathRejected = await cwv.middleware(
+        new NextRequest(new URL('/api/auth/signin', 'https://hub.example.com'), { headers: { cookie: setCookie } }),
+      );
+      expect(publicPathRejected.status).toBe(403);
+
+      const rejected = await cwv.middleware(
+        new NextRequest(new URL('/catalog', 'https://hub.example.com'), {
+          method: 'POST',
+          headers: { cookie: setCookie },
+        }),
+      );
+      expect(rejected.status).toBe(403);
+      await expect(rejected.json()).resolves.toEqual({ error: 'credential_not_allowed' });
+    } finally {
+      if (ORIGINAL_CANONICAL_ORIGIN === undefined) delete process.env.AUTH_CANONICAL_ORIGIN;
+      else process.env.AUTH_CANONICAL_ORIGIN = ORIGINAL_CANONICAL_ORIGIN;
+      if (ORIGINAL_CWV_PROBE_SECRET === undefined) delete process.env.CWV_PROBE_SECRET;
+      else process.env.CWV_PROBE_SECRET = ORIGINAL_CWV_PROBE_SECRET;
+      if (ORIGINAL_CWV_PROBE_TENANT_ID === undefined) delete process.env.CWV_PROBE_TENANT_ID;
+      else process.env.CWV_PROBE_TENANT_ID = ORIGINAL_CWV_PROBE_TENANT_ID;
+      if (ORIGINAL_CWV_PROBE_WORKSPACE_ID === undefined) delete process.env.CWV_PROBE_WORKSPACE_ID;
+      else process.env.CWV_PROBE_WORKSPACE_ID = ORIGINAL_CWV_PROBE_WORKSPACE_ID;
+      vi.resetModules();
+    }
   });
 });

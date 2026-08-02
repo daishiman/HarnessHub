@@ -27,6 +27,9 @@ describe('production auth bindings', () => {
       [
         'AUTH_ACCESS_TOKEN_SECRET',
         'AUTH_SESSION_SECRET',
+        'CWV_PROBE_SECRET',
+        'CWV_PROBE_TENANT_ID',
+        'CWV_PROBE_WORKSPACE_ID',
         'ENCRYPTION_KEK',
         'TURSO_AUTH_TOKEN',
         'TURSO_DATABASE_URL',

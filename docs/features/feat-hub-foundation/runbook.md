@@ -99,6 +99,30 @@ Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers S
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 
+### 1.1 protected `/catalog` の CWV 実測を有効化する（qa-131）
+
+> **目的**: 通常ユーザーのログイン鍵を CI に置かず、実際に認証が必要な catalog 画面を計測する。ここで扱う secret の値を issue・文書・shell 履歴・Actions log に貼らない。
+
+1. 読み取り専用の代表 tenant と Workspace を選ぶ。実在ユーザーの個人データや publish 権限を持つ Workspace は使わない。
+2. パスワードマネージャで 32 bytes 以上のランダム値を 1 つ生成し、Worker と GitHub に**同じ値**を登録する。通常の `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` を転用しない。
+
+   ```bash
+   cd apps/hub
+   wrangler secret put CWV_PROBE_SECRET
+   wrangler secret put CWV_PROBE_TENANT_ID
+   wrangler secret put CWV_PROBE_WORKSPACE_ID
+
+   gh secret set HUB_CWV_PROBE_SECRET
+   gh secret set HUB_CWV_PROBE_TENANT_ID
+   gh secret set HUB_CWV_PROBE_WORKSPACE_ID
+   ```
+
+3. main の CI で Worker を deploy した後、Actions の `hub-cwv` を dispatch する。自由入力の URL は無く、`HUB_PUBLIC_URL` の同一 HTTPS origin にある `/catalog` だけを測る。未投入なら workflow は secret 名だけを出して失敗する。
+4. `cwv-evidence` artifact の `lighthouse.json` と `cwv-report.json` に `__cwv_probe`、ticket、secret が無いこと、LCP/CLS/TBT の値が全て得られることを確認する。計測失敗は good ではない。
+5. 漏えい疑いまたは代表 scope の変更時は、Worker と GitHub の `*_CWV_PROBE_SECRET` を同じ新値へ rotate し、次の workflow を再実行する。旧 ticket は最大 5 分を待たず署名不一致で失効する。
+
+外部 secret の投入、本番 deploy、最初の実測は repository 外の操作である。証跡が揃うまで `HarnessHub-9cgb` を close しない。
+
 ## 2. 通常デプロイ
 
 main への merge で `ci.yml` が全自動実行する（qa-034）。手動 gate は置かない。

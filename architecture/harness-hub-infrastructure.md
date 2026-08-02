@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T05:41:06.531373Z"
+updated_at: "2026-08-02T08:32:31.653436Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T05:37:45Z","origin_kind":"system-spec-harness","source_digest":"47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"fe2ef626f06de681c39979e67255940fa0f57832b017378c0e929edcea7c1b07","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -118,6 +118,16 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Google client secretやテナント別`IDP_SECRET_*`を追加しない。
 - 現行rolloutの外部受入はGoogle/HarnessHub 1テナント。複数テナント分離試験を維持し、
   「本番1件」と「製品が単一テナント」を混同しない。
+
+**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-131)**:
+
+- `hub-cwv` は自由入力 URL を受けず、`HUB_PUBLIC_URL` の HTTPS `/catalog` にだけ短命 ticket を
+  発行する。必須設定が無い場合は未計測を成功扱いにせず fail-closed で停止する。
+- Worker は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、Actions は
+  対応する `HUB_CWV_PROBE_*` を用途限定で使う。標準の auth secret やユーザー credential を
+  GitHub に複製しない。
+- Lighthouse upload 前に ticket を除去・検査し、集計 report には ticket を含まない URL だけを残す。
+  secret の投入、read-only scope 選定、main deploy、初回成功は外部 follow-up として Beads を open に保つ。
 - R1〜R5はprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
   refresh再利用失効、session revocationまで本番実測し、release recordへ記録する。
 
