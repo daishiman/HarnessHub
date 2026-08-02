@@ -61,3 +61,11 @@ SLO 最終判定または旧 token revoke 確認を再開する場合は、既�
 ## 7. 500 行上限
 
 手書き対象文書は、ユーザー指定の 500 行より厳しい repository 規約の 300 行以下に維持した。長くなった lifecycle review は `final-lifecycle-review-20260802.md` へ責務分離した。正規 writer が管理する生成 specification wrapper は 460 行で、ユーザー指定の 500 行以下である。対象文書に 500 行超過はない。
+
+## 8. PR #633 の main 再同期追補
+
+PR 作成後に `origin/main` が PR #632 まで前進し、GitHub が conflict を報告したため、ローカル `main` を `a8aa91a5` へ fast-forward してから本ブランチへマージした。Git の未解決ファイルは 0 件で、`qa-123` / `appr-023`、4 ノードの lifecycle、SLO を PASS にしない境界は保持された。
+
+main 側の `system-spec/dev-workflow.md` 更新により生成 wrapper `specs/harness-hub-system-specification.md` の digest が `214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1` へ変わったため、C02 `upsert-node.py` 経由で `feat-hub-foundation` と `feat-domain-model-db` の source lineage を再束縛した。graph revision は 1111 から 1113 へ進み、artifact 本文は保持された。
+
+再検証は task package 2 件とも P01〜P13・違反 0、system-spec coverage / foundation / citation と compiler 42 / 42、Dev Graph `valid: true`、対象 source digest 2 / 2 一致、対象 evidence dangling 0、repository CI `PASS 136 / WARN 4 / FAIL 0`。したがって conflict 解消による追加の製品仕様・API・DB・認証・UI・deploy unit への影響はなく、本受領の `spec_impact=reflected` と正規 QA / approval は変更しない。
