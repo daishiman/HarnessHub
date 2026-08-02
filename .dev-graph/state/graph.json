@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1106,
+  "graph_revision": 1114,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321",
+        "evaluated_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T04:26:39Z",
+        "imported_at": "2026-08-02T05:37:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f573b23b5100d4157f90c9aa841af4b637b6ae6ef71968fb4ce762c621b90321",
+        "source_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T04:26:39Z"
+      "updated_at": "2026-08-02T05:40:02.373839Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "evaluated_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T05:37:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "source_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T05:41:06.531373Z"
     },
     {
       "acceptance": [
@@ -782,12 +782,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:06Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/acceptance-report.md",
+          "docs/features/feat-hub-foundation/release-notes.md",
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:06Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
@@ -844,15 +848,15 @@
         "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:27:46Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -863,7 +867,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:01:55.324015Z"
+      "updated_at": "2026-08-02T06:25:39.927001Z"
     },
     {
       "acceptance": [
@@ -893,12 +897,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:36Z",
+        "evidence_refs": [
+          "docs/features/feat-domain-model-db/acceptance-record.md",
+          "docs/features/feat-domain-model-db/evidence-summary.md",
+          "docs/features/feat-domain-model-db/release-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:36Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
@@ -956,15 +964,15 @@
         "UI"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-25T21:18:40Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -975,7 +983,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T21:18:40Z"
+      "updated_at": "2026-08-02T06:25:41.177574Z"
     },
     {
       "acceptance": [
@@ -3139,7 +3147,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -3151,7 +3159,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-02T05:46:07.491153Z"
     },
     {
       "acceptance": [
@@ -38874,12 +38882,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:42:33Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-02T03:42:33Z",
+        "source": "manual",
+        "status": "not_applicable"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38960,7 +38970,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "slo",
@@ -38973,7 +38983,7 @@
       "template_version": "1.0.0",
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:11:25.870970Z"
+      "updated_at": "2026-08-02T05:46:51.338346Z"
     },
     {
       "acceptance": [

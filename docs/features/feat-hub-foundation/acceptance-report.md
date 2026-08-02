@@ -21,11 +21,11 @@ measured_at: "2026-07-21"
 |---|---|---|---|
 | A1 CI が test→deploy を完走 | blocked | **合格（2026-07-25 / P13）** | main への push で run **[30143422049](https://github.com/daishiman/HarnessHub/actions/runs/30143422049)**（`ec0f3e45`）が 3 job すべて success。deploy job は `needs: [static-gates, test]` により両ゲート success を経由しなければ起動しないため、「同一 run 内で test → deploy が success」を満たす。証跡 `evidence/ci-run.md` §確定 run / `evidence/deploy-2026-07-25.json` |
 | A2 bundle 3MiB 以内 | 合格 | **合格（維持）** | 本番アップロード時の実測は gzip **1034.27 KiB（約 1.010 MiB）**。P07 時点の dry-run 実測 0.952 MiB より約 6% 大きいが、いずれも 3 MiB 予算内。CI の G5 ゲートも success |
-| A3 SLO 99.5% の計測と /health 稼働 | 部分達成（blocked） | **部分達成（観測は稼働・時間ゲート未了）** | `/health` は 2026-08-01 に HTTP 200・依存 3 件 ok を再確認。Better Stack の 4 資源と `CRON_HEARTBEAT_URL` は適用済み。**2026-08-01T12:07:18Z の公開 status page 実測（token 不要）で monitor は `operational` / 30 日 `availability: 0.988579` と確認**し、2026-07-28 の「monitor paused」判断は誤読と確定した（`not_monitored` は無データ日を指し、HTML アイコンは 30 日履歴の代表）。観測済みは **6 日 / 必要 30 日**、`slo-dashboard.json` は `collecting`。30 日到達後も Workers Analytics の 5xx 率が揃うまで pass にしない（§9 / qa-019）。**エラーバジェット運用の適用状況**: 観測済み窓での外形 downtime は `6312.31` 秒 ＝ 30 日許容 `12960` 秒に対し **48.7% 消費**で、警告閾値 70% / 凍結閾値 100% のいずれにも未達のため **発動中の措置なし**（`triggered_actions: []`）。証跡は [evidence/slo-observation.json](evidence/slo-observation.json)。フォローアップ `HarnessHub-37h.15` で追跡する |
+| A3 SLO 99.5% の計測と /health 稼働 | 部分達成（blocked） | **観測契約は維持・追跡は waived（免除）** | `/health` は 2026-08-01 に HTTP 200・依存 3 件 ok を再確認。Better Stack 公開実測は monitor `operational`、観測 **6 日 / 必要 30 日**、`collecting`、外形単独判定 `null`。Workers Analytics 5xx 率も未取得なので **99.5% 達成とは判定しない**。2026-08-02 のユーザー判断により `HarnessHub-37h.15` は `not_applicable` で閉じ、feature の delivery closure を block しない。qa-019 / qa-116 の目標・計測・70% 警告／100% 凍結は維持する。証跡: [evidence/slo-observation.json](evidence/slo-observation.json) / [closeout 受領書](feature-closeout-spec-reflection-receipt.md) |
 | A4 共通層の単一実装 | 条件付き合格 | **条件付き合格（維持）** | 実 consumer 未結線 5 層の状態は変わっていない（§2.1） |
 
 - A1 の証跡には限定条件がある。**deploy job のみ再実行しており、3 job を一度の連続実行で通したわけではない**（同一 sha に対する再実行のため検査対象コードは同一）。詳細は `evidence/ci-run.md` §証跡の性質。
-- **A3 が未達である以上、feature の acceptance 4 件は全件充足していない。** P13（デプロイ作業）は完了だが、それは epic `HarnessHub-37h` の完了を意味しない。
+- **A3 を PASS に変更していない。** ただし qa-123 で delivery closure と operational verdict を分離し、ユーザーが未完了観測の追加追跡を免除したため、P13 と epic `HarnessHub-37h` は closed とする。
 
 ## 1. 判定サマリ
 

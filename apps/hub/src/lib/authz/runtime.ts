@@ -18,10 +18,21 @@ import {
   createRepositoryContext,
   createTursoWebClient,
 } from '@harness-hub/db';
-import { type AuditSink, createAuditLogger, type RecordedAuditEvent } from '../../shared/audit/index.js';
+import {
+  type AuditLogger,
+  type AuditSink,
+  createAuditLogger,
+  type RecordedAuditEvent,
+} from '../../shared/audit/index.js';
 import { type AuthRouteHandler, createAuthjsHandler } from '../auth/adapter/index.js';
 import { createDbAuthPorts, createDbClientSecretResolver } from '../auth/db-ports.js';
 import { createDeviceFlowService, type DeviceFlowService } from '../auth/device-flow/index.js';
+import {
+  createGoogleOidcConnectionTester,
+  createOidcAdminService,
+  createUnavailableOidcAdminService,
+  type OidcAdminService,
+} from '../auth/oidc-admin/index.js';
 import type { AuthPorts, TenantOidcConnection } from '../auth/ports.js';
 import { readSharedGoogleCredentials } from '../auth/shared-credentials.js';
 import { createRevocationChecker } from './revocation.js';
@@ -47,6 +58,8 @@ export interface AuthRuntime {
   readonly deviceFlow: DeviceFlowService;
   /** `/api/auth/{tenant_slug}/{action}` の実処理。Auth.js 由来の型は出て来ない。 */
   readonly authRoute: AuthRouteHandler;
+  /** provider-admin 向け OIDC 接続管理 (issue-auth-tenancy-customer-managed-google-oidc-20260729)。 */
+  readonly oidcAdmin: OidcAdminService;
 }
 
 export interface AuthRuntimeInput {
@@ -62,12 +75,22 @@ export interface AuthRuntimeInput {
    * `credentialMode` で選ぶため。分岐の実体は `lib/auth/shared-credentials.ts` に閉じている。
    */
   readonly clientSecretFor: (connection: TenantOidcConnection) => Promise<string | null>;
+  /**
+   * OIDC 接続の管理サービスを作る関数。**省略可**にしてあるのは、認証・device flow だけを
+   * 検査する既存テストに repository 一式を用意させないため。省略時は全操作が例外になる実体が入る
+   * (`createUnavailableOidcAdminService`) — 未結線が「何も起きない成功」で隠れない。
+   *
+   * 実体ではなく関数で受けるのは、監査 logger を runtime 内の 1 個に揃えるため。
+   * 外で別の logger を作って渡すと、runtime 単位の監査という前提が静かに崩れる。
+   */
+  readonly oidcAdmin?: (audit: AuditLogger) => OidcAdminService;
 }
 
 export function createAuthRuntime(input: AuthRuntimeInput): AuthRuntime {
   const audit = createAuditLogger({ sink: input.auditSink });
 
   return {
+    oidcAdmin: input.oidcAdmin?.(audit) ?? createUnavailableOidcAdminService(),
     ports: input.ports,
     authz: {
       ports: input.ports,
@@ -215,6 +238,14 @@ export function createProductionAuthRuntime(source: Record<string, string | unde
     ports: createDbAuthPorts({ repositories, sharedGoogle }),
     auditSink: createDbAuditSink(repositories.audit),
     clientSecretFor: createDbClientSecretResolver({ repositories, sharedGoogle }),
+    // 接続テストは global fetch。Workers 側でも同じ実体なので差し替えない
+    oidcAdmin: (audit) =>
+      createOidcAdminService({
+        repositories,
+        audit,
+        canonicalOrigin: env.canonicalOrigin,
+        testConnection: createGoogleOidcConnectionTester(),
+      }),
     env,
   });
 }

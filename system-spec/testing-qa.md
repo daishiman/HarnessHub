@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-119 |
+| Web (web) | 確定 | 確定質疑: qa-130 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -23,6 +23,12 @@ serves_goals: [G1, G2, G5]
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-095 |
 
 ## 確定内容 (質疑録)
+
+### qa-130 (対応セル: web)
+
+**質問**: 顧客持ち込み Google OAuth 管理機能の品質保証を testing-qa.web の現行契約へどう追加しますか?
+
+**回答**: qa-119 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡契約を全面維持し、次を追加確定する。【実 DB 結合】libSQL と既存封筒暗号化を使い、pending/tested/active/disabled、無停止 rotation、取消、disabled 再登録、現行再テスト時刻、暗号文 CAS 競合、migration 0004 の旧 writer 互換を検査する。【認可・境界】provider-admin/workspace-admin/member/未認証、CSRF、tenant A/B 越境、Google 以外 issuer の非列挙・操作拒否を route test で固定する。【非露出】応答全文、監査 payload、DOM、エラー経路、repository secret scan に secret 全値が無いことを負例で確認する。【UI】実画面と同じ h1→h2→h3 骨格で axe-core の違反0、password/autocomplete、rotation の現行継続表示、Workspace ドメイン正規化を検査する。【ゲートと残余】pnpm verify、auth/tenant/secret/bundle/client-bundle、task plan/dev-graph/system-spec validator を PR 前に再実行する。Google 実 OAuth client による probe とブラウザ login、Playwright 実操作、production migration は repository test で代替せず残課題に明示する。
 
 ### qa-119 (対応セル: web)
 

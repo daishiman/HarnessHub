@@ -105,3 +105,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 一覧・詳細・Release 履歴の表示 cache は tenant/workspace/project key と一致する場合だけ描画する。
 - 同一 scope の `degraded` は直近表示を維持できるが、401/403/契約不正では `ErrorState` のみとし、以前の内容や install descriptor を描画しない。
 - 正本は [system-spec/frontend.md](../system-spec/frontend.md) の `qa-118`、セキュリティ境界は [security architecture](./harness-hub-security.md) を参照する。
+
+## 2026-08-02 顧客持ち込み Google OAuth 管理画面
+
+- `/settings/auth` は Google Console 側の手作業、Hub 登録、接続状態を順に表示し、
+  callback URL、scope、last4、現行/pending、最終テスト時刻を区別する。
+- client secret は password 入力に留め、送信後に state から消す。任意の Workspace domain は
+  カンマ/改行区切りを小文字化・空白除去・重複排除して API へ渡す。
+- 公開 enum だけを固定文言へ写し、未知 error・例外・入力値を画面へ流さない。
+  正本は [system-spec/frontend.md](../system-spec/frontend.md) の `qa-127`。

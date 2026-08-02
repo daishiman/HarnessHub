@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-120 |
+| Web (web) | 確定 | 確定質疑: qa-128 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,11 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-120 (対応セル: web)
+### qa-128 (対応セル: web)
 
-**質問**: main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?
+**質問**: 顧客持ち込み Google OAuth 管理面の秘密・認可・tenant 境界を security.web の現行防御契約へどう追加しますか?
 
-**回答**: ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。
-
-【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。
-
-【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。
-
-【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。
-
-【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。
+**回答**: qa-120 の共有 OAuth state/cookie/hd 防御、catalog cache 防御、既存 deny-by-default を全面維持し、顧客持ち込み管理面を追加確定する。【認可】read/change action は provider-admin のみ、状態変更は同一 origin、repository は全 read/write/decrypt に tenant_id を強制する。別 tenant の ID は存在を漏らさず、Google 専用 API は issuer を server 定数に固定し、別 issuer の ID 指定を拒否する。【秘密】client secret は要求 body→repository の封筒暗号化、または接続テスターへの短命引数だけを通る。応答型、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別子は last4 に限定する。共有方式の secret は tenant 行へ複製しない。【状態安全】未テスト credential、disabled、CAS 敗北、未知 mode、不正 domain JSON は fail-closed とし、active 以外を認証解決しない。rotation は現行値を保持した staging と原子的昇格により、失敗時の認証停止を防ぐ。【外部確認】不正 code probe は client credential の疎通確認に限定し、redirect URI の完全一致は Google の認可フローを使う実ブラウザ login で確認する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 
