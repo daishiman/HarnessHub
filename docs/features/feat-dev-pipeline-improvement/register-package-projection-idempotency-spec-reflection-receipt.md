@@ -97,7 +97,7 @@ receipt 不変条件の実装不足を直すもので、requirements / approval 
   artifact placement、300 行制限、plugin package、content review: PASS
 - C14 fresh live trial `20260802T101500Z-cvli-decompose-r7`: beads / none の両系列で PASS、
   behavior closure `5bfe6072…f06f069f`。C02/C03 の fresh live trial も現行 closure として保持した。
-- `git diff --check`: PASS（対象を stage し直した最終確認で実行する）。
+- `git diff --check`: PASS（対象を stage した後の最終確認済み）。
 
 `specs/` には製品仕様変更がないため反映しない判断を再確認した。これは「未反映」ではなく、
 第 5 節のスコープ判定どおりの正規反映である。
