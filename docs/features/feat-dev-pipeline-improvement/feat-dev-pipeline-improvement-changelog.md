@@ -201,3 +201,14 @@ close した。
 - `guard-graph-schema.py` 本体の遮断ロジックは非変更。仕様影響は開発品質ゲートのテスト検証方法に限定され、
   [仕様反映受領書](5iuq-guard-latency-proxy-metric-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+## 2026-08-01 追記: `bd-bridge.py` と mfh7 実測ログの責務分割
+
+- `HarnessHub-w7n7` で `bd-bridge.py` の CLI / receipt を残し、判定ロジックを
+  `contracts` / `graph` / `projection` / `audit` の四 module へ分離した。
+- 既存 private symbol と `bd` / `git` monkeypatch 境界を adapter で維持し、
+  Beads mutation の単一チョークポイントは変更していない。
+- mfh7 文書は課題定義 130 行と時系列実測ログ 422 行に分け、全手書き対象を
+  500 行以下へ収束させた。
+- 仕様・設計反映と検証結果は
+  [仕様反映受領書](w7n7-bd-bridge-split-spec-reflection-receipt.md) を正とする。

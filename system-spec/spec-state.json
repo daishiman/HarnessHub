@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-111",
+        "qa_ref": "qa-120",
         "serves_goals": [
           "G4",
           "G5"
@@ -280,7 +280,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-062",
+        "qa_ref": "qa-118",
         "serves_goals": [
           "G1",
           "G2",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-117",
+        "qa_ref": "qa-121",
         "serves_goals": [
           "G1",
           "G2",
@@ -1009,8 +1009,28 @@
     },
     {
       "id": "qa-117",
+      "question": "認証済みの dual catalog で取得済みデータを再利用する場合、認可失敗とテナント切替をまたいだ情報露出をどう防ぎますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-104 までの deny-by-default、tenant/workspace/role、CSRF、監査、credential 境界を全面維持し、dual catalog の cache 境界を次のとおり追加確定する。\n\n【1. 認可失敗時の表示】catalog 一覧・詳細・Release 履歴は、同じ画面で以前の取得に成功していても、最新応答が 401、403、または契約不正を示した時点で以前の内容を描画しない。Hub 到達不能・404・408・429・5xx の degraded と、現在の主体に閲覧権限が無い unauthorized/forbidden/fatal を同じ stale 表示へ倒さない。\n\n【2. scope 束縛】閲覧用 cache は tenant_id、workspace_id、および対象 project_id に束縛する。tenant/workspace/project が切り替わった場合、新 scope の取得が degraded でも旧 scope の一覧・詳細・履歴を再利用しない。同一 scope の degraded に限り、直近の認可済み表示と install descriptor のコピーを維持できる。\n\n【3. marketplace 応答 cache】`/marketplace.json` は `withAuthz` と tenant/workspace resource 解決を通る認証済み応答であるため、共有 cache を許可しない。`Cache-Control` は private の短い max-age と stale-while-revalidate を使い、`Vary` に Cookie、tenant header、workspace header を含める。これにより同一 session/scope の停止時継続性を保ちつつ、CDN や別 scope への再配信を拒否する。\n\n【4. 検証】成功後の 403 で一覧・詳細・履歴が消えること、同一 scope の 503 では stale を保つこと、scope 切替後の 503 では旧 tenant の内容が出ないこと、marketplace が private/Vary を返すことを自動テストで固定する。\n\n【5. 所有境界】role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、catalog client に認可規則を複製しない。本追補は既存の server-side 認可を弱めず、表示 cache と応答 cache の漏えい窓を閉じる。"
+    },
+    {
+      "id": "qa-118",
+      "question": "dual catalog の縮退表示と一覧絞り込みを、既存 frontend.web 契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-062 の画面構成、install descriptor、publish polling、レスポンシブ、共通部品、認可出し分けを全面維持し、dual catalog の差分を次のとおり追加確定する。\n\n【1. 縮退と認可の表示境界】`/catalog`、`/catalog/:projectId`、`/catalog/releases` は同一 tenant/workspace の 5xx 等では DegradedBanner と直近の認可済みデータを併記できる。一方 401/403/契約不正では ErrorState のみを表示し、以前の行、詳細、install descriptor、Release 履歴を描画しない。scope が変わった場合は新 scope の応答が返る前から旧 scope の内容を表示対象外にする。\n\n【2. 一覧絞り込み】種別・キーワードは入力中の draft 値と適用済み query を分ける。初回に 1 回取得し、入力だけでは通信せず「絞り込む」の submit ごとに 1 回だけ取得する。同一条件の明示的な再 submit は再取得できる。\n\n【3. Hub 停止時の継続性】stale 表示を許すのは同一 scope で認可済みだった閲覧データに限定する。導入済み Skill 自体の実行経路は Hub に依存せず、UI は新規変更操作を無効化して直近 descriptor のコピーだけを維持する既存 §6.1 契約を保つ。\n\n【4. 境界】PublishRequest 状態機械、catalog API 実装、role 判定はそれぞれ既存 owner のままとし、frontend は port の失敗分類と capability を描画へ適用するだけとする。"
+    },
+    {
+      "id": "qa-119",
+      "question": "dual catalog の認可 cache 境界と絞り込み要求数を、既存 testing-qa.web 契約へどう追加しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-109 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡の契約を全面維持し、dual catalog の検証束を追加確定する。\n\n【1. 認可 cache 回帰】成功応答を描画した後に 403 を返す順序付きテストを一覧・詳細・Release 履歴へ置き、以前の内容と table が消えることを検査する。初期詳細を渡した経路も 403 後に消えることを含める。\n\n【2. scope と縮退の直積】同一 scope の成功→503 では DegradedBanner と以前の内容を維持し、tenant/workspace 切替の成功→503 では旧 tenant の識別可能な内容が 0 件であることを検査する。HTTP adapter の全 request が tenant/workspace header を送る既存検査と組み合わせる。\n\n【3. 配布応答】認証済み `/marketplace.json` が private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を返すことを route test で固定し、public cache への退行を拒否する。\n\n【4. 通信回数】一覧のキーワード入力中は request 数が増えず、submit で 1 回だけ増え、適用 query が送られることを component test で固定する。\n\n【5. CI と未実測境界】catalog 固有 Vitest は GitHub Actions から fail-closed に到達させ、axe 違反 0 と bundle 予算を維持する。production URL 上の LCP/INP/CLS と 2 社同時運用は repository test で代替せず P13 の外部実測として未完了を明示する。"
+    },
+    {
+      "id": "qa-120",
+      "question": "main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?",
+      "answer": "ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。\n\n【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。\n\n【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。\n\n【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。\n\n【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。"
+    },
+    {
+      "id": "qa-121",
       "question": "system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?",
-      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。\n\n【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。\n\n【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。\n\n【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。\n\n【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。"
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。\n\n【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。\n\n【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。\n\n【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。\n\n【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。"
     }
   ],
   "approval_log": [
@@ -1096,7 +1116,7 @@
     },
     {
       "id": "appr-022",
-      "note": "ユーザーの 2026-08-02 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-ji8y / issue-task-spec-validate-command-unrunnable-20260725 の C12 世代非依存 rerun command と contract 1.3.0 の fail-closed 検証を qa-117 として testing-qa.web へ反映する。"
+      "note": "ユーザーの 2026-08-02 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-ji8y / issue-task-spec-validate-command-unrunnable-20260725 の C12 世代非依存 rerun command と contract 1.3.0 の fail-closed 検証を qa-121 として testing-qa.web へ反映する。"
     }
   ],
   "reopen_log": [
@@ -1929,9 +1949,33 @@
       "from": "確定"
     },
     {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-110 is re-keyed to qa-117 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-111 is re-keyed to qa-118 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
       "category": "testing-qa",
       "platform": "web",
-      "reason": "HarnessHub-ji8y の実装で task spec C12 再検証コマンドの lifecycle 分離と contract 1.3.0 fail-closed gate が確定したため、既存 testing-qa.web 契約を保持して qa-117 を追補する",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-112 is re-keyed to qa-119 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: qa-111 shared Google OAuth and qa-117 dual catalog cache are both confirmed and require one current security.web integration anchor",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "HarnessHub-ji8y の実装で task spec C12 再検証コマンドの lifecycle 分離と contract 1.3.0 fail-closed gate が確定したため、main の qa-119 testing-qa.web 契約を保持して qa-121 を追補する",
       "from": "確定"
     }
   ],

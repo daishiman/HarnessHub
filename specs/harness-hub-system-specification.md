@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T03:09:19.394535Z"
+updated_at: "2026-08-02T03:21:38.748405Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"fe8e646f22bc898c622f6600721c0a89c9c6d1309487c88f42f8465253113eb1","evaluator":"validate-coverage-matrix.py","evidence_ref":"docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-02T03:05:11Z","origin_kind":"system-spec-harness","source_digest":"fe8e646f22bc898c622f6600721c0a89c9c6d1309487c88f42f8465253113eb1","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"2ec2154bc1b97816741280eb14cf0ac11adacec2925c6cfb069e83fc53bac387","evaluator":"validate-coverage-matrix.py","evidence_ref":"docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-02T03:17:38Z","origin_kind":"system-spec-harness","source_digest":"2ec2154bc1b97816741280eb14cf0ac11adacec2925c6cfb069e83fc53bac387","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -56,8 +56,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
 - [system-spec/index.md](../system-spec/index.md) (sha256: `58d85cb5ff4c828f…`)
 
-- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（qa-117 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `fe8e646f22bc898c…`）
-- 取込日時: 2026-08-02T03:05:11Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（qa-121 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `2ec2154bc1b97816…`）
+- 取込日時: 2026-08-02T03:17:38Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -397,6 +397,17 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
+**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
+
+- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
+  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
+- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
+  `architecture/harness-hub-dev-workflow.md`、判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+  とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
@@ -408,7 +419,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 30 日到達後も Workers Analytics の 5xx 率が揃うまで最終判定を保留し、qa-019 の 99.5%／70% 警告／100% 変更凍結を変更しない。
 - 共有 Google OAuth client を含む製品 API、DB schema、認証認可、UI、Cloudflare deploy unit に変更はない。正本は [infrastructure](../system-spec/infrastructure.md)、反映経路と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
 
-## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-117)
+## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-121)
 
 - promotion 前は system-dev-planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。
 - contract 1.3.0 は、task spec の fenced/inline code にある `--staging`、`--feature-package` 欠落、別 package id を fail-closed に拒否する。backtick/tilde fence、行継続、未閉じ fence も検査し、散文はコマンドと誤認しない。

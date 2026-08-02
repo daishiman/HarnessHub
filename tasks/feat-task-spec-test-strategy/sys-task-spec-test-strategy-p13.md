@@ -209,7 +209,7 @@ This section is the current source closure and supersedes older counts or wordin
 ## 参照情報
 
 - goal-spec: goal-spec.json (parent_feature=feat-task-spec-test-strategy, feature_context_digest=sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7)
-- 仕様正本: system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080/qa-117 (テスト戦略必須化と世代非依存 rerun command)
+- 仕様正本: system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080/qa-121 (テスト戦略必須化と世代非依存 rerun command)
 - trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.
 
 ## 依存

@@ -10,7 +10,7 @@ C12 検証コマンドを、promotion（生成物を正式版へ昇格する処�
 
 ## 結論
 
-仕様・設計影響は **あり**。確定仕様を `testing-qa.web` の qa-117 として
+仕様・設計影響は **あり**。確定仕様を `testing-qa.web` の qa-121 として
 reopen → re-confirm し、task spec contract 1.3.0 に世代非依存 rerun command の
 fail-closed gate（条件を確認できなければ失敗にする検査）を追加した。
 
@@ -34,7 +34,7 @@ fail-closed gate（条件を確認できなければ失敗にする検査）を�
 
 ## 正規フローの受領
 
-- 仕様正本: `system-spec/spec-state.json` に `qa-117` / `appr-022` を単一 writer の
+- 仕様正本: `system-spec/spec-state.json` に `qa-121` / `appr-022` を単一 writer の
   `apply-spec-transition.py` で記録し、`system-spec/testing-qa.md` を compiler で再生成した。
 - 統合仕様: `specs/harness-hub-system-specification.md` に lifecycle、互換性、影響境界を反映した。
 - 設計: `architecture/harness-hub-testing-qa.md` に current pointer 解決と versioned contract を反映した。
@@ -59,5 +59,5 @@ system-spec / dev-graph / 文書 lint、repository CI gate がすべて PASS し
 - Beads ID: `HarnessHub-ji8y`
 - dev-graph node ID: `issue-task-spec-validate-command-unrunnable-20260725`
 - feature package: `feature-package/feat-task-spec-test-strategy`
-- specification: `qa-117`
+- specification: `qa-121`
 - approval: `appr-022`

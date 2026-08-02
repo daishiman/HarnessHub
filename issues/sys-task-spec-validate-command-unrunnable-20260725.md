@@ -12,14 +12,13 @@ iteration: null
 title: "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能"
 owners: ["daishiman"]
 created_at: "2026-07-25T13:00:00Z"
-updated_at: "2026-08-02T03:01:38.139216Z"
+updated_at: "2026-08-02T03:20:01.245542Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-task-spec-test-strategy"]
 resource_scope: ["architecture/harness-hub-testing-qa.md","docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md","features/feat-task-spec-test-strategy.md","issues/sys-task-spec-validate-command-unrunnable-20260725.md","plugin-plans/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/agents/system-dev-plan-architect.md","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","plugins/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/scripts/validate-task-spec-contract.py","plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md","plugins/system-dev-planner/tests/test_task_spec_rerun_command.py","plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py","specs/harness-hub-system-specification.md","system-spec/spec-state.json","system-spec/testing-qa.md","tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"]
 purpose: "task spec に書かれた検証手順を promotion 後も無改変で再実行できるようにし、別 package を誤検証した成功を防ぐ"
 goal: "新規 task spec の validate-system-plan 再実行コマンドが自 package の current pointer を使う世代非依存形になり、C12 が不正形を promotion 前に fail-closed で拒否する状態"
-mvp_alignment: null
 scope_in: ["R3-emit prompt と task spec template の再実行コマンド契約","C12 契約 v1.3.0 と staging・欠落・package 不一致の検査","旧 promoted package の digest 不変性と契約 version 免除","CommonMark backtick/tilde fence と inline code span の回帰検査"]
 scope_out: ["既に promoted 済み task spec 本文の遡及書き換え","promotion 前の C12 staging 検証入口の廃止","P01..P13 exact-13 と 13-node DAG 契約の変更"]
 acceptance: ["R3-emit と正本 template が promotion 後の再実行に --feature-package <自 package id> を要求し --staging を書かない","C12 契約 1.3.0 が --staging・--feature-package 欠落・他 package id を fenced/inline command から fail-closed で拒否する","promotion 前は C12 が --staging <実 generation path> を検証し、promotion 後は task spec の --feature-package が current pointer から同 package を検証する lifecycle 境界が証跡化される","1.2.0 以前に promote 済み package の canonical digest と再検証結果が不変である"]
@@ -33,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "draft"
 evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
-source_lineage: {"imported_at":"2026-07-25T13:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
+source_lineage: {"imported_at":"2026-07-23T13:51:02Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.98
 classification_reason: "feat-task-spec-test-strategy P10 の D-2 で実測された生成側欠陥を C12 promotion gate まで含めて解消する follow-up issue"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-task-spec-validate-command-unrunnable-20260725.md","confidence":0.98}]
