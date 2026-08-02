@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-122 |
+| Web (web) | 確定 | 確定質疑: qa-138 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
@@ -24,9 +24,9 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-122 (対応セル: web)
+### qa-138 (対応セル: web)
 
-**質問**: qa-096 の開発品質契約を情報欠落なく維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web の自己完結した現行契約としてどう確定しますか?
+**質問**: C10/C11/C28 の最終レビューで、Dev Graph と Beads の正本を守る契約をどのように確定しますか？
 
 **回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。
 
@@ -49,6 +49,16 @@ serves_goals: [G1, G4, G5]
 【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。
 
 【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。
+
+【11. C10 の事前遮断】inline Python 変数で組み立てた canonical graph/config path と、改行で区切られた shell segment を独立して判定する。command 文字列だけで確定できる write は実行前に遮断する。
+
+【12. script-file 実行後監査】script file の完全な意味解析を C10 へ集中させず、PostToolUse 監査が canonical file の size・mtime・ctime・digest・revision・exact-4-key envelope を確認する。confirmed drift と初回 invalid state は clean baseline に昇格させず、VCS rollback の advisory は shell segment が git 操作だけの場合に限定する。
+
+【13. C11 exact envelope】C02 build、C11 validator、PostToolUse 監査は shared module の exact-4-key envelope 定義を共有し、余剰 key と欠落 key を同じ基準で拒否する。
+
+【14. C28 の継承】最新 main で確定済みの正規 bridge 契約を継承し、公開 `--labels` を replacement 型の `bd --set-labels` へ転送し、priority・assignee とともに direct `bd update` を経由せず更新する。今回の branch では重複実装せず、main 統合後の契約と回帰試験を検証対象に含める。
+
+【15. 今回の製品境界】追加契約は repository 内の Dev Graph authority、Beads mutation、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-088 (対応セル: desktop-windows)
 

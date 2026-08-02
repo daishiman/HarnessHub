@@ -220,3 +220,22 @@ CI blocking invocation を local hard gate または理由付き exact allowlist
 是正は閾値の引き上げを採らず、契約を直接測る構造検査へ置き換えた。遮断対象コマンドが `context_ok()` (repository context 解決。唯一 subprocess を起動する後段) へ到達しないことを `monkeypatch` で直接検証し、本体 repo (大きい graph) と空 repo の双方で成立することを固定した。陽性対照 (`echo safe` が `context_ok()` へ進み、trap が発火する) を添えて、判定ロジックの空振りを排除している。実プロセスでの exit-2 smoke test は維持し、遮断そのものの実測は残した。
 
 対象は `plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py` の 1 ファイルに限定され、`guard-graph-schema.py` の遮断ロジックは変更していない。製品 API・state・security・UI の契約は非変更のため `system-spec/`・`specs/` は非変更。検証は focused file 3 回連続 48 passed/2 skipped、`plugins/dev-graph/tests` 全体 pytest-xdist 721 passed/2 skipped、`make lint` / `plugin-package-check` PASS。判断と検証の全量は [仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/5iuq-guard-latency-proxy-metric-spec-reflection.md) を正とする。
+
+### 差分追記 (2026-08-02): C10/C11/C28 authority 防御の責務分担
+
+出典: system-spec `qa-135` / `appr-027`、bd `HarnessHub-kzth` / `HarnessHub-f84o` /
+`HarnessHub-l1ru` / `HarnessHub-dc7`。
+
+C10 は command 文字列上で確定できる直接・inline 変数経由の graph/config 書込みを、
+repository read や subprocess を使わず拒否する。script file の全意味解析は担当せず、
+実行後の authority drift 監査が stat/digest/revision/envelope の変化を検出する。
+confirmed drift は clean baseline へ昇格させず、C02/C28 など正規 writer による修復まで
+繰り返し通知する。初回でも壊れた JSON/envelope は baseline に採用しない。VCS rollback の
+advisory 緩和は shell segment 全体が git 操作だけの場合に限定し、非 git writer が混在する
+command は confirmed のままとする。
+
+C11 は C02 build・事後監査と共有する exact-4-key envelope を正とし、canonical store
+では余剰・欠落 key を拒否する。最新 main の C28 bridge は priority/assignee/labels を扱い、
+公開 `--labels` を冪等（何回実行しても同じ結果になる性質）な `bd --set-labels` へ転送する。詳細な受入条件、
+仕様反映、500 行例外は [仕様反映受領書](guard-authority-c10-c11-c28-spec-reflection-receipt.md)
+を正とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。

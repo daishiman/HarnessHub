@@ -1,0 +1,55 @@
+{
+  "verifier": "independent-agent",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "verdict": "PASS",
+  "observations": [
+    {
+      "id": 1,
+      "text": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "verdict": "PASS",
+      "evidence": [
+        "plugins/system-spec-harness/.claude-plugin/plugin.json exists at repo level with version=0.1.0 (>=0.1.0 <1.0.0 satisfied)",
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl confirms 3 subagent Task dispatches (hearing-auditor, doc-freshness-auditor, matrix-auditor) within the fixture session 490e541e-acdd-4229-b214-3bccafdde494",
+        "system-spec/spec-state.json matrix: 48 total cells = 8 confirmed + 40 excluded, 0 uncollected (no \u672a\u53ce\u96c6)",
+        "system-spec/completeness-report.json verdict=PASS with all 6 aspects (foundation_trace, decision_guidance, matrix_coverage, design_knowledge_reflection, doc_freshness, prompt_quality) each PASS",
+        "system-spec/index.md exists with 8 category chapters (database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops) + requirements definition (00-requirements-definition.md)"
+      ],
+      "blocker": null
+    },
+    {
+      "id": 2,
+      "text": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "verdict": "PASS",
+      "evidence": [
+        ".dev-graph/state/graph.json has nodes spec-local-todo-rest-api (artifact_kind=specification) and arch-local-todo-rest-api (artifact_kind=architecture)",
+        "spec-local-todo-rest-api source_lineage: origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=eval-log/node-bodies/specification.md, source_version=0.1.0, source_digest=6946daffa3202f67ae2b440fe0af00326d47ce7e7afeca98dfc74e05c2ee1105, imported_at=2026-08-02T07:33:59Z -- all 6 fields present and non-null",
+        "arch-local-todo-rest-api source_lineage: origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=eval-log/node-bodies/architecture.md, source_version=0.1.0, source_digest=880884cda9a1959d1b982f87a2d817fa45496baa6b816c509d8e46af91af909d, imported_at=2026-08-02T07:33:59Z -- all 6 fields present and non-null",
+        "Recomputed sha256(eval-log/node-bodies/specification.md) = 6946daffa3202f67ae2b440fe0af00326d47ce7e7afeca98dfc74e05c2ee1105 matches recorded source_digest",
+        "Recomputed sha256(eval-log/node-bodies/architecture.md) = 880884cda9a1959d1b982f87a2d817fa45496baa6b816c509d8e46af91af909d matches recorded source_digest",
+        "Both nodes confirmation_status=confirmed, evidence_ref=system-spec/completeness-report.json which exists at that path"
+      ],
+      "blocker": null
+    },
+    {
+      "id": 3,
+      "text": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "verdict": "PASS",
+      "evidence": [
+        "graph_revision=2 (exactly 2 nodes registered)",
+        "Grep for 'apply.spec.transition|apply_spec_transition' in plugins/dev-graph/ found only 1 hit in tests/fixtures/live_trial_shapes/shape_system_spec.py (line 23, docstring comment) -- no actual transition writer implementation",
+        "Grep for 'compile.spec.doc|compile_spec_doc' in plugins/dev-graph/ found only 1 hit in tests/fixtures/live_trial_shapes/shape_system_spec.py (line 61, inline comment) -- no compile logic implementation"
+      ],
+      "blocker": null
+    }
+  ],
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "eval-log/run-dev-graph-system-spec-goal-spec.json exists with original_goal and original_goal_hash fields present",
+      "original_goal_hash=30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454 matches recomputed sha256(original_goal.encode('utf-8'))=30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454",
+      "eval-log/run-dev-graph-system-spec-intermediate.jsonl has exactly 2 lines, each with all 6 required keys (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal)",
+      "eval-log/run-dev-graph-system-spec-progress.json registered_this_run=[spec-local-todo-rest-api, arch-local-todo-rest-api] -- both node ids present"
+    ],
+    "blocker": null
+  }
+}

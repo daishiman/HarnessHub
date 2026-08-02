@@ -293,19 +293,25 @@ def test_write_denial_names_the_actual_protected_scope(guard, monkeypatch, capsy
     assert guard.main() == 0, capsys.readouterr().err
 
 
-# TODO(human): 下の 3 形は redirect 境界のうちまだ分類を決めていないものです。
-#   実挙動を確かめたうえで、遮断すべきものを BOUNDARY_MUST_BLOCK へ、通すべきものを
-#   BOUNDARY_MUST_PASS へ振り分けてください (両方空のままでも suite は緑のままです)。
-#     (a) 'python3 build-repo-config.py --repo-root "$ROOT" --stdin > .dev-graph/tmp/receipt.json'
-#         writer の receipt を .dev-graph/tmp/ へ落とす。tmp/ は再生成可能で graph authority の
-#         保護対象外だが、宛先は .dev-graph/ 配下である。
-#     (b) 'jq . .dev-graph/state/graph.json > .dev-graph/cache/pretty.json'
-#         cache/ への派生物生成。source は保護 path、宛先は保護外。
-#     (c) 'git checkout -- .dev-graph/state/graph.json'
-#         redirect ではないが graph を過去 revision へ巻き戻す。C02 の revision 単調増加を
-#         迂回する書込みと見るか、VCS 操作として guard の管轄外と見るか。
-BOUNDARY_MUST_BLOCK: list[str] = []
-BOUNDARY_MUST_PASS: list[str] = []
+# redirect 境界の分類。判定軸は「宛先が graph authority か」の一点に置く。source が保護 path
+# であることや、`.dev-graph/` 配下であることを理由に遮断すると、保護外の tmp/ cache/ を使う
+# 正規手順まで塞がれ、遮断された agent が別の迂回を探す (6in4 の fail-open が起きた局面)。
+#
+#   (a) writer receipt を `.dev-graph/tmp/` へ落とす。tmp/ は再生成可能で保護対象外であり、
+#       run-dev-graph-init が config draft の置き場として使う正規手順そのもの → PASS。
+#   (b) `cache/` への派生物生成。source は保護 path だが読取りに過ぎず、宛先は保護外 → PASS。
+#       source を理由に遮断すると graph の閲覧・整形が一切できなくなる。
+#   (c) `git checkout --` は redirect ではないが、graph を過去 revision へ巻き戻す書込みで
+#       あり、C02 の graph_revision 単調増加を迂回する → BLOCK。VCS 操作だから管轄外とは
+#       しない。guard が見るのは「誰が書くか」ではなく「authority が正規 writer 以外の手で
+#       書き換わるか」であり、checkout はその条件を満たす。
+BOUNDARY_MUST_BLOCK: list[str] = [
+    "git checkout -- .dev-graph/state/graph.json",
+]
+BOUNDARY_MUST_PASS: list[str] = [
+    'python3 build-repo-config.py --repo-root "$ROOT" --stdin > .dev-graph/tmp/receipt.json',
+    "jq . .dev-graph/state/graph.json > .dev-graph/cache/pretty.json",
+]
 
 
 @pytest.mark.parametrize("command", BOUNDARY_MUST_BLOCK)
@@ -316,3 +322,98 @@ def test_boundary_cases_classified_as_writes_are_blocked(guard, command):
 @pytest.mark.parametrize("command", BOUNDARY_MUST_PASS)
 def test_boundary_cases_classified_as_reads_pass(guard, command):
     assert guard.destructive_graph_or_schema_operation(command) is False, command
+
+
+# HarnessHub-f84o: path や mode を一度変数へ束ねてから書込む形は、字面一致だけを見る旧実装で
+# 素通りした。遮断判定はコマンド文字列の中で閉じている代入を畳んでから行う。畳めるのは
+# literal・Path()/os.path.join()・f-string・`+` 連結までで、実行時にしか値が定まらないもの
+# (関数戻り値・環境変数・argv) は畳まない = ALLOW となる。そこは C10 の遮断範囲の外であり、
+# PostToolUse の audit-graph-authority-drift.py が事後に拾う (HarnessHub-kzth)。
+VARIABLE_WRITE_MUST_BLOCK = [
+    "python3 -c \"p='.dev-graph/state/graph.json'; open(p,'w').write('{}')\"",
+    "python3 -c \"from pathlib import Path; p = Path('.dev-graph') / 'state' / 'graph.json'; p.write_text('{}')\"",
+    "python3 -c \"import pathlib; p = pathlib.Path('.dev-graph', 'config.json'); p.write_text('{}')\"",
+    "python3 -c \"import os; p = os.path.join('.dev-graph', 'config.json'); open(p, 'w')\"",
+    "python3 -c \"root='.dev-graph'; p=f'{root}/state/graph.json'; open(p,'w')\"",
+    "python3 -c \"p='.dev-graph' + '/state/graph.json'; open(p,'w')\"",
+    # mode 側だけを変数に逃がす形。path が literal でも write verb が読めなくなる。
+    "python3 -c \"p='.dev-graph/state/graph.json'; m='w'; open(p, m)\"",
+    # 2 段の後方参照 (d -> p)。
+    "python3 -c \"d='.dev-graph/state'; p=d+'/graph.json'; Path(p).write_text('{}')\"",
+]
+
+VARIABLE_MUST_ALLOW = [
+    # 変数を畳んでも読取りのままのもの。
+    "python3 -c \"p='.dev-graph/state/graph.json'; print(open(p).read())\"",
+    "python3 -c \"p='.dev-graph/state/graph.json'; open(p,'r')\"",
+    # 畳んだ先が保護対象外。
+    "python3 -c \"p='docs/notes.md'; open(p,'w')\"",
+    # 実行時決定値は畳めない。ここは C10 の遮断範囲外であることを明示的に固定する。
+    "python3 -c \"p=compute_path(); open(p,'w')\"",
+    "python3 -c \"p=os.environ['GRAPH']; open(p,'w')\"",
+]
+
+
+@pytest.mark.parametrize("command", VARIABLE_WRITE_MUST_BLOCK)
+def test_variable_bound_paths_and_modes_are_resolved_before_deciding(guard, command):
+    assert guard.interpreter_writes_graph_authority(command) is True, command
+
+
+@pytest.mark.parametrize("command", VARIABLE_MUST_ALLOW)
+def test_variable_resolution_does_not_over_block(guard, command):
+    assert guard.interpreter_writes_graph_authority(command) is False, command
+
+
+def test_script_file_indirection_is_outside_the_pretooluse_blocking_range(guard):
+    """書込みを別 script file へ移した形は C10 では遮断できない (HarnessHub-kzth)。
+
+    これは欠陥ではなく遮断範囲の上限である。「interpreter 起動 x 書込み動詞 x authority
+    path」の共起がコマンド文字列上で 1 つも成立しないため、遮断するには script の中身を
+    読む必要があり、それは本 test file が固定している遮断時間契約 (subprocess/file I/O を
+    遮断経路に置かない) を破る。範囲外であることを test で明示しておかないと、後続の実装が
+    「C10 があるから graph authority は保護されている」と誤読する。事後検出は PostToolUse の
+    audit-graph-authority-drift.py が担う。
+    """
+    for command in (
+        "python3 tools/writer.py",
+        "python3 tools/writer.py .dev-graph/state/graph.json",
+        "bash tools/writer.sh",
+    ):
+        assert guard.interpreter_writes_graph_authority(command) is False, command
+        assert guard.destructive_graph_or_schema_operation(command) is False, command
+
+
+# HarnessHub-l1ru: `_mutating_operands` はセグメント分割に改行を含める。`_pipelines` が既に
+# 改行で分割しているのに片方だけ分割しないと、先頭行の `git restore` が後続行のトークンまで
+# 自分の operand として吸収し、保護外 path の復元だけのコマンドが誤って BLOCK になる。
+NEWLINE_SEGMENTS_MUST_PASS = [
+    "git restore eval-log/harness-coverage.json\ngit add docs/foo.md\ngit status",
+    "git restore eval-log/x.json && git add docs/foo.md",
+]
+
+NEWLINE_SEGMENTS_MUST_BLOCK = [
+    "git restore docs/foo.md",
+    "git restore eval-log/x.json\ngit restore .dev-graph/state/graph.json",
+]
+
+
+@pytest.mark.parametrize("command", NEWLINE_SEGMENTS_MUST_PASS)
+def test_newline_joined_commands_do_not_absorb_later_operands(guard, command):
+    assert guard.destructive_graph_or_schema_operation(command) is False, command
+
+
+@pytest.mark.parametrize("command", NEWLINE_SEGMENTS_MUST_BLOCK)
+def test_newline_split_still_blocks_protected_operands_in_any_segment(guard, command):
+    assert guard.destructive_graph_or_schema_operation(command) is True, command
+
+
+def test_mutating_operands_and_pipelines_split_on_the_same_separators():
+    """分割規則の非対称そのものを固定する (症状ではなく原因側の契約)。
+
+    l1ru の再発は「片方の分割規則だけ直す」形で起きる。個別コマンドの期待値だけを test に
+    置くと、次に別の区切り文字が追加されたときに同じ非対称が復活する。
+    """
+    module = load(PLUGIN / "hooks" / "guard_graph_commands.py", "guard_commands_split")
+    command = "git restore eval-log/x.json\ngit add docs/foo.md"
+    assert module._mutating_operands(command) == ["eval-log/x.json"]
+    assert len(module._pipelines(command)) == len(command.split("\n"))

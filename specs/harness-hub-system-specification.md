@@ -384,7 +384,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
 - 反映先と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
 
-**開発管理の実装反映 (2026-08-02 / `HarnessHub-dc7`)**: Beads の `priority`、`assignee`、`labels` は graph parity 対象外のまま、書込経路を `bd-bridge.py` に一本化した。guard の直接更新遮断、置換型 labels、共通 priority 正規化を維持し、製品 API・DB・認証認可・UI・deploy unit・確定済み QA 回答は変更しない。正本は `system-spec/dev-workflow.md`、設計と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md) とする。
+**Dev Graph / Beads authority 追補**: C10・C11・C28 と PostToolUse 監査の詳細は、
+[Dev Graph authority 追補](harness-hub-dev-graph-authority-addendum.md) を正とする。
 
 **P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
 
@@ -413,17 +414,6 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   session 専用の提出契約を**本番実挙動として観測する**手段を追加する差分である。
   他 tenant の header を騙る負例は、資源の存在を伏せる既存契約どおり `404 tenant_mismatch`
   を期待し、`403` への退行も検出する。
-
-**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
-
-- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
-  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
-- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
-  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
-- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
-  `architecture/harness-hub-dev-workflow.md`、判断と検証は
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
-  とする。
 
 ## 未決事項
 

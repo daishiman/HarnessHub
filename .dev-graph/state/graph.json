@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1156,
+  "graph_revision": 1157,
   "nodes": [
     {
       "acceptance": [
@@ -12999,9 +12999,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
-        "evaluator": "codex-final-review + merge-reconciliation",
-        "evidence_ref": "system-spec/dev-workflow.md"
+        "evaluated_digest": "b905443a8fd044f4d2db611ef22bd4fced2080bc328bf07b8f4402cdffe564fa",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13020,7 +13020,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-135 の確定内容に適合し、C10/C11/PostToolUse の三層 authority 防御、C02 document parity、C28 mutation、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -13037,7 +13037,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C10/C11/C28 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13056,9 +13056,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T05:27:08Z",
+        "imported_at": "2026-08-02T12:13:53Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
+        "source_digest": "ad50d08c1e88c61635e659910ca5e5e03da89bb332baf2294806151c0e8e3523",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13074,7 +13074,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T05:27:08Z"
+      "updated_at": "2026-08-02T12:13:53Z"
     },
     {
       "acceptance": [
@@ -46763,6 +46763,127 @@
       "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
       "updated_at": "2026-08-02T12:47:00Z"
+    },
+    {
+      "acceptance": [
+        "inline path と改行 segment の直接書込みを C10 が拒否する",
+        "script-file drift と初回 invalid state を PostToolUse が fail-closed に検出する",
+        "C02・C11・監査が同じ exact-4-key envelope を使う",
+        "C28 が Beads 自由フィールドを正規 bridge 経由で更新する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-dev-graph-authority-addendum.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-dev-workflow.md",
+          "confidence": 0.64
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "qa-135 の Dev Graph / Beads authority 契約を aggregate から 500 行制限に従って分冊する仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b905443a8fd044f4d2db611ef22bd4fced2080bc328bf07b8f4402cdffe564fa",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-02T11:56:44Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-dev-graph-authority-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-135 の C10/C11/C28 authority 契約と実装・品質証拠を一つの追跡可能な仕様境界として維持する",
+      "graph_node_id": "spec-harness-hub-dev-graph-authority-addendum",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T12:13:53Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Dev Graph と Beads の正本更新を事前遮断・実行後監査・保存時検証・単一 bridge で保護する",
+      "related_nodes": [
+        "arch-harness-hub-dev-workflow",
+        "issue-guard-script-file-indirection-20260726",
+        "issue-guard-graph-schema-inline-python-variable-path-20260726",
+        "issue-guard-graph-schema-newline-segment-split-20260728",
+        "issue-bd-free-field-write-route-20260721"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-dev-graph-authority-addendum.md",
+        "system-spec/dev-workflow.md",
+        "architecture/harness-hub-dev-workflow.md"
+      ],
+      "scope_in": [
+        "C10 command guard",
+        "PostToolUse drift audit",
+        "C11 exact envelope",
+        "C28 Beads bridge"
+      ],
+      "scope_out": [
+        "製品 API の変更",
+        "製品 DB schema の変更",
+        "認証認可・UI・deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T12:13:53Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "ad50d08c1e88c61635e659910ca5e5e03da89bb332baf2294806151c0e8e3523",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "beads",
+        "authority",
+        "quality-gate"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub Dev Graph / Beads authority 追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-02T12:13:53Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
