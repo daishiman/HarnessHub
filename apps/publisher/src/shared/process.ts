@@ -15,10 +15,17 @@ export interface ProcessResult {
 
 export type RunProcess = (command: string, args: readonly string[]) => Promise<ProcessResult>;
 
+/** Node の型定義バージョン差を越えて spawn の完了イベントを扱う最小契約。 */
+interface ChildLifecycleEvents {
+  on(event: 'error', listener: (error: Error) => void): void;
+  on(event: 'close', listener: (exitCode: number | null) => void): void;
+}
+
 export function createNodeProcessRunner(): RunProcess {
   return (command, args) =>
     new Promise((resolvePromise, reject) => {
       const child = spawn(command, [...args], { shell: false });
+      const lifecycle = child as unknown as ChildLifecycleEvents;
       let stdout = '';
       let stderr = '';
       child.stdout?.on('data', (chunk: Buffer) => {
@@ -27,8 +34,8 @@ export function createNodeProcessRunner(): RunProcess {
       child.stderr?.on('data', (chunk: Buffer) => {
         stderr += chunk.toString('utf-8');
       });
-      child.on('error', reject);
-      child.on('close', (exitCode) => {
+      lifecycle.on('error', reject);
+      lifecycle.on('close', (exitCode) => {
         resolvePromise({ exitCode: exitCode ?? 1, stdout, stderr });
       });
     });

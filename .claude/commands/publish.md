@@ -1,1 +1,0 @@
-../../plugins/harness-hub-publisher/commands/publish.md
