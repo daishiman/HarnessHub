@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub data アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T08:35:00Z"
+updated_at: "2026-08-02T08:12:28Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"0cc8dee51613b54e967eef00f320ff8b1423f064efe951d811562b246a38b8a1","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"system-spec-harness","source_digest":"5a4d5439793d391f019e66e49f4baf7684bc361b3bbfe15c08fd5cdc3e1fd83d","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"9ee58696d797a2fc235f290c4bdc77c3f16001080b39d341dd0cc8778eebafcb","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T08:12:28Z","origin_kind":"system-spec-harness","source_digest":"9ee58696d797a2fc235f290c4bdc77c3f16001080b39d341dd0cc8778eebafcb","source_path":"system-spec/database.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-data.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/database.md](../system-spec/database.md) (sha256: `44731a240f143b9e…`)
+- [system-spec/database.md](../system-spec/database.md) (sha256: `9ee58696d797a2fc…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-26T08:35:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
+- 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -130,6 +130,24 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   consumer 境界を例外化しない。
 - 仕様遷移と証拠は
   [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を参照する。
+
+**共有 Google OIDC 差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-112)**:
+
+- **schema**: `idp_connections` へ `credential_mode` (TEXT NOT NULL DEFAULT
+  `customer_google`) と `allowed_workspace_domains` (TEXT NOT NULL DEFAULT `[]`) を
+  追加する。既存行は migration 後も `customer_google` として意味を変えず、許可ドメイン
+  JSON は読取境界で schema 検証する。
+- **保存不変条件**: `customer_google` は従来どおり `client_id` と `client_secret_enc` を
+  持つ。`shared_google` は共有 credential を tenant 行へ複製せず両列を空 sentinel とし、
+  issuer は Google 固定、`allowed_workspace_domains` を最低 1 件持つ。方式ごとの必須項目は
+  repository の discriminated input で分ける。
+- **read/decrypt**: primary connection の決定順序と tenant scope を維持する。shared 行は
+  環境 client_id を合成して auth port へ返し、`decryptClientSecretForTenant` は shared 行を
+  復号対象として受け付けない。未知 mode・不正 JSON・空 allow-list は runtime で fail closed
+  にする。
+- **migration/rollback**: 0003 migration は ADD COLUMN 2 本のみで既存データを移送・削除
+  しない。旧 Worker へ戻す前に shared 行を `customer_google` へ戻すか削除し、旧コードが空
+  credential を読む状態を作らない。
 
 ## Delivery, migration and rollback
 
