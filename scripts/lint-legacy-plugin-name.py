@@ -49,12 +49,33 @@ ALLOWLIST = {
     "doc/マルチ企業展開/構築手順.md": "harness-creator への改名経緯の説明 (旧名→新名対応の意図的言及)",
     "doc/マルチ企業展開/移管計画.md": "移管元である旧 meta-skill-creator repo 構造の歴史記述",
     "doc/マルチ企業展開/クリーンアップ計画.md":
-        "実在する凍結層ディレクトリ doc/参考Skill/skill-creator/ への整理対象パス言及と"
-        "旧 repo 構造の歴史記述",
+        "削除済み凍結層ディレクトリ doc/参考Skill/skill-creator/ (2026-08-02 削除。§1-D) への"
+        "削除記録としてのパス言及と、旧 repo 構造の歴史記述",
     "plugins/dev-graph/scripts/migrate-pipeline-improvement.py":
         "改名前 skill-creator 期の eval-log 成果物 (skill-build-trace-*/skill-creation-report) を"
         "実在する凍結層ディレクトリ eval-log/skill-creator/ へ整理する route 定義。歴史的実体への"
         "整理対象パス言及であり、現行 harness-creator へ route すると別時代の成果物が混入する",
+}
+
+# 削除済み path を正確に記録する必要がある仕様・task 証跡だけ、完全一致の文字列を
+# 局所許容する。ファイル全体を ALLOWLIST に入れず、同じファイル内の別の旧名再流入は
+# 引き続き検出する。
+SCOPED_HISTORY_ALLOWLIST = {
+    ".dev-graph/state/graph.json": {
+        "doc/参考Skill/skill-creator": "削除 task の resource_scope と受入証跡",
+    },
+    "system-spec/spec-state.json": {
+        "doc/参考Skill/skill-creator": "qa-122 の削除対象を固定する質疑履歴",
+    },
+    "system-spec/dev-workflow.md": {
+        "doc/参考Skill/skill-creator": "qa-122 から compile した削除対象の記録",
+    },
+    "tasks/task-remove-aiworkflow-reference-skill-20260802.md": {
+        "doc/参考Skill/skill-creator": "削除 task の対象 path と受入条件",
+    },
+    "docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md": {
+        "doc/参考Skill/skill-creator": "削除済み path の仕様反映受領証跡",
+    },
 }
 
 
@@ -79,10 +100,13 @@ def main() -> int:
             text = p.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
+        scan_text = text
+        for allowed_literal in SCOPED_HISTORY_ALLOWLIST.get(rel, {}):
+            scan_text = scan_text.replace(allowed_literal, "")
         for token in LEGACY_TOKENS:
-            if token in text:
+            if token in scan_text:
                 line_no = next(
-                    (i for i, ln in enumerate(text.splitlines(), 1) if token in ln), 0
+                    (i for i, ln in enumerate(scan_text.splitlines(), 1) if token in ln), 0
                 )
                 violations.append(f"{rel}:{line_no}: 旧固有名 {token!r} が能動層に残存/再流入")
                 break
