@@ -1,0 +1,51 @@
+{
+  "reviewer_id": "codex-independent-evaluator-eval_decompose_trial_r7-20260802",
+  "verdict": "FAIL",
+  "blockers": [
+    {
+      "id": "progress-goal-seek-tool-evidence-contradiction",
+      "detail": "The replay progress evidence says nested Task tools were Read/Grep/Glob plus read-only ls/find when needed, while task.md requires Read/Grep/Glob only and prohibits Bash including ls/find. The transcript itself satisfies the stricter contract, but the persisted goal-seek claim contradicts it."
+    }
+  ],
+  "recoverable_nonblockers": [
+    {
+      "detail": "The beads pre-state inspection first addressed node_count at the wrong JSON level and raised KeyError('node_count'); the corrected inspection completed before writes."
+    },
+    {
+      "detail": "The beads no-op resend inspection first addressed metadata at the wrong JSON level and raised KeyError('metadata'); the corrected inspection completed and all five envelopes remained no-op."
+    }
+  ],
+  "contract_checks": {
+    "skill_launch_contract": "PASS: namespaced probe at transcript record 60 returns Unknown skill exactly once; successful short-alias launches are records 63/145 for beads and 191/256 for none.",
+    "tool_order": "PASS: beads Skill1 63 -> R2 Read 68 -> R3 Read 71 -> Explore 76; none Skill1 191 -> R2 Read 195 -> R3 Read 198 -> Explore 202.",
+    "explore_isolation": "PASS: exactly two Explore tasks; each used Read seven times and no nested Bash or write-capable tool.",
+    "post_skill2_writer_count": "PASS: no upsert-node.py or graph writer after either binding's Skill2.",
+    "user_intervention": "PASS: only the initial instruction is a human user message; later user-role records are tool results.",
+    "prohibited_reads": "PASS: only the current r7 task, scenario, replay bundle, and r7 fixture paths were read; no prior live-trial run, transcript, or earlier fixture was inspected."
+  },
+  "required_observations": {
+    "O1": "PASS: both audits report architecture=1, feature=4, task=0, acyclic=true, measured maximum inter-feature dependency 1 <= 3.",
+    "O2": "PASS: apply-mode audits derive zero publication deltas from pre/post state and distinguish every zero reason.",
+    "O3": "PASS: three produced features remain draft/excluded; feat-user-auth-001 is the sole confirmed/pass/complete candidate.",
+    "O4": "PASS: separate persisted beads and none runs are attested; GitHub is schema-unreachable; binding source is persisted graph state.",
+    "O5": "PASS: write counts come from pre/post inventory and both audits record schema_validation.stdin_path_used=true.",
+    "O6": "PASS: promoted digests recompute and match for beads and none.",
+    "O7": "PASS: both audits execute and reject both canonical negative controls."
+  },
+  "additional_evidence": {
+    "noop_resends": "PASS: five operation=noop/write_count=0 receipts per binding; final graph revisions and SHAs remain unchanged.",
+    "progress_goal_seek": "FAIL: each progress artifact structurally passes, but its tool-evidence sentence permits read-only ls/find and therefore contradicts the task's Read/Grep/Glob-only contract.",
+    "intermediate": "PASS: each JSONL has two rows, all six required keys, and the expected goal hash.",
+    "cross_binding_audit_sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f",
+    "beads_promotion_digest": "18d061a7aa4c7fbf9dcb4932c00b2d99095e2e964ae8c1624b133b8d467c7d29",
+    "none_promotion_digest": "b03ab2d063d340cf911f8c07275df9c16267e58ce6793ad985e3689e18c489c4"
+  },
+  "evidence_paths": [
+    "transcript.jsonl",
+    "task.md",
+    "evidence/beads-decompose-audit.json",
+    "evidence/none-decompose-audit.json",
+    "evidence/beads-progress.json",
+    "evidence/none-progress.json"
+  ]
+}

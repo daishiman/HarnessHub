@@ -1,0 +1,56 @@
+{
+  "reviewer": "codex-independent-evaluator-eval_decompose_trial_r3-20260802",
+  "verdict": "FAIL",
+  "goal_outcome": "PASS",
+  "blockers": [
+    "none 系列は transcript 上で Skill① の直後が Explore であり、必須の R2-plan.md / R3-decompose.md Read を省略した",
+    "beads 系列も Skill① と R2-plan.md / R3-decompose.md Read の間に resolve-repo-context Bash があり、task.md の逐語的な『直後』条件を満たさない"
+  ],
+  "user_intervention": {
+    "nudge_count": 0,
+    "gate_response_count": 0,
+    "ask_user_question_count": 0
+  },
+  "procedural_order": {
+    "beads": "Skill① -> resolve-repo-context Bash -> R2 Read -> R3 Read -> Explore",
+    "none": "Skill① -> Explore",
+    "result": "fail"
+  },
+  "observations": {
+    "dag_and_granularity": {
+      "result": "pass",
+      "value": "各 binding は architecture=1、feature=4、task=0、edge=3、acyclic、max depends_on=1 <= 3"
+    },
+    "draft_publication_gate": {
+      "result": "pass",
+      "value": "draft feature 3件は publication gate により issue write 0、理由を audit が区別"
+    },
+    "sole_candidate": {
+      "result": "pass",
+      "value": "feat-user-auth-001 だけが confirmed/pass/complete、残り3 feature は draft"
+    },
+    "binding_routes": {
+      "result": "pass",
+      "value": "beads/none の別 fixture を実走し、両 audit は run_binding_attested=true。github macro-only は schema 上到達不能"
+    },
+    "measured_writes": {
+      "result": "pass",
+      "value": "pre/post repository state 差分で write 数を測定し、schema は stdin 経路。resend は両 binding 全5件 noop/write_count=0"
+    },
+    "confirmation_digest": {
+      "result": "pass",
+      "value": "beads=80a7c2f9013590278eb2fdc370ad8751ecba28dd61ca0b1356c36bbe2e5b5500、none=86e731691847bf1c82a924e9fdc7031aa6ffc1e0e271ff947c5b81afa3f3c267 で declared/recomputed が一致"
+    },
+    "negative_controls": {
+      "result": "pass",
+      "value": "canonical audit は両 binding で pass=true、共通 implementation sha256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f"
+    }
+  },
+  "evidence": [
+    "task.md",
+    "out/status.json",
+    "../../../../live-trial-fixtures/wt31-qa121-decompose-beads-r3/eval-log/decompose-audit.json",
+    "../../../../live-trial-fixtures/wt31-qa121-decompose-none-r3/eval-log/decompose-audit.json",
+    "/Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-31/39832a0c-be9b-4405-ae36-ef057cd84eeb.jsonl"
+  ]
+}
