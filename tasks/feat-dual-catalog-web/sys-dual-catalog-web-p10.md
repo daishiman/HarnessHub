@@ -12,7 +12,7 @@ iteration: null
 title: "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-08-01T12:13:42.728760Z"
 status: "active"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P09"]
 related_nodes: ["feat-dual-catalog-web"]
@@ -71,3 +71,31 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dual-catalog-web` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-08-01 最終レビュー追補
+
+- 対象 Beads: 親 `HarnessHub-dhy` と `HarnessHub-dhy.1`〜`HarnessHub-dhy.13`
+- 対象 dev-graph: `SYS-DUAL-CATALOG-WEB-P01`〜`SYS-DUAL-CATALOG-WEB-P13`
+- task package digest: `sha256:7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817`
+- task 仕様ゲート: P01〜P13 exact set、`status=pass`、`violations=[]`
+- 実装ゲート: catalog 8 files / 63 tests、Hub・schemas typecheck、workspace build、Biome を pass
+
+### 指摘と是正
+
+1. 認証済み `/marketplace.json` の shared cache を禁止し、private cache と scope ごとの `Vary` に変更した。
+2. 401/403/契約不正後に旧 catalog を描画しないようにし、cache を tenant/workspace/project に束縛した。
+3. 一覧の draft 入力と適用 query を分け、入力中の通信と submit 時の重複要求を除去した。
+4. DC-TEN-06..10、DC-LIST-01、DC-MKT-07 の回帰検査で上記境界を固定した。
+
+### 仕様・設計反映
+
+影響あり。正規 transition writer で `security.web`、`frontend.web`、`testing-qa.web` を reopen し、
+main との統合時に QA ID の衝突を解消し、`qa-117`、`qa-118`、`qa-119` として再確定した。さらに共有 Google OAuth の `qa-111` と dual catalog security の `qa-117` を両方保持する統合正本 `qa-120` を確定後に compile した。
+反映先は `system-spec/`、`specs/harness-hub-dual-catalog-cache-addendum.md`、
+`architecture/`、`features/`、`docs/features/feat-dual-catalog-web/`。
+受領書は `docs/features/feat-dual-catalog-web/spec-reflection-receipt.md` を正とする。
+
+### 完了境界
+
+draft PR 作成時点では task spec の completion contract を満たさないため、P01〜P13 と親 epic を
+durable done にしない。PR merge と default branch reconciliation 後に dev-graph / Beads を収束させる。

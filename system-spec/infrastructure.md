@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-113 |
+| Web (web) | 確定 | 確定質疑: qa-116 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,19 +24,21 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-113 (対応セル: web)
+### qa-116 (対応セル: web)
 
-**質問**: 共有 Google OAuth client を infrastructure.web の既存 Cloudflare 配備契約へどう統合しますか?
+**質問**: qa-019 / qa-106 / qa-113 の SLO・Cloudflare 配備契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-106 の Cloudflare Worker、GitHub Actions、health、rollback、R2 契約を全面維持し、認証配備差分を追加確定する。
+**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示と 2026-08-02 の競合解消指示を明示承認として、qa-019 / qa-106 / qa-113 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。
 
-【1. OAuth 登録】環境ごとに Google OAuth client を1件作り、承認済み redirect URI は AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc の1本とする。tenant 追加のたびに Google Cloud Console の client/URI を増やさない。
+【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。
 
-【2. secret】SHARED_GOOGLE_OAUTH_CLIENT_ID と SHARED_GOOGLE_OAUTH_CLIENT_SECRET は Cloudflare Worker の環境 secret/secret binding として投入し、repository と GitHub Actions Secrets を受渡し元にしない。共有方式を使わない環境では未設定を許し、その場合は shared tenant だけ fail closed にする。
+【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。
 
-【3. 配備順序】DB backup・migration dry-run、0003 apply、Worker secret 投入、共有対応 Worker deploy、対象 tenant の shared_google 化、実ログイン smoke の順で段階導入する。customer tenant を canary 対照として残し、callback、hd、audit、secret 非露出を確認する。
+【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。
 
-【4. rollback/rotation】障害時は tenant 行を customer_google へ戻して旧 callback/credential を確認してから旧 Worker version へ戻す。共有 secret rotation は新 secret 投入、Worker 反映、ログイン確認、旧 secret revoke の順とし、DB rollback と証跡削除は行わない。
+【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。
+
+【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、共有 Google OAuth client を含む既存の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 
