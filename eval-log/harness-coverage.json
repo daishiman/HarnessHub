@@ -23,7 +23,7 @@
     },
     {
       "type": "skills",
-      "count": 92,
+      "count": 93,
       "mechanical": {
         "instrumented": true,
         "coverage_pct": 100.0,
@@ -32,7 +32,7 @@
       },
       "llm_eval": {
         "instrumented": true,
-        "coverage_pct": 87.0,
+        "coverage_pct": 87.1,
         "met": true,
         "note": "非ref=content-review verdict / ref=ref-review verdict(source-traceability) PASS 率"
       }
