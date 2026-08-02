@@ -16,6 +16,25 @@ version: 0.1.0
 source: docs/features/feat-publisher-plugin/design-review-notes.md
 script_refs:
   - scripts/run-publisher-publish.sh
+feedback_contract:
+  max_iterations: 3
+  criteria:
+    - id: IN1
+      loop_scope: inner
+      text: "薄い shell wrapper が package 収集・認証・Hub API・Wrangler の業務ロジックを再実装せず、apps/publisher/bin/harness-publisher.mjs の publish サブコマンドへ引数と終了コードをそのまま委譲する。pt5-plugin-surface-structure.test.ts と plugin-package-check が通る"
+      verify_by: test
+    - id: IN2
+      loop_scope: inner
+      text: "必要な引数と web_app 時の wrangler-config 要件が command・Skill・CLI の間で一致し、不足時は近似実行せず CLI が非0で停止する。validate-frontmatter.py と CLI の unit test が通る"
+      verify_by: lint
+    - id: OUT1
+      loop_scope: outer
+      text: "利用者が publish の副作用、Device Flow の人手認可、OS 資格情報域、実サービス E2E が未完であることを誤解せず、command→Skill→CLI の一方向責務境界を追跡できる"
+      verify_by: elegant-review
+    - id: OUT2
+      loop_scope: outer
+      text: "配布 plugin と apps/publisher の接続が二重実装や秘密情報の平文保存を導入せず、pre-check と Hub 検査を同じ packages/inspection owner に委譲している"
+      verify_by: evaluator
 ---
 
 # run-publisher-publish
