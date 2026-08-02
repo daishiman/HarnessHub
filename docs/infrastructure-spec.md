@@ -61,7 +61,8 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
 | `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK (base64 32 byte)。**1 本のみでテナント数に依存しない**。`users.salary` (purpose=`salary`) と `idp_connections.client_secret_enc` (purpose=`idp_secret`) の DEK を wrap して `encryption_keys` へ保存する (security-spec-data-integrity §4.1/§4.3) | 年 1 回。**DEK の re-wrap のみで列の再暗号化は不要** |
-| `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
+| `SHARED_GOOGLE_OAUTH_CLIENT_ID` / `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` | 共有 Google OAuth client (環境単位で 1 組)。名前の正本は `apps/hub/src/lib/auth/shared-credentials.ts`。**Worker の起動要件ではない** (未投入でも顧客持ち込み方式のテナントは動き、片方欠落は `readSharedGoogleCredentials` が null に倒す) が、**2026-08-02 に本番投入済み**のため runbook S-02 に従い `secrets.required` へ宣言し、消失を deploy 前に検知する対象とする | 年 1 回 |
+| `RESEND_API_KEY` | メール送信 (SEC9)。**2026-08-02 時点で実装からの参照が無い** (planned)。投入しても効果が無く用途不明の credential を増やすだけなので、実装と同じ変更で required へ移すまで投入しない | 年 1 回 |
 | `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL (§5/§9)。URL 自体が事実上の秘匿情報のため wrangler.jsonc の var ではなく secret で投入する | 監視側で再発行したとき |
 
 - **2026-07-28 台帳訂正 (`HarnessHub-x2x9`)**: 本表は旧設計の `SALARY_ENC_KEY` と `IDP_SECRET_<tenant_slug>` を載せ、
@@ -69,6 +70,10 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
   実装 (`packages/db/repository/crypto.ts`) にも `apps/hub/src/lib/authz/runtime.ts` にも該当 binding は存在しない。
   **旧表のまま本番投入すると `ENCRYPTION_KEK` 未投入で Worker が起動時例外になる**ため、実装と §4.5 に合わせて訂正した。
   テナント IdP の client secret は Workers Secret ではなく `idp_connections.client_secret_enc` へ封筒暗号化で保存する。
+
+- **2026-08-02 実投入ゲートの追加 (`HarnessHub-o2i.13`)**: 本表の機械可読な正本を `scripts/ci/worker-secrets-registry.json` に置き、`scripts/ci/check-worker-secrets.mjs` が **台帳 ↔ `wrangler.jsonc` の `secrets.required` ↔ 本番の実投入**を三方向で突合する。静的突合は静的ゲート job と `pnpm verify`、実投入突合 (`--live`) は deploy job が **deploy より前に**実行する (失敗しても本番は前進していないため、赤は「古い版が動き続ける」で済む)。requirement 語彙は `required` / `optional` / `planned` / `legacy` で、`wrangler.jsonc` の宣言と 1:1 対応するのは `required` だけ。未投入が恒常的な赤になるとゲート全体が無視される方向へ効くため、投入と同じ変更で `required` へ移す (共有 Google OIDC runbook S-02 と同じ判断)。
+  **契機**: 本番 Worker へ `AUTH_ACCESS_TOKEN_SECRET` が未投入のまま稼働していたことを実測した。`wrangler.jsonc` は同名を `secrets.required` に宣言し、テストもその**宣言**を検査していたが、「宣言した secret が実際に入っているか」は誰も見ていなかった。GitHub 側に `check-actions-secrets.mjs --live` がありながら Cloudflare 側に等価物が無い非対称が穴の本体である。発覚が遅れたのは middleware が fail-closed だったため — 鍵が無いとき Bearer を cookie へ fallback させず `principal=null` に倒す設計は正しいが、副作用として「鍵が無い」と「token が不正」が同じ 401 へ潰れ、設定漏れが障害として立ち上がらなかった。**同日 `wrangler secret put` で投入済み**。
+  **検査対象の境界**: 乖離しうるのは `wrangler deploy` が押し込まない帯域外設定 (Workers Secret / R2 bucket / Actions secret / Turso migration) だけで、`vars`・binding・cron trigger・compatibility flag は deploy が本設定ファイルから押し込むため乖離しない。棚卸し結果と根拠は `scripts/ci/check-worker-secrets.mjs` の冒頭コメントに置く。
 
 - **サイズ予算**: Worker bundle ≤ 3 MiB (gzip, Free 上限) を CI ゲートで計測 (§7)。恒常超過は Workers Paid ($5/月) 移行と C2 再交渉をユーザーへ差し戻す (D1 caveat)。
 - **CPU 予算**: Workers Free は CPU 10ms/呼出。API はポーリング統一 (qa-031) で接続保持なし。cron の集計は chunk 処理 (§5) で 1 呼出の CPU を抑える。恒常超過時は D1 caveat と同じ経路で Paid 移行を再交渉。
@@ -162,9 +167,10 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
 - **main の明示再実行 (2026-08-01 / `HarnessHub-o2i.13`)**: 通常経路は main merge による push のまま維持する。docs-only merge など、`on.push.paths` の対象外で deploy run が起動しなかった場合だけ、`workflow_dispatch` で main の同一 commit を再配備できる。dispatch も `static-gates` と `test` を省略せず、feature branch では deploy しない。これは手元の Wrangler 操作や手動承認 gate を追加するものではなく、同じ CI の再実行経路である。
-- deploy job の内容: 必須設定preflight → productionへdrizzle migrate → `wrangler deploy` →
+- deploy job の内容: 必須設定preflight → **Worker secret実投入検査** → productionへdrizzle migrate → `wrangler deploy` →
   post-deploy `GET /health` → **OIDC start-flow smoke** → **DB/R2本番スモーク6項目** →
-  失敗時`wrangler rollback` (直前versionへ)。**常設stagingを経由しない** (§6 / qa-038【5】)。
+  **hearing実データE2E/SEC8スモーク** → 失敗時`wrangler rollback` (直前versionへ)。
+  **常設stagingを経由しない** (§6 / qa-038【5】)。
 - **deploy preflight (2026-07-30追補)**: GitHub Actionsが未登録値を空文字へ変換する性質を踏まえ、
   migration前に`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_R2_API_TOKEN` /
   `CLOUDFLARE_ACCOUNT_ID` / Turso 2件 / `HUB_HEALTH_URL` / `HUB_PUBLIC_URL`の
@@ -174,6 +180,18 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
   `response_type=code`、identity scope、`state`、`nonce`、PKCE S256を本番URLで確認する。
   人のGoogle資格情報をCIへ置かないためcallback後の実ログイン/JITは自動化せず、
   release recordの手動E2E証跡と分ける。
+- **hearing実データE2E/SEC8スモーク (2026-08-02追補 / `HarnessHub-o2i.13`)**:
+  `pnpm --filter @harness-hub/hub run smoke:hearing-production` がDB/R2スモークの直後に走る。
+  **新しいsecretを要求せず**、既存の`TURSO_*`と`vars.HUB_PUBLIC_URL`だけで成立させる。
+  session専用の提出はrouteと同じrepository→service合成をserver側で実行し、TOKEN資格の
+  `ai-jobs/pull`・`complete`は本番URLへ実HTTPで送る。Device Flowの`code`/`token`は認証不要
+  endpointなので署名鍵なしで**本物のaccess token**を取得でき、sessionが要るapproveだけをDBの
+  CASで代行する。状態変更要求には必ず`origin`を付ける (無いと`untrusted_origin`で認可判定へ
+  到達せず検査が空振りする)。使い捨てtenant 2件は`finally`で全行削除し、**残行数0でなければ失敗**
+  させる。検査はDevice token取得・受付番号発番・同一transaction enqueue・SEC5 (年収非保存)・
+  SEC8 (他tenantに204 / header詐称に404 `tenant_mismatch`（資源存在を伏せる） / 非claim tokenに403 `not_owner`)・
+  workspace header必須の400・claim後のDB状態・complete後の`review`往復・session専用契約の
+  `credential_not_allowed`の10点。
 - **owner認可の名前付きゲート (2026-07-30追補)**: G14は`owner`をDB roleとして扱わず、
   tenant境界確認後に対象resourceとの関係から合成する既存契約を、全action×role表、
   非owner拒否、cross-tenant拒否とともに名指しで再実行する。
@@ -209,7 +227,11 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **外形監視 (Better Stack Free, qa-034)**: production `/health` を 3 分間隔で監視 + cron heartbeat (§5) + status page (常設 staging monitor は不要 = §6)。無料枠 10 monitors・heartbeat 10 本・商用利用可 (公式確認 2026-07-17)。SLO 99.5%/月の一次計測源。
 - **SLO 運用**: 可用性 99.5%/月 (許容停止 約 3.6 時間/月 = 30 日あたり 12,960 秒)。エラーバジェット消費は外形監視の downtime + Workers analytics の 5xx 率で算定し、**消費 70% で警告し信頼性作業を優先・消費 100% で公開機能の変更を凍結** (qa-019)。本節は当初 100% の凍結のみを定めていたが、凍結まで無反応だと是正が間に合わないため、§4 の Turso 使用量監視と同じ 70% 警告段を 2026-07-25 に追加した。
 - **監視設定の正本 (config as code, 2026-07-25 確定)**: Better Stack へ投入する monitor / heartbeat / status page の要求内容は [`apps/hub/monitoring/better-stack.monitors.json`](../apps/hub/monitoring/better-stack.monitors.json)、SLO 算定規則とエラーバジェット方針は [`apps/hub/monitoring/slo-dashboard.json`](../apps/hub/monitoring/slo-dashboard.json) を機械可読な正本とする。**ダッシュボード上の手動設定を正本にしない** (レビュー・再現・差分追跡ができず、設定が消えたことを検知できないため)。設定値の回帰は `apps/hub/tests/monitoring/monitoring-config.test.ts` (HF-A3-SLO-001) が固定する。
-  - **適用状態の分離 (fail-closed)**: 「設定を書いた」ことと「外部へ適用した」ことを `application_state` / `applied_at` / `external_id` で区別し、実適用まで `pending_credentials` / `null` を保つ。さらに外部資源が存在しても monitor paused などで収集不能なら SLO 側を `verdict.status = collection_blocked`（観測開始日時なし）とする。**設定ファイルや external ID の存在を「監視稼働」「99.5% 達成」と読み替えない** (§9 の計測が動いていないのに受入条件 A3 を合格にしてしまうのを防ぐ)。
+  - **適用状態の分離 (fail-closed)**: 「設定を書いた」ことと「外部へ適用した」ことを `application_state` / `applied_at` / `external_id` で区別し、実適用まで `pending_credentials` / `null` を保つ。さらに外部資源が存在しても monitor 停止などで収集不能なら SLO 側を `verdict.status = collection_blocked`（観測開始日時なし）とする。**設定ファイルや external ID の存在を「監視稼働」「99.5% 達成」と読み替えない** (§9 の計測が動いていないのに受入条件 A3 を合格にしてしまうのを防ぐ)。
+  - **観測状態の実測 (2026-08-01 追加, fail-closed)**: `verdict` は散文や dashboard の見た目ではなく [`apps/hub/scripts/verify-slo-observation.mjs`](../apps/hub/scripts/verify-slo-observation.mjs) の実測を正本とする。公開 status page の `/index.json`（**認証不要**＝API token を持たない者でも検証できる）から `status_history` を読み、**進行中の当日と `not_monitored`（無データ）の日を窓から除いた**観測済み日数・downtime 秒を数え、`slo-dashboard.json` の `verdict` と突合する（一致 exit 0 / 不一致 exit 1 / **実測不能 exit 2**）。
+    - **`not_monitored` を「監視停止」と読まない**: これは「その日は監視対象が存在せずデータが無い」を表し、status page の HTML アイコンは**現在状態ではなく 30 日履歴全体の代表**である。2026-07-28 にこれを paused と誤読して `collection_blocked` を記録した実例があるため、判断は必ず `/index.json` の `status` フィールドで行う。
+    - **観測完了 ≠ 合格**: 観測済みが 30 日に達した時点の verdict は `observation_complete_pending_application_error_rate` であり、`blocker: workers-analytics-5xx-rate-not-collected` を保つ。外形監視は算定式の片側にすぎず、**外形単独で 99.5% 達成を主張しない** (qa-019)。
+    - **運用判定と開発完了の分離 (2026-08-02 / qa-123)**: 30 日観測と Workers Analytics 5xx 率の最終判定は qa-019 / qa-116 のまま維持する。一方、ユーザーが当該 follow-up の追加追跡を不要と判断した場合は `completion_evidence.status=not_applicable` で delivery closure から切り離せる。これは waiver（追跡免除）であり SLO PASS ではない。再開時は issue を reopen または再起票し、同じ CLI / runbook / 生データ契約で再検証する。
   - **秘密の扱い**: Better Stack API token と heartbeat URL は設定ファイルへ保存せず、API token は投入時のみ環境変数 (`BETTER_STACK_API_TOKEN`)、heartbeat URL は用途別に Worker secret `CRON_HEARTBEAT_URL` と GitHub Actions secret `BACKUP_HEARTBEAT_URL` へ渡す (§2 secret 台帳と同じ規律)。設定ファイルが保持するのは binding 名だけで、2 本は別の heartbeat 資源へ結び付ける。
 - **Workers 側**: observability logs 有効化 + Workers analytics (p95 レイテンシ・エラー率)。SLO ダッシュボードは Cloudflare dashboard + 外形監視の status page で代替 (追加サービスなし)。
 - **アプリ内運用通知 (インフラ追加なし、qa-027)**: AI キュー滞留・Resend 送信失敗・ingest 異常値・Turso 使用量閾値は notifications (アプリ内) で provider-admin へ通知。

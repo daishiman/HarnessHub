@@ -12,8 +12,8 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-30T13:27:46Z"
-status: "active"
+updated_at: "2026-08-02T06:25:39.927001Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["features/feat-hub-foundation.md"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T13:27:46Z","origin_kind":"generated","source_digest":"a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T06:25:09Z","origin_kind":"generated","source_digest":"214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-hub-foundation.md","confidence":0.9}]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-02T03:44:06Z","evidence_refs":["docs/features/feat-hub-foundation/acceptance-report.md","docs/features/feat-hub-foundation/release-notes.md","docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-08-02T03:44:06Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -129,3 +129,17 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 実装反映 (2026-08-01 / HarnessHub-37h.15)
+
+- Better Stack の公開 status page を認証なしで実測する `verify:slo-observation` を追加し、設定の存在ではなく現在状態と日次履歴から SLO 観測進捗を判定する。
+- 当日と `not_monitored` を観測窓から除外し、30 日未満は合否を断定しない。2026-08-01 時点は 6 日 / 30 日の `collecting` で、外形エラーバジェット消費は 48.7%。
+- 30 日到達後も Workers Analytics の 5xx 率が揃うまで A3 を確定しない。2026-08-02 のユーザー判断により、この観測 follow-up 自体は `not_applicable` として閉じた（下記 closeout 参照）。
+- 正規仕様は `system-spec/infrastructure.md` の qa-116、反映経路と残課題は [SLO 公開実測 仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を正とする。
+
+## Closeout (2026-08-02 / `HarnessHub-37h` / qa-123)
+
+- exact-13 の P01〜P13、CI test→deploy、本番 `/health`、bundle 予算、共通層、release / runbook 証跡を delivery closure（開発成果を閉じる境界）として本 feature を閉じた。
+- `HarnessHub-37h.14` と `HarnessHub-37h.15` は独立した運用 follow-up であり、ユーザーが追加対応不要と判断したため `not_applicable` で閉じた。これは SLO 99.5% 達成を意味しない。
+- qa-019 / qa-116 の 30 日観測、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結は維持する。再開時は issue を reopen または再起票し、同じ runbook / CLI 契約で検証する。
+- 仕様反映と判断根拠は [feature closeout 仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を正とする。

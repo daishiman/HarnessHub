@@ -12,11 +12,11 @@ iteration: null
 title: "bd-bridge.py と mfh7 issue 本文がユーザー指定 500 行上限を超過しており、安全な分割方針が未確定"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-07-28T04:57:02.738907Z"
-status: "draft"
+updated_at: "2026-08-01T13:48:01Z"
+status: "done"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725"]
-resource_scope: ["plugins/dev-graph/scripts/bd-bridge.py","issues/sys-bd-external-ref-orphan-nodes-20260725.md"]
+resource_scope: [".dev-graph/state/graph.json","plugins/dev-graph/scripts/bd-bridge.py","plugins/dev-graph/lib/bd_bridge_audit.py","plugins/dev-graph/lib/bd_bridge_contracts.py","plugins/dev-graph/lib/bd_bridge_graph.py","plugins/dev-graph/lib/bd_bridge_projection.py","issues/sys-doc-line-limit-followup-mfh7-20260728.md","issues/sys-bd-external-ref-orphan-nodes-20260725.md","issues/sys-bd-external-ref-orphan-nodes-20260725-log.md","issues/sys-guard-graph-schema-newline-segment-split-20260728.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md","docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md","docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-node/","eval-log/dev-graph/run-dev-graph-sync/","eval-log/dev-graph/run-dev-graph-decompose/","eval-log/dev-graph/run-dev-graph-schedule/"]
 purpose: "HarnessHub-mfh7 の変更で plugins/dev-graph/scripts/bd-bridge.py が 1124 行 (529 行増)、issues/sys-bd-external-ref-orphan-nodes-20260725.md が 533 行になり、ユーザー指定の 500 行上限を超えた。どちらもリポジトリの CI lint (scripts/lint-doc-line-limit.py は system-spec/architecture/features/tasks/docs の 5 root のみ対象で issues/ と *.py は対象外) には抵触しないが、可読性と変更差分の追跡性のため分割が望ましい"
 goal: "bd-bridge.py が choke-point 契約と既存テスト coverage を壊さずに 500 行以下へ責務分割され、mfh7 issue 本文の分割が dev-graph node body との整合 (C02 再登録) を保ったまま完了している状態"
 mvp_alignment: null
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-01T13:48:01Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-node/live-trial/20260801T121510Z-wt28-w7n7-node/verdict.json","eval-log/dev-graph/run-dev-graph-sync/live-trial/20260801T123553Z-wt28-w7n7-sync/verdict.json","eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260801T131339Z-wt28-w7n7-decompose/verdict.json","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260801T125011Z-wt28-w7n7-schedule/verdict.json"],"policy":"manual","reconciled_at":"2026-08-01T13:48:01Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -93,3 +93,19 @@ features/tasks/docs` の 5 root のみで、`issues/` と `*.py` は対象外。
 wc -l plugins/dev-graph/scripts/bd-bridge.py issues/sys-bd-external-ref-orphan-nodes-20260725.md
 cd plugins/dev-graph && python3 -m pytest tests/ -q
 ```
+
+## 実装結果 (2026-08-01)
+
+- `bd-bridge.py` は CLI / preflight / receipt に限定し、内部判定を
+  `bd_bridge_contracts.py`、`bd_bridge_graph.py`、`bd_bridge_projection.py`、
+  `bd_bridge_audit.py` へ分離した。既存 operation と private symbol は adapter で維持した。
+- mfh7 本文は課題定義 130 行と実測ログ 422 行へ分割した。ログは node を持たない分冊で、
+  親文書だけが `graph_node_id` を保持する。
+- 分割先を `plugins/dev-graph/lib/` としたため、`scripts/*.py` を分母にする harness
+  coverage ratchet は分割前と同値を維持した。
+- 製品仕様は変えないが、内部 component 境界は設計影響として
+  `system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/` へ反映した。
+
+最終ゲートと Beads 更新、commit、draft PR の受領結果は
+`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
+を正とする。

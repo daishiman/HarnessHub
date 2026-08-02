@@ -43,3 +43,10 @@ consumes: [docs/features/feat-domain-model-db/architecture-decision-record.md, d
 
 1. **constraint 4 (display_code_counters)**: 表示用連番カウンタは本 feature core の scope 外であり、Studio 拡張 feature が owner (ADR §2 / P03 観点 2 で独立承認済み)。core migration に display_code_counters が 0 件であることはレビュー側の実測で確認済みで、これは gap ではなく責務境界。本 feature 所管の ULID PK + サーバ epoch 時刻は完全充足。
 2. **constraint 6 (四半期 restore drill)**: drill の定期スケジュール運用化は P12 runbook の領域。goal-spec の `executable-export-restore-ci-fixture` が「P12 文書を先行条件にしない」と明示しており、executable な核 (別 DB への restore round-trip と失敗判定の機械化) は実装・実測済みのため受入根拠として成立する。
+
+## Lifecycle closeout 追補 (2026-08-02 / `HarnessHub-u6q`)
+
+- canonical graph、feature artifact、Beads の status が `closed` で一致することを再確認した。
+- 本 feature の固有受入は SQLite 方言互換 schema、Release immutable 強制、content-addressed R2 registry、export / restore の実行証跡であり、上記 10/10 充足を完了根拠とする。
+- Hub 基盤の SLO 観測 follow-up は独立した運用判断で、DB schema / repository / backup 契約を変更しない。qa-123 はこの完了境界を明文化しただけである。
+- 中学生向けには「データの置き方、勝手に書き換えられない公開版、同じデータを見つける倉庫、壊れたときに戻す道具を作り、テストで確かめた機能」である。

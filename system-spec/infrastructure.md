@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-113 |
+| Web (web) | 確定 | 確定質疑: qa-131 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,19 +24,21 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-113 (対応セル: web)
+### qa-131 (対応セル: web)
 
-**質問**: 共有 Google OAuth client を infrastructure.web の既存 Cloudflare 配備契約へどう統合しますか?
+**質問**: 既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-106 の Cloudflare Worker、GitHub Actions、health、rollback、R2 契約を全面維持し、認証配備差分を追加確定する。
+**回答**: ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。
 
-【1. OAuth 登録】環境ごとに Google OAuth client を1件作り、承認済み redirect URI は AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc の1本とする。tenant 追加のたびに Google Cloud Console の client/URI を増やさない。
+【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。
 
-【2. secret】SHARED_GOOGLE_OAUTH_CLIENT_ID と SHARED_GOOGLE_OAUTH_CLIENT_SECRET は Cloudflare Worker の環境 secret/secret binding として投入し、repository と GitHub Actions Secrets を受渡し元にしない。共有方式を使わない環境では未設定を許し、その場合は shared tenant だけ fail closed にする。
+【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。
 
-【3. 配備順序】DB backup・migration dry-run、0003 apply、Worker secret 投入、共有対応 Worker deploy、対象 tenant の shared_google 化、実ログイン smoke の順で段階導入する。customer tenant を canary 対照として残し、callback、hd、audit、secret 非露出を確認する。
+【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。
 
-【4. rollback/rotation】障害時は tenant 行を customer_google へ戻して旧 callback/credential を確認してから旧 Worker version へ戻す。共有 secret rotation は新 secret 投入、Worker 反映、ログイン確認、旧 secret revoke の順とし、DB rollback と証跡削除は行わない。
+【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。
+
+【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

@@ -15,7 +15,16 @@ export default defineConfig({
   test: {
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'tests/**/*.spec.ts', 'tests/**/*.spec.tsx'],
+    include: [
+      'tests/**/*.test.ts',
+      'tests/**/*.test.tsx',
+      'tests/**/*.spec.ts',
+      'tests/**/*.spec.tsx',
+      // feature 単位のテストは published task spec が src/__tests__/<feature>/ を Write scope に指定する。
+      // ここへ追加しないと収集対象外となり「テストを書いたのに実行 0 件で緑」になる (P03 指摘 R6)
+      'src/__tests__/**/*.test.ts',
+      'src/__tests__/**/*.test.tsx',
+    ],
     // fixtures は「共通層の第 2 consumer 系統」であってテスト本体ではない
     exclude: ['node_modules/**', '.next/**', '.open-next/**', 'tests/fixtures/**'],
     // jsdom 上の axe 走査と bundle ゲートの子プロセス起動は既定の 5 秒に収まらない。
@@ -26,6 +35,8 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
+        // テスト本体をカバレッジ母数に入れない (自己言及で閾値が歪む)
+        'src/__tests__/**',
         // OpenNext のビルド生成物 (.open-next/worker.js) への静的 import を持つ配線層。
         // ビルドしないと import 先が存在せず、単体テストでは到達できない
         'src/worker.ts',

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-062 |
+| Web (web) | 確定 | 確定質疑: qa-127 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-062 (対応セル: web)
+### qa-127 (対応セル: web)
 
-**質問**: docs/frontend-spec.md の 2026-07-18 追記 (S01 公開ウィザード配置・S11/S12/S14/S15/S02 詳細契約・§10 実装順・redirect/ナビ段階運用) を frontend 仕様へ反映するか。 (訂正再登録: qa-055 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-062 として登録し直す)
+**質問**: provider-admin 向け Google OAuth 管理画面を frontend.web の現行画面契約へどう統合しますか?
 
-**回答**: qa-040 の確定内容 (技術選定 8 論点。qa-035 スマホサイズ仕様の維持を含む) を全面維持しつつ、次の delta を確定する。mock 実測どおり公開ウィザードは S01「プラグインを公開」モーダル (S02 は既存 Project の詳細・管理・導入で新規取込の入口ではない)。S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff polling を追加。S11 一覧: status/HS コード・title/domain・department/people・hours/applicant/updated_at の 6 列 (モバイルはカード畳み)、status/department filter + 全文検索 + cursor ページング、権限外行のクライアント側除外実装は禁止 (API が範囲を返す)。S12 詳細: ヘッダ + 生成 4 section (概要/課題/機能タグ/削減効果) + 元入力/試算 snapshot + Build/PublishRequest 参照。received の表示は全画面共通「受付」。admin 操作は右側メタ領域で member には非表示かつ API でも拒否。P2 有効後のみ自動作成 Build への導線を表示。S12 PDF: 別データ生成せず認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化し window.print() (salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test)。S01 公開ウィザード: Step1 CLI 取込推奨/Web 手動 ZIP 代替 → Step2 target(skill/web_app)/category/visibility (Stage 1 は workspace まで)/説明 → Step3 検査結果と公開確認。新規 Project 作成→PublishRequest→upload/submit を 1 UI フローに束ねるが API status は隠さない。Green 自動/Yellow 承認待ち/Needs Fix は S03 findings へ。単一テナント/単一 Project を定数にしない。S14: status 件数 + FR コード/harness/type (改善要望/レビュー依頼/バグ報告)/priority/requester/date/status、sanitize 済み AI 応答、修正版 Build 導線で S13→publish→更新通知まで追跡。S15: common+自 tenant 合成一覧、sanitize 済み Markdown 閲覧、admin 編集 textarea+preview、member に編集 CTA を出さず common 編集は provider-admin のみ。S02: 全 Release と stable 版、install/download modal は backend descriptor 表示のみで R2 key/永続生 URL を組み立てず、promote/rollback/suspend は owner だけに表示。P6 ボトムシート対象へ公開ウィザード追加。§10 実装順: P0 共通シェル + S07/S08 → P1 S10/S11/S12 → P2 S01→S02/S03→S13 → P3 S14/S15 → P4 S16/S17/S18 → P5 S09 + S05/S06。/ redirect は S09 完成 (P5) まで /sheets へ。サイドバー/ボトムタブは未実装 phase 項目を非表示 (グレーアウト不可 = qa-018 整合)、ボトムタブ先頭 slot は S09 完成までシート (S11) 暫定。部品実装順は shared-layers §1 (StepWizard=P1、StageBoard=P2、MarkdownEditor=P3、InlineEditTable=P4、チャート/KPI=P4 の S16 から S09 で完成)。認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面。
+**回答**: qa-118 までの画面構成、認可後データ境界、レスポンシブ、共通部品、認可出し分けを全面維持し、/settings/auth の管理面を追加確定する。【手順表示】Google Cloud Console 側の手作業、Hub への登録、接続状態を順に示し、正規 callback URL と必要 scope をコピー可能にする。Google 側設定を Hub が代行しない責任境界を明示する。【入力】client ID、password 型・autocomplete=new-password の client secret、任意の Workspace ドメインを受ける。ドメインはカンマ/改行区切りを小文字化・空白除去・重複排除し、成功後は ID・secret・ドメイン入力を破棄する。【状態】pending/tested/active/disabled と last4、最終テスト時刻、rotation の現行/pending を区別し、未テスト staging は有効化できないこと、昇格前は旧設定でログイン継続すること、昇格後の Google 側旧 secret 失効が手作業であることを表示する。【エラー】公開 enum を runtime schema で検証して固定文言へ写し、未知 error、例外、入力値、secret、Google 応答本文を描画しない。コピー失敗は未処理 Promise にしない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

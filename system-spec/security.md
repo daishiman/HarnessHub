@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-111 |
+| Web (web) | 確定 | 確定質疑: qa-128 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,11 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-111 (対応セル: web)
+### qa-128 (対応セル: web)
 
-**質問**: 共有 Google OAuth client の信頼境界を security.web の既存契約へどう統合しますか?
+**質問**: 顧客持ち込み Google OAuth 管理面の秘密・認可・tenant 境界を security.web の現行防御契約へどう追加しますか?
 
-**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-104 の二段階認証認可、tenant 非開示、secret scan、append-only 監査を全面維持し、共有 OIDC の境界を追加確定する。
-
-【1. state 防御】tenant を運ぶ state は session secret による HS256、10分 TTL、token type、tenant id/slug、ランダム binding の SHA-256 を持つ。平文 binding は HttpOnly/Secure/SameSite=Lax/__Host- cookie にだけ置き、署名不正、期限切れ、cookie 欠落・不一致を一般化した拒否応答で閉じる。
-
-【2. IdP 防御】PKCE S256 と nonce を必須のまま維持する。Google ID token は Auth.js/oauth4webapi が issuer、署名、audience、nonce を検証し、その検証済み claims の hd を tenant 許可リストへ完全一致させる。authorization の hd parameter は表示ヒントであり認可境界に使わない。
-
-【3. secret 境界】共有 client_secret は Worker 環境 secret に1件だけ置き、tenant DB 行、ログ、API response、Git、GitHub Secretsへ複製しない。credential object は JSON 化時に secret を伏せ、shared 行への tenant secret 復号要求は明示エラーにする。
-
-【4. fail closed】unknown credential_mode、Google 以外の shared issuer、空の許可ドメイン、共有環境 secret の片方欠落では認可を開始しない。customer_google へも shared_google へも暗黙 fallback しない。
+**回答**: qa-120 の共有 OAuth state/cookie/hd 防御、catalog cache 防御、既存 deny-by-default を全面維持し、顧客持ち込み管理面を追加確定する。【認可】read/change action は provider-admin のみ、状態変更は同一 origin、repository は全 read/write/decrypt に tenant_id を強制する。別 tenant の ID は存在を漏らさず、Google 専用 API は issuer を server 定数に固定し、別 issuer の ID 指定を拒否する。【秘密】client secret は要求 body→repository の封筒暗号化、または接続テスターへの短命引数だけを通る。応答型、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別子は last4 に限定する。共有方式の secret は tenant 行へ複製しない。【状態安全】未テスト credential、disabled、CAS 敗北、未知 mode、不正 domain JSON は fail-closed とし、active 以外を認証解決しない。rotation は現行値を保持した staging と原子的昇格により、失敗時の認証停止を防ぐ。【外部確認】不正 code probe は client credential の疎通確認に限定し、redirect URI の完全一致は Google の認可フローを使う実ブラウザ login で確認する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

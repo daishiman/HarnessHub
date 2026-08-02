@@ -1,0 +1,465 @@
+{
+  "graph_revision": 7,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/session-timeout-not-enforced.md",
+          "confidence": 0.95
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/session-timeout-not-enforced.md",
+          "confidence": 0.05
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "バグ報告形式: 現在の挙動/期待する挙動/再現手順を持ち、tags にbugを含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T03:44:05Z",
+      "depends_on": [],
+      "domain": "session-management",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/session-timeout-not-enforced.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "session-timeout-not-enforced",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "bug",
+        "security",
+        "session-management",
+        "high-priority"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ログインセッションのタイムアウトが強制されない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:48:00.570428Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/implement-api-rate-limiting.md",
+          "confidence": 0.92
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/implement-api-rate-limiting.md",
+          "confidence": 0.08
+        }
+      ],
+      "classification_confidence": 0.92,
+      "classification_reason": "実行手順・受入条件を持つ実装タスク形式。目的/入力/出力/手順が明示されている",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T03:44:05Z",
+      "depends_on": [],
+      "domain": "api",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/implement-api-rate-limiting.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "implement-api-rate-limiting",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "backend",
+        "api",
+        "rate-limiting"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "公開 API エンドポイントへレートリミットを実装する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:44:05Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/rest-api-v2-migration-spec.md",
+          "confidence": 0.97
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/rest-api-v2-migration-spec.md",
+          "confidence": 0.03
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "仕様書形式: スコープ/機能要件/API契約/互換性を持ち、tags にspecificationとbreaking-changeを含む。API変更あり",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T03:44:05Z",
+      "depends_on": [],
+      "domain": "api",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/rest-api-v2-migration-spec.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "rest-api-v2-migration-spec",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "api",
+        "specification",
+        "migration",
+        "breaking-change"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "REST API v2 移行仕様",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:44:05Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/order-processing-backend-architecture.md",
+          "confidence": 0.96
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/order-processing-backend-architecture.md",
+          "confidence": 0.04
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "Architecture overview/Context/System context/Container viewを持ち、Subtype architectureにbackendとsecurityを含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T03:44:05Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/order-processing-backend-architecture.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "order-processing-backend-architecture",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "architecture",
+        "backend",
+        "security",
+        "infrastructure",
+        "revised"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:48:04.411514Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/dev-environment-setup-guide.md",
+          "confidence": 0.94
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/dev-environment-setup-guide.md",
+          "confidence": 0.06
+        }
+      ],
+      "classification_confidence": 0.94,
+      "classification_reason": "開発者向けガイド形式: 対象読者/要約/手順/よくある問題を持ち、tags にdocumentationを含む",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T03:44:05Z",
+      "depends_on": [],
+      "domain": "onboarding",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/dev-environment-setup-guide.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "dev-environment-setup-guide",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "developer-guide",
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "default",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "documentation",
+        "onboarding",
+        "developer-guide"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "開発環境セットアップの手引き",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:44:05Z"
+    }
+  ]
+}
