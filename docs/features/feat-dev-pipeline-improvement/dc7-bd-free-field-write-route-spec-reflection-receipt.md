@@ -108,7 +108,7 @@ guard は直接 `bd update` を全て遮断し、正規入口 `bd-bridge.py` も
 | Dev Graph test suite | PASS: 752 passed / 2 skipped / 5 subtests passed |
 | task specification package | PASS: P01〜P13、violations 0、digest `sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6` |
 | system-spec gate | PASS: coverage complete + foundation、source citation 全件整合 |
-| graph / document / placement | PASS: graph schema violations 0、483 文書の行数制限、artifact placement、plugin manifest |
+| graph / document / placement | PASS: graph schema violations 0、485 文書の行数制限、artifact placement、plugin manifest |
 | fresh live trials | PASS: node / sync / schedule / decompose、独立 evaluator blockers 0 |
 | live-trial / criteria receipts | PASS: verdict 9/9、criteria evidence 22 passed |
 | repository CI checks | PASS: 136 PASS / 4 既存 WARN / 0 FAIL |
