@@ -31,7 +31,20 @@ export {
   type PublisherTokenRow,
   type PublisherTokensRepo,
 } from './device-flow';
-export { createIdpConnectionsRepo, type IdpConnectionRow, type IdpConnectionsRepo } from './idp';
+export {
+  CLIENT_SECRET_LAST4_LENGTH,
+  type CurrentSecretCas,
+  clientSecretLast4,
+  createIdpConnectionsRepo,
+  type IdpConnectionRow,
+  type IdpConnectionsRepo,
+  type IdpCredentialStatus,
+  InvalidCredentialStatusTransitionError,
+  PendingCredentialAbsentError,
+  type PendingSecretCas,
+  RESOLVABLE_CREDENTIAL_STATUS,
+  SharedCredentialSecretAccessError,
+} from './idp';
 export {
   createIdempotencyLedgerRepo,
   createSessionRevocationsRepo,

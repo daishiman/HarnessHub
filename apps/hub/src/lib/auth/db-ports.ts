@@ -26,7 +26,12 @@ import {
   type PublisherTokenRow,
   type UserRow,
 } from '@harness-hub/db';
-import { type PublisherTokenScope, publisherTokenScopeSchema, workspaceDomainSchema } from '@harness-hub/schemas';
+import {
+  type PublisherTokenScope,
+  publisherTokenScopeSchema,
+  RESOLVABLE_OIDC_CREDENTIAL_STATUS,
+  workspaceDomainSchema,
+} from '@harness-hub/schemas';
 import type {
   AuthClock,
   AuthPorts,
@@ -95,7 +100,7 @@ const serializeScopes = (scope: readonly PublisherTokenScope[]): string => JSON.
  * 逆に顧客方式では空配列 = `hd` 検査なしなので、壊れた値を空配列に倒すと**検査が消える**。
  * どちらの方向にも黙って倒れないよう、故障は故障として上げる。
  */
-function parseAllowedWorkspaceDomains(json: string | null, label: string): readonly string[] {
+export function parseAllowedWorkspaceDomains(json: string | null, label: string): readonly string[] {
   if (json === null || json.length === 0) return [];
 
   let parsed: unknown;
@@ -123,11 +128,19 @@ function parseAllowedWorkspaceDomains(json: string | null, label: string): reado
  * **この関数を通さない選択を増やさないこと。** issuer/client_id を決める経路 (`findByTenantSlug`) と
  * client_secret を復号する経路 (`createDbClientSecretResolver`) が別の規則で選ぶと、
  * 片方だけ別の接続を掴み「secret が合わない」だけの障害になる。規則が 1 つなら構造的に起きない。
+ *
+ * 並べ替えの前に `credential_status` で絞る (issue-auth-tenancy-customer-managed-google-oidc-20260729)。
+ * 管理 API から登録した接続は `pending` で作られ、接続テストを通して `active` にするまで
+ * ここへ現れない。**「見つからない」= 認証させない**であって、別状態の行や共有方式へは倒さない
+ * (受入条件 6 の暗黙 fallback 禁止)。絞り込みをこの 1 箇所に置くのも上と同じ理由で、
+ * 解決経路ごとに条件が分かれると片方だけ未有効化の credential を掴む。
  */
 function pickPrimaryConnection(connections: readonly IdpConnectionRow[]): IdpConnectionRow | null {
-  const sorted = [...connections].sort((left, right) =>
-    left.createdAt === right.createdAt ? left.id.localeCompare(right.id) : left.createdAt - right.createdAt,
-  );
+  const sorted = connections
+    .filter((row) => row.credentialStatus === RESOLVABLE_OIDC_CREDENTIAL_STATUS)
+    .sort((left, right) =>
+      left.createdAt === right.createdAt ? left.id.localeCompare(right.id) : left.createdAt - right.createdAt,
+    );
   return sorted[0] ?? null;
 }
 

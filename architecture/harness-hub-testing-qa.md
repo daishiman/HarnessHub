@@ -151,3 +151,12 @@ plugin/workflow diff
 ## 上流指針 (doctrine anchor)
 
 - reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。
+
+## 2026-08-02 顧客持ち込み Google OAuth 回帰設計
+
+- 実 libSQL と封筒暗号化で lifecycle、rotation、取消、disabled 再開、現行再テスト、
+  暗号文 CAS、migration 旧 writer 互換を検査する。
+- route test は role 4 種、CSRF、tenant A/B、Google 以外 issuer、secret 非露出を含む。
+- UI は実見出し階層で axe-core 違反 0、password/autocomplete、Workspace domain 正規化を検査する。
+  Google 実 client、Playwright、production migration は別の外部実測として残す。
+- 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-129`。

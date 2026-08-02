@@ -140,3 +140,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Workspace 拒否を user insert より前に置き、同じ Google `sub` も
   `(tenant_id, sub)` で別 principal とする。
 - 顧客方式の basePath、Auth.js state cookie、secret 復号、session claims は非回帰とする。
+
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-124)**:
+
+- `/api/v1/admin/oidc-connections/*` は既存 `withAuthz` の provider-admin 判定と
+  同一 origin 検査を通し、資源側 tenant を repository context へ渡す。
+- 一覧・ID 指定操作を Google issuer に限定し、同一 tenant の別 IdP を管理対象へ混ぜない。
+- 現行テストは現行暗号文+期待状態、pending テスト/昇格は pending 暗号文を CAS 条件にし、
+  同時差し替え時は 409 `state_conflict` で読み直しを要求する。
+- token probe は client credential の疎通確認に限定し、redirect URI は実 login で確認する。
+  応答・監査には列挙値と last4 だけを渡す。

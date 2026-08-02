@@ -73,6 +73,30 @@ export const oidcCredentialModeSchema = z.enum(['customer_google', 'shared_googl
 export type OidcCredentialMode = z.output<typeof oidcCredentialModeSchema>;
 
 /**
+ * 顧客持ち込み OIDC credential の lifecycle 状態
+ * (issue-auth-tenancy-customer-managed-google-oidc-20260729)。
+ *
+ * - `pending`: 登録済みだが接続テスト未実施。**認証解決の対象外**。
+ * - `tested`: 接続テストに合格したが、まだ有効化していない。
+ * - `active`: 認証解決に使う。この状態だけが解決対象。
+ * - `disabled`: 運用者が止めた。復帰は `pending` からやり直す (再テストを要求する)。
+ *
+ * `credentialMode` と同じく**既定値を持たせない**。「未設定なら有効」にすると、
+ * 状態を持たない経路で登録された接続が黙って認証に使われる。
+ */
+export const oidcCredentialStatusSchema = z.enum(['pending', 'tested', 'active', 'disabled']);
+export type OidcCredentialStatus = z.output<typeof oidcCredentialStatusSchema>;
+
+/**
+ * 認証解決に使ってよい唯一の状態。
+ *
+ * 「解決してよい状態の**集合**」ではなく単一値にしてある。集合にすると
+ * 「とりあえず tested も足しておく」が型を壊さずに通ってしまい、
+ * 未有効化の credential が認証へ流れる変更がレビューで目立たなくなる。
+ */
+export const RESOLVABLE_OIDC_CREDENTIAL_STATUS: OidcCredentialStatus = 'active';
+
+/**
  * Google Workspace のプライマリドメイン (ID token の `hd` claim と突き合わせる値)。
  *
  * 小文字のみを許すのは、`hd` の比較を「正規化してから」ではなく**保存時点で一意**にするため。

@@ -180,3 +180,21 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照する。
 - draft PR の merge と default branch reconciliation までは
   `HarnessHub-fnej` と dev-graph node を `in_progress` のまま維持する。
+
+## 実装反映 (2026-08-02 / HarnessHub-uk2i)
+
+- 顧客が所有する Google OAuth client を `provider-admin` が `/settings/auth` から登録し、
+  テスト、有効化、rotation、取消、無効化、再開できる管理面を追加した。
+- 接続は `pending / tested / active / disabled` で管理し、`active` 以外はログイン解決に使わない。
+  disabled の再開は新 credential の登録からやり直し、古い secret を未検証で戻さない。
+- 既存 Google 行へ staging 列を追加し、client ID・暗号化 secret・方式・許可 Workspace
+  ドメインを CAS で同時昇格する。切替前と取消後は現行ログインを継続する。
+- 管理 API は provider-admin、同一 origin、tenant scope、Google issuer に閉じる。
+  secret 全値は UI/API/監査/ログ/エラーへ返さず last4 のみ表示する。
+- 正本は system-spec `qa-123`〜`qa-129`、手順は
+  [顧客持ち込み Google OIDC runbook](../docs/features/feat-auth-tenancy/runbook-customer-managed-google-oidc.md)、
+  対応表は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+- Google 実環境 login、Playwright、production migration、draft PR merge と default branch
+  reconciliation が残るため、`HarnessHub-uk2i` は `in_progress` を維持する。

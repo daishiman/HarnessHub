@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-110 |
+| Web (web) | 確定 | 確定質疑: qa-124 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,19 +24,11 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-110 (対応セル: web)
+### qa-124 (対応セル: web)
 
-**質問**: 共有 callback と credential resolver を backend.web の既存 API/runtime 契約へどう統合しますか?
+**質問**: 顧客持ち込み Google OAuth 管理 API と競合制御を backend.web の現行契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-01 指示を明示承認として、qa-103 の API、principal、状態機械、監査、冪等性契約を全面維持し、認証 adapter の runtime 契約を追加確定する。
-
-【1. route dispatch】/api/auth/shared/callback/tenant-oidc は専用入口で処理し、state を先に検証して tenant を復元する。shared tenant の tenant 別 callback は 404、customer tenant を共通 callback へ向けた要求と予約 slug は 400 とし、曖昧な route fallback を作らない。
-
-【2. config resolution】TenantOidcConnectionPort は credential_mode と allowed_workspace_domains を返す。credential resolver は customer_google だけ tenant 行の暗号文を復号し、shared_google だけ環境 credential を返す。issuer/mode/設定の不一致と未知 mode は null として認可開始前に閉じる。
-
-【3. callback order】state 検証、tenant 接続一致、Auth.js の code exchange・署名・PKCE・nonce、Workspace hd、既存利用者/JIT、session 発行の順を守る。Workspace 拒否は user insert より前で、binding cookie は成功・拒否の callback 後に使い切る。
-
-【4. 互換性】customer_google の basePath、redirect_uri、Auth.js state cookie、secret 復号、session claims は変更しない。provider adapter の外へ Auth.js 型を漏らさない。
+**回答**: qa-110 の API、principal、共有 callback、credential resolver、状態機械、監査、冪等性契約を全面維持し、Google 専用管理面を追加確定する。【API】/api/v1/admin/oidc-connections と test / rotation / activate / disable を provider-admin 専用とし、状態変更は同一 origin、資源側 tenant scope、列挙 schema を通す。テナント越境の不存在は 404 に畳み、許可された provider-admin 越境は既存監査へ残す。【対象境界】一覧・ID 指定操作とも issuer=https://accounts.google.com の接続だけを対象にし、別 issuer の顧客方式 IdP を列挙・回転・無効化しない。【競合】現行テストは接続 ID・現行暗号文・期待状態、pending テストと昇格は pending 暗号文を CAS 条件に含め、テスト中の差し替え結果を別 credential へ誤適用しない。active/tested の再テストでも last_tested_at を更新する。【応答】secret 全値と Google の自由文応答は返さず、last4、状態、列挙エラーだけを返す。成立した変更は idp.connection_change の metadata.change で registered / credential_staged / mode_switch_staged / reactivation_staged / tested / rotation_* / activated / disabled を区別する。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 

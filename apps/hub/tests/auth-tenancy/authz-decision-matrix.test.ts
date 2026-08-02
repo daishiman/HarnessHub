@@ -99,6 +99,11 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   'publish.write': OWNER_UP,
   'publish.cancel': OWNER_UP,
   'deployment.register': OWNER_UP,
+  // 顧客持ち込み OIDC credential の管理面。テナント内の最上位である workspace-admin にも渡さない。
+  // 自テナントの認証 credential を差し替えられる権限は、そのテナントへの全ログインを乗っ取れる位置にある
+  // (issue-auth-tenancy-customer-managed-google-oidc-20260729)。
+  'idp.connection_read': PROVIDER_ONLY,
+  'idp.connection_change': PROVIDER_ONLY,
 };
 
 const COLUMNS: readonly MatrixColumn[] = ['member', 'owner', 'workspace-admin', 'provider-admin'];

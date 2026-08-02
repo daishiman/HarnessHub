@@ -155,3 +155,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   catalog client へ認可規則を複製しない。
 - 詳細は [system-spec/security.md](../system-spec/security.md) の `qa-120`、
   回帰契約は [testing-qa architecture](./harness-hub-testing-qa.md) を参照する。
+
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-127)**:
+
+- 顧客持ち込み credential の管理は provider-admin・同一 origin・tenant scope・Google issuer の
+  4 境界を全て通す。active 以外、未知状態、CAS 競合、別 tenant/issuer は fail-closed とする。
+- secret 平文は要求 body から封筒暗号化、または接続テスターの短命引数へだけ渡す。
+  API、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別は last4 に限定する。
+- rotation は現行値を保持する staging と原子的昇格で行い、disabled の復帰は新 credential の
+  pending テストを必須にする。顧客方式から共有方式への暗黙 fallback は行わない。

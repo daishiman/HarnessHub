@@ -51,11 +51,14 @@ const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', 'packages', 'db'
  * 0002 (hearing intake) は認証に関わる表を触らないので載せない。ここは認証 port の足場であり、
  * 無関係な migration を足すと「この harness が何を前提にしているか」が読めなくなる。
  * 0003 は `idp_connections` に列を足すので必須。
+ * 0004 も同じ表へ credential lifecycle 列を足す。載せないと本番 port が読む列が harness に存在せず、
+ * 「テストは通るが本番で落ちる」形になる。
  */
 const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
   '0001_auth-tenancy-device-flow-contract.sql',
   '0003_auth-tenancy-shared-google-oidc.sql',
+  '0004_auth-tenancy-customer-managed-oidc-lifecycle.sql',
 ];
 
 export interface RealDbHarness {
