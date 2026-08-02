@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1095,
+  "graph_revision": 1113,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
+        "evaluated_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T05:37:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
+        "source_digest": "6fd5a0fecc55d6efc1973d84965ffeb09fd636471b4579caf1e92ab222dcc051",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T05:40:02.373839Z"
     },
     {
       "acceptance": [
@@ -561,7 +561,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "evaluated_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "evaluator": "validate-coverage-matrix.py",
         "evidence_ref": "system-spec/spec-state.json"
       },
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T05:37:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "source_digest": "47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T05:41:06.531373Z"
     },
     {
       "acceptance": [
@@ -782,12 +782,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:06Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/acceptance-report.md",
+          "docs/features/feat-hub-foundation/release-notes.md",
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:06Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502",
@@ -844,15 +848,15 @@
         "テナント固有の OIDC/role/Device Flow policy (共通 auth adapter・認可 MW の package 境界のみ対象)"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:27:46Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "a38866c48d0a49e4d203b48dd382167cc2b18df68a8970eaddc9246a0847820b",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -863,7 +867,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:01:55.324015Z"
+      "updated_at": "2026-08-02T06:25:39.927001Z"
     },
     {
       "acceptance": [
@@ -893,12 +897,16 @@
       "classification_confidence": 0.9,
       "classification_reason": "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:44:36Z",
+        "evidence_refs": [
+          "docs/features/feat-domain-model-db/acceptance-record.md",
+          "docs/features/feat-domain-model-db/evidence-summary.md",
+          "docs/features/feat-domain-model-db/release-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-02T03:44:36Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b",
@@ -956,15 +964,15 @@
         "UI"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-25T21:18:40Z",
+        "imported_at": "2026-08-02T06:25:09Z",
         "origin_kind": "generated",
-        "source_digest": "2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c",
+        "source_digest": "214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1",
         "source_path": "specs/harness-hub-system-specification.md",
         "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -975,7 +983,7 @@
       "template_version": "1.0.0",
       "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T21:18:40Z"
+      "updated_at": "2026-08-02T06:25:41.177574Z"
     },
     {
       "acceptance": [
@@ -3139,7 +3147,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "stage-1",
@@ -3151,7 +3159,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-02T05:46:07.491153Z"
     },
     {
       "acceptance": [
@@ -12946,9 +12954,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1",
+        "evaluated_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
         "evaluator": "codex-final-review + merge-reconciliation",
-        "evidence_ref": "docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"
+        "evidence_ref": "system-spec/dev-workflow.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -12967,7 +12975,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -12984,7 +12992,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する",
+      "purpose": "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -13003,9 +13011,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:37:07Z",
+        "imported_at": "2026-08-02T05:27:08Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "dadd50e82509a1814c6cf9ccf05b7bc37a58f3fc0745364b28e7e799835f064b",
+        "source_digest": "f365125fc467dc03f961f07c03a206bd43b0202714abaa0c31da784df195763b",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13021,7 +13029,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T13:37:07Z"
+      "updated_at": "2026-08-02T05:27:08Z"
     },
     {
       "acceptance": [
@@ -25303,7 +25311,8 @@
       "related_nodes": [
         "issue-audit-followups-20260717",
         "issue-c02-upsert-lifecycle-regression-20260729",
-        "issue-id-uniqueness-gate-generalization-20260728"
+        "issue-id-uniqueness-gate-generalization-20260728",
+        "issue-doc-line-limit-followup-mfh7-20260728"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25347,7 +25356,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:18:22.142120Z"
+      "updated_at": "2026-08-01T12:00:37Z"
     },
     {
       "acceptance": [
@@ -26245,7 +26254,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:55:08.510722Z"
+      "updated_at": "2026-08-01T12:00:37Z"
     },
     {
       "acceptance": [
@@ -38873,12 +38882,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "P13 から切り出した A3 (SLO 計測) の時間ゲート作業を追跡する standalone issue。exact-13 package の子は P01-P13 固定のため package へ追加できない",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-02T03:42:33Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-02T03:42:33Z",
+        "source": "manual",
+        "status": "not_applicable"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -38959,7 +38970,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "feat-hub-foundation",
         "slo",
@@ -38972,7 +38983,7 @@
       "template_version": "1.0.0",
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:11:25.870970Z"
+      "updated_at": "2026-08-02T05:46:51.338346Z"
     },
     {
       "acceptance": [
@@ -42366,12 +42377,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-mfh7 の最終レビューで検出した 500 行超過 2 件。ユーザー判断によりファイル分割は今回の PR に含めずフォローアップ課題として切り出した (共有インフラである bd-bridge.py と graph authority 下の issue 本文を、大規模レビューの最中に安全確認なく分割するリスクを避けるため)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-01T13:48:01Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-node/live-trial/20260801T121510Z-wt28-w7n7-node/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260801T123553Z-wt28-w7n7-sync/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260801T131339Z-wt28-w7n7-decompose/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260801T125011Z-wt28-w7n7-schedule/verdict.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-01T13:48:01Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42416,8 +42433,27 @@
         "issue-bd-external-ref-orphan-nodes-20260725"
       ],
       "resource_scope": [
+        ".dev-graph/state/graph.json",
         "plugins/dev-graph/scripts/bd-bridge.py",
-        "issues/sys-bd-external-ref-orphan-nodes-20260725.md"
+        "plugins/dev-graph/lib/bd_bridge_audit.py",
+        "plugins/dev-graph/lib/bd_bridge_contracts.py",
+        "plugins/dev-graph/lib/bd_bridge_graph.py",
+        "plugins/dev-graph/lib/bd_bridge_projection.py",
+        "issues/sys-doc-line-limit-followup-mfh7-20260728.md",
+        "issues/sys-bd-external-ref-orphan-nodes-20260725.md",
+        "issues/sys-bd-external-ref-orphan-nodes-20260725-log.md",
+        "issues/sys-guard-graph-schema-newline-segment-split-20260728.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p08.md",
+        "docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md",
+        "docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md",
+        "eval-log/dev-graph/run-dev-graph-node/",
+        "eval-log/dev-graph/run-dev-graph-sync/",
+        "eval-log/dev-graph/run-dev-graph-decompose/",
+        "eval-log/dev-graph/run-dev-graph-schedule/"
       ],
       "scope_in": [
         "bd-bridge.py の責務分割方針の設計 (create/update/close 等の verb 別 module 化など)。HarnessHub-2mor (500 行分割が harness coverage の分母を希釈し ratchet を回帰させる懸念) と矛盾しない進め方の確認",
@@ -42438,7 +42474,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "quality",
         "dev-graph",
@@ -42449,7 +42485,7 @@
       "template_version": "1.0.0",
       "title": "bd-bridge.py と mfh7 issue 本文がユーザー指定 500 行上限を超過しており、安全な分割方針が未確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T04:57:02.738907Z"
+      "updated_at": "2026-08-01T13:48:01Z"
     },
     {
       "acceptance": [
@@ -44206,6 +44242,112 @@
     },
     {
       "acceptance": [
+        "改行区切りの `git restore <保護外パス>` の直後に続く無関係な `git add <保護対象パス>` を含む複数行コマンドが誤って BLOCK されない",
+        "同一保護対象パスを対象にした単一行の `git restore` は引き続き正しく BLOCK される (回帰なし)",
+        "既存の guard 系ユニットテストが全て pass する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-l1ru",
+        "linked_at": "2026-07-28T11:38:35Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-guard-graph-schema-newline-segment-split-20260728.md",
+          "confidence": 0.85
+        }
+      ],
+      "classification_confidence": 0.85,
+      "classification_reason": "PR #499 最終レビュー中に実際の複数行 Bash コマンドで誤 BLOCK を実測し、hook を直接計測して原因を確定した実挙動欠陥",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-07-28T11:40:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-guard-graph-schema-newline-segment-split-20260728.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "改行のみで連結された独立コマンド群が、それぞれ独立した mutating-operand 判定を受ける状態",
+      "graph_node_id": "issue-guard-graph-schema-newline-segment-split-20260728",
+      "implementation_readiness": {
+        "checked_at": "2026-07-28T11:40:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "改行区切りの複数コマンドを単一 Bash tool 呼出しにまとめても、無関係な後続コマンドのパスが誤って保護対象と判定されない状態にする",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/dev-graph/hooks/guard_graph_commands.py"
+      ],
+      "scope_in": [
+        "_mutating_operands() のセグメント分割正規表現へ改行 (\\n) を追加する",
+        "回帰テストとして改行区切り + 保護外パス + 保護対象パスの組合せを追加する"
+      ],
+      "scope_out": [
+        "_pipelines() 側の改行分割仕様の変更 (既に改行を含めて分割しており対称化のみ必要)",
+        "GRAPH_OR_SCHEMA_TARGET 正規表現自体の見直し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-28T11:40:00Z",
+        "origin_kind": "generated",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "hook",
+        "over-blocking",
+        "guard-graph-schema"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "guard-graph-schema の Bash git 分岐が改行区切りの複数コマンドを1コマンドとして誤結合し無関係パスを誤って BLOCK する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-07-28T11:40:00Z"
+    },
+    {
+      "acceptance": [
         "401/403/契約不正後に以前の catalog 内容を描画しない",
         "同一 scope の一時障害だけ stale を許可し scope 切替後は再利用しない",
         "認証済み marketplace は private cache と scope ごとの Vary を返す",
@@ -44326,6 +44468,265 @@
       "title": "Harness Hub Dual Catalog cache・認可境界追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-01T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "doc/参考Skill/skill-creator の追跡ファイルが 0 件になる",
+        "active code/plugin/docs から削除 path と aiworkflow-requirements への実行依存が 0 件になる",
+        "external-cli-agents-guide.md が consumer plugin 配下に存在し codex-connection.md と resource-map.yaml から到達できる",
+        "system-spec/specs/architecture/features/tasks/docs と仕様反映受領書が同じ影響境界を記録する",
+        "対象品質ゲートと repository CI が blocking failure 0 で完了する",
+        "手書き変更ファイルが 500 行以下で repository Markdown の 300 行制約を満たす"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ym9h",
+        "linked_at": "2026-08-02T04:09:29Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "外部参考コピーの削除と唯一の有効参照移設を一つの rollback 単位で完了する repository maintenance task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b901921ef649ea9ef2e36b838e56bfb7ffa68835ce17be4465468b9480a5cdee",
+        "evaluator": "codex-task-intake",
+        "evidence_ref": "tasks/task-remove-aiworkflow-reference-skill-20260802.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-02T03:57:41Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "doc/参考Skill/skill-creator の追跡ファイル 0、有効な dangling reference 0、consumer plugin から外部 CLI 契約へ到達可能、全仕様層と Beads の判断一致を同時に成立させる",
+      "graph_node_id": "task-remove-aiworkflow-reference-skill-20260802",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T03:57:41Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "UBM 由来の aiworkflow-requirements を前提にした外部参考コピーを除去し、現在も利用する外部 CLI 契約だけを consumer plugin の所有 path へ移して、能動コードから凍結参考層への依存をなくす",
+      "related_nodes": [
+        "feat-doc-governance-portability",
+        "arch-harness-hub-dev-workflow",
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "doc/参考Skill/skill-creator/",
+        "plugins/harness-creator/skills/delegate-codex-skill-review/references/",
+        "plugins/plugin-dev-planner/skills/run-plugin-dev-plan/references/phase-lifecycle.md",
+        "doc/マルチ企業展開/クリーンアップ計画.md",
+        "doc/マルチ企業展開/移管計画.md",
+        "doc/ClaudeCodeスキルの設計書/23a-prefix-driven-internal-structure.md",
+        "scripts/lint-legacy-plugin-name.py",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-doc-governance-portability.md",
+        "tasks/task-remove-aiworkflow-reference-skill-20260802.md",
+        "docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "doc/参考Skill/skill-creator のディレクトリ単位削除",
+        "external-cli-agents-guide.md の delegate-codex-skill-review 配下への移設",
+        "cleanup/transfer 計画と legacy name allowlist の整合",
+        "dev-workflow の system-spec/spec/architecture/feature/task/docs 反映と受領書",
+        "task spec、dev-graph、plugin、document、repository 品質ゲート再実行"
+      ],
+      "scope_out": [
+        "Harness Hub の UI/API/DB/auth/deploy runtime 変更",
+        "eval-log の凍結履歴削除",
+        "xl-skills 原本の変更",
+        "外部 CLI 実行方式そのものの再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T03:57:41Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-02",
+      "status": "active",
+      "tags": [
+        "documentation",
+        "portability",
+        "reference-cleanup",
+        "aiworkflow"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T04:39:00Z"
+    },
+    {
+      "acceptance": [
+        "priority、assignee、labels を bd-bridge update から更新できる",
+        "直接 bd update は自由フィールドを含め引き続き遮断される",
+        "labels は置換型 set-labels に正規化され、空入力と操作外引数を fail-closed に拒否する",
+        "契約文書、guard 案内、UPDATE_FIELDS の三者一致を contract test が固定する",
+        "task 仕様品質ゲートと repository 品質ゲートが統合後 tree で成功する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dc7",
+        "linked_at": "2026-08-02T03:24:50Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-bd-free-field-write-route-20260721.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "Beads HarnessHub-dc7 の実装・検証・仕様反映を追跡する repository development tooling issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "feefe87306cadc6bc7406c3a6e22796c591088c92d5c7fdfb005d58f60046e69",
+        "evaluator": "beads-design-review + codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T01:21:36Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-bd-free-field-write-route-20260721.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "guard、実行契約、bd-bridge が自由フィールドの扱いで一致し、直接更新を許可せずに bridge 経由で決定論的に更新できる",
+      "graph_node_id": "issue-bd-free-field-write-route-20260721",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T03:24:50Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "priority、assignee、labels を Beads 側の突合対象外に保ちながら、更新経路だけは単一チョークポイントへ統一し、到達不能な契約を解消する",
+      "related_nodes": [
+        "issue-bd-bridge-notes-passthrough-20260721",
+        "issue-doc-line-limit-followup-mfh7-20260728",
+        "arch-harness-hub-dev-workflow",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "plugins/dev-graph/lib/bd_bridge_contracts.py",
+        "plugins/dev-graph/scripts/bd-bridge.py",
+        "plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py",
+        "plugins/dev-graph/tests/test_bd_free_field_write_route.py",
+        "issues/sys-bd-free-field-write-route-20260721.md",
+        "docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md",
+        "docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"
+      ],
+      "scope_in": [
+        "bd-bridge update への priority、assignee、labels の追加",
+        "priority と labels の正規化および dry-run receipt への反映",
+        "guard、契約文書、bridge の三者一致を固定する回帰テスト",
+        "仕様・設計・feature・task への実装反映と受領書"
+      ],
+      "scope_out": [
+        "guard の直接 bd update 遮断の緩和",
+        "Beads CLI 本体の変更",
+        "priority、assignee、labels の graph parity 管理",
+        "先行して main へ統合済みの bd-bridge 責務分割そのもの"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T03:24:50Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "bd-bridge",
+        "choke-point",
+        "dev-graph",
+        "beads"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Beads 自由フィールドの正規更新経路を bd-bridge に統一する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T03:24:50Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

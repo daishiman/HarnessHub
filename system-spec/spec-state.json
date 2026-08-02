@@ -54,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-112",
+        "qa_ref": "qa-126",
         "serves_goals": [
           "G1",
           "G2",
@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-115",
+        "qa_ref": "qa-124",
         "serves_goals": [
           "G2",
           "G4"
@@ -162,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-120",
+        "qa_ref": "qa-128",
         "serves_goals": [
           "G4",
           "G5"
@@ -200,11 +200,12 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-116",
+        "qa_ref": "qa-123",
         "serves_goals": [
           "G1",
           "G4",
-          "G5"
+          "G5",
+          "G2"
         ]
       },
       "mobile": {
@@ -239,7 +240,7 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-110",
+        "qa_ref": "qa-125",
         "serves_goals": [
           "G1",
           "G2",
@@ -280,7 +281,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-118",
+        "qa_ref": "qa-127",
         "serves_goals": [
           "G1",
           "G2",
@@ -318,7 +319,7 @@
     "maintenance-ops": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-114",
+        "qa_ref": "qa-129",
         "serves_goals": [
           "G1",
           "G2",
@@ -355,7 +356,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-096",
+        "qa_ref": "qa-122",
         "serves_goals": [
           "G1",
           "G4",
@@ -394,7 +395,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-119",
+        "qa_ref": "qa-130",
         "serves_goals": [
           "G1",
           "G2",
@@ -1026,6 +1027,56 @@
       "id": "qa-120",
       "question": "main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?",
       "answer": "ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。\n\n【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。\n\n【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。\n\n【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。\n\n【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。"
+    },
+    {
+      "id": "qa-121",
+      "question": "qa-096 の CI/local 品質ゲートとポータビリティ契約を維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web にどう統合しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-096 の MVP 優先度、CI/local parity、fail-closed、回帰証拠、製品境界を全面維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【2. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【3. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【4. 検証と境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。本契約は repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-122",
+      "question": "qa-096 の開発品質契約を情報欠落なく維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web の自己完結した現行契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。\n\n【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【8. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-123",
+      "question": "qa-019 / qa-116 の SLO 99.5% と公開実測契約を維持しながら、feat-hub-foundation と関連 Beads をどの完了境界で閉じ、未完了の観測リスクをどう残しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・Beads 更新指示、および同日 Beads に記録済みの『HarnessHub-37h.14 / HarnessHub-37h.15 は追加対応不要』という明示判断を承認根拠として、qa-019 / qa-116 の SLO 99.5%・公開実測・エラーバジェット契約を全面維持し、delivery closure と operational verdict を次のとおり分離する。\n\n【1. 運用品質契約の維持】Better Stack 公開 status page の実測、完了 UTC 日だけを数える 30 日観測窓、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結を変更しない。観測 6 日 / 30 日で collecting、外形単独判定 null、Workers 5xx 率未取得という 2026-08-01 時点の証跡を保持し、99.5% 達成を主張しない。\n\n【2. feature の完了境界】feat-hub-foundation は exact-13 の P01〜P13、CI test→deploy、本番 /health、bundle 予算、共通層、release / runbook 証跡の完了を delivery closure とする。SLO 30 日観測と旧 token revoke 確認は独立した運用 follow-up であり、ユーザーが HarnessHub-37h.14 / HarnessHub-37h.15 を追加対応不要として completion_evidence.status=not_applicable で閉じたため、feat-hub-foundation と後続 feature を block しない。HarnessHub-37h.13 は P13 デプロイ責務の完了として閉じる。\n\n【3. waiver の意味】not_applicable は PASS や目標達成ではなく、今回の delivery closure に対する追跡免除である。将来、観測判定や token revoke 確認を再開する場合は既存 issue を reopen するか新 issue を起票し、qa-116 の CLI / runbook / 生データ契約で再検証する。\n\n【4. domain model の独立完了】feat-domain-model-db / HarnessHub-u6q は、SQLite 方言互換 schema、Release immutable 強制、content-addressed R2 registry、export / restore 証跡という固有受入の完了を根拠に閉じる。Hub 基盤の waived follow-up を domain model の未完了へ読み替えない。\n\n【5. 非影響範囲】外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit、SLO 目標値、計測式、秘密管理境界は変更しない。本反映は lifecycle と acceptance governance の変更に限定する。"
+    },
+    {
+      "id": "qa-124",
+      "question": "顧客持ち込み Google OAuth client の管理 lifecycle を、共有方式を含む auth.web の現行認証契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-115 の production OIDC・共有 Google OAuth・JIT・session・Device Flow 契約を全面維持し、顧客持ち込み方式の管理 lifecycle を追加確定する。【状態】管理 API の新規登録は pending、現行 credential の接続テスト合格は pending のとき tested、明示的な有効化だけが active、無効化は disabled とする。認証解決対象は active のみで、顧客方式の失敗・無効化から共有方式へ暗黙 fallback しない。【再開】disabled の古い credential を直接 active に戻さない。新しい client ID / secret / 許可 Workspace ドメインを staging すると pending へ戻り、pending テスト合格後の有効化でのみ active へ進む。【切替】1 テナント 1 Google 行の制約を維持し、client ID・secret・方式・許可ドメインを staging へ一式保存して、テスト済みの一式を同一更新で昇格する。昇格前と取消後は現行 credential でログインを継続する。【検証境界】token endpoint の不正 code probe は discovery と client ID / secret の疎通確認であり、Google Console の redirect URI 一致は証明しない。有効化後の実ブラウザ login を別の完了ゲートとする。"
+    },
+    {
+      "id": "qa-125",
+      "question": "顧客持ち込み Google OAuth 管理 API と競合制御を backend.web の現行契約へどう統合しますか?",
+      "answer": "qa-110 の API、principal、共有 callback、credential resolver、状態機械、監査、冪等性契約を全面維持し、Google 専用管理面を追加確定する。【API】/api/v1/admin/oidc-connections と test / rotation / activate / disable を provider-admin 専用とし、状態変更は同一 origin、資源側 tenant scope、列挙 schema を通す。テナント越境の不存在は 404 に畳み、許可された provider-admin 越境は既存監査へ残す。【対象境界】一覧・ID 指定操作とも issuer=https://accounts.google.com の接続だけを対象にし、別 issuer の顧客方式 IdP を列挙・回転・無効化しない。【競合】現行テストは接続 ID・現行暗号文・期待状態、pending テストと昇格は pending 暗号文を CAS 条件に含め、テスト中の差し替え結果を別 credential へ誤適用しない。active/tested の再テストでも last_tested_at を更新する。【応答】secret 全値と Google の自由文応答は返さず、last4、状態、列挙エラーだけを返す。成立した変更は idp.connection_change の metadata.change で registered / credential_staged / mode_switch_staged / reactivation_staged / tested / rotation_* / activated / disabled を区別する。"
+    },
+    {
+      "id": "qa-126",
+      "question": "顧客持ち込み credential の lifecycle と無停止 rotation を database.web の永続化契約へどう反映しますか?",
+      "answer": "qa-112 の tenant scope、方式別保存、共有 credential 非複製、primary connection、migration/rollback 契約を維持する。ただし qa-112【1】の allowed_workspace_domains TEXT NOT NULL DEFAULT [] は migration 0003 の実契約と不一致だったため、TEXT NULL 許容、NULL=顧客方式では hd 未検査・共有方式では fail-closed へ訂正する。【0004 expand】idp_connections に credential_status TEXT NOT NULL DEFAULT active と、client_secret_last4、pending_client_secret_enc / last4 / client_id / credential_mode / allowed_workspace_domains / tested_at、last_tested_at、updated_at の NULL 許容列を追加する。既存行は実際に稼働中だったため active 既定で後方互換を保ち、管理 API の新規行は明示的に pending とする。【無停止】現行暗号文を上書きせず pending に封筒暗号化して保存し、テスト済み時刻と同じ CAS 更新で client ID・secret・方式・許可ドメインを昇格する。取消は pending 列だけを消す。【再開と競合】disabled への新 credential staging は期待状態を CAS 条件にして pending へ戻す。現行テストも現行暗号文と期待状態を CAS 条件にし、競合時は0行として再読込を要求する。暗号文の AAD は同一行の論理 secret slot を用い、pending から現行へ暗号文を再暗号化せず移せる。"
+    },
+    {
+      "id": "qa-127",
+      "question": "provider-admin 向け Google OAuth 管理画面を frontend.web の現行画面契約へどう統合しますか?",
+      "answer": "qa-118 までの画面構成、認可後データ境界、レスポンシブ、共通部品、認可出し分けを全面維持し、/settings/auth の管理面を追加確定する。【手順表示】Google Cloud Console 側の手作業、Hub への登録、接続状態を順に示し、正規 callback URL と必要 scope をコピー可能にする。Google 側設定を Hub が代行しない責任境界を明示する。【入力】client ID、password 型・autocomplete=new-password の client secret、任意の Workspace ドメインを受ける。ドメインはカンマ/改行区切りを小文字化・空白除去・重複排除し、成功後は ID・secret・ドメイン入力を破棄する。【状態】pending/tested/active/disabled と last4、最終テスト時刻、rotation の現行/pending を区別し、未テスト staging は有効化できないこと、昇格前は旧設定でログイン継続すること、昇格後の Google 側旧 secret 失効が手作業であることを表示する。【エラー】公開 enum を runtime schema で検証して固定文言へ写し、未知 error、例外、入力値、secret、Google 応答本文を描画しない。コピー失敗は未処理 Promise にしない。"
+    },
+    {
+      "id": "qa-128",
+      "question": "顧客持ち込み Google OAuth 管理面の秘密・認可・tenant 境界を security.web の現行防御契約へどう追加しますか?",
+      "answer": "qa-120 の共有 OAuth state/cookie/hd 防御、catalog cache 防御、既存 deny-by-default を全面維持し、顧客持ち込み管理面を追加確定する。【認可】read/change action は provider-admin のみ、状態変更は同一 origin、repository は全 read/write/decrypt に tenant_id を強制する。別 tenant の ID は存在を漏らさず、Google 専用 API は issuer を server 定数に固定し、別 issuer の ID 指定を拒否する。【秘密】client secret は要求 body→repository の封筒暗号化、または接続テスターへの短命引数だけを通る。応答型、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別子は last4 に限定する。共有方式の secret は tenant 行へ複製しない。【状態安全】未テスト credential、disabled、CAS 敗北、未知 mode、不正 domain JSON は fail-closed とし、active 以外を認証解決しない。rotation は現行値を保持した staging と原子的昇格により、失敗時の認証停止を防ぐ。【外部確認】不正 code probe は client credential の疎通確認に限定し、redirect URI の完全一致は Google の認可フローを使う実ブラウザ login で確認する。"
+    },
+    {
+      "id": "qa-129",
+      "question": "顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?",
+      "answer": "qa-114 の共有 OAuth rollout/rollback、観測、完了収束、既存 runbook 契約を全面維持し、顧客持ち込み方式の運用を追加確定する。【責任境界】Google Cloud Console の client 作成、redirect URI、同意画面、secret 追加/失効は顧客の手作業、Hub の登録・テスト・有効化・無効化は provider-admin の操作とする。【通常手順】callback URL 確認→Google client 準備→Hub 登録→probe 合格→有効化→実ブラウザ login の順を gate 化する。rotation は Google で新 secret 追加、Hub staging、pending テスト、昇格、実 login、Google で旧 secret 失効の順とし、昇格前は取消可能にする。【停止と再開】無効化は共有方式へ fallback せずログインを止める。再開は新 credential を登録して pending→tested→active を再実行し、古い credential の直接復帰を禁止する。【証跡】secret 全値を issue/PR/chat/screenshot に残さず last4 のみ記録し、runbook、検証結果、仕様反映受領書、Beads notes、draft PR に実施結果と Google 実環境/Playwright/production migration の残課題を分離する。"
+    },
+    {
+      "id": "qa-130",
+      "question": "顧客持ち込み Google OAuth 管理機能の品質保証を testing-qa.web の現行契約へどう追加しますか?",
+      "answer": "qa-119 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡契約を全面維持し、次を追加確定する。【実 DB 結合】libSQL と既存封筒暗号化を使い、pending/tested/active/disabled、無停止 rotation、取消、disabled 再登録、現行再テスト時刻、暗号文 CAS 競合、migration 0004 の旧 writer 互換を検査する。【認可・境界】provider-admin/workspace-admin/member/未認証、CSRF、tenant A/B 越境、Google 以外 issuer の非列挙・操作拒否を route test で固定する。【非露出】応答全文、監査 payload、DOM、エラー経路、repository secret scan に secret 全値が無いことを負例で確認する。【UI】実画面と同じ h1→h2→h3 骨格で axe-core の違反0、password/autocomplete、rotation の現行継続表示、Workspace ドメイン正規化を検査する。【ゲートと残余】pnpm verify、auth/tenant/secret/bundle/client-bundle、task plan/dev-graph/system-spec validator を PR 前に再実行する。Google 実 OAuth client による probe とブラウザ login、Playwright 実操作、production migration は repository test で代替せず残課題に明示する。"
     }
   ],
   "approval_log": [
@@ -1108,6 +1159,14 @@
     {
       "id": "appr-020",
       "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として記録。feat-publish-pipeline の API、状態機械、R2、認証、運用、品質契約を qa-103〜qa-108 へ反映する。"
+    },
+    {
+      "id": "appr-022",
+      "note": "ユーザーの 2026-08-02 指示を、外部参考 Skill の削除、有効な外部 CLI 契約の consumer-owned path への移設、system-spec/specs/architecture/features/tasks/docs への正規反映、品質ゲート、commit/push/draft PR の明示承認として記録する。"
+    },
+    {
+      "id": "appr-023",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks 更新、Beads 更新、main 統合後の commit・push・draft PR』および Beads に記録済みの HarnessHub-37h.14 / HarnessHub-37h.15 追加対応不要判断を明示承認として記録。SLO 運用契約を維持したまま delivery closure と operational verdict を qa-123 で分離する。"
     }
   ],
   "reopen_log": [
@@ -1961,6 +2020,66 @@
       "category": "security",
       "platform": "web",
       "reason": "2026-08-02 main integration: qa-111 shared Google OAuth and qa-117 dual catalog cache are both confirmed and require one current security.web integration anchor",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "外部参考コピーに残っていた有効契約を consumer plugin へ移し、参考層を runtime 正本にしない所有境界を qa-096 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "qa-121 が qa-096 を要約参照に留めて章単独の情報を失ったため、旧契約全文と参考層 ownership の新契約を qa-122 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "feat-hub-foundation の delivery closure と qa-116 の未完了 operational verdict を分離するため、確定済み infrastructure.web を R4-reopen して追補する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "顧客持ち込み Google OAuth 管理 lifecycle の実装・最終レビュー差分を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "Google 専用管理 API、CAS、監査契約を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "migration 0004、staging credential、原子的昇格、CAS を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "provider-admin 管理 UI と Workspace domain 入力を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "secret、tenant、issuer、fail-closed 境界を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "登録、rotation、無効化、再開 runbook を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "認可、CAS、非露出、a11y、残余ゲートを正式反映するため",
       "from": "確定"
     }
   ],
@@ -3202,7 +3321,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

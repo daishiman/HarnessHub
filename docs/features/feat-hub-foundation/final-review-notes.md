@@ -294,3 +294,5 @@ shared-layers 前文が名指しする 4 件を実装レベルで確認した。
 ## 13. 再レビュー以降
 
 Round 1（範囲限定の差し戻し）は本書 §1〜§12、Round 2（2026-07-21 / 条件付き承認）と条件 3 件の解消記録は [final-review-round2-notes.md](./final-review-round2-notes.md) §§13〜14 が正本。
+
+2026-08-02 の lifecycle 最終レビューは、300 行上限を守るため [final-lifecycle-review-20260802.md](final-lifecycle-review-20260802.md) へ責務分割した。

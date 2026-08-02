@@ -20,9 +20,9 @@ resource_scope: ["plugins/dev-graph/hooks/guard_graph_commands.py"]
 purpose: "改行区切りの複数コマンドを単一 Bash tool 呼出しにまとめても、無関係な後続コマンドのパスが誤って保護対象と判定されない状態にする"
 goal: "改行のみで連結された独立コマンド群が、それぞれ独立した mutating-operand 判定を受ける状態"
 mvp_alignment: null
-scope_in: ["_mutating_operands() のセグメント分割正規表現へ改行 (\\n) を追加する", "回帰テストとして改行区切り + 保護外パス + 保護対象パスの組合せを追加する"]
-scope_out: ["_pipelines() 側の改行分割仕様の変更 (既に改行を含めて分割しており対称化のみ必要)", "GRAPH_OR_SCHEMA_TARGET 正規表現自体の見直し"]
-acceptance: ["改行区切りの `git restore <保護外パス>` の直後に続く無関係な `git add <保護対象パス>` を含む複数行コマンドが誤って BLOCK されない", "同一保護対象パスを対象にした単一行の `git restore` は引き続き正しく BLOCK される (回帰なし)", "既存の guard 系ユニットテストが全て pass する"]
+scope_in: ["_mutating_operands() のセグメント分割正規表現へ改行 (\\n) を追加する","回帰テストとして改行区切り + 保護外パス + 保護対象パスの組合せを追加する"]
+scope_out: ["_pipelines() 側の改行分割仕様の変更 (既に改行を含めて分割しており対称化のみ必要)","GRAPH_OR_SCHEMA_TARGET 正規表現自体の見直し"]
+acceptance: ["改行区切りの `git restore <保護外パス>` の直後に続く無関係な `git add <保護対象パス>` を含む複数行コマンドが誤って BLOCK されない","同一保護対象パスを対象にした単一行の `git restore` は引き続き正しく BLOCK される (回帰なし)","既存の guard 系ユニットテストが全て pass する"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
@@ -44,9 +44,10 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: null
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-28T11:40:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 概要
 
