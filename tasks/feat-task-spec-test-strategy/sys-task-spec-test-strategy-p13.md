@@ -209,7 +209,7 @@ This section is the current source closure and supersedes older counts or wordin
 ## 参照情報
 
 - goal-spec: goal-spec.json (parent_feature=feat-task-spec-test-strategy, feature_context_digest=sha256:eafd046f7f71c3c44f48a69297d08e0ca160a3f503e243a99a8a11c7bd178df7)
-- 仕様正本: system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080 (タスク仕様書テスト戦略必須化)
+- 仕様正本: system-spec/testing-qa.md qa-076/qa-078/qa-079/qa-080/qa-117 (テスト戦略必須化と世代非依存 rerun command)
 - trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.
 
 ## 依存
@@ -222,5 +222,6 @@ This section is the current source closure and supersedes older counts or wordin
 - scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
 - verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-task-spec-test-strategy` を使い、current pointer から現行世代を再解決する。
+- closure: `HarnessHub-ji8y` の正本判断と検証証跡は `docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md` を参照する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。

@@ -4,7 +4,7 @@ artifact_kind: "feature"
 artifact_subtypes: []
 project_id: "harness-hub"
 domain: "testing-qa"
-tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","decision-d8"]
+tags: ["macro-feature","testing-qa","task-spec","quality-gate","qa-076","qa-078","qa-079","qa-081","qa-117","decision-d8"]
 priority: "high"
 start_date: null
 target_date: null
@@ -12,7 +12,7 @@ iteration: null
 title: "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T20:58:52Z"
-updated_at: "2026-08-01T05:05:39.390012Z"
+updated_at: "2026-08-02T03:12:10.700517Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","feat-doc-governance-portability","feat-mvp-first-scheduling"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-task-spec-test-strategy/7d185f453466523edcc7c6071fde7c24001612da367de329c10ba13c82a43bae/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-01T04:59:08Z","origin_kind":"generated","source_digest":"530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T02:48:59Z","origin_kind":"generated","source_digest":"d5a432d9dfee0d5645e2469093cd73df265f403ad18867bbea19943e63d35c36","source_path":"system-spec/testing-qa.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 testing-qa 章 qa-076/qa-078/qa-079/qa-081 と D8 から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-task-spec-test-strategy.md","confidence":0.9}]
@@ -131,3 +131,14 @@ system-dev-planner が生成する P01..P13 タスク仕様書が、次の 4 項
 `tasks/task-slide-report-generator-browser-ci-20260730.md`、判断と証拠は
 `docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md`
 を参照する。
+
+## 2026-08-02 C12 再実行コマンドの改善
+
+`HarnessHub-ji8y` で、task spec が公開後も記載どおり検証できるようにした。
+生成中の内部検証は実 staging path を使い、公開 task spec は
+`--feature-package <self-package-id>` から current generation を解決する。
+contract 1.3.0 の validator は `--staging`、flag 欠落、package mismatch を
+CommonMark の fenced/inline code から検出し、旧 immutable package は従来契約で守る。
+仕様・設計・検証の対応は
+`docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md`
+を正とする。

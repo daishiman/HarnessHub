@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1089,
+  "graph_revision": 1095,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
+        "evaluated_digest": "fe8e646f22bc898c622f6600721c0a89c9c6d1309487c88f42f8465253113eb1",
         "evaluator": "validate-coverage-matrix.py",
-        "evidence_ref": "system-spec/spec-state.json"
+        "evidence_ref": "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T15:28:45Z",
+        "imported_at": "2026-08-02T03:05:11Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f86f54c42a5c98bef64036974a89b57ba7e9f6a2c3053930634b07c020a33e5f",
+        "source_digest": "fe8e646f22bc898c622f6600721c0a89c9c6d1309487c88f42f8465253113eb1",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T15:28:45Z"
+      "updated_at": "2026-08-02T03:09:19.394535Z"
     },
     {
       "acceptance": [
@@ -33959,9 +33959,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
-        "evaluator": "codex-conflict-resolution",
-        "evidence_ref": "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
+        "evaluated_digest": "d5a432d9dfee0d5645e2469093cd73df265f403ad18867bbea19943e63d35c36",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -33980,7 +33980,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・一時生成物に左右されない skill lint・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
+      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-117 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -33997,7 +33997,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅 (単体・結合・境界値・回帰)、カバレッジ 80% 品質ゲートと改善ループ、FE/BE/インフラ層別テスト方針、behavior ベースの保守しやすい UI テスト、タスク仕様書へのテスト戦略の冪等組込 — を dev-graph から参照する",
+      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅、カバレッジ 80% 品質ゲート、層別テスト方針、task 仕様書のテスト戦略と世代非依存 rerun command — を dev-graph から参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -34017,9 +34017,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T04:59:08Z",
+        "imported_at": "2026-08-02T02:48:59Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
+        "source_digest": "d5a432d9dfee0d5645e2469093cd73df265f403ad18867bbea19943e63d35c36",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34035,7 +34035,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T05:03:56.967511Z"
+      "updated_at": "2026-08-02T02:56:42.381196Z"
     },
     {
       "acceptance": [
@@ -34139,9 +34139,9 @@
         "P01..P13 exact-13 契約そのものの変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T04:59:08Z",
+        "imported_at": "2026-08-02T02:48:59Z",
         "origin_kind": "generated",
-        "source_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
+        "source_digest": "d5a432d9dfee0d5645e2469093cd73df265f403ad18867bbea19943e63d35c36",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -34157,6 +34157,7 @@
         "qa-078",
         "qa-079",
         "qa-081",
+        "qa-117",
         "decision-d8"
       ],
       "target_date": null,
@@ -34164,7 +34165,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T05:05:39.390012Z"
+      "updated_at": "2026-08-02T03:12:10.700517Z"
     },
     {
       "acceptance": [
@@ -35786,23 +35787,31 @@
     },
     {
       "acceptance": [
-        "新規生成される task spec の Verification 節が `--feature-package <feature_package_id>` 形 (または staging 実 path) を持つ",
-        "生成直後の staging 段階と promotion 後の双方で、記載コマンドが無改変で exit 0 になることを実測記録する",
-        "既存 promoted 世代の validated_digest が不変であること (遡及書き換えをしない)"
+        "R3-emit と正本 template が promotion 後の再実行に --feature-package <自 package id> を要求し --staging を書かない",
+        "C12 契約 1.3.0 が --staging・--feature-package 欠落・他 package id を fenced/inline command から fail-closed で拒否する",
+        "promotion 前は C12 が --staging <実 generation path> を検証し、promotion 後は task spec の --feature-package が current pointer から同 package を検証する lifecycle 境界が証跡化される",
+        "1.2.0 以前に promote 済み package の canonical digest と再検証結果が不変である"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ji8y",
+        "linked_at": "2026-07-25T14:24:19Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
           "candidate_path": "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
-          "confidence": 0.9
+          "confidence": 0.98
         }
       ],
-      "classification_confidence": 0.9,
-      "classification_reason": "feat-task-spec-test-strategy P10 最終レビューが記録済み逸脱 D-2 として申し送った生成側欠陥",
+      "classification_confidence": 0.98,
+      "classification_reason": "feat-task-spec-test-strategy P10 の D-2 で実測された生成側欠陥を C12 promotion gate まで含めて解消する follow-up issue",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -35831,15 +35840,16 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "R3-emit が出力する検証コマンドが、生成された task spec を読んだだけで無改変に実行でき、promotion 後も有効な世代非依存形になっている",
+      "goal": "新規 task spec の validate-system-plan 再実行コマンドが自 package の current pointer を使う世代非依存形になり、C12 が不正形を promotion 前に fail-closed で拒否する状態",
       "graph_node_id": "issue-task-spec-validate-command-unrunnable-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-07-25T13:00:00Z",
+        "checked_at": "2026-08-02T02:19:33Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
+      "mvp_alignment": null,
       "owners": [
         "daishiman"
       ],
@@ -35848,22 +35858,43 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "R3-emit が生成する全 task spec の Verification 節が `validate-system-plan.py --staging .` を列挙するが、`--staging` は staging generation path を要求するためカレントディレクトリ `.` では解決できず、記載どおりに実行すると必ず失敗する。promotion 後は staging path 自体が消滅するため構造的にも不適切。feat-task-spec-test-strategy の P05..P13 実行時に実測で判明し、世代非依存形 `--feature-package <id>` へ読み替えて証跡を取得した (final-review.md D-2)。",
+      "purpose": "task spec に書かれた検証手順を promotion 後も無改変で再実行できるようにし、別 package を誤検証した成功を防ぐ",
       "related_nodes": [
         "feat-task-spec-test-strategy"
       ],
       "resource_scope": [
-        "issues/sys-task-spec-validate-command-unrunnable-20260725.md"
+        "architecture/harness-hub-testing-qa.md",
+        "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md",
+        "features/feat-task-spec-test-strategy.md",
+        "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
+        "plugin-plans/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
+        "plugins/system-dev-planner/assets/validation-contract-baseline.json",
+        "plugins/system-dev-planner/references/feature-execution-package-contract.md",
+        "plugins/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
+        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
+        "plugins/system-dev-planner/tests/test_task_spec_rerun_command.py",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"
       ],
       "scope_in": [
-        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
-        "plugins/system-dev-planner/references/system-task-spec-template.md"
+        "R3-emit prompt と task spec template の再実行コマンド契約",
+        "C12 契約 v1.3.0 と staging・欠落・package 不一致の検査",
+        "旧 promoted package の digest 不変性と契約 version 免除",
+        "CommonMark backtick/tilde fence と inline code span の回帰検査"
       ],
       "scope_out": [
-        "既に promoted 済み世代の task spec 本文の遡及書き換え"
+        "既に promoted 済み task spec 本文の遡及書き換え",
+        "promotion 前の C12 staging 検証入口の廃止",
+        "P01..P13 exact-13 と 13-node DAG 契約の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-23T13:51:02Z",
+        "imported_at": "2026-07-25T13:00:00Z",
         "origin_kind": "manual",
         "source_digest": null,
         "source_path": null,
@@ -35875,14 +35906,15 @@
       "tags": [
         "system-dev-planner",
         "task-spec",
-        "validator"
+        "validator",
+        "quality-gate"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "R3-emit が生成する task spec の C12 検証コマンド `--staging .` が実行不能",
+      "title": "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T13:00:00Z"
+      "updated_at": "2026-08-02T03:01:38.139216Z"
     },
     {
       "acceptance": [
