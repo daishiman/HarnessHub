@@ -11,7 +11,7 @@ beads_ids:
 spec_impact: reflected
 qa_id: qa-138
 approval_id: appr-027
-reviewed_at: 2026-08-02
+reviewed_at: 2026-08-03
 ---
 
 # C10/C11/C28 authority 防御 仕様反映受領書
@@ -25,9 +25,10 @@ reviewed_at: 2026-08-02
 
 ## 結論
 
-変更は製品機能ではなく repository 内の開発管理契約へ影響するため、`qa-138` として
-dev-workflow 仕様を再確定した。C10 事前 guard、PostToolUse 監査、C11 validator の三層防御と、
-最新 main で確定済みの C28 bridge 更新 field 契約を正本・集約仕様・設計・feature・task へ同期した。
+変更は製品機能ではなく repository 内の開発管理契約へ影響するため、`qa-134`（行数ゲート境界）と
+`qa-138`（authority 防御）として dev-workflow 仕様を統合確定した。C10 事前 guard、PostToolUse
+監査、C11 validator の三層防御と、最新 main で確定済みの C28 bridge 更新 field 契約を正本・集約仕様・
+設計・feature・task へ同期した。
 
 ## TL;DR
 
@@ -59,8 +60,8 @@ Beads の priority・assignee・labels 更新も正規 bridge だけで届くよ
 
 | 層 | 反映先 | 内容 |
 |---|---|---|
-| 正本 | `system-spec/spec-state.json` / `system-spec/dev-workflow.md` | `qa-138` / `appr-027`、C10/C11/C28 契約 |
-| 集約仕様 | `specs/harness-hub-system-specification.md` / `specs/harness-hub-dev-graph-authority-addendum.md` | 500 行制限に従う追補分冊、三層防御、exact envelope、製品非変更 |
+| 正本 | `system-spec/spec-state.json` / `system-spec/dev-workflow.md` | `qa-134` / `qa-138` / `appr-027`、prompt-only 行数境界と C10/C11/C28 契約 |
+| 集約仕様 | `specs/harness-hub-system-specification.md` / `specs/harness-hub-dev-graph-authority-addendum.md` | 三層防御、exact envelope、製品非変更。正規文書と prompt は個別の行数ゲートへ従う |
 | 設計 | `architecture/harness-hub-dev-workflow.md` / changelog | 責務分担、lineage、受領書参照 |
 | feature | `features/feat-dev-pipeline-improvement.md` / changelog | final-review wave と handoff |
 | task | P12 / P13 | 品質ゲートと PR 引継ぎの write-back |
@@ -71,14 +72,16 @@ Beads の priority・assignee・labels 更新も正規 bridge だけで届くよ
 外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。変更範囲は
 repository の Dev Graph authority、validator、Beads mutation、開発品質証拠に限定される。
 
-## 500 行境界
+## 行数境界
 
-新規の手書き実装・テスト・受領書は 500 行未満へ責務分離した。live-trial fixture の sync
-責務は `live_trial_sync_contract.py` へ分離した。最新 main の `HarnessHub-w7n7` が
+今回の新規手書き実装・テスト・受領書はいずれも 500 行未満であるが、これは固定の一般ルールではない。
+qa-134 によりソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性で判断する。
+live-trial fixture の sync 責務は `live_trial_sync_contract.py` へ分離した。最新 main の `HarnessHub-w7n7` が
 `bd-bridge.py` の判定責務を四つの `plugins/dev-graph/lib/bd_bridge_*.py` へ分離済みで、CLI 本体も
-421 行へ収束している。最新 main 統合後に 510 行となった集約仕様書は
-`harness-hub-dev-graph-authority-addendum.md` へ分冊し、本体 493 行・追補 146 行へ収束した。
-そのため、本変更で新規作成または責務追加した手書き実装・テスト・文書に 500 行超はない。
+421 行へ収束している。実行時 context に入る `SKILL.md` は本文 300 行、skill の
+`prompts/*.md|yaml` は 500 行、qa-070 の正規文書は 300 行をそれぞれ上限として機械検査する。
+最新 main 統合後に 510 行となった集約仕様書は `harness-hub-dev-graph-authority-addendum.md` へ分冊し、
+本体 493 行・追補 146 行へ収束した。
 `.dev-graph/state/graph.json`、`system-spec/spec-state.json`、`.claude/settings.json` は schema が
 単一文書を要求する構造化正本であり、分割すると loader と正本契約を壊すため分割対象にしない。
 
@@ -98,7 +101,14 @@ repository の Dev Graph authority、validator、Beads mutation、開発品質�
 | live-trial acceptance | PASS、9 verdicts verified、task contract violations 0、incremental reuse 9 / run 0 / defer 0 |
 | repository CI | PASS 139 / WARN 5 / FAIL 0（WARN は段階導入中の既存項目） |
 | document line limit / diff check | PASS、524 文書・上限 300・allowlist 0、`git diff --check` clean |
-| spec reflection receipt | clean commit 後に HEAD-bound receipt を生成する |
+| spec reflection receipt | PASS、競合解消後 HEAD `aa8f30aa` と main `a67bbeff` への統合を本受領書へ記録 |
+
+## 最新 main 統合の受領
+
+追加で更新された `origin/main` の feature source lineage review closure を local `main` と本 branch に
+取り込み、`aa8f30aa` で競合を解消した。評価証跡6件は最新 main の live-trial 参照へ更新し、
+`eval-log/system-spec-harness/audit-fork-ledger.jsonl` は双方の append-only 記録を保持した。`qa-134` と
+`qa-138` は `system-spec/dev-workflow.md` に併記し、製品仕様への影響は引き続きない。
 
 ## 残課題
 
