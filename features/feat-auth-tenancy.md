@@ -196,5 +196,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   対応表は
   [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
   を参照する。
-- Google 実環境 login、Playwright、production migration、draft PR merge と default branch
-  reconciliation が残るため、`HarnessHub-uk2i` は `in_progress` を維持する。
+- PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境 login、Playwright、production migration は外部環境が必要な未完了項目のため、`HarnessHub-uk2i` は `in_progress` を維持する。

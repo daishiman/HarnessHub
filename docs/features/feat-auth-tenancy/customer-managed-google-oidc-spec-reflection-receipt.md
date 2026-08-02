@@ -82,6 +82,10 @@ credential 状態機械、秘密値の扱い、運用手順、テスト完了条
 
 `CI=1 pnpm verify` を修正後に再実行し、exit 0 を受領した。
 
+最終レビューでも `CI=1 pnpm verify` を再実行し、exit 0 を受領した。最初の実行は
+worktree の `node_modules` に macOS 用 Biome 実行ファイルが欠けていたため lint 前に停止したが、
+`pnpm install --frozen-lockfile`（lockfile を変更しない依存再現）後の再実行で全 gate が完走した。
+
 - Hub: 85 files / 1040 tests pass
 - DB: 31 files / 256 tests pass
 - UI: 12 files / 266 tests pass
@@ -95,21 +99,22 @@ credential 状態機械、秘密値の扱い、運用手順、テスト完了条
 - system plan、dev-graph schema、system-spec coverage / foundation / citation /
   knowledge / doctrine / required-info / cross: 全て pass
 - `git diff --check`: pass
+- 最終レビュー: task-spec 13 phase、system-spec coverage / foundation / citation、knowledge /
+  required-info / doctrine / cross、dev-graph schema、R3 source digest / evidence reference、
+  doc line limit、artifact placement: 全て pass
 
 ## 7. main 同期受領結果
 
-- `origin/main`: `7bab5a2ff6c732eabc709649ffdeec79fd51c807`
-- local `main`: `7bab5a2ff6c732eabc709649ffdeec79fd51c807`
-- 初回同期 merge: `961ee43b491d687f452799407fed567ea55c8fe8`
-- 最新 main の feature への反映: 本受領書を含む最新 merge commit
+- `origin/main`: `3e34b78f0f891c9f3427e9af6fde27172ab5aeb9`（PR #634 の merge commit）
+- local `main`: `3e34b78f0f891c9f3427e9af6fde27172ab5aeb9`
+- feature branch への local `main` 反映: `git merge --ff-only main` により同じ commit へ前進
 - `git merge-base --is-ancestor origin/main HEAD`: pass
 
-リモート main をローカル main へ同期した後、その local main を feature branch へマージした。
-初回同期後に main が PR #633 まで前進したため再同期した。`system-spec/spec-state.json` では
-main 側の Hub 基盤 closeout `qa-123` と今回分の旧 `qa-123` が衝突したため、main の
-`qa-123` を維持し、今回分を `qa-124`〜`qa-130` へ再採番した。7 章すべてを正規 writer の
-reopen → confirm → set-serves と compiler で再反映し、手作業の片側採用は行っていない。
-マージ後に system plan、dev-graph schema、system-spec 全決定論ゲートを再実行して pass した。
+リモート main をローカル main へ同期した後、その local main を feature branch へ反映した。
+PR #634 はすでに main へ merge 済みであり、今回の反映は fast-forward（履歴を枝分かれさせず
+既存 commit へ進める更新）で完了した。`system-spec/spec-state.json` では main 側の Hub 基盤
+closeout `qa-123` を維持し、今回分は `qa-124`〜`qa-130` として正規 writer の reopen → confirm →
+set-serves と compiler を通して確定済みである。
 
 ## 8. 500 行制約
 
@@ -124,12 +129,29 @@ reopen → confirm → set-serves と compiler で再反映し、手作業の片
 - 顧客の実 Google OAuth client を使った probe とブラウザ login。
 - Playwright（実ブラウザを自動操作するテスト）導入後の画面操作確認。
 - production 環境への migration 0004 適用と smoke test。
-- draft PR の review / CI / merge 完了後に Beads を close すること。
 
-これらは外部 credential または production 権限、PR merge を必要とするため、repository 内の
+これらは外部 credential または production 権限を必要とするため、repository 内の
 実装完了と分離して追跡する。現時点では Beads を `in_progress` のまま維持する。
 
-## 10. 受領結論
+## 10. PR #634 merge 後の最終レビューと R3 再取込
+
+- `git status` と `git diff` を確認し、main へ確定済みの仕様書に対して architecture wrapper の
+  source digest が古いことを検出した。C02 正規 writer で backend / data / frontend / security /
+  infrastructure / testing-qa の 6 node を再取込した。本文は保持し、frontmatter と graph の来歴だけを
+  現行正本へ再束縛した。
+- この最終レビューによる **新規の仕様・設計影響はなし**と判定した。理由は、API、認可、状態遷移、DB
+  schema、秘密値の露出方針、運用手順、テスト受入条件はすべて qa-124〜qa-130 として PR #634 前に
+  system-spec 正規フローで確定済みであり、今回行ったのは確定正本への参照来歴更新だけだからである。
+  よって system-spec/・specs/ に追加の変更はせず、この判断を本受領書、feature、task 文書へ記録した。
+- R3 source digest と evidence reference（証拠参照）の検査は登録 6 node すべて PASS である。
+  既存の別 node `issue-guard-graph-schema-interpreter-write-coverage-20260726` にのみ dangling evidence が
+  残るが、今回の登録 node には該当せず、本変更へ取り込まない。
+- C15 schedule（着手可能な作業の算出）は新しい graph digest で再計算し、変更前後の graph / tracker /
+  lease digest 一致、resource conflict 0 を受領した。今回の認証機能 node が shared Google OIDC node の
+  完了待ちと表示される既存依存は、本最終レビューでは状態遷移を変更しない。
+
+## 11. 受領結論
 
 仕様影響を「あり」として正規反映し、実装、仕様、architecture、feature、task、運用、検証証跡の
-対応が取れていることを受領した。repository 内で実行可能な品質ゲートは全て合格している。
+対応が取れていることを受領した。merge 後の最終レビューでは新たな仕様変更なしとして参照来歴を更新し、
+repository 内で実行可能な品質ゲートは全て合格している。

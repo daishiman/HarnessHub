@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T05:41:06.531373Z"
+updated_at: "2026-08-02T07:43:48Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T05:37:45Z","origin_kind":"system-spec-harness","source_digest":"47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T07:43:48Z","origin_kind":"system-spec-harness","source_digest":"47d9b82aba7181068cc3411bec85243ea43ae3974d878773d6d0ccaa8df38541","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -54,10 +54,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 正本 (source of truth)
 
 - [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `47d9b82aba718106…`)
-- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `960ed37334a8cbcf…`)
+- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `c04b243a8bd18f15…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（SLO 運用契約を維持し、delivery closure を qa-123 で分離）
-- 再取込日時: 2026-08-02T05:37:45Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-08-02T07:43:48Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
