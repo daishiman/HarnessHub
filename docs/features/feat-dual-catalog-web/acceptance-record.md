@@ -79,6 +79,14 @@ Lighthouse (`.github/workflows/cwv.yml`) は公開 URL に対して実行され�
 > (変更は未コミットで、deploy は `main` への push でのみ走る)。詳細は `release-record.md` §2.3。
 > この取り違えを放置すると「変数を設定したから測れる」と判断し、**catalog を含まない旧版を測って good と記録**しうる。
 
+> **再訂正 (2026-08-02 実測)**: 上記の阻害要因 (未デプロイ) は解消した。PR #628 が merge commit `16a6f915` で
+> main へ入り、`hub-ci` run `30727984628` の deploy job が success している。**それでも CWV は計測できない。**
+> deploy 後に `hub-cwv` を `/catalog` 指定で実行した run `30736055772` は
+> `Lighthouse was unable to reliably load the page you requested. (Status code: 401)` で失敗した。
+> `/catalog` は deny-by-default により未認証で 401 を返し、`cwv.yml` は認証済みセッションを持たない。
+> **真の阻害要因は「未デプロイ」ではなく「認証必須 route に対する計測経路の欠落」**である。
+> `cwv.yml` は feat-hub-foundation 所管で本 feature の Write scope 外のため、追跡課題へ引き渡す。
+
 ### 2.3 現時点で満たしている前提条件
 
 実測はできないが、good を取りにいくための設計上の条件は満たしている。
@@ -92,12 +100,13 @@ Lighthouse (`.github/workflows/cwv.yml`) は公開 URL に対して実行され�
 client JS 予算は CWV 本体ではないが、**唯一この段階で実測できる CWV 関連の代理指標**であり、
 是正前 139.6 KiB → 是正後 119.0 KiB の実測値を持つ (test-run-results.md §4)。
 
-### 2.4 確定手順 (P13 後)
+### 2.4 確定手順 (2026-08-02 更新)
 
-1. catalog route を含む版を本番へ deploy する (`main` への push → `ci.yml` の deploy job)。
-   `vars.HUB_PUBLIC_URL` は設定済みのため追加設定は不要。**deploy 前に走らせても旧版を測るだけなので実行しない。**
-2. `.github/workflows/cwv.yml` を実行し LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1 を確認する。
-3. 本記録の acceptance 2 を pass へ更新する (未達のまま release-record を closed にしない)。
+1. ~~catalog route を含む版を本番へ deploy する~~ → **完了** (merge `16a6f915` / `hub-ci` run `30727984628`)。
+2. ~~`cwv.yml` を実行し LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1 を確認する~~ → **実行したが 401 で計測不能** (§2.2 再訂正)。
+3. **先に計測経路を用意する。** `cwv.yml` に認証済みセッション (または計測可能な到達経路) を与える。
+   feat-hub-foundation 所管のため本 feature では実施せず、追跡課題として引き渡す。
+4. 計測後に本記録の acceptance 2 を pass へ更新する (未達のまま release-record を closed にしない)。
 
 ---
 

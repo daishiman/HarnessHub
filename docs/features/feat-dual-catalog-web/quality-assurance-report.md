@@ -143,7 +143,7 @@ CWV の計測経路は `.github/workflows/cwv.yml` (週次 Lighthouse) に存在
 | WCAG 2.2 AA (自動検査で届く範囲) | **確認済** | 上記 axe ルールセット |
 | WCAG 2.2 AA (自動検査で届かない範囲) | **部分的** | キーボード操作順序・フォーカス可視性は `Tabs` / `DataTable` (packages/ui) 側の担保に依存。実機のスクリーンリーダー確認は未実施 |
 | レスポンシブ | 確認済 | DC-RESP-01 |
-| CWV (LCP/INP/CLS) 実測 | **未達 (未計測)** | catalog route が未デプロイ (P07 acceptance 2 と同一判定。`vars.HUB_PUBLIC_URL` は登録済み — P13 §2.3 で訂正) |
+| CWV (LCP/INP/CLS) 実測 | **未達 (計測不能)** | deploy 済だが `/catalog` が未認証で 401 を返し Lighthouse が読めない (2026-08-02 / run `30736055772`)。P07 acceptance 2 と同一判定 |
 | CWV 代理指標 (client JS 予算) | **pass** | 全 catalog route が 120.0 KiB 未満 (最大 119.0 KiB / P08 §3.1) |
 | リリース条件としての CI 存在 | **pass** | DC-CI-01..05。`continue-on-error` / `\|\| true` / `passWithNoTests` を持たない |
 

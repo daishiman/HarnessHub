@@ -11,10 +11,6 @@ on:
     # 週次 (JST 月曜 10:00)。デプロイ直後の一時的な劣化ではなく定常状態を測る
     - cron: "0 1 * * 1"
   workflow_dispatch:
-    inputs:
-      target_url:
-        description: "計測対象 URL (未指定なら vars.HUB_PUBLIC_URL)"
-        required: false
 
 jobs:
   lighthouse:
@@ -23,18 +19,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 計測対象が無い状態を「good」と誤判定しないため fail-closed にする。
-      # デプロイ前は URL が無いので、このワークフローは失敗する = 未計測であることが可視化される。
-      - name: 計測対象 URL の解決
+      # 計測対象・scope・専用 secret のどれかが無い状態を「good」と誤判定しないため fail-closed にする。
+      # target URL を手入力にすると短命 ticket を任意 origin へ送れるので、HUB_PUBLIC_URL の /catalog に固定する。
+      - name: CWV 専用 credential の前提確認と target の発行
+        env:
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
+          HUB_CWV_PROBE_SECRET: ${{ secrets.HUB_CWV_PROBE_SECRET }}
+          HUB_CWV_PROBE_TENANT_ID: ${{ secrets.HUB_CWV_PROBE_TENANT_ID }}
+          HUB_CWV_PROBE_WORKSPACE_ID: ${{ secrets.HUB_CWV_PROBE_WORKSPACE_ID }}
         run: |
-          url="${{ github.event.inputs.target_url }}"
-          [ -n "$url" ] || url="${{ vars.HUB_PUBLIC_URL }}"
-          if [ -z "$url" ]; then
-            echo "::error::計測対象 URL が未設定です (vars.HUB_PUBLIC_URL)。デプロイ (P13) 完了後に設定してください"
-            echo "未計測を good と見なさないため、ここで失敗させています"
+          set -euo pipefail
+          missing=""
+          for name in HUB_PUBLIC_URL HUB_CWV_PROBE_SECRET HUB_CWV_PROBE_TENANT_ID HUB_CWV_PROBE_WORKSPACE_ID; do
+            eval "value=\${$name:-}"
+            [ -n "$value" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::CWV 計測の必須設定が未投入です:$missing"
+            echo "未計測を good と見なさないため、secret/variable 名だけを示して停止します"
             exit 1
           fi
-          echo "TARGET_URL=$url" >> "$GITHUB_ENV"
+          node apps/hub/scripts/mint-cwv-probe.mjs --github-env "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:
@@ -48,6 +53,11 @@ jobs:
             --only-categories=performance \
             --chrome-flags="--headless --no-sandbox" \
             --quiet
+
+      - name: Lighthouse artifact から短命 ticket を除去
+        run: |
+          set -euo pipefail
+          node apps/hub/scripts/sanitize-cwv-artifact.mjs ./lighthouse.json "$CWV_PROBE_TICKET"
 
       # qa-018(2) の閾値: LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1。
       # 1 つでも外れたら fail させる (警告どまりにすると劣化が放置される)。
@@ -73,7 +83,7 @@ jobs:
               console.log(`${name}: ${m.value.toFixed(2)} / 予算 ${m.budget} ${m.unit} → ${ok ? "OK" : "NG"}`);
               if (!ok) failed = true;
             }
-            fs.writeFileSync("./cwv-report.json", JSON.stringify({ url: process.env.TARGET_URL, metrics }, null, 2));
+            fs.writeFileSync("./cwv-report.json", JSON.stringify({ url: process.env.SAFE_TARGET_URL, metrics }, null, 2));
             if (failed) { console.error("::error::Core Web Vitals が good 圏を外れています (qa-018)"); process.exit(1); }
           '
 
