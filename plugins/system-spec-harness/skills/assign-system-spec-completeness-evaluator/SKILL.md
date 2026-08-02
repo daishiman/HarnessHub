@@ -40,6 +40,7 @@ reference_refs:
   - references/aspect-criteria.md
 script_refs:
   - scripts/aggregate-completeness.py
+  - scripts/audit_fork_attribution.py
   - ../../scripts/validate-coverage-matrix.py
 schema_refs:
   - schemas/completeness-findings.schema.json
@@ -183,6 +184,7 @@ C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-k
 - `references/aspect-criteria.md` — 観点別意味判定の詳細基準 + 観点↔監査 agent 対応
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
 - `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論)
+- `scripts/audit_fork_attribution.py` — fork 台帳集計・receipt 照合・run/session 束縛を担う import 専用モジュール。公開 CLI と総合判定は `aggregate-completeness.py` が継続して所有する
 - `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (PostToolUse: `Task|Agent`)。帰属検証の証跡正本
 - `prompts/R1-score.md` / `prompts/R2-delegate.md` — R1 (スコアリング) / R2 (監査 fork 集約) 責務正本
 - fork 先 agent: `../../agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md`
