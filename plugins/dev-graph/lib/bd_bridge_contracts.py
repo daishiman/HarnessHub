@@ -59,6 +59,12 @@ MVP_FIT_RANK: dict[str | None, int] = {"direct": 0, "enabling": 1, None: 2, "def
 # --op update が bd update へ転送してよい field の exact-set。
 # bridge が単一チョークポイントである以上、ここに無い field は運用上「存在しない」ため、
 # 受理する field は網羅的に宣言し、転送忘れ (silent drop) を構造的に起こせなくする。
+# priority/assignee/labels は契約 §2 の parity 突合対象外 ("bd 側自由領域") だが、
+# 「突合しない」は「bridge を通さない」ではない。C10 guard は bd 直接実行を field 単位で
+# 選り分けず全面遮断するため、ここに宣言されて初めてこの 3 field は到達経路を持つ
+# (宣言前はどの経路からも更新不能だった: HarnessHub-dc7)。
+# labels の写像先は置換系の `--set-labels` 一本に限る。`--add-label`/`--remove-label` を
+# 併せて受けると同一 run の適用順で結果が変わり、receipt から最終状態を再現できなくなる。
 UPDATE_FIELDS: tuple[tuple[str, str], ...] = (
     ("status", "--status"),
     ("title", "--title"),
@@ -66,6 +72,9 @@ UPDATE_FIELDS: tuple[tuple[str, str], ...] = (
     ("notes", "--notes"),
     ("append_notes", "--append-notes"),
     ("design", "--design"),
+    ("priority", "--priority"),
+    ("assignee", "--assignee"),
+    ("labels", "--set-labels"),
 )
 PRIORITY_ALIASES = {
     "critical": "0",
@@ -168,6 +177,26 @@ def normalize_priority(value: str) -> str:
     raise ContractError("priority must be critical|high|medium|low|backlog or 0-4/P0-P4")
 
 
+def normalize_labels(value: str) -> str:
+    """`--labels` のカンマ区切り入力を bd `--set-labels` の単一引数へ正規化する。
+
+    空値を受理しないのは fail-closed の一貫性による。`--set-labels` は repeatable な
+    strings フラグで、空文字が全消去か空 label 1 件かは bd の公開 surface に規定がない。
+    未検証の意味論へ依存せず拒否し、全消去が必要なら専用 operation を別途定義する。
+    """
+    labels = [item.strip() for item in value.split(",")]
+    if any(not item for item in labels):
+        raise ContractError("labels must be a comma-separated list of non-empty values")
+    return ",".join(labels)
+
+
+# 転送前に値を畳む field。ここに無い field は生値をそのまま bd へ渡す。
+UPDATE_FIELD_NORMALIZERS = {
+    "priority": normalize_priority,
+    "labels": normalize_labels,
+}
+
+
 def requested_update_fields(args: Any) -> list[str]:
     """明示指定された update field を argparse dest 名で順序どおり返す。
 
@@ -191,13 +220,17 @@ def validate_update_fields(requested: list[str]) -> None:
         raise ContractError("update accepts --notes or --append-notes, not both")
 
 
-def update_argv(args: Any) -> tuple[list[str], list[str]]:
-    """受理した update field を bd update のフラグ列へ写し、適用 field 名と併せて返す。"""
+def update_argv(args: Any) -> tuple[list[str], list[str], dict[str, str]]:
+    """update field を bd argv へ写し、適用名と正規化後の値を返す。"""
     requested = requested_update_fields(args)
     validate_update_fields(requested)
     flags: list[str] = []
+    normalized: dict[str, str] = {}
     for dest, flag in UPDATE_FIELDS:
         value = getattr(args, dest, None)
         if value is not None:
+            normalize = UPDATE_FIELD_NORMALIZERS.get(dest)
+            value = normalize(value) if normalize else value
+            normalized[dest] = value
             flags += [flag, value]
-    return flags, requested
+    return flags, requested, normalized
