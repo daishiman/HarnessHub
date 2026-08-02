@@ -86,7 +86,7 @@ _type_matches = SCHEMA_SUBSET._type_matches
 _resolve_local_ref = SCHEMA_SUBSET._resolve_local_ref
 schema_violations = SCHEMA_SUBSET.schema_violations
 
-# QA semantic coverage は専用 module へ分離し、C12 本体を 500 行以下に保つ。
+# QA semantic coverage は契約 version 解決と異なる責務なので専用 module へ分離する。
 # 公開定数と関数は既存テスト/利用者との互換性のため本 module から再公開する。
 QA_COVERAGE = _load_sibling(
     "validate-qa-semantic-coverage.py",

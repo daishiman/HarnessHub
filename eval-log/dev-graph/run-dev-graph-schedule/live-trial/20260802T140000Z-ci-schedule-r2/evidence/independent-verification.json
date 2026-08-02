@@ -1,0 +1,30 @@
+{
+  "verifier": "C17-independent-parallel-safety",
+  "observations": [
+    {
+      "id": 1,
+      "check": "resource_scope_separation",
+      "status": "PASS",
+      "evidence": "Graph confirms LT-SCHED-001 resource_scope=[src/alpha.py] and LT-SCHED-002 resource_scope=[src/alpha.py] — intersection is non-empty. Receipt batches: Batch-1=[LT-SCHED-001, LT-SCHED-003], Batch-2=[LT-SCHED-002, LT-SCHED-006]. LT-SCHED-001 and LT-SCHED-002 are in different batches; they never share a batch. conflict_pairs entry kind=ready_pair confirms the overlap was detected. Separation is correct."
+    },
+    {
+      "id": 2,
+      "check": "blocked_task_exclusion",
+      "status": "PASS",
+      "evidence": "Graph: LT-SCHED-005 depends_on=[LT-SCHED-001]; LT-SCHED-001 completion_evidence.status=open (not done). LT-SCHED-005 must therefore be blocked. Receipt ready_set.tasks=[LT-SCHED-001, LT-SCHED-002, LT-SCHED-003, LT-SCHED-006] — LT-SCHED-005 absent. Receipt unmapped contains {external_ref: LT-SCHED-005, reason: dependency_unsatisfied, blocking_depends_on: [LT-SCHED-001]}. Exclusion and reason reporting are both correct."
+    },
+    {
+      "id": 3,
+      "check": "lease_active_suppression_stale_reclaim",
+      "status": "PASS",
+      "evidence": "Lease snapshot: LT-SCHED-004 expires_at=2099-01-01T00:00:00+00:00 (active; evaluation date 2026-08-02 is before expiry) — must be suppressed. Receipt ready_set.tasks excludes LT-SCHED-004; it appears in conflicts=[LT-SCHED-004] and conflict_pairs kind=lease. Suppression is correct. LT-SCHED-006 expires_at=2020-01-01T00:00:00+00:00 (stale; evaluation date 2026-08-02 is after expiry) — stale lease must be reclaimed and node included. Receipt ready_set.tasks includes LT-SCHED-006 and assignment_hints contains a claim entry for it. Reclamation is correct."
+    },
+    {
+      "id": 4,
+      "check": "max_parallel_and_branch_uniqueness",
+      "status": "PASS",
+      "evidence": "Receipt max_parallel=2. Batch-1 has 2 tasks, Batch-2 has 2 tasks; neither exceeds limit. suggested_branch values: [devgraph/LT-SCHED-001, devgraph/LT-SCHED-002, devgraph/LT-SCHED-003, devgraph/LT-SCHED-006] — 4 values, 4 unique, all matching pattern devgraph/<graph_node_id>. claim_commands are 4 distinct strings each referencing a unique node ID. No duplicates found."
+    }
+  ],
+  "overall": "PASS"
+}

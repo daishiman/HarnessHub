@@ -12,7 +12,7 @@ iteration: "C4 改訂 (qa-045-048)"
 title: "テナント業務データ保管 (C4 改訂: R2 封筒暗号化・即時完全削除)"
 owners: ["daishiman"]
 created_at: "2026-07-18T16:20:35Z"
-updated_at: "2026-07-19T14:19:56Z"
+updated_at: "2026-08-02T20:56:49.635746Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-tenant-data-retention/7cc4cbbe32bcbdf9d8a69c1305cdfca81fe60bd36da2338c2619c1d3323142c1/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T16:20:35Z","origin_kind":"generated","source_digest":"5b591475b2b95dc3cbdc76b1c9ab3bc585b1c70baad75311f2420884cf013214","source_path":"docs/features/feat-domain-model-db/requirements-baseline.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-18T16:20:35Z","origin_kind":"generated","source_digest":"fa2924a1c1430e37138e539024949ee9507f4cdcf5c7db753cd5a4e3c8b3dae7","source_path":"docs/features/feat-domain-model-db/requirements-baseline.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (docs/ 全体再分解 2026-07-18。feat-domain-model-db requirements-baseline §6.2 が qa-045 を follow-up feature candidate として dev-graph へ返すと明示)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-tenant-data-retention.md","confidence":0.9}]

@@ -1,0 +1,119 @@
+{
+  "graph_revision": 3,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/LT-TASK-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "Deterministic acceptance fixture",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "evaluator": "fixture-evaluator",
+        "evidence_ref": "evidence/LT-TASK-001.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-13T07:50:00Z",
+      "depends_on": [],
+      "domain": "verification",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/LT-TASK-001.md",
+      "github_project_linkages": [
+        {
+          "field_snapshot": {
+            "priority": "Medium",
+            "status": "In Progress"
+          },
+          "item_id": "PVTI_lADOFixture001",
+          "last_error_code": null,
+          "last_synced_at": "2026-08-02T12:27:22.291459Z",
+          "linked_at": "2026-07-13T07:50:00Z",
+          "owner_login": "example",
+          "owner_type": "user",
+          "project_alias": "planning",
+          "project_id": "PVT_kwDOFixture001",
+          "project_number": 1,
+          "sync_state": "synced"
+        }
+      ],
+      "github_publication": {
+        "labels": [
+          "live-trial",
+          "safe"
+        ],
+        "milestone": null,
+        "mode": "issue_and_projects",
+        "project_aliases": [
+          "planning"
+        ]
+      },
+      "goal": null,
+      "graph_node_id": "LT-TASK-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-13T07:50:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": {
+        "issue_number": 1,
+        "linked_at": "2026-07-13T07:50:00Z",
+        "repo": "example/dev-graph-live-trial"
+      },
+      "iteration": "R3",
+      "owners": [
+        "harness-maintainers"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "dev-graph-live-trial",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [
+        "docs/live-trial-output.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-07-13T07:50:00Z",
+        "origin_kind": "manual",
+        "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_path": "tasks/LT-TASK-001.md",
+        "source_plugin": null,
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "safe"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "Validate isolated live trial (updated remotely r7)",
+      "tracker_binding": "github",
+      "updated_at": "2026-08-02T12:27:22.555867Z"
+    }
+  ]
+}

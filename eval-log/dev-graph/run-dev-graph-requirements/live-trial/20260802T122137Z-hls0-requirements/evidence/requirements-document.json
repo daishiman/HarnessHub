@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "requirements-document",
+  "feature_id": "F-LIVE-001",
+  "feature_package_id": "feature-package/F-LIVE-001",
+  "repository_id": "local:sha256:d68f196cc5ec1b7dd7848735fa4dd2f252c11b43497348acaec1bc62c66a64f9",
+  "snapshot_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+  "source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "source_paths": [
+      "system-spec/index.md",
+      "system-spec/00-requirements-definition.md"
+    ],
+    "confirmed": true
+  },
+  "architecture_refs": ["LT-ARCH-001"],
+  "readiness_matrix": {
+    "summary": "all_complete",
+    "incomplete_count": 0,
+    "pending_count": 0,
+    "fail_count": 0,
+    "stale_count": 0,
+    "complete_count": 15,
+    "missing_sections": [],
+    "nodes": [
+      {"graph_node_id": "LT-ARCH-001", "artifact_kind": "architecture", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "F-LIVE-001", "artifact_kind": "feature", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P01", "artifact_kind": "task", "phase_ref": "P01", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P02", "artifact_kind": "task", "phase_ref": "P02", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P03", "artifact_kind": "task", "phase_ref": "P03", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P04", "artifact_kind": "task", "phase_ref": "P04", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P05", "artifact_kind": "task", "phase_ref": "P05", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P06", "artifact_kind": "task", "phase_ref": "P06", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P07", "artifact_kind": "task", "phase_ref": "P07", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P08", "artifact_kind": "task", "phase_ref": "P08", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P09", "artifact_kind": "task", "phase_ref": "P09", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P10", "artifact_kind": "task", "phase_ref": "P10", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P11", "artifact_kind": "task", "phase_ref": "P11", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P12", "artifact_kind": "task", "phase_ref": "P12", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"},
+      {"graph_node_id": "SYS-LIVE-001-P13", "artifact_kind": "task", "phase_ref": "P13", "evaluation_status": "pass", "confirmation_status": "confirmed", "implementation_readiness": "complete"}
+    ]
+  },
+  "gate_results": {
+    "C11_validate_graph_schema": {"status": "pass", "valid": true, "missing_sections": [], "violations": []},
+    "C02_validate_source_digest": {"status": "pass", "checked": 15, "registered_mismatch": []},
+    "validate_system_plan": {"status": "pass", "validated_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105", "violations": []},
+    "all_gates_pass": true
+  },
+  "system_plan_reference": {
+    "package_path": "system-plan/F-LIVE-001",
+    "feature_package_path": "system-plan/F-LIVE-001/feature-package.json",
+    "workstream_inventory_path": "system-plan/F-LIVE-001/workstream-inventory.json",
+    "task_graph_path": "system-plan/F-LIVE-001/task-graph.json",
+    "system_build_handoff_path": "system-plan/F-LIVE-001/system-build-handoff.json",
+    "task_spec_paths": [
+      "system-plan/F-LIVE-001/task-specs/phase-01-requirements.md",
+      "system-plan/F-LIVE-001/task-specs/phase-02-architecture.md",
+      "system-plan/F-LIVE-001/task-specs/phase-03-design-review.md",
+      "system-plan/F-LIVE-001/task-specs/phase-04-test-design.md",
+      "system-plan/F-LIVE-001/task-specs/phase-05-implementation.md",
+      "system-plan/F-LIVE-001/task-specs/phase-06-test-run.md",
+      "system-plan/F-LIVE-001/task-specs/phase-07-acceptance.md",
+      "system-plan/F-LIVE-001/task-specs/phase-08-refactoring-migration.md",
+      "system-plan/F-LIVE-001/task-specs/phase-09-quality-assurance.md",
+      "system-plan/F-LIVE-001/task-specs/phase-10-final-review.md",
+      "system-plan/F-LIVE-001/task-specs/phase-11-evidence.md",
+      "system-plan/F-LIVE-001/task-specs/phase-12-documentation-operations.md",
+      "system-plan/F-LIVE-001/task-specs/phase-13-release-deploy.md"
+    ]
+  },
+  "emitted_at": "2026-08-02T12:30:00Z"
+}

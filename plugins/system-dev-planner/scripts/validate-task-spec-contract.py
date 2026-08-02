@@ -16,7 +16,7 @@ promote 済み package は content-addressed で digest 不変のため、後か
 満たすよう修正できない。修正すれば digest が変わり `published_digest` を記録済みの receipt が
 偽になる。そこで validator 側が契約 version を持ち、各 package を **promote 時点で妥当だった
 契約** で再検証する。この module はその version 定義・台帳解決・version 差のある本文検査を
-`validate-system-plan.py` から分離して保持する (責務分離および 1 file 500 行上限の遵守)。
+`validate-system-plan.py` から分離して保持する (契約 version 管理という責務境界の維持)。
 """
 from __future__ import annotations
 

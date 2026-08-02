@@ -91,10 +91,10 @@ dot directory 全般へ一般化し、通常の深さ違反、root / plugin pari
 （後勝ち＝後の定義が前を消す挙動）で隠れる経路を閉じた。
 
 task/component、transcript turn、handoff route は別 bounded context
-（責務境界）なので共通ライブラリへ過剰統合せず、各 plugin 内の小さな
-決定論 helper と負例 fixture で同じ不変条件を実装する。500 行を超えた
-validator / test は CLI、report contract、graph shape、回帰テストの責務で
-分離し、公開 CLI path と JSON 出力契約を維持する。
+（責務境界）なので共通ライブラリへ過剰統合せず、各 plugin 内の決定論 helper と
+負例 fixture で同じ不変条件を実装する。validator / test の分割は CLI、report contract、
+graph shape、回帰テストなどの責務境界を根拠に判断し、コード行数だけを理由にしない。
+分割時は公開 CLI path と JSON 出力契約を維持する。
 
 影響は repository 内の validation contract に限定される。製品 API、DB、
 認証認可、UI、deploy unit、確定 QA の内容は変えない。反映と検証の対応は
