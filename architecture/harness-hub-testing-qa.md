@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-01T05:03:56.967511Z"
+updated_at: "2026-08-01T16:30:33Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97","evaluator":"codex-conflict-resolution","evidence_ref":"docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-01T04:59:08Z","origin_kind":"system-spec-harness","source_digest":"530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-01T16:30:33Z","origin_kind":"system-spec-harness","source_digest":"8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `59aa87850fd7…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `8773724d5676e514…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `codex-final-review` → **PASS** (`docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`)
-- 取込日時: 2026-07-30T07:08:55Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
+- 取込日時: 2026-08-01T16:30:33Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -139,6 +139,14 @@ plugin/workflow diff
 仕様正本は `system-spec/testing-qa.md` qa-109、実装判断と検証の対応は
 [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md)
 を参照する。
+
+## 2026-08-01 dual catalog 回帰設計
+
+- 成功→403 の順序付き component test で一覧・詳細・Release 履歴の stale 非表示を固定する。
+- 同一 scope の成功→503 は stale 維持、scope 切替後の成功→503 は旧 tenant 内容 0 件を要求する。
+- 認証済み marketplace route の private cache と Cookie/tenant/workspace `Vary` を route test で固定する。
+- 一覧は入力中 request 0 回、submit で 1 回だけ増えることを component test で固定する。
+- 本番 CWV と 2 社同時稼働は repository test で代替せず P13 の外部実測として残す。正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-119`。
 
 ## 上流指針 (doctrine anchor)
 

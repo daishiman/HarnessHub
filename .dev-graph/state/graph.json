@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1080,
+  "graph_revision": 1097,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"
+        "evaluated_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -86,10 +86,10 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-24T12:35:34Z",
+        "imported_at": "2026-08-02T02:09:36Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b",
-        "source_path": "system-spec/00-requirements-definition.md",
+        "source_digest": "dd70bf01432a3b82cb20d9d88ddaa27975656a7d37f86ad82954c0ff81674b2d",
+        "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
       },
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T12:00:37Z"
+      "updated_at": "2026-08-02T02:10:41.843662Z"
     },
     {
       "acceptance": [
@@ -135,9 +135,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "2031ebf4f2b8f5b86beba0f41942235be2c40403c31c3c569a6dde5341806f96",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evaluated_digest": "1f9b092a0745dd2c31b3ed27aace2dc7242664fb5440afeea1f7cb3602b79ad8",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -193,9 +193,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-18T15:01:04Z",
+        "imported_at": "2026-08-01T16:23:40Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "2031ebf4f2b8f5b86beba0f41942235be2c40403c31c3c569a6dde5341806f96",
+        "source_digest": "1f9b092a0745dd2c31b3ed27aace2dc7242664fb5440afeea1f7cb3602b79ad8",
         "source_path": "system-spec/frontend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -211,7 +211,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-18T15:01:04Z"
+      "updated_at": "2026-08-01T16:23:40Z"
     },
     {
       "acceptance": [
@@ -242,9 +242,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f6ba21931374775143fb656c55c7689e8490662b56a19b170902c6ab565dd465",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evaluated_digest": "db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -299,9 +299,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:30:00Z",
+        "imported_at": "2026-08-01T11:54:39Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "6381665fef864065b67525652cc87bcbcb23db18c7f7c3157e7573aee1111f8b",
+        "source_digest": "db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe",
         "source_path": "system-spec/backend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -317,7 +317,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub backend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T04:40:19Z"
+      "updated_at": "2026-08-01T11:54:39Z"
     },
     {
       "acceptance": [
@@ -454,9 +454,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "06a1c8d047a12d74d28d9885f38760618ea1e09c0d5b4142a7ad997d0ce8c26e",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"
+        "evaluated_digest": "8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -512,9 +512,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:30:00Z",
+        "imported_at": "2026-08-01T16:30:33Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "50006262f86ccfe1603373b05f220f0816278dbefb0b8b7df31483f72aaa7f26",
+        "source_digest": "8ecd1f6b7cff6a0649e6ee8e250f30d058a9653a25fbe4586f0fb26eaa5aa5d2",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -530,7 +530,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T04:40:19Z"
+      "updated_at": "2026-08-01T16:30:33Z"
     },
     {
       "acceptance": [
@@ -561,9 +561,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "dcaea21237f4c45e484054c3c1a3c00f04f92b40de5654cf625136d185e940bf",
-        "evaluator": "assign-system-spec-completeness-evaluator",
-        "evidence_ref": "eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260721-231238.json"
+        "evaluated_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -619,9 +619,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-30T13:30:00Z",
+        "imported_at": "2026-08-01T15:28:45Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "cff4f0f1635e3c595933f1e8ba707b23639b33fbf3f2eb0517cf75559b99a321",
+        "source_digest": "eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a",
         "source_path": "system-spec/infrastructure.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -637,7 +637,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-07-30T04:40:19Z"
+      "updated_at": "2026-08-01T15:28:45Z"
     },
     {
       "acceptance": [
@@ -863,7 +863,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:27:46Z"
+      "updated_at": "2026-08-01T12:01:55.324015Z"
     },
     {
       "acceptance": [
@@ -1087,7 +1087,7 @@
       "template_version": "1.0.0",
       "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T04:40:19Z"
+      "updated_at": "2026-08-01T12:29:53Z"
     },
     {
       "acceptance": [
@@ -2171,7 +2171,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T12:03:19.233775Z"
     },
     {
       "acceptance": [
@@ -2896,7 +2896,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 証跡収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:19:20.811908Z"
+      "updated_at": "2026-08-01T12:04:31.042165Z"
     },
     {
       "acceptance": [
@@ -15866,7 +15866,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T06:12:00Z"
+      "updated_at": "2026-08-01T12:29:53Z"
     },
     {
       "acceptance": [
@@ -21934,7 +21934,7 @@
       "template_version": "1.0.0",
       "title": "独立最終レビュー — quality_constraints 7件・acceptance 3件の最終確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-01T12:13:42.728760Z"
     },
     {
       "acceptance": [
@@ -33960,9 +33960,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
-        "evaluator": "codex-conflict-resolution",
-        "evidence_ref": "docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"
+        "evaluated_digest": "8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -34018,9 +34018,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T04:59:08Z",
+        "imported_at": "2026-08-01T16:30:33Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
+        "source_digest": "8773724d5676e514cb316f19335a0712467133f0c9399225c27db13babf22f93",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34036,7 +34036,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-01T05:03:56.967511Z"
+      "updated_at": "2026-08-01T16:30:33Z"
     },
     {
       "acceptance": [
@@ -38925,10 +38925,18 @@
         "arch-harness-hub-infrastructure"
       ],
       "resource_scope": [
-        "docs/features/feat-hub-foundation/runbook.md",
-        "docs/features/feat-hub-foundation/acceptance-report.md",
-        "docs/features/feat-hub-foundation/evidence/",
-        "docs/infrastructure-spec.md"
+        "apps/hub/monitoring/slo-dashboard.json",
+        "apps/hub/scripts/verify-slo-observation.mjs",
+        "apps/hub/tests/monitoring/",
+        "docs/features/feat-hub-foundation/",
+        "docs/infrastructure-spec.md",
+        "system-spec/infrastructure.md",
+        "system-spec/spec-state.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-infrastructure.md",
+        "features/feat-hub-foundation.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p05.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p11.md"
       ],
       "scope_in": [
         "Better Stack Free での production /health 3 分間隔 monitor 登録",
@@ -38965,7 +38973,7 @@
       "template_version": "1.0.0",
       "title": "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T15:44:20Z"
+      "updated_at": "2026-08-01T12:11:25.870970Z"
     },
     {
       "acceptance": [
@@ -43906,10 +43914,19 @@
       "resource_scope": [
         "apps/hub/src/lib/auth/",
         "apps/hub/src/app/api/auth/",
+        "apps/hub/tests/auth-tenancy/",
         "packages/schemas/auth-tenancy/",
         "packages/db/schema/core/identity.ts",
         "packages/db/repository/",
         "packages/db/migrations/",
+        "packages/db/__tests__/",
+        "system-spec/",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-security.md",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-infrastructure.md",
+        "features/feat-auth-tenancy.md",
+        "tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md",
         "docs/features/feat-auth-tenancy/"
       ],
       "scope_in": [
@@ -43947,7 +43964,7 @@
       "template_version": "1.0.0",
       "title": "HarnessHub共通Google OAuthクライアント方式を実装する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T23:16:50.690748Z"
+      "updated_at": "2026-08-01T12:29:53Z"
     },
     {
       "acceptance": [
@@ -44318,6 +44335,129 @@
       "title": "guard-graph-schema の Bash git 分岐が改行区切りの複数コマンドを1コマンドとして誤結合し無関係パスを誤って BLOCK する",
       "tracker_binding": "beads",
       "updated_at": "2026-07-28T11:40:00Z"
+    },
+    {
+      "acceptance": [
+        "401/403/契約不正後に以前の catalog 内容を描画しない",
+        "同一 scope の一時障害だけ stale を許可し scope 切替後は再利用しない",
+        "認証済み marketplace は private cache と scope ごとの Vary を返す",
+        "一覧は入力中に通信せず submit 1 回につき 1 回だけ取得する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-dual-catalog-cache-addendum.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-security.md",
+          "confidence": 0.52
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "qa-110..112 の確定契約を横断参照する製品仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c",
+        "evaluator": "system-spec-harness-final-review",
+        "evidence_ref": "docs/features/feat-dual-catalog-web/spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-01T09:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "platform",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-dual-catalog-cache-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-110..112 と実装・回帰検査を一つの追跡可能な仕様境界として維持する",
+      "graph_node_id": "spec-dual-catalog-cache-boundary",
+      "implementation_readiness": {
+        "checked_at": "2026-08-01T09:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "dual catalog の cache と認可失敗表示が tenant 境界を越えない製品契約を固定する",
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-dual-catalog-cache-addendum.md",
+        "system-spec/security.md",
+        "system-spec/frontend.md",
+        "system-spec/testing-qa.md"
+      ],
+      "scope_in": [
+        "認証済み marketplace cache",
+        "catalog list/detail/release history の stale 表示",
+        "tenant/workspace/project scope 切替",
+        "一覧 query の要求回数"
+      ],
+      "scope_out": [
+        "製品 API と DB schema の変更",
+        "PublishRequest 状態機械と role 判定 owner の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-01T09:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "c2b6bb4aacc4d5e79a19e21e5aae578b168494b62e410b02b1b64576356d0f1c",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "dual-catalog",
+        "security",
+        "frontend",
+        "testing-qa",
+        "cache-boundary"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub Dual Catalog cache・認可境界追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-01T09:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

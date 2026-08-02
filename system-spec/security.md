@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-104 |
+| Web (web) | 確定 | 確定質疑: qa-120 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,19 +24,19 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-104 (対応セル: web)
+### qa-120 (対応セル: web)
 
-**質問**: Publisher Bearer、tenant 分離、package 検査を security.web の既存契約へどう統合しますか?
+**質問**: main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?
 
-**回答**: ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-098 までの security.web 契約を全面維持し、公開パイプラインの信頼境界を追加確定する。
+**回答**: ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。
 
-【1. 二段階認証認可】Authorization: Bearer がある要求は edge middleware で access token の署名、期限、tenant_id、workspace_id を fail-closed に検証する。無効 Bearer から有効 session cookie へ fallback しない。route の withAuthz は scope、Project 所有者、credential 種別、token 失効を最終判定する。
+【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。
 
-【2. tenant 非開示と権限】全資源解決は principal の tenant/workspace と repository row scope を一致させ、cross-tenant 資源は存在を漏らさない 404 とする。approve は workspace-admin、owner 操作は当該 Project owner に限定し、role 判定表を publish route 側へ複製しない。
+【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。
 
-【3. package 防御】ZIP は size/content-type と archive path を検証し、static validation、secret scan、policy の共有 pipeline を必ず通す。Green 以外を stable へ昇格させず、secret を含む bundle は Release と package registry を作らない。検査結線と DB schema 境界は CI の負例付き静的 gate で遮断する。
+【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。
 
-【4. 監査】公開、承認、取消、昇格、rollback、停止、deployment 登録を append-only hash chain へ記録し、認証情報や package 内 secret をログへ残さない。監査 failure は公開成功として扱わない。
+【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

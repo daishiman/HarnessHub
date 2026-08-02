@@ -46,10 +46,10 @@
     }
   ],
   "verdict": {
-    "status": "collection_blocked",
-    "observation_started_at": null,
-    "first_monthly_verdict_due_at": null,
-    "blocker": "better-stack-monitor-paused",
-    "$comment": "2026-07-27T21:38:14Z に公開 status page で resource=not_monitored を確認。Better Stack 公式仕様上、これは underlying monitor が paused の状態を意味する。適用器を再実行して paused:false へ PATCH し、resource=operational を確認した時点を 30 日観測の開始にする。"
+    "status": "collecting",
+    "observation_started_at": "2026-07-27T20:46:37.686Z",
+    "first_monthly_verdict_due_at": "2026-08-26T20:46:37.686Z",
+    "blocker": null,
+    "$comment": "2026-08-01T05:19:15.333Z に公開 status page (https://harness-hub-daishimanju.betteruptime.com/index.json) を実測して収束させた値。observed_days=6/30。verify-slo-observation.mjs が正本で、手で書き換えないこと。"
   }
 }
