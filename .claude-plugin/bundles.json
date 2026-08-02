@@ -19,7 +19,8 @@
         "skill-governance-migration",
         "skill-governance-secrets",
         "system-spec-harness",
-        "extract-system-blueprint"
+        "extract-system-blueprint",
+        "harness-hub-publisher"
       ]
     },
     {

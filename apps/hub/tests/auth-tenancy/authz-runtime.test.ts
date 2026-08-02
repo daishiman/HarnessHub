@@ -58,7 +58,15 @@ const REQUIRED_AUTH_KEYS = [
   'AUTH_CANONICAL_ORIGIN',
 ] as const;
 
-const ALL_SOURCE_KEYS = [...REQUIRED_AUTH_KEYS, 'TURSO_DATABASE_URL', 'TURSO_AUTH_TOKEN', 'ENCRYPTION_KEK'] as const;
+const ALL_SOURCE_KEYS = [
+  ...REQUIRED_AUTH_KEYS,
+  'CWV_PROBE_SECRET',
+  'CWV_PROBE_TENANT_ID',
+  'CWV_PROBE_WORKSPACE_ID',
+  'TURSO_DATABASE_URL',
+  'TURSO_AUTH_TOKEN',
+  'ENCRYPTION_KEK',
+] as const;
 
 function envSource(overrides: Record<string, string | undefined> = {}): Record<string, string | undefined> {
   return {
@@ -119,6 +127,27 @@ describe('readAuthRuntimeEnv: 設定の読み取りと正規化', () => {
     );
   });
 
+  it('CWV probe Secret 3 件が揃ったときだけ read-only probe 設定を結線する', () => {
+    expect(
+      readAuthRuntimeEnv(
+        envSource({
+          CWV_PROBE_SECRET: 'cwv-secret',
+          CWV_PROBE_TENANT_ID: TENANT_A,
+          CWV_PROBE_WORKSPACE_ID: WORKSPACE_A1,
+        }),
+      ).cwvProbe,
+    ).toEqual({
+      secret: 'cwv-secret',
+      tenantId: TENANT_A,
+      workspaceId: WORKSPACE_A1,
+      origin: 'https://hub.example.com',
+    });
+  });
+
+  it('CWV probe Secret の部分設定は通常認証へ黙って fallback せず起動時に落とす', () => {
+    expect(() => readAuthRuntimeEnv(envSource({ CWV_PROBE_SECRET: 'cwv-secret' }))).toThrow('同時に設定');
+  });
+
   it('引数を省略すると process.env から読む', () => {
     const saved = new Map(ALL_SOURCE_KEYS.map((key) => [key, process.env[key]]));
     try {
@@ -160,6 +189,23 @@ describe('createAuthRuntime: 依存の結線', () => {
     expect(runtime.authz.sessionSecret).toBe('session-secret');
     expect(runtime.authz.accessTokenSecret).toBe('access-secret');
     expect(runtime.authz.allowedOrigins).toEqual(['https://hub.example.com', 'https://admin.example.com']);
+  });
+
+  it('CWV probe 設定を authz deps へ写す', () => {
+    const ports = createTestPorts();
+    const runtime = createAuthRuntime({
+      ports,
+      auditSink: createInMemoryAuditSink(),
+      clientSecretFor: async () => 'client-secret',
+      env: readAuthRuntimeEnv(
+        envSource({
+          CWV_PROBE_SECRET: 'cwv-secret',
+          CWV_PROBE_TENANT_ID: TENANT_A,
+          CWV_PROBE_WORKSPACE_ID: WORKSPACE_A1,
+        }),
+      ),
+    });
+    expect(runtime.authz.cwvProbe).toMatchObject({ secret: 'cwv-secret', tenantId: TENANT_A });
   });
 
   it('device flow と auth route の入口が生える', () => {

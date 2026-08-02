@@ -12,21 +12,21 @@ layer: feature-release
 
 ---
 
-## 0. 本記録の性格 — **初回 P13 では本番デプロイを実施していない**
+## 0. 本記録の性格 — 初回 P13 は未デプロイ、**2026-08-02 に本番反映済み**
 
-P13 の目的は「wrangler で本番へロールアウトし、smoke test を実施し、U5 を判定する」ことだが、
-**初回 run ではデプロイを実行していない。** その後の最終レビューでは commit・push・draft PR までが
-許可されたが、main merge と production deploy は対象外のため、次の記録を履歴として維持する。
+P13 の目的は「wrangler で本番へロールアウトし、smoke test を実施し、U5 を判定する」こと。
+初回 run ではデプロイを実行せず、最終レビューでも draft PR までが許可範囲だった。
+その後 PR #628 が main へ merge され、deploy job が success したため、catalog は本番に出ている。
 
-| # | 理由 | 内容 |
+| # | 事項 | 内容 |
 |---|---|---|
-| 1 | **初回 run の指示** | 初回 P13 は commit・push・PR を行わない条件だった。最終レビューでは draft PR まで許可されたが、main push はまだ行わない |
+| 1 | **初回 run の指示** | 初回 P13 は commit・push・PR を行わない条件だった。最終レビューでも draft PR までで main push は行わなかった |
 | 2 | **deploy トリガーの構造** | `ci.yml` の deploy job は `github.ref == 'refs/heads/main' && github.event_name == 'push'` でのみ走る。手元から `wrangler deploy` を直接叩く運用は取っていない (§1.2) |
-| 3 | **初回時点で未コミット** | 初回 P13 では作業ツリー上だけに存在した。最終レビュー後も draft PR merge 前なので catalog は本番に出ていない |
+| 3 | **解消済 (2026-08-02)** | PR #628 が merge commit `16a6f915` で main へ入り、`hub-ci` run `30727984628` の deploy job が success。現在の実測値は §2 |
 
 **未実施を「実施済み」と書かない。** 実測していない smoke 結果を pass として記録すると、
 本 feature が守ってきた fail-closed の原則 (未計測を good と見なさない) を最後の phase で破ることになる。
-本記録は「**何をどう実行すれば完了するか**」を確定させ、実行者へ引き渡すことを役割とする。
+デプロイ後も、**実行していない smoke は §3 で「未実行」のまま**にしてある。
 
 ---
 
@@ -84,27 +84,33 @@ secret は値も存在も本記録から確認していない。`ci.yml` の pre
 
 ## 2. 本 run の状態
 
-### 2.1 変更は未コミット
+### 2.1 変更は main へ merge 済み (2026-08-02)
 
 本 feature の成果物 (実装 6 ファイル + 画面 5 ファイル + route 3 + テスト 7 ファイル + 契約 + 文書 13) は
-すべて作業ツリー上にある。`git status` で確認できる。**この状態では deploy しても catalog は本番に出ない。**
+draft PR #628 として提出され、**merge commit `16a6f915` で main へ取り込まれた** (mergedAt 2026-08-02T01:57:58Z)。
+`hub-ci` は `paths` フィルタを持つが、本 merge は `packages/**` を含むため発火している。
 
-### 2.2 本番 URL への疎通確認は行っていない
+### 2.2 本番 Worker の稼働は CI 経由で確認済み
 
-`HUB_PUBLIC_URL` は登録済みだが、本セッションから当該 URL への HTTP アクセスは実行していない
-(コマンド実行が許可されなかった)。したがって **Worker が現在稼働しているかどうかは本記録では未確認**である。
-「変数が登録されている」と「Worker が生きている」は別の事実なので、混同しないこと。
+`hub-ci` run `30727984628` (main / push / `16a6f915`) の deploy job は、preflight / production migration /
+opennext build / **wrangler deploy** / **`/health` 疎通確認** / **OIDC start-flow smoke** /
+**DB・R2 smoke 6 項目** が全て success、「失敗時ロールバック」は skipped (= 前段が落ちていない)。
+ただしこれらは基盤 (feat-hub-foundation) 側の smoke であり、**catalog 画面の smoke ではない** (§3)。
 
 ### 2.3 **訂正: CWV が測れない理由は「URL が無いから」ではない**
 
 P03〜P11 の各文書は「`vars.HUB_PUBLIC_URL` が未設定のため計測対象が存在しない」と記していたが、
-**同変数は既に登録済みであり、この前提は誤りだった。** 実際の阻害要因は次の 2 点である。
+**同変数は既に登録済みであり、この前提は誤りだった。** 実際の阻害要因は次の 3 点である。
 
-1. **本 feature の catalog route がまだ本番に出ていない** (§2.1)。
-   今 `cwv.yml` を実行すると、catalog を含まない旧版を測って値が返る。
-   その値を acceptance 2 の根拠にすると、**測っていない画面を good と申告する**ことになる。
+1. ~~本 feature の catalog route がまだ本番に出ていない~~ → **2026-08-02 に解消** (§2.1)。
 2. **`cwv.yml` は既定でルート URL しか測らない**。`vars.HUB_PUBLIC_URL` をそのまま Lighthouse に渡す実装であり、
    `/catalog` を測るには `workflow_dispatch` の `target_url` 入力で明示する必要がある。
+3. **`/catalog` は未認証で 401 を返し、Lighthouse がページを読み込めない** (2026-08-02 実測)。
+   1・2 を解消したうえで `gh workflow run hub-cwv -f target_url=<HUB_PUBLIC_URL>/catalog` を実行したところ、
+   run `30736055772` が `Lighthouse was unable to reliably load the page you requested. (Status code: 401)`
+   で失敗した。401 は deny-by-default の設計どおりの応答であり、**障害ではなく計測経路の欠落**である。
+   `cwv.yml` は認証済みセッションを持たないため、認証必須 route の CWV は現行経路では原理的に測れない。
+   同 workflow は feat-hub-foundation 所管で本 feature の Write scope 外のため、追跡課題として引き渡す。
 
 この取り違えは「変数を設定すれば完了」という誤った作業計画を生む。
 該当箇所は `acceptance-record.md` §2.2 / `final-review-record.md` §2・§5 / `quality-assurance-report.md` §4 /
@@ -155,7 +161,7 @@ runner がその位置を見ていないという不整合があり、それを�
 ## 3. smoke test 項目 — 定義と現在の状態
 
 P13 の required evidence が求める 5 種を、**実行可能な形**に落とす。
-現時点の状態は全項目 **未実行 (デプロイ未実施のため)**。
+デプロイは完了した (§2.2) が、下記 smoke は**認証済みセッションを要する**ため未実行のまま。現状は §3.7。
 
 ### 3.1 catalog 一覧表示 (S01)
 
@@ -212,20 +218,20 @@ curl -sSI "$HUB_PUBLIC_URL/marketplace.json" -b "$SESSION_COOKIE" \
 
 ### 3.6 CWV ゲート通過
 
-- **本番デプロイ後にのみ実行できる。** 手順は §5.2 の 3 の通り。
 - **pass 条件**: LCP ≤ 2500ms / CLS ≤ 0.1 / TBT ≤ 200ms (INP の lab 代理指標)。
-- **現状: 未計測 = 未達。** acceptance 2 はこの実測をもってのみ pass にできる。
+- **現状: 未計測 = 未達。** deploy 完了後に実行した run `30736055772` は 401 で Lighthouse が失敗した (§2.3-3)。
+  **計測経路が存在しないことが確定した**ため、acceptance 2 は認証付き計測経路の整備まで pass にできない。
 
 ### 3.7 現在の状態まとめ
 
 | # | 項目 | 状態 | 根拠 |
 |---|---|---|---|
-| 1 | catalog 一覧表示 | **未実行** | デプロイ未実施 |
+| 1 | catalog 一覧表示 | **未実行** | deploy 済。認証セッションを要し CI/CLI から実行できないため人手待ち |
 | 2 | catalog 詳細表示 | **未実行** | 同上 |
 | 3 | publish 状況ポーリング | **未実行** | 同上 (加えて実 publishId の入手性に依存) |
 | 4 | `marketplace.json` 配信 | **未実行** | 同上 |
 | 5 | axe ゲート | **pass** | ローカル実測 (test:a11y 3 tests / 契約テスト 63 tests) |
-| 6 | CWV ゲート | **未実行 (未達)** | デプロイ未実施 (§2.3) |
+| 6 | CWV ゲート | **未達 (計測不能)** | run `30736055772` が 401 で失敗。計測経路が無い (§2.3-3) |
 
 ---
 

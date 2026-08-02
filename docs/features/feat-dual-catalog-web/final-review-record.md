@@ -43,7 +43,7 @@ P03 が実装前の設計妥当性を見るのに対し、P10 は全工程完了
 | # | acceptance | 判定 | 備考 |
 |---|---|---|---|
 | 1 | axe 検出可能違反 0 がリリース条件として CI に存在する | **pass** | 「違反 0」と「条件として存在する」を分けて確認済 (P07 §1)。`continue-on-error` / `\|\| true` / `passWithNoTests` を持たないことを再確認 |
-| 2 | CWV 全指標 good を実測で満たす | **未達 (未計測)** | 阻害要因は「本 feature の画面が未デプロイ」(P13 §2.3 で訂正)。`vars.HUB_PUBLIC_URL` は登録済みで、先行 phase の「URL が無い」という前提は誤り。**未計測を good と読み替えない** |
+| 2 | CWV 全指標 good を実測で満たす | **未達 (計測不能)** | 2026-08-02 に deploy 完了後も計測できず。`/catalog` が未認証で 401 を返し Lighthouse が読めない (run `30736055772`)。阻害要因は URL 不在でも未デプロイでもなく**認証必須 route の計測経路欠落**。**未計測を good と読み替えない** |
 | 3 | 導入済み Skill が Hub 停止中も動作継続する (§6.1 縮退) | **pass** | 導入済み Skill の実行経路に Hub Worker が入らない構造 + 縮退時の能力表 + SWR 配信で確認 |
 
 ---
@@ -133,7 +133,7 @@ requirements-baseline §6 の 4 件を、実装側から再確認した。
 
 | 項目 | 状態 | 判断 |
 |---|---|---|
-| CWV 実測 (LCP/INP/CLS) | 未計測 | **リリース阻害としない**。計測経路 (`cwv.yml`) は fail-closed で用意済み。**阻害要因は URL 未設定ではなく catalog route の未デプロイ** (P13 §2.3)。未計測のまま good と記録しないことで担保する |
+| CWV 実測 (LCP/INP/CLS) | 未計測 (計測不能) | **リリース阻害としない**。ただし 2026-08-02 の deploy 後実測で、`cwv.yml` は**認証必須 route を計測できない**ことが確定した (`/catalog` が 401 / run `30736055772`)。「fail-closed で用意済み」は経路の存在を意味しない。未計測のまま good と記録しないことで担保する |
 | SLO ダッシュボードへの CWV 反映 | 未反映 | **リリース阻害としない**。`apps/hub/monitoring/` は本 feature の Write scope 外で、feat-hub-foundation の受入条件 A3 に紐づく。follow-up として P12 へ引き継ぐ |
 | `/api/v1/harnesses*` の実装 | 未実装 | **リリース阻害としない**。feat-publish-pipeline 所有 (ADR §0 A2)。未実装状態でも縮退表示で画面は成立する |
 | E2E (Playwright) | 未導入 | **リリース阻害としない**。導入は Write scope 外。follow-up として P12 へ引き継ぐ |

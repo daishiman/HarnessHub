@@ -110,6 +110,12 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - 各 package 内の Vitest 並列性は維持し、設定欠落・値変更を `pnpm check:pnpm` の正負テストで拒否する。これにより assertion 全成功後の worker RPC timeout を G4 の失敗と誤認しない。
 - 製品仕様は変更せず、CI/CD 実行設計と検証結果は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
 
+## 実装反映 (2026-08-02 / HarnessHub-9cgb)
+
+- protected `/catalog` の G11 Core Web Vitals を、通常の session/access token を CI へ渡さずに実測できるようにした。
+- GitHub Actions と Worker が共有する専用 secret から最大 5 分の ticket を発行し、固定 tenant/workspace の GET/HEAD catalog read だけへ閉じる。ticket は redirect 後の URL、ログ、Lighthouse artifact に残さない。
+- Worker/GitHub secret の投入、本番 deploy、初回 Lighthouse は外部実測待ちであり、未計測を good と数えない。詳細は [仕様反映受領書](../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md)。
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-infrastructure](../architecture/harness-hub-infrastructure.md)

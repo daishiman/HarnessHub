@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T07:35:52.300205Z"
+updated_at: "2026-08-02T09:55:09.611895Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T07:35:20Z","origin_kind":"system-spec-harness","source_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T10:00:00Z","origin_kind":"system-spec-harness","source_digest":"8734263d5f297806bea6a5e7b4f6fa9f30730d55351d33f5e5176424dde86920","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -102,6 +102,16 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 認証・認可
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**CWV 実測境界 (2026-08-02 / `HarnessHub-9cgb` / qa-133)**:
+
+- 認証必須の `/catalog` は、通常の利用者 session を CI に複製せず、5 分で失効する
+  read-only probe credential で実測する。対象は固定 HTTPS origin・固定 tenant/workspace の
+  catalog read 経路だけで、書込み・install・publish・管理 API は deny-by-default のまま維持する。
+- 仕様の詳細と検証・外部未完了の受領は
+  [CWV probe credential 仕様反映受領書](../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md)
+  を参照する。正本は `system-spec/auth.md`、`system-spec/security.md`、
+  `system-spec/infrastructure.md`、`system-spec/testing-qa.md` の qa-133 である。
 
 **実装反映 (2026-07-26 / HarnessHub-b7ng)**:
 
