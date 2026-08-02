@@ -108,5 +108,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   feature、task、runbook、検証結果、仕様反映受領書を同期する。
 - 最終レビュー: Google 以外 issuer の操作拒否、active 再テスト時刻、disabled 再開、
   Workspace domain 入力、secret 非露出、500 行分割を補正し、全品質ゲートを再実行する。
-- 完了条件: Google 実環境確認、production migration、draft PR merge、default branch
-  reconciliation までは Beads と dev-graph を `in_progress` に維持する。
+- PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境確認、production migration は外部環境が必要な未完了項目のため、Beads と dev-graph を `in_progress` に維持する。
