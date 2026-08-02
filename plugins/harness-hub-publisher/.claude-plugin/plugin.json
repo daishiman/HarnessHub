@@ -1,0 +1,8 @@
+{
+  "name": "harness-hub-publisher",
+  "version": "0.1.0",
+  "description": "skills-package を Harness Hub へ publish したいとき、Device Flow 認証・pre-check・wrangler デプロイまでを一括で実行したいときに使う。業務ロジックは持たず apps/publisher CLI (@harness-hub/publisher) を呼び出すだけの薄いラッパー。",
+  "author": {
+    "name": "harness maintainers"
+  }
+}

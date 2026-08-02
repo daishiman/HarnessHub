@@ -6,6 +6,8 @@
 packages:
   # Hub 本体 (Next.js on Workers)。UI + API + 認可 MW を同居させる単一 deploy unit
   - "apps/hub"
+  # feat-publisher-plugin: skills-package を Hub へ公開する CLI (AD-1)
+  - "apps/publisher"
   # docs/shared-layers.md §1〜§2 の共通層。実装 owner は feat-hub-foundation
   - "packages/ui"
   - "packages/schemas"
