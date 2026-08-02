@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-133 |
+| Web (web) | 確定 | 確定質疑: qa-134 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,21 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-133 (対応セル: web)
+### qa-134 (対応セル: web)
 
-**質問**: 未認証では deny-by-default の `/catalog` を、通常の session 秘密を GitHub Actions へ渡さずに Core Web Vitals で実測するため、最小権限の認証・セキュリティ・CI・検証契約を web 仕様へどう統合しますか?
+**質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
 
-**回答**: ユーザーの 2026-08-02 確認『ok』を明示承認として、qa-123/124/128/130/132 の既存の production OIDC・session・access token・deny-by-default・SLO/CWV・秘密管理・品質ゲートを全面維持し、CWV 専用 credential を追加確定する。
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
 
-【1. 専用 credential】GitHub Actions と Worker が共有する `CWV_PROBE_SECRET` だけで HS256 の短命 JWT を検証する。claim は `typ=cwv_probe`、`aud=harness-hub-cwv`、正規 origin、固定 tenant/workspace、iat/exp とし、有効期間は最大 5 分である。通常の `AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、利用者 session、Publisher token を CI/成果物へ渡さず、CWV credential はユーザー主体・OIDC・Device Flow・外部 API の新たな認証方式ではない。
+【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
 
-【2. 到達境界】bootstrap は HTTPS の `GET /catalog` だけで、署名・audience・origin・時間・tenant/workspace をすべて検証した後、URL の ticket を除去する 307 redirect と `__Host-harness-hub.cwv-probe` (Secure / HttpOnly / SameSite=Strict / Path=/ / 最大 5 分) を返す。以後は `GET`/`HEAD` の catalog 画面と catalog が使う読み取り API だけを許可する。書込み、install、publish、管理 API、別 tenant/workspace、別 origin、method 違い、欠損/期限切れ/改ざん ticket は deny-by-default で拒否する。scope は ticket の署名済み claim だけを既存認可層へ渡し、query/header の任意値で昇格しない。
+【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。
 
-【3. 秘密と露出】ticket は redirect 後 URL、HTTP リファラ、Lighthouse JSON、CWV report、Actions ログ、artifact のいずれにも残さない。bootstrap 応答は `Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付け、workflow は ticket を mask し、artifact を upload 前に secret/ticket を除去・検査する。secret の値は source、wrangler 設定、文書、テスト fixture に保存しない。`CWV_PROBE_SECRET` の rotate は既存 ticket を即時無効化する。
+【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。
 
-【4. 構成と運用】Worker Secret は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、GitHub Actions secret は対応する `HUB_CWV_PROBE_*` とする。自由入力の target URL は廃止し、`HUB_PUBLIC_URL` の同一 HTTPS origin の `/catalog` だけを対象にする。secret 投入・read-only 代表 tenant/workspace 選定・本番 deploy・最初の実 Lighthouse は外部状態を変える follow-up であり、投入前/失敗時は未計測として fail-closed で可視化し、good と数えない。
-
-【5. 検証】JWT mint/verify、期限・audience・origin・scope・method・tenant/workspace の負例、cookie/bootstrap の URL 除去・属性、認可規則の read-only 境界、workflow target/secret/artifact sanitizer、wrangler secret 台帳、対象 Vitest、task/system-spec/dev-graph/doc gate を repository 内で検証する。実環境の secret 権限と Lighthouse 成功は静的検証で代替せず、Beads を外部実測完了まで open に保つ。
+【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 

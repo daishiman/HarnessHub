@@ -1,0 +1,23 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "A later Bash heredoc embedded original-body and added-section text prohibited by the trial task",
+    "The first intermediate row was created after the Skill invocation rather than before it",
+    "Progress statuses used PASS rather than the task-specific completed vocabulary",
+    "The Agent fork occurred only after final_status was already PASS"
+  ],
+  "observations": {
+    "canonical_paths": {
+      "result": "PASS",
+      "evidence": "Five artifact kinds were routed to canonical paths"
+    },
+    "consecutive_update_integrity": {
+      "result": "FAIL",
+      "evidence": "Stored kind/path integrity passed, but the extra trial procedure contract was violated"
+    },
+    "macro_feature_guard": {
+      "result": "PASS",
+      "evidence": "A direct non-C14 feature registration was rejected without graph or feature-file growth"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "reviewer_id": "codex-independent-evaluator-eval_node_trial_r6-20260802",
+  "verdict": "FAIL",
+  "blockers": [
+    {
+      "id": "dry-run-contract-omitted",
+      "detail": "The five inputs were edited after their previews and applied without previewing the modified inputs; the revision 5 to 6 patch also had no dry-run."
+    }
+  ],
+  "required_observations": {
+    "O1": {"status": "PASS", "evidence": "Revision 6 has exactly five nodes in the five canonical kind paths."},
+    "O2": {"status": "PASS", "evidence": "The update changed revision 5 to 6 and preserved body, kind, and path integrity."},
+    "O3": {"status": "PASS", "evidence": "There are zero feature nodes and zero feature Markdown artifacts."}
+  },
+  "contract_checks": {
+    "exact_qualified_skill_invocation": "PASS",
+    "subagent_fork": "PASS",
+    "no_human_question_or_nudge": "PASS",
+    "final_schema": "PASS",
+    "goal_seek_artifacts_and_hash": "PASS",
+    "status_marker": "PASS"
+  },
+  "evidence_digests": {
+    "graph_sha256": "9ed1758406759e27ecf6223aa22f1a1dd8fb919320e5ab8592cc371e0b58b5eb",
+    "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2"
+  }
+}

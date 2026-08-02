@@ -1,0 +1,48 @@
+  ⎿  Wrote 58 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r8/eval-log/run-dev-graph-node-progress.json
+       1 {
+       2   "scenario": "C02-OUT1-positive-mixed-artifacts",
+       3   "checklist": [
+       4     {
+       5       "id": "CL1",
+       6       "text": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+       7       "status": "PASS",
+       8       "evidence": "resolve-repo-context.py --mode write returned repository_id=local:sha256:e5da84f43a5ac81179e3a8b08990da38bf490c7d3566130d05b67c3e7049a954, matching config.json. All content_roots resolv
+         ed within repo_root."
+       9     },
+      10     {
+     … +48 lines (ctrl+o to expand)
+
+⏺ IN1 PASS (valid=true, 0 violations). Now write intermediate.jsonl and run the goal-seek verification.
+
+⏺ Bash(python3 -c "
+      import hashlib, json…)
+  ⎿  eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r8/eval-log/run-dev-graph-node-intermediate.jsonl)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r8/eval-log/run-dev-graph-node-intermediate.jsonl
+      1 {"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ","o
+        riginal_goal_hash":"eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2","current_goal_snapshot":"5 mixed artifacts classified and registered to canonical kind paths via deterministic upsert.
+        Consecutive update verified frontmatter/path parity. No feature created outside C14 macro contract.","delta_from_original":"Scenario C02-OUT1 tests normal artifact routing only; package registration (CL4)
+        is not_applicable. All other checklist items PASS.","merged_directive_for_next":"All checklist items resolved. IN1 schema validation PASS. OUT1 observations 1-3 all PASS. Goal-seek loop complete in 1 itera
+        tion.","drift_signal":"none"}
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r8 && python3 - "$DEV_GRAPH_ROOT/eval-log/run-d…)
+  ⎿  GOAL-SEEK VERIFICATION PASS
+
+⏺ All verifications pass. Now write the status marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T144500Z-wt31-qa131-node-r8/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T144500Z-wt31-qa131-node-r8/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T144500Z-wt31-qa131-node-r8/out/status.json
+      1 {"status":"PASS","scenario":"C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Brewed for 10m 0s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

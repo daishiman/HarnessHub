@@ -14,7 +14,7 @@
 
 ### 入力契約
 
-- C11 report、C02保存readiness/evaluation、source digest。C11 report は `validate-graph-schema.py --graph <repo の .dev-graph/state/graph.json>` の実行出力へ係留し、graph.json 直読や ad-hoc script の出力を report として扱わない (2026-07-23 live-trial で validator 0回実行のまま照合が自己申告された fail-open の再発防止)。source digest の照合は `validate-source-digest.py` の exit code へ係留し、`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけで readiness を PASS にしない (2026-07-21 live-trial r13 で registered_mismatch 4件のまま handoff が emit された fail-open の再発防止)。
+- C11 report、C02保存readiness/evaluation、source digest。C11 report は `validate-graph-schema.py --graph <repo の .dev-graph/state/graph.json>` の実行出力へ係留し、graph.json 直読や ad-hoc script の出力を report として扱わない (2026-07-23 live-trial で validator 0回実行のまま照合が自己申告された fail-open の再発防止)。source digest の照合対象は、選択 feature node、同 feature の `architecture_refs`、同じ `feature_package_id` を持つ task 13 件の lineage closure 全件とする。これを `validate-source-digest.py --registered` へ重複除去・node ID 昇順で渡し、`confirmation_status`/`evaluation_status`/`implementation_readiness` の比較だけや task 13 件だけの検査で readiness を PASS にしない。
 
 ### 出力契約
 
@@ -26,11 +26,11 @@
 
 ### 受入条件
 
-- C11 reportとC02 saved stateが一致し、scope内node全件を `--registered` に渡した `validate-source-digest.py` が exit 0 (stale digest 0件) で、validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしたcomplete/pass/confirmedだけreadyになる。
+- C11 reportとC02 saved stateが一致し、選択 feature・その `architecture_refs`・package task 13 件の closure 全件を `--registered` に渡した `validate-source-digest.py` が exit 0 (stale digest 0件) で、`validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` の P01..P13 exact-set/13-node DAG が PASS した complete/pass/confirmed だけ ready になる。`--staging` や package 引数なし実行へ読み替えない。
 
 ## Layer 3: インフラ層
 
-- 使用資産: validate-graph-schemaとvalidate-source-digestとvalidate-system-plan。
+- 使用資産: validate-graph-schema、validate-source-digest、`validate-system-plan.py --feature-package <選択 feature node の feature_package_id>`。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -58,8 +58,8 @@
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] `validate-graph-schema.py` を実行して C11 report を取得している (graph.json 直読や自作 script で代替しない)
 - [ ] C11 reportとC02 saved stateが一致したcomplete/pass/confirmedだけreadyになる
-- [ ] scope内node全件を `--registered` に渡した `validate-source-digest.py` を実行し exit 0 である (stale digest 0件。status 比較や目視で代替しない)
-- [ ] validate-system-plan.pyのP01..P13 exact-set/13-node DAGがPASSしている
+- [ ] 選択 feature、同 feature の `architecture_refs`、同一 package の task 13 件を重複除去した lineage closure 全件を `--registered` に渡した `validate-source-digest.py` を実行し exit 0 である (task 13 件だけ、status 比較、目視で代替しない)
+- [ ] `validate-system-plan.py --repo-root "$DEV_GRAPH_ROOT" --feature-package "<選択 feature node の feature_package_id>"` の P01..P13 exact-set/13-node DAG が PASS し、`--staging` や package 引数なし実行をしていない
 
 ### 5.4 実行方式
 
