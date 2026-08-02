@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — S10-S12 の Cloudflare Workers 本番反映とロールアウト確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-08-02T06:38:39.904388Z"
+updated_at: "2026-08-02T07:04:14.571966Z"
 status: "active"
 depends_on: ["SYS-HEARING-INTAKE-P12"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
@@ -121,6 +121,6 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   stdout 最終位置に決め打ちせず JSON 配列候補を順番に解析する負例を追加した。
 - 本番 smoke の tenant header 詐称は当初 `403` を期待していたが、既存の存在秘匿契約と矛盾するため
   `404 tenant_mismatch` へ修正し、静的契約テストで `403` への退行も検出するよう固定した。
-- 仕様影響ありとして `infrastructure.web` / `testing-qa.web` を R4-reopen し、`appr-022` を根拠に
-  `qa-121` / `qa-122` へ再確定した。C02 writer で specification / infrastructure architecture /
+- 仕様影響ありとして `infrastructure.web` / `testing-qa.web` を R4-reopen し、main の確定履歴を保持して
+  `appr-024` を根拠に `qa-124` / `qa-125` へ再確定した。C02 writer で specification / infrastructure architecture /
   feature / 本 task projection を更新し、公開済み content-addressed task spec 自体は変更していない。

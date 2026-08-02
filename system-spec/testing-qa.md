@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-122 |
+| Web (web) | 確定 | 確定質疑: qa-125 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,7 +24,7 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-122 (対応セル: web)
+### qa-125 (対応セル: web)
 
 **質問**: Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?
 

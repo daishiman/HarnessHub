@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-121 |
+| Web (web) | 確定 | 確定質疑: qa-124 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-121 (対応セル: web)
+### qa-124 (対応セル: web)
 
 **質問**: 既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。
+**回答**: ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。
 
 【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。
 

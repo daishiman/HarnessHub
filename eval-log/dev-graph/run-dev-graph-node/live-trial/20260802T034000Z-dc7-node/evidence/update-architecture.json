@@ -1,0 +1,14 @@
+{
+  "graph_node_id": "order-processing-backend-architecture",
+  "patch": {
+    "graph_node_id": "order-processing-backend-architecture",
+    "tags": [
+      "architecture",
+      "backend",
+      "security",
+      "infrastructure",
+      "revised"
+    ]
+  },
+  "body": "## Architecture overview\n\n注文処理パイプラインのバックエンド構成と、それに組み込むセキュリティ制御を定義する。\n\n## Context and drivers\n\n決済と在庫を跨ぐ更新を単一障害で不整合にしないこと、\nおよび個人情報の保護要件を満たすことが主要な制約である。\n\n## System context and boundaries\n\n1. クライアント から API gateway (TLS 終端)\n2. API gateway から 認証サービス (トークン検証)\n3. 認証サービス から 注文サービス (認可済みリクエスト)\n4. 注文サービス から 決済・在庫 (saga による調停)\n5. 全更新を監査ログへ非同期送出\n\n## Container and component view\n\n- 注文サービス: 注文ライフサイクル (作成・更新・取消) を保持する\n- 決済アダプタ: 外部決済事業者との境界を 1 か所へ閉じる\n- 在庫サービス: 楽観ロックで在庫を更新する\n- 通知サービス: イベント駆動で通知を送出する\n\n## Subtype architecture\n\n### Backend\n\nサービス間は非同期メッセージで疎結合にし、注文集約のみが在庫と決済を調停する。\n永続化は関係データベース、冪等性キーで再送を吸収する。\n\n### Security\n\n- 認証: 公開鍵署名のトークンとリフレッシュトークンの回転\n- 認可: 役割ベースのポリシー評価をゲートウェイ直後で行う\n- データ保護: 保存時の個人情報を暗号化し、転送は TLS のみ許可する\n- 監査: 追記専用の監査ログで改竄を検出する\n\n## 変更履歴\n\n- 2026-08-02: 監査ログの暗号化要件を追記。保存時の監査ログにも暗号化を適用し、改竄検出の信頼性を向上させる。"
+}
