@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T08:32:54.342375Z"
+updated_at: "2026-08-02T09:40:16.707097Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"ce6433762cc19d322f14f7d6cce44c025442664e2ea7fea74f46f6d81026f98f","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T09:32:20Z","origin_kind":"system-spec-harness","source_digest":"8981abfb090d9ebd74c5cfe589c7216c050653fea4aa1242b7f64ed88d3a947d","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/security.md](../system-spec/security.md) (sha256: `8ecd1f6b7cff6a06…`)
-- [system-spec/auth.md](../system-spec/auth.md) (sha256: `fec2086b1ace68d0…`)
+- [system-spec/security.md](../system-spec/security.md) (sha256: `d2333481227822b7…`)
+- [system-spec/auth.md](../system-spec/auth.md) (sha256: `14439efdbbce8f2b…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
-- 再取込日時: 2026-08-01T16:30:33Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -119,7 +119,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 本番 smoke の結果と rollback 判断は
   [feat-publish-pipeline release record](../docs/features/feat-publish-pipeline/release-record.md) を証跡正本とする。
 
-**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-131)**:
+**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-133)**:
 
 - protected `/catalog` の CWV runner は、通常 session / access token と鍵を共有しない
   5 分以下の HS256 ticket を使う。`typ`、audience、HTTPS origin、tenant/workspace、発行・期限を

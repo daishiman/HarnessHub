@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T08:30:01.122253Z"
+updated_at: "2026-08-02T09:55:09.611895Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T10:00:00Z","origin_kind":"system-spec-harness","source_digest":"8734263d5f297806bea6a5e7b4f6fa9f30730d55351d33f5e5176424dde86920","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -103,7 +103,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
-**CWV 実測境界 (2026-08-02 / `HarnessHub-9cgb` / qa-131)**:
+**CWV 実測境界 (2026-08-02 / `HarnessHub-9cgb` / qa-133)**:
 
 - 認証必須の `/catalog` は、通常の利用者 session を CI に複製せず、5 分で失効する
   read-only probe credential で実測する。対象は固定 HTTPS origin・固定 tenant/workspace の
@@ -111,7 +111,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 仕様の詳細と検証・外部未完了の受領は
   [CWV probe credential 仕様反映受領書](../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md)
   を参照する。正本は `system-spec/auth.md`、`system-spec/security.md`、
-  `system-spec/infrastructure.md`、`system-spec/testing-qa.md` の qa-131 である。
+  `system-spec/infrastructure.md`、`system-spec/testing-qa.md` の qa-133 である。
 
 **実装反映 (2026-07-26 / HarnessHub-b7ng)**:
 
@@ -406,6 +406,23 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
+
+**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-131〜132)**:
+
+- migration より前に、Worker Secret の機械可読台帳、`wrangler.jsonc` の required 宣言、
+  本番 Worker の実投入名を三方向で突合する。値は保存せず、認証不足・通信不能・解析不能・
+  未投入・台帳外投入を fail-closed（検査できない場合も安全側で停止）にする。
+- post-deploy 検証の末尾へ hearing 実データ E2E / SEC8 スモークを追加する。**新しい secret を
+  要求せず**、既存の `TURSO_*` と `vars.HUB_PUBLIC_URL` だけで成立させる。
+- session 専用の提出経路は route と同じ repository → service 合成を server 側で実行し、TOKEN 資格の
+  AI キュー API は本番 URL へ実 HTTP で送る。Device Flow の `code` / `token` が認証不要 endpoint で
+  あるという既存契約を使い、署名鍵を CI へ配らずに本物の access token を得る。
+- 検証用の使い捨て tenant は fixture 全体を 1 transaction（途中失敗なら全取り消し）で作り、
+  `finally` の削除も 1 transaction で行う。全対象表の**残行数 0 でなければ失敗**とする。
+- 認可契約そのものは変更しない。SEC5（年収非保存）、SEC8（tenant 分離・claim token 束縛）、
+  session 専用の提出契約を**本番実挙動として観測する**手段を追加する差分である。
+  他 tenant の header を騙る負例は、資源の存在を伏せる既存契約どおり `404 tenant_mismatch`
+  を期待し、`403` への退行も検出する。
 
 **開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
 

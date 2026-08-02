@@ -60,8 +60,10 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | libSQL 接続 | token 失効時・年 1 回 |
 | `AUTH_SESSION_SECRET` | Auth.js session JWT cookie 署名 | 年 1 回 (全セッション失効を伴う) |
 | `AUTH_ACCESS_TOKEN_SECRET` | Publisher access token JWT 署名 | 年 1 回 (短命 access token の再発行を伴う) |
+| `CWV_PROBE_SECRET` / `CWV_PROBE_TENANT_ID` / `CWV_PROBE_WORKSPACE_ID` | protected `/catalog` の CWV 実測専用。最大 5 分の ticket 署名鍵と、読み取り専用の固定 tenant/workspace を束縛する。通常 session / access token の鍵と共有しない。未投入時は計測だけを fail-closed で停止する | 署名鍵は漏えい疑い・年 1 回、固定 scope は代表環境を変更するとき |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK (base64 32 byte)。**1 本のみでテナント数に依存しない**。`users.salary` (purpose=`salary`) と `idp_connections.client_secret_enc` (purpose=`idp_secret`) の DEK を wrap して `encryption_keys` へ保存する (security-spec-data-integrity §4.1/§4.3) | 年 1 回。**DEK の re-wrap のみで列の再暗号化は不要** |
-| `RESEND_API_KEY` | メール送信 (SEC9) | 年 1 回 |
+| `SHARED_GOOGLE_OAUTH_CLIENT_ID` / `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` | 共有 Google OAuth client (環境単位で 1 組)。名前の正本は `apps/hub/src/lib/auth/shared-credentials.ts`。**Worker の起動要件ではない** (未投入でも顧客持ち込み方式のテナントは動き、片方欠落は `readSharedGoogleCredentials` が null に倒す) が、**2026-08-02 に本番投入済み**のため runbook S-02 に従い `secrets.required` へ宣言し、消失を deploy 前に検知する対象とする | 年 1 回 |
+| `RESEND_API_KEY` | メール送信 (SEC9)。**2026-08-02 時点で実装からの参照が無い** (planned)。投入しても効果が無く用途不明の credential を増やすだけなので、実装と同じ変更で required へ移すまで投入しない | 年 1 回 |
 | `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL (§5/§9)。URL 自体が事実上の秘匿情報のため wrangler.jsonc の var ではなく secret で投入する | 監視側で再発行したとき |
 
 - **2026-07-28 台帳訂正 (`HarnessHub-x2x9`)**: 本表は旧設計の `SALARY_ENC_KEY` と `IDP_SECRET_<tenant_slug>` を載せ、
@@ -69,6 +71,10 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
   実装 (`packages/db/repository/crypto.ts`) にも `apps/hub/src/lib/authz/runtime.ts` にも該当 binding は存在しない。
   **旧表のまま本番投入すると `ENCRYPTION_KEK` 未投入で Worker が起動時例外になる**ため、実装と §4.5 に合わせて訂正した。
   テナント IdP の client secret は Workers Secret ではなく `idp_connections.client_secret_enc` へ封筒暗号化で保存する。
+
+- **2026-08-02 実投入ゲートの追加 (`HarnessHub-o2i.13`)**: 本表の機械可読な正本を `scripts/ci/worker-secrets-registry.json` に置き、`scripts/ci/check-worker-secrets.mjs` が **台帳 ↔ `wrangler.jsonc` の `secrets.required` ↔ 本番の実投入**を三方向で突合する。静的突合は静的ゲート job と `pnpm verify`、実投入突合 (`--live`) は deploy job が **deploy より前に**実行する (失敗しても本番は前進していないため、赤は「古い版が動き続ける」で済む)。requirement 語彙は `required` / `optional` / `planned` / `legacy` で、`wrangler.jsonc` の宣言と 1:1 対応するのは `required` だけ。未投入が恒常的な赤になるとゲート全体が無視される方向へ効くため、投入と同じ変更で `required` へ移す (共有 Google OIDC runbook S-02 と同じ判断)。
+  **契機**: 本番 Worker へ `AUTH_ACCESS_TOKEN_SECRET` が未投入のまま稼働していたことを実測した。`wrangler.jsonc` は同名を `secrets.required` に宣言し、テストもその**宣言**を検査していたが、「宣言した secret が実際に入っているか」は誰も見ていなかった。GitHub 側に `check-actions-secrets.mjs --live` がありながら Cloudflare 側に等価物が無い非対称が穴の本体である。発覚が遅れたのは middleware が fail-closed だったため — 鍵が無いとき Bearer を cookie へ fallback させず `principal=null` に倒す設計は正しいが、副作用として「鍵が無い」と「token が不正」が同じ 401 へ潰れ、設定漏れが障害として立ち上がらなかった。**同日 `wrangler secret put` で投入済み**。
+  **検査対象の境界**: 乖離しうるのは `wrangler deploy` が押し込まない帯域外設定 (Workers Secret / R2 bucket / Actions secret / Turso migration) だけで、`vars`・binding・cron trigger・compatibility flag は deploy が本設定ファイルから押し込むため乖離しない。棚卸し結果と根拠は `scripts/ci/check-worker-secrets.mjs` の冒頭コメントに置く。
 
 - **サイズ予算**: Worker bundle ≤ 3 MiB (gzip, Free 上限) を CI ゲートで計測 (§7)。恒常超過は Workers Paid ($5/月) 移行と C2 再交渉をユーザーへ差し戻す (D1 caveat)。
 - **CPU 予算**: Workers Free は CPU 10ms/呼出。API はポーリング統一 (qa-031) で接続保持なし。cron の集計は chunk 処理 (§5) で 1 呼出の CPU を抑える。恒常超過時は D1 caveat と同じ経路で Paid 移行を再交渉。
@@ -160,13 +166,14 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 - **Worker 成果物の生成は G4 より前**に行う。`check:bundle` と bundle contract test は `.open-next` を前提とするため、G4 の後に生成していた旧構成では bundle 検査が CI で常時 skip されていた (P10 F-15)。
 - `pnpm --filter <pkg> run <script>` は **script 不在でも exit 0 になり得る**ため、G6 / G7 / G8 は実行前に `scripts/ci/check-required-package-script.mjs` で package.json 上の script 実在を fail-closed 検査する。ゲートの「緑」が「検査した結果の緑」であることを構造的に担保する。
 - **Actions 設定台帳の突合**: `scripts/ci/actions-secrets-registry.json` を用途・種類・必須度・利用 workflow の正本とし、`scripts/ci/check-actions-secrets.mjs` が workflow の実参照と双方向で照合する。静的ゲートでは構造 drift を、手動 `--live` では GitHub 上の実投入状況も fail-closed で検査する。
-- **G11 protected route の測定境界 (2026-08-02 / qa-131)**: `cwv.yml` は任意 URL を受け取らず、`HUB_PUBLIC_URL` の `/catalog` に限定する。GitHub Actions は通常の `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` を持たず、`HUB_CWV_PROBE_*` から最大 5 分の署名 ticket を発行する。Worker は同じ secret と固定 tenant/workspace で検証し、URL から ticket を除去して `__Host-` / HttpOnly / Secure / SameSite=Strict Cookie へ移す。ticket・secret は Actions log、Lighthouse JSON、CWV report、artifact に保存しない。Worker/GitHub secret の投入、本番 deploy、初回実測は外部状態なので、投入前は workflow を失敗させ未計測として扱う。詳細と手順は [CWV probe 仕様反映受領書](features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) と feature runbook §1.1 を正とする。
+- **G11 protected route の測定境界 (2026-08-02 / qa-133)**: `cwv.yml` は任意 URL を受け取らず、`HUB_PUBLIC_URL` の `/catalog` に限定する。GitHub Actions は通常の `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` を持たず、`HUB_CWV_PROBE_*` から最大 5 分の署名 ticket を発行する。Worker は同じ secret と固定 tenant/workspace で検証し、URL から ticket を除去して `__Host-` / HttpOnly / Secure / SameSite=Strict Cookie へ移す。ticket・secret は Actions log、Lighthouse JSON、CWV report、artifact に保存しない。Worker/GitHub secret の投入、本番 deploy、初回実測は外部状態なので、投入前は workflow を失敗させ未計測として扱う。詳細と手順は [CWV probe 仕様反映受領書](features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) と feature runbook §1.1 を正とする。
 
 - **`deploy.yml` への分離は行わない (2026-07-21 改訂)**。理由: feat-hub-foundation の acceptance「CI が test→deploy を完走する」は**単一 workflow run 内での連鎖**を判定条件としており、2 workflow に分けると別 run になって構造的に判定不能になる。ユーザー確認により `ci.yml` への統合を確定した。
 - **main の明示再実行 (2026-08-01 / `HarnessHub-o2i.13`)**: 通常経路は main merge による push のまま維持する。docs-only merge など、`on.push.paths` の対象外で deploy run が起動しなかった場合だけ、`workflow_dispatch` で main の同一 commit を再配備できる。dispatch も `static-gates` と `test` を省略せず、feature branch では deploy しない。これは手元の Wrangler 操作や手動承認 gate を追加するものではなく、同じ CI の再実行経路である。
-- deploy job の内容: 必須設定preflight → productionへdrizzle migrate → `wrangler deploy` →
+- deploy job の内容: 必須設定preflight → **Worker secret実投入検査** → productionへdrizzle migrate → `wrangler deploy` →
   post-deploy `GET /health` → **OIDC start-flow smoke** → **DB/R2本番スモーク6項目** →
-  失敗時`wrangler rollback` (直前versionへ)。**常設stagingを経由しない** (§6 / qa-038【5】)。
+  **hearing実データE2E/SEC8スモーク** → 失敗時`wrangler rollback` (直前versionへ)。
+  **常設stagingを経由しない** (§6 / qa-038【5】)。
 - **deploy preflight (2026-07-30追補)**: GitHub Actionsが未登録値を空文字へ変換する性質を踏まえ、
   migration前に`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_R2_API_TOKEN` /
   `CLOUDFLARE_ACCOUNT_ID` / Turso 2件 / `HUB_HEALTH_URL` / `HUB_PUBLIC_URL`の
@@ -176,6 +183,18 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
   `response_type=code`、identity scope、`state`、`nonce`、PKCE S256を本番URLで確認する。
   人のGoogle資格情報をCIへ置かないためcallback後の実ログイン/JITは自動化せず、
   release recordの手動E2E証跡と分ける。
+- **hearing実データE2E/SEC8スモーク (2026-08-02追補 / `HarnessHub-o2i.13`)**:
+  `pnpm --filter @harness-hub/hub run smoke:hearing-production` がDB/R2スモークの直後に走る。
+  **新しいsecretを要求せず**、既存の`TURSO_*`と`vars.HUB_PUBLIC_URL`だけで成立させる。
+  session専用の提出はrouteと同じrepository→service合成をserver側で実行し、TOKEN資格の
+  `ai-jobs/pull`・`complete`は本番URLへ実HTTPで送る。Device Flowの`code`/`token`は認証不要
+  endpointなので署名鍵なしで**本物のaccess token**を取得でき、sessionが要るapproveだけをDBの
+  CASで代行する。状態変更要求には必ず`origin`を付ける (無いと`untrusted_origin`で認可判定へ
+  到達せず検査が空振りする)。使い捨てtenant 2件は`finally`で全行削除し、**残行数0でなければ失敗**
+  させる。検査はDevice token取得・受付番号発番・同一transaction enqueue・SEC5 (年収非保存)・
+  SEC8 (他tenantに204 / header詐称に404 `tenant_mismatch`（資源存在を伏せる） / 非claim tokenに403 `not_owner`)・
+  workspace header必須の400・claim後のDB状態・complete後の`review`往復・session専用契約の
+  `credential_not_allowed`の10点。
 - **owner認可の名前付きゲート (2026-07-30追補)**: G14は`owner`をDB roleとして扱わず、
   tenant境界確認後に対象resourceとの関係から合成する既存契約を、全action×role表、
   非owner拒否、cross-tenant拒否とともに名指しで再実行する。
