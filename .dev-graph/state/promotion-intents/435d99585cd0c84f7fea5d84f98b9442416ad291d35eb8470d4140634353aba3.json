@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/tmp/postsignin-qid-rebase-staging",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3",
+  "digest": "sha256:41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "package_slug": "feature-package-feat-post-signin-scope-routing",
+  "generation_id": "41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+    "published_digest": "sha256:f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3/atomic-promotion-receipt.json",
+  "completed_at": "2026-08-02T12:45:11Z"
+}
