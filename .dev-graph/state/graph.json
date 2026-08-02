@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1148,
+  "graph_revision": 1156,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36",
+        "evaluated_digest": "767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c",
         "evaluator": "validate-coverage-matrix.py --require-complete",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T10:00:00Z",
+        "imported_at": "2026-08-02T11:50:05Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8734263d5f297806bea6a5e7b4f6fa9f30730d55351d33f5e5176424dde86920",
+        "source_digest": "767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T09:55:09.611895Z"
+      "updated_at": "2026-08-02T11:50:05Z"
     },
     {
       "acceptance": [
@@ -196,7 +196,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T12:15:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "3363f4169d061fd50f1bcfda40a7ee7cd0bf7af2273e307616ab6b683f18a09b",
+        "source_digest": "48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873",
         "source_path": "system-spec/frontend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -212,7 +212,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T12:15:00Z"
+      "updated_at": "2026-08-02T12:48:16.841716Z"
     },
     {
       "acceptance": [
@@ -34013,9 +34013,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36",
+        "evaluated_digest": "8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d",
         "evaluator": "validate-coverage-matrix.py --require-complete",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evidence_ref": "system-spec/testing-qa.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-24T12:35:34Z",
@@ -34034,7 +34034,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095 の確定内容と D8 (Testing Library 採用) に適合し、タスク仕様書のテスト戦略セクション必須化・カバレッジ 80% ゲート・UI 微調整で壊れない behavior ベーステスト・一時生成物に左右されない skill lint・再利用可能な live-trial 証拠・失敗時改善ループの指針を提供する",
+      "goal": "qa-076/qa-077/qa-079/qa-080/qa-089/qa-095/qa-119/qa-130/qa-132/qa-134 の確定内容と D8 に適合し、task 仕様書の品質ゲートを promotion 前後で再現可能にする設計指針を提供する",
       "graph_node_id": "arch-harness-hub-testing-qa",
       "implementation_readiness": {
         "checked_at": "2026-07-24T12:35:34Z",
@@ -34051,7 +34051,7 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅 (単体・結合・境界値・回帰)、カバレッジ 80% 品質ゲートと改善ループ、FE/BE/インフラ層別テスト方針、behavior ベースの保守しやすい UI テスト、タスク仕様書へのテスト戦略の冪等組込 — を dev-graph から参照する",
+      "purpose": "テスト戦略・品質保証 (testing-qa) の確定仕様 — テストレベル 4 種網羅、カバレッジ 80% 品質ゲート、層別テスト方針、task 仕様書のテスト戦略と世代非依存 rerun command — を dev-graph から参照する",
       "related_nodes": [
         "arch-harness-hub-frontend",
         "arch-harness-hub-backend",
@@ -34071,9 +34071,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T10:05:00Z",
+        "imported_at": "2026-08-02T11:50:05Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "00fe1666df6786459d035fa1e7d51df650bbed55a6c81e74195443629eaa5d20",
+        "source_digest": "8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34089,7 +34089,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T09:56:50.457641Z"
+      "updated_at": "2026-08-02T11:50:05Z"
     },
     {
       "acceptance": [
@@ -34193,12 +34193,12 @@
         "P01..P13 exact-13 契約そのものの変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-01T04:59:08Z",
-        "origin_kind": "generated",
-        "source_digest": "530b64ca7ea7ed04e838c8e0d049fe54d087d14d777bacf0f883d4093b3e5e97",
+        "imported_at": "2026-08-02T11:50:05Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d",
         "source_path": "system-spec/testing-qa.md",
-        "source_plugin": "dev-graph",
-        "source_version": null
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
       },
       "start_date": null,
       "status": "active",
@@ -34211,6 +34211,7 @@
         "qa-078",
         "qa-079",
         "qa-081",
+        "qa-134",
         "decision-d8"
       ],
       "target_date": null,
@@ -34218,7 +34219,7 @@
       "template_version": "1.0.0",
       "title": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T05:05:39.390012Z"
+      "updated_at": "2026-08-02T11:52:52.665067Z"
     },
     {
       "acceptance": [
@@ -35840,23 +35841,31 @@
     },
     {
       "acceptance": [
-        "新規生成される task spec の Verification 節が `--feature-package <feature_package_id>` 形 (または staging 実 path) を持つ",
-        "生成直後の staging 段階と promotion 後の双方で、記載コマンドが無改変で exit 0 になることを実測記録する",
-        "既存 promoted 世代の validated_digest が不変であること (遡及書き換えをしない)"
+        "R3-emit と正本 template が promotion 後の再実行に --feature-package <自 package id> を要求し --staging を書かない",
+        "C12 契約 1.3.0 が --staging・--feature-package 欠落・他 package id を fenced/inline command から fail-closed で拒否する",
+        "promotion 前は C12 が --staging <実 generation path> を検証し、promotion 後は task spec の --feature-package が current pointer から同 package を検証する lifecycle 境界が証跡化される",
+        "1.2.0 以前に promote 済み package の canonical digest と再検証結果が不変である"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ji8y",
+        "linked_at": "2026-07-25T14:24:19Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
           "candidate_path": "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
-          "confidence": 0.9
+          "confidence": 0.98
         }
       ],
-      "classification_confidence": 0.9,
-      "classification_reason": "feat-task-spec-test-strategy P10 最終レビューが記録済み逸脱 D-2 として申し送った生成側欠陥",
+      "classification_confidence": 0.98,
+      "classification_reason": "feat-task-spec-test-strategy P10 の D-2 で実測された生成側欠陥を C12 promotion gate まで含めて解消する follow-up issue",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -35885,12 +35894,12 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "R3-emit が出力する検証コマンドが、生成された task spec を読んだだけで無改変に実行でき、promotion 後も有効な世代非依存形になっている",
+      "goal": "新規 task spec の validate-system-plan 再実行コマンドが自 package の current pointer を使う世代非依存形になり、C12 が不正形を promotion 前に fail-closed で拒否する状態",
       "graph_node_id": "issue-task-spec-validate-command-unrunnable-20260725",
       "implementation_readiness": {
-        "checked_at": "2026-07-25T13:00:00Z",
+        "checked_at": "2026-08-02T06:14:02Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -35902,19 +35911,80 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "R3-emit が生成する全 task spec の Verification 節が `validate-system-plan.py --staging .` を列挙するが、`--staging` は staging generation path を要求するためカレントディレクトリ `.` では解決できず、記載どおりに実行すると必ず失敗する。promotion 後は staging path 自体が消滅するため構造的にも不適切。feat-task-spec-test-strategy の P05..P13 実行時に実測で判明し、世代非依存形 `--feature-package <id>` へ読み替えて証跡を取得した (final-review.md D-2)。",
+      "purpose": "task spec に書かれた検証手順を promotion 後も無改変で再実行できるようにし、別 package を誤検証した成功を防ぐ",
       "related_nodes": [
         "feat-task-spec-test-strategy"
       ],
       "resource_scope": [
-        "issues/sys-task-spec-validate-command-unrunnable-20260725.md"
+        "architecture/harness-hub-testing-qa.md",
+        "docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md",
+        "eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T060000Z-wt31-qa121-decompose",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T063000Z-wt31-qa121-decompose-r2",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T071500Z-wt31-qa121-decompose-r3",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T083000Z-wt31-qa121-decompose-r4",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T091500Z-wt31-qa121-decompose-r5",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T094500Z-wt31-qa121-decompose-r6",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-wt31-qa121-decompose-r7",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T104500Z-wt31-qa121-decompose-r8",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T121500Z-wt31-qa131-decompose-r9",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T171500Z-wt31-qa131-decompose-r10",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T184500Z-wt31-qa131-decompose-r11",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T190000Z-wt31-qa131-decompose-r12",
+        "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T031500Z-wt31-qa121-node",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T041500Z-wt31-qa121-node-r2",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T053000Z-wt31-qa121-node-r3",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T110000Z-wt31-qa131-node-r4",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T113000Z-wt31-qa131-node-r5",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124500Z-wt31-qa131-node-r6",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T141500Z-wt31-qa131-node-r7",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T144500Z-wt31-qa131-node-r8",
+        "eval-log/dev-graph/run-dev-graph-requirements/content-review/elegance-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/content-review/rubric-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T031500Z-wt31-qa121-requirements",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T041500Z-wt31-qa121-requirements-r2",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T051500Z-wt31-qa121-requirements-r3",
+        "eval-log/llm-coverage.json",
+        "features/feat-task-spec-test-strategy.md",
+        "issues/sys-task-spec-validate-command-unrunnable-20260725.md",
+        "plugin-plans/dev-graph/component-inventory.json",
+        "plugin-plans/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md",
+        "plugins/dev-graph/skills/run-dev-graph-requirements/prompts/R2b-readiness.md",
+        "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "plugins/dev-graph/tests/fixtures/build_decompose_promotion_patch.py",
+        "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "plugins/dev-graph/tests/fixtures/live_trial_shapes/requirements_baseline.py",
+        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_requirements.py",
+        "plugins/dev-graph/tests/test_decompose_live_trial_integrity.py",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py",
+        "plugins/dev-graph/tests/test_validate_source_digest.py",
+        "plugins/system-dev-planner/agents/system-dev-plan-architect.md",
+        "plugins/system-dev-planner/assets/validation-contract-baseline.json",
+        "plugins/system-dev-planner/references/feature-execution-package-contract.md",
+        "plugins/system-dev-planner/references/system-task-spec-template.md",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "plugins/system-dev-planner/scripts/validate-task-spec-contract.py",
+        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
+        "plugins/system-dev-planner/tests/test_task_spec_rerun_command.py",
+        "plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md"
       ],
       "scope_in": [
-        "plugins/system-dev-planner/skills/run-system-dev-plan/prompts/R3-emit.md",
-        "plugins/system-dev-planner/references/system-task-spec-template.md"
+        "R3-emit prompt と task spec template の再実行コマンド契約",
+        "C12 契約 v1.3.0 と staging・欠落・package 不一致の検査",
+        "旧 promoted package の digest 不変性と契約 version 免除",
+        "CommonMark backtick/tilde fence と inline code span の回帰検査"
       ],
       "scope_out": [
-        "既に promoted 済み世代の task spec 本文の遡及書き換え"
+        "既に promoted 済み task spec 本文の遡及書き換え",
+        "promotion 前の C12 staging 検証入口の廃止",
+        "P01..P13 exact-13 と 13-node DAG 契約の変更"
       ],
       "source_lineage": {
         "imported_at": "2026-07-23T13:51:02Z",
@@ -35929,14 +35999,15 @@
       "tags": [
         "system-dev-planner",
         "task-spec",
-        "validator"
+        "validator",
+        "quality-gate"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "R3-emit が生成する task spec の C12 検証コマンド `--staging .` が実行不能",
+      "title": "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T13:00:00Z"
+      "updated_at": "2026-08-02T10:26:42Z"
     },
     {
       "acceptance": [
@@ -44920,7 +44991,7 @@
         }
       ],
       "classification_confidence": 0.99,
-      "classification_reason": "qa-134/135/136 の確定契約を横断参照する製品仕様追補",
+      "classification_reason": "qa-135/qa-136/qa-137 の確定契約を横断参照する製品仕様追補",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -44951,7 +45022,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-134/qa-135/qa-136 を実装計画が参照できる単一の仕様境界として維持する",
+      "goal": "qa-135/qa-136/qa-137 を実装計画が参照できる単一の仕様境界として維持する",
       "graph_node_id": "spec-post-signin-workspace-scope",
       "implementation_readiness": {
         "checked_at": "2026-08-02T04:58:10Z",
@@ -44997,7 +45068,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T04:58:10Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "5cfb88a13df490dbbd1ad4cd536d880bc584f2e452c50a42eeecad08f2678794",
+        "source_digest": "54fa89c8249033fd7d2d6ba104f397108ee5d33331834ae743ecaccb4542de45",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -45017,7 +45088,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub サインイン後 Workspace スコープ導線 仕様追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T12:28:52.089760Z"
+      "updated_at": "2026-08-02T12:38:53.750218Z"
     },
     {
       "acceptance": [
@@ -45049,7 +45120,7 @@
         }
       ],
       "classification_confidence": 0.96,
-      "classification_reason": "qa-134/qa-136 の scope 解決とルーティング結線を担うマクロ feature",
+      "classification_reason": "qa-135/qa-137 の scope 解決とルーティング結線を担うマクロ feature",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -45059,9 +45130,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-02T05:05:00Z",
@@ -45127,7 +45198,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T12:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f",
+        "source_digest": "564ffbb11081059fcaa732f66f20a849b57ee5c835a783a385910f8804d3f403",
         "source_path": "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -45146,7 +45217,7 @@
       "template_version": "1.0.0",
       "title": "サインイン後のスコープ解決とルーティング結線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:29:45.134160Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "acceptance": [
@@ -45175,7 +45246,7 @@
         }
       ],
       "classification_confidence": 0.96,
-      "classification_reason": "qa-134【4】/qa-135【4】【5】の選択・切替と回復導線を担うマクロ feature",
+      "classification_reason": "qa-135【4】/qa-136【4】【5】の選択・切替と回復導線を担うマクロ feature",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -45249,7 +45320,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T12:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f",
+        "source_digest": "564ffbb11081059fcaa732f66f20a849b57ee5c835a783a385910f8804d3f403",
         "source_path": "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -45268,7 +45339,7 @@
       "template_version": "1.0.0",
       "title": "Workspace 選択・切替とスコープ不足の回復導線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:30:05.164701Z"
+      "updated_at": "2026-08-02T12:39:56.592845Z"
     },
     {
       "acceptance": [
@@ -45299,7 +45370,7 @@
         }
       ],
       "classification_confidence": 0.96,
-      "classification_reason": "qa-135【1】【2】【3】/qa-136【4】【5】の Web 完結導線を担うマクロ feature",
+      "classification_reason": "qa-136【1】【2】【3】/qa-137【4】【5】の Web 完結導線を担うマクロ feature",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -45374,7 +45445,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T12:30:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f",
+        "source_digest": "564ffbb11081059fcaa732f66f20a849b57ee5c835a783a385910f8804d3f403",
         "source_path": "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -45393,7 +45464,7 @@
       "template_version": "1.0.0",
       "title": "CLI 非依存の Web 完結公開導線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:30:41.771422Z"
+      "updated_at": "2026-08-02T12:40:34.629164Z"
     },
     {
       "acceptance": [
@@ -45484,7 +45555,7 @@
       "source_lineage": {
         "imported_at": "2026-08-02T12:31:00Z",
         "origin_kind": "generated",
-        "source_digest": "2a0ef14728f0344a6c3e1495bbaa602d6deb43d3d013f269d13a07849533076b",
+        "source_digest": "d04de0898b47de270cb48cd41302d47355e26c1442022baffbbb453a15ad8b7f",
         "source_path": "features/feat-post-signin-scope-routing.md",
         "source_plugin": "dev-graph/run-dev-graph-requirements",
         "source_version": "0.1.0"
@@ -45502,7 +45573,7 @@
       "template_version": "1.0.0",
       "title": "feat-post-signin-scope-routing 実装要件定義書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T12:31:28.850562Z"
+      "updated_at": "2026-08-02T12:41:31.987120Z"
     },
     {
       "artifact_kind": "task",
@@ -45526,12 +45597,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
@@ -45570,10 +45641,10 @@
         "docs/features/feat-post-signin-scope-routing/requirements-baseline.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-01-requirements.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-01-requirements.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -45590,7 +45661,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -45614,12 +45685,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P01"
       ],
@@ -45660,10 +45731,10 @@
         "docs/features/feat-post-signin-scope-routing/architecture-decision.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-02-architecture.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-02-architecture.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -45680,7 +45751,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -45704,12 +45775,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P02"
       ],
@@ -45750,10 +45821,10 @@
         "docs/features/feat-post-signin-scope-routing/design-review.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-03-design-review.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-03-design-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -45770,7 +45841,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -45794,12 +45865,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P03"
       ],
@@ -45840,10 +45911,10 @@
         "docs/features/feat-post-signin-scope-routing/test-design.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-04-test-design.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-04-test-design.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -45860,7 +45931,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -45884,12 +45955,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P04"
       ],
@@ -45936,10 +46007,10 @@
         "apps/hub/src/app/page.tsx"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-05-implementation.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-05-implementation.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -45956,7 +46027,7 @@
       "template_version": "1.1.0",
       "title": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -45980,12 +46051,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P05"
       ],
@@ -46029,10 +46100,10 @@
         "apps/hub/test/auth/session-workspace-binding.test.ts"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-06-test-run.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-06-test-run.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46049,7 +46120,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46073,12 +46144,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P06"
       ],
@@ -46119,10 +46190,10 @@
         "docs/features/feat-post-signin-scope-routing/acceptance-record.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-07-acceptance.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-07-acceptance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46139,7 +46210,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46163,12 +46234,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P07"
       ],
@@ -46216,10 +46287,10 @@
         "docs/features/feat-post-signin-scope-routing/refactoring-record.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-08-refactoring-migration.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-08-refactoring-migration.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46236,7 +46307,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46260,12 +46331,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P08"
       ],
@@ -46306,10 +46377,10 @@
         "docs/features/feat-post-signin-scope-routing/quality-assurance-record.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-09-quality-assurance.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-09-quality-assurance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46326,7 +46397,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46350,12 +46421,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P09"
       ],
@@ -46396,10 +46467,10 @@
         "docs/features/feat-post-signin-scope-routing/final-review.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-10-final-review.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-10-final-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46416,7 +46487,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46440,12 +46511,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P10"
       ],
@@ -46486,10 +46557,10 @@
         "docs/features/feat-post-signin-scope-routing/evidence-record.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-11-evidence.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-11-evidence.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46506,7 +46577,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — source digest と再実行コマンドの保存",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46530,12 +46601,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P11"
       ],
@@ -46578,10 +46649,10 @@
         "docs/features/feat-post-signin-scope-routing/operations-runbook.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-12-documentation-operations.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-12-documentation-operations.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46598,7 +46669,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     },
     {
       "artifact_kind": "task",
@@ -46622,12 +46693,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
+        "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-02T12:14:43Z",
+      "created_at": "2026-08-02T12:47:00Z",
       "depends_on": [
         "SYS-POST-SIGNIN-SCOPE-P12"
       ],
@@ -46671,10 +46742,10 @@
         "specs/harness-hub-post-signin-workspace-scope-addendum.md"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:14:43Z",
+        "imported_at": "2026-08-02T12:47:00Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/task-specs/phase-13-release-deploy.md",
+        "source_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-13-release-deploy.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -46691,7 +46762,7 @@
       "template_version": "1.1.0",
       "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:14:43Z"
+      "updated_at": "2026-08-02T12:47:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

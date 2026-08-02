@@ -13,7 +13,7 @@ iteration: null
 title: "feat-post-signin-scope-routing 実装要件定義書"
 owners: ["daishiman"]
 created_at: "2026-08-02T00:00:00Z"
-updated_at: "2026-08-02T12:31:28.850562Z"
+updated_at: "2026-08-02T12:41:31.987120Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
@@ -33,7 +33,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"ddeaeaf2fea9c113864fece8820d9a4b9e50c11696a1cf7f8dfadd5d66ed4d1a","evaluator":"dev-graph/run-dev-graph-requirements","evidence_ref":"eval-log/run-dev-graph-requirements-progress.json"}
-source_lineage: {"imported_at":"2026-08-02T12:31:00Z","origin_kind":"generated","source_digest":"2a0ef14728f0344a6c3e1495bbaa602d6deb43d3d013f269d13a07849533076b","source_path":"features/feat-post-signin-scope-routing.md","source_plugin":"dev-graph/run-dev-graph-requirements","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:31:00Z","origin_kind":"generated","source_digest":"d04de0898b47de270cb48cd41302d47355e26c1442022baffbbb453a15ad8b7f","source_path":"features/feat-post-signin-scope-routing.md","source_plugin":"dev-graph/run-dev-graph-requirements","source_version":"0.1.0"}
 classification_confidence: 1
 classification_reason: "requirements verb の成果物であり document kind が確定している (人手判断を要さない)"
 classification_candidates: []
@@ -180,7 +180,7 @@ entry task は `SYS-POST-SIGNIN-SCOPE-P01`。DAG は feature 内の一本鎖で�
 1. **要件定義書の出力先を `docs/features/<feature-id>/implementation-requirements.md` とする。** `requirements-baseline.md` は P01 task の成果物（`task: SYS-*-P01` を frontmatter に持つ）であり、requirements verb の成果物ではないため流用しない。
 2. **本書は C02 単一 writer（`upsert-node.py`）経由で document node として登録する。** content root への直接書込は単一 writer 契約に反するため行わない。
 3. **handoff package は graph 外の内部データとして `.dev-graph/handoff/` に置く。** graph node 化はしない。
-4. **qa semantic coverage を有効化する。** 最新 main で `qa-121`〜`qa-123` が別決定に使われていたため、本 feature の確定契約は `qa-134` / `qa-135` / `qa-136` として再採番した。parent feature の frontmatter tags に3件を明示し、goal-spec と P01〜P13 の全 task spec に同じ参照を再生成して、`validate-qa-semantic-coverage.py` の機械検証を通す。`C13` lock と content-addressed package は新世代へ正規再生成し、古い世代本文を手編集しない。
+4. **qa semantic coverage を有効化する。** 最新 main で `qa-121`〜`qa-123` が別決定に使われていたため、本 feature の確定契約は `qa-135` / `qa-136` / `qa-137` として再採番した。parent feature の frontmatter tags に3件を明示し、goal-spec と P01〜P13 の全 task spec に同じ参照を再生成して、`validate-qa-semantic-coverage.py` の機械検証を通す。`C13` lock と content-addressed package は新世代へ正規再生成し、古い世代本文を手編集しない。
 5. **evaluator は fork（別 context の subagent）で実行した。** `plan-findings.schema.json` が `evaluator.context: const "fork"` を要求しており、自分が書いた package を自分で PASS 宣言する receipt は proposer≠approver の原則に反するため。
 
 ## 運用・更新方法

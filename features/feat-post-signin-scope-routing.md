@@ -12,7 +12,7 @@ iteration: null
 title: "サインイン後のスコープ解決とルーティング結線"
 owners: ["daishiman"]
 created_at: "2026-08-02T05:05:00Z"
-updated_at: "2026-08-02T12:29:45.134160Z"
+updated_at: "2026-08-02T12:39:36.969516Z"
 status: "active"
 depends_on: []
 related_nodes: ["spec-post-signin-workspace-scope","feat-auth-tenancy","feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-security"]
@@ -32,9 +32,9 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f","source_path":"specs/harness-hub-post-signin-workspace-scope-addendum.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"564ffbb11081059fcaa732f66f20a849b57ee5c835a783a385910f8804d3f403","source_path":"specs/harness-hub-post-signin-workspace-scope-addendum.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.96
-classification_reason: "qa-134/qa-136 の scope 解決とルーティング結線を担うマクロ feature"
+classification_reason: "qa-135/qa-137 の scope 解決とルーティング結線を担うマクロ feature"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-post-signin-scope-routing.md","confidence":0.96}]
 issue_linkage: null
 tracker_binding: "beads"
@@ -103,4 +103,4 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 
 ## 出典
 
-`specs/harness-hub-post-signin-workspace-scope-addendum.md` A 節・B 節 / `system-spec/spec-state.json` qa-134 【1】【2】【3】・qa-136 【1】【2】【3】【6】
+`specs/harness-hub-post-signin-workspace-scope-addendum.md` A 節・B 節 / `system-spec/spec-state.json` qa-135 【1】【2】【3】・qa-137 【1】【2】【3】【6】

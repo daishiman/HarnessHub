@@ -12,7 +12,7 @@ iteration: null
 title: "Workspace 選択・切替とスコープ不足の回復導線"
 owners: ["daishiman"]
 created_at: "2026-08-02T05:05:00Z"
-updated_at: "2026-08-02T12:30:05.164701Z"
+updated_at: "2026-08-02T12:39:56.592845Z"
 status: "active"
 depends_on: ["feat-post-signin-scope-routing"]
 related_nodes: ["spec-post-signin-workspace-scope","feat-dual-catalog-web","feat-workspace-governance","arch-harness-hub-frontend"]
@@ -32,9 +32,9 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"25682ae448e2060b835c7ef0800a2aa722176ec6a8a4eb83baf680cb7c41d224","evaluator":"run-dev-graph-decompose (spec-post-signin-workspace-scope 由来。evaluator_gate_waiver 適用)","evidence_ref":"eval-log/run-dev-graph-system-spec-progress.json"}
-source_lineage: {"imported_at":"2026-08-02T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f","source_path":"specs/harness-hub-post-signin-workspace-scope-addendum.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"564ffbb11081059fcaa732f66f20a849b57ee5c835a783a385910f8804d3f403","source_path":"specs/harness-hub-post-signin-workspace-scope-addendum.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.96
-classification_reason: "qa-134【4】/qa-135【4】【5】の選択・切替と回復導線を担うマクロ feature"
+classification_reason: "qa-135【4】/qa-136【4】【5】の選択・切替と回復導線を担うマクロ feature"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-workspace-switch-ux.md","confidence":0.96}]
 issue_linkage: null
 tracker_binding: "beads"
@@ -91,4 +91,4 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
 
 ## 出典
 
-`specs/harness-hub-post-signin-workspace-scope-addendum.md` C 節・F 節 / `system-spec/spec-state.json` qa-134 【4】・qa-135 【4】【5】
+`specs/harness-hub-post-signin-workspace-scope-addendum.md` C 節・F 節 / `system-spec/spec-state.json` qa-135 【4】・qa-136 【4】【5】

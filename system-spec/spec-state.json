@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-136",
+        "qa_ref": "qa-137",
         "serves_goals": [
           "G2",
           "G4"
@@ -124,7 +124,7 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-135",
+        "qa_ref": "qa-136",
         "serves_goals": [
           "G1",
           "G2",
@@ -281,7 +281,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-134",
+        "qa_ref": "qa-135",
         "serves_goals": [
           "G1",
           "G2",
@@ -395,7 +395,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-133",
+        "qa_ref": "qa-134",
         "serves_goals": [
           "G1",
           "G2",
@@ -1095,16 +1095,21 @@
     },
     {
       "id": "qa-134",
+      "question": "system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。\n\n【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。\n\n【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。\n\n【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。\n\n【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。"
+    },
+    {
+      "id": "qa-135",
       "question": "ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?",
       "answer": "既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。"
     },
     {
-      "id": "qa-135",
+      "id": "qa-136",
       "question": "CLI を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?",
       "answer": "Hub Web 単体で公開、状態確認、導入案内まで到達できることを受入条件とする。S01 は ZIP アップロードを CLI と同一の static validation、secret scan、policy に収束させ、Green/Yellow/Red の表示と再投入導線を統一する。Device Flow は CLI/Publisher 専用として残し、確認コードなしの `/device` では用途を説明して S01 への回復導線を示す。共通シェルには現在の Workspace と切替を常設するが、所属が 1 件なら操作を強制しない。missing_tenant_scope は内部エラーを露出せず Workspace 選択で回復可能な ErrorState とし、401/403 や scope 切替後に旧 scope データを表示しない既存契約を維持する。状態機械、検査実装、role 判定は既存 owner の責務のままとする。"
     },
     {
-      "id": "qa-136",
+      "id": "qa-137",
       "question": "ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?",
       "answer": "authorize() の public → 認証 → scope 一意性 → tenant 一致 → workspace 所属と deny-by-default は不変とする。正規の scope 入力は API/機械クライアントの明示ヘッダーとブラウザ session の active tenant/workspace の二系統だけであり、両方が不一致なら ambiguous_scope として拒否し、両方が無ければ missing_tenant_scope とする。session へ workspace を束縛する前と切替時には principal の所属を再検証し、session 値を所属検証の代替にしない。Device Flow の確認コード制約と権限上限は維持する。S01 Web 公開は通常の session 認可で行い、CLI より広い権限を持たない。サインイン後の戻り先は同一 origin の相対 path だけを許可し、解決後も通常の authorize() を通す。"
     }
@@ -1205,6 +1210,10 @@
     {
       "id": "appr-025",
       "note": "ユーザーが 2026-08-02 に、CWV 専用・最小権限 credential を新設し、通常の session secret を CI へ渡さない実装方針へ『ok』と明示承認した。main 統合で qa-131 が HarnessHub-o2i.13 に割り当て済みのため、CWV の設計回答は qa-133 として再採番した。"
+    },
+    {
+      "id": "appr-026",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、remote main→local main→task branch の統合、commit・push・draft PR、Beads 更新』を明示承認として記録。HarnessHub-ji8y / issue-task-spec-validate-command-unrunnable-20260725 の C12 世代非依存 rerun command と contract 1.3.0 の fail-closed 検証を qa-134 として testing-qa.web へ反映する。main の qa-123〜qa-133 / appr-025 を保持する。"
     }
   ],
   "reopen_log": [
@@ -2154,6 +2163,12 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "latest main の qa-130 を保持した上で、HarnessHub-o2i.13 の secret gate・本番 E2E/SEC8 smoke・未実測境界を統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "latest main の qa-133 を保持した上で、今回の世代非依存 task-spec 再実行契約を履歴を失わず qa-134 として統合するため",
       "from": "確定"
     }
   ],
@@ -3395,7 +3410,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 2,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }

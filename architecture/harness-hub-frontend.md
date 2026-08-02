@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub frontend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T12:15:00Z"
+updated_at: "2026-08-02T12:48:16.841716Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","spec-post-signin-workspace-scope"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-08-02T12:15:00Z","origin_kind":"system-spec-harness","source_digest":"3363f4169d061fd50f1bcfda40a7ee7cd0bf7af2273e307616ab6b683f18a09b","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:15:00Z","origin_kind":"system-spec-harness","source_digest":"48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-frontend.md","confidence":0.95}]
@@ -125,6 +125,6 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   複製せず同じ resolver へ収束させる。
 - Workspace 選択・切替と S01 Web 公開は共通シェルおよび既存の検査 pipeline に接続する。
   scope 未解決では旧データを描画せず、利用者には Workspace 選択へ戻れる ErrorState を示す。
-- 正本は [frontend](../system-spec/frontend.md) の `qa-134`、
-  [UI-UX](../system-spec/ui-ux.md) の `qa-135`、認可境界は
-  [auth](../system-spec/auth.md) の `qa-136` を参照する。
+- 正本は [frontend](../system-spec/frontend.md) の `qa-135`、
+  [UI-UX](../system-spec/ui-ux.md) の `qa-136`、認可境界は
+  [auth](../system-spec/auth.md) の `qa-137` を参照する。
