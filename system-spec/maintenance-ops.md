@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-128 |
+| Web (web) | 確定 | 確定質疑: qa-129 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,7 +24,7 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-128 (対応セル: web)
+### qa-129 (対応セル: web)
 
 **質問**: 顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?
 

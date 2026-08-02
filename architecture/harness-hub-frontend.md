@@ -113,4 +113,4 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - client secret は password 入力に留め、送信後に state から消す。任意の Workspace domain は
   カンマ/改行区切りを小文字化・空白除去・重複排除して API へ渡す。
 - 公開 enum だけを固定文言へ写し、未知 error・例外・入力値を画面へ流さない。
-  正本は [system-spec/frontend.md](../system-spec/frontend.md) の `qa-126`。
+  正本は [system-spec/frontend.md](../system-spec/frontend.md) の `qa-127`。

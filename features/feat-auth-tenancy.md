@@ -191,7 +191,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   ドメインを CAS で同時昇格する。切替前と取消後は現行ログインを継続する。
 - 管理 API は provider-admin、同一 origin、tenant scope、Google issuer に閉じる。
   secret 全値は UI/API/監査/ログ/エラーへ返さず last4 のみ表示する。
-- 正本は system-spec `qa-123`〜`qa-129`、手順は
+- 正本は system-spec `qa-124`〜`qa-130`、手順は
   [顧客持ち込み Google OIDC runbook](../docs/features/feat-auth-tenancy/runbook-customer-managed-google-oidc.md)、
   対応表は
   [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)

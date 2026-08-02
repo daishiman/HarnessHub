@@ -37,13 +37,13 @@ credential 状態機械、秘密値の扱い、運用手順、テスト完了条
 
 | 章 | 確定質疑 | 反映内容 |
 | --- | --- | --- |
-| auth | `qa-123` | pending / tested / active / disabled、明示有効化、暗黙 fallback 禁止、disabled 再開 |
-| backend | `qa-124` | Google 専用管理 API、provider-admin、issuer 境界、CAS、監査語彙 |
-| database | `qa-125` | migration 0004、staging 列、原子的昇格、現行/pending CAS、nullable domain 契約訂正 |
-| frontend | `qa-126` | `/settings/auth`、Workspace domain 入力、状態/rotation 表示、固定エラー文言 |
-| security | `qa-127` | secret 非露出、tenant/issuer 境界、fail-closed、probe と実 login の分離 |
-| maintenance-ops | `qa-128` | 顧客と Hub の責任境界、登録/rotation/停止/再開 runbook |
-| testing-qa | `qa-129` | 実 DB、認可、CAS、非露出、a11y、全品質ゲート、外部実測残余 |
+| auth | `qa-124` | pending / tested / active / disabled、明示有効化、暗黙 fallback 禁止、disabled 再開 |
+| backend | `qa-125` | Google 専用管理 API、provider-admin、issuer 境界、CAS、監査語彙 |
+| database | `qa-126` | migration 0004、staging 列、原子的昇格、現行/pending CAS、nullable domain 契約訂正 |
+| frontend | `qa-127` | `/settings/auth`、Workspace domain 入力、状態/rotation 表示、固定エラー文言 |
+| security | `qa-128` | secret 非露出、tenant/issuer 境界、fail-closed、probe と実 login の分離 |
+| maintenance-ops | `qa-129` | 顧客と Hub の責任境界、登録/rotation/停止/再開 runbook |
+| testing-qa | `qa-130` | 実 DB、認可、CAS、非露出、a11y、全品質ゲート、外部実測残余 |
 
 反映先は `system-spec/spec-state.json` と各章
 (`auth.md` / `backend.md` / `database.md` / `frontend.md` / `security.md` /
@@ -98,13 +98,18 @@ credential 状態機械、秘密値の扱い、運用手順、テスト完了条
 
 ## 7. main 同期受領結果
 
-- `origin/main`: `a8aa91a5837d7d0d82269f67e7a1406f055053e2`
-- local `main`: `a8aa91a5837d7d0d82269f67e7a1406f055053e2`
-- feature への merge commit: `961ee43b491d687f452799407fed567ea55c8fe8`
+- `origin/main`: `7bab5a2ff6c732eabc709649ffdeec79fd51c807`
+- local `main`: `7bab5a2ff6c732eabc709649ffdeec79fd51c807`
+- 初回同期 merge: `961ee43b491d687f452799407fed567ea55c8fe8`
+- 最新 main の feature への反映: 本受領書を含む最新 merge commit
 - `git merge-base --is-ancestor origin/main HEAD`: pass
 
 リモート main をローカル main へ同期した後、その local main を feature branch へマージした。
-競合は無く、マージ後に system plan、dev-graph schema、system-spec 全決定論ゲートを再実行して pass した。
+初回同期後に main が PR #633 まで前進したため再同期した。`system-spec/spec-state.json` では
+main 側の Hub 基盤 closeout `qa-123` と今回分の旧 `qa-123` が衝突したため、main の
+`qa-123` を維持し、今回分を `qa-124`〜`qa-130` へ再採番した。7 章すべてを正規 writer の
+reopen → confirm → set-serves と compiler で再反映し、手作業の片側採用は行っていない。
+マージ後に system plan、dev-graph schema、system-spec 全決定論ゲートを再実行して pass した。
 
 ## 8. 500 行制約
 

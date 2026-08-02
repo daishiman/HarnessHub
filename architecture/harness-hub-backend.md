@@ -141,7 +141,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   `(tenant_id, sub)` で別 principal とする。
 - 顧客方式の basePath、Auth.js state cookie、secret 復号、session claims は非回帰とする。
 
-**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-124)**:
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-125)**:
 
 - `/api/v1/admin/oidc-connections/*` は既存 `withAuthz` の provider-admin 判定と
   同一 origin 検査を通し、資源側 tenant を repository context へ渡す。

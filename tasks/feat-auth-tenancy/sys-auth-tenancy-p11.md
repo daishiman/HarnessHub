@@ -104,7 +104,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - dev-graph node: `issue-auth-tenancy-customer-managed-google-oidc-20260729`
 - 変更: 顧客所有 Google OAuth client の provider-admin 管理 UI/API、
   lifecycle、暗号化 staging、CAS rotation、無効化後の安全な再開、監査。
-- 仕様反映: system-spec `qa-123`〜`qa-129`、仕様 wrapper、architecture 5 件、
+- 仕様反映: system-spec `qa-124`〜`qa-130`、仕様 wrapper、architecture 5 件、
   feature、task、runbook、検証結果、仕様反映受領書を同期する。
 - 最終レビュー: Google 以外 issuer の操作拒否、active 再テスト時刻、disabled 再開、
   Workspace domain 入力、secret 非露出、500 行分割を補正し、全品質ゲートを再実行する。

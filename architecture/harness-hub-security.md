@@ -156,7 +156,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 詳細は [system-spec/security.md](../system-spec/security.md) の `qa-120`、
   回帰契約は [testing-qa architecture](./harness-hub-testing-qa.md) を参照する。
 
-**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-127)**:
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-128)**:
 
 - 顧客持ち込み credential の管理は provider-admin・同一 origin・tenant scope・Google issuer の
   4 境界を全て通す。active 以外、未知状態、CAS 競合、別 tenant/issuer は fail-closed とする。

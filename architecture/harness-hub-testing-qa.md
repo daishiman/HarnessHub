@@ -159,4 +159,4 @@ plugin/workflow diff
 - route test は role 4 種、CSRF、tenant A/B、Google 以外 issuer、secret 非露出を含む。
 - UI は実見出し階層で axe-core 違反 0、password/autocomplete、Workspace domain 正規化を検査する。
   Google 実 client、Playwright、production migration は別の外部実測として残す。
-- 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-129`。
+- 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-130`。

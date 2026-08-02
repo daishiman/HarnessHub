@@ -66,7 +66,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
-**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-125)**:
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-126)**:
 
 - migration 0004 は既存行を active のまま保つ expand-only の 10 列追加とする。
   管理 API の新規行だけは pending を明示する。

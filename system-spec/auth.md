@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-123 |
+| Web (web) | 確定 | 確定質疑: qa-124 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,7 +24,7 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-123 (対応セル: web)
+### qa-124 (対応セル: web)
 
 **質問**: 顧客持ち込み Google OAuth client の管理 lifecycle を、共有方式を含む auth.web の現行認証契約へどう統合しますか?
 
