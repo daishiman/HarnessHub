@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-127 |
+| Web (web) | 確定 | 確定質疑: qa-134 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -23,6 +23,24 @@ serves_goals: [G1, G2, G3, G5]
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-007 |
 
 ## 確定内容 (質疑録)
+
+### qa-134 (対応セル: web)
+
+**質問**: ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?
+
+**回答**: ユーザーの 2026-08-02 指示 (ログイン後に業務画面へ到達できない実装未結線の是正、および CLI 非依存で Web 完結させる要求) を明示承認として、qa-062 / qa-118 / qa-127 の既確定 (画面構成・install descriptor・publish polling・レスポンシブ・共通部品・認可出し分け・dual catalog 縮退表示・OAuth 管理面) を全面維持したうえで、ログイン後導線の差分を次のとおり追加確定する。
+
+【1. サインイン成功後の着地先】現行の callbackUrl 固定値 "/" (apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx) を廃し、(a) サインイン開始時に保存した遷移元 path、(b) それが無い場合は既定着地 `/sheets` の順で解決する。docs/frontend-spec.md §10 の段階運用 (S09 ダッシュボード完成までは `/` → `/sheets`、完成後に `/dashboard`) に従い、既定着地は単一の定数から解決して画面ごとに散らさない。戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす (open redirect 防止)。
+
+【2. `/` の扱い】未認証時は現行の稼働確認表示 (/health 導線を含む) を維持する。認証済み session がある場合は既定着地へ redirect し、`/` を認証済みユーザーの終着点にしない。稼働確認そのものの参照先は /health を正本とし、`/` の表示内容を業務画面へ置き換えない。
+
+【3. ブラウザ通常遷移でのテナントスコープ伝搬】業務画面 (/sheets・/sheets/new・/sheets/:id・/catalog・/catalog/:projectId・/catalog/releases) はブラウザ遷移で明示ヘッダーを付けられないため、server 側で session principal から tenant/workspace scope を解決する経路を正規とする。明示ヘッダー経路は API / 機械クライアント専用として存置し、両経路は同一の authorize() に収束させる (判定の二重実装を作らない)。scope 未解決のまま業務画面本体を描画しない (deny-by-default を維持)。
+
+【4. active workspace の選択】session に active workspace を保持する。所属 workspace が 1 件のときは自動選択し選択画面を挟まない。2 件以上のときは Workspace 選択画面を挟み、選択後に本来の遷移先へ進む。切替は共通シェルから常時可能とし、切替時は新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)。
+
+【5. ナビゲーションの段階表示】未実装 phase の項目を非表示にする既存契約 (docs/frontend-spec.md §10) を変更しない。本件で新設するのは Workspace 選択/切替と既定着地であり、サイドバー 9 項目の前倒し表示ではない。
+
+【6. 境界】authorize() の判定順・role 判定・catalog/sheets API 実装は既存 owner のままとし、frontend は解決済み scope の描画適用と回復導線の提示だけを担う。
 
 ### qa-127 (対応セル: web)
 

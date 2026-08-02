@@ -86,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-133",
+        "qa_ref": "qa-136",
         "serves_goals": [
           "G2",
           "G4"
@@ -124,7 +124,7 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-065",
+        "qa_ref": "qa-135",
         "serves_goals": [
           "G1",
           "G2",
@@ -281,7 +281,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-127",
+        "qa_ref": "qa-134",
         "serves_goals": [
           "G1",
           "G2",
@@ -1092,6 +1092,21 @@
       "id": "qa-132",
       "question": "Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?",
       "answer": "ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 / qa-130 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。\n\n【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。\n\n【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。\n\n【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。\n\n【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。\n\n【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。"
+    },
+    {
+      "id": "qa-134",
+      "question": "ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?",
+      "answer": "既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。"
+    },
+    {
+      "id": "qa-135",
+      "question": "CLI を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?",
+      "answer": "Hub Web 単体で公開、状態確認、導入案内まで到達できることを受入条件とする。S01 は ZIP アップロードを CLI と同一の static validation、secret scan、policy に収束させ、Green/Yellow/Red の表示と再投入導線を統一する。Device Flow は CLI/Publisher 専用として残し、確認コードなしの `/device` では用途を説明して S01 への回復導線を示す。共通シェルには現在の Workspace と切替を常設するが、所属が 1 件なら操作を強制しない。missing_tenant_scope は内部エラーを露出せず Workspace 選択で回復可能な ErrorState とし、401/403 や scope 切替後に旧 scope データを表示しない既存契約を維持する。状態機械、検査実装、role 判定は既存 owner の責務のままとする。"
+    },
+    {
+      "id": "qa-136",
+      "question": "ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?",
+      "answer": "authorize() の public → 認証 → scope 一意性 → tenant 一致 → workspace 所属と deny-by-default は不変とする。正規の scope 入力は API/機械クライアントの明示ヘッダーとブラウザ session の active tenant/workspace の二系統だけであり、両方が不一致なら ambiguous_scope として拒否し、両方が無ければ missing_tenant_scope とする。session へ workspace を束縛する前と切替時には principal の所属を再検証し、session 値を所属検証の代替にしない。Device Flow の確認コード制約と権限上限は維持する。S01 Web 公開は通常の session 認可で行い、CLI より広い権限を持たない。サインイン後の戻り先は同一 origin の相対 path だけを許可し、解決後も通常の authorize() を通す。"
     }
   ],
   "approval_log": [

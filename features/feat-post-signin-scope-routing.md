@@ -1,0 +1,106 @@
+---
+graph_node_id: "feat-post-signin-scope-routing"
+artifact_kind: "feature"
+artifact_subtypes: []
+project_id: "harness-hub"
+domain: "auth"
+tags: ["macro-feature","stage-1","auth","frontend","post-signin"]
+priority: "high"
+start_date: null
+target_date: null
+iteration: null
+title: "サインイン後のスコープ解決とルーティング結線"
+owners: ["daishiman"]
+created_at: "2026-08-02T05:05:00Z"
+updated_at: "2026-08-02T12:29:45.134160Z"
+status: "active"
+depends_on: []
+related_nodes: ["spec-post-signin-workspace-scope","feat-auth-tenancy","feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-security"]
+resource_scope: ["features/feat-post-signin-scope-routing.md","apps/hub/src/middleware/authz.ts","apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx","apps/hub/src/app/page.tsx"]
+purpose: "ログイン後に業務画面が 403 missing_tenant_scope になる実装未結線を、判定順と deny-by-default を変えずに解消する"
+goal: "scope の入力系統 2 系統とサインイン後の着地先解決を結線し、業務画面 6 種へ通常のブラウザ操作で到達できるようにする"
+scope_in: ["scope 解決の 2 系統 (明示ヘッダー / session active tenant-workspace)","ambiguous_scope による不一致拒否","session への active workspace 束縛と所属再検証","サインイン後の着地先解決 (遷移元 path -> 既定着地 /sheets)","戻り先の同一 origin 相対 path 制限 (open redirect 防止)","認証済み / の既定着地への redirect"]
+scope_out: ["authorize() の判定順・role 判定・deny-by-default の変更","catalog/sheets API 実装と DB schema の変更","Workspace 選択画面の UI 実装","Web 公開ウィザードの導線","サイドバー段階表示契約の変更"]
+acceptance: ["遷移元が無いサインイン成功で /sheets に着地し / に留まらない","絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる","認証済みで / を開くと既定着地へ redirect される","業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない","明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否される","両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)","所属検証を通らない workspace は session へ束縛されない","戻り先の解決結果に対しても authorize() が適用される"]
+architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-security"]
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "features/feat-post-signin-scope-routing.md"
+template_id: "feature"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/f5f2a30f4f6828bf6ccaf1c30d387863f02b79f5f59950036f50784eb73f3cd6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-02T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"4000251dbbb66de3c4b9b28a7d2ceaf373e412d1a1ebb22a5f8d45db011bae7f","source_path":"specs/harness-hub-post-signin-workspace-scope-addendum.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+classification_confidence: 0.96
+classification_reason: "qa-134/qa-136 の scope 解決とルーティング結線を担うマクロ feature"
+classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-post-signin-scope-routing.md","confidence":0.96}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-3sjj","linked_at":"2026-08-02T08:05:20Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections":[],"status":"complete"}
+---
+
+# feat-post-signin-scope-routing — サインイン後のスコープ解決とルーティング結線
+
+## 目的
+
+ログインは成功するのに業務画面が 403 `missing_tenant_scope` になる実装未結線を、認可の判定順と deny-by-default を変えずに解消する。判定へ渡す **scope の入力系統**と、サインイン後の**着地先解決**を結線する。
+
+## 位置づけ
+
+本 feature は新規機能の追加ではなく、**既にデプロイ済みのコードどうしの結線欠落を埋める統合修正**である。前提となる認可ミドルウェア (`apps/hub/src/middleware/authz.ts`) と業務画面 (`/sheets` `/catalog` 系) は本番で稼働しており、欠けているのは両者を繋ぐ scope の受け渡しと遷移先の解決である。
+
+このため機能間 `depends_on` は空とし、`feat-auth-tenancy` / `feat-dual-catalog-web` との関係は `related_nodes` で表現する。両 feature の残タスク完了を待たせると、既に稼働している経路の欠陥修正が不当にブロックされるためである。
+
+## スコープ内
+
+1. **scope 解決の 2 系統**
+   - (a) 明示ヘッダー = API / 機械クライアント (Publisher・CLI・Device Flow token 保持クライアント)
+   - (b) session の active tenant/workspace = ブラウザ通常遷移。server 側で session principal から解決する
+   - 両方あって不一致は `ambiguous_scope` で拒否。どちらかを黙って優先しない
+   - 両方無い場合は従来どおり `missing_tenant_scope`
+   - 両経路は同一 `authorize()` に収束させ、判定を二重実装しない
+
+2. **session への active workspace 束縛**
+   - 束縛できるのは principal の所属検証を通過した workspace だけ
+   - 切替のたびに所属を再検証し、session 保持値を所属検証の代替に使わない
+
+3. **サインイン後の着地先解決**
+   - `callbackUrl` 固定値 `"/"` を廃止し、(a) 遷移元 path → (b) 既定着地 `/sheets` の順で解決
+   - 既定着地は単一定数から解決し画面ごとに散らさない
+   - 戻り先は同一 origin の相対 path のみ許可。絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす
+   - 戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない
+
+4. **`/` の扱い**
+   - 未認証時は稼働確認表示を維持
+   - 認証済み session がある場合は既定着地へ redirect し、`/` を終着点にしない
+
+## スコープ外
+
+- `authorize()` の判定順・role 判定・deny-by-default の変更
+- catalog / sheets API 実装と DB schema の変更
+- Workspace 選択画面そのものの UI 実装 (feat-workspace-switch-ux が所有)
+- Web 公開ウィザードの導線 (feat-web-only-publish-journey が所有)
+- サイドバー 9 項目の段階表示契約の変更
+
+## 受入基準
+
+1. 遷移元が無いサインイン成功で `/sheets` に着地し、`/` に留まらない
+2. 絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる (open redirect 防止)
+3. 認証済みで `/` を開くと既定着地へ redirect される
+4. 業務画面 6 種が通常のブラウザ操作で 403 `missing_tenant_scope` にならない
+5. 明示ヘッダーと session scope が併存し不一致なら `ambiguous_scope` で拒否される
+6. どちらの scope 入力も無い場合は `missing_tenant_scope` のまま (deny-by-default 非退行)
+7. 所属検証を通らない workspace は session へ束縛されない
+8. 戻り先の解決結果に対しても `authorize()` が適用される
+
+## 出典
+
+`specs/harness-hub-post-signin-workspace-scope-addendum.md` A 節・B 節 / `system-spec/spec-state.json` qa-134 【1】【2】【3】・qa-136 【1】【2】【3】【6】

@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-133 |
+| Web (web) | 確定 | 確定質疑: qa-136 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -23,6 +23,24 @@ serves_goals: [G2, G4, G1]
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-073 |
 
 ## 確定内容 (質疑録)
+
+### qa-136 (対応セル: web)
+
+**質問**: ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?
+
+**回答**: ユーザーの 2026-08-02 指示を明示承認として、qa-115 / qa-124 / qa-133 の既確定 (テナント別 OIDC・role 4 種・単一認可ミドルウェア・Device Flow・production OIDC・session・access token・deny-by-default) を全面維持したうえで、scope 解決の入力系統を次のとおり追加確定する。
+
+【1. 判定順と既定拒否】authorize() の判定順 (public → 認証 → scope 一意性 → tenant 一致 → workspace 所属) と deny-by-default は変更しない。本件は判定の緩和ではなく、判定へ渡す scope の入力系統を定義するものである。
+
+【2. scope 解決の入力 2 系統】(a) 明示ヘッダー = API / 機械クライアント (Publisher・CLI・Device Flow token 保持クライアント)、(b) session の active tenant/workspace = ブラウザ通常遷移、の 2 系統を正規入力とする。両方が存在し値が一致しない場合は ambiguous_scope として拒否する (どちらかを黙って優先しない)。いずれも存在しない場合は従来どおり missing_tenant_scope とする。
+
+【3. session への active workspace 束縛】session に active workspace を束縛できるのは、principal の所属検証を通過した workspace だけとする。切替のたびに所属を再検証し、検証を通らない値は session へ書かない。session に保持した値を所属検証の代替に使わない。
+
+【4. Device Flow の現行制約維持】確認コードの制約 (英数 8 文字 / 有効期限 10 分 / 5 回失敗で無効 / 使用済み再利用不可 / 期限切れは CLI 側でやり直し) は現行のまま変更しない。approve 時に選択した Workspace の範囲を超える権限を付与しない。
+
+【5. Web 公開経路の権限境界】S01 Web 公開ウィザード経由の公開は Device Flow token を用いず、通常の session 認可で行う。CLI 経路と Web 経路で権限境界 (作成者を owner に固定・現在の tenant/workspace scope 内に限定) を同一にし、Web 経路が CLI 経路より広い権限を持たない。
+
+【6. サインイン後 redirect の安全性】サインイン後の戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・protocol-relative は既定着地へ落とす。戻り先の解決結果に対しても通常の authorize() を適用し、redirect を認可の迂回路にしない。
 
 ### qa-133 (対応セル: web)
 

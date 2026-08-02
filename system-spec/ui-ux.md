@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-065 |
+| Web (web) | 確定 | 確定質疑: qa-135 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,23 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-065 (対応セル: web)
+### qa-135 (対応セル: web)
 
-**質問**: docs/user-journeys.md の全ジャーニー J0〜J6 を、既存 UI-UX 確定 qa-063 を維持しながら system-spec から識別子単位で逆引き可能にするため、どのように確定するか。
+**質問**: CLI (Claude Code / Codex / Publisher) を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?
 
-**回答**: qa-063 の確定内容 (S01〜S18、P0〜P5、J1/J4 の詳細、レスポンシブ表示、mock 非採用事項) を全面維持し、docs/user-journeys.md の全ジャーニーを次の端から端の契約として明示的に確定する。J0 = 提供者の Stage 0 technical gate (URL 型 marketplace / Bootstrap Installer / 作者 local wrangler 経路を実機検証し、成立経路を J1/J2 に採用)。J1 = 作者が Claude Code/Codex で作成し、Device Flow 認証後に Publisher CLI または S01 Web 公開ウィザードから同一検査 pipeline へ投入し、S03 の Green/Yellow/Red、S02 の Release/stable/rollback まで自己完結する。J2 = 利用者が SSO でログインし、S01 で同一 Workspace の複数 Project/target を検索、S02 で stable release の install/download descriptor または健全性確認済み WebApp URL を使い、品質報告・更新通知へ進む。J3 = Workspace 管理者が S04 で IdP/role/token を管理し、S05 承認・S06 監査・公開停止/owner 再割当を行う。IdP 接続と role/deny-by-default は P0、承認/監査 UI は P5 でも認可・監査記録自体は前 phase から有効にする。J4 = S10 4 step 入力→受付番号→D5 pull 型生成→S11 一覧→S12 詳細/PDF→S13 7 工程→J1 publish のヒアリング起点。J5 = CLI または S14 Web から改善要望/レビュー依頼/バグ報告→D5 pull 型 AI 解析→Feedback status/aiResponse→人の確認→S13/J1 再公開→update 通知の改善ループ。J6 = 短命 token・冪等 key・回数のみの metrics ingest→サーバ側係数換算→週次 rollup→P4 の S16/S17、P5 の S09 へ反映する効果測定。起動順は P0=J0+共通 SSO/J3 IdP、P1=J4 前半、P2=J1/J2/J4 後半、P3=J5、P4=J6 S16/S17、P5=J6 S09+J3 S05/S06。J0〜J6 の詳細表・surface・裏側の仕組み・根拠の正本は docs/user-journeys.md、画面 ID の正本は docs/screen-inventory.md とし、system-spec はこの回答で全ジャーニーへの逆引きを保持する。
+**回答**: ユーザーの 2026-08-02 指示 (「基本ユーザーは CLI を使わないので Web で対応できるようにしておく」) を明示承認として、qa-065 の既確定 (画面構成・レスポンシブ変換・共通部品・a11y) を全面維持したうえで、CLI 非依存導線を次のとおり追加確定する。
+
+【1. Web 単独完結の受入条件】主対象利用者は CLI を使わない前提とし、Hub Web 単体で「公開 → 状態確認 → 導入案内」まで到達できることを ui-ux.web の受入条件に加える。docs/user-journeys.md J1 step 3b の「Web 代替: S01 公開ウィザード」を、Stage 1 の任意代替ではなく必須経路へ格上げする。
+
+【2. S01 公開ウィザードの Web 経路】S01 に ZIP アップロード経路を置き、CLI 取込経路と同一の Hub 側検査 (static validation / secret scan / policy) へ収束させる。検査結果 (Green 自動公開 / Yellow・Red は Needs Fix 差し戻し) の表示・文言・再投入導線は CLI 経路と同一 UI を使い、経路ごとに別の状態表現を作らない。
+
+【3. Device 承認 (S08) の位置づけ】OAuth Device Flow は CLI / Publisher 利用者専用の経路として維持し、Web 単独利用者の主導線からは分離する。/device へ確認コードを持たずに到達した利用者に対しては、(a) この画面は CLI / Publisher から開始した場合だけ使うこと、(b) Web だけで公開したい場合は S01 公開ウィザードへ進むこと、の 2 点を画面上で明示し、行き止まりにしない。
+
+【4. Workspace 選択/切替の常設】共通シェルに現在の Workspace 表示と切替を常設する。所属が 1 件のときは切替 UI を出さず現在値の表示のみとし、選択操作を強いない。
+
+【5. スコープ不足の扱い】403 missing_tenant_scope をエンドユーザーへ露出させない。scope 未解決は失敗ではなく「Workspace を選べば回復する状態」として扱い、Workspace 選択への回復導線を提示する。qa-118 【1】の 401/403 は ErrorState のみ (旧データを描画しない) という契約は維持し、本項はその ErrorState の文言と回復導線を定めるものであって、旧 scope データの継続表示を許すものではない。
+
+【6. 境界】PublishRequest 状態機械・検査実装・role 判定は既存 owner のままとし、ui-ux は経路差を吸収した単一の表現と回復導線の提示だけを担う。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
