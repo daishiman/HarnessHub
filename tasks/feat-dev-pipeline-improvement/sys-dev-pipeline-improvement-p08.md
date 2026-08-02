@@ -12,7 +12,7 @@ iteration: null
 title: "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:55:08.510722Z"
+updated_at: "2026-08-01T12:00:37Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P07"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -212,3 +212,16 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-08-01 `HarnessHub-w7n7` refactoring write-back
+
+本節は凍結済み P08 実行契約の再生成ではなく、後続の単一責務 refactoring を追跡する
+write-back（実装後の参照記録）である。`bd-bridge.py` の CLI / receipt / mutation 権限を
+維持し、純粋契約、graph read、Beads projection、read-only audit を
+`plugins/dev-graph/lib/bd_bridge_*.py` 四本へ分離した。mfh7 の課題定義は親文書に残し、
+時系列実測だけを `issues/sys-bd-external-ref-orphan-nodes-20260725-log.md` へ移した。
+
+既存 P08 の `resource_scope`、phase acceptance、published generation は変更しない。
+後続 task の実装範囲と検証は `HarnessHub-w7n7` および
+`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
+を正とする。

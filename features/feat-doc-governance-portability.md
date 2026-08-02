@@ -95,3 +95,13 @@ qa-070 (appr-008 承認) で確定したドキュメント規約 2 件 — 仕�
 
 - 次工程: `/dev-graph plan --feature-id feat-doc-governance-portability --feature-context features/feat-doc-governance-portability.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 保守反映 (2026-08-02 / `HarnessHub-ym9h`)
+
+- 外部参考層を能動 plugin の正本にしない既存方針を、`system-spec/dev-workflow.md` の
+  `qa-122` で明文化した。
+- `aiworkflow-requirements` 依存の参考コピー 275 ファイルを削除し、利用中の外部 CLI
+  契約 1 ファイルだけを consumer plugin の `references/` へ履歴付きで移す。
+- 実装 task は [task-remove-aiworkflow-reference-skill-20260802](../tasks/task-remove-aiworkflow-reference-skill-20260802.md)、
+  判断と検証は [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+  を正とする。製品 runtime の UI/API/DB/auth/deploy には影響しない。

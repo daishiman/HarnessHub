@@ -52,7 +52,10 @@ registration payloadの`tracker_binding="repo-config-default"` sentinelと`bindi
 
 - tombstoned の bd 写像は `bd close --reason=tombstoned`。bd 側の tombstone status は実在するが delete 系操作でのみ遷移するため bridge は行わない (C28 は破壊操作を呼ばない)。
 - bd status 語彙の出典: bd v1.1.0 組込み status = open/in_progress/blocked/closed/deferred (+hooked/tombstone)。
-- parity突合対象はstatusと依存edge exact-set (`dev-graph depends_on` ↔ bd `blocks`)。priority/assignee/labelsはbd側自由領域とする。statusまたはedge差分はC03の手動確認フローへ回し、解消までready推薦から除外する。
+- parity突合対象はstatusと依存edge exact-set (`dev-graph depends_on` ↔ bd `blocks`)。priority/assignee/labelsはbd側自由領域 (= dev-graph側に対応する正本を持たず突合しない) とする。statusまたはedge差分はC03の手動確認フローへ回し、解消までready推薦から除外する。
+- **自由領域=突合対象外であって、bridge 迂回の許可ではない**。C10 guard は `bd` の mutation サブコマンドを field で選り分けず全面遮断するため、自由領域 3 field の書込経路も C28 `bd-bridge.py --op update` の `--priority` / `--assignee` / `--labels` に一本化する。guard を field 単位で緩める案は、フラグの並び・短縮形・後続コマンド連結で fail-closed が破れるため採らない (HarnessHub-dc7)。
+- `--labels` は `bd update --set-labels` への置換転送のみを受ける (add/remove の部分適用は、同一 run の適用順で最終状態が変わり receipt から再現できないため受けない)。空文字は拒否する: strings フラグの空値が全消去か空 label 1 件かは bd の公開 surface に規定が無く、§7 の「安定 surface のみに依存」に反するため。
+- guard の粒度はサブコマンド単位なので `bd update --help` のような read も遮断される。help は `bd help update` を使う (`bd show` / `bd list` / `bd ready` は遮断されない)。
 - 写像は冪等 projection として C28 bd-bridge / C12 gh-bridge が適用する。逆方向の書込み (bd 側の手動 close を dev-graph へ取り込む等) は C03 sync / C26 reconciliation の突合で検出し、自動上書きせず manual conflict へ回す。
 - system route の exact-13 package projection は registration receipt の `source_digest` を manifest に必須とする。再計画で digest が変わっても epic と13 childの `external_ref=dev-graph:<graph_node_id>` は再利用し、title/description/metadataと機能内dependency exact-setを新世代へ収束させる。旧dependencyは除去し、closed issueを含む同一external_refの重複はfail-closedで拒否する。
 

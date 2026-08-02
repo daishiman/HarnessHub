@@ -28,15 +28,15 @@ keep=精神維持 / transform=対象ドメインへ写像 / drop=廃止 / replac
 | P9 品質保証 | replace | P0 lint 8 本 + `validate-build-trace.py` + schema parity + content-review |
 | P10 最終レビューゲート | keep | P10 final-review = elegant-review C1-C4 (final) + governance + unassigned 0 (P03 とは別の最終ゲート) |
 | P11 evidence (スクショ) | replace | スクショ DROP。Markdown evidence = lint exit0 ログ / schema parity / build-trace coverage / content-review verdict / `eval-log/coverage/*.json` |
-| P12 ドキュメント 6 タスク (aiworkflow 同期) | keep+replace | 6 タスク雛形流用。aiworkflow 連携 DROP、反映先を `feedback_contract_ssot.py`/`lessons-learned`/`bundles.json` へ |
+| P12 ドキュメント 6 タスク (旧仕様同期) | keep+replace | 6 タスク雛形流用。旧 UBM 仕様書 Skill 連携 DROP、反映先を `feedback_contract_ssot.py`/`lessons-learned`/`bundles.json` へ |
 | P13 PR 作成 (PR/IPC/Cloudflare) | transform | IPC・Cloudflare 全 DROP。PR は harness `feature→main + make validate + pytest` 完了条件として最終仕様書が言及 (本スキル責務外) |
 
 ### DROP (UBM 機能開発固有のみ)
-Electron IPC・safeInvoke / Cloudflare・D1・Workers / Phase 11 スクリーンショット / aiworkflow-requirements SSOT 連携 / GitHub PR・deploy。**REPLACE**: スクショ → Markdown evidence (lint exit0 / schema parity / build-trace coverage / content-review verdict / coverage JSON)。この **5 要素集合** は P11 セル(上表)・`io-contract.md` §10 と一致させる (evidence 定義の単一 SSOT)。coverage JSON の表記は glob `eval-log/coverage/*.json` と具体パス `eval-log/coverage/skills/<plugin>__<skill>.json` の表層差を許容する (指す実体は同一)。
+Electron IPC・safeInvoke / Cloudflare・D1・Workers / Phase 11 スクリーンショット / 旧 UBM 仕様書 Skill の SSOT 連携 / GitHub PR・deploy。**REPLACE**: スクショ → Markdown evidence (lint exit0 / schema parity / build-trace coverage / content-review verdict / coverage JSON)。この **5 要素集合** は P11 セル(上表)・`io-contract.md` §10 と一致させる (evidence 定義の単一 SSOT)。coverage JSON の表記は glob `eval-log/coverage/*.json` と具体パス `eval-log/coverage/skills/<plugin>__<skill>.json` の表層差を許容する (指す実体は同一)。
 
 ## §8 13 フェーズ写像 (従来 Phase 1-13 → プラグイン開発・成果物軸の SSOT)
 
-機能開発の従来 Phase 1-13 をプラグイン開発ドメインへ 1:1 写像した 13 フェーズ。**各フェーズ = 1 Markdown ファイル `phase-NN-<kebab>.md`** で、上から順に読める宣言型タスク仕様 (8 節・本文床の正本=`specfm.PHASE_BODY_SECTIONS`・人間向け primary deliverable)。id/kebab/category/gate_type は `scripts/specfm.py` の `PHASE_*` dict が正本 (`schemas/phase-spec.schema.json` と parity)。UBM 機能開発固有 (Electron IPC / Cloudflare・D1・Workers / スクショ / aiworkflow SSOT 連携 / GitHub PR・deploy) は §7 のとおり DROP/REPLACE 済み。
+機能開発の従来 Phase 1-13 をプラグイン開発ドメインへ 1:1 写像した 13 フェーズ。**各フェーズ = 1 Markdown ファイル `phase-NN-<kebab>.md`** で、上から順に読める宣言型タスク仕様 (8 節・本文床の正本=`specfm.PHASE_BODY_SECTIONS`・人間向け primary deliverable)。id/kebab/category/gate_type は `scripts/specfm.py` の `PHASE_*` dict が正本 (`schemas/phase-spec.schema.json` と parity)。UBM 機能開発固有 (Electron IPC / Cloudflare・D1・Workers / スクショ / 旧仕様書 Skill の SSOT 連携 / GitHub PR・deploy) は §7 のとおり DROP/REPLACE 済み。
 
 | # | id | phase_name (kebab) | 日本語 | category | gate_type | 目的 | 成果物 | 完了条件 |
 |---|---|---|---|---|---|---|---|---|

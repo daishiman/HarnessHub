@@ -12,8 +12,9 @@ production_deployed_at: "2026-07-29T00:57:54Z"
 
 > **状態**: S10-S12 と AI キュー API は **2026-07-29 00:57:54 UTC に CI 経由で本番反映済み**。migration
 > `0002_hearing-intake-ai-queue` の適用、本番 Worker への 9 ルート同梱、`/health` 200、本番 DB のテーブル実在を
-> 実測で確認した。一方、runbook が要求する**実データ E2E smoke（提出 → pull → complete → S12 表示）と
-> SEC8 の本番実挙動確認は未実施**である。P13 の完了判定は §7 を参照。
+> 実測で確認した。runbook が要求する**実データ E2E smoke（提出 → pull → complete → S12 表示）と SEC8 の
+> 本番実挙動確認は、引き継ぎ用の手順書から毎デプロイ実行される自動検査へ移した**（§7.2）。本 commit 時点で
+> その本番実測値はまだ回収していない。P13 の完了判定は §7.3 を参照。
 
 本書に記載する値はすべて GitHub Actions の実行ログから回収した実測値であり、「そう起動したはず」という
 申告値は含まない。回収元 run は §1 と §5 に run id で示す。
@@ -129,31 +130,44 @@ health: 200
 version が前進しているのは 2026-07-29 以降に他 feature の PR が main へ merge されたためであり、
 `wrangler rollback` による巻き戻しではない（rollback step は当該 run でも起動していない）。
 
-## 6. リリース前ゲートの再実行（2026-08-01・ローカル）
+### 5.1 P13 の CI trigger 修正が本番へ出たことの実測（run 30688453261）
 
-main を本ブランチへ取り込んだ状態で再実行した。
+同日 06:48 UTC に本 task の PR [#624](https://github.com/daishiman/HarnessHub/pull/624) が main へ merge され、
+deploy job が起動した（sha `f303274045ec35df284a0ba72629c811d78d6ce6`）。docs-only merge では `on.push.paths` が
+効いて deploy が発火しなかった問題への修正（main の push / 明示 dispatch を deploy 対象にする）が本番反映まで
+通ることを、この run [30688453261](https://github.com/daishiman/HarnessHub/actions/runs/30688453261) で確認した。
+
+| 観測項目 | 実測 |
+|---|---|
+| 3 job | すべて success。「失敗時ロールバック」step は **skipped** |
+| migration | dry-run `journal: 3` / `applied: 3` / **`pending: 0`** → 適用後も `appliedAfter: 3`、tags に `0002` 在籍 |
+| Worker version | **`c5b8dc72-db12-45ed-ac5f-6f50b6587c9a`** |
+| bundle | Total Upload 6429.64 KiB / **gzip 1279.31 KiB**（予算 3 MiB 以内） |
+| `/health` | **200** / `version: c5b8dc72-…`（db 868ms / r2 557ms） |
+| OIDC smoke | O1-O4 すべて `ok: true` |
+| DB・R2 smoke | §4.2 の 6 項目すべて pass（`dedupeOk: true` / `invariantOk: true`） |
+
+## 6. リリース前ゲートの再実行（2026-08-02・ローカル）
+
+origin/main `3e34b78f` をローカル main へ取り込み、そのローカル main を本ブランチへ merge した状態で再実行した。
 
 `pnpm verify` は最終ゲートの `check:client-bundle` まで `&&` チェーンを完走した。
 
 | ゲート | 実測 |
 |---|---|
 | `validate-system-plan.py --feature-package feature-package/feat-hearing-intake` | **pass** / `violations: []` / `validated_digest` が task 仕様の `dev_graph_source_digest`（`sha256:61fac79f…`）と一致 |
-| Biome lint | **423 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
+| Biome lint | **489 ファイル検査 / エラー 0**（info 1 件は `biome.json` の `$schema` が 2.5.4、CLI が 2.5.5 という表記差のみ） |
 | typecheck（6 パッケージ） | pass |
 | build / build:worker | pass |
-| test（全パッケージ） | **128 files / 1619 tests 全 pass**（hub 845 / ui 266 / db 231 / inspection 151 / schemas 86 / estimation 40） |
-| test（本 feature 名指し） | **8 files / 101 tests 全 pass**（`apps/hub/tests/hearing-intake`） |
+| test（全パッケージ） | **149 files / 1861 tests 全 pass**（hub 1060 / ui 266 / db 258 / inspection 151 / schemas 86 / estimation 40） |
+| test（今回追加した名指し検査） | **22 tests 全 pass**（DB fixture transaction 2 / Worker secret・本番 smoke 構造 20） |
 | tenant 分離 / secret scan / OpenAPI・zod drift | pass |
-| Worker bundle 予算 | **gzip 1.225 MiB** / 3.000 MiB（wrangler dry-run 計測） |
-| client bundle 予算（本 feature の 3 画面） | `/sheets/new` **116.2 KiB** / `/sheets/[id]` **115.9 KiB** / `/sheets` **111.7 KiB**（予算 120.0 KiB） |
+| Worker secret 三方向突合 | **台帳 10 件 / Worker 宣言 7 件**を静的に確認（live 検査は deploy 前に実行） |
+| Worker bundle 予算 | **gzip 1.330 MiB** / 3.000 MiB（wrangler dry-run 計測） |
+| client bundle 予算（本 feature の 3 画面） | `/sheets/new` **116.4 KiB** / `/sheets/[id]` **116.1 KiB** / `/sheets` **111.9 KiB**（予算 120.0 KiB） |
 
-client bundle は 3 画面とも予算内だが、`/sheets/new` は残り 3.8 KiB（約 3%）である。S10 に client component を
+client bundle は 3 画面とも予算内だが、`/sheets/new` は残り 3.6 KiB（約 3%）である。S10 に client component を
 追加する変更では、この余裕が先に尽きる点を留意する。
-
-> **ローカル実行時の注意**: 既定の `node` が x64（Rosetta）で解決されるため、`@biomejs/cli-darwin-x64` /
-> `@libsql/darwin-x64` / `@next/swc-darwin-x64` が見つからず lint・build が落ちる。これは環境要因であり
-> コードの欠陥ではない。arm64 の Node（`/opt/homebrew/bin/node`、同一 v22.21.1）を PATH 先頭に置いて
-> 実行すること。CI は ubuntu-latest のため影響を受けない。
 
 ### 6.1 CI 側のゲート実績（同一コードに対する正本）
 
@@ -168,35 +182,54 @@ G7b テナント分離網羅 / G8 OpenAPI・zod drift / G9 axe a11y / G5 bundle 
 
 | # | 項目 | 要求元 | 状態 |
 |---|---|---|---|
-| 1 | 実データ E2E smoke（テスト tenant で提出 → `HS-xxxx` 発番 → pull → complete → S12 表示） | runbook.md「リリース前後の確認」、task spec Workstream/Quality | **未実施** |
-| 2 | SEC8 の本番実挙動確認（他 tenant の job が pull で見えない / 別 claim token で complete できない） | task spec Workstream/Security | **未実施** |
-| 3 | 反映後 15 分の 5xx・queue 滞留・認可拒否率の観測 | runbook.md「AI キュー滞留監視 (qa-027)」 | **未実施** |
+| 1 | 実データ E2E smoke（テスト tenant で提出 → `HS-xxxx` 発番 → pull → complete → S12 表示） | runbook.md「リリース前後の確認」、task spec Workstream/Quality | **自動検査として実装済み**（本番実測は未回収） |
+| 2 | SEC8 の本番実挙動確認（他 tenant の job が pull で見えない / 別 claim token で complete できない） | task spec Workstream/Security | **自動検査として実装済み**（本番実測は未回収） |
+| 3 | 反映後 15 分の 5xx・queue 滞留・認可拒否率の観測 | runbook.md「AI キュー滞留監視 (qa-027)」 | **未実施**（継続観測） |
 
-**この commit 時点で未実施の理由**: 3 項目とも本番エンドポイントへのアクセスまたは本番 tenant への
-実データ書き込みを伴うため、先に本変更を main へ反映し、CI の本番反映を再実行する必要がある。今回の
-最終レビューでは commit・push・PR・main merge が承認されている。main 反映と CI 完走後に §7.2 の順で
-検査し、同じ P13 の追補として実測値を記録する。したがって、これは失敗ではなく順序制約による一時的な未実施である。
+**1・2 の現状**: 従来は §7.2 に手順書があるだけで、実行には本番資格情報を持つ人間の手作業が必要だった。
+本 commit で同じ手順を `pnpm --filter @harness-hub/hub run smoke:hearing-production` という 1 本の
+fail-closed な検査へ落とし、deploy job の post-deploy 検証へ常設した（§7.2）。本番資格情報は CI secret
+にしか無く手元へ配らないため、**この commit 時点では本番実測値を回収していない**。回収は main 反映後の
+deploy run で行う（記録先は §7.3）。これは失敗ではなく、資格情報の所在による順序制約である。
 
-### 7.2 実施手順と判定基準（引き継ぎ用）
+### 7.2 項目 1・2 を実行する自動検査（`smoke:hearing-production`）
 
-項目 1（実データ E2E smoke）:
+| 項目 | 値 |
+|---|---|
+| entrypoint | `pnpm --filter @harness-hub/hub run smoke:hearing-production` |
+| 実体 | `apps/hub/scripts/smoke-production-hearing.ts`（設定・HTTP・Device Flow は同 `-support.ts`） |
+| 起動箇所 | `ci.yml` deploy job、DB・R2 smoke の直後（step id `hearing_smoke`）。失敗時ロールバックの判定材料に入る |
+| 必要な資格情報 | **新規 secret なし**。既存の `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` と `vars.HUB_PUBLIC_URL` だけ |
 
-1. テスト tenant / workspace を用意し、member ロールで `/sheets/new` の 4 ステップ 12 項目を送信する。
-2. 応答に `HS-xxxx` 形式の受付番号が含まれ、一覧の状態が `generating` であることを確認する。
-   年収は試算にのみ使われ `hearing_sheets` に保存されていないこと（SEC5）を DB 側でも確認する。
-3. `aijob:process` scope を持つ Device Flow token で `POST /api/v1/ai-jobs/pull` を呼び、job を claim する。
-   `x-harness-workspace-id` ヘッダーが必須である（未指定は 400）。
-4. 同じ claim token で `POST /api/v1/ai-jobs/[id]/complete` へ Markdown を書き戻す。
-5. `/sheets/[id]`（S12）で sanitize 済み Markdown が表示され、sheet の状態が `review` になることを確認する。
-6. 検査後、作成したテスト tenant のデータを削除する。
+提出（`POST /api/v1/sheets`）は session 専用のため CI から HTTP では叩けない。そこで**経路を 2 つに分ける**。
+提出は本番 DB へ接続した repository → service（route と同じ合成）を server 側で実行し、TOKEN 資格の
+`pull` / `complete` は本番 URL へ実 HTTP で送る。Device Flow の `code` / `token` は認証不要 endpoint なので
+署名鍵なしで**本物の access token** を取得でき、session が要る approve だけを DB の CAS で代行する。
+状態変更要求には必ず `origin` を付ける（無いと認可判定の手前で `untrusted_origin` 403 になり検査が空振りする）。
 
-判定基準: 1〜5 がすべて期待どおりなら pass。3 で 204 が返り続ける場合は job が enqueue されていないため fail。
+使い捨て tenant を 2 件作り、終了時に全行を削除して**残数が 0 でなければ fail** させる。検査は次の 10 点。
 
-項目 2（SEC8）: 別 tenant の token で `pull` を呼んで対象 job が返らないこと、および項目 1 の job に対して
-別 claim token で `complete` を呼んで拒否されることを確認する。いずれかが通ってしまう場合は
+| id | 検査 | 期待 |
+|---|---|---|
+| H1 | 使い捨て tenant 2 件・実 access token 3 本 | scope に `aijob:process`、tenant/workspace/sub が claims と一致 |
+| H2 | 提出 | `HS-xxxx` 発番 / `generating` / 同一 transaction で `sheet_generation` が `queued` |
+| SEC5 | 年収の非保存 | `form_json` に `salary` なし、`estimate_json` に `hourlyRate` なし、`savedAmountPerYear > 0` |
+| SEC8-a1 | 他 tenant の worker が `pull` | **204**（tenant A の job が見えない） |
+| SEC8-a2 | 他 tenant の worker が tenant A の header を騙って `pull` | **404 `tenant_mismatch`**（他 tenant の資源存在を伏せる）、job は `queued` のまま |
+| H3 | `x-harness-workspace-id` 未指定の `pull` | **400** |
+| H4 | claim | 200 / AI payload に `salary` なし / DB が `processing` かつ `claimed_by_token_id` が当該 token |
+| SEC8-b | claim していない token の `complete` | **403 `not_owner`**、job は変更されない |
+| H5 | claim した token の `complete` | 200 `completed` / sheet が `review` / S12 取得結果が生成内容と一致 |
+| H6 | Bearer で `POST /api/v1/sheets` | **403 `credential_not_allowed`**（session 専用契約） |
+
+判定基準: 10 点すべてが期待どおりで、後片付けの残行数が 0 なら pass。1 つでも外れれば step が失敗し、
+deploy job の「失敗時ロールバック」の判定材料になる。SEC8-a / SEC8-b が通ってしまう場合は
 **セキュリティ事象として新規受付を停止**する（runbook「AI キュー滞留監視」§アラート対応 6）。
 
-項目 3（観測）: runbook の SQL で tenant 別の `queued` 最古 `created_at` を確認する。
+本番資格情報を CI 以外へ配らないため、手元では `apps/hub/tests/hearing-intake/production-smoke-script.test.ts`
+が entrypoint の生存と上表の検査構造の非退行だけを見る（5 tests pass）。実行結果の正本は deploy run の step。
+
+項目 3（観測）は自動化していない。runbook の SQL で tenant 別の `queued` 最古 `created_at` を確認する。
 warning は 15 分超、critical は 60 分超 / lease 期限超過の `processing` 反復 / `dead` 増加。
 
 ### 7.3 完了判定
@@ -208,17 +241,45 @@ warning は 15 分超、critical は 60 分超 / lease 期限超過の `processi
 | §Rollout「本番反映」 | **達成**（§1・§2・§3・§5 が実測） |
 | §Verification「本番反映日時が記載されている」 | **達成**（§1） |
 | §Verification「ロールアウト確認結果が記載されている」 | **達成**（§5） |
-| §Verification「smoke test 結果が記載されている」 | **部分**（基盤 6 項目は §4.2 で pass。機能 smoke は §7.1-1 が未実施） |
-| §Workstream/Security「本番で SEC8 が機能していることの最終確認」 | **未達**（§7.1-2） |
-| §Workstream/Quality「ロールアウト後の smoke test 結果を release-notes へ記録」 | **未達**（§7.1-1） |
+| §Verification「smoke test 結果が記載されている」 | **部分**（基盤 6 項目は §4.2 で pass。機能 smoke は検査を常設したが実測未回収） |
+| §Workstream/Security「本番で SEC8 が機能していることの最終確認」 | **部分**（§7.2 SEC8-a/b として常設。実測未回収） |
+| §Workstream/Quality「ロールアウト後の smoke test 結果を release-notes へ記録」 | **部分**（同上） |
 
 feat-hub-foundation P13 では未達項目（SLO 30 日観測）を別 issue へ切り出して完了と判定したが、
 本 task の未達 2 項目は**時間ゲートではなく一度実行すれば済む検査**であり、切り出す正当性が無い。
-本番反映という主目的は達成しているものの、機能が本番で意図どおり動くことを一度も測っていない状態で
-P13 を完了と申告すると、「デプロイした」と「動くことを確認した」を同一視することになる。したがって
-§7.1 の 1・2 を実施し、その結果を §4 相当の実測として本書へ追記した時点で P13 を完了とする。
+機能が本番で意図どおり動くことを一度も測っていない状態で P13 を完了と申告すると、「デプロイした」と
+「動くことを確認した」を同一視することになる。
 
-項目 3 は継続観測であり、1・2 の完了を妨げない。
+**残る作業は 1 回の deploy run である。** 本変更が main へ入ると deploy job の step
+`本番 hearing 実データ E2E / SEC8 スモークテスト (P13 受入条件)` が起動する。その run id と出力
+（§7.2 の 10 点および後片付けの残行数）を本節へ追記した時点で P13 を完了とする。step が失敗した場合は
+完了ではなく、失敗内容を §7.1 へ差し戻す。項目 3 は継続観測であり、この判定を妨げない。
+
+### 7.4 実装中に判明した契約上の注意（follow-up）
+
+`aijob.complete` の `selfOnly` は `decide()` の設計どおり **workspace-admin 以上で越えられる**
+(`apps/hub/src/lib/authz/decide.ts`)。したがって「claim していない別 token」が workspace-admin 相当だと
+認可では止まらず、repository の CAS が `RepositoryError('conflict')` を投げて止める
+(`packages/db/repository/hearing-intake-queue.ts`)。`withAuthz` は `AuthzError` しか捕捉しないため、
+**この経路の応答は 409 ではなく 500 になる**。job も sheet も transaction 内で巻き戻るため
+SEC8（他者の claim を奪えない）は保たれているが、拒否が 5xx として観測される点は §7.1-3 の 5xx 監視に
+影響する。§7.2 の SEC8-b はこの穴を踏まないよう **member ロールの token** を使い、`not_owner` 403 を
+決定的に観測する。`conflict` の 409 マッピングは本 task の scope 外として別 issue へ切り出す。
+
+### 7.5 §7.1 項目 1・2 を実測前から阻んでいた本番設定の欠落（2026-08-02 / 解消済み）
+
+`wrangler secret list` で本番 Worker を実測したところ `AUTH_ACCESS_TOKEN_SECRET` が**未投入**だった。`readAuthRuntimeEnv()`
+がこれを `required()` で読むため（`apps/hub/src/lib/authz/runtime.ts`）、`apps/hub/src/middleware.ts` は Bearer を cookie へ
+fallback させず `principal = null` に倒す。つまり **TOKEN 資格の経路が本番で全滅していた**（`ai-jobs/pull` / `complete` を
+含む）。§7.2 の smoke は実 access token を取る H1 で落ちるため、この状態では deploy しても実測を回収できなかった。
+
+`/health` が 200 を返し続けていたのは矛盾しない（認証不要で Bearer 経路を通らない）。fail-closed 設計が正しく働いた
+結果として「鍵が無い」と「token が不正」が同じ 401 へ潰れ、設定漏れが障害として立ち上がらなかった。この非対称の
+解消が `docs/infrastructure-spec.md` §2 の実投入ゲートである。
+
+**対処**: 同日 `openssl rand -base64 32` を `wrangler secret put AUTH_ACCESS_TOKEN_SECRET` へ直接流して投入し、`wrangler
+secret list` で存在を確認した（値は画面にも履歴にも残していない）。鍵は HS256 の HMAC 材料として UTF-8 raw bytes で使われる
+だけ（`apps/hub/src/lib/auth/jwt.ts`）で形式制約は無く外部サービス登録も不要。欠落していた鍵で発行された有効 token は存在せず、session ログインは別鍵 `AUTH_SESSION_SECRET`（投入済み）のため既存利用者への影響は無い。
 
 ## 8. ロールバック
 

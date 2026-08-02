@@ -1,0 +1,95 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/w7n7-sync-20260801 と続けて --dry-run / --apply / 確認 --dry-run の 3 パスを同じ入力で回す (決定論 remote は fixture 内 .dev-graph/remote.json)",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "91ea0b643d141247c8827872e11b8ddb70695480ee0c5ba61184bab9d4c9c647",
+  "transcript_sha256": "795986cf98df607ddab6bfb88958d5293f52facf7568b57ccbfc5ebbbb767303",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 8.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 720.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C03-OUT1-positive-second-sync-zero",
+    "required_observations": [
+      "the first sync applies the expected import and export",
+      "the second sync reports imports changes=0 and exports changes=0",
+      "stable IDs and snapshots are unchanged on the second run"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the first sync applies the expected import and export",
+        "evidence_ref": "independent-verification.json#/observations/first_sync"
+      },
+      {
+        "index": 2,
+        "observation": "the second sync reports imports changes=0 and exports changes=0",
+        "evidence_ref": "independent-verification.json#/observations/second_sync_zero"
+      },
+      {
+        "index": 3,
+        "observation": "stable IDs and snapshots are unchanged on the second run",
+        "evidence_ref": "independent-verification.json#/observations/stable_identity"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> と続けて --dry-run / --apply / 確認 --dry-run の 3 パスを同じ入力で回す (決定論 remote は fixture 内 .dev-graph/remote.json)",
+      "template_flags": [
+        "--apply",
+        "--dry-run",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--apply",
+        "--dry-run",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

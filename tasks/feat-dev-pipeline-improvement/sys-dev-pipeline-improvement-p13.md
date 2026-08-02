@@ -241,7 +241,7 @@ This section is the current source closure and supersedes older counts or wordin
 - verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
-- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。`HarnessHub-dc7` の post-completion P13 書き戻しは、確定済み QA を変更せず Beads 自由フィールドの bridge 経路を各層へ反映し、`docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md` を判断・検証の正本とする。
 
 ## 2026-07-29 skill tree lint P13 書き戻し
 

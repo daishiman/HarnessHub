@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:06:48Z"
-updated_at: "2026-08-01T12:11:25.870970Z"
-status: "draft"
+updated_at: "2026-08-02T05:46:51.338346Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-hub-foundation","SYS-HUB-FOUNDATION-P13","arch-harness-hub-infrastructure"]
 resource_scope: ["apps/hub/monitoring/slo-dashboard.json","apps/hub/scripts/verify-slo-observation.mjs","apps/hub/tests/monitoring/","docs/features/feat-hub-foundation/","docs/infrastructure-spec.md","system-spec/infrastructure.md","system-spec/spec-state.json","specs/harness-hub-system-specification.md","architecture/harness-hub-infrastructure.md","features/feat-hub-foundation.md","tasks/feat-hub-foundation/sys-hub-foundation-p05.md","tasks/feat-hub-foundation/sys-hub-foundation-p11.md"]
@@ -43,11 +43,9 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-02T03:42:33Z","evidence_refs":["docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-08-02T03:42:33Z","source":"manual","status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-25T11:06:48Z","missing_sections":[],"status":"complete"}
 ---
-
-
 
 # Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する
 
@@ -99,3 +97,10 @@ A3 は**時間ゲート**であり、デプロイ作業ではない。3 分間�
 - 観測済み窓の downtime は約 6,312 秒、30 日許容 12,960 秒に対する消費は約 48.7% で、70% 警告と 100% 変更凍結は未発動。
 - 残作業は 30 日時間ゲート、Workers Analytics 5xx 率、Worker cron heartbeat 着信実測。これらが揃うまで本 issue と `HarnessHub-37h.15` は未完了を維持する。
 - 仕様反映は `system-spec/infrastructure.md` の qa-116、[仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+
+## 最終 closure (2026-08-02 / qa-123)
+
+- 上記「未完了を維持する」は観測を継続する当初方針の履歴として保持する。その後、ユーザーが本 follow-up の追加対応は不要と判断したため、completion evidence を `not_applicable` として閉じた。
+- `not_applicable` は SLO PASS ではない。最終証跡は観測 6 日 / 30 日の `collecting`、外形単独判定 `null`、Workers Analytics 5xx 率未取得のままであり、99.5% 達成を主張しない。
+- qa-019 / qa-116 の目標値・計測式・エラーバジェット運用は維持する。将来再開する場合は本 issue を reopen または新 issue を起票し、runbook と `verify:slo-observation` を再実行する。
+- delivery closure との分離判断は [feature closeout 仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) に記録する。

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5, G2]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-116 |
+| Web (web) | 確定 | 確定質疑: qa-131 |
 | モバイル (mobile) | 対象外 | 理由: native モバイル向け配信基盤なし (ブラウザ経由提供) |
 | タブレット (tablet) | 対象外 | 理由: native タブレット向け配信基盤なし (ブラウザ経由提供) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-043 |
@@ -24,21 +24,21 @@ serves_goals: [G1, G4, G5, G2]
 
 ## 確定内容 (質疑録)
 
-### qa-116 (対応セル: web)
+### qa-131 (対応セル: web)
 
-**質問**: qa-019 / qa-106 / qa-113 の SLO・Cloudflare 配備契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?
+**質問**: 既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?
 
-**回答**: ユーザーの 2026-08-01 最終レビュー・仕様反映指示と 2026-08-02 の競合解消指示を明示承認として、qa-019 / qa-106 / qa-113 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。
+**回答**: ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。
 
-【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。
+【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。
 
-【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。
+【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。
 
-【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。
+【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。
 
-【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。
+【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。
 
-【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、共有 Google OAuth client を含む既存の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。
+【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。
 
 ### qa-043 (対応セル: desktop-windows, desktop-macos)
 

@@ -66,6 +66,15 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-126)**:
+
+- migration 0004 は既存行を active のまま保つ expand-only の 10 列追加とする。
+  管理 API の新規行だけは pending を明示する。
+- 現行 credential と staging を別列に保持し、テスト済みの client ID・暗号化 secret・方式・
+  許可ドメインを 1 UPDATE で昇格する。取消は staging だけを消す。
+- `allowed_workspace_domains` は NULL 許容で、顧客方式では未検査、共有方式では拒否を意味する。
+  JSON は read 境界で schema 検証する。
+
 ## Goals and non-goals
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

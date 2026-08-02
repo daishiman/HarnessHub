@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T15:28:45Z"
+updated_at: "2026-08-02T07:36:12.924712Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T15:28:45Z","origin_kind":"system-spec-harness","source_digest":"eca0eba6c0906893ca304e50f0596ebdea565ea3854f1d6c41714edee5a4652a","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"0e4f17b11b75fc6f447d3e3e4c40fcc131a482b63ee52eef3a67846d9ad8d56a","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T07:35:20Z","origin_kind":"system-spec-harness","source_digest":"6353c77f4220f9c4a9a07dcea41476822ae339e02c948a7603dc9c41102a6b57","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `eca0eba6c0906893…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `47d9b82aba718106…`)
 - [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `960ed37334a8cbcf…`)
 
-- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（共有 Google OAuth 配備契約と SLO 観測契約を qa-116 へ統合）
-- 再取込日時: 2026-08-01T15:28:45Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（SLO 運用契約を維持し、delivery closure を qa-123 で分離）
+- 再取込日時: 2026-08-02T05:37:45Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -193,8 +193,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 **deploy検証追補 (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**
 
 - pipeline順序を`required settings preflight → migration → deploy → health →
-  OIDC start-flow smoke → DB/R2 smoke`に固定する。
-- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2失敗は
+  OIDC start-flow smoke → DB/R2 smoke`に固定する。2026-08-02 (`SYS-HEARING-INTAKE-P13`) に
+  `→ hearing実データE2E/SEC8 smoke`を末尾へ追加した。追加分も新規secretを要求せず、
+  失敗は同じrollback判定へ入る。
+- **Worker secret実投入検査を preflight の直後へ挿入 (2026-08-02 / `HarnessHub-o2i.13`)**:
+  既存preflightは**GitHub側**のsecret/variableしか見ず、Worker自身が読むCloudflare Secretは
+  別の入れ物なので検査対象外だった。`wrangler.jsonc`の`secrets.required`は宣言、
+  既存testはその宣言の検査であり、どちらも実投入を測らない。GitHub側にだけ`--live`があって
+  Cloudflare側に等価物が無いという非対称が穴の本体である。`check-worker-secrets.mjs --live`が
+  台帳↔宣言↔実投入を三方向で突合する。migrationより前に置くのでDBもWorkerも前進しない。
+- hearing smoke のfixture生成とcleanupはそれぞれ1 transactionに閉じる。生成途中に失敗して
+  tenant ID を呼び出し側へ返せなくても部分行を残さず、cleanup後は全対象表の残行数0を確認する。
+- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2/hearing失敗は
   直前Workerへrollbackし、DBはexpand-onlyのため前進状態を維持する。
 - OIDC smokeは秘密値を保持せず、tenant provider・canonical callback・未知tenant拒否・
   CSRF・Google 302・state/nonce/PKCEを検査する。Google callback後の実ログインは
@@ -211,6 +221,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **最終判定**: 30 日到達後も Workers Analytics 5xx 率が揃うまで `observation_complete_pending_application_error_rate` とし、外形監視だけで 99.5% 達成を主張しない。
 - **再現性と秘密**: 検証 CLI は一致 0 / 不一致 1 / 取得・入力不能 2 を返し、公開 URL だけを読む。API token と heartbeat URL を証跡へ保存しない。
 - 正本は [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-116、実装・検証・残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+
+## Delivery closure と SLO verdict の分離 (2026-08-02 / qa-123)
+
+- SLO target、観測窓、複合算定、エラーバジェットは qa-019 / qa-116 を維持する。
+- feature / P13 の delivery lifecycle は exact-13、release、health、bundle、共通層の証跡で閉じ、ユーザーが不要とした運用 follow-up は `not_applicable` として非 blocker にする。
+- waiver を稼働品質 PASS へ変換しない。観測再開時は同一 issue の reopen または新 issue と、既存 runbook / CLI / 生データを必要とする。
+- この変更は acceptance governance の境界だけで、API、DB schema、認証認可、UI、Worker deploy unit の構造を変えない。詳細は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
 
 **差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-113・qa-114)**:
 
