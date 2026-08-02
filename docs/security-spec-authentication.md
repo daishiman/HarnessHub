@@ -42,6 +42,16 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 > `session_revocations` は緊急時のみ書かれる小テーブル。通常の JWT 検証で DB 往復を発生させないよう、**テナント単位の最終失効時刻のみ**を保持し、Workers のメモリ/KV キャッシュ (TTL 60 秒) 経由で参照する。
 
+#### 2.1.1 protected CWV probe（運用専用・人のログインではない）
+
+`/catalog` の実測は未認証を許可せず、通常 session の署名鍵も CI に渡さない。`CWV_PROBE_SECRET` で署名する最大 **5 分**の HS256 ticket は、`typ=cwv_probe` / `aud=harness-hub-cwv` / 正規 HTTPS origin / 固定 tenant_id・workspace_id / iat・exp を全て満たす場合だけ受理する。
+
+- bootstrap は `GET /catalog` だけ。ticket を検証後に URL から除去し、`__Host-harness-hub.cwv-probe`（HttpOnly / Secure / SameSite=Strict / Path=/）へ移す。`Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付ける。
+- Cookie は catalog の GET/HEAD と明示した catalog read endpoint にしか使えない。書込み、install、publish、管理 API、別 origin/tenant/workspace、期限切れ・改ざん ticket は拒否する。
+- `CWV_PROBE_SECRET` の rotate は既存 ticket を即時に無効化する。利用者 session、OIDC、Device Flow、Publisher token の寿命・失効・外部 API 契約は変更しない。
+
+これは外部 client に発行する authentication method ではなく、GitHub Actions と Worker の運用境界である。投入手順と外部実測の未完了境界は feature runbook §1.1 を参照する。
+
 ### 2.2 Publisher / CLI / AI worker (OAuth Device Authorization Flow, RFC 8628)
 
 正本: `backend-spec.md` §4.1 (endpoint)。本節は**数値契約と scope** を確定する。

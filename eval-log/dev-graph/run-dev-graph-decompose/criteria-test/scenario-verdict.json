@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "codex-final-review; OUT1 refresh=isolated-claude-opus-cvli-20260802",
+  "reviewer": "eval_c14_fcth_finalmain_r14; OUT1 refresh=codex-independent-evaluator-eval_decompose_trial_r12-20260802",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,19 +26,18 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/beads/eval-log/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/none/eval-log/decompose-audit.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/beads/eval-log/run-dev-graph-decompose-progress.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T101500Z-cvli-decompose-r7/evidence/none/eval-log/run-dev-graph-decompose-progress.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/evidence/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/evidence/progress.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T135000Z-ci-decompose/evidence/graph.json",
         "plugins/dev-graph/tests/test_decompose_live_trial_audit.py"
       ],
-      "observed": "2026-08-02 fresh paired replay live trial (20260802T101500Z-cvli-decompose-r7) は actual_model=claude-opus-4-6、nudge=0、gate=0、poll_exit=DONE で PASS。初期 node 0 の beads / none fixture で target Skill を各2回、read-only Explore Task を各1回実行し、各 Skill②後の node writer は0。両系列は architecture 1 + feature 4 + task 0、3 edge、acyclic、最大依存1、系列別 tracker binding を満たした。両 audit は pass=true / run_binding_attested=true / implementation SHA-256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f。goal-seek violations=0、required observations 7/7、args/task contract 一致、current behavior closure digest=5bfe6072a9e346d5b720770809adc08b5a83d54150bf45f46fa52a26f06f069f。"
+      "observed": "2026-08-02 fresh live trial (20260802T135000Z-ci-decompose) は overall=PASS、nudge=0、gate=0。実書込みで architecture 1件と feature 4件の acyclic DAG を作成し、draft gate・sole publication candidate・beads/none binding・GitHub schema-unreachable・pre/post 差分・confirmation evidence の再計算・schema の負例を fresh Agent が独立検証した。required observations 7/7 と task contract は一致し、current behavior closure digest=f73417465930ed5163eba9ad97095d99379ae94582441a88618bc9990e3d68f7。"
     },
     "OUT2": {
       "status": "PASS",

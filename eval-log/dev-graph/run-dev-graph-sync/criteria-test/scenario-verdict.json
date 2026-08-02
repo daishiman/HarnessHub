@@ -27,12 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T091000Z-cvli-sync/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T091000Z-cvli-sync/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T091000Z-cvli-sync/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T091000Z-cvli-sync/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T091000Z-cvli-sync/pane.txt",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/evidence/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T134000Z-ci-sync/evidence/progress.json",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/transcript.jsonl",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/out/status.json",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/independent-verification.json",
@@ -40,7 +41,7 @@
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/verdict.json",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_project_item_is_stable_and_alias_failure_is_pending_retry"
       ],
-      "observed": "2026-08-02 fresh live trial PASS (run 20260802T091000Z-cvli-sync, nudge=0, gate=0, poll DONE)。正規 fixture 生成器から隔離 repository を再構築し、first sync は remote title の import 1 / Project Status の export 1、second sync は changes=0 / imports=[] / exports=[] / write_count=0 / converged=true。graph・remote・snapshot の3 digest と issue/project/item の stable ID は最終確認前後で不変。goal-seek violations=0、required observations 3/3、goal-seek の分離 Agent を含む fresh evaluator PASS / blockers=[]、current behavior closure digest=8cc6d8faff27657aa8ee438b2495da3e7b818a8d3359c5c0c45c01172961d29f。旧 closure の成功 run は provenance として保持した。"
+      "observed": "2026-08-02 fresh live trial (20260802T134000Z-ci-sync) は overall=PASS、nudge=0、gate=0。隔離 fixture で dry-run、apply、確認 dry-run を実行し、初回で remote title の import と Project Status の export を適用、確認 dry-run で imports/exports changes=0 を確認した。fresh Agent の独立検証は3観測すべて PASS、stable ID と snapshot は不変であり、current behavior closure digest=8a019fbf8f53c9f3f53a518f86a395865fd21140eeb652c4544bf7dd4500d3e0。"
     },
     "OUT2": {
       "status": "PASS",

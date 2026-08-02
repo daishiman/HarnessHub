@@ -287,3 +287,23 @@ def test_c04_digest_gate_reaches_the_responsibility_prompt() -> None:
     assert any(
         "validate-source-digest.py" in line and "exit 0" in line for line in checklist
     ), "prompt の完了チェックリスト (停止条件) に script の exit 0 が必要"
+
+
+def test_c04_validates_full_lineage_closure_and_current_package() -> None:
+    """C04 は task 13 件だけでなく上流 lineage を検査し、公開後入口を使う。"""
+    plugin = Path(__file__).resolve().parents[1]
+    paths = [
+        plugin / "skills" / "run-dev-graph-requirements" / "SKILL.md",
+        plugin / "skills" / "run-dev-graph-requirements" / "prompts" / "R2b-readiness.md",
+    ]
+    for path in paths:
+        text = path.read_text(encoding="utf-8")
+        assert "選択 feature" in text
+        assert "architecture_refs" in text
+        assert "task 13 件" in text
+        assert "--feature-package" in text
+        assert "package 引数なし" in text
+
+    skill_text = paths[0].read_text(encoding="utf-8")
+    assert '--feature-package "<選択 feature node の feature_package_id>"' in skill_text
+    assert "task 13 件だけの検査は closure 不足として拒否する" in skill_text

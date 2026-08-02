@@ -1,0 +1,25 @@
+{
+  "assertions": [
+    {
+      "id": 1,
+      "description": "all five artifacts routed to canonical kind paths",
+      "status": "PASS",
+      "evidence": "graph.json contains exactly 5 nodes. Mappings: issue->issues/session-timeout-not-enforced.md, task->tasks/implement-rate-limit-public-api.md, specification->specs/rest-api-v2-migration-spec.md, architecture->architecture/order-backend-architecture-security.md, document->docs/dev-environment-setup-guide.md. All prefixes match the root_map in template-contract.json and all 5 files physically exist on disk."
+    },
+    {
+      "id": 2,
+      "description": "frontmatter kind and stored path agree after consecutive update",
+      "status": "PASS",
+      "evidence": "issues/session-timeout-not-enforced.md frontmatter has artifact_kind: \"issue\" and file_path: \"issues/session-timeout-not-enforced.md\" (starts with issues/). Graph node session-timeout-not-enforced has priority: \"critical\" and tags include \"urgent\" (proving the update was applied). The file_path in graph matches the frontmatter file_path exactly."
+    },
+    {
+      "id": 3,
+      "description": "no feature created outside C14 macro-feature contract",
+      "status": "PASS",
+      "evidence": "No node in graph.json has artifact_kind: \"feature\" (the 5 kinds present are issue, task, specification, architecture, document). The features/ directory contains no .md artifacts."
+    }
+  ],
+  "overall": "PASS",
+  "verified_at": "2026-08-02T13:30:00Z",
+  "verifier": "independent-agent"
+}

@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-124 |
+| Web (web) | 確定 | 確定質疑: qa-137 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,39 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-124 (対応セル: web)
+### qa-137 (対応セル: web)
 
-**質問**: 顧客持ち込み Google OAuth client の管理 lifecycle を、共有方式を含む auth.web の現行認証契約へどう統合しますか?
+**質問**: ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-115 の production OIDC・共有 Google OAuth・JIT・session・Device Flow 契約を全面維持し、顧客持ち込み方式の管理 lifecycle を追加確定する。【状態】管理 API の新規登録は pending、現行 credential の接続テスト合格は pending のとき tested、明示的な有効化だけが active、無効化は disabled とする。認証解決対象は active のみで、顧客方式の失敗・無効化から共有方式へ暗黙 fallback しない。【再開】disabled の古い credential を直接 active に戻さない。新しい client ID / secret / 許可 Workspace ドメインを staging すると pending へ戻り、pending テスト合格後の有効化でのみ active へ進む。【切替】1 テナント 1 Google 行の制約を維持し、client ID・secret・方式・許可ドメインを staging へ一式保存して、テスト済みの一式を同一更新で昇格する。昇格前と取消後は現行 credential でログインを継続する。【検証境界】token endpoint の不正 code probe は discovery と client ID / secret の疎通確認であり、Google Console の redirect URI 一致は証明しない。有効化後の実ブラウザ login を別の完了ゲートとする。
+**回答**: ユーザーの 2026-08-02 指示を明示承認として、qa-115 / qa-124 / qa-133 の既確定 (テナント別 OIDC・role 4 種・単一認可ミドルウェア・Device Flow・production OIDC・session・access token・deny-by-default) を全面維持したうえで、scope 解決の入力系統を次のとおり追加確定する。
+
+【1. 判定順と既定拒否】authorize() の判定順 (public → 認証 → scope 一意性 → tenant 一致 → workspace 所属) と deny-by-default は変更しない。本件は判定の緩和ではなく、判定へ渡す scope の入力系統を定義するものである。
+
+【2. scope 解決の入力 2 系統】(a) 明示ヘッダー = API / 機械クライアント (Publisher・CLI・Device Flow token 保持クライアント)、(b) session の active tenant/workspace = ブラウザ通常遷移、の 2 系統を正規入力とする。両方が存在し値が一致しない場合は ambiguous_scope として拒否する (どちらかを黙って優先しない)。いずれも存在しない場合は従来どおり missing_tenant_scope とする。
+
+【3. session への active workspace 束縛】session に active workspace を束縛できるのは、principal の所属検証を通過した workspace だけとする。切替のたびに所属を再検証し、検証を通らない値は session へ書かない。session に保持した値を所属検証の代替に使わない。
+
+【4. Device Flow の現行制約維持】確認コードの制約 (英数 8 文字 / 有効期限 10 分 / 5 回失敗で無効 / 使用済み再利用不可 / 期限切れは CLI 側でやり直し) は現行のまま変更しない。approve 時に選択した Workspace の範囲を超える権限を付与しない。
+
+【5. Web 公開経路の権限境界】S01 Web 公開ウィザード経由の公開は Device Flow token を用いず、通常の session 認可で行う。CLI 経路と Web 経路で権限境界 (作成者を owner に固定・現在の tenant/workspace scope 内に限定) を同一にし、Web 経路が CLI 経路より広い権限を持たない。
+
+【6. サインイン後 redirect の安全性】サインイン後の戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・protocol-relative は既定着地へ落とす。戻り先の解決結果に対しても通常の authorize() を適用し、redirect を認可の迂回路にしない。
+
+### qa-133 (対応セル: web)
+
+**質問**: 未認証では deny-by-default の `/catalog` を、通常の session 秘密を GitHub Actions へ渡さずに Core Web Vitals で実測するため、最小権限の認証・セキュリティ・CI・検証契約を web 仕様へどう統合しますか?
+
+**回答**: ユーザーの 2026-08-02 確認『ok』を明示承認として、qa-123/124/128/130/132 の既存の production OIDC・session・access token・deny-by-default・SLO/CWV・秘密管理・品質ゲートを全面維持し、CWV 専用 credential を追加確定する。
+
+【1. 専用 credential】GitHub Actions と Worker が共有する `CWV_PROBE_SECRET` だけで HS256 の短命 JWT を検証する。claim は `typ=cwv_probe`、`aud=harness-hub-cwv`、正規 origin、固定 tenant/workspace、iat/exp とし、有効期間は最大 5 分である。通常の `AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、利用者 session、Publisher token を CI/成果物へ渡さず、CWV credential はユーザー主体・OIDC・Device Flow・外部 API の新たな認証方式ではない。
+
+【2. 到達境界】bootstrap は HTTPS の `GET /catalog` だけで、署名・audience・origin・時間・tenant/workspace をすべて検証した後、URL の ticket を除去する 307 redirect と `__Host-harness-hub.cwv-probe` (Secure / HttpOnly / SameSite=Strict / Path=/ / 最大 5 分) を返す。以後は `GET`/`HEAD` の catalog 画面と catalog が使う読み取り API だけを許可する。書込み、install、publish、管理 API、別 tenant/workspace、別 origin、method 違い、欠損/期限切れ/改ざん ticket は deny-by-default で拒否する。scope は ticket の署名済み claim だけを既存認可層へ渡し、query/header の任意値で昇格しない。
+
+【3. 秘密と露出】ticket は redirect 後 URL、HTTP リファラ、Lighthouse JSON、CWV report、Actions ログ、artifact のいずれにも残さない。bootstrap 応答は `Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付け、workflow は ticket を mask し、artifact を upload 前に secret/ticket を除去・検査する。secret の値は source、wrangler 設定、文書、テスト fixture に保存しない。`CWV_PROBE_SECRET` の rotate は既存 ticket を即時無効化する。
+
+【4. 構成と運用】Worker Secret は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、GitHub Actions secret は対応する `HUB_CWV_PROBE_*` とする。自由入力の target URL は廃止し、`HUB_PUBLIC_URL` の同一 HTTPS origin の `/catalog` だけを対象にする。secret 投入・read-only 代表 tenant/workspace 選定・本番 deploy・最初の実 Lighthouse は外部状態を変える follow-up であり、投入前/失敗時は未計測として fail-closed で可視化し、good と数えない。
+
+【5. 検証】JWT mint/verify、期限・audience・origin・scope・method・tenant/workspace の負例、cookie/bootstrap の URL 除去・属性、認可規則の read-only 境界、workflow target/secret/artifact sanitizer、wrangler secret 台帳、対象 Vitest、task/system-spec/dev-graph/doc gate を repository 内で検証する。実環境の secret 権限と Lighthouse 成功は静的検証で代替せず、Beads を外部実測完了まで open に保つ。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

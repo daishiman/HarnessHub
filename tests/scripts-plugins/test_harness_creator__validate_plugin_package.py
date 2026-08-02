@@ -5,7 +5,7 @@ plugin.json 必須キー (PKG-002)・skill/agent 名前衝突 (PKG-003)・SKILL.
 (PKG-004)・subagent_refs 整合 (PKG-005) を担当する。
 
 PKG-006〜014 は test_harness_creator__validate_plugin_package_s2.py、run_checks と main
-は test_harness_creator__validate_plugin_package_cli.py が担当する (500 行上限による分割)。
+は test_harness_creator__validate_plugin_package_cli.py が担当する (検査責務の分離)。
 共有 fixture は _validate_plugin_package_fixtures.py に集約している。
 
 実 repo の plugins は一切書き換えず、全 fixture は tmp_path 配下に構築する。
@@ -221,6 +221,26 @@ def test_pkg_003_symlink_not_owner(tmp_path):
     assert MOD.check_pkg_003(a) == []
 
 
+def test_pkg_003_identical_feedback_copy_is_source_owned(tmp_path):
+    """Distributable feedback copies share the canonical namespace owner."""
+    source_plugin = _plugin(tmp_path, "harness-creator")
+    copied_plugin = _plugin(tmp_path, "publisher")
+    _write_plugin_json(source_plugin, {"name": "harness-creator"})
+    _write_plugin_json(copied_plugin, {"name": "publisher"})
+    source = _write_skill(source_plugin, "run-skill-feedback", _full_required_fm())
+    copied = _write_skill(copied_plugin, "run-skill-feedback", _full_required_fm())
+    (source.parent / "workflow-manifest.json").write_text('{"version": 1}\n', encoding="utf-8")
+    (copied.parent / "workflow-manifest.json").write_text('{"version": 1}\n', encoding="utf-8")
+
+    assert MOD.check_pkg_003(source_plugin) == []
+    assert MOD.check_pkg_003(copied_plugin) == []
+
+    (copied.parent / "workflow-manifest.json").write_text('{"version": 2}\n', encoding="utf-8")
+    findings = MOD.check_pkg_003(copied_plugin)
+    assert len(findings) == 1
+    assert "run-skill-feedback" in findings[0]["evidence"]
+
+
 def test_pkg_003_agent_name_collision(tmp_path):
     a = _plugin(tmp_path, "demo")
     b = _plugin(tmp_path, "other")
@@ -360,5 +380,3 @@ def test_pkg_005_all_declared_present(tmp_path):
     fm = _full_required_fm() + "\nsubagent_refs:\n  - judge"
     _write_skill(p, "sk", fm)
     assert MOD.check_pkg_005(p) == []
-
-

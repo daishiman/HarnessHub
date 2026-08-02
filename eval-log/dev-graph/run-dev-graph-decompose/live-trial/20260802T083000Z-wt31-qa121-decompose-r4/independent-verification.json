@@ -1,0 +1,20 @@
+{
+  "reviewer": "codex-independent-evaluator-eval_decompose_trial_r4-20260802",
+  "verdict": "FAIL",
+  "blockers": [
+    "Explore child が禁止された Bash redirection/pipe/head を使用した",
+    "beads 系列の namespaced Skill は Unknown skill となり、短縮名の別 tool call へ fallback したため、task.md の逐語的な Skill call 数/形と一致しない"
+  ],
+  "no_user_intervention": true,
+  "observations": {
+    "dag_and_granularity": {"result": "pass", "value": "各 binding は architecture=1、feature=4、task=0、edge=3、acyclic、max depends_on=1 <= 3"},
+    "draft_publication_gate": {"result": "pass", "value": "draft feature 3件は理由付きで publication 0"},
+    "sole_candidate": {"result": "pass", "value": "feat-user-auth-001 だけが confirmed/pass/complete"},
+    "binding_routes": {"result": "pass", "value": "beads/none は別 fixture、run_binding_attested=true、github macro-only は到達不能"},
+    "measured_writes": {"result": "pass", "value": "pre/post 差分、stdin schema、全5 resend noop/write_count=0"},
+    "confirmation_digest": {"result": "pass", "value": "beads=80a7c2f9013590278eb2fdc370ad8751ecba28dd61ca0b1356c36bbe2e5b5500、none=86e731691847bf1c82a924e9fdc7031aa6ffc1e0e271ff947c5b81afa3f3c267"},
+    "negative_controls": {"result": "pass", "value": "両 audit pass、implementation sha256=be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f"}
+  },
+  "recoverable_failures": "missing want と blank variable の失敗は relevant write 0 で同 step 内に正規操作が成功したため単独 blocker ではない",
+  "evidence": ["task.md", "out/status.json", "/Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-31/f13ff109-5bcc-4cde-8ef5-1042388cf5fa.jsonl"]
+}

@@ -1,6 +1,6 @@
 """Task graph の shape 移行・coupling・target shape 検査。
 
-`validate-task-graph.py` の CLI と基礎整合性検査を 500 行以下へ保つため、
+`validate-task-graph.py` の CLI と基礎整合性検査から、
 shape 固有の検査だけを分離する。公開 CLI は引き続き
 `validate-task-graph.py` が所有する。
 """

@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-08-02T12:47:00Z",
+  "generation_id": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3",
+    "published_digest": "sha256:41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/41703dfa2d58592414ffcbd8182dfa762f08727b325a065b950d89efe75cb7f3/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+  "evaluated_digest": "sha256:ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+  "published_digest": "sha256:ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/dev-graph-registration.json"
+}

@@ -1,0 +1,30 @@
+{
+  "target": {
+    "plugin": "harness-hub-publisher",
+    "skill": "run-publisher-publish",
+    "skill_md_sha256": "b1b4b7726a88f08fe1418487639e4743d746259fc8c1cf82f1cccac5353d9821"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "codex-final-review",
+  "reviewed_at": "2026-08-02T17:20:00+09:00",
+  "iterations": 1,
+  "human_review_required": false,
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2"],
+    "positive_feedback": [
+      "完全性: manifest、slash command、Skill、実行script、CLIの各面と Marketplace/Bundle/CI lint被覆が揃い、plugin-package-checkとplugin-completenessが通る。",
+      "一貫性: Skill固有のfeedback_contractが内側の機械確認と外側の利用者安全性を分離し、content-review記録のcriteria_evaluatedが全4条件を覆う。",
+      "検証可能性: Publisher test 19 files/110 passed/4 todo、typecheck、Biome、秘密情報平文保存検査、共有層重複検査、task plan検証を再実行し、すべて通過した。"
+    ],
+    "negative_feedback": [
+      "実サービスを使うmacOS/Windowsのpublish E2Eおよび初回15分測定は、この静的レビューとローカル自動試験の評価範囲外であり未達である。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "manual-final-review",
+    "next_action": "none"
+  },
+  "notes": "5観点（完全性・一貫性・深度・検証可能性・簡潔性）を確認。静的な配布SurfaceとしてPASS。ただし外部サービス実機受入の残課題はrelease-record.mdに従いfail-closedで保留する。"
+}

@@ -7,6 +7,13 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-02: prompt の行数ゲートをコードから分離
+
+- `HarnessHub-hls0` で、一般コード・テストの一律 500 行分割を廃止し、`SKILL.md` 本文 300 行と
+  skill `prompts/*.md|yaml` 500 行の機械ゲートへ分離した。
+- 製品 API・DB・認証・UI・Cloudflare deploy unit は変更しない。仕様・設計の反映、既存 task package を
+  書き換えない理由、検証結果は [仕様反映受領書](prompt-line-budget-spec-reflection-receipt.md) を正とする。
+
 ## 2026-07-26 最終レビュー追記
 
 - C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。

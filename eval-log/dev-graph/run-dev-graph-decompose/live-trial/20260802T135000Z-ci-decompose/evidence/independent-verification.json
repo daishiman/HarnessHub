@@ -1,0 +1,73 @@
+{
+  "verifier": "independent-agent",
+  "timestamp": "2026-08-02T23:15:00Z",
+  "required_observations": {
+    "criterion_1_dag_acyclic": {
+      "status": "PASS",
+      "evidence": "5 nodes total (1 architecture + 4 features). Cycle detection via DFS found 0 cycles. 0 task-granularity nodes (artifact_kinds present: architecture, feature). feature_count=4 <= max_value=10 (declared_granularity_threshold from goal-spec). DAG edges: feat-user-dashboard->feat-user-auth, feat-email-notification->feat-user-auth, feat-admin-report->[feat-user-auth, feat-user-dashboard]. All edges verified as forward-only with no back-edges."
+    },
+    "criterion_2_draft_gate_zero": {
+      "status": "PASS",
+      "evidence": "All 4 draft/unconfirmed/evaluation-non-pass nodes have zero tracker publications: beads_linkage=null, issue_linkage=null, github_publication.mode=local_only.",
+      "zero_reasons": {
+        "arch-web-app-stack": "confirmation_status=draft, evaluation_status=pending: node has never been evaluated or confirmed, so the publication gate (which requires confirmed+pass+readiness-complete) blocks all external publication. beads_linkage=null because no bd-bridge run has occurred for an unevaluated node. issue_linkage=null because github.enabled=false in config and the gate blocks it. mode=local_only because the schema allOf[14] enforces local_only for tracker_binding=beads.",
+        "feat-user-dashboard": "confirmation_status=draft, evaluation_status=pending: the C14 macro-evaluation did not promote this feature (readiness incomplete, no artifact completeness check passed). beads_linkage=null because draft features are excluded from bd-bridge issue creation. issue_linkage=null because the publication gate blocks pre-confirmation publication. mode=local_only enforced by schema for tracker_binding=beads.",
+        "feat-email-notification": "confirmation_status=draft, evaluation_status=pending: same as feat-user-dashboard, not promoted by C14. Additionally tracker_binding=none, which by schema allOf[17] forces beads_linkage=null and mode=local_only. issue_linkage=null because the binding is none (no external tracker at all).",
+        "feat-admin-report": "confirmation_status=draft, evaluation_status=pending: not promoted by C14 macro-evaluation. beads_linkage=null because draft features are excluded from bd-bridge. issue_linkage=null because publication gate blocks it. mode=local_only enforced by schema for tracker_binding=beads."
+      }
+    },
+    "criterion_3_exclusion_vs_promotion": {
+      "status": "PASS",
+      "evidence": "Exactly 1 feature (feat-user-auth) is confirmed/pass/readiness-complete with status=active. 3 features remain draft (feat-user-dashboard, feat-email-notification, feat-admin-report) with confirmation_status=draft, evaluation_status=pending, implementation_readiness.status=incomplete. The exclusion is a decision of the publication gate: each draft feature has a written artifact file in features/ (feat-user-dashboard.md, feat-email-notification.md, feat-admin-report.md all exist with non-zero size), confirming that content was generated but the gate withheld promotion because the C14 macro-evaluation did not pass them (readiness incomplete). The files exist (3954, 3836, 3890 bytes respectively), so the exclusion is not due to missing content."
+    },
+    "criterion_4_binding_routes": {
+      "status": "PASS",
+      "evidence_beads": "4 nodes have tracker_binding=beads: arch-web-app-stack, feat-user-auth, feat-user-dashboard, feat-admin-report. The beads binding route is active.",
+      "evidence_none": "1 node has tracker_binding=none: feat-email-notification. The none binding route is present.",
+      "evidence_github_unreachable": "0 nodes have tracker_binding=github. Schema rule chain that makes github structurally unreachable for features: (1) allOf[13] at schema line ~1433: tracker_binding=github requires github_publication.mode in [issue, issue_and_projects]. (2) allOf[12] at schema line ~1228: github_publication.mode=issue|issue_and_projects requires artifact_kind in [issue, task] AND confirmation_status=confirmed AND evaluation_status=pass AND implementation_readiness.status=complete. (3) Combined: tracker_binding=github is impossible for any node with artifact_kind=feature because the mode constraint forces artifact_kind to be issue or task. Additionally, domain_findings() in validate-graph-schema.py line 289 enforces that tracker_binding=github cannot have beads_linkage != null (binding_collision check). Falsification proof: synthetic graph with feat-user-dashboard set to tracker_binding=github + mode=issue was rejected with 4 violations: artifact_kind not in [issue,task], confirmation_status != confirmed, evaluation_status != pass, readiness != complete."
+    },
+    "criterion_5_write_counts_from_diff": {
+      "status": "PASS",
+      "pre": {
+        "graph_sha256": "f4273afd63c3b4fdc0d415253904f65b2c9b014ffb132b5f8407d8e50a789a9c",
+        "feature_file_count": 0,
+        "architecture_file_count": 0,
+        "graph_revision": 0,
+        "node_count": 0
+      },
+      "post": {
+        "feature_file_count": 4,
+        "feature_files": ["feat-admin-report.md", "feat-email-notification.md", "feat-user-auth.md", "feat-user-dashboard.md"],
+        "architecture_file_count": 1,
+        "architecture_files": ["arch-web-app-stack.md"],
+        "graph_revision": 9,
+        "node_count": 5
+      },
+      "diff": {
+        "feature_files_added": 4,
+        "architecture_files_added": 1,
+        "graph_revision_delta": 9,
+        "nodes_added": 5,
+        "derivation": "post counts read from filesystem ls of features/ and architecture/ (excluding .gitkeep). graph_revision read directly from .dev-graph/state/graph.json. Pre-run values from eval-log/pre-run-state.json."
+      }
+    },
+    "criterion_6_digest_match": {
+      "status": "PASS",
+      "stored": "e2084086acb3507cdf71887628e1a17bd5089026ada538b75ff924d3a5fcadc1",
+      "recomputed": "e2084086acb3507cdf71887628e1a17bd5089026ada538b75ff924d3a5fcadc1",
+      "match": true,
+      "recipe": "sha256(json.dumps({k: v for k, v in node.items() if k != 'confirmation_evidence'}, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest()",
+      "excluded_fields": ["confirmation_evidence"]
+    },
+    "criterion_7_gate_falsifiable": {
+      "status": "PASS",
+      "violation_detail": "Synthetic graph with feat-user-dashboard.tracker_binding=github and github_publication.mode=issue was rejected by validate-graph-schema.py via stdin. Exit code=1, valid=false. 4 violations reported: (1) $.artifact_kind: not in enum ['issue', 'task'] -- feature kind is not allowed for github publication mode. (2) $.confirmation_status: expected const 'confirmed' -- draft status blocked. (3) $.evaluation_status: expected const 'pass' -- pending status blocked. (4) $.implementation_readiness.status: expected const 'complete' -- incomplete readiness blocked. The schema gate is falsifiable: it demonstrably rejects the mutation."
+    },
+    "criterion_8_stdin_validation": {
+      "status": "PASS",
+      "valid": true,
+      "detail": "Final graph validated via stdin path (--graph - --repo-root <repo>). validate-graph-schema.py returned valid=true, violations=[], exit code=0. File system scan before and after validation confirmed 0 new files created inside the managed repository, proving no temp file was written (the stdin path avoids the contained() constraint that would require writing to the repo)."
+    }
+  },
+  "overall": "PASS"
+}
