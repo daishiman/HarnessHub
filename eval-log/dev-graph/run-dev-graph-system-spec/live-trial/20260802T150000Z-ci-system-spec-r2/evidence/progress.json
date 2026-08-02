@@ -1,0 +1,32 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "repo_root": "eval-log/dev-graph/live-trial-fixtures/system-spec-ci-rerun-r2-20260802",
+  "gates": {
+    "R0_context": "PASS",
+    "R1_preflight": "PASS",
+    "R2_delegate": "PASS",
+    "R3_import": "PASS",
+    "V1_source_digest": "PASS",
+    "V2_evidence_refs": "PASS",
+    "V3_no_duplicate_logic": "PASS"
+  },
+  "registered_this_run": [
+    "spec-todo-api-system-requirements",
+    "arch-todo-api-backend"
+  ],
+  "evidence": {
+    "elicit": "validate-coverage-matrix.py --require-complete --require-foundation exit 0",
+    "doc_fetch": "validate-source-citation.py exit 0",
+    "compile": "10 files generated",
+    "completeness_evaluator": "aggregate-completeness.py --report exit 0, verdict=PASS",
+    "nodes_registered": [
+      "spec-todo-api-system-requirements",
+      "arch-todo-api-backend"
+    ]
+  },
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  }
+}

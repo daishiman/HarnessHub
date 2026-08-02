@@ -1,0 +1,514 @@
+{
+  "graph_revision": 9,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "frontend",
+        "data"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/arch-web-app-stack.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "macro decomposition architecture node for web app stack",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T13:44:50Z",
+      "depends_on": [],
+      "domain": "platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-web-app-stack.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-web-app-stack",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "web-app",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [
+        "src/"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:44:50Z",
+        "origin_kind": "generated",
+        "source_digest": "c2706bc9bec6ba5b331eb9a768c4ab23fa86666885f6c5d2231203fc458c4941",
+        "source_path": "eval-log/macro-decomposition-brief.json",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "web",
+        "fullstack"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "小規模Webアプリ技術スタック",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T13:44:50Z"
+    },
+    {
+      "acceptance": [
+        "新規ユーザーがメールアドレスとパスワードで登録できる",
+        "登録済みユーザーがログイン・ログアウトできる",
+        "未ログインユーザーが保護ページにアクセスするとログイン画面にリダイレクトされる"
+      ],
+      "architecture_refs": [
+        "arch-web-app-stack"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-user-auth.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "macro decomposition feature for user authentication",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "e2084086acb3507cdf71887628e1a17bd5089026ada538b75ff924d3a5fcadc1",
+        "evaluator": "run-dev-graph-decompose/C14-macro-evaluation",
+        "evidence_ref": "eval-log/run-dev-graph-decompose-progress.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-02T13:45:37Z",
+      "depends_on": [],
+      "domain": "auth",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-user-auth.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "メールアドレスとパスワードでユーザー登録・ログイン・ログアウトが動作し、認証状態がセッションで維持される状態",
+      "graph_node_id": "feat-user-auth",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T13:48:28Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "web-app",
+      "pull_request_linkages": [],
+      "purpose": "ユーザーが自分のアカウントを作成し、安全にログインしてサービスを利用できるようにする",
+      "related_nodes": [
+        "arch-web-app-stack"
+      ],
+      "resource_scope": [
+        "src/auth/"
+      ],
+      "scope_in": [
+        "ユーザー登録フォームとバリデーション",
+        "ログイン・ログアウト処理",
+        "パスワードハッシュ化と安全な保存",
+        "セッション管理"
+      ],
+      "scope_out": [
+        "OAuth/ソーシャルログイン連携",
+        "二要素認証",
+        "パスワードリセット機能"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:45:37Z",
+        "origin_kind": "generated",
+        "source_digest": "c2706bc9bec6ba5b331eb9a768c4ab23fa86666885f6c5d2231203fc458c4941",
+        "source_path": "eval-log/macro-decomposition-brief.json",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "auth",
+        "registration",
+        "login"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ユーザー登録・ログイン機能",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T13:51:42Z"
+    },
+    {
+      "acceptance": [
+        "ログイン後にダッシュボード画面が表示される",
+        "自分の利用回数・最終利用日時が表示される",
+        "他ユーザーのデータは表示されない"
+      ],
+      "architecture_refs": [
+        "arch-web-app-stack"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-user-dashboard.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "macro decomposition feature for user dashboard",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T13:45:37Z",
+      "depends_on": [
+        "feat-user-auth"
+      ],
+      "domain": "dashboard",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-user-dashboard.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ログイン後にダッシュボード画面が表示され、自分の利用履歴・統計情報が確認できる状態",
+      "graph_node_id": "feat-user-dashboard",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "web-app",
+      "pull_request_linkages": [],
+      "purpose": "ログイン済みユーザーが自分の利用状況をひと目で把握できるようにする",
+      "related_nodes": [
+        "arch-web-app-stack"
+      ],
+      "resource_scope": [
+        "src/dashboard/"
+      ],
+      "scope_in": [
+        "ダッシュボード画面のレイアウトとUI",
+        "利用状況データの取得と表示",
+        "ログインユーザーごとのデータフィルタリング"
+      ],
+      "scope_out": [
+        "リアルタイム更新",
+        "カスタムウィジェット",
+        "データエクスポート機能"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:45:37Z",
+        "origin_kind": "generated",
+        "source_digest": "c2706bc9bec6ba5b331eb9a768c4ab23fa86666885f6c5d2231203fc458c4941",
+        "source_path": "eval-log/macro-decomposition-brief.json",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "dashboard",
+        "usage"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "ユーザーダッシュボード",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T13:45:37Z"
+    },
+    {
+      "acceptance": [
+        "ユーザー登録完了時に確認メールが送信される",
+        "重要な変更があった場合に通知メールが送信される",
+        "メール送信失敗時にエラーがログに記録される"
+      ],
+      "architecture_refs": [
+        "arch-web-app-stack"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-email-notification.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "macro decomposition feature for email notifications",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T13:45:37Z",
+      "depends_on": [
+        "feat-user-auth"
+      ],
+      "domain": "notification",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-email-notification.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "登録完了時と重要な変更時にメール通知が自動送信され、ユーザーが受信を確認できる状態",
+      "graph_node_id": "feat-email-notification",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "web-app",
+      "pull_request_linkages": [],
+      "purpose": "ユーザーに重要なイベントをメールで確実に通知し、利用体験を向上させる",
+      "related_nodes": [
+        "arch-web-app-stack"
+      ],
+      "resource_scope": [
+        "src/notification/"
+      ],
+      "scope_in": [
+        "メール送信基盤の構築",
+        "登録完了メールの送信",
+        "重要変更通知メールの送信",
+        "メールテンプレート管理"
+      ],
+      "scope_out": [
+        "プッシュ通知",
+        "SMS通知",
+        "メール配信停止設定画面"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:45:37Z",
+        "origin_kind": "generated",
+        "source_digest": "c2706bc9bec6ba5b331eb9a768c4ab23fa86666885f6c5d2231203fc458c4941",
+        "source_path": "eval-log/macro-decomposition-brief.json",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "email",
+        "notification"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "通知メール送信",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-02T13:49:57Z"
+    },
+    {
+      "acceptance": [
+        "運営者がレポート画面にアクセスできる",
+        "全ユーザーの利用回数・登録数の集計が表示される",
+        "一般ユーザーはレポート画面にアクセスできない"
+      ],
+      "architecture_refs": [
+        "arch-web-app-stack"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-admin-report.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "macro decomposition feature for admin reports",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T13:45:37Z",
+      "depends_on": [
+        "feat-user-auth",
+        "feat-user-dashboard"
+      ],
+      "domain": "admin",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-admin-report.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "運営者がログインしてレポート画面で全ユーザーの利用状況集計を閲覧できる状態",
+      "graph_node_id": "feat-admin-report",
+      "implementation_readiness": {
+        "checked_at": null,
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "web-app",
+      "pull_request_linkages": [],
+      "purpose": "運営者が全ユーザーの利用状況を集計して把握し、サービス改善の意思決定を行えるようにする",
+      "related_nodes": [
+        "arch-web-app-stack"
+      ],
+      "resource_scope": [
+        "src/admin/"
+      ],
+      "scope_in": [
+        "運営者用レポート画面のUI",
+        "全ユーザー利用状況の集計ロジック",
+        "運営者認証・認可"
+      ],
+      "scope_out": [
+        "レポートのPDF出力",
+        "カスタムレポート作成",
+        "リアルタイム分析ダッシュボード"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:45:37Z",
+        "origin_kind": "generated",
+        "source_digest": "c2706bc9bec6ba5b331eb9a768c4ab23fa86666885f6c5d2231203fc458c4941",
+        "source_path": "eval-log/macro-decomposition-brief.json",
+        "source_plugin": "run-dev-graph-decompose",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "admin",
+        "report",
+        "analytics"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "運営者向けレポート画面",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T13:45:37Z"
+    }
+  ]
+}
