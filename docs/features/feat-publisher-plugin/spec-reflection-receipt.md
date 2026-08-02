@@ -32,7 +32,7 @@ graph_node_id: feat-publisher-plugin
 
 ## 反映した実行状態
 
-- ローカル実装・型検査・19 test files / 110 tests（4 todo）は成功した。最新の再実行では Statements 89.55% / Branches 94.65% / Functions 89.70% / Lines 89.55%、共有層重複検査は 528 ファイルで違反 0 件だった。
+- ローカル実装・型検査・19 test files / 110 tests（4 todo）は成功した。最新の再実行では Statements / Branches / Functions / Lines の全カバレッジ指標が閾値 80% 以上であり、共有層重複検査は 534 ファイルで違反 0 件だった。
 - pre-check と Hub 検査の同値性（A2）は充足した。
 - fake I/O テストと Windows 手順書は、実サービスを使う E2E や 15 分実測の代替ではない。したがって A1/A3 は未達であり、marketplace 登録依頼を保留する。
 

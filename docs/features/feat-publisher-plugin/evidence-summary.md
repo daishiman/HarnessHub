@@ -152,7 +152,7 @@ P06/P07/P09/P10 の証跡を、実機を持たない第三者が同一コマン�
 
 | コマンド | 結果 |
 |---|---|
-| `pnpm --filter @harness-hub/publisher test` | **19 files / 110 tests passed / 4 todo (114)** — exit 0。Statements 89.55% / Branches 94.65% / Functions 89.70% / Lines 89.55% |
+| `pnpm --filter @harness-hub/publisher test` | **19 files / 110 tests passed / 4 todo (114)** — exit 0。Statements / Branches / Functions / Lines の全カバレッジ指標が閾値 80% 以上 |
 | `pnpm --filter @harness-hub/publisher typecheck` | pass (エラー 0 件) |
 | `pnpm exec biome check apps/publisher packages/schemas/publisher-plugin` | pass |
 

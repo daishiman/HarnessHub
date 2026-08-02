@@ -124,7 +124,9 @@ export async function runPublishCommand(
   // exit code が非 0 でも URL が出力されていれば、Hub は orphan_candidate として追跡できる。
   // URL を捨てると実際に作成された deployment が Hub から見えなくなる。
   if (!deployOutcome.ok) {
-    deps.log(`wrangler deploy は非 0 で終了しました。deployment を orphan_candidate として登録します: ${deployOutcome.errorMessage ?? '不明なエラー'}`);
+    deps.log(
+      `wrangler deploy は非 0 で終了しました。deployment を orphan_candidate として登録します: ${deployOutcome.errorMessage ?? '不明なエラー'}`,
+    );
   }
 
   await registerWranglerDeployment(client, {
