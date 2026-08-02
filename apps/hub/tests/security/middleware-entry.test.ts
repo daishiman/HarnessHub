@@ -271,6 +271,26 @@ describe('CWV 専用 credential の bootstrap', () => {
       expect(catalog.status).toBe(200);
       expect(catalog.headers.get('x-middleware-next')).toBe('1');
 
+      const wrongOrigin = await cwv.middleware(
+        new NextRequest(
+          new URL(
+            `/catalog?tenant=${USER.tenantId}&workspace=${USER.workspaceIds[0]}&__cwv_probe=${cwvTicket}`,
+            'https://other.example',
+          ),
+        ),
+      );
+      expect(wrongOrigin.status).toBe(401);
+
+      const wrongOriginCookie = await cwv.middleware(
+        new NextRequest(
+          new URL(`/catalog?tenant=${USER.tenantId}&workspace=${USER.workspaceIds[0]}`, 'https://other.example'),
+          {
+            headers: { cookie: setCookie },
+          },
+        ),
+      );
+      expect(wrongOriginCookie.status).toBe(401);
+
       const publicPathRejected = await cwv.middleware(
         new NextRequest(new URL('/api/auth/signin', 'https://hub.example.com'), { headers: { cookie: setCookie } }),
       );

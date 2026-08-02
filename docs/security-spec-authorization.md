@@ -250,7 +250,7 @@ export function listSheets(ctx: TenantCtx, cursor?: string): Promise<Sheet[]>  /
 | 認可拒否・**他テナント**のリソース | **`404`** | ID の存在有無を漏らさない (T3 の情報源にしない) |
 | scope 不足 (token) | `403` + `detail` に必要 scope | CLI 側で再認可を促す |
 
-### 3.7.1 CWV probe の最小権限境界（qa-131）
+### 3.7.1 CWV probe の最小権限境界（qa-133）
 
 `credential='cwv_probe'` は role の近道ではない。`harnesses.read` だけが session と共用でき、edge と route の両方で次を満たす場合に限り許可する。
 

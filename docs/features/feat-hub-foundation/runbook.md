@@ -99,7 +99,7 @@ Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers S
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
 
-### 1.1 protected `/catalog` の CWV 実測を有効化する（qa-131）
+### 1.1 protected `/catalog` の CWV 実測を有効化する（qa-133）
 
 > **目的**: 通常ユーザーのログイン鍵を CI に置かず、実際に認証が必要な catalog 画面を計測する。ここで扱う secret の値を issue・文書・shell 履歴・Actions log に貼らない。
 

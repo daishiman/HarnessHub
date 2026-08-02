@@ -37,7 +37,7 @@ Cookie は HttpOnly / Secure / SameSite=Strict / Path=/、bootstrap 応答は `C
 ## 5. 仕様反映の正規フロー
 
 1. `auth.web`、`security.web`、`infrastructure.web`、`testing-qa.web` を R4 reopen した。
-2. ユーザーの 2026-08-02 の「ok」を `appr-024`、設計回答を `qa-131` として single transition writer で再確定した。
+2. main 統合後、ユーザーの 2026-08-02 の「ok」を `appr-025`、設計回答を `qa-133` として single transition writer で再確定した。main の `appr-024` と `qa-131` / `qa-132` は保持する。
 3. C03 compiler で `system-spec/` を再生成した。
 4. C02 import で `specs/` と system-spec 参照 architecture の lineage を更新し、source digest の不整合を検査する。
 5. 詳細仕様、feature、task、runbook、CI secret 台帳、Beads を同期する。
@@ -53,11 +53,12 @@ Cookie は HttpOnly / Secure / SameSite=Strict / Path=/、bootstrap 応答は `C
 
 | ゲート | 結果 |
 | --- | --- |
-| repository 統合 | `pnpm verify` pass（pnpm / 重複 / auth / lint / 全 workspace typecheck / build / Worker build / 全 test / tenant isolation / secrets / drift / bundle / client bundle） |
+| repository 統合 | main 統合後の `pnpm verify` が exit 0（pnpm / 重複 / Worker secret / auth / lint / 全 workspace typecheck / build / Worker build / 全 test / tenant isolation / secrets / drift / bundle / client bundle） |
 | TypeScript と対象回帰 | `pnpm --filter @harness-hub/hub run typecheck` pass、CWV/authz/workflow 台帳の Vitest 5 files・83 tests pass |
 | system-spec | C03 compiler、coverage+foundation、source citation、knowledge / doctrine / required-info / cross graph pass |
 | CWV credential | mint/verify、期限、origin、scope、method/path、URL 除去 Cookie、public path を含む allowlist 外拒否、artifact sanitizer の正負テスト pass |
 | Actions 台帳 | workflow の実参照 16 件と `scripts/ci/actions-secrets-registry.json` の双方向一致 pass |
+| Worker secret 台帳 | `CWV_PROBE_*` を必須として宣言し、台帳 13 件と `apps/hub/wrangler.jsonc` の宣言 10 件の一致 pass |
 | task / graph / 文書 | feat-hub-foundation / feat-dual-catalog-web task spec、C02 source digest、graph schema、evidence refs、artifact placement、300 行上限、`git diff --check` pass |
 
 ## 7. 残課題

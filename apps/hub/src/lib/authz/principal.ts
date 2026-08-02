@@ -34,6 +34,9 @@ export async function resolveRequestPrincipal(
   // 短命 probe cookie が提示された要求は、改ざん時に session/Bearer へ fallback しない。
   // fallback すると cookie を付け替えた攻撃者が別 credential の経路へ滑り込む余地ができる。
   if (deps.cwvProbe !== undefined && readCookie(request.headers.get('cookie'), CWV_PROBE_COOKIE_NAME) !== null) {
+    // claim と設定値の照合だけでは、同一 Worker に紐づく別 custom domain まで使えてしまう。
+    // route を middleware を通さず unit/integration 実行しても同じ境界を守るため、ここでも request origin を固定する。
+    if (new URL(request.url).origin !== deps.cwvProbe.origin) return null;
     return resolveCwvProbePrincipal(request.headers.get('cookie'), deps.cwvProbe, deps.nowSeconds);
   }
   const bearer = readBearerToken(request.headers.get('authorization'));

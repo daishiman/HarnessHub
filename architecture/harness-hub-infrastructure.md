@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T08:32:31.653436Z"
+updated_at: "2026-08-02T09:02:28.303313Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"fe2ef626f06de681c39979e67255940fa0f57832b017378c0e929edcea7c1b07","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"50cd1d223a33474217da9e4095b4db990907d7fa14de7fddd5afdad7b6abdf4c","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T09:01:07Z","origin_kind":"system-spec-harness","source_digest":"20b9875658b579068eb5bae0d166829bd019091ad4dfaa38db213c2523cff58a","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -118,16 +118,6 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Google client secretやテナント別`IDP_SECRET_*`を追加しない。
 - 現行rolloutの外部受入はGoogle/HarnessHub 1テナント。複数テナント分離試験を維持し、
   「本番1件」と「製品が単一テナント」を混同しない。
-
-**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-131)**:
-
-- `hub-cwv` は自由入力 URL を受けず、`HUB_PUBLIC_URL` の HTTPS `/catalog` にだけ短命 ticket を
-  発行する。必須設定が無い場合は未計測を成功扱いにせず fail-closed で停止する。
-- Worker は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、Actions は
-  対応する `HUB_CWV_PROBE_*` を用途限定で使う。標準の auth secret やユーザー credential を
-  GitHub に複製しない。
-- Lighthouse upload 前に ticket を除去・検査し、集計 report には ticket を含まない URL だけを残す。
-  secret の投入、read-only scope 選定、main deploy、初回成功は外部 follow-up として Beads を open に保つ。
 - R1〜R5はprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
   refresh再利用失効、session revocationまで本番実測し、release recordへ記録する。
 
@@ -178,6 +168,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、実測は
   [hearing intake P13 release notes](../docs/features/feat-hearing-intake/release-notes.md) とする。
 
+**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-133)**:
+
+- `hub-cwv` は任意 URL を受けず、`HUB_PUBLIC_URL` の HTTPS `/catalog` だけへ短命 ticket を発行する。必須設定が無い場合は未計測を成功扱いにせず fail-closed で停止する。
+- Worker は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、Actions は対応する `HUB_CWV_PROBE_*` を用途限定で使い、標準 auth secret やユーザー credential を GitHub に複製しない。
+- Lighthouse upload 前に ticket を除去・検査し、secret 投入、read-only scope 選定、main deploy、初回成功までは Beads を open に保つ。
+
 ## Risks and verification
 
 正本章 (system-spec/infrastructure.md, system-spec/maintenance-ops.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -203,8 +199,18 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 **deploy検証追補 (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**
 
 - pipeline順序を`required settings preflight → migration → deploy → health →
-  OIDC start-flow smoke → DB/R2 smoke`に固定する。
-- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2失敗は
+  OIDC start-flow smoke → DB/R2 smoke`に固定する。2026-08-02 (`SYS-HEARING-INTAKE-P13`) に
+  `→ hearing実データE2E/SEC8 smoke`を末尾へ追加した。追加分も新規secretを要求せず、
+  失敗は同じrollback判定へ入る。
+- **Worker secret実投入検査を preflight の直後へ挿入 (2026-08-02 / `HarnessHub-o2i.13`)**:
+  既存preflightは**GitHub側**のsecret/variableしか見ず、Worker自身が読むCloudflare Secretは
+  別の入れ物なので検査対象外だった。`wrangler.jsonc`の`secrets.required`は宣言、
+  既存testはその宣言の検査であり、どちらも実投入を測らない。GitHub側にだけ`--live`があって
+  Cloudflare側に等価物が無いという非対称が穴の本体である。`check-worker-secrets.mjs --live`が
+  台帳↔宣言↔実投入を三方向で突合する。migrationより前に置くのでDBもWorkerも前進しない。
+- hearing smoke のfixture生成とcleanupはそれぞれ1 transactionに閉じる。生成途中に失敗して
+  tenant ID を呼び出し側へ返せなくても部分行を残さず、cleanup後は全対象表の残行数0を確認する。
+- preflight失敗はdeploy前失敗なのでrollback対象なし。deploy成功後のhealth/OIDC/DB-R2/hearing失敗は
   直前Workerへrollbackし、DBはexpand-onlyのため前進状態を維持する。
 - OIDC smokeは秘密値を保持せず、tenant provider・canonical callback・未知tenant拒否・
   CSRF・Google 302・state/nonce/PKCEを検査する。Google callback後の実ログインは
