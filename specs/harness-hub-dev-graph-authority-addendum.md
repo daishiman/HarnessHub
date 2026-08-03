@@ -34,7 +34,7 @@ evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7fd613b24a1b65b21cecae6e7bb54c3b68841ed485662409ae8346ee66df9d91","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
 source_lineage: {"imported_at":"2026-08-02T13:18:41Z","origin_kind":"system-spec-harness","source_digest":"d354adf3f05a030b4cb514285777099ed0c4d457213d66affdd14f3a3bc71682","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.99
-classification_reason: "qa-138 の Dev Graph / Beads authority 契約を aggregate から 500 行制限に従って分冊する仕様追補"
+classification_reason: "qa-138 の Dev Graph / Beads authority 契約を aggregate から、qa-134 の責務境界と qa-070 文書行数ゲートに従って分冊する仕様追補"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-dev-graph-authority-addendum.md","confidence":0.99},{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.64}]
 issue_linkage: null
 tracker_binding: "none"
@@ -87,7 +87,7 @@ Dev Graph と Beads の正本更新を、事前遮断・実行後監査・保存
 - Safety: 未検査・不正形状・初回 invalid state を成功へ読み替えない。
 - Maintainability: script-file の意味解析を C10 に重複実装せず、責務を三層へ分離する。
 - Portability: 証拠と契約 path はリポジトリ相対で保存する。
-- Size: 手書きの変更対象ファイルは 500 行以下を維持する。
+- Size: ソースコードとテストには一律の数値行数上限を設けず、責務境界と変更容易性で分離する。実行時 context の `SKILL.md` 本文は 300 行、`prompts/*.md|yaml` は 500 行、qa-070 の正規文書は 300 行を、それぞれ機械検査する。
 
 ## UI・状態遷移
 

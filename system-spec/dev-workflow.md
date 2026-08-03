@@ -141,8 +141,11 @@ receipt 出力だけを保持する。判定処理は次の四責務へ分離す
 分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
 Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
 注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
-変更対象の手書きファイルは 500 行以下に保ち、分割先は harness coverage の scripts 分母へ
-追加しない `plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
+`HarnessHub-w7n7` の実装時点では変更対象の手書きファイルを 500 行以下に保つ運用目標を採った。
+ただし qa-134 により、ソースコードとテストの一律数値上限は廃止済みであり、現在は責務境界と変更容易性で
+分離する。`SKILL.md` 本文 300 行、`prompts/*.md|yaml` 500 行、qa-070 の正規文書 300 行は個別の
+機械ゲートとして維持する。分割先は harness coverage の scripts 分母へ追加しない
+`plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
 UI、Cloudflare deploy unit は変更しない。判断と最終検証は
 `docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
 を正とする。

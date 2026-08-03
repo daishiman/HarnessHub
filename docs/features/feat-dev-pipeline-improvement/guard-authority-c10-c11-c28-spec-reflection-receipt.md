@@ -95,13 +95,33 @@ live-trial fixture の sync 責務は `live_trial_sync_contract.py` へ分離し
 | Gate | 結果 |
 |---|---|
 | system plan exact P01-P13 / semantic coverage | PASS、violations 0、digest `af8a73df…` |
-| graph schema / canonical envelope | PASS、revision 1157、violations 0 |
-| focused Dev Graph pytest | PASS、163 passed in 20.05s |
-| full Dev Graph pytest | PASS、799 passed + 5 subtests in 143.83s |
-| live-trial acceptance | PASS、9 verdicts verified、task contract violations 0、incremental reuse 9 / run 0 / defer 0 |
+| graph schema / canonical envelope | PASS、revision 1178、violations 0 |
+| criteria evidence pytest | PASS、22 passed |
+| full Dev Graph pytest | PASS、805 passed + 5 subtests in 378.08s |
+| live-trial acceptance | PASS、9 verdicts verified、task contract violations 0（C02/C03/C14/C19 を現行 closure で再取得） |
 | repository CI | PASS 139 / WARN 5 / FAIL 0（WARN は段階導入中の既存項目） |
-| document line limit / diff check | PASS、524 文書・上限 300・allowlist 0、`git diff --check` clean |
-| spec reflection receipt | PASS、競合解消後 HEAD `aa8f30aa` と main `a67bbeff` への統合を本受領書へ記録 |
+| document line limit / artifact placement / diff check | PASS、528 文書・上限 300・allowlist 0、配置違反 0、`git diff --check` clean |
+| spec reflection receipt | 本変更の commit 後、HEAD-bound 機械受領書を再記録する |
+
+### CI 証跡更新と行数契約の明確化 (2026-08-03)
+
+latest main 統合後に CI が失敗した直接原因は、C02/C03/C14/C19 の live-trial verdict に記録された
+`skill_dir_tree_sha` が、統合後の skill directory と一致しなくなったことであり、500 行ゲートの不一致ではない。
+各 trial は現行 skill を対象に再実行し、別 evaluator が観測値と closure digest を再計算して確認する。
+
+あわせて `specs/harness-hub-dev-graph-authority-addendum.md` に残っていた「手書き変更対象は 500 行以下」
+という一般表現を qa-134 に同期した。現行の正本は、ソースコード／テストを一律の数値で制限せず責務で分離し、
+`SKILL.md` 本文 300 行、`prompts/*.md|yaml` 500 行、qa-070 正規文書 300 行だけを機械ゲートにする。
+この訂正は repository の開発品質契約の表現整合であり、製品 API、DB schema、認証認可、UI、Cloudflare deploy
+unit への影響はない。
+
+### 正規 C02 登録 (2026-08-03)
+
+配置ゲートが追補仕様の graph projection 不在を検出したため、
+`spec-harness-hub-dev-graph-authority-addendum` を C02 `upsert-node.py` の dry-run 後に登録した。
+本文は `preserved`、operation は `added`、graph revision は 1177 から 1178 となり、canonical envelope・
+frontmatter・artifact placement を再検証して violations 0 を確認した。入力は
+`eval-log/dev-graph/c02-authority-addendum-registration/authority-addendum-input.json` に保持する。
 
 ## 最新 main 統合の受領
 
