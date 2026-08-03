@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1180,
+  "graph_revision": 1187,
   "nodes": [
     {
       "acceptance": [
@@ -28,8 +28,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c",
-        "evaluator": "validate-coverage-matrix.py --require-complete",
+        "evaluated_digest": "3eae709fbdd156e34265e15ba997c7466d6767c518fa33bb4f1217ff4c27f2d0",
+        "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
         "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T11:50:05Z",
+        "imported_at": "2026-08-03T04:40:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c",
+        "source_digest": "3eae709fbdd156e34265e15ba997c7466d6767c518fa33bb4f1217ff4c27f2d0",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T11:50:05Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -12999,9 +12999,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4",
-        "evaluator": "codex-final-review (HarnessHub-cvli)",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"
+        "evaluated_digest": "f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598",
+        "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13056,9 +13056,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T00:00:00Z",
+        "imported_at": "2026-08-03T04:56:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4",
+        "source_digest": "f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13074,7 +13074,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T00:00:00Z"
+      "updated_at": "2026-08-03T04:56:00Z"
     },
     {
       "acceptance": [
@@ -25402,7 +25402,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:49:05.376000Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -26732,7 +26732,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T02:46:06Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -26841,7 +26841,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T09:02:49.053809Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -41063,10 +41063,15 @@
     },
     {
       "acceptance": [
-        "Beads issue HarnessHub-f84o の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる",
-        "C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"
+        "変数・Path・join・format・alias 経由の graph authority 書込みが exit 2 で遮断される",
+        "読取専用と .dev-graph/tmp/cache/templates は許可される",
+        "遮断判定は subprocess/network/graph 全件検証を起動しない",
+        "rename/replace/move の source と destination を双方判定する",
+        "仕様反映受領書と再実行可能な品質証拠が記録される"
       ],
-      "architecture_refs": [],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
@@ -41085,11 +41090,13 @@
       "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-f84o の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"
+        ],
+        "policy": "linked_pr_merged_all",
         "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "source": "manual",
+        "status": "in_progress"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -41111,7 +41118,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
+      "goal": "C02 atomic writer を迂回する代表的な inline Python 書込みを fail-closed に検出し、読取と保護外領域を巻き込まない",
       "graph_node_id": "issue-guard-graph-schema-inline-python-variable-path-20260726",
       "implementation_readiness": {
         "checked_at": "2026-07-28T00:24:44.679Z",
@@ -41129,17 +41136,34 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "未解決の Beads issue HarnessHub-f84o を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
+      "purpose": "inline Python が変数や Path 式で組み立てた graph authority 書込みを、PreToolUse の時間契約を守った静的解析で遮断する",
       "related_nodes": [
-        "issue-bd-external-ref-orphan-nodes-20260725",
-        "issue-orphan-external-ref-backlog-disposition-20260726"
+        "feat-dev-pipeline-improvement",
+        "issue-guard-graph-schema-interpreter-write-coverage-20260726"
       ],
-      "resource_scope": [],
+      "resource_scope": [
+        "plugins/dev-graph/hooks/",
+        "plugins/dev-graph/tests/",
+        "plugins/dev-graph/references/claude-code-hooks-contract.md",
+        "docs/features/feat-dev-pipeline-improvement/",
+        "system-spec/dev-workflow.md",
+        "system-spec/spec-state.json",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/"
+      ],
       "scope_in": [
-        "Beads issue HarnessHub-f84o の題名・説明・notes・受入条件を保持した issue node の復元"
+        "python -c / heredoc の AST 解析と path 定数伝播",
+        "代表的な write API と rename/move の source/destination 判定",
+        "誤遮断・fail-open・性能・既知限界の回帰テスト",
+        "dev-workflow 仕様・設計・運用文書への反映"
       ],
       "scope_out": [
-        "orphan 復元と同時に元 issue の実装や close を行うこと"
+        "exec/eval 内 source の再帰実行",
+        "任意の文字列難読化の実行",
+        "別 script file 本文の PreToolUse 解析",
+        "Harness Hub 製品 runtime の変更"
       ],
       "source_lineage": {
         "imported_at": "2026-07-28T00:24:44.679Z",
@@ -41154,15 +41178,15 @@
       "tags": [
         "quality",
         "dev-graph",
-        "beads",
-        "orphan-recovery"
+        "guard",
+        "c10"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
       "title": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T20:43:11Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -47075,6 +47099,122 @@
       "title": "Harness Hub Dev Graph / Beads authority 追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-02T12:13:53Z"
+    },
+    {
+      "acceptance": [
+        "対象 6 skill に current behavior closure と一致する verdict.json がある",
+        "各 verdict が nudge_count=0 / gate_count=0 と独立評価を満たす",
+        "python3 scripts/lint-live-trial-verdict.py --all --enforce が PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pjcb",
+        "linked_at": "2026-08-03T10:16:18.942006Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "f84o 最終レビューで origin/main にも再現する repository-wide verdict 不在 6 件を検出し、本変更と分離して追跡する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T10:15:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "6 skill の current behavior closure に一致する独立検証済み verdict を取得し、lint-live-trial-verdict.py --all --enforce を PASS にする",
+      "graph_node_id": "issue-live-trial-verdict-baseline-six-skills-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T10:15:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "origin/main に既存の repository-wide live-trial verdict 不在 6 件を、今回変更の品質判定から分離して追跡する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "issue-guard-graph-schema-inline-python-variable-path-20260726"
+      ],
+      "resource_scope": [
+        "eval-log/skill-intake/run-intake-option-catalog/",
+        "eval-log/spec-drift-guardian/run-rubric-sync/",
+        "eval-log/system-dev-planner/run-system-dev-plan/",
+        "eval-log/system-spec-harness/run-system-spec-elicit/",
+        "eval-log/ubm-goal-setting/run-ubm-consult/",
+        "eval-log/ubm-goal-setting/run-ubm-goal-setting/"
+      ],
+      "scope_in": [
+        "対象 6 skill の fresh live-trial と独立 evaluator",
+        "verdict lineage と behavior closure の検証",
+        "repository-wide verdict lint の再実行"
+      ],
+      "scope_out": [
+        "HarnessHub-f84o の 9 Dev Graph skill 証跡",
+        "対象 skill の機能仕様変更",
+        "Harness Hub 製品 runtime の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T10:15:00Z",
+        "origin_kind": "generated",
+        "source_digest": "491effc86e609461d97aef1133f77cbfbeac4d2f88f893aa89d61f7b2b38693e",
+        "source_path": "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md",
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "live-trial",
+        "evidence",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "live-trial: repository-wide 6 skill の verdict 不在を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T10:16:37.658382Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

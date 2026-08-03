@@ -1,0 +1,488 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-29-2
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/task.md
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Let me start by examining the fixtures and recording pre-run state.
+
+⏺ Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo…)
+  ⎿  f80e4dbc7aff101e3c9862539833c35a60a4ce384473277853918b33b5b8a49f  /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re
+     po/.dev-graph/state/graph.json
+
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo…)
+  ⎿  3afe48580e53f6a1b1bbad5bb0ba319c4d2ba9c608d7e541c1bf46e34357cbb7  /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re
+     po-none/.dev-graph/state/graph.json
+
+⏺ Read 4 files (ctrl+o to expand)
+
+⏺ Now let me read the scenario definition and SKILL.md for goal_seek requirements before proceeding.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  (No output)
+
+⏺ Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json, glob…)
+  ⎿  plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json scenarios
+     {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+     … +29 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+       "component_id": "C14",
+     … +30 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+       "component_id": "C14",
+     … +30 lines (ctrl+o to expand)
+
+⏺ Now let me prepare goal_seek files and compute the original_goal_hash, and also find the github binding schema rule.
+
+⏺ Bash(python3 -c "
+      import hashlib…)
+  ⎿  3f082c5e355a245ad6db2bfcfd569f8a795af23a87cd95e3515fcb7da8bd28ad
+
+⏺ Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Now let me create the goal_seek files (工程 5 requires line 1 before Skill execution) and then run the first Skill.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval…)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-goal-spec.json)
+  ⎿  Wrote 6 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-goal-spec.json
+      1 {
+      2   "original_goal": "社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者
+        は全社の進捗を集計したレポートを閲覧できる。",
+      3   "skill": "run-dev-graph-decompose",
+      4   "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+      5   "created_at": "2026-08-06T01:00:00Z"
+      6 }
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Wrote 12 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-progress.json
+       1 {
+       2   "checklist": [
+       3     {"id": "macro_dag_no_cycle", "status": "pending", "evidence": null},
+       4     {"id": "draft_publication_zero", "status": "pending", "evidence": null},
+       5     {"id": "ready_package_exact_13", "status": "pending", "evidence": null},
+       6     {"id": "c02_all_or_none", "status": "pending", "evidence": null},
+       7     {"id": "binding_projection", "status": "pending", "evidence": null},
+       8     {"id": "dry_run_write_zero", "status": "pending", "evidence": null}
+       9   ],
+      10   "loop": 0,
+     … +2 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-intermediate.jsonl)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-intermediate.jsonl
+      1 {"original_goal":"社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者は
+        全社の進捗を集計したレポートを閲覧できる。","original_goal_hash":"3f082c5e355a245ad6db2bfcfd569f8a795af23a87cd95e3515fcb7da8bd28ad","current_goal_snapshot":"macro decomposition of business portal want into
+         feature/architecture/depends_on DAG","delta_from_original":"initial state - no decomposition performed yet","merged_directive_for_next":"execute run-dev-graph-decompose with binding=beads on fixture-repo,
+         then binding=none on fixture-repo-none","drift_signal":"none"}
+
+⏺ Now executing 工程 1: run A (binding=beads).
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ I'll execute the macro decomposition for run A (binding=beads). Let me start by resolving the repo context.
+
+⏺ Bash(python3 plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +22 lines (ctrl+o to expand)
+
+⏺ Good, repo context resolved. Now let me read the schema and upsert-node.py to construct proper feature/architecture nodes.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now I'll decompose the want into feature and architecture nodes for run A (binding=beads). Let me create the node definitions.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  Architecture node created at /tmp/c14-runA-bpmC
+     /tmp/c14-runA-bpmC
+
+⏺ Bash(TMPDIR="/tmp/c14-runA-bpmC"…)
+  ⎿  All node JSONs and bodies created in /tmp/c14-runA-bpmC
+     total 80
+     drwx------@  12 dm    wheel    384 Aug  3 18:18 .
+     … +11 lines (ctrl+o to expand)
+
+⏺ Now let me build a preview graph and validate it via stdin before registering.
+
+⏺ Bash(TMPDIR="/tmp/c14-runA-bpmC"
+      DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-…)
+  ⎿  Error: Exit code 1
+     {
+       "implementation_readiness": "incomplete",
+       "missing_sections": [
+         "architecture/arch-portal-001.md",
+         "features/feat-admin-report-001.md",
+         "features/feat-dashboard-001.md",
+         "features/feat-notification-001.md",
+         "features/feat-user-auth-001.md"
+       ],
+     … +70 lines (ctrl+o to see all)
+
+⏺ Schema validation passed (only artifact_missing because body files don't exist yet in the repo). Now let me register nodes via upsert-node.py which will create both graph entries and artifact files.
+
+⏺ Bash(TMPDIR="/tmp/c14-runA-bpmC"
+      DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "path escapes authority root: /private/tmp/c14-runA-bpmC/arch-portal-001.json not within
+     /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo",
+       "valid": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "path escapes authority root: /private/tmp/c14-runA-bpmC/arch-portal-001.json not within
+     /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo",
+       "valid": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ The path policy requires input files to be within the repo. Let me place them in .dev-graph/cache/.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  total 80
+     drwxr-xr-x@ 12 dm  staff   384 Aug  3 18:19 .
+     drwxr-xr-x@  5 dm  staff   160 Aug  3 18:19 ..
+     … +10 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  {
+       "artifact_sha256_after": "e3f9f8f10613bbb00c4879439a61958d263eb3ac2ba4b89c4d1929f825ab4c0e",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  === Registering feat-user-auth-001 ===
+     {
+       "error": "feature from the C14 macro contract requires source_lineage.source_plugin",
+     … +24 lines (ctrl+o to expand)
+
+⏺ Features need source_lineage.source_plugin for the C14 macro contract. Let me fix the source_lineage.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  Updated feat-user-auth-001
+     Updated feat-dashboard-001
+     Updated feat-notification-001
+     Updated feat-admin-report-001
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  === Registering feat-user-auth-001 ===
+     {
+       "error": "feature from the C14 macro contract requires source_lineage.source_path to be a contained repository file whose sha256 equals source_lineage.source_digest",
+     … +24 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  feat-stage0-distribution-gate {"imported_at": "2026-07-30T04:33:46Z", "origin_kind": "generated", "source_digest": "7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77", "source_path": "specs/harne
+     ss-hub-system-specification.md", "source_plugin": "dev-graph", "source_version": null}
+
+⏺ I need to create a source spec file containing the want in the fixture repo first.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  Error: PreToolUse:Bash hook error: [python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard-graph-schema.py" --repo-root "${CLAUDE_PROJECT_DIR}"]: [guard-graph-schema] BLOCKED: graph/schema の直接破壊操作は C02 atomic writer
+     を迂回できない (.dev-graph/config.json は scripts/build-repo-config.py、初期 graph は scripts/build-graph-store.py 経由で書く)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/specs/business-portal-want.md)
+  ⎿  Wrote 3 lines to ../../../eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/specs/business-portal-want.md
+      1 # 業務ポータル構想
+      2
+      3 社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者は全社の進捗を集計し
+        たレポートを閲覧できる。
+
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo…)
+  ⎿  27e00d8bb22578e89dcd3be97f41de5a84838e1f8ba64fb8a5ad42b2eecbada7
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  Updated feat-user-auth-001
+     Updated feat-dashboard-001
+     Updated feat-notification-001
+     Updated feat-admin-report-001
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  === Registering feat-user-auth-001 ===
+     {
+       "artifact_sha256_after": "4474135b703376bb51a1a3e8029ea2d466b8071260e333d6047c28febd1a4f2a",
+     … +63 lines (ctrl+o to expand)
+
+⏺ All 5 nodes registered successfully in FIXTURE_BEADS (run A). Now let me validate the final graph via stdin and record the post-run state.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Run A graph is valid. Now let me record the post-run state for FIXTURE_BEADS and proceed to run B.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  === Post-run A graph.json SHA-256 ===
+     6b865b60d5885eb639e65e157aa1502958b27fc9fde95a96af993c51c6229b48  /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re
+     po/.dev-graph/state/graph.json
+     … +24 lines (ctrl+o to expand)
+
+⏺ Run A complete. Now proceeding to 工程 2: run B (binding=none) on FIXTURE_NONE. Let me invoke the second Skill call.
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Executing run B (binding=none) on FIXTURE_NONE. Let me resolve context and register identical nodes with tracker_binding: "none".
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/Harnes…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +20 lines (ctrl+o to expand)
+
+⏺ Good. Now let me create the source spec file, prepare the node JSONs with tracker_binding: "none", and register them.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo-none/specs/business-portal-want.md)
+  ⎿  Wrote 3 lines to ../../../eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo-none/specs/business-portal-want.md
+      1 # 業務ポータル構想
+      2
+      3 社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者は全社の進捗を集計し
+        たレポートを閲覧できる。
+
+⏺ Bash(DEV_GRAPH_ROOT_NONE="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixtu…)
+  ⎿  spec digest: 27e00d8bb22578e89dcd3be97f41de5a84838e1f8ba64fb8a5ad42b2eecbada7
+     Created feat-user-auth-001 with binding=none
+     Created feat-dashboard-001 with binding=none
+     … +2 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT_NONE="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixtu…)
+  ⎿  Error: Exit code 1
+     {
+       "implementation_readiness": "incomplete",
+       "missing_sections": [
+         "architecture/arch-portal-001.md",
+         "features/feat-admin-report-001.md",
+         "features/feat-dashboard-001.md",
+         "features/feat-notification-001.md",
+         "features/feat-user-auth-001.md"
+       ],
+     … +70 lines (ctrl+o to see all)
+
+⏺ Schema valid (only artifact_missing pre-registration). Now register all nodes for run B.
+
+⏺ Bash(DEV_GRAPH_ROOT_NONE="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixtu…)
+  ⎿  === arch-portal-001 ===
+     {
+       "artifact_sha256_after": "990a261989ef7d2179b02cac23fb754d28519fa66eec455314ac30531966e07c",
+     … +64 lines (ctrl+o to expand)
+
+⏺ All nodes registered for run B. Let me validate and record post-run state.
+
+⏺ Bash(DEV_GRAPH_ROOT_NONE="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixtu…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +11 lines (ctrl+o to expand)
+
+⏺ Both runs complete. Now proceeding to 工程 3: Promote one feature in each graph while leaving others as draft. I'll promote feat-user-auth-001 to confirmed/pass/readiness-complete in both fixtures.
+
+⏺ Bash(# First, read the current feat-user-auth-001 node from FIXTURE_BEADS graph to build the promotion patch
+      python3 -c "…)
+  ⎿  {
+       "acceptance": [
+         "有効なアカウントでログインし認証済みセッションが開始される",
+     … +94 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-re…)
+  ⎿  {
+       "artifact_sha256_after": "61bc4410f30db56923c78579c11ea2f1737c070d2bb37d88c34703a7753affa7",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Now promote feat-user-auth-001 in FIXTURE_NONE.
+
+⏺ Bash(# Build promotion patch for FIXTURE_NONE
+      python3 -c "…)
+  ⎿  Digest: 297470bc1b9c334ae12ff4ff88308c6a9ba3f592564cf38464dd224b50cbbcc5
+
+⏺ Bash(DEV_GRAPH_ROOT_NONE="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixtu…)
+  ⎿  {
+       "artifact_sha256_after": "d5f5204acb81f43e52c57bf7d2ca8e38a3709e11f97dd87db273c87839f8714d",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Both promotions successful. Now proceeding to 工程 4: Verification. Let me run all 7 verification checks.
+
+⏺ Bash(python3 << 'PYEOF'
+      import json, hashlib, sys…)
+  ⎿  ============================================================
+     VERIFICATION 1: DAG acyclicity & granularity threshold
+     ============================================================
+     … +35 lines (ctrl+o to expand)
+
+⏺ Bash(python3 << 'PYEOF'
+      import json…)
+  ⎿  ============================================================
+     VERIFICATION 4: Binding routes differ between runs
+     ============================================================
+     … +53 lines (ctrl+o to expand)
+
+⏺ Now verify adapter route reachability via dry-run.
+
+⏺ Bash(# Check if bd-bridge.py and gh-bridge.py support dry-run route check
+      head -30 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/plugins/dev-graph/scripts/bd-bridge.p…)
+  ⎿  #!/usr/bin/env python3
+     # /// script
+     # name: bd-bridge
+     … +37 lines (ctrl+o to expand)
+
+⏺ Bash(# Test bd-bridge dry-run route reachability for FIXTURE_BEADS
+      DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-deco…)
+  ⎿  {
+       "dry_run_preview": {
+         "expected_depends_on": [],
+     … +24 lines (ctrl+o to expand)
+
+⏺ Bash(# Test gh-bridge dry-run route reachability
+      python3 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/plugins/dev-graph/scripts/gh-bridge.py --help 2>&1 | head -10…)
+  ⎿  Error: Exit code 2
+     usage: gh-bridge.py [-h] --op
+                         {issue-fetch,issue-create,issue-update,issue-close,lifecycle-facts,project-resolve,project-item-find,project-item-add,project-item-edit}
+                         [--repo REPO] [--number NUMBER] [--title TITLE]
+                         [--body BODY] [--owner OWNER]
+                         [--project-number PROJECT_NUMBER]
+                         [--content-id CONTENT_ID] [--project-id PROJECT_ID]
+                         [--item-id ITEM_ID] [--field-id FIELD_ID]
+                         [--option-id OPTION_ID]
+                         [--value-type {single_select,text,number,date,iteration}]
+     … +36 lines (ctrl+o to see all)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-29-2/plugins/dev-graph/scripts/gh-bridge.py \
+        --op issue-create \…)
+  ⎿  {
+       "dry_run": true,
+       "mutation_suppressed": true,
+     … +9 lines (ctrl+o to expand)
+
+⏺ Good, both adapters have reachable dry-run routes. Now verification 6 (digest recomputation) and 7 (negative controls).
+
+⏺ Bash(python3 << 'PYEOF'
+      import json, hashlib…)
+  ⎿  ============================================================
+     VERIFICATION 6: confirmation_evidence digest recomputation
+     ============================================================
+     … +12 lines (ctrl+o to expand)
+
+⏺ Now verification 7: negative controls via schema validator.
+
+⏺ Bash(python3 << 'PYEOF'
+      import json, copy, subprocess, sys…)
+  ⎿  Error: Exit code 1
+     ============================================================
+     VERIFICATION 7: Negative controls rejected by schema validator
+     ============================================================
+
+     --- Control 1: evaluation pass + readiness incomplete ---
+     Traceback (most recent call last):
+       File "<stdin>", line 25, in <module>
+       File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 550, in run
+         stdout, stderr = process.communicate(input, timeout=timeout)
+     … +30 lines (ctrl+o to see all)
+
+⏺ Bash(python3 << 'PYEOF'
+      import json, copy, subprocess, sys…)
+  ⎿  Error: Exit code 1
+     ============================================================
+     VERIFICATION 7: Negative controls rejected by schema validator
+     ============================================================
+
+     --- Control 1: evaluation pass + readiness incomplete ---
+     Exit code: 1
+     Traceback (most recent call last):
+       File "<stdin>", line 37, in <module>
+       File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py", line 346, in loads
+     … +26 lines (ctrl+o to see all)
+
+⏺ Bash(python3 << 'PYEOF'
+      import json, copy, subprocess, sys…)
+  ⎿  ============================================================
+     VERIFICATION 7: Negative controls rejected by schema validator
+     ============================================================
+     … +22 lines (ctrl+o to expand)
+
+⏺ All 7 verifications passed. Now let me complete 工程 5 (goal_seek line 2) and the fail-closed measurement.
+
+⏺ Bash(# Append line 2 to intermediate.jsonl (post-verification)
+      FIXTURE_BEADS="/Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose…)
+  ⎿  Line 2 appended
+     ✓ goal_seek verification passed: 2 rows, hash=3f082c5e355a245ad6db2bfcfd569f8a795af23a87cd95e3515fcb7da8bd28ad
+
+⏺ Now update the progress.json.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/fixture-repo/eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Added 8 lines, removed 8 lines
+       1  {
+       2    "checklist": [
+       3 -    {"id": "macro_dag_no_cycle", "status": "pending", "evidence": null},
+       4 -    {"id": "draft_publication_zero", "status": "pending", "evidence": null},
+       5 -    {"id": "ready_package_exact_13", "status": "pending", "evidence": null},
+       6 -    {"id": "c02_all_or_none", "status": "pending", "evidence": null},
+       7 -    {"id": "binding_projection", "status": "pending", "evidence": null},
+       8 -    {"id": "dry_run_write_zero", "status": "pending", "evidence": null}
+       3 +    {"id": "macro_dag_no_cycle", "status": "pass", "evidence": "acyclic DAG with max_inter_feature_depends_on=1, task contamination=0"},
+       4 +    {"id": "draft_publication_zero", "status": "pass", "evidence": "3 draft features have 0 issues with draft gate, readiness gate, and local_only mode reasons"},
+       5 +    {"id": "ready_package_exact_13", "status": "not_applicable", "evidence": "macro-only run, no system-dev-planner invocation"},
+       6 +    {"id": "c02_all_or_none", "status": "pass", "evidence": "5 nodes registered atomically via upsert-node.py"},
+       7 +    {"id": "binding_projection", "status": "pass", "evidence": "beads binding in fixture-repo, none binding in fixture-repo-none, derived from persisted tracker_binding"},
+       8 +    {"id": "dry_run_write_zero", "status": "not_applicable", "evidence": "real write run, not dry-run"}
+       9    ],
+      10 -  "loop": 0,
+      11 -  "updated_at": "2026-08-06T01:00:00Z"
+      10 +  "loop": 1,
+      11 +  "updated_at": "2026-08-06T01:01:00Z"
+      12  }
+      13   No newline at end of file
+
+⏺ Now let me run the fail-closed measurement required before writing the completion marker.
+
+⏺ Bash(python3 << 'PYEOF'
+      import json…)
+  ⎿  ============================================================
+     FAIL-CLOSED MEASUREMENT (pre-completion marker)
+     ============================================================
+     … +27 lines (ctrl+o to expand)
+
+⏺ All conditions met. Writing completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-29-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r9"}
+
+⏺ DONE: PASS
+
+✻ Crunched for 17m 48s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

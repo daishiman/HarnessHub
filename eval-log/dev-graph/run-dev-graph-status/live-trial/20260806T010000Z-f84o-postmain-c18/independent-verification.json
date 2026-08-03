@@ -1,0 +1,20 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C18-OUT1-positive-read-only-status",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Graph store LT-TASK-001: status=\"active\", closed_at=null, depends_on=[]; LT-TASK-002: status=\"active\", closed_at=null, depends_on=[\"LT-TASK-001\"]. Execution output (run-dev-graph-status-execution.json results array) reports identical values plus computed dependents (LT-TASK-001 dependents=[\"LT-TASK-002\"], LT-TASK-002 dependents=[]). All fields compared individually and match. Literal Skill tool invocation confirmed in transcript (\"name\":\"Skill\", \"skill\":\"dev-graph:run-dev-graph-status\"). No AskUserQuestion tool use (0 occurrences of name:AskUserQuestion). No human_turn_start events (no nudge/user gate)."
+    },
+    "2": {
+      "met": true,
+      "evidence": "LT-TASK-001 has depends_on=[] and status=\"active\" → ready (zero unmet dependencies). LT-TASK-002 has depends_on=[\"LT-TASK-001\"] where LT-TASK-001 is active (not done/closed) → blocked by predecessor. Pane.txt line 78-79 explicitly records: 'LT-TASK-002 blocked by LT-TASK-001 (depends_on non-empty, predecessor active/not completed); LT-TASK-001 ready (depends_on empty)'. Derivation from actual graph fields, not summary counts."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Independent SHA-256 verification: graph.json=360a96971c5a2e2fe6a88981b42b6402fe1913122bd6cfaa1407d6de10db0ca1 (matches pre-run value from transcript line 14-15 and post-run line 65-66); config.json=8b7b2bef3cf3aafed888be306b38b76c8db9423b1a87a172d684048e8ecd33bd (matches pre/post). Execution JSON confirms read_only=true, graph_sha256_before==after=360a9697..., authority_sha256_before==after=b9371f4b.... Config shows github.enabled=false (no GitHub writes possible). Content root files unchanged: 7 .gitkeep files + tasks/lt-task-001.md + tasks/lt-task-002.md — no additions, deletions or modifications. Only writes were to fixture-repo/eval-log/ (permitted by contract)."
+    }
+  }
+}

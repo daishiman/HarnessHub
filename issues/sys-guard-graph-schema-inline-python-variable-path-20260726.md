@@ -4,7 +4,7 @@ artifact_kind: "issue"
 artifact_subtypes: []
 project_id: "harness-hub"
 domain: "quality"
-tags: ["quality","dev-graph","beads","orphan-recovery"]
+tags: ["quality","dev-graph","guard","c10"]
 priority: "medium"
 start_date: null
 target_date: null
@@ -12,18 +12,18 @@ iteration: null
 title: "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す"
 owners: ["daishiman"]
 created_at: "2026-07-25T20:43:11Z"
-updated_at: "2026-07-25T20:43:11Z"
+updated_at: "2026-08-03T04:40:00Z"
 status: "draft"
 depends_on: []
-related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
-resource_scope: []
-purpose: "未解決の Beads issue HarnessHub-f84o を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する"
-goal: "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す"
+related_nodes: ["feat-dev-pipeline-improvement","issue-guard-graph-schema-interpreter-write-coverage-20260726"]
+resource_scope: ["plugins/dev-graph/hooks/","plugins/dev-graph/tests/","plugins/dev-graph/references/claude-code-hooks-contract.md","docs/features/feat-dev-pipeline-improvement/","system-spec/dev-workflow.md","system-spec/spec-state.json","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/"]
+purpose: "inline Python が変数や Path 式で組み立てた graph authority 書込みを、PreToolUse の時間契約を守った静的解析で遮断する"
+goal: "C02 atomic writer を迂回する代表的な inline Python 書込みを fail-closed に検出し、読取と保護外領域を巻き込まない"
 mvp_alignment: null
-scope_in: ["Beads issue HarnessHub-f84o の題名・説明・notes・受入条件を保持した issue node の復元"]
-scope_out: ["orphan 復元と同時に元 issue の実装や close を行うこと"]
-acceptance: ["Beads issue HarnessHub-f84o の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる","C02 writer の検証を通り、external_ref が canonical graph の実在 node を指す"]
-architecture_refs: []
+scope_in: ["python -c / heredoc の AST 解析と path 定数伝播","代表的な write API と rename/move の source/destination 判定","誤遮断・fail-open・性能・既知限界の回帰テスト","dev-workflow 仕様・設計・運用文書への反映"]
+scope_out: ["exec/eval 内 source の再帰実行","任意の文字列難読化の実行","別 script file 本文の PreToolUse 解析","Harness Hub 製品 runtime の変更"]
+acceptance: ["変数・Path・join・format・alias 経由の graph authority 書込みが exit 2 で遮断される","読取専用と .dev-graph/tmp/cache/templates は許可される","遮断判定は subprocess/network/graph 全件検証を起動しない","rename/replace/move の source と destination を双方判定する","仕様反映受領書と再実行可能な品質証拠が記録される"]
+architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -44,69 +44,57 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-28T00:24:44.679Z","missing_sections":[],"status":"complete"}
 ---
 
 # 概要
 
-dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す
+inline Python が変数や Path 式で組み立てた graph authority の書込み先を、C10 が
+subprocess を起動せず静的に解決し、C02 atomic writer の迂回として遮断する。
 
 ## 背景と問題
 
-Beads の未解決 issue `HarnessHub-f84o` は `dev-graph:issue-guard-graph-schema-inline-python-variable-path-20260726` を参照しているが、
-canonical graph に node が無く、課題本文が ready/parity の対象から外れていた。
-課題自体は未解決で内容も有効なため、参照を剥がしたり close したりせず node として復元する。
+PR #72 の C19 live-trial で、`.dev-graph/state/graph.json` を変数へ格納した Python が
+C10 を通過した。旧判定は書込み API と保護 path の連続した字面に依存していたため、
+`Path('.dev-graph') / 'state' / 'graph.json'` のような普通の組立てでも検出できなかった。
 
-### Beads に記録された内容
+遮断を強める一方、HarnessHub-6in4 で解消した timeout fail-open を再導入せず、読取専用と
+`.dev-graph/tmp/` / `cache/` / `templates/` を巻き込まないことが必要だった。
 
-PR #72 の C19 live-trial 検証中、guard-graph-schema.py が inline Python 内で変数へ格納した .dev-graph/state/graph.json の書換パスを静的に解決できず、sanctioned C02 writer を通らない書換を遮断しないケースを確認した。直接リテラル経路だけでなく、変数代入・Path 結合・open/write_text 等の代表的な間接表現を fail-closed で検出する回帰テストを追加する。既存の HarnessHub-6in4 (timeout fail-open 解消) を緩めず、誤検知とhook時間上限も維持する。
+## 実装
 
-### Beads notes
-
-追加 notes は未記録。
-
-## 現在の挙動
-
-`bd-bridge.py --op orphan-audit --scan-refs` では、この参照が
-`repoint_or_close` の非クローズ orphan として検出される。どの走査 ref にも同名 node が無く、
-issue 文書も存在しないため、canonical graph から課題へ到達できない。
-
-## 期待する挙動
-
-同じ `graph_node_id` の issue node と本文が C02 writer 経由で登録され、Beads の
-`external_ref` が実在 node を指す。元の課題内容と notes は失われず、実装は別タスクとして継続できる。
-
-## 再現手順またはユースケース
-
-1. `bd --readonly show HarnessHub-f84o --json` で `external_ref` と元の本文を読む。
-2. `python3 plugins/dev-graph/scripts/bd-bridge.py --op orphan-audit --repo-root . --scan-refs` を実行する。
-3. 出力で `HarnessHub-f84o` が非クローズ orphan に含まれることを確認する。
-
-## 影響と優先度
-
-- 影響範囲: dev-graph の ready/parity 表示と、未解決バックログへの到達性
-- 深刻度: medium
-- 緊急度: 警告を orphan 在庫で埋めず、本物の manifest 取りこぼしを識別できる状態へ戻す必要がある
-
-## スコープ
-
-- In: 元 Beads issue の内容を保持した issue node の復元
-- Out: 元 issue が要求する機能・文書・運用作業そのものの実装
-
-## 関連グラフ
-
-- 原因/親ノード: `issue-bd-external-ref-orphan-nodes-20260725`
-- 関連仕様: `issue-orphan-external-ref-backlog-disposition-20260726`
-- 関連アーキテクチャ: N/A: orphan 復元は既存課題の到達性回復であり新規アーキテクチャを定義しない
-- 解決タスク: `issue-guard-graph-schema-inline-python-variable-path-20260726`
+- `guard-graph-schema.py` は entrypoint、静的遮断の順序、既存字面層を所有する。
+- `guard_python_writes.py` は `python -c` / heredoc 抽出と write API 収集を所有する。
+- `guard_python_path_eval.py` は AST 定数伝播による path 評価を所有する。
+- 変数、Path 結合・parent・tail 置換、join、format、列、import 別名、identity 包み、bytes path を解決する。
+- `open` / `os.open` / pathlib / shutil / os mutation を対象とし、rename / move は元と宛先の双方を変更として扱う。
+- 解決不能でも authority prefix または `state/graph.json` tail が確定すれば fail-closed にする。
 
 ## 受入条件
 
-- [ ] Beads issue HarnessHub-f84o の未解決内容と判断根拠が保持され、実装時に検証結果を記録できる
-- [ ] C02 writer の frontmatter/schema 検証を通り、orphan-audit の非クローズ件数が 1 件減る
+- [x] 変数・Path・join・format・alias 経由の graph authority 書込みが exit 2 で遮断される。
+- [x] 読取専用と保護外領域は許可される。
+- [x] 遮断判定は subprocess / network / graph 全件検証を起動しない。
+- [x] rename / replace / move の source と destination を双方判定する。
+- [x] path 評価・write 収集・core case・境界 test を責務分割し、変更した手書き file は 500 行以下である。
+- [ ] draft PR が main へ merge され、Beads / graph / GitHub の completion authority が一致する。
+
+## 仕様・設計反映
+
+`system-spec/spec-state.json` は単一 transition writer で `dev-workflow.web` を R4-reopen し、
+最新 main の `qa-138` / `appr-027` を保持し、`qa-139` / `appr-028` として再確定した。
+集約仕様、architecture、feature、P12/P13、plugin contract と
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
+へ同一 wave で反映した。製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は非変更。
+
+## 既知の限界
+
+`exec` / `eval` 内の再帰 source、任意文字列変換、別 script file 本文は C10 の時間契約外。
+PostToolUse authority drift audit と C02 writer 規約で補完する。
 
 ## 検証証跡
 
-- コマンド/テスト: `upsert-node.py --dry-run`、`upsert-node.py`、`bd-bridge.py --op orphan-audit --scan-refs`
-- 証跡 path: `issues/sys-orphan-external-ref-backlog-disposition-20260726.md`
+最新 main 統合後に focused 257、Dev Graph 952 + 5 subtests、criteria 22、標準 CI
+139 PASS / 5 WARN / 0 FAIL、fresh live-trial 9/9 PASS を確認した。behavior closure と PR URL は
+仕様反映受領書と Beads notes へ記録する。

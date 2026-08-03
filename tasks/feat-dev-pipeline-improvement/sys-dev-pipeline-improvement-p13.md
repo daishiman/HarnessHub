@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-02T09:02:49.053809Z"
+updated_at: "2026-08-03T04:40:00Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-register-package-projection-idempotency-drift-20260728"]
@@ -289,11 +289,12 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 
 ## 2026-07-30 PR #610 CI follow-up
 
-共有 behavior closure の変更で stale になった Dev Graph 9 skill の live-trial を、
-過去 verdict の digest を編集せず fresh session で再実行した。C04 は feature から参照する
-architecture を同一 confirmed system-spec digest へ束縛し、C19 は contained fixture の
-監査台帳 path を tmux session へ明示して report・ledger・session の三点を canonical
-aggregate gate で突合した。実 tmux の stale/current/空値と隔離 cleanup も回帰化し、失敗 run
-は append-only で残して final PASS だけを planner が再利用できる状態にした。仕様・設計反映と
-全ゲート結果は `qa-102` / `appr-019` および
-`docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md` を正とする。
+stale になった 9 skill の live-trial を fresh session で再取得し、C19 の report / ledger / session を canonical gate で突合した。結果は `qa-102` / `appr-019` と [受領書](../../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+
+## 2026-08-03 `HarnessHub-f84o` Phase 13 引き継ぎ
+
+branch は `devgraph/issue-guard-graph-schema-inline-python-variable-path-20260726`、base は `main`。
+対象実装・テスト・仕様層・fresh evidence・Beads 投影だけを commit し、無関係な既存差分を除外する。
+`origin/main` → local `main` → branch を `1c60a47d` / `5bdf3c25` まで統合し、全ゲート PASS を確認。
+目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
+[f84o 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
