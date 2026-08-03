@@ -5,9 +5,11 @@
  * 無い性質を踏めない) で real DB を使うが、載せる migration が異なる:
  *   - `users`/`user_settings`/`audit_events`/`session_revocations` は 0000 (baseline) にある
  *   - `tenant_coefficients` (AD-4 の見積係数、GET /api/v1/tenant/coefficients が読む) は 0002 にある
+ *   - `encryption_keys.tenant_id`（共有 `ColumnCipher` が常に参照する）は 0006 にある
  * auth-tenancy 側は 0002 を意図的に除外しているため、この feature 専用の harness をここに持つ
  * (認証系 harness を書き換えて依存を増やさない)。0001/0003/0004 (idp_connections 関連) は
- * user-org-admin のどの route も読まないため載せない。
+ * user-org-admin のどの route も読まないため載せない。0006 の tenant-data table 自体は読まないが、
+ * 同 migration に含まれる encryption key 台帳の互換 DDL は salary 暗号化に必須である。
  *
  * `:memory:` を使わないこと。@libsql/client のローカル backend は transaction ごとに別接続を開くため、
  * in-memory では transaction 内からスキーマが見えない (packages/db 側と同じ制約)。
@@ -38,7 +40,11 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 /** 相対 path 参照にする理由は auth-tenancy 版と同じ (共通層の境界迂回を避ける)。 */
 const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', 'packages', 'db', 'migrations');
 
-const MIGRATIONS = ['0000_baseline-core-domain.sql', '0002_hearing-intake-ai-queue.sql'];
+const MIGRATIONS = [
+  '0000_baseline-core-domain.sql',
+  '0002_hearing-intake-ai-queue.sql',
+  '0006_tenant-data-retention.sql',
+];
 
 export interface RealDbHarness {
   readonly repositories: CoreRepositories;
