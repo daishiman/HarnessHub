@@ -38,10 +38,11 @@ TASK_SPECS = [
 
 def build(out: Path) -> None:
     """C18 scenario 用の隔離 fixture repository を生成する。"""
-    scaffold(out, kind=SHAPE)
     nodes = [task_node(node_id, title, slug, depends_on) for node_id, title, slug, depends_on in TASK_SPECS]
     # graph_revision=1 は「骨格 + 初期 node 登録が 1 回だけ起きた」状態を表す。
-    write_json(out / ".dev-graph" / "state" / "graph.json", {"graph_revision": 1, "nodes": nodes})
+    # node を先に組んで scaffold へ渡すのは、graph store の書き込み点を 1 箇所に保つため
+    # (直に write_json すると canonical envelope の付与が抜ける)。
+    scaffold(out, kind=SHAPE, graph={"graph_revision": 1, "nodes": nodes})
     for node in nodes:
         write_node_markdown(out, node)
     finalize(out)

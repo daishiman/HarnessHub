@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "runtime_svg": "The generated HTML is self-contained: inline SVG, CSS, and JavaScript exist, while external script, link, CDN, and runtime references are absent.",
+    "denominator": "The rendered progress denominator is 13 and equals both registration receipt applied_count=13 and expected_count=13.",
+    "numerator": "An independent count of done or closed child tasks is 4 and equals the rendered numerator.",
+    "source_digest": "The rendered registration metadata source_digest exactly matches the registration receipt and all 13 child lineage digests."
+  }
+}

@@ -79,9 +79,18 @@ def _expanded(value: str, assignments: dict[str, str]) -> str:
 
 
 def _mutating_operands(command: str) -> list[str]:
-    """Return operands that a recognised shell command can mutate."""
+    """Return operands that a recognised shell command can mutate.
+
+    セグメント分割には改行を含める (HarnessHub-l1ru)。``shlex.split`` は改行を通常の空白と
+    同じに扱うため、改行だけで連結された独立コマンド群を 1 セグメントに残すと、先頭行の
+    ``git restore`` / ``git checkout --`` が後続行のトークンまで自分の operand として
+    吸収する。実測では ``git restore <保護外>\\ngit add docs/foo.md`` が
+    ``['eval-log/...', 'git', 'add', 'docs/foo.md', ...]`` を返し、保護外パスの復元だけの
+    コマンドが誤って BLOCK になった。``_pipelines`` は既に改行で分割しており、ここでの
+    追加は両者の分割規則の対称化である (過検知の解消であって遮断の緩和ではない)。
+    """
     targets: list[str] = []
-    for segment in re.split(r"(?:&&|\|\||[;|])", command):
+    for segment in re.split(r"(?:&&|\|\||[;|\n])", command):
         try:
             tokens = shlex.split(segment, comments=False, posix=True)
         except ValueError:

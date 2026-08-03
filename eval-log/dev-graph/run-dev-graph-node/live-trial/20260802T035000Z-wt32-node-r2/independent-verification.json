@@ -1,0 +1,19 @@
+{
+  "evaluator": "fresh-evaluator/C02-OUT1-positive-mixed-artifacts",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "canonical_routing": {
+      "result": "PASS",
+      "evidence": "V1 confirmed: all 5 artifacts placed at canonical kind paths — issue→issues/, task→tasks/, specification→specs/, architecture→architecture/, document→docs/. Corroborated by physical markdown files in fixture at those exact paths. graph_revision advanced to 5, schema valid=true."
+    },
+    "consecutive_update": {
+      "result": "PASS",
+      "evidence": "V3 confirmed: update-01-issue.json and update-02-architecture.json applied consecutively; graph_revision advanced 5→7 (two distinct commits); body_source=from_input preserved; frontmatter kind/path parity held after each patch; schema valid=true throughout."
+    },
+    "feature_rejection": {
+      "result": "PASS",
+      "evidence": "V4 confirmed: node-06-feature-reject.json (origin_kind=manual) rejected at C14 macro contract gate with error 'feature must come from the C14 macro contract'; write_count=0; no features/ files created; graph_revision remained unchanged at 7."
+    }
+  }
+}
