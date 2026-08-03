@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-134 |
+| Web (web) | 確定 | 確定質疑: qa-134, qa-138 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
@@ -49,6 +49,24 @@ serves_goals: [G1, G4, G5]
 【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は外部原本と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。
 
 【10. 追加検証と製品境界】active code/plugin/docs からの旧実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、qa-070 の文書行数、`SKILL.md` と `prompts/` の行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。
+
+### qa-138 (対応セル: web)
+
+**質問**: C10/C11/C28 の最終レビューで、Dev Graph と Beads の正本を守る契約をどのように確定しますか？
+
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-134 の品質ゲート境界を情報欠落なく継承し、repository 内の Dev Graph authority と Beads mutation の所有契約を追加確定する。
+
+【1. qa-134 の継承】タスク優先度、CI と local の同一実装、意図的な空走査、C02 writer の後退防止、参考層と能動層の正本所有、外部 CLI 契約の移設、履歴復元と追加検証は qa-134 の【1】から【10】を正本とする。ソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性を根拠に判断する。実行時 context に入る `SKILL.md` は本文300行、skill の `prompts/*.md|yaml` は500行を上限として機械検査し、qa-070 の正規文書300行ゲートは別契約として維持する。
+
+【2. C10 の事前遮断】inline Python 変数で組み立てた canonical graph/config path と、改行で区切られた shell segment を独立して判定する。command 文字列だけで確定できる write は実行前に遮断する。
+
+【3. script-file 実行後監査】script file の完全な意味解析を C10 へ集中させず、PostToolUse 監査が canonical file の size・mtime・ctime・digest・revision・exact-4-key envelope を確認する。confirmed drift と初回 invalid state は clean baseline に昇格させず、VCS rollback の advisory は shell segment が git 操作だけの場合に限定する。
+
+【4. C11 exact envelope】C02 build、C11 validator、PostToolUse 監査は shared module の exact-4-key envelope 定義を共有し、余剰 key と欠落 key を同じ基準で拒否する。
+
+【5. C28 の継承】最新 main で確定済みの正規 bridge 契約を継承し、公開 `--labels` を replacement 型の `bd --set-labels` へ転送し、priority・assignee とともに direct `bd update` を経由せず更新する。今回の branch では重複実装せず、main 統合後の契約と回帰試験を検証対象に含める。
+
+【6. 今回の製品境界】追加契約は repository 内の Dev Graph authority、Beads mutation、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-088 (対応セル: desktop-windows)
 
@@ -123,8 +141,11 @@ receipt 出力だけを保持する。判定処理は次の四責務へ分離す
 分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
 Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
 注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
-変更対象の手書きファイルは 500 行以下に保ち、分割先は harness coverage の scripts 分母へ
-追加しない `plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
+`HarnessHub-w7n7` の実装時点では変更対象の手書きファイルを 500 行以下に保つ運用目標を採った。
+ただし qa-134 により、ソースコードとテストの一律数値上限は廃止済みであり、現在は責務境界と変更容易性で
+分離する。`SKILL.md` 本文 300 行、`prompts/*.md|yaml` 500 行、qa-070 の正規文書 300 行は個別の
+機械ゲートとして維持する。分割先は harness coverage の scripts 分母へ追加しない
+`plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
 UI、Cloudflare deploy unit は変更しない。判断と最終検証は
 `docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
 を正とする。

@@ -47,9 +47,16 @@ recorded_at: 2026-08-03
 ## 受領の確定記録
 
 - draft PR: [#650](https://github.com/daishiman/HarnessHub/pull/650) (`base=main`, `head=devgraph/feat-tenant-data-retention`)
-- main 統合: `origin/main` と local `main` が同じ `41a79292` であることを確認し、同 commit を本 branch へ merge した。
+- main 統合: CI/コンフリクト是正時に `origin/main` と local `main` が同じ `1c60a47db221c90d7ac453b992766c4f7b1150bd` であることを確認し、同 commit を本 branch へ merge した。
 - 最終実行: DB focused 37 件、Hub focused 87 件、Schemas 86 件、DB/Hub/Schemas 型検査、Hub build、artifact placement、doc line limit、task-spec quality gate、dev-graph schema、CI 等価チェック 139 件はいずれも PASS。
 - Beads: `HarnessHub-47b` と `HarnessHub-47b.13` に最終判定、PR、残課題を記録した。
+
+## 2026-08-03 CI・main 統合後の仕様反映判定
+
+- **CI 是正**: `restore-control-plane.ts` が tenant_data を含む artifact に tombstone manifest を必須化した一方、domain-model-db runbook の restore 例が manifest を渡していなかった。runbook に manifest 抽出と `--tombstone-manifest` を追加し、CI が実行する手順と運用手順を一致させた。
+- **migration 衝突**: `main` の docs-cms 用 `0005` を正本として維持し、未マージだった tenant-data の 2 migration を main 取込後に Drizzle 正規フローで 1 本の `0006_tenant-data-retention.sql` へ再生成した。既に配布済みの migration は変更していない。
+- **仕様影響**: 無し。外部 API、保持期間、削除保証、鍵スコープ、復元時の非再出現という既存仕様は変えていない。変更は既存の削除保証を実行可能な runbook と一意な migration lineage に整合させるもの。
+- **反映先の判断**: `docs/` と `docs/features/` は上記の手順・migration 名へ反映済み。`system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/` は契約・設計判断・content-addressed task package を変更しないため無変更とし、この受領書に判断理由を記録する。
 
 ## 残課題
 

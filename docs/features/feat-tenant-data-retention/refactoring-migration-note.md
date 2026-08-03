@@ -31,7 +31,7 @@ task spec の `resource_scope` は `packages/db/src/schema/encryption-keys.ts` /
 
 ## 1. `encryption_keys.tenant_id` migration の適用手順と非破壊確認
 
-### 1.1 migration 内容 (`packages/db/migrations/0005_tenant-data-retention-envelope-encryption.sql`)
+### 1.1 migration 内容 (`packages/db/migrations/0006_tenant-data-retention.sql`)
 
 ```sql
 CREATE TABLE `tenant_data_objects` ( ... );
@@ -55,7 +55,7 @@ NULL` の partial index で `(tenant_id, purpose, key_version)` の組を一意�
 | --- | --- |
 | 既存 `salary`/`idp_secret` の round-trip・IV・AAD・rotation ケース (DMDB-T11) が migration 後も無改修で PASS する | `packages/db/__tests__/encryption.test.ts`。migration 前の KEK-wrap AAD `` `${purpose}:v${keyVersion}` `` で seed した global DEK を復号する回帰テストを含め、P06 の apps/hub 全体 vitest 実行に含めて確認 |
 | `purpose` enum への `tenant_data` 追加が既存 `EncryptionPurpose` 型の消費側を壊さない | `pnpm --filter @harness-hub/db exec tsc --noEmit` PASS |
-| migration ファイルが追記のみ (既存 migration 0000〜0004 を書き換えていない) | `packages/db/migrations/` の連番ファイル群を確認。0005/0006 は新規追加のみ |
+| migration ファイルが追記のみ (既存 migration 0000〜0005 を書き換えていない) | `packages/db/migrations/` の連番ファイル群を確認。0006 は新規追加のみ |
 
 ### 1.3 per-tenant DEK provisioning (lookup / rotation / deletion)
 
@@ -100,7 +100,7 @@ PackageRegistry の閾値判定へ混入することもない。`BACKUPS_BUCKET`
 ## 3. tombstone manifest の同一 transaction/workflow 更新
 
 `packages/db/schema/tenant-data/tombstones.ts` に `tenant_data_tombstones` テーブルを定義し、
-`packages/db/migrations/0006_tenant-data-tombstones.sql` で作成する。`packages/db/repository/
+`packages/db/migrations/0006_tenant-data-retention.sql` に同じ tenant-data の封筒暗号化拡張とともに作成する。`packages/db/repository/
 tenant-data.ts` の `deleteTenantDataObject` が R2 blob 削除・DB row 削除・tombstone 行挿入を同一
 呼び出し内で実行する。日次 export は `allTables` から Studio 拡張を含めて出力し、
 `packages/db/backup/tenant-data-tombstones.ts` が削除後 artifact から manifest を抽出する。古い snapshot
@@ -115,4 +115,4 @@ tenant-data.ts` の `deleteTenantDataObject` が R2 blob 削除・DB row 削除�
 | --- | --- |
 | `docs/features/feat-tenant-data-retention/refactoring-migration-note.md` | 新規 (本ファイル) |
 
-`packages/db/migrations/` への新規追加は無し (0005/0006 は P05 で作成済み)。
+`packages/db/migrations/` への新規追加は無し (0006 は P05 で作成済み)。

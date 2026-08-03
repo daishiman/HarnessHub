@@ -39,6 +39,11 @@ import {
   type PublisherTokensRepo,
 } from './device-flow';
 import {
+  createDocsCmsRepository as createDocsCmsRepositoryLeaf,
+  type DocsCmsRepository as DocsCmsRepositoryShape,
+  type DocumentRow as DocumentRowShape,
+} from './docs-cms';
+import {
   type AiJobRow as AiJobRowShape,
   createHearingIntakeRepository as createHearingIntakeRepositoryLeaf,
   type HearingIntakeRepository as HearingIntakeRepositoryShape,
@@ -113,10 +118,17 @@ export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;
 export type TenantDataObjectPage = TenantDataObjectPageShape;
 export type { TenantDataRepo };
+export type DocsCmsRepository = DocsCmsRepositoryShape;
+export type DocumentRow = DocumentRowShape;
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
   return createHearingIntakeRepositoryLeaf(adapter);
+}
+
+/** Studio S15/B7 (docs-cms) も同じ facade 経由の原則に従う。 */
+export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
+  return createDocsCmsRepositoryLeaf(adapter);
 }
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */

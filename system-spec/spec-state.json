@@ -356,7 +356,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-122",
+        "qa_ref": "qa-135",
         "serves_goals": [
           "G1",
           "G4",
@@ -1112,6 +1112,11 @@
       "id": "qa-137",
       "question": "ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?",
       "answer": "authorize() の public → 認証 → scope 一意性 → tenant 一致 → workspace 所属と deny-by-default は不変とする。正規の scope 入力は API/機械クライアントの明示ヘッダーとブラウザ session の active tenant/workspace の二系統だけであり、両方が不一致なら ambiguous_scope として拒否し、両方が無ければ missing_tenant_scope とする。session へ workspace を束縛する前と切替時には principal の所属を再検証し、session 値を所属検証の代替にしない。Device Flow の確認コード制約と権限上限は維持する。S01 Web 公開は通常の session 認可で行い、CLI より広い権限を持たない。サインイン後の戻り先は同一 origin の相対 path だけを許可し、解決後も通常の authorize() を通す。"
+    },
+    {
+      "id": "qa-138",
+      "question": "C10/C11/C28 の最終レビューで、Dev Graph と Beads の正本を守る契約をどのように確定しますか？",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。\n\n【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【8. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。\n\n【11. C10 の事前遮断】inline Python 変数で組み立てた canonical graph/config path と、改行で区切られた shell segment を独立して判定する。command 文字列だけで確定できる write は実行前に遮断する。\n\n【12. script-file 実行後監査】script file の完全な意味解析を C10 へ集中させず、PostToolUse 監査が canonical file の size・mtime・ctime・digest・revision・exact-4-key envelope を確認する。confirmed drift と初回 invalid state は clean baseline に昇格させず、VCS rollback の advisory は shell segment が git 操作だけの場合に限定する。\n\n【13. C11 exact envelope】C02 build、C11 validator、PostToolUse 監査は shared module の exact-4-key envelope 定義を共有し、余剰 key と欠落 key を同じ基準で拒否する。\n\n【14. C28 の継承】最新 main で確定済みの正規 bridge 契約を継承し、公開 `--labels` を replacement 型の `bd --set-labels` へ転送し、priority・assignee とともに direct `bd update` を経由せず更新する。今回の branch では重複実装せず、main 統合後の契約と回帰試験を検証対象に含める。\n\n【15. 今回の製品境界】追加契約は repository 内の Dev Graph authority、Beads mutation、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -1214,6 +1219,10 @@
     {
       "id": "appr-026",
       "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、remote main→local main→task branch の統合、commit・push・draft PR、Beads 更新』を明示承認として記録。HarnessHub-ji8y / issue-task-spec-validate-command-unrunnable-20260725 の C12 世代非依存 rerun command と contract 1.3.0 の fail-closed 検証を qa-134 として testing-qa.web へ反映する。main の qa-123〜qa-133 / appr-025 を保持する。"
+    },
+    {
+      "id": "appr-027",
+      "note": "2026-08-02 のユーザー最終レビュー依頼に基づき、仕様・設計影響を正本、集約仕様、architecture、feature、task、受領書へ反映することを承認。"
     }
   ],
   "reopen_log": [
@@ -2169,6 +2178,12 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "latest main の qa-133 を保持した上で、今回の世代非依存 task-spec 再実行契約を履歴を失わず qa-134 として統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "C10/C11 の Dev Graph authority 防御、script-file 実行後監査、改行 segment 判定、および最新 main で確定した C28 Beads field 経路を最終レビュー結果へ同期するため",
       "from": "確定"
     }
   ],

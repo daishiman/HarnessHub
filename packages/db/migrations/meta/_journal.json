@@ -40,15 +40,15 @@
     {
       "idx": 5,
       "version": "6",
-      "when": 1785728932756,
-      "tag": "0005_tenant-data-retention-envelope-encryption",
+      "when": 1785736588263,
+      "tag": "0005_common_stepford_cuckoos",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "6",
-      "when": 1785729215041,
-      "tag": "0006_tenant-data-tombstones",
+      "when": 1785746695565,
+      "tag": "0006_tenant-data-retention",
       "breakpoints": true
     }
   ]

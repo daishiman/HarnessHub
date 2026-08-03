@@ -31,7 +31,7 @@ const SCAN_EXTENSIONS = ['.md', '.ts', '.mjs', '.yml'] as const;
  * ここへ相対パスを書くと呼び出し元 (リポジトリ根・workflow の step) の基準と食い違って必ず外れる。
  * `--file` は wrangler r2 object put/get 用。
  */
-const PATH_OPTIONS = new Set(['--out', '--in', '--ddl', '--migrations-dir', '--file']);
+const PATH_OPTIONS = new Set(['--out', '--in', '--ddl', '--migrations-dir', '--file', '--tombstone-manifest']);
 
 const readSource = (relPath: string): string => readFileSync(join(REPO_ROOT, relPath), 'utf8');
 
@@ -173,18 +173,19 @@ afterAll(() => {
 });
 
 describe('DMDB-T14 手順書の CLI 呼び出しが実行可能であること', () => {
-  it('runbook §1 の export → §2 の restore が、書かれたコマンドのまま exit 0 で完走する', () => {
+  it('runbook §1 の export → §2 の manifest 抽出 → restore が、書かれたコマンドのまま exit 0 で完走する', () => {
     const runbook = commandSurface(RUNBOOK, readSource(RUNBOOK));
     const targetPath = join(workDir, 'runbook-target.db');
 
     // 手順書の行をそのまま並べて実行する。書き換えるのは環境変数の中身だけで、
     // コマンド本体 (区切り `--` の有無・パスの基準) には一切手を入れない。
-    // §1 の export と §2 の restore が同じ `$WORK_DIR/export.jsonl` を介して噛み合うことが
-    // 手順書側の設計で、噛み合っていなければこの実走がそのまま落ちる。
+    // §1 の export と §2 の manifest 抽出・restore が同じ `$WORK_DIR/export.jsonl` を介して
+    // 噛み合うことが手順書側の設計で、噛み合っていなければこの実走がそのまま落ちる。
     const drill = [
       'set -eu',
       `WORK_DIR=${JSON.stringify(workDir)}`,
       invocationOf(runbook, 'scripts/export-control-plane.ts'),
+      invocationOf(runbook, 'scripts/extract-tenant-data-tombstones.ts'),
       invocationOf(runbook, 'scripts/restore-control-plane.ts'),
     ].join('\n');
 

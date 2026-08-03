@@ -17,6 +17,16 @@ timeout すると Claude Code は tool を通すため、遮断経路の内側�
 所要時間はそのまま fail-open の窓になる。HarnessHub-6in4 ではこの窓を通って
 ``.dev-graph/config.json`` と ``.dev-graph/state/graph.json`` への Bash 直書きが
 live-trial 中に 2 回素通りした。context_ok() はこの判定を通過した入力に対してだけ呼ぶ。
+
+この設計から導かれる遮断範囲の上限を、能力の誇張を避けるため明記する。判定材料は
+PreToolUse に届くコマンド文字列だけであり、``python3 tools/writer.py`` のように書込みを
+別 script file へ移した間接起動は「interpreter 起動 x 書込み動詞 x authority path」の
+共起が文字列上で 1 つも成立しないため、ここでは遮断できない (HarnessHub-kzth)。script の
+中身を読めば遮断できるが、それは上の遮断時間契約を破って fail-open 窓を再び開く。
+遮断できない範囲は PostToolUse の ``audit-graph-authority-drift.py`` (graph_revision の
++1 不変条件による事後検出) と C11 の envelope 検査が受け持つ。3 層の責務分担と、
+いずれの層でも閉じない残余は ``references/claude-code-hooks-contract.md`` に契約として
+書いてある。
 """
 from __future__ import annotations
 
@@ -77,6 +87,120 @@ GRAPH_AUTHORITY_LITERAL = re.compile(
     r"""|graph-node\.schema\.json\b""",
     re.I,
 )
+# 変数経由の間接表現 (HarnessHub-f84o)。INTERPRETER_WRITE / PATHLIB_MUTATION は書込み先と
+# mode を字面でしか読まないため、`p = '.dev-graph/state/graph.json'` のように一度変数へ退避
+# されると 1 つも成立しない。ここでは inline Python の「文字列に畳める代入」だけを静的に解決し、
+# 解決値を quote 済み literal へ展開した写しに対して同じ検出器をもう一度かける。
+# 解決できない式 (関数呼出し・添字・実行時値) は None のままにして展開しない — 展開の失敗は
+# 現状維持 (= 従来どおり ALLOW) であり、遮断の緩和にはならない。subprocess も file I/O も
+# 使わないため HarnessHub-6in4 の fail-open 窓は再導入しない。
+_MAX_TRACKED_VARIABLES = 64
+_MAX_EXPANDED_COMMAND = 32_768
+# 代入の開始境界には quote を含める。inline Python は `python3 -c "p='...'; ..."` の形で
+# 渡るため、最初の代入は必ず quote の直後に現れる。
+_ASSIGNMENT = re.compile(
+    r"""(?:^|[;\n(,'"]|\s)(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?P<expr>[^;\n]{1,512})"""
+)
+_EXPRESSION_TOKEN = re.compile(
+    r"""(?P<call>(?:pathlib\s*\.\s*)?(?:Pure)?(?:Posix|Windows)?Path|os\s*\.\s*path\s*\.\s*join)\s*\(
+      |(?P<literal>f?(?P<quote>['"])(?P<body>[^'"]*)(?P=quote))
+      |(?P<name>[A-Za-z_][A-Za-z0-9_]*)
+      |(?P<join>[/,])
+      |(?P<concat>\+)
+      |(?P<close>\))
+      |(?P<space>\s+)""",
+    re.X,
+)
+_PLACEHOLDER = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
+_IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+
+
+def _resolve_expression(expr: str, known: dict[str, str]) -> str | None:
+    """``'a'`` / ``Path('a')/'b'`` / ``os.path.join(a, 'b')`` / ``f'{a}/b'`` を path 文字列へ畳む。
+
+    許可トークン以外が 1 つでも挟まれば None を返す (未解決は展開しない)。``/`` と ``,`` は
+    path 区切り、``+`` は素の連結として扱う。
+    """
+    expr = expr.split("#", 1)[0].strip()
+    if not expr:
+        return None
+    segments: list[tuple[str, str]] = []
+    separator = ""
+    position = 0
+    for match in _EXPRESSION_TOKEN.finditer(expr):
+        if match.start() != position:
+            return None
+        position = match.end()
+        if match.group("space") or match.group("call") or match.group("close"):
+            continue
+        if match.group("join"):
+            separator = "/"
+            continue
+        if match.group("concat"):
+            separator = ""
+            continue
+        if match.group("literal") is not None:
+            body = match.group("body")
+            if match.group("literal").startswith("f"):
+                try:
+                    body = _PLACEHOLDER.sub(lambda hit: known[hit.group(1)], body)
+                except KeyError:
+                    return None
+            elif "{" in body:
+                return None
+            segments.append((separator, body))
+        else:
+            value = known.get(match.group("name"))
+            if value is None:
+                return None
+            segments.append((separator, value))
+        separator = ""
+    if position != len(expr) or not segments:
+        return None
+    resolved = segments[0][1]
+    for boundary, value in segments[1:]:
+        resolved = f"{resolved.rstrip('/')}/{value.lstrip('/')}" if boundary == "/" else resolved + value
+    return resolved
+
+
+def _string_assignments(command: str) -> dict[str, str]:
+    """command 内の「文字列に畳める代入」を変数名 -> 値へ解決する。
+
+    2 パス回すのは ``base = '.dev-graph'`` -> ``target = base + '/state/graph.json'`` の
+    ような 1 段の後方参照を解くため。収束したら打ち切り、追跡数にも上限を置く。
+    """
+    known: dict[str, str] = {}
+    for _ in range(2):
+        changed = False
+        for match in _ASSIGNMENT.finditer(command):
+            if len(known) >= _MAX_TRACKED_VARIABLES:
+                return known
+            name = match.group("name")
+            value = _resolve_expression(match.group("expr"), known)
+            if value is not None and known.get(name) != value:
+                known[name] = value
+                changed = True
+        if not changed:
+            break
+    return known
+
+
+def _with_variables_expanded(command: str) -> str:
+    """解決済み変数の参照を quote 済み literal へ置き換えた command の写しを返す。
+
+    値は quoted literal 由来で ``'`` を含まないため、置換で quote 構造は壊れない。
+    """
+    if len(command) > _MAX_EXPANDED_COMMAND:
+        return command
+    known = _string_assignments(command)
+    if not known:
+        return command
+    return _IDENTIFIER.sub(
+        lambda hit: f"'{known[hit.group(0)]}'" if hit.group(0) in known else hit.group(0),
+        command,
+    )
+
+
 def payload() -> dict:
     try:
         value = json.load(sys.stdin)
@@ -115,8 +239,8 @@ def _open_mode_is_write(mode: str) -> bool:
     return bool(set(mode) & {"w", "a", "x"}) or "+" in mode
 
 
-def interpreter_writes_graph_authority(command: str) -> bool:
-    """python -c / heredoc 内の interpreter 経由書込みが graph authority を指すか。
+def _literal_interpreter_write(command: str) -> bool:
+    """字面に現れる path/mode だけで interpreter 経由の graph authority 書込みを判定する。
 
     保証範囲 (HarnessHub-lp36): 字面パターンに一致する次の書込み API のみを検出する。
     ``open(path, mode)`` (mode が w/a/x/r+ 系)・``Path.write_text``・``Path.write_bytes``・
@@ -142,6 +266,27 @@ def interpreter_writes_graph_authority(command: str) -> bool:
     if PATHLIB_MUTATION.search(command) and GRAPH_AUTHORITY_LITERAL.search(command):
         return True
     return False
+
+
+def interpreter_writes_graph_authority(command: str) -> bool:
+    """interpreter 経由の graph authority 書込みを、字面と変数解決の 2 段で判定する。
+
+    第 1 段は従来どおり字面 (HarnessHub-lp36 の保証範囲)。第 2 段は「文字列に畳める代入」を
+    解決した写しに同じ判定をかけ、``p = '.dev-graph/state/graph.json'`` のように書込み先や
+    mode を変数へ退避した形を拾う (HarnessHub-f84o)。第 2 段は第 1 段を緩めない — 展開に
+    失敗した式は元の command のまま判定される。
+
+    ここでも残る取りこぼしは変数解決の外側にある: 実行時にしか定まらない値 (argv・環境変数・
+    関数戻り値)、``exec``/``eval``、そして書込みを別 script file へ移した間接起動である。
+    最後の形は「interpreter 起動 x 書込み動詞 x authority path」の共起がコマンド文字列上で
+    1 つも成立しないため PreToolUse では原理的に閉じられない (HarnessHub-kzth)。事後検出は
+    PostToolUse の ``audit-graph-authority-drift.py``、store 側の canonicality は C11 の
+    envelope 検査が担う。
+    """
+    if _literal_interpreter_write(command):
+        return True
+    expanded = _with_variables_expanded(command)
+    return expanded != command and _literal_interpreter_write(expanded)
 
 
 def context_ok(root: Path) -> tuple[bool, str]:

@@ -1,0 +1,33 @@
+/** Document CMS 契約の公開入口。consumer は @harness-hub/schemas root から参照する。 */
+export type {
+  CompleteDocDraftJobRequest,
+  CreateDocumentRequest,
+  DocDraftPayload,
+  DocDraftResult,
+  DocumentDetail,
+  DocumentListItem,
+  DocumentListQuery,
+  DocumentListResponse,
+  DocumentScope,
+  DocumentStatus,
+  FailDocDraftJobRequest,
+  PullDocDraftJobRequest,
+  PulledDocDraftJob,
+  UpdateDocumentRequest,
+} from './contracts.js';
+export {
+  completeDocDraftJobRequestSchema,
+  createDocumentRequestSchema,
+  docDraftPayloadSchema,
+  docDraftResultSchema,
+  documentDetailSchema,
+  documentListItemSchema,
+  documentListQuerySchema,
+  documentListResponseSchema,
+  documentScopeSchema,
+  documentStatusSchema,
+  failDocDraftJobRequestSchema,
+  pullDocDraftJobRequestSchema,
+  pulledDocDraftJobSchema,
+  updateDocumentRequestSchema,
+} from './contracts.js';

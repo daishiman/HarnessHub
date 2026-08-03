@@ -33,10 +33,9 @@ architecture_refs: []
 
 既存の deploy job (`docs/infrastructure-spec.md` §7) は「必須設定 preflight → Worker secret 実投入
 検査 → production へ drizzle migrate → `wrangler deploy` → post-deploy health + smoke → 失敗時
-rollback」の順で実行される。本 feature の migration (`0005_tenant-data-retention-envelope-encryption.sql`
-/ `0006_tenant-data-tombstones.sql`) はこの既存パイプラインにそのまま乗る。
+rollback」の順で実行される。本 feature の migration (`0006_tenant-data-retention.sql`) はこの既存パイプラインにそのまま乗る。
 
-- migration は追記のみ (既存 0000〜0004 を書き換えない、`refactoring-migration-note.md` §1.2 参照)。
+- migration は追記のみ (既存 0000〜0005 を書き換えない、`refactoring-migration-note.md` §1.2 参照)。
 - `encryption_keys.tenant_id` は nullable で追加するため、migration 適用直後もアプリケーションコード
   デプロイ前の旧コードが新 schema 上でそのまま動作する (expand-only、§7 G7 の前方互換方針と一致)。
   そのため「migration 先行・deploy 追従」の順序で問題が起きない。
