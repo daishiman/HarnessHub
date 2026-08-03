@@ -1,0 +1,20 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Literal Skill tool call for dev-graph:run-dev-graph-system-spec at transcript L7. All 4 canonical harness entry points invoked via Skill: run-system-spec-elicit (L70), run-system-spec-doc-fetch (L299), run-system-spec-compile (L361), assign-system-spec-completeness-evaluator (L385). Plugin preflight reads plugin.json (L15, version=0.1.0 satisfying >=0.1.0 <1.0.0) and package-contract.json (L26) with 4 required entry points verified. Audit fork ledger at fixture-repo/eval-log/system-spec-harness/audit-fork-ledger.jsonl contains 3 genuine hook-written entries (system-spec-matrix-auditor, system-spec-hearing-auditor, system-spec-doc-freshness-auditor) all sharing session_id 0c24a3b1-ad3a-4512-ab5f-5b3abb264f02 matching completeness-report.json audit_delegations. C06 hearing PASS, C07 matrix PASS, C08 doc-freshness PASS. aggregate-completeness.py --report/--fork-ledger/--session invoked at L476 with result EXIT: 0 at L481. completeness-report.json verdict=PASS with 0 gaps."
+    },
+    "2": {
+      "met": true,
+      "evidence": "graph.json contains 2 nodes: spec-system-requirements (artifact_kind=specification) and arch-system-todo-api (artifact_kind=architecture). All 6 source_lineage fields non-null on both: spec node has origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=system-spec/00-requirements-definition.md, source_version=0.1.0, source_digest=47f856058acc1094a115210c325589446959719cd64186fd322b8cfc26f1d34c, imported_at=2026-08-03T09:48:27Z; arch node has origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=system-spec/backend.md, source_version=0.1.0, source_digest=7bc9754acac9ef200aab20c04fce98c95f0efab49c97dfe2a229e5d6990c84a6, imported_at=2026-08-03T09:49:07Z. Independent shasum -a 256 recomputation confirms both digests match their source files exactly. Both nodes confirmation_status=confirmed, evidence_ref=system-spec/completeness-report.json. validate-source-digest.py: checked=2, registered_mismatch=[], exit 0. validate-evidence-refs.py: scanned=2, registered_dangling=[], existing_dangling=[], exit 0."
+    },
+    "3": {
+      "met": true,
+      "evidence": "All graph content writes go through upsert-node.py (C02) at transcript L504, L511, L519, L526. Zero Write/Edit tool calls to graph.json, specs/, or architecture/ in transcript. graph_revision advanced 0→2 matching 2 node registrations. Positive-control grep for write predicates (write_text|json.dump|open(...w...)) at L608/L614 hits upsert-node.py and build-graph-store.py in plugins/dev-graph/scripts, confirming search terms work. Grep at L617 for apply-spec-transition|compile-spec-doc|elicit terms in plugins/dev-graph/skills/run-dev-graph-system-spec finds only .md prompt/delegation files, zero Python reimplementations. Node markdown bodies contain lineage references (source_lineage frontmatter + 出典 section pointing to source_path and evidence_ref) rather than copied system-spec chapters. No AskUserQuestion calls in transcript (no nudge/user gate). Goal-seek intermediate.jsonl has 2 append-only lines with correct ordering (L1 before harness delegation, L2 after completion)."
+    }
+  }
+}

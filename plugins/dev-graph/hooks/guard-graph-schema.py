@@ -48,6 +48,7 @@ from guard_graph_commands import (
     destructive_graph_or_schema_operation,
     indirect_mutation_over_guarded_area,
 )
+from guard_python_writes import inline_python_writes_graph_authority, python_sources
 
 BD_MUTATION = re.compile(r"(?:^|[;&|]\s*)bd\s+(?:create|update|close|delete|purge|sql)\b", re.I)
 GH_MUTATION = re.compile(r"\bgh\s+(?:issue\s+(?:create|edit|close|delete)|project\s+item-(?:add|edit|delete))\b", re.I)
@@ -86,6 +87,13 @@ GRAPH_AUTHORITY_LITERAL = re.compile(
     r"""\.dev-graph/(?:state(?:/|['"]|$)|config\.json\b)"""
     r"""|graph-node\.schema\.json\b""",
     re.I,
+)
+# Unit-level callers historically pass a Python source fragment directly, while the hook receives a
+# shell command.  The literal fallback may inspect direct source fragments, but must not scan prose
+# emitted by ``echo``/``cat`` as if it were executable Python.
+RAW_PYTHON_SOURCE = re.compile(
+    r"^\s*(?:from\s+\w+\s+import\b|import\s+\w+\b|open\s*\(|(?:Path|pathlib\.|shutil\.|os\.|json\.)|\w+\s*=)",
+    re.S,
 )
 # 変数経由の間接表現 (HarnessHub-f84o)。INTERPRETER_WRITE / PATHLIB_MUTATION は書込み先と
 # mode を字面でしか読まないため、`p = '.dev-graph/state/graph.json'` のように一度変数へ退避
@@ -252,41 +260,42 @@ def _literal_interpreter_write(command: str) -> bool:
     ``build-graph-store.py`` / ``build-repo-config.py``) の使用を運用規約として要求すること
     でしか閉じられない。
     """
-    for match in INTERPRETER_WRITE.finditer(command):
-        path = match.group("path") or match.group("path2") or ""
-        if not GRAPH_AUTHORITY_PATH.search(path):
-            continue
-        mode = match.group("mode") or match.group("mode2") or ""
-        if _open_mode_is_write(mode):
+    sources = python_sources(command)
+    candidates = sources or ([command] if RAW_PYTHON_SOURCE.match(command) else [])
+    for source in candidates:
+        for match in INTERPRETER_WRITE.finditer(source):
+            path = match.group("path") or match.group("path2") or ""
+            if not GRAPH_AUTHORITY_PATH.search(path):
+                continue
+            mode = match.group("mode") or match.group("mode2") or ""
+            if _open_mode_is_write(mode):
+                return True
+        # ``Path.write_text`` / ``shutil.copy`` 等は path を ``open(...)`` の第 1 引数として
+        # 渡さないため上の枝では検出できない。API 呼出しと graph authority の文字列が同一
+        # source 内に共起するかだけを見る粗い判定にとどめ、``Path.read_text`` のような
+        # 読取専用呼出しは対象外のまま残す。
+        if PATHLIB_MUTATION.search(source) and GRAPH_AUTHORITY_LITERAL.search(source):
             return True
-    # ``Path.write_text`` / ``shutil.copy`` 等は path を ``open(...)`` の第 1 引数として渡さない
-    # ため上の枝では検出できない。API 呼出しと graph authority の文字列が同一コマンド内に
-    # 共起するかだけを見る粗い判定にとどめ (path/mode の対応関係までは解析しない)、
-    # ``Path.read_text`` のような読取専用呼出しは対象外のまま残す。
-    if PATHLIB_MUTATION.search(command) and GRAPH_AUTHORITY_LITERAL.search(command):
-        return True
     return False
 
 
 def interpreter_writes_graph_authority(command: str) -> bool:
-    """interpreter 経由の graph authority 書込みを、字面と変数解決の 2 段で判定する。
+    """interpreter 経由の authority 書込みを AST・字面・代入展開で判定する。
 
-    第 1 段は従来どおり字面 (HarnessHub-lp36 の保証範囲)。第 2 段は「文字列に畳める代入」を
-    解決した写しに同じ判定をかけ、``p = '.dev-graph/state/graph.json'`` のように書込み先や
-    mode を変数へ退避した形を拾う (HarnessHub-f84o)。第 2 段は第 1 段を緩めない — 展開に
-    失敗した式は元の command のまま判定される。
+    AST 層 (HarnessHub-f84o) は inline Python の変数・Path・join・format・alias と主要
+    write API を解析する。字面層 (HarnessHub-lp36) と main 由来の shell 定数代入展開は、
+    AST 化できない断片と既存保証を保持する。3 層は加算的で、いずれも subprocess や
+    repository file を読まない。
 
-    ここでも残る取りこぼしは変数解決の外側にある: 実行時にしか定まらない値 (argv・環境変数・
-    関数戻り値)、``exec``/``eval``、そして書込みを別 script file へ移した間接起動である。
-    最後の形は「interpreter 起動 x 書込み動詞 x authority path」の共起がコマンド文字列上で
-    1 つも成立しないため PreToolUse では原理的に閉じられない (HarnessHub-kzth)。事後検出は
-    PostToolUse の ``audit-graph-authority-drift.py``、store 側の canonicality は C11 の
-    envelope 検査が担う。
+    別 script file、``exec``/``eval`` 内 source、任意の文字列難読化は PostToolUse drift
+    audit と C02/C11 が補完する。
     """
-    if _literal_interpreter_write(command):
+    if inline_python_writes_graph_authority(command) or _literal_interpreter_write(command):
         return True
     expanded = _with_variables_expanded(command)
-    return expanded != command and _literal_interpreter_write(expanded)
+    if expanded == command:
+        return False
+    return inline_python_writes_graph_authority(expanded) or _literal_interpreter_write(expanded)
 
 
 def context_ok(root: Path) -> tuple[bool, str]:
