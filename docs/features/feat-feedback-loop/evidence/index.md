@@ -43,7 +43,7 @@ published task spec の `validate-system-plan.py --repo-root . --staging .` は 
 | 2 | workspace-admin 自 tenant pull | PASS | `apps/hub/src/__tests__/feedback-loop/route-handler-execution.test.ts`(P05 差し戻しで実行テスト化、`quality-assurance-report.md` §7 で確認) |
 | 3 | provider-admin cross-tenant pull+audit | PASS | 同上 + `packages/db/__tests__/feedback-loop-queue.test.ts`(実DB検証、6テスト) |
 | 4 | 他 tenant 拒否 | PASS | `packages/db/__tests__/tenant-isolation.test.ts` + `apps/hub/src/__tests__/feedback-loop/feedback-entity-tenant-scope-isolation.test.ts` |
-| 5 | migration | PASS | `main` の `0005_common_stepford_cuckoos.sql` の次に、`packages/db/migrations/0006_feedback-loop-builds.sql` を Drizzle で再生成。`refactoring-migration-note.md` §「P10差し戻し追補」参照 |
+| 5 | migration | PASS | `main` の `0006_tenant-data-retention.sql` を保持した次に、`packages/db/migrations/0007_feedback-loop-builds.sql` を Drizzle で再生成。`refactoring-migration-note.md` §「P10差し戻し追補」参照 |
 | 6 | P10/P11 証跡対応表 | 本表がその対応表を兼ねる | 本ファイル |
 
 ## quality_constraints 8件 最終状態(P10 差し戻し後)

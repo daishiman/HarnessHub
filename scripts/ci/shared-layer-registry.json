@@ -104,7 +104,7 @@
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
       ],
-      "app_wiring_note": "feat-feedback-loop が結線 (features/feedback-loop/runtime.ts・notification.ts の resolved 遷移通知)"
+      "app_wiring_note": "feat-feedback-loop の resolved 遷移通知と、feat-tenant-data-retention (AD-5) の使用量閾値超過通知が結線"
     },
     {
       "id": "pii-guard",

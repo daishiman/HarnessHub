@@ -98,6 +98,14 @@ serves_goals: [G1, G2, G3, G4, G5]
 | lease | 10 分・attempt 3 で `dead` (`backend-spec.md` §5.5 既存確定) |
 | 監査 | `ai_job.complete` (既存 §3.8) |
 
+### 6.6 tenant_data upload の入力境界 (T14 / T15)
+
+`POST /api/v1/tenant-data/objects` は multipart/form-data で `workspaceId`、`kind`、`title`、`file` を受ける。
+メタデータは zod の strict schema で検査し、`workspaceId` は認可済みの
+`x-harness-workspace-id` と完全一致しなければ 400 とする。`kind` は
+`knowledge_doc` / `run_input` / `run_output`、`title` は trim 後 1..200 文字、本文は 50 MiB 以下とする。
+この一致検査により、body/query の workspace 申告で認可済み scope をすり替えられない。
+
 ## 7. Web 基本防御
 
 ### 7.1 CSP (Content Security Policy)
@@ -152,6 +160,10 @@ report-uri /api/v1/csp-report
 | `POST /api/v1/metrics/events` | token | **60 / 分** (burst **120**) | ハーネスは 1 実行 1 送信。burst は起動直後のまとめ送信を許容 |
 | `POST /api/v1/publish` | token | **10 / 分** | 正常な publish は数分に 1 回 |
 | `POST /api/v1/feedback` | token/session | **20 / 分** | — |
+| `POST /api/v1/tenant-data/objects` | tenant + principal | **20 / 分** | multipart upload の濫用防止 |
+| `GET /api/v1/tenant-data/objects` / `GET /api/v1/tenant-data/objects/:id` | tenant + principal | **120 / 分** | 一覧・メタデータ読取 |
+| `GET /api/v1/tenant-data/objects/:id/content` | tenant + principal | **60 / 分** | R2 読取・復号の負荷を抑制 |
+| `DELETE /api/v1/tenant-data/objects/:id` | tenant + principal | **20 / 分** | 不可逆な物理削除の濫用防止 |
 | 一般 API (session) | user | **120 / 分** | 画面のポーリング (publish 2 秒 / ボード 30 秒) を阻害しない上限 |
 | `POST /api/v1/csp-report` | IP | **30 / 分** | report の氾濫防止 |
 | 超過時 | `429` + `Retry-After` (RFC 9457 形式) | — |

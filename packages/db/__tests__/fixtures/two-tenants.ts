@@ -18,12 +18,15 @@ import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../..
 import { createPackagesRepo } from '../../repository/packages';
 import { createReleasesRepo } from '../../repository/releases';
 import { createTenantsRepo } from '../../repository/tenants';
+import { newUlid } from '../../repository/ulid';
 import { createUsersRepo } from '../../repository/users';
 import { createUserWorkspacesRepo } from '../../repository/workspaces';
 import { catalogEntries, deploymentReferences, projects } from '../../schema/core/catalog';
 import { userSettings, workspaces } from '../../schema/core/identity';
 import { deviceAuthorizations, publisherTokens, publishRequests } from '../../schema/core/publish';
 import { tenantCoefficients } from '../../schema/hearing-intake/schema';
+import { tenantDataObjects } from '../../schema/tenant-data/schema';
+import { tenantDataTombstones } from '../../schema/tenant-data/tombstones';
 import { createRepositoryContext } from '../../src/context';
 import type { RepositoryContext } from '../../src/types';
 
@@ -287,6 +290,32 @@ async function seedTenant(
     { id: feedbackRow.id, workspaceId, type: 'improvement' },
     'design',
   );
+
+  const tenantDataKeyVersion = await cipher.ensureActiveDek('tenant_data', tenant.id);
+  const tenantDataId = newUlid();
+  await adapter.client.insert(tenantDataObjects).values({
+    id: tenantDataId,
+    tenantId: tenant.id,
+    workspaceId,
+    kind: 'knowledge_doc',
+    title: `Fixture doc ${slug}`,
+    r2Key: `tenant/${tenant.id}/${workspaceId}/knowledge_doc/${tenantDataId}`,
+    sizeBytes: 128,
+    contentHash: await sha256Hex(new TextEncoder().encode(`tenant-data-${slug}`)),
+    encKeyVersion: tenantDataKeyVersion,
+    uploadedBy: user.id,
+    createdAt: Date.now(),
+  });
+
+  // tombstone: 過去に削除された tenant_data の痕跡 (TC-8 backup restore 検証が読む対象)。
+  const tombstoneObjectId = newUlid();
+  await adapter.client.insert(tenantDataTombstones).values({
+    id: newUlid(),
+    tenantId: tenant.id,
+    objectId: tombstoneObjectId,
+    r2Key: `tenant/${tenant.id}/${workspaceId}/knowledge_doc/${tombstoneObjectId}`,
+    deletedAt: Date.now(),
+  });
 
   return {
     context,

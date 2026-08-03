@@ -69,6 +69,9 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   documents: 'createDocsCmsRepository',
   feedbacks: 'createFeedbackRepository',
   builds: 'createBuildsRepository',
+  encryption_keys: 'cipher.ensureActiveDek',
+  tenant_data_objects: 'tenantDataObjects',
+  tenant_data_tombstones: 'tenantDataTombstones',
 };
 const uncovered = scoped.filter((name) => {
   const symbol = SYMBOL_BY_TABLE[name];

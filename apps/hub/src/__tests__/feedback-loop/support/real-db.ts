@@ -43,15 +43,16 @@ const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', '..', 'packages'
  * (無いと "no such table: users" が updateFeedbackStatus の fire-and-forget try/catch へ
  * 静かに飲み込まれ、通知経路が一切実行されないまま緑化してしまう)。device-flow/OIDC 系
  * (0001/0003/0004) は feedback-loop から参照されないため含めない。
- * `0006` (feedback-loop-builds) は AiJob(`feedback_response`) 完了時の冪等作成
- * (ADR §7 P10 差し戻し) の検証に必要。`0005` は main で先行した documents の migration なので、
- * canonical lineage と同じ順で適用する。
+ * `0006` は main で先行した tenant-data-retention、`0007` (feedback-loop-builds) は
+ * AiJob(`feedback_response`) 完了時の冪等作成 (ADR §7 P10 差し戻し) の検証に必要。
+ * `0005` の documents migration を含め、canonical lineage と同じ順で適用する。
  */
 const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
   '0002_hearing-intake-ai-queue.sql',
   '0005_common_stepford_cuckoos.sql',
-  '0006_feedback-loop-builds.sql',
+  '0006_tenant-data-retention.sql',
+  '0007_feedback-loop-builds.sql',
 ];
 
 export interface FeedbackDbHarness {

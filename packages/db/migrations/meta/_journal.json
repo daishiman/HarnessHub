@@ -47,8 +47,15 @@
     {
       "idx": 6,
       "version": "6",
-      "when": 1785746920046,
-      "tag": "0006_feedback-loop-builds",
+      "when": 1785746695565,
+      "tag": "0006_tenant-data-retention",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1785757672226,
+      "tag": "0007_feedback-loop-builds",
       "breakpoints": true
     }
   ]
