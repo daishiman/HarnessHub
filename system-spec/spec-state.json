@@ -373,7 +373,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-088",
+        "qa_ref": "qa-140",
         "serves_goals": [
           "G1",
           "G4"
@@ -1122,6 +1122,11 @@
       "id": "qa-139",
       "question": "C02 atomic writer の単一書込み境界を維持しながら、inline Python が変数や Path 式で graph authority を組み立てる迂回を C10 PreToolUse でどう扱いますか?",
       "answer": "ユーザーの 2026-08-03 最終レビュー・仕様反映・公開指示を明示承認として、qa-122 と最新 main の qa-138 を全面維持し、C10 の inline Python 書込み検出を追加確定する。\n\n【1. 保護境界】graph authority は `.dev-graph/state/`、`.dev-graph/config.json`、`graph-node.schema.json` とし、初期 config / graph は正規 writer、node 更新は C02 `upsert-node.py` だけが書く。`.dev-graph/tmp/`、`cache/`、`templates/` は再生成領域なので一律遮断しない。\n\n【2. AST 静的検出】`python -c` と heredoc の本文は実行せず AST で解析し、変数代入、Path の `/`・`joinpath`・`parent`・`with_name`・`with_suffix`、`os.path.join`、f-string、`%` / `format`、list/tuple join、import 別名、`str` / `os.fspath` 包み、bytes path を定数伝播で評価する。`open` / `os.open` / Path 書込み / shutil / os rename・remove 系を対象とし、rename / move は元と宛先の双方を変更対象として判定する。\n\n【3. fail-closed と性能】評価不能な式でも `.dev-graph/` prefix または `state/graph.json` 末尾が確定すれば安全側で遮断する。遮断判定は subprocess、network、graph 全件検証を起動せず、PreToolUse timeout が許可窓になる構造を作らない。読取専用と保護外領域は通し、誤遮断で正規手順を壊さない。\n\n【4. 意図的な限界】`exec` / `eval` 内の再帰的 source、任意の文字列変換、別 script file の本文解析は C10 の範囲外とする。再帰実行や任意 file 読込みは遮断時間を入力に依存させるためで、script 経由の drift は PostToolUse 監査と C02 writer 規約で補完する。\n\n【5. 回帰と責務分離】BLOCK / PASS、実プロセス exit 2、subprocess 非起動、深さ上限、性能余裕、既知の限界を自動テストで固定する。path 評価、書込み対象収集、hook entrypoint、境界テストを責務別ファイルへ分離する。\n\n【6. 製品境界】変更は repository 内の Dev Graph 開発品質ゲートに限定し、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-140",
+      "question": "qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。\n\n【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。\n\n【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。\n\n【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -1232,6 +1237,10 @@
     {
       "id": "appr-028",
       "note": "ユーザーの 2026-08-03 最終レビュー、仕様反映、main 同期、公開指示を HarnessHub-f84o の C10 AST 契約追加の明示承認として記録する。"
+    },
+    {
+      "id": "appr-029",
+      "note": "ユーザーが 2026-08-03 に HarnessHub-7xi9 の最終レビューを依頼し、更新時刻診断の訂正を system-spec / specs / architecture / docs / features / tasks へ正規反映して公開することを明示承認した。"
     }
   ],
   "reopen_log": [
@@ -2199,6 +2208,12 @@
       "category": "dev-workflow",
       "platform": "web",
       "reason": "HarnessHub-f84o の AST guard 契約を最新 main の qa-138 に加算し、旧 qa-138 ID 衝突を解消して正規再確定するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-7xi9 の 2026-07-31 更新時刻クラスタは非Git系clobberと断定できず、reflog の reset --hard + pull という直接証拠と新規の非ブロッキング診断契約を qa-088 へ追補する必要がある",
       "from": "確定"
     }
   ],
