@@ -265,20 +265,20 @@ def test_in1_assembled_output_passes_source_citation(tmp_path):
 def test_in1_fixture_valid_exit0():
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-valid.json")
-    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 0
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(SKILL_DIR)]) == 0
 
 
 def test_in1_fixture_missing_target_exit1(capsys):
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-missing.json")
-    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 1
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(SKILL_DIR)]) == 1
     assert "postgres" in capsys.readouterr().err
 
 
 def test_in1_fixture_host_mismatch_exit1(capsys):
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-host-mismatch.json")
-    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 1
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(SKILL_DIR)]) == 1
     assert "official_host" in capsys.readouterr().err
 
 

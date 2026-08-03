@@ -2,14 +2,10 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "run-system-spec-doc-fetch",
-    "skill_md_sha256": "e7b88137a0a4735906498e2c6558c07c8a70c109e2b44146161969cd9cb8a353"
+    "skill_md_sha256": "8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "incremental-focused-combined-reviewer",
-  "reviewed_at": "2026-08-03T15:00:00Z",
-  "iterations": 1,
-  "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
@@ -17,13 +13,17 @@
     "dependency_break": 0,
     "smell": 0
   },
+  "reviewer": "independent-content-reviewer",
+  "reviewed_at": "2026-08-03T00:00:00Z",
+  "iterations": 1,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "単一責務 (公式ドキュメント出典記録の組み立て) が維持され、evidence 束縛の追加は既存の検証可能性 (IN1) を強化する妥当な深化。allowed-tools は WebSearch/WebFetch/Read/Write/Bash で最小権限。",
-      "出力契約が schema (fetched-references.schema.json) に接地し、IN1 = validate-source-citation.py exit0 が検証可能述語。evidence_ref/evidence_sha256 の追加は schema required・Output Contract JSON 例・必須リストの全層で一致。前回の Output Contract ドリフトが解消。",
-      "SSOT 原則が貫通: build-fetched-references.py が決定論 assembler、手書き JSON 緑化を Key Rule4 で禁止。knowledge qualification の単一 writer (C01 set-knowledge-candidate) 経由も維持。"
+      "frontmatter: name=kebab+run prefix、kind=run、effect=local-artifact、allowed-tools=[WebSearch,WebFetch,Read,Write,Bash] が最小権限維持。R4 追加で responsibilities 4 件、responsibility_refs 4 件が整合",
+      "出力契約: fetched-references.schema.json に接地し IN1=validate-source-citation.py exit0 が検証可能述語。evidence_ref/evidence_sha256 が schema required・Output Contract JSON 例・必須リストの全層で一致",
+      "SSOT 原則: build-fetched-references.py が決定論 assembler、手書き JSON 緑化を Key Rule 4 で禁止。knowledge qualification の単一 writer (C01 set-knowledge-candidate) 経由も維持。鮮度判定の C08 委譲 (Key Rule 6) が R4 の co-location と両立",
+      "テスト coverage: 正例・負例 (host-mismatch/missing-target/必須フィールド欠落/重複/非 SHA256) と end-to-end IN1 検証が fixture 移動後も全 32 件 PASSED"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -31,5 +31,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental focused combined review (not exhaustive rubric scoring): working-tree 状態の SKILL.md (sha256=e7b88137a0a4735906498e2c6558c07c8a70c109e2b44146161969cd9cb8a353) を ref-skill-design-rubric 規範の主要次元で検査。FM: name=kebab+run prefix OK、description=Use when 形 OK、kind=run/effect=local-artifact/allowed-tools 整合 (Write は evidence 書出しに必要で最小権限維持)。BD: Purpose/Output Contract (JSON 例・必須リストに evidence_ref/evidence_sha256 追加済み)・Gotchas・検証コマンド・Additional Resources あり (166 行、resource-map で Progressive Disclosure)。NM: ディレクトリ名一致。境界: 鮮度判定 C08 委譲・MCP 対象外を維持。SSOT: build-fetched-references.py + validate-source-citation.py。全依存実在。high severity 0。run-system-spec-compile と同一 batch で combined 評価。"
+  "notes": "independent rubric review: SKILL.md (sha256=8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939) を ref-skill-design-rubric 主要次元で検査。FM: name/description/kind/effect/allowed-tools/responsibility_refs (R4 追加済み)/responsibilities (4 件) 整合。BD: Purpose/Output Contract/Key Rules/Gotchas/検証コマンド/Additional Resources/ゴールシーク実行/局面カタログ/feedback_contract あり (170 行、resource-map で Progressive Disclosure)。NM: ディレクトリ名一致。境界: 鮮度判定 C08 委譲・MCP 対象外維持。SSOT: build-fetched-references.py + validate-source-citation.py。evidence fixtures 移動後の全依存実在を shasum 突合。high severity 0。"
 }

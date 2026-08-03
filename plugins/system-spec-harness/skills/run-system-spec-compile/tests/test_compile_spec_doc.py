@@ -79,7 +79,7 @@ def test_IN1_source_citation_exit0():
     assert REFS.is_file()
     assert _run(
         CITE_VALIDATOR,
-        ["--targets", str(SPEC), "--references", str(REFS), "--repo-root", str(FIXTURES)],
+        ["--targets", str(SPEC), "--references", str(REFS), "--repo-root", str(SKILL_DIR)],
     ) == 0
 
 

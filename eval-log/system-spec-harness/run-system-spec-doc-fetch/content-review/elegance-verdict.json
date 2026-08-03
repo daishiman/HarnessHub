@@ -2,14 +2,10 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "run-system-spec-doc-fetch",
-    "skill_md_sha256": "e7b88137a0a4735906498e2c6558c07c8a70c109e2b44146161969cd9cb8a353"
+    "skill_md_sha256": "8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "incremental-focused-combined-reviewer",
-  "reviewed_at": "2026-08-03T15:00:00Z",
-  "iterations": 1,
-  "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
@@ -17,13 +13,17 @@
     "dependency_break": 0,
     "smell": 0
   },
+  "reviewer": "independent-content-reviewer",
+  "reviewed_at": "2026-08-03T00:00:00Z",
+  "iterations": 1,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "citation retrieval integrity (evidence_ref/evidence_sha256/--repo-root) が IN1 criteria・Output Contract JSON 例・必須リスト・checklist・goal・key rules・validation command・schema・build script・R2-fetch・R3-record の全層で一貫。前回指摘の Output Contract ドリフト (JSON 例・必須リストの evidence 欠落) が修正され material inconsistency 0。",
-      "allowed-tools への Write 追加が evidence ファイル書出しに必要で最小権限原則維持。",
-      "既存の良設計判断 (公式一次情報限定/鮮度判定 C08 委譲/捏造禁止 fail-visible/恒久キャッシュ禁止/doctrine anchor 準拠) が破壊されていない。"
+      "R4-audit-doc-freshness の responsibility_refs・responsibilities 登録と Key Rule 6 (鮮度判定=C08 委譲) が矛盾なく共存: R4 は SSOT 定義をこの skill に置き実行は C08 外部起動に委ねる分離が明瞭",
+      "evidence fixtures の examples/fixture-evidence 移動後、fixture-references-valid/missing/host-mismatch の全 evidence_ref パスと SHA-256 が実ファイルと一致し全32テスト PASSED",
+      "fetched-references.schema.json・validate-source-citation.py・SKILL.md 必須フィールド定義・IN1 criteria・R2-fetch・R3-record が五重に整合",
+      "R1-R4 の 7 層プロンプトが一貫した構造と用語で記述され責務境界が明確。局面カタログに R4 を含めず C08 外部起動に限定する境界が正当"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -31,5 +31,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "incremental focused combined review (not exhaustive 30-thought): working-tree 状態の SKILL.md (sha256=e7b88137a0a4735906498e2c6558c07c8a70c109e2b44146161969cd9cb8a353) を全文読了。前回 verdict で指摘した Output Contract JSON 例 (L77-83) と必須リスト (L87) の evidence_ref/evidence_sha256 欠落が修正済み。IN1 criteria (L52)・checklist (L120)・goal (L109)・key rule 6 (L98)・doctrine anchor (L72)・validation command (L147) との一貫性を確認。schema required[] に evidence_ref/evidence_sha256 確認、validate-source-citation.py に --repo-root/evidence_ref/evidence_sha256 確認、build-fetched-references.py/R2-fetch.md/R3-record.md に evidence フィールド確認。全 17 依存ファイル実在。5 条件 (a)矛盾0 (b)漏れ0 (c)規約整合 (d)依存整合 (e)rubric high severity 0。run-system-spec-compile と同一 batch で combined 評価。"
+  "notes": "independent content review: SKILL.md (sha256=8bef0bbf461ccb07d970a96ba43053836b62518708787d419c3c4b94e75d8939) を全文読了。R4 追加 (responsibility_refs/responsibilities/本文責務正本行) と evidence fixtures の examples/fixture-evidence 移動を検証。R4 は C08 起動アダプタ経由の外部実行であり goal-seek 局面カタログ非掲載は正当。fixtures 3 ファイルの evidence_ref パス・SHA-256 を shasum -a 256 で突合済み。schema required[]・validate-source-citation.py REQUIRED_FIELDS・IN1 criteria・R2/R3 プロンプト間で必須フィールド定義が一貫。全 32 テスト PASSED。(a)矛盾0 (b)漏れ0 (c)規約整合 (d)依存整合 (e)rubric high severity 0。"
 }

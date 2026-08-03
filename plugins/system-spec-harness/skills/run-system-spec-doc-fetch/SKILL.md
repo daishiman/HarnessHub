@@ -23,6 +23,7 @@ responsibility_refs:
   - prompts/R1-identify.md
   - prompts/R2-fetch.md
   - prompts/R3-record.md
+  - prompts/R4-audit-doc-freshness.md
 schema_refs:
   - ../../schemas/fetched-references.schema.json
 responsibilities:
@@ -34,6 +35,9 @@ responsibilities:
     prompt_required: true
   - id: R3-record
     name: record
+    prompt_required: true
+  - id: R4-audit-doc-freshness
+    name: audit-doc-freshness
     prompt_required: true
 combinators:
   - with-goal-seek
@@ -59,7 +63,7 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 
 # run-system-spec-doc-fetch
 
-> システム仕様ヒアリングで使う予定の外部技術について、**最新公式ドキュメントの出典記録** `fetched-references.json` を都度取得して組み立てる run skill。起動経路は (a) `spec-compile` (C10) 前の未取得参照検出、(b) `run-system-spec-elicit` (C01) R2 ヒアリング中の裏取り要求の 2 系統。責務の正本は `prompts/R1-identify.md` / `R2-fetch.md` / `R3-record.md`。
+> システム仕様ヒアリングで使う予定の外部技術について、**最新公式ドキュメントの出典記録** `fetched-references.json` を都度取得して組み立てる run skill。起動経路は (a) `spec-compile` (C10) 前の未取得参照検出、(b) `run-system-spec-elicit` (C01) R2 ヒアリング中の裏取り要求の 2 系統。責務の正本は `prompts/R1-identify.md` / `R2-fetch.md` / `R3-record.md` / `R4-audit-doc-freshness.md`。
 
 ## Purpose & Output Contract
 
