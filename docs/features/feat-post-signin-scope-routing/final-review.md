@@ -1,3 +1,8 @@
+---
+status: confirmed
+layer: feature-quality
+---
+
 # 最終レビュー — feat-post-signin-scope-routing
 
 > P10 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-10-final-review.md`

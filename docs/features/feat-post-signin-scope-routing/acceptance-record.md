@@ -1,3 +1,8 @@
+---
+status: confirmed
+layer: feature-quality
+---
+
 # 受入判定 — feat-post-signin-scope-routing
 
 > P07 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-07-acceptance.md`
