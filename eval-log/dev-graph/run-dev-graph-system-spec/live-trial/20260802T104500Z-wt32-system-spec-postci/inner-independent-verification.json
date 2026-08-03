@@ -1,0 +1,48 @@
+{
+  "verdict": "PASS",
+  "observations": {
+    "obs1_harness_flow": {
+      "verdict": "PASS",
+      "evidence": [
+        "plugin.json: name='system-spec-harness', version='0.1.0' (>=0.1.0 satisfied)",
+        "spec-state.json: all 8 categories have category_aggregate='確定': database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops",
+        "spec-state.json: hearing_progress.complete=true (loop_count=4)",
+        "completeness-report.json: verdict='PASS', 6 aspects all PASS (foundation_trace, decision_guidance, matrix_coverage, design_knowledge_reflection, doc_freshness, prompt_quality), gaps=[]",
+        "index.md: all 8 chapters listed with '確定' status and 'confirmed' marker in table",
+        "fetched-references.json: 5 references present (sqlite/www.sqlite.org, fastapi/fastapi.tiangolo.com, flask/flask.palletsprojects.com, local-bearer-token/fastapi.tiangolo.com, postgresql/www.postgresql.org) all with official_host fields"
+      ]
+    },
+    "obs2_lineage_evidence": {
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json node 'spec-local-todo-rest-api': source_lineage has 6 non-null fields (origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/index.md', source_version='0.1.0', source_digest='70bd53a78951a83dcee28adf3898405b430df93ab77b926d0d8f6b0f417780d2', imported_at='2026-08-02T10:23:57Z')",
+        "graph.json node 'arch-local-todo-rest-api': source_lineage has 6 non-null fields (origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/backend.md', source_version='0.1.0', source_digest='f191ef52c03740957bbb6dbba1d8b471b93b9505b11f0076a8d6343b145f74a2', imported_at='2026-08-02T10:23:57Z')",
+        "sha256 digest verification PASS: system-spec/index.md computes to 70bd53a78951a83dcee28adf3898405b430df93ab77b926d0d8f6b0f417780d2 (matches source_digest)",
+        "sha256 digest verification PASS: system-spec/backend.md computes to f191ef52c03740957bbb6dbba1d8b471b93b9505b11f0076a8d6343b145f74a2 (matches source_digest)",
+        "Both nodes: confirmation_status='confirmed', confirmation_evidence.evaluator='assign-system-spec-completeness-evaluator', confirmation_evidence.evidence_ref='system-spec/completeness-report.json'",
+        "sha256 digest verification PASS: system-spec/completeness-report.json computes to 600b2ee0c9a0449e8e74d3e48a4619ce260c493b9049ec44459168c599920b8d (matches evaluated_digest in both nodes)",
+        "validate-source-digest.py: exit 0, checked=2, registered_mismatch=[]",
+        "validate-evidence-refs.py: exit 0, scanned_nodes_with_evidence=2, registered_dangling=[], existing_dangling=[]"
+      ]
+    },
+    "obs3_c02_only_no_duplication": {
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json: graph_revision=2 (exactly 2 upsert operations for spec + arch nodes)",
+        "grep 'apply_spec_transition' in plugins/dev-graph/: 0 implementation files (test shape comment only)",
+        "grep 'compile_spec_doc' in plugins/dev-graph/: 0 implementation files (test shape comment only)",
+        "specs/spec-local-todo-rest-api.md: summary/reference content, NOT full chapter duplication",
+        "architecture/arch-local-todo-rest-api.md: summary/reference content, NOT full chapter duplication"
+      ]
+    }
+  },
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "goal-spec.json: exists with original_goal and hash 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454",
+      "intermediate.jsonl: exactly 2 lines with all 6 required keys, both original_goal_hash values match",
+      "progress.json: registered_this_run=['spec-local-todo-rest-api', 'arch-local-todo-rest-api'], all 8 checklist items PASS"
+    ]
+  },
+  "blockers": []
+}

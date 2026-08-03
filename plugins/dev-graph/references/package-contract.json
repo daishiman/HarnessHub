@@ -26,7 +26,8 @@
     ],
     "hooks": [
       "guard-graph-schema",
-      "reconcile-task-lifecycle"
+      "reconcile-task-lifecycle",
+      "audit-graph-authority-drift"
     ]
   },
   "distribution": {

@@ -285,8 +285,7 @@ Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy un
 - test 分割後の変更対象コード／文書は 500 行以下を維持する
 - `origin/main` → local `main` → 本 branch の順で統合し、統合後 tree で
   task package、plugin test、content/live-trial、repository CI を再検証する
-- 仕様反映受領書:
-  `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`
+- 仕様反映受領書: `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`。2026-08-02 の C10/C11/C28 final review は `guard-authority-c10-c11-c28-spec-reflection-receipt.md` を正とする。
 
 ## 2026-07-30 PR #610 CI follow-up
 

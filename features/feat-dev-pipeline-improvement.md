@@ -128,3 +128,4 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 ## Handoff
 
 - 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`。再 plan は `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json`、昇格条件は `confirmation_status=confirmed` + `evaluation_status=pass` + `implementation_readiness=complete`。
+- 2026-08-02 の C10/C11/C28 authority 防御と Beads 更新経路は qa-138 / appr-027 に再確定し、実装・設計・検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md) を正とする。

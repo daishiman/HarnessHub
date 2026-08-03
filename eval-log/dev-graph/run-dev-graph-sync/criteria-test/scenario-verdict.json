@@ -7,7 +7,7 @@
     "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "verdict": "PASS",
-  "reviewer": "eval_c03_fcth_finalmain_r4; OUT1 refresh=fresh-live-trial-cvli-merge-20260802",
+  "reviewer": "eval_c03_fcth_finalmain_r4; OUT1 refresh=fresh-live-trial-wt32-ci-sync-r3-20260803",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,12 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260803T074100Z-wt32-ci-sync-r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/evidence/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260802T205600Z-cvli-merge-sync/evidence/progress.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260803T074100Z-wt32-ci-sync-r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260803T074100Z-wt32-ci-sync-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260803T074100Z-wt32-ci-sync-r3/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260803T074100Z-wt32-ci-sync-r3/independent-verification.json",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/transcript.jsonl",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/out/status.json",
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/independent-verification.json",
@@ -41,7 +40,7 @@
         "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260729T083756Z-pr601-sync/verdict.json",
         "plugins/dev-graph/tests/test_sync_render_schedule_v2.py::test_sync_project_item_is_stable_and_alias_failure_is_pending_retry"
       ],
-      "observed": "2026-08-02 fresh live trial (20260802T205600Z-cvli-merge-sync) は overall=PASS、nudge=0、gate=0。隔離 fixture で dry-run、apply、確認 dry-run を実行し、初回で remote title の import と Project Status の export を適用、確認 dry-run で imports/exports changes=0 を確認した。fresh Agent の独立検証は3観測すべて PASS、stable ID と snapshot は不変であり、current behavior closure digest=5fb317b755a1d1838a4ec021db75e42d9e672333c17a88f8c6968b3bc2808cab。"
+      "observed": "2026-08-03 fresh live trial (20260803T074100Z-wt32-ci-sync-r3) は overall=PASS、nudge=0、gate=0。隔離 fixture で dry-run、apply、確認 dry-run を実行し、初回で remote title の import と Project Status の export を適用、確認 dry-run で imports/exports changes=0 を確認した。fresh evaluator の独立検証は3観測すべて PASS、stable ID と snapshot は不変であり、current behavior closure digest=55e8e5dc4921e18ebb4ba7d58b859ee55ac6fc82c8d3078060a2044c47bd0e28。"
     },
     "OUT2": {
       "status": "PASS",

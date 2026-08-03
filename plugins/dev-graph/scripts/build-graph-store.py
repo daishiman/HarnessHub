@@ -5,7 +5,7 @@
 # inputs: ["argv: --repo-root PATH [--dry-run]"]
 # outputs: ["stdout: JSON initialization receipt"]
 # requires-python = ">=3.10"
-# dependencies: ["validate-graph-schema.py", "node_transaction.py", "_common.py"]
+# dependencies: ["validate-graph-schema.py", "node_transaction.py", "_common.py", "../lib/graph_envelope.py"]
 # contexts: [A, C, E]
 # network: false
 # write-scope: the caller repository .dev-graph/state/graph.json only
@@ -29,15 +29,18 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "lib"))
 
 from _common import ContractError, atomic_json, contained, dump, load_json  # noqa: E402
+from graph_envelope import (  # noqa: E402
+    CANONICAL_GRAPH_KEYS,
+    SCHEMA_VERSION,
+    envelope_violations,
+)
 from node_transaction import graph_operation_lock  # noqa: E402
 
 CONFIG_RELATIVE = Path(".dev-graph") / "config.json"
 GRAPH_RELATIVE = Path(".dev-graph") / "state" / "graph.json"
-CANONICAL_GRAPH_KEYS = frozenset(
-    {"schema_version", "repository_id", "graph_revision", "nodes"}
-)
 
 _spec = importlib.util.spec_from_file_location(
     "_dev_graph_store_validator",
@@ -77,7 +80,7 @@ def _repository_id(root: Path) -> str:
 
 def _canonical_empty(repository_id: str) -> dict[str, Any]:
     return {
-        "schema_version": "1.0.0",
+        "schema_version": SCHEMA_VERSION,
         "repository_id": repository_id,
         "graph_revision": 0,
         "nodes": [],
@@ -90,30 +93,19 @@ def _validate_existing(
     root: Path,
     repository_id: str,
 ) -> list[str]:
-    violations: list[str] = []
-    if not isinstance(document, dict):
-        return ["graph store must be an object"]
-    if set(document) != CANONICAL_GRAPH_KEYS:
-        violations.append(
-            "graph store keys must be exactly "
-            + ", ".join(sorted(CANONICAL_GRAPH_KEYS))
-        )
-    if document.get("schema_version") != "1.0.0":
-        violations.append("schema_version must be 1.0.0")
-    if document.get("repository_id") != repository_id:
-        violations.append("repository_id must match repo config")
-    revision = document.get("graph_revision")
-    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 0:
-        violations.append("graph_revision must be a non-negative integer")
-    nodes = document.get("nodes")
-    if not isinstance(nodes, list) or not all(isinstance(node, dict) for node in nodes):
-        violations.append("nodes must be an array of objects")
-    elif not violations:
-        violations.extend(
-            json.dumps(item, ensure_ascii=False, sort_keys=True)
-            for item in _validator.validate(nodes, repo_root=root)
-        )
-    return violations
+    """既存 store の envelope と nodes[] を順に検査する。
+
+    envelope 判定は `graph_envelope` の単一定義へ委譲する。同じ 4 key 契約を init・C11・
+    PostToolUse 監査が各自で書き写すと、片方だけ緩んだときに store 側の検査層が静かに
+    穴を開ける (HarnessHub-kzth の遮断できない範囲を埋める層がこれに当たる)。
+    """
+    violations = envelope_violations(document, repository_id=repository_id)
+    if violations:
+        return violations
+    return [
+        json.dumps(item, ensure_ascii=False, sort_keys=True)
+        for item in _validator.validate(document["nodes"], repo_root=root)
+    ]
 
 
 def main() -> int:

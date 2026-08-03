@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1179,
+  "graph_revision": 1180,
   "nodes": [
     {
       "acceptance": [
@@ -46954,6 +46954,127 @@
       "title": "500行制限をプロンプト系成果物へ限定し一般コードから撤廃する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-02T12:07:52.775449Z"
+    },
+    {
+      "acceptance": [
+        "inline path と改行 segment の直接書込みを C10 が拒否する",
+        "script-file drift と初回 invalid state を PostToolUse が fail-closed に検出する",
+        "C02・C11・監査が同じ exact-4-key envelope を使う",
+        "C28 が Beads 自由フィールドを正規 bridge 経由で更新する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-dev-graph-authority-addendum.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-dev-workflow.md",
+          "confidence": 0.64
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "qa-138 の Dev Graph / Beads authority 契約を aggregate から、qa-134 の責務境界と qa-070 文書行数ゲートに従って分冊する仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7fd613b24a1b65b21cecae6e7bb54c3b68841ed485662409ae8346ee66df9d91",
+        "evaluator": "validate-coverage-matrix.py",
+        "evidence_ref": "system-spec/spec-state.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-02T11:56:44Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-dev-graph-authority-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-138 の C10/C11/C28 authority 契約と実装・品質証拠を一つの追跡可能な仕様境界として維持する",
+      "graph_node_id": "spec-harness-hub-dev-graph-authority-addendum",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T12:13:53Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Dev Graph と Beads の正本更新を事前遮断・実行後監査・保存時検証・単一 bridge で保護する",
+      "related_nodes": [
+        "arch-harness-hub-dev-workflow",
+        "issue-guard-script-file-indirection-20260726",
+        "issue-guard-graph-schema-inline-python-variable-path-20260726",
+        "issue-guard-graph-schema-newline-segment-split-20260728",
+        "issue-bd-free-field-write-route-20260721"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-dev-graph-authority-addendum.md",
+        "system-spec/dev-workflow.md",
+        "architecture/harness-hub-dev-workflow.md"
+      ],
+      "scope_in": [
+        "C10 command guard",
+        "PostToolUse drift audit",
+        "C11 exact envelope",
+        "C28 Beads bridge"
+      ],
+      "scope_out": [
+        "製品 API の変更",
+        "製品 DB schema の変更",
+        "認証認可・UI・deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T13:18:41Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "d354adf3f05a030b4cb514285777099ed0c4d457213d66affdd14f3a3bc71682",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "beads",
+        "authority",
+        "quality-gate"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub Dev Graph / Beads authority 追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-02T12:13:53Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

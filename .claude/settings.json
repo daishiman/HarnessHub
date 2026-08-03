@@ -16,6 +16,12 @@
       {
         "event": "PostToolUse",
         "matcher": "Bash",
+        "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/audit-graph-authority-drift.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"",
+        "from_plugin": "dev-graph"
+      },
+      {
+        "event": "PostToolUse",
+        "matcher": "Bash",
         "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"",
         "from_plugin": "dev-graph"
       },
@@ -288,6 +294,15 @@
           }
         ],
         "matcher": "Write|Edit"
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PROJECT_DIR}/plugins/dev-graph/hooks/audit-graph-authority-drift.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\""
+          }
+        ]
       },
       {
         "matcher": "Bash",

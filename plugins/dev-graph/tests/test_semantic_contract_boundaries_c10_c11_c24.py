@@ -119,7 +119,19 @@ def test_c11_uses_canonical_schema_and_frontmatter_path_contract(tmp_path, monke
     assert mod.validate([node], repo_root=tmp_path) == []
     graph = tmp_path / ".dev-graph" / "state" / "graph.json"
     graph.parent.mkdir(parents=True)
-    graph.write_text(json.dumps({"nodes": [node]}), encoding="utf-8")
+    # canonical store path へ置く以上、C11 は exact-4-key envelope を要求する。
+    # 本テストの主題は schema と frontmatter path の契約なので、envelope は正しい形で与える。
+    graph.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "repository_id": "local:c11-contract-boundary",
+                "graph_revision": 1,
+                "nodes": [node],
+            }
+        ),
+        encoding="utf-8",
+    )
     code, captured = call_main(mod, monkeypatch, capsys, "--graph", graph, "--repo-root", tmp_path)
     assert code == 0 and json.loads(captured.out)["schema"].endswith("schemas/graph-node.schema.json")
 

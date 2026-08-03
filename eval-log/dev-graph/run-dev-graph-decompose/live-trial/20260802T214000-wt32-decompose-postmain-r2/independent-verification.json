@@ -1,0 +1,53 @@
+{
+  "evaluator": "fresh independent evaluator /root/eval_decompose_r2",
+  "verdict": "PASS",
+  "blockers": [],
+  "required_observations": {
+    "O1": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/graph and evidence/none-decompose-audit.json#/graph",
+      "detail": "Both graphs contain one architecture and four features, are acyclic, and measure max inter-feature depends_on as 1 within the declared maximum 3."
+    },
+    "O2": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/draft_publication_zero and evidence/none-decompose-audit.json#/draft_publication_zero",
+      "detail": "Real local graph writes occurred while every draft publication zero retained its distinct gate or route reason."
+    },
+    "O3": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/publication_gate and evidence/none-decompose-audit.json#/publication_gate",
+      "detail": "Three produced draft features remained excluded and the promoted user-auth feature became the sole confirmed, evaluated and ready candidate."
+    },
+    "O4": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/persisted_bindings and evidence/none-decompose-audit.json#/persisted_bindings",
+      "detail": "Separate beads and none runs persisted distinct bindings; GitHub macro-only publication was recorded unreachable from the schema rule."
+    },
+    "O5": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/derived_write_counts and evidence/none-decompose-audit.json#/derived_write_counts",
+      "detail": "Write counts came from pre/post repository state and both preview graphs were validated through stdin."
+    },
+    "O6": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/evidence_binding and evidence/none-decompose-audit.json#/evidence_binding",
+      "detail": "Each promoted feature confirmation digest was recomputed from final persisted content excluding only confirmation_evidence and matched."
+    },
+    "O7": {
+      "status": "PASS",
+      "evidence": "evidence/beads-decompose-audit.json#/gate_negative_controls and evidence/none-decompose-audit.json#/gate_negative_controls",
+      "detail": "Canonical schema negative controls rejected synthesized readiness and publication gate violations."
+    }
+  },
+  "contract_checks": {
+    "qualified_skill_calls": "PASS: four qualified dev-graph:run-dev-graph-decompose calls, two per binding",
+    "explore_forks": "PASS: exactly one read-only Explore fork per binding",
+    "required_order": "PASS: Skill1, R2 Read, R3 Read, Explore order held for both bindings",
+    "no_node_writer_after_skill2": "PASS",
+    "noop_receipts": "PASS: five sequential noops per binding with write_count=0",
+    "immutable_want": "PASS: both baselines contained the expected want digest before launch and remained unchanged",
+    "audits": "PASS: pass=true, run_binding_attested=true and identical audit implementation digest",
+    "goal_seek": "PASS: pending=0, null evidence=0 and overall=pass in both progress artifacts",
+    "output_contract": "PASS: out contains only the exact PASS status marker"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "passes_completed": 2,
+  "passes_required": 2,
+  "observations_verified": 6,
+  "observations_required": 6,
+  "observations": {
+    "obs1_first_pass_creates": "PASS - 6 content roots, config (action:created), graph store (action:created), templates copied",
+    "obs2_second_pass_zero_changes": "PASS - config: action=unchanged changed=false, graph: action=preserved_existing changed=false",
+    "obs3_template_edit_survives": "PASS - task.md edited to 3905 bytes between passes, remains 3905 bytes after pass 2",
+    "obs4_plugin_hook_source": "PASS - claude_hooks.source=plugin in config, hooks.json resolved from plugin directory",
+    "obs5_no_absolute_path_no_token": "PASS - config scanned, no absolute paths or tokens found",
+    "obs6_c11_with_node": "PASS - validate-graph-schema.py valid=true, 1 node (task-init-idempotence-test-001)"
+  },
+  "status": "PASS"
+}
