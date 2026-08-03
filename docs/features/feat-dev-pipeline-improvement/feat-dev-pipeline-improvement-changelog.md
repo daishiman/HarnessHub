@@ -10,7 +10,7 @@ layer: implementation-notes
 ## 2026-08-03: C19 task contract r2 の fresh live-trial 受領
 
 - `HarnessHub-eiky` の C19 scenario r2 への更新で旧受領書が `scenario-contract-superseded` となったため、`HarnessHub-m0bd` / Dev Graph `issue-c19-live-trial-rerun-task-contract-r2-20260803` で fresh live-trial を実行した。
-- `20260803T113353Z-m0bd-c19-r2` は overall=PASS。r2 task contract の `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGER`、公式ページを実取得して現行 version を記録する条件を満たし、C19 の focused pytest は 51 passed へ復帰した。製品仕様への影響がない層別判断と証跡は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+- `main` 統合後の `20260806T020000Z-m0bd-c19-r3-postmain` は overall=PASS。r2 task contract の `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGER`、公式ページを実取得して現行 version を記録する条件を満たした。製品仕様への影響がない層別判断と証跡は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
 
 ## 2026-08-02: prompt の行数ゲートをコードから分離
 

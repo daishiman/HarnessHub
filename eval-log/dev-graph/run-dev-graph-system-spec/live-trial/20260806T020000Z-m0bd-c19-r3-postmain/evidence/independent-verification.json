@@ -1,0 +1,51 @@
+{
+  "verifier": "independent-agent",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r2",
+  "observations": {
+    "canonical_flow_completes": {
+      "verdict": "PASS",
+      "evidence": [
+        "plugin.json: name=system-spec-harness, version=0.1.0",
+        "package-contract.json: 5 skills entry points include all 4 required (run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator)",
+        "spec-state.json exists with 8 categories x 6 platforms matrix, all confirmed/excluded, hearing_progress.complete=true",
+        "fetched-references.json exists with 3 targets (sqlite, fastapi, fastapi-security)",
+        "index.md exists with substantive content: 8 chapter table, category aggregate summary, requirements definition cross-references",
+        "completeness-report.json exists with verdict=PASS, 6 aspects all PASS, 0 gaps",
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0",
+        "validate-source-citation.py: exit 0"
+      ]
+    },
+    "source_lineage_and_evidence": {
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json contains 2 nodes: specification-local-todo-rest-api and architecture-local-todo-rest-api",
+        "specification node source_lineage has all 6 fields: origin_kind, source_plugin, source_path, source_version, source_digest, imported_at",
+        "specification node confirmation_evidence has evaluator, evidence_ref, evaluated_digest",
+        "architecture node source_lineage has all 6 fields",
+        "architecture node confirmation_evidence has evaluator, evidence_ref, evaluated_digest",
+        "validate-source-digest.py: checked=2, registered_mismatch=[] (exit 0)",
+        "validate-evidence-refs.py: scanned_nodes_with_evidence=2, registered_dangling=[], existing_dangling=[] (exit 0)"
+      ]
+    },
+    "c02_only_no_duplicates": {
+      "verdict": "PASS",
+      "evidence": [
+        "Grep for elicit/compile_spec/apply.spec.transition/validate_coverage in dev-graph/**/*.py: only 1 hit in tests/fixtures (docstring, not executable logic)",
+        "specs/specification-local-todo-rest-api.md exists with correct frontmatter graph_node_id",
+        "architecture/architecture-local-todo-rest-api.md exists with correct frontmatter graph_node_id",
+        "progress.json: all 11 checklist items PASS"
+      ]
+    }
+  },
+  "goal_seek_integrity": {
+    "verdict": "PASS",
+    "evidence": [
+      "goal-seek verification script: PASS",
+      "intermediate.jsonl has 2 rows with all 6 required keys",
+      "original_goal_hash verified as SHA-256 of original_goal",
+      "drift_signal=none in both rows"
+    ]
+  },
+  "overall": "PASS",
+  "blockers": []
+}

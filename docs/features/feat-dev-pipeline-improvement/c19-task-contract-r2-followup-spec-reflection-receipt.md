@@ -18,9 +18,9 @@ reviewed_at: 2026-08-03
 
 ## 結論
 
-今回の未コミット差分は **HarnessHub 製品の仕様・設計を変更しない**。変更は `plugins/dev-graph/` の C19 試験契約と、その未完了 follow-up の記録だけである。
+今回の変更は **HarnessHub 製品の仕様・設計を変更しない**。変更は `plugins/dev-graph/` の C19 試験契約と、その follow-up の記録だけである。
 
-新しい r2 live-trial が受領書を更新し、C19 の旧証跡検出を解消した。以後の commit、main 統合、push、Draft PR は下記の最終品質ゲートがすべて PASS した場合にのみ実施する。
+`main` 統合後の新しい r2 live-trial が受領書を更新し、C19 の旧証跡検出を解消した。commit、push、Draft PR は下記の最終品質ゲートがすべて PASS した場合にのみ実施する。
 
 ## 層別の反映判断
 
@@ -39,9 +39,10 @@ plugin 内部の技術契約の正本は `plugins/dev-graph/references/live-tria
 
 - `git diff --check`: PASS（空白エラーなし）。
 - task specification gate: `validate-system-plan.py --feature-package feature-package/feat-dev-pipeline-improvement` は exact-13、violations 0、digest `af8a73df…da6` で PASS。
-- live-trial planner: 実走前は `scenario-contract-superseded` を返して新規実走を要求し、実走後は新 verdict を `current-pass` として再利用可能と判定した。これは fail-closed（不整合を成功扱いしない）設計が正しく切り替わった証拠である。
-- 新規 live-trial: `20260803T113353Z-m0bd-c19-r2` は overall=PASS、nudge=0、gate=0。`run-system-spec-doc-fetch` が SQLite と FastAPI の公式ページを実 Fetch し、取得時刻・現行 version を記録した。
-- C19 acceptance pytest: `test_skill_criteria_evidence.py` と `test_live_trial_task_contract.py` は 51 passed。最新 task と scenario-verdict は r2 scenario ID を参照し、task_contract の 3 必須断片、3 required observations、goal-seek 証跡を満たす。
+- live-trial planner: `main` 統合直後に旧 r2 verdict を `scenario-contract-superseded` と判定して新規実走を要求した。実走後は新 verdict を `current-pass` として再利用可能と判定する。これは fail-closed（不整合を成功扱いしない）設計が正しく切り替わった証拠である。
+- 新規 live-trial: `20260806T020000Z-m0bd-c19-r3-postmain` は overall=PASS、nudge=0、gate=0。`run-system-spec-doc-fetch` が SQLite と FastAPI の公式ページを実 Fetch し、取得時刻・現行 version を記録した。独立監査 C06/C07/C08、C02 登録、source digest・evidence reference 検証、fresh evaluator の3観測もすべて PASS した。
+- C19 acceptance pytest: `test_live_trial_fixture_builders.py`、`test_skill_criteria_evidence.py`、`test_live_trial_task_contract.py` は 92 passed。最新 task と scenario-verdict が r2 scenario ID、task_contract の3必須断片、3 required observations、goal-seek 証跡を参照することを検査した。
+- 最終品質ゲート: exact-13 task specification、graph schema、open residue、live-trial task contract、文書行数、artifact placement、plugin package、`git diff --check` はすべて PASS（plugin package の 23 件は既定の非ブロッキング advisory のみ）。
 
 ## Beads と Dev Graph
 
@@ -49,7 +50,7 @@ plugin 内部の技術契約の正本は `plugins/dev-graph/references/live-tria
 - Dev Graph: `issue-c19-live-trial-rerun-task-contract-r2-20260803`
 - 依存: `HarnessHub-eiky`
 
-Beads の `external_ref` と Dev Graph の `beads_linkage` を接続した。新規 live-trial の証跡は `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/` と `criteria-test/scenario-verdict.json` に記録した。Beads は PR 作成まで in_progress を維持する。
+Beads の `external_ref` と Dev Graph の `beads_linkage` を接続した。新規 live-trial の証跡は `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-m0bd-c19-r3-postmain/` と `criteria-test/scenario-verdict.json` に記録した。Beads は PR 作成まで in_progress を維持する。
 
 ## 中学生向けの説明
 
@@ -61,4 +62,4 @@ C19 scenario に `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGE
 
 ## 行数と次のアクション
 
-この新規受領書は 500 行未満であり、既存の feature 履歴も分冊の 300 行上限内である。live-trial の `transcript.jsonl` と `pane.txt` は 500 行を超えるが、SHA-256 で束縛された一次証跡のため分割・編集せず run ディレクトリに保持する。`HarnessHub-m0bd` の実走受入条件は満たした。残る作業は、最終品質ゲート、main 統合、対象ファイルだけの commit、push、Draft PR 作成である。
+この新規受領書は 500 行未満であり、既存の feature 履歴も分冊の 300 行上限内である。live-trial の `transcript.jsonl` は 500 行を超えるが、SHA-256 で束縛された一次証跡のため分割・編集せず run ディレクトリに保持する。`pane.txt` は 500 行未満である。`HarnessHub-m0bd` の実走受入条件は満たした。残る作業は、最終品質ゲート、対象ファイルだけの commit、push、Draft PR 作成である。

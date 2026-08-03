@@ -35,7 +35,7 @@ TRIALS = REPO / "eval-log" / "dev-graph" / "run-dev-graph-system-spec" / "live-t
 # fixture 契約と矛盾する旧前提で走り FAIL した run (verdict.json を持たない)。
 STALE_TASK = TRIALS / "20260726T040700Z-sysspec-final" / "task.md"
 # 現行 scenario/task_contract に合わせて PASS を再取得した run。
-FRESH_TASK = TRIALS / "20260803T113353Z-m0bd-c19-r2" / "task.md"
+FRESH_TASK = TRIALS / "20260806T020000Z-m0bd-c19-r3-postmain" / "task.md"
 SHAPE = "system-spec"
 
 
@@ -132,7 +132,7 @@ def test_stale_task_reports_resume_flag_drift() -> None:
 def test_extra_arg_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        ("m0bd-c19-r2-20260803\"})", "m0bd-c19-r2-20260803 --resume\"})"),
+        ("m0bd-c19-r3-postmain-20260806\"})", "m0bd-c19-r3-postmain-20260806 --resume\"})"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
