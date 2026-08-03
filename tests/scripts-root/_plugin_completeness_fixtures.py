@@ -1,6 +1,6 @@
 """scripts/validate-plugin-completeness.py テスト群の共有 fixture ビルダ。
 
-同スクリプトのテストは 500 行上限のため 3 ファイルへ分割してある
+同スクリプトのテストは収集・書込・entry point 契約の 3 責務へ分割してある
 (収集/検証・登録予防層/CLI・実 repo の hooks entry point 契約)。擬似 plugin ツリーの
 構築ヘルパはどのファイルでも同じ意味で使うため、複製して drift させずここへ集約する
 (tests/criteria/_criteria_helpers.py と同じ位置づけ)。

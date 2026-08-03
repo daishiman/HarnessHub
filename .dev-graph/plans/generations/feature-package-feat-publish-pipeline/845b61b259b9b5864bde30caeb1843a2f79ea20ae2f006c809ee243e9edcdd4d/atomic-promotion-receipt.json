@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "status": "promoted",
+  "promoted_at": "2026-07-30T12:25:36Z",
+  "generation_id": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "published_digest": "sha256:3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31/atomic-promotion-receipt.json"
+  },
+  "repo_identity": "github:daishiman/HarnessHub",
+  "staging_digest": "sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "evaluated_digest": "sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "published_digest": "sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "implementation_readiness": "complete",
+  "quality_conditions": {
+    "no_contradiction": "PASS",
+    "no_missing": "PASS",
+    "consistent": "PASS",
+    "dependency_integrity": "PASS"
+  },
+  "promotion_method": "same-filesystem-atomic-rename",
+  "registration_manifest": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/dev-graph-registration.json"
+}

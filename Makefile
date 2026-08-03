@@ -2,7 +2,7 @@
 # 二重正本 drift 防止: creator-kit/skills/ 変更後に sync ターゲットを実行すること。
 # CI では --check gate (harness-creator-kit-ci.yml) が走るため二重防護となる。
 
-.PHONY: sync sync-check native-surfaces native-surfaces-dry-run native-surfaces-apply native-surfaces-check native-surfaces-pr-ready lint plugin-package-check contract-intake vendored-ssot tenant-isolation runtime-portability readme-portability prompt-contract-drift company-master-vendored config-version-lock feedback-contract content-review pytest coverage llm-coverage coverage-gate harness-coverage harness-ratchet test help
+.PHONY: sync sync-check native-surfaces native-surfaces-dry-run native-surfaces-apply native-surfaces-check native-surfaces-pr-ready lint plugin-package-check contract-intake vendored-ssot tenant-isolation runtime-portability readme-portability prompt-contract-drift company-master-vendored config-version-lock feedback-contract content-review pytest coverage llm-coverage coverage-gate harness-coverage harness-ratchet orphan-external-ref test help
 
 # LLM_COV_SINCE: 新規スキルの coverage gate 境界日。これ以降に since された loop-kind スキルは
 # coverage-gate で <80% なら fail-closed。既存スキルは ratchet で段階的に底上げ。
@@ -70,6 +70,9 @@ lint: contract-intake vendored-ssot legacy-plugin-name tenant-isolation runtime-
 	python3 scripts/lint-skill-name.py --skills-dir plugins/system-spec-harness/skills
 	python3 scripts/lint-skill-description.py --skills-dir plugins/system-spec-harness/skills
 	python3 scripts/validate-frontmatter.py --skills-dir plugins/system-spec-harness/skills
+	python3 scripts/lint-skill-name.py --skills-dir plugins/harness-hub-publisher/skills
+	python3 scripts/lint-skill-description.py --skills-dir plugins/harness-hub-publisher/skills
+	python3 scripts/validate-frontmatter.py --skills-dir plugins/harness-hub-publisher/skills
 	python3 scripts/lint-plugin-lint-coverage.py
 	# repo 全域の全 test が CI のテスト実行で到達することを fail-closed 検査 (elegant-review 2026-06-30)
 	python3 scripts/lint-test-discovery-coverage.py
@@ -89,6 +92,9 @@ lint: contract-intake vendored-ssot legacy-plugin-name tenant-isolation runtime-
 	#   governance-check.yml と同一実装を local からも呼べるようにする (HarnessHub-5u5k / 2026-07-28)
 	python3 scripts/lint-workflow-step-guard.py --self-test
 	python3 scripts/lint-workflow-step-guard.py
+	# CI の repo-root Python 検査が local pre-push へ同じ引数形で結線されているか集合突合する。
+	# 副作用・認証・non-blocking による除外は空でない理由付き allowlist のみ許可する。
+	python3 scripts/lint-ci-local-check-parity.py
 
 ## vendored-ssot: plugin 同梱 SSOT (notion_config.py / feedback_contract_ssot.py) が正本と byte 一致か検証
 vendored-ssot:
@@ -184,6 +190,15 @@ harness-coverage:
 ##   80% 絶対 gate (harness-coverage) は WARN のまま漸進を許すが、現状より悪化 (verdict/test 未添付の新規 artifact 追加) は blocking で止める。改善時は --update-floor で floor を引き上げる。
 harness-ratchet:
 	python3 scripts/validate-harness-coverage.py --ratchet
+
+## orphan-external-ref: bd issue → graph node の逆方向突合で宙に浮いた external_ref を fail-closed 検出する
+##   既存の同期系 (sync-graph / lint-open-residue / build-parity-manifest) は全て graph 起点で走査するため、
+##   graph から node が消えると、その node を指す bd issue は全ての検査の視界から同時に消える。
+##   本 lint だけが bd 起点で graph を引くため、この盲点を塞ぐ唯一の検査になる。
+##   live な bd (Dolt DB) が要るので CI ではなくローカル品質ゲート専用。
+##   `.beads/issues.jsonl` は gitignore 対象で CI には存在せず、CI へ置くと恒久 no-op になるため lint/test には束ねない。
+orphan-external-ref:
+	python3 plugins/dev-graph/scripts/lint-orphan-external-ref.py --repo-root . --scan-refs
 
 ## test: native-surfaces-check + lint + plugin-package-check + feedback-contract + content-review + pytest + gate-phase0 を順に実行する
 ##   (coverage / llm-coverage は WARN のため test には含めず、coverage-gate を CI で別途実行する)

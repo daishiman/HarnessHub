@@ -3,7 +3,7 @@
 # name: live-trial-verdict
 # purpose: trial 成果 (transcript/成果物/判定入力) を回収し、schema 自己検証済みの live-trial verdict.json を生成する。
 # inputs:
-#   - argv: --workdir --target-skill --skill-dir --launch --completion --goal-result ほか (下記 usage)
+#   - argv: --workdir --target-skill --skill-dir --launch --completion --goal-result --scenario-id --scenario-file --observation ほか (下記 usage)
 #   - env: CLAUDE_PROJECTS_DIR ($HOME/.claude/projects)
 # outputs:
 #   - stdout: verdict 要約 + 書出パス
@@ -23,12 +23,15 @@
   plugin manifest/hooks) の複合 sha256 (repo 相対パス + 内容)。
 - 生成した verdict は同梱 schemas/live-trial-verdict.schema.json で自己検証してから
   書き出す (required / enum / additionalProperties false / pattern)。
+- scenario 契約: --scenario-id を名乗る trial は --scenario-file (required_observations の
+  正本) を必須とし、--observation N=<evidence ref> で回収を宣言する。未回収項目と
+  task_args_template との乖離は scenario_contract へ機械的に列挙され、未回収があれば
+  goal_verdict は FAIL になる。scenario_id 一致だけの verdict は契約充足を意味しない。
 - 被験 skill denylist (再帰遮断) は backend.deny_target_skill が正本。
 """
 from __future__ import annotations
 
 import argparse
-import csv
 import glob as globmod
 import hashlib
 import importlib.util
@@ -148,373 +151,20 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-_BEHAVIOR_REF_KEYS = (
-    "script_refs",
-    "reference_refs",
-    "responsibility_refs",
-    "schema_refs",
-)
+_BEHAVIOR = _load_sibling("build-skill-behavior-closure")
+behavior_closure_files = _BEHAVIOR.behavior_closure_files
+skill_dir_tree_sha = _BEHAVIOR.skill_dir_tree_sha
 
 
-def _frontmatter(text: str) -> str:
-    lines = text.splitlines()
-    if not lines or lines[0].strip() != "---":
-        return ""
-    for index, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            return "\n".join(lines[1:index])
-    raise ValueError("SKILL.md frontmatter is not terminated")
-
-
-def _clean_yaml_scalar(value: str) -> str:
-    value = value.split(" #", 1)[0].strip()
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
-        value = value[1:-1]
-    return value.strip()
-
-
-def _frontmatter_refs(skill_md: Path) -> list[str]:
-    """Extract path-like *_refs without adding a PyYAML runtime dependency."""
-    lines = _frontmatter(skill_md.read_text(encoding="utf-8")).splitlines()
-    refs: list[str] = []
-    for index, line in enumerate(lines):
-        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line)
-        if not match or match.group(1) not in _BEHAVIOR_REF_KEYS:
-            continue
-        value = match.group(2).strip()
-        if value.startswith("["):
-            if not value.endswith("]"):
-                raise ValueError(f"unsupported multiline flow list: {match.group(1)}")
-            body = value[1:-1].strip()
-            if body:
-                refs.extend(
-                    _clean_yaml_scalar(item)
-                    for item in next(csv.reader([body], skipinitialspace=True))
-                    if _clean_yaml_scalar(item)
-                )
-            continue
-        if value:
-            refs.append(_clean_yaml_scalar(value))
-            continue
-        for child in lines[index + 1:]:
-            if child and not child[0].isspace():
-                break
-            item = re.match(r"^\s+-\s+(.+?)\s*$", child)
-            if item:
-                cleaned = _clean_yaml_scalar(item.group(1))
-                if cleaned:
-                    refs.append(cleaned)
-    return refs
-
-
-def _plugin_context(skill_dir: Path) -> tuple[Path, Path] | None:
-    """Return (repo root, plugin root) only for a canonical plugins/<name>/skills path."""
-    for candidate in (skill_dir, *skill_dir.parents):
-        if candidate.parent.name != "plugins":
-            continue
-        manifest = candidate / ".claude-plugin" / "plugin.json"
-        if manifest.is_file():
-            return candidate.parent.parent.resolve(), candidate.resolve()
-    return None
-
-
-def _read_package_contract(
-    plugin_root: Path, skill_name: str,
-) -> tuple[Path | None, tuple[str, ...]]:
-    """Read and validate package dependencies, narrowed for one target skill.
-
-    The package-level ``depends_on`` list is an allow-list.  If
-    ``skill_dependencies`` is present, only the mapped subset participates in
-    this skill's behavior closure.  Without the map, legacy all-dependency
-    behavior is retained.
-    """
-    path = plugin_root / "references" / "package-contract.json"
-    if not path.is_file():
-        return None, ()
-    try:
-        doc = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"package contract read/parse error: {path}: {exc}") from exc
-    depends = doc.get("depends_on", []) if isinstance(doc, dict) else None
-    if not isinstance(depends, list) or not all(
-        isinstance(item, str) and re.fullmatch(r"[a-z0-9][a-z0-9-]*", item)
-        for item in depends
-    ):
-        raise ValueError(f"package contract depends_on must be plugin slug strings: {path}")
-    if len(depends) != len(set(depends)):
-        raise ValueError(f"package contract depends_on contains duplicates: {path}")
-    scoped = doc.get("skill_dependencies")
-    if scoped is None:
-        return path, tuple(depends)
-    if not isinstance(scoped, dict):
-        raise ValueError(f"package contract skill_dependencies must be an object: {path}")
-    entries = doc.get("entry_points", {})
-    known_skills = set(entries.get("skills", [])) if isinstance(entries, dict) else set()
-    for declared_skill, dependencies in scoped.items():
-        if not isinstance(declared_skill, str) or not re.fullmatch(
-            r"[a-z0-9][a-z0-9-]*", declared_skill
-        ):
-            raise ValueError(
-                f"package contract skill_dependencies has invalid skill: {declared_skill!r}"
-            )
-        if known_skills and declared_skill not in known_skills:
-            raise ValueError(
-                "package contract skill_dependencies references an undeclared entry point: "
-                f"{declared_skill}"
-            )
-        if not isinstance(dependencies, list) or not all(
-            isinstance(item, str) and re.fullmatch(r"[a-z0-9][a-z0-9-]*", item)
-            for item in dependencies
-        ):
-            raise ValueError(
-                "package contract skill_dependencies values must be plugin slug arrays: "
-                f"{declared_skill}"
-            )
-        if len(dependencies) != len(set(dependencies)):
-            raise ValueError(
-                f"package contract skill_dependencies contains duplicates: {declared_skill}"
-            )
-        undeclared = sorted(set(dependencies) - set(depends))
-        if undeclared:
-            raise ValueError(
-                "package contract skill_dependencies must be a subset of depends_on: "
-                f"{declared_skill} -> {undeclared}"
-            )
-    return path, tuple(scoped.get(skill_name, []))
-
-
-def _contained(path: Path, root: Path, label: str) -> Path:
-    try:
-        resolved = path.resolve(strict=True)
-    except OSError as exc:
-        raise ValueError(f"declared behavior dependency missing: {label}: {path}") from exc
-    try:
-        resolved.relative_to(root)
-    except ValueError as exc:
-        raise ValueError(f"declared behavior dependency escapes repository: {label}: {resolved}") from exc
-    return resolved
-
-
-def _manifest_name(plugin_root: Path, expected: str) -> Path:
-    manifest_path = plugin_root / ".claude-plugin" / "plugin.json"
-    try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"plugin manifest read/parse error: {manifest_path}: {exc}") from exc
-    actual = manifest.get("name") if isinstance(manifest, dict) else None
-    if actual != expected:
-        raise ValueError(
-            f"plugin manifest name mismatch: expected={expected} actual={actual}"
-        )
-    return manifest_path.resolve()
-
-
-def _dependency_behavior_contract(plugin_root: Path, expected: str) -> tuple[Path, dict]:
-    """Load the harness sidecar that identifies a dependency's behavior surface."""
-    path = plugin_root / "references" / "package-contract.json"
-    try:
-        contract = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(
-            f"dependency package contract read/parse error: {path}: {exc}"
-        ) from exc
-    if not isinstance(contract, dict) or contract.get("plugin_name") != expected:
-        actual = contract.get("plugin_name") if isinstance(contract, dict) else None
-        raise ValueError(
-            "dependency package contract plugin_name mismatch: "
-            f"expected={expected} actual={actual}"
-        )
-    entry_points = contract.get("entry_points")
-    if not isinstance(entry_points, dict):
-        raise ValueError(f"dependency package contract entry_points missing: {path}")
-    for kind in ("skills", "agents", "commands", "hooks"):
-        values = entry_points.get(kind, [])
-        if not isinstance(values, list) or not all(
-            isinstance(item, str) and item for item in values
-        ):
-            raise ValueError(
-                f"dependency package contract entry_points.{kind} must be strings: {path}"
-            )
-    return path.resolve(), entry_points
-
-
-def _resolve_behavior_ref(
-    ref: str, *, skill_dir: Path, repo_root: Path, plugin_root: Path
-) -> Path:
-    """Resolve one declared *_refs entry.  Containment/existence は呼び出し元が弾く。
-
-    SKILL.md の *_refs には 2 つの書式が混在している:
-      - skill dir 相対: `scripts/foo.py`, `../../references/bar.md`
-      - repo root 相対: `plugins/<name>/skills/...`, `doc/notion-schema/...`
-    解決順は近いスコープ優先で固定する (skill dir → 同一 plugin の skill 名 → repo root)。
-    同名が skill dir と repo root の双方にある場合は skill dir 側が shadow する。module
-    import と同じ規則にすることで、宣言を読んだだけで解決先が一意に決まる。`plugins/`
-    始まりだけは plugin 間参照の既存契約として常に repo root 起点。
-
-    repo root 相対を最後に試すのは互換のため: 従来 repo root として扱われたのは
-    `plugins/` 始まりだけで、`doc/notion-schema/...` 等は解決できず fail-closed
-    停止していた (plan-live-trials が dev-graph plugin 全体で停止する原因)。
-    """
-    if ref.startswith("plugins/"):
-        return repo_root / ref
-
-    skill_relative = skill_dir / ref
-    if skill_relative.exists():
-        return skill_relative
-
-    # 拡張子もスラッシュも無い ref は同一 plugin 内の skill 名として解決する (既存挙動)。
-    if "/" not in ref and "." not in ref:
-        return plugin_root / "skills" / ref / "SKILL.md"
-
-    repo_relative = repo_root / ref
-    if repo_relative.exists():
-        return repo_relative
-
-    # どこにも無ければ skill dir 相対を返し、呼び出し元の fail-closed 検査に委ねる。
-    return skill_relative
-
-
-def behavior_closure_files(skill_dir: Path) -> list[tuple[str, Path]]:
-    """Resolve the declared behavior closure, fail-closed on missing/unsafe refs."""
-    skill_dir = Path(skill_dir).resolve()
-    skill_md = skill_dir / "SKILL.md"
-    if not skill_md.is_file():
-        raise ValueError(f"skill dir has no SKILL.md: {skill_dir}")
-
-    context = _plugin_context(skill_dir)
-    repo_root, plugin_root = context or (skill_dir, skill_dir)
-    files: dict[Path, str] = {}
-
-    def add_file(path: Path, source: str) -> None:
-        resolved = _contained(path, repo_root, source)
-        if not resolved.is_file():
-            raise ValueError(f"behavior dependency is not a file: {source}: {resolved}")
-        label = (
-            resolved.relative_to(repo_root).as_posix()
-            if context else resolved.relative_to(skill_dir).as_posix()
-        )
-        files.setdefault(resolved, label)
-
-    def add_tree(path: Path, source: str) -> None:
-        resolved = _contained(path, repo_root, source)
-        if not resolved.is_dir():
-            raise ValueError(f"behavior dependency is not a directory: {source}: {resolved}")
-        for child in sorted(resolved.rglob("*")):
-            child_resolved = _contained(child, repo_root, source)
-            if child_resolved.is_dir():
-                if child.is_symlink():
-                    raise ValueError(
-                        f"behavior dependency directory symlink is not allowed: "
-                        f"{source}: {child} -> {child_resolved}"
-                    )
-                continue
-            if "__pycache__" in child.parts or child.suffix == ".pyc":
-                continue
-            add_file(child, source)
-
-    add_file(skill_md, "SKILL.md")
-    for dirname in ("scripts", "prompts"):
-        directory = skill_dir / dirname
-        if directory.is_dir():
-            add_tree(directory, dirname)
-
-    contract_path: Path | None = None
-    declared_dependencies: tuple[str, ...] = ()
-    if context:
-        plugin_slug = plugin_root.name
-        add_file(_manifest_name(plugin_root, plugin_slug), "native plugin manifest")
-        hooks = plugin_root / "hooks"
-        if hooks.is_dir():
-            add_tree(hooks, "native plugin hooks")
-        _contract_path, declared_dependencies = _read_package_contract(
-            plugin_root, skill_dir.name
-        )
-        # Do not hash the raw target package contract.  The selected dependency
-        # set below is the behavior-relevant projection; hashing unrelated
-        # entry points or another skill's dependency map would invalidate every
-        # trial in the plugin.
-        # Bind exactly the dependency plugins boot loads for this skill.  A
-        # package without skill_dependencies keeps the legacy all-dependency
-        # closure; a scoped package avoids unrelated invalidation.
-        for dependency in declared_dependencies:
-            dep_root = _contained(
-                repo_root / "plugins" / dependency, repo_root,
-                f"declared plugin dependency {dependency}",
-            )
-            try:
-                dep_root.relative_to(repo_root / "plugins")
-            except ValueError as exc:
-                raise ValueError(
-                    f"declared plugin dependency escapes plugins root: {dependency}"
-                ) from exc
-            add_file(_manifest_name(dep_root, dependency), f"dependency manifest {dependency}")
-            dep_contract, dep_entries = _dependency_behavior_contract(dep_root, dependency)
-            add_file(dep_contract, f"dependency package contract {dependency}")
-            dep_hooks = dep_root / "hooks"
-            if dep_hooks.is_dir():
-                add_tree(dep_hooks, f"dependency hooks {dependency}")
-            for skill_name in dep_entries.get("skills", []):
-                add_tree(
-                    dep_root / "skills" / skill_name,
-                    f"dependency skill {dependency}:{skill_name}",
-                )
-            for agent_name in dep_entries.get("agents", []):
-                add_file(
-                    dep_root / "agents" / f"{agent_name}.md",
-                    f"dependency agent {dependency}:{agent_name}",
-                )
-            for command_name in dep_entries.get("commands", []):
-                add_file(
-                    dep_root / "commands" / f"{command_name}.md",
-                    f"dependency command {dependency}:{command_name}",
-                )
-            # Shared runtime assets referenced by dependency entry points commonly
-            # live at plugin root. Keep tests/docs outside the closure.
-            for dirname in ("scripts", "schemas"):
-                directory = dep_root / dirname
-                if directory.is_dir():
-                    add_tree(directory, f"dependency {dirname} {dependency}")
-
-    declared_set = set(declared_dependencies)
-    for ref in _frontmatter_refs(skill_md):
-        raw = Path(ref)
-        if raw.is_absolute():
-            raise ValueError(f"declared behavior dependency must be relative: {ref}")
-        candidate = _resolve_behavior_ref(
-            ref, skill_dir=skill_dir, repo_root=repo_root, plugin_root=plugin_root
-        )
-        resolved = _contained(candidate, repo_root, ref)
-        if context:
-            try:
-                relative_plugins = resolved.relative_to(repo_root / "plugins")
-            except ValueError:
-                relative_plugins = None
-            if relative_plugins and relative_plugins.parts:
-                referenced_plugin = relative_plugins.parts[0]
-                if referenced_plugin not in {plugin_root.name, *declared_set}:
-                    raise ValueError(
-                        "cross-plugin behavior dependency is not declared in "
-                        f"package-contract.depends_on: {referenced_plugin} ({ref})"
-                    )
-        if resolved.is_dir():
-            add_tree(resolved, ref)
-        elif resolved.is_file():
-            add_file(resolved, ref)
-        else:
-            raise ValueError(f"unsupported behavior dependency: {ref}: {resolved}")
-
-    return sorted(((label, path) for path, label in files.items()), key=lambda item: item[0])
-
-
-def skill_dir_tree_sha(skill_dir: Path) -> str:
-    """Declared behavior closure digest (legacy field name retained for compatibility)."""
-    h = hashlib.sha256()
-    for label, path in behavior_closure_files(skill_dir):
-        h.update(label.encode("utf-8"))
-        h.update(b"\0")
-        h.update(path.read_bytes())
-        h.update(b"\0")
-    return h.hexdigest()
+_SCENARIO = _load_sibling("validate-live-trial-scenario-contract")
+_FLAG_PATTERN = _SCENARIO._FLAG_PATTERN
+load_scenario = _SCENARIO.load_scenario
+parse_observation_claims = _SCENARIO.parse_observation_claims
+validate_evidence_claims = _SCENARIO.validate_evidence_claims
+observation_coverage = _SCENARIO.observation_coverage
+args_divergence = _SCENARIO.args_divergence
+validate_task_contract = _SCENARIO.validate_task_contract
+scenario_contract_blockers = _SCENARIO.scenario_contract_blockers
 
 
 def derive_overall(*, launch: str, completion: str, goal_result: str | None,
@@ -549,7 +199,11 @@ def derive_overall(*, launch: str, completion: str, goal_result: str | None,
 
 
 def validate_schema(doc, schema, path: str = "$") -> list[str]:
-    """同梱 schema 用の最小 validator (type/enum/required/properties/additionalProperties/items/pattern/minimum/minLength)。"""
+    """同梱 schema 用の最小 validator。
+
+    type/enum/required/properties/additionalProperties/items/uniqueItems/
+    pattern/minimum/minLength を扱う。
+    """
     errs: list[str] = []
     types = schema.get("type")
     if types is not None:
@@ -590,9 +244,23 @@ def validate_schema(doc, schema, path: str = "$") -> list[str]:
         for key, sub in props.items():
             if key in doc:
                 errs.extend(validate_schema(doc[key], sub, f"{path}.{key}"))
-    if isinstance(doc, list) and "items" in schema:
-        for i, item in enumerate(doc):
-            errs.extend(validate_schema(item, schema["items"], f"{path}[{i}]"))
+    if isinstance(doc, list):
+        if schema.get("uniqueItems"):
+            seen: set[str] = set()
+            for item in doc:
+                identity = json.dumps(
+                    item,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                if identity in seen:
+                    errs.append(f"{path}: uniqueItems 違反 {item!r}")
+                    break
+                seen.add(identity)
+        if "items" in schema:
+            for i, item in enumerate(doc):
+                errs.extend(validate_schema(item, schema["items"], f"{path}[{i}]"))
     return errs
 
 
@@ -621,7 +289,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--blocked", action="store_true", help="tmux 不在 / HARD_CAP 超過等の fail-closed 記録")
     ap.add_argument("--scenario-origin", default="synthetic", choices=["synthetic", "replay"])
     ap.add_argument("--scenario-id", default="",
-                    help="criteria receipt と実走を束縛する stable scenario id (任意)")
+                    help="criteria receipt と実走を束縛する stable scenario id (任意。指定時は --scenario-file 必須)")
+    ap.add_argument("--scenario-file", default="",
+                    help="required_observations の正本 (scenarios[] を持つ JSON)")
+    ap.add_argument("--observation", action="append", default=[],
+                    help="回収済み required_observation を N=<evidence ref> で指定 (複数可)")
     ap.add_argument("--tier", default="live", choices=["static", "fork", "live"])
     ap.add_argument("--downgrade-reason", default="")
     ap.add_argument("--permissions-mode", default="bypassPermissions")
@@ -702,6 +374,46 @@ def main(argv: list[str] | None = None) -> int:
             "ゴールシーク配線の実体検証に失敗: " + " | ".join(wiring_violations)
         )
 
+    # scenario 契約の機械 gate: scenario_id を名乗る trial は required_observations の
+    # 回収状況を開示する。scenario_id の一致だけでは「契約が要求する観測を一つも
+    # 取っていない run」も PASS になる (HarnessHub-dyxr)。
+    scenario_contract: dict | None = None
+    if ns.scenario_id and not ns.scenario_file:
+        print(
+            "[ERROR] --scenario-id を名乗る trial は --scenario-file が必須 "
+            "(required_observations の回収を検査できないため)",
+            file=sys.stderr,
+        )
+        return 2
+    if ns.scenario_file:
+        if not ns.scenario_id:
+            print("[ERROR] --scenario-file には --scenario-id が必須", file=sys.stderr)
+            return 2
+        try:
+            scenario = load_scenario(Path(ns.scenario_file), ns.scenario_id)
+            required_observations = list(scenario["required_observations"])
+            claims = parse_observation_claims(ns.observation, len(required_observations))
+            claims = validate_evidence_claims(workdir, claims)
+        except ValueError as exc:
+            print(f"[ERROR] {exc}", file=sys.stderr)
+            return 2
+        observed, unobserved = observation_coverage(required_observations, claims)
+        scenario_contract = {
+            "scenario_file": ns.scenario_file,
+            "scenario_id": ns.scenario_id,
+            "required_observations": required_observations,
+            "observed": observed,
+            "unobserved": unobserved,
+            "args_divergence": args_divergence(
+                scenario.get("task_args_template", ""), ns.trial_args
+            ),
+            "task_contract": validate_task_contract(scenario, workdir / "task.md"),
+        }
+        contract_blockers = scenario_contract_blockers(scenario_contract)
+        if contract_blockers and not ns.blocked:
+            goal_result = "FAIL"
+            blockers.extend(contract_blockers)
+
     goal_fit, verdict, auto_reason = derive_overall(
         launch=launch, completion=ns.completion, goal_result=goal_result,
         nudge=ns.nudge_count, gate=ns.gate_response_count, proof=ns.proof,
@@ -747,6 +459,8 @@ def main(argv: list[str] | None = None) -> int:
     }
     if ns.scenario_id:
         doc["scenario_id"] = ns.scenario_id
+    if scenario_contract is not None:
+        doc["scenario_contract"] = scenario_contract
 
     schema = json.loads(_schema_path().read_text(encoding="utf-8"))
     errs = validate_schema(doc, schema)

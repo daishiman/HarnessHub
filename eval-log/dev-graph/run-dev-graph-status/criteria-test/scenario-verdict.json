@@ -7,7 +7,7 @@
     "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
+  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; OUT1 refresh=fresh-agent/eval_c01_live_trial",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,13 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260802T104500Z-wt32-status-postci/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260726T040700Z-status-final/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260802T104500Z-wt32-status-postci/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260730T061000Z-wt13-ci-status-r2/transcript.jsonl",
+        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260730T061000Z-wt13-ci-status-r2/independent-verification.json"
       ],
-      "observed": "fresh live trial PASS。read-only status、件数・状態集計、graph/content 不変、goal-seek を独立評価で確認した。"
+      "observed": "2026-07-30 fresh live trial (20260730T061000Z-wt13-ci-status-r2) は overall=PASS、nudge=0、gate=0、poll_exit=DONE。ready / blocked の状態と理由を正しく表示し、graph・config・成果物を一切変更しない read-only 性を確認した。 外部独立 evaluator fresh-agent/eval_c01_live_trial は blockers=[] で PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

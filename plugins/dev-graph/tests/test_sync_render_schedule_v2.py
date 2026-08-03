@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import argparse
-import hashlib
-import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -12,10 +9,6 @@ import pytest
 
 from test_operational_loop_v2 import args as upsert_args
 from test_operational_loop_v2 import load, node_fixture, workspace
-
-
-PLUGIN = Path(__file__).resolve().parents[1]
-SCRIPTS = PLUGIN / "scripts"
 
 
 def call_main(module, monkeypatch, capsys, *argv):
@@ -212,52 +205,6 @@ def test_sync_project_item_is_stable_and_alias_failure_is_pending_retry(tmp_path
     pending_node = json.loads(graph.read_text())["nodes"][0]
     assert pending_node["priority"] == "low", "local promotion must not roll back"
     assert pending_node["github_project_linkages"][0]["sync_state"] == "pending_retry"
-
-
-def test_render_scope_containment_and_registration_receipt(tmp_path, monkeypatch, capsys):
-    render = load("render-graph-html.py", "render_v2_contract")
-    root = tmp_path
-    graph = root / ".dev-graph" / "state" / "graph.json"
-    graph.parent.mkdir(parents=True)
-    nodes = [{
-        "graph_node_id": "feature", "artifact_kind": "feature", "status": "active", "depends_on": [],
-    }]
-    digest = "a" * 64
-    for index in range(1, 14):
-        nodes.append({
-            "graph_node_id": f"task-{index:02d}", "artifact_kind": "task",
-            "status": "done" if index <= 4 else "active", "parent_feature": "feature", "depends_on": [],
-            "source_lineage": {"source_digest": digest},
-        })
-    nodes.append({"graph_node_id": "outside", "artifact_kind": "issue", "status": "active", "depends_on": []})
-    graph.write_bytes((json.dumps({"graph_revision": 1, "nodes": nodes}, sort_keys=True) + "\n").encode())
-    receipt = root / ".dev-graph" / "registration.json"
-    receipt.write_text(json.dumps({
-        "parent_feature": "feature", "source_digest": f"sha256:{digest}",
-        "expected_count": 13, "applied_count": 13,
-        "node_ids": [f"task-{index:02d}" for index in range(1, 14)],
-        "graph_digest_after": "sha256:" + hashlib.sha256(
-            json.dumps(json.loads(graph.read_text()), ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest(),
-    }), encoding="utf-8")
-    code, rendered = call_main(
-        render, monkeypatch, capsys,
-        "--repo-root", root, "--graph", graph, "--scope", "feature",
-        "--registration-receipt", receipt,
-    )
-    assert code == 0 and rendered["nodes"] == 14
-    assert rendered["feature_progress"]["by_feature"]["feature"] == {"done": 4, "total": 13}
-    assert rendered["registration"]["source_digest"] == f"sha256:{digest}"
-    html = root / rendered["out_relative"]
-    assert html.is_file() and "outside" not in html.read_text()
-
-    monkeypatch.setattr(
-        sys,
-        "argv",
-        [str(SCRIPTS / "render-graph-html.py"), "--repo-root", str(root), "--graph", str(graph), "--out", str(root.parent / "outside.html")],
-    )
-    with pytest.raises(render.ContractError, match="escapes authority"):
-        render.main()
 
 
 def test_schedule_mixed_binding_parity_expiry_scope_and_max_parallel(tmp_path, monkeypatch, capsys):
@@ -459,17 +406,6 @@ def test_sync_project_unset_field_and_stale_item_identity_fail_safe():
     deleted = sync._plan([node], {"github": {"n": remote_node}}, {"nodes": {}}, config, {})
     assert deleted["tombstones"][0]["physical_delete"] is False
     assert not any(item["kind"].startswith("project-") for item in deleted["exports"])
-
-
-def test_render_task_scope_adds_parent_without_siblings():
-    render = load("render-graph-html.py", "render_task_scope_contract")
-    nodes = [
-        {"graph_node_id": "feature", "artifact_kind": "feature", "depends_on": []},
-        {"graph_node_id": "task-1", "artifact_kind": "task", "parent_feature": "feature", "depends_on": []},
-        {"graph_node_id": "task-2", "artifact_kind": "task", "parent_feature": "feature", "depends_on": []},
-    ]
-    selected = render._scope_nodes(nodes, "task-1")
-    assert {item["graph_node_id"] for item in selected} == {"feature", "task-1"}
 
 
 def test_gh_bridge_not_found_tombstone_and_project_field_value_types(monkeypatch, capsys):

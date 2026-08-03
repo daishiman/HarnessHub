@@ -3,10 +3,10 @@
 # name: live-trial-boot
 # purpose: 隔離 claude セッションを tmux 上で起動し READY まで待つ (session UUID 固定で transcript を決定的に引けるようにする)。
 # inputs:
-#   - argv: <session> <cwd> [--model M] [--session-id UUID] [--target-skill plugin:skill] [--self-test]
-#   - env: BOOT_TIMEOUT(90) BOOT_GRACE(3) — テスト高速化用。通常は触らない
+#   - argv: <session> <cwd> --run-id ID [--model M] [--session-id UUID] [--target-skill plugin:skill] [--self-test]
+#   - env: BOOT_TIMEOUT(90) BOOT_GRACE(3)、hook routing 変数 (tmux stale 値を session 単位で上書き)
 # outputs:
-#   - stdout: "READY: <session> (Ns) MODEL:<model|default> SESSION_ID:<uuid>" / BOOT_FAIL / TIMEOUT
+#   - stdout: "READY: <session> (Ns) MODEL:<model|default> OWNER_PID:<pid> SESSION_ID:<uuid>" / BOOT_FAIL / TIMEOUT
 #   - exit: 0=READY / 1=BOOT_FAIL・TIMEOUT / 2=usage・denylist / 3=BLOCKED (tmux 不在)
 # contexts: [C, E]
 # network: false
@@ -58,6 +58,7 @@ _BYPASS_CONFIRM_MARKERS = (
 # (`*sh` は ssh 等を誤爆)。blacklist 外 shell (tcsh/ksh/nu/pwsh) では BOOT_FAIL も READY
 # 偽陽性 guard も無効 → TIMEOUT へ縮退 (安全側)。
 _SHELL_BLACKLIST = {"zsh", "bash", "sh", "fish", "dash", ""}
+_SESSION_SCOPED_ENV = ("SYSTEM_SPEC_AUDIT_FORK_LEDGER",)
 
 
 def _load_sibling(stem: str):
@@ -273,13 +274,22 @@ def is_bypass_permissions_confirm(text: str) -> bool:
     return all(marker in text for marker in _BYPASS_CONFIRM_MARKERS)
 
 
-def boot(backend, session: str, cwd: str, model: str, session_id: str,
+def boot(backend, session: str, run_id: str, cwd: str, model: str, session_id: str,
          timeout: int, grace: int,
-         plugin_dir: str | Path | tuple[str | Path, ...] | list[str | Path] | None = None) -> int:
+         plugin_dir: str | Path | tuple[str | Path, ...] | list[str | Path] | None = None,
+         owner_pid: int | None = None) -> int:
     # tmux 既定の対話 shell 起動→send-line に依存せず、検証済み
     # claude argv を pane の直接 shell-command として起動する。
+    effective_owner_pid = os.getpid() if owner_pid is None else owner_pid
     backend.new_session(
-        session, cwd, command_argv=build_claude_argv(session_id, model, plugin_dir)
+        session,
+        cwd,
+        command_argv=build_claude_argv(session_id, model, plugin_dir),
+        run_id=run_id,
+        owner_pid=effective_owner_pid,
+        environment_overrides={
+            name: os.environ.get(name, "") for name in _SESSION_SCOPED_ENV
+        },
     )
     bypass_confirmed = False
     for i in range(1, timeout + 1):
@@ -304,7 +314,10 @@ def boot(backend, session: str, cwd: str, model: str, session_id: str,
         # (shell prompt の ❯ で偽 READY しない)。受理済みgateが
         # 残っている間もREADYにせず、実入力promptまで待つ。
         if not exact_bypass_gate and not at_shell and _READY_RE.search(cap):
-            print(f"READY: {session} ({i}s) MODEL:{model or 'default'} SESSION_ID:{session_id}")
+            print(
+                f"READY: {session} ({i}s) MODEL:{model or 'default'} "
+                f"OWNER_PID:{effective_owner_pid} SESSION_ID:{session_id}"
+            )
             return 0
         # 死亡検出: direct process が即死すると tmux session が消失し
         # pane_current_command="" になる。後方互換の shell 復帰も同じ分岐。
@@ -353,6 +366,11 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("session", nargs="?")
     ap.add_argument("cwd", nargs="?")
+    ap.add_argument(
+        "--run-id",
+        default="",
+        help="session の所有 run-id。session 名は lt-<run-id>[-<slug>] にする",
+    )
     ap.add_argument("--model", default="", help="空=ユーザー既定 model。proof trial は full id 必須")
     ap.add_argument("--session-id", default="", help="transcript 固定用 UUID (省略時は自動生成)")
     ap.add_argument("--target-skill", default="",
@@ -373,6 +391,16 @@ def main(argv: list[str] | None = None) -> int:
     if not backend.valid_session_name(ns.session):
         print(f"[ERROR] invalid session name: {ns.session}", file=sys.stderr)
         return 2
+    if not backend.valid_run_id(ns.run_id):
+        print(f"[ERROR] invalid or missing run-id: {ns.run_id}", file=sys.stderr)
+        return 2
+    if not backend.session_belongs_to_run(ns.session, ns.run_id):
+        print(
+            f"[ERROR] session {ns.session!r} does not belong to run-id "
+            f"{ns.run_id!r}",
+            file=sys.stderr,
+        )
+        return 2
     if not Path(ns.cwd).is_dir():
         print(f"[ERROR] cwd not found: {ns.cwd}", file=sys.stderr)
         return 2
@@ -392,7 +420,7 @@ def main(argv: list[str] | None = None) -> int:
     timeout = int(os.environ.get("BOOT_TIMEOUT", "90"))
     grace = int(os.environ.get("BOOT_GRACE", "3"))
     return boot(
-        backend, ns.session, ns.cwd, ns.model, session_id, timeout, grace,
+        backend, ns.session, ns.run_id, ns.cwd, ns.model, session_id, timeout, grace,
         plugin_dir=plugin_dirs,
     )
 

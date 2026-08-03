@@ -1,0 +1,36 @@
+{
+  "name": "@harness-hub/publisher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "skills-package を Harness Hub へ公開する CLI (feat-publisher-plugin AD-1)。plugins/harness-hub-publisher の薄いラッパーから呼び出される単一実装",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "bin": {
+    "harness-publisher": "./bin/harness-publisher.mjs"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "scripts": {
+    "test": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "pnpm --workspace-root exec biome check apps/publisher",
+    "cli": "tsx src/cli/index.ts",
+    "check:plaintext-secret-storage": "node scripts/check-plaintext-secret-storage.mjs"
+  },
+  "dependencies": {
+    "@harness-hub/inspection": "workspace:*",
+    "@harness-hub/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.7",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0"
+  }
+}

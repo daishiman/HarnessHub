@@ -12,7 +12,7 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — 採用経路の onboarding/更新導線/障害時対応手順の確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:08Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-07-30T02:25:21.272203Z"
 status: "closed"
 depends_on: ["SYS-STAGE0-DISTRIBUTION-GATE-P11"]
 related_nodes: ["feat-stage0-distribution-gate","arch-harness-hub-infrastructure"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-21T03:18:16Z","evidence_refs":["tasks/feat-stage0-distribution-gate/sys-stage0-distribution-gate-p12.md","docs/features/feat-stage0-distribution-gate/stage0-gate-conclusion.md","docs/features/feat-stage0-distribution-gate/acceptance-record.md"],"policy":"manual","reconciled_at":"2026-07-30T02:24:47Z","source":"manual","status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-stage0-distribution-gate` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## Post-close handoff (2026-07-30)
+
+P07 が Stage 0 を REJECTED としたため P12 は意図どおり非実行であり、
+`runbook.md` は作成されていない。これは必須成果物の欠落ではなく、
+fail-closed な phase gate（前工程が不合格なら後工程を実行しない仕組み）の結果である。
+
+公式 marketplace 仕様で確認した `git-subdir` の再検証は、本 task を遡って
+完了扱いにせず後続 `HarnessHub-n2c0` が担当する。再検証が A1〜A3 をすべて
+満たした場合だけ、新しい計画世代で P08 以降と P12 runbook を再計画する。

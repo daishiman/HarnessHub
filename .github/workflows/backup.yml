@@ -27,8 +27,9 @@ jobs:
           missing=""
           [ -n "${{ secrets.TURSO_DATABASE_URL }}" ] || missing="$missing TURSO_DATABASE_URL"
           [ -n "${{ secrets.TURSO_AUTH_TOKEN }}" ] || missing="$missing TURSO_AUTH_TOKEN"
-          [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] || missing="$missing CLOUDFLARE_API_TOKEN"
+          [ -n "${{ secrets.CLOUDFLARE_R2_API_TOKEN }}" ] || missing="$missing CLOUDFLARE_R2_API_TOKEN"
           [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          [ -n "${{ secrets.BACKUP_HEARTBEAT_URL }}" ] || missing="$missing BACKUP_HEARTBEAT_URL"
           if [ -n "$missing" ]; then
             echo "::error::backup に必要な secret が未設定です:$missing"
             echo "投入手順: docs/features/feat-hub-foundation/runbook.md §1"
@@ -76,7 +77,8 @@ jobs:
       # 起動するため、相対パスだと apps/hub/backup/... を指してしまい upload も検証も落ちる。
       - name: R2 へ upload (Wrangler)
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # Wrangler が読む env 名は固定だが、値は Workers deploy 権限を持たない R2 専用 secret から渡す。
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
@@ -86,7 +88,7 @@ jobs:
       # upload しただけでは「復元できる」ことの根拠にならないため、実体を取り直して byte 単位で照合する
       - name: upload 結果の検証
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
@@ -101,8 +103,4 @@ jobs:
       - name: heartbeat 通知
         if: success()
         run: |
-          if [ -z "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]; then
-            echo "::warning::BACKUP_HEARTBEAT_URL 未設定のため heartbeat を送出していません (cron 失敗検知が効きません)"
-            exit 0
-          fi
           curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"

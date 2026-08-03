@@ -1,0 +1,80 @@
+{
+  "document_type": "requirements-document",
+  "feature_id": "F-LIVE-001",
+  "feature_title": "live-trial fixture の確定 feature",
+  "feature_package_id": "feature-package/F-LIVE-001",
+  "architecture_refs": ["LT-ARCH-001"],
+  "graph_snapshot_digest": "sha256:1c66ca975690dd1007827b924e7215358a52d18e61727dd3bb8479c91eaf5631",
+  "gate_results": {
+    "C11_schema_validation": {
+      "status": "pass",
+      "valid": true,
+      "violations": [],
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    "C02_source_digest": {
+      "status": "pass",
+      "checked": 15,
+      "registered_mismatch": [],
+      "lineage_closure": [
+        "F-LIVE-001",
+        "LT-ARCH-001",
+        "SYS-LIVE-001-P01",
+        "SYS-LIVE-001-P02",
+        "SYS-LIVE-001-P03",
+        "SYS-LIVE-001-P04",
+        "SYS-LIVE-001-P05",
+        "SYS-LIVE-001-P06",
+        "SYS-LIVE-001-P07",
+        "SYS-LIVE-001-P08",
+        "SYS-LIVE-001-P09",
+        "SYS-LIVE-001-P10",
+        "SYS-LIVE-001-P11",
+        "SYS-LIVE-001-P12",
+        "SYS-LIVE-001-P13"
+      ]
+    },
+    "system_plan_validation": {
+      "status": "pass",
+      "validated_digest": "sha256:d488766cbbc092b6745f7b136d365f452bfa82dd7ad7bb254a0400da14740e45",
+      "phase_refs": ["P01","P02","P03","P04","P05","P06","P07","P08","P09","P10","P11","P12","P13"],
+      "violations": []
+    }
+  },
+  "readiness_matrix": {
+    "LT-ARCH-001": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "F-LIVE-001": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P01": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P02": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P03": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P04": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P05": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P06": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P07": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P08": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P09": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P10": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P11": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P12": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"},
+    "SYS-LIVE-001-P13": {"confirmation_status": "confirmed", "evaluation_status": "pass", "implementation_readiness": "complete"}
+  },
+  "task_dependency_chain": [
+    {"id": "SYS-LIVE-001-P01", "title": "要件ベースライン確定 (P01)", "phase": "P01", "depends_on": []},
+    {"id": "SYS-LIVE-001-P02", "title": "アーキテクチャとワークストリーム設計 (P02)", "phase": "P02", "depends_on": ["SYS-LIVE-001-P01"]},
+    {"id": "SYS-LIVE-001-P03", "title": "独立設計レビュー (P03)", "phase": "P03", "depends_on": ["SYS-LIVE-001-P02"]},
+    {"id": "SYS-LIVE-001-P04", "title": "テストファースト設計 (P04)", "phase": "P04", "depends_on": ["SYS-LIVE-001-P03"]},
+    {"id": "SYS-LIVE-001-P05", "title": "実装 (P05)", "phase": "P05", "depends_on": ["SYS-LIVE-001-P04"]},
+    {"id": "SYS-LIVE-001-P06", "title": "テスト実行 (P06)", "phase": "P06", "depends_on": ["SYS-LIVE-001-P05"]},
+    {"id": "SYS-LIVE-001-P07", "title": "feature 受入判定 (P07)", "phase": "P07", "depends_on": ["SYS-LIVE-001-P06"]},
+    {"id": "SYS-LIVE-001-P08", "title": "リファクタリングと移行 (P08)", "phase": "P08", "depends_on": ["SYS-LIVE-001-P07"]},
+    {"id": "SYS-LIVE-001-P09", "title": "品質・セキュリティ・運用保証 (P09)", "phase": "P09", "depends_on": ["SYS-LIVE-001-P08"]},
+    {"id": "SYS-LIVE-001-P10", "title": "独立最終レビュー (P10)", "phase": "P10", "depends_on": ["SYS-LIVE-001-P09"]},
+    {"id": "SYS-LIVE-001-P11", "title": "再現可能な証跡整備 (P11)", "phase": "P11", "depends_on": ["SYS-LIVE-001-P10"]},
+    {"id": "SYS-LIVE-001-P12", "title": "ドキュメントと運用手順 (P12)", "phase": "P12", "depends_on": ["SYS-LIVE-001-P11"]},
+    {"id": "SYS-LIVE-001-P13", "title": "リリースとクローズアウト (P13)", "phase": "P13", "depends_on": ["SYS-LIVE-001-P12"]}
+  ],
+  "incomplete_nodes": [],
+  "missing_sections": [],
+  "generated_at": "2026-08-02T13:40:00Z"
+}

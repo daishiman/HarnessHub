@@ -15,13 +15,39 @@
 // 迂回させるのではなく必要な能力をここから出す。
 export { applyDdlStatements, splitMigrationSql } from '../backup/ddl';
 export { createTursoClient, createTursoWebClient } from '../connection/turso';
+// R2 PackageRegistry。consumer (feat-publish-pipeline の package upload) は
+// `@harness-hub/db/registry` の subpath ではなく必ずこの入口から取る —
+// subpath 直参照は detector が boundary-bypass-deep-import として落とす。
 export {
+  createPackageRegistry,
+  type PackageRegistry,
+  type PutPackageResult,
+  packageR2Key,
+  type R2BucketLike,
+} from '../registry/index';
+export {
+  type AiJobRow,
   type CoreRepositories,
   type CoreRepositoriesInput,
   createCoreRepositories,
+  createDocsCmsRepository,
+  createHearingIntakeRepository,
+  createHearingSmokeDbProbe,
+  createPublishSmokeDbProbe,
   type DeviceAuthorizationRow,
+  type DocsCmsRepository,
+  type DocumentRow,
+  type HearingIntakeRepository,
+  type HearingSheetRow,
+  type HearingSmokeDbProbe,
+  type HearingSmokeJobSnapshot,
+  type HearingSmokeSheetSnapshot,
+  type HearingSmokeTenantFixture,
   type IdpConnectionRow,
   type PublisherTokenRow,
+  type PublishSmokeDbProbe,
+  type PublishSmokeEvidence,
+  type TenantCoefficientRow,
   type TenantRow,
   type UserRow,
 } from '../repository/composition';
@@ -39,11 +65,15 @@ export { createRepositoryContext, type RepositoryContextInput } from './context'
 export type { DrizzleSchema, QueryFilter } from './drizzle';
 
 export {
+  ConnectionPoisonedError,
   DriverNotSupportedError,
   EntityNotFoundError,
   RepositoryError,
   type RepositoryErrorCode,
 } from './errors';
+// 接続が壊れたときの判定述語。アプリ層が「再試行して良い競合」と「接続を作り直すべき故障」を
+// 見分けるために必要 (毒エラーは drizzle に包まれるので instanceof だけでは判らない)。
+export { isConnectionPoisoned, isLockConflict } from './lock-conflict';
 export {
   DEFAULT_PAGE_SIZE,
   defineRepositoryFactory,

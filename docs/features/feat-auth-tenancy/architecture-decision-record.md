@@ -26,9 +26,11 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend]
 | [AD-7](#7-ad-7-session-は-jwt-stateless--session_revocations-による即時失効の-2-段で構成する) | session は JWT stateless + session_revocations 即時失効の 2 段 | session-jwt-staleness-…-qa036 |
 | [AD-8](#8-ad-8-dev-専用-provider-を構造的に存在させない) | dev 専用 provider を構造的に存在させない (CI 禁止検査で恒久化) | no-hub-native-account-…-i7 |
 | [AD-9](./architecture-implementation-notes.md#9-ad-9-数値契約は-libauthconfigts-の-1-箇所を正本にする) | 数値契約は `apps/hub/src/lib/auth/config.ts` の 1 箇所を正本にする | 全件の検証可能性 |
+| [AD-10](./architecture-decision-record-shared-google-oidc.md) | 共通 Google OAuth client 方式: 環境単位の共有 secret + 共通 callback 1 本 + 署名付き `state` + `hd` 照合。AD-5 の代替ではなく併存 | issue-auth-tenancy-shared-google-oidc-20260729 |
 
 > [実装追補](./architecture-implementation-notes.md) に AD-9 と P05〜P09 で確定した詳細がある。
 > AD-1〜AD-9 を覆すものではなく、粒度を実装レベルまで下ろしたもの。
+> AD-10 は P13 完了後に追加した 2 本目の方式で、[別文書](./architecture-decision-record-shared-google-oidc.md)に分離してある。
 
 ---
 

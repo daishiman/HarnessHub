@@ -1,0 +1,47 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/system-spec-lp36-hook-final-r2",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "assign-system-spec-completeness-evaluator",
+    "dev-graph:run-dev-graph-system-spec",
+    "run-dev-graph-system-spec",
+    "run-system-spec-compile",
+    "run-system-spec-doc-fetch",
+    "run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "e90c85853680f5666643a07ca15999b90548aefeb32a2b18287753edee5efd98",
+  "transcript_sha256": "179ddbc679439b0ca2ab4892edd42b9bf732b90c8798c68d7c675f8448e58735",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 15.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 1342.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage"
+}

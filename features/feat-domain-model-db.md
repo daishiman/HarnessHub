@@ -12,8 +12,8 @@ iteration: "Stage 1"
 title: "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-25T21:18:40Z"
-status: "active"
+updated_at: "2026-08-02T20:51:47.946447Z"
+status: "closed"
 depends_on: ["feat-hub-foundation"]
 related_nodes: []
 resource_scope: ["features/feat-domain-model-db.md"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-25T21:18:40Z","origin_kind":"generated","source_digest":"2cde8657ead407a7bdf9c19833207c9d9fbcf9372bc64789a118de70252bc83c","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T06:25:09Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-domain-model-db.md","confidence":0.9}]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-02T03:44:36Z","evidence_refs":["docs/features/feat-domain-model-db/acceptance-record.md","docs/features/feat-domain-model-db/evidence-summary.md","docs/features/feat-domain-model-db/release-record.md"],"policy":"manual","reconciled_at":"2026-08-02T03:44:36Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -84,7 +84,14 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 
 - 日次 export は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、四半期 drill と障害復旧は同じ成果物を `restore-control-plane.ts` で検証付き restore する。
 - runbook のコマンドは `packages/db/__tests__/runbook-invocation.test.ts` が記載どおりに実走し、`pnpm --filter` の cwd 差と引数透過の回帰を検出する (`HarnessHub-0yvi`)。
-- remote の backup / deploy 実走確認は `HarnessHub-fnzl` に残し、最小権限 token 分離は `HarnessHub-bda4` に分離している。
+- remote の backup / deploy 実走確認は `HarnessHub-fnzl` へ分離した。2026-08-01 に `hub-ci` run `30684710098` と `hub-backup` run `30686023662` が success となり、同課題は closed。最小権限 token 分離の追跡は `HarnessHub-bda4` が担う。
+
+## 接続復旧の実装反映 (2026-07-30 / `HarnessHub-njkm`)
+
+- process-local libSQL 接続が `SQLITE_BUSY` で壊れた可能性を検知し、read/write/transaction を `ConnectionPoisonedError` で止める fail-fast 境界を追加した。
+- `TursoAdapter.reconnect()` / `isPoisoned()` を公開し、公開 client の参照を変えずに raw 接続だけを作り直す。
+- request-bound の Turso remote / D1 は従来の競合再試行を維持し、ローカル固有の隔離を本番経路へ波及させない。
+- 子プロセスによる実 file lock テストで、未 commit 行が別接続から見えないことと、明示 reconnect 後の書き込みが見えることを確認する。
 
 ## アーキテクチャ参照
 
@@ -106,3 +113,9 @@ Tenant→Workspace→Project→TargetChannel→Release(immutable) のドメイ�
 ## 上流未解決 (P02 設計時に解消)
 
 - User 基底テーブルの owner feature が未明記 (qa-024 は User 拡張列 department/salary のみ確定、既存不変エンティティ一覧にも User が無い)。P02 で本 feature が User 基底スキーマの owner かを確定する。feat-user-org-admin は安全側で write_scope を追加分 (packages/db/schema/user-org-admin/) に限定済み (出典: feat-user-org-admin plan 設計判断 2026-07-17)
+
+## Closeout (2026-08-02 / `HarnessHub-u6q` / qa-123)
+
+- SQLite 方言互換 schema、Release immutable 強制、content-addressed R2 registry、日次 export / restore の実行証跡を固有受入として本 feature を閉じた。
+- `feat-hub-foundation` の SLO 観測 follow-up は運用上の独立課題であり、本 feature の DB 契約や完了判定へ混入させない。
+- 外部 API、DB schema、認証認可、UI、deploy unit の追加変更はない。最終レビュー記録と仕様影響は [P10 最終レビュー記録](../docs/features/feat-domain-model-db/final-review-record.md) および [feature closeout 仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。

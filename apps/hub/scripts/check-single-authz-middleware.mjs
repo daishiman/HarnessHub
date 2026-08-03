@@ -44,7 +44,7 @@ const ALLOWLIST = [
     reason: 'role の**型**定義 (z.enum)。値の意味付けはせず、判定は lib/authz が行う',
   },
   {
-    path: 'apps/hub/tests/auth-tenancy/authz-matrix.test.ts',
+    path: 'apps/hub/tests/auth-tenancy/authz-decision-matrix.test.ts',
     reason: 'backend-spec §3.3 の matrix を仕様側から書き下す表。実装を参照すると検査が自己言及になる',
   },
   {

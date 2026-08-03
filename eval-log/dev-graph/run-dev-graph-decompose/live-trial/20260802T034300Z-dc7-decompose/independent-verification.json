@@ -1,0 +1,43 @@
+{
+  "evaluator": "independent-claude-opus-4.6",
+  "result": "PASS",
+  "blockers": [],
+  "caveats": [
+    "Three transient command failures were immediately recovered with corrected absolute-path or source-lineage commands; the final persisted evidence and both audits were not corrupted.",
+    "The task goal hash is the hash of the canonical original_goal, not the user-facing want text; both goal-seek validators confirmed the same canonical value."
+  ],
+  "observations": {
+    "dag_and_granularity": {
+      "result": "PASS",
+      "evidence": "Both graphs contain one architecture and four features in an acyclic DAG; the measured maximum inter-feature dependency count is 1, within the declared limit of 3."
+    },
+    "draft_publication_gate": {
+      "result": "PASS",
+      "evidence": "Both audits record zero draft publication and attribute each excluded draft to the active-not-ready draft gate, distinct from route-unreachable and no-candidate reasons."
+    },
+    "sole_candidate": {
+      "result": "PASS",
+      "evidence": "Three produced draft features remain excluded while produced feat-user-auth-001 is confirmed, evaluation-pass, readiness-complete, and the sole publication candidate in real-write runs."
+    },
+    "binding_routes": {
+      "result": "PASS",
+      "evidence": "Separate Beads and none runs derive distinct routes from persisted tracker_binding values; GitHub is recorded unreachable with the exact schema rule that prevents a macro-only declaration."
+    },
+    "measured_writes": {
+      "result": "PASS",
+      "evidence": "Local and tracker write counts come from pre/post publication-inventory differences, and both previews were validated through validate-graph-schema.py --graph - using stdin."
+    },
+    "confirmation_digest": {
+      "result": "PASS",
+      "evidence": "Independent recomputation from each final persisted promoted node, excluding only confirmation_evidence, matches the declared Beads and none evaluated digests."
+    },
+    "negative_controls": {
+      "result": "PASS",
+      "evidence": "Both audits report all canonical negative controls rejected, including pass-with-incomplete-readiness and publication intent on a blocked draft node."
+    }
+  },
+  "process_contract": {
+    "result": "PASS",
+    "evidence": "All required task fragments are present; Skill calls are beads=2 and none=2, Explore calls are one per series with read-only behavior, no node writer follows either Skill two, both audits pass with binding attestation, and audit implementation digests match."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "exact_thirteen": "PASS; source evidence: fixture eval-log handoff, validator output, and transcript.jsonl.",
+    "lineage": "PASS; source evidence: fixture eval-log handoff, source-digest validation, and transcript.jsonl.",
+    "no_implementation_source": "PASS; source evidence: fixture inspection and transcript.jsonl."
+  }
+}

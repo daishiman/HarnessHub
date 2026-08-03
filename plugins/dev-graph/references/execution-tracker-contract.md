@@ -52,7 +52,10 @@ registration payloadの`tracker_binding="repo-config-default"` sentinelと`bindi
 
 - tombstoned の bd 写像は `bd close --reason=tombstoned`。bd 側の tombstone status は実在するが delete 系操作でのみ遷移するため bridge は行わない (C28 は破壊操作を呼ばない)。
 - bd status 語彙の出典: bd v1.1.0 組込み status = open/in_progress/blocked/closed/deferred (+hooked/tombstone)。
-- parity突合対象はstatusと依存edge exact-set (`dev-graph depends_on` ↔ bd `blocks`)。priority/assignee/labelsはbd側自由領域とする。statusまたはedge差分はC03の手動確認フローへ回し、解消までready推薦から除外する。
+- parity突合対象はstatusと依存edge exact-set (`dev-graph depends_on` ↔ bd `blocks`)。priority/assignee/labelsはbd側自由領域 (= dev-graph側に対応する正本を持たず突合しない) とする。statusまたはedge差分はC03の手動確認フローへ回し、解消までready推薦から除外する。
+- **自由領域=突合対象外であって、bridge 迂回の許可ではない**。C10 guard は `bd` の mutation サブコマンドを field で選り分けず全面遮断するため、自由領域 3 field の書込経路も C28 `bd-bridge.py --op update` の `--priority` / `--assignee` / `--labels` に一本化する。guard を field 単位で緩める案は、フラグの並び・短縮形・後続コマンド連結で fail-closed が破れるため採らない (HarnessHub-dc7)。
+- `--labels` は `bd update --set-labels` への置換転送のみを受ける (add/remove の部分適用は、同一 run の適用順で最終状態が変わり receipt から再現できないため受けない)。空文字は拒否する: strings フラグの空値が全消去か空 label 1 件かは bd の公開 surface に規定が無く、§7 の「安定 surface のみに依存」に反するため。
+- guard の粒度はサブコマンド単位なので `bd update --help` のような read も遮断される。help は `bd help update` を使う (`bd show` / `bd list` / `bd ready` は遮断されない)。
 - 写像は冪等 projection として C28 bd-bridge / C12 gh-bridge が適用する。逆方向の書込み (bd 側の手動 close を dev-graph へ取り込む等) は C03 sync / C26 reconciliation の突合で検出し、自動上書きせず manual conflict へ回す。
 - system route の exact-13 package projection は registration receipt の `source_digest` を manifest に必須とする。再計画で digest が変わっても epic と13 childの `external_ref=dev-graph:<graph_node_id>` は再利用し、title/description/metadataと機能内dependency exact-setを新世代へ収束させる。旧dependencyは除去し、closed issueを含む同一external_refの重複はfail-closedで拒否する。
 
@@ -102,6 +105,25 @@ PR merged (事実 authority)
 - `upsert-node.py` の本文解決順は `--body-file` → input `body` → `--regenerate-body` → 実在artifact本文の保持 → 新規template とする。graphからnodeが消えている再注入時も、artifactが実在すれば本文を保持する。
 - metadataだけのpatchは本文を暗黙再生成しない。既存本文を破棄してtemplateへ戻す操作は `--regenerate-body` の明示opt-inに限る。
 - transaction receipt は `body_source` (`from_file|from_input|preserved|template|regenerated`) と `replaced_body_lines` を返す。一括更新の本文非破壊性は `body_source=preserved` と `replaced_body_lines=null` で検証する。
+
+### C02 exact-13 登録と task projection の所有境界
+
+- system-dev-planner の registration manifest は exact-13 node、source digest、generation receipt を所有する。task Markdown の必須 frontmatter である `purpose`、`goal`、`scope_in`、`scope_out`、`acceptance`、`architecture_refs` は C02 `upsert-node.py` が投影時に具体化する。
+- 同一 generation を再登録するとき、manifest が六項目を省略していれば `register-package.py` は保存済み node の値を保持してから比較・置換する。manifest が値を明示した場合はその値を優先し、差分を drift として検出する。六項目以外の保存済み値を広く取り込むことはしない。
+- projection による `updated_at` の前進だけは同一状態として受理する。保存済み時刻が登録時刻より前、または片方が解釈不能・欠落で文字列も一致しない場合は fail-closed とし、source digest・exact-13 構造・immutable receipt の検査を緩めない。
+
+### C02 document layer の graph/frontmatter parity
+
+- `artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する `layer` を必須とする。形式は空でない小文字 kebab-case とし、役割追加を妨げる固定 enum は置かない。
+- `layer` は document 専用 metadata であり、issue / task / specification / architecture / feature には置かない。schema は document での必須化と非 document での禁止を同時に強制する。
+- 旧 document node だけが graph に `layer` を持たず artifact frontmatter に値を持つ場合、C02 は既存 frontmatter の単一 scalar を一度だけ移行元として読み、graph へ保存してから正準 frontmatter を再生成する。新規 document の暗黙 default、重複 key、形式不正、既存 artifact にも値が無い状態は fail-closed とする。
+- docs 配置 lint は同じ `$defs.documentLayer` を参照し、C02 と別の許容値表を持たない。これにより graph validation と repository placement の判定を一つの schema へ束縛する。
+
+### C02 feature lifecycle の stale before-image 拒否
+
+- `node` または bare canonical node による feature 全体の再 upsert は、C14 が生成した同一入力を再試行する snapshot 経路である。既存 feature が前進済みなのに snapshot が `status` を `draft`、`confirmation_status` を `draft`、`evaluation_status` を `pending`、または `implementation_readiness.status` を `incomplete` へ戻す場合、C02 は stale before-image として dry-run / apply の両方を fail-closed で拒否する。
+- 拒否時は graph revision・node・artifact Markdown を変更しない。呼出側は最新 node snapshot を取り直して再試行する。
+- source 変更などに伴う意図的な再評価・lifecycle reset は、変更フィールドを列挙した `patch` で明示する。これにより、冪等な snapshot 再試行と意図的な状態遷移を入力形式で区別する。
 
 ## 5. worktree 並列実行との対応
 
@@ -210,6 +232,7 @@ C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は gra
 | `generated_at` | RFC3339 UTC (`YYYY-MM-DDThh:mm:ssZ`) | snapshot を作った時刻 |
 | `source_graph_digest` | `sha256:<64 lowercase hex>` | 素にした graph の canonical digest |
 | `nodes[]` | object[] | `graph_node_id` / `bd_issue_id` / `graph_status` / `depends_on` |
+| `graph_node_ids[]` | string[] | snapshot 時点で graph に実在した node id の全集合 (`nodes[]` の投影対象に限らない) |
 
 - `source_graph_digest` の算出式は C05 render-graph-html の `graph_digest_after` と同一 (`json.dumps(graph, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` の sha256)。整形差で stale 判定が揺れないよう、バイト列 digest ではなく canonical digest を使う。
 - 由来欠落・形式違反は C28 が fail-closed で拒否する。素性のない snapshot を流通させない。
@@ -225,7 +248,20 @@ C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は gra
 | reason | 意味 | 対処 owner |
 |---|---|---|
 | `external_ref_absent` | `bd ready` 候補が dev-graph の `external_ref` を持たない = graph 管理外の bd 課題 | 対処不要 (可視化のみ)。graph 管理下へ移すなら C02 で node 化する |
-| `parity_manifest_missing` | `external_ref` を持つのに manifest に対応 node が無い = graph 管理下の取りこぼし | C03 sync の `--parity-manifest` (= `build-parity-manifest.py`) で manifest 再生成 / linkage 修復 |
+| `graph_node_missing` | `external_ref` が指す node が `graph_node_ids` に無い = graph から消えた node への宙に浮いた参照 (orphan) | C02 で node を復元するか、失効しているなら C28 `--op close` で bd 側を閉じる。**C03 sync では解消しない** |
+| `parity_manifest_missing` | `external_ref` が指す node は graph に実在するのに manifest の `nodes[]` に無い = 投影の取りこぼし | C03 sync の `--parity-manifest` (= `build-parity-manifest.py`) で manifest 再生成 / linkage 修復 |
+| `dependency_unsatisfied` | C16 schedule の対象かつ schedulable だが、未完了の `depends_on` があるため ready-set から除外された node | `source: "schedule-graph"` と `blocking_depends_on: string[]` を確認し、列挙された上流 node の完了を待つ |
 
 - C28 は理由別件数を `unmapped_summary` として receipt に載せる。件数だけで「管理外が何件・取りこぼしが何件」を判別できるようにするため。
 - C16 schedule-graph は C28 の `unmapped` / `conflicts` を自身の `unmapped` へ `source: "bd-bridge"` 付きで引き継ぐ。schedule の判定には使わないが、report から消すことは silent drop にあたるため禁止する。
+- C16 schedule-graph は選択範囲内かつ schedulable な node の依存だけを評価し、未充足時は `external_ref`、`reason: "dependency_unsatisfied"`、`blocking_depends_on`、`source: "schedule-graph"` を `unmapped[]` に載せる。選択範囲外・非 schedulable の除外と条件分岐を分離し、依存未充足として誤報告してはならない。
+
+**graph → tracker の片方向走査が作る盲点と、逆方向の全数検査 (`lint-orphan-external-ref.py`)**
+
+C03 sync (`_plan`) も C28 manifest 生成 (`_entries`) も lint-open-residue も、走査の起点は例外なく graph の `nodes[]` である。したがって **node が graph から消えた瞬間、その node を指していた bd issue は全ての検査の視界から同時に外れる**。issue は `external_ref: dev-graph:<消えた node>` を抱えたまま open で残り、GC/削除のたびに orphan が積み上がる (HarnessHub-ii90 / HarnessHub-mfh7)。
+
+- C28 の `graph_node_missing` は、`bd ready` の候補になった orphan だけを可視化する。ready に上がらない orphan (closed 済み・依存で blocked 等) は原理的に捕まらないため、**分類の精緻化だけでは検査として完結しない**。
+- 全数の逆方向突合は `scripts/lint-orphan-external-ref.py` が担う。bd export を起点に graph を引き、参照先が実在しない issue を `closed_residue` (履歴の残骸) / `node_restorable` (md 実体あり = C02 復元) / `true_orphan` (実体なし = 処分要) へ仕分け、非クローズの残置を fail-closed で遮断する。
+- 既知の未処分 orphan は repo 側データ `scripts/dev-graph-orphan-baseline.json` の shrink-only baseline に凍結し、**新規発生のみ**を違反とする。baseline を増やす変更は「orphan を生み続ける経路を塞ぐ」という目的そのものを無効化するため認めない。処分が済んだ行は lint 出力の `resolved_baseline_entries[]` に現れ、削除を督促する (残すと同じ参照が再発しても違反にならない穴になる)。
+- baseline を plugins/ 側へ焼き込まないのは qa-070 の仕組み/ナレッジ境界による。`plugins/dev-graph/` は他 repo へ持ち出せる portable な仕組みであり、特定 repo の node id を抱えると持ち出した先で意味を失う。既知 orphan は repo 固有ナレッジなので repo 側データとして入力で受け渡す (`scripts/lint-mechanism-knowledge-boundary.py` が機械強制)。
+- 本 lint は bd の live 状態 (Dolt DB) を要求するのでローカル品質ゲートで実行する。`.beads/issues.jsonl` は受動エクスポートであり状態判定の正本ではないため読まない。

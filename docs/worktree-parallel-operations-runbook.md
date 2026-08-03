@@ -221,9 +221,31 @@ git diff --shortstat <古い基点> <最新> -- <path>
 
 ---
 
-## 6. 関連
+## 6. 並行 live-trial の安全な後片付け
+
+live-trial の tmux session は worktree をまたいで同じ tmux server に存在する。
+名前が `lt-` で始まるだけでは、自分が削除してよい session とは判断できない。
+
+通常の終了処理は boot の出力から `RUN_ID` と `OWNER_PID` を保持し、次だけを実行する。
+
+```bash
+python3 "$SCRIPTS/live-trial-backend.py" kill-session "$SESSION"
+python3 "$SCRIPTS/live-trial-backend.py" \
+  reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"
+```
+
+- `OWNER_PID` は boot READY 行の値を使い、現在の shell の `$$` で代用しない。
+- 引数なし `reap` は使わない。安全のため CLI が拒否する。
+- `reap --all` は管理者が全 live-trial session の回収を明示した場合だけ使う。
+- 別 owner、別 run、metadata 無し session は通常 reaper が残す。誤って個別削除しない。
+
+中学生向けには、run-id は「活動番号」、owner PID は「片付け担当者番号」に相当する。
+両方が合うロッカーだけを片付ける仕組みで、色が同じロッカーを全部空にしない。
+
+## 7. 関連
 
 - 課題: `issues/sys-worktree-main-ref-desync-20260728.md`
+- live-trial cleanup 課題: `issues/sys-live-trial-reap-unscoped-kill-20260728.md`
 - ガード実装: `scripts/guard-cross-worktree-ref-update.py` / `scripts/guard-worktree-desync.py`
 - 配線検査: `scripts/validate-git-hooks-wiring.py`
 - hook 実体: `<git-common-dir>/harness-hub-hooks/`（主経路）

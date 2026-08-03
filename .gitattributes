@@ -8,3 +8,7 @@
 # 未 install の環境では merge.devgraph-json が解決できず、git は従来通り行ベースで
 # 衝突表示する (壊れた自動解決にはならない = fail-safe)。
 .dev-graph/state/graph.json merge=devgraph-json
+
+# live-trial で利用者編集済み byte 列を証明する template copy は、末尾空行も
+# SHA-256 の対象になる。人手整形せず raw evidence を保持する。
+eval-log/**/live-trial/**/evidence/edited-template.md whitespace=-blank-at-eof

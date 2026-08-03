@@ -1,0 +1,42 @@
+{
+  "checklist": [
+    {
+      "id": "CL-01",
+      "description": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+      "status": "pass",
+      "evidence": "C24 resolve-repo-context.py --mode write returned repository_id=local:sha256:e140847ba36a34aff334b14425cf391cffabb1cb1fef1bf33d8167f67f2daf71, repo_root confirmed"
+    },
+    {
+      "id": "CL-02",
+      "description": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+      "status": "pass",
+      "evidence": "All 5 artifacts auto-confirmed: issue(0.95,margin=0.40), task(0.92,margin=0.32), specification(0.95,margin=0.45), architecture(0.95,margin=0.55), document(0.93,margin=0.48). All confidence>=0.80 and margin>=0.15."
+    },
+    {
+      "id": "CL-03",
+      "description": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+      "status": "pass",
+      "evidence": "validate-graph-schema.py returned valid=true, violations=[] after all 5 registrations and consecutive update. Frontmatter kind=issue matches stored path=issues/ after update."
+    },
+    {
+      "id": "CL-04",
+      "description": "package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である",
+      "status": "not_applicable",
+      "evidence": "No package registration in this scenario; only 5 individual artifacts processed"
+    },
+    {
+      "id": "CL-05",
+      "description": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+      "status": "pass",
+      "evidence": "Final graph_revision=6 (5 adds + 1 update). All 5 node IDs present in graph.json. Receipt chain: rev 0->1->2->3->4->5->6."
+    },
+    {
+      "id": "CL-06",
+      "description": "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる",
+      "status": "pass",
+      "evidence": "All 5 receipts show recovered_interrupted_transaction=false. WAL mechanism verified through upsert-node.py's node_transaction.py integration."
+    }
+  ],
+  "overall_status": "pass",
+  "completed_at": "2026-08-02T13:30:00Z"
+}

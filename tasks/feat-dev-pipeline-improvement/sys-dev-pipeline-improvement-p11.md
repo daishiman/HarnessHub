@@ -12,7 +12,7 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-25T16:56:36.431928Z"
+updated_at: "2026-07-30T01:53:05Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P10"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -209,3 +209,41 @@ This section is the current source closure and supersedes older counts or wordin
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-29 実装後の証跡追補
+
+本 P11 の promoted task spec と完了判定は変更しない。後続課題 `HarnessHub-cjwm`
+（重複 `HarnessHub-0vs2`）では、live-trial cleanup の回帰証拠を責務別 pytest、
+backend/boot self-test、内容レビュー、仕様反映受領書へ固定した。
+
+通常 reaper の証拠は「対象が消えた」だけでなく、同じ run-id の別 owner、別 run、
+metadata 無し session が残ることを含む。全件削除は明示 `--all` の正例と、
+引数なし `reap` を拒否する負例の両方を保持する。
+再検証は `python3 -m pytest tests/test_live_trial_*.py -q` と
+`python3 scripts/lint-content-review.py --all` を使う。
+
+## 2026-07-29 C11 artifact 本文の最終レビュー証跡
+
+本 P11 の promoted task spec と完了判定は変更しない。後続課題 `HarnessHub-4t9g` では、
+C11 の本文検査を全 6 artifact kind に対して固定した。
+
+- canonical template は `placeholder_only_section` で拒否する。
+- 実内容へ置換した本文は受理する。
+- 全 required section を見出しだけへ潰した mutation は拒否する。
+- `TODO` だけの節と fenced code block だけの節は拒否する。
+- architecture の構造 container は、実内容のある child section を含む場合に限り受理する。
+- C02 の template-only 新規生成と placeholder 再生成が rollback することを確認する。
+
+再検証は
+`python3 -m pytest plugins/dev-graph/tests/test_graph_artifact_readiness.py plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py plugins/dev-graph/tests/test_upsert_node_body_preservation.py -q`
+を使い、広域 gate では `plugins/dev-graph/tests` と repository `tests` を再実行する。
+
+## 2026-07-30 HarnessHub-foq6 品質ゲート追補
+
+本 P11 の promoted task spec と完了判定は変更しない。後続の空走査是正では、
+missing directory / empty directory / explicit `--allow-empty` の三分岐を専用テストへ
+分離し、focused pytest 41 passed、self-test 9 checks、実 workflow 10 件の
+violations 0 を証拠として固定した。検査対象 0 件の exit 0 は証拠として受理しない。
+再検証の全コマンドと仕様反映は
+`docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
+を正とする。

@@ -11,12 +11,16 @@ import { SESSION_COOKIE_NAME } from '../../../src/lib/auth/config.js';
 import { createDeviceFlowService } from '../../../src/lib/auth/device-flow/service.js';
 import type { DirectoryUser } from '../../../src/lib/auth/index.js';
 import { buildSessionClaims, signSessionToken } from '../../../src/lib/auth/index.js';
+// `authz/runtime.js` からではなく実体 module から取る。device flow の route テストは
+// runtime module ごと `vi.mock` で差し替えるので、そちら経由だとこの実体まで消える。
+import { createUnavailableOidcAdminService } from '../../../src/lib/auth/oidc-admin/index.js';
 import type { AuthRuntime } from '../../../src/lib/authz/runtime.js';
 import { createAuditLogger, createInMemoryAuditSink } from '../../../src/shared/audit/index.js';
 import {
   createSequentialIds,
   createTestPorts,
   directoryUser,
+  oidcConnection,
   TENANT_A,
   type TestPorts,
   WORKSPACE_A1,
@@ -44,14 +48,12 @@ export function createDeviceRouteHarness(): DeviceRouteHarness {
   const ports = createTestPorts({
     users: [directoryUser({ id: USER_ID, tenantId: TENANT_A, workspaceIds: [WORKSPACE_A1] })],
     oidcConnections: [
-      {
+      oidcConnection({
         tenantId: TENANT_A,
         tenantSlug: TENANT_SLUG,
-        issuer: 'https://idp.example.com',
         clientId: 'client-a',
         displayName: 'Acme IdP',
-        enabled: true,
-      },
+      }),
     ],
   });
   ports.clock.set(NOW);
@@ -84,6 +86,8 @@ export function createDeviceRouteHarness(): DeviceRouteHarness {
     authRoute: async () => {
       throw new Error('device route から authRoute は呼ばれない');
     },
+    // 同上。OIDC 接続管理も device flow の検査対象外なので、触れたら落ちる実体を置く
+    oidcAdmin: createUnavailableOidcAdminService(),
   };
 
   return { runtime, ports, sink };

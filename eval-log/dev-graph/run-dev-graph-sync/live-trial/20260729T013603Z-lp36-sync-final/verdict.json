@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/sync-lp36-final; dry-run/apply/dry-run with fixture remote",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "bbeb774507e984d4140611d68aaab4a46d34593d55887b3384912e43454afda6",
+  "transcript_sha256": "58465584b2c472d83e9c6c7728b714f3e57266534e9d4019f18df35aafea372f",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 6.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 302.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

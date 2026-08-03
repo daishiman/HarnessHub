@@ -31,6 +31,7 @@ GitHub Actions の step-level `if:` が「評価時点では解決できない�
 
 usage:
   python3 scripts/lint-workflow-step-guard.py [--workflows-dir PATH]
+  python3 scripts/lint-workflow-step-guard.py --workflows-dir PATH --allow-empty
   python3 scripts/lint-workflow-step-guard.py --self-test
   python3 scripts/lint-workflow-step-guard.py --simulate \
       --workflow governance-check.yml --secret NOTION_TOKEN=dummy
@@ -351,6 +352,8 @@ def _lint_text(tmp_dir: Path, name: str, text: str) -> list[str]:
 
 
 def self_test() -> int:
+    from contextlib import redirect_stdout
+    from io import StringIO
     import tempfile
 
     failures: list[str] = []
@@ -391,12 +394,30 @@ def self_test() -> int:
         if any(run is True for _, _, run in broken_with_token):
             failures.append("defect fixture が token 投入で run されてしまった (再現失敗)")
 
+        # 7-9. 検査対象 0 件は既定 fail-closed、明示 opt-in でのみ許可する
+        empty_dir = tmp / "empty-workflows"
+        empty_dir.mkdir()
+        missing_dir = tmp / "missing-workflows"
+        with redirect_stdout(StringIO()):
+            missing_status = lint_workflows_directory(missing_dir, allow_empty=False)
+            empty_status = lint_workflows_directory(empty_dir, allow_empty=False)
+            allowed_statuses = (
+                lint_workflows_directory(missing_dir, allow_empty=True),
+                lint_workflows_directory(empty_dir, allow_empty=True),
+            )
+        if missing_status == 0:
+            failures.append("workflows dir 不在を成功として扱っている")
+        if empty_status == 0:
+            failures.append("workflow 走査 0 件を成功として扱っている")
+        if allowed_statuses != (0, 0):
+            failures.append(f"--allow-empty が空走査を許可していない: {allowed_statuses}")
+
     for message in failures:
         print(f"[NG] {message}")
     if failures:
         print(f"self-test: FAIL ({len(failures)} 件)")
         return 1
-    print("self-test: OK (6 checks)")
+    print("self-test: OK (9 checks)")
     return 0
 
 
@@ -408,9 +429,41 @@ def _parse_assignments(pairs: list[str]) -> dict[str, str]:
     return result
 
 
+def lint_workflows_directory(workflows_dir: Path, *, allow_empty: bool) -> int:
+    """workflow ディレクトリを走査し、対象 0 件は明示 opt-in がない限り失敗させる。"""
+    if not workflows_dir.is_dir():
+        if allow_empty:
+            print(f"[SKIP] workflows dir not found (allowed by --allow-empty): {workflows_dir}")
+            return 0
+        print(f"[ERROR] workflows dir not found: {workflows_dir}")
+        return 1
+
+    workflow_paths = sorted(workflows_dir.glob("*.y*ml"))
+    if not workflow_paths:
+        if allow_empty:
+            print(f"[SKIP] no workflow files found (allowed by --allow-empty): {workflows_dir}")
+            return 0
+        print(f"[ERROR] no workflow files found: {workflows_dir}")
+        return 1
+
+    all_violations: list[str] = []
+    for path in workflow_paths:
+        all_violations.extend(lint_workflow(path))
+
+    for message in all_violations:
+        print(f"VIOLATION {message}")
+    print(f"summary: workflows={len(workflow_paths)} violations={len(all_violations)}")
+    return 1 if all_violations else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workflows-dir", default=str(DEFAULT_WORKFLOWS_DIR))
+    parser.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="workflow dir 不在または YAML 0 件を、意図した空走査として明示的に許可する",
+    )
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--simulate", action="store_true",
                         help="secret/vars の投入状態を仮定して run/skip を実測する")
@@ -437,20 +490,7 @@ def main() -> int:
             print(f"{mark} {job_id}: {label}")
         return 0
 
-    if not workflows_dir.is_dir():
-        print(f"[SKIP] workflows dir not found: {workflows_dir}")
-        return 0
-
-    all_violations: list[str] = []
-    checked = 0
-    for path in sorted(workflows_dir.glob("*.y*ml")):
-        checked += 1
-        all_violations.extend(lint_workflow(path))
-
-    for message in all_violations:
-        print(f"VIOLATION {message}")
-    print(f"summary: workflows={checked} violations={len(all_violations)}")
-    return 1 if all_violations else 0
+    return lint_workflows_directory(workflows_dir, allow_empty=args.allow_empty)
 
 
 if __name__ == "__main__":

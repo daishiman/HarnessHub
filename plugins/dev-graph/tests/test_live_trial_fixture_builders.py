@@ -36,6 +36,8 @@ PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
 CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
+SOURCE_DIGEST_VALIDATOR = PLUGIN / "scripts" / "validate-source-digest.py"
+SYSTEM_PLAN_VALIDATOR = PLUGIN.parent / "system-dev-planner" / "scripts" / "validate-system-plan.py"
 
 
 def _load_builder():
@@ -256,6 +258,68 @@ def test_requirements_fixture_does_not_preseed_c04_outputs(built: dict[str, Path
     assert baseline["subject_outputs_absent_at_baseline"]
 
 
+def test_requirements_fixture_scope_closure_passes_source_digest(
+    built: dict[str, Path],
+) -> None:
+    """C04 が feature の architecture closure を除外せず gate できる。"""
+    out = built["requirements"]
+    graph = json.loads(
+        (out / ".dev-graph" / "state" / "graph.json").read_text(encoding="utf-8")
+    )
+    registered = ",".join(node["graph_node_id"] for node in graph["nodes"])
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SOURCE_DIGEST_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--registered",
+            registered,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["registered_mismatch"] == []
+    assert report["checked"] == len(graph["nodes"])
+
+
+def test_requirements_fixture_resolves_published_package_from_current_pointer(
+    built: dict[str, Path],
+) -> None:
+    """C04 の promotion 後入口は --feature-package で current pointer を解決できる。"""
+    out = built["requirements"]
+    pointer = (
+        out
+        / ".dev-graph"
+        / "plan-state"
+        / "current"
+        / "feature-package-F-LIVE-001.json"
+    )
+    payload = json.loads(pointer.read_text(encoding="utf-8"))
+    assert payload["feature_package_id"] == "feature-package/F-LIVE-001"
+    assert payload["published_path"] == "system-plan/F-LIVE-001"
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SYSTEM_PLAN_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--feature-package",
+            "feature-package/F-LIVE-001",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["status"] == "pass"
+
+
 def test_status_fixture_exposes_a_dependency_edge(built: dict[str, Path]) -> None:
     """C18 が ready/blocked を区別できる最小構成 (task 2 件 + 前方依存 1 本) である。"""
     graph = json.loads(
@@ -272,9 +336,18 @@ def test_distinct_output_paths_get_distinct_repository_ids(tmp_path: Path) -> No
     first = _build("status", tmp_path / "a")
     second = _build("status", tmp_path / "b")
     assert first["repository_id"] != second["repository_id"]
-    # path 依存値は repository_id に閉じているので、内容 digest は path をまたいで一致する。
+    # path 依存値は repository_id フィールドに閉じている。config だけでなく graph store も
+    # canonical envelope の一部として repository_id を持つので (C11 の exact-4-key)、
+    # 生の digest は 2 file で割れる。
     manifest_a = _content_manifest(tmp_path / "a")
     manifest_b = _content_manifest(tmp_path / "b")
     assert set(manifest_a) == set(manifest_b)
     differing = {key for key in manifest_a if manifest_a[key] != manifest_b[key]}
-    assert differing == {".dev-graph/config.json"}
+    assert differing == {".dev-graph/config.json", ".dev-graph/state/graph.json"}
+    # 「repository_id に閉じている」ことは、その 1 key を落とした投影が一致することで示す。
+    # digest の差分集合を数えるだけだと、同じ file の別 key が動いても検出できない。
+    for relative in sorted(differing):
+        document_a = json.loads((tmp_path / "a" / relative).read_text(encoding="utf-8"))
+        document_b = json.loads((tmp_path / "b" / relative).read_text(encoding="utf-8"))
+        assert document_a.pop("repository_id") != document_b.pop("repository_id")
+        assert document_a == document_b

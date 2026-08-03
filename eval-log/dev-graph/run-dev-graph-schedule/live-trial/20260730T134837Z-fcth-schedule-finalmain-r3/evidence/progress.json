@@ -1,0 +1,70 @@
+{
+  "scenario": "C15-OUT1-positive-ready-set-r16",
+  "status": "PASS",
+  "checklist": [
+    {
+      "item": "candidate は confirmed/pass/readiness complete、全 depends_on done、active lease なしを満たす",
+      "status": "PASS",
+      "evidence": "ready_set.tasks = [LT-SCHED-001, LT-SCHED-002, LT-SCHED-003, LT-SCHED-006]. All 4 have status=active, confirmation_status=confirmed, evaluation_status=pass, implementation_readiness.status=complete, no unsatisfied depends_on, and no active lease. LT-SCHED-004 excluded by active lease. LT-SCHED-005 excluded by dependency_unsatisfied."
+    },
+    {
+      "item": "feature ready と task ready が別々の ready-set/batch に出力される",
+      "status": "PASS",
+      "evidence": "ready_set.features=[], ready_set.tasks=[LT-SCHED-001,002,003,006]. batches.features=[], batches.tasks=[[001,003],[002,006]]. No mixing. All nodes are artifact_kind=task so features are empty."
+    },
+    {
+      "item": "同一 parallel batch の resource_scope.touches 重複 pair が0件である",
+      "status": "PASS",
+      "evidence": "batch[0]: LT-SCHED-001(src/alpha.py) + LT-SCHED-003(src/beta.py) → intersection empty. batch[1]: LT-SCHED-002(src/alpha.py) + LT-SCHED-006(src/delta.py) → intersection empty. LT-SCHED-001 and LT-SCHED-002 share src/alpha.py but are in separate batches."
+    },
+    {
+      "item": "各 task の suggested_branch が devgraph/<graph_node_id> で claim command が public CLI 形式である",
+      "status": "PASS",
+      "evidence": "4 assignment_hints with unique suggested_branch: devgraph/LT-SCHED-001, devgraph/LT-SCHED-002, devgraph/LT-SCHED-003, devgraph/LT-SCHED-006. Each has claim_command: /dev-graph worktree claim <id> --branch devgraph/<id> --session-id <session>."
+    },
+    {
+      "item": "実行前後の graph/tracker/lease digest が同一である",
+      "status": "PASS",
+      "evidence": "graph_sha256_before=graph_sha256_after=e4d17190..., lease_sha256_before=lease_sha256_after=b10e1c16..., tracker_sha256_before=tracker_sha256_after=null (no beads tracker). read_only=true."
+    },
+    {
+      "item": "lease pathがgit common-dirの正本と一致する",
+      "status": "PASS",
+      "evidence": "lease_source=git_common_dir. Path .git/dev-graph/leases.json matches git rev-parse --git-common-dir canonical path."
+    },
+    {
+      "item": "LT-SCHED-005 が dependency_unsatisfied で ready-set から除外される",
+      "status": "PASS",
+      "evidence": "unmapped contains {external_ref: LT-SCHED-005, reason: dependency_unsatisfied, blocking_depends_on: [LT-SCHED-001], source: schedule-graph}. LT-SCHED-001 has status=active (not done), so dependency is unsatisfied."
+    }
+  ],
+  "observations": [
+    {
+      "id": 1,
+      "description": "the overlapping resource_scope pair is never placed in the same batch",
+      "status": "PASS",
+      "evidence": "LT-SCHED-001 and LT-SCHED-002 both touch src/alpha.py. They appear in conflict_pairs[0] as ready_pair. batch[0]=[001,003], batch[1]=[002,006] — never co-located."
+    },
+    {
+      "id": 2,
+      "description": "the blocked task is excluded from the ready set and the reason is reported",
+      "status": "PASS",
+      "evidence": "LT-SCHED-005 depends_on LT-SCHED-001 (status=active, not done). Excluded from ready_set. Reported in unmapped with reason=dependency_unsatisfied, blocking_depends_on=[LT-SCHED-001]."
+    },
+    {
+      "id": 3,
+      "description": "the active lease suppresses its task while the stale lease is reclaimed",
+      "status": "PASS",
+      "evidence": "LT-SCHED-004: active lease (in_progress, expires 2099) → conflicts=[LT-SCHED-004], excluded from ready set. LT-SCHED-006: stale lease (claimed, expires 2020) → reclaimed, included in ready_set and batch[1]."
+    },
+    {
+      "id": 4,
+      "description": "batches respect --max-parallel and suggested_branch and worktree claim commands stay unique",
+      "status": "PASS",
+      "evidence": "max_parallel=2. batch[0] has 2 tasks, batch[1] has 2 tasks. All 4 suggested_branch values are unique (devgraph/LT-SCHED-001, -002, -003, -006). All claim_commands are unique."
+    }
+  ],
+  "c17_verifier": "PASS (11/11 checks passed)",
+  "goal_seek_verification": "PASS",
+  "execution_receipt": "eval-log/run-dev-graph-schedule-execution.json"
+}

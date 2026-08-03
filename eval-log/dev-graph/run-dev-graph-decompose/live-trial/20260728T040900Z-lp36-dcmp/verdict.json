@@ -1,0 +1,44 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "--repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260728-082322-wt-11/eval-log/dev-graph/live-trial-fixtures/decompose-lp36-merged --binding none --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "lifecycle probe が許可された状態項目以外の updated_at まで変更し、その他の内容を変更しないシナリオ契約に違反した"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "872ef5390e7c85c5d59ddc76a75083fbb07247fb2d169b1f16a0bd683e043d02",
+  "transcript_sha256": "db2ccbd9e4ee50506e3c65fd95a5bf627f94e55f328fea18b63398d51e3e59e7",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "dangerously-skip-permissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 495.0
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r2"
+}

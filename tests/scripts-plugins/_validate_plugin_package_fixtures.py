@@ -1,4 +1,4 @@
-"""validate-plugin-package.py テスト群の共有 fixture (500 行上限による分割の共通層)。
+"""validate-plugin-package.py テスト群の共有 fixture (責務分割後の共通層)。
 
 被験 script のロードと plugin fixture 構築ヘルパをここに集約し、分割した 3 ファイル
 (pure 関数/PKG-002〜005・PKG-006〜014・run_checks/main) が同じ実装を複製しないようにする。

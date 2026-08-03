@@ -7,7 +7,7 @@
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { tenantOidcSigninAction } from '../../src/app/[tenant_slug]/signin/tenant-oidc-action.js';
+import { tenantOidcCsrfAction, tenantOidcSigninAction } from '../../src/app/[tenant_slug]/signin/tenant-oidc-action.js';
 import {
   createAuthjsHandler,
   SESSION_COOKIE_NAME,
@@ -22,6 +22,7 @@ import {
   directoryUser,
   type InMemoryUsers,
   type MutableClock,
+  oidcConnection,
 } from './support/in-memory-ports.js';
 
 const SESSION_SECRET = 'test-session-secret-at-least-32-bytes';
@@ -41,20 +42,19 @@ function createHandler(
   } = {},
 ) {
   const oidcConnections = createInMemoryOidcConnections([
-    {
+    oidcConnection({
       tenantId: 'tenant-acme',
       tenantSlug: 'acme',
       issuer: ISSUER,
       clientId: CLIENT_ID,
       displayName: 'Acme ID',
-      enabled: true,
-    },
+    }),
   ]);
 
   return createAuthjsHandler({
     config: {
       oidcConnections,
-      clientSecretFor: async (tenantId) => (tenantId === 'tenant-acme' ? 'client-secret-acme' : null),
+      clientSecretFor: async (connection) => (connection.tenantId === 'tenant-acme' ? 'client-secret-acme' : null),
     },
     users: overrides.users ?? createInMemoryUsers(),
     clock: overrides.clock ?? createMutableClock(NOW_SECONDS),
@@ -78,6 +78,8 @@ describe('Auth.js route 結線 (AC-1)', () => {
   it('テナント別サインイン画面を handler と同じ tenant path へ接続する', () => {
     expect(tenantOidcSigninAction('acme')).toBe('/api/auth/acme/signin/tenant-oidc');
     expect(tenantOidcSigninAction('tenant/subpath')).toBe('/api/auth/tenant%2Fsubpath/signin/tenant-oidc');
+    expect(tenantOidcCsrfAction('acme')).toBe('/api/auth/acme/csrf');
+    expect(tenantOidcCsrfAction('tenant/subpath')).toBe('/api/auth/tenant%2Fsubpath/csrf');
   });
 
   it('tenant 別 provider を実 Auth.js endpoint から返し、callback origin を正規値へ固定する', async () => {

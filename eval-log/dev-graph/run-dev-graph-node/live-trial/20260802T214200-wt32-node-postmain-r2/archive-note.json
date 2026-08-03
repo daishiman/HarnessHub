@@ -1,0 +1,5 @@
+{
+  "original_run_id": "20260802T124200Z-wt32-node-postmain-r2",
+  "archived_run_id": "20260802T214200-wt32-node-postmain-r2",
+  "reason": "The trial was started at 2026-08-02 21:42 JST. Its archive directory was renamed after completion from a UTC-labelled identifier to the repository's local-time run-id convention so latest-evidence ordering is chronological. Transcript and verdict bytes were not modified."
+}

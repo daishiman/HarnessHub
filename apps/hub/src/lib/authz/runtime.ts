@@ -18,11 +18,24 @@ import {
   createRepositoryContext,
   createTursoWebClient,
 } from '@harness-hub/db';
-import { type AuditSink, createAuditLogger, type RecordedAuditEvent } from '../../shared/audit/index.js';
+import {
+  type AuditLogger,
+  type AuditSink,
+  createAuditLogger,
+  type RecordedAuditEvent,
+} from '../../shared/audit/index.js';
 import { type AuthRouteHandler, createAuthjsHandler } from '../auth/adapter/index.js';
+import { readCwvProbeConfig } from '../auth/cwv-probe.js';
 import { createDbAuthPorts, createDbClientSecretResolver } from '../auth/db-ports.js';
 import { createDeviceFlowService, type DeviceFlowService } from '../auth/device-flow/index.js';
-import type { AuthPorts } from '../auth/ports.js';
+import {
+  createGoogleOidcConnectionTester,
+  createOidcAdminService,
+  createUnavailableOidcAdminService,
+  type OidcAdminService,
+} from '../auth/oidc-admin/index.js';
+import type { AuthPorts, TenantOidcConnection } from '../auth/ports.js';
+import { readSharedGoogleCredentials } from '../auth/shared-credentials.js';
 import { createRevocationChecker } from './revocation.js';
 import type { AuthzRuntimeDeps } from './with-authz.js';
 
@@ -38,6 +51,8 @@ export interface AuthRuntimeEnv {
    * OIDC の callback URL はここから組む。Host ヘッダから組むと Host 偽装で callback を差し替えられる。
    */
   readonly canonicalOrigin: string;
+  /** 設定済みのときだけ protected CWV 計測を許可する最小権限 credential。 */
+  readonly cwvProbe?: ReturnType<typeof readCwvProbeConfig>;
 }
 
 export interface AuthRuntime {
@@ -46,6 +61,8 @@ export interface AuthRuntime {
   readonly deviceFlow: DeviceFlowService;
   /** `/api/auth/{tenant_slug}/{action}` の実処理。Auth.js 由来の型は出て来ない。 */
   readonly authRoute: AuthRouteHandler;
+  /** provider-admin 向け OIDC 接続管理 (issue-auth-tenancy-customer-managed-google-oidc-20260729)。 */
+  readonly oidcAdmin: OidcAdminService;
 }
 
 export interface AuthRuntimeInput {
@@ -53,17 +70,30 @@ export interface AuthRuntimeInput {
   readonly auditSink: AuditSink;
   readonly env: AuthRuntimeEnv;
   /**
-   * テナントの OIDC client_secret を取る関数。
+   * 解決済み接続の OIDC client_secret を取る関数。
    * `AuthPorts` に含めないのは、平文 secret を port の戻り値に載せると
    * port を受け取る全ての層 (device flow・認可判定) が触れる位置に置かれるため。
+   *
+   * 引数が接続そのものなのは、secret の出所 (テナント行の暗号化列 / 環境単位の共有 Secret) を
+   * `credentialMode` で選ぶため。分岐の実体は `lib/auth/shared-credentials.ts` に閉じている。
    */
-  readonly clientSecretFor: (tenantId: string) => Promise<string | null>;
+  readonly clientSecretFor: (connection: TenantOidcConnection) => Promise<string | null>;
+  /**
+   * OIDC 接続の管理サービスを作る関数。**省略可**にしてあるのは、認証・device flow だけを
+   * 検査する既存テストに repository 一式を用意させないため。省略時は全操作が例外になる実体が入る
+   * (`createUnavailableOidcAdminService`) — 未結線が「何も起きない成功」で隠れない。
+   *
+   * 実体ではなく関数で受けるのは、監査 logger を runtime 内の 1 個に揃えるため。
+   * 外で別の logger を作って渡すと、runtime 単位の監査という前提が静かに崩れる。
+   */
+  readonly oidcAdmin?: (audit: AuditLogger) => OidcAdminService;
 }
 
 export function createAuthRuntime(input: AuthRuntimeInput): AuthRuntime {
   const audit = createAuditLogger({ sink: input.auditSink });
 
   return {
+    oidcAdmin: input.oidcAdmin?.(audit) ?? createUnavailableOidcAdminService(),
     ports: input.ports,
     authz: {
       ports: input.ports,
@@ -72,6 +102,7 @@ export function createAuthRuntime(input: AuthRuntimeInput): AuthRuntime {
       revocation: createRevocationChecker(input.ports.sessionRevocations, input.ports.clock),
       sessionSecret: input.env.sessionSecret,
       accessTokenSecret: input.env.accessTokenSecret,
+      cwvProbe: input.env.cwvProbe,
       allowedOrigins: input.env.allowedOrigins,
     },
     deviceFlow: createDeviceFlowService({
@@ -133,6 +164,8 @@ export function createDbAuditSink(auditRepo: CoreRepositories['audit']): AuditSi
 
 /** 環境変数から設定を読む。欠けている値は既定へ落とさず例外にする (fail-closed)。 */
 export function readAuthRuntimeEnv(source: Record<string, string | undefined> = process.env): AuthRuntimeEnv {
+  const canonicalOrigin = requiredOrigin(source, 'AUTH_CANONICAL_ORIGIN');
+  const cwvProbe = readCwvProbeConfig(source, canonicalOrigin);
   return {
     sessionSecret: required(source, 'AUTH_SESSION_SECRET'),
     accessTokenSecret: required(source, 'AUTH_ACCESS_TOKEN_SECRET'),
@@ -141,7 +174,8 @@ export function readAuthRuntimeEnv(source: Record<string, string | undefined> = 
       .map((origin) => origin.trim())
       .filter((origin) => origin.length > 0),
     verificationUri: required(source, 'AUTH_DEVICE_VERIFICATION_URI'),
-    canonicalOrigin: requiredOrigin(source, 'AUTH_CANONICAL_ORIGIN'),
+    canonicalOrigin,
+    ...(cwvProbe === undefined ? {} : { cwvProbe }),
   };
 }
 
@@ -151,6 +185,9 @@ const AUTH_RUNTIME_SOURCE_KEYS = [
   'AUTH_ALLOWED_ORIGINS',
   'AUTH_DEVICE_VERIFICATION_URI',
   'AUTH_CANONICAL_ORIGIN',
+  'CWV_PROBE_SECRET',
+  'CWV_PROBE_TENANT_ID',
+  'CWV_PROBE_WORKSPACE_ID',
   'TURSO_DATABASE_URL',
   'TURSO_AUTH_TOKEN',
   'ENCRYPTION_KEK',
@@ -201,10 +238,24 @@ export function createProductionAuthRuntime(source: Record<string, string | unde
     kekBase64: required(source, 'ENCRYPTION_KEK'),
   });
 
+  // 共有 Google OAuth client は環境単位で 1 組。未設定なら共有方式のテナントが解決されないだけで、
+  // 顧客持ち込み方式のテナントは従来どおり動く (issue-auth-tenancy-shared-google-oidc-20260729)
+  const sharedGoogle = readSharedGoogleCredentials(source);
+
   return createAuthRuntime({
-    ports: createDbAuthPorts({ repositories }),
+    // ports と resolver へ同じ値を渡す。片方だけに渡すと
+    // 「client_id は解決できるが secret が無い」テナントが生まれる
+    ports: createDbAuthPorts({ repositories, sharedGoogle }),
     auditSink: createDbAuditSink(repositories.audit),
-    clientSecretFor: createDbClientSecretResolver({ repositories }),
+    clientSecretFor: createDbClientSecretResolver({ repositories, sharedGoogle }),
+    // 接続テストは global fetch。Workers 側でも同じ実体なので差し替えない
+    oidcAdmin: (audit) =>
+      createOidcAdminService({
+        repositories,
+        audit,
+        canonicalOrigin: env.canonicalOrigin,
+        testConnection: createGoogleOidcConnectionTester(),
+      }),
     env,
   });
 }

@@ -1,0 +1,47 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "--repo-root <fixture> --binding none --dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "goal 判定未実施 (trial が完走せず fresh evaluator を起動できない)",
+      "ゴールシーク配線の実体検証に失敗: eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [
+    "eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "077b98fe5c67be6e122385ce23849b712af228fe494509890dff806ca2b49383",
+  "transcript_sha256": "0348ae2900e7cd23a605b4cecad082c9fb75b7bd06a2090030823a471ab0e3ef",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 11.0,
+    "poll_exit": "STALL",
+    "wall_clock_s": 1965.0
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition"
+}

@@ -57,3 +57,61 @@ export type UserStatus = z.output<typeof userStatusSchema>;
 
 /** UNIX epoch 秒。JWT の `iat`/`exp` と失効時刻の比較に使うため、ミリ秒と混ぜない。 */
 export const epochSecondsSchema = z.number().int().nonnegative();
+
+/**
+ * OIDC credential の出所 (issue-auth-tenancy-shared-google-oidc-20260729)。
+ *
+ * - `customer_google`: テナント所有の Google Cloud project で作った OAuth client。
+ *   client_id / client_secret はテナント行 (`idp_connections`) に持つ。
+ * - `shared_google`: HarnessHub 所有の共通 OAuth client。credential は**環境単位で 1 組**だけ持ち、
+ *   テナント行へは複製しない。
+ *
+ * **既定値を持たせない。** 「未設定なら共有」にすると、既存テナントの認証境界が
+ * 列を足した瞬間に変わってしまう。未設定・不明な値は解決側で拒否する (fail-closed)。
+ */
+export const oidcCredentialModeSchema = z.enum(['customer_google', 'shared_google']);
+export type OidcCredentialMode = z.output<typeof oidcCredentialModeSchema>;
+
+/**
+ * 顧客持ち込み OIDC credential の lifecycle 状態
+ * (issue-auth-tenancy-customer-managed-google-oidc-20260729)。
+ *
+ * - `pending`: 登録済みだが接続テスト未実施。**認証解決の対象外**。
+ * - `tested`: 接続テストに合格したが、まだ有効化していない。
+ * - `active`: 認証解決に使う。この状態だけが解決対象。
+ * - `disabled`: 運用者が止めた。復帰は `pending` からやり直す (再テストを要求する)。
+ *
+ * `credentialMode` と同じく**既定値を持たせない**。「未設定なら有効」にすると、
+ * 状態を持たない経路で登録された接続が黙って認証に使われる。
+ */
+export const oidcCredentialStatusSchema = z.enum(['pending', 'tested', 'active', 'disabled']);
+export type OidcCredentialStatus = z.output<typeof oidcCredentialStatusSchema>;
+
+/**
+ * 認証解決に使ってよい唯一の状態。
+ *
+ * 「解決してよい状態の**集合**」ではなく単一値にしてある。集合にすると
+ * 「とりあえず tested も足しておく」が型を壊さずに通ってしまい、
+ * 未有効化の credential が認証へ流れる変更がレビューで目立たなくなる。
+ */
+export const RESOLVABLE_OIDC_CREDENTIAL_STATUS: OidcCredentialStatus = 'active';
+
+/**
+ * Google Workspace のプライマリドメイン (ID token の `hd` claim と突き合わせる値)。
+ *
+ * 小文字のみを許すのは、`hd` の比較を「正規化してから」ではなく**保存時点で一意**にするため。
+ * 大文字を許すと `Example.com` と `example.com` が別エントリとして登録でき、
+ * 「許可したつもりのドメインが一致しない」という無言の拒否 (または片方だけ許可) を生む。
+ *
+ * ドットを 1 つ以上要求する。`hd` は登録済みドメインなので TLD を必ず持ち、
+ * ドット無しの値 (`localhost` 等) は Workspace ドメインとして成立しない。
+ */
+export const workspaceDomainSchema = z
+  .string()
+  .min(3, 'Workspace ドメインが短すぎます')
+  .max(253, 'Workspace ドメインが長すぎます')
+  .regex(
+    /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$/,
+    'Workspace ドメインは小文字の DNS 名で指定してください',
+  );
+export type WorkspaceDomain = z.output<typeof workspaceDomainSchema>;

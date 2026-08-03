@@ -1,0 +1,97 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-13/eval-log/dev-graph/live-trial-fixtures/wt13-ci-node-20260730 --input /Users/dm/orca/workspaces/HarnessHub/wt-13/eval-log/dev-graph/live-trial-fixtures/wt13-ci-node-20260730/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "goal-seek progress overall_status is completed rather than the required PASS",
+      "update bodies were embedded in a shell python command instead of being read from JSON",
+      "goal-seek subagent fork was not executed and progress steps were updated only after all checks"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "084c91cd1f013218b2e3266d2f9bd2d2b1361f44d307ae64f3004766f6f702d8",
+  "transcript_sha256": "41d3b637a3ac411326af2a3f12b450ec988a7f5c0988f548a79c12729b56e4ae",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 8.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 585.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+    "required_observations": [
+      "all five artifacts are routed to canonical kind paths",
+      "frontmatter kind and stored path agree after a consecutive update",
+      "no feature is created outside the C14 macro-feature contract"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "all five artifacts are routed to canonical kind paths",
+        "evidence_ref": "independent-verification.json#/observations/canonical_paths"
+      },
+      {
+        "index": 2,
+        "observation": "frontmatter kind and stored path agree after a consecutive update",
+        "evidence_ref": "independent-verification.json#/observations/consecutive_update_integrity"
+      },
+      {
+        "index": 3,
+        "observation": "no feature is created outside the C14 macro-feature contract",
+        "evidence_ref": "independent-verification.json#/observations/macro_feature_guard"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "add --repo-root <contained-fixture-repo> --input <contained-fixture-repo>/mixed-artifacts.json",
+      "template_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

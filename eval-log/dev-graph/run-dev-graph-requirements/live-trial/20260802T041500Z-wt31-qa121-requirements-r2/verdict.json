@@ -1,0 +1,95 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-requirements",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements-r2 --feature-id F-LIVE-001 (package は fixture 内 system-plan/F-LIVE-001/ を skill が解決する)",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "The positive fixture lacked the required current pointer at start; the run created it after the first --feature-package validation failed"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-requirements"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "735dd638ac2037fec28c34f7aa815b996c51f2b9a894f45f832f0fc3999b0d87",
+  "transcript_sha256": "50a00b307c98bc6ea05a04448ff313bf4ed23e3d466768df22e34cbd4c10a779",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 8.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 885.0
+  },
+  "scenario_id": "C04-OUT1-positive-ready-handoff",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C04-OUT1-positive-ready-handoff",
+    "required_observations": [
+      "a capability-build task-graph handoff is emitted for the exact-13 package",
+      "the handoff remains bound to the feature and source digest",
+      "the requirements skill generates no implementation source file"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "a capability-build task-graph handoff is emitted for the exact-13 package",
+        "evidence_ref": "independent-verification.json#/observations/exact_13_handoff"
+      },
+      {
+        "index": 2,
+        "observation": "the handoff remains bound to the feature and source digest",
+        "evidence_ref": "independent-verification.json#/observations/feature_and_digest_binding"
+      },
+      {
+        "index": 3,
+        "observation": "the requirements skill generates no implementation source file",
+        "evidence_ref": "independent-verification.json#/observations/no_implementation_source"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --feature-id F-LIVE-001 (package は fixture 内 system-plan/F-LIVE-001/ を skill が解決する)",
+      "template_flags": [
+        "--feature-id",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--feature-id",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

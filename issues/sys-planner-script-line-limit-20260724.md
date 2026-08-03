@@ -57,6 +57,8 @@ system-dev-planner の `promote-system-plan.py` (677 行) と `build-system-hand
 
 ## 現在の挙動
 
+graph status は `draft`、completion status は `open` であり、Beads `HarnessHub-7ui` が残作業の実行状態を管理する。
+
 ```
 $ wc -l plugins/system-dev-planner/scripts/promote-system-plan.py
      677

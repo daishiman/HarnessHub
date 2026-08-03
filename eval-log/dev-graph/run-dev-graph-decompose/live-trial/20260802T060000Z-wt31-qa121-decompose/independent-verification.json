@@ -1,0 +1,16 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "The promoted feature declared evaluated_digest 85274214d842c369895f0083d91b7279f189cd89106a141938b3fd4f21b0f11a but the final persisted node recomputed to a6c1356035bed80158878361127c9370d6ba7076b536bd2e4a6729615430195f",
+    "The task required immediate failure before a second Skill call or corrective upsert, but the run continued debugging"
+  ],
+  "observations": {
+    "1": "not reached after fail-closed evidence-binding mismatch",
+    "2": "not reached after fail-closed evidence-binding mismatch",
+    "3": "FAIL: promoted feature evidence was not bound to final node",
+    "4": "paired none run not reached",
+    "5": "pre-state captured, full audit not reached",
+    "6": "FAIL: declared_digest did not equal expected_digest",
+    "7": "not reached after fail-closed evidence-binding mismatch"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ",
+  "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+  "steps": [
+    {
+      "id": "V1",
+      "description": "Register all 5 artifact kinds from mixed-artifacts.json via Skill and verify canonical paths and graph revision",
+      "status": "completed",
+      "criterion": "all five artifacts are routed to canonical kind paths",
+      "evidence": {
+        "result": "PASS",
+        "detail": "5 artifacts registered: issue→issues/sys-session-timeout-enforcement.md, task→tasks/sys-api-rate-limit.md, specification→specs/sys-rest-api-v2-migration.md, architecture→architecture/sys-order-backend-security.md, document→docs/sys-dev-environment-setup.md. graph_revision=5, all files exist, schema valid=true, violations=[], all original bodies preserved as byte-for-byte substrings, API strings (GET /api/v1/users, POST /api/v2/orders, items, line_items, X-API-Key, Authorization: Bearer, DELETE /api/v2/sessions/bulk) all found."
+      }
+    },
+    {
+      "id": "V2",
+      "description": "Apply real diffs to 2 nodes of different artifact_kind and verify operation=updated, revision increase, updated_at != created_at, kind/path consistency, original body preserved",
+      "status": "completed",
+      "criterion": "frontmatter kind and stored path agree after a consecutive update",
+      "evidence": {
+        "result": "PASS",
+        "detail": "Issue sys-session-timeout-enforcement: operation=updated, revision 5→6, created_at=2026-07-29T10:04:48Z != updated_at=2026-07-29T10:09:49.544603Z, kind=issue, path=issues/ prefix correct, body preserved. Architecture sys-order-backend-security: operation=updated, revision 6→7, created_at=2026-07-29T10:06:27Z != updated_at=2026-07-29T10:09:50.136917Z, kind=architecture, path=architecture/ prefix correct, body preserved. Both body_source=preserved."
+      }
+    },
+    {
+      "id": "V3",
+      "description": "Attempt direct feature registration outside C14 macro contract and verify fail-closed rejection with no revision/file increase",
+      "status": "completed",
+      "criterion": "no feature is created outside the C14 macro-feature contract",
+      "evidence": {
+        "result": "PASS",
+        "detail": "Direct feature registration rejected with error: 'feature must come from the C14 macro contract: source_lineage.origin_kind manual is not one of [generated, system-spec-harness]'. write_count=0, valid=false, exit_code=2. Post-attempt: revision=7 (unchanged), features/ file count=0 (unchanged)."
+      }
+    }
+  ],
+  "overall_status": "completed",
+  "final_status": "PASS"
+}

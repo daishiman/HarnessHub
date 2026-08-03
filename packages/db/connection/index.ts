@@ -11,6 +11,7 @@ export {
   type D1PreparedStatementLike,
   type D1ResultLike,
 } from './d1';
+export { createRecoverableClient, type RecoverableClient } from './recoverable-client';
 export {
   createTursoClient,
   createTursoWebClient,

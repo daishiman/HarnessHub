@@ -13,6 +13,25 @@ const MONITORING_FILES = [
 /** 適用状態はこの 2 値だけ。中間状態を作ると「半分適用」を緑で通してしまう */
 const APPLICATION_STATES = ['pending_credentials', 'applied'] as const;
 
+/**
+ * application_state=applied のときに取りうる verdict。
+ * observation_complete_pending_application_error_rate は「外形 30 日は揃ったが
+ * Workers analytics の 5xx 率が無いので最終判定できない」状態で、
+ * 外形単独で 99.5% 達成を主張する経路を塞ぐ (infrastructure-spec §9 / qa-019)。
+ */
+const APPLIED_VERDICT_STATUSES = [
+  'collecting',
+  'collection_blocked',
+  'observation_complete_pending_application_error_rate',
+] as const;
+
+/** verdict.status ごとに宣言してよい blocker。組み合わせがずれると状態が読めなくなる */
+const BLOCKER_BY_VERDICT: Record<string, string | null> = {
+  collecting: null,
+  collection_blocked: 'better-stack-monitor-paused',
+  observation_complete_pending_application_error_rate: 'workers-analytics-5xx-rate-not-collected',
+};
+
 /** heartbeat の ping URL。これ自体が cron 成功を偽装できる秘密なので成果物へ出さない */
 const HEARTBEAT_URL_PATTERN = /uptime\.betterstack\.com\/api\/v\d+\/heartbeat\//;
 
@@ -42,10 +61,20 @@ interface BetterStackConfig {
   };
   heartbeat: {
     external_id: string | null;
+    provisioning_state: (typeof APPLICATION_STATES)[number];
     secret_binding: string;
     request: {
       endpoint: string;
-      payload: { period: number; grace: number; paused: boolean };
+      payload: { name: string; period: number; grace: number; paused: boolean };
+    };
+  };
+  backup_heartbeat: {
+    external_id: string | null;
+    provisioning_state: (typeof APPLICATION_STATES)[number];
+    secret_binding: string;
+    request: {
+      endpoint: string;
+      payload: { name: string; period: number; grace: number; paused: boolean };
     };
   };
   status_page: {
@@ -80,6 +109,7 @@ interface SloConfig {
     observation_started_at: string | null;
     first_monthly_verdict_due_at: string | null;
     blocker?: string | null;
+    $comment?: string;
   };
 }
 
@@ -100,14 +130,28 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     });
   });
 
-  it('日次 cron の heartbeat と secret binding を宣言する', () => {
+  it('Worker 日次 cron の heartbeat と secret binding を宣言する', () => {
     expect(monitoring.heartbeat.request.endpoint).toBe('https://uptime.betterstack.com/api/v2/heartbeats');
     expect(monitoring.heartbeat.request.payload).toMatchObject({
+      name: 'Harness Hub daily cron',
       period: 86_400,
       grace: 3_600,
       paused: false,
     });
+    expect(monitoring.heartbeat.provisioning_state).toBe('applied');
     expect(monitoring.heartbeat.secret_binding).toBe('CRON_HEARTBEAT_URL');
+  });
+
+  it('backup 専用 heartbeat を Worker cron と分離し、当日中に異常化させる', () => {
+    expect(monitoring.backup_heartbeat.request.endpoint).toBe('https://uptime.betterstack.com/api/v2/heartbeats');
+    expect(monitoring.backup_heartbeat.request.payload).toMatchObject({
+      name: 'Harness Hub daily backup',
+      period: 86_400,
+      grace: 3_600,
+      paused: false,
+    });
+    expect(monitoring.backup_heartbeat.secret_binding).toBe('BACKUP_HEARTBEAT_URL');
+    expect(monitoring.backup_heartbeat.secret_binding).not.toBe(monitoring.heartbeat.secret_binding);
   });
 
   it('status page に 30 日の履歴と health monitor の関連付けを宣言する', () => {
@@ -164,6 +208,7 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     if (monitoring.application_state === 'pending_credentials') {
       expect(monitoring.applied_at).toBeNull();
       expect(externalIds).toStrictEqual([null, null, null, null]);
+      expect(monitoring.backup_heartbeat.external_id).toBeNull();
       expect(dashboard.verdict.status).toBe('collecting_not_started');
       expect(dashboard.verdict.observation_started_at).toBeNull();
       expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
@@ -175,8 +220,14 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
       expect(typeof externalId).toBe('string');
       expect(externalId).not.toBe('');
     }
+    if (monitoring.backup_heartbeat.provisioning_state === 'pending_credentials') {
+      expect(monitoring.backup_heartbeat.external_id).toBeNull();
+    } else {
+      expect(typeof monitoring.backup_heartbeat.external_id).toBe('string');
+      expect(monitoring.backup_heartbeat.external_id).not.toBe('');
+    }
     expect(monitoring.applied_at).toMatch(ISO_INSTANT);
-    expect(['collecting', 'collection_blocked']).toContain(dashboard.verdict.status);
+    expect(APPLIED_VERDICT_STATUSES).toContain(dashboard.verdict.status);
     if (dashboard.verdict.status === 'collection_blocked') {
       expect(dashboard.verdict.observation_started_at).toBeNull();
       expect(dashboard.verdict.first_monthly_verdict_due_at).toBeNull();
@@ -201,6 +252,20 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
     expect(dashboard.verdict.status).toBe('collecting');
   });
 
+  // status と blocker がずれると「止まっているのに理由が消えている」「動いているのに
+  // 古い理由が残っている」状態が作れてしまい、verdict を読んだ人が実態を誤認する
+  it('verdict.status と blocker の組が宣言どおりである', () => {
+    expect(Object.keys(BLOCKER_BY_VERDICT)).toContain(dashboard.verdict.status);
+    expect(dashboard.verdict.blocker ?? null).toBe(BLOCKER_BY_VERDICT[dashboard.verdict.status] ?? null);
+  });
+
+  // verdict を手で書き換えると、実測を伴わない状態宣言が復活する (2026-07-27 の実例)。
+  // 実測器の名前を出典として残させることで、少なくとも「誰が決めた値か」を追える形に固定する
+  it('applied 後の verdict は実測器を出典として記録する', () => {
+    if (monitoring.application_state !== 'applied') return;
+    expect(String(dashboard.verdict.$comment ?? '')).toContain('verify-slo-observation.mjs');
+  });
+
   it('秘密値 (heartbeat URL・API token) を設定ファイルへ書かない', () => {
     for (const relativePath of MONITORING_FILES) {
       const raw = readFileSync(path.join(REPO_ROOT, relativePath), 'utf8');
@@ -208,8 +273,9 @@ describe('HF-A3-SLO-001: production monitoring configuration', () => {
       // token は「値そのもの」を検出できないため、置き場としての key 名の出現を禁じる
       expect(raw).not.toMatch(/"(?:api_token|token|authorization)"\s*:/i);
     }
-    // heartbeat URL の受け渡し口は Worker secret 名の宣言だけであること
+    // heartbeat URL の受け渡し口は用途別 secret 名の宣言だけであること
     expect(monitoring.heartbeat.secret_binding).toBe('CRON_HEARTBEAT_URL');
+    expect(monitoring.backup_heartbeat.secret_binding).toBe('BACKUP_HEARTBEAT_URL');
     expect(JSON.stringify(monitoring)).not.toContain('/api/v1/heartbeat/');
   });
 });

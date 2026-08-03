@@ -1,0 +1,45 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "<want> --repo-root <paired contained fixtures>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "最初の beads Skill 呼出し後に outer turn が終了し、step 5 以降を自走しなかった"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [
+    "eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "BLOCKED"
+  },
+  "skill_dir_tree_sha": "9e20570ce77dd9dfd89cc0447459261682cc31d3909af98162aeccdba52e75db",
+  "transcript_sha256": "11e87f66c81aa25c278a99100900a9a667b65843129f5e271bb6c3e9c6cc2128",
+  "scenario_origin": "replay",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "tmux 不在 / HARD_CAP 超過等の fail-closed",
+  "timeline": {
+    "boot_s": 4.0,
+    "poll_exit": "STALL",
+    "wall_clock_s": 600.0
+  }
+}

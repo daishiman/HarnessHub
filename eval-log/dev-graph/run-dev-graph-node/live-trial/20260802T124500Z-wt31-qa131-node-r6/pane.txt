@@ -1,0 +1,48 @@
+  ⎿  Error: Exit code 1
+     Traceback (most recent call last):
+       File "<stdin>", line 10, in <module>
+     AssertionError
+
+     Traceback (most recent call last):
+       File "<stdin>", line 10, in <module>
+     AssertionError
+
+⏺ Bash(python3 -c "
+      import hashlib, json…)
+  ⎿  expected hash: eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(~/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r6/eval-log/run-dev-graph-node-intermediate.jsonl)
+  ⎿  Added 1 line, removed 1 line
+      1 -{"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ","
+        -original_goal_hash":"a7bd113b9ea0f1e4abe14c2dd7d98b1a7aa4b53bc0f2f0e8e5e23acd0e90dd15","current_goal_snapshot":"5 mixed artifacts classified (issue/task/specification/architecture/document), all routed to
+        - canonical kind paths, graph validated, consecutive update tested","delta_from_original":"No package scenario (no exact-13 tasks), no feature creation. Focus on 5 artifact routing and consecutive update v
+        -erification.","merged_directive_for_next":"Verify all 3 required_observations are met: (1) all 5 artifacts routed, (2) frontmatter/path agree after update, (3) no feature outside C14. Write status.json.",
+        -"drift_signal":"none"}
+      1 +{"original_goal":"通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ","
+        +original_goal_hash":"eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2","current_goal_snapshot":"5 mixed artifacts classified (issue/task/specification/architecture/document), all routed to
+        + canonical kind paths, graph validated, consecutive update tested","delta_from_original":"No package scenario (no exact-13 tasks), no feature creation. Focus on 5 artifact routing and consecutive update v
+        +erification.","merged_directive_for_next":"Verify all 3 required_observations are met: (1) all 5 artifacts routed, (2) frontmatter/path agree after update, (3) no feature outside C14. Write status.json.",
+        +"drift_signal":"none"}
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa131-node-r6 && python3 - "$DEV_GRAPH_ROOT/eval-log/run-d…)
+  ⎿  goal-seek verification PASSED
+
+⏺ Goal-seek verification passed. Now write the status.json output file.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124500Z-wt31-qa131-node-r6/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124500Z-wt31-qa131-node-r6/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124500Z-wt31-qa131-node-r6/out/status.json
+      1 {"status":"PASS","scenario":"C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 13m 14s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

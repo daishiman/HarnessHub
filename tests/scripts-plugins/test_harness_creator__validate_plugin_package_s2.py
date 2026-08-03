@@ -1,10 +1,10 @@
 """validate-plugin-package.py の PKG-006〜014 sub-check の genuine 機能テスト。
 
 hook 実体と登録の整合 (PKG-006)・script shebang/+x (PKG-007)・settings JSON 妥当性
-(PKG-008)・kind/combinator runtime contract (PKG-014) を担当する (500 行上限による分割)。
+(PKG-008)・kind/combinator runtime contract (PKG-014) を担当する (検査責務の分離)。
 
 PKG-006 と PKG-007 は「hooks/ と scripts/ 配下のファイルは全て起動対象」を前提に
-していたため、500 行分割で生まれた import 専用 support module を偽陽性で落としていた。
+していたため、責務分割で生まれた import 専用 support module を偽陽性で落としていた。
 is_import_only_support_module の判別境界 (実 entry point を素通りさせない) を本ファイルで固定する。
 
 実 repo の plugins は一切書き換えず、全 fixture は tmp_path 配下に構築する。
@@ -136,7 +136,7 @@ def test_pkg_006_invalid_shlex_command_falls_back_to_split(tmp_path):
 
 
 def test_pkg_006_import_only_support_module_is_exempt(tmp_path):
-    """500 行分割で hooks/ に生まれた import 専用 module は起動対象ではないので未登録でよい。"""
+    """責務分割で hooks/ に生まれた import 専用 module は起動対象ではないので未登録でよい。"""
     p = _plugin(tmp_path)
     (p / "hooks").mkdir(parents=True)
     (p / "hooks" / "guard_commands.py").write_text(
@@ -216,7 +216,7 @@ def test_pkg_007_underscore_module_with_main_guard_still_fails(tmp_path):
 
 
 def test_pkg_007_import_only_support_module_is_exempt(tmp_path):
-    """500 行分割で生まれた import 専用 module に shebang を強要しない (偽陽性の解消)。"""
+    """責務分割で生まれた import 専用 module に shebang を強要しない (偽陽性の解消)。"""
     p = _plugin(tmp_path)
     (p / "scripts").mkdir(parents=True)
     (p / "scripts" / "node_body.py").write_text(
@@ -382,5 +382,4 @@ def test_pkg_014_unknown_combinator_fails_closed(tmp_path):
     _write_skill(p, "run-demo", _runtime_fm(combinators="[with-magic]"))
     fs = MOD.check_pkg_014(p)
     assert any("未定義 combinator" in f["evidence"] for f in fs)
-
 

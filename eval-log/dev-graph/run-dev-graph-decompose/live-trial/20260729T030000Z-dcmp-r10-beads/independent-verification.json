@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "reviewer": "codex-final-review-20260729",
+  "blockers": [],
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/dcmp-r10-beads",
+  "checks": {
+    "graph": {
+      "revision": 8,
+      "node_count": 5,
+      "feature_count": 4,
+      "edge_count": 3,
+      "task_count": 0,
+      "acyclic": true,
+      "measured_max_inter_feature_depends_on": 1,
+      "declared_max": 3
+    },
+    "binding": {
+      "persisted": "beads",
+      "run_binding_attested": true
+    },
+    "promoted_evidence": {
+      "graph_node_id": "feat-user-auth-001",
+      "declared_digest": "2eb2640cfda7469697d6cb5e8fff5e0cb58054199c107e6a1822ad7e4d4b2779",
+      "recomputed_digest": "2eb2640cfda7469697d6cb5e8fff5e0cb58054199c107e6a1822ad7e4d4b2779",
+      "matches": true,
+      "recipe": "sha256 of final node canonical JSON excluding only confirmation_evidence"
+    },
+    "audit": {
+      "pass": true,
+      "evidence_all_bound": true,
+      "negative_controls_all_rejected": true,
+      "preview_consistent": true,
+      "structural_contract_valid": true
+    },
+    "verdict_contract": {
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+      "observations": "7/7",
+      "args_match": true,
+      "task_contract_match": true,
+      "goal_seek_evidence_violations": [],
+      "actual_model": "claude-opus-4-6"
+    }
+  },
+  "note": "The reviewer independently loaded the final graph and recomputed the promoted node digest rather than trusting the trial report."
+}

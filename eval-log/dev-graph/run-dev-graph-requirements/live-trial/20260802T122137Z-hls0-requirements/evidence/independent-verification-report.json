@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "independent-verification-report",
+  "verifier": "dev-graph-requirements-verifier",
+  "feature_id": "F-LIVE-001",
+  "verified_at": "2026-08-02T00:00:00Z",
+  "fixture_root": "/Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-hls0-20260802",
+  "overall_verdict": "PASS",
+  "checks": {
+    "check_1_exact13_package_readiness": {
+      "verdict": "PASS",
+      "description": "All 13 task nodes SYS-LIVE-001-P01 through P13 verified in graph.json",
+      "evidence_path": "/Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-hls0-20260802/.dev-graph/state/graph.json",
+      "detail": {
+        "task_node_count": 13,
+        "nodes_verified": [
+          "SYS-LIVE-001-P01",
+          "SYS-LIVE-001-P02",
+          "SYS-LIVE-001-P03",
+          "SYS-LIVE-001-P04",
+          "SYS-LIVE-001-P05",
+          "SYS-LIVE-001-P06",
+          "SYS-LIVE-001-P07",
+          "SYS-LIVE-001-P08",
+          "SYS-LIVE-001-P09",
+          "SYS-LIVE-001-P10",
+          "SYS-LIVE-001-P11",
+          "SYS-LIVE-001-P12",
+          "SYS-LIVE-001-P13"
+        ],
+        "all_implementation_readiness_status": "complete",
+        "all_evaluation_status": "pass",
+        "all_confirmation_status": "confirmed",
+        "note": "implementation_readiness is an object; status field = complete for all 13 nodes. Verified via direct graph.json inspection."
+      }
+    },
+    "check_2_handoff_emitted_and_digest_bound": {
+      "verdict": "PASS",
+      "description": "capability-build-handoff.json emitted at eval-log/ and snapshot_digest matches requirements-document.json",
+      "evidence_paths": [
+        "/Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-hls0-20260802/eval-log/capability-build-handoff.json",
+        "/Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-hls0-20260802/eval-log/requirements-document.json"
+      ],
+      "detail": {
+        "handoff_file_present": true,
+        "requirements_document_snapshot_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+        "handoff_snapshot_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+        "digests_match": true,
+        "expected_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+        "matches_expected": true
+      }
+    },
+    "check_3_handoff_feature_and_source_digest": {
+      "verdict": "PASS",
+      "description": "Handoff references correct feature_id and source_feature_digest",
+      "evidence_path": "/Users/dm/orca/workspaces/HarnessHub/main-2/eval-log/dev-graph/live-trial-fixtures/requirements-hls0-20260802/eval-log/capability-build-handoff.json",
+      "detail": {
+        "feature_id_in_handoff": "F-LIVE-001",
+        "expected_feature_id": "F-LIVE-001",
+        "feature_id_match": true,
+        "source_feature_digest_in_handoff": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+        "expected_source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+        "source_feature_digest_match": true
+      }
+    },
+    "check_4_no_implementation_code": {
+      "verdict": "PASS",
+      "description": "No implementation source code files generated; only JSON artifacts in eval-log/",
+      "detail": {
+        "implementation_code_files_found": [],
+        "non_artifact_files_outside_git": [],
+        "artifact_files_in_eval_log": [
+          "eval-log/capability-build-handoff.json",
+          "eval-log/requirements-document.json",
+          "eval-log/run-dev-graph-requirements-goal-spec.json",
+          "eval-log/run-dev-graph-requirements-intermediate.jsonl",
+          "eval-log/run-dev-graph-requirements-progress.json"
+        ],
+        "other_files_outside_git": [
+          "architecture/.gitkeep",
+          "docs/.gitkeep",
+          "features/.gitkeep",
+          "issues/.gitkeep",
+          "specs/.gitkeep",
+          "system-spec/.gitkeep",
+          "tasks/.gitkeep"
+        ],
+        "constraint_no_implementation_code_generated_in_handoff": true
+      }
+    },
+    "check_5_validation_scripts": {
+      "verdict": "PASS",
+      "description": "All three validation scripts passed independently",
+      "detail": {
+        "validate_graph_schema": {
+          "script": "/Users/dm/orca/workspaces/HarnessHub/main-2/plugins/dev-graph/scripts/validate-graph-schema.py",
+          "invocation": "python3 validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root <fixture_root>",
+          "exit_code": 0,
+          "result": {
+            "implementation_readiness": "complete",
+            "missing_sections": [],
+            "valid": true,
+            "violations": []
+          }
+        },
+        "validate_source_digest": {
+          "script": "/Users/dm/orca/workspaces/HarnessHub/main-2/plugins/dev-graph/scripts/validate-source-digest.py",
+          "invocation": "python3 validate-source-digest.py --repo-root <fixture_root> --graph <graph.json> --registered LT-ARCH-001,F-LIVE-001,SYS-LIVE-001-P01..P13",
+          "exit_code": 0,
+          "result": {
+            "checked": 15,
+            "registered_mismatch": []
+          },
+          "note": "All 15 nodes registered; source digests verified: LT-ARCH-001 and F-LIVE-001 against system-spec/00-requirements-definition.md (sha256:13510cc39...), P01-P13 against feature-package.json canonical digest."
+        },
+        "validate_system_plan": {
+          "script": "/Users/dm/orca/workspaces/HarnessHub/main-2/plugins/system-dev-planner/scripts/validate-system-plan.py",
+          "invocation": "python3 validate-system-plan.py --repo-root <fixture_root> --feature-package feature-package/F-LIVE-001",
+          "exit_code": 0,
+          "result": {
+            "status": "pass",
+            "validated_digest": "sha256:6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+            "feature_package_id": "feature-package/F-LIVE-001",
+            "parent_feature": "F-LIVE-001",
+            "phase_refs": [
+              "P01",
+              "P02",
+              "P03",
+              "P04",
+              "P05",
+              "P06",
+              "P07",
+              "P08",
+              "P09",
+              "P10",
+              "P11",
+              "P12",
+              "P13"
+            ],
+            "contract_version": "1.2.0",
+            "contract_baseline_exemption": false,
+            "test_strategy_contract": {
+              "mode": "enforced",
+              "contract_version": "1.2.0",
+              "enforced_from": "1.2.0"
+            },
+            "violations": []
+          }
+        }
+      }
+    }
+  },
+  "boundary_separation": {
+    "verdict": "PASS",
+    "description": "dev-graph skill does not duplicate spec compiler or task generator responsibilities",
+    "evidence": {
+      "skill_md_boundary_declaration": "run-system-dev-plan output consumed; dev-graph does not generate task specs (SKILL.md step 3: 13 task generation logic is not duplicated)",
+      "R2_plan_prompt_boundary": "Explicitly states elicitation/compile/13task生成を複製せず (no duplication of compile/13-task generation)",
+      "R3_handoff_prompt_boundary": "Outputs atomic requirements document and handoff reference only; no implementation code generation",
+      "skill_md_location": "/Users/dm/orca/workspaces/HarnessHub/main-2/plugins/dev-graph/skills/run-dev-graph-requirements/SKILL.md",
+      "validate_system_plan_ownership": "validate-system-plan.py owned by system-dev-planner plugin; dev-graph invokes it externally without re-implementing",
+      "task_spec_generation_owner": "system-dev-planner"
+    }
+  },
+  "source_lineage": {
+    "verdict": "PASS",
+    "description": "All source lineage paths and digests resolve correctly",
+    "evidence": {
+      "requirements_document_source_lineage": {
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0",
+        "source_paths": [
+          "system-spec/index.md",
+          "system-spec/00-requirements-definition.md"
+        ],
+        "confirmed": true,
+        "paths_exist": true
+      },
+      "arch_feature_nodes": {
+        "source_path": "system-spec/00-requirements-definition.md",
+        "stored_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+        "actual_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+        "match": true
+      },
+      "task_nodes_P01_P13": {
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0",
+        "source_digest": "6f91d28de1cb055601f8e80add171abd6740f250e4b279a19cfbdc4744b78105",
+        "meaning": "canonical package digest = snapshot_digest",
+        "match": true
+      }
+    }
+  },
+  "checklist_completion": {
+    "all_referenced_nodes_confirmed_pass_complete": true,
+    "source_lineage_path_version_digest_resolved": true,
+    "package_exact13_same_parent_package_acyclic": true,
+    "handoff_entity_refs_match_graph_snapshot": true,
+    "no_spec_compiler_or_task_generator_duplication_in_dev_graph": true
+  },
+  "self_evaluation": {
+    "completeness": "All Layer 5 stop conditions evaluated across 5 checks",
+    "consistency": "Confirmed absence of compiler/task-generator responsibility duplication in dev-graph skill (SKILL.md, R2-plan.md, R3-handoff.md reviewed)"
+  }
+}

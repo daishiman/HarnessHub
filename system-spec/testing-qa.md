@@ -15,32 +15,44 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-076 |
+| Web (web) | 確定 | 確定質疑: qa-134 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-081 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-078 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-095 |
 
 ## 確定内容 (質疑録)
 
-### qa-076 (対応セル: web)
+### qa-134 (対応セル: web)
 
-**質問**: タスク仕様書が担保すべきテストレベルの網羅方針は何ですか? 単体テストだけで十分ですか?
+**質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
 
-**回答**: 単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する
+**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
 
-### qa-081 (対応セル: desktop-windows)
+【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
 
-**質問**: テスト戦略をタスク仕様書へ組み込み、何度実行しても同じ品質基準で再現する仕組みはどう実装しますか? (qa-079 の確定内容の章反映)
+【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。
 
-**回答**: qa-079 で確定したとおり、タスク仕様書の生成時にテスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する。カバレッジ基準は qa-077 で確定した 80% 以上の品質ゲートと失敗時の改善ループ (失敗分析→修正→再実行) を維持し、テストレベルの範囲は qa-076 で確定した 4 レベル網羅 (単体・結合・境界値・回帰) を前提とする。UI コンポーネント層の実装ツールは D8 (意思決定) で @testing-library/react + Vitest を正式採用した
+【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。
 
-### qa-078 (対応セル: desktop-macos)
+【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。
 
-**質問**: フロントエンド・バックエンド・インフラの各層で、どのようなテスト種別と保守性方針を適用しますか?
+### qa-095 (対応セル: desktop-windows, desktop-macos)
 
-**回答**: 層別に適用する: フロントエンドは component 単体 + ユーザー操作フローの結合テストとし、ボタン配置などの見た目の微調整で壊れない behavior ベース (accessible role / ラベルでの要素選択) を必須とする。pixel 位置や DOM 構造への依存は禁止し、UI 微修正がテストエラーにならない管理しやすい設計に限定する。バックエンドは API 契約テスト + ビジネスロジック単体 + DB 結合テスト。インフラは IaC/設定の静的検証 + デプロイ後の smoke テスト。どこまで管理するかの線引きは各層のテスト設計方針として仕様に明文化し、過剰なテスト (実装詳細への密結合) を作らない
+**質問**: 作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?
+
+**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-078 と qa-081 の既存契約を全面維持し、skill 構造 lint の生成物境界を追補する。
+
+【1. テスト戦略】タスク仕様書は単体・結合・境界値・既存回帰の各テストを変更内容から選び、focused test と実際の実行順序を再現する広域回帰の両方を記録する。失敗時は原因分析、修正、同一コマンド再実行の改善ループを回す。
+
+【2. 層別方針】frontend は behavior ベースの component / 操作フロー、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界を検証する。pixel・DOM 内部構造・一時生成物の物理配置など、本来の設計契約ではない実装詳細へ品質判定を密結合させない。
+
+【3. skill tree の生成物境界】skill 構造 lint は人が管理する SKILL.md、許可 directory、命名、深さを検査する。一方、pytest・mypy 等の test tool が skill 配下へ作る dot で始まる directory とその配下、Python の __pycache__ / .pyc は生成物として構造判定から除外する。許可 directory 集合に dot directory は含めず、個別 cache 名の列挙ではなく同じ性質を持つ生成物へ一般化する。
+
+【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。
+
+【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 

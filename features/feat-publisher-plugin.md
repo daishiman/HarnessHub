@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:18:12Z"
+updated_at: "2026-08-02T20:56:00.450300Z"
 status: "active"
 depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publisher-plugin/b98891c25036105636bb3f660873c81b1af6c08410f5bf1a88a43c3932eed2df/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-publisher-plugin.md","confidence":0.9}]

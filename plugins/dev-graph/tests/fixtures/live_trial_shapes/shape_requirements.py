@@ -25,6 +25,8 @@ scenario 契約 (live-trial-positive-scenarios.json):
   3. C12  plugins/system-dev-planner/scripts/validate-system-plan.py
      package 本体の正本。validate (:232-451) が feature-package/inventory/
      task-graph/13 task specs/handoff/manifest の exact-set と digest を検査する。
+     C04 は promotion 後の consumer なので、fixture は feature 別 current pointer も持ち、
+     ``--feature-package feature-package/F-LIVE-001`` から published package を解決できる。
 
 したがって本 shape は「published package 一式」と「その package を C02 が登録し終えた
 graph」を同時に作る。scenario が --package で指す ``package.json`` は、C12 が読む
@@ -93,6 +95,21 @@ from .requirements_exact13_package import (
 SHAPE = "requirements"
 
 
+def _write_current_pointer(out: Path, package_digest: str) -> None:
+    """promotion 後 consumer が世代非依存 CLI で package を解決するための C11 入力。"""
+    dump_json(
+        out / ".dev-graph" / "plan-state" / "current" / "feature-package-F-LIVE-001.json",
+        {
+            "schema_version": "1.0.0",
+            "feature_package_id": FEATURE_PACKAGE_ID,
+            "generation_id": package_digest.removeprefix("sha256:"),
+            "published_path": PACKAGE_DIR_REL,
+            "published_digest": package_digest,
+            "receipt": f"{PACKAGE_DIR_REL}/atomic-promotion-receipt.json",
+        },
+    )
+
+
 def _graph_document_digest(graph: dict) -> str:
     """C02 _canonical_digest (register-package.py:150-152) と同一手順。"""
     raw = json.dumps(graph, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
@@ -143,7 +160,7 @@ def _write_system_spec(out: Path) -> None:
     )
 
 
-def _architecture_node() -> dict:
+def _architecture_node(spec_digest_hex: str) -> dict:
     """feature.architecture_refs の参照先となる architecture node。
 
     C11 domain_findings は architecture_refs を graph node id として解決するため
@@ -163,6 +180,17 @@ def _architecture_node() -> dict:
             "evaluated_digest": hashlib.sha256(ARCHITECTURE_ID.encode("utf-8")).hexdigest(),
             "evaluator": "build_live_trial_fixture",
             "evidence_ref": ARCHITECTURE_REL,
+        },
+        # C04 の scope closure は feature.architecture_refs も source-digest gate
+        # へ渡す。manual/null lineage のままだと runner が architecture を除外して
+        # handoff を出せてしまうため、feature と同じ確定 system-spec へ束縛する。
+        "source_lineage": {
+            "imported_at": FIXED_TS,
+            "origin_kind": "system-spec-harness",
+            "source_digest": spec_digest_hex,
+            "source_path": SYSTEM_SPEC_REQUIREMENTS_REL,
+            "source_plugin": "system-spec-harness",
+            "source_version": "0.1.0",
         },
         "classification_candidates": [
             {"artifact_kind": "architecture", "candidate_path": ARCHITECTURE_REL, "confidence": 1.0}
@@ -383,7 +411,8 @@ def build(out: Path) -> None:
     repository_id = _add_plan_roots(out)
     _write_system_spec(out)
 
-    architecture = _architecture_node()
+    spec_digest_hex = sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
+    architecture = _architecture_node(spec_digest_hex)
     _write_node_markdown(out, architecture)
 
     source_feature_digest = _write_feature_context(out)
@@ -401,9 +430,7 @@ def build(out: Path) -> None:
 
     depends = {phase: ([] if index == 0 else [task_id(PHASES[index - 1])])
                for index, phase in enumerate(PHASES)}
-    feature = _feature_node(
-        package_digest_hex, sha256_file(out / SYSTEM_SPEC_REQUIREMENTS_REL)
-    )
+    feature = _feature_node(package_digest_hex, spec_digest_hex)
     task_nodes = [
         _package_task_node(phase, responsibility, depends[phase], package_digest_hex)
         for phase, responsibility, _kind in PHASE_META
@@ -423,6 +450,7 @@ def build(out: Path) -> None:
     _write_registration_artifacts(
         out, repository_id, package_digest, task_nodes, _graph_document_digest(graph)
     )
+    _write_current_pointer(out, package_digest)
     finalize(out)
 
     # commit 後に「baseline = C04 の入力だけ」を検査する。ここで宣言外の path を弾くので、

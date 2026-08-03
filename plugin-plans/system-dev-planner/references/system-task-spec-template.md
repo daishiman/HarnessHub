@@ -104,7 +104,11 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 そのまま再実行できる形だけを書く。`--repo-root . --staging .` のように repository root 起点で
 解決できない形と、generation id の直書き (再計画で stale になる) は禁止する。plan validator の
 再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>`
-を使う (`references/feature-execution-package-contract.md` §2.3)。
+を使う (`references/feature-execution-package-contract.md` §2.3)。`<feature_package_id>` は自 package の
+値であること。契約 version が `1.3.0` 以上に解決される package では、`--staging` の使用・
+`--feature-package` の欠落・他 package の id を `validate-system-plan.py` (C12) が fail-closed で
+拒否する。検査対象は fenced block と inline code span が提示するコマンドだけで、散文中の
+script 名への言及は対象外。
 
 ## Inner goal-seek execution loop
 
@@ -142,5 +146,6 @@ draft の既存参照を壊さない。P08 で正本化・P12 で最終確定 (g
 - `Workstream applicability` は該当しない workstream を `N/A: reason` で明示し、空欄のまま省略しない (適用外の理由を機械可読に残す)。
 - 全pathはcaller repository相対でC09 containment済みであること。`/absolute`、drive-letter、`..`、root外symlinkはincomplete。
 - task spec本文かruntime時に読むgoal/manifest/validator/evidenceはpackage-relative pathまたはcanonical published pathで参照する。C11のatomic rename後に消滅する`.dev-graph/staging`参照は禁止し、C12がpromotion前にfail-closedで拒否する。
+- 同じ理由で、本文が提示する`validate-system-plan.py`再実行コマンドは`--staging`ではなく自packageの`--feature-package <feature_package_id>`を使う。契約`1.3.0`以上に解決されるpackageではC12が`task-spec-rerun-staging-path`/`task-spec-rerun-package-missing`/`task-spec-rerun-package-mismatch`で拒否する。
 - P01は`parent_feature.depends_on all done|closed`を機械判定可能なentry gateとして明記する。upstream feature IDはtask `depends_on`へ複製せず、schedulerがcanonical parent featureの現行edgeを都度評価する。
 - staging/evaluator/published digestが一致しC11 promotion receiptが存在するまでL4 handoffを出さない。

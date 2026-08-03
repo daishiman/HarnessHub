@@ -28,6 +28,7 @@ from typing import Any
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
 from node_body import artifact_bytes as _artifact_bytes
 from node_body import resolve_body as _resolve_body
+from node_body import restore_document_layer as _restore_document_layer
 from node_lifecycle import apply_lifecycle_request
 from node_transaction import (
     finalize_transaction,
@@ -217,6 +218,52 @@ def _request_node(
     return node, explicit_updated_at
 
 
+def _stale_feature_lifecycle_fields(
+    existing: dict[str, Any],
+    requested: dict[str, Any],
+) -> list[str]:
+    """Return lifecycle fields that a stale full feature snapshot would regress.
+
+    A full ``node`` input is a before-image produced by C14 and may be retried.
+    Once a feature has advanced, replaying that old image must not silently
+    erase the advancement.  Callers that intentionally reset lifecycle state
+    can still do so with an explicit ``patch`` request.
+    """
+    if (
+        existing.get("artifact_kind") != "feature"
+        or requested.get("artifact_kind") != "feature"
+    ):
+        return []
+
+    regressions: list[str] = []
+    if (
+        existing.get("status") in {"active", "blocked", "done", "closed", "tombstoned"}
+        and requested.get("status") == "draft"
+    ):
+        regressions.append("status")
+    if (
+        existing.get("confirmation_status") in {"confirmed", "superseded"}
+        and requested.get("confirmation_status") == "draft"
+    ):
+        regressions.append("confirmation_status")
+    if (
+        existing.get("evaluation_status") in {"pass", "fail", "stale"}
+        and requested.get("evaluation_status") == "pending"
+    ):
+        regressions.append("evaluation_status")
+
+    existing_readiness = existing.get("implementation_readiness")
+    requested_readiness = requested.get("implementation_readiness")
+    if (
+        isinstance(existing_readiness, dict)
+        and existing_readiness.get("status") == "complete"
+        and isinstance(requested_readiness, dict)
+        and requested_readiness.get("status") == "incomplete"
+    ):
+        regressions.append("implementation_readiness.status")
+    return regressions
+
+
 def _perform(args: argparse.Namespace) -> dict[str, Any]:
     root = Path(args.repo_root).expanduser().resolve(strict=True)
     graph_path = _graph_path(root, args.graph)
@@ -257,6 +304,14 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         node, explicit_updated_at = _request_node(payload, existing)
         if _node_id(node) != requested_id:
             raise ContractError("graph_node_id is immutable and must match the request identity")
+        if existing is not None and "patch" not in payload:
+            lifecycle_regressions = _stale_feature_lifecycle_fields(existing, node)
+            if lifecycle_regressions:
+                raise ContractError(
+                    "stale feature lifecycle before-image would regress "
+                    f"{', '.join(lifecycle_regressions)}; refresh the full node "
+                    "snapshot or use an explicit patch for an intentional reset"
+                )
         relative_path = _canonical_path(node, existing)
         # 新規 feature と kind 差替えによる feature 化の双方を gate する (dry-run も同じ経路)。
         if node.get("artifact_kind") == "feature" and (
@@ -264,6 +319,7 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         ):
             _assert_c14_macro_contract(node, root)
         artifact = contained(root / relative_path, root, must_exist=False)
+        _restore_document_layer(node, artifact)
         body, body_source, replaced_body_lines = _resolve_body(
             payload,
             args.body_file,

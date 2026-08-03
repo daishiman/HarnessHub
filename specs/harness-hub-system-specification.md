@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-08-02T11:50:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json"}
-source_lineage: {"imported_at":"2026-07-24T12:35:34Z","origin_kind":"system-spec-harness","source_digest":"190b5c6131b7c7817919692648e4b4cecd7124a3b038dbaddc7d206c9dfe081b","source_path":"system-spec/00-requirements-definition.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -54,10 +54,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 正本 (source of truth)
 
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `862938b8c222c01c…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `1a85072d10ea2bc…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json`、evaluated_digest `190b5c6131b7c78…`)
-- 取込日時: 2026-07-24T12:35:34Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS**（最新 main の qa-123〜qa-133 を保持し、qa-134 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `767a7d11af2c05a…`）
+- 取込日時: 2026-08-02T11:50:05Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -109,9 +109,28 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - Auth.js 本番 route、DB-backed AuthPorts、CAS 一回性、テナント付き所属主キー、Worker Secret、要求間 write 分離と rollout 順序を正本へ書き戻した。
 - 反映先と検証の対応は [仕様反映受領書](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md) を正とする。
 
+**本番反映 (2026-07-30 / `SYS-AUTH-TENANCY-P13` / qa-097〜qa-099)**:
+
+- productionはGoogle OIDC / HarnessHub 1テナントを現行rollout境界とする。製品の複数テナント分離契約、
+  分離試験、将来の共通Google OAuth client方式と顧客持ち込み方式は維持する。
+- tenant別CSRF cookie/tokenを取得してから同じAuth.js basePathへnative form POSTし、
+  Googleへの302をブラウザ遷移として処理する。CSRF取得失敗・空値・不一致はfail-closedとする。
+- Google client secretは1Passwordから登録時だけmasked展開し、purpose別DEKでDBへ暗号化する。
+  Workerは共通`ENCRYPTION_KEK`を使い、GitHubやテナント別Worker Secretへ値を複製しない。
+- 正本は[auth](../system-spec/auth.md)・[security](../system-spec/security.md)・
+  [infrastructure](../system-spec/infrastructure.md)、対応表は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+
 ## エラー・例外・回復
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+**データ接続復旧の反映 (2026-07-30 / `HarnessHub-njkm` / qa-101)**:
+
+- process-local の `file:` / `:memory:` libSQL が `SQLITE_BUSY` を踏んだ場合、接続を poisoned（復旧まで使用禁止）として隔離し、以後の read/write/transaction を `ConnectionPoisonedError` で fail-fast する。
+- `TursoAdapter.reconnect()` は raw client を factory から作り直すが、公開 Client / Drizzle / repository の参照は変えない。自動 reconnect は並行 transaction と障害観測を壊すため行わない。
+- request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
+- 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
 
 **開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
 
@@ -131,6 +150,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**認証production rollout (2026-07-30 / `SYS-AUTH-TENANCY-P13`)**:
+
+- `wrangler.jsonc`の公開URL 3変数と必須Worker Secret名5件を配備契約とし、値はGitへ保存しない。
+- Google/HarnessHub 1テナントでprovider/CSRF/sign-in、JIT、Workspace所属、Device Flow、
+  refresh rotation/reuse失効、session revocationをR1〜R5として本番実測した。
+- 2番目のproduction tenantを本リリース条件から外したことと、製品全体の複数テナント分離保証を
+  外したことを混同しない。後続方式は`HarnessHub-fnej` / `HarnessHub-uk2i`で追跡する。
+- **実装ゲート追補**: CIはmigration前にdeploy依存設定の存在を検査し、deploy後は
+  provider/canonical callback、未知tenant拒否、CSRF、Google認可URLの
+  `state`・`nonce`・PKCEまでを本番URLで検査する。owner認可はDBのbase roleではなく
+  resourceとの関係roleとして、全action×role表とcross-tenant拒否を名前付きゲートで再実行する。
+  これは`qa-091` / `qa-097` / `qa-099`と既存認可表の検証手段を固定する追補であり、
+  製品仕様・role順序・API・DB schemaは変更しない。
+
 **差分追記 (2026-07-25 / feat-domain-model-db P13 / `SYS-DOMAIN-MODEL-DB-P13`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10、実測証跡は [docs/features/feat-domain-model-db/release-record.md](../docs/features/feat-domain-model-db/release-record.md)。
 
 - **リリースの成立条件**: production migration の台帳一致 → deploy → `/health` → 本番スモーク 6 項目 (接続 / ULID / release 不変性 / R2 往復 / audit chain / export-restore dry-run) の全 pass。1 項目でも欠ければリリース成功と数えない。
@@ -143,6 +176,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - **復元契約**: `backup.yml` は `export-control-plane.ts` の JSONL を gzip して R2 に保存し、`restore-control-plane.ts` が header・行数・audit chain・暗号断面を fail-closed で検査する。日次形式と drill の不一致を許容しない。
 - **仕様影響判定**: qa-011 / qa-019 の RPO・RTO・復元可能性要件を具体化した実装反映であり、外部 API・データモデル・確定 QA の変更はない。
 
+**差分追記 (2026-07-29 / `HarnessHub-bda4` / qa-091)**
+
+- **Cloudflare credential 契約**: Actions の deploy / rollback は R2 write 権限を持たない `CLOUDFLARE_API_TOKEN`、backup / production smoke の R2 object 操作は Workers Scripts 権限を持たない `CLOUDFLARE_R2_API_TOKEN` を使う。
+- **R2 permission 契約**: Wrangler の remote object 操作は Cloudflare REST API を使うため、R2 token には account-scoped の `Workers R2 Storage Write` を付与する。bucket-scoped item 権限は S3 互換 API 専用なので代替にしない。
+- **受入契約**: workflow と `scripts/ci/actions-secrets-registry.json` の双方向一致、および deploy / R2 token の相互不参照を静的ゲートで遮断する。実投入は `--live`、拒否系と完走は GitHub Actions の外部実測を根拠とし、文書更新だけで完了扱いにしない。
+- **仕様影響判定**: CI/CD credential の権限境界を変更したため infrastructure.web を正式に reopen し qa-091 として反映した。外部 API、DB schema、認証認可モデル、UI、deploy unit の変更はない。
+
 ## テストと受入条件
 
 正本章 (system-spec/00-requirements-definition.md, system-spec/index.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -151,6 +191,303 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 **差分追記 (2026-07-26)**: `packages/db/__tests__/runbook-invocation.test.ts` は runbook に記載した `pnpm --filter ... exec` コマンドをそのまま実走し、引数区切りと cwd (実行時の基準ディレクトリ) の回帰を検出する。`apps/hub/tests/ci/actions-secrets.test.ts` は台帳の 4 方向突合と live 設定検査の fail-closed 性を固定する。
 
+**開発品質反映 (2026-07-29 / `HarnessHub-9ndl`・`HarnessHub-dyxr`)**:
+
+- `system-spec/testing-qa.md` の qa-089 として、AI skill の live-trial を受入根拠にする場合の durable evidence（repository に残り clean clone でも解決できる証拠）、scenario・task 手順束縛と失効、pre/post 実測、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance を確定した。
+- 影響は repository 内の開発品質ゲートに限定され、Harness Hub 製品の外部 API・データモデル・認証認可・UI・Cloudflare deploy unit は変更しない。
+- 反映先と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を正とする。
+
+**開発品質追補 (2026-07-30 / `HarnessHub-yn71`)**:
+
+- qa-100 は qa-089 の受領境界を fail-closed（確認不能なら失敗）にし、live-trial の `scenario_contract`、全 required observation、引数、宣言済み task 契約、run 内 evidence を criteria-test で再照合する。旧形式の欠落は互換成功にせず fresh run で更新する。
+- 影響は開発証拠の受領だけで、schedule skill 本体と製品契約は非変更。反映対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md) を正とする。
+
+**plugin browser CI 到達追補 (2026-07-30 / `HarnessHub-nznu` / qa-109)**:
+
+- 実ブラウザを必要とする plugin acceptance は EVALS やローカル `npm test` への列挙だけで完了とせず、plugin path 変更時に GitHub Actions から runtime install → 同一 test → read-only check へ到達させる。
+- Node/Playwright と OS/CPU 別 Chromium は plugin 配下へ復元する。cache は高速化に限定し、最終 check が version、実行ファイル実在、plugin-local path 包含を検証する。
+- `slide-report-generator` は Chromium 起動、16:9、2 slide screenshot、report self-test を vendor test で実測し、workflow 配線を Python 契約テストで固定する。
+- 影響は repository 内の品質ゲートに限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。反映対応は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md) を正とする。
+
+**開発運用反映 (2026-07-29 / `HarnessHub-cjwm`・`HarnessHub-0vs2`)**:
+
+- `system-spec/dev-workflow.md` の qa-090 として、live-trial session の通常 cleanup は
+  session 名の run prefix、記録済み run-id、記録済み owner PID の完全一致へ限定する。
+- run-id または owner PID が無い通常 `reap` は拒否し、全件削除は明示的な管理者操作
+  `--all` だけに限定する。別 owner、別 run、metadata 無し session は通常 cleanup で削除しない。
+- 影響は repository 内の macOS 開発用 acceptance harness に限定される。製品仕様は非変更。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-reaper-spec-reflection.md)
+  を正とする。
+
+**開発品質反映 (2026-07-29 / `HarnessHub-4t9g`)**:
+
+- `system-spec/dev-workflow.md` の `qa-092` として、Dev Graph C11 が artifact の
+  required section 本文を検査する契約を確定した。
+- 空本文、canonical placeholder の残存、`TBD` / `TODO` / `未定` だけの節は
+  `implementation_readiness=incomplete` とし、節名を `missing_sections` に返す。
+- C02 の template-only 新規生成と placeholder への再生成は transaction rollback
+  する。実本文の保持と substantive body による作成・復旧は維持する。
+- 影響は repository 内の readiness、tracker 投影、system build handoff に限定する。
+  製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+  反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-artifact-body-readiness-spec-reflection.md)
+  を正とする。
+
+**運用監視反映 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
+
+- 日次 backup は Worker 日次 cron と別の Better Stack heartbeat を使い、`CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` を共用しない。
+- `BACKUP_HEARTBEAT_URL` は required。backup workflow は未投入を前提確認で拒否し、全 step 成功後だけ heartbeat を送る。
+- backup heartbeat は `period=86400` 秒 / `grace=3600` 秒。repository 内実装、外部資源、GitHub secret、main 成功 run、着信実測を分離し、後者 4 件が揃うまで完了を主張しない。
+- 反映先と検証は [backup heartbeat 分離 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-spec-reflection-receipt.md) を正とする。
+
+**適用証跡追記 (2026-08-01 / `HarnessHub-fnzl`・`HarnessHub-dbx6`)**:
+
+- qa-094 の契約は変更しない。backup 専用 heartbeat `477775` を Worker cron 用 `475650` と分離したまま外部適用し、`BACKUP_HEARTBEAT_URL` を repository secret へ投入した。
+- `check-actions-secrets.mjs --live` は workflow 参照 13 件 = 台帳 13 件で exit 0。main の `hub-backup` run `30686023662` は export 19 テーブル / 64 行、R2 往復一致、heartbeat ping の HTTP 2xx 受理まで完走した。
+- これは確定済み仕様の実現証跡であり、外部 API、DB schema、認証認可、UI、deploy unit、period / grace の値を変更しない。判断と証跡は [外部適用 仕様反映受領書](../docs/features/feat-hub-foundation/backup-heartbeat-application-spec-reflection-receipt.md) を正とする。
+
+**開発品質ゲートの空走査反映 (2026-07-30 / `HarnessHub-foq6` / qa-096)**:
+
+- `system-spec/dev-workflow.md` の web セルを正規に reopen し、qa-069 の
+  MVP ファースト契約を維持したまま qa-096 へ再確定した。
+- 品質ゲートは directory 不在・検査対象 0 件を既定で失敗させ、
+  意図的な空走査だけを明示 opt-in で許可する。
+- `qa-092` / `appr-013` は main 側 C11 契約を保持し、本変更は空き ID
+  `qa-096` / `appr-015` へ再採番した。
+- 製品 API・DB・認証認可・UI・deploy unit は変更しない。反映と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md)
+  を正とする。
+
+**開発管理整合性の反映 (2026-07-29 / `HarnessHub-bk8v`)**:
+
+- dev-graph C02 は、昇格済み feature へ古い full snapshot が再送されても lifecycle を
+  暗黙に後退させない。stale before-image は dry-run / apply とも無変更で拒否し、
+  意図的な再評価は変更フィールドを列挙した明示 patch に限定する。
+- 反映対象は repository 内の開発管理契約である。Harness Hub 製品の外部 API、
+  DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 実装契約、設計判断、検証結果の対応は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md)
+  を正とする。
+- 重複報告 `HarnessHub-j66m` は別仕様・別実装を作らず、同じ受領書と dev-graph node
+  `issue-c02-upsert-lifecycle-regression-20260729` の再検証 trace に統合する。
+
+**開発管理整合性の反映 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
+
+- `system-spec/dev-workflow.md` の qa-102 として、Dev Graph C02 の document metadata 契約を確定した。`artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する小文字 kebab-case の `layer` を必須とし、非 document では禁止する。
+- legacy document は既存 frontmatter の単一 `layer` scalar を一度だけ graph へ移行できる。新規 document の暗黙 default、欠落、重複、形式不正は fail-closed とし、本文は保持する。
+- artifact placement lint は同じ schema 定義を参照し、graph validation と別の許容値表を持たない。
+- 影響は repository 内の開発管理 metadata と品質ゲートに限定される。Harness Hub 製品の外部 API・DB schema・認証認可・UI・Cloudflare deploy unit は変更しない。
+- 反映先、検証結果、500 行判断は [仕様反映確認](../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+
+**CI 追補 (2026-07-30 / `HarnessHub-dqca` / qa-102)**:
+
+- C02 変更で stale になった Dev Graph 9 skill の live-trial を正規に再取得し、失敗 run も append-only で保持する。
+- tmux server の global environment は hook routing の正本にせず、boot 呼び出し元の `SYSTEM_SPEC_AUDIT_FORK_LEDGER` を `new-session -e` で対象 session へ明示する。未設定は空値で上書きし、過去 trial の一時 path を継承しない。
+- C19 は fixture 内台帳と current session id を canonical aggregate gate で突合し、正規 system-spec 4 entry point、独立3監査、C02 import が揃った場合だけ PASS とする。
+- これは repository 内の acceptance harness と証拠配送の設計であり、製品 API・DB・認証認可・UI・Cloudflare deploy unit は変更しない。
+
+**開発品質反映 (2026-07-29 / `HarnessHub-xswf` / qa-095)**:
+
+- skill 構造 lint は人が管理する tree の深さ・命名・許可 directory を検査し、
+  test tool が生成する dot directory、`__pycache__`、`.pyc` は構造判定から除外する。
+- repository root と配布 plugin の lint 実装は同一バイト列を維持し、
+  `.pytest_cache` / `.mypy_cache` / 任意の dot cache と通常の nested directory 違反を
+  正負の回帰検体にする。
+- per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを
+  task の広域回帰証拠とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-ml57` / qa-088 実装具体化)**:
+
+- CI の repository-root Python 検査と local pre-push の hard gate を、
+  script path と正規化済み引数の集合として突合する meta-lint を追加した。
+- CI blocking invocation は local hard gate または理由付き allowlist のどちらかに
+  必ず属し、未被覆、理由欠落、stale allowlist は fail-closed で拒否する。
+- 外部資格情報、working-tree write、CI non-blocking の呼び出しは、実行しない理由を
+  exact invocation ごとに記録し、「CI 全体を local で完全再現する」という過大な宣言を避ける。
+- これは qa-088 の local development contract の具体化であり、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit は変更しない。
+- 反映先と最終検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md)
+  を正とする。
+
+**公式出典鮮度と Stage 0 再検証の反映 (2026-07-30 / `HarnessHub-e2u`)**:
+
+- C08 公式出典台帳の確認値を Next.js 16.2.12、Drizzle stable 0.45.2 /
+  v1 prerelease rc.4、Wrangler 4.115.0、Claude Code 2.1.220 時点へ更新した。
+  これらは採用版の自動変更ではなく、実装・依存更新前に再確認する固定点である。
+- Claude Code の現行公式 `git-subdir` source は旧 H7 後に確認された有効な
+  配信候補である。ただし、macOS / Windows の Skills 列挙と実 skill 起動が
+  未検証なので、Stage 0 の `NOT_ESTABLISHED` と Stage 1 fail-closed を維持する。
+- 後続 `HarnessHub-n2c0` が公式契約の再照合、2 OS E2E、設定非汚染を検証する。
+  製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+- 層別の反映先、非影響判断、検証結果は
+  [仕様反映受領書](../docs/features/feat-stage0-distribution-gate/source-freshness-spec-reflection-receipt.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-ory6`)**:
+
+- ID を `set` / `dict` へ正規化して参照実在性を検査する repository 内
+  validator は、正規化の前に同一 ID の重複を fail-closed で拒否する。
+  重複した別要素を 1 件へ畳み込んだ後の「参照先あり」を合格根拠にしない。
+- 適用対象は plugin-dev-planner の task/component ID、ubm-goal-setting の
+  transcript turn ID、harness-creator の handoff route ID。正常系は従来の
+  exit 0 を維持し、重複 fixture は CLI 非 0 終了まで回帰テストで固定する。
+- 影響は repository 内の validation contract に限定される。製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
+  を正とする。
+
+**開発品質反映 (2026-07-30 / `HarnessHub-35ai`)**:
+
+- feature scope の renderer は registration receipt を検証できた場合だけ
+  `verified` を表示し、receipt 未指定の探索表示は `not_performed` とする。
+- 同じ 13 child graph を receipt 有り／無しで描画する正負の回帰テストにより、
+  見かけの task 件数だけで登録成功を推測する偽陽性を禁止する。
+- CLI receipt、可視 HTML banner、埋込み metadata は同じ判定を返す。
+  影響は repository 内の検証契約に限定され、製品 API、DB schema、認証認可、
+  UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
+  を正とする。
+
+## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
+
+- `system-spec/backend.md` の `qa-103` で、公開要求から Release 生成までの REST API、
+  状態遷移、Green 自動公開、Yellow/Red の修正待ち、TargetChannel 単位の直列化を確定した。
+- `system-spec/security.md` の `qa-104` で、session/Bearer の経路別許可、
+  tenant/owner の fail-closed 判定、CSRF、冪等鍵、監査を確定した。
+- `system-spec/database.md` の `qa-105` で、既存 schema の consumer 境界、
+  immutable Release、partial UNIQUE、stable pointer 更新を確定した。
+- production smoke の DB 操作も root 公開 API の `createPublishSmokeDbProbe`
+  経由とし、運用検証を理由に schema subpath へ到達しない。
+- `system-spec/infrastructure.md` の `qa-106` と
+  `system-spec/maintenance-ops.md` の `qa-107` で、R2 binding、本番 smoke、
+  code-only rollback、履歴保持を確定した。
+- `system-spec/testing-qa.md` の `qa-108` で、状態機械・認可・検査・DB/R2・
+  production smoke の証拠束を受入条件へ固定した。
+- 正規遷移は `appr-020` を根拠に各セルを R4 reopen → confirm し、
+  compile と coverage/source-citation gate を通した。詳細は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を正とする。
+
+**G4 実行安定化の反映 (2026-07-30 / `HarnessHub-pyb3`)**:
+
+- `pnpm -r test` は CI / local の共通入口として維持し、pnpm project 設定の
+  `workspaceConcurrency: 1` で package 間だけを直列化する。
+- 各 package 内の Vitest 並列性は維持する。設定欠落・値変更は
+  `pnpm check:pnpm` の正負テストで非ゼロ終了させる。
+- qa-038 の G4、qa-088 / qa-096 の CI-local 同値と fail-closed 契約を実装具体化する
+  もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
+- 反映先と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
+
+**Dev Graph / Beads authority 追補**: C10・C11・C28 と PostToolUse 監査の詳細は、
+[Dev Graph authority 追補](harness-hub-dev-graph-authority-addendum.md) を正とする。
+
+**P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
+
+- production deploy の正本を GitHub Actions `ci.yml` に一本化する既存契約を維持する。
+- 通常は main merge の push で全自動配備する。path filter 非発火時だけ、main の明示
+  `workflow_dispatch` で同じ静的ゲート・test・migration・deploy・post-deploy smoke を再実行できる。
+- feature branch deploy、全ゲートの短絡、通常運用でのローカル Wrangler deploy は許可しない。
+- これは CI trigger の回復経路を具体化する差分で、製品 API、DB schema、認証認可、UI、
+  Worker deploy unit は変更しない。正本は `system-spec/infrastructure.md` と
+  [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
+  [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
+
+**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-131〜132)**:
+
+- migration より前に、Worker Secret の機械可読台帳、`wrangler.jsonc` の required 宣言、
+  本番 Worker の実投入名を三方向で突合する。値は保存せず、認証不足・通信不能・解析不能・
+  未投入・台帳外投入を fail-closed（検査できない場合も安全側で停止）にする。
+- post-deploy 検証の末尾へ hearing 実データ E2E / SEC8 スモークを追加する。**新しい secret を
+  要求せず**、既存の `TURSO_*` と `vars.HUB_PUBLIC_URL` だけで成立させる。
+- session 専用の提出経路は route と同じ repository → service 合成を server 側で実行し、TOKEN 資格の
+  AI キュー API は本番 URL へ実 HTTP で送る。Device Flow の `code` / `token` が認証不要 endpoint で
+  あるという既存契約を使い、署名鍵を CI へ配らずに本物の access token を得る。
+- 検証用の使い捨て tenant は fixture 全体を 1 transaction（途中失敗なら全取り消し）で作り、
+  `finally` の削除も 1 transaction で行う。全対象表の**残行数 0 でなければ失敗**とする。
+- 認可契約そのものは変更しない。SEC5（年収非保存）、SEC8（tenant 分離・claim token 束縛）、
+  session 専用の提出契約を**本番実挙動として観測する**手段を追加する差分である。
+  他 tenant の header を騙る負例は、資源の存在を伏せる既存契約どおり `404 tenant_mismatch`
+  を期待し、`403` への退行も検出する。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
+
+## SLO 公開実測の反映 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
+
+- Better Stack の公開 status page を token なしで実測し、resource `external_id`、完了済み UTC 日、downtime から観測進捗を再現する。設定や resource の存在を監視稼働・SLO 完了へ読み替えない。
+- 進行中の当日と `not_monitored` は観測窓から除外し、30 日未満は `collecting`、`external_only_target_met=null` とする。
+- 30 日到達後も Workers Analytics の 5xx 率が揃うまで最終判定を保留し、qa-019 の 99.5%／70% 警告／100% 変更凍結を変更しない。
+- 共有 Google OAuth client を含む製品 API、DB schema、認証認可、UI、Cloudflare deploy unit に変更はない。正本は [infrastructure](../system-spec/infrastructure.md)、反映経路と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+
+## Feature closeout 境界 (2026-08-02 / qa-123)
+
+- qa-019 / qa-116 の SLO 99.5%、30 日観測、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結を維持する。
+- `feat-hub-foundation` は exact-13 と release 証跡を delivery closure とし、ユーザーが追加対応不要とした `HarnessHub-37h.14` / `.15` は `not_applicable` で閉じる。waiver は SLO PASS ではない。
+- `feat-domain-model-db` は schema / immutable Release / R2 registry / export-restore の固有受入で独立して閉じる。
+- 外部 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。判断と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
+
+## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-134)
+
+- promotion 前は system-dev-planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。
+- contract 1.3.0 は、task spec の fenced/inline code にある `--staging`、`--feature-package` 欠落、別 package id を fail-closed に拒否する。backtick/tilde fence、行継続、未閉じ fence も検査し、散文はコマンドと誤認しない。
+- 既存の content-addressed package は immutable のため 1.2.0 以前の契約で再検証し、本文 digest と再現可能性を維持する。
+- 影響は repository 内の task spec 生成・検証契約に限定され、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正本は [testing-qa](../system-spec/testing-qa.md)、設計と証跡は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) を参照する。
+
+## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
+
+- `idp_connections.credential_mode` は `customer_google` と `shared_google` を明示し、
+  未知値・設定不備を別方式へフォールバックさせない。既存行は
+  `customer_google` を既定にして従来の tenant 別 callback と暗号化 secret を維持する。
+- 共有方式は環境単位の Google client 1 組と固定 callback
+  `/api/auth/shared/callback/tenant-oidc` を使う。tenant は 10 分 TTL の署名付き
+  `state` と HttpOnly binding cookie で復元し、PKCE S256 と nonce は Auth.js に残す。
+- Auth.js が検証した Google ID token の `hd` を tenant の
+  `allowed_workspace_domains` と完全一致させる。欠落、別 Workspace、
+  サブドメイン、tenant 差し替えでは JIT 利用者・session を作らない。
+- 共有 client ID/secret は tenant DB 行、ログ、response、Git、GitHub Secretsへ
+  複製しない。Cloudflare Worker の環境 secret とし、共有方式を使わない環境の未設定は許す。
+- migration `0003_auth-tenancy-shared-google-oidc.sql` は列追加のみ。rollback は
+  shared tenant を customer mode へ戻して旧 callback を確認してから Worker code を戻す。
+- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
+  [security](../system-spec/security.md)、[database](../system-spec/database.md)、
+  [infrastructure](../system-spec/infrastructure.md)、
+  [maintenance-ops](../system-spec/maintenance-ops.md)。判断と検証は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+
+## 外部参考 Skill の所有境界 (2026-08-02 / `HarnessHub-ym9h` / qa-122)
+
+- `doc/参考Skill/` は外部由来の比較・移管記録であり、能動 plugin の契約正本にしない。
+- `aiworkflow-requirements` を前提にする参考コピーは directory 単位で削除し、利用中の
+  外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。
+- 変更は repository の開発文書・plugin reference 所有に限定され、製品 UI、外部 API、
+  DB schema、認証認可、Cloudflare deploy unit は変更しない。
+- 正本は [dev-workflow](../system-spec/dev-workflow.md) の `qa-122`、判断・検証・復元経路は
+  [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+  を参照する。
+
+## 顧客持ち込み Google OAuth client 管理 (2026-08-02 / `HarnessHub-uk2i` / qa-124〜qa-130)
+
+- `provider-admin` は `/settings/auth` と Google 専用管理 API から、顧客所有 client の
+  登録、接続テスト、有効化、無停止 rotation、取消、無効化、安全な再開を行える。
+- lifecycle は `pending → tested → active → disabled`。認証解決は `active` のみで、
+  disabled からは新 credential を staging して pending テストを通さない限り復帰できない。
+- client ID・secret・方式・許可 Workspace ドメインは 1 テナント 1 Google 行の staging に
+  一式保存し、暗号文 CAS（比較一致時だけ更新）で同時昇格する。昇格前と取消後は現行ログインを維持する。
+- secret 全値は応答、ログ、監査、DOM、エラー、snapshot へ出さず、暗号化保存と last4 表示に限定する。
+  管理 API は tenant scope・同一 origin・Google issuer・provider-admin を fail-closed で強制する。
+- 不正 code の token probe は discovery と client credential の疎通確認であり、redirect URI 一致は
+  証明しない。有効化後の Google 実ブラウザ login を運用上の別ゲートとする。
+- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
+  [database](../system-spec/database.md)、[frontend](../system-spec/frontend.md)、
+  [security](../system-spec/security.md)、[maintenance-ops](../system-spec/maintenance-ops.md)、
+  [testing-qa](../system-spec/testing-qa.md)。反映と検証は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
+  を参照する。

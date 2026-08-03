@@ -1,0 +1,52 @@
+{
+  "verifier": "independent-agent",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "verdict": "PASS",
+  "observations": {
+    "obs1_harness_canonical_flow": {
+      "verdict": "PASS",
+      "evidence": [
+        "plugins/system-spec-harness/.claude-plugin/plugin.json exists with name=system-spec-harness, version=0.1.0 (satisfies >=0.1.0 <1.0.0)",
+        "system-spec/spec-state.json has 8 categories (database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops) all with category_aggregate=confirmed",
+        "validate-coverage-matrix.py --require-complete --require-foundation: exit 0",
+        "system-spec/completeness-report.json exists with verdict=PASS across 6 aspects (foundation_trace, decision_guidance, matrix_coverage, design_knowledge_reflection, doc_freshness, prompt_quality)",
+        "system-spec/fetched-references.json exists with 3 references (sqlite 3.53.4, fastapi 0.141.1, fastapi-security 0.141.1)"
+      ]
+    },
+    "obs2_lineage_and_evidence": {
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json has exactly 2 nodes: spec-system-requirements and arch-system-database",
+        "spec-system-requirements source_lineage: all 6 fields non-null (imported_at=2026-07-30T07:00:00Z, origin_kind=system-spec-harness, source_digest=a541d989..., source_path=system-spec/00-requirements-definition.md, source_plugin=system-spec-harness, source_version=0.1.0)",
+        "arch-system-database source_lineage: all 6 fields non-null (imported_at=2026-07-30T07:00:00Z, origin_kind=system-spec-harness, source_digest=1113425036d4..., source_path=system-spec/database.md, source_plugin=system-spec-harness, source_version=0.1.0)",
+        "Both nodes: source_digest matches actual sha256 of source_path file (verified via python3 hashlib)",
+        "Both nodes: confirmation_status=confirmed, confirmation_evidence.evaluator=assign-system-spec-completeness-evaluator",
+        "validate-source-digest.py: exit 0, checked=2, registered_mismatch=[]",
+        "validate-evidence-refs.py: exit 0, scanned_nodes_with_evidence=2, registered_dangling=[], existing_dangling=[]"
+      ]
+    },
+    "obs3_c02_only_no_duplication": {
+      "verdict": "PASS",
+      "evidence": [
+        "graph_revision=2, matches 2 registered nodes",
+        "grep 'apply-spec-transition' in plugins/dev-graph/scripts/: 0 hits",
+        "grep 'compile-spec-doc' in plugins/dev-graph/scripts/: 0 hits",
+        "grep 'apply-spec-transition' in plugins/dev-graph/**/*.py: 1 hit in tests/fixtures/live_trial_shapes/shape_system_spec.py (docstring reference only, not script logic)",
+        "grep 'compile-spec-doc' in plugins/dev-graph/**/*.py: 1 hit in tests/fixtures/live_trial_shapes/shape_system_spec.py (docstring reference only, not script logic)",
+        "specs/system-requirements.md has graph_node_id frontmatter (node artifact with graph_node_id=spec-system-requirements, artifact_kind=specification)",
+        "architecture/system-database.md has graph_node_id frontmatter (node artifact with graph_node_id=arch-system-database, artifact_kind=architecture)"
+      ]
+    }
+  },
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "Goal-seek hash verification: 2 rows verified, hash=30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454",
+      "All rows contain required 6 keys: original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal",
+      "All rows: original_goal matches goal-spec.json, original_goal_hash matches sha256 of original_goal",
+      "progress.json: all 8 checklist items are PASS (system_spec_content_root_match, system_spec_harness_version_and_entry_points, elicit_doc_fetch_compile_evaluator_skill_execution, coverage_source_evaluator_gate_pass, c02_node_lineage_confirmation_evidence, validate_source_digest_exit_0, validate_evidence_refs_exit_0, no_duplicate_logic_in_dev_graph)",
+      "progress.json: registered_this_run=[spec-system-requirements, arch-system-database] (both node IDs present)"
+    ]
+  },
+  "blockers": []
+}

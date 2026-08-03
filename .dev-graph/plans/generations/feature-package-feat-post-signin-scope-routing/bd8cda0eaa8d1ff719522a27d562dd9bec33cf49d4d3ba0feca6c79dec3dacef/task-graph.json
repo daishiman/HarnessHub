@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "parent_feature": "feat-post-signin-scope-routing",
+  "nodes": [
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P01",
+      "graph_node_id": "sys-post-signin-scope-p01",
+      "title": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P02",
+      "graph_node_id": "sys-post-signin-scope-p02",
+      "title": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P01"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P03",
+      "graph_node_id": "sys-post-signin-scope-p03",
+      "title": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P02"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P04",
+      "graph_node_id": "sys-post-signin-scope-p04",
+      "title": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P03"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P05",
+      "graph_node_id": "sys-post-signin-scope-p05",
+      "title": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P04"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P06",
+      "graph_node_id": "sys-post-signin-scope-p06",
+      "title": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P05"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P07",
+      "graph_node_id": "sys-post-signin-scope-p07",
+      "title": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P06"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P08",
+      "graph_node_id": "sys-post-signin-scope-p08",
+      "title": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P07"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P09",
+      "graph_node_id": "sys-post-signin-scope-p09",
+      "title": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P08"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P10",
+      "graph_node_id": "sys-post-signin-scope-p10",
+      "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P09"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P11",
+      "graph_node_id": "sys-post-signin-scope-p11",
+      "title": "証跡固定 — source digest と再実行コマンドの保存",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P10"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P12",
+      "graph_node_id": "sys-post-signin-scope-p12",
+      "title": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P11"
+      ]
+    },
+    {
+      "id": "SYS-POST-SIGNIN-SCOPE-P13",
+      "graph_node_id": "sys-post-signin-scope-p13",
+      "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+      "parent_feature": "feat-post-signin-scope-routing",
+      "depends_on": [
+        "SYS-POST-SIGNIN-SCOPE-P12"
+      ]
+    }
+  ]
+}

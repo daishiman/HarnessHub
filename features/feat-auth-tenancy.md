@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-26T06:12:00Z"
+updated_at: "2026-08-02T20:47:57.685957Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-auth-tenancy.md","confidence":0.9}]
@@ -101,7 +101,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照）。
 - 詳細は [runbook §2.5.1](../docs/features/feat-auth-tenancy/runbook.md) を参照する。
 
-## 実装反映 (2026-07-28 / 最終レビュー)
+## 実装反映 (2026-07-28 / リリース前レビュー)
 
 - テナント別サインイン画面を、確定済みの Auth.js path
   `/api/auth/{tenant_slug}/signin/tenant-oidc` へ接続した。
@@ -109,11 +109,41 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   確認コード入力・Workspace 選択・状態別エラー表示を持つ承認画面を追加した。
 - `/device` の表示時にも session 緊急失効を確認し、承認 API は既存の
   `withAuthz` による認証・認可を維持する。
-- API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地である。
-  判断根拠と検証は
+- この時点では API・DB・role・数値・信頼境界の新しい仕様判断はなく、既存契約への実装接地と
+  判定した。判断根拠と検証は
   [仕様反映受領書 §10](../docs/features/feat-auth-tenancy/spec-reflection-receipt.md)
   を参照する。
-- 本番設定・OIDC 登録・デプロイ・スモークは未実施のため、P13 は継続する。
+- この時点では本番設定・OIDC 登録・デプロイ・スモークは未実施だった。後続結果は次節を正とする。
+
+## 実装・本番反映 (2026-07-30 / SYS-AUTH-TENANCY-P13)
+
+- 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`)
+  1テナントへ限定した。製品の複数テナント分離契約と回帰試験は維持する。
+- Google OAuth client secret は1Passwordを運用上の受渡し元とし、repository経由で
+  `idp_connections.client_secret_enc`へ暗号化した。Workerは共通`ENCRYPTION_KEK`で復号し、
+  GitHub Secretsやテナント別Worker Secretには保存しない。
+- サインイン画面はtenant別CSRF endpointからcookie/tokenを揃えた後、native form navigationで
+  Auth.jsとGoogleへ遷移する。取得失敗時は外部送信せず再試行可能なエラーを表示する。
+- 本番でlogin/JIT、role 4種、Device Flow、refresh再利用検知、session緊急失効までR1〜R5を完了した。
+- 仕様正本は`system-spec`の`qa-097`〜`qa-099`へR4 reopen経由で反映した。設計・検証の対応は
+  [P13仕様反映受領書](../docs/features/feat-auth-tenancy/p13-spec-reflection-receipt.md)を参照する。
+- 本変更のdraft PRがdefault branchへmergeされるまでは、task completion policyによりP13を
+  `in_progress`のまま維持する。
+
+## main反映後のrelease gate追補 (2026-07-30)
+
+- PR #612はmainへmerge済み。mainの自動deployはDB検査S1〜S3を通過後、
+  GitHub repositoryにR2専用tokenが未登録だったためS4で失敗し、自動rollbackは成功した。
+- 同じ欠落を本番変更前に止めるdeploy preflightと、tenant/CSRF/Google
+  state・nonce・PKCEを確認するOIDC start-flow smokeを追加した。
+- 既存のowner関係role、非owner拒否、cross-tenant拒否をOIDC契約と一緒に
+  G14の名前付きrelease gateとして再実行する。
+- 製品仕様やroleモデルは変更せず、`qa-091` / `qa-097` / `qa-099`の実装接地である。
+  判断理由は
+  [post-merge仕様影響受領書](../docs/features/feat-auth-tenancy/p13-postmerge-auth-gate-spec-receipt.md)
+  を正とする。
+- Cloudflare所有者による最小権限R2 token発行、GitHub secret投入、main run完走までは
+  `HarnessHub-15h.13` / `HarnessHub-bda4`を`in_progress`で維持する。
 
 ## アーキテクチャ参照
 
@@ -131,3 +161,37 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 実装反映 (2026-08-01 / HarnessHub-fnej)
+
+- Google OAuth client を tenant ごとに作る従来方式へ、環境単位の共有 client と
+  固定 callback 1 本を使う `shared_google` mode を追加した。
+- tenant context は署名付き `state` と binding cookie で共通 callback に束縛し、
+  Auth.js の PKCE・nonce・ID token 署名検証を維持した。
+- Google ID token の `hd` を許可 Workspace domain と完全一致させ、個人 Google、
+  別 Workspace、tenant 差し替えを JIT/session 発行前に拒否する。
+- 共有 secret は Worker 環境に 1 組だけ置き、tenant DB 行へ複製しない。
+  既存 `customer_google` の callback・暗号化 secret・session は回帰試験で維持する。
+- schema、migration、rollout/rollback、AD-10、実 Auth.js 往復試験を追加した。
+  仕様正本は `qa-110`〜`qa-115`、対応表は
+  [共有 Google OIDC 仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+- draft PR の merge と default branch reconciliation までは
+  `HarnessHub-fnej` と dev-graph node を `in_progress` のまま維持する。
+
+## 実装反映 (2026-08-02 / HarnessHub-uk2i)
+
+- 顧客が所有する Google OAuth client を `provider-admin` が `/settings/auth` から登録し、
+  テスト、有効化、rotation、取消、無効化、再開できる管理面を追加した。
+- 接続は `pending / tested / active / disabled` で管理し、`active` 以外はログイン解決に使わない。
+  disabled の再開は新 credential の登録からやり直し、古い secret を未検証で戻さない。
+- 既存 Google 行へ staging 列を追加し、client ID・暗号化 secret・方式・許可 Workspace
+  ドメインを CAS で同時昇格する。切替前と取消後は現行ログインを継続する。
+- 管理 API は provider-admin、同一 origin、tenant scope、Google issuer に閉じる。
+  secret 全値は UI/API/監査/ログ/エラーへ返さず last4 のみ表示する。
+- 正本は system-spec `qa-124`〜`qa-130`、手順は
+  [顧客持ち込み Google OIDC runbook](../docs/features/feat-auth-tenancy/runbook-customer-managed-google-oidc.md)、
+  対応表は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+- PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境 login、Playwright、production migration は外部環境が必要な未完了項目のため、`HarnessHub-uk2i` は `in_progress` を維持する。

@@ -1,6 +1,19 @@
 // packages/inspection の公開 API。Hub 正式検査と Publisher ローカル pre-check はこの入口のみを参照する。
 
 export {
+  ARCHIVE_LIMITS,
+  ARCHIVE_RULE_IDS,
+  type ArchiveEntry,
+  type ArchiveHeaderReport,
+  inspectArchiveHeader,
+} from './archive';
+export {
+  createPackageInspectionRules,
+  PACKAGE_MANIFEST_PATH,
+  PACKAGE_REQUIRED_META_KEYS,
+  PACKAGE_RULE_IDS,
+} from './package-rules';
+export {
   createInspectionPipeline,
   describePipeline,
   type InspectionPipeline,
@@ -8,6 +21,7 @@ export {
   runInspection,
   withRules,
 } from './pipeline';
+export { createPublishInspectionRules, PUBLISH_INSPECTION_REQUIRED_STAGES } from './publish-inspection';
 
 export {
   definePolicyRule,

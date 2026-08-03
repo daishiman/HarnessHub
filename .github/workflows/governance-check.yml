@@ -93,6 +93,12 @@ jobs:
       - name: "lint workflow step guard (step-level if の env 解決性。secret gate の常時 skip 遮断)"
         run: python3 scripts/lint-workflow-step-guard.py
         continue-on-error: false
+      # CI に検査を追加したのに local pre-push へ結線し忘れる drift を、script 名だけでなく
+      # 意味のある引数形の集合差として遮断する。副作用・認証・non-blocking のため local で
+      # 意図的に走らせないものは、正確な呼び出し形と理由を allowlist へ宣言する。
+      - name: "lint CI-local check parity (repo-root Python 検査の引数形被覆)"
+        run: python3 scripts/lint-ci-local-check-parity.py
+        continue-on-error: false
       # per-repo の .notion-config.json は gitignore 対象で CI には存在しない。
       # notion_config.require_or_skip() は config 不在を fail-closed (exit 2) で落とすため、
       # token / DB ID をすべて env 解決へ委ねる最小 config を生成し NOTION_CONFIG_PATH で指す。
@@ -382,6 +388,16 @@ jobs:
         continue-on-error: false
       - name: extract-system-blueprint lint plugin composition (capabilities 重複/実在 + hooks↔plugin.json 配線対応)
         run: python3 plugins/skill-governance-lint/scripts/lint-plugin-composition.py plugins/extract-system-blueprint/plugin-composition.yaml
+        continue-on-error: false
+      # ── harness-hub-publisher conformance (marketplace-bundle plugin) ──
+      - name: harness-hub-publisher validate frontmatter (commonCore + SemVer)
+        run: python3 plugins/skill-governance-lint/scripts/validate-frontmatter.py --skills-dir plugins/harness-hub-publisher/skills
+        continue-on-error: false
+      - name: harness-hub-publisher lint skill name (28章 §4)
+        run: python3 plugins/skill-governance-lint/scripts/lint-skill-name.py --skills-dir plugins/harness-hub-publisher/skills
+        continue-on-error: false
+      - name: harness-hub-publisher lint skill description (03章 R1-R5)
+        run: python3 plugins/skill-governance-lint/scripts/lint-skill-description.py --skills-dir plugins/harness-hub-publisher/skills
         continue-on-error: false
       # ── plugin lint 被覆メタ検査 (新 plugin 追加時の配線忘れを fail-closed 検出) ──
       - name: lint plugin lint coverage (marketplace 全 plugin の lint 被覆保証)

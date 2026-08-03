@@ -94,14 +94,24 @@ serves_goals: [G1, G2, G3, G4, G5]
 | binding 名 | 内容 | 用途 | ローテーション |
 |---|---|---|---|
 | `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` | Auth.js session / Publisher access token の用途分離 JWT 署名鍵 | §2.1 / §2.2 | 年 1 回 (前者は全 session 失効、後者は全 Publisher access token の再発行を伴う) |
+| `CWV_PROBE_SECRET` / `CWV_PROBE_TENANT_ID` / `CWV_PROBE_WORKSPACE_ID` | protected `/catalog` の CWV 実測専用。最大 5 分の ticket を固定した読み取り専用 tenant/workspace へ束縛し、通常の session / access token には使わない | security-spec-authentication §2.1.1 | 漏えい疑いまたは代表 scope 変更時。secret / ticket 値はログ・artifact・DB へ残さない |
 | `ENCRYPTION_KEK` | 封筒暗号化の KEK | §4.1 | 年 1 回 (DEK re-wrap のみ) |
+| `TURSO_DATABASE_URL` | Turso **DB 接続 URL**。token と組で接続が成立するため var ではなく secret で投入する (2026-07-28 追記。実装は起動時必須) | DB | DB 移設時 |
 | `TURSO_AUTH_TOKEN` | Turso **DB 接続** token。CI の migrate/smoke も同名を使う。Platform API token (`TURSO_API_TOKEN`・`backup.yml` 専用) とは別物で相互流用しない | DB | 年 1 回 |
+| `CRON_HEARTBEAT_URL` | scheduled handler が日次ジョブ完走時に ping する外形監視の heartbeat URL。**URL 自体が事実上の秘匿情報**のため var ではなく secret で投入する (infrastructure-spec §2/§5/§9。2026-07-28 追記) | §9 監視 | 監視側で再発行したとき |
 | ~~`R2_ACCESS_KEY` / `R2_SECRET_KEY`~~ | **2026-07-25 廃止**。R2 は Workers binding + `wrangler` 経路のみとし専用キーを発行しない (infrastructure-spec §7 台帳と同期) | — | — |
 | `RESEND_API_KEY` | メール送信 | §4.6 | 年 1 回 |
+| ~~`AUTH_SECRET`~~ | **廃止予定・rollback 用に暫定残置** (2026-07-28)。qa-032 の静的 secret 5 種の 1 つだったが、§2.1/§2.2 の用途分離で `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` へ分割済みで現行実装の参照は 0 件。**本番 Worker には投入されたまま**である | 旧 runtime への rollback | ローテーションしない。**削除条件**: 新 runtime の本番スモーク (feat-auth-tenancy P13 の R4) が pass し旧版への rollback 窓が閉じた時点で `wrangler secret delete` する |
 
 - **DB に入る secret**: テナント IdP client_secret のみ (封筒暗号化・§4.3)。
 - **コードに入る secret**: なし。CI で検査 (§8.2)。
 - **ログに入る secret**: なし。エラーは RFC 9457 の `detail` に値を含めない。
+- **2026-07-28 追記 (`HarnessHub-x2x9`)**: `TURSO_DATABASE_URL` と `CRON_HEARTBEAT_URL` は本番投入済みかつ実装が参照しているが本表から欠落していた。
+  値も振る舞いも変えない記載漏れの補正であるため R4-reopen は行わず、実測に合わせて追記した。
+  併せて infrastructure-spec §2 側の旧設計 (`SALARY_ENC_KEY` / `IDP_SECRET_<tenant_slug>`) を本表へ収束させた。
+- **`AUTH_SECRET` を廃止予定行として載せる理由**: 本表は「この表にないものを Workers Secret に置かない」を規律としているため、
+  **本番に存在するのに表に無い binding があると、棚卸しのたびに正体を判定できず「消してよいか分からないまま残る」**。
+  R2 キー廃止行と同じ形式に揃え、削除条件を明記して期限付きの管理下に置いた。
 
 ### 4.6 メール (Resend) の PII 境界
 

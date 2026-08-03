@@ -1,0 +1,50 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "",
+  "requested_model": "",
+  "actual_model": [
+    "<synthetic>",
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "Claude Code usage limit reached before artifact completion; reset Jul 31 17:00 Asia/Tokyo",
+      "ゴールシーク配線の実体検証に失敗: progress-missing: run-dev-graph-sync-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [
+    "progress.json"
+  ],
+  "goal_seek_evidence_violations": [
+    "progress-missing: run-dev-graph-sync-progress.json が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "FAIL"
+  },
+  "skill_dir_tree_sha": "309dc7732f19ede99d530dac0614975bb36b6171650b89103305518f9962c634",
+  "transcript_sha256": "208c74aee79935aeb69e5be66de7b12a7ed98f7654303807305460b530f0eca3",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "STALL",
+    "wall_clock_s": 240.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

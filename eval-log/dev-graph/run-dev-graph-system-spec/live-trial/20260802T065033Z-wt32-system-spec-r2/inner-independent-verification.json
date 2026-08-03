@@ -1,0 +1,60 @@
+{
+  "verdict": "PASS",
+  "verified_at": "2026-08-02T07:30:00Z",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "verifier": "independent-verification-agent",
+  "observations": [
+    {
+      "id": 1,
+      "description": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "verdict": "PASS",
+      "evidence": [
+        "plugins/system-spec-harness/.claude-plugin/plugin.json exists with name='system-spec-harness', version='0.1.0' (satisfies >=0.1.0 <1.0.0)",
+        "system-spec/spec-state.json: 48 cells total, 8 confirmed, 40 excluded, 0 uncollected (no cells with state '未収集')",
+        "system-spec/completeness-report.json exists with verdict='PASS', 3 audit delegations (matrix-auditor PASS, hearing-auditor PASS, doc-freshness-auditor PASS), 2 gate results (validate-coverage-matrix exit 0, validate-source-citation exit 0)",
+        "system-spec/fetched-references.json exists with 3 references (sqlite, fastapi, fastapi-security)",
+        "system-spec/index.md exists with chapter table and requirements-definition link",
+        "Chapter files present: 00-requirements-definition.md, database.md, auth.md, backend.md, frontend.md, infrastructure.md, maintenance-ops.md, security.md, ui-ux.md, requirements-brief.md"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "verdict": "PASS",
+      "evidence": [
+        "Node spec-system-requirements: source_lineage has all 6 fields non-null (origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/00-requirements-definition.md', source_version='0.1.0', source_digest='d678fbbe94c714704b73c221d6377062f968744396920005fca88ccb4a14f2a0', imported_at='2026-08-02T07:08:45Z')",
+        "Node spec-system-requirements: confirmation_status='confirmed', evaluation_status='pass'",
+        "Node spec-system-requirements: confirmation_evidence has evaluator='assign-system-spec-completeness-evaluator', evidence_ref='system-spec/completeness-report.json', evaluated_digest='d678fbbe94c714704b73c221d6377062f968744396920005fca88ccb4a14f2a0' (all non-null)",
+        "Node arch-system-overview: source_lineage has all 6 fields non-null (origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/database.md', source_version='0.1.0', source_digest='a9edec1254356729288c787d4161c81a5398174191c3a7ad7fc17f082355efdd', imported_at='2026-08-02T07:08:45Z')",
+        "Node arch-system-overview: confirmation_status='confirmed', evaluation_status='pass'",
+        "Node arch-system-overview: confirmation_evidence has evaluator='assign-system-spec-completeness-evaluator', evidence_ref='system-spec/completeness-report.json', evaluated_digest='a9edec1254356729288c787d4161c81a5398174191c3a7ad7fc17f082355efdd' (all non-null)",
+        "Independent SHA-256 verification: sha256(system-spec/00-requirements-definition.md)='d678fbbe94c714704b73c221d6377062f968744396920005fca88ccb4a14f2a0' matches source_digest for spec-system-requirements",
+        "Independent SHA-256 verification: sha256(system-spec/database.md)='a9edec1254356729288c787d4161c81a5398174191c3a7ad7fc17f082355efdd' matches source_digest for arch-system-overview"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json graph_revision=2, matching 2 registered nodes (spec-system-requirements, arch-system-overview)",
+        "Search for 'apply_cell_op' in plugins/dev-graph/: 0 hits (negative control confirmed)",
+        "Search for 'render_chapter' in plugins/dev-graph/: 0 hits (negative control confirmed)",
+        "Search for 'apply_cell_op' in plugins/system-spec-harness/: 3 files found (positive control confirmed: apply-spec-transition.py, test_spec_transition.py, guard-confirmed-chapter-overwrite.py)",
+        "Search for 'render_chapter' in plugins/system-spec-harness/: 4 files found (positive control confirmed: compile-spec-doc.py, test_compile_spec_doc.py, chapter-template.md, R2-render.md)"
+      ]
+    }
+  ],
+  "goal_seek_integrity": {
+    "verdict": "PASS",
+    "evidence": [
+      "run-dev-graph-system-spec-goal-spec.json exists with original_goal present and non-empty",
+      "run-dev-graph-system-spec-intermediate.jsonl has 2 lines (>= 2 required)",
+      "All 2 lines have all 6 required keys: original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal",
+      "original_goal is consistent across all lines (1 unique value)",
+      "Independent SHA-256 of original_goal (UTF-8): '30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454' matches original_goal_hash in all lines",
+      "run-dev-graph-system-spec-progress.json: all 8 checklist items are true (system_spec_content_root_match, system_spec_harness_version_entry_points, elicit_docfetch_compile_evaluator_skill_only, coverage_source_evaluator_gate_pass, c02_lineage_confirmation_evidence_readiness, validate_source_digest_exit0, validate_evidence_refs_exit0, no_duplicate_logic)"
+    ]
+  },
+  "blockers": []
+}

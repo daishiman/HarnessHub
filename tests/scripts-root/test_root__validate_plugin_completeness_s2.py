@@ -3,7 +3,7 @@
 test_root__validate_plugin_completeness.py が収集/検証層を担当するのに対し、本ファイルは
 書込みを伴う register_missing (--fix のコア)、marketplace エントリ生成の純関数
 (_marketplace_entry_block / _insert_marketplace_entry)、main() の全 exit path、および
-NEVER_DISTRIBUTE 固有名 denylist の多層防御を担当する (500 行上限による分割)。
+NEVER_DISTRIBUTE 固有名 denylist の多層防御を担当する (書込・CLI 責務の分離)。
 
 main() は PLUGINS_DIR / BUNDLES_JSON / MARKETPLACE_JSON / ROOT を monkeypatch で
 tmp_path へ向け in-process 駆動する。subprocess 経路だけは実 repo に対して実行し、

@@ -153,3 +153,65 @@ reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検
 | 500 行超チェック | ✅ 変更ファイルの最大は `packages/db/scripts/check-db-write-gate.mjs` 271 行。分離不要 |
 
 2026-07-28 追記: 初回 PR 作成後、CI (`build & test`) で `Cannot find package 'typescript' imported from .../scripts/ci/check-db-write-gate.mjs` により失敗した。原因は pnpm workspace の既定 (isolated) node-linker では `scripts/ci/` がどの workspace パッケージにも属さず、`typescript` を直接依存に持つ `packages/db` の node_modules 解決が届かないため (ローカル検証環境はグローバル pnpm 設定 `node-linker=hoisted` によりルート直下へ巻き上げられていて再現しなかった)。`scripts/ci/check-db-write-gate.mjs` を `packages/db/scripts/check-db-write-gate.mjs` へ移動し、`packages/db` 自身の直接依存解決に乗せて修正した。仕様反映の判定 (§8 結論) に変更はない。
+
+---
+
+## 9. 2026-08-01 P13 完了状態の最終レビュー受領書
+
+- Beads ID: `HarnessHub-u6q.13`
+- dev-graph node ID: `SYS-DOMAIN-MODEL-DB-P13`
+- 対象 branch: `devgraph/sys-domain-model-db-p13`
+- 判定: **`spec_impact = none`**
+
+### 9-1. 今回変更した内容
+
+| ファイル | 変更 | 役割 |
+|---|---|---|
+| `.dev-graph/state/graph.json` | P13 の lifecycle を `active` から `closed` へ更新 | dev-graph の正本状態 |
+| `tasks/feat-domain-model-db/sys-domain-model-db-p13.md` | frontmatter の lifecycle を同じく `closed` へ同期 | task 投影 |
+| `eval-log/run-dev-graph-status-execution.json` | `domain-model-db` 14 node の読み取り結果を再生成 | graph/authority 非改変と状態収束の機械証跡 |
+| 本書 | 最終レビュー、仕様影響判定、再検証結果を追記 | 仕様反映の受領書 |
+
+graph と task の更新は C02 `upsert-node.py` を通し、task 本文を保持した。status 証跡は更新後に再生成し、P01〜P13 がすべて `closed`、親 feature が依存課題のため `active` であることを記録した。
+
+今回更新した人向け文書と証跡は、本書と task が 300 行以下、status 証跡が 475 行で、いずれも 500 行以下である。`graph.json` は既存の単一 JSON 正本であり、分割すると reader/schema 契約を壊すため分離対象にせず、正規 writer が対象 node の 4 項目だけを更新した。
+
+### 9-2. 仕様・設計への影響がない理由
+
+今回の差分は、すでに実装・本番検証・Beads close が完了していた P13 の lifecycle 表示を収束させるものに限られる。API、DB schema、migration、runtime behavior、security boundary、運用手順、外部 interface は変更していない。このため、製品仕様や設計の新しい判断は発生していない。
+
+| 正本層 | 照合結果 | 更新判断 |
+|---|---|---|
+| `docs/` | `release-record.md` に migration、R2、smoke 6/6、backup/restore の実測が記録済み | 本受領書のみ追記 |
+| `features/` | `feat-domain-model-db.md` に Turso/Drizzle/R2、immutable Release、export/restore の目的・受入が記録済み | 意味変更なしのため無改変 |
+| `system-spec/` | `database.md` に tenant scope、Release 不変性、R2 content hash の契約が記録済み | 契約変更なしのため無改変 |
+| `architecture/` | `harness-hub-data.md` / `harness-hub-backend.md` に data/backend 境界と本番 smoke が記録済み | 設計変更なしのため無改変 |
+| `specs/` | `harness-hub-system-specification.md` に release 成立条件、復元契約、P13 smoke が記録済み | 上位仕様変更なしのため無改変 |
+| `tasks/` | P13 本文の実行記録を保持し、lifecycle だけを正規 writer で `closed` へ同期 | 今回反映済み |
+
+digest に束縛された正本へ内容のない更新を加えると、変更理由のない source-digest 更新が発生する。したがって、既存記述を実測照合し、変更不要の理由を本受領書へ残すことを正規の反映結果とした。
+
+### 9-3. 機能概要
+
+中学生向けに言うと、この機能は「サービスの大事な情報を、利用者ごとに混ざらないよう整理して保存し、壊れたときに戻せるようにする保管庫」である。保管庫そのものはすでに作成・試験・本番確認済みで、今回の変更は作業表と進捗ボードを「作業中」から「完了」へ正しく直し、最新の点検表を残すものになる。
+
+技術的には、Turso/libSQL と D1 互換の Drizzle schema、tenant-scoped repository、immutable Release、content-addressed R2 registry、監査 hash chain、決定論的 JSONL export/restore の実装証跡を前提に、P13 の Beads・dev-graph・task projection の lifecycle を冪等（べきとう＝再実行しても結果が変わらない性質）に収束させた。status 実行は read-only で、graph/authority の実行前後 digest が一致することを検証する。
+
+### 9-4. 品質ゲート
+
+| ゲート | 2026-08-01 の実測結果 |
+|---|---|
+| `validate-system-plan.py --feature-package feature-package/feat-domain-model-db` | **PASS**。P01〜P13 exact-set、validated digest `6ac94e...a73b`、violations 0 |
+| `@harness-hub/db` typecheck | **PASS**。TypeScript error 0 |
+| `@harness-hub/db` test (単一 worker 再実行) | **PASS**。30 files / **231 tests**、exit 0。coverage: statements 90.54% / branches 88.21% / functions 88.20% / lines 90.54% |
+| `validate-graph-schema.py` | **PASS**。`valid: true`、violations 0 |
+| `validate-source-digest.py --registered SYS-DOMAIN-MODEL-DB-P13` | **PASS**。checked 1、mismatch 0 |
+| `lint-open-residue.py --node-id SYS-DOMAIN-MODEL-DB-P13` | **PASS**。Beads live DB を解決、scanned 1、violations 0 |
+| `status-graph.py --keyword domain-model-db` | **PASS**。14 node、P13 `closed`、feature `active`、graph/authority digest は実行前後一致 |
+| 文書/eval-log gate | **PASS**。artifact placement、eval-log 4091 files、doc 459 files (上限 300 行)、violations 0 |
+| Actions secret 台帳 (`--live`) | **PASS**。workflow 参照 13 件と台帳 13 件が一致し、実投入も確認済み |
+| hub-backup run `30686023662` | **PASS**。workflow `hub-backup`、status `completed`、conclusion `success` |
+| `bash scripts/run-ci-checks.sh` | **PASS**。hard gate 136、fail 0。段階導入中の既存 warning 4 件のみ |
+| `git diff --check` | **PASS**。空白エラー 0 |
+
+初回の通常並列 DB test は 30 files / 231 tests 自体が全件 pass した後、共有マシン上で他の Vitest 群と競合し `onTaskUpdate` worker RPC timeout 2 件により exit 1 となった。並列度を 1 に固定した再実行は同じ 231 tests と coverage 集計を exit 0 で完走したため、製品ロジックの失敗ではなく実行基盤の高負荷に起因する一過性エラーと判定した。

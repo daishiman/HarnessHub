@@ -1,0 +1,93 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-node-20260802 --input /Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-node-20260802/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "9da09f04950dc8b4927e75fd0874a8420f34450b938142c5cb8c540e3539c084",
+  "transcript_sha256": "5bb06f60fd5092f294319dcb75f64fce65a2520f336cc5a498d96090e80f3e0b",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 915.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+    "required_observations": [
+      "all five artifacts are routed to canonical kind paths",
+      "frontmatter kind and stored path agree after a consecutive update",
+      "no feature is created outside the C14 macro-feature contract"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "all five artifacts are routed to canonical kind paths",
+        "evidence_ref": "transcript.jsonl#canonical-paths"
+      },
+      {
+        "index": 2,
+        "observation": "frontmatter kind and stored path agree after a consecutive update",
+        "evidence_ref": "transcript.jsonl#consecutive-update"
+      },
+      {
+        "index": 3,
+        "observation": "no feature is created outside the C14 macro-feature contract",
+        "evidence_ref": "transcript.jsonl#macro-feature-rejection"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "add --repo-root <contained-fixture-repo> --input <contained-fixture-repo>/mixed-artifacts.json",
+      "template_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

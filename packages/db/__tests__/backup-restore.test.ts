@@ -235,14 +235,18 @@ describe('P13 production migration / smoke CLI', () => {
   it('migration は dry-run → 初回適用 → 再適用を台帳どおり冪等に処理する', () => {
     const dbPath = join(workDir, 'p13-migration.db');
     const url = `file:${dbPath}`;
+    // 件数はリテラルで書く。journal の長さを参照すると、migration を足しただけで一緒に
+    // 緑になり「台帳に載っていない DDL が適用された」を検出できなくなる。
+    // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
+    // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 2, applied: 0, pending: 2 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 6, applied: 0, pending: 6 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 2 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 6 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 2, appliedAfter: 2 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 6, appliedAfter: 6 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

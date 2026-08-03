@@ -1,0 +1,34 @@
+{
+  "$schema": "../../harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json",
+  "package_mode": "bundle",
+  "plugin_name": "harness-hub-publisher",
+  "entry_points": {
+    "skills": [
+      "run-publisher-publish",
+      "run-skill-feedback"
+    ],
+    "agents": [],
+    "commands": [
+      "publish"
+    ],
+    "hooks": []
+  },
+  "distribution": {
+    "distributable": true,
+    "bundle_targets": [
+      "skills-full"
+    ],
+    "category": "productivity",
+    "tags": [
+      "publisher",
+      "harness-hub",
+      "device-flow",
+      "wrangler",
+      "cli"
+    ]
+  },
+  "depends_on": [
+    "harness-creator"
+  ],
+  "pkg_checks": {}
+}

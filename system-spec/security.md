@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-075 |
+| Web (web) | 確定 | 確定質疑: qa-133 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,21 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-075 (対応セル: web)
+### qa-133 (対応セル: web)
 
-**質問**: HarnessHub-b7ng で確定した Device Flow / refresh token の並行更新契約を security.web の正本へ反映するか。
+**質問**: 未認証では deny-by-default の `/catalog` を、通常の session 秘密を GitHub Actions へ渡さずに Core Web Vitals で実測するため、最小権限の認証・セキュリティ・CI・検証契約を web 仕様へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。
+**回答**: ユーザーの 2026-08-02 確認『ok』を明示承認として、qa-123/124/128/130/132 の既存の production OIDC・session・access token・deny-by-default・SLO/CWV・秘密管理・品質ゲートを全面維持し、CWV 専用 credential を追加確定する。
+
+【1. 専用 credential】GitHub Actions と Worker が共有する `CWV_PROBE_SECRET` だけで HS256 の短命 JWT を検証する。claim は `typ=cwv_probe`、`aud=harness-hub-cwv`、正規 origin、固定 tenant/workspace、iat/exp とし、有効期間は最大 5 分である。通常の `AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、利用者 session、Publisher token を CI/成果物へ渡さず、CWV credential はユーザー主体・OIDC・Device Flow・外部 API の新たな認証方式ではない。
+
+【2. 到達境界】bootstrap は HTTPS の `GET /catalog` だけで、署名・audience・origin・時間・tenant/workspace をすべて検証した後、URL の ticket を除去する 307 redirect と `__Host-harness-hub.cwv-probe` (Secure / HttpOnly / SameSite=Strict / Path=/ / 最大 5 分) を返す。以後は `GET`/`HEAD` の catalog 画面と catalog が使う読み取り API だけを許可する。書込み、install、publish、管理 API、別 tenant/workspace、別 origin、method 違い、欠損/期限切れ/改ざん ticket は deny-by-default で拒否する。scope は ticket の署名済み claim だけを既存認可層へ渡し、query/header の任意値で昇格しない。
+
+【3. 秘密と露出】ticket は redirect 後 URL、HTTP リファラ、Lighthouse JSON、CWV report、Actions ログ、artifact のいずれにも残さない。bootstrap 応答は `Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付け、workflow は ticket を mask し、artifact を upload 前に secret/ticket を除去・検査する。secret の値は source、wrangler 設定、文書、テスト fixture に保存しない。`CWV_PROBE_SECRET` の rotate は既存 ticket を即時無効化する。
+
+【4. 構成と運用】Worker Secret は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、GitHub Actions secret は対応する `HUB_CWV_PROBE_*` とする。自由入力の target URL は廃止し、`HUB_PUBLIC_URL` の同一 HTTPS origin の `/catalog` だけを対象にする。secret 投入・read-only 代表 tenant/workspace 選定・本番 deploy・最初の実 Lighthouse は外部状態を変える follow-up であり、投入前/失敗時は未計測として fail-closed で可視化し、good と数えない。
+
+【5. 検証】JWT mint/verify、期限・audience・origin・scope・method・tenant/workspace の負例、cookie/bootstrap の URL 除去・属性、認可規則の read-only 境界、workflow target/secret/artifact sanitizer、wrangler secret 台帳、対象 Vitest、task/system-spec/dev-graph/doc gate を repository 内で検証する。実環境の secret 権限と Lighthouse 成功は静的検証で代替せず、Beads を外部実測完了まで open に保つ。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 

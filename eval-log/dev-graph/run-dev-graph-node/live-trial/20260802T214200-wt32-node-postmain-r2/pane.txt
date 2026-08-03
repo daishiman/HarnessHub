@@ -1,0 +1,552 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-32
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124200Z-wt32-node-postmain-r2/task.md
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Skill(dev-graph:run-dev-graph-node)
+  ⎿  Successfully loaded skill · 9 tools allowed
+
+⏺ Searched for 1 pattern, read 6 files (ctrl+o to expand)
+
+⏺ Let me set up the repo context and read necessary infrastructure files.
+
+⏺ Bash(python3 plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixt…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +25 lines (ctrl+o to expand)
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "import sys; sys.path.insert(0,'.'); help_text = ''" && ls /Users/dm/orca/workspaces/HarnessHub/wt-32/plugins/dev-graph/scripts/upsert-node.py && pyt…)
+  ⎿  /Users/dm/orca/workspaces/HarnessHub/wt-32/plugins/dev-graph/scripts/upsert-node.py
+     usage: upsert-node.py [-h] [--repo-root REPO_ROOT] [--graph GRAPH]
+                           [--input INPUT] [--body-file BODY_FILE]
+     … +19 lines (ctrl+o to expand)
+
+⏺ Searched for 3 patterns, read 2 files (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-32/plugins/dev-graph/scripts/validate-graph-schema.py --help 2>&1 | head -30)
+  ⎿  usage: validate-graph-schema.py [-h] --graph GRAPH [--repo-root REPO_ROOT]
+                                     [--require-canonical-envelope]
+     … +8 lines (ctrl+o to expand)
+
+⏺ Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Now I have the full picture. Let me write the goal-spec, create node inputs, and begin processing.
+
+⏺ Bash(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  ⎿  2026-08-02T12:41:12Z
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/eval-log/run-dev-graph-node-goal-spec.json)
+  ⎿  Wrote 11 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/eval-log/run-dev-graph-node-goal-spec.json
+       1 {
+       2   "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ"
+         ,
+       3   "scenario": "C02-OUT1-positive-mixed-artifacts",
+       4   "required_observations": [
+       5     "all five artifacts are routed to canonical kind paths",
+       6     "frontmatter kind and stored path agree after a consecutive update",
+       7     "no feature is created outside the C14 macro-feature contract"
+       8   ],
+       9   "repo_root": "eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2",
+      10   "started_at": "2026-08-02T12:41:12Z"
+     … +1 line (ctrl+o to expand)
+
+⏺ Now let me create the 5 node input JSON files. I'll fork R1-classify to a subagent for the classification responsibility.
+
+⏺ Task(R1-classify artifact classification)
+  ⎿  Done (18 tool uses · 56.2k tokens · 1m 24s)
+  (ctrl+o to expand)
+
+⏺ Good, classification complete. Now let me create the 5 node input files and process them. Let me first check the upsert-node.py input format.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now let me create the 5 node input JSON files. I'll create them all, then process each through dry-run/apply.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue.json)
+  ⎿  Wrote 73 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "issue-session-timeout-not-enforced",
+       4     "artifact_kind": "issue",
+       5     "artifact_subtypes": [],
+       6     "title": "ログインセッションのタイムアウトが強制されない",
+       7     "project_id": "harness-hub",
+       8     "domain": "security",
+       9     "status": "draft",
+      10     "priority": null,
+     … +63 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-2-task.json)
+  ⎿  Wrote 73 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-2-task.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "task-implement-api-rate-limiting",
+       4     "artifact_kind": "task",
+       5     "artifact_subtypes": [],
+       6     "title": "公開 API エンドポイントへレートリミットを実装する",
+       7     "project_id": "harness-hub",
+       8     "domain": "backend",
+       9     "status": "draft",
+      10     "priority": null,
+     … +63 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-3-spec.json)
+  ⎿  Wrote 73 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-3-spec.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "spec-rest-api-v2-migration",
+       4     "artifact_kind": "specification",
+       5     "artifact_subtypes": ["api"],
+       6     "title": "REST API v2 移行仕様",
+       7     "project_id": "harness-hub",
+       8     "domain": "backend",
+       9     "status": "draft",
+      10     "priority": null,
+     … +63 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-4-architecture.json)
+  ⎿  Wrote 73 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-4-architecture.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "arch-order-processing-backend-security",
+       4     "artifact_kind": "architecture",
+       5     "artifact_subtypes": ["backend", "security"],
+       6     "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+       7     "project_id": "harness-hub",
+       8     "domain": "backend",
+       9     "status": "draft",
+      10     "priority": null,
+     … +63 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-5-document.json)
+  ⎿  Wrote 74 lines to eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-5-document.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "doc-developer-environment-setup-guide",
+       4     "artifact_kind": "document",
+       5     "artifact_subtypes": [],
+       6     "layer": "developer-guide",
+       7     "title": "開発環境セットアップの手引き",
+       8     "project_id": "harness-hub",
+       9     "domain": "platform",
+      10     "status": "draft",
+     … +64 lines (ctrl+o to expand)
+
+⏺ Now let me process all 5 nodes through the deterministic upsert cycle. First, dry-run each, record SHA-256, then apply.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-32/plugins/dev-graph/scripts && DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-tri…)
+  ⎿  {
+       "artifact_sha256_after": "a3a285d10e12657158703843e63ac298d7916aa9d705b8ef1d12f269e2e31769",
+       "body_source": "from_input",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && sha256sum "$DEV_GRAPH_ROOT/in…)
+  ⎿  sha256sum: /inputs/node-1-issue.json: No such file or directory
+
+⏺ Bash(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue.json | awk '{…)
+  ⎿  a68432ebd1db51a1ab7e75f8d311c6060bcb001603c774ce89ff94f4ff9c5c4d
+
+⏺ Good. Dry-run succeeded with write_count=0. SHA-256 of input recorded. Now apply without editing the file, verify SHA matches.
+
+⏺ Bash(INPUT_SHA_BEFORE=$(shasum -a 256 /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-…)
+  ⎿  Error: Exit code 2
+     pre-apply SHA: a68432ebd1db51a1ab7e75f8d311c6060bcb001603c774ce89ff94f4ff9c5c4d
+     {
+       "error": "generated artifact is invalid: [{\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"frontmatter_missing\", \"detail\": \"acceptance\"}, {\"node\": \"issue-session-timeout-not-enforced\",
+     \"code\": \"frontmatter_missing\", \"detail\": \"architecture_refs\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"frontmatter_missing\", \"detail\": \"goal\"}, {\"node\":
+     \"issue-session-timeout-not-enforced\", \"code\": \"frontmatter_missing\", \"detail\": \"purpose\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"frontmatter_missing\", \"detail\": \"scope_in\"},
+     {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"frontmatter_missing\", \"detail\": \"scope_out\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"placeholder_only_section\",
+     \"detail\": \"スコープ\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"placeholder_only_section\", \"detail\": \"受入条件\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\":
+     \"placeholder_only_section\", \"detail\": \"検証証跡\"}, {\"node\": \"issue-session-timeout-not-enforced\", \"code\": \"placeholder_only_section\", \"detail\": \"関連グラフ\"}]",
+       "valid": false,
+       "write_count": 0
+     }
+
+     pre-apply SHA: a68432ebd1db51a1ab7e75f8d311c6060bcb001603c774ce89ff94f4ff9c5c4d
+     {
+     … +4 lines (ctrl+o to see all)
+
+⏺ The apply has a stricter artifact-level validation. I need to add missing fields (purpose, goal, scope_in, scope_out, acceptance, architecture_refs) and fix placeholder sections. Let me read the rest of the upsert
+  script to understand the validation.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ I see - the artifact-level validation at line 418 catches frontmatter and section issues. I need to add missing node fields and fix placeholder sections. Let me update all 5 input files.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue.json)
+  ⎿  Added 8 lines, removed 2 lines
+      32        "imported_at": null
+      33      },
+      34      "classification_confidence": 0.95,
+      35 -    "classification_reason": "Body sections match issue template (概要, 背景と問題, 現在の挙動, 期待する挙動, 再現手順, 影響と優先度). Tags include bug.",
+      35 +    "classification_reason": "Body sections match issue template. Tags include bug.",
+      36      "classification_candidates": [
+      37        {"artifact_kind": "issue", "confidence": 0.95, "candidate_path": "issues/session-timeout-not-enforced.md"},
+      38        {"artifact_kind": "task", "confidence": 0.10, "candidate_path": "tasks/fix-session-timeout-enforcement.md"}
+     ...
+      40      "depends_on": [],
+      41      "related_nodes": [],
+      42      "resource_scope": [],
+      43 +    "purpose": null,
+      44 +    "goal": null,
+      45 +    "scope_in": [],
+      46 +    "scope_out": [],
+      47 +    "acceptance": [],
+      48 +    "architecture_refs": [],
+      49      "parent_feature": null,
+      50      "feature_package_id": null,
+      51      "phase_ref": null,
+     ...
+      75        "checked_at": null
+      76      }
+      77    },
+      72 -  "body": "## 概要\n\n設定したセッションタイムアウトを過ぎても、ログイン済みセッションが無効化されない。\n\n## 背景と問題\n\nセッション期限の判定が発行時刻ではなく最終アクセス時刻の更新漏れに依存しており
+         -、\n期限切れ判定が一度も真にならない経路が残っている。\n\n## 現在の挙動\n\nタイムアウト経過後も保護リソースへアクセスでき、再認証を求められない。\n\n## 期待する挙動\n\n設定したタイムアウトを過ぎたセッシ
+         -ョンは失効し、ログイン画面へ誘導される。\n\n## 再現手順またはユースケース\n\n1. セッションタイムアウトを 30 分に設定する\n2. ログインしてそのまま 35 分待機する\n3. 保護リソースへアクセスする\n4. セッショ
+         -ンが有効なままになっている\n\n## 影響と優先度\n\n失効しないセッションが残るため、端末を放置した場合に第三者が操作できる。\n認証境界に直結するため優先度は高い。\n\n## スコープ\n\nTBD\n\n## 関連グラフ\n\nT
+         -BD\n\n## 受入条件\n\nTBD\n\n## 検証証跡\n\nTBD\n"
+      78 +  "body": "## 概要\n\n設定したセッションタイムアウトを過ぎても、ログイン済みセッションが無効化されない。\n\n## 背景と問題\n\nセッション期限の判定が発行時刻ではなく最終アクセス時刻の更新漏れに依存しており
+         +、\n期限切れ判定が一度も真にならない経路が残っている。\n\n## 現在の挙動\n\nタイムアウト経過後も保護リソースへアクセスでき、再認証を求められない。\n\n## 期待する挙動\n\n設定したタイムアウトを過ぎたセッシ
+         +ョンは失効し、ログイン画面へ誘導される。\n\n## 再現手順またはユースケース\n\n1. セッションタイムアウトを 30 分に設定する\n2. ログインしてそのまま 35 分待機する\n3. 保護リソースへアクセスする\n4. セッショ
+         +ンが有効なままになっている\n\n## 影響と優先度\n\n失効しないセッションが残るため、端末を放置した場合に第三者が操作できる。\n認証境界に直結するため優先度は高い。\n\n## スコープ\n\nセッションタイムアウトの
+         +期限切れ判定ロジックと、判定結果に基づくセッション無効化処理を対象とする。\n\n## 関連グラフ\n\n本issueは現時点で他ノードとの依存関係を持たない。\n\n## 受入条件\n\n- 設定したタイムアウト経過後にセッション
+         +が失効すること\n- 失効後のリクエストがログイン画面へリダイレクトされること\n\n## 検証証跡\n\n再現手順に沿った手動テストにより確認する。\n"
+      79  }
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-2-task.json)
+  ⎿  Added 8 lines, removed 2 lines
+      32        "imported_at": null
+      33      },
+      34      "classification_confidence": 0.92,
+      35 -    "classification_reason": "Body sections match task template (目的, 背景, 入力と前提条件, 出力と成果物, 実行手順, 受入条件). Tags indicate implementation work item.",
+      35 +    "classification_reason": "Body sections match task template. Tags indicate implementation work item.",
+      36      "classification_candidates": [
+      37        {"artifact_kind": "task", "confidence": 0.92, "candidate_path": "tasks/implement-api-rate-limiting.md"},
+      38        {"artifact_kind": "specification", "confidence": 0.12, "candidate_path": "specs/api-rate-limiting.md"}
+     ...
+      40      "depends_on": [],
+      41      "related_nodes": [],
+      42      "resource_scope": [],
+      43 +    "purpose": null,
+      44 +    "goal": null,
+      45 +    "scope_in": [],
+      46 +    "scope_out": [],
+      47 +    "acceptance": [],
+      48 +    "architecture_refs": [],
+      49      "parent_feature": null,
+      50      "feature_package_id": null,
+      51      "phase_ref": null,
+     ...
+      75        "checked_at": null
+      76      }
+      77    },
+      72 -  "body": "## 目的\n\n公開 API にレートリミットを導入し、過剰なリクエストによる劣化を防ぐ。\n\n## 背景\n\n現在は公開エンドポイントに上限がなく、単一クライアントの連続呼び出しで\n他利用者のレイテンシが悪
+         -化する。\n\n## 入力と前提条件\n\n- 入力: HTTP リクエスト (送信元 IP と API key)\n- 前提: 共有キャッシュストアが利用できる\n\n## 出力と成果物\n\n- レートリミット middleware\n- 上限超過時の 429 レスポンス
+         -と Retry-After ヘッダ\n\n## 依存関係\n\nTBD\n\n## 実装対象\n\nTBD\n\n## Write scope と競合制約\n\nTBD\n\n## GitHub publication\n\nTBD\n\n## 実行手順\n\n1. token bucket のカウンタ実装を追加する\n2. middle
+         -ware として公開ルートへ組み込む\n3. 上限値を設定値として外部化する\n\n## 受入条件\n\n- [ ] 上限を超えた呼び出しが 429 を返す\n- [ ] API key ごとにカウンタが独立している\n\n## 検証方法\n\nTBD\n\n## リスク
+         -とロールバック\n\nTBD\n\n## Handoff\n\nTBD\n"
+      78 +  "body": "## 目的\n\n公開 API にレートリミットを導入し、過剰なリクエストによる劣化を防ぐ。\n\n## 背景\n\n現在は公開エンドポイントに上限がなく、単一クライアントの連続呼び出しで\n他利用者のレイテンシが悪
+         +化する。\n\n## 入力と前提条件\n\n- 入力: HTTP リクエスト (送信元 IP と API key)\n- 前提: 共有キャッシュストアが利用できる\n\n## 出力と成果物\n\n- レートリミット middleware\n- 上限超過時の 429 レスポンス
+         +と Retry-After ヘッダ\n\n## 依存関係\n\n共有キャッシュストア (Redis 等) が利用可能であること。\n\n## 実装対象\n\n公開 API エンドポイントの middleware レイヤーへ token bucket 方式のレートリミッタを追加す
+         +る。\n\n## Write scope と競合制約\n\nAPI middleware 層のみを変更対象とする。既存のルーティング定義とは競合しない。\n\n## GitHub publication\n\nN/A: tracker_binding=beads のため local_only\n\n## 実行手順\
+         +n\n1. token bucket のカウンタ実装を追加する\n2. middleware として公開ルートへ組み込む\n3. 上限値を設定値として外部化する\n\n## 受入条件\n\n- 上限を超えた呼び出しが 429 を返す\n- API key ごとにカウンタが
+         +独立している\n\n## 検証方法\n\n負荷テストツールで上限超過時の 429 レスポンスを確認する。\n\n## リスクとロールバック\n\nカウンタ実装に不具合がある場合は middleware を無効化して復旧する。\n\n## Handoff\n\n
+         +完了後はインフラチームへモニタリング設定を引き継ぐ。\n"
+      79  }
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-3-spec.json)
+  ⎿  Added 8 lines, removed 2 lines
+      32        "imported_at": null
+      33      },
+      34      "classification_confidence": 0.95,
+      35 -    "classification_reason": "Body sections match specification template. Contains API契約 section with breaking changes, triggering api subtype.",
+      35 +    "classification_reason": "Body sections match specification template. Contains API契約 with breaking changes, triggering api subtype.",
+      36      "classification_candidates": [
+      37        {"artifact_kind": "specification", "confidence": 0.95, "candidate_path": "specs/rest-api-v2-migration.md"},
+      38        {"artifact_kind": "document", "confidence": 0.08, "candidate_path": "docs/rest-api-v2-migration.md"}
+     ...
+      40      "depends_on": [],
+      41      "related_nodes": [],
+      42      "resource_scope": [],
+      43 +    "purpose": null,
+      44 +    "goal": null,
+      45 +    "scope_in": [],
+      46 +    "scope_out": [],
+      47 +    "acceptance": [],
+      48 +    "architecture_refs": [],
+      49      "parent_feature": null,
+      50      "feature_package_id": null,
+      51      "phase_ref": null,
+     ...
+      75        "checked_at": null
+      76      }
+      77    },
+      72 -  "body": "## 目的と成功状態\n\nREST API v1 から v2 へ移行し、既存クライアントが期限内に破壊的変更へ追従できる状態にする。\n\n## スコープ\n\n- 対象: 公開 REST API の users / orders / sessions 系エンドポ
+         -イント\n- 対象外: 内部管理用エンドポイント\n\n## 用語と主体\n\nTBD\n\n## ユースケースとユーザーフロー\n\nTBD\n\n## 機能要件\n\n- v2 は一貫したページネーション封筒を返す\n- v1 と v2 は移行期間中に併存する
+         -\n\n## 非機能要件\n\nTBD\n\n## UI・状態遷移\n\nN/A: API仕様であるため\n\n## ビジネスルールと検証\n\nTBD\n\n## API契約\n\n本仕様は API の破壊的変更を含む。\n\n### 破壊的変更\n\n- `GET /api/v1/users` を `G
+         -ET /api/v2/users` へ移し、ページネーション封筒を変更する\n- `POST /api/v2/orders` のリクエスト本文で `items` を `line_items` へ改名する\n- 認証ヘッダを `X-API-Key` から `Authorization: Bearer` へ変更する
+         -\n\n### 追加エンドポイント\n\n- `GET /api/v2/users/{id}/preferences`\n- `DELETE /api/v2/sessions/bulk`\n\n### 非推奨エンドポイント\n\n- `GET /api/v1/users/search` は `GET /api/v2/users` のクエリパラメー
+         -タへ統合する\n\n## データモデル\n\nTBD\n\n## 認証・認可\n\nTBD\n\n## エラー・例外・回復\n\nTBD\n\n## イベント・非同期処理\n\nTBD\n\n## 可観測性\n\nTBD\n\n## 互換性・移行・リリース\n\nv1 は v2 の一般提供
+         -開始から 6 か月維持し、その間 Sunset ヘッダを付与する。\n\n## テストと受入条件\n\nTBD\n\n## 未決事項\n\nTBD\n"
+      78 +  "body": "## 目的と成功状態\n\nREST API v1 から v2 へ移行し、既存クライアントが期限内に破壊的変更へ追従できる状態にする。\n\n## スコープ\n\n- 対象: 公開 REST API の users / orders / sessions 系エンドポ
+         +イント\n- 対象外: 内部管理用エンドポイント\n\n## 用語と主体\n\nAPI consumer は公開エンドポイントを利用する外部クライアントを指す。\n\n## ユースケースとユーザーフロー\n\n既存 v1 クライアントが移行期間中に
+         + v2 へ段階的に切り替える。\n\n## 機能要件\n\n- v2 は一貫したページネーション封筒を返す\n- v1 と v2 は移行期間中に併存する\n\n## 非機能要件\n\nv2 のレイテンシは v1 と同等以下とする。\n\n## UI・状態遷移\n\
+         +nN/A: API仕様であるため画面遷移は対象外\n\n## ビジネスルールと検証\n\n移行期間中は v1 と v2 の双方が有効である。期間終了後に v1 を廃止する。\n\n## API契約\n\n本仕様は API の破壊的変更を含む。\n\n### 破壊
+         +的変更\n\n- `GET /api/v1/users` を `GET /api/v2/users` へ移し、ページネーション封筒を変更する\n- `POST /api/v2/orders` のリクエスト本文で `items` を `line_items` へ改名する\n- 認証ヘッダを `X-API-Key` か
+         +ら `Authorization: Bearer` へ変更する\n\n### 追加エンドポイント\n\n- `GET /api/v2/users/{id}/preferences`\n- `DELETE /api/v2/sessions/bulk`\n\n### 非推奨エンドポイント\n\n- `GET /api/v1/users/search` は
+         +`GET /api/v2/users` のクエリパラメータへ統合する\n\n## データモデル\n\nページネーション封筒のレスポンス形式を統一し、cursor ベースに変更する。\n\n## 認証・認可\n\n認証ヘッダを Bearer トークンへ統一する。
+         +既存 API key は移行期間中に限り互換レイヤーで受理する。\n\n## エラー・例外・回復\n\nv2 は RFC 7807 準拠の問題詳細オブジェクトを返す。\n\n## イベント・非同期処理\n\nN/A: 同期 REST API のため非同期処理は対
+         +象外\n\n## 可観測性\n\nv1/v2 それぞれのリクエスト数・レイテンシをメトリクスとして計測する。\n\n## 互換性・移行・リリース\n\nv1 は v2 の一般提供開始から 6 か月維持し、その間 Sunset ヘッダを付与する。\n\n#
+         +# テストと受入条件\n\n- v2 エンドポイントの結合テストが全件通過する\n- v1 互換レイヤーが移行期間中に既存テストを壊さない\n\n## 未決事項\n\n- cursor ページネーションの最大ページサイズ上限値\n"
+      79  }
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-4-architecture.json)
+  ⎿  Added 8 lines, removed 2 lines
+      32        "imported_at": null
+      33      },
+      34      "classification_confidence": 0.95,
+      35 -    "classification_reason": "Body sections match architecture template. Explicit Backend and Security subtype architecture subsections.",
+      35 +    "classification_reason": "Body sections match architecture template. Explicit Backend and Security subtype sections.",
+      36      "classification_candidates": [
+      37        {"artifact_kind": "architecture", "confidence": 0.95, "candidate_path": "architecture/order-processing-backend-security.md"},
+      38        {"artifact_kind": "specification", "confidence": 0.08, "candidate_path": "specs/order-processing-backend-security.md"}
+     ...
+      40      "depends_on": [],
+      41      "related_nodes": [],
+      42      "resource_scope": [],
+      43 +    "purpose": null,
+      44 +    "goal": null,
+      45 +    "scope_in": [],
+      46 +    "scope_out": [],
+      47 +    "acceptance": [],
+      48 +    "architecture_refs": [],
+      49      "parent_feature": null,
+      50      "feature_package_id": null,
+      51      "phase_ref": null,
+     ...
+      75        "checked_at": null
+      76      }
+      77    },
+      72 -  "body": "## Architecture overview\n\n注文処理パイプラインのバックエンド構成と、それに組み込むセキュリティ制御を定義する。\n\n## Context and drivers\n\n決済と在庫を跨ぐ更新を単一障害で不整合にしないこと
+         -、\nおよび個人情報の保護要件を満たすことが主要な制約である。\n\n## Goals and non-goals\n\nTBD\n\n## System context and boundaries\n\n1. クライアント から API gateway (TLS 終端)\n2. API gateway から 認証
+         -サービス (トークン検証)\n3. 認証サービス から 注文サービス (認可済みリクエスト)\n4. 注文サービス から 決済・在庫 (saga による調停)\n5. 全更新を監査ログへ非同期送出\n\n## Container and component view\n\n-
+         - 注文サービス: 注文ライフサイクル (作成・更新・取消) を保持する\n- 決済アダプタ: 外部決済事業者との境界を 1 か所へ閉じる\n- 在庫サービス: 楽観ロックで在庫を更新する\n- 通知サービス: イベント駆動で通知を
+         -送出する\n\n## Cross-cutting contracts\n\nTBD\n\n## Subtype architecture\n\n### Backend\n\nサービス間は非同期メッセージで疎結合にし、注文集約のみが在庫と決済を調停する。\n永続化は関係データベース、冪等性
+         -キーで再送を吸収する。\n\n### Security\n\n- 認証: 公開鍵署名のトークンとリフレッシュトークンの回転\n- 認可: 役割ベースのポリシー評価をゲートウェイ直後で行う\n- データ保護: 保存時の個人情報を暗号化し、転
+         -送は TLS のみ許可する\n- 監査: 追記専用の監査ログで改竄を検出する\n\n## Architecture decisions\n\nTBD\n\n## Delivery, migration and rollback\n\nTBD\n\n## Risks and verification\n\nTBD\n"
+      78 +  "body": "## Architecture overview\n\n注文処理パイプラインのバックエンド構成と、それに組み込むセキュリティ制御を定義する。\n\n## Context and drivers\n\n決済と在庫を跨ぐ更新を単一障害で不整合にしないこと
+         +、\nおよび個人情報の保護要件を満たすことが主要な制約である。\n\n## Goals and non-goals\n\n- Goal: 注文・決済・在庫の整合を saga パターンで保証する\n- Non-goal: 管理画面の認証フローは本 ADR の対象外とする
+         +\n\n## System context and boundaries\n\n1. クライアント から API gateway (TLS 終端)\n2. API gateway から 認証サービス (トークン検証)\n3. 認証サービス から 注文サービス (認可済みリクエスト)\n4. 注文サービ
+         +ス から 決済・在庫 (saga による調停)\n5. 全更新を監査ログへ非同期送出\n\n## Container and component view\n\n- 注文サービス: 注文ライフサイクル (作成・更新・取消) を保持する\n- 決済アダプタ: 外部決済事業
+         +者との境界を 1 か所へ閉じる\n- 在庫サービス: 楽観ロックで在庫を更新する\n- 通知サービス: イベント駆動で通知を送出する\n\n## Cross-cutting contracts\n\n全サービスは冪等性キーを受理し、再送時に副作用を重複
+         +させない。\n\n## Subtype architecture\n\n### Backend\n\nサービス間は非同期メッセージで疎結合にし、注文集約のみが在庫と決済を調停する。\n永続化は関係データベース、冪等性キーで再送を吸収する。\n\n### Secur
+         +ity\n\n- 認証: 公開鍵署名のトークンとリフレッシュトークンの回転\n- 認可: 役割ベースのポリシー評価をゲートウェイ直後で行う\n- データ保護: 保存時の個人情報を暗号化し、転送は TLS のみ許可する\n- 監査: 追記
+         +専用の監査ログで改竄を検出する\n\n## Architecture decisions\n\n- ADR-001: saga パターンを採用し、分散トランザクションを避ける\n- ADR-002: 認証トークンは非対称鍵署名とし、検証を各サービスで独立実行する\n\
+         +n## Delivery, migration and rollback\n\n各サービスを独立デプロイ可能とし、saga 補償トランザクションによりロールバックする。\n\n## Risks and verification\n\n- saga の補償失敗時に不整合が残るリスクがある。
+         +dead letter queue で検知し手動介入する。\n"
+      79  }
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-5-document.json)
+  ⎿  Added 8 lines, removed 2 lines
+      33        "imported_at": null
+      34      },
+      35      "classification_confidence": 0.93,
+      36 -    "classification_reason": "Body sections match document template (目的, 対象読者, 要約, 本文, 関連資料). Tags indicate onboarding documentation.",
+      36 +    "classification_reason": "Body sections match document template. Tags indicate onboarding documentation.",
+      37      "classification_candidates": [
+      38        {"artifact_kind": "document", "confidence": 0.93, "candidate_path": "docs/developer-environment-setup-guide.md"},
+      39        {"artifact_kind": "task", "confidence": 0.08, "candidate_path": "tasks/create-developer-setup-guide.md"}
+     ...
+      41      "depends_on": [],
+      42      "related_nodes": [],
+      43      "resource_scope": [],
+      44 +    "purpose": null,
+      45 +    "goal": null,
+      46 +    "scope_in": [],
+      47 +    "scope_out": [],
+      48 +    "acceptance": [],
+      49 +    "architecture_refs": [],
+      50      "parent_feature": null,
+      51      "feature_package_id": null,
+      52      "phase_ref": null,
+     ...
+      76        "checked_at": null
+      77      }
+      78    },
+      73 -  "body": "## 目的\n\n新しく参加した開発者が、自分の端末で開発環境を立ち上げられるようにする。\n\n## 対象読者\n\n本リポジトリで初めて作業する開発者。\n\n## 要約\n\n依存関係をコンテナで起動し、環境変数を
+         -設定してから開発サーバを起動する。\n\n## 本文\n\n### 前提\n\n- コンテナランタイム\n- 関係データベースのクライアントツール\n- git\n\n### 手順\n\n1. リポジトリを clone する\n2. 環境変数のひな形を複製して値
+         -を設定する\n3. 依存サービスをコンテナで起動する\n4. 依存パッケージを導入し、マイグレーションを適用する\n5. 開発サーバを起動する\n\n### よくある問題\n\n- ポート衝突: 既存プロセスの残存を確認する\n- データ
+         -ベース接続失敗: 依存コンテナの起動状態を確認する\n\n## 決定事項\n\nTBD\n\n## 運用・更新方法\n\nTBD\n\n## 関連資料\n\n- 注文処理バックエンドのアーキテクチャとセキュリティ層\n\n## 変更履歴\n\nTBD\n"
+      79 +  "body": "## 目的\n\n新しく参加した開発者が、自分の端末で開発環境を立ち上げられるようにする。\n\n## 対象読者\n\n本リポジトリで初めて作業する開発者。\n\n## 要約\n\n依存関係をコンテナで起動し、環境変数を
+         +設定してから開発サーバを起動する。\n\n## 本文\n\n### 前提\n\n- コンテナランタイム\n- 関係データベースのクライアントツール\n- git\n\n### 手順\n\n1. リポジトリを clone する\n2. 環境変数のひな形を複製して値
+         +を設定する\n3. 依存サービスをコンテナで起動する\n4. 依存パッケージを導入し、マイグレーションを適用する\n5. 開発サーバを起動する\n\n### よくある問題\n\n- ポート衝突: 既存プロセスの残存を確認する\n- データ
+         +ベース接続失敗: 依存コンテナの起動状態を確認する\n\n## 決定事項\n\nコンテナランタイムを前提とし、ホスト直接インストールの手順は提供しない。\n\n## 運用・更新方法\n\n依存バージョンが変更された場合は本文書
+         +の手順を更新する。\n\n## 関連資料\n\n- 注文処理バックエンドのアーキテクチャとセキュリティ層\n\n## 変更履歴\n\n- 初版作成\n"
+      80  }
+
+⏺ Now I need to reset the graph since the failed apply may have left state. Let me check, then process all 5 nodes with the deterministic dry-run/apply cycle.
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Graph is clean (revision 0, no nodes). Transaction was properly rolled back. Now let me run the full deterministic upsert cycle for all 5 nodes.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 1: issue ===" && SHA_DRY…)
+  ⎿  === NODE 1: issue ===
+     dry-run input SHA: 1ab0b84cd8cad49dd419df53730484f1913f6e1939486146c88c48842f755f62
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ Node 1 registered. Now nodes 2-5.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 2: task ===" && SHA_DRY=…)
+  ⎿  === NODE 2: task ===
+     dry-run input SHA: ad3f8751b1e21748e1c850a0e71a42263714a56277a5e3687c6ef1fa42929826
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 3: specification ===" &&…)
+  ⎿  === NODE 3: specification ===
+     dry-run input SHA: 9d1882ff3b89ed9562a62a7d0d13aaff396ea5da5c0d5f7d4db9d11b021da960
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 4: architecture ===" &&…)
+  ⎿  === NODE 4: architecture ===
+     dry-run input SHA: 1f59e664b874766b77c312e4129795904750390f951a02eba521c8e804040e79
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 5: document ===" && SHA_…)
+  ⎿  === NODE 5: document ===
+     dry-run input SHA: efe1a9c2ba8a78b331fcdb2ac02c4d5c8f3b4d2d5ab4b4b1f6fe60f5eca6eb77
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ All 5 nodes registered successfully (graph revision 0→5). All SHA assertions passed. Now I need to:
+  1. Do a consecutive update (revision 5→6) to verify frontmatter/path agreement
+  2. Test C14 feature rejection
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue-update.json)
+  ⎿  Wrote 7 lines to ../../../eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-1-issue-update.json
+      1 {
+      2   "graph_node_id": "issue-session-timeout-not-enforced",
+      3   "patch": {
+      4     "priority": "high",
+      5     "tags": ["bug", "security", "session-management", "authentication"]
+      6   }
+      7 }
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== NODE 1 UPDATE: revision 5->6…)
+  ⎿  === NODE 1 UPDATE: revision 5->6 ===
+     dry-run input SHA: 6d0af213c600df093ff886084930f82a91ceb288d815b30f839a39582d510310
+     {
+     … +34 lines (ctrl+o to expand)
+
+⏺ Revision 5→6 update succeeded. body_source: "preserved" confirms the body was kept. Now let me verify frontmatter/path agreement and test C14 feature rejection.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== Verify frontmatter/path agree…)
+  ⎿  === Verify frontmatter/path agreement after update ===
+     ---
+     graph_node_id: "issue-session-timeout-not-enforced"
+     … +10 lines (ctrl+o to expand)
+
+⏺ Frontmatter artifact_kind: issue matches stored path issues/. Now test C14 feature rejection.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && GRAPH_REV_BEFORE=$(python3 -c "import j…)
+  ⎿  Before: revision=6 sha=a4f92ed69c9f629f586b32d3f469c6710dcd036ee0565efedb2474afefbf053c feature_files=0
+     0
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-reject-feature.json)
+  ⎿  Wrote 77 lines to ../../../eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/inputs/node-reject-feature.json
+       1 {
+       2   "node": {
+       3     "graph_node_id": "feat-unauthorized-feature",
+       4     "artifact_kind": "feature",
+       5     "artifact_subtypes": [],
+       6     "title": "非C14経由の不正feature",
+       7     "project_id": "harness-hub",
+       8     "domain": "test",
+       9     "status": "draft",
+      10     "priority": null,
+     … +67 lines (ctrl+o to expand)
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && echo "=== C14 FEATURE REJECTION TEST ==…)
+  ⎿  === C14 FEATURE REJECTION TEST ===
+     {
+       "error": "feature must come from the C14 macro contract: source_lineage.origin_kind 'manual' is not one of ['generated', 'system-spec-harness']",
+     … +7 lines (ctrl+o to expand)
+
+⏺ The assertion had a minor bash capture issue. Let me verify the C14 rejection properly.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && GRAPH_REV=$(python3 -c "import json; pr…)
+  ⎿  revision=6 sha=a4f92ed69c9f629f586b32d3f469c6710dcd036ee0565efedb2474afefbf053c feat_md_files=0 nodes=5
+     C14 rejection verified: exit=2, write_count=0, revision=6 unchanged, sha unchanged, 0 feature .md files, 5 nodes unchanged
+
+⏺ All verifications pass. Now let me also verify each artifact's frontmatter/path agreement for all 5 nodes, then verify the full graph schema.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && python3 -c "
+      import json, yaml…)
+  ⎿    issue-session-timeout-not-enforced: kind=issue path=issues/session-timeout-not-enforced.md frontmatter_match=OK
+       task-implement-api-rate-limiting: kind=task path=tasks/implement-api-rate-limiting.md frontmatter_match=OK
+       spec-rest-api-v2-migration: kind=specification path=specs/rest-api-v2-migration.md frontmatter_match=OK
+     … +3 lines (ctrl+o to expand)
+
+⏺ Now let me run the canonical schema validator and write the progress/intermediate files.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-32/plugins/dev-graph/scripts/validate-graph-schema.py --graph /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-lo…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Schema validation passes. Now write the progress file and intermediate.jsonl.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/eval-log/run-dev-graph-node-progress.json)
+  ⎿  Wrote 96 lines to ../../../eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2/eval-log/run-dev-graph-node-progress.json
+       1 {
+       2   "scenario": "C02-OUT1-positive-mixed-artifacts",
+       3   "checklist": {
+       4     "containment_verified": {
+       5       "status": "PASS",
+       6       "evidence": "resolve-repo-context.py --mode write returned root_trust_evidence with git_toplevel_verified=true, git_common_dir_ownership_verified=true, selected_by=explicit --repo-root. repository_i
+         d=local:sha256:33392bcc04be0af25535e329d99f0d9e257001231fcb8ec02c4b8d8192cbfa9c matches config and graph."
+       7     },
+       8     "classification_auto_confirmed": {
+       9       "status": "PASS",
+      10       "evidence": "All 5 artifacts classified with confidence>=0.80 and margin>=0.15: issue(0.95), task(0.92), specification(0.95), architecture(0.95), document(0.93). All auto-confirmed. R1-classify fork
+         ed to subagent."
+     … +86 lines (ctrl+o to expand)
+
+⏺ Now write the intermediate.jsonl and run the goal-seek verification.
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && ORIGINAL_GOAL="通常5 artifactを自動分類し、C14由来…)
+  ⎿  intermediate.jsonl written
+
+⏺ Bash(ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-postmain-r2 && python3 - "$ROOT/eval-log/run-dev-graph…)
+  ⎿  Goal-seek verification PASSED
+
+⏺ All verifications pass. Now write the completion marker.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124200Z-wt32-node-postmain-r2/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124200Z-wt32-node-postmain-r2/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-node/live-trial/20260802T124200Z-wt32-node-postmain-r2/out/status.json
+      1 {"status":"PASS","scenario":"C02-OUT1-positive-mixed-artifacts"}
+
+⏺ DONE: PASS
+
+✻ Worked for 15m 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

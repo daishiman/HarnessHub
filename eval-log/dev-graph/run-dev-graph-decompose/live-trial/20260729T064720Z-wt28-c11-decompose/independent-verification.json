@@ -1,0 +1,6 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "observation 4: none binding was not exercised as a separate run in this evidence set"
+  ]
+}

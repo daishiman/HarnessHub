@@ -225,6 +225,63 @@ describe('Actions secret / variable 台帳の突合', () => {
     expect(runbook).not.toContain('gh secret set TURSO_DATABASE_NAME');
   });
 
+  it('CWV 専用 credential は台帳・workflow・runbook で同じ 3 Secret を追跡する', () => {
+    const registry = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, 'scripts/ci/actions-secrets-registry.json'), 'utf8'),
+    ) as { entries: RegistryEntry[] };
+    const workflow = readFileSync(path.join(REPO_ROOT, '.github/workflows/cwv.yml'), 'utf8');
+    const runbook = readFileSync(path.join(REPO_ROOT, 'docs/features/feat-hub-foundation/runbook.md'), 'utf8');
+    const names = ['HUB_CWV_PROBE_SECRET', 'HUB_CWV_PROBE_TENANT_ID', 'HUB_CWV_PROBE_WORKSPACE_ID'];
+
+    for (const name of names) {
+      const entry = registry.entries.find((item) => item.name === name);
+      expect(entry).toMatchObject({ kind: 'secret', requirement: 'required', workflows: ['cwv.yml'] });
+      expect(workflow).toContain(`secrets.${name}`);
+      expect(runbook).toContain(`gh secret set ${name}`);
+    }
+    expect(workflow).not.toContain('secrets.AUTH_SESSION_SECRET');
+    expect(workflow).not.toContain('secrets.AUTH_ACCESS_TOKEN_SECRET');
+  });
+
+  it('Workers deploy token と R2 write token を workflow の役割ごとに分離する', () => {
+    const backup = readFileSync(path.join(REPO_ROOT, '.github/workflows/backup.yml'), 'utf8');
+    const ci = readFileSync(path.join(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');
+    const deployStart = ci.indexOf('- name: wrangler deploy');
+    const deployEnd = ci.indexOf('- name:', deployStart + 1);
+    const smokeStart = ci.indexOf('- name: 本番 DB / R2 スモークテスト');
+    const smokeEnd = ci.indexOf('- name:', smokeStart + 1);
+
+    expect(backup).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
+    expect(backup).toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(deployStart).toBeGreaterThan(-1);
+    expect(ci.slice(deployStart, deployEnd)).toContain('secrets.CLOUDFLARE_API_TOKEN');
+    expect(ci.slice(deployStart, deployEnd)).not.toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(smokeStart).toBeGreaterThan(-1);
+    expect(ci.slice(smokeStart, smokeEnd)).toContain('secrets.CLOUDFLARE_R2_API_TOKEN');
+    expect(ci.slice(smokeStart, smokeEnd)).not.toContain('secrets.CLOUDFLARE_API_TOKEN');
+  });
+
+  it('backup heartbeat は required で、未投入時に workflow を fail-closed で止める', () => {
+    const registry = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, 'scripts/ci/actions-secrets-registry.json'), 'utf8'),
+    ) as { entries: RegistryEntry[] };
+    const backup = readFileSync(path.join(REPO_ROOT, '.github/workflows/backup.yml'), 'utf8');
+    const heartbeatEntry = registry.entries.find((item) => item.name === 'BACKUP_HEARTBEAT_URL');
+    const preflightStart = backup.indexOf('- name: 前提 secret の存在確認');
+    const preflightEnd = backup.indexOf('- uses:', preflightStart);
+    const heartbeatStart = backup.indexOf('- name: heartbeat 通知');
+
+    expect(heartbeatEntry).toMatchObject({
+      kind: 'secret',
+      requirement: 'required',
+      workflows: ['backup.yml'],
+    });
+    expect(preflightStart).toBeGreaterThan(-1);
+    expect(backup.slice(preflightStart, preflightEnd)).toContain('[ -n "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]');
+    expect(backup.slice(heartbeatStart)).not.toContain('BACKUP_HEARTBEAT_URL 未設定');
+    expect(backup.slice(heartbeatStart)).toContain('curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"');
+  });
+
   it('DB 識別子の secret 系統が TURSO_DATABASE_URL の 1 本に統一されている', () => {
     const workflows = execFileSync(
       'grep',

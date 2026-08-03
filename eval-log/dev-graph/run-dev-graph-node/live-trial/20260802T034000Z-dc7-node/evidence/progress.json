@@ -1,0 +1,38 @@
+{
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "steps": [
+    {
+      "id": "V1",
+      "description": "mixed-artifacts.json の5種類を一括登録し、各 node の正規 path と graph revision を実測する",
+      "status": "completed",
+      "evidence": [
+        {"result": "PASS", "detail": "5 nodes registered: issue→issues/, task→tasks/, specification→specs/, architecture→architecture/, document→docs/. graph_revision=5. All 5 files exist."}
+      ]
+    },
+    {
+      "id": "V2",
+      "description": "原文本文が保存 Markdown に byte-for-byte の連続文字列として残ることを検査し、API 原文を確認する",
+      "status": "completed",
+      "evidence": [
+        {"result": "PASS", "detail": "All 5 original bodies are byte-for-byte contiguous substrings in saved Markdown. API strings verified: GET /api/v1/users, POST /api/v2/orders, items, line_items, X-API-Key, Authorization: Bearer, DELETE /api/v2/sessions/bulk"}
+      ]
+    },
+    {
+      "id": "V3",
+      "description": "artifact_kind が異なる issue と architecture へ実差分を加えて連続更新する",
+      "status": "completed",
+      "evidence": [
+        {"result": "PASS", "detail": "Issue updated rev5→6, architecture updated rev6→7. Both: operation=updated, body_source=from_input, updated_at!=created_at, kind/path intact, original body preserved as contiguous substring."}
+      ]
+    },
+    {
+      "id": "V4",
+      "description": "C14 macro contract 由来でない feature 直接登録を試し、fail-closed で拒否されることを実測する",
+      "status": "completed",
+      "evidence": [
+        {"result": "PASS", "detail": "Feature with origin_kind=manual rejected: 'feature must come from the C14 macro contract'. write_count=0, revision unchanged at 7, node count unchanged at 5, features/ file count unchanged at 0."}
+      ]
+    }
+  ],
+  "final_status": "PASS"
+}

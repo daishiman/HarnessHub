@@ -11,6 +11,7 @@
 
 import type { AuditLogger } from '../../shared/audit/index.js';
 import { isTrustedOrigin } from '../auth/config.js';
+import { type CwvProbeConfig, isCwvProbeRequestAllowed } from '../auth/cwv-probe.js';
 import type { AuthPorts } from '../auth/ports.js';
 import { decide } from './decide.js';
 import { resolveRequestPrincipal } from './principal.js';
@@ -62,6 +63,7 @@ export interface AuthzRuntimeDeps {
   readonly revocation: RevocationChecker;
   readonly sessionSecret: string;
   readonly accessTokenSecret: string;
+  readonly cwvProbe?: CwvProbeConfig | undefined;
   /** state-changing 要求で許可する Origin。空配列なら全ての state-changing 要求が落ちる。 */
   readonly allowedOrigins: readonly string[];
 }
@@ -71,6 +73,11 @@ export interface AuthzContext {
   readonly principal: AuthzPrincipal;
   readonly effectiveRole: EffectiveRole;
   readonly resource: AuthzResourceRef;
+  /**
+   * 同じ principal/resource に対する追加 capability の照会。
+   * route 側で role 文字列を比較せず、認可規則表を単一正本のまま利用する。
+   */
+  readonly can: (action: string) => boolean;
 }
 
 export interface WithAuthzOptions<TParams> {
@@ -121,17 +128,26 @@ export function withAuthz<TParams = Record<string, never>>(
       sessionSecret: deps.sessionSecret,
       accessTokenSecret: deps.accessTokenSecret,
       nowSeconds: deps.ports.clock.nowSeconds(),
+      cwvProbe: deps.cwvProbe,
     });
     if (principal === null) return denyResponse('unauthenticated');
+
+    if (
+      principal.credential === 'cwv_probe' &&
+      !isCwvProbeRequestAllowed(request.method, new URL(request.url).pathname)
+    ) {
+      return denyResponse('credential_not_allowed');
+    }
 
     const resource = await options.resolveResource(request, params, principal);
     if (resource === null) return denyResponse('unresolved_resource');
 
-    const sessionRevoked = await deps.revocation.isRevoked(
-      principal.tenantId,
-      principal.userId,
-      principal.issuedAtSeconds,
-    );
+    // probe は user session ではなく短命・rotate 可能な専用鍵で失効させる。synthetic actor を
+    // session_revocations テーブルへ問い合わせないことで、測定経路に不要な DB read も加えない。
+    const sessionRevoked =
+      principal.credential === 'cwv_probe'
+        ? false
+        : await deps.revocation.isRevoked(principal.tenantId, principal.userId, principal.issuedAtSeconds);
 
     const outcome = decide({ action: options.action, principal, resource, sessionRevoked });
 
@@ -159,7 +175,16 @@ export function withAuthz<TParams = Record<string, never>>(
     if (!outcome.allowed) return denyResponse(outcome.reason);
 
     try {
-      return await handler(request, { principal, effectiveRole: outcome.effectiveRole, resource }, params);
+      return await handler(
+        request,
+        {
+          principal,
+          effectiveRole: outcome.effectiveRole,
+          resource,
+          can: (action) => decide({ action, principal, resource, sessionRevoked }).allowed,
+        },
+        params,
+      );
     } catch (error) {
       // handler 内で追加判定した結果の拒否も、同じ形の応答へ寄せる
       if (error instanceof AuthzError) {

@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0.0",
   "feature_package_id": "feature-package/feat-publish-pipeline",
-  "generation_id": "fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-  "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-  "published_digest": "sha256:fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b",
-  "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/atomic-promotion-receipt.json",
+  "generation_id": "845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "published_digest": "sha256:845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d",
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/atomic-promotion-receipt.json",
   "supersedes": {
-    "published_path": ".dev-graph/plans/feature-package-feat-publish-pipeline",
-    "published_digest": "sha256:916ce1c1a191902bea28c98d0df91de3b52a9d42505cd87f5cfa8ac08bdfa360",
-    "receipt": ".dev-graph/plans/feature-package-feat-publish-pipeline/atomic-promotion-receipt.json"
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "published_digest": "sha256:3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-publish-pipeline/3a357d04c3dd712bfb8df02d2ca8c8e31720a8a0d923b9e9a941321508f17f31/atomic-promotion-receipt.json"
   }
 }

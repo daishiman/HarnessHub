@@ -25,6 +25,7 @@ architecture_refs: [arch-harness-hub-infrastructure, arch-harness-hub-frontend, 
 | D-P02-3 | 共通層の配置境界 | shared-layers §1〜§3 の各層を §3 の表で package へ一意に割当。所有者は全て feat-hub-foundation |
 | D-P02-4 | パッケージマネージャ | pnpm のみ。root `package.json` の `packageManager` で pin し、CI で npm 混入を fail させる（§6） |
 | D-P02-5 | 認可 middleware / auth adapter | 配置境界を `apps/hub/src/middleware/` `apps/hub/src/shared/auth/` に**予約**。共通境界は本 feature、テナント固有 policy は feat-auth-tenancy |
+| D-P02-6 | G4 の workspace 実行資源 | `pnpm -r test` の入口は維持し、`pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間を直列化する。package 内並列は各 Vitest 設定に委ねる（§6） |
 
 ## 2. 【設計判断】pnpm workspace 構成の比較検討
 
@@ -136,7 +137,7 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | G1 | pnpm 強制 | **corepack で pin**（正本機構）+ `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 | 検出時に非ゼロ終了 | A1, qa-039 |
 | G2 | lint / format | リポジトリ規約に沿った静的整形検査 | 違反で fail | qa-038【2】 |
 | G3 | typecheck | `pnpm -r typecheck`（TypeScript strict） | 型エラーで fail | qa-038【2】 |
-| G4 | unit / integration test | `pnpm -r test`（Tenant 分離・検査 pipeline 挙動同値・contract を含む） | 失敗で fail | A1, A4, qa-006, qa-010 |
+| G4 | unit / integration test | `pnpm -r test`（Tenant 分離・検査 pipeline 挙動同値・contract を含む）。各 package の Vitest worker pool は `workspaceConcurrency: 1` で同時起動させない | 失敗で fail | A1, A4, qa-006, qa-010 |
 | G5 | bundle 予算 | OpenNext build 出力の gzip 後サイズを算出 | 3 MiB 超過で非ゼロ終了 | A2 |
 | G6 | secret scan | `packages/inspection` の secret scan を **CI からも呼ぶ**（qa-038【2】。publish pipeline と同一実装） | 検出で fail | A4, SEC |
 | G7 | 破壊的 DDL 検査 | drizzle migration の expand/contract 3 段階違反を検出 | 違反で fail | qa-038【5】 |
@@ -148,12 +149,14 @@ plugins/publisher/           # ディレクトリ予約のみ。実装は feat-p
 | G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS（page entry + route 固有 client reference manifest の和集合）を gzip 実測。運用値 **120 KiB / route**（frontend-spec §8 の上限 250KB の内側に置く早期検知線） | 超過で非ゼロ終了 | qa-018, R-05 |
 
 - **G11 を PR 単位に置かない理由 (R-05)**: PR ごとの Lighthouse 実行は GitHub Actions 無料枠 2,000 分/月（infrastructure-spec §11）を圧迫し C2 に反する。CWV は bundle 予算（代理指標）とは別に**実測経路を持つ**必要があるため、main 反映後の定期計測として確保する。R2/edge 配信（`ASSETS` binding）と不要 JS 削減が達成手段（qa-018(2) の 3 手段に対応）。
+- **G11 protected route の認証境界 (2026-08-02 / qa-133)**: `/catalog` は deny-by-default を維持する。Lighthouse には利用者 session や access token を渡さず、専用 secret で最大 5 分の ticket を発行する。ticket は固定 origin/tenant/workspace、GET/HEAD の catalog read 経路に閉じ、最初の redirect で URL から取り除いて `__Host-` Cookie にだけ保持する。任意 target URL、書込み、install、publish、admin API は許可しない。artifact sanitizer と mask を通し、ticket を証跡へ保存しない。secret 投入・deploy・初回実測までは未計測であり good ではない。
 - **G13 を G5 と分けて置く理由 (2026-07-25 追記, qa-018)**: G5 と G13 は名前が似ているが**測る対象が別物**である。G5 は wrangler が Cloudflare へ上げる Worker（サーバー側実行コード）を 3 MiB で測り、G13 はブラウザへ配る client JS を測る。TBT / INP を悪化させるのは後者であり、G5 では原理的に検知できない。実測（2026-07-24 の本番初回 CWV / HarnessHub-aqi）: `/` の First Load JS が 159 kB へ膨らみ TBT 926ms（予算 200ms）を出したとき、G5 は 0.96 MiB / 3 MiB で緑のままだった。G11 は main 反映後の定期計測ゆえ PR 段階では止められないため、PR 段階で client 側の退行を遮断する G13 を独立に置く。G11（実測・事後）と G13（静的予算・事前）は代替関係ではなく二段構えである。G13 は Lighthouse を起動せず既存の `next build` 出力を読むだけなので Actions 時間をほぼ消費せず、R-05 が G11 を定期計測へ回した理由（C2）とは衝突しない。
 - **G13 の計測範囲 (2026-07-25)**: `app-build-manifest.json` の route entry だけでは root layout の chunk を取りこぼす（App Router は `/page` と `/layout` を別 entry にするため）。実ブラウザは両方を読むので、route 固有の `*_client-reference-manifest.js` と page entry の**和集合**を計測対象とする。route handler（API）はブラウザが chunk を読まないため判定対象から外し、計測値の記録のみ行う。未ビルド・chunk 欠落は「予算内」と誤判定せず **fail-closed** で停止する。
 - **G6 の consumer 構成 (R-07)**: `packages/inspection` の第 2 consumer は **CI 自身**とする。Publisher（feat-publisher-plugin）は未実装で workspace member でもないため、A4-1「実在する consumer のみを対象にする」規則により Publisher を待つと判定不能になる。qa-038【2】が「CI からも呼ぶ」と確定しているため、CI が実在 consumer として成立する。
 - ゲートの実行順は「静的ゲート（G1・G10・G12）→ install → G2・G3 → build → G4・G6・G7・G8・G9 → G5・G13 → deploy」とし、**deploy は全ゲート通過後にのみ、同一 workflow run 内で実行**する（R-02。A1 の "test→deploy 完走" の定義）。G13 が静的ゲート段に入らないのは、`next build` の出力を読む必要があり install・build を前提とするためである。
 - **G12 の位置づけ (2026-07-25 追記 / issue-auth-tenancy-ci-wiring-20260725)**: feat-auth-tenancy が追加した 3 検査は、共有 CI が当該 feature の write scope 外だったため CI から 1 度も呼ばれていなかった。呼ばれない検査は存在しないのと同じなので、静的ゲート段へ結線する。3 検査はいずれも「名前と参照経路」から決定的に判定でき next-auth の導入有無に依存しないため、install 前に落とせる。G9・G10 と同じく qa-038【2】の「8 種」には数えない横断品質ゲートであり、qa-038【2】の列挙項目を増減させない。
 - **G4 の Tenant 分離を名指しで守る (同上)**: qa-038【2】は Tenant 分離テストを必須ゲートとして名指しするが、`pnpm -r test` に含まれるだけでは分割・`it.skip` で静かに外れる。`scripts/ci/check-tenant-isolation-gate.mjs` で対象実在・T-ISO ID 網羅・無効化の不在を検査したうえで名指し実行する（ゲート数は増えない）。
+- **G4 の package 間直列化 (2026-07-30 / `HarnessHub-pyb3`)**: 6 package がそれぞれ Vitest worker pool と child process を同時に起動すると、assertion は全件成功していても worker-main RPC の `onTaskUpdate` が timeout して exit 1 になることを実測した。`--workspace-concurrency=1` では同じ 648 tests が完走したため、個別 test の timeout 緩和ではなく pnpm project 設定で package 間を直列化する。`pnpm -r test` の共通入口と package 内並列は維持し、設定は G1 の `check:pnpm` で fail-closed に固定する。
 - **local 再現 (R-18)**: required status checks と同一コマンドを root の `pnpm verify` で実行できるようにする（qa-039【2】）。**2026-07-25 時点の未結線は G7 / G7b / G9** — 追加ゲートは CI と local 入口を同時に用意すること（CI にしか無いゲートは着手前に気づけず、PR で初めて落ちる）。G13 は `pnpm check:client-bundle` を root に用意して同時結線した。
 
 ## 7. 監視・SLO 構成（qa-019 / qa-027）

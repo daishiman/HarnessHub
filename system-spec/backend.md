@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-082 |
+| Web (web) | 確定 | 確定質疑: qa-125 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-082 (対応セル: web)
+### qa-125 (対応セル: web)
 
-**質問**: HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。
+**質問**: 顧客持ち込み Google OAuth 管理 API と競合制御を backend.web の現行契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。
+**回答**: qa-110 の API、principal、共有 callback、credential resolver、状態機械、監査、冪等性契約を全面維持し、Google 専用管理面を追加確定する。【API】/api/v1/admin/oidc-connections と test / rotation / activate / disable を provider-admin 専用とし、状態変更は同一 origin、資源側 tenant scope、列挙 schema を通す。テナント越境の不存在は 404 に畳み、許可された provider-admin 越境は既存監査へ残す。【対象境界】一覧・ID 指定操作とも issuer=https://accounts.google.com の接続だけを対象にし、別 issuer の顧客方式 IdP を列挙・回転・無効化しない。【競合】現行テストは接続 ID・現行暗号文・期待状態、pending テストと昇格は pending 暗号文を CAS 条件に含め、テスト中の差し替え結果を別 credential へ誤適用しない。active/tested の再テストでも last_tested_at を更新する。【応答】secret 全値と Google の自由文応答は返さず、last4、状態、列挙エラーだけを返す。成立した変更は idp.connection_change の metadata.change で registered / credential_staged / mode_switch_staged / reactivation_staged / tested / rotation_* / activated / disabled を区別する。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 

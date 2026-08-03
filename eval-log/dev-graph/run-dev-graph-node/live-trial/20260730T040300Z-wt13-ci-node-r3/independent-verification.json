@@ -1,0 +1,23 @@
+{
+  "evaluator": "fresh-agent-eval_c02_live_trial",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "canonical_paths": {
+      "result": "PASS",
+      "evidence": "V1 registered five artifact kinds at canonical paths and was recorded complete before V2 began"
+    },
+    "consecutive_update_integrity": {
+      "result": "PASS",
+      "evidence": "V3 used two JSON inputs with top-level body, both receipts reported updated and body_source=from_input, and kind/path/frontmatter remained aligned"
+    },
+    "macro_feature_guard": {
+      "result": "PASS",
+      "evidence": "V4 rejected the non-C14 feature with graph revision 7 and features file count 0 unchanged"
+    },
+    "goal_seek_execution": {
+      "result": "PASS",
+      "evidence": "V1 through V4 were updated separately, final_status is PASS, and the declared Agent fork independently verified the fixture"
+    }
+  }
+}

@@ -34,6 +34,20 @@ def _load(path: str) -> object:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def _duplicate_ids(entries: list[dict]) -> list[str]:
+    """provenance の集合化前に、同じ ID を持つ別 turn を検出する。"""
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for entry in entries:
+        value = entry.get("id")
+        if not isinstance(value, str):
+            continue
+        if value in seen:
+            duplicates.add(value)
+        seen.add(value)
+    return sorted(duplicates)
+
+
 def detect_prescription_stance(response: str) -> dict[str, bool]:
     """IN1: 1 応答が考え方/フレームを提示し処方マーカーを含まないかを決定論検出する。"""
     return {
@@ -92,6 +106,9 @@ def validate(record: dict, transcript: list[dict] | None, *, ephemeral: bool = F
     turn_ids = solution.get("source_turn_ids") if isinstance(solution, dict) else None
     if not isinstance(turn_ids, list) or not turn_ids:
         errors.append("user_solution.source_turn_ids 欠落")
+    duplicate_turn_ids = _duplicate_ids(transcript or [])
+    if duplicate_turn_ids:
+        errors.append(f"transcript turn id が重複: {', '.join(duplicate_turn_ids)}")
     user_turn_ids = {t.get("id") for t in (transcript or []) if t.get("role") == "user"}
     if turn_ids and not set(turn_ids).issubset(user_turn_ids):
         errors.append("user_solution が role=user turn を参照していない")

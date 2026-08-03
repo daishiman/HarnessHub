@@ -1,0 +1,20 @@
+{
+  "result": "FAIL",
+  "blockers": [
+    "The positive fixture lacked the required current pointer at start; the run created it after the first --feature-package validation failed"
+  ],
+  "observations": {
+    "exact_13_handoff": {
+      "result": "PASS",
+      "evidence": "A capability-build task-graph handoff was emitted for the exact-13 package"
+    },
+    "feature_and_digest_binding": {
+      "result": "FAIL",
+      "evidence": "The 15-node digest closure passed, but only after repairing a missing positive-fixture precondition"
+    },
+    "no_implementation_source": {
+      "result": "PASS",
+      "evidence": "No implementation source file was generated"
+    }
+  }
+}

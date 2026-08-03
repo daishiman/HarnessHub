@@ -1,0 +1,48 @@
+
+⏺ Now append the second intermediate line (post-execution results):
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-15/eval-log/dev-graph/live-trial-fixtures/sync-fcth-20260730-finalmain-r4 && echo
+      '{"original_goal":"trac…)
+  ⎿  (No output)
+
+⏺ Re-verify the goal-seek after second line:
+
+⏺ Bash(DEV_GRAPH_ROOT=/Users/dm/orca/workspaces/HarnessHub/wt-15/eval-log/dev-graph/live-trial-fixtures/sync-fcth-20260730-finalmain-r4 && python3 -
+      "$DEV_GRAPH_ROOT/e…)
+  ⎿  goal-seek verification with 2 rows: PASS
+
+⏺ Now write the progress.json with all criteria and checklist items:
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/sync-fcth-20260730-finalmain-r4/eval-log/run-dev-graph-sync-progress.json)
+  ⎿  Wrote 106 lines to eval-log/dev-graph/live-trial-fixtures/sync-fcth-20260730-finalmain-r4/eval-log/run-dev-graph-sync-progress.json
+       1 {
+       2   "scenario": "C03-OUT1-positive-second-sync-zero",
+       3   "status": "PASS",
+       4   "completed_at": "2026-07-30T13:35:41Z",
+       5   "checklist": [
+       6     {
+       7       "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+       8       "status": "PASS",
+       9       "evidence": "dry-run pass1 produced 1 import (title, remote-only) and 1 export (status, local_to_project). Each classified in 3-way plan wit
+         h snapshot digests. graph_sha256=7860c6..., snapshot_sha256=37e836..."
+      10     },
+     … +96 lines (ctrl+o to expand)
+
+⏺ Now write the status.json:
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-15/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-sync/live-trial/20260730T133000Z-fcth-sync-finalmain-r4/out/status.json
+      1 {"status":"PASS","scenario":"C03-OUT1-positive-second-sync-zero"}
+
+⏺ DONE: PASS
+
+✻ Baked for 6m 10s
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                  Update available! Run: brew upgrade claude-code
+

@@ -69,6 +69,14 @@ def calls(bridge, monkeypatch):
     return recorded
 
 
+def register_graph(root: Path, *node_ids: str) -> None:
+    """create の実在検証 (HarnessHub-mfh7) が読む canonical graph を fixture root に置く。"""
+    state = root / ".dev-graph"
+    state.mkdir(exist_ok=True)
+    (state / "config.json").write_text(json.dumps({"local_state": {"graph": ".dev-graph/graph.json"}}))
+    (state / "graph.json").write_text(json.dumps({"nodes": [{"graph_node_id": node_id} for node_id in node_ids]}))
+
+
 def _update_call(calls: list[list[str]]) -> list[str]:
     matching = [args for args in calls if args and args[0] == "update"]
     assert len(matching) == 1, calls
@@ -88,6 +96,7 @@ FORWARDED = [
     ("--description", "description", "本文を差し替える"),
     ("--status", "status", "in_progress"),
     ("--title", "title", "新しいタイトル"),
+    ("--assignee", "assignee", "daishiman"),
 ]
 
 
@@ -129,7 +138,12 @@ def test_empty_value_is_forwarded_as_explicit_clear(bridge, calls, monkeypatch, 
 
 
 def test_update_fields_cover_every_declared_flag(bridge):
-    """UPDATE_FIELDS が exact-set であること (宣言漏れ = 運用上の機能欠落) を固定する。"""
+    """UPDATE_FIELDS が exact-set であること (宣言漏れ = 運用上の機能欠落) を固定する。
+
+    priority/assignee/labels は契約 §2 の parity 突合対象外だが、C10 guard が bd 直接実行を
+    field で選り分けず遮断する以上、ここに載っていない field は到達経路を持たない
+    (HarnessHub-dc7)。labels の写像先が `--set-labels` (置換) であることも併せて固定する。
+    """
     assert dict(bridge.UPDATE_FIELDS) == {
         "status": "--status",
         "title": "--title",
@@ -137,6 +151,9 @@ def test_update_fields_cover_every_declared_flag(bridge):
         "notes": "--notes",
         "append_notes": "--append-notes",
         "design": "--design",
+        "priority": "--priority",
+        "assignee": "--assignee",
+        "labels": "--set-labels",
     }
 
 
@@ -187,6 +204,7 @@ def test_dry_run_applies_the_same_acceptance_rules(bridge, calls, monkeypatch, c
     [("critical", "0"), ("high", "1"), ("medium", "2"), ("low", "3"), ("backlog", "4"), ("P3", "3")],
 )
 def test_create_priority_is_normalized_and_forwarded(bridge, calls, monkeypatch, capsys, tmp_path, priority, expected):
+    register_graph(tmp_path, f"G-{priority}")
     code, _ = call_main(
         bridge, monkeypatch, capsys,
         "--op", "create", "--repo-root", tmp_path,
@@ -201,6 +219,7 @@ def test_create_priority_is_normalized_and_forwarded(bridge, calls, monkeypatch,
 def test_create_rejects_unknown_priority_before_write(bridge, calls, monkeypatch, capsys, tmp_path):
     from _common import ContractError
 
+    register_graph(tmp_path, "G1")
     with pytest.raises(ContractError, match="priority must be"):
         call_main(
             bridge, monkeypatch, capsys,
@@ -211,6 +230,7 @@ def test_create_rejects_unknown_priority_before_write(bridge, calls, monkeypatch
 
 
 def test_create_priority_dry_run_normalizes_without_writing(bridge, calls, monkeypatch, capsys, tmp_path):
+    register_graph(tmp_path, "G1")
     code, receipt = call_main(
         bridge, monkeypatch, capsys,
         "--op", "create", "--repo-root", tmp_path,

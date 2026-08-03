@@ -1,0 +1,36 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "original_goal": "dev-graph:run-dev-graph-init fresh live-trial r3",
+  "original_goal_hash": "sha256:8b9a4b1a258d52d593ff992e08f11d7ad1589c5d09968c4bc650e363d4341c70",
+  "fixture_root": "eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r3",
+  "passes": [
+    {
+      "pass": 1,
+      "config_action": "created",
+      "graph_action": "created",
+      "content_roots_created": ["issues", "tasks", "specs", "architecture", "features", "docs"],
+      "templates_copied": 20,
+      "validate_config_exit": 0,
+      "validate_graph_exit": 0
+    },
+    {
+      "pass": 2,
+      "config_action": "unchanged",
+      "graph_action": "preserved_existing",
+      "template_edit_preserved": true,
+      "template_edit_sha256": "561a3babe46a8d5f6f7501c55faaf44e5977158cd5ace0c966bb3fb5e1c82f15",
+      "validate_config_exit": 0,
+      "validate_graph_exit": 0,
+      "planned_changes": 0
+    }
+  ],
+  "observations": {
+    "obs1_content_roots_created": true,
+    "obs2_second_pass_zero_changes": true,
+    "obs3_template_edit_survived": true,
+    "obs4_hook_source_diagnosed": true,
+    "obs5_no_absolute_paths_tokens": true,
+    "obs6_c11_pass_with_nodes": true
+  },
+  "status": "PASS"
+}

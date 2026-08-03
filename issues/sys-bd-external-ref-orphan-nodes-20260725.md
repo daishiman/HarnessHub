@@ -12,7 +12,7 @@ iteration: null
 title: "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:57:00Z"
-updated_at: "2026-07-25T03:00:44.850804Z"
+updated_at: "2026-07-28T02:18:00Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -111,17 +111,20 @@ python3 plugins/dev-graph/scripts/bd-bridge.py --op ready --repo-root . \
 
 ## 再現コマンド
 
+初版に載せていた再現コマンドは `g['nodes'].keys()` を使っていたが、現行 schema の `nodes` は
+dict ではなく **list** であり `AttributeError` で動かない。棚卸しは専用 op に置き換えた。
+
 ```bash
-python3 - <<'PY'
-import json, subprocess
-g = json.load(open('.dev-graph/state/graph.json'))
-ids = set(g['nodes'].keys())
-rows = [json.loads(l) for l in subprocess.run(
-    ['bd', 'export', '--format', 'jsonl'], capture_output=True, text=True
-).stdout.splitlines() if l.strip()]
-orph = [r for r in rows
-        if (r.get('external_ref') or '').startswith('dev-graph:')
-        and r['external_ref'].split(':', 1)[1] not in ids]
-print('orphan:', len(orph))
-PY
+# 正: 棚卸しは C28 の専用 op で行う (2026-07-26 以降)
+python3 plugins/dev-graph/scripts/bd-bridge.py --op orphan-audit --repo-root .
 ```
+
+---
+
+## 棚卸しの実測ログ (別ファイル)
+
+2026-07-26 以降の棚卸し結果・仕分け・発生経路の特定・完了確認は、時系列の実測ログとして次へ分離した。
+
+- `issues/sys-bd-external-ref-orphan-nodes-20260725-log.md`
+
+分離は**レイアウトのみ**で、内容の改変・要約・削除はしていない。監査証跡としては本ファイル → ログファイルの順に続けて読むこと。

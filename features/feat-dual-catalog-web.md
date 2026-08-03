@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:13:14Z"
+updated_at: "2026-08-02T20:52:37.353128Z"
 status: "active"
 depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dual-catalog-web/7069e34892e25830493bc3b3164f5ebba8dbf911c5054e3308bc0d6261f17817/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dual-catalog-web.md","confidence":0.9}]
@@ -96,3 +96,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 2026-08-01 最終レビュー実装フィードバック
+
+- 認可済み catalog の stale 表示を同一 tenant/workspace/project の `degraded` に限定し、401/403/契約不正と scope 切替では以前の内容を描画しない。
+- `/marketplace.json` は private cache + Cookie/tenant/workspace `Vary` へ改訂し、Hub 停止時の同一 scope 継続性を残したまま shared cache のテナント漏えい窓を閉じた。
+- 一覧の入力値と適用 query を分離し、入力中の自動取得と submit 時の二重取得を解消した。
+- dual catalog の仕様正本は `qa-117`〜`qa-119`、main との security 統合正本は `qa-120`。設計は [frontend](../architecture/harness-hub-frontend.md)・[security](../architecture/harness-hub-security.md)・[testing-qa](../architecture/harness-hub-testing-qa.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-dual-catalog-web/spec-reflection-receipt.md) を参照する。

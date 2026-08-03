@@ -19,6 +19,8 @@ import {
   SESSION_COOKIE_NAME,
   signSessionToken,
 } from '../../../src/lib/auth/index.js';
+// `authz/runtime.js` からではなく実体 module から取る (device-route-runtime.ts と同じ理由)。
+import { createUnavailableOidcAdminService } from '../../../src/lib/auth/oidc-admin/index.js';
 import { createRevocationChecker } from '../../../src/lib/authz/revocation.js';
 import type { AuthRuntime } from '../../../src/lib/authz/runtime.js';
 import { createAuditLogger, createInMemoryAuditSink } from '../../../src/shared/audit/index.js';
@@ -26,6 +28,7 @@ import {
   createSequentialIds,
   createTestPorts,
   directoryUser,
+  oidcConnection,
   TENANT_A,
   type TestPorts,
   WORKSPACE_A1,
@@ -59,14 +62,12 @@ export function createTokenRouteHarness(options: { readonly authRoute?: AuthRout
   const ports = createTestPorts({
     users: [testUser(OWNER_ID), adminUser(), testUser(STRANGER_ID)],
     oidcConnections: [
-      {
+      oidcConnection({
         tenantId: TENANT_A,
         tenantSlug: TENANT_SLUG,
-        issuer: 'https://idp.example.com',
         clientId: 'client-acme',
         displayName: 'Acme ID',
-        enabled: true,
-      },
+      }),
     ],
   });
   ports.clock.set(NOW);
@@ -104,6 +105,8 @@ export function createTokenRouteHarness(options: { readonly authRoute?: AuthRout
         (() => {
           throw new Error('この route は authRoute を使わないはず');
         }),
+      // 同上。OIDC 接続管理は token 系 route の検査対象外
+      oidcAdmin: createUnavailableOidcAdminService(),
     },
   };
 }

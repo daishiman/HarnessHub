@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { TenantOidcConnection } from '../../src/lib/auth/index.js';
-import { createInMemoryOidcConnections } from './support/in-memory-ports.js';
+import { createInMemoryOidcConnections, oidcConnection } from './support/in-memory-ports.js';
 
 const { notFound, authRuntime } = vi.hoisted(() => ({
   notFound: vi.fn(),
@@ -18,15 +18,13 @@ vi.mock('../../src/lib/authz/index.js', () => ({ authRuntime }));
 const SigninPage = (await import('../../src/app/[tenant_slug]/signin/page.js')).default;
 
 function connection(overrides: Partial<TenantOidcConnection> = {}): TenantOidcConnection {
-  return {
+  return oidcConnection({
     tenantId: 'tenant-a',
     tenantSlug: 'acme',
-    issuer: 'https://idp.example.com',
     clientId: 'client-1',
     displayName: 'Acme IdP',
-    enabled: true,
     ...overrides,
-  };
+  });
 }
 
 function withConnections(connections: readonly TenantOidcConnection[]): void {
@@ -92,7 +90,13 @@ describe('サインイン画面の接続解決', () => {
 
     expect(html).toContain('Acme IdP でサインイン');
     expect(html).toContain('action="/api/auth/acme/signin/tenant-oidc"');
+    expect(html).toContain('data-csrf-endpoint="/api/auth/acme/csrf"');
     expect(html).toContain('method="post"');
+    expect(html).toContain('name="csrfToken"');
+    expect(html).toContain('name="callbackUrl"');
+    // SSR 初期値は既定着地 (`/sheets`)。旧仕様の固定値 "/" は業務画面へ届かない不具合だった
+    // (feat-post-signin-scope-routing)。client mount 後は returnTo に応じて useEffect が更新する
+    expect(html).toContain('value="/sheets"');
   });
 
   it('他テナントの slug では、そのテナントの接続だけを引く', async () => {

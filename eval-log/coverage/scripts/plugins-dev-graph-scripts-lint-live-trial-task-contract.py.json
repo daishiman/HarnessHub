@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/dev-graph/scripts/lint-live-trial-task-contract.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine code-review + ruff/py_compile/pytest OK。CLI責務を premise生成・対象列挙・決定論JSON report・exit code変換へ限定し、契約解析を500行未満のlib/live_trial_task_contract.pyへ分離している。--task/--all/--emit-premiseはmutually exclusiveで曖昧な実行を拒否し、TASK_CONTRACT宣言0件・対象task欠落・shape解決不能を成功扱いにしない。違反はrule/task/detail順に安定sortされ、契約違反=exit 2、読込不能=exit 1、正常=exit 0のfail-closed境界が明確。--allはverdictを持つ最新runだけを対象にし、中断runを合格証拠と混同しない。write-scopeは明示された--json-outだけで、networkアクセスなしというfrontmatterと実装が一致する。内部libは固定plugin相対pathをsys.path先頭へ追加して通常importし、単体起動entry pointとして誤宣言しない。SMELL: module import自体の失敗はargparseのtryより前なので整形済みERRORではなくtracebackになるが、exit非0で検査を止める安全性は維持される。TESTS: 実FAIL/PASS task、premise round-trip、all mode、相対task pathを含む plugins/dev-graph/tests/test_live_trial_task_contract.py 29件PASS。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

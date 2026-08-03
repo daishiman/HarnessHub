@@ -13,7 +13,7 @@
 # dependencies: []
 # requires-python: ">=3.10"
 # ///
-"""Lint Skill directory tree against articles 第8〜13条.
+"""Lint Skill directory tree and prompt-size contracts against articles 第8〜13条.
 
 Usage:
   lint-skill-tree.py /path/to/skill-dir
@@ -30,8 +30,10 @@ ALLOWED_NESTED_DIRS = {
     ("templates", "combinators"),
 }
 SCRIPT_EXTS = {".py", ".sh"}
+PROMPT_EXTS = {".md", ".yaml"}
 MAX_SKILL_LINES = 300  # P0-2: 300行 cap 機械強制
 WARN_SKILL_LINES = 280  # SS-203: 上限接近の事前警告 (warn のみ、exit 1 にしない)
+MAX_PROMPT_LINES = 500  # prompt context の肥大化だけを対象にする。一般コードは対象外。
 
 OS_PREAMBLE_PATTERN = re.compile(r"!`uname -s")
 # 本文先頭から探索する行数 (先頭付近の定義: 設計書13章)
@@ -118,7 +120,7 @@ def check_prompts_listed(root: "Path", skill_md: "Path") -> list[str]:
     for f in sorted(prompts_dir.iterdir()):
         if not f.is_file():
             continue
-        if f.suffix not in {".md", ".yaml"}:
+        if f.suffix not in PROMPT_EXTS:
             continue
         rel = f"prompts/{f.name}"
         if rel not in listed_paths:
@@ -126,6 +128,30 @@ def check_prompts_listed(root: "Path", skill_md: "Path") -> list[str]:
                 f"[Warn]MED-4: {rel} が SKILL.md frontmatter responsibility_refs に未列挙"
             )
     return warns
+
+
+def check_prompt_line_limits(root: Path) -> list[str]:
+    """skill の prompts/ にある実行プロンプトだけを 500 行上限で検査する。
+
+    ソースコード、テスト、references、templates はこの数値ゲートの対象外。コードの
+    分割は責務境界と変更容易性で判断し、ファイル行数を品質の代理指標にしない。
+    """
+    prompts_dir = root / "prompts"
+    if not prompts_dir.is_dir():
+        return []
+
+    errs: list[str] = []
+    for prompt in sorted(prompts_dir.iterdir()):
+        if not prompt.is_file() or prompt.suffix not in PROMPT_EXTS:
+            continue
+        line_count = len(prompt.read_text(encoding="utf-8").splitlines())
+        if line_count > MAX_PROMPT_LINES:
+            rel = prompt.relative_to(root)
+            errs.append(
+                f"P0-prompt-line-limit違反: {rel} が {line_count} 行"
+                f" (上限 {MAX_PROMPT_LINES} 行)。責務単位の prompt に分割すること"
+            )
+    return errs
 
 
 def check_os_preamble(skill_md: "Path") -> list[str]:
@@ -201,12 +227,23 @@ def lint_one(root: Path) -> list[str]:
             file=sys.stderr,
         )
 
+    # 実行時にそのまま context へ入る prompt だけを数値上限の対象にする。
+    # scripts/tests/references の行数は検査せず、コードへの一律 500 行制限を持ち込まない。
+    errs.extend(check_prompt_line_limits(root))
+
     # 第13条 フラットツリー (深さ <= 2)
     for p in root.rglob("*"):
-        # __pycache__ / .pyc を除外
-        if "__pycache__" in p.parts or p.suffix == ".pyc":
-            continue
         rel = p.relative_to(root)
+        # Python / test tools が生成する cache は人が設計した skill tree ではない。
+        # ALLOWED_DIRS に dot directory は無いため、個別ツール名を列挙せず、
+        # dot で始まる directory とその配下を一律に除外する。
+        dir_parts = rel.parts if p.is_dir() else rel.parts[:-1]
+        if (
+            "__pycache__" in rel.parts
+            or p.suffix == ".pyc"
+            or any(part.startswith(".") for part in dir_parts)
+        ):
+            continue
         # templates/ 配下は雛形なので skill 規約検査を skip (生成後の skill 側で検査)
         if rel.parts and rel.parts[0] == "templates" and len(rel.parts) > 1:
             continue

@@ -25,11 +25,54 @@ export {
   deviceErrorResponseSchema,
   deviceTokenRequestSchema,
 } from './device-flow.js';
-export type { PublisherTokenScope, SessionRole, TenantSlug, UserCode, UserStatus } from './primitives.js';
+export type {
+  OidcAdminError,
+  OidcConnectionListResponse,
+  OidcConnectionMutationResponse,
+  OidcConnectionRegisterRequest,
+  OidcConnectionSetup,
+  OidcConnectionSummary,
+  OidcConnectionTestFailure,
+  OidcConnectionTestRequest,
+  OidcConnectionTestResponse,
+  OidcConnectionTestTarget,
+  OidcSecretRotation,
+  OidcSecretRotationStageRequest,
+} from './oidc-admin.js';
+export {
+  googleOauthClientIdSchema,
+  googleOauthClientSecretSchema,
+  OIDC_CLIENT_SECRET_LAST4_LENGTH,
+  oidcAdminErrorSchema,
+  oidcConnectionListResponseSchema,
+  oidcConnectionMutationResponseSchema,
+  oidcConnectionRegisterRequestSchema,
+  oidcConnectionSetupSchema,
+  oidcConnectionSummarySchema,
+  oidcConnectionTestFailureSchema,
+  oidcConnectionTestRequestSchema,
+  oidcConnectionTestResponseSchema,
+  oidcConnectionTestTargetSchema,
+  oidcSecretRotationSchema,
+  oidcSecretRotationStageRequestSchema,
+} from './oidc-admin.js';
+export type {
+  OidcCredentialMode,
+  OidcCredentialStatus,
+  PublisherTokenScope,
+  SessionRole,
+  TenantSlug,
+  UserCode,
+  UserStatus,
+  WorkspaceDomain,
+} from './primitives.js';
 export {
   deviceCodeSchema,
   epochSecondsSchema,
+  oidcCredentialModeSchema,
+  oidcCredentialStatusSchema,
   publisherTokenScopeSchema,
+  RESOLVABLE_OIDC_CREDENTIAL_STATUS,
   refreshTokenSchema,
   sessionRoleSchema,
   tenantSlugSchema,
@@ -37,9 +80,12 @@ export {
   USER_CODE_LENGTH,
   userCodeSchema,
   userStatusSchema,
+  workspaceDomainSchema,
 } from './primitives.js';
 export type { OidcIdTokenClaims, SessionClaims, SigninRouteParams } from './session.js';
 export { oidcIdTokenClaimsSchema, sessionClaimsSchema, signinRouteParamsSchema } from './session.js';
+export type { SharedOidcStateClaims } from './shared-oidc.js';
+export { sharedOidcStateClaimsSchema } from './shared-oidc.js';
 export type {
   AccessTokenClaims,
   RefreshRequest,

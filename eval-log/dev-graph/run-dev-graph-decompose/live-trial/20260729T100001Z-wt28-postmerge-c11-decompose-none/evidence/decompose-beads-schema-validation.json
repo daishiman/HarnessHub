@@ -1,0 +1,25 @@
+{
+  "receipt": {
+    "argv": [
+      "python3",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py",
+      "--graph",
+      "-",
+      "--repo-root",
+      "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-postmerge-decompose"
+    ],
+    "payload": {
+      "implementation_readiness": "complete",
+      "missing_sections": [],
+      "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/schemas/graph-node.schema.json",
+      "valid": true,
+      "violations": []
+    },
+    "returncode": 0,
+    "stderr": ""
+  },
+  "stdin_path_used": true,
+  "structural_contract_valid": true,
+  "structural_violations": [],
+  "violation_count": 0
+}
