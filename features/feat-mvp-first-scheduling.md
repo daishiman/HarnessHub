@@ -12,7 +12,7 @@ iteration: null
 title: "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)"
 owners: ["daishiman"]
 created_at: "2026-07-23T05:00:00Z"
-updated_at: "2026-07-24T08:48:38Z"
+updated_at: "2026-08-02T20:54:50.702859Z"
 status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-mvp-first-scheduling/55a34fe2a62841c0175b568204b4a1fde8e1fd04d1c0496bb4e0444e3cf86387/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-23T05:00:00Z","origin_kind":"generated","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-23T05:00:00Z","origin_kind":"generated","source_digest":"ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-069 タスク優先度選定 MVP ファースト化から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-mvp-first-scheduling.md","confidence":0.9}]

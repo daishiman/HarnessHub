@@ -12,7 +12,7 @@ iteration: null
 title: "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)"
 owners: ["daishiman"]
 created_at: "2026-07-22T01:25:08Z"
-updated_at: "2026-07-24T21:00:03Z"
+updated_at: "2026-08-02T20:49:55.234469Z"
 status: "closed"
 depends_on: []
 related_nodes: ["issue-qa070-implementation-feature-20260722","feat-dev-pipeline-improvement"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-22T01:25:08Z","origin_kind":"generated","source_digest":"0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-22T01:25:08Z","origin_kind":"generated","source_digest":"ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-070 ドキュメント規約 2 件の実装 3 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-doc-governance-portability.md","confidence":0.9}]
