@@ -1,0 +1,45 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-node-final",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "invalidated: origin/main advanced during the trial; latest main must be merged before evidence collection"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [
+    "eval-root-missing: goal_seek 宣言 skill は --goal-seek-eval-root が必須"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "FAIL",
+    "goal_fit": "FAIL",
+    "verdict": "BLOCKED"
+  },
+  "skill_dir_tree_sha": "74cb878ef8a5f8903c48c6b78be36c5dd120406e075915d89bfcb4d3cf49b121",
+  "transcript_sha256": "f1bf4a1b88f6b380efa0ac5fd43397e0b62308722d26f713d360b5f0fdaf5509",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "tmux 不在 / HARD_CAP 超過等の fail-closed",
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "INVALIDATED_BY_MAIN_ADVANCE",
+    "wall_clock_s": null
+  }
+}

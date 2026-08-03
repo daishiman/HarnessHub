@@ -5,7 +5,7 @@
 # inputs: ["argv: --graph FILE --repo-root PATH?"]
 # outputs: ["stdout: JSON validation report"]
 # requires-python = ">=3.10"
-# dependencies: []
+# dependencies: ["../lib/graph_envelope.py"]
 # contexts: [A, B, C, E]
 # network: false
 # write-scope: none
@@ -22,11 +22,15 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlsplit
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PLUGIN_ROOT / "lib"))
+
 from _common import ContractError, contained, dump, load_json
 from graph_artifact_readiness import markdown_sections_of, placeholder_sections
+from graph_envelope import envelope_violations
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = PLUGIN_ROOT / "schemas" / "graph-node.schema.json"
+CANONICAL_STORE_RELATIVE = PurePosixPath(".dev-graph/state/graph.json")
 TEMPLATE_CONTRACT_PATH = PLUGIN_ROOT / "templates" / "template-contract.json"
 PHASES = {f"P{i:02d}" for i in range(1, 14)}
 ROOT_BY_KIND = {
@@ -42,6 +46,24 @@ def nodes_of(data: Any) -> list[dict[str, Any]]:
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):
         raise ContractError("graph must be an array or an object with nodes[]")
     return values
+
+
+def envelope_findings(document: Any) -> list[dict[str, str]]:
+    """canonical store の外枠を検査し、C11 の finding 形式へ写す (HarnessHub-kzth)。
+
+    ``nodes_of()`` は nodes[] を取り出した時点で外枠を捨てるため、C11 は長く「store が
+    canonical writer の書いた形か」を見ていなかった。C10 PreToolUse は書込みを別 script
+    file へ移した間接起動を原理的に遮断できないので、遮断が閉じない範囲は store 側の
+    検査で拾う必要がある。未知 key の混入・schema_version の書換・graph_revision の
+    型崩れは、いずれも正規 writer が作らない形であり迂回書込みの直接の痕跡になる。
+
+    検査対象は canonical store を読んだ経路に限る。``--graph -`` の preview や部分 graph は
+    そもそも外枠を持たない正当な入力であり、ここで落とすと dry-run 検証が壊れる。
+    """
+    return [
+        {"node": "$graph", "code": "envelope_violation", "detail": detail}
+        for detail in envelope_violations(document)
+    ]
 
 
 def _is_type(value: Any, expected: str) -> bool:
@@ -208,6 +230,15 @@ def _repo_root_for(graph: Path, explicit: str | None) -> Path:
         if parent.name == ".dev-graph":
             return parent.parent
     raise ContractError("--repo-root is required when --graph is outside the canonical .dev-graph tree")
+
+
+def _is_canonical_store(graph: Path, repo_root: Path) -> bool:
+    """検証対象が repo の canonical store (.dev-graph/state/graph.json) 自身かを返す。"""
+    try:
+        relative = graph.resolve().relative_to(repo_root.resolve())
+    except (OSError, ValueError):
+        return False
+    return PurePosixPath(relative.as_posix()) == CANONICAL_STORE_RELATIVE
 
 
 def artifact_findings(
@@ -391,7 +422,13 @@ def main() -> int:
         help="graph JSON path、または '-' で stdin から preview graph を読む (dry-run 用)",
     )
     parser.add_argument("--repo-root")
+    parser.add_argument(
+        "--require-canonical-envelope",
+        action="store_true",
+        help="入力が canonical store でなくても 4 key envelope を必須にする (監査経路用)",
+    )
     args = parser.parse_args()
+    canonical_store = False
     if args.graph == "-":
         # dry-run preview 検証: 管理対象 repo へ一時ファイルを書かせないための stdin 経路。
         # --graph FILE は contained(graph, root) を要求するため、preview を検証するには
@@ -399,12 +436,19 @@ def main() -> int:
         if not args.repo_root:
             raise ContractError("--repo-root is required when reading a preview graph from stdin")
         repo_root = Path(args.repo_root).expanduser().resolve(strict=True)
-        nodes = nodes_of(json.loads(sys.stdin.read()))
+        document = json.loads(sys.stdin.read())
     else:
         graph = Path(args.graph).expanduser().resolve(strict=True)
         repo_root = _repo_root_for(graph, args.repo_root)
-        nodes = nodes_of(load_json(graph))
+        document = load_json(graph)
+        canonical_store = _is_canonical_store(graph, repo_root)
+    nodes = nodes_of(document)
     violations = validate(nodes, repo_root=repo_root)
+    if canonical_store or args.require_canonical_envelope:
+        violations = sorted(
+            violations + envelope_findings(document),
+            key=lambda item: (item["node"], item["code"], item["detail"]),
+        )
     missing = readiness_missing_sections(violations)
     dump({
         "valid": not violations,

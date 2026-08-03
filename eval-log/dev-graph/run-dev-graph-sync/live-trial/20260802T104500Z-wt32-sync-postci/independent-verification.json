@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "first_import_export": "Fixture progress and the separate Agent verification record 1 imported title, 1 exported Status value, and the expected canonical writes during apply.",
+    "second_zero": "The confirmation dry-run records imports=[], exports=[], changes=0 and converged=true.",
+    "stable_state": "The separate Agent re-read the final graph, remote, and snapshot; progress records stable graph, remote, and snapshot digests with the same graph_node_id."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "dag_granularity": "Both final graphs contain one architecture and four features in an acyclic star; measured max inter-feature dependency is 1 within declared max 3.",
+    "draft_zero_reasons": "Draft-gate, route-unreachable, and not-exercised zero-publication reasons remain distinct in both binding audits.",
+    "sole_candidate": "Three produced draft features remain excluded while feat-user-auth-001 alone is confirmed, evaluation-pass, readiness-complete, and publication-eligible.",
+    "binding_routes": "Separate beads and none runs persisted their own tracker bindings and produced different exercised routes; github is unreachable with the canonical schema reason.",
+    "write_counts_stdin": "Pre/post repository state proves zero local issue, Beads export, GitHub, and Projects writes for drafts; preview validation used stdin without a managed-repository temp file.",
+    "evidence_digest": "Each promoted node confirmation digest was independently recomputed from final persisted content excluding only confirmation_evidence and matches exactly.",
+    "negative_controls": "Readiness and forbidden-publication mutations synthesized from the final graph were both rejected by the canonical validator."
+  }
+}

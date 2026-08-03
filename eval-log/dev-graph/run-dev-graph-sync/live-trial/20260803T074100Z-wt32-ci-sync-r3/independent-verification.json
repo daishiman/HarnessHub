@@ -1,0 +1,10 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "first_import_export": "Transcript apply receipt: LT-TASK-001 imports the newer remote title and exports Project Status=In Progress; changes=2 and write_count=3.",
+    "second_zero": "Transcript verification dry-run receipt: imports=[], exports=[], changes=0, write_count=0, and converged=true.",
+    "stable_state": "Verification dry-run records identical before/after digests: graph 49669cb8511e9e3c3017e7b3bc4c87479d7e2ee9c2be02e6662977450f04458d, remote 113cf1a05f453c2dd0195d0b89056d13933ee4cd2951aaabfb1ab1f2a72b640e, snapshot ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f."
+  }
+}

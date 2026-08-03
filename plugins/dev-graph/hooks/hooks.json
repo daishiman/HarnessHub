@@ -11,7 +11,10 @@
     }],
     "PostToolUse": [{
       "matcher": "Bash",
-      "hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"", "timeout": 10, "async": true}]
+      "hooks": [
+        {"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/reconcile-task-lifecycle.py\" --event post-tool-use --repo-root \"${CLAUDE_PROJECT_DIR}\"", "timeout": 10, "async": true},
+        {"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/audit-graph-authority-drift.py\" --repo-root \"${CLAUDE_PROJECT_DIR}\"", "timeout": 10}
+      ]
     }],
     "TaskCompleted": [{
       "hooks": [{"type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/reconcile-task-lifecycle.py\" --event task-completed --repo-root \"${CLAUDE_PROJECT_DIR}\"", "timeout": 20}]

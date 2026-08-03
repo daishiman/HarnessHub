@@ -1,0 +1,565 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/run-dev-graph-init/live-trial/20260802T032100Z-wt32-init-r1/task.md
+
+⏺ Read 2 files (ctrl+o to expand)
+
+⏺ Let me set up the eval-log structure and intermediate JSONL, then run the first pass.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1 && git log --oneline -3 2>/dev/null; echo "---"; ls -…)
+  ⎿  9924511 chore(fixture): initialize dev-graph live-trial fixture
+     ---
+     total 0
+     … +39 lines (ctrl+o to expand)
+
+⏺ Explore(Find upsert-node script)
+  ⎿  Done (17 tool uses · 54.4k tokens · 1m 4s)
+  (ctrl+o to expand)
+
+⏺ Searched for 1 pattern, read 4 files (ctrl+o to expand)
+
+⏺ Now let me set up the evidence structure and compute the goal hash. First, create the intermediate JSONL with line 1 before running the skill.
+
+⏺ Bash(FIXTURE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      mkdir -p "$FIXTURE_ROOT/eval-log"…)
+  ⎿  4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Write(eval-log/init-intermediate.jsonl)
+  ⎿  Wrote 1 lines to eval-log/init-intermediate.jsonl
+      1 {"original_goal":"symlinkで配布された任意の呼出し元repository/worktreeを解決し、そのrepo内だけに6 content root (issues/tasks/specs/architecture/features/docs)、repo-local config/template/stateと選択式Claud
+        e hook配線を冪等初期化できる状態になっている","original_goal_hash":"4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec","current_goal_snapshot":"pass 1: 6 content root・routing policy・graph
+        store・plugin hook を冪等初期化する","delta_from_original":"none","merged_directive_for_next":"pass 1 を実行し、6 root/config/graph/template/hook を生成して検証する","drift_signal":"none"}
+
+⏺ Now run the first pass of dev-graph:run-dev-graph-init.
+
+⏺ Skill(dev-graph:run-dev-graph-init)
+  ⎿  Successfully loaded skill · 9 tools allowed
+
+⏺ I'll execute the init skill step by step. Let me set up variables and start with repo context resolution.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +27 lines (ctrl+o to expand)
+
+⏺ Good, repo context resolved. Now create the 6 content roots and .dev-graph structure.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      # Create 6 content roots…)
+  ⎿  Content roots and .dev-graph structure created
+     total 0
+     drwxr-xr-x@ 12 dm  staff  384 Aug  2 12:26 .
+     … +11 lines (ctrl+o to expand)
+
+⏺ Now copy templates from plugin (only missing ones).
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Templates copied: 21, skipped (already exist): 0
+     api-contract.md
+     architecture-backend.md
+     … +19 lines (ctrl+o to expand)
+
+⏺ Now build the repo config. First I need to prepare the config draft.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(.dev-graph/tmp/config-draft.json)
+  ⎿  Wrote 68 lines to .dev-graph/tmp/config-draft.json
+       1 {
+       2   "schema_version": "1.0.0",
+       3   "repository_id": "local:sha256:33ee1341edffdf08a685776acc10f0627049416e2435eea4241862dea6b65318",
+       4   "content_roots": {
+       5     "issues": "issues",
+       6     "tasks": "tasks",
+       7     "specifications": "specs",
+       8     "architecture": "architecture",
+       9     "features": "features",
+      10     "documents": "docs",
+     … +58 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Error: Exit code 1
+     {
+       "action": "rejected",
+       "changed": false,
+       "config": "/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/.dev-graph/config.json",
+       "dry_run": false,
+       "valid": false,
+       "violations": [
+         {
+           "code": "schema_violation",
+     … +30 lines (ctrl+o to see all)
+
+⏺ Fix the config draft for schema violations.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(.dev-graph/tmp/config-draft.json)
+  ⎿  Added 1 line, removed 1 line
+      17    },
+      18    "github": {
+      19      "enabled": false,
+      20 -    "issue_repository": "",
+      20 +    "issue_repository": "placeholder/placeholder",
+      21      "projects": [],
+      22      "completion_policy": {
+      23        "trigger": "linked_pr_merged",
+
+⏺ Update(.dev-graph/tmp/config-draft.json)
+  ⎿  Added 1 line, removed 1 line
+      28        "revert": "create_follow_up_unless_issue_reopened",
+      29        "local_reconciliation": ["manual_sync", "claude_hook", "scheduled_sync"],
+      30        "scheduled_reconciliation": {
+      31 -        "enabled": false,
+      31 +        "enabled": true,
+      32          "interval_minutes": 5,
+      33          "owner": "claude_session_start",
+      34          "entry_point": "dev-graph sync --reconcile-lifecycle"
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "action": "created",
+       "changed": true,
+     … +7 lines (ctrl+o to expand)
+
+⏺ Config created. Now build the graph store.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "action": "created",
+       "changed": true,
+     … +8 lines (ctrl+o to expand)
+
+⏺ Now validate both config and graph.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "config": "/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/.dev-graph/config.json",
+       "missing_sections": [],
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Pass 1 complete. Both config and graph validate. Now write the goal-spec and save pass 1 evidence. Then proceed to the inter-pass steps.
+
+⏺ Write(eval-log/run-dev-graph-init-goal-spec.json)
+  ⎿  Wrote 5 lines to eval-log/run-dev-graph-init-goal-spec.json
+      1 {
+      2   "original_goal": "symlinkで配布された任意の呼出し元repository/worktreeを解決し、そのrepo内だけに6 content root (issues/tasks/specs/architecture/features/docs)、repo-local config/template/stateと選択式Cla
+        ude hook配線を冪等初期化できる状態になっている",
+      3   "scenario": "C01-OUT1-positive-idempotence-r17",
+      4   "hook_source": "plugin"
+      5 }
+
+⏺ Now the inter-pass steps: 1) Edit a canonical template, record SHA-256, 2) Register a node via upsert-node.py, 3) Verify graph has at least 1 node.
+
+  Step 1: Edit a template and record SHA-256
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(.dev-graph/templates/issue.md)
+  ⎿  Added 1 line
+      38
+      39  ## 受入条件
+      40
+      41 +<!-- LIVE-TRIAL-MARKER: C01-OUT1-positive-idempotence-r17 -->
+      42  - [ ] <観測可能な結果>
+      43
+      44  ## 検証証跡
+
+⏺ Bash(TEMPLATE_PATH="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/.dev-graph/templates/issue.md"
+      EDITED_SHA…)
+  ⎿  Edited template SHA-256: 1e93e069914890cf56ddf4f9ec5de99c8e689b5d0b3848836889a0a5bac1a1f8
+
+⏺ Step 2: Register a node via C02 upsert-node.py
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "[Errno 63] File name too long:
+     '/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/{\"request\":\"node\",\"id\":\"TRIAL-INIT-001\",\"artifact_kind\":\"issue\",\"title\":\"Live trial idempotence
+      test node\",\"status\":\"open\",\"priority\":\"medium\",\"depends_on\":[],\"body\":\"# Live Trial Test Issue\\\\n\\\\nThis node was created to verify C11 schema validation against a graph with at least one
+     node.\\\\n\\\\n## Background\\\\n\\\\nCreated during C01-OUT1-positive-idempotence-r17 live trial between pass 1 and pass 2 of init.\"}'",
+       "valid": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "[Errno 63] File name too long:
+     '/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/{\"request\":\"node\",\"id\":\"TRIAL-INIT-001\",\"artifact_kind\":\"issue\",\"title\":\"Live trial idempotence
+      test node\",\"status\":\"open\",\"priority\":\"medium\",\"depends_on\":[],\"body\":\"# Live Trial Test Issue\\\\n\\\\nThis node was created to verify C11 schema validation against a graph with at least one
+     node.\\\\n\\\\n## Background\\\\n\\\\nCreated during C01-OUT1-positive-idempotence-r17 live trial between pass 1 and pass 2 of init.\"}'",
+       "valid": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ The --input is being treated as a path. Let me check how the script reads input.
+
+⏺ Searched for 2 patterns (ctrl+o to expand)
+
+⏺ It expects --input as a file path within the repository. Let me create the input JSON file first.
+
+⏺ Write(.dev-graph/tmp/node-input.json)
+  ⎿  Wrote 10 lines to .dev-graph/tmp/node-input.json
+       1 {
+       2   "request": "node",
+       3   "id": "TRIAL-INIT-001",
+       4   "artifact_kind": "issue",
+       5   "title": "Live trial idempotence test node",
+       6   "status": "open",
+       7   "priority": "medium",
+       8   "depends_on": [],
+       9   "body": "# Live Trial Test Issue\n\nThis node was created to verify C11 schema validation against a graph with at least one node.\n\n## Background\n\nCreated during C01-OUT1-positive-idempotence-r17 liv
+         e trial between pass 1 and pass 2 of init."
+      10 }
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "input requires graph_node_id",
+       "valid": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "input requires graph_node_id",
+       "valid": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Need graph_node_id in the input. Let me also check what other required fields the node schema expects.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(.dev-graph/tmp/node-input.json)
+  ⎿  Added 8 lines, removed 7 lines
+       1  {
+       2 -  "request": "node",
+       3 -  "id": "TRIAL-INIT-001",
+       4 -  "artifact_kind": "issue",
+       5 -  "title": "Live trial idempotence test node",
+       6 -  "status": "open",
+       7 -  "priority": "medium",
+       8 -  "depends_on": [],
+       2 +  "node": {
+       3 +    "graph_node_id": "TRIAL-INIT-001",
+       4 +    "artifact_kind": "issue",
+       5 +    "title": "Live trial idempotence test node",
+       6 +    "status": "open",
+       7 +    "priority": "medium",
+       8 +    "depends_on": []
+       9 +  },
+      10    "body": "# Live Trial Test Issue\n\nThis node was created to verify C11 schema validation against a graph with at least one node.\n\n## Background\n\nCreated during C01-OUT1-positive-idempotence-r17 li
+          ve trial between pass 1 and pass 2 of init."
+      11  }
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Error: Exit code 2
+     {
+       "error": "proposed graph is invalid: [{\"node\": \"TRIAL-INIT-001\", \"code\": \"invalid_status\", \"detail\": \"open\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$.status:
+     expected const 'done'\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$.status: expected const 'done'\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\":
+     \"$.status: not in enum ['draft', 'active', 'blocked', 'done', 'closed', 'tombstoned']\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     artifact_subtypes\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property beads_linkage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\",
+     \"detail\": \"$: missing required property classification_candidates\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property classification_confidence\"},
+     {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property classification_reason\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$:
+     missing required property completion_evidence\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property confirmation_evidence\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property confirmation_status\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property domain\"},
+      {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property evaluation_status\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$:
+     missing required property execution_contexts\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property feature_package_id\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property github_project_linkages\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     github_publication\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property implementation_readiness\"}, {\"node\": \"TRIAL-INIT-001\", \"code\":
+     \"schema_violation\", \"detail\": \"$: missing required property issue_linkage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property iteration\"}, {\"node\":
+     \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property owners\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     parent_feature\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property phase_ref\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\":
+     \"$: missing required property project_id\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property pull_request_linkages\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property related_nodes\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     resource_scope\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property source_lineage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\",
+     \"detail\": \"$: missing required property start_date\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property tags\"}, {\"node\": \"TRIAL-INIT-001\", \"code\":
+     \"schema_violation\", \"detail\": \"$: missing required property target_date\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property template_id\"}, {\"node\":
+     \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property template_version\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required
+     property tracker_binding\"}]",
+       "valid": false,
+       "write_count": 0
+     }
+
+     {
+       "error": "proposed graph is invalid: [{\"node\": \"TRIAL-INIT-001\", \"code\": \"invalid_status\", \"detail\": \"open\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$.status:
+     expected const 'done'\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$.status: expected const 'done'\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\":
+     \"$.status: not in enum ['draft', 'active', 'blocked', 'done', 'closed', 'tombstoned']\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     artifact_subtypes\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property beads_linkage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\",
+     \"detail\": \"$: missing required property classification_candidates\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property classification_confidence\"},
+     {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property classification_reason\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$:
+     missing required property completion_evidence\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property confirmation_evidence\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property confirmation_status\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property domain\"},
+      {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property evaluation_status\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$:
+     missing required property execution_contexts\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property feature_package_id\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property github_project_linkages\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     github_publication\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property implementation_readiness\"}, {\"node\": \"TRIAL-INIT-001\", \"code\":
+     \"schema_violation\", \"detail\": \"$: missing required property issue_linkage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property iteration\"}, {\"node\":
+     \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property owners\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     parent_feature\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property phase_ref\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\":
+     \"$: missing required property project_id\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property pull_request_linkages\"}, {\"node\": \"TRIAL-INIT-001\",
+     \"code\": \"schema_violation\", \"detail\": \"$: missing required property related_nodes\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property
+     resource_scope\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property source_lineage\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\",
+     \"detail\": \"$: missing required property start_date\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property tags\"}, {\"node\": \"TRIAL-INIT-001\", \"code\":
+     \"schema_violation\", \"detail\": \"$: missing required property target_date\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property template_id\"}, {\"node\":
+     \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required property template_version\"}, {\"node\": \"TRIAL-INIT-001\", \"code\": \"schema_violation\", \"detail\": \"$: missing required
+     property tracker_binding\"}]",
+       "valid": false,
+     … +2 lines (ctrl+o to see all)
+
+⏺ I need a complete node with all required fields. Let me find an example.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now I have a complete example. Let me create the proper input.
+
+⏺ Write(.dev-graph/tmp/node-input.json)
+  ⎿  Added 71 lines, removed 5 lines
+       1  {
+       2    "node": {
+       3 -    "graph_node_id": "TRIAL-INIT-001",
+       3 +    "graph_node_id": "sys-init-idempotence-test-20260802",
+       4      "artifact_kind": "issue",
+       5 -    "title": "Live trial idempotence test node",
+       6 -    "status": "open",
+       5 +    "artifact_subtypes": [],
+       6 +    "title": "Init idempotence test fixture issue",
+       7 +    "status": "draft",
+       8      "priority": "medium",
+       8 -    "depends_on": []
+       9 +    "depends_on": [],
+      10 +    "domain": "dev-graph",
+      11 +    "tags": ["init-test"],
+      12 +    "goal": "Confirm second init pass reports zero planned changes",
+      13 +    "purpose": "Verify that dev-graph init is idempotent",
+      14 +    "acceptance": ["Second init reports 0 changes"],
+      15 +    "scope_in": ["init idempotence"],
+      16 +    "scope_out": ["production use"],
+      17 +    "architecture_refs": [],
+      18 +    "owners": [],
+      19 +    "iteration": null,
+      20 +    "start_date": null,
+      21 +    "target_date": null,
+      22 +    "project_id": "wt32-init-r1",
+      23 +    "feature_package_id": null,
+      24 +    "parent_feature": null,
+      25 +    "phase_ref": null,
+      26 +    "related_nodes": [],
+      27 +    "resource_scope": [],
+      28 +    "execution_contexts": [],
+      29 +    "confirmation_status": "draft",
+      30 +    "confirmation_evidence": {
+      31 +      "evaluator": null,
+      32 +      "evaluated_digest": null,
+      33 +      "evidence_ref": null
+      34 +    },
+      35 +    "evaluation_status": "pending",
+      36 +    "implementation_readiness": {
+      37 +      "status": "incomplete",
+      38 +      "missing_sections": [],
+      39 +      "checked_at": null
+      40 +    },
+      41 +    "completion_evidence": {
+      42 +      "status": "not_applicable",
+      43 +      "policy": "manual",
+      44 +      "source": null,
+      45 +      "evidence_refs": [],
+      46 +      "completed_at": null,
+      47 +      "reconciled_at": null
+      48 +    },
+      49 +    "source_lineage": {
+      50 +      "origin_kind": "manual",
+      51 +      "source_path": null,
+      52 +      "source_digest": null,
+      53 +      "source_version": null,
+      54 +      "source_plugin": null,
+      55 +      "imported_at": null
+      56 +    },
+      57 +    "template_id": "issue",
+      58 +    "template_version": "1.0.0",
+      59 +    "tracker_binding": "none",
+      60 +    "issue_linkage": null,
+      61 +    "pull_request_linkages": [],
+      62 +    "github_project_linkages": [],
+      63 +    "github_publication": {
+      64 +      "mode": "local_only",
+      65 +      "labels": [],
+      66 +      "milestone": null,
+      67 +      "project_aliases": []
+      68 +    },
+      69 +    "beads_linkage": null,
+      70 +    "classification_candidates": [],
+      71 +    "classification_confidence": 1.0,
+      72 +    "classification_reason": "Explicitly created as test fixture issue",
+      73 +    "created_at": "2026-08-02T03:21:00Z",
+      74 +    "updated_at": "2026-08-02T03:21:00Z"
+      75    },
+      10 -  "body": "# Live Trial Test Issue\n\nThis node was created to verify C11 schema validation against a graph with at least one node.\n\n## Background\n\nCreated during C01-OUT1-positive-idempotence-r17 li
+         -ve trial between pass 1 and pass 2 of init."
+      76 +  "body": "# Init idempotence test fixture issue\n\nThis node was created to verify C11 schema validation against a graph with at least one node.\n\n## Background\n\nCreated during C01-OUT1-positive-idem
+         +potence-r17 live trial between pass 1 and pass 2 of init.\n\n## Acceptance\n\n- [ ] Second init reports 0 changes"
+      77  }
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "artifact_sha256_after": "aad54fd177326dcc5cc5166947d7b317b635a81ddaf74054856774ed40719774",
+       "body_source": "from_input",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Node registered successfully. Now verify the graph has at least 1 node.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      python3 -c "…)
+  ⎿  nodes: 1, revision: 1
+       - sys-init-idempotence-test-20260802 (issue)
+
+⏺ Graph has 1 node. Now run the second pass of dev-graph:run-dev-graph-init.
+
+⏺ Skill(dev-graph:run-dev-graph-init)
+  ⎿  Successfully loaded skill · 9 tools allowed
+
+⏺ Pass 2: Re-running init on the already-initialized fixture. Following the same steps to verify idempotence.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +26 lines (ctrl+o to expand)
+
+⏺ Good — config_missing diagnostic is gone (config exists now). Check existing structure — all 6 roots and .dev-graph dirs should already exist.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      ROOTS_EXIST=0; ROOTS_MISSING=0…)
+  ⎿  Content roots: 6 exist, 0 missing
+     .dev-graph items: 5 exist, 0 missing
+
+⏺ All exist — zero directories to create. Now check templates — all 21 should already exist, zero copies needed.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  Pass 2 templates: copied=0, skipped=21
+     User-edited (migration_preview): issue.md
+
+⏺ Zero copies, and issue.md correctly identified as user-edited (not overwritten). Now re-run build-repo-config with --if-absent and build-graph-store to confirm zero changes.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "action": "skipped_existing",
+       "changed": false,
+     … +7 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "action": "preserved_existing",
+       "changed": false,
+     … +8 lines (ctrl+o to expand)
+
+⏺ Both report changed: false — config skipped_existing, graph preserved_existing. Now run validations.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "config": "/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/.dev-graph/config.json",
+       "missing_sections": [],
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/worksp…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Both validations PASS. Verify the edited template's SHA-256 is preserved after pass 2.
+
+⏺ Bash(TEMPLATE_PATH="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/.dev-graph/templates/issue.md"
+      POST_PASS2…)
+  ⎿  Post-pass-2 SHA-256: 1e93e069914890cf56ddf4f9ec5de99c8e689b5d0b3848836889a0a5bac1a1f8
+     Pre-pass-2 SHA-256:  1e93e069914890cf56ddf4f9ec5de99c8e689b5d0b3848836889a0a5bac1a1f8
+     MATCH: template preserved after pass 2
+
+⏺ Pass 2 complete. All checks pass:
+  - Config: skipped_existing, changed: false
+  - Graph: preserved_existing, changed: false, 1 node intact
+  - Templates: 0 copies, edited issue.md SHA-256 preserved
+  - Both validate-repo-config.py and validate-graph-schema.py: valid: true, 0 violations
+  - C11 passes with 1 node in graph
+
+  Now verify config has no absolute paths or tokens, then write evidence and complete.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      python3 -c "…)
+  ⎿  absolute_paths: []
+     tokens: []
+     github_node_ids: []
+     no_secrets: True
+
+⏺ All 6 observations verified. Now write the progress, append the second intermediate JSONL line, run the goal-seek verification, and write final evidence.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/eval-log/run-dev-graph-init-progress.json)
+  ⎿  Wrote 12 lines to ../../../eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/eval-log/run-dev-graph-init-progress.json
+       1 {
+       2   "scenario": "C01-OUT1-positive-idempotence-r17",
+       3   "checklist": {
+       4     "resolve_repo_context": {"status": "PASS", "evidence": "repository_id matches, content roots within repo"},
+       5     "six_roots_and_state": {"status": "PASS", "evidence": "issues/tasks/specs/architecture/features/docs and .dev-graph/{config.json,state/graph.json,cache,locks} exist"},
+       6     "template_scaffold": {"status": "PASS", "evidence": "21 templates copied pass 1, 0 copies pass 2, edited issue.md SHA-256 1e93e069914890cf56ddf4f9ec5de99c8e689b5d0b3848836889a0a5bac1a1f8 preserved"},
+       7     "hook_source": {"status": "PASS", "evidence": "plugin hook source, no project fallback needed"},
+       8     "validate_repo_config": {"status": "PASS", "evidence": "valid=true, violations=[], no absolute paths/tokens/node IDs"},
+       9     "validate_graph_schema": {"status": "PASS", "evidence": "valid=true, violations=[], C11 pass with 1 node"},
+      10     "idempotence": {"status": "PASS", "evidence": "pass 2: config skipped_existing, graph preserved_existing, template copy 0"}
+     … +2 lines (ctrl+o to expand)
+
+⏺ Bash(JSONL_PATH="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/eval-log/init-intermediate.jsonl"
+      printf '%s…)
+  ⎿  Appended line 2 to intermediate JSONL
+            2 /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1/eval-log/init-intermediate.jsonl
+
+⏺ Now run the goal-seek verification script.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1"
+      python3 - "$DEV_GRAPH_ROOT/eval-log/run…)
+  ⎿  Goal-seek verification PASS: 2 rows, hash matches, all 6 keys present
+
+⏺ Now write the final status.json.
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/run-dev-graph-init/live-trial/20260802T032100Z-wt32-init-r1/out/status.json)
+  ⎿  Wrote 1 lines to ../../../eval-log/dev-graph/run-dev-graph-init/live-trial/20260802T032100Z-wt32-init-r1/out/status.json
+      1 {"status":"PASS","scenario":"C01-OUT1-positive-idempotence-r17"}
+
+⏺ DONE: PASS
+
+✻ Cooked for 13m 13s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code
