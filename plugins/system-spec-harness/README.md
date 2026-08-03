@@ -32,7 +32,7 @@
 - **sub-agent×3**: `system-spec-hearing-auditor` (C06) / `system-spec-matrix-auditor` (C07) / `system-spec-doc-freshness-auditor` (C08) — C05 が独立 context で fork する監査。
 - **slash-command×2**: `/spec-hearing-start` (C09) / `/spec-compile` (C10)。
 - **hook×1**: `guard-confirmed-chapter-overwrite.py` (C11・確定章の誤上書きを PreToolUse で fail-closed 遮断)。
-- **script×3** (plugin-root 共有決定論ゲート): `validate-coverage-matrix.py` (C12・マトリクス網羅性) / `validate-source-citation.py` (C13・出典記録) / `validate-knowledge-graph.py` (C14・知識依存グラフ、doctrine、必須情報の整合)。
+- **script×3** (plugin-root 共有決定論ゲート): `validate-coverage-matrix.py` (C12・マトリクス網羅性) / `validate-source-citation.py` (C13・出典記録、future時刻・一括固定時刻・取得証跡digestも検証) / `validate-knowledge-graph.py` (C14・知識依存グラフ、doctrine、必須情報の整合)。
 - **C05 内部責務分割**: 公開入口 `aggregate-completeness.py` はレポート集約と CLI を保持し、fork 台帳の読取り・receipt 照合・run/session 束縛は import 専用 `audit_fork_attribution.py` が担う。入力、出力、exit code は変えない。
 
 ### データフロー
