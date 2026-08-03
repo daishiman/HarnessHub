@@ -65,6 +65,10 @@ export const statusVocabulary = {
     suspended: entry('danger', '停止中', 'Suspended'),
     deprecated: entry('neutral', '非推奨', 'Deprecated'),
   },
+  document: {
+    draft: entry('neutral', '下書き', 'Draft'),
+    published: entry('success', '公開済み', 'Published'),
+  },
   /**
    * OIDC credential の lifecycle (`oidcCredentialStatusSchema` と同じ 4 値)。
    *

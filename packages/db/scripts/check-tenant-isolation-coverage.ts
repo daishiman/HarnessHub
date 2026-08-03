@@ -66,6 +66,7 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   ai_jobs: 'createHearingIntakeRepository',
   display_code_counters: 'createHearingIntakeRepository',
   tenant_coefficients: 'tenantCoefficients',
+  documents: 'createDocsCmsRepository',
 };
 const uncovered = scoped.filter((name) => {
   const symbol = SYMBOL_BY_TABLE[name];
