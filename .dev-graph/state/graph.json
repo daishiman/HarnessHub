@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1180,
+  "graph_revision": 1185,
   "nodes": [
     {
       "acceptance": [
@@ -47075,6 +47075,118 @@
       "title": "Harness Hub Dev Graph / Beads authority 追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-02T12:13:53Z"
+    },
+    {
+      "acceptance": [
+        "設計知識 card の後に確定 qa_ref・対応セル・serves_goals を示す章固有の適用節が生成される",
+        "複数 card の表示順が knowledge-catalog の depends_on topo order と一致する",
+        "focused regression と task-spec quality gate が exit 0",
+        "製品仕様層への意味的影響なしを受領書に記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
+      "completion_evidence": {
+        "completed_at": "2026-08-03T13:30:00Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T130000Z-codex-final-c19/verdict.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-03T13:30:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
+        "evaluator": "codex-final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "二つの system-spec compiler correction が回帰せず、製品仕様へ不要な二重正本を作らず、PR reviewer が検証と影響境界を再現できる状態",
+      "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-evidence",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "設計知識の章固有適用表示と位相順描画の最終レビュー、仕様影響判定、main 統合、Beads 追記を単一の証跡として残す",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/skills/run-system-spec-compile",
+        "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+      ],
+      "scope_in": [
+        "run-system-spec-compile の設計知識表示規則と回帰テスト",
+        "run-dev-graph-system-spec の C02 準備 adapter と live-trial 回帰",
+        "仕様影響なしの判断根拠と受領書",
+        "merged main を含む branch の最終レビュー"
+      ],
+      "scope_out": [
+        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit の変更",
+        "確定済み system-spec/specs/architecture/features/tasks の内部契約の重複記載"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T13:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
+        "source_path": "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.2.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "system-spec-harness",
+        "final-review",
+        "spec-impact"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T13:30:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

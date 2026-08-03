@@ -48,3 +48,4 @@
 {"requested_at": "2026-07-28T06:19:52.259179+00:00", "reason": "git 変更ファイルが 48 件 (閾値 20)", "changed_skills": [], "trigger": "Stop"}
 {"requested_at": "2026-07-29T01:25:01.772402+00:00", "reason": "評価対象 artifact の変更を検出 (1 件): plugins/harness-creator/skills/run-skill-live-trial/SKILL.md", "changed_skills": ["plugins/harness-creator/skills/run-skill-live-trial/SKILL.md"], "trigger": "Stop"}
 {"requested_at": "2026-08-01T04:27:44.535972+00:00", "reason": "git 変更ファイルが 28 件 (閾値 20)", "changed_skills": [], "trigger": "Stop"}
+{"requested_at": "2026-08-03T12:08:41.381320+00:00", "reason": "評価対象 artifact の変更を検出 (1 件): plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md", "changed_skills": ["plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md"], "trigger": "Stop"}
