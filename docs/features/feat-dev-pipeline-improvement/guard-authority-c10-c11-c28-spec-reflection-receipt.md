@@ -95,7 +95,7 @@ live-trial fixture の sync 責務は `live_trial_sync_contract.py` へ分離し
 | Gate | 結果 |
 |---|---|
 | system plan exact P01-P13 / semantic coverage | PASS、violations 0、digest `af8a73df…` |
-| graph schema / canonical envelope | PASS、revision 1178、violations 0 |
+| graph schema / canonical envelope | PASS、revision 1180、violations 0 |
 | criteria evidence pytest | PASS、22 passed |
 | full Dev Graph pytest | PASS、805 passed + 5 subtests in 244.73s（latest main 統合後） |
 | live-trial acceptance | PASS、9 verdicts verified、task contract violations 0（C02/C03/C14/C19 を現行 closure で再取得） |
