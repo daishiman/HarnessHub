@@ -23,6 +23,7 @@ CREATE TABLE `tenant_data_tombstones` (
 );
 --> statement-breakpoint
 CREATE INDEX `tenant_data_tombstones_tenant_deleted_idx` ON `tenant_data_tombstones` (`tenant_id`,`deleted_at`);--> statement-breakpoint
+-- ddl:contract-approved 未配布の tenant-data migration で、global 用一意制約を tenant_id NULL / NOT NULL の partial unique index に安全に置換するため。
 DROP INDEX `encryption_keys_purpose_version_uq`;--> statement-breakpoint
 ALTER TABLE `encryption_keys` ADD `tenant_id` text;--> statement-breakpoint
 CREATE UNIQUE INDEX `encryption_keys_purpose_version_global_uq` ON `encryption_keys` (`purpose`,`key_version`) WHERE tenant_id IS NULL;--> statement-breakpoint

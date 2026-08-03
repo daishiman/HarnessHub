@@ -55,6 +55,7 @@ recorded_at: 2026-08-03
 
 - **CI 是正**: `restore-control-plane.ts` が tenant_data を含む artifact に tombstone manifest を必須化した一方、domain-model-db runbook の restore 例が manifest を渡していなかった。runbook に manifest 抽出と `--tombstone-manifest` を追加し、CI が実行する手順と運用手順を一致させた。
 - **migration 衝突**: `main` の docs-cms 用 `0005` を正本として維持し、未マージだった tenant-data の 2 migration を main 取込後に Drizzle 正規フローで 1 本の `0006_tenant-data-retention.sql` へ再生成した。既に配布済みの migration は変更していない。
+- **G7 DDL gate 是正**: 上記 `0006` の global 用 unique index 置換は、未配布 migration 内で global / tenant 用 partial unique index へ移行するための意図的な contract 操作である。該当 `DROP INDEX` の直前に `ddl:contract-approved` 注釈を記録し、G7 の fail-closed 検査を通す。
 - **仕様影響**: 無し。外部 API、保持期間、削除保証、鍵スコープ、復元時の非再出現という既存仕様は変えていない。変更は既存の削除保証を実行可能な runbook と一意な migration lineage に整合させるもの。
 - **反映先の判断**: `docs/` と `docs/features/` は上記の手順・migration 名へ反映済み。`system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/` は契約・設計判断・content-addressed task package を変更しないため無変更とし、この受領書に判断理由を記録する。
 
