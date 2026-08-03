@@ -2,8 +2,10 @@
  * HarnessHub-6o0r: GET /catalog へのハードナビゲーション到達性の確定 (issue-hub-catalog-scope-unreachable-20260802)。
  *
  * 通常の session を持つブラウザのページ遷移はカスタムヘッダを送れない。
- * `page.tsx` が読む `?tenant=&workspace=` も middleware の認可入力ではないため、
- * 実際の Next.js middleware まで通して 403 になることを固定する。
+ * そのため単一 workspace 所属の session は server 側で active scope を安全に解決し、
+ * 実際の Next.js middleware を通っても業務画面へ到達できることを固定する。
+ * `?tenant=&workspace=` は middleware の認可入力ではなく、query string で scope を
+ * 偽装できないことも同時に確認する。
  *
  * `__cwv_probe` を使う短命・署名済みの CWV 計測経路は別物であり、
  * `apps/hub/tests/security/middleware-entry.test.ts` がその到達性と閉域性を検証する。
@@ -58,8 +60,8 @@ async function loadSessionMiddleware(): Promise<MiddlewareModule> {
   return import('../../middleware.js');
 }
 
-async function sessionCookie(): Promise<string> {
-  const claims = buildSessionClaims(user, Math.floor(Date.now() / 1000));
+async function sessionCookie(directoryUser: DirectoryUser = user): Promise<string> {
+  const claims = buildSessionClaims(directoryUser, Math.floor(Date.now() / 1000));
   return `${SESSION_COOKIE_NAME}=${await signSessionToken(claims, SESSION_SECRET)}`;
 }
 
@@ -73,25 +75,33 @@ afterEach(() => {
 });
 
 describe('HH-6o0r / GET /catalog のハードナビゲーション到達性', () => {
-  it('通常 session のクエリなし GET は middleware で 403 missing_tenant_scope になる', async () => {
+  it('単一 workspace 所属の通常 session はクエリなし GET でも middleware を通過できる', async () => {
     const { middleware } = await loadSessionMiddleware();
     const response = await middleware(requestFor('/catalog', await sessionCookie()));
 
-    expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({ error: 'missing_tenant_scope' });
+    expect(response.status).toBe(200);
   });
 
-  it('?tenant=&workspace= を付けても通常 session の GET は 403 のまま', async () => {
+  it('query string の tenant/workspace は scope に使わず、session の安全な scope だけを使う', async () => {
     const { middleware } = await loadSessionMiddleware();
     const response = await middleware(
-      requestFor('/catalog?tenant=tenant-a&workspace=workspace-a1', await sessionCookie()),
+      requestFor('/catalog?tenant=tenant-b&workspace=workspace-b1', await sessionCookie()),
+    );
+
+    expect(response.status).toBe(200);
+  });
+
+  it('複数 workspace 所属で active workspace が未選択なら middleware で 403 のまま', async () => {
+    const { middleware } = await loadSessionMiddleware();
+    const response = await middleware(
+      requestFor('/catalog', await sessionCookie({ ...user, workspaceIds: ['workspace-a1', 'workspace-a2'] })),
     );
 
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toEqual({ error: 'missing_tenant_scope' });
   });
 
-  it('通常の認可層は path / header の宣言済み scope だけを受け取る', () => {
+  it('明示ヘッダーで宣言した scope も従来どおり受け取る', () => {
     const decision = authorize({
       pathname: '/catalog',
       headers: new Map([

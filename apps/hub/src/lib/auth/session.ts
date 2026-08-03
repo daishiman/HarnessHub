@@ -77,3 +77,26 @@ export function readCookie(cookieHeader: string | null, name: string): string | 
   }
   return null;
 }
+
+/**
+ * session への active workspace 束縛に使う cookie 名。
+ * 値は「利用者がどの workspace を選んだか」という意思表示に過ぎず、認可上の正当性は
+ * 毎回 `memberWorkspaceIds` (session 検証済みの所属一覧) に対して再検証するため、署名は不要。
+ */
+export const ACTIVE_WORKSPACE_COOKIE_NAME = 'hh_active_workspace';
+
+/**
+ * cookie 由来の active workspace を、principal の所属一覧で毎回再検証する (fail-closed)。
+ * 所属を外れた値は握りつぶし、直前の cookie 値へフォールバックしない。
+ * cookie が無い場合は、所属が単一 workspace のときだけ選択の余地がないため自動的に束縛する。
+ */
+export function resolveActiveWorkspaceId(
+  cookieHeader: string | null,
+  memberWorkspaceIds: readonly string[],
+): string | null {
+  const requested = readCookie(cookieHeader, ACTIVE_WORKSPACE_COOKIE_NAME);
+  if (requested !== null) {
+    return memberWorkspaceIds.includes(requested) ? requested : null;
+  }
+  return memberWorkspaceIds.length === 1 ? (memberWorkspaceIds[0] ?? null) : null;
+}
