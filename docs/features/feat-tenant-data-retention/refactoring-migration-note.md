@@ -57,6 +57,7 @@ NULL` の partial index で `(tenant_id, purpose, key_version)` の組を一意�
 | `purpose` enum への `tenant_data` 追加が既存 `EncryptionPurpose` 型の消費側を壊さない | `pnpm --filter @harness-hub/db exec tsc --noEmit` PASS |
 | migration ファイルが追記のみ (既存 migration 0000〜0005 を書き換えていない) | `packages/db/migrations/` の連番ファイル群を確認。0006 は新規追加のみ |
 | global 用 unique index の tenant 対応への置換が G7 で意図どおり検査される | `0006` の `DROP INDEX` の直前に `ddl:contract-approved` 注釈を置く。これは未配布 migration 内で、既存 global 行を保持する partial unique index と tenant 用 unique index へ置換するための承認記録 |
+| tenant-scoped 3 テーブルが 2-tenant fixture で実際に seed され、G7b がその経路を検査する | `cipher.ensureActiveDek`（`encryption_keys`）、`tenantDataObjects`、`tenantDataTombstones` を `check-tenant-isolation-coverage.ts` の対応表へ明示する |
 
 ### 1.3 per-tenant DEK provisioning (lookup / rotation / deletion)
 
