@@ -293,20 +293,23 @@ def test_write_denial_names_the_actual_protected_scope(guard, monkeypatch, capsy
     assert guard.main() == 0, capsys.readouterr().err
 
 
-# redirect 境界の分類。判定軸は「宛先が graph authority か」の一点に置く。source が保護 path
-# であることや、`.dev-graph/` 配下であることを理由に遮断すると、保護外の tmp/ cache/ を使う
-# 正規手順まで塞がれ、遮断された agent が別の迂回を探す (6in4 の fail-open が起きた局面)。
+# redirect 境界の分類。判定軸は「その操作の後に graph authority の内容が変わるか」であり、
+# 保護 path が command のどこかに現れるかではない。
 #
-#   (a) writer receipt を `.dev-graph/tmp/` へ落とす。tmp/ は再生成可能で保護対象外であり、
-#       run-dev-graph-init が config draft の置き場として使う正規手順そのもの → PASS。
-#   (b) `cache/` への派生物生成。source は保護 path だが読取りに過ぎず、宛先は保護外 → PASS。
-#       source を理由に遮断すると graph の閲覧・整形が一切できなくなる。
-#   (c) `git checkout --` は redirect ではないが、graph を過去 revision へ巻き戻す書込みで
-#       あり、C02 の graph_revision 単調増加を迂回する → BLOCK。VCS 操作だから管轄外とは
-#       しない。guard が見るのは「誰が書くか」ではなく「authority が正規 writer 以外の手で
-#       書き換わるか」であり、checkout はその条件を満たす。
+#   (c) VCS 経由の巻き戻しは書込みである。`git checkout -- <graph>` は C02 atomic writer を
+#       通さずに graph の内容を過去 revision へ差し替えるため、revision の単調増加を
+#       迂回する。redirect でないことは免罪符にならない。
+#   (a) writer receipt の宛先 .dev-graph/tmp/ は再生成可能で保護対象外。run-dev-graph-init が
+#       config draft を置く正規手順そのものなので、`.dev-graph/` 配下という理由で塞がない
+#       (6in4 の fail-open は、正規手順まで塞がれたと読んだ agent が迂回を探して起きた)。
+#   (b) source が保護 path でも読取は書込みではない。宛先が保護外の cache/ なら通す。
+#       ここを塞ぐと a5w.1 が解消した参照↔書込 conflation を再導入する。
 BOUNDARY_MUST_BLOCK: list[str] = [
     "git checkout -- .dev-graph/state/graph.json",
+    "git checkout HEAD~1 -- .dev-graph/state/graph.json",
+    "git restore .dev-graph/state/graph.json",
+    # 保護外の receipt 手順を騙っても、宛先が state/ なら書込みである
+    'python3 build-repo-config.py --stdin > .dev-graph/state/receipt.json',
 ]
 BOUNDARY_MUST_PASS: list[str] = [
     'python3 build-repo-config.py --repo-root "$ROOT" --stdin > .dev-graph/tmp/receipt.json',

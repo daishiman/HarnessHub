@@ -33,6 +33,12 @@
 - shell redirect は quote 外の演算子とその宛先だけを評価する。遮断例を引用した notes 等の散文は redirect とみなさず、tokenize 不能な入力だけ安全側 fallback を使う。
 - `.dev-graph/config.json` の正規 writer は `scripts/build-repo-config.py`、初期 `.dev-graph/state/graph.json` の正規 writer は `scripts/build-graph-store.py`。init は各 receipt を検証し、直接 Write/Edit/Bash redirect/`Path.write_text()` へ退避しない。node 登録後の graph 変更は C02 `upsert-node.py` に限定する。
 - シェル書込み先解析は `hooks/guard_graph_commands.py` に分離し、hook entrypoint は input 正規化・静的遮断・context 検査の順序だけを所有する。
+- inline Python (`python -c` / heredoc) の書込み先解析は `hooks/guard_python_writes.py`、副作用のない path 式評価は `hooks/guard_python_path_eval.py` に分離する。Python は shell の command 位置にある場合だけ抽出し、環境変数代入・`env`・`bash -c` 内の heredoc は追跡する一方、`echo` / `cat` が文字として保持する Python 例は実行とみなさない。`ast` の定数伝播により、変数代入・`Path` の `/` 結合・`os.path.join`・f-string・`%` 書式・import 別名で字面が分断されていても、リテラル直書きと同じ境界で扱う。標準 library の mutation 関数は import 解決後の qualified name で判定し、同名のユーザー定義関数を巻き込まない。書込み判定は mode 文字列 (`open`) と整数 flag (`os.open` の `O_WRONLY`/`O_CREAT` 等) の双方を見る。`rename` / `replace` / `move` は元 path と宛先の双方を変更対象とする。`ast` は subprocess を起動しないため遮断時間契約を変えない。
+- `getattr(x, '<リテラル>')` は `x.<リテラル>` へ畳んでから照合する。method 名を文字列へ逃がす形も path を変数へ逃がす形と同じ境界で扱う。`str()`/`os.fspath()`/`os.path.abspath` 等の identity 包みも透過する。
+- path を要素へ分解する形 (`'/'.join(parts)`・`Path(*parts)`・`parts[0]`) は list/tuple リテラルを列として保持して畳む。区切りを定数属性で組む形 (`os.sep`)、親を参照する形 (`Path.parent`)、末尾を差し替える形 (`with_name`/`with_suffix`)、bytes 字面も同じ境界で扱う。
+- 定数伝播には再帰の深さ上限がある。上限を超えて root が未解決になっても、末尾が `state/graph.json` の確定形なら fail-closed 側で遮断する。未解決 root の下の `config.json` は `.dev-graph/tmp/` の draft でありうるため通す (init の正規手順を巻き添えにしない)。
+- 残る限界は `exec`/`eval` の source 内で path を組み立てる形、`replace` / slice / base64 等の任意文字列変換、別 script file の本文へ書込みを移す形。再帰的 source 解析や任意 file 読込みは所要時間を入力に依存させるため、遮断時間契約と両立しない。C02 atomic writer の使用規約と PostToolUse の authority drift 監査で補完する。
+- 評価しきれない path 式は fail-closed とする。確定した prefix が `.dev-graph/` 配下から出ていない限り遮断し、`.dev-graph/tmp/`・`.dev-graph/cache/` のように保護外だと確定した prefix だけ通す。「解決できなかったので許可する」は fail-open として扱わない。
 
 ## C10 が遮断できない範囲と、それを埋める層 (HarnessHub-kzth)
 

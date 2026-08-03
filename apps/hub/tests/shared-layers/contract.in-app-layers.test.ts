@@ -45,6 +45,8 @@ const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = [
   'auth-adapter',
   // feat-auth-tenancy が結線: 越境要求の監査 (lib/authz/with-authz.ts) と device flow の token 記録
   'audit-event-logger',
+  // feat-feedback-loop の resolved 遷移と、feat-tenant-data-retention (AD-5) の使用量閾値超過通知が結線する。
+  'notification-dispatch',
 ];
 
 const REGISTRY_PATH = path.resolve(

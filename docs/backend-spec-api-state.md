@@ -161,6 +161,19 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 | `GET /api/v1/audit-events` | workspace-admin | append-only 閲覧 (filter: action/entity/actor/期間, cursor) |
 | `GET /api/v1/search?q=` | member | ハーネス + ユーザー横断 (ユーザーは name/department のみ返す) |
 
+### 4.13 tenant_data 保管
+
+| Method Path | 最小 role | 概要 |
+|---|---|---|
+| `POST /api/v1/tenant-data/objects` | member | multipart の `workspaceId` / `kind` / `title` / `file` を受理。header の workspace と一致必須、50 MiB 以下。R2 へ tenant 別 DEK で暗号化保存し、メタデータだけを DB に登録 |
+| `GET /api/v1/tenant-data/objects` | member | `workspaceId` 必須、`kind` / cursor / limit (1..100、既定 50) でページング。自テナント・認可済み workspace の行だけを返す |
+| `GET /api/v1/tenant-data/objects/:id` | member | メタデータ取得。他 tenant または存在しない id は同じ 404 (存在秘匿) |
+| `GET /api/v1/tenant-data/objects/:id/content` | member | 認可後にだけ R2 実体を復号して返す。`Cache-Control: no-store`、他 tenant は 404 |
+| `DELETE /api/v1/tenant-data/objects/:id` | workspace-admin | R2 blob と DB 行を物理削除し、tombstone と監査 event を残す。削除前 backup の restore では新しい tombstone manifest を重ねて参照を除去 |
+
+- 5 endpoint はすべて `withAuthz()` を通り、`x-harness-workspace-id` が無い要求は 400 で拒否する。
+- R2 key は `tenant/{tenant_id}/{workspace_id}/{kind}/{object_id}`。同じ内容の再アップロードは重複保存を許容し、行単位 AAD と物理削除を安全に保つ。
+
 ## 5. 状態機械
 
 ### 5.1 PublishRequest (§7.2 完全準拠, qa-009)

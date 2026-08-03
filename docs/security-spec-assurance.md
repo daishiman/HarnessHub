@@ -67,6 +67,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | T-12 | 存在秘匿 (§3.7) | 他テナントのリソース ID に対して 404 が返ること (403 でないこと) |
 | T-13 | ヒアリング所有者境界 | member の一覧/詳細が自分の `applicant_user_id` だけを返し、form 内の `applicant` 改ざんで他人のシートを取得できないこと。admin は自テナント全件だけ取得できること |
 | T-14 | Project/配布境界 (§6.3.1) | 作成者だけが owner になり、他 Project の publish が拒否されること。install が stable/available だけを返し、他 tenant・任意 release/R2 key 指定を 404 にすること。短命 URL は期限切れ/再利用で拒否されること |
+| T-15 | tenant_data 削除完全性 (T15) | 削除後に R2 blob と DB 行が消え、tombstone manifest を削除前の backup restore に重ねても object 参照が復元されないこと。削除監査 event が 1 件だけ残ること |
 
 ### 8.4 テナント分離テスト (CI 必須・SEC3)
 
@@ -77,6 +78,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | 方式 | 2 テナント (A/B) の完全なフィクスチャを作り、**A の principal で全 API を呼び、B の資源が 1 件も返らないこと**を検証する |
 | 対象 | `tenant_id` を持つ**全テーブル**。テーブル追加時にテストが自動で対象を拾う (スキーマ駆動) |
 | 網羅の担保 | **新テーブル追加時にこのテストが未対応なら CI が fail する** (テーブル一覧とテスト対象の差分検査) |
+| tenant_data | R2 key は tenant/workspace/kind/object id ごとに一意。別 tenant の object は 404 とし、認可前に復号しない |
 | 例外 | `documents.scope='common'` のみ (読取は両テナントから可・書込は provider-admin) |
 | 頻度 | **全 PR** |
 
@@ -86,6 +88,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 |---|---|---|
 | 監査 chain 全体検証 | 日次 cron (§5.4.4) | provider-admin |
 | Turso 使用量 | 日次 (既存 qa-031/qa-032) | provider-admin |
+| R2 使用量 | 日次。70% warning / 90% critical を tenant-data と packages の bucket 別に評価 | provider-admin (構造化ログ) |
 | `token.reuse_detected` | 即時 | provider-admin + 該当 workspace-admin |
 | `metrics.anomaly` (§6.4) | 日次 | provider-admin |
 | rate limit 429 の急増 | 日次 | provider-admin |
