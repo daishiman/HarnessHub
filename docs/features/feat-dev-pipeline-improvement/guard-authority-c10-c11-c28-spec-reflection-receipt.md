@@ -97,10 +97,10 @@ live-trial fixture の sync 責務は `live_trial_sync_contract.py` へ分離し
 | system plan exact P01-P13 / semantic coverage | PASS、violations 0、digest `af8a73df…` |
 | graph schema / canonical envelope | PASS、revision 1178、violations 0 |
 | criteria evidence pytest | PASS、22 passed |
-| full Dev Graph pytest | PASS、805 passed + 5 subtests in 378.08s |
+| full Dev Graph pytest | PASS、805 passed + 5 subtests in 244.73s（latest main 統合後） |
 | live-trial acceptance | PASS、9 verdicts verified、task contract violations 0（C02/C03/C14/C19 を現行 closure で再取得） |
 | repository CI | PASS 139 / WARN 5 / FAIL 0（WARN は段階導入中の既存項目） |
-| document line limit / artifact placement / diff check | PASS、528 文書・上限 300・allowlist 0、配置違反 0、`git diff --check` clean |
+| document line limit / artifact placement / diff check | PASS、542 文書・上限 300・allowlist 0、配置違反 0、`git diff --check` clean |
 | spec reflection receipt | 本変更の commit 後、HEAD-bound 機械受領書を再記録する |
 
 ### CI 証跡更新と行数契約の明確化 (2026-08-03)
@@ -126,7 +126,8 @@ frontmatter・artifact placement を再検証して violations 0 を確認した
 ## 最新 main 統合の受領
 
 追加で更新された `origin/main` の feature source lineage review closure を local `main` と本 branch に
-取り込み、`aa8f30aa` で競合を解消した。評価証跡6件は最新 main の live-trial 参照へ更新し、
+取り込み、`aa8f30aa` で競合を解消した。さらに `origin/main` `41a79292` を local `main` から
+`08cefba2` へ統合し、今回の追加統合では手作業 conflict は発生しなかった。評価証跡6件は最新 main の live-trial 参照へ更新し、
 `eval-log/system-spec-harness/audit-fork-ledger.jsonl` は双方の append-only 記録を保持した。`qa-134` と
 `qa-138` は `system-spec/dev-workflow.md` に併記し、製品仕様への影響は引き続きない。
 
