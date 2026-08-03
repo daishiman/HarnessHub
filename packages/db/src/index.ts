@@ -25,15 +25,27 @@ export {
   packageR2Key,
   type R2BucketLike,
 } from '../registry/index';
+// tenant_data 用 R2 レジストリ。PackageRegistry (immutable/content-addressed) とは
+// バケット・削除ポリシーが異なる別種の登録簿なので、subpath を分けて公開する (AD-3)。
+export {
+  createTenantDataRegistry,
+  type TenantDataBucketLike,
+  type TenantDataRegistry,
+  tenantDataR2Key,
+} from '../registry/tenant-data';
 export {
   type AiJobRow,
   type CoreRepositories,
   type CoreRepositoriesInput,
   createCoreRepositories,
+  createDocsCmsRepository,
   createHearingIntakeRepository,
   createHearingSmokeDbProbe,
   createPublishSmokeDbProbe,
+  createTenantDataRepository,
   type DeviceAuthorizationRow,
+  type DocsCmsRepository,
+  type DocumentRow,
   type HearingIntakeRepository,
   type HearingSheetRow,
   type HearingSmokeDbProbe,
@@ -45,6 +57,12 @@ export {
   type PublishSmokeDbProbe,
   type PublishSmokeEvidence,
   type TenantCoefficientRow,
+  type TenantDataListInput,
+  type TenantDataObjectPage,
+  type TenantDataObjectRow,
+  type TenantDataRepo,
+  type TenantDataRepositoryInput,
+  type TenantDataUploadInput,
   type TenantRow,
   type UserRow,
 } from '../repository/composition';

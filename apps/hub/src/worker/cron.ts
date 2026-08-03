@@ -1,6 +1,8 @@
 // Workers scheduled handler の dispatch 骨格。infrastructure-spec §5 の cron 2 系統をジョブ単位で冪等実行する。
 // ジョブ本体 (rollup・使用量監視など) は各ドメイン feature の責務なので、ここには業務ロジックを書かない。
 
+import { createUsageMonitorJob } from '../lib/scheduled/usage-monitor.js';
+
 /** 日次バッチ (JST 0:00)。infrastructure-spec §5 */
 export const DAILY_CRON = '0 15 * * *';
 /** 週次バッチ (JST 月曜 9:00)。infrastructure-spec §5 */
@@ -85,7 +87,7 @@ function pendingJob(id: string): CronJob {
 export const DEFAULT_CRON_REGISTRY: CronRegistry = {
   [DAILY_CRON]: [
     pendingJob('metrics-rollup-daily'),
-    pendingJob('turso-usage-monitor'),
+    createUsageMonitorJob(),
     pendingJob('orphan-candidate-notify'),
     pendingJob('token-cleanup'),
   ],

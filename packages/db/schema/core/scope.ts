@@ -9,5 +9,4 @@ export const TENANT_SCOPE_EXEMPT: Readonly<Record<string, string>> = Object.free
   tenants: '自身がテナント境界のルート (行 = テナント)',
   user_settings: 'users 1:1 従属。tenant へは users 経由で辿る',
   packages: 'content-addressed 共有 (C4)。到達可能性は releases 経由の認可で制御',
-  encryption_keys: 'システム全体の鍵台帳。行データではなく鍵素材のため D4 分離テスト対象外',
 });

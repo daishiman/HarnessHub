@@ -1,0 +1,36 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Both fixture-repo (beads) and fixture-repo-none graphs contain 5 nodes (4 features + 1 architecture, 0 tasks). Independent topological sort confirms acyclic (all 5 sorted). max_inter_feature_depends_on_per_feature = 1 (feat-dashboard-001→feat-user-auth-001, feat-notification-001→feat-dashboard-001, feat-admin-report-001→feat-user-auth-001), well within declared threshold of 3. Transcript verification at line 326 confirms identical results for both graphs."
+    },
+    "2": {
+      "met": true,
+      "evidence": "Real writes confirmed: graph changed from 0 nodes (pre-run SHA f80e4dbc7aff) to 5 nodes (post-run SHA 6b865b60d588) in fixture-repo. Each of 3 draft features (feat-dashboard-001, feat-notification-001, feat-admin-report-001) publishes zero issues with three distinct attributed reasons per feature: (1) draft gate: confirmation_status=draft, evaluation_status=pending; (2) readiness gate: implementation_readiness.status=incomplete; (3) publication mode: local_only. These are structurally distinct from 'binding route disabled' and 'absence of a live candidate'. Verified in transcript line 326 verification output."
+    },
+    "3": {
+      "met": true,
+      "evidence": "In both fixtures: feat-user-auth-001 is the sole publication candidate (confirmation_status=confirmed, evaluation_status=pass, implementation_readiness.status=complete). Three generated draft features remain excluded (feat-dashboard-001, feat-notification-001, feat-admin-report-001 all at confirmation_status=draft). The exclusion is a gate decision, not a side-effect of suppressed writes — pre/post graph diff shows real writes occurred (0→5 nodes). Fail-closed measurement at transcript line 403 confirms candidate_count=1 and draft_excluded_count=3 in both graphs."
+    },
+    "4": {
+      "met": true,
+      "evidence": "Two separate Skill tool_use invocations confirmed at transcript lines 118 (fixture-repo) and 254 (fixture-repo-none). Fixture-repo persists tracker_binding='beads' on all 5 nodes; fixture-repo-none persists tracker_binding='none' on all 5 nodes — values read from final persisted graph.json, not restated from arguments. GitHub binding recorded as unreachable: schema rule at graph-node.schema.json lines 1433-1458 requires github_publication.mode in ['issue','issue_and_projects'] when tracker_binding='github', but macro-only nodes have mode='local_only', making it schema-invalid before persistence. Beads adapter dry-run exercised via bd-bridge.py (transcript line 340), GitHub adapter dry-run via gh-bridge.py --dry-run (transcript line 350), both returning dry_run=true/mutation_suppressed=true."
+    },
+    "5": {
+      "met": true,
+      "evidence": "Pre-run state captured via shasum at transcript lines 16-21 (graph SHA f80e4dbc7aff for beads, 3afe48580e53 for none, both with 0 nodes). Post-run SHA 6b865b60d588 (beads) with 5 nodes. Local writes derived from state diff: 0→5 nodes, 7 content files. Beads/GitHub/Projects external writes all 0, derived from pre/post comparison not skill report. Preview graph validated via stdin 5 times using '--graph -' flag (transcript lines 155, 240, 276, 288, 327). No temp files created inside managed repositories (confirmed by fixture directory listings showing only expected cache, state, architecture, features, specs dirs)."
+    },
+    "6": {
+      "met": true,
+      "evidence": "Independent recomputation from final persisted graph.json: fixture-repo feat-user-auth-001 stored digest c62eaf2e1818294b9937df47389ece98410284269a9575c9fb1b2d0cf8c30dde matches recomputed digest (JSON with ensure_ascii=False, sort_keys=True, separators=(',',':'), SHA-256, excluding only confirmation_evidence). fixture-repo-none feat-user-auth-001 stored digest 297470bc1b9c334ae12ff4ff88308c6a9ba3f592564cf38464dd224b50cbbcc5 also matches independently recomputed value. Digests differ between fixtures due to tracker_binding field difference (beads vs none), confirming they reflect final node content."
+    },
+    "7": {
+      "met": true,
+      "evidence": "Two negative controls synthesized in-memory from final graph and fed to validate-graph-schema.py via stdin: (1) evaluation_status='pass' with implementation_readiness.status='incomplete' → rejected with exit code 1, schema_violation on implementation_readiness constraint; (2) blocked draft feature with publication intent (beads_linkage set on draft) → rejected with exit code 1, beads_publication violation ('beads requires local_only'). Both rejections by the canonical schema validator at transcript line 381, proving the publication gate is falsifiable on the same data. Third retry at line 378 succeeded after fixing JSON parsing issues in prior attempts (lines 370, 374)."
+    }
+  }
+}

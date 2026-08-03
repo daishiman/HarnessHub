@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-03T00:00:00Z"
+updated_at: "2026-08-03T04:56:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4","evaluator":"codex-final-review (HarnessHub-cvli)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-03T04:56:00Z","origin_kind":"system-spec-harness","source_digest":"f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `f365125fc467…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `f49e4a3a57b3…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `codex-final-review + merge-reconciliation` → **PASS**
-  ([dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md) / [参考層クリーンアップ受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md))
-- 取込日時: 2026-08-02T05:27:08Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete --require-foundation` → **PASS**
+  ([f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) / [exact-13 再登録受領書](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md))
+- 取込日時: 2026-08-03T04:40:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -134,4 +134,18 @@ add/remove を契約面から排除する。設計判断と検証証拠は
 所有先へ履歴付きで移し、能動参照 0 件・到達可能性・復元経路を同じ変更で検証する。
 製品 runtime の component 境界は変えない。詳細は `system-spec/dev-workflow.md` の
 `qa-122` と [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+を正とする。
+
+## C10 inline Python 静的解析境界 (2026-08-03)
+
+C10 entrypoint は判定順序だけを所有し、inline Python の書込み API 収集を
+`guard_python_writes.py`、副作用のない path 式評価を `guard_python_path_eval.py` が担う。
+両 module は AST だけを使い、subprocess・network・repository file 読込みを遮断経路へ
+持ち込まない。shell 抽出は Python の command 位置、環境変数付き起動、嵌め込み shell を
+区別し、散文として出力する `echo` / `cat` を実行と誤認しない。mutation API は import 解決後の
+qualified name で判定し、同名のユーザー定義関数を巻き込まない。rename / move は source と
+destination の双方、評価不能 path は確定済み
+authority prefix / graph-store tail で fail-closed にする。別 script の本文は PreToolUse の
+時間契約外とし、PostToolUse drift audit が補完する。契約と検証は
+[f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
 を正とする。
