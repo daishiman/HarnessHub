@@ -177,3 +177,21 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   API、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別は last4 に限定する。
 - rotation は現行値を保持する staging と原子的昇格で行い、disabled の復帰は新 credential の
   pending テストを必須にする。顧客方式から共有方式への暗黙 fallback は行わない。
+
+**差分追記 (2026-08-03 / `feat-post-signin-scope-routing` / qa-135・qa-137)**:
+
+- `authorize()` の判定順「public 判定 → 認証 → スコープ一意性 → tenant 一致 → workspace 所属」と
+  deny-by-default は変更しない。本追記は判定へ渡す scope 入力の定義であり、判定規則そのもの
+  ではない (owner=feat-auth-tenancy)。
+- scope の正規入力は 2 系統に固定する。(a) 明示ヘッダー (API・機械クライアント専用)、
+  (b) session の active tenant/workspace (ブラウザ通常遷移。所属検証を通過した workspace だけを
+  束縛し、切替のたびに再検証する fail-closed 方式)。両系統は同一の `authorize()` へ収束させ、
+  判定を二重実装しない。
+- 両系統が存在して workspace の申告が不一致の場合は `ambiguous_scope` で拒否する。どちらも
+  存在しない場合は従来どおり `missing_tenant_scope` とする (deny-by-default 非退行)。
+- サインイン後の戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・
+  protocol-relative・バックスラッシュトリックは既定着地 (`/sheets`) へ落とす (open redirect 防止)。
+  戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない。
+- 詳細は [system-spec/auth.md](../system-spec/auth.md) の `qa-137`、
+  製品契約は [spec-post-signin-workspace-scope](../specs/harness-hub-post-signin-workspace-scope-addendum.md)
+  の B 節を参照する。実装根拠は `apps/hub/src/middleware/authz.ts` の `authorize()`/`mergeScopes()`。
