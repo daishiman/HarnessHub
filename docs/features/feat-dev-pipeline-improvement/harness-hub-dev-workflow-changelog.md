@@ -220,3 +220,19 @@ CI blocking invocation を local hard gate または理由付き exact allowlist
 是正は閾値の引き上げを採らず、契約を直接測る構造検査へ置き換えた。遮断対象コマンドが `context_ok()` (repository context 解決。唯一 subprocess を起動する後段) へ到達しないことを `monkeypatch` で直接検証し、本体 repo (大きい graph) と空 repo の双方で成立することを固定した。陽性対照 (`echo safe` が `context_ok()` へ進み、trap が発火する) を添えて、判定ロジックの空振りを排除している。実プロセスでの exit-2 smoke test は維持し、遮断そのものの実測は残した。
 
 対象は `plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py` の 1 ファイルに限定され、`guard-graph-schema.py` の遮断ロジックは変更していない。製品 API・state・security・UI の契約は非変更のため `system-spec/`・`specs/` は非変更。検証は focused file 3 回連続 48 passed/2 skipped、`plugins/dev-graph/tests` 全体 pytest-xdist 721 passed/2 skipped、`make lint` / `plugin-package-check` PASS。判断と検証の全量は [仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/5iuq-guard-latency-proxy-metric-spec-reflection.md) を正とする。
+
+### 差分追記 (2026-08-02): exact-13 registration と task projection の境界
+
+`HarnessHub-cvli` は、system-dev-planner の registration manifest と C02
+`upsert-node.py` の task Markdown 投影が同じ node を順に更新する境界を明文化した。
+manifest は exact-13、source digest、immutable generation receipt を所有し、C02 は
+`purpose`、`goal`、`scope_in`、`scope_out`、`acceptance`、`architecture_refs` を task
+frontmatter と graph node に具体化する。再登録時に manifest が六項目を省略している場合だけ、
+`register-package.py` が保存済みの投影値をコピーして比較・置換する。明示 manifest 値を保存値で
+上書きすること、または六項目以外を無差別に引き継ぐことはしない。
+
+projection により `updated_at` が前進する場合だけを同一状態として許可する。時刻後退、解釈不能な
+時刻、または非時刻フィールドの差分は fail-closed とし、drift として止める。この最小の共有 helper
+により 500 行を超えた registration script と test を責務分離し、公開 CLI・graph schema・
+source digest・receipt contract は維持する。製品 runtime の component 境界は変更しない。詳細は
+[仕様反映受領書](register-package-projection-idempotency-spec-reflection-receipt.md) を正とする。

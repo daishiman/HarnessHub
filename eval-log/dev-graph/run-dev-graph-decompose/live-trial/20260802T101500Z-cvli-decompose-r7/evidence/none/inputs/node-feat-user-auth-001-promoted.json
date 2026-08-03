@@ -1,0 +1,97 @@
+{
+  "acceptance": [
+    "新規ユーザーが有効なメールとパスワードで登録後ログイン可能",
+    "不正ログイン試行は拒否される",
+    "ログイン後セッション維持"
+  ],
+  "architecture_refs": [
+    "arch-webapp-001"
+  ],
+  "artifact_kind": "feature",
+  "artifact_subtypes": [],
+  "beads_linkage": null,
+  "classification_candidates": [],
+  "classification_confidence": 1.0,
+  "classification_reason": "Core feature for user registration and login",
+  "completion_evidence": {
+    "completed_at": null,
+    "evidence_refs": [],
+    "policy": "manual",
+    "reconciled_at": null,
+    "source": null,
+    "status": "not_applicable"
+  },
+  "confirmation_evidence": {
+    "evaluated_digest": "7b46ebea30664a83a21a4c9868ad6748b1ea0f0d798e21dffefe747b05f1e8cf",
+    "evaluator": "run-dev-graph-decompose",
+    "evidence_ref": "eval-log/run-dev-graph-decompose-progress.json"
+  },
+  "confirmation_status": "confirmed",
+  "created_at": "2026-07-30T11:00:00Z",
+  "depends_on": [],
+  "domain": "web-application",
+  "evaluation_status": "pass",
+  "execution_contexts": [],
+  "feature_package_id": null,
+  "file_path": "features/feat-user-auth-001.md",
+  "github_project_linkages": [],
+  "github_publication": {
+    "labels": [],
+    "milestone": null,
+    "mode": "local_only",
+    "project_aliases": []
+  },
+  "goal": "登録したユーザーがメールアドレスとパスワードでログインでき、セッションを通じて認証状態が維持される状態",
+  "graph_node_id": "feat-user-auth-001",
+  "implementation_readiness": {
+    "checked_at": "2026-07-30T11:00:00Z",
+    "missing_sections": [],
+    "status": "complete"
+  },
+  "issue_linkage": null,
+  "iteration": null,
+  "owners": [],
+  "parent_feature": null,
+  "phase_ref": null,
+  "priority": null,
+  "project_id": "webapp-minimal",
+  "pull_request_linkages": [],
+  "purpose": "ユーザーがメールアドレスとパスワードで登録・ログイン可能にし、アプリケーションへのアクセス制御を実現する",
+  "related_nodes": [],
+  "resource_scope": [
+    "src/auth",
+    "src/backend/models/user"
+  ],
+  "scope_in": [
+    "ユーザー登録画面",
+    "ログイン画面",
+    "パスワードハッシング・セッション管理",
+    "エラーハンドリング"
+  ],
+  "scope_out": [
+    "パスワードリセット",
+    "ソーシャルログイン",
+    "二要素認証"
+  ],
+  "source_lineage": {
+    "imported_at": "2026-07-30T11:00:00Z",
+    "origin_kind": "generated",
+    "source_digest": "7c08c499e176f8c3f6f0349a5d22bead19b24bc9a5605911b68afc1003a14577",
+    "source_path": "docs/want.md",
+    "source_plugin": "run-dev-graph-decompose",
+    "source_version": "0.1.0"
+  },
+  "start_date": null,
+  "status": "draft",
+  "tags": [
+    "user-authentication",
+    "registration",
+    "login"
+  ],
+  "target_date": null,
+  "template_id": "feature",
+  "template_version": "1.0.0",
+  "title": "ユーザー登録とログイン",
+  "tracker_binding": "none",
+  "updated_at": "2026-07-30T11:00:00Z"
+}

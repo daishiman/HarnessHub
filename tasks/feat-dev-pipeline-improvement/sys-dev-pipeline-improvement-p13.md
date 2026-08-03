@@ -12,10 +12,10 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T11:57:56Z"
+updated_at: "2026-08-02T09:02:49.053809Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
-related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-register-package-projection-idempotency-drift-20260728"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]
 purpose: "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。"
 goal: "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
@@ -241,7 +241,7 @@ This section is the current source closure and supersedes older counts or wordin
 - verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
-- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。`HarnessHub-dc7` の post-completion P13 書き戻しは、確定済み QA を変更せず Beads 自由フィールドの bridge 経路を各層へ反映し、`docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md` を判断・検証の正本とする。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。`HarnessHub-dc7` の post-completion P13 書き戻しは、確定済み QA を変更せず Beads 自由フィールドの bridge 経路を各層へ反映し、`docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md` を判断・検証の正本とする。`HarnessHub-cvli` は同じ write-back として、exact-13 registration と C02 task projection の六項目所有境界・時刻後退 fail-closed を反映し、`docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md` を正とする。
 
 ## 2026-07-29 skill tree lint P13 書き戻し
 
