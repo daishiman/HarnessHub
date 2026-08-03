@@ -21,15 +21,15 @@ serves_goals: [G1, G2, G3, G4, G5]
 ### 4.1 封筒暗号化 (KEK/DEK) — S-D5 / S-D8 確定
 
 ```
-[Workers Secret: KEK]  ──(AES-GCM で復号)──>  [DB: encryption_keys.dek_wrapped]  ──(AES-GCM で復号/暗号化)──>  [列データ]
-        1 本・不動                                  DEK (テナント共通・版番号付き)                     users.salary / idp_connections.client_secret
+[Workers Secret: KEK]  ──(AES-GCM で復号)──>  [DB: encryption_keys.dek_wrapped]  ──(AES-GCM で復号/暗号化)──>  [列/R2 実体]
+        1 本・不動                                  DEK (global または tenant 別・版番号付き)           salary / IdP secret / tenant_data
 ```
 
 | 項目 | 確定 |
 |---|---|
 | アルゴリズム | **AES-256-GCM** (Web Crypto API。Workers 標準 — 外部依存なし) |
 | KEK | `ENCRYPTION_KEK` (Workers Secret binding)。**1 本のみ**。テナント数に依存しない |
-| DEK | DB (`encryption_keys`) に **KEK で wrap して保存**。用途別 (`salary` / `idp_secret`) に分ける |
+| DEK | DB (`encryption_keys`) に **KEK で wrap して保存**。global 用途 (`salary` / `idp_secret`) と tenant 別用途 (`tenant_data`) を分ける |
 | IV | **レコードごとにランダム 96 bit**。再利用しない (GCM の nonce 再利用は致命的) |
 | AAD | `"{table}:{column}:{row_id}"` を付加 | 暗号文の他行への移植 (cut-and-paste 攻撃) を防ぐ |
 | 保存形式 | `{key_version}:{iv_b64}:{ciphertext_b64}:{tag_b64}` (単一 TEXT 列) |
@@ -39,7 +39,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | テーブル | 主な列 | 制約・備考 |
 |---|---|---|
-| `encryption_keys` | `id`, `purpose`(`salary`/`idp_secret`), `key_version` INT, `dek_wrapped` TEXT (KEK で AES-GCM wrap), `status`(`active`/`retiring`/`retired`), `created_at`, `retired_at` | UNIQUE(purpose, key_version)。`active` は purpose ごとに 1 件。DEK 平文は**保存しない** |
+| `encryption_keys` | `id`, `tenant_id` nullable, `purpose`(`salary`/`idp_secret`/`tenant_data`), `key_version` INT, `dek_wrapped` TEXT (KEK で AES-GCM wrap), `status`(`active`/`retiring`/`retired`), `created_at`, `retired_at` | global は `tenant_id IS NULL` で `(purpose,key_version)` 一意、`tenant_data` は `(tenant_id,purpose,key_version)` 一意。active は各スコープごとに 1 件。DEK 平文は**保存しない** |
 
 #### 4.1.2 ローテーション手順
 
@@ -49,6 +49,14 @@ serves_goals: [G1, G2, G3, G4, G5]
 | **DEK** | 新 `key_version` を `active` にし、旧を `retiring` へ → 新規書込は新 version → バッチで旧 version の行を再暗号化 → 旧を `retired` | 必要 (対象は `users.salary` と `idp_connections` のみ = 小規模) |
 | 契機 | 定期: **年 1 回**。臨時: 侵害の疑い・退職者の DB アクセス失効時 | — |
 | 復号互換 | `key_version` 列により**旧版の復号は常に可能**。`retired` の DEK は削除せず `status` のみ変更 (復旧可能性の確保) | — |
+
+#### 4.1.3 `tenant_data` の鍵スコープと後方互換
+
+- `tenant_data` は `tenant_id` を必須とし、存在しない／空の tenant id は実行時にも拒否する。global 用途へ tenant id を渡すことも拒否し、型回避による鍵スコープ混同を fail-closed（安全側に失敗する）にする。
+- R2 実体は tenant 別 DEK で暗号化し、AAD（暗号文を特定の行に結びつける追加認証データ）は
+  `tenant_data_objects:r2_object:{id}` とする。DEK の KEK-wrap AAD は `tenant_data:{tenant_id}:v{key_version}`
+  とする。
+- 既存 global DEK の KEK-wrap AAD は migration 前からの `${purpose}:v${keyVersion}` を保持する。新しい区切り語を足して既存 `salary` / `idp_secret` の DEK を読めなくする変更は禁止し、回帰テストで固定する。
 
 ### 4.2 PII: `users.salary` (T4 / T13 対策)
 

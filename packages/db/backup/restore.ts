@@ -5,14 +5,29 @@
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
 import type { CoreAdapter } from '../repository/db';
 import { type ExportHeader, parseExportArtifact, resolveTable } from './export';
+import {
+  applyTenantDataTombstoneManifest,
+  mergeTenantDataTombstoneManifests,
+  type TenantDataTombstoneManifest,
+  tenantDataTombstoneManifestFromArtifact,
+} from './tenant-data-tombstones';
 import { verifyAuditChain } from './verify';
 
 export interface RestoreReport {
   readonly ok: boolean;
   readonly header: ExportHeader | null;
   readonly restoredCounts: Readonly<Record<string, number>>;
+  readonly tombstonesApplied: number;
   readonly chainOk: boolean;
   readonly errors: readonly string[];
+}
+
+export interface RestoreOptions {
+  /**
+   * 復元対象より新しい日次 export から抽出した manifest。削除後の tombstone を重ねることで、
+   * 削除前 snapshot の tenant_data object が復元されることを防ぐ。
+   */
+  readonly tenantDataTombstoneManifest?: TenantDataTombstoneManifest;
 }
 
 const INSERT_CHUNK = 50;
@@ -21,10 +36,15 @@ const INSERT_CHUNK = 50;
  * artifact を target (スキーマ適用済みの空 DB) へ復元し、整合検査まで行う。
  * schema の適用は呼出し側の責務 (P06 は schema harness、P08 以降は canonical migration)。
  */
-export async function restoreControlPlane(target: CoreAdapter, artifact: string): Promise<RestoreReport> {
+export async function restoreControlPlane(
+  target: CoreAdapter,
+  artifact: string,
+  options: RestoreOptions = {},
+): Promise<RestoreReport> {
   const errors: string[] = [];
   let header: ExportHeader | null = null;
   const restoredCounts: Record<string, number> = {};
+  let tombstonesApplied = 0;
   let chainOk = false;
 
   try {
@@ -48,6 +68,16 @@ export async function restoreControlPlane(target: CoreAdapter, artifact: string)
         errors.push(`行数不一致: ${tableName} expected=${expected} actual=${actualRows.length}`);
       }
     }
+
+    // 復元 artifact 自身の tombstone に加え、呼出し側が渡した新しい snapshot の manifest を
+    // 適用する。後者により「削除前の古い backup」でも削除済み object を再出現させない。
+    tombstonesApplied = await applyTenantDataTombstoneManifest(
+      target,
+      mergeTenantDataTombstoneManifests([
+        tenantDataTombstoneManifestFromArtifact(parsed),
+        ...(options.tenantDataTombstoneManifest === undefined ? [] : [options.tenantDataTombstoneManifest]),
+      ]),
+    );
 
     // audit chain 全体検証
     const chainResults = await verifyAuditChain(target);
@@ -75,5 +105,5 @@ export async function restoreControlPlane(target: CoreAdapter, artifact: string)
     errors.push(error instanceof Error ? error.message : String(error));
   }
 
-  return { ok: errors.length === 0, header, restoredCounts, chainOk, errors };
+  return { ok: errors.length === 0, header, restoredCounts, tombstonesApplied, chainOk, errors };
 }

@@ -1,5 +1,6 @@
 // コアドメイン: 監査 (append-only + hash chain)・封筒暗号化 DEK 台帳・緊急失効 (ADR §2 #15-#17)。
 
+import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 /**
@@ -29,20 +30,28 @@ export const auditEvents = sqliteTable(
 
 /**
  * 封筒暗号化の DEK 台帳 (KEK で wrap。security-spec §4.1.1)。DEK 平文は保存しない。
- * システム全体の鍵素材のため tenant 非スコープ (ADR §2 の宣言済み除外)。
+ * purpose='tenant_data' のみ tenant_id を持つ (feat-tenant-data-retention AD-1)。
+ * それ以外の purpose (salary/idp_secret) はシステム全体の鍵素材のため tenant 非スコープ (ADR §2 の宣言済み除外) で
+ * tenant_id は常に NULL になる。2 本の partial unique index で global 用と tenant 用を両立させる。
  */
 export const encryptionKeys = sqliteTable(
   'encryption_keys',
   {
     id: text('id').primaryKey(),
-    purpose: text('purpose', { enum: ['salary', 'idp_secret'] }).notNull(),
+    tenantId: text('tenant_id'),
+    purpose: text('purpose', { enum: ['salary', 'idp_secret', 'tenant_data'] }).notNull(),
     keyVersion: integer('key_version').notNull(),
     dekWrapped: text('dek_wrapped').notNull(),
     status: text('status', { enum: ['active', 'retiring', 'retired'] }).notNull(),
     createdAt: integer('created_at').notNull(),
     retiredAt: integer('retired_at'),
   },
-  (t) => [uniqueIndex('encryption_keys_purpose_version_uq').on(t.purpose, t.keyVersion)],
+  (t) => [
+    uniqueIndex('encryption_keys_purpose_version_global_uq').on(t.purpose, t.keyVersion).where(sql`tenant_id IS NULL`),
+    uniqueIndex('encryption_keys_tenant_purpose_version_uq')
+      .on(t.tenantId, t.purpose, t.keyVersion)
+      .where(sql`tenant_id IS NOT NULL`),
+  ],
 );
 
 /** 緊急失効のみ (security-spec §2.1)。認可 MW が JWT.iat < revoked_at を拒否する。 */
