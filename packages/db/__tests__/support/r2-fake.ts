@@ -1,6 +1,7 @@
 // R2BucketLike の in-memory fake (DMDB-T05)。書込回数を記録し、immutable (再書込スキップ) を検証可能にする。
 
 import type { R2BucketLike } from '../../registry/index';
+import type { TenantDataBucketLike } from '../../registry/tenant-data';
 
 export interface FakeR2Bucket extends R2BucketLike {
   readonly putCalls: string[];
@@ -26,6 +27,36 @@ export function createFakeR2Bucket(): FakeR2Bucket {
     },
     head(key) {
       return Promise.resolve(objects.has(key) ? { key } : null);
+    },
+  };
+}
+
+// TenantDataBucketLike (put/get/delete) の in-memory fake。削除呼び出しの回数と対象 key を記録する。
+export interface FakeTenantDataBucket extends TenantDataBucketLike {
+  readonly deleteCalls: string[];
+  readonly objects: Map<string, Uint8Array>;
+}
+
+export function createFakeTenantDataBucket(): FakeTenantDataBucket {
+  const objects = new Map<string, Uint8Array>();
+  const deleteCalls: string[] = [];
+  return {
+    objects,
+    deleteCalls,
+    put(key, value) {
+      const bytes = value instanceof Uint8Array ? value : new Uint8Array(value);
+      objects.set(key, new Uint8Array(bytes));
+      return Promise.resolve({ key });
+    },
+    get(key) {
+      const bytes = objects.get(key);
+      if (bytes === undefined) return Promise.resolve(null);
+      return Promise.resolve({ body: new Blob([bytes]).stream() });
+    },
+    delete(key) {
+      deleteCalls.push(key);
+      objects.delete(key);
+      return Promise.resolve();
     },
   };
 }

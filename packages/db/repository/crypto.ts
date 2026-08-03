@@ -2,7 +2,7 @@
 // users.salary と idp_connections.client_secret_enc が同一プリミティブを再利用する。
 // 消費 feature (feat-user-org-admin 等) は encryptColumn/decryptColumn 経由でのみ暗号列に触れる。
 
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { encryptionKeys } from '../schema/core/security';
 import { fromBase64, toBase64 } from './bytes';
 import { guardedWrite } from './conflict';
@@ -10,7 +10,10 @@ import type { CoreAdapter } from './db';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
-export type EncryptionPurpose = 'salary' | 'idp_secret';
+export type EncryptionPurpose = 'salary' | 'idp_secret' | 'tenant_data';
+
+/** tenant_data 以外は常に tenant 非スコープ (tenant_id は NULL) であることを型で強制する。 */
+type TenantIdFor<P extends EncryptionPurpose> = P extends 'tenant_data' ? string : undefined;
 
 /** AAD (`"{table}:{column}:{row_id}"`) の材料。暗号文の他行への移植 (cut-and-paste) を防ぐ。 */
 export interface ColumnRef {
@@ -36,6 +39,23 @@ export class EncryptionError extends Error {
 
 function aadBytes(ref: ColumnRef): Uint8Array {
   return new TextEncoder().encode(`${ref.table}:${ref.column}:${ref.rowId}`);
+}
+
+/**
+ * `tenant_data` は必ずテナント単位の DEK を使う。型だけに依存すると、JavaScript 呼出や
+ * `any` 経由で tenant_id=NULL の鍵を作れてしまうため、境界でも fail-closed にする。
+ */
+function resolveKeyScope(purpose: EncryptionPurpose, tenantId: string | undefined): string | undefined {
+  if (purpose === 'tenant_data') {
+    if (typeof tenantId !== 'string' || tenantId.trim().length === 0) {
+      throw new EncryptionError('tenant_data の DEK には tenantId が必要です');
+    }
+    return tenantId;
+  }
+  if (tenantId !== undefined) {
+    throw new EncryptionError(`${purpose} の DEK は tenantId を受け取りません`);
+  }
+  return undefined;
 }
 
 function isRetryableKeyWrite(error: unknown): boolean {
@@ -121,37 +141,61 @@ export class ColumnCipher {
     return this.kekPromise;
   }
 
-  private wrapAad(purpose: EncryptionPurpose, keyVersion: number): ColumnRef {
-    return { table: 'encryption_keys', column: 'dek_wrapped', rowId: `${purpose}:v${keyVersion}` };
+  /**
+   * KEK-wrap 用 AAD。tenant_data はテナントを含めて行を束縛する (AD-1 是正 C1)。
+   * 既存の global purpose は migration 前から `${purpose}:v${keyVersion}` で wrap 済みなので、
+   * 形式を変えずに既存 DEK の復号互換を保つ。
+   */
+  private wrapAad(purpose: EncryptionPurpose, tenantId: string | undefined, keyVersion: number): ColumnRef {
+    if (purpose !== 'tenant_data') {
+      return { table: 'encryption_keys', column: 'dek_wrapped', rowId: `${purpose}:v${keyVersion}` };
+    }
+    if (tenantId === undefined) throw new EncryptionError('tenant_data の DEK には tenantId が必要です');
+    return { table: 'encryption_keys', column: 'dek_wrapped', rowId: `${purpose}:${tenantId}:v${keyVersion}` };
   }
 
-  private async activeDekVersion(purpose: EncryptionPurpose): Promise<number | null> {
+  private tenantScope(tenantId: string | undefined) {
+    return tenantId === undefined ? isNull(encryptionKeys.tenantId) : eq(encryptionKeys.tenantId, tenantId);
+  }
+
+  private async activeDekVersion(purpose: EncryptionPurpose, tenantId: string | undefined): Promise<number | null> {
     const rows = await this.adapter.client
       .select({ keyVersion: encryptionKeys.keyVersion })
       .from(encryptionKeys)
-      .where(and(eq(encryptionKeys.purpose, purpose), eq(encryptionKeys.status, 'active')))
+      .where(
+        and(eq(encryptionKeys.purpose, purpose), this.tenantScope(tenantId), eq(encryptionKeys.status, 'active')),
+      )
       .orderBy(desc(encryptionKeys.keyVersion))
       .limit(1);
     return rows[0]?.keyVersion ?? null;
   }
 
-  private async latestDekVersion(purpose: EncryptionPurpose): Promise<number> {
+  private async latestDekVersion(purpose: EncryptionPurpose, tenantId: string | undefined): Promise<number> {
     const rows = await this.adapter.client
       .select({ keyVersion: encryptionKeys.keyVersion })
       .from(encryptionKeys)
-      .where(eq(encryptionKeys.purpose, purpose))
+      .where(and(eq(encryptionKeys.purpose, purpose), this.tenantScope(tenantId)))
       .orderBy(desc(encryptionKeys.keyVersion))
       .limit(1);
     return rows[0]?.keyVersion ?? 0;
   }
 
-  private async insertActiveDek(purpose: EncryptionPurpose, keyVersion: number): Promise<void> {
+  private async insertActiveDek(
+    purpose: EncryptionPurpose,
+    tenantId: string | undefined,
+    keyVersion: number,
+  ): Promise<void> {
     const dekRaw = crypto.getRandomValues(new Uint8Array(DEK_BYTES));
     const kek = await this.kek();
-    const { iv, ciphertext, tag } = await gcmEncrypt(kek, dekRaw, aadBytes(this.wrapAad(purpose, keyVersion)));
+    const { iv, ciphertext, tag } = await gcmEncrypt(
+      kek,
+      dekRaw,
+      aadBytes(this.wrapAad(purpose, tenantId, keyVersion)),
+    );
     await guardedWrite(this.adapter, () =>
       this.adapter.client.insert(encryptionKeys).values({
         id: newUlid(),
+        tenantId: tenantId ?? null,
         purpose,
         keyVersion,
         dekWrapped: `${toBase64(iv)}:${toBase64(ciphertext)}:${toBase64(tag)}`,
@@ -162,35 +206,44 @@ export class ColumnCipher {
   }
 
   /** active な DEK が無ければ新 version を発行する。UNIQUE 競合は再読込して収束させる。 */
-  async ensureActiveDek(purpose: EncryptionPurpose): Promise<number> {
+  async ensureActiveDek<P extends EncryptionPurpose>(purpose: P, tenantId?: TenantIdFor<P>): Promise<number> {
+    const scope = resolveKeyScope(purpose, tenantId as string | undefined);
     for (let attempt = 0; attempt < KEY_WRITE_ATTEMPTS; attempt += 1) {
-      const active = await this.activeDekVersion(purpose);
+      const active = await this.activeDekVersion(purpose, scope);
       if (active !== null) return active;
 
-      const nextVersion = (await this.latestDekVersion(purpose)) + 1;
+      const nextVersion = (await this.latestDekVersion(purpose, scope)) + 1;
       try {
-        await this.insertActiveDek(purpose, nextVersion);
+        await this.insertActiveDek(purpose, scope, nextVersion);
         return nextVersion;
       } catch (error) {
         if (!isRetryableKeyWrite(error)) throw error;
       }
     }
-    throw new EncryptionError(`active DEK の発行が競合しました (purpose=${purpose})`);
+    throw new EncryptionError(`active DEK の発行が競合しました (purpose=${purpose}, tenant=${scope ?? 'global'})`);
   }
 
-  private async dekByVersion(purpose: EncryptionPurpose, keyVersion: number): Promise<CryptoKey> {
-    const cacheKey = `${purpose}:${keyVersion}`;
+  private async dekByVersion(
+    purpose: EncryptionPurpose,
+    tenantId: string | undefined,
+    keyVersion: number,
+  ): Promise<CryptoKey> {
+    const cacheKey = `${purpose}:${tenantId ?? 'global'}:${keyVersion}`;
     const cached = this.dekCache.get(cacheKey);
     if (cached !== undefined) return cached;
 
     const rows = await this.adapter.client
       .select()
       .from(encryptionKeys)
-      .where(and(eq(encryptionKeys.purpose, purpose), eq(encryptionKeys.keyVersion, keyVersion)))
+      .where(
+        and(eq(encryptionKeys.purpose, purpose), this.tenantScope(tenantId), eq(encryptionKeys.keyVersion, keyVersion)),
+      )
       .limit(1);
     const row = rows[0];
     if (row === undefined) {
-      throw new EncryptionError(`DEK が存在しません (purpose=${purpose}, key_version=${keyVersion})`);
+      throw new EncryptionError(
+        `DEK が存在しません (purpose=${purpose}, tenant=${tenantId ?? 'global'}, key_version=${keyVersion})`,
+      );
     }
     const [ivB64, ctB64, tagB64] = row.dekWrapped.split(':');
     if (ivB64 === undefined || ctB64 === undefined || tagB64 === undefined) {
@@ -202,7 +255,7 @@ export class ColumnCipher {
       fromBase64(ivB64),
       fromBase64(ctB64),
       fromBase64(tagB64),
-      aadBytes(this.wrapAad(purpose, keyVersion)),
+      aadBytes(this.wrapAad(purpose, tenantId, keyVersion)),
     );
     const dek = await crypto.subtle.importKey('raw', dekRaw as BufferSource, 'AES-GCM', false, ['encrypt', 'decrypt']);
     this.dekCache.set(cacheKey, dek);
@@ -210,15 +263,26 @@ export class ColumnCipher {
   }
 
   /** 平文を active DEK で暗号化し、保存形式 `{key_version}:{iv}:{ct}:{tag}` を返す。 */
-  async encryptColumn(purpose: EncryptionPurpose, plaintext: string, ref: ColumnRef): Promise<string> {
-    const keyVersion = await this.ensureActiveDek(purpose);
-    const dek = await this.dekByVersion(purpose, keyVersion);
+  async encryptColumn<P extends EncryptionPurpose>(
+    purpose: P,
+    plaintext: string,
+    ref: ColumnRef,
+    tenantId?: TenantIdFor<P>,
+  ): Promise<string> {
+    const scope = resolveKeyScope(purpose, tenantId as string | undefined);
+    const keyVersion = await this.ensureActiveDek(purpose, tenantId);
+    const dek = await this.dekByVersion(purpose, scope, keyVersion);
     const { iv, ciphertext, tag } = await gcmEncrypt(dek, new TextEncoder().encode(plaintext), aadBytes(ref));
     return `${keyVersion}:${toBase64(iv)}:${toBase64(ciphertext)}:${toBase64(tag)}`;
   }
 
   /** 保存形式から key_version を読み、旧版 DEK でも常に復号できる (§4.1.2 復号互換)。 */
-  async decryptColumn(purpose: EncryptionPurpose, stored: string, ref: ColumnRef): Promise<string> {
+  async decryptColumn<P extends EncryptionPurpose>(
+    purpose: P,
+    stored: string,
+    ref: ColumnRef,
+    tenantId?: TenantIdFor<P>,
+  ): Promise<string> {
     const [versionStr, ivB64, ctB64, tagB64] = stored.split(':');
     if (versionStr === undefined || ivB64 === undefined || ctB64 === undefined || tagB64 === undefined) {
       throw new EncryptionError('暗号化列の保存形式が不正です');
@@ -227,7 +291,8 @@ export class ColumnCipher {
     if (!Number.isInteger(keyVersion) || keyVersion < 1) {
       throw new EncryptionError('key_version が不正です');
     }
-    const dek = await this.dekByVersion(purpose, keyVersion);
+    const scope = resolveKeyScope(purpose, tenantId as string | undefined);
+    const dek = await this.dekByVersion(purpose, scope, keyVersion);
     const plain = await gcmDecrypt(dek, fromBase64(ivB64), fromBase64(ctB64), fromBase64(tagB64), aadBytes(ref));
     return new TextDecoder().decode(plain);
   }
@@ -237,15 +302,16 @@ export class ColumnCipher {
    * UNIQUE 競合時は勝者の version を再読込するため、同時実行でも active key 不在にならない。
    * 旧 version 行の再暗号化バッチは運用手順 (P12 runbook) の責務。
    */
-  async rotateDek(purpose: EncryptionPurpose): Promise<number> {
+  async rotateDek<P extends EncryptionPurpose>(purpose: P, tenantId?: TenantIdFor<P>): Promise<number> {
+    const scope = resolveKeyScope(purpose, tenantId as string | undefined);
     for (let attempt = 0; attempt < KEY_WRITE_ATTEMPTS; attempt += 1) {
-      const current = await this.ensureActiveDek(purpose);
+      const current = await this.ensureActiveDek(purpose, tenantId);
       const nextVersion = current + 1;
       try {
-        await this.insertActiveDek(purpose, nextVersion);
+        await this.insertActiveDek(purpose, scope, nextVersion);
       } catch (error) {
         if (!isRetryableKeyWrite(error)) throw error;
-        const winner = await this.activeDekVersion(purpose);
+        const winner = await this.activeDekVersion(purpose, scope);
         if (winner !== null && winner > current) return winner;
         continue;
       }
@@ -256,6 +322,7 @@ export class ColumnCipher {
           .where(
             and(
               eq(encryptionKeys.purpose, purpose),
+              this.tenantScope(scope),
               eq(encryptionKeys.keyVersion, current),
               eq(encryptionKeys.status, 'active'),
             ),
@@ -263,6 +330,6 @@ export class ColumnCipher {
       );
       return nextVersion;
     }
-    throw new EncryptionError(`DEK rotation が競合しました (purpose=${purpose})`);
+    throw new EncryptionError(`DEK rotation が競合しました (purpose=${purpose}, tenant=${scope ?? 'global'})`);
   }
 }

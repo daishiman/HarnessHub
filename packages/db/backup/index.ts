@@ -9,5 +9,15 @@ export {
   parseExportArtifact,
   resolveTable,
 } from './export';
-export { type RestoreReport, restoreControlPlane } from './restore';
+export { type RestoreOptions, type RestoreReport, restoreControlPlane } from './restore';
+export {
+  applyTenantDataTombstoneManifest,
+  mergeTenantDataTombstoneManifests,
+  parseTenantDataTombstoneManifest,
+  TENANT_DATA_TOMBSTONE_MANIFEST_FORMAT,
+  TENANT_DATA_TOMBSTONE_MANIFEST_VERSION,
+  tenantDataTombstoneManifestFromArtifact,
+  type TenantDataTombstone,
+  type TenantDataTombstoneManifest,
+} from './tenant-data-tombstones';
 export { type ChainVerifyResult, verifyAuditChain, verifyChainRows } from './verify';

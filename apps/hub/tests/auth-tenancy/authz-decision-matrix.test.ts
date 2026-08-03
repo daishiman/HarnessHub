@@ -104,6 +104,12 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   // (issue-auth-tenancy-customer-managed-google-oidc-20260729)。
   'idp.connection_read': PROVIDER_ONLY,
   'idp.connection_change': PROVIDER_ONLY,
+  // feat-tenant-data-retention: 通常業務の入出力は member 以上、復元不可な削除だけ workspace-admin。
+  'tenant-data.upload': MEMBER_UP,
+  'tenant-data.list': MEMBER_UP,
+  'tenant-data.read': MEMBER_UP,
+  'tenant-data.read_content': MEMBER_UP,
+  'tenant-data.delete': ADMIN_UP,
 };
 
 const COLUMNS: readonly MatrixColumn[] = ['member', 'owner', 'workspace-admin', 'provider-admin'];

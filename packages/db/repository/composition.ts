@@ -19,6 +19,7 @@
  * 暗号化列の鍵を扱う層が package の外へ増える。外へ出すのは「鍵の文字列」ではなく「鍵を渡す 1 箇所」。
  */
 
+import { createTenantDataRegistry, type TenantDataBucketLike } from '../registry/tenant-data';
 import { deploymentReferences, projects } from '../schema/core/catalog';
 import { type AuditRepo, createAuditRepo } from './audit';
 import {
@@ -74,6 +75,14 @@ import {
   type PublishSmokeEvidence as PublishSmokeEvidenceShape,
 } from './publish-smoke';
 import { createReleasesRepo, type ReleaseRow as ReleaseRowShape, type ReleasesRepo } from './releases';
+import {
+  createTenantDataRepo,
+  type TenantDataListInput as TenantDataListInputShape,
+  type TenantDataObjectPage as TenantDataObjectPageShape,
+  type TenantDataObjectRow as TenantDataObjectRowShape,
+  type TenantDataRepo,
+  type TenantDataUploadInput as TenantDataUploadInputShape,
+} from './tenant-data';
 import { createTenantsRepo, type TenantRow as TenantRowShape, type TenantsRepo } from './tenants';
 import { createUsersRepo, type UserRow as UserRowShape, type UsersRepo } from './users';
 import { createUserWorkspacesRepo, type UserWorkspacesRepo } from './workspaces';
@@ -99,6 +108,11 @@ export type HearingSmokeDbProbe = HearingSmokeDbProbeShape;
 export type HearingSmokeTenantFixture = HearingSmokeTenantFixtureShape;
 export type HearingSmokeSheetSnapshot = HearingSmokeSheetSnapshotShape;
 export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
+export type TenantDataObjectRow = TenantDataObjectRowShape;
+export type TenantDataUploadInput = TenantDataUploadInputShape;
+export type TenantDataListInput = TenantDataListInputShape;
+export type TenantDataObjectPage = TenantDataObjectPageShape;
+export type { TenantDataRepo };
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
@@ -182,4 +196,26 @@ export function createCoreRepositories(input: CoreRepositoriesInput): CoreReposi
     projects: createScopedCrud(adapter, projects),
     deploymentReferences: createScopedCrud(adapter, deploymentReferences),
   };
+}
+
+export interface TenantDataRepositoryInput extends CoreRepositoriesInput {
+  /** feat-tenant-data-retention 専用の R2 bucket (AD-3: PackageRegistry とはバケットを分離)。 */
+  readonly bucket: TenantDataBucketLike;
+}
+
+/**
+ * tenant_data の repository を組む facade。`createCoreRepositories` から独立させているのは、
+ * こちらだけが R2 bucket (DB 外の依存) を要求するため — `CoreRepositoriesInput` へ bucket を混ぜると
+ * bucket を持たない既存呼び出し元 (hearing-intake 等) にまで無関係な依存を強制してしまう。
+ * cipher を共有しないのも同じ理由 (別の合成単位): tenant_data の DEK は purpose 別に独立して
+ * 管理される (AD-1) ため、`createCoreRepositories` 側の cipher と同居させる必然性が無い。
+ */
+export function createTenantDataRepository(input: TenantDataRepositoryInput): TenantDataRepo {
+  const cipher = new ColumnCipher(input.adapter, input.kekBase64);
+  return createTenantDataRepo(
+    input.adapter,
+    cipher,
+    createTenantDataRegistry(input.bucket),
+    createAuditRepo(input.adapter),
+  );
 }
