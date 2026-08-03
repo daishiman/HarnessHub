@@ -41,10 +41,17 @@ recorded_at: 2026-08-03
 ## ファイル分割の判定
 
 - 手書きの変更ファイルはすべて 500 行未満である。
+- `docs/infrastructure-spec.md` はリポジトリのより厳しい 300 行ゲートに合わせ、R2 の責務を `docs/infrastructure-storage-spec.md` へ分離した（293 行 / 22 行）。
 - `packages/db/migrations/meta/0005_snapshot.json` と `0006_snapshot.json` は Drizzle が生成する migration snapshot で、それぞれ 2,077 行・2,131 行である。migration lineage が単一 JSON 文書として読込む生成成果物のため分割できず、生成物をそのまま記録する。
+
+## 受領の確定記録
+
+- draft PR: [#650](https://github.com/daishiman/HarnessHub/pull/650) (`base=main`, `head=devgraph/feat-tenant-data-retention`)
+- main 統合: `origin/main` と local `main` が同じ `41a79292` であることを確認し、同 commit を本 branch へ merge した。
+- 最終実行: DB focused 37 件、Hub focused 87 件、Schemas 86 件、DB/Hub/Schemas 型検査、Hub build、artifact placement、doc line limit、task-spec quality gate、dev-graph schema、CI 等価チェック 139 件はいずれも PASS。
+- Beads: `HarnessHub-47b` と `HarnessHub-47b.13` に最終判定、PR、残課題を記録した。
 
 ## 残課題
 
 - P13: main merge 後の production deploy、planned の Turso Platform API secret 投入、実環境 smoke／restore drill は外部操作のため未実施。
 - C14 macro feature に残る content-addressed R2 という旧方式の文言を、P03 ADR の行ごとに一意な R2 key と整合させる C02 起点の再計画を行う（Beads 親課題の残課題として記録）。
-- 本受領書は PR 作成時の番号・URL、Beads note、最終実行コマンドを追記して確定する。
