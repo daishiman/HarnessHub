@@ -16,8 +16,8 @@ export {
   parseTenantDataTombstoneManifest,
   TENANT_DATA_TOMBSTONE_MANIFEST_FORMAT,
   TENANT_DATA_TOMBSTONE_MANIFEST_VERSION,
-  tenantDataTombstoneManifestFromArtifact,
   type TenantDataTombstone,
   type TenantDataTombstoneManifest,
+  tenantDataTombstoneManifestFromArtifact,
 } from './tenant-data-tombstones';
 export { type ChainVerifyResult, verifyAuditChain, verifyChainRows } from './verify';

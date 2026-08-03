@@ -162,9 +162,7 @@ export class ColumnCipher {
     const rows = await this.adapter.client
       .select({ keyVersion: encryptionKeys.keyVersion })
       .from(encryptionKeys)
-      .where(
-        and(eq(encryptionKeys.purpose, purpose), this.tenantScope(tenantId), eq(encryptionKeys.status, 'active')),
-      )
+      .where(and(eq(encryptionKeys.purpose, purpose), this.tenantScope(tenantId), eq(encryptionKeys.status, 'active')))
       .orderBy(desc(encryptionKeys.keyVersion))
       .limit(1);
     return rows[0]?.keyVersion ?? null;

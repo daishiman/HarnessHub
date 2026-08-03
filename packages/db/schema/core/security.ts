@@ -47,9 +47,7 @@ export const encryptionKeys = sqliteTable(
     retiredAt: integer('retired_at'),
   },
   (t) => [
-    uniqueIndex('encryption_keys_purpose_version_global_uq')
-      .on(t.purpose, t.keyVersion)
-      .where(sql`tenant_id IS NULL`),
+    uniqueIndex('encryption_keys_purpose_version_global_uq').on(t.purpose, t.keyVersion).where(sql`tenant_id IS NULL`),
     uniqueIndex('encryption_keys_tenant_purpose_version_uq')
       .on(t.tenantId, t.purpose, t.keyVersion)
       .where(sql`tenant_id IS NOT NULL`),
