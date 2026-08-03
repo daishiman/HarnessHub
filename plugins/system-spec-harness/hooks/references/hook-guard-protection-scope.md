@@ -126,4 +126,6 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
 
 - 回帰テスト `tests/test_record_audit_fork.py`。
 - consumer 側の突合テストは
-  `skills/assign-system-spec-completeness-evaluator/tests/test_aggregate_completeness.py`。
+  `skills/assign-system-spec-completeness-evaluator/tests/test_audit_fork_attribution.py`、
+  集約・CLI 側は `tests/test_aggregate_completeness.py`。共通 fixture は
+  `tests/completeness_test_support.py` に置き、責務別テストを 500 行以下に保つ。

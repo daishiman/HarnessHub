@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "PublishRequest パイプライン (状態機械・検査・promote/rollback)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-30T12:25:36Z"
+updated_at: "2026-08-02T20:55:27.042241Z"
 status: "active"
 depends_on: ["feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"generated","source_digest":"349125ae4533b71860acb69a161d1ec53efcf1eabcc88f2492d25a1c71b893fe","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-publish-pipeline.md","confidence":0.9}]

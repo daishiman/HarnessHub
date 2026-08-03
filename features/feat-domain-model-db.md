@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T06:25:41.177574Z"
+updated_at: "2026-08-02T20:51:47.946447Z"
 status: "closed"
 depends_on: ["feat-hub-foundation"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-domain-model-db/6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T06:25:09Z","origin_kind":"generated","source_digest":"214f1c231bfa44f7a9e7b44390f6edc51643f9187186cb49c79626100cf1f6d1","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-08-02T06:25:09Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-domain-model-db.md","confidence":0.9}]
