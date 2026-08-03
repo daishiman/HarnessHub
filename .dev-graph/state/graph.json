@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1192,
+  "graph_revision": 1193,
   "nodes": [
     {
       "acceptance": [
@@ -10471,12 +10471,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S14 実装・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続を実装する P05 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:46:03Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/architecture-decision-record.md",
+          "docs/features/feat-feedback-loop/refactoring-migration-note.md",
+          "packages/db/schema/builds/schema.ts",
+          "packages/db/repository/builds.ts",
+          "apps/hub/src/__tests__/feedback-loop/publish-connect-no-automerge.test.ts"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T07:50:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -10561,7 +10567,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T07:48:04.016414Z"
     },
     {
       "acceptance": [
@@ -10932,12 +10938,15 @@
       "classification_confidence": 0.85,
       "classification_reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査記録) の充足を確認する P09 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T06:33:27Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/quality-assurance-report.md",
+          "docs/features/feat-feedback-loop/test-run-report.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T06:34:17Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11020,7 +11029,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T06:37:59.688832Z"
     },
     {
       "acceptance": [
@@ -11049,12 +11058,15 @@
       "classification_confidence": 0.86,
       "classification_reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 8 件の充足を独立した視点で最終判定する P10 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:54:32Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/final-review-notes.md",
+          "docs/features/feat-feedback-loop/architecture-decision-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:00:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11131,7 +11143,7 @@
       "template_version": "1.0.0",
       "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T07:56:02.673512Z"
     },
     {
       "acceptance": [
@@ -11160,12 +11172,14 @@
       "classification_confidence": 0.84,
       "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:59:31Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/evidence/index.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:05:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11242,7 +11256,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — 再現可能な検証証跡の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T08:00:05.674528Z"
     },
     {
       "acceptance": [
@@ -11270,12 +11284,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P11 のエビデンスを踏まえ S14 運用手順・AI キュー運用・監査/通知運用を runbook 化する P12 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T08:03:40Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:10:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11353,7 +11369,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T08:04:14.147672Z"
     },
     {
       "acceptance": [

@@ -23,6 +23,11 @@ import { createTenantDataRegistry, type TenantDataBucketLike } from '../registry
 import { deploymentReferences, projects } from '../schema/core/catalog';
 import { type AuditRepo, createAuditRepo } from './audit';
 import {
+  type BuildRow as BuildRowShape,
+  type BuildsRepository as BuildsRepositoryShape,
+  createBuildsRepository as createBuildsRepositoryLeaf,
+} from './builds';
+import {
   createTargetChannelsRepo,
   type TargetChannelRow as TargetChannelRowShape,
   type TargetChannelsRepo,
@@ -43,6 +48,11 @@ import {
   type DocsCmsRepository as DocsCmsRepositoryShape,
   type DocumentRow as DocumentRowShape,
 } from './docs-cms';
+import {
+  createFeedbackRepository as createFeedbackRepositoryLeaf,
+  type FeedbackRepository as FeedbackRepositoryShape,
+  type FeedbackRow as FeedbackRowShape,
+} from './feedback-loop';
 import {
   type AiJobRow as AiJobRowShape,
   createHearingIntakeRepository as createHearingIntakeRepositoryLeaf,
@@ -103,6 +113,12 @@ export type AiJobRow = AiJobRowShape;
 export type HearingSheetRow = HearingSheetRowShape;
 export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
+export type DocsCmsRepository = DocsCmsRepositoryShape;
+export type DocumentRow = DocumentRowShape;
+export type FeedbackRow = FeedbackRowShape;
+export type FeedbackRepository = FeedbackRepositoryShape;
+export type BuildRow = BuildRowShape;
+export type BuildsRepository = BuildsRepositoryShape;
 export type PublishRequestRow = PublishRequestRowShape;
 export type ReleaseRow = ReleaseRowShape;
 export type TargetChannelRow = TargetChannelRowShape;
@@ -118,8 +134,6 @@ export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;
 export type TenantDataObjectPage = TenantDataObjectPageShape;
 export type { TenantDataRepo };
-export type DocsCmsRepository = DocsCmsRepositoryShape;
-export type DocumentRow = DocumentRowShape;
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
@@ -129,6 +143,16 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
 /** Studio S15/B7 (docs-cms) も同じ facade 経由の原則に従う。 */
 export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
   return createDocsCmsRepositoryLeaf(adapter);
+}
+
+/** feat-feedback-loop も同じ理由でこの facade からだけ組み立てる。 */
+export function createFeedbackRepository(adapter: CoreAdapter): FeedbackRepository {
+  return createFeedbackRepositoryLeaf(adapter);
+}
+
+/** `builds` も同じ理由でこの facade からだけ組み立てる (ADR §7 P10 差し戻し再設計)。 */
+export function createBuildsRepository(adapter: CoreAdapter): BuildsRepository {
+  return createBuildsRepositoryLeaf(adapter);
 }
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */

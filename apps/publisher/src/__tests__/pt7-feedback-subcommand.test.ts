@@ -135,11 +135,13 @@ describe('PT7-A feedback CLI 薄いクライアントの契約テスト', () => 
     });
   });
 
-  it('feedback サブコマンド追加により feat-feedback-loop 側の endpoint 契約 (request/response 型) は変更されない', () => {
-    // feat-feedback-loop の応答スキーマは packages/schemas に一切存在しない (owner は別 feature)。
-    // feedback-command.ts がそれを再定義・import していないことを構造的に確認する。
+  it('feedback サブコマンドは feat-feedback-loop の endpoint 契約を再定義しない', () => {
+    // endpoint 契約の owner は feat-feedback-loop であり、canonical schema は packages/schemas 側に置く。
+    // Publisher は schema を import・再定義せず、薄い HTTP client のまま維持する。
     const feedbackSchemaFiles = collectFiles(SCHEMAS_ROOT).filter((path) => /feedback/i.test(path));
-    expect(feedbackSchemaFiles).toEqual([]);
+    expect(
+      feedbackSchemaFiles.map((path) => path.replace(`${SCHEMAS_ROOT}/`, '').replaceAll('\\', '/')).sort(),
+    ).toEqual(['feedback-loop/contracts.ts', 'feedback-loop/index.ts']);
 
     const commandPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'cli', 'feedback-command.ts');
     const source = readFileSync(commandPath, 'utf-8');

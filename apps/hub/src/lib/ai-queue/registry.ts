@@ -9,16 +9,25 @@
 import type { AiJobRow, RepositoryContext } from '@harness-hub/db';
 import {
   completeDocDraftJobRequestSchema,
+  completeFeedbackResponseJobRequestSchema,
   completeSheetGenerationJobRequestSchema,
   failDocDraftJobRequestSchema,
+  failFeedbackResponseJobRequestSchema,
   failSheetGenerationJobRequestSchema,
   pullDocDraftJobRequestSchema,
+  pullFeedbackResponseJobRequestSchema,
   pullSheetGenerationJobRequestSchema,
 } from '@harness-hub/schemas';
 import type { z } from 'zod';
 
 import { serializeDocDraftResult, toPulledDocDraftJob } from '../../features/docs-cms/ai-job-adapter/index.js';
 import { docsCmsRuntime } from '../../features/docs-cms/runtime.js';
+import {
+  parseFeedbackResponseResult,
+  serializeFeedbackResponseResult,
+  toPulledFeedbackResponseJob,
+} from '../../features/feedback-loop/ai-job-adapter/index.js';
+import { feedbackLoopRuntime } from '../../features/feedback-loop/runtime.js';
 import { serializeGenerationResult, toPulledJob } from '../../features/hearing-intake/ai-job-adapter/index.js';
 import { hearingIntakeRuntime } from '../../features/hearing-intake/runtime.js';
 
@@ -56,6 +65,27 @@ export const AI_QUEUE_ADAPTERS: Readonly<Record<string, AiQueueAdapter>> = {
     complete: (context, id, tokenId, resultJson) =>
       docsCmsRuntime().repository.completeDocDraftJob(context, id, tokenId, resultJson),
     fail: (context, id, tokenId, error) => docsCmsRuntime().repository.failDocDraftJob(context, id, tokenId, error),
+  },
+  feedback_response: {
+    pullRequestSchema: pullFeedbackResponseJobRequestSchema,
+    completeRequestSchema: completeFeedbackResponseJobRequestSchema,
+    failRequestSchema: failFeedbackResponseJobRequestSchema,
+    toPulled: (job) => toPulledFeedbackResponseJob(job),
+    serializeResult: (input) => serializeFeedbackResponseResult(input),
+    claim: (context, tokenId) => feedbackLoopRuntime().repository.claimNextFeedbackResponseJob(context, tokenId),
+    complete: (context, id, tokenId, resultJson) => {
+      const result = parseFeedbackResponseResult(resultJson);
+      if (result === null) throw new Error('feedback_response の結果を復元できません');
+      return feedbackLoopRuntime().repository.completeFeedbackResponseJob(
+        context,
+        id,
+        tokenId,
+        resultJson,
+        result.ai_response,
+      );
+    },
+    fail: (context, id, tokenId, error) =>
+      feedbackLoopRuntime().repository.failFeedbackResponseJob(context, id, tokenId, error),
   },
 };
 
