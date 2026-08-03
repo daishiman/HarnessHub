@@ -15,76 +15,36 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-134, qa-138 |
+| Web (web) | 確定 | 確定質疑: qa-135 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-088 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-102 |
 
 ## 確定内容 (質疑録)
 
-### qa-134 (対応セル: web)
+### qa-135 (対応セル: web)
 
-**質問**: qa-122 の開発品質契約を維持しながら、一般コードとプロンプト成果物に混在した500行ルールをどの境界へ訂正しますか?
+**質問**: ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-02 指示を明示承認として、qa-122 の契約を維持する。ただし、qa-096 由来の一般コードに対する500行分割条件だけは本回答で明示的に廃止し、行数ゲートをプロンプト成果物へ限定する。
+**回答**: 既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。
 
-【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。
+### qa-140 (対応セル: desktop-windows)
 
-【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。
+**質問**: qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?
 
-【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。
+**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。
 
-【4. 回帰証拠と行数ゲートの境界】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。ソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性を根拠に判断する。実行時 context へ入る `SKILL.md` は本文 300 行、skill の `prompts/*.md|yaml` は 500 行を上限として機械検査する。qa-070 の正規文書 300 行ゲートは別契約として維持する。
+【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。
 
-【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。
+【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
 
-【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。
 
-【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。
+【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。
 
-【8. 削除と移設】廃止済みの外部参考層は directory 単位で削除し、現在も利用する外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。部分コピーを残して二重正本にしない。
-
-【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は外部原本と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。
-
-【10. 追加検証と製品境界】active code/plugin/docs からの旧実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、qa-070 の文書行数、`SKILL.md` と `prompts/` の行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。
-
-### qa-138 (対応セル: web)
-
-**質問**: C10/C11/C28 の最終レビューで、Dev Graph と Beads の正本を守る契約をどのように確定しますか？
-
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-134 の品質ゲート境界を情報欠落なく継承し、repository 内の Dev Graph authority と Beads mutation の所有契約を追加確定する。
-
-【1. qa-134 の継承】タスク優先度、CI と local の同一実装、意図的な空走査、C02 writer の後退防止、参考層と能動層の正本所有、外部 CLI 契約の移設、履歴復元と追加検証は qa-134 の【1】から【10】を正本とする。ソースコードとテストには一律の数値行数上限を設けず、分割は責務境界と変更容易性を根拠に判断する。実行時 context に入る `SKILL.md` は本文300行、skill の `prompts/*.md|yaml` は500行を上限として機械検査し、qa-070 の正規文書300行ゲートは別契約として維持する。
-
-【2. C10 の事前遮断】inline Python 変数で組み立てた canonical graph/config path と、改行で区切られた shell segment を独立して判定する。command 文字列だけで確定できる write は実行前に遮断する。
-
-【3. script-file 実行後監査】script file の完全な意味解析を C10 へ集中させず、PostToolUse 監査が canonical file の size・mtime・ctime・digest・revision・exact-4-key envelope を確認する。confirmed drift と初回 invalid state は clean baseline に昇格させず、VCS rollback の advisory は shell segment が git 操作だけの場合に限定する。
-
-【4. C11 exact envelope】C02 build、C11 validator、PostToolUse 監査は shared module の exact-4-key envelope 定義を共有し、余剰 key と欠落 key を同じ基準で拒否する。
-
-【5. C28 の継承】最新 main で確定済みの正規 bridge 契約を継承し、公開 `--labels` を replacement 型の `bd --set-labels` へ転送し、priority・assignee とともに direct `bd update` を経由せず更新する。今回の branch では重複実装せず、main 統合後の契約と回帰試験を検証対象に含める。
-
-【6. 今回の製品境界】追加契約は repository 内の Dev Graph authority、Beads mutation、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### qa-088 (対応セル: desktop-windows)
-
-**質問**: qa-039 のローカル開発契約と qa-087 の並列 worktree 安全契約を、章単独で情報を失わない自己完結した契約としてどう確定しますか?
-
-**回答**: ユーザーの 2026-07-28 最終レビュー・仕様反映指示を明示承認として、qa-039 と qa-087 を統合した次のローカル開発契約を確定する。
-
-【1. ローカル環境】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。
-
-【2. CI と local の一致】PR の required status checks と同じ実装を pnpm script から実行できるようにし、CI 専用の検査手順を CI 側だけに持たない。merge 前ゲートの正本は CI とする。
-
-【3. commit 前のローカルゲート】lint と format は早期検知の補助として任意実行し、secret scan も local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
-
-【4. 並列 worktree の ref 整合性】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲する。tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。
-
-【5. ローカルからの本番操作】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。ローカル開発は preview Turso または local SQLite を使い production DB を指さない。
-
-【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。
+【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-102 (対応セル: desktop-macos)
 
@@ -101,85 +61,6 @@ serves_goals: [G1, G4, G5]
 【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。
 
 【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### 実装反映注記 (2026-07-30 / `HarnessHub-ml57`)
-
-qa-088【2】の「CI と local の一致」を、運用上の心がけではなく repository gate として
-具体化した。GitHub Actions が repository root から実行する
-`python3 scripts/*.py` の呼び出しを script path と意味のある引数の組へ正規化し、
-local hard-fail gate または理由付き allowlist に含まれることを set membership で検査する。
-allowlist に無い差分、理由のない例外、CI から消えた stale 例外、動的 working-directory
-など静的に境界を確定できない入力は fail-closed とする。
-
-local gate の責務は「CI のうち手元で安全に再実行できる検査」であり、外部資格情報が必要、
-working tree を書き換える、CI 自体が non-blocking という呼び出しは、正確な引数形と理由を
-`scripts/ci-local-check-allowlist.json` に記録する。製品 API、DB schema、認証認可、UI、
-Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-07-30 / `HarnessHub-pyb3`)
-
-qa-088【2】と qa-096【2】の CI / local 共通ゲートを具体化し、`pnpm -r test` の入口を
-変えずに `pnpm-workspace.yaml` の `workspaceConcurrency: 1` で package 間だけを直列化する。
-各 package が持つ Vitest worker pool の同時起動による RPC timeout を防ぎ、設定欠落・値変更は
-`pnpm check:pnpm` の正負テストで fail-closed に拒否する。製品 API、DB schema、認証認可、
-UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。反映と検証は
-`docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md` を正とする。
-
-### 実装反映注記 (2026-08-01 / `HarnessHub-w7n7`)
-
-Beads 操作の単一チョークポイント（書き込みを必ず通す一本の入口）である
-`plugins/dev-graph/scripts/bd-bridge.py` は、CLI 引数解析、preflight、Beads 実行、
-receipt 出力だけを保持する。判定処理は次の四責務へ分離する。
-
-- `bd_bridge_contracts.py`: exact-set 語彙と外部 I/O を持たない純粋判定
-- `bd_bridge_graph.py`: canonical graph、manifest、artifact の read-only 解決
-- `bd_bridge_projection.py`: graph node から Beads issue への投影
-- `bd_bridge_audit.py`: orphan 棚卸しと node 削除 preflight の read-only 監査
-
-分離後も CLI、operation、receipt schema、既存 private symbol、書込権限は変更しない。
-Beads / git を使う処理は実行関数を引数で受け、CLI module の薄い adapter が呼出時に
-注入することで、既存の hermetic test（外部状態を偽物へ差し替えるテスト）を維持する。
-`HarnessHub-w7n7` の実装時点では変更対象の手書きファイルを 500 行以下に保つ運用目標を採った。
-ただし qa-134 により、ソースコードとテストの一律数値上限は廃止済みであり、現在は責務境界と変更容易性で
-分離する。`SKILL.md` 本文 300 行、`prompts/*.md|yaml` 500 行、qa-070 の正規文書 300 行は個別の
-機械ゲートとして維持する。分割先は harness coverage の scripts 分母へ追加しない
-`plugins/dev-graph/lib/` とする。Harness Hub 製品の API、DB schema、認証認可、
-UI、Cloudflare deploy unit は変更しない。判断と最終検証は
-`docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-08-02 / `HarnessHub-dc7`)
-
-`plugins/dev-graph/references/execution-tracker-contract.md` §2 の Beads mutation
-単一チョークポイントを維持し、Dev Graph parity の対象外である
-`priority`、`assignee`、`labels` も書き込み経路だけは C28
-`bd-bridge.py` に限定する。「自由領域」は graph と完全一致させないという意味であり、
-guard を迂回して直接更新できるという意味ではない。
-
-bridge は三フィールドを `bd update` の `--priority`、`--assignee`、`--set-labels` へ
-転送する。priority は create と共通の正規化を使い、labels は再実行可能な置換だけを許す。
-直接 `bd update` の遮断は緩めず、空 labels、更新値なし、別 operation への更新専用引数は
-fail-closed に拒否する。これは既存の開発管理契約を実行可能にする内部実装具体化であり、
-確定済み QA 回答、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-判断と検証は `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
-を正とする。
-
-### 実装反映注記 (2026-08-02 / `HarnessHub-cvli`)
-
-system route の exact-13 package は、registration manifest が持つ generation・source digest・
-immutable receipt と、C02 が task Markdown に投影する `purpose`、`goal`、`scope_in`、
-`scope_out`、`acceptance`、`architecture_refs` を別の責務として扱う。再登録では、manifest が
-省略する後者六項目だけを保存済み node から保持し、明示値は manifest を優先する。これにより
-同じ generation の register → upsert → register dry-run は idempotent になる。
-
-`updated_at` は投影で前進し得るため同値比較では保存済み時刻が同時刻以降であることを確認する。
-時刻の後退・不正値・他フィールド差分は受理せず fail-closed とし、exact-13、source digest、
-receipt の不変条件を維持する。これは repository 内の開発管理契約の実装具体化であり、製品 API、
-DB schema、認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。判断と検証は
-`docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md`
-を正とする。
 
 ## 上流指針 (doctrine anchor)
 

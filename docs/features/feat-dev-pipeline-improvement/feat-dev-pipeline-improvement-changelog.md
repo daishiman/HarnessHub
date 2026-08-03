@@ -7,6 +7,16 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
+
+- `HarnessHub-7xi9` の 2026-07-31 事象は、reflog の直接証拠により `git reset --hard` と
+  直後の `git pull` が最有力原因と判明した。mtime 一致だけで非 Git 系 clobber と断定しない。
+- `scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを横断してクラスタを報告する
+  非ブロッキング診断とし、検知後は runbook の reflog・差分・実体照合で裏取りする。
+- 正本は system-spec `qa-140` と
+  [更新時刻診断追補](../../../specs/harness-hub-worktree-mtime-diagnostic-addendum.md) を正とする。
+  製品 API・DB・認証認可・UI・deploy unit は非変更。
+
 ## 2026-08-02: prompt の行数ゲートをコードから分離
 
 - `HarnessHub-hls0` で、一般コード・テストの一律 500 行分割を廃止し、`SKILL.md` 本文 300 行と

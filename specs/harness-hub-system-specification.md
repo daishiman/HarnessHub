@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T11:50:05Z"
+updated_at: "2026-08-03T00:00:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"0f79145d07900124031f39b0e7e5aa564bc889253591080837408d6f5fbd98d4","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"0f79145d07900124031f39b0e7e5aa564bc889253591080837408d6f5fbd98d4","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -132,10 +132,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
 - 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
 
-**開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
+**開発フロー反映 (2026-08-03 / `HarnessHub-7xi9`)**:
 
-- `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
+- `system-spec/dev-workflow.md` の desktop-windows を R4-reopen し、`qa-140` で `qa-039` の既存ローカル開発契約、並列 worktree の整合性契約、診断の証拠境界を自己完結して再確定した。
 - ref 更新は `reference-transaction` で予防し、判定不能時は修復可能性を残すため fail-open とする。巻き戻し commit は `pre-commit` で fail-closed に止める二層境界を正本とした。
+- mtime クラスタは一括書込みの調査開始点であり、原因を単独で断定しない。診断専用 `lint-worktree-clobber-mtime.py` と reflog による裏取りは [更新時刻診断追補](harness-hub-worktree-mtime-diagnostic-addendum.md) を正とする。
 - 影響は repository の開発運用に限定され、Hub の外部 API・データモデル・認証認可・Cloudflare deploy unit は変更しない。
 
 ## イベント・非同期処理

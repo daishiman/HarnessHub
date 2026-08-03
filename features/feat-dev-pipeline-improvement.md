@@ -120,6 +120,10 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
 を正とする。
 
+`HarnessHub-7xi9` の更新時刻診断追補は、`qa-140` の R4-reopen により再確定した。
+mtime クラスタは調査開始点に限定し、reflog などの直接証拠で原因を確認する。詳細は
+[差分追記ログ](../docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md)を正とする。
+
 ## アーキテクチャ参照・機能間依存
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
