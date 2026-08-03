@@ -27,6 +27,14 @@ export function roleRank(role: EffectiveRole): number {
   return ROLE_ORDER.indexOf(role);
 }
 
+/**
+ * `users.role` に書き込める 3 値 (DB 列値のみ、`owner` を除く)。
+ * zod (`sessionRoleSchema`) を client component から import すると
+ * バンドル (client-bundle 予算) に zod 本体ごと混入するため、
+ * 入力値の enum チェックだけが必要な箇所はこちらを使う。
+ */
+export const BASE_ROLES: readonly BaseRole[] = ROLE_ORDER.filter((role): role is BaseRole => role !== 'owner');
+
 /** `actual` が `required` 以上か。未知の role は -1 になり、必ず false 側へ落ちる。 */
 export function atLeast(actual: EffectiveRole, required: EffectiveRole): boolean {
   const actualRank = roleRank(actual);

@@ -11,6 +11,8 @@ export * from '../hearing-intake/index.js';
 export * from '../publish-pipeline/index.js';
 // feat-publisher-plugin の契約 schema。同上の理由でここから再エクスポートする。
 export * from '../publisher-plugin/index.js';
+// feat-user-org-admin の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../user-org-admin/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,

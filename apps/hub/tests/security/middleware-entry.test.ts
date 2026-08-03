@@ -188,6 +188,13 @@ describe('middleware の decision と NextResponse の対応', () => {
     expect(response.headers.get('x-middleware-next')).toBe('1');
   });
 
+  it('/legal (feat-user-org-admin, 全利用者アクセス方針) は未ログインでも次のハンドラへ委譲する', async () => {
+    const response = await loaded.secured.middleware(requestFor('/legal'));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+  });
+
   it('拒否理由と status を JSON 応答へそのまま写す', async () => {
     const { middleware } = loaded.secured;
     const cookie = await sessionCookie();

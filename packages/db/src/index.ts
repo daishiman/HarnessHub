@@ -47,6 +47,7 @@ export {
   type TenantCoefficientRow,
   type TenantRow,
   type UserRow,
+  type UserSettingsRow,
 } from '../repository/composition';
 export {
   assertSupportedDriver,
