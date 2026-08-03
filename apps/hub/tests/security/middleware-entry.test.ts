@@ -196,9 +196,12 @@ describe('middleware の decision と NextResponse の対応', () => {
     expect(mismatch.status).toBe(403);
     await expect(mismatch.json()).resolves.toEqual({ error: 'tenant_mismatch' });
 
-    const missingScope = await middleware(requestFor('/api/documents', { cookie }));
-    expect(missingScope.status).toBe(403);
-    await expect(missingScope.json()).resolves.toEqual({ error: 'missing_tenant_scope' });
+    // USER は workspace 1 件のみ所属 (TID-BIND-03: cookie に active workspace 指定が無くても、
+    // 所属が 1 件なら曖昧さが無いため session scope へ自動採用する。feat-post-signin-scope-routing)。
+    // header 申告が無くても session cookie だけで scope が解決され、通常のブラウザ遷移が
+    // missing_tenant_scope に落ちなくなったことがこの機能の主目的。
+    const viaSessionOnly = await middleware(requestFor('/api/documents', { cookie }));
+    expect(viaSessionOnly.status).toBe(200);
   });
 
   it('header 由来のスコープも判定へ渡す', async () => {
@@ -214,11 +217,14 @@ describe('middleware の decision と NextResponse の対応', () => {
     );
     expect(allowed.status).toBe(200);
 
+    // header は ws-9 を申告する一方、session (cookie) は所属唯一の ws-1 を自動採用しており
+    // 両系統が食い違う。どちらが正か推測しないため ambiguous_scope になる
+    // (TID-SCOPE-05: explicit と session が不一致の場合。feat-post-signin-scope-routing)
     const denied = await middleware(
       requestFor('/api/documents', { cookie, [TENANT_HEADER]: 'tenant-a', [WORKSPACE_HEADER]: 'ws-9' }),
     );
     expect(denied.status).toBe(403);
-    await expect(denied.json()).resolves.toEqual({ error: 'workspace_not_member' });
+    await expect(denied.json()).resolves.toEqual({ error: 'ambiguous_scope' });
   });
 });
 
