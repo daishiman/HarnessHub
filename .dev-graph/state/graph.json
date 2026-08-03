@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1177,
+  "graph_revision": 1179,
   "nodes": [
     {
       "acceptance": [
@@ -46694,9 +46694,22 @@
       "updated_at": "2026-08-02T12:47:00Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/release-record.md (本番実測結果と書き戻し照合記録) と docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md (仕様影響・反映先・no-change理由)、および system-spec/・specs/・architecture/・features/・tasks/ の反映または no-change 判断",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている",
+        "CI が検出した catalog hard-navigation 契約の更新後、単一 workspace session の到達・query string 非信頼・複数 workspace 未選択時の missing_tenant_scope を apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts で PASS させる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.13",
+        "linked_at": "2026-08-02T08:08:09Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46736,6 +46749,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P13",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46752,16 +46766,42 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P13 を実行する: リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
         "arch-harness-hub-security"
       ],
       "resource_scope": [
+        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
         "docs/features/feat-post-signin-scope-routing/release-record.md",
+        "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "system-spec/frontend.md",
+        "system-spec/security.md",
+        "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "architecture/harness-hub-frontend.md",
         "architecture/harness-hub-security.md",
-        "specs/harness-hub-post-signin-workspace-scope-addendum.md"
+        "features/feat-post-signin-scope-routing.md",
+        "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
+      ],
+      "scope_in": [
+        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
+        "docs/features/feat-post-signin-scope-routing/release-record.md",
+        "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "system-spec/frontend.md",
+        "system-spec/security.md",
+        "specs/harness-hub-post-signin-workspace-scope-addendum.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-security.md",
+        "features/feat-post-signin-scope-routing.md",
+        "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
+      ],
+      "scope_out": [
+        "新規機能の追加",
+        "authorize() の判定順・role 判定の変更 (owner=feat-auth-tenancy)",
+        "Workspace 選択画面の UI 実装 (owner=feat-workspace-switch-ux)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46784,7 +46824,7 @@
       "template_version": "1.1.0",
       "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-03T05:30:35Z"
     },
     {
       "acceptance": [

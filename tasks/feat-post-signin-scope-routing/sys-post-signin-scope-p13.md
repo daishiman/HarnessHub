@@ -11,17 +11,17 @@ target_date: null
 iteration: null
 title: "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"
 owners: ["daishiman"]
-created_at: "2026-08-02T06:25:14Z"
-updated_at: "2026-08-02T08:18:42.476337Z"
+created_at: "2026-08-02T12:47:00Z"
+updated_at: "2026-08-03T05:30:35Z"
 status: "active"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P12"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
-resource_scope: ["docs/features/feat-post-signin-scope-routing/release-record.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md"]
+resource_scope: ["apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts","docs/features/feat-post-signin-scope-routing/release-record.md","docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md","docs/features/feat-post-signin-scope-routing/test-run-record.md","system-spec/frontend.md","system-spec/security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","features/feat-post-signin-scope-routing.md","tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"]
 purpose: "feat-post-signin-scope-routing の P13 を実行する: リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
-scope_in: ["docs/features/feat-post-signin-scope-routing/release-record.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md"]
+scope_in: ["apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts","docs/features/feat-post-signin-scope-routing/release-record.md","docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md","docs/features/feat-post-signin-scope-routing/test-run-record.md","system-spec/frontend.md","system-spec/security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","features/feat-post-signin-scope-routing.md","tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"]
 scope_out: ["新規機能の追加","authorize() の判定順・role 判定の変更 (owner=feat-auth-tenancy)","Workspace 選択画面の UI 実装 (owner=feat-workspace-switch-ux)"]
-acceptance: ["published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/release-record.md (本番実測結果と書き戻し照合記録)、および architecture/harness-hub-frontend.md・architecture/harness-hub-security.md・specs/harness-hub-post-signin-workspace-scope-addendum.md の更新","published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"]
+acceptance: ["published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/release-record.md (本番実測結果と書き戻し照合記録) と docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md (仕様影響・反映先・no-change理由)、および system-spec/・specs/・architecture/・features/・tasks/ の反映または no-change 判断","published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている","CI が検出した catalog hard-navigation 契約の更新後、単一 workspace session の到達・query string 非信頼・複数 workspace 未選択時の missing_tenant_scope を apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts で PASS させる"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-security"]
 parent_feature: "feat-post-signin-scope-routing"
 feature_package_id: "feature-package/feat-post-signin-scope-routing"
@@ -32,7 +32,7 @@ template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T06:25:14Z","origin_kind":"system-dev-planner","source_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","source_path":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:47:00Z","origin_kind":"system-dev-planner","source_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","source_path":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.92
 classification_reason: "goal-spec.json を入力に P13 の単一責務 (infrastructure) を実行する task"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md","confidence":0.92}]
@@ -72,3 +72,4 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
 - spec writeback: P13 は実行結果・判断・改善点を確定 system spec と architecture へ書き戻し、次回の外側ループへ引き継ぐ。
+- 仕様反映受領書: `docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md` を正本とし、system-spec/・specs/・architecture/・features/・tasks/・docs/ の反映先または no-change の根拠を記録する。
