@@ -1,0 +1,24 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C05-OUT1-positive-feature-progress",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Rendered index.html at .dev-graph/render/index.html is a single self-contained file: inline <style> block with all CSS, no <link> external stylesheets, no <script src= external JS, zero http:// or https:// CDN references. SVG is embedded directly as <svg viewBox=\"0 0 1000 1160\" role=\"img\" aria-label=\"Task dependency graph\"> containing 15 <g class=\"node\"> elements and 12 <path> edges. The only <script> blocks are type=\"application/json\" data blobs and a 2-line inline filter handler. No additional runtime dependency is required."
+    },
+    "2": {
+      "met": true,
+      "evidence": "Registration receipt (system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json) has applied_count=13 and expected_count=13. The HTML feature node renders '4/13' (denominator=13). The render-metadata JSON embedded in the HTML confirms applied_count:13, expected_count:13. The <aside> registration verification bar shows 'VERIFIED' with '13/13 nodes', and registration_verification.status='verified', confirming the renderer validated the applied_count==expected_count invariant."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Independent recomputation from .dev-graph/state/graph.json: 13 child tasks of LT-FEATURE-001 exist (P01-P13). Statuses: P01=done, P02=done, P03=done, P04=done, P05=active, P06=blocked, P07-P13=draft. Count of done|closed = 4. The HTML renders progress as 4/13 on the feature node and graph-data JSON shows {\"done\":4,\"total\":13}. The receipt contains no done-count field (only applied_count and expected_count), so the numerator is necessarily computed from the graph store. Numerator (4) differs from denominator (13), confirming no confusion between the two values."
+    },
+    "4": {
+      "met": true,
+      "evidence": "Receipt source_digest = 'sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807'. HTML <aside> displays 'source sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807'. render-metadata JSON in HTML carries the identical source_digest value. The rendered subject (the feature and its 13-task package) is the artifact identified by this digest, and registration_verification.status='verified' confirms the renderer matched it."
+    }
+  }
+}

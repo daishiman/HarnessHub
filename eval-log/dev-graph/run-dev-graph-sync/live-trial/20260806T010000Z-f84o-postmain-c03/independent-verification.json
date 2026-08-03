@@ -1,0 +1,20 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Pass 2 (apply) report shows imports=[{field:title, from:'Validate isolated live trial', to:'Validate isolated live trial (updated remotely r7)', node:LT-TASK-001}] and exports=[{field:status, value:'In Progress', kind:project-field-update, node:LT-TASK-001, item_id:PVTI_lADOFixture001}]. changes=2, ok=true, mode=apply. Graph SHA256 moved d968124a→239d42b8→b606e6e4 (rev 1→2→3). Skill dev-graph:run-dev-graph-sync was invoked at transcript line 83, no nudge or AskUserQuestion was issued."
+    },
+    "2": {
+      "met": true,
+      "evidence": "Pass 3 (convergence dry-run) report: changes=0, imports=[], exports=[], converged=true, write_count=0, ok=true. The empty imports and exports arrays directly substantiate imports changes=0 and exports changes=0 as required by the scenario SSOT."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Post-pass-2 SHA256 hashes (transcript line 123): graph.json=b606e6e423f4c937a895e056b35309b6cb11df300d87eff9aa665720e9f02c66, sync-snapshot.json=ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f, remote.json=4383a92a01fe7c055d99ea6f7b084caade62cebd62101457379ab8731ffbc811. Post-pass-3 hashes (transcript line 135): identical three-way match. Independent on-disk verification via shasum -a 256 also matches all three. Pass 3 report confirms graph_sha256_before=graph_sha256_after=b606e6e4..., snapshot_sha256_before=snapshot_sha256_after=ae94bd6d.... Stable IDs (graph_node_id LT-TASK-001, issue_number 1, item_id PVTI_lADOFixture001, option_ids OPT_InProgress001/OPT_Medium001) are unchanged in the final graph.json."
+    }
+  }
+}
