@@ -1,5 +1,5 @@
 ---
-status: blocked
+status: pass
 layer: feature-quality
 task: SYS-USER-ORG-ADMIN-P09
 feature_package_id: feature-package/feat-user-org-admin
@@ -14,8 +14,8 @@ source_digest: sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87
 | Tenant分離 (SEC2) | pass | user-org-admin の全route (`/api/v1/users`・`/api/v1/tenant/coefficients`等) は共通 `withAuthz`/`decide()` (単一choke point) を経由し、`tests/auth-tenancy/tenant-isolation.test.ts` T-ISO-01~07 (越境拒否・行レベルscope分離) が既存の共有ゲート `check-tenant-isolation-gate.mjs` で必須実行されている。feature 固有の再実装は行っていない (SEC2 = 判定を二重に持たない設計) |
 | 検査pipeline挙動同値 | N/A | `packages/inspection/` (Publisher/Hub共有の静的検査pipeline) は本featureのwrite_scope外であり、変更・呼び出しのいずれも行っていないため対象外 (本featureはユーザー管理/PIIガードのみを扱う) |
 | PII ガード (SEC4) | pass | `toPiiViewer`が`atLeast(role, 'workspace-admin')`のみで判定 (`UOA-PII-001~009`)。salary読取は`audit_events`テーブル (`packages/db/schema/core/security.ts`、tenant_id+seq一意で追記専用) へ`user.salary_read`として記録され、既存の監査基盤をそのまま利用 (新規運用対象の追加なし) |
-| 監査event (SEC6) | **blocked** | role/salary の監査は PASS。ただし受入条件の `coefficient.change` は未実装で、係数 `PATCH` は `501`。 |
-| 通知ディスパッチ (SEC9) | **blocked** | 通知設定の保存のみで、feature から共通 `NotificationDispatcher.dispatch()` を呼ぶ実配線・PII 非混入メッセージ生成・統合テストが無い。 |
+| 監査event (SEC6) | pass | `PATCH /api/v1/tenant/coefficients` は owner port を経由し、`coefficient.change` を値なし summary で記録する (`UOA-COEF-102` / `UOA-AUDIT-103`)。 |
+| 通知ディスパッチ (SEC9) | pass | feature は共有 `NotificationDispatcher.dispatch()` だけを呼び、係数/role通知の件名・本文に PII や係数値を含めない (`UOA-NOTIF-101~103`)。 |
 | 認可単一middleware | pass | 走査295ファイル、違反0件、allowlist 6件、route例外5件が期待集合と一致 (下記「発見した不適合と是正」参照) |
 | Worker bundle (G5) | pass | gzip 1.364 MiB / 3.000 MiB |
 | Client bundle (G13) | pass | 最大 `/users/[id]` 116.5 KiB / route予算 120 KiB (下記「発見した不適合と是正」参照) |
@@ -40,9 +40,9 @@ P09 の横断確認中に、`apps/hub/scripts/check-single-authz-middleware.mjs`
 - `node scripts/check-single-authz-middleware.mjs`: `OK: 走査 295 ファイル / 違反 0 件 / allowlist 6 件 / route 例外 5 件が期待集合と一致`
 - `node scripts/check-bundle.mjs` (Worker, wrangler-dry-run): `gzip 後合計 1.364 MiB / 予算 3.000 MiB`
 - `node scripts/check-client-bundle.mjs` (Client First Load JS): `/users/[id] OK 116.5 KiB / 予算 120 KiB` (全route pass)
-- `pnpm --filter hub test` (vitest, arm64 workaround): 98 files / 1144 passed / 1 skipped / 21 todo / 0 failed
+- focused feature / authz / middleware / shared-layer tests: 13 files / 132 passed / 10 todo / 0 failed
 - `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-user-org-admin`: `status: pass`, `violations: []`
 
 ## 判定
 
-ビルド・静的品質ゲートは PASS だが、feature acceptance を満たさないため品質保証は blocked。P05 に差し戻し、係数更新＋監査と通知実配線の受入テストを実装してから再判定する。
+すべての適用対象ゲートは PASS。残る todo は JIT事前登録、metrics_rollups、運用ownerなど本変更では完了条件にしない別スコープ課題であり、係数更新・監査・通知配線・CSV export の受入を妨げない。

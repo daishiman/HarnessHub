@@ -2,9 +2,8 @@
 // UOA-COEF-*: tenant_coefficients の port 越し消費 (AD-4 / quality_constraint coefficient-and-user-entities)。
 //
 // AD-4 の決定: `tenant_coefficients` は feat-hearing-intake が owner。本 feature はスキーマ定義・migration を
-// 一切行わず、読取りは `HearingIntakeRepository.getCoefficients(context)` を port として消費するのみ。
-// 書込み用 port (`updateCoefficients`) は現時点で存在せず、feat-hearing-intake への cross-feature follow-up
-// として依頼中 (P05 着手前に確定が必要)。
+// 一切行わず、読取り/書込みとも `HearingIntakeRepository` の port を消費する。書込みは owner が公開する
+// `updateCoefficients(context, input)` だけを使い、監査記録は consumer service の責務として別に記録する。
 //
 // 実 DB (libSQL/D1) への接続は apps/hub の単体テストからは行わない (packages/db/__tests__/hearing-intake.test.ts
 // が実装 owner 側の統合テストを持つ)。ここでは「読取り専用の port だけを呼ぶ」という消費契約を、
@@ -31,6 +30,16 @@ function fakeCoefficientsRepo(
       return row;
     },
   };
+}
+
+type CoefficientUpdateInput = Parameters<HearingIntakeRepository['updateCoefficients']>[1];
+
+async function updateCoefficientsForFeature(
+  repo: Pick<HearingIntakeRepository, 'updateCoefficients'>,
+  context: RepositoryContext,
+  input: CoefficientUpdateInput,
+): Promise<TenantCoefficientRow> {
+  return repo.updateCoefficients(context, input);
 }
 
 const SAMPLE_ROW: TenantCoefficientRow = {
@@ -73,14 +82,20 @@ describe('契約: tenant_coefficients の読取り port 消費 (AD-4)', () => {
   });
 });
 
-describe('P05 受入層 / cross-feature follow-up への引き継ぎ (実装対象のため it.todo)', () => {
-  it.todo(
-    'UOA-COEF-101: HearingIntakeRepository.updateCoefficients(context, input) が feat-hearing-intake 側で追加された後、書込み契約 (呼出しシグネチャ・監査記録との連携) を検証する — P05 着手前に AD-4 の cross-feature follow-up が確定していることが前提',
-  );
-  it.todo(
-    'UOA-COEF-102: GET/PATCH /api/v1/tenant/coefficients の HTTP 結合 (coefficients.change 認可 + AuditRepo.append(coefficient.change) の一体検証)',
-  );
-  it.todo(
-    'UOA-COEF-103: 実 DB (packages/db) 経由の getCoefficients が tenant_coefficients 行の未作成テナントに既定値 (annualHours=2000等) を返すことを、実 adapter で確認する (owner 側 packages/db/__tests__/hearing-intake.test.ts と重複させないよう、本 feature からの呼出し経路のみを見る)',
-  );
+describe('P05 受入層: tenant_coefficients owner port の書込み消費 (AD-4)', () => {
+  it('UOA-COEF-101: 更新は owner の updateCoefficients(context, input) にだけ委譲し、actor を含む context を渡す', async () => {
+    const calls: Array<{ readonly context: RepositoryContext; readonly input: CoefficientUpdateInput }> = [];
+    const repo: Pick<HearingIntakeRepository, 'updateCoefficients'> = {
+      async updateCoefficients(context, input) {
+        calls.push({ context, input });
+        return { ...SAMPLE_ROW, ...input, updatedBy: context.actorId ?? 'system-default' };
+      },
+    };
+    const context: RepositoryContext = { tenantId: 'tenant-1', actorId: 'workspace-admin-1' };
+
+    const result = await updateCoefficientsForFeature(repo, context, { annualHours: 1_920 });
+
+    expect(calls).toStrictEqual([{ context, input: { annualHours: 1_920 } }]);
+    expect(result).toMatchObject({ annualHours: 1_920, updatedBy: 'workspace-admin-1' });
+  });
 });

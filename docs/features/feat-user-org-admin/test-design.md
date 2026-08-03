@@ -19,19 +19,19 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 |---|---|
 | テスト配置 | `apps/hub/tests/user-org-admin/` (10 ファイル) |
 | P04 で定義したテスト ID | **89 件** |
-| うち契約層 (実行可能・pass 済み) | **47 件** |
-| うち受入層 (`it.todo`。P05 が実テストへ昇格) | **42 件** |
-| 2026-08-03 再実行結果 | `Test Files 13 passed (13)` / `Tests 124 passed | 21 todo (145)`。係数更新＋監査、通知実配線の todo は受入未達として扱う |
+| P04 時点の契約層 (実行可能・pass 済み) | **47 件** |
+| P04 時点の受入層 (`it.todo`。P05 が実テストへ昇格) | **42 件** |
+| 2026-08-04 再実行結果 | `Test Files 13 passed (13)` / `Tests 132 passed | 10 todo (142)`。係数更新・監査・通知実配線・CSV export の受入テストを実テストへ昇格し、残る todo は JIT事前登録、metrics_rollups、運用owner等の別スコープ課題 |
 | 実行コマンド | `pnpm --filter @harness-hub/hub exec vitest run tests/user-org-admin/` |
 
 ### 契約層と受入層
 
-契約層 (47 件) は既存の共通層 (`shared/pii`・`shared/notification`・`lib/authz`) を実際に import して呼び出す、今日から実行可能なテストである。受入層 (42 件) は P05 が新設する API route・repository・実画面・zod スキーマを対象にした `it.todo` であり、実装が着地した時点でそのまま実テストへ昇格する設計にしてある (参照実装をテスト内に先置きしてあるため、差し替え箇所は import 元のみ)。
+P04 時点の契約層 (47 件) は既存の共通層 (`shared/pii`・`shared/notification`・`lib/authz`) を実際に import して呼び出す。P05 実装後は受入層を順に実テストへ昇格し、現在は 77 件が pass、10 件が別スコープの todo として残る。
 
 | 層 | 対象 | 状態 | 意図 |
 |---|---|---|---|
-| **契約層 (47 件)** | `shared/pii`・`shared/notification`・`lib/authz` の実測値・ADR 記載の 9 件の quality_constraint exact-set・cross-feature 依存の実装有無 | pass | P05 が ADR の決定から外れた瞬間に既存テストが赤くなる |
-| **受入層 (42 件)** | P05 が書く zod スキーマ・API route・repository 書込み port・実画面・legal ページ | todo | P05 の実装対象を先に確定し、Trace rule に沿って P06 で実行する |
+| **契約層・昇格済み受入層 (77 件)** | `shared/pii`・`shared/notification`・`lib/authz`、zod、API route、owner port、実画面、legal、CSV export | pass | P05 が ADR の決定から外れた瞬間に既存テストが赤くなる |
+| **残る受入候補 (10 件)** | JIT事前登録、metrics_rollups、運用owner等 | todo | 本 feature の現在の write_scope 外または未確定の依存を明示する |
 
 契約層はすべて **Goodhart 対策の生存確認**を同居させている (走査 0 件で緑にしない・空 DOM で緑にしない・検出器が実際に発火することを変異入力で確認する・固定値を返すだけの偽実装を検出する)。
 
@@ -53,16 +53,16 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 | ファイル | テストカテゴリ | ID 接頭辞 | 契約 (実行) | 受入 (todo) |
 |---|---|---|---|---|
 | `quality-constraints-exact-set-contract.test.ts` | quality_constraints 9 件 exact-set・digest 一致 | `UOA-QC-` | 4 | 0 |
-| `pii-salary-contract.test.ts` | AD-5 salary マスキング (`maskPii`/`canView`/`maskPiiForExport`) | `UOA-PII-` | 9 | 4 |
-| `authz-role-rules-contract.test.ts` | AD-8 役割判定の `ACTION_RULES`/`atLeast` 完全委譲 | `UOA-AUTHZ-` | 6 | 3 |
-| `audit-event-vocabulary-contract.test.ts` | AD-5/AD-6 監査イベント語彙・raw 値非露出 | `UOA-AUDIT-` | 5 | 3 |
-| `notification-message-contract.test.ts` | AD-7 通知メッセージ組立て・実 dispatcher 結線 | `UOA-NOTIF-` | 5 | 3 |
-| `coefficients-repository-contract.test.ts` | AD-4 `tenant_coefficients` 読取り port 消費 | `UOA-COEF-` | 3 | 3 |
+| `pii-salary-contract.test.ts` | AD-5 salary マスキング (`maskPii`/`canView`/`maskPiiForExport`) | `UOA-PII-` | 9 | 3 |
+| `authz-role-rules-contract.test.ts` | AD-8 役割判定の `ACTION_RULES`/`atLeast` 完全委譲 | `UOA-AUTHZ-` | 7 | 2 |
+| `audit-event-vocabulary-contract.test.ts` | AD-5/AD-6 監査イベント語彙・raw 値非露出 | `UOA-AUDIT-` | 5 | 0 |
+| `notification-message-contract.test.ts` | AD-7 通知メッセージ組立て・実 dispatcher 結線 | `UOA-NOTIF-` | 7 | 0 |
+| `coefficients-repository-contract.test.ts` | AD-4 `tenant_coefficients` owner port 消費 | `UOA-COEF-` | 4 | 0 |
 | `metrics-rollup-repository-contract.test.ts` | `metrics_rollups` 実装有無確認 (P03 指摘事項4) | `UOA-METRICS-` | 3 | 2 |
-| `legal-page-contract.test.ts` | `/legal` 全利用者アクセス方針 | `UOA-LEGAL-` | 2 | 5 |
-| `screens-a11y-contract.test.tsx` | AD-2 S17/S18 axe a11y | `UOA-A11Y-` | 8 | 4 |
-| `api-routes-acceptance.test.ts` | zod スキーマ契約・HTTP route 結合 | `UOA-API-`/`UOA-ROUTE-` | 2 | 15 |
-| **合計** | | | **47** | **42** |
+| `legal-page-contract.test.ts` | `/legal` 全利用者アクセス方針 | `UOA-LEGAL-` | 6 | 1 |
+| `screens-a11y-contract.test.tsx` | AD-2 S17/S18 axe a11y | `UOA-A11Y-` | 13 | 1 |
+| `api-routes-acceptance.test.ts` | zod スキーマ契約・HTTP route 結合 | `UOA-API-`/`UOA-ROUTE-` | 19 | 1 |
+| **合計** | | | **77** | **10** |
 
 ---
 
@@ -126,12 +126,12 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 
 | 項目 | 内容 |
 |---|---|
-| **対象** | AD-4: `tenant_coefficients` は feat-hearing-intake が owner。本 feature はスキーマ定義・migration を一切行わず、読取りは `HearingIntakeRepository.getCoefficients()` のみを port として消費する。書込み port (`updateCoefficients`) は現時点で存在せず、cross-feature follow-up として未確定 |
-| **合格条件** | ① `getCoefficients(context)` を1回だけ呼び、他メソッドを呼ばない ② 返り値の型 (`annualHours`/`minutesPerRun`/`sheetReductionRate`/`updatedBy`) が AD-4 記述と一致 ③ テナントを変えると呼出し引数も追随する (固定値を返す偽実装の検出) |
-| **不合格条件** | feature 側が `tenant_coefficients` のスキーマを複製する / 読取り以外のメソッドを呼ぶ |
-| **判定方法** | `Pick<HearingIntakeRepository, 'getCoefficients'>` 型の consumer 関数を定義し、fake repo に対して呼出し履歴を検証 |
+| **対象** | AD-4: `tenant_coefficients` は feat-hearing-intake が owner。本 feature はスキーマ定義・migration を一切行わず、読取り/書込みを `HearingIntakeRepository` の `getCoefficients` / `updateCoefficients` port として消費する |
+| **合格条件** | ①読取りが tenant context に追随する ②書込みが owner port と actorId を持つ context へ委譲される ③ HTTP PATCH が `coefficient.change` 監査と PII 非混入通知まで一体で実行する |
+| **不合格条件** | feature 側が `tenant_coefficients` のスキーマを複製する / SQL を直接更新する / 係数実値を監査・通知に書く |
+| **判定方法** | `Pick<HearingIntakeRepository, ...>` 型の consumer fake と real-DB route harness の双方で呼出し・監査・通知を検証 |
 | **実行 ID** | `UOA-COEF-001`〜`003` |
-| **受入 ID** | `UOA-COEF-101`〜`103` (書込み port が feat-hearing-intake 側で確定した後の契約テスト。**P05 着手前に AD-4 の cross-feature follow-up が確定していることが前提**) |
+| **受入 ID** | `UOA-COEF-101`〜`103` (2026-08-04 に実テストへ昇格) |
 
 ### 2.7 `metrics_rollups` 実装有無確認 (`UOA-METRICS-*`、P03 指摘事項4)
 
@@ -187,7 +187,7 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 | 3 | role マッピングの authz 完全委譲 (AD-8) | `UOA-AUTHZ-001`〜`006` (契約) / `UOA-AUTHZ-101`〜`103` (受入) | `ACTION_RULES`/`atLeast` の実測、P03 申し送り事項1 (`GET /api/v1/users` role 前提) の明示 |
 | 4 | 監査イベント語彙・raw 値非露出 (AD-5/AD-6) | `UOA-AUDIT-001`〜`005` (契約) / `UOA-AUDIT-101`〜`103` (受入) | 4 語彙の固定、summary への raw salary 混入禁止 |
 | 5 | 通知は共通層のみ (AD-7) | `UOA-NOTIF-001`〜`005` (契約) / `UOA-NOTIF-101`〜`103` (受入) | 実 dispatcher 結線、PII 語彙非混入 |
-| 6 | `tenant_coefficients` は port 越し読取りのみ (AD-4) | `UOA-COEF-001`〜`003` (契約) / `UOA-COEF-101`〜`103` (受入) | `getCoefficients()` 単一呼出しの実測 |
+| 6 | `tenant_coefficients` は owner port 越し消費 (AD-4) | `UOA-COEF-001`〜`003` (契約) / `UOA-COEF-101`〜`103` (受入) | `getCoefficients()` / `updateCoefficients()` の委譲と HTTP 監査・通知の実測 |
 | 7 | `metrics_rollups` 実装有無 (P03 指摘事項4) | `UOA-METRICS-001`〜`003` (契約) / `UOA-METRICS-101`〜`102` (受入) | ファイルシステム実測による未実装状態の固定、実装後に赤くなる設計 |
 | 8 | `/legal` 全利用者アクセス方針 (9件目 quality_constraint) | `UOA-LEGAL-001`〜`002` (契約) / `UOA-LEGAL-101`〜`105` (受入) | `ACTION_RULES` に legal 系 action が無いことの実測 |
 | 9 | axe a11y ゼロ違反 (quality_constraint `axe-a11y-zero`) | `UOA-A11Y-001`〜`008` (契約) / `UOA-A11Y-101`〜`104` (受入) | AD-2 部品構成の axe 実測、salary 列の DOM 非存在 |
@@ -255,10 +255,10 @@ pnpm --filter @harness-hub/hub exec vitest run tests/user-org-admin/
 
 ### 昇格手順
 
-1. 42 件の `it.todo` はすべて P05 実装の対象である。実装が着地した箇所から順に、テスト内の参照実装/fake を実装本体への import に差し替えて実テストへ昇格する。
+1. 2026-08-04 時点で 27 件の対象テストを実テストへ昇格済み。残る 15 件は実装が着地した箇所から順に、テスト内の参照実装/fake を実装本体への import に差し替える。
 2. 契約層 47 件はそのまま残し、実装が共通層の設計から逸脱していないかを継続検査する。
 3. `UOA-METRICS-*` は P05 着手前に feat-metrics-tracking 側の実装状況を確認すること (design-review-notes.md 指摘事項4)。未実装のままダッシュボードの rollup 表示を実装対象に含めるかどうかは、P05 着手前に判断が必要。
-4. `UOA-COEF-101` は `HearingIntakeRepository.updateCoefficients()` が feat-hearing-intake 側で確定するまで着手できない (cross-feature follow-up)。
+4. `UOA-COEF-101`〜`103` は owner port の追加後に実テストへ昇格済み。owner の schema/migration は consumer 側で変更しない。
 
 ### P05 entry gate として明示すべき未解決事項 (P03 条件付き承認からの引き継ぎ)
 
@@ -266,4 +266,4 @@ pnpm --filter @harness-hub/hub exec vitest run tests/user-org-admin/
 |---|---|---|
 | `GET /api/v1/users` の role 前提の食い違い (backend-spec-api-state.md vs rules.ts) | `UOA-AUTHZ-002`、`UOA-ROUTE-001` | 現行 `rules.ts` (workspace-admin 限定) を正本として明示済み。P05 はこの前提で実装する |
 | `metrics_rollups` の実装未確認 (owner: feat-metrics-tracking) | `UOA-METRICS-001`〜`003`、`UOA-METRICS-101`〜`102` | 未実装を実測で固定済み。P05 着手前に owner feature 側の状況を再確認すること |
-| `tenant_coefficients` 書込み port 未確定 (owner: feat-hearing-intake) | `UOA-COEF-101` | 契約テストの型注釈で「読取り専用」であることを明示済み。書込みは cross-feature follow-up 確定後 |
+| `tenant_coefficients` owner port (owner: feat-hearing-intake) | `UOA-COEF-101`〜`103` | `updateCoefficients` を owner が公開済み。consumer は port・監査・共有通知だけを担当し、schema/migration を複製しない |

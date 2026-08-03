@@ -8,6 +8,10 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  notifyRoleChanged,
+  resolveUserOrgAdminNotificationChannels,
+} from '../../src/features/user-org-admin/notification.js';
+import {
   createNotificationDispatcher,
   type NotificationChannel,
   type NotificationDeliveryResult,
@@ -140,14 +144,37 @@ describe('契約: NotificationMessage の組立て (AD-7)', () => {
   });
 });
 
-describe('P05 受入層への引き継ぎ (実装対象のため it.todo)', () => {
-  it.todo(
-    'UOA-NOTIF-101: S18 通知設定 UI の notify_generation/notify_review/notify_weekly/notify_feedback/email_enabled から channels 配列を組み立てる変換関数の実装を検証する',
-  );
-  it.todo(
-    'UOA-NOTIF-102: createNotificationDispatcher への transports 注入は feat-hub-foundation 側のまま変更されていないことを結線テストで確認する',
-  );
-  it.todo(
-    'UOA-NOTIF-103: 実際の係数変更/role変更通知が dispatch() 呼出しに至るまでの HTTP 結合 (route → buildXxxMessage → dispatch)',
-  );
+describe('P05 受入層: feature から共通 dispatcher への結線', () => {
+  it('UOA-NOTIF-101: account管理通知はアプリ内を既定とし、email_enabled が有効なときだけメールを追加する', () => {
+    expect(resolveUserOrgAdminNotificationChannels(false)).toEqual(['in_app']);
+    expect(resolveUserOrgAdminNotificationChannels(true)).toEqual(['in_app', 'email']);
+  });
+
+  it('UOA-NOTIF-102: feature は共通 dispatcher へ PII を含まない role変更メッセージだけを渡す', async () => {
+    const sent: NotificationMessage[] = [];
+    const dispatcher = createNotificationDispatcher({
+      transports: [fakeTransport('in_app', sent), fakeTransport('email', sent)],
+    });
+    await notifyRoleChanged(dispatcher, {
+      tenantId: 'tenant-1',
+      recipientUserId: 'user-9',
+      emailEnabled: true,
+      auditEventId: 'audit-1',
+    });
+
+    expect(sent).toHaveLength(2);
+    expect(sent[0]).toMatchObject({
+      tenantId: 'tenant-1',
+      workspaceId: null,
+      recipientSubject: 'user-9',
+      kind: 'user.role_changed',
+      idempotencyKey: 'user.role_changed:audit-1',
+    });
+    for (const message of sent) {
+      for (const keyword of ['salary', '年収', '¥', '給与']) {
+        expect(message.subject).not.toContain(keyword);
+        expect(message.body).not.toContain(keyword);
+      }
+    }
+  });
 });

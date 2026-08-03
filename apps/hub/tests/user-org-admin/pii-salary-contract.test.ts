@@ -103,7 +103,7 @@ describe('P05 受入層への引き継ぎ (実装対象のため it.todo)', () =
   it.todo(
     'UOA-PII-102: 個別ダッシュボード画面の salary 表示/編集 UI が admin 限定で分岐する (role 別 UI スナップショット)',
   );
-  it.todo('UOA-PII-103: CSV export エンドポイントが maskPiiForExport を通す (export DTO 結合)');
+  // UOA-PII-103 は api-routes-acceptance.test.ts の UOA-ROUTE-007 として real-DB HTTP 結合へ昇格済み。
   it.todo(
     'UOA-PII-104: decryptSalary() 呼出しが withAuthz(users.read_salary | users.write_salary) を通過した後にのみ発生する (呼出し順序の結合検証)',
   );

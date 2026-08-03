@@ -24,6 +24,7 @@ import { createUnavailableOidcAdminService } from '../../../src/lib/auth/oidc-ad
 import { createRevocationChecker } from '../../../src/lib/authz/revocation.js';
 import type { AuthRuntime } from '../../../src/lib/authz/runtime.js';
 import { createAuditLogger, createInMemoryAuditSink } from '../../../src/shared/audit/index.js';
+import type { NotificationDispatcher } from '../../../src/shared/notification/index.js';
 import { createSequentialIds } from '../../auth-tenancy/support/in-memory-ports.js';
 import { createRealDbHarness, type RealDbHarness, type SeededUser, seedUserOrgAdminTenant } from './real-db.js';
 
@@ -43,7 +44,9 @@ export interface UserOrgAdminHarness {
   close(): void;
 }
 
-export async function createUserOrgAdminHarness(): Promise<UserOrgAdminHarness> {
+export async function createUserOrgAdminHarness(
+  options: { readonly dispatcher?: NotificationDispatcher } = {},
+): Promise<UserOrgAdminHarness> {
   const db = await createRealDbHarness();
   const audit = createInMemoryAuditSink();
   const auditLogger = createAuditLogger({ sink: audit, newId: createSequentialIds('audit') });
@@ -75,6 +78,7 @@ export async function createUserOrgAdminHarness(): Promise<UserOrgAdminHarness> 
   const userOrgAdminRuntime = createUserOrgAdminRuntime(
     { users: db.repositories.users, userSettings: db.repositories.userSettings, audit: db.repositories.audit },
     db.hearingIntake,
+    options.dispatcher,
   );
 
   return {

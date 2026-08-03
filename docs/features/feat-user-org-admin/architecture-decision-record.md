@@ -20,7 +20,7 @@ architecture_refs: [arch-harness-hub-security, arch-harness-hub-backend, arch-ha
 | [AD-1](#1-ad-1-users-テーブルのカラム-owner-は-feat-domain-model-db-であり本-feature-は-port-越しにのみ消費する) | `users.department`/`users.salary` のスキーマ owner は feat-domain-model-db。本 feature はカラムを追加せず `UsersRepo`/`AuditRepo` を port として消費する | coefficient-and-user-entities |
 | [AD-2](#2-ad-2-s17s18-画面構成と共通-ui-部品の再利用方針) | S17 (ユーザー管理 + 個別ダッシュボード)・S18 (アカウント設定 + `/legal`) の画面構成 | backend-b10-user-management |
 | [AD-3](#3-ad-3-api-契約は-packagesschemasuser-org-admin-に-zod-単一ソースで置く) | `packages/schemas/user-org-admin/` に zod スキーマを新設し、既存 authz `ACTION_RULES` の action 語彙とハンドラを 1:1 対応させる | backend-b10-user-management, role-4-integration |
-| [AD-4](#4-ad-4-tenant_coefficients-テーブルは-feat-hearing-intake-が-owner-であり本-feature-は-port-越しにのみ消費する) | `tenant_coefficients` テーブルは feat-hearing-intake が既に owner として実装済み。本 feature は新規テーブルを作らず `HearingIntakeRepository.getCoefficients()` を port として消費し、書込み用 port は feat-hearing-intake への cross-feature follow-up として追加を依頼する | coefficient-and-user-entities |
+| [AD-4](#4-ad-4-tenant_coefficients-テーブルは-feat-hearing-intake-が-owner-であり本-feature-は-port-越しにのみ消費する) | `tenant_coefficients` テーブルは feat-hearing-intake が owner。本 feature は新規テーブルを作らず、owner が公開する `HearingIntakeRepository.getCoefficients()` / `updateCoefficients()` を port として消費する | coefficient-and-user-entities |
 | [AD-5](#5-ad-5-salary-の-pii-ガードは-feat-hub-foundation-の共通-pii-層-apphubsrcsharedpii-をそのまま消費する) | salary は `apps/hub/src/shared/pii/` の `PiiFieldPolicy`/`canView`/`maskPii`/`maskPiiForExport` をそのまま消費し、admin 限定の `decryptSalary` 明示呼出しと組み合わせて適用する (共通層の再実装はしない) | salary-pii-guard |
 | [AD-6](#6-ad-6-監査統合は-auditrepoappend-を消費し既存-action-語彙をそのまま使う) | role/salary/coefficient 変更は `AuditRepo.append()` を呼び、`user.role_change`/`user.salary_change`/`user.salary_read`/`coefficient.change` の既存語彙をそのまま使う (新語彙を作らない) | audit-event-expansion |
 | [AD-7](#7-ad-7-通知ディスパッチは-feat-hub-foundation-の共通層-apphubsrcsharednotification-をそのまま消費する) | `notifications` の配信は既に実装済みの `apps/hub/src/shared/notification/` (`NotificationDispatcher`/`createNotificationDispatcher`) をそのまま消費する。本 feature は呼出しメッセージの組立てのみを担う | notification-dispatch-common-layer |
@@ -94,8 +94,8 @@ feat-domain-model-db ADR §1 の 3 系統の証跡 (文書証跡・write_scope �
 ### 決定
 
 1. 本 feature は `tenant_coefficients` のスキーマ定義・migration を一切行わない (write_scope に `packages/db/schema/` を含めない。AD-1 と同型のパターン)。
-2. 読取りは `HearingIntakeRepository.getCoefficients(context)` をそのまま port として消費する。
-3. 書込み (係数変更 API) の port は現時点で存在しない (`HearingIntakeRepository` は getter のみ)。本 feature は `updateCoefficients(context, input)` を `HearingIntakeRepository` へ追加することを feat-hearing-intake への **cross-feature follow-up** として依頼する (追加自体は feat-hearing-intake の write_scope であり、本 feature は追加しない)。P05 着手前に確定させる (「実装追補・未解決事項」参照)。
+2. 読取りは `HearingIntakeRepository.getCoefficients(context)` を、書込みは同 owner が公開する `updateCoefficients(context, input)` をそのまま port として消費する。`updateCoefficients` は actorId を持つ `RepositoryContext` を必須にし、係数テーブルへの更新責務を owner に維持する。
+3. 本 feature は owner port を呼ぶ API/service consumer であり、`tenant_coefficients` の SQL・migration・第2の repository は持たない。port 呼出し後、consumer 文脈の監査を `coefficient.change` として記録する。
 4. 変更は `coefficient.change` action 経由・`AuditRepo.append()` で記録必須 (AD-6)。監査呼出しは port 呼出し側 (本 feature の API ハンドラ) の責務とし、`HearingIntakeRepository` 側には持たせない (監査は消費者ごとに文脈が異なるため owner 側に埋め込まない)。
 
 ### スコープ外
@@ -208,7 +208,7 @@ role 4 種 (`provider-admin`/`workspace-admin`/`owner`/`member`) の認可判定
 
 - `/legal` の Studio mockup 上の詳細要件 (静的コンテンツの更新 owner、axe 検証範囲) は本タスクの「Normative implementation closure」オーバーレイと `docs/features/feat-user-org-admin/requirements-baseline.md` (P01 確定 acceptance 3 件) の記載件数に差異がある (baseline は 8 quality_constraints、オーバーレイは 9 件目として `legal-static-page-all-users` を追加)。screen-inventory.md の「規約は S18 配下」という既存確定事項とは整合するため本書では設計に含めたが、P01 baseline 側への正式な差分反映は spec-drift-triage の対象として別途起票する。
 - 2026-08-03 最終レビュー訂正: AD-5 の role マッピングは実装済みだが、AD-7 の `NotificationMessage` 組立て・`NotificationDispatcher.dispatch()` 呼出しは grep 0 件で未実装だった。「最初に統合する consumer」という将来形を完了済みと扱わない。P05 を再オープンし、PII 非混入のメッセージ生成・注入済み dispatcher 呼出し・実配線テストを追加する。
-- AD-4: `HearingIntakeRepository` への `updateCoefficients(context, input)` 追加を feat-hearing-intake への cross-feature follow-up として依頼する。P05 (本 feature の実装) は、この port が確定するまで着手できない旨を dev-graph 側の依存関係として明示する必要がある。
+- 2026-08-04 AD-4 実装追補: `HearingIntakeRepository.updateCoefficients(context, input)` を owner 側 repository に追加し、`PATCH /api/v1/tenant/coefficients` はこの port、`AuditRepo.append(action: 'coefficient.change')`、共有 `NotificationDispatcher.dispatch()` を順に利用する。監査 summary と通知本文には係数の実値を含めない。スキーマ/migration の追加はしていない。
 - P03 (3回目、条件付き承認) の申し送り: (a) AD-3 の `GET /api/v1/users` は `users.read` (workspace-admin 限定) としているが、`docs/backend-spec-api-state.md:32` は同エンドポイントを「member (簡易: name/department のみ) / admin (全列)」と記載しており、両 `status: confirmed` 文書間でドリフトがある。現行 screen-inventory/acceptance に member 向け一覧要求は無く機能的欠落ではないが、正式な是正は spec-drift-triage の対象として別途起票する (AD-3 は security-spec/実装済み `rules.ts` 側を優先する現行設計を維持)。(b) AD-2 の個別ダッシュボードが読む `metrics_rollups` は feat-metrics-tracking 側に実装が確認できず (`packages/db/schema/`・`packages/db/repository/` に該当なし)、AD-4 と同型の cross-feature 依存が未解決のまま残っている。P05 着手前に feat-metrics-tracking 側の実装状況を確認し、未実装であれば AD-4 と同様に follow-up を起票する。
 
 ## 参照情報

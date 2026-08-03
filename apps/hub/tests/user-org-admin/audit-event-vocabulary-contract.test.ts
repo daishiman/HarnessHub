@@ -107,14 +107,4 @@ describe('契約: salary 読取の呼出し即監査 (AD-5 決定4)', () => {
   });
 });
 
-describe('P05 受入層への引き継ぎ (実装対象のため it.todo)', () => {
-  it.todo(
-    'UOA-AUDIT-101: 実 AuditRepo.append() (packages/db) を使い、role/salary/coefficient 変更の hash chain 込み記録を検証する (packages/db 側の統合テストへ委譲するか、apps/hub 側で adapter 経由結合を追加する)',
-  );
-  it.todo(
-    'UOA-AUDIT-102: PATCH /api/v1/users/:id で role 変更時のみ user.role_change が記録され、role 以外の更新では記録されない (HTTP 結合)',
-  );
-  it.todo(
-    'UOA-AUDIT-103: PATCH /api/v1/tenant/coefficients が coefficient.change を記録する (AD-4 の書込み port 確定後に実装可能)',
-  );
-});
+// UOA-AUDIT-101~103 は api-routes-acceptance.test.ts の real-DB HTTP 結合へ昇格済み。

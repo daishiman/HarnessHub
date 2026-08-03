@@ -60,5 +60,5 @@ pnpm --filter @harness-hub/hub exec vitest run tests/user-org-admin
 ## 5. 未実装 (手順で代替しないもの)
 
 - 通知ディスパッチの自動リトライ・バッチ分割: 現状の `createNotificationDispatcher` は 1 メッセージ単位の即時送出のみで、日次送信数上限・週次サマリのバッチ分割・失敗時の自動リトライは実装されていない。Resend 等の実 transport 接続自体もこのリポジトリには存在せず (`NotificationTransport` は呼び出し元がテスト用 fake を注入する契約のみ)、これらは feat-hub-foundation 側の共通層拡張が必要な将来課題であり、本 runbook では手順として代替しない。
-- 係数の変更と `coefficient.change` 監査: `HearingIntakeRepository.updateCoefficients()` が未実装のため、`PATCH /api/v1/tenant/coefficients` は `501`。DB を直接更新して代替せず、owner port と feature 側監査経路を実装してから公開する。
+- 係数の変更と `coefficient.change` 監査: `PATCH /api/v1/tenant/coefficients` は owner の `HearingIntakeRepository.updateCoefficients()` を経由する。変更後は `audit_events` に `coefficient.change` があり、summary が `changedFields` のみで係数値を含まないことを確認する。異常時も DB を直接更新して代替しない。
 - `/legal` の内容更新 owner: 規約・ポリシー本文の実際の更新責任者・更新フローは、本 feature の write_scope 外 (法務/コンテンツ管理側の意思決定) のため未確定。内容更新が必要になった時点で dev-graph へ別途起票する。

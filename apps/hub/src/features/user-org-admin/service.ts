@@ -18,6 +18,7 @@ import type {
   UpdateDisplaySettingsRequest,
   UpdateMeRequest,
   UpdateNotificationSettingsRequest,
+  UpdateTenantCoefficientsRequest,
   UpdateUserRequest,
   UserDetail,
   UserListItem,
@@ -25,7 +26,16 @@ import type {
 } from '@harness-hub/schemas';
 import { displaySettingsResponseSchema } from '@harness-hub/schemas';
 import { atLeast } from '../../lib/authz/index.js';
-import { ADMIN_ROLE, canView, maskPii, type PiiFieldPolicy, type PiiViewer } from '../../shared/pii/index.js';
+import type { NotificationDispatcher } from '../../shared/notification/index.js';
+import {
+  ADMIN_ROLE,
+  canView,
+  maskPii,
+  maskPiiForExport,
+  type PiiFieldPolicy,
+  type PiiViewer,
+} from '../../shared/pii/index.js';
+import { notifyCoefficientsChanged, notifyRoleChanged } from './notification.js';
 
 // packages/db の公開面 (`src/index.ts`) は個別 repository の interface (UsersRepo 等) を
 // 意図的に公開しない (leaf export 禁止 — composition.ts 冒頭コメント参照)。
@@ -63,10 +73,12 @@ export interface UserOrgAdminServiceDeps {
   readonly userSettings: UserSettingsRepo;
   readonly audit: AuditRepo;
   readonly coefficients: HearingIntakeRepository;
+  readonly notifications: NotificationDispatcher;
 }
 
 export interface UserOrgAdminService {
   listUsers(context: RepositoryContext, viewerRole: ViewerRole, actorId: string): Promise<UserListResponse>;
+  exportUsers(context: RepositoryContext): Promise<readonly UserExportRow[]>;
   getUser(context: RepositoryContext, id: string, viewerRole: ViewerRole, actorId: string): Promise<UserDetail | null>;
   updateUser(context: RepositoryContext, id: string, request: UpdateUserRequest, actorId: string): Promise<UserDetail>;
   getMe(context: RepositoryContext, userId: string): Promise<MeResponse | null>;
@@ -79,6 +91,19 @@ export interface UserOrgAdminService {
   getDisplaySettings(userId: string): Promise<DisplaySettingsResponse>;
   updateDisplaySettings(userId: string, request: UpdateDisplaySettingsRequest): Promise<DisplaySettingsResponse>;
   getCoefficients(context: RepositoryContext): Promise<TenantCoefficientsResponse>;
+  updateCoefficients(
+    context: RepositoryContext,
+    request: UpdateTenantCoefficientsRequest,
+    actorId: string,
+  ): Promise<TenantCoefficientsResponse>;
+}
+
+export interface UserExportRow {
+  readonly name: string;
+  readonly department: string | null;
+  readonly role: string;
+  readonly status: string;
+  readonly salary: string | null;
 }
 
 /**
@@ -136,6 +161,21 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
       return { items, next_cursor: null };
     },
 
+    async exportUsers(context) {
+      const rows = await deps.users.list(context);
+      return rows.map((row) => {
+        // ciphertext の有無だけを渡し、salary を復号しない。共通 export guard は viewer を受けず常にマスクする。
+        const masked = maskPiiForExport(toListItemBase(row, row.salary), [SALARY_POLICY]);
+        return {
+          name: String(masked.name),
+          department: masked.department === null ? null : String(masked.department),
+          role: String(masked.role),
+          status: String(masked.status),
+          salary: masked.salary === null ? null : String(masked.salary),
+        };
+      });
+    },
+
     async getUser(context, id, viewerRole, actorId) {
       const row = await deps.users.findById(context, id);
       if (row === null) return null;
@@ -172,13 +212,20 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
       const updated = Object.keys(patch).length > 0 ? await deps.users.update(context, id, patch) : before;
 
       if (request.role !== undefined && request.role !== before.role) {
-        await deps.audit.append(context, {
+        const auditEvent = await deps.audit.append(context, {
           actorType: 'user',
           actorId,
           action: 'user.role_change',
           entityType: 'user',
           entityId: id,
           summary: { from: before.role, to: request.role },
+        });
+        const settings = await deps.userSettings.getOrDefault(id);
+        await notifyRoleChanged(deps.notifications, {
+          tenantId: context.tenantId,
+          recipientUserId: id,
+          emailEnabled: settings.emailEnabled,
+          auditEventId: auditEvent.id,
         });
       }
 
@@ -271,6 +318,43 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
 
     async getCoefficients(context) {
       const row = await deps.coefficients.getCoefficients(context);
+      return {
+        annual_hours: row.annualHours,
+        minutes_per_run: row.minutesPerRun,
+        sheet_reduction_rate: row.sheetReductionRate,
+        updated_by: row.updatedBy,
+      };
+    },
+
+    async updateCoefficients(context, request, actorId) {
+      const changedFields = [
+        ...(request.annual_hours !== undefined ? ['annualHours'] : []),
+        ...(request.minutes_per_run !== undefined ? ['minutesPerRun'] : []),
+        ...(request.sheet_reduction_rate !== undefined ? ['sheetReductionRate'] : []),
+      ];
+      if (changedFields.length === 0) return this.getCoefficients(context);
+
+      const row = await deps.coefficients.updateCoefficients(context, {
+        ...(request.annual_hours !== undefined && { annualHours: request.annual_hours }),
+        ...(request.minutes_per_run !== undefined && { minutesPerRun: request.minutes_per_run }),
+        ...(request.sheet_reduction_rate !== undefined && { sheetReductionRate: request.sheet_reduction_rate }),
+      });
+      const auditEvent = await deps.audit.append(context, {
+        actorType: 'user',
+        actorId,
+        action: 'coefficient.change',
+        entityType: 'tenant_coefficients',
+        entityId: context.tenantId,
+        // 係数の実値は監査ログにも通知本文にも書かない (SEC6/SEC9)。
+        summary: { changedFields },
+      });
+      const settings = await deps.userSettings.getOrDefault(actorId);
+      await notifyCoefficientsChanged(deps.notifications, {
+        tenantId: context.tenantId,
+        recipientUserId: actorId,
+        emailEnabled: settings.emailEnabled,
+        auditEventId: auditEvent.id,
+      });
       return {
         annual_hours: row.annualHours,
         minutes_per_run: row.minutesPerRun,

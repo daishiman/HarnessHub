@@ -174,7 +174,7 @@ export const tenantCoefficientsResponseSchema = z
   .strict();
 export type TenantCoefficientsResponse = z.output<typeof tenantCoefficientsResponseSchema>;
 
-/** 部分更新。書込み port (`updateCoefficients`) が feat-hearing-intake 側で確定するまで route は 501 を返す (AD-4 決定3)。 */
+/** 部分更新。書込みは tenant_coefficients owner の `HearingIntakeRepository.updateCoefficients()` を経由する (AD-4)。 */
 export const updateTenantCoefficientsRequestSchema = z
   .object({
     annual_hours: z.number().int().positive().optional(),

@@ -1,6 +1,6 @@
 import { createRepositoryContext } from '@harness-hub/db';
-import { problemDetails } from '@harness-hub/schemas';
-import { problemResponse } from '../../../../../features/user-org-admin/http.js';
+import { updateTenantCoefficientsRequestSchema } from '@harness-hub/schemas';
+import { parseJsonRequest } from '../../../../../features/user-org-admin/http.js';
 import { userOrgAdminRuntime } from '../../../../../features/user-org-admin/runtime.js';
 import { authRuntime, requestScopedResource, withAuthz } from '../../../../../lib/authz/index.js';
 
@@ -24,11 +24,7 @@ export const GET = withAuthz(
   },
 );
 
-/**
- * PATCH /api/v1/tenant/coefficients は未実装。
- * `HearingIntakeRepository` に `updateCoefficients` port が無く (owner は feat-hearing-intake)、
- * 本 feature 側で書込みを自前実装すると repository の二重定義になる (AD-4 決定3)。
- */
+/** PATCH /api/v1/tenant/coefficients — owner port 経由の係数更新と値を含めない監査記録。 */
 export const PATCH = withAuthz(
   {
     action: 'coefficients.change',
@@ -36,14 +32,14 @@ export const PATCH = withAuthz(
     resolveResource: async (request) =>
       requestScopedResource(request, { type: 'tenant_coefficients', workspaceId: null }),
   },
-  async (request) => {
-    return problemResponse(
-      problemDetails({
-        title: '未実装です',
-        status: 501,
-        detail: '見積係数の更新 port が feat-hearing-intake 側にまだ無いため、この操作は未実装です。',
-        instance: new URL(request.url).pathname,
-      }),
+  async (request, authz) => {
+    const parsed = await parseJsonRequest(request, updateTenantCoefficientsRequestSchema);
+    if (!parsed.ok) return parsed.response;
+    const result = await userOrgAdminRuntime().service.updateCoefficients(
+      contextFor(authz.resource.tenantId, authz.principal.userId),
+      parsed.data,
+      authz.principal.userId,
     );
+    return Response.json(result);
   },
 );

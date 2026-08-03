@@ -11,7 +11,6 @@
 // (`pii-salary-contract.test.ts` の UOA-PII-101 が同じ理由で it.todo のまま)。そのためここでは
 // 到達可能な範囲 (workspace-admin が実値を見られること) だけを検証する。
 //
-// UOA-ROUTE-007 (CSV export) は S17 画面と export エンドポイントが未実装のため it.todo のまま残す。
 // UOA-ROUTE-101 (S17/S18/legal 統合 axe) も画面実装後に昇格する。
 
 import {
@@ -26,10 +25,17 @@ import {
 } from '@harness-hub/schemas';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET as getMe, PATCH as patchMe } from '../../src/app/api/v1/me/route.js';
+import { GET as getCoefficients, PATCH as patchCoefficients } from '../../src/app/api/v1/tenant/coefficients/route.js';
 import { GET as getUser, PATCH as patchUser } from '../../src/app/api/v1/users/[id]/route.js';
+import { GET as exportUsers } from '../../src/app/api/v1/users/export/route.js';
 import { POST as createUser, GET as listUsers } from '../../src/app/api/v1/users/route.js';
 import type { AuthRuntime } from '../../src/lib/authz/runtime.js';
 import { TENANT_HEADER } from '../../src/middleware/index.js';
+import {
+  createNotificationDispatcher,
+  type NotificationMessage,
+  type NotificationTransport,
+} from '../../src/shared/notification/index.js';
 import {
   ALLOWED_ORIGIN,
   contextFor,
@@ -136,9 +142,19 @@ describe('P05 受入層: zod スキーマ契約 (AD-3)', () => {
 
 describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', () => {
   let harness: UserOrgAdminHarness;
+  let sentNotifications: NotificationMessage[];
 
   beforeEach(async () => {
-    harness = await createUserOrgAdminHarness();
+    sentNotifications = [];
+    const transport = (channel: NotificationTransport['channel']): NotificationTransport => ({
+      channel,
+      async send(message) {
+        sentNotifications.push(message);
+      },
+    });
+    harness = await createUserOrgAdminHarness({
+      dispatcher: createNotificationDispatcher({ transports: [transport('in_app'), transport('email')] }),
+    });
     runtimeHolder.current = harness.authRuntime;
     userOrgAdminRuntimeHolder.current = harness.userOrgAdminRuntime;
   });
@@ -209,6 +225,17 @@ describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', ()
     expect(salaryChange?.summaryJson).not.toContain('5500000');
   });
 
+  it('UOA-AUDIT-102: role 以外の PATCH では user.role_change を記録しない', async () => {
+    const response = await patchUser(
+      await buildRequest(`/users/${harness.member.id}`, 'PATCH', { body: { department: '経理' } }),
+      routeContext(harness.member.id),
+    );
+
+    expect(response.status).toBe(200);
+    const events = await harness.db.repositories.audit.read(contextFor(harness.tenantId));
+    expect(events.some((event) => event.action === 'user.role_change')).toBe(false);
+  });
+
   it('UOA-ROUTE-005: GET /api/v1/users/:id (個別ダッシュボード) の salary 読取りが decryptSalary 経由で user.salary_read を記録する', async () => {
     const response = await getUser(
       await buildRequest(`/users/${harness.member.id}`, 'GET'),
@@ -222,6 +249,84 @@ describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', ()
     expect(events.some((event) => event.action === 'user.salary_read' && event.entityId === harness.member.id)).toBe(
       true,
     );
+  });
+
+  it('UOA-COEF-103: GET /api/v1/tenant/coefficients は実 DB の未作成テナントに既定係数を返す', async () => {
+    const response = await getCoefficients(await buildRequest('/tenant/coefficients', 'GET'));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      annual_hours: 2_000,
+      minutes_per_run: 15,
+      sheet_reduction_rate: 0.35,
+      updated_by: 'system-default',
+    });
+  });
+
+  it('UOA-COEF-102 / UOA-AUDIT-103 / UOA-NOTIF-103: PATCH /api/v1/tenant/coefficients は owner port・監査・通知を一体で実行する', async () => {
+    const response = await patchCoefficients(
+      await buildRequest('/tenant/coefficients', 'PATCH', {
+        body: { annual_hours: 1_920, minutes_per_run: 20 },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      annual_hours: 1_920,
+      minutes_per_run: 20,
+      sheet_reduction_rate: 0.35,
+      updated_by: harness.workspaceAdmin.id,
+    });
+    const events = await harness.db.repositories.audit.read(contextFor(harness.tenantId));
+    const coefficientChange = events.find((event) => event.action === 'coefficient.change');
+    expect(coefficientChange).toMatchObject({
+      actorId: harness.workspaceAdmin.id,
+      entityType: 'tenant_coefficients',
+      entityId: harness.tenantId,
+    });
+    expect(JSON.parse(coefficientChange?.summaryJson ?? '{}')).toEqual({
+      changedFields: ['annualHours', 'minutesPerRun'],
+    });
+    expect(coefficientChange?.summaryJson).not.toContain('1920');
+    expect(coefficientChange?.summaryJson).not.toContain('20');
+
+    expect(sentNotifications).toHaveLength(2);
+    for (const message of sentNotifications) {
+      expect(message).toMatchObject({
+        tenantId: harness.tenantId,
+        workspaceId: null,
+        recipientSubject: harness.workspaceAdmin.id,
+        kind: 'tenant.coefficients_changed',
+        idempotencyKey: `tenant.coefficients_changed:${coefficientChange?.id}`,
+      });
+      for (const keyword of ['salary', '年収', '¥', '給与', '1920']) {
+        expect(message.subject).not.toContain(keyword);
+        expect(message.body).not.toContain(keyword);
+      }
+    }
+  });
+
+  it('UOA-AUDIT-101: role/salary/coefficient の変更は実 AuditRepo の同一テナント hash chain に追記される', async () => {
+    const roleResponse = await patchUser(
+      await buildRequest(`/users/${harness.member.id}`, 'PATCH', { body: { role: 'workspace-admin' } }),
+      routeContext(harness.member.id),
+    );
+    expect(roleResponse.status).toBe(200);
+    await patchUser(
+      await buildRequest(`/users/${harness.member.id}`, 'PATCH', { body: { salary: 5_500_000 } }),
+      routeContext(harness.member.id),
+    );
+    await patchCoefficients(await buildRequest('/tenant/coefficients', 'PATCH', { body: { annual_hours: 1_920 } }));
+
+    const events = await harness.db.repositories.audit.read(contextFor(harness.tenantId));
+    expect(events.map((event) => event.action)).toEqual([
+      'user.role_change',
+      'user.salary_change',
+      'coefficient.change',
+    ]);
+    expect(events.map((event) => event.seq)).toEqual([1, 2, 3]);
+    expect(events[1]?.prevHash).toBe(events[0]?.eventHash);
+    expect(events[2]?.prevHash).toBe(events[1]?.eventHash);
   });
 
   it('UOA-ROUTE-006: 事前登録 POST /api/v1/users の権限は workspace-admin 限定で、member からは 403', async () => {
@@ -243,9 +348,17 @@ describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', ()
     expect(adminResponse.status).toBe(501);
   });
 
-  it.todo(
-    'UOA-ROUTE-007: CSV export エンドポイントが maskPiiForExport を通し、閲覧者の role に関わらず salary をマスクする',
-  );
+  it('UOA-ROUTE-007 / UOA-PII-103: CSV export は maskPiiForExport を通り、workspace-admin でも salary を常にマスクする', async () => {
+    const response = await exportUsers(await buildRequest('/users/export', 'GET'));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/csv');
+    expect(response.headers.get('content-disposition')).toContain('attachment');
+    const csv = await response.text();
+    expect(csv).toContain('name,department,role,status,salary');
+    expect(csv).toContain('Member,,member,active,***');
+    expect(csv).not.toContain('4800000');
+  });
 
   it('UOA-ROUTE-008: GET/PATCH /api/v1/me は session 本人限定 (selfOnly) で、自分の行だけを読み書きする', async () => {
     const memberSelf = await getMe(await buildRequest('/me', 'GET', { user: harness.member }));

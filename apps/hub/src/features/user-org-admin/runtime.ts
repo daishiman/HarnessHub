@@ -13,9 +13,8 @@
  * 初回ログイン時は常に新規 `idpSubject` で `role: 'member'` の行を作るだけで、メール等で
  * 既存の事前登録行へ紐付ける仕組みが存在しない。事前登録行を先に作っても初回ログインで
  * 別行が JIT 作成され、同一人物が二重登録になる。この紐付けは feat-auth-tenancy が持つ
- * JIT ロジック自体の変更を要し本 feature の書込み範囲外のため、`tenant_coefficients` の
- * 書込み port 未実装と同じ扱い (AD-4 決定3) で route が 501 を返す。フォローアップは
- * bd issue として別途起票する。
+ * JIT ロジック自体の変更を要し本 feature の書込み範囲外のため、route は 501 を返す。
+ * フォローアップは bd issue として別途起票する。
  */
 import {
   type CoreRepositories,
@@ -23,6 +22,7 @@ import {
   createTursoWebClient,
   type HearingIntakeRepository,
 } from '@harness-hub/db';
+import { createNotificationDispatcher, type NotificationDispatcher } from '../../shared/notification/index.js';
 import { hearingIntakeRuntime } from '../hearing-intake/runtime.js';
 import { createUserOrgAdminService, type UserOrgAdminService } from './service.js';
 
@@ -35,6 +35,7 @@ export interface UserOrgAdminRuntime {
 export function createUserOrgAdminRuntime(
   repositories: Pick<CoreRepositories, 'users' | 'userSettings' | 'audit'>,
   coefficients: HearingIntakeRepository,
+  dispatcher: NotificationDispatcher = createNotificationDispatcher({ transports: [] }),
 ): UserOrgAdminRuntime {
   return {
     repositories,
@@ -44,6 +45,7 @@ export function createUserOrgAdminRuntime(
       userSettings: repositories.userSettings,
       audit: repositories.audit,
       coefficients,
+      notifications: dispatcher,
     }),
   };
 }
