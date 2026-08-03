@@ -30,6 +30,11 @@ import { createScopedCrud, type ScopedCrudRepo } from './crud';
 import { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
 import {
+  createDocsCmsRepository as createDocsCmsRepositoryLeaf,
+  type DocsCmsRepository as DocsCmsRepositoryShape,
+  type DocumentRow as DocumentRowShape,
+} from './docs-cms';
+import {
   createDeviceAuthorizationsRepo,
   createPublisherTokensRepo,
   type DeviceAuthorizationRow as DeviceAuthorizationRowShape,
@@ -99,10 +104,17 @@ export type HearingSmokeDbProbe = HearingSmokeDbProbeShape;
 export type HearingSmokeTenantFixture = HearingSmokeTenantFixtureShape;
 export type HearingSmokeSheetSnapshot = HearingSmokeSheetSnapshotShape;
 export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
+export type DocsCmsRepository = DocsCmsRepositoryShape;
+export type DocumentRow = DocumentRowShape;
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
   return createHearingIntakeRepositoryLeaf(adapter);
+}
+
+/** Studio S15/B7 (docs-cms) も同じ facade 経由の原則に従う。 */
+export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
+  return createDocsCmsRepositoryLeaf(adapter);
 }
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */

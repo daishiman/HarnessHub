@@ -11,6 +11,7 @@ import * as catalog from './core/catalog';
 import * as identity from './core/identity';
 import * as publish from './core/publish';
 import * as security from './core/security';
+import * as docsCms from './docs-cms/schema';
 import * as hearingIntake from './hearing-intake/schema';
 
 export * from './core/catalog';
@@ -20,6 +21,7 @@ export * from './core/scope';
 export * from './core/security';
 
 // --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
+export * from './docs-cms/schema';
 export * from './hearing-intake/schema';
 
 /** コアドメイン 19 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
@@ -57,6 +59,7 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.aiJobs,
       hearingIntake.displayCodeCounters,
       hearingIntake.tenantCoefficients,
+      docsCms.documents,
     ].map((table) => [getTableName(table), table]),
   ),
 );
