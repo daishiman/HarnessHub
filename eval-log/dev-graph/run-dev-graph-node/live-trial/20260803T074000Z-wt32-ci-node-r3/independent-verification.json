@@ -1,0 +1,10 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "artifact_routing": "PASS: final graph revision 7 has exactly five nodes—issue, task, specification, architecture, and document—whose stored paths are respectively under issues/, tasks/, specs/, architecture/, and docs/; validate-graph-schema.py reported valid=true with no violations.",
+    "consecutive_update": "PASS: captured live-trial evidence records issue revision 5→6 and architecture revision 6→7; their final frontmatter artifact_kind and file_path match the graph node and actual stored path, with the corresponding update fields reflected.",
+    "macro_contract": "PASS: captured live-trial command rejected inputs/08-feature-direct-reject.json with exit code 2 and the C14 macro-contract error; final graph has zero feature nodes and features/ contains only .gitkeep."
+  }
+}

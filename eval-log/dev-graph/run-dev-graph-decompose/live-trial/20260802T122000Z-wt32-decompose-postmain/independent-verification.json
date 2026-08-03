@@ -1,0 +1,7 @@
+{
+  "evaluator": "orchestrator fail-closed precondition audit",
+  "result": "FAIL",
+  "blockers": [
+    "docs/want.md was absent from both fixture baselines, and the trial attempted to create that declared immutable input after execution began."
+  ]
+}

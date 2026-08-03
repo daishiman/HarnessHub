@@ -1,0 +1,9 @@
+{
+  "evaluator": "fresh independent evaluator /root/eval_node_trial",
+  "result": "FAIL",
+  "blockers": [
+    "No non-C14 feature was attempted, so an empty features directory does not prove canonical rejection.",
+    "The revision 5 to 6 patch lacked a post-dry-run SHA baseline and equality assertion before apply.",
+    "Goal-seek progress marked both unsupported checks PASS and therefore does not contain complete evidence."
+  ]
+}

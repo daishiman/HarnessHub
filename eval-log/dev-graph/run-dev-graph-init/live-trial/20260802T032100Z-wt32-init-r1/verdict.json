@@ -1,0 +1,117 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r1 --hook-source plugin",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "FAIL",
+    "blockers": [
+      "ゴールシーク配線の実体検証に失敗: intermediate-missing: run-dev-graph-init-intermediate.jsonl が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init"
+  ],
+  "missing_goal_seek_artifacts": [
+    "intermediate.jsonl"
+  ],
+  "goal_seek_evidence_violations": [
+    "intermediate-missing: run-dev-graph-init-intermediate.jsonl が無い — skill をロードしながらゴールシーク配線を実行していない疑い"
+  ],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "FAIL",
+    "verdict": "DEGRADED"
+  },
+  "skill_dir_tree_sha": "4950e6adc421e5d5f80d526d3b3ff10497651471e3b3009746fd72b297d9859b",
+  "transcript_sha256": "a9d212666b3978edbfd50d2b431bab14c36f13abfaed7fc03158627dcf201bcd",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": "goal-proxy 乖離 (完走するが目的を果たさない)",
+  "timeline": {
+    "boot_s": 7.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 810.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence-r17",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C01-OUT1-positive-idempotence-r17",
+    "required_observations": [
+      "the first pass creates the six content roots, the routing policy and the graph store",
+      "the second pass re-invokes the skill and reports zero planned changes",
+      "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+      "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+      "config stores no absolute path and no token or node id",
+      "C11 passes against a graph that contains at least one node"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the first pass creates the six content roots, the routing policy and the graph store",
+        "evidence_ref": "independent-verification.json#/observations/first_pass_scaffold"
+      },
+      {
+        "index": 2,
+        "observation": "the second pass re-invokes the skill and reports zero planned changes",
+        "evidence_ref": "independent-verification.json#/observations/second_pass_noop"
+      },
+      {
+        "index": 3,
+        "observation": "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+        "evidence_ref": "independent-verification.json#/observations/edited_template_preserved"
+      },
+      {
+        "index": 4,
+        "observation": "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+        "evidence_ref": "independent-verification.json#/observations/plugin_hook_source"
+      },
+      {
+        "index": 5,
+        "observation": "config stores no absolute path and no token or node id",
+        "evidence_ref": "independent-verification.json#/observations/portable_config"
+      },
+      {
+        "index": 6,
+        "observation": "C11 passes against a graph that contains at least one node",
+        "evidence_ref": "independent-verification.json#/observations/nonempty_c11"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --hook-source plugin",
+      "template_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

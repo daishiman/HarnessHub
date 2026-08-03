@@ -1,0 +1,31 @@
+{
+  "evaluator": "fresh-evaluator/C01-OUT1-positive-idempotence-r17",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "first_pass_scaffold": {
+      "result": "PASS",
+      "evidence": "pane.txt confirms pass 1 created all 6 content roots (architecture/docs/features/issues/specs/tasks) and .dev-graph/{config.json,state/graph.json,cache,locks,templates}. 21 templates copied (skipped=0). config build-repo-config returned action=created/changed=true; build-graph-store returned action=created/changed=true. validate-repo-config.py and validate-graph-schema.py both returned valid=true with 0 violations."
+    },
+    "second_pass_noop": {
+      "result": "PASS",
+      "evidence": "Second Skill invocation (pane.txt) reported: templates copied=0/skipped=21; build-repo-config action=skipped_existing/changed=false; build-graph-store action=preserved_existing/changed=false; content-roots 6 exist 0 missing; .dev-graph items 5 exist 0 missing. Both validators still return valid=true. Zero planned changes confirmed by re-invoking the skill itself, not by manual file inspection."
+    },
+    "edited_template_preserved": {
+      "result": "PASS",
+      "evidence": "issue.md edited between passes with marker '<!-- LIVE-TRIAL-MARKER: C01-OUT1-positive-idempotence-r17 -->'. SHA-256 recorded pre-pass2: 1e93e069914890cf56ddf4f9ec5de99c8e689b5d0b3848836889a0a5bac1a1f8. Post-pass2 shasum command returned identical hash. Marker still present (grep confirmed). Non-overwrite proven by executing pass 2 skill and comparing hashes, not by inspecting the file alone."
+    },
+    "plugin_hook_source": {
+      "result": "PASS",
+      "evidence": "Skill invoked with --hook-source plugin. config.json claude_hooks section records source=plugin, project_plugin_link=.claude/dev-graph-plugin, session_start=true, post_tool_reconcile=true, task_completed_gate=true. progress.json checklist hook_source=PASS with evidence 'plugin hook source, no project fallback needed'. Receipt embedded in config.json."
+    },
+    "portable_config": {
+      "result": "PASS",
+      "evidence": "config.json path_policy.stored_paths=repository-relative; all content_roots values are relative strings (e.g. 'issues', 'docs'); python3 scan of config text found absolute_user_paths=[], tokens=[], github_node_ids=[]. repository_id uses content-addressed form local:sha256:33ee1341... (not an absolute path or node ID). No secrets or machine-specific paths stored."
+    },
+    "nonempty_c11": {
+      "result": "PASS",
+      "evidence": "graph.json graph_revision=1 contains 1 node: sys-init-idempotence-test-20260802 (artifact_kind=issue, status=draft). Registered via upsert-node.py between passes using full required schema. Pass 2 validate-graph-schema.py returned implementation_readiness=complete, valid=true, violations=[]. progress.json validate_graph_schema=PASS with evidence 'valid=true, violations=[], C11 pass with 1 node'."
+    }
+  }
+}

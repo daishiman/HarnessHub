@@ -1,0 +1,8 @@
+{
+  "original_goal": "C01-OUT1-positive-idempotence-r17",
+  "hash": "c4bfd5081f945c5c8a2e7a004158d0df1661c52c9acd43f10464a4ab6ff35aba",
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "verb": "run-dev-graph-init",
+  "fixture_root": "/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-final",
+  "created_at": "2026-08-02T08:42:55Z"
+}

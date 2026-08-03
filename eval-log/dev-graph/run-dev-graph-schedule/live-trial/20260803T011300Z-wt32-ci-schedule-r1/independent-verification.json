@@ -1,0 +1,11 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "overlap_excluded": "PASS; source evidence: fixture schedule receipt and transcript.jsonl.",
+    "blocked_reason": "PASS; source evidence: fixture schedule receipt and transcript.jsonl.",
+    "lease_lifecycle": "PASS; source evidence: fixture schedule receipt and transcript.jsonl.",
+    "batch_constraints": "PASS; source evidence: fixture schedule receipt and transcript.jsonl."
+  }
+}

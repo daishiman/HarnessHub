@@ -1,0 +1,23 @@
+{
+  "evaluator": "fresh independent evaluator /root/eval_node_r2",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "canonical_routing": {
+      "result": "PASS",
+      "evidence": "All five artifact kinds were stored at their canonical paths."
+    },
+    "consecutive_update": {
+      "result": "PASS",
+      "evidence": "The revision 5 to 6 update preserved matching frontmatter kind and stored path; all six dry-run/apply SHA pairs matched."
+    },
+    "feature_rejection": {
+      "result": "PASS",
+      "evidence": "A non-C14 feature was submitted to the canonical writer and rejected with revision, graph SHA and feature file count unchanged."
+    },
+    "goal_seek": {
+      "result": "PASS",
+      "evidence": "The separated classification responsibility and canonical goal-seek evidence are complete."
+    }
+  }
+}
