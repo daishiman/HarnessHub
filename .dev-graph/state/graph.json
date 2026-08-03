@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1178,
+  "graph_revision": 1179,
   "nodes": [
     {
       "acceptance": [
@@ -46696,7 +46696,8 @@
     {
       "acceptance": [
         "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/release-record.md (本番実測結果と書き戻し照合記録) と docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md (仕様影響・反映先・no-change理由)、および system-spec/・specs/・architecture/・features/・tasks/ の反映または no-change 判断",
-        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている",
+        "CI が検出した catalog hard-navigation 契約の更新後、単一 workspace session の到達・query string 非信頼・複数 workspace 未選択時の missing_tenant_scope を apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts で PASS させる"
       ],
       "architecture_refs": [
         "arch-harness-hub-frontend",
@@ -46772,8 +46773,10 @@
         "arch-harness-hub-security"
       ],
       "resource_scope": [
+        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
         "docs/features/feat-post-signin-scope-routing/release-record.md",
         "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
         "system-spec/frontend.md",
         "system-spec/security.md",
         "specs/harness-hub-post-signin-workspace-scope-addendum.md",
@@ -46783,8 +46786,10 @@
         "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
       ],
       "scope_in": [
+        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
         "docs/features/feat-post-signin-scope-routing/release-record.md",
         "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
         "system-spec/frontend.md",
         "system-spec/security.md",
         "specs/harness-hub-post-signin-workspace-scope-addendum.md",
@@ -46819,7 +46824,7 @@
       "template_version": "1.1.0",
       "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T03:58:51.505731Z"
+      "updated_at": "2026-08-03T05:30:35Z"
     },
     {
       "acceptance": [

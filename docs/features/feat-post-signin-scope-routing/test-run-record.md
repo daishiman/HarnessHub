@@ -10,9 +10,9 @@ layer: feature-quality
 
 ## 実行結果サマリー
 
-- 実行対象: `apps/hub` パッケージ (テストファイル 91 件、テストケース 1104 件)
-- 結果: **1103 PASS / 1 SKIP / 0 FAIL**（既存テストの回帰 0 件）
-- カバレッジ: statements 81.90% / branches 86.51% / functions 85.66% / lines 81.90%（閾値 80% を全指標で上回る）
+- 実行対象: `apps/hub` パッケージ (テストファイル 92 件、テストケース 1108 件)
+- 結果: **1107 PASS / 1 SKIP / 0 FAIL**（既存テストの回帰 0 件）
+- カバレッジ: statements 81.89% / branches 86.49% / functions 85.66% / lines 81.89%（閾値 80% を全指標で上回る）
 - 実行日: 2026-08-03
 - 実行コマンド:
   ```bash
@@ -92,6 +92,7 @@ P05 実装（着地先 `/sheets` への変更、`mergeScopes` の session scope 
 | `apps/hub/tests/auth-tenancy/signin-page.test.tsx` | SSR 初期値のアサーションを旧仕様の固定値 `/` から既定着地 `/sheets` へ更新 | PASS |
 | `apps/hub/tests/a11y/hub-screens.spec.ts` | `HomePage` が async server component になったため `createElement(HomePage)` を `await HomePage()` へ変更 | PASS |
 | `apps/hub/tests/security/middleware-entry.test.ts` | `mergeScopes` 修正後の意図した挙動変化（cookie 無し・所属 1 件のみで自動束縛、explicit/session 不一致で `ambiguous_scope`）に合わせて 2 箇所のアサーションを更新 | PASS |
+| `apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts` | CI で検出した旧契約を更新。単一 workspace 所属の通常 session は `/catalog` へ到達でき、query string は scope を偽装できず、複数 workspace で未選択なら `missing_tenant_scope` のままであることを実 middleware 経由で固定 | PASS（4 ケース） |
 
 `apps/hub/tests/security/authz-deny-by-default.test.ts`（deny-by-default 本体、principal が 2 workspace 所属で本 feature の変更の影響を受けない構成）は無変更のまま全 12 件 PASS を維持しており、健全性の裏付けとした。
 

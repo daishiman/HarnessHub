@@ -64,6 +64,7 @@ status: "accepted_with_release_pending"
 | feature-focused test | PASS（main マージ後に 7 files、77 tests） |
 | shared-layer boundary test | PASS（1 file、26 tests） |
 | lint / typecheck | PASS（Biome、TypeScript） |
+| Hub 全体 unit / integration | PASS（92 files、1107 tests PASS、1 skipped）。CI が検出した旧 catalog 契約を現行仕様へ整合させた後の再実行。 |
 
 テスト開始時に欠けていた lockfile 既定の macOS Rollup optional dependency は、
 `pnpm install --frozen-lockfile` で lockfile を変更せず復元した。全体テストの途中で
