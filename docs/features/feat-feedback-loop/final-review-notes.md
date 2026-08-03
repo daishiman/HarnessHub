@@ -37,7 +37,7 @@ quality_constraint 7 (`feedback-fix-publish-existing-pipeline-no-automerge`) が
 | workspace-admin 自 tenant pull | **PASS (契約レベル static + 汎用機構の実行検証)** | feedback 固有の pull は `ai-pull-queue-provider-admin-device-flow.test.ts` FL-SEC8-101 (静的検査: route が `workspaceId: authz.resource.workspaceId` を強制し role 分岐を持たないことを確認) に留まるが、根拠となる汎用 `decide()`/`aijob.pull` ルールは `authz-decision-matrix.test.ts` で実行テスト済み (decide.ts coverage 100%) |
 | provider-admin cross-tenant pull+audit | **PASS (同上)** | FL-SEC8-102 (静的検査) + `with-authz.ts` の `provider.cross_tenant_access` 監査呼び出しは `authz-decision-matrix.test.ts` の越境シナリオ経由で実行される汎用機構 |
 | 他 tenant 拒否 | **PASS** | `tenant-isolation.test.ts` がスキーマ駆動で `feedbacks` を含む全テーブルの他テナント遮断を実 DB で検証 (自ら再実行し PASS を確認) |
-| migration | **PASS** | `packages/db/migrations/0005_feedback-loop.sql` (`CREATE TABLE feedbacks` + 3 index のみ、既存23テーブルへの ALTER 無し) を直接読んで確認。`packages/db/__tests__/migration-lineage.test.ts` (migration SQL と schema barrel の完全一致) を含む packages/db 全 264 tests PASS を自ら再実行して確認 |
+| migration | **PASS** | main の documents migration の後に `packages/db/migrations/0006_feedback-loop-builds.sql` を Drizzle で再生成し、`feedbacks` / `builds` と index だけを追加した。既存24テーブルへの ALTER は無い。`packages/db/__tests__/migration-lineage.test.ts` (migration SQL と schema barrel の完全一致) を含む packages/db 全テストを再実行して確認 |
 | P10/P11 証跡対応表 | **本表がそれに当たる** | 上記6項目のうち5項目 PASS・quality_constraint 7 (publish 接続) は Mandatory evidence には明示列挙されていないが、P10 として追加で発見した不足であるため本レポートに記録した |
 
 ## 差し戻し要否と対象工程
@@ -96,8 +96,8 @@ P01〜P09 の成果物は quality_constraint 7 を除く7件について、実�
 差し戻し前レビューで欠落と指摘された「AiJob(`feedback_response`) 完了時に既存 `PublishRequest` 状態機械へ接続する最小限の接続点」について、以下を実コードで直接確認した。
 
 1. **`builds` テーブルの新規作成**: `packages/db/schema/builds/schema.ts` に `id`/`tenant_id`/`workspace_id`/`type`/`stage`/`sheet_id`(nullable)/`feedback_id`(nullable, 一意 index `builds_feedback_id_uq`)/`publish_request_id`(nullable)/`created_at`/`updated_at` が定義されている。ADR §7 が列挙する最小列と完全一致することを確認した。
-2. **migration の非破壊性**: `packages/db/migrations/0006_builds.sql` は `CREATE TABLE builds` + `CREATE UNIQUE INDEX builds_feedback_id_uq` + `CREATE INDEX builds_tenant_workspace_stage_updated_idx` のみで構成され、既存 24 テーブルへの `ALTER`/削除/列変更は無いことを実ファイルを読んで確認した。`packages/db/__tests__/migration-lineage.test.ts`・`backup-restore.test.ts` を含む packages/db 全テストが本レビューで PASS したことも合わせて確認した。
-3. **complete route での実際の呼び出し**: `apps/hub/src/app/api/v1/ai-jobs/[id]/complete/route.ts` の `feedback_response` 分岐 (L113-124) で、`ai_response`/`ai_job_id` の書き戻しと監査記録の直後に `feedbackLoopRuntime().repository.findFeedback` で対象 feedback を取得し、`feedback.type === 'bug' ? 'test' : 'design'` で初期 stage を算出したうえで `feedbackLoopRuntime().buildsRepository.findOrCreateBuildForFeedback(context, {...}, initialStage)` を呼んでいることをソースを直接読んで確認した。呼び出しがスキップされる分岐 (feedback が見つからない場合のみ) 以外は必ず実行される。
+2. **migration の非破壊性**: `packages/db/migrations/0006_feedback-loop-builds.sql` は `CREATE TABLE feedbacks` / `builds` と index のみで構成され、既存24テーブルへの `ALTER`/削除/列変更は無いことを確認した。`packages/db/__tests__/migration-lineage.test.ts`・`backup-restore.test.ts` を含む packages/db 全テストが本レビューで PASS したことも合わせて確認した。
+3. **complete route での実際の呼び出し**: main が導入した `apps/hub/src/lib/ai-queue/registry.ts` の共通 dispatch に `feedback_response` adapter を登録し、`POST /api/v1/ai-jobs/:id/complete` が kind ごとに同じ route 分岐を増やさず adapter へ委譲する構成へ統合した。adapter は `ai_response` を検証済み result から復元し、`completeFeedbackResponseJob` を呼ぶ。同 repository 内で `type=bug` は `stage=test`、それ以外は `stage=design` の Build を冪等作成するため、AiJob 完了・応答書戻し・Build 作成は同一 transaction で確定する。
 4. **冪等性のロジック検証**: `packages/db/repository/builds.ts` の `findOrCreateBuildForFeedback` は `insert(...).onConflictDoNothing().returning()` を試み、`returning()` が空 (= 一意制約 `feedback_id` に競合 = 既存行あり) の場合のみ `tenantId`+`feedbackId` で既存行を再 select して返す。**2 回目以降の呼び出しで新規行が作られないこと・既存の `stage` が上書きされないこと** をコードロジックとして確認した (2 回目呼び出し時に渡す `initialStage` 引数は無視され、既存行がそのまま返る)。
 5. **実行テストへの格上げ**: `apps/hub/src/__tests__/feedback-loop/publish-connect-no-automerge.test.ts` を通読した。旧版は `FEEDBACK_LOOP_EXPORT_NAMES` に publish/automerge 関連の名前が無いことのみを検査する静的検査 (`FL-PUB-001` 相当) に留まっていたが、現版は `FL-PUB-101`/`FL-PUB-102` として:
    - `createFeedbackRoute` → `pullRoute` (`POST /api/v1/ai-jobs/pull`) → `completeRoute` (`POST /api/v1/ai-jobs/:id/complete`) を実際に `Request`/`Response` として実行する (mock は `authRuntime`/`feedbackLoopRuntime`/`hearingIntakeRuntime` の DI 差し替えのみで、`route.ts` 自体は実装コードをそのまま通す)。
@@ -163,7 +163,7 @@ P10 差し戻し後の実装を PR 作成前にもう一度確認したところ
 - `pnpm --filter @harness-hub/db typecheck`、`pnpm --filter @harness-hub/db test -- feedback-loop-queue.test.ts`、
   `pnpm --filter hub typecheck`、`pnpm --filter hub test -- --coverage` はすべて PASS。
 - `validate-system-plan.py` は PASS。手書きの実装・テスト・文書は最大 364 行であり、500 行を
-  超えない。`0005_snapshot.json` (2,098 行) と `0006_snapshot.json` (2,196 行) だけは Drizzle の
+  超えない。`0005_snapshot.json` (2,053 行) と `0006_snapshot.json` (2,294 行) だけは Drizzle の
   migration 単位の機械生成スナップショットであり、分割すると migration lineage（移行履歴の整合性）を
   壊すため、生成物として一体のまま保持する。
 
@@ -175,3 +175,12 @@ Build の初期 stage、手動 publish、監査・通知の契約は既存の co
 原子性（複数の DB 更新を全成功または全失敗にそろえる性質）を実装・検証したものであり、外部 API、
 状態機械、権限、データ境界、新規依存を変えない。したがって C01 再オープン/C03 compile/C02 import は
 不要とし、PR 前に `--spec-impact none` の受領書へこの理由を記録する。
+
+### main 統合時の再確認
+
+PR 作成前に `origin/main` の Docs CMS 変更をローカル `main` に取り込み、この feature branch へ
+merge した。両方の変更が共有する AiJob route と migration 番号を確認し、route に feature 固有の
+分岐を増やさず、共通 `AI_QUEUE_ADAPTERS` へ `feedback_response` adapter を登録した。migration は
+main の Documents 用 `0005` を保持し、Feedback と Build を Drizzle で `0006_feedback-loop-builds` と
+して再生成した。これにより、base branch 上の Docs CMS の振る舞いを変えず、Feedback 完了時の原子性も
+維持する。統合後の `packages/db` 全 34 ファイル・265 テスト、型検査、lint、仕様書 gate を再実行する。

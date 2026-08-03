@@ -10,6 +10,7 @@ import { createTargetChannelsRepo } from '../../repository/channels';
 import { createScopedCrud } from '../../repository/crud';
 import type { ColumnCipher } from '../../repository/crypto';
 import type { CoreAdapter } from '../../repository/db';
+import { createDocsCmsRepository } from '../../repository/docs-cms';
 import { createFeedbackRepository } from '../../repository/feedback-loop';
 import { createHearingIntakeRepository } from '../../repository/hearing-intake';
 import { createIdpConnectionsRepo } from '../../repository/idp';
@@ -205,6 +206,14 @@ async function seedTenant(
     entityType: 'user',
     entityId: user.id,
     summary: { field: 'salary', changed: true },
+  });
+
+  const docsCms = createDocsCmsRepository(adapter);
+  await docsCms.createDocument(context, {
+    scope: 'tenant',
+    title: `Fixture doc ${slug}`,
+    bodyMarkdown: `# Fixture doc ${slug}`,
+    actorId: user.id,
   });
 
   const revocations = createSessionRevocationsRepo(adapter);

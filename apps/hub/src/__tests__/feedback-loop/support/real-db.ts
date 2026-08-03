@@ -8,7 +8,7 @@
  *     `packages/db/__tests__/support/*` という package 内部 test 専用モジュールで、
  *     ここから import すると共通層の境界迂回 (deep import) になる)。
  *   - `feedbacks` / `ai_jobs` は tenant_id/workspace_id を単純列として持つだけで
- *     tenants/workspaces/users への FK 制約が無い (0005/0002 migration に REFERENCES が無い)。
+ *     tenants/workspaces/users への FK 制約が無い (0006/0002 migration に REFERENCES が無い)。
  *     そのため実 tenant/workspace/user 行を先に作らなくても、authz 側の in-memory ports
  *     (`tests/auth-tenancy/support/token-route-runtime.ts`) と同じ tenant_id/workspace_id
  *     文字列をそのまま repository context へ渡せる。
@@ -43,13 +43,15 @@ const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', '..', 'packages'
  * (無いと "no such table: users" が updateFeedbackStatus の fire-and-forget try/catch へ
  * 静かに飲み込まれ、通知経路が一切実行されないまま緑化してしまう)。device-flow/OIDC 系
  * (0001/0003/0004) は feedback-loop から参照されないため含めない。
- * `0006` (builds) は AiJob(`feedback_response`) 完了時の冪等作成 (ADR §7 P10 差し戻し) の検証に必要。
+ * `0006` (feedback-loop-builds) は AiJob(`feedback_response`) 完了時の冪等作成
+ * (ADR §7 P10 差し戻し) の検証に必要。`0005` は main で先行した documents の migration なので、
+ * canonical lineage と同じ順で適用する。
  */
 const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
   '0002_hearing-intake-ai-queue.sql',
-  '0005_feedback-loop.sql',
-  '0006_builds.sql',
+  '0005_common_stepford_cuckoos.sql',
+  '0006_feedback-loop-builds.sql',
 ];
 
 export interface FeedbackDbHarness {

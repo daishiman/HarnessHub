@@ -238,7 +238,8 @@ describe('P13 production migration / smoke CLI', () => {
     // 件数はリテラルで書く。journal の長さを参照すると、migration を足しただけで一緒に
     // 緑になり「台帳に載っていない DDL が適用された」を検出できなくなる。
     // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
-    // 0004 顧客持ち込み OAuth client の lifecycle / 0005 feedback-loop / 0006 builds (P10 差し戻し)
+    // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms) /
+    // 0006 feedback/builds (feedback-loop)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
     expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 7, applied: 0, pending: 7 });
 

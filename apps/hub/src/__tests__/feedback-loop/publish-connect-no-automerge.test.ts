@@ -51,16 +51,21 @@ vi.mock('../../features/feedback-loop/runtime.js', async (importOriginal) => {
   };
 });
 
-// ai-jobs/pull・complete の resolveResource は kind 判定のため hearingIntakeRuntime().repository.findJob
-// も必ず呼ぶ (ADR §5: ai_jobs は kind 非依存の共通テーブル)。この file は sheet_generation を一切
-// 扱わないため、TURSO_* 環境変数を要求する本物の runtime を初期化させず、常に null を返す最小スタブへ
-// 差し替える (feedback_response 側の分岐だけを実行対象にする)。
+// ai-jobs/complete の共通 route は kind 判定のため hearingIntakeRuntime().repository.findJob も
+// 呼ぶ (ADR §5: ai_jobs は kind 非依存の共通テーブル)。この file は sheet_generation を一切扱わないため、
+// 本物の TURSO runtime は初期化せず、同じ実 DB の feedback repository を generic lookup として使う。
+// これで、共通 route が feedback_response adapter を選択する本番経路を検証できる。
 vi.mock('../../features/hearing-intake/runtime.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../features/hearing-intake/runtime.js')>();
   return {
     ...actual,
     hearingIntakeRuntime: () => ({
-      repository: { findJob: async () => null },
+      repository: {
+        findJob: (context: Parameters<FeedbackLoopRuntime['repository']['findFeedbackResponseJob']>[0], id: string) => {
+          if (feedbackRuntimeHolder.current === null) return Promise.resolve(null);
+          return feedbackRuntimeHolder.current.repository.findFeedbackResponseJob(context, id);
+        },
+      },
       service: {},
     }),
   };

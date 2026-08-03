@@ -1,9 +1,107 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "80a0edaf-0f14-45be-b0fd-96eefe90f079",
-  "prevId": "97eed0c0-b985-42e7-96af-3549ea9d0040",
+  "id": "bf8f27e8-1122-43ec-8f6a-dc9aceba91d9",
+  "prevId": "7e3a9850-8d49-48cb-a87f-2ef4a9057cd2",
   "tables": {
+    "builds": {
+      "name": "builds",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "stage": {
+          "name": "stage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sheet_id": {
+          "name": "sheet_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "feedback_id": {
+          "name": "feedback_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "publish_request_id": {
+          "name": "publish_request_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "builds_feedback_id_uq": {
+          "name": "builds_feedback_id_uq",
+          "columns": [
+            "feedback_id"
+          ],
+          "isUnique": true
+        },
+        "builds_tenant_workspace_stage_updated_idx": {
+          "name": "builds_tenant_workspace_stage_updated_idx",
+          "columns": [
+            "tenant_id",
+            "workspace_id",
+            "stage",
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "catalog_entries": {
       "name": "catalog_entries",
       "columns": {
@@ -1559,8 +1657,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "builds": {
-      "name": "builds",
+    "documents": {
+      "name": "documents",
       "columns": {
         "id": {
           "name": "id",
@@ -1576,46 +1674,47 @@
           "notNull": true,
           "autoincrement": false
         },
-        "workspace_id": {
-          "name": "workspace_id",
+        "scope": {
+          "name": "scope",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "type": {
-          "name": "type",
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "stage": {
-          "name": "stage",
+        "body_markdown": {
+          "name": "body_markdown",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "sheet_id": {
-          "name": "sheet_id",
+        "status": {
+          "name": "status",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         },
-        "feedback_id": {
-          "name": "feedback_id",
+        "updated_by": {
+          "name": "updated_by",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "publish_request_id": {
-          "name": "publish_request_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {
@@ -1634,19 +1733,19 @@
         }
       },
       "indexes": {
-        "builds_feedback_id_uq": {
-          "name": "builds_feedback_id_uq",
-          "columns": [
-            "feedback_id"
-          ],
-          "isUnique": true
-        },
-        "builds_tenant_workspace_stage_updated_idx": {
-          "name": "builds_tenant_workspace_stage_updated_idx",
+        "documents_tenant_scope_updated_idx": {
+          "name": "documents_tenant_scope_updated_idx",
           "columns": [
             "tenant_id",
-            "workspace_id",
-            "stage",
+            "scope",
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "documents_scope_updated_idx": {
+          "name": "documents_scope_updated_idx",
+          "columns": [
+            "scope",
             "updated_at"
           ],
           "isUnique": false

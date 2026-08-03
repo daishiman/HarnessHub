@@ -21,6 +21,7 @@ const REPO_ROOT = path.resolve(APP_SRC, '..', '..', '..');
 const pullRoute = () => readFileSync(path.resolve(APP_SRC, 'app/api/v1/ai-jobs/pull/route.ts'), 'utf8');
 const completeRoute = () => readFileSync(path.resolve(APP_SRC, 'app/api/v1/ai-jobs/[id]/complete/route.ts'), 'utf8');
 const failRoute = () => readFileSync(path.resolve(APP_SRC, 'app/api/v1/ai-jobs/[id]/fail/route.ts'), 'utf8');
+const aiQueueRegistrySource = () => readFileSync(path.resolve(APP_SRC, 'lib/ai-queue/registry.ts'), 'utf8');
 const withAuthzSource = () => readFileSync(path.resolve(APP_SRC, 'lib/authz/with-authz.ts'), 'utf8');
 const queueRepoSource = () =>
   readFileSync(path.resolve(REPO_ROOT, 'packages/db/repository/feedback-loop-queue.ts'), 'utf8');
@@ -71,10 +72,14 @@ describe('ai-pull-queue-provider-admin-device-flow: AiJob(feedback_response) 契
   describe('P05 実装後: pull/writeback ハンドラの kind=feedback_response 配線', () => {
     it('FL-SEC8-101: workspace-admin は自テナントの feedback_response ジョブのみ pull できる (role 分岐を feature 側に持たない)', () => {
       const route = pullRoute();
+      const registry = aiQueueRegistrySource();
       expect(route).toContain('withAuthz');
       expect(route).not.toMatch(/principal\.role|effectiveRole\s*===/);
-      expect(route).toContain('claimNextFeedbackResponseJob');
+      expect(route).toContain('AI_QUEUE_ADAPTERS[kind]');
+      expect(route).toContain('adapter.claim');
       expect(route).toContain('workspaceId: authz.resource.workspaceId');
+      expect(registry).toContain('feedback_response:');
+      expect(registry).toContain('claimNextFeedbackResponseJob');
     });
 
     it('FL-SEC8-102: provider-admin は cross-tenant で feedback_response ジョブを pull できる (共通監査へ委譲)', () => {
@@ -98,8 +103,11 @@ describe('ai-pull-queue-provider-admin-device-flow: AiJob(feedback_response) 契
       expect(feedbackUpdate).toContain('.set({ aiResponse, aiJobId: job.id, updatedAt: now })');
       expect(feedbackUpdate.split('.where(')[0]).not.toContain('status');
       const route = completeRoute();
-      expect(route).toContain('completeFeedbackResponseJob');
-      expect(route).toContain('parsed.data.ai_response');
+      const registry = aiQueueRegistrySource();
+      expect(route).toContain('AI_QUEUE_ADAPTERS[job.kind]');
+      expect(route).toContain('adapter.complete');
+      expect(registry).toContain('completeFeedbackResponseJob');
+      expect(registry).toContain('parseFeedbackResponseResult');
     });
 
     it('FL-SEC8-104: fail 後は再 enqueue され feedbacks.status は変化しない', () => {
@@ -110,7 +118,10 @@ describe('ai-pull-queue-provider-admin-device-flow: AiJob(feedback_response) 契
       expect(method).not.toContain('db.update(feedbacks)');
       expect(method).not.toContain('.update(feedbacks)');
       const route = failRoute();
-      expect(route).toContain('failFeedbackResponseJob');
+      const registry = aiQueueRegistrySource();
+      expect(route).toContain('AI_QUEUE_ADAPTERS[job.kind]');
+      expect(route).toContain('adapter.fail');
+      expect(registry).toContain('failFeedbackResponseJob');
     });
   });
 });

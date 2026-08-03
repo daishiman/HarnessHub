@@ -43,6 +43,11 @@ import {
   type PublisherTokensRepo,
 } from './device-flow';
 import {
+  createDocsCmsRepository as createDocsCmsRepositoryLeaf,
+  type DocsCmsRepository as DocsCmsRepositoryShape,
+  type DocumentRow as DocumentRowShape,
+} from './docs-cms';
+import {
   createFeedbackRepository as createFeedbackRepositoryLeaf,
   type FeedbackRepository as FeedbackRepositoryShape,
   type FeedbackRow as FeedbackRowShape,
@@ -99,6 +104,8 @@ export type AiJobRow = AiJobRowShape;
 export type HearingSheetRow = HearingSheetRowShape;
 export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
+export type DocsCmsRepository = DocsCmsRepositoryShape;
+export type DocumentRow = DocumentRowShape;
 export type FeedbackRow = FeedbackRowShape;
 export type FeedbackRepository = FeedbackRepositoryShape;
 export type BuildRow = BuildRowShape;
@@ -117,6 +124,11 @@ export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
   return createHearingIntakeRepositoryLeaf(adapter);
+}
+
+/** Studio S15/B7 (docs-cms) も同じ facade 経由の原則に従う。 */
+export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository {
+  return createDocsCmsRepositoryLeaf(adapter);
 }
 
 /** feat-feedback-loop も同じ理由でこの facade からだけ組み立てる。 */

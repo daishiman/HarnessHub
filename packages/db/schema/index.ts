@@ -12,6 +12,7 @@ import * as catalog from './core/catalog';
 import * as identity from './core/identity';
 import * as publish from './core/publish';
 import * as security from './core/security';
+import * as docsCms from './docs-cms/schema';
 import * as feedbackLoop from './feedback-loop/schema';
 import * as hearingIntake from './hearing-intake/schema';
 
@@ -22,6 +23,7 @@ export * from './core/identity';
 export * from './core/publish';
 export * from './core/scope';
 export * from './core/security';
+export * from './docs-cms/schema';
 export * from './feedback-loop/schema';
 export * from './hearing-intake/schema';
 
@@ -60,6 +62,7 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.aiJobs,
       hearingIntake.displayCodeCounters,
       hearingIntake.tenantCoefficients,
+      docsCms.documents,
       feedbackLoop.feedbacks,
       builds.builds,
     ].map((table) => [getTableName(table), table]),
