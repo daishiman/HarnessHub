@@ -1,0 +1,20 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C04-OUT1-positive-ready-handoff",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "capability-build-handoff.json at system-plan/F-LIVE-001/ has kind=capability-build-handoff, handoff_target=capability-build/task-graph, and execution_tasks with exactly 13 entries whose phase_refs are P01..P13. Cross-verified against feature-package.json (task_count=13, phase_refs=[P01..P13]) and system-build-handoff.json (13 execution_tasks with matching phase_refs and task_ids). The handoff file was created at 18:03, after the 17:29 fixture baseline."
+    },
+    "2": {
+      "met": true,
+      "evidence": "capability-build-handoff.json carries feature_id=F-LIVE-001, feature_package_id=feature-package/F-LIVE-001, source_feature_digest=sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998. This digest matches exactly in feature-package.json (source_feature_digest) and system-build-handoff.json (identity.source_feature_digest). The manifest_digest sha256:a5f8c41986e7ad53fc3a4d0c2727562586b8575de420b8822b118f16a5060dfe matches staging-manifest.json canonical_digest and feature-package-F-LIVE-001.json published_digest. Binding is consistent across all artifacts."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Six files were created by the skill run (verified via filesystem timestamps newer than baseline): 3 under eval-log/ (goal-spec.json, intermediate.jsonl, progress.json) and 3 under system-plan/F-LIVE-001/ (capability-build-handoff.json, readiness-matrix.json, requirements-document.json). All are JSON planning/handoff artifacts. No .py, .js, .ts, .go, .java, .rb, .rs, .c, .cpp or any other implementation source file was created. Additionally, the literal Skill tool_use for dev-graph:run-dev-graph-requirements is confirmed in the transcript, and zero AskUserQuestion tool_use calls were found (no nudge/user gate)."
+    }
+  }
+}
