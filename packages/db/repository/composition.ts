@@ -30,11 +30,6 @@ import { createScopedCrud, type ScopedCrudRepo } from './crud';
 import { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
 import {
-  createDocsCmsRepository as createDocsCmsRepositoryLeaf,
-  type DocsCmsRepository as DocsCmsRepositoryShape,
-  type DocumentRow as DocumentRowShape,
-} from './docs-cms';
-import {
   createDeviceAuthorizationsRepo,
   createPublisherTokensRepo,
   type DeviceAuthorizationRow as DeviceAuthorizationRowShape,
@@ -42,6 +37,11 @@ import {
   type PublisherTokenRow as PublisherTokenRowShape,
   type PublisherTokensRepo,
 } from './device-flow';
+import {
+  createDocsCmsRepository as createDocsCmsRepositoryLeaf,
+  type DocsCmsRepository as DocsCmsRepositoryShape,
+  type DocumentRow as DocumentRowShape,
+} from './docs-cms';
 import {
   type AiJobRow as AiJobRowShape,
   createHearingIntakeRepository as createHearingIntakeRepositoryLeaf,

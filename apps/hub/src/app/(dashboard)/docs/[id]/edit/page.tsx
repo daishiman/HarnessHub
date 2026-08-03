@@ -7,8 +7,17 @@
  * 未保存の下書きとの差分を確認できるようにする。
  */
 import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
-import { Alert, Button, MarkdownEditor, MarkdownView, Select, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
+import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+
+const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
+  loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
+});
+
+const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
+  loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
+});
 
 interface PageProps {
   readonly params: Promise<{ readonly id: string }>;

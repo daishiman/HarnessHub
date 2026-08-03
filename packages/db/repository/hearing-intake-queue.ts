@@ -97,7 +97,14 @@ export async function claimNextJob(
       const rows = await db
         .select()
         .from(aiJobs)
-        .where(and(eq(aiJobs.tenantId, context.tenantId), eq(aiJobs.workspaceId, workspaceId), eq(aiJobs.kind, kind), claimable))
+        .where(
+          and(
+            eq(aiJobs.tenantId, context.tenantId),
+            eq(aiJobs.workspaceId, workspaceId),
+            eq(aiJobs.kind, kind),
+            claimable,
+          ),
+        )
         .orderBy(asc(aiJobs.createdAt))
         .limit(1);
       const job = rows[0] as AiJobRow | undefined;
@@ -105,8 +112,20 @@ export async function claimNextJob(
 
       const updated = await db
         .update(aiJobs)
-        .set({ status: 'processing', claimedByTokenId: tokenId, leaseExpiresAt: now + leaseMilliseconds, updatedAt: now })
-        .where(and(eq(aiJobs.tenantId, context.tenantId), eq(aiJobs.workspaceId, workspaceId), eq(aiJobs.id, job.id), claimable))
+        .set({
+          status: 'processing',
+          claimedByTokenId: tokenId,
+          leaseExpiresAt: now + leaseMilliseconds,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(aiJobs.tenantId, context.tenantId),
+            eq(aiJobs.workspaceId, workspaceId),
+            eq(aiJobs.id, job.id),
+            claimable,
+          ),
+        )
         .returning();
       return (updated[0] as AiJobRow | undefined) ?? null;
     }),
@@ -135,7 +154,11 @@ export async function completeJob(
     transactional(adapter).transaction(async (tx) => {
       const db = tx.client as CoreDb;
       const scope = scopedPredicates(context);
-      const jobs = await db.select().from(aiJobs).where(and(...scope, eq(aiJobs.id, id))).limit(1);
+      const jobs = await db
+        .select()
+        .from(aiJobs)
+        .where(and(...scope, eq(aiJobs.id, id)))
+        .limit(1);
       const job = jobs[0] as AiJobRow | undefined;
       if (job === undefined) throw new EntityNotFoundError('ai_jobs', id);
       if (
@@ -182,7 +205,11 @@ export async function failJob(
     transactional(adapter).transaction(async (tx) => {
       const db = tx.client as CoreDb;
       const scope = scopedPredicates(context);
-      const jobs = await db.select().from(aiJobs).where(and(...scope, eq(aiJobs.id, id))).limit(1);
+      const jobs = await db
+        .select()
+        .from(aiJobs)
+        .where(and(...scope, eq(aiJobs.id, id)))
+        .limit(1);
       const job = jobs[0] as AiJobRow | undefined;
       if (
         job === undefined ||
@@ -198,7 +225,14 @@ export async function failJob(
       const now = serverNow();
       const updated = await db
         .update(aiJobs)
-        .set({ status: dead ? 'dead' : 'queued', attempt, error, leaseExpiresAt: null, claimedByTokenId: null, updatedAt: now })
+        .set({
+          status: dead ? 'dead' : 'queued',
+          attempt,
+          error,
+          leaseExpiresAt: null,
+          claimedByTokenId: null,
+          updatedAt: now,
+        })
         .where(and(...scope, eq(aiJobs.id, id), eq(aiJobs.status, 'processing'), eq(aiJobs.claimedByTokenId, tokenId)))
         .returning();
       if (updated[0] === undefined) throw new RepositoryError('conflict', 'AI job の失敗 CAS に失敗しました');

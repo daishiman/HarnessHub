@@ -62,8 +62,8 @@ describe('DOCS-DB: documents repository', () => {
 
     const thirdPage = await repository.listDocuments(context, { limit: 1, cursor: secondPage.nextCursor });
     expect(thirdPage.nextCursor).toBeNull();
-    expect(new Set([...firstPage.items, ...secondPage.items, ...thirdPage.items].map((document) => document.id))).toEqual(
-      new Set(created.map((document) => document.id)),
-    );
+    expect(
+      new Set([...firstPage.items, ...secondPage.items, ...thirdPage.items].map((document) => document.id)),
+    ).toEqual(new Set(created.map((document) => document.id)));
   });
 });

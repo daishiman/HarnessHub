@@ -67,7 +67,10 @@ export function DocumentList({ tenantId, workspaceId }: DocumentListProps): Reac
         key: 'scope',
         header: 'スコープ',
         render: (row: DocumentListItem) => (
-          <ScopeChip scope={row.scope === 'common' ? 'common' : 'tenant'} name={row.scope === 'common' ? '共通' : 'テナント'} />
+          <ScopeChip
+            scope={row.scope === 'common' ? 'common' : 'tenant'}
+            name={row.scope === 'common' ? '共通' : 'テナント'}
+          />
         ),
       },
       {

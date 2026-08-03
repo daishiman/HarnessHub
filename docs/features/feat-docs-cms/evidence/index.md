@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms 再現可能証跡索引 (P11)"
 status: confirmed
+layer: feature-evidence
 graph_node_id: "SYS-DOCS-CMS-P11"
 beads_linkage: "HarnessHub-9wb.11"
 ---

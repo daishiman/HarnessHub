@@ -2,8 +2,8 @@ import { createRepositoryContext } from '@harness-hub/db';
 import { problemDetails } from '@harness-hub/schemas';
 
 import { problemResponse } from '../../../../../features/hearing-intake/http.js';
-import { authRuntime, requestScopedResource, withAuthz } from '../../../../../lib/authz/index.js';
 import { AI_QUEUE_ADAPTERS, resolveAiQueueKind } from '../../../../../lib/ai-queue/registry.js';
+import { authRuntime, requestScopedResource, withAuthz } from '../../../../../lib/authz/index.js';
 
 export const POST = withAuthz(
   {

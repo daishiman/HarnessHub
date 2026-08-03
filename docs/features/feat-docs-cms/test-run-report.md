@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms テスト実行結果 (P06)"
 status: confirmed
+layer: feature-test-evidence
 graph_node_id: "SYS-DOCS-CMS-P06"
 beads_linkage: "HarnessHub-9wb.6"
 depends_on:
@@ -30,14 +31,14 @@ cd apps/hub
 
 ## 全体結果
 
-- Test Files: 99 passed (99)
-- Tests: 1136 passed | 1 skipped (1137)
+- Test Files: 102 passed (102)
+- Tests: 1166 passed | 1 skipped (1167)
 - Exit code: 0
 - Coverage (`apps/hub` グローバル閾値 80%):
-  - lines: 80.03%
-  - branches: 85.8%
-  - functions: 82.5%
-  - statements: 80.03%
+  - lines: 80.21%
+  - branches: 86.13%
+  - functions: 82.86%
+  - statements: 80.21%
 - source digest: `sha256:a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85`
 
 ## 5 テストカテゴリ (P04 定義) の結果

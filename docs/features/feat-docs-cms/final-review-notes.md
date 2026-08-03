@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms 最終レビュー記録 (P10)"
 status: confirmed
+layer: feature-final-review
 graph_node_id: "SYS-DOCS-CMS-P10"
 beads_linkage: "HarnessHub-9wb.10"
 ---
@@ -21,7 +22,7 @@ beads_linkage: "HarnessHub-9wb.10"
 | 確認項目 | 実測 |
 | --- | --- |
 | 型検査 | `pnpm -r typecheck` と `pnpm --filter hub typecheck` が pass |
-| Hub フルテスト | 99 ファイル pass、1,136 pass / 1 skipped、line coverage 80.03% |
+| Hub フルテスト | 102 ファイル pass、1,166 pass / 1 skipped、line coverage 80.21% |
 | Docs CMS 回帰 | `DOCS-PAGE-001` を含む 59 件が pass |
 | DB / security gates | DDL・tenant isolation・connection isolation・schema drift・write gate・単一 authz middleware が全て pass |
 | 本番ビルド | `pnpm --filter hub build` が pass |
@@ -37,3 +38,14 @@ SEC2/SEC6/SEC7/SEC8 の既存要件、および feature-package の goal/設計�
 
 `features/` と `tasks/` は content-addressed な graph 投影であるため、要件変更なしの実装作業で手編集しない。
 本番 deploy／smoke は P13 として未実行であり、PR マージ後の残課題である。
+
+## PR CI 失敗の是正
+
+PR 初回 CI で、文書 11 件の `layer` frontmatter 欠落、Biome 整形 19 件、Markdown 部品を
+初期 bundle へ含めたことによる client JS 予算超過を検出した。各文書へ layer を宣言し、
+CI と同じ Biome 2.5.4 で整形を確認した。MarkdownView/MarkdownEditor は既存の sheets 画面と
+同じ dynamic import に変更し、sanitize 経路は共通部品のまま維持している。
+
+再計測では `/docs/[id]` は 114.3 KiB、`/docs/[id]/edit` は 117.6 KiB、`/docs/new` は
+114.5 KiB で、いずれも 120 KiB 予算内となった。Docs CMS focused test 59 件、Hub typecheck、
+production build、client-bundle gate、配置規約、task 仕様書品質ゲートが pass した。

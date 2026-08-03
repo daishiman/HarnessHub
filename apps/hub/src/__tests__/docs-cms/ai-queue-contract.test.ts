@@ -10,9 +10,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-
-import { decide } from '../../lib/authz/decide.js';
 import { AI_QUEUE_ADAPTERS } from '../../lib/ai-queue/registry.js';
+import { decide } from '../../lib/authz/decide.js';
 import type { AuthzPrincipal, AuthzResourceRef } from '../../lib/authz/types.js';
 
 describe('DOCS-QUEUE: doc_draft kind の登録 (AD-4 汎化)', () => {
@@ -62,7 +61,12 @@ describe('DOCS-SEC8: AI キュー認可は既存 aijob.* action をそのまま�
     // 既存 3 action (pull/complete/fail) だけで doc_draft も処理できることを固定する
     const actions = ['aijob.pull', 'aijob.complete', 'aijob.fail'] as const;
     for (const action of actions) {
-      const outcome = decide({ action, principal: principal({ credential: 'access_token', role: 'member' }), resource: { ...resource, ownerUserId: 'user-worker' }, sessionRevoked: false });
+      const outcome = decide({
+        action,
+        principal: principal({ credential: 'access_token', role: 'member' }),
+        resource: { ...resource, ownerUserId: 'user-worker' },
+        sessionRevoked: false,
+      });
       expect(outcome.allowed).toBe(action !== 'aijob.pull'); // pull だけ workspace-admin 以上を要求する非対称
     }
   });

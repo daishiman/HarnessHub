@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms テストファースト設計 (P04)"
 status: confirmed
+layer: feature-test-design
 graph_node_id: "SYS-DOCS-CMS-P04"
 beads_linkage: "HarnessHub-9wb.4"
 depends_on:

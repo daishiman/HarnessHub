@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms CI 品質ゲート確認 (P09)"
 status: confirmed
+layer: feature-quality
 graph_node_id: "SYS-DOCS-CMS-P09"
 beads_linkage: "HarnessHub-9wb.9"
 depends_on:
@@ -25,9 +26,12 @@ depends_on:
 | ゲート | コマンド | 結果 |
 | --- | --- | --- |
 | typecheck (全 workspace) | `pnpm -r typecheck` | OK (7 projects) |
-| 単体/結合/契約テスト | `pnpm --filter hub test` | Test Files 99 passed, Tests 1136 passed / 1 skipped |
+| G2 lint / format (CI と同じ Biome 2.5.4) | `pnpm dlx @biomejs/biome@2.5.4 ci` | OK (576 files、整形差分 0) |
+| 単体/結合/契約テスト | `pnpm --filter hub test` | Test Files 102 passed, Tests 1166 passed / 1 skipped |
 | Docs cursor pagination 回帰 | `packages/db/__tests__/docs-cms.test.ts` | `DOCS-PAGE-001` pass (3 文書を重複なく走査) |
 | production build | `pnpm --filter hub build` | OK (compile + type check) |
+| client JS 予算 (qa-018) | `pnpm --filter @harness-hub/hub run check:client-bundle` | OK: `/docs/[id]` 114.3 KiB、`/docs/[id]/edit` 117.6 KiB、`/docs/new` 114.5 KiB（各 120 KiB 以下） |
+| 成果物配置・frontmatter | `python3 scripts/lint-artifact-placement.py` | OK（status/layer を全成果物に宣言） |
 | tenant 分離 (D4/DOCS-TEN) | `apps/hub/src/__tests__/docs-cms/tenant-isolation.test.ts` (hub test に内包) | 6/6 pass |
 | XSS sanitize (SEC7/DOCS-SEC7) | `apps/hub/src/__tests__/docs-cms/markdown-sanitize.test.ts` (hub test に内包) | 7/7 pass |
 | AI キュー認可 (SEC8/DOCS-QUEUE) | `apps/hub/src/__tests__/docs-cms/ai-queue-contract.test.ts` (hub test に内包) | 8/8 pass |

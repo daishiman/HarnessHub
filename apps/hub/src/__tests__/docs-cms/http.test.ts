@@ -1,7 +1,7 @@
 // P06 実行テスト (SYS-DOCS-CMS-P06)
 // DOCS-HTTP-*: docs-cms route が共有する JSON parse / problem+json 応答ヘルパー。
 
-import { PROBLEM_JSON_MEDIA_TYPE, documentDetailSchema } from '@harness-hub/schemas';
+import { documentDetailSchema, PROBLEM_JSON_MEDIA_TYPE } from '@harness-hub/schemas';
 import { describe, expect, it } from 'vitest';
 
 import { parseJsonRequest, problemResponse } from '../../features/docs-cms/http.js';

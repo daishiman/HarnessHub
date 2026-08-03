@@ -16,10 +16,10 @@ import { aiJobs } from '../schema/hearing-intake/schema';
 import { isTransactionalAdapter } from '../src/adapter';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
-import type { AiJobRow, QueueWriteback } from './hearing-intake-queue';
-import { claimNextJob, completeJob, failJob } from './hearing-intake-queue';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
+import type { AiJobRow, QueueWriteback } from './hearing-intake-queue';
+import { claimNextJob, completeJob, failJob } from './hearing-intake-queue';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -70,7 +70,11 @@ export interface DocsCmsRepository {
   getDocument(context: RepositoryContext, id: string): Promise<DocumentRow | null>;
   createDocument(context: RepositoryContext, input: CreateDocumentInput): Promise<DocumentRow>;
   updateDocument(context: RepositoryContext, id: string, input: UpdateDocumentInput): Promise<DocumentRow>;
-  claimNextDocDraftJob(context: RepositoryContext, tokenId: string, leaseMilliseconds?: number): Promise<AiJobRow | null>;
+  claimNextDocDraftJob(
+    context: RepositoryContext,
+    tokenId: string,
+    leaseMilliseconds?: number,
+  ): Promise<AiJobRow | null>;
   completeDocDraftJob(context: RepositoryContext, id: string, tokenId: string, resultJson: string): Promise<AiJobRow>;
   failDocDraftJob(context: RepositoryContext, id: string, tokenId: string, error: string): Promise<AiJobRow>;
   enqueueDocDraft(

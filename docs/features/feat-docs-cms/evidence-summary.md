@@ -49,9 +49,10 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root .
 | コマンド | 期待 | 実測 |
 |---|---|---|
 | `pnpm -r typecheck` | exit 0 (7 projects) | pass |
-| `pnpm --filter hub test` | 全 pass + coverage 80%以上 | **Test Files 99 passed (99) / Tests 1136 passed \| 1 skipped (1137)** / coverage lines 80.03% / branches 85.8% / functions 82.5% / statements 80.03% |
+| `pnpm --filter hub test` | 全 pass + coverage 80%以上 | **Test Files 102 passed (102) / Tests 1166 passed \| 1 skipped (1167)** / coverage lines 80.21% / branches 86.13% / functions 82.86% / statements 80.21% |
 | `pnpm --filter hub build` | production build | pass (compile + type check) |
 | `DOCS-PAGE-001` | 1 件ずつの cursor pagination で重複なく全件到達 | pass (3 文書を 3 ページで取得) |
+| `pnpm --filter @harness-hub/hub run check:client-bundle` | route ごとの client JS 120 KiB 以下 | pass: `/docs/[id]` 114.3 KiB、`/docs/[id]/edit` 117.6 KiB、`/docs/new` 114.5 KiB |
 | `check:ddl` | 未承認の破壊的 DDL 0 件 | 6 migration / 単一 lineage / 違反 0 件 |
 | `check:tenant-isolation-coverage` | fixture 網羅 100% | scoped=20 / fixture 網羅 20/20 (`documents` 未登録を検出・修正済み、§3 参照) |
 | `check:connection-isolation` | driver 直接 import 0 件 | packages/db 外からの driver 直接 import 0 件 |
@@ -138,6 +139,13 @@ repository が `next_cursor` を返しながら、次回検索に cursor を適�
 先頭ページを繰り返す状態だった。`WHERE documents.id < :cursor` と `ORDER BY documents.id DESC` を導入し、
 ULID の安定した順序でページを進めるよう修正した。`DOCS-PAGE-001` は 3 文書を limit 1 で走査し、
 重複なく全 ID に到達することを確認する。
+
+### 3.4 初回 CI の formatting / artifact / client bundle 不備
+
+PR の初回 CI は、11 文書の `layer` frontmatter と 19 件の Biome 整形、Markdown の初期 bundle
+取り込みで失敗した。`layer` を補完し、CI と同じ Biome 2.5.4 で整形を固定した。MarkdownView と
+MarkdownEditor は既存 sheets の方式と同じ dynamic import にして初期 chunk から分離し、共通の
+sanitize 実装を変えずに 3 route を 120 KiB 以下へ戻した。
 
 ---
 

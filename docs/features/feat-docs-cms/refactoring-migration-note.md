@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms リファクタリング／migration 記録 (P08)"
 status: confirmed
+layer: feature-migration
 graph_node_id: "SYS-DOCS-CMS-P08"
 beads_linkage: "HarnessHub-9wb.8"
 ---

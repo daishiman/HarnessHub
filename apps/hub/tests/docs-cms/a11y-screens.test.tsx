@@ -10,13 +10,12 @@ import axe from 'axe-core';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-
-import DocumentDetailPage from '../../src/app/(dashboard)/docs/[id]/page.js';
 import DocumentEditPage from '../../src/app/(dashboard)/docs/[id]/edit/page.js';
+import DocumentDetailPage from '../../src/app/(dashboard)/docs/[id]/page.js';
 import { DocumentList } from '../../src/app/(dashboard)/docs/document-list.js';
-import DocumentsPage from '../../src/app/(dashboard)/docs/page.js';
-import DocumentCreatePage from '../../src/app/(dashboard)/docs/new/page.js';
 import { DocumentCreateForm } from '../../src/app/(dashboard)/docs/new/document-create-form.js';
+import DocumentCreatePage from '../../src/app/(dashboard)/docs/new/page.js';
+import DocumentsPage from '../../src/app/(dashboard)/docs/page.js';
 
 function mountScreen(node: ReactNode): void {
   const html = renderToStaticMarkup(

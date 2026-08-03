@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms 品質保証報告 (P09)"
 status: confirmed
+layer: feature-quality
 graph_node_id: "SYS-DOCS-CMS-P09"
 beads_linkage: "HarnessHub-9wb.9"
 canonical_detail: "docs/features/feat-docs-cms/ci-quality-gates-verification.md"

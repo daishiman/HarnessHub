@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms 最終独立レビュー (P10)"
 status: confirmed
+layer: feature-final-review
 graph_node_id: "SYS-DOCS-CMS-P10"
 beads_linkage: "HarnessHub-9wb.10"
 depends_on:

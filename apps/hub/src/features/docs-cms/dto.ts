@@ -1,7 +1,12 @@
 /** DocumentRow (camelCase) と wire 契約 (snake_case) の間を結ぶ mapper。 */
 
 import type { DocumentRow } from '@harness-hub/db';
-import { type DocumentDetail, type DocumentListItem, documentDetailSchema, documentListItemSchema } from '@harness-hub/schemas';
+import {
+  type DocumentDetail,
+  type DocumentListItem,
+  documentDetailSchema,
+  documentListItemSchema,
+} from '@harness-hub/schemas';
 
 export function toDocumentDetail(row: DocumentRow): DocumentDetail {
   return documentDetailSchema.parse({

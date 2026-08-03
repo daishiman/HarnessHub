@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms 受入検証 (P07)"
 status: confirmed
+layer: feature-acceptance
 graph_node_id: "SYS-DOCS-CMS-P07"
 beads_linkage: "HarnessHub-9wb.7"
 depends_on:

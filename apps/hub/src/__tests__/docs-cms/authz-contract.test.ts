@@ -37,7 +37,12 @@ const OWN_TENANT_DOC: AuthzResourceRef = {
 
 describe('DOCS-AUTHZ: docs.read (member 以上)', () => {
   it('DOCS-AUTHZ-001: member は自テナントの doc を読める', () => {
-    const outcome = decide({ action: 'docs.read', principal: principal(), resource: OWN_TENANT_DOC, sessionRevoked: false });
+    const outcome = decide({
+      action: 'docs.read',
+      principal: principal(),
+      resource: OWN_TENANT_DOC,
+      sessionRevoked: false,
+    });
     expect(outcome).toEqual({ allowed: true, effectiveRole: 'member' });
   });
 });

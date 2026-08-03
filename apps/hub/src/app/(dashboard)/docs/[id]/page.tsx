@@ -5,8 +5,13 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, MarkdownView, ScopeChip, StatusChip } from '@harness-hub/ui';
+import { Alert, Button, ScopeChip, StatusChip } from '@harness-hub/ui';
+import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+
+const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
+  loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
+});
 
 interface PageProps {
   readonly params: Promise<{ readonly id: string }>;
@@ -55,12 +60,18 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         <h1>{doc.title}</h1>
         <p>
           <StatusChip domain="document" status={doc.status} />{' '}
-          <ScopeChip scope={doc.scope === 'common' ? 'common' : 'tenant'} name={doc.scope === 'common' ? '共通' : 'テナント'} />
+          <ScopeChip
+            scope={doc.scope === 'common' ? 'common' : 'tenant'}
+            name={doc.scope === 'common' ? '共通' : 'テナント'}
+          />
         </p>
       </header>
       <MarkdownView content={doc.body_markdown} />
       <p>
-        <Button type="button" onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}>
+        <Button
+          type="button"
+          onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
+        >
           編集する
         </Button>
       </p>

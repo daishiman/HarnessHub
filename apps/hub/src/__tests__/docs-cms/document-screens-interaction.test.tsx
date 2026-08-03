@@ -9,9 +9,8 @@ import { UiProvider } from '@harness-hub/ui';
 import { act, createElement, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
 import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/page.js';
+import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
 import { DocumentList } from '../../app/(dashboard)/docs/document-list.js';
 import { DocumentCreateForm } from '../../app/(dashboard)/docs/new/document-create-form.js';
 
@@ -95,7 +94,10 @@ afterEach(async () => {
 
 describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
   it('DOCS-UI-001: 取得成功で行と次へボタンが有効になる', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockImplementation(async () => jsonResponse(LIST_RESPONSE)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(async () => jsonResponse(LIST_RESPONSE)),
+    );
     await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
 
     expect(container.textContent).toContain('導入ガイド');

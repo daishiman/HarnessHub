@@ -1,6 +1,7 @@
 ---
 title: "feat-docs-cms リリース記録 (P13)"
 status: pending_pr_and_production_deploy
+layer: feature-release
 graph_node_id: "SYS-DOCS-CMS-P13"
 beads_linkage: "HarnessHub-9wb.13"
 ---

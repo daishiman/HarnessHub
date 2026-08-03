@@ -1,8 +1,13 @@
 'use client';
 
 import type { DocumentDetail, DocumentScope } from '@harness-hub/schemas';
-import { Alert, Button, MarkdownEditor, Select, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
+import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useState } from 'react';
+
+const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
+  loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
+});
 
 interface DocumentCreateFormProps {
   readonly tenantId: string;

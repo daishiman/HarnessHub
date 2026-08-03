@@ -20,12 +20,15 @@ export const GET = withAuthz(
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
     const { limit, cursor, scope, status } = parsed.data;
-    const page = await docsCmsRuntime().repository.listDocuments(createRepositoryContext({ tenantId: authz.resource.tenantId }), {
-      limit,
-      ...(cursor !== undefined ? { cursor } : {}),
-      ...(scope !== undefined ? { scope } : {}),
-      ...(status !== undefined ? { status } : {}),
-    });
+    const page = await docsCmsRuntime().repository.listDocuments(
+      createRepositoryContext({ tenantId: authz.resource.tenantId }),
+      {
+        limit,
+        ...(cursor !== undefined ? { cursor } : {}),
+        ...(scope !== undefined ? { scope } : {}),
+        ...(status !== undefined ? { status } : {}),
+      },
+    );
     return Response.json({
       items: page.items.map(toDocumentListItem),
       next_cursor: page.nextCursor,
