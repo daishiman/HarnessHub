@@ -1,0 +1,20 @@
+{
+  "evaluator": "claude-opus-4-6",
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "All five artifact files exist at canonical kind paths in the fixture-repo filesystem: issue→issues/sys-session-timeout-not-enforced.md, task→tasks/sys-implement-rate-limiting-for-public-api.md, specification→specs/sys-rest-api-v2-migration-spec.md, architecture→architecture/sys-order-processing-backend-architecture.md, document→docs/sys-development-environment-setup-guide.md. Graph.json (graph_revision=10) confirms 5 nodes whose artifact_kind and file_path values match each file's actual location. Verified from on-disk fixture state, not session prose."
+    },
+    "2": {
+      "met": true,
+      "evidence": "After the consecutive update pass (5 adds then 5 updates, graph_revision 0→10), all five files carry '(updated)' in their frontmatter title, and each file's frontmatter artifact_kind agrees with its file_path and actual filesystem location: issue/issues/, task/tasks/, specification/specs/, architecture/architecture/, document/docs/. Verified by reading each .md file's YAML frontmatter directly and cross-checking against graph.json node entries."
+    },
+    "3": {
+      "met": true,
+      "evidence": "The features/ directory contains only .gitkeep — zero feature files. Graph.json contains exactly 5 nodes (issue, task, specification, architecture, document) with zero feature-kind nodes. The skill correctly routed all five mixed artifacts without creating any feature outside the C14 macro-feature contract. Literal skill invocation confirmed at pane.txt line 38: 'Skill(dev-graph:run-dev-graph-node)'. Single user prompt at line 6, no subsequent nudge or user gate — task completed autonomously."
+    }
+  }
+}

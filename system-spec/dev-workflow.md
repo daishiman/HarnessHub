@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-135 |
+| Web (web) | 確定 | 確定質疑: qa-139 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,11 +24,23 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-135 (対応セル: web)
+### qa-139 (対応セル: web)
 
-**質問**: ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?
+**質問**: C02 atomic writer の単一書込み境界を維持しながら、inline Python が変数や Path 式で graph authority を組み立てる迂回を C10 PreToolUse でどう扱いますか?
 
-**回答**: 既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。
+**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映・公開指示を明示承認として、qa-122 と最新 main の qa-138 を全面維持し、C10 の inline Python 書込み検出を追加確定する。
+
+【1. 保護境界】graph authority は `.dev-graph/state/`、`.dev-graph/config.json`、`graph-node.schema.json` とし、初期 config / graph は正規 writer、node 更新は C02 `upsert-node.py` だけが書く。`.dev-graph/tmp/`、`cache/`、`templates/` は再生成領域なので一律遮断しない。
+
+【2. AST 静的検出】`python -c` と heredoc の本文は実行せず AST で解析し、変数代入、Path の `/`・`joinpath`・`parent`・`with_name`・`with_suffix`、`os.path.join`、f-string、`%` / `format`、list/tuple join、import 別名、`str` / `os.fspath` 包み、bytes path を定数伝播で評価する。`open` / `os.open` / Path 書込み / shutil / os rename・remove 系を対象とし、rename / move は元と宛先の双方を変更対象として判定する。
+
+【3. fail-closed と性能】評価不能な式でも `.dev-graph/` prefix または `state/graph.json` 末尾が確定すれば安全側で遮断する。遮断判定は subprocess、network、graph 全件検証を起動せず、PreToolUse timeout が許可窓になる構造を作らない。読取専用と保護外領域は通し、誤遮断で正規手順を壊さない。
+
+【4. 意図的な限界】`exec` / `eval` 内の再帰的 source、任意の文字列変換、別 script file の本文解析は C10 の範囲外とする。再帰実行や任意 file 読込みは遮断時間を入力に依存させるためで、script 経由の drift は PostToolUse 監査と C02 writer 規約で補完する。
+
+【5. 回帰と責務分離】BLOCK / PASS、実プロセス exit 2、subprocess 非起動、深さ上限、性能余裕、既知の限界を自動テストで固定する。path 評価、書込み対象収集、hook entrypoint、境界テストを責務別ファイルへ分離する。
+
+【6. 製品境界】変更は repository 内の Dev Graph 開発品質ゲートに限定し、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-140 (対応セル: desktop-windows)
 

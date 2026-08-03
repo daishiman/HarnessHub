@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-02T20:49:05.376000Z"
+updated_at: "2026-08-03T04:40:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728"]
@@ -118,6 +118,12 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 `HarnessHub-dc7` では Beads 自由フィールドの書込経路を単一 bridge へ統一した。
 製品仕様は変えず、内部設計と検証は
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
+を正とする。
+
+`HarnessHub-f84o` では C10 が inline Python の変数・Path 式経由書込みを見逃す穴を、
+subprocess 非依存の AST 定数伝播で閉じた。製品 API・DB・認証認可・UI は変えず、
+開発品質ゲートの内部契約を `qa-139` / `appr-028` と architecture へ反映した。実装境界、既知の限界、
+検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
 を正とする。
 
 `HarnessHub-7xi9` の更新時刻診断追補は、`qa-140` の R4-reopen により再確定した。

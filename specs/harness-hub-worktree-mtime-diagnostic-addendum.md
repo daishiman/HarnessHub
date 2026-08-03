@@ -12,7 +12,7 @@ iteration: null
 title: "並列 worktree 更新時刻診断の追補"
 owners: ["daishiman"]
 created_at: "2026-08-03T00:00:00Z"
-updated_at: "2026-08-03T00:00:00Z"
+updated_at: "2026-08-03T09:45:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["issue-worktree-main-ref-desync-20260728","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e8303501052f58013cef2f0526fd27bd65858e9a2dfbb0e2d34834497207b78d","evaluator":"system-spec-harness compile + coverage validation (qa-140)","evidence_ref":"system-spec/dev-workflow.md"}
-source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"e8303501052f58013cef2f0526fd27bd65858e9a2dfbb0e2d34834497207b78d","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05","evaluator":"system-spec-harness compile + coverage validation (qa-139, qa-140)","evidence_ref":"system-spec/dev-workflow.md"}
+source_lineage: {"imported_at":"2026-08-03T09:45:00Z","origin_kind":"system-spec-harness","source_digest":"7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "qa-140 の確定 system-spec から導出する開発運用仕様の追補"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-worktree-mtime-diagnostic-addendum.md","confidence":0.95}]
@@ -44,7 +44,7 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
-implementation_readiness: {"checked_at":"2026-08-03T00:00:00Z","missing_sections":[],"status":"complete"}
+implementation_readiness: {"checked_at":"2026-08-03T09:45:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # 並列 worktree 更新時刻診断の追補

@@ -237,7 +237,6 @@ close した。
 - labels は冪等な `--set-labels` 置換、priority は create/update 共通正規化を使う。
 - 契約・設計・検証結果は
   [仕様反映受領書](dc7-bd-free-field-write-route-spec-reflection-receipt.md) を正とする。
-
 ## 2026-08-02 追記: exact-13 再登録と task projection の冪等性
 
 - `HarnessHub-cvli` で、registration manifest が省略する task frontmatter 六項目を
@@ -247,3 +246,11 @@ close した。
 - 変更は repository 内の開発管理契約に限定され、製品 API・DB・認証認可・UI・deploy unit は非変更。
   層別の判断と検証は
   [仕様反映受領書](register-package-projection-idempotency-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-03 追記: inline Python の変数経由 graph 書込み遮断
+
+- `HarnessHub-f84o` で、`python -c` / heredoc の path 変数、`Path` 結合、join、format、import 別名を AST 定数伝播で解決する C10 層を追加した。
+- `open` / `os.open` / pathlib / shutil / os mutation を対象とし、rename / move は元と宛先の双方を変更として扱う。読取と `.dev-graph/tmp/` / `cache/` / `templates/` は許可する。
+- path 評価と書込み収集、core case と性能・既知限界 test を責務分割し、変更した手書きファイルを 500 行以下へ収束させた。
+- `exec` / `eval`、任意文字列変換、別 script file 本文は性能上の既知限界として明記し、PostToolUse drift audit と C02 writer 規約で補完する。
+- 正本は `system-spec/dev-workflow.md` の `qa-139` / `appr-028`、設計・検証・製品非変更の判断は [仕様反映受領書](f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
