@@ -34,8 +34,8 @@ BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 TRIALS = REPO / "eval-log" / "dev-graph" / "run-dev-graph-system-spec" / "live-trial"
 # fixture 契約と矛盾する旧前提で走り FAIL した run (verdict.json を持たない)。
 STALE_TASK = TRIALS / "20260726T040700Z-sysspec-final" / "task.md"
-# fixture 契約へ合わせて PASS を再取得した run。
-FRESH_TASK = TRIALS / "20260726T050519Z-sysspec-final2" / "task.md"
+# 現行 scenario/task_contract に合わせて PASS を再取得した run。
+FRESH_TASK = TRIALS / "20260803T113353Z-m0bd-c19-r2" / "task.md"
 SHAPE = "system-spec"
 
 
@@ -130,7 +130,10 @@ def test_stale_task_reports_resume_flag_drift() -> None:
 
 
 def test_extra_arg_is_rejected(tmp_path: Path) -> None:
-    task = _mutated(tmp_path, ("system-spec-wt6\"})", "system-spec-wt6 --resume\"})"))
+    task = _mutated(
+        tmp_path,
+        ("m0bd-c19-r2-20260803\"})", "m0bd-c19-r2-20260803 --resume\"})"),
+    )
     code, report = _lint("--task", str(task))
     assert code == 2
     assert "LT-006" in _rules(report)
@@ -164,7 +167,7 @@ def test_wrong_subject_skill_is_rejected(tmp_path: Path) -> None:
 def test_presence_claim_on_absent_artifact_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        ("- `system-spec/completeness-report.json` の `verdict`",
+        ("- `system-spec/completeness-report.json`",
          "- `system-spec/completeness-report.json` は生成済み"),
     )
     code, report = _lint("--task", str(task))
@@ -175,8 +178,8 @@ def test_presence_claim_on_absent_artifact_is_rejected(tmp_path: Path) -> None:
 def test_reexecution_ban_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        ("brief は U1-U9、48 セル、技術選定、公式出典、",
-         "既存 receipt があるので elicit / compile を再実行しないこと。\nbrief は U1-U9、48 セル、技術選定、公式出典、"),
+        ("R0-context / R1-preflight を省略せず、",
+         "既存 receipt があるので elicit / compile を再実行しないこと。\nR0-context / R1-preflight を省略せず、"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -206,10 +209,7 @@ def test_entry_point_without_skill_requirement_is_rejected(tmp_path: Path) -> No
     """
     task = _mutated(
         tmp_path,
-        ("各 entry point は必ず `Skill` ツールで呼び出してください。", "各手順を実行してください。"),
-        ("- system-spec-harness の正規 4 entry point を `Skill` ツールで呼んだ実行記録",
-         "- system-spec-harness の正規 4 entry point の実行記録"),
-        ("正規 4 entry point が `Skill` 経由で完走し", "正規 4 entry point が完走し"),
+        ("各 entry point は必ず `Skill` ツールで呼び出してください (", "各手順を実行してください ("),
     )
     code, report = _lint("--task", str(task))
     assert code == 2

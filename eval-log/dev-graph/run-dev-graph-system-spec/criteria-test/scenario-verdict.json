@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; OUT1 refresh=20260803T075100Z-wt32-ci-system-spec-r3 fresh-evaluator live trial",
+  "reviewer": "fresh-claude-live-goal-evaluator-m0bd-c19-r2-20260803; independent verifier executed within live trial 20260803T113353Z-m0bd-c19-r2",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,15 +27,15 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T075100Z-wt32-ci-system-spec-r3/verdict.json",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T075100Z-wt32-ci-system-spec-r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T075100Z-wt32-ci-system-spec-r3/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T075100Z-wt32-ci-system-spec-r3/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T075100Z-wt32-ci-system-spec-r3/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T113353Z-m0bd-c19-r2/evidence/independent-verification.json"
       ],
-      "observed": "2026-08-03 fresh live trial (20260803T075100Z-wt32-ci-system-spec-r3) は overall=PASS、nudge=0、gate=0。system-spec-harness の正規4 entry point、48セルの確定・除外、公式参照の鮮度・引用・仕様コンパイル・完全性評価を実行し、C02 経由で specification / architecture node を登録した。source digest と evidence reference の検証は exit 0、fresh evaluator による3観測と goal-seek integrity は PASS、current behavior closure digest=5d2eb84cd3eff462d7ae26339c743c5b56df0c0d6e2738f1b83acca1516be5b4。"
+      "observed": "2026-08-03 fresh live trial (20260803T113353Z-m0bd-c19-r2) は overall=PASS、nudge=0、gate=0。r2 task 契約に従い doc-fetch が SQLite・FastAPI の公式ページを実 Fetch し、実取得時刻と現行 version を記録した。system-spec-harness の正規4 entry point、48セルの確定・除外、公式参照の鮮度・引用・仕様コンパイル・完全性評価を実行し、C02 upsert-node.py 経由で specification / architecture node を登録した。source digest と evidence reference の検証は exit 0、fresh evaluator による3観測と goal-seek integrity は PASS、current behavior closure digest=5d2eb84cd3eff462d7ae26339c743c5b56df0c0d6e2738f1b83acca1516be5b4。"
     }
   }
 }

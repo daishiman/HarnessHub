@@ -7,6 +7,11 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-03: C19 task contract r2 の fresh live-trial 受領
+
+- `HarnessHub-eiky` の C19 scenario r2 への更新で旧受領書が `scenario-contract-superseded` となったため、`HarnessHub-m0bd` / Dev Graph `issue-c19-live-trial-rerun-task-contract-r2-20260803` で fresh live-trial を実行した。
+- `20260803T113353Z-m0bd-c19-r2` は overall=PASS。r2 task contract の `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGER`、公式ページを実取得して現行 version を記録する条件を満たし、C19 の focused pytest は 51 passed へ復帰した。製品仕様への影響がない層別判断と証跡は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+
 ## 2026-08-02: prompt の行数ゲートをコードから分離
 
 - `HarnessHub-hls0` で、一般コード・テストの一律 500 行分割を廃止し、`SKILL.md` 本文 300 行と
