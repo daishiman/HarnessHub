@@ -343,18 +343,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
-**開発品質反映 (2026-07-30 / `HarnessHub-35ai`)**:
+**開発品質反映 (2026-07-30 / `HarnessHub-35ai`、2026-08-04 / `HarnessHub-0ui0`)**:
 
-- feature scope の renderer は registration receipt を検証できた場合だけ
-  `verified` を表示し、receipt 未指定の探索表示は `not_performed` とする。
+- feature scope の renderer は registration receipt の node IDs、件数、source digest、
+  source lineage、graph digest を検証する。すべて一致時だけ `verified`、後続 sync により
+  graph digest だけが古い場合は `partial` / `graph_digest_stale`、receipt 未指定の探索表示は
+  `not_performed` とする。他の証拠不一致は引き続き fail-closed とする。
 - 同じ 13 child graph を receipt 有り／無しで描画する正負の回帰テストにより、
   見かけの task 件数だけで登録成功を推測する偽陽性を禁止する。
 - CLI receipt、可視 HTML banner、埋込み metadata は同じ判定を返す。
   影響は repository 内の検証契約に限定され、製品 API、DB schema、認証認可、
   UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
-- 反映先と検証は
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
-  を正とする。
+- 反映先と検証は [初回受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) と
+  [stale digest 受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
 
 ## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
 

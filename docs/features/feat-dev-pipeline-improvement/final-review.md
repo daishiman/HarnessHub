@@ -137,6 +137,20 @@ repository CI 136 PASS / 4 既存 WARN / 0 FAIL。最終結果と層別判断は
 中学生向けには「名簿に 13 人いるだけでは登録完了と言わず、受付の受領書と
 名簿が一致したときだけ合格印を出す仕組み」である。
 
+## renderer registration stale digest の最終レビュー (2026-08-04)
+
+`HarnessHub-0ui0` は、登録時点の graph digest が後続 sync で古くなると、正しい登録証拠まで
+失敗として HTML を出せなくなる問題を修正する。node IDs、件数、source digest、source lineage が
+一致し graph digest も一致する場合は `verified`、graph digest だけが古い場合は `partial` /
+`graph_digest_stale`、receipt 未指定は `not_performed` とし、他の証拠不一致は fail-closed を維持する。
+
+この変更は repository 内の renderer 品質契約に限られ、製品 API・DB・認証認可・UI・deploy unit は
+変更しない。実装、task 仕様書ゲート、fresh live trial、repository CI の最終結果と Beads / Draft PR は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
+
+中学生向けには「受付後に名簿の並び替えがあって受付番号だけ古くなっても、名前と人数が全部一致して
+いることまで『未確認』にしない。番号だけ古いと正直に表示して、間違った名簿なら止める仕組み」である。
+
 ### 仕様・設計影響
 
 新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。
