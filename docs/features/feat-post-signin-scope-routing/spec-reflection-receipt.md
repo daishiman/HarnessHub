@@ -61,7 +61,7 @@ status: "accepted_with_release_pending"
 | task-spec quality gate | `validate-system-plan.py` PASS（P01〜P13、violations 0、contract 1.3.0） |
 | generation lineage | PASS（checked 1、violations 0） |
 | task projection rerun | PASS（checked 13、missing 0） |
-| feature-focused test | PASS（6 files、51 tests） |
+| feature-focused test | PASS（main マージ後に 7 files、77 tests） |
 | shared-layer boundary test | PASS（1 file、26 tests） |
 | lint / typecheck | PASS（Biome、TypeScript） |
 
