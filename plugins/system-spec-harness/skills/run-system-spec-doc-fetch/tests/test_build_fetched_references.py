@@ -23,6 +23,7 @@ plugin-root の共有 script を read-only で呼び出す (本 skill 配下は�
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 
@@ -56,6 +57,8 @@ def _react_rec() -> dict:
         "official_host": "react.dev",
         "version": "19.0",
         "latest_checked_at": "2026-07-11T00:00:00Z",
+        "evidence_ref": "evidence/react.txt",
+        "evidence_sha256": "a" * 64,
         "summary": "React reference",
     }
 
@@ -63,11 +66,13 @@ def _react_rec() -> dict:
 def _postgres_rec() -> dict:
     return {
         "target_id": "postgres",
-        "retrieved_at": "2026-07-11T00:00:00Z",
+        "retrieved_at": "2026-07-11T00:05:00Z",
         "source_url": "https://www.postgresql.org/docs/",
         "official_publisher": "PGDG",
         "last_updated": "2026-05-01",
-        "latest_checked_at": "2026-07-11T00:00:00Z",
+        "latest_checked_at": "2026-07-11T00:05:00Z",
+        "evidence_ref": "evidence/postgres.txt",
+        "evidence_sha256": "b" * 64,
         "summary": "PostgreSQL docs",
     }
 
@@ -107,7 +112,7 @@ def test_build_record_missing_target_id():
 
 
 @pytest.mark.parametrize(
-    "field", ["source_url", "official_publisher", "retrieved_at", "latest_checked_at", "summary"]
+    "field", ["source_url", "official_publisher", "retrieved_at", "latest_checked_at", "evidence_ref", "evidence_sha256", "summary"]
 )
 def test_build_record_missing_required_field(field):
     rec = _react_rec()
@@ -121,6 +126,13 @@ def test_build_record_no_version_no_last_updated():
     rec.pop("version", None)
     rec.pop("last_updated", None)
     with pytest.raises(bfr.RecordError, match="last_updated"):
+        bfr.build_record(rec)
+
+
+def test_build_record_rejects_non_sha256_evidence_digest():
+    rec = _react_rec()
+    rec["evidence_sha256"] = "not-a-digest"
+    with pytest.raises(bfr.RecordError, match="evidence_sha256"):
         bfr.build_record(rec)
 
 
@@ -180,6 +192,17 @@ def _write(tmp_path: Path, name: str, obj) -> str:
     return str(p)
 
 
+def _attach_evidence(tmp_path: Path, records: list[dict]) -> None:
+    evidence_dir = tmp_path / "evidence"
+    evidence_dir.mkdir(exist_ok=True)
+    for record in records:
+        path = evidence_dir / f"{record['target_id']}.txt"
+        content = f"WebFetch evidence for {record['target_id']}\n".encode()
+        path.write_bytes(content)
+        record["evidence_ref"] = str(path.relative_to(tmp_path))
+        record["evidence_sha256"] = hashlib.sha256(content).hexdigest()
+
+
 def test_main_assemble_stdout_ok(tmp_path, capsys):
     recs = _write(tmp_path, "recs.json", [_react_rec(), _postgres_rec()])
     assert bfr.main(["assemble", "--records", recs]) == 0
@@ -228,10 +251,12 @@ def test_main_bad_json_returns_2(tmp_path):
 # IN1 受入: 組み立て結果が validate-source-citation.py を通る (end-to-end)      #
 # --------------------------------------------------------------------------- #
 def test_in1_assembled_output_passes_source_citation(tmp_path):
-    result = bfr.assemble([_react_rec(), _postgres_rec()])
+    records = [_react_rec(), _postgres_rec()]
+    _attach_evidence(tmp_path, records)
+    result = bfr.assemble(records)
     refs = _write(tmp_path, "fetched-references.json", result)
     tgt = _write(tmp_path, "t.json", {"targets": [{"target_id": "react"}, {"target_id": "postgres"}]})
-    assert vsc.main(["--targets", tgt, "--references", refs]) == 0
+    assert vsc.main(["--targets", tgt, "--references", refs, "--repo-root", str(tmp_path)]) == 0
 
 
 # --------------------------------------------------------------------------- #
@@ -240,20 +265,20 @@ def test_in1_assembled_output_passes_source_citation(tmp_path):
 def test_in1_fixture_valid_exit0():
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-valid.json")
-    assert vsc.main(["--targets", targets, "--references", refs]) == 0
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 0
 
 
 def test_in1_fixture_missing_target_exit1(capsys):
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-missing.json")
-    assert vsc.main(["--targets", targets, "--references", refs]) == 1
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 1
     assert "postgres" in capsys.readouterr().err
 
 
 def test_in1_fixture_host_mismatch_exit1(capsys):
     targets = str(FIXTURES / "fixture-targets.json")
     refs = str(FIXTURES / "fixture-references-host-mismatch.json")
-    assert vsc.main(["--targets", targets, "--references", refs]) == 1
+    assert vsc.main(["--targets", targets, "--references", refs, "--repo-root", str(FIXTURES)]) == 1
     assert "official_host" in capsys.readouterr().err
 
 

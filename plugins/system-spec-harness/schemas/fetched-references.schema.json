@@ -16,6 +16,8 @@
           "official_publisher",
           "official_host",
           "latest_checked_at",
+          "evidence_ref",
+          "evidence_sha256",
           "summary"
         ],
         "properties": {
@@ -27,6 +29,8 @@
           "version": {"type": ["string", "null"]},
           "last_updated": {"type": ["string", "null"]},
           "latest_checked_at": {"type": "string", "format": "date-time"},
+          "evidence_ref": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "summary": {"type": "string", "minLength": 1}
         },
         "anyOf": [

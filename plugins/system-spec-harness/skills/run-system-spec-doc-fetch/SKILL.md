@@ -17,6 +17,7 @@ allowed-tools:
   - WebSearch
   - WebFetch
   - Read
+  - Write
   - Bash
 responsibility_refs:
   - prompts/R1-identify.md
@@ -48,7 +49,7 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
   criteria:
     - id: IN1
       loop_scope: inner
-      text: validate-source-citation.py で対象 target_id と fetched-references.json が全件対応し retrieved_at/source_url/official_publisher/official_host/(version または last_updated)/latest_checked_at を持ち公式host一致であることを検証し欠落0件。
+      text: validate-source-citation.py で対象 target_id と fetched-references.json が全件対応し retrieved_at/source_url/official_publisher/official_host/(version または last_updated)/latest_checked_at/evidence_ref/evidence_sha256 を持ち、公式host・時刻・repo内取得証跡digestが一致することを検証し欠落0件。
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -114,9 +115,10 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 - [ ] R1 が `spec-state.json` 由来の取得対象一覧 (`target_id` 群) を捏造 0 で確定している
 - [ ] R2 が各対象の公式 host を特定し、非公式ソースで穴埋めしていない (未取得は理由付きで明示)
 - [ ] 各 record が必須フィールドを充足し version か `last_updated` のいずれかを持つ
+- [ ] 各 record が実 WebFetch の最小取得証跡を `system-spec/retrieval-evidence/<target_id>.json` に残し、repo 相対 `evidence_ref` と SHA-256 `evidence_sha256` でその内容へ束縛している
 - [ ] `source_url` の host が `official_host` と一致している
 - [ ] 対象一覧と `fetched-references.json` が全件対応 (欠落 0・重複 0)
-- [ ] IN1: `validate-source-citation.py --targets <targets> --references fetched-references.json` が exit0
+- [ ] IN1: `validate-source-citation.py --targets <targets> --references fetched-references.json --repo-root <project-root>` が exit0
 - [ ] `knowledge_candidates[]` のdiscovered対象は、公式/一次HTTPS `source_refs[]` と実`checked_at`を得たものだけがqualifiedになっている
 
 ### ゴールシークループ
@@ -140,7 +142,7 @@ python3 skills/run-system-spec-doc-fetch/scripts/build-fetched-references.py \
   assemble --records records.json --targets targets.json --out fetched-references.json
 # IN1 ゲート (共有 script)
 python3 scripts/validate-source-citation.py \
-  --targets targets.json --references fetched-references.json
+  --targets targets.json --references fetched-references.json --repo-root "$CLAUDE_PROJECT_DIR"
 ```
 
 ## Gotchas

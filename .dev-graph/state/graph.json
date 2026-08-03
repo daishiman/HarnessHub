@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1180,
+  "graph_revision": 1182,
   "nodes": [
     {
       "acceptance": [
@@ -47075,6 +47075,118 @@
       "title": "Harness Hub Dev Graph / Beads authority 追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-02T12:13:53Z"
+    },
+    {
+      "acceptance": [
+        "retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する",
+        "複数 record の retrieved_at 完全一致を exit 非0で検出する",
+        "各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する",
+        "20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-p1ql",
+        "linked_at": "2026-08-03T08:16:11Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "system-spec-harness の C13 citation validation 契約を強化する単独 bug 修正であり、issue artifact として issues/ へ正規配置する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "feca098df82289522ed3ff10aba3f9dd14e31cee65915942600872ce65343596",
+        "evaluator": "Codex final review",
+        "evidence_ref": "issues/sys-source-citation-retrieval-integrity-20260803.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T08:28:16Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる",
+      "graph_node_id": "issue-source-citation-retrieval-integrity-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T08:28:16Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "モデル記憶で作られた citation と将来日時を形式だけで通す C13 の穴を塞ぎ、仕様書の出典を再検証可能にする",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "plugins/system-spec-harness/skills/run-system-spec-doc-fetch/",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/",
+        "plugins/system-spec-harness/schemas/fetched-references.schema.json",
+        "plugins/system-spec-harness/tests/",
+        "docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md",
+        "issues/sys-source-citation-retrieval-integrity-20260803.md"
+      ],
+      "scope_in": [
+        "validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証",
+        "R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期",
+        "fixture と回帰テストによる C19 r2 捏造パターンの固定"
+      ],
+      "scope_out": [
+        "WebFetch 実行自体を強制する live-trial fixture の改修 (HarnessHub-eiky が所有)",
+        "公式 host の意味的な鮮度判定 (既存 C08 の責務)",
+        "HarnessHub 製品の API、DB schema、認証認可、UI、Cloudflare 配置の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T08:28:16Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec-harness",
+        "citation",
+        "integrity"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Citation の取得証跡・時刻実在性を fail-closed で検証する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T08:28:16Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
