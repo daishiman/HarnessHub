@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-post-signin-scope-routing",
+  "feature_context_digest": "sha256:d2f1b1eafc3773a672b279d784dbe1fec10902d32a31643edd8d0bf8379cfcfb",
+  "purpose": "ログインは成功するのに業務画面 (/sheets /catalog 系) が 403 missing_tenant_scope で開けない実装未結線を、認可の判定順と deny-by-default を変えずに解消する。原因はサインイン後の戻り先が / 固定であること、/ が稼働確認しか表示しないこと、通常のブラウザ遷移では認可が要求するテナント情報が付与されないことの 3 点であり、利用者の操作誤りではない 確定仕様の根拠は qa-135（frontend 着地先・scope 伝搬）、qa-136（Web 完結 UX）、qa-137（認可境界）である。",
+  "goal": "scope の入力系統 2 系統 (明示ヘッダー / session の active tenant-workspace) とサインイン後の着地先解決が結線され、業務画面 6 種 (/sheets /sheets/new /sheets/{id} /catalog /catalog/releases /catalog/{projectId}) へ通常のブラウザ操作で到達できる状態",
+  "scope_in": [
+    "scope 解決の 2 系統: 明示ヘッダー (API / 機械クライアント) と session の active tenant/workspace (ブラウザ通常遷移) を server 側で解決する",
+    "両方が存在して不一致なら ambiguous_scope で拒否し、どちらかを黙って優先しない",
+    "両方とも存在しない場合は従来どおり missing_tenant_scope とする (deny-by-default 非退行)",
+    "両経路を同一の authorize() へ収束させ、判定を二重実装しない",
+    "session への active workspace 束縛と、切替のたびの所属再検証",
+    "サインイン後の着地先解決: callbackUrl の固定値 \"/\" を廃止し、遷移元 path -> 既定着地 /sheets の順で解決する",
+    "既定着地を単一定数から解決し、画面ごとに散らさない",
+    "戻り先を同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative (//) は既定着地へ落とす (open redirect 防止)",
+    "戻り先の解決結果にも通常の authorize() を適用し、redirect を認可の迂回路にしない",
+    "/ の扱い: 未認証時は稼働確認表示を維持し、認証済み session がある場合は既定着地へ redirect する"
+  ],
+  "scope_out": [
+    "authorize() の判定順・role 判定・deny-by-default そのものの変更",
+    "catalog / sheets API 実装と DB schema の変更",
+    "Workspace 選択画面の UI 実装 (feat-workspace-switch-ux が所有)",
+    "Web 公開ウィザードの導線 (feat-web-only-publish-journey が所有)",
+    "サイドバー 9 項目の段階表示契約の変更 (docs/frontend-spec.md §10)",
+    "Device Flow 確認コード制約の変更 (現行維持)"
+  ],
+  "acceptance": [
+    "遷移元が無いサインイン成功で /sheets に着地し、/ に留まらない",
+    "戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる",
+    "認証済み session で / を開くと既定着地へ redirect される",
+    "業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない",
+    "明示ヘッダーと session scope が併存し不一致のとき ambiguous_scope で拒否される",
+    "どちらの scope 入力も無い場合は missing_tenant_scope のままである (deny-by-default 非退行)",
+    "principal の所属検証を通らない workspace は session へ束縛されない",
+    "戻り先の解決結果に対しても authorize() が適用される"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-post-signin-scope-routing.context.json",
+      "feature_id": "feat-post-signin-scope-routing",
+      "exists": true,
+      "sha256": "d2f1b1eafc3773a672b279d784dbe1fec10902d32a31643edd8d0bf8379cfcfb",
+      "digest_status": "resolved",
+      "digest_note": "shasum -a 256 で実測した値が .dev-graph/locks/system-dev-plan-lock.json の feature_digest と完全一致することを確認した (2 つの独立出典によるクロス検証)。同 lock の feature_id・run_id・session_owner も C13 acquire 時の宣言値と一致する。"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "digest_status": "resolved",
+      "digest_note": "frontmatter confirmation_status=confirmed / evaluation_status=pass を Read で確認済み。source_lineage は system-spec/frontend.md と system-spec/ui-ux.md。サインイン後着地先・段階表示・ErrorState 契約の根拠として参照する。"
+    },
+    {
+      "path": "architecture/harness-hub-security.md",
+      "exists": true,
+      "digest_status": "resolved",
+      "digest_note": "frontmatter confirmation_status=confirmed / evaluation_status=pass を Read で確認済み。source_lineage は system-spec/security.md と system-spec/auth.md。deny-by-default・scope 解決・redirect 安全性の根拠として参照する。"
+    },
+    {
+      "path": "specs/harness-hub-post-signin-workspace-scope-addendum.md",
+      "exists": true,
+      "digest_status": "resolved",
+      "digest_note": "本 run の spec verb で確定した追補仕様。A 節から G 節が scope 解決 2 系統・着地先解決・Workspace 切替・Web 完結導線・権限境界を規定する。qa-135 / qa-136 / qa-137 の qa_log 逐語が出典。"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "authz-decision-order-and-deny-by-default-non-regression",
+      "summary": "authorize() の判定順 (public 判定 → 認証 → スコープ一意性 → tenant 一致 → workspace 所属) と deny-by-default を変更しない。scope の入力系統を増やすだけで、判定そのものの構造・順序・既定拒否は非退行とする。scope 入力がどちらも無い場合は従来どおり missing_tenant_scope を返す。",
+      "source": "apps/hub/src/middleware/authz.ts authorize() の判定順コメントと分岐実装; features/feat-post-signin-scope-routing.context.json scope_out (「authorize() の判定順・role 判定・deny-by-default そのものの変更」) および acceptance (「どちらの scope 入力も無い場合は missing_tenant_scope のままである (deny-by-default 非退行)」); system-spec/spec-state.json qa-137 (判定順と既定拒否)"
+    },
+    {
+      "id": "scope-resolution-two-inputs-ambiguous-rejection",
+      "summary": "scope 解決の入力は 2 系統 (明示ヘッダー = API と機械クライアント / session の active tenant-workspace = ブラウザ通常遷移) とし、両方が存在して不一致なら ambiguous_scope で拒否する。どちらかを黙って優先しない。両経路は同一の authorize() へ収束させ、判定を二重実装しない。",
+      "source": "features/feat-post-signin-scope-routing.context.json scope_in 4 項および acceptance (「明示ヘッダーと session scope が併存し不一致のとき ambiguous_scope で拒否される」); system-spec/spec-state.json qa-137 (scope 解決の入力 2 系統); apps/hub/src/middleware/authz.ts resolveRequestedScope の既存 ambiguous_scope 分岐"
+    },
+    {
+      "id": "session-active-workspace-binding-membership-revalidation",
+      "summary": "session へ束縛できる active workspace は principal の所属検証を通過したものだけとする。切替のたびに所属を再検証し、session 保持値を所属検証の代替に使わない。",
+      "source": "features/feat-post-signin-scope-routing.context.json scope_in (「session への active workspace 束縛と、切替のたびの所属再検証」) および acceptance (「principal の所属検証を通らない workspace は session へ束縛されない」); system-spec/spec-state.json qa-137 (session への active workspace 束縛)"
+    },
+    {
+      "id": "post-signin-landing-resolution-single-default-constant",
+      "summary": "サインイン後の着地先は callbackUrl 固定値を廃止し、遷移元 path から既定着地 /sheets の順で解決する。既定着地は単一定数から解決し、画面ごとに散らさない。認証済み session で / を開いた場合も既定着地へ redirect し、/ を終着点にしない。未認証時の / は稼働確認表示を維持する。",
+      "source": "features/feat-post-signin-scope-routing.context.json scope_in (着地先解決 3 項) および acceptance (「遷移元が無いサインイン成功で /sheets に着地し、/ に留まらない」「認証済み session で / を開くと既定着地へ redirect される」); docs/frontend-spec.md の / から /sheets への遷移規定; apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx の callbackUrl 固定値; system-spec/spec-state.json qa-135 (サインイン成功後の着地先, / の扱い)"
+    },
+    {
+      "id": "open-redirect-prevention-same-origin-relative-only",
+      "summary": "戻り先は同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative (先頭 2 連スラッシュ) は既定着地へ落とす。戻り先の解決結果にも通常の authorize() を適用し、redirect を認可の迂回路にしない。",
+      "source": "features/feat-post-signin-scope-routing.context.json scope_in (「戻り先を同一 origin の相対 path のみに制限し」「戻り先の解決結果にも通常の authorize() を適用し、redirect を認可の迂回路にしない」) および acceptance (「戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる」「戻り先の解決結果に対しても authorize() が適用される」); system-spec/spec-state.json qa-137 (サインイン後 redirect の安全性)"
+    },
+    {
+      "id": "integration-fix-not-new-capability-cross-feature-boundary",
+      "summary": "本 feature は新規機能の追加ではなく、既にデプロイ済みのコードどうしの結線欠落を埋める統合修正である。authorize() の判定規則そのものは feat-auth-tenancy が、業務画面本体は feat-dual-catalog-web が所有する。Workspace 選択画面の UI は feat-workspace-switch-ux、Web 公開ウィザードの導線は feat-web-only-publish-journey が所有し、本 feature は解決規則と着地先解決の結線のみを所有する。",
+      "source": "features/feat-post-signin-scope-routing.md 位置づけ (「既にデプロイ済みのコードどうしの結線欠落を埋める統合修正」「機能間 depends_on は空とし、feat-auth-tenancy / feat-dual-catalog-web との関係は related_nodes で表現する」); features/feat-post-signin-scope-routing.context.json scope_out (「Workspace 選択画面の UI 実装 (feat-workspace-switch-ux が所有)」「Web 公開ウィザードの導線 (feat-web-only-publish-journey が所有)」)"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "id_match_note": "features/feat-post-signin-scope-routing.context.json の graph_node_id、features/feat-post-signin-scope-routing.md frontmatter の graph_node_id、.dev-graph/locks/system-dev-plan-lock.json の feature_id が全て feat-post-signin-scope-routing で一致する。",
+    "context_match": true,
+    "context_match_note": "goal-spec の purpose / goal / scope_in / scope_out / acceptance は features/feat-post-signin-scope-routing.context.json の同フィールドを逐語転記したものであり、改変を加えていない。",
+    "feature_context_digest_verified": true,
+    "feature_context_digest_verified_note": "shasum -a 256 実測値と C13 lock の feature_digest の一致で検証した。",
+    "system_spec_source_status": "confirmed + evaluator PASS (architecture/harness-hub-frontend.md・architecture/harness-hub-security.md の frontmatter confirmation_status=confirmed / evaluation_status=pass。system-spec/completeness-report.json verdict=PASS)",
+    "architecture_refs_resolved": true,
+    "architecture_refs_resolved_note": "architecture_refs 3 件は全て caller repository 内に実在し Read で内容確認済み。絶対 path・traversal を含まない。",
+    "notes_ja": true,
+    "status": "complete",
+    "feature_split_or_task_generation_performed": false
+  },
+  "extracted_at": "2026-08-02T05:45:00Z"
+}

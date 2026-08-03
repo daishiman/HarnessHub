@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-01T12:29:53Z"
+updated_at: "2026-08-02T20:47:57.685957Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-auth-tenancy/98fd3cc31bb17e536f40d38cc09ef8c21116bae295e33adcd2c40df83b977f52/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-auth-tenancy.md","confidence":0.9}]
@@ -46,8 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
-
-
 
 # 認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)
 
@@ -180,3 +178,20 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照する。
 - draft PR の merge と default branch reconciliation までは
   `HarnessHub-fnej` と dev-graph node を `in_progress` のまま維持する。
+
+## 実装反映 (2026-08-02 / HarnessHub-uk2i)
+
+- 顧客が所有する Google OAuth client を `provider-admin` が `/settings/auth` から登録し、
+  テスト、有効化、rotation、取消、無効化、再開できる管理面を追加した。
+- 接続は `pending / tested / active / disabled` で管理し、`active` 以外はログイン解決に使わない。
+  disabled の再開は新 credential の登録からやり直し、古い secret を未検証で戻さない。
+- 既存 Google 行へ staging 列を追加し、client ID・暗号化 secret・方式・許可 Workspace
+  ドメインを CAS で同時昇格する。切替前と取消後は現行ログインを継続する。
+- 管理 API は provider-admin、同一 origin、tenant scope、Google issuer に閉じる。
+  secret 全値は UI/API/監査/ログ/エラーへ返さず last4 のみ表示する。
+- 正本は system-spec `qa-124`〜`qa-130`、手順は
+  [顧客持ち込み Google OIDC runbook](../docs/features/feat-auth-tenancy/runbook-customer-managed-google-oidc.md)、
+  対応表は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+- PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境 login、Playwright、production migration は外部環境が必要な未完了項目のため、`HarnessHub-uk2i` は `in_progress` を維持する。

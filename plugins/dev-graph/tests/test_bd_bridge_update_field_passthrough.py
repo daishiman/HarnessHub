@@ -96,6 +96,7 @@ FORWARDED = [
     ("--description", "description", "本文を差し替える"),
     ("--status", "status", "in_progress"),
     ("--title", "title", "新しいタイトル"),
+    ("--assignee", "assignee", "daishiman"),
 ]
 
 
@@ -137,7 +138,12 @@ def test_empty_value_is_forwarded_as_explicit_clear(bridge, calls, monkeypatch, 
 
 
 def test_update_fields_cover_every_declared_flag(bridge):
-    """UPDATE_FIELDS が exact-set であること (宣言漏れ = 運用上の機能欠落) を固定する。"""
+    """UPDATE_FIELDS が exact-set であること (宣言漏れ = 運用上の機能欠落) を固定する。
+
+    priority/assignee/labels は契約 §2 の parity 突合対象外だが、C10 guard が bd 直接実行を
+    field で選り分けず遮断する以上、ここに載っていない field は到達経路を持たない
+    (HarnessHub-dc7)。labels の写像先が `--set-labels` (置換) であることも併せて固定する。
+    """
     assert dict(bridge.UPDATE_FIELDS) == {
         "status": "--status",
         "title": "--title",
@@ -145,6 +151,9 @@ def test_update_fields_cover_every_declared_flag(bridge):
         "notes": "--notes",
         "append_notes": "--append-notes",
         "design": "--design",
+        "priority": "--priority",
+        "assignee": "--assignee",
+        "labels": "--set-labels",
     }
 
 

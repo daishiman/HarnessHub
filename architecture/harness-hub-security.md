@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub security アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T12:29:53Z"
+updated_at: "2026-08-02T09:40:16.707097Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"5e1ce5ab6e76bd234f47c59f6f91e54c0bb2c682602098cca8598c1c50245575","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T11:54:39Z","origin_kind":"system-spec-harness","source_digest":"5e1ce5ab6e76bd234f47c59f6f91e54c0bb2c682602098cca8598c1c50245575","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T09:32:20Z","origin_kind":"system-spec-harness","source_digest":"8981abfb090d9ebd74c5cfe589c7216c050653fea4aa1242b7f64ed88d3a947d","source_path":"system-spec/security.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-security.md","confidence":0.95}]
@@ -47,19 +47,17 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
-
-
 # Harness Hub security アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/security.md](../system-spec/security.md) (sha256: `4c4572235580b8a6…`)
-- [system-spec/auth.md](../system-spec/auth.md) (sha256: `ee2467537a90363e…`)
+- [system-spec/security.md](../system-spec/security.md) (sha256: `d2333481227822b7…`)
+- [system-spec/auth.md](../system-spec/auth.md) (sha256: `14439efdbbce8f2b…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-30T04:40:19Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
+- 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -121,6 +119,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 本番 smoke の結果と rollback 判断は
   [feat-publish-pipeline release record](../docs/features/feat-publish-pipeline/release-record.md) を証跡正本とする。
 
+**差分追記 (2026-08-02 / `HarnessHub-9cgb` / qa-133)**:
+
+- protected `/catalog` の CWV runner は、通常 session / access token と鍵を共有しない
+  5 分以下の HS256 ticket を使う。`typ`、audience、HTTPS origin、tenant/workspace、発行・期限を
+  Worker で検証し、改ざん・期限切れ・scope 不一致は通常 credential へ fallback せず拒否する。
+- ticket は最初の `GET /catalog` で URL から除去し、`__Host-`、HttpOnly、Secure、SameSite=Strict、
+  Path=/ の Cookie に移す。edge と route は GET/HEAD の catalog read allowlist と
+  `harnesses.read` の credential 規則を二段で検査する。
+- 秘密値・ticket は source、文書、log、Lighthouse artifact に保存しない。設計の受領と
+  外部実測の残課題は
+  [CWV probe credential 仕様反映受領書](../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md)
+  を正とする。
+
 ## Delivery, migration and rollback
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
@@ -145,3 +156,24 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 詳細は [AD-10](../docs/features/feat-auth-tenancy/architecture-decision-record-shared-google-oidc.md)
   と [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
   を参照する。
+
+**差分追記 (2026-08-02 / `HarnessHub-dhy` / qa-120、qa-111・qa-117 統合)**:
+
+- 認証済み `/marketplace.json` は tenant/workspace ごとに内容が変わるため、
+  shared cache に置かない。`private, max-age=60, stale-while-revalidate=300` と
+  Cookie/tenant/workspace の `Vary` を組み合わせる。
+- client 側で stale 表示を許すのは、同一 tenant/workspace/project scope で認可済みの
+  取得データに限定する。401/403/契約不正と scope 切替では以前の内容を描画しない。
+- role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、
+  catalog client へ認可規則を複製しない。
+- 詳細は [system-spec/security.md](../system-spec/security.md) の `qa-120`、
+  回帰契約は [testing-qa architecture](./harness-hub-testing-qa.md) を参照する。
+
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-128)**:
+
+- 顧客持ち込み credential の管理は provider-admin・同一 origin・tenant scope・Google issuer の
+  4 境界を全て通す。active 以外、未知状態、CAS 競合、別 tenant/issuer は fail-closed とする。
+- secret 平文は要求 body から封筒暗号化、または接続テスターの短命引数へだけ渡す。
+  API、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別は last4 に限定する。
+- rotation は現行値を保持する staging と原子的昇格で行い、disabled の復帰は新 credential の
+  pending テストを必須にする。顧客方式から共有方式への暗黙 fallback は行わない。

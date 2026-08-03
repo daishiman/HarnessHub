@@ -237,15 +237,16 @@ describe('P13 production migration / smoke CLI', () => {
     const url = `file:${dbPath}`;
     // 件数はリテラルで書く。journal の長さを参照すると、migration を足しただけで一緒に
     // 緑になり「台帳に載っていない DDL が適用された」を検出できなくなる。
-    // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client
+    // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
+    // 0004 顧客持ち込み OAuth client の lifecycle
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 4, applied: 0, pending: 4 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 5, applied: 0, pending: 5 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 4 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 5 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 4, appliedAfter: 4 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 5, appliedAfter: 5 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

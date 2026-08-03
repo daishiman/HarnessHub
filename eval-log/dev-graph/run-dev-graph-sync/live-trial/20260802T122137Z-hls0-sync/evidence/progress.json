@@ -1,0 +1,36 @@
+{
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "checklist": {
+    "3way_plan_with_snapshot_digest": {
+      "status": "PASS",
+      "evidence": "dry-run showed imports=1,exports=1 with sha256 digests"
+    },
+    "mutation_authority_single_path": {
+      "status": "PASS",
+      "evidence": "LT-TASK-001 uses tracker_binding=github only"
+    },
+    "dry_run_write_count_zero": {
+      "status": "PASS",
+      "evidence": "Phase 1 write_count=0, Phase 3 write_count=0"
+    },
+    "one_sided_changes_mapped": {
+      "status": "PASS",
+      "evidence": "title imported from remote, status exported to project"
+    },
+    "close_delete_tombstone": {
+      "status": "N/A",
+      "evidence": "no close/delete in this scenario"
+    },
+    "done_only_on_merge_evidence": {
+      "status": "N/A",
+      "evidence": "no done transition in this scenario"
+    },
+    "second_sync_changes_zero": {
+      "status": "PASS",
+      "evidence": "Phase 3: changes=0, converged=true, imports=[], exports=[]"
+    }
+  },
+  "phase1_result": "ok=true, changes=2, write_count=0",
+  "phase2_result": "ok=true, changes=2, write_count=4, parity_manifest=ok",
+  "phase3_result": "ok=true, changes=0, converged=true, write_count=0"
+}

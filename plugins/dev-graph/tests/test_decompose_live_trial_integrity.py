@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -15,6 +18,7 @@ SPEC.loader.exec_module(SUPPORT)
 
 AUDIT = SUPPORT.AUDIT
 INTEGRITY = AUDIT.INTEGRITY
+PATCH_BUILDER = HERE / "fixtures" / "build_decompose_promotion_patch.py"
 
 
 def _features() -> list[dict]:
@@ -60,6 +64,65 @@ def test_digest_recipe_excludes_only_self_reference() -> None:
     changed_content["title"] = "different title"
     assert INTEGRITY.evaluation_digest(changed_content) != baseline
     assert INTEGRITY.EVALUATED_DIGEST_EXCLUDED == ("confirmation_evidence",)
+
+
+def test_promotion_patch_binds_digest_to_final_node(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    (root / ".dev-graph" / "config.json").write_text(
+        json.dumps({"local_state": {"graph": ".dev-graph/state/graph.json"}}),
+        encoding="utf-8",
+    )
+    node = _features()[0]
+    graph_path = root / ".dev-graph" / "state" / "graph.json"
+    graph_path.write_text(json.dumps({"nodes": [node]}), encoding="utf-8")
+    output = root / "eval-log" / "promotion.json"
+    built = subprocess.run(
+        [
+            sys.executable,
+            str(PATCH_BUILDER),
+            "build",
+            "--repo-root",
+            str(root),
+            "--node-id",
+            node["graph_node_id"],
+            "--output",
+            str(output),
+            "--checked-at",
+            "2026-08-02T06:30:00Z",
+            "--evaluator",
+            "test",
+            "--evidence-ref",
+            "eval-log/preview.json",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert built.returncode == 0, built.stdout + built.stderr
+    request = json.loads(output.read_text(encoding="utf-8"))
+    promoted = {**node, **request["patch"]}
+    assert request["patch"]["confirmation_evidence"]["evaluated_digest"] == (
+        INTEGRITY.evaluation_digest(promoted)
+    )
+
+    graph_path.write_text(json.dumps({"nodes": [promoted]}), encoding="utf-8")
+    verified = subprocess.run(
+        [
+            sys.executable,
+            str(PATCH_BUILDER),
+            "verify",
+            "--repo-root",
+            str(root),
+            "--node-id",
+            node["graph_node_id"],
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert verified.returncode == 0, verified.stdout + verified.stderr
+    assert json.loads(verified.stdout)["matches"] is True
 
 
 def test_mirror_array_diverging_from_nodes_is_rejected() -> None:

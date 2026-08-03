@@ -1,0 +1,48 @@
+      cat "$FIXTURE/.dev-graph/state/graph.json…)
+  ⎿  updated_at: 2026-08-02T06:01:00Z
+     status: active
+     confirmation_status: confirmed
+     … +3 lines (ctrl+o to expand)
+
+⏺ Bash(FIXTURE="/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-decompose-beads"
+      cat "$FIXTURE/.dev-graph/state/graph.json…)
+  ⎿  acceptance: ["メールアドレスとパスワードで新規登録できる", "登録済みユーザーがログインできる", "ログイン後にセッションが維持される", "ログアウトでセッションが破棄される"]
+     architecture_refs: ["arch-web-app-001"]
+     artifact_kind: "feature"
+     … +42 lines (ctrl+o to expand)
+
+⏺ Bash(FIXTURE="/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-decompose-beads"
+      cat "$FIXTURE/.dev-graph/state/graph.json…)
+  ⎿  {"acceptance":["メールアドレスとパスワードで新規登録できる","登録済みユーザーがログインできる","ログイン後にセッションが維持される","ログアウトでセッションが破棄される"],"architecture_refs":["arch-web-app-001"]
+     ,"artifact_kind":"feature","artifact_subtypes":[],"beads_linkage":null,"classification_candidates":[{"artifact_kind":"feature","candidate_path":"features/feat-user-auth-001.md","confidence":0.95}],"classificati
+     on_confidence":0.95,"classification_reason":"want文からユーザー認証機能を自動分類","completion_evidence":{"completed_at":null,"evidence_refs":[],"policy":"manual","rec
+     … +8 lines (ctrl+o to expand)
+
+⏺ Let me understand what _restore_document_layer does, as it might be modifying the node.
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ I need to investigate the digest mismatch. Let me compare the serialized forms carefully.
+
+⏺ Bash(FIXTURE="/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-decompose-beads"
+      cat "$FIXTURE/.dev-graph/state/graph.json…)
+  ⎿  Error: Exit code 1
+       File "<string>", line 40
+         if a \!= b:
+               ^
+     SyntaxError: unexpected character after line continuation character
+
+       File "<string>", line 40
+         if a \!= b:
+               ^
+     SyntaxError: unexpected character after line continuation character
+
+· Executing beads fixture cycle… (21m 8s · ↓ 18.1k tokens)
+  ⎿  ◼ Execute beads fixture full cycle
+     ◻ Execute none fixture full cycle › blocked by #1
+     ◻ Write final status marker › blocked by #1, #2
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle) · esc to interrupt · ctrl+t to hide tasks                                                                                  Update available! Run: brew upgrade claude-code

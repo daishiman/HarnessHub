@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T12:29:53Z"
+updated_at: "2026-08-02T11:50:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T12:29:53Z","origin_kind":"system-spec-harness","source_digest":"1f3f0481d8aa38f6bf96355cd601fafd7ca0ec5963ed58bf950ac65541fb2ea1","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"767a7d11af2c05a85d035fda2b61dcdb6da593229a4af55cd59e11a3ef124a5c","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -47,8 +47,6 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
-
-
 # Harness Hub システム要件仕様 (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
@@ -56,10 +54,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ## 正本 (source of truth)
 
 - [system-spec/00-requirements-definition.md](../system-spec/00-requirements-definition.md) (sha256: `190b5c6131b7c78…`)
-- [system-spec/index.md](../system-spec/index.md) (sha256: `862938b8c222c01c…`)
+- [system-spec/index.md](../system-spec/index.md) (sha256: `1a85072d10ea2bc…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260724-testing-qa-r2.json`、evaluated_digest `190b5c6131b7c78…`)
-- 取込日時: 2026-07-24T12:35:34Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS**（最新 main の qa-123〜qa-133 を保持し、qa-134 の C12 世代非依存 rerun command 契約を統合。evaluated_digest `767a7d11af2c05a…`）
+- 取込日時: 2026-08-02T11:50:05Z / plugin: system-spec-harness v0.1.0
 
 ## 目的と成功状態
 
@@ -384,9 +382,9 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   `pnpm check:pnpm` の正負テストで非ゼロ終了させる。
 - qa-038 の G4、qa-088 / qa-096 の CI-local 同値と fail-closed 契約を実装具体化する
   もので、製品 API、DB schema、認証認可、UI、deploy unit、確定済み QA 回答は変更しない。
-- 反映先と検証は
-  [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md)
-  を正とする。
+- 反映先と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md) を正とする。
+
+**開発管理の実装反映 (2026-08-02 / `HarnessHub-dc7`)**: Beads の `priority`、`assignee`、`labels` は graph parity 対象外のまま、書込経路を `bd-bridge.py` に一本化した。guard の直接更新遮断、置換型 labels、共通 priority 正規化を維持し、製品 API・DB・認証認可・UI・deploy unit・確定済み QA 回答は変更しない。正本は `system-spec/dev-workflow.md`、設計と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md) とする。
 
 **P13 production CI 再実行の反映 (2026-08-01 / `HarnessHub-o2i.13`)**:
 
@@ -399,9 +397,58 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure spec](../docs/infrastructure-spec.md) §7、受領証跡は
   [P13 仕様反映受領書](../docs/features/feat-hearing-intake/p13-spec-reflection-receipt.md) とする。
 
+**P13 本番配備ゲート / hearing スモークの反映 (2026-08-02 / `HarnessHub-o2i.13` / qa-131〜132)**:
+
+- migration より前に、Worker Secret の機械可読台帳、`wrangler.jsonc` の required 宣言、
+  本番 Worker の実投入名を三方向で突合する。値は保存せず、認証不足・通信不能・解析不能・
+  未投入・台帳外投入を fail-closed（検査できない場合も安全側で停止）にする。
+- post-deploy 検証の末尾へ hearing 実データ E2E / SEC8 スモークを追加する。**新しい secret を
+  要求せず**、既存の `TURSO_*` と `vars.HUB_PUBLIC_URL` だけで成立させる。
+- session 専用の提出経路は route と同じ repository → service 合成を server 側で実行し、TOKEN 資格の
+  AI キュー API は本番 URL へ実 HTTP で送る。Device Flow の `code` / `token` が認証不要 endpoint で
+  あるという既存契約を使い、署名鍵を CI へ配らずに本物の access token を得る。
+- 検証用の使い捨て tenant は fixture 全体を 1 transaction（途中失敗なら全取り消し）で作り、
+  `finally` の削除も 1 transaction で行う。全対象表の**残行数 0 でなければ失敗**とする。
+- 認可契約そのものは変更しない。SEC5（年収非保存）、SEC8（tenant 分離・claim token 束縛）、
+  session 専用の提出契約を**本番実挙動として観測する**手段を追加する差分である。
+  他 tenant の header を騙る負例は、資源の存在を伏せる既存契約どおり `404 tenant_mismatch`
+  を期待し、`403` への退行も検出する。
+
+**開発管理内部構造の反映 (2026-08-01 / `HarnessHub-w7n7`)**:
+
+- Beads mutation の単一入口と CLI / receipt 契約を維持したまま、内部判定を
+  pure contracts、graph read、Beads projection、read-only audit の四責務へ分離した。
+- 変更は repository 内の保守性とテスト差替え境界に限定され、製品 API、DB schema、
+  認証認可、UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
+- 正本は `system-spec/dev-workflow.md` の実装反映注記、設計は
+  `architecture/harness-hub-dev-workflow.md`、判断と検証は
+  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+  とする。
+
 ## 未決事項
 
 - なし (C05 完成度評価 PASS 時点)
+
+## SLO 公開実測の反映 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
+
+- Better Stack の公開 status page を token なしで実測し、resource `external_id`、完了済み UTC 日、downtime から観測進捗を再現する。設定や resource の存在を監視稼働・SLO 完了へ読み替えない。
+- 進行中の当日と `not_monitored` は観測窓から除外し、30 日未満は `collecting`、`external_only_target_met=null` とする。
+- 30 日到達後も Workers Analytics の 5xx 率が揃うまで最終判定を保留し、qa-019 の 99.5%／70% 警告／100% 変更凍結を変更しない。
+- 共有 Google OAuth client を含む製品 API、DB schema、認証認可、UI、Cloudflare deploy unit に変更はない。正本は [infrastructure](../system-spec/infrastructure.md)、反映経路と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
+
+## Feature closeout 境界 (2026-08-02 / qa-123)
+
+- qa-019 / qa-116 の SLO 99.5%、30 日観測、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結を維持する。
+- `feat-hub-foundation` は exact-13 と release 証跡を delivery closure とし、ユーザーが追加対応不要とした `HarnessHub-37h.14` / `.15` は `not_applicable` で閉じる。waiver は SLO PASS ではない。
+- `feat-domain-model-db` は schema / immutable Release / R2 registry / export-restore の固有受入で独立して閉じる。
+- 外部 API、DB schema、認証認可、UI、Worker deploy unit は変更しない。判断と検証は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
+
+## task spec C12 再実行契約の反映 (2026-08-02 / `HarnessHub-ji8y` / qa-134)
+
+- promotion 前は system-dev-planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。
+- contract 1.3.0 は、task spec の fenced/inline code にある `--staging`、`--feature-package` 欠落、別 package id を fail-closed に拒否する。backtick/tilde fence、行継続、未閉じ fence も検査し、散文はコマンドと誤認しない。
+- 既存の content-addressed package は immutable のため 1.2.0 以前の契約で再検証し、本文 digest と再現可能性を維持する。
+- 影響は repository 内の task spec 生成・検証契約に限定され、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正本は [testing-qa](../system-spec/testing-qa.md)、設計と証跡は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) を参照する。
 
 ## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
 
@@ -423,4 +470,34 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [infrastructure](../system-spec/infrastructure.md)、
   [maintenance-ops](../system-spec/maintenance-ops.md)。判断と検証は
   [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  を参照する。
+
+## 外部参考 Skill の所有境界 (2026-08-02 / `HarnessHub-ym9h` / qa-122)
+
+- `doc/参考Skill/` は外部由来の比較・移管記録であり、能動 plugin の契約正本にしない。
+- `aiworkflow-requirements` を前提にする参考コピーは directory 単位で削除し、利用中の
+  外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。
+- 変更は repository の開発文書・plugin reference 所有に限定され、製品 UI、外部 API、
+  DB schema、認証認可、Cloudflare deploy unit は変更しない。
+- 正本は [dev-workflow](../system-spec/dev-workflow.md) の `qa-122`、判断・検証・復元経路は
+  [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+  を参照する。
+
+## 顧客持ち込み Google OAuth client 管理 (2026-08-02 / `HarnessHub-uk2i` / qa-124〜qa-130)
+
+- `provider-admin` は `/settings/auth` と Google 専用管理 API から、顧客所有 client の
+  登録、接続テスト、有効化、無停止 rotation、取消、無効化、安全な再開を行える。
+- lifecycle は `pending → tested → active → disabled`。認証解決は `active` のみで、
+  disabled からは新 credential を staging して pending テストを通さない限り復帰できない。
+- client ID・secret・方式・許可 Workspace ドメインは 1 テナント 1 Google 行の staging に
+  一式保存し、暗号文 CAS（比較一致時だけ更新）で同時昇格する。昇格前と取消後は現行ログインを維持する。
+- secret 全値は応答、ログ、監査、DOM、エラー、snapshot へ出さず、暗号化保存と last4 表示に限定する。
+  管理 API は tenant scope・同一 origin・Google issuer・provider-admin を fail-closed で強制する。
+- 不正 code の token probe は discovery と client credential の疎通確認であり、redirect URI 一致は
+  証明しない。有効化後の Google 実ブラウザ login を運用上の別ゲートとする。
+- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
+  [database](../system-spec/database.md)、[frontend](../system-spec/frontend.md)、
+  [security](../system-spec/security.md)、[maintenance-ops](../system-spec/maintenance-ops.md)、
+  [testing-qa](../system-spec/testing-qa.md)。反映と検証は
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
   を参照する。

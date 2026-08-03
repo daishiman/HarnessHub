@@ -79,15 +79,15 @@ G7 は migration が存在しない現 scope では対象なしだが、対象�
 
 | 項目 | 状態 |
 |---|---|
-| エラーバジェット運用 | 手順を ADR §7 に確定（70% 警告 / 100% 凍結）。**実運用は監視設定後** |
+| エラーバジェット運用 | 手順を ADR §7 に確定（70% 警告 / 100% 凍結）。公開実測は 48.7% 消費で警告未発動 |
 | restore drill | `backup.yml` と runbook 手順は実装済み。四半期の実 drill は未実行 |
 | /health | 実装・契約テスト・production HTTP 200（全依存 ok）を確認済み |
-| 外形監視 | **未設定**（ユーザー作業） |
+| 外形監視 | Better Stack 4 資源を適用済み。2026-08-01 の公開実測で `operational`、観測 6 日 / 30 日 |
 
 ## 6. 総合判定
 
 - **ローカル適用対象 G1〜G10 は `pnpm verify` で実行され、exit 0。script 欠落時の fail-open も事前存在検査で封じた。**
-- **G11 は workflow 実装済みだが production 実測値がなく、月次 SLO とともに未充足**。backup は workflow 実装済みだが実 drill は未実行。
+- **G11 の backup workflow は production 成功 run と R2 往復を実測済み**。四半期 restore drill と、月次 SLO の 30 日時間ゲート／Workers Analytics 5xx 率は未充足。
 - したがって P09 のローカル品質・セキュリティ・運用 readiness は確認済み。外部時間依存の G11/SLO を pass には読み替えない。
 
 ## 7. 最新再検証結果（2026-07-21）

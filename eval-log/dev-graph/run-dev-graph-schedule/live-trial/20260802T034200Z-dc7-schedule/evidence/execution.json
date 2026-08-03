@@ -1,0 +1,140 @@
+{
+  "assignment_hints": [
+    {
+      "claim_command": "/dev-graph worktree claim LT-SCHED-001 --branch devgraph/LT-SCHED-001 --session-id <session>",
+      "graph_node_id": "LT-SCHED-001",
+      "suggested_branch": "devgraph/LT-SCHED-001"
+    },
+    {
+      "claim_command": "/dev-graph worktree claim LT-SCHED-002 --branch devgraph/LT-SCHED-002 --session-id <session>",
+      "graph_node_id": "LT-SCHED-002",
+      "suggested_branch": "devgraph/LT-SCHED-002"
+    },
+    {
+      "claim_command": "/dev-graph worktree claim LT-SCHED-003 --branch devgraph/LT-SCHED-003 --session-id <session>",
+      "graph_node_id": "LT-SCHED-003",
+      "suggested_branch": "devgraph/LT-SCHED-003"
+    },
+    {
+      "claim_command": "/dev-graph worktree claim LT-SCHED-006 --branch devgraph/LT-SCHED-006 --session-id <session>",
+      "graph_node_id": "LT-SCHED-006",
+      "suggested_branch": "devgraph/LT-SCHED-006"
+    }
+  ],
+  "batches": {
+    "features": [],
+    "tasks": [
+      [
+        "LT-SCHED-001",
+        "LT-SCHED-003"
+      ],
+      [
+        "LT-SCHED-002",
+        "LT-SCHED-006"
+      ]
+    ]
+  },
+  "conflict_pairs": [
+    {
+      "kind": "ready_pair",
+      "left": "LT-SCHED-001",
+      "resources": [
+        "src/alpha.py"
+      ],
+      "right": "LT-SCHED-002"
+    },
+    {
+      "kind": "lease",
+      "left": "LT-SCHED-004",
+      "resources": [
+        "src/gamma.py"
+      ],
+      "right": "active-lease"
+    }
+  ],
+  "conflicts": [
+    "LT-SCHED-004"
+  ],
+  "executed_at": "2026-08-02T04:13:43.010925Z",
+  "graph_sha256_after": "e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484",
+  "graph_sha256_before": "e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484",
+  "lease_sha256_after": "b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41",
+  "lease_sha256_before": "b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41",
+  "lease_source": "git_common_dir",
+  "max_parallel": 2,
+  "parity_provenance": null,
+  "read_only": true,
+  "ready_set": {
+    "features": [],
+    "tasks": [
+      "LT-SCHED-001",
+      "LT-SCHED-002",
+      "LT-SCHED-003",
+      "LT-SCHED-006"
+    ]
+  },
+  "ready_source": "binding-aware",
+  "scope": null,
+  "selection_receipt": {
+    "entries": [
+      {
+        "artifact_kind": "task",
+        "background": null,
+        "deferral_reason": null,
+        "graph_node_id": "LT-SCHED-001",
+        "mvp_fit": null,
+        "order_index": 0,
+        "purpose": null,
+        "rationale": null,
+        "sort_rank": 2
+      },
+      {
+        "artifact_kind": "task",
+        "background": null,
+        "deferral_reason": null,
+        "graph_node_id": "LT-SCHED-002",
+        "mvp_fit": null,
+        "order_index": 1,
+        "purpose": null,
+        "rationale": null,
+        "sort_rank": 2
+      },
+      {
+        "artifact_kind": "task",
+        "background": null,
+        "deferral_reason": null,
+        "graph_node_id": "LT-SCHED-003",
+        "mvp_fit": null,
+        "order_index": 2,
+        "purpose": null,
+        "rationale": null,
+        "sort_rank": 2
+      },
+      {
+        "artifact_kind": "task",
+        "background": null,
+        "deferral_reason": null,
+        "graph_node_id": "LT-SCHED-006",
+        "mvp_fit": null,
+        "order_index": 3,
+        "purpose": null,
+        "rationale": null,
+        "sort_rank": 2
+      }
+    ],
+    "mvp_established": {},
+    "policy": "mvp-first/v1"
+  },
+  "tracker_sha256_after": null,
+  "tracker_sha256_before": null,
+  "unmapped": [
+    {
+      "blocking_depends_on": [
+        "LT-SCHED-001"
+      ],
+      "external_ref": "LT-SCHED-005",
+      "reason": "dependency_unsatisfied",
+      "source": "schedule-graph"
+    }
+  ]
+}

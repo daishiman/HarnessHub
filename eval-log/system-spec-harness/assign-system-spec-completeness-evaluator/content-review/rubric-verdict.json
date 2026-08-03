@@ -2,12 +2,12 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "assign-system-spec-completeness-evaluator",
-    "skill_md_sha256": "febfdb3dae3f9a39a3474b32befee07f8f9bfabb0d150c1cf498af678588df4e"
+    "skill_md_sha256": "4bbdfebab7f92af7d8a571844f8dc69b5c764fcebc6cf864e985a60d7ede7a9a"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator-combined",
-  "reviewed_at": "2026-07-23",
+  "reviewer": "local-claude-focused-combined-review",
+  "reviewed_at": "2026-08-03T06:23:08+09:00",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -19,21 +19,26 @@
   },
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["foundation_trace", "decision_guidance", "matrix_coverage", "design_knowledge_reflection", "doc_freshness", "prompt_quality"],
+    "criteria_evaluated": [
+      "C1-contract",
+      "C2-compatibility",
+      "C3-documentation",
+      "C4-test-boundary",
+      "C5-session-evidence"
+    ],
     "positive_feedback": [
-      "単一責務と境界が run/session 束縛の追加後も崩れていない: session の観測は引き続き hook (record-audit-fork.py) の責務、宣言は R2 (fork 起動者) の責務、突合は consumer (aggregate-completeness.py) の責務で、skill 側 allowed-tools に Write が増えていない。『証跡はモデルが書けない層に置く』という既存の設計原理の延長として session 軸が増えており、新しい原理を持ち込んでいない。",
-      "出力契約の二重接地が session 軸にも及ぶ: schema (dispatch.session_id required + 単一 run 収束要件を description に明記) と施行 (validate_attribution の収束検査 + ledger_corroborates の突合 + --session の CLI 検査) が 1:1 対応し、schema にだけ書いて施行しない・施行するのに schema へ書かない、のどちらの片肺も無い。契約テスト (test_schema_requires_audit_delegations の dispatch.required 検査) で固定済み。",
-      "判断箇所を TODO(human) で凍結せず AI 起案 + 根拠記録で閉じる repo 方針 (knowledge-build-patterns.json feedback-no-todo-human / ref-skill-design-rubric KeyRule5) に適合: \"unknown\" 宣言の受理/拒否というトレードオフを、両選択肢の帰結を実装コメントへ記録した上で fail-closed 拒否として決定し、対象 skill 配下の TODO(human) 残存は 0 件。pytest は 514 passed / 0 failed。",
-      "Progressive Disclosure が保たれている: SKILL.md への追記は帰属節の bullet 2 本 (束縛の要点 + 機械層の限界の更新) に留まり、分岐仕様の詳細は aspect-criteria.md、設計判断の根拠は ledger_corroborates の docstring/実装コメント、運用手順は R2-delegate.md へ委譲されている。issue 正本 (issues/sys-completeness-auditor-attribution-20260721.md) の残余ギャップ節が予告した設計とも一致。"
+      "単一責務: helper は帰属、public CLI は verdict 集約と gate 実行を所有し、既存 import 利用者向けの定数・補助関数 re-export も維持した。",
+      "fail-closed 契約: 空台帳、欠落/unknown/fabricated session、複数 session、虚偽の独立監査、unknown agent、重複 receipt、verdict 不一致を分割テストで網羅している。",
+      "出力契約: report 形状と session-bound audit_delegations は実 ledger と照合され、意図した doc freshness FAIL を改ざんせず出力する。",
+      "文書と hook 保護範囲は実際の test/support/helper パスを参照し、500 行分割の維持条件を検証可能にしている。"
     ],
     "negative_feedback": [
-      "(content 対象外 / 参考) lint-skill-tree.py の LS-203 Warn 2 件: top-level 'tests' は従前どおり系全体の規約論点。'.claude/handoff' は本セッションの PreCompact hook が skill ディレクトリを cwd として自動生成した未追跡 snapshot で、SKILL.md 内容起因ではない (git 未追跡のため commit 対象にもならない)。",
-      "(landing 制約 / 本 skill の内容起因ではない) schema の dispatch.session_id required 化は破壊的変更であり、origin/main に既存の completeness-report.json (PR #39 で再生成) は session_id 欠落のため landing 後に violation となる。レポート再生成の migration follow-up が必要 (セッション報告で起票予定)。"
+      "レビュー時の low 所見: README の旧テスト件数を 486 passed へ更新済み。high/medium finding は 0。"
     ],
     "iteration": 1,
-    "iteration_limit": 2,
-    "hook_trigger": "stop-hook",
+    "iteration_limit": 1,
+    "hook_trigger": "manual-final-review",
     "next_action": "none"
   },
-  "notes": "incremental profile の combined review のうち rubric 側を分離投影 (verification_profile=exhaustive 非明示のため 30 思考法 + 独立 rubric evaluator は未実施であることを申告する)。ref-skill-design-rubric の規範軸での採点: 単一責務 — 観測 (hook) / 宣言 (R2) / 突合 (consumer) の三権分立が session 軸でも維持され、skill は read-only のまま (allowed-tools: Read/Bash/Task)。命名 — session_id / sessions / declared_sid / recorded_sessions / expected_session の語彙が schema・script・SKILL.md・aspect-criteria.md・R2/R1 prompt・テストで一貫し、『宣言』と『観測』の区別が全箇所で保たれている。境界 — 機械層の主張範囲は『(session_id, subagent_type) の fork 完了』までで、能動的偽装 (--session なしでの過去 session 丸写し) を意味層責務として開示し over-claim なし。出力契約 — dispatch.required = {tool, subagent_type, session_id} は schema と契約テストで固定、fail-closed 分岐は台帳不在 / subagent_type 未宣言 / 記録なし / 宣言なし / \"unknown\" / session 不一致 の 6 分岐全てに復旧手順つき reason。SSOT — 規範正本 scoring-rubric.json の attribution 節は receipt 集合を定めるもので session 軸の変更対象外 (required_receipts 不変)、runtime 正本は aggregate-completeness.py の実装、詳細正本は aspect-criteria.md という層構造が維持されている。機械検査 — validate-frontmatter.py exit0 / lint-skill-name.py exit0 / lint-skill-tree.py exit0 (Warn のみ) / pytest plugins/system-spec-harness 514 passed / pytest plugins/system-dev-planner 62 passed (producer↔consumer 追従の検証)。high severity 0 のため PASS。negative_feedback の 2 点はいずれも本 SKILL.md の内容起因ではないため findings に計上しないが、隠さず記録した。"
+  "notes": "incremental focused combined review の rubric projection。独立レビューは C1-C5 の全条件を読み取り、公開 CLI 互換性、fail-closed 帰属、文書境界、分割テスト、session 証跡を確認した。30 思考法の exhaustive rubric audit は明示されていないため未実施。"
 }

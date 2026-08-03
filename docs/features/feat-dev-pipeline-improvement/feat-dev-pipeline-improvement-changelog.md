@@ -7,6 +7,13 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-02: prompt の行数ゲートをコードから分離
+
+- `HarnessHub-hls0` で、一般コード・テストの一律 500 行分割を廃止し、`SKILL.md` 本文 300 行と
+  skill `prompts/*.md|yaml` 500 行の機械ゲートへ分離した。
+- 製品 API・DB・認証・UI・Cloudflare deploy unit は変更しない。仕様・設計の反映、既存 task package を
+  書き換えない理由、検証結果は [仕様反映受領書](prompt-line-budget-spec-reflection-receipt.md) を正とする。
+
 ## 2026-07-26 最終レビュー追記
 
 - C10 guard の破壊操作遮断を subprocess 非依存へ変更し、hook timeout による fail-open 窓を解消した。
@@ -201,3 +208,22 @@ close した。
 - `guard-graph-schema.py` 本体の遮断ロジックは非変更。仕様影響は開発品質ゲートのテスト検証方法に限定され、
   [仕様反映受領書](5iuq-guard-latency-proxy-metric-spec-reflection.md)
   に反映した。製品 API・DB・認証認可・UI・deploy unit は非変更。
+
+## 2026-08-01 追記: `bd-bridge.py` と mfh7 実測ログの責務分割
+
+- `HarnessHub-w7n7` で `bd-bridge.py` の CLI / receipt を残し、判定ロジックを
+  `contracts` / `graph` / `projection` / `audit` の四 module へ分離した。
+- 既存 private symbol と `bd` / `git` monkeypatch 境界を adapter で維持し、
+  Beads mutation の単一チョークポイントは変更していない。
+- mfh7 文書は課題定義 130 行と時系列実測ログ 422 行に分け、全手書き対象を
+  500 行以下へ収束させた。
+- 仕様・設計反映と検証結果は
+  [仕様反映受領書](w7n7-bd-bridge-split-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-02 追記: Beads 自由フィールドの正規更新経路
+
+- `HarnessHub-dc7` で `priority`、`assignee`、`labels` の更新を `bd-bridge.py` へ追加した。
+- guard の全直接更新遮断は維持し、「自由」は graph parity 対象外という意味に明確化した。
+- labels は冪等な `--set-labels` 置換、priority は create/update 共通正規化を使う。
+- 契約・設計・検証結果は
+  [仕様反映受領書](dc7-bd-free-field-write-route-spec-reflection-receipt.md) を正とする。

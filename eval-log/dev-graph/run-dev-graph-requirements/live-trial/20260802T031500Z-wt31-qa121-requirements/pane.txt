@@ -1,0 +1,48 @@
+       2   "schema_version": "1.0.0",
+       3   "skill": "run-dev-graph-requirements",
+       4   "feature_id": "F-LIVE-001",
+       5   "loop_count": 1,
+       6   "max_loops": 5,
+       7   "status": "complete",
+       8   "checklist": {
+       9     "lineage_closure_zero": {"status": "PASS", "evidence": "all 13 nodes share feature_package_id=feature-package/F-LIVE-001, parent_feature=F-LIVE-001, source_lineage.source_digest=9f854ef953bd13598d4d3c
+         86e893968d2dd73f67fa57837d37f0c0c5f0156333"},
+      10     "C11_C02_match": {"status": "PASS", "evidence": "validate-graph-schema.py: valid=true, implementation_readiness=complete, missing_sections=[], violations=[]"},
+     … +11 lines (ctrl+o to expand)
+
+⏺ Now run the final goal-seek verification to confirm both lines are valid.
+
+⏺ Bash(DEV_GRAPH_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements" && python3 - "$DEV_GRAPH_ROOT/eval-lo…)
+  ⎿  FINAL VERIFICATION PASS: 2 rows, hash=04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96
+
+⏺ Now verify the success conditions and confirm no implementation code was generated.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/live-trial-fixtures/wt31-qa121-requirements && git diff --name-only HEAD 2>/dev/null && echo "-…)
+  ⎿  ---NEW FILES---
+     eval-log/capability-build-handoff-ref.json
+     eval-log/requirements-document.json
+     … +3 lines (ctrl+o to expand)
+
+⏺ All new files are in eval-log/ only - no implementation source code generated. Success conditions verified:
+
+  1. capability-build task-graph handoff emitted: capability-build-handoff-ref.json with exact-13 package (P01-P13)
+  2. handoff bound to feature and source digest: feature_id=F-LIVE-001, source_feature_digest=sha256:9ea5885..., validated_package_digest=sha256:9f854ef...
+  3. no implementation source file generated: only eval-log JSON artifacts produced
+
+  Now write the status.json and the out directory.
+
+⏺ Bash(mkdir -p /Users/dm/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T031500Z-wt31-qa121-requirements/out)
+  ⎿  Done
+
+⏺ Write(~/orca/workspaces/HarnessHub/wt-31/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T031500Z-wt31-qa121-requirements/out/status.json)
+  ⎿  Wrote 1 lines to ../../run-dev-graph-requirements/live-trial/20260802T031500Z-wt31-qa121-requirements/out/status.json
+      1 {"status": "PASS", "scenario": "C04-OUT1-positive-ready-handoff"}
+
+⏺ DONE: PASS
+
+✻ Baked for 11m 49s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                            Update available! Run: brew upgrade claude-code

@@ -11,6 +11,7 @@
 
 import type { AuditLogger } from '../../shared/audit/index.js';
 import { isTrustedOrigin } from '../auth/config.js';
+import { type CwvProbeConfig, isCwvProbeRequestAllowed } from '../auth/cwv-probe.js';
 import type { AuthPorts } from '../auth/ports.js';
 import { decide } from './decide.js';
 import { resolveRequestPrincipal } from './principal.js';
@@ -62,6 +63,7 @@ export interface AuthzRuntimeDeps {
   readonly revocation: RevocationChecker;
   readonly sessionSecret: string;
   readonly accessTokenSecret: string;
+  readonly cwvProbe?: CwvProbeConfig | undefined;
   /** state-changing 要求で許可する Origin。空配列なら全ての state-changing 要求が落ちる。 */
   readonly allowedOrigins: readonly string[];
 }
@@ -126,17 +128,26 @@ export function withAuthz<TParams = Record<string, never>>(
       sessionSecret: deps.sessionSecret,
       accessTokenSecret: deps.accessTokenSecret,
       nowSeconds: deps.ports.clock.nowSeconds(),
+      cwvProbe: deps.cwvProbe,
     });
     if (principal === null) return denyResponse('unauthenticated');
+
+    if (
+      principal.credential === 'cwv_probe' &&
+      !isCwvProbeRequestAllowed(request.method, new URL(request.url).pathname)
+    ) {
+      return denyResponse('credential_not_allowed');
+    }
 
     const resource = await options.resolveResource(request, params, principal);
     if (resource === null) return denyResponse('unresolved_resource');
 
-    const sessionRevoked = await deps.revocation.isRevoked(
-      principal.tenantId,
-      principal.userId,
-      principal.issuedAtSeconds,
-    );
+    // probe は user session ではなく短命・rotate 可能な専用鍵で失効させる。synthetic actor を
+    // session_revocations テーブルへ問い合わせないことで、測定経路に不要な DB read も加えない。
+    const sessionRevoked =
+      principal.credential === 'cwv_probe'
+        ? false
+        : await deps.revocation.isRevoked(principal.tenantId, principal.userId, principal.issuedAtSeconds);
 
     const outcome = decide({ action: options.action, principal, resource, sessionRevoked });
 

@@ -1,0 +1,18 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "canonical_paths": {
+      "result": "PASS",
+      "evidence": "All five artifacts were routed to canonical kind paths"
+    },
+    "consecutive_update_integrity": {
+      "result": "PASS",
+      "evidence": "A consecutive update preserved frontmatter kind, stored path, and original body"
+    },
+    "macro_feature_guard": {
+      "result": "PASS",
+      "evidence": "No feature was created outside the C14 macro-feature contract"
+    }
+  }
+}

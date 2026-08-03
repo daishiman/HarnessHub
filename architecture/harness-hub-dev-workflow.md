@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-30T13:37:07Z"
+updated_at: "2026-08-02T08:40:06.768354Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、および検査対象 0 件と CI/local 呼び出し parity の品質ゲート境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート境界を情報欠落なく提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e79a3416bcc35b3a1f649fe2051d3a97e93344b419d7228403c10a0164893dd1","evaluator":"codex-final-review + merge-reconciliation","evidence_ref":"docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-07-30T13:37:07Z","origin_kind":"system-spec-harness","source_digest":"dadd50e82509a1814c6cf9ccf05b7bc37a58f3fc0745364b28e7e799835f064b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"ccec5f9db6ebdbe69e5936c1e8821058a782dd4c08c884bda399277345440f74","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
+source_lineage: {"imported_at":"2026-08-02T08:30:40Z","origin_kind":"system-spec-harness","source_digest":"ca851fe9a8af91e23f60a23f3c9f67564fabf49b53f25b1553d78bf48e6a10ea","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,10 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `25b8ff760035…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `f365125fc467…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json`)
-- 取込日時: 2026-07-23T04:45:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `codex-final-review + merge-reconciliation` → **PASS**
+  ([dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md) / [参考層クリーンアップ受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md))
+- 取込日時: 2026-08-02T05:27:08Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -98,6 +99,39 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 正本章 (system-spec/dev-workflow.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+## Beads bridge の内部コンポーネント境界 (2026-08-01)
+
+`bd-bridge.py` は Beads mutation の唯一の CLI 境界として残し、内部ロジックを
+`contracts` / `graph` / `projection` / `audit` の四 component へ分離する。
+`contracts` と `graph` は Beads へ書かず、`audit` も read-only、書込投影は
+`projection` だけが担う。外部 I/O を持つ関数は `bd=` / `git=` を注入され、
+CLI adapter が呼出時に実行関数を解決する。この境界により、単一チョークポイントを
+維持したまま責務ごとの変更容易性を保つ。一般コードには一律の数値行数上限を設けない。
+行数ゲートは実行時 context へ入る `SKILL.md` と skill の `prompts/` に限定する。
+
+詳細な責務、互換性、不変条件、検証証拠は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+を正とする。
+
+## Beads 自由フィールドの書込境界 (2026-08-02)
+
+`priority`、`assignee`、`labels` は Dev Graph parity の対象外だが、書込 authority は
+他の mutation と同じ C28 bridge に限定する。C10 guard は直接 `bd update` を一律遮断し、
+CLI adapter は引数解析と receipt、`bd_bridge_contracts.py` は許可 exact-set・priority と
+labels の正規化を担う。labels は `--set-labels` への全置換だけを許し、順序依存の
+add/remove を契約面から排除する。設計判断と検証証拠は
+[dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
+を正とする。
+
 > **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は
 > [harness-hub-dev-workflow-changelog.md](../docs/features/feat-dev-pipeline-improvement/harness-hub-dev-workflow-changelog.md)
 > へ分割済み (300 行上限超過による remediation)。新規の差分追記は同ファイルへ追記する。
+
+## 外部参考層と能動 plugin の所有境界 (2026-08-02)
+
+`doc/参考Skill/` は比較・移管用の参考層とし、実行時に使う契約は consumer plugin の
+`references/` と resource map が所有する。旧参考 Skill を削除するときは、利用中の契約を
+所有先へ履歴付きで移し、能動参照 0 件・到達可能性・復元経路を同じ変更で検証する。
+製品 runtime の component 境界は変えない。詳細は `system-spec/dev-workflow.md` の
+`qa-122` と [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+を正とする。

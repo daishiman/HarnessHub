@@ -1,0 +1,45 @@
+{
+  "reviewer_id": "codex-independent-evaluator-eval_decompose_trial_r6-20260802",
+  "verdict": "FAIL",
+  "blockers": [
+    {
+      "id": "PRE_STEP1_READ_PROHIBITION",
+      "detail": "task.md permits only task.md and the scenario file before beads step 1, but transcript lines 14-34 perform 11 Bash reads/listings of current fixture state, replay bundles, the run directory, and plugin scripts before step 1 starts at line 38."
+    }
+  ],
+  "recoverable_nonblockers": [
+    {
+      "detail": "The beads resend-envelope command raised KeyError('revision') after writing all five envelopes. The agent recovered using graph_revision, completed five no-op resends, and did not violate the task's explicit immediate-failure condition, which applies to promotion helper verify."
+    }
+  ],
+  "contract_checks": {
+    "skill_launch_contract": "PASS: namespaced probe at transcript line 53 returns Unknown skill at line 54 exactly once; successful short-alias launches are lines 56/137 for beads and 197/259 for none.",
+    "tool_order": "PASS: beads Skill1 56 -> R2 Read 61 -> R3 Read 64 -> Explore 81; none Skill1 197 -> R2 Read 201 -> R3 Read 204 -> Explore 208.",
+    "explore_isolation": "PASS: exactly two Explore tasks; each used Glob x1 and Read x5, with no nested Bash or write-capable tool.",
+    "post_skill2_writer_count": "PASS: no upsert-node.py or graph writer after either binding's Skill2.",
+    "user_intervention": "PASS: only the initial instruction is a human user message; later user-role records are tool results."
+  },
+  "required_observations": {
+    "O1": "PASS: both audits report architecture=1, feature=4, task=0, acyclic=true, measured maximum inter-feature dependency 1 <= 3.",
+    "O2": "PASS: apply-mode audits derive zero publication deltas from pre/post state and distinguish every zero reason.",
+    "O3": "PASS: three produced features remain draft/excluded; feat-user-auth-001 is the sole confirmed/pass/complete candidate.",
+    "O4": "PASS: separate persisted beads and none runs are attested; GitHub is schema-unreachable; binding source is persisted graph state.",
+    "O5": "PASS: write counts come from pre/post inventory and both audits record schema_validation.stdin_path_used=true.",
+    "O6": "PASS: promoted digests recompute and match for beads and none.",
+    "O7": "PASS: both audits execute and reject both canonical negative controls."
+  },
+  "additional_evidence": {
+    "noop_resends": "PASS: five operation=noop/write_count=0 receipts per binding; final graphs remain revision 6.",
+    "progress_goal_seek": "PASS: each progress artifact has exactly one passing goal_seek_fork, pending=0, null evidence=0, overall=pass.",
+    "intermediate": "PASS: each JSONL has two rows, all six required keys, and the expected goal hash.",
+    "cross_binding_audit_sha256": "be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f"
+  },
+  "evidence_paths": [
+    "transcript.jsonl",
+    "task.md",
+    "evidence/beads-decompose-audit.json",
+    "evidence/none-decompose-audit.json",
+    "evidence/beads-progress.json",
+    "evidence/none-progress.json"
+  ]
+}

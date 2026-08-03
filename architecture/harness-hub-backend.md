@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub backend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-01T11:54:39Z"
+updated_at: "2026-08-02T09:35:39.090388Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-01T11:54:39Z","origin_kind":"system-spec-harness","source_digest":"db30a63373f9994133e9c39a0ae7691d4e4b70abc6fe5561cf73bf2ec7356ffe","source_path":"system-spec/backend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+source_lineage: {"imported_at":"2026-08-02T09:32:20Z","origin_kind":"system-spec-harness","source_digest":"a8ca02bed90d95d3646428342d09fd92c7bf813b3d166873cfdcd22d168c1aa5","source_path":"system-spec/backend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-backend.md","confidence":0.95}]
@@ -47,17 +47,16 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
-
 # Harness Hub backend アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/backend.md](../system-spec/backend.md) (sha256: `0ec0f8b86acd29ef…`)
+- [system-spec/backend.md](../system-spec/backend.md) (sha256: `a8ca02bed90d95d…`)
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`system-spec/completeness-report.json`)
-- 再取込日時: 2026-07-26T06:10:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
+- 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -140,3 +139,13 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   Workspace 拒否を user insert より前に置き、同じ Google `sub` も
   `(tenant_id, sub)` で別 principal とする。
 - 顧客方式の basePath、Auth.js state cookie、secret 復号、session claims は非回帰とする。
+
+**差分追記 (2026-08-02 / `HarnessHub-uk2i` / qa-125)**:
+
+- `/api/v1/admin/oidc-connections/*` は既存 `withAuthz` の provider-admin 判定と
+  同一 origin 検査を通し、資源側 tenant を repository context へ渡す。
+- 一覧・ID 指定操作を Google issuer に限定し、同一 tenant の別 IdP を管理対象へ混ぜない。
+- 現行テストは現行暗号文+期待状態、pending テスト/昇格は pending 暗号文を CAS 条件にし、
+  同時差し替え時は 409 `state_conflict` で読み直しを要求する。
+- token probe は client credential の疎通確認に限定し、redirect URI は実 login で確認する。
+  応答・監査には列挙値と last4 だけを渡す。

@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 本番リリース・デプロイ"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-08-02T05:46:07.491153Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P12"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","docs/features/feat-hub-foundation/release-notes.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]
@@ -78,3 +78,15 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - repository 内の受入は、Actions secret 台帳と workflow 参照の双方向一致、deploy step と R2 操作 step の相互 token 不参照、task / graph / system-spec の品質ゲート再実行とする。
 - Cloudflare での token 発行、GitHub secret 投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態を変更する後続作業として `HarnessHub-bda4` で継続する。実測前に本項を完了証拠へ読み替えない。
 - 仕様影響は infrastructure.web の credential 境界にあり、正式な reopen / compile 結果を `system-spec/infrastructure.md` qa-091、詳細を `docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md` に記録する。
+
+## 最終 closure (2026-08-02 / `HarnessHub-37h.13`)
+
+- P13 の責務は本番 release / deploy と再実行可能な証跡の確立までとして完了した。
+- SLO 30 日観測は独立 follow-up `HarnessHub-37h.15` へ分離済みで、ユーザー判断により `not_applicable` で閉じた。これは SLO PASS ではなく、P13 と feature の delivery closure を阻害しないという受入境界の決定である。
+- task 仕様書の再検証は `validate-system-plan.py --feature-package feature-package/feat-hub-foundation` を使い、結果を [feature closeout 仕様反映受領書](../../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) に残す。
+
+## post-release CWV hardening (2026-08-02 / `HarnessHub-9cgb`)
+
+- P13 で確立した G11 定期測定を、実際に認証が必要な `/catalog` へ拡張する。通常の session/access token を CI に複製せず、最大 5 分・固定 tenant/workspace・GET/HEAD catalog read 専用の `CWV_PROBE_*` credential を使う。
+- repository 内の実装・secret 台帳・artifact sanitizer・負例テストは本変更で完了する。Worker/GitHub secret 投入、main deploy、初回 Lighthouse 実測は外部状態変更のため `HarnessHub-9cgb` を open のまま追跡する。
+- 仕様正本は `system-spec/*` の qa-133、詳細手順と受領書は [CWV probe 仕様反映受領書](../../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) を参照する。

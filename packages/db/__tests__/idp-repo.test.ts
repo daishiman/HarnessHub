@@ -257,6 +257,37 @@ describe('migration 0003 の後方互換 (rollback 安全性)', () => {
   });
 });
 
+describe('migration 0004 の後方互換 (rollback 安全性)', () => {
+  it('lifecycle 列を足す前の形で書かれた行は active として読め、認証を落とさない', async () => {
+    // 0004 以前の writer を再現する。追加した lifecycle 10 列を INSERT 文から落として書くので、
+    // 値を決めるのは列の DB 既定値だけになる。
+    const rowId = 'idp-pre-0004';
+    const secretEnc = await cipher.encryptColumn('idp_secret', SECRET, {
+      table: 'idp_connections',
+      column: 'client_secret_enc',
+      rowId,
+    });
+
+    await asCore(adapter).client.run(sql`
+      INSERT INTO idp_connections (id, tenant_id, issuer_url, client_id, client_secret_enc, scopes, created_at)
+      VALUES (
+        ${rowId}, ${context.tenantId}, ${'https://idp.example.com/pre-0004'},
+        ${'client-pre-0004'}, ${secretEnc}, ${'openid'}, ${1_800_000_000}
+      )
+    `);
+
+    const row = await repo.findById(context, rowId);
+    // ここが pending へ倒れると、列を足した瞬間に既存テナント全部がログインできなくなる。
+    // 既定 'active' は「不明なら有効」ではなく「この列より前の行は実際に稼働中だった」の意味
+    expect(row?.credentialStatus).toBe('active');
+    // 末尾 4 文字は記録されていない。無いことと空文字を区別する
+    expect(row?.clientSecretLast4).toBeNull();
+    expect(row?.pendingClientSecretEnc).toBeNull();
+    expect(row?.updatedAt).toBeNull();
+    expect(await repo.decryptClientSecret(context, rowId)).toBe(SECRET);
+  });
+});
+
 describe('idp_connections の削除', () => {
   it('deleteById は自テナントの行だけを消す', async () => {
     const mine = await repo.insert(context, {

@@ -1,0 +1,2 @@
+Final tmux capture was empty after Claude exited normally.
+Primary recovery evidence: transcript.jsonl and out/status.json.

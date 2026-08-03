@@ -54,6 +54,71 @@ export const idpConnections = sqliteTable(
      * 解決自体を拒否する。顧客方式では NULL のとき従来どおり `hd` を検査しない (後方互換)。
      */
     allowedWorkspaceDomains: text('allowed_workspace_domains'),
+    /**
+     * 接続の lifecycle 状態 (`pending → tested → active → disabled`)。
+     *
+     * 認証解決に使ってよいのは `active` だけ。DB 既定を `active` にするのは
+     * `credential_mode` と同じ理由で、**この列を足す前に存在した行が実際に稼働中だから**であり
+     * 「不明なら有効」ではない。管理 API から登録される新しい接続は明示的に `pending` で作られ、
+     * 接続テストを通るまで解決対象にならない
+     * (issue-auth-tenancy-customer-managed-google-oidc-20260729 受入条件 1)。
+     */
+    credentialStatus: text('credential_status', { enum: ['pending', 'tested', 'active', 'disabled'] })
+      .notNull()
+      .default('active'),
+    /**
+     * 現行 client_secret の末尾 4 文字。**識別のためだけ**に持つ (受入条件 2)。
+     *
+     * 全値は保存後に一切返さないので、運用者が「Google Cloud に今あるのはどの secret か」を
+     * 突き合わせる手掛かりがこれ以外に無い。NULL = この列を足す前に登録された行 (末尾未記録)。
+     */
+    clientSecretLast4: text('client_secret_last4'),
+    /**
+     * rotation 中の**新しい** client_secret の暗号文。
+     *
+     * `client_secret_enc` を直接上書きしないのが要点。上書きすると接続テストに落ちた時点で
+     * 旧 secret が既に消えており、テナントのログインが復旧不能になる (受入条件 5)。
+     * 列を分けておけば、失敗時は単にこちらを捨てれば旧 credential で動き続ける。
+     * NULL = rotation 進行中でない。
+     */
+    pendingClientSecretEnc: text('pending_client_secret_enc'),
+    /** rotation 中の新 secret の末尾 4 文字。用途は `client_secret_last4` と同じ。 */
+    pendingClientSecretLast4: text('pending_client_secret_last4'),
+    /**
+     * staging 中の新しい client ID。NULL = client ID は据え置き (secret だけの rotation)。
+     *
+     * `idp_connections_tenant_issuer_uq` により 1 テナントの Google 接続は 1 行しか作れないので、
+     * 「別の OAuth client へ乗り換える」も既存行の差し替えになる。client_id を即時上書きすると
+     * 現行 secret と対にならない中間状態が生まれるため、secret と同じ staging に置いて
+     * 昇格時に一緒に動かす。
+     */
+    pendingClientId: text('pending_client_id'),
+    /**
+     * staging 中の credential 方式。NULL = 方式は据え置き。
+     *
+     * 共有方式 → 顧客方式の切替をこの列で表す。切替が確定するのは接続テスト合格後の昇格時点で、
+     * それまで行は共有方式のまま解決され続ける (mode 切替の無停止化)。
+     */
+    pendingCredentialMode: text('pending_credential_mode', { enum: ['customer_google', 'shared_google'] }),
+    /**
+     * staging 中の許可 Workspace ドメイン JSON。NULL = 据え置き。
+     *
+     * credential と同時に動かすのは、これが「誰がログインできるか」の一部だから。
+     * 先に適用すると、まだ現行 (切替前) の credential で入っている利用者を締め出す。
+     */
+    pendingAllowedWorkspaceDomains: text('pending_allowed_workspace_domains'),
+    /**
+     * rotation 中の新 secret が接続テストに合格した時刻 (epoch ミリ秒)。
+     *
+     * NULL のまま `activate` を許すと「試していない secret へ切り替える」経路になる。
+     * activate の CAS 条件にこの列の非 NULL を含めることで、順序 (保存 → テスト → 切替) を
+     * 運用手順ではなく DB 述語として強制する (受入条件 4)。
+     */
+    pendingTestedAt: integer('pending_tested_at'),
+    /** 現行 credential が最後に接続テストへ合格した時刻 (epoch ミリ秒)。管理画面の表示用。 */
+    lastTestedAt: integer('last_tested_at'),
+    /** 最終更新時刻 (epoch ミリ秒)。NULL = この列を足す前に登録され、以後更新されていない行。 */
+    updatedAt: integer('updated_at'),
   },
   (t) => [uniqueIndex('idp_connections_tenant_issuer_uq').on(t.tenantId, t.issuerUrl)],
 );
