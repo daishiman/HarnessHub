@@ -141,6 +141,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     pathname: request.nextUrl.pathname,
     headers: authzHeaders,
     principal,
+    // Bearer token (Device Flow access token) は cookie を送らない機械クライアント前提のため、
+    // session cookie 由来の active workspace 自動解決 (所属1件なら cookie 無しでも確定) を適用しない。
+    allowSessionScope: bearer === null,
   });
 
   if (!decision.allowed) {
