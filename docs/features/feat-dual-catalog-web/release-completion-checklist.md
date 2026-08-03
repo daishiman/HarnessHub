@@ -43,16 +43,33 @@ gh workflow run hub-cwv --ref main \
 ### 完了条件
 
 - [x] `ci.yml` deploy job が success — run `30727984628` / wrangler deploy・/health・OIDC・DB/R2 smoke すべて success
-- [ ] catalog 一覧・詳細・marketplace smoke が pass — **未実行** (認証セッションが要るため CI/CLI 不可)
+- [ ] catalog 一覧・詳細・marketplace smoke が pass — **§3.1 実測 fail (2026-08-03)**。本番はまだ
+      session-bound scope 修正を配信していない。修正後の再デプロイと、一覧・詳細・marketplace の一連 smoke が必要
 - [ ] catalog route の CWV が LCP ≤ 2500ms / CLS ≤ 0.1 / TBT ≤ 200ms — **計測不能** (run `30736055772` が 401 で失敗)
 - [ ] acceptance record が実測値付き pass — 上 2 件に従属
-- [ ] marketplace `source_status` が Stage 0 gate verdict と一致 — **実装は一致を確認** (DC-MKT-10 pass /
+- [ ] marketplace `source_status` が Stage 0 gate verdict と一致 — **実装確認済み** (DC-MKT-10 pass /
       正本 `stage0-gate-conclusion.md` の `verdict: H7_NOT_ESTABLISHED` に対し `resolveAdoptedSourceResolver()` は
-      `null` を返す)。ただし**本番配信面は未確認** — `/marketplace.json` も認証必須のため CI/CLI から応答を取れない
+      `null` を返す)。**2026-08-03 本番配信面も実測** — `GET /marketplace.json` (header 経路) が 200 を返し、
+      response header `x-catalog-source-status: pending-h7` を実測した。ただし body 側 `source_status` 値との一致は未確認
 - [x] PR merge と default branch reconciliation が完了 — merge commit `16a6f915` (2026-08-02T01:57:58Z)
 
 1 件でも欠けたまま P01〜P13、親 Beads、dev-graph node を完了にしない。
-**2026-08-02 時点で 6 件中 2 件が成立**したにとどまるため、dhy ファミリーは依然 close しない。
+**2026-08-03 時点で 6 件中 2 件が成立**したにとどまるため、dhy ファミリーは依然 close しない。
+
+### 2026-08-03 smoke 実測
+
+`$HUB_PUBLIC_URL=https://harness-hub.daishimanju.workers.dev`、tenant=`01KYREM0H83N4PVENM2491S7XF`
+(slug `harness-hub`)、workspace=`01KYRHS4D705XSJA4HXPC262HZ` (本番 DB で実在確認済み) で実施。
+
+- §3.1 (catalog 一覧、通常ブラウザ導線): `GET /catalog?tenant=..&workspace=..` → **403 `missing_tenant_scope`**。
+  `GET /t/{tenant}/w/{workspace}/catalog` → **404** (該当 route 未実装)。これは deploy 済みの旧 Worker に対する
+  観測である。`main` の PR #647（`41a79292`）は任意 query を認可入力にせず、session の active Workspace を
+  所属一覧で再検証して通常 GET の scope を解決する。`HarnessHub-4lxg` はこの実装済み修正と重複するため
+  close し、残る再デプロイと本番再測定は `HarnessHub-dhy.13` の責務として継続する。
+- §3.4 (marketplace.json): `GET /marketplace.json` (header 経路) → **200**、`x-catalog-source-status: pending-h7`
+  実測。body 側 `source_status` フィールドとの一致は未確認のため残タスク。
+
+本番への再デプロイと §3.1 起点の catalog 一覧・詳細 smoke が済むまで、acceptance record は完了扱いにしない。
 
 ### dev-graph PR linkage の記録 (未実施)
 
@@ -83,7 +100,7 @@ python3 plugins/dev-graph/scripts/reconcile-github-lifecycle.py \
 | repository 実装・テスト・文書 | 完了 | — (PR #628 merge 済 / `16a6f915`) |
 | dev-graph PR linkage | 未記録 | commit/push 後に §2 の `--mode check` で eligible を確認 |
 | 本番デプロイ | **完了 (2026-08-02)** | — (`hub-ci` run `30727984628`) |
-| smoke | 未実行 | 認証セッションを用意し release record §3.1〜3.4 を実施 |
+| smoke | §3.1 fail (旧 Worker) / §3.4 header pass・body未照合 | `HarnessHub-dhy.13` で main の session-bound scope 修正をデプロイ後、一覧・詳細・marketplace を再測定 |
 | axe | 8 files / 63 tests 内で pass | CI 再確認 |
 | CWV | **未達 (計測経路が無い)** | 認証付き Lighthouse 経路を feat-hub-foundation 側で整備 |
 | U5 | 未判定 | 提供者代表が本書 §1 の手順 2〜4 を実施 |

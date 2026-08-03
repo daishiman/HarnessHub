@@ -7,7 +7,7 @@
     "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-wt28-c11-postmerge-20260729; IN1/OUT1 refresh=eval_requirements_trial_r3",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,13 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T134000Z-ci-requirements-r2/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T134000Z-ci-requirements-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T134000Z-ci-requirements-r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260802T134000Z-ci-requirements-r2/evidence/independent-verification-report.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/independent-verification.json"
       ],
-      "observed": "2026-08-02 fresh live trial (20260802T134000Z-ci-requirements-r2) は overall=PASS、nudge=0、gate=0。15-node lineage closure の exact-13 package から requirements-document と capability-build handoff を emit し、feature と source digest への束縛を確認した。fresh Agent の独立検証は3観測すべて PASS、implementation source file の生成は0件で、current behavior closure digest=101276da0e0ba3b4dd5d440c73b7858653599358e52c17ac7484b820b7637ae9。"
+      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c04 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=d5033c34ba50dcabd525c707ba8161f140c2708c586857883c745c9e8194c3b6。"
     },
     "OUT2": {
       "status": "PASS",

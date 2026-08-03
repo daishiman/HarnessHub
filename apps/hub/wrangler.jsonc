@@ -33,6 +33,12 @@
     {
       "binding": "BACKUPS_BUCKET",
       "bucket_name": "harness-hub-backups"
+    },
+    {
+      // feat-tenant-data-retention (AD-3): PackageRegistry (content-addressed / immutable) とは
+      // 削除ポリシー・key 設計が異なるため、バケットを分離する。
+      "binding": "TENANT_DATA_BUCKET",
+      "bucket_name": "harness-hub-tenant-data"
     }
   ],
   // デプロイのたびに Cloudflare が採番する version id を Worker から読めるようにする。

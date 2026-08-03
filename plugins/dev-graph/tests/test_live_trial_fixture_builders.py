@@ -336,9 +336,18 @@ def test_distinct_output_paths_get_distinct_repository_ids(tmp_path: Path) -> No
     first = _build("status", tmp_path / "a")
     second = _build("status", tmp_path / "b")
     assert first["repository_id"] != second["repository_id"]
-    # path 依存値は repository_id に閉じているので、内容 digest は path をまたいで一致する。
+    # path 依存値は repository_id フィールドに閉じている。config だけでなく graph store も
+    # canonical envelope の一部として repository_id を持つので (C11 の exact-4-key)、
+    # 生の digest は 2 file で割れる。
     manifest_a = _content_manifest(tmp_path / "a")
     manifest_b = _content_manifest(tmp_path / "b")
     assert set(manifest_a) == set(manifest_b)
     differing = {key for key in manifest_a if manifest_a[key] != manifest_b[key]}
-    assert differing == {".dev-graph/config.json"}
+    assert differing == {".dev-graph/config.json", ".dev-graph/state/graph.json"}
+    # 「repository_id に閉じている」ことは、その 1 key を落とした投影が一致することで示す。
+    # digest の差分集合を数えるだけだと、同じ file の別 key が動いても検出できない。
+    for relative in sorted(differing):
+        document_a = json.loads((tmp_path / "a" / relative).read_text(encoding="utf-8"))
+        document_b = json.loads((tmp_path / "b" / relative).read_text(encoding="utf-8"))
+        assert document_a.pop("repository_id") != document_b.pop("repository_id")
+        assert document_a == document_b

@@ -7,7 +7,7 @@ import { getTableColumns, getTableName } from 'drizzle-orm';
 import { getTableConfig, type SQLiteColumn, type SQLiteTable } from 'drizzle-orm/sqlite-core';
 import { canonicalJson } from '../repository/bytes';
 import type { CoreAdapter } from '../repository/db';
-import { coreTables } from '../schema/index';
+import { allTables } from '../schema/index';
 
 export const EXPORT_FORMAT = 'harness-hub-control-plane-export';
 export const EXPORT_FORMAT_VERSION = 1;
@@ -47,12 +47,15 @@ function compareByKeys(keys: readonly string[]) {
 
 /** control-plane DB 全体を JSONL 文字列へ export する。 */
 export async function exportControlPlane(adapter: CoreAdapter): Promise<string> {
-  const tableNames = Object.keys(coreTables).sort();
+  // 日次バックアップは core だけでなく Studio 拡張も含む全 control-plane table を対象にする。
+  // tenant_data の削除 tombstone を除外すると、過去の snapshot を復元する際に削除済みの
+  // object 参照が再出現し得るため、allTables をこの経路の単一ソースにする。
+  const tableNames = Object.keys(allTables).sort();
   const counts: Record<string, number> = {};
   const rowLines: string[] = [];
 
   for (const name of tableNames) {
-    const table = coreTables[name] as SQLiteTable;
+    const table = allTables[name] as SQLiteTable;
     const rows = (await adapter.client.select().from(table)) as Record<string, unknown>[];
     rows.sort(compareByKeys(pkKeys(table)));
     counts[name] = rows.length;
@@ -95,7 +98,7 @@ export function parseExportArtifact(artifact: string): ParsedArtifact {
     throw new Error('export artifact の tables が不正です');
   }
 
-  const expectedTables = Object.keys(coreTables).sort();
+  const expectedTables = Object.keys(allTables).sort();
   const actualTables = Object.keys(header.tables).sort();
   if (
     expectedTables.length !== actualTables.length ||
@@ -138,7 +141,7 @@ export function parseExportArtifact(artifact: string): ParsedArtifact {
 
 /** テーブル名 → drizzle table の解決 (restore が使う)。未知テーブルは fail-closed。 */
 export function resolveTable(name: string): SQLiteTable {
-  const table = coreTables[name];
+  const table = allTables[name];
   if (table === undefined) throw new Error(`未知のテーブル: ${name}`);
   return table;
 }

@@ -109,4 +109,18 @@ priority は `medium`。`/catalog` への導線 (nav link) 自体が未実装の
 
 ## 検証証跡
 
-未着手。一次記録は HarnessHub-9cgb の notes（`authorize()`/`resolveRequestedScope()` の tsx 直接実行結果）と本 issue である。着手時に実機/テストでの実行コマンド・結果・repository 内 evidence path を追記する。
+2026-08-03 最終レビューで確定。`apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts` が、署名済みの通常 session を持つ `NextRequest` を実際の `src/middleware.ts` へ渡し、以下を固定する（3 件 pass）。
+
+1. 通常 session・`/catalog`・クエリなし・カスタムヘッダなし → `403 missing_tenant_scope`
+2. 同上 + `?tenant=tenant-a&workspace=workspace-a1` → `403 missing_tenant_scope`（query は通常認可層の scope 入力ではない）
+3. 単一認可層では、path/header で宣言した一致 scope のみを許可する → `allowed: true`
+
+併せて既存の `apps/hub/tests/security/middleware-entry.test.ts` を再確認した。署名済みの `__cwv_probe` は `/catalog` で一度だけ受理され、ticket を URL から除去して HttpOnly cookie 化した後に到達する。これは CWV 計測だけの read-only credential であり、通常 session の browser navigation、任意 query、または任意 header を許可する抜け道ではない。
+
+**結論（受入条件を満たす）**:
+
+- 受入条件1・2: **通常 session の**ログイン済み実ユーザーによる `GET /catalog`（クエリあり・なし双方）はハードナビゲーションでは **到達不能**（`403 missing_tenant_scope`）と確定。CWV 専用 credential はこの結論の対象外であり、既存の qa-133 契約どおりに限定された運用経路である。
+- 受入条件3: 一般利用者向けの `/catalog` 公開経路は現時点で提供しない。`/catalog` への nav link が無く、middleware は query の tenant/workspace を信用しない。`resolveRequestedScope()` への query 対応や redirect 補完を採用するには、単一認可層 (`authz.ts`/`scope.ts`) のコア変更として system-spec reopen・ADR 改訂・spec-reflection-receipt を伴う正式 governance が必要であり、本 issue では実施しない。
+- 受入条件4: `docs/features/feat-dual-catalog-web/architecture-decision-record.md` §1.1・§7 を改訂し、「RSC が tenant/workspace を解決する」がUI表示用スコープの受け渡しであり認可判定ではないことを明記して整合を取った。
+
+仕様反映判断と対象外の理由は `docs/features/feat-dual-catalog-web/catalog-scope-unreachable-spec-reflection-receipt.md` を正とする。残課題（別途 governance が必要なため本 issue の対象外）: `/catalog` を一般利用者へ公開する場合の到達経路設計（query→canonical path redirect、または別の安全な session-bound scope bootstrap）。CWV probe は計測専用のため一般利用の候補にはしない。

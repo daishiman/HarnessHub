@@ -94,7 +94,9 @@ describe('サインイン画面の接続解決', () => {
     expect(html).toContain('method="post"');
     expect(html).toContain('name="csrfToken"');
     expect(html).toContain('name="callbackUrl"');
-    expect(html).toContain('value="/"');
+    // SSR 初期値は既定着地 (`/sheets`)。旧仕様の固定値 "/" は業務画面へ届かない不具合だった
+    // (feat-post-signin-scope-routing)。client mount 後は returnTo に応じて useEffect が更新する
+    expect(html).toContain('value="/sheets"');
   });
 
   it('他テナントの slug では、そのテナントの接続だけを引く', async () => {

@@ -1,0 +1,97 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-render-review",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-render"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "7bc7aca6b468002ce4790b341a626f4207615472d90abff889e9708a2514a0e2",
+  "transcript_sha256": "b9c8c917b45f9a7716ede8247f24a267b8539456b91031c01dd05969cddc6921",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 390.0
+  },
+  "scenario_id": "C05-OUT1-positive-feature-progress",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C05-OUT1-positive-feature-progress",
+    "required_observations": [
+      "the rendered HTML and CSS open with no additional runtime dependency and the SVG graph is displayed",
+      "the progress denominator equals the registration receipt applied_count and expected_count, which the renderer already refuses to render when they disagree",
+      "the progress numerator equals the number of child tasks whose status is done or closed, recomputed independently from the graph store rather than read back from the receipt",
+      "the rendered subject corresponds to the source_digest recorded in the registration receipt"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the rendered HTML and CSS open with no additional runtime dependency and the SVG graph is displayed",
+        "evidence_ref": "independent-verification.json#/observations/runtime_svg"
+      },
+      {
+        "index": 2,
+        "observation": "the progress denominator equals the registration receipt applied_count and expected_count, which the renderer already refuses to render when they disagree",
+        "evidence_ref": "independent-verification.json#/observations/denominator"
+      },
+      {
+        "index": 3,
+        "observation": "the progress numerator equals the number of child tasks whose status is done or closed, recomputed independently from the graph store rather than read back from the receipt",
+        "evidence_ref": "independent-verification.json#/observations/numerator"
+      },
+      {
+        "index": 4,
+        "observation": "the rendered subject corresponds to the source_digest recorded in the registration receipt",
+        "evidence_ref": "independent-verification.json#/observations/source_digest"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

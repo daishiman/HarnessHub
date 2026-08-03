@@ -1,0 +1,24 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C15-OUT1-positive-ready-set-r16",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Graph store confirms LT-SCHED-001 and LT-SCHED-002 both have resource_scope [\"src/alpha.py\"] — the sole overlapping pair. Execution output batches are [[LT-SCHED-001, LT-SCHED-003], [LT-SCHED-002, LT-SCHED-006]]. The two overlapping tasks are placed in separate batches (batch 0 vs batch 1). conflict_pairs entry confirms: {kind: ready_pair, left: LT-SCHED-001, right: LT-SCHED-002, resources: [src/alpha.py]}."
+    },
+    "2": {
+      "met": true,
+      "evidence": "Graph store shows LT-SCHED-005 has depends_on: [\"LT-SCHED-001\"] and LT-SCHED-001 has status \"active\" (not done/closed), so the dependency is unsatisfied. Execution output unmapped array contains {external_ref: \"LT-SCHED-005\", reason: \"dependency_unsatisfied\", blocking_depends_on: [\"LT-SCHED-001\"], source: \"schedule-graph\"}. LT-SCHED-005 is absent from ready_set.tasks. The blocked task is excluded and the specific reason plus blocking dependency are reported."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Lease store shows LT-SCHED-004 expires_at 2099-01-01 (active, far-future) and LT-SCHED-006 expires_at 2020-01-01 (stale, past). Execution output: LT-SCHED-004 is in conflicts array and absent from ready_set — suppressed by active lease. conflict_pairs confirms {kind: lease, left: LT-SCHED-004, right: active-lease}. LT-SCHED-006 is present in ready_set.tasks and placed in batch 1 — stale lease was reclaimed. The two lease states are treated differently: active suppresses, stale is reclaimed."
+    },
+    "4": {
+      "met": true,
+      "evidence": "max_parallel=2 in execution output. Batch 0 has 2 tasks, batch 1 has 2 tasks — both respect the limit. assignment_hints contains 4 entries with unique suggested_branch values: devgraph/LT-SCHED-001, devgraph/LT-SCHED-002, devgraph/LT-SCHED-003, devgraph/LT-SCHED-006. All 4 claim_commands are unique (each differs by node ID and branch name). Literal Skill(dev-graph:run-dev-graph-schedule) invocation confirmed in pane.txt line 48 and transcript line 78. No AskUserQuestion calls found. All external_user transcript entries are hook_progress/bash_progress — no nudge or user gate."
+    }
+  }
+}

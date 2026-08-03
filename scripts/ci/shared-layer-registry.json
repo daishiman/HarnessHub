@@ -104,8 +104,7 @@
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"
       ],
-      "app_wiring": "pending",
-      "app_wiring_note": "apps/hub 本体に呼び出し元が無く、実 consumer は fixture の 1 系統のみ。結線は各ドメイン feature の責務 (A4-1 未達として記録)"
+      "app_wiring_note": "feat-feedback-loop の resolved 遷移通知と、feat-tenant-data-retention (AD-5) の使用量閾値超過通知が結線"
     },
     {
       "id": "pii-guard",

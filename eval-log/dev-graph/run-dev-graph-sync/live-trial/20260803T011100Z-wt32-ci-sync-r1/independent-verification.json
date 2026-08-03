@@ -1,0 +1,10 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "first_import_export": "PASS; source evidence: fixture eval-log/run-dev-graph-sync-progress.json and transcript.jsonl.",
+    "second_zero": "PASS; source evidence: fixture eval-log/run-dev-graph-sync-progress.json and transcript.jsonl.",
+    "stable_state": "PASS; source evidence: fixture eval-log/run-dev-graph-sync-progress.json and transcript.jsonl."
+  }
+}

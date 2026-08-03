@@ -12,7 +12,7 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-02T20:49:05.376000Z"
+updated_at: "2026-08-03T04:40:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728"]
@@ -120,6 +120,12 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
 を正とする。
 
+`HarnessHub-f84o` では C10 が inline Python の変数・Path 式経由書込みを見逃す穴を、
+subprocess 非依存の AST 定数伝播で閉じた。製品 API・DB・認証認可・UI は変えず、
+開発品質ゲートの内部契約を `qa-139` / `appr-028` と architecture へ反映した。実装境界、既知の限界、
+検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
+を正とする。
+
 ## アーキテクチャ参照・機能間依存
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)
@@ -128,3 +134,4 @@ qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-lo
 ## Handoff
 
 - 現行世代: `.dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/`。再 plan は `/dev-graph plan --feature-id feat-dev-pipeline-improvement --feature-context features/feat-dev-pipeline-improvement.context.json`、昇格条件は `confirmation_status=confirmed` + `evaluation_status=pass` + `implementation_readiness=complete`。
+- 2026-08-02 の C10/C11/C28 authority 防御と Beads 更新経路は qa-138 / appr-027 に再確定し、実装・設計・検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md) を正とする。

@@ -78,7 +78,6 @@ LEASES: list[dict[str, Any]] = [
 
 def build(out: Path) -> None:
     """C15 scenario 用の隔離 fixture repository を生成する。"""
-    common, _ = scaffold(out, kind=SHAPE)
     nodes = []
     for node_id, title, slug, depends_on, scope in TASK_SPECS:
         node = task_node(node_id, title, slug, depends_on)
@@ -87,7 +86,9 @@ def build(out: Path) -> None:
         node["resource_scope"] = scope
         nodes.append(node)
     # graph_revision=1 は「骨格 + 初期 node 登録が 1 回だけ起きた」状態を表す。
-    write_json(out / ".dev-graph" / "state" / "graph.json", {"graph_revision": 1, "nodes": nodes})
+    # node を先に組んで scaffold へ渡すのは、graph store の書き込み点を 1 箇所に保つため
+    # (直に write_json すると canonical envelope の付与が抜ける)。
+    common, _ = scaffold(out, kind=SHAPE, graph={"graph_revision": 1, "nodes": nodes})
     for node in nodes:
         write_node_markdown(out, node)
     # lease 台帳の正本は worktree ではなく git common dir 側 (C15 の authority 判定)。

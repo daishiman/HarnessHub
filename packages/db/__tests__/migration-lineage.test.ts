@@ -107,7 +107,7 @@ describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', 
       const fromMigrations = introspect(migrationStatements);
       const fromHarness = introspect(await schemaDdl());
       expect(fromMigrations).toStrictEqual(fromHarness);
-      expect(Object.keys(fromMigrations)).toHaveLength(23);
+      expect(Object.keys(fromMigrations)).toHaveLength(28);
     },
   );
 });

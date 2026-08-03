@@ -47,6 +47,8 @@ const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = [
   'audit-event-logger',
   // feat-user-org-admin が結線 (AD-5): salary マスク判定 (features/user-org-admin/service.ts の toPiiViewer/maskPii)
   'pii-guard',
+  // feat-feedback-loop の resolved 遷移と、feat-tenant-data-retention (AD-5) の使用量閾値超過通知が結線する。
+  'notification-dispatch',
 ];
 
 const REGISTRY_PATH = path.resolve(

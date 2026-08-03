@@ -5,7 +5,10 @@
 // contract-registry (OpenAPI drift 検査の入力) には登録しない — 登録簿の責務は共通契約までのため。
 export * from '../auth-tenancy/index.js';
 // feat-dual-catalog-web の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../docs-cms/index.js';
 export * from '../dual-catalog-web/index.js';
+// feat-feedback-loop の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../feedback-loop/index.js';
 export * from '../hearing-intake/index.js';
 // feat-publish-pipeline の契約 schema。auth-tenancy と同じ理由でここから再エクスポートする。
 export * from '../publish-pipeline/index.js';
@@ -13,6 +16,8 @@ export * from '../publish-pipeline/index.js';
 export * from '../publisher-plugin/index.js';
 // feat-user-org-admin の契約 schema。同上の理由でここから再エクスポートする。
 export * from '../user-org-admin/index.js';
+// feat-tenant-data-retention の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../tenant-data/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,

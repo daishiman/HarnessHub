@@ -140,7 +140,6 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // Publisher CLI 専用。publish.write と異なり session を許可しない。
   'publish.cancel': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
   'deployment.register': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
-
   // feat-user-org-admin (AD-3): S18 アカウント設定。自分自身の情報のみを対象にするため
   // role の下限は member (`token.list.self` と同型の selfOnly パターン)。
   'me.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
@@ -148,6 +147,18 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // 読取りは一覧・個別ダッシュボードから誰でも参照する想定 (users.read と同強度)。
   // 変更は既存の coefficients.change (workspace-admin) のまま。
   'coefficients.read': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+
+  // feat-tenant-data-retention (AD-4)。workspace 内の共有データなので selfOnly は使わない
+  // (`docs.write_tenant` と同様に workspace 単位で判定する。所有者限定ではない)。
+  // upload/list/read/read_content は member — 通常業務のデータ入出力なので workspace-admin まで
+  // 上げる理由が無い (`docs.read` と同強度)。delete だけ workspace-admin にするのは、
+  // 削除は復元不可 (soft delete 列を持たない、AD-1) で誤操作の影響が大きいため
+  // (`sheets.status_change` 等の破壊的操作と同強度に揃える)。
+  'tenant-data.upload': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  'tenant-data.list': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  'tenant-data.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  'tenant-data.read_content': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  'tenant-data.delete': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
 };
 
 export function findActionRule(action: string): ActionRule | null {

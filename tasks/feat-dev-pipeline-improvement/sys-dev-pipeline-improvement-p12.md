@@ -12,7 +12,7 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T02:46:06Z"
+updated_at: "2026-08-03T04:40:00Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -285,16 +285,16 @@ pre-merge 評価済みの旧 ID は意味を変えず、競合解消時にのみ
 
 ## 2026-07-30 ID 一意性 gate の write-back
 
-本 P12 の promoted task spec と完了判定は変更しない。後続の standalone issue
-`HarnessHub-ory6` で、task graph、consult transcript、route build handoff の
-ID が `set` / `dict` 化される前に一意であることを検査する横断 gate を実装した。
+`HarnessHub-ory6` は task graph / transcript / handoff の重複 ID を fail-closed にし、責務分割後も公開 CLI を維持した。仕様と証拠は `system-spec/testing-qa.md` と [受領書](../../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md) を正とする。
 
-負例 fixture は同じ ID の別内容を投入し、公開 CLI の非 0 終了と正常系の exit 0 維持を確認する。
-500 行超の validator / test は report contract、graph shape、shape regression に責務分離し、
-公開 CLI path と JSON 出力契約を変えない。
+## 2026-08-03 `HarnessHub-f84o` P12 品質ゲート追補
 
 仕様正本への実装フィードバックは `system-spec/testing-qa.md`、集約仕様は
 `specs/harness-hub-system-specification.md`、設計は
 `architecture/harness-hub-testing-qa.md`、実装・検証・残課題の対応は
-`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`
-を正とする。
+`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md` を既存証跡、2026-08-02 の C10/C11/C28 authority 防御は `guard-authority-c10-c11-c28-spec-reflection-receipt.md` を正とする。
+
+C10 inline Python AST 層は BLOCK / PASS、実 process exit 2、subprocess 非起動、深さ上限、
+性能余裕、既知限界を固定した。最新 main 統合後は focused 257、Dev Graph 952 + 5 subtests、
+criteria 22、task package / system-spec coverage、標準 CI 139 PASS / 5 WARN / 0 FAIL、
+fresh live-trial 9/9 が PASS。製品 runtime は非変更で、仕様判断と全結果は [f84o 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。

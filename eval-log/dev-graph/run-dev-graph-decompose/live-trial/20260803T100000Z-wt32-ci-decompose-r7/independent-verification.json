@@ -1,0 +1,14 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "obs1": "Both audited final graphs contain one architecture and four features, no tasks, are acyclic, and measure max_inter_feature_depends_on_per_feature=1 within the declared maximum 3.",
+    "obs2": "Both apply-mode audits show real local state advancement; the three persisted draft features have zero publications with draft-gate attribution, while adapter and unreachable-route zero reasons remain distinct.",
+    "obs3": "Each final graph retains three produced draft features and exactly one sole lifecycle candidate, feat-user-auth-001, confirmed/pass/readiness-complete and attributable to the run from the pre-state diff.",
+    "obs4": "The paired runs persist exclusively beads versus none bindings and record different route sets; GitHub is schema-unreachable for macro-only local_only nodes, with binding measurements read from persisted graph nodes.",
+    "obs5": "Audits derive local/Beads/GitHub/Projects counts from pre-state to post-state publication inventories (0 to 5 graph nodes and revision 0 to 6 for real writes); both validator receipts use --graph - via stdin.",
+    "obs6": "Fresh recomputation with ensure_ascii=False, sort_keys=True, and separators=(',', ':') matches the promoted final-node digests: beads 6a7c665276d6402c69ca72356672bf9be8cd21114426bc59fab93c32ca19c83a; none 215f2e26b21223c1d97d995f3c1810e594d335c302300de343088a983d70bc98.",
+    "obs7": "Fresh stdin validator controls reject both synthesized readiness-incomplete evaluation pass and publication intent on a blocked draft feature in each final graph; the audits record the same two rejected controls. Transcript inspection also found exactly four fully qualified launches and two strict read-only Explore runs, one per binding."
+  }
+}
