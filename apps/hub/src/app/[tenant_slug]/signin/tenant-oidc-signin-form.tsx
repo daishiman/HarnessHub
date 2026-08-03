@@ -1,7 +1,9 @@
 'use client';
 
 import { Alert, Button } from '@harness-hub/ui';
-import { type FormEvent, type ReactNode, useRef, useState } from 'react';
+import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
+
+import { resolvePostSigninLanding } from '../../../lib/routing/post-signin-landing.js';
 
 interface TenantOidcSigninFormProps {
   readonly action: string;
@@ -46,6 +48,14 @@ export function TenantOidcSigninForm({ action, csrfEndpoint, displayName }: Tena
   const submitting = useRef(false);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
+  // SSR と初回クライアント render を一致させるため既定値で始め、mount 後に `?returnTo=` を反映する。
+  // サインイン画面は認証前に到達するため returnTo は署名/検証されていない自己申告であり、
+  // 外部遷移を防ぐ検証は resolvePostSigninLanding 側 (安全な相対 path のみ許可) に一本化する。
+  const [callbackUrl, setCallbackUrl] = useState(() => resolvePostSigninLanding(null));
+
+  useEffect(() => {
+    setCallbackUrl(resolvePostSigninLanding(new URLSearchParams(window.location.search).get('returnTo')));
+  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -80,7 +90,7 @@ export function TenantOidcSigninForm({ action, csrfEndpoint, displayName }: Tena
         onSubmit={submit}
       >
         <input type="hidden" name="csrfToken" defaultValue="" />
-        <input type="hidden" name="callbackUrl" value="/" />
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <Button type="submit" variant="primary" loading={loading}>
           {loading ? 'サインインを準備中…' : `${displayName} でサインイン`}
         </Button>

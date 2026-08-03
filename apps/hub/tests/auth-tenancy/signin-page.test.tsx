@@ -94,7 +94,8 @@ describe('サインイン画面の接続解決', () => {
     expect(html).toContain('method="post"');
     expect(html).toContain('name="csrfToken"');
     expect(html).toContain('name="callbackUrl"');
-    expect(html).toContain('value="/"');
+    // 遷移元 (returnTo) が無い場合は既定着地 (/sheets) に落ちる。/ は非業務のステータス画面のため留まらない
+    expect(html).toContain('value="/sheets"');
   });
 
   it('他テナントの slug では、そのテナントの接続だけを引く', async () => {

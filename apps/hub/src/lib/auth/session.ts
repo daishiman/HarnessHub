@@ -77,3 +77,24 @@ export function readCookie(cookieHeader: string | null, name: string): string | 
   }
   return null;
 }
+
+/**
+ * 「今 session が束縛している workspace」を運ぶ cookie 名。
+ * JWT session claims (`SessionClaims`) には含めない。claims を跨いだ再発行なしに
+ * workspace 切替を即時反映させたいのと、claims schema の変更を避けるため。
+ */
+export const ACTIVE_WORKSPACE_COOKIE_NAME = 'hh_active_workspace';
+
+/**
+ * cookie の workspace id は自己申告 (改ざん可能) なので、そのまま信用せず
+ * 呼び出し時点の principal の所属 (`memberWorkspaceIds`) に含まれる場合だけ採用する。
+ * 所属を外れた workspace は無条件で null (未選択) に落とす。
+ */
+export function resolveActiveWorkspace(
+  cookieHeader: string | null,
+  memberWorkspaceIds: readonly string[],
+): string | null {
+  const candidate = readCookie(cookieHeader, ACTIVE_WORKSPACE_COOKIE_NAME);
+  if (candidate === null) return null;
+  return memberWorkspaceIds.includes(candidate) ? candidate : null;
+}
