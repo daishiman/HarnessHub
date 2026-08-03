@@ -32,7 +32,7 @@ P02 spec が想定した前提と現行リポジトリ実測との差分。**D1-
 
 | 画面 | route (実装) | 構成 | 状態の所在 |
 |---|---|---|---|
-| S01 一覧 | `/catalog` | RSC (`page.tsx`) が tenant/workspace を解決 → client 部品 `CatalogList` が一覧取得・絞込・ページ送り | サーバ状態=`CatalogList` の `useState`、URL 状態=`searchParams` (tenant/workspace) |
+| S01 一覧 | `/catalog` | RSC (`page.tsx`) が `searchParams` から tenant/workspace の **UI 表示用スコープ**を読む → client 部品 `CatalogList` が一覧取得・絞込・ページ送り (`HarnessHub-6o0r` 追補: この読み取りは**認可判定ではない**。§7 #5 参照) | サーバ状態=`CatalogList` の `useState`、URL 状態=`searchParams` (tenant/workspace) |
 | S02 詳細 | `/catalog/[projectId]` | RSC (`page.tsx`) → client 部品 `CatalogDetail` が詳細 + release 一覧 + install descriptor を取得 | 同上。install descriptor は `CatalogInstallPanel` のローカル状態 |
 | S03 公開状態 | `/catalog/[projectId]` 内タブ | `CatalogPublishStatus` を S02 のタブとして統合 (frontend-spec §3.1「S03 は S02 の公開タブに統合」に準拠。独立 route を作らない) | 非終端の PublishRequest のみポーリング (D2) |
 | S04 Workspace 設定・Release 履歴 | `/catalog/releases` | **読取専用の Release 履歴のみ**を本 feature が持つ。IdP 接続・role 管理・token 失効は feat-auth-tenancy、rollback 実行は feat-publish-pipeline の所有 | `CatalogReleaseHistory` のローカル状態 |
@@ -163,5 +163,6 @@ CatalogEntry[] --(純関数: buildMarketplaceDocument)--> marketplace document
 | 2 | `GET/POST /api/v1/harnesses*` 未実装 | port 境界 + 縮退で吸収 (§0 A2 / §2.3)。実装到着時は `http-adapter.ts` のみ差し替え |
 | 3 | route path の spec drift (`/harnesses` vs `/catalog`) | 実装は `/catalog`。frontend-spec §1 route 表への追補を P12 で行う |
 | 4 | TanStack Query 未導入 | `polling.ts` の純関数分離により移行コストを局所化 (§0 A3) |
+| 5 | **通常 session の `GET /catalog` ハードナビゲーションは到達不能** (`HarnessHub-6o0r`) | §1.1 の「RSC が tenant/workspace を解決する」は `page.tsx` が `searchParams` を読んで `CatalogList` へ渡す**表示用スコープの受け渡し**を指すのみで、**認可判定ではない**。認可判定 (`src/middleware.ts` → `authorize()`) は単一認可層 (§5 境界 3) に閉じており、`resolveRequestedScope()` は URL パス (`/t/{tenantId}/w/{workspaceId}/...`) と `x-harness-tenant-id`/`x-harness-workspace-id` ヘッダのみを読む。実際の middleware を通す回帰テストで、ログイン済み通常 session のクエリあり/なし双方が `403 missing_tenant_scope` になることを確定した。**ただし CWV 計測専用の `__cwv_probe` は例外**である。これは署名・origin・固定 scope・5 分 TTL を検証後に cookie へ移す、GET/HEAD の catalog read に限った閉域 credential であり、通常利用者の navigation や query scope の許可ではない（`apps/hub/tests/security/middleware-entry.test.ts`、`system-spec/auth.md` qa-133）。`/catalog` への通常 nav link は依然として無く、一般利用者向けの公開経路は現状未提供とする。query 対応や redirect 補完を採る場合は、単一認可層のコア変更として system-spec reopen・ADR 改訂・spec-reflection-receipt を伴う正式 governance を別途行う。 |
 
 **rollback trigger**: feat-publish-pipeline の API 契約 (§2.1) または採用配布経路 (§3.1) が本 ADR の前提と異なることが判明した場合、当該決定を re-open し P02 を再実行する。再実行までは影響を受ける P03 以降の項目の着手を保留する。

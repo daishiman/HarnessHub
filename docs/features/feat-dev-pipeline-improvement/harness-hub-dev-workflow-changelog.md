@@ -221,21 +221,18 @@ CI blocking invocation を local hard gate または理由付き exact allowlist
 
 対象は `plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py` の 1 ファイルに限定され、`guard-graph-schema.py` の遮断ロジックは変更していない。製品 API・state・security・UI の契約は非変更のため `system-spec/`・`specs/` は非変更。検証は focused file 3 回連続 48 passed/2 skipped、`plugins/dev-graph/tests` 全体 pytest-xdist 721 passed/2 skipped、`make lint` / `plugin-package-check` PASS。判断と検証の全量は [仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/5iuq-guard-latency-proxy-metric-spec-reflection.md) を正とする。
 
-### 差分追記 (2026-08-02): C10/C11/C28 authority 防御の責務分担
+### 差分追記 (2026-08-02): exact-13 registration と task projection の境界
 
-出典: system-spec `qa-135` / `appr-027`、bd `HarnessHub-kzth` / `HarnessHub-f84o` /
-`HarnessHub-l1ru` / `HarnessHub-dc7`。
+`HarnessHub-cvli` は、system-dev-planner の registration manifest と C02
+`upsert-node.py` の task Markdown 投影が同じ node を順に更新する境界を明文化した。
+manifest は exact-13、source digest、immutable generation receipt を所有し、C02 は
+`purpose`、`goal`、`scope_in`、`scope_out`、`acceptance`、`architecture_refs` を task
+frontmatter と graph node に具体化する。再登録時に manifest が六項目を省略している場合だけ、
+`register-package.py` が保存済みの投影値をコピーして比較・置換する。明示 manifest 値を保存値で
+上書きすること、または六項目以外を無差別に引き継ぐことはしない。
 
-C10 は command 文字列上で確定できる直接・inline 変数経由の graph/config 書込みを、
-repository read や subprocess を使わず拒否する。script file の全意味解析は担当せず、
-実行後の authority drift 監査が stat/digest/revision/envelope の変化を検出する。
-confirmed drift は clean baseline へ昇格させず、C02/C28 など正規 writer による修復まで
-繰り返し通知する。初回でも壊れた JSON/envelope は baseline に採用しない。VCS rollback の
-advisory 緩和は shell segment 全体が git 操作だけの場合に限定し、非 git writer が混在する
-command は confirmed のままとする。
-
-C11 は C02 build・事後監査と共有する exact-4-key envelope を正とし、canonical store
-では余剰・欠落 key を拒否する。最新 main の C28 bridge は priority/assignee/labels を扱い、
-公開 `--labels` を冪等（何回実行しても同じ結果になる性質）な `bd --set-labels` へ転送する。詳細な受入条件、
-仕様反映、500 行例外は [仕様反映受領書](guard-authority-c10-c11-c28-spec-reflection-receipt.md)
-を正とする。製品 API・DB・認証認可・UI・deploy unit は変更しない。
+projection により `updated_at` が前進する場合だけを同一状態として許可する。時刻後退、解釈不能な
+時刻、または非時刻フィールドの差分は fail-closed とし、drift として止める。この最小の共有 helper
+により 500 行を超えた registration script と test を責務分離し、公開 CLI・graph schema・
+source digest・receipt contract は維持する。製品 runtime の component 境界は変更しない。詳細は
+[仕様反映受領書](register-package-projection-idempotency-spec-reflection-receipt.md) を正とする。

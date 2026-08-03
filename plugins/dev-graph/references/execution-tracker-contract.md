@@ -106,6 +106,12 @@ PR merged (事実 authority)
 - metadataだけのpatchは本文を暗黙再生成しない。既存本文を破棄してtemplateへ戻す操作は `--regenerate-body` の明示opt-inに限る。
 - transaction receipt は `body_source` (`from_file|from_input|preserved|template|regenerated`) と `replaced_body_lines` を返す。一括更新の本文非破壊性は `body_source=preserved` と `replaced_body_lines=null` で検証する。
 
+### C02 exact-13 登録と task projection の所有境界
+
+- system-dev-planner の registration manifest は exact-13 node、source digest、generation receipt を所有する。task Markdown の必須 frontmatter である `purpose`、`goal`、`scope_in`、`scope_out`、`acceptance`、`architecture_refs` は C02 `upsert-node.py` が投影時に具体化する。
+- 同一 generation を再登録するとき、manifest が六項目を省略していれば `register-package.py` は保存済み node の値を保持してから比較・置換する。manifest が値を明示した場合はその値を優先し、差分を drift として検出する。六項目以外の保存済み値を広く取り込むことはしない。
+- projection による `updated_at` の前進だけは同一状態として受理する。保存済み時刻が登録時刻より前、または片方が解釈不能・欠落で文字列も一致しない場合は fail-closed とし、source digest・exact-13 構造・immutable receipt の検査を緩めない。
+
 ### C02 document layer の graph/frontmatter parity
 
 - `artifact_kind=document` は `graph-node.schema.json#/$defs/documentLayer` に適合する `layer` を必須とする。形式は空でない小文字 kebab-case とし、役割追加を妨げる固定 enum は置かない。

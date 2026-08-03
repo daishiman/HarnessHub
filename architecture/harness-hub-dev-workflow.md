@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-02T12:13:53Z"
+updated_at: "2026-08-03T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C10/C11/C28 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-138 の確定内容に適合し、C10/C11/PostToolUse の三層 authority 防御、C02 document parity、C28 mutation、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"7fd613b24a1b65b21cecae6e7bb54c3b68841ed485662409ae8346ee66df9d91","evaluator":"validate-coverage-matrix.py","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-02T13:18:41Z","origin_kind":"system-spec-harness","source_digest":"d354adf3f05a030b4cb514285777099ed0c4d457213d66affdd14f3a3bc71682","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4","evaluator":"codex-final-review (HarnessHub-cvli)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"25e7bf3726001531ab555a87650a132d02e74ca5305cd9a56647ae0cd84ed5d4","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -118,19 +118,9 @@ CLI adapter が呼出時に実行関数を解決する。この境界により�
 `priority`、`assignee`、`labels` は Dev Graph parity の対象外だが、書込 authority は
 他の mutation と同じ C28 bridge に限定する。C10 guard は直接 `bd update` を一律遮断し、
 CLI adapter は引数解析と receipt、`bd_bridge_contracts.py` は許可 exact-set・priority と
-labels の正規化を担う。公開 `--labels` は `bd --set-labels` への全置換だけを許し、順序依存の
+labels の正規化を担う。labels は `--set-labels` への全置換だけを許し、順序依存の
 add/remove を契約面から排除する。設計判断と検証証拠は
 [dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
-を正とする。
-
-## Dev Graph authority の三層防御 (2026-08-02 / qa-138)
-
-C10 は command-only の事前遮断、PostToolUse は canonical store の実行後監査、C11 は保存形状の
-schema 検証を担当する。三層は exact-4-key envelope を共有するが、script file の意味解析を
-C10 へ重複実装しない。監査 baseline は size・mtime・ctime・digest・revision を保持し、confirmed
-drift と初回 invalid state では進めない。VCS-only command だけを rollback advisory とし、非 git
-writer が混在する command は confirmed のまま扱う。詳細は
-[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md)
 を正とする。
 
 > **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は

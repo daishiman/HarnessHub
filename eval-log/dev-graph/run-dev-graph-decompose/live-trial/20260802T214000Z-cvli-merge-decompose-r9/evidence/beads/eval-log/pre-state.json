@@ -1,0 +1,141 @@
+{
+  "audit_implementation": {
+    "index_matches_worktree": true,
+    "modules": [
+      {
+        "index_blob": "110ff08e625513f61743fb8292f2f4ac30580fde",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_integrity.py",
+        "sha256": "204089ca751a09759f51a7b3c8f6f73ad99eed399ad6c8e03d51b6af5791d0ba",
+        "tracked_in_index": true,
+        "worktree_blob": "110ff08e625513f61743fb8292f2f4ac30580fde"
+      },
+      {
+        "index_blob": "38d5181c7a0a85ea4aa7e0686e8deffc939926c1",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+        "sha256": "f23387f1fd078f36b6f98c7ace3ce06091740bd8e53160588584ac23df9c48fd",
+        "tracked_in_index": true,
+        "worktree_blob": "38d5181c7a0a85ea4aa7e0686e8deffc939926c1"
+      },
+      {
+        "index_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_decompose_publication.py",
+        "sha256": "81d7eded3db608b7d6d8724dee7a821dd4952914c23d1612b3c06ef072714dc2",
+        "tracked_in_index": true,
+        "worktree_blob": "e9191702da1ae34c4b7efa1f4c1b71ab40403283"
+      },
+      {
+        "index_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/audit_live_trial_state.py",
+        "sha256": "ed99ef285e90516a107e902d80d95ef9239659c3c6a965b81d3c788ccbe43ee7",
+        "tracked_in_index": true,
+        "worktree_blob": "f7a94de5885e2c6add3ba0d30f55f2a29e73c388"
+      },
+      {
+        "index_blob": "2a0be8f291fb190b287f34d5727e7691760ce57f",
+        "index_matches_worktree": true,
+        "path": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "sha256": "6b51f4447a1db34fd4cbc9e4fd6efd893f430f59c43e165a1dc347ca5fc50d81",
+        "tracked_in_index": true,
+        "worktree_blob": "2a0be8f291fb190b287f34d5727e7691760ce57f"
+      }
+    ],
+    "path": "plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py",
+    "sha256": "8bf5069a726c62f21d48d8e9356f769082dac97a8afacce8a27649d97b6e6da6",
+    "tracked_in_index": true
+  },
+  "config": {
+    "path": ".dev-graph/config.json",
+    "sha256": "918924bb1fc3125efe18b21ac55019319020e86ea01360cb504e78acedbc7bf3"
+  },
+  "content_inventory": {
+    "architecture": [
+      {
+        "bytes": 0,
+        "path": "architecture/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "documents": [
+      {
+        "bytes": 0,
+        "path": "docs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "features": [
+      {
+        "bytes": 0,
+        "path": "features/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "issues": [
+      {
+        "bytes": 0,
+        "path": "issues/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "specifications": [
+      {
+        "bytes": 0,
+        "path": "specs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "system_spec": [
+      {
+        "bytes": 0,
+        "path": "system-spec/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "tasks": [
+      {
+        "bytes": 0,
+        "path": "tasks/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "git_status": {
+    "all": [
+      {
+        "path": "eval-log/run-dev-graph-decompose-goal-spec.json",
+        "status": "??"
+      },
+      {
+        "path": "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+        "status": "??"
+      }
+    ],
+    "managed": []
+  },
+  "graph": {
+    "node_count": 0,
+    "path": ".dev-graph/state/graph.json",
+    "revision": 0,
+    "sha256": "f4273afd63c3b4fdc0d415253904f65b2c9b014ffb132b5f8407d8e50a789a9c"
+  },
+  "publication_inventory": {
+    "beads_export": {
+      "count": 0,
+      "exists": false,
+      "ids": [],
+      "path": ".beads/issues.jsonl"
+    },
+    "issues": {
+      "count": 1,
+      "paths": [
+        "issues/.gitkeep"
+      ],
+      "root": "issues"
+    },
+    "node_linkages": {}
+  },
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-30/eval-log/dev-graph/live-trial-fixtures/cvli-merge-c14-r9-beads-20260802"
+}
