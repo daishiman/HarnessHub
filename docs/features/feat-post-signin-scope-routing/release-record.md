@@ -17,6 +17,12 @@ source: docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md
 - [仕様反映受領書](./spec-reflection-receipt.md) で、system-spec・spec・architecture に意味変更がないことを照合した。
 - Draft PR の作成・CI 結果確認後も、P13 は main へ merge され本番で検証されるまで close しない。
 
+## CI 修復（2026-08-03）
+
+- PR #647 の `hub-ci` と catalog 固有ゲートは、旧契約を期待する `catalog-hard-navigation-scope.test.ts` が browser session の `/catalog` を 403 と判定して失敗した。
+- session scope 補完は本 feature で確定した既存契約であり、実装変更は不要だったため、テストを「browser session は 200、query の tenant/workspace は認可入力にしない」へ更新した。
+- catalog 固有ゲートは 9 files / 66 tests PASS、Hub 全体の `vitest run --coverage` も PASS。認可 API/Bearer の明示 scope 必須は別テストで継続検証する。
+
 ## 残る本番確認
 
 認証済み browser session で次の 6 path を確認する: `/sheets`、`/sheets/new`、`/sheets/{id}`、`/catalog`、`/catalog/releases`、`/catalog/{projectId}`。各 path が 403 `missing_tenant_scope` にならず、別 tenant/workspace の情報を表示しないことを記録する。

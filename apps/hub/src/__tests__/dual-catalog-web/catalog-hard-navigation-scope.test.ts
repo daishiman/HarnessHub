@@ -2,8 +2,9 @@
  * HarnessHub-6o0r: GET /catalog へのハードナビゲーション到達性の確定 (issue-hub-catalog-scope-unreachable-20260802)。
  *
  * 通常の session を持つブラウザのページ遷移はカスタムヘッダを送れない。
- * `page.tsx` が読む `?tenant=&workspace=` も middleware の認可入力ではないため、
- * 実際の Next.js middleware まで通して 403 になることを固定する。
+ * session 由来の tenant scope を middleware が補完するため、実際の Next.js middleware
+ * まで通しても `/catalog` に到達できることを固定する。`?tenant=&workspace=` は
+ * middleware の認可入力ではないため、session 由来の結果を変えない。
  *
  * `__cwv_probe` を使う短命・署名済みの CWV 計測経路は別物であり、
  * `apps/hub/tests/security/middleware-entry.test.ts` がその到達性と閉域性を検証する。
@@ -73,22 +74,20 @@ afterEach(() => {
 });
 
 describe('HH-6o0r / GET /catalog のハードナビゲーション到達性', () => {
-  it('通常 session のクエリなし GET は middleware で 403 missing_tenant_scope になる', async () => {
+  it('通常 session のクエリなし GET は session scope 補完により middleware を通過する', async () => {
     const { middleware } = await loadSessionMiddleware();
     const response = await middleware(requestFor('/catalog', await sessionCookie()));
 
-    expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({ error: 'missing_tenant_scope' });
+    expect(response.status).toBe(200);
   });
 
-  it('?tenant=&workspace= を付けても通常 session の GET は 403 のまま', async () => {
+  it('?tenant=&workspace= は認可入力にせず、通常 session の GET は同じく通過する', async () => {
     const { middleware } = await loadSessionMiddleware();
     const response = await middleware(
       requestFor('/catalog?tenant=tenant-a&workspace=workspace-a1', await sessionCookie()),
     );
 
-    expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({ error: 'missing_tenant_scope' });
+    expect(response.status).toBe(200);
   });
 
   it('通常の認可層は path / header の宣言済み scope だけを受け取る', () => {
