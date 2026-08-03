@@ -12,7 +12,7 @@ iteration: null
 title: "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す"
 owners: ["daishiman"]
 created_at: "2026-07-25T20:43:11Z"
-updated_at: "2026-08-03T04:40:00Z"
+updated_at: "2026-08-03T10:26:18.055450Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","issue-guard-graph-schema-interpreter-write-coverage-20260726"]
@@ -42,9 +42,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-f84o","linked_at":"2026-07-28T00:24:44.679Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-guard-graph-schema-inline-python-variable-path-20260726","linked_at":"2026-08-03T10:26:00Z","merge_commit_sha":null,"merged_at":null,"pr_number":655,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/655"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"manual","status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/655"],"policy":"linked_pr_merged_all","reconciled_at":null,"source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-28T00:24:44.679Z","missing_sections":[],"status":"complete"}
 ---
 

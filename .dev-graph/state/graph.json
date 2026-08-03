@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1187,
+  "graph_revision": 1188,
   "nodes": [
     {
       "acceptance": [
@@ -41091,7 +41091,8 @@
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"
+          "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/655"
         ],
         "policy": "linked_pr_merged_all",
         "reconciled_at": null,
@@ -41135,7 +41136,20 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-guard-graph-schema-inline-python-variable-path-20260726",
+          "linked_at": "2026-08-03T10:26:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 655,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/655"
+        }
+      ],
       "purpose": "inline Python が変数や Path 式で組み立てた graph authority 書込みを、PreToolUse の時間契約を守った静的解析で遮断する",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -41186,7 +41200,7 @@
       "template_version": "1.0.0",
       "title": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T04:40:00Z"
+      "updated_at": "2026-08-03T10:26:18.055450Z"
     },
     {
       "acceptance": [

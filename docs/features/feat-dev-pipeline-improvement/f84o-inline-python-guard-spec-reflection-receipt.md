@@ -109,8 +109,9 @@ system-spec / repository CI を満たし、今回対象の変更は draft PR 公
 - local `main` → branch: `6ac56644` を経て、最終再統合 `5bdf3c25`。
 - branch: `devgraph/issue-guard-graph-schema-inline-python-variable-path-20260726`
 - base: repository default branch `main`
-- commit / push / draft PR は本受領書を含む対象 file だけで実行し、URL は Beads と
-  Dev Graph linkage に記録する。
+- commit: `4cd9b844`
+- draft PR: [#655](https://github.com/daishiman/HarnessHub/pull/655)（base `main`）
+- PR URL は Beads と Dev Graph linkage にも記録済み。
 - 既存 draft PR #642 の f84o 正規表現層より AST 層の実測 coverage が広いため、本 PR は
   f84o 部分の後継として関係を明記する。別 Beads の変更は混在させない。
 
