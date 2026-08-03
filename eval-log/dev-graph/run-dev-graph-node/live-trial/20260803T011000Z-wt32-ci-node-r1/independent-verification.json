@@ -1,0 +1,10 @@
+{
+  "evaluator": "fresh-codex-agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "all_routed": "PASS; source evidence: fixture eval-log/run-dev-graph-node-progress.json and transcript.jsonl.",
+    "consecutive_update": "PASS; source evidence: fixture eval-log/run-dev-graph-node-progress.json and transcript.jsonl.",
+    "macro_feature": "PASS; source evidence: fixture eval-log/run-dev-graph-node-progress.json and transcript.jsonl."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "original_goal": "dev-graph:run-dev-graph-init fresh live-trial r3",
+  "original_goal_hash": "sha256:fd2f3bbaa793ae81a12e792d10e181feccbeba87576c434ad1733b108c1bf273",
+  "fixture_root": "eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-r3",
+  "required_skill_calls": 2,
+  "required_observations": [
+    "first pass creates six content roots, routing policy and graph store",
+    "second pass re-invokes skill and reports zero planned changes",
+    "template edited between passes holds edited bytes after second pass",
+    "plugin hook source resolved with receipt or rejection diagnosis recorded",
+    "config stores no absolute path and no token or node id",
+    "C11 passes against graph containing at least one node"
+  ]
+}

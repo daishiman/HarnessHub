@@ -1,0 +1,31 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "checklist": {
+    "obs1_first_pass_creates_roots_and_stores": {
+      "status": "PASS",
+      "evidence": "6 content roots created, config via build-repo-config.py (action=created), graph via build-graph-store.py (action=created), validate-repo-config.py valid=true, validate-graph-schema.py valid=true"
+    },
+    "obs2_second_pass_zero_changes": {
+      "status": "PASS",
+      "evidence": "build-repo-config.py --if-absent: action=skipped_existing changed=false; build-graph-store.py: action=preserved_existing changed=false"
+    },
+    "obs3_template_preserved_after_second_pass": {
+      "status": "PASS",
+      "evidence": "task.md edited with marker EDITED-BY-LIVE-TRIAL-20260802T104500Z; post-second-pass digest 51c73b04a88f046da2219bb1d590001edb38bbfea09ad106e7034283a44afde4 matches pre-second-pass digest; proven via init re-invocation not file inspection alone"
+    },
+    "obs4_plugin_hook_source_resolved": {
+      "status": "PASS",
+      "evidence": "hook_source=plugin, hooks.json found in plugins/dev-graph/hooks/ with 4 hooks; claude_hooks.source=plugin in config"
+    },
+    "obs5_no_absolute_paths_or_tokens": {
+      "status": "PASS",
+      "evidence": "config contains 0 absolute paths, 0 tokens, 0 GitHub node IDs; all paths are repository-relative"
+    },
+    "obs6_c11_passes_with_node": {
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py valid=true with 1 node (task-init-trial-postci-001); graph_revision=1"
+    }
+  },
+  "skill_invocations": 2,
+  "overall": "PASS"
+}

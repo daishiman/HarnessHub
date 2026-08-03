@@ -27,17 +27,17 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260803T100000Z-wt32-ci-decompose-r7/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/evidence/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/evidence/progress.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260802T214000Z-cvli-merge-decompose-r9/evidence/graph.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260803T100000Z-wt32-ci-decompose-r7/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260803T100000Z-wt32-ci-decompose-r7/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260803T100000Z-wt32-ci-decompose-r7/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260803T100000Z-wt32-ci-decompose-r7/independent-verification.json",
+        "eval-log/dev-graph/live-trial-fixtures/20260803-wt32-ci-decompose-beads-r7/eval-log/decompose-audit.json",
+        "eval-log/dev-graph/live-trial-fixtures/20260803-wt32-ci-decompose-none-r7/eval-log/decompose-audit.json",
         "plugins/dev-graph/tests/test_decompose_live_trial_audit.py"
       ],
-      "observed": "2026-08-02 fresh live trial (20260802T214000Z-cvli-merge-decompose-r9) は overall=PASS、nudge=0、gate=0。実書込みで architecture 1件と feature 4件の acyclic DAG を作成し、draft gate・sole publication candidate・beads/none binding・GitHub schema-unreachable・pre/post 差分・confirmation evidence の再計算・schema の負例を fresh Agent が独立検証した。required observations 7/7 と task contract は一致し、current behavior closure digest=3e32c8c1c3298eeff6af189b926d77145b128aee887be2713ff3fda0aabc08fa。"
+      "observed": "2026-08-03 fresh paired live trial (20260803T100000Z-wt32-ci-decompose-r7) は overall=PASS、nudge=0、gate=0。Beads/none の各空 fixture を pre-state から C02 writer で登録し、architecture 1件と feature 4件の acyclic DAG、draft gate、sole publication candidate、binding 実測、GitHub schema-unreachable、pre/post 差分、confirmation evidence の最終再計算、schema 負例を fresh evaluator が独立検証した。required observations 7/7 と task contract は一致し、current behavior closure digest=46d9688d0bdd6fbdc088372e6ecdb8e5187de8ce9aba2148d8dc0e042eb25fb7。"
     },
     "OUT2": {
       "status": "PASS",

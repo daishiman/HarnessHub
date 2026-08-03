@@ -1,0 +1,8 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "original_goal": "Verify idempotent init: first pass creates six content roots, routing policy, and graph store; second pass reports zero planned changes; template edits survive second pass; plugin hook source resolved; config stores no absolute path or token; C11 passes with at least one node.",
+  "hash": "c4bfd5081f945c5c8a2e7a004158d0df1661c52c9acd43f10464a4ab6ff35aba",
+  "fixture_root": "/Users/dm/orca/workspaces/HarnessHub/wt-32/eval-log/dev-graph/live-trial-fixtures/20260802-wt32-init-review",
+  "required_skill_invocations": 2,
+  "required_observations": 6
+}

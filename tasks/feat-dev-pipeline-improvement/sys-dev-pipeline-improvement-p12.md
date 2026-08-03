@@ -296,5 +296,4 @@ ID が `set` / `dict` 化される前に一意であることを検査する横�
 仕様正本への実装フィードバックは `system-spec/testing-qa.md`、集約仕様は
 `specs/harness-hub-system-specification.md`、設計は
 `architecture/harness-hub-testing-qa.md`、実装・検証・残課題の対応は
-`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md`
-を正とする。
+`docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md` を既存証跡、2026-08-02 の C10/C11/C28 authority 防御は `guard-authority-c10-c11-c28-spec-reflection-receipt.md` を正とする。

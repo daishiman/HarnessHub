@@ -1,0 +1,19 @@
+{
+  "evaluator": "fresh-evaluator/C02-OUT1-positive-mixed-artifacts",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "canonical_routing": {
+      "result": "PASS",
+      "evidence": "5 artifacts physically present at canonical paths: LT-NODE-001→issues/login-session-timeout.md (artifact_kind=issue), LT-NODE-002→tasks/implement-rate-limit-public-api.md (artifact_kind=task), LT-NODE-003→specs/rest-api-v2-migration.md (artifact_kind=specification), LT-NODE-004→architecture/order-processing-backend-security.md (artifact_kind=architecture), LT-NODE-005→docs/development-environment-setup-guide.md (artifact_kind=document). Each file's frontmatter file_path matches its physical location. evidence_path: fixture/eval-log/progress.json V1 + 5 physical artifact files"
+    },
+    "consecutive_update": {
+      "result": "PASS",
+      "evidence": "Two consecutive updates confirmed: LT-NODE-001 patch (tags+related_nodes, graph_revision 5→6) and LT-NODE-004 patch (subtypes+related_nodes, graph_revision 6→7). Post-update physical files show: issues/login-session-timeout.md tags=[bug,security,session-management,authentication] and related_nodes=[LT-NODE-004]; architecture/order-processing-backend-security.md artifact_subtypes=[backend,security,infrastructure] and related_nodes=[LT-NODE-001]. Both files frontmatter artifact_kind and file_path unchanged and consistent with graph paths after update. evidence_path: fixture/eval-log/progress.json V3 + physical artifact files"
+    },
+    "feature_rejection": {
+      "result": "PASS",
+      "evidence": "Feature registration attempt with origin_kind=manual rejected with ContractError: 'feature must come from the C14 macro contract: source_lineage.origin_kind manual is not one of [generated, system-spec-harness]'. valid=false, write_count=0, exit_code=2. graph_revision held at 7, node_count held at 5, feature_nodes=0. features/ directory contains only .gitkeep — no feature file created. evidence_path: fixture/eval-log/progress.json V4"
+    }
+  }
+}

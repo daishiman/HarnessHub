@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "scope_batches": "The overlapping src/alpha.py pair is split across two batches, each batch size is at most 2, and all suggested branches and claim commands are unique.",
+    "blocked_reason": "LT-SCHED-005 is excluded with dependency_unsatisfied and blocking_depends_on=[LT-SCHED-001].",
+    "lease_handling": "The active 2099 lease suppresses LT-SCHED-004 while the stale 2020 lease is reclaimed and LT-SCHED-006 becomes ready; graph and lease digests remain unchanged.",
+    "parallel_unique": "The separate C17 verifier reports PASS for ready-set correctness, batch safety, lease authority, max parallelism, branch uniqueness, and digest invariance."
+  }
+}
