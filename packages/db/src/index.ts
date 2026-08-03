@@ -35,10 +35,14 @@ export {
 } from '../registry/tenant-data';
 export {
   type AiJobRow,
+  type BuildRow,
+  type BuildsRepository,
   type CoreRepositories,
   type CoreRepositoriesInput,
+  createBuildsRepository,
   createCoreRepositories,
   createDocsCmsRepository,
+  createFeedbackRepository,
   createHearingIntakeRepository,
   createHearingSmokeDbProbe,
   createPublishSmokeDbProbe,
@@ -46,6 +50,8 @@ export {
   type DeviceAuthorizationRow,
   type DocsCmsRepository,
   type DocumentRow,
+  type FeedbackRepository,
+  type FeedbackRow,
   type HearingIntakeRepository,
   type HearingSheetRow,
   type HearingSmokeDbProbe,

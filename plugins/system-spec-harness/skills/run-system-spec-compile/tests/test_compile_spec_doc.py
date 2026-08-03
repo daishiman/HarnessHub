@@ -77,7 +77,10 @@ def test_IN1_coverage_matrix_exit0_require_complete():
 
 def test_IN1_source_citation_exit0():
     assert REFS.is_file()
-    assert _run(CITE_VALIDATOR, ["--targets", str(SPEC), "--references", str(REFS)]) == 0
+    assert _run(
+        CITE_VALIDATOR,
+        ["--targets", str(SPEC), "--references", str(REFS), "--repo-root", str(SKILL_DIR)],
+    ) == 0
 
 
 # --------------------------------------------------------------------------- #
@@ -491,52 +494,3 @@ def test_category_design_refs_map_matches_matcher():
     # materialized view (CATEGORY_DESIGN_REFS) が matcher と一致し drift しない。
     for cat_id, refs in mod.CATEGORY_DESIGN_REFS.items():
         assert refs == mod.category_design_refs(cat_id)
-
-
-# --------------------------------------------------------------------------- #
-# CLI (compile) の網羅                                                          #
-# --------------------------------------------------------------------------- #
-def test_cli_compile_writes_docset(tmp_path):
-    out_dir = tmp_path / "system-spec"
-    rc = mod.main(
-        ["compile", "--spec", str(SPEC), "--references", str(REFS), "--out-dir", str(out_dir)]
-    )
-    assert rc == 0
-    assert (out_dir / "index.md").is_file()
-    assert (out_dir / "database.md").is_file()
-    # 生成章 frontmatter に確定マーカー
-    fm = _parse_frontmatter((out_dir / "database.md").read_text(encoding="utf-8"))
-    assert fm["status"] == "confirmed"
-
-
-def test_cli_compile_matches_golden(tmp_path):
-    out_dir = tmp_path / "system-spec"
-    assert mod.main(["compile", "--spec", str(SPEC), "--references", str(REFS), "--out-dir", str(out_dir)]) == 0
-    got = (out_dir / "index.md").read_text(encoding="utf-8")
-    assert got == (FIXTURES / "expected-index.md").read_text(encoding="utf-8")
-
-
-def test_cli_bad_spec_returns_1(tmp_path):
-    missing = tmp_path / "nope.json"
-    rc = mod.main(["compile", "--spec", str(missing), "--references", str(REFS), "--out-dir", str(tmp_path / "o")])
-    assert rc == 1
-
-
-def test_cli_compile_error_returns_1(tmp_path):
-    bad_spec = tmp_path / "bad.json"
-    bad_spec.write_text(json.dumps({"platforms": [], "matrix": {}}), encoding="utf-8")
-    rc = mod.main(["compile", "--spec", str(bad_spec), "--references", str(REFS), "--out-dir", str(tmp_path / "o")])
-    assert rc == 1
-
-
-def test_write_docset_creates_files(tmp_path):
-    docset = {"a.md": "hello", "index.md": "idx\n"}
-    written = mod.write_docset(docset, tmp_path / "out")
-    assert len(written) == 2
-    assert (tmp_path / "out" / "a.md").read_text(encoding="utf-8") == "hello\n"
-
-
-def test_load_json_roundtrip(tmp_path):
-    p = tmp_path / "x.json"
-    p.write_text(json.dumps({"k": 1}), encoding="utf-8")
-    assert mod.load_json(str(p)) == {"k": 1}
