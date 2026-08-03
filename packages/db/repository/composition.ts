@@ -22,6 +22,11 @@
 import { deploymentReferences, projects } from '../schema/core/catalog';
 import { type AuditRepo, createAuditRepo } from './audit';
 import {
+  type BuildRow as BuildRowShape,
+  type BuildsRepository as BuildsRepositoryShape,
+  createBuildsRepository as createBuildsRepositoryLeaf,
+} from './builds';
+import {
   createTargetChannelsRepo,
   type TargetChannelRow as TargetChannelRowShape,
   type TargetChannelsRepo,
@@ -37,6 +42,11 @@ import {
   type PublisherTokenRow as PublisherTokenRowShape,
   type PublisherTokensRepo,
 } from './device-flow';
+import {
+  createFeedbackRepository as createFeedbackRepositoryLeaf,
+  type FeedbackRepository as FeedbackRepositoryShape,
+  type FeedbackRow as FeedbackRowShape,
+} from './feedback-loop';
 import {
   type AiJobRow as AiJobRowShape,
   createHearingIntakeRepository as createHearingIntakeRepositoryLeaf,
@@ -89,6 +99,10 @@ export type AiJobRow = AiJobRowShape;
 export type HearingSheetRow = HearingSheetRowShape;
 export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
+export type FeedbackRow = FeedbackRowShape;
+export type FeedbackRepository = FeedbackRepositoryShape;
+export type BuildRow = BuildRowShape;
+export type BuildsRepository = BuildsRepositoryShape;
 export type PublishRequestRow = PublishRequestRowShape;
 export type ReleaseRow = ReleaseRowShape;
 export type TargetChannelRow = TargetChannelRowShape;
@@ -103,6 +117,16 @@ export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
   return createHearingIntakeRepositoryLeaf(adapter);
+}
+
+/** feat-feedback-loop も同じ理由でこの facade からだけ組み立てる。 */
+export function createFeedbackRepository(adapter: CoreAdapter): FeedbackRepository {
+  return createFeedbackRepositoryLeaf(adapter);
+}
+
+/** `builds` も同じ理由でこの facade からだけ組み立てる (ADR §7 P10 差し戻し再設計)。 */
+export function createBuildsRepository(adapter: CoreAdapter): BuildsRepository {
+  return createBuildsRepositoryLeaf(adapter);
 }
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */

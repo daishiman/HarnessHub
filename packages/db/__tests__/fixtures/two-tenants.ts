@@ -4,11 +4,13 @@
 // 新テーブル追加時にこの fixture が未追随なら tenant-isolation.test.ts が fail する (スキーマ駆動)。
 
 import { createAuditRepo } from '../../repository/audit';
+import { createBuildsRepository } from '../../repository/builds';
 import { sha256Hex } from '../../repository/bytes';
 import { createTargetChannelsRepo } from '../../repository/channels';
 import { createScopedCrud } from '../../repository/crud';
 import type { ColumnCipher } from '../../repository/crypto';
 import type { CoreAdapter } from '../../repository/db';
+import { createFeedbackRepository } from '../../repository/feedback-loop';
 import { createHearingIntakeRepository } from '../../repository/hearing-intake';
 import { createIdpConnectionsRepo } from '../../repository/idp';
 import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../../repository/misc';
@@ -249,6 +251,33 @@ async function seedTenant(
         estimate: { savedHoursPerYear: 840, savedAmountPerYear: 2_520_000 },
       }),
   });
+
+  const feedback = createFeedbackRepository(adapter);
+  const feedbackRow = await feedback.createAndEnqueue(context, {
+    workspaceId,
+    projectId,
+    type: 'improvement',
+    priority: 'medium',
+    source: 'manual',
+    body: `Fixture feedback ${slug}`,
+    createdBy: user.id,
+    buildPayloadJson: (feedbackId, code) =>
+      JSON.stringify({
+        feedback_id: feedbackId,
+        feedback_code: code,
+        type: 'improvement',
+        body: `Fixture feedback ${slug}`,
+      }),
+  });
+
+  // builds (ADR §7/§12 P10 差し戻し再設計): AiJob(feedback_response) 完了時の冪等作成と同じ
+  // repository API を fixture でも使い、feedback_id 一意の builds 行を両テナントへ用意する。
+  const builds = createBuildsRepository(adapter);
+  await builds.findOrCreateBuildForFeedback(
+    context,
+    { id: feedbackRow.id, workspaceId, type: 'improvement' },
+    'design',
+  );
 
   return {
     context,

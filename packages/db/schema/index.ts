@@ -7,19 +7,22 @@
 
 import { getTableName } from 'drizzle-orm';
 import type { SQLiteTable } from 'drizzle-orm/sqlite-core';
+import * as builds from './builds/schema';
 import * as catalog from './core/catalog';
 import * as identity from './core/identity';
 import * as publish from './core/publish';
 import * as security from './core/security';
+import * as feedbackLoop from './feedback-loop/schema';
 import * as hearingIntake from './hearing-intake/schema';
 
+// --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
+export * from './builds/schema';
 export * from './core/catalog';
 export * from './core/identity';
 export * from './core/publish';
 export * from './core/scope';
 export * from './core/security';
-
-// --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
+export * from './feedback-loop/schema';
 export * from './hearing-intake/schema';
 
 /** コアドメイン 19 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
@@ -57,6 +60,8 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.aiJobs,
       hearingIntake.displayCodeCounters,
       hearingIntake.tenantCoefficients,
+      feedbackLoop.feedbacks,
+      builds.builds,
     ].map((table) => [getTableName(table), table]),
   ),
 );
