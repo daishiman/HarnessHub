@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1189,
+  "graph_revision": 1190,
   "nodes": [
     {
       "acceptance": [
@@ -10471,12 +10471,18 @@
       "classification_confidence": 0.9,
       "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S14 実装・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続を実装する P05 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:46:03Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/architecture-decision-record.md",
+          "docs/features/feat-feedback-loop/refactoring-migration-note.md",
+          "packages/db/schema/builds/schema.ts",
+          "packages/db/repository/builds.ts",
+          "apps/hub/src/__tests__/feedback-loop/publish-connect-no-automerge.test.ts"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T07:50:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -10561,7 +10567,7 @@
       "template_version": "1.0.0",
       "title": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T07:48:04.016414Z"
     },
     {
       "acceptance": [
@@ -10932,12 +10938,15 @@
       "classification_confidence": 0.85,
       "classification_reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査記録) の充足を確認する P09 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T06:33:27Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/quality-assurance-report.md",
+          "docs/features/feat-feedback-loop/test-run-report.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T06:34:17Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11020,7 +11029,7 @@
       "template_version": "1.0.0",
       "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T06:37:59.688832Z"
     },
     {
       "acceptance": [
@@ -11049,12 +11058,15 @@
       "classification_confidence": 0.86,
       "classification_reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 8 件の充足を独立した視点で最終判定する P10 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:54:32Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/final-review-notes.md",
+          "docs/features/feat-feedback-loop/architecture-decision-record.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:00:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11131,7 +11143,7 @@
       "template_version": "1.0.0",
       "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T07:56:02.673512Z"
     },
     {
       "acceptance": [
@@ -11160,12 +11172,14 @@
       "classification_confidence": 0.84,
       "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T07:59:31Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/evidence/index.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:05:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11242,7 +11256,7 @@
       "template_version": "1.0.0",
       "title": "エビデンス収集 — 再現可能な検証証跡の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T08:00:05.674528Z"
     },
     {
       "acceptance": [
@@ -11270,12 +11284,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P11 のエビデンスを踏まえ S14 運用手順・AI キュー運用・監査/通知運用を runbook 化する P12 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-03T08:03:40Z",
+        "evidence_refs": [
+          "docs/features/feat-feedback-loop/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-03T08:10:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "aef91f0231dbd92a359c36fe52de9defa3e85b99c9ad530b2173311cb6611927",
@@ -11353,7 +11369,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-03T08:04:14.147672Z"
     },
     {
       "acceptance": [
@@ -46995,129 +47011,6 @@
     },
     {
       "acceptance": [
-        "query-param 認可案を最新 main の session-bound scope 契約で置換している",
-        "HarnessHub-dhy.13 に本番再デプロイと smoke の未完条件が残っている",
-        "Beads と dev-graph が重複 close の判断を追跡できる"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-security",
-        "arch-harness-hub-frontend"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-4lxg",
-        "linked_at": "2026-08-03T06:50:22Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
-          "confidence": 0.95
-        }
-      ],
-      "classification_confidence": 0.95,
-      "classification_reason": "本番 smoke 実測 (2026-08-03) を最新 main の正式実装と照合し、重複 issue と判定した",
-      "closed_at": "2026-08-03T07:45:55Z",
-      "completion_evidence": {
-        "completed_at": "2026-08-03T07:45:55Z",
-        "evidence_refs": [
-          "beads:HarnessHub-4lxg",
-          "main:41a79292",
-          "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
-          "docs/features/feat-dual-catalog-web/release-completion-checklist.md"
-        ],
-        "policy": "manual",
-        "reconciled_at": "2026-08-03T07:45:55Z",
-        "source": "manual",
-        "status": "done"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-03T00:00:00Z",
-      "depends_on": [],
-      "domain": "security",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "重複タスクを正しく close し、未完の本番再デプロイと smoke を HarnessHub-dhy.13 へ一元化する",
-      "graph_node_id": "issue-hub-catalog-page-missing-tenant-scope-20260803",
-      "implementation_readiness": {
-        "checked_at": "2026-08-03T07:45:55Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "critical",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "本番旧 Worker の /catalog 通常 GET が 403 missing_tenant_scope を返す観測を、latest main との統合後に再評価し、独立した query-param 修正を作らず session-bound scope 実装へ収束する",
-      "related_nodes": [
-        "issue-hub-catalog-scope-unreachable-20260802",
-        "SYS-DUAL-CATALOG-WEB-P13"
-      ],
-      "resource_scope": [
-        "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
-        "docs/features/feat-dual-catalog-web/release-completion-checklist.md",
-        "apps/hub/src/middleware/authz.ts",
-        "apps/hub/src/lib/auth/session.ts",
-        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts"
-      ],
-      "scope_in": [
-        "latest main の session-bound scope 実装と 2026-08-03 本番観測の照合",
-        "重複する query-param 認可案の不採用判断",
-        "HarnessHub-dhy.13 への本番再測定責務の集約"
-      ],
-      "scope_out": [
-        "URL query を認可入力として信頼する実装",
-        "本番 Worker の再デプロイと authenticated smoke (HarnessHub-dhy.13)",
-        "CWV計測経路の整備 (HarnessHub-9cgb が所管)"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-03T07:45:55Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "closed",
-      "tags": [
-        "bug",
-        "hub",
-        "catalog",
-        "auth-tenancy",
-        "smoke-test"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "[bug] catalog一覧(/catalog)が一般ユーザーの通常ナビゲーションで missing_tenant_scope (403) を返し到達不能",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-03T07:45:55Z"
-    },
-    {
-      "acceptance": [
         "inline path と改行 segment の直接書込みを C10 が拒否する",
         "script-file drift と初回 invalid state を PostToolUse が fail-closed に検出する",
         "C02・C11・監査が同じ exact-4-key envelope を使う",
@@ -47352,6 +47245,129 @@
       "title": "live-trial: repository-wide 6 skill の verdict 不在を解消する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-03T10:16:37.658382Z"
+    },
+    {
+      "acceptance": [
+        "query-param 認可案を最新 main の session-bound scope 契約で置換している",
+        "HarnessHub-dhy.13 に本番再デプロイと smoke の未完条件が残っている",
+        "Beads と dev-graph が重複 close の判断を追跡できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-security",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-4lxg",
+        "linked_at": "2026-08-03T06:50:22Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "本番 smoke 実測 (2026-08-03) を最新 main の正式実装と照合し、重複 issue と判定した",
+      "closed_at": "2026-08-03T07:45:55Z",
+      "completion_evidence": {
+        "completed_at": "2026-08-03T07:45:55Z",
+        "evidence_refs": [
+          "beads:HarnessHub-4lxg",
+          "main:41a79292",
+          "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
+          "docs/features/feat-dual-catalog-web/release-completion-checklist.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-03T07:45:55Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T00:00:00Z",
+      "depends_on": [],
+      "domain": "security",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "重複タスクを正しく close し、未完の本番再デプロイと smoke を HarnessHub-dhy.13 へ一元化する",
+      "graph_node_id": "issue-hub-catalog-page-missing-tenant-scope-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T07:45:55Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本番旧 Worker の /catalog 通常 GET が 403 missing_tenant_scope を返す観測を、latest main との統合後に再評価し、独立した query-param 修正を作らず session-bound scope 実装へ収束する",
+      "related_nodes": [
+        "issue-hub-catalog-scope-unreachable-20260802",
+        "SYS-DUAL-CATALOG-WEB-P13"
+      ],
+      "resource_scope": [
+        "issues/hub-catalog-page-missing-tenant-scope-20260803.md",
+        "docs/features/feat-dual-catalog-web/release-completion-checklist.md",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts"
+      ],
+      "scope_in": [
+        "latest main の session-bound scope 実装と 2026-08-03 本番観測の照合",
+        "重複する query-param 認可案の不採用判断",
+        "HarnessHub-dhy.13 への本番再測定責務の集約"
+      ],
+      "scope_out": [
+        "URL query を認可入力として信頼する実装",
+        "本番 Worker の再デプロイと authenticated smoke (HarnessHub-dhy.13)",
+        "CWV計測経路の整備 (HarnessHub-9cgb が所管)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T07:45:55Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "bug",
+        "hub",
+        "catalog",
+        "auth-tenancy",
+        "smoke-test"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "[bug] catalog一覧(/catalog)が一般ユーザーの通常ナビゲーションで missing_tenant_scope (403) を返し到達不能",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T07:45:55Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
