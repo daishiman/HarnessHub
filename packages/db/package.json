@@ -34,6 +34,7 @@
     "check:tenant-isolation-coverage": "tsx scripts/check-tenant-isolation-coverage.ts",
     "check:connection-isolation": "tsx scripts/check-connection-layer-isolation.ts",
     "export:control-plane": "tsx scripts/export-control-plane.ts",
+    "extract:tenant-data-tombstones": "tsx scripts/extract-tenant-data-tombstones.ts",
     "restore:control-plane": "tsx scripts/restore-control-plane.ts",
     "migrate:deploy": "tsx scripts/migrate-deploy.ts",
     "smoke:production": "tsx scripts/smoke-production.ts"

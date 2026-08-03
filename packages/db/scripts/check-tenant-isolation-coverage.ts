@@ -67,6 +67,9 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   display_code_counters: 'createHearingIntakeRepository',
   tenant_coefficients: 'tenantCoefficients',
   documents: 'createDocsCmsRepository',
+  encryption_keys: 'cipher.ensureActiveDek',
+  tenant_data_objects: 'tenantDataObjects',
+  tenant_data_tombstones: 'tenantDataTombstones',
 };
 const uncovered = scoped.filter((name) => {
   const symbol = SYMBOL_BY_TABLE[name];

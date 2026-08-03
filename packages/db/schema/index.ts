@@ -13,6 +13,8 @@ import * as publish from './core/publish';
 import * as security from './core/security';
 import * as docsCms from './docs-cms/schema';
 import * as hearingIntake from './hearing-intake/schema';
+import * as tenantData from './tenant-data/schema';
+import * as tenantDataTombstones from './tenant-data/tombstones';
 
 export * from './core/catalog';
 export * from './core/identity';
@@ -23,8 +25,10 @@ export * from './core/security';
 // --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
 export * from './docs-cms/schema';
 export * from './hearing-intake/schema';
+export * from './tenant-data/schema';
+export * from './tenant-data/tombstones';
 
-/** コアドメイン 19 テーブルの一覧 (export・分離テスト・網羅チェックが共用する単一ソース)。 */
+/** コアドメイン 19 テーブルの一覧 (分離テスト・網羅チェックが共用する単一ソース)。 */
 export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
   Object.fromEntries(
     [
@@ -59,6 +63,8 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.aiJobs,
       hearingIntake.displayCodeCounters,
       hearingIntake.tenantCoefficients,
+      tenantData.tenantDataObjects,
+      tenantDataTombstones.tenantDataTombstones,
       docsCms.documents,
     ].map((table) => [getTableName(table), table]),
   ),
