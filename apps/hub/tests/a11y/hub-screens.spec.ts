@@ -27,7 +27,9 @@ function formatViolations(violations: readonly axe.Result[]): string {
 
 describe('apps/hub 画面結合の a11y', () => {
   it('トップ画面 (layout + page) に axe 違反が無い', async () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement(HomePage)));
+    // HomePage は async server component (cookies() で session を読む) なので、
+    // 関数を渡すのではなく await した ReactNode を渡す (signin/page.tsx のテストと同じ理由)
+    const html = renderToStaticMarkup(createElement(RootLayout, null, await HomePage()));
     mountScreen(html);
 
     const results = await axe.run(document);
@@ -35,8 +37,8 @@ describe('apps/hub 画面結合の a11y', () => {
     expect(results.violations).toHaveLength(0);
   });
 
-  it('検査対象の DOM が実際に描画されている (空ページを緑にしない)', () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement(HomePage)));
+  it('検査対象の DOM が実際に描画されている (空ページを緑にしない)', async () => {
+    const html = renderToStaticMarkup(createElement(RootLayout, null, await HomePage()));
     mountScreen(html);
 
     // 「何も無いページなら違反 0 件」で通ってしまう Goodhart 化を防ぐ
