@@ -1,23 +1,34 @@
 /**
- * サインイン成功後の遷移先解決。(spec: harness-hub-post-signin-workspace-scope-addendum §B)
- * `/` は非業務のステータス画面のため、既定着地は業務画面 (`/sheets`) に固定する。
+ * サインイン後の着地先解決。既定着地はこのファイルが単一定数として持つ (画面ごとに散らさない)。
+ *
+ * 戻り先の検証は文字列の前方一致に頼らない。`URL` パーサーへ固定 origin を base として
+ * 渡し、結果の origin が変わっていないかで判定する。`//evil.com` (protocol-relative) や
+ * バックスラッシュを使ったホスト解釈トリックは、前方一致チェックだけでは見逃す場合があるため。
  */
 
-export const DEFAULT_LANDING_PATH = '/sheets';
+export const DEFAULT_POST_SIGNIN_LANDING = '/sheets';
 
-/**
- * 相対 path だけを許可する。絶対URL・スキーム付き・protocol-relative (`//`)・
- * ブラウザが `/\` を `//` と同一視する正規化トリックは外部遷移につながるため弾く。
- */
-export function isSafeRelativePath(value: string): boolean {
-  if (!value.startsWith('/')) return false;
-  if (value.startsWith('//')) return false;
-  if (value.startsWith('/\\')) return false;
-  return true;
+/** 判定用の内部 base origin。実在ホストと衝突しない予約済みドメインを使う (RFC 2606)。 */
+const RESOLUTION_BASE_ORIGIN = 'http://post-signin-landing.invalid';
+
+export function resolvePostSigninLanding(returnTo: string | null | undefined): string {
+  if (typeof returnTo !== 'string' || returnTo.length === 0) {
+    return DEFAULT_POST_SIGNIN_LANDING;
+  }
+  if (!isSameOriginRelativePath(returnTo)) {
+    return DEFAULT_POST_SIGNIN_LANDING;
+  }
+  return returnTo;
 }
 
-/** 戻り先候補が安全な相対 path でなければ既定着地へ落とす。 */
-export function resolvePostSigninLanding(returnTo: string | null | undefined): string {
-  if (typeof returnTo === 'string' && isSafeRelativePath(returnTo)) return returnTo;
-  return DEFAULT_LANDING_PATH;
+function isSameOriginRelativePath(value: string): boolean {
+  if (!value.startsWith('/')) return false;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(value, RESOLUTION_BASE_ORIGIN);
+  } catch {
+    return false;
+  }
+  return parsed.origin === RESOLUTION_BASE_ORIGIN;
 }

@@ -1,39 +1,44 @@
-// spec: harness-hub-post-signin-workspace-scope-addendum §B (AC1/AC2)
+/**
+ * TID-LAND-01〜07: サインイン後の着地先解決 (`resolvePostSigninLanding`) の入力分類。
+ * 05〜07 は design-review.md 指摘1 (open redirect のランタイム挙動検査) に対応する境界値。
+ *
+ * feat-post-signin-scope-routing P06 (docs/features/feat-post-signin-scope-routing/test-design.md)
+ */
 import { describe, expect, it } from 'vitest';
 
-import {
-  DEFAULT_LANDING_PATH,
-  isSafeRelativePath,
-  resolvePostSigninLanding,
-} from '../../src/lib/routing/post-signin-landing.js';
+import { DEFAULT_POST_SIGNIN_LANDING, resolvePostSigninLanding } from '../../src/lib/routing/post-signin-landing.js';
 
-describe('resolvePostSigninLanding', () => {
-  it('AC1: 遷移元が無ければ既定着地 (/sheets) に落ちる', () => {
-    expect(resolvePostSigninLanding(null)).toBe(DEFAULT_LANDING_PATH);
-    expect(resolvePostSigninLanding(undefined)).toBe(DEFAULT_LANDING_PATH);
-    expect(resolvePostSigninLanding('')).toBe(DEFAULT_LANDING_PATH);
+describe('TID-LAND: 着地先解決の入力分類', () => {
+  it('TID-LAND-01: 遷移元が無い (null / undefined) -> 既定着地', () => {
+    expect(resolvePostSigninLanding(null)).toBe(DEFAULT_POST_SIGNIN_LANDING);
+    expect(resolvePostSigninLanding(undefined)).toBe(DEFAULT_POST_SIGNIN_LANDING);
   });
 
-  it('安全な相対 path はそのまま採用する', () => {
-    expect(resolvePostSigninLanding('/catalog')).toBe('/catalog');
+  it('TID-LAND-02: 同一 origin の相対 path -> そのまま採用', () => {
     expect(resolvePostSigninLanding('/sheets/new')).toBe('/sheets/new');
   });
 
-  it('AC2: 絶対URL・スキーム付きは既定着地へ落ちる (外部遷移を許さない)', () => {
-    expect(resolvePostSigninLanding('https://evil.example.com/phish')).toBe(DEFAULT_LANDING_PATH);
-    expect(resolvePostSigninLanding('javascript:alert(1)')).toBe(DEFAULT_LANDING_PATH);
-    expect(resolvePostSigninLanding('evil.example.com')).toBe(DEFAULT_LANDING_PATH);
+  it('TID-LAND-03: 絶対 URL -> 既定着地へフォールバック', () => {
+    expect(resolvePostSigninLanding('https://evil.com/phish')).toBe(DEFAULT_POST_SIGNIN_LANDING);
   });
 
-  it('AC2: protocol-relative (//) は既定着地へ落ちる', () => {
-    expect(resolvePostSigninLanding('//evil.example.com')).toBe(DEFAULT_LANDING_PATH);
+  it('TID-LAND-04: スキーム付き -> 既定着地へフォールバック', () => {
+    expect(resolvePostSigninLanding('javascript:alert(1)')).toBe(DEFAULT_POST_SIGNIN_LANDING);
   });
 
-  it('AC2: ブラウザが //  と同一視する /\\ トリックも既定着地へ落ちる', () => {
-    expect(resolvePostSigninLanding('/\\evil.example.com')).toBe(DEFAULT_LANDING_PATH);
+  it('TID-LAND-05: protocol-relative (先頭2連スラッシュ) -> 既定着地へフォールバック', () => {
+    expect(resolvePostSigninLanding('//evil.com')).toBe(DEFAULT_POST_SIGNIN_LANDING);
   });
 
-  it('クエリ文字列内のコロンは弾かない (誤検知の回避)', () => {
-    expect(isSafeRelativePath('/sheets?time=12:30')).toBe(true);
+  it('TID-LAND-06: バックスラッシュによるホスト解釈トリック -> 既定着地へフォールバック', () => {
+    expect(resolvePostSigninLanding('/\\evil.com')).toBe(DEFAULT_POST_SIGNIN_LANDING);
+  });
+
+  it('TID-LAND-07: 資格情報付き URL -> 既定着地へフォールバック', () => {
+    expect(resolvePostSigninLanding('http://user@evil.com')).toBe(DEFAULT_POST_SIGNIN_LANDING);
+  });
+
+  it('既定着地の定数値は /sheets (画面ごとに散らさない単一定数)', () => {
+    expect(DEFAULT_POST_SIGNIN_LANDING).toBe('/sheets');
   });
 });

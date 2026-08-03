@@ -1,8 +1,8 @@
 // 認可判定の単一層。deny-by-default で Tenant/Workspace スコープを強制する (shared-layers §2 / qa-006 / D4)
 // この層以外に認可判定を書かないこと。テナント固有 policy は feat-auth-tenancy が本層へ注入する。
-import { resolveActiveWorkspace } from '../lib/auth/session.js';
+import { resolveActiveWorkspaceId } from '../lib/auth/session.js';
 import type { Principal } from '../shared/auth/index.js';
-import { type RequestedScope, resolveRequestedScope, scopeFromPath } from './scope.js';
+import { type RequestedScope, resolveRequestedScope } from './scope.js';
 
 export type DenyReason =
   | 'unauthenticated'
@@ -65,15 +65,6 @@ export function isPublicPath(pathname: string): boolean {
  * 認可判定の本体。
  * 判定順は「public 判定 → 認証 → スコープ一意性 → tenant 一致 → workspace 所属」。
  * どの分岐にも当たらない要求は許可側へ落ちない構造にしてある。
- *
- * スコープの申告経路は 3 系統ある: (a) path (`/t/{id}/w/{id}`)、(b) `x-harness-*` header、
- * (c) 認証済み session から導く暗黙スコープ (通常のブラウザ操作向け)。
- * path は URL 上に明示された最も強い申告なので、path にある field は他と食い違っても
- * (page/header 間の食い違いは既存どおり ambiguous) session の意見を聞かず path 優先で確定する。
- * path に無い field だけ、header と session を同列の申告として突き合わせる
- * (両方あって食い違えば ambiguous、session だけなら補完として採用)。
- * 通常のブラウザ遷移は path/header のどちらにもスコープを含まないため、(c) が無いと
- * 業務画面が missing_tenant_scope で弾かれてしまう。
  */
 export function authorize(input: AuthzInput): AuthzDecision {
   if (isPublicPath(input.pathname)) {
@@ -84,79 +75,69 @@ export function authorize(input: AuthzInput): AuthzDecision {
     return { allowed: false, reason: 'unauthenticated', status: 401 };
   }
 
-  const resolution = resolveRequestedScope(input.pathname, input.headers);
-  if (!resolution.ok) {
+  const explicitResolution = resolveRequestedScope(input.pathname, input.headers);
+  if (!explicitResolution.ok) {
     return { allowed: false, reason: 'ambiguous_scope', status: 403 };
   }
 
-  const pathScope = scopeFromPath(input.pathname);
-  const sessionScope = resolveSessionScope(input);
-  const tenantId = mergeWithSessionScope(pathScope.tenantId, resolution.scope.tenantId, sessionScope.tenantId);
-  const workspaceId = mergeWithSessionScope(
-    pathScope.workspaceId,
-    resolution.scope.workspaceId,
-    sessionScope.workspaceId,
-  );
-  if (tenantId === SCOPE_CONFLICT || workspaceId === SCOPE_CONFLICT) {
+  // scope 入力の第2系統: session の active tenant/workspace (通常のブラウザ遷移向け)。
+  // 明示ヘッダー系統 (API / 機械クライアント向け) とはここで初めて合流させ、
+  // 判定順「public判定→認証→スコープ一意性→tenant一致→workspace所属」自体は変更しない。
+  const sessionScope = resolveSessionScope(input.principal, input.headers.get('cookie') ?? null);
+  const merged = mergeScopes(explicitResolution.scope, sessionScope);
+  if (merged === 'ambiguous_scope') {
     return { allowed: false, reason: 'ambiguous_scope', status: 403 };
   }
+  const scope = merged;
 
   // 非 public な要求は必ずテナントスコープを申告させる。
   // 申告なしを「自テナント扱い」にすると、スコープ漏れの API が黙って通ってしまう。
-  if (tenantId === null) {
+  if (scope.tenantId === null) {
     return { allowed: false, reason: 'missing_tenant_scope', status: 403 };
   }
 
-  if (tenantId !== input.principal.tenantId) {
+  if (scope.tenantId !== input.principal.tenantId) {
     return { allowed: false, reason: 'tenant_mismatch', status: 403 };
   }
 
-  if (workspaceId !== null && !input.principal.workspaceIds.includes(workspaceId)) {
+  if (scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
     return { allowed: false, reason: 'workspace_not_member', status: 403 };
   }
 
-  return { allowed: true, scope: { tenantId, workspaceId } };
+  return { allowed: true, scope };
 }
 
-/** `/api/` 配下は機械クライアント向けの明示申告必須 API とみなし、session 補完の対象にしない。 */
-const API_PATH_PREFIX = '/api/';
-
 /**
- * session (cookie) 由来の暗黙スコープ。以下はいずれも「機械クライアントの明示申告必須」を
- * 保つため何も補わない: `cookie` header が無い要求 (session を提示していない)、
- * `authorization` header を伴う要求 (Bearer/API クライアント)、`/api/` 配下への要求
- * (画面ではなく API 呼び出しなので、cookie を持っていても暗黙適用しない)。
+ * 明示ヘッダー系統と session 系統を合流させる。
+ *
+ * tenantId は比較しない: session 側の tenantId は常に principal 自身の tenantId (`resolveSessionScope`)
+ * であり、explicit との不一致は独立した二重申告ではなく、この関数を呼んだ後段の
+ * `scope.tenantId !== principal.tenantId` (tenant_mismatch) が既に正しく検出する。ここで先取りして
+ * ambiguous_scope に倒すと、越境要求が本来の `tenant_mismatch` より粗い理由へすり替わる。
+ * 独立した二重申告として意味を持つのは workspaceId (explicit ヘッダー由来 vs session の active workspace) だけ。
  */
-function resolveSessionScope(input: AuthzInput): RequestedScope {
-  if (
-    input.principal === null ||
-    input.headers.has('authorization') ||
-    !input.headers.has('cookie') ||
-    input.pathname.startsWith(API_PATH_PREFIX)
-  ) {
-    return { tenantId: null, workspaceId: null };
+function mergeScopes(explicit: RequestedScope, session: RequestedScope | null): RequestedScope | 'ambiguous_scope' {
+  const hasExplicit = explicit.tenantId !== null || explicit.workspaceId !== null;
+  if (!hasExplicit) {
+    return session ?? explicit;
   }
-  return {
-    tenantId: input.principal.tenantId,
-    workspaceId: resolveActiveWorkspace(input.headers.get('cookie') ?? null, input.principal.workspaceIds),
-  };
+  if (session === null) return explicit;
+  if (explicit.workspaceId !== null && session.workspaceId !== null && explicit.workspaceId !== session.workspaceId) {
+    return 'ambiguous_scope';
+  }
+  return { tenantId: explicit.tenantId ?? session.tenantId, workspaceId: explicit.workspaceId ?? session.workspaceId };
 }
 
-const SCOPE_CONFLICT = Symbol('scope_conflict');
-
 /**
- * path 由来の値があれば (path/header 間は `resolveRequestedScope` 側で既に整合済みなので) それを
- * そのまま採用し、session とは突き合わせない。path に無い field だけ、header 由来の値
- * (`merged` はここでは header 由来と同義) と session を同列に突き合わせる。
+ * session (ブラウザ通常遷移) 由来の要求スコープを解決する。
+ * 明示ヘッダー系統とは独立した第2の入力系統だが、合流と認可判断はこのモジュールにだけ置く。
+ * 所属を外れた active workspace は束縛しない (fail-closed)。
  */
-function mergeWithSessionScope(
-  pathValue: string | null,
-  merged: string | null,
-  session: string | null,
-): string | null | typeof SCOPE_CONFLICT {
-  if (pathValue !== null) return merged;
-  if (merged !== null && session !== null && merged !== session) return SCOPE_CONFLICT;
-  return merged ?? session;
+function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
+  const workspaceId = resolveActiveWorkspaceId(cookieHeader, principal.workspaceIds);
+  if (workspaceId === null) return null;
+
+  return { tenantId: principal.tenantId, workspaceId };
 }
 
 function normalize(pathname: string): string {

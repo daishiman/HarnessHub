@@ -94,7 +94,8 @@ describe('サインイン画面の接続解決', () => {
     expect(html).toContain('method="post"');
     expect(html).toContain('name="csrfToken"');
     expect(html).toContain('name="callbackUrl"');
-    // 遷移元 (returnTo) が無い場合は既定着地 (/sheets) に落ちる。/ は非業務のステータス画面のため留まらない
+    // SSR 初期値は既定着地 (`/sheets`)。旧仕様の固定値 "/" は業務画面へ届かない不具合だった
+    // (feat-post-signin-scope-routing)。client mount 後は returnTo に応じて useEffect が更新する
     expect(html).toContain('value="/sheets"');
   });
 

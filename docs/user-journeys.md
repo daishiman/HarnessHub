@@ -26,7 +26,8 @@ sources: [system-spec/00-requirements-definition.md]
 
 | # | 利用者がすること | 触れる surface | 裏で動く仕組み | 根拠 |
 |---|---|---|---|---|
-| 1 | Hub Web へアクセス → 会社の SSO でログイン → 元の安全な業務画面、なければ `/sheets` へ進む | S07 サインイン → 顧客 IdP | Auth.js + テナント別 OIDC。戻り先は同一 origin の相対 path のみ。通常のブラウザ遷移は検証済み session scope を認可層へ渡す | qa-005, qa-135, qa-137 |
+| 1 | Hub Web へアクセス → 会社の SSO でログイン | S07 サインイン → 顧客 IdP | Auth.js + テナント別 OIDC。Hub 独自アカウントなし | qa-005 |
+| 1.5 | サインイン完了後、自動的に業務画面へ着地する | S07 → S01 一覧 (既定 `/sheets`) | 遷移元 path があればそこへ、無ければ既定着地。同一 origin の相対 path のみ許可し、不正な戻り先は既定着地へフォールバック (open redirect 防止)。[運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) 参照 | qa-135, qa-137, feat-post-signin-scope-routing |
 | 2 | プラグイン Hub で業務ツールを探す | S01 一覧 | Tenant/Workspace スコープ強制 (見えるのは自 Workspace のみ)。複数 Project/target を検索・絞込 | I4, D4 |
 | 3 | 詳細を見る | S02 詳細 | CatalogEntry + Release 情報 | I4 |
 | 4a | **Claude 契約あり**: S01/S02 の「追加/ダウンロード」→ 提示された導入手順を実行 | install/download modal → 自分の Claude Code | 安定版をサーバ解決し、URL 型 marketplace (native source) または Bootstrap Installer を提示。GitHub アカウント不要。raw ZIP は Stage 0 採用時だけ短命 URL | I6 |

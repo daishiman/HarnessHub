@@ -27,8 +27,8 @@ function formatViolations(violations: readonly axe.Result[]): string {
 
 describe('apps/hub 画面結合の a11y', () => {
   it('トップ画面 (layout + page) に axe 違反が無い', async () => {
-    // HomePage は session 解決のため async Server Component になった。
-    // renderToStaticMarkup は async component を待たないため、先に解決してから渡す
+    // HomePage は async server component (cookies() で session を読む) なので、
+    // 関数を渡すのではなく await した ReactNode を渡す (signin/page.tsx のテストと同じ理由)
     const html = renderToStaticMarkup(createElement(RootLayout, null, await HomePage()));
     mountScreen(html);
 

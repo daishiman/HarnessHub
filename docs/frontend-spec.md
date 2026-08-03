@@ -294,7 +294,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ユーザー確定の構築優先順位 (P0 認証基盤 → P1 ヒアリング → P2 プラグイン Hub + パイプライン → P3 改善ループ・ドキュメント → P4 ユーザー・効果測定 → P5 ダッシュボード・統制) を画面実装へ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。本節の P0〜P5 は構築 phase 番号であり、§6.3 のレスポンシブ変換パターン P1〜P10 とは無関係。
 
 - **画面の実装順**: P0 = 共通シェル (§3.0) + S07/S08 → P1 = S10/S11/S12 → P2 = S01 (公開ウィザード・一覧・install/download) → S02/S03 (管理・公開状態) → S13 (ヒアリング/公開との接続) → P3 = S14/S15 → P4 = S16/S17/S18 → P5 = S09 + S05/S06。
-- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。
+- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とする。
 - **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
 - **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
 - **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。

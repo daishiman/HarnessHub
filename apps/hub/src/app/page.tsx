@@ -1,18 +1,28 @@
 // P0 シェルのトップ画面。dashboard 等の低優先 UI は作らず、基盤が起動していることだけを示す
 // 表示部品は必ず @harness-hub/ui から import する (apps/hub 内で design system を再実装しない)
 import { Alert } from '@harness-hub/ui';
-import { headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { authRuntime } from '../lib/authz/index.js';
-import { DEFAULT_LANDING_PATH } from '../lib/routing/post-signin-landing.js';
-import { resolveDeviceApprovalSession } from './device/device-approval-session.js';
 
+import { SESSION_COOKIE_NAME, systemAuthClock, verifySessionToken } from '../lib/auth/index.js';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../lib/routing/post-signin-landing.js';
+
+/**
+ * 未認証時は稼働確認表示を維持し、認証済み session がある場合は既定着地へ redirect する。
+ * ここでの検証は署名と claims の形・期限だけを見る (edge の authorize() と同じ制約)。
+ * 緊急失効の判定は route 側が担い、ここでは行わない。
+ */
 export default async function HomePage() {
-  // `/` は非業務のステータス画面 (public path)。認証済み session はここに留めず既定業務画面へ送る。
-  // spec: harness-hub-post-signin-workspace-scope-addendum §C (「/ を開くと既定着地へ redirect」)
-  const session = await resolveRootSession();
-  if (session.status === 'authenticated') {
-    redirect(DEFAULT_LANDING_PATH);
+  const sessionSecret = process.env.AUTH_SESSION_SECRET;
+  if (sessionSecret !== undefined && sessionSecret.length > 0) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null;
+    if (token !== null) {
+      const verification = await verifySessionToken(token, sessionSecret, systemAuthClock.nowSeconds());
+      if (verification.ok) {
+        redirect(DEFAULT_POST_SIGNIN_LANDING);
+      }
+    }
   }
 
   return (
@@ -26,20 +36,4 @@ export default async function HomePage() {
       />
     </section>
   );
-}
-
-/** device 承認画面と同じ session 解決を再利用する。認証設定が未結線でも `/` 自体は表示を続ける。 */
-async function resolveRootSession() {
-  try {
-    const runtime = authRuntime();
-    const requestHeaders = await headers();
-    return await resolveDeviceApprovalSession(requestHeaders.get('cookie'), {
-      sessionSecret: runtime.authz.sessionSecret,
-      nowSeconds: runtime.ports.clock.nowSeconds(),
-      isRevoked: (tenantId, userId, issuedAtSeconds) =>
-        runtime.authz.revocation.isRevoked(tenantId, userId, issuedAtSeconds),
-    });
-  } catch {
-    return { status: 'unavailable' } as const;
-  }
 }

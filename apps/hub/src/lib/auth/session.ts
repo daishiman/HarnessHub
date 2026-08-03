@@ -79,22 +79,24 @@ export function readCookie(cookieHeader: string | null, name: string): string | 
 }
 
 /**
- * 「今 session が束縛している workspace」を運ぶ cookie 名。
- * JWT session claims (`SessionClaims`) には含めない。claims を跨いだ再発行なしに
- * workspace 切替を即時反映させたいのと、claims schema の変更を避けるため。
+ * session への active workspace 束縛に使う cookie 名。
+ * 値は「利用者がどの workspace を選んだか」という意思表示に過ぎず、認可上の正当性は
+ * 毎回 `memberWorkspaceIds` (session 検証済みの所属一覧) に対して再検証するため、署名は不要。
  */
 export const ACTIVE_WORKSPACE_COOKIE_NAME = 'hh_active_workspace';
 
 /**
- * cookie の workspace id は自己申告 (改ざん可能) なので、そのまま信用せず
- * 呼び出し時点の principal の所属 (`memberWorkspaceIds`) に含まれる場合だけ採用する。
- * 所属を外れた workspace は無条件で null (未選択) に落とす。
+ * cookie 由来の active workspace を、principal の所属一覧で毎回再検証する (fail-closed)。
+ * 所属を外れた値は握りつぶし、直前の cookie 値へフォールバックしない。
+ * cookie が無い場合は、所属が単一 workspace のときだけ選択の余地がないため自動的に束縛する。
  */
-export function resolveActiveWorkspace(
+export function resolveActiveWorkspaceId(
   cookieHeader: string | null,
   memberWorkspaceIds: readonly string[],
 ): string | null {
-  const candidate = readCookie(cookieHeader, ACTIVE_WORKSPACE_COOKIE_NAME);
-  if (candidate === null) return null;
-  return memberWorkspaceIds.includes(candidate) ? candidate : null;
+  const requested = readCookie(cookieHeader, ACTIVE_WORKSPACE_COOKIE_NAME);
+  if (requested !== null) {
+    return memberWorkspaceIds.includes(requested) ? requested : null;
+  }
+  return memberWorkspaceIds.length === 1 ? (memberWorkspaceIds[0] ?? null) : null;
 }
