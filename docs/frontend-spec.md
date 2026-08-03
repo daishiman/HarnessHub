@@ -297,4 +297,4 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とする。
 - **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
 - **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
-- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。
+- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。
