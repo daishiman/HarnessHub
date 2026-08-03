@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-spec-reflection
+task: SYS-POST-SIGNIN-SCOPE-P13
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/evidence-record.md
+---
+
 # 仕様反映受領書
 
 対象: `HarnessHub-3sjj` / `feat-post-signin-scope-routing`。記録日: 2026-08-03。

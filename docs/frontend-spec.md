@@ -297,11 +297,4 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。
 - **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
 - **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
-- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。
-
-### 10.1 サインイン後の scope 解決（2026-08-03 実装反映）
-
-- テナント別サインインフォームは `returnTo` を `resolvePostSigninLanding()` で検証し、未指定または安全でない値は単一の既定値 `/sheets` に正規化する。絶対 URL、scheme 付き URL、`//`、`/\\` は受理しない。
-- `/` は未認証時の稼働状況表示を保つ。署名・失効を確認済みの session があるときだけ `/sheets` に redirect する。
-- ブラウザの業務画面では、検証済み principal の tenant と、所属を再確認済みの `hh_active_workspace` cookie だけを `authorize()` に補完する。API、Bearer 認証、cookie 不在の要求は従来どおり明示 scope 必須である。
-- Workspace 選択・切替の画面は本 feature の scope 外であり、`feat-workspace-switch-ux` が所有する。実装済みなのは cookie 値の fail-closed な採用までであり、未実装 UI を完了扱いにしない。
+- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。

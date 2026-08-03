@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality
+task: SYS-POST-SIGNIN-SCOPE-P09
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/refactoring-record.md
+---
+
 # P09 品質保証記録
 
 対象: `HarnessHub-3sjj.9`。2026-08-03 に安全境界を一時変異させ、対応テストが赤へ反転することを確認した後、元の実装へ復元した。

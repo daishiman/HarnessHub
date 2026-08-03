@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-POST-SIGNIN-SCOPE-P02
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/requirements-baseline.md
+---
+
 # P02 アーキテクチャ決定
 
 対象: `HarnessHub-3sjj.2`。

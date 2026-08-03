@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality
+task: SYS-POST-SIGNIN-SCOPE-P07
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/test-run-record.md
+---
+
 # P07 受入判定記録
 
 対象: `HarnessHub-3sjj.7`。ローカル受入は **PASS**、本番到達実測は P13 に残る。

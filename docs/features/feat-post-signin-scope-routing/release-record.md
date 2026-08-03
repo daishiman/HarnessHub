@@ -1,3 +1,12 @@
+---
+status: active
+layer: feature-operations
+task: SYS-POST-SIGNIN-SCOPE-P13
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md
+---
+
 # P13 リリース記録
 
 対象: `HarnessHub-3sjj.13`。状態: **local review complete / production verification pending**。

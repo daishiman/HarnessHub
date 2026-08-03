@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-POST-SIGNIN-SCOPE-P04
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/design-review.md
+---
+
 # P04 テスト設計
 
 対象: `HarnessHub-3sjj.4`。テストは実装と同じ契約を直接検査する。

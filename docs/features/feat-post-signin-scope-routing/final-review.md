@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality
+task: SYS-POST-SIGNIN-SCOPE-P10
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/quality-assurance-record.md
+---
+
 # P10 最終レビュー
 
 対象: `HarnessHub-3sjj.10`。結論は **ローカル変更を Draft PR に載せてよい**。

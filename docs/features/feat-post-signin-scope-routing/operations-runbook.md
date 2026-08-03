@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-operations
+task: SYS-POST-SIGNIN-SCOPE-P12
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/evidence-record.md
+---
+
 # P12 運用・一次切り分け
 
 対象: `HarnessHub-3sjj.12`。業務画面に入れない場合は、利用者の cookie や token を共有・記録せずに切り分ける。

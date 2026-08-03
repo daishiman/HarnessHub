@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality
+task: SYS-POST-SIGNIN-SCOPE-P08
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/acceptance-record.md
+---
+
 # P08 リファクタリング記録
 
 対象: `HarnessHub-3sjj.8`。

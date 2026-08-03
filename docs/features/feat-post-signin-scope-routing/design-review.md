@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-design
+task: SYS-POST-SIGNIN-SCOPE-P03
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/architecture-decision.md
+---
+
 # P03 設計レビュー
 
 対象: `HarnessHub-3sjj.3`。結論は **実装可**。

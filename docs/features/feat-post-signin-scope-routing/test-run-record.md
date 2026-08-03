@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality
+task: SYS-POST-SIGNIN-SCOPE-P06
+parent_feature: feat-post-signin-scope-routing
+feature_package_id: feature-package/feat-post-signin-scope-routing
+source: docs/features/feat-post-signin-scope-routing/test-design.md
+---
+
 # P06 テスト実行記録
 
 対象: `HarnessHub-3sjj.6`。実行日: 2026-08-03。
