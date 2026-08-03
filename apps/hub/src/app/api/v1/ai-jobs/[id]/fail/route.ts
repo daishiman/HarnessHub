@@ -1,8 +1,9 @@
 import { createRepositoryContext } from '@harness-hub/db';
-import { failSheetGenerationJobRequestSchema, problemDetails } from '@harness-hub/schemas';
+import { problemDetails } from '@harness-hub/schemas';
 
-import { parseJsonRequest, problemResponse } from '../../../../../../features/hearing-intake/http.js';
+import { problemResponse } from '../../../../../../features/hearing-intake/http.js';
 import { hearingIntakeRuntime } from '../../../../../../features/hearing-intake/runtime.js';
+import { AI_QUEUE_ADAPTERS } from '../../../../../../lib/ai-queue/registry.js';
 import { authRuntime, requestScopedResource, withAuthz } from '../../../../../../lib/authz/index.js';
 
 interface JobParams {
@@ -29,13 +30,29 @@ export const POST = withAuthz<JobParams>(
     },
   },
   async (request, authz, params) => {
-    const parsed = await parseJsonRequest(request, failSheetGenerationJobRequestSchema);
-    if (!parsed.ok) return parsed.response;
+    const job = await hearingIntakeRuntime().repository.findJob(
+      createRepositoryContext({ tenantId: authz.resource.tenantId }),
+      params.id,
+    );
+    const adapter = job === null ? undefined : AI_QUEUE_ADAPTERS[job.kind];
+    if (job === null || adapter === undefined) {
+      return problemResponse(problemDetails({ title: '対象の AI job が見つかりません', status: 404 }));
+    }
+    let rawBody: unknown;
+    try {
+      rawBody = await request.json();
+    } catch {
+      return problemResponse(problemDetails({ title: 'JSON を読み取れません', status: 400 }));
+    }
+    const parsed = adapter.failRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return problemResponse(problemDetails({ title: 'リクエストが不正です', status: 400 }));
+    }
     const tokenId = authz.principal.tokenId;
     if (tokenId === undefined || tokenId === null) {
       return problemResponse(problemDetails({ title: 'Device Flow token が必要です', status: 401 }));
     }
-    const job = await hearingIntakeRuntime().repository.failSheetGenerationJob(
+    const failed = await adapter.fail(
       createRepositoryContext({
         tenantId: authz.resource.tenantId,
         ...(authz.resource.workspaceId === null ? {} : { workspaceId: authz.resource.workspaceId }),
@@ -43,7 +60,7 @@ export const POST = withAuthz<JobParams>(
       }),
       params.id,
       tokenId,
-      parsed.data.error,
+      (parsed.data as { error: string }).error,
     );
     await authRuntime().authz.audit.record({
       actorSubject: authz.principal.userId,
@@ -53,12 +70,12 @@ export const POST = withAuthz<JobParams>(
       resourceType: 'ai_job',
       resourceId: params.id,
       metadata: {
-        kind: job.kind,
-        attempt: job.attempt,
-        status: job.status,
+        kind: failed.kind,
+        attempt: failed.attempt,
+        status: failed.status,
         credential: authz.principal.credential,
       },
     });
-    return Response.json({ id: job.id, status: job.status, attempt: job.attempt });
+    return Response.json({ id: failed.id, status: failed.status, attempt: failed.attempt });
   },
 );
