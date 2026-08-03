@@ -5,13 +5,24 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { chmodSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { exportControlPlane, parseExportArtifact, restoreControlPlane } from '@harness-hub/db/backup';
+import {
+  exportControlPlane,
+  parseExportArtifact,
+  restoreControlPlane,
+  tenantDataTombstoneManifestFromArtifact,
+} from '@harness-hub/db/backup';
+import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTursoClient, type TursoAdapter } from '../connection/turso';
+import { createTenantDataRegistry } from '../registry/tenant-data';
+import { createAuditRepo } from '../repository/audit';
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
+import { createTenantDataRepo } from '../repository/tenant-data';
 import { createTenantsRepo } from '../repository/tenants';
-import { coreTables } from '../schema/index';
+import { allTables } from '../schema/index';
+import { tenantDataObjects } from '../schema/tenant-data/schema';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
+import { createFakeTenantDataBucket } from './support/r2-fake';
 import { schemaDdl } from './support/schema-harness';
 import { asCore, createLibsqlTestDb, testCipher } from './support/test-db';
 
@@ -33,6 +44,13 @@ afterAll(() => {
 });
 
 describe('DMDB-T06 export artifact の暗号断面', () => {
+  it('Studio 拡張の tenant_data object と削除 tombstone も日次 export に含める', () => {
+    const { header, rowsByTable } = parseExportArtifact(artifact);
+    expect(Object.keys(header.tables).sort()).toStrictEqual(Object.keys(allTables).sort());
+    expect(rowsByTable.get('tenant_data_objects')).toHaveLength(2);
+    expect(rowsByTable.get('tenant_data_tombstones')).toHaveLength(2);
+  });
+
   it('export 成果物に salary / client_secret の平文が一切現れない (常にマスク相当)', () => {
     expect(artifact).not.toContain(String(fixture.a.salary));
     expect(artifact).not.toContain(String(fixture.b.salary));
@@ -119,6 +137,38 @@ describe('DMDB-T06 restore round-trip', () => {
       target.close();
     }
   });
+
+  it('削除後の manifest を重ねると、削除前 snapshot の tenant_data object は復元されない', async () => {
+    const rows = await source.client
+      .select()
+      .from(tenantDataObjects)
+      .where(eq(tenantDataObjects.tenantId, fixture.a.tenantId));
+    const deleted = rows[0];
+    expect(deleted).toBeDefined();
+    if (deleted === undefined) throw new Error('fixture tenant_data object がありません');
+
+    const bucket = createFakeTenantDataBucket();
+    const repo = createTenantDataRepo(
+      asCore(source),
+      testCipher(asCore(source)),
+      createTenantDataRegistry(bucket),
+      createAuditRepo(asCore(source)),
+    );
+    await repo.deleteTenantDataObject(fixture.a.context, deleted.id);
+    const currentArtifact = await exportControlPlane(asCore(source));
+    const manifest = tenantDataTombstoneManifestFromArtifact(parseExportArtifact(currentArtifact));
+
+    const target = await createLibsqlTestDb();
+    try {
+      const report = await restoreControlPlane(asCore(target), artifact, { tenantDataTombstoneManifest: manifest });
+      expect(report.ok).toBe(true);
+      expect(report.tombstonesApplied).toBeGreaterThanOrEqual(3);
+      const restored = await target.client.select().from(tenantDataObjects).where(eq(tenantDataObjects.id, deleted.id));
+      expect(restored).toHaveLength(0);
+    } finally {
+      target.close();
+    }
+  });
 });
 
 describe('DMDB-T12 CLI 経由の round-trip (executable-export-restore-ci-fixture)', () => {
@@ -151,12 +201,23 @@ describe('DMDB-T12 CLI 経由の round-trip (executable-export-restore-ci-fixtur
     expect(JSON.parse(exportOut.trim().split('\n').at(-1) as string).ok).toBe(true);
     expect(readFileSync(artifactPath, 'utf8')).toContain('harness-hub-control-plane-export');
 
+    const tombstoneManifestPath = join(workDir, 'tenant-data-tombstones.json');
+    const extractOut = runCli('scripts/extract-tenant-data-tombstones.ts', [
+      '--in',
+      artifactPath,
+      '--out',
+      tombstoneManifestPath,
+    ]);
+    expect(JSON.parse(extractOut.trim().split('\n').at(-1) as string)).toMatchObject({ ok: true, tombstones: 2 });
+
     const targetPath = join(workDir, 'cli-target.db');
     const restoreOut = runCli('scripts/restore-control-plane.ts', [
       '--url',
       `file:${targetPath}`,
       '--in',
       artifactPath,
+      '--tombstone-manifest',
+      tombstoneManifestPath,
       '--ddl',
       ddlPath,
     ]);
@@ -191,7 +252,7 @@ describe('vns9 export 成果物の採否 (verify-export-artifact CLI)', () => {
     const summary = JSON.parse(result.stdout.trim().split('\n').at(-1) as string);
     expect(summary.ok).toBe(true);
     expect(summary.totalRows).toBe(0);
-    expect(summary.tableCount).toBe(Object.keys(coreTables).length);
+    expect(summary.tableCount).toBe(Object.keys(allTables).length);
     // 採用はするが、無言で通すと「バックアップは取れている」と読み違えるため警告は残す
     expect(result.stdout).toContain('::warning::');
   }, 120_000);
@@ -238,15 +299,17 @@ describe('P13 production migration / smoke CLI', () => {
     // 件数はリテラルで書く。journal の長さを参照すると、migration を足しただけで一緒に
     // 緑になり「台帳に載っていない DDL が適用された」を検出できなくなる。
     // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
-    // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms)
+    // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms) /
+    // 0006 tenant-data-retention (封筒暗号化拡張と tombstone 台帳) /
+    // 0007 feedback/builds (feedback-loop)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 6, applied: 0, pending: 6 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 8, applied: 0, pending: 8 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 6 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 8 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 6, appliedAfter: 6 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 8, appliedAfter: 8 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

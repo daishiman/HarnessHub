@@ -53,12 +53,21 @@ const MIGRATIONS_DIR = join(HERE, '..', '..', '..', '..', '..', 'packages', 'db'
  * 0003 は `idp_connections` に列を足すので必須。
  * 0004 も同じ表へ credential lifecycle 列を足す。載せないと本番 port が読む列が harness に存在せず、
  * 「テストは通るが本番で落ちる」形になる。
+ * 0005 は docs-cms の documents 表だけを追加する。認証経路は使わないが、canonical lineage の順序を
+ * harness でも保つため載せる。
+ * 0006 は `encryption_keys` (core domain, `createCoreRepositories` が組む DEK 台帳) へ
+ * `tenant_id` 列を足し、tenant_data と tombstones の表も追加する (feat-tenant-data-retention AD-1)。
+ * tenant_data 関連の表を作らない用途でも、
+ * `ColumnCipher` が発行する DEK 検索 query は列の存在を前提にするため必須。載せないと
+ * 「no such column: encryption_keys.tenant_id」で全 real-db harness が落ちる。
  */
 const MIGRATIONS = [
   '0000_baseline-core-domain.sql',
   '0001_auth-tenancy-device-flow-contract.sql',
   '0003_auth-tenancy-shared-google-oidc.sql',
   '0004_auth-tenancy-customer-managed-oidc-lifecycle.sql',
+  '0005_common_stepford_cuckoos.sql',
+  '0006_tenant-data-retention.sql',
 ];
 
 export interface RealDbHarness {

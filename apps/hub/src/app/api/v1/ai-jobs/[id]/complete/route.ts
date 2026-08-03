@@ -17,7 +17,7 @@ export const POST = withAuthz<JobParams>(
     resolveResource: async (request, params, principal) => {
       const base = requestScopedResource(request, { type: 'ai_job', id: params.id });
       if (base === null) return null;
-      // ai_jobs は kind を問わず 1 テーブルなので、kind に依らずここで一度だけ引ける
+      // ai_jobs は kind を問わず 1 テーブルなので、kind に依らずここで一度だけ引ける。
       const job = await hearingIntakeRuntime().repository.findJob(
         createRepositoryContext({ tenantId: base.tenantId }),
         params.id,

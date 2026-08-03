@@ -9,7 +9,7 @@
  * 本物の実装を通す。ここをモックすると「200 が返ったこと」から意味が消える。
  */
 
-import type { TokenResponse } from '@harness-hub/schemas';
+import type { PublisherTokenScope, TokenResponse } from '@harness-hub/schemas';
 
 import {
   type AuthRouteHandler,
@@ -116,10 +116,11 @@ export async function issuePublisherToken(
   harness: TokenRouteHarness,
   userId: string = OWNER_ID,
   workspaceId: string = WORKSPACE_A1,
+  scope: readonly PublisherTokenScope[] = ['publish:write'],
 ): Promise<TokenResponse> {
   const issued = await harness.runtime.deviceFlow.requestCode({
     tenantId: TENANT_A,
-    scope: ['publish:write'],
+    scope,
     deviceLabel: 'macbook',
   });
   const approval = await harness.runtime.deviceFlow.approve({
