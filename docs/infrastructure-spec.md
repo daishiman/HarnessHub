@@ -17,7 +17,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 ```text
 [利用者ブラウザ] ──HTTPS──▶ Cloudflare Workers (単一 Worker, D1)
 [Publisher CLI]  ──HTTPS──▶   ├─ Next.js (@opennextjs/cloudflare): Hub Web + /api/v1
-                              ├─ R2 binding: packages (immutable) / backups
+                              ├─ R2 binding: packages (immutable) / backups / tenant-data (encrypted)
                               ├─ @libsql/client (HTTP) ──▶ Turso Free (control-plane DB, D2)
                               ├─ Resend API (メール補助, D6)
                               └─ cron triggers (§5)
@@ -28,7 +28,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 | リソース | サービス / プラン | 用途 | 根拠 |
 |---|---|---|---|
 | Hub 実行環境 | Cloudflare Workers Free (単一 Worker) | Next.js SSR + REST API + cron | D1 / qa-003 |
-| パッケージ実体 | Cloudflare R2 Free (10GB) | immutable PackageRegistry + DB バックアップ | qa-004 / C4 |
+| R2 実体 | Cloudflare R2 Free (10GB) | immutable PackageRegistry + DB バックアップ + tenant_data 暗号化実体 | qa-004 / C4 |
 | control-plane DB | Turso Free (libSQL, HTTP 接続) | 全 27 テーブル (backend-spec §2) | D2 / qa-004 |
 | メール送信 | Resend Free (3,000 通/月・100 通/日) | 通知補助チャネル (アプリ内が正本) | D6 / qa-026 |
 | CI/CD + バッチ | GitHub Actions Free | test → deploy / 日次 DB export | qa-011 |
@@ -45,6 +45,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 |---|---|---|---|
 | `PACKAGES_BUCKET` | R2 | `harness-hub-packages` | PackageRegistry (immutable) |
 | `BACKUPS_BUCKET` | R2 | `harness-hub-backups` | DB export 保管 (§10) |
+| `TENANT_DATA_BUCKET` | R2 | `harness-hub-tenant-data` | tenant_data の暗号化済み実体。PackageRegistry / backup と分離 |
 | `ASSETS` | assets | `.open-next/assets` | 静的アセット (edge 配信) |
 | `CF_VERSION_METADATA` | version_metadata | Cloudflare 採番の version id | `/health` の `version` に載せ「いま配信されている版」を応答から特定可能にする (§9)。build 時注入と違い **rollback 後も実配信版と一致する**ため、障害時のロールバック判断の一次情報になる (2026-07-21 追加) |
 | `AUTH_CANONICAL_ORIGIN` / `AUTH_ALLOWED_ORIGINS` / `AUTH_DEVICE_VERIFICATION_URI` | var | 環境別 URL (§8) | Host ヘッダに依存しない OIDC callback、変更系 Origin 許可、Device Flow の確認画面 URL |
@@ -82,16 +83,8 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 
 ## 3. R2 バケット設計
 
-| バケット | key 設計 | 書込経路 (それ以外は禁止) | 公開 |
-|---|---|---|---|
-| `harness-hub-packages` | `packages/<sha256>.zip` (content-addressed, **immutable**) | publish pipeline (`PUT /publish/:id/package` 検査通過後) のみ | 非公開。配信は Worker 経由 (認可 + 監査) |
-| `harness-hub-backups` | `db-export/<YYYY>/<YYYY-MM-DD>.jsonl.gz` | GitHub Actions 日次 export (§10) のみ | 非公開 |
-
-- packages は上書き・削除を行わない (content hash 一致 = 同一実体。suspend は DB 側 status で表現)。
-- S01 の Web upload と Publisher CLI upload は同じ staging prefix・検査 pipeline・content hash 確定処理へ収束させる。ブラウザから R2 への公開 write URL は発行しない。
-- install/download は Worker の `POST /api/v1/harnesses/:projectId/install` を必ず経由する。R2 bucket/object key を UI/API へ返さない。Stage 0 で raw ZIP を採用した場合だけ、安定版に固定した TTL 5 分以内・単回の短命 URL を発行する。
-- backups の保持: **直近 90 日 + 各月 1 日断面を 12 ヶ月** (R2 lifecycle rule で自動削除)。salary は暗号文のまま格納される (qa-032: バックアップ断面にも平文を残さない)。
-- 無料枠: 10GB / Class A 100万 ops/月 / Class B 1,000万 ops/月。使用量は月次レビュー (§11)。
+R2 の bucket、object key、書込境界、保持期間の詳細正本は
+[infrastructure-storage-spec.md](infrastructure-storage-spec.md) に分離した。§1 のトポロジ、§2 の binding 台帳、§10 の backup/DR と合わせて参照する。
 
 ## 4. Turso 構成 (D2)
 
@@ -99,7 +92,7 @@ sources: [system-spec/infrastructure.md, system-spec/maintenance-ops.md, system-
 - 接続: `@libsql/client` (HTTP) のみ。native binding はないため、接続情報は §2 の secret 台帳で管理。
 - migration: `drizzle-kit generate` で SQL を生成しリポジトリ管理 → CI の deploy job (§7) が **deploy 前に production へ直接適用** (qa-038【5】。常設 staging を経由しない)。破壊的 DDL は expand/contract 3 段階を強制 (§7 G7)。**SQLite 方言互換を維持し、D1 退避経路を温存する** (D2 ヘッジ。Drizzle は libSQL/D1 両対応)。
 - 無料枠 (公式確認 2026-07-17): ストレージ 5GB・読取 5 億行/月・書込 1,000 万行/月・100 DB。
-- 使用量監視 (qa-031 の帰結): 日次 cron (§5) が Turso Platform API から usage を取得し、**閾値 70% で admin 通知 (アプリ内)・90% で保持期間導入の R4-reopen 起票を促す**。metrics_events 無期限保持の代償措置。
+- 使用量監視 (qa-031 の帰結): 日次 cron (§5) が Turso Platform API から usage を取得し、**閾値 70% で admin 通知 (アプリ内)・90% で保持期間導入の R4-reopen 起票を促す**。metrics_events 無期限保持の代償措置。R2 は binding の list をページングして tenant-data / packages bucket 別の bytes を測り、同じ 70% / 90% 閾値で構造化ログへ通知する。
 
 ## 5. cron トリガ設計 (Workers cron + GitHub Actions cron)
 
@@ -111,7 +104,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | cron 式 (UTC) | 実行主体 | ジョブ (順次実行・ジョブ単位 try/catch) |
 |---|---|---|
-| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 |
+| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso/R2 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 |
 | `0 0 * * 1` (JST 月 9:00) | Workers scheduled handler | 週次 rollup 確定 + 週次サマリメール (opt-in、100 通/日制限のバッチ分割 = D6/qa-027) |
 | `0 17 * * *` (JST 2:00) | GitHub Actions (`backup.yml`) | DB export → gzip → R2 `harness-hub-backups` へ upload (§10) |
 
@@ -140,8 +133,8 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | `backup.yml` | cron `0 17 * * *` | `export-control-plane.ts` で決定論的 JSONL を生成 → gzip → R2 へ **`wrangler r2 object put --remote` で upload → 再 download + `cmp` で往復検証** → 成功を heartbeat 通知 |
 | `cwv.yml` | 週次 cron / 手動 dispatch | `HUB_PUBLIC_URL` の同一 HTTPS origin に固定した protected `/catalog` を Lighthouse で計測。通常 session ではなく短命 read-only ticket を使い、未設定・計測不能を good と数えない |
 
-- **backup.yml の export / upload 経路 (2026-07-26 実装反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。restore CLI が同じ形式を直接読めるため、drill と障害復旧が日次成果物そのものを検証する。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
-- **成果物の採否判定は `verify-export-artifact.ts` に一本化する (2026-07-28 実装反映 / `HarnessHub-vns9`)**: workflow の shell で header を `grep` したり行数を `awk` で数えたりしない。判定の実体は `parseExportArtifact` (`packages/db/backup/export.ts`) で、header 形式・`format_version`・`coreTables` 19 テーブルとの**集合一致**・header 宣言行数と実際の行数の一致まで fail-closed に見る。workflow 側に弱い検査を二重に置くと、**弱い方が先に判定してしまう**。実際、旧実装の「データ行 0 なら不採用」がこれに当たり、migration 済みだがまだ利用の無い本番 DB を 3 夜連続で失敗させていた (詳細は §10)。
+- **backup.yml の export / upload 経路 (2026-08-03 tenant_data 反映)**: `packages/db/scripts/export-control-plane.ts` が生成する JSONL を日次保存形式の正本とする。全 control-plane table（Studio 拡張と `tenant_data_tombstones` を含む）を出力し、`extract-tenant-data-tombstones.ts` が後続 snapshot から manifest を抽出する。古い snapshot を復元するときは `restore-control-plane.ts --tombstone-manifest <manifest>` を必須にし、削除済み object 参照を再出現させない。upload は R2 アクセスキーを追加発行せず `wrangler` を用い、再 download 後の `cmp` で byte 一致まで確認する。Turso CLI / `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` はこの経路では不要。
+- **成果物の採否判定は `verify-export-artifact.ts` に一本化する (2026-08-03 tenant_data 反映)**: workflow の shell で header を `grep` したり行数を `awk` で数えたりしない。判定の実体は `parseExportArtifact` (`packages/db/backup/export.ts`) で、header 形式・`format_version`・`allTables`（Studio 拡張を含む）との**集合一致**・header 宣言行数と実際の行数の一致まで fail-closed に見る。workflow 側に弱い検査を二重に置くと、**弱い方が先に判定してしまう**。実際、旧実装の「データ行 0 なら不採用」がこれに当たり、migration 済みだがまだ利用の無い本番 DB を 3 夜連続で失敗させていた (詳細は §10)。
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 

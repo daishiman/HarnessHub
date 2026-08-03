@@ -46,26 +46,32 @@ pnpm --filter @harness-hub/hub exec wrangler r2 object get \
   "harness-hub-backups/$LATEST_OBJECT_KEY" --file "$WORK_DIR/latest.jsonl.gz" --remote
 gzip -dc "$WORK_DIR/latest.jsonl.gz" > "$WORK_DIR/export.jsonl"
 
-# 2) 空の一時 DB へ restore する。常設 staging は持たないので使い捨てのローカル DB を使う
+# 2) 削除済み tenant_data を古い artifact から復活させないため、同じ export から tombstone manifest を抽出する
+#    古い artifact を復元する場合は、削除後に作られた新しい export から manifest を抽出して、このファイルを差し替える
+pnpm --filter @harness-hub/db exec tsx scripts/extract-tenant-data-tombstones.ts \
+  --in "$WORK_DIR/export.jsonl" --out "$WORK_DIR/tenant-data-tombstones.json"
+
+# 3) 空の一時 DB へ restore する。常設 staging は持たないので使い捨てのローカル DB を使う
 DRILL_DATABASE_URL="file:$WORK_DIR/drill.db"
 pnpm --filter @harness-hub/db exec tsx scripts/restore-control-plane.ts \
-  --url "$DRILL_DATABASE_URL" --in "$WORK_DIR/export.jsonl"
+  --url "$DRILL_DATABASE_URL" --in "$WORK_DIR/export.jsonl" \
+  --tombstone-manifest "$WORK_DIR/tenant-data-tombstones.json"
 # exit 0 かつ report の ok / chainOk がともに true = drill 成功。
 # 1 つでも欠ければ、そのバックアップを成功と数えない
 
-# 3) 復元 DB を独立クエリで確認 (baseline は domain table=18 / explicit index=12)
+# 4) 復元 DB を独立クエリで確認 (baseline は domain table=18 / explicit index=12)
 sqlite3 "$WORK_DIR/drill.db" \
   "SELECT count(*) AS domain_tables FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name <> '__drizzle_migrations';
    SELECT count(*) AS explicit_indexes FROM sqlite_master WHERE type='index' AND sql IS NOT NULL;"
 
-# 4) 作業ディレクトリごと破棄 (一時 DB もこの中にあるため Turso 側の後始末は不要)
+# 5) 作業ディレクトリごと破棄 (一時 DB もこの中にあるため Turso 側の後始末は不要)
 rm -rf "$WORK_DIR"
 ```
 
-- **本番復旧のときも同じ 2) を打つ。** 復旧先を Turso にする場合は `DRILL_DATABASE_URL` を新規 DB の接続 URL に、`TURSO_AUTH_TOKEN` を発行済みの DB 接続 token に差し替えるだけで、コマンド本体は変わらない。drill と復旧で別のコマンドを持たない (drill で通した経路がそのまま復旧経路であることが RTO ≤ 4h の根拠)。
+- **本番復旧のときも同じ 2)-3) を打つ。** 復旧先を Turso にする場合は `DRILL_DATABASE_URL` を新規 DB の接続 URL に、`TURSO_AUTH_TOKEN` を発行済みの DB 接続 token に差し替えるだけで、コマンド本体は変わらない。drill と復旧で別のコマンドを持たない (drill で通した経路がそのまま復旧経路であることが RTO ≤ 4h の根拠)。
 - 検証順序は ADR §9 のとおり CLI 内部で強制される: header 検証 → schema 適用 → insert → 行数一致 → audit chain 全体検証 → salary/secret 暗号断面検査。schema は restore CLI 自身が適用するため、SQL dump を別途流し込む手順は要らない。
 - 2026-07-25 の実走で、Turso の SQL dump は `turso db create --from-dump` へ渡すと Turso CLI 1.0.30 で 0 table のまま成功表示になることを確認済み。**復元できたように見えて中身が空になる経路**があるため、成功判定は CLI の exit code ではなく上記 report の `ok` / `chainOk` で行う。
-- §1 の手動 export をそのまま検証する場合は 1) を飛ばして 2) から実行する (`$WORK_DIR/export.jsonl` が既にある状態)。この最短経路は DMDB-T14 が CI で毎 PR 実走している。
+- §1 の手動 export をそのまま検証する場合は 1) を飛ばして 2) から 3) を実行する (`$WORK_DIR/export.jsonl` が既にある状態)。この最短経路は DMDB-T14 が CI で毎 PR 実走している。
 
 ## 3. migration 積み増し手順 (Studio 拡張 feature 向け)
 

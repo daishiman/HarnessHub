@@ -150,7 +150,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 ### 3.7 レート制限 (SEC8)
 
-- Workers 層 (Rate Limiting binding) で IP + principal 単位。**閾値は security-spec §7.2 で確定済み** (device/code 10・device/token 20・approve 5・auth 20・metrics 60 burst 120・publish 10・feedback 20・一般 API 120 / 分)。feature P02 は**実測に基づく調整のみ**とし、方式・鍵の変更は R4-reopen を要する。
+- Workers 層 (Rate Limiting binding) で IP + principal 単位。**閾値は security-spec §7.2 で確定済み** (device/code 10・device/token 20・approve 5・auth 20・metrics 60 burst 120・publish 10・feedback 20・tenant-data upload/delete 20・content 60・一覧/メタデータ 120・一般 API 120 / 分)。方式・鍵の変更は R4-reopen を要する。
 
 ### 3.8 監査対象 action (SEC6 = 既存 I8 + Studio 追加)
 
@@ -185,6 +185,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 ### 4.11 [AI ジョブキュー (B5/D5: pull 型)](backend-spec-api-state.md#411-ai-ジョブキュー-b5d5-pull-型)
 
 ### 4.12 [監査・検索](backend-spec-api-state.md#412-監査検索)
+
+### 4.13 [tenant_data 保管](backend-spec-api-state.md#413-tenant_data-保管)
 
 ## 5. 状態機械
 
