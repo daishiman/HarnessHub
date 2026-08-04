@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scenario": "C19-OUT1-positive-system-spec-lineage",
+  "observations": {
+    "plugin_loads_and_flow_completes": true,
+    "source_lineage_and_evaluator_evidence_retained": true,
+    "registration_only_through_c02": true
+  },
+  "registered_nodes": ["spec-system-todo-api", "arch-system-todo-api"],
+  "gates": {
+    "coverage_matrix": "exit0",
+    "source_citation": "exit0",
+    "evaluator_verdict": "PASS",
+    "source_digest": "exit0",
+    "evidence_refs": "exit0",
+    "goal_seek_verification": "PASS"
+  },
+  "independent_verification": {
+    "pass": true,
+    "checks": 8,
+    "failures": 0
+  }
+}

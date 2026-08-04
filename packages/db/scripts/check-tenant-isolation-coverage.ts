@@ -67,6 +67,8 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   display_code_counters: 'createHearingIntakeRepository',
   tenant_coefficients: 'tenantCoefficients',
   documents: 'createDocsCmsRepository',
+  feedbacks: 'createFeedbackRepository',
+  builds: 'createBuildsRepository',
   encryption_keys: 'cipher.ensureActiveDek',
   tenant_data_objects: 'tenantDataObjects',
   tenant_data_tombstones: 'tenantDataTombstones',

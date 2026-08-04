@@ -257,11 +257,14 @@ def test_premise_emission_is_deterministic() -> None:
 
 
 def test_all_mode_passes_on_real_repo() -> None:
-    """実 repo の最新 verdict 保有 run が契約を満たす (CI から呼ぶ経路そのもの)。"""
+    """receipt 採用済み PASS run を優先し、時計ずれの古い run を選ばない。"""
     code, report = _lint("--all")
     assert code == 0, report["violations"]
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
+    assert report["checked"][0]["task"].endswith(
+        "20260804T083000Z-m0bd-c19-r10-clean-fixture/task.md"
+    )
 
 
 # --- 契約: fixture 実体との一致 (受入条件 1) ---------------------------------------

@@ -45,11 +45,29 @@ C11 hook (guard-confirmed-chapter-overwrite) はこのマーカー + spec-state.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
+
+
+def _load_sibling_module(name: str):
+    """直接実行と importlib によるテスト読み込みの双方で sibling を読む。"""
+    path = Path(__file__).with_name(f"{name}.py")
+    spec = importlib.util.spec_from_file_location(f"_{name}_sibling", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"sibling module を読めない: {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_KNOWLEDGE_ORDER_MODULE = _load_sibling_module("build-knowledge-order")
+KnowledgeOrderError = _KNOWLEDGE_ORDER_MODULE.KnowledgeOrderError
+topological_file_order = _KNOWLEDGE_ORDER_MODULE.topological_file_order
 
 # --- plugin 共有定数 (apply-spec-transition.py / validate-coverage-matrix.py と SSOT 整合) ---
 CANONICAL_PLATFORMS = (
@@ -81,6 +99,7 @@ _DESIGN_KNOWLEDGE_DIR = (
     Path(__file__).resolve().parents[2] / "ref-system-design-knowledge" / "references"
 )
 _READ_WHEN_PAIRS: list[tuple[str, str]] | None = None
+_KNOWLEDGE_FILE_ORDER: dict[str, int] | None = None
 _DOCTRINE_REGISTRY: dict | None = None
 
 
@@ -130,6 +149,19 @@ def _resource_map_read_when() -> list[tuple[str, str]]:
     return _READ_WHEN_PAIRS
 
 
+def _knowledge_file_order() -> dict[str, int]:
+    """C14 の正本 knowledge-catalog から card の消費順位を導出する。"""
+    global _KNOWLEDGE_FILE_ORDER
+    if _KNOWLEDGE_FILE_ORDER is None:
+        try:
+            _KNOWLEDGE_FILE_ORDER = topological_file_order(
+                _DESIGN_KNOWLEDGE_DIR / "knowledge-catalog.json"
+            )
+        except KnowledgeOrderError as exc:
+            raise CompileError(f"C14 knowledge topo_order を導出できない: {exc}") from exc
+    return _KNOWLEDGE_FILE_ORDER
+
+
 def category_design_refs(cat_id: str) -> list[str]:
     """resource-map.yaml の read_when にカテゴリ id が現れる設計知識 .md を実行時導出する。
 
@@ -141,7 +173,8 @@ def category_design_refs(cat_id: str) -> list[str]:
     for fname, read_when in _resource_map_read_when():
         if fname.endswith(".md") and cat_id in read_when and fname not in refs:
             refs.append(fname)
-    return refs
+    order = _knowledge_file_order()
+    return sorted(refs, key=lambda filename: (order.get(filename, len(order)), filename))
 
 
 def _canonical_category_ids() -> list[str]:

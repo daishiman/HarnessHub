@@ -66,7 +66,49 @@ git の checkout は書き込んだファイルの mtime を**現在時刻**に�
 
 派生症状として、**テストが偽の赤を出す**。依存ファイルが古い実体に置き換わっているためで、実測では dev-graph のテストが 24 件失敗し別のテストは収集エラーになった。原因を実装側に探すと時間を丸ごと失う。**テストが説明のつかない失敗をしたら、まず `git diff --shortstat HEAD` を撃つ。**
 
-#### 2.1.1 鮮度ゲートの偽陽性に従ってはいけない
+#### 2.1.1 発生源調査（2026-08-03 に訂正）
+
+以下は 2026-08-02 時点の調査過程である。観測4で reflog の直接証拠が見つかったため、
+「非 Git 系コピー機構が 2026-07-31 事象の原因」という当初の推論は撤回した。観測1〜3 は
+状況証拠、観測4 を原因判断の正本とする。
+
+**観測1: 現存する未コミット差分の mtime 指紋**
+
+2026-08-02 時点で主 WT に残る未コミット 401 件のうち 276 件が、日付だけでなく**分単位まで完全一致**する mtime (`2026-07-31 06:56`) を持っていた。対象は dev-graph / ubm-goal-setting / slide-report-generator / skill-governance など相互に無関係な 15+ プラグインにまたがる。個々のセッションが別々の時刻に編集した場合この一致は起こり得ず、**単一の一括書き込み処理が同時刻に全ファイルへ mtime を刻んだ**ことを示す。当初は `git checkout` だけを比較対象にしていたため、元 mtime を保持するコピー機構 (`rsync -a` / `tar` 展開 / `cp -p` / Finder コピー等) を推定した。しかし `git reset --hard` も同じ指紋を作り得るため、この推定は観測4で撤回した。
+
+**観測2: 同時刻帯の orca 操作ログ**
+
+orca アプリのトレースログ (`~/Library/Application Support/orca/logs/main.trace.ndjson.2`, unix nano timestamp・`git.exec` span に `cwd`/`git.subcommand` を記録) を `2026-07-31 06:56` 前後 ±60 秒で検索したところ、主 WT (`/Users/dm/dev/dev/個人開発/HarnessHub`) に対する `status` / `diff` / `remote` / `fetch` / `rev-parse` / `for-each-ref` / `symbolic-ref` / `check-ignore` のみが記録されており、**working tree のファイル内容を書き換えうる `checkout` / `reset` / `worktree` 系コマンドは同時間帯に一件も無かった**。これにより、orca 自身の git 操作ループが直接の書き込み元である可能性は低いと判断できる。
+
+**観測3: 同ディレクトリの Finder コピー中断マーカー**
+
+`/Users/dm/dev/dev` (主 WT の親ディレクトリ) に `com.apple.metadata:kMDItemResumableCopy` という拡張属性が付与されていた。これは Finder が「大容量コピーが中断され再開待ち」の状態を記録する印である。中身を復号すると、**2022-11-16 の Time Machine バックアップ**（`/Volumes/.timemachine/.../2022-11-16-194401.backup/.../Users/manjumotodaishi/dev`、当時の別ユーザー名アカウント）から現在の `dev` ディレクトリへの Finder コピーが未完了のまま残置されていることが分かった。これは git を経由しない、mtime を保持した一括ファイル配置という「メカニズムのクラス」が同一ディレクトリで過去に実際に発生した物証であり、観測1の指紋と整合する。ただし日付が2022年のものであり、2026-07-31 の事象と同一の実行であるとまでは断定できない。
+
+**観測4 (訂正): reflog に同時刻の git 操作が実在した**
+
+復旧作業 (§4) 実行時に `git reflog show HEAD --date=iso` を確認したところ、観測1の mtime 指紋 (`2026-07-31 06:56`) と**秒単位で一致する** git 操作が記録されていた。
+
+```
+44521451 HEAD@{2026-07-31 06:56:28 +0900}: reset: moving to HEAD    (= git reset --hard HEAD 相当)
+c4e6ad9b HEAD@{2026-07-31 06:56:34 +0900}: pull: Fast-forward
+```
+
+`git reset --hard` は working tree の全対象ファイルを書き込み時点の現在時刻で mtime 更新する。観測1で「git 由来ではない」と判断した根拠（mtime がバラバラの過去日時ではなく実行時刻に完全一致すること）は、実は `git checkout` だけでなく `git reset --hard` にも等しく当てはまる。**つまり 2026-07-31 06:56 の事象は、非 git 系コピー機構ではなく、`git reset --hard HEAD` → `git pull` という通常の (ただし他セッションの未コミット変更を巻き込む点で破壊的な) git 操作列で説明できる。**
+
+これは観測3 (2022年の Time Machine コピー中断マーカー) を否定するものではない。観測3は「mtime を保持する非 git コピー機構がこの環境で過去に発生した物証」としては依然有効だが、**2026-07-31 06:56 の事象そのものの説明としては reflog の git 操作が優先する** (直接証拠 > 状況証拠)。
+
+**現時点の結論 (訂正版)**: 2026-07-31 06:56 の mtime クラスタは `git reset --hard` + `git pull` という git 操作の組み合わせで説明が付く。ただし `reset: moving to HEAD` は「HEAD が既に指しているコミットへの reset」であり、コマンド実行者の意図（どのセッションが・なぜ実行したか）は reflog だけでは分からない。mtime 指紋そのものは今後も「一括書き込みの発生時刻を特定する」材料として有効であり、`lint-worktree-clobber-mtime.py` は git 起因・非 git 起因を問わず両方を拾う検知網として維持する価値がある。
+
+**再発検知ツール**: 観測1の指紋（無関係な複数ディレクトリへまたがる mtime 分単位完全一致クラスタ）を自動検知する `scripts/lint-worktree-clobber-mtime.py` を追加した。`guard-worktree-desync.py` が index (staged 内容) しか見ないのに対し、こちらは working tree を直接見るため**未 stage の clobber も捕捉できる**。誤検知の余地がある状況証拠ベースの判定のため、commit を止める blocking hook としては配線していない (fail-open)。
+
+```bash
+python3 scripts/lint-worktree-clobber-mtime.py            # 人間向け報告
+python3 scripts/lint-worktree-clobber-mtime.py --json     # 判定材料を JSON で出力
+```
+
+疑わしい状態に気づいたら (テストの説明不能な失敗・大量差分など)、上記を実行してクラスタの有無を確認し、疑いが出たら §2.1 の mtime 見分け方で裏を取る。
+
+#### 2.1.2 鮮度ゲートの偽陽性に従ってはいけない
 
 もう一つの派生症状として、**作業ツリーの内容を入力とする鮮度ゲートが偽陽性で発火する**。実測では Stop hook (`check-review-trigger.py`) が「未評価 or stale な変更 skill が 16 件」と報告したが、当該セッションは SKILL.md を 1 バイトも編集していなかった。同 script は変更検出に `git diff --name-only HEAD` を使うため、clobber で古い実体に戻った 9 件の SKILL.md が「変更された」と判定されていた。
 
@@ -247,5 +289,6 @@ python3 scripts/validate-git-hooks-wiring.py --check-local-config
 | 2026-07-28 午前 | ref desync | 作業ツリーが `03093e4` に取り残し。commit していれば 65 files / -5,467 行 | commit 前に検知・復旧 |
 | 2026-07-28 午後 | ref desync | 作業ツリーが PR #87 前に取り残し。commit していれば 19 files / -878 行 | commit 前に検知・復旧 |
 | 2026-07-28 夕 | **clobber（§2.1）** | ref 無傷のまま作業ツリーが丸ごと過去スナップショットへ。403 files / -29,159 行。未コミットの編集が消失 | §4.0 で清浄 worktree へ退避し作業続行。**汚染ツリーは残置** |
+| 2026-07-31 06:56 | **git 起因（`reset --hard` + `pull`）と判明・clobber ではなかった** | 未コミット 401 件中 276 件の mtime が分単位まで完全一致。dev-graph / ubm-goal-setting / slide-report-generator 等 15+ プラグインへ横断 | §2.1.1 観測4で reflog 突合により訂正。`reset: moving to HEAD` (06:56:28) → `pull: Fast-forward` (06:56:34) が実行時刻の一致として mtime クラスタを説明。2026-08-02 に `git checkout --detach origin/main` + `stash push -u` (index の未解決コンフリクト4件を ours で解消後) で復旧、主 WT は origin/main (`ce874d46`) と差分ゼロに収束。退避内容は `stash@{0}` (`fdw4-recovery-20260802`) に保全 |
 
-表の 4 件は、機械防御の導入前に人間／エージェントの目視で止めた履歴である。この再発を根拠に `reference-transaction` と `pre-commit` の二層防御を導入した。とくに 4 件目は reflog に指紋を残さないため ref 更新の遮断だけでは検知できないが、有害な巻き戻し内容を stage して commit する段階では第 2 層が遮断する。未 stage の clobber 自体は hook の検査対象外なので、テストの説明不能な失敗や大量差分が出たときは §2.1 の検知を引き続き行う。
+表の 4 件（初出3件+2026-07-28夕）は、機械防御の導入前に人間／エージェントの目視で止めた履歴である。この再発を根拠に `reference-transaction` と `pre-commit` の二層防御を導入した。とくに 4 件目は reflog に指紋を残さないため ref 更新の遮断だけでは検知できないが、有害な巻き戻し内容を stage して commit する段階では第 2 層が遮断する。未 stage の clobber 自体は hook の検査対象外なので、テストの説明不能な失敗や大量差分が出たときは §2.1 の検知を引き続き行う。
