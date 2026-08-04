@@ -166,3 +166,14 @@ CatalogEntry[] --(純関数: buildMarketplaceDocument)--> marketplace document
 | 5 | **通常 session の `GET /catalog` ハードナビゲーションは到達不能** (`HarnessHub-6o0r`) | §1.1 の「RSC が tenant/workspace を解決する」は `page.tsx` が `searchParams` を読んで `CatalogList` へ渡す**表示用スコープの受け渡し**を指すのみで、**認可判定ではない**。認可判定 (`src/middleware.ts` → `authorize()`) は単一認可層 (§5 境界 3) に閉じており、`resolveRequestedScope()` は URL パス (`/t/{tenantId}/w/{workspaceId}/...`) と `x-harness-tenant-id`/`x-harness-workspace-id` ヘッダのみを読む。実際の middleware を通す回帰テストで、ログイン済み通常 session のクエリあり/なし双方が `403 missing_tenant_scope` になることを確定した。**ただし CWV 計測専用の `__cwv_probe` は例外**である。これは署名・origin・固定 scope・5 分 TTL を検証後に cookie へ移す、GET/HEAD の catalog read に限った閉域 credential であり、通常利用者の navigation や query scope の許可ではない（`apps/hub/tests/security/middleware-entry.test.ts`、`system-spec/auth.md` qa-133）。`/catalog` への通常 nav link は依然として無く、一般利用者向けの公開経路は現状未提供とする。query 対応や redirect 補完を採る場合は、単一認可層のコア変更として system-spec reopen・ADR 改訂・spec-reflection-receipt を伴う正式 governance を別途行う。 |
 
 **rollback trigger**: feat-publish-pipeline の API 契約 (§2.1) または採用配布経路 (§3.1) が本 ADR の前提と異なることが判明した場合、当該決定を re-open し P02 を再実行する。再実行までは影響を受ける P03 以降の項目の着手を保留する。
+
+## 8. 追記 (2026-08-04): `HarnessHub-dhy.2` 完了確認
+
+`HarnessHub-dhy.2` (アーキテクチャ設計 — S01/S02/S03/S04 画面構成・install descriptor
+取得・ポーリング契約・marketplace.json 生成方式・CWV バンドル予算の決定) が求める決定は
+本 ADR の D1 (§1)・D2 (§2)・D3 (§3)・D4 (§4) として既に確定済みであり、本タスク固有の
+未決定事項は残っていない。新規の設計決定は不要と判断し、本節をその確認記録として残す。
+
+未完了のまま残る P13 (リリース/デプロイ) は、CWV 本番実測・U5 実測・draft PR merge・
+default-branch reconciliation という**運用上の実施**であり、本 ADR (P02 設計) の対象外
+である。
