@@ -146,6 +146,38 @@ describe('TID-SCOPE: 明示ヘッダーと session の合流真理値表', () =>
   });
 });
 
+describe('TID-SCOPE-06: allowSessionScope=false (Bearer token 経路) は cookie 由来の singleton-workspace 自動選択を適用しない', () => {
+  // singleton-workspace 規則 (cookie 無し・所属 1 件のみなら自動確定) を再現するため、
+  // 通常テストの 2 workspace principal とは別に 1 workspace 所属の principal を使う。
+  const singletonPrincipal: Principal = {
+    subject: 'user-2',
+    tenantId: 'tenant-a',
+    workspaceIds: ['ws-1'],
+    roles: ['member'],
+  };
+
+  it('cookie 無し・別 workspace を明示ヘッダー指定 + allowSessionScope=false -> explicit をそのまま採用 (ambiguous_scope にならない)', () => {
+    const decision = authorize({
+      pathname: '/api/documents',
+      headers: headers({ [TENANT_HEADER]: 'tenant-a', [WORKSPACE_HEADER]: 'ws-9' }),
+      principal: singletonPrincipal,
+      allowSessionScope: false,
+    });
+
+    expect(decision).toMatchObject({ allowed: false, reason: 'workspace_not_member', status: 403 });
+  });
+
+  it('cookie 無し・別 workspace を明示ヘッダー指定 + allowSessionScope 省略 (既定 true) -> singleton 自動確定と衝突せず explicit を採用', () => {
+    const decision = authorize({
+      pathname: '/api/documents',
+      headers: headers({ [TENANT_HEADER]: 'tenant-a', [WORKSPACE_HEADER]: 'ws-1' }),
+      principal: singletonPrincipal,
+    });
+
+    expect(decision).toMatchObject({ allowed: true, scope: { tenantId: 'tenant-a', workspaceId: 'ws-1' } });
+  });
+});
+
 describe('TID-INT-04: 業務画面 6 種は session scope のみで 403 missing_tenant_scope にならない', () => {
   const businessScreens = [
     '/sheets',

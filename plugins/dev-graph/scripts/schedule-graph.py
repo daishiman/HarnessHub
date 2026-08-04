@@ -22,69 +22,7 @@ from typing import Any
 
 from _common import ContractError, atomic_json, contained, dump, load_json, repository_eval_root, run, utc_now
 from node_transaction import ensure_no_pending_transaction, graph_operation_lock
-
-
-def touches(node: dict[str, Any]) -> set[str]:
-    """Return the canonical graph-node `resource_scope: string[]` value.
-
-    Older prototypes used ``{"touches": [...]}``, but that shape contradicts
-    graph-node.schema.json and silently erased every scope during scheduling.
-    Reject the stale shape instead of producing an unsafe parallel batch.
-    """
-    values = node.get("resource_scope", [])
-    if not isinstance(values, list) or any(
-        not isinstance(value, str) or not value for value in values
-    ):
-        node_id = node.get("graph_node_id") or node.get("id") or "<unknown>"
-        raise ContractError(f"{node_id}: resource_scope must be a non-empty string[]")
-    return set(values)
-
-
-def is_schedulable(node: dict[str, Any]) -> bool:
-    readiness = node.get("implementation_readiness") or {}
-    return (
-        node.get("status") == "active"
-        and node.get("confirmation_status") == "confirmed"
-        and node.get("evaluation_status") == "pass"
-        and isinstance(readiness, dict)
-        and readiness.get("status") == "complete"
-    )
-
-
-def blocking_dependencies(
-    node: dict[str, Any], by_id: dict[str, dict[str, Any]], done: set[str]
-) -> list[str] | None:
-    """Return unfinished dependency IDs without copying macro feature edges.
-
-    P01 is the package entry point. Its own ``depends_on`` remains an
-    intra-feature task edge list (normally empty), while the parent feature's
-    canonical macro dependencies are evaluated dynamically as an entry gate.
-
-    ``None`` preserves the existing fail-closed result for malformed dependency
-    shapes. Valid dependency lists return a deterministic, de-duplicated list
-    so the scheduler can report why a node was excluded.
-    """
-    dependencies = node.get("depends_on", [])
-    if not isinstance(dependencies, list):
-        return None
-    blocking = [dep for dep in dependencies if dep not in done]
-    if node.get("artifact_kind", node.get("kind")) != "task" or node.get("phase_ref") != "P01":
-        return sorted(set(blocking))
-    parent_id = node.get("parent_feature")
-    if not isinstance(parent_id, str) or parent_id not in by_id:
-        return None
-    upstream = by_id[parent_id].get("depends_on", [])
-    if not isinstance(upstream, list):
-        return None
-    blocking.extend(dep for dep in upstream if dep not in done)
-    return sorted(set(blocking))
-
-
-def dependencies_satisfied(
-    node: dict[str, Any], by_id: dict[str, dict[str, Any]], done: set[str]
-) -> bool:
-    """Evaluate task dependencies while preserving the public bool helper."""
-    return blocking_dependencies(node, by_id, done) == []
+from schedule_graph_nodes import blocking_dependencies, is_schedulable, touches
 
 
 ACTIVE_LEASE_STATES = {
@@ -92,8 +30,7 @@ ACTIVE_LEASE_STATES = {
     "claim_pending_local_repair",
 }
 
-# qa-069 MVP-first: MVP 適合 rank 第一・node_id 辞書順 tie-break の決定論ソート定数。
-# 未設定 (None) を deferred より前に置くのは、既存資産 (全て未設定) を品質系明示 task より
+# qa-069 MVP-first: MVP 適合 rank 第一・node_id 辞書順 tie-break。未設定 (None) を deferred より前に置くのは、既存資産 (全て未設定) を品質系明示 task より
 # 優先し、一括書き換え禁止 (scope_out) の下で現行挙動から劣化させないため。
 # bd-bridge.py 側の同名定数と一致必須 (test_bd_bridge_mvp_ready_order.py が固定する)。
 MVP_FIT_RANK: dict[str | None, int] = {"direct": 0, "enabling": 1, None: 2, "deferred": 3}
@@ -358,8 +295,6 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
         if not is_schedulable(node):
             continue
         blockers = blocking_dependencies(node, by_id, done)
-        if blockers is None:
-            continue
         if blockers:
             unmapped.append({
                 "external_ref": node_id,
@@ -373,7 +308,7 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
             entry = ready_by_id.get(node_id)
             parity = entry.get("edge_parity") if entry else None
             status_matches = entry is not None and entry.get("graph_status") == node.get("status")
-            dependency_matches = entry is not None and entry.get("graph_depends_on") == node.get("depends_on", [])
+            dependency_matches = entry is not None and sorted(entry.get("graph_depends_on", [])) == sorted(node.get("depends_on", []))
             if entry and isinstance(parity, dict) and parity.get("confirmed") is True and status_matches and dependency_matches:
                 ready_ids.add(node_id)
             elif entry:
@@ -384,6 +319,14 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
                     "observed_status": entry.get("graph_status"),
                     "expected_depends_on": node.get("depends_on", []),
                     "observed_depends_on": entry.get("graph_depends_on"),
+                    "observed_edge_parity": parity,
+                    "source": "schedule-graph",
+                })
+            else:
+                unmapped.append({
+                    "external_ref": node_id,
+                    "reason": "ready_payload_entry_absent",
+                    "source": "schedule-graph",
                 })
         elif binding in {"github", "none"}:
             ready_ids.add(node_id)
@@ -391,13 +334,19 @@ def _schedule(args: argparse.Namespace, root: Path | None, graph_path: Path) -> 
             # Compatibility with pre-binding fixtures; not used by the public command.
             if node_id in ready_by_id:
                 ready_ids.add(node_id)
+            else:
+                unmapped.append({
+                    "external_ref": node_id,
+                    "reason": "ready_payload_entry_absent",
+                    "source": "schedule-graph",
+                })
         elif binding is None:
             ready_ids.add(node_id)
         else:
             raise ContractError(f"{node_id}: unresolved tracker_binding {binding!r}")
     for external, item in ready_by_id.items():
         if external not in by_id:
-            unmapped.append({**item, "reason": "graph_node_missing"})
+            unmapped.append({**item, "reason": "graph_node_missing", "source": "schedule-graph"})
 
     lease_path, lease_source = _lease_path(args, root)
     lease_before = _read_optional(lease_path)
