@@ -356,7 +356,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-139",
+        "qa_ref": "qa-142",
         "serves_goals": [
           "G1",
           "G4",
@@ -1127,6 +1127,16 @@
       "id": "qa-140",
       "question": "qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?",
       "answer": "ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。\n\n【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。\n\n【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。\n\n【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-141",
+      "question": "C16 schedule-graph が bd ready payload に entry を持たない beads binding node を除外するとき、ready set の完全性と復旧可能性をどのように保証しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー、仕様反映、main 同期、公開指示を明示承認として、qa-138 と qa-139 の Dev Graph authority 契約を維持し、C16 の ready-payload 欠落報告を追加確定する。\n\n【1. 完全性】C16 は選択範囲内かつ schedulable な beads binding node ごとに、確認済み parity entry があれば ready set へ載せ、entry が無ければ node id を黙って捨てず `unmapped[]` へ載せる。ready set と unmapped の和から候補 node が消えないことを回帰テストで固定する。\n\n【2. 機械可読な原因】payload 欠落は `reason=ready_payload_entry_absent` と `source=schedule-graph` を必須とする。parity 不一致の `beads_parity_stale_or_unconfirmed`、依存未充足の `dependency_unsatisfied`、C28 が持つ manifest 側の分類とは混同しない。\n\n【3. 復旧境界】この理由は `bd ready` の現時点の投影欠落を示す。C03/C28 の正規同期・linkage 修復・新しい parity manifest 生成を行ってから schedule を再実行し、reason を消すために ready set へ推測で追加しない。\n\n【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-142",
+      "question": "C16 の ready-payload 欠落報告を、lease conflict・依存形状不正・依存配列順序を含む完全性契約として、どのように fail-closed で運用しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー指示に基づき、qa-140 の entry 欠落契約を実装実態と一致するよう再確定する。\n\n【1. 候補被覆】selected かつ schedulable な node は、pre-lease 判定で ready または unmapped のいずれかになる。active lease / resource conflict による最終除外は別用途の `conflicts[]` に残るため、最終 schedule report の被覆集合は `ready_set ∪ unmapped ∪ conflicts` とする。lease conflict を payload 欠落や依存未充足と混同しない。\n\n【2. fail-closed と parity 比較】P01 の parent_feature、depends_on、または parent の depends_on が不正なら schedule を停止し candidate を黙って捨てない。Beads parity の dependency 比較は集合として行い、順序だけの差で `beads_parity_stale_or_unconfirmed` にしない。\n\n【3. 排他順序と復旧】依存未充足を payload entry / parity 判定より先に評価し、node ごとに最初に成立した C16 reason だけを記録する。依存を満たす Beads node の entry 欠落だけを `ready_payload_entry_absent` / `source=schedule-graph` とし、C03/C28 同期、linkage 修復、fresh parity manifest 後に再実行する。推測で ready set へ追加しない。\n\n【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -1241,6 +1251,14 @@
     {
       "id": "appr-029",
       "note": "ユーザーが 2026-08-03 に HarnessHub-7xi9 の最終レビューを依頼し、更新時刻診断の訂正を system-spec / specs / architecture / docs / features / tasks へ正規反映して公開することを明示承認した。"
+    },
+    {
+      "id": "appr-030",
+      "note": "ユーザーの 2026-08-03 指示『全変更の最終レビュー、task 仕様書品質ゲート、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks 更新、Beads 更新、origin main→local main→task branch の統合、commit/push/draft PR』を、HarnessHub-xz0u の C16 ready-payload 欠落報告契約の明示承認として記録する。 main 統合で qa-140/appr-029 が既存別件として確定済みだったため、C01 single-writer の reopen→re-confirm 正規フローで再登録する。"
+    },
+    {
+      "id": "appr-031",
+      "note": "ユーザーの同一最終レビュー指示を、HarnessHub-xz0u の C16 候補被覆・fail-closed・reason 優先順位を実装と文書で一致させる追加確認として記録する。 main 統合後の C01 re-confirm として記録する。"
     }
   ],
   "reopen_log": [
@@ -2214,6 +2232,12 @@
       "category": "dev-workflow",
       "platform": "desktop-windows",
       "reason": "HarnessHub-7xi9 の 2026-07-31 更新時刻クラスタは非Git系clobberと断定できず、reflog の reset --hard + pull という直接証拠と新規の非ブロッキング診断契約を qa-088 へ追補する必要がある",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "C16 が beads binding node の bd ready payload 欠落を silent drop せず、機械可読な unmapped 理由として報告する契約を main 統合後の正本へ追加するため",
       "from": "確定"
     }
   ],
@@ -3455,7 +3479,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

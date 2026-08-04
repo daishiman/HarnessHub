@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1194,
+  "graph_revision": 1201,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed",
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
         "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
-        "evidence_ref": "system-spec/spec-state.json"
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -47,7 +47,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する",
+      "goal": "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140 と C16 qa-141/qa-142 の dev-workflow 契約を正本から追跡できる状態を維持する",
       "graph_node_id": "spec-harness-hub-requirements",
       "implementation_readiness": {
         "checked_at": "2026-07-17T00:35:59Z",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T09:45:00Z",
+        "imported_at": "2026-08-04T01:17:41Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed",
+        "source_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T09:45:00Z"
+      "updated_at": "2026-08-04T01:18:57.420903Z"
     },
     {
       "acceptance": [
@@ -13015,9 +13015,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05",
-        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140)",
-        "evidence_ref": "system-spec/dev-workflow.md"
+        "evaluated_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142)",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13036,7 +13036,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority と並列 worktree の診断境界、consumer-owned reference の境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -13072,9 +13072,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T09:45:00Z",
+        "imported_at": "2026-08-04T01:17:41Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05",
+        "source_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13090,7 +13090,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T09:45:00Z"
+      "updated_at": "2026-08-04T01:19:26.465165Z"
     },
     {
       "acceptance": [
@@ -47583,6 +47583,253 @@
       "title": "並列 worktree 更新時刻診断の追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-03T09:45:00Z"
+    },
+    {
+      "acceptance": [
+        "payload に entry が無い schedulable beads node が unmapped[] に exact reason と source 付きで出る",
+        "pre-lease の ready_ids と unmapped、および最終 report の conflicts を合わせて対象候補から node を取りこぼさない",
+        "C16/C28 の契約正本と全指定ドキュメント層が同一の復旧境界を記録する",
+        "focused と関連する品質ゲート、system-spec coverage、graph schema、document line limit、repository CI が blocking failure 0 で完了する",
+        "変更した手書きファイルは 500 行以下、管理対象 Markdown は repository の 300 行制約を満たす"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xz0u",
+        "linked_at": "2026-08-03T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "HarnessHub-xz0u の bd ready payload 欠落を単独で修正・検証・公開する repository maintenance task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
+        "evaluator": "final-review C01 qa-141/qa-142 and C03 compile",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "選択範囲内かつ schedulable な beads node が pre-lease 判定で ready_ids または unmapped に現れ、最終 report では conflicts を含めて取りこぼさず、payload 欠落時は ready_payload_entry_absent として復旧可能になる",
+      "graph_node_id": "task-schedule-beads-ready-entry-absent-reporting-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "bd ready の payload から欠けた beads task を schedule report が黙って落とさず、原因と復旧手順を機械可読に示す",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow",
+        "spec-harness-hub-requirements",
+        "issue-schedule-blocked-exclusion-unreported-20260728"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/schedule-graph.py",
+        "plugins/dev-graph/scripts/schedule_graph_nodes.py",
+        "plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py",
+        "plugins/dev-graph/tests/test_runtime_coverage.py",
+        "plugins/dev-graph/references/schedule-graph-contract.md",
+        "plugins/dev-graph/plugin-composition.yaml",
+        "scripts/lint-script-naming.py",
+        "eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260806T010001Z-xz0u-c15r5/verdict.json",
+        "system-spec/spec-state.json",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
+        "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"
+      ],
+      "scope_in": [
+        "schedule-graph.py の beads ready 判定に payload entry 欠落の unmapped 報告を追加する",
+        "pre-lease の ready_ids / unmapped と lease conflict を含む最終候補被覆、malformed dependency fail-closed、順序非依存 parity を回帰テストで固定する",
+        "schedule-graph-contract.md、system-spec、specs、architecture、feature、task、receipt、Beads を同じ判断へ更新する"
+      ],
+      "scope_out": [
+        "bd ready の選定規則、Beads issue の状態、依存 DAG の変更",
+        "Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit の変更",
+        "ready payload に無い task を推測で ready set へ追加すること"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-03",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "schedule-graph",
+        "beads",
+        "observability",
+        "silent-drop"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "schedule-graph が bd ready payload 欠落 node を理由付きで報告する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T01:26:17.145670Z"
+    },
+    {
+      "acceptance": [
+        "C16/C28 の exact reason/source、候補被覆、復旧境界を記録する",
+        "内部 dev-workflow 影響と製品 runtime 非変更の根拠を記録する",
+        "C01 qa-141/qa-142、C03、C02 の正規 lineage を追跡可能にする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [],
+      "classification_confidence": 1,
+      "classification_reason": "HarnessHub-xz0u の仕様反映判断と正規 C01/C03/C02 lineage を記録する受領書",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [
+          "beads:HarnessHub-xz0u"
+        ],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
+        "evaluator": "C01 qa-141/qa-142, C03 compile, C02 specification reflection",
+        "evidence_ref": "system-spec/spec-state.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T22:02:24.549928Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "schedule の payload entry 欠落を silent drop せず復旧可能に報告する契約が、指定された全ドキュメント層で一致していることを記録する",
+      "graph_node_id": "doc-xz0u-ready-payload-entry-absent-spec-reflection-receipt-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-spec-reflection",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-xz0u の仕様影響判断と正規反映結果を、人間可読かつ graph から追跡可能な形で受領する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow",
+        "task-schedule-beads-ready-entry-absent-reporting-20260803"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md",
+        "plugins/dev-graph/scripts/schedule-graph.py",
+        "plugins/dev-graph/scripts/schedule_graph_nodes.py",
+        "plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py",
+        "plugins/dev-graph/tests/test_runtime_coverage.py",
+        "plugins/dev-graph/references/schedule-graph-contract.md",
+        "system-spec/spec-state.json",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"
+      ],
+      "scope_in": [
+        "C16/C28 の内部 dev-workflow 契約",
+        "system-spec、specification、architecture、feature、task、docs の仕様反映"
+      ],
+      "scope_out": [
+        "Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit",
+        "bd ready の選定規則または Beads issue 状態の変更"
+      ],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": "dev-graph",
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "schedule-graph",
+        "beads",
+        "spec-reflection"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "bd ready payload entry 欠落報告の仕様反映受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T01:31:46.475830Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
