@@ -12,16 +12,16 @@ iteration: null
 title: "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-07-28T00:05:00Z"
-status: "draft"
+updated_at: "2026-08-04T08:01:43.939979Z"
+status: "active"
 depends_on: []
-related_nodes: []
-resource_scope: ["scripts/validate-plugin-completeness.py","tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py","plugins/*/package-contract.json","plugins/*/hooks/hooks.json"]
+related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-plugin-hook-governance-20260804","arch-harness-hub-dev-workflow","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","task-live-trial-evidence-selection-handoff-20260804"]
+resource_scope: ["scripts/validate-plugin-completeness.py","scripts/validate-plugin-hooks.py","tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py","tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py","plugins/*/package-contract.json","plugins/*/hooks/hooks.json","plugins/*/.claude-plugin/plugin.json","system-spec/dev-workflow.md","specs/harness-hub-plugin-hook-governance-addendum.md","architecture/harness-hub-dev-workflow.md","docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"]
 purpose: "scripts/validate-plugin-completeness.py は hooks について declared ⊆ actual (宣言した hook がディスクに実在すること) しか強制しておらず、hooks/hooks.json が実際に登録している entry point が package-contract.json に宣言されているかを検査しない。この parity 検査は 2026-07-28 に dev-graph 1 plugin 専用の契約テストとしてのみ実装されており、他 plugin が hooks.json へ hook を登録しながら宣言を怠っても repo 全体の完全性検査は素通りする"
-goal: "hooks.json 登録 ⊆ package-contract.json 宣言 の parity を、dev-graph 専用テストではなく repo 全 plugin へ適用する検査経路に置くか、適用しない設計判断を根拠付きで確定した状態にする"
-scope_in: ["validate-plugin-completeness.py へ hooks.json 登録内容との parity 検査を追加する是非を評価する","support module (単体起動の入口を持たない import 専用ファイル) の許容判定を全 plugin 共通ロジックとして共有できるか評価する","一般化する場合、既存 plugin の hooks.json と package-contract.json の乖離を棚卸しし移行コストを見積もる","一般化しない場合、dev-graph 専用に留める理由を architecture へ記録する"]
+goal: "全 plugin の hook entry point で、台帳・登録・実体の 3 者一致を qa-146 の repo 全体 fail-closed 検査として維持し、手動 script との責務混同を防ぐ状態にする"
+scope_in: ["validate-plugin-completeness.py で sidecar hooks.json と manifest inline hooks を登録実態として突合する","全 plugin の宣言・登録 parity と import 専用 support module の許容境界を回帰テストで固定する","既存 plugin の乖離を棚卸しし、手動 script を hooks/ から分離する","qa-146 の仕様・設計・Beads・draft PR の追跡を一致させる"]
 scope_out: ["skills / agents / commands の entry_points 宣言漏れ (HarnessHub-zrn で追跡)","hooks 実装そのものの変更","live-trial behavior closure digest の算出範囲変更"]
-acceptance: ["全 plugin へ適用するか dev-graph 専用に留めるかの判断が根拠付きで記録されている","適用する場合、hooks.json へ登録済みかつ未宣言の hook を持つ plugin を repo 全体の検査が非 0 終了で検出する","適用する場合、import 専用 support module が偽陽性として検出されない回帰テストが存在する","適用しない場合、dev-graph 専用に留める理由と再検討トリガーが architecture へ記録されている"]
+acceptance: ["HK-001 が登録済み・未宣言を repo 全体で非 0 終了にする","HK-002 が登録構成を持つ plugin の宣言済み・未登録を repo 全体で非 0 終了にする","HK-003 が実行可能な残余を拒否し import 専用 support module を許容する","focused pytest、全 plugin 完全性、task 仕様書ゲート、C01 coverage が pass する"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
@@ -29,9 +29,9 @@ phase_ref: null
 file_path: "issues/sys-hooks-entry-point-parity-generalization-20260728.md"
 template_id: "issue"
 template_version: "1.0.0"
-confirmation_status: "draft"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"89f42b29a1af7b635ec8534fe3bdf452d8f878309696305200484e0d2c8c4ec6","evaluator":"final-review: focused pytest + plugin completeness + task-spec gate + C01/C03 coverage (qa-146)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-07-28T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.95
 classification_reason: "PR #82 の CI 是正で判明した、repo 全体検査と plugin 専用テストの被覆差に関する追跡課題"
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/666"],"policy":"linked_pr_merged_all","reconciled_at":"2026-08-04T00:00:00Z","source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-28T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -83,6 +83,13 @@ implementation_readiness: {"checked_at":"2026-07-28T00:00:00Z","missing_sections
 
 - 影響範囲: 全 plugin の entry point 台帳の信頼性。台帳が実体と乖離すると、live-trial の被覆計算と配布物の完全性検査がともに実態より楽観的な結果を返す。
 - 緊急度: 中。現時点で dev-graph 以外に実測された宣言漏れはないが、検出手段がないため「無い」ことは確認できていない。
+
+## 実施結果 (2026-08-04)
+
+- 一般化を採用した。HK-001 は登録 ⊆ 宣言、HK-002 は登録構成を持つ plugin の宣言 ⊆ 登録、HK-003 は hook directory の残余を import 専用 support module だけに限定する。
+- 登録は `hooks/hooks.json` と manifest inline hooks の和で取得する。相対 command の `hooks/foo.py` と `./hooks/foo.py` を同じ entry point として扱う。
+- repo 全体検査は harness-creator の未宣言 `auto-sync-on-session-start.py` と、skill-intake に混在していた手動 keychain script を発見した。前者は宣言を追加し、後者は `scripts/` へ移動して自動 hook として登録しない構造に訂正した。
+- 検査本体は 500 行を超えたため hook 判定を `scripts/validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書品質ゲート PASS を確認した。別ブランチで異なる契約に同じ qa-143 が使われたため、仕様・設計の正規反映は統合済み `qa-146` と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
 
 ## 関連
 

@@ -39,8 +39,7 @@
       "hook-guard-skillgen.py",
       "pre-publish-secret-scrub.sh",
       "pre-publish-schema-validate.py",
-      "post-publish-notify.sh",
-      "post-keychain-add.sh"
+      "post-publish-notify.sh"
     ],
     "runtime": [
       "scripts/_vendor.py",

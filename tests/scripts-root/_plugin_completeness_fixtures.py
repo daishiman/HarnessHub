@@ -64,6 +64,24 @@ def _make_plugin(base: Path, name: str, manifest: dict | None = None,
     return d
 
 
+def _write_hooks_json(plugin_dir: Path, *registered: str) -> Path:
+    """hooks/hooks.json を書き、指定ファイルを entry point として登録する。
+
+    「実際に登録されている entry point」は hooks/ のファイル一覧ではなく
+    hooks.json の command なので、parity テストは必ずこの登録側を組み立てる。
+    """
+    hooks_dir = plugin_dir / "hooks"
+    hooks_dir.mkdir(parents=True, exist_ok=True)
+    document = {"hooks": {"PreToolUse": [{"matcher": ".*", "hooks": [
+        {"type": "command",
+         "command": f'python3 "$CLAUDE_PLUGIN_ROOT/hooks/{name}" --repo-root "."'}
+        for name in registered
+    ]}]}}
+    path = hooks_dir / "hooks.json"
+    path.write_text(json.dumps(document), encoding="utf-8")
+    return path
+
+
 def _mk(*names) -> dict[str, str]:
     """marketplace_entries dict {name: ./plugins/name} を作る簡易ヘルパ。"""
     return {n: f"./plugins/{n}" for n in names}

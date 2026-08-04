@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-04T07:10:34.922526Z"
+updated_at: "2026-08-04T07:59:19.950336Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
-resource_scope: ["specs/harness-hub-system-specification.md","system-spec/spec-state.json","docs/features/feat-dev-pipeline-improvement/live-trial-evidence-selection-spec-reflection-receipt.md"]
+resource_scope: ["specs/harness-hub-system-specification.md","system-spec/spec-state.json","system-spec/dev-workflow.md","docs/features/feat-dev-pipeline-improvement/live-trial-evidence-selection-spec-reflection-receipt.md","docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md","specs/harness-hub-plugin-hook-governance-addendum.md"]
 purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
-goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-145 の C11/C14/C16 と live-trial 証跡選択の dev-workflow 契約を正本から追跡できる状態を維持する"
+goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-146 の C11/C14/C16、live-trial 証跡選択、全 plugin hook parity の dev-workflow 契約を正本から追跡できる状態を維持する"
 scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"2d9009a44589d28eb1abf5c0894b94174d5ee3b5c46a2df58f6ebf3342b0e456","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/live-trial-evidence-selection-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-04T07:20:00Z","origin_kind":"system-spec-harness","source_digest":"2d9009a44589d28eb1abf5c0894b94174d5ee3b5c46a2df58f6ebf3342b0e456","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"4b0c134b7643358cf7928fb2bf2327539278030d546f247046bdad84980a96a1","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation (qa-146)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"4b0c134b7643358cf7928fb2bf2327539278030d546f247046bdad84980a96a1","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]

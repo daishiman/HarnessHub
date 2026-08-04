@@ -491,9 +491,9 @@ plugins/skill-intake/
 │   ├── pre-publish-secret-scrub.sh    # 公開前 secret 走査 (exit 2 でブロック)
 │   ├── pre-publish-schema-validate.py # 公開前スキーマ検証
 │   ├── post-publish-notify.sh         # Slack 通知 (任意, silent skip)
-│   ├── post-keychain-add.sh           # Keychain 登録直後の検証 (手動)
 │   └── README.md
 ├── scripts/                           # 共有スクリプト (Python 3.9+、vendor/python を自動使用)
+│   ├── post-keychain-add.sh           # Keychain 登録直後の検証 (手動)
 │   ├── keychain_get_secret.py         # Keychain アクセスの唯一経路
 │   ├── notion_http.py                 # Notion REST wrapper
 │   ├── intake_publish_pipeline.py     # publish/republish/revise の単一発火点
