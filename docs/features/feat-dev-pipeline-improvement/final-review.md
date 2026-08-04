@@ -159,6 +159,19 @@ qa-071 / appr-009 は `system-spec/spec-state.json` に既に確定済みで、
 判断根拠と `system-spec/`・`specs/`・`architecture/` を編集しない理由は
 `qa071-spec-reflection-receipt.md` に記録した。
 
+### CI 証跡と main 統合の再確認 (2026-08-04)
+
+リモート `main` の `fb05db56781598096aa38298edda2447f9b1d1ca` をローカル `main` に取り込み、
+本 branch へ clean merge した。競合は発生しなかった。CI の C05 contract drift は component inventory の
+feedback 契約を Skill と同じ照合規則へ同期して解消した。C03 / C14 の stale closure は既存 SHA を
+書き換えず、fresh live trial `20260807T000000Z-ci-c03` / `20260807T000000Z-ci-c14` を実走し、両方とも
+独立 evaluator が nudge=0、gate=0、overall PASS と判定した。
+
+この再検証は repository の CI 証跡を更新するだけで、製品 API・DB・認証認可・UI・deploy unit と
+Dev Graph の機能契約を追加変更しない。`scripts/run-ci-checks.sh` は **139 PASS / 5 WARN / 0 FAIL** で、
+WARN は段階導入中の既知の非ブロッキング項目である。詳細な受領内容は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
+
 ## C02 重複報告 j66m の最終レビュー (2026-07-30)
 
 `HarnessHub-j66m` は `HarnessHub-bk8v` と同じ lifecycle 回帰を指す重複報告である。

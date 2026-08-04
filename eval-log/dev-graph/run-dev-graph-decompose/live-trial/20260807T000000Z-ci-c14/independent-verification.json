@@ -1,0 +1,36 @@
+{
+  "evaluator": "fresh-independent-c14-evidence-evaluator",
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Both fixture graphs validate, are acyclic, and measure maximum inter-feature dependency 2 against the threshold 3."
+    },
+    "2": {
+      "met": true,
+      "evidence": "The three pre-evaluation draft features have zero Issue, Beads, and Projects linkage with distinct zero-attribution evidence."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Each fixture has one confirmed/pass/complete feature candidate and three remaining draft features."
+    },
+    "4": {
+      "met": true,
+      "evidence": "The transcript shows exactly two target Skill invocations and the persisted bindings differ as beads and none; github is rejected for macro-only local-only publication."
+    },
+    "5": {
+      "met": true,
+      "evidence": "The task records pre/post state differentials and validates previews through the stdin validator path."
+    },
+    "6": {
+      "met": true,
+      "evidence": "The promoted node's evaluated_digest was recomputed from its final persisted content and matches in both fixtures."
+    },
+    "7": {
+      "met": true,
+      "evidence": "The two in-memory publication-gate negative controls are rejected by the canonical stdin schema validator."
+    }
+  }
+}

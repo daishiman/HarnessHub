@@ -78,8 +78,15 @@ source digest 検査（不一致 0）、renderer focused regression（3 PASS）�
 placement、doc line limit を再実行し合格した。C05 の guard-clean fresh live trial は overall PASS、
 nudge=0、gate=0 である。
 
-repository CI は **138 PASS / 5 WARN / 1 FAIL** だった。FAIL は今回未変更の C03
-`run-dev-graph-sync` と C14 `run-dev-graph-decompose` の既存 live-trial behavior closure が
-stale であるためで、今回の C05 は最新証跡により解消済みである。残課題は C03/C14 の fresh
-live trial をそれぞれの担当変更として再取得すること、および本 draft PR のレビューと main への
-取り込みである。commit SHA と PR 番号は公開後に Beads `HarnessHub-0ui0` の notes へ記録する。
+CI 改善では、C05 `verify` の contract drift を component inventory の feedback 契約を Skill と
+同じ照合規則へ同期して解消した。C03 `run-dev-graph-sync` と C14
+`run-dev-graph-decompose` の stale behavior closure は既存証跡の SHA を書き換えず、fresh live trial
+`20260807T000000Z-ci-c03` / `20260807T000000Z-ci-c14` を新規取得した。どちらも独立 evaluator が
+nudge=0、gate=0、overall PASS と判定し、criteria receipt も新しい証跡を参照するよう更新した。
+
+`scripts/run-ci-checks.sh` の最終結果は **139 PASS / 5 WARN / 0 FAIL** である。WARN は段階導入中の
+既知の非ブロッキング項目である。この CI 証跡更新は検証記録だけを変え、製品 API・DB schema・
+認証認可・製品 UI・deploy unit、および既に確定した Dev Graph 機能契約には追加影響がない。そのため
+`system-spec/`・`specs/`・`architecture/` への追加反映は不要と判断し、根拠を本受領書へ記録した。
+残課題は draft PR のレビューと main への取り込みだけである。commit SHA と PR 番号は公開後に
+Beads `HarnessHub-0ui0` の notes へ記録する。

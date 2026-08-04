@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c14",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260806T010000Z-f84o-postmain-c14/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c14 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=79649629ca85614d8aea6a67192a3dbdcf6277ab44272f7d09696aed6bdde5dd。"
+      "observed": "fresh live trial 20260807T000000Z-ci-c14 は overall=PASS、nudge=0、gate=0。独立 evaluator が、target Skill 2 回、両 fixture の DAG/粒度、beads/none の永続 binding、唯一の昇格候補と draft gate、pre/post 差分、confirmation evidence 再計算、stdin negative controls を一次証跡から PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",
