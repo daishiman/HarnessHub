@@ -1,0 +1,20 @@
+{
+  "evaluator": "fresh-independent-c03-evidence-evaluator",
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "The captured transcript records pass2 apply with import 1 and export 1 on the isolated fixture."
+    },
+    "2": {
+      "met": true,
+      "evidence": "The captured transcript records pass3 with changes=0, imports=[], exports=[], write_count=0, and converged=true."
+    },
+    "3": {
+      "met": true,
+      "evidence": "The pass2/pass3 graph, snapshot, and remote SHA-256 values match; issue, Project item, field, and option identifiers remain stable."
+    }
+  }
+}

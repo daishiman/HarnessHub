@@ -7,7 +7,7 @@
     "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c03",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260806T010000Z-f84o-postmain-c03/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260807T000000Z-ci-c03/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260806T010000Z-f84o-postmain-c03/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260806T010000Z-f84o-postmain-c03/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260806T010000Z-f84o-postmain-c03/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260806T010000Z-f84o-postmain-c03/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260807T000000Z-ci-c03/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260807T000000Z-ci-c03/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260807T000000Z-ci-c03/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260807T000000Z-ci-c03/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c03 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=f618d4bac3309a9d27a31c271f8ad4f7bb5ec88359c9e2f914df645728b57449。"
+      "observed": "fresh live trial 20260807T000000Z-ci-c03 は overall=PASS、nudge=0、gate=0。独立 evaluator が pass2 の import 1/export 1、pass3 の changes=0/imports=[]/exports=[]、pass2/pass3 の graph/snapshot/remote SHA-256 と stable IDs の不変を一次証跡から PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

@@ -54,6 +54,10 @@ serves_goals: [G1, G2, G5]
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
+### 2026-08-04 Dev Graph registration receipt の実装フィードバック
+
+registration receipt の node IDs、件数、source digest、source lineage が一致し、登録時点の graph digest も一致する場合を `verified` とする。後続 sync により graph digest だけが古くなった場合は、証拠不一致や未検証と混同せず `partial` / `graph_digest_stale` として可視化する。他の証拠不一致は fail-closed を維持する。これは既存確定 QA を変更せず、repository 内の testing-qa 実装契約を具体化するフィードバックであり、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit には影響しない。
+
 ## 上流指針 (doctrine anchor)
 
 - 本カテゴリは共通シード (categories) 外のプロジェクト固有カテゴリで、approved な pending 例外 (owner: daishiman) として上流指針を確定している。

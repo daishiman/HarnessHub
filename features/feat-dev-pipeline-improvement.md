@@ -130,6 +130,11 @@ subprocess 非依存の AST 定数伝播で閉じた。製品 API・DB・認証�
 mtime クラスタは調査開始点に限定し、reflog などの直接証拠で原因を確認する。詳細は
 [差分追記ログ](../docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md)を正とする。
 
+`HarnessHub-0ui0` では、後続 sync が registration 時点の graph digest を古くしても、
+node ID・件数・source digest・lineage が一致する登録証拠を失わないよう、`partial` 状態を追加した。
+証拠不一致の fail-closed と製品 API・DB・認証認可・UI・deploy unit の非変更は維持し、
+詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
+
 ## アーキテクチャ参照・機能間依存
 
 - [arch-harness-hub-dev-workflow](../architecture/harness-hub-dev-workflow.md) / 要件正本: [spec-harness-hub-requirements](../specs/harness-hub-system-specification.md)

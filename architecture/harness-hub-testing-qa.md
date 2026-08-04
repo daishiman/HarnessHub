@@ -103,17 +103,18 @@ graph shape、回帰テストなどの責務境界を根拠に判断し、コー
 
 ## 2026-07-30 renderer 登録検証表示の実装反映
 
-`HarnessHub-35ai` では、feature progress projection と registration proof を
-分離した。証拠経路は `registration receipt → receipt validator →
-registration_verification state → CLI / visible banner / embedded metadata`
-とし、validator を通過した場合だけ `verified` を返す。
+`HarnessHub-35ai` / `HarnessHub-0ui0` では、feature progress projection と
+registration proof を分離した。証拠経路は `registration receipt → receipt validator →
+registration_verification state → CLI / visible banner / embedded metadata` とする。node IDs、
+件数、source digest、source lineage、graph digest が一致する場合だけ `verified` を返す。
 
-receipt が無い探索表示は `not_performed` とする。同じ 13 child graph を
-receipt 有り／無しで描画する正負テストにより、件数が偶然一致しただけの
-偽陽性を遮断する。影響は repository 内の renderer 品質契約だけであり、
-製品 API、DB、認証認可、UI、deploy unit は変えない。詳細は
-[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
-を参照する。
+後続 sync により graph digest だけが古い場合は、登録済みの四つの証拠を捨てず
+`partial` / `graph_digest_stale` を返す。receipt が無い探索表示は `not_performed` とする。
+同じ graph を verified / partial / not_performed として描画する正負テストにより、件数の
+偶然一致と stale digest の書き換えによる偽陽性を遮断する。影響は repository 内の renderer
+品質契約だけであり、製品 API、DB、認証認可、UI、deploy unit は変えない。詳細は
+[初回受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) と
+[stale digest 受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md) を参照する。
 
 ## 2026-07-30 plugin-local browser CI 到達設計
 

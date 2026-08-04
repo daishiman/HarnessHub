@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1204,
+  "graph_revision": 1205,
   "nodes": [
     {
       "acceptance": [
@@ -47830,6 +47830,240 @@
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
       "updated_at": "2026-08-04T01:31:46.475830Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0ui0",
+        "linked_at": "2026-08-04T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-render-registration-stale-digest-20260803.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "registration 時点の graph_digest_after と sync 後の canonical graph digest が 11 verb 順序で構造的に異なるため、registration proof の部分照合を明示する品質不具合として分類した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T21:15:05.909349Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-render-registration-stale-digest-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "issue-render-registration-stale-digest-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "issue-render-registration-receipt-contract-mismatch-20260726",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/",
+        "eval-log/dev-graph/run-dev-graph-render/",
+        "issues/sys-render-registration-stale-digest-20260803.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "graph-digest",
+        "stale"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T21:45:57.713524Z"
+    },
+    {
+      "acceptance": [
+        "graph digest だけが stale の場合に partial/graph_digest_stale として HTML を生成する",
+        "node ID・件数・source digest・source lineage の不一致は fail-closed を維持する",
+        "task 文書、graph node、Beads、draft PR の追跡情報が一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0ui0",
+        "linked_at": "2026-08-04T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "P13 本体の 300 行上限を超えず、stale digest 変更の統合条件だけを単一責務で追跡する補助 task である",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669",
+        "evaluator": "final-review",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "文書、graph、Beads、draft PR が同じ Beads ID と three-state verification 契約を参照し、main への取り込み後に再現可能な証跡を残す",
+      "graph_node_id": "task-render-registration-stale-digest-handoff-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Phase 13 の補助引継ぎとして、registration receipt の stale graph digest を安全に部分照合する変更の統合条件と検証証跡を追跡可能にする",
+      "related_nodes": [
+        "issue-render-registration-stale-digest-20260803",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md",
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "eval-log/dev-graph/run-dev-graph-render/"
+      ],
+      "scope_in": [
+        "renderer の stale graph digest 表示契約",
+        "回帰テストと fresh live trial",
+        "system-spec/specs/architecture/features/tasks/docs への反映",
+        "Beads/graph/PR の相互記録"
+      ],
+      "scope_out": [
+        "製品 API、DB schema、認証認可、製品 UI、Cloudflare deploy unit",
+        "registration receipt の digest 値の書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "stale-digest",
+        "phase-13"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "registration receipt stale digest の Phase 13 引継ぎを確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T00:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

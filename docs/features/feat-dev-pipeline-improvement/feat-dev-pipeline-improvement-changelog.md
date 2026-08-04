@@ -9,6 +9,12 @@ layer: implementation-notes
 
 ## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
 
+## 2026-08-04 追記: renderer registration receipt の stale digest を部分照合として表示
+
+- `HarnessHub-0ui0` で、registration 時点に束縛された `graph_digest_after` が後続 sync で古くなる構造を、registration proof 全体の失敗と扱わないよう是正した。
+- node IDs、件数、source digest、source lineage が一致し graph digest も一致する場合は `verified`、graph digest だけが stale の場合は `partial` / `graph_digest_stale`、receipt 未指定は `not_performed` とする。他の証拠不一致は fail-closed のまま維持する。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。層別反映と検証は [仕様反映受領書](render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
+
 - `HarnessHub-7xi9` の 2026-07-31 事象は、reflog の直接証拠により `git reset --hard` と
   直後の `git pull` が最有力原因と判明した。mtime 一致だけで非 Git 系 clobber と断定しない。
 - `scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを横断してクラスタを報告する
