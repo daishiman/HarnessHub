@@ -41,6 +41,8 @@ EXCEPTION_PATTERNS = [
 EXCEPTION_PATHS = {
     "plugins/dev-graph/scripts/graph_artifact_readiness.py":
         "import-only Python module (§4.4)",
+    "plugins/dev-graph/scripts/schedule_graph_nodes.py":
+        "import-only Python module (§4.4)",
 }
 
 # 暫定例外 (Change Governance 経由でリネーム予定)

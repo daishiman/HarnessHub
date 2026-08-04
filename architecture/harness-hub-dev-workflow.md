@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-03T04:56:00Z"
+updated_at: "2026-08-03T22:19:00.966425Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-03T04:56:00Z","origin_kind":"system-spec-harness","source_digest":"f49e4a3a57b3b33a9e27137df103e6f6b0131efb1b0cc6a3403823d0e5a4b598","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -149,3 +149,7 @@ authority prefix / graph-store tail で fail-closed にする。別 script の�
 時間契約外とし、PostToolUse drift audit が補完する。契約と検証は
 [f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
 を正とする。
+
+## C16 Beads ready payload 欠落の観測境界 (2026-08-03)
+
+C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
