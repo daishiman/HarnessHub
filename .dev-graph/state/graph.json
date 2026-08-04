@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1196,
+  "graph_revision": 1197,
   "nodes": [
     {
       "acceptance": [
@@ -47155,16 +47155,12 @@
       "classification_confidence": 0.96,
       "classification_reason": "system-spec-harness の C13 citation validation 契約を強化する単独 bug 修正であり、issue artifact として issues/ へ正規配置する",
       "completion_evidence": {
-        "completed_at": "2026-08-04T00:50:48Z",
-        "evidence_refs": [
-          "https://github.com/daishiman/HarnessHub/pull/654",
-          "docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md",
-          "03386bc2"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-08-04T00:53:20Z",
-        "source": "manual",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
       },
       "confirmation_evidence": {
         "evaluated_digest": "feca098df82289522ed3ff10aba3f9dd14e31cee65915942600872ce65343596",
@@ -47233,7 +47229,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "system-spec-harness",
         "citation",
@@ -47244,7 +47240,7 @@
       "template_version": "1.0.0",
       "title": "Citation の取得証跡・時刻実在性を fail-closed で検証する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T00:53:20Z"
+      "updated_at": "2026-08-04T01:02:00Z"
     },
     {
       "acceptance": [

@@ -12,8 +12,8 @@ iteration: null
 title: "Citation の取得証跡・時刻実在性を fail-closed で検証する"
 owners: ["daishiman"]
 created_at: "2026-08-03T08:28:16Z"
-updated_at: "2026-08-04T00:53:20Z"
-status: "done"
+updated_at: "2026-08-04T01:02:00Z"
+status: "active"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/system-spec-harness/scripts/validate-source-citation.py","plugins/system-spec-harness/skills/run-system-spec-doc-fetch/","plugins/system-spec-harness/skills/run-system-spec-compile/","plugins/system-spec-harness/schemas/fetched-references.schema.json","plugins/system-spec-harness/tests/","docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md","issues/sys-source-citation-retrieval-integrity-20260803.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-08-04T00:50:48Z","evidence_refs":["https://github.com/daishiman/HarnessHub/pull/654","docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md","03386bc2"],"policy":"manual","reconciled_at":"2026-08-04T00:53:20Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-08-03T08:28:16Z","missing_sections":[],"status":"complete"}
 ---
 
