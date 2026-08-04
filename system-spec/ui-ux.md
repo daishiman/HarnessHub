@@ -26,21 +26,9 @@ serves_goals: [G1, G2, G3, G5]
 
 ### qa-136 (対応セル: web)
 
-**質問**: CLI (Claude Code / Codex / Publisher) を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?
+**質問**: CLI を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?
 
-**回答**: ユーザーの 2026-08-02 指示 (「基本ユーザーは CLI を使わないので Web で対応できるようにしておく」) を明示承認として、qa-065 の既確定 (画面構成・レスポンシブ変換・共通部品・a11y) を全面維持したうえで、CLI 非依存導線を次のとおり追加確定する。
-
-【1. Web 単独完結の受入条件】主対象利用者は CLI を使わない前提とし、Hub Web 単体で「公開 → 状態確認 → 導入案内」まで到達できることを ui-ux.web の受入条件に加える。docs/user-journeys.md J1 step 3b の「Web 代替: S01 公開ウィザード」を、Stage 1 の任意代替ではなく必須経路へ格上げする。
-
-【2. S01 公開ウィザードの Web 経路】S01 に ZIP アップロード経路を置き、CLI 取込経路と同一の Hub 側検査 (static validation / secret scan / policy) へ収束させる。検査結果 (Green 自動公開 / Yellow・Red は Needs Fix 差し戻し) の表示・文言・再投入導線は CLI 経路と同一 UI を使い、経路ごとに別の状態表現を作らない。
-
-【3. Device 承認 (S08) の位置づけ】OAuth Device Flow は CLI / Publisher 利用者専用の経路として維持し、Web 単独利用者の主導線からは分離する。/device へ確認コードを持たずに到達した利用者に対しては、(a) この画面は CLI / Publisher から開始した場合だけ使うこと、(b) Web だけで公開したい場合は S01 公開ウィザードへ進むこと、の 2 点を画面上で明示し、行き止まりにしない。
-
-【4. Workspace 選択/切替の常設】共通シェルに現在の Workspace 表示と切替を常設する。所属が 1 件のときは切替 UI を出さず現在値の表示のみとし、選択操作を強いない。
-
-【5. スコープ不足の扱い】403 missing_tenant_scope をエンドユーザーへ露出させない。scope 未解決は失敗ではなく「Workspace を選べば回復する状態」として扱い、Workspace 選択への回復導線を提示する。qa-118 【1】の 401/403 は ErrorState のみ (旧データを描画しない) という契約は維持し、本項はその ErrorState の文言と回復導線を定めるものであって、旧 scope データの継続表示を許すものではない。
-
-【6. 境界】PublishRequest 状態機械・検査実装・role 判定は既存 owner のままとし、ui-ux は経路差を吸収した単一の表現と回復導線の提示だけを担う。
+**回答**: Hub Web 単体で公開、状態確認、導入案内まで到達できることを受入条件とする。S01 は ZIP アップロードを CLI と同一の static validation、secret scan、policy に収束させ、Green/Yellow/Red の表示と再投入導線を統一する。Device Flow は CLI/Publisher 専用として残し、確認コードなしの `/device` では用途を説明して S01 への回復導線を示す。共通シェルには現在の Workspace と切替を常設するが、所属が 1 件なら操作を強制しない。missing_tenant_scope は内部エラーを露出せず Workspace 選択で回復可能な ErrorState とし、401/403 や scope 切替後に旧 scope データを表示しない既存契約を維持する。状態機械、検査実装、role 判定は既存 owner の責務のままとする。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

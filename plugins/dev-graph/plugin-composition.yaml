@@ -59,6 +59,9 @@ internal_support:
   - ref: scripts/node_transaction.py
     owners: [C02, C05, C11, C15]
     purpose: nodeのWAL recoveryとread-only consumerのpending transaction fail-closed検査
+  - ref: scripts/schedule_graph_nodes.py
+    owners: [C16]
+    purpose: schedule entrypointが共有する純関数のnode述語 (resource_scope/schedulable/依存充足)
 
 dependencies:
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-node, type: calls}

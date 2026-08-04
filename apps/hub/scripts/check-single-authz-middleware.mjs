@@ -51,6 +51,21 @@ const ALLOWLIST = [
     path: 'apps/hub/tests/auth-tenancy/tenant-isolation.test.ts',
     reason: 'role×action の越境不可を総当たりする分離テスト。期待値として role 語彙を持つ',
   },
+  {
+    path: 'apps/hub/tests/user-org-admin/authz-role-rules-contract.test.ts',
+    reason:
+      'AD-8 (role 判定は feature 側で再実装せず lib/authz/ACTION_RULES・atLeast に完全委譲) の契約テスト。ACTION_RULES/ROLE_ORDER/atLeast を正本から import して実測するだけで、独自の role 比較・authz 表を feature 側に定義しない',
+  },
+  {
+    path: 'apps/hub/tests/user-org-admin/pii-salary-contract.test.ts',
+    reason:
+      'UOA-PII-009: toPiiViewer が atLeast の戻り値だけで判定していることを role 4 種の総当たりで固定する契約テスト (AD-5)。期待値として role 語彙を持つ',
+  },
+  {
+    path: 'apps/hub/tests/user-org-admin/legal-page-contract.test.tsx',
+    reason:
+      '/legal 用の action が ACTION_RULES に存在しないこと (=role 制限を課さない設計) を正本から確認する契約テスト',
+  },
 ];
 
 /**

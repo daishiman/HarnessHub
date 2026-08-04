@@ -76,6 +76,13 @@ function repository(overrides: Partial<HearingIntakeRepository> = {}): HearingIn
       sheetReductionRate: 0.35,
       updatedBy: 'system-default',
     })),
+    updateCoefficients: vi.fn(async (context, input) => ({
+      tenantId: context.tenantId,
+      annualHours: input.annualHours ?? 2_000,
+      minutesPerRun: input.minutesPerRun ?? 15,
+      sheetReductionRate: input.sheetReductionRate ?? 0.35,
+      updatedBy: context.actorId ?? 'system-default',
+    })),
     createSheetAndEnqueue: vi.fn(async (_context, input) => {
       input.buildPayloadJson(SHEET_ROW.id, SHEET_ROW.code);
       return SHEET_ROW;

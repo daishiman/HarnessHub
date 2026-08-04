@@ -137,6 +137,20 @@ repository CI 136 PASS / 4 既存 WARN / 0 FAIL。最終結果と層別判断は
 中学生向けには「名簿に 13 人いるだけでは登録完了と言わず、受付の受領書と
 名簿が一致したときだけ合格印を出す仕組み」である。
 
+## renderer registration stale digest の最終レビュー (2026-08-04)
+
+`HarnessHub-0ui0` は、登録時点の graph digest が後続 sync で古くなると、正しい登録証拠まで
+失敗として HTML を出せなくなる問題を修正する。node IDs、件数、source digest、source lineage が
+一致し graph digest も一致する場合は `verified`、graph digest だけが古い場合は `partial` /
+`graph_digest_stale`、receipt 未指定は `not_performed` とし、他の証拠不一致は fail-closed を維持する。
+
+この変更は repository 内の renderer 品質契約に限られ、製品 API・DB・認証認可・UI・deploy unit は
+変更しない。実装、task 仕様書ゲート、fresh live trial、repository CI の最終結果と Beads / Draft PR は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
+
+中学生向けには「受付後に名簿の並び替えがあって受付番号だけ古くなっても、名前と人数が全部一致して
+いることまで『未確認』にしない。番号だけ古いと正直に表示して、間違った名簿なら止める仕組み」である。
+
 ### 仕様・設計影響
 
 新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。
@@ -144,6 +158,19 @@ qa-071 / appr-009 は `system-spec/spec-state.json` に既に確定済みで、
 本変更はその本文を feature と P01〜P13 の実行契約へ投影する変更である。
 判断根拠と `system-spec/`・`specs/`・`architecture/` を編集しない理由は
 `qa071-spec-reflection-receipt.md` に記録した。
+
+### CI 証跡と main 統合の再確認 (2026-08-04)
+
+リモート `main` の `fb05db56781598096aa38298edda2447f9b1d1ca` をローカル `main` に取り込み、
+本 branch へ clean merge した。競合は発生しなかった。CI の C05 contract drift は component inventory の
+feedback 契約を Skill と同じ照合規則へ同期して解消した。C03 / C14 の stale closure は既存 SHA を
+書き換えず、fresh live trial `20260807T000000Z-ci-c03` / `20260807T000000Z-ci-c14` を実走し、両方とも
+独立 evaluator が nudge=0、gate=0、overall PASS と判定した。
+
+この再検証は repository の CI 証跡を更新するだけで、製品 API・DB・認証認可・UI・deploy unit と
+Dev Graph の機能契約を追加変更しない。`scripts/run-ci-checks.sh` は **139 PASS / 5 WARN / 0 FAIL** で、
+WARN は段階導入中の既知の非ブロッキング項目である。詳細な受領内容は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
 
 ## C02 重複報告 j66m の最終レビュー (2026-07-30)
 

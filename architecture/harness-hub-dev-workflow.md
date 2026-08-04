@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-03T09:45:00Z"
+updated_at: "2026-08-04T05:44:22.440339Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
 purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority と並列 worktree の診断境界、consumer-owned reference の境界を情報欠落なく提供する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140、C16 qa-141/qa-142、および qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、hook entry point parity、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05","evaluator":"system-spec-harness compile + coverage validation (qa-139, qa-140)","evidence_ref":"system-spec/dev-workflow.md"}
-source_lineage: {"imported_at":"2026-08-03T09:45:00Z","origin_kind":"system-spec-harness","source_digest":"7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -149,3 +149,32 @@ authority prefix / graph-store tail で fail-closed にする。別 script の�
 時間契約外とし、PostToolUse drift audit が補完する。契約と検証は
 [f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
 を正とする。
+
+## hooks entry point 宣言・登録・実体の 3 者一致境界 (2026-08-04)
+
+hooks の entry point 台帳は `package-contract.json` の `entry_points.hooks` が所有し、
+その parity 検査は dev-graph 専用の契約テストではなく repo 全体の必須ゲート
+`scripts/validate-plugin-completeness.py` (HK-001..003) が単一 SSOT として持つ。
+
+**一般化する判断の根拠**: 宣言 ⊆ 実体だけを見る旧検査では台帳の過少申告 (登録済み
+かつ未宣言) を検出できず、「乖離が無い」ことを確認する手段自体が無かった。実際に
+一般化した検査で harness-creator の `auto-sync-on-session-start` 1 件が検出され、
+移行コストは宣言 1 行の追加に収まった。同スクリプトは behavior closure の外側にある
+ため、検査追加が live-trial receipt を失効させない点も採用理由である。
+
+- HK-001 登録 ⊆ 宣言。登録元は `hooks/hooks.json` と manifest inline hooks の和を取る
+  (manifest が hooks.json を参照していなくても Claude Code は読むため fail-closed)。
+- HK-002 宣言 ⊆ 登録。`hooks/hooks.json` または manifest inline hooks の少なくとも一方を
+  持つ plugin に適用する。登録経路自体を持たない plugin へ適用すると「未配線」を
+  「宣言漏れ」と取り違える。
+- HK-003 残余は import 専用 support module であること。判定は命名規則だけに頼らず
+  shebang と `__main__` ブロックの不在まで要求し、責務分割 (500 行規約) で生まれる
+  support module を偽陽性にせず、snake_case を付けた実 hook の宣言漏れも通さない。
+
+判定ロジックの複製は禁じる。dev-graph の契約テストは同スクリプトの関数を import して
+実 repo へ適用するだけとし、plugin 専用実装が repo 全体の検査を追い越す被覆差
+(HarnessHub-vf66) を再発させない。
+
+## C16 Beads ready payload 欠落の観測境界 (2026-08-03)
+
+C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。

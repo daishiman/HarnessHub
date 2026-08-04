@@ -1,0 +1,394 @@
+ ▐▛███▜▌   Claude Code v2.1.221
+▝▜█████▛▘  Opus 5 (1M context) · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-25
+
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/task.md
+
+⏺ I'll read the task file first.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Task understood. Starting with 工程 0 (pre-state capture) — this must happen before any Skill call.
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  === eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads ===
+     EXISTS
+     total 0
+     … +27 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      ls plugins/dev-graph/scripts/ 2>/dev/null…)
+  ⎿  __pycache__
+     _common.py
+     bd-bridge.py
+     … +38 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  === beads ===
+     -- graph.json sha256 --
+     a5f9e28deb84777e5ba85992db0c9e3fe232f77174e1f708bc5203fac663f8ef  /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads/.dev-graph/state/graph.json
+     … +29 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 -c "…)
+  ⎿  {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+       "component_id": "C14",
+     … +35 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      for K in beads none; do echo "=== $K config ==="; cat eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-$K/.d…)
+  ⎿  === beads config ===
+     {
+       "claude_hooks": {
+     … +156 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      echo "-- bd CLI --"; which bd || echo "bd NOT FOUND"…)
+  ⎿  -- bd CLI --
+     /opt/homebrew/bin/bd
+     -- gh CLI --
+     … +3 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "goal_seek\|goal-spec\|progress.json\|intermediate.jsonl\|original_goal_hash\|drift_signal" plugins/dev-gr…)
+  ⎿  55:goal_seek:
+     60:  - "manifest: goal_seek.engine=inline が未達 checklist から実行局面を都度選ぶため、固定 phase の workflow-manifest.json は適用外。停止条件と配線は本文 ## ゴールシーク実行を正本とする。"
+     149:frontmatter の `goal_seek.engine: inline` / `fork: subagent` / `max_loops: 5` を実行契約とする。固定手順は使わず、未達 checklist と担当 `prompts/*.md` からその周回の操作を都度生成する。各周回で inner criter
+     … +8 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      for K in beads none; do…)
+  ⎿  === beads baseline for beads ===
+     Error: no beads database found
+     Hint: run 'bd where' to inspect the resolved workspace, or 'bd init' to create a new database
+     … +10 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Pre-state captured. Now 工程 5's pre-run artifacts (line 1 of intermediate.jsonl must exist before the Skill call).
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  goal hash ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795
+     written to /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads/eval-log
+     ['run-dev-graph-decompose-intermediate.jsonl', 'run-dev-graph-decompose-progress.json', 'run-dev-graph-decompose-goal-spec.json']
+
+⏺ Pre-run wiring done. Now 工程 1 — run A (binding=beads), literal Skill invocation:
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Skill loaded. Executing per its ゴールシーク配線 — first C24 repo context resolution:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root /Users/dm/orca/workspaces/Harne…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +39 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 plugins/dev-graph/scripts/upsert-node.py --help 2>&1 | head -60)
+  ⎿  usage: upsert-node.py [-h] [--repo-root REPO_ROOT] [--graph GRAPH]
+                           [--input INPUT] [--body-file BODY_FILE]
+                           [--regenerate-body] [--dry-run]
+     … +18 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      wc -l plugins/dev-graph/schemas/graph-node.schema.json…)
+  ⎿      1566 plugins/dev-graph/schemas/graph-node.schema.json
+     {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+     … +198 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 - <<'PY'…)
+  ⎿  === TOP allOf ===
+     [
+      {
+     … +604 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "feature" plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py | head -40…)
+  ⎿  === total lines ===
+          397 plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 - <<'PY'…)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "feature" plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py | head -40…)
+  ⎿  === total lines ===
+          397 plugins/dev-graph/tests/fixtures/build_live_trial_fixture.py
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 - <<'PY'…)
+  ⎿  ### resource_scope
+     {
+      "type": "array",
+     … +706 lines (ctrl+o to expand)
+
+⏺ Schema rules extracted. Now building the macro decomposition (R2/R3). Let me check the writer's input contract:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "def \|envelope\|patch\|registration\|node_payload\|dev-graph-registration\|body_file\|required" plugins/d…)
+  ⎿  4:# purpose: Atomically add or patch one canonical Markdown artifact and its dev-graph node.
+     55:def _validator() -> Any:
+     66:def _sha256(data: bytes) -> str:
+     … +32 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "MACRO_FEATURE_ORIGIN_KINDS\|ROOT_BY_KIND" plugins/dev-graph/scripts/upsert-node.py plugins/dev-graph/scri…)
+  ⎿  plugins/dev-graph/scripts/upsert-node.py:44:ROOT_BY_KIND = {
+     plugins/dev-graph/scripts/upsert-node.py:54:MACRO_FEATURE_ORIGIN_KINDS = frozenset({"generated", "system-spec-harness"})
+     plugins/dev-graph/scripts/upsert-node.py:116:    if kind not in ROOT_BY_KIND:
+     … +12 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 -c "…)
+  ⎿  {}
+     --- top keys --- ['schema_version', 'template_version', 'placeholder_tokens', 'not_applicable_format', 'common_frontmatter', 'artifacts', 'graph_projection', 'system_plan', 'readiness']
+     api-contract.md
+     … +20 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 -c "…)
+  ⎿  PLACEHOLDERS ['<', 'TBD', 'TODO', '未定']
+     COMMON_FM {"template": "common-frontmatter.md", "required": ["graph_node_id", "artifact_kind", "artifact_subtypes", "title", "project_id", "domain", "status", "priority", "start_date", "target_date", "iteration
+     ", "owners", "tags", "file_path", "template_id", "template_version", "confirmation_status", "evaluation_status", "confirmation_evidence", "source_lineage", "created_at", "updated_at", "depends_on", "related_nod
+     … +65 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 -c "…)
+  ⎿  issue ["概要", "背景と問題", "現在の挙動", "期待する挙動", "再現手順またはユースケース", "影響と優先度", "スコープ", "関連グラフ", "受入条件", "検証証跡"]
+     task ["目的", "背景", "入力と前提条件", "出力と成果物", "依存関係", "実装対象", "Write scope と競合制約", "GitHub publication", "実行手順", "受入条件", "検証方法", "リスクとロールバック", "Handoff"]
+     document ["目的", "対象読者", "要約", "本文", "決定事項", "運用・更新方法", "関連資料", "変更履歴"]
+     … +109 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "required_sections\|placeholder\|missing_sections\|readiness" plugins/dev-graph/scripts/upsert-node.py plu…)
+  ⎿  plugins/dev-graph/scripts/upsert-node.py:255:    existing_readiness = existing.get("implementation_readiness")
+     plugins/dev-graph/scripts/upsert-node.py:256:    requested_readiness = requested.get("implementation_readiness")
+     plugins/dev-graph/scripts/upsert-node.py:258:        isinstance(existing_readiness, dict)
+     … +10 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      sed -n '1,140p' plugins/dev-graph/scripts/graph_artifact_readiness.py)
+  ⎿  """Markdown artifact body checks used by the C11 graph validator."""
+     from __future__ import annotations
+     … +136 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "readiness\|placeholder_sections\|missing_sections" plugins/dev-graph/scripts/validate-graph-schema.py | h…)
+  ⎿  29:from graph_artifact_readiness import markdown_sections_of, placeholder_sections
+     262:            # Missing canonical artifacts are readiness gaps, not containment
+     282:        for section in placeholder_sections(
+     … +6 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      sed -n '240,340p' plugins/dev-graph/scripts/validate-graph-schema.py)
+  ⎿          return False
+         return PurePosixPath(relative.as_posix()) == CANONICAL_STORE_RELATIVE
+     … +98 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      grep -n "publication\|draft\|blocked" plugins/dev-graph/scripts/validate-graph-schema.py | head -30…)
+  ⎿  313:        if node.get("status") not in {"draft", "active", "blocked", "done", "closed", "tombstoned"}:
+     318:        if node.get("tracker_binding") == "beads" and (node.get("github_publication") or {}).get("mode") != "local_only":
+     319:            findings.append({"node": loc, "code": "beads_publication", "detail": "beads requires local_only"})
+     … +90 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 -c "…)
+  ⎿  template_version 1.0.0
+     schema_version 1.0.0
+     required: ["graph_node_id", "artifact_kind", "artifact_subtypes", "title", "project_id", "domain", "status", "priority", "start_date", "target_date", "iteration", "owners", "tags", "file_path", "template_id", "
+     … +5 lines (ctrl+o to expand)
+
+⏺ Now generating the macro decomposition (R2-plan / R3-decompose). Writing the node/body generator:
+
+  Made 1 scratchpad edit +372 (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  {
+       "repo": "/Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads",
+       "binding": "beads",
+     … +11 lines (ctrl+o to expand)
+
+⏺ Now the pre-send preview graph validation — stdin path only, no temp file inside the managed repo:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  exit=1
+     valid False
+     Counter({'artifact_missing': 7})
+     … +7 lines (ctrl+o to expand)
+
+⏺ Preview gate clean — zero schema/domain violations; the only findings are the 7 not-yet-materialised artifacts (C02 writes those). Now the atomic C02 registration:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  --- arch-portal-frontend-001 ---
+     applied added rev 0 -> 1 writes 2
+     --- arch-portal-backend-001 ---
+     … +11 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  exit=0
+     valid True readiness complete violations 0
+     --- files now in fixture (non .git) ---
+     … +35 lines (ctrl+o to expand)
+
+⏺ Run A complete: 7 nodes registered, persisted graph validates clean. Now 工程 2 — run B (binding=none), second literal Skill invocation:
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FN=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-none…)
+  ⎿  repo_root /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-none
+     content_roots.repository /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-none
+     match True
+     … +15 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FN=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-none…)
+  ⎿  preview exit=1
+     valid False Counter({'artifact_missing': 7})
+     arch-portal-frontend-001 applied added 0 -> 1
+     … +7 lines (ctrl+o to expand)
+
+⏺ Both runs registered and validate clean. Now 工程 3 — promotion via ordinary C02 upsert in both fixtures:
+
+  Made 1 scratchpad edit +93 (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  === beads ===
+     {
+       "repo": "/Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads",
+     … +35 lines (ctrl+o to expand)
+
+⏺ Both promotions bind the digest to the final persisted node. Now 工程 4 — verification. First the adapter dry-run routes:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      echo "=== bd-bridge ==="; python3 plugins/dev-graph/scripts/bd-bridge.py --help 2>&1 | head -40…)
+  ⎿  === bd-bridge ===
+     usage: bd-bridge.py [-h] --op
+                         {create,update,dep-add,dep-remove,close,ready,show,claim,github-push,gate-add,gate-check,orphan-audit,removal-preflight}
+     … +67 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      FB=$PWD/eval-log/dev-graph/live-trial-fixtures/20260807-ci-c14-beads…)
+  ⎿  === bd-bridge create dry-run (beads route reachability) ===
+     {
+       "dry_run_preview": {
+     … +39 lines (ctrl+o to expand)
+
+⏺ All routes verified reachable with mutations suppressed. Now the full 工程 4 verification:
+
+  Made 1 scratchpad edit +233 (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  [beads] valid=True features=4 arch=3 tasks=0 acyclic=True max_dep=2<=3:True
+     [beads] candidates=1['feat-user-auth-001'] drafts_excluded=3 draft_issues=0
+     [beads] binding_persisted=['beads'] nodes 0->7 rev 0->8
+     … +8 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  === beads
+       evaluation_pass_without_readiness_complete rejected= True
+         active_not_ready | active requires confirmed/pass/complete
+     … +21 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      echo "=== external tracker state AFTER the runs (baseline was: no bd db, repo unresolvable, projects=[]) ==="…)
+  ⎿  === external tracker state AFTER the runs (baseline was: no bd db, repo unresolvable, projects=[]) ===
+     --- beads ---
+     Error: no beads database found
+     … +12 lines (ctrl+o to expand)
+
+⏺ All controls rejected. Now the observation-2 zero-attribution matrix and the verbatim github schema rule:
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      python3 - <<'PY'…)
+  ⎿  --- plugins/dev-graph/schemas/graph-node.schema.json:1433-1458 ---
+     1433           {
+     1434             "if": {
+     … +64 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  {
+       "zero_attribution_matrix": {
+
+⏺ Final fail-closed measurement before the completion marker — including an empirical count of the literal Skill tool_use events from the session transcript:
+
+⏺ Bash(ls -d /Users/dm/.claude/projects/*HarnessHub-wt-25* 2>/dev/null
+      D=/Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-25…)
+  ⎿  /Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-25
+     /Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-25-2
+     /Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-25-eval-log-dev-graph-live-trial-fixtures-c02-final-positive-r3
+     … +28 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  {
+       "literal_Skill_tool_use_count": 2,
+       "calls": [
+     … +12 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json,hashlib…)
+  ⎿  want_identical_verbatim: True
+     want_sha256: ['3f082c5e355a245a', '3f082c5e355a245a']
+     no suppression flag (--dry-run): True
+     arg shape identical except repo-root: True
+
+⏺ Now 工程 5's post-verification artifacts (line 2 appended, never rewritten):
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  intermediate rows: 2
+     === SKILL.md ゴールシーク検証 (fail-closed) ===
+     goal_seek verification OK: rows = 2 hash = ceef75f32843aae2
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-25
+      SP=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-25/18216fda-4bff-4388-904a-e90345cdc905/scratch…)
+  ⎿  PASS (a) literal Skill tool_use == 2
+     PASS (b) beads candidate_count == 1
+     PASS (c) beads draft_excluded_count >= 1
+     … +17 lines (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json)
+  ⎿  Wrote 1 line to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r9"}
+
+⏺ Bash(ls -la /Users/dm/orca/workspaces/HarnessHub/wt-25/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/
+      git status --porcelain plug…)
+  ⎿  total 8
+     drwxr-xr-x@ 3 dm  staff   96 Aug  4 09:52 .
+     drwxr-xr-x@ 5 dm  staff  160 Aug  4 09:39 ..
+     -rw-r--r--@ 1 dm  staff   75 Aug  4 09:52 status.json
+
+⏺ DONE: PASS
+
+✻ Baked for 13m 7s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle) · PR #658
