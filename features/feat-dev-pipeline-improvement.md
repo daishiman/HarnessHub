@@ -141,3 +141,12 @@ mtime クラスタは調査開始点に限定し、reflog などの直接証拠�
 - 2026-08-02 の C10/C11/C28 authority 防御と Beads 更新経路は qa-138 / appr-027 に再確定し、実装・設計・検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md) を正とする。
 
 HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着手可能 node を黙って落とさず、ready_payload_entry_absent と source=schedule-graph を持つ unmapped[] として報告するようにした。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆し、不正な依存形状は停止、dependency 配列順だけの parity 不一致は除く。これは製品 runtime を変えず、開発管理パイプラインの観測可能性（原因を後から判断できる性質）を改善する内部契約である。正規 C01/C03 仕様反映、復旧境界、検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
+
+`HarnessHub-85z0` と `HarnessHub-3tw` では、C11 が specification の必須見出し不在を
+`heading_missing` として fail-closed にし、C14 dry-run の stdin preview は未書込み artifact
+だけを許容するようにした。既存 specification 2 件を canonical template の全見出しへ移行し、
+task / issue の conditional template は `HarnessHub-yzv0` に切り分けた。これは Hub 製品 runtime
+を変えず、開発管理パイプラインの入力品質と dry-run の安全性を改善する内部契約である。
+C01 `qa-143` / `appr-032`、C02 取得証跡、C03 compile、全層の判断は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-heading-presence-preview-spec-reflection-receipt.md)
+を正とする。

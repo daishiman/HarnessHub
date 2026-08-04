@@ -26,7 +26,11 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN_ROOT / "lib"))
 
 from _common import ContractError, contained, dump, load_json
-from graph_artifact_readiness import markdown_sections_of, placeholder_sections
+from graph_artifact_readiness import (
+    markdown_sections_of,
+    missing_required_headings,
+    placeholder_sections,
+)
 from graph_envelope import envelope_violations
 
 SCHEMA_PATH = PLUGIN_ROOT / "schemas" / "graph-node.schema.json"
@@ -41,6 +45,11 @@ ROOT_BY_KIND = {
     "feature": "features",
     "document": "docs",
 }
+# task/issue の required_sections は template-contract.json の
+# conditional_templates/conditional_required_sections (system_development 系統)
+# を解決するコードがまだ存在せず、system-dev-planner 由来の見出し体系と単純照合すると
+# 誤検出になる (HarnessHub-85z0 調査で発覚、解消は別課題)。specification のみ有効化する。
+HEADING_MISSING_KINDS = {"specification"}
 def nodes_of(data: Any) -> list[dict[str, Any]]:
     values = data.get("nodes") if isinstance(data, dict) else data
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):
@@ -242,7 +251,10 @@ def _is_canonical_store(graph: Path, repo_root: Path) -> bool:
 
 
 def artifact_findings(
-    nodes: list[dict[str, Any]], repo_root: Path | None, template_contract: dict[str, Any]
+    nodes: list[dict[str, Any]],
+    repo_root: Path | None,
+    template_contract: dict[str, Any],
+    allow_missing_artifacts: bool = False,
 ) -> list[dict[str, str]]:
     findings: list[dict[str, str]] = []
     required_frontmatter = set((template_contract.get("common_frontmatter") or {}).get("required") or [])
@@ -267,7 +279,8 @@ def artifact_findings(
             findings.append({"node": node_id, "code": "artifact_path_invalid", "detail": str(exc)})
             continue
         if not artifact.is_file():
-            findings.append({"node": node_id, "code": "artifact_missing", "detail": raw_path})
+            if not allow_missing_artifacts:
+                findings.append({"node": node_id, "code": "artifact_missing", "detail": raw_path})
             continue
         try:
             frontmatter = frontmatter_of(artifact)
@@ -279,6 +292,15 @@ def artifact_findings(
         for key in ("graph_node_id", "artifact_kind", "file_path", "template_id", "template_version"):
             if key in node and frontmatter.get(key) != node.get(key):
                 findings.append({"node": node_id, "code": "frontmatter_parity_error", "detail": key})
+        if kind in HEADING_MISSING_KINDS:
+            for section in missing_required_headings(artifact, str(kind), template_contract):
+                findings.append(
+                    {
+                        "node": node_id,
+                        "code": "heading_missing",
+                        "detail": section,
+                    }
+                )
         for section in placeholder_sections(
             artifact,
             str(kind),
@@ -389,6 +411,7 @@ def domain_findings(nodes: list[dict[str, Any]]) -> list[dict[str, str]]:
 def validate(
     nodes: list[dict[str, Any]], schema: dict[str, Any] | None = None,
     *, repo_root: Path | None = None, template_contract: dict[str, Any] | None = None,
+    allow_missing_artifacts: bool = False,
 ) -> list[dict[str, str]]:
     canonical_schema = schema or load_json(SCHEMA_PATH)
     if not isinstance(canonical_schema, dict):
@@ -398,7 +421,7 @@ def validate(
         raise ContractError(f"template contract must be an object: {TEMPLATE_CONTRACT_PATH}")
     findings = [item for index, node in enumerate(nodes) for item in schema_findings(node, canonical_schema, index)]
     findings.extend(domain_findings(nodes))
-    findings.extend(artifact_findings(nodes, repo_root, contract))
+    findings.extend(artifact_findings(nodes, repo_root, contract, allow_missing_artifacts))
     return sorted(findings, key=lambda item: (item["node"], item["code"], item["detail"]))
 
 
@@ -409,6 +432,7 @@ def readiness_missing_sections(violations: list[dict[str, str]]) -> list[str]:
             "frontmatter_missing",
             "artifact_missing",
             "placeholder_only_section",
+            "heading_missing",
         }
         or (item["code"] == "schema_violation" and "required property" in item["detail"])
     })
@@ -429,7 +453,8 @@ def main() -> int:
     )
     args = parser.parse_args()
     canonical_store = False
-    if args.graph == "-":
+    is_stdin = args.graph == "-"
+    if is_stdin:
         # dry-run preview 検証: 管理対象 repo へ一時ファイルを書かせないための stdin 経路。
         # --graph FILE は contained(graph, root) を要求するため、preview を検証するには
         # repo 内へ書くしかなく「dry-run write 0」契約と矛盾していた (C14 OUT3)。
@@ -443,7 +468,10 @@ def main() -> int:
         document = load_json(graph)
         canonical_store = _is_canonical_store(graph, repo_root)
     nodes = nodes_of(document)
-    violations = validate(nodes, repo_root=repo_root)
+    # stdin preview はまだ書いていない node を送ることが正当な用途 (decompose の dry-run) であり、
+    # ここで artifact_missing を fail させると preview 検証そのものが成立しない。envelope_findings
+    # が stdin を特別扱いするのと同じ理由 (HarnessHub-3tw)。
+    violations = validate(nodes, repo_root=repo_root, allow_missing_artifacts=is_stdin)
     if canonical_store or args.require_canonical_envelope:
         violations = sorted(
             violations + envelope_findings(document),

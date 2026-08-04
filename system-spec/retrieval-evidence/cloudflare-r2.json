@@ -1,0 +1,7 @@
+{
+  "target_id": "cloudflare-r2",
+  "source_url": "https://developers.cloudflare.com/r2/pricing/",
+  "retrieved_at": "2026-08-04T03:40:31Z",
+  "publisher": "Cloudflare, Inc.",
+  "observed": "Cloudflare R2 の公式 Pricing ページを取得し、Free tier の storage、操作、egress の情報を確認した。"
+}

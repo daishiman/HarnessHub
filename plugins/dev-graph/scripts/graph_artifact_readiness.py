@@ -100,6 +100,26 @@ def _template_placeholders(
     }
 
 
+def missing_required_headings(
+    artifact: Path,
+    kind: str,
+    template_contract: dict[str, Any],
+) -> list[str]:
+    """List required sections whose heading is entirely absent from the body.
+
+    Distinct from placeholder_sections: that function only inspects headings
+    that already exist. A required heading that was never written (e.g. a
+    template revision adds a section an older artifact predates) is invisible
+    to placeholder_sections because it never enters `sections`/`direct_invalid`.
+    """
+    artifact_contract = (template_contract.get("artifacts") or {}).get(kind) or {}
+    required = artifact_contract.get("required_sections") or []
+    if not isinstance(required, list):
+        return []
+    present = set(markdown_sections_of(artifact))
+    return sorted(section for section in required if section not in present)
+
+
 def placeholder_sections(
     artifact: Path,
     kind: str,

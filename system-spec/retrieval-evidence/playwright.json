@@ -1,0 +1,7 @@
+{
+  "target_id": "playwright",
+  "source_url": "https://playwright.dev/docs/release-notes",
+  "retrieved_at": "2026-08-04T03:40:38Z",
+  "publisher": "Microsoft",
+  "observed": "Playwright の公式 release notes を取得した。"
+}

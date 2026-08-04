@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub サインイン後 Workspace スコープ導線 仕様追補"
 owners: ["daishiman"]
 created_at: "2026-08-02T04:58:10Z"
-updated_at: "2026-08-02T12:38:53.750218Z"
+updated_at: "2026-08-04T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["spec-harness-hub-requirements","arch-harness-hub-frontend","arch-harness-hub-security"]
@@ -44,112 +44,132 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
-implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections":[],"status":"complete"}
+implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
-# Harness Hub サインイン後 Workspace スコープ導線 仕様追補
-
-## 目的
+# 目的と成功状態
 
 ログイン自体は成功するのに業務画面 (`/sheets` `/catalog` 系) が 403 `missing_tenant_scope` で開けない実装未結線を是正し、あわせて CLI を使わない利用者が Hub Web 単体で公開・状態確認・導入案内まで到達できるようにするための製品契約を固定する。
 
 本書は `system-spec/` の確定質疑 qa-135 (frontend.web) / qa-136 (ui-ux.web) / qa-137 (auth.web) を、実装計画が参照できる単一の仕様境界としてまとめた追補である。既確定の qa-062 / qa-065 / qa-115 / qa-118 は全面維持し、本書はその差分だけを定める。
 
-## 背景 (観測された事象)
+成功状態: サインイン直後に業務画面へ到達でき、所属 workspace 数に応じた適切な導線 (自動選択 or 選択画面) を経て、CLI を使わない利用者も Hub Web だけで公開まで完了できる。
 
-本番 URL で以下が確認されている。
+## スコープ
 
-| 画面 | URL | 状態 |
-|---|---|---|
-| サインイン | `/harness-hub/signin` | 表示可能 |
-| Device 承認 | `/device` | 表示可能 |
-| ヘルス情報 | `/health` | JSON 応答 |
-| 業務画面 | `/sheets` `/sheets/new` `/sheets/{id}` `/catalog` `/catalog/releases` `/catalog/{projectId}` | 通常のブラウザ操作で 403 `missing_tenant_scope` |
+- In: サインイン後の着地先と戻り先の安全性、ブラウザ通常遷移での tenant/workspace scope 解決、active workspace の選択と切替、CLI 非依存の Web 完結公開導線、Device 承認画面の位置づけと行き止まり回避、scope 不足時の利用者向け表現と回復導線
+- Out: `authorize()` の判定順・role 判定の変更、catalog/sheets API 実装と DB schema の変更、PublishRequest 状態機械と検査実装の owner 変更、サイドバー 9 項目の段階表示契約の変更
 
-原因は 4 点の未結線である。
+## 用語と主体
 
-1. サインイン成功後の戻り先が `/` 固定 — `apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx:83`
-2. `/` は稼働確認だけを表示する — `apps/hub/src/app/page.tsx:1`
-3. 仕様上はダッシュボード完成前の `/` を `/sheets` へ送ることになっている — `docs/frontend-spec.md:297`
-4. 認可は業務画面にテナント情報を要求するが、通常のブラウザ遷移では該当ヘッダーが付与されない — `apps/hub/src/middleware/authz.ts:68`
+| Term/Actor | Definition/Responsibility |
+|---|---|
+| 既定着地 (default landing) | 遷移元が無いサインイン成功時に送る先。単一定数から解決する `/sheets` |
+| active workspace | session に束縛された、principal が所属検証を通過した workspace |
+| 明示ヘッダー scope | API / 機械クライアント (Publisher・CLI・Device Flow token 保持クライアント) が渡す tenant/workspace 指定 |
+| session scope | ブラウザ通常遷移で server 側が session principal から解決する tenant/workspace |
+| ambiguous_scope | 明示ヘッダーと session scope が両方存在し値が不一致のときの拒否理由 |
+| missing_tenant_scope | 両方の scope 入力が無いときの拒否理由 (deny-by-default) |
+| S01 公開ウィザード | ZIP アップロードで CLI 取込経路と同一検査に収束する Web 完結公開経路 |
+| Device Flow 利用者 | CLI / Publisher から確認コードを発行し `/device` で承認する利用者 |
 
-利用者の操作誤りではなく実装の未結線である。
+## ユースケースとユーザーフロー
 
-## 確定契約
+1. 利用者がサインインし、遷移元が無い場合は既定着地 `/sheets` へ着地する。
+2. 所属 workspace が 1 件の利用者は選択画面を経ずに業務画面へ直接到達する。
+3. 所属 workspace が 2 件以上の利用者は Workspace 選択画面を経て、選択後に本来の遷移先へ進む。
+4. CLI を使わない利用者は共通シェルから S01 公開ウィザードを開き、ZIP をアップロードして検査結果 (Green/Yellow/Red) を確認し、必要なら差し戻しに従って再投入する。
+5. 確認コードを持たずに `/device` へ到達した利用者は、この画面が CLI/Publisher 専用であることと S01 への導線を提示され、行き止まりにならない。
+6. scope 未解決 (missing_tenant_scope) の利用者は、403 の生値ではなく Workspace 選択への回復導線を提示され、選択すれば回復する。
 
-### A. サインイン後の着地先 (qa-135 【1】【2】)
+## 機能要件
 
-- `callbackUrl` の固定値 `"/"` を廃止し、(a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/sheets` の順で解決する。
-- 既定着地は単一の定数から解決し、画面ごとに散らさない。`docs/frontend-spec.md` §10 の段階運用 (S09 ダッシュボード完成後に `/dashboard` へ切替) に従う。
-- 戻り先は **同一 origin の相対 path のみ許可**する。絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす (open redirect 防止)。
-- `/` は未認証時のみ稼働確認表示を維持する。認証済み session がある場合は既定着地へ redirect し、`/` を認証済み利用者の終着点にしない。稼働確認の正本は `/health` とする。
+- `FR-001`: サインイン成功後の戻り先は (a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/sheets` の順で解決する。`callbackUrl` の固定値 `"/"` は廃止する。
+- `FR-002`: 戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす。
+- `FR-003`: `/` は未認証時のみ稼働確認表示を維持し、認証済み session がある場合は既定着地へ redirect する。稼働確認の正本は `/health` とする。
+- `FR-004`: scope 解決の正規入力を明示ヘッダー (API/機械クライアント専用) と session の active tenant/workspace (ブラウザ通常遷移) の 2 系統とし、両方が存在して不一致なら `ambiguous_scope`、両方無ければ `missing_tenant_scope` とする。
+- `FR-005`: 所属 workspace が 1 件のときは自動選択し選択画面を挟まない。2 件以上のときは Workspace 選択画面を挟み、選択後に本来の遷移先へ進む。
+- `FR-006`: S01 に ZIP アップロード経路を置き、CLI 取込経路と同一の Hub 側検査 (static validation / secret scan / policy) へ収束させる。
+- `FR-007`: 確認コードを持たずに `/device` へ到達した利用者へ、この画面が CLI/Publisher 専用であることと S01 への導線を画面上で明示する。
 
-### B. ブラウザ通常遷移でのスコープ解決 (qa-135 【3】 / qa-137 【1】【2】【3】)
+## 非機能要件
 
-- `authorize()` の判定順 (public → 認証 → scope 一意性 → tenant 一致 → workspace 所属) と deny-by-default は **変更しない**。本追補は判定の緩和ではなく、判定へ渡す scope の入力系統の定義である。
-- scope 解決の正規入力を 2 系統とする。
-  - (a) **明示ヘッダー** — API / 機械クライアント (Publisher・CLI・Device Flow token 保持クライアント) 専用。
-  - (b) **session の active tenant/workspace** — ブラウザ通常遷移。server 側で session principal から解決する。
-- 両方が存在して値が一致しない場合は `ambiguous_scope` として拒否する。どちらかを黙って優先しない。
-- 両方とも存在しない場合は従来どおり `missing_tenant_scope` とする。
-- 両経路は同一の `authorize()` に収束させ、判定の二重実装を作らない。
-- scope 未解決のまま業務画面本体を描画しない。
-- session に active workspace を束縛できるのは principal の所属検証を通過した workspace だけとし、切替のたびに所属を再検証する。session 保持値を所属検証の代替に使わない。
+- Performance: scope 解決は既存の `authorize()` 呼び出し 1 回に収め、追加の同期外部呼び出しを増やさない。
+- Availability/Reliability: scope 未解決時も業務画面のクラッシュではなく回復導線付きの ErrorState を返す。
+- Accessibility/Usability: Workspace 選択画面・回復導線の文言は 403 の生値を露出しない利用者向け表現とする。
+- Security/Privacy: deny-by-default を維持し、`ambiguous_scope` と `missing_tenant_scope` を明確に分離する (どちらかを黙って優先しない)。
+- Maintainability/Operability: scope 解決ロジックはブラウザ経路・API 経路で単一の `authorize()` に収束させ、判定の二重実装を作らない。
 
-### C. active workspace の選択と切替 (qa-135 【4】 / qa-136 【4】)
+## UI・状態遷移
 
-- session に active workspace を保持する。
-- 所属 workspace が **1 件**のときは自動選択し、選択画面を挟まない。切替 UI も出さず現在値の表示のみとする。
-- 所属 workspace が **2 件以上**のときは Workspace 選択画面を挟み、選択後に本来の遷移先へ進む。
-- 切替は共通シェルから常時可能とする。切替時は新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)。
+- 画面/CLI/API状態: 未選択 (workspace 未確定) → 自動選択 (1件) or 選択画面表示 (2件以上) → 業務画面到達。S01 は検査中 → Green (自動公開) / Yellow・Red (Needs Fix 差し戻し)。
+- 遷移条件: サインイン成功イベントで着地先解決、Workspace 選択イベントで active workspace 確定、切替イベントで active workspace 再検証。
+- Loading/Empty/Error: scope 未解決中は業務画面本体を描画しない。切替時は新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】継承)。401/403 は ErrorState のみを表示し旧データを描画しない。
 
-### D. CLI 非依存の Web 完結導線 (qa-136 【1】【2】)
+## ビジネスルールと検証
 
-- 主対象利用者は CLI を使わない前提とし、**Hub Web 単体で「公開 → 状態確認 → 導入案内」まで到達できること**を ui-ux.web の受入条件に加える。
-- `docs/user-journeys.md` J1 step 3b の「Web 代替: S01 公開ウィザード」を、Stage 1 の任意代替ではなく **必須経路へ格上げ**する。
-- S01 に ZIP アップロード経路を置き、CLI 取込経路と同一の Hub 側検査 (static validation / secret scan / policy) へ収束させる。
-- 検査結果 (Green 自動公開 / Yellow・Red は Needs Fix 差し戻し) の表示・文言・再投入導線は CLI 経路と同一 UI を使い、経路ごとに別の状態表現を作らない。
+- `BR-001`: `authorize()` の判定順 (public → 認証 → scope 一意性 → tenant 一致 → workspace 所属) と deny-by-default は変更しない。本追補は判定へ渡す scope の入力系統の定義のみを行う。
+- `BR-002`: session に active workspace を束縛できるのは principal の所属検証を通過した workspace だけとし、切替のたびに所属を再検証する。session 保持値を所属検証の代替に使わない。
+- `BR-003`: S01 Web 公開ウィザード経由の公開は Device Flow token を用いず、通常の session 認可で行う。CLI 経路と Web 経路の権限境界 (作成者を owner に固定・現在の tenant/workspace scope 内に限定) は同一とし、Web 経路が CLI 経路より広い権限を持たない。
+- `BR-004`: 自分で開始していない確認コードは承認しない旨を `/device` 画面で警告する。approve 時に選択した Workspace の範囲を超える権限を付与しない。
 
-### E. Device 承認の位置づけ (qa-136 【3】 / qa-137 【4】)
+## API契約
 
-- OAuth Device Flow は CLI / Publisher 利用者専用の経路として維持し、Web 単独利用者の主導線からは分離する。
-- 確認コードを持たずに `/device` へ到達した利用者に対し、次の 2 点を画面上で明示して行き止まりにしない。
-  - この画面は CLI / Publisher から開始した場合だけ使うこと
-  - Web だけで公開したい場合は S01 公開ウィザードへ進むこと
-- 確認コードの制約は現行のまま変更しない。
-  - 英数 8 文字
-  - 有効期限 10 分
-  - 5 回失敗で無効
-  - 使用済みコードは再利用不可
-  - 期限切れは Publisher / CLI 側で最初からやり直す
-- 自分で開始していない確認コードは承認しない旨を画面で警告する。approve 時に選択した Workspace の範囲を超える権限を付与しない。
+新規 API エンドポイントの追加・変更はない。本追補は既存 `authorize()` (`apps/hub/src/middleware/authz.ts`) が受け取る scope 入力の解決経路を定義するものであり、エンドポイント契約自体は `system-spec/auth.md` の既存確定 (qa-115) を継承する。
 
-### F. スコープ不足の利用者向け表現 (qa-136 【5】)
+## データモデル
 
-- 403 `missing_tenant_scope` をエンドユーザーへ露出させない。
-- scope 未解決は失敗ではなく「Workspace を選べば回復する状態」として扱い、Workspace 選択への回復導線を提示する。
-- qa-118 【1】の「401/403 は ErrorState のみ (旧データを描画しない)」契約は維持する。本項は ErrorState の文言と回復導線を定めるものであり、旧 scope データの継続表示を許すものではない。
+- Entity/Value: 新規永続 Entity の追加はない。既存 session に `active_workspace_id` を保持する (追加フィールド、DB schema 変更を伴わない session store 上の値)。
+- Fields/Types/Nullability: `active_workspace_id` は所属検証を通過した workspace id のみを許容し、未確定時は null。
+- Relations/Constraints/Indexes: `active_workspace_id` は principal の所属 workspace 集合の部分集合でなければならない (切替時に再検証)。
+- Ownership/Retention/Migration: session store のライフサイクルに従い、session 破棄時に消える。永続 DB migration は不要。
 
-### G. Web 公開経路の権限境界 (qa-137 【5】【6】)
+## 認証・認可
 
-- S01 Web 公開ウィザード経由の公開は Device Flow token を用いず、通常の session 認可で行う。
-- CLI 経路と Web 経路で権限境界 (作成者を owner に固定・現在の tenant/workspace scope 内に限定) を同一にし、**Web 経路が CLI 経路より広い権限を持たない**。
-- サインイン後の戻り先の解決結果に対しても通常の `authorize()` を適用し、redirect を認可の迂回路にしない。
+- Authentication: 既存のテナント別 OIDC (Auth.js) を継続利用し、本追補で変更しない。
+- Authorization: `authorize()` の判定順は不変。本追補は判定へ渡す scope 入力 (明示ヘッダー / session scope) の解決規則のみを追加する。
+- Tenant/data boundary: 明示ヘッダーと session scope が不一致なら `ambiguous_scope` で拒否し、tenant/workspace 境界を跨いだ暗黙のフォールバックを行わない。
 
-## 受入基準
+## エラー・例外・回復
 
-1. サインイン成功後、遷移元がなければ `/sheets` に着地する。`/` には留まらない。
-2. 戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず、既定着地へ落ちる。
-3. 所属 workspace 1 件の利用者は選択画面を経ずに業務画面へ到達する。
-4. 所属 workspace 2 件以上の利用者は Workspace 選択後に本来の遷移先へ進む。
-5. 業務画面 6 種 (`/sheets` `/sheets/new` `/sheets/{id}` `/catalog` `/catalog/releases` `/catalog/{projectId}`) が通常のブラウザ操作で 403 にならない。
-6. 明示ヘッダーと session scope が併存し不一致のとき `ambiguous_scope` で拒否される。
-7. どちらの scope 入力も無いとき `missing_tenant_scope` のままである (deny-by-default の非退行)。
-8. scope 未解決時、利用者には 403 の生値ではなく Workspace 選択への回復導線が提示される。
-9. CLI を一度も使わずに Hub Web だけで公開 → 状態確認 → 導入案内まで到達できる。
-10. 確認コードを持たずに `/device` へ到達した利用者に、S01 への導線が提示される。
-11. Web 公開経路で作成した成果物の権限境界が CLI 経路と一致し、広い権限を持たない。
-12. Device 確認コードの 5 制約 (8 文字 / 10 分 / 5 回失敗 / 再利用不可 / 期限切れ再開始) が非退行である。
+- Error taxonomy: `ambiguous_scope` (両 scope 入力が不一致)、`missing_tenant_scope` (両方とも入力無し、deny-by-default 非退行)。
+- Retry/Timeout/Fallback: scope 未解決は失敗ではなく「Workspace を選べば回復する状態」として扱い、Workspace 選択への回復導線を提示する。403 の生値はエンドユーザーへ露出しない。
+- Idempotency/Concurrency: Workspace 切替は冪等 (同じ workspace への再切替は無操作)。切替中の旧 scope 応答は破棄し新 scope 確定後にのみ描画する。
+
+## イベント・非同期処理
+
+N/A: 本追補はリクエスト同期経路内の scope 解決のみを扱い、非同期メッセージング/イベント基盤の追加を伴わない。
+
+## 可観測性
+
+- Logs/Metrics/Traces/Audit: `ambiguous_scope` / `missing_tenant_scope` の発生を既存 authz ログ経路に記録する (機微情報である tenant/workspace 実値は既存の redaction 方針に従う)。
+- Alert/SLO dashboard: 追加の専用ダッシュボードは設けない。既存 authz エラー率監視の対象に含める。
+
+## 互換性・移行・リリース
+
+- Compatibility/versioning: 既存 API 契約・DB schema を変更しないため後方互換。既存 session を持つ利用者は次回リクエストから新しい scope 解決規則が適用される。
+- Migration/backfill: データ移行は不要 (`active_workspace_id` は既存 session store 上の追加値で、初回アクセス時に所属検証から自動導出)。
+- Rollout/rollback: 既存の `callbackUrl` 固定値ロジックへ戻すことで即時ロールバック可能。段階的リリースは不要 (単一 tenant 内で完結する変更)。
+
+## テストと受入条件
+
+- [ ] `AC-001`: サインイン成功後、遷移元がなければ `/sheets` に着地する。`/` には留まらない。
+- [ ] `AC-002`: 戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず、既定着地へ落ちる。
+- [ ] `AC-003`: 所属 workspace 1 件の利用者は選択画面を経ずに業務画面へ到達する。
+- [ ] `AC-004`: 所属 workspace 2 件以上の利用者は Workspace 選択後に本来の遷移先へ進む。
+- [ ] `AC-005`: 業務画面 6 種 (`/sheets` `/sheets/new` `/sheets/{id}` `/catalog` `/catalog/releases` `/catalog/{projectId}`) が通常のブラウザ操作で 403 にならない。
+- [ ] `AC-006`: 明示ヘッダーと session scope が併存し不一致のとき `ambiguous_scope` で拒否される。
+- [ ] `AC-007`: どちらの scope 入力も無いとき `missing_tenant_scope` のままである (deny-by-default の非退行)。
+- [ ] `AC-008`: scope 未解決時、利用者には 403 の生値ではなく Workspace 選択への回復導線が提示される。
+- [ ] `AC-009`: CLI を一度も使わずに Hub Web だけで公開 → 状態確認 → 導入案内まで到達できる。
+- [ ] `AC-010`: 確認コードを持たずに `/device` へ到達した利用者に、S01 への導線が提示される。
+- [ ] `AC-011`: Web 公開経路で作成した成果物の権限境界が CLI 経路と一致し、広い権限を持たない。
+- [ ] `AC-012`: Device 確認コードの 5 制約 (8 文字 / 10 分 / 5 回失敗 / 再利用不可 / 期限切れ再開始) が非退行である。
+- Contract/integration/e2e/security/performance: `authorize()` の判定順回帰は既存 unit test で継続。着地先解決・Workspace 選択・S01 検査収束は frontend e2e で被覆。open redirect 防止はセキュリティ観点の contract test で固定する。
+
+## 未決事項
+
+- なし (2026-08-02 時点で qa-135/qa-136/qa-137 は確定済み。新規未決は未検出)。
 
 ## 境界 (本追補が変更しないもの)
 

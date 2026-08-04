@@ -247,3 +247,14 @@ violations 0 を証拠として固定した。検査対象 0 件の exit 0 は�
 再検証の全コマンドと仕様反映は
 `docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
 を正とする。
+
+## 2026-08-04 C11 見出し存在の最終レビュー証跡
+
+本 P11 の promoted task spec と完了判定は変更しない。`HarnessHub-85z0` の後続検証として、
+specification の required heading が本文に無いケースを `heading_missing`、既存見出しの空本文を
+`placeholder_only_section` として区別する回帰テストを追加した。全必須見出しを実内容で満たす正例、
+task / issue には conditional template 未解決のため誤適用しない負例を固定する。
+
+最終 evidence は focused Dev Graph test 20 passed、`validate-system-plan.py` の P01〜P13 pass、
+canonical graph valid、C01 `qa-143` / C02 citation / C03 compile pass とする。詳細は
+`docs/features/feat-dev-pipeline-improvement/c11-heading-presence-preview-spec-reflection-receipt.md` を正とする。

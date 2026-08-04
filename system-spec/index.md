@@ -39,6 +39,18 @@ kind: index
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| postgres | 16.1 | PostgreSQL Global Development Group (www.postgresql.org) | https://www.postgresql.org/docs/16/ | 2026-07-11T00:00:00Z | 2026-07-11T00:00:00Z |
-| react | 19.0 | Meta (react.dev) | https://react.dev/reference/react | 2026-07-11T00:05:00Z | 2026-07-11T00:05:00Z |
-| nodejs | 22.0 | OpenJS Foundation (nodejs.org) | https://nodejs.org/docs/latest/api/ | 2026-07-11T00:10:00Z | 2026-07-11T00:10:00Z |
+| nextjs | 16.3.0 | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs | 2026-08-04T03:40:20Z | 2026-08-04T03:40:20Z |
+| typescript | 7.0 | Microsoft (www.typescriptlang.org) | https://www.typescriptlang.org/docs/ | 2026-08-04T03:40:21Z | 2026-08-04T03:40:21Z |
+| pnpm | 11.16.0 | pnpm maintainers (github.com) | https://github.com/pnpm/pnpm/releases | 2026-08-04T03:40:22Z | 2026-08-04T03:40:22Z |
+| zod | 4 | Zod maintainers (Colin McDonnell) (zod.dev) | https://zod.dev/ | 2026-08-04T03:40:23Z | 2026-08-04T03:40:23Z |
+| github-actions | 2026-08-04 (ページ本文に最終更新日の明示なし) | GitHub, Inc. (docs.github.com) | https://docs.github.com/en/actions | 2026-08-04T03:40:24Z | 2026-08-04T03:40:24Z |
+| turso | 2026-08-04 (Pricing ページ取得日) | Turso (turso.tech) | https://turso.tech/pricing | 2026-08-04T03:40:25Z | 2026-08-04T03:40:25Z |
+| drizzle-orm | v1.0.0-rc.4 / 0.45.2 | Drizzle Team (github.com) | https://github.com/drizzle-team/drizzle-orm/releases | 2026-08-04T03:40:26Z | 2026-08-04T03:40:26Z |
+| authjs | next-auth@5.0.0-beta 以降 (@auth/* namespace) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-08-04T03:40:27Z | 2026-08-04T03:40:27Z |
+| claude-code-plugins | 2026-08-04 (ページ本文に最終更新日の明示なし) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-08-04T03:40:28Z | 2026-08-04T03:40:28Z |
+| cloudflare-workers | Jul 7, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-08-04T03:40:29Z | 2026-08-04T03:40:29Z |
+| wrangler | 4.115.0 | Cloudflare, Inc. (github.com) | https://github.com/cloudflare/workers-sdk/releases | 2026-08-04T03:40:30Z | 2026-08-04T03:40:30Z |
+| cloudflare-r2 | May 28, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/r2/pricing/ | 2026-08-04T03:40:31Z | 2026-08-04T03:40:31Z |
+| cloudflare-d1 | Apr 21, 2026 | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/d1/platform/pricing/ | 2026-08-04T03:40:32Z | 2026-08-04T03:40:32Z |
+| opennext-cloudflare | 1.20.2 (@opennextjs/cloudflare) | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare | 2026-08-04T03:40:33Z | 2026-08-04T03:40:33Z |
+| resend | 2026-08-04 (Pricing ページ取得日) | Resend, Inc. (resend.com) | https://resend.com/pricing | 2026-08-04T03:40:34Z | 2026-08-04T03:40:34Z |

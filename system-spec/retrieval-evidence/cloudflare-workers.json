@@ -1,0 +1,7 @@
+{
+  "target_id": "cloudflare-workers",
+  "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
+  "retrieved_at": "2026-08-04T03:40:29Z",
+  "publisher": "Cloudflare, Inc.",
+  "observed": "Cloudflare Workers の公式 Pricing ページを取得し、Free/Workers Paid の料金情報を確認した。"
+}

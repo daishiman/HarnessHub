@@ -158,6 +158,7 @@ def test_frontmatter_repo_root_and_artifact_failure_classification(tmp_path):
     missing = {"graph_node_id": "missing", "artifact_kind": "issue", "file_path": "issues/missing.md"}
     result = mod.artifact_findings([missing], tmp_path, contract)
     assert result == [{"node": "missing", "code": "artifact_missing", "detail": "issues/missing.md"}]
+    assert mod.artifact_findings([missing], tmp_path, contract, allow_missing_artifacts=True) == []
 
     invalid_frontmatter = tmp_path / "issues" / "invalid.md"
     invalid_frontmatter.parent.mkdir()

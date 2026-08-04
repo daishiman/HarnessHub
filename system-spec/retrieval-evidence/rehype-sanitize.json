@@ -1,0 +1,7 @@
+{
+  "target_id": "rehype-sanitize",
+  "source_url": "https://github.com/rehypejs/rehype-sanitize",
+  "retrieved_at": "2026-08-04T03:40:36Z",
+  "publisher": "rehype",
+  "observed": "公式 README は allow-list schema で HTML を sanitize し、Node.js 16+ の ESM package と説明している。"
+}

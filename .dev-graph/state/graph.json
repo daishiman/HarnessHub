@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1201,
+  "graph_revision": 1204,
   "nodes": [
     {
       "acceptance": [
@@ -455,7 +455,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36",
+        "evaluated_digest": "cc624f0b357af44401a07a0a18fb48f804df1f131ebbca587e1ef068e5fad0d0",
         "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/completeness-report.json"
       },
@@ -513,9 +513,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T09:32:20Z",
+        "imported_at": "2026-08-04T03:51:09Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8981abfb090d9ebd74c5cfe589c7216c050653fea4aa1242b7f64ed88d3a947d",
+        "source_digest": "cc624f0b357af44401a07a0a18fb48f804df1f131ebbca587e1ef068e5fad0d0",
         "source_path": "system-spec/security.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -531,7 +531,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub security アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T09:40:16.707097Z"
+      "updated_at": "2026-08-04T03:55:11.380846Z"
     },
     {
       "acceptance": [
@@ -13015,9 +13015,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
-        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142)",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
+        "evaluated_digest": "684ade27a20ac430a741a7d9a1717c9acc1bbcf7b981c0b4326004c6a5d65118",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142, qa-143)",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/c11-heading-presence-preview-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13036,7 +13036,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142/qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -13072,9 +13072,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-04T01:17:41Z",
+        "imported_at": "2026-08-04T03:51:09Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
+        "source_digest": "684ade27a20ac430a741a7d9a1717c9acc1bbcf7b981c0b4326004c6a5d65118",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13090,7 +13090,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T01:19:26.465165Z"
+      "updated_at": "2026-08-04T03:54:32.125380Z"
     },
     {
       "acceptance": [
@@ -34047,7 +34047,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d",
+        "evaluated_digest": "35734582ec2ff446eda197e3cac4069a1bd3440347208dacecf31501cb64ca4f",
         "evaluator": "validate-coverage-matrix.py --require-complete",
         "evidence_ref": "system-spec/testing-qa.md"
       },
@@ -34105,9 +34105,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T11:50:05Z",
+        "imported_at": "2026-08-04T03:51:09Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d",
+        "source_digest": "35734582ec2ff446eda197e3cac4069a1bd3440347208dacecf31501cb64ca4f",
         "source_path": "system-spec/testing-qa.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -34123,7 +34123,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub testing-qa アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T11:50:05Z"
+      "updated_at": "2026-08-04T03:55:44.841174Z"
     },
     {
       "acceptance": [

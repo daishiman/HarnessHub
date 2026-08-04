@@ -1,0 +1,7 @@
+{
+  "target_id": "owasp-asvs",
+  "source_url": "https://owasp.org/www-project-application-security-verification-standard/",
+  "retrieved_at": "2026-08-04T03:40:35Z",
+  "publisher": "OWASP Foundation",
+  "observed": "OWASP Foundation の Application Security Verification Standard 公式ページを取得した。"
+}

@@ -61,6 +61,10 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "completeness-report.json",
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
 }
+# C02/run-system-spec-doc-fetch が一時的な取得本文ではなく、URL・時刻・要約を持つ最小 JSON
+# 証跡を置く唯一の例外。fetched-references.json の evidence_ref/evidence_sha256 と
+# validate-source-citation.py が存在・内容を別途 fail-closed 検証する。
+SYSTEM_SPEC_EVIDENCE_DIRECTORY = "retrieval-evidence"
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
 DOCS_REQUIRED_FRONTMATTER_KEYS = ("status", "layer")
 GRAPH_NODE_SCHEMA_PATH = (
@@ -258,9 +262,21 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
         for p in sorted(ss_root.iterdir()):
             rp = p.relative_to(repo_root).as_posix()
             if p.is_dir():
+                if p.name == SYSTEM_SPEC_EVIDENCE_DIRECTORY:
+                    invalid = [
+                        child.name
+                        for child in p.rglob("*")
+                        if not child.is_file() or child.suffix != ".json"
+                    ]
+                    if invalid:
+                        violations.append(
+                            f"VIOLATION: system-spec-stray: {rp}/ は C02 の .json 取得証跡だけを許可。"
+                            f"不正項目: {', '.join(sorted(invalid))}"
+                        )
+                    continue
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp}/ (サブディレクトリ) は置かない。"
-                    "system-spec/ 直下はコンパイラ出力と正本 JSON のみ"
+                    "許可: コンパイラ出力 / 正本 JSON / C02 retrieval-evidence/*.json"
                 )
             elif p.suffix == ".md" or p.name in SYSTEM_SPEC_JSON_ALLOWLIST:
                 continue
@@ -319,8 +335,18 @@ def self_test() -> int:
             encoding="utf-8",
         )
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
+        evidence = root / "system-spec" / SYSTEM_SPEC_EVIDENCE_DIRECTORY
+        evidence.mkdir()
+        (evidence / "official.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
-        assert v == [], f"クリーン状態で違反を誤検出: {v}"
+        assert v == [], f"C02 retrieval evidence を含むクリーン状態で違反を誤検出: {v}"
+
+        (evidence / "stray.txt").write_text("x", encoding="utf-8")
+        v, _ = lint(root)
+        assert any(
+            "retrieval-evidence" in line and "stray.txt" in line for line in v
+        ), "C02 evidence directory の非 JSON 混入を検出しない"
+        (evidence / "stray.txt").unlink()
 
         # layer の許容形式は graph-node.schema.json の documentLayer が唯一の正本。
         # `xlayer:` のような部分一致や大文字・空白入りの値は layer 宣言として扱わない。

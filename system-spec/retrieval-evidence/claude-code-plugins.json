@@ -1,0 +1,7 @@
+{
+  "target_id": "claude-code-plugins",
+  "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
+  "retrieved_at": "2026-08-04T03:40:28Z",
+  "publisher": "Anthropic",
+  "observed": "公式文書は marketplace、plugin source、git-subdir、npm source、version resolution を定義している。"
+}

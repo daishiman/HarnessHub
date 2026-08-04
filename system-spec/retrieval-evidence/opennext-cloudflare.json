@@ -1,0 +1,7 @@
+{
+  "target_id": "opennext-cloudflare",
+  "source_url": "https://opennext.js.org/cloudflare",
+  "retrieved_at": "2026-08-04T03:40:33Z",
+  "publisher": "OpenNext",
+  "observed": "公式 Cloudflare guide は @opennextjs/cloudflare で Next.js app を Cloudflare Workers へ deploy できると説明している。"
+}

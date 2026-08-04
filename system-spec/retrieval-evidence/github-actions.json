@@ -1,0 +1,7 @@
+{
+  "target_id": "github-actions",
+  "source_url": "https://docs.github.com/en/actions",
+  "retrieved_at": "2026-08-04T03:40:24Z",
+  "publisher": "GitHub, Inc.",
+  "observed": "公式文書は repository 内で CI/CD を含むソフトウェア開発ワークフローを自動化・実行すると説明している。"
+}
