@@ -16,6 +16,8 @@ export * from '../publish-pipeline/index.js';
 export * from '../publisher-plugin/index.js';
 // feat-tenant-data-retention の契約 schema。同上の理由でここから再エクスポートする。
 export * from '../tenant-data/index.js';
+// feat-user-org-admin の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../user-org-admin/index.js';
 export type { ContractSchemaName } from './contract-registry.js';
 export {
   buildContractComponents,

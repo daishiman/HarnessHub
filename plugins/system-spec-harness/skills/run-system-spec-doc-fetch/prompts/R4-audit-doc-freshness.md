@@ -17,15 +17,15 @@
 ## Layer 1: 基本定義層
 - **目的**: C02 が出力した `fetched-references.json` を独立 context で読み、取得済みドキュメントが**公式かつ現行版か** — **対象一覧の欠落 / 非公式 host / 古い version・更新日 / 確認時刻・出典の欠落** の 4 軸 — を**二層**で監査し、verdict と検出根拠を返す。これは C02 の OUT1 (outer-loop 受入=公式サイト上の現行版を再確認) を担う。
 - **役割**: read-only 監査 (auditor)。`fetched-references.json` の書き換え・再取得・target 追記・記録更新はしない。修正は C02 (R2-fetch/R3-record)、収集完了の最終ゲートは C05 の責務。
-- **二層の分担 (不変則)**: **層1=形式** は C13 (`validate-source-citation.py`) が担い、全件対応・必須フィールド・`source_url` host が自己申告 `official_host` と一致するかを機械検査する。**層2=内容鮮度** は本責務が担い、WebSearch/WebFetch で公式サイト現行版を再照合し、記録された version/更新日が現行か・宣言 host が本当に publisher の公式ホストかを意味照合する。**C13 は形式のみ・C08 は内容鮮度**。C13 が PASS でも内容が古い/非公式なら本責務は `FAIL` にする (両層は補完関係)。
+- **二層の分担 (不変則)**: **層1=形式** は C13 (`validate-source-citation.py`) が担い、全件対応・必須フィールド・`source_url` host・時刻・repo内の取得証跡digestが一致するかを機械検査する。**層2=内容鮮度** は本責務が担い、WebSearch/WebFetch で公式サイト現行版を再照合し、記録された version/更新日が現行か・宣言 host が本当に publisher の公式ホストかを意味照合する。**C13 は形式/証跡・C08 は内容鮮度**。C13 が PASS でも内容が古い/非公式なら本責務は `FAIL` にする (両層は補完関係)。
 - **不変則**: 記録と証跡 (`official_host`/`version`/`last_updated`/`latest_checked_at`/`source_url`) の実在と公式サイト裏取りに基づき判定し、裏取りできないものを「問題なし」と楽観しない。疑い (非公式/古い/未確認) は検出側に倒す (安全側)。
 
 ## Layer 2: ドメイン層
 - **用語**: `references[]`=取得済みドキュメントの記録配列 / `target_id`=対象ツール/インフラ/フレームワークの識別子 / `official_publisher`=公式発行者 (例: Meta) / `official_host`=公式ドキュメントの host (例: react.dev) / `version` または `last_updated`=取得時点のドキュメント版・更新日 / `retrieved_at`=取得時刻 / `latest_checked_at`=現行版として最後に確認した時刻 / `source_url`=参照元 URL。`targets[]`=取得対象一覧 (C01 `spec-state.json` 由来、または C02 が特定した target_id 集合)。
 - **二層 × 検出 4 軸**:
-  - **層1 (形式) = C13 (`validate-source-citation.py`)**: `--targets <取得対象一覧>` と `--references <fetched-references.json>` を渡して Bash 実行し、exit code で判定する。
-    - exit0 = 形式 OK (全件対応・必須フィールド充足・host 文字列一致)。
-    - exit1 = 形式違反 (欠落 target / 必須フィールド `retrieved_at`・`source_url`・`official_publisher`・`official_host`・(`version`または`last_updated`)・`latest_checked_at` の空欠落 / `source_url` host が自己申告 `official_host` と不一致 / `target_id` 重複)。違反行を検出根拠に採る。
+  - **層1 (形式) = C13 (`validate-source-citation.py`)**: `--targets <取得対象一覧>` / `--references <fetched-references.json>` / `--repo-root <project-root>` を渡して Bash 実行し、exit code で判定する。
+    - exit0 = 形式・証跡 OK (全件対応・必須フィールド充足・host・時刻・証跡digest一致)。
+    - exit1 = 形式違反 (欠落 target / 必須フィールド / future・不正形式・一括固定の時刻 / repo外・欠落・digest不一致の取得証跡 / host 不一致 / target_id 重複)。違反行を検出根拠に採る。
     - exit2 = 入力不備 (ファイル欠落・JSON 破損) → `INDETERMINATE` へ寄せる。
     - **限界**: C13 の host 一致は「自己申告 `official_host` との文字列一致」まで。その host が本当に公式かは検査しないため、非公式サイトを申告どおり通し得る。この穴は層2 の非公式 host 判定で塞ぐ。
   - **層2 (内容鮮度) = WebSearch/WebFetch 再照合**:
@@ -38,9 +38,9 @@
 ## Layer 3: インフラ層
 - **参照ファイル**: C02 出力の `fetched-references.json` (監査対象)、取得対象一覧 `targets` (`spec-state.json` の `targets[]` 等)。本 SSOT。
 - **ツール**: `Read` (SSOT: references と targets)、`Bash` (C13 `validate-source-citation.py` の実行と JSON 検査のみ・read-only/network:false)、`WebSearch` (公式ホストの裏取り・現行版の所在特定)、`WebFetch` (公式現行ページを GET し version/更新日を照合)。書込・POST・mutation は行わない。
-- **C13 実行形**: `python3 $CLAUDE_PLUGIN_ROOT/scripts/validate-source-citation.py --targets <取得対象一覧> --references <fetched-references.json>`。
+- **C13 実行形**: `python3 $CLAUDE_PLUGIN_ROOT/scripts/validate-source-citation.py --targets <取得対象一覧> --references <fetched-references.json> --repo-root $CLAUDE_PROJECT_DIR`。
 - **fetched-references.json 形状 (共有データ契約)**:
-  - `references[]` = `{target_id, retrieved_at, source_url, official_publisher, official_host, version または last_updated, latest_checked_at, summary}`。
+  - `references[]` = `{target_id, retrieved_at, source_url, official_publisher, official_host, version または last_updated, latest_checked_at, evidence_ref, evidence_sha256, summary}`。
   - `targets[]` = `[{target_id, ...}, ...]` または `["react", ...]` (文字列 id 配列も可)。
 
 ## Layer 4: 共通ポリシー層

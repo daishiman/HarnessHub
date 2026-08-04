@@ -126,7 +126,7 @@ IN1/OUT1 の未達ゲートを起点に assemble/render/crosslink の該当責�
 
 ## Feedback Contract (with-feedback-contract / with-goal-seek)
 
-- **IN1** (inner, script): 生成直前の spec-state.json / fetched-references.json に対し `../../scripts/validate-coverage-matrix.py --matrix <spec>` と `../../scripts/validate-source-citation.py --targets <spec> --references <refs>` が exit0。
+- **IN1** (inner, script): 生成直前の spec-state.json / fetched-references.json に対し `../../scripts/validate-coverage-matrix.py --matrix <spec>` と `../../scripts/validate-source-citation.py --targets <spec> --references <refs> --repo-root <project-root>` が exit0。
 - **OUT1** (outer, test): 生成ドキュメントセットがカテゴリ×プラットフォームの確定/対象外理由と最新ドキュメント出典を含むことを `tests/test_compile_spec_doc.py` が確認。
 - goal-seek (engine=inline, fork=subagent, max_loops=5): IN1/OUT1 を満たすまで章構成・レンダリングを反復改善する。
 
