@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-04T01:18:57.420903Z"
+updated_at: "2026-08-04T05:43:46.944032Z"
 status: "active"
 depends_on: []
-related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
+related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
 purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
-goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140 と C16 qa-141/qa-142 の dev-workflow 契約を正本から追跡できる状態を維持する"
+goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140、C16 qa-141/qa-142、qa-143 の dev-workflow 契約を正本から追跡できる状態を維持する"
 scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-04T01:17:41Z","origin_kind":"system-spec-harness","source_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]

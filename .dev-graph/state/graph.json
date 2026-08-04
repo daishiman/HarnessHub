@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1202,
+  "graph_revision": 1212,
   "nodes": [
     {
       "acceptance": [
@@ -28,9 +28,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
-        "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
+        "evaluated_digest": "c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-143)",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
@@ -47,7 +47,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140 と C16 qa-141/qa-142 の dev-workflow 契約を正本から追跡できる状態を維持する",
+      "goal": "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140、C16 qa-141/qa-142、qa-143 の dev-workflow 契約を正本から追跡できる状態を維持する",
       "graph_node_id": "spec-harness-hub-requirements",
       "implementation_readiness": {
         "checked_at": "2026-07-17T00:35:59Z",
@@ -72,7 +72,9 @@
         "arch-harness-hub-frontend",
         "arch-harness-hub-infrastructure",
         "arch-harness-hub-security",
-        "arch-harness-hub-testing-qa"
+        "arch-harness-hub-testing-qa",
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "spec-harness-hub-plugin-hook-governance-20260804"
       ],
       "resource_scope": [
         "specs/harness-hub-system-specification.md"
@@ -86,9 +88,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-04T01:17:41Z",
+        "imported_at": "2026-08-04T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
+        "source_digest": "c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +106,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T01:18:57.420903Z"
+      "updated_at": "2026-08-04T05:43:46.944032Z"
     },
     {
       "acceptance": [
@@ -13015,9 +13017,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
-        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142)",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
+        "evaluated_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-143)",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-18T08:10:00Z",
@@ -13036,7 +13038,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140、C16 qa-141/qa-142、および qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、hook entry point parity、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -13059,7 +13061,10 @@
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
         "arch-harness-hub-security",
-        "arch-harness-hub-infrastructure"
+        "arch-harness-hub-infrastructure",
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "spec-harness-hub-plugin-hook-governance-20260804",
+        "doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"
       ],
       "resource_scope": [
         "architecture/harness-hub-dev-workflow.md"
@@ -13072,9 +13077,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-04T01:17:41Z",
+        "imported_at": "2026-08-04T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
+        "source_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13090,7 +13095,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T01:19:26.465165Z"
+      "updated_at": "2026-08-04T05:44:22.440339Z"
     },
     {
       "acceptance": [
@@ -25374,7 +25379,11 @@
         "issue-c02-upsert-lifecycle-regression-20260729",
         "issue-id-uniqueness-gate-generalization-20260728",
         "issue-doc-line-limit-followup-mfh7-20260728",
-        "issue-register-package-projection-idempotency-drift-20260728"
+        "issue-register-package-projection-idempotency-drift-20260728",
+        "task-schedule-beads-ready-entry-absent-reporting-20260803",
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "task-hooks-entry-point-parity-final-review-handoff-20260804",
+        "doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25418,7 +25427,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T04:40:00Z"
+      "updated_at": "2026-08-04T05:52:18.482658Z"
     },
     {
       "acceptance": [
@@ -48064,6 +48073,453 @@
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
       "updated_at": "2026-08-04T01:31:46.475830Z"
+    },
+    {
+      "acceptance": [
+        "HK-001..003 の検査境界を明記する",
+        "手動 script の置場を hooks/ と区別する",
+        "qa-143 と architecture/receipt を参照する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-plugin-hook-governance-addendum.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "qa-143 の開発品質契約を既存仕様 wrapper の行数上限を超えずに参照する追補。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-143)",
+        "evidence_ref": "system-spec/dev-workflow.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-plugin-hook-governance-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-143 の hook parity 契約を仕様として参照可能にし、500 行上限を守る。",
+      "graph_node_id": "spec-harness-hub-plugin-hook-governance-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "全 plugin の hook 台帳・登録・実体を fail-closed で一致させ、手動 script との責務混同を防ぐ。",
+      "related_nodes": [
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-plugin-hook-governance-addendum.md",
+        "system-spec/dev-workflow.md",
+        "architecture/harness-hub-dev-workflow.md"
+      ],
+      "scope_in": [
+        "plugin 配布・CI・開発品質ゲート",
+        "hook entry point の宣言・登録・実体 parity"
+      ],
+      "scope_out": [
+        "Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "plugin-governance",
+        "hooks",
+        "qa-143"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "全 plugin hook entry point governance 追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "HK-001..003 の検査と回帰が pass",
+        "C01/C03 の仕様反映が記録済み",
+        "PR 作成前の機械受領書が clean HEAD に束縛される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "凍結済み P13 本体の行数上限を越えず、vf66 の最終統合条件だけを記録する補助 task。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
+        "evaluator": "final-review + system-dev-plan validation",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Beads、issue node、仕様反映受領書、commit、draft PR が同じ hook parity 契約を指す。",
+      "graph_node_id": "task-hooks-entry-point-parity-final-review-handoff-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-vf66 の実装・仕様反映・検証・公開前統合条件を、凍結済み P01..P13 を変えずに追跡する。",
+      "related_nodes": [
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow",
+        "spec-harness-hub-plugin-hook-governance-20260804"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md",
+        "system-spec/dev-workflow.md",
+        "specs/harness-hub-plugin-hook-governance-addendum.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md"
+      ],
+      "scope_in": [
+        "final review",
+        "仕様反映",
+        "品質ゲート",
+        "Beads と draft PR の追跡"
+      ],
+      "scope_out": [
+        "製品 API、DB schema、認証認可、UI、Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "plugin-governance",
+        "hooks",
+        "phase-13",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "全 plugin hook parity 最終レビューの Phase 13 補助引継ぎ",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "仕様影響ありの理由と反映先を明記する",
+        "中学生向けと技術的な説明を併記する",
+        "残課題と Beads ID を記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "仕様反映と製品非変更境界の受領記録を独立 document として残す。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760",
+        "evaluator": "final-review + system-spec-harness",
+        "evidence_ref": "system-spec/dev-workflow.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "本変更が qa-143、各文書層、Beads、commit、draft PR と矛盾なく結び付く。",
+      "graph_node_id": "doc-hooks-entry-point-parity-spec-reflection-receipt-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-spec-reflection",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-vf66 の仕様・設計影響、製品非変更境界、検証と公開前受領を人間・機械双方で追跡する。",
+      "related_nodes": [
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "issue-fetched-reference-evidence-provenance-20260804",
+        "feat-dev-pipeline-improvement",
+        "spec-harness-hub-plugin-hook-governance-20260804",
+        "arch-harness-hub-dev-workflow",
+        "task-hooks-entry-point-parity-final-review-handoff-20260804"
+      ],
+      "resource_scope": [
+        "docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md",
+        "system-spec/dev-workflow.md",
+        "system-spec/spec-state.json",
+        "specs/harness-hub-plugin-hook-governance-addendum.md",
+        "architecture/harness-hub-dev-workflow.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md"
+      ],
+      "scope_in": [
+        "仕様反映の根拠",
+        "検証結果",
+        "製品非変更の判断",
+        "公開前の追跡情報"
+      ],
+      "scope_out": [
+        "製品 API、DB schema、認証認可、UI、Cloudflare deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "spec-reflection",
+        "plugin-governance",
+        "hooks",
+        "qa-143"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "Hook entry point parity 仕様反映受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T05:50:52.065533Z"
+    },
+    {
+      "acceptance": [
+        "20 reference の provenance が揃う",
+        "citation gate が 0 で終了する",
+        "再コンパイル時の投影差分をレビューする"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-yxb2",
+        "linked_at": "2026-08-04T05:48:25Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-fetched-reference-evidence-provenance-20260804.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "C03 final review で検出した既存 citation provenance 欠落を、変更本体から分離して追跡する issue。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-fetched-reference-evidence-provenance-20260804.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "20 reference の evidence_ref と evidence_sha256 を再現可能に記録し citation gate を pass する。",
+      "graph_node_id": "issue-fetched-reference-evidence-provenance-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "仕様 source citation gate を通すため、取得済み reference の証拠位置とハッシュを補完する。",
+      "related_nodes": [
+        "issue-hooks-entry-point-parity-generalization-20260728",
+        "spec-harness-hub-requirements"
+      ],
+      "resource_scope": [
+        "issues/sys-fetched-reference-evidence-provenance-20260804.md",
+        "system-spec/fetched-references.json",
+        "system-spec/spec-state.json",
+        "plugins/system-spec-harness/scripts/validate-source-citation.py"
+      ],
+      "scope_in": [
+        "fetched reference の provenance 補完",
+        "citation gate の再実行",
+        "根拠再取得とハッシュ記録"
+      ],
+      "scope_out": [
+        "Harness Hub の製品 API、DB schema、認証認可、UI、Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "draft",
+      "tags": [
+        "system-spec",
+        "citation",
+        "provenance",
+        "quality-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "fetched reference の evidence provenance 欠落を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T05:48:41.981011Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

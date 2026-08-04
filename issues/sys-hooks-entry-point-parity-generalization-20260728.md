@@ -84,6 +84,13 @@ implementation_readiness: {"checked_at":"2026-07-28T00:00:00Z","missing_sections
 - 影響範囲: 全 plugin の entry point 台帳の信頼性。台帳が実体と乖離すると、live-trial の被覆計算と配布物の完全性検査がともに実態より楽観的な結果を返す。
 - 緊急度: 中。現時点で dev-graph 以外に実測された宣言漏れはないが、検出手段がないため「無い」ことは確認できていない。
 
+## 実施結果 (2026-08-04)
+
+- 一般化を採用した。HK-001 は登録 ⊆ 宣言、HK-002 は登録構成を持つ plugin の宣言 ⊆ 登録、HK-003 は hook directory の残余を import 専用 support module だけに限定する。
+- 登録は `hooks/hooks.json` と manifest inline hooks の和で取得する。相対 command の `hooks/foo.py` と `./hooks/foo.py` を同じ entry point として扱う。
+- repo 全体検査は harness-creator の未宣言 `auto-sync-on-session-start.py` と、skill-intake に混在していた手動 keychain script を発見した。前者は宣言を追加し、後者は `scripts/` へ移動して自動 hook として登録しない構造に訂正した。
+- 検査本体は 500 行を超えたため hook 判定を `scripts/validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書品質ゲート PASS を確認した。仕様・設計の正規反映は `qa-143` と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
+
 ## 関連
 
 - `HarnessHub-6in4` — 本課題を派生させた guard fail-open 是正（PR #82）

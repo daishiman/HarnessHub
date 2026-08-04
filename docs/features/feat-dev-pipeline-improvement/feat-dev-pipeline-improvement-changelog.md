@@ -7,6 +7,13 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-04 追記: 全 plugin の hook entry point parity
+
+- `HarnessHub-vf66` で hook の台帳 (`package-contract.json`)・登録 (`hooks/hooks.json` と manifest inline hooks)・実体を HK-001..003 で双方向に照合する repo 全体ゲートへ一般化した。
+- 検査で発見した harness-creator の未宣言 entry point を台帳へ追加し、skill-intake の手動 keychain 操作は `hooks/` から `scripts/` へ移して自動処理との責務を分離した。
+- `validate-plugin-completeness.py` は 500 行を超えたため、hook 判定を `validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書ゲート PASS を確認した。
+- 変更は開発品質契約だけに影響する。`qa-143`、`system-spec/`、`specs/`、architecture、feature、task、[仕様反映受領書](hooks-entry-point-parity-spec-reflection-receipt.md) に反映し、製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。
+
 ## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
 
 ## 2026-08-04 追記: renderer registration receipt の stale digest を部分照合として表示
