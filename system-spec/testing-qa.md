@@ -71,8 +71,4 @@ serves_goals: [G1, G2, G5]
 
 ## 最新ドキュメント出典
 
-| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
-|---|---|---|---|---|---|
-| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
-| playwright | 1.61.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
-| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
+- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)

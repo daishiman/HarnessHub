@@ -31,7 +31,12 @@ def load(path: Path, name: str):
 
 @pytest.fixture
 def common():
-    return load(SCRIPTS / "_common.py", "_common")
+    # canonical な sys.path 経由の _common を返す。ここで再 exec して sys.modules["_common"]
+    # を差し替えると、既に import 済みの helper module (schedule_graph_nodes 等) が束縛済みの
+    # 旧 ContractError を投げ続け、pytest.raises(common.ContractError) が別クラスを待つ。
+    import _common
+
+    return _common
 
 
 def call_main(module, monkeypatch, capsys, *args, stdin=None):
