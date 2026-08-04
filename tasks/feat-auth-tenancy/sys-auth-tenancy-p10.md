@@ -12,8 +12,8 @@ iteration: null
 title: "最終独立レビュー — quality_constraints 7 件の充足判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T04:18:27Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P09"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/final-review-record.md"]

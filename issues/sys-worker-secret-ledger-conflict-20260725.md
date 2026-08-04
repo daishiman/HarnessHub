@@ -12,8 +12,8 @@ iteration: null
 title: "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計と矛盾"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:36:53Z"
-updated_at: "2026-07-25T03:36:53Z"
-status: "draft"
+updated_at: "2026-07-30T05:30:33Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

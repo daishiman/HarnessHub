@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "run-dev-graph-init の live-trial verdict と criteria scenario receipt を HarnessHub-sgt の SKILL.md 変更へ追随させる"
+title: "dev-graph: run-dev-graph-init の live-trial verdict と criteria scenario receipt を sgt の SKILL.md 変更へ追随させる"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:29:18Z"
-updated_at: "2026-07-25T11:02:35.378890Z"
+updated_at: "2026-07-28T04:10:47Z"
 status: "closed"
 depends_on: []
 related_nodes: []

@@ -12,8 +12,8 @@ iteration: null
 title: "validate-coverage-matrix が qa_log の ID 重複を検出できない (集合化で静かに潰れる)"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "draft"
+updated_at: "2026-07-28T04:09:56Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements","arch-harness-hub-testing-qa"]
 resource_scope: ["plugins/system-spec-harness/scripts/validate-coverage-matrix.py","plugins/system-spec-harness/tests/"]

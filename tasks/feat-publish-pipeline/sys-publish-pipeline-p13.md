@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T12:25:36Z"
+updated_at: "2026-08-04T03:43:45.399996Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P12"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "apps/hub は cloudflare-workers/hub 上の実デプロ�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p13.md","confidence":0.85}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.13","linked_at":"2026-08-04T03:14:51Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test
 

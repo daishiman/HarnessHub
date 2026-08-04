@@ -12,7 +12,7 @@ iteration: null
 title: "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T13:53:21.882018Z"
+updated_at: "2026-08-04T03:42:42.872478Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P10"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "P06/P07/P09/P10 で得られた証跡を集約し、第�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p11.md","confidence":0.84}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.11","linked_at":"2026-08-04T03:14:46Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

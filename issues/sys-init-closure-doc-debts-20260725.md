@@ -9,11 +9,11 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "run-dev-graph-init の closure 内文書に裏付けなき断定と未文書化の初期 shape が残る"
+title: "dev-graph: run-dev-graph-init の closure 内文書に裏付けなき system_spec 断定と未文書化の初期 graph shape が残る"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:10:00Z"
-updated_at: "2026-07-25T03:08:51.801112Z"
-status: "draft"
+updated_at: "2026-08-04T03:15:48Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/dev-graph/skills/run-dev-graph-init/references/validation-contract.md","plugins/dev-graph/scripts/validate-repo-config.py","plugins/dev-graph/skills/run-dev-graph-init/prompts/R3-init.md"]

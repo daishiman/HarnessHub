@@ -11,8 +11,8 @@ target_date: null
 iteration: null
 title: "最終レビュー — 実行済み証跡のみによるリリース可否判定"
 owners: ["daishiman"]
-created_at: "2026-08-02T06:25:14Z"
-updated_at: "2026-08-02T08:17:45.388189Z"
+created_at: "2026-08-02T12:47:00Z"
+updated_at: "2026-08-04T03:54:54.591984Z"
 status: "active"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P09"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
@@ -32,7 +32,7 @@ template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-02T06:25:14Z","origin_kind":"system-dev-planner","source_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","source_path":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-10-final-review.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-02T12:47:00Z","origin_kind":"system-dev-planner","source_digest":"ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa","source_path":".dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-10-final-review.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.92
 classification_reason: "goal-spec.json を入力に P10 の単一責務 (quality) を実行する task"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p10.md","confidence":0.92}]
