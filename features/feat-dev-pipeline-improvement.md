@@ -12,10 +12,10 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-03T22:19:39.055408Z"
+updated_at: "2026-08-04T05:52:18.482658Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"generated","source_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T12:05:00Z","origin_kind":"generated","source_digest":"ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
@@ -146,3 +146,5 @@ node ID・件数・source digest・lineage が一致する登録証拠を失わ�
 - 2026-08-02 の C10/C11/C28 authority 防御と Beads 更新経路は qa-138 / appr-027 に再確定し、実装・設計・検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md) を正とする。
 
 HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着手可能 node を黙って落とさず、ready_payload_entry_absent と source=schedule-graph を持つ unmapped[] として報告するようにした。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆し、不正な依存形状は停止、dependency 配列順だけの parity 不一致は除く。これは製品 runtime を変えず、開発管理パイプラインの観測可能性（原因を後から判断できる性質）を改善する内部契約である。正規 C01/C03 仕様反映、復旧境界、検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
+
+HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-142 |
+| Web (web) | 確定 | 確定質疑: qa-143 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,19 +24,19 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-142 (対応セル: web)
+### qa-143 (対応セル: web)
 
-**質問**: C16 の ready-payload 欠落報告を、lease conflict・依存形状不正・依存配列順序を含む完全性契約として、どのように fail-closed で運用しますか?
+**質問**: 全 plugin の hook entry point について、package-contract の宣言・Claude Code への登録・実体ファイルをどのように fail-closed で一致させ、手動実行スクリプトを誤って自動 hook と扱わないようにしますか?
 
-**回答**: ユーザーの 2026-08-03 最終レビュー指示に基づき、qa-140 の entry 欠落契約を実装実態と一致するよう再確定する。
+**回答**: ユーザーの 2026-08-04 最終レビュー・品質ゲート再実行・仕様反映・公開指示を明示承認として、qa-142 を全面維持したまま repository 内の plugin 完全性検査へ hook entry point の 3 者一致を追加確定する。
 
-【1. 候補被覆】selected かつ schedulable な node は、pre-lease 判定で ready または unmapped のいずれかになる。active lease / resource conflict による最終除外は別用途の `conflicts[]` に残るため、最終 schedule report の被覆集合は `ready_set ∪ unmapped ∪ conflicts` とする。lease conflict を payload 欠落や依存未充足と混同しない。
+【1. 登録と宣言の双方向検査】`scripts/validate-plugin-completeness.py` は `package-contract.json` の `entry_points.hooks` を台帳の正本として、manifest inline hooks と `hooks/hooks.json` の和集合で得た登録 entry point に突合する。登録済みで未宣言なら HK-001、登録構成（inline manifest または hooks.json）がある plugin で宣言済み・未登録なら HK-002 として非 0 終了にする。`hooks/foo.py` と `./hooks/foo.py` の相対 command も登録として読む。
 
-【2. fail-closed と parity 比較】P01 の parent_feature、depends_on、または parent の depends_on が不正なら schedule を停止し candidate を黙って捨てない。Beads parity の dependency 比較は集合として行い、順序だけの差で `beads_parity_stale_or_unconfirmed` にしない。
+【2. 実体と責務境界】宣言または登録された entry point は `hooks/` に実在しなければならない。残余の Python は import 可能な名前、shebang 不在、`__main__` block 不在の全条件を満たす import 専用 support module だけを許容し、それ以外と shell script は HK-003 で拒否する。自動 event に接続しない手動運用スクリプトは `hooks/` ではなく `scripts/` に置き、entry point 台帳・自動登録・手動操作を混同しない。
 
-【3. 排他順序と復旧】依存未充足を payload entry / parity 判定より先に評価し、node ごとに最初に成立した C16 reason だけを記録する。依存を満たす Beads node の entry 欠落だけを `ready_payload_entry_absent` / `source=schedule-graph` とし、C03/C28 同期、linkage 修復、fresh parity manifest 後に再実行する。推測で ready set へ追加しない。
+【3. 単一責務と回帰】検査本体が 500 行を超えたため、hook/sidecar の純粋な収集・判定を `validate-plugin-hooks.py` に分離する。CLI と判定ロジックを別責務にしても同じ単体テストと repo 全体契約テストから呼び、plugin 専用の実装が全体ゲートを追い越す被覆差を作らない。
 
-【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【4. 製品境界】変更は repository 内の plugin 配布、CI、開発品質ゲートだけに限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-140 (対応セル: desktop-windows)
 
