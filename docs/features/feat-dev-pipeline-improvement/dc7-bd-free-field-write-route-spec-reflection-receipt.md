@@ -4,7 +4,7 @@ layer: feature-spec-reflection
 feature_id: feat-dev-pipeline-improvement
 graph_node_id: issue-bd-free-field-write-route-20260721
 beads_id: HarnessHub-dc7
-updated: 2026-08-02
+updated: 2026-08-04
 spec_impact: reflected-internal-design
 ---
 
@@ -122,3 +122,30 @@ guard は直接 `bd update` を全て遮断し、正規入口 `bd-bridge.py` も
   repository の承認フローである。
 
 最終レビューで、本 issue の受入条件に関する新しい未解決不具合は検出されなかった。
+
+## 9. 2026-08-04 文書最終レビュー
+
+今回の差分は issue の「検証証跡」を、既に main へ merge 済みの PR #632、merge commit、
+GitHub checks、受領書への導線で具体化する文書訂正だけである。bridge、guard、契約、
+製品 runtime、または既存の仕様・設計判断は変更しない。
+
+そのため、既存反映先の `system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/`
+は変更しない。これらには本実装の内部設計反映がすでに存在し、この review のためだけに
+同じ内容を重複記載すると、正本の更新ではなく履歴ノイズになるためである。今回の判断と
+再検証結果はこの受領書と issue 本文に集約する。
+
+| 確認項目 | 結果 |
+| --- | --- |
+| `origin/main` → local `main` → review branch | PASS: `origin/main` と local `main` は `c1fe30d4` で一致し、review branch は同 commit から作成 |
+| task specification package | PASS: P01〜P13、violations 0、digest `sha256:af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6` |
+| focused bridge / contract tests | PASS: 43 passed |
+| Dev Graph regression suite | PASS: 956 passed / 5 subtests passed |
+| graph / placement / document line limit | PASS: graph schema valid、配置規約適合、600 文書・上限 300 行・allowlist 0 件 |
+| repository CI equivalent | PASS: 139 PASS / 5 existing WARN / 0 FAIL |
+| `git diff --check` | PASS |
+| system-spec coverage | PASS: final + foundation の収集マトリクスは適合 |
+
+`validate-source-citation.py` は、今回未変更で `origin/main` と同一の
+`system-spec/fetched-references.json` に 20 件の `evidence_ref` / `evidence_sha256` が
+未記録のため FAIL となった。これは dc7 の文書訂正に起因しない既存ベースラインであり、
+本変更に混在させず Beads の最終レビュー記録へ残す。新しい仕様・設計影響は **なし** と確定する。
