@@ -50,6 +50,14 @@ export interface AuthzInput {
   readonly headers: ReadonlyMap<string, string>;
   /** 認証できなかった場合は null。null をそのまま許可へ倒さないこと */
   readonly principal: Principal | null;
+  /**
+   * session (browser cookie) 由来の active workspace 解決を許すか。既定 true。
+   * Bearer token (Device Flow access token 等の機械クライアント) は cookie を送らない前提であり、
+   * `resolveActiveWorkspaceId` の「所属が1件なら cookie 無しでも自動確定する」規則を適用すると、
+   * 明示ヘッダーで別 workspace を指定した要求が意図せず ambiguous_scope に落ちる。
+   * 呼び出し元が Bearer token 経路と分かっている場合は false を渡すこと。
+   */
+  readonly allowSessionScope?: boolean;
 }
 
 export function isPublicPath(pathname: string): boolean {
@@ -85,7 +93,10 @@ export function authorize(input: AuthzInput): AuthzDecision {
   // scope 入力の第2系統: session の active tenant/workspace (通常のブラウザ遷移向け)。
   // 明示ヘッダー系統 (API / 機械クライアント向け) とはここで初めて合流させ、
   // 判定順「public判定→認証→スコープ一意性→tenant一致→workspace所属」自体は変更しない。
-  const sessionScope = resolveSessionScope(input.principal, input.headers.get('cookie') ?? null);
+  const sessionScope =
+    input.allowSessionScope === false
+      ? null
+      : resolveSessionScope(input.principal, input.headers.get('cookie') ?? null);
   const merged = mergeScopes(explicitResolution.scope, sessionScope);
   if (merged === 'ambiguous_scope') {
     return { allowed: false, reason: 'ambiguous_scope', status: 403 };
