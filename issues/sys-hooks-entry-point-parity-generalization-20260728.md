@@ -12,16 +12,16 @@ iteration: null
 title: "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-07-28T00:05:00Z"
-status: "draft"
+updated_at: "2026-08-04T05:59:54.585720Z"
+status: "active"
 depends_on: []
-related_nodes: []
-resource_scope: ["scripts/validate-plugin-completeness.py","tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py","plugins/*/package-contract.json","plugins/*/hooks/hooks.json"]
+related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-plugin-hook-governance-20260804","arch-harness-hub-dev-workflow","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
+resource_scope: ["scripts/validate-plugin-completeness.py","scripts/validate-plugin-hooks.py","tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py","tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py","plugins/*/package-contract.json","plugins/*/hooks/hooks.json","plugins/*/.claude-plugin/plugin.json","system-spec/dev-workflow.md","specs/harness-hub-plugin-hook-governance-addendum.md","architecture/harness-hub-dev-workflow.md"]
 purpose: "scripts/validate-plugin-completeness.py は hooks について declared ⊆ actual (宣言した hook がディスクに実在すること) しか強制しておらず、hooks/hooks.json が実際に登録している entry point が package-contract.json に宣言されているかを検査しない。この parity 検査は 2026-07-28 に dev-graph 1 plugin 専用の契約テストとしてのみ実装されており、他 plugin が hooks.json へ hook を登録しながら宣言を怠っても repo 全体の完全性検査は素通りする"
-goal: "hooks.json 登録 ⊆ package-contract.json 宣言 の parity を、dev-graph 専用テストではなく repo 全 plugin へ適用する検査経路に置くか、適用しない設計判断を根拠付きで確定した状態にする"
-scope_in: ["validate-plugin-completeness.py へ hooks.json 登録内容との parity 検査を追加する是非を評価する","support module (単体起動の入口を持たない import 専用ファイル) の許容判定を全 plugin 共通ロジックとして共有できるか評価する","一般化する場合、既存 plugin の hooks.json と package-contract.json の乖離を棚卸しし移行コストを見積もる","一般化しない場合、dev-graph 専用に留める理由を architecture へ記録する"]
+goal: "全 plugin の hook entry point で、台帳・登録・実体の 3 者一致を repo 全体の fail-closed 検査として維持し、手動 script との責務混同を防ぐ状態にする"
+scope_in: ["validate-plugin-completeness.py で sidecar hooks.json と manifest inline hooks を登録実態として突合する","全 plugin の宣言・登録 parity と import 専用 support module の許容境界を回帰テストで固定する","既存 plugin の乖離を棚卸しし、手動 script を hooks/ から分離する","仕様・設計・Beads・draft PR の追跡を一致させる"]
 scope_out: ["skills / agents / commands の entry_points 宣言漏れ (HarnessHub-zrn で追跡)","hooks 実装そのものの変更","live-trial behavior closure digest の算出範囲変更"]
-acceptance: ["全 plugin へ適用するか dev-graph 専用に留めるかの判断が根拠付きで記録されている","適用する場合、hooks.json へ登録済みかつ未宣言の hook を持つ plugin を repo 全体の検査が非 0 終了で検出する","適用する場合、import 専用 support module が偽陽性として検出されない回帰テストが存在する","適用しない場合、dev-graph 専用に留める理由と再検討トリガーが architecture へ記録されている"]
+acceptance: ["HK-001 が登録済み・未宣言を repo 全体で非 0 終了にする","HK-002 が登録構成を持つ plugin の宣言済み・未登録を repo 全体で非 0 終了にする","HK-003 が実行可能な残余を拒否し import 専用 support module を許容する","focused pytest、全 plugin 完全性、task 仕様書ゲート、C01 coverage が pass する"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
@@ -29,9 +29,9 @@ phase_ref: null
 file_path: "issues/sys-hooks-entry-point-parity-generalization-20260728.md"
 template_id: "issue"
 template_version: "1.0.0"
-confirmation_status: "draft"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","evaluator":"final-review: focused pytest + plugin completeness + task-spec gate + C01 coverage","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-07-28T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.95
 classification_reason: "PR #82 の CI 是正で判明した、repo 全体検査と plugin 専用テストの被覆差に関する追跡課題"
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-vf66","linked_at":"2026-07-28T00:00:00Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-hooks-entry-point-parity-generalization-20260728","linked_at":"2026-08-04T05:55:34Z","merge_commit_sha":null,"merged_at":null,"pr_number":666,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/666"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/666"],"policy":"linked_pr_merged_all","reconciled_at":"2026-08-04T05:55:34Z","source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-28T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

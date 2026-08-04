@@ -83,5 +83,6 @@ implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections
 ## 追跡と残課題
 
 - Beads: `HarnessHub-vf66` / Dev Graph node: `issue-hooks-entry-point-parity-generalization-20260728`。
+- commit: `d2e4932b` / branch: `devgraph/issue-hooks-entry-point-parity-generalization-20260728` / draft PR: [#666](https://github.com/daishiman/HarnessHub/pull/666)（base: `main`）。
 - commit・branch・draft PR は本受領書を含む最終 clean HEAD に束縛する機械受領書で記録する。
 - `system-spec/fetched-references.json` の既存 20 reference は evidence provenance を欠いて citation gate が 40 件で fail する。本件で導入した差分ではなく、Beads `HarnessHub-yxb2` として追跡して修正する。
