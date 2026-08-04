@@ -99,6 +99,11 @@ import {
   type TenantDataUploadInput as TenantDataUploadInputShape,
 } from './tenant-data';
 import { createTenantsRepo, type TenantRow as TenantRowShape, type TenantsRepo } from './tenants';
+import {
+  createUserSettingsRepo,
+  type UserSettingsRepo,
+  type UserSettingsRow as UserSettingsRowShape,
+} from './user-settings';
 import { createUsersRepo, type UserRow as UserRowShape, type UsersRepo } from './users';
 import { createUserWorkspacesRepo, type UserWorkspacesRepo } from './workspaces';
 
@@ -106,6 +111,7 @@ import { createUserWorkspacesRepo, type UserWorkspacesRepo } from './workspaces'
 // 行の型は列の集合そのものなので公開する。**列の値域 (enum) は公開しない** — 値域は zod 側が持つ。
 export type TenantRow = TenantRowShape;
 export type UserRow = UserRowShape;
+export type UserSettingsRow = UserSettingsRowShape;
 export type IdpConnectionRow = IdpConnectionRowShape;
 export type DeviceAuthorizationRow = DeviceAuthorizationRowShape;
 export type PublisherTokenRow = PublisherTokenRowShape;
@@ -172,6 +178,7 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
 export interface CoreRepositories {
   readonly tenants: TenantsRepo;
   readonly users: UsersRepo;
+  readonly userSettings: UserSettingsRepo;
   readonly userWorkspaces: UserWorkspacesRepo;
   readonly idpConnections: IdpConnectionsRepo;
   readonly sessionRevocations: SessionRevocationsRepo;
@@ -218,6 +225,7 @@ export function createCoreRepositories(input: CoreRepositoriesInput): CoreReposi
   return {
     tenants: createTenantsRepo(adapter),
     users: createUsersRepo(adapter, cipher),
+    userSettings: createUserSettingsRepo(adapter),
     userWorkspaces: createUserWorkspacesRepo(adapter),
     idpConnections: createIdpConnectionsRepo(adapter, cipher),
     sessionRevocations: createSessionRevocationsRepo(adapter),

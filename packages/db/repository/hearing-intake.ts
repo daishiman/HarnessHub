@@ -38,6 +38,13 @@ export interface TenantCoefficientRow {
   readonly updatedBy: string;
 }
 
+/** `tenant_coefficients` owner が公開する部分更新 input。値域検証は consumer の zod schema が担う。 */
+export interface UpdateTenantCoefficientsInput {
+  readonly annualHours?: number;
+  readonly minutesPerRun?: number;
+  readonly sheetReductionRate?: number;
+}
+
 export interface HearingSheetRow {
   readonly id: string;
   readonly tenantId: string;
@@ -86,6 +93,7 @@ export interface HearingSheetPage {
 
 export interface HearingIntakeRepository extends HearingQueueRepository {
   getCoefficients(context: RepositoryContext): Promise<TenantCoefficientRow>;
+  updateCoefficients(context: RepositoryContext, input: UpdateTenantCoefficientsInput): Promise<TenantCoefficientRow>;
   createSheetAndEnqueue(context: RepositoryContext, input: CreateHearingSheetInput): Promise<HearingSheetRow>;
   listSheets(context: RepositoryContext, input: ListHearingSheetsInput): Promise<HearingSheetPage>;
   findSheet(context: RepositoryContext, id: string): Promise<HearingSheetRow | null>;
@@ -226,6 +234,35 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
         .where(eq(tenantCoefficients.tenantId, context.tenantId))
         .limit(1);
       return (rows[0] as TenantCoefficientRow | undefined) ?? { ...DEFAULT_COEFFICIENTS, tenantId: context.tenantId };
+    },
+
+    async updateCoefficients(context, input) {
+      if (Object.keys(input).length === 0) return this.getCoefficients(context);
+      const actorId = context.actorId;
+      if (actorId === undefined) {
+        throw new RepositoryError('invalid-context', '係数更新には操作主体 (actorId) が必要です');
+      }
+
+      const patch = {
+        ...(input.annualHours !== undefined && { annualHours: input.annualHours }),
+        ...(input.minutesPerRun !== undefined && { minutesPerRun: input.minutesPerRun }),
+        ...(input.sheetReductionRate !== undefined && { sheetReductionRate: input.sheetReductionRate }),
+        updatedBy: actorId,
+      };
+      const rows = await guardedWrite(adapter, () =>
+        adapter.client
+          .insert(tenantCoefficients)
+          .values({
+            tenantId: context.tenantId,
+            annualHours: input.annualHours ?? DEFAULT_COEFFICIENTS.annualHours,
+            minutesPerRun: input.minutesPerRun ?? DEFAULT_COEFFICIENTS.minutesPerRun,
+            sheetReductionRate: input.sheetReductionRate ?? DEFAULT_COEFFICIENTS.sheetReductionRate,
+            updatedBy: actorId,
+          })
+          .onConflictDoUpdate({ target: tenantCoefficients.tenantId, set: patch })
+          .returning(),
+      );
+      return rows[0] as TenantCoefficientRow;
     },
 
     async createSheetAndEnqueue(context, input) {
