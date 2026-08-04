@@ -2,8 +2,8 @@
 """live-trial 実走 acceptance 証拠 (verdict.json) を機械検査する (offline, tmux/LLM 不実行)。
 
 役割境界 (D9: lint-content-review 同型の最終強制層):
-  - 機械層: eval-log/<plugin>/<skill>/live-trial/<run-id>/verdict.json (最新 run-id) の
-            schema 適合 / skill_dir_tree_sha 再計算突合 / overall.verdict=PASS /
+  - 機械層: criteria-test の承認済み verdict（未整備 skill は最新 run-id への後方互換
+            fallback）の schema 適合 / skill_dir_tree_sha 再計算突合 / overall.verdict=PASS /
             tier 降格・denylist 被験体の除外 を検査
   - 実走層 (本 lint の対象外): trial 実行はローカル claude + tmux で run-skill-live-trial
             を起動して行う (リモート CI での LLM/tmux 実行は D14 で却下済み)
@@ -100,7 +100,7 @@ def _declares_live_trial(plugin, skill):
 
 
 def latest_verdict_path(plugin, skill):
-    """最新 run-id (辞書順最大) の verdict.json。無ければ None。"""
+    """後方互換用: 最新 run-id (辞書順最大) の verdict.json。無ければ None。"""
     base = EVAL_LOG / plugin / skill / "live-trial"
     if not base.is_dir():
         return None
@@ -109,6 +109,72 @@ def latest_verdict_path(plugin, skill):
         key=lambda d: d.name,
     )
     return (candidates[-1] / "verdict.json") if candidates else None
+
+
+def criteria_receipt_verdict_path(plugin, skill):
+    """承認済み criteria receipt が指す live-trial verdict を返す。
+
+    run-id は実行環境の時計に由来するため、並行 worktree や時計ずれで辞書順の最大値が
+    現在の受領証跡である保証はない。criteria-test は正の scenario を受領した明示的な
+    SSOT なので、live-trial criterion があればその ref を優先する。ref の形・包含・実体
+    を確認できない場合は fallback せず、呼出し側を fail-closed にする。
+    """
+    base = EVAL_LOG / plugin / skill / "live-trial"
+    receipt = EVAL_LOG / plugin / skill / "criteria-test" / "scenario-verdict.json"
+    if not receipt.is_file():
+        return None, None
+    try:
+        data = json.loads(receipt.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return None, f"criteria-receipt-invalid-json: {receipt}: {exc}"
+
+    criteria = data.get("criteria_results")
+    if not isinstance(criteria, dict):
+        return None, f"criteria-receipt-invalid: {receipt} の criteria_results が object ではない"
+    refs = []
+    for criterion_id, criterion in criteria.items():
+        if not isinstance(criterion, dict) or criterion.get("verify_by") != "live-trial":
+            continue
+        ref = criterion.get("live_trial_verdict_ref")
+        if not isinstance(ref, str) or not ref:
+            return None, (
+                f"criteria-receipt-invalid: {receipt} の {criterion_id}.live_trial_verdict_ref "
+                "が空または文字列ではない"
+            )
+        refs.append((criterion_id, ref))
+
+    if not refs:
+        return None, None
+    unique_refs = {ref for _, ref in refs}
+    if len(unique_refs) != 1:
+        return None, (
+            f"criteria-receipt-ambiguous: {receipt} の live-trial criterion が複数 verdict を参照: "
+            + ", ".join(f"{criterion_id}={ref}" for criterion_id, ref in refs)
+        )
+
+    ref = next(iter(unique_refs))
+    ref_path = Path(ref)
+    if ref_path.is_absolute() or ref_path.name != "verdict.json":
+        return None, f"criteria-receipt-invalid-ref: {receipt} の ref={ref!r}"
+    candidate = (EVAL_LOG.parent / ref_path).resolve()
+    try:
+        candidate.relative_to(base.resolve())
+    except ValueError:
+        return None, (
+            f"criteria-receipt-outside-live-trial: {receipt} の ref={ref!r} "
+            f"は {base} 配下ではない"
+        )
+    if not candidate.is_file():
+        return None, f"criteria-receipt-missing-verdict: {receipt} の ref={ref!r} が存在しない"
+    return candidate, None
+
+
+def selected_verdict_path(plugin, skill):
+    """承認済み receipt を優先し、未整備の場合だけ legacy 最新 run-id へ戻す。"""
+    receipt_path, err = criteria_receipt_verdict_path(plugin, skill)
+    if err is not None or receipt_path is not None:
+        return receipt_path, err
+    return latest_verdict_path(plugin, skill), None
 
 
 def check_verdict(path, plugin, skill, verdict_mod, backend_mod, schema):
@@ -210,8 +276,11 @@ def run_lint(plugin_filter=None, enforce=False):
             _declares_live_trial(plugin, skill)
             and not backend_mod.deny_target_skill(skill)
         )
-        latest = latest_verdict_path(plugin, skill)
-        if latest is None:
+        selected, selection_err = selected_verdict_path(plugin, skill)
+        if selection_err is not None:
+            violations.append(f"{plugin}/{skill}: {selection_err}")
+            continue
+        if selected is None:
             if required:
                 missing.append(
                     f"{plugin}/{skill}: feedback_contract が verify_by: live-trial を宣言するが"
@@ -219,8 +288,8 @@ def run_lint(plugin_filter=None, enforce=False):
                 )
             continue
         checked += 1
-        for err in check_verdict(latest, plugin, skill, verdict_mod, backend_mod, schema):
-            violations.append(f"{plugin}/{skill}: {latest.parent.name}/verdict.json {err}")
+        for err in check_verdict(selected, plugin, skill, verdict_mod, backend_mod, schema):
+            violations.append(f"{plugin}/{skill}: {selected.parent.name}/verdict.json {err}")
 
     if missing:
         level = "FAIL" if enforce else "WARN"

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-143 |
+| Web (web) | 確定 | 確定質疑: qa-145 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,21 +24,23 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-143 (対応セル: web)
+### qa-145 (対応セル: web)
 
-**質問**: C16 の qa-142 契約を保全したまま、HarnessHub-85z0 の C11 必須見出し欠落検出と HarnessHub-3tw の未書込み stdin preview 検証を、どのような fail-closed 境界として dev-workflow.web に再確定しますか?
+**質問**: qa-143 の C16・C11・stdin preview 契約と qa-144 の durable live-trial evidence 契約を情報欠落なく保全しつつ、並行 worktree や時計ずれで run-id の辞書順が承認済み証跡と逆転する場合、CI はどの verdict を検査し、C02 registration receipt の改変検出は証跡本文の単なるファイル名参照をどう扱いますか?
 
-**回答**: ユーザーの 2026-08-04 最終レビュー、task 仕様書品質ゲート、仕様・設計の正規反映、origin/main→local main→task branch 統合、commit/push/draft PR 作成の明示指示を承認として、qa-142 の C16 契約を変更せず保全したうえで、C11 と stdin preview の内部品質契約を追加確定する。
+**回答**: ユーザーの 2026-08-04 CI 失敗修正・最終レビュー・仕様反映・公開指示を明示承認として、qa-143 の C16/C11/C14 境界と qa-089/qa-100 の durable evidence/criteria-test 受領境界を情報欠落なく次のとおり再確定する。
 
 【1. C16 契約の保全】selected かつ schedulable な node は pre-lease で ready または unmapped のいずれかになり、active lease/resource conflict を含む最終 report は `ready_set ∪ unmapped ∪ conflicts` で候補を被覆する。P01 parent_feature、depends_on、parent の depends_on が不正なら停止し、Beads parity の dependency は順序ではなく集合で比較する。依存未充足を payload/parity 判定より先に評価し、各 node は最初に成立した reason だけを記録する。依存を満たす Beads node の payload entry 欠落だけを `ready_payload_entry_absent` / `source=schedule-graph` として C03/C28 同期、linkage 修復、fresh parity manifest 後に再実行し、推測で ready set へ追加しない。
 
-【2. C11 必須見出しの存在】`artifact_kind=specification` は、template-contract の `required_sections` と body から解析した見出し名を照合する。見出しが本文に存在しないときは exact code `heading_missing` と section 名を findings / `missing_sections` に入れ、implementation_readiness を incomplete にする。既に存在する見出しの空本文、template placeholder、TBD/TODO/未定 は従来どおり `placeholder_only_section` で検出する。既存の specification 2 件は同じ意味を保ったまま canonical template の全必須見出しへ移行する。
+【2. C11 必須見出しと C02】`artifact_kind=specification` は template-contract の `required_sections` と body から解析した見出し名を照合する。見出し不在は exact code `heading_missing` と section 名を findings / `missing_sections` に入れ、implementation_readiness を incomplete にする。空本文、template placeholder、TBD/TODO/未定だけの節は従来どおり `placeholder_only_section` とする。task / issue の conditional template は未解決のため単純照合の対象外とし、`HarnessHub-yzv0` の resolver 実装後に扱う。C02 は template-only 作成、placeholder 再生成、見出し欠落状態を rollback し、substantive body を持つ specification だけを登録・復旧可能にする。
 
-【3. 対象限定と C02】task / issue の required_sections は conditional template を未解決のまま単純照合すると旧 artifact を誤検出するため、heading_missing は specification のみに限定する。task / issue への拡張は conditional-template resolver を実装してから別 Beads `HarnessHub-yzv0` で扱う。C02 では template-only 作成、placeholder 再生成、見出し欠落状態を rollback し、substantive body を持つ specification だけを登録・復旧可能にする。
+【3. stdin preview 境界】`validate-graph-schema.py --graph - --repo-root <repo>` は decompose dry-run の未書込み preview を検証する専用入口とする。この入口は `artifact_missing` だけを許容するが、schema、frontmatter、path containment、既存 artifact の壊れた本文、frontmatter parity は fail-closed のまま維持する。`--repo-root` は必須であり、file path の canonical graph 検証は `artifact_missing` を引き続き fail とする。
 
-【4. stdin preview 境界】`validate-graph-schema.py --graph - --repo-root <repo>` は decompose dry-run の未書込み preview を検証する専用入口とする。この入口は `artifact_missing` だけを許容するが、schema、frontmatter、path containment、既存 artifact の壊れた本文、frontmatter parity は従来どおり fail-closed とする。`--repo-root` は必須であり、file path の canonical graph 検証は `artifact_missing` を引き続き fail とする。
+【4. 承認済み証跡の選択】criteria-test/scenario-verdict.json に verify_by=live-trial の criterion がある skill は、その唯一の live_trial_verdict_ref を現在の受領証跡として優先する。run-id は実行環境の時計に由来するため、辞書順最大の directory を current の根拠にしない。criteria receipt が無い legacy skill だけは既存の最新 run-id fallback を維持する。
 
-【5. 製品境界】変更は repository 内の Dev Graph C11/C02/C14 開発品質契約に限定する。Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【5. fail-closed と C02 receipt 検出の精度】receipt の JSON 形状、live-trial ref の文字列性、verdict.json 名、同一 plugin/skill の live-trial 配下への containment、実ファイル、複数 criterion の単一 ref 一致を全て確認する。receipt が存在していて不正・欠落・外部参照・曖昧なら最新 run-id へ fallback せず CI を失敗させる。選択 verdict には既存どおり schema、transcript digest、skill_dir_tree_sha、tier=live、PASS、C02 bypass を検査する。registration receipt を正規 C02 writer 以外で書換え・削除する直接操作は引き続き拒否するが、検出は receipt literal と mutation が同じ操作にあるか、receipt path を束縛した alias が mutation target である場合に限る。progress/evidence JSON の説明文に receipt 名が出るだけで別 artifact を書く操作は C02 迂回ではないため拒否しない。
+
+【6. 証跡更新と製品境界】fresh live-trial は append-only に保存し、criteria receipt を新しい PASS run へ更新して current acceptance を明示する。過去の run を削除・書換えず、digest だけの緑化も既存 provenance gate で拒否する。変更は repository 内の Dev Graph 開発品質・証跡受領に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-140 (対応セル: desktop-windows)
 

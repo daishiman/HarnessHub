@@ -123,6 +123,20 @@ def test_c02_bypass_read_only_receipt_is_not_flagged(tmp_path):
     assert _MOD.check_c02_bypass(tmp_path) == []
 
 
+def test_c02_bypass_evidence_text_with_receipt_name_is_not_a_mutation(tmp_path):
+    """別 artifact の証跡本文に receipt 名が出ても C02 迂回ではない。"""
+    command = """python3 - <<'PY'
+from pathlib import Path
+target = Path('eval-log/progress.json')
+payload = {"evidence": "digest matches dev-graph-registration-receipt.json"}
+target.write_text(str(payload), encoding='utf-8')
+PY"""
+    (tmp_path / "transcript.jsonl").write_text(
+        _asst_tool_use("Bash", {"command": command}), encoding="utf-8"
+    )
+    assert _MOD.check_c02_bypass(tmp_path) == []
+
+
 def test_c02_bypass_edit_tool_on_receipt_is_flagged(tmp_path):
     """Write/Edit 系ツールで receipt を直接編集する経路も C02 迂回として検出する。"""
     (tmp_path / "transcript.jsonl").write_text(

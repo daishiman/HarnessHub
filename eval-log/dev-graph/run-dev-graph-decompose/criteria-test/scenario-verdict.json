@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c14",
+  "reviewer": "independent-c14-r2-evidence-evaluator",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/independent-verification.json"
       ],
-      "observed": "fresh live trial 20260807T000000Z-ci-c14 は overall=PASS、nudge=0、gate=0。独立 evaluator が、target Skill 2 回、両 fixture の DAG/粒度、beads/none の永続 binding、唯一の昇格候補と draft gate、pre/post 差分、confirmation evidence 再計算、stdin negative controls を一次証跡から PASS と判定した。"
+      "observed": "main 統合後の fresh live trial 20260804T064000Z-ci-c14-r2 は overall=PASS、nudge=0、gate=0。別 evaluator が target Skill の厳密に2回の呼出し、両 fixture の DAG/粒度、beads/none の永続 binding、唯一の昇格候補と draft gate、前後差分、confirmation evidence の再計算、stdin の negative controls を一次証跡から全件 PASS と判定した。behavior closure digest=c03fb6fed5a310ff12e87febcf767dd4a3054269306b3b8999c79a763b1fbe93。"
     },
     "OUT2": {
       "status": "PASS",

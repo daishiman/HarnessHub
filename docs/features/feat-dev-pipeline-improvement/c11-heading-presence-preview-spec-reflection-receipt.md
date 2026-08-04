@@ -64,9 +64,10 @@ specification の不足見出しは `heading_missing` として readiness を in
 - C01 coverage / C02 citation: **pass**（20 records、証跡 SHA-256 一致）。
 - C03 compile / acceptance test: **12 files generated、36 passed**。
 - `git diff --check`: pass。
-- main 統合後の共有 `test_skill_criteria_evidence.py`: **14 passed、8 failed**。C01/C02/C03/C04/C05/C14/C18/C19
-  の既存 live-trial verdict が現在の `skill_dir_tree_sha` と不一致であり、C11/C14 の focused regression
-  の失敗ではない。fresh live-trial で証跡を再取得するまで draft PR の残課題とする。
+- main 統合直後の共有 `test_skill_criteria_evidence.py` は **14 passed、8 failed** で、C01/C02/C03/C04/C05/C14/C18/C19
+  の旧 verdict が現在の `skill_dir_tree_sha` と不一致だった。これは C11/C14 focused regression の失敗ではない。
+  fresh live-trial の再取得と受領書選択の恒久修正は
+  [live-trial 証跡選択の受領書](live-trial-evidence-selection-spec-reflection-receipt.md) に分離して完了した。
 
 ## 500 行上限
 
@@ -83,7 +84,7 @@ transition と schema を壊すため例外とする。C02 の各取得証跡は
 - 2026-08-04 に `origin/main` の `c560c0e8` を local `main` 経由で本 branch へ merge commit
   `3916de67` として統合した。自動マージで競合はなく、PR #664 は `MERGEABLE` を確認済み。
 - 後続: `HarnessHub-yzv0` が task / issue conditional template resolver と heading check 拡張を扱う。
-- 共有証跡: C01/C02/C03/C04/C05/C14/C18/C19 の fresh live-trial を再実行し、
-  `test_skill_criteria_evidence.py` の stale behavior-closure digest を更新する。C19 は
-  `HarnessHub-m0bd` / PR #656 が所有し、Claude の週次利用上限の解除待ちである。
+- 共有証跡: C01/C02/C03/C04/C05/C14/C18/C19 の fresh live-trial を再取得し、
+  criteria receipt を current PASS verdict へ更新済み。選択規約と C19 の独立評価を含む詳細は
+  [live-trial 証跡選択の受領書](live-trial-evidence-selection-spec-reflection-receipt.md) を正とする。
 - Draft PR #664 の CI / review 完了後に main merge 後の reconciliation を行う。

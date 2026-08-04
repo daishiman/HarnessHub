@@ -7,7 +7,7 @@
     "skill_md_sha256": "3749ff518403e2b48d02aeb7f3dd5aa3567331426db1850de75d3ab5db994bd1"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260804-c02-r2",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,14 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c02 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=8e203f481a89fe474208286ea42bc23807ecb473c764182dd9dc74df19063f68。"
+      "observed": "main 統合後の fresh live trial 20260804T052500Z-ci-c02-r2 は overall=PASS、nudge=0、gate=0。required observations 全件を別 fresh evaluator が 5 artifact の実パス、frontmatter、graph、transcript の実体証拠から PASS と判定した。behavior closure digest=d4060e74448ad9843f23d1dcdcc4a76566d2b468b34791645843339cfe04a711。"
     },
     "OUT2": {
       "status": "PASS",

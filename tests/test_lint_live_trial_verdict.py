@@ -112,6 +112,21 @@ def _write_verdict(lint, doc, skill="run-demo", run_id="20260702T000000"):
     return vdir / "verdict.json"
 
 
+def _write_criteria_receipt(lint, ref, skill="run-demo"):
+    receipt = lint.EVAL_LOG / "demo-plugin" / skill / "criteria-test" / "scenario-verdict.json"
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    receipt.write_text(json.dumps({
+        "criteria_results": {
+            "OUT1": {
+                "status": "PASS",
+                "verify_by": "live-trial",
+                "live_trial_verdict_ref": ref,
+            }
+        }
+    }), encoding="utf-8")
+    return receipt
+
+
 # --- 正 fixture -------------------------------------------------------------
 
 def test_valid_pass_verdict_exit0(lint, capsys):
@@ -232,6 +247,26 @@ def test_latest_run_id_wins_newer_pass(lint):
     _write_verdict(lint, bad, run_id="20260701T000000")
     _write_verdict(lint, good, run_id="20260702T000000")
     assert lint.run_lint() == 0
+
+
+def test_criteria_receipt_selects_accepted_verdict_despite_later_run_id(lint):
+    """run-id の時計ずれで後発 directory を誤って採用しない。"""
+    skill_dir = _make_skill(lint)
+    accepted = _write_verdict(lint, _valid_doc(lint, skill_dir), run_id="20260701T000000")
+    stale = _valid_doc(lint, skill_dir)
+    stale["overall"]["verdict"] = "FAIL"
+    _write_verdict(lint, stale, run_id="20260899T000000")
+    _write_criteria_receipt(lint, accepted.relative_to(lint.EVAL_LOG.parent).as_posix())
+    assert lint.run_lint() == 0
+
+
+def test_invalid_criteria_receipt_ref_hard_fails_without_legacy_fallback(lint, capsys):
+    """受領書があれば ref 不正を最新 run-id で隠さず fail-closed にする。"""
+    skill_dir = _make_skill(lint)
+    _write_verdict(lint, _valid_doc(lint, skill_dir))
+    _write_criteria_receipt(lint, "eval-log/other-plugin/other-skill/live-trial/x/verdict.json")
+    assert lint.run_lint() == 1
+    assert "criteria-receipt-outside-live-trial" in capsys.readouterr().out
 
 
 # --- self-test 経路 -----------------------------------------------------------

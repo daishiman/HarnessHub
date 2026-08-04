@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "independent-verifier-opus-4.6-wt20-citation-fix-20260806",
+  "reviewer": "independent-c19-r2-evidence-evaluator",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,14 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T073000Z-ci-c19-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T073000Z-ci-c19-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T073000Z-ci-c19-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T073000Z-ci-c19-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T073000Z-ci-c19-r2/independent-verification.json"
       ],
-      "observed": "CI 修正後の fresh live trial 20260806T020000Z-wt20-c19-citation-fix は overall=PASS、nudge=0、gate=0、required observations 全件を独立評価者が実体証拠から PASS と判定。behavior closure digest=45408faa755af7e291f18990b7d4fcfa4f5f19433a60cc1f42f7b1fc771e2d1e。"
+      "observed": "main 統合後の fresh live trial 20260804T073000Z-ci-c19-r2 は overall=PASS、nudge=0、gate=0。初回 evaluator の FAIL を隠さず、正規 C01/C02 フローで doc freshness と設計知識を補強して再コンパイル・再 fork した後、別 evaluator が harness 4 entry points、6/6 source lineage、C02-only 登録、非複製を一次証跡と再実行ゲートから全件 PASS と判定した。behavior closure digest=f067749c3b0749f36f28df55a3b97c2d277e71d9cc0f62f033a45c08cddcd13f。"
     }
   }
 }

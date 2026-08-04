@@ -7,7 +7,7 @@
     "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-0ui0-20260806",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260804-c05-r2",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,14 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C05-OUT1-positive-feature-progress",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/independent-verification.json"
       ],
-      "observed": "Fresh guard-clean live trial 20260806T030000Z-0ui0-render-guardclean is overall=PASS with nudge=0 and gate=0. A fresh independent evaluator confirmed every C05 observation from artifacts: inline SVG/HTML, 13=applied=expected denominator, independently recomputed 4 numerator, and matching source digest; the C02 receipt-write bypass guard produced no violations."
+      "observed": "main 統合後の fresh live trial 20260804T062000Z-ci-c05-r2 は overall=PASS、nudge=0、gate=0。別 fresh evaluator が実体成果物から、外部依存なしの inline SVG/HTML、13=applied=expected の分母、graph store から独立再計算した分子 4、source digest と child lineage の一致を全件 PASS と判定した。behavior closure digest=7cd173c59c3136347df7fe03a31872fe1e2d206d242c8cb656acef32366e330a。"
     }
   }
 }
