@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1200,
+  "graph_revision": 1201,
   "nodes": [
     {
       "acceptance": [
@@ -47829,7 +47829,7 @@
       "template_version": "1.0.0",
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T01:25:48.206800Z"
+      "updated_at": "2026-08-04T01:31:46.475830Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

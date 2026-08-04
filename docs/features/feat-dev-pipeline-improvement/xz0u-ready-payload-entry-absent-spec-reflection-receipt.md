@@ -13,7 +13,7 @@ iteration: null
 title: "bd ready payload entry 欠落報告の仕様反映受領書"
 owners: ["daishiman"]
 created_at: "2026-08-03T22:02:24.549928Z"
-updated_at: "2026-08-04T01:25:48.206800Z"
+updated_at: "2026-08-04T01:31:46.475830Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","task-schedule-beads-ready-entry-absent-reporting-20260803"]
@@ -117,8 +117,7 @@ main 統合後に再実行した最終実測結果は次のとおりである。
   段階導入中の既存・非ブロッキング項目。 `git diff --check`: pass。
 
 `origin/main` は local `main` と同一コミットであることを確認したうえで、local `main` を本 branch に
-実マージし、上記品質ゲートを再実行した。Draft PR URL と Beads publication note は、作成直後に正規 linkage
-として記録する。
+実マージし、上記品質ゲートを再実行した。Draft PR [#661](https://github.com/daishiman/HarnessHub/pull/661) を `main` 向けに作成し、Beads publication note と Dolt 同期まで完了した。
 
 ## 追跡情報
 
