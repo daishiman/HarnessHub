@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "PublishRequest パイプライン (状態機械・検査・promote/rollback)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-07-19T14:17:23Z"
+updated_at: "2026-08-02T20:55:27.042241Z"
 status: "active"
 depends_on: ["feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
@@ -31,8 +31,8 @@ template_id: "feature"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/fd3d49521dee4c5aaf2a76aed0ca06341b7e11bbb17c483c8cfc34fbec114d3b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-18T22:35:48Z","origin_kind":"generated","source_digest":"a4c26b6d4e7e8c3556d4a78089c12c6bb8dee445c20c623b151079d5747fd22d","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
+confirmation_evidence: {"evaluated_digest":"845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-publish-pipeline/845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-30T13:30:00Z","origin_kind":"generated","source_digest":"7e1a6753bec43aa5e758f148039c1af71517142bb6e039dc8b1de20638018d77","source_path":"specs/harness-hub-system-specification.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-publish-pipeline.md","confidence":0.9}]
@@ -97,3 +97,23 @@ publish → 検査 → Ready → Publishing → Published が atomic に完走�
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 実装・最終受入の反映 (2026-07-30)
+
+- 現行 task package は contract `1.2.0`、digest
+  `845b61b259b9b5864bde30caeb1843a2f79ea20ae2f006c809ee243e9edcdd4d`。
+  P01〜P13 の task projection と Beads `HarnessHub-dfm.1`〜`.13` をこの世代へ再固定した。
+- Hub API は公開要求の作成、ZIP 検査、submit、approve/cancel、Release 一覧、
+  channel promote/rollback、Release suspend、deployment 登録を提供する。
+- Green は検査後に自動公開し、Yellow/Red は修正待ちへ戻す。Release は不変、
+  stable pointer は atomic に切り替え、失敗時は旧 stable を維持する。
+- Package は SHA-256 による content-addressed key で R2 へ保存し、DB repository、
+  単一認可入口、冪等鍵、TargetChannel 直列化、append-only 監査を共有する。
+- P13 production smoke の DB fixture・証跡・cleanup は
+  `createPublishSmokeDbProbe` に閉じ、Hub が schema table を直接参照しない。
+- 外部 API、状態機械、DB/R2、認可、運用 smoke/rollback に仕様影響があるため、
+  `appr-020` と `qa-103`〜`qa-108` で system-spec を R4 再確認した。
+  反映範囲と検証結果は
+  [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を正とする。
+- durable completion（永続的な完了状態）は draft PR の merge と default branch
+  reconciliation 後に行う。作業中の task を先に `done` へしない。

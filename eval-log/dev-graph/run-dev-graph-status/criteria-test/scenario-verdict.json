@@ -7,7 +7,7 @@
     "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r2-20260722",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,13 +27,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-status/live-trial/20260724T062623Z-wt1/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/independent-verification.json"
       ],
-      "observed": "2026-07-24 に closure 更新後の behavior digest へ整合させるため 2 task・前方依存 1 本の fixture で wt1 を正規再実走 (fresh claude session, opus-4-6, 自走完走 nudge=0/gate=0)。status/closed_at/depends_on/dependents/file_path が graph 実値と field 単位一致、002=blocked/001=ready、graph/config/content 無変更 (read-only, sha256 不変を fresh evaluator が独立確認)。goal-seek 3 点セット全出力・intermediate は append-only 2 行・original_goal hash 検証 PASS。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c18 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=64a9eac953469ecbfb01a5510f39ae6f9dfb22625e74f4ca67544291bbac1bf4。"
     },
     "OUT2": {
       "status": "PASS",

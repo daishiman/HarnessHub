@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T09:08:00Z",
+  "evaluator": "fresh-agent/fresh_c02_pr601_r2_evaluator",
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "verdict": "FAIL",
+  "blockers": [
+    "task, specification, architecture, and document bodies are not preserved as byte-for-byte contiguous strings",
+    "goal-seek evidence incorrectly reports the incomplete body-preservation check as PASS"
+  ],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json"
+  ]
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 テスト設計 (test-first 受入契約)"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-07-30T12:57:15Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P03"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","apps/hub/tests/","docs/features/feat-hub-foundation/test-design.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T21:00:53Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 実装追補 (2026-07-30 / `HarnessHub-pyb3`)
+
+HF-A1-CI-004 として G4 の workspace 間直列化を test-first 契約へ追加した。`pnpm -r test`
+の入口と package 内並列は維持し、`workspaceConcurrency: 1` の欠落・値変更を負例で拒否する。

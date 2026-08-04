@@ -2,27 +2,39 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-sync",
-    "skill_md_sha256": "e21ba72e1027459544a9dc81bd2084fa76494472c4804ca99c0bbac707157fd6"
+    "skill_md_sha256": "29baae336110074cb542880cb8641858eab6fa9f0f25edade6c227e0896e8fa0"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "audit-sync-render-20260720",
-  "reviewed_at": "2026-07-20",
-  "iterations": 1,
+  "reviewer": "assign-skill-design-evaluator-inline-20260724",
+  "reviewed_at": "2026-07-24T23:31:17Z",
+  "iterations": 2,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 1
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5", "OUT6", "OUT7", "OUT8", "OUT9"],
     "positive_feedback": [
-      "FM-001/NM-001 適合: name=run-dev-graph-sync は run- prefix + kebab-case でディレクトリ basename と一致",
-      "BD-001/BD-002 適合: '## Purpose & Output Contract'・'## Protocol'・'## Gotchas' を保持し、冒頭30行に authority 混在拒否の禁則を集約",
-      "SSOT 適合: 責務を Protocol と R1-R8 に分割し reference_refs で execution-tracker/github-lifecycle contract を外部化、body を約93行に抑えて Less is More を維持"
+      "FM-001/NM-001 維持: name=run-dev-graph-sync は run- prefix + kebab-case でディレクトリ basename と一致し、本差分は命名・kind・hierarchy・argument-hint に触れていない。追加した build-parity-manifest.py も動詞始まりで lint-script-naming.py の verb 規約に適合 (違反 0 を実行確認)",
+      "BD-001/BD-002 維持: '## Purpose & Output Contract' / '## Protocol' / '## Gotchas' の骨格を保持し、冒頭 30 行の authority 混在拒否の禁則も不変。追記は Protocol の CLI 例示直後に閉じており、章を増やしていない (220 行 / 上限 300)",
+      "PG-001 維持: R1-elicit から R8-scheduled の 8 responsibility と prompts/*.md の対応は不変で、manifest 再生成のために新しい responsibility を追加していない。生成は R3-sync が収束させた graph の事後投影であり、既存責務の出口に収まる",
+      "単一責務の保持: C03 の責務は『local graph を正本として binding 別 tracker を収束させる』であり、収束後の graph から下流用 snapshot を作り直す行為はその出口処理として一貫する。生成ロジック自体は sync-graph.py へ inline せず read-only な独立 script へ切り出し、sync を回さず manifest だけ作る経路と実装を共有させたため、C03 が manifest 生成の知識を抱え込む肥大化を避けている",
+      "SSOT 参照の維持: 回復手順の正本を references/execution-tracker-contract.md §10 に置いたまま『§10 が C03 に課す回復手順』と名指し参照し、要件本文を SKILL.md へ複製していない。reference_refs も既存の 2 件から増やしていない",
+      "Goodhart 耐性: 『source_graph_digest だけを現在値へ書き換える修正は stale 検出を恒久的に無効化するため禁止する』と、検査を通す最短経路を名指しで塞いだ。加えて失敗時に snapshot を進めない旨を明記し、緑の receipt だけが残る状態を文面からも排除している"
     ],
-    "negative_feedback": [],
-    "iteration": 1,
+    "negative_feedback": [
+      "smell (severity=low / 非ブロッキング): Protocol 節が『3-way plan → authority 分離 → conflict hint → tombstone/pending_retry → PR lifecycle』の 5 手順に加えて、CLI 例示・parity manifest 再生成・単独 generator・Beads dependency 収束・Projects 3-way・PR policy を地の文で連ねており、本差分でさらに 1 段落 + 1 コードブロックが加わった。現時点で行数・章構成の規約に違反せず記述は実装と一致するが、次に手順が増える際は '## Protocol' 内の小見出し分割を推奨する"
+    ],
+    "iteration": 2,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "Stop",
     "next_action": "none"
   },
-  "notes": "独立監査で現SKILL.md (sha256 e21ba72e...) をrubric観点で再確認。同期という単一責務、authority分離、CLI/出力契約、OUT1..OUT9の受入節、参照SSOTに重大違反0件。PASS。"
+  "notes": "incremental profile の focused combined review を elegance/rubric の 2 verdict へ分割記録したうちの rubric 側。30思考法は未使用。assign-skill-design-evaluator は .claude/agents/ に未登録のため SubAgent 起動経路が存在せず、同一 context で評価した。iteration 1 で検出した low 2 件 (path 表記の二重化 / 失敗時挙動の未記載) は SKILL.md 修正で解消し、iteration 2 の再評価で新規 finding 0。rubric 観点 (命名 FM/NM、構造 BD、責務プロンプト PG、単一責務、SSOT 参照、Goodhart 耐性) で high severity 0 件。\n\nslice 外の pending 事項 (未算入): (1) criteria-test/scenario-verdict.json が skill_md_sha256 変化で stale、再生成に live-trial 再実走が必要。(2) 実 repository での sync-graph.py --dry-run --parity-manifest 通し実行は 240s timeout で未完のため、apply-only 配線は AST 検査で担保している。"
 }

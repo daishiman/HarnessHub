@@ -2,7 +2,7 @@
 # /// script
 # name: upsert-node
 # purpose: Atomically add or patch one canonical Markdown artifact and its dev-graph node.
-# inputs: ["argv: --repo-root PATH --input JSON [--graph FILE] [--body-file FILE] [--dry-run]"]
+# inputs: ["argv: --repo-root PATH --input JSON [--graph FILE] [--body-file FILE] [--regenerate-body] [--dry-run]"]
 # outputs: ["stdout: JSON transaction receipt"]
 # requires-python = ">=3.10"
 # dependencies: ["validate-graph-schema.py"]
@@ -26,6 +26,10 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from _common import ContractError, atomic_json, contained, dump, load_json, utc_now
+from node_body import artifact_bytes as _artifact_bytes
+from node_body import resolve_body as _resolve_body
+from node_body import restore_document_layer as _restore_document_layer
+from node_lifecycle import apply_lifecycle_request
 from node_transaction import (
     finalize_transaction,
     graph_operation_lock,
@@ -48,16 +52,6 @@ ROOT_BY_KIND = {
 # feature を生む正経路の出自。manual/github/system-dev-planner は macro 層の入口ではない
 # (system-dev-planner は 1 feature → exact-13 task を返す側で、feature 自体は作らない)。
 MACRO_FEATURE_ORIGIN_KINDS = frozenset({"generated", "system-spec-harness"})
-TEMPLATE_BY_KIND = {
-    "issue": "issue.md",
-    "task": "task.md",
-    "specification": "specification.md",
-    "architecture": "architecture.md",
-    "document": "document.md",
-    "feature": "feature.md",
-}
-
-
 def _validator() -> Any:
     path = Path(__file__).with_name("validate-graph-schema.py")
     spec = importlib.util.spec_from_file_location("dev_graph_node_validator", path)
@@ -189,50 +183,6 @@ def _assert_c14_macro_contract(node: dict[str, Any], root: Path) -> None:
         )
 
 
-def _body_from_artifact(path: Path) -> str:
-    text = path.read_text(encoding="utf-8")
-    if not text.startswith("---\n"):
-        raise ContractError(f"existing artifact has no frontmatter: {path}")
-    marker = text.find("\n---\n", 4)
-    if marker < 0:
-        raise ContractError(f"existing artifact frontmatter is not terminated: {path}")
-    return text[marker + 5 :].lstrip("\n")
-
-
-def _body(
-    payload: dict[str, Any], body_file: str | None, root: Path,
-    artifact: Path, kind: str, existing: dict[str, Any] | None,
-) -> str:
-    if body_file:
-        source = Path(body_file)
-        source = source if source.is_absolute() else root / source
-        value = contained(source, root, must_exist=True).read_text(encoding="utf-8")
-    elif "body" in payload:
-        value = payload["body"]
-        if not isinstance(value, str):
-            raise ContractError("input body must be a string")
-    elif existing is not None:
-        value = _body_from_artifact(artifact)
-    else:
-        value = (PLUGIN_ROOT / "templates" / TEMPLATE_BY_KIND[kind]).read_text(encoding="utf-8")
-    if value.lstrip().startswith("---"):
-        raise ContractError("body must not contain YAML frontmatter; upsert-node owns frontmatter")
-    return value.rstrip() + "\n"
-
-
-def _artifact_bytes(node: dict[str, Any], body: str, schema: dict[str, Any]) -> bytes:
-    properties = schema.get("properties") if isinstance(schema, dict) else None
-    order = list(properties) if isinstance(properties, dict) else list(node)
-    keys = [key for key in order if key in node] + sorted(set(node) - set(order))
-    lines = ["---"]
-    lines.extend(
-        f"{key}: {json.dumps(node[key], ensure_ascii=False, sort_keys=True, separators=(',', ':'))}"
-        for key in keys
-    )
-    lines.extend(["---", "", body.rstrip(), ""])
-    return "\n".join(lines).encode("utf-8")
-
-
 def _request_node(
     payload: dict[str, Any], existing: dict[str, Any] | None,
 ) -> tuple[dict[str, Any], bool]:
@@ -266,6 +216,52 @@ def _request_node(
         node.setdefault("created_at", existing.get("created_at"))
         node.setdefault("updated_at", existing.get("updated_at"))
     return node, explicit_updated_at
+
+
+def _stale_feature_lifecycle_fields(
+    existing: dict[str, Any],
+    requested: dict[str, Any],
+) -> list[str]:
+    """Return lifecycle fields that a stale full feature snapshot would regress.
+
+    A full ``node`` input is a before-image produced by C14 and may be retried.
+    Once a feature has advanced, replaying that old image must not silently
+    erase the advancement.  Callers that intentionally reset lifecycle state
+    can still do so with an explicit ``patch`` request.
+    """
+    if (
+        existing.get("artifact_kind") != "feature"
+        or requested.get("artifact_kind") != "feature"
+    ):
+        return []
+
+    regressions: list[str] = []
+    if (
+        existing.get("status") in {"active", "blocked", "done", "closed", "tombstoned"}
+        and requested.get("status") == "draft"
+    ):
+        regressions.append("status")
+    if (
+        existing.get("confirmation_status") in {"confirmed", "superseded"}
+        and requested.get("confirmation_status") == "draft"
+    ):
+        regressions.append("confirmation_status")
+    if (
+        existing.get("evaluation_status") in {"pass", "fail", "stale"}
+        and requested.get("evaluation_status") == "pending"
+    ):
+        regressions.append("evaluation_status")
+
+    existing_readiness = existing.get("implementation_readiness")
+    requested_readiness = requested.get("implementation_readiness")
+    if (
+        isinstance(existing_readiness, dict)
+        and existing_readiness.get("status") == "complete"
+        and isinstance(requested_readiness, dict)
+        and requested_readiness.get("status") == "incomplete"
+    ):
+        regressions.append("implementation_readiness.status")
+    return regressions
 
 
 def _perform(args: argparse.Namespace) -> dict[str, Any]:
@@ -308,6 +304,14 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         node, explicit_updated_at = _request_node(payload, existing)
         if _node_id(node) != requested_id:
             raise ContractError("graph_node_id is immutable and must match the request identity")
+        if existing is not None and "patch" not in payload:
+            lifecycle_regressions = _stale_feature_lifecycle_fields(existing, node)
+            if lifecycle_regressions:
+                raise ContractError(
+                    "stale feature lifecycle before-image would regress "
+                    f"{', '.join(lifecycle_regressions)}; refresh the full node "
+                    "snapshot or use an explicit patch for an intentional reset"
+                )
         relative_path = _canonical_path(node, existing)
         # 新規 feature と kind 差替えによる feature 化の双方を gate する (dry-run も同じ経路)。
         if node.get("artifact_kind") == "feature" and (
@@ -315,7 +319,16 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
         ):
             _assert_c14_macro_contract(node, root)
         artifact = contained(root / relative_path, root, must_exist=False)
-        body = _body(payload, args.body_file, root, artifact, str(node["artifact_kind"]), existing)
+        _restore_document_layer(node, artifact)
+        body, body_source, replaced_body_lines = _resolve_body(
+            payload,
+            args.body_file,
+            root,
+            artifact,
+            str(node["artifact_kind"]),
+            regenerate=bool(getattr(args, "regenerate_body", False)),
+            plugin_root=PLUGIN_ROOT,
+        )
 
         # Decide idempotency before generating an automatic update timestamp.
         preliminary_bytes = _artifact_bytes(node, body, schema)
@@ -351,6 +364,8 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
                 "graph_sha256_before": _sha256(graph_bytes_before),
                 "graph_sha256_after": _sha256(graph_bytes_before),
                 "artifact_sha256_after": _sha256(artifact_bytes_after),
+                "body_source": body_source,
+                "replaced_body_lines": replaced_body_lines,
                 "write_count": 0,
             }
 
@@ -372,6 +387,8 @@ def _perform(args: argparse.Namespace) -> dict[str, Any]:
                 (json.dumps(proposed, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
             ),
             "artifact_sha256_after": _sha256(artifact_bytes_after),
+            "body_source": body_source,
+            "replaced_body_lines": replaced_body_lines,
             "write_count": 0 if args.dry_run else int(graph_changed) + int(artifact_changed),
         }
         if args.dry_run:
@@ -417,12 +434,33 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Atomically add or patch one dev-graph node")
     parser.add_argument("--repo-root", default=".")
     parser.add_argument("--graph")
-    parser.add_argument("--input", required=True, help="JSON node/envelope/patch within the repository")
+    parser.add_argument("--input", help="JSON node/envelope/patch within the repository")
     parser.add_argument("--body-file", help="Markdown body without frontmatter, within the repository")
+    parser.add_argument(
+        "--regenerate-body",
+        action="store_true",
+        help="既存 artifact の本文を破棄して template から再生成する (既定は保持)",
+    )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--operation", choices=("apply-lifecycle-request",))
+    parser.add_argument("--request")
+    parser.add_argument("--receipt")
     args = parser.parse_args(argv)
     try:
-        dump(_perform(args))
+        if args.operation == "apply-lifecycle-request":
+            if args.input or args.body_file or args.dry_run or args.regenerate_body:
+                raise ContractError(
+                    "apply-lifecycle-request cannot be combined with node upsert arguments"
+                )
+            dump(apply_lifecycle_request(args, _perform))
+        else:
+            if not args.input:
+                raise ContractError("node upsert requires --input")
+            if args.request or args.receipt:
+                raise ContractError(
+                    "--request/--receipt require --operation apply-lifecycle-request"
+                )
+            dump(_perform(args))
         return 0
     except (ContractError, OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
         dump({"valid": False, "error": str(exc), "write_count": 0})

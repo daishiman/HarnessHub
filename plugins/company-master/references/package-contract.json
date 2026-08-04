@@ -1,0 +1,31 @@
+{
+  "$schema": "../../harness-creator/skills/ref-pkg-contract/schemas/package-contract.schema.json",
+  "package_mode": "bundle",
+  "plugin_name": "company-master",
+  "entry_points": {
+    "skills": [
+      "run-company-master-build",
+      "run-company-master-backfill"
+    ],
+    "agents": [
+      "company-master-resolve-identity",
+      "company-master-enrich-attributes",
+      "company-master-notion-upsert"
+    ],
+    "commands": [
+      "company-master",
+      "company-master-backfill"
+    ],
+    "hooks": [
+      "hook-guard-secret.py"
+    ]
+  },
+  "distribution": {
+    "distributable": true,
+    "bundle_targets": ["skills-full"],
+    "category": "productivity",
+    "tags": ["company-master", "notion", "enrichment", "corporate-number"]
+  },
+  "depends_on": [],
+  "pkg_checks": {}
+}

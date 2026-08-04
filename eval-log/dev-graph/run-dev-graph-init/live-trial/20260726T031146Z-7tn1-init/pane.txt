@@ -1,0 +1,17 @@
+First pass completed successfully:
+- six content roots created
+- repo-local config, graph store, cache, locks and templates created
+- validate-repo-config.py exit 0
+- validate-graph-schema.py exit 0
+- hook source resolved as plugin
+- absolute stored paths, tokens and node IDs: 0
+
+The trial then returned to the idle prompt after saying:
+"The first pass is done. Now returning control to the parent task for the
+between-passes modifications (template edit + node registration) and the
+second pass."
+
+The required between-pass template edit, C02 node registration, second Skill
+invocation and completion marker were not performed. The orchestrator stopped
+the poll without sending a nudge so this incomplete run could not be mistaken
+for an autonomous PASS.

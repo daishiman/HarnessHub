@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-062 |
+| Web (web) | 確定 | 確定質疑: qa-135 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-062 (対応セル: web)
+### qa-135 (対応セル: web)
 
-**質問**: docs/frontend-spec.md の 2026-07-18 追記 (S01 公開ウィザード配置・S11/S12/S14/S15/S02 詳細契約・§10 実装順・redirect/ナビ段階運用) を frontend 仕様へ反映するか。 (訂正再登録: qa-055 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-062 として登録し直す)
+**質問**: ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?
 
-**回答**: qa-040 の確定内容 (技術選定 8 論点。qa-035 スマホサイズ仕様の維持を含む) を全面維持しつつ、次の delta を確定する。mock 実測どおり公開ウィザードは S01「プラグインを公開」モーダル (S02 は既存 Project の詳細・管理・導入で新規取込の入口ではない)。S01/S02 のデータ取得へ install descriptor (GET /harnesses/:projectId/install) と publish 中 2s→backoff polling を追加。S11 一覧: status/HS コード・title/domain・department/people・hours/applicant/updated_at の 6 列 (モバイルはカード畳み)、status/department filter + 全文検索 + cursor ページング、権限外行のクライアント側除外実装は禁止 (API が範囲を返す)。S12 詳細: ヘッダ + 生成 4 section (概要/課題/機能タグ/削減効果) + 元入力/試算 snapshot + Build/PublishRequest 参照。received の表示は全画面共通「受付」。admin 操作は右側メタ領域で member には非表示かつ API でも拒否。P2 有効後のみ自動作成 Build への導線を表示。S12 PDF: 別データ生成せず認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化し window.print() (salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test)。S01 公開ウィザード: Step1 CLI 取込推奨/Web 手動 ZIP 代替 → Step2 target(skill/web_app)/category/visibility (Stage 1 は workspace まで)/説明 → Step3 検査結果と公開確認。新規 Project 作成→PublishRequest→upload/submit を 1 UI フローに束ねるが API status は隠さない。Green 自動/Yellow 承認待ち/Needs Fix は S03 findings へ。単一テナント/単一 Project を定数にしない。S14: status 件数 + FR コード/harness/type (改善要望/レビュー依頼/バグ報告)/priority/requester/date/status、sanitize 済み AI 応答、修正版 Build 導線で S13→publish→更新通知まで追跡。S15: common+自 tenant 合成一覧、sanitize 済み Markdown 閲覧、admin 編集 textarea+preview、member に編集 CTA を出さず common 編集は provider-admin のみ。S02: 全 Release と stable 版、install/download modal は backend descriptor 表示のみで R2 key/永続生 URL を組み立てず、promote/rollback/suspend は owner だけに表示。P6 ボトムシート対象へ公開ウィザード追加。§10 実装順: P0 共通シェル + S07/S08 → P1 S10/S11/S12 → P2 S01→S02/S03→S13 → P3 S14/S15 → P4 S16/S17/S18 → P5 S09 + S05/S06。/ redirect は S09 完成 (P5) まで /sheets へ。サイドバー/ボトムタブは未実装 phase 項目を非表示 (グレーアウト不可 = qa-018 整合)、ボトムタブ先頭 slot は S09 完成までシート (S11) 暫定。部品実装順は shared-layers §1 (StepWizard=P1、StageBoard=P2、MarkdownEditor=P3、InlineEditTable=P4、チャート/KPI=P4 の S16 から S09 で完成)。認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面。
+**回答**: 既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

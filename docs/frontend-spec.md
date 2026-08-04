@@ -269,7 +269,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ## 8. 非機能 (性能・a11y・テスト)
 
-- **CWV good (qa-018)**: p75 で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1。**First Load JS ≤ 250KB (gzip) / route** を `next build` 出力で CI 計測 (Worker bundle 3MiB ゲートとは別軸)。チャート・Markdown・ウィザードは dynamic import で route 分割。
+- **CWV good (qa-018)**: p75 で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1。**First Load JS ≤ 250KB (gzip) / route** を `next build` 出力で CI 計測 (Worker bundle 3MiB ゲートとは別軸)。チャート・Markdown・ウィザードは dynamic import で route 分割。**実装 (2026-07-25, G13)**: 上記を CI ゲート G13 (`apps/hub/scripts/check-client-bundle.mjs`) が機械強制する。**運用値は 120 KiB / route** とし、上限 250KB の内側に早期検知線を引く (現状の下限は Next.js 15 の framework baseline 103.0 KiB で、それ以上は削れない。120 KiB は下限に約 17 KiB の余裕を残しつつ、barrel 巻き込み級の退行 +56 KiB は必ず超過させる位置)。上限 250KB は将来 Markdown エディタ等で正当に重くなる route を許容するための天井であり、両者は矛盾しない。登録簿は [shared-layers.md](shared-layers.md) の CI 品質ゲート登録簿。
+  - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する**。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
 - **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) × **2 viewport (1280×800 / 390×844)** + axe 統合。分離テスト等サーバ側は backend-spec 準拠。
@@ -293,7 +294,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ユーザー確定の構築優先順位 (P0 認証基盤 → P1 ヒアリング → P2 プラグイン Hub + パイプライン → P3 改善ループ・ドキュメント → P4 ユーザー・効果測定 → P5 ダッシュボード・統制) を画面実装へ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。本節の P0〜P5 は構築 phase 番号であり、§6.3 のレスポンシブ変換パターン P1〜P10 とは無関係。
 
 - **画面の実装順**: P0 = 共通シェル (§3.0) + S07/S08 → P1 = S10/S11/S12 → P2 = S01 (公開ウィザード・一覧・install/download) → S02/S03 (管理・公開状態) → S13 (ヒアリング/公開との接続) → P3 = S14/S15 → P4 = S16/S17/S18 → P5 = S09 + S05/S06。
-- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。
+- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とする。
 - **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
 - **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
-- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。
+- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。

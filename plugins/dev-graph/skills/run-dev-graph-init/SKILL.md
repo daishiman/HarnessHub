@@ -11,9 +11,9 @@ user-invocable: true
 disable-model-invocation: false
 argument-hint: "[--repo-root PATH] [--hook-source plugin|project-fallback] [--dry-run]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Skill, Agent]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-repo-config.py, ../../scripts/build-repo-config.py, ../../scripts/build-graph-store.py]
 schema_refs: [../../schemas/graph-node.schema.json, ../../schemas/repo-config.schema.json]
-reference_refs: [../../schemas/repo-config.schema.json, ../../templates/template-contract.json, ../../references/claude-code-hooks-contract.md]
+reference_refs: [references/validation-contract.md, ../../schemas/repo-config.schema.json, ../../templates/template-contract.json, ../../references/claude-code-hooks-contract.md]
 responsibility_refs:
   - prompts/R1-elicit.md
   - prompts/R2-plan.md
@@ -92,7 +92,7 @@ feedback_contract:
 ## Input / output
 
 - 入力: `--repo-root` または信頼済み project context、hook source。保存先や node ID は質問しない。
-- 出力: `issues/ tasks/ specs/ architecture/ features/ docs/`、`.dev-graph/{config.json,graph.json,state/,cache/,locks/,templates/}` と初期化 receipt。
+- 出力: `issues/ tasks/ specs/ architecture/ features/ docs/`、`.dev-graph/{config.json,state/graph.json,cache/,locks/,templates/}` と初期化 receipt。
 - GitHub は `enabled:false` で初期化し、owner/project number/field name のみ保存する。token と GitHub node ID は保存しない。
 
 ## Execution contract
@@ -101,9 +101,25 @@ feedback_contract:
 2. 既存ファイルを列挙して preview。6 root と repo-local directory は欠落時だけ作る。
 3. plugin の `templates/` 全件を `.dev-graph/templates/` へ欠落時だけコピーする。利用者編集済みファイルは上書きせず `migration_preview` へ記録する。
 4. plugin hook を既定とする。`project-fallback` は plain-symlink 導入かつ effective plugin hook 不在時だけ許可し、既存 `.claude/settings.json` を deep-merge preview 後に更新して rollback manifest を残す。二重登録は拒否する。
-5. `validate-graph-schema.py` で config/graph/template readiness を検証する。二回目実行の planned changes が 0 でなければ完了しない。
+5. `.dev-graph/config.json` は `build-repo-config.py` 経由でのみ書く。`Write`/`Edit`、shell redirect、interpreter の `open(...,'w')` はいずれも C10 guard (`hooks/guard-graph-schema.py`) が graph authority への迂回として遮断するため、この writer が唯一の正規経路である。R2-plan が組み立てた config 全文は `.dev-graph/tmp/config-draft.json` へ `Write` で置いてから (`tmp/` は guard の保護対象外) writer に `--from-json` で渡す。writer は書込前に `validate-repo-config.py` の検証を通し (違反は exit 1 で書込前に停止)、既存と同一内容なら書かない。利用者編集済み config を保全する scaffold では `--if-absent` を使う。
+6. 初期 `.dev-graph/state/graph.json` は `build-graph-store.py` 経由でのみ作る。`Write`/`Edit`、shell redirect、`Path.write_text()` を含む interpreter 直書きは C10 guard が遮断する。writer は config の `repository_id` と canonical graph path を検証し、欠落時だけ 4-key envelope (`schema_version` / `repository_id` / `graph_revision` / `nodes`) を atomic に生成する。既存 store は全 node の C11 検証に通る場合だけ byte-preserve し、非正準 store を暗黙修復しない。
+7. 生成 config を `validate-repo-config.py`、初期 graph を `validate-graph-schema.py` で検証する。jsonschema を手書きせず必ずこの 2 script を実行し、二回目実行の planned changes が 0 でなければ完了しない。変数束縛・検証 3 層・`--require-content-roots` に 6 root だけを渡す根拠は `references/validation-contract.md` を正本とする。
 
-Receipt は `repository_id`, repo-relative roots, created/preserved/migration_preview, hook_source, schema_result を含む。検証失敗時は部分成功を成功扱いしない。
+```bash
+# config は writer 経由でのみ書く (Write/Edit/redirect は C10 guard が遮断する)。
+# draft は `.dev-graph/tmp/` (保護対象外) へ Write で置き、writer が検証して atomic に設置する。
+python3 "$DEV_GRAPH_PLUGIN/scripts/build-repo-config.py" --repo-root "$DEV_GRAPH_ROOT" \
+  --from-json "$DEV_GRAPH_ROOT/.dev-graph/tmp/config-draft.json" \
+  --require-content-roots issues tasks specifications architecture features documents
+python3 "$DEV_GRAPH_PLUGIN/scripts/build-graph-store.py" --repo-root "$DEV_GRAPH_ROOT"
+
+python3 "$DEV_GRAPH_PLUGIN/scripts/validate-repo-config.py" --repo-root "$DEV_GRAPH_ROOT" \
+  --config "$DEV_GRAPH_ROOT/.dev-graph/config.json" --require-content-roots issues tasks specifications architecture features documents
+python3 "$DEV_GRAPH_PLUGIN/scripts/validate-graph-schema.py" --repo-root "$DEV_GRAPH_ROOT" \
+  --graph "$DEV_GRAPH_ROOT/.dev-graph/state/graph.json"
+```
+
+Receipt は `repository_id`, repo-relative roots, created/preserved/migration_preview, hook_source, schema_result を含む。`schema_result` は上記 2 script の実行出力を正本とし、手書き要約で代替しない。検証失敗時は部分成功を成功扱いしない。
 
 ## ゴールシーク実行
 
@@ -118,9 +134,10 @@ symlinkで配布された任意の呼出し元repository/worktreeを解決し、
 ### 完了チェックリスト
 
 - [ ] `resolve-repo-context.py` receipt の repository_id/common-dir/content root が caller repo と一致する
-- [ ] `issues/tasks/specs/architecture/features/docs` と `.dev-graph/{config.json,graph.json,state,cache,locks}` が実在する
+- [ ] `issues/tasks/specs/architecture/features/docs` と `.dev-graph/{config.json,state/graph.json,cache,locks}` が実在する
 - [ ] `template-contract.json` 列挙資産が欠落0で、利用者編集済み template の digest が不変である
 - [ ] effective hook は plugin または許可済み fallback の一経路だけで、既存 settings key/hash の変更が0件である
+- [ ] `validate-repo-config.py --require-content-roots <6 root>` が exit0 で、生成 config の schema 適合・path containment・秘密材料0件を実行出力で示している (jsonschema の手書き検証で代替しない)
 - [ ] `validate-graph-schema.py` が exit0 で、同じ入力の二回目 init の planned changes が0件である
 
 ### ゴールシークループ
@@ -166,6 +183,8 @@ PY
 ## Gotchas
 
 - symlink 元の plugin directory を content authority にせず、C24 receipt の caller repo だけを書込み先にする。
+- `.dev-graph/config.json` を `Write`/`Edit`、`cat >`/`tee`、`python3 -c "open(...,'w')"` で書かない。C10 guard が遮断する経路であり、遮断が遅いことに依存した迂回は過去に実際の fail-open (HarnessHub-6in4) だった。`build-repo-config.py` を使う。
+- `.dev-graph/state/graph.json` の初期化も `Path.write_text()` 等で代替しない。初期 store は `build-graph-store.py`、node 追加後の変更は C02 `upsert-node.py` だけを使う。
 - token、GitHub node ID、環境固有の絶対 path を repo config へ永続化しない。
 - 利用者が編集した template は上書きせず、migration preview に差分を残す。
 - effective plugin hook がある状態で project fallback を追加しない。

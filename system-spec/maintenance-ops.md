@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-058 |
+| Web (web) | 確定 | 確定質疑: qa-129 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-058 (対応セル: web)
+### qa-129 (対応セル: web)
 
-**質問**: 構築優先順位 P0-P5 に伴う監視・運用の段階的有効化 (docs/infrastructure-spec.md §13・docs/shared-layers.md の 2026-07-18 追記) を保守運用仕様へ反映するか。
+**質問**: 顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?
 
-**回答**: 監視・運用ジョブは必要 phase で段階的に有効化する: P1 で AiJob キュー滞留監視 (qa-027 の監視対象) と生成完了通知、P2 で orphan 通知 (承認 queue UI は P5 でも監査記録は P2 から有効)、P4 で metrics rollup cron・Turso 使用量監視・週次通知、P5 で dashboard/承認/監査 UI 向け route の外形確認。P0 時点では metrics rollup・週次サマリー・dashboard monitor を有効化しない。AI 処理主体の表記は D5 確定 (pull 型 = Claude Code セッション消費・サーバ側 AI 課金なし) へ統一 (旧「D5 候補」表記の解消)。既確定の監視・バックアップ・運用手順 (qa-027 ほか) は不変で有効化タイミングだけを追加確定。
+**回答**: qa-114 の共有 OAuth rollout/rollback、観測、完了収束、既存 runbook 契約を全面維持し、顧客持ち込み方式の運用を追加確定する。【責任境界】Google Cloud Console の client 作成、redirect URI、同意画面、secret 追加/失効は顧客の手作業、Hub の登録・テスト・有効化・無効化は provider-admin の操作とする。【通常手順】callback URL 確認→Google client 準備→Hub 登録→probe 合格→有効化→実ブラウザ login の順を gate 化する。rotation は Google で新 secret 追加、Hub staging、pending テスト、昇格、実 login、Google で旧 secret 失効の順とし、昇格前は取消可能にする。【停止と再開】無効化は共有方式へ fallback せずログインを止める。再開は新 credential を登録して pending→tested→active を再実行し、古い credential の直接復帰を禁止する。【証跡】secret 全値を issue/PR/chat/screenshot に残さず last4 のみ記録し、runbook、検証結果、仕様反映受領書、Beads notes、draft PR に実施結果と Google 実環境/Playwright/production migration の残課題を分離する。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 

@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
-    "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
+    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-content-reviewer-20260723",
-  "reviewed_at": "2026-07-23",
+  "reviewer": "codex-independent-evaluator-eval_decompose_trial_r3-20260802",
+  "reviewed_at": "2026-08-02",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -18,10 +18,10 @@
       "OUT2"
     ],
     "positive_feedback": [
-      "NM 命名: name=run-dev-graph-requirements が dir 名/prefix=run と一致し、description は要件導出 + readiness 完了時のみ handoff という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力 (requirements document + readiness matrix + handoff)/四 gate 完了条件を明記し、Gotchas 節も具備。手順5 が emit 対象成果物 4 点を列挙し、emit 0 件での完了申告を契約違反として明記。",
-      "測定可能性: 完了チェックリストが『成果物ファイルの実在が条件。progress.json 内の記載や gate PASS の事実だけでは未達』という機械確認可能 (ファイル実在検査可能) な二値条件へ強化され、C11 report の validate-graph-schema.py 実行出力係留・validate-source-digest.py exit 0 係留と合わせて自己申告不能なチェックリストになった。",
-      "RG/責務: 『要件導出と gated handoff』へ単一収束し、実装コード生成と exact-13 検証を外部 (capability-build / validate-system-plan.py) へ委譲。emit 責務は R3-handoff prompt の出力契約・達成ゴールと 1:1 対応し責務逸脱なし。"
+      "NM/整合: SKILL.md、R2b-readiness.md、component-inventory C04-IN1 が同じ 15-node closure、CLI、停止条件を表現する。",
+      "BD/測定可能性: validate-source-digest.py exit 0 と validate-system-plan.py PASS に係留され、自己申告や目視で代替できない。",
+      "RG/責務: 要件導出と gated handoff に限定し、task 生成と実装コード生成を system-dev-planner/capability-build へ委譲する。",
+      "安全性: incomplete/pending/fail/stale、lineage 不一致、package 検証失敗のいずれでも部分 handoff を認めない。"
     ],
     "negative_feedback": [],
     "iteration": 1,
@@ -29,5 +29,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "『gate 検証 PASS のみで成果物 emit を省略して完了申告する』fail-open への追加修正 (手順5 + 完了チェックリストへ emit を完了条件として明文化) を rubric 観点で再評価。IN1/OUT1/OUT2 は ## Criteria acceptance に 1:1 で測定可能な受入条件化を維持し、OUT1 (handoff の live-trial 確認) が emit 条件の behavioral 検証を担う。チェックリスト強化により completion 判定の測定可能性が向上し、high severity 0 件で PASS。"
+  "notes": "qa-121 で更新した C04 current behavior closure を fresh independent reviewer が rubric 観点で再評価。lineage closure、current pointer、四 gate、責務境界が測定可能かつ fail-closed で、high severity 0 件のため PASS。"
 }

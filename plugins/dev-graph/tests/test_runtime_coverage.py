@@ -31,7 +31,12 @@ def load(path: Path, name: str):
 
 @pytest.fixture
 def common():
-    return load(SCRIPTS / "_common.py", "_common")
+    # canonical な sys.path 経由の _common を返す。ここで再 exec して sys.modules["_common"]
+    # を差し替えると、既に import 済みの helper module (schedule_graph_nodes 等) が束縛済みの
+    # 旧 ContractError を投げ続け、pytest.raises(common.ContractError) が別クラスを待つ。
+    import _common
+
+    return _common
 
 
 def call_main(module, monkeypatch, capsys, *args, stdin=None):
@@ -120,6 +125,11 @@ def test_resolve_discover_and_main(common, tmp_path, monkeypatch, capsys):
 
 def test_bd_helpers_and_all_operations(common, tmp_path, monkeypatch, capsys):
     mod = load(SCRIPTS / "bd-bridge.py", "bd_bridge_cov")
+    # create の実在検証 (HarnessHub-mfh7) が読む canonical graph。起票対象の
+    # graph_node_id が graph に居ないと create は書込前に落ちる。
+    state = tmp_path / ".dev-graph"; state.mkdir(exist_ok=True)
+    (state / "config.json").write_text(json.dumps({"local_state": {"graph": ".dev-graph/graph.json"}, "content_roots": {"issues": "issues"}}))
+    (state / "graph.json").write_text(json.dumps({"nodes": [{"graph_node_id": "G1"}, {"graph_node_id": "G9"}]}))
     monkeypatch.setattr(mod, "run", lambda *a, **k: SimpleNamespace(stdout='{"id":"x"}', returncode=0))
     assert mod.bd(["show"], cwd=tmp_path)["id"] == "x"
     monkeypatch.setattr(mod, "run", lambda *a, **k: SimpleNamespace(stdout="plain", returncode=4))
@@ -418,7 +428,7 @@ def test_reconcile_lifecycle_modes(common, tmp_path, monkeypatch, capsys):
     args = ("--repo-root", tmp_path, "--graph", graph, "--graph-node-id", "G", "--repo", "o/r", "--pr", "1")
     code, out = call_main(mod, monkeypatch, capsys, *args, "--mode", "check")
     assert code == 0 and out["policy_decision"] == "complete"
-    code, out = call_main(mod, monkeypatch, capsys, *args)
+    code, out = call_main(mod, monkeypatch, capsys, *args, "--writer-request-only")
     assert code == 0 and out["policy_decision"] == "writer_pending"
     assert json.loads(graph.read_text())["nodes"][0]["status"] == "active"
     bad = {**remote, "pull_request": {**remote["pull_request"], "state": "CLOSED", "merged": False, "mergedAt": None}}

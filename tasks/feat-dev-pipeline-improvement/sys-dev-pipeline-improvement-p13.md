@@ -11,11 +11,11 @@ target_date: null
 iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
-created_at: "2026-07-22T04:16:31Z"
-updated_at: "2026-07-24T07:07:52.151248Z"
-status: "done"
+created_at: "2026-07-25T16:38:15Z"
+updated_at: "2026-08-03T04:40:00Z"
+status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
-related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-register-package-projection-idempotency-drift-20260728"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/release-receipt.json"]
 purpose: "全成果を PR として main へ反映し、P12 手順に従って issue-bd-bridge-notes-passthrough-20260721 (解決済み・open 残置) を 3 表現同時に閉じることで close-loop の実効性をリリースと同時に実証する。"
 goal: "P13 の受入条件と品質ゲートを満たし、再実行可能な検証証跡を残す"
@@ -31,19 +31,19 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-22T04:16:31Z","origin_kind":"system-dev-planner","source_digest":"9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/9be3809dad465db6de2af20a8b475ae4d9e01d0abe544d5592f3cdf7de91a33b/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-07-25T16:38:15Z","origin_kind":"system-dev-planner","source_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","source_path":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.87
 classification_reason: "qa-067 の開発管理パイプライン改善 8 要件のうち P13 責務 (リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証) を実行する task"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md","confidence":0.87}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-k2u.13","linked_at":"2026-07-21T16:50:00Z","sync_state":"linked"}
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/feat-dev-pipeline-and-doc-governance","linked_at":"2026-07-24T07:07:52.148155Z","merge_commit_sha":"b655e22db768f38fb044cb24482807ce35ec00f5","merged_at":"2026-07-23T04:02:24Z","pr_number":41,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/41"}]
+pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-07-23T04:02:24Z","evidence_refs":["https://github.com/daishiman/HarnessHub/pull/41"],"policy":"linked_pr_merged_all","reconciled_at":"2026-07-24T07:07:52.148676Z","source":"github_pr_merge","status":"done"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -74,7 +74,7 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 ## 前提条件
 
 - Required spec/architecture/phase/task nodes: feat-dev-pipeline-improvement, arch-harness-hub-dev-workflow
-- Entry gate: goal-spec.json の feature_context_digest が sha256:16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085 に一致し、features/feat-dev-pipeline-improvement.md の frontmatter と goal-spec の purpose/goal/scope_in/scope_out/acceptance が逐語一致すること
+- Entry gate: goal-spec.json の feature_context_digest が sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89 に一致し、features/feat-dev-pipeline-improvement.md の frontmatter と goal-spec の purpose/goal/scope_in/scope_out/acceptance が逐語一致すること
 - Source pin: system-spec-harness v0.1.0 / run-system-spec-compile / assign-system-spec-completeness-evaluator
 - Repository context: repo_identity=github:daishiman/HarnessHub、root_resolution_source=explicit-cli (validate-system-plan.py 実行時に --repo-root を明示指定する運用)、config=.dev-graph/config.json。全 path は repository 相対とし absolute path は使用しない
 - 直前 phase (SYS-DEV-PIPELINE-IMPROVEMENT-P12) の完了に依存する (直列 DAG)。
@@ -133,6 +133,39 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 - Automated commands: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .`
 - Required evidence: release-receipt.json と main 上での lint 3 本 + 回帰テストの exit 0
 
+### 2026-07-29 P13 書き戻し記録
+
+C14 live-trial acceptance の証拠完全性、最終 persisted node への評価 digest 束縛、正準 validator の negative control を `system-spec/testing-qa.md` の qa-089、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-testing-qa.md`、`features/feat-dev-pipeline-improvement.md` へ書き戻した。外部 API・DB・認証認可・UI・deploy unit は非変更で、変更境界は repository 内の開発品質ゲートである。受領書は `docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md` を正とする。
+
+書き戻し後の再検証は PR #598 の最新 `main` (`bb95580`) 統合後ツリーで広域 pytest 9308 passed / 7 skipped、repository CI 123 PASS / 4 既存 WARN / 0 FAIL、現行 task package P01〜P13 violations 0、fresh r7 live-trial beads/none 2 系列 PASS である。live-trial は統合後も有効な behavior closure `c0d843d7…4801` へ束縛し、旧 reaper による別 worktree session 回収は main の ownership 契約で解消した。
+
+### 2026-07-30 scenario contract 受領ゲートの追補
+
+`HarnessHub-yn71` は P13 の release evidence 受領条件を qa-100 へ具体化した。
+`verify_by=live-trial` の verdict は `scenario_contract` を省略できず、required/observed
+の同数・同順、`unobserved=[]`、引数、宣言済み task 契約、run 内 evidence の実在を
+criteria-test が再照合する。C15 schedule は 4/4 観測の fresh run へ更新した。
+schedule 実装と製品契約は非変更で、判断・検証の正本は
+`docs/features/feat-dev-pipeline-improvement/live-trial-scenario-contract-required-spec-reflection.md`
+とする。
+
+### 2026-07-29 C02 lifecycle 回帰の最終レビュー追記
+
+`HarnessHub-bk8v` では、C14 の stale full feature snapshot が評価済み lifecycle を
+draft へ戻す回帰を C02 の単一 writer 境界で遮断した。明示 patch による意図的 reset は
+維持し、通常の同一入力は noop、stale full snapshot は graph / Markdown / revision を
+変えずに拒否する。
+
+書き戻し先は `system-spec/dev-workflow.md`、
+`architecture/harness-hub-dev-workflow.md`、
+`specs/harness-hub-system-specification.md`、
+`features/feat-dev-pipeline-improvement.md` とした。製品仕様への影響はなく、
+開発管理ツール内部の整合性契約だけを具体化した。検証と判断理由は
+`docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md`
+を正とする。
+
+2026-07-30 の最終レビューでは、重複報告 `HarnessHub-j66m` を別実装にせず `HarnessHub-bk8v` / `issue-c02-upsert-lifecycle-regression-20260729` の完了証拠へ統合し、現行 `main` で受入条件と品質ゲートを再実行して製品 runtime 契約に差分がない判断を仕様反映受領書へ記録する。
+
 ## Inner goal-seek execution loop
 
 - Methodology contract: `system-task-goal-seek/v1`
@@ -154,10 +187,10 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 
 ## Current canonical feature baseline
 
-- Feature context: `features/feat-dev-pipeline-improvement.context.json` (`sha256:16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085`)
+- Feature context: `features/feat-dev-pipeline-improvement.context.json` (`sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89`)
 - Phase responsibility: 現行 context の purpose・goal・scope・acceptance のうち本 phase 責務の部分集合を所有する。
-- Purpose: 開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する
-- Goal: qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態
+- Purpose: 開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する
+- Goal: qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態
 - Scope in (all items are in-scope for the package; this phase owns the subset matching its responsibility):
 - lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)
 - eval-log/ 配置規約の明文化と CI lint 強制
@@ -167,6 +200,7 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 - dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与
 - spec-drift-guardian の verdict close gate 配線
 - 陳腐化文書の定期棚卸し GC の sync verb 運用組込み
+- qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化
 - Scope out:
 - Hub プロダクト本体機能 (Web/API/DB) の変更
 - dev-graph への新 verb 追加
@@ -180,13 +214,15 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 - graph.json 分割の再検討トリガーが仕様に記録されている
 - spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される
 - 陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている
+- feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している
+- P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している
+- validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している
 - Architecture/source refs:
 - architecture/harness-hub-dev-workflow.md
 - specs/harness-hub-system-specification.md
 - system-spec/dev-workflow.md
 
 This section is the current source closure and supersedes older counts or wording in this task when they conflict with the pinned feature context.
-
 ## Phase acceptance
 
 - 全成果物の PR が main へ merge され、release-receipt.json に PR 番号・merge commit・CI 結果が記録されている
@@ -194,6 +230,71 @@ This section is the current source closure and supersedes older counts or wordin
 
 ## 参照情報
 
-- goal-spec: goal-spec.json (parent_feature=feat-dev-pipeline-improvement, feature_context_digest=sha256:16d9e07bc878c21e6054ba7f178d2d1fc5e303961a297f9a5949a20f328e5085)
-- 仕様正本: system-spec/dev-workflow.md qa-067 (開発管理パイプライン改善 8 要件)
+- goal-spec: goal-spec.json (parent_feature=feat-dev-pipeline-improvement, feature_context_digest=sha256:0dcdff8e099067cabb0810cbd7df5a0c90dcdd068c0f6f4b29c19bcf3745df89)
+- 仕様正本: system-spec/dev-workflow.md qa-067 (開発管理パイプライン改善 8 要件) / qa-071 (開発管理方法論 8 要件: マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制。spec-state qa_log 登録済み・appr-009 承認)
 - trace rule: P04 defines executable test IDs; P05 implements their subjects; P06 executes them; P07/P10 adjudicate only executed evidence; P09 makes applicable checks fail-closed; P11 preserves source digest and rerun commands; P12/P13 cannot substitute documentation or planned work for missing implementation/evidence.
+
+## 実行契約
+
+- claim: Beads issueをatomic claimし、並行実行時はworktree leaseを取得する。
+- scope: frontmatter `resource_scope` と published task spec の Write scope/touches を両方守る。
+- verification: published task spec の Automated commands と Required evidence を全件実行・保存する。
+- rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dev-pipeline-improvement` を使い、current pointer から現行世代を再解決する。
+- completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
+- source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。`HarnessHub-dc7` の post-completion P13 書き戻しは、確定済み QA を変更せず Beads 自由フィールドの bridge 経路を各層へ反映し、`docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md` を判断・検証の正本とする。`HarnessHub-cvli` は同じ write-back として、exact-13 registration と C02 task projection の六項目所有境界・時刻後退 fail-closed を反映し、`docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md` を正とする。
+
+## 2026-07-29 skill tree lint P13 書き戻し
+
+`HarnessHub-xswf` の実装結果を testing-qa の R4-reopen → qa-095 再確定として
+`system-spec/spec-state.json` / `system-spec/testing-qa.md` へ書き戻した。
+参照 wrapper、system spec 要約、feature 履歴、P12 品質ゲート、仕様反映受領書も
+同一 wave で更新した。
+
+変更境界は repository 内の skill 構造 lint と local test reproducibility であり、
+Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+最終検証は
+`docs/features/feat-dev-pipeline-improvement/skill-tree-cache-spec-reflection-receipt.md`
+へ記録し、draft PR は `main` 向けに作成する。
+
+## 2026-07-30 `HarnessHub-ml57` Phase 13 引き継ぎ
+
+- branch: `devgraph/issue-local-ci-gate-drift-20260728`
+- base: repository default branch `main`
+- commit scope: implementation、focused tests、CI/local wiring、仕様反映文書、
+  dev-graph / Beads linkage に限定する
+- excluded dirty files: 既存の
+  `eval-log/run-dev-graph-schedule-beads-ready.json` と
+  `eval-log/run-dev-graph-schedule-execution.json`
+- PR body: 目的、変更内容、検証結果、仕様反映、Beads ID、dev-graph node ID、
+  残課題を明記し Draft で作成する
+- merge order: `origin/main` → local `main` → 本 branch の順に統合し、
+  統合後 tree で品質ゲートを再実行する
+
+仕様反映受領書は
+`docs/features/feat-dev-pipeline-improvement/local-ci-parity-spec-reflection-receipt.md`
+とする。
+
+## 2026-07-30 `HarnessHub-35ai` Phase 13 引き継ぎ
+
+- branch: `devgraph/issue-render-registration-receipt-contract-mismatch-20260726`
+- base: repository default branch `main`
+- commit scope: renderer、skill 契約、正負の回帰テスト、評価証拠、
+  仕様反映文書、dev-graph / Beads 完了投影に限定する
+- registration receipt 有りは `verified`、無しは `not_performed` とし、
+  13 task の見かけの一致を成功根拠にしない
+- test 分割後の変更対象コード／文書は 500 行以下を維持する
+- `origin/main` → local `main` → 本 branch の順で統合し、統合後 tree で
+  task package、plugin test、content/live-trial、repository CI を再検証する
+- 仕様反映受領書: `docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md`。2026-08-02 の C10/C11/C28 final review は `guard-authority-c10-c11-c28-spec-reflection-receipt.md` を正とする。
+
+## 2026-07-30 PR #610 CI follow-up
+
+stale になった 9 skill の live-trial を fresh session で再取得し、C19 の report / ledger / session を canonical gate で突合した。結果は `qa-102` / `appr-019` と [受領書](../../docs/features/feat-dev-pipeline-improvement/c02-document-layer-spec-reflection.md) を正とする。
+
+## 2026-08-03 `HarnessHub-f84o` Phase 13 引き継ぎ
+
+branch は `devgraph/issue-guard-graph-schema-inline-python-variable-path-20260726`、base は `main`。
+対象実装・テスト・仕様層・fresh evidence・Beads 投影だけを commit し、無関係な既存差分を除外する。
+`origin/main` → local `main` → branch を `1c60a47d` / `5bdf3c25` まで統合し、全ゲート PASS を確認。
+目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
+[f84o 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。

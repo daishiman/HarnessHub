@@ -1,0 +1,33 @@
+{
+  "evaluator": "fresh-evaluator/C01-OUT1-positive-idempotence-r17",
+  "result": "FAIL",
+  "blockers": [
+    "second_pass_noop: Skill({skill:'dev-graph:run-dev-graph-init'}) was invoked exactly once in the transcript (line 67, first pass only). The second pass was executed via direct Bash calls to build-repo-config.py and build-graph-store.py, violating the explicit task contract ('Skill の手順を省略しない' / '存在確認で代替しない' / transcript confirms single Skill call at line 67)."
+  ],
+  "observations": {
+    "first_pass_scaffold": {
+      "result": "PASS",
+      "evidence": "Filesystem confirms 6 content root dirs (architecture, docs, features, issues, specs, tasks) each contain .gitkeep; .dev-graph/config.json present with path_policy authority=caller-repository/stored_paths=repository-relative (routing policy); .dev-graph/state/graph.json present with schema_version=1.0.0. Skill tool invoked at transcript line 67 with --hook-source plugin produced these artifacts."
+    },
+    "second_pass_noop": {
+      "result": "FAIL",
+      "evidence": "Transcript contains exactly one Skill tool_use call (line 67, first pass). No second Skill invocation exists. The agent instead executed build-repo-config.py (transcript line 345 → tool_result line 355: action=skipped_existing, changed=false) and build-graph-store.py (line 347 → tool_result line 363: action=preserved_existing, changed=false) via Bash. These scripts confirm noop state but the Skill was not re-invoked as required by task.md § '3. 同じ outer session から次を再度呼ぶ'."
+    },
+    "edited_template_preserved": {
+      "result": "PASS",
+      "evidence": "task.md contains edit marker '<!-- r2-idempotence-marker: 20260802-wt32-init-r2 -->'. Independent shasum -a 256 returns 00c046e870fed4b524a2cc57813e66c250b185ff839dcfbeb1cc8776e10c42a5, matching the progress.json claim and the transcript line 384 post-second-pass verification. SHA is identical before and after the second-pass scripts ran."
+    },
+    "plugin_hook_source": {
+      "result": "PASS",
+      "evidence": "config.json claude_hooks.source='plugin', project_plugin_link='.claude/dev-graph-plugin'. Transcript tool_result line 175: 'Plugin hooks.json exists / No .claude dir in fixture yet' — plugin source at plugins/dev-graph/hooks/hooks.json confirmed present; absence of .claude/ symlink in fixture is explicitly diagnosed and recorded, satisfying 'receipt or rejection diagnosis' criterion."
+    },
+    "portable_config": {
+      "result": "PASS",
+      "evidence": "config.json stores only repository-relative paths (path_policy.stored_paths=repository-relative; all values under content_roots, local_state, path_policy are relative). No absolute paths (no leading /), no API tokens, no GitHub node IDs in config.json values. repository_id='local:sha256:e076207c...' is a content-hash identifier, not a GitHub node ID. github.enabled=false with placeholder 'example/example-repository'."
+    },
+    "nonempty_c11": {
+      "result": "PASS",
+      "evidence": "graph.json contains 1 node: graph_node_id=INIT-TRIAL-SENTINEL-001, artifact_kind=task, schema_version=1.0.0, graph_revision=1. Transcript progress line 392 '=== Observation 6: graph has at least one node ==='. progress.json observation 6: validate-graph-schema.py valid=true, violations=[], with 1 node. C11 schema validation passes against non-empty graph."
+    }
+  }
+}

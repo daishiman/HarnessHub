@@ -12,7 +12,7 @@ iteration: null
 title: "最終独立レビュー — quality_constraints 8 件の充足判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-19T14:14:11Z"
+updated_at: "2026-08-03T07:56:02.673512Z"
 status: "active"
 depends_on: ["SYS-FEEDBACK-LOOP-P09"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-03T07:54:32Z","evidence_refs":["docs/features/feat-feedback-loop/final-review-notes.md","docs/features/feat-feedback-loop/architecture-decision-record.md"],"policy":"manual","reconciled_at":"2026-08-03T08:00:00Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

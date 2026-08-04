@@ -1,0 +1,66 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "ready-set 独立再計算との一致 (両方向差分)",
+      "expected": "skill の ready-set と、評価者が graph.json から独立実装で算出した ready-set が一致し、偽陽性 0 件・取りこぼし 0 件",
+      "observed": "評価者算出 = [LT-SCHED-001, LT-SCHED-002, LT-SCHED-003, LT-SCHED-006] (4 件)。skill 出力 ready_set.tasks = 同一 4 件、ready_set.features = 0 件。偽陽性 (skill only) 0 件、取りこぼし (評価者 only) 0 件",
+      "verdict": "PASS"
+    },
+    {
+      "name": "推薦 task の depends_on 未充足 0 件 (推移閉包で検査)",
+      "expected": "ready-set の各要素について depends_on を再帰的に辿り、status が done/closed でない依存が 1 件でもあれば FAIL",
+      "observed": "LT-SCHED-001/002/003/006 いずれも depends_on=[]、推移閉包で辿った未充足依存 0 件。ready-set 内の未充足依存保有ノード 0 件",
+      "verdict": "PASS"
+    },
+    {
+      "name": "真空合格 (vacuous pass) の否定: 依存判定が実際に発火したか",
+      "expected": "ready-set が非空で、かつ depends_on を持つノードが存在し、うち未充足のものが実際に除外されている",
+      "observed": "ready-set 件数 = 4 件 (非空) / graph 全 6 ノード中 depends_on を持つノード = 1 件 (LT-SCHED-005, depends_on=[LT-SCHED-001]) / 未充足依存で除外されたノード = 1 件 (LT-SCHED-005。依存先 LT-SCHED-001 の status=active で done/closed でない)。LT-SCHED-005 は状態 gate (active/confirmed/pass/readiness complete) を全て通過しており、除外理由は depends_on 未充足のみ。検査対象は空集合ではない",
+      "verdict": "PASS"
+    },
+    {
+      "name": "依存 gate の双方向性 mutation probe",
+      "expected": "依存先を done にすると、除外されていた候補が ready-set へ入る (判定ロジックが実際に依存状態を読んでいる)",
+      "observed": "fixture の scratchpad コピー上で LT-SCHED-001 の status を done へ変異させ schedule-graph.py を再実行 → ready_set.tasks = [LT-SCHED-002, LT-SCHED-003, LT-SCHED-005, LT-SCHED-006] となり LT-SCHED-005 が新規に ready へ昇格 (001 は done で schedulable 外へ)。fixture 本体は無変更",
+      "verdict": "PASS"
+    },
+    {
+      "name": "依存以外の除外理由の妥当性 (取りこぼし誤判定の排除)",
+      "expected": "評価者の依存充足集合に含まれるが skill ready-set に無いノードは、依存以外の正当な理由 (active lease) で除外されている",
+      "observed": "依存充足かつ状態 gate 通過は {001,002,003,004,006} の 5 件。skill が落とした LT-SCHED-004 は .git/dev-graph/leases.json に state=in_progress・expires_at=2099-01-01Z・resource_scope=[src/gamma.py] の active lease があり、receipt の conflict_pairs に kind=lease で記録済み。逆に LT-SCHED-006 の lease は expires_at=2020-01-01Z (期限切れ) で active 扱いされず ready に残っており、期限判定も正しい",
+      "verdict": "PASS"
+    },
+    {
+      "name": "receipt が現在の graph/lease 実体に対する算出結果か (stale receipt でないか)",
+      "expected": "receipt の graph/lease digest が fixture の実ファイル digest と一致し、read_only=true で before/after が同一",
+      "observed": "graph.json 実測 sha256 = e4d17190c75575639238f0b168528bba1aee3a9f373f86a4fa1cbbd1c1f34484 = receipt の graph_sha256_before/after。leases.json 実測 sha256 = b10e1c1670e6cf36ca3155b2d390bdbd45183fff76b04c91c562d9f1f8c32b41 = receipt の lease_sha256_before/after。read_only=true、lease_source=git_common_dir、unmapped=[]",
+      "verdict": "PASS"
+    },
+    {
+      "name": "receipt の script 再現性 (手書き receipt でないことの確認)",
+      "expected": "同一入力で schedule-graph.py を再実行すると receipt が再現する",
+      "observed": "fixture を scratchpad へコピーし schedule-graph.py --max-parallel 2 を再実行 (exit=0)。executed_at 以外の全キーが fixture receipt と完全一致 (ready_set / batches [[001,003],[002,006]] / conflicts [LT-SCHED-004] / conflict_pairs / assignment_hints / selection_receipt を含む)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "goal_seek 3 点セットの存在",
+      "expected": "goal-spec.json / progress.json / intermediate.jsonl の 3 ファイルが fixture の eval-log/ 配下に存在する",
+      "observed": "3 件すべて存在: run-dev-graph-schedule-goal-spec.json (348B) / -progress.json (2913B, checklist 7 項目 + criteria IN1/OUT1/OUT2/OUT3) / -intermediate.jsonl (1506B, 2 行)",
+      "verdict": "PASS"
+    },
+    {
+      "name": "intermediate.jsonl の必須 6 キーと goal hash (SKILL.md 埋め込み検査スクリプト相当)",
+      "expected": "全行が original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal を持ち、original_goal が goal-spec と一致し hash が sha256(original_goal) と一致",
+      "observed": "2 行とも 6 キー欠落なし。original_goal は goal-spec と完全一致、original_goal_hash = d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6 = 評価者が再計算した sha256 と一致。drift_signal=none。SKILL.md 記載の assert スクリプト相当を実行して PASS",
+      "verdict": "PASS"
+    },
+    {
+      "name": "fixture 被覆の限界 (OUT1 判定への影響評価)",
+      "expected": "OUT1 判定に必要な依存判定が実際に発火していること (被覆の広さ自体は OUT1 の受入条件ではない)",
+      "observed": "OUT1 に必要な発火は確認済み (未充足依存 1 件を除外)。ただし被覆上の限界として: (a) graph 内に status=done/closed のノードが 0 件のため、trial 自身の fixture では『依存が done で充足されて推薦される』正方向が空虚充足 (depends_on=[]) しか含まれない — 評価者の mutation probe で正方向の動作は別途確認済み。(b) 依存鎖の深さが 1 段 (005 -> 001) のみで、多段推移依存の判定は fixture では発火していない。(c) 全ノード tracker_binding=none のため beads parity 経路は未発火 (config の execution_tracker.mode=beads かつ eval-log/run-dev-graph-schedule-beads-ready.json は 'no beads database found' のエラー文字列、parity-manifest.json は nodes=[] だが、schedule-graph.py の beads_present=False 経路のため ready-set 算出に影響なし)",
+      "verdict": "PASS"
+    }
+  ]
+}

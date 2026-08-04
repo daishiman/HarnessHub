@@ -20,9 +20,12 @@ collected_at: "2026-07-21"
 | E1 全登録共通層の owner / 公開 API / consumer 一覧 | [shared-layer-ownership.json](shared-layer-ownership.json) | P05/P09 | `node scripts/ci/check-shared-layer-duplicates.mjs --report <path> --no-fail` |
 | E2 consumer contract test 実行結果 | [test-run.log](test-run.log)（P06 時点）/ [local-verify-2026-07-21.md](local-verify-2026-07-21.md)（最新） | P06/P09 | `pnpm verify` |
 | E3 duplicate implementation scan（0 件） | [duplicate-scan.json](duplicate-scan.json) | P09 | `node scripts/ci/check-shared-layer-duplicates.mjs --json <path>` |
-| E4 CI（test→deploy 完走） | [ci-run.md](ci-run.md)（test まで success / deploy skip） | P06 | main push 後の同一 run で deploy まで再確認 |
-| E5 bundle サイズ計測（0.952 MiB / 3 MiB） | [bundle-report.json](bundle-report.json) | P06 | `pnpm --filter @harness-hub/hub run build:worker && pnpm --filter @harness-hub/hub run check:bundle` |
-| E6 SLO 計測 / `/health` 稼働 | [health-response.json](health-response.json)（`/health` は取得済み、SLO 時系列は未取得） | P06/P13 | 外形監視設定後に月次時系列を取得 |
+| E4 CI（test→deploy 完走） | [ci-run.md](ci-run.md)（**2026-07-25 に確定**。run 30143422049 で deploy まで success） | P06/P13 | `gh run view 30143422049 --json jobs` |
+| E5 bundle サイズ計測 | [bundle-report.json](bundle-report.json)（0.952 MiB / dry-run）／[deploy-2026-07-25.json](deploy-2026-07-25.json)（**1.010 MiB / 本番実デプロイ**） | P06/P13 | `pnpm --filter @harness-hub/hub run build:worker && pnpm --filter @harness-hub/hub run check:bundle` |
+| E6 SLO 計測 / `/health` 稼働 | [health-response.json](health-response.json)（2026-07-21 手動計測）／[deploy-2026-07-25.json](deploy-2026-07-25.json)（本番デプロイ直後の CI 内計測）／[monitoring-applied.json](monitoring-applied.json)（**2026-07-28 外部資源を適用。monitor 4724920 / heartbeat 475650 / status page 256797 / resource 8978911**。`/health` は再実測 HTTP 200・依存 3 件 ok、Worker secret も確認済み）／[slo-observation.json](slo-observation.json)（**2026-08-01T12:07:18Z に公開 status page `/index.json` を token なしで実測。monitor は `operational` / 30 日 `availability: 0.988579`。観測済み 6 日 / 必要 30 日、外形 downtime 6312.31 秒＝エラーバジェット 48.7% 消費**。2026-07-28 の「monitor paused」記述は誤読と確定）／設定正本 `apps/hub/monitoring/better-stack.monitors.json`（`application_state: applied`）・`slo-dashboard.json`（`verdict.status: collecting`）。**30 日到達後も Workers Analytics の 5xx 率が揃うまで A3 は確定しない**（§9 / qa-019） | P06/P13/`HarnessHub-37h.15` | 設定の回帰: `pnpm --filter @harness-hub/hub exec vitest run tests/monitoring` / 観測状態の実測突合（token 不要）: `pnpm --filter @harness-hub/hub run verify:slo-observation --json docs/features/feat-hub-foundation/evidence/slo-observation.json` / 再適用（冪等）: `pnpm --filter @harness-hub/hub run apply:monitoring --put-secret --json docs/features/feat-hub-foundation/evidence/monitoring-applied.json` |
+| E7 本番デプロイ実績（P13） | [deploy-2026-07-25.json](deploy-2026-07-25.json) | P13 | `gh run view 30143422049` ／ [../release-notes.md](../release-notes.md) |
+| E8 GitHub Actions secret / variable の投入状況と backup 実起動の診断 | [actions-secrets-2026-07-28.json](actions-secrets-2026-07-28.json)（**2026-07-28**。未参照 secret 2 本を削除して `--live` が exit 0。同日 backup を実起動したが export step で失敗し、原因と是正を記録） | `HarnessHub-vns9` | `node scripts/ci/check-actions-secrets.mjs --live` ／ `gh run view 30321679596 --log-failed` |
+| E9 backup heartbeat 外部適用・初回成功 | [backup-heartbeat-applied-2026-08-01.json](backup-heartbeat-applied-2026-08-01.json)（heartbeat `477775`、live 台帳 13/13、run `30686023662` success、export 19 テーブル / 64 行、R2 独立再検証） | `HarnessHub-fnzl` / `HarnessHub-dbx6` | `node scripts/ci/check-actions-secrets.mjs --live` ／ `gh run view 30686023662 --json conclusion,jobs` |
 | — pnpm 混入検査 | [pnpm-only-scan.json](pnpm-only-scan.json) | P09 | `node scripts/ci/check-pnpm-only.mjs --json <path>` |
 
 ## 2. 判定文書
@@ -56,14 +59,17 @@ collected_at: "2026-07-21"
 
 | 証跡 | 理由 | 解除条件 |
 |---|---|---|
-| E4 CI deploy | feature branch CI は test まで success だが deploy は main 限定で skip | GitHub production 設定を確認し、main push の同一 run で deploy success |
-| E6 月次 SLO | 実 HTTP `/health` は 200 だが、外形監視の時系列が無い | Better Stack 3 分間隔監視を開始し 1 か月集計 |
+| ~~E4 CI deploy~~ | ~~feature branch CI は test まで success だが deploy は main 限定で skip~~ → **2026-07-25 解除**。run 30143422049（`main` / `ec0f3e45`）で 3 job すべて success（[ci-run.md](ci-run.md) §確定 run） | — |
+| E6 月次 SLO | ~~Better Stack への適用が未実施~~ → **2026-07-28 に適用済み**（`application_state: applied`、[monitoring-applied.json](monitoring-applied.json)）。ただし**収集が始まったばかりで 30 日分の時系列が無い**ため、99.5% 達成の判定は依然として出せない（`verdict.status: collecting`） | `2026-08-26T20:46:37.686Z` 以降に Better Stack の月次可用性と Workers Analytics の 5xx 率を突き合わせて初回判定を出す（`slo-dashboard.json` の `calculation.formula`）。**それ以前に「99.5% 達成」と書かないこと** |
 | G11 実 CWV | workflow はあるが production 実測値を未取得 | `HUB_PUBLIC_URL` 設定後の定期 run |
-| restore drill | `backup.yml` と手順は実装済みだが、四半期 drill は未実行 | 一時 DB への復元と整合検査を実施 |
-| cron trigger | Worker handler は実装・テスト済みだが本番登録失敗 | Cloudflare アカウント全体の quota / token scope を解消 |
+| ~~backup 初回成功~~ | **2026-08-01 解除**。run `30686023662` が success。`db-export/2026/2026-08-01.jsonl.gz` を run と独立に再取得し、19 テーブル / 64 行の復元可能な artifact と確認した（[E9](backup-heartbeat-applied-2026-08-01.json)） | — |
+| restore drill | `backup.yml` と手順、復元対象 artifact は揃ったが、四半期 drill 自体は未実行 | E9 の artifact を一時 DB へ復元し、整合検査を実施 |
+| ~~cron trigger~~ | ~~Worker handler は実装・テスト済みだが本番登録失敗~~ → **2026-07-25 解除**。上限 5 本が**アカウント単位**（エラー `10072`）と判明し、他プロジェクトの cron を削除して枠を解放。`0 15 * * *` / `0 0 * * 1` の 2 本が登録済み（使用 2/5） | — |
 
 ## 5. source integrity
 
 - feature context: `features/feat-hub-foundation.context.json` = `sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8ba821594d17062d`（実測一致）
 - published package digest: `sha256:8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502`
-- 検証コマンド: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502` → `status: pass`
+- 検証コマンド（**世代非依存・推奨**）: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation` → `violations: []` / exit 0（2026-07-25 実測）
+- 検証コマンド（世代 path 直指定）: `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --staging .dev-graph/plans/generations/feature-package-feat-hub-foundation/8735bb1680e29f961a3e76fc33b07944368946f486875f20e2ce77007c81b502` → `violations: []`（2026-07-25 再実測）
+  - 世代 path 直指定は、その世代ディレクトリが残っている間しか再実行できない。**再現性の担保には `--feature-package` 形式を使う**（`.dev-graph/state/current/` の pointer から現行世代を解決するため、promotion 後も解決可能）。P13 task spec の実行契約 `rerun` も同形式を正としている。

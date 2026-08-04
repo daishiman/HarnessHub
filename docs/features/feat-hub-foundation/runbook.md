@@ -12,7 +12,13 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 
-## 1. 初回セットアップ（未実施。ユーザー作業）
+## 1. 初回セットアップ（**外部資源は適用済み・30 日観測を収集中**）
+
+> **投入状況の正本は本文ではなく `node scripts/ci/check-actions-secrets.mjs --live` の出力**。散文で書いた一覧は書いた翌日には古くなるため、判断前に必ずコマンドを叩く（未投入・用途不明・台帳との食い違いを一度に出す）。
+
+> **実施状況**: `HUB_PUBLIC_URL` は 2026-07-26 に既存 `HUB_HEALTH_URL` と同じ origin へ投入済み。**2026-07-28 に Better Stack 外部資源を適用し、`CRON_HEARTBEAT_URL` を Worker secret へ投入した**（monitor `4724920` / heartbeat `475650` / status page `256797` / resource `8978911`、適用時刻 `2026-07-27T20:46:37.686Z` UTC）。**2026-08-01T12:07:18Z に公開 status page の `/index.json` を token なしで実測し、monitor は稼働中（`status: operational` / 直近 30 日 `availability: 0.988579`）と確認した**。2026-07-28 に「resource が `not_monitored` ＝ monitor が paused」と記録したのは **誤読**である。`not_monitored` は「その日は監視対象が存在せずデータが無い」を表し、status page の HTML アイコンは**現在状態ではなく 30 日履歴全体の代表**なので、resource 作成直後は必ずこの見た目になる。実測の正本は `pnpm --filter @harness-hub/hub run verify:slo-observation`（[scripts/verify-slo-observation.mjs](../../../apps/hub/scripts/verify-slo-observation.mjs)）で、公開 JSON から観測済み日数を数え `slo-dashboard.json` の `verdict` と突合する（一致 exit 0 / 不一致 exit 1 / 実測不能 exit 2）。現在の実測値は **観測済み 6 日 / 必要 30 日**、外形 downtime `6312.31` 秒（30 日許容 `12960` 秒に対しエラーバジェット消費 **48.7%**、warn 閾値 70% 未満）であり、`slo-dashboard.json` は `collecting`（観測開始 `2026-07-27T20:46:37.686Z` / 初回月次判定 `2026-08-26T20:46:37.686Z`）。**30 日揃っても外形監視だけでは A3 を pass にしない**（infrastructure-spec §9 / qa-019 のとおり Workers Analytics の 5xx 率が別途必要）。証跡は [evidence/slo-observation.json](evidence/slo-observation.json) と [evidence/monitoring-applied.json](evidence/monitoring-applied.json)、[evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json)、経緯は [release-notes.md](release-notes.md)。なお、workflow から参照されなくなった `TURSO_API_TOKEN` / `TURSO_DATABASE_NAME` は **2026-07-28 に削除し、`--live` は exit 0 になった**（証跡は [evidence/actions-secrets-2026-07-28.json](evidence/actions-secrets-2026-07-28.json)）。**2026-08-01 時点で `--live` は exit 0（workflow 参照 13 件と台帳 13 件が一致し、実投入も確認済み）** であり、`BACKUP_HEARTBEAT_URL` を含む required はすべて投入済みである。日次 backup も **run 30686023662 で初回成功**した（§7 U-1）。以下の手順は再構築時のために残す。
+>
+> **backup heartbeat の分離判断 (HarnessHub-dbx6)**: Worker の日次 cron (`0 15 * * *`) と GitHub Actions の日次 backup (`0 17 * * *`) は、同じ heartbeat 資源を**共用しない**。共用すると Worker 側の成功 ping が backup 側の失敗・不発を上書きし、backup が取れていなくても監視が正常に見えるためである。backup 専用資源 `hub-backup-daily` は `period=86400` 秒 / `grace=3600` 秒とし、JST 2:00 の予定 run が完走しなければ、おおむね JST 3:00 までに異常化する。`BACKUP_HEARTBEAT_URL` はこの検知経路に必須なので台帳上 `required` とし、未投入なら backup workflow 自体も前提確認で fail-closed（失敗として停止）する。**2026-08-01 に外部適用まで完了した**。`apps/hub/monitoring/better-stack.monitors.json` の `backup_heartbeat` は `provisioning_state: applied` / `external_id: 477775` になり、`BACKUP_HEARTBEAT_URL` も repository secret へ投入済みで `--live` は exit 0。同日の `workflow_dispatch` run `30686023662` が success となり、export 検証 (19 テーブル / 64 行)・R2 往復・heartbeat ping (`curl -fsS` が 2xx で完了) まで到達した。証跡は [evidence/backup-heartbeat-applied-2026-08-01.json](evidence/backup-heartbeat-applied-2026-08-01.json)。なお provider 側の heartbeat 状態遷移そのものは Uptime API token を保持しない方針のため未確認であり、証跡でも ping 受理と区別して記録している。
 
 > **順序制約（重要）**: `wrangler secret put` は **Worker が存在しないと実行できない**ため、初回だけは「deploy → secret 投入」の順になり、その間 `/health` は 503 を返します。`ci.yml` の post-deploy `/health` チェックは 200 必須なので、**初回は CI に任せず手動 bootstrap を行ってください**（CI 側のチェックを緩めるとゲートが恒久的に甘くなるため、この方式を採ります）。
 >
@@ -29,10 +35,16 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 # 1. Cloudflare 認証
 wrangler login
 
-# 2. GitHub Secrets / Variables（CI の deploy job が参照）
-gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy 権限
+# 2. GitHub Secrets / Variables（CI の deploy job と日次 backup job が参照）
+#    用途・必須/任意の正本は scripts/ci/actions-secrets-registry.json（ci.yml が workflow と突合する）
+gh secret set CLOUDFLARE_API_TOKEN      # Workers deploy / rollback 専用。R2 write 権限なし
+gh secret set CLOUDFLARE_R2_API_TOKEN   # R2 backup / 本番 smoke 専用。Workers Scripts 権限なし
 gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret set TURSO_DATABASE_URL        # migration / 本番 smoke / 日次 export 用
+gh secret set TURSO_AUTH_TOKEN          # 同上の DB 接続 token（Platform API token とは別物）
+gh secret set BACKUP_HEARTBEAT_URL      # 必須。backup 専用 heartbeat URL
 gh variable set HUB_HEALTH_URL --body "https://hub.<domain>/health"
+gh variable set HUB_PUBLIC_URL --body "https://hub.<domain>"   # ci.yml の OIDC smoke / cwv.yml の計測対象
 
 # 3. Worker secret（wrangler 経由。コード・DB に平文を置かない）
 cd apps/hub
@@ -42,11 +54,74 @@ wrangler secret put AUTH_SECRET
 wrangler secret put CRON_HEARTBEAT_URL   # Better Stack の heartbeat URL (未設定なら ping しない)
 ```
 
-4. **Better Stack Free** で以下を登録
-   - production `/health` を **3 分間隔**で監視（SLO 99.5% の一次計測源）
-   - cron heartbeat（日次バッチ完了 ping 用）
+Cloudflare token は 2 本を別々に発行する。deploy 用には `Workers Scripts Edit` を付与し、R2 write は付与しない。R2 用には account-scoped の `Workers R2 Storage Write` を付与し、Workers Scripts は付与しない。`wrangler r2 object put/get --remote` は Cloudflare REST API を使うため、S3 互換 API 専用の bucket-scoped `Workers R2 Storage Bucket Item Write` では動作しない。token 値はコマンド引数・文書・ログへ書かず、上記 `gh secret set` の入力待ちに貼り付ける。
+
+4. **Better Stack Free** の外形監視を適用する（**要求内容の正本は [`apps/hub/monitoring/better-stack.monitors.json`](../../../apps/hub/monitoring/better-stack.monitors.json)**。ダッシュボードで独自に値を決めない）
+
+   登録内容は monitor（production `/health` を **3 分間隔**・SLO 99.5% の一次計測源）・heartbeat 2 本（Worker 日次 cron / GitHub Actions 日次 backup。いずれも period 86,400s / 猶予 3,600s）・status page（履歴 30 日。monitor を resource として関連付け）の 4 点。**画面から手で登録せず、正本ファイルを適用する script を使う**：
+
+   ```bash
+   # a. 何を送るかを先に確認する (ネットワークへは出ない)
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs --dry-run
+
+   # b. 適用する。token は環境変数で渡す (引数は ps とシェル履歴に残る)
+   #    --put-secrets を付けると 2 本の heartbeat URL を標準出力へ出さず、
+   #    Worker secret と GitHub Actions secret の stdin へそれぞれ直接流す
+   export BETTER_STACK_API_TOKEN=...   # 取得場所は下の注記を参照
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs \
+     --put-secrets \
+     --json docs/features/feat-hub-foundation/evidence/monitoring-applied.json
+   unset BETTER_STACK_API_TOKEN
+
+   # c. 既存環境へ backup heartbeat だけを追加する場合 (HarnessHub-dbx6)
+   #    別タスクが扱う monitor / Worker heartbeat / status page / SLO dashboard は変更しない
+   export BETTER_STACK_API_TOKEN=...   # 取得場所は下の注記を参照
+   node apps/hub/scripts/apply-better-stack-monitoring.mjs \
+     --only-backup-heartbeat \
+     --put-github-secret \
+     --json docs/features/feat-hub-foundation/evidence/backup-heartbeat-applied.json
+   unset BETTER_STACK_API_TOKEN
+
+   # d. 書き戻しと状態遷移を検証する
+   pnpm --filter @harness-hub/hub test tests/monitoring
+   ```
+
+   - **token の取得場所**: Better Stack にログイン →左下のアカウントメニュー→ **API tokens** → **Team-based tokens** → 対象チームを選び **Uptime API tokens** セクションからコピー（無ければ新規作成）。**team 単位の Uptime API token を使うこと**。同じ画面にある **Global API token（全 team 横断）を使うと、作成 body に `team_name` が必須**になり、正本にその項目が無いため作成が失敗する（[公式手順](https://betterstack.com/docs/uptime/api/getting-started-with-uptime-api/)）。
+   - token は可視 ASCII のみ。全角文字・改行・空白が混ざると script が**適用前に**落ちる（HTTP ヘッダへ載せると token の文字コードが例外メッセージへ出てしまうため、手前で塞いでいる）。コピー時に改行が付いていないか確認する。
+   - script は既存資源を名前・URL・subdomain で同定し、monitor / heartbeat は正本との差分だけを `PATCH` してから不足分だけを作るため、**再実行しても二重登録にならず、paused のような dashboard 側 drift も正本へ戻る**。中断したら同じコマンドをそのまま流し直す。
+   - 適用に成功すると設定ファイルへ `external_id` / `applied_at` が書き戻り `application_state` が `applied` になり、`slo-dashboard.json` の `verdict` が `collecting`（`observation_started_at` と `first_monthly_verdict_due_at` 付き）へ進む。**書き戻るまで SLO は「計測開始前」として扱う**。
+   - heartbeat URL は secret。script は標準出力・設定ファイル・エラーメッセージのいずれにも出さない。`--put-secret` は Worker の `CRON_HEARTBEAT_URL` だけ、`--put-github-secret` は repository secret の `BACKUP_HEARTBEAT_URL` だけ、`--put-secrets` は両方を投入する。既存環境で backup だけを追加するときは、対象外の monitor を更新しないよう `--only-backup-heartbeat --put-github-secret` を使う。値をコマンド引数へ渡してはいけない。
+   - **分離を維持する**: `CRON_HEARTBEAT_URL` と `BACKUP_HEARTBEAT_URL` は異なる Better Stack heartbeat の URL でなければならない。前者は Worker cron、後者は backup workflow の成功だけが ping する。片方の成功で他方の失敗を隠さないことが目的である。
+   - 書き戻しは JSON を丸ごと再出力する（2 space インデント）。差分が状態遷移分だけになるよう正本側の数値表記は正規化済み（例: `1.0` ではなく `1`）。適用後の差分に状態以外の行が出たら、それは正本の書式が崩れた合図なので取り込む前に確認する。
+   - **API フィールド名は 2026-07-26 に公式ドキュメント（`create-a-new-monitor` / `create-a-hearbeat` / `create-a-new-status-page` / `create-a-new-status-page-resource`）へ照合済み**。422 が出た場合は Better Stack 側の仕様変更なので、**ダッシュボードではなく設定ファイルを直して**再適用する。
+   - **403 `Cannot modify status page advanced settings` はプラン制限**であり、フィールド名の誤りではない。Free プランでは status page の advanced settings 群（`automatic_reports` / `subscribable` / `hide_from_search_engines` など）は**既定値と同じ値でも送信自体が拒否される**（2026-07-26 実測）。該当フィールドは正本の payload から外し、理由を `$comment_omitted_fields` に残してある。有料プランへ上げたときに復活を検討する。
+   - **途中で失敗した場合、作成済みの資源は Better Stack 側に残るが設定ファイルへは書き戻らない**（`applyMonitoring` は 4 資源すべての成功を条件に書き戻すため）。この「リモートには在るのにファイルは `pending_credentials`」という状態は正常な中間状態で、同じコマンドを流し直せば既存分は `reused` として拾い直される。
 
 > secret / binding の**内容正本**は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §2。本 runbook は手順のみを持つ。
+
+### 1.1 protected `/catalog` の CWV 実測を有効化する（qa-133）
+
+> **目的**: 通常ユーザーのログイン鍵を CI に置かず、実際に認証が必要な catalog 画面を計測する。ここで扱う secret の値を issue・文書・shell 履歴・Actions log に貼らない。
+
+1. 読み取り専用の代表 tenant と Workspace を選ぶ。実在ユーザーの個人データや publish 権限を持つ Workspace は使わない。
+2. パスワードマネージャで 32 bytes 以上のランダム値を 1 つ生成し、Worker と GitHub に**同じ値**を登録する。通常の `AUTH_SESSION_SECRET` / `AUTH_ACCESS_TOKEN_SECRET` を転用しない。
+
+   ```bash
+   cd apps/hub
+   wrangler secret put CWV_PROBE_SECRET
+   wrangler secret put CWV_PROBE_TENANT_ID
+   wrangler secret put CWV_PROBE_WORKSPACE_ID
+
+   gh secret set HUB_CWV_PROBE_SECRET
+   gh secret set HUB_CWV_PROBE_TENANT_ID
+   gh secret set HUB_CWV_PROBE_WORKSPACE_ID
+   ```
+
+3. main の CI で Worker を deploy した後、Actions の `hub-cwv` を dispatch する。自由入力の URL は無く、`HUB_PUBLIC_URL` の同一 HTTPS origin にある `/catalog` だけを測る。未投入なら workflow は secret 名だけを出して失敗する。
+4. `cwv-evidence` artifact の `lighthouse.json` と `cwv-report.json` に `__cwv_probe`、ticket、secret が無いこと、LCP/CLS/TBT の値が全て得られることを確認する。計測失敗は good ではない。
+5. 漏えい疑いまたは代表 scope の変更時は、Worker と GitHub の `*_CWV_PROBE_SECRET` を同じ新値へ rotate し、次の workflow を再実行する。旧 ticket は最大 5 分を待たず署名不一致で失効する。
+
+外部 secret の投入、本番 deploy、最初の実測は repository 外の操作である。証跡が揃うまで `HarnessHub-9cgb` を close しない。
 
 ## 2. 通常デプロイ
 
@@ -79,7 +154,34 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 | `/health` が 503 | 応答 body の `db` / `r2` を見る | Turso 障害 → 縮退バナー表示。R2 障害 → publish/install を一時停止表示（infrastructure-spec §10 の縮退マトリクス） |
 | 応答は 200 だが機能不全 | Workers analytics の 5xx 率 | エラーバジェット算定に 5xx も含まれる。原因の Worker version を特定しロールバック |
 | cron が動かない | heartbeat 未達アラート | scheduled handler のログを確認。ジョブ単位 try/catch のため 1 ジョブ失敗でも後続は継続する |
+| **cron の登録に失敗する** | `wrangler` は「A request to the Cloudflare API failed.」としか出さないので、**Cloudflare API を直接叩いてエラーコードを取る**（下記 §4.1） | コード `10072` なら**アカウント全体の cron 枠が上限 5 本に達している**。他 Worker の cron を減らす。詳細は [docs/infrastructure-spec.md](../../infrastructure-spec.md) §5 |
 | デプロイ失敗 | Actions のログ | ゲートで落ちたなら是正して再 push。deploy 中失敗なら §3 |
+
+### 4.1 cron 枠の確認と操作（2026-07-25 の実障害から）
+
+**上限 5 本は Worker 単位ではなくアカウント単位である。** 本 Worker の cron を減らしても、他プロジェクトが枠を埋めていれば登録できない。
+
+```bash
+# 現在の登録内容を確認（Worker ごとに実行）
+curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/<script>/schedules"
+
+# 更新は宣言的。残したい cron を配列で丸ごと送る（個別 DELETE は存在しない）
+curl -s -X PUT -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/<script>/schedules" \
+  --data '[{"cron":"0 15 * * *"}]'
+```
+
+- **枠を空ける前に、削除する cron の内容を控える。** 配列を丸ごと置き換える方式のため、送信内容が新しい全量になる。復元用ペイロードは [evidence/deploy-2026-07-25.json](evidence/deploy-2026-07-25.json) の `cron_triggers.prior_failure.restore_payloads` に保全してある。
+- Hub の現在の使用数は **2 / 5**（`0 15 * * *` / `0 0 * * 1`）。新規 cron を足す前に、アカウント全体の残枠を数えること。
+
+### 4.2 CI デプロイ運用の注意（同上）
+
+- **古い run の再実行は本番を巻き戻しうる。** `concurrency` グループは `github.ref` 単位で新規 run を直列化するが、**過去 run の再実行はその制御外**にある。失敗 run を再実行するときは、それが main の最新 sha であることを確認する。
+- **GitHub Actions は未設定の secret / variable をエラーではなく空文字として渡す。** 設定漏れは「認証情報が無い」ではなく「認証に失敗した」形で deploy 途中に現れ、切り分けが遅れる。必要な値は `.github/workflows/ci.yml` 冒頭のコメントに列挙してある。
+- **GitHub Secrets の値は登録後に読み出せない**（API も Web 画面も名前と更新日時のみ返す）。登録時に原本をパスワードマネージャへ保存する。
+- **デプロイ直後の `/health` は 1 つ前の版を返しうる。** エッジへの伝播に時間差があるため、`version` フィールドで版を確認するときは数十秒おいて再取得する。
 
 ## 5. エラーバジェット運用（qa-019）
 
@@ -89,12 +191,35 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 - **消費 100%**: **新規公開機能の変更を凍結**し、信頼性回復を最優先にする
 - ユーザー影響のある障害は blame-free ポストモーテムを issue 化し、再発防止を自動化候補へ接続する
 
+**観測状態と消費率の確認（token 不要・いつでも安全に実行できる）**:
+
+```bash
+# 実測して slo-dashboard.json の verdict と突合する（読み取りのみ）
+pnpm --filter @harness-hub/hub run verify:slo-observation
+
+# 証跡を残す場合
+pnpm --filter @harness-hub/hub run verify:slo-observation \
+  --json docs/features/feat-hub-foundation/evidence/slo-observation.json
+
+# 実測に合わせて verdict を書き換える（実測と食い違ったときだけ）
+pnpm --filter @harness-hub/hub run verify:slo-observation --write
+```
+
+| exit code | 意味 | 対応 |
+|---|---|---|
+| `0` | 実測と `slo-dashboard.json` の `verdict` が一致 | なし |
+| `1` | 食い違い（例: 監視が止まっているのに `collecting` のまま） | 原因を確認し、実測が正しければ `--write` で収束させる |
+| `2` | **実測できなかった**（status page 応答なし・JSON でない・resource 不在） | 「問題なし」と読まない。status page 側の設定を確認する |
+
+- 公開 status page の `/index.json` を読むだけなので **API token を必要としない**。判断は必ずこのコマンドの出力で行い、status page の見た目（HTML のアイコン）で判断しない — アイコンは**現在状態ではなく 30 日履歴全体の代表**であり、`not_monitored`（＝その日はデータが無い）を「監視停止」と誤読した実例がある。
+- 観測が 30 日に達しても verdict は `observation_complete_pending_application_error_rate` にとどまる。**Workers analytics の 5xx 率が揃うまで 99.5% 達成を主張しない**（算定式の片側しか埋まっていないため）。
+
 ## 6. バックアップと restore drill（RPO ≤ 24h / RTO ≤ 4h）
 
 **手順**:
-1. 新 Turso DB を作成
-2. R2 `harness-hub-backups` の最新 dump を restore
-3. secret の URL/token を差し替え
+1. [domain-model DB runbook §2](../feat-domain-model-db/runbook.md#2-四半期-restore-drill-qa-019-復元できないバックアップを成功と数えない) に従い、R2 の最新 JSONL export を使い捨ての一時 DB へ restore CLI で流し込む
+2. restore report の `ok` / `chainOk` に加え、18 domain table / 12 explicit index を確認（行数一致・audit chain・暗号断面は CLI が内部で強制する）
+3. 障害復旧時だけ Worker secret の URL/token を復元 DB へ差し替え
 4. `/health` で確認
 
 **四半期ごとの restore drill**: 一時 DB へ実際に restore し、**行数・整合検査まで実施する**。
@@ -104,7 +229,7 @@ curl -s https://hub.<domain>/health | jq .   # 復旧確認
 
 | # | 未実装 | 影響 | 必要な作業 |
 |---|---|---|---|
-| ~~U-1~~ | ~~backup workflow 未実装~~ → **実装済み** (`.github/workflows/backup.yml`) | — | secret 投入後に初回実行を確認すること |
+| ~~U-1~~ | ~~backup workflow 未実装 / 初回成功が取れていない~~ → **解決** (`.github/workflows/backup.yml` 実装済み・初回成功取得済み) | — | 2026-07-28 の実起動 (run 30321679596) と直前 2 回の cron は export step で失敗していた。原因は secret ではなく「データ行 0 を不採用」という判定で、稼働直後の本番 DB は 19 テーブルすべて 0 行のため恒常的に落ちていた。判定を `verify-export-artifact` CLI へ一本化して是正し、**2026-08-01 の run 30686023662 で初回成功**（export 19 テーブル 64 行・R2 往復一致・heartbeat ping 2xx）。R2 成果物は run と独立にローカルで再取得し `verify-export-artifact.ts` で `ok=true` を確認済み（`HarnessHub-fnzl` / `HarnessHub-dbx6` クローズ）。backup heartbeat の external ID `477775` も設定正本へ書き戻し済み |
 | ~~U-2~~ | ~~scheduled handler 未実装~~ → **実装済み** (`apps/hub/src/worker.ts` + `src/worker/cron.ts`) | ジョブ本体は空 (id は登録済み)。各ドメイン feature が中身を実装する | — |
 | ~~U-3~~ | ~~G6 / G8 未配線~~ → **配線済み**。実効性も実測 | — | — |
 | U-4 | 未 wrap route の静的検出 | 認可 fail-open のリスクが残る | detector 拡張 |

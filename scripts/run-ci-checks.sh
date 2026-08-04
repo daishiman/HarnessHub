@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# CI と同等の機械チェックをローカルで一括実行する。
+# CI のうちローカルで安全に再実行できる機械チェックを一括実行する。
 # pre-push hook / 手動実行 (bash scripts/run-ci-checks.sh) の双方から呼ばれる SSOT。
 # 内容の良し悪し (LLM 自由度領域) は判定対象外。構造・命名・SSOT・symlink drift のみ。
+# CI-only の呼び出しは scripts/lint-ci-local-check-parity.py が引数形まで突合し、
+# 副作用・認証・non-blocking 等の理由付き allowlist 以外を fail-closed で遮断する。
 #
 # 失敗したチェックを蓄積して全て表示するため、最初の失敗で抜けず continue する。
 set -u
@@ -40,7 +42,19 @@ run_soft() {
 }
 
 # ── 構造・命名・frontmatter ──
+run "guard-change-category"                 python3 scripts/guard-change-category.py --base origin/main --bypass-cooldown
 run "lint-script-naming"                   python3 scripts/lint-script-naming.py
+run "lint-artifact-placement --self-test"  python3 scripts/lint-artifact-placement.py --self-test
+run "lint-artifact-placement"              python3 scripts/lint-artifact-placement.py
+run "lint-doc-line-limit"                  python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main
+run "lint-mechanism-knowledge-boundary"    python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
+run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-knowledge-optin.py --repo-root .
+# workflow の step gate 自体が壊れていないかを pre-push 段で検査する。step-level `if` から同一 step の
+# `env:` を参照すると Actions の評価順 (if → env) で式が恒久 false になり、secret 投入後も step が
+# 永久 skip される (= 検査が存在しないのと同じ緑)。CI 側 governance-check.yml と同一実装。
+run "lint-workflow-step-guard --self-test" python3 scripts/lint-workflow-step-guard.py --self-test
+run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-guard.py
+run "lint-ci-local-check-parity"           python3 scripts/lint-ci-local-check-parity.py
 run "lint-skill-description (harness-creator)" python3 scripts/lint-skill-description.py
 run "lint-dependency-direction (harness-creator)" python3 scripts/lint-dependency-direction.py --skills-dir plugins/harness-creator/skills
 run "lint-dependency-direction (all)"      python3 scripts/lint-dependency-direction.py --skills-dir plugins
@@ -52,11 +66,25 @@ run "lint-content-review (all)"            python3 scripts/lint-content-review.p
 run "lint-live-trial-verdict (all)"        python3 scripts/lint-live-trial-verdict.py --all
 run "live-trial digest provenance"         python3 scripts/lint-live-trial-verdict.py --check-provenance origin/main
 run "lint-feedback-contract (all)"         python3 scripts/lint-feedback-contract.py --all
+run "lint-prompt-contract-drift (all)"     python3 scripts/lint-prompt-contract-drift.py --all
 run "lint-vendored-ssot"                   python3 scripts/lint-vendored-ssot.py
 run "lint-legacy-plugin-name"              python3 scripts/lint-legacy-plugin-name.py
 run "lint-runtime-portability"             python3 scripts/lint-runtime-portability.py
+# harness-creator-kit-ci.yml では lint-runtime-portability の直後に置かれているが
+# run-ci-checks には非包含だった。README の bash フェンスを触る変更が pre-push を
+# 素通りし CI で初めて落ちた (2026-07-28)。現在は個別結線に加え
+# lint-ci-local-check-parity が同型の将来 drift を集合差で遮断する。
+run "lint-readme-plugin-root-portability"  python3 scripts/lint-readme-plugin-root-portability.py
+run "lint-company-master-vendored-deps"    python3 scripts/lint-company-master-vendored-deps.py
+run "lint-knowledge-layout"                python3 scripts/lint-knowledge-layout.py
+# 同じ「CI にあってローカルに無い」型の 2 例目 (同日中の再発)。新規 script を 1 本足すと
+# llm_eval 被覆率が floor を割り CI verify が落ちる。引数なしの bare 実行は PASS を返すため、
+# script 名だけの突合では検出できない (--ratchet の有無で意味が変わる)。読み取り専用。
+run "validate-harness-coverage --ratchet"  python3 scripts/validate-harness-coverage.py --ratchet
+run "validate-harness-coverage --self-test" python3 scripts/validate-harness-coverage.py --self-test
 run "check-scripts-drift"                  bash scripts/check-scripts-drift.sh
-run "build-claude-symlinks --check"        python3 scripts/build-claude-symlinks.py --check
+run "build-plugins-from-harness --check-only" python3 scripts/build-plugins-from-harness.py --check-only
+run "native-surfaces-check"                 make native-surfaces-check
 # ── discovery 派生台帳 parity (roster / llm-coverage が discovery と一致するか) ──
 # governance-check.yml と対称。この2つが run-ci-checks 非包含だと改名/skill 変更時に
 # pre-push を素通りして CI で初めて露見する (2026-07-02 harness-creator 改名で criteria
@@ -128,12 +156,27 @@ fi
 # fail-closed 検査する。配線漏れで腐ると登録漏れ (notion-gmail-send 未表示) を永久に
 # 見逃す自己強化ループに陥るため hard 配線で再発を機械遮断する (F4/F5)。
 run "validate-plugin-completeness (MK/BD)" python3 scripts/validate-plugin-completeness.py
+run "lint-plugin-lint-coverage"            python3 scripts/lint-plugin-lint-coverage.py
+# 同じ「CI にあってローカルに無い」型の 3 例目 (同日中の 3 度目)。名前が
+# validate-plugin-completeness と紛らわしいが別物で、こちらは package-contract
+# (PKG-002..014) を検査する。plugin-root scripts/ に shebang 付き .py を
+# 実行ビット無しで足すと PKG-007 が blocking FAIL になる。
+run "validate-plugin-packages (PKG-*)"     python3 scripts/validate-plugin-packages.py
+run "contract-intake-enum-ssot"            python3 scripts/contract-intake-enum-ssot.py
 
 # ── test discovery coverage (全 test が CI 実行で到達するか) ──
 # elegant-review 2026-06-30 (LS-F1/SS-02/SS-05): tests/・plugins/ 以外 (scripts/・doc/・
 # repo-root 直下) に置いた test は CI の探索 2 機構の境界外で無言未実行になりうる。
 # 実 test 集合 ⊆ CI 到達集合 を fail-closed 検査し silent-skip を loud failure 化する。
 run "lint-test-discovery-coverage"         python3 scripts/lint-test-discovery-coverage.py
+
+# ── git hook 配線 (hook が「存在するのに動いていない」状態の検知) ──
+# core.hooksPath はリポジトリに 1 つしか設定できず、beads の .beads/hooks と repo の
+# .githooks が競合する。片方が選ばれるともう片方の hook は無言で死ぬため、失敗が
+# 起きず気づけない (本検査の導入前、.githooks/pre-push の CI 等価チェックは実際に
+# 死んでいた)。CI ではファイル整合を fail-closed 検査し、ローカル設定 (core.hooksPath)
+# は pre-push 側の run-repo-guards.sh が --check-local-config 付きで検査する。
+run "validate-git-hooks-wiring"            python3 scripts/validate-git-hooks-wiring.py
 
 # ── サマリ ──
 echo
@@ -149,5 +192,5 @@ if (( ${#FAILED[@]} > 0 )); then
   for f in "${FAILED[@]}"; do echo "  - $f"; done
   exit 1
 fi
-echo "All CI-equivalent checks passed."
+echo "All locally reproducible CI checks passed (reasoned CI-only allowlist verified)."
 exit 0

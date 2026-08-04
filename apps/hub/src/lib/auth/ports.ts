@@ -1,0 +1,241 @@
+/**
+ * 本 feature が「必要とする問い合わせの形」を宣言する consumer-driven contract (ADR AD-1)。
+ *
+ * ここに宣言するのは **port (要求する形)** であって、テーブル定義ではない。
+ * `users` / `session_revocations` / `device_authorizations` / `publisher_tokens` / `idp_connections` の
+ * スキーマ owner は feat-domain-model-db である。HarnessHub-b7ng で owner と合意し、
+ * ここで要求している列 (device_authorizations の scope/device_name/attempts/last_polled_at/workspace_id、
+ * publisher_tokens の workspace_id、利用者の Workspace 所属) を `packages/db/schema/` 側へ追加した。
+ * **port が先、スキーマが後**であり、逆 (テーブルの形に合わせて port を歪める) はしない。
+ *
+ * 全メソッドが第 1 引数にテナントスコープを要求する。
+ * テナントを受け取らない問い合わせを 1 つでも作ると、そこが row-level-scope (D4) の穴になる。
+ *
+ * **状態遷移は必ず compare-and-swap (CAS = 期待した現在値と一致したときだけ更新) を通す。**
+ * 「読む → 判定する → 全置換で書く」を許す port にすると、同じ device_code / refresh token を
+ * 並行に提示された時に両方が通り、token が複製される。そのため遷移用メソッドは真偽値を返し、
+ * 遷移できなかった側 (= 競合に負けた側) を呼び出し側が識別できる形にしてある。
+ */
+
+import type { OidcCredentialMode, PublisherTokenScope, SessionRole, UserStatus } from '@harness-hub/schemas';
+
+/** 時刻の注入口。TTL・rotation・失効の時間依存を決定論的に検査できるようにする。 */
+export interface AuthClock {
+  /** UNIX epoch 秒。ミリ秒と混ぜない (JWT の iat/exp は秒)。 */
+  nowSeconds(): number;
+}
+
+/** 既定の時計。テスト以外はこれを使う。 */
+export const systemAuthClock: AuthClock = {
+  nowSeconds: () => Math.floor(Date.now() / 1000),
+};
+
+// ---------------------------------------------------------------------------
+// テナント別 OIDC 接続
+// ---------------------------------------------------------------------------
+
+/** `idp_connections` 1 行のうち、認証で参照する部分。client_secret は port の外へ出さない。 */
+export interface TenantOidcConnection {
+  readonly tenantId: string;
+  readonly tenantSlug: string;
+  /** discovery document の `issuer` と厳密一致すべき値。 */
+  readonly issuer: string;
+  /**
+   * この接続の認可要求で使う client_id (= ID token の `aud` に期待する値)。
+   *
+   * **解決済みの値**であって「DB 行の列」ではない。共有方式 (`shared_google`) では
+   * DB 行の client_id 列が空で、port 実装が環境単位の共有 client_id をここへ埋める。
+   * 型を `string | null` にせず常に確定値にしてあるのは、`aud` 検証が
+   * 「client_id が無い場合」を分岐しないで済むようにするため — 分岐が生まれると
+   * その枝が `aud` 未検証の経路になる。
+   */
+  readonly clientId: string;
+  /** 表示名 (「〇〇でログイン」のボタン文言)。 */
+  readonly displayName: string;
+  /** 無効化された接続は解決対象から外す。 */
+  readonly enabled: boolean;
+  /**
+   * credential の出所 (issue-auth-tenancy-shared-google-oidc-20260729)。
+   * 未知・未設定の値をここへ入れない。port 実装は不明値を解決失敗 (null) に倒す。
+   */
+  readonly credentialMode: OidcCredentialMode;
+  /**
+   * 受理する Google Workspace ドメイン (ID token の `hd` claim と照合する)。
+   *
+   * 空配列 = 未設定。共有方式では port 実装が空配列の接続を解決しない
+   * (`aud` がテナント識別子にならないため、`hd` 未設定は「誰でも入れる」と同義)。
+   * 顧客方式では空配列のとき `hd` を検査しない — 既存テナントの認証境界を変えないため。
+   */
+  readonly allowedWorkspaceDomains: readonly string[];
+}
+
+export interface TenantOidcConnectionPort {
+  /** slug からテナントの OIDC 接続を引く。無い / 無効なら null (推測で補完しない)。 */
+  findByTenantSlug(tenantSlug: string): Promise<TenantOidcConnection | null>;
+}
+
+// ---------------------------------------------------------------------------
+// 利用者ディレクトリ
+// ---------------------------------------------------------------------------
+
+export interface DirectoryUser {
+  readonly id: string;
+  readonly tenantId: string;
+  /** IdP 側の sub。`(tenantId, idpSubject)` で一意 (別テナントの同値 sub と混線しない)。 */
+  readonly idpSubject: string;
+  readonly role: SessionRole;
+  readonly status: UserStatus;
+  readonly workspaceIds: readonly string[];
+}
+
+export interface UserDirectoryPort {
+  findByIdpSubject(tenantId: string, idpSubject: string): Promise<DirectoryUser | null>;
+  findById(tenantId: string, userId: string): Promise<DirectoryUser | null>;
+  /**
+   * JIT provisioning。初回ログインの利用者を作る。
+   * role は呼び出し側が決めるのではなく **常に member 固定**で作られる契約 (実装側で強制する)。
+   */
+  createFromOidc(input: { tenantId: string; idpSubject: string; email: string | null }): Promise<DirectoryUser>;
+}
+
+// ---------------------------------------------------------------------------
+// session 緊急失効
+// ---------------------------------------------------------------------------
+
+export interface SessionRevocationPort {
+  /**
+   * テナントの最終失効時刻 (epoch 秒)。失効指示が無ければ null。
+   * 例外を投げた場合、呼び出し側は **fail-closed** (拒否側へ倒す) で扱う。
+   */
+  findRevokedAtSeconds(tenantId: string, userId: string): Promise<number | null>;
+}
+
+// ---------------------------------------------------------------------------
+// Device Authorization Flow
+// ---------------------------------------------------------------------------
+
+export type DeviceAuthorizationStatus = 'pending' | 'approved' | 'denied' | 'consumed';
+
+export interface DeviceAuthorizationRecord {
+  readonly id: string;
+  readonly tenantId: string;
+  /** device_code は SHA-256 ハッシュのみ保存する。平文は発行時の応答にしか存在しない。 */
+  readonly deviceCodeHash: string;
+  /** user_code は人が読み上げる照合キーなので平文で持つ。照合後は即失効させる。 */
+  readonly userCode: string;
+  readonly scope: readonly PublisherTokenScope[];
+  readonly deviceLabel: string | null;
+  readonly status: DeviceAuthorizationStatus;
+  /** user_code の照合失敗回数。上限超過で `denied` へ落とす。 */
+  readonly attempts: number;
+  readonly expiresAtSeconds: number;
+  /** 直近の polling 時刻。`slow_down` 判定に使う。 */
+  readonly lastPolledAtSeconds: number | null;
+  /** この認可に適用中の polling 間隔。`slow_down` のたびに増える。 */
+  readonly intervalSeconds: number;
+  readonly approvedByUserId: string | null;
+  readonly workspaceId: string | null;
+}
+
+/** polling 進行の書き戻し。**status を含められない形**にしてあるのが要点 (下の解説を参照)。 */
+export interface DevicePollProgress {
+  readonly tenantId: string;
+  readonly id: string;
+  readonly lastPolledAtSeconds: number;
+  readonly intervalSeconds: number;
+}
+
+export interface DeviceAuthorizationPort {
+  create(record: DeviceAuthorizationRecord): Promise<void>;
+  findByDeviceCodeHash(tenantId: string, deviceCodeHash: string): Promise<DeviceAuthorizationRecord | null>;
+  findByUserCode(tenantId: string, userCode: string): Promise<DeviceAuthorizationRecord | null>;
+  /**
+   * polling の進行だけを書き戻す。
+   *
+   * **あえて record 全置換の `save` を持たせていない。** 全置換を残すと、遷移 (status の書き換え) が
+   * CAS を通らずここから漏れる。この引数型では status を渡す手段が無いので、
+   * 「うっかり非原子的に遷移させる」経路が型レベルで消える。
+   * 競合しても後書きが残るだけで認可の可否は変わらないため、こちらは CAS にしない。
+   */
+  savePollProgress(progress: DevicePollProgress): Promise<void>;
+  /**
+   * 現在の status が `expectedStatus` と一致するときだけ `next` へ差し替える CAS。
+   * 遷移できたら true、既に別の要求が遷移させていたら false。
+   *
+   * 並行要求のうち **true を得るのは 1 本だけ**であることが device_code 使い捨ての保証になる。
+   * `attempts` の増加もここを通す — 上限到達で `denied` へ落ちる = 遷移だから。
+   */
+  compareAndSwapStatus(input: {
+    readonly expectedStatus: DeviceAuthorizationStatus;
+    /** 失敗回数も同時更新されるため、読み取った値から変わっていないことを CAS 条件へ含める。 */
+    readonly expectedAttempts: number;
+    readonly next: DeviceAuthorizationRecord;
+  }): Promise<boolean>;
+}
+
+// ---------------------------------------------------------------------------
+// Publisher token (access/refresh)
+// ---------------------------------------------------------------------------
+
+export interface PublisherTokenRecord {
+  readonly id: string;
+  readonly tenantId: string;
+  readonly workspaceId: string;
+  readonly userId: string;
+  /**
+   * rotation の系列を束ねる ID。
+   * 再利用が検知されたとき、この単位でまとめて失効させる (窃取された枝だけ潰しても意味がない)。
+   */
+  readonly familyId: string;
+  readonly refreshTokenHash: string;
+  readonly scope: readonly PublisherTokenScope[];
+  readonly deviceLabel: string | null;
+  readonly createdAtSeconds: number;
+  readonly lastUsedAtSeconds: number | null;
+  readonly expiresAtSeconds: number;
+  readonly revokedAtSeconds: number | null;
+}
+
+export interface PublisherTokenPort {
+  create(record: PublisherTokenRecord): Promise<void>;
+  findByRefreshTokenHash(tenantId: string, refreshTokenHash: string): Promise<PublisherTokenRecord | null>;
+  findById(tenantId: string, id: string): Promise<PublisherTokenRecord | null>;
+  /** family 単位の取得。再利用検知時の一括失効に使う。 */
+  listByFamilyId(tenantId: string, familyId: string): Promise<readonly PublisherTokenRecord[]>;
+  /** 利用者の token 一覧。workspaceId を渡すと Workspace で絞る (管理者の一覧用)。 */
+  listByUserId(tenantId: string, userId: string): Promise<readonly PublisherTokenRecord[]>;
+  listByWorkspaceId(tenantId: string, workspaceId: string): Promise<readonly PublisherTokenRecord[]>;
+  /**
+   * **まだ失効していないときだけ**失効させる CAS。失効させられたら true。
+   *
+   * refresh token の「1 回しか使えない」を DB の条件で保証する要点。同じ refresh token を
+   * 並行に提示されても true を得るのは 1 本だけなので、新しい枝も 1 本しか生まれない。
+   * ここも `save` (全置換) を持たせない — 全置換を残すと `revokedAtSeconds` の書き込みが
+   * 「読んで null を確認してから書く」形に戻せてしまう。
+   */
+  revokeIfActive(input: {
+    readonly tenantId: string;
+    readonly id: string;
+    readonly revokedAtSeconds: number;
+    readonly lastUsedAtSeconds?: number;
+  }): Promise<boolean>;
+  /**
+   * family 単位の一括失効 (再利用検知 / 利用者による失効)。
+   * **実際に失効させた本数**を返す (既に失効していた枝は数えない)。冪等に呼べる。
+   */
+  revokeFamily(input: {
+    readonly tenantId: string;
+    readonly familyId: string;
+    readonly revokedAtSeconds: number;
+  }): Promise<number>;
+}
+
+/** 本 feature が要求する port 一式。実装 (本番 / in-memory) はこの形で注入する。 */
+export interface AuthPorts {
+  readonly clock: AuthClock;
+  readonly oidcConnections: TenantOidcConnectionPort;
+  readonly users: UserDirectoryPort;
+  readonly sessionRevocations: SessionRevocationPort;
+  readonly deviceAuthorizations: DeviceAuthorizationPort;
+  readonly publisherTokens: PublisherTokenPort;
+}

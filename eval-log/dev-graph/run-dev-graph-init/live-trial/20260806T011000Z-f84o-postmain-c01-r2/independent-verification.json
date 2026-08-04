@@ -1,0 +1,32 @@
+{
+  "evaluator": "claude-opus-4-6 independent live-trial evaluator",
+  "scenario_id": "C01-OUT1-positive-idempotence-r17",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Transcript line 54: Bash mkdir -p creates all six content roots (issues, tasks, specs, architecture, features, docs). Line 97/101: build-repo-config.py returns {\"action\":\"created\",\"changed\":true} creating config.json (routing policy). Line 103: build-graph-store.py creates .dev-graph/state/graph.json (graph store). Line 132 verification confirms all six roots exist plus config.json and graph.json on disk."
+    },
+    "2": {
+      "met": true,
+      "evidence": "Transcript line 159: a literal Skill tool_use with {\"skill\":\"dev-graph:run-dev-graph-init\",\"args\":\"--repo-root ... --hook-source plugin\"} — not a hand-written bash re-run. Line 182: second pass reports 'Planned changes: 0'. Line 189: build-repo-config.py returns {\"action\":\"unchanged\",\"changed\":false}. Line 193: build-graph-store.py returns {\"action\":\"preserved_existing\",\"changed\":false,\"graph_revision\":1}."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Transcript line 137: Edit tool adds '<!-- user-edit-marker:C01-OUT1-positive-idempotence-r17 -->' to issue.md. Line 146: SHA-256 recorded as 2ac142468a25cd75b628dd05604771e8bd83d196a27b1213f745746bcf963fa7 before second pass. Line 212 (工程5 verification): re-computed SHA-256 matches exactly. Independent evaluator re-computation via shasum -a 256 also returns 2ac142468a25cd75b628dd05604771e8bd83d196a27b1213f745746bcf963fa7, confirming the second init pass did not overwrite user-edited bytes."
+    },
+    "4": {
+      "met": true,
+      "evidence": "Both Skill invocations (lines 40, 159) pass --hook-source plugin. The config draft (line 88) and final config.json both contain {\"claude_hooks\":{\"source\":\"plugin\",...}}. Line 212 verification reports 'hook_source: plugin'. The actual config.json on disk at claude_hooks.source = 'plugin' confirms resolution was recorded."
+    },
+    "5": {
+      "met": true,
+      "evidence": "Independent evaluator ran python3 regex check on config.json: absolute_paths=[], tokens=[], node_ids=[]. Transcript line 212 also confirms absolute_paths:0, tokens:0, github_node_ids:0. All stored paths are repository-relative (.dev-graph/state/graph.json, .dev-graph/cache, etc.). No ghp_/gho_/github_pat_/sk- tokens or PVT_/MDQ6 node IDs present."
+    },
+    "6": {
+      "met": true,
+      "evidence": "Transcript line 206/212: validate-graph-schema.py executed with exit code 0 (PASS). Graph contains 1 node (graph_node_id: issue-idempotence-test) at graph_revision 1, registered between passes via upsert-node.py (line 157: operation=added, graph_revision 0→1). Independent verification confirms node_count=1, graph_revision=1. C11 did not pass vacuously on an empty graph."
+    }
+  }
+}

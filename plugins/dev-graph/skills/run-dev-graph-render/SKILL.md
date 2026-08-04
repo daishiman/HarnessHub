@@ -47,7 +47,7 @@ feedback_contract:
       verify_by: script
     - id: OUT1
       loop_scope: outer
-      text: "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示され、featureごとの子task進捗X/Yのうち総数Yがregistration receiptのapplied_count/expected_countと一致し(done数Xは登録後のstatus遷移で変動するため一致を求めない)、表示対象がreceiptのsource_digestに対応することを受入テストが確認する"
+      text: "生成したHTML/CSSをブラウザで開いた際に追加ランタイム依存なくSVGグラフが表示される。registration receipt指定時はfeatureごとの子task進捗X/Yの総数Y、node IDs、source digest、source lineageを照合し、graph digestも一致すればverified、graph digestだけが後続syncで古ければpartialを明示する (done数Xは登録後のstatus遷移で変動するため一致を求めない)。receipt未指定時はHTMLとrender-metadataの双方が照合未実施(not_performed)を明示する"
       verify_by: live-trial
 ---
 
@@ -57,13 +57,13 @@ feedback_contract:
 
 - 入力: C24/C11 検証済み graph/scope、repo 内 output path。
 - 出力: SVG/CSS/JS を inline 化した単一 HTML と node/edge/feature-progress counts、input/output digest を持つ renderer receipt。
-- 完了条件: 外部 runtime 参照0、ブラウザ上で SVG と feature X/Y が表示され、receipt の counts/digests が実体に一致する。
+- 完了条件: 外部 runtime 参照0、ブラウザ上で SVG と feature X/Y が表示される。registration receipt 指定時は node IDs、counts、source digest、source lineage が実体に一致し、graph digest も一致すれば `verified`、graph digest だけが古ければ `partial` を明示する。未指定時は HTML と render-metadata が照合未実施 (`not_performed`) を明示する。
 
 1. C24/C11 で caller graph と scope を検証する。
 2. 出力は repo 内の指定 path（既定 `.dev-graph/render/index.html`）に限定する。
 3. `render-graph-html.py` を呼び、SVG、CSS、JS を単一 HTML に inline 化する。外部 `script/link`, CDN, npm dependency は禁止。
 4. feature node は `parent_feature` の task を X/Y で集約し、feature 間 edge と task 内 edge を混同せず表示する。
-5. renderer receipt の node/edge/progress counts と input digest を照合して返す。
+5. renderer receipt の node/edge/progress counts と input digest を照合して返す。registration receipt 指定時は全照合一致で `registration_verification.status=verified`、graph digest だけが古ければ `partial`、未指定時は `not_performed` と理由コードを返す。
 
 ```bash
 python3 ../../scripts/render-graph-html.py \
@@ -74,7 +74,7 @@ python3 ../../scripts/render-graph-html.py \
   --out "$DEV_GRAPH_ROOT/.dev-graph/render/index.html"
 ```
 
-`--scope`は指定nodeと子孫・必要なdependencyだけを描画する。registration receipt指定時は`node_ids`、`applied_count/expected_count`、`source_digest`、graph digestを実graphと照合し、不一致ならHTMLを書かない。graphとoutputはrepository内realpathに限定し、pending node WALがあれば停止する。
+`--scope`は指定nodeと子孫・必要なdependencyだけを描画する。`--registration-receipt` は optional。指定時は`node_ids`、`applied_count/expected_count`、`source_digest`、source lineage、graph digestを実graphと照合する。node ID・件数・source digest・lineage の不一致はHTMLを書かず fail-closed とするが、後続 sync による graph digest だけの不一致は `partial` / `graph_digest_stale` を三つの表示面へ出してHTMLを生成する。未指定時も探索的 render は許可するが、HTML と `render-metadata` の双方へ照合未実施 (`not_performed`) を明記する。graphとoutputはrepository内realpathに限定し、pending node WALがあれば停止する。
 
 graph は read-only。HTML 以外の graph/content を変更しない。
 
@@ -94,6 +94,7 @@ graph は read-only。HTML 以外の graph/content を変更しない。
 - [ ] render model の node/edge/feature progress counts が input graph と一致する
 - [ ] 生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する
 - [ ] renderer receipt の input/output digest と実ファイル digest が一致する
+- [ ] registration receipt 指定時は照合状態が `verified`、未指定時は HTML と render-metadata の双方で `not_performed` になっている
 - [ ] ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される
 
 ### ゴールシークループ
@@ -130,11 +131,11 @@ PY
 ## Criteria acceptance
 
 - `criteria:IN1`: output HTMLの外部script/link参照が0件でゼロ依存である。
-- `criteria:OUT1`: 生成HTML/CSSをブラウザで開き、追加ランタイム依存なくSVGグラフとfeatureごとの子task進捗X/Yが表示され、**総数Y**がregistration receiptの`applied_count/expected_count`と一致し、`source_digest`が表示内容に一致する。**done数Xの一致は求めない** — 登録時点で13子すべてが`active`強制 (`register-package.py`) であるため receipt を伴う状態のXは常に0であり、Xを動かすと `graph_digest_after` が stale 化して render 自体が落ちる。実装も総数のみを照合する (`render-graph-html.py` の `len(child_nodes) != receipt["applied_count"]`)。
+- `criteria:OUT1`: 生成HTML/CSSをブラウザで開き、追加ランタイム依存なくSVGグラフとfeatureごとの子task進捗X/Yが表示される。registration receipt **指定時**は、**総数Y**、node IDs、`source_digest`、source lineage が一致し、graph digest も一致すれば `verified` を返す。後続 sync によって graph digest だけが古い場合は、同じ一致済み証拠を保持した `partial` / `graph_digest_stale` を返す。receipt **未指定時**は、HTML と `render-metadata.registration_verification.status` の双方が照合未実施 (`not_performed`) を明示し、総数Yが偶然一致しても照合済みと扱わない。**done数Xの一致は求めない** — 登録時点で13子すべてが`active`強制 (`register-package.py`) であるため receipt を伴う状態のXは常に0であり、Xを動かすと `graph_digest_after` は stale になる。実装も総数のみを照合する (`render-graph-html.py` の `len(child_nodes) != receipt["applied_count"]`)。
 
 ## Gotchas
 
 - CDN、npm bundle、外部 `script/link` を単一 HTML に混入させない。
 - feature progress は `parent_feature` の task 実数から導出し、手入力値を表示しない。
-- browser 表示だけで PASS にせず、receipt count と input/output digest も照合する。
+- browser 表示だけで PASS にせず、receipt 指定時は node IDs、count、source digest、source lineage、`graph_digest_match`、全実行で input/output digest と `registration_verification.status` を照合する。
 - render は read-only graph から生成し、graph/content 本体を変更しない。

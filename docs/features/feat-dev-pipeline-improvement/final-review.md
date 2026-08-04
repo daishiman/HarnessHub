@@ -41,3 +41,141 @@ P01-P09 成果物を横断し baseline 乖離・acceptance 残未達・quality_c
 ## 判定
 
 P11 以降 (証跡固定・文書化・リリース) へ進む条件を満たす。機能 acceptance は7件すべて PASS。P13 の外部リリース操作 (commit/main 統合/push/PR) は実行済みで、PR #41 は 2026-07-23 に main へ merge 済み。最終 done 確定 (merge commit `b655e22` 記録・graph/md/beads の 3 表現 durable done) まで完了した。
+
+## qa-071 本文伝播の最終レビュー (2026-07-28)
+
+`HarnessHub-8wo` の再 plan を最終レビューし、remote `main` と local
+`main` を `515b849` へ一致させてから本 branch へ merge した。main 由来の
+別 task/issue の完了投影差分は qa-071 の変更へ混ぜず、対象 feature、
+P01〜P13、フォローアップ `HarnessHub-cvli` の15 nodeだけを正規 C02
+writer で graph へ再反映した。
+
+### task 仕様書ゲート
+
+- `validate-system-plan.py`: PASS、exact-13、digest `af8a73df…`、違反 0
+- `validate-generation-lineage.py`: 1 package 検査、違反 0
+- `build-task-projection-rerun.py --check`: 13 task 検査、missing 0
+- `validate-source-digest.py`: 13 node 検査、mismatch 0
+- planner tests: 166 PASS
+- dev-graph tests: 539 PASS / 2 SKIP
+- repository 横断 tests (`tests` + `plugins/dev-graph/tests`):
+  8037 PASS / 7 SKIP
+- criteria evidence: C02 live trial r4 と全 criteria tests が PASS
+- graph schema、artifact placement、eval-log layout、handoff disposition、
+  evidence refs、plugin package PKG-002〜008/014: すべて blocking 違反 0
+
+`lint-open-residue.py` で今回対象の 14 node を走査し、残置は 0 件。
+repository 全体の live Beads 状態では、本変更と無関係な並行 task
+`HarnessHub-mb7c` / `HarnessHub-33ho` / `HarnessHub-v22l` の3件だけが
+OR-003 として検出された。対象外の lifecycle を本変更へ混ぜていない。
+
+500 行を超えていた登録scriptは、JSON Schema検証と上流契約preflightを
+別moduleへ責務分離した。分割で変わったC02の挙動閉包は
+最新 main 統合後の live trial
+`20260727T234043Z-node-qa071-main515-r4` を再実走し、
+5 artifactの本文保全、連続no-op、graph schema、goal-seek証跡を確認した。
+現行 digest は `8c555da985c9e77f706ae263476c45a4f2a7d0b35c8b9a9053797e69bc64810e`
+で、fresh evaluatorも自己申告を除外した一次情報でblockerなしPASSと判定した。
+CI で検出した PKG-007 に対して分割 helper 2 本へ Python shebang と実行ビットを
+付与した。live-trial planner の再利用判定では挙動閉包 digest が不変で、
+上記 r4 証跡を current PASS として再利用できることも確認した。
+
+## C19 task / fixture 前提 drift の最終レビュー (2026-07-28)
+
+`HarnessHub-768b` の実装をレビューし、C19 の fixture が
+`system-spec/requirements-brief.md` だけを置く契約を machine-readable な
+`TASK_CONTRACT` にした。task 指示は scenario と fixture の両正本へ照合され、確定成果物を
+事前配置済みとする旧前提、正規 flow の再実行禁止、被験 skill・引数・entry point・観測条件
+のずれを `LT-001..012` で fail-closed に検出する。
+
+650 行だった lint は、CLI／report と契約解析 module に責務分離し、双方を 500 行未満へ
+収束した。focused pytest は 29 PASS、`--all` は最新 verdict 保有 task 1 件を検査して
+違反 0。fixture を brief だけから構築した fresh PASS evidence は
+`20260726T050519Z-sysspec-final2` を再利用し、改変していない。
+
+中学生向けには「実験台に水しかないのに、説明書が完成品を置いた前提になっていないかを
+始める前に照合する仕組み」である。技術契約と再実行コマンドは
+`plugins/dev-graph/references/live-trial-task-contract.md`、仕様影響なしの層別判断は
+`c19-task-contract-spec-reflection.md` に記録した。
+
+## C02 stale feature lifecycle の最終レビュー (2026-07-29)
+
+`HarnessHub-bk8v` の実装をレビューし、C14 が生成した古い feature snapshot の再送で、
+既に `confirmed`・評価 PASS・実装準備完了へ進んだ状態が draft へ戻る不具合を修正した。
+full snapshot の暗黙退行は書込み前に拒否し、意図的な再評価だけを明示 `patch` で許可する。
+
+回帰テストは各 lifecycle フィールドを単独で戻すケース、`node` envelope と bare canonical
+入力、退行しない正の対照、feature 以外の非影響、明示 reset を分離して検証する。main
+統合・競合解消後に C02 node、C03 sync、C14 decompose を fresh 実走した。C14 は
+beads / none の paired run で各 2 回、合計 4 回の Skill 呼出しと全 5 node の最終 noop を
+介入なしで確認し、3 系列とも独立 evaluator が blocker なし PASS と判定した。
+
+中学生向けには「前に合格した申請書へ古い下書きをもう一度出しても、合格済みの印を勝手に
+消さない仕組み」である。技術契約は
+`plugins/dev-graph/references/execution-tracker-contract.md`、製品仕様への影響なしの層別判断は
+`bk8v-c02-lifecycle-spec-reflection.md` に記録した。
+
+## renderer 登録検証表示の最終レビュー (2026-07-30)
+
+`HarnessHub-35ai` の変更は、13 task の進捗表示が正しくても registration receipt
+との照合を実施していなければ「登録検証済み」と誤解できた問題を解消する。
+receipt の件数、node ID、graph digest、source digest を検証した場合だけ
+`verified` とし、receipt 無しは CLI、可視 HTML、埋込み metadata のすべてで
+`not_performed` を返す。
+
+同じ 13 child graph を receipt 有り／無しで描画する正負テストを分離し、
+偶然の件数一致では検証済みにならないことを固定した。560 行だった混成テストは
+登録検証専用の `test_render_registration_verification.py` へ責務分離し、
+変更対象の手書きコード／文書を 500 行以下へ収束した。
+
+fresh live trial `20260730T053500Z-wt18-35ai-render` は nudge 0、
+gate response 0 で PASS、独立 evaluator の 8 検査も blocker 0 で PASS。
+main 統合後は focused pytest 13 passed、Dev Graph 全回帰 721 passed / 2 skipped、
+repository CI 136 PASS / 4 既存 WARN / 0 FAIL。最終結果と層別判断は
+`render-registration-verification-spec-reflection-receipt.md` に記録する。
+
+中学生向けには「名簿に 13 人いるだけでは登録完了と言わず、受付の受領書と
+名簿が一致したときだけ合格印を出す仕組み」である。
+
+## renderer registration stale digest の最終レビュー (2026-08-04)
+
+`HarnessHub-0ui0` は、登録時点の graph digest が後続 sync で古くなると、正しい登録証拠まで
+失敗として HTML を出せなくなる問題を修正する。node IDs、件数、source digest、source lineage が
+一致し graph digest も一致する場合は `verified`、graph digest だけが古い場合は `partial` /
+`graph_digest_stale`、receipt 未指定は `not_performed` とし、他の証拠不一致は fail-closed を維持する。
+
+この変更は repository 内の renderer 品質契約に限られ、製品 API・DB・認証認可・UI・deploy unit は
+変更しない。実装、task 仕様書ゲート、fresh live trial、repository CI の最終結果と Beads / Draft PR は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
+
+中学生向けには「受付後に名簿の並び替えがあって受付番号だけ古くなっても、名前と人数が全部一致して
+いることまで『未確認』にしない。番号だけ古いと正直に表示して、間違った名簿なら止める仕組み」である。
+
+### 仕様・設計影響
+
+新しい製品仕様・API・データ・セキュリティ・配備契約への影響はない。
+qa-071 / appr-009 は `system-spec/spec-state.json` に既に確定済みで、
+本変更はその本文を feature と P01〜P13 の実行契約へ投影する変更である。
+判断根拠と `system-spec/`・`specs/`・`architecture/` を編集しない理由は
+`qa071-spec-reflection-receipt.md` に記録した。
+
+### CI 証跡と main 統合の再確認 (2026-08-04)
+
+リモート `main` の `fb05db56781598096aa38298edda2447f9b1d1ca` をローカル `main` に取り込み、
+本 branch へ clean merge した。競合は発生しなかった。CI の C05 contract drift は component inventory の
+feedback 契約を Skill と同じ照合規則へ同期して解消した。C03 / C14 の stale closure は既存 SHA を
+書き換えず、fresh live trial `20260807T000000Z-ci-c03` / `20260807T000000Z-ci-c14` を実走し、両方とも
+独立 evaluator が nudge=0、gate=0、overall PASS と判定した。
+
+この再検証は repository の CI 証跡を更新するだけで、製品 API・DB・認証認可・UI・deploy unit と
+Dev Graph の機能契約を追加変更しない。`scripts/run-ci-checks.sh` は **139 PASS / 5 WARN / 0 FAIL** で、
+WARN は段階導入中の既知の非ブロッキング項目である。詳細な受領内容は
+`render-registration-stale-digest-spec-reflection-receipt.md` に記録する。
+
+## C02 重複報告 j66m の最終レビュー (2026-07-30)
+
+`HarnessHub-j66m` は `HarnessHub-bk8v` と同じ lifecycle 回帰を指す重複報告である。
+実装 commit `b1c5001` と PR #601 が現行 `main` に含まれ、C02 の拒否処理、回帰テスト、
+実行契約、各仕様層の trace が残ることを再確認した。新しい製品仕様や別実装は追加せず、
+再検証結果を既存 dev-graph node
+`issue-c02-upsert-lifecycle-regression-20260729` と本受領書へ集約する。

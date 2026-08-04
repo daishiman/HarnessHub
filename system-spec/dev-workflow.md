@@ -15,45 +15,60 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-069 |
+| Web (web) | 確定 | 確定質疑: qa-143 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-039 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-039 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-102 |
 
 ## 確定内容 (質疑録)
 
-### qa-069 (対応セル: web)
+### qa-143 (対応セル: web)
 
-**質問**: dev-graph/beads (bd) のタスク優先度選定 (schedule/ready の判断軸) を、どのような基準へ変更しますか? 現行の品質・本質先行の選定で何が問題になっていますか?
+**質問**: 全 plugin の hook entry point について、package-contract の宣言・Claude Code への登録・実体ファイルをどのように fail-closed で一致させ、手動実行スクリプトを誤って自動 hook と扱わないようにしますか?
 
-**回答**: 現行は AI が文脈から『本質的なシステムを作り上げること』を最優先に選定するため、同じ基盤タスクを繰り返し実行して解決せず、依存関係でつながった他タスクまで止まり、いちばん作りたかった機能から離れていく (根本原因は品質と再現性を求めすぎる完璧主義がスケジューラの優先度に転写されたこと)。変更後の判断軸は (1) 目的=何のために作るか、(2) 背景=どういう経緯で必要になったか、(3) MVP=今必要な動くもの、の3軸とし、品質を先回りする基盤・本質課題解決タスクよりも『まず使えるものを構築する』タスクを優先して選定する。まず作って、使って、課題をあぶり出す回転 (build-use-learn) に戻すことが狙い。具体的には feature/task の選定時に MVP 適合 (今必要な動くものに直結するか) を第一ソートキーへ昇格し、品質・再現性強化系は MVP 成立後に繰り延べる。CI/CD・quality gate 等の既確定の dev-workflow 要件 (qa-066) 自体は維持し、優先度選定の判断軸のみ組み替える
+**回答**: ユーザーの 2026-08-04 最終レビュー・品質ゲート再実行・仕様反映・公開指示を明示承認として、qa-142 を全面維持したまま repository 内の plugin 完全性検査へ hook entry point の 3 者一致を追加確定する。
 
-### qa-039 (対応セル: desktop-windows, desktop-macos)
+【1. 登録と宣言の双方向検査】`scripts/validate-plugin-completeness.py` は `package-contract.json` の `entry_points.hooks` を台帳の正本として、manifest inline hooks と `hooks/hooks.json` の和集合で得た登録 entry point に突合する。登録済みで未宣言なら HK-001、登録構成（inline manifest または hooks.json）がある plugin で宣言済み・未登録なら HK-002 として非 0 終了にする。`hooks/foo.py` と `./hooks/foo.py` の相対 command も登録として読む。
 
-**質問**: 開発フロー（dev-workflow）× デスクトップ (Windows)（desktop-windows）/ デスクトップ (macOS)（desktop-macos）は対象ですか? 対象なら要件を教えてください。
+【2. 実体と責務境界】宣言または登録された entry point は `hooks/` に実在しなければならない。残余の Python は import 可能な名前、shebang 不在、`__main__` block 不在の全条件を満たす import 専用 support module だけを許容し、それ以外と shell script は HK-003 で拒否する。自動 event に接続しない手動運用スクリプトは `hooks/` ではなく `scripts/` に置き、entry point 台帳・自動登録・手動操作を混同しない。
 
-**回答**: 対象。提供者/作者のローカル開発環境 (macOS 主・Windows 従。既存 auth/security の desktop-windows/desktop-macos 行と同じ作者環境の定義) における開発フローを以下で確定する。
+【3. 単一責務と回帰】検査本体が 500 行を超えたため、hook/sidecar の純粋な収集・判定を `validate-plugin-hooks.py` に分離する。CLI と判定ロジックを別責務にしても同じ単体テストと repo 全体契約テストから呼び、plugin 専用の実装が全体ゲートを追い越す被覆差を作らない。
 
-【1. ローカル環境の構成】
-- Claude Code (実装・AI レビュー) + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。
-- 開発は macOS を主環境、Windows を従環境とし、両者で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存のコマンドを pnpm script に埋め込まない)。
+【4. 製品境界】変更は repository 内の plugin 配布、CI、開発品質ゲートだけに限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-【2. CI と local の乖離防止】
-- PR の required status checks (qa-038 の 2) と同一のコマンドを pnpm script として local からも実行可能にする (例: pnpm verify が lint / typecheck / test / bundle size を CI と同じ実装で回す)。CI 専用の検査手順を CI 側だけに持たない。
-- これにより「local では通るが CI で落ちる」を構造的に減らし、1 名 + AI 運用 (C1) での往復回数を抑える。
+### qa-140 (対応セル: desktop-windows)
 
-【3. commit 前のローカルゲート】
-- pre-commit hook で lint / format を任意実行 (fail-closed にはしない。merge 前ゲートの正本は CI であり、local hook は早期検知の補助に留める)。
-- secret の誤 commit 防止のため、secret scan は local hook でも実行できるようにする (正本の遮断は CI 側)。
+**質問**: qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?
 
-【4. ローカルからの本番操作の禁止】
-- production への wrangler deploy と production Turso への migration 適用を、提供者のローカル端末から日常的に行わない。両者の正本経路は CI (qa-038 の 4/5) に一本化する。ローカルからの本番 deploy は CI 障害時の緊急経路としてのみ位置付け、実施時は事後に PR/commit へ記録を残す。
-- ローカル開発では preview 用 Turso または local SQLite を binding し、production DB を指さない。
+**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。
 
-【5. Web App 出口との区別】
-- 作者 local session で wrangler CLI をスクリプト実行して顧客の Web App を公開する経路 (I5) は、Hub 本体の開発フローとは別物である。I5 は作者の業務ツール公開の実行系であり、本カテゴリが定義するのは Hub 本体 (提供者が開発するプロダクト) の開発フローに限る。
+【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。
+
+【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
+
+【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。
+
+【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。
+
+【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+
+### qa-102 (対応セル: desktop-macos)
+
+**質問**: qa-092 の C11 本文 readiness を維持しながら、C02 の lifecycle・document layer 整合性と live-trial の session 環境隔離を、自己完結した dev-workflow.desktop-macos 契約としてどう統合しますか?
+
+**回答**: ユーザーの 2026-07-30 CI 失敗修正・最終レビュー・仕様反映指示を明示承認として、qa-090 の live-trial session 所有権境界、qa-092 の C11 本文 readiness、HarnessHub-bk8v の C02 lifecycle 保全を維持し、C02 document layer parity と tmux session 環境隔離を統合した次の契約を確定する。
+
+【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。
+
+【2. C02 lifecycle と document layer parity】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行する。新規 document の暗黙 default、欠落、重複、形式不正を fail-closed にし、既存本文を byte-for-byte 保持して再実行を noop にする。docs 配置 lint は同じ schema 定義を読み、別の許容値表を持たない。
+
+【3. live-trial session 環境の正本】tmux server が保持する global environment は live-trial の routing 正本にしない。hook の証拠出力先など trial 固有の環境変数は、boot 呼び出し元の現在値を new-session -e で対象 session へ明示的に上書きする。呼び出し元で未設定なら空値を渡し、過去 trial の値へ fallback しない。backend は環境変数名を identifier 形式に限定し、値に NUL・改行・復帰を許さない。転送対象は harness が宣言した session-scoped allow-list に限定する。
+
+【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。
+
+【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 ## 上流指針 (doctrine anchor)
 

@@ -6,12 +6,19 @@
 packages:
   # Hub 本体 (Next.js on Workers)。UI + API + 認可 MW を同居させる単一 deploy unit
   - "apps/hub"
+  # feat-publisher-plugin: skills-package を Hub へ公開する CLI (AD-1)
+  - "apps/publisher"
   # docs/shared-layers.md §1〜§2 の共通層。実装 owner は feat-hub-foundation
   - "packages/ui"
   - "packages/schemas"
   - "packages/inspection"
   - "packages/estimation"
   - "packages/db"
+
+# pnpm の再帰 workspace script 全体を直列化する。G4 では各 workspace の test が
+# 個別に Vitest worker pool を起動し、workspace 間も並列にすると worker RPC が
+# 枯渇して偽陽性で失敗するためである。package 内の並列性は維持する。
+workspaceConcurrency: 1
 
 # pnpm 10 は依存パッケージの lifecycle script を既定でブロックするため、
 # ビルドに必要なものだけを明示的に許可する (P03 指摘 R-21。実測で警告を確認)。

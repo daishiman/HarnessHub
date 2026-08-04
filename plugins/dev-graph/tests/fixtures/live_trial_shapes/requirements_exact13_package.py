@@ -138,7 +138,7 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
     """C12 の task spec 検査を満たす 1 phase 分の spec 本文を組む。
 
     制約 (validate-system-plan.py:39-59, 342-365):
-      - REQUIRED_TASK_SPEC_SECTIONS の 15 見出しがちょうど 1 回ずつ、本文が非空
+      - REQUIRED_TASK_SPEC_SECTIONS とテスト戦略の 16 見出しがちょうど 1 回ずつ、本文が非空
         (`Inner goal-seek execution loop` は system-task-goal-seek/v1 と rubric verdict=PASS を含み、
          P13 は `P13 spec/architecture writeback: required` を宣言する)
       - PLACEHOLDER 正規表現に当たらない。``<`` は ``<[^>]+>`` が改行も跨いで一致する
@@ -198,6 +198,12 @@ def _task_spec_text(phase: str, responsibility: str, spec_task_id: str,
         ("スコープ外", "\n".join([
             "- 他 feature の task への直接参照",
             "- 実 repository への書き込み",
+        ])),
+        ("テスト戦略", "\n".join([
+            "- テストレベル選定: 単体・結合・境界値・回帰の4レベルを適用する",
+            "- カバレッジ目標: 既定 80% を維持する",
+            "- 層別方針: N/A: fixture の検証用仕様であり実装層を変更しない",
+            "- 保守性制約: pixel 位置依存と DOM 構造依存のテストを禁止する",
         ])),
         ("Verification and evidence", "\n".join([
             f"- 検証: {responsibility}の完了を phase 成果物で確認する",

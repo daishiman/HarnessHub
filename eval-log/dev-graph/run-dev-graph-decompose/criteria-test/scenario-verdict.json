@@ -7,7 +7,7 @@
     "skill_md_sha256": "2652930f71ddbc6104b06a0f80a00742e37ae3d5ea384e53611df80efc46dda3"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-integrity-auditor-fresh-evaluator-20260724T095200Z-decompose-wt1r3",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c14",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -26,14 +26,15 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C14-OUT1-positive-macro-decomposition",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260724T095200Z-decompose-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/independent-verification.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T095200Z-decompose-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動, --binding none --dry-run): MVP-first 実装で挙動閉包 sha が更新され旧 verdict (wt1r2) が stale 化したため、fixture を git reset --hard + clean -fdx で baseline (1f33d07) へ戻してから再取得。fresh evaluator が transcript のコマンドを そのまま再実行して同一 JSON 出力 (valid=false, artifact_missing 3 件のみ、schema_violation / dependency_cycle / binding_collision は 0 件) を再現し、fabrication でないことを裏取り。DAG を独自再計算し node_count=3 (architecture 1 + feature 2)、feat-dashboard depends_on feat-user-auth、cycles=[]、kinds={architecture, feature} (task 粒度の混入なし)、orphan なしを確認。git status は ?? eval-log/ のみで graph.json / config.json に差分なし、leases は空、transcript 中の gh-bridge / bd-bridge 呼出し 0 件により local / beads / github / projects の write_count=0 を独立裏取り。resolve-repo-context.py --mode write の receipt で repo_root == content_roots.repository を確認。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (ceef75f3…) 一致・1 行目 (Skill 起動 00:59:10Z より前の 00:58:49Z) と 2 行目 (01:03:48Z) で約 5 分差の append-only を実証。AskUserQuestion 0 件。blocker 0 で PASS。非 blocker の scope 留意点 (本 scenario は --binding none --dry-run のみを被覆) は HarnessHub-vnr で追跡。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "fresh live trial 20260807T000000Z-ci-c14 は overall=PASS、nudge=0、gate=0。独立 evaluator が、target Skill 2 回、両 fixture の DAG/粒度、beads/none の永続 binding、唯一の昇格候補と draft gate、pre/post 差分、confirmation evidence 再計算、stdin negative controls を一次証跡から PASS と判定した。"
     },
     "OUT2": {
       "status": "PASS",

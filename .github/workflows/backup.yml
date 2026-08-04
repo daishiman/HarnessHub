@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   backup:
-    name: Turso dump → gzip → R2
+    name: control-plane export → gzip → R2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,74 +25,82 @@ jobs:
       - name: 前提 secret の存在確認
         run: |
           missing=""
+          [ -n "${{ secrets.TURSO_DATABASE_URL }}" ] || missing="$missing TURSO_DATABASE_URL"
           [ -n "${{ secrets.TURSO_AUTH_TOKEN }}" ] || missing="$missing TURSO_AUTH_TOKEN"
-          [ -n "${{ secrets.TURSO_DATABASE_NAME }}" ] || missing="$missing TURSO_DATABASE_NAME"
-          [ -n "${{ secrets.R2_ACCESS_KEY_ID }}" ] || missing="$missing R2_ACCESS_KEY_ID"
-          [ -n "${{ secrets.R2_SECRET_ACCESS_KEY }}" ] || missing="$missing R2_SECRET_ACCESS_KEY"
-          [ -n "${{ secrets.R2_ACCOUNT_ID }}" ] || missing="$missing R2_ACCOUNT_ID"
+          [ -n "${{ secrets.CLOUDFLARE_R2_API_TOKEN }}" ] || missing="$missing CLOUDFLARE_R2_API_TOKEN"
+          [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          [ -n "${{ secrets.BACKUP_HEARTBEAT_URL }}" ] || missing="$missing BACKUP_HEARTBEAT_URL"
           if [ -n "$missing" ]; then
             echo "::error::backup に必要な secret が未設定です:$missing"
-            echo "docs/features/feat-hub-foundation/runbook.md §1 の手順で設定してください"
+            echo "投入手順: docs/features/feat-hub-foundation/runbook.md §1"
+            echo "台帳 (用途・必須/任意の正本): scripts/ci/actions-secrets-registry.json"
             exit 1
           fi
 
-      - name: Turso CLI の導入
-        run: |
-          curl -sSfL https://get.tur.so/install.sh | bash
-          echo "$HOME/.turso" >> "$GITHUB_PATH"
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
 
-      - name: DB dump → gzip
+      # 成果物は restore CLI が読む control-plane export (JSONL) にする。
+      # turso db shell の .dump だと SQL になり、§10 の restore drill が実行できない
+      # =「復元できないバックアップを成功と数えない」(qa-019) を満たせないため。
+      # 副次的に Turso CLI と Platform API token (TURSO_API_TOKEN) への依存も無くなる。
+      - name: control-plane export → gzip
         env:
-          TURSO_API_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
         run: |
           set -euo pipefail
           stamp="$(date -u +%Y-%m-%d)"
           year="$(date -u +%Y)"
-          mkdir -p backup
-          turso db shell "${{ secrets.TURSO_DATABASE_NAME }}" ".dump" > "backup/${stamp}.sql"
-          # 空 dump を成功にしない (DB 接続だけ成功して中身が取れないケースを弾く)
-          bytes=$(wc -c < "backup/${stamp}.sql")
-          echo "dump size: ${bytes} bytes"
-          if [ "$bytes" -lt 100 ]; then
-            echo "::error::dump が異常に小さい (${bytes} bytes)。バックアップとして採用しない"
-            exit 1
-          fi
-          gzip -9 "backup/${stamp}.sql"
-          echo "OBJECT_KEY=db-export/${year}/${stamp}.sql.gz" >> "$GITHUB_ENV"
-          echo "LOCAL_PATH=backup/${stamp}.sql.gz" >> "$GITHUB_ENV"
+          mkdir -p "$GITHUB_WORKSPACE/backup"
+          artifact="$GITHUB_WORKSPACE/backup/${stamp}.jsonl"
+          # --filter は cwd を packages/db にするため、--out は必ず絶対パスで渡す。
+          pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
+            --url "$TURSO_DATABASE_URL" --out "$artifact"
+          # 成果物の採否は verify-export-artifact へ一本化する (実体は parseExportArtifact)。
+          # header の形式・coreTables 19 テーブルとの集合一致・header の行数と実際の行数の一致まで
+          # fail-closed で見るため、schema が異なる接続先や migration 未適用は必ず落ちる。
+          # ここで header を grep したり行数を awk で数えたりすると、ライブラリより弱い検査が
+          # 先に判定してしまう。旧実装の「データ行 0 なら失敗」がまさにそれで、migration 済みだが
+          # まだ利用の無い本番 DB を 3 夜連続で失敗させていた (空 DB の export も復元可能な正しい断面)。
+          pnpm --filter @harness-hub/db exec tsx scripts/verify-export-artifact.ts --file "$artifact"
+          gzip -9 "$artifact"
+          echo "OBJECT_KEY=db-export/${year}/${stamp}.jsonl.gz" >> "$GITHUB_ENV"
+          echo "LOCAL_PATH=${artifact}.gz" >> "$GITHUB_ENV"
 
-      - name: R2 へ upload (S3 互換 API)
+      # --file に渡すパスは必ず絶対パスにする。pnpm --filter は wrangler を apps/hub を cwd として
+      # 起動するため、相対パスだと apps/hub/backup/... を指してしまい upload も検証も落ちる。
+      - name: R2 へ upload (Wrangler)
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+          # Wrangler が読む env 名は固定だが、値は Workers deploy 権限を持たない R2 専用 secret から渡す。
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          aws s3 cp "$LOCAL_PATH" "s3://harness-hub-backups/$OBJECT_KEY" --endpoint-url "$endpoint"
+          pnpm --filter @harness-hub/hub exec wrangler r2 object put \
+            "harness-hub-backups/$OBJECT_KEY" --file "$LOCAL_PATH" --remote
 
-      # upload しただけでは「復元できる」ことの根拠にならないため、実体の存在とサイズを取り直す
+      # upload しただけでは「復元できる」ことの根拠にならないため、実体を取り直して byte 単位で照合する
       - name: upload 結果の検証
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          endpoint="https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
-          remote=$(aws s3api head-object --bucket harness-hub-backups --key "$OBJECT_KEY" \
-            --endpoint-url "$endpoint" --query ContentLength --output text)
-          local_size=$(wc -c < "$LOCAL_PATH")
-          echo "remote=${remote} local=${local_size}"
-          [ "$remote" = "$local_size" ]
+          verify_path="$GITHUB_WORKSPACE/backup/verify-${GITHUB_RUN_ID}.jsonl.gz"
+          pnpm --filter @harness-hub/hub exec wrangler r2 object get \
+            "harness-hub-backups/$OBJECT_KEY" --file "$verify_path" --remote
+          cmp "$LOCAL_PATH" "$verify_path"
+          echo "upload 後に再取得した backup は元ファイルと一致しました"
 
       # 全て成功したときだけ heartbeat を打つ。「cron が動かなかった」と
       # 「動いたが失敗した」の両方を外形監視側で検知させる (qa-027)。
       - name: heartbeat 通知
         if: success()
         run: |
-          if [ -z "${{ secrets.BACKUP_HEARTBEAT_URL }}" ]; then
-            echo "::warning::BACKUP_HEARTBEAT_URL 未設定のため heartbeat を送出していません (cron 失敗検知が効きません)"
-            exit 0
-          fi
           curl -fsS -m 10 "${{ secrets.BACKUP_HEARTBEAT_URL }}"

@@ -1,0 +1,9 @@
+{
+  "goal_spec_sha256_before": "0668066e9ce8425e5dc5266324ba027fe199b8af64c87a24c09bca30651cc8ac",
+  "goal_spec_sha256_after": "0668066e9ce8425e5dc5266324ba027fe199b8af64c87a24c09bca30651cc8ac",
+  "intermediate_line_1_sha256_before": "b099d7b08c97e4bffd8524fd11523db1921332e454c98e87f54cbb9a04a7d939",
+  "intermediate_line_1_sha256_after": "b099d7b08c97e4bffd8524fd11523db1921332e454c98e87f54cbb9a04a7d939",
+  "intermediate_line_count_after": 2,
+  "transcript_goal_spec_or_line_1_write_count": 0,
+  "result": "PASS"
+}

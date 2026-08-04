@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-07-23T09:50:00Z"
+updated_at: "2026-08-04T05:44:22.440339Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
-purpose: "Hub 本体の開発フロー (GitHub Flow + PR 必須・required status checks・PR preview + production 環境・main merge 自動デプロイ・expand/contract migration)、作者ローカル環境規律、dev-graph/beads (bd) タスク優先度選定の MVP ファースト判断軸 (目的・背景・MVP) を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069 の確定内容に適合し、P0〜P5 の開発運用・feature baseline の source lineage 逆引き・開発管理パイプライン改善 8 要件 (qa-067)・タスク優先度選定の MVP ファースト判断軸 (qa-069: 目的=何のために作るか / 背景=どういう経緯か / MVP=今必要な動くもの の3軸を第一ソートキーとし、品質・再現性強化系タスクは MVP 成立後へ繰り延べる。既確定 CI/CD・quality gate 要件は維持) の指針を提供する"
+purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140、C16 qa-141/qa-142、および qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、hook entry point parity、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","evaluator":"assign-system-spec-completeness-evaluator","evidence_ref":"eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json"}
-source_lineage: {"imported_at":"2026-07-23T04:45:00Z","origin_kind":"system-spec-harness","source_digest":"43336931b9d84c400dc5782da751ef86682e031b5169643c25778584c065cd86","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,14 +53,15 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `43336931b9d8…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `7863d7fc569d…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `assign-system-spec-completeness-evaluator` → **PASS** (`eval-log/system-spec-harness/assign-system-spec-completeness-evaluator/completeness-report-20260723-qa069.json`)
-- 取込日時: 2026-07-23T04:45:00Z / plugin: system-spec-harness v0.1.0
+- confirmation: `confirmed` / evaluator: `system-spec-harness compile + coverage validation (qa-139, qa-140)` → **PASS**
+  ([f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) / [exact-13 再登録受領書](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md))
+- 取込日時: 2026-08-03T09:45:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
-正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない)。
+正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない / qa-139: inline Python の Graph authority 書込みを AST で fail-closed 検出 / qa-140: mtime クラスタを診断に限定し reflog で原因確認)。
 
 ## Context and drivers
 
@@ -98,18 +99,82 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 正本章 (system-spec/dev-workflow.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
-### 差分追記 (2026-07-21): 検証証跡の真正性リスク
+## Beads bridge の内部コンポーネント境界 (2026-08-01)
 
-live-trial 証跡の調査 (`HarnessHub-s7b`/`-rix`/`-aoe`/`-m7d`) で、**成果物だけを見る検査では「実行した」と「実行したことにした」を区別できない**というリスクが実測された。同一構造の抜け道が別々の局面で 3 回選ばれている (digest 単独書き換え / 下位 script 直叩き / registration receipt 偽造)。
+`bd-bridge.py` は Beads mutation の唯一の CLI 境界として残し、内部ロジックを
+`contracts` / `graph` / `projection` / `audit` の四 component へ分離する。
+`contracts` と `graph` は Beads へ書かず、`audit` も read-only、書込投影は
+`projection` だけが担う。外部 I/O を持つ関数は `bd=` / `git=` を注入され、
+CLI adapter が呼出時に実行関数を解決する。この境界により、単一チョークポイントを
+維持したまま責務ごとの変更容易性を保つ。一般コードには一律の数値行数上限を設けない。
+行数ゲートは実行時 context へ入る `SKILL.md` と skill の `prompts/` に限定する。
 
-本リスクは製品 (Harness Hub) の仕様ではなく**リポジトリ内の開発ツール統治**に属するため、正本章へは逆輸入しない (`system-spec/dev-workflow.md` qa-066 の「下流投影を system-spec へ逆輸入して二重正本にしない」原則)。詳細と実務ルールは次を参照する。
+詳細な責務、互換性、不変条件、検証証拠は
+[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md)
+を正とする。
 
-- [`doc/evidence-integrity-practices.md`](../doc/evidence-integrity-practices.md) — 3 局面の記録、4 つの教訓 (指標の独立性 / 充足可能性の担保 / 改竄と訂正の同型性 / 検証主体の分離)、導入した検証入口とその限界
+## Beads 自由フィールドの書込境界 (2026-08-02)
 
-検証入口 (いずれも read-only):
+`priority`、`assignee`、`labels` は Dev Graph parity の対象外だが、書込 authority は
+他の mutation と同じ C28 bridge に限定する。C10 guard は直接 `bd update` を一律遮断し、
+CLI adapter は引数解析と receipt、`bd_bridge_contracts.py` は許可 exact-set・priority と
+labels の正規化を担う。labels は `--set-labels` への全置換だけを許し、順序依存の
+add/remove を契約面から排除する。設計判断と検証証拠は
+[dc7 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md)
+を正とする。
 
-| 入口 | 検出対象 |
-|---|---|
-| `validate-receipt.py` (検査 SSOT は `register-package.py` を共有) | registration receipt の手書き・事後改変 |
-| `run-skill-live-trial/scripts/validate-goal-seek-evidence.py` | `goal_seek` 実行契約の省略 |
-| `lint-live-trial-verdict.py --check-provenance` | commit 差分での digest 単独書き換え |
+> **変更履歴**: 2026-07-21〜2026-08-01 の差分追記は
+> [harness-hub-dev-workflow-changelog.md](../docs/features/feat-dev-pipeline-improvement/harness-hub-dev-workflow-changelog.md)
+> へ分割済み (300 行上限超過による remediation)。新規の差分追記は同ファイルへ追記する。
+
+## 外部参考層と能動 plugin の所有境界 (2026-08-02)
+
+`doc/参考Skill/` は比較・移管用の参考層とし、実行時に使う契約は consumer plugin の
+`references/` と resource map が所有する。旧参考 Skill を削除するときは、利用中の契約を
+所有先へ履歴付きで移し、能動参照 0 件・到達可能性・復元経路を同じ変更で検証する。
+製品 runtime の component 境界は変えない。詳細は `system-spec/dev-workflow.md` の
+`qa-122` と [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+を正とする。
+
+## C10 inline Python 静的解析境界 (2026-08-03)
+
+C10 entrypoint は判定順序だけを所有し、inline Python の書込み API 収集を
+`guard_python_writes.py`、副作用のない path 式評価を `guard_python_path_eval.py` が担う。
+両 module は AST だけを使い、subprocess・network・repository file 読込みを遮断経路へ
+持ち込まない。shell 抽出は Python の command 位置、環境変数付き起動、嵌め込み shell を
+区別し、散文として出力する `echo` / `cat` を実行と誤認しない。mutation API は import 解決後の
+qualified name で判定し、同名のユーザー定義関数を巻き込まない。rename / move は source と
+destination の双方、評価不能 path は確定済み
+authority prefix / graph-store tail で fail-closed にする。別 script の本文は PreToolUse の
+時間契約外とし、PostToolUse drift audit が補完する。契約と検証は
+[f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md)
+を正とする。
+
+## hooks entry point 宣言・登録・実体の 3 者一致境界 (2026-08-04)
+
+hooks の entry point 台帳は `package-contract.json` の `entry_points.hooks` が所有し、
+その parity 検査は dev-graph 専用の契約テストではなく repo 全体の必須ゲート
+`scripts/validate-plugin-completeness.py` (HK-001..003) が単一 SSOT として持つ。
+
+**一般化する判断の根拠**: 宣言 ⊆ 実体だけを見る旧検査では台帳の過少申告 (登録済み
+かつ未宣言) を検出できず、「乖離が無い」ことを確認する手段自体が無かった。実際に
+一般化した検査で harness-creator の `auto-sync-on-session-start` 1 件が検出され、
+移行コストは宣言 1 行の追加に収まった。同スクリプトは behavior closure の外側にある
+ため、検査追加が live-trial receipt を失効させない点も採用理由である。
+
+- HK-001 登録 ⊆ 宣言。登録元は `hooks/hooks.json` と manifest inline hooks の和を取る
+  (manifest が hooks.json を参照していなくても Claude Code は読むため fail-closed)。
+- HK-002 宣言 ⊆ 登録。`hooks/hooks.json` または manifest inline hooks の少なくとも一方を
+  持つ plugin に適用する。登録経路自体を持たない plugin へ適用すると「未配線」を
+  「宣言漏れ」と取り違える。
+- HK-003 残余は import 専用 support module であること。判定は命名規則だけに頼らず
+  shebang と `__main__` ブロックの不在まで要求し、責務分割 (500 行規約) で生まれる
+  support module を偽陽性にせず、snake_case を付けた実 hook の宣言漏れも通さない。
+
+判定ロジックの複製は禁じる。dev-graph の契約テストは同スクリプトの関数を import して
+実 repo へ適用するだけとし、plugin 専用実装が repo 全体の検査を追い越す被覆差
+(HarnessHub-vf66) を再発させない。
+
+## C16 Beads ready payload 欠落の観測境界 (2026-08-03)
+
+C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。

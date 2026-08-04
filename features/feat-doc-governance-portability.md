@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)"
 owners: ["daishiman"]
 created_at: "2026-07-22T01:25:08Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-08-02T20:49:55.234469Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-qa070-implementation-feature-20260722","feat-dev-pipeline-improvement"]
 resource_scope: ["features/feat-doc-governance-portability.md"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-doc-governance-portability/d33c318dbf7cf3f407daf50b396531f67b365d7d8743146223f46224a8958aee/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-22T01:25:08Z","origin_kind":"generated","source_digest":"0c48fb74e1f93e4e6fe6e4f31cf5e04c4b3839537fae063002a3ce2f3e10b2bf","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-22T01:25:08Z","origin_kind":"generated","source_digest":"ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-070 ドキュメント規約 2 件の実装 3 スコープから導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-doc-governance-portability.md","confidence":0.9}]
@@ -95,3 +95,13 @@ qa-070 (appr-008 承認) で確定したドキュメント規約 2 件 — 仕�
 
 - 次工程: `/dev-graph plan --feature-id feat-doc-governance-portability --feature-context features/feat-doc-governance-portability.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## 保守反映 (2026-08-02 / `HarnessHub-ym9h`)
+
+- 外部参考層を能動 plugin の正本にしない既存方針を、`system-spec/dev-workflow.md` の
+  `qa-122` で明文化した。
+- `aiworkflow-requirements` 依存の参考コピー 275 ファイルを削除し、利用中の外部 CLI
+  契約 1 ファイルだけを consumer plugin の `references/` へ履歴付きで移す。
+- 実装 task は [task-remove-aiworkflow-reference-skill-20260802](../tasks/task-remove-aiworkflow-reference-skill-20260802.md)、
+  判断と検証は [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
+  を正とする。製品 runtime の UI/API/DB/auth/deploy には影響しない。

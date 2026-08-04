@@ -1,6 +1,6 @@
 """live-trial fixture 生成器 (--kind レジストリ) の契約テスト。
 
-固定する契約は 3 つある。
+固定する契約は 4 つある。
 
 1. **決定論**: 同じ ``--kind`` と同じ ``--out`` からは、何度生成しても同じ内容になる。
    fixture の実体は ``eval-log/dev-graph/live-trial-fixtures/`` (.gitignore 対象) にしか
@@ -11,6 +11,11 @@
 3. **repository_id の実測**: config の repository_id は生成先の git common dir から
    導出した値でなければならない (C24 resolve-repo-context.py の fail-closed 条件)。
    ハードコードすると起動ゲートを迂回した偽 PASS を生む。
+4. **repo-config 適合**: 生成した config が validate-repo-config.py を violation 0 で
+   通る。2 の graph 側と対になる契約で、これが無かったために HarnessHub-n88
+   (execution_tracker.mode=github と github.enabled=false の同時宣言) が 8 kind 全ての
+   fixture で気づかれずに live-trial を通っていた。schema 違反 config を渡された被験
+   skill は「本番なら起動ゲートで落ちる入力」で実走したことになり、trial の意味が失われる。
 
 kind の一覧は生成器の ``BUILDERS`` から採るので、新しい kind を登録して本テストを
 足し忘れても自動的に検査対象へ入る。
@@ -30,6 +35,9 @@ import pytest
 PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 VALIDATOR = PLUGIN / "scripts" / "validate-graph-schema.py"
+CONFIG_VALIDATOR = PLUGIN / "scripts" / "validate-repo-config.py"
+SOURCE_DIGEST_VALIDATOR = PLUGIN / "scripts" / "validate-source-digest.py"
+SYSTEM_PLAN_VALIDATOR = PLUGIN.parent / "system-dev-planner" / "scripts" / "validate-system-plan.py"
 
 
 def _load_builder():
@@ -48,9 +56,11 @@ def _load_builder():
 
 BUILDER_MODULE = _load_builder()
 KINDS = sorted(BUILDER_MODULE.BUILDERS)
-# C01 init の被験対象は「dev-graph 未初期化の repository」なので graph を持たない。
-# 検証すべき graph が無いことがこの kind の正しい初期状態であり、C11 の対象外になる。
+# C01 init の被験対象は「dev-graph 未初期化の repository」なので graph も config も
+# 持たない。検証すべき state が無いことがこの kind の正しい初期状態であり、C11 と
+# repo-config 検証の双方から外れる (config を先に置くと init が何を作ったか判別できない)。
 KINDS_WITHOUT_GRAPH = {"init"}
+KINDS_WITHOUT_CONFIG = {"init"}
 
 
 def _build(kind: str, out: Path) -> dict:
@@ -116,6 +126,49 @@ def test_graph_passes_c11(kind: str, built: dict[str, Path]) -> None:
     assert proc.returncode == 0, f"C11 failed for --kind {kind}:\n{proc.stdout}{proc.stderr}"
 
 
+@pytest.mark.parametrize("kind", sorted(set(KINDS) - KINDS_WITHOUT_CONFIG))
+def test_config_passes_repo_config_validation(kind: str, built: dict[str, Path]) -> None:
+    """生成した config が validate-repo-config.py を violation 0 で通る。
+
+    graph 側 (C11) と対になる契約。fixture の config は被験 skill が起動時に読む入力
+    そのものなので、schema 違反のまま trial を回すと「本番なら起動ゲートで落ちる条件」
+    での実走になり、PASS が挙動の保証にならない。
+    """
+    out = built[kind]
+    proc = subprocess.run(
+        [sys.executable, str(CONFIG_VALIDATOR),
+         "--config", str(out / ".dev-graph" / "config.json"),
+         "--repo-root", str(out)],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 0, (
+        f"repo-config validation failed for --kind {kind}:\n{proc.stdout}{proc.stderr}"
+    )
+    assert json.loads(proc.stdout)["violations"] == []
+
+
+def test_repo_config_builder_rejects_incoherent_tracker_and_projects() -> None:
+    """mode と Projects 定義の矛盾を、config を組み立てる時点で拒否する。
+
+    schema の条件連鎖 (mode ∈ {github, both} → github.enabled=true → default Projects
+    ちょうど 1 件) を builder 側の不変条件として持つ。ここが素通りすると
+    HarnessHub-n88 と同じく「schema 違反 config が全 kind へ静かに配られる」再発になる。
+    """
+    module = BUILDER_MODULE
+    with pytest.raises(ValueError):
+        # GitHub トラッカー宣言に対して Projects 定義が無い。
+        module._repo_config("local:sha256:" + "0" * 64, tracker_mode="github", projects=[])
+    with pytest.raises(ValueError):
+        # default=true が 2 件 (schema は maxContains=1)。
+        duplicated = [module._planning_project(), {**module._planning_project(), "alias": "second"}]
+        module._repo_config("local:sha256:" + "0" * 64, tracker_mode="github", projects=duplicated)
+    with pytest.raises(ValueError):
+        # GitHub 無効なのに Projects 定義を持つ (使われない設定の持ち込み)。
+        module._repo_config(
+            "local:sha256:" + "0" * 64, tracker_mode="beads", projects=[module._planning_project()]
+        )
+
+
 @pytest.mark.parametrize("kind", sorted(set(KINDS) - KINDS_WITHOUT_GRAPH))
 def test_repository_id_is_measured_from_git_common_dir(kind: str, built: dict[str, Path]) -> None:
     """config の repository_id が生成先の git common dir から導出された実測値である。
@@ -152,6 +205,11 @@ def test_node_fixture_declares_no_artifact_kind(built: dict[str, Path]) -> None:
     assert len(batch) == 5
     for artifact in batch:
         assert set(artifact) == {"title", "body", "tags"}
+    # shell 展開を避けた入力コピーを goal-seek evidence 記録後に置けるよう、空の staging
+    # directory は fixture commit に含める。分類済み成果物を先取りしてはいけない。
+    staging = built["node"] / "inputs"
+    assert staging.is_dir()
+    assert [path.name for path in staging.iterdir()] == [".gitkeep"]
     # 分類先の content root も空のままであること (登録結果を先に置いていない)。
     graph = json.loads((built["node"] / ".dev-graph" / "state" / "graph.json").read_text(encoding="utf-8"))
     assert graph["nodes"] == []
@@ -200,6 +258,68 @@ def test_requirements_fixture_does_not_preseed_c04_outputs(built: dict[str, Path
     assert baseline["subject_outputs_absent_at_baseline"]
 
 
+def test_requirements_fixture_scope_closure_passes_source_digest(
+    built: dict[str, Path],
+) -> None:
+    """C04 が feature の architecture closure を除外せず gate できる。"""
+    out = built["requirements"]
+    graph = json.loads(
+        (out / ".dev-graph" / "state" / "graph.json").read_text(encoding="utf-8")
+    )
+    registered = ",".join(node["graph_node_id"] for node in graph["nodes"])
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SOURCE_DIGEST_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--registered",
+            registered,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["registered_mismatch"] == []
+    assert report["checked"] == len(graph["nodes"])
+
+
+def test_requirements_fixture_resolves_published_package_from_current_pointer(
+    built: dict[str, Path],
+) -> None:
+    """C04 の promotion 後入口は --feature-package で current pointer を解決できる。"""
+    out = built["requirements"]
+    pointer = (
+        out
+        / ".dev-graph"
+        / "plan-state"
+        / "current"
+        / "feature-package-F-LIVE-001.json"
+    )
+    payload = json.loads(pointer.read_text(encoding="utf-8"))
+    assert payload["feature_package_id"] == "feature-package/F-LIVE-001"
+    assert payload["published_path"] == "system-plan/F-LIVE-001"
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(SYSTEM_PLAN_VALIDATOR),
+            "--repo-root",
+            str(out),
+            "--feature-package",
+            "feature-package/F-LIVE-001",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    report = json.loads(proc.stdout)
+    assert report["status"] == "pass"
+
+
 def test_status_fixture_exposes_a_dependency_edge(built: dict[str, Path]) -> None:
     """C18 が ready/blocked を区別できる最小構成 (task 2 件 + 前方依存 1 本) である。"""
     graph = json.loads(
@@ -216,9 +336,18 @@ def test_distinct_output_paths_get_distinct_repository_ids(tmp_path: Path) -> No
     first = _build("status", tmp_path / "a")
     second = _build("status", tmp_path / "b")
     assert first["repository_id"] != second["repository_id"]
-    # path 依存値は repository_id に閉じているので、内容 digest は path をまたいで一致する。
+    # path 依存値は repository_id フィールドに閉じている。config だけでなく graph store も
+    # canonical envelope の一部として repository_id を持つので (C11 の exact-4-key)、
+    # 生の digest は 2 file で割れる。
     manifest_a = _content_manifest(tmp_path / "a")
     manifest_b = _content_manifest(tmp_path / "b")
     assert set(manifest_a) == set(manifest_b)
     differing = {key for key in manifest_a if manifest_a[key] != manifest_b[key]}
-    assert differing == {".dev-graph/config.json"}
+    assert differing == {".dev-graph/config.json", ".dev-graph/state/graph.json"}
+    # 「repository_id に閉じている」ことは、その 1 key を落とした投影が一致することで示す。
+    # digest の差分集合を数えるだけだと、同じ file の別 key が動いても検出できない。
+    for relative in sorted(differing):
+        document_a = json.loads((tmp_path / "a" / relative).read_text(encoding="utf-8"))
+        document_b = json.loads((tmp_path / "b" / relative).read_text(encoding="utf-8"))
+        assert document_a.pop("repository_id") != document_b.pop("repository_id")
+        assert document_a == document_b

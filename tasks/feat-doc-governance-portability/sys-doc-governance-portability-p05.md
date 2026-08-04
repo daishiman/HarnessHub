@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線"
 owners: ["daishiman"]
 created_at: "2026-07-22T02:31:19Z"
-updated_at: "2026-07-22T02:47:44Z"
-status: "active"
+updated_at: "2026-07-26T01:19:20.811908Z"
+status: "closed"
 depends_on: ["SYS-DOC-GOVERNANCE-PORTABILITY-P04"]
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow"]
 resource_scope: ["scripts/lint-doc-line-limit.py","scripts/lint-mechanism-knowledge-boundary.py","scripts/lint-portability-knowledge-optin.py","scripts/doc-line-limit-allowlist.json","tests/scripts-root/test_root__lint_doc_line_limit.py","tests/scripts-root/test_root__lint_mechanism_knowledge_boundary.py","tests/scripts-root/test_root__lint_portability_knowledge_optin.py",".github/workflows/governance-check.yml"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-24T08:25:25Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-22T09:35:00Z","missing_sections":[],"status":"complete"}
 ---
 

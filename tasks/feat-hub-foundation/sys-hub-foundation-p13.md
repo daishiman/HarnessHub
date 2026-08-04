@@ -12,8 +12,8 @@ iteration: null
 title: "Hub 基盤 本番リリース・デプロイ"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:15:47Z"
-updated_at: "2026-07-19T14:15:47Z"
-status: "active"
+updated_at: "2026-08-02T05:46:07.491153Z"
+status: "closed"
 depends_on: ["SYS-HUB-FOUNDATION-P12"]
 related_nodes: ["feat-hub-foundation","arch-harness-hub-infrastructure","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/middleware/","apps/hub/src/shared/","docs/features/feat-hub-foundation/release-notes.md","packages/estimation/","packages/inspection/","packages/schemas/","packages/ui/"]
@@ -42,8 +42,8 @@ beads_linkage: {"bd_issue_id":"HarnessHub-37h.13","linked_at":"2026-07-18T01:45:
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
-execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+execution_contexts: [{"base_branch":"main","branch":"devgraph/SYS-HUB-FOUNDATION-P13","head_sha":"f055796a5412a8f1ec9b59e9cb2f589663650ffa","last_seen_at":"2026-07-25T11:07:45.666064Z","lease_acquired_at":"2026-07-25T11:01:35.019032Z","released_at":"2026-07-25T11:07:45.665778Z","state":"released","worktree_id":"wt_34e5e34b31310b4a"}]
+completion_evidence: {"completed_at":"2026-07-25T16:06:31Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,22 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-hub-foundation` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## リリース後 security hardening (2026-07-29 / `HarnessHub-bda4`)
+
+- P13 後に判明した Cloudflare token の権限共用を、deploy / rollback 用 `CLOUDFLARE_API_TOKEN` と backup / production smoke 用 `CLOUDFLARE_R2_API_TOKEN` へ分離した。
+- repository 内の受入は、Actions secret 台帳と workflow 参照の双方向一致、deploy step と R2 操作 step の相互 token 不参照、task / graph / system-spec の品質ゲート再実行とする。
+- Cloudflare での token 発行、GitHub secret 投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態を変更する後続作業として `HarnessHub-bda4` で継続する。実測前に本項を完了証拠へ読み替えない。
+- 仕様影響は infrastructure.web の credential 境界にあり、正式な reopen / compile 結果を `system-spec/infrastructure.md` qa-091、詳細を `docs/features/feat-hub-foundation/ci-token-least-privilege-spec-reflection-receipt.md` に記録する。
+
+## 最終 closure (2026-08-02 / `HarnessHub-37h.13`)
+
+- P13 の責務は本番 release / deploy と再実行可能な証跡の確立までとして完了した。
+- SLO 30 日観測は独立 follow-up `HarnessHub-37h.15` へ分離済みで、ユーザー判断により `not_applicable` で閉じた。これは SLO PASS ではなく、P13 と feature の delivery closure を阻害しないという受入境界の決定である。
+- task 仕様書の再検証は `validate-system-plan.py --feature-package feature-package/feat-hub-foundation` を使い、結果を [feature closeout 仕様反映受領書](../../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) に残す。
+
+## post-release CWV hardening (2026-08-02 / `HarnessHub-9cgb`)
+
+- P13 で確立した G11 定期測定を、実際に認証が必要な `/catalog` へ拡張する。通常の session/access token を CI に複製せず、最大 5 分・固定 tenant/workspace・GET/HEAD catalog read 専用の `CWV_PROBE_*` credential を使う。
+- repository 内の実装・secret 台帳・artifact sanitizer・負例テストは本変更で完了する。Worker/GitHub secret 投入、main deploy、初回 Lighthouse 実測は外部状態変更のため `HarnessHub-9cgb` を open のまま追跡する。
+- 仕様正本は `system-spec/*` の qa-133、詳細手順と受領書は [CWV probe 仕様反映受領書](../../docs/features/feat-hub-foundation/cwv-probe-credential-spec-reflection-receipt.md) を参照する。

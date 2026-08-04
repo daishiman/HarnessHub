@@ -1,25 +1,33 @@
 {
-  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-modify", "skill_md_sha256": "aff9aeb31b92cc21440f35592c9ad216e049ab6f99eac7febacf9347d2080576"},
+  "target": {"plugin": "slide-report-generator", "skill": "run-slide-report-modify", "skill_md_sha256": "841df17edb2b95adcc24e77b22e9641da3904463493901e9302c9fa4c003b3b2"},
   "review_kind": "elegance",
   "verdict": "PASS",
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 1},
-  "reviewer": "review-group-c-independent-elegance",
-  "reviewed_at": "2026-07-12T00:22:24Z",
-  "iterations": 2,
+  "findings_summary": {"contradiction": 0, "omission": 2, "inconsistency": 2, "dependency_break": 0, "smell": 2},
+  "reviewer": "claude-opus-5-rescue-independent-elegance",
+  "reviewed_at": "2026-07-28T00:00:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "IN1: mode inference, explicit override and validate-output-mode fail-closed gate occur before the isolated modifier worker; slide/report paths preserve their own structure SSOT.",
-      "OUT1/C1-C3: modification rules prohibit whole rewrites, preserve design core/non-target regions, and require slide verify/evaluate/print or report rerender/runtime/visual evaluation. test_validate_report_visual checks missing sections, excess visuals, placeholders and CLI 0/1/2 behavior.",
-      "C4: prompt, two mode-specific rule references, three schemas, seven runtime validators/renderers and name-based worker all exist; generation/cross-deck responsibilities are delegated. plugin pytest 131 PASS."
+      "C1(矛盾なし): plugin root を `${SRG_ROOT:-$CLAUDE_PLUGIN_ROOT}` へ変える変更が SKILL.md 全 8 箇所 (役割行・deterministic_checks 6 コマンド・Gotchas) に行き渡り、skill dir 配下に素の `$CLAUDE_PLUGIN_ROOT` は 0 件。宣言と実装も一致する (build-playwright-runtime.py:35 と validate-output-mode.py:98 が環境変数 SRG_ROOT を優先解決)。同 branch で prompts/R1-orchestrate.md と prompts/R2-agent-slide-report-modifier.md も同記法へ追従済み。",
+      "C2(漏れなし)/IN1: CONST_001-012→013・RCONST_001-012→013 の繰り上げが実体を伴う。references/modification-rules.md:86 に CONST_013、references/report-modification-rules.md:90 に RCONST_013 (いずれも入口ホリゾンタル保持) が実在し、012 の取り残し参照は skill 配下 0 件。IN1 の送信前ゲート (validate-output-mode.py --mode/--report-type・fail-closed) は R1 に置かれ mode 判定→worker 伝播の順序が保たれている。",
+      "C3(整合性あり)/OUT1: 追加された `build-playwright-runtime.py --install` は実需に裏付けられた依存修正で、宣言のための宣言ではない。R3 の検証系は plugin-local Chromium を前提とする (verify-slides.js:13 が playwright-runtime.js 経由、verify-report-runtime.js:41-43/122-123 が chromium.launch を直接使用) ため、追加前は R3 が 'playwright unavailable' で落ちる導線だった。vendor 側 playwright-runtime.js:22-24 の setupCommand() も新名を返し案内文が一致する。",
+      "C4(依存関係整合): SKILL.md が参照する 15 パス (prompts/manifest/schemas 5・plugin 共有 scripts 3・skill 私有 references 2・vendor scripts 5) を存在検査し MISSING 0。workflow-manifest.json の resources 14 件すべて解決 (dangling 0)、phase の resourceIds に未宣言 id 0。改名は skill 層で完結しており 3 箇所 (R1 resourceIds・R3 resourceIds・resources[].id) すべて `script-build-playwright-runtime` へ更新済みで、skill 配下に `setup-playwright` の dangling は 0 件。統率 agent `slide-report-modifier` と下流 4 agent (html-generator/structure-designer/report-structure-designer/ai-image-diagram-producer) および deck-evaluator はすべて plugins/slide-report-generator/agents/ に実在し、Task の name 起動が成立する。",
+      "決定論根拠: plugin pytest 136 passed、lint-contract-drift PASS(count=0)、lint-reference-attribution PASS、validate-plugin-completeness PASS、build-playwright-runtime.py --check exit 0。"
     ],
-    "negative_feedback": ["low: static acceptance strongly validates report structure/visual preservation, while exact byte-level non-target diff preservation still depends on the modifier's change report and runtime review."],
-    "iteration": 2,
+    "negative_feedback": [
+      "[medium・inconsistency・plugin scope] lint-vendor-parity.py が FAIL (total=191 ok=190 mismatch=1)。本 branch の改名作業で vendor/scripts/hooks/deck-postgen-hook.js のメッセージを `npx playwright install chromium` から `scripts/build-playwright-runtime.py --install` へ書き換えたが、vendor-digest-manifest.json の pin を 7c6e2165… に更新した一方で実 blob は f3171915… であり不一致。origin/main では pin 3e527c76… と blob 3e527c76… が一致し PASS していたので、これは本 branch が持ち込んだ退行であり merge 前に pin 再計算が必要。SKILL.md 自体は当該 hook を参照しないため本 skill の adequacy は損なわないが、改名整合の検証対象としては未完了。なお sibling の run-slide-report-generate verdict は『pin は origin/main の blob とも既に不一致で本 branch 由来の退行ではない』と記述するが、実測では origin/main は一致しており当該記述は誤りである。",
+      "[low・inconsistency] CONST_013 の実質が slide 側で本文に出ていない非対称。report 側 (L87) は『入口ホリゾンタル（タイトル/リード/summary の読者価値・RCONST_013）』と新規制約の中身を明示したのに、slide 側 (L86) は範囲を CONST_001-013 へ繰り上げただけで同期維持の話に留まる。CONST_013 は slide でもタイトルスライド・冒頭キーメッセージ・セクション扉に効く対称な制約なので、router 要約が片側しか言及しないと slide 修正時に新規制約を取りこぼす導線になる。",
+      "[low・smell] provisioning を『決定論チェック (deterministic_checks)』ブロックへ同居させた層の混在。L98 の `--install` は検査でなく副作用を持つ復元コマンドだが、同ブロックを締める L114 は『いずれも全ゲート exit 0 を完成根拠とする』と宣言するため、状態変更が完成根拠のゲート列に混ざる。sibling の run-slide-report-generate:124 は `--install && validate-output-mode.py --preflight` と連結して検査で閉じるのに対し、modify は `--preflight` を持たず復元成否を確かめる手段がブロック内に無い。",
+      "[low・omission] `### R1: 修正対象と指示の確定` 節が Chromium 復元に触れない。workflow-manifest.json の description と R1 phase title は『R1 でplugin-local Chromiumを復元・検査し』と宣言し、prompts/R1-orchestrate.md:84 も build-playwright-runtime.py を『R1 (送信前・必須) / R3 (再確認)』へ割り当てるのに、SKILL.md の R1 本文には記述が無く deterministic_checks でも 【共通】表記に留まる。router と manifest の phase 対応がわずかに非対称。",
+      "[low・smell] OUT1 (verify_by: test) の受け皿が依然薄い。plugins/slide-report-generator/tests/ は 4 本 (test_build_playwright_runtime / test_lint_contract_drift / test_validate_output_mode / test_validate_report_visual) で、『指定箇所のみが修正され非対象箇所が不変』を差分レベルで確認する受入テストは存在しない。非対象不変性は今も modifier の修正レポートと R3 の視覚ゲートに依存しており、前 verdict (sha aff9aeb3…) の同趣旨の低指摘が未解消のまま残る。"
+    ],
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-skill-sha-change",
     "next_action": "none"
   },
-  "notes": "Meaning-preserving rubric heading correction was the only required change; design remains coherent and dependencies resolve."
+  "notes": "救出 branch の未レビュー変更 (origin/main 比 +13 -11) に対する genuine 再評価であり、旧 verdict (sha aff9aeb3…) の引き写しではない。実測根拠: (1) SKILL.md 参照 15 パスを存在検査し MISSING 0、workflow-manifest.json resources 14 件すべて解決。(2) 改名整合を 3 層で実測 — manifest の id/path/phase resourceIds 3 箇所すべて build-playwright-runtime 系へ更新済み、skill 配下の setup-playwright dangling 0 件、vendor playwright-runtime.js:22-24 の setupCommand() も新名。(3) CONST_013/RCONST_013 が references の L86/L90 に実在し繰り上げが空振りでないことを確認。(4) SRG_ROOT が scripts 側で実装済み (build-playwright-runtime.py:35・validate-output-mode.py:98) で宣言と実装が一致。(5) plugin pytest 136 passed、lint-contract-drift/lint-reference-attribution/validate-plugin-completeness いずれも PASS、build-playwright-runtime.py --check exit 0。C1-C4 に high severity の破れは無く PASS。ただし plugin scope の medium 1 件 (lint-vendor-parity FAIL = deck-postgen-hook.js の digest pin 7c6e2165… と実 blob f3171915… の不一致。origin/main は pin と blob が一致して PASS しており本 branch 由来の退行) と low 4 件を負のフィードバックとして残す。medium は SKILL.md の依存閉包外のため本 verdict を FAIL にはしないが、plugin 宣言ゲートとして merge 前の pin 再計算を必須とする。本評価は content-review-protocol の incremental 経路であり、30 思考法の網羅実行は行っていない。"
 }

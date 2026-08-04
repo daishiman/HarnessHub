@@ -1,4 +1,4 @@
-// HF-A1-CI-002/003: npm 混入検査が実効的であること、および packageManager が pnpm に pin されていること
+// HF-A1-CI-002/003/004: pnpm 制約と安定した workspace test 実行を fail-closed で検査する
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -11,13 +11,24 @@ const SCRIPT = path.join(REPO_ROOT, 'scripts/ci/check-pnpm-only.mjs');
 
 const workDirs: string[] = [];
 
-/** 検査対象の最小 workspace を作る。lockfile を置くかどうかで違反状態を切り替える。 */
-function makeWorkspace(options: { packageManager?: string; lockfile?: string }): string {
+/** 検査対象の最小 workspace を作る。各 option で違反状態を切り替える。 */
+function makeWorkspace(options: {
+  packageManager?: string;
+  lockfile?: string;
+  workspaceConcurrency?: number | null;
+}): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'hub-pnpm-only-'));
   workDirs.push(dir);
   const pkg: Record<string, unknown> = { name: 'fixture', private: true };
   if (options.packageManager !== undefined) pkg.packageManager = options.packageManager;
   writeFileSync(path.join(dir, 'package.json'), JSON.stringify(pkg, null, 2), 'utf8');
+  if (options.workspaceConcurrency !== null) {
+    writeFileSync(
+      path.join(dir, 'pnpm-workspace.yaml'),
+      `packages: []\nworkspaceConcurrency: ${options.workspaceConcurrency ?? 1}\n`,
+      'utf8',
+    );
+  }
   if (options.lockfile) {
     mkdirSync(path.join(dir, 'apps/hub'), { recursive: true });
     writeFileSync(path.join(dir, 'apps/hub', options.lockfile), '{}', 'utf8');
@@ -54,6 +65,25 @@ describe('HF-A1-CI-003: packageManager の pnpm pin', () => {
   it('pnpm 以外に pin されていれば非ゼロ終了する', () => {
     const result = runCheck(makeWorkspace({ packageManager: 'npm@10.0.0' }));
     expect(result.status).not.toBe(0);
+  });
+});
+
+describe('HF-A1-CI-004: workspace test の直列実行', () => {
+  it('workspaceConcurrency が 1 なら pass する', () => {
+    const result = runCheck(makeWorkspace({ packageManager: 'pnpm@10.9.0' }));
+    expect(result.status).toBe(0);
+  });
+
+  it('pnpm-workspace.yaml が無ければ非ゼロ終了する', () => {
+    const result = runCheck(makeWorkspace({ packageManager: 'pnpm@10.9.0', workspaceConcurrency: null }));
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('missing-pnpm-workspace');
+  });
+
+  it('workspaceConcurrency が 1 以外なら非ゼロ終了する', () => {
+    const result = runCheck(makeWorkspace({ packageManager: 'pnpm@10.9.0', workspaceConcurrency: 2 }));
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('workspace-concurrency-not-serial');
   });
 });
 

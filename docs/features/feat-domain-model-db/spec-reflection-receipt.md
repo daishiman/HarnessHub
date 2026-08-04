@@ -1,0 +1,217 @@
+---
+status: recorded
+layer: feature-design
+updated: 2026-07-28
+task: SYS-DOMAIN-MODEL-DB (最終レビュー / 仕様反映判定)
+parent_feature: feat-domain-model-db
+feature_package_id: feature-package/feat-domain-model-db
+feature_context_digest: sha256:68f274de9cd604964c4499897cc3bf2efc88d09bdaf730db7640c5f09c9caffc
+package_digest: sha256:6ac94e1d58326eb092a3e9e7b3a139d4041a0a2988faa3266e4a4eaceb84a73b
+beads: HarnessHub-u6q
+dev_graph_node: feat-domain-model-db
+judged_at: 2026-07-24
+reviewer: independent-fork (spec-impact 監査。read-only + digest 実測 + 検証コマンド実走)
+---
+
+# feat-domain-model-db 仕様反映 受領書
+
+> **位置づけ**: beads `HarnessHub-u6q` (dev-graph node `feat-domain-model-db`) の実装 (packages/db) について、コミット前に「正本 spec (system-spec/・architecture/・features/) への反映が必要か」を独立コンテキストで判定した受領書。判定に用いた根拠と、反映を要さないと判断した理由、および spec 文書間の追従遅れを扱う follow-up の対応関係を記録する。
+
+## 1. 判定結論
+
+**正本 (system-spec/・architecture/・features/) への手編集を要する実質 drift: なし。**
+
+実装は正本 spec および正本が参照する詳細定義 (`docs/backend-spec.md` §2.2/§5.1) と整合する。正本を手編集せず、既存の正規フロー (dev-graph follow-up) で追従を継続する。
+
+## 2. 正本無改変の実測根拠 (fact)
+
+- **正本 3 ファイルの digest 一致**: `system-spec/database.md` の実 sha256 = `0cc8dee5…` は wrapper `architecture/harness-hub-data.md` の記録値と一致。`system-spec/backend.md` の `f6ba2193…` も `architecture/harness-hub-backend.md` と一致。`git status --porcelain system-spec/ architecture/ features/` は空 = 本タスクで正本は未改変。
+- **本コミットの変更集合は正本を含まない**: 変更は `packages/db/**`・`docs/features/feat-domain-model-db/**`・`.github/workflows/ci.yml`・`pnpm-lock.yaml` に限定 (74 files)。governed な `system-spec/`・`architecture/`・`features/`・`tasks/` への差分は 0。
+
+## 3. 整合の確認 (実装 ↔ 正本)
+
+| 契約 | 実装 | 正本 | 判定 |
+|---|---|---|---|
+| コアドメイン 18 テーブル | `schema/index.ts` coreTables = 18 / migration CREATE TABLE = 18 | `docs/backend-spec.md` §2.2 の 18 テーブル | 一致 |
+| User 基底 (owner) | `schema/core/identity.ts` users に department/salary/role enum/status enum を含む完全基底 | §2.2 「既存確定・不変」の users 行 | 一致 (owner=feat-domain-model-db は ADR §1 で確定) |
+| releases immutable (I3) | `repository/releases.ts` は status 以外の更新関数を非公開。status enum=available/suspended/deprecated | §2.2 immutable・更新は status のみ | 一致 |
+| publish_requests 状態機械 | `schema/core/publish.ts` 9 状態 + partial UNIQUE (終端除外) | §5.1 の 9 状態機械 | 完全一致 |
+| audit hash chain | `schema/core/security.ts` seq/prev_hash/event_hash + UNIQUE(tenant_id,seq)。repository は append/read のみ | §2.2 append-only hash chain | 一致 |
+| 封筒暗号化 DEK | encryption_keys: purpose enum(salary/idp_secret) + UNIQUE(purpose,key_version)・DEK 平文非保存 | §2.2 封筒暗号化 | 一致 |
+| 接続層隔離 (qa-020/D2) | `check-connection-layer-isolation.ts` が packages/db 外の driver import を fail-closed 禁止 (違反 0) | qa-020 | 一致 |
+| D4 行レベルスコープ | tenant_id 保有 14 + TENANT_SCOPE_EXEMPT 4 = 18。全 repository 操作で WHERE tenant_id 強制 | qa-060 (P0 から必須) | 一致 |
+| export マスク保持 (qa-019) | `backup/export.ts` は暗号文を暗号文のまま転写・decrypt 呼出 0 | qa-019「常にマスク」 | 一致 |
+| qa-045 tenant_data_objects | schema/migration に不在 (本 digest スコープ外) | database.md qa-045 | scope-out 遵守 |
+
+## 4. 反映を要さない判断理由 (governance)
+
+`system-spec/`・`architecture/`・`features/` は dev-graph が digest 付きで生成する **read-only な正本** である (`requirements-baseline.md` にも「features/ 配下は読み取り専用のため訂正は dev-graph への follow-up として申し送る」と明記)。実装が正本と整合している以上、正本の手編集は不要であり、かつ手編集は wrapper/completeness-report が保持する digest を破壊して validate 失敗 (既知の 27 violations クラス) を誘発するため行わない。spec 文書間に残る追従遅れは、正規フロー (dev-graph 再生成 / 該当 feature の再実行) で解消する。
+
+## 5. spec 文書間の追従遅れと follow-up 対応 (既存 tracker へマップ)
+
+| # | 追従遅れ | 是正経路 | 既存 tracker |
+|---|---|---|---|
+| G1 | `features/feat-domain-model-db.md` 上流未解決節が User owner「未確定」のまま stale (ADR §1 で確定済み) | dev-graph 再生成での features md 更新 | HarnessHub-4q8 / HarnessHub-8vx (promoted package 遡及契約失効の是正) |
+| G2 | `feat-user-org-admin` plan が User 拡張列 (department/salary) を記述し owner 決定と矛盾 | 当該 feature (xwt) の P02 再設計 | HarnessHub-xwt.2 (アーキ設計: User拡張/TenantCoefficient・PIIガード, open) |
+| G3 | qa-045 tenant_data_objects (本 digest スコープ外) | 別 feature で実装 | HarnessHub-47b (.1 要件 / .5 実装, open) |
+| G4 | releases/target_channels の tenant_id 非正規化・encryption_keys の現行 tenant 非スコープ | 段階設計 (手編集不要。D4/qa-024 と整合) | HarnessHub-47b.8 (per-tenant DEK migration) |
+
+いずれも実装 (packages/db) 側の是正は不要。新規 follow-up の起票は不要 (既存 open tracker が被覆)。
+
+## 6. 環境制約の申し送り
+
+- ~~**beads mutation 不可**~~ — **【2026-07-25 訂正: 誤診断だった】** guard hook (`plugins/dev-graph/hooks/guard-graph-schema.py:541`) は `BD_MUTATION.search(command) and "bd-bridge.py" not in command` という**部分文字列判定**であり、チョークポイント (検問所) スクリプト `plugins/dev-graph/scripts/bd-bridge.py` は worktree・origin/main とも tracked で実在する。「不在」と判定したのは root 直下 `scripts/bd-bridge.py` のみを見た誤りで、beads の update / close / note 追記は実行可能。実際に u6q へ PR link を追記して実証済み。唯一の制約は `--op create` (新規 issue 作成) が graph node を要求する点のみ。
+- e9b / x4o は既に closed (受入確認済み・main 反映を merge 祖先確認済み) のため mutation 不要。
+
+---
+
+## 7. 追補: 2026-07-25 セッション変更分の仕様反映判定
+
+前回 (2026-07-24) 判定後に本ブランチへ加わった変更について、同じ基準で再判定した。
+
+**結論: 正本 (`system-spec/`・`architecture/`・`features/`・`tasks/`・`specs/`) への反映は不要 (spec_impact = none)。**
+
+### 7-1. 判定対象の変更集合
+
+| # | 変更 | 種別 | 仕様影響の判断 |
+|---|---|---|---|
+| A | `docs/features/feat-domain-model-db/session-handoff-20260724.md` の frontmatter へ `status: recorded` / `layer: session-handoff` を追加 | 文書メタデータ | **なし**。`scripts/lint-artifact-placement.py` が課す配置規約 (docs/*.md は status:/layer: 必須) への適合であり、本文の主張・実装契約・正本の内容には一切触れない。CI `change-category-guard` の唯一の赤を解消する修正。 |
+| B | `issues/sys-test-coverage-enforcement-20260724.md` (新規) + `.dev-graph/state/graph.json` への issue ノード 1 件追加 (rev 523 → 524) | tracker 起票 | **なし**。「タスク仕様書がテスト網羅を機械強制する仕組み」の**起票**であって、仕様の変更ではない。実際の仕様変更 (template 正本 / validate-system-plan.py / vitest coverage 閾値) は当該 issue が別途担当し、その実施時に改めて spec 反映判定を行う。 |
+| C | `main` (55e0440) の本ブランチへのマージ | 履歴統合 | **なし**。main 側で既に review・CI を通過した確定内容の取り込みで、本ブランチ由来の新規変更を含まない。graph.json は main 版 (279 node) を土台に採り、既存ノードの改変 0 件・追加 1 件のみであることを実測 (下記)。 |
+| D | `session-handoff-20260724.md` の分割 → `session-handoff-20260725.md` (新規) | 文書分割 | **なし**。qa-070 の 1 文書 300 行上限 (`scripts/lint-doc-line-limit.py`) への適合措置。追補を足すと 334 行で超過するためセッション単位で責務分割した。本文の主張は無改変で移設のみ (20260724 版は §12 を後続文書への参照リンクへ置換)。allowlist 登録は `--ratchet-base` が新規追加を遮断する設計であり、規約の意図にも反するため採らない。 |
+
+### 7-2. 無改変の実測根拠 (fact)
+
+- `git status --porcelain` の変更集合に `system-spec/`・`architecture/`・`features/`・`tasks/`・`specs/` は **0 件** (本追補時点で実測)。
+- graph.json の差分は機械的に「rev 523→524 / 追加ノード = `issue-test-coverage-enforcement-20260724` の 1 件 / 既存 279 ノードの改変 0 件」。手編集ではなく正規経路 `plugins/dev-graph/scripts/upsert-node.py` の transaction receipt (`operation: added` / `write_count: 2`) で適用しており、digest 整合を壊していない。
+- 実装 (`packages/db`) は本セッションで一切変更していない (`git diff` に `packages/` の差分なし)。したがって §3 の整合表は**そのまま有効**であり、再検証を要しない。
+
+### 7-3. 品質ゲート再実行の結果 (2026-07-25 実測)
+
+| ゲート | 結果 |
+|---|---|
+| `pnpm --filter @harness-hub/db test` | ✅ 13 files / **62 tests pass / 0 fail** |
+| `tsc --noEmit` | ✅ 0 error |
+| `biome check packages/db` | ✅ 65 files / 0 diagnostics |
+| `check:ddl` | ✅ 1 migration / 単一 lineage / 破壊的 DDL 0 |
+| `check:tenant-isolation-coverage` | ✅ scoped=14 / exempt=4 / fixture 14/14 |
+| `check:connection-isolation` | ✅ driver 直接 import 0 |
+| `scripts/lint-artifact-placement.py` (**CI 赤の原因 1**) | ✅ self-test 緑 + 本検査 **exit 0** (修正前は 2 violations) |
+| `scripts/lint-doc-line-limit.py --ratchet-base origin/main` (**CI 赤の原因 2**) | ✅ 345 文書検査 / **exit 0** (分割前は 334 行で 1 violation) |
+| `pytest tests/scripts-root/test_root__lint_doc_line_limit.py` | ✅ **29 passed** (`test_cli_real_repo_exit_zero` を含む) |
+| `validate-graph-schema.py` | ✅ `valid: true` / violations 0 |
+| `lint-eval-log-layout.py` | ✅ 2389 走査 / violations 0 |
+| `lint-handoff-disposition.py` | ✅ 123 findings 走査 / violations 0 |
+| `lint-open-residue.py` | ⚠️ ローカルのみ 19 件 (§7-4) |
+
+### 7-4. `lint-open-residue` 19 件の切り分け (本 PR 起因ではない)
+
+ローカル実行では `violation_count: 19 / exit_code: 2` になるが、**本 feature 起因ではない**。
+
+- 違反ノードは `SYS-DOC-GOVERNANCE-PORTABILITY-P01..P13`・`SYS-STAGE0-DISTRIBUTION-GATE-P02..P13`・独立 issue 6 件で、`feat-domain-model-db` 系および本セッション追加の `issue-test-coverage-enforcement-20260724` は **0 件** (node id 全件を grep して実測)。
+- CI の同ステップは `continue-on-error: false` にもかかわらず PR #53 で **pass** している。差分の理由は **beads DB の有無**: ローカルは `beads_axis=resolved` で md / graph / beads の 3 表現の乖離まで検査するが、CI 環境には beads DB が無いためこの軸が評価されない。
+- したがって本 PR のマージ可否には影響しない。既存 tracker (`HarnessHub-j71` 系 / doc-governance 系) の completion projection 残置として別途扱う。
+
+---
+
+## 8. 追補: 2026-07-28 `HarnessHub-mb7c` (db-write-gate-sweep) の仕様反映判定
+
+`issue-db-write-gate-sweep-20260726` (beads `HarnessHub-mb7c`) で、`packages/db/repository/` 配下の残る write を `guardedWrite` へ掃き出し、CI 静的検査 (`packages/db/scripts/check-db-write-gate.mjs`) を追加した最終レビューでの仕様反映判定。
+
+**結論: 正本 (`system-spec/`・`architecture/`・`features/`・`tasks/`・`specs/`) への反映は不要 (spec_impact = none)。**
+
+### 8-1. 判定対象の変更集合
+
+| # | 変更 | 種別 |
+|---|---|---|
+| A | `packages/db/repository/{crud,channels,crypto,idp,misc,packages,releases,tenants,users}.ts` の insert/update/delete を `guardedWrite(adapter, () => ...)` でラップ | 実装 (掃き出し) |
+| B | `packages/db/repository/conflict.ts` ヘッダコメント更新 (「掃き出しは別 issue で行う」→「掃き出し済み、CI が網羅を保証」) | コメント整合 |
+| C | `packages/db/scripts/check-db-write-gate.mjs` (新規) — repository 配下の write が全て `guardedWrite` 経由かを TypeScript AST で静的検査 | CI ゲート新設 |
+| D | `packages/db/__tests__/check-db-write-gate.test.ts` (新規) + `fixtures/db-write-gate-violation/` (新規) — 上記 CI スクリプトの正常系・実効性 (fixture で意図的に違反させ非ゼロ終了することを確認) | テスト |
+| E | `packages/db/__tests__/write-conflict.test.ts` へ `users.markLastLogin` / `releases.createRelease` の代表 2 経路を追加 (別接続 reader で commit 済み行数を数える回帰) | テスト |
+
+### 8-2. 反映不要の判断理由
+
+- **`guardedWrite` の適用方針自体は既に確定済み契約である。** `system-spec/spec-state.json` の `qa-083`/`qa-086` (database.web 正本) が「認証・監査と並走する書き込みは `guardedWrite` を通す」という方針を確定しており、`system-spec/database.md` にもその契約が反映されている (`docs/features/feat-auth-tenancy/spec-reflection-receipt.md` §8 で `HarnessHub-mb7c` は「残る DB write を `guardedWrite` へ統一する」後続作業として明示的に切り出し済み)。今回の変更はこの確定済み方針の **未実施分の実装を完了させた** だけであり、新しい設計判断・外部契約・データ契約の追加ではない。
+- **公開 API のシグネチャは無変更。** 各 repository の関数シグネチャ (引数・戻り値の型) は変更していない。内部実装を `guardedWrite` のコールバックで包んだのみで、呼び出し側 (consumer) の契約に影響しない。
+- **正本は本タスクで未改変。** `git status --porcelain=v1 -- system-spec/ architecture/ features/ tasks/ specs/` を実測すると、表示される差分は全て `M ` (2 文字目が空白 = ステージ済みで working tree 差分なし) であり、これは本タスク開始前に別経路で index へ積まれていた `main` 取り込み分 (コンフリクトゼロの機械的マージ) である。`HarnessHub-mb7c` の実装 (unstaged 変更 + untracked 新規ファイル) はこれらのファイルを一切含まない。
+
+### 8-3. follow-up (ドキュメント鮮度のずれ)
+
+`system-spec/spec-state.json` の `qa-086` 回答文末尾に「残る repository write の全量掃き出しは `HarnessHub-mb7c` で追跡する」という未来形の記述があり (`system-spec/database.md` にも同文言が反映済み)、今回の完了により事実と食い違う (stale) 状態になった。
+
+正本の直接編集は `plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py` が確定済み章への Write/Edit を fail-closed で遮断するため、手編集では解消しない。是正は次回の `/spec-hearing-start --resume` (C01 R4-reopen で `qa-086` を再オープン) → `/spec-compile` の正規サイクルで、回答文へ「(2026-07-28 完了。全 write が `guardedWrite` 経由、CI 検査 `packages/db/scripts/check-db-write-gate.mjs` で担保)」を追記して解消する。新規 follow-up の起票は不要 (既存の `HarnessHub-mb7c` 自体が是正対象であり、close 時にこの追補で申し送りが完結する)。
+
+### 8-4. 品質ゲート再実行の結果 (2026-07-28 実測)
+
+| ゲート | 結果 |
+|---|---|
+| `node packages/db/scripts/check-db-write-gate.mjs` | ✅ repository 配下 19 ファイル / write 31 件 (直接 30 / helper 経由 1) / 全て guardedWrite 経由・違反 0 |
+| `pnpm --filter @harness-hub/db typecheck` | ✅ 0 error |
+| `pnpm --filter @harness-hub/db test` | ✅ 17 files / **80 tests pass / 0 fail** (write-conflict.test.ts の新規 2 ケース、check-db-write-gate.test.ts の 5 ケースを含む) |
+| `biome check packages/db` | ✅ 76 files / 0 diagnostics (移動後は `packages/db/scripts/check-db-write-gate.mjs` もこの走査範囲に含まれる) |
+| 500 行超チェック | ✅ 変更ファイルの最大は `packages/db/scripts/check-db-write-gate.mjs` 271 行。分離不要 |
+
+2026-07-28 追記: 初回 PR 作成後、CI (`build & test`) で `Cannot find package 'typescript' imported from .../scripts/ci/check-db-write-gate.mjs` により失敗した。原因は pnpm workspace の既定 (isolated) node-linker では `scripts/ci/` がどの workspace パッケージにも属さず、`typescript` を直接依存に持つ `packages/db` の node_modules 解決が届かないため (ローカル検証環境はグローバル pnpm 設定 `node-linker=hoisted` によりルート直下へ巻き上げられていて再現しなかった)。`scripts/ci/check-db-write-gate.mjs` を `packages/db/scripts/check-db-write-gate.mjs` へ移動し、`packages/db` 自身の直接依存解決に乗せて修正した。仕様反映の判定 (§8 結論) に変更はない。
+
+---
+
+## 9. 2026-08-01 P13 完了状態の最終レビュー受領書
+
+- Beads ID: `HarnessHub-u6q.13`
+- dev-graph node ID: `SYS-DOMAIN-MODEL-DB-P13`
+- 対象 branch: `devgraph/sys-domain-model-db-p13`
+- 判定: **`spec_impact = none`**
+
+### 9-1. 今回変更した内容
+
+| ファイル | 変更 | 役割 |
+|---|---|---|
+| `.dev-graph/state/graph.json` | P13 の lifecycle を `active` から `closed` へ更新 | dev-graph の正本状態 |
+| `tasks/feat-domain-model-db/sys-domain-model-db-p13.md` | frontmatter の lifecycle を同じく `closed` へ同期 | task 投影 |
+| `eval-log/run-dev-graph-status-execution.json` | `domain-model-db` 14 node の読み取り結果を再生成 | graph/authority 非改変と状態収束の機械証跡 |
+| 本書 | 最終レビュー、仕様影響判定、再検証結果を追記 | 仕様反映の受領書 |
+
+graph と task の更新は C02 `upsert-node.py` を通し、task 本文を保持した。status 証跡は更新後に再生成し、P01〜P13 がすべて `closed`、親 feature が依存課題のため `active` であることを記録した。
+
+今回更新した人向け文書と証跡は、本書と task が 300 行以下、status 証跡が 475 行で、いずれも 500 行以下である。`graph.json` は既存の単一 JSON 正本であり、分割すると reader/schema 契約を壊すため分離対象にせず、正規 writer が対象 node の 4 項目だけを更新した。
+
+### 9-2. 仕様・設計への影響がない理由
+
+今回の差分は、すでに実装・本番検証・Beads close が完了していた P13 の lifecycle 表示を収束させるものに限られる。API、DB schema、migration、runtime behavior、security boundary、運用手順、外部 interface は変更していない。このため、製品仕様や設計の新しい判断は発生していない。
+
+| 正本層 | 照合結果 | 更新判断 |
+|---|---|---|
+| `docs/` | `release-record.md` に migration、R2、smoke 6/6、backup/restore の実測が記録済み | 本受領書のみ追記 |
+| `features/` | `feat-domain-model-db.md` に Turso/Drizzle/R2、immutable Release、export/restore の目的・受入が記録済み | 意味変更なしのため無改変 |
+| `system-spec/` | `database.md` に tenant scope、Release 不変性、R2 content hash の契約が記録済み | 契約変更なしのため無改変 |
+| `architecture/` | `harness-hub-data.md` / `harness-hub-backend.md` に data/backend 境界と本番 smoke が記録済み | 設計変更なしのため無改変 |
+| `specs/` | `harness-hub-system-specification.md` に release 成立条件、復元契約、P13 smoke が記録済み | 上位仕様変更なしのため無改変 |
+| `tasks/` | P13 本文の実行記録を保持し、lifecycle だけを正規 writer で `closed` へ同期 | 今回反映済み |
+
+digest に束縛された正本へ内容のない更新を加えると、変更理由のない source-digest 更新が発生する。したがって、既存記述を実測照合し、変更不要の理由を本受領書へ残すことを正規の反映結果とした。
+
+### 9-3. 機能概要
+
+中学生向けに言うと、この機能は「サービスの大事な情報を、利用者ごとに混ざらないよう整理して保存し、壊れたときに戻せるようにする保管庫」である。保管庫そのものはすでに作成・試験・本番確認済みで、今回の変更は作業表と進捗ボードを「作業中」から「完了」へ正しく直し、最新の点検表を残すものになる。
+
+技術的には、Turso/libSQL と D1 互換の Drizzle schema、tenant-scoped repository、immutable Release、content-addressed R2 registry、監査 hash chain、決定論的 JSONL export/restore の実装証跡を前提に、P13 の Beads・dev-graph・task projection の lifecycle を冪等（べきとう＝再実行しても結果が変わらない性質）に収束させた。status 実行は read-only で、graph/authority の実行前後 digest が一致することを検証する。
+
+### 9-4. 品質ゲート
+
+| ゲート | 2026-08-01 の実測結果 |
+|---|---|
+| `validate-system-plan.py --feature-package feature-package/feat-domain-model-db` | **PASS**。P01〜P13 exact-set、validated digest `6ac94e...a73b`、violations 0 |
+| `@harness-hub/db` typecheck | **PASS**。TypeScript error 0 |
+| `@harness-hub/db` test (単一 worker 再実行) | **PASS**。30 files / **231 tests**、exit 0。coverage: statements 90.54% / branches 88.21% / functions 88.20% / lines 90.54% |
+| `validate-graph-schema.py` | **PASS**。`valid: true`、violations 0 |
+| `validate-source-digest.py --registered SYS-DOMAIN-MODEL-DB-P13` | **PASS**。checked 1、mismatch 0 |
+| `lint-open-residue.py --node-id SYS-DOMAIN-MODEL-DB-P13` | **PASS**。Beads live DB を解決、scanned 1、violations 0 |
+| `status-graph.py --keyword domain-model-db` | **PASS**。14 node、P13 `closed`、feature `active`、graph/authority digest は実行前後一致 |
+| 文書/eval-log gate | **PASS**。artifact placement、eval-log 4091 files、doc 459 files (上限 300 行)、violations 0 |
+| Actions secret 台帳 (`--live`) | **PASS**。workflow 参照 13 件と台帳 13 件が一致し、実投入も確認済み |
+| hub-backup run `30686023662` | **PASS**。workflow `hub-backup`、status `completed`、conclusion `success` |
+| `bash scripts/run-ci-checks.sh` | **PASS**。hard gate 136、fail 0。段階導入中の既存 warning 4 件のみ |
+| `git diff --check` | **PASS**。空白エラー 0 |
+
+初回の通常並列 DB test は 30 files / 231 tests 自体が全件 pass した後、共有マシン上で他の Vitest 群と競合し `onTaskUpdate` worker RPC timeout 2 件により exit 1 となった。並列度を 1 に固定した再実行は同じ 231 tests と coverage 集計を exit 0 で完走したため、製品ロジックの失敗ではなく実行基盤の高負荷に起因する一過性エラーと判定した。

@@ -1,0 +1,12 @@
+{
+  "artifact": "scripts/lint-live-trial-verdict.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 84,
+    "notes": "genuine code-review + py_compile OK / live-trial 実走 acceptance 証拠 (verdict.json) の機械検査 lint (D9/D13)。soundness: 検証実装を自作せず run-skill-live-trial 同梱の validate_schema / skill_dir_tree_sha を importlib で借用しており、生成側と検査側の実装乖離を排除する SSOT 設計が徹底されている。HARNESS_SKILL_DIR を PLUGINS_DIR と独立に固定しているため、self-test が PLUGINS_DIR を tmp へ差し替えても SSOT 実装のロード元は実 repo のままで、検査器自身が偽装可能にならない。transcript 束縛が本 lint の白眉で、transcript_required を「jsonl 宣言 or 実体あり or 記録 digest あり」の OR で立て、成立時は recorded is None / 実体なし / digest 不一致をすべて違反にする肯定形。'recorded is not None' の否定ガードで書くと transcript_sha256=null + transcript 削除の 2 操作で束縛検査を丸ごとすり抜け、どの会話ログにも紐付かない verdict が live 証拠として通る (2026-07-21 実測の故障モード) — layer 表示だけに依存せず transcript.is_file() を独立根拠に併用する点も、実体がある run を tui と偽る迂回を塞いでいる。責務分離後の構造は facade パターンで、check_c02_bypass (receiptguard_helper) / check_digest_provenance / run_provenance (provenance_helper) を re-export して公開参照面を凍結し、実装だけを分離した (_MOD.check_c02_bypass 等の既存呼出面は分割前と完全に同一)。sys.path.insert + bare import は既存の feedback_contract_ssot に前例があり、spec_from_file_location 経由のロードでも解決する。responsibility: 機械層 (schema 適合・sha 突合・tier 降格・denylist・transcript 束縛・C02 迂回の配線) に限定し、実走層 (tmux/LLM) を明示的に対象外と宣言。D13 パイロットゲートの非対称設計も妥当 — verdict 不在は record-only WARN だが、存在する verdict の stale-sha / schema 不適合 / FAIL / downgrade は常に exit 1 (『存在する証拠の偽装・陳腐化は soft にしない』)。error-handling: JSON 破損は invalid-json で早期 return、schema エラーも早期 return、denylist 被験体は『この証拠は存在してはならない』として能動的に違反化。side-effect-safety: 読取りと標準出力のみで network なし、書込みは self-test の tempfile 内に限定。MINOR-1: self_test の合格メッセージ '15 case(s) passed' が実ケース数のハードコードで、ケース追加時に更新漏れするとメッセージが実態とズレる (現状は expect 8 + c02_case 5 + invalid-json + missing = 15 で一致を実測確認)。MINOR-2: self_test が global PLUGINS_DIR/EVAL_LOG を差し替え、復元 (`PLUGINS_DIR, EVAL_LOG = orig`) が try/finally でなく直線コードのため、with ブロック内で例外が出ると復元されない (単発 CLI 実行では実害なし)。MINOR-3: `# /// script` frontmatter 未添付 (本 lint 導入時からの既存流儀で、本 PR では closure 影響を避けるため据え置き)。TESTS: tests/test_lint_live_trial_verdict.py が check_verdict への C02 配線を含む統合経路を、tests/test_receiptguard_helper.py / test_provenance_helper.py が分離済み helper を exercise (合計 42 passed)。self-test 15 case(s) passed / --all / --check-provenance origin/main いずれも EXIT=0 を実測。"
+  },
+  "reviewed_by": "harness-ratchet-recovery-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

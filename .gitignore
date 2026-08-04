@@ -89,9 +89,27 @@ plugin-plans/*/task-progress.md
 # dev-graph も同ポリシー: verb ごとの progress/intermediate は周回・buildごとの揮発投影ゆえ除外する。
 eval-log/run-dev-graph-*-progress.json
 eval-log/run-dev-graph-*-intermediate.jsonl
+# parity manifest は graph の canonical digest に束縛された揮発 snapshot。追跡すると
+# commit 時点で即 stale になり、C16 が「古い snapshot を掴んだ停止」を繰り返す。
+# 生成経路は build-parity-manifest.py の単一 writer (execution-tracker-contract §10)。
+eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json
+# 検証時の手動 smoke 出力 (`--eval-log` / `--ready-json` の書込先は repository 内に
+# 限られるため scratchpad へ逃がせない)。証跡は live-trial/ 配下が正本なので、
+# dot 始まりの一時受け皿は追跡しない。
+eval-log/dev-graph/**/.verify-*.json
 # runtime 揮発状態 (期限切れ lock receipt / stderr capture の空残骸)。
 .dev-graph/locks/expired-lock-receipts/
 .dev-graph/cache/projections/*.err
+# upsert-node.py は authority root 外の入力 path を拒否するため、node envelope の一時 JSON /
+# body markdown は repo 内 (.dev-graph/tmp/) に置くしかない。かつ guard-graph-schema.py が
+# .dev-graph 配下の rm/mv を間接 mutation として遮断するので shell 掃除もできない。
+# 追跡対象にすると受領書ビルダー (scripts/build-spec-reflection-receipt.py) の
+# clean-tree 検査を毎回落とすため、揮発スクラッチとして除外する。
+.dev-graph/tmp/
+# plugins/dev-graph/README.md が node 入力 JSON の例示に使っているのは .dev-graph/staging/
+# であり、tmp/ だけを除外しても README どおりに操作した時点で clean-tree 検査が落ちる。
+# 同じ揮発スクラッチなので同じ扱いにする。
+.dev-graph/staging/
 plugin-plans/*/task-execution-report.html
 plugin-plans/*/.gate/
 
@@ -116,3 +134,12 @@ node_modules/
 artifacts/
 *.tsbuildinfo
 apps/hub/.dev.vars
+
+# vitest --coverage の生成物 (各 package/apps 配下)
+coverage/
+# ただし eval-log/coverage/ は code-review verdict の正本で追跡対象 (281 件が tracked)。
+# 上の coverage/ は区切り文字を含まないため全階層の coverage/ にマッチし、eval-log/coverage/ も
+# 巻き込む。ignore は index 済みファイルには効かないので既存 281 件は動き続ける一方、
+# 新規 verdict だけが黙って untracked のまま落ちる (= harness-ratchet を緑にする修正が
+# push されない)。2026-07-28 に実際に踏んだため明示的に再包含する。
+!eval-log/coverage/

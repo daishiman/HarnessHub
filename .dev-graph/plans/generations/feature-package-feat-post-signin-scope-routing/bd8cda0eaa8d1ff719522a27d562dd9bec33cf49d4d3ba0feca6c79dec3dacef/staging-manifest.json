@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:bd8cda0eaa8d1ff719522a27d562dd9bec33cf49d4d3ba0feca6c79dec3dacef",
+  "feature_package_id": "feature-package/feat-post-signin-scope-routing",
+  "files": {
+    "feature-package.json": "2ebf8c153808f5284c1a9378da1b4a4bf33ea59c6b0fbee9a53742c2e45d5366",
+    "system-build-handoff.json": "0163828e6c6667be3acdfcc41cc31401b85ab65cd5c1b3e9f7fdd8667f2b241b",
+    "task-graph.json": "a95e6ed9d88f658d73bf28f569f8389bfa5f71e0cff9951bf67f5f1bbd400344",
+    "task-specs/phase-01-requirements.md": "dfad0073ec9a46b5d2d4628720a5434384682e33fe2c9320272eecebd46e931a",
+    "task-specs/phase-02-architecture.md": "079d556d82ec27e372e419f4d38fb22845c30196e5753b32293154158cd2b790",
+    "task-specs/phase-03-design-review.md": "5bc5a7685cfed386564490e4c07d30b44722756e7d92138360c8f5c68885cc8a",
+    "task-specs/phase-04-test-design.md": "d567ffd73a15e3605810845266def5aa8df3da159467e5984396581cba2c0f87",
+    "task-specs/phase-05-implementation.md": "fed94d760afb68e7e2e47a55a0759867321fee56dd5b4085a5e113490406214c",
+    "task-specs/phase-06-test-run.md": "45f0cf837ee565c1708c1b5ca1b934c3d5beccd560e2fdf75599edaea0312cb2",
+    "task-specs/phase-07-acceptance.md": "7f0a75f4db3f120efe80e3a525a1ab8f7613b1101fd9a801152133e1cdc763b3",
+    "task-specs/phase-08-refactoring-migration.md": "681335d840fddc483da59e89887d734f74463e49e8b68fdf526f1668ea74c48e",
+    "task-specs/phase-09-quality-assurance.md": "d4556137e9af5826367597fa56eb517ccab73e4492b361e35214ff3ed7f559f5",
+    "task-specs/phase-10-final-review.md": "bb68111279ae3bd3c6524fc182e5ef66ea37fde56a92ca157059857750df88c7",
+    "task-specs/phase-11-evidence.md": "756e7118fecf16519e1b5227c7a80be77db5a1f1bf3f234dee5af805e2cfdd40",
+    "task-specs/phase-12-documentation-operations.md": "32ffd7e5278d36a3a9781c95b4c803390dfc01260d59d46b3c7810cc795542f4",
+    "task-specs/phase-13-release-deploy.md": "3bbddc9ef8f526f6162d2d787affc6777ece54a6ec24d8eb8d63cfe11c5a93c1",
+    "workstream-inventory.json": "a82233e8d51c634cf1cb626f1f82e1821fa13eb6f639230aa6c35482f94e7776"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "0163828e6c6667be3acdfcc41cc31401b85ab65cd5c1b3e9f7fdd8667f2b241b",
+    "source_canonical_digest": "sha256:3c837f8ac339bcd794b466f3f09fefd9b659b7d64c68604b79c2b79fd1f65ddc"
+  },
+  "parent_feature": "feat-post-signin-scope-routing",
+  "schema_version": "1.0.0"
+}

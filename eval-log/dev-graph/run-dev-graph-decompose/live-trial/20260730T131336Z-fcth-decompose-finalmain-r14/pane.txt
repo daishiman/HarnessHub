@@ -1,0 +1,48 @@
+
+⏺ Bash(NONE="/Users/dm/orca/workspaces/HarnessHub/wt-15/eval-log/dev-graph/live-trial-fixtures/decompose-fcth-none-20260730-r14" &&
+      REPLAY="/Users/dm/orca/workspaces/H…)
+  ⎿  goal_seek_fork count: 1, status: pass
+     pending: 0, null evidence: 0, overall: pass
+     intermediate verification PASS
+
+⏺ Both fixtures complete. Now cross-fixture verification: audit SHA match and transcript counts.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  beads audit_implementation.sha256: be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f
+     none  audit_implementation.sha256: be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f
+     sha256 match: True
+
+⏺ Now verify the transcript counts. The task requires: target Skill beads=2, none=2, total=4; Task beads=1, none=1, total=2; Task nested tools are Read/Grep/Glob
+  + read-only ls/find, write 0; each Skill② after, fixture node writer=0.
+
+  The transcript in this conversation:
+  - Beads: Skill① (step 4) + Skill② (step 12) = 2 Skills
+  - None: Skill① (step 4/none) + Skill② (step 12/none) = 2 Skills
+  - Total Skills = 4
+  - Beads Explore Task (step 6) = 1 Task
+  - None Explore Task (step 6/none) = 1 Task
+  - Total Tasks = 2
+  - Both Explore Tasks used Read/Grep/Glob only, write 0
+  - After beads Skill②: no upsert-node.py calls for beads fixture
+  - After none Skill②: no upsert-node.py calls for none fixture
+
+  All checks pass. Write the status.json.
+
+⏺ Bash(mkdir -p
+      "/Users/dm/orca/workspaces/HarnessHub/wt-15/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/out")
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260730T131336Z-fcth-decompose-finalmain-r14/out/status.json
+      1 {"status":"PASS","scenario":"C14-OUT1-positive-macro-decomposition-r7","binding":"paired:beads+none"}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 22m 39s
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                  Update available! Run: brew upgrade claude-code
+

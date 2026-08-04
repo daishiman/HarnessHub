@@ -1,0 +1,81 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "skill-tool-invocation",
+      "verdict": "PASS",
+      "observed": "transcript line 61: Skill(dev-graph:run-dev-graph-system-spec) called with --repo-root pointing to fixture"
+    },
+    {
+      "name": "harness-4-entry-points-via-skill",
+      "verdict": "PASS",
+      "observed": "transcript lines 119/300/344/364: Skill(run-system-spec-elicit), Skill(run-system-spec-doc-fetch), Skill(run-system-spec-compile), Skill(assign-system-spec-completeness-evaluator) all present"
+    },
+    {
+      "name": "coverage-source-evaluator-pass",
+      "verdict": "PASS",
+      "observed": "completeness-report.json verdict=PASS; audit_delegations: matrix_coverage PASS (48 cells resolved), doc_freshness PASS (validate-source-citation exit0), foundation_trace PASS"
+    },
+    {
+      "name": "specification-node-registered",
+      "verdict": "PASS",
+      "observed": "graph.json node graph_node_id=spec-local-todo-api, artifact_kind=specification, specs/spec-local-todo-api.md exists"
+    },
+    {
+      "name": "architecture-node-registered",
+      "verdict": "PASS",
+      "observed": "graph.json node graph_node_id=arch-local-todo-api-backend, artifact_kind=architecture, architecture/arch-local-todo-api-backend.md exists"
+    },
+    {
+      "name": "source-lineage-6-fields-non-null",
+      "verdict": "PASS",
+      "observed": "spec-local-todo-api: origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=system-spec/00-requirements-definition.md, source_version=0.1.0, source_digest=df5a4804..., imported_at=2026-07-26T05:29:26Z; arch-local-todo-api-backend: origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=system-spec/backend.md, source_version=0.1.0, source_digest=6ae8dcb2..., imported_at=2026-07-26T05:30:30Z; 全12値に null/空文字なし"
+    },
+    {
+      "name": "source-digest-recalculation",
+      "verdict": "PASS",
+      "observed": "独立sha256再計算: spec-local-todo-api node=df5a4804d0a12dd2... recalc=df5a4804d0a12dd2... MATCH=True; arch-local-todo-api-backend node=6ae8dcb22830e20b... recalc=6ae8dcb22830e20b... MATCH=True"
+    },
+    {
+      "name": "confirmation-evidence",
+      "verdict": "PASS",
+      "observed": "両node: confirmation_status=confirmed, confirmation_evidence.evidence_ref=system-spec/completeness-report.json, evaluator=assign-system-spec-completeness-evaluator"
+    },
+    {
+      "name": "c02-writer-only",
+      "verdict": "PASS",
+      "observed": "transcript全tool_useスキャン: graph.json/specs/architecture への Write/Edit 直接操作 0件; upsert-node.py Bash呼出し lines 602-714 に8回; graph_revision before=0 after=2 (登録2件分)"
+    },
+    {
+      "name": "no-duplicate-logic",
+      "verdict": "PASS",
+      "observed": "node本文は template skeleton (placeholder <ユーザー価値...>, <context> 等); source章 00-requirements-definition.md は実コンテンツ(U1-U9, 確定マーカー, qa_ref等)で内容不一致; 参照は source_lineage.source_path + source_digest のみ"
+    },
+    {
+      "name": "goal-seek-goal-spec",
+      "verdict": "PASS",
+      "observed": "eval-log/run-dev-graph-system-spec-goal-spec.json 存在; original_goal/skill/created_at 3フィールド充足"
+    },
+    {
+      "name": "goal-seek-progress",
+      "verdict": "PASS",
+      "observed": "eval-log/run-dev-graph-system-spec-progress.json 存在; checklist 8項目全て status=done; registered_this_run=[spec-local-todo-api, arch-local-todo-api-backend]"
+    },
+    {
+      "name": "goal-seek-intermediate-append-only",
+      "verdict": "PASS",
+      "observed": "eval-log/run-dev-graph-system-spec-intermediate.jsonl 2行; line1 Write at transcript L84 (2026-07-26T05:09:23Z), line2 Bash open('a') at transcript L739 (2026-07-26T05:31:31Z); 6必須key全存在; original_goal_hash=30a1de05... 両行で独立sha256再計算一致"
+    },
+    {
+      "name": "validate-source-digest-exit0",
+      "verdict": "PASS",
+      "observed": "独立実行: python3 validate-source-digest.py exit 0, checked=2, registered_mismatch=[]"
+    },
+    {
+      "name": "validate-evidence-refs-exit0",
+      "verdict": "PASS",
+      "observed": "独立実行: python3 validate-evidence-refs.py exit 0, scanned_nodes_with_evidence=2, registered_dangling=[], existing_dangling=[]"
+    }
+  ]
+}

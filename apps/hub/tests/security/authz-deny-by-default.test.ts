@@ -78,6 +78,22 @@ describe('認可 middleware の deny-by-default', () => {
     expect(isPublicPath('/healthz')).toBe(false);
   });
 
+  it('テナント別サインイン画面だけを公開し、似た path は公開しない', () => {
+    expect(isPublicPath('/tenant-a/signin')).toBe(true);
+    expect(isPublicPath('/tenant_a/signin/')).toBe(true);
+    expect(isPublicPath('/tenant-a/signin/callback')).toBe(false);
+    expect(isPublicPath('/api/tenant-a/signin')).toBe(false);
+    expect(isPublicPath('//signin')).toBe(false);
+  });
+
+  it('Device Flow承認画面だけを公開し、承認APIや似たpathは公開しない', () => {
+    expect(isPublicPath('/device')).toBe(true);
+    expect(isPublicPath('/device/')).toBe(true);
+    expect(isPublicPath('/device/approve')).toBe(false);
+    expect(isPublicPath('/api/v1/device/approve')).toBe(false);
+    expect(isPublicPath('/devices')).toBe(false);
+  });
+
   it('auth provider 未注入のとき全要求が未認証になる (fail-closed)', async () => {
     const adapter = createAuthAdapter();
     expect(adapter.providerName).toBe(denyAllAuthProvider.name);

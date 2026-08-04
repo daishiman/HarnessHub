@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "--repo-root eval-log/dev-graph/live-trial-fixtures/sync-mfh7-current; dry-run/apply/dry-run",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "8ed3cb7ffedab25616d82b1d01e3890c01620c151801c0d24425aaa1d325896f",
+  "transcript_sha256": "5455a166ecbae263c8110864e9b006611d08bd4c36bb9e563177311780d4228b",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 285.0
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero"
+}

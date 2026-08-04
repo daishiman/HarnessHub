@@ -1,0 +1,148 @@
+{
+  "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+  "nodes": [
+    {
+      "depends_on": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p01",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P01",
+      "title": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p02",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P02",
+      "title": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p03",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P03",
+      "title": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p04",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P04",
+      "title": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p05",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P05",
+      "title": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p06",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P06",
+      "title": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p07",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P07",
+      "title": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p08",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P08",
+      "title": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p09",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P09",
+      "title": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p10",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P10",
+      "title": "最終レビュー — 全 phase 成果の横断整合確認"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p11",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P11",
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p12",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P12",
+      "title": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド"
+    },
+    {
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      ],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "graph_node_id": "sys-task-spec-test-strategy-p13",
+      "id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+      "parent_feature": "feat-task-spec-test-strategy",
+      "phase_ref": "P13",
+      "title": "リリース — main 反映と確定 system spec/architecture への writeback"
+    }
+  ],
+  "parent_feature": "feat-task-spec-test-strategy",
+  "schema_version": "1.0.0"
+}

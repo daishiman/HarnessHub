@@ -1,0 +1,50 @@
+{
+  "all_rejected": true,
+  "controls": [
+    {
+      "clause_fired": true,
+      "control": "readiness_clause",
+      "expected_clause": "$.implementation_readiness.status",
+      "mutated_node": "feat-admin-report-001",
+      "mutation": "confirmation_status=confirmed, evaluation_status=pass, readiness incomplete",
+      "new_violations": [
+        {
+          "code": "schema_violation",
+          "detail": "$.implementation_readiness.status: expected const 'complete'"
+        }
+      ],
+      "rejected": true
+    },
+    {
+      "clause_fired": true,
+      "control": "publication_intent_on_blocked_node",
+      "expected_clause": "$.confirmation_status",
+      "mutated_node": "feat-admin-report-001",
+      "mutation": "github_publication.mode=issue on a gate-blocked feature",
+      "new_violations": [
+        {
+          "code": "schema_violation",
+          "detail": "$.artifact_kind: not in enum ['issue', 'task']"
+        },
+        {
+          "code": "schema_violation",
+          "detail": "$.confirmation_status: expected const 'confirmed'"
+        },
+        {
+          "code": "schema_violation",
+          "detail": "$.evaluation_status: expected const 'pass'"
+        },
+        {
+          "code": "schema_violation",
+          "detail": "$.github_publication.mode: expected const 'local_only'"
+        },
+        {
+          "code": "schema_violation",
+          "detail": "$.implementation_readiness.status: expected const 'complete'"
+        }
+      ],
+      "rejected": true
+    }
+  ],
+  "executed": true
+}

@@ -2,27 +2,39 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
-    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
+    "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "rubric-evaluator",
-  "reviewed_at": "2026-07-14",
+  "reviewer": "assign-skill-design-evaluator",
+  "reviewed_at": "2026-07-26",
   "iterations": 1,
   "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 1,
+    "dependency_break": 0,
+    "smell": 2
+  },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "OUT3", "OUT4", "OUT5"],
     "positive_feedback": [
-      "NM 命名: name=run-dev-graph-init が dir 名/prefix=run と一致、description は冪等初期化という発火条件を trigger 型で明示。",
-      "BD 出力契約: Purpose & Output Contract に入力/出力 (6 root+.dev-graph 配下)/完了条件を明記し、別に Input/output・Execution contract・Gotchas 節を具備。",
-      "RG/責務: init という単一責務に収束し、goal_seek/feedback_contract を frontmatter で明示。GitHub 設定は雛形生成に限定し token/node ID を保存しない境界が明確。"
+      "Mechanical scoring: score=97 / threshold=80 / passed=true. Only finding is FM-005 (low, description first phrase 'dev-graph' is not a verb). required_fixes=[] and pending_human=[] are both empty. Axis-by-axis: FM-001 PASS, FM-002 PASS (description contains 'したいとき' x2), FM-003 PASS (trigger count=2), FM-004 PASS, FM-005 low, BD-001 PASS (Output contract section present), BD-002 PASS (## Gotchas section present), BD-003 PASS (body=110 ≤ 300), BD-004 non-scoring, NM-001 PASS, NM-002 PASS, NM-003 PASS, PD-001 PASS (body=110 > 100 but references/ non-empty), RG-001 non-scoring. High severity rule violations: 0.",
+      "build-graph-store.py の追加で script_refs が 4→5 件になったが、全件が物理ファイルとして実在する (existence check 実測)。新しい script は SKILL.md Execution contract 6 から直接呼び出され、frontmatter responsibilities R3-init の Layer 3 インフラ層にも writer として明記されている。script_refs と本文の参照整合は NM-002 の評価対象であり PASS を維持。",
+      "IN1 の design claim: validate-graph-schema.py が Execution contract step 7 と bash ブロックの両方で呼び出されている。test_build_graph_store_contract.py は writer 自身が内部で validate-graph-schema.py を import して C11 検証を行う実装を検証しており、init の 2 段構え (writer 内検証 + 独立検証) が設計上噛み合っている。",
+      "OUT4 の design claim: config writer は書込前に validate-repo-config.py の秘密材料検査層を通す。validation-contract.md が secret_material finding code を定義し、token prefix だけを report する (値を出さない) 設計を明記。GitHub 節への token 混入を config 永続化前に遮断する fail-closed 構造が設計文書で一貫している。"
     ],
-    "negative_feedback": [],
+    "negative_feedback": [
+      "[low/smell] FM-005: frontmatter description の先頭句 'dev-graph' が動詞でない (機械採点の唯一の finding、前系列から継続)。description 本体は『〜したいとき』を 2 回含み FM-002/FM-003 は PASS のため、指摘は先頭句の語形のみ。",
+      "[low/smell] Execution contract 5 が 481 字で step 中最長。最長/最短比 8.2 は前系列 verdict (4.3) から悪化。BD-003 上限内のため機械スコアに非発火だが、退避余地は残る。",
+      "[low/inconsistency] validation-contract.md に build-repo-config.py の言及が 0 件。Execution contract 7 が当文書を『検証 3 層の正本』と宣言しているのに、config writer が担う書込前検証層の記載がない。test_reference_contract_lists_exactly_the_init_roots が root 一覧を pin するのに対し、writer 経路には同等 pin が欠如。"
+    ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "ref-skill-design-rubric 規範で現 SKILL.md (sha256 1db7dd6c...) を採点。FM: name/description/trigger 適合、allowed-tools 明示。BD: Output contract+Gotchas 具備、body<300行。NM: dir 名一致。PD: 本文簡潔で prompts/templates/references へ分離。RG: goal_seek/feedback_contract 明示。責務は『caller repo 内への dev-graph 冪等初期化』に単一収束し、hook 配線も plugin 既定/fallback の非破壊 merge に限定され越境なし。high severity 0 件。PASS。"
+  "notes": "Fresh independent review of current bytes (sha256:3b708071…). Prior rubric verdict targeted sha256:6d01572a… and is stale. Mechanical scoring executed via render-findings-score.py with L0 (ref-skill-design-rubric 1.3.0) + L2 (evaluator override) composition. rubric_hash=sha256:6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d, composition_hash=sha256:e614f46dd2e0a64401dee72acd80f489d8f9b6dd8f9823d5f06a463529d11bce. Score=97 / threshold=80 / passed=true / findings=[FM-005 low] / required_fixes=[] / pending_human=[]. Criteria突合: frontmatter feedback_contract.criteria[].id を機械抽出し IN1/OUT1/OUT2/OUT3/OUT4/OUT5 の 6 件と確認、criteria_evaluated と全件一致。全 criteria は design claim としてのみ評価 — verify_by が test/live-trial の OUT1–OUT5 の実行挙動受入は Gate D (run-skill-live-trial) の実走証跡が正本であり、本 verdict を流用してはならない。L2 evaluator-specific rules PG-001/PG-002 は prompts/ ディレクトリに R1–R5 の 5 ファイルが実在し responsibilities 集合と 1:1 対応するため PASS。BND-001 は既存 plugin であり非発火。REG-001 は本 verdict の scope 外 (全体 gate 検査)。Remaining 3 findings are all low severity; 0 high, 0 medium → verdict PASS, next_action=none."
 }

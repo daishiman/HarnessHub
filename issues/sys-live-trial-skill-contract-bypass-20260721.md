@@ -12,8 +12,8 @@ iteration: null
 title: "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる"
 owners: ["daishiman"]
 created_at: "2026-07-21T18:30:00Z"
-updated_at: "2026-07-23T10:25:28.267083Z"
-status: "draft"
+updated_at: "2026-07-26T01:19:20.811908Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-live-trial-skill-contract-bypass-20260721.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-07-24T11:20:29Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-18T16:20:35Z","missing_sections":[],"status":"complete"}
 ---
 

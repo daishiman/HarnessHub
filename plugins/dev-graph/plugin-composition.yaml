@@ -48,6 +48,7 @@ capabilities:
   - {kind: script, ref: scripts/schedule-graph.py, tier: core}
   - {kind: script, ref: scripts/status-graph.py, tier: core}
   - {kind: script, ref: scripts/sync-graph.py, tier: core}
+  - {kind: script, ref: scripts/build-parity-manifest.py, tier: core}
   - {kind: script, ref: scripts/upsert-node.py, tier: core}
   - {kind: script, ref: scripts/register-package.py, tier: core}
 
@@ -58,6 +59,9 @@ internal_support:
   - ref: scripts/node_transaction.py
     owners: [C02, C05, C11, C15]
     purpose: nodeのWAL recoveryとread-only consumerのpending transaction fail-closed検査
+  - ref: scripts/schedule_graph_nodes.py
+    owners: [C16]
+    purpose: schedule entrypointが共有する純関数のnode述語 (resource_scope/schedulable/依存充足)
 
 dependencies:
   - {from: commands/dev-graph.md, to: skills/run-dev-graph-node, type: calls}
@@ -81,6 +85,7 @@ dependencies:
   - {from: skills/run-dev-graph-schedule, to: scripts/resolve-repo-context.py, type: calls}
   - {from: skills/run-dev-graph-schedule, to: scripts/manage-worktree-lease.py, type: calls}
   - {from: skills/run-dev-graph-schedule, to: scripts/bd-bridge.py, type: calls}
+  - {from: skills/run-dev-graph-schedule, to: scripts/build-parity-manifest.py, type: calls}
   - {from: skills/run-dev-graph-status, to: scripts/resolve-repo-context.py, type: calls}
   - {from: skills/run-dev-graph-status, to: scripts/validate-graph-schema.py, type: calls}
   - {from: skills/run-dev-graph-status, to: scripts/status-graph.py, type: calls}
@@ -89,8 +94,10 @@ dependencies:
   - {from: skills/run-dev-graph-sync, to: scripts/gh-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/bd-bridge.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/reconcile-github-lifecycle.py, type: calls}
+  - {from: scripts/reconcile-github-lifecycle.py, to: scripts/upsert-node.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/validate-graph-schema.py, type: calls}
   - {from: skills/run-dev-graph-sync, to: scripts/manage-worktree-lease.py, type: calls}
+  - {from: skills/run-dev-graph-sync, to: scripts/build-parity-manifest.py, type: calls}
   - {from: skills/run-dev-graph-render, to: scripts/render-graph-html.py, type: calls}
   - {from: skills/run-dev-graph-schedule, to: scripts/schedule-graph.py, type: calls}
   - {from: skills/run-dev-graph-init, to: scripts/resolve-repo-context.py, type: calls}

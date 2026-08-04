@@ -17,11 +17,13 @@ allowed-tools:
   - WebSearch
   - WebFetch
   - Read
+  - Write
   - Bash
 responsibility_refs:
   - prompts/R1-identify.md
   - prompts/R2-fetch.md
   - prompts/R3-record.md
+  - prompts/R4-audit-doc-freshness.md
 schema_refs:
   - ../../schemas/fetched-references.schema.json
 responsibilities:
@@ -33,6 +35,9 @@ responsibilities:
     prompt_required: true
   - id: R3-record
     name: record
+    prompt_required: true
+  - id: R4-audit-doc-freshness
+    name: audit-doc-freshness
     prompt_required: true
 combinators:
   - with-goal-seek
@@ -48,7 +53,7 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
   criteria:
     - id: IN1
       loop_scope: inner
-      text: validate-source-citation.py で対象 target_id と fetched-references.json が全件対応し retrieved_at/source_url/official_publisher/official_host/(version または last_updated)/latest_checked_at を持ち公式host一致であることを検証し欠落0件。
+      text: validate-source-citation.py で対象 target_id と fetched-references.json が全件対応し retrieved_at/source_url/official_publisher/official_host/(version または last_updated)/latest_checked_at/evidence_ref/evidence_sha256 を持ち、公式host・時刻・repo内取得証跡digestが一致することを検証し欠落0件。
       verify_by: script
     - id: OUT1
       loop_scope: outer
@@ -58,17 +63,17 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 
 # run-system-spec-doc-fetch
 
-> システム仕様ヒアリングで使う予定の外部技術について、**最新公式ドキュメントの出典記録** `fetched-references.json` を都度取得して組み立てる run skill。起動経路は (a) `spec-compile` (C10) 前の未取得参照検出、(b) `run-system-spec-elicit` (C01) R2 ヒアリング中の裏取り要求の 2 系統。責務の正本は `prompts/R1-identify.md` / `R2-fetch.md` / `R3-record.md`。
+> システム仕様ヒアリングで使う予定の外部技術について、**最新公式ドキュメントの出典記録** `fetched-references.json` を都度取得して組み立てる run skill。起動経路は (a) `spec-compile` (C10) 前の未取得参照検出、(b) `run-system-spec-elicit` (C01) R2 ヒアリング中の裏取り要求の 2 系統。責務の正本は `prompts/R1-identify.md` / `R2-fetch.md` / `R3-record.md` / `R4-audit-doc-freshness.md`。
 
 ## Purpose & Output Contract
 
 **入力**: `spec-state.json` (C01 出力) の`targets[]`、`decisions[].options[].evidence_refs`候補、`knowledge_candidates[]`。ヒアリング/R5意思決定中の裏取りでは比較候補の公式文書・公式価格ページ。seed外knowledgeでは `status=discovered` candidateの一次資料を確認する。
 **出力**: `fetched-references.json` (共有データ契約)。
 
-意思決定候補の価格/無料枠/制約は変動するため、R5の推奨前に通常の鮮度契約（公式publisher/host、versionまたは更新日、retrieved/latest_checked_at）で再確認する。
+意思決定候補の価格/無料枠/制約は変動するため、R5の推奨前に通常の鮮度契約（公式publisher/host、versionまたは更新日、retrieved/latest_checked_at、取得証跡 digest）で再確認する。
 **完了条件**: 下記「完了チェックリスト」を全充足 (IN1 = `validate-source-citation.py` exit0)。
 
-**上流指針 (doctrine anchor)**: 取得対象の技術は `ref-system-design-knowledge/references/doctrine-anchor-registry.json` の concern authority (presentation=Apple HIG / application-architecture・data-access=Clean Architecture / authentication・security=OWASP ASVS+Secrets Management / reliability・operations=Google SRE) が示す上流指針に沿った公式一次資料を優先取得する。取得した参照は IN1 の official_host 検証 (C13 citation gate) と併せて、C14 knowledge graph の位相順 (上位概念→下位概念) で後続 (C01/C03) の参照へ供給する。registry は具体技術を直書きせず上流工程を導くのみで、本 skill の取得対象 (`target_id`) 自体は `spec-state.json` が正本。
+**上流指針 (doctrine anchor)**: 取得対象の技術は `ref-system-design-knowledge/references/doctrine-anchor-registry.json` の concern authority (presentation=Apple HIG / application-architecture・data-access=Clean Architecture / authentication・security=OWASP ASVS+Secrets Management / reliability・operations=Google SRE) が示す上流指針に沿った公式一次資料を優先取得する。取得した参照は IN1 の official_host・時刻・取得証跡検証 (C13 citation gate) と併せて、C14 knowledge graph の位相順 (上位概念→下位概念) で後続 (C01/C03) の参照へ供給する。registry は具体技術を直書きせず上流工程を導くのみで、本 skill の取得対象 (`target_id`) 自体は `spec-state.json` が正本。
 
 `fetched-references.json` の形状 (厳守):
 
@@ -77,11 +82,13 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
   {"target_id":"react","retrieved_at":"2026-07-11T00:00:00Z",
    "source_url":"https://react.dev/reference/react","official_publisher":"Meta",
    "official_host":"react.dev","version":"19.0",
-   "latest_checked_at":"2026-07-11T00:00:00Z","summary":"..."}
+   "latest_checked_at":"2026-07-11T00:00:00Z",
+   "evidence_ref":"system-spec/retrieval-evidence/react.json",
+   "evidence_sha256":"<sha256>","summary":"..."}
 ]}
 ```
 
-- 必須: `target_id` / `retrieved_at` / `source_url` / `official_publisher` / `official_host` / `latest_checked_at` / `summary`、および `version` か `last_updated` のいずれか。
+- 必須: `target_id` / `retrieved_at` / `source_url` / `official_publisher` / `official_host` / `latest_checked_at` / `evidence_ref` / `evidence_sha256` / `summary`、および `version` か `last_updated` のいずれか。`evidence_ref` は project root 相対、`evidence_sha256` はその実ファイルの小文字16進数64桁 SHA-256 とする。
 - 全件対応: `spec-state.targets[]` の各 `target_id` に record が 1 件対応 (欠落 0・重複 0)。
 - host 一致: `source_url` の host が `official_host` と一致する。
 
@@ -92,7 +99,7 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 3. **恒久キャッシュ禁止**: `fetched-references.json` は都度生成。ミラーリングや永続キャッシュはしない。
 4. **決定論組み立て**: 記録は `scripts/build-fetched-references.py` で正規化し、`validate-source-citation.py` (IN1) で機械検証する。手書き JSON で緑化しない。
 5. **時刻は実取得値**: `retrieved_at`/`latest_checked_at` は R2 が控えた実時刻をそのまま用いる (壁時計上書きなし = 再現性)。
-6. **鮮度判定は分離**: 現行最新版かの意味判定は本 skill でなく C08 (`system-spec-doc-freshness-auditor`, OUT1) の担当。本 skill は形式・全件・host 一致まで。
+6. **鮮度判定は分離**: 現行最新版かの意味判定は本 skill でなく C08 (`system-spec-doc-freshness-auditor`, OUT1) の担当。本 skill は形式・全件・host・時刻・取得証跡一致まで。
 7. **MCP 対象外**: 取得は WebSearch/WebFetch のみで完結する (MCP 連携は `open_issues` GAP-MCP-DOCFETCH で保留)。
 8. **言語**: 本文は日本語、`target_id`/URL/version/JSON キーは英語のまま。
 9. **Knowledge qualification担当**: C02は`discovered` candidateごとに公式/一次HTTPS資料を取得し、実確認時刻付き`source_refs[]`を作る。C01の単一writer `set-knowledge-candidate` を通してのみ `qualified` へ進める。C02はdeep card作成やcurated昇格を代行しない。
@@ -103,7 +110,7 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 
 ### ゴール (Goal)
 
-対象カテゴリで使う予定のツール/インフラ/フレームワークの最新公式ドキュメントが取得され、`target_id` 全件対応・公式 publisher/host・version または更新日・取得/確認時刻・参照元を保持した `fetched-references.json` が、現行版を再照合できる状態で確定している。
+対象カテゴリで使う予定のツール/インフラ/フレームワークの最新公式ドキュメントが取得され、`target_id` 全件対応・公式 publisher/host・version または更新日・取得/確認時刻・参照元・内容 digest を保持した `fetched-references.json` が、現行版を再照合できる状態で確定している。
 
 ### 目的・背景 (Why)
 
@@ -114,9 +121,10 @@ feedback_contract: # per-skill 評価基準 (component-inventory.json C02 SSOT)
 - [ ] R1 が `spec-state.json` 由来の取得対象一覧 (`target_id` 群) を捏造 0 で確定している
 - [ ] R2 が各対象の公式 host を特定し、非公式ソースで穴埋めしていない (未取得は理由付きで明示)
 - [ ] 各 record が必須フィールドを充足し version か `last_updated` のいずれかを持つ
+- [ ] 各 record が実 WebFetch の最小取得証跡を `system-spec/retrieval-evidence/<target_id>.json` に残し、repo 相対 `evidence_ref` と SHA-256 `evidence_sha256` でその内容へ束縛している
 - [ ] `source_url` の host が `official_host` と一致している
 - [ ] 対象一覧と `fetched-references.json` が全件対応 (欠落 0・重複 0)
-- [ ] IN1: `validate-source-citation.py --targets <targets> --references fetched-references.json` が exit0
+- [ ] IN1: `validate-source-citation.py --targets <targets> --references fetched-references.json --repo-root <project-root>` が exit0
 - [ ] `knowledge_candidates[]` のdiscovered対象は、公式/一次HTTPS `source_refs[]` と実`checked_at`を得たものだけがqualifiedになっている
 
 ### ゴールシークループ
@@ -140,7 +148,7 @@ python3 skills/run-system-spec-doc-fetch/scripts/build-fetched-references.py \
   assemble --records records.json --targets targets.json --out fetched-references.json
 # IN1 ゲート (共有 script)
 python3 scripts/validate-source-citation.py \
-  --targets targets.json --references fetched-references.json
+  --targets targets.json --references fetched-references.json --repo-root "$CLAUDE_PROJECT_DIR"
 ```
 
 ## Gotchas

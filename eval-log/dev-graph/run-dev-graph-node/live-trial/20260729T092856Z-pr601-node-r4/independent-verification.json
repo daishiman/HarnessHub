@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "evaluated_at": "2026-07-29T09:43:00Z",
+  "evaluator": "fresh-agent/fresh_c02_pr601_r4_evaluator",
+  "scenario": "C02-OUT1-positive-mixed-artifacts",
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": [
+    "task.md",
+    "pane.txt",
+    "transcript.jsonl",
+    "out/status.json"
+  ],
+  "observations": {
+    "target_skill_invocation": "verified",
+    "automatic_classification_count": 5,
+    "full_contiguous_body_preservation_count": 5,
+    "initial_body_source_from_input_count": 5,
+    "updated_artifact_kind_count": 2,
+    "feature_direct_registration": "fail-closed/write_count=0",
+    "final_graph_revision": 7,
+    "goal_seek_pending_count": 0,
+    "null_evidence_count": 0
+  }
+}

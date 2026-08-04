@@ -1,0 +1,463 @@
+
+ ▐▛███▜▌   Claude Code v2.1.62
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-28
+
+✻ Conversation compacted (ctrl+o for history)
+
+  ⎿  Read eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/feat-admin-report-body.md (35 lines)
+  ⎿  Read eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/feat-notification-body.md (34 lines)
+  ⎿  Read eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/feat-dashboard-body.md (34 lines)
+  ⎿  Read eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/feat-user-auth-body.md (35 lines)
+  ⎿  Read eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/arch-body.md (64 lines)
+  ⎿  Skills restored (dev-graph:run-dev-graph-decompose)
+
+⏺ Continuing with the none fixture. Registering the remaining 3 feature nodes.
+
+⏺ Bash(NONE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"
+      python3 /Users/dm/orca/workspaces/Ha…)
+  ⎿  {
+       "artifact_sha256_after": "640ffbe3a9dfda93a2aa301494f724ea7e51b46235df9883e473d370a9e7ab88",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(NONE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"
+      python3 /Users/dm/orca/workspaces/Ha…)
+  ⎿  {
+       "artifact_sha256_after": "c0093402917a9c3a856459035072bb3810a44619ddf1941e71f7049592506901",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(NONE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"
+      python3 /Users/dm/orca/workspaces/Ha…)
+  ⎿  {
+       "artifact_sha256_after": "79ea5109912fc4fac275d7b04f60f3d93f4b0c18095ae4312bd7640eaf87c168",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ All 5 nodes registered (graph_revision=5). Now save macro-preview.json and validate via stdin.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Graph looks correct. Save preview and validate via stdin.
+
+⏺ Bash(NONE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"
+      cp "$NONE_ROOT/.dev-graph/state/grap…)
+  ⎿  (No output)
+
+⏺ Bash(NONE_ROOT="/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"
+      DEV_GRAPH_PLUGIN="/Users/dm/orca/wor…)
+  ⎿  Error: Exit code 2
+     cat: /.dev-graph/state/graph.json: No such file or directory
+     /Library/Frameworks/Python.framework/Versions/3.11/Resources/Python.app/Contents/MacOS/Python: can't open file '/scripts/validate-graph-schema.py': [Errno 2] No such file or directory
+
+     cat: /.dev-graph/state/graph.json: No such file or directory
+     /Library/Frameworks/Python.framework/Versions/3.11/Resources/Python.app/Contents/MacOS/Python: can't open file '/scripts/validate-graph-schema.py': [Errno 2] No such file or directory
+
+⏺ Variable expansion issue. Using full paths directly.
+
+⏺ Bash(cat "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/.dev-graph/state/graph.json" | python3 "/Us…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +4 lines (ctrl+o to expand)
+
+⏺ Validation passed. Now promote feat-user-auth-001 to confirmed/pass/complete. Need to compute the digest.
+
+⏺ Bash(python3 - <<'PY'
+      import json, hashlib…)
+  ⎿  digest: 8c263b33c52b6f7c5ec2bdd614861aebd2ff69654915e8a635699209863fbaec
+
+⏺ Now write the promoted node via upsert-node.py.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now create the promoted node JSON and submit it.
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  Error: PreToolUse:Bash hook error: [python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard-graph-schema.py" --repo-root "${CLAUDE_PROJECT_DIR}"]: [guard-graph-schema] BLOCKED: interpreter 経由の graph
+     authority 書込みは C02 atomic writer を迂回できない (初期 graph は scripts/build-graph-store.py、node 更新は scripts/upsert-node.py 経由)
+
+⏺ Hook blocking Python. Using Write tool directly.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/none-promote-auth.json)
+  ⎿  Wrote 104 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/none-promote-auth.json
+       1 {
+       2   "acceptance": [
+       3     "未登録ユーザーがメールとパスワードで新規登録できる",
+       4     "登録済みユーザーがログインしてセッションを取得できる",
+       5     "不正な資格情報ではログインが拒否される"
+       6   ],
+       7   "architecture_refs": [
+       8     "arch-webapp-foundation-001"
+       9   ],
+      10   "artifact_kind": "feature",
+     … +94 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "71e9bfa0e9247d81c06e8e22b0664e62baedd91b71ff0fc3e107a0c2e27dc321",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Promotion applied (graph_revision=6). Verify the digest persisted correctly.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  confirmation_status: confirmed
+     evaluation_status: pass
+     readiness: complete
+     digest: 8c263b33c52b6f7c5ec2bdd614861aebd2ff69654915e8a635699209863fbaec
+
+⏺ Promotion confirmed. Now invoke Skill tool #4 (2nd Skill call for none fixture - idempotent re-execution).
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ This is the 2nd Skill call for the none fixture (idempotent re-execution). The graph already has all 5 nodes registered and feat-user-auth-001 promoted. I need to re-submit all 5 nodes and verify
+  they all produce noop/write_count=0.
+
+  First, resolve repo context and verify current state.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root "/Users/dm/orca/workspaces/Harness…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +24 lines (ctrl+o to expand)
+
+⏺ Good. DEV_GRAPH_ROOT confirmed. Now re-submit all 5 persisted nodes for idempotent noop verification. I'll read the current graph and re-submit each node.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  graph_revision: 6
+     node_count: 5
+       arch-webapp-foundation-001: draft/pending/incomplete
+     … +4 lines (ctrl+o to expand)
+
+⏺ Graph has all 5 nodes, auth promoted. Now re-submit all 5 for noop verification. The node JSON files already exist in eval-log/.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "bfb8909fd4a829c93d105f6ec19c0b1e3db18895e435ffd796739efd53001405",
+       "body_source": "from_file",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "71e9bfa0e9247d81c06e8e22b0664e62baedd91b71ff0fc3e107a0c2e27dc321",
+       "body_source": "from_file",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "640ffbe3a9dfda93a2aa301494f724ea7e51b46235df9883e473d370a9e7ab88",
+       "body_source": "from_file",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "c0093402917a9c3a856459035072bb3810a44619ddf1941e71f7049592506901",
+       "body_source": "from_file",
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "79ea5109912fc4fac275d7b04f60f3d93f4b0c18095ae4312bd7640eaf87c168",
+       "body_source": "from_file",
+     … +13 lines (ctrl+o to expand)
+
+⏺ All 5 nodes: operation=noop, write_count=0, graph_revision unchanged at 6. Idempotent re-execution verified for none fixture.
+
+  Now run the audit with --run-binding none.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/audit_decompose_live_trial.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub…)
+  ⎿  Error: Exit code 2
+     /Library/Frameworks/Python.framework/Versions/3.11/Resources/Python.app/Contents/MacOS/Python: can't open file
+     '/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/audit_decompose_live_trial.py': [Errno 2] No such file or directory
+
+     /Library/Frameworks/Python.framework/Versions/3.11/Resources/Python.app/Contents/MacOS/Python: can't open file
+     '/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/audit_decompose_live_trial.py': [Errno 2] No such file or directory
+
+⏺ Searched for 1 pattern (ctrl+o to expand)
+
+⏺ It's in tests/fixtures/.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py \
+        --repo-root "/Users/dm/orca/workspaces/Har…)
+  ⎿  Error: Exit code 2
+     usage: audit_decompose_live_trial.py [-h] {snapshot,audit} ...
+     audit_decompose_live_trial.py: error: argument command: invalid choice: '/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none' (choose
+     from 'snapshot', 'audit')
+
+     usage: audit_decompose_live_trial.py [-h] {snapshot,audit} ...
+     audit_decompose_live_trial.py: error: argument command: invalid choice: '/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none' (choose
+     from 'snapshot', 'audit')
+
+⏺ Needs a subcommand. Let me check the usage.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py audit --help)
+  ⎿  usage: audit_decompose_live_trial.py audit [-h] --repo-root REPO_ROOT
+                                                --preview PREVIEW --scenario
+                                                SCENARIO --pre-state PRE_STATE
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py audit \
+        --repo-root "/Users/dm/orca/workspac…)
+  ⎿  Error: Exit code 65
+     [Errno 2] No such file or directory: 'C14-OUT1-positive-macro-decomposition-r7'
+
+     [Errno 2] No such file or directory: 'C14-OUT1-positive-macro-decomposition-r7'
+
+⏺ The scenario might be a file path. Let me check what was used for the beads fixture audit.
+
+⏺ Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  scenarios [
+       {
+         "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+     … +7 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r7",
+       "component_id": "C14",
+     … +22 lines (ctrl+o to expand)
+
+⏺ The --scenario flag expects the scenario file path. Let me try.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py audit \
+        --repo-root "/Users/dm/orca/workspac…)
+  ⎿  (No output)
+  ⎿  (timeout 30s)
+
+⏺ Audit completed. Let me read the results.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  pass: False
+     run_binding_attested: True
+     evidence_binding.all_bound: False
+     … +12 lines (ctrl+o to expand)
+
+⏺ Pass is False. Let me check the evidence_binding details to understand the failure.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {
+       "all_bound": false,
+       "checks": [
+     … +42 lines (ctrl+o to expand)
+
+⏺ Digest mismatch on feat-user-auth-001. The auditor recomputes the digest from the persisted node. Let me check what changed.
+
+⏺ Bash(python3 -c "
+      import json, hashlib…)
+  ⎿  updated_at: 2026-07-29T13:20:00Z
+     checked_at: 2026-07-29T13:20:00Z
+     confirmation_status: confirmed
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  (No output)
+
+⏺ No differences between submitted and persisted. So the node is exactly what I submitted. The issue is that the digest I pre-computed doesn't match what the auditor recomputes. Let me check the exact
+  canonical form used.
+
+⏺ Bash(python3 -c "
+      import json, hashlib…)
+  ⎿  Method 1 (exclude key): cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3
+     Method 2 (null values): bff94aeef0303f654bb8aba57f234eb906679142b3af99f4bfe254a86e8b3f63
+     declared: 8c263b33c52b6f7c5ec2bdd614861aebd2ff69654915e8a635699209863fbaec
+
+⏺ The digest was computed incorrectly - I need to use the auditor's method (exclude the key entirely) and compute from the final promoted state. The correct digest is
+  cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3. I need to update the node.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Update(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/none-promote-auth.json)
+  ⎿  Added 1 line, removed 1 line
+      28      "status": "open"
+      29    },
+      30    "confirmation_evidence": {
+      31 -    "evaluated_digest": "8c263b33c52b6f7c5ec2bdd614861aebd2ff69654915e8a635699209863fbaec",
+      31 +    "evaluated_digest": "cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3",
+      32      "evaluator": "decompose-agent",
+      33      "evidence_ref": "eval-log/macro-preview.json"
+      34    },
+
+⏺ Now re-submit the fixed node.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/upsert-node.py \
+        --repo-root "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log…)
+  ⎿  {
+       "artifact_sha256_after": "28d4c45c65dfb8dd9cc7db14750dac146f8b6e30a56f930120f7884aaa8b0d82",
+       "body_source": "from_file",
+     … +14 lines (ctrl+o to expand)
+
+⏺ Now verify the digest is correct and re-run audit.
+
+⏺ Bash(python3 -c "
+      import json, hashlib…)
+  ⎿  recomputed: cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3
+     declared: cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3
+     match: True
+
+⏺ Digest matches now. Re-run the audit.
+
+⏺ Bash(python3 /Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py audit \
+        --repo-root "/Users/dm/orca/workspac…)
+  ⎿  (No output)
+  ⎿  (timeout 30s)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  pass: True
+     run_binding_attested: True
+     evidence_binding.all_bound: True
+     … +7 lines (ctrl+o to expand)
+
+⏺ None fixture audit: pass=True. Audit implementation SHA matches beads (be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f).
+
+  Now let me check the binding details.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  (No output)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  binding_observations_distinct : true
+     binding_projections : {
+       "beads": {
+     … +42 lines (ctrl+o to expand)
+
+⏺ All bindings correct. All 5 nodes bound to "none". Now complete the goal-seek for the none fixture. Let me append the second line to intermediate.jsonl and create progress.json.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Bash(printf '%s\n' '{"original_goal":"自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready
+      featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/sys…)
+  ⎿  (No output)
+
+⏺ Now create progress.json for none fixture.
+
+⏺ Write(eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/run-dev-graph-decompose-progress.json)
+  ⎿  Wrote 32 lines to eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/run-dev-graph-decompose-progress.json
+       1 {
+       2   "checklist": [
+       3     {
+       4       "id": "macro_no_phase_task",
+       5       "description": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+       6       "status": "pass",
+       7       "evidence": "graph has 5 nodes (1 architecture + 4 features), acyclic=true, task_count=0"
+       8     },
+       9     {
+      10       "id": "no_draft_publication",
+     … +22 lines (ctrl+o to expand)
+
+⏺ Run goal-seek verification.
+
+⏺ Bash(python3 - "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none/eval-log/run-dev-graph-decompose-goal…)
+  ⎿  PASS: 2 rows verified, hash=ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795
+
+⏺ None fixture complete. Both fixtures done. Now need to:
+  1. Cross-fixture verification (audit SHA match)
+  2. Write final status.json
+
+  Cross-fixture check: Both audits have audit_implementation.sha256 = be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f - confirmed matching.
+
+  Now read the task file to check what the final status.json should contain.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Now I need to do the manual 7-point verification for the none fixture, then write status.json. Let me perform the 7-point verification.
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  === 1. Registration ===
+     graph_revision: 7
+     node_count: 5
+     … +32 lines (ctrl+o to expand)
+
+⏺ Now points 6 and 7, plus the binding audit details and git status check.
+
+⏺ Bash(python3 -c "
+      import json, hashlib…)
+  ⎿  === 6. Evidence binding ===
+     declared_digest: cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3
+     recomputed_digest: cd9aff23f19fe547e5efd5aec8a64d145b9b125e8242d3c019a29bb6a0c043a3
+     match: True
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  Error: Exit code 1
+     Traceback (most recent call last):
+       File "<string>", line 21, in <module>
+     AttributeError: 'list' object has no attribute 'items'
+     === 7. Falsifiability ===
+     executed: True
+     all_rejected: True
+       control: readiness_clause, clause_fired: True, rejected: True
+       control: publication_intent_on_blocked_node, clause_fired: True, rejected: True
+
+     … +14 lines (ctrl+o to see all)
+
+⏺ Bash(git -C /Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none status --short)
+  ⎿  Error: Sibling tool call errored
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  beads: exercised=False, route_declarable=True, zero_attribution=not-exercised-by-run
+       probe: {"blocking_rules": [], "decided_by": ["python3", "/Users/dm/orca/workspaces/HarnessHub/wt-28/plugins/dev-graph/scripts/validate-graph-schema.py", "--graph", "-", "--repo-root", "/Use
+     rs/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none"], "declar
+     … +18 lines (ctrl+o to expand)
+
+⏺ Bash(git -C "/Users/dm/orca/workspaces/HarnessHub/wt-28/eval-log/dev-graph/live-trial-fixtures/wt28-finalmain-decompose-none" status --short)
+  ⎿   M .dev-graph/state/graph.json
+     ?? .dev-graph/state/.graph.json.register.lock
+     ?? architecture/arch-webapp-foundation-001.md
+     … +6 lines (ctrl+o to expand)
+
+⏺ All 7 verification points pass for none fixture:
+
+  1. Registration: graph_revision=7, 5 nodes (1 architecture + 4 features)
+  2. DAG: 3 edges, max 1 dep/feature (threshold 3), acyclic=True (Kahn, 5/5 visited)
+  3. Task granularity: task=0, phase_ref=0, parent_feature=0, P-pattern=0
+  4. Draft/candidate gate: feat-user-auth-001 promoted (confirmed/pass/complete), 3 others draft/pending/incomplete
+  5. Binding: all 5 nodes tracker_binding=none; none=exercised/declarable, beads=not-exercised/declarable, github=not-exercised/not-declarable (schema: $.github_publication.mode: not in enum ['issue',
+  'issue_and_projects'])
+  6. Evidence binding: digest match confirmed (cd9aff23...)
+  7. Falsifiability: executed=true, all_rejected=true, both controls clause_fired=true
+
+  Cross-fixture check: audit_implementation.sha256 = be85370ba80cb255b49863efb6556852b97074eedf9c41b5a34ef0e0b083e25f matches between beads and none audits.
+
+  Now write the final status.json.
+
+⏺ Read 1 file (ctrl+o to expand)
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T131000Z-wt28-finalmain-c11-decompose-paired/out/status.json)
+  ⎿  Wrote 1 lines to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260729T131000Z-wt28-finalmain-c11-decompose-paired/out/status.json
+      1 {"status": "PASS", "scenario": "C14-OUT1-positive-macro-decomposition-r7", "binding": "paired:beads+none"}
+
+⏺ DONE: PASS
+
+✻ Baked for 28m 37s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                         Update available! Run: brew upgrade claude-code

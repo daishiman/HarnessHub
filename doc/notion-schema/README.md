@@ -35,8 +35,13 @@ python3 scripts/sync-notion-schema.py --check
 python3 scripts/sync-notion-schema.py --apply
 ```
 
-`.notion-config.json` が未配置の repo では `[notion_config] WARN: ... not found` を出して exit 0 (skip)。
-Notion API トークンは env `NOTION_TOKEN` → macOS Keychain (config の `keychain_service`/`keychain_account`) の順で解決。
+DB ID / token が解決できない場合は **exit 2 で停止** する (fail-closed)。「設定が無いから成功扱い」に
+しないのは、`--check` で「検査した結果の緑」と「検査していない緑」が区別できなくなるため。Notion 連携を
+使わない repo では、このコマンド自体を起動しない。
+
+Notion API トークンは macOS Keychain (config の `keychain_service`/`keychain_account`) → legacy fallback →
+`INTAKE_ALLOW_ENV_TOKEN=1` のときだけ env `NOTION_TOKEN`、の順で解決する (env は最優先ではない)。
+CI での投入手順は [notion-per-repo-setup.md §6](../../plugins/harness-creator/references/notion-per-repo-setup.md) を参照。
 
 ## 制約メモ
 

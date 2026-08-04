@@ -29,7 +29,9 @@
 
 ## Layer 3: インフラ層
 
-- 使用資産: Write/Edit、`validate-graph-schema.py`。
+- 使用資産: `build-repo-config.py` (`.dev-graph/config.json` の唯一の書込経路)、`build-graph-store.py` (初期 `.dev-graph/state/graph.json` の唯一の書込経路)、Write/Edit (graph authority 以外の成果物と `.dev-graph/tmp/config-draft.json`)、`validate-repo-config.py` (生成 config)、`validate-graph-schema.py` (初期 graph)。
+- `.dev-graph/config.json` へ Write/Edit・shell redirect・interpreter 書込みを使わない。C10 guard が graph authority への迂回として遮断する。config 全文は `.dev-graph/tmp/` 配下の draft へ置き、`--from-json` で writer に渡す。
+- `.dev-graph/state/graph.json` へ Write/Edit・shell redirect・`Path.write_text()` 等を使わない。config writer の成功後に `build-graph-store.py` を呼び、欠落時だけ canonical empty store を作る。既存 store は検証して保持し、暗黙修復しない。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -74,4 +76,3 @@
 ## 出力指示
 
 Layer 2 の入力・出力・責務境界・受入条件を正本としてこの単一責務だけを実行し、思考過程を出力せず、artifact/receipt、検証結果、未達 blocker だけを返す。
-

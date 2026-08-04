@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-19T14:10:09Z"
-status: "active"
+updated_at: "2026-08-01T12:29:53Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P10"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/evidence-summary.md"]
@@ -43,9 +43,11 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-07-25T00:47:04Z","evidence_refs":["issues/sys-lint-open-residue-ci-red-20260725.md"],"policy":"manual","reconciled_at":"2026-07-26T01:19:20.811908Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
+
+
 
 # エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約
 
@@ -71,3 +73,39 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-auth-tenancy` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-07-26 追加エビデンス
+
+- 実装 issue: `HarnessHub-b7ng` / dev-graph node: `issue-auth-tenancy-production-adapter-20260725`
+- 仕様反映: system-spec の `qa-074`、`qa-075`、`qa-082`〜`qa-086`、architecture 4 wrapper、feature node、spec wrapper
+- 記録: `docs/features/feat-auth-tenancy/spec-reflection-receipt.md`
+- 検証: task spec validator、認証/DB 集中テスト、`pnpm verify` の結果を最終レビュー記録へ集約する。
+- 最終レビュー補正: Auth.js request body の stream 維持と DB write scope の要求分離を回帰テストへ追加した。
+
+## 2026-08-01 追加エビデンス
+
+- 実装 issue: `HarnessHub-fnej`
+- dev-graph node: `issue-auth-tenancy-shared-google-oidc-20260729`
+- 変更: 共有 Google OAuth client、共通 callback、署名付き tenant state、
+  Workspace `hd` 強制、credential mode、migration、rollout/rollback。
+- 仕様反映: system-spec `qa-110`〜`qa-115`、仕様 wrapper、architecture 3 件、
+  feature、task、docs を正規 writer で同期する。
+- 最終レビュー: task plan validator、system-spec coverage/source citation、
+  認証/DB/tenant isolation/secret/type/lint/build、line limit、artifact placement、
+  branch diff を再実行し、結果を
+  [仕様反映受領書](../../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
+  に集約する。
+- 完了条件: draft PR の merge と default branch reconciliation までは
+  Beads と dev-graph を `in_progress` に維持する。
+
+## 2026-08-02 追加エビデンス
+
+- 実装 issue: `HarnessHub-uk2i`
+- dev-graph node: `issue-auth-tenancy-customer-managed-google-oidc-20260729`
+- 変更: 顧客所有 Google OAuth client の provider-admin 管理 UI/API、
+  lifecycle、暗号化 staging、CAS rotation、無効化後の安全な再開、監査。
+- 仕様反映: system-spec `qa-124`〜`qa-130`、仕様 wrapper、architecture 5 件、
+  feature、task、runbook、検証結果、仕様反映受領書を同期する。
+- 最終レビュー: Google 以外 issuer の操作拒否、active 再テスト時刻、disabled 再開、
+  Workspace domain 入力、secret 非露出、500 行分割を補正し、全品質ゲートを再実行する。
+- PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境確認、production migration は外部環境が必要な未完了項目のため、Beads と dev-graph を `in_progress` に維持する。

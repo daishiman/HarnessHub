@@ -1,0 +1,336 @@
+#!/usr/bin/env node
+/** feat-publish-pipeline P13 production smoke の実行手順。 */
+
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+import { createPublishSmokeDbProbe, createTursoClient } from '@harness-hub/db';
+
+import {
+  type ApiResult,
+  apiClient,
+  assert,
+  downloadR2,
+  expectString,
+  greenZip,
+  HELP,
+  loadConfig,
+  secretZip,
+  sha256,
+  smokeId,
+  TERMINAL,
+} from './smoke-production-publish-support.js';
+
+async function main(): Promise<void> {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    process.stdout.write(HELP);
+    return;
+  }
+
+  const config = loadConfig();
+  const adapter = createTursoClient({ url: config.databaseUrl, authToken: config.databaseToken });
+  const db = createPublishSmokeDbProbe(adapter);
+  const repositoryContext = {
+    tenantId: config.claims.tenant_id,
+    workspaceId: config.claims.workspace_id,
+    actorId: config.claims.sub,
+  };
+  const api = apiClient(config);
+  const projectId = smokeId('project');
+  const channelId = smokeId('channel');
+  const webChannelId = smokeId('web_channel');
+  const webReleaseId = smokeId('web_release');
+  const temp = await mkdtemp(join(tmpdir(), 'harness-hub-publish-smoke-'));
+  const cleanupRequests = new Set<string>();
+  let fixtureCreated = false;
+  let runError: unknown;
+  const cleanupErrors: string[] = [];
+  const observed: Record<string, unknown> = {};
+
+  try {
+    const now = Date.now();
+    await db.createProjectChannelFixture(repositoryContext, {
+      projectId,
+      channelId,
+      ownerUserId: config.claims.sub,
+      createdAt: now,
+    });
+    fixtureCreated = true;
+
+    const createRequest = async (): Promise<string> => {
+      const result = await api('POST', '/api/v1/publish', {
+        expected: 201,
+        json: { project_id: projectId, target: 'skill', visibility: 'workspace' },
+      });
+      assert(result.body.status === 'draft', 'S1: 新規 request が draft ではありません');
+      const id = expectString(result.body.id, 'S1 request id');
+      cleanupRequests.add(id);
+      return id;
+    };
+    const upload = async (id: string, bytes: Uint8Array, expected: number): Promise<ApiResult> =>
+      api('PUT', `/api/v1/publish/${id}/package`, { expected, bytes });
+    const submit = async (id: string, expected: number): Promise<ApiResult> =>
+      api('POST', `/api/v1/publish/${id}/submit`, { expected });
+
+    // S1/S2/S4: Green v1。
+    const v1Bytes = greenZip('1.0.0');
+    const v1Request = await createRequest();
+    const v1Upload = await upload(v1Request, v1Bytes, 200);
+    const v1Hash = expectString(v1Upload.body.content_hash, 'S2 v1 content_hash');
+    assert(v1Hash === sha256(v1Bytes), 'S2: v1 API hash と fixture hash が一致しません');
+    const v1Submit = await submit(v1Request, 200);
+    assert(v1Submit.body.status === 'published', 'S4: v1 が published ではありません');
+    const v1Release = expectString(v1Submit.body.release_id, 'S4 v1 release_id');
+    cleanupRequests.delete(v1Request);
+
+    // S3: secret ZIP は 422/needs_fix、Release と R2 registry を作らず stable を変えない。
+    const rejectedBytes = secretZip();
+    const rejectedHash = sha256(rejectedBytes);
+    const rejectedRequest = await createRequest();
+    const rejectedUpload = await upload(rejectedRequest, rejectedBytes, 422);
+    assert(rejectedUpload.body.error === 'package_rejected', 'S3: secret ZIP が package_rejected ではありません');
+    const findings = Array.isArray(rejectedUpload.body.findings) ? rejectedUpload.body.findings : [];
+    assert(
+      findings.some(
+        (finding) =>
+          typeof finding === 'object' &&
+          finding !== null &&
+          (finding as Record<string, unknown>).rule_id === 'secret-scan/aws-access-key-id',
+      ),
+      'S3: AWS access key finding がありません',
+    );
+    const rejectedSubmit = await submit(rejectedRequest, 200);
+    assert(rejectedSubmit.body.status === 'needs_fix', 'S3: rejected request が needs_fix ではありません');
+    const stableAfterRejection = await db.findStableReleaseId(repositoryContext, channelId);
+    assert(stableAfterRejection === v1Release, 'S3: secret ZIP 後に旧 stable v1 が変化しました');
+    const rejectedRow = await db.findRequest(repositoryContext, rejectedRequest);
+    assert(rejectedRow?.releaseId === null, 'S3: secret ZIP の PublishRequest に Release が結び付きました');
+
+    // 409 直列化: 先行 request を ready fixture にして、後続 submit を拒否させる。
+    const blockerRequest = await createRequest();
+    await upload(blockerRequest, greenZip('1.1.0'), 200);
+    await db.markRequestReady(repositoryContext, blockerRequest);
+
+    const v2Bytes = greenZip('2.0.0');
+    const v2Request = await createRequest();
+    const v2Upload = await upload(v2Request, v2Bytes, 200);
+    const v2Hash = expectString(v2Upload.body.content_hash, 'S2 v2 content_hash');
+    assert(v2Hash === sha256(v2Bytes), 'S2: v2 API hash と fixture hash が一致しません');
+    const blocked = await submit(v2Request, 409);
+    assert(blocked.body.error === 'channel_busy', '409: channel_busy ではありません');
+    const cancelled = await api('POST', `/api/v1/publish/${blockerRequest}/cancel`, { expected: 200 });
+    assert(cancelled.body.status === 'draft', 'cleanup: blocker cancel が draft を返しません');
+    cleanupRequests.delete(blockerRequest);
+
+    const v2Submit = await submit(v2Request, 200);
+    assert(v2Submit.body.status === 'published', 'S4: v2 が published ではありません');
+    const v2Release = expectString(v2Submit.body.release_id, 'S4 v2 release_id');
+    cleanupRequests.delete(v2Request);
+
+    // 12 route contract のうち Bearer 対応経路は成功、session-only 経路は明示的な 403 を確認する。
+    const listed = await api('GET', `/api/v1/publish?project_id=${encodeURIComponent(projectId)}&limit=100`, {
+      expected: 200,
+    });
+    const listedItems = Array.isArray(listed.body.items) ? listed.body.items : [];
+    assert(
+      listedItems.some(
+        (item) => typeof item === 'object' && item !== null && (item as Record<string, unknown>).id === v2Request,
+      ),
+      'route coverage: GET publish list に v2 request がありません',
+    );
+    const detailed = await api('GET', `/api/v1/publish/${v2Request}`, { expected: 200 });
+    assert(
+      detailed.body.id === v2Request && detailed.body.status === 'published',
+      'route coverage: GET publish detail 不一致',
+    );
+    const approveDenied = await api('POST', `/api/v1/publish/${v2Request}/approve`, { expected: 403 });
+    assert(
+      approveDenied.body.error === 'credential_not_allowed',
+      'route coverage: approve が Bearer を fail-closed で拒否しません',
+    );
+    const releasesDenied = await api('GET', `/api/v1/projects/${projectId}/releases`, { expected: 403 });
+    assert(
+      releasesDenied.body.error === 'credential_not_allowed',
+      'route coverage: releases list が session-only 契約を守りません',
+    );
+
+    // S5: v2 -> v1 rollback、v1 -> v2 promote。
+    const rolledBack = await api('POST', `/api/v1/channels/${channelId}/rollback`, {
+      expected: 200,
+      json: { release_id: v1Release },
+    });
+    assert(rolledBack.body.stable_release_id === v1Release, 'S5: rollback 後 stable が v1 ではありません');
+    const promoted = await api('POST', `/api/v1/channels/${channelId}/promote`, {
+      expected: 200,
+      json: { release_id: v2Release },
+    });
+    assert(promoted.body.stable_release_id === v2Release, 'S5: promote 後 stable が v2 ではありません');
+
+    const suspended = await api('POST', `/api/v1/releases/${v1Release}/suspend`, { expected: 200 });
+    assert(suspended.body.status === 'suspended', 'route coverage: 非 stable v1 を suspend できません');
+
+    // deployment は web_app 出口なので、同じ Project 配下に専用 channel/release fixture を作る。
+    const fixtureNow = Date.now();
+    await db.createWebReleaseFixture(repositoryContext, {
+      projectId,
+      channelId: webChannelId,
+      releaseId: webReleaseId,
+      packageHash: v2Hash,
+      createdBy: config.claims.sub,
+      createdAt: fixtureNow,
+    });
+    const deployment = await api('POST', `/api/v1/projects/${projectId}/deployment`, {
+      expected: 201,
+      json: {
+        channel_id: webChannelId,
+        release_id: webReleaseId,
+        url: `https://example.invalid/${projectId}`,
+        provider: 'cloudflare',
+        exit_code: 1,
+      },
+    });
+    const deploymentId = expectString(deployment.body.id, 'route coverage deployment id');
+    assert(
+      deployment.body.orphan_candidate === true,
+      'route coverage: failed deployment が orphan_candidate ではありません',
+    );
+
+    const smokeIds = new Set([
+      v1Request,
+      rejectedRequest,
+      blockerRequest,
+      v2Request,
+      v1Release,
+      v2Release,
+      channelId,
+      webChannelId,
+      webReleaseId,
+      deploymentId,
+    ]);
+    const evidence = await db.collectEvidence(repositoryContext, {
+      projectId,
+      channelId,
+      contentHashes: [v1Hash, v2Hash, rejectedHash],
+      entityIds: smokeIds,
+    });
+    assert(evidence.stableReleaseId === v2Release, 'S5: DB stable pointer が v2 ではありません');
+    const releaseRows = evidence.releaseRows;
+    assert(
+      releaseRows.some((row) => row.id === v1Release) && releaseRows.some((row) => row.id === v2Release),
+      'S4: v1/v2 Release が DB にそろっていません',
+    );
+    assert(!releaseRows.some((row) => row.packageHash === rejectedHash), 'S3: secret ZIP の Release が存在します');
+
+    // R2 content-addressed object を再取得し、API/DB/実体の SHA-256 を一致させる。
+    const packageRows = evidence.packageRows;
+    for (const hash of [v1Hash, v2Hash]) {
+      const row = packageRows.find((item) => item.contentHash === hash);
+      assert(row, `R2: packages row がありません (${hash})`);
+      const destination = join(temp, `${hash}.zip`);
+      downloadR2(config.r2Bucket, row.r2Key, destination);
+      const downloaded = await readFile(destination);
+      assert(sha256(downloaded) === hash, `R2: 再取得 SHA-256 が不一致です (${hash})`);
+    }
+    assert(!packageRows.some((row) => row.contentHash === rejectedHash), 'S3: secret ZIP が registry に存在します');
+
+    // S6: 共通検証器で全 chain を再計算し、この smoke の必須 action も確認する。
+    const chain = evidence.auditChain;
+    assert(chain?.ok, `S6: audit chain error: ${chain?.errors.join(' / ') ?? 'tenant chain missing'}`);
+    const actions = new Set(evidence.auditActions);
+    for (const action of [
+      'publish.request',
+      'publish.package_upload',
+      'publish.submit',
+      'publish.approve',
+      'publish.cancel',
+      'channel.rollback',
+      'channel.promote',
+      'release.suspend',
+      'deployment.register',
+    ]) {
+      assert(actions.has(action), `S6: audit action ${action} がありません`);
+    }
+
+    observed.S1 = { request_id: v1Request, status: 'draft' };
+    observed.S2 = { v1_hash: v1Hash, v2_hash: v2Hash };
+    observed.S3 = {
+      request_id: rejectedRequest,
+      status: 'needs_fix',
+      registry_rows: 0,
+      release_id: null,
+      stable_unchanged: v1Release,
+    };
+    observed.S4 = { v1_release: v1Release, v2_release: v2Release };
+    observed.S5 = { rollback_to: v1Release, promote_to: v2Release };
+    observed.S6 = { checked: chain.checked, errors: chain.errors.length, actions: [...actions].sort() };
+    observed.serialization = { status: 409, error: 'channel_busy' };
+    observed.r2 = { verified_hashes: [v1Hash, v2Hash] };
+    observed.routes = {
+      contract_paths: 12,
+      bearer_success_paths: 10,
+      session_only_bearer_denials: ['publish.approve', 'project.releases'],
+      deployment_reference_id: deploymentId,
+    };
+  } catch (error) {
+    runError = error;
+  } finally {
+    for (const requestId of cleanupRequests) {
+      try {
+        const row = await db.findRequest(repositoryContext, requestId);
+        if (row && !TERMINAL.has(row.status)) {
+          await api('POST', `/api/v1/publish/${requestId}/cancel`, { expected: 200 });
+        }
+      } catch (error) {
+        cleanupErrors.push(`request ${requestId}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+    if (fixtureCreated) {
+      try {
+        await db.archiveProject(repositoryContext, projectId);
+      } catch (error) {
+        cleanupErrors.push(`project archive: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+    try {
+      adapter.close();
+    } catch (error) {
+      cleanupErrors.push(`database close: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    try {
+      await rm(temp, { recursive: true, force: true });
+    } catch (error) {
+      cleanupErrors.push(`temporary files: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  if (runError !== undefined) {
+    if (cleanupErrors.length > 0) {
+      throw new AggregateError(
+        [runError, ...cleanupErrors.map((message) => new Error(message))],
+        `production smoke failed and cleanup failed: ${cleanupErrors.join(' / ')}`,
+      );
+    }
+    throw runError;
+  }
+  if (cleanupErrors.length > 0) {
+    throw new Error(`production smoke cleanup failed: ${cleanupErrors.join(' / ')}`);
+  }
+
+  process.stdout.write(
+    `${JSON.stringify(
+      {
+        status: 'pass',
+        project_id: projectId,
+        target_channel_id: channelId,
+        project_cleanup: 'archived',
+        immutable_evidence_retained: ['releases', 'r2_objects', 'audit_events'],
+        checks: observed,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+}
+
+await main();

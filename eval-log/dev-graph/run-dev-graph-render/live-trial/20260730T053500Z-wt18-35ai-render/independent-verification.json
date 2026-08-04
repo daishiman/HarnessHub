@@ -1,0 +1,51 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "checks": [
+    {
+      "name": "Skill invocation and no human nudge",
+      "verdict": "PASS",
+      "observed": "Transcript line 89 contains a dev-graph:run-dev-graph-render Skill invocation. The only user messages are the initial task and automatic Skill content injection; no human nudge or gate response occurred."
+    },
+    {
+      "name": "HTML self-contained: SVG, inline JS, no external refs",
+      "verdict": "PASS",
+      "observed": "External script src, link href, and HTTP(S) CDN references are all 0. The HTML contains an SVG with 14 node groups and inline filter JavaScript."
+    },
+    {
+      "name": "13 children of LT-FEATURE-001; displayed X/Y correct",
+      "verdict": "PASS",
+      "observed": "graph.json has exactly 13 children P01-P13; 4 are done and 0 are closed. The HTML and graph-data display 4/13."
+    },
+    {
+      "name": "Receipt counts equal the displayed denominator",
+      "verdict": "PASS",
+      "observed": "Registration receipt and render-metadata both report applied_count=13 and expected_count=13; the displayed denominator is 13."
+    },
+    {
+      "name": "Registration verification and source digest",
+      "verdict": "PASS",
+      "observed": "render-metadata registration_verification.status is verified, the visible banner says Registration verification: VERIFIED, and source_digest sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807 occurs twice in the HTML."
+    },
+    {
+      "name": "Input/output digests and read-only graph",
+      "verdict": "PASS",
+      "observed": "Actual graph SHA-256 is 6251071a24054cefcace9f23e54fba01f2528a71a043b261b91dbbdf51c9475e and actual HTML SHA-256 is 6d7fad0a8bea87a9623b3b344b24cd74c6105fea378a71826455bd65c10f4586; both match the trial evidence. Canonical graph digest matches graph_digest_after, and graph_sha256_before equals graph_sha256_after."
+    },
+    {
+      "name": "Goal-seek evidence",
+      "verdict": "PASS",
+      "observed": "All three goal-seek files exist. Six checklist items and both criteria pass. intermediate.jsonl has exactly two rows with all six required keys, and original_goal_hash 1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8 matches the goal text."
+    },
+    {
+      "name": "Receipt-absent negative unit test",
+      "verdict": "PASS",
+      "observed": "The unit test renders the same 13-child graph without --registration-receipt and asserts registration=None plus not_performed in stdout, visible HTML, and render-metadata. The implementation branches on registration is None."
+    }
+  ],
+  "evaluator": {
+    "session_id": "a0ad0434-f412-4c18-ae41-1419b5217410",
+    "mode": "fresh-read-only",
+    "score_emitted": false
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "authority_sha256_after": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "authority_sha256_before": "a9b70a2fa364ddb8e1624f0a195127893edbf827ea8963884c3548d7ca228fd1",
+  "count": 13,
+  "executed_at": "2026-07-25T04:34:15.287762Z",
+  "filters": {
+    "domain": null,
+    "id": null,
+    "keyword": "TASK-SPEC-TEST-STRATEGY",
+    "kind": "task",
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "graph_sha256_before": "014ee27d9d9efe5101b9b2ab72ac39117d47b2f355f6a9d29f2f78c04fd93e1e",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.1",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      ],
+      "depends_on": [],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p01.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P01",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.2",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p02.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P02",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.3",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p03.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P03",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.4",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p04.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P04",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.5",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p05.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P05",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.6",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p06.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P06",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.7",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p07.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P07",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.8",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p08.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P08",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.9",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p09.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P09",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.10",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p10.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P10",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "最終レビュー — 全 phase 成果の横断整合確認",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.11",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p11.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P11",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.12",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P13"
+      ],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p12.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P12",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a4ks.13",
+        "linked_at": "2026-07-25T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+      ],
+      "domain": "operations",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-task-spec-test-strategy",
+      "file_path": "tasks/feat-task-spec-test-strategy/sys-task-spec-test-strategy-p13.md",
+      "graph_node_id": "SYS-TASK-SPEC-TEST-STRATEGY-P13",
+      "issue_linkage": null,
+      "parent_feature": "feat-task-spec-test-strategy",
+      "project_id": "feature-package-feat-task-spec-test-strategy",
+      "status": "active",
+      "tags": [
+        "feat-task-spec-test-strategy",
+        "macro-feature",
+        "test-strategy",
+        "quality-gate",
+        "qa-074",
+        "system-dev-planner"
+      ],
+      "title": "リリース — main 反映と確定 system spec/architecture への writeback",
+      "tracker_binding": "beads"
+    }
+  ]
+}

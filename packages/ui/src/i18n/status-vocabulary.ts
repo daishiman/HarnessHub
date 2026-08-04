@@ -65,6 +65,23 @@ export const statusVocabulary = {
     suspended: entry('danger', '停止中', 'Suspended'),
     deprecated: entry('neutral', '非推奨', 'Deprecated'),
   },
+  document: {
+    draft: entry('neutral', '下書き', 'Draft'),
+    published: entry('success', '公開済み', 'Published'),
+  },
+  /**
+   * OIDC credential の lifecycle (`oidcCredentialStatusSchema` と同じ 4 値)。
+   *
+   * `active` だけを success にしてあるのは、この画面で「ログインに使われている」のが
+   * `active` の 1 状態しか無いため (backend-spec の `RESOLVABLE_OIDC_CREDENTIAL_STATUS`)。
+   * `tested` を success にすると、テストに通っただけの接続が有効に見える。
+   */
+  idpCredential: {
+    pending: entry('neutral', '未検証', 'Not verified'),
+    tested: entry('info', 'テスト合格', 'Test passed'),
+    active: entry('success', '有効', 'Active'),
+    disabled: entry('danger', '無効', 'Disabled'),
+  },
 } as const satisfies Record<string, Record<string, StatusEntry>>;
 
 export type StatusDomain = keyof typeof statusVocabulary;

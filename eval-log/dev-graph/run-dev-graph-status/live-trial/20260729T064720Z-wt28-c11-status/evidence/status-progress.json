@@ -1,0 +1,37 @@
+{
+  "skill": "run-dev-graph-status",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "checklist": [
+    {
+      "item": "query は許可 filter field と明示 tag match mode だけを持つ",
+      "status": "PASS",
+      "evidence": "filters.tag_match='all', all filter fields are null or empty (no disallowed fields)"
+    },
+    {
+      "item": "validate-graph-schema.py が exit0 で root 外 file_path と dangling dependency が0件",
+      "status": "PASS",
+      "evidence": "valid=true, violations=[], missing_sections=[]"
+    },
+    {
+      "item": "report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致",
+      "status": "PASS",
+      "evidence": "LT-TASK-001: status=active/closed_at=null/depends_on=[]/dependents=[LT-TASK-002] match graph. LT-TASK-002: status=active/closed_at=null/depends_on=[LT-TASK-001]/dependents=[] match graph."
+    },
+    {
+      "item": "該当なしが空 result の成功として返る",
+      "status": "PASS",
+      "evidence": "2 nodes returned matching graph content; empty-result path not triggered (fixture has nodes)"
+    },
+    {
+      "item": "実行前後の graph/config/content digest が同一で外部 write が0件",
+      "status": "PASS",
+      "evidence": "graph_sha256 before=after=120a1ed8609c19bee776711ef8b67ec2c155cf20f78aca5ade7b4151fc4f268d, config digest before=after=1c4cf89701d71cfc239186d533f78e6faade42232a8efff5c056f5eac23b6936, authority_sha256 before=after=01879f58b4c719dc2d5cdb175538fbd92556ed981882868e5bbfe4848e3479f3, read_only=true"
+    },
+    {
+      "item": "全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される",
+      "status": "PASS",
+      "evidence": "status-graph.py enforces read_only=true, no WAL detected, eval-log output under repo_root/eval-log/"
+    }
+  ],
+  "overall": "PASS"
+}

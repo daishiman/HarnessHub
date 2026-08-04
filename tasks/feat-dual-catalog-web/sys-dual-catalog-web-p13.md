@@ -12,7 +12,7 @@ iteration: null
 title: "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-19T14:13:14Z"
+updated_at: "2026-07-26T01:39:34.074446Z"
 status: "active"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P12"]
 related_nodes: ["feat-dual-catalog-web"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,17 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dual-catalog-web` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-08-03 本番 smoke の重複整理
+
+旧 Worker の authenticated `GET /catalog` は 403 だったが、latest `main` の PR #647
+(`41a79292`) には session の active Workspace を所属一覧で再検証して通常ブラウザ遷移へ渡す修正と、
+実 middleware を通す回帰テストがある。query parameter を認可入力として信頼する別実装は採らない。
+
+`HarnessHub-4lxg` はこの修正と重複するため close し、P13 の未完条件を次に集約する。
+
+- main を本番 Worker へ再デプロイする。
+- session を持つ利用者で catalog 一覧・詳細・marketplace を再測定する。
+- marketplace の response header と body `source_status` の Stage 0 verdict 整合を確認する。
+
+上記が未完の間、P13 と親 feature は完了扱いにしない。

@@ -40,7 +40,16 @@ const LAYERS = {
  * 残りは境界だけ用意されていて本体側の呼び出し元がまだ無く、**consumer は fixture 系統のみ**である。
  * ここを固定しておくと、結線が進んだとき (= この一覧が古くなったとき) にテストが落ちて更新を強制できる。
  */
-const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = ['authz-middleware', 'auth-adapter'];
+const WIRED_IN_APP_LAYERS: readonly (keyof typeof LAYERS)[] = [
+  'authz-middleware',
+  'auth-adapter',
+  // feat-auth-tenancy が結線: 越境要求の監査 (lib/authz/with-authz.ts) と device flow の token 記録
+  'audit-event-logger',
+  // feat-user-org-admin が結線 (AD-5): salary マスク判定 (features/user-org-admin/service.ts の toPiiViewer/maskPii)
+  'pii-guard',
+  // feat-feedback-loop の resolved 遷移と、feat-tenant-data-retention (AD-5) の使用量閾値超過通知が結線する。
+  'notification-dispatch',
+];
 
 const REGISTRY_PATH = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),

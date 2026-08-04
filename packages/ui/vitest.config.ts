@@ -11,5 +11,11 @@ export default defineConfig({
     // jsdom 上の操作再現と axe 走査は既定の 5 秒に収まらないことがあるため広げる
     testTimeout: 30000,
     hookTimeout: 30000,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/test-utils.tsx'],
+      thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
+    },
   },
 });

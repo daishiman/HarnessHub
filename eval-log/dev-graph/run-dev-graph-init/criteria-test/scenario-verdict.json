@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-init",
     "component_id": "C01",
-    "skill_md_sha256": "1db7dd6c2cde83fc50e02704fb3e3b725f66dd2209b08521c88a5fc52fc535f0"
+    "skill_md_sha256": "3b7080713c94b4d81bdf95df07fcada9ec333b745afc74f731e96d7abb5e7abf"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-criteria-scenario-r4-20260722-postmerge",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -18,32 +18,39 @@
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_frontmatter_repo_root_and_artifact_failure_classification",
-        "independent: python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/state/graph.json"
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_validate_rejects_invalid_authority_documents",
+        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause[C01-IN1-skill_path0-markers0]",
+        "independent: python3 plugins/dev-graph/scripts/validate-graph-schema.py --repo-root eval-log/dev-graph/live-trial-fixtures/init-wt9 --graph eval-log/dev-graph/live-trial-fixtures/init-wt9/.dev-graph/state/graph.json",
+        "independent: 同 script を artifact_kind/graph_node_id/status を除去した graph 複製 (scratchpad) に対して実行"
       ],
-      "observed": "Running validate-graph-schema.py directly on the real initialized r3-init graph store returned exit 0 with valid=true, violations=[], missing_sections=[] (0 missing required keys); a graph placed outside the authority root was rejected exit 2 (fail-closed). The two pytest schema-gate nodes passed, covering required-key and invalid-authority rejection paths."
+      "observed": "レビュア自身が init-wt9 の実グラフストアへ validate-graph-schema.py を直接実行し exit=0、valid=true、violations=[]、missing_sections=[] を得た (必須キー欠落 0 件)。負例として同 graph の複製から artifact_kind/graph_node_id/status の 3 必須キーを除いた版を scratchpad へ置いて再実行すると exit=1、valid=false、missing_sections に \"'artifact_kind' is a required property\"/\"'graph_node_id' is a required property\"/\"'status' is a required property\" が並び、violations に missing_id と schema_violation が出て fail-closed した。SKILL.md 変更で新設された references/validation-contract.md 経路でも呼出コマンドは同一で、script 実行が受入の正本であることを確認済み。pytest 4 node も実行して pass。"
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-init/live-trial/20260724T063927Z-init-wt1/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/independent-verification.json"
       ],
-      "observed": "2026-07-24 に closure 更新後の behavior digest へ整合させるため未初期化 fixture で wt1 を正規再実走 (fresh claude session, opus-4-6, 自走完走 nudge=0/gate=0)。target Skill を pass1/pass2 の 2 回 Skill ツールで起動 (script 直叩きでない)。6 content root・routing policy・graph store を pass1 で生成、pass2 は planned_changes=0。pass 間で編集した template は pass2 後も編集後 bytes/SHA を保持 (非上書きを再走で証明)、config に絶対 path/token/node ID なし、validate-graph-schema exit0・node 1 件。goal-seek 3 点セット全出力・intermediate append-only。fresh evaluator が独立に全 6 observation PASS を確認、skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "最新 main 統合後の fresh live trial 20260806T011000Z-f84o-postmain-c01-r2 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=9fa4b678db3facd7e274c40152896c9235a85e9c78eed726c434c16cbc53c722。"
     },
     "OUT2": {
       "status": "PASS",
       "verify_by": "test",
       "evidence_kind": "hybrid",
       "test_refs": [
-        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause",
-        "independent: diff <(ls plugins/dev-graph/templates) <(ls eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/templates)"
+        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause[C01-OUT2-skill_path2-markers2]",
+        "plugins/dev-graph/tests/test_repo_config_schema_conformance.py::test_config_template_conforms_to_schema",
+        "independent: diff <(ls plugins/dev-graph/templates) <(ls eval-log/dev-graph/live-trial-fixtures/init-wt9/.dev-graph/templates)",
+        "independent: diff -rq plugins/dev-graph/templates eval-log/dev-graph/live-trial-fixtures/init-wt9/.dev-graph/templates",
+        "independent: shasum -a 256 で issue.md の編集後 bytes 保持を確認"
       ],
-      "observed": "The scaffolded .dev-graph/templates set is name-identical (21 entries: template-contract.json, common-frontmatter, issue/task/specification/document/feature kinds, architecture + 5 subtypes, api-contract, system-phase/task specs, example configs, README) to the plugin templates source; the OUT2 acceptance-clause contract test passed."
+      "observed": "name 集合の diff は空で plugin templates と fixture .dev-graph/templates が 21 件同一名 (template-contract.json, common-frontmatter, issue/task/specification/document/feature, architecture + 5 subtype, api-contract, system-phase/task spec, repo-config/claude-settings example, README ほか)。内容 diff は issue.md 1 件だけが差分で、その差分は先頭行 \"<!-- USER_EDIT: idempotence-test-marker-20260725 -->\" の追加のみ。編集版 sha256=21df7940689af4c0f406a8c671f65209ae4c6156373c5a3492a3951cf6de6e4a、plugin 原本 sha256=00a3a972368541b992d3b240378873290a87a37483e3a08e40ee1e3a01b2b705。transcript の時系列 (pass1=line52 → 編集=line178 → pass2=line210) から、この編集は 2 回目 init を跨いで保持されており、レビュアの再走査でも上書きは 0 件・migration_preview 相当の利用者編集検出は issue.md の 1 件だけだった。pytest 2 node も実行して pass。"
     },
     "OUT3": {
       "status": "PASS",
@@ -52,30 +59,44 @@
       "test_refs": [
         "plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py::test_c24_enforces_symlink_containment_and_common_repository_ownership",
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_resolve_discover_and_main",
-        "independent: eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/config.json absolute-path scan"
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_symlinked_content_root_escaping_repository_is_rejected",
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_non_repo_relative_path_is_rejected",
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_cli_rejects_config_outside_the_canonical_tree",
+        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause[C01-OUT3-skill_path3-markers3]",
+        "independent: python3 plugins/dev-graph/scripts/resolve-repo-context.py --repo-root <init-wt9> --mode read (と CLAUDE_PROJECT_DIR 不一致・非 git dir の負例)",
+        "independent: python3 plugins/dev-graph/scripts/validate-repo-config.py --repo-root <別 repo> --config <init-wt9 の config.json>",
+        "independent: 切断済み symlink 経由で resolve-repo-context.py を起動"
       ],
-      "observed": "r3-init config.json stores only repository-relative content_roots/local_state paths (grep for /Users/ returned 0), with path_policy.allow_outside_repository=false and follow_content_symlinks_outside_repository=false. The C24 containment and resolve pytest nodes passed, confirming cross-repo read/write, project-root mismatch and broken/escaping content symlinks are fail-closed."
+      "observed": "absolute stored path はレビュア自身の走査で config.json / state/graph.json ともに 0 件 (\"/Users/\" 等の一致 0)、path_policy は authority=caller-repository, stored_paths=repository-relative, allow_outside_repository=false, follow_content_symlinks_outside_repository=false。resolve-repo-context.py --mode read は init-wt9 を repository_id=local:sha256:93a3aac6650b38d27cc766b0169372e92861d7e07088c09b7220fc4626026173 で解決し、content_roots/local_state/coordination_paths がすべて fixture 内に閉じ、root_trust_evidence の 3 項目が true。負例は 3 通り実測: (a) 非 git ディレクトリ指定は exit=1 で git rev-parse 失敗を診断出力、(b) CLAUDE_PROJECT_DIR を別 repo にすると exit=1 \"--repo-root and CLAUDE_PROJECT_DIR disagree\" (project-root 不一致 fail-closed)、(c) repo B を authority にして repo A の config を読ませると exit=2 \"path escapes authority root: .../init-wt9/.dev-graph/config.json not within .../notgit\" (cross-read 拒否)。harness link 切断は、存在しない plugin root を指す symlink 経由で scripts/resolve-repo-context.py を起動すると python が exit=2 \"can't open file\" で起動前に停止することを確認 (skill code は 1 行も走らない)。broken content symlink / symlink escape / common-dir ownership の分岐は C24 pytest が個別 assert しており、citing した pytest 6 node すべて実行して pass。"
     },
     "OUT4": {
       "status": "PASS",
       "verify_by": "test",
       "evidence_kind": "hybrid",
       "test_refs": [
-        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause",
-        "independent: eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/config.json github block inspection"
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_token_material_is_rejected",
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_project_node_id_is_rejected",
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_ordinary_github_values_are_not_flagged",
+        "plugins/dev-graph/tests/test_validate_repo_config.py::test_skill_command_requires_exactly_the_init_roots",
+        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause[C01-OUT4-skill_path4-markers4]",
+        "independent: python3 plugins/dev-graph/scripts/validate-repo-config.py --repo-root <init-wt9> --config <init-wt9 の config.json> --require-content-roots issues tasks specifications architecture features documents",
+        "independent: token / project node ID / 絶対 path を注入した config 複製 3 種を scratchpad で同 script にかける"
       ],
-      "observed": "config.github.enabled=false while retaining owner_login=example, project_number=1, alias/auto_add and field_mappings (Status/Priority single_select option maps). A grep for token/node_id/item_id/project node IDs returned no matches; the OUT4 acceptance-clause contract test passed."
+      "observed": "fixture config の github block は enabled=false のまま issue_repository=local/init-fixture、projects[0] に alias=delivery / owner_type=user / owner_login=local / project_number=1 / auto_add / field_mappings (Status と Priority の single_select option_map) を保持しており、雛形として要求される値は残っている。token・project/item/field node ID はレビュアの正規表現走査でも 0 件。機械側でも確認するため config 複製に (a) github.token=\"ghp_...\"、(b) projects[0].project_node_id=\"PVT_kwDOABCDEF4AAlqQ\"、(c) local_state.graph を絶対 path、をそれぞれ注入して validate-repo-config.py にかけると 3 件とも exit=1 valid=false で拒否され (a)(b) は \"Additional properties are not allowed\"、(c) は絶対 path の schema_violation を返した。無改変の複製は exit=0 valid=true violations=[] なので、拒否は注入分に由来する。pytest 5 node も実行して pass。"
     },
     "OUT5": {
       "status": "PASS",
       "verify_by": "test",
       "evidence_kind": "hybrid",
       "test_refs": [
-        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause",
+        "plugins/dev-graph/tests/test_skill_criteria_contracts.py::test_skill_criterion_has_dedicated_acceptance_clause[C01-OUT5-skill_path5-markers5]",
         "plugins/dev-graph/tests/test_c25_lifecycle_hook_contract.py::test_session_start_owns_interval_and_persists_last_success",
-        "independent: eval-log/dev-graph/live-trial-fixtures/r3-init/.dev-graph/config.json claude_hooks inspection"
+        "plugins/dev-graph/tests/test_c25_lifecycle_hook_contract.py::test_scheduler_claim_suppresses_reentry_and_retries_after_failure",
+        "independent: plugins/dev-graph/hooks/hooks.json の event 別登録数の再集計",
+        "independent: init-wt9 配下の .claude / settings*.json 実在走査",
+        "independent: git status --porcelain .claude による host settings 無変更確認"
       ],
-      "observed": "r3-init ran with --hook-source plugin: config.claude_hooks.source=plugin with project_plugin_link=.claude/dev-graph-plugin and no project-fallback .claude/settings.json was written (effective plugin hook present suppresses fallback, 0 double registration). The OUT5 acceptance clause (project-fallback / 二重登録0件 / rollback markers) and the C25 lifecycle-hook contract pytest passed."
+      "observed": "実走は --hook-source plugin で行われたため、観測できたのは plugin 既定側の分岐である。plugin hooks.json は PreToolUse/SessionStart/PostToolUse/TaskCompleted の 4 event を各 1 登録し、\"project settings fallback must not be enabled at the same time\" を明記。fixture 側は .claude ディレクトリ自体が非存在で settings*.json の rglob 結果が空、すなわち project fallback の書込 0 件・二重登録 0 件で、各 event は plugin 経路 1 本のみに配線されている。config.claude_hooks は source=plugin / project_plugin_link=.claude/dev-graph-plugin / session_start,post_tool_reconcile,task_completed_gate=true。既存 settings への非破壊性は、host repo の追跡下 .claude (197 files, settings.json は 23440 bytes / sha256 7d82b9a6ced18548a1c612f8ea095e9c302414451e861945cd629d91aa831b11) が trial 後も git status --porcelain で差分 0 であることから確認した。【未実測の残余を明記する】project-fallback を選択した場合の deep-merge・managed/disabled 診断・rollback manifest 再現は本 trial では一度も実行されておらず (過去 5 回の init live-trial もすべて --hook-source plugin)、repo 内に当該分岐を実行する test も存在しない (project-fallback の grep 一致は SKILL.md・EVALS.json・plan・transcript のみ)。この範囲は acceptance clause の契約 test と C25 hook runtime の再入抑止 test による拘束にとどまるため、fallback 分岐の behavior 証跡は今後 test か live-trial scenario で補う必要がある。pytest 3 node は実行して pass。"
     }
   }
 }

@@ -1,0 +1,41 @@
+{
+  "checklist": [
+    {
+      "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+      "status": "pass",
+      "evidence": "dry-run returned imports/exports with snapshot_sha256 before/after"
+    },
+    {
+      "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      "status": "pass",
+      "evidence": "LT-TASK-001 tracker_binding=github, single authority path via C12"
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "pass",
+      "evidence": "Pass 1 and Pass 3 both show write_count=0"
+    },
+    {
+      "item": "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+      "status": "pass",
+      "evidence": "title import (remote-only change), status export (local-only via field_mapping); conflicts=[]"
+    },
+    {
+      "item": "close/delete は graph_node_id を保持した tombstone/status transition になる",
+      "status": "pass",
+      "evidence": "no close/delete in this scenario; tombstones=[] correctly"
+    },
+    {
+      "item": "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+      "status": "pass",
+      "evidence": "node remains status=active, no done transition without merge evidence"
+    },
+    {
+      "item": "同一状態の二回目 sync の imports/exports/Project item add が0件である",
+      "status": "pass",
+      "evidence": "Pass 3 verification dry-run: changes=0, converged=true, imports=[], exports=[]"
+    }
+  ],
+  "overall": "pass",
+  "completed_at": "2026-08-02T13:38:13Z"
+}

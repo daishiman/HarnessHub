@@ -1,0 +1,31 @@
+{
+  "patch": {
+    "graph_node_id": "SYS-MVP-FIRST-SCHEDULING-P05",
+    "status": "done",
+    "updated_at": "2026-07-24T11:18:17Z",
+    "completion_evidence": {
+      "status": "done",
+      "policy": "linked_pr_merged_all",
+      "source": "github_pr_merge",
+      "completed_at": "2026-07-24T02:54:22Z",
+      "reconciled_at": "2026-07-24T11:18:17Z",
+      "evidence_refs": [
+        "https://github.com/daishiman/HarnessHub/pull/47"
+      ]
+    },
+    "pull_request_linkages": [
+      {
+        "repo": "daishiman/HarnessHub",
+        "pr_number": 47,
+        "url": "https://github.com/daishiman/HarnessHub/pull/47",
+        "base_branch": "main",
+        "head_branch": "devgraph/SYS-MVP-FIRST-SCHEDULING-P13",
+        "state": "merged",
+        "merged_at": "2026-07-24T02:54:22Z",
+        "merge_commit_sha": "8d802c23095c896c0b129708f375d9e341ec8873",
+        "linked_at": "2026-07-24T11:18:17Z",
+        "closing_reference_verified": true
+      }
+    ]
+  }
+}

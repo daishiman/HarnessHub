@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-requirements",
     "component_id": "C04",
-    "skill_md_sha256": "6d2058664b908138d4349663bcd0b0f0aaeba4d50dfe5f3f3fddbdd20ddaa653"
+    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
   },
   "verdict": "PASS",
-  "reviewer": "dev-graph-requirements-verifier-fresh-evaluator-20260724T093756Z-requirements-wt1r3",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -17,23 +17,25 @@
       "evidence_kind": "hybrid",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
-        "plugins/dev-graph/tests/test_runtime_coverage.py::test_gh_bridge_helpers_and_operations",
-        "independent: scripts/validate-graph-schema.py --graph eval-log/dev-graph/live-trial-fixtures/r3-requirements/.dev-graph/state/graph.json"
+        "plugins/dev-graph/tests/test_validate_source_digest.py::test_c04_validates_full_lineage_closure_and_current_package",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_scope_closure_passes_source_digest",
+        "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_resolves_published_package_from_current_pointer"
       ],
-      "observed": "test_domain_dag_exact13_evidence_and_readiness_boundaries PASSED: a 12-member package raises feature_package_not_exact_13 while a valid P01..P13 13-node DAG with shared parent_feature/feature_package_id and forward depends_on raises none of {feature_package_not_exact_13, non_forward_phase_dependency, premature_feature_done, feature_evidence_missing}. test_gh_bridge_helpers_and_operations PASSED (issue context stays auxiliary). Independent validate-graph-schema.py on the r3-requirements fixture (16 nodes) returned exit0 with valid=true, violations=[], implementation_readiness=complete, missing_sections=[] (no required-key gaps, no stale digest)."
+      "observed": "選択 feature・architecture_refs・P01..P13 task の 15-node lineage closure を validate-source-digest.py へ全件渡す fixture test が PASS し、promotion 後の current pointer を validate-system-plan.py --feature-package feature-package/F-LIVE-001 が解決した。task 13件だけ、--staging、package 引数なしの検査は契約上拒否される。"
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/transcript.jsonl",
-        "independent: eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260724T093756Z-requirements-wt1r3/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/independent-verification.json"
       ],
-      "observed": "2026-07-24 再実走 (run 20260724T093756Z-requirements-wt1r3, fresh claude session Opus 4.6, 自走完走 nudge=0/gate=0, Skill ツール起動が最初の実行アクション): MVP-first 実装で挙動閉包 sha が更新され旧 verdict が stale 化したため再取得。fresh evaluator が fixture 実体を独立走査し、graph.json 全 15 node が confirmed / pass / complete、validate-graph-schema.py exit0 (valid=true, violations=[])、validate-source-digest.py checked=14 / registered_mismatch=[]、validate-system-plan.py --staging system-plan/F-LIVE-001 が status=pass かつ validated_digest (sha256:00114efd…290337) が成果物記載値と一致することを自分で再実行して確認。graph_snapshot_digest も hashlib.sha256(graph.json bytes) で再計算し sha256:b882e943…412058 が一致。capability-build-handoff.json の exact_13_tasks と source_feature_digest を上流 feature-package.json と突合して lineage 接続を実測、requirements-document.json の source_lineage 参照先 4 件の実在も確認。eval-log 外に実装ソース (.ts/.js/.py/.go/.java/.rs) 生成 0 件、git status は ?? eval-log/ のみ。goal-seek 3 点セットは必須 6 キー充足・original_goal hash (04482e65…) 一致・Skill 起動前の Write と約 7 分後の append で append-only を実証。pane.txt の EXIT_CODE=2 は evaluator が自ら再現し、validate-system-plan.py の相互排他フラグ (--staging | --feature-package) の誤用による CLI 使用ミスでデータ不整合ではないと切り分け済み。blocker 0 で PASS。skill_dir_tree_sha が現行 closure と一致。"
+      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c04 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=d5033c34ba50dcabd525c707ba8161f140c2708c586857883c745c9e8194c3b6。"
     },
     "OUT2": {
       "status": "PASS",

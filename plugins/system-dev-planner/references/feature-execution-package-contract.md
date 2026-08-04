@@ -54,8 +54,33 @@ supersede 済み世代 directory は pointer/receipt を辿らないと旧世代
 
 task spec 本文の `Automated commands` は §2 のとおり `.dev-graph/staging` を保存しないが、`--repo-root . --staging .` のような repository root 起点で解決できない形も同じ理由で禁止する。generation id の直書きは再計画のたびに stale になるため使わない。
 
-- validate-system-plan の再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>` を正本形式とする。この経路は feature 別 current pointer から現行世代の published package を解決する。
-- 2026-07-22 以前に promote 済みの 15 package (計 195 task spec) は本文に `--staging .` を残したまま不変保持する。executor が読む mutable な task projection (`tasks/<parent_feature>/<id>.md` の `## 実行契約`) 側へ `scripts/build-task-projection-rerun.py` が正本形式を冪等配線し、`--check` が未配線を fail-closed で報告する。planner の 1 feature run では `--feature-package <feature_package_id>` で対象の exact 13 だけに scope し、引数省略の 195 件全体モードは repository 移行・監査に限定する。どちらも対象 0 件は exit 2 とする。
+- validate-system-plan の再実行は世代非依存の `validate-system-plan.py --repo-root <root> --feature-package <feature_package_id>` を正本形式とする。この経路は feature 別 current pointer から現行世代の published package を解決する。`<feature_package_id>` は自 package の値とする。他 package の id を書くと再実行が別 package を検証して緑になり、証跡が対象を指さない fail-open になる。
+- 機械検査: 契約 `1.3.0` 以上に解決される package では、C12 が各 task spec 本文の実行コマンドを検査し、`--staging` の使用 (`task-spec-rerun-staging-path`)、`--feature-package` の欠落 (`task-spec-rerun-package-missing`)、他 package の id (`task-spec-rerun-package-mismatch`) を fail-closed で拒否する。検査対象は fenced block と inline code span が提示するコマンドに限り、散文中の script 名への言及 (「validate-system-plan.py 実行時に `--repo-root` を明示指定する運用」のような、promote 済み package が実際に持つ説明文) は対象外とする。生成側は R3-emit prompt の Layer 2.2 ドメインルールと Layer 5.3 完了チェックリストが同じ規則を持ち、検査を二重化する。
+- `--staging` の禁止対象は **task spec 本文が promotion 後の再実行として提示するコマンド**に限る。R3-emit 自身の staging 検証と、R4 findings の `deterministic-validation` gate command は promotion 前の staging generation を対象とするため `--staging` が正しく、promote-system-plan.py はむしろその形を要求する。
+- contract 1.3.0 より前に promote 済みで台帳登録された 21 generation (計 273 task spec) は本文に `--staging .` を残したまま不変保持する。executor が読む mutable な task projection (`tasks/<parent_feature>/<id>.md` の `## 実行契約`) 側へ `scripts/build-task-projection-rerun.py` が正本形式を冪等配線し、`--check` が未配線を fail-closed で報告する。planner の 1 feature run では `--feature-package <feature_package_id>` で対象の exact 13 だけに scope し、引数省略の全件モードは repository 移行・監査に限定する。どちらも対象 0 件は exit 2 とする。
+
+### 2.4 契約 version と promote 済み package の再検証
+
+C12 の検査内容は強化されうるが、promote 済み package は content-addressed で digest 不変のため、後から強化された契約を満たすよう修正できない。修正すれば digest が変わり、`published_digest` を記録済みの receipt が偽になる (§2.2 と同じ理由)。したがって validator 側が契約 version を持ち、各 package を **promote 時点で妥当だった契約** で再検証する。
+
+- 契約 version は `scripts/validate-task-spec-contract.py` の `CONTRACT_VERSIONS` が正本 (`validate-system-plan.py` は module 属性として再公開するだけ)。`1.0.0` は 2026-07-22T13:53:21Z (commit 367ba5c) 以前の契約で必須節 14 件、`1.1.0` は同 commit が追加した Inner goal-seek execution loop 節・`system-task-goal-seek/v1` marker・`rubric verdict=PASS` feedback loop・P13 spec/architecture writeback を要求する。`1.2.0` (2026-07-25〜2026-08-02) は 1.1.0 の全要求に加えて後述の QA semantic coverage を要求する。`1.3.0` (2026-08-02 以降) は 1.2.0 の全要求に加えて §2.3 の世代非依存 rerun command を要求する現行契約。
+- 適用 version は `assets/validation-contract-baseline.json` が canonical digest 単位で定める。照合鍵は `staging-manifest.json` の申告値ではなく **canonical files の実バイトから再計算した digest** とする。manifest 自身は digest 対象集合の外にあり書き換え可能なため、申告値を根拠にすると台帳登録済み digest を騙るだけで契約を回避できる。
+- 台帳に無い digest、digest を再計算できない対象、台帳 asset の欠落・破損はすべて最新契約で検証する。台帳の削除・改変が緩和経路にならず、新規生成 package は常に fail-closed で最新契約に晒される。
+- 免除の及ぶ範囲は version 間で差のある検査 (必須節集合・goal-seek marker・P13 writeback・QA semantic coverage・世代非依存 rerun command) に限る。違反 code 単位で免除すると `task-spec-section-missing` が丸ごと無効化され、goal-seek 以外の節欠落まで素通りする fail-open になる。
+- 検証 report は `contract_version` と `contract_baseline_exemption` を返し、免除が効いた pass を下流が識別できるようにする。
+- 台帳への追加は、当該 digest が (a) 既に promote 済みで、(b) 記載 version で残違反ゼロの pass になることを確認したうえでレビューする。現行契約で pass する package は登録しない (免除枠の希釈防止)。
+- C14 handoff builder (`scripts/build-system-handoff.py`) は同じ契約検査を独自に保持するが、新規生成専用のため最新契約のみを持つ。旧 package の handoff は既に digest へ封じ込まれており、遡及検証の対象外。
+- 現況 (2026-08-02 実測): 台帳 21 エントリ = `1.0.0` 18 件 + `1.1.0` 3 件 (`feat-dev-pipeline-improvement` / `feat-mvp-first-scheduling` / `feat-task-spec-test-strategy`)。同梱 generation は 24 で、未登録の 3 件はいずれも `feat-publish-pipeline` の世代であり、本文が既に `--feature-package feature-package/feat-publish-pipeline` を使っているため最新契約 `1.3.0` で残違反ゼロの pass となる (よって §2.4 の amendment ルールどおり登録しない)。登録済み 21 件は `--staging .` を本文に残したまま `1.0.0`/`1.1.0` へ免除され、再検証結果は 1.3.0 導入後も変わらない。
+
+### 2.5 QA 宣言の意味被覆 (tag だけの宣言を拒否する)
+
+feature が frontmatter `tags` に `qa-NNN` を宣言したら、その QA で確定した要件は goal-spec と exact 13 task spec の**本文へ意味として届いていなければならない**。`1.2.0` はこれを機械検査する。tag と系譜だけで「反映済み」と主張できる状態は、確定回答が下流の実行契約に届いていないのに緑になる fail-open であり、qa-071 の実運用で実際に発生した。
+
+- 検査は `scripts/validate-qa-semantic-coverage.py` が担当し、`validate-system-plan.py` から呼ばれる。契約 version・JSON Schema サブセット・QA 被覆は異なる変更理由を持つため、1 ファイルに同居させない (§4.3 の責務分離)。一般コードのファイル行数は分割条件にしない。
+- 三軸で検証する。(a) **登録**: 宣言された `qa-NNN` が `system-spec/spec-state.json` の `qa_log` に存在する (`qa-ref-unregistered`)。(b) **goal 被覆**: goal-spec の `purpose`/`goal`/`scope_in`/`scope_out`/`acceptance` のいずれかに現れる (`qa-semantic-coverage`)。(c) **task trace**: exact 13 task spec の全件に現れる (`qa-task-trace`)。1 件でも欠ければ違反。
+- goal-spec が `quality_constraints[].id == "semantic-coverage-not-tag-only"` を宣言した QA については、`qa_log` の確定回答から `【N. 見出し】` 形式の要件見出しを抽出し、その**見出し語が goal-spec と 13 task spec の本文に現れること**まで要求する。ID 参照だけでは通らない。見出しを抽出できない確定回答は違反として報告する (検査不能を pass にしない)。
+- feature の `tags` が JSON として壊れている場合は `qa-tags-unparsable` で落とす。読めない宣言を「宣言なし」と解釈すると、壊れた tags を置くだけで検査を回避できる。
+- `qa-NNN` 宣言が無い feature は対象外。既存の non-QA package に新しい必須節を遡及させない。
 
 ## 3. 13 taskの固定写像
 

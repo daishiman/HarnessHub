@@ -12,14 +12,14 @@ iteration: null
 title: "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-19T14:14:59Z"
+updated_at: "2026-07-28T23:37:47.968705Z"
 status: "active"
 depends_on: ["SYS-HEARING-INTAKE-P04"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
-resource_scope: ["apps/hub/src/app/(dashboard)/hearing-intake/","apps/hub/src/app/(dashboard)/hearing-sheets/","apps/hub/src/app/api/v1/sheets/","apps/hub/src/features/hearing-intake/","apps/hub/src/features/hearing-intake/ai-job-adapter/","apps/hub/src/features/hearing-intake/estimation-adapter/","packages/db/schema/hearing-intake/","packages/schemas/hearing-intake/"]
+resource_scope: ["apps/hub/src/app/(dashboard)/sheets/","apps/hub/src/app/api/v1/sheets/","apps/hub/src/app/api/v1/ai-jobs/","apps/hub/src/features/hearing-intake/","packages/db/repository/hearing-intake.ts","packages/db/repository/hearing-intake-queue.ts","packages/db/schema/hearing-intake/","packages/schemas/hearing-intake/"]
 purpose: "feat-hearing-intake の P05 を実行する: 実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
-scope_in: ["apps/hub/src/app/(dashboard)/hearing-intake/","apps/hub/src/app/(dashboard)/hearing-sheets/","apps/hub/src/app/api/v1/sheets/","apps/hub/src/features/hearing-intake/","apps/hub/src/features/hearing-intake/ai-job-adapter/","apps/hub/src/features/hearing-intake/estimation-adapter/","packages/db/schema/hearing-intake/","packages/schemas/hearing-intake/"]
+scope_in: ["apps/hub/src/app/(dashboard)/sheets/","apps/hub/src/app/api/v1/sheets/","apps/hub/src/app/api/v1/ai-jobs/","apps/hub/src/features/hearing-intake/","packages/db/repository/hearing-intake.ts","packages/db/repository/hearing-intake-queue.ts","packages/db/schema/hearing-intake/","packages/schemas/hearing-intake/"]
 scope_out: ["published task spec の『スコープ外』節を正本とする"]
 acceptance: ["P04 のテストスタブがすべて green であること、および pnpm build/test の成功ログが得られている","現行feature context sha256:d186363b613242215867a3dabda3c9a25690f884d363ae23de6d492538a09507のscope_in/acceptance全件をP05責務として追跡し、未割当0件である","Normative closure: feature固有 AiJob schema や kind=hearing を作らず、共通 ai_jobs の kind=sheet_generation を consumer として使う。POST /api/v1/sheets は server-side packages/estimation の sheetEstimate を実行し estimate snapshot を保存してから、同一transactionでsheet_generationをenqueueする。共通 package/boundary の実装ownerは feat-hub-foundationであり、hearingは公開contractを消費する。P1は後発metrics完了を前提にしない。 Evidence: kind=sheet_generation、shared queue consumer、sheetEstimate server execution、estimate snapshot、tenant/role、enqueue/complete round-trip の contract testsを必須とする。"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

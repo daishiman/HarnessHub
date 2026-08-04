@@ -36,6 +36,10 @@
     {
       "id": "dev-workflow",
       "label": "開発フロー"
+    },
+    {
+      "id": "testing-qa",
+      "label": "テスト戦略・品質保証"
     }
   ],
   "platforms": [
@@ -50,7 +54,7 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-060",
+        "qa_ref": "qa-126",
         "serves_goals": [
           "G1",
           "G2",
@@ -82,7 +86,7 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-036",
+        "qa_ref": "qa-137",
         "serves_goals": [
           "G2",
           "G4"
@@ -98,7 +102,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -110,7 +114,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -120,7 +124,7 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-065",
+        "qa_ref": "qa-136",
         "serves_goals": [
           "G1",
           "G2",
@@ -158,7 +162,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-061",
+        "qa_ref": "qa-133",
         "serves_goals": [
           "G4",
           "G5"
@@ -174,7 +178,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -186,7 +190,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-041",
+        "qa_ref": "qa-073",
         "serves_goals": [
           "G1",
           "G4"
@@ -196,9 +200,10 @@
     "infrastructure": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-068",
+        "qa_ref": "qa-133",
         "serves_goals": [
           "G1",
+          "G2",
           "G4",
           "G5"
         ]
@@ -235,7 +240,7 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-059",
+        "qa_ref": "qa-125",
         "serves_goals": [
           "G1",
           "G2",
@@ -276,7 +281,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-062",
+        "qa_ref": "qa-135",
         "serves_goals": [
           "G1",
           "G2",
@@ -314,7 +319,7 @@
     "maintenance-ops": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-058",
+        "qa_ref": "qa-129",
         "serves_goals": [
           "G1",
           "G2",
@@ -351,7 +356,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-069",
+        "qa_ref": "qa-143",
         "serves_goals": [
           "G1",
           "G4",
@@ -368,7 +373,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-039",
+        "qa_ref": "qa-140",
         "serves_goals": [
           "G1",
           "G4"
@@ -380,10 +385,49 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-039",
+        "qa_ref": "qa-102",
         "serves_goals": [
           "G1",
           "G4"
+        ]
+      }
+    },
+    "testing-qa": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-134",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする"
+      },
+      "desktop-windows": {
+        "state": "確定",
+        "qa_ref": "qa-095",
+        "serves_goals": [
+          "G1",
+          "G5"
+        ]
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする"
+      },
+      "desktop-macos": {
+        "state": "確定",
+        "qa_ref": "qa-095",
+        "serves_goals": [
+          "G1",
+          "G5"
         ]
       }
     }
@@ -733,6 +777,371 @@
       "id": "qa-069",
       "question": "dev-graph/beads (bd) のタスク優先度選定 (schedule/ready の判断軸) を、どのような基準へ変更しますか? 現行の品質・本質先行の選定で何が問題になっていますか?",
       "answer": "現行は AI が文脈から『本質的なシステムを作り上げること』を最優先に選定するため、同じ基盤タスクを繰り返し実行して解決せず、依存関係でつながった他タスクまで止まり、いちばん作りたかった機能から離れていく (根本原因は品質と再現性を求めすぎる完璧主義がスケジューラの優先度に転写されたこと)。変更後の判断軸は (1) 目的=何のために作るか、(2) 背景=どういう経緯で必要になったか、(3) MVP=今必要な動くもの、の3軸とし、品質を先回りする基盤・本質課題解決タスクよりも『まず使えるものを構築する』タスクを優先して選定する。まず作って、使って、課題をあぶり出す回転 (build-use-learn) に戻すことが狙い。具体的には feature/task の選定時に MVP 適合 (今必要な動くものに直結するか) を第一ソートキーへ昇格し、品質・再現性強化系は MVP 成立後に繰り延べる。CI/CD・quality gate 等の既確定の dev-workflow 要件 (qa-066) 自体は維持し、優先度選定の判断軸のみ組み替える"
+    },
+    {
+      "id": "qa-071",
+      "question": "既存確定 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 を全面維持したまま、開発管理パイプラインの方法論 (methodology) として次の 8 要件を追加確定する: (1) マクロ構造、(2) exact-13、(3) 外側ループ、(4) 内側ループ、(5) スコープ分離、(6) 情報配置、(8) 書き戻し、(9) 既存保全と更新統制。ユーザー提供の要件定義 (2026-07-22 /dev-graph spec --resume 引数) に基づき、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定する。(要件 7 の命名規則/doc 粒度は qa-070 で確定済み。要件 10 の portable separation は qa-070 で確定済み。要件 11 の Git 差分照合は completeness evaluator の responsibilities に帰属)",
+      "answer": "既存 qa-038/qa-039/qa-051/qa-066/qa-067/qa-070 の確定内容は全面維持し、本 qa は以下 8 要件をユーザー提供の回答として確定する。出典: ユーザー逐語 (2026-07-22 /dev-graph spec --resume 引数。追加ヒアリング不要として明示)。\n【1. マクロ構造 (macro-structure)】小さな task と依存関係を積み上げて feature にし、複数 feature を system にする。グラフには依存関係のある実行タスクだけを載せる (仕様本文・architecture 本文は正規文書に集約し、task/feature は参照と lineage だけを持つ)。実行タスクの最小単位は feature 内の 1 フェーズ相当作業であり、feature 間の依存は feature 粒度で表現する。\n【2. exact-13 (13フェーズ固定)】1 feature は P01..P13 の 13 フェーズで構成し、13 フェーズは直列依存 (前フェーズ完了が次フェーズの開始条件)。各フェーズ内の子タスク数は固定せず、達成に必要な粒度で分解し、並列実行可能なものは並列化する。小さい機能でも 13 フェーズを省略しない。1 feature → 13 task への分解は system-dev-planner (/dev-graph plan) が担う。\n【3. 外側ループ (outer loop)】feature 全体の改善とフィードバックを回す外側ループを持つ。中心には目的・背景・ゴールを置き、これらを確定してから 13 フェーズを進める。feature の目的・背景・ゴールが未確定のまま実装フェーズへ進まない。\n【4. 内側ループ (inner loop)】各フェーズに汎用 task prompt・goal-seek・rubric・feedback loop を持たせ、各フェーズの目的達成まで反復する。フェーズ内の達成基準 (rubric) が PASS するまでループを回す。\n【5. スコープ分離 (scope separation)】量が多い・1 task で完結しない・目的・背景から外れる問題は別 task または別 feature に切り出す。切り出した feature も同じ 13 フェーズと品質ゲートを通す。スコープ拡大の誘惑に負けず、切り出しを先行させる。\n【6. 情報配置 (information placement)】task graph に仕様本文や architecture 本文を詰め込まない。仕様・architecture・task-spec・docs は正規文書に集約し、task/feature は参照と lineage だけを持つ (内容を複製しない)。正規文書への参照は source_lineage と architecture_refs で追跡する。\n【8. 書き戻し (write-back)】実装完了後、結果・判断・改善点を仕様書と architecture へ反映し、次の task/feature が再利用できるようにする。一方通行にしない: 実装→仕様書→次の feature というフィードバックループを確立する。書き戻しの責務は feature の P13 (保守・運用移行) フェーズに含める。\n【9. 既存保全と更新統制 (preservation and update control)】AI の追加偏重による重複・矛盾を防ぎ、既存情報を消さずに差分更新する。不要情報の削除や置換は仕組み化された gate (reopen → re-confirm フロー・CI lint) で管理する。既存確定 qa 項目を AI が単独で書き換えない。変更は必ず reopen → 確認 → re-confirm の経路を通す。\n要件 7 (命名規則と検索可能性・文書粒度): qa-070 の確定内容 (kebab-case 接頭辞体系・300 行上限 fail-closed CI lint・責務単位分割) が実効値として包含する。要件 10 (portable separation): qa-070 の仕組みとナレッジのオン・オフ分離で確定済み。以上 8 要件 + qa-070 の 2 要件 (portable separation / doc 粒度) + qa-067 の 8 要件 (lifecycle close-loop 他) がG1 (仕組みの持ち出しによる配布・運用効率)・G4 (fail-closed 品質ゲート)・G5 (ドキュメント管理の持続性) に資する。実装は関連 feature (feat-dev-pipeline-improvement の 13 フェーズ・issue-qa070-implementation-feature-20260722) を通じて行う。"
+    },
+    {
+      "id": "qa-072",
+      "question": "qa-036 (auth.web) の R4-reopen: session JWT claims の確定集合へ workspace_ids を追加するか、edge の Workspace 判定を別手段 (DB 往復 / KV キャッシュ) へ変えるか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-036 は claims を sub/tenant_id/role/status/iat/exp の 6 種で『最小集合』と列挙して確定したが、feat-auth-tenancy 実装 packages/schemas/auth-tenancy/session.ts は 7 種目に workspace_ids を載せており、Publisher CLI から観測できる契約であるため実装側の判断のままにできない)",
+      "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「実装を追認して 7 claim で確定」を選択。承認記録 appr-010) により、qa-036 の確定内容を全面維持したうえで session JWT claims の確定集合のみを改定し、auth.web の専用正本として再確定する。【本 R4-reopen の唯一の差分】session JWT claims = sub(user_id) / tenant_id / role / status / workspace_ids / iat / exp の 7 種(qa-036 の 6 種 + workspace_ids) を、認可 MW が DB 往復なしで判定できる最小集合とする。workspace_ids は所属 Workspace id の配列で、edge の認可 MW が Workspace 越境を DB 往復なしで拒否するために載せる(載せない場合 edge は membership を判定できず、全 Workspace スコープ要求が落ちる)。代償は 2 点あり、いずれも受容する: (a) cookie が所属 Workspace 数に比例して膨らむ、(b) membership 変更の反映が最大 updateAge (15 分) 遅れる — これは role/status と同じ陳腐化として扱い、緊急時は session_revocations による即時失効で回避する。access token 側は発行時の workspace_id 1 件だけへ束縛し、被害範囲を session より狭く保つ (claims をそのまま写さない)。実装正本は packages/schemas/auth-tenancy/session.ts の sessionClaimsSchema、仕様正本は docs/security-spec.md §2.1。【qa-036 から維持する確定内容】qa-005 の Auth.js + テナント別 OIDC (顧客既存 IdP 委譲・Hub 独自アカウント基盤なし・署名付き JWT cookie・role 4 種) を全面維持し、docs/security-spec.md §2.1/§2.3/§2.5 で確定する。session 数値: strategy=JWT、cookie は __Host-harness-hub.session (HttpOnly/Secure/SameSite=Lax/Path=/、Domain 設定なし)、maxAge 8 時間 (業務日 1 日)、updateAge 15 分、署名鍵は AUTH_SECRET (Workers Secret binding)。失効の意味論: JWT は stateless のため role/status 変更の反映は最大 15 分遅延する(updateAge ごとの再発行時に jwt callback で DB 再読込)。これを受容する代わりに、Publisher/ingest token 失効は即時 (publisher_tokens.revoked_at を毎リクエスト参照)、緊急失効 (退職・侵害) は session_revocations テーブル (テナント単位の最終失効時刻・KV/メモリキャッシュ TTL 60 秒) により即時とし、認可 MW が iat < revoked_at の JWT を拒否する。OIDC 検証契約 (T1 対策): issuer は idp_connections.issuer_url と厳密一致 (discovery の issuer とも一致)、aud は当該テナントの client_id、nonce/state 検証、PKCE S256 を confidential client でも併用、tenant 束縛はログイン URL /{tenant_slug}/signin で tenant を先に確定し当該テナントの idp_connections のみを候補にする、email_verified=true のみ受理し email はテナント跨ぎの識別子に使わない(同一 email が複数テナントに存在しうるため識別子は idp_subject。UNIQUE(tenant_id, idp_subject) で束縛)、JIT provisioning は role=member/status=active で作成し自動昇格しない。パスワード/2FA/リセットは実装せず IdP 責務とする (D3 維持・scope out)。mockup の login 画面は IdP redirect へ、account 画面のセキュリティ節は IdP 設定への外部リンク + Publisher token 一覧・失効ボタンへ置換する。開発・デモ環境の認証 (ユーザー確認による確定 2026-07-17): 提供者の Google Workspace を dev tenant の OIDC provider として登録し、本番と同一経路で認証する。dev 専用 provider (Credentials/mock login/SKIP_AUTH) をコードに存在させず CI で文字列出現を禁止検査する(認証経路を 1 本に保てば dev 専用コードの本番混入という事故クラスが構造的に発生しない)。ネット接続と dev tenant IdP 設定が開発の前提条件になることを受容する。CSRF は SameSite=Lax + 全 state-changing リクエストの Origin 検査 + Auth.js 既定の CSRF token、CORS は不許可。"
+    },
+    {
+      "id": "qa-073",
+      "question": "qa-041 (auth / security の desktop-windows・desktop-macos) の R4-reopen: Device Flow の polling interval に server 強制の上限値と、interval を守った client への減衰規則を確定するか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-041 は interval 5 秒・slow_down 受信時 +5 秒までしか確定しておらず、RFC 8628 §3.5 自体も加算幅までしか規定していない。feat-auth-tenancy 実装は上限 60 秒と -5 秒の減衰を導入済みで、Publisher CLI から観測できる契約である)",
+      "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「上限 60 秒・減衰 -5 秒を確定」を選択。承認記録 appr-010) により、qa-041 の確定内容を全面維持したうえで polling interval の上限と減衰を追加確定し、auth / security の desktop-windows・desktop-macos の専用正本として再確定する。【本 R4-reopen の唯一の差分】polling interval は 5 秒を初期値とし、interval 未満の polling には slow_down を返して +5 秒を加算、interval を守った polling には -5 秒を減衰させる。server が強制する interval の上限は 60 秒、下限は発行応答で client へ告げた 5 秒とする。根拠: RFC 8628 §3.5 は加算幅しか定めておらず、上限が無いと interval は単調増加して device_code TTL 600 秒を追い越し、client が次に叩いてよい時刻に達する前に code が失効して server 側から flow を詰ませる。上限 60 秒は TTL 600 秒に対し最悪でも 10 回は叩けることを値の選択そのもので担保する。加算幅と減衰幅を同じ 5 秒にするのは、幅が違うと「速く叩いて罰を受け、次の 1 回だけ守って帳消しにする」交互 polling が実質的に罰を免れるためであり、初期値への一括 reset も同じ理由で採らない。下限を告知値 5 秒より下げないのは、告知どおりに叩いている client を後から slow_down にできてしまわないため。限界を明示する: 上限が縛るのは server が強制する間隔だけであり、client が自分側で持つ間隔は RFC どおり slow_down のたびに +5 秒され上限を持たない (client 実装の責務であり server からは是正できない)。実装正本は apps/hub/src/lib/auth/config.ts の AUTH_NUMERIC_CONTRACT (devicePollIntervalSeconds=5 / devicePollBackoffSeconds=5 / devicePollMaxIntervalSeconds=60) と apps/hub/src/lib/auth/device-flow/service.ts の nextPollIntervalSeconds() / relaxedPollIntervalSeconds()、仕様正本は docs/security-spec.md §2.2。【qa-041 から維持する確定内容】docs/security-spec.md §2.2 (Device Flow 数値契約)・§2.2.1 (scope)・§4.4・§8.6 と dev-workflow の qa-039 (ローカル運用規律) を desktop 実仕様として確定する。(1) Publisher / CLI / AI worker の認証 = OAuth Device Authorization Flow (RFC 8628、qa-008 維持): device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、user_code 8 文字 Crockford Base32 (I/L/O/U 除外)・5 回失敗で denied・照合後即失効。(2) token: access token 15 分 (短命 JWT・サーバ非保存)、refresh token 90 日・rotation 必須・SHA-256 ハッシュのみ保存・再利用検知で同一 family 全失効 + 監査 event token.reuse_detected + admin/本人通知。(3) 保存先 = OS 資格情報域のみ: macOS Keychain / Windows Credential Manager。平文ファイル・環境変数・リポジトリへの保存を禁止し、長命 secret のコピペを非エンジニアに求めない (G1 整合)。(4) scope 最小権限 = publish:write / metrics:write / feedback:write / aijob:process の 4 種。ハーネス実行環境へ渡る token は metrics:write + feedback:write のみで publish 権限を含めない。(5) 失効導線 = Hub Web (S04/S18) から本人・admin が即時失効 (publisher_tokens.revoked_at を毎リクエスト参照)。窃取疑い時は family 全失効 → 監査確認 (§8.6 インシデント最小手順)。(6) ローカル開発の秘密・本番境界 (qa-039 接続): production への wrangler deploy / migration をローカルから日常的に行わない (正本経路は CI。緊急時のみ + 事後記録)、ローカルは preview 用 Turso または local SQLite を binding し本番 DB を指さない、secret scan を local hook でも実行可能にする (正本の遮断は CI)。作者環境は macOS 主・Windows 従で同一 pnpm script が動作すること。"
+    },
+    {
+      "id": "qa-076",
+      "question": "タスク仕様書が担保すべきテストレベルの網羅方針は何ですか? 単体テストだけで十分ですか?",
+      "answer": "単体テストだけでは不十分。タスク仕様書は、想定できるテストレベルを網羅する: (1) 単体テスト (関数・コンポーネント単位)、(2) 結合テスト (モジュール間・API 連携)、(3) 境界値テスト (入力境界・異常系)、(4) 既存回帰テスト (変更が既存機能を壊していないこと)。各タスク仕様書はテスト戦略セクションを必須で持ち、対象変更に対しどのレベルのテストを追加・実行するかを明記する。この機能がエラーなく使えるかの検証を目的とし、テスト種別の選定はタスクの変更内容から導出する"
+    },
+    {
+      "id": "qa-077",
+      "question": "テストカバレッジの数値基準と、基準未達・テスト失敗時の扱いはどうしますか?",
+      "answer": "カバレッジは 80% 以上を既定閾値とし、CI の品質ゲートで機械検証する (変更対象コードの line/branch カバレッジを既定とし、層別に閾値を調整可能)。テストが失敗またはカバレッジ未達の場合はエラーとして扱い、マージを止め、問題点を改善するループ (失敗分析→修正→再実行) へ回す。エラーが生じないテスト構築を先に行い、問題があれば改善する仕組みを標準フローとする。数値の目的化 (カバレッジだけ満たして重要 behavior 未検証) は maintenance-ops 章の既存方針どおり禁止し、behavior 検証を優先する"
+    },
+    {
+      "id": "qa-078",
+      "question": "フロントエンド・バックエンド・インフラの各層で、どのようなテスト種別と保守性方針を適用しますか?",
+      "answer": "層別に適用する: フロントエンドは component 単体 + ユーザー操作フローの結合テストとし、ボタン配置などの見た目の微調整で壊れない behavior ベース (accessible role / ラベルでの要素選択) を必須とする。pixel 位置や DOM 構造への依存は禁止し、UI 微修正がテストエラーにならない管理しやすい設計に限定する。バックエンドは API 契約テスト + ビジネスロジック単体 + DB 結合テスト。インフラは IaC/設定の静的検証 + デプロイ後の smoke テスト。どこまで管理するかの線引きは各層のテスト設計方針として仕様に明文化し、過剰なテスト (実装詳細への密結合) を作らない"
+    },
+    {
+      "id": "qa-079",
+      "question": "テスト戦略をタスク仕様書へ落とし込む仕組みの再現性はどう担保しますか?",
+      "answer": "タスク仕様書の生成時に、テスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する"
+    },
+    {
+      "id": "qa-080",
+      "question": "テスト戦略・品質保証カテゴリの対象 platform はどこまでですか?",
+      "answer": "dev-workflow と同じ platform 範囲とする。CI (GitHub Actions) 上のテスト実行とカバレッジゲートは web 行、作者ローカルでのテスト実行環境は desktop-windows / desktop-macos 行でカバーする。mobile / tablet / desktop-linux は開発者クライアント環境として使わないため対象外 (dev-workflow の既存確定と同根拠)"
+    },
+    {
+      "id": "qa-081",
+      "question": "テスト戦略をタスク仕様書へ組み込み、何度実行しても同じ品質基準で再現する仕組みはどう実装しますか? (qa-079 の確定内容の章反映)",
+      "answer": "qa-079 で確定したとおり、タスク仕様書の生成時にテスト戦略セクション (テストレベル選定・カバレッジ目標・層別方針・保守性制約) をテンプレート必須項目として組み込み、何度実行しても同じ品質基準のタスク仕様書が生成される冪等な仕組みとする。手作業の書き足しに依存せず、仕様生成パイプライン (system-dev-planner の task spec 必須 section 契約) 側で機械検証し、テスト戦略の欠落した仕様書を fail-closed で拒否する。カバレッジ基準は qa-077 で確定した 80% 以上の品質ゲートと失敗時の改善ループ (失敗分析→修正→再実行) を維持し、テストレベルの範囲は qa-076 で確定した 4 レベル網羅 (単体・結合・境界値・回帰) を前提とする。UI コンポーネント層の実装ツールは D8 (意思決定) で @testing-library/react + Vitest を正式採用した"
+    },
+    {
+      "id": "qa-074",
+      "question": "HarnessHub-b7ng の本番 Auth.js / AuthPorts 結線で確定した認証契約を auth.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-072 までの auth.web 確定内容を全面維持し、次の実装追補を確定する。Auth endpoint は GET/POST /api/auth/{tenant_slug}/{action} とし、slug から当該 tenant の idp_connections だけを解決する。Auth.js の JWT encode/decode は SessionClaims の署名・検証へ委譲し、edge 認可と cookie が同じ 7 claims 契約を使う。callback origin は要求 Host ではなく AUTH_CANONICAL_ORIGIN へ固定する。JIT provisioning は同一 (tenant_id,idp_subject) の同時初回ログインを UNIQUE 制約後の再読込で 1 user へ収束させ、role=member/status=active 以外を IdP claims から与えない。Workers Secret は session と Publisher access token の blast radius を分離するため AUTH_SESSION_SECRET と AUTH_ACCESS_TOKEN_SECRET に分ける。"
+    },
+    {
+      "id": "qa-075",
+      "question": "HarnessHub-b7ng で確定した Device Flow / refresh token の並行更新契約を security.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-061 までの security.web 確定内容を全面維持し、次の実装追補を確定する。device authorization の approve/consume/失敗計数は status と attempts の組を条件にする compare-and-swap (CAS) とし、同じ device_code の token 発行成功は 1 本だけ、user_code の同時失敗は取りこぼさず 5 回で denied とする。refresh rotation は revoked_at IS NULL の CAS で旧枝を先に失効し、新しい枝は 1 本だけ作る。既に失効した refresh token の再提示では family 全体を一括失効して token.reuse_detected を記録する。一方、同時提示で CAS に負けただけの要求は invalid_grant とし、その瞬間に family 失効へ昇格しない。昇格すると勝者の新枝作成との競走で掃討漏れが生じるためであり、同じ旧 token の再提示時に再利用検知へ昇格する。認証 runtime は Worker binding/Secret の値変更を要求ごとに比較し、変更後も旧鍵・旧接続先を使い続けない。"
+    },
+    {
+      "id": "qa-082",
+      "question": "HarnessHub-b7ng の本番 adapter と API 結線を backend.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-059 までの backend.web 確定内容を全面維持し、次の実装追補を確定する。apps/hub の composition root は createDbAuthPorts、createDbAuditSink、createAuthjsHandler、DeviceFlowService を packages/db の CoreRepositories へ結線する。Auth.js 固有 import と型は lib/auth/adapter/ 内だけに閉じ、外部へは Web 標準の (Request)=>Promise<Response> を公開する。/api/v1/device/code・approve・token、/api/v1/token/refresh、/api/v1/tokens の本番経路は同じ AuthPorts を使い、in-memory adapter を production fallback にしない。必要な設定・OIDC 接続・client_secret・DB 接続が欠ける場合は既定 tenant/provider/secret へ落とさず fail-closed で停止する。"
+    },
+    {
+      "id": "qa-083",
+      "question": "HarnessHub-b7ng で確定した認証永続化スキーマと migration 契約を database.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-060 までの database.web 確定内容を全面維持し、次の実装追補を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書込みは guardedWrite を通し、ローカル libSQL の SQLITE_BUSY による未 commit 成功を防ぐ。残る repository write の全量掃き出しは別 Beads 課題で追跡する。"
+    },
+    {
+      "id": "qa-084",
+      "question": "HarnessHub-b7ng の production 認証に必要な Worker 変数・Secret と rollout 順序を infrastructure.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 仕様反映指示を明示承認として、qa-068 までの infrastructure.web 確定内容を全面維持し、次の実装追補を確定する。production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、ログへ記録しない。rollout は DB backup と migration dry-run、本適用、認証 Secret/変数の存在確認、Worker deploy、2 tenant OIDC・Device Flow smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。"
+    },
+    {
+      "id": "qa-085",
+      "question": "HarnessHub-b7ng の最終レビューで確定した DB 書き込みゲートの実行環境別共有範囲を database.web の正本へ反映するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 のスキーマ、migration、guardedWrite 契約を全面維持し、実行環境別の共有範囲を追補する。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。"
+    },
+    {
+      "id": "qa-086",
+      "question": "HarnessHub-b7ng の database.web 正本を、schema・migration・書き込みゲートの共有範囲を失わない単独で完結した契約としてどう確定するか。",
+      "answer": "ユーザーの 2026-07-26 最終レビュー・仕様反映指示を明示承認として、qa-083 と qa-085 を統合した次の database.web 契約を確定する。user_workspaces は tenant_id,user_id,workspace_id の複合主キーとし、別 tenant で同じ user/workspace ID を使っても衝突させない。device_authorizations は tenant_id NOT NULL、workspace_id、scopes_json、device_name、attempts、last_polled_at を保持し、expired は列値でなく expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持つ。既存 publisher_tokens は Workspace 帰属を復元できないため migration で移送せず、利用者は Device Flow をやり直して再発行する。認証・監査と並走する user insert、user_workspaces add/remove、device authorization、publisher token の書き込みは guardedWrite を通す。Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一 adapter の書き込みを module scope の WeakMap で直列化してローカル接続固有の SQLITE_BUSY と未 commit 成功を防ぐ。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、module scope の Promise 待ち行列へ入れず、各要求内で競合再試行だけを行って DB 側の排他と CAS に並行制御を委ねる。これにより別要求に属する I/O Promise の共有を避ける。adapter の scope は型で必須化し、ローカル直列化と request-bound 非連結を回帰テストで固定する。残る repository write の全量掃き出しは HarnessHub-mb7c で追跡する。"
+    },
+    {
+      "id": "qa-087",
+      "question": "提供者のローカル開発環境で複数 worktree を並列利用するとき、別 worktree による checkout 中 branch の ref 直接更新と、その結果生じる巻き戻しコミットをどのように防止しますか?",
+      "answer": "ユーザーの 2026-07-28 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映」を明示承認として、qa-039 のローカル開発環境・CI 正本・secret scan の契約を全面維持し、並列 worktree の整合性契約を追補する。全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要なため worktree 情報を取得できない場合は fail-open とし、pre-commit hook が index tree と HEAD の祖先 tree の一致および異常な staged 削除を検査して巻き戻し commit を fail-closed で拒否する。共有 bundle は beads hook へ委譲し、tracked template・installed bundle・core.hooksPath・beads 保険経路のずれを pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。対象は開発フローの安全性であり、Hub の外部 API・データモデル・認証認可・Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-088",
+      "question": "qa-039 のローカル開発契約と qa-087 の並列 worktree 安全契約を、章単独で情報を失わない自己完結した契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-07-28 最終レビュー・仕様反映指示を明示承認として、qa-039 と qa-087 を統合した次のローカル開発契約を確定する。\n\n【1. ローカル環境】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。\n\n【2. CI と local の一致】PR の required status checks と同じ実装を pnpm script から実行できるようにし、CI 専用の検査手順を CI 側だけに持たない。merge 前ゲートの正本は CI とする。\n\n【3. commit 前のローカルゲート】lint と format は早期検知の補助として任意実行し、secret scan も local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【4. 並列 worktree の ref 整合性】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲する。tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【5. ローカルからの本番操作】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。ローカル開発は preview Turso または local SQLite を使い production DB を指さない。\n\n【6. Web App 出口との境界】作者 local session から顧客 Web App を公開する I5 は Hub 本体の開発フローと分離する。本契約は Hub repository の開発フローに限り、Hub の外部 API、データモデル、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-089",
+      "question": "AI skill の live-trial を task/feature の受入証拠として再利用するとき、文字列上の PASS や一時ファイル参照を実証済みと誤認しないために何を必須としますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、開発品質ゲートの実走証拠契約を確定する。\n\n【1. scenario 束縛】受領書と verdict は positive scenario 正本の現行 scenario_id に一致し、required_observations を全件回収し、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md の必須・禁止手順を宣言する場合は実 task.md も一致させ、実装不能な指示を別 operation へ読み替えて結果だけを合わせる run を拒否する。scenario_id の更新または scenario の削除は旧証拠を失効させる。\n\n【2. durable evidence】各 observation の evidence_ref は verdict の run directory を起点とした相対パスとし、生成時に workdir 内の実在する通常ファイルへ解決する。絶対パス、workdir 外への逸脱、ignored fixture や削除済み一時領域だけに残る参照を受入根拠にしない。PR に採用する run は参照先を含めて repository へ保持し、clean clone の品質ゲートでも解決できなければならない。\n\n【3. 実測と帰属】write count は実行前後の repository state 差分から導出し、binding は graph に永続した tracker_binding から導出する。起動引数や adapter の dry-run echo を実測値として書き戻さない。draft node の publication gate による 0 件と、promoted candidate の external-adapter dry-run による 0 件は別の帰属として記録する。昇格済み node の confirmation_evidence.evaluated_digest は、最終 persisted node から自己参照となる confirmation_evidence だけを除いた正準 JSON の SHA-256 と突合し、形式だけを満たす placeholder や昇格後の stale PASS を拒否する。\n\n【4. provenance】監査 helper は scenario 契約を含む責務分割した全 module の複合 digest と Git index 一致を pre/post で束縛し、監査自身や合格条件を書き換えた trial を拒否する。正例だけでなく同じ最終 graph から publication gate や schema rule を壊した負の検体を作り、正準 validator の該当節が赤になることを要求する。\n\n【5. 境界】本契約は Harness Hub の開発管理・テスト証拠に限定する。製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-090",
+      "question": "並行 live-trial の後片付けが別実行の tmux session を終了させないため、macOS のローカル開発契約へどの所有権境界を追加しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 のローカル開発契約を全面維持し、live-trial cleanup の所有権境界を追補する。各 tmux session は起動時に安全な run-id と owner PID を metadata として保持する。通常の reap は session 名の run prefix、記録済み run-id、記録済み owner PID の三つが完全一致した session だけを削除し、同じ run-id の別 owner、別 run-id、metadata 無し session を削除しない。run-id または owner PID が無い通常 reap は fail-closed で拒否する。全 live-trial session の削除は明示的な管理者操作 --all に限定し、通常の終了経路で使用しない。boot は記録した owner PID を READY 出力で呼出元へ渡し、cleanup は現在の shell PID で代用しない。fake tmux と実 tmux の回帰テストで sibling session の生存を固定する。本契約は repository 内の開発用 acceptance harness に限定し、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-091",
+      "question": "production Worker の認証設定と GitHub Actions の Cloudflare token 最小権限分離を、infrastructure.web 単独で情報を失わない契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-084 の production 認証・rollout 契約を全面維持し、GitHub Actions の Cloudflare token 分離を統合した次の infrastructure.web 契約を確定する。\n\n【1. Worker runtime の Secret / 環境設定】production Worker は AUTH_SESSION_SECRET、AUTH_ACCESS_TOKEN_SECRET、ENCRYPTION_KEK、TURSO_AUTH_TOKEN を Secret として保持し、AUTH_ALLOWED_ORIGINS、AUTH_DEVICE_VERIFICATION_URI、AUTH_CANONICAL_ORIGIN、TURSO_DATABASE_URL を環境設定として受け取る。Secret 値を wrangler.jsonc、source、文書、ログへ記録しない。\n\n【2. GitHub Actions の Cloudflare token 分離】CLOUDFLARE_API_TOKEN は Worker deploy / rollback 専用とし Workers Scripts Edit を付与するが R2 write 権限を付与しない。CLOUDFLARE_R2_API_TOKEN は日次 backup と production smoke の R2 object put/get/delete 専用とし Workers Scripts 権限を付与しない。Wrangler の r2 object put/get --remote は Cloudflare REST API を使い、bucket-scoped の Workers R2 Storage Bucket Item Write は S3-compatible API 専用で REST API では利用できないため、R2 token には account-scoped の Workers R2 Storage Write を使う。2 token は別々の GitHub Actions secret として投入し、値を引数・文書・ログへ残さない。\n\n【3. rollout 順序】DB backup と migration dry-run、本適用、認証 Secret/環境設定と Actions required secret の存在確認、Worker deploy、/health、2 tenant OIDC・Device Flow smoke、本番 R2 smoke の順とする。0001 migration は旧 publisher token を失効させるため、利用者告知と Device Flow 再認証を release 条件に含め、rollback は DB を前進させたまま code を戻す既存契約を維持する。\n\n【4. 検証境界】workflow の secret 参照と scripts/ci/actions-secrets-registry.json は CI で双方向突合し、実投入状況は check-actions-secrets.mjs --live で検査する。静的 test は deploy step が deploy token だけを、backup / R2 smoke が R2 token だけを参照することを固定する。token 発行、GitHub への投入、deploy token による R2 write 拒否、R2 token による workflow 完走は外部状態の実測が揃うまで完了扱いにしない。\n\n【5. 境界】本変更は CI/CD credential の権限境界と運用契約を強化する。Hub の外部 API、DB schema、認証認可モデル、UI、Cloudflare deploy unit 自体は変更しない。"
+    },
+    {
+      "id": "qa-092",
+      "question": "Dev Graph の implementation readiness が本文未記入の成果物を通さないため、C11 のローカル開発契約へどの本文検査境界を追加しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-088 と qa-090 のローカル開発契約を全面維持し、Dev Graph C11 の artifact 本文検査を追補する。C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が各 artifact kind に定める required section の内容を canonical template と照合する。節本文が空、canonical template の angle-bracket placeholder を残す、または本文全体が TBD / TODO / 未定だけの場合は placeholder_only_section として implementation_readiness=incomplete にし、該当節名を missing_sections へ列挙する。architecture のように親節が構造 container である場合は substantive な必須 child section を含めば親節を未記入扱いしない。C02 upsert は生成後に同じ C11 を通すため、本文なしの新規 template 生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。一方、既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。全 artifact kind の canonical template、実内容、見出しだけへ潰した mutation を回帰テストで固定する。本契約は repository 内の Dev Graph readiness、tracker 投影、system build handoff に限定し、Harness Hub 製品の API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-093",
+      "question": "日次 backup の失敗・cron 不発が無音にならないようにするため、Worker cron と GitHub Actions backup の heartbeat、required secret、完了判定をどの契約で確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-011 / qa-019 / qa-034 のバックアップ・監視・RPO/RTO・Better Stack 採用を全面維持し、HarnessHub-dbx6 で判明した観測経路の欠落を次の契約で補強する。(1) Worker 日次 cron と GitHub Actions 日次 backup は異なる仕事であり、一方の成功が他方の失敗を隠さないよう Better Stack heartbeat 資源を分離する。Worker は CRON_HEARTBEAT_URL、backup は BACKUP_HEARTBEAT_URL を使い、同じ URL を共用しない。(2) backup 専用 heartbeat hub-backup-daily は period=86400 秒、grace=3600 秒とし、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は optional ではなく required とする。backup workflow は開始時に未投入を fail-closed で拒否し、heartbeat は全 backup step 成功後だけ送る。cron 不発は heartbeat 期限超過、途中失敗は GitHub Actions failure と同じ heartbeat 期限超過の両方で観測可能にする。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、用途別 secret store へ stdin で投入する。監視設定ファイルは binding 名、period/grace、外部適用状態だけを保持する。(5) repository 内の設定・テストが揃っても外部適用済みとは数えない。backup heartbeat の provisioning_state が applied、GitHub repository secret が投入済み、main 上の成功 run 後に着信を実測するまで HarnessHub-dbx6 と受入条件は未完了を維持する。(6) 本変更は infrastructure / maintenance-ops の運用契約を強化するが、Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker の deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-094",
+      "question": "qa-093 の backup heartbeat 契約を追加したうえで、直前まで確定していた infrastructure.web と maintenance-ops.web の契約を情報欠落なくどう統合しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-091 の production Worker Secret / 環境設定、Cloudflare deploy token と R2 token の最小権限分離、rollout 順序、静的検査と外部実測の完了境界を全面維持する。また qa-058 の phase 別監視有効化、qa-011 / qa-019 の日次 control-plane JSONL backup・RPO 24h・RTO 4h・復元不能断面を成功と数えない契約、機械可読 secret 台帳と workflow 実参照の双方向突合、実投入状態を --live で判定する契約も全面維持する。そのうえで qa-093 を統合し、次を追加確定する。(1) Worker 日次 cron と GitHub Actions 日次 backup は別々の Better Stack heartbeat を使い、CRON_HEARTBEAT_URL と BACKUP_HEARTBEAT_URL の URL を共用しない。(2) backup 専用 hub-backup-daily は period=86400 秒 / grace=3600 秒で、UTC 17:00 の予定 run が完走しなければおおむね UTC 18:00 (JST 03:00) までに異常化する。(3) BACKUP_HEARTBEAT_URL は required とし、workflow 開始時の未投入を fail-closed で拒否する。heartbeat は全 backup step 成功後だけ送るため、cron 不発も途中失敗も期限超過として外形監視へ表れる。(4) Better Stack API token と heartbeat URL は設定・成果物・引数・ログへ保存せず、stdin で用途別 secret store へ投入する。設定は binding 名・period/grace・外部適用状態だけを持つ。(5) repository 内実装だけで完了扱いにせず、backup heartbeat の provisioning_state=applied、GitHub secret 投入、main の成功 run、heartbeat 着信実測が揃うまで HarnessHub-dbx6 を継続する。(6) Hub の外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-095",
+      "question": "作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-078 と qa-081 の既存契約を全面維持し、skill 構造 lint の生成物境界を追補する。\n\n【1. テスト戦略】タスク仕様書は単体・結合・境界値・既存回帰の各テストを変更内容から選び、focused test と実際の実行順序を再現する広域回帰の両方を記録する。失敗時は原因分析、修正、同一コマンド再実行の改善ループを回す。\n\n【2. 層別方針】frontend は behavior ベースの component / 操作フロー、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界を検証する。pixel・DOM 内部構造・一時生成物の物理配置など、本来の設計契約ではない実装詳細へ品質判定を密結合させない。\n\n【3. skill tree の生成物境界】skill 構造 lint は人が管理する SKILL.md、許可 directory、命名、深さを検査する。一方、pytest・mypy 等の test tool が skill 配下へ作る dot で始まる directory とその配下、Python の __pycache__ / .pyc は生成物として構造判定から除外する。許可 directory 集合に dot directory は含めず、個別 cache 名の列挙ではなく同じ性質を持つ生成物へ一般化する。\n\n【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。\n\n【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-096",
+      "question": "MVP ファーストの優先度判断を維持したまま、CI / local の品質ゲートが検査対象 0 件で緑になる fail-open を防ぐ dev-workflow.web 契約を、章単独で情報を失わない形でどう確定しますか?",
+      "answer": "ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-069 の MVP ファーストな優先度契約を全面維持し、品質ゲートの空走査境界を統合した次の dev-workflow.web 契約を確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は plugins/dev-graph/references/execution-tracker-contract.md、判断と検証の受領書は docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md とする。\n\n【6. 境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-097",
+      "question": "SYS-AUTH-TENANCY-P13 の本番実行で確定した Google OIDC rollout とテナント別 CSRF sign-in を、auth.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-074 までの auth.web 契約を全面維持し、次を追加確定する。(1) 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`) 1テナントだけを有効化する。これはリリース境界であり、製品の row-level tenant isolation、複数テナント回帰試験、将来の共通 Google OAuth client / 顧客持ち込み方式を削除しない。(2) tenant別サインイン画面は GET `/api/auth/{tenant_slug}/csrf` を `credentials=same-origin` で呼び、応答で設定されるCSRF cookieと`csrfToken`を同じtenant basePathのPOST `/api/auth/{tenant_slug}/signin/tenant-oidc`へ送る。(3) Googleへの302はfetchで追わずnative form navigationへ渡す。token取得失敗、空token、入力欠落では外部遷移せず再試行可能なエラーを表示する。(4) callback origin、JIT provisioning、7 claims、role=member/status=active、session/access署名鍵分離はqa-074を維持する。"
+    },
+    {
+      "id": "qa-098",
+      "question": "本番 Google OIDC の client_secret と CSRF を、security.web の秘密管理・要求検証契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-075 までの security.web 契約を全面維持し、次を追加確定する。(1) Google `client_secret` の復元可能な運用原本と安全な受渡し元は1Passwordとし、登録処理中だけmasked `op run`で展開する。値を文書、ログ、issue、PR、GitHub Secrets、テナント別Cloudflare Worker Secretsへ置かない。(2) repository経由でpurpose別DEKにより暗号化し、production DB `idp_connections.client_secret_enc`へ保存する。Workerは要求時にDBを読み、Cloudflare Worker Secretの共通`ENCRYPTION_KEK`で復号する。Workerは実行時に1Passwordを参照しない。(3) sign-in CSRFはtenant別basePathのcookie/token対を要求し、取得失敗・不一致・空値をfail-closedにする。別slugのcookie/tokenを混用しない。(4) Device FlowのCAS、refresh rotation/reuse検知、runtime binding再読込はqa-075を維持する。"
+    },
+    {
+      "id": "qa-099",
+      "question": "production Worker の認証bindingと現行1テナントrolloutを、infrastructure.web の既存運用契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 のbackup/heartbeat、token分離、RPO/RTO、外部実測境界を全面維持し、production authの差分を次のとおり追加確定する。(1) `apps/hub/wrangler.jsonc`は秘密でない`AUTH_CANONICAL_ORIGIN`、`AUTH_ALLOWED_ORIGINS`、`AUTH_DEVICE_VERIFICATION_URI`をproduction varsの正本とする。(2) production runtimeの必須Worker Secret名は`AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、`TURSO_DATABASE_URL`、`TURSO_AUTH_TOKEN`、`ENCRYPTION_KEK`の5件とし、値は設定・source・文書へ保存しない。OIDC client secretや`IDP_SECRET_<tenant_slug>`をWorker Secretへ追加しない。(3) 現行rolloutの外部受入対象はGoogle / HarnessHub 1テナントである。二つ目のproduction tenantはP13完了条件にしないが、複数テナント分離試験と将来方式のtaskは維持する。(4) rolloutはbinding確認、deploy、health/provider/CSRF/sign-in、JIT、workspace membership、Device Flow token/refresh/reuse失効、session revocationをR1〜R5で実測し、証跡とrollback先をrelease recordへ残す。repository内実装だけで外部受入を完了扱いにしない。"
+    },
+    {
+      "id": "qa-100",
+      "question": "qa-089 の live-trial 証拠契約を受領する criteria-test は、scenario_contract が欠落した旧形式の PASS をどう扱い、何を照合して初めて合格にしますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-089 の scenario 束縛、durable evidence、実測、provenance、製品境界を全面維持し、受領側の fail-closed 契約を追補する。\n\n【1. 非省略契約】verify_by=live-trial の criteria evidence は、正準 positive scenario と verdict の scenario_contract を必須とする。legacy verdict schema 上で field が省略可能でも、criteria acceptance では欠落を互換成功として扱わず不合格にする。\n\n【2. 照合条件】scenario_id が正準 scenario と一致し、required_observations が全件 observed、unobserved が空、task_args_template と実引数の option flag が一致しなければならない。scenario が task.md 契約を宣言する場合は required/forbidden instruction も一致させる。各 evidence_ref は同じ run directory 内に包含される実在ファイルへ解決する。\n\n【3. 更新方法】旧受領書が新契約を満たさない場合、digest や field の手編集で追認せず、現行 scenario と現行挙動閉包を使って fresh live-trial を実走し、その durable run 一式を repository に保持する。\n\n【4. 回帰検証】criteria-test は field の存在と全照合条件を無条件に検査する。正例 run の成功に加え、scenario_contract を欠落させた負例が失敗する判別力を維持する。\n\n【5. 境界】本変更は Harness Hub repository の開発品質ゲートと証拠受領に限定する。run-dev-graph-schedule のスケジューリング動作、Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-109",
+      "question": "既存のテスト戦略・品質保証契約を維持しながら、plugin-local Chromium を使う slide-report-generator の受入試験を、ローカルだけでなく GitHub Actions から必ず到達可能にするには何を必須としますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108 の既存契約を全面維持し、plugin-local browser acceptance の CI 到達契約を追補する。\n\n【1. テスト戦略】task 仕様書は単体・結合・境界値・既存回帰の4レベル、既定80%のカバレッジ目標、層別方針、実装詳細へ密結合しない保守性制約を持つ。実ブラウザを使う処理は、文字列・mock だけの単体試験で代替せず、Chromium 起動と生成物観測を結合／受入証拠に含める。\n\n【2. CI 到達】plugin の EVALS や npm test に受入試験を列挙するだけで完了としない。plugin または専用 workflow の変更を trigger とする GitHub Actions job から、plugin-local runtime 復元、同じ npm test、runtime の read-only check を順番に実行する。install/test/check のいずれかが失敗した場合は job を非0で停止する。\n\n【3. 再現可能な runtime】Node/Playwright 依存と OS/CPU 別 Chromium は plugin 配下へ復元し、利用者や runner の global browser cache を正本にしない。cache は高速化だけに使い、最終 check で Playwright version、実行ファイルの存在、plugin-local path への包含を再検証する。依存が無い clean runner でも install が npm ci と Chromium 復元へ収束する。\n\n【4. 回帰と証拠】Python 契約テストは workflow の path trigger、working-directory、install→npm test→check の配線を検査する。Node 受入試験は plugin-local Chromium を実起動し、16:9 検査と複数 slide screenshot の実在を確認する。EVALS、npm test、workflow の三経路に test-verify-slides を到達させ、宣言だけ・ローカルだけ・CIだけの片肺を許さない。\n\n【5. platform と境界】GitHub Actions は testing-qa.web の CI 実行基盤として扱い、作者の desktop platform と混同しない。本契約は repository 内の slide-report-generator 品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-101",
+      "question": "HarnessHub-njkm の接続復旧実装を受け、qa-086 の schema・migration・書き込み共有範囲を失わず、プロセス外 SQLITE_BUSY 後の database.web 契約をどう確定しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-086 の schema、migration、guardedWrite、実行環境別共有範囲を全面維持し、次の database.web 契約を再確定する。\n\n【1. 既存データ契約の維持】user_workspaces は tenant_id,user_id,workspace_id の複合主キー、device_authorizations は tenant_id NOT NULL と workspace_id/scopes_json/device_name/attempts/last_polled_at を保持し、expired は expires_at から導出する。publisher_tokens は workspace_id NOT NULL と family_id を持ち、旧 token は移送せず Device Flow で再発行する。repository write は HarnessHub-mb7c で全量 guardedWrite 経由へ統一済みで、packages/db/scripts/check-db-write-gate.mjs が新規迂回を拒否する。\n\n【2. 実行環境別の競合境界】Node の file: / :memory: libSQL adapter は writeConcurrencyScope=process-local とし、同一プロセス内の write を guardedWrite で直列化する。別プロセスが同じ file DB を触る競合は直列化の外に残る。Cloudflare Workers の Turso Web client と D1 adapter は writeConcurrencyScope=request-bound とし、要求間 Promise を共有せず、DB 側の排他と CAS、競合再試行へ委ねる。\n\n【3. 壊れた接続の隔離】process-local 接続が SQLITE_BUSY / database is locked を踏んだ場合、接続層は raw client を poisoned（復旧まで使用禁止）として記録する。以後の read/write/transaction 操作は ConnectionPoisonedError で fail-fast し、未 commit の行を同じ接続から読ませず、『成功したのに別接続から行が見えない』silent data loss を防ぐ。UNIQUE などロック以外の確定失敗は poison にしない。request-bound 接続は 1 要求ごとに状態が閉じるため poison にせず従来の再試行を維持する。\n\n【4. 復旧口と参照安定性】TursoAdapter は reconnect() と isPoisoned() を公開する。reconnect() は同じ factory から新しい client を先に生成し、成功後に poison を解除して古い raw client を閉じる。公開 Client と Drizzle adapter の参照は変えないため、既に構築済み repository や spread された test adapter を作り直さない。poison 検知時の自動 reconnect は、並行 transaction を途中で巻き込み故障の観測も消すため採用しない。\n\n【5. 再試行と検証】ConnectionPoisonedError は元の SQLITE_BUSY を cause に保持するが、isLockConflict はこれを再試行対象から除外し、壊れた接続を 25 回叩かない。fake Client の状態遷移テストに加え、子プロセスが同じ file DB の write lock を保持する実 libSQL テストで、BUSY 後の read/write fail-fast、未 commit 行が別接続から見えないこと、lock 解放と reconnect 後の書き込みが別接続から見えることを固定する。\n\n【6. 境界】DB schema、migration、API payload、Cloudflare request-bound runtime の公開挙動は変更しない。本差分はローカル file DB 接続の障害検知・明示復旧契約を追加する。"
+    },
+    {
+      "id": "qa-102",
+      "question": "qa-092 の C11 本文 readiness を維持しながら、C02 の lifecycle・document layer 整合性と live-trial の session 環境隔離を、自己完結した dev-workflow.desktop-macos 契約としてどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 CI 失敗修正・最終レビュー・仕様反映指示を明示承認として、qa-090 の live-trial session 所有権境界、qa-092 の C11 本文 readiness、HarnessHub-bk8v の C02 lifecycle 保全を維持し、C02 document layer parity と tmux session 環境隔離を統合した次の契約を確定する。\n\n【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。\n\n【2. C02 lifecycle と document layer parity】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行する。新規 document の暗黙 default、欠落、重複、形式不正を fail-closed にし、既存本文を byte-for-byte 保持して再実行を noop にする。docs 配置 lint は同じ schema 定義を読み、別の許容値表を持たない。\n\n【3. live-trial session 環境の正本】tmux server が保持する global environment は live-trial の routing 正本にしない。hook の証拠出力先など trial 固有の環境変数は、boot 呼び出し元の現在値を new-session -e で対象 session へ明示的に上書きする。呼び出し元で未設定なら空値を渡し、過去 trial の値へ fallback しない。backend は環境変数名を identifier 形式に限定し、値に NUL・改行・復帰を許さない。転送対象は harness が宣言した session-scoped allow-list に限定する。\n\n【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。\n\n【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-103",
+      "question": "SYS-PUBLISH-PIPELINE-P01〜P13 で確定した公開 API・状態機械・認証境界を、backend.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-082 までの backend.web 契約を全面維持し、PublishRequest パイプラインを次のとおり追加確定する。\n\n【1. API と principal】POST /publish、GET /publish、GET /publish/:id、PUT /publish/:id/package、POST /publish/:id/submit は session と短命 Bearer の dual principal を受理する。session の変更系は Origin/CSRF を必須とし、Bearer は CSRF 非該当とする。approve と Project release 一覧は session/workspace-admin、cancel、channel promote/rollback、deployment 登録は Bearer/Project owner の契約を維持し、全 route は共有 withAuthz と zod schema を通す。\n\n【2. 状態機械と直列化】POST /publish は編集可能な Draft を作るだけで TargetChannel を占有しない。PUT package で R2 staging と検査対象を準備し、POST submit の Draft→Validating 時に同一 channel の非終端 request を検出した場合は 409 channel_busy として Draft に留める。Green は Ready→Publishing→Published を進み、Yellow/Red は Needs Fix へ戻し旧 stable を変更しない。\n\n【3. 公開と監査】PublishRequest、inspection verdict、immutable Release、TargetChannel stable pointer、content-addressed Package を service と repository port で調停し、promote/rollback を transaction 内で行う。publish.request、package_upload、submit、approve、cancel、channel.promote、channel.rollback、release.suspend、deployment.register は append-only 監査 event へ記録する。\n\n【4. 冪等性と境界】変更系は tenant と endpoint に束縛した Idempotency-Key を使い、同一 key の payload 不一致は 422 とする。package 検査は packages/inspection の共有純関数を使い、apps/hub が packages/db の schema 内部へ直接依存しない。Publisher クライアント UI とカタログ UI は本差分の対象外とする。"
+    },
+    {
+      "id": "qa-104",
+      "question": "Publisher Bearer、tenant 分離、package 検査を security.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-098 までの security.web 契約を全面維持し、公開パイプラインの信頼境界を追加確定する。\n\n【1. 二段階認証認可】Authorization: Bearer がある要求は edge middleware で access token の署名、期限、tenant_id、workspace_id を fail-closed に検証する。無効 Bearer から有効 session cookie へ fallback しない。route の withAuthz は scope、Project 所有者、credential 種別、token 失効を最終判定する。\n\n【2. tenant 非開示と権限】全資源解決は principal の tenant/workspace と repository row scope を一致させ、cross-tenant 資源は存在を漏らさない 404 とする。approve は workspace-admin、owner 操作は当該 Project owner に限定し、role 判定表を publish route 側へ複製しない。\n\n【3. package 防御】ZIP は size/content-type と archive path を検証し、static validation、secret scan、policy の共有 pipeline を必ず通す。Green 以外を stable へ昇格させず、secret を含む bundle は Release と package registry を作らない。検査結線と DB schema 境界は CI の負例付き静的 gate で遮断する。\n\n【4. 監査】公開、承認、取消、昇格、rollback、停止、deployment 登録を append-only hash chain へ記録し、認証情報や package 内 secret をログへ残さない。監査 failure は公開成功として扱わない。"
+    },
+    {
+      "id": "qa-105",
+      "question": "PublishRequest と stable pointer の永続化不変条件を database.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-101 までの database.web 契約と既存 migration/schema を全面維持し、公開 repository 契約を追加確定する。\n\n【1. 既存 schema の消費】本差分は feat-domain-model-db が所有する publish_requests、inspection_results、releases、target_channels、packages、監査関連テーブルを consumer として使い、新しい schema owner を作らない。apps/hub は packages/db の repository composition だけを参照し、schema subpath と直接 SQL を使わない。\n\n【2. 状態と不変性】PublishRequest の許可遷移は状態機械に限定し、Release は作成後不変とする。Package は SHA-256 content hash を identity として R2 key と DB registry を一致させる。検査失敗では Release と Package registry を作らず、既存 stable pointer を維持する。\n\n【3. 直列化と原子性】同一 TargetChannel の非終端 PublishRequest は partial UNIQUE index と transaction で 1 件に制限する。Draft は非占有で、submit 時の競合を channel_busy へ写像する。promote/rollback は指定 Release の整合を検証して stable_release_id と監査 event を同じ transaction で更新し、失敗時に旧 stable を残す。\n\n【4. tenant scope と冪等台帳】repository は tenant_id と workspace_id を全操作へ伝播し、cross-tenant row を返さない。Idempotency-Key は tenant、endpoint、payload hash、24 時間 TTL に束縛し、同一 key の異なる payload を 422 とする。"
+    },
+    {
+      "id": "qa-106",
+      "question": "Cloudflare Worker と R2 上の publish pipeline を infrastructure.web の既存配備契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-099 までの infrastructure.web 契約を全面維持し、公開パイプラインの本番契約を追加確定する。\n\n【1. runtime 境界】apps/hub は Cloudflare Worker 上で実行し、package object は R2 binding を通じて content-addressed key packages/<sha256> へ保存する。Worker 内から Cloudflare REST API を使って R2 を操作せず、DB repository と object storage port の境界を維持する。\n\n【2. 配備と実測】production deploy は GitHub Actions を正本とし、緊急時の手動 Wrangler 操作は release record へ version、配信率、直前 version、rollback command を記録する。本番 health は runtime-config、db、r2 を fail-closed に確認し、S1〜S6 で create、upload/inspection、secret 拒否、公開、promote/rollback、audit hash chain を実測する。\n\n【3. R2 整合】Green package は API content hash、DB packages.content_hash、R2 再取得 SHA-256 が一致することを確認する。Secret 入り package は R2 registry へ登録しない。Release と参照中 object は証跡・参照整合のため rollback で削除せず、Worker code version だけを既知安定版へ戻す。\n\n【4. 再実行】smoke:publish-production は環境変数で本番対象を受け取り、12 API 操作、旧 stable 維持、Release 非生成、必須監査 action 9 種を fail-closed に検査する。短命 token は実行後に失効・削除する。"
+    },
+    {
+      "id": "qa-107",
+      "question": "公開パイプラインの runbook、rollback、完了収束を maintenance-ops.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-094 までの maintenance-ops.web 契約を全面維持し、publish 運用を追加確定する。\n\n【1. runbook】事前条件、短命 Publisher token、使い捨て Project/TargetChannel、S1〜S6、TargetChannel 409、R2 hash、audit chain、後処理を一つの runbook で再現する。smoke は途中失敗を成功扱いにせず、作成した一時 token を失効する。\n\n【2. rollback】Worker code 障害は記録済み直前 version へ 100% rollback し、rollback 中は既知の認証制約を明示して Publisher API を一時停止扱いにする。Release、R2 object、監査 event は immutable/append-only の履歴として保持し、DB を巻き戻して証跡を消さない。\n\n【3. 観測と証跡】health dependency、bundle size、test/gate 件数、Worker version、stable Release、audit chain event 数、R2 content hash を release record へ記録する。確認していない再実行を実測済みと書かず、ローカル契約検証と本番実測を分離する。\n\n【4. 完了収束】実装・本番 acceptance が完了しても、Draft PR の merge と default branch reconciliation までは Beads P01〜P13 と親 epic を in_progress に維持する。merge 後に dev-graph、Beads、default branch を正規 sync して完了へ収束する。"
+    },
+    {
+      "id": "qa-108",
+      "question": "PublishRequest パイプラインの受入を testing-qa.web の既存品質契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-07-30 最終レビュー・仕様反映指示を明示承認として、qa-076 までの testing-qa.web 契約を全面維持し、公開パイプラインの品質ゲートを追加確定する。\n\n【1. 振る舞い】状態遷移の許可・拒否直積、Green/Yellow/Red 写像、旧 stable 維持、immutable Release、TargetChannel 直列化、idempotency の replay/payload mismatch、tenant/workspace/role matrix を自動テストで固定する。\n\n【2. 結線と境界】共有 inspection が secret scan を含むことだけでなく Hub がその bundle を実際に使うことを静的 gate で検査する。apps/hub から packages/db schema subpath への依存を禁止し、各 detector は意図的な bypass を拒否できる負例テストを持つ。検査対象 0 件を成功にしない。\n\n【3. production acceptance】repository 内の test 合格だけで P13 を完了扱いにせず、production Worker、DB、R2 に対する S1〜S6、channel_busy、R2 hash、audit chain を実測する。自動 smoke の entrypoint と必須 action 集合も静的・単体テストで固定する。\n\n【4. 証跡】system-plan P01〜P13 の validator violations 0、対象 package test/typecheck/lint、boundary/security gate、文書 line limit、artifact placement、diff check を PR 前に再実行し、結果と既知の非 blocker follow-up を受領書、release record、Beads notes へ残す。"
+    },
+    {
+      "id": "qa-110",
+      "question": "共有 callback と credential resolver を backend.web の既存 API/runtime 契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-103 の API、principal、状態機械、監査、冪等性契約を全面維持し、認証 adapter の runtime 契約を追加確定する。\n\n【1. route dispatch】/api/auth/shared/callback/tenant-oidc は専用入口で処理し、state を先に検証して tenant を復元する。shared tenant の tenant 別 callback は 404、customer tenant を共通 callback へ向けた要求と予約 slug は 400 とし、曖昧な route fallback を作らない。\n\n【2. config resolution】TenantOidcConnectionPort は credential_mode と allowed_workspace_domains を返す。credential resolver は customer_google だけ tenant 行の暗号文を復号し、shared_google だけ環境 credential を返す。issuer/mode/設定の不一致と未知 mode は null として認可開始前に閉じる。\n\n【3. callback order】state 検証、tenant 接続一致、Auth.js の code exchange・署名・PKCE・nonce、Workspace hd、既存利用者/JIT、session 発行の順を守る。Workspace 拒否は user insert より前で、binding cookie は成功・拒否の callback 後に使い切る。\n\n【4. 互換性】customer_google の basePath、redirect_uri、Auth.js state cookie、secret 復号、session claims は変更しない。provider adapter の外へ Auth.js 型を漏らさない。"
+    },
+    {
+      "id": "qa-111",
+      "question": "共有 Google OAuth client の信頼境界を security.web の既存契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-104 の二段階認証認可、tenant 非開示、secret scan、append-only 監査を全面維持し、共有 OIDC の境界を追加確定する。\n\n【1. state 防御】tenant を運ぶ state は session secret による HS256、10分 TTL、token type、tenant id/slug、ランダム binding の SHA-256 を持つ。平文 binding は HttpOnly/Secure/SameSite=Lax/__Host- cookie にだけ置き、署名不正、期限切れ、cookie 欠落・不一致を一般化した拒否応答で閉じる。\n\n【2. IdP 防御】PKCE S256 と nonce を必須のまま維持する。Google ID token は Auth.js/oauth4webapi が issuer、署名、audience、nonce を検証し、その検証済み claims の hd を tenant 許可リストへ完全一致させる。authorization の hd parameter は表示ヒントであり認可境界に使わない。\n\n【3. secret 境界】共有 client_secret は Worker 環境 secret に1件だけ置き、tenant DB 行、ログ、API response、Git、GitHub Secretsへ複製しない。credential object は JSON 化時に secret を伏せ、shared 行への tenant secret 復号要求は明示エラーにする。\n\n【4. fail closed】unknown credential_mode、Google 以外の shared issuer、空の許可ドメイン、共有環境 secret の片方欠落では認可を開始しない。customer_google へも shared_google へも暗黙 fallback しない。"
+    },
+    {
+      "id": "qa-112",
+      "question": "共有 credential mode と Workspace allow-list を database.web の既存永続化契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-105 の tenant scope、transaction、既存 schema owner、immutable 公開資源契約を全面維持し、idp_connections の差分を追加確定する。\n\n【1. schema】idp_connections へ credential_mode TEXT NOT NULL DEFAULT customer_google と allowed_workspace_domains TEXT NOT NULL DEFAULT [] を追加する。既存行は migration 後も customer_google として意味を変えず、許可ドメイン JSON は読取境界で schema 検証する。\n\n【2. 保存不変条件】customer_google は従来どおり client_id と client_secret_enc を持つ。shared_google は tenant 行へ共有 client_id/client_secret を複製せず、両列を空 sentinel とし、issuer は Google 固定、allowed_workspace_domains を最低1件持つ。repository の discriminated input で方式ごとの必須項目を分ける。\n\n【3. read/decrypt】primary connection の決定順序と tenant scope を維持する。shared 行は環境 client_id を合成して auth port へ返し、decryptClientSecretForTenant は shared 行を復号対象として受け付けない。未知 mode、不正 JSON、空 allow-list は runtime で fail closed にする。\n\n【4. migration/rollback】0003 migration は ADD COLUMN 2本のみで既存データを移送・削除しない。旧 Worker へ戻す前に shared 行を customer_google へ戻すか削除し、旧コードが空 credential を読む状態を作らない。"
+    },
+    {
+      "id": "qa-113",
+      "question": "共有 Google OAuth client を infrastructure.web の既存 Cloudflare 配備契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-106 の Cloudflare Worker、GitHub Actions、health、rollback、R2 契約を全面維持し、認証配備差分を追加確定する。\n\n【1. OAuth 登録】環境ごとに Google OAuth client を1件作り、承認済み redirect URI は AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc の1本とする。tenant 追加のたびに Google Cloud Console の client/URI を増やさない。\n\n【2. secret】SHARED_GOOGLE_OAUTH_CLIENT_ID と SHARED_GOOGLE_OAUTH_CLIENT_SECRET は Cloudflare Worker の環境 secret/secret binding として投入し、repository と GitHub Actions Secrets を受渡し元にしない。共有方式を使わない環境では未設定を許し、その場合は shared tenant だけ fail closed にする。\n\n【3. 配備順序】DB backup・migration dry-run、0003 apply、Worker secret 投入、共有対応 Worker deploy、対象 tenant の shared_google 化、実ログイン smoke の順で段階導入する。customer tenant を canary 対照として残し、callback、hd、audit、secret 非露出を確認する。\n\n【4. rollback/rotation】障害時は tenant 行を customer_google へ戻して旧 callback/credential を確認してから旧 Worker version へ戻す。共有 secret rotation は新 secret 投入、Worker 反映、ログイン確認、旧 secret revoke の順とし、DB rollback と証跡削除は行わない。"
+    },
+    {
+      "id": "qa-114",
+      "question": "共有 OAuth client の rollout・rollback・完了収束を maintenance-ops.web の既存運用契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 指示を明示承認として、qa-107 の runbook、rollback、観測、default branch 収束契約を全面維持し、共有 OIDC の運用を追加確定する。\n\n【1. runbook】事前条件、Google Console の固定 callback、Cloudflare secret、DB backup/migration、tenant 登録、共有/顧客両方式の smoke、個人 Google・別 Workspace 拒否、ログ/response/DB の secret 非露出を1つの再実行可能な runbook にする。\n\n【2. 監視】認可開始失敗、state 拒否、Workspace 拒否、JIT/session 発行を値を漏らさない分類で観測し、tenant id/slug と secret、token、binding の平文をログへ出さない。拒否理由の細分を外部応答に露出しない。\n\n【3. rollback と回復】shared tenant の方式を戻し、customer callback が成功することを確認後に Worker をrollbackする。Google client 削除、secret revoke、migration down は最後に判断し、先に行って復旧経路を失わない。\n\n【4. 完了収束】ローカル品質ゲート、仕様 writer/compiler、dev-graph validator、対象差分 commit、draft PR までを証跡化する。draft PR の merge と default branch reconciliation までは HarnessHub-fnej と node を in_progress に維持し、merge 後に Beads、dev-graph、default branch を正規 sync して閉じる。"
+    },
+    {
+      "id": "qa-115",
+      "question": "HarnessHub-fnej の共有 Google OAuth client 方式を、auth.web の既存認証契約を維持しながらどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-097 の production Google OIDC、JIT、session、Device Flow 契約を全面維持し、次を追加確定する。\n\n【1. credential mode】idp connection は customer_google と shared_google を明示し、未知値や共有設定不備を既定方式へ fallback させない。既存行は customer_google を既定にして従来の tenant 別 issuer/client/secret と callback path を維持する。\n\n【2. 共有認可開始】shared_google は issuer を https://accounts.google.com に固定し、環境単位の client_id/client_secret を使う。認可開始は tenant path から行うが、Google へ渡す redirect_uri は /api/auth/shared/callback/tenant-oidc の1本に集約する。state には tenant id/slug、発行・期限、CSRF binding hash を HMAC 署名して載せ、PKCE と nonce は Auth.js の検査を維持する。\n\n【3. callback と帰属】共通 callback は署名・期限・binding cookie を DB lookup より先に検証し、復元した tenant id/slug と実接続を完全一致させる。Auth.js が署名・nonce 検証した Google ID token の hd を、tenant の allowed_workspace_domains と大文字小文字を正規化した完全一致で照合する。hd 欠落、別 Workspace、サブドメイン、tenant 差し替えでは session/JIT 行を作らない。\n\n【4. principal 分離】同じ Google sub でも principal は tenant_id と sub の組で束縛し、共有 client を tenant identity として使わない。shared は callback 用予約 slug として tenant route で拒否する。"
+    },
+    {
+      "id": "qa-116",
+      "question": "qa-019 / qa-106 / qa-113 の SLO・Cloudflare 配備契約を維持しながら、Better Stack の公開実測から観測進捗とエラーバジェットを再現可能かつ誤判定なく確定するには何を必須としますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示と 2026-08-02 の競合解消指示を明示承認として、qa-019 / qa-106 / qa-113 の既存インフラ契約を全面維持し、HarnessHub-37h.15 の SLO 観測契約を次のとおり追補する。\n\n【1. 実測の正本】Better Stack へ投入した設定や external_id の存在だけで監視稼働を宣言しない。認証不要の公開 status page /index.json から、status page resource の external_id を主鍵に status / availability / status_history を取得し、apps/hub/monitoring/slo-dashboard.json の verdict と突合する。公開実測を取得できない場合は判定不能として fail-closed にする。\n\n【2. 観測窓】UTC 日単位で完了した日だけを対象とし、進行中の当日と not_monitored（無データ）の日を分母から除外する。observed_days が minimum_observation_days_for_final_verdict=30 に満たない間は collecting とし、外形単独の目標達成判定 external_only_target_met は null に保つ。未観測時間を無停止時間へ読み替えない。\n\n【3. 判定境界】30 日到達後も外形監視だけで 99.5% 達成を主張せず、verdict を observation_complete_pending_application_error_rate、blocker を workers-analytics-5xx-rate-not-collected とする。最終判定には Better Stack downtime と Workers analytics 5xx 率の両方が必要で、70% 警告／100% 変更凍結の既存エラーバジェット方針を維持する。\n\n【4. 再実行と証跡】verify-slo-observation.mjs は一致=exit 0、不一致=exit 1、取得／入力不能=exit 2 とする。--write は dashboard の verdict を実測へ収束させ、--json 併用時は更新後に再突合した consistent=true の証跡だけを保存する。出力先欠落など不完全な CLI 引数を成功扱いにしない。\n\n【5. 秘密と範囲】検証器は公開 URL だけを読み、Better Stack API token と heartbeat URL を読み込まず証跡にも保存しない。本変更は SLO の観測・証跡・運用判定を具体化するもので、共有 Google OAuth client を含む既存の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit、既存 99.5% 目標値は変更しない。"
+    },
+    {
+      "id": "qa-117",
+      "question": "認証済みの dual catalog で取得済みデータを再利用する場合、認可失敗とテナント切替をまたいだ情報露出をどう防ぎますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-104 までの deny-by-default、tenant/workspace/role、CSRF、監査、credential 境界を全面維持し、dual catalog の cache 境界を次のとおり追加確定する。\n\n【1. 認可失敗時の表示】catalog 一覧・詳細・Release 履歴は、同じ画面で以前の取得に成功していても、最新応答が 401、403、または契約不正を示した時点で以前の内容を描画しない。Hub 到達不能・404・408・429・5xx の degraded と、現在の主体に閲覧権限が無い unauthorized/forbidden/fatal を同じ stale 表示へ倒さない。\n\n【2. scope 束縛】閲覧用 cache は tenant_id、workspace_id、および対象 project_id に束縛する。tenant/workspace/project が切り替わった場合、新 scope の取得が degraded でも旧 scope の一覧・詳細・履歴を再利用しない。同一 scope の degraded に限り、直近の認可済み表示と install descriptor のコピーを維持できる。\n\n【3. marketplace 応答 cache】`/marketplace.json` は `withAuthz` と tenant/workspace resource 解決を通る認証済み応答であるため、共有 cache を許可しない。`Cache-Control` は private の短い max-age と stale-while-revalidate を使い、`Vary` に Cookie、tenant header、workspace header を含める。これにより同一 session/scope の停止時継続性を保ちつつ、CDN や別 scope への再配信を拒否する。\n\n【4. 検証】成功後の 403 で一覧・詳細・履歴が消えること、同一 scope の 503 では stale を保つこと、scope 切替後の 503 では旧 tenant の内容が出ないこと、marketplace が private/Vary を返すことを自動テストで固定する。\n\n【5. 所有境界】role 判定は既存 `lib/authz/` と API の deny-by-default を正本とし、catalog client に認可規則を複製しない。本追補は既存の server-side 認可を弱めず、表示 cache と応答 cache の漏えい窓を閉じる。"
+    },
+    {
+      "id": "qa-118",
+      "question": "dual catalog の縮退表示と一覧絞り込みを、既存 frontend.web 契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-062 の画面構成、install descriptor、publish polling、レスポンシブ、共通部品、認可出し分けを全面維持し、dual catalog の差分を次のとおり追加確定する。\n\n【1. 縮退と認可の表示境界】`/catalog`、`/catalog/:projectId`、`/catalog/releases` は同一 tenant/workspace の 5xx 等では DegradedBanner と直近の認可済みデータを併記できる。一方 401/403/契約不正では ErrorState のみを表示し、以前の行、詳細、install descriptor、Release 履歴を描画しない。scope が変わった場合は新 scope の応答が返る前から旧 scope の内容を表示対象外にする。\n\n【2. 一覧絞り込み】種別・キーワードは入力中の draft 値と適用済み query を分ける。初回に 1 回取得し、入力だけでは通信せず「絞り込む」の submit ごとに 1 回だけ取得する。同一条件の明示的な再 submit は再取得できる。\n\n【3. Hub 停止時の継続性】stale 表示を許すのは同一 scope で認可済みだった閲覧データに限定する。導入済み Skill 自体の実行経路は Hub に依存せず、UI は新規変更操作を無効化して直近 descriptor のコピーだけを維持する既存 §6.1 契約を保つ。\n\n【4. 境界】PublishRequest 状態機械、catalog API 実装、role 判定はそれぞれ既存 owner のままとし、frontend は port の失敗分類と capability を描画へ適用するだけとする。"
+    },
+    {
+      "id": "qa-119",
+      "question": "dual catalog の認可 cache 境界と絞り込み要求数を、既存 testing-qa.web 契約へどう追加しますか?",
+      "answer": "ユーザーの 2026-08-01 最終レビュー・仕様反映指示を明示承認として、qa-109 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡の契約を全面維持し、dual catalog の検証束を追加確定する。\n\n【1. 認可 cache 回帰】成功応答を描画した後に 403 を返す順序付きテストを一覧・詳細・Release 履歴へ置き、以前の内容と table が消えることを検査する。初期詳細を渡した経路も 403 後に消えることを含める。\n\n【2. scope と縮退の直積】同一 scope の成功→503 では DegradedBanner と以前の内容を維持し、tenant/workspace 切替の成功→503 では旧 tenant の識別可能な内容が 0 件であることを検査する。HTTP adapter の全 request が tenant/workspace header を送る既存検査と組み合わせる。\n\n【3. 配布応答】認証済み `/marketplace.json` が private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を返すことを route test で固定し、public cache への退行を拒否する。\n\n【4. 通信回数】一覧のキーワード入力中は request 数が増えず、submit で 1 回だけ増え、適用 query が送られることを component test で固定する。\n\n【5. CI と未実測境界】catalog 固有 Vitest は GitHub Actions から fail-closed に到達させ、axe 違反 0 と bundle 予算を維持する。production URL 上の LCP/INP/CLS と 2 社同時運用は repository test で代替せず P13 の外部実測として未完了を明示する。"
+    },
+    {
+      "id": "qa-120",
+      "question": "main の共有 Google OAuth client と dual catalog の認可 cache 境界を、security.web の現行契約としてどのように両立させますか?",
+      "answer": "ユーザーの 2026-08-02 コンフリクト改善指示を明示承認として、qa-111 の共有 Google OAuth 防御契約と qa-117 の dual catalog cache 防御契約をどちらも全面維持する。\n\n【1. 共有 OAuth 境界】tenant を運ぶ state の HS256・10分 TTL・CSRF binding、PKCE S256、nonce、検証済み Google ID token の hd allow-list 完全一致、Worker 環境 secret 1件への集約、未知 mode・空 allow-list・片側 credential 欠落時の fail-closed を qa-111 のまま維持する。\n\n【2. Catalog cache 境界】閲覧 cache を tenant/workspace/project scope に束縛し、401/403/契約不正と scope 切替で旧表示を消去する。認証済み marketplace 応答は private, max-age=60, stale-while-revalidate=300 と Cookie/tenant/workspace の Vary を必須にし、同一 scope の degraded だけに stale 利用を限る qa-117 の契約を維持する。\n\n【3. 責務分離】OAuth callback の本人性・tenant 確定と、認可後 catalog データの再利用境界は異なる防御層である。どちらかを他方の代替とせず、既存 lib/authz/ と API の deny-by-default を共通の正本とする。\n\n【4. 回帰】共有 OAuth の state/cookie/hd/secret 負例と、catalog の成功後 403・同一 scope 503・scope 切替後 503・private/Vary をそれぞれ自動テストで固定する。本統合は既存の応答・認可・DB schema を弱めず、QA ID 衝突解消後の現行契約を明確化する。"
+    },
+    {
+      "id": "qa-121",
+      "question": "qa-096 の CI/local 品質ゲートとポータビリティ契約を維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web にどう統合しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-096 の MVP 優先度、CI/local parity、fail-closed、回帰証拠、製品境界を全面維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【2. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【3. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【4. 検証と境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。本契約は repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-122",
+      "question": "qa-096 の開発品質契約を情報欠落なく維持しながら、外部参考 Skill の削除と有効な外部 CLI 契約の移設を dev-workflow.web の自己完結した現行契約としてどう確定しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。\n\n【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【8. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-123",
+      "question": "qa-019 / qa-116 の SLO 99.5% と公開実測契約を維持しながら、feat-hub-foundation と関連 Beads をどの完了境界で閉じ、未完了の観測リスクをどう残しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・Beads 更新指示、および同日 Beads に記録済みの『HarnessHub-37h.14 / HarnessHub-37h.15 は追加対応不要』という明示判断を承認根拠として、qa-019 / qa-116 の SLO 99.5%・公開実測・エラーバジェット契約を全面維持し、delivery closure と operational verdict を次のとおり分離する。\n\n【1. 運用品質契約の維持】Better Stack 公開 status page の実測、完了 UTC 日だけを数える 30 日観測窓、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結を変更しない。観測 6 日 / 30 日で collecting、外形単独判定 null、Workers 5xx 率未取得という 2026-08-01 時点の証跡を保持し、99.5% 達成を主張しない。\n\n【2. feature の完了境界】feat-hub-foundation は exact-13 の P01〜P13、CI test→deploy、本番 /health、bundle 予算、共通層、release / runbook 証跡の完了を delivery closure とする。SLO 30 日観測と旧 token revoke 確認は独立した運用 follow-up であり、ユーザーが HarnessHub-37h.14 / HarnessHub-37h.15 を追加対応不要として completion_evidence.status=not_applicable で閉じたため、feat-hub-foundation と後続 feature を block しない。HarnessHub-37h.13 は P13 デプロイ責務の完了として閉じる。\n\n【3. waiver の意味】not_applicable は PASS や目標達成ではなく、今回の delivery closure に対する追跡免除である。将来、観測判定や token revoke 確認を再開する場合は既存 issue を reopen するか新 issue を起票し、qa-116 の CLI / runbook / 生データ契約で再検証する。\n\n【4. domain model の独立完了】feat-domain-model-db / HarnessHub-u6q は、SQLite 方言互換 schema、Release immutable 強制、content-addressed R2 registry、export / restore 証跡という固有受入の完了を根拠に閉じる。Hub 基盤の waived follow-up を domain model の未完了へ読み替えない。\n\n【5. 非影響範囲】外部 API、DB schema、認証認可、UI、Cloudflare Worker deploy unit、SLO 目標値、計測式、秘密管理境界は変更しない。本反映は lifecycle と acceptance governance の変更に限定する。"
+    },
+    {
+      "id": "qa-124",
+      "question": "顧客持ち込み Google OAuth client の管理 lifecycle を、共有方式を含む auth.web の現行認証契約へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-115 の production OIDC・共有 Google OAuth・JIT・session・Device Flow 契約を全面維持し、顧客持ち込み方式の管理 lifecycle を追加確定する。【状態】管理 API の新規登録は pending、現行 credential の接続テスト合格は pending のとき tested、明示的な有効化だけが active、無効化は disabled とする。認証解決対象は active のみで、顧客方式の失敗・無効化から共有方式へ暗黙 fallback しない。【再開】disabled の古い credential を直接 active に戻さない。新しい client ID / secret / 許可 Workspace ドメインを staging すると pending へ戻り、pending テスト合格後の有効化でのみ active へ進む。【切替】1 テナント 1 Google 行の制約を維持し、client ID・secret・方式・許可ドメインを staging へ一式保存して、テスト済みの一式を同一更新で昇格する。昇格前と取消後は現行 credential でログインを継続する。【検証境界】token endpoint の不正 code probe は discovery と client ID / secret の疎通確認であり、Google Console の redirect URI 一致は証明しない。有効化後の実ブラウザ login を別の完了ゲートとする。"
+    },
+    {
+      "id": "qa-125",
+      "question": "顧客持ち込み Google OAuth 管理 API と競合制御を backend.web の現行契約へどう統合しますか?",
+      "answer": "qa-110 の API、principal、共有 callback、credential resolver、状態機械、監査、冪等性契約を全面維持し、Google 専用管理面を追加確定する。【API】/api/v1/admin/oidc-connections と test / rotation / activate / disable を provider-admin 専用とし、状態変更は同一 origin、資源側 tenant scope、列挙 schema を通す。テナント越境の不存在は 404 に畳み、許可された provider-admin 越境は既存監査へ残す。【対象境界】一覧・ID 指定操作とも issuer=https://accounts.google.com の接続だけを対象にし、別 issuer の顧客方式 IdP を列挙・回転・無効化しない。【競合】現行テストは接続 ID・現行暗号文・期待状態、pending テストと昇格は pending 暗号文を CAS 条件に含め、テスト中の差し替え結果を別 credential へ誤適用しない。active/tested の再テストでも last_tested_at を更新する。【応答】secret 全値と Google の自由文応答は返さず、last4、状態、列挙エラーだけを返す。成立した変更は idp.connection_change の metadata.change で registered / credential_staged / mode_switch_staged / reactivation_staged / tested / rotation_* / activated / disabled を区別する。"
+    },
+    {
+      "id": "qa-126",
+      "question": "顧客持ち込み credential の lifecycle と無停止 rotation を database.web の永続化契約へどう反映しますか?",
+      "answer": "qa-112 の tenant scope、方式別保存、共有 credential 非複製、primary connection、migration/rollback 契約を維持する。ただし qa-112【1】の allowed_workspace_domains TEXT NOT NULL DEFAULT [] は migration 0003 の実契約と不一致だったため、TEXT NULL 許容、NULL=顧客方式では hd 未検査・共有方式では fail-closed へ訂正する。【0004 expand】idp_connections に credential_status TEXT NOT NULL DEFAULT active と、client_secret_last4、pending_client_secret_enc / last4 / client_id / credential_mode / allowed_workspace_domains / tested_at、last_tested_at、updated_at の NULL 許容列を追加する。既存行は実際に稼働中だったため active 既定で後方互換を保ち、管理 API の新規行は明示的に pending とする。【無停止】現行暗号文を上書きせず pending に封筒暗号化して保存し、テスト済み時刻と同じ CAS 更新で client ID・secret・方式・許可ドメインを昇格する。取消は pending 列だけを消す。【再開と競合】disabled への新 credential staging は期待状態を CAS 条件にして pending へ戻す。現行テストも現行暗号文と期待状態を CAS 条件にし、競合時は0行として再読込を要求する。暗号文の AAD は同一行の論理 secret slot を用い、pending から現行へ暗号文を再暗号化せず移せる。"
+    },
+    {
+      "id": "qa-127",
+      "question": "provider-admin 向け Google OAuth 管理画面を frontend.web の現行画面契約へどう統合しますか?",
+      "answer": "qa-118 までの画面構成、認可後データ境界、レスポンシブ、共通部品、認可出し分けを全面維持し、/settings/auth の管理面を追加確定する。【手順表示】Google Cloud Console 側の手作業、Hub への登録、接続状態を順に示し、正規 callback URL と必要 scope をコピー可能にする。Google 側設定を Hub が代行しない責任境界を明示する。【入力】client ID、password 型・autocomplete=new-password の client secret、任意の Workspace ドメインを受ける。ドメインはカンマ/改行区切りを小文字化・空白除去・重複排除し、成功後は ID・secret・ドメイン入力を破棄する。【状態】pending/tested/active/disabled と last4、最終テスト時刻、rotation の現行/pending を区別し、未テスト staging は有効化できないこと、昇格前は旧設定でログイン継続すること、昇格後の Google 側旧 secret 失効が手作業であることを表示する。【エラー】公開 enum を runtime schema で検証して固定文言へ写し、未知 error、例外、入力値、secret、Google 応答本文を描画しない。コピー失敗は未処理 Promise にしない。"
+    },
+    {
+      "id": "qa-128",
+      "question": "顧客持ち込み Google OAuth 管理面の秘密・認可・tenant 境界を security.web の現行防御契約へどう追加しますか?",
+      "answer": "qa-120 の共有 OAuth state/cookie/hd 防御、catalog cache 防御、既存 deny-by-default を全面維持し、顧客持ち込み管理面を追加確定する。【認可】read/change action は provider-admin のみ、状態変更は同一 origin、repository は全 read/write/decrypt に tenant_id を強制する。別 tenant の ID は存在を漏らさず、Google 専用 API は issuer を server 定数に固定し、別 issuer の ID 指定を拒否する。【秘密】client secret は要求 body→repository の封筒暗号化、または接続テスターへの短命引数だけを通る。応答型、構造化ログ、監査、DOM、エラー、snapshot に全値を置かず、識別子は last4 に限定する。共有方式の secret は tenant 行へ複製しない。【状態安全】未テスト credential、disabled、CAS 敗北、未知 mode、不正 domain JSON は fail-closed とし、active 以外を認証解決しない。rotation は現行値を保持した staging と原子的昇格により、失敗時の認証停止を防ぐ。【外部確認】不正 code probe は client credential の疎通確認に限定し、redirect URI の完全一致は Google の認可フローを使う実ブラウザ login で確認する。"
+    },
+    {
+      "id": "qa-129",
+      "question": "顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?",
+      "answer": "qa-114 の共有 OAuth rollout/rollback、観測、完了収束、既存 runbook 契約を全面維持し、顧客持ち込み方式の運用を追加確定する。【責任境界】Google Cloud Console の client 作成、redirect URI、同意画面、secret 追加/失効は顧客の手作業、Hub の登録・テスト・有効化・無効化は provider-admin の操作とする。【通常手順】callback URL 確認→Google client 準備→Hub 登録→probe 合格→有効化→実ブラウザ login の順を gate 化する。rotation は Google で新 secret 追加、Hub staging、pending テスト、昇格、実 login、Google で旧 secret 失効の順とし、昇格前は取消可能にする。【停止と再開】無効化は共有方式へ fallback せずログインを止める。再開は新 credential を登録して pending→tested→active を再実行し、古い credential の直接復帰を禁止する。【証跡】secret 全値を issue/PR/chat/screenshot に残さず last4 のみ記録し、runbook、検証結果、仕様反映受領書、Beads notes、draft PR に実施結果と Google 実環境/Playwright/production migration の残課題を分離する。"
+    },
+    {
+      "id": "qa-130",
+      "question": "顧客持ち込み Google OAuth 管理機能の品質保証を testing-qa.web の現行契約へどう追加しますか?",
+      "answer": "qa-119 までの単体・結合・境界値・回帰、CI 到達、再現可能 runtime、実測証跡契約を全面維持し、次を追加確定する。【実 DB 結合】libSQL と既存封筒暗号化を使い、pending/tested/active/disabled、無停止 rotation、取消、disabled 再登録、現行再テスト時刻、暗号文 CAS 競合、migration 0004 の旧 writer 互換を検査する。【認可・境界】provider-admin/workspace-admin/member/未認証、CSRF、tenant A/B 越境、Google 以外 issuer の非列挙・操作拒否を route test で固定する。【非露出】応答全文、監査 payload、DOM、エラー経路、repository secret scan に secret 全値が無いことを負例で確認する。【UI】実画面と同じ h1→h2→h3 骨格で axe-core の違反0、password/autocomplete、rotation の現行継続表示、Workspace ドメイン正規化を検査する。【ゲートと残余】pnpm verify、auth/tenant/secret/bundle/client-bundle、task plan/dev-graph/system-spec validator を PR 前に再実行する。Google 実 OAuth client による probe とブラウザ login、Playwright 実操作、production migration は repository test で代替せず残課題に明示する。"
+    },
+    {
+      "id": "qa-133",
+      "question": "未認証では deny-by-default の `/catalog` を、通常の session 秘密を GitHub Actions へ渡さずに Core Web Vitals で実測するため、最小権限の認証・セキュリティ・CI・検証契約を web 仕様へどう統合しますか?",
+      "answer": "ユーザーの 2026-08-02 確認『ok』を明示承認として、qa-123/124/128/130/132 の既存の production OIDC・session・access token・deny-by-default・SLO/CWV・秘密管理・品質ゲートを全面維持し、CWV 専用 credential を追加確定する。\n\n【1. 専用 credential】GitHub Actions と Worker が共有する `CWV_PROBE_SECRET` だけで HS256 の短命 JWT を検証する。claim は `typ=cwv_probe`、`aud=harness-hub-cwv`、正規 origin、固定 tenant/workspace、iat/exp とし、有効期間は最大 5 分である。通常の `AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、利用者 session、Publisher token を CI/成果物へ渡さず、CWV credential はユーザー主体・OIDC・Device Flow・外部 API の新たな認証方式ではない。\n\n【2. 到達境界】bootstrap は HTTPS の `GET /catalog` だけで、署名・audience・origin・時間・tenant/workspace をすべて検証した後、URL の ticket を除去する 307 redirect と `__Host-harness-hub.cwv-probe` (Secure / HttpOnly / SameSite=Strict / Path=/ / 最大 5 分) を返す。以後は `GET`/`HEAD` の catalog 画面と catalog が使う読み取り API だけを許可する。書込み、install、publish、管理 API、別 tenant/workspace、別 origin、method 違い、欠損/期限切れ/改ざん ticket は deny-by-default で拒否する。scope は ticket の署名済み claim だけを既存認可層へ渡し、query/header の任意値で昇格しない。\n\n【3. 秘密と露出】ticket は redirect 後 URL、HTTP リファラ、Lighthouse JSON、CWV report、Actions ログ、artifact のいずれにも残さない。bootstrap 応答は `Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付け、workflow は ticket を mask し、artifact を upload 前に secret/ticket を除去・検査する。secret の値は source、wrangler 設定、文書、テスト fixture に保存しない。`CWV_PROBE_SECRET` の rotate は既存 ticket を即時無効化する。\n\n【4. 構成と運用】Worker Secret は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、GitHub Actions secret は対応する `HUB_CWV_PROBE_*` とする。自由入力の target URL は廃止し、`HUB_PUBLIC_URL` の同一 HTTPS origin の `/catalog` だけを対象にする。secret 投入・read-only 代表 tenant/workspace 選定・本番 deploy・最初の実 Lighthouse は外部状態を変える follow-up であり、投入前/失敗時は未計測として fail-closed で可視化し、good と数えない。\n\n【5. 検証】JWT mint/verify、期限・audience・origin・scope・method・tenant/workspace の負例、cookie/bootstrap の URL 除去・属性、認可規則の read-only 境界、workflow target/secret/artifact sanitizer、wrangler secret 台帳、対象 Vitest、task/system-spec/dev-graph/doc gate を repository 内で検証する。実環境の secret 権限と Lighthouse 成功は静的検証で代替せず、Beads を外部実測完了まで open に保つ。"
+    },
+    {
+      "id": "qa-131",
+      "question": "既存の Cloudflare 配備・SLO・認証契約を維持したまま、Worker Secret の実投入漏れをデプロイ前に止め、ヒアリング機能の本番受入を毎回再現可能にするには何を必須としますか?",
+      "answer": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書、docs/・features/・system-spec/・architecture/・tasks/ の更新、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として、qa-019 / qa-034 / qa-038 / qa-106 / qa-113 / qa-116 / qa-123 の既存インフラ契約を全面維持し、HarnessHub-o2i.13 の本番配備契約を次のとおり追補する。\n\n【1. Secret の三方向突合】Worker が読む帯域外設定（wrangler deploy が設定ファイルから押し込まない Workers Secret）は、機械可読台帳、apps/hub/wrangler.jsonc の secrets.required 宣言、本番 Worker の実投入名を三方向で突合する。値は台帳・ログ・成果物へ保存せず、名前・requirement・用途・欠落時影響・投入手順だけを管理する。requirement は required / optional / planned / legacy とし、required 集合だけを secrets.required と 1:1 にする。\n\n【2. 実行順と停止境界】静的突合は PR の static-gates と pnpm verify から必ず到達させ、実投入突合は Cloudflare 認証を持つ deploy job で必須設定 preflight の直後、migration より前に実行する。認証不足、通信不能、解釈不能、required 未投入、未記載 secret のいずれも未検査を合格へ読み替えず fail-closed にする。この失敗では DB も Worker も前進せず、旧版が動き続ける。\n\n【3. Post-deploy hearing smoke】既存の migration → deploy → health → OIDC start-flow → DB/R2 smoke の末尾へ hearing 実データ E2E / SEC8 smoke を追加し、その失敗を既存 rollback 判定へ含める。新しい secret は要求せず TURSO_DATABASE_URL / TURSO_AUTH_TOKEN / HUB_PUBLIC_URL だけを使う。Device Flow の code / token は本番 HTTP endpoint を通し、session が必要な approve だけを DB の CAS で代行して本番 Worker が署名した access token を得る。\n\n【4. 本番データの後始末】使い捨て tenant fixture は生成全体を 1 transaction にし、途中失敗時に部分行を残さない。生成後は finally で tenant 従属行を子から 1 transaction で削除し、全対象表の残行数 0 を確認できなければ smoke を失敗させる。\n\n【5. 既存境界】本追補は deploy pipeline、帯域外 secret の運用検査、本番受入の観測手段を具体化する。外部 API の要求・応答、DB schema、認証認可規則、UI、Cloudflare Worker の deploy unit、既存 SLO 値は変更しない。"
+    },
+    {
+      "id": "qa-132",
+      "question": "Worker Secret の実投入ゲートと本番 hearing E2E / SEC8 smoke を、既存 testing-qa.web 契約へどのように追加し、何を未完了として残しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・品質ゲート再実行・仕様反映指示を明示承認として、qa-076 / qa-081 / qa-089 / qa-095 / qa-100 / qa-108 / qa-109 / qa-119 / qa-130 の既存品質契約を全面維持し、HarnessHub-o2i.13 の検証束を次のとおり追補する。\n\n【1. Secret gate の正負例】台帳 required と wrangler 宣言の集合一致を実データで固定し、required 未投入、台帳外の実投入、planned の先行投入、required 未宣言、required でない宣言、台帳に無い宣言をそれぞれ非 0 にする。wrangler のバナーや JSON 前後の角括弧付き警告が混在しても JSON 配列だけを抽出し、空配列は正当な実測として受理しつつ required 欠落で落とす。解釈不能は例外とし未検査を合格にしない。\n\n【2. Smoke の局所回帰】entrypoint が必要な H1〜H6 / SEC5 / SEC8a / SEC8b と finally cleanup を持つことを静的契約で固定する。DB probe は fixture 作成途中の UNIQUE 違反を実 DB driver で起こし、tenant / idp_connection / workspace が transaction rollback で 0 行になること、および正常 fixture の cleanup 後に残行数 0 になることを結合テストで固定する。\n\n【3. Production acceptance】本番では Device Flow token 取得、受付番号発番、同一 transaction の enqueue、SEC5 年収非保存、別 tenant 取得の非露出、tenant header 詐称拒否、workspace header 必須、claim token 束縛、complete 後の review / DB 結果一致、session 専用 API の TOKEN 拒否を実測する。状態変更 HTTP には production origin を必須とし、CSRF 前段で空振りした検査を合格にしない。\n\n【4. CI 到達と証跡】静的 gate は pnpm verify と GitHub Actions、実投入 gate と production smoke は main の deploy job から fail-closed に到達させる。task spec validator、artifact placement、文書行数、graph/source digest、対象 package test/typecheck/lint、build、全体 pnpm verify、diff check を PR 前に再実行し、結果を release notes、仕様反映受領書、Beads notes、PR 本文へ残す。\n\n【5. 未実測境界】repository test の合格を本番 smoke の代替にしない。本変更 commit 時点では本番資格情報を使う deploy run をまだ実行していないため、P13 と親 epic は完了扱いにしない。main merge 後の deploy run で production smoke が成功し、実測 run / 時刻 / 結果を release notes と Beads へ記録するまで残課題として明示する。"
+    },
+    {
+      "id": "qa-134",
+      "question": "system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。\n\n【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。\n\n【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。\n\n【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。\n\n【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。"
+    },
+    {
+      "id": "qa-135",
+      "question": "ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?",
+      "answer": "既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。"
+    },
+    {
+      "id": "qa-136",
+      "question": "CLI を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?",
+      "answer": "Hub Web 単体で公開、状態確認、導入案内まで到達できることを受入条件とする。S01 は ZIP アップロードを CLI と同一の static validation、secret scan、policy に収束させ、Green/Yellow/Red の表示と再投入導線を統一する。Device Flow は CLI/Publisher 専用として残し、確認コードなしの `/device` では用途を説明して S01 への回復導線を示す。共通シェルには現在の Workspace と切替を常設するが、所属が 1 件なら操作を強制しない。missing_tenant_scope は内部エラーを露出せず Workspace 選択で回復可能な ErrorState とし、401/403 や scope 切替後に旧 scope データを表示しない既存契約を維持する。状態機械、検査実装、role 判定は既存 owner の責務のままとする。"
+    },
+    {
+      "id": "qa-137",
+      "question": "ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?",
+      "answer": "authorize() の public → 認証 → scope 一意性 → tenant 一致 → workspace 所属と deny-by-default は不変とする。正規の scope 入力は API/機械クライアントの明示ヘッダーとブラウザ session の active tenant/workspace の二系統だけであり、両方が不一致なら ambiguous_scope として拒否し、両方が無ければ missing_tenant_scope とする。session へ workspace を束縛する前と切替時には principal の所属を再検証し、session 値を所属検証の代替にしない。Device Flow の確認コード制約と権限上限は維持する。S01 Web 公開は通常の session 認可で行い、CLI より広い権限を持たない。サインイン後の戻り先は同一 origin の相対 path だけを許可し、解決後も通常の authorize() を通す。"
+    },
+    {
+      "id": "qa-138",
+      "question": "C10/C11/C28 の最終レビューで、Dev Graph と Beads の正本を守る契約をどのように確定しますか？",
+      "answer": "ユーザーの 2026-08-02 最終レビュー・仕様反映・公開指示を明示承認として、qa-069 と qa-096 の契約を情報欠落なく維持し、repository 内の参考層と能動層の所有契約を追加確定する。\n\n【1. タスク優先度】feature / task の選定は、目的、背景、MVP（今必要な動くもの）への直結度を第一判断軸とする。品質・再現性強化だけを目的とする基盤タスクは MVP 成立後へ繰り延べ、まず作り、使い、課題を学ぶ build-use-learn の回転を優先する。これは既確定の CI/CD・quality gate を緩和または削除する契約ではない。\n\n【2. CI と local の品質ゲート】required status check と同じ検査実装を local の script からも実行可能にし、CI 専用の検査ロジックを持たない。検査器は、対象ディレクトリ不在または検査対象 0 件を既定で非 0 にして fail-closed とする。『違反 0 件』と『1 件も検査していない』を同じ緑へ潰さない。\n\n【3. 意図的な空走査】単独配布物など、検査対象が無いこと自体が正しい環境だけは `--allow-empty` のような明示 opt-in で成功を許可する。repository の通常 CI / make lint / pre-push 経路は opt-in を付けず、実際の検査件数を summary へ出す。\n\n【4. 回帰証拠】missing directory、empty directory、explicit allow-empty の三分岐を専用テストで固定し、self-test と実 repository scan の双方でゲートの生存を確認する。500 行を超える検査ファイルは単一責務で分冊し、分割後も同じ CLI 実装を検証する。\n\n【5. C02 writer の後退防止】dev-graph の C02 writer は、昇格済み feature に古い full snapshot が再送された場合、status、confirmation_status、evaluation_status、implementation_readiness.status の後退を stale before-image として dry-run / apply の双方で無変更かつ fail-closed に拒否する。意図的な再評価は変更フィールドを列挙した明示 patch に限る。実装契約の正本は `plugins/dev-graph/references/execution-tracker-contract.md`、判断と検証の受領書は `docs/features/feat-dev-pipeline-improvement/bk8v-c02-lifecycle-spec-reflection.md` とする。\n\n【6. 既存境界】本契約は Harness Hub repository の開発品質ゲートに限定する。Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【7. 正本所有】`doc/参考Skill/` は外部由来の比較・移管記録であり、実行中 plugin の契約正本にしない。能動 plugin が利用する契約は consumer plugin 配下へ置き、SKILL/resource map/隣接 reference から repository 内の相対 path で到達できる状態にする。\n\n【8. 削除と移設】`aiworkflow-requirements` を前提にする `doc/参考Skill/skill-creator/` は directory 単位で削除し、現在も利用する `external-cli-agents-guide.md` だけを `plugins/harness-creator/skills/delegate-codex-skill-review/references/` へ履歴付きで移す。部分コピーを残して二重正本にしない。\n\n【9. 履歴と復元】`eval-log/` など凍結済み履歴に残る旧 path・旧名称は実行依存と区別して保持できる。削除対象の復元正本は `xl-skills` と git 履歴とし、cleanup / transfer 計画に件数、根拠、復元経路を記録する。\n\n【10. 追加検証と製品境界】削除前後の追跡件数、active code/plugin/docs からの旧 path と `aiworkflow-requirements` 実行依存 0、移設先の resource map 到達、legacy-name lint、artifact placement、文書行数、task spec、repository CI を検証する。この追加契約も repository documentation / plugin reference ownership に限定し、Harness Hub 製品の UI、外部 API、DB schema、認証認可、Cloudflare deploy unit は変更しない。\n\n【11. C10 の事前遮断】inline Python 変数で組み立てた canonical graph/config path と、改行で区切られた shell segment を独立して判定する。command 文字列だけで確定できる write は実行前に遮断する。\n\n【12. script-file 実行後監査】script file の完全な意味解析を C10 へ集中させず、PostToolUse 監査が canonical file の size・mtime・ctime・digest・revision・exact-4-key envelope を確認する。confirmed drift と初回 invalid state は clean baseline に昇格させず、VCS rollback の advisory は shell segment が git 操作だけの場合に限定する。\n\n【13. C11 exact envelope】C02 build、C11 validator、PostToolUse 監査は shared module の exact-4-key envelope 定義を共有し、余剰 key と欠落 key を同じ基準で拒否する。\n\n【14. C28 の継承】最新 main で確定済みの正規 bridge 契約を継承し、公開 `--labels` を replacement 型の `bd --set-labels` へ転送し、priority・assignee とともに direct `bd update` を経由せず更新する。今回の branch では重複実装せず、main 統合後の契約と回帰試験を検証対象に含める。\n\n【15. 今回の製品境界】追加契約は repository 内の Dev Graph authority、Beads mutation、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-139",
+      "question": "C02 atomic writer の単一書込み境界を維持しながら、inline Python が変数や Path 式で graph authority を組み立てる迂回を C10 PreToolUse でどう扱いますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー・仕様反映・公開指示を明示承認として、qa-122 と最新 main の qa-138 を全面維持し、C10 の inline Python 書込み検出を追加確定する。\n\n【1. 保護境界】graph authority は `.dev-graph/state/`、`.dev-graph/config.json`、`graph-node.schema.json` とし、初期 config / graph は正規 writer、node 更新は C02 `upsert-node.py` だけが書く。`.dev-graph/tmp/`、`cache/`、`templates/` は再生成領域なので一律遮断しない。\n\n【2. AST 静的検出】`python -c` と heredoc の本文は実行せず AST で解析し、変数代入、Path の `/`・`joinpath`・`parent`・`with_name`・`with_suffix`、`os.path.join`、f-string、`%` / `format`、list/tuple join、import 別名、`str` / `os.fspath` 包み、bytes path を定数伝播で評価する。`open` / `os.open` / Path 書込み / shutil / os rename・remove 系を対象とし、rename / move は元と宛先の双方を変更対象として判定する。\n\n【3. fail-closed と性能】評価不能な式でも `.dev-graph/` prefix または `state/graph.json` 末尾が確定すれば安全側で遮断する。遮断判定は subprocess、network、graph 全件検証を起動せず、PreToolUse timeout が許可窓になる構造を作らない。読取専用と保護外領域は通し、誤遮断で正規手順を壊さない。\n\n【4. 意図的な限界】`exec` / `eval` 内の再帰的 source、任意の文字列変換、別 script file の本文解析は C10 の範囲外とする。再帰実行や任意 file 読込みは遮断時間を入力に依存させるためで、script 経由の drift は PostToolUse 監査と C02 writer 規約で補完する。\n\n【5. 回帰と責務分離】BLOCK / PASS、実プロセス exit 2、subprocess 非起動、深さ上限、性能余裕、既知の限界を自動テストで固定する。path 評価、書込み対象収集、hook entrypoint、境界テストを責務別ファイルへ分離する。\n\n【6. 製品境界】変更は repository 内の Dev Graph 開発品質ゲートに限定し、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-140",
+      "question": "qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。\n\n【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。\n\n【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。\n\n【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。\n\n【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。\n\n【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-141",
+      "question": "C16 schedule-graph が bd ready payload に entry を持たない beads binding node を除外するとき、ready set の完全性と復旧可能性をどのように保証しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー、仕様反映、main 同期、公開指示を明示承認として、qa-138 と qa-139 の Dev Graph authority 契約を維持し、C16 の ready-payload 欠落報告を追加確定する。\n\n【1. 完全性】C16 は選択範囲内かつ schedulable な beads binding node ごとに、確認済み parity entry があれば ready set へ載せ、entry が無ければ node id を黙って捨てず `unmapped[]` へ載せる。ready set と unmapped の和から候補 node が消えないことを回帰テストで固定する。\n\n【2. 機械可読な原因】payload 欠落は `reason=ready_payload_entry_absent` と `source=schedule-graph` を必須とする。parity 不一致の `beads_parity_stale_or_unconfirmed`、依存未充足の `dependency_unsatisfied`、C28 が持つ manifest 側の分類とは混同しない。\n\n【3. 復旧境界】この理由は `bd ready` の現時点の投影欠落を示す。C03/C28 の正規同期・linkage 修復・新しい parity manifest 生成を行ってから schedule を再実行し、reason を消すために ready set へ推測で追加しない。\n\n【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-142",
+      "question": "C16 の ready-payload 欠落報告を、lease conflict・依存形状不正・依存配列順序を含む完全性契約として、どのように fail-closed で運用しますか?",
+      "answer": "ユーザーの 2026-08-03 最終レビュー指示に基づき、qa-140 の entry 欠落契約を実装実態と一致するよう再確定する。\n\n【1. 候補被覆】selected かつ schedulable な node は、pre-lease 判定で ready または unmapped のいずれかになる。active lease / resource conflict による最終除外は別用途の `conflicts[]` に残るため、最終 schedule report の被覆集合は `ready_set ∪ unmapped ∪ conflicts` とする。lease conflict を payload 欠落や依存未充足と混同しない。\n\n【2. fail-closed と parity 比較】P01 の parent_feature、depends_on、または parent の depends_on が不正なら schedule を停止し candidate を黙って捨てない。Beads parity の dependency 比較は集合として行い、順序だけの差で `beads_parity_stale_or_unconfirmed` にしない。\n\n【3. 排他順序と復旧】依存未充足を payload entry / parity 判定より先に評価し、node ごとに最初に成立した C16 reason だけを記録する。依存を満たす Beads node の entry 欠落だけを `ready_payload_entry_absent` / `source=schedule-graph` とし、C03/C28 同期、linkage 修復、fresh parity manifest 後に再実行する。推測で ready set へ追加しない。\n\n【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
+    },
+    {
+      "id": "qa-143",
+      "question": "全 plugin の hook entry point について、package-contract の宣言・Claude Code への登録・実体ファイルをどのように fail-closed で一致させ、手動実行スクリプトを誤って自動 hook と扱わないようにしますか?",
+      "answer": "ユーザーの 2026-08-04 最終レビュー・品質ゲート再実行・仕様反映・公開指示を明示承認として、qa-142 を全面維持したまま repository 内の plugin 完全性検査へ hook entry point の 3 者一致を追加確定する。\n\n【1. 登録と宣言の双方向検査】`scripts/validate-plugin-completeness.py` は `package-contract.json` の `entry_points.hooks` を台帳の正本として、manifest inline hooks と `hooks/hooks.json` の和集合で得た登録 entry point に突合する。登録済みで未宣言なら HK-001、登録構成（inline manifest または hooks.json）がある plugin で宣言済み・未登録なら HK-002 として非 0 終了にする。`hooks/foo.py` と `./hooks/foo.py` の相対 command も登録として読む。\n\n【2. 実体と責務境界】宣言または登録された entry point は `hooks/` に実在しなければならない。残余の Python は import 可能な名前、shebang 不在、`__main__` block 不在の全条件を満たす import 専用 support module だけを許容し、それ以外と shell script は HK-003 で拒否する。自動 event に接続しない手動運用スクリプトは `hooks/` ではなく `scripts/` に置き、entry point 台帳・自動登録・手動操作を混同しない。\n\n【3. 単一責務と回帰】検査本体が 500 行を超えたため、hook/sidecar の純粋な収集・判定を `validate-plugin-hooks.py` に分離する。CLI と判定ロジックを別責務にしても同じ単体テストと repo 全体契約テストから呼び、plugin 専用の実装が全体ゲートを追い越す被覆差を作らない。\n\n【4. 製品境界】変更は repository 内の plugin 配布、CI、開発品質ゲートだけに限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。"
     }
   ],
   "approval_log": [
@@ -763,6 +1172,102 @@
     {
       "id": "appr-007",
       "note": "中立再確認 (2026-07-18・AskUserQuestion 3 ラウンド) による requirements_foundation 改訂の承認: C4 を保持前提へ改訂・U6 stakeholders から「顧客の情報システム/セキュリティ部門」を削除・G5 文言をユーザー個別追認。C06 監査指摘 (誘導質問 6 件・上位概念遡及性 2 件) への対応。"
+    },
+    {
+      "id": "appr-009",
+      "note": "ユーザー逐語提供 (/dev-graph spec --resume 引数 2026-07-22): dev-graph 方法論 8 要件 (マクロ構造・exact-13・外側ループ・内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を qa-071 として確定。ユーザーは「ヒアリングには、まず以下を今回の対象機能の回答として使用してください」と明示し、仕様確定に不可欠な情報が既に揃っているため追加ヒアリングなしで確定することを明示した。要件 7 (500行目安) は既存 qa-070 の 300 行上限 fail-closed が実効値として包含するため保全。要件 10 (portable separation) は qa-070 で確定済みのため保全。"
+    },
+    {
+      "id": "appr-010",
+      "note": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725) の R4-reopen 2 件を 1 往復で確認・承認 (2026-07-25、AskUserQuestion)。D1 (session JWT claims): 選択肢「実装を追認して 7 claim で確定」「6 claim を維持し実装を改修」「7 claim で確定 + 所属数上限で DB 判定へフォールバック」を提示し、ユーザーは **「実装を追認して 7 claim で確定」** を選択。→ qa-072 として確定登録。D2 (Device Flow polling interval): 選択肢「上限 60 秒・減衰 -5 秒を確定」「上限のみ確定し減衰は削除」「上限値を変更して確定」を提示し、ユーザーは **「上限 60 秒・減衰 -5 秒を確定」** を選択。→ qa-073 として確定登録。いずれも現行実装 (packages/schemas/auth-tenancy/session.ts / apps/hub/src/lib/auth/config.ts) の追認であり、本承認により実装改修は不要、仕様側 (docs/security-spec.md §2.1/§2.2) を確定内容へ合わせる。"
+    },
+    {
+      "id": "appr-011",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks の文書にも反映」を明示承認として記録。HarnessHub-9ndl / HarnessHub-dyxr の最終レビューで確定した durable live-trial evidence、scenario 失効、実測帰属、最終 node への評価 digest 束縛、反証可能な negative control、監査 provenance の契約を qa-089 として反映する。"
+    },
+    {
+      "id": "appr-012",
+      "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-cjwm / HarnessHub-0vs2 の最終レビューで確定した run-id + owner PID の live-trial cleanup 所有権境界を qa-090 として dev-workflow.desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-013",
+      "note": "ユーザーの 2026-07-29 指示「本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-4t9g の C11 artifact 本文 readiness 強化を qa-092 として dev-workflow.desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-014",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映」を明示承認として記録。HarnessHub-xswf の最終レビューで確定した skill tree lint の生成物境界、root/plugin 複製 parity、per-plugin→repository 実行順序回帰を qa-095 として testing-qa の desktop-windows / desktop-macos へ反映する。"
+    },
+    {
+      "id": "appr-015",
+      "note": "ユーザーの 2026-07-29 指示「task 仕様書の品質ゲートを再実行し、本変更分に仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks のドキュメントにも反映。500 行超過時は分離」を明示承認として記録。HarnessHub-foq6 の空走査 fail-closed、明示 allow-empty、回帰証拠、500 行分冊を qa-096 として dev-workflow.web へ反映する。qa-092 / appr-013 は並行して main へ統合済みの C11 artifact 本文 readiness 契約が使用しているため、その履歴を保持して次の空き ID へ再採番する。"
+    },
+    {
+      "id": "appr-016",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべての Beads タスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映して仕様反映の受領書を記録し、docs/・features/・system-spec/・architecture/・tasks/ に反映」を明示承認として記録。SYS-AUTH-TENANCY-P13 / HarnessHub-15h.13 の本番 Google OIDC、credential custody、tenant別CSRF、production rollout の確定差分を qa-097〜qa-099 として反映する。"
+    },
+    {
+      "id": "appr-017",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-yn71 の scenario_contract 非省略、全 observation・引数・task 契約・証拠参照照合、fresh live-trial による更新を qa-100 として qa-089 へ追補する。"
+    },
+    {
+      "id": "appr-021",
+      "note": "ユーザーの 2026-07-30 指示「今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離」を明示承認として記録。HarnessHub-nznu / task-slide-report-generator-browser-ci-20260730 の plugin-local Chromium 受入試験を GitHub Actions から到達可能にする契約を qa-109 として testing-qa.web へ反映する。main で確定した qa-102〜qa-108 / appr-019〜appr-020 は保持する。"
+    },
+    {
+      "id": "appr-018",
+      "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、仕様・設計への影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映し、docs/features/system-spec/architecture/tasks にも反映する』を明示承認として記録。HarnessHub-njkm の process-local libSQL 接続 poison 隔離、ConnectionPoisonedError、明示 reconnect、request-bound 非隔離、実プロセス外競合テストを qa-101 として database.web へ統合する。"
+    },
+    {
+      "id": "appr-019",
+      "note": "ユーザーの 2026-07-30 最終レビュー・CI 修正・仕様反映指示を明示承認として、C02 document layer / lifecycle 契約と tmux session 環境隔離を qa-102 へ統合し、main の qa-097〜qa-101 / appr-016〜appr-018 を保持して dev-workflow.desktop-macos を再確定する。"
+    },
+    {
+      "id": "appr-020",
+      "note": "ユーザーの 2026-07-30 指示『今回変更しているすべてのタスクを最終レビューし、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、main 統合後の commit・push・draft PR、Beads 更新』を明示承認として記録。feat-publish-pipeline の API、状態機械、R2、認証、運用、品質契約を qa-103〜qa-108 へ反映する。"
+    },
+    {
+      "id": "appr-022",
+      "note": "ユーザーの 2026-08-02 指示を、外部参考 Skill の削除、有効な外部 CLI 契約の consumer-owned path への移設、system-spec/specs/architecture/features/tasks/docs への正規反映、品質ゲート、commit/push/draft PR の明示承認として記録する。"
+    },
+    {
+      "id": "appr-023",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks 更新、Beads 更新、main 統合後の commit・push・draft PR』および Beads に記録済みの HarnessHub-37h.14 / HarnessHub-37h.15 追加対応不要判断を明示承認として記録。SLO 運用契約を維持したまま delivery closure と operational verdict を qa-123 で分離する。"
+    },
+    {
+      "id": "appr-024",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、remote main→local main→task branch の統合、commit・push・draft PR、Beads 更新』を明示承認として記録。latest main の qa-124〜qa-130 を保持し、HarnessHub-o2i.13 の production acceptance 契約を qa-131 / qa-132 へ統合する。"
+    },
+    {
+      "id": "appr-025",
+      "note": "ユーザーが 2026-08-02 に、CWV 専用・最小権限 credential を新設し、通常の session secret を CI へ渡さない実装方針へ『ok』と明示承認した。main 統合で qa-131 が HarnessHub-o2i.13 に割り当て済みのため、CWV の設計回答は qa-133 として再採番した。"
+    },
+    {
+      "id": "appr-026",
+      "note": "ユーザーの 2026-08-02 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響がある場合の system-spec/・specs/・architecture/ への正規反映と受領書記録、docs/・features/・system-spec/・architecture/・tasks/ の更新、500 行超過時の分離、remote main→local main→task branch の統合、commit・push・draft PR、Beads 更新』を明示承認として記録。HarnessHub-ji8y / issue-task-spec-validate-command-unrunnable-20260725 の C12 世代非依存 rerun command と contract 1.3.0 の fail-closed 検証を qa-134 として testing-qa.web へ反映する。main の qa-123〜qa-133 / appr-025 を保持する。"
+    },
+    {
+      "id": "appr-027",
+      "note": "2026-08-02 のユーザー最終レビュー依頼に基づき、仕様・設計影響を正本、集約仕様、architecture、feature、task、受領書へ反映することを承認。"
+    },
+    {
+      "id": "appr-028",
+      "note": "ユーザーの 2026-08-03 最終レビュー、仕様反映、main 同期、公開指示を HarnessHub-f84o の C10 AST 契約追加の明示承認として記録する。"
+    },
+    {
+      "id": "appr-029",
+      "note": "ユーザーが 2026-08-03 に HarnessHub-7xi9 の最終レビューを依頼し、更新時刻診断の訂正を system-spec / specs / architecture / docs / features / tasks へ正規反映して公開することを明示承認した。"
+    },
+    {
+      "id": "appr-030",
+      "note": "ユーザーの 2026-08-03 指示『全変更の最終レビュー、task 仕様書品質ゲート、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks 更新、Beads 更新、origin main→local main→task branch の統合、commit/push/draft PR』を、HarnessHub-xz0u の C16 ready-payload 欠落報告契約の明示承認として記録する。 main 統合で qa-140/appr-029 が既存別件として確定済みだったため、C01 single-writer の reopen→re-confirm 正規フローで再登録する。"
+    },
+    {
+      "id": "appr-031",
+      "note": "ユーザーの同一最終レビュー指示を、HarnessHub-xz0u の C16 候補被覆・fail-closed・reason 優先順位を実装と文書で一致させる追加確認として記録する。 main 統合後の C01 re-confirm として記録する。"
+    },
+    {
+      "id": "appr-032",
+      "note": "ユーザーの 2026-08-04 指示『今回変更しているすべてのタスクの最終レビュー、task 仕様書の品質ゲート再実行、仕様・設計影響の正規反映と受領書、docs/features/system-spec/architecture/tasks の更新、500 行超過時の分離、origin main→local main→task branch の統合、commit/push/draft PR、Beads 更新』を HarnessHub-vf66 の全 plugin hook entry point parity 契約の明示承認として記録する。"
     }
   ],
   "reopen_log": [
@@ -1323,6 +1828,432 @@
       "platform": "web",
       "reason": "利用者要望による仕様変更: dev-graph/beads (bd) のタスク優先度選定が品質・本質・再現性を先回りする基準になっており、依存グラフ上で本質的なシステム構築タスクが最優先されて『いちばん作りたいもの (MVP)』から離れる。判断軸を目的・背景・MVP の3軸へ組み替えるため dev-workflow.web を再オープンする",
       "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-036 は session JWT claims を sub/tenant_id/role/status/iat/exp の 6 種で「最小集合」と列挙して確定したが、feat-auth-tenancy 実装 (packages/schemas/auth-tenancy/session.ts) は edge の認可 MW が Workspace 越境を DB 往復なしで弾くために workspace_ids を加えている。列挙確定値への追加であり Publisher CLI から観測できる契約のため、claims の確定集合と代償 (cookie 肥大・membership 変更の最大 15 分遅延) を再確認する。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-l2g9 (issue-auth-tenancy-spec-delta-20260725): qa-041 の Device Flow 数値契約は polling interval 5 秒 (slow_down 受信時 +5 秒) までしか確定しておらず、上限も減衰も未確定。実装 (apps/hub/src/lib/auth/config.ts・device-flow/service.ts) は server 強制の上限 60 秒と、interval を守った polling への -5 秒減衰 (下限 5 秒) を導入している。上限が無いと interval が単調増加して device_code TTL 600 秒を追い越し server 側から flow を詰ませるため、上限値と減衰規則を確定し直す。",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘: qa-079 (タスク仕様書へのテスト戦略の冪等組込) が qa_log に確定記録されているのに章へ描画されていない。qa-079 の内容を統合した qa-081 を本セルの確定質疑へ昇格させ、章反映するため再オープンする (qa-077 のカバレッジ基準は qa-081 の回答中で引用維持)",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で Auth.js route、JWT bridge、canonical origin、JIT 同時実行契約、鍵分離が実結線され、実装から仕様への書き戻しが必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の最終レビューで token 一回性と失敗回数の並行 CAS、refresh race の失効方針、Secret 更新時の runtime 再構成を実装契約として確定した",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で 501 placeholder を実 Auth.js handler と DB-backed AuthPorts へ置換し、本番 composition contract が確定した",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng で AuthPorts を満たす列・テナント付き所属主キー・migration の token 再発行境界・競合ゲートが確定した",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の本番結線で必要な Secret/変数名、migration と deploy の順序、既存 token 再認証が release contract になった",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-b7ng の最終レビューで、ローカル接続用の module-scope 書き込み待ち行列を Workers の要求間で共有し得る設計差分が判明し、実行環境別の共有範囲を正本へ明示する必要が生じた",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "qa-085 は qa-083 の維持を参照で表したため、compile 後の database.md 単独では schema と migration の詳細が展開されない。情報を落とさない自己完結した契約へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-7xi9 で並列 worktree の ref 直接更新遮断、巻き戻し commit の fail-closed 検査、共有 hook bundle の配線契約が新たに確定し、qa-039 のローカル hook 方針へ追補が必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-7xi9 で並列 worktree の ref 直接更新遮断、巻き戻し commit の fail-closed 検査、共有 hook bundle の配線契約が新たに確定し、qa-039 のローカル hook 方針へ追補が必要になった",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "qa-087 は qa-039 の維持を参照で表したため、compile 後の dev-workflow.md 単独ではローカル環境・CI 一致・本番操作禁止の詳細が展開されない。旧契約と worktree 安全契約を統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-cjwm / HarnessHub-0vs2 の実装で、並行 live-trial cleanup の所有権境界が既存 qa-088 より具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-090 へ再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "HarnessHub-bda4 の Cloudflare credential 分離を qa-091 として再確定し、origin/main の qa-090 live-trial cleanup 契約との QA ID 衝突を解消する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-4t9g の実装で、C11 readiness が frontmatter と artifact 実在だけでなく required section 本文の未記入も fail-closed にする契約へ具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-092 へ再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "main 側 qa-092 と本ブランチ側 qa-092/qa-093 の並行確定により QA ID と生成章が衝突したため、main の履歴を保持して backup heartbeat 契約を新しい QA ID で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "main 側 qa-092 と本ブランチ側 qa-092/qa-093 の並行確定により QA ID と生成章が衝突したため、main の履歴を保持して backup heartbeat 契約を新しい QA ID で再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-xswf の実装で、test tool が生成する dot cache と人が設計した skill tree の境界が qa-081 より具体化されたため、ユーザーの仕様反映指示に従い R4-reopen して qa-095 へ再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-macos",
+      "reason": "HarnessHub-xswf の実装で、per-plugin pytest 後の .pytest_cache が repository criteria test を偽陽性にする実行順序依存を解消したため、qa-078 を維持しつつ生成物境界を qa-095 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-foq6 で品質ゲート自身に残っていた対象 0 件成功の fail-open を解消し、qa-069 の MVP ファースト契約を維持したまま CI / local の空走査境界を自己完結して再確定する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "SYS-AUTH-TENANCY-P13 の本番実行で、Google・HarnessHub 1テナントという現行rollout境界と、Auth.js signin前のtenant別CSRF cookie/token取得が新たに確定したため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "Google client_secret の1Password受渡し、DB封筒暗号化、Worker共通ENCRYPTION_KEKというcredential境界とCSRF fail-closed契約が本番実測で確定したため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "production Workerの公開URL3変数、必須Secret 5件、本番1テナントrolloutとR1-R5完了証跡が従来の2tenant前提を更新したため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "HarnessHub-nznu の完成度監査で、plugin-local Chromium 受入試験がローカル実走済みでも GitHub Actions から未到達である設計差が判明したため、既存 qa-076〜qa-081・qa-089・qa-095・qa-100・qa-108 を維持して CI 到達契約を qa-109 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "HarnessHub-njkm で process-local libSQL がプロセス外 SQLITE_BUSY を踏んだ後の silent data loss を接続層で隔離し、qa-086 のプロセス内直列化契約へ明示復旧境界を追加する必要が生じたため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "PR #610 の C02 document layer 回帰と C19 live-trial で検出した tmux stale global environment 混入を、main の qa-097〜qa-101 を保持した次の空き QA へ自己完結して統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "SYS-PUBLISH-PIPELINE-P01〜P13 の実装・本番実測で、dual principal の公開 API、Draft 非占有と submit 時直列化、検査から公開までの状態機械が qa-082 より具体化されたため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "SYS-PUBLISH-PIPELINE-P13 の本番実測で、Bearer の edge fail-closed 検証、route 認可、tenant 非開示、package secret scan の信頼境界が qa-098 より具体化されたため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "PublishRequest、immutable Release、content-addressed Package、TargetChannel stable pointer の transaction 不変条件を既存 schema 上の repository 契約として再確定するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "Cloudflare Worker と R2 binding を使う publish pipeline の本番配備、content hash 検証、smoke と rollback の成立条件が qa-099 より具体化されたため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "公開パイプラインの自動 smoke、監査 hash chain、Release 保持、Worker rollback と PR merge 後の完了収束を qa-094 の運用契約へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "状態機械、検査結線、DB schema 境界、tenant 分離、idempotency と production smoke の fail-closed 品質ゲートを製品受入契約へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "HarnessHub-fnej で Google OAuth client を環境単位で共有する第2の credential mode、共通 callback、署名付き tenant state、Workspace hd 強制が qa-097 より具体化されたため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "共有 callback 受信時の state 先行検証、tenant 解決、Auth.js basePath 再構成、JIT provisioning 前の Workspace 判定を qa-103 の backend 契約へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "tenant state 差し替え、login CSRF、個人 Google account、別 Workspace、共有 secret 複製を防ぐ新しい信頼境界を qa-104 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "idp_connections に credential_mode と allowed_workspace_domains を追加し、共有 secret を tenant 行へ保存しない永続化契約を qa-105 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "共有 Google OAuth client の環境 secret、固定 redirect URI、migration と段階配備・rollback 順序を qa-106 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "共有 OAuth client の登録、段階導入、secret rotation、旧方式への rollback、PR merge 後の完了収束を qa-107 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "並行仕様更新が qa-109 を testing-qa.web に先行採番したため、共有 Google OAuth client の auth.web 契約を未使用の qa-115 へ付け直し、別タスクの質疑参照を解消する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "origin/main の qa-113 共有 Google OAuth 配備契約を保持した上で、HarnessHub-37h.15 の公開 status page 時系列・終了コード・30日未満の判定禁止を同じ infrastructure.web 契約へ追補するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-110 is re-keyed to qa-117 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-111 is re-keyed to qa-118 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: preserve both confirmed specification histories; dual catalog entry qa-112 is re-keyed to qa-119 after main allocated qa-110..qa-116",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-02 main integration: qa-111 shared Google OAuth and qa-117 dual catalog cache are both confirmed and require one current security.web integration anchor",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "外部参考コピーに残っていた有効契約を consumer plugin へ移し、参考層を runtime 正本にしない所有境界を qa-096 へ統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "qa-121 が qa-096 を要約参照に留めて章単独の情報を失ったため、旧契約全文と参考層 ownership の新契約を qa-122 へ統合する",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "feat-hub-foundation の delivery closure と qa-116 の未完了 operational verdict を分離するため、確定済み infrastructure.web を R4-reopen して追補する",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "顧客持ち込み Google OAuth 管理 lifecycle の実装・最終レビュー差分を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "Google 専用管理 API、CAS、監査契約を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "migration 0004、staging credential、原子的昇格、CAS を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "provider-admin 管理 UI と Workspace domain 入力を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "secret、tenant、issuer、fail-closed 境界を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "登録、rotation、無効化、再開 runbook を正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "認可、CAS、非露出、a11y、残余ゲートを正式反映するため",
+      "from": "確定"
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "CWV 専用の最小権限 credential を追加し、通常の session 秘密を CI へ渡さず protected /catalog を実測する契約へ拡張するため",
+      "from": "確定"
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "CWV ticket の短命・scope 固定・URL/Artifact 非露出・Cookie 境界を明文化するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "GitHub Actions と Worker の CWV 専用 secret 台帳、固定 target、外部実測の fail-closed 運用を追加するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "CWV credential の負例、artifact sanitizer、実環境検証の分離を品質契約へ追加するため",
+      "from": "確定"
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "latest main の qa-124〜qa-130 を保持した上で、HarnessHub-o2i.13 の Worker Secret 実投入ゲートと hearing production acceptance 契約を統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "latest main の qa-130 を保持した上で、HarnessHub-o2i.13 の secret gate・本番 E2E/SEC8 smoke・未実測境界を統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "latest main の qa-133 を保持した上で、今回の世代非依存 task-spec 再実行契約を履歴を失わず qa-134 として統合するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "C10/C11 の Dev Graph authority 防御、script-file 実行後監査、改行 segment 判定、および最新 main で確定した C28 Beads field 経路を最終レビュー結果へ同期するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-f84o の AST guard 契約を最新 main の qa-138 に加算し、旧 qa-138 ID 衝突を解消して正規再確定するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "HarnessHub-7xi9 の 2026-07-31 更新時刻クラスタは非Git系clobberと断定できず、reflog の reset --hard + pull という直接証拠と新規の非ブロッキング診断契約を qa-088 へ追補する必要がある",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "C16 が beads binding node の bd ready payload 欠落を silent drop せず、機械可読な unmapped 理由として報告する契約を main 統合後の正本へ追加するため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-vf66 の plugin hook entry point 宣言・登録・実体の全体 parity と手動 script の責務境界を qa-143 として追加確定するため、qa-142 を R4-reopen する",
+      "from": "確定"
     }
   ],
   "category_aggregate": {
@@ -1334,7 +2265,8 @@
     "backend": "確定",
     "frontend": "確定",
     "maintenance-ops": "確定",
-    "dev-workflow": "確定"
+    "dev-workflow": "確定",
+    "testing-qa": "確定"
   },
   "targets": [
     {
@@ -1389,6 +2321,18 @@
     {
       "target_id": "rehype-sanitize",
       "category": "security"
+    },
+    {
+      "target_id": "vitest",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "playwright",
+      "category": "testing-qa"
+    },
+    {
+      "target_id": "testing-library",
+      "category": "testing-qa"
     }
   ],
   "requirements_foundation": {
@@ -2450,11 +3394,107 @@
         "confirmed_at": "2026-07-21T08:00:00+09:00",
         "note": "AskUserQuestion で「qa-038 を正とする (常設 staging なし)」を選択 (2026-07-21)。feat-hub-foundation P03 指摘 R-01 の上位エスカレーションに対する確定。併せて R-02 (A1 が 2 workflow 分離では構造的に pass 不能) について ci.yml への deploy job 統合も確定した。反映先: docs/infrastructure-spec.md §2/§4/§6/§7/§8/§9/§10/§11/§12 質疑証跡: qa-067 (2026-07-21 確定質疑の追補登録, 2026-07-22 C05 指摘対応)。infrastructure.web の D7 整合改訂は qa-068。"
       }
+    },
+    {
+      "id": "D8",
+      "question": "UI コンポーネントテストのツール選定: UI 微調整 (ボタン配置変更等) で壊れず保守しやすい behavior ベーステスト (qa-078 の保守性要件) を何で実装するか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "testing-library-react",
+          "label": "@testing-library/react + Vitest (behavior ベースのコンポーネントテスト)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MIT)。金銭コスト 0 円。Vitest 環境に @testing-library/react + @testing-library/dom (peer dependency) を追加するのみで、CI 実行時間への影響も component 単位テストのため軽微"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "guiding principle『ソフトウェアの使われ方に近いテストほど信頼できる』が qa-078 の behavior ベース要件 (accessible role/ラベルでの要素選択・実装詳細への密結合禁止) と直接一致し、UI 微調整で壊れないテストを標準化できる",
+          "security_fit": "テスト依存の追加のみで攻撃面への影響なし",
+          "pros": [
+            "ボタン配置・DOM 構造の微修正でテストが壊れない (要素選択が role/ラベル基準)",
+            "コンポーネント単位で高速に実行でき、カバレッジ 80% ゲート (qa-077) の主担体になれる",
+            "React 公式ドキュメントも推奨する事実上の標準で、知見・情報が豊富"
+          ],
+          "cons": [
+            "実ブラウザではなく jsdom/happy-dom 環境のため、レイアウト起因の不具合は検出できない (E2E の Playwright と役割分担が必要)"
+          ],
+          "risks": [
+            "v16 以降 @testing-library/dom の peer dependency 明示が必要 (導入手順に明記して回避)"
+          ],
+          "lock_in": "低 (テストコードは Testing Library API に依存するが、behavior ベースの書き方自体は他ツールへ移植しやすい)",
+          "ops_burden": "低 (追加設定は Vitest 環境への組込のみ)",
+          "evidence_refs": [
+            "https://testing-library.com/docs/react-testing-library/intro/",
+            "https://vitest.dev/blog/vitest-4-1.html"
+          ]
+        },
+        {
+          "id": "playwright-e2e-only",
+          "label": "コンポーネントテストを持たず Playwright E2E のみで UI を検証",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (Apache-2.0)。金銭コスト 0 円。ただし E2E はブラウザ起動を伴い CI 実行時間が component テストより大きい"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "テストツールが 1 つ減り管理は軽いが、UI 不具合の検出が E2E 層まで遅延し、qa-076 のテストレベル網羅 (単体・結合) に UI コンポーネント層の空白が生じる",
+          "security_fit": "テスト依存の追加なし",
+          "pros": [
+            "ツール数が最小で管理が軽い",
+            "実ブラウザでの検証のためレイアウト起因の不具合も検出できる"
+          ],
+          "cons": [
+            "コンポーネント単位の高速なフィードバックループがない",
+            "E2E は実行が重く、カバレッジ 80% ゲートの主担体にすると CI 時間が肥大する",
+            "失敗時の原因切り分けが component テストより粗い"
+          ],
+          "risks": [
+            "UI 層の回帰検出が遅れ、qa-077 の改善ループ (失敗分析→修正→再実行) の回転が遅くなる"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中 (E2E の flake 管理が UI 検証全体を背負う)",
+          "evidence_refs": [
+            "https://playwright.dev/docs/release-notes"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "testing-library-react",
+        "rationale": "qa-078 の確定要件 (behavior ベース・実装詳細への密結合禁止・UI 微修正でテストエラーにならない管理しやすい設計) を最も直接に実現する標準ツールであり、Vitest (単体・結合)・Playwright (E2E) との 3 点構成でテストレベル網羅 (qa-076) の各層に主担体を配置できるため。",
+        "comparison_basis": {
+          "goal_fit": "behavior ベース要件 (qa-078) との一致度と、テストレベル網羅 (qa-076) の空白有無で比較",
+          "tco": "両案とも OSS で金銭コスト 0 円のため、CI 実行時間と管理負荷で比較",
+          "security": "両案ともテスト依存の追加のみで攻撃面への影響なし",
+          "operations": "flake 管理・失敗切り分け・改善ループ (qa-077) の回転速度で比較",
+          "lock_in": "両案とも低。behavior ベースの書き方は他ツールへ移植しやすい"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-07-24T12:11:57Z",
+        "caveats": [
+          "jsdom/happy-dom 環境ではレイアウト起因の不具合を検出できないため、実ブラウザ検証は Playwright E2E と役割分担する (component テストの守備範囲を越えた検証を書かない)",
+          "@testing-library/react v16 以降は @testing-library/dom を peer dependency として明示インストールする必要がある",
+          "role/ラベルで特定できない要素に data-testid を乱用すると behavior ベースの利点が失われるため、accessible role を優先する選択規律を維持する"
+        ]
+      },
+      "user_decision": {
+        "option_id": "testing-library-react",
+        "confirmed_at": "2026-07-24T21:11:57+09:00",
+        "note": "AskUserQuestion で「採用する (推奨)」を選択 (2026-07-24)。completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘『testing-library の接地欠如』への確定対応。Vitest + Playwright + Testing Library の 3 点構成を正式採用"
+      }
     }
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 2,
+    "loop_count": 1,
     "next_question": null,
     "complete": true
   }

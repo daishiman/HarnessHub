@@ -1,0 +1,42 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260724-201121-wt-5/eval-log/dev-graph/live-trial-fixtures/node --input /Users/dm/dev/dev/個人開発/HarnessHub/.worktrees/task-20260724-201121-wt-5/eval-log/dev-graph/live-trial-fixtures/node/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "2855be96b733d622a2fc80dbb120320cf761c4bffdb93064ddfafe7148a3844a",
+  "transcript_sha256": "cbbd130c320441795238966659e08ee6258d757973f1508a65d8564d12567bdb",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 585.0
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts"
+}

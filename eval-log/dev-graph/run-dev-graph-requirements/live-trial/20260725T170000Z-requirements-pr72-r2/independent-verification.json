@@ -1,0 +1,37 @@
+{
+  "fixture": "eval-log/dev-graph/live-trial-fixtures/requirements-pr72-r2",
+  "scenario_id": "C04-OUT1-positive-ready-handoff",
+  "checks": [
+    {
+      "name": "exact_13_tasks_bound_to_single_feature_and_package",
+      "pass": true,
+      "detail": "13 tasks cover P01..P13 and share F-LIVE-001 / feature-package/F-LIVE-001"
+    },
+    {
+      "name": "handoff_resolves_to_real_task_specs",
+      "pass": true,
+      "detail": "13 task node ids and 13 task specs resolve from the handoff"
+    },
+    {
+      "name": "source_digest_binding_preserved",
+      "pass": true,
+      "detail": "source and package digests match the validated fixture bytes"
+    },
+    {
+      "name": "no_implementation_source_generated",
+      "pass": true,
+      "detail": "generated_implementation_code_files=0"
+    },
+    {
+      "name": "integrated_contract_1_2_passes",
+      "pass": true,
+      "detail": "validate-system-plan status=pass, contract_version=1.2.0, violations=[]"
+    },
+    {
+      "name": "goal_seek_evidence_valid",
+      "pass": true,
+      "detail": "2 append-only rows; violations=[]"
+    }
+  ],
+  "all_pass": true
+}

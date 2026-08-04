@@ -62,6 +62,18 @@ def write_json(path: Path, value: Any) -> None:
     load_base()._write_json(path, value)
 
 
+def write_graph(out: Path, repository_id: str, graph: dict[str, Any] | None = None) -> None:
+    """canonical envelope を保証したうえで graph store を書く単一の入口。
+
+    ``{graph_revision, nodes}`` だけの graph を、C02 の正規 writer が store へ書くのと
+    同じ exact-4-key ``{schema_version, repository_id, graph_revision, nodes}`` へ
+    引き上げてから書く。shape が ``write_json(... "graph.json", {...})`` を直に呼ぶと
+    envelope の付与が抜け、被験 skill が「本番なら C11 起動ゲートで落ちる入力」で
+    実走してしまうため、graph store への書き込みは本 helper に集約する。
+    """
+    load_base()._write_graph(out, repository_id, graph)
+
+
 def mark_fixture(common: Path, kind: str) -> None:
     """本生成器が作った fixture であることを git 内部へ記録する。
 
@@ -88,7 +100,7 @@ def scaffold(
     *,
     kind: str,
     graph: dict[str, Any] | None = None,
-    tracker_mode: str = "github",
+    tracker_mode: str = "beads",
     projects: list[dict[str, Any]] | None = None,
 ) -> tuple[Path, str]:
     """dev-graph 初期化済みの repo 骨格を作り ``(git common dir, repository_id)`` を返す。
@@ -96,6 +108,11 @@ def scaffold(
     ``graph`` を省略すると空 graph (revision 0) になる。node を先に置く shape は
     自分で revision と nodes を渡すか、生成後に graph.json を読み直して追記する。
     commit はまだ打たない (shape 固有の成果物を置いてから ``finalize`` で打つ)。
+
+    ``tracker_mode`` の既定が beads なのは、本 helper が Projects 定義を持たない骨格を
+    作るため。GitHub トラッカーを宣言すると schema が default Projects を 1 件要求し、
+    fixture が使いもしない Projects v2 定義を抱えることになる (HarnessHub-n88)。
+    GitHub 同期そのものが被験対象の shape だけが ``projects`` を伴って github を選ぶ。
     """
     base = load_base()
     common = init_repository(out, kind=kind)
@@ -108,7 +125,7 @@ def scaffold(
         out / ".dev-graph" / "config.json",
         base._repo_config(repository_id, tracker_mode=tracker_mode, projects=list(projects or [])),
     )
-    write_json(out / ".dev-graph" / "state" / "graph.json", graph or {"graph_revision": 0, "nodes": []})
+    write_graph(out, repository_id, graph)
     # lease 台帳の正本は worktree ではなく git common dir 側 (C15 の authority 判定)。
     write_json(common / "dev-graph" / "leases.json", {"leases": []})
     return common, repository_id

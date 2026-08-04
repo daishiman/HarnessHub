@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "evaluator": "fresh-agent/eval_c01_live_trial",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "status_closed_at_and_edges_match": true,
+    "predecessor_ready_and_dependent_blocked": true,
+    "graph_config_content_and_github_unchanged": true,
+    "literal_skill_call_observed": true,
+    "goal_seek_rows": 2,
+    "goal_seek_hash_matches": true,
+    "fresh_agent_id": "ae3d448e9c8360e86",
+    "agent_verdict_preserved_exactly": true
+  },
+  "caveat": "The in-session Agent emitted prose before its final JSON, but the complete final JSON verdict object was preserved exactly."
+}

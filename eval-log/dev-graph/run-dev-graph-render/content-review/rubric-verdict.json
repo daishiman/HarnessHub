@@ -2,28 +2,37 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
-    "skill_md_sha256": "e31e1245beaec6ad6b62b0079d0108db03532c40a82ea071bf039eefca4eebf6"
+    "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "content-review-out1-clarification-20260721",
-  "reviewed_at": "2026-07-21",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "reviewer": "c05-independent-content-review-20260803-221356z",
+  "reviewed_at": "2026-08-03T22:13:56Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1"
+    ],
     "positive_feedback": [
-      "NM 命名/発火条件: name=run-dev-graph-render が dir 名と prefix=run に一致し、description は『静的 HTML 可視化』『外部 CDN/npm なしの自己完結 SVG + inline JS』という trigger 型の発火条件を保つ。今回の改訂は criteria 本文のみで命名層に影響しない。",
-      "BD 出力契約/受入条件: Purpose & Output Contract に 入力/出力 (inline 単一 HTML + renderer receipt)/完了条件 が揃い、`## Criteria acceptance` が IN1/OUT1 双方を検証可能な述語へ落としている。改訂後 OUT1 は『総数Yを receipt の applied_count/expected_count と一致』『source_digest 一致』という機械判定可能な条件と、『done数Xは一致を求めない』という明示的除外を分けて書いており、判定境界の曖昧さが除去された。除外の根拠 (登録時 active 固定 / graph_digest_after の stale 化) を併記しているため、条件緩和が Goodhart 的な緑化に見えない構成になっている。",
-      "RG 責務/最小権限: render 単一責務に収束し、allowed-tools は Read/Bash 中心で Write 非付与のため『graph は read-only』(L79) の宣言が権限レベルで裏打ちされる。goal_seek (engine=inline / fork=subagent / max_loops=5) と feedback_contract (max_iterations=3) を frontmatter で明示し、completeness_exempt に workflow-manifest 適用外の理由も記録済み。",
-      "DP 実装整合: criterion 文言が実装と乖離していないことを実コードで確認。render-graph-html.py L118 が子 node 総数のみを applied_count と照合、done/total は L173-174 で graph から導出、L123 が graph_digest_after を fail-closed 検査。register-package.py L324 が登録時 status=active を強制。既存テスト test_render_scope_containment_and_registration_receipt は done=4/total=13 + applied_count=13 で exit 0 を期待し、改訂文言と同じ意味論を固定している。high severity 相当の rubric 違反は0件。"
+      "IN1 is supported by the renderer's self-contained-document guard and the focused regression suite: three tests passed, including the verified, not_performed, and stale-digest branches. The current live trial also records inline SVG with no external script/link.",
+      "OUT1 has current guard-clean, closure-bound evidence: live trial 20260806T030000Z-0ui0-render-guardclean is overall PASS, its independently recomputed skill-directory tree SHA is 65df36fd407873af8525c3fae3a8b95063b61a8be28b11e979e27bb7afd27b4e, and the independent verifier confirms SVG/runtime, 13/13 denominator, recomputed numerator 4, and source-digest evidence. Its repo-relative scenario reference and lint-live-trial-verdict check both pass, including the C02 proof-write guard.",
+      "Implementation parity is complete for the changed receipt semantics. _registration rejects malformed, scope, node-ID, count, source-digest, and source-lineage-digest evidence before output; only graph_digest_after mismatch reaches the explicit partial/graph_digest_stale CLI receipt, HTML banner, and embedded render metadata."
     ],
     "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-independent-incremental-review",
     "next_action": "none"
   },
-  "notes": "OUT1 文言明確化 (総数 Y のみ receipt 一致・done 数 X は非要求) に伴う incremental profile 再評価の rubric 側投影。exhaustive の30思考法は使用していない。SKILL.md を実読のうえ命名・出力契約・単一責務/最小権限・実装整合の各観点で採点し、high severity 0件を確認した。改訂は到達不能な受入条件を実装整合な条件へ是正するもので、rubric 上の退行は認められない。skill_md_sha256 は shasum -a 256 の実測値。PASS。"
+  "notes": "Genuine current incremental rubric review of only plugins/dev-graph/skills/run-dev-graph-render/SKILL.md at SHA d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669. Reconfirmed IN1 and OUT1 against the renderer, focused regression test diff, execution-tracker receipt contract, current C05 scenario receipt, and guard-clean fresh live trial 20260806T030000Z-0ui0-render-guardclean plus independent verification. PASS: no contradiction, meaningful omission, contract/dependency/implementation mismatch, or high-severity rubric concern."
 }

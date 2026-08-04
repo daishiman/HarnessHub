@@ -1,4 +1,18 @@
 {
-  "original_goal": "claim 済み SYS-HUB-FOUNDATION-P01 とその依存・全体完了状態を read-only で検索し、digest 不変を保証する",
-  "recorded_at": "2026-07-20T00:00:00Z"
+ "original_goal": "11 verb 一括実行で新規登録した feat-task-spec-test-strategy / SYS-TASK-SPEC-TEST-STRATEGY-P01..P13 / arch-harness-hub-testing-qa の登録状態を read-only で検索し、依存・confirmation/evaluation/readiness・tracker linkage・execution context を graph の実状態どおりに提示して、実行前後の digest 不変を保証する",
+ "original_goal_hash": "d11ae154542583fb3ad8aa3a748dca1e3c155f2277e85d7030c820cbcf6311e0",
+ "verb": "status",
+ "recorded_at": "2026-07-25T04:35:49Z",
+ "current_directive": "/dev-graph status (11 verb 一括実行の verb 9)",
+ "current_queries": [
+  "--id feat-task-spec-test-strategy",
+  "--kind task --keyword TASK-SPEC-TEST-STRATEGY",
+  "--id STATUS-NONEXISTENT-EMPTY-PROBE (該当なし検証)"
+ ],
+ "superseded_goals": [
+  {
+   "original_goal": "claim 済み SYS-HUB-FOUNDATION-P01 とその依存・全体完了状態を read-only で検索し、digest 不変を保証する",
+   "recorded_at": "2026-07-20T00:00:00Z"
+  }
+ ]
 }

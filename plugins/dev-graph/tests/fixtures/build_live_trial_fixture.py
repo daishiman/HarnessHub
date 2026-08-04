@@ -44,36 +44,23 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import live_trial_shapes  # noqa: E402  (上の sys.path 調整より後でなければ解決できない)
+from live_trial_sync_contract import (  # noqa: E402
+    CONTENT_ROOTS,
+    planning_project as _planning_project,
+    repo_config as _repo_config,
+    sync_remote_state as _sync_remote_state,
+    sync_snapshot as _sync_snapshot,
+    sync_task_node as _sync_task_node,
+)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(PLUGIN_ROOT / "lib"))
 SCHEMA_PATH = PLUGIN_ROOT / "schemas" / "graph-node.schema.json"
 
-# 固定 timestamp 群。冪等性のため utc_now() 相当を一切使わない。
-CREATED_AT = "2026-07-13T07:50:00Z"
-REMOTE_UPDATED_AT = "2026-07-21T02:22:22Z"
-SNAPSHOT_AT = "2026-07-13T07:55:00Z"
 COMMIT_DATE = "2026-07-13T07:50:00+00:00"
 
 COMMIT_IDENTITY = ("dev-graph-fixture@example.invalid", "dev-graph fixture builder")
-
-# 安定 ID。trial は「前後で issue/project/item ID が不変」を検査するので、
-# 生成のたびに変わる値 (uuid など) を使ってはならない。
-ISSUE_NODE_ID = "I_kwDOFixture001"
-PROJECT_ID = "PVT_kwDOFixture001"
-PROJECT_ITEM_ID = "PVTI_lADOFixture001"
-STATUS_FIELD_ID = "PVTF_Status001"
-PRIORITY_FIELD_ID = "PVTF_Priority001"
-
-CONTENT_ROOTS = {
-    "issues": "issues",
-    "tasks": "tasks",
-    "specifications": "specs",
-    "architecture": "architecture",
-    "features": "features",
-    "documents": "docs",
-    "system_spec": "system-spec",
-}
 
 TASK_BODY = """# 目的
 
@@ -180,6 +167,49 @@ def _write_json(path: Path, value: Any) -> None:
     )
 
 
+def _schema_version() -> str:
+    """canonical envelope の schema_version を scripts 側の正本から読む。
+
+    fixture 側へ "1.0.0" と書き写すと、正本が動いたときに fixture だけが古い値を持ち、
+    C11 envelope 検査を「fixture では通るが本番では落ちる」状態にできる。
+    """
+    scripts = str(PLUGIN_ROOT / "scripts")
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
+    import graph_envelope  # noqa: PLC0415  (import 時の副作用を避けるため呼び出し時解決)
+
+    return graph_envelope.SCHEMA_VERSION
+
+
+def _canonical_graph(repository_id: str, graph: dict[str, Any] | None = None) -> dict[str, Any]:
+    """``{graph_revision, nodes}`` だけの graph を canonical envelope へ引き上げる。
+
+    C02 の正規 writer (build-graph-store.py / upsert-node.py) が store へ書く形は
+    exact-4-key の ``{schema_version, repository_id, graph_revision, nodes}`` で、C11 は
+    canonical store path に対してこの 4 key を要求する。``schema_version``/``repository_id``
+    を欠いた store を fixture が置くと、被験 skill は「本番なら起動ゲートで落ちる入力」で
+    実走することになり trial の意味が失われる。
+    """
+    source = graph or {"graph_revision": 0, "nodes": []}
+    return {
+        "schema_version": _schema_version(),
+        "repository_id": repository_id,
+        "graph_revision": source.get("graph_revision", 0),
+        "nodes": source.get("nodes", []),
+    }
+
+
+def _write_graph(out: Path, repository_id: str, graph: dict[str, Any] | None = None) -> None:
+    """canonical envelope を保証したうえで graph store を書く単一の入口。
+
+    graph store への書き込みを本 helper に集約するのは、``_write_json`` を直に呼ぶ経路が
+    増えるたびに envelope の付与漏れが起きうるため。既存 store を読み直して nodes を
+    追記する経路 (shape_render / shape_requirements) は、生成点がここを通る限り envelope を
+    そのまま持ち越すので追加の処置を要しない。
+    """
+    _write_json(out / ".dev-graph" / "state" / "graph.json", _canonical_graph(repository_id, graph))
+
+
 def _artifact_bytes(node: dict[str, Any], body: str) -> bytes:
     """C02 upsert-node.py が生成するのと同じ frontmatter 形式で artifact を書く。
 
@@ -196,302 +226,6 @@ def _artifact_bytes(node: dict[str, Any], body: str) -> bytes:
     )
     lines.extend(["---", "", body.rstrip(), ""])
     return "\n".join(lines).encode("utf-8")
-
-
-def _repo_config(repository_id: str, *, tracker_mode: str, projects: list[dict[str, Any]]) -> dict[str, Any]:
-    """repo-config.schema.json の必須 9 key だけを持つ最小 config。
-
-    本体 repo の config は plan_roots など追加 key を持つが、fixture は additionalProperties
-    違反を避けて必須集合ちょうどに絞る。beads を選ばないのは、schedulable な beads node が
-    あると C15 schedule が parity manifest の provenance を要求して停止するため。
-    """
-    return {
-        "schema_version": "1.0.0",
-        "repository_id": repository_id,
-        "content_roots": dict(CONTENT_ROOTS),
-        "local_state": {
-            "graph": ".dev-graph/state/graph.json",
-            "cache": ".dev-graph/cache",
-            "locks": ".dev-graph/locks",
-        },
-        "github": {
-            "enabled": False,
-            "issue_repository": "example/dev-graph-live-trial",
-            "projects": projects,
-            "completion_policy": {
-                "trigger": "linked_pr_merged",
-                "required_pull_requests": "all",
-                "target_branch": "default",
-                "closed_unmerged": "keep_active",
-                "issue_reopened": "reopen_task",
-                "revert": "create_follow_up_unless_issue_reopened",
-                "local_reconciliation": ["manual_sync"],
-                "scheduled_reconciliation": {
-                    "enabled": False,
-                    "interval_minutes": 5,
-                    "owner": "claude_session_start",
-                    "entry_point": "dev-graph sync --reconcile-lifecycle",
-                },
-            },
-        },
-        "execution_tracker": {"mode": tracker_mode},
-        "worktrees": {
-            "enabled": True,
-            "lease_ttl_seconds": 1800,
-            "heartbeat_seconds": 60,
-            "coordination_store": "git_common_dir",
-            "completion_write_branch": "default",
-            "dirty_worktree_policy": "fail_closed",
-        },
-        "claude_hooks": {
-            "source": "plugin",
-            "project_plugin_link": ".claude/dev-graph-plugin",
-            "session_start": False,
-            "post_tool_reconcile": False,
-            "task_completed_gate": False,
-        },
-        "path_policy": {
-            "authority": "caller-repository",
-            "stored_paths": "repository-relative",
-            "allow_outside_repository": False,
-            "follow_content_symlinks_outside_repository": False,
-        },
-    }
-
-
-def _planning_project() -> dict[str, Any]:
-    """alias=planning の Projects v2 定義。
-
-    status は schema 上 local_to_project 固定なので、これが「local 側が正で export が
-    1 件出る」経路になる。priority は bidirectional にして「双方一致なら何も起きない」
-    経路を同時に踏ませる。
-    """
-    return {
-        "alias": "planning",
-        "owner_type": "user",
-        "owner_login": "example",
-        "project_number": 1,
-        "default": True,
-        "auto_add": {
-            "artifact_kinds": ["task"],
-            "confirmation_status": "confirmed",
-            "evaluation_status": "pass",
-            "implementation_readiness": "complete",
-        },
-        "field_mappings": [
-            {
-                "local_field": "status",
-                "project_field_name": "Status",
-                "value_type": "single_select",
-                "direction": "local_to_project",
-                "option_map": {"active": "In Progress", "blocked": "Blocked", "done": "Done"},
-            },
-            {
-                "local_field": "priority",
-                "project_field_name": "Priority",
-                "value_type": "single_select",
-                "direction": "bidirectional",
-                "option_map": {"high": "High", "medium": "Medium", "low": "Low"},
-            },
-        ],
-    }
-
-
-def _sync_task_node() -> dict[str, Any]:
-    """C15 schedule が ready と判定できる唯一の task node。
-
-    status=active / confirmed / pass / readiness complete / depends_on 空 /
-    resource_scope 非空、かつ tracker_binding=github。github binding なので schedule は
-    beads parity manifest を要求しない。
-    """
-    return {
-        "acceptance": [],
-        "architecture_refs": [],
-        "artifact_kind": "task",
-        "artifact_subtypes": [],
-        "beads_linkage": None,
-        "classification_candidates": [
-            {"artifact_kind": "task", "candidate_path": "tasks/LT-TASK-001.md", "confidence": 1.0}
-        ],
-        "classification_confidence": 1.0,
-        "classification_reason": "Deterministic acceptance fixture",
-        "completion_evidence": {
-            "completed_at": None,
-            "evidence_refs": [],
-            "policy": "manual",
-            "reconciled_at": None,
-            "source": None,
-            "status": "in_progress",
-        },
-        "confirmation_evidence": {
-            "evaluated_digest": "a" * 64,
-            "evaluator": "fixture-evaluator",
-            "evidence_ref": "evidence/LT-TASK-001.json",
-        },
-        "confirmation_status": "confirmed",
-        "created_at": CREATED_AT,
-        "depends_on": [],
-        "domain": "verification",
-        "evaluation_status": "pass",
-        "execution_contexts": [],
-        "feature_package_id": None,
-        "file_path": "tasks/LT-TASK-001.md",
-        "github_project_linkages": [
-            {
-                # item_id は remote fixture と一致させる。ズレていると sync が
-                # project-item-add を出し、二回目の収束検査が壊れる。
-                "field_snapshot": {"priority": "Medium", "status": "Backlog"},
-                "item_id": PROJECT_ITEM_ID,
-                "last_error_code": None,
-                "last_synced_at": SNAPSHOT_AT,
-                "linked_at": CREATED_AT,
-                "owner_login": "example",
-                "owner_type": "user",
-                "project_alias": "planning",
-                "project_id": PROJECT_ID,
-                "project_number": 1,
-                "sync_state": "synced",
-            }
-        ],
-        "github_publication": {
-            "labels": ["live-trial", "safe"],
-            "milestone": None,
-            "mode": "issue_and_projects",
-            "project_aliases": ["planning"],
-        },
-        "goal": None,
-        "graph_node_id": "LT-TASK-001",
-        "implementation_readiness": {
-            "checked_at": CREATED_AT,
-            "missing_sections": [],
-            "status": "complete",
-        },
-        "issue_linkage": {
-            "issue_number": 1,
-            "linked_at": CREATED_AT,
-            "repo": "example/dev-graph-live-trial",
-        },
-        "iteration": "R3",
-        "owners": ["harness-maintainers"],
-        "parent_feature": None,
-        "phase_ref": None,
-        "priority": "medium",
-        "project_id": "dev-graph-live-trial",
-        "pull_request_linkages": [],
-        "purpose": None,
-        "related_nodes": [],
-        "resource_scope": ["docs/live-trial-output.md"],
-        "scope_in": [],
-        "scope_out": [],
-        "source_lineage": {
-            "imported_at": CREATED_AT,
-            "origin_kind": "manual",
-            "source_digest": "b" * 64,
-            "source_path": "tasks/LT-TASK-001.md",
-            "source_plugin": None,
-            "source_version": "1.0.0",
-        },
-        "start_date": None,
-        "status": "active",
-        "tags": ["live-trial", "safe"],
-        "target_date": None,
-        "template_id": "task",
-        "template_version": "1.0.0",
-        "title": "Validate isolated live trial",
-        "tracker_binding": "github",
-        "updated_at": CREATED_AT,
-    }
-
-
-def _sync_remote_state() -> dict[str, Any]:
-    """決定論 adapter fixture。外部 GitHub へ一切接続せずに 3-way 収束を再現する。
-
-    title だけ remote 側が進んでおり (import 1 件)、Projects の Status だけ local 側が
-    正である (export 1 件)。priority は両者一致で「変化なし」を確認する対照になる。
-    """
-    return {
-        "beads": {},
-        "github": {
-            "LT-TASK-001": {
-                "id": ISSUE_NODE_ID,
-                "number": 1,
-                "projects": {
-                    "planning": {
-                        "definitions": {
-                            "Status": {
-                                "id": STATUS_FIELD_ID,
-                                "options": [
-                                    {"id": "OPT_InProgress001", "name": "In Progress"},
-                                    {"id": "OPT_Done001", "name": "Done"},
-                                    {"id": "OPT_Blocked001", "name": "Blocked"},
-                                    {"id": "OPT_Backlog001", "name": "Backlog"},
-                                ],
-                            },
-                            "Priority": {
-                                "id": PRIORITY_FIELD_ID,
-                                "options": [
-                                    {"id": "OPT_High001", "name": "High"},
-                                    {"id": "OPT_Medium001", "name": "Medium"},
-                                    {"id": "OPT_Low001", "name": "Low"},
-                                ],
-                            },
-                        },
-                        "fields": {
-                            "Status": {
-                                "field_id": STATUS_FIELD_ID,
-                                "option_id": "OPT_Backlog001",
-                                "updated_at": SNAPSHOT_AT,
-                                "value": "Backlog",
-                            },
-                            "Priority": {
-                                "field_id": PRIORITY_FIELD_ID,
-                                "option_id": "OPT_Medium001",
-                                "updated_at": SNAPSHOT_AT,
-                                "value": "Medium",
-                            },
-                        },
-                        "item_id": PROJECT_ITEM_ID,
-                    }
-                },
-                "repo": "example/dev-graph-live-trial",
-                "state": "open",
-                "title": "Validate isolated live trial (updated remotely r7)",
-                "updated_at": REMOTE_UPDATED_AT,
-            }
-        },
-        "schema_version": "1.0",
-    }
-
-
-def _sync_snapshot() -> dict[str, Any]:
-    """3-way merge の base。graph 直下の legacy last_synced_snapshot ではなくこちらが正本。
-
-    title の base を local/remote とも旧値にしておくことで「local は変えていない・remote
-    だけ進んだ」= import と判定される。ここを remote 新値にすると差分が消えて trial が
-    何も検証しなくなる。
-    """
-    return {
-        "nodes": {
-            "LT-TASK-001": {
-                "binding": "github",
-                "issue": {
-                    "status": {"local": "open", "remote": "open"},
-                    "title": {
-                        "local": "Validate isolated live trial",
-                        "remote": "Validate isolated live trial",
-                    },
-                },
-                "projects": {
-                    "planning": {
-                        "priority": {"local": "Medium", "remote": "Medium"},
-                        "status": {"local": "Backlog", "remote": "Backlog"},
-                    }
-                },
-            }
-        },
-        "schema_version": "1.0",
-        "updated_at": SNAPSHOT_AT,
-    }
 
 
 def _init_repository(out: Path) -> Path:
@@ -538,14 +272,12 @@ def build_sync(out: Path) -> None:
     """C03 run-dev-graph-sync と C15 run-dev-graph-schedule が共有する fixture。"""
     common = _init_repository(out)
     node = _sync_task_node()
+    repository_id = _repository_id(common)
     _write_json(
         out / ".dev-graph" / "config.json",
-        _repo_config(_repository_id(common), tracker_mode="github", projects=[_planning_project()]),
+        _repo_config(repository_id, tracker_mode="github", projects=[_planning_project()]),
     )
-    _write_json(
-        out / ".dev-graph" / "state" / "graph.json",
-        {"graph_revision": 1, "nodes": [node]},
-    )
+    _write_graph(out, repository_id, {"graph_revision": 1, "nodes": [node]})
     _write_json(out / ".dev-graph" / "remote.json", _sync_remote_state())
     _write_json(out / ".dev-graph" / "state" / "sync-snapshot.json", _sync_snapshot())
     artifact = out / node["file_path"]
@@ -561,14 +293,17 @@ def build_decompose(out: Path) -> None:
     """C14 run-dev-graph-decompose の --dry-run マクロ分解用 fixture。
 
     分解結果は draft preview として提示されるだけなので graph は空でよい。全 node が
-    tracker_binding=none 前提のため Projects 定義も持たせない。
+    tracker_binding=none 前提のため Projects 定義も持たせない。Projects を持たない以上
+    GitHub トラッカーは宣言できないので、mode は execution-tracker-contract §1 の既定
+    (ソロ + AI エージェント開発の private repo = beads) を採る。
     """
     common = _init_repository(out)
+    repository_id = _repository_id(common)
     _write_json(
         out / ".dev-graph" / "config.json",
-        _repo_config(_repository_id(common), tracker_mode="github", projects=[]),
+        _repo_config(repository_id, tracker_mode="beads", projects=[]),
     )
-    _write_json(out / ".dev-graph" / "state" / "graph.json", {"graph_revision": 0, "nodes": []})
+    _write_graph(out, repository_id)
     _write_json(common / "dev-graph" / "leases.json", {"leases": []})
     _finalize(out)
 

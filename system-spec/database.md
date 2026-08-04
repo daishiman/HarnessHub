@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-060 |
+| Web (web) | 確定 | 確定質疑: qa-126 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,11 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-060 (対応セル: web)
+### qa-126 (対応セル: web)
 
-**質問**: builds/feedbacks/projects のスキーマ改訂 (docs/backend-spec.md §2 の 2026-07-18 追記) を database 仕様へ反映するか。 (訂正再登録: qa-053 の回答に系譜継続句が欠けていたため、同一 delta を継続句付きで qa-060 として登録し直す)
+**質問**: 顧客持ち込み credential の lifecycle と無停止 rotation を database.web の永続化契約へどう反映しますか?
 
-**回答**: qa-045 の確定内容 (C4 改訂の業務データ保持 tenant_data_objects・封筒暗号化・即時完全削除を含む確定スキーマ) を全面維持しつつ、次の delta を確定する。builds へ sheet_id (NULL 可) と feedback_id (NULL 可) を持たせ、起点は Sheet/Feedback のどちらか一方 (CHECK 制約 + 非 NULL 値の partial UNIQUE で各起点=1 Build を保証)。feedbacks の type を improvement/review/bug の 3 値へ改訂し priority (high/medium/low) 列を追加。projects は owner_user_id を作成時の principal に固定し slug/name は Workspace 内一意。1 Workspace に複数 Project、各 Project は skill/web_app の複数 TargetChannel を持てる (マルチシステム前提)。全テーブルの tenant_id スコープ (D4) は P0 の最初の migration から必須で後付けしない。
+**回答**: qa-112 の tenant scope、方式別保存、共有 credential 非複製、primary connection、migration/rollback 契約を維持する。ただし qa-112【1】の allowed_workspace_domains TEXT NOT NULL DEFAULT [] は migration 0003 の実契約と不一致だったため、TEXT NULL 許容、NULL=顧客方式では hd 未検査・共有方式では fail-closed へ訂正する。【0004 expand】idp_connections に credential_status TEXT NOT NULL DEFAULT active と、client_secret_last4、pending_client_secret_enc / last4 / client_id / credential_mode / allowed_workspace_domains / tested_at、last_tested_at、updated_at の NULL 許容列を追加する。既存行は実際に稼働中だったため active 既定で後方互換を保ち、管理 API の新規行は明示的に pending とする。【無停止】現行暗号文を上書きせず pending に封筒暗号化して保存し、テスト済み時刻と同じ CAS 更新で client ID・secret・方式・許可ドメインを昇格する。取消は pending 列だけを消す。【再開と競合】disabled への新 credential staging は期待状態を CAS 条件にして pending へ戻す。現行テストも現行暗号文と期待状態を CAS 条件にし、競合時は0行として再読込を要求する。暗号文の AAD は同一行の論理 secret slot を用い、pending から現行へ暗号文を再暗号化せず移せる。
 
 ## 上流指針 (doctrine anchor)
 

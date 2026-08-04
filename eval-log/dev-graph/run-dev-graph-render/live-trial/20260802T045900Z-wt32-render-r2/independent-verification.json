@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "runtime_svg": "Verified directly: .dev-graph/render/index.html is a single self-contained 5-line document (doctype/meta/style/header/aside/svg/script all inline). grep for http(s):// , <link>, and <script src=> returned zero matches. It contains one <svg viewBox=\"0 0 1000 1088\" role=\"img\"> with 14 node groups and 12 bezier edge paths, plus an inline <script> for client-side filtering only — no external runtime dependency.",
+    "denominator": "Registration receipt system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json: applied_count=13, expected_count=13. Rendered HTML render-metadata script block: registration.applied_count=13, expected_count=13. graph-data script block shows LT-FEATURE-001 progress.total=13. All three sources agree; denominator=13.",
+    "numerator": "Independently recomputed from .dev-graph/state/graph.json by reading each of the 13 LT-FEATURE-001-P0x task nodes' `status` field directly (not from status.json or agent prose): P01=done, P02=done, P03=done, P04=done, P05=active, P06=blocked, P07..P13=draft. No node has status=closed. Count of done+closed = 4, matching the rendered graph-data progress.done=4 and the SVG label 'active · feature · 4/13'.",
+    "source_digest": "Receipt source_digest = sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807 (with explicit 'sha256:' prefix in the receipt field value). Rendered HTML render-metadata script: registration.source_digest = sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807 — exact match. The visible aside banner also renders the same digest string and status 'VERIFIED'. Additionally, per-node source_lineage.source_digest fields in graph.json for P01-P13 (unprefixed hex) match the suffix of the receipt digest exactly."
+  }
+}

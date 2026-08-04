@@ -1,0 +1,34 @@
+{
+  "patch": {
+    "graph_node_id": "issue-devgraph-completion-event-ledger-gap-20260724",
+    "updated_at": "2026-07-25T00:19:30Z",
+    "resource_scope": [
+      "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+      "plugins/dev-graph/scripts/upsert-node.py",
+      "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+      "plugins/dev-graph/tests/test_runtime_coverage.py",
+      "plugins/dev-graph/tests/test_live_trial_fixture_builders.py",
+      "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_node.py",
+      "plugins/dev-graph/references/github-lifecycle-contract.md",
+      "plugins/dev-graph/references/git-worktree-contract.md",
+      "plugins/dev-graph/plugin-composition.yaml",
+      "plugin-plans/dev-graph/component-inventory.json",
+      "eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json",
+      "eval-log/dev-graph/run-dev-graph-sync/criteria-test/scenario-verdict.json"
+    ],
+    "completion_evidence": {
+      "status": "done",
+      "policy": "manual",
+      "source": "reconciliation",
+      "completed_at": "2026-07-24T12:44:42Z",
+      "reconciled_at": "2026-07-25T00:19:30Z",
+      "evidence_refs": [
+        "plugins/dev-graph/tests/test_semantic_c26_completion.py",
+        "plugins/dev-graph/scripts/reconcile-github-lifecycle.py",
+        "plugins/dev-graph/scripts/upsert-node.py",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260724T224206Z-pj6-node-r4/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260724T205545Z-pj6-sync-r2/verdict.json"
+      ]
+    }
+  }
+}
