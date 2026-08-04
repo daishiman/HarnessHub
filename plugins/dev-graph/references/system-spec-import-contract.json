@@ -1,4 +1,5 @@
 {
+  "contract_version": "1.0.0",
   "artifacts": {
     "index": "system-spec/index.md",
     "requirements": "system-spec/00-requirements-definition.md",
@@ -15,9 +16,9 @@
       "source_artifact": "requirements",
       "file_path": "architecture/system-spec-overview.md",
       "architecture_refs": [],
-      "purpose": "確定済み system-spec の構成境界を参照可能にする。",
+      "purpose": "確定済み system-spec の architecture context を参照可能にする。",
       "goal": "仕様由来の architecture context を feature から参照できる状態。",
-      "scope_in": ["localhost API", "SQLite", "認証と運用境界"],
+      "scope_in": ["confirmed system-spec requirements artifact"],
       "acceptance": ["source lineage と evaluator evidence を保持する", "C02 でのみ登録する"],
       "classification_reason": "system-spec-harness が確定した architecture context の import。"
     },
@@ -31,13 +32,9 @@
       "architecture_refs": ["arch-system-spec-overview"],
       "purpose": "確定済み system-spec の index を参照可能にする。",
       "goal": "仕様と architecture context を source lineage 付きで結ぶ。",
-      "scope_in": ["TODO REST API の compiled specification"],
+      "scope_in": ["confirmed system-spec index artifact"],
       "acceptance": ["source lineage と evaluator evidence を保持する", "architecture node を参照する"],
       "classification_reason": "system-spec-harness が compile した specification index の import。"
     }
-  },
-  "bodies": {
-    "architecture": "# Architecture overview\n\n## Context and drivers\n\n- ローカル専用 TODO REST API を外向き通信なしで運用する。\n\n## Goals and non-goals\n\n- Goals: 認証、CRUD、SQLite 永続化、単一コマンド起動を満たす。\n- Non-goals: GUI、外部同期、クラウド配備、複数利用者共有は扱わない。\n\n## System context and boundaries\n\n- 利用者の HTTP client、localhost の API process、SQLite file を境界として扱う。\n\n## Container and component view\n\n| Container/Component | Responsibility | Interface | Data owner | Deployment unit |\n| --- | --- | --- | --- | --- |\n| API process | router/service/repository を実行する | localhost HTTP | TODO data | single process |\n| SQLite file | TODO と token hash を永続化する | repository access | local user | local file |\n\n## Cross-cutting contracts\n\n- bearer token 認証、入力検証、構造化ログ、パラメータ化 SQL を全層で適用する。\n\n## Subtype architecture\n\n- Frontend: N/A: 専用 UI を実装しない。\n- Backend: router / service / repository の 3 層で API を提供する。\n- Infrastructure: localhost の単一プロセスで起動する。\n- Data: SQLite 単一ファイルを system of record とする。\n- Security: token hash、localhost bind、入力検証を適用する。\n\n## Architecture decisions\n\n| ADR | Decision | Alternatives | Trade-on rationale | Consequences |\n| --- | --- | --- | --- | --- |\n| D1 | SQLite を採用 | external DB | 常駐 process を増やさない | file backup が可能 |\n| D2 | FastAPI を採用 | alternate Python framework | OpenAPI と schema validation | local HTTP API を提供 |\n| D3 | local bearer token | external identity provider | 外部通信なし | single-user 限定 |\n\n## Delivery, migration and rollback\n\n- schema を版数付き SQL で移行し、問題時は SQLite backup を復元する。\n\n## Risks and verification\n\n- 認証漏れと data loss を、401 acceptance test と再起動後の CRUD test で検証する。",
-    "specification": "# 目的と成功状態\n\n`system-spec/index.md` が示す確定済み仕様を、source lineage 付きで dev-graph から参照可能にする。\n\n## スコープ\n\n- In: 生成済みの TODO REST API 仕様を参照する。\n- Out: system-spec-harness の要求、判断、章本文を変更しない。\n\n## 用語と主体\n\n| Term/Actor | Definition/Responsibility |\n| --- | --- |\n| 利用者 | localhost の TODO API を利用し、仕様を確定した主体。 |\n\n## ユースケースとユーザーフロー\n\n1. 利用者は認証済みで TODO を作成し、再起動後に一覧で確認する。\n\n## 機能要件\n\n- `FR-001`: TODO CRUD と完了操作を localhost の HTTP API として提供する。\n\n## 非機能要件\n\n- 外向き通信を行わず、単一プロセスと単一 SQLite ファイルで運用する。\n\n## UI・状態遷移\n\n- UI は持たず、HTTP API の認証済み・未認証・検証エラー状態を返す。\n\n## ビジネスルールと検証\n\n- `BR-001`: 未認証の TODO 操作は 401 で拒否する。\n\n## API契約\n\n- `/todos` の CRUD、完了操作、`/health`、`/openapi.json` を提供する。\n\n## データモデル\n\n- SQLite の `todos` と `api_tokens` を単一ファイルに永続化する。\n\n## 認証・認可\n\n- 単一利用者の bearer token をハッシュ化して保存し、全 TODO endpoint で確認する。\n\n## エラー・例外・回復\n\n- 検証エラーは一定のエラー形式で返し、再起動後も SQLite から状態を回復する。\n\n## イベント・非同期処理\n\n- N/A: 外部 queue、イベント配信、常駐 worker を使わない単一プロセス構成である。\n\n## 可観測性\n\n- 構造化ログを標準出力へ出し、`/health` で稼働を確認する。\n\n## 互換性・移行・リリース\n\n- SQLite schema は単調増加の SQL 版数で管理し、バックアップはデータファイルのコピーで行う。\n\n## テストと受入条件\n\n- [ ] `AC-001`: 未認証の TODO endpoint は 401 を返す。\n- [ ] `AC-002`: 作成した TODO は再起動後の一覧取得で戻る。\n\n## 未決事項\n\n- N/A: source の completeness report が PASS で、追加の未決事項は取り込まない。"
   }
 }

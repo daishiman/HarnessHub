@@ -69,7 +69,7 @@ feedback_contract:
 1. C24 で caller repo の `system-spec/` を解決し、plugin source/別 repo の content を拒否する。
 2. `plugins/system-spec-harness/.claude-plugin/plugin.json` の name/version が `>=0.1.0 <1.0.0`、かつ `references/package-contract.json#entry_points.skills` が `run-system-spec-elicit`, `run-system-spec-doc-fetch`, `run-system-spec-compile`, `assign-system-spec-completeness-evaluator` を持つことを確認する。公式manifestへharness専用キーを混在させず、不在/不一致は fallback を実装せず停止する。
 3. Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲する。
-4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の入力は `build-system-spec-import.py` が宣言的 contract から組み立て、C02 の書込み前に schema・本文テンプレートを推測しない。
+4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。
 
 出力は import report (`system-spec/index.md`, imported node ids, lineage, confirmation_status, readiness)。feature は `architecture_refs` で参照し、内容を複製しない。1 feature→13 task は system-dev-planner の責務であり本 skill は扱わない。
 

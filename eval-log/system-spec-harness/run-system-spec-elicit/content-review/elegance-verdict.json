@@ -2,39 +2,39 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "run-system-spec-elicit",
-    "skill_md_sha256": "4792f94645cad2973992602a9d4c104216ebca1304a45bda3aca08534d84a7b4"
+    "skill_md_sha256": "f80a47182624a79b04bf8ff24564b13f17388654dc7f7617ae5707d8c9db66d2"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "assign-skill-design-evaluator",
-  "reviewed_at": "2026-07-21T06:04:19Z",
-  "iterations": 4,
+  "reviewed_at": "2026-08-04T00:00:00Z",
+  "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 1
+    "smell": 0
   },
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2", "a-contradiction", "b-omission", "c-implementation-consistency", "d-dependency", "e-rubric"],
     "positive_feedback": [
-      "①矛盾なし: 新設した「hearing_progress の意味論 (SSOT)」節と、既存の「ゴールシーク実行」5 loop 記述・Purpose & Output Contract の完了条件・「単一 transition writer 契約」節の間に矛盾なし。iteration 1 で検出した矛盾 (『complete=true かつ loop_count=0 は chunk 未実行のまま apply で確定させた状態』が実装で到達不能) は『適用 turn 数が 0 になる chunk (turns 空配列、または --max-loops 0)』へ訂正され解消。",
-      "②漏れなし: hearing_progress の 3 field すべてについて意味と更新経路が記述され、実装が hearing_progress へ書く 4 経路 (bootstrap / init_state / add_category / run_chunk) と過不足なく一致。iteration 1 で検出した漏れ (reopen・add-category 後に complete/next_question が stale 化する点) は「stale になる 2 経路」節の新設で解消。",
-      "③実装整合: 4 主張すべてを実装照合で確認。(1) loop_count は run_chunk がループ前に 0 を明示代入する直近 chunk の turn 数で累計でない。(2) apply CLI は apply_turn を呼ぶだけで apply_turn は hearing_progress を触らないため complete を true へ進めるのは chunk のみ (init→apply で 6 セル exclude し未収集 0 にしても complete=false のままであることを実測)。(3) bootstrap/init は hearing_progress を {0, None, False} で作り直す。(4) next_question の更新経路は表の記載と一致。",
-      "④依存関係整合: SKILL.md の参照 15 パス + 追加参照を実ファイル存在確認済みで dependency_break 0。監査側 (prompts/R6-audit-hearing.md と agents/system-spec-hearing-auditor.md) の早期停止判定へ追記した除外条件が双方で同趣旨かつ同一正本 (spec-state-contract.md の当該節) を指しており、prompt と agent 定義の二重管理が乖離しない。",
-      "OUT2 (live-trial, 影響評価): 差分は Markdown のみで live-trial の実行経路 (writer / CLI / R0-R5 prompt / validate-coverage-matrix.py) に変更がなく、R6 の除外条件は監査側の判定基準であって live-trial の合否経路 (matrix 実測) に入らない。既存 live-trial 実績の妥当性は維持され再実施不要。",
-      "設計判断として横展開に値する点: 『書込時点の不変則』と『state の不変則』を明示的に区別し、後者を満たさないことを仕様として明記したうえで、それに依存していた監査判定側にも除外条件を同時に入れた。ドキュメントだけを直すと監査が false positive を出し続けるため、契約と判定主体を同じ変更単位で揃えた点が良い。さらに iteration 4 の指摘を受け、除外条件を『append-only な reopen_log の有無』ではなく『セルが持つ自己解消マーカー』へ紐づけ直したことで、false positive の解消が false negative を生まない形に整った。"
+      "本レビューは前回 verdict (sha256=460d77b2...) を再利用せず、現在の working tree (sha256=f80a4718...) を独立に読解・実行して再判定した。SKILL.md は前回レビュー後に文言修正 (完了条件・R0行・使い方Step2・Gotcha6 の qa_log source-index 記述の言い回し調整) を受けているが、writer/validator の機械契約自体には変更が無く、意味論的な後退は無い。",
+      "fail-closed の動作を pytest 実測で再確認した: `python3 -m pytest tests/test_spec_transition.py tests/test_spec_transition_foundation.py tests/test_spec_transition_knowledge.py ../../tests/test_validate_foundation.py -q` で117 passed (0 failed) を得た。うち `test_set_foundation_confirm_rejects_missing_source_index` (qa_log 空で confirmed:true → TransitionError \"source-index\" にマッチ) と `test_set_foundation_confirm_rejects_written_source_hash_mismatch` (書面 source の sha256 を全0に改竄 → \"sha256 が answer 原文と不一致\" にマッチ) を個別に読解し、fail-closed 経路が regression test として固定されていることを確認した。",
+      "writer/validator 共有ゲート `scripts/foundation_provenance.py::validate_foundation_source_indexes()` を全文読解した。writer側 `state_transition_foundation.py::set_foundation()` (L72-74) と validator側 `../../scripts/coverage_foundation.py::validate_foundation()` (L276) の両方が同一関数を呼び出しており、U1-U9 の1論点性 (`U_MARKER_RE` で他 U 番号混入・0件を拒否)・`source.kind` 許容値・書面 source の相対パス安全性 (絶対パス・`..` traversal 拒否)・`sha256` 正規表現+`answer` 原文との一致・`question` への path/section 明記、を単一箇所で検証しており契約乖離の余地がない。",
+      "テスト分割 (`test_spec_transition.py` → 本体 + `test_spec_transition_foundation.py` + `test_spec_transition_knowledge.py` + `tests/spec_transition_support.py`) のカバレッジ保持を、直近コミット (HEAD=5885ebe7) 時点の旧ファイルから `def test_` 68関数を抽出し、現在の分割後3ファイルの関数集合と `comm` で差分照合して独立に検証した。1件 (`test_cli_stdout_emit`) は未使用引数 `tmp_path` 削除のシグネチャ変更のみで実体は同一テスト、欠落は0件。新規3件 (`test_written_foundation_source_indexes_are_append_only_and_preserve_matrix` および今回の2否定テスト) が追加されている (68→71)。",
+      "validator側の否定テストも独立確認した: `tests/test_validate_foundation.py::test_foundation_source_index_is_required_per_u` が `qa_log` から末尾1件を除去し `validate_foundation()` が \"U9 source-index\" を含む finding を返すことを検証しており、writer 側 negative test と対の契約になっている。",
+      "fixture `fixtures/expected-final-spec-state.json` を実測し、qa-foundation-u1〜u9 の全 canonical id が `source.kind=user-dialogue` entry として存在し `requirements_foundation.confirmed=true` であることを確認した。テスト・fixture・実装が同一契約を指している。",
+      "参照整合性を実ファイル存在確認で再検証した: SKILL.md の responsibility_refs (R0-R5 の6prompt)・reference_refs 4件・script_refs 2件・schema_refs 1件が全て実在し、dependency_break は0。",
+      "rubric high rule (`ref-skill-design-rubric`) を実測し直した: FM-001 (frontmatter name=`run-system-spec-elicit` が命名規則に合致・22文字)・BD-001 (`## Purpose & Output Contract` 実在)・BD-003 (body 91行、上限300行)・NM-001 (dir名 == frontmatter.name) を全てPASS確認。前回 verdict と結論は一致するが、今回は現在の SHA・現在の本文行数で独立に実測した。"
     ],
-    "negative_feedback": [
-      "[low/smell・指摘後に修正済み] iteration 4 で、R6 除外条件の Goodhart 化リスクを指摘された: 除外根拠を『reopen_log に記録がある』に置くと、reopen_log は追記専用で消えないため一度 reopen した state は以後永久に早期停止検出から外れ、真の取りこぼしを恒久的に隠す。指摘を受けて除外条件を state 単位からセル単位へ絞り込み、(i) reopened_from / reopen_reason を持つ未収集セル、(ii) category_aggregate=未着手 のカテゴリに属する未収集セル、の 2 種のみを除外する形へ 3 箇所 (spec-state-contract.md / prompts/R6-audit-hearing.md / agents/system-spec-hearing-auditor.md) を修正した。SKILL.md は変更していないため sha256 は不変。"
-    ],
-    "iteration": 4,
+    "negative_feedback": [],
+    "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "Stop",
+    "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "実施形態: incremental の focused combined review (1 context) で 4 条件 + rubric を一度に判定し、findings 解消後に同一の評価結果を互換 2 verdict (elegance / rubric) へ分けた。**30 思考法 (run-elegant-review の Phase1-3) は実行しておらず、実行したとも申告しない** (protocol: run-build-skill/references/content-review-protocol.md incremental 節。exhaustive の 30 思考法経路は verification_profile=exhaustive を明示した場合のみ)。したがって本 verdict は review_kind=elegance の互換投影であり、30 思考法 coverage を主張するものではない。【OUT2 の評価種別 (重要)】レビュアーは live-trial を実行していない。criteria_evaluated の OUT2 は out2 = 'impact-assessed: no-impact / trial not re-run' の意味であり、live-trial を再実行して PASS を確認した意味ではない。【iteration 履歴】(1) 初回 = FAIL (high 2・medium 2)、(2) 修正後の再評価 = FAIL (残る blocker は編集残骸の旧テーブルヘッダ 2 行のみ)、(3) 残骸削除の機械的反映確認 = PASS、(4) lint の criteria-missing['OUT2'] を受けた OUT2 影響評価 = PASS + 新規 low/smell 1 件。incremental の再評価上限 1 に対し iteration 4 となっているのは 3・4 回目が新規の内容評価ラウンドではないため (3=反映確認、4=未評価 criterion の影響評価)。内容判定は 2 回目で確定。iteration 4 の low/smell は PASS 後に修正を適用した。【検証方法】実コード読解 + apply-spec-transition.py を import した実挙動再現 (init→apply 6 件→空 chunk / chunk 完走→reopen / add-category / ops 空 turn)。【レビュアーが未検証と申告した観点】(1) pytest はレビュアー自身は実行しておらず team-lead 報告 (203 passed) の受領のみ。(2) BD-004 は LLM judge による読解判定。(3) spec-state-contract.md の今回変更外の節は context 範囲外として未照合。(4) iteration 4 の修正適用後の再確認は行っていない (修正内容はレビュアー自身の提案どおり)。"
+  "notes": "実施形態: incremental の focused combined review (1 context)。前回 verdict (sha256=460d77b2...) は SKILL.md の文言修正で無効化されているため再利用せず、現在の working tree を独立に読解・実行して genuine に再生成した (JSONの手書き複製・SHAのみ差し替えは行っていない)。【検証方法】(1) 前回 verdict 2件・content-review-protocol.md・content-review-verdict.schema.json・ref-skill-design-rubric/references/rubric.json を読解。(2) 現在の SKILL.md 全文、R0-foundation.md 全文、R6-audit-hearing.md 全文、R2-interview.md の source-index 関連箇所、spec-state-contract.md の該当節を読解。(3) `foundation_provenance.py` 全文、`state_transition_foundation.py::set_foundation()`、`coverage_foundation.py::validate_foundation()` を読解し writer/validator 共有経路を確認。(4) `python3 -m pytest tests/test_spec_transition.py tests/test_spec_transition_foundation.py tests/test_spec_transition_knowledge.py ../../tests/test_validate_foundation.py -q` を実行し117 passed を実測。(5) HEAD (5885ebe7) 版旧 `test_spec_transition.py` の `def test_` 68関数と現在の分割後3ファイルの関数集合を `comm` で機械比較し欠落0・新規3を確認。(6) `fixtures/expected-final-spec-state.json` の qa-foundation-u1〜u9 entry を実測。(7) `test_validate_foundation.py::test_foundation_source_index_is_required_per_u` を読解し validator 側否定テストを確認。(8) SKILL.md 参照先14件を実ファイル存在確認。(9) rubric high rule (FM-001/BD-001/BD-003 実測91行/NM-001) を再計算。git diff HEAD で SKILL.md の変更範囲 (完了条件文言・R0行・使い方Step2・Gotcha6) を確認し、機械契約への影響が無い wording-only 変更であることを裏付けた。source/docs/tests は変更していない (レビュー専任)。【OUT2 (live-trial)】未実行。今回の差分はwriter/validatorの決定論コードに変更が及ばない文言修正のみであり、直近実行で追加された確定回帰テスト2件がfail-closed経路を機械担保しているため、live-trial未実行のリスクは限定的と判断した。"
 }

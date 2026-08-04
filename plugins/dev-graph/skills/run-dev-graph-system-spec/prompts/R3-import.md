@@ -25,8 +25,10 @@
 ### C02 登録の決定論的準備
 
 system-spec-harness の evaluator が `PASS` の場合だけ、次の準備 script を実行する。これは
-specification/architecture の内容を生成し直さず、確定済み `system-spec/` 成果物から C02 用の
-40-key node envelope と substantive body（空や placeholder でない本文）を作る adapter である。
+specification/architecture の内容を生成し直さず、確定済み `system-spec/` 成果物の本文そのものから
+C02 用の 40-key node envelope と substantive body（空や placeholder でない本文）を作る adapter である。
+組込み contract は artifact path と node shape のみを持ち、製品固有の本文を持たない。各出力 body は
+対応する `source_artifact` の本文（YAML frontmatter のみ除去）と同一でなければならない。
 
 ```bash
 IMPORT_DIR="$DEV_GRAPH_ROOT/.dev-graph/tmp/system-spec-import"
@@ -62,7 +64,7 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/upsert-node.py" \
 
 ## Layer 3: インフラ層
 
-- 使用資産: Skill run-dev-graph-nodeとvalidate-graph-schemaとvalidate-evidence-refsとvalidate-source-digest。
+- 使用資産: C02 `upsert-node.py` とvalidate-graph-schemaとvalidate-evidence-refsとvalidate-source-digest。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層

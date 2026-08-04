@@ -154,4 +154,4 @@ C01 (`run-system-spec-elicit`) が出力した `spec-state.json` を、監査 SS
 
 ## Self-Evaluation
 
-返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (`matrix` 全セルと `qa_log` 全質問を漏れなく走査し 4 軸を評価) と **検証可能性** (各検出がセル/qa-id 単位で追える) と **一貫性** (監査 SSOT と `spec-state.json` の状態値・key 語彙に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` を優先し、差分をサマリに明示する。
+返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (`matrix` 全セルと `qa_log` 全質問を漏れなく走査し 4 軸を評価) と **検証可能性** (各検出がセル/qa-id 単位で追える) と **一貫性** (監査 SSOT と `spec-state.json` の状態値・key 語彙に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。

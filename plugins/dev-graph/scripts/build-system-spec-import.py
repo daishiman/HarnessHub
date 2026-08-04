@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
 # /// script
 # name: build-system-spec-import
-# purpose: Build schema-valid C02 input and substantive Markdown bodies from confirmed artifacts and a declarative import contract.
+# purpose: Build schema-valid C02 input and source-derived Markdown bodies from confirmed system-spec artifacts.
 # inputs: ["argv: --repo-root PATH --out-dir PATH [--contract PATH]"]
 # outputs: ["out-dir: architecture.node.json, specification.node.json, architecture.body.md, specification.body.md"]
 # requires-python = ">=3.11"
 # network: false
 # write-scope: caller-repo/.dev-graph/tmp only
 # ///
-"""Build, but never write, C02 imports from an explicit import contract.
+"""Build, but never write, C02 imports from a structural import contract.
 
-The system-specific artifact paths, node identities, and bodies belong in the
-declarative contract. This portable adapter only validates confirmed inputs,
-calculates digests, and projects those values into the dev-graph envelope.
-The caller remains responsible for invoking C02 ``upsert-node.py``.
+The contract names the stable system-spec interface and graph-node shape only.
+The Markdown body is always read from the confirmed caller-repository artifact
+named by each node's ``source_artifact``; product prose in a contract is
+rejected.  This keeps source lineage and imported content bound to the same
+bytes.  The caller remains responsible for invoking C02 ``upsert-node.py``.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,7 +29,10 @@ from typing import Any
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 HARNESS_MANIFEST = SCRIPT_ROOT.parent / "system-spec-harness" / ".claude-plugin" / "plugin.json"
 DEFAULT_CONTRACT = SCRIPT_ROOT / "references" / "system-spec-import-contract.json"
-TIMESTAMP = "2026-08-03T00:00:00Z"
+
+def utc_now() -> str:
+    """Return the actual import time in the graph's canonical UTC form."""
+    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def sha256(path: Path) -> str:
@@ -67,9 +72,27 @@ def require_file(root: Path, relative: str) -> Path:
     return path
 
 
+def markdown_body(path: Path) -> str:
+    """Return substantive Markdown without optional YAML frontmatter.
+
+    C02 owns the destination frontmatter, so copying source frontmatter into
+    ``--body-file`` would create a nested envelope.  Apart from that envelope
+    removal, the confirmed source text is preserved verbatim.
+    """
+    text = path.read_text(encoding="utf-8")
+    if text.startswith("---\n"):
+        marker = text.find("\n---\n", 4)
+        if marker < 0:
+            raise ValueError(f"source Markdown frontmatter is not terminated: {path}")
+        text = text[marker + 5 :].lstrip("\n")
+    if not text.strip() or not any(line.startswith("#") for line in text.splitlines()):
+        raise ValueError(f"source Markdown body must be substantive and headed: {path}")
+    return text.rstrip() + "\n"
+
+
 def node_from_contract(
     *, node: dict[str, Any], source_path: str, source_digest: str,
-    evidence_path: str, evidence_digest: str, version: str,
+    evidence_path: str, evidence_digest: str, version: str, imported_at: str,
 ) -> dict[str, Any]:
     kind = require_string(node.get("artifact_kind"), "node.artifact_kind")
     node_id = require_string(node.get("graph_node_id"), "node.graph_node_id")
@@ -96,8 +119,8 @@ def node_from_contract(
         "start_date": None,
         "target_date": None,
         "iteration": None,
-        "created_at": TIMESTAMP,
-        "updated_at": TIMESTAMP,
+        "created_at": imported_at,
+        "updated_at": imported_at,
         "depends_on": [],
         "related_nodes": [],
         "resource_scope": [source_path, evidence_path],
@@ -126,7 +149,7 @@ def node_from_contract(
             "source_path": source_path,
             "source_version": version,
             "source_digest": source_digest,
-            "imported_at": TIMESTAMP,
+            "imported_at": imported_at,
         },
         "classification_confidence": 1.0,
         "classification_reason": classification_reason,
@@ -140,10 +163,10 @@ def node_from_contract(
         "execution_contexts": [],
         "completion_evidence": {
             "policy": "manual", "status": "done", "source": "manual",
-            "completed_at": TIMESTAMP, "reconciled_at": TIMESTAMP,
+            "completed_at": imported_at, "reconciled_at": imported_at,
             "evidence_refs": [evidence_path],
         },
-        "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": TIMESTAMP},
+        "implementation_readiness": {"status": "complete", "missing_sections": [], "checked_at": imported_at},
     }
 
 
@@ -170,13 +193,15 @@ def main() -> int:
         contract = load_json(contract_path)
         artifacts = contract.get("artifacts")
         nodes = contract.get("nodes")
-        bodies = contract.get("bodies")
-        if not isinstance(artifacts, dict) or not isinstance(nodes, dict) or not isinstance(bodies, dict):
-            raise ValueError("contract requires artifacts, nodes, and bodies objects")
+        if not isinstance(artifacts, dict) or not isinstance(nodes, dict):
+            raise ValueError("contract requires artifacts and nodes objects")
+        if "bodies" in contract:
+            raise ValueError("contract must not contain bodies; node source_artifact is the body authority")
         artifact_paths = {key: require_string(value, f"artifacts.{key}") for key, value in artifacts.items()}
+        artifact_files = {key: require_file(root, path) for key, path in artifact_paths.items()}
         evidence_key = require_string(contract.get("evidence_artifact"), "evidence_artifact")
         evidence_path = artifact_paths[evidence_key]
-        report = require_file(root, evidence_path)
+        report = artifact_files[evidence_key]
         if load_json(report).get("verdict") != "PASS":
             raise ValueError("confirmed evaluator report verdict must be PASS")
         version = str(load_json(HARNESS_MANIFEST).get("version") or "")
@@ -186,28 +211,32 @@ def main() -> int:
         raise SystemExit(f"[build-system-spec-import] FAIL: {exc}")
 
     evidence_digest = sha256(report)
+    imported_at = utc_now()
     generated: dict[str, dict[str, Any]] = {}
+    body_sources: dict[str, Path] = {}
     try:
         for name, node in nodes.items():
             if not isinstance(node, dict):
                 raise ValueError(f"contract node object required: {name}")
             source_key = require_string(node.get("source_artifact"), f"nodes.{name}.source_artifact")
             source_path = artifact_paths[source_key]
+            source = artifact_files[source_key]
+            body_sources[name] = source
             generated[name] = node_from_contract(
                 node=node,
                 source_path=source_path,
-                source_digest=sha256(require_file(root, source_path)),
+                source_digest=sha256(source),
                 evidence_path=evidence_path,
                 evidence_digest=evidence_digest,
                 version=version,
+                imported_at=imported_at,
             )
         output_order = require_list(contract.get("output_order"), "output_order")
         for name in output_order:
             if name not in generated:
                 raise ValueError(f"output_order references unknown node: {name}")
-            body = require_string(bodies.get(name), f"bodies.{name}")
             write(out / f"{name}.node.json", generated[name])
-            write(out / f"{name}.body.md", body)
+            write(out / f"{name}.body.md", markdown_body(body_sources[name]))
     except (KeyError, ValueError) as exc:
         raise SystemExit(f"[build-system-spec-import] FAIL: {exc}")
     print(json.dumps({"out_dir": str(out), "node_ids": [generated[name]["graph_node_id"] for name in output_order]}, ensure_ascii=False))

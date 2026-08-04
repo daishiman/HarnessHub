@@ -16,9 +16,13 @@ def build_confirmed_system_spec(tmp_path: Path, verdict: str = "PASS") -> Path:
     root = tmp_path / "repo"
     spec = root / "system-spec"
     spec.mkdir(parents=True)
-    (spec / "index.md").write_text("# compiled specification\n", encoding="utf-8")
+    (spec / "index.md").write_text(
+        "---\nkind: index\n---\n\n# compiled specification\n\nIndex source fact.\n",
+        encoding="utf-8",
+    )
     (spec / "00-requirements-definition.md").write_text(
-        "# confirmed requirements\n", encoding="utf-8"
+        "---\nstatus: confirmed\n---\n\n# confirmed requirements\n\nRequirements source fact.\n",
+        encoding="utf-8",
     )
     (spec / "completeness-report.json").write_text(
         json.dumps({"verdict": verdict}), encoding="utf-8"
@@ -48,7 +52,7 @@ def run(
     )
 
 
-def test_prepares_two_schema_shaped_c02_inputs_and_substantive_bodies(tmp_path: Path) -> None:
+def test_prepares_two_schema_shaped_c02_inputs_and_source_derived_bodies(tmp_path: Path) -> None:
     root = build_confirmed_system_spec(tmp_path)
     proc = run(root)
     assert proc.returncode == 0, proc.stdout + proc.stderr
@@ -68,8 +72,25 @@ def test_prepares_two_schema_shaped_c02_inputs_and_substantive_bodies(tmp_path: 
     assert specification["architecture_refs"] == ["arch-system-spec-overview"]
     assert specification["source_lineage"]["source_path"] == "system-spec/index.md"
 
-    assert "# Architecture overview" in (out / "architecture.body.md").read_text(encoding="utf-8")
-    assert "# 目的と成功状態" in (out / "specification.body.md").read_text(encoding="utf-8")
+    assert (out / "architecture.body.md").read_text(encoding="utf-8") == (
+        "# confirmed requirements\n\nRequirements source fact.\n"
+    )
+    assert (out / "specification.body.md").read_text(encoding="utf-8") == (
+        "# compiled specification\n\nIndex source fact.\n"
+    )
+
+
+def test_source_content_change_changes_only_its_matching_import_body(tmp_path: Path) -> None:
+    root = build_confirmed_system_spec(tmp_path)
+    (root / "system-spec" / "index.md").write_text(
+        "# updated index\n\nActual caller-repository content.\n", encoding="utf-8"
+    )
+    proc = run(root)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+    out = root / ".dev-graph" / "tmp" / "import"
+    assert "Actual caller-repository content." in (out / "specification.body.md").read_text(encoding="utf-8")
+    assert "Actual caller-repository content." not in (out / "architecture.body.md").read_text(encoding="utf-8")
 
 
 def test_refuses_unconfirmed_evaluator_output(tmp_path: Path) -> None:
@@ -96,10 +117,10 @@ def test_refuses_out_dir_that_escapes_repo_root(tmp_path: Path) -> None:
     assert "--out-dir must be contained" in proc.stderr
 
 
-def test_refuses_contract_with_invalid_top_level_structure(tmp_path: Path) -> None:
+def test_refuses_contract_with_static_product_body(tmp_path: Path) -> None:
     root = build_confirmed_system_spec(tmp_path)
-    contract = write_contract(root, lambda value: value.update({"bodies": []}))
+    contract = write_contract(root, lambda value: value.update({"bodies": {"specification": "static prose"}}))
     proc = run(root, contract=contract)
 
     assert proc.returncode != 0
-    assert "contract requires artifacts, nodes, and bodies objects" in proc.stderr
+    assert "must not contain bodies" in proc.stderr

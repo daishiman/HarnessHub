@@ -2,29 +2,38 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
-    "skill_md_sha256": "7c7ead1625eb9203e5306784aa594d2326bb9516677ff49d707ac4c1e8d5f5e9"
+    "skill_md_sha256": "ec6509312aed25d3663942e74b9825de7f3fdf0aa22e2ecc09e7766e8741083e"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "local-claude-incremental-independent-review",
-  "reviewed_at": "2026-08-03T12:57:14Z",
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 1
+  },
+  "reviewer": "independent-focused-design-evaluator",
+  "reviewed_at": "2026-08-03T22:31:21Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "skill-design rubric score=88/80、blocker/high=0。",
-      "C02 envelope の schema 必須項目、source lineage、evaluator evidence、architecture→specification 順が一貫する。",
-      "adapter は write scope と path containment を fail-closed で制限し、異常 contract と escape の回帰テストを持つ。"
+      "validate-source-digest.py と validate-evidence-refs.py は registered_this_run の和集合だけを検査対象にし、既存 node の証跡とは責務を分離している。",
+      "validate-evidence-refs.py は既存 dangling を progress.json へ機械的に自動転記し、報告の握り潰しを防ぐ。",
+      "SKILL.md、R3-import、adapter、contract、回帰テストの間で、本文=source_artifact 直接取得と architecture→specification の登録順序が一致する。",
+      "R3-import は evidence gate の exit code だけを根拠とし、散文 checklist の自己申告を根拠にしない。",
+      "C02 node envelope は schema 必須項目、source_lineage、confirmation_evidence を一貫して満たす。"
     ],
     "negative_feedback": [
-      "低優先度の timestamp、plugin layout、インライン body は既知の運用上の残余リスクとして記録し、現在の受入れを妨げない。"
+      "[smell/低] architecture node の命名と要件定義章を本文にする現在の対応には軽微な意味的乖離がある。IN1/OUT1 の PASS 条件には抵触しないが、architecture 専用章の追加時に見直す。"
     ],
     "iteration": 1,
-    "iteration_limit": 1,
-    "hook_trigger": "incremental-content-review",
+    "iteration_limit": 3,
+    "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "Focused incremental review: score=88/80, blocker/high=0, medium feedback resolved. Raw evaluator output: incremental-evaluator-output-20260803.json."
+  "notes": "Genuine fresh independent rubric review after prior FAIL. Independently reran `python3 -m pytest plugins/dev-graph/tests/test_prepare_system_spec_import.py -v` (6 passed), inspected the C19 source slice, verified bodies cannot appear in the contract and timestamps now derive from datetime.now(UTC), then checked registered-scope source/evidence validators and verdict schema requirements. The evaluator could not write this projection because its shell write was blocked; this file preserves its returned verdict unchanged in schema form."
 }

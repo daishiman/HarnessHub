@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1202,
+  "graph_revision": 1203,
   "nodes": [
     {
       "acceptance": [
@@ -47132,10 +47132,11 @@
     },
     {
       "acceptance": [
-        "設計知識 card の後に確定 qa_ref・対応セル・serves_goals を示す章固有の適用節が生成される",
-        "複数 card の表示順が knowledge-catalog の depends_on topo order と一致する",
-        "focused regression と task-spec quality gate が exit 0",
-        "製品仕様層への意味的影響なしを受領書に記録する"
+        "章ごとに確定 qa_ref・対応セル・serves_goals を示す適用節を生成する",
+        "knowledge-catalog の depends_on topo order と表示順が一致する",
+        "監査 PASS が実 fork 台帳、response digest、最終 AUDIT_VERDICT と一致する",
+        "C02 が caller repository の source artifact 本文だけを登録する",
+        "製品仕様層への意味的影響なしを理由付きで記録する"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow"
@@ -47153,20 +47154,21 @@
       "classification_confidence": 0.96,
       "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
       "completion_evidence": {
-        "completed_at": "2026-08-03T13:30:00Z",
+        "completed_at": "2026-08-04T03:21:00Z",
         "evidence_refs": [
           "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260803T130000Z-codex-final-c19/verdict.json"
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-08-03T13:30:00Z",
+        "reconciled_at": "2026-08-04T03:21:00Z",
         "source": "manual",
         "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
-        "evaluator": "codex-final-review",
-        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+        "evaluated_digest": "0978faf297121ab095888b3a70d1d89f6a41180a06c2e626d4197f1b37a7ddfc",
+        "evaluator": "independent-live-trial-acceptance-evaluator",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-03T00:00:00Z",
@@ -47183,10 +47185,10 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "二つの system-spec compiler correction が回帰せず、製品仕様へ不要な二重正本を作らず、PR reviewer が検証と影響境界を再現できる状態",
+      "goal": "plugin 内部契約の修正が回帰せず、製品仕様に不要な二重正本を作らず、reviewer が検証と影響境界を追跡できる状態",
       "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
       "implementation_readiness": {
-        "checked_at": "2026-08-03T00:00:00Z",
+        "checked_at": "2026-08-04T03:21:00Z",
         "missing_sections": [],
         "status": "complete"
       },
@@ -47201,24 +47203,27 @@
       "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "設計知識の章固有適用表示と位相順描画の最終レビュー、仕様影響判定、main 統合、Beads 追記を単一の証跡として残す",
+      "purpose": "設計知識表示、監査 verdict 束縛、C02 import の最終レビューと仕様影響判定を単一の受領書として残す",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
         "arch-harness-hub-dev-workflow"
       ],
       "resource_scope": [
         "plugins/system-spec-harness/skills/run-system-spec-compile",
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "plugins/dev-graph/scripts/build-system-spec-import.py",
         "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
       ],
       "scope_in": [
-        "run-system-spec-compile の設計知識表示規則と回帰テスト",
-        "run-dev-graph-system-spec の C02 準備 adapter と live-trial 回帰",
-        "仕様影響なしの判断根拠と受領書",
-        "merged main を含む branch の最終レビュー"
+        "compiler の設計知識表示規則と回帰テスト",
+        "foundation source provenance",
+        "completion evaluator の fork 台帳と response verdict 束縛",
+        "C02 import adapter と live-trial",
+        "仕様影響なしの受領記録"
       ],
       "scope_out": [
-        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit の変更",
-        "確定済み system-spec/specs/architecture/features/tasks の内部契約の重複記載"
+        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit",
+        "確定済み system-spec/specs/architecture/features/tasks の内部契約への重複記載"
       ],
       "source_lineage": {
         "imported_at": "2026-08-03T13:30:00Z",
@@ -47240,7 +47245,7 @@
       "template_version": "1.0.0",
       "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T13:30:00Z"
+      "updated_at": "2026-08-04T03:21:00Z"
     },
     {
       "acceptance": [
