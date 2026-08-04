@@ -24,6 +24,7 @@ const EXPECTED_KEYS = [
   'releases',
   'sessionRevocations',
   'tenants',
+  'userSettings',
   'userWorkspaces',
   'users',
 ];
@@ -39,7 +40,7 @@ beforeEach(async () => {
 afterEach(() => adapter.close());
 
 describe('createCoreRepositories', () => {
-  it('CoreRepositories の 15 フィールドを過不足なく返す', () => {
+  it('CoreRepositories の 16 フィールドを過不足なく返す', () => {
     expect(Object.keys(repos).sort()).toStrictEqual(EXPECTED_KEYS);
   });
 
