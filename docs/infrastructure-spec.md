@@ -138,6 +138,8 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
+> **正本は [docs/shared-layers.md](shared-layers.md) の「CI 品質ゲート登録簿 (G1〜G14)」** (2026-08-04 追記, `HarnessHub-yhc3`)。下表はデプロイ経路の文脈で参照するための要約であり、fail 条件・実行段・根拠 QA・local 入口を含む完全な定義は登録簿側にある。**ゲートを増減するときは登録簿を先に改訂し、本表はその写しとして追随させる** (以前は本表が G12 を、登録簿が G14 を落とすという双方向のドリフトが起きていた)。
+
 | # | ゲート | 内容 |
 |---|---|---|
 | G1 | pnpm 強制 | corepack で pin + `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 |
@@ -151,6 +153,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 | G9 | axe a11y | 部品単体 + 画面結合の 2 段 (qa-018) |
 | G10 | 共通層 duplicate detector | owner package 外の同名 export / 境界迂回 import に加え、**運用機構 (§3) の owner artifact 実在**と**認可 wrapper を迂回した route handler** を検出 |
 | G11 | Core Web Vitals | main 反映後の定期計測 (PR 単位では Actions 無料枠を圧迫するため) |
+| G12 | 認証・認可 静的検査 | `apps/hub/scripts/check-auth-gates.mjs` の 3 検査 — Auth.js 境界隔離 (D3) / 認可判定の単一集約 + route 例外の厳密一致 (SEC2 / AD-4) / dev 専用 provider の非存在 (I7)。静的ゲート段 |
 | G13 | client JS 予算 | `next build` 出力から route ごとの First Load JS を gzip 実測し 120 KiB / route 超過で fail (G5 の Worker 予算とは別軸。qa-018 / frontend-spec §8) |
 | G14 | OIDC / owner認可 release contract | tenant別OIDC開始フローと、owner関係roleを含む認可表・tenant分離を名指しで再実行 |
 

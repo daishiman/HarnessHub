@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1201,
+  "graph_revision": 1204,
   "nodes": [
     {
       "acceptance": [
@@ -787,7 +787,8 @@
         "evidence_refs": [
           "docs/features/feat-hub-foundation/acceptance-report.md",
           "docs/features/feat-hub-foundation/release-notes.md",
-          "docs/features/feat-hub-foundation/runbook.md"
+          "docs/features/feat-hub-foundation/runbook.md",
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
         ],
         "policy": "manual",
         "reconciled_at": "2026-08-02T03:44:06Z",
@@ -868,7 +869,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:53:41.905305Z"
+      "updated_at": "2026-08-04T07:11:21.952635Z"
     },
     {
       "acceptance": [
@@ -3053,7 +3054,8 @@
       "completion_evidence": {
         "completed_at": "2026-07-25T16:06:31Z",
         "evidence_refs": [
-          "issues/sys-lint-open-residue-ci-red-20260725.md"
+          "issues/sys-lint-open-residue-ci-red-20260725.md",
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
         ],
         "policy": "manual",
         "reconciled_at": "2026-07-26T01:19:20.811908Z",
@@ -3160,7 +3162,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T05:46:07.491153Z"
+      "updated_at": "2026-08-04T07:11:58.246500Z"
     },
     {
       "acceptance": [
@@ -13072,9 +13074,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-04T01:17:41Z",
+        "imported_at": "2026-08-04T00:00:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
+        "source_digest": "36d26f4ffe8d81c5a72f577bedefcb0f483727900f264f40a50b0202938ee47a",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13090,7 +13092,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T01:19:26.465165Z"
+      "updated_at": "2026-08-04T07:10:59.636615Z"
     },
     {
       "acceptance": [

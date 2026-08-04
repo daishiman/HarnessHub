@@ -46,6 +46,8 @@ serves_goals: [G1, G4, G5]
 
 【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。
 
+root の `pnpm verify` は、CI の merge-blocking gate を package script の存在確認付きで再利用する入口とする。G7 (破壊的 DDL)、G7b (tenant 分離網羅・connection isolation)、G9 (axe a11y)、G14 (OIDC / owner 認可 release contract) を「CI にだけ書かれた step」に戻さず、G1〜G10・G12〜G14 の該当実装をローカルから同じ順序で起動できなければ fail とする。G11 は main 反映後の定期 Core Web Vitals 測定であり、PR の merge-blocking gate でも local `verify` の対象でもない。package 内 script を直接 `pnpm --filter` で呼ぶ場合も、root wrapper は先に required script の実在を検査し、script rename / 削除で見かけだけ成功する状態を許さない。
+
 【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
 
 【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。

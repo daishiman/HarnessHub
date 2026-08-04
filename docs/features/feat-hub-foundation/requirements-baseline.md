@@ -130,6 +130,12 @@ A4 (`shared-layers 登録済み共通層が単一 package/境界に実装され�
 | github-actions-ci | GitHub Actions による CI 品質ゲート (pnpm混入検査 / axe a11y違反ゼロ / bundle予算 Worker 3MiB / Tenant分離テスト / 検査pipeline挙動同値テスト) を備える | docs/shared-layers.md §3 |
 | shared-layers-single-implementation-owner | acceptanceは4件、quality_constraintsは9件。P05は雛形だけでなく、packages/ui・packages/schemas・packages/inspection・packages/estimation、auth adapter/認可middleware、audit/AiJob/Notification/PII共通adapterの公開contract実体、CI/運用共通境界を単一ownerとして実装する。domain-specific logicはconsumer featureに残す。P04/P06/P07/P09/P10/P11は複数consumer contract testと重複実装detector=0を第4 acceptanceとして実判定する。 | docs/shared-layers.md §1-§5; features/feat-hub-foundation.context.json |
 
+**`github-actions-ci` の inline 列挙について** (2026-08-04 追記, `HarnessHub-42g`): 上表の summary 列は `.dev-graph/plans/feature-package-feat-hub-foundation/goal-spec.json` からの**転記原文**であり、goal-spec との突合が成立する状態を保つため書き換えない。したがって `github-actions-ci` 行が挙げる 5 項目 (pnpm 混入検査 / axe a11y / bundle 予算 / Tenant 分離 / 検査 pipeline 挙動同値) は**転記時点のスナップショットであって、現行のゲート集合ではない**。
+
+- **ゲート集合の正本**は [docs/shared-layers.md](../../shared-layers.md) の「CI 品質ゲート登録簿 (G1〜G14)」である。上記 5 項目は現行の G1 / G9 / G5 / G4 に対応し、残る G2・G3・G6・G7・G7b・G8・G10・G11・G12・G13・G14 は転記後に追加された。
+- この制約 id を引用する他 feature の requirements-baseline (例: feat-user-org-admin の `axe-a11y-zero`) も同様に、**個別項目の充足判定は登録簿を参照して行う**。inline 列挙の 5 項目だけを満たしても `github-actions-ci` の充足にはならない。
+- ゲートを増減するときに改訂すべき 4 者 (`ci.yml` / 登録簿 / `spec-state.json` qa-038【2】/ ADR §6) に**本ファイルは含まれない**。転記原文は goal-spec が改訂されたときにのみ追随する。
+
 ## 7. 確定 QA との紐付け
 
 | QA | 本 feature への確定内容 |

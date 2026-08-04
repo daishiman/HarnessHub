@@ -12,7 +12,7 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:53:41.905305Z"
+updated_at: "2026-08-04T07:11:21.952635Z"
 status: "closed"
 depends_on: []
 related_nodes: []
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-08-02T03:44:06Z","evidence_refs":["docs/features/feat-hub-foundation/acceptance-report.md","docs/features/feat-hub-foundation/release-notes.md","docs/features/feat-hub-foundation/runbook.md"],"policy":"manual","reconciled_at":"2026-08-02T03:44:06Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-08-02T03:44:06Z","evidence_refs":["docs/features/feat-hub-foundation/acceptance-report.md","docs/features/feat-hub-foundation/release-notes.md","docs/features/feat-hub-foundation/runbook.md","docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-08-02T03:44:06Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
