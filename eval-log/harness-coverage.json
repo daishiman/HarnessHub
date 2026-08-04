@@ -7,7 +7,7 @@
   "sections": [
     {
       "type": "scripts",
-      "count": 430,
+      "count": 432,
       "mechanical": {
         "instrumented": true,
         "coverage_pct": 85.6,

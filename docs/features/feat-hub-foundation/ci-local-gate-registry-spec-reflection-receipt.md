@@ -67,23 +67,24 @@ tenant 分離を守る 1 つの品質境界である。
 
 | 層 | 反映内容 |
 | --- | --- |
-| `system-spec/` | `dev-workflow.md` の qa-140 に、local `verify` が再利用する gate、G11 の除外理由、script 実在確認を追記 |
-| `specs/` | **変更なし**。`specs/harness-hub-system-specification.md` は `00-requirements-definition.md` と `index.md` だけを出典にする参照型 wrapper で、`dev-workflow.md` は scope 外である。ここへ差分を複製すると正規フローに反し、495 行の文書を 500 行上限を超えて肥大化させるため、該当する architecture wrapper を更新した。 |
+| `system-spec/` | qa-140 の `dev-workflow.desktop-windows` を C01 R4-reopen し、qa-144 として local `verify` が再利用する gate、G11 の除外理由、script 実在確認を再確定して C03 `compile-spec-doc.py` で `dev-workflow.md` へ生成 |
+| `specs/` | `spec-harness-hub-requirements` を C02 `upsert-node.py` で更新し、`system-spec/spec-state.json` の実測 SHA-256 へ source digest を同期。本文は保持し 495 行のままなので、500 行上限を超えない。 |
 | `architecture/` | `arch-harness-hub-dev-workflow` を C02 `upsert-node.py` で更新し、source digest を `system-spec/dev-workflow.md` の実測 SHA-256 へ同期 |
 | `features/` | `feat-hub-foundation` の completion evidence に本受領書を C02 経由で追加 |
 | `tasks/` | 凍結済み exact-13 本文を改変せず、`SYS-HUB-FOUNDATION-P13` の completion evidence に本受領書を C02 経由で追加 |
 | `docs/` | G1〜G14 の登録簿、インフラ要約、ADR、requirements baseline を同じ事実へ同期 |
 
 C02 の更新は全件で既存本文を保持した (`body_source=preserved`、本文置換 0 行)。
-`system-spec/spec-state.json` は変更していない。確定済み QA の回答を変えず、既存の
-CI/local 同値契約を具体化したためである。
+`system-spec/spec-state.json` は qa-140 の回答を直接改変せず、R4-reopen の根拠を
+`reopen_log` に残したうえで qa-144 を追加し、同じセルを再確定した。これにより既存
+質疑録を失わず、CI/local 同値契約の具体化を監査可能にした。
 
 ## 6. 影響判定の根拠
 
 - **影響あり**: local gate の集合と実行順を変更するため、開発フローの品質契約に影響する。
-- **仕様状態の改訂なし**: qa-038 の required status checks 8 種の数え方は変わらない。
+- **仕様状態を正規に再確定**: qa-038 の required status checks 8 種の数え方は変わらない。
   G14 は G4 に含まれていた認証・tenant 契約を名指し実行へ引き上げる横断 gate であり、
-  G11 と同様にこの 8 種を増減させない。
+  G11 と同様にこの 8 種を増減させない。qa-144 はこの不変条件と実行入口を明文化する。
 - **製品への影響なし**: runtime の機能・公開インターフェース・データ保存形式・認可規則は
   変更していない。変更対象は repository 内の開発時検査入口だけである。
 
@@ -92,6 +93,7 @@ CI/local 同値契約を具体化したためである。
 | 検証 | 結果 |
 | --- | --- |
 | task package quality gate | PASS — `validate-system-plan.py --feature-package feature-package/feat-hub-foundation`、P01〜P13、violations 0 |
+| C01 / C03 正規フロー | PASS — qa-140 を R4-reopen、qa-144 で再確定し、`compile-spec-doc.py` が 12 ファイルを生成 |
 | Dev Graph schema | PASS — `validate-graph-schema.py`、`valid=true` |
 | G7 | PASS — migration 8 件、未承認の破壊的 DDL 0 件 |
 | G7b | PASS — scoped 25/25、packages/db 外の driver 直接 import 0 件 |
@@ -102,15 +104,22 @@ CI/local 同値契約を具体化したためである。
 | architecture source digest | PASS — `validate-source-digest.py --registered arch-harness-hub-dev-workflow`、実ファイル SHA-256 と一致 |
 | artifact placement | PASS — graph 登録・docs frontmatter・配置規約に違反なし |
 
+`validate-source-citation.py` は未変更の `system-spec/fetched-references.json` にある 20
+reference の `evidence_ref` / `evidence_sha256` 欠落で 40 件失敗した。これは
+`origin/main` と同一の既存状態であり、別 Beads `HarnessHub-yxb2` が追跡するため、
+本 task の変更として混入させない。
+
 テスト開始時は worktree の optional dependency
 `@rollup/rollup-darwin-x64` が欠けていた。`pnpm install --frozen-lockfile` で lockfile を
 変更せず依存関係だけを修復してから、G9 と G14 を再実行した。
 
 ## 8. ファイルサイズ
 
-本変更で更新・追加した文書はすべて 500 行以下である。500 行超過による分割対象はない。
+本変更で更新・追加した文書はすべて 500 行以下である。`specs/` の参照型 wrapper も
+495 行のまま C02 metadata だけを更新した。500 行超過による分割対象はない。
 
 ## 9. 残課題
 
 - final commit 後に HEAD 束縛の `build-spec-reflection-receipt.py` を実行し、draft PR を作成する。
 - PR 上の GitHub Actions とレビュー結果を確認する。
+- `HarnessHub-yxb2` が追跡する既存 source citation の evidence provenance 40 件を解消する。

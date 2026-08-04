@@ -15,46 +15,34 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-142 |
+| Web (web) | 確定 | 確定質疑: qa-143 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-144 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
 | デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-102 |
 
 ## 確定内容 (質疑録)
 
-### qa-142 (対応セル: web)
+### qa-143 (対応セル: web)
 
-**質問**: C16 の ready-payload 欠落報告を、lease conflict・依存形状不正・依存配列順序を含む完全性契約として、どのように fail-closed で運用しますか?
+**質問**: 全 plugin の hook entry point について、package-contract の宣言・Claude Code への登録・実体ファイルをどのように fail-closed で一致させ、手動実行スクリプトを誤って自動 hook と扱わないようにしますか?
 
-**回答**: ユーザーの 2026-08-03 最終レビュー指示に基づき、qa-140 の entry 欠落契約を実装実態と一致するよう再確定する。
+**回答**: ユーザーの 2026-08-04 最終レビュー・品質ゲート再実行・仕様反映・公開指示を明示承認として、qa-142 を全面維持したまま repository 内の plugin 完全性検査へ hook entry point の 3 者一致を追加確定する。
 
-【1. 候補被覆】selected かつ schedulable な node は、pre-lease 判定で ready または unmapped のいずれかになる。active lease / resource conflict による最終除外は別用途の `conflicts[]` に残るため、最終 schedule report の被覆集合は `ready_set ∪ unmapped ∪ conflicts` とする。lease conflict を payload 欠落や依存未充足と混同しない。
+【1. 登録と宣言の双方向検査】`scripts/validate-plugin-completeness.py` は `package-contract.json` の `entry_points.hooks` を台帳の正本として、manifest inline hooks と `hooks/hooks.json` の和集合で得た登録 entry point に突合する。登録済みで未宣言なら HK-001、登録構成（inline manifest または hooks.json）がある plugin で宣言済み・未登録なら HK-002 として非 0 終了にする。`hooks/foo.py` と `./hooks/foo.py` の相対 command も登録として読む。
 
-【2. fail-closed と parity 比較】P01 の parent_feature、depends_on、または parent の depends_on が不正なら schedule を停止し candidate を黙って捨てない。Beads parity の dependency 比較は集合として行い、順序だけの差で `beads_parity_stale_or_unconfirmed` にしない。
+【2. 実体と責務境界】宣言または登録された entry point は `hooks/` に実在しなければならない。残余の Python は import 可能な名前、shebang 不在、`__main__` block 不在の全条件を満たす import 専用 support module だけを許容し、それ以外と shell script は HK-003 で拒否する。自動 event に接続しない手動運用スクリプトは `hooks/` ではなく `scripts/` に置き、entry point 台帳・自動登録・手動操作を混同しない。
 
-【3. 排他順序と復旧】依存未充足を payload entry / parity 判定より先に評価し、node ごとに最初に成立した C16 reason だけを記録する。依存を満たす Beads node の entry 欠落だけを `ready_payload_entry_absent` / `source=schedule-graph` とし、C03/C28 同期、linkage 修復、fresh parity manifest 後に再実行する。推測で ready set へ追加しない。
+【3. 単一責務と回帰】検査本体が 500 行を超えたため、hook/sidecar の純粋な収集・判定を `validate-plugin-hooks.py` に分離する。CLI と判定ロジックを別責務にしても同じ単体テストと repo 全体契約テストから呼び、plugin 専用の実装が全体ゲートを追い越す被覆差を作らない。
 
-【4. 製品境界】変更は repository 内の Dev Graph 開発品質契約と観測可能性に限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【4. 製品境界】変更は repository 内の plugin 配布、CI、開発品質ゲートだけに限定する。Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-### qa-140 (対応セル: desktop-windows)
+### qa-144 (対応セル: desktop-windows)
 
-**質問**: qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?
+**質問**: CI の merge-blocking 品質ゲートと root pnpm verify の実行契約を、G7/G7b/G9/G14 を含めてどのように一致させますか?
 
-**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。
-
-【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。
-
-root の `pnpm verify` は、CI の merge-blocking gate を package script の存在確認付きで再利用する入口とする。G7 (破壊的 DDL)、G7b (tenant 分離網羅・connection isolation)、G9 (axe a11y)、G14 (OIDC / owner 認可 release contract) を「CI にだけ書かれた step」に戻さず、G1〜G10・G12〜G14 の該当実装をローカルから同じ順序で起動できなければ fail とする。G11 は main 反映後の定期 Core Web Vitals 測定であり、PR の merge-blocking gate でも local `verify` の対象でもない。package 内 script を直接 `pnpm --filter` で呼ぶ場合も、root wrapper は先に required script の実在を検査し、script rename / 削除で見かけだけ成功する状態を許さない。
-
-【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
-
-【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。
-
-【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。
-
-【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+**回答**: ユーザーの 2026-08-04 最終レビュー・仕様反映・公開指示を明示承認として、qa-038 / qa-039 の既存 CI/local 同値契約を次のとおり具体化する。root の pnpm verify は、CI の merge-blocking gate が再利用する既存 package script を同じ順序で起動する入口とし、G7 (破壊的 DDL)、G7b (tenant 分離網羅・connection isolation)、G9 (axe a11y)、G14 (OIDC / owner 認可 release contract) を CI 専用 step として残さない。package 内 script を pnpm --filter で呼ぶ wrapper は、先に required script の実在を検査し、rename / 削除で無実行の緑になることを fail-closed で防ぐ。G11 は main 反映後の定期 Core Web Vitals 測定であり、PR merge-blocking gate でも local verify の対象でもない。今回の変更は repository 内の開発品質契約と証跡に限定し、Harness Hub の外部 API、DB schema、認証認可規則、UI、Cloudflare deploy unit は変更しない。
 
 ### qa-102 (対応セル: desktop-macos)
 

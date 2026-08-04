@@ -77,13 +77,17 @@ def test_render_scope_containment_and_registration_receipt(tmp_path, monkeypatch
     assert rendered["feature_progress"]["by_feature"]["feature"] == {"done": 4, "total": 13}
     assert rendered["registration"]["source_digest"] == f"sha256:{digest}"
     assert rendered["registration"]["applied_count"] == rendered["registration"]["expected_count"] == 13
-    assert rendered["registration_verification"] == {"status": "verified", "reason": None}
+    assert rendered["registration_verification"] == {
+        "status": "verified", "reason": None, "graph_digest_match": True,
+    }
     html = root / rendered["out_relative"]
     document = html.read_text()
     assert html.is_file() and "outside" not in document
     assert document.count(f"sha256:{digest}") >= 1
     assert "Registration verification: VERIFIED" in document
-    assert render_metadata(document)["registration_verification"] == {"status": "verified", "reason": None}
+    assert render_metadata(document)["registration_verification"] == {
+        "status": "verified", "reason": None, "graph_digest_match": True,
+    }
 
     unverified_out = root / ".dev-graph" / "render" / "without-receipt.html"
     code, unverified = call_main(
@@ -105,6 +109,7 @@ def test_render_scope_containment_and_registration_receipt(tmp_path, monkeypatch
     assert unverified["registration_verification"] == {
         "status": "not_performed",
         "reason": "registration_receipt_not_provided",
+        "graph_digest_match": None,
     }
     unverified_document = unverified_out.read_text()
     assert "Registration verification: NOT PERFORMED" in unverified_document
@@ -112,6 +117,7 @@ def test_render_scope_containment_and_registration_receipt(tmp_path, monkeypatch
     assert render_metadata(unverified_document)["registration_verification"] == {
         "status": "not_performed",
         "reason": "registration_receipt_not_provided",
+        "graph_digest_match": None,
     }
 
     monkeypatch.setattr(
@@ -129,6 +135,52 @@ def test_render_scope_containment_and_registration_receipt(tmp_path, monkeypatch
     )
     with pytest.raises(render.ContractError, match="escapes authority"):
         render.main()
+
+
+def test_render_registration_receipt_stale_graph_digest_is_partial_not_fail_closed(tmp_path, monkeypatch, capsys):
+    # HarnessHub-0ui0: receipt.graph_digest_after is bound to the graph revision at
+    # registration time; a later sync always advances the graph before render runs in
+    # the 11-verb dispatcher order, so this must degrade to an explicit partial match
+    # instead of raising ContractError.
+    render = load("render-graph-html.py", "render_registration_stale_digest")
+    root = tmp_path
+    graph = root / ".dev-graph" / "state" / "graph.json"
+    graph.parent.mkdir(parents=True)
+    nodes = [{
+        "graph_node_id": "feature", "artifact_kind": "feature", "status": "active", "depends_on": [],
+    }]
+    digest = "a" * 64
+    for index in range(1, 3):
+        nodes.append({
+            "graph_node_id": f"task-{index:02d}", "artifact_kind": "task",
+            "status": "active", "parent_feature": "feature", "depends_on": [],
+            "source_lineage": {"source_digest": digest},
+        })
+    graph.write_bytes((json.dumps({"graph_revision": 1101, "nodes": nodes}, sort_keys=True) + "\n").encode())
+    receipt = root / ".dev-graph" / "registration.json"
+    receipt.write_text(json.dumps({
+        "parent_feature": "feature", "source_digest": f"sha256:{digest}",
+        "expected_count": 2, "applied_count": 2,
+        "node_ids": ["task-01", "task-02"],
+        # Bound to a graph digest from before a later sync advanced the revision.
+        "graph_digest_after": "sha256:" + "0" * 64,
+    }), encoding="utf-8")
+    code, rendered = call_main(
+        render, monkeypatch, capsys,
+        "--repo-root", root, "--graph", graph, "--scope", "feature",
+        "--registration-receipt", receipt,
+    )
+    assert code == 0
+    assert rendered["registration"]["applied_count"] == rendered["registration"]["expected_count"] == 2
+    assert rendered["registration"]["graph_digest_match"] is False
+    assert rendered["registration_verification"] == {
+        "status": "partial", "reason": "graph_digest_stale", "graph_digest_match": "stale",
+    }
+    html = (root / rendered["out_relative"]).read_text()
+    assert "Registration verification: PARTIAL" in html
+    assert render_metadata(html)["registration_verification"] == {
+        "status": "partial", "reason": "graph_digest_stale", "graph_digest_match": "stale",
+    }
 
 
 def test_render_task_scope_adds_parent_without_siblings():
