@@ -1,0 +1,9 @@
+{
+  "target_id": "claude-code-plugins",
+  "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
+  "retrieved_at": "2026-08-04T00:40:04Z",
+  "http_status": 200,
+  "content_bytes": 1185485,
+  "content_sha256": "373a285de690cf20d4eaafa6642f1e3fe4acc59e1e61c96eb52b814056e6dbed",
+  "body_summary": "Create and distribute a plugin marketplace - Claude Code Docs"
+}

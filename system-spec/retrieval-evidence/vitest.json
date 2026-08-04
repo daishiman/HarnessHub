@@ -1,0 +1,9 @@
+{
+  "target_id": "vitest",
+  "source_url": "https://vitest.dev/blog/vitest-4-1.html",
+  "retrieved_at": "2026-08-04T00:40:08Z",
+  "http_status": 200,
+  "content_bytes": 125614,
+  "content_sha256": "7e4832d358c5bd258408c3bbac0bdc30d5915af6f3583393d9bfaf1b8e02ef00",
+  "body_summary": "Vitest 4.1 is out! | Vitest"
+}

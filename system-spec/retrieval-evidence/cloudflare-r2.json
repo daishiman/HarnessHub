@@ -1,0 +1,9 @@
+{
+  "target_id": "cloudflare-r2",
+  "source_url": "https://developers.cloudflare.com/r2/pricing/",
+  "retrieved_at": "2026-08-04T00:40:06Z",
+  "http_status": 200,
+  "content_bytes": 142065,
+  "content_sha256": "07dedbd04d3d608f54ac378a2eedf9db9e4206e8e65364601ef9a9f02738e6f9",
+  "body_summary": "Pricing · Cloudflare R2 docs"
+}

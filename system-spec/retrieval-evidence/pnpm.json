@@ -1,0 +1,9 @@
+{
+  "target_id": "pnpm",
+  "source_url": "https://github.com/pnpm/pnpm/releases",
+  "retrieved_at": "2026-08-04T00:40:00Z",
+  "http_status": 200,
+  "content_bytes": 591629,
+  "content_sha256": "6c443146ba664b867a7f66c2936b3d95edff1bf3adad3514df7a03a3efb56c6c",
+  "body_summary": "Releases · pnpm/pnpm · GitHub"
+}

@@ -1,0 +1,9 @@
+{
+  "target_id": "resend",
+  "source_url": "https://resend.com/pricing",
+  "retrieved_at": "2026-08-04T00:40:07Z",
+  "http_status": 200,
+  "content_bytes": 511812,
+  "content_sha256": "31ed71f5bf3df906be3d5571b8917c459cea29cc24638f915f307be1f93ee2be",
+  "body_summary": "Pricing · Resend"
+}

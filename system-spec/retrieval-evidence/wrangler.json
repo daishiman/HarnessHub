@@ -1,0 +1,9 @@
+{
+  "target_id": "wrangler",
+  "source_url": "https://github.com/cloudflare/workers-sdk/releases",
+  "retrieved_at": "2026-08-04T00:40:05Z",
+  "http_status": 200,
+  "content_bytes": 477250,
+  "content_sha256": "d7dfc87c67d8697e85c1c60943f0e5b6353849443ca5d4ee62ee244d85b66a2b",
+  "body_summary": "Releases · cloudflare/workers-sdk · GitHub"
+}

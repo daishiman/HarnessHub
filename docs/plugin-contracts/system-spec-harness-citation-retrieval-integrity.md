@@ -4,19 +4,19 @@ layer: plugin-contract-record
 task: HarnessHub-p1ql
 beads: HarnessHub-p1ql
 dev_graph_node: issue-source-citation-retrieval-integrity-20260803
-judged_at: 2026-08-03T08:45:00Z
-reviewer: daishiman
+judged_at: 2026-08-04T00:42:00Z
+reviewer: Codex final review
 ---
 
 # Citation 取得証跡・時刻実在性 — 仕様反映判定の受領書
 
-対象変更: `plugins/system-spec-harness` の C13 citation validation を、自己申告の URL と時刻だけで通さず、実際に保存された取得証跡へ束縛するよう強化する。
+対象変更: `plugins/system-spec-harness` の C13 citation validation を、自己申告の URL と時刻だけで通さず、実際に保存された取得証跡へ束縛するよう強化する。最終レビューで判明した既存 20 record の移行漏れも併せて是正する。
 
 ## 判定結論
 
-**spec-impact: none。** `system-spec/`、`specs/`、`architecture/`、`features/`、`tasks/` への反映は不要と判定した。機械受領書は、対象 commit を作成後に `scripts/build-spec-reflection-receipt.py --spec-impact none` で HEAD に束縛して記録する。
+**spec-impact: reflected。** C13 の実装自体は HarnessHub 製品の振る舞いを変えないが、最終レビューで `system-spec/fetched-references.json` の全 20 record が新しい必須証跡を持たず、実データに C13 を掛けると失敗することを検出した。公式一次 URL を HTTP 200 で再取得し、各 record に `evidence_ref` とその SHA-256 を反映した。機械受領書は、この反映を含む commit の作成後に `scripts/build-spec-reflection-receipt.py --spec-impact reflected` で HEAD に束縛して記録する。
 
-変更対象は HarnessHub 製品の振る舞いではなく、plugin が生成する `fetched-references.json` と C13 validator の内部契約である。製品 API、DB schema、認証認可、画面、Cloudflare 配置、feature/task 要件は変更しない。正本は `plugins/system-spec-harness/` の schema、R2/R3/R4、C03、C08、runbook に置く。
+変更対象は HarnessHub 製品の振る舞いではなく、plugin が生成・検証する引用レジストリの完全性である。製品 API、DB schema、認証認可、画面、Cloudflare 配置、feature/task 要件は変更しない。正本は `plugins/system-spec-harness/` の schema、R2/R3/R4、C03、C08、runbook と、今回移行した `system-spec/fetched-references.json` / `system-spec/retrieval-evidence/` に置く。
 
 ## 変更した契約
 
@@ -28,7 +28,7 @@ reviewer: daishiman
 | 突合 | validator が path traversal と repo 外参照を拒否し、実ファイルの digest と比較する |
 | 実行 | citation を検証する CLI は `--repo-root` を必須にし、証跡を実ファイルに対して検査する |
 
-R2-fetch は raw snapshot と要約を `system-spec/retrieval-evidence/<target_id>.json` に保存し、R3-record は算出済み digest を引用する。C03 compile と C08 freshness audit、schema、fixture、runbook をこの契約へ同期した。
+R2-fetch は raw snapshot と要約を `system-spec/retrieval-evidence/<target_id>.json` に保存し、R3-record は算出済み digest を引用する。今回、20 record すべてをこの形式に移行した。`retrieved_at` は実際の証跡取得時刻に更新した一方、`latest_checked_at`・version・summary は意味的鮮度 (C08) の別判定を混同しないため変更していない。
 
 ## task 仕様書ゲートの判定
 
@@ -38,19 +38,19 @@ R2-fetch は raw snapshot と要約を `system-spec/retrieval-evidence/<target_i
 
 | 領域 | 判定 | 理由 |
 |---|---|---|
-| `system-spec/` | 反映なし | 製品仕様の状態遷移・構成・Q&A は不変 |
+| `system-spec/` | 反映 | `fetched-references.json` の 20 record と `retrieval-evidence/` 20 件を C13 の実ファイル digest に束縛。製品状態遷移・構成・Q&A は不変 |
 | `specs/` | 反映なし | 公開 API・データ契約は不変 |
 | `architecture/` | 反映なし | サービス構成・境界・配置は不変 |
 | `features/` | 反映なし | 製品機能の受入条件は不変 |
 | `tasks/` | 反映なし | 本件は単独 bug 修正で feature package を持たない |
-| `docs/` | 記録 | 本受領書で plugin 契約と no-impact 判定を記録 |
+| `docs/` | 記録 | 本受領書で移行内容、判定理由、残る C08 境界を記録 |
 
 ## 検証
 
 - `python3 -m pytest -q plugins/system-spec-harness`
-- `python3 plugins/system-spec-harness/scripts/validate-source-citation.py --targets <targets> --references <references> --repo-root <repo-root>`
+- `python3 plugins/system-spec-harness/scripts/validate-source-citation.py --targets <system-spec/spec-state.json 由来の 20 target> --references system-spec/fetched-references.json --state system-spec/spec-state.json --repo-root .`（C13 実データ）
 - `validate-graph-schema.py`、`lint-artifact-placement.py`、`lint-doc-line-limit.py`、`git diff --check`
 
 ## 残課題
 
-実際の WebFetch 実行を doc-fetch 完了条件として強制し、`_records.json` の事後編集を防ぐ変更は **HarnessHub-eiky** が所有する。本件は C13 が捏造結果を通さないようにする検証層までを担当する。
+実際の WebFetch 実行を doc-fetch 完了条件として強制し、`_records.json` の事後編集を防ぐ変更は **HarnessHub-eiky** が所有する。本件は C13 が捏造結果を通さないようにする検証層までを担当する。さらに既存の `system-spec/completeness-report.json` が記録する C08 の意味的鮮度（pnpm / wrangler / Playwright などの version 再照合）は別の follow-up であり、本移行で古い version を現在値と偽って更新しない。

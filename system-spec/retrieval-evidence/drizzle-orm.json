@@ -1,0 +1,9 @@
+{
+  "target_id": "drizzle-orm",
+  "source_url": "https://github.com/drizzle-team/drizzle-orm/releases",
+  "retrieved_at": "2026-08-04T00:40:03Z",
+  "http_status": 200,
+  "content_bytes": 569191,
+  "content_sha256": "acad443be4eab0933b36170231d0399c461ec005313d5ba46f1581df27373e2a",
+  "body_summary": "Releases · drizzle-team/drizzle-orm · GitHub"
+}

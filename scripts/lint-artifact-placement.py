@@ -11,7 +11,7 @@
   ただし plugin package 実体 (.claude-plugin/plugin.json を持つツリー) 配下は除外する。
   SKILL.md 等の frontmatter schema は Claude Code 側の仕様で決まっており、
   status:/layer: を足すと仕様違反かつ検証対象の破壊になるため (HarnessHub-5ph)。
-- system-spec/ 直下はコンパイラ出力 (*.md) と正本 JSON 3 種のみ (混入遮断)
+- system-spec/ 直下はコンパイラ出力 (*.md)、正本 JSON、C13 の取得証跡 JSON のみ (混入遮断)
 - リポジトリ直下のファイルは allowlist 制 (置き場迷子の遮断)
 
 dev-graph 未初期化 (.dev-graph/config.json 不在) の repo は検査対象なしとして exit 0。
@@ -61,6 +61,7 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "completeness-report.json",
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
 }
+SYSTEM_SPEC_EVIDENCE_DIR = "retrieval-evidence"
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
 DOCS_REQUIRED_FRONTMATTER_KEYS = ("status", "layer")
 GRAPH_NODE_SCHEMA_PATH = (
@@ -252,22 +253,36 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
                     "graph-node.schema.json#/$defs/documentLayer に適合しない"
                 )
 
-    # 3. system-spec/ 直下の混入遮断
+    # 3. system-spec/ 直下の混入遮断。C13 の証跡だけは一意の専用 directory に
+    # JSON として置く。任意のサブディレクトリや形式を許すと正本の配置規約が崩れる。
     ss_root = repo_root / roots.get("system_spec", "system-spec")
     if ss_root.is_dir():
         for p in sorted(ss_root.iterdir()):
             rp = p.relative_to(repo_root).as_posix()
             if p.is_dir():
+                if p.name == SYSTEM_SPEC_EVIDENCE_DIR:
+                    for evidence in sorted(p.iterdir()):
+                        evidence_rp = evidence.relative_to(repo_root).as_posix()
+                        if not evidence.is_file() or evidence.suffix != ".json":
+                            violations.append(
+                                "VIOLATION: system-spec-stray: "
+                                f"{evidence_rp} は置かない。許可: "
+                                f"system-spec/{SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
+                            )
+                    continue
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp}/ (サブディレクトリ) は置かない。"
-                    "system-spec/ 直下はコンパイラ出力と正本 JSON のみ"
+                    "許可: コンパイラ出力・正本 JSON・"
+                    f"{SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
                 )
             elif p.suffix == ".md" or p.name in SYSTEM_SPEC_JSON_ALLOWLIST:
                 continue
             else:
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp} は置かない。"
-                    "許可: *.md / " + " / ".join(sorted(SYSTEM_SPEC_JSON_ALLOWLIST))
+                    "許可: *.md / "
+                    + " / ".join(sorted(SYSTEM_SPEC_JSON_ALLOWLIST))
+                    + f" / {SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
                 )
 
     # 4. リポジトリ直下の allowlist
@@ -321,6 +336,17 @@ def self_test() -> int:
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
         assert v == [], f"クリーン状態で違反を誤検出: {v}"
+
+        # C13 の取得証跡は唯一の専用 directory に JSON としてのみ許可する。
+        evidence_dir = root / "system-spec" / SYSTEM_SPEC_EVIDENCE_DIR
+        evidence_dir.mkdir()
+        (evidence_dir / "react.json").write_text("{}", encoding="utf-8")
+        v, _ = lint(root)
+        assert v == [], f"C13 証跡 JSON を誤って配置違反にした: {v}"
+        (evidence_dir / "stray.txt").write_text("x", encoding="utf-8")
+        v, _ = lint(root)
+        assert any("stray.txt" in line for line in v), "C13 証跡 directory の非 JSON を検出しない"
+        (evidence_dir / "stray.txt").unlink()
 
         # layer の許容形式は graph-node.schema.json の documentLayer が唯一の正本。
         # `xlayer:` のような部分一致や大文字・空白入りの値は layer 宣言として扱わない。

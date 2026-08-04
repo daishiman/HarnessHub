@@ -1,0 +1,9 @@
+{
+  "target_id": "owasp-asvs",
+  "source_url": "https://owasp.org/www-project-application-security-verification-standard/",
+  "retrieved_at": "2026-08-04T00:40:07Z",
+  "http_status": 200,
+  "content_bytes": 67761,
+  "content_sha256": "e0a25745cd2ad2ec399f0b16580e354d9a04e416d25dd903fb14013aa08a0236",
+  "body_summary": "OWASP Application Security Verification Standard (ASVS) | OWASP Foundation"
+}

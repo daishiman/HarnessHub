@@ -1,0 +1,9 @@
+{
+  "target_id": "zod",
+  "source_url": "https://zod.dev/",
+  "retrieved_at": "2026-08-04T00:40:01Z",
+  "http_status": 200,
+  "content_bytes": 169596,
+  "content_sha256": "d063074e466347118061fe7ea49cf12c0529b6346cca65f68f18c470dc8a0774",
+  "body_summary": "Intro | Zod"
+}

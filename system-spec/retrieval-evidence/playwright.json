@@ -1,0 +1,9 @@
+{
+  "target_id": "playwright",
+  "source_url": "https://playwright.dev/docs/release-notes",
+  "retrieved_at": "2026-08-04T00:40:10Z",
+  "http_status": 200,
+  "content_bytes": 918565,
+  "content_sha256": "919d734237ced0329679e87f7fb07fbc73dcae1fb5ee5cd56e0638132183b0f0",
+  "body_summary": "Release notes | Playwright"
+}

@@ -1,0 +1,9 @@
+{
+  "target_id": "github-actions",
+  "source_url": "https://docs.github.com/en/actions",
+  "retrieved_at": "2026-08-04T00:40:01Z",
+  "http_status": 200,
+  "content_bytes": 423424,
+  "content_sha256": "d2e8db6c0d8892368d8214735a25e395ed3c4298da776a16180042c05729e220",
+  "body_summary": "GitHub Actions documentation - GitHub Docs"
+}

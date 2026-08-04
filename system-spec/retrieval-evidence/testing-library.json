@@ -1,0 +1,9 @@
+{
+  "target_id": "testing-library",
+  "source_url": "https://testing-library.com/docs/react-testing-library/intro/",
+  "retrieved_at": "2026-08-04T00:40:11Z",
+  "http_status": 200,
+  "content_bytes": 33872,
+  "content_sha256": "4b5462297868dd85f3c6acef236814a7aee90bf78fe1a615bf71975aabaff17d",
+  "body_summary": "React Testing Library | Testing Library"
+}

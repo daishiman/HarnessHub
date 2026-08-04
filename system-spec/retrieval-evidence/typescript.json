@@ -1,0 +1,9 @@
+{
+  "target_id": "typescript",
+  "source_url": "https://www.typescriptlang.org/docs/",
+  "retrieved_at": "2026-08-04T00:40:00Z",
+  "http_status": 200,
+  "content_bytes": 170589,
+  "content_sha256": "7d3aaef77fec1da246a38a93b00839af732caff71d28b04da9797423dfe4b0f7",
+  "body_summary": "TypeScript: The starting point for learning TypeScript"
+}
