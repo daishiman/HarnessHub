@@ -36,6 +36,8 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
   // Next.js のビルド成果物・静的アセット
   '/_next',
   '/favicon.ico',
+  // 利用規約・プライバシーポリシー (静的・PII 非参照)。全利用者 (未ログイン含む) に公開する (AD-2, feat-user-org-admin)
+  '/legal',
 ];
 
 /** tenant slug を先に確定するサインイン画面。API 配下などへ広がらないよう 1 segment に限定する。 */

@@ -71,6 +71,7 @@ export {
   type TenantDataUploadInput,
   type TenantRow,
   type UserRow,
+  type UserSettingsRow,
 } from '../repository/composition';
 export {
   assertSupportedDriver,
