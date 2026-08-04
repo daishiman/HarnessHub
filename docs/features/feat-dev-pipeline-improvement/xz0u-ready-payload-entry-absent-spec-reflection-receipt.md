@@ -13,16 +13,16 @@ iteration: null
 title: "bd ready payload entry 欠落報告の仕様反映受領書"
 owners: ["daishiman"]
 created_at: "2026-08-03T22:02:24.549928Z"
-updated_at: "2026-08-04T00:37:47.019196Z"
+updated_at: "2026-08-04T01:25:48.206800Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","task-schedule-beads-ready-entry-absent-reporting-20260803"]
-resource_scope: ["docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md","plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/scripts/schedule_graph_nodes.py","plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py","plugins/dev-graph/tests/test_runtime_coverage.py","plugins/dev-graph/references/schedule-graph-contract.md","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md"]
+resource_scope: ["docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md","plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/scripts/schedule_graph_nodes.py","plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py","plugins/dev-graph/tests/test_runtime_coverage.py","plugins/dev-graph/references/schedule-graph-contract.md","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md","eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"]
 purpose: "HarnessHub-xz0u の仕様影響判断と正規反映結果を、人間可読かつ graph から追跡可能な形で受領する"
 goal: "schedule の payload entry 欠落を silent drop せず復旧可能に報告する契約が、指定された全ドキュメント層で一致していることを記録する"
 scope_in: ["C16/C28 の内部 dev-workflow 契約","system-spec、specification、architecture、feature、task、docs の仕様反映"]
 scope_out: ["Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit","bd ready の選定規則または Beads issue 状態の変更"]
-acceptance: ["C16/C28 の exact reason/source、候補被覆、復旧境界を記録する","内部 dev-workflow 影響と製品 runtime 非変更の根拠を記録する","C01 qa-140/qa-141、C03、C02 の正規 lineage を追跡可能にする"]
+acceptance: ["C16/C28 の exact reason/source、候補被覆、復旧境界を記録する","内部 dev-workflow 影響と製品 runtime 非変更の根拠を記録する","C01 qa-141/qa-142、C03、C02 の正規 lineage を追跡可能にする"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
@@ -32,7 +32,7 @@ template_id: "document"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40","evaluator":"C01 qa-140/qa-141, C03 compile, C02 specification reflection","evidence_ref":"system-spec/spec-state.json"}
+confirmation_evidence: {"evaluated_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","evaluator":"C01 qa-141/qa-142, C03 compile, C02 specification reflection","evidence_ref":"system-spec/spec-state.json"}
 source_lineage: {"imported_at":null,"origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":"dev-graph","source_version":null}
 classification_confidence: 1
 classification_reason: "HarnessHub-xz0u の仕様反映判断と正規 C01/C03/C02 lineage を記録する受領書"
@@ -91,7 +91,7 @@ deploy unit、および `bd ready` の選定規則は変更していない。
 
 | 層 | 反映内容 |
 |---|---|
-| `system-spec/spec-state.json` | C01 transition の `qa-140` / `appr-029` と `qa-141` / `appr-030` として C16 の候補被覆、fail-closed、順序非依存 parity、reason/source、C03/C28 recovery、製品非変更を再確定 |
+| `system-spec/spec-state.json` | main 側の別件 `qa-140` / `appr-029` を保持し、C01 transition の `qa-141` / `appr-030` と `qa-142` / `appr-031` として C16 の候補被覆、fail-closed、順序非依存 parity、reason/source、C03/C28 recovery、製品非変更を reopen→re-confirm で再確定 |
 | `system-spec/dev-workflow.md` | C03 compile 正規生成で上記契約を反映 |
 | `specs/`・`architecture/` | 集約仕様と workflow architecture に C16/C28 境界と責務分割を反映 |
 | `plugins/dev-graph/references/schedule-graph-contract.md` | C28 共通契約から C16 固有の reason/source・候補被覆・fail-closed を分離。C14/C03 が不要な scheduler 詳細に依存しないようにする |
@@ -100,22 +100,25 @@ deploy unit、および `bd ready` の選定規則は変更していない。
 
 ## 検証記録
 
-pre-publication の実測結果は次のとおりである。
+main 統合後に再実行した最終実測結果は次のとおりである。
 
-- focused/related schedule regression: **34 passed**。
+- focused/related schedule regression: **56 passed**。
 - Dev Graph criteria: **22 passed**。C15 は fresh live trial
   `20260806T010001Z-xz0u-c15r5` で overall=PASS、nudge=0、gate=0、独立 evaluator=PASS、
   current behavior-closure digest
   `86d58c347f693e56fa911155e24b80c51233682502377befedf22c12bc20645c` を確認した。
-- system plan: pass。system-spec coverage: pass。system-spec compile/integration/foundation:
-  **81 passed**。
-- graph schema: valid、violations=0。文書行数: **583 文書**が 300 行上限に適合。
+- system plan: pass。system-spec coverage: pass。current main の C03 compile suite: **42 passed**。
+- graph schema: valid、violations=0。文書行数: **596 文書**が 300 行上限に適合。
   手書きの変更ファイルは最大 500 行で、`schedule-graph.py` は 500 行ちょうどのため helper を分離済み。
-- repository CI: blocking failure=0（段階導入中の既存 WARN 5 件と live-trial record-only WARN 6 件は
-  非ブロッキング）。`git diff --check`: pass。
+- harness coverage ratchet: PASS。新規 helper の実コードレビュー受領書
+  `eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json` を添付し、
+  scripts LLM 評価軸を floor 63.1% 以上に維持した。
+- repository CI: **PASS 139 / WARN 5 / FAIL 0**。WARN 5 件と live-trial record-only WARN 6 件は
+  段階導入中の既存・非ブロッキング項目。 `git diff --check`: pass。
 
-remote `main` を local `main` へ同期し、本 branch への実マージ後に上記品質ゲートを再実行する。
-Draft PR URL と Beads publication note は、その最終チェック後に正規 linkage として記録する。
+`origin/main` は local `main` と同一コミットであることを確認したうえで、local `main` を本 branch に
+実マージし、上記品質ゲートを再実行した。Draft PR URL と Beads publication note は、作成直後に正規 linkage
+として記録する。
 
 ## 追跡情報
 

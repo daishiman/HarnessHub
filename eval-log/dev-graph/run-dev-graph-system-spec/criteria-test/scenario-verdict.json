@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "independent-verifier-opus-4.6-wt20-citation-fix-20260806",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -28,14 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T010000Z-f84o-postmain-c19/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T010000Z-f84o-postmain-c19/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T010000Z-f84o-postmain-c19/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T010000Z-f84o-postmain-c19/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T010000Z-f84o-postmain-c19/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c19 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=3b536069697403b0dbd525015e6b3fd147a221a286286d3faba1f5b1c839c34f。"
+      "observed": "CI 修正後の fresh live trial 20260806T020000Z-wt20-c19-citation-fix は overall=PASS、nudge=0、gate=0、required observations 全件を独立評価者が実体証拠から PASS と判定。behavior closure digest=45408faa755af7e291f18990b7d4fcfa4f5f19433a60cc1f42f7b1fc771e2d1e。"
     }
   }
 }

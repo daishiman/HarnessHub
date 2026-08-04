@@ -12,11 +12,11 @@ iteration: null
 title: "schedule-graph が bd ready payload 欠落 node を理由付きで報告する"
 owners: ["daishiman"]
 created_at: "2026-08-03T00:00:00Z"
-updated_at: "2026-08-04T01:06:25.928653Z"
+updated_at: "2026-08-04T01:26:17.145670Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-requirements","issue-schedule-blocked-exclusion-unreported-20260728"]
-resource_scope: ["plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/scripts/schedule_graph_nodes.py","plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py","plugins/dev-graph/tests/test_runtime_coverage.py","plugins/dev-graph/references/schedule-graph-contract.md","plugins/dev-graph/plugin-composition.yaml","scripts/lint-script-naming.py","eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260806T010001Z-xz0u-c15r5/verdict.json","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md","docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"]
+resource_scope: ["plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/scripts/schedule_graph_nodes.py","plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py","plugins/dev-graph/tests/test_runtime_coverage.py","plugins/dev-graph/references/schedule-graph-contract.md","plugins/dev-graph/plugin-composition.yaml","scripts/lint-script-naming.py","eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260806T010001Z-xz0u-c15r5/verdict.json","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md","docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md","eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"]
 purpose: "bd ready の payload から欠けた beads task を schedule report が黙って落とさず、原因と復旧手順を機械可読に示す"
 goal: "選択範囲内かつ schedulable な beads node が pre-lease 判定で ready_ids または unmapped に現れ、最終 report では conflicts を含めて取りこぼさず、payload 欠落時は ready_payload_entry_absent として復旧可能になる"
 scope_in: ["schedule-graph.py の beads ready 判定に payload entry 欠落の unmapped 報告を追加する","pre-lease の ready_ids / unmapped と lease conflict を含む最終候補被覆、malformed dependency fail-closed、順序非依存 parity を回帰テストで固定する","schedule-graph-contract.md、system-spec、specs、architecture、feature、task、receipt、Beads を同じ判断へ更新する"]
@@ -31,7 +31,7 @@ template_id: "task"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","evaluator":"final-review C01 qa-140/qa-141 and C03 compile","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
+confirmation_evidence: {"evaluated_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","evaluator":"final-review C01 qa-141/qa-142 and C03 compile","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "HarnessHub-xz0u の bd ready payload 欠落を単独で修正・検証・公開する repository maintenance task"

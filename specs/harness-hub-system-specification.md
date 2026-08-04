@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-03T22:18:24.898772Z"
+updated_at: "2026-08-04T01:18:57.420903Z"
 status: "active"
 depends_on: []
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
 purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
-goal: "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する"
+goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140 と C16 qa-141/qa-142 の dev-workflow 契約を正本から追跡できる状態を維持する"
 scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T01:17:41Z","origin_kind":"system-spec-harness","source_digest":"1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -132,10 +132,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - request-bound の Turso Web client / D1 は poison 対象外とし、従来どおり DB 側排他・CAS・競合再試行へ委ねる。DB schema、migration、API payload は変更しない。
 - 正規反映と実測結果は [libSQL 接続復旧 仕様反映受領書](../docs/features/feat-domain-model-db/libsql-connection-recovery-spec-reflection-receipt.md) を正とする。
 
-**開発フロー反映 (2026-07-28 / `HarnessHub-7xi9`)**:
+**開発フロー反映 (2026-08-03 / `HarnessHub-7xi9`)**:
 
-- `system-spec/dev-workflow.md` の desktop-windows / desktop-macos を R4-reopen し、`qa-088` で `qa-039` の既存ローカル開発契約と並列 worktree の整合性契約を自己完結して再確定した。
+- `system-spec/dev-workflow.md` の desktop-windows を R4-reopen し、`qa-140` で `qa-039` の既存ローカル開発契約、並列 worktree の整合性契約、診断の証拠境界を自己完結して再確定した。
 - ref 更新は `reference-transaction` で予防し、判定不能時は修復可能性を残すため fail-open とする。巻き戻し commit は `pre-commit` で fail-closed に止める二層境界を正本とした。
+- mtime クラスタは一括書込みの調査開始点であり、原因を単独で断定しない。診断専用 `lint-worktree-clobber-mtime.py` と reflog による裏取りは [更新時刻診断追補](harness-hub-worktree-mtime-diagnostic-addendum.md) を正とする。
 - 影響は repository の開発運用に限定され、Hub の外部 API・データモデル・認証認可・Cloudflare deploy unit は変更しない。
 
 ## イベント・非同期処理
@@ -487,7 +488,7 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 遮断経路は subprocess / network / graph 全件検証を起動せず、未解決でも authority prefix または graph store 末尾が確定すれば fail-closed にする。読取と tmp/cache/templates は巻き込まない。
 - `exec` / `eval` 内の再帰 source、任意文字列変換、別 script 本文は性能境界から対象外とし、PostToolUse 監査と C02 規約で補完する。製品 runtime 契約は非変更。判断と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を参照する。
 
-## C16 Beads ready payload 欠落報告 (2026-08-03 / HarnessHub-xz0u / qa-140・qa-141)
+## C16 Beads ready payload 欠落報告 (2026-08-03 / HarnessHub-xz0u / qa-141・qa-142)
 
 - 選択範囲内かつ schedulable な Beads node が bd ready payload に無いとき、C16 は node を黙って除外せず unmapped[] に reason=ready_payload_entry_absent と source=schedule-graph を記録する。
 - pre-lease は ready set と unmapped、最終 report は active lease/resource conflict の conflicts を加えた和で候補 node を被覆する。P01 parent / dependency 形状は fail-closed、parity dependency は順序非依存で比較し、依存未充足・parity・manifest 分類とは別 reason とする。復旧は C03/C28 の同期・linkage 修復・fresh parity manifest の後に再実行し、欠落 node を推測で ready set へ加えない。

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1207,
+  "graph_revision": 1200,
   "nodes": [
     {
       "acceptance": [
@@ -28,7 +28,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40",
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
         "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
       },
@@ -47,7 +47,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する",
+      "goal": "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140 と C16 qa-141/qa-142 の dev-workflow 契約を正本から追跡できる状態を維持する",
       "graph_node_id": "spec-harness-hub-requirements",
       "implementation_readiness": {
         "checked_at": "2026-07-17T00:35:59Z",
@@ -86,9 +86,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T00:00:00Z",
+        "imported_at": "2026-08-04T01:17:41Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40",
+        "source_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -104,7 +104,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T22:18:24.898772Z"
+      "updated_at": "2026-08-04T01:18:57.420903Z"
     },
     {
       "acceptance": [
@@ -13015,8 +13015,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03",
-        "evaluator": "validate-coverage-matrix.py --require-complete --require-foundation",
+        "evaluated_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142)",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
@@ -13036,7 +13036,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する",
+      "goal": "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する",
       "graph_node_id": "arch-harness-hub-dev-workflow",
       "implementation_readiness": {
         "checked_at": "2026-07-18T08:10:00Z",
@@ -13072,9 +13072,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T00:00:00Z",
+        "imported_at": "2026-08-04T01:17:41Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03",
+        "source_digest": "58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -13090,7 +13090,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-03T22:19:00.966425Z"
+      "updated_at": "2026-08-04T01:19:26.465165Z"
     },
     {
       "acceptance": [
@@ -25374,8 +25374,7 @@
         "issue-c02-upsert-lifecycle-regression-20260729",
         "issue-id-uniqueness-gate-generalization-20260728",
         "issue-doc-line-limit-followup-mfh7-20260728",
-        "issue-register-package-projection-idempotency-drift-20260728",
-        "task-schedule-beads-ready-entry-absent-reporting-20260803"
+        "issue-register-package-projection-idempotency-drift-20260728"
       ],
       "resource_scope": [
         "features/feat-dev-pipeline-improvement.md"
@@ -25398,9 +25397,9 @@
         "graph.json 分割の実装 (トリガー記録のみ)"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T00:00:00Z",
+        "imported_at": "2026-07-30T12:05:00Z",
         "origin_kind": "generated",
-        "source_digest": "f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03",
+        "source_digest": "ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837",
         "source_path": "system-spec/dev-workflow.md",
         "source_plugin": "dev-graph",
         "source_version": null
@@ -25419,7 +25418,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T22:19:39.055408Z"
+      "updated_at": "2026-08-03T04:40:00Z"
     },
     {
       "acceptance": [
@@ -47133,6 +47132,118 @@
     },
     {
       "acceptance": [
+        "retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する",
+        "複数 record の retrieved_at 完全一致を exit 非0で検出する",
+        "各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する",
+        "20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-p1ql",
+        "linked_at": "2026-08-03T08:16:11Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "system-spec-harness の C13 citation validation 契約を強化する単独 bug 修正であり、issue artifact として issues/ へ正規配置する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "feca098df82289522ed3ff10aba3f9dd14e31cee65915942600872ce65343596",
+        "evaluator": "Codex final review",
+        "evidence_ref": "issues/sys-source-citation-retrieval-integrity-20260803.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T08:28:16Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる",
+      "graph_node_id": "issue-source-citation-retrieval-integrity-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T08:28:16Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "モデル記憶で作られた citation と将来日時を形式だけで通す C13 の穴を塞ぎ、仕様書の出典を再検証可能にする",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "plugins/system-spec-harness/skills/run-system-spec-doc-fetch/",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/",
+        "plugins/system-spec-harness/schemas/fetched-references.schema.json",
+        "plugins/system-spec-harness/tests/",
+        "docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md",
+        "issues/sys-source-citation-retrieval-integrity-20260803.md"
+      ],
+      "scope_in": [
+        "validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証",
+        "R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期",
+        "fixture と回帰テストによる C19 r2 捏造パターンの固定"
+      ],
+      "scope_out": [
+        "WebFetch 実行自体を強制する live-trial fixture の改修 (HarnessHub-eiky が所有)",
+        "公式 host の意味的な鮮度判定 (既存 C08 の責務)",
+        "HarnessHub 製品の API、DB schema、認証認可、UI、Cloudflare 配置の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T08:28:16Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec-harness",
+        "citation",
+        "integrity"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Citation の取得証跡・時刻実在性を fail-closed で検証する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T08:28:16Z"
+    },
+    {
+      "acceptance": [
         "対象 6 skill に current behavior closure と一致する verdict.json がある",
         "各 verdict が nudge_count=0 / gate_count=0 と独立評価を満たす",
         "python3 scripts/lint-live-trial-verdict.py --all --enforce が PASS する"
@@ -47372,6 +47483,109 @@
     },
     {
       "acceptance": [
+        "mtime クラスタが診断専用である",
+        "reflog 等の直接証拠で原因を確認する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-worktree-mtime-diagnostic-addendum.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "qa-140 の確定 system-spec から導出する開発運用仕様の追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05",
+        "evaluator": "system-spec-harness compile + coverage validation (qa-139, qa-140)",
+        "evidence_ref": "system-spec/dev-workflow.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T00:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-worktree-mtime-diagnostic-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "一括書込みの疑いを検知し、直接証拠に基づいて安全に復旧判断できる。",
+      "graph_node_id": "spec-harness-hub-worktree-mtime-diagnostic-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T09:45:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "並列 worktree の異常調査で mtime クラスタを断定材料として誤用しない。",
+      "related_nodes": [
+        "issue-worktree-main-ref-desync-20260728",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-worktree-mtime-diagnostic-addendum.md"
+      ],
+      "scope_in": [
+        "repository の開発運用と診断ツール"
+      ],
+      "scope_out": [
+        "Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T09:45:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "7863d7fc569ddf9661497519d63763bfab0cc1b525497f2bb541ef8c86ec3e05",
+        "source_path": "system-spec/dev-workflow.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "worktree",
+        "diagnostic",
+        "qa-140"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "並列 worktree 更新時刻診断の追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-03T09:45:00Z"
+    },
+    {
+      "acceptance": [
         "payload に entry が無い schedulable beads node が unmapped[] に exact reason と source 付きで出る",
         "pre-lease の ready_ids と unmapped、および最終 report の conflicts を合わせて対象候補から node を取りこぼさない",
         "C16/C28 の契約正本と全指定ドキュメント層が同一の復旧境界を記録する",
@@ -47406,8 +47620,8 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03",
-        "evaluator": "final-review C01 qa-140/qa-141 and C03 compile",
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
+        "evaluator": "final-review C01 qa-141/qa-142 and C03 compile",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
@@ -47465,7 +47679,8 @@
         "architecture/harness-hub-dev-workflow.md",
         "features/feat-dev-pipeline-improvement.md",
         "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
-        "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"
+        "docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"
       ],
       "scope_in": [
         "schedule-graph.py の beads ready 判定に payload entry 欠落の unmapped 報告を追加する",
@@ -47499,13 +47714,13 @@
       "template_version": "1.0.0",
       "title": "schedule-graph が bd ready payload 欠落 node を理由付きで報告する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T01:06:25.928653Z"
+      "updated_at": "2026-08-04T01:26:17.145670Z"
     },
     {
       "acceptance": [
         "C16/C28 の exact reason/source、候補被覆、復旧境界を記録する",
         "内部 dev-workflow 影響と製品 runtime 非変更の根拠を記録する",
-        "C01 qa-140/qa-141、C03、C02 の正規 lineage を追跡可能にする"
+        "C01 qa-141/qa-142、C03、C02 の正規 lineage を追跡可能にする"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow"
@@ -47527,8 +47742,8 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "07e193afb84039d2de3b7281dbef081bdc67deac83b8fe82d5fa584e1bd8bd40",
-        "evaluator": "C01 qa-140/qa-141, C03 compile, C02 specification reflection",
+        "evaluated_digest": "1cfe7bc2d9433a14011cde84341a3f824e8a7d6106f7dae7b8cfedf149c92d0e",
+        "evaluator": "C01 qa-141/qa-142, C03 compile, C02 specification reflection",
         "evidence_ref": "system-spec/spec-state.json"
       },
       "confirmation_status": "confirmed",
@@ -47582,7 +47797,8 @@
         "specs/harness-hub-system-specification.md",
         "architecture/harness-hub-dev-workflow.md",
         "features/feat-dev-pipeline-improvement.md",
-        "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md"
+        "tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md",
+        "eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"
       ],
       "scope_in": [
         "C16/C28 の内部 dev-workflow 契約",
@@ -47613,7 +47829,7 @@
       "template_version": "1.0.0",
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-04T00:37:47.019196Z"
+      "updated_at": "2026-08-04T01:25:48.206800Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

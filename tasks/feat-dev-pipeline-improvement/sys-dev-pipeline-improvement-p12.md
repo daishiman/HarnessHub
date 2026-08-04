@@ -218,15 +218,15 @@ This section is the current source closure and supersedes older counts or wordin
 
 ## 2026-07-28 実装後の運用追補
 
-本 P12 の promoted task spec と完了判定は変更しない。後続の repository 横断課題
-`HarnessHub-7xi9` で、並列 worktree の ref ずれを予防・検知・復旧する runbook を
-`docs/worktree-parallel-operations-runbook.md` へ追加した。仕様正本は
-`system-spec/dev-workflow.md` `qa-088`、設計正本は
+本 P12 の promoted task spec と完了判定は変更しない。後続の repository 横断課題 `HarnessHub-7xi9` で、
+並列 worktree の ref ずれを予防・検知・復旧する `docs/worktree-desync-recovery-runbook.md` と、
+mtime クラスタを非ブロッキングで報告する診断を追加した。仕様正本は
+`system-spec/dev-workflow.md` `qa-140`、設計正本は
 `architecture/harness-hub-dev-workflow.md` とする。
 
-再検証は `python3 scripts/validate-git-hooks-wiring.py --check-local-config` と、
-対象 3 test file の pytest を使う。stash は `stash@{N}` でなく固有メッセージから得た
-commit SHA で参照し、古い branch でも git common dir の共有 hook bundle を使う。
+再検証は `python3 scripts/validate-git-hooks-wiring.py --check-local-config` と
+`tests/scripts-root/` の worktree guard 群の pytest を使う。mtime クラスタは reflog・差分・
+実体照合で裏取りし、stash は `stash@{N}` でなく固有メッセージから得た commit SHA で参照する。
 
 ## 2026-07-29 実装後の live-trial 運用追補
 

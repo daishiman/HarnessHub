@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-03T22:19:00.966425Z"
+updated_at: "2026-08-04T01:19:26.465165Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
 purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
-goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、consumer-owned reference の境界を情報欠落なく提供する"
+goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140 および C16 qa-141/qa-142 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、consumer-owned reference の境界を情報欠落なく提供する"
 scope_in: ["system-spec/dev-workflow.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-03T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"f8593b3355bb2943aa23b764ed2cfd12c41cec1ce59c1f339d61f48f4a16db03","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b","evaluator":"system-spec-harness compile + coverage validation (qa-139, qa-140, qa-141, qa-142)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T01:17:41Z","origin_kind":"system-spec-harness","source_digest":"58c698b9961d02c3cf5ad53a1d48e1b8f3c048184537c33632fbbf43e37c120b","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,15 +53,15 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `f49e4a3a57b3…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `7863d7fc569d…` (完全値は frontmatter source_lineage.source_digest))
 
-- confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete --require-foundation` → **PASS**
+- confirmation: `confirmed` / evaluator: `system-spec-harness compile + coverage validation (qa-139, qa-140)` → **PASS**
   ([f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) / [exact-13 再登録受領書](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md))
-- 取込日時: 2026-08-03T04:40:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-03T09:45:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
-正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない)。
+正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない / qa-139: inline Python の Graph authority 書込みを AST で fail-closed 検出 / qa-140: mtime クラスタを診断に限定し reflog で原因確認)。
 
 ## Context and drivers
 
