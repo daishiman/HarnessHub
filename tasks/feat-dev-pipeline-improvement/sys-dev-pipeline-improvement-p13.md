@@ -134,7 +134,7 @@ implementation_readiness: {"checked_at":"2026-07-21T15:10:00Z","missing_sections
 - Required evidence: release-receipt.json と main 上での lint 3 本 + 回帰テストの exit 0
 
 > 2026-07-29〜2026-07-30 の P13 書き戻し記録・scenario contract 追補・C02 lifecycle 回帰レビューは
-> [sys-dev-pipeline-improvement-p13-handoff-log.md](sys-dev-pipeline-improvement-p13-handoff-log.md) へ分離した (300行上限 remediation)。
+> [sys-dev-pipeline-improvement-p13-handoff-log.md](../../docs/features/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-handoff-log.md) へ分離した (300行上限 remediation)。
 
 ## Inner goal-seek execution loop
 
@@ -215,7 +215,7 @@ This section is the current source closure and supersedes older counts or wordin
 
 > 2026-07-29〜2026-08-03 の skill tree lint 書き戻し・`ml57`/`35ai`/`f84o` Phase 13 引き継ぎ・
 > PR #610 CI follow-up は
-> [sys-dev-pipeline-improvement-p13-handoff-log.md](sys-dev-pipeline-improvement-p13-handoff-log.md) へ分離した (300行上限 remediation)。
+> [sys-dev-pipeline-improvement-p13-handoff-log.md](../../docs/features/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-handoff-log.md) へ分離した (300行上限 remediation)。
 
 ## 2026-08-07 `HarnessHub-yzv0` Phase 13 引き継ぎ
 
