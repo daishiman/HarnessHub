@@ -32,7 +32,9 @@ describe('認可 middleware の deny-by-default', () => {
 
   it('他テナントのスコープ要求を拒否する', () => {
     const decision = authorize({ pathname: '/t/tenant-b/docs', headers: noHeaders, principal });
-    expect(decision).toMatchObject({ reason: 'tenant_mismatch', status: 403 });
+    // 存在秘匿 (T-ISO-06): 403 だと「その ID の資源が他テナントに在る」ことが伝わるため 404。
+    // route 層の denyStatusFor と同じ対応表であることは deny-status-layer-parity.test.ts が固定する。
+    expect(decision).toMatchObject({ reason: 'tenant_mismatch', status: 404 });
   });
 
   it('自テナントでも所属していない Workspace を拒否する', () => {

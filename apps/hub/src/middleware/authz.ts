@@ -13,7 +13,9 @@ export type DenyReason =
 
 export type AuthzDecision =
   | { readonly allowed: true; readonly scope: RequestedScope }
-  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 };
+  // 404 は `tenant_mismatch` の存在秘匿専用 (T-ISO-06)。route 層の `denyStatusFor` と同じ対応表を
+  // 使う必要があるため、片側だけ status を足すと本層が先に応答する経路で契約が崩れる。
+  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 | 404 };
 
 /**
  * 認証不要で到達できる path の**明示**allowlist。
@@ -109,8 +111,12 @@ export function authorize(input: AuthzInput): AuthzDecision {
     return { allowed: false, reason: 'missing_tenant_scope', status: 403 };
   }
 
+  // 存在秘匿 (T-ISO-06): 他テナントの資源は 404 で返す。403 だと「その ID の資源が他テナントに在る」
+  // ことが応答から伝わってしまう。route 層の `denyStatusFor` は同じ理由で既に 404 を返していたが、
+  // 本 middleware が先に応答するため route 側の 404 は到達不能で、本番だけ 403 になっていた
+  // (route 単体テストは withAuthz を直接呼ぶので緑のまま素通りする)。対応表は両層で一致させる。
   if (scope.tenantId !== input.principal.tenantId) {
-    return { allowed: false, reason: 'tenant_mismatch', status: 403 };
+    return { allowed: false, reason: 'tenant_mismatch', status: 404 };
   }
 
   if (scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
