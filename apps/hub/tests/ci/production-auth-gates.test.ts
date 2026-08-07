@@ -86,6 +86,51 @@ describe('production OIDC / owner authorization release gates', () => {
     expect(WORKFLOW).toContain('echo "deployed_version=$version" >> "$GITHUB_OUTPUT"');
   });
 
+  // 2026-08-07 の run 31221676748: /health は 1.3 秒後に新版へ切替わりゲートは通ったが、続く hearing
+  // smoke は修正前のコード (tenant_mismatch=403) を叩いて落ちた。colo ごとに切替時刻が違うため、
+  // 単発の一致では「全拠点で入れ替わった」ことにならない。連続一致を通過条件にして窓を狭める。
+  it('配信版の一致は連続 N 回を要求し、単発の一致では smoke へ進まない', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    // 連続一致の回数を数え、不一致で streak を 0 へ戻す (通算一致回数で代用しない)
+    expect(step).toContain('required_streak="${VERSION_GATE_STREAK:-3}"');
+    expect(step).toContain('streak=$(( streak + 1 ))');
+    expect(step).toContain('streak=0');
+    expect(step).toContain('if [ "$streak" -ge "$required_streak" ]; then break; fi');
+    // 期限切れは fail-open にしない。streak 未達のまま抜けたら必ず落とす
+    expect(step).toContain('if [ "$streak" -lt "$required_streak" ]; then');
+    expect(step).toContain('exit 1');
+  });
+
+  it('配信版の観測はキャッシュ済み応答を配信中の版と誤認せず、観測した colo を記録する', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    expect(step).toContain("-H 'Cache-Control: no-cache'");
+    expect(step).toContain('?_version_gate=${attempt}');
+    // どの拠点を観測したうえで通したかを後から検証できるようにする
+    expect(step).toContain('cf-ray');
+    expect(step).toContain('colos=');
+  });
+
+  // 判定材料を wrangler の一覧出力に置くと、表示仕様が変わったときパース失敗が空文字になって素通りしうる。
+  // 通過判定は /health の JSON だけに寄せ、wrangler は診断表示に留める。
+  it('通過判定は /health の JSON だけを根拠にし、wrangler の一覧出力は診断に留める', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    const listIndex = step.indexOf('wrangler deployments list');
+    const diagIndex = step.indexOf('--- 診断: 現在の deployment / version 一覧 ---');
+    expect(listIndex).toBeGreaterThan(-1);
+    // wrangler 呼び出しは診断ブロックより後にだけ現れる = 判定には使われていない
+    expect(listIndex).toBeGreaterThan(diagIndex);
+    expect(step).toContain('|| true');
+  });
+
   it('配信版が入れ替わっていないときは rollback しない (古い版への固定を強めないため)', () => {
     expect(WORKFLOW).toContain('VERSION_GATE_OUTCOME: ${{ steps.version_gate.outcome }}');
     const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
