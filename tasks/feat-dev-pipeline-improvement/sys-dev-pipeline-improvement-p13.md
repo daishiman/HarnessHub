@@ -298,3 +298,13 @@ branch は `devgraph/issue-guard-graph-schema-inline-python-variable-path-202607
 `origin/main` → local `main` → branch を `1c60a47d` / `5bdf3c25` まで統合し、全ゲート PASS を確認。
 目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
 [f84o 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-07 `HarnessHub-yzv0` Phase 13 引き継ぎ
+
+branch は `devgraph/issue-task-conditional-heading-check-resolution-20260807`、base は `main`。
+`HarnessHub-85z0` が `specification` のみへ限定していた C11 `HEADING_MISSING_KINDS` を
+`task` kind へ拡張し、system-dev-planner 由来 task の `conditional_required_sections`
+(フル19見出し / 軽量3見出し の2 variant) を `source_lineage.origin_kind` トリガーで解決した。
+対象実装・テスト・仕様層・Beads 記録だけを commit し、無関係な既存差分を除外する。
+目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
+[yzv0 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。

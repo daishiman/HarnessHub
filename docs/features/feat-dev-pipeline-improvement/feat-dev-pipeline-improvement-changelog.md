@@ -254,3 +254,15 @@ close した。
 - path 評価と書込み収集、core case と性能・既知限界 test を責務分割し、変更した手書きファイルを 500 行以下へ収束させた。
 - `exec` / `eval`、任意文字列変換、別 script file 本文は性能上の既知限界として明記し、PostToolUse drift audit と C02 writer 規約で補完する。
 - 正本は `system-spec/dev-workflow.md` の `qa-139` / `appr-028`、設計・検証・製品非変更の判断は [仕様反映受領書](f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-07 追記: task kind の conditional_templates 見出し検査解決
+
+- `HarnessHub-yzv0` で、`HarnessHub-85z0` が `specification` のみへ限定していた
+  `HEADING_MISSING_KINDS` (C11 本文見出し欠落検査の対象 kind) へ `task` を追加した。
+- system-dev-planner 由来 task 260 件の実測により、`source_lineage.origin_kind` が
+  唯一の判別可能な条件分岐トリガーであることを確認し、`conditional_required_sections` の
+  複数 variant (フル19見出し / 軽量3見出し) のいずれかに一致すれば heading_missing なしと
+  判定する解決コードを実装した。
+- `issue` kind は実測の結果 task とは異なる構造課題と判断しスコープ外へ切り出した。
+- 判断・検証結果の全量は
+  [仕様反映受領書](yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
