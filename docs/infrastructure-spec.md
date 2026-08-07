@@ -167,15 +167,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
   post-deploy `GET /health` → **配信版一致ゲート** → **OIDC start-flow smoke** → **DB/R2本番スモーク6項目** →
   **hearing実データE2E/SEC8スモーク** → 失敗時`wrangler rollback` (直前versionへ)。
   **常設stagingを経由しない** (§6 / qa-038【5】)。
-- **配信版一致ゲート (2026-08-07 追補 / 「deploy 成功 ≠ 配信更新」)**: Cloudflare Workers は
-  **version (アップロードされた版)** と **deployment (実際に配信される版)** が別概念であり、
-  `wrangler deploy` が成功して `Current Version ID` を返しても配信が入れ替わらない状態が成立する。
-  deploy step は出力から version id を捕捉し (`steps.deploy.outputs.deployed_version`)、直後のゲートが
-  `HUB_HEALTH_URL` の `/health` が返す `version` (§2 の `CF_VERSION_METADATA` 由来 = **いま実行されている版**)
-  と突合する。伝播遅延と未昇格を取り違えないよう 5 秒間隔で最大 60 秒再試行し、不一致なら
-  `wrangler deployments list` / `versions list` を診断出力して **exit 1 で停止**する。以降の smoke を
-  古いコードに対して走らせないための fail-closed であり、回帰は
-  `apps/hub/tests/ci/production-auth-gates.test.ts` が step の存在・順序・rollback 連携で固定する。
+- **配信版一致ゲート (2026-08-07 追補 / 「deploy 成功 ≠ 配信更新」)**: Workers は version (アップロード済みの版) と deployment (実際に配信される版) が別概念で、`wrangler deploy` 成功後も配信が入れ替わらない状態が成立する。deploy step が捕捉した version id (`steps.deploy.outputs.deployed_version`) を、直後のゲートが `/health` の `version` (§2 の `CF_VERSION_METADATA` 由来 = いま実行されている版) と突合し、5 秒間隔・最大 60 秒の再試行後も不一致なら `deployments list` / `versions list` を診断出力して exit 1 で止める (以降の smoke を古いコードへ走らせないための fail-closed)。要求の正本は [観測性 addendum §2.11 の V7-a..d](../specs/harness-hub-post-signin-landing-observability-addendum.md)、回帰固定は `apps/hub/tests/ci/production-auth-gates.test.ts`。
 - **deploy preflight (2026-07-30追補)**: GitHub Actionsが未登録値を空文字へ変換する性質を踏まえ、
   migration前に`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_R2_API_TOKEN` /
   `CLOUDFLARE_ACCOUNT_ID` / Turso 2件 / `HUB_HEALTH_URL` / `HUB_PUBLIC_URL`の
