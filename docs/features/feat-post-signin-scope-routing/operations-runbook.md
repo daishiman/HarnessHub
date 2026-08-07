@@ -15,12 +15,21 @@ layer: feature-operations
 1. public path 判定 (`isPublicPath`) → 該当すれば常に許可
 2. 認証 → 未認証なら `unauthenticated` (401)
 3. スコープ一意性 (`ambiguous_scope`) → 明示ヘッダーと session の workspace が食い違う場合に 403
-4. tenant 一致 → スコープ未申告 (`missing_tenant_scope`) または他テナント (`tenant_mismatch`) で 403
+4. tenant 一致 → スコープ未申告 (`missing_tenant_scope`) は 403、他テナント (`tenant_mismatch`) は **404** (T-ISO-06 存在秘匿: 403 だと「その ID の資源が他テナントに在る」ことが応答から伝わるため。route 層の `denyStatusFor` と middleware の両方で 404 に揃える)
 5. workspace 所属 → 申告した workspace に principal が所属していない (`workspace_not_member`) で 403
 
 ## 一次切り分け: 3 分岐
 
-申告 (「業務画面に入れない」「変な画面に飛ばされる」) を受けたら、まず HTTP status とレスポンスの `reason` (アプリログまたはネットワークタブで確認) を見て、次の 3 分岐のどれかへ振り分ける。
+申告 (「業務画面に入れない」「変な画面に飛ばされる」) を受けたら、まず HTTP status とレスポンスの `reason` (アプリログまたはネットワークタブで確認) を見て、次の 3 分岐のどれかへ振り分ける。**ただし分岐の手前で必ず「分岐 0」を通す。**
+
+### 分岐 0 (最初に必ず確認): 見ている本番は、直したコードが動いている版か
+
+- **なぜ最初に見るか**: Cloudflare Workers は **version (アップロードされた版)** と **deployment (実際に配信される版)** が別概念で、`wrangler deploy` が成功しても配信が入れ替わらない状態が成立する。この状態では、コードを直して merge しても本番の挙動が一切変わらないため、下の分岐 A〜C をいくら追っても原因に到達しない。2026-08-07 に実際に踏んだ (8/4 の失敗時 rollback で固定された版 `2e4a6c5b` が 2 run 連続で配信され続け、修正済みの `tenant_mismatch → 404` が「直っていない」ように見えた)。
+- **確認手順**:
+  1. `curl -s "$HUB_HEALTH_URL" | jq -r .version` で **いま配信されている version** を得る (この値は `CF_VERSION_METADATA` binding 由来なので、ビルド時に埋め込んだ文字列と違い rollback 後も嘘をつかない)。
+  2. 対象の CI run の `wrangler deploy` step のログから `Current Version ID` を読む。
+  3. 両者が一致しない場合、**本番は旧コードで動いている**。分岐 A〜C の切り分けには進まない。
+- **対応**: `pnpm --filter @harness-hub/hub exec wrangler deployments list` / `versions list` で現在の deployment を確認し、意図した version へ deployment を昇格させる。この不一致は CI の「配信版が今デプロイした版であることの検査」step が fail-closed で検出するため、通常は smoke より前に赤で止まる (`docs/infrastructure-spec.md` §7)。
 
 ### 分岐 A: 未認証 (`unauthenticated`, 401)
 
@@ -41,9 +50,9 @@ layer: feature-operations
   2. reason が `ambiguous_scope` の場合: 明示ヘッダー (`x-harness-tenant-id` / `x-harness-workspace-id`) を送るクライアント (API・機械クライアント) が、session の active workspace と異なる workspace を指定していないか確認する。ブラウザの通常遷移でこの reason が出た場合は、リクエストに意図しない明示ヘッダーが混入していないか (プロキシ・拡張機能等) を疑う。
 - **対応**: 想定内の deny であるため実装を疑う前に利用者の操作 (workspace 未選択・複数申告) を確認する。issue 化する場合は、実際に単一の正しい workspace のみを申告しているにも関わらず deny された再現手順が必須。
 
-### 分岐 C: 所属なし・越境 (`tenant_mismatch` / `workspace_not_member`, 403)
+### 分岐 C: 所属なし・越境 (`tenant_mismatch` は 404 / `workspace_not_member` は 403)
 
-- **症状**: 認証も scope 申告もできているが、特定の tenant/workspace への到達だけ拒否される。
+- **症状**: 認証も scope 申告もできているが、特定の tenant/workspace への到達だけ拒否される。越境の場合、資源が存在しないかのように 404 が返る (存在秘匿)。
 - **原因**: `tenant_mismatch` は申告した `tenantId` が principal 自身の `tenantId` と異なる (越境)。`workspace_not_member` は申告した `workspaceId` に principal が所属していない。
 - **確認手順**:
   1. reason が `tenant_mismatch` の場合: 利用者がブックマーク等で別テナントの URL を開いていないか確認する。正当な tenant 変更 (異動等) であれば、Workspace 管理者にディレクトリ側の所属更新を依頼する。
