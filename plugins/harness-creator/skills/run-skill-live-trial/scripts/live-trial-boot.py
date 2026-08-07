@@ -3,7 +3,7 @@
 # name: live-trial-boot
 # purpose: 隔離 claude セッションを tmux 上で起動し READY まで待つ (session UUID 固定で transcript を決定的に引けるようにする)。
 # inputs:
-#   - argv: <session> <cwd> --run-id ID [--model M] [--session-id UUID] [--target-skill plugin:skill] [--self-test]
+#   - argv: <session> <cwd> --run-id ID [--model M] [--session-id UUID] [--target-skill plugin:skill] [--audit-fork-ledger PATH] [--self-test]
 #   - env: BOOT_TIMEOUT(90) BOOT_GRACE(3)、hook routing 変数 (tmux stale 値を session 単位で上書き)
 # outputs:
 #   - stdout: "READY: <session> (Ns) MODEL:<model|default> OWNER_PID:<pid> SESSION_ID:<uuid>" / BOOT_FAIL / TIMEOUT
@@ -75,6 +75,27 @@ def valid_model(model: str) -> bool:
 
 def valid_session_id(session_id: str) -> bool:
     return bool(_SESSION_ID_RE.fullmatch(session_id)) and ".." not in session_id
+
+
+def resolve_audit_fork_ledger(value: str, cwd: str) -> str:
+    """Resolve an explicit trial ledger without allowing it outside the trial repo.
+
+    The evaluator hook uses this value asynchronously inside tmux.  Keeping the
+    destination under ``cwd`` prevents a trial invocation from silently routing
+    its append-only evidence into a shared worktree or an arbitrary location.
+    """
+    if not value:
+        return ""
+    root = Path(cwd).resolve()
+    candidate = Path(value)
+    resolved = (candidate if candidate.is_absolute() else root / candidate).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"audit fork ledger escapes trial repo: {resolved}") from exc
+    if resolved.name != "audit-fork-ledger.jsonl":
+        raise ValueError("audit fork ledger filename must be audit-fork-ledger.jsonl")
+    return str(resolved)
 
 
 def _resolve_plugin_dir(root: Path, plugin_slug: str, *, purpose: str) -> Path:
@@ -277,7 +298,7 @@ def is_bypass_permissions_confirm(text: str) -> bool:
 def boot(backend, session: str, run_id: str, cwd: str, model: str, session_id: str,
          timeout: int, grace: int,
          plugin_dir: str | Path | tuple[str | Path, ...] | list[str | Path] | None = None,
-         owner_pid: int | None = None) -> int:
+         owner_pid: int | None = None, audit_fork_ledger: str = "") -> int:
     # tmux 既定の対話 shell 起動→send-line に依存せず、検証済み
     # claude argv を pane の直接 shell-command として起動する。
     effective_owner_pid = os.getpid() if owner_pid is None else owner_pid
@@ -288,7 +309,12 @@ def boot(backend, session: str, run_id: str, cwd: str, model: str, session_id: s
         run_id=run_id,
         owner_pid=effective_owner_pid,
         environment_overrides={
-            name: os.environ.get(name, "") for name in _SESSION_SCOPED_ENV
+            name: (
+                audit_fork_ledger
+                if name == "SYSTEM_SPEC_AUDIT_FORK_LEDGER" and audit_fork_ledger
+                else os.environ.get(name, "")
+            )
+            for name in _SESSION_SCOPED_ENV
         },
     )
     bypass_confirmed = False
@@ -375,6 +401,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--session-id", default="", help="transcript 固定用 UUID (省略時は自動生成)")
     ap.add_argument("--target-skill", default="",
                     help="被験 skill (denylist 再帰遮断の機械 gate。省略可だが指定推奨)")
+    ap.add_argument(
+        "--audit-fork-ledger",
+        default="",
+        help="trial repo 内の監査 fork 台帳。指定時だけ tmux session へ明示継承する",
+    )
     ap.add_argument("--self-test", action="store_true")
     ns = ap.parse_args(argv)
     if ns.self_test:
@@ -407,6 +438,11 @@ def main(argv: list[str] | None = None) -> int:
     if not valid_model(ns.model):
         print(f"[ERROR] invalid model: {ns.model}", file=sys.stderr)
         return 2
+    try:
+        audit_fork_ledger = resolve_audit_fork_ledger(ns.audit_fork_ledger, ns.cwd)
+    except ValueError as exc:
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        return 2
     session_id = (ns.session_id or str(uuid.uuid4())).lower()
     if not valid_session_id(session_id):
         print(f"[ERROR] invalid session id: {session_id}", file=sys.stderr)
@@ -421,7 +457,7 @@ def main(argv: list[str] | None = None) -> int:
     grace = int(os.environ.get("BOOT_GRACE", "3"))
     return boot(
         backend, ns.session, ns.run_id, ns.cwd, ns.model, session_id, timeout, grace,
-        plugin_dir=plugin_dirs,
+        plugin_dir=plugin_dirs, audit_fork_ledger=audit_fork_ledger,
     )
 
 

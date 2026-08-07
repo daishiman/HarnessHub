@@ -478,11 +478,12 @@ def test_category_design_refs_derived_from_resource_map():
     # database の read_when は ddd のみ (clean-architecture は backend/frontend 対応 → 混入しない)。
     assert mod.category_design_refs("database") == ["ddd.md"]
     assert "clean-architecture.md" not in mod.category_design_refs("database")
-    # backend は read_when に "backend" を含む 3 ファイルを resource-map 出現順で導出。
+    # backend は read_when に "backend" を含む 3 ファイルを抽出し、C14 の
+    # knowledge-catalog topo_order (DDD → Clean Architecture → API design) で消費する。
     assert mod.category_design_refs("backend") == [
+        "ddd.md",
         "clean-architecture.md",
         "api-design-patterns.md",
-        "ddd.md",
     ]
     assert mod.category_design_refs("security") == ["secure-by-design.md"]
     assert mod.category_design_refs("maintenance-ops") == ["clean-code.md"]
