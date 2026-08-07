@@ -270,7 +270,18 @@ jobs:
         run: pnpm --filter @harness-hub/hub run build:worker
       - name: wrangler deploy
         id: deploy
-        run: pnpm --filter @harness-hub/hub exec wrangler deploy
+        # Cloudflare Workers は「version (アップロードされた版)」と「deployment (実際に配信される版)」が
+        # 別概念で、deploy が成功しても配信が入れ替わらない状態が成立し得る。後段の一致検査へ渡すため、
+        # 今アップロードした version id を出力へ控える (表示はそのまま残す)。
+        run: |
+          set -euo pipefail
+          pnpm --filter @harness-hub/hub exec wrangler deploy 2>&1 | tee /tmp/wrangler-deploy.log
+          version="$(grep -oE 'Current Version ID: [0-9a-fA-F-]+' /tmp/wrangler-deploy.log | tail -1 | awk '{print $NF}')"
+          if [ -z "$version" ]; then
+            echo "::error::wrangler deploy の出力から Current Version ID を取得できなかった。配信版の一致検査ができないため中止する"
+            exit 1
+          fi
+          echo "deployed_version=$version" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -283,6 +294,37 @@ jobs:
           code=$(curl -s -o /tmp/health.json -w "%{http_code}" "$url")
           echo "health: $code"; cat /tmp/health.json
           [ "$code" = "200" ]
+      # 2026-08-07 に実際に踏んだ欠落を埋める step。deploy は 2 run 連続で success を返していたのに、
+      # 配信されていたのは 8/4 の失敗時 rollback で固定された古い version (2e4a6c5b) のままだった。
+      # 直後の smoke は古いコードを検査するので、修正済みの契約 (tenant_mismatch=404) が直っていないように見え、
+      # その失敗でまた rollback が走って古い版の固定が強まる、という悪循環になっていた。
+      # /health は CF_VERSION_METADATA から「いま実行されている version」を返すので、判定材料は最初から
+      # 応答に載っていた。deploy した版と突き合わせていなかっただけなので、ここで fail-closed にする。
+      - name: 配信版が今デプロイした版であることの検査 (deploy 成功 ≠ 配信更新)
+        id: version_gate
+        env:
+          DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}
+          HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          # 伝播には数秒かかる。「まだ伝播していない」と「そもそも昇格していない」を取り違えないよう、
+          # 60 秒までは再試行してから落とす。
+          served=""
+          for _ in $(seq 1 12); do
+            served="$(curl -sf "$HEALTH_URL" | jq -r '.version // ""' || true)"
+            if [ "$served" = "$DEPLOYED_VERSION" ]; then break; fi
+            sleep 5
+          done
+          echo "deployed=${DEPLOYED_VERSION} served=${served}"
+          if [ "$served" != "$DEPLOYED_VERSION" ]; then
+            echo "::error::deploy は成功したが本番の配信版が入れ替わっていない (deployed=${DEPLOYED_VERSION} served=${served})。以降の smoke は古いコードを検査することになるため中止する"
+            echo "--- 診断: 現在の deployment / version 一覧 ---"
+            pnpm --filter @harness-hub/hub exec wrangler deployments list || true
+            pnpm --filter @harness-hub/hub exec wrangler versions list || true
+            exit 1
+          fi
       # Google 資格情報を CI に保存せず、tenant provider → CSRF → native form POST →
       # Google authorization redirect (state / nonce / PKCE) までを本番 URL で確認する。
       - name: 本番 OIDC start-flow smoke (tenant / CSRF / Google redirect)
@@ -331,15 +373,22 @@ jobs:
           MIGRATE_OUTCOME: ${{ steps.migrate.outcome }}
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
           HEALTH_OUTCOME: ${{ steps.health.outcome }}
+          VERSION_GATE_OUTCOME: ${{ steps.version_gate.outcome }}
           OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
           HEARING_SMOKE_OUTCOME: ${{ steps.hearing_smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
+            exit 0
+          fi
+          # 配信版が入れ替わっていないなら、本番に出ているのは元から旧版であって「壊れた新 version」ではない。
+          # ここで rollback を打つと、未昇格の原因である古い版への固定をこちらから強めてしまう (2026-08-07 の実例)。
+          if [ "${VERSION_GATE_OUTCOME}" != "success" ]; then
+            echo "配信版が今デプロイした版に入れ替わっていない (version_gate=${VERSION_GATE_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
             exit 0
           fi
           echo "::warning::post-deploy 検証が失敗したため Worker を直前 version へ戻す"
