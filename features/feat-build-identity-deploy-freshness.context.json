@@ -1,0 +1,30 @@
+{
+  "graph_node_id": "feat-build-identity-deploy-freshness",
+  "artifact_kind": "feature",
+  "purpose": "本番で動いているビルドが repository のどの commit に対応するかを知る手段が無いため、『コードは直っている』と『本番が直っている』を区別できず、1 回の GET で決まる事実の確定に 10 ラウンド以上を要した。この観測不能状態を解消する。",
+  "goal": "稼働中の成果物から対応 commit を認証なしで確認でき、稼働ビルドが既定 branch の HEAD より古い状態が続くことを CI が検出する状態にする。",
+  "scope_in": [
+    "稼働成果物へ commit 識別子を埋め込み、認証なしで読み出せる経路を用意する (V6)",
+    "稼働ビルドの commit と既定 branch HEAD の乖離が続くことを検出する仕組み (V7)",
+    "乖離検出の閾値と通知先の決定",
+    "検出が実際に発火することを test で固定する"
+  ],
+  "scope_out": [
+    "deploy そのものの実行 (運用操作であり本 feature の成果物ではない)",
+    "deploy pipeline の構成変更 (GitHub Actions 経由という既存経路を維持する)",
+    "認証を要する管理画面での表示 (認証なしで読めることが要件のため)"
+  ],
+  "acceptance": [
+    "稼働中の成果物から、それが repository のどの commit に対応するかを認証なしで確認できる",
+    "commit 識別子の埋め込みが CI の build 時に自動で行われ、手動更新に依存しない",
+    "稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出できる",
+    "検出のしきい値を超えた状態を再現する fixture で、検査が実際に落ちることが test で固定されている",
+    "commit 識別子の露出が、内部 path・secret・個人データを含まない"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-infrastructure.md",
+    "architecture/harness-hub-testing-qa.md",
+    "specs/harness-hub-post-signin-landing-observability-addendum.md"
+  ],
+  "updated_at": "2026-08-07T11:12:00Z"
+}

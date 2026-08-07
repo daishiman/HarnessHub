@@ -9,11 +9,11 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "implementation_readiness が本文未記入の artifact を complete と判定する"
+title: "implementation_readiness=complete が本文全面プレースホルダで成立し、missing_sections が本文の節を一度も見ていない"
 owners: ["daishiman"]
 created_at: "2026-07-28T13:59:42Z"
-updated_at: "2026-07-29T06:17:57Z"
-status: "draft"
+updated_at: "2026-07-29T14:28:20Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["plugins/dev-graph/scripts/validate-graph-schema.py","plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py","plugins/dev-graph/tests/test_upsert_node_body_preservation.py","plugins/dev-graph/templates/README.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/"]
@@ -35,7 +35,7 @@ evaluation_status: "pending"
 confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
 source_lineage: {"imported_at":"2026-07-29T06:17:57Z","origin_kind":"generated","source_digest":"26ad9ea7e825da5bedd2ff3952fa7013065c1dbbfc5fc120cbc723bce86af95e","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 1
-classification_reason: "HarnessHub-4t9g の受入条件と qa-092 が C11 artifact 本文 readiness の単一責務を確定する"
+classification_reason: "HarnessHub-4t9g の受入条件と qa-091 が C11 artifact 本文 readiness の単一責務を確定する"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-implementation-readiness-body-validation-20260728.md","confidence":1}]
 issue_linkage: null
 tracker_binding: "beads"

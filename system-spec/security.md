@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-133 |
+| Web (web) | 確定 | 確定質疑: qa-161 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,21 +24,25 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-133 (対応セル: web)
+### qa-161 (対応セル: web)
 
-**質問**: 未認証では deny-by-default の `/catalog` を、通常の session 秘密を GitHub Actions へ渡さずに Core Web Vitals で実測するため、最小権限の認証・セキュリティ・CI・検証契約を web 仕様へどう統合しますか?
+**質問**: qa-152 / qa-158 は認可拒否を apps/hub/src/middleware/authz.ts の DenyReason 5 値だけで論じ、『外部応答は 401/403 の 2 値まで』という境界を置いた。しかし実装には第 2 の認可層 apps/hub/src/lib/authz/with-authz.ts (route handler の決定点) があり、WrapperDenyReason は 12 値、denyStatusFor は 400/401/403/404 を返し、tenant_mismatch は意図的に 404 へ畳まれている。境界前提が実装と矛盾している。2 層を通した tenant enumeration 境界を確定せよ。
 
-**回答**: ユーザーの 2026-08-02 確認『ok』を明示承認として、qa-123/124/128/130/132 の既存の production OIDC・session・access token・deny-by-default・SLO/CWV・秘密管理・品質ゲートを全面維持し、CWV 専用 credential を追加確定する。
+**回答**: C07 matrix-auditor の HIGH finding への確定対応。qa-152 / qa-158 の逐語は改変せず、本 entry を正本とする。私の以前の境界記述は『認可層は 1 つ』という誤った前提に立っており、実装は 2 段構えである。訂正する。
 
-【1. 専用 credential】GitHub Actions と Worker が共有する `CWV_PROBE_SECRET` だけで HS256 の短命 JWT を検証する。claim は `typ=cwv_probe`、`aud=harness-hub-cwv`、正規 origin、固定 tenant/workspace、iat/exp とし、有効期間は最大 5 分である。通常の `AUTH_SESSION_SECRET`、`AUTH_ACCESS_TOKEN_SECRET`、利用者 session、Publisher token を CI/成果物へ渡さず、CWV credential はユーザー主体・OIDC・Device Flow・外部 API の新たな認証方式ではない。
+[前提の訂正] 認可は 2 層ある。(i) edge middleware (src/middleware/authz.ts) = スコープ門。DenyReason 5 値 (unauthenticated / ambiguous_scope / missing_tenant_scope / tenant_mismatch / workspace_not_member)、status は 401|403。DB へ届かないため資源の実在を一切参照しない。(ii) route handler の withAuthz (src/lib/authz/with-authz.ts) = 決定点。WrapperDenyReason は AuthzDenyReason 9 値 (no_rule / inactive_user / revoked_session / credential_not_allowed / missing_scope / tenant_mismatch / workspace_not_member / not_owner / insufficient_role) に unauthenticated / untrusted_origin / unresolved_resource を加えた 12 値、status は denyStatusFor により 400|401|403|404。DB を参照でき、緊急失効も見る (ADR AD-7 の 2 段構え)。
 
-【2. 到達境界】bootstrap は HTTPS の `GET /catalog` だけで、署名・audience・origin・時間・tenant/workspace をすべて検証した後、URL の ticket を除去する 307 redirect と `__Host-harness-hub.cwv-probe` (Secure / HttpOnly / SameSite=Strict / Path=/ / 最大 5 分) を返す。以後は `GET`/`HEAD` の catalog 画面と catalog が使う読み取り API だけを許可する。書込み、install、publish、管理 API、別 tenant/workspace、別 origin、method 違い、欠損/期限切れ/改ざん ticket は deny-by-default で拒否する。scope は ticket の署名済み claim だけを既存認可層へ渡し、query/header の任意値で昇格しない。
+[境界の再定義] 『外部応答は 401/403 の 2 値まで』は層をまたぐ規則としては誤り。層に依らない不変則はただ 1 つ、**『応答から、要求者が権限を持たないテナント/workspace/資源の実在を推測できないこと』**とする。各層の具体形は資源実在を参照するかどうかで変わる。
+[i-1] edge 層: 実在照会を行わないので、実在/非実在で応答が変わりようがない。5 値を 401 (未認証) と 403 (それ以外) の 2 値へ畳む qa-152 [1] / qa-158 の結論はそのまま有効。
+[ii-1] route 層: 実在照会を行うため、応答形が実在の oracle になりうる。既存実装は tenant_mismatch を 404 へ畳んでおり (with-authz.ts denyStatusFor、受入テスト T-ISO-06 が固定)、これは『403 だと他テナントにその ID の資源が存在すると読み取れる』という、私が置いた 2 値境界より**強い**防御である。この既存挙動を維持し、変更しない。私の以前の記述は誤って弱い側へ倒していた。
+[ii-2] revoked_session / unauthenticated を 401、unresolved_resource を 400 とする既存マッピングも実在情報を漏らさないため維持する (401 は『名乗り直せば通る可能性』、400 は資源参照の形式不正)。
 
-【3. 秘密と露出】ticket は redirect 後 URL、HTTP リファラ、Lighthouse JSON、CWV report、Actions ログ、artifact のいずれにも残さない。bootstrap 応答は `Cache-Control: no-store` と `Referrer-Policy: no-referrer` を付け、workflow は ticket を mask し、artifact を upload 前に secret/ticket を除去・検査する。secret の値は source、wrangler 設定、文書、テスト fixture に保存しない。`CWV_PROBE_SECRET` の rotate は既存 ticket を即時無効化する。
+[残存リスクの明示 — 隠さず記録する] route 層で workspace_not_member / not_owner が 403 を返す経路は、同一テナント内において『その資源は存在するが自分の workspace/所有ではない』ことを推測させうる。テナント境界は越えないため今回は受容し、404 へ畳むことはしない。理由は、同一テナント内では所属変更や共有依頼という正当な業務導線が存在し、404 に畳むと利用者が『権限が無い』のか『本当に無い』のか分からず問い合わせ不能になるため。テナント内での資源存在の秘匿が要件化された時点で再オープンする候補として明記する。
 
-【4. 構成と運用】Worker Secret は `CWV_PROBE_SECRET`、`CWV_PROBE_TENANT_ID`、`CWV_PROBE_WORKSPACE_ID`、GitHub Actions secret は対応する `HUB_CWV_PROBE_*` とする。自由入力の target URL は廃止し、`HUB_PUBLIC_URL` の同一 HTTPS origin の `/catalog` だけを対象にする。secret 投入・read-only 代表 tenant/workspace 選定・本番 deploy・最初の実 Lighthouse は外部状態を変える follow-up であり、投入前/失敗時は未計測として fail-closed で可視化し、good と数えない。
+[内部ログへの反映] qa-151 [147-a] / qa-156 の構造化ログは、理由コードに加えて**どちらの層で落ちたか (layer=edge|route)** を必ず持たせる。2 層が同名の理由 (tenant_mismatch / workspace_not_member / unauthenticated) を持つため、層を記録しないと切り分けができない。特に route 層の tenant_mismatch は外部へは 404 として出るので、ログ側でしか『権限不足の 404』と『本当に存在しない 404』を区別できない (with-authz.ts のコメントが明記している代償)。
 
-【5. 検証】JWT mint/verify、期限・audience・origin・scope・method・tenant/workspace の負例、cookie/bootstrap の URL 除去・属性、認可規則の read-only 境界、workflow target/secret/artifact sanitizer、wrangler secret 台帳、対象 Vitest、task/system-spec/dev-graph/doc gate を repository 内で検証する。実環境の secret 権限と Lighthouse 成功は静的検証で代替せず、Beads を外部実測完了まで open に保つ。
+[この見落としが起きた理由と再発防止] 私は DenyReason という 1 つの型名だけを頼りに列挙を閉じ、同じ責務を担う別ファイルを探さなかった。同種の見落としを防ぐため、qa-160 の CI 必須ゲートに [V5] を加える: 『認可拒否の理由コード集合が、仕様書に列挙された集合と一致することを検査する (実装に増えた理由が仕様に無ければ CI を赤にする)』。列挙の網羅性を人の注意力ではなく機械に担保させる。
+本 entry は appr-033 (ユーザーによる代理回答の明示委任) の範囲で AI が確定したものであり、利用者の逐語発話ではない。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 
@@ -99,4 +103,7 @@ serves_goals: [G4, G5, G1]
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| owasp-asvs | 5.0.0 | OWASP Foundation (owasp.org) | https://owasp.org/www-project-application-security-verification-standard/ | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| rehype-sanitize | 6.0.0 | rehype (unified collective) (github.com) | https://github.com/rehypejs/rehype-sanitize | 2026-08-07T03:26:34Z | 2026-08-07T03:26:34Z |

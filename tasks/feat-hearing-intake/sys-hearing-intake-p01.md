@@ -12,8 +12,8 @@ iteration: null
 title: "ヒアリング intake 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-29T08:48:58Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["docs/features/feat-hearing-intake/requirements-baseline.md"]

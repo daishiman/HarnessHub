@@ -12,8 +12,8 @@ iteration: null
 title: "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T20:58:52Z"
-updated_at: "2026-08-02T11:52:52.665067Z"
-status: "active"
+updated_at: "2026-08-03T01:01:43Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","feat-doc-governance-portability","feat-mvp-first-scheduling"]
 resource_scope: ["features/feat-task-spec-test-strategy.md"]

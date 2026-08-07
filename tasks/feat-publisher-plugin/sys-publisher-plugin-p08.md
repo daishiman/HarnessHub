@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:18:12Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-02T07:03:28Z"
+status: "closed"
 depends_on: ["SYS-PUBLISHER-PLUGIN-P07"]
 related_nodes: ["feat-publisher-plugin","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["apps/publisher/src/","docs/features/feat-publisher-plugin/refactoring-migration-note.md"]

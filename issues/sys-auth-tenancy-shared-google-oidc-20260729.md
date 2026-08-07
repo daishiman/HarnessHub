@@ -12,8 +12,8 @@ iteration: null
 title: "HarnessHub共通Google OAuthクライアント方式を実装する"
 owners: ["daishiman"]
 created_at: "2026-07-28T23:10:15Z"
-updated_at: "2026-08-01T12:29:53Z"
-status: "active"
+updated_at: "2026-08-01T16:27:29Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P13"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/lib/auth/","apps/hub/src/app/api/auth/","apps/hub/tests/auth-tenancy/","packages/schemas/auth-tenancy/","packages/db/schema/core/identity.ts","packages/db/repository/","packages/db/migrations/","packages/db/__tests__/","system-spec/","specs/harness-hub-system-specification.md","architecture/harness-hub-security.md","architecture/harness-hub-backend.md","architecture/harness-hub-infrastructure.md","features/feat-auth-tenancy.md","tasks/feat-auth-tenancy/sys-auth-tenancy-p11.md","docs/features/feat-auth-tenancy/"]
@@ -46,8 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-28T23:10:15Z","missing_sections":[],"status":"complete"}
 ---
-
-
 
 # 概要
 

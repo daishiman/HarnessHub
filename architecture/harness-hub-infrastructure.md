@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T09:40:38.296426Z"
+updated_at: "2026-08-07T12:30:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-08-02T09:32:20Z","origin_kind":"system-spec-harness","source_digest":"783b0e040c2e827a093cd5b8cb1165ce7f71ea5c8b96d94d7ef61ecbf166cd54","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-07T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"ab47365337dc37f3e517aa522fd1523913cb5f4621f67659790258c84a341102","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -47,17 +47,18 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # Harness Hub infrastructure アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `47d9b82aba718106…`)
-- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `960ed37334a8cbcf…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `ab47365337dc37f3…`)
+- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `fc10ded7f295f685…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（SLO 運用契約を維持し、delivery closure を qa-123 で分離）
-- 再取込日時: 2026-08-02T05:37:45Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
 
 ## Architecture overview
 
@@ -256,3 +257,25 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   手順と証跡は
   [rollout runbook](../docs/features/feat-auth-tenancy/runbook-shared-google-oidc-rollout.md)
   を正とする。
+
+## 2026-08-07 稼働ビルドの素性と deploy 反映鮮度の設計反映
+
+サインイン後に業務画面へ到達できない事象の原因究明 (qa-185〜qa-190) を受けて、
+確定章 [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-187 が
+次を確定した。本節はその参照索引であり、内容の正本は確定章側にある。
+
+- **isolate 再利用と環境値の stale 化 (qa-187-a/-b)**: binding だけを変更する deploy では
+  Cloudflare が実行中の isolate を再利用し得るため、env 由来の値を module 最上位 (global scope) で
+  保持すると、binding 差し替え後も stale な値が持続し得る。公式が名指しする anti-pattern であり、
+  正しい形は request ごとに解決することである。
+- **断定の強さと根拠の強さを揃える (qa-187-c)**: 上記は『機序として公式記述で確認済み』であって
+  『本番でそれが起きた』ことの確認ではない。本番の isolate 生成時刻と secret 投入時刻の前後関係は
+  取得していないため、未ゲート経路など他の候補も併存させる。
+- **設計への反映 (qa-187-d)**: 認証に関わる構築物を module scope に保持せず request ごとに解決する
+  ことを acceptance に置き、module 最上位での環境値依存構築を検査で検出する。検査の説明文には
+  『何を防ぐ検査か』(isolate 再利用による stale) を書き添え、将来これが過剰と誤解されて
+  緩められることを防ぐ。
+
+本設計を実行へ落とす macro feature は `feat-build-identity-deploy-freshness`
+(稼働ビルドの素性確認 V6 と deploy 反映鮮度検出 V7) および
+`feat-runtime-env-resolution-discipline` (実行時環境変数の解決規律) である。

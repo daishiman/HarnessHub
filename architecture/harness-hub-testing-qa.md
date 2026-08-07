@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-02T11:50:05Z"
+updated_at: "2026-08-07T12:30:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/testing-qa.md"}
-source_lineage: {"imported_at":"2026-08-02T11:50:05Z","origin_kind":"system-spec-harness","source_digest":"8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-07T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"585614aca77999660d4f6f689209dbab0f6a3f13ac1f29824a24a7e070a606ed","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -47,16 +47,17 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # Harness Hub testing-qa アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `8e8d4833fcbbbcab…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `585614aca7799966…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
-- 取込日時: 2026-08-02T11:50:05Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -173,3 +174,18 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 - UI は実見出し階層で axe-core 違反 0、password/autocomplete、Workspace domain 正規化を検査する。
   Google 実 client、Playwright、production migration は別の外部実測として残す。
 - 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-130`。
+
+## 2026-08-07 検査の情報源網羅と論点分離の反映
+
+確定章 [system-spec/testing-qa.md](../system-spec/testing-qa.md) の qa-190 が次を確定した。
+本節は参照索引であり、内容の正本は確定章側にある。
+
+- **V7 の情報源は 3 経路 (qa-190-b)**: 同一リテラル union の重複定義を検出する検査は、
+  TypeScript 型宣言・zod schema・ORM schema の 3 経路を突合する。型宣言と zod の 2 経路だけを
+  実装すると ORM schema 側の定義が検査をすり抜ける。
+- **論点分離の適用 (qa-190-a/-c/-d)**: 由来が同じ (同一監査の継続指摘) というだけで別ドメインの
+  論点を 1 entry に束ねない。束ねが後から判明した場合は既登録 entry の逐語を改変せず、
+  分離索引を新規 entry として追記し、主題に近い category へ束縛する。
+
+本設計の検査実装は macro feature `feat-build-identity-deploy-freshness` の V6/V7、
+および `feat-classification-vocabulary-parity` が所有する。

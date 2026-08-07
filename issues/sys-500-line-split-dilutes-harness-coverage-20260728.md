@@ -12,8 +12,8 @@ iteration: null
 title: "500 行分割が harness coverage の分母を希釈し ratchet を回帰させる"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:20:00Z"
-updated_at: "2026-07-28T00:22:00Z"
-status: "draft"
+updated_at: "2026-08-04T03:17:15Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-hooks-entry-point-parity-generalization-20260728"]
 resource_scope: ["scripts/validate-harness-coverage.py","eval-log/harness-coverage-floor.json","eval-log/coverage/scripts"]

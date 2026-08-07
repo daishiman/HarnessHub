@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T04:47:10Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P02"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-docs-cms/design-review-notes.md"]

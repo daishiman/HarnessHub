@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T12:14:09Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P07"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/legal/","apps/hub/src/app/legal/__tests__/","docs/features/feat-user-org-admin/refactoring-migration-note.md","packages/db/schema/user-org-admin/"]

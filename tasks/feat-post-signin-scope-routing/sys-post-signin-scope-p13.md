@@ -12,9 +12,9 @@ iteration: null
 title: "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-03T05:30:35Z"
+updated_at: "2026-08-04T00:40:02Z"
 status: "active"
-depends_on: ["SYS-POST-SIGNIN-SCOPE-P12"]
+depends_on: []
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts","docs/features/feat-post-signin-scope-routing/release-record.md","docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md","docs/features/feat-post-signin-scope-routing/test-run-record.md","system-spec/frontend.md","system-spec/security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","features/feat-post-signin-scope-routing.md","tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"]
 purpose: "feat-post-signin-scope-routing の P13 を実行する: リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"

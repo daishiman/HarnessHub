@@ -12,8 +12,8 @@ iteration: null
 title: "fetched reference の evidence provenance 欠落を解消する"
 owners: ["daishiman"]
 created_at: "2026-08-04T00:00:00Z"
-updated_at: "2026-08-04T05:48:41.981011Z"
-status: "draft"
+updated_at: "2026-08-04T08:06:05Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-requirements"]
 resource_scope: ["issues/sys-fetched-reference-evidence-provenance-20260804.md","system-spec/fetched-references.json","system-spec/spec-state.json","plugins/system-spec-harness/scripts/validate-source-citation.py"]

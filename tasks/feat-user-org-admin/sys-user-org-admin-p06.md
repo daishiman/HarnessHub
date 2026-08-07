@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 単体/結合/分離/a11yテストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-07T03:37:30Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P05"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/legal/","apps/hub/src/app/legal/__tests__/","apps/hub/src/features/user-org-admin/__tests__/"]

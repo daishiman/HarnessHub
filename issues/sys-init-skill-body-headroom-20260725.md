@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "run-dev-graph-init に skill-local references/ を新設し Execution contract 5 の過積載と PD-001 の残 1 行を同時に解消する"
+title: "dev-graph: run-dev-graph-init に skill-local references/ を新設し Execution contract 5 の過積載と PD-001 の残 1 行を解消する"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:29:18Z"
-updated_at: "2026-07-25T11:01:51.664887Z"
+updated_at: "2026-07-28T04:12:10Z"
 status: "closed"
 depends_on: []
 related_nodes: []

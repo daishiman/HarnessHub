@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:55:18Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P11"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-docs-cms/runbook.md"]

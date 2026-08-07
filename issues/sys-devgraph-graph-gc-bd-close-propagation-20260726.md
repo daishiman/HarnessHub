@@ -12,8 +12,8 @@ iteration: null
 title: "graph node の GC 削除が bd issue へ伝播せず orphan external_ref を生み続ける"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-28T02:23:00Z"
-status: "draft"
+updated_at: "2026-07-28T22:39:54Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725"]
 resource_scope: [".dev-graph/state/graph.json","plugins/dev-graph/scripts/","plugins/dev-graph/tests/","issues/"]

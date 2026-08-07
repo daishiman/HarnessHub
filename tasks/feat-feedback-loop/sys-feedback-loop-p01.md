@@ -12,8 +12,8 @@ iteration: null
 title: "改善要望フィードバックループ要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T10:16:41Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-feedback-loop/requirements-baseline.md"]

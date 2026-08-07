@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T12:13:38Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P02"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-user-org-admin/design-review-notes.md"]

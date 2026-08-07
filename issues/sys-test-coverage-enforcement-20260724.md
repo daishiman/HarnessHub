@@ -12,8 +12,8 @@ iteration: null
 title: "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築"
 owners: ["daishiman"]
 created_at: "2026-07-24T11:51:28Z"
-updated_at: "2026-07-28T02:43:39.962309Z"
-status: "draft"
+updated_at: "2026-07-28T04:31:12Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugin-plans/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/references/system-task-spec-template.md","plugins/system-dev-planner/scripts/validate-system-plan.py","packages/db/vitest.config.ts"]

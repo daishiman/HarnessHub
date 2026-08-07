@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-29T08:49:12Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P05"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["apps/hub/src/app/api/v1/sheets/","apps/hub/src/features/hearing-intake/ai-job-adapter/","apps/hub/src/features/hearing-intake/estimation-adapter/","docs/features/feat-hearing-intake/test-run-report.md"]

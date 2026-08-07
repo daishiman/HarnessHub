@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "live-trial scenario の required_observations に残る恒真観測を棚卸しし、非空虚性・in-run negative control・恒真性の自己申告で解消する"
+title: "live-trial scenario の required_observations に残る恒真観測を棚卸しし解消する"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-07-28T00:00:00Z"
+updated_at: "2026-07-28T04:11:36Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-c14-publication-probe-tautology-20260726"]

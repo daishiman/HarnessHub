@@ -27,7 +27,9 @@ sources: [system-spec/00-requirements-definition.md]
 | # | 利用者がすること | 触れる surface | 裏で動く仕組み | 根拠 |
 |---|---|---|---|---|
 | 1 | Hub Web へアクセス → 会社の SSO でログイン | S07 サインイン → 顧客 IdP | Auth.js + テナント別 OIDC。Hub 独自アカウントなし | qa-005 |
-| 1.5 | サインイン完了後、自動的に業務画面へ着地する | S07 → S01 一覧 (既定 `/sheets`) | 遷移元 path があればそこへ、無ければ既定着地。同一 origin の相対 path のみ許可し、不正な戻り先は既定着地へフォールバック (open redirect 防止)。[運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) 参照 | qa-135, qa-137, feat-post-signin-scope-routing |
+| 1.5 | サインイン完了後、自動的に業務画面へ着地する | S07 → 着地ダッシュボード (既定 `/dashboard`。2026-08-07 に `/sheets` から変更 = appr-034) | 遷移元 path があればそこへ、無ければ既定着地。同一 origin の相対 path のみ許可し、不正な戻り先は既定着地へフォールバック (open redirect 防止)。[運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) 参照 | qa-135, qa-137, qa-170, appr-034, feat-post-signin-scope-routing |
+| 1.6 | 着地先で「今どこにいて、次に何をすればいいか」が分かる | 着地ダッシュボード | 所属テナント／ワークスペースを常時表示 (複数所属ならその場で切替)、自分が最後に触ったものを種別横断で提示、既存業務画面への導線を必ず持つ。稼働状況は異常時だけ出す (通常時は出さない) | qa-177, appr-035 |
+| 1.7 | 認証基盤が使えないときも、自分の操作ミスだと誤解しない | 着地ダッシュボード / サインイン | 秘密の未解決などで認証が縮退した場合、「サインインしてください」と一律表示して無限の再試行へ誘導しない。権限不足 (403) では再サインインへ誘導しない (解決しないためループになる) | qa-162, qa-175, specs/harness-hub-post-signin-landing-observability-addendum.md |
 | 2 | プラグイン Hub で業務ツールを探す | S01 一覧 | Tenant/Workspace スコープ強制 (見えるのは自 Workspace のみ)。複数 Project/target を検索・絞込 | I4, D4 |
 | 3 | 詳細を見る | S02 詳細 | CatalogEntry + Release 情報 | I4 |
 | 4a | **Claude 契約あり**: S01/S02 の「追加/ダウンロード」→ 提示された導入手順を実行 | install/download modal → 自分の Claude Code | 安定版をサーバ解決し、URL 型 marketplace (native source) または Bootstrap Installer を提示。GitHub アカウント不要。raw ZIP は Stage 0 採用時だけ短命 URL | I6 |

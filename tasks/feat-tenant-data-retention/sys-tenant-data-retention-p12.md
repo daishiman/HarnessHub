@@ -12,8 +12,8 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:10:12Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P11"]
 related_nodes: ["feat-tenant-data-retention"]
 resource_scope: ["docs/features/feat-tenant-data-retention/runbook.md"]
