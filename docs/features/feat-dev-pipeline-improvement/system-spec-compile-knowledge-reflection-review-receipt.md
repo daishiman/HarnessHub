@@ -96,6 +96,19 @@ implementation_readiness: {"checked_at":"2026-08-04T03:21:00Z","missing_sections
 - remote `main` と local `main` が同一 `fb05db56` であることを確認し、本 branch へ `main` を merge した (`e14f2231`)。この後の最終 fetch と全ゲート再実行を PR 作成直前に行う。
 - (2026-08-08 追補) `python3 -m pytest tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py -q` — 16 passed(新規回帰3件を含む)。`python3 -m pytest tests/scripts-root/ -q` — 1188 passed。`python3 -m pytest plugins/system-spec-harness -q` — 508 passed(再実行)。`python3 scripts/lint-doc-line-limit.py` — 605 文書、違反 0。remote `main` / local `main` は同一 (差分 0 コミット) を再確認、branch は既に main を merge済み(`74ae832d`)でコンフリクトなし。
 
+## 追補 (2026-08-08 その2): main 再合流とコンフリクト解消
+
+PR #665 が main に対して 6 ファイルの衝突を報告したため、`origin/main`（当時 `1c5e7451`、その後 `3aa84ee9` まで1コミット進行）を本 branch へ再度合流した。衝突は以下のとおり解消し、いずれも一方を機械的に選ぶのではなく、両ブランチの完全な diff を突き合わせたうえで判断した。
+
+- `compile-spec-doc.py` / `test_compile_spec_doc.py`: 双方が「`knowledge-catalog.json` の `depends_on` に基づく設計知識のトポロジカル順序付け」を独立実装していた。本 branch 側は `lib/spec_docset_catalog.py` へ切り出した Kahn 法によるトポロジカルソート、main 側は `build-knowledge-order.py` という兄弟スクリプトを `importlib` 動的読込する方式。本 branch 側実装がテストカバレッジ上位互換だったため、本 branch 側を採用し、main 側でのみ追加された `build-knowledge-order.py`（どこからも参照されなくなった孤立スクリプト）とその coverage 台帳エントリはユーザー承認のうえ削除した。
+- `scenario-verdict.json`: 追記専用ではない「最新 C19 live-trial 判定」の状態ファイルのため、より新しい main 側の内容をそのまま採用した。
+- `harness-coverage.json`: 生成物（`scripts/validate-harness-coverage.py` の出力）のため、マージ後の実測値を `python3 scripts/validate-harness-coverage.py --json eval-log/harness-coverage.json` で再生成した（scripts count 433→438 に更新、既存の llm_eval 系未達は今回の変更と無関係の既知の状態）。
+- `audit-fork-ledger.jsonl`: 監査台帳（append-only、[[audit-fork-ledger-forgery-issue-20260728]] で完全性が問題視されている対象）のため、どちらか一方を選ばず両ブランチの新規行を `ts` でソートして和集合（union）マージし、全行が JSON として妥当であることを検証した。
+
+マージ作業中、無関係な untracked ファイルを誤って `git add -A` してしまい、`git reset`（引数なし）で取り消した際に、その副作用で `MERGE_HEAD`/`MERGE_MSG` が失われる事故が発生した（git はマージ中の後始末処理を素の `reset` にも紐付けているため）。作業ツリー・インデックスの内容は無傷だったため、正しいマージ相手コミット SHA で `MERGE_HEAD` を手動復元し、2 親のマージコミットとして正しくコミットし直した（`bc172799`）。その後 origin/main の残り1コミット分 (`3aa84ee9`) を通常の `git merge` で追加取り込み（衝突なし、`2fa35c79`）。再発防止として、マージ中の部分的なステージ取消はパス指定の `git reset -- <path>` を使う運用を今後徹底する。
+
+この一連の解消・再生成後も、製品仕様・設計への意味的影響は **なし**。plugin 内部実装の統合と生成物の再計算に閉じており、上表の判断は変わらない。
+
 ## 残課題
 
 blocker はない。architecture 専用章を将来追加する場合は、architecture node が要件定義章を source artifact としている現在の対応を見直す（低優先度）。
@@ -113,3 +126,4 @@ blocker はない。architecture 専用章を将来追加する場合は、archi
 | 2026-08-03 | 最終レビューの受領書を作成 | Codex |
 | 2026-08-04 | fork verdict 束縛、C19 fresh live trial PASS、仕様影響なしの受領を記録 | Codex |
 | 2026-08-08 | hooks entry point parity 検査の是正(構文エラー伝播・CLAUDE_PLUGIN_ROOT 判定・デコード不能ファイル耐性)を追補、回帰テスト追加、仕様影響なしを再確認 | Claude |
+| 2026-08-08 | main 再合流に伴う6ファイルのコンフリクト解消(設計知識トポロジカル順序の実装統合、監査台帳union merge、生成物再計算)とMERGE_HEAD事故からの復旧を記録、仕様影響なしを再確認 | Claude |
