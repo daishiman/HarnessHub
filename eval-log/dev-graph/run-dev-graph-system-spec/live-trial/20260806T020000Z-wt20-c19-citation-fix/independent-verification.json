@@ -1,0 +1,20 @@
+{
+  "evaluator": "independent-verifier-opus-4.6",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "pane.txt:13 'Skills restored' lists all 4 harness skills (elicit/doc-fetch/compile/completeness-evaluator), confirming they were Skill-loaded before compaction. Artifact trail is internally consistent: completeness-report.json verdict=PASS with all 6 aspects PASS; fetched-references.json has 3 records (sqlite 3.53.4, fastapi 0.141.1, local-bearer-token 0.141.1) with retrieved_at timestamps; audit-fork-ledger.jsonl has 3 audit forks (C06 hearing-auditor, C07 matrix-auditor, C08 doc-freshness-auditor) on session 615f57da; 8 chapter .md files + index.md + 00-requirements-definition.md all present with confirmed markers; gate_results in report show validate-coverage-matrix.py exit 0 and validate-source-citation.py exit 0. Limitation: transcript compacted so direct Skill invocations not visible, evidence is artifact-based plus Skills-restored marker."
+    },
+    "2": {
+      "met": true,
+      "evidence": "graph.json contains 2 nodes: spec-requirements-definition (artifact_kind=specification) and arch-todo-api-technical (artifact_kind=architecture). source_lineage 6/6 fields non-null on both: origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_version=0.1.0, imported_at=2026-08-03T12:12:40Z. source_digest independently verified via shasum -a 256: spec node digest 79275aaefb07c3bbc9060bdf27c4d3c498d802243b75a49d42ed0815111c9dfb matches system-spec/00-requirements-definition.md; arch node digest 6aa8f5389daea4eebb923543b901d7f82564fa2e3da481bb03370ece2fc12c9e matches system-spec/index.md. Both have confirmation_status=confirmed, confirmation_evidence.evidence_ref=system-spec/completeness-report.json, evaluated_digest=a272e6a3e68517d38a4de4452a16705469e583d91315fadde02c05bd7201f60f which matches sha256 of completeness-report.json (independently computed). validate-source-digest.py exit 0 (pane:206-209, checked=2, mismatch=[]), validate-evidence-refs.py exit 0 (pane:211-215, scanned=2, dangling=[])."
+    },
+    "3": {
+      "met": true,
+      "evidence": "C02-only: graph_revision=2 for 2 nodes. pane.txt:120-132 shows upsert-node.py Bash call for spec node (dry-run then apply, revision 0->1); pane.txt:151-163 shows same for arch node (revision 1->2). specs/spec-requirements-definition.md and architecture/arch-todo-api-technical.md have -rw------- permissions consistent with Python open() via upsert-node.py, not Write tool. Agent did Edit _node-*.json staging files (adding missing frontmatter fields, fixing null->[]) and Write _body-arch.md (101 lines) as preparation inputs for upsert-node.py; these are system-spec/ staging files, not graph store (.dev-graph/state/graph.json) or final spec/arch artifacts. No duplicate logic: architecture node body is a 4KB summary (not a copy of ~30KB chapter content); source_lineage provides the harness reference chain. No changes to plugins/dev-graph/ codebase during trial. Grep results for positive control searches are collapsed in pane (ctrl+o) so not independently re-verifiable from transcript alone, but artifact structure confirms no logic duplication."
+    }
+  }
+}

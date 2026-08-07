@@ -221,6 +221,10 @@ dev-graph=マクロ層 (機能単位の保持 + 実行オーケストレーシ�
 - PR close→task close→ローカル反映の自動化 (§3 カスケード / C25 hook) は bd CLI (C28 bridge) と PR fact を直接叩き、strandkanban を経由しない。看板は結果を表示するだけ。
 - したがって看板の起動有無・オフライン・停止は完了収束に影響しない (§7 の drift 耐性と同一設計)。CI/headless 環境で SvelteKit を起動できなくても、bd + C05 render で運用は成立する。
 
+### 9.4 C05 registration receipt の stale 表示契約
+
+C05 の registration receipt は登録時点の `graph_digest_after` を保持する。後続 C03 sync が graph revision を進めた場合、node IDs、expected/applied count、source digest、source lineage が一致しても全体 graph digest は古くなる。この場合、C05 は登録証拠を消さず `registration_verification.status=partial`、`reason=graph_digest_stale`、`graph_digest_match="stale"` を CLI JSON、HTML banner、埋込み metadata に共通して返す。これ以外の証拠不一致は引き続き fail-closed とし、digest 値の書き換えで `verified` を偽装してはならない。
+
 ## 10. parity manifest の由来必須化と unmapped 分類 (C28 ready / C16 schedule の停止条件) — 正本
 
 C28 `bd-bridge.py --op ready --parity-manifest` が受け取る manifest は graph の snapshot であり、tracker 側の事実ではない。snapshot に由来がないと、古い snapshot が `edge_parity.confirmed=true` を主張しても下流が stale を機械判定できず、消えた/増えた node を黙って無視した ready-set が出る。以下を必須契約とする。

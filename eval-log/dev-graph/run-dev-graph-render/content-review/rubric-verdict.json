@@ -2,7 +2,7 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-render",
-    "skill_md_sha256": "128c9ae12517217a4530d64750a1d2f276a71a28082215805501de086f761369"
+    "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
@@ -13,8 +13,8 @@
     "dependency_break": 0,
     "smell": 0
   },
-  "reviewer": "focused-content-review-f5e76715",
-  "reviewed_at": "2026-07-30T05:47:27Z",
+  "reviewer": "c05-independent-content-review-20260803-221356z",
+  "reviewed_at": "2026-08-03T22:13:56Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -24,15 +24,15 @@
       "OUT1"
     ],
     "positive_feedback": [
-      "OUT1 は done 数 X を receipt 照合から除外する理由を、register-package.py の active 強制と graph_digest_after の stale 化で具体化している。検証漏れと意図的な対象外を区別でき、将来のレビューで同じ誤解を再発させない。",
-      "renderer は count・source digest・graph digest の不一致を HTML 書込み前に ContractError で fail-closed にする。検証失敗時に部分的または誤解を招く出力を残さない実装が SKILL の契約と一致している。",
-      "fresh live verdict と独立検証は、Skill 実起動、4/13、receipt 13/13、`verified`、source_digest 2 件、graph read-only、goal-seek 証跡を現行 behavior closure に対して確認している。SKILL・実装・テスト・実走証跡の連鎖が current SHA で閉じている。"
+      "IN1 is supported by the renderer's self-contained-document guard and the focused regression suite: three tests passed, including the verified, not_performed, and stale-digest branches. The current live trial also records inline SVG with no external script/link.",
+      "OUT1 has current guard-clean, closure-bound evidence: live trial 20260806T030000Z-0ui0-render-guardclean is overall PASS, its independently recomputed skill-directory tree SHA is 65df36fd407873af8525c3fae3a8b95063b61a8be28b11e979e27bb7afd27b4e, and the independent verifier confirms SVG/runtime, 13/13 denominator, recomputed numerator 4, and source-digest evidence. Its repo-relative scenario reference and lint-live-trial-verdict check both pass, including the C02 proof-write guard.",
+      "Implementation parity is complete for the changed receipt semantics. _registration rejects malformed, scope, node-ID, count, source-digest, and source-lineage-digest evidence before output; only graph_digest_after mismatch reaches the explicit partial/graph_digest_stale CLI receipt, HTML banner, and embedded render metadata."
     ],
     "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-independent-incremental-review",
     "next_action": "none"
   },
-  "notes": "incremental focused combined review の rubric 側 projection。fresh read-only evaluator session f5e76715-04b9-4aec-a248-f8fba17eee04 が name/trigger、output contract、responsibility、least privilege、implementation parity を確認し、high severity finding 0 件と判定した。exhaustive 30 思考法は未使用。PASS。"
+  "notes": "Genuine current incremental rubric review of only plugins/dev-graph/skills/run-dev-graph-render/SKILL.md at SHA d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669. Reconfirmed IN1 and OUT1 against the renderer, focused regression test diff, execution-tracker receipt contract, current C05 scenario receipt, and guard-clean fresh live trial 20260806T030000Z-0ui0-render-guardclean plus independent verification. PASS: no contradiction, meaningful omission, contract/dependency/implementation mismatch, or high-severity rubric concern."
 }

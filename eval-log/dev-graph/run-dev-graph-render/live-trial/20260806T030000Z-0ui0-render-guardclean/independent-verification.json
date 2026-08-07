@@ -1,0 +1,24 @@
+{
+  "trial_id": "20260806T030000Z-0ui0-render-guardclean",
+  "evaluator": "fresh independent agent",
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "runtime_svg": {
+      "result": "PASS",
+      "evidence": "Fresh evaluator confirmed inline SVG and JS, no external runtime references, and focused stale-only partial regression passes (3)."
+    },
+    "denominator": {
+      "result": "PASS",
+      "evidence": "Fresh evaluator confirmed HTML metadata and the exact registration proof both report applied_count=13 and expected_count=13 with verification=verified."
+    },
+    "numerator": {
+      "result": "PASS",
+      "evidence": "Fresh evaluator independently recomputed four done/closed child tasks (P01-P04) from the graph, matching rendered progress 4/13."
+    },
+    "source_digest": {
+      "result": "PASS",
+      "evidence": "Fresh evaluator confirmed every one of the 13 child source lineages matches the registration proof digest; the tracked proof remained clean and the transcript contains no proof write."
+    }
+  }
+}

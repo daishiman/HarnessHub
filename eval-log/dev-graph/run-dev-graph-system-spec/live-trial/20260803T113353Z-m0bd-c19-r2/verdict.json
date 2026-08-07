@@ -1,0 +1,99 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-system-spec",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-21/eval-log/dev-graph/live-trial-fixtures/m0bd-c19-r2-20260803",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-system-spec",
+    "system-spec-harness:assign-system-spec-completeness-evaluator",
+    "system-spec-harness:run-system-spec-compile",
+    "system-spec-harness:run-system-spec-doc-fetch",
+    "system-spec-harness:run-system-spec-elicit"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "5d2eb84cd3eff462d7ae26339c743c5b56df0c0d6e2738f1b83acca1516be5b4",
+  "transcript_sha256": "85d8dc037bf52f3c07f7a31cd303d5a8ba1b1fb1ffd3f7fb3cfe3750089ec4a1",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": 5.0,
+    "poll_exit": "DONE",
+    "wall_clock_s": 2130.0
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+    "required_observations": [
+      "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "the imported specification and architecture retain source lineage and evaluator evidence",
+      "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+        "evidence_ref": "evidence/independent-verification.json#/observations/obs1"
+      },
+      {
+        "index": 2,
+        "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+        "evidence_ref": "evidence/independent-verification.json#/observations/obs2"
+      },
+      {
+        "index": 3,
+        "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+        "evidence_ref": "evidence/independent-verification.json#/observations/obs3"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": true,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [
+        "upsert-node.py",
+        "SYSTEM_SPEC_AUDIT_FORK_LEDGER",
+        "doc-fetch は公式ページを実取得して現行 version を記録する"
+      ],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

@@ -82,3 +82,55 @@ status: "accepted_with_release_pending"
 
 以上により、仕様影響の判定、正本への反映または no-change 理由、実装・検証・残課題を
 同一の追跡可能な記録として受領する。
+
+## 追補 (2026-08-04): 本番反映時に発見した conformance fix
+
+P13 の本番デプロイ試行 (secret 投入後の CI 再実行) で、本番 hearing smoke テストの
+SEC8-a (他テナントの Bearer token で自テナントのヘッダーを騙るリクエスト) が
+`tenant_mismatch` (404) ではなく `ambiguous_scope` (403) を返す不具合を検出した。
+
+### 原因
+
+`specs/harness-hub-post-signin-workspace-scope-addendum.md` §B は scope 解決の正規入力を
+「(a) 明示ヘッダー = API/機械クライアント専用」「(b) session の active
+tenant/workspace = ブラウザ通常遷移専用」の 2 系統に明確に分離済みだった。しかし
+`authz.ts` の実装は `resolveSessionScope()` を principal の種別を区別せず常に呼んでおり、
+Bearer token (Device Flow access token) 保持クライアントにも session cookie 由来の
+singleton-workspace 自動選択 (所属 1 件なら cookie 無しでも active workspace を自動確定
+する §C の規則) を適用していた。所属 1 workspace の principal が明示ヘッダーで別
+workspace を指定すると、session 側の自動確定値と衝突し `ambiguous_scope` に落ちていた。
+
+### 判定: 新しい仕様変更ではない
+
+§B は既に「明示ヘッダー系統は API/機械クライアント専用、session 系統はブラウザ通常遷移
+専用」と規定しており、今回の修正はこの既存契約に実装を合わせる conformance fix
+(仕様の意味を変えない適合修正) である。`system-spec/`・`specs/`・`architecture/`・
+`features/` のいずれも新規反映は不要と判定する。
+
+### 実装
+
+- `apps/hub/src/middleware/authz.ts`: `AuthzInput` に `allowSessionScope?: boolean`
+  (既定 `true`) を追加し、`false` のとき `resolveSessionScope()` を呼ばず
+  session scope を `null` として扱う。
+- `apps/hub/src/middleware.ts`: `authorize()` 呼び出しに
+  `allowSessionScope: bearer === null` を配線し、Bearer token 保持リクエストにのみ
+  session scope 解決を無効化する。
+
+### 検証
+
+- 回帰テスト追加: `apps/hub/tests/authz/scope-resolution.test.ts` TID-SCOPE-06
+  (2 tests) — Bearer 経路 (`allowSessionScope: false`) で明示ヘッダーが優先され
+  `ambiguous_scope` にならないこと、既定値 (session 許可) では singleton 自動確定と
+  衝突しないことを確認。
+- `apps/hub/tests/authz/scope-resolution.test.ts` (18 tests) と
+  `apps/hub/tests/security/` (34 tests) は計 52 tests 全て PASS。
+- `tsc --noEmit`、`biome check` (対象 3 ファイル) ともに PASS。
+- 本テスト実行環境固有の事象として、`tests/authz/scope-resolution.test.ts` の
+  TID-INT-01/TID-INT-03 (HomePage SSR redirect、本修正と無関係な既存テスト) が
+  この worktree でのみ `ReferenceError: React is not defined` で失敗した。同一コミット
+  content を独立した git worktree (fresh checkout) で実行すると再現しないことを確認
+  済みであり、CI が使う fresh checkout 環境には影響しない worktree ローカルの
+  キャッシュ/環境要因と判断する。pre-push hook (`scripts/run-ci-checks.sh`) は
+  vitest を実行しないため、この事象は push をブロックしない。
+
+P13 は本番再デプロイと実環境確認が残るため引き続き open のまま維持する。

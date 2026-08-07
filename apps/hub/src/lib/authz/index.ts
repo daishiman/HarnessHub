@@ -32,6 +32,7 @@ export {
   type AuthzPrincipal,
   type AuthzResourceRef,
   atLeast,
+  BASE_ROLES,
   type BaseRole,
   type EffectiveRole,
   ROLE_ORDER,

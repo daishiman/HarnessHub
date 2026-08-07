@@ -140,6 +140,13 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // Publisher CLI 専用。publish.write と異なり session を許可しない。
   'publish.cancel': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
   'deployment.register': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
+  // feat-user-org-admin (AD-3): S18 アカウント設定。自分自身の情報のみを対象にするため
+  // role の下限は member (`token.list.self` と同型の selfOnly パターン)。
+  'me.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'me.update': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  // 読取りは一覧・個別ダッシュボードから誰でも参照する想定 (users.read と同強度)。
+  // 変更は既存の coefficients.change (workspace-admin) のまま。
+  'coefficients.read': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
 
   // feat-tenant-data-retention (AD-4)。workspace 内の共有データなので selfOnly は使わない
   // (`docs.write_tenant` と同様に workspace 単位で判定する。所有者限定ではない)。

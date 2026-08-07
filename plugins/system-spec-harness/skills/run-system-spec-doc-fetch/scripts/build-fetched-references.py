@@ -2,7 +2,7 @@
 # /// script
 # name: build-fetched-references
 # version: 0.1.0
-# purpose: run-system-spec-doc-fetch R3 の記録形状を決定論的に組み立てる assembler。取得済みドキュメントの record を必須フィールド検証・source_url host と official_host の一致検証付きで正規化し、fetched-references.json (共有データ契約) を出力する。恒久キャッシュ/ミラーリング/ネットワークは行わず WebSearch/WebFetch の取得結果を渡し込む純関数群として動く。内容が現行最新版かの意味判定は C08 が、対象一覧との全件対応の最終突合は plugin-root の validate-source-citation.py が担う。
+# purpose: run-system-spec-doc-fetch R3 の記録形状を決定論的に組み立てる assembler。取得済みドキュメントの record を必須フィールド検証・source_url host と official_host の一致検証・retrieval evidence digest 形式検証付きで正規化し、fetched-references.json (共有データ契約) を出力する。恒久キャッシュ/ミラーリング/ネットワークは行わず WebSearch/WebFetch の取得結果を渡し込む純関数群として動く。内容が現行最新版かの意味判定は C08 が、対象一覧との全件対応と証跡実在の最終突合は plugin-root の validate-source-citation.py が担う。
 # inputs:
 #   - argv: assemble サブコマンドと --records FILE / --targets FILE / --out FILE
 # outputs:
@@ -30,6 +30,8 @@ record 素材 (入力) の期待形状:
    "version": "19.0",                      # version または last_updated のいずれか必須
    "last_updated": "2026-06-01",
    "latest_checked_at": "2026-07-11T00:00:00Z",
+   "evidence_ref": "system-spec/retrieval-evidence/react.json",
+   "evidence_sha256": "<小文字16進数64桁のSHA-256>",
    "summary": "..."}
 
 出力 (fetched-references.json):
@@ -39,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
@@ -50,8 +53,11 @@ REQUIRED_INPUT_FIELDS = (
     "official_publisher",
     "retrieved_at",
     "latest_checked_at",
+    "evidence_ref",
+    "evidence_sha256",
     "summary",
 )
+SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
 # 正規化後の出力キー順 (契約の可読順)。存在するものだけ載せる。
 OUTPUT_FIELD_ORDER = (
     "target_id",
@@ -62,6 +68,8 @@ OUTPUT_FIELD_ORDER = (
     "version",
     "last_updated",
     "latest_checked_at",
+    "evidence_ref",
+    "evidence_sha256",
     "summary",
 )
 
@@ -104,6 +112,8 @@ def build_record(rec: dict) -> dict:
 
     if not (rec.get("version") or rec.get("last_updated")):
         raise RecordError(f"{tid}: version と last_updated の両方が空 (いずれか必須)")
+    if not SHA256_HEX.fullmatch(str(rec.get("evidence_sha256", ""))):
+        raise RecordError(f"{tid}: evidence_sha256 は小文字16進数64桁の SHA-256 必須")
 
     src = rec["source_url"]
     derived = host_of(src)

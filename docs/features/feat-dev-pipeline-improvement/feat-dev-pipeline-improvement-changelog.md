@@ -7,7 +7,32 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-04: C19 r10 自走受入と C14 参照順序の是正
+
+- `main` 統合後の C19 r4 live-trial は、C14 の knowledge catalog が定める前提順と C03 の設計参照順が一致しない不備を FAIL として検出した。`build-knowledge-order.py` へ依存関係の topological order（前提を先にする順序）を分離し、backend の参照を `ddd → clean-architecture → api-design-patterns` に是正した。
+- compile / source-citation の focused pytest は 131 passed。r5 は最終 status 出力前に中断し、r6 は実行内容が PASS でも nudge=1 のため `DEGRADED` とした。r7 は audit-ledger 保護強化前の旧挙動、r8 は stale progress / intermediate を独立 verifier が検出した FAIL として監査履歴に残した。新しい隔離 fixture の fresh r10 は `overall=PASS`、nudge=0、gate=0、正規4 entry point、C02 登録、source digest・evidence reference、独立検証の 3 観測をすべて満たし、唯一の成功証跡として登録した。
+- task-contract / verdict lint は criteria receipt の OUT1 PASS evidence を優先し、時計ずれで将来日付になった歴史的 run や r7 が r10 を上書きしないようにした。回帰 pytest と両 lint の PASS で選択規則を固定した。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。層別判断、試験失敗の根因、再開条件は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-03: C19 task contract r2 の fresh live-trial 受領
+
+- `HarnessHub-eiky` の C19 scenario r2 への更新で旧受領書が `scenario-contract-superseded` となったため、`HarnessHub-m0bd` / Dev Graph `issue-c19-live-trial-rerun-task-contract-r2-20260803` で fresh live-trial を実行した。
+- `main` 統合後の `20260806T020000Z-m0bd-c19-r3-postmain` は overall=PASS。r2 task contract の `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGER`、公式ページを実取得して現行 version を記録する条件を満たした。製品仕様への影響がない層別判断と証跡は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-04 追記: 全 plugin の hook entry point parity
+
+- `HarnessHub-vf66` で hook の台帳 (`package-contract.json`)・登録 (`hooks/hooks.json` と manifest inline hooks)・実体を HK-001..003 で双方向に照合する repo 全体ゲートへ一般化した。
+- 検査で発見した harness-creator の未宣言 entry point を台帳へ追加し、skill-intake の手動 keychain 操作は `hooks/` から `scripts/` へ移して自動処理との責務を分離した。
+- `validate-plugin-completeness.py` は 500 行を超えたため、hook 判定を `validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書ゲート PASS を確認した。
+- 変更は開発品質契約だけに影響する。`qa-143`、`system-spec/`、`specs/`、architecture、feature、task、[仕様反映受領書](hooks-entry-point-parity-spec-reflection-receipt.md) に反映し、製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。
+
 ## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
+
+## 2026-08-04 追記: renderer registration receipt の stale digest を部分照合として表示
+
+- `HarnessHub-0ui0` で、registration 時点に束縛された `graph_digest_after` が後続 sync で古くなる構造を、registration proof 全体の失敗と扱わないよう是正した。
+- node IDs、件数、source digest、source lineage が一致し graph digest も一致する場合は `verified`、graph digest だけが stale の場合は `partial` / `graph_digest_stale`、receipt 未指定は `not_performed` とする。他の証拠不一致は fail-closed のまま維持する。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。層別反映と検証は [仕様反映受領書](render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
 
 - `HarnessHub-7xi9` の 2026-07-31 事象は、reflog の直接証拠により `git reset --hard` と
   直後の `git pull` が最有力原因と判明した。mtime 一致だけで非 Git 系 clobber と断定しない。

@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/dev-graph/scripts/schedule_graph_nodes.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "genuine final code review for HarnessHub-xz0u. py_compile PASS and the focused scheduler suite (56 passed) covers ready-payload absence, parity ordering, malformed dependency fail-closed behavior, lease conflicts, and batch construction. The module has one responsibility: pure graph-node predicates. touches() rejects stale/non-string resource_scope values rather than silently granting an empty touch set; is_schedulable() requires active/confirmed/pass/complete; blocking_dependencies() validates both P01 and parent dependency shapes and returns a sorted deduplicated result. It has no network or write scope. Minor: the error text says non-empty string[] although an omitted resource_scope defaults to an empty list and is accepted; this is deliberate compatibility behavior but the wording could be clearer."
+  },
+  "reviewed_by": "xz0u-final-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}
