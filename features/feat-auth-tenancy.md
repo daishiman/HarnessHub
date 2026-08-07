@@ -12,8 +12,8 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:47:57.685957Z"
-status: "active"
+updated_at: "2026-08-02T23:36:46Z"
+status: "closed"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
 related_nodes: []
 resource_scope: ["features/feat-auth-tenancy.md"]

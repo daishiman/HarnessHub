@@ -12,8 +12,8 @@ iteration: null
 title: "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:48:28Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P08"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/docs/","apps/hub/src/features/docs-cms/ai-job-adapter/","docs/features/feat-docs-cms/quality-assurance-report.md","packages/schemas/docs-cms/"]

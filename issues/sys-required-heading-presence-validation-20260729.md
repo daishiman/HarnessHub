@@ -12,8 +12,8 @@ iteration: null
 title: "required heading 欠落を C11 readiness で専用拒否する"
 owners: ["daishiman"]
 created_at: "2026-07-29T09:35:58Z"
-updated_at: "2026-07-29T09:37:50Z"
-status: "draft"
+updated_at: "2026-08-04T07:41:06Z"
+status: "closed"
 depends_on: ["issue-implementation-readiness-body-validation-20260728"]
 related_nodes: ["issue-implementation-readiness-body-validation-20260728","feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["plugins/dev-graph/scripts/validate-graph-schema.py","plugins/dev-graph/scripts/graph_artifact_readiness.py","plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py","plugins/dev-graph/tests/test_graph_artifact_readiness.py","plugins/dev-graph/templates/README.md","issues/"]

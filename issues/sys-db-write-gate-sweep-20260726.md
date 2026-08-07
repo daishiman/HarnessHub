@@ -9,11 +9,11 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "packages/db の書き込みのうち guardedWrite を通っていない経路が残っており監査 append と衝突しうる"
+title: "packages/db の全 write を guardedWrite へ掃き出し CI で機械検査する"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T00:00:00Z"
-status: "draft"
+updated_at: "2026-07-28T04:09:50Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-domain-model-db","feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
 resource_scope: ["packages/db/repository/","packages/db/__tests__/","scripts/ci/"]

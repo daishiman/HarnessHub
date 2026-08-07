@@ -200,7 +200,9 @@ describe('middleware の decision と NextResponse の対応', () => {
     const cookie = await sessionCookie();
 
     const mismatch = await middleware(requestFor('/t/tenant-b/docs', { cookie }));
-    expect(mismatch.status).toBe(403);
+    // 存在秘匿 (T-ISO-06) により tenant_mismatch は 404。middleware が先に応答するため、
+    // ここが実効値になる (本番 smoke が expected=404 / actual=403 で落ちていた経路)。
+    expect(mismatch.status).toBe(404);
     await expect(mismatch.json()).resolves.toEqual({ error: 'tenant_mismatch' });
 
     // USER は workspace 1 件のみ所属 (TID-BIND-03: cookie に active workspace 指定が無くても、

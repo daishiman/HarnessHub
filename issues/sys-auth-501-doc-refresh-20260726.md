@@ -9,12 +9,12 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "feat-auth-tenancy の成果物 6 件が /api/auth を 501 未結線と記述したままで実装と食い違う"
+title: "feat-auth-tenancy 成果物の /api/auth 501 記述を実装へ追従させる"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T06:50:00Z"
+updated_at: "2026-07-28T04:11:53Z"
 status: "done"
-depends_on: []
+depends_on: ["issue-auth-tenancy-production-adapter-20260725"]
 related_nodes: ["feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
 resource_scope: ["docs/features/feat-auth-tenancy/"]
 purpose: "HarnessHub-b7ng で @auth/core を adapter 境界内へ導入し、/api/auth/[...nextauth] は 501 auth_provider_not_wired ではなく tenant 別 OIDC を処理するようになった。しかし feat-auth-tenancy の成果物 6 件 (architecture-decision-record.md / acceptance-record.md / test-run-results.md / release-record.md / refactoring-migration-note.md / final-review-record.md) は依然として『501 を返す』『next-auth 未導入』『本番 runtime 未結線』と記述している。これらは feature 完了時の記録であり、当時としては正しいが、現在の実装を知らない読者が『まだ未結線だ』と誤読する。特に final-review-record.md の未達表は HarnessHub-b7ng を open として掲げており、epic rollup の判断材料になる。記録の改竄ではなく『いつ何が変わったか』を追記する形で追従させる必要がある"

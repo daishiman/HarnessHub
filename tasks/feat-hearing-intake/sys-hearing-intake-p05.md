@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-28T23:37:47.968705Z"
-status: "active"
+updated_at: "2026-07-29T08:49:09Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P04"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["apps/hub/src/app/(dashboard)/sheets/","apps/hub/src/app/api/v1/sheets/","apps/hub/src/app/api/v1/ai-jobs/","apps/hub/src/features/hearing-intake/","packages/db/repository/hearing-intake.ts","packages/db/repository/hearing-intake-queue.ts","packages/db/schema/hearing-intake/","packages/schemas/hearing-intake/"]

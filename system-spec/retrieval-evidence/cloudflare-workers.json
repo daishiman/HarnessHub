@@ -1,0 +1,23 @@
+{
+  "allowed_domains": [
+    "developers.cloudflare.com"
+  ],
+  "findings": [
+    "Workers Paid は account あたり最低 $5/月。Workers / Pages Functions / Workers KV / Hyperdrive / Durable Objects の利用を含む",
+    "Free の 100,000 requests/day 上限は Paid には無い",
+    "CPU time は既定 30 秒、Paid では limits.cpu_ms で最大 5 分 (300,000ms) まで引上げ可",
+    "network 待ち (fetch / KV read / DB query) は CPU time に算入されない",
+    "isolate あたり memory 上限 128MB (超過は Error 1102)",
+    "Workers は cache より前段で走るため、cache hit の要求も課金対象"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "Cloudflare Workers pricing paid plan limits",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://developers.cloudflare.com/workers/platform/pricing/",
+    "https://developers.cloudflare.com/workers/platform/limits/",
+    "https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/"
+  ],
+  "target_id": "cloudflare-workers"
+}

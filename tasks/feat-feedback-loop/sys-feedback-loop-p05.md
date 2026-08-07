@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-08-03T07:48:04.016414Z"
-status: "active"
+updated_at: "2026-08-03T09:10:39Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P04"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/(dashboard)/feedback/","apps/hub/src/app/api/v1/feedback/","apps/hub/src/features/feedback-loop/","packages/db/schema/feedback-loop/","packages/schemas/feedback-loop/"]

@@ -12,10 +12,10 @@ iteration: null
 title: "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む"
 owners: ["daishiman"]
 created_at: "2026-07-28T02:05:00Z"
-updated_at: "2026-07-28T09:00:15.438342Z"
+updated_at: "2026-08-03T12:30:13Z"
 status: "closed"
 closed_at: "2026-07-28T08:55:00Z"
-depends_on: []
+depends_on: ["issue-desync-guard-bundle-untracked-20260728"]
 related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-requirements","issue-local-ci-gate-drift-20260728","issue-desync-guard-bundle-untracked-20260728"]
 resource_scope: [".githooks",".beads/hooks",".dev-graph/state/graph.json","architecture/harness-hub-dev-workflow.md","docs/worktree-desync-recovery-runbook.md","docs/worktree-parallel-operations-runbook.md","features/feat-dev-pipeline-improvement.md","issues/sys-worktree-main-ref-desync-20260728.md","scripts/install-git-hooks.sh","scripts/run-ci-checks.sh","scripts/guard-cross-worktree-ref-update.py","scripts/guard-worktree-desync.py","scripts/validate-git-hooks-wiring.py","specs/harness-hub-system-specification.md","system-spec/dev-workflow.md","system-spec/spec-state.json","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p12.md","tests/scripts-root"]
 purpose: "2026-07-28、主ワークツリーで HEAD と index だけが最新 main へ進み、作業ツリーが 09:36 時点 (03093e4) に取り残される desync が発生した。原因は並列稼働中の worktree/セッションが git update-ref 系で refs/heads/main を直接書き換えたこと。git reflog show main に理由メッセージが空のエントリが 3 件 (10:06:29 -> 8560e92 / 10:16:32 -> 6e03e8f / 10:52:28 -> 9fe09e5) 残っており、pull / merge / checkout いずれの経路でもないことが確定している。症状は (a) ref が最新のため git pull が Already up to date を返す、(b) git status が PR で追加されたファイルを deleted、更新されたファイルを modified と表示する、の 2 点。この状態で git commit -a すると PR #84 / #85 のマージ内容を丸ごと巻き戻すコミット (65 files / -5467 行) が main に載る。今回は commit 前に検知して復旧したが、過去の stash に同種の退避が残っており再発である。復旧作業中に別セッションが stash push したため番号参照の指す対象が入れ替わる事象も同時に観測した"

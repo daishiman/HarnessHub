@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:57:35Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P04"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/tenant-data/","apps/hub/src/lib/scheduled/r2-usage-monitor.ts","apps/hub/src/lib/scheduled/usage-monitor.ts","apps/hub/src/lib/tenant-data/","docs/features/feat-tenant-data-retention/implementation-notes.md","packages/db/migrations/","packages/db/src/backup/tenant-data-tombstones.ts","packages/db/src/repository/tenant-deks.ts","packages/db/src/schema/encryption-keys.ts","packages/db/src/schema/tenant-data-objects.ts","packages/schemas/tenant-data/"]

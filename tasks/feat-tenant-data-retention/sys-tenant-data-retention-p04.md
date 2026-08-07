@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:57:23Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P03"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/lib/scheduled/usage-monitor.ts","docs/features/feat-tenant-data-retention/test-design.md","packages/db/migrations/","packages/db/src/__tests__/tenant-data/","packages/db/src/backup/tenant-data-tombstones.ts","packages/db/src/repository/tenant-deks.ts","packages/db/src/schema/encryption-keys.ts"]
