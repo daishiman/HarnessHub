@@ -13,7 +13,7 @@ iteration: null
 title: "system-spec compiler knowledge reflection 最終レビュー受領書"
 owners: ["daishiman"]
 created_at: "2026-08-03T00:00:00Z"
-updated_at: "2026-08-04T03:21:00Z"
+updated_at: "2026-08-08T00:00:00Z"
 status: "done"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -75,6 +75,16 @@ implementation_readiness: {"checked_at":"2026-08-04T03:21:00Z","missing_sections
 
 製品層に compiler の内部表示順や監査台帳の形式を重複記載しないことが正規フローである。上表の「変更なし」は未確認ではなく、差分と C19 実走を確認したうえでの判断である。
 
+## 追補 (2026-08-08)
+
+`scripts/validate-plugin-hooks.py` の hooks entry point parity 検査 (HK-001..003) に 2 件の是正を追加した。
+
+- `registered_hook_files()` は `hooks/hooks.json` の JSON 構文エラーを黙って空集合へ握り潰していた。実際は登録済みの hook が未登録 (HK-002) として誤検出されうるため、エラーを `registered_hooks_error` として呼び出し側へ返し、validate() が明示エラーを出す。
+- `_hook_file_from_token()` は token 中の任意の `"/hooks/"` 部分文字列を無条件で拾っていた。`.git/hooks/pre-commit` のような `$CLAUDE_PLUGIN_ROOT` を経由しない無関係な `/hooks/` を entry point と誤認しないよう、`CLAUDE_PLUGIN_ROOT` プレフィックスを確認するガードを追加した。
+- `is_import_only_support_module()` は UTF-8 デコード不能なファイルで `UnicodeDecodeError` を捕捉しておらず、検査全体が例外で落ちる余地があった。`OSError` と同様に捕捉し、安全側 (entry point 扱い) にフォールバックする。
+
+いずれも `scripts/validate-plugin-completeness.py` / `scripts/validate-plugin-hooks.py` 内部の判定ロジックの正確性修正であり、製品仕様・API・DB・認証認可・UI・デプロイには接続しない。回帰テスト 3 件 (`tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py`) を追加し、対象範囲の pytest は以下のとおり PASS した。この追補分についても製品仕様への意味的影響は **なし**(上表の判断をそのまま適用する — plugin 内部契約の是正であり、promoted task package も紐付かない standalone correction のため)。
+
 ## 検証結果
 
 - `python3 -m pytest plugins/system-spec-harness -q` — 508 passed。
@@ -84,6 +94,7 @@ implementation_readiness: {"checked_at":"2026-08-04T03:21:00Z","missing_sections
 - 独立した読み取り専用評価 — PASS。source artifact と登録本文の一致、source digest、graph の直接編集がないことを確認した。
 - `validate-system-plan.py` — P01〜P13、status=pass。`lint-doc-line-limit.py` — 584 文書、違反 0。`git diff --check` — whitespace error 0。
 - remote `main` と local `main` が同一 `fb05db56` であることを確認し、本 branch へ `main` を merge した (`e14f2231`)。この後の最終 fetch と全ゲート再実行を PR 作成直前に行う。
+- (2026-08-08 追補) `python3 -m pytest tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py -q` — 16 passed(新規回帰3件を含む)。`python3 -m pytest tests/scripts-root/ -q` — 1188 passed。`python3 -m pytest plugins/system-spec-harness -q` — 508 passed(再実行)。`python3 scripts/lint-doc-line-limit.py` — 605 文書、違反 0。remote `main` / local `main` は同一 (差分 0 コミット) を再確認、branch は既に main を merge済み(`74ae832d`)でコンフリクトなし。
 
 ## 残課題
 
@@ -101,3 +112,4 @@ blocker はない。architecture 専用章を将来追加する場合は、archi
 |---|---|---|
 | 2026-08-03 | 最終レビューの受領書を作成 | Codex |
 | 2026-08-04 | fork verdict 束縛、C19 fresh live trial PASS、仕様影響なしの受領を記録 | Codex |
+| 2026-08-08 | hooks entry point parity 検査の是正(構文エラー伝播・CLAUDE_PLUGIN_ROOT 判定・デコード不能ファイル耐性)を追補、回帰テスト追加、仕様影響なしを再確認 | Claude |

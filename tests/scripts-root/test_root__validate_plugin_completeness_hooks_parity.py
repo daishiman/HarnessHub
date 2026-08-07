@@ -218,6 +218,60 @@ def test_unregistered_entry_point_shaped_file_is_violation(tmp_path, name, text)
     assert any("(HK-003)" in e and name in e for e in errs), errs
 
 
+# --- hooks.json 構文エラーの伝播 (握り潰し禁止) ------------------------------
+
+def test_invalid_hooks_json_is_reported_not_silently_dropped(tmp_path):
+    """hooks.json が壊れている場合、登録 0 件 (HK-002 誤検出) ではなく明示エラーにする。"""
+    plugin_dir = _plugin(
+        tmp_path,
+        hook_files={"guard-a.py": ENTRY_POINT},
+        declared=["guard-a.py"],
+    )
+    (plugin_dir / "hooks" / "hooks.json").write_text("{not json", encoding="utf-8")
+
+    data = MOD.collect(plugin_dir)
+    errs = MOD.validate("p", data, set(), {})
+
+    assert data["registered_hooks_error"] is not None
+    assert any("hooks/hooks.json invalid" in e for e in errs), errs
+
+
+# --- CLAUDE_PLUGIN_ROOT を経由しない "/hooks/" は対象外 -----------------------
+
+def test_unrelated_hooks_substring_outside_plugin_root_is_ignored(tmp_path):
+    """.git/hooks/pre-commit のような無関係な "/hooks/" を entry point と誤認しない。"""
+    manifest = {
+        "name": "p", "version": "1.0.0", "description": "d",
+        "hooks": {"SessionStart": [{"matcher": "startup", "hooks": [
+            {"type": "command", "command": "/repo/.git/hooks/pre-commit"},
+        ]}]},
+    }
+    plugin_dir = _plugin(
+        tmp_path,
+        hook_files={"guard-a.py": ENTRY_POINT},
+        declared=["guard-a.py"],
+        manifest=manifest,
+    )
+
+    assert MOD.collect(plugin_dir)["registered_hooks"] == []
+
+
+# --- import 専用判定はデコード不能ファイルでも例外を出さない ------------------
+
+def test_undecodable_hook_file_does_not_crash_and_is_treated_as_entry_point(tmp_path):
+    plugin_dir = _plugin(
+        tmp_path,
+        hook_files={"guard-a.py": ENTRY_POINT},
+        declared=["guard-a.py"],
+        registered=["guard-a.py"],
+    )
+    (plugin_dir / "hooks" / "guard_b.py").write_bytes(b"\xff\xfe\x00broken")
+
+    errs = _errs(plugin_dir)
+
+    assert any("(HK-003)" in e and "guard_b.py" in e for e in errs), errs
+
+
 # --- 再現手順の回帰 (repo 全体検査が非 0 終了する) ---------------------------
 
 def test_repo_wide_check_exits_non_zero_on_undeclared_registration(
