@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1410,
+  "graph_revision": 1413,
   "nodes": [
     {
       "acceptance": [
@@ -51011,6 +51011,122 @@
       "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
       "updated_at": "2026-08-07T14:16:31.150745Z"
+    },
+    {
+      "acceptance": [
+        "伝播が遅い状況で smoke より前に赤で停止することを再現できる",
+        "追加した待機・再試行が fail-open でないことがテストで固定されている",
+        "正常時の deploy job 所要時間の増分が実用上問題にならない範囲に収まる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-u9zq",
+        "linked_at": "2026-08-07T22:19:22Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ci-post-deploy-smoke-propagation-window-20260808.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "version_gate 実装後に残った運用上の窓を、変更本体から分離して追跡する issue。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "3785a2c548943b38839c405c936aff16d43cc696ee847a84fabc463b14bfb5d7",
+        "evaluator": "CI 実測 (hub-ci run 31221676748 / 31222374425) による原因確定",
+        "evidence_ref": "specs/harness-hub-post-signin-landing-observability-addendum.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T00:00:00Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ci-post-deploy-smoke-propagation-window-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "伝播が遅い状況で smoke が旧版へ当たる前に fail-closed で停止し、正常時は deploy 所要時間を実用範囲に保つ。",
+      "graph_node_id": "issue-ci-post-deploy-smoke-propagation-window-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "配信版一致ゲート通過後も残る colo 間伝播ムラの窓を塞ぎ、smoke が旧版を検査して偽の赤を出すことを防ぐ。",
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "spec-post-signin-landing-observability"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/tests/ci/production-auth-gates.test.ts",
+        "docs/infrastructure-spec.md",
+        "specs/harness-hub-post-signin-landing-observability-addendum.md"
+      ],
+      "scope_in": [
+        "version_gate の連続一致要求または smoke 直前の version 再確認",
+        "追加検査が fail-open でないことの契約テスト",
+        "infrastructure-spec / addendum への反映"
+      ],
+      "scope_out": [
+        "認可判定ロジック (tenant_mismatch の status)",
+        "Cloudflare 側の配信基盤設定変更",
+        "rollback 方針そのものの再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ci",
+        "deploy",
+        "cloudflare-workers",
+        "fail-closed",
+        "smoke"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "post-deploy smoke が配信伝播完了前に走る窓を塞ぐ",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-07T22:19:22Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
