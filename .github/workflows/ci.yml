@@ -310,16 +310,46 @@ jobs:
         run: |
           set -euo pipefail
           # 伝播には数秒かかる。「まだ伝播していない」と「そもそも昇格していない」を取り違えないよう、
-          # 60 秒までは再試行してから落とす。
+          # 一定時間は再試行してから落とす。
+          #
+          # 一致は 1 回では足りない。Cloudflare は colo (エッジ拠点) ごとに切替タイミングが違うので、
+          # 単発の一致で通すと、直後の smoke が別 colo の旧版へ当たる窓が残る。2026-08-07 の run
+          # 31221676748 で実際に起きた: /health は 1.3 秒後に新版へ切替わってゲートは通ったのに、
+          # 続く hearing smoke は修正前のコード (tenant_mismatch=403) を叩いて落ちた。
+          # そのため VERSION_GATE_STREAK 回「連続で」一致することを通過条件にする。
+          # 判定材料は /health の JSON だけに寄せる。wrangler の一覧出力は表示仕様が変わりうるため、
+          # 通過判定には使わず診断表示に留める (パース失敗が空文字になって素通りするのを避ける)。
+          required_streak="${VERSION_GATE_STREAK:-3}"
+          interval="${VERSION_GATE_INTERVAL_SECONDS:-3}"
+          timeout_seconds="${VERSION_GATE_TIMEOUT_SECONDS:-90}"
+          deadline=$(( SECONDS + timeout_seconds ))
+          streak=0
+          attempt=0
           served=""
-          for _ in $(seq 1 12); do
-            served="$(curl -sf "$HEALTH_URL" | jq -r '.version // ""' || true)"
-            if [ "$served" = "$DEPLOYED_VERSION" ]; then break; fi
-            sleep 5
+          observed_colos=""
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            attempt=$(( attempt + 1 ))
+            headers="/tmp/version-gate-headers.txt"
+            # cache-buster と no-cache で、途中のキャッシュされた応答を「配信中の版」と誤認しない
+            served="$(curl -sf -D "$headers" -H 'Cache-Control: no-cache' "${HEALTH_URL}?_version_gate=${attempt}" | jq -r '.version // ""' || true)"
+            # cf-ray の末尾が応答した colo。どの拠点を何回観測したうえで通したかを後から検証できるようにする
+            colo="$(grep -i '^cf-ray:' "$headers" 2>/dev/null | tr -d '\r' | awk -F'-' '{print $NF}' || true)"
+            case " $observed_colos " in
+              *" ${colo:-unknown} "*) ;;
+              *) observed_colos="${observed_colos} ${colo:-unknown}" ;;
+            esac
+            if [ "$served" = "$DEPLOYED_VERSION" ]; then
+              streak=$(( streak + 1 ))
+            else
+              streak=0
+            fi
+            echo "attempt=${attempt} colo=${colo:-unknown} served=${served:-none} streak=${streak}/${required_streak}"
+            if [ "$streak" -ge "$required_streak" ]; then break; fi
+            sleep "$interval"
           done
-          echo "deployed=${DEPLOYED_VERSION} served=${served}"
-          if [ "$served" != "$DEPLOYED_VERSION" ]; then
-            echo "::error::deploy は成功したが本番の配信版が入れ替わっていない (deployed=${DEPLOYED_VERSION} served=${served})。以降の smoke は古いコードを検査することになるため中止する"
+          echo "deployed=${DEPLOYED_VERSION} served=${served} streak=${streak}/${required_streak} colos=${observed_colos# }"
+          if [ "$streak" -lt "$required_streak" ]; then
+            echo "::error::配信版が ${timeout_seconds} 秒以内に ${required_streak} 回連続で一致しなかった (deployed=${DEPLOYED_VERSION} served=${served})。以降の smoke は古いコードを検査することになるため中止する"
             echo "--- 診断: 現在の deployment / version 一覧 ---"
             pnpm --filter @harness-hub/hub exec wrangler deployments list || true
             pnpm --filter @harness-hub/hub exec wrangler versions list || true
