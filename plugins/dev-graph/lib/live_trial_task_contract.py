@@ -61,6 +61,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from live_trial_evidence_selection import task_path_from_criteria_receipt
+
 LINT_NAME = "lint-live-trial-task-contract"
 
 FIXTURES_REL = "plugins/dev-graph/tests/fixtures"
@@ -424,11 +426,15 @@ def resolve_scenario(
 
 
 def latest_task_path(root: Path, skill: str) -> Path | None:
-    """verdict.json を持つ最新 run-id の task.md を返す。
+    """criteria receipt の PASS evidence、次に最新 run-id の task.md を返す。
 
-    「最新」の定義を lint-live-trial-verdict.py (辞書順最大の verdict 保有 run) と揃える。
-    verdict の無い中断 run を対象にすると、合格証拠と無関係な task を検査してしまう。
+    criteria receipt が採用した current PASS を優先することで、時計ずれを含む run-id の
+    辞書順が古い verdict を勝たせない。receipt が無い場合だけ、従来どおり verdict 保有
+    run-id の辞書順最大へ後退する。verdict の無い中断 run は常に対象外である。
     """
+    receipted = task_path_from_criteria_receipt(root, skill)
+    if receipted is not None:
+        return receipted
     base = root / "eval-log" / EVIDENCE_PLUGIN / skill / "live-trial"
     if not base.is_dir():
         return None

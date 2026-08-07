@@ -7,7 +7,7 @@
     "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
   },
   "verdict": "PASS",
-  "reviewer": "independent-verifier-opus-4.6-wt20-citation-fix-20260806",
+  "reviewer": "fresh-claude-live-goal-evaluator-m0bd-c19-r10-clean-fixture-20260804; independent verifier executed within live trial 20260804T083000Z-m0bd-c19-r10-clean-fixture",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -27,15 +27,15 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260806T020000Z-wt20-c19-citation-fix/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/evidence/independent-verification.json"
       ],
-      "observed": "CI 修正後の fresh live trial 20260806T020000Z-wt20-c19-citation-fix は overall=PASS、nudge=0、gate=0、required observations 全件を独立評価者が実体証拠から PASS と判定。behavior closure digest=45408faa755af7e291f18990b7d4fcfa4f5f19433a60cc1f42f7b1fc771e2d1e。"
+      "observed": "main 統合後の fresh live trial (20260804T083000Z-m0bd-c19-r10-clean-fixture) は overall=PASS、nudge=0、gate=0。r2 task 契約に従い doc-fetch が公式一次情報を実 Fetch し、実取得時刻・公式発行元・現在 version を記録した。system-spec-harness の正規4 entry point、48セルの確定・除外、公式参照の鮮度・引用・仕様コンパイル・完全性評価を実行し、C02 upsert-node.py 経由で specification / architecture node を登録した。source digest と evidence reference の検証は exit 0、fresh evaluator と独立 verifier による3観測は PASS、current behavior closure digest=90affd8245f8099d5595cc4c26898eb6cc217f1073577952426352cd2ef313e0。"
     }
   }
 }

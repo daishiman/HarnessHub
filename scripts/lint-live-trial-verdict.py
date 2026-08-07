@@ -2,7 +2,7 @@
 """live-trial 実走 acceptance 証拠 (verdict.json) を機械検査する (offline, tmux/LLM 不実行)。
 
 役割境界 (D9: lint-content-review 同型の最終強制層):
-  - 機械層: eval-log/<plugin>/<skill>/live-trial/<run-id>/verdict.json (最新 run-id) の
+  - 機械層: criteria receipt が採用した PASS verdict（receipt が無い skill は最新 run-id）の
             schema 適合 / skill_dir_tree_sha 再計算突合 / overall.verdict=PASS /
             tier 降格・denylist 被験体の除外 を検査
   - 実走層 (本 lint の対象外): trial 実行はローカル claude + tmux で run-skill-live-trial
@@ -45,6 +45,11 @@ import feedback_contract_ssot as FC  # noqa: E402
 # 取り込み、check_verdict / main / 既存テスト (_MOD.check_c02_bypass 等) の参照面を維持する。
 from receiptguard_helper import check_c02_bypass  # noqa: E402,F401
 from provenance_helper import check_digest_provenance, run_provenance  # noqa: E402,F401
+
+# dev-graph の criteria receipt が特定する受領済み evidence を、run-id の辞書順より
+# 優先する。時計ずれで将来日付の歴史的 run が現行 PASS を隠す事故を防ぐ。
+sys.path.insert(0, str(ROOT / "plugins" / "dev-graph" / "lib"))
+from live_trial_evidence_selection import verdict_path_from_criteria_receipt  # noqa: E402
 
 
 def _load_module(path: Path):
@@ -100,7 +105,10 @@ def _declares_live_trial(plugin, skill):
 
 
 def latest_verdict_path(plugin, skill):
-    """最新 run-id (辞書順最大) の verdict.json。無ければ None。"""
+    """受領済み OUT1 verdict を優先し、無ければ最新 run-id の verdict を返す。"""
+    receipted = verdict_path_from_criteria_receipt(EVAL_LOG.parent, plugin, skill)
+    if receipted is not None:
+        return receipted
     base = EVAL_LOG / plugin / skill / "live-trial"
     if not base.is_dir():
         return None
