@@ -256,6 +256,28 @@ $ curl -s https://harness-hub.daishimanju.workers.dev/harness-hub/signin | grep 
 | V2 | 「認証成功・着地先が既定値へ後退」を、認証失敗と**区別して**記録すること | 成功として通過する異常を可視化する |
 | V7 | 稼働ビルドが既定 branch の HEAD より古い状態が続くことを検出すること | 本件は修正から 4 日間 (08-03 → 08-07) 未反映だった |
 
+### 2.11 なぜ古いビルドが配信され続けたのか — deploy 成功 ≠ 配信更新 (2026-08-07 実測)
+
+§2.10 は「本番が古い」ことまでを確定したが、**なぜ古いままだったのか**は開いていた。2026-08-07 の再配備 2 回でこれが確定したので、V7 の機序として記録する。
+
+Cloudflare Workers は **version (アップロードされた版)** と **deployment (実際に配信される版)** が別概念であり、`wrangler deploy` が成功して `Current Version ID` を返しても、配信される deployment が入れ替わらない状態が成立する。実測は次のとおりで、2 run とも deploy した版は配信されなかった。
+
+| run | `wrangler deploy` の Current Version ID | 直後の `/health` の `version` |
+|---|---|---|
+| 31218362101 (main への push) | `c3d03c71-0231-4a64-ab9f-e86d745346a2` | `2e4a6c5b-20f6-4eca-9599-862f77e5f37b` |
+| 31219592345 (同一 commit の workflow_dispatch) | `c7a1ca03-ab24-4319-8951-462920241062` | `2e4a6c5b-20f6-4eca-9599-862f77e5f37b` |
+
+`2e4a6c5b` は 2026-08-04 の失敗時 rollback で固定された版である。**この状態は自己強化する**: 配信が旧版のまま → 後続の smoke が古いコードを検査して失敗 → `if: failure()` の rollback が「直前 version へ戻す」を実行 → 古い版への固定がさらに強まる、という閉じた循環になる。修正を何度 merge しても本番が変わらないため、コードを読むほど誤った確信が強まるという §2.10 の観測不能性が、そのまま持続する。
+
+**判定材料は最初から応答に載っていた。** `/health` の `version` は `CF_VERSION_METADATA` binding 由来で「いま実行されている version」を返すため、ビルド時に埋め込む文字列と違い rollback 後も嘘をつかない (V6 の実装がこれにあたる)。欠けていたのは値ではなく**突合**であり、CI は deploy した version と `/health` が返す version を一度も比較していなかった。
+
+したがって V7 の要求を次のとおり具体化する。実装は `.github/workflows/ci.yml` の「配信版が今デプロイした版であることの検査」step、回帰固定は `apps/hub/tests/ci/production-auth-gates.test.ts`、運用手順は infrastructure-spec §7 と feature runbook の「分岐 0」を正本とする。
+
+- **V7-a**: deploy 直後に、deploy した version id と `/health` が返す version を突合し、不一致なら **smoke より前に fail-closed で停止する**。以降の smoke を古いコードに対して走らせない (無関係な差分で赤くなり、真因が埋まるため)。
+- **V7-b**: 伝播遅延と未昇格を取り違えない。一定時間 (現行 60 秒) の再試行を経てなお不一致の場合にだけ失敗とする。
+- **V7-c**: 不一致時は deployment / version の一覧を診断出力し、次の是正が推測でなく実測から始められる状態にする。
+- **V7-d**: 配信版が入れ替わっていない場合は **rollback しない**。本番に出ているのは元から旧版であって「壊れた新 version」ではなく、そこで rollback を打つと未昇格の原因である古い版への固定をこちらから強めてしまう。
+
 ## 3. 着地先と着地画面 (利用者の直接決定)
 
 ### 3.1 既定着地 = `/dashboard` (appr-034)
