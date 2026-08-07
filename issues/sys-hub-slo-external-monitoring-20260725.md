@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "Hub 本番の外部死活監視と SLO 計測を稼働させ A3 を確定する"
+title: "Hub 外形監視を Better Stack へ適用し SLO 計測を開始"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:06:48Z"
-updated_at: "2026-08-02T05:46:51.338346Z"
+updated_at: "2026-08-02T06:29:20Z"
 status: "closed"
 depends_on: []
 related_nodes: ["feat-hub-foundation","SYS-HUB-FOUNDATION-P13","arch-harness-hub-infrastructure"]

@@ -12,8 +12,8 @@ iteration: null
 title: "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:29Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P02"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-task-spec-test-strategy/design-review.md"]

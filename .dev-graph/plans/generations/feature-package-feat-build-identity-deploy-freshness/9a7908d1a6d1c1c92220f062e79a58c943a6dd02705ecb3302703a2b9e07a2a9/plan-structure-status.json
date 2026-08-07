@@ -1,0 +1,115 @@
+{
+  "_generated": "project-task-status.py (派生ビュー・手書き編集しない・再生成で上書き)",
+  "graph_hash": null,
+  "summary": {
+    "total": 13,
+    "by_state": {
+      "pending": 13,
+      "running": 0,
+      "done": 0,
+      "blocked": 0
+    },
+    "completion_rate": 0.0,
+    "blocked_tasks": [],
+    "route_report_count": 0,
+    "completion_gate": null,
+    "effective_status": "in_progress"
+  },
+  "nodes": [
+    {
+      "id": "SYS-BUILD-IDENTITY-P01",
+      "title": "要件ベースライン確定 — 稼働ビルドの素性確認 (V6) と deploy 反映鮮度検出 (V7) の要件確定",
+      "phase_ref": "P01",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P02",
+      "title": "アーキテクチャ決定 — commit 識別子の埋込経路・公開読出経路・鮮度判定の所在",
+      "phase_ref": "P02",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P03",
+      "title": "設計レビュー — 情報露出・deploy 直後の誤検出・CI 依存の 3 リスク検証",
+      "phase_ref": "P03",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P04",
+      "title": "テスト設計 — 埋込・公開読出・鮮度検出の実行可能テスト定義",
+      "phase_ref": "P04",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P05",
+      "title": "実装 — build 時の commit 識別子埋込・認証なし読出経路・鮮度検査 script",
+      "phase_ref": "P05",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P06",
+      "title": "テスト実行 — P04 のテスト ID 実行と結果証跡の収集",
+      "phase_ref": "P06",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P07",
+      "title": "受入判定 — goal-spec acceptance 5 件の実測証跡による判定",
+      "phase_ref": "P07",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P08",
+      "title": "リファクタリングと移行 — しきい値の単一定数化と既存 check 系列への整列",
+      "phase_ref": "P08",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P09",
+      "title": "品質保証 — 露出範囲の非退行と検査の発火性の固定",
+      "phase_ref": "P09",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P10",
+      "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+      "phase_ref": "P10",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P11",
+      "title": "証跡固定 — source digest と再実行コマンドの保存",
+      "phase_ref": "P11",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P12",
+      "title": "ドキュメントと運用 — 稼働ビルドの確認手順と鮮度警告時の対応手順",
+      "phase_ref": "P12",
+      "entity_ref": null,
+      "state": "pending"
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P13",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "phase_ref": "P13",
+      "entity_ref": null,
+      "state": "pending"
+    }
+  ],
+  "discovered_pending": [],
+  "route_reports": [],
+  "build_summary": null,
+  "completion_evidence": null
+}

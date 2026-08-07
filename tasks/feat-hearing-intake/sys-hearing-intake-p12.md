@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-29T08:49:31Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P11"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["docs/features/feat-hearing-intake/runbook.md"]

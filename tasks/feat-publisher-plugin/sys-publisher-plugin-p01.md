@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:18:12Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T10:16:20Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-publisher-plugin","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publisher-plugin/requirements-baseline.md"]

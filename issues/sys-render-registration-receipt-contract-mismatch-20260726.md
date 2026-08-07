@@ -9,12 +9,12 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "run-dev-graph-render の --registration-receipt が optional 表記なのに OUT1 受入条件は receipt 照合を必須要求している"
+title: "dev-graph: run-dev-graph-render の --registration-receipt が optional 表記なのに OUT1 受入条件は receipt 照合を必須要求している"
 owners: ["daishiman"]
 created_at: "2026-07-25T22:22:01Z"
-updated_at: "2026-07-30T06:43:32Z"
+updated_at: "2026-07-30T09:44:21Z"
 status: "closed"
-depends_on: ["issue-guard-fix-closure-verdict-refresh-20260726"]
+depends_on: []
 related_nodes: ["issue-guard-graph-schema-timeout-fail-open-20260725","feat-dev-pipeline-improvement"]
 resource_scope: ["plugins/dev-graph/skills/run-dev-graph-render/SKILL.md","plugins/dev-graph/scripts/render-graph-html.py","plugins/dev-graph/tests/test_render_registration_verification.py","plugin-plans/dev-graph/component-inventory.json","eval-log/dev-graph/run-dev-graph-render/"]
 purpose: "receipt を渡さない実行では render-metadata の registration が null になり OUT1 の照合が成立しないが、仕様は optional と表記している。表示総数が偶然一致すると照合したように見える真空合格が成立し、呼び出し側から本物の合格と区別できない"

@@ -12,9 +12,9 @@ iteration: null
 title: "リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-08-03T07:47:29Z"
 status: "active"
-depends_on: ["SYS-DUAL-CATALOG-WEB-P12"]
+depends_on: ["SYS-DUAL-CATALOG-WEB-P12","issue-hub-catalog-page-missing-tenant-scope-20260803"]
 related_nodes: ["feat-dual-catalog-web"]
 resource_scope: ["docs/features/feat-dual-catalog-web/release-record.md"]
 purpose: "feat-dual-catalog-web の P13 を実行する: リリース/デプロイ — Cloudflare Workers(wrangler)へのロールアウト・rollback手順・Stage 1完了判定"

@@ -1,0 +1,30 @@
+{
+  "graph_node_id": "feat-classification-vocabulary-parity",
+  "artifact_kind": "feature",
+  "purpose": "縮退の分類語彙が型宣言・zod・ORM schema の複数箇所に独立定義されると、片方だけ増えた状態が静かに成立し、記録の分類が実態からずれる。この乖離を機械検査で塞ぐ。",
+  "goal": "分類語彙の収集が到達可能性ベースで行われ、3 経路すべてを突合し、宣言外の app/package が増えたら検査が落ちる状態にする。",
+  "scope_in": [
+    "分類語彙の収集を到達可能性ベース (宣言リストではなく実際に到達する範囲) で行う",
+    "型宣言・zod 導出・ORM schema 導出の 3 経路すべてを情報源にする",
+    "同一のリテラル union が複数箇所に独立定義されている状態の検出",
+    "段0 の分類語彙に tenants.status (active/suspended) を含める",
+    "実測で見落とした 8 件の fixture 全てで検査が発火することの test 固定"
+  ],
+  "scope_out": [
+    "分類語彙そのものの設計 (feat-post-signin-transition-observability の担当)",
+    "ORM schema の構造変更"
+  ],
+  "acceptance": [
+    "分類語彙の収集が到達可能性ベースで行われ、宣言外の app/package が増えたら検査が落ちる",
+    "分類語彙の収集が型宣言・zod 導出・ORM schema 導出の 3 経路すべてを対象にしている",
+    "同一のリテラル union が複数箇所に独立定義されている状態を検査が検出し、3 経路すべてを情報源として突合する",
+    "段0 の分類語彙に tenants.status (active/suspended) が含まれ、検査が実際に発火する",
+    "実測で見落とした 8 件の fixture 全てで検査が発火することが test で固定されている"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-testing-qa.md",
+    "architecture/harness-hub-data.md",
+    "specs/harness-hub-post-signin-landing-observability-addendum.md"
+  ],
+  "updated_at": "2026-08-07T11:12:00Z"
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-28T23:37:47.151668Z"
-status: "active"
+updated_at: "2026-07-29T08:49:06Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P03"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["apps/hub/src/app/api/v1/sheets/","apps/hub/tests/hearing-intake/","apps/hub/src/features/hearing-intake/ai-job-adapter/","apps/hub/src/features/hearing-intake/estimation-adapter/","docs/features/feat-hearing-intake/test-design.md"]

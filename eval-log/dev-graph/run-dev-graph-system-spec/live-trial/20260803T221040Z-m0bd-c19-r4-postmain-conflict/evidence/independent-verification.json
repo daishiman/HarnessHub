@@ -1,0 +1,185 @@
+{
+  "verifier": "fresh-agent-independent-verification",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r2",
+  "verdict": "FAIL",
+  "observations": [
+    {
+      "id": "obs1",
+      "text": "宣言済み system-spec-harness plugin が読み込まれ canonical flow (elicit → doc-fetch → compile → completeness-evaluator) が完走したか。分解すると『plugin load + 4 entry point を Skill 経由で canonical 順に実行 + dev-graph fallback 不使用』は実測 SATISFIED だが、『flow が PASS 終端に到達』は未達。本 run の task 契約自身が『4 entry point の canonical flow が PASS になり evaluator の fresh 3 監査と canonical report gate が exit 0 になるまで C02 import へ進まない』と定義しているため、契約語彙での完走は成立していない。",
+      "verdict": "NOT_SATISFIED",
+      "evidence": [
+        "session transcript /Users/dm/.claude/projects/-Users-dm-orca-workspaces-HarnessHub-wt-21/88fa50b0-d298-4c30-9bd4-670cb4db24a3.jsonl の tool_use を全走査: Skill 呼出は 7 件で順序は dev-graph:run-dev-graph-system-spec → system-spec-harness:run-system-spec-elicit → run-system-spec-doc-fetch → run-system-spec-compile → assign-system-spec-completeness-evaluator x3。canonical 順で 4 entry point 全てが Skill ツール経由 (script 直叩き代替なし)",
+        "WebFetch 14 件が transcript に実在 = doc-fetch は実取得。fixture の system-spec/retrieval-evidence/ に 6 target 分 (sqlite/postgresql/fastapi/flask/fastapi-security/rfc6749) の証跡 JSON が実在",
+        "compile 成果物 11 md (00-requirements-definition.md + 8 category + index.md + 既存 requirements-brief.md) + spec-state.json + fetched-references.json + completeness-report.json が生成済み",
+        "しかし completeness-report.json の verdict=FAIL。aspects: foundation_trace=PASS(92) / decision_guidance=PASS(84) / matrix_coverage=PASS(95) / design_knowledge_reflection=FAIL(58) / doc_freshness=PASS(93) / prompt_quality=PASS(85)。findings 13 件 = high 1 / medium 3 / low 5 / info 4",
+        "high finding は 1 件のみ: 'design_knowledge_reflection / C14 位相順消費' (backend.md の設計知識反映順が topo_order 違反)",
+        "plugin 版数: plugins/system-spec-harness/.claude-plugin/plugin.json version=0.1.0 (>=0.1.0 <1.0.0 内)。plugins/dev-graph/scripts/ に spec-state writer / 章 renderer は不在 = fallback 実装なし"
+      ]
+    },
+    {
+      "id": "obs2",
+      "text": "取り込まれた specification / architecture が source lineage と evaluator evidence を保持しているか。取り込み自体が 1 件も発生していないため、保持を主張できる対象が存在しない。",
+      "verdict": "NOT_SATISFIED",
+      "evidence": [
+        "<fixture>/.dev-graph/state/graph.json は nodes=[] (170 bytes, graph_revision=0)。specification/architecture node は 0 件",
+        "fixture repo 内で `git diff HEAD -- .dev-graph/state/graph.json` が空 = 初期 commit dee8747 から graph.json は一切変更されていない (登録して revert した痕跡もない)",
+        "<fixture>/specs/ と <fixture>/architecture/ は .gitkeep のみ = node Markdown も 0 件",
+        "progress.json の registered_this_run=[] / CL5 status=NOT_REACHED。実行者自身も未登録を明記",
+        "validate-source-digest.py --repo-root <fixture> --progress <progress.json> → exit 0 だが checked=0、validate-evidence-refs.py → exit 0 だが scanned_nodes_with_evidence=0。いずれも空検査であり lineage 健全性の根拠にならない",
+        "harness 成果物側 (spec-state.json / fetched-references.json / retrieval-evidence/) には source lineage は存在するが、dev-graph 側への import が 0 件なので観測 obs2 の対象事象が成立しない"
+      ]
+    },
+    {
+      "id": "obs3",
+      "text": "登録は C02 経由だけか、かつ dev-graph 内に elicitation / compile の同等ロジック複製が無いか。複製 0 件は実測で確認。C02 限定の方は登録 0 件のため空虚 (vacuous) に真であり、bypass 経路 (graph.json 直書き等) が使われた痕跡も無い。",
+      "verdict": "SATISFIED",
+      "evidence": [
+        "複製検査 (grep -rl、__pycache__ 除外) harness=陽性対照 / dev-graph=被験: category_aggregate 22/0、hearing_progress 15/0、qa_log 23/0、spec_cells 14/0、requirements_foundation 28/1、apply-spec-transition 21/1、compile-spec-doc 13/1、未収集 37/1、fetched-references 32/3",
+        "dev-graph 側 hit を自分で開いて分類: plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py (277 行、`^def `/`^class ` は `def build(out: Path)` の 1 件のみ。hit は全て docstring L7-L67 と生成する散文文字列 L152/L201/L234)、plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json (scenario metadata)、plugins/dev-graph/references/live-trial-task-contract.md (契約散文)。実行ロジックの複製は 0 件",
+        "plugins/dev-graph/scripts/ (33 entry) を列挙・grep: 'spec-state|spec_state|matrix[' に一致する script は 0 件。spec-state セル遷移 writer も章 renderer も存在しない",
+        "graph.json は HEAD と bit 一致 = 直接書込による登録代替なし。ただし『登録は C02 経由だけ』は登録 0 件による空虚な充足であり、C02 経路が正しく機能することの陽性証明にはなっていない"
+      ]
+    }
+  ],
+  "goal_seek": {
+    "hash_match": true,
+    "required_keys_present": true,
+    "drift_detected": false,
+    "evidence": [
+      "自分で計算: sha256(goal-spec.original_goal, utf-8) = 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454 = goal-spec.original_goal_hash と一致",
+      "intermediate.jsonl 全 2 行 (loop 0 / loop 1) について original_goal_hash が goal-spec と一致し、かつ各行の sha256(original_goal) が自行の original_goal_hash と再計算一致。original_goal 文字列も goal-spec と完全一致",
+      "6 必須キー (original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal) は 2 行とも欠落 0",
+      "current_goal_snapshot は 2 行とも original_goal と文字列完全一致 = 目標のすり替え・緩和なし。delta_from_original も 'none'、drift_signal も 'none'",
+      "行数 2 は task 契約『intermediate は skill の実作業前に正しい hash を持つ初回行を書き、実行・検証後に結果行だけを append する』に一致 (loop=3 と行数 2 の差は契約違反ではない)",
+      "FAIL の PASS すり替えなし: completeness-report.json の verdict=FAIL に対し progress.json status='FAIL'、CL4 status='FAIL'、G-evaluator-verdict exit=null/verdict=FAIL と報告",
+      "未検査を PASS と混同していない: CL6/CL7 を 'PASS_VACUOUS' と明示し note に 'checked=0 の空検査で exit 0。登録があったことの根拠にはならない (未検査と PASS を混同しない)' と自己申告。私の再実行でも checked=0 / scanned_nodes_with_evidence=0 を確認",
+      "evaluator PASS 未達で R3-import に進まなかったのは task 契約遵守であり goal 緩和ではない"
+    ]
+  },
+  "gate_results": [
+    {
+      "id": "G-coverage-final",
+      "command": "python3 plugins/system-spec-harness/scripts/validate-coverage-matrix.py --matrix <fixture>/system-spec/spec-state.json --require-complete --require-foundation",
+      "exit": 0,
+      "detail": "'OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす'。spec-state は 48 セル (8 category x 6 platform) = 確定 8 / 対象外 40 / 未収集 0"
+    },
+    {
+      "id": "G-source-citation",
+      "command": "python3 plugins/system-spec-harness/scripts/validate-source-citation.py --targets <{\"targets\":[...6件...]}> --references <fixture>/system-spec/fetched-references.json --state <fixture>/system-spec/spec-state.json --repo-root <fixture>",
+      "exit": 0,
+      "detail": "'OK: 出典記録が全件対応・必須フィールド・公式 host・時刻・取得証跡の一致を満たす'。targets は spec-state.targets[] の 6 件 (sqlite/postgresql/fastapi/flask/fastapi-security/rfc6749)。注: --targets に素の JSON 配列を渡すと _target_ids() が AttributeError で exit 1 になり、{\"targets\": [...]} でラップする必要がある (--help に未記載の暗黙契約)"
+    },
+    {
+      "id": "G-evaluator-report-shape",
+      "command": "python3 plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py --report <fixture>/system-spec/completeness-report.json",
+      "exit": 0,
+      "detail": "'OK: レポート形状・総合判定整合・独立 auditor 帰属の fork 証跡接地を満たす (verdict=FAIL)'。--session 88fa50b0-d298-4c30-9bd4-670cb4db24a3 を追加しても exit 0"
+    },
+    {
+      "id": "G-evaluator-verdict",
+      "command": "read <fixture>/system-spec/completeness-report.json",
+      "exit": null,
+      "detail": "verdict=FAIL。aspects[].verdict = foundation_trace PASS(92) / decision_guidance PASS(84) / matrix_coverage PASS(95) / design_knowledge_reflection FAIL(58) / doc_freshness PASS(93) / prompt_quality PASS(85)。findings 13 = high 1 / medium 3 / low 5 / info 4。high は 'design_knowledge_reflection / C14 位相順消費' の 1 件"
+    },
+    {
+      "id": "G-validate-source-digest",
+      "command": "python3 plugins/dev-graph/scripts/validate-source-digest.py --repo-root <fixture> --progress <fixture>/eval-log/run-dev-graph-system-spec-progress.json",
+      "exit": 0,
+      "detail": "{\"checked\": 0, \"registered_mismatch\": []} = 空検査。登録健全性の証拠にならない"
+    },
+    {
+      "id": "G-validate-evidence-refs",
+      "command": "python3 plugins/dev-graph/scripts/validate-evidence-refs.py --repo-root <fixture> --progress <fixture>/eval-log/run-dev-graph-system-spec-progress.json",
+      "exit": 0,
+      "detail": "{\"scanned_nodes_with_evidence\": 0, \"registered_dangling\": [], \"existing_dangling\": []} = 空検査"
+    },
+    {
+      "id": "G-compile-acceptance",
+      "command": "python3 -m pytest plugins/system-spec-harness/skills/run-system-spec-compile/tests/ -q",
+      "exit": 0,
+      "detail": "42 passed in 0.34s。実行者の '42 passed' 主張と一致"
+    },
+    {
+      "id": "G-knowledge-order",
+      "command": "python3 plugins/system-spec-harness/scripts/validate-knowledge-graph.py --profile knowledge --input plugins/system-spec-harness/skills/ref-system-design-knowledge/references/knowledge-catalog.json --order",
+      "exit": 0,
+      "detail": "topo_order = [\"clean-code\",\"ddd\",\"design-patterns\",\"clean-architecture\",\"api-design-patterns\",\"secure-by-design\"]"
+    },
+    {
+      "id": "G-graph-node-count",
+      "command": "python3 -c 'json.load(open(\"<fixture>/.dev-graph/state/graph.json\"))'",
+      "exit": 0,
+      "detail": "nodes=0、edges キー不在、graph_revision=0。git diff HEAD で差分 0"
+    },
+    {
+      "id": "G-audit-fork-ledger",
+      "command": "grep/jsonl 解析 on /Users/dm/orca/workspaces/HarnessHub/wt-21/eval-log/system-spec-harness/audit-fork-ledger.jsonl",
+      "exit": 0,
+      "detail": "全 105 行 (28 session)。session 88fa50b0-d298-4c30-9bd4-670cb4db24a3 は 9 行で末尾 9 行を占め、subagent_type は system-spec-matrix-auditor x3 / system-spec-doc-freshness-auditor x3 / system-spec-hearing-auditor x3、tool_name は全て 'Agent'、prompt_sha256 は全 9 行 64 hex。ts は 3 群 (22:27-22:29 / 22:45 / 22:57) = 3 round x 3 fork。progress.json の rounds 記載と ts 単位で一致"
+    },
+    {
+      "id": "G-ledger-tamper-check",
+      "command": "git diff HEAD --numstat / git diff --cached / transcript tool_use 全走査",
+      "exit": 0,
+      "detail": "台帳差分は +12/-0 (staged +3 は別 session bec3cb64、unstaged +9 は全て 88fa50b0) = append-only、削除・書換 0。writer は .claude/settings.json L229/L411 と plugins/system-spec-harness/hooks/hooks.json L22 の PostToolUse (Task|Agent) → record-audit-fork.py。transcript の Write/Edit は 12 件で全て fixture eval-log 3 ファイルと scratchpad のみ、Bash 112 件に台帳への > / >> / tee / sed -i は 0 件 (台帳言及 8 件は全て read-only の tail/grep/ls)"
+    },
+    {
+      "id": "G-executor-digest-integrity",
+      "command": "sha256 再計算 vs progress.json evidence[kind=artifact_digest]",
+      "exit": 0,
+      "detail": "spec-state.json / fetched-references.json / index.md / 00-requirements-definition.md / completeness-report.json の 5 件すべて申告 digest と一致"
+    },
+    {
+      "id": "G-plugin-untouched",
+      "command": "git status --porcelain plugins/ + transcript Write/Edit/Bash 走査",
+      "exit": 0,
+      "detail": "plugins/ 配下 29 件の差分はすべて index 済み (本 branch の既存作業) で、本 session の Write/Edit は plugins/ に 1 件も無く、Bash からの plugin 書込パターン (redirect/sed -i/tee/cp/mv/git apply/patch) も 0 件。被験 plugin は本 run 中に改変されていない"
+    }
+  ],
+  "blockers": [
+    {
+      "severity": "high",
+      "owner": "live-trial run (C19-OUT1-positive-system-spec-lineage-r2) / obs2",
+      "summary": "specification / architecture node の C02 登録が 0 件 (graph.json nodes=[]、specs//architecture/ 空) のため、positive scenario の中核観測 obs2 『取り込み成果物が source lineage と evaluator evidence を保持する』が全く実証されていない。dev-graph 側 gate 2 本 (validate-source-digest / validate-evidence-refs) の exit 0 は checked=0 / scanned=0 の空検査であり充足根拠にならない。",
+      "fixture_side_remediable": false
+    },
+    {
+      "severity": "high",
+      "owner": "system-spec-harness / run-system-spec-compile (C03)",
+      "summary": "compile-spec-doc.py:133 category_design_refs() は resource-map.yaml の read_when に cat_id が含まれる .md をファイル出現順で返すだけで topo_order ソートを持たない (実測: backend -> ['clean-architecture.md','api-design-patterns.md','ddd.md']、resource-map ファイル順 = [... clean-architecture, design-patterns, api-design-patterns, secure-by-design, ddd, clean-code])。topo_order は ddd < clean-architecture < api-design-patterns を要求するため、card 2 件以上の章 (backend) では C14 位相順違反が構造的に再発する。render_design_refs():560 も refs をそのまま enumerate するため呼出側でも順序修正されない。入力は plugin 同梱の resource-map.yaml / system-category-taxonomy.json のみで fixture から与えられる値はゼロ。",
+      "fixture_side_remediable": false
+    },
+    {
+      "severity": "medium",
+      "owner": "system-spec-harness / assign-system-spec-completeness-evaluator (C05)",
+      "summary": "実行者 BLK-2 (sub_input 監査 C06 が FAIL のとき観点 verdict へ escalation する規約が rubric/SKILL/R1-score に未明文化で evaluator 裁量に依存する) は completeness-report.json の findings にも記録されているが、私は rubric 側の未明文化を独立に再導出していない。round 3 では C06=PASS になっているため本 run の FAIL 要因ではない。",
+      "fixture_side_remediable": false
+    },
+    {
+      "severity": "low",
+      "owner": "live-trial boot / task harness",
+      "summary": "SYSTEM_SPEC_AUDIT_FORK_LEDGER が空文字列で渡された (transcript の printenv 出力に 'SYSTEM_SPEC_AUDIT_FORK_LEDGER=' と python repr '' が実在)。record-audit-fork.py:ledger_path() は `if env:` で判定するため空文字列は falsy となり、CLAUDE_PROJECT_DIR 相対の既定パス (wt-21/eval-log/system-spec-harness/) へフォールバックした。結果として監査台帳が fixture 外に書かれ、task 契約 (『boot で渡された fixture 内パスを変更しない』) の前提が boot 側で崩れている。実行者は env も台帳も改変しておらず、この blocker の帰責は boot 側。",
+      "fixture_side_remediable": false
+    },
+    {
+      "severity": "low",
+      "owner": "system-spec-harness / scripts/validate-source-citation.py",
+      "summary": "--targets に素の JSON 配列を渡すと _target_ids() (L75) が data.get() で AttributeError を投げ traceback + exit 1 になる。spec-state.json の targets[] をそのままファイル化した自然な入力が crash する一方、--help は形状要件 ({\"targets\": [...]} ラップ) を記載していない。",
+      "fixture_side_remediable": false
+    }
+  ],
+  "misreporting_check": {
+    "executor_claims_consistent_with_measurements": false,
+    "discrepancies": [
+      "実行者の『残存 high finding は harness 側 compile-spec-doc.py の topo_order 未実装が原因で、fixture 変更では是正できない』『fixture 側に順序を制御する lever が無い』(BLK-1 fixture_side_remediable=false / reason_not_remediable) は部分的に誤り。evaluator の high finding は違反箇所を 2 つ挙げており (a) 出典カード節 L50 clean-architecture / L91 api-design-patterns / L134 ddd と (b) 質疑録の card 適用判定 L33/L34/L35。(a) は確かに plugin 駆動で fixture 制御不能だが、(b) は fixture の spec-state.json qa_log[27].answer に実行者自身が書いた文字列であり (私が spec-state.json を走査して card 適用判定順 ['Clean Architecture','API Design Patterns','DDD'] を qa_log[27].answer に特定)、ddd → clean-architecture → api-design-patterns 順へ書き換える fixture 側 lever が実在した。したがって『lever が本当に無い』は成立せず、正確な主張は『fixture 側で半分は是正可能だが、(a) が残るため high finding 自体は plugin 修正なしには解消しない』である。high finding が残存する結論そのものは妥当。",
+      "上記以外の実行者主張は実測と完全一致した (再現確認済み): coverage --require-complete --require-foundation exit 0 / source-citation exit 0 / aggregate-completeness --report(--session) exit 0 / pytest 42 passed / topo_order 6 件 / completeness verdict=FAIL と 6 aspect verdict / findings high1 medium3 low5 info4 / registered_this_run=[] と graph.json nodes=0 / validate-source-digest checked=0 / validate-evidence-refs scanned=0 / 台帳 session 行 9 件と subagent_type 3x3 / 5 件の artifact digest / dev-graph 複製 0 件 / SYSTEM_SPEC_AUDIT_FORK_LEDGER 空文字列。status='FAIL' の自己申告は誠実で、FAIL を PASS と偽る挙動・空検査を充足と読み替える挙動は検出されなかった。"
+    ]
+  },
+  "notes": [
+    "被験 plugin は本 run 中に改変されていない (transcript の Write/Edit は fixture eval-log 3 ファイルと scratchpad のみ、Bash から plugins/ への書込パターン 0 件)。task 契約『指定 fixture だけを変更する』は遵守されている。",
+    "canonical flow の委譲機構そのものは健全に動作した: 4 entry point がすべて Skill ツール経由・canonical 順で呼ばれ (transcript 実測)、dev-graph 側に elicitation/compile の実行ロジック複製は 0 件、監査 fork は PostToolUse hook 台帳に 3 round x 3 auditor として実 fork 証跡で裏取りされている。失敗は委譲機構ではなく (i) harness compile の C14 順序欠陥と (ii) その結果 C02 import に到達しなかったことに起因する。",
+    "obs3 の『登録は C02 経由だけ』は登録 0 件による空虚な充足であり、C02 経路の正常動作を陽性に示したものではない。次 run で obs2/obs3 を陽性に閉じるには BLK (compile の topo_order ソート実装) を harness 側で先に解消する必要がある。",
+    "goal-seek は健全 (hash 再計算一致・6 キー完備・snapshot 不変・drift なし)。intermediate.jsonl が 2 行であることは task 契約 (『実作業前の初回行 + 実行・検証後の結果行を append』) に適合し、loop=3 との差は違反ではない。",
+    "この run 全体としては scenario 充足を主張できない (obs1/obs2 が NOT_SATISFIED)。task.md の規定により、この verifier 判定が FAIL であるため run は FAIL。"
+  ]
+}

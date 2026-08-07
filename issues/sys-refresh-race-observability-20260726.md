@@ -12,9 +12,9 @@ iteration: null
 title: "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-27T23:33:20.616615Z"
-status: "draft"
-depends_on: []
+updated_at: "2026-07-28T04:11:53Z"
+status: "closed"
+depends_on: ["issue-auth-tenancy-production-adapter-20260725"]
 related_nodes: ["feat-auth-tenancy","issue-auth-tenancy-production-adapter-20260725"]
 resource_scope: ["apps/hub/src/lib/auth/device-flow/service.ts","apps/hub/tests/auth-tenancy/","docs/backend-spec.md","docs/security-spec.md","docs/features/feat-auth-tenancy/runbook.md"]
 purpose: "refresh() には同じ refresh token が 2 回提示されたときに落ちる分岐が 2 つある。(1) 失効済みを提示した再利用検知は family 全失効 + token.reuse_detected を残す。(2) 読んだ時点は生きていたが revokeIfActive の CAS に負けた側は invalid_grant を返すだけで監査に何も残らない。どちらに落ちるかは interleaving で決まり、負けた側の読みが勝者の CAS より後なら (1)、先なら (2)。単一プロセス (ローカル file backend + guardedWrite) の実測では (1) に落ちるが、Workers は isolate が複数でプロセス内の待ち行列を共有しないため本番では両者が生きた枝を読んで (2) に落ちる。つまり本番の主経路が監査に痕跡を残さない側である。HarnessHub-b7ng は escalate しない判断を採った (掃討が勝者の create と競走して決定論にならない。実測の監査行 revoked_family_size=1 / revoked_count=0 が掃討時点で勝者の枝が無いことの証拠。加えて CLI の並行 refresh ごとに利用者がログアウトする可用性の代償がある)。検知自体は負けた枝の再提示で (1) に落ちるので失われないが、client が invalid_grant で古い token を捨てて再提示しない場合その窓の窃取は観測されない。監査 action の語彙の正本は docs/backend-spec.md にあり b7ng の resource_scope 外だったため分離した"

@@ -44,12 +44,20 @@
       ]
     },
     {
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
       "component_id": "C19",
       "skill": "run-dev-graph-system-spec",
       "criterion_id": "OUT1",
       "mode": "positive",
       "task_args_template": "--repo-root <contained-fixture-repo>",
+      "task_contract": {
+        "required_fragments": [
+          "upsert-node.py",
+          "SYSTEM_SPEC_AUDIT_FORK_LEDGER",
+          "doc-fetch は公式ページを実取得して現行 version を記録する"
+        ],
+        "forbidden_fragments": []
+      },
       "fixture_contract": "The contained system-spec workspace holds only system-spec/requirements-brief.md; spec-state.json, fetched-references.json, completeness-report.json and index.md are absent by design. The declared system-spec-harness plugin supplies all four required entry points, and confirmed output, citations and evaluator PASS must be produced by completing that canonical flow during the trial.",
       "required_observations": [
         "the declared system-spec-harness plugin is loaded and its canonical flow completes",

@@ -1,0 +1,21 @@
+{
+  "allowed_domains": [
+    "owasp.org"
+  ],
+  "findings": [
+    "現行安定版は 5.0.0 (プロジェクトの Downloads ページ配布)",
+    "要件 ID 形式は <chapter>.<section>.<requirement>。版間で ID が変わるため外部文書からの引用は v<version>-<chapter>.<section>.<requirement> 形式 (例 v5.0.0-1.2.5、v は小文字) が推奨",
+    "1.#.# は Encoding and Sanitization 章、1.2.# はその Injection Prevention 節",
+    "旧 4.0.3 は 286 要件。5.0 は導入障壁の低減を目標に据えた大改訂"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "OWASP Application Security Verification Standard ASVS version release",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://owasp.org/www-project-application-security-verification-standard/",
+    "https://owasp.org/blog/2025/04/09/asvs-rc1-review",
+    "https://owasp.org/blog/2022/05/15/asvs-5.0-roadmap"
+  ],
+  "target_id": "owasp-asvs"
+}

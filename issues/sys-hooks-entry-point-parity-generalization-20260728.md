@@ -12,8 +12,8 @@ iteration: null
 title: "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-08-04T05:59:54.585720Z"
-status: "active"
+updated_at: "2026-08-04T08:11:23Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","spec-harness-hub-plugin-hook-governance-20260804","arch-harness-hub-dev-workflow","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
 resource_scope: ["scripts/validate-plugin-completeness.py","scripts/validate-plugin-hooks.py","tests/scripts-root/test_root__validate_plugin_completeness_hooks_parity.py","tests/scripts-root/test_root__plugin_hooks_entry_point_contract.py","plugins/*/package-contract.json","plugins/*/hooks/hooks.json","plugins/*/.claude-plugin/plugin.json","system-spec/dev-workflow.md","specs/harness-hub-plugin-hook-governance-addendum.md","architecture/harness-hub-dev-workflow.md"]

@@ -1,20 +1,26 @@
 {
- "original_goal": "feat-task-spec-test-strategy と SYS-TASK-SPEC-TEST-STRATEGY-P01..P13 の計 14 node を Beads へ冪等に投影して beads_linkage を確立し、既存 feature/task の graph active vs bd closed 乖離を 3-way plan で reconcile して、同一入力の二回目 sync が changes=0 に 収束した状態にする",
- "original_goal_hash": "36ce947f86c4190e204d7d314d89e72f42e4855628d4fb68766bf086fe48063b",
- "verb": "sync",
- "recorded_at": "2026-07-25T02:52:45Z",
- "current_directive": "/dev-graph sync (11 verb 一括実行の verb 10)",
- "receipts": {
-  "projection": "eval-log/dev-graph/run-dev-graph-sync/beads-projection-receipt-feat-task-spec-test-strategy.json",
-  "dry_run_1": "eval-log/dev-graph/run-dev-graph-sync/dryrun-1.json",
-  "apply_1": "eval-log/dev-graph/run-dev-graph-sync/apply-1.json",
-  "dry_run_2": "eval-log/dev-graph/run-dev-graph-sync/dryrun-2.json"
- },
- "superseded_goals": [
-  {
-   "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
-   "recorded_at": "2026-07-22T00:32:15Z",
-   "run_note": "2026-07-22 wt-10: 新規 issue node 6 件 (hearing-trace/doc-granularity/qa070-implementation/source-freshness/security-web-qaref/既存 d7) の beads 投影。--dry-run → --apply → --dry-run で changes=0 収束を確認"
-  }
- ]
+  "original_goal": "feat-task-spec-test-strategy と SYS-TASK-SPEC-TEST-STRATEGY-P01..P13 の計 14 node を Beads へ冪等に投影して beads_linkage を確立し、既存 feature/task の graph active vs bd closed 乖離を 3-way plan で reconcile して、同一入力の二回目 sync が changes=0 に 収束した状態にする",
+  "original_goal_hash": "36ce947f86c4190e204d7d314d89e72f42e4855628d4fb68766bf086fe48063b",
+  "verb": "sync",
+  "recorded_at": "2026-07-25T02:52:45Z",
+  "current_directive": "/dev-graph sync --repo-root <root> --dry-run → --apply --parity-manifest <path> → --dry-run",
+  "receipts": {
+    "projection": "eval-log/dev-graph/run-dev-graph-sync/beads-projection-receipt-feat-task-spec-test-strategy.json",
+    "dry_run_1": "eval-log/dev-graph/run-dev-graph-sync/dryrun-1.json",
+    "apply_1": "eval-log/dev-graph/run-dev-graph-sync/apply-1.json",
+    "dry_run_2": "eval-log/dev-graph/run-dev-graph-sync/dryrun-2.json"
+  },
+  "superseded_goals": [
+    {
+      "original_goal": "tracker_binding=beads の authority に従い local graph と Beads を 3-way 突合し、失われた feature 間 blocks 辺 34 件と claim 1 件を export、2 回目 changes=0 の冪等収束を確認する",
+      "recorded_at": "2026-07-22T00:32:15Z",
+      "run_note": "2026-07-22 wt-10: 新規 issue node 6 件 (hearing-trace/doc-granularity/qa070-implementation/source-freshness/security-web-qaref/既存 d7) の beads 投影。--dry-run → --apply → --dry-run で changes=0 収束を確認"
+    }
+  ],
+  "last_invoked_at": "2026-08-07T16:15:19Z",
+  "current_mode": "dry-run → apply → 確認 dry-run (3 段すべて実行)",
+  "current_graph_sha256": "sha256:68f3ce81d76c207ffb60e235d8532c1b7607af3a18971b4de0d98de8e6b84db1",
+  "current_result": "PASS (対象 feature scope) / 未収束 (repo scope)",
+  "current_blocker": null,
+  "current_residual": "repo 全体では pending_retry 47 件が残る。内訳は他 feature の未起票 task 38 件と、confirmation_status=draft の 9 件 (issue 5 / feature 4)。後者は decompose 契約が 「draft/unconfirmed/readiness incomplete を tracker へ投影しない」と定める対象であり、起票してはならない node が pending_retry に積まれ続ける点は sync 側の分類漏れである (本来は skipped_by_contract のような別分類にすべきで、pending_retry=0 が構造的に到達不能になっている)。"
 }

@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:28Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P04"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["plugins/system-dev-planner/schemas/task-spec-test-strategy.schema.json","plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/agents/system-dev-plan-architect.md","plugins/system-dev-planner/tests/test_task_spec_test_strategy_sections.py","plugins/system-dev-planner/tests/test_task_spec_test_strategy_derivation.py"]

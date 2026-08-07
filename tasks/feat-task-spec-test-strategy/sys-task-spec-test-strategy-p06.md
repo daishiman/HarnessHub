@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:27Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P05"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["eval-log/system-dev-planner/task-spec-test-strategy/test-run-p06.json"]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """C19 (`run-dev-graph-system-spec`) 用の fixture 形状。
 
-scenario: ``C19-OUT1-positive-system-spec-lineage``
+scenario: ``C19-OUT1-positive-system-spec-lineage-r2``
 契約: live-trial-positive-scenarios.json の fixture_contract
   "The contained system-spec workspace holds only system-spec/requirements-brief.md;
    spec-state.json, fetched-references.json, completeness-report.json and index.md are
@@ -221,7 +221,7 @@ PLACED_CONTENT: dict[str, str] = {BRIEF_PATH: BRIEF}
 # (scenario_id だけは突合キーとして持つ)。lint が両者を突合するので、
 # どちらか一方だけ動かすと drift として検出される。
 TASK_CONTRACT: dict[str, object] = {
-    "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
     # 被験 skill が委譲する先の plugin。task.md はこの plugin 名を明示して
     # 「宣言済み plugin を読み込む」観測条件 (required_observations[0]) に接地させる。
     "harness_plugin": "system-spec-harness",

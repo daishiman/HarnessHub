@@ -12,8 +12,8 @@ iteration: null
 title: "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:08:17Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P09"]
 related_nodes: ["feat-tenant-data-retention"]
 resource_scope: ["docs/features/feat-tenant-data-retention/final-review-record.md"]
