@@ -44,4 +44,6 @@ P01〜P09 の成果物 (`requirements-baseline.md`・`architecture-decision-reco
 
 ## 最終判定
 
-acceptance は 3/3 pass。今回の PR は draft のため、本番デプロイと default branch への durable completion は行わない。残る todo は別スコープ課題として Beads に継続記録する。
+acceptance は 3/3 pass。PR #657 は 2026-08-04 に `main` へマージ済み（`fb05db56`）。2026-08-07 の post-merge 再検証でも focused suite 132 passed / 10 todo、task package validator PASS を再確認した。
+
+本番デプロイ（SYS-USER-ORG-ADMIN-P13 / HarnessHub-xwt.13）は未実施のため feature epic の durable completion はまだ行わない。残る todo は別スコープ課題として Beads に継続記録する。詳細は [post-merge-lifecycle-receipt.md](./post-merge-lifecycle-receipt.md)。
