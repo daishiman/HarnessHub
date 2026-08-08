@@ -39,7 +39,8 @@ reviewed_at: "2026-08-08"
 - full Dev Graph pytest: 975 PASS / 5 subtests PASS / 0 FAIL / 0 xfail。旧 C19 DEGRADED を前提にした固定 path テストも fresh PASS receipt 参照へ是正。
 - 3 contract copy の byte equality: PASS。
 - system-spec foundation / source-citation gate: PASS。最新 `main` 取込後の system-spec-harness tests は 508 PASS。U1〜U9 の原文は過去の確定済み QA を正とし、推測・捏造 0 件。
-- fresh live trial: C01 / C02 / C03 / C04 / C05 / C14 / C18 / C19 の 8 件が独立評価込みですべて PASS。C19 正本 run は `20260808T154500Z-o4zi-c19r3`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `d090d08557e35d65477b10fc7d6f692f0f1b1b146abf8a200dbc1fc78e1832f2`。
+- fresh live trial: C01 / C02 / C03 / C04 / C05 / C14 / C18 / C19 の 8 件が独立評価込みですべて PASS。C14 正本 run は `20260808T190000Z-o4zi-c14r11`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `b0c1f6192f5f0322a5b61f442ca7d2acdc2c2a3163b7554ea3fce79df797d4e8`。C19 正本 run は `20260808T154500Z-o4zi-c19r3`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `d090d08557e35d65477b10fc7d6f692f0f1b1b146abf8a200dbc1fc78e1832f2`。
+- main 同期: `origin/main` の `2209f8ad` を local `main` の `d7b1bbc9` へ統合し、その local `main` を本 branch へ `5fddb2ac` でマージ。`spec-state.json` の競合は qa-206 / qa-207 / qa-208 として双方の確定仕様を保持した。
 - C19 は target Skill と harness 正規4 Skill を literal call で順番どおり実行し、3件の独立監査、completeness gate、C02 経由の2 node、source / evidence digest、writer 経路、複製ロジック 0 を確認。
 - full graph schema の 160 件（frontmatter 44、parity 5、heading 111）は `origin/main` と同一の既存 baseline。今回変更 node の違反は 0 件で、無関係な過去 artifact を本 commit で一括変更しない。
 
@@ -56,4 +57,4 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 
 ## 500 行制約
 
-変更した実装・文書はいずれも 500 行以下。既存 500 行超過 generated artifact は今回の手編集・分割対象にしない。
+変更した手書きの実装・文書はいずれも 500 行以下。500 行を超えるのは機械生成された C19 transcript、`.dev-graph/state/graph.json`、`system-spec/spec-state.json` だけである。いずれも改変防止用 digest、遷移履歴、参照位置を一体で検証する単一証拠／状態正本（SSOT＝唯一の正しい保存先）のため分割しない。これらは生成物であり、手書きファイルの責務分割上限には数えない。

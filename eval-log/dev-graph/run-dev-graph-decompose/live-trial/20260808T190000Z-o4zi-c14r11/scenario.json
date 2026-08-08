@@ -98,7 +98,7 @@
       ]
     },
     {
-      "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+      "scenario_id": "C14-OUT1-positive-macro-decomposition-r15",
       "component_id": "C14",
       "skill": "run-dev-graph-decompose",
       "criterion_id": "OUT1",
