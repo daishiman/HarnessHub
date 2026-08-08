@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-170 |
+| Web (web) | 確定 | 確定質疑: qa-203 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,29 +24,15 @@ serves_goals: [G1, G2, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-170 (対応セル: web)
+### qa-203 (対応セル: web)
 
-**質問**: C06 監査 finding-1 (HIGH): 既定着地 /sheets は qa-135 で事実として確定しているが、利用者の承認にも appr-033 の委任範囲にも紐付いていない。『利用者がサインイン後どの画面に着地すべきか』は製品の価値判断であり、受入基準の起点として承認済みにする必要がある。利用者へ問うたうえで確定せよ。
+**質問**: qa-200 が UI 基盤の公開部品として実装に存在しない Cluster を列挙していた。qa-200 の所有境界と既存 frontend/web 契約を維持しつつ、公開 contract の列挙を実装に一致させるにはどう訂正するか。
 
-**回答**: 利用者へ直接問い、**既定着地を `/dashboard` とし、ダッシュボード画面を先に作る**という決定を得た (appr-034)。qa-135 の逐語は改変せず、本 entry を frontend/web の確定内容の正本とする。
+**回答**: [出所] 本 entry は appr-037 の技術的事実委任下で、packages/ui/src/index.ts の export 実測に基づいて訂正する。利用者の好みを新たに決定するものではない。qa-200 の逐語は改変せず、本 entry を frontend/web の正本とする。
 
-[変更点は 1 点だけ] 既定着地の値を `/sheets` から `/dashboard` へ変更する。`DEFAULT_POST_SIGNIN_LANDING` を単一定数から解決する構造 (apps/hub/src/lib/routing/post-signin-landing.ts) はそのまま用い、値だけを変える。画面ごとに着地先を散らさない。
+qa-200 の AppShell / design token / 共通画面状態の所有境界、apps/hub を consumer とする方針、公開 API・DB・認証認可・deploy unit 非変更は全面維持する。訂正は公開部品の列挙だけである。正しい layout 公開 contract は AppShell / Container / SidebarLayout / Stack / Card / PageHeader / NavList とする。Cluster は実装も export も存在しないため列挙から除外する。
 
-[qa-135 の他の契約は全面維持] 以下は一切変更しない。
- - サインイン開始時に保存した安全な相対戻り先を優先し、無い場合に既定着地へ落とす順序。
- - 絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす (open redirect 防止)。
- - 未認証の `/` は稼働確認表示を保ち、認証済みの `/` は既定着地へ redirect する。  `/` を認証済み利用者の終着点にしない。稼働確認の正本は `/health`。
- - ブラウザ業務画面は session principal の active tenant/workspace から server 側で   scope を解決し、明示ヘッダー経路と同じ authorize() に収束させる。
- - workspace 1 件は自動選択、2 件以上は選択画面を挟み、切替時は新 scope の応答前に  旧 scope 表示を消す。
- - scope 未解決の業務画面描画・認可規則の二重実装・未実装ナビゲーションの前倒し表示は  許可しない。
-
-[新規に本 feature の scope へ入るもの] `/dashboard` 画面の実装。これまで docs/frontend-spec.md §10 の段階運用では S09 (ダッシュボード完成後に `/` を `/dashboard` へ切替) として後段に置かれていたが、利用者の決定により本 feature で実装する。
-
-[『前倒し表示の禁止』との整合] qa-135 は『未実装ナビゲーションの前倒し表示は許可しない』と定めている。本決定はこれに反しない。禁じているのは**実体が無い画面へのリンクを出すこと**であり、本決定は `/dashboard` の実体を実装したうえで着地させる。サイドバー 9 項目の段階表示契約 (docs/frontend-spec.md §10) は変更せず、ダッシュボード以外の未実装項目を前倒しで見せることはしない。
-
-[段階表の更新義務] docs/frontend-spec.md §10 の S09 は『ダッシュボード完成後に切替』と書かれており、本決定でその前提が変わる。仕様書と段階表が食い違ったまま残ると次の実装者がどちらを正としてよいか判断できないため、**§10 の段階表そのものを本 feature の変更対象に含める** (仕様間の不整合を残さない)。
-
-[この決定の性質] 着地先の選択は利用者本人の決定であり (appr-034)、AI の代理回答 (appr-033) ではない。実装量が増える代償は提示済みで、利用者は了解している。
+画面状態は packages/ui の Skeleton / EmptyState / ErrorState と、apps/hub の LoadingScreen / NotFoundScreen / ForbiddenScreen / ErrorScreen の二層で構成する。route 側の loading.tsx / error.tsx / not-found.tsx / global-error.tsx は薄い配線に留める。その他の qa-200 の契約は変更しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -103,6 +89,14 @@ serves_goals: [G1, G2, G3]
 - `essential_purpose`に直結するpolicyを外部詳細から守り、goal達成ロジックの検証を速くする。
 - 制約に「vendor lock-in低減」「複数platform」「高い変更頻度」がある場合、変更範囲と移行riskを局所化する。
 - 適用判断は「何層あるか」でなく、守るgoal、予想される変更、boundary testで観測する。
+
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-203 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-007 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G1, G2, G3
 
 ## 最新ドキュメント出典
 

@@ -27,7 +27,7 @@ export default async function HomePage() {
 
   return (
     <section aria-labelledby="status-heading">
-      <h2 id="status-heading">稼働状況</h2>
+      <h1 id="status-heading">稼働状況</h1>
       <Alert
         tone="success"
         title="Hub の実行基盤が起動しています"

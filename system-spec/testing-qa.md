@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-190 |
+| Web (web) | 確定 | 確定質疑: qa-204 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,19 +24,15 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-190 (対応セル: web)
+### qa-204 (対応セル: web)
 
-**質問**: C07 独立監査ラウンド12 (verdict PASS) が MEDIUM として、qa-188 の論点束ねを指摘した。qa-188 の (a)〜(d) は『tenants.status を段0 語彙へ追加する』という 1 論点として妥当だが、(e)『DeviceAuthorizationStatus の三重定義と V7 の第3情報源化』は独立した別論点である、という判定である。理由は、対象ドメインが異なる (前者=認証の前提状態、後者=検査ツールの網羅範囲) こと、影響先も異なる (前者=段0 マトリクス、後者=V7 acceptance) ことの 2 点。spec-state 契約『qa_log の論点分離』は既登録 entry の逐語改変を禁じ、束ねが後から判明した場合は分離索引を新規 entry として追記せよと定めている。この扱いを決めよ。
+**質問**: qa-202 の component catalog 分類名が実装の CatalogGroup と一致せず、responsive 計測と VRT 撮影の viewport も区別が曖昧だった。qa-202 と既存 testing-qa/web 契約を維持しつつ、実装と一致する検査 contract へどう訂正するか。
 
-**回答**: C07 の判定を受け入れ、**qa-188-e を本 entry へ分離索引として切り出す**。qa-188 の逐語は一切改変しない。matrix.maintenance-ops.web.qa_ref も qa-188 のまま据え置く。
+**回答**: [出所] 本 entry は appr-037 の技術的事実委任下で、apps/hub/tests/browser の実装と CI 配線を実測して訂正する。利用者の好みを新たに決定するものではない。qa-202 の逐語は改変せず、本 entry を testing-qa/web の正本とする。
 
-[qa-190-a 束ねであったことを認める] qa-188 は『tenants.status を段0 語彙へ追加する』を主題として書かれ、その末尾に (e) として DeviceAuthorizationStatus の三重定義を付けた。両者に共通していたのは『C07 が継続指摘している未対応項目である』という**由来だけ**であり、内容の関係ではない。由来の共通性で束ねるのは、まさに論点分離契約が禁じている形である。C06 が論点別に中立性を検証できなくなるため、分離する。
+qa-202 の Vitest Browser Mode + Playwright + Chromium、OS 単位 baseline、fail-closed、画面状態 gate、jsdom gate 維持は全面維持する。catalog の実装上の分類名は layout / form / feedback / data / chart / navigation / overlay の 7 種であり、全公開描画部品をいずれか 1 entry として登録する。全 7 group を light / dark で撮るため baseline は 14 枚となり、VRT 固定 viewport は 1024x768 とする。
 
-[qa-190-b 分離した論点の内容] `DeviceAuthorizationStatus` は同一のリテラル union が 3 箇所に独立して存在する: `packages/schemas/auth-tenancy/src/ports.ts:117` (TypeScript 型宣言)、`packages/schemas/auth-tenancy/src/repository/device-flow.ts:23` (zod の z.enum)、drizzle schema `publish.ts:106` (text(col, {enum: [...]}))。V7 (同一リテラル union の重複定義を検出する検査) が突合すべき情報源は、したがって **型宣言 / zod / ORM schema の 3 経路**である。型宣言と zod の 2 経路だけを実装すると、3 件目 (ORM schema) が検査をすり抜ける。これは検査ツールの網羅範囲の問題であり、認証の前提状態語彙 (qa-188 の主題) とは別の層にある。
-
-[qa-190-c 本 entry を testing-qa/web に束縛する理由] この論点の影響先は V7 の acceptance、すなわち検査ツールが何を情報源とするかである。段0 マトリクス (maintenance-ops) ではなく testing-qa の管轄にあたる。分離索引を主題に近いカテゴリへ置くことで、後から読む者が『V7 の網羅範囲はどこで決まったか』を categoryから辿れる。
-
-[qa-190-d 由来の明示] 本 entry の内容は qa-188 の (e) に由来する。qa-188 側にはこの分離を指す逆参照が無い (未解決事項 6 と同じ構造的欠落である)。本 entry から qa-188 を参照する片方向の索引として記録する。qa-188 の逐語を書き換えて双方向にすることは、契約が禁じているため行わない。
+responsive regression の viewport は VRT と別契約で、mobile=360x800、tablet=768x1024、desktop=1280x800 とする。ここでは document overflow、table の局所 scroll、md=768 の列切替、comfortable 44px / compact 36px を数値検査する。CI 起動条件は workflow_dispatch または PR の ui-visual label とし、失敗時 actual / diff artifact を保存する。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 

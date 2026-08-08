@@ -31,7 +31,7 @@ export default async function SigninPage({ params }: SigninPageProps) {
   if (connection === null) {
     return (
       <section aria-labelledby="signin-heading">
-        <h2 id="signin-heading">サインイン</h2>
+        <h1 id="signin-heading">サインイン</h1>
         <Alert
           tone="danger"
           title="このテナントではサインインできません"
@@ -45,7 +45,7 @@ export default async function SigninPage({ params }: SigninPageProps) {
     // 認証基盤が未結線であることを画面上でも隠さない (ADR §10)
     return (
       <section aria-labelledby="signin-heading">
-        <h2 id="signin-heading">サインイン</h2>
+        <h1 id="signin-heading">サインイン</h1>
         <Alert
           tone="warning"
           title="認証基盤が未結線です"
@@ -57,7 +57,7 @@ export default async function SigninPage({ params }: SigninPageProps) {
 
   return (
     <section aria-labelledby="signin-heading">
-      <h2 id="signin-heading">サインイン</h2>
+      <h1 id="signin-heading">サインイン</h1>
       <p>{connection.displayName} のアカウントでサインインします。</p>
       <TenantOidcSigninForm
         action={tenantOidcSigninAction(parsed.data.tenant_slug)}

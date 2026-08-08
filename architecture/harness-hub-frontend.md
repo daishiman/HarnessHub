@@ -142,3 +142,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 正本は [frontend](../system-spec/frontend.md) の `qa-135`、
   [UI-UX](../system-spec/ui-ux.md) の `qa-136`、認可境界は
   [auth](../system-spec/auth.md) の `qa-137` を参照する。
+
+## 2026-08-08 UI 基盤・実ブラウザ品質境界
+
+- `packages/ui` を AppShell、layout primitive、design token、focus ring、base CSS の owner とし、`apps/hub` は root layout で一度だけ base CSS を注入する consumer とする。
+- App Router の root / dashboard / workspace は loading / error / not-found を共通画面状態へ接続し、root は global-error も持つ。403 は再認証導線へ潰さない。
+- responsive の数値正本は `breakpointTokens` (`480 / 768 / 1120`)。表の超過は局所 scroll container で受け、document 全体の overflow は実 Chromium で拒否する。
+- jsdom gate に加え、Vitest Browser Mode + Playwright で 360 / 768 / 1280px、44px / 36px 操作域、catalog light/dark VRT を検査する。baseline は OS 単位とし CPU architecture では分けない。
+- 規範契約は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、仕様反映経路は [受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を正とする。

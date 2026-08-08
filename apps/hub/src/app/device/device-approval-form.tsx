@@ -90,7 +90,7 @@ export function DeviceApprovalForm({
 
   return (
     <section aria-labelledby="device-approval-heading">
-      <h2 id="device-approval-heading">端末を承認する</h2>
+      <h1 id="device-approval-heading">端末を承認する</h1>
       <p>PublisherまたはCLIに表示された8文字の確認コードを入力してください。</p>
       <form onSubmit={onSubmit}>
         <TextInput
