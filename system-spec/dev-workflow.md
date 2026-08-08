@@ -52,6 +52,13 @@ serves_goals: [G1, G4, G5]
 
 [qa-198-g 引き継ぎ] 本 entry は dev-workflow/web の正本を qa-197 から引き継ぐ。qa-197 が保持していた未解決事項 6・9・10 は本 entry が引き継いで保持する。qa-196 の照会規律 8 項目は引き続き有効である。**原因究明は本 entry で完了した。** 未解決事項のうち原因に関するものは解消し、残るのは plugin 側の課題 (6・8・9・10) と実装 verb の既知タスク (V5 検査 script) である。
 
+[qa-198-h 実装 writeback 索引 (2026-08-08)] qa-198-f の V6 (稼働ビルドの素性) / V7 (deploy 反映鮮度) は elicitation（要件の聞き取り）正本のまま維持し、**新規 qa_log は起票しない**（既確定要求の実装であり、聞き取りセルの再オープンを要しない）。実装確定契約の正本は次へ分離した。
+
+- 実装契約: [`specs/harness-hub-build-identity-deploy-freshness-addendum.md`](../specs/harness-hub-build-identity-deploy-freshness-addendum.md)
+- 親追補索引: [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8
+- feature: `feat-build-identity-deploy-freshness` / Beads `HarnessHub-hf9y`
+- 受領書: `docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`
+
 ### qa-140 (対応セル: desktop-windows)
 
 **質問**: qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?
