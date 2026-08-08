@@ -22,6 +22,8 @@ import { randomBytes } from 'node:crypto';
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 /** AI queue worker が要求する scope。`aijob.pull` / `aijob.complete` の requiredScope と同じ値。 */
 const QUEUE_SCOPE = 'aijob:process';
+/** Harness からの feedback 投稿が要求する scope。`feedback.create` の requiredScope と同じ値。 */
+const FEEDBACK_SCOPE = 'feedback:write';
 const DEVICE_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:device_code';
 
 const HELP = `Usage:
@@ -216,6 +218,10 @@ function apiClient(config: SmokeConfig): ApiClient {
  * code 発行と token 交換は本番 Worker の public endpoint を通す。承認だけは session が要るため
  * `approve` (DB probe の CAS) に委譲する。CAS が false を返したら token を作らずに失敗させる —
  * 「承認できていないのに token が出た」状態を smoke が見逃さないため。
+ *
+ * `scopes` を省略すると AI queue 用 (`aijob:process`) の token になる。scope 別の拒否
+ * (`missing_scope`) を本番で観測するには、要求 scope を呼び出し側が選べる必要がある
+ * (HarnessHub-p0lr): `feedback.create` は `feedback:write` を要求するため、queue token では通らない。
  */
 async function acquireDeviceToken(
   api: ApiClient,
@@ -226,13 +232,15 @@ async function acquireDeviceToken(
     readonly workspaceId: string;
     readonly userId: string;
     readonly label: string;
+    readonly scopes?: readonly string[];
   },
 ): Promise<DeviceGrant> {
+  const scopes = input.scopes ?? [QUEUE_SCOPE];
   const code = await api({
     method: 'POST',
     path: '/api/v1/device/code',
     expected: 200,
-    json: { tenant_slug: input.tenantSlug, scope: [QUEUE_SCOPE], device_label: input.label },
+    json: { tenant_slug: input.tenantSlug, scope: [...scopes], device_label: input.label },
   });
   const deviceCode = expectString(code.body.device_code, `${input.label} device_code`);
   const userCode = expectString(code.body.user_code, `${input.label} user_code`);
@@ -255,7 +263,14 @@ async function acquireDeviceToken(
   const claims = decodeAccessClaims(accessToken, `${input.label} access token`);
 
   assert(token.body.token_type === 'Bearer', `${input.label}: token_type が Bearer ではありません`);
-  assert(claims.scope.includes(QUEUE_SCOPE), `${input.label}: token に ${QUEUE_SCOPE} がありません`);
+  for (const scope of scopes) {
+    assert(claims.scope.includes(scope), `${input.label}: token に ${scope} がありません`);
+  }
+  // 要求していない scope が付いて返ってきたら、scope 別拒否の観測そのものが無意味になる。
+  assert(
+    claims.scope.every((granted) => scopes.includes(granted)),
+    `${input.label}: 要求していない scope が付与されました (${claims.scope.join(',')})`,
+  );
   assert(claims.tenant_id === input.tenantId, `${input.label}: token の tenant_id が承認先と一致しません`);
   assert(claims.workspace_id === input.workspaceId, `${input.label}: token の workspace_id が承認先と一致しません`);
   assert(claims.sub === input.userId, `${input.label}: token の sub が承認した利用者と一致しません`);
@@ -272,6 +287,7 @@ export {
   expectNumber,
   expectObject,
   expectString,
+  FEEDBACK_SCOPE,
   HELP,
   loadConfig,
   QUEUE_SCOPE,
