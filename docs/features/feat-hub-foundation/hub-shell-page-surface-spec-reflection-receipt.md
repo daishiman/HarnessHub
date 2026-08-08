@@ -78,7 +78,7 @@ beads_ids:
 - 前回 UI 基盤 5 Beads (`tiqw / snlo / xuhj / xaa3 / 4a2z`): PR #679 の `main` merge を確認し、2026-08-08 に closed へ収束した。
 - branch: `devgraph/issue-hub-shell-page-surface-unification-20260808`、draft PR: [#683](https://github.com/daishiman/HarnessHub/pull/683)、base: `main`。
 - Linux Chromium VRT: 初回 Actions run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470) は旧 baseline との差で FAIL。artifact の light/dark 8 枚を目視し、今回の shell / surface / overlay の意図した表示だけであることを確認して Linux baseline として受領した。更新後 run [#31255841043](https://github.com/daishiman/HarnessHub/actions/runs/31255841043) は PASS（1分10秒）。
-- pre-push の Git hook 文脈だけで `jsonschema` を未導入と誤判定する事象は `HarnessHub-sl6o` に分離した。同一の CI-equivalent gate は手動で 139/139 PASS 後、初回 push のみリポジトリ既定の `PUSH_SKIP_CI=1` を使用し、GitHub CI で再検査する。
+- pre-push の Git hook 文脈だけで `jsonschema` を未導入と誤判定する事象は `HarnessHub-sl6o` に分離した。同一の CI-equivalent gate は手動で 139/139 PASS 後、本セッションの公開 push ではリポジトリ既定の `PUSH_SKIP_CI=1` を使用し、各 commit を GitHub CI で再検査した。
 
 ## 8. 残課題
 
