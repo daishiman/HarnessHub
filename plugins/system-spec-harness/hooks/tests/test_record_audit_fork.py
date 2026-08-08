@@ -43,7 +43,7 @@ def _payload(subagent_type: str, tool_name: str = "Task", prompt: str = "監査�
         "cwd": "/tmp/project",
         "tool_name": tool_name,
         "tool_input": {"subagent_type": subagent_type, "prompt": prompt},
-        "tool_response": {"success": True},
+        "tool_response": {"content": [{"type": "text", "text": "監査完了\nAUDIT_VERDICT: PASS"}]},
     }
 
 
@@ -72,6 +72,17 @@ class BuildRecordTest(unittest.TestCase):
         self.assertEqual(rec["schema_version"], hook.SCHEMA_VERSION)
         self.assertTrue(rec["ts"].endswith("Z"))
         self.assertEqual(len(rec["prompt_sha256"]), 64)
+        self.assertEqual(len(rec["response_sha256"]), 64)
+        self.assertEqual(rec["audit_verdict"], "PASS")
+
+    def test_requires_one_canonical_audit_verdict_marker(self):
+        payload = _payload(_MATRIX_AUDITOR)
+        payload["tool_response"] = {"text": "verdict: PASS"}
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertIsNone(rec["audit_verdict"])
+        payload["tool_response"] = {"text": "AUDIT_VERDICT: PASS\nAUDIT_VERDICT: FAIL"}
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertIsNone(rec["audit_verdict"])
 
     def test_records_agent_tool_fork_with_observed_name(self):
         """現行ハーネスの起動ツール名 'Agent' も記録対象。台帳へは観測名をそのまま書く

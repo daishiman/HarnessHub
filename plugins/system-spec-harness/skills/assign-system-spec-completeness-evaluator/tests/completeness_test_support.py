@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -49,7 +50,10 @@ def golden_delegations(verdicts=None, session_id="sess-1"):
             "role": requirement["role"],
             "auditor": requirement["auditor"],
             "component": requirement["component"],
-            "dispatch": {"tool": "Task", "subagent_type": requirement["auditor"], "session_id": session_id},
+            "dispatch": {
+                "tool": "Task", "subagent_type": requirement["auditor"], "session_id": session_id,
+                "response_sha256": response_digest(requirement["auditor"], verdicts.get(requirement["aspect"], "PASS")),
+            },
             "verdict": verdicts.get(requirement["aspect"], "PASS"),
             "evidence": [f"{requirement['auditor']}: 独立 context で監査"],
         }
@@ -57,14 +61,33 @@ def golden_delegations(verdicts=None, session_id="sess-1"):
     ]
 
 
-def golden_ledger(auditors=None, session_id="sess-1"):
+def response_digest(auditor: str, verdict: str = "PASS") -> str:
+    return hashlib.sha256(f"{auditor}:{verdict}".encode("utf-8")).hexdigest()
+
+
+def golden_ledger(auditors=None, session_id="sess-1", verdicts=None):
     if auditors is None:
         auditors = [requirement["auditor"] for requirement in AUDIT.required_delegations()]
+    verdicts = verdicts or {}
+    verdict_by_auditor = {
+        requirement["auditor"]: verdicts.get(requirement["aspect"], "PASS")
+        for requirement in AUDIT.required_delegations()
+    }
     return {
         "path": "eval-log/system-spec-harness/audit-fork-ledger.jsonl",
         "exists": True,
         "dispatched": {name: 1 for name in auditors},
         "sessions": {name: {session_id: 1} for name in auditors},
+        "receipts": {
+            name: {
+                session_id: {
+                    response_digest(name, verdict_by_auditor.get(name, "PASS")): {
+                        "tool_name": "Task", "verdict": verdict_by_auditor.get(name, "PASS"),
+                    }
+                }
+            }
+            for name in auditors
+        },
         "malformed": 0,
     }
 
@@ -86,8 +109,9 @@ def write_ledger(path: Path, auditors=None, extra_lines=()):
         auditors = [requirement["auditor"] for requirement in AUDIT.required_delegations()]
     lines = [
         json.dumps({
-            "schema_version": "1.0", "ts": "2026-07-21T22:00:00Z", "session_id": "sess-1",
-            "tool_name": "Task", "subagent_type": name, "prompt_sha256": "0" * 64, "cwd": "/tmp/project",
+            "schema_version": "1.1", "ts": "2026-07-21T22:00:00Z", "session_id": "sess-1",
+            "tool_name": "Task", "subagent_type": name, "prompt_sha256": "0" * 64,
+            "response_sha256": response_digest(name), "audit_verdict": "PASS", "cwd": "/tmp/project",
         }, ensure_ascii=False)
         for name in auditors
     ]

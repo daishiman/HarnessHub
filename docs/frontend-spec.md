@@ -19,7 +19,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 領域 | 採用 | 根拠・制約 |
 |---|---|---|
 | スタイリング | Tailwind CSS v4 | design tokens を CSS variables で定義し utility から参照。テーマ/密度切替は `:root` 属性切替 |
-| UI 部品 | shadcn/ui ベースの `packages/ui` | Radix primitives 由来の focus 管理・ARIA を部品側で獲得 (qa-018「部品側で a11y 一括担保」に適合)。コードはリポジトリへ取込む方式で lock-in なし |
+| UI 部品 | リポジトリ内の `packages/ui` | focus trap・ARIA・token・responsive shell を部品側で一括担保 (qa-018)。外部 runtime へ UI contract を委ねず、consumer は公開入口だけを使う |
 | サーバ状態 | TanStack Query v5 (~13KB gz) | ポーリング統一 (qa-031: publish 2 秒 backoff・ボード/通知 30 秒) を `refetchInterval` で実装。キャッシュ無効化・楽観更新標準装備 |
 | フォーム | react-hook-form + zodResolver | `packages/schemas` の zod をクライアント validation に再利用 (B1 単一ソース、二重定義禁止) |
 | チャート | SVG 自作 (`packages/ui`) | 折れ線・バー・ドーナツ・スパークラインの 4 種のみ。依存ゼロ・SSR 可・token 直結 (qa-022 の 3MiB/軽量制約の帰結) |
@@ -75,7 +75,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 部品 | ベース | 一括担保する a11y/品質 | 主な消費画面 |
 |---|---|---|---|
 | Button / Input / Select / Checkbox / Radio / Textarea | shadcn/ui | ラベル紐付け・focus-visible・44px タップ域 (§6.1) | 全画面 |
-| Dialog (確認) / Sheet (ボトム/サイド) / Popover / DropdownMenu | shadcn/ui (Radix) | focus trap・Esc/外側閉じ・破壊的操作の確認+可逆性明示 (qa-018) | 全画面 |
+| Modal / ConfirmDialog / BottomSheet / navigation disclosure | 自作 (`packages/ui`) | modal は focus trap・Esc・focus 復帰・scroll lock、破壊操作は可逆性明示、navigation disclosure は標準 Tab 順 (qa-207) | 全画面 |
 | Tabs / Badge (状態チップ) / Toast / Skeleton / Tooltip | shadcn/ui | 状態語彙統一 (§2.4)・aria-live=polite・CLS 抑制 | 全画面 |
 | DataTable (ソート・cursor ページング・カード化応答) | shadcn Table + 自作 | th scope・ソート aria-sort・モバイルでカードリスト化 (§6.3) | S01/S04/S06/S11/S14/S15/S17 |
 | KPI カード / LineChart / BarChart / DonutChart / Sparkline | 自作 SVG | role="img" + aria-label + 「表で見る」代替テーブル切替・SSR 描画 | S09/S12/S16/S17 |
@@ -210,12 +210,12 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - `100dvh` 基準・`env(safe-area-inset-*)` 対応 (ノッチ/ホームバー)。入力フォント 16px 以上 (iOS 自動ズーム防止)。
 - 横スクロールは §6.3 で明示した箇所のみ許可 (それ以外の水平オーバーフローは欠陥として扱う)。
 
-### 6.2 ナビゲーション (ボトムタブ + その他シート = qa-034)
+### 6.2 ナビゲーション (ボトムタブ + その他 disclosure = qa-207)
 
 - **ボトムタブ 5 slot (固定)**: ダッシュボード (S09) / ハーネス (S01) / 申請 (S11。新規作成ボタン→S10) / 通知 (未読バッジ) / **その他**。
-- **その他タブ** → ボトムシート: パイプライン・フィードバック・ドキュメント・トラッキング・[admin] ユーザー管理・[admin] Workspace 設定・承認キュー・監査ログ・アカウント設定・規約 + ワークスペース表示 (切替は provider-admin のみ)。role により項目を出し分け (deny-by-default の画面表現)。
+- **その他タブ** → `details/summary` disclosure: 実在 route の追加導線だけを表示する。session role は `member` / `workspace-admin` / `provider-admin` の 3 種で出し分け、role 未確定時も管理導線を隠す (deny-by-default)。背景を遮る modal ではないため focus trap / scroll lock は適用しない。
 - ヘッダ: 画面タイトル + 検索アイコン (全画面検索シート) + アバター。サイドバーはモバイルで描画しない。
-- タブは currentPage を `aria-current` で明示。シートは focus trap + スワイプダウン/Esc で閉じる。
+- タブは currentPage を `aria-current` で明示。操作用 BottomSheet は disclosure と別部品で、focus trap + Esc + 閉じるボタン + focus 復帰 + scroll lock を持つ。スワイプは任意で、唯一の閉じ方にしない。
 
 ### 6.3 レスポンシブ変換パターン辞書 (デスクトップ → モバイル)
 
@@ -273,7 +273,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
   - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する**。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
-- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) × **2 viewport (1280×800 / 390×844)** + axe 統合。分離テスト等サーバ側は backend-spec 準拠。
+- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md) を正とする。分離テスト等サーバ側は backend-spec 準拠。
 - **セキュリティ (フロント境界)**: sanitize 済み Markdown のみ描画 (SEC7)・外部リンク `rel="noopener noreferrer"`・CSP は security 章準拠・PII (salary) は admin API レスポンス以外に出現させない (SEC4。ログ・エラー通知にも含めない)。
 
 ## 9. 確定記録 (2026-07-17 ユーザー確認 = qa-040 / qa-035)
@@ -294,7 +294,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ユーザー確定の構築優先順位 (P0 認証基盤 → P1 ヒアリング → P2 プラグイン Hub + パイプライン → P3 改善ループ・ドキュメント → P4 ユーザー・効果測定 → P5 ダッシュボード・統制) を画面実装へ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。本節の P0〜P5 は構築 phase 番号であり、§6.3 のレスポンシブ変換パターン P1〜P10 とは無関係。
 
 - **画面の実装順**: P0 = 共通シェル (§3.0) + S07/S08 → P1 = S10/S11/S12 → P2 = S01 (公開ウィザード・一覧・install/download) → S02/S03 (管理・公開状態) → S13 (ヒアリング/公開との接続) → P3 = S14/S15 → P4 = S16/S17/S18 → P5 = S09 + S05/S06。
-- **`/` redirect の段階運用**: §1 の「`/` は `/dashboard` へ redirect」は S09 完成後 (P5) の最終形。**S09 完成までは `/` → `/sheets`** (最優先のヒアリング動線へ誘導。P2 以降も、ダッシュボード完成までこのまま)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とする。
-- **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。ボトムタブのダッシュボード slot は S09 完成まで「シート (S11)」を先頭 slot にする暫定とし、確定は feat-metrics-tracking の P02 で行う。
+- **`/` redirect の段階運用 (2026-08-07 改訂 = appr-034 / appr-035)**: 既定着地は **`/dashboard`** とする。2026-07-18 時点の本項は「S09 完成までは `/` → `/sheets`」だったが、サインイン後に業務画面へ到達できない不具合の原因究明 (specs/harness-hub-post-signin-landing-observability-addendum.md) を受け、利用者が 3 択 (`/sheets` 維持 / `/catalog` / `/dashboard` を先に作る) から **`/dashboard` を先に作る**を直接選択した (appr-034)。**前倒しするのは S09 の全体ではない** — S09 (KPI・推移・完了率・ランキング・部門別削減) は P5 のまま据え置き、着地に必要な部分だけを先に作る。着地画面に何を載せるか (appr-035 で確定した 4 項目・KPI を含まない・行き止まりにしない) の正本は [addendum §3.2](../specs/harness-hub-post-signin-landing-observability-addendum.md) の表であり、本書へは複製しない (二重管理でずれると片方だけが古くなる)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とし、相対 path のみ許可・open redirect 防止・scope 解決の契約 (qa-135/136/137) は変更しない。既定着地の**値だけ**が変わる。実装上の唯一の正本は `apps/hub/src/lib/routing/post-signin-landing.ts` の `DEFAULT_POST_SIGNIN_LANDING` で、テストは値を書き写さずこの定数を import する。
+- **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。`/dashboard` が実在するまでは `/sheets` を先頭 slot とし、route 着地後に appr-034 の `/dashboard` へ置き換える。S09 の KPI 部分の確定は従来どおり feat-metrics-tracking の P02 で行う。
 - **部品の実装順**: [shared-layers.md](shared-layers.md) §1「部品の実装順」参照 (StepWizard = P1、StageBoard = P2、MarkdownEditor = P3、InlineEditTable = P4、チャート/KPI カード = P4 の S16 から・S09 で完成)。
-- **role 分離の扱い**: 認可 (deny-by-default・role 4 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。
+- **role 分離の扱い**: 認可 (deny-by-default・session role 3 種・admin 出し分け) は P0 から全画面に効く。後回しにするのは S17/S05/S06 という**管理画面そのもの**であり、認可制御ではない。サインイン後の着地・scope 解決・RSC フォールバック/共通シェル (`HubShell`。旧 PrimaryNav 最小シェルの置換先) の実装境界は、[feature 個別仕様](features/feat-post-signin-scope-routing/frontend-scope-reference.md) を参照する。

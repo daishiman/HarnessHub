@@ -12,8 +12,8 @@ iteration: null
 title: "execution-tracker-contract §10 の unmappable_status の説明が実測より過大で、回復手順の > 上書きが既存 receipt を壊しうる"
 owners: ["daishiman"]
 created_at: "2026-07-21T21:26:06Z"
-updated_at: "2026-07-25T02:52:04Z"
-status: "draft"
+updated_at: "2026-08-04T03:16:47Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

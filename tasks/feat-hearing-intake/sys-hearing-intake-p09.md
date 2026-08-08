@@ -12,8 +12,8 @@ iteration: null
 title: "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-29T08:49:22Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P08"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["apps/hub/src/app/api/v1/sheets/","apps/hub/src/features/hearing-intake/ai-job-adapter/","apps/hub/src/features/hearing-intake/estimation-adapter/","docs/features/feat-hearing-intake/quality-assurance-report.md"]

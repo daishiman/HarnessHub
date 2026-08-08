@@ -1,0 +1,500 @@
+{
+  "graph_revision": 6,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/iss-c02-mixed-routing.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/iss-c02-mixed-routing.md",
+          "confidence": 0.18
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "背景/事象/期待の3節構成で観測済みの懸念を追跡する形であり issue へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T03:10:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/iss-c02-mixed-routing.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "iss-c02-mixed-routing",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T03:10:03Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02fix",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "spec-c02-mixed-batch-contract",
+        "arch-c02-writer-boundary",
+        "task-c02-verify-mixed-routing",
+        "doc-c02-mixed-batch-runbook"
+      ],
+      "resource_scope": [
+        "issues/iss-c02-mixed-routing.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T03:10:03Z",
+        "origin_kind": "manual",
+        "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "c02-out1",
+        "issue"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "混在バッチ登録で issue が canonical root へ routing されない懸念",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T03:11:48.818836Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/spec-c02-mixed-batch-contract.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/spec-c02-mixed-batch-contract.md",
+          "confidence": 0.15
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "入力契約/出力契約を定義する規範文書であるため specification へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T03:10:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/spec-c02-mixed-batch-contract.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "spec-c02-mixed-batch-contract",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T03:10:03Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02fix",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "iss-c02-mixed-routing"
+      ],
+      "resource_scope": [
+        "specs/spec-c02-mixed-batch-contract.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T03:10:03Z",
+        "origin_kind": "manual",
+        "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "c02-out1",
+        "specification"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "混在バッチ登録の入出力契約",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T03:10:03Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "data"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/arch-c02-writer-boundary.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/arch-c02-writer-boundary.md",
+          "confidence": 0.19
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "構成と subtype (backend/data) の境界を定義するため architecture へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T03:10:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-c02-writer-boundary.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-c02-writer-boundary",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T03:10:03Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02fix",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "iss-c02-mixed-routing",
+        "spec-c02-mixed-batch-contract"
+      ],
+      "resource_scope": [
+        "architecture/arch-c02-writer-boundary.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T03:10:03Z",
+        "origin_kind": "manual",
+        "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "c02-out1",
+        "architecture"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "単一 writer の書込境界と graph store の整合",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T03:10:03Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-c02-verify-mixed-routing.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/task-c02-verify-mixed-routing.md",
+          "confidence": 0.2
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "目的/完了条件を持ち実行単位として閉じているため task へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T03:10:03Z",
+      "depends_on": [
+        "iss-c02-mixed-routing"
+      ],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-c02-verify-mixed-routing.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "task-c02-verify-mixed-routing",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T03:10:03Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02fix",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "spec-c02-mixed-batch-contract",
+        "arch-c02-writer-boundary"
+      ],
+      "resource_scope": [
+        "tasks/task-c02-verify-mixed-routing.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T03:10:03Z",
+        "origin_kind": "manual",
+        "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "c02-out1",
+        "task"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "混在バッチ routing と連続更新の整合を検証する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T03:10:03Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/doc-c02-mixed-batch-runbook.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/doc-c02-mixed-batch-runbook.md",
+          "confidence": 0.17
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "手順と記録を伝える運用 runbook であるため document へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T03:10:03Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/doc-c02-mixed-batch-runbook.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "doc-c02-mixed-batch-runbook",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T03:10:03Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "operations",
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02fix",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "spec-c02-mixed-batch-contract",
+        "arch-c02-writer-boundary",
+        "task-c02-verify-mixed-routing"
+      ],
+      "resource_scope": [
+        "docs/doc-c02-mixed-batch-runbook.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T03:10:03Z",
+        "origin_kind": "manual",
+        "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "c02-out1",
+        "document"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "混在バッチ登録の実走 runbook",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T03:10:03Z"
+    }
+  ],
+  "repository_id": "local:sha256:02ea3e79a981e72d05d6c2a069af0ee8334b6cab5fd8909298ba8d5fe18a8117",
+  "schema_version": "1.0.0"
+}

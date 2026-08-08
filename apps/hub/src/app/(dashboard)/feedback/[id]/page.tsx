@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { FeedbackDetail } from './feedback-detail.js';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ interface PageProps {
 }
 
 export default async function FeedbackDetailPage({ params, searchParams }: PageProps) {
-  const [{ id }, query] = await Promise.all([params, searchParams]);
-  return <FeedbackDetail id={id} tenantId={query.tenant ?? ''} workspaceId={query.workspace ?? ''} />;
+  const [{ id }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  return <FeedbackDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />;
 }

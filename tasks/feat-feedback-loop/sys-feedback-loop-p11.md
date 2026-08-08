@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — 再現可能な検証証跡の集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-08-03T08:00:05.674528Z"
-status: "active"
+updated_at: "2026-08-03T09:10:56Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P10"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-feedback-loop/evidence/"]

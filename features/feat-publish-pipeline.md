@@ -12,8 +12,8 @@ iteration: "Stage 1"
 title: "PublishRequest パイプライン (状態機械・検査・promote/rollback)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:55:27.042241Z"
-status: "active"
+updated_at: "2026-08-02T23:37:34Z"
+status: "closed"
 depends_on: ["feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
 resource_scope: ["features/feat-publish-pipeline.md"]

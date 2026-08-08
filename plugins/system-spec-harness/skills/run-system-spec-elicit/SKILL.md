@@ -98,7 +98,7 @@ feedback_contract:
 
 > 上位概念がブレると、仕様が整ってもブレる。技術マトリクス (下位概念) の**手前**で上位概念 (U1-U9) を最初にしっかり抽出して `requirements_foundation` に固定し、各技術決定 (確定セル) を `serves_goals` でそこへトレース (anchor) する。どのゴールにも資さない収集は drift として検出する。
 
-- **bootstrap** サブコマンドが空のstate envelope (`$CLAUDE_PROJECT_DIR/system-spec/spec-state.json`) を作り、**R0-foundation** が `set-foundation` op で `requirements_foundation` (U1-U9) を確定してから **R1-init** (`init` サブコマンド) がtaxonomyをpopulateする。R1は既存foundation/decisionsを保持し、上位概念が曖昧なまま技術ヒアリングへ進まない。
+- **bootstrap** サブコマンドが空のstate envelope (`$CLAUDE_PROJECT_DIR/system-spec/spec-state.json`) を作り、**R0-foundation** が `set-foundation` op で `requirements_foundation` (U1-U9) を確定してから **R1-init** (`init` サブコマンド) がtaxonomyをpopulateする。R1は既存foundation/decisionsを保持し、上位概念が曖昧なまま技術ヒアリングへ進まない。確定には U1-U9 ごとの**1論点 source-index** が `qa_log` に必要で、対話は `source.kind=user-dialogue`、書面は `source.kind=written-requirements` と相対 path・section・原文 SHA-256 を `chunk` の `ops: []` turn で追記する。書面入力を AI の無根拠な要約として扱わず、監査可能な一次根拠として残す。
 - 各 `確定` セルに `serves_goals: [<goal_id>, ...]` を付与 (confirm 同時付与 or `set-serves` op) し、どの上位概念に資するかを明示する。
 - C03 (`run-system-spec-compile`) は `requirements_foundation` を `system-spec/00-requirements-definition.md` (要件定義書=憲法) として先頭章に生成し、各技術章 frontmatter に `serves_goals` を持たせて全章を貫通させる。
 - 検証: `../../scripts/validate-coverage-matrix.py --require-foundation` が U1-U5 非空・各確定セルの serves_goals トレース・drift 候補を機械検証する (opt-in)。
@@ -107,7 +107,7 @@ feedback_contract:
 
 **入力**: ヒアリング応答 (対話) / 既存 `spec-state.json` (resume 時) / C04 taxonomy。
 **出力**: `spec-state.json` (`references/spec-state-contract.md` の形状。plugin 共有データ契約。上位概念 `requirements_foundation` を含む)。
-**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の `coverage_certificate.blocking_items` が空 (`missing_effect=block` の必須情報が全て確定に接地) である。
+**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、各 U が 1論点の `qa_log` entry へ遡及できる。対話 entry は `source.kind=user-dialogue`、書面要件 entry は質問の入力 path/section、回答の原文、`source.sha256` (原文の SHA-256) を持つ。全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の `coverage_certificate.blocking_items` が空 (`missing_effect=block` の必須情報が全て確定に接地) である。
 
 - **platforms (6)**: `web` / `mobile` / `tablet` / `desktop-windows` / `desktop-linux` / `desktop-macos`。
 - **cell states (3値, loop 中)**: `未収集` / `対象外` / `確定`。最終時は `未収集` を0にする。
@@ -129,7 +129,7 @@ feedback_contract:
 
 | id | prompt | 責務 |
 |---|---|---|
-| R0-foundation | `prompts/R0-foundation.md` | マトリクス収集の**手前**で上位概念 (U1-U9) を深掘りヒアリング (5 Whys で U1・JTBD で U6) し `set-foundation` で `requirements_foundation` を確定。未確定は再質問し放置しない。 |
+| R0-foundation | `prompts/R0-foundation.md` | マトリクス収集の**手前**で上位概念 (U1-U9) を深掘りヒアリング (5 Whys で U1・JTBD で U6) し `set-foundation` で `requirements_foundation` を確定。書面要件があるときは U ごとの 1論点 source-index を `qa_log` に残す。未確定は再質問し放置しない。 |
 | R1-init | `prompts/R1-init.md` | C04 taxonomy を Read し、カテゴリ×6必須platform の全存在(対象外は理由付き)を検証して初期化。カテゴリ軸の拡張発見もここ。 |
 | R2-interview | `prompts/R2-interview.md` | 未収集セルを対象に 質問→回答→仕様反映 の往復で各セルを `確定` か `対象外+理由` へ遷移。 |
 | R3-reask | `prompts/R3-reask.md` | 未確定セルを再質問。1 invocation の 5 loop 到達時は未完了状態と next_question を保存し resumable な結果を返す。未収集を完了扱いしない。 |
@@ -155,7 +155,7 @@ feedback_contract:
 > `spec-state.json` の正本位置は `$CLAUDE_PROJECT_DIR/system-spec/spec-state.json`。以下のパス例はこの正本を指す (別ディレクトリに二重生成しない)。
 
 1. **bootstrap**: `apply-spec-transition.py bootstrap --out $CLAUDE_PROJECT_DIR/system-spec/spec-state.json` で空foundation/decisions/targets/logsを持つstate envelopeを用意する (`init` は taxonomy から matrix を初期化する別subコマンドで、envelope 生成は `bootstrap`)。
-2. **R0-foundation**: 技術ヒアリングの手前で上位概念 U1-U9 を深掘りし、U1/U2/U3 は値必須・U4-U9 は値または明示N/A理由で埋め、U1-U9 要約をユーザーへ提示して承認 `approval_ref` を得て確定する。
+2. **R0-foundation**: 技術ヒアリングの手前で上位概念 U1-U9 を深掘りし、U1/U2/U3 は値必須・U4-U9 は値または明示N/A理由で埋め、U1-U9 要約をユーザーへ提示して承認 `approval_ref` を得て確定する。対話なら各 U を `user-dialogue` entry、書面要件なら各 U を入力 path/section・原文 SHA-256 付き 1論点 `qa_log` source-index として先に記録する。
 3. **R1-init**: taxonomy を Readしてmatrixをpopulateする。既存foundation/decisionsを保持する。
 4. **R2/R3/R5**: 未収集セルをヒアリングし、不明・未決定ならR5で根拠付き候補と推奨を提示する。確定セル/decisionはgoalへトレースし、5 loop超でresume保存。
 5. **R4-reopen**: 確定セルの見直しが要るときのみ reopen。
@@ -168,7 +168,7 @@ feedback_contract:
 3. 5 loop 到達で未収集が残るなら未完了として保存する。未収集を勝手に確定/対象外にしない。
 4. `category_aggregate` は writer が真理値表から再計算する (手書きしない)。
 5. platform id は canonical 6 種のみ (別名を作らない)。
-6. `qa_log` は 1 entry = 1 論点。複数論点を束ねると C06 が論点別に中立性を検証できない。既登録 entry の逐語は改変せず、束ねが判明したら分離索引を新規 entry として追記する (契約は `references/spec-state-contract.md`「qa_log の論点分離」)。
+6. `qa_log` は 1 entry = 1 論点。複数論点を束ねると C06 が論点別に中立性を検証できない。書面要件も利用者の一次入力なので、U1-U9 ごとに path/section・原文 SHA-256 を持つ source-index を記録する。既登録 entry の逐語は改変せず、束ねが判明したら分離索引を新規 entry として追記する (契約は `references/spec-state-contract.md` の「qa_log の論点分離`)。
 
 ## Additional Resources
 

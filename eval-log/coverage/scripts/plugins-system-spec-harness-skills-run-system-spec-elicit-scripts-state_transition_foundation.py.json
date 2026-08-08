@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_foundation.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 83,
+    "notes": "requirements_foundationのconfirmed遷移にmissing-fields・approval_ref証跡・foundation_provenanceによるsource-index検証を多層で要求しており、ゲートの健全性は高い。decisionの状態遷移もserves_goalsのdangling参照拒否・options 2-3件・free/low-cost必須・evidence_refsのhttps強制・confirmedにはuser_decision必須という筋の通ったルールで単一責務(foundation/decision遷移)を保っている。軽微な懸念は、set_foundation内でmerged=dict(state.get(...))が浅いコピーのためforeign入力にscopeキーが無い場合にmerged['scope']が元stateのネスト辞書と同一参照を指し、scope.setdefault(...)がその共有オブジェクトを直接変異させる点(実害は小さいが呼び出し元の期待する不変性に反する可能性)。docstringはモジュール冒頭に1行のみ。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

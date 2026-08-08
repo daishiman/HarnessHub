@@ -18,6 +18,7 @@
 ### 1.1 不変ルール
 - 状態書込は writer (`scripts/apply-spec-transition.py`) の一経路のみ。直接 JSON 編集禁止。
 - `確定` は `qa_ref` (qa_log entry) 必須、`対象外` は `reason` か `approval_ref` 必須。
+- `qa_log` は 1 entry = 1 論点。1問に複数の設計判断を束ねない。書面要件に複数論点が同居するときは、対応原文・相対 path・section・原文 SHA-256 を持つ `source.kind=written-requirements` の分離 source-index turn (`ops: []`) を先に追加し、`qa_ref` は当該セルの論点だけを指す entry にする。
 - 確定/対象外済みセルを再質問しない (未収集セルのみ対象)。
 
 ### 1.2 倫理ガード
@@ -32,7 +33,7 @@
 ### 2.2 ドメインルール
 - **platform 一括判断を優先**: 非対象 platform は一括承認 (approval_log) で列を `対象外` にし turn 数を圧縮する。
 - 対象 platform だけ各カテゴリ要件を確定する。
-- 1 turn = 質問→回答→反映。反映は writer の `chunk` / `apply` で行う。
+- 1 turn = 1論点の質問→回答→反映。1つの回答に複数の性質が含まれても、cell を確定する `qa_ref` はそのセルを裏付ける 1論点 entry に限定し、残りは分離 index として `chunk` の `ops: []` turn で追記する。書面 source-index は原文の SHA-256 を `source.sha256` に記録する。反映は writer の `chunk` / `apply` で行う。
 - **出典 producer (要件 C5)**: 確定 (`確定`) した qa に外部技術/ツール/フレームワーク (例: React, PostgreSQL) が現れたら、その技術を `set-targets` op で `targets[]` へ反映する (`target_id` は安定 kebab-case・重複禁止・分かれば `category` も付与)。これが後段 C02 (`run-system-spec-doc-fetch`) の取得対象と C13 (`validate-source-citation.py`) の全件突合の発生源になる。
 - **未知知識 producer (要件 open-world)**: ヒアリング中に既知 seed (clean-arch / DDD 等 C04 の 6 枚) に無い未知の設計領域・技術・パターンを検出したら、`set-knowledge-candidate` op で `status=discovered` として `spec-state` へ記録する (id は安定 kebab-case・`topic`・`problem`・実在 goal を指す `serves_goals` を付与)。これが open-world knowledge lifecycle の入口 (discover) で、後段の qualify/deepen/promote はこの discovered を起点に進む。
 
@@ -87,6 +88,7 @@
 ### 5.3 完了チェックリスト (停止条件)
 - [ ] 非対象platformの全セルがapproval_refまたは具体的reason付きの`対象外`である
 - [ ] 対象platformの回答済みセルがqa_ref付きの`確定`である
+- [ ] 各 qa_log entry が 1論点であり、複数論点の書面入力は path/section・原文 SHA-256 を持つ分離 source-index として記録されている
 - [ ] `確定`/`対象外` の付帯 (qa_ref / reason) が全て埋まっている
 - [ ] 確定qaに現れた外部技術/ツール/フレームワークが`set-targets`で`targets[]`へ反映されている
 - [ ] seedに無い未知の設計領域/技術/パターンを検出した場合`set-knowledge-candidate`(status=discovered)で記録されている
@@ -115,4 +117,4 @@
 
 ## 出力指示
 
-references/elicit-question-bank.md に沿って未収集セルへ質問し、回答を turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。確定 qa に外部技術/ツール/フレームワークが現れたら `set-targets` で `targets[]` へ反映し、seed に無い未知の設計領域/技術/パターンを検出したら `set-knowledge-candidate` (status=discovered) で記録する。反映後 `validate-coverage-matrix.py` (loop) の exit0 を確認する。確定セルの変更が要るときは R4-reopen を使う。余計な前置き・思考過程出力は禁止。
+references/elicit-question-bank.md に沿って未収集セルへ 1論点ずつ質問し、回答を turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。書面入力に複数論点がある場合は、各論点を path/section・原文・`source.sha256` で示す `ops: []` の分離 source-index turn を先に追加し、確定セルの `qa_ref` を対応する 1論点 entry にする。確定 qa に外部技術/ツール/フレームワークが現れたら `set-targets` で `targets[]` へ反映し、seed に無い未知の設計領域/技術/パターンを検出したら `set-knowledge-candidate` (status=discovered) で記録する。反映後 `validate-coverage-matrix.py` (loop) の exit0 を確認する。確定セルの変更が要るときは R4-reopen を使う。余計な前置き・思考過程出力は禁止。

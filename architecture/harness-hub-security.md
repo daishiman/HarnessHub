@@ -195,3 +195,26 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 詳細は [system-spec/auth.md](../system-spec/auth.md) の `qa-137`、
   製品契約は [spec-post-signin-workspace-scope](../specs/harness-hub-post-signin-workspace-scope-addendum.md)
   の B 節を参照する。実装根拠は `apps/hub/src/middleware/authz.ts` の `authorize()`/`mergeScopes()`。
+
+**差分追記 (2026-08-08 / RSC 画面の session scope 再利用)**:
+
+- `(dashboard)` 配下の Server Component が session scope を読む経路は、認可判定を
+  画面へ複製しない。`resolveSessionScope()` を `middleware` 公開境界から export し、
+  `lib/routing/dashboard-scope.ts` が cookie 検証後に同じ関数へ委譲する。
+- URL クエリ (`?tenant=` / `?workspace=`) は互換のための優先入力であり、認可入力の
+  正本ではない。middleware は引き続き明示ヘッダーと session だけを信頼し、
+  クエリ文字列を authz 入力にしない (catalog hard-navigation 契約と整合)。
+
+**差分追記 (2026-08-08 / `issue-hub-root-500-signin-20260808` / public exact paths と拒否表現)**:
+
+- public path は **完全一致** (`PUBLIC_EXACT_PATHS`: `/`, `/signin`, `/signin/workspace`, `/device`)
+  と **前方一致** (`PUBLIC_PATH_PREFIXES`: `/health`, `/api/auth`, Device Flow 発行経路等) に分ける。
+  入口 1 枚だけを開ける path を前方一致に載せると、将来の子 route が黙って公開になる。
+- `/{tenant_slug}/signin` の slug 形は `tenantSlugSchema` を唯一の正本とする。
+  middleware と画面で文字集合がずれると「middleware は public、画面は 404」の入口差が生まれる。
+- `GET /signin/workspace` は scope 未確定を解消する受け口のため `withAuthz` を掛けない
+  (掛けると `missing_tenant_scope` で自分自身を弾く)。代わりに route が session の
+  署名・期限・`status === 'active'` と所属一覧を再検証し、所属外 ID は cookie にしない。
+- 認可拒否の **判定** は `authz.ts` 単一層のまま。**表現**だけを middleware が分ける:
+  navigation (GET + `Accept: text/html` + Bearer 無し + 非 `/api`) → HTML、
+  それ以外 → JSON。`tenant_mismatch` は HTML でも理由を明かさず 404 相当の文言にする。

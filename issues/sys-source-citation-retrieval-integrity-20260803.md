@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "Citation の取得証跡・時刻実在性を fail-closed で検証する"
+title: "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す"
 owners: ["daishiman"]
 created_at: "2026-08-03T08:28:16Z"
-updated_at: "2026-08-03T08:28:16Z"
+updated_at: "2026-08-04T02:12:33Z"
 status: "active"
 depends_on: []
 related_nodes: []

@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:42:07Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P05"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/docs/","apps/hub/src/features/docs-cms/ai-job-adapter/","docs/features/feat-docs-cms/test-run-report.md","packages/schemas/docs-cms/"]

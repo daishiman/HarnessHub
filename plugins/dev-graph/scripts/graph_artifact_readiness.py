@@ -100,6 +100,74 @@ def _template_placeholders(
     }
 
 
+def _conditional_trigger(kind: str, node: dict[str, Any] | None) -> str | None:
+    """Identify which conditional_required_sections family a node belongs to.
+
+    system-dev-planner の task は origin_kind でしか見分けられない: frontmatter の
+    template_id/template_version は全世代で同一 ("task"/"1.0.0") のままで、生成元
+    テンプレートの世代 (HarnessHub-yzv0 実測: 20 feature 中 17 が軽量3見出し、
+    3 がフル19見出し。phase_ref は世代と相関しない) を区別する情報を持たない。
+    """
+    if kind != "task" or not node:
+        return None
+    origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+    if origin_kind == "system-dev-planner":
+        return "system_development"
+    return None
+
+
+def _required_section_variants(
+    kind: str,
+    node: dict[str, Any] | None,
+    artifact_contract: dict[str, Any],
+) -> list[list[str]]:
+    base = artifact_contract.get("required_sections") or []
+    base_variant = [base] if isinstance(base, list) else []
+    conditional = artifact_contract.get("conditional_required_sections") or {}
+    trigger = _conditional_trigger(kind, node)
+    if trigger is None or not isinstance(conditional, dict):
+        return base_variant
+    variants = [
+        sections
+        for name, sections in conditional.items()
+        if isinstance(sections, list) and (name == trigger or name.startswith(f"{trigger}_"))
+    ]
+    return variants or base_variant
+
+
+def missing_required_headings(
+    artifact: Path,
+    kind: str,
+    template_contract: dict[str, Any],
+    node: dict[str, Any] | None = None,
+) -> list[str]:
+    """List required sections whose heading is entirely absent from the body.
+
+    Distinct from placeholder_sections: that function only inspects headings
+    that already exist. A required heading that was never written (e.g. a
+    template revision adds a section an older artifact predates) is invisible
+    to placeholder_sections because it never enters `sections`/`direct_invalid`.
+
+    ``node`` を渡すと、conditional_required_sections に登録された代替 section 集合
+    (例: system-dev-planner の複数テンプレート世代) のうち、実体と最も一致する
+    variant で判定する。1 つでも完全一致すれば missing なしとして扱う (fail-closed
+    ではなく既知の正当な世代差を許容する側へ倒す)。
+    """
+    artifact_contract = (template_contract.get("artifacts") or {}).get(kind) or {}
+    variants = _required_section_variants(kind, node, artifact_contract)
+    if not variants:
+        return []
+    present = set(markdown_sections_of(artifact))
+    best: list[str] | None = None
+    for required in variants:
+        missing = sorted(section for section in required if section not in present)
+        if not missing:
+            return []
+        if best is None or len(missing) < len(best):
+            best = missing
+    return best or []
+
+
 def placeholder_sections(
     artifact: Path,
     kind: str,

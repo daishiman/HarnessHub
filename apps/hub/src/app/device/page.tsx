@@ -2,6 +2,7 @@ import { Alert } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
+import { PublicShell } from '../../components/shell/public-shell.js';
 import { authRuntime } from '../../lib/authz/index.js';
 import { normalizeUserCodeInput } from './device-approval-code.js';
 import { DeviceApprovalForm } from './device-approval-form.js';
@@ -16,7 +17,12 @@ interface DeviceApprovalPageProps {
   readonly searchParams: Promise<{ readonly user_code?: string | readonly string[] }>;
 }
 
-export default async function DeviceApprovalPage({ searchParams }: DeviceApprovalPageProps) {
+export default async function DeviceApprovalPage(props: DeviceApprovalPageProps) {
+  // 画面骨格はここで 1 度だけ包む。本体は状態ごとに早期 return するため関数を分けている
+  return <PublicShell>{await renderDeviceApprovalBody(props)}</PublicShell>;
+}
+
+async function renderDeviceApprovalBody({ searchParams }: DeviceApprovalPageProps) {
   const requestHeaders = await headers();
   const session = await resolveSession(requestHeaders.get('cookie'));
 

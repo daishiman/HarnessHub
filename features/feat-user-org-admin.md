@@ -98,5 +98,13 @@ workspace-admin がユーザーの role・部門・年収係数を管理でき�
 
 ## Handoff
 
+### Post-merge 状態（2026-08-07）
+
+- 実装 PR: [#657](https://github.com/daishiman/HarnessHub/pull/657) / merge commit `fb05db56`（`main` 取り込み済み）
+- Beads: `HarnessHub-xwt.5`〜`.12` を完了。`HarnessHub-xwt.13`（本番デプロイ）と epic `HarnessHub-xwt` は未完了
+- 仕様影響: なし（`docs/features/feat-user-org-admin/post-merge-lifecycle-receipt.md`）
+- 再検証: task package validator PASS、focused tests 132 passed / 10 todo
+- 次アクション: 承認後に P13（Cloudflare Workers 本番反映）を実施し、完了後に feature completion_evidence を graph 正規フローで記録
+
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる

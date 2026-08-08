@@ -144,6 +144,35 @@ export async function runOidcSmoke({ origin: rawOrigin, tenant: rawTenant, fetch
   }
   checks.push({ id: 'O4', name: 'Google redirect / state / nonce / PKCE', ok: true });
 
+  /*
+   * O5: サインイン後の遷移先に外部 URL を差し込めないこと (open redirect / HarnessHub-p0lr)。
+   *
+   * `resolvePostSigninLanding` は「`/` 始まり かつ 同一 origin」以外を既定の `/sheets` へ落とす。
+   * ただし呼び出しは client の useEffect の中にあるため、**HTTP から観測できるのは SSR 済み HTML だけ**
+   * であり、hydration 後の再解決までは本 smoke では見ない (そこは unit test の担当)。
+   * ここで押さえるのは「悪意ある returnTo が SSR 応答へ素通しで載らない」ことの本番実測。
+   */
+  const hostileReturnTo = 'https://oidc-smoke-open-redirect.invalid/steal';
+  const signinPageUrl = `${origin}/${encodeURIComponent(tenant)}/signin?returnTo=${encodeURIComponent(hostileReturnTo)}`;
+  const signinPageResponse = await fetchImpl(signinPageUrl, { headers: { accept: 'text/html' }, redirect: 'manual' });
+  assertStatus(signinPageResponse, [200], 'signin page');
+  const signinHtml = await signinPageResponse.text();
+  if (!signinHtml.includes('name="callbackUrl"')) {
+    throw new Error('post-signin landing: callbackUrl input was missing from the rendered sign-in page');
+  }
+  if (!signinHtml.includes('value="/sheets"')) {
+    throw new Error('post-signin landing: server-rendered callbackUrl was not the safe default /sheets');
+  }
+  // 「HTML 中に文字列が一切現れないこと」は検査条件にしない: App Router は router state (URL と
+  // クエリ) を RSC payload へ載せるため、実装が正しくても returnTo の文字列自体は出現しうる。
+  // 危険なのは**遷移に使われる位置**へ入ることなので、その位置だけを名指しで見る。
+  for (const attribute of ['value', 'href', 'action', 'content']) {
+    if (signinHtml.includes(`${attribute}="${hostileReturnTo}"`)) {
+      throw new Error(`post-signin landing: hostile returnTo reached a navigable ${attribute} attribute`);
+    }
+  }
+  checks.push({ id: 'O5', name: 'post-signin landing rejects external returnTo', ok: true });
+
   return { ok: true, tenant, checks };
 }
 

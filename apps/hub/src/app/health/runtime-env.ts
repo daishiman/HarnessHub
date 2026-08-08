@@ -24,6 +24,11 @@ export interface RuntimeEnv {
    * ローカル/テストでは undefined になりうる。
    */
   readonly CF_VERSION_METADATA?: { readonly id?: string; readonly tag?: string; readonly timestamp?: string };
+  /**
+   * 稼働中の成果物が対応する repository の commit。CI が deploy 時に `wrangler deploy --var` で注入する。
+   * wrangler.jsonc へは値を書かない (設定ファイルに値を保存しない規約) ため、宣言はここだけに置く。
+   */
+  readonly HUB_COMMIT_SHA?: string;
   /** Turso 接続 URL (secret 台帳 / infrastructure-spec §2) */
   readonly TURSO_DATABASE_URL?: string;
   /** Turso 接続 token (secret 台帳 / infrastructure-spec §2) */
@@ -62,4 +67,22 @@ export function resolveVersion(env: RuntimeEnv): string {
   if (typeof fromMetadata === 'string' && fromMetadata.trim().length > 0) return fromMetadata.trim();
   const candidate = env.HUB_VERSION;
   return typeof candidate === 'string' && candidate.trim().length > 0 ? candidate.trim() : 'unknown';
+}
+
+/** git の完全 SHA-1 (40 桁小文字 hex) だけを受ける。短縮 sha や branch 名では commit を一意に辿れない */
+const COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
+
+/**
+ * 応答に載せる commit。埋込が無ければ `undefined` を返す。
+ *
+ * `unknown` のような代替値を返さないのは、「素性が不明」と「素性がこの値」を区別するため。
+ * 形式が合わない値も落とす: 埋込配線を間違えて branch 名や短縮 sha が入ったとき、それを
+ * 正しい素性として受け入れると、鮮度検査が常に不一致を報告して無視されるようになる
+ * (= 検査が鳴りっぱなしで意味を失う)。
+ */
+export function resolveCommit(env: RuntimeEnv): string | undefined {
+  const candidate = env.HUB_COMMIT_SHA;
+  if (typeof candidate !== 'string') return undefined;
+  const normalized = candidate.trim().toLowerCase();
+  return COMMIT_SHA_PATTERN.test(normalized) ? normalized : undefined;
 }

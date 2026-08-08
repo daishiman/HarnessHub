@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G2, G5]
+serves_goals: [G1, G4, G5]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-134 |
+| Web (web) | 確定 | 確定質疑: qa-205 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,19 +24,23 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-134 (対応セル: web)
+### qa-205 (対応セル: web)
 
-**質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
+**質問**: 既存 testing-qa/web 正本 qa-204 と、それ以前の確定契約を維持したまま、post-signin scope・Feedback Loop・Docs CMS の本番未計測領域を毎デプロイ検査する契約をどう確定するか。
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
+**回答**: ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。
 
-【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
+【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
 
-【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。
+【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 
-【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。
+【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
+
+【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。
+
+【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 
@@ -53,10 +57,6 @@ serves_goals: [G1, G2, G5]
 【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。
 
 【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
-
-### 2026-08-04 Dev Graph registration receipt の実装フィードバック
-
-registration receipt の node IDs、件数、source digest、source lineage が一致し、登録時点の graph digest も一致する場合を `verified` とする。後続 sync により graph digest だけが古くなった場合は、証拠不一致や未検証と混同せず `partial` / `graph_digest_stale` として可視化する。他の証拠不一致は fail-closed を維持する。これは既存確定 QA を変更せず、repository 内の testing-qa 実装契約を具体化するフィードバックであり、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit には影響しない。
 
 ## 上流指針 (doctrine anchor)
 
@@ -75,4 +75,8 @@ registration receipt の node IDs、件数、source digest、source lineage が�
 
 ## 最新ドキュメント出典
 
-- (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-08-07T03:26:46Z | 2026-08-07T03:26:46Z |
+| playwright | 1.62.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-08-07T03:26:57Z | 2026-08-07T03:26:57Z |
+| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-08-07T03:27:06Z | 2026-08-07T03:27:06Z |

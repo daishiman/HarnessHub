@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "bd-bridge.py と mfh7 issue 本文がユーザー指定 500 行上限を超過しており、安全な分割方針が未確定"
+title: "bd-bridge.py と mfh7 issue 本文の 500 行超過の分割方針を確定する"
 owners: ["daishiman"]
 created_at: "2026-07-28T00:00:00Z"
-updated_at: "2026-08-01T13:48:01Z"
+updated_at: "2026-08-02T03:04:53Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725"]

@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:57:02Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P01"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-infrastructure"]
 resource_scope: ["docs/features/feat-tenant-data-retention/architecture-decision-record.md"]

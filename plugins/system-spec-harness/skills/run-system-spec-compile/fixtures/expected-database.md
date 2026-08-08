@@ -82,6 +82,13 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 - core domainへ設計投資を集中し、generic領域は無料/低コストserviceや標準実装も比較対象にできる。
 - refactoringは一括rewriteでなく、重要なbusiness rule周辺からstrangler/bubble context等で境界を育てる。
 
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-database (対応セル: web, mobile, tablet, desktop-windows, desktop-linux, desktop-macos) の判断へ適用する
+- 資するゴール: G1
+
 ## 最新ドキュメント出典
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |

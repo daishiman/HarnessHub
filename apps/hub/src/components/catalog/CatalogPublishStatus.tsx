@@ -104,7 +104,7 @@ export function CatalogPublishStatus({
 
   return (
     <section aria-labelledby="catalog-publish-status-heading">
-      <h3 id="catalog-publish-status-heading">公開状態</h3>
+      <h2 id="catalog-publish-status-heading">公開状態</h2>
 
       {/* 更新のたびに focus を奪わず、読み上げも中断しない (qa-018) */}
       <p aria-live="polite">

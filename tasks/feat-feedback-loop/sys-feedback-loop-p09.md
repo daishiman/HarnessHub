@@ -12,8 +12,8 @@ iteration: null
 title: "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-08-03T06:37:59.688832Z"
-status: "active"
+updated_at: "2026-08-03T12:06:30Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P08"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/api/v1/feedback/","docs/features/feat-feedback-loop/quality-assurance-report.md","packages/db/schema/feedback-loop/","packages/schemas/feedback-loop/"]

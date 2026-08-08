@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-136 |
+| Web (web) | 確定 | 確定質疑: qa-207 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,17 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-136 (対応セル: web)
+### qa-207 (対応セル: web)
 
-**質問**: CLI を使わない利用者が Hub Web だけで公開・状態確認・導入案内まで到達できる導線を、既存 ui-ux.web 契約へどう統合しますか?
+**質問**: qa-201 とそれ以前の ui-ux/web 契約を維持したまま、desktop/mobile shell、その他 navigation、page surface、overlay の操作規則を実装と一致する形でどう確定するか。
 
-**回答**: Hub Web 単体で公開、状態確認、導入案内まで到達できることを受入条件とする。S01 は ZIP アップロードを CLI と同一の static validation、secret scan、policy に収束させ、Green/Yellow/Red の表示と再投入導線を統一する。Device Flow は CLI/Publisher 専用として残し、確認コードなしの `/device` では用途を説明して S01 への回復導線を示す。共通シェルには現在の Workspace と切替を常設するが、所属が 1 件なら操作を強制しない。missing_tenant_scope は内部エラーを露出せず Workspace 選択で回復可能な ErrorState とし、401/403 や scope 切替後に旧 scope データを表示しない既存契約を維持する。状態機械、検査実装、role 判定は既存 owner の責務のままとする。
+**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。
+
+md=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。
+
+各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。
+
+既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

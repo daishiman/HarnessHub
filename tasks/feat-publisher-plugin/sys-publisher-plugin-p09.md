@@ -12,8 +12,8 @@ iteration: null
 title: "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:18:12Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-02T07:18:22Z"
+status: "closed"
 depends_on: ["SYS-PUBLISHER-PLUGIN-P08"]
 related_nodes: ["feat-publisher-plugin","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["apps/publisher/","apps/publisher/scripts/","docs/features/feat-publisher-plugin/quality-assurance-report.md","packages/schemas/publisher-plugin/","plugins/harness-hub-publisher/"]

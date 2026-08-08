@@ -9,11 +9,11 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "GET /catalog はログイン済みでも tenant scope 未解決で 403 missing_tenant_scope になり得る — ?tenant=&workspace= がハードナビゲーション経路で認可されない疑義"
+title: "GET /catalog はログイン済みでも tenant scope 未解決で 403 missing_tenant_scope になり得る"
 owners: ["daishiman"]
 created_at: "2026-08-02T08:47:22Z"
-updated_at: "2026-08-02T08:54:04.165993Z"
-status: "draft"
+updated_at: "2026-08-02T23:48:02Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/middleware/scope.ts","apps/hub/src/middleware/authz.ts","apps/hub/src/app/(workspace)/catalog/page.tsx","apps/hub/src/components/catalog/CatalogList.tsx"]

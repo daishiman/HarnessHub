@@ -1,6 +1,8 @@
+import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { CatalogReleaseHistory } from '../../../../components/catalog/CatalogReleaseHistory.js';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
   title: 'リリース履歴 | Harness Hub',
@@ -22,20 +24,28 @@ interface PageProps {
 }
 
 export default async function CatalogReleasesPage({ searchParams }: PageProps) {
-  const query = await searchParams;
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const resolved = scopeFromQuery(query, scope);
   const projectId = query.project ?? '';
 
   return (
-    <section aria-labelledby="catalog-releases-heading">
-      <h1 id="catalog-releases-heading">リリース履歴</h1>
-      {projectId === '' ? (
-        <p>業務ツールを選ぶと、その公開履歴を表示します。</p>
-      ) : (
-        <CatalogReleaseHistory
-          scope={{ tenantId: query.tenant ?? '', workspaceId: query.workspace ?? '' }}
-          projectId={projectId}
-        />
-      )}
-    </section>
+    <>
+      <ScreenHeader
+        id="catalog-releases-heading"
+        title="リリース履歴"
+        breadcrumbs={[
+          { href: `/catalog?tenant=${resolved.tenantId}&workspace=${resolved.workspaceId}`, label: '業務ツール' },
+          { label: 'リリース履歴' },
+        ]}
+        breadcrumbsLabel="現在地"
+      />
+      <Panel flush={projectId !== ''}>
+        {projectId === '' ? (
+          <p style={{ margin: 0 }}>業務ツールを選ぶと、その公開履歴を表示します。</p>
+        ) : (
+          <CatalogReleaseHistory scope={resolved} projectId={projectId} />
+        )}
+      </Panel>
+    </>
   );
 }

@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-08-03T08:04:14.147672Z"
-status: "active"
+updated_at: "2026-08-03T09:10:59Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P11"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-feedback-loop/runbook.md"]

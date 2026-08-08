@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T02:25:34Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-dual-catalog-web/requirements-baseline.md"]

@@ -9,12 +9,12 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "qa-071 の意味被覆 enforcement を landing し dev-graph 3 skill の live-trial を再取得する"
+title: "qa-071 enforcement tooling を landing (validator+evaluator+回帰テスト) + dev-graph 3 skill 再 live-trial"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:09:07Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "draft"
-depends_on: ["issue-validator-contract-version-20260724"]
+updated_at: "2026-07-28T04:10:48Z"
+status: "closed"
+depends_on: []
 related_nodes: ["issue-planner-script-line-limit-20260724"]
 resource_scope: ["plugins/system-dev-planner/scripts/validate-system-plan.py","plugins/system-dev-planner/scripts/validate-qa-semantic-coverage.py","plugins/system-dev-planner/scripts/validate-task-spec-contract.py","plugins/system-dev-planner/assets/validation-contract-baseline.json","plugins/system-dev-planner/references/feature-execution-package-contract.md","plugins/system-dev-planner/agents/system-dev-plan-evaluator.md","plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/prompts/R4-evaluate.md","plugins/system-dev-planner/skills/assign-system-dev-plan-evaluator/references/evaluation-rubric.md","plugins/system-dev-planner/tests/test_qa_semantic_coverage.py","plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py","plugins/dev-graph/tests/fixtures/audit_live_trial_state.py","eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-node/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-requirements/criteria-test/scenario-verdict.json"]
 purpose: "PR #56 は qa-071 を system-spec/spec-state.json の qa_log へ登録しただけで、その中身が plan 成果物に届いているかを検査する enforcement は分離されたままだった。tag に qa-071 と書けば通る状態では、確定した QA 要件が goal-spec の purpose/goal/scope/acceptance にも 13 task spec にも降りていない plan が promote でき、qa_log が飾りになる。tag 宣言ではなく意味被覆を C12 決定論ゲートで要求し、宣言と中身の乖離を promote 前に落とす"

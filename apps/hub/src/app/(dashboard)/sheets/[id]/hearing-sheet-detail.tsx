@@ -1,13 +1,16 @@
 'use client';
 
 import type { HearingSheetStatus, SheetDetail } from '@harness-hub/schemas';
-import { Alert, Button, Select, StatusChip } from '@harness-hub/ui';
+import { Alert, Button, Panel, ScreenHeader, Select, StatusChip } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
 });
+// 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)。
+// 同ファイルの MarkdownView と同じ遅延読み込みの型に揃えている。
+const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
 interface HearingSheetDetailProps {
   readonly id: string;
@@ -26,6 +29,8 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [completionNotice, setCompletionNotice] = useState(false);
+  // 再生成は既存の本文を作り直す取り消しにくい操作なので、実行前に必ず確認を挟む (§P6)
+  const [regenerateOpen, setRegenerateOpen] = useState(false);
   const previousStatus = useRef<SheetDetail['status'] | null>(null);
 
   const load = useCallback(async () => {
@@ -76,6 +81,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   };
 
   const regenerate = async (): Promise<void> => {
+    setRegenerateOpen(false);
     setSaving(true);
     try {
       const response = await fetch(`/api/v1/sheets/${id}/regenerate`, {
@@ -97,87 +103,119 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   if (sheet === null) return <p aria-live="polite">読み込み中です…</p>;
 
   const sections = sheet.generated_sections;
+  const listHref = `/sheets?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
+
   return (
     <article>
+      <div data-print-exclude="">
+        <ScreenHeader
+          title={`${sheet.code} ${sheet.title}`}
+          breadcrumbs={[{ href: listHref, label: 'ヒアリングシート' }, { label: sheet.code }]}
+          breadcrumbsLabel="現在地"
+          actions={
+            <Button type="button" variant="secondary" onClick={() => window.print()}>
+              印刷
+            </Button>
+          }
+        />
+      </div>
       {completionNotice ? (
         <Alert tone="success" title="生成完了" description={`${sheet.code} のシート本文が完成しました。`} />
       ) : null}
       {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
-      <header>
-        <h1>
-          {sheet.code} {sheet.title}
-        </h1>
-        <p aria-live="polite">
-          <StatusChip domain="sheet" status={sheet.status} />
-        </p>
-        {sheet.ai_job_status === 'dead' ? (
-          <Alert tone="warning" title="生成を完了できませんでした" description="管理者が再生成できます。" />
-        ) : null}
-      </header>
-
-      <section aria-label="生成されたシート本文">
-        {sections === null ? (
-          <p>生成処理中です。完了すると内容がここに表示されます。</p>
-        ) : (
-          <>
-            <MarkdownView content={sections.overview} />
-            <MarkdownView content={sections.issue} />
-            <MarkdownView content={['## 推奨機能タグ', ...sections.feature_tags.map((tag) => `- ${tag}`)].join('\n')} />
-            <MarkdownView content={sections.estimated_effect} />
-          </>
-        )}
-      </section>
-
-      <table>
-        <caption>元入力とサーバ試算の snapshot</caption>
-        <tbody>
-          <tr>
-            <th scope="row">業務領域</th>
-            <td>{sheet.form_snapshot.domain}</td>
-          </tr>
-          <tr>
-            <th scope="row">月間工数</th>
-            <td>{sheet.form_snapshot.hours} 時間</td>
-          </tr>
-          <tr>
-            <th scope="row">対象人数</th>
-            <td>{sheet.form_snapshot.people} 人</td>
-          </tr>
-          <tr>
-            <th scope="row">年間削減時間</th>
-            <td>{sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間</td>
-          </tr>
-          <tr>
-            <th scope="row">年間削減額</th>
-            <td>{sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円</td>
-          </tr>
-        </tbody>
-      </table>
-
-      {sheet.can_manage ? (
-        <aside aria-label="管理者操作" data-print-exclude="">
-          <h2>管理者操作</h2>
-          <Select
-            label="状態"
-            value={sheet.status === 'completed' ? 'completed' : 'review'}
-            onChange={(event) => void patchStatus(event.target.value as HearingSheetStatus)}
-            options={[
-              { value: 'review', label: 'レビュー待ち' },
-              { value: 'completed', label: '完了' },
-            ]}
-            disabled={saving}
-          />
-          <Button type="button" variant="secondary" onClick={() => void regenerate()} disabled={saving}>
-            再生成
-          </Button>
-        </aside>
+      <p aria-live="polite">
+        <StatusChip domain="sheet" status={sheet.status} />
+      </p>
+      {sheet.ai_job_status === 'dead' ? (
+        <Alert tone="warning" title="生成を完了できませんでした" description="管理者が再生成できます。" />
       ) : null}
 
-      <p data-print-exclude="">
-        <Button type="button" variant="secondary" onClick={() => window.print()}>
-          印刷
-        </Button>
-      </p>
+      <Panel title="シート本文" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+        <section aria-label="生成されたシート本文">
+          {sections === null ? (
+            <p>生成処理中です。完了すると内容がここに表示されます。</p>
+          ) : (
+            <>
+              <MarkdownView content={sections.overview} />
+              <MarkdownView content={sections.issue} />
+              <MarkdownView
+                content={['## 推奨機能タグ', ...sections.feature_tags.map((tag) => `- ${tag}`)].join('\n')}
+              />
+              <MarkdownView content={sections.estimated_effect} />
+            </>
+          )}
+        </section>
+      </Panel>
+
+      <Panel title="元入力とサーバ試算" flush style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+        <table>
+          <caption>元入力とサーバ試算の snapshot</caption>
+          <tbody>
+            <tr>
+              <th scope="row">業務領域</th>
+              <td>{sheet.form_snapshot.domain}</td>
+            </tr>
+            <tr>
+              <th scope="row">月間工数</th>
+              <td>{sheet.form_snapshot.hours} 時間</td>
+            </tr>
+            <tr>
+              <th scope="row">対象人数</th>
+              <td>{sheet.form_snapshot.people} 人</td>
+            </tr>
+            <tr>
+              <th scope="row">年間削減時間</th>
+              <td>{sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間</td>
+            </tr>
+            <tr>
+              <th scope="row">年間削減額</th>
+              <td>{sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円</td>
+            </tr>
+          </tbody>
+        </table>
+      </Panel>
+
+      {sheet.can_manage ? (
+        <div data-print-exclude="">
+          <Panel title="管理者操作" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+            {/* landmark として拾えるよう aside は残す。見出しは Panel 側が出す */}
+            <aside
+              aria-label="管理者操作"
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'flex-end',
+                gap: 'var(--hh-space-3)',
+              }}
+            >
+              <Select
+                label="状態"
+                value={sheet.status === 'completed' ? 'completed' : 'review'}
+                onChange={(event) => void patchStatus(event.target.value as HearingSheetStatus)}
+                options={[
+                  { value: 'review', label: 'レビュー待ち' },
+                  { value: 'completed', label: '完了' },
+                ]}
+                disabled={saving}
+              />
+              <Button type="button" variant="secondary" onClick={() => setRegenerateOpen(true)} disabled={saving}>
+                再生成
+              </Button>
+            </aside>
+          </Panel>
+
+          <ConfirmDialog
+            open={regenerateOpen}
+            title="シート本文を再生成しますか？"
+            description="いまの本文は破棄され、AI が最初から作り直します。元の本文には戻せません。"
+            reversible={false}
+            confirmLabel="再生成する"
+            cancelLabel="やめる"
+            onConfirm={() => void regenerate()}
+            onCancel={() => setRegenerateOpen(false)}
+          />
+        </div>
+      ) : null}
     </article>
   );
 }

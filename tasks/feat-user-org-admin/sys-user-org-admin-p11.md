@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — acceptance根拠・監査ログ・分離テスト結果の証跡集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-07T03:37:35Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P10"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-user-org-admin/evidence/"]

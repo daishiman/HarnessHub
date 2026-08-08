@@ -12,8 +12,8 @@ iteration: null
 title: "ユーザー管理・アカウント設定 要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T10:16:17Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-user-org-admin/requirements-baseline.md"]

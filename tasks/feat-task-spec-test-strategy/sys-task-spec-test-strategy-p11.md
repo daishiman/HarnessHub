@@ -12,8 +12,8 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:22Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P10"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["eval-log/system-dev-planner/task-spec-test-strategy/evidence-manifest.json"]

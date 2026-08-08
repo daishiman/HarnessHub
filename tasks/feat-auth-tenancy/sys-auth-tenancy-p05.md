@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T07:13:29Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P04"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/[tenant_slug]/signin/","apps/hub/src/app/api/auth/","apps/hub/src/app/api/v1/device/","apps/hub/src/app/api/v1/token/","apps/hub/src/app/api/v1/tokens/","apps/hub/src/lib/auth/","apps/hub/src/lib/authz/","apps/hub/src/middleware.ts","packages/schemas/auth-tenancy/"]

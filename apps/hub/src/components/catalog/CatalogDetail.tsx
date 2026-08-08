@@ -143,7 +143,7 @@ export function CatalogDetail({
   return (
     <article>
       {degraded ? <DegradedBanner description={failure?.message} /> : null}
-      <h2>{visibleDetail.name}</h2>
+      <h1>{visibleDetail.name}</h1>
       <Tabs label="業務ツールの詳細" items={items} defaultActiveId="overview" />
     </article>
   );

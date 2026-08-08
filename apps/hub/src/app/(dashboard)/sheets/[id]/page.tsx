@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { HearingSheetDetail } from './hearing-sheet-detail.js';
 
 export const metadata: Metadata = {
@@ -11,11 +12,12 @@ interface PageProps {
 }
 
 export default async function HearingSheetDetailPage({ params, searchParams }: PageProps) {
-  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const [{ id }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   return (
     <>
       <style>{'@media print { [data-print-exclude] { display: none !important; } }'}</style>
-      <HearingSheetDetail id={id} tenantId={query.tenant ?? ''} workspaceId={query.workspace ?? ''} />
+      <HearingSheetDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />
     </>
   );
 }
