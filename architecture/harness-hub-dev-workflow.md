@@ -188,3 +188,8 @@ C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C2
 - **配布層**: plugin、導入済み `.dev-graph`、plugin-plan の template contract 3 コピーを同一バイト列に保つ。
 
 製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
+C19 R3 では source-derived body の byte 同一性を保つ。dev-graph が所有してはいけないのは
+system-spec の elicitation / compile 実行ロジックであり、確定成果物の本文自体ではない。
+adapter は contract の node shape と source artifact 読取りだけを担い、C02 writer が node と
+graph store の双方を書く。この境界を live-trial と adapter unit test の両方で固定する。

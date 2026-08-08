@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": "capability-build/task-graph handoff は SYS-LIVE-001-P01..P13 を phase_ref P01..P13 として正確に13件含む。根拠: fixture-repo/docs/capability-build-handoff-F-LIVE-001.json, transcript.jsonl",
+    "2": "feature F-LIVE-001、feature-package/F-LIVE-001、package digest sha256:fe4d00b5d19323916ed36451d5ae0ffecd82c133fa419cbc56b2e02aa59cf46a、system-spec digest、graph snapshot digest が正本と一致。根拠: handoff、staging-manifest、registration receipt、graph store",
+    "3": "実測 pre/post diff の追加は documentation 3件と goal-seek JSON/JSONL 3件だけで、tracked change と implementation source 追加はいずれも0件。根拠: transcript.jsonl, fixture-repo/.git/dev-graph/live-trial-baseline.json"
+  },
+  "skill_invocation": {
+    "target": "dev-graph:run-dev-graph-requirements",
+    "count": 1
+  },
+  "goal_seek": {
+    "result": "PASS",
+    "original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+    "intermediate_rows": 2,
+    "checklist": "7/7 PASS",
+    "validator_exit": 0
+  },
+  "validator_exit_summary": {
+    "C11_validate_graph_schema": 0,
+    "C02_stored_readiness_evaluation": "PASS (15/15 confirmed/pass/complete)",
+    "validate_source_digest_complete_closure": "PASS (15 checked, 0 mismatch)",
+    "validate_system_plan_feature_package": "PASS (P01..P13, 0 violations)"
+  }
+}

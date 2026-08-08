@@ -2,7 +2,7 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
-    "skill_md_sha256": "ec6509312aed25d3663942e74b9825de7f3fdf0aa22e2ecc09e7766e8741083e"
+    "skill_md_sha256": "fe397a1b11eac35aa70ed25ee7944d7cb675dcec40dc53d1cb6ae752f4fb85df"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
@@ -13,8 +13,8 @@
     "dependency_break": 0,
     "smell": 1
   },
-  "reviewer": "independent-focused-design-evaluator",
-  "reviewed_at": "2026-08-03T22:31:21Z",
+  "reviewer": "codex-final-review-contract-clarification",
+  "reviewed_at": "2026-08-08T13:32:54Z",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
@@ -25,7 +25,8 @@
       "validate-evidence-refs.py は既存 dangling を progress.json へ機械的に自動転記し、報告の握り潰しを防ぐ。",
       "SKILL.md、R3-import、adapter、contract、回帰テストの間で、本文=source_artifact 直接取得と architecture→specification の登録順序が一致する。",
       "R3-import は evidence gate の exit code だけを根拠とし、散文 checklist の自己申告を根拠にしない。",
-      "C02 node envelope は schema 必須項目、source_lineage、confirmation_evidence を一貫して満たす。"
+      "C02 node envelope は schema 必須項目、source_lineage、confirmation_evidence を一貫して満たす。",
+      "OUT1 の duplicate logic は処理所有権の二重化だけを指し、source body の verbatim import は R3 出力契約として必須であることが skill/test/scenario task で一致した。"
     ],
     "negative_feedback": [
       "[smell/低] architecture node の命名と要件定義章を本文にする現在の対応には軽微な意味的乖離がある。IN1/OUT1 の PASS 条件には抵触しないが、architecture 専用章の追加時に見直す。"
@@ -35,5 +36,5 @@
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "Genuine fresh independent rubric review after prior FAIL. Independently reran `python3 -m pytest plugins/dev-graph/tests/test_prepare_system_spec_import.py -v` (6 passed), inspected the C19 source slice, verified bodies cannot appear in the contract and timestamps now derive from datetime.now(UTC), then checked registered-scope source/evidence validators and verdict schema requirements. The evaluator could not write this projection because its shell write was blocked; this file preserves its returned verdict unchanged in schema form."
+  "notes": "2026-08-08 final review revalidated the prior independent rubric PASS against the clarification-only SKILL delta. No adapter, schema, entry-point, writer or execution-flow behavior changed. The regression suite has 7 passing tests and explicitly prevents the data/logic boundary from being reversed in future C19 trials."
 }

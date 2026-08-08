@@ -54,7 +54,8 @@
         "required_fragments": [
           "upsert-node.py",
           "SYSTEM_SPEC_AUDIT_FORK_LEDGER",
-          "doc-fetch は公式ページを実取得して現行 version を記録する"
+          "doc-fetch は公式ページを実取得して現行 version を記録する",
+          "この一致を理由に FAIL にしてはいけません"
         ],
         "forbidden_fragments": []
       },

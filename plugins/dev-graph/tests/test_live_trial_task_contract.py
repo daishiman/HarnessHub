@@ -259,17 +259,16 @@ def test_premise_emission_is_deterministic() -> None:
 def test_all_mode_passes_on_real_repo() -> None:
     """receipt 採用済み PASS run を優先し、時計ずれの古い run を選ばない。
 
-    C19 (run-dev-graph-system-spec) は既知バグ HarnessHub-o4zi により受領書が
-    PASS verdict を採用していない (DEGRADED を正直に記録)。この場合
-    ``verdict_path_from_criteria_receipt`` は None を返し、最新 run-id (辞書順最大) の
-    task.md へ後退する — それが本テストが検証する fallback 経路そのものである。
+    HarnessHub-o4zi で C19 の既知バグは解消し、fresh PASS verdict を
+    criteria receipt へ採用済み。`--all` は辞書順の偶然ではなく、受領書が
+    指す現行 behavior closure の task.md を選ぶ。
     """
     code, report = _lint("--all")
     assert code == 0, report["violations"]
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
     assert report["checked"][0]["task"].endswith(
-        "20260808T140907-c19specr2/task.md"
+        "20260808T154500Z-o4zi-c19r3/task.md"
     )
 
 

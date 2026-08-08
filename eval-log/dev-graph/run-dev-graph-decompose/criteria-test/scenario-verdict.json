@@ -13,15 +13,17 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T040815Z-wt27-c14decomp/verdict.json",
-      "observed": "fresh live trial 20260807T000000Z-ci-c14 は overall=PASS、nudge=0、gate=0。独立 evaluator が、target Skill 2 回、両 fixture の DAG/粒度、beads/none の永続 binding、唯一の昇格候補と draft gate、pre/post 差分、confirmation evidence 再計算、stdin negative controls を一次証跡から PASS と判定した。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/verdict.json",
+      "observed": "fresh exhaustive live trial 20260808T143000Z-o4zi-exh-c14r3 は overall=PASS、nudge=0、gate=0。fresh 独立 evaluator が target Skill 正確に 2 回、Task/Agent 0 回、両 fixture の DAG/粒度、永続 beads/none binding、唯一の昇格候補と draft 除外 3 件、成功した mutation-suppressed adapter dry-run、pre/post 差分、confirmation evidence 再計算、stdin negative controls、goal-seek checklist 6/6 PASS を一次証拠から確認した。",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T040815Z-wt27-c14decomp/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260807T000000Z-ci-c14/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/audit-beads.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T143000Z-o4zi-exh-c14r3/audit-none.json"
       ],
       "verify_by": "live-trial"
     },
@@ -89,7 +91,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c14",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260808-o4zi-c14r3",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C14",

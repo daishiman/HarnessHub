@@ -297,4 +297,4 @@ close した。
 - `HarnessHub-o4zi` で specification / architecture の正当な system-spec import 形を `origin_kind + source_path` の宣言型 trigger へ分離した。
 - architecture を `HEADING_MISSING_KINDS` へ追加し、0/10 見出しでも complete になっていた非対称を解消した。
 - plugin / installed / plan の template contract 3 コピーを同期し、fixture は required sections を正本から読む。
-- 製品 runtime は非変更。仕様層、検証結果、fresh C19 live trial の残ゲートは [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+- fresh C19 live trial は正規4スキル、独立 completeness 監査、C02 経由の2ノード登録、source digest / evidence ref 再検証をすべて PASS した。同時に foundation U1〜U9 の source-index 欠落も確定済み QA の正規 transition で復旧した。製品 runtime は非変更。確定した仕様層と検証結果は [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

@@ -12,8 +12,8 @@ iteration: null
 title: "system-spec foundation の U1〜U9 source-index を復旧する"
 owners: ["daishiman"]
 created_at: "2026-08-08T11:00:00Z"
-updated_at: "2026-08-08T10:10:38Z"
-status: "draft"
+updated_at: "2026-08-08T13:32:54Z"
+status: "closed"
 depends_on: []
 related_nodes: ["arch-harness-hub-testing-qa","spec-harness-hub-requirements","issue-system-spec-import-heading-contract-20260808"]
 resource_scope: ["system-spec/spec-state.json","system-spec/00-requirements-definition.md","system-spec/source-citation-report.json","system-spec/coverage-report.json","plugins/system-spec-harness"]
@@ -30,8 +30,8 @@ file_path: "issues/system-spec-foundation-source-index-recovery-20260808.md"
 template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":"2026-08-08 final review deterministic gates","evidence_ref":"docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"}
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"9c39bd48c2ae427aad083db9eecc890e3e53cfeba09bc644722a5571e296c5da","evaluator":"2026-08-08 final review deterministic gates","evidence_ref":"docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-08T11:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "system-spec foundation の既存 provenance debt を独立して復旧する監査課題。"
@@ -43,9 +43,10 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-08T13:32:54Z","evidence_refs":["system-spec/spec-state.json","system-spec/source-citation-report.json","system-spec/coverage-report.json","docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-08-08T13:32:54Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-08T11:00:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # system-spec foundation の source-index を復旧する
 
@@ -57,11 +58,11 @@ implementation_readiness: {"checked_at":"2026-08-08T11:00:00Z","missing_sections
 
 2026-08-08 の最終レビューで source citation と compiler は PASS したが、foundation gate は U1〜U9 の 9 件をすべて「source-index が無い」として拒否した。今回追加した `qa-205` ではなく、既存 foundation 要件の由来情報が不足している。
 
-## 現在の挙動
+## 発見時の挙動
 
 - `system-spec/00-requirements-definition.md` には U1〜U9 が存在する。
 - 対応する source-index が `system-spec/spec-state.json` に無いため、foundation gate が 9 件失敗する。
-- 現在の変更から由来を推測して埋めると、存在しないユーザー発言を作ることになるため禁止する。
+- 変更から由来を推測して埋めると、存在しないユーザー発言を作ることになるため禁止した。
 
 ## 期待する挙動
 
@@ -96,4 +97,19 @@ priority: high。現在の本文内容や製品 runtime を直ちに壊すもの
 
 ## 検証証跡
 
-2026-08-08 最終レビューの foundation gate 失敗 9 件、および `docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md` を発見時の証跡とする。
+`qa-012`、`qa-013`、`qa-014` に保存済みのユーザー回答と `appr-001` の一括承認を正規の参照元とし、
+`apply-spec-transition.py chunk` を 2 回使って `qa-foundation-u1`〜`qa-foundation-u9` を
+`spec-state.json#qa_log` へ追加した。U1〜U8 は各ダイアログの記録済み文面、U9 は
+`U1-U9 承認=「承認する」を選択` という既存承認文だけを使い、新しい要件文を作っていない。
+
+復旧後の結果:
+
+- `validate-coverage-matrix.py --require-complete --require-foundation`: PASS。
+- `validate-source-citation.py`: PASS。
+- system-spec-harness の elicit / compile 関連 test: `357 passed`。
+- compiler の再生成で発生した無関係な章差分は受理せず、本件の source-index と
+  main 由来 `qa-205` との ID 衝突回避 (`qa-206`) だけを保存した。
+
+仕様反映と最終判断の証跡は
+`docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md`
+を正とする。

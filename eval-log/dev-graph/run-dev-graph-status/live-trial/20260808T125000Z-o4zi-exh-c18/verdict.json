@@ -1,0 +1,91 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root /private/tmp/harnesshub-o4zi.Gv5hFK/eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/fixture-repo",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-4-6"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-status"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "da4c3d51feda90e061c4c680a58dff74362ec9af88bd5ea2814480edfeaee3b9",
+  "transcript_sha256": "9cf73e65e66ed3e743874ab3b2de239830ca87c879ba7dc60abb4cbab0c04b06",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 255.0
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C18-OUT1-positive-read-only-status",
+    "required_observations": [
+      "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+      "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+      "the run leaves graph, config, content and GitHub state unchanged"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 2,
+        "observation": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 3,
+        "observation": "the run leaves graph, config, content and GitHub state unchanged",
+        "evidence_ref": "independent-verification.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

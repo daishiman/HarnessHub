@@ -154,3 +154,13 @@ PostToolUse が tool 完了後に監査する。非同期 queue や製品イベ�
 - 完全な base template 準拠は conditional family 発火時も正当な variant として残す。
 
 反映と検証は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
+## system-spec import の data / logic 分離契約
+
+- `build-system-spec-import.py` は confirmed source artifact の frontmatter を除いた本文を
+  byte-for-byte で C02 body へ渡す。これは source lineage/digest と本文を同じ出典へ
+  結び付ける data import である。
+- elicitation state transition、coverage matrix、chapter compile、source citation 判定は
+  system-spec-harness が所有し、dev-graph 側に同等ロジックを置かない。
+- C19 OUT1 の「複製 0」は後者の処理ロジックだけを指す。前者の verbatim body
+  import を理由に受理を拒否しない。

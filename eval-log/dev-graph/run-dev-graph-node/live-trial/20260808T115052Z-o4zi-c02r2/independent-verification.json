@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": "5成果物は issue/task/specification/architecture/document の正規パスへ登録され、graph・frontmatter・実ファイルが一致する。根拠: fixture-repo/.dev-graph/state/graph.json と各 content root の成果物",
+    "2": "連続更新は2回目の Skill 呼び出しで実施され、task の kind/path 整合と本文保持を確認。更新後 graph_revision=6。根拠: transcript.jsonl, fixture-repo/.dev-graph/tmp/c02-update.json, fixture-repo/tasks/task-public-api-rate-limiting.md",
+    "3": "feature node 0件、features/ 成果物0件で、C14契約外 feature は生成されていない。根拠: fixture-repo/.dev-graph/state/graph.json, fixture-repo/features/.gitkeep"
+  },
+  "invocation_count": 2,
+  "invocation_sequence": [
+    "add --repo-root <fixture-repo> --input <fixture-repo>/mixed-artifacts.json",
+    "update --repo-root <fixture-repo> --input <fixture-repo>/.dev-graph/tmp/c02-update.json"
+  ],
+  "goal_seek": {
+    "result": "PASS",
+    "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+    "intermediate_rows": 2,
+    "checklist_statuses": ["pass", "pass", "pass", "not_applicable", "pass", "pass"]
+  },
+  "validator_exits": {
+    "independent_contract": 0,
+    "validate_graph_schema_C11": 0,
+    "goal_seek_contract": 0
+  }
+}

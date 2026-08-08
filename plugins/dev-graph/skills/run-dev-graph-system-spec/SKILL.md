@@ -69,7 +69,7 @@ feedback_contract:
 1. C24 で caller repo の `system-spec/` を解決し、plugin source/別 repo の content を拒否する。
 2. `plugins/system-spec-harness/.claude-plugin/plugin.json` の name/version が `>=0.1.0 <1.0.0`、かつ `references/package-contract.json#entry_points.skills` が `run-system-spec-elicit`, `run-system-spec-doc-fetch`, `run-system-spec-compile`, `assign-system-spec-completeness-evaluator` を持つことを確認する。公式manifestへharness専用キーを混在させず、不在/不一致は fallback を実装せず停止する。
 3. Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲する。
-4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。
+4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。この source body の verbatim import (素材の取込み) は、elicitation/compile の処理ロジックを dev-graph へ再実装する「複製」には含めない。取込み元本文と node body の一致は、`source_digest` が示す成果物を忠実に参照した証拠として扱う。
 
 出力は import report (`system-spec/index.md`, imported node ids, lineage, confirmation_status, readiness)。feature は `architecture_refs` で参照し、内容を複製しない。1 feature→13 task は system-dev-planner の責務であり本 skill は扱わない。
 
@@ -151,3 +151,4 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-source-digest
 - plugin source 側や別 repo の `system-spec/` を読まず、C24 receipt の caller repo だけを content authority にする。
 - evaluator PASS と confirmed の両方が揃わない章を C02 へ登録しない。
 - feature に仕様本文を複製せず、`architecture_refs` と source lineage で参照する。
+- node body の source-derived verbatim import と、elicitation/compile 実行ロジックの複製を混同しない。前者は R3 の必須出力、後者だけが OUT1 の禁止対象である。

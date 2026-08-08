@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1432,
+  "graph_revision": 1434,
   "nodes": [
     {
       "acceptance": [
@@ -51620,7 +51620,8 @@
         "index と requirements の正当形だけが conditional 緩和で PASS する",
         "通常 architecture の不足見出しが fail-closed になる",
         "3 contract copy が一致する",
-        "focused regression が PASS する"
+        "focused regression が PASS する",
+        "fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow",
@@ -51644,22 +51645,25 @@
       "classification_reason": "system-spec import と dev-graph C11 readiness の横断的な repository tooling bug。",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T154500Z-o4zi-c19r3/verdict.json"
+        ],
         "policy": "manual",
         "reconciled_at": null,
         "source": null,
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": "focused regression + final review",
+        "evaluated_digest": "22d2ad06076392ac4808817f063148823fde66cc725ad4da0844f235cb44ec00",
+        "evaluator": "focused regression + fresh C19 independent final review",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-08T10:00:00Z",
       "depends_on": [],
       "domain": "dev-workflow",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/system-spec-import-heading-contract-20260808.md",
@@ -51673,7 +51677,7 @@
       "goal": "source lineage に基づく宣言型見出し contract と architecture/specification/task の対称な readiness 判定を確立する。",
       "graph_node_id": "issue-system-spec-import-heading-contract-20260808",
       "implementation_readiness": {
-        "checked_at": "2026-08-08T10:00:00Z",
+        "checked_at": "2026-08-08T14:20:00Z",
         "missing_sections": [],
         "status": "complete"
       },
@@ -51686,7 +51690,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-system-spec-import-heading-contract-20260808",
+          "linked_at": "2026-08-08T14:20:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 680,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/680"
+        }
+      ],
       "purpose": "system-spec import の正当な本文形だけを許容し、不完全な architecture を fail-closed に拒否する。",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -51724,7 +51741,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "draft",
+      "status": "active",
       "tags": [
         "dev-graph",
         "system-spec",
@@ -51736,7 +51753,7 @@
       "template_version": "1.0.0",
       "title": "system-spec import の見出し契約と architecture readiness を一致させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T10:00:00Z"
+      "updated_at": "2026-08-08T14:20:00Z"
     },
     {
       "acceptance": [
@@ -51765,15 +51782,20 @@
       "classification_confidence": 0.99,
       "classification_reason": "system-spec foundation の既存 provenance debt を独立して復旧する監査課題。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-08T13:32:54Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json",
+          "system-spec/source-citation-report.json",
+          "system-spec/coverage-report.json",
+          "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-08T13:32:54Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
+        "evaluated_digest": "9c39bd48c2ae427aad083db9eecc890e3e53cfeba09bc644722a5571e296c5da",
         "evaluator": "2026-08-08 final review deterministic gates",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
       },
@@ -51781,7 +51803,7 @@
       "created_at": "2026-08-08T11:00:00Z",
       "depends_on": [],
       "domain": "testing-qa",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/system-spec-foundation-source-index-recovery-20260808.md",
@@ -51841,7 +51863,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "system-spec",
         "foundation",
@@ -51853,7 +51875,7 @@
       "template_version": "1.0.0",
       "title": "system-spec foundation の U1〜U9 source-index を復旧する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T10:10:38Z"
+      "updated_at": "2026-08-08T13:32:54Z"
     },
     {
       "acceptance": [],
