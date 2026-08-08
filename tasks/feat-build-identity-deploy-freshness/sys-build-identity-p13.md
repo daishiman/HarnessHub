@@ -71,3 +71,4 @@ implementation_readiness: {"checked_at":"2026-08-07T11:35:00Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+- 2026-08-08 follow-up: `HarnessHub-u9zq` の smoke 前配信版再確認は、公開済み P13 task spec の digest を書き換えない独立 issue として実装・検証する。P13 の書き戻し責務に従い、その仕様・architecture・受領書への追補を本 projection から参照する。詳細は `docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md` §7 を正本とする。

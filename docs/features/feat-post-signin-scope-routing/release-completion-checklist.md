@@ -10,7 +10,7 @@ layer: feature-release
 ## 1. 完了条件
 
 - [x] PR merge と default branch reconciliation — PR #647（docs整理）・PR #648（`feat(hub): route signed-in users with resolved scope`）ともに main へ merge 済み
-- [ ] `ci.yml` deploy job が success（上記 merge を含む main の反映分）
+- [x] `ci.yml` deploy job が success（上記 merge を含む main の反映分）— **2026-08-08 実測で確定**: main `44109782` の hub-ci run [31240466397](https://github.com/daishiman/HarnessHub/actions/runs/31240466397) は deploy job 全 step success（配信版一致ゲート・稼働ビルド鮮度検査・OIDC smoke・DB/R2 smoke・hearing smoke を含む）、`失敗時ロールバック` は skipped。PR #648 は既に main へ merge 済みのため、この run が配備した版に本 feature の実装が含まれる
 - [ ] 本番環境で `authorize()` の判定順（`apps/hub/src/middleware/authz.ts`）どおりに、下記 6 系統の scope 判定が到達可能であることを確認する
   1. 未認証 (`unauthenticated`, 401 → サインイン画面)
   2. scope 未申告 (`missing_tenant_scope`, 403)
@@ -36,7 +36,7 @@ gh run list --workflow ci.yml --branch main --limit 1   # deploy 状態の確認
 | 項目 | 状態 | 次のアクション |
 |---|---|---|
 | 実装・テスト・文書 | 完了 | — (PR #647・#648 merge 済み) |
-| 本番デプロイ | 未確認 | 上記コマンドで deploy job の成否を確認する |
-| 6 系統 scope 判定の実環境確認 | 未実施 | operations-runbook.md 分岐 A〜C に沿って人手で確認する |
-| open redirect フォールバック確認 | 未実施 | 同上 |
+| 本番デプロイ | **完了 (2026-08-08 実測)** | — (run 31240466397 / main `44109782` で deploy job 全 step success) |
+| 6 系統 scope 判定の実環境確認 | 未実施 | operations-runbook.md 分岐 A〜C。**人手のブラウザ確認は再現性が無く、次のデプロイで壊れても気付けない。** 1〜5 は session cookie / scope ヘッダーの組合せで HTTP 応答 status が決まるため、`apps/hub/scripts/smoke-production-hearing.ts` と同型の本番 smoke として自動化し、`ci.yml` の smoke 群へ結線するのが望ましい (6 のみ着地 path の確認が要る) |
+| open redirect フォールバック確認 | 未実施 | 同上。戻り先の判定は `returnTo` を変えた HTTP 応答の `Location` で機械的に測れるため、上記 smoke に含められる |
 | PR merge / default branch reconciliation | 完了 | dev-graph PR linkage の記録（`reconcile-github-lifecycle.py --mode check`）を実施する |

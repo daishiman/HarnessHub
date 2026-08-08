@@ -35,6 +35,11 @@ curl -s -H 'Cache-Control: no-cache' "$HUB_HEALTH_URL" | jq '{version, commit}'
 # 2. 鮮度検査が緑で通ること
 #    期待: deploy job の「稼働ビルドの鮮度検査」step が outcome=success、
 #          JSON 証跡の outcome が up-to-date（または deploy 直後なら lagging-within-grace）
+#
+# 3. 最初の smoke が deploy 版へ当たること
+#    期待: deploy job の「smoke 直前の配信版再確認」step が outcome=success、
+#          /tmp/smoke-version-recheck.json が deployment version と /health.version の
+#          連続 3 回一致を記録する。失敗時は smoke / rollback が実行されないこと。
 ```
 
 **取得するまで「確認済み」とは書かない。** 未取得を確認済みと書くことこそ、

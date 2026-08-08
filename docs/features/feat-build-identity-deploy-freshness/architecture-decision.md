@@ -90,3 +90,11 @@ CI からは `DEPLOY_FRESHNESS_MAX_LAG_MINUTES` で上書きする。値を複�
 **理由:** version_gate は「今 deploy した版が配信されたか」しか見ないので、**deploy 経路自体が長期間動いていない**
 状態（今回）は捉えられない。鮮度検査はそこを埋める。smoke より前に置くのは、古い版に対して smoke を走らせて
 「無関係な差分で赤くなる」状態を作らないため。
+
+## AD-9: smoke 直前の再確認は鮮度検査と分ける
+
+**決定:** 鮮度検査の直後、最初の smoke の直前に `assert-served-version.mjs` を置く。deploy step が控えた version id と `/health.version` が 3 回連続で一致した場合だけ smoke を開始する。
+
+**理由:** 3 つの検査は似て見えても、答える問いが異なる。`version_gate` は新版が届いたか、鮮度検査は既定 branch の HEAD から長期間遅れていないか、ここで追加する再確認は **smoke が今から当たる版が deploy 版で安定しているか** を確認する。2026-08-07 の実測では前 2 者が通過したあと、hearing smoke が別 colo の旧版へ当たった。再確認で不一致・通信失敗・version 欠落が残れば、旧版を検査して無関係な失敗を作る前に fail-closed で停止する。
+
+**rollback 境界:** 再確認失敗時は smoke が未実行なので、新版が壊れた証拠がない。どの版へ戻すかも確定しないため rollback は打たない。これは AD-7 の理由を伝播安定性へ適用したものである。

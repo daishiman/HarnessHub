@@ -41,7 +41,7 @@ elicitation（要件ヒアリング）確定後に実装へ落とした契約の
 
 | 主題 | 要求の出所 | 実装契約 | feature / Beads |
 |---|---|---|---|
-| 稼働ビルドの素性 (acceptance V6) と反映鮮度 (acceptance V7) | `dev-workflow.md` qa-198-f | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y` |
+| 稼働ビルドの素性 (acceptance V6) と反映鮮度・smoke 前伝播安定性 (acceptance V7) | `dev-workflow.md` qa-198-f / qa-198-h | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y`、伝播安定性 follow-up `HarnessHub-u9zq` |
 
 ## 全体ドキュメント出典 (未割当参照)
 
