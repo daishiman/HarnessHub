@@ -16,6 +16,10 @@ import {
 import { parseJsonRequest, problemResponse } from '../../src/features/hearing-intake/http.js';
 import { createHearingIntakeService } from '../../src/features/hearing-intake/service.js';
 
+// server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
+// 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
+
 const CONTEXT: RepositoryContext = { tenantId: 'tenant-a', workspaceId: 'workspace-a', actorId: 'user-a' };
 
 const FORM = createSheetRequestSchema.parse({

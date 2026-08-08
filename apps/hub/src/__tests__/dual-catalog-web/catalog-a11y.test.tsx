@@ -35,6 +35,10 @@ vi.mock('next/font/google', () => ({
 /** catalog は (workspace) 配下。本番と同じく業務シェルが main ランドマークを持つ。 */
 const { HubShell } = await import('../../components/shell/hub-shell.js');
 
+// server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
+// 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
+
 const SCOPE_QUERY = { tenant: 'tenant-a', workspace: 'workspace-a1' };
 
 /** 日時は brand 型。schema を通して作り、契約に載る形だけを fixture に使う。 */

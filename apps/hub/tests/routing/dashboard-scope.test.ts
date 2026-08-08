@@ -10,12 +10,16 @@ import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SESSION_COOKIE_NAME } from '../../src/lib/auth/config.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME } from '../../src/lib/auth/session.js';
 
-const { getCookie, verifySessionToken } = vi.hoisted(() => ({
-  getCookie: vi.fn(),
-  verifySessionToken: vi.fn(),
-}));
+const { getCookie, cookies, verifySessionToken } = vi.hoisted(() => {
+  const getCookie = vi.fn();
+  return {
+    getCookie,
+    cookies: vi.fn(async () => ({ get: getCookie })),
+    verifySessionToken: vi.fn(),
+  };
+});
 
-vi.mock('next/headers', () => ({ cookies: async () => ({ get: getCookie }) }));
+vi.mock('next/headers', () => ({ cookies }));
 vi.mock('../../src/lib/auth/session.js', async () => {
   const actual = await vi.importActual<typeof import('../../src/lib/auth/session.js')>('../../src/lib/auth/session.js');
   return { ...actual, verifySessionToken };
@@ -55,6 +59,17 @@ describe('TID-DSCOPE: resolveDashboardScope の入力分類', () => {
     delete process.env.AUTH_SESSION_SECRET;
 
     await expect(resolveDashboardScope()).resolves.toEqual({ tenantId: null, workspaceId: null });
+  });
+
+  it('TID-DSCOPE-08: secret 未設定でも cookies() へ到達する (呼び出し元 page が静的化されない)', async () => {
+    delete process.env.AUTH_SESSION_SECRET;
+
+    await resolveDashboardScope();
+
+    // Next.js は「実行時に動的 API へ到達したか」で route を静的化する。secret 未設定のビルド環境で
+    // cookies() の手前に early return が入ると、呼び出し元の page が静的化され本番で DYNAMIC_SERVER_USAGE (500) になる
+    // (2026-08-08 の `/` の障害と同型)。判定順を戻したらここで落とす。
+    expect(cookies).toHaveBeenCalled();
   });
 
   it('TID-DSCOPE-02: session cookie 無し -> 空 scope', async () => {

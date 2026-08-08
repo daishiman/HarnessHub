@@ -22,6 +22,13 @@ interface SigninPageProps {
   readonly params: Promise<{ tenant_slug: string }>;
 }
 
+/**
+ * エラー状態から抜ける唯一の導線。この画面は URL でテナントが確定しているため、
+ * 入力し直す場所はランディング (`/`) のテナント入力しかない。導線が無いと戻るボタン以外に逃げ道が消える。
+ * 文言・遷移先はどのエラーでも同一にする — 状態ごとに変えると応答差からテナントの有無が読めてしまう。
+ */
+const retryFromLanding = <a href="/">別のテナント ID を入力する</a>;
+
 export default async function SigninPage(props: SigninPageProps) {
   // 画面骨格はここで 1 度だけ包む。本体は状態ごとに早期 return するため関数を分けている
   return <PublicShell>{await renderSigninBody(props)}</PublicShell>;
@@ -42,6 +49,7 @@ async function renderSigninBody({ params }: SigninPageProps) {
           tone="danger"
           title="このテナントではサインインできません"
           description="接続設定が見つからないか、無効化されています。管理者にお問い合わせください。"
+          action={retryFromLanding}
         />
       </section>
     );
@@ -56,6 +64,7 @@ async function renderSigninBody({ params }: SigninPageProps) {
           tone="warning"
           title="認証基盤が未結線です"
           description="OIDC の本番 adapter と Auth.js が未結線のため、サインインを開始できません。"
+          action={retryFromLanding}
         />
       </section>
     );
