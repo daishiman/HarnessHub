@@ -33,10 +33,16 @@ const EMPTY_SCOPE: DashboardScope = { tenantId: null, workspaceId: null };
  * cookie 読取・JWT 署名検証の重複実行を避ける。リクエストを跨いでキャッシュされることはない。
  */
 export const resolveDashboardScope = cache(async (): Promise<DashboardScope> => {
+  // `await cookies()` は env の分岐より**前**で無条件に呼ぶこと (順序を戻さない)。
+  // Next.js は「実行時に動的 API へ到達したか」で route を静的化するため、secret 未設定のビルド環境で
+  // early return してしまうと呼び出し元の page が静的化され、本番実行時に DYNAMIC_SERVER_USAGE で 500 になる。
+  // 2026-08-08 の `/` の 500 がまさにこの形で、本関数は (dashboard)/(workspace) 配下の十数画面から呼ばれる。
+  // cookie を読むこと自体に副作用はないので、先に読んでから判定して構わない。
+  const cookieStore = await cookies();
+
   const sessionSecret = process.env.AUTH_SESSION_SECRET;
   if (sessionSecret === undefined || sessionSecret.length === 0) return EMPTY_SCOPE;
 
-  const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (token === undefined) return EMPTY_SCOPE;
 

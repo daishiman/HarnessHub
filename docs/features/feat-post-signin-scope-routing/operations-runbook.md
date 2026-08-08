@@ -6,7 +6,7 @@ layer: feature-operations
 # 運用 Runbook — feat-post-signin-scope-routing
 
 > P12 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-12-documentation-operations.md`
-> 目的: サインイン後に業務画面 (`/sheets` 等) へ到達できない、または想定外の画面に飛ばされるという申告を受けた際の一次切り分け手順を固定する。実装根拠: `apps/hub/src/middleware/authz.ts`, `apps/hub/src/lib/authz/resource.ts`, `apps/hub/src/lib/auth/session.ts`, `apps/hub/src/lib/routing/post-signin-landing.ts`, `apps/hub/src/lib/routing/dashboard-scope.ts`, `apps/hub/src/components/primary-nav.tsx`。
+> 目的: サインイン後に業務画面 (`/sheets` 等) へ到達できない、または想定外の画面に飛ばされるという申告を受けた際の一次切り分け手順を固定する。実装根拠: `apps/hub/src/middleware/authz.ts`, `apps/hub/src/lib/authz/resource.ts`, `apps/hub/src/lib/auth/session.ts`, `apps/hub/src/lib/routing/post-signin-landing.ts`, `apps/hub/src/lib/routing/dashboard-scope.ts`, `apps/hub/src/lib/routing/signin-entry.ts`, `apps/hub/src/lib/routing/workspace-entry.ts`, `apps/hub/src/lib/routing/deny-navigation.ts`, `apps/hub/src/components/primary-nav.tsx`。
 
 ## 前提: authorize() の判定順と reason (`apps/hub/src/middleware/authz.ts`)
 
@@ -62,11 +62,32 @@ layer: feature-operations
 
 ## 着地先が想定外の画面になる場合 (open redirect 防止の副作用)
 
-- **通常の解決順**: サインイン開始時の `returnTo` が同一 origin の相対 path ならその path、無いまたは無効なら既定着地 `/sheets` を使う。`/` 自体は未認証時に稼働確認を表示し、認証済み session がある場合だけ `/sheets` へ redirect する。
+- **通常の解決順**: サインイン開始時の `returnTo` が同一 origin の相対 path ならその path、無いまたは無効なら既定着地 `/sheets` を使う。
+- **`/` の現在の挙動 (2026-08-08)**:
+  - 未認証 → テナント ID 入力（稼働確認 Alert 付き）。`/signin` 経由で `/{slug}/signin` へ。
+  - 認証済み + scope 確定 → 既定着地 `/sheets` へ redirect。
+  - 認証済み + 複数 Workspace 未選択 → Workspace 選択 UI（行き止まりにしない）。
 - **症状**: サインイン後、期待した戻り先ではなく既定着地 (`/sheets`) へ飛ばされる。
 - **原因**: `resolvePostSigninLanding()` (`apps/hub/src/lib/routing/post-signin-landing.ts`) は同一 origin の相対 path 以外の戻り先を全て既定着地へフォールバックする (絶対 URL・スキーム付き・protocol-relative・バックスラッシュトリック・資格情報付き URL を含む)。これは bug ではなく open redirect 防止の設計上の挙動。
 - **確認手順**: 戻り先として渡された値が `/` から始まる相対 path かどうかを確認する。外部リンクや旧 URL からの遷移で絶対 URL 形式の戻り先が渡されていないか確認する。
 - **対応**: 呼び出し元 (戻り先を組み立てる箇所) を同一 origin の相対 path に修正する。フォールバック自体を緩めない (`quality-assurance-record.md` 検査2で fail-closed であることを実測済み)。
+
+## ランディング `/` が 500 または空応答の場合 (2026-08-08 追記)
+
+- **症状**: トップだけ 500。`/health` や API smoke は通る。
+- **原因候補**:
+  1. `/` が静的 prerender されたまま実行時に `cookies()` を呼んでいる（`DYNAMIC_SERVER_USAGE`）。
+  2. 配信版が古い Worker のまま（分岐 0 を先に確認）。
+- **確認手順**:
+  1. 分岐 0 で配信 version 一致を確認する。
+  2. ローカルで `pnpm --filter @harness-hub/hub run build:next` 後 `check:dynamic-routes` が緑か確認する（`/` が prerender-manifest に載っていないこと）。
+  3. 本番 `GET $HUB_PUBLIC_URL/` が 200 かつ本文に `name="tenant"` があること（CI のランディング smoke と同条件）。
+- **対応**: `page.tsx` / `dashboard-scope.ts` で `cookies()` を env 分岐の内側へ戻さない。`export const dynamic = 'force-dynamic'` を外さない。
+
+## ブラウザで JSON の拒否文が出る場合
+
+- **想定 (2026-08-08 以降)**: 通常のページ遷移 (GET + `Accept: text/html`) では `deny-navigation` の HTML（タイトルとトップへのリンク）が返る。`{"error":"..."}` は API・Bearer・RSC client fetch 向け。
+- **HTML なのに行き止まり**: `missing_tenant_scope` の案内どおり `/` で Workspace を選ばせる。所属 0 件なら管理者へ Workspace 追加依頼。
 
 ## スコープ外の確認
 

@@ -171,6 +171,7 @@ route handler が `withAuthz()` を経由していることは、foundation の 
 | `POST /api/v1/device/code` | RFC 8628 §3.1: device がまだ principal を持たない段階の要求 | rate limit + 発行値がハッシュ保存 |
 | `POST /api/v1/device/token` | RFC 8628 §3.4: polling は未承認状態で始まる | device_code ハッシュ照合 + interval 強制 |
 | `POST /api/v1/token/refresh` | principal は refresh token の検証**結果**として得られる。検証前に principal は存在しない | rotation + 再利用検知 |
+| `GET /signin/workspace` | `withAuthz()` は **scope 確定済み**を前提に action の可否を決める層だが、この route は「scope がまだ確定していない」状態を解消するためにある。wrapper を通すと自分自身を `missing_tenant_scope` で弾き、複数 workspace 所属者がサインイン後に業務画面へ到達できない (2026-08-08 実測) | route 自身が session の署名・期限・`status === 'active'` を再検証し、**claims の `workspace_ids` に無い値は cookie にしない** fail-closed。cookie は毎要求 `resolveActiveWorkspaceId()` が所属一覧と再照合するため、書けても認可は素通りしない |
 
 これらは `scripts/ci/shared-layer-registry.json` の `route_handler_policy.exemptions` へ理由付きで登録する (detector 自身が「登録簿の変更のみを正式経路とする」と定めている経路)。**さらに** 本 feature の CI 検査 (`check-single-authz-middleware.mjs`) が exemption 一覧を期待集合と厳密一致で照合し、将来 exemption が黙って増えることを防ぐ (実装と赤化確認は §10.1)。
 

@@ -77,6 +77,20 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 
 ## 確定契約
 
+### A'. 未認証ランディングと拒否表現 (2026-08-08 追補 / issue-hub-root-500-signin-20260808)
+
+- 未認証の `/` はテナント ID 入力の入口とする（稼働確認表示は残す）。入力は JS 無し GET で
+  `/signin` へ渡り、slug 形のみ検証したうえで `/{tenant_slug}/signin` へ 303 する。
+  テナント存在有無は入口で答えない。
+- `/` は session cookie を読むため **動的 route でなければならない**。静的 prerender すると
+  本番で `DYNAMIC_SERVER_USAGE` により 500 になる。ビルド成果物検査で再発を防ぐ。
+- 認証済みで active workspace が未確定（所属 2 件以上で未選択、または所属 0 件）のとき、
+  `/` 上で Workspace 選択または案内を出し、業務画面の JSON 403 行き止まりにしない。
+  選択の受理と cookie 書き込みは専用 route が fail-closed で行う。
+- ブラウザの画面遷移に対する認可拒否は、生の JSON ではなく人間可読な HTML で回復導線を示す。
+  API・Bearer・機械クライアントの JSON 契約は変えない。
+- public path の「入口 1 枚だけ」は完全一致 allowlist に置き、前方一致で子 route を巻き込まない。
+
 ### A. サインイン後の着地先 (qa-135 【1】【2】)
 
 - `callbackUrl` の固定値 `"/"` を廃止し、(a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/sheets` の順で解決する。
