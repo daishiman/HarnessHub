@@ -24,18 +24,17 @@
       "observed": "test_validate_rejects_invalid_authority_documents and test_validate_graph_schema_and_main PASSED (the dev-graph schema/C11 gate accepts confirmed spec/architecture with lineage and rejects invalid authority docs). The R3 import evidence gates are pinned by two deterministic scripts wired into the SKILL goal-seek verification block: validate-evidence-refs.py (evidence_ref existence, exit 2 on registered dangling) and validate-source-digest.py (per-path source_digest equality, exit 2 on reuse) — both cover 5 unit cases each in tests/test_validate_evidence_refs.py / tests/test_validate_source_digest.py. The 20260729T005727Z live trial executed the harness coverage/source-citation gates and both R3 evidence gates with exit 0 before the fresh evaluator returned PASS."
     },
     "OUT1": {
-      "status": "PASS",
+      "status": "DEGRADED",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T140907-c19specr2/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T140907-c19specr2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T140907-c19specr2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T140907-c19specr2/out/status.json"
       ],
-      "observed": "origin/main 再合流後の fresh live trial (20260807T130000-wt22-c19-ledgerfix) は overall=PASS、nudge=0、gate=0。system-spec-harness の正規4 entry point (run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator) を実行し、audit-fork-ledger.jsonl の union-merge 後の内容と completeness-report.json の PASS 記録が一致することを確認、C02 upsert-node.py 経由でのみ specification / architecture node を登録した (graph_revision 0→2)。source digest と evidence reference の検証は exit 0、fresh evaluator と独立 verifier による3観測は PASS、current behavior closure (skill_dir_tree_sha)=e1d2ec6bd48a8729b7ff99e0d2f77450037ddb8855d7cbbe01b03d2d99ff70b2 (現行 skill 実装と一致・stale-sha 解消済み)。"
+      "observed": "既知バグ HarnessHub-o4zi: canonical fixture builder (build_live_trial_fixture.py --kind system-spec) で生成した fixture に対する fresh live trial (20260808T140907-c19specr2, actual_model=claude-opus-5, nudge=0, gate=0) は overall.goal_fit=FAIL / overall.verdict=DEGRADED、out/status.json も status=FAIL。system-spec-harness の正規4 entry point 実行後、C11 heading 検査 (HEADING_MISSING_KINDS に specification が含まれる) が system-spec-harness の生成本文を17見出し未充足として拒否し、architecture ノードのみ registration されて specification ノードは登録されなかった (graph.json は architecture 1件のみ)。同一 scenario_id での前回実行 (20260808T130745-c19spec, 手作り fixture) でも同一の heading_missing 拒否が再現しており、fixture 品質起因ではなく本物の regression と確定した。current behavior closure (skill_dir_tree_sha)=d8a1f3537f219c51c6b2e28fab2ff63e9cf47f381cdaa1bcc41b0412c15b10cf (現行 skill 実装と一致)。"
     }
   }
 }

@@ -1,0 +1,118 @@
+{
+  "content_roots": {
+    "architecture": "architecture",
+    "documents": "docs",
+    "features": "features",
+    "issues": "issues",
+    "specifications": "specs",
+    "system_spec": "system-spec",
+    "tasks": "tasks"
+  },
+  "created_directories": [
+    "issues/",
+    "tasks/",
+    "specs/",
+    "architecture/",
+    "features/",
+    "docs/",
+    ".dev-graph/",
+    "local_state.graph parent",
+    "local_state.cache",
+    "local_state.locks",
+    ".dev-graph/templates/"
+  ],
+  "created_files": [
+    "local_state config (build-repo-config.py)",
+    "local_state graph store (build-graph-store.py)",
+    ".dev-graph/templates/README.md",
+    ".dev-graph/templates/api-contract.md",
+    ".dev-graph/templates/architecture-backend.md",
+    ".dev-graph/templates/architecture-data.md",
+    ".dev-graph/templates/architecture-frontend.md",
+    ".dev-graph/templates/architecture-infrastructure.md",
+    ".dev-graph/templates/architecture-security.md",
+    ".dev-graph/templates/architecture.md",
+    ".dev-graph/templates/claude-settings.example.json",
+    ".dev-graph/templates/common-frontmatter.md",
+    ".dev-graph/templates/document.md",
+    ".dev-graph/templates/feature.md",
+    ".dev-graph/templates/issue.md",
+    ".dev-graph/templates/repo-config.example.json",
+    ".dev-graph/templates/specification.md",
+    ".dev-graph/templates/system-phase-spec.md",
+    ".dev-graph/templates/system-plan-contract.json",
+    ".dev-graph/templates/system-task-spec.md",
+    ".dev-graph/templates/task-graph-node.md",
+    ".dev-graph/templates/task.md",
+    ".dev-graph/templates/template-contract.json"
+  ],
+  "hook_source": {
+    "checks": {
+      "caller_dev_graph_registrations": 0,
+      "caller_project_plugin_link_present": false,
+      "caller_project_settings_local_present": false,
+      "caller_project_settings_present": false,
+      "declared_events": [
+        "PostToolUse",
+        "PreToolUse",
+        "SessionStart",
+        "TaskCompleted"
+      ],
+      "manifest_declares_hooks": true,
+      "missing_hook_scripts": [],
+      "plugin_hooks_json_present": true,
+      "plugin_manifest_present": true,
+      "required_events_covered": true,
+      "session_enabled_dev_graph_plugins": {}
+    },
+    "diagnostics": [
+      "hook_source=plugin accepted: plugin manifest declares ./hooks/hooks.json and all 4 C10/C25 events (PostToolUse, PreToolUse, SessionStart, TaskCompleted) resolve to existing scripts under the resolved plugin_source; command strings reference only ${CLAUDE_PLUGIN_ROOT}/${CLAUDE_PROJECT_DIR}.",
+      "no project fallback written: caller repo has no .claude/settings.json and no dev-graph hook registration, so effective wiring stays on the single plugin path (duplicate registrations=0, existing settings key/hash changes=0).",
+      "advisory (not a rejection): dev-graph is not listed in the user's enabledPlugins, so a Claude session rooted at this caller repo would not load the plugin hooks until the plugin is installed/enabled or the operator re-runs init with --hook-source project-fallback (which requires the plain symlink .claude/dev-graph-plugin)."
+    ],
+    "effective_hook_path_count": 1,
+    "requested": "plugin",
+    "resolution": "accepted"
+  },
+  "local_state": {
+    "cache": ".dev-graph/cache",
+    "graph": ".dev-graph/state/graph.json",
+    "locks": ".dev-graph/locks"
+  },
+  "migration_preview": [],
+  "pass": 1,
+  "preserved": [],
+  "repository_id": "local:sha256:d47b8566486476522cbd54c68c6565416e04e5aba23105ff69aac4300e70302a",
+  "schema_result": {
+    "validate-graph-schema.py": {
+      "exit_code": 0,
+      "stdout": {
+        "implementation_readiness": "complete",
+        "missing_sections": [],
+        "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/plugins/dev-graph/schemas/graph-node.schema.json",
+        "valid": true,
+        "violations": []
+      }
+    },
+    "validate-repo-config.py": {
+      "exit_code": 0,
+      "stdout": {
+        "config": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T113753-yq4k1/fixture-repo/.dev-graph/config.json",
+        "missing_sections": [],
+        "repository_id": "local:sha256:d47b8566486476522cbd54c68c6565416e04e5aba23105ff69aac4300e70302a",
+        "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/plugins/dev-graph/schemas/repo-config.schema.json",
+        "valid": true,
+        "violations": []
+      }
+    }
+  },
+  "skill": "run-dev-graph-init",
+  "template_counts": {
+    "contract_enumerated": 16,
+    "created": 21,
+    "migration_preview": 0,
+    "missing_in_plugin": 0,
+    "preserved_identical": 0,
+    "scaffolded_total": 21
+  }
+}

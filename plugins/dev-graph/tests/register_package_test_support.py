@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
-import re
 import subprocess
 import sys
 import tempfile
@@ -213,6 +212,16 @@ class RegisterPackageFixtureMixin:
         graph["nodes"].append(arch)
         self.write(self.output, graph)
         body = self.root / "body.md"
-        template = (PLUGIN / "templates" / "task.md").read_text(encoding="utf-8")
-        body.write_text(re.sub(r"<[^<>\n]+>", "検証用の実文", template), encoding="utf-8")
+        # task_node() は origin_kind="system-dev-planner" を既定にするため (register-package
+        # が生成する task は常に system-dev-planner 由来)、本文は base task.md (manual 用の
+        # 13 見出し) ではなく conditional_required_sections の system_development_baseline
+        # variant (軽量3見出し) に揃える。HarnessHub-yzv0 で HEADING_MISSING_KINDS へ task を
+        # 追加した際、base テンプレートのままでは variant 不一致で heading_missing が発生した。
+        body.write_text(
+            "# task-P01\n\n"
+            "## 正本仕様書\n\n検証用の実文。\n\n"
+            "## 依存\n\n検証用の実文。\n\n"
+            "## 実行契約\n\n検証用の実文。\n",
+            encoding="utf-8",
+        )
         return body

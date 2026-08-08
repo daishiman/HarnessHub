@@ -158,6 +158,7 @@ def test_frontmatter_repo_root_and_artifact_failure_classification(tmp_path):
     missing = {"graph_node_id": "missing", "artifact_kind": "issue", "file_path": "issues/missing.md"}
     result = mod.artifact_findings([missing], tmp_path, contract)
     assert result == [{"node": "missing", "code": "artifact_missing", "detail": "issues/missing.md"}]
+    assert mod.artifact_findings([missing], tmp_path, contract, allow_missing_artifacts=True) == []
 
     invalid_frontmatter = tmp_path / "issues" / "invalid.md"
     invalid_frontmatter.parent.mkdir()
@@ -179,102 +180,8 @@ def test_frontmatter_repo_root_and_artifact_failure_classification(tmp_path):
     assert mod.artifact_findings([{"id": "none", "file_path": None}], tmp_path, contract) == []
 
 
-@pytest.mark.parametrize(
-    ("kind", "content_root"),
-    [
-        ("issue", "issues"),
-        ("task", "tasks"),
-        ("document", "docs"),
-        ("specification", "specs"),
-        ("architecture", "architecture"),
-        ("feature", "features"),
-    ],
-)
-def test_required_section_placeholders_make_readiness_incomplete(
-    tmp_path, kind, content_root
-):
-    """HarnessHub-4t9g: template bodies and a body-crushing mutation must fail C11."""
-    mod = load()
-    canonical = json.loads((PLUGIN / "templates/template-contract.json").read_text(encoding="utf-8"))
-    artifact_contract = {
-        "placeholder_tokens": canonical["placeholder_tokens"],
-        "common_frontmatter": {"required": []},
-        "artifacts": {kind: canonical["artifacts"][kind]},
-    }
-    artifact = tmp_path / content_root / "placeholder.md"
-    artifact.parent.mkdir()
-    frontmatter = "\n".join([
-        "---",
-        f"graph_node_id: placeholder-{kind}",
-        f"artifact_kind: {kind}",
-        f"file_path: {content_root}/placeholder.md",
-        f"template_id: {kind}",
-        "template_version: 1.0.0",
-        "---",
-        "",
-    ])
-    template = (
-        PLUGIN / "templates" / canonical["artifacts"][kind]["template"]
-    ).read_text(encoding="utf-8")
-    artifact.write_text(frontmatter + template, encoding="utf-8")
-    node = {
-        "graph_node_id": f"placeholder-{kind}",
-        "artifact_kind": kind,
-        "file_path": f"{content_root}/placeholder.md",
-        "template_id": kind,
-        "template_version": "1.0.0",
-    }
-
-    findings = mod.artifact_findings([node], tmp_path, artifact_contract)
-    missing = canonical["artifacts"][kind]["required_sections"]
-    expected_missing = set(missing)
-    assert {item["code"] for item in findings} == {"placeholder_only_section"}
-    assert {item["detail"] for item in findings} == expected_missing
-    assert mod.readiness_missing_sections(findings) == sorted(expected_missing)
-
-    filled = "\n".join(
-        f"## {section}\n\n実装・検証済みの具体的内容。"
-        + (" コマンド引数 `<feature-id>` は説明用の変数。" if section == "Handoff" else "")
-        for section in missing
-    )
-    artifact.write_text(frontmatter + filled + "\n", encoding="utf-8")
-    assert mod.artifact_findings([node], tmp_path, artifact_contract) == []
-
-    crushed = "\n".join(f"## {section}\n" for section in missing)
-    artifact.write_text(frontmatter + crushed + "\n", encoding="utf-8")
-    mutated = mod.artifact_findings([node], tmp_path, artifact_contract)
-    assert {item["detail"] for item in mutated} == set(missing)
-
-    sentinel_target = missing[-1]
-    sentinel_body = "\n".join(
-        f"## {section}\n\n" + ("- TODO" if section == sentinel_target else "実装・検証済みの具体的内容。")
-        for section in missing
-    )
-    artifact.write_text(frontmatter + sentinel_body + "\n", encoding="utf-8")
-    sentinel_findings = mod.artifact_findings([node], tmp_path, artifact_contract)
-    assert sentinel_findings == [{
-        "node": f"placeholder-{kind}",
-        "code": "placeholder_only_section",
-        "detail": sentinel_target,
-    }]
-
-    fenced_target = missing[-1]
-    fenced_body = "\n".join(
-        f"## {section}\n\n"
-        + (
-            "```text\ncanonical template example only\n```"
-            if section == fenced_target
-            else "実装・検証済みの具体的内容。"
-        )
-        for section in missing
-    )
-    artifact.write_text(frontmatter + fenced_body + "\n", encoding="utf-8")
-    fenced_findings = mod.artifact_findings([node], tmp_path, artifact_contract)
-    assert fenced_findings == [{
-        "node": f"placeholder-{kind}",
-        "code": "placeholder_only_section",
-        "detail": fenced_target,
-    }]
+# heading_missing / placeholder_only_section の C11 readiness テストは
+# test_validate_graph_schema_c11_heading_readiness.py へ分離 (500 行超過の解消)。
 
 
 def task(node_id: str, **overrides):
@@ -394,6 +301,65 @@ def test_preview_graph_validates_from_stdin_without_writing_into_the_repo(tmp_pa
 
     after = sorted(p.relative_to(root).as_posix() for p in root.rglob("*"))
     assert after == before, "preview 検証が管理対象 repo へファイルを残してはならない"
+
+
+def _schema_valid_issue_node(graph_node_id: str, file_path: str) -> dict:
+    """canonical store から schema 適合済みの issue node を1件借用し、id/file_path だけ差し替える。
+
+    graph-node.schema.json は required フィールドが多く、その場でリテラルを組むと
+    schema drift のたびにテストが追従漏れするため、正本 store の実データを流用する。
+    """
+    canonical = PLUGIN.parents[1] / ".dev-graph" / "state" / "graph.json"
+    document = json.loads(canonical.read_text(encoding="utf-8"))
+    template = next(node for node in document["nodes"] if node.get("artifact_kind") == "issue")
+    node = dict(template)
+    node["graph_node_id"] = graph_node_id
+    node["file_path"] = file_path
+    node["depends_on"] = []
+    node["related_nodes"] = []
+    return node
+
+
+def test_file_path_graph_rejects_not_yet_written_artifact(tmp_path) -> None:
+    """--graph FILE 経路 (canonical store) は artifact_missing を fail 扱いにする (既存挙動の固定)。"""
+    import subprocess
+
+    root = tmp_path / "repo"
+    state = root / ".dev-graph" / "state"
+    state.mkdir(parents=True)
+    node = _schema_valid_issue_node("not-yet-written", "issues/not-yet-written.md")
+    graph_path = state / "graph.json"
+    graph_path.write_text(json.dumps({"nodes": [node]}), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPTS / "validate-graph-schema.py"),
+         "--graph", str(graph_path), "--repo-root", str(root)],
+        capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 1, proc.stderr
+    result = json.loads(proc.stdout)
+    assert result["valid"] is False
+    assert {"node": "not-yet-written", "code": "artifact_missing", "detail": "issues/not-yet-written.md"} in result["violations"]
+
+
+def test_preview_stdin_skips_artifact_missing_for_not_yet_written_node(tmp_path) -> None:
+    """stdin preview (`--graph -`) は未作成 node の artifact_missing を自動で skip する。
+
+    decompose の dry-run は「まだ書いていない node」を送るのが正当な用途であり、file 経路と
+    同じ artifact_missing 判定を適用すると preview 検証そのものが常に fail する (HarnessHub-3tw)。
+    """
+    import subprocess
+
+    root = tmp_path / "repo"
+    (root / ".dev-graph" / "state").mkdir(parents=True)
+    node = _schema_valid_issue_node("not-yet-written", "issues/not-yet-written.md")
+    preview = json.dumps({"nodes": [node]})
+    proc = subprocess.run(
+        [sys.executable, str(SCRIPTS / "validate-graph-schema.py"),
+         "--graph", "-", "--repo-root", str(root)],
+        input=preview, capture_output=True, text=True, check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["valid"] is True
 
 
 def test_preview_stdin_requires_explicit_repo_root() -> None:

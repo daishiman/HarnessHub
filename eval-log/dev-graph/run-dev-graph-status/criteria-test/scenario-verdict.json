@@ -1,52 +1,52 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-status",
-    "component_id": "C18",
-    "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "test_validate_graph_schema_and_main and test_c11_uses_canonical_schema_and_frontmatter_path_contract PASSED (C11 reads via the canonical schema + frontmatter path contract). Independent validate-graph-schema.py on r3-status (1 node) and r2-status (1 node) returned exit0 with valid=true, violations=[], missing_sections=[]: the read result carries the full required-key set with zero missing keys, matching the graph store's actual state.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
         "plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py::test_c11_uses_canonical_schema_and_frontmatter_path_contract",
         "independent: scripts/validate-graph-schema.py --graph eval-log/dev-graph/live-trial-fixtures/r3-status/.dev-graph/state/graph.json"
       ],
-      "observed": "test_validate_graph_schema_and_main and test_c11_uses_canonical_schema_and_frontmatter_path_contract PASSED (C11 reads via the canonical schema + frontmatter path contract). Independent validate-graph-schema.py on r3-status (1 node) and r2-status (1 node) returned exit0 with valid=true, violations=[], missing_sections=[]: the read result carries the full required-key set with zero missing keys, matching the graph store's actual state."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T130722-c18status/verdict.json",
+      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c18 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=64a9eac953469ecbfb01a5510f39ae6f9dfb22625e74f4ca67544291bbac1bf4。",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T130722-c18status/verdict.json",
         "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/transcript.jsonl",
         "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/out/status.json",
         "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c18 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=64a9eac953469ecbfb01a5510f39ae6f9dfb22625e74f4ca67544291bbac1bf4。"
+      "verify_by": "live-trial"
     },
     "OUT2": {
-      "status": "PASS",
-      "verify_by": "test",
       "evidence_kind": "hybrid",
+      "observed": "Independent 2026-07-20 audit confirmed graph/config/content authority mutation is rejected, the reader holds a shared graph lock for the whole query, and pending WAL is fail-closed. An eval-log root symlink was rejected before write with the outside directory remaining empty; graph/content/tracker bytes were unchanged.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py::test_c10_invokes_c11_then_still_rejects_direct_mutation",
         "plugins/dev-graph/tests/test_operational_loop_v2.py::test_readers_reject_eval_log_symlink_escape_before_writing",
         "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_writer_waits_for_whole_reader_operation_lock",
         "independent: KeyboardInterrupt/WAL/authority mutation probes"
       ],
-      "observed": "Independent 2026-07-20 audit confirmed graph/config/content authority mutation is rejected, the reader holds a shared graph lock for the whole query, and pending WAL is fail-closed. An eval-log root symlink was rejected before write with the outside directory remaining empty; graph/content/tracker bytes were unchanged."
+      "verify_by": "test"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C18",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-status",
+    "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
+  },
+  "verdict": "PASS"
 }

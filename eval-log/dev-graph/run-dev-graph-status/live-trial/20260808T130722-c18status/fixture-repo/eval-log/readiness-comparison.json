@@ -1,0 +1,53 @@
+{
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "required_observation": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+  "predecessor_node_id": "LT-TASK-001",
+  "dependent_node_id": "LT-TASK-002",
+  "edge": {
+    "direction": "LT-TASK-001 --(precedes)--> LT-TASK-002",
+    "evidence_forward": "LT-TASK-001.dependents = ['LT-TASK-002'] (report 実値)",
+    "evidence_backward": "LT-TASK-002.depends_on = ['LT-TASK-001'] (report 実値)",
+    "edge_count": 1,
+    "reciprocity_holds": true
+  },
+  "nodes": [
+    {
+      "graph_node_id": "LT-TASK-001",
+      "role": "predecessor (先行 task)",
+      "status_reported": "active",
+      "status_in_graph_store": "active",
+      "closed_at_reported": null,
+      "depends_on_reported": [],
+      "dependents_reported": [
+        "LT-TASK-002"
+      ],
+      "unmet_predecessors": [],
+      "readiness": "ready",
+      "readiness_reason": "depends_on が空 = 先行依存 0 本。未充足 predecessor が存在しないため ready。"
+    },
+    {
+      "graph_node_id": "LT-TASK-002",
+      "role": "dependent (後続 task)",
+      "status_reported": "active",
+      "status_in_graph_store": "active",
+      "closed_at_reported": null,
+      "depends_on_reported": [
+        "LT-TASK-001"
+      ],
+      "dependents_reported": [],
+      "unmet_predecessors": [
+        "LT-TASK-001"
+      ],
+      "readiness": "blocked",
+      "readiness_reason": "depends_on=['LT-TASK-001'] の先行 LT-TASK-001 の status が 'active' で {done,closed} に含まれないため未充足。よって LT-TASK-001 によって blocked。"
+    }
+  ],
+  "lifecycle_state_identical": true,
+  "lifecycle_state_value": "active",
+  "readiness_derivation": {
+    "rule": "node は depends_on の中に status ∉ {done, closed} の predecessor を 1 件でも持てば blocked、0 件なら ready",
+    "rule_source": "plugins/dev-graph/scripts/schedule-graph.py:261 (done = status in {done,closed}) + blocking_dependencies",
+    "why_not_from_status": "両 node の status は同一の 'active' であり、status だけでは ready/blocked を区別できない。差は依存辺 (LT-TASK-002.depends_on に LT-TASK-001 が 1 本ある / LT-TASK-001.depends_on が空) からのみ導かれている。"
+  },
+  "verdict": "PASS"
+}
