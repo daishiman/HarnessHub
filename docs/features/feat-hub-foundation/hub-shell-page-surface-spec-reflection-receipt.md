@@ -63,6 +63,7 @@ beads_ids:
 | `packages/ui` tests | 17 files / 373 tests PASS |
 | `apps/hub` tests | 139 files / 1503 pass / 10 todo |
 | browser / VRT | 3 files / 33 tests PASS、macOS light/dark baseline と一致 |
+| GitHub Linux Chromium VRT | 更新後 run [#31255841043](https://github.com/daishiman/HarnessHub/actions/runs/31255841043) PASS（1分10秒） |
 | system-spec coverage | `--require-complete` PASS、未収集 0 |
 | source citation | PASS |
 | repository `pnpm verify` | exit 0。lint、全 workspace typecheck/test、Next/Worker build、auth、tenant、secret、drift、bundle gate を通過 |
@@ -76,15 +77,14 @@ beads_ids:
 - `HarnessHub-imzk`: 本変更の実装・仕様・検証・draft PR を追跡し、PR merge までは `in_progress` を維持する。
 - 前回 UI 基盤 5 Beads (`tiqw / snlo / xuhj / xaa3 / 4a2z`): PR #679 の `main` merge を確認し、2026-08-08 に closed へ収束した。
 - branch: `devgraph/issue-hub-shell-page-surface-unification-20260808`、draft PR: [#683](https://github.com/daishiman/HarnessHub/pull/683)、base: `main`。
-- Linux Chromium VRT: 初回 Actions run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470) は旧 baseline との差で FAIL。artifact の light/dark 8 枚を目視し、今回の shell / surface / overlay の意図した表示だけであることを確認して Linux baseline として受領した。更新後の再実行を待つ。
+- Linux Chromium VRT: 初回 Actions run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470) は旧 baseline との差で FAIL。artifact の light/dark 8 枚を目視し、今回の shell / surface / overlay の意図した表示だけであることを確認して Linux baseline として受領した。更新後 run [#31255841043](https://github.com/daishiman/HarnessHub/actions/runs/31255841043) は PASS（1分10秒）。
 - pre-push の Git hook 文脈だけで `jsonschema` を未導入と誤判定する事象は `HarnessHub-sl6o` に分離した。同一の CI-equivalent gate は手動で 139/139 PASS 後、初回 push のみリポジトリ既定の `PUSH_SKIP_CI=1` を使用し、GitHub CI で再検査する。
 
 ## 8. 残課題
 
-1. 更新した Linux Chromium baseline の再実行を PASS で受領する。
-2. PR merge 後、`HarnessHub-imzk` と graph node を default branch reconciliation で閉じる。
-3. system-spec U1〜U9 の既存 source-index debt は、原文を特定できる独立 task で扱う。
-4. pre-push の Python 依存誤判定を `HarnessHub-sl6o` で再現・修復する。
+1. PR merge 後、`HarnessHub-imzk` と graph node を default branch reconciliation で閉じる。
+2. system-spec U1〜U9 の既存 source-index debt は、原文を特定できる独立 task で扱う。
+3. pre-push の Python 依存誤判定を `HarnessHub-sl6o` で再現・修復する。
 
 ## 9. 説明
 

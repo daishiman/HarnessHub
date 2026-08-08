@@ -101,4 +101,4 @@ implementation_readiness: {"checked_at":"2026-08-08T10:30:00Z","missing_sections
 
 - コマンド/テスト: UI / Hub unit・a11y・typecheck・lint、task spec validator、`pnpm verify`、system-spec gate、CI-equivalent local gate 139/139 PASS。
 - 証跡 path: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`。
-- 公開証跡: draft PR [#683](https://github.com/daishiman/HarnessHub/pull/683)、Linux VRT run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470)。
+- 公開証跡: draft PR [#683](https://github.com/daishiman/HarnessHub/pull/683)、Linux VRT 初回差分 run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470)、baseline 受領後 PASS run [#31255841043](https://github.com/daishiman/HarnessHub/actions/runs/31255841043)。
