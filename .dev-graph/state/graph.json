@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1429,
+  "graph_revision": 1430,
   "nodes": [
     {
       "acceptance": [
@@ -51826,6 +51826,119 @@
       "title": "provider-admin 越境の edge 遮断と route 層監査契約の不整合を解消する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "3 択のいずれかへ決着し、実装・secret 台帳・運用記録が一致している",
+        "結線を選んだ場合は ci.yml から fail-closed で実行され、失敗時ロールバックの判定にも当該 outcome が追加されている",
+        "廃止を選んだ場合は publish pipeline の退行検出手段が別に存在し、その所在が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pf5o",
+        "linked_at": "2026-08-08T09:53:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/publish-smoke-unwired-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-p0lr が scope_out（新しい secret の追加）を理由に publish smoke の結線を保留した積み残し。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:53:00Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/publish-smoke-unwired-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "publish の本番検証が『走る』か『意図して走らせない』かのどちらかへ確定し、未結線の理由と退行検出手段を追跡できる状態にする。",
+      "graph_node_id": "issue-publish-smoke-unwired-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:53:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "登録済みだが CI から一度も呼ばれていない smoke:publish-production について、結線するか廃止するかを決着させ、実装・台帳・運用判断を一致させる。",
+      "related_nodes": [
+        "issue-production-smoke-coverage-gaps-20260808"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts/smoke-production-publish.ts",
+        "scripts/ci/actions-secrets-registry.json",
+        "docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "Device Flow 化 / secrets 台帳登録 / 廃止 の 3 択の決着",
+        "決着に応じた ci.yml 結線または script 削除",
+        "仕様反映受領書と運用台帳の更新"
+      ],
+      "scope_out": [
+        "既に結線済み 4 smoke の再設計",
+        "wrangler rollback 判定ロジックそのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:53:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "draft",
+      "tags": [
+        "ci",
+        "smoke",
+        "publish",
+        "secrets",
+        "deployment-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "smoke:publish-production を結線するか廃止するか決着させる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:53:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

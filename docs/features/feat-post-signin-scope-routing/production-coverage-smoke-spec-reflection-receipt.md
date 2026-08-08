@@ -2,7 +2,7 @@
 status: recorded
 layer: cross-feature-spec-reflection
 graph_node_id: issue-production-smoke-coverage-gaps-20260808
-beads_ids: [HarnessHub-p0lr, HarnessHub-3sjj.13, HarnessHub-1vb.13, HarnessHub-9wb.13]
+beads_ids: [HarnessHub-p0lr, HarnessHub-3sjj.13, HarnessHub-1vb.13, HarnessHub-9wb.13, HarnessHub-pf5o]
 dev_graph_node_id: issue-production-smoke-coverage-gaps-20260808
 spec_impact: reflected
 reviewed_at: "2026-08-08"
@@ -41,13 +41,13 @@ reviewed_at: "2026-08-08"
 - task specification gate: post-signin / feedback-loop / docs-cms の 3 feature package がすべて PASS。
 - system-spec transition / compile / citation gate: PASS。
 - system-spec foundation gate: 既存 U1〜U9 source-index 9 件欠落で FAIL。今回の qa-205 追加由来ではなく、元発言を捏造できないため `HarnessHub-iys4` へ分離した。
-- full graph schema gate: local main / p0lr branch / o4zi branch の全てが同一の 160 件（frontmatter 44、parity 5、heading 111）で FAIL。今回追加した production coverage / provider-admin ノードの違反は 0 件で、既存 artifact 移行 debt は `HarnessHub-o4zi` で継続する。
+- full graph schema gate: local main / p0lr branch / o4zi branch の全てが同一の 160 件（frontmatter 44、parity 5、heading 111）で FAIL。今回追加した production coverage / provider-admin / publish follow-up ノードの違反は 0 件で、既存 artifact 移行 debt は `HarnessHub-o4zi` で継続する。
 - production runtime: secret を使う外部実走は未実施。PR merge 後の deploy job が最終証拠となる。
 
 ## 残課題
 
 - `HarnessHub-stmx`: provider-admin 越境の edge 404 / route 監査契約を統一する。
-- publish smoke の CI 結線: `PUBLISH_ACCESS_TOKEN` の最小権限・台帳・rotation を先に確定する。
+- `HarnessHub-pf5o`: publish smoke を Device Flow 化・secret 台帳登録・廃止のどれにするか決着し、CI 結線と運用記録を一致させる。
 - `HarnessHub-iys4`: system-spec foundation の U1〜U9 source-index を、原発言の真正な根拠から復旧する。
 - 3 個の P13 task は production run 成功まで close しない。
 
