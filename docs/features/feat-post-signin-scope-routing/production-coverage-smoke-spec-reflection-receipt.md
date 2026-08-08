@@ -53,4 +53,4 @@ reviewed_at: "2026-08-08"
 
 ## 500 行制約
 
-新 runner は 478 行。総合仕様は 496 行で追記すると 500 行を超えるため、横断契約を `harness-hub-production-coverage-smoke-addendum.md` に分離した。その他の対象ファイルも 500 行以下である。
+新 runner は 478 行。総合仕様は 496 行で追記すると 500 行を超えるため、横断契約を `harness-hub-production-coverage-smoke-addendum.md` に分離した。`.dev-graph/state/graph.json` と `system-spec/spec-state.json` は、単一 envelope を前提に writer / compiler が生成する分割不能な SSOT（唯一の正本）なので、手編集による分割対象外とする。それ以外の変更対象ファイルは 500 行以下である。
