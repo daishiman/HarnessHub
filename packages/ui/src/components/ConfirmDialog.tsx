@@ -1,20 +1,12 @@
 'use client';
 
 /** 破壊的操作の確認ダイアログ。可逆かどうかの明示・フォーカストラップ・Esc 閉じを統一パターンで担保する。 */
-import { type KeyboardEvent as ReactKeyboardEvent, type ReactNode, useCallback, useEffect, useId, useRef } from 'react';
+import { type ReactNode, useId, useRef } from 'react';
 
+import { useFocusTrap, useScrollLock } from '../internal/focus-trap.js';
 import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
 import { Button } from './Button.js';
-
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -47,50 +39,10 @@ export function ConfirmDialog({
   const titleId = `${id}-title`;
   const descriptionId = `${id}-description`;
   const dialogRef = useRef<HTMLDivElement>(null);
-  const returnFocusRef = useRef<HTMLElement | null>(null);
 
-  // 開いた時点のフォーカス位置を覚えておき、閉じたら必ず戻す。
-  useEffect(() => {
-    if (!open) return;
-
-    returnFocusRef.current = document.activeElement as HTMLElement | null;
-    const focusables = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
-    (focusables?.[0] ?? dialogRef.current)?.focus();
-
-    return () => {
-      returnFocusRef.current?.focus?.();
-    };
-  }, [open]);
-
-  const handleKeyDown = useCallback(
-    (event: ReactKeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Escape') {
-        event.stopPropagation();
-        onCancel();
-        return;
-      }
-      if (event.key !== 'Tab') return;
-
-      // ダイアログ外へフォーカスが逃げないように端で巻き戻す。
-      const focusables = [...(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? [])];
-
-      // 件数ではなく値そのものを確かめる。空配列の除外と型の絞り込みが 1 度で済む
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (first === undefined || last === undefined) return;
-
-      const active = document.activeElement;
-
-      if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    },
-    [onCancel],
-  );
+  // フォーカスの閉じ込め・Esc 閉じ・復帰は modal 層で共通化した規則に従う。
+  const { onKeyDown } = useFocusTrap(open, dialogRef, onCancel);
+  useScrollLock(open);
 
   if (!open) return null;
 
@@ -99,6 +51,7 @@ export function ConfirmDialog({
       style={{
         position: 'fixed',
         inset: 0,
+        zIndex: 70,
         display: 'grid',
         placeItems: 'center',
         background: 'rgba(0, 0, 0, 0.45)',
@@ -112,7 +65,7 @@ export function ConfirmDialog({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         tabIndex={-1}
-        onKeyDown={handleKeyDown}
+        onKeyDown={onKeyDown}
         style={{
           ...surfaceStyle,
           width: 'min(480px, 100%)',
@@ -124,7 +77,13 @@ export function ConfirmDialog({
           {title}
         </h2>
 
-        <p id={descriptionId} style={{ color: colorVar('text'), lineHeight: 'var(--hh-line-height-normal)' }}>
+        <p
+          id={descriptionId}
+          style={{
+            color: colorVar('text'),
+            lineHeight: 'var(--hh-line-height-normal)',
+          }}
+        >
           {description}
         </p>
 
@@ -138,7 +97,13 @@ export function ConfirmDialog({
           {reversible ? t('dialog.reversibleHint') : t('dialog.destructiveHint')}
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: spaceVar(2) }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: spaceVar(2),
+          }}
+        >
           <Button variant="secondary" onClick={onCancel}>
             {cancelLabel ?? t('action.cancel')}
           </Button>

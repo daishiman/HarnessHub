@@ -14,36 +14,30 @@
  * 「この entry は A と B を網羅している」という申告制にすると、実際には描いていない部品を
  * 網羅済みと書けてしまい、被覆率だけが緑になる。名前を鍵にすれば、載せた=描いた が一致する。
  */
+
 import {
+  ActionLink,
   Alert,
   AppShell,
-  BarChart,
   Button,
+  buildShellCss,
   Card,
-  ConfirmDialog,
   Container,
-  DataTable,
   DegradedBanner,
-  DonutChart,
   EmptyState,
   ErrorState,
   FormField,
-  InlineEditTable,
-  KpiCard,
-  LineChart,
+  Icon,
   MarkdownEditor,
-  MarkdownView,
   NavList,
   PageHeader,
+  Panel,
   ProgressBar,
-  ScopeChip,
+  ScreenHeader,
   Select,
   SidebarLayout,
   Skeleton,
-  Sparkline,
   Stack,
-  StageBoard,
-  StatusChip,
   StepWizard,
   Tabs,
   Textarea,
@@ -52,6 +46,9 @@ import {
   UiProvider,
 } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
+
+import { dataCatalogEntries } from './entries-data.js';
+import { shellCatalogEntries } from './entries-shell.js';
 
 /** 見本を束ねる単位。VRT の 1 スクリーンショット = 1 group になる。 */
 export type CatalogGroup = 'layout' | 'form' | 'feedback' | 'data' | 'chart' | 'navigation' | 'overlay';
@@ -69,18 +66,6 @@ export interface CatalogEntry {
  * カタログ全体をこの 2 つで包んでいるので、描画自体は全 group で行われている。
  */
 export const catalogWrappers = ['UiProvider', 'ToastProvider'] as const;
-
-interface DemoRow {
-  id: string;
-  name: string;
-  owner: string;
-  status: string;
-}
-
-const demoRows: readonly DemoRow[] = [
-  { id: '1', name: '見積もり作成支援', owner: '営業部', status: '公開中' },
-  { id: '2', name: '在庫確認ツール', owner: '物流部', status: '下書き' },
-];
 
 /**
  * 見本のデータは全て固定値にする。日付・乱数・件数の揺れが入ると、
@@ -127,6 +112,40 @@ export const catalogEntries: readonly CatalogEntry[] = [
       <AppShell brand="Harness Hub" headerActions={<Button variant="secondary">アカウント</Button>}>
         本文領域。
       </AppShell>
+    ),
+  },
+  {
+    name: 'Panel',
+    group: 'layout',
+    render: () => (
+      <Panel title="面の見出し" description="カード状の面。画面の中で情報のかたまりを区切る。">
+        本文が入る。
+      </Panel>
+    ),
+  },
+  {
+    name: 'ScreenHeader',
+    group: 'layout',
+    render: () => (
+      <ScreenHeader
+        title="ヒアリングシート詳細"
+        description="この画面で何ができるかの説明。"
+        breadcrumbs={[{ href: '/sheets', label: 'シート' }, { label: 'HS-0001' }]}
+        breadcrumbsLabel="現在地"
+        actions={<ActionLink href="/sheets/new">新規作成</ActionLink>}
+      />
+    ),
+  },
+  {
+    name: 'Icon',
+    group: 'layout',
+    render: () => (
+      <Stack gap={3} direction="horizontal">
+        <Icon name="sheet" label="ヒアリングシート" />
+        <Icon name="docs" label="ドキュメント" />
+        <Icon name="feedback" label="改善要望" />
+        <Icon name="settings" label="設定" />
+      </Stack>
     ),
   },
   {
@@ -209,6 +228,18 @@ export const catalogEntries: readonly CatalogEntry[] = [
     render: () => <Textarea label="説明" defaultValue="どんなツールかを書きます。" rows={3} />,
   },
   {
+    name: 'ActionLink',
+    group: 'form',
+    render: () => (
+      <Stack gap={2} direction="horizontal">
+        <ActionLink href="/sheets/new">新規作成</ActionLink>
+        <ActionLink href="/sheets" variant="secondary">
+          一覧へ戻る
+        </ActionLink>
+      </Stack>
+    ),
+  },
+  {
     name: 'Select',
     group: 'form',
     render: () => (
@@ -263,167 +294,15 @@ export const catalogEntries: readonly CatalogEntry[] = [
     group: 'feedback',
     render: () => <DegradedBanner description="一部の情報が古い可能性があります。" />,
   },
-  { name: 'ProgressBar', group: 'feedback', render: () => <ProgressBar label="生成の進捗" value={40} /> },
+  {
+    name: 'ProgressBar',
+    group: 'feedback',
+    render: () => <ProgressBar label="生成の進捗" value={40} />,
+  },
   { name: 'Skeleton', group: 'feedback', render: () => <Skeleton lines={3} /> },
 
-  // --- data ---------------------------------------------------------------
-  {
-    name: 'DataTable',
-    group: 'data',
-    render: () => (
-      <DataTable
-        caption="配布状況"
-        rowKey={(row: DemoRow) => row.id}
-        rows={demoRows}
-        columns={[
-          { key: 'name', header: 'ツール名', value: (row: DemoRow) => row.name, sortable: true },
-          { key: 'owner', header: '管理者', value: (row: DemoRow) => row.owner },
-          { key: 'status', header: '公開状態', value: (row: DemoRow) => row.status },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'InlineEditTable',
-    group: 'data',
-    render: () => (
-      <InlineEditTable
-        caption="係数"
-        rows={demoRows}
-        rowKey={(row: DemoRow) => row.id}
-        rowLabel={(row: DemoRow) => row.name}
-        onCommit={() => undefined}
-        columns={[
-          { key: 'name', header: 'ツール名', value: (row: DemoRow) => row.name },
-          { key: 'owner', header: '管理者', value: (row: DemoRow) => row.owner, editable: true },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'StatusChip',
-    group: 'data',
-    render: () => (
-      <Stack gap={2} direction="horizontal">
-        <StatusChip domain="publish" status="published" />
-        <StatusChip domain="publish" status="needs_fix" />
-        <StatusChip domain="feedback" status="open" />
-      </Stack>
-    ),
-  },
-  {
-    name: 'ScopeChip',
-    group: 'data',
-    render: () => (
-      <Stack gap={2} direction="horizontal">
-        <ScopeChip scope="tenant" name="株式会社サンプル" />
-        <ScopeChip scope="project" name="見積もりツール" />
-      </Stack>
-    ),
-  },
-  {
-    name: 'StageBoard',
-    group: 'data',
-    render: () => (
-      <StageBoard
-        label="構築の進み具合"
-        columns={[
-          { stage: 'hearing', cards: [{ id: 'c1', title: 'ヒアリング実施', meta: '営業部' }] },
-          { stage: 'build', cards: [{ id: 'c2', title: '画面の実装', meta: '開発部', risk: 'warn' }] },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'MarkdownView',
-    group: 'data',
-    render: () => <MarkdownView content={'## 見出し\n\n- 箇条書き 1\n- 箇条書き 2\n\n本文です。'} />,
-  },
-
-  // --- chart --------------------------------------------------------------
-  {
-    name: 'KpiCard',
-    group: 'chart',
-    render: () => (
-      <KpiCard
-        label="公開中のツール"
-        value="128"
-        unit="件"
-        delta={{ text: '+12', trend: 'up' }}
-        trendValues={[3, 5, 4, 8, 7, 10]}
-      />
-    ),
-  },
-  {
-    name: 'BarChart',
-    group: 'chart',
-    render: () => (
-      <BarChart
-        title="部署別の利用数"
-        data={[
-          { label: '営業', value: 42 },
-          { label: '物流', value: 28 },
-          { label: '総務', value: 15 },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'LineChart',
-    group: 'chart',
-    render: () => (
-      <LineChart
-        title="週次の公開数"
-        series={[
-          {
-            name: '公開',
-            points: [
-              { label: '第1週', value: 4 },
-              { label: '第2週', value: 7 },
-              { label: '第3週', value: 5 },
-            ],
-          },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'DonutChart',
-    group: 'chart',
-    render: () => (
-      <DonutChart
-        title="公開状態の内訳"
-        data={[
-          { label: '公開中', value: 60 },
-          { label: '下書き', value: 25 },
-          { label: '却下', value: 15 },
-        ]}
-      />
-    ),
-  },
-  {
-    name: 'Sparkline',
-    group: 'chart',
-    render: () => <Sparkline label="直近の推移" values={[2, 4, 3, 6, 5, 9]} />,
-  },
-
-  // --- overlay ------------------------------------------------------------
-  // 画面全体に覆いかぶさる部品は専用 group へ隔離する。同じページに置くと
-  // 他の部品の見本を覆い隠し、その部品の基準画像が「隠れた状態」で固定されてしまう。
-  {
-    name: 'ConfirmDialog',
-    group: 'overlay',
-    render: () => (
-      <ConfirmDialog
-        open
-        title="公開を取り消しますか？"
-        description="利用者からは見えなくなります。"
-        reversible
-        onConfirm={() => undefined}
-        onCancel={() => undefined}
-      />
-    ),
-  },
+  ...dataCatalogEntries,
+  ...shellCatalogEntries,
 ];
 
 /** VRT が回す単位。entry の group から導出するので、group を足せば自動で対象が増える。 */
@@ -437,6 +316,7 @@ export function renderCatalogGroup(group: CatalogGroup): ReactNode {
   return (
     <UiProvider>
       <ToastProvider>
+        {group === 'navigation' ? <style>{catalogShellPreviewCss}</style> : null}
         <Container size="standard">
           <Stack gap={6}>
             <PageHeader title={`コンポーネントカタログ: ${group}`} />
@@ -453,3 +333,33 @@ export function renderCatalogGroup(group: CatalogGroup): ReactNode {
     </UiProvider>
   );
 }
+
+/**
+ * shell 部品は本番では HubShell が `buildShellCss()` を 1 度だけ注入する。
+ * カタログも同じ CSS を使い、Card の中では desktop sidebar と mobile tabbar の
+ * 両方が見えるよう、preview の外枠だけを局所的に固定する。
+ */
+const catalogShellPreviewCss = `${buildShellCss()}
+.hh-catalog-sidebar-preview .hh-shell__sidebar {
+  display: block;
+  position: relative;
+  width: 220px;
+  height: auto;
+}
+.hh-catalog-sidebar-preview .hh-shell__nav-label {
+  display: inline;
+}
+.hh-catalog-sidebar-preview .hh-shell__nav-link {
+  justify-content: flex-start;
+}
+.hh-catalog-tabbar-preview {
+  position: relative;
+  min-height: 72px;
+}
+.hh-catalog-tabbar-preview .hh-shell__tabbar {
+  position: absolute;
+  display: grid;
+  inset-inline: 0;
+  inset-block-end: 0;
+}
+`;

@@ -1,3 +1,4 @@
+import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
@@ -15,12 +16,20 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   return (
-    <section aria-labelledby="docs-heading">
-      <h1 id="docs-heading">ドキュメント</h1>
-      <p>
-        <a href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`}>新しく作成</a>
-      </p>
-      <DocumentList tenantId={tenantId} workspaceId={workspaceId} />
-    </section>
+    <>
+      <ScreenHeader
+        id="docs-heading"
+        title="ドキュメント"
+        description="業務ツールの使い方や運用手順をまとめて共有します。"
+        actions={
+          <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
+            新しく作成
+          </ActionLink>
+        }
+      />
+      <Panel flush>
+        <DocumentList tenantId={tenantId} workspaceId={workspaceId} />
+      </Panel>
+    </>
   );
 }

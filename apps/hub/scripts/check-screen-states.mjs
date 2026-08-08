@@ -27,7 +27,37 @@ const REQUIRED_IMPORTS = {
   'not-found.tsx': 'components/screen-states.js',
 };
 
+/**
+ * 共通実装を「包んだうえで」使う中継ファイルの許可リスト。
+ *
+ * 公開画面 (route group の外) は骨格 (header / main) を持つ層が居ないため、
+ * 状態画面を骨格ごと差し替える必要がある。中継を無条件に許すと文面の分岐が
+ * そこで増やせてしまうので、中継ファイル自身が共通実装を使っていることも検証する。
+ */
+const ALLOWED_WRAPPERS = {
+  'error.tsx': ['components/shell/public-error-screen.js'],
+};
+
 const hubRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+/** 状態ファイルが共通実装へ (直接または許可された中継経由で) 繋がっているか。 */
+function usesSharedImplementation(source, required) {
+  const shared = REQUIRED_IMPORTS[required];
+  if (source.includes(shared)) return true;
+  for (const wrapper of ALLOWED_WRAPPERS[required] ?? []) {
+    if (!source.includes(wrapper)) continue;
+    const wrapperPath = join(hubRoot, 'src', wrapper.replace(/\.js$/, '.tsx'));
+    // 中継先は共通実装と同じ階層に居ることがあり、相対 import には `components/` が現れない。
+    // 判定はファイル名 (error-screen.js) で行う。
+    const sharedFile = shared.slice(shared.lastIndexOf('/') + 1);
+    try {
+      if (readFileSync(wrapperPath, 'utf8').includes(sharedFile)) return true;
+    } catch {
+      // 中継先が消えていれば「使っていない」扱いにする (握り潰して緑にしない)
+    }
+  }
+  return false;
+}
 
 function parseArgs(argv) {
   const options = { appDir: join(hubRoot, 'src', 'app'), json: null };
@@ -94,7 +124,7 @@ function main() {
       }
       // 存在するだけで中身が独自実装だと、状態の見た目が結局ばらつく
       const source = readFileSync(join(segment, required), 'utf8');
-      if (!source.includes(REQUIRED_IMPORTS[required])) {
+      if (!usesSharedImplementation(source, required)) {
         violations.push({
           segment: segmentPath,
           kind: 'not-shared',
