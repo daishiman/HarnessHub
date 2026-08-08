@@ -16,12 +16,12 @@ updated_at: "2026-08-02T12:39:36.969516Z"
 status: "active"
 depends_on: []
 related_nodes: ["spec-post-signin-workspace-scope","feat-auth-tenancy","feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-security"]
-resource_scope: ["features/feat-post-signin-scope-routing.md","apps/hub/src/middleware/authz.ts","apps/hub/src/lib/routing/dashboard-scope.ts","apps/hub/src/lib/routing/post-signin-landing.ts","apps/hub/src/components/primary-nav.tsx","apps/hub/src/app/(dashboard)/layout.tsx","apps/hub/src/app/(workspace)/layout.tsx","apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx","apps/hub/src/app/page.tsx"]
+resource_scope: ["features/feat-post-signin-scope-routing.md","apps/hub/src/middleware/authz.ts","apps/hub/src/lib/routing/dashboard-scope.ts","apps/hub/src/lib/routing/post-signin-landing.ts","apps/hub/src/lib/routing/signin-entry.ts","apps/hub/src/lib/routing/workspace-entry.ts","apps/hub/src/lib/routing/deny-navigation.ts","apps/hub/src/components/primary-nav.tsx","apps/hub/src/app/(dashboard)/layout.tsx","apps/hub/src/app/(workspace)/layout.tsx","apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx","apps/hub/src/app/page.tsx","apps/hub/src/app/signin/route.ts","apps/hub/src/app/signin/workspace/route.ts","apps/hub/scripts/check-dynamic-routes.mjs"]
 purpose: "ログイン後に業務画面が 403 missing_tenant_scope になる実装未結線を、判定順と deny-by-default を変えずに解消する"
 goal: "scope の入力系統 2 系統とサインイン後の着地先解決を結線し、業務画面 6 種へ通常のブラウザ操作で到達できるようにする"
-scope_in: ["scope 解決の 2 系統 (明示ヘッダー / session active tenant-workspace)","ambiguous_scope による不一致拒否","session への active workspace 束縛と所属再検証","サインイン後の着地先解決 (遷移元 path -> 既定着地 /sheets)","戻り先の同一 origin 相対 path 制限 (open redirect 防止)","認証済み / の既定着地への redirect","RSC 画面の session scope フォールバック (resolveDashboardScope)","到達性のための PrimaryNav 最小シェル (scope 付きリンク)"]
-scope_out: ["authorize() の判定順・role 判定・deny-by-default の変更","catalog/sheets API 実装と DB schema の変更","Workspace 選択画面の UI 実装","Web 公開ウィザードの導線","サイドバー段階表示契約の変更 (qa-018 本実装)"]
-acceptance: ["遷移元が無いサインイン成功で /sheets に着地し / に留まらない","絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる","認証済みで / を開くと既定着地へ redirect される","業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない","明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否される","両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)","所属検証を通らない workspace は session へ束縛されない","戻り先の解決結果に対しても authorize() が適用される","URL クエリ無しの着地直後でも resolveDashboardScope が session から scope を補完する"]
+scope_in: ["scope 解決の 2 系統 (明示ヘッダー / session active tenant-workspace)","ambiguous_scope による不一致拒否","session への active workspace 束縛と所属再検証","サインイン後の着地先解決 (遷移元 path -> 既定着地 /sheets)","戻り先の同一 origin 相対 path 制限 (open redirect 防止)","認証済み / の既定着地への redirect","未認証 / のテナント入口と /signin 振り分け","RSC 画面の session scope フォールバック (resolveDashboardScope)","到達性のための PrimaryNav 最小シェル (scope 付きリンク)","ブラウザ navigation 拒否時の HTML 回復導線","動的必須 route の静的化防止ゲート"]
+scope_out: ["authorize() の判定順・role 判定・deny-by-default の変更","catalog/sheets API 実装と DB schema の変更","共通シェル常設の Workspace 切替 UI (feat-workspace-switch-ux)","Web 公開ウィザードの導線","サイドバー段階表示契約の変更 (qa-018 本実装)"]
+acceptance: ["遷移元が無いサインイン成功で /sheets に着地し / に留まらない","絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる","認証済みで scope 確定済みの / は既定着地へ redirect される","未認証の / が 200 でテナント入力フォームを描画する","業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない","明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否される","両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)","所属検証を通らない workspace は session へ束縛されない","戻り先の解決結果に対しても authorize() が適用される","URL クエリ無しの着地直後でも resolveDashboardScope が session から scope を補完する","/ が prerender-manifest に静的 route として載らない"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-security"]
 parent_feature: null
 feature_package_id: null
@@ -78,19 +78,25 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
    - 戻り先は同一 origin の相対 path のみ許可。絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす
    - 戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない
 
-4. **`/` の扱い**
-   - 未認証時は稼働確認表示を維持
-   - 認証済み session がある場合は既定着地へ redirect し、`/` を終着点にしない
+4. **`/` の扱い (2026-08-08 追補)**
+   - 未認証時: テナント ID 入力フォーム + 稼働確認 Alert。`GET /signin` が `/{slug}/signin` へ 303（slug 形のみ検証、存在有無は答えない）
+   - 認証済み + scope 確定: 既定着地へ redirect し、`/` を終着点にしない
+   - 認証済み + 複数 Workspace 未選択: 入口で Workspace 選択を提示（cookie 束縛は `/signin/workspace`）。常設切替 UI は feat-workspace-switch-ux
+   - `cookies()` は env 分岐より前で無条件に呼び、`dynamic = 'force-dynamic'` で静的 prerender を禁止する（本番 500 再発防止）
 
 5. **RSC 画面シェル (2026-08-08 追補)**
    - 既定着地はクエリ無しのため、各業務 page が `resolveDashboardScope()` で session をフォールバックする
    - layout の `PrimaryNav` が scope 付きリンクで他画面へ遷移できるようにする (最小シェル。qa-018 段階表示の本実装ではない)
 
+6. **ブラウザ拒否の表現 (2026-08-08 追補)**
+   - navigation 要求のみ人間可読 HTML。API / Bearer は JSON 契約を維持
+   - 認可判定は `authz.ts` 単一層のまま。表示だけを分離する
+
 ## スコープ外
 
 - `authorize()` の判定順・role 判定・deny-by-default の変更
 - catalog / sheets API 実装と DB schema の変更
-- Workspace 選択画面そのものの UI 実装 (feat-workspace-switch-ux が所有)
+- 共通シェル常設の Workspace 切替 UI (feat-workspace-switch-ux が所有)
 - Web 公開ウィザードの導線 (feat-web-only-publish-journey が所有)
 - サイドバー 9 項目の段階表示契約の変更 (qa-018 本実装)
 
@@ -98,13 +104,15 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 
 1. 遷移元が無いサインイン成功で `/sheets` に着地し、`/` に留まらない
 2. 絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる (open redirect 防止)
-3. 認証済みで `/` を開くと既定着地へ redirect される
-4. 業務画面 6 種が通常のブラウザ操作で 403 `missing_tenant_scope` にならない
-5. 明示ヘッダーと session scope が併存し不一致なら `ambiguous_scope` で拒否される
-6. どちらの scope 入力も無い場合は `missing_tenant_scope` のまま (deny-by-default 非退行)
-7. 所属検証を通らない workspace は session へ束縛されない
-8. 戻り先の解決結果に対しても `authorize()` が適用される
-9. URL クエリ無しの着地直後でも `resolveDashboardScope` が session から scope を補完する
+3. 認証済みで scope 確定済みの `/` を開くと既定着地へ redirect される
+4. 未認証の `/` が 200 でテナント入力フォーム (`name="tenant"`) を描画する
+5. 業務画面 6 種が通常のブラウザ操作で 403 `missing_tenant_scope` にならない
+6. 明示ヘッダーと session scope が併存し不一致なら `ambiguous_scope` で拒否される
+7. どちらの scope 入力も無い場合は `missing_tenant_scope` のまま (deny-by-default 非退行)
+8. 所属検証を通らない workspace は session へ束縛されない
+9. 戻り先の解決結果に対しても `authorize()` が適用される
+10. URL クエリ無しの着地直後でも `resolveDashboardScope` が session から scope を補完する
+11. `/` がビルド成果物の prerender-manifest に静的 route として載らない
 
 ## 出典
 

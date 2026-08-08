@@ -81,6 +81,21 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   (`dashboard-scope-context.tsx`)。server page は Context を消費できないため各自
   `resolveDashboardScope()` を呼ぶ (React `cache()` で request 内は 1 回にまとまる)。
 
+**差分追記 (2026-08-08 / `issue-hub-root-500-signin-20260808` / ランディング入口)**:
+
+- `/` は session cookie を読む動的 route である。`cookies()` を env 分岐の内側に置くと
+  ビルド時に静的 prerender され、本番で `DYNAMIC_SERVER_USAGE` の 500 になる。
+  無条件の `cookies()` と `export const dynamic = 'force-dynamic'` を必須とする。
+  CI は `apps/hub/scripts/check-dynamic-routes.mjs` で prerender-manifest を検査する。
+- 未認証の `/` はテナント ID 入力フォームを描画する（JS 無し GET）。
+  `signin-entry.ts` + `GET /signin` が slug 形を検証し `/{slug}/signin` へ 303 する。
+  テナント存在有無は入口で答えない（総当たり防止）。
+- 認証済みで scope が決まらない場合（複数 Workspace 未選択 / 所属 0 件）は
+  `/` 上で選択または案内を出し、業務画面の JSON 403 行き止まりにしない。
+  cookie 束縛は `workspace-entry.ts` + `GET /signin/workspace` が fail-closed で行う。
+- ブラウザ navigation の認可拒否は `deny-navigation.ts` が HTML を返す。
+  API / Bearer / RSC client fetch は JSON 契約のまま。
+
 ## Goals and non-goals
 
 正本章 (system-spec/frontend.md, system-spec/ui-ux.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

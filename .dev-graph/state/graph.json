@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1431,
+  "graph_revision": 1432,
   "nodes": [
     {
       "acceptance": [
@@ -52179,6 +52179,137 @@
       "title": "smoke:publish-production を結線するか廃止するか決着させる",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T09:53:00Z"
+    },
+    {
+      "acceptance": [
+        "ビルド成果物で `/` が静的 prerender されていない",
+        "未認証 GET `/` が 200 かつ name=\"tenant\" フォームを含む",
+        "認証済み singleton workspace は既定着地へ redirect",
+        "認証済み multi workspace 未選択は選択 UI を出し missing_tenant_scope 行き止まりにしない",
+        "ブラウザ GET 拒否は HTML、API/Bearer は JSON 契約を維持",
+        "task-spec gate / focused tests / auth gates が PASS"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-root-500-signin-20260808.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "本番 500 実測とサインイン入口欠落を 1 つの issue として修復する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a51a02da70fc69875c76f37d99d888f738403ecad38c9632f7a3deb0b5d31e92",
+        "evaluator": "manual-final-review",
+        "evidence_ref": "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T12:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-root-500-signin-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "利用者が最初に開く `/` が 200 でサインイン入口を描画し、認証済みは scope 解決後に着地し、拒否時は JSON 生値ではなく回復導線を返す",
+      "graph_node_id": "issue-hub-root-500-signin-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T12:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "critical",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本番 `/` の 500 を解消し、未認証のテナント入口・複数 Workspace 選択・ブラウザ拒否時の人間可読導線を閉じる",
+      "related_nodes": [
+        "feat-post-signin-scope-routing",
+        "feat-workspace-switch-ux",
+        "SYS-POST-SIGNIN-SCOPE-P13",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "resource_scope": [
+        "issues/hub-root-500-signin-20260808.md",
+        "apps/hub/src/app/page.tsx",
+        "apps/hub/src/app/signin/route.ts",
+        "apps/hub/src/app/signin/workspace/route.ts",
+        "apps/hub/src/lib/routing/signin-entry.ts",
+        "apps/hub/src/lib/routing/workspace-entry.ts",
+        "apps/hub/src/lib/routing/deny-navigation.ts",
+        "apps/hub/src/lib/routing/dashboard-scope.ts",
+        "apps/hub/src/middleware.ts",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/scripts/check-dynamic-routes.mjs",
+        ".github/workflows/ci.yml"
+      ],
+      "scope_in": [
+        "`/` の動的 route 強制と cookies() 無条件呼出し",
+        "テナント入力 → /signin → /{slug}/signin の JS 無し導線",
+        "所属 2 件以上時の Workspace 選択と /signin/workspace cookie 束縛",
+        "ブラウザ navigation 拒否時の HTML 応答",
+        "PUBLIC_EXACT_PATHS と tenantSlugSchema による public 判定",
+        "prerender-manifest 静的化ゲートと本番ランディング smoke"
+      ],
+      "scope_out": [
+        "共通シェルからの常時 Workspace 切替 UI (feat-workspace-switch-ux 残)",
+        "S09-L 着地ダッシュボード本体",
+        "authorize() の判定順・role 判定の変更",
+        "catalog/sheets API と DB schema"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T12:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "bug",
+        "hub",
+        "signin",
+        "routing",
+        "production",
+        "ci-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "[bug] 本番ランディング `/` が DYNAMIC_SERVER_USAGE で 500 になり、サインイン入口・Workspace 選択・拒否画面が欠落していた",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T12:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
