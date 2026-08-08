@@ -291,3 +291,10 @@ close した。
 - `issue` kind は実測の結果 task とは異なる構造課題と判断しスコープ外へ切り出した。
 - 判断・検証結果の全量は
   [仕様反映受領書](yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 追記: system-spec import heading contract
+
+- `HarnessHub-o4zi` で specification / architecture の正当な system-spec import 形を `origin_kind + source_path` の宣言型 trigger へ分離した。
+- architecture を `HEADING_MISSING_KINDS` へ追加し、0/10 見出しでも complete になっていた非対称を解消した。
+- plugin / installed / plan の template contract 3 コピーを同期し、fixture は required sections を正本から読む。
+- 製品 runtime は非変更。仕様層、検証結果、fresh C19 live trial の残ゲートは [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

@@ -1,0 +1,102 @@
+---
+graph_node_id: "issue-system-spec-import-heading-contract-20260808"
+artifact_kind: "issue"
+artifact_subtypes: []
+project_id: "harness-hub"
+domain: "dev-workflow"
+tags: ["dev-graph","system-spec","heading-readiness","fail-closed"]
+priority: "high"
+start_date: "2026-08-08"
+target_date: null
+iteration: null
+title: "system-spec import の見出し契約と architecture readiness を一致させる"
+owners: ["daishiman"]
+created_at: "2026-08-08T10:00:00Z"
+updated_at: "2026-08-08T10:00:00Z"
+status: "draft"
+depends_on: []
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
+resource_scope: ["plugins/dev-graph",".dev-graph/templates/template-contract.json","plugin-plans/dev-graph/templates/template-contract.json","system-spec","specs/harness-hub-dev-graph-authority-addendum.md","architecture","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement","docs/features/feat-dev-pipeline-improvement"]
+purpose: "system-spec import の正当な本文形だけを許容し、不完全な architecture を fail-closed に拒否する。"
+goal: "source lineage に基づく宣言型見出し contract と architecture/specification/task の対称な readiness 判定を確立する。"
+scope_in: ["conditional trigger の contract 化","architecture heading_missing の有効化","3 template contract copy の同期","fixture と focused regression"]
+scope_out: ["issue kind の見出し慣習整理","Harness Hub 製品 runtime","system-spec の意味内容変更"]
+acceptance: ["index と requirements の正当形だけが conditional 緩和で PASS する","通常 architecture の不足見出しが fail-closed になる","3 contract copy が一致する","focused regression が PASS する"]
+architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "issues/system-spec-import-heading-contract-20260808.md"
+template_id: "issue"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pending"
+confirmation_evidence: {"evaluated_digest":null,"evaluator":"focused regression + final review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-08T10:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
+classification_confidence: 0.99
+classification_reason: "system-spec import と dev-graph C11 readiness の横断的な repository tooling bug。"
+classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/system-spec-import-heading-contract-20260808.md","confidence":0.99}]
+issue_linkage: null
+tracker_binding: "beads"
+beads_linkage: {"bd_issue_id":"HarnessHub-o4zi","linked_at":"2026-08-08T10:00:00Z","sync_state":"linked"}
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+implementation_readiness: {"checked_at":"2026-08-08T10:00:00Z","missing_sections":[],"status":"complete"}
+---
+
+# system-spec import の見出し契約と architecture readiness を一致させる
+
+## 概要
+
+`system-spec-harness` が生成する index、要件定義、通常章は同じ origin でも本文形が異なる。C11 が全 specification に 17 見出しを要求して index 登録を拒否する一方、architecture は検査対象外で空本文でも complete になる非対称を解消する。
+
+## 背景と問題
+
+C19 live trial で `system-spec/index.md` を specification として登録すると、compile 済み index の 4 見出しに対して template の 17 見出しが要求され、C02 は write_count=0 で停止した。同時に `HEADING_MISSING_KINDS` から architecture が漏れ、要件定義・通常章の不足を一切検出していなかった。
+
+## 現在の挙動
+
+- system-spec index は正当な本文でも `heading_missing` になる。
+- architecture は 10 見出し中 0 件でも `implementation_readiness=complete` になりうる。
+- trigger が task の `origin_kind` 分岐へ直書きされ、他 kind が契約データから拡張できない。
+
+## 期待する挙動
+
+- `origin_kind` と `source_path` の AND 一致を template contract に宣言する。
+- index は 4 見出し、要件定義は U1〜U9、通常章は architecture 基本 10 見出しで検査する。
+- task / specification / architecture を同じ heading_missing 経路へ載せる。
+- contract の 3 コピーを同一バイト列に保つ。
+
+## 再現手順またはユースケース
+
+C19 の system-spec live trial fixture、または focused test `test_validate_graph_schema_c11_heading_readiness.py` を実行する。index、requirements、通常 architecture の 3 形を同じ `origin_kind=system-spec-harness` で入力し、source_path ごとの結果を比較する。
+
+## 影響と優先度
+
+priority: high。正当な system-spec import が構造的に登録不能である一方、不完全な architecture は通るため、fail-closed の向きが逆転している。製品 runtime への直接影響は無い。
+
+## スコープ
+
+対象は conditional trigger、heading readiness、live-trial fixture、template contract 同期、関連する正本文書。issue kind の見出し慣習、製品 API/DB/UI、system-spec 内容そのものは変更しない。
+
+## 関連グラフ
+
+- `feat-dev-pipeline-improvement`
+- `arch-harness-hub-dev-workflow`
+- `arch-harness-hub-testing-qa`
+- Beads `HarnessHub-o4zi`
+
+## 受入条件
+
+- index / requirements の正当な形は PASS し、同じ origin の通常章へ誤って緩和が波及しない。
+- architecture の不足見出しは fail-closed に列挙される。
+- base template 完全準拠は conditional family 発火時も受理される。
+- 空条件 rule は発火しない。
+- 3 contract copy が一致し、focused regression が PASS する。
+
+## 検証証跡
+
+`plugins/dev-graph/tests/test_graph_artifact_readiness.py`、`test_validate_graph_schema_c11_heading_readiness.py`、`test_live_trial_fixture_builders.py` と仕様反映受領書を正とする。fresh C19 live trial は draft PR 後の残ゲートとして明示する。

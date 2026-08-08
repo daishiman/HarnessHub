@@ -355,7 +355,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-199",
+        "qa_ref": "qa-205",
         "serves_goals": [
           "G1",
           "G4",
@@ -1458,6 +1458,14 @@
       "id": "qa-204",
       "question": "qa-202 の component catalog 分類名が実装の CatalogGroup と一致せず、responsive 計測と VRT 撮影の viewport も区別が曖昧だった。qa-202 と既存 testing-qa/web 契約を維持しつつ、実装と一致する検査 contract へどう訂正するか。",
       "answer": "[出所] 本 entry は appr-037 の技術的事実委任下で、apps/hub/tests/browser の実装と CI 配線を実測して訂正する。利用者の好みを新たに決定するものではない。qa-202 の逐語は改変せず、本 entry を testing-qa/web の正本とする。\n\nqa-202 の Vitest Browser Mode + Playwright + Chromium、OS 単位 baseline、fail-closed、画面状態 gate、jsdom gate 維持は全面維持する。catalog の実装上の分類名は layout / form / feedback / data / chart / navigation / overlay の 7 種であり、全公開描画部品をいずれか 1 entry として登録する。全 7 group を light / dark で撮るため baseline は 14 枚となり、VRT 固定 viewport は 1024x768 とする。\n\nresponsive regression の viewport は VRT と別契約で、mobile=360x800、tablet=768x1024、desktop=1280x800 とする。ここでは document overflow、table の局所 scroll、md=768 の列切替、comfortable 44px / compact 36px を数値検査する。CI 起動条件は workflow_dispatch または PR の ui-visual label とし、失敗時 actual / diff artifact を保存する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-205",
+      "question": "既存 dev-workflow/web 正本 qa-199 と、それ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。",
+      "answer": "ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。\n\n【1. 宣言型 trigger】conditional_required_sections の family 選択は実装へ path 分岐を直書きせず、template-contract.json の conditional_triggers を正本とする。family 以外の条件は source_lineage の同名 field と AND 完全一致させ、条件 0 件、lineage 欠落、型不正では発火させない。\n\n【2. 正当な import 形】origin_kind=system-spec-harness かつ source_path=system-spec/index.md の specification は compile 済み index の 4 見出しを許容する。同じ origin_kind でも source_path=system-spec/00-requirements-definition.md の architecture だけは U1-U9 を許容し、通常の章 import には architecture の基本 10 見出しを要求する。完全な基本テンプレート準拠は conditional family 発火時も有効な候補として残す。\n\n【3. fail-closed 対称性】heading_missing の対象を task / specification / architecture とする。architecture が 10 見出し中 0 件でも implementation_readiness=complete になっていた非対称を解消し、正当な requirements import 以外は不足見出しを列挙して拒否する。\n\n【4. 配布同期】plugins/dev-graph/templates/template-contract.json、plugin-plans/dev-graph/templates/template-contract.json、.dev-graph/templates/template-contract.json の 3 コピーを同一バイト列に保ち、fixture は契約正本から見出しを読む。\n\n【5. 製品境界】Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。影響は repository 内の Dev Graph artifact readiness と live-trial fixture の検証契約に限定する。",
       "source": {
         "kind": "user-dialogue"
       }
@@ -2942,6 +2950,12 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "qa-202 の catalog 分類名と responsive/VRT viewport 境界を実装へ一致させる qa-204 訂正。qa-202 の品質方針と既存契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "HarnessHub-o4zi で system-spec import の見出し契約と architecture fail-closed 判定を追加確定するため",
       "from": "確定"
     }
   ],

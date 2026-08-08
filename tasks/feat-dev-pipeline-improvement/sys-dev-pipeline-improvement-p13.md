@@ -226,3 +226,7 @@ branch は `devgraph/issue-task-conditional-heading-check-resolution-20260807`�
 対象実装・テスト・仕様層・Beads 記録だけを commit し、無関係な既存差分を除外する。
 目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
 [yzv0 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 `HarnessHub-o4zi` Phase 13 引き継ぎ
+
+branch は `devgraph/issue-system-spec-import-heading-contract-20260808`、base は `main`。system-spec index / requirements の正当形を declarative trigger で許容し、通常 architecture の不足を fail-closed にする。focused regression と contract copy parity を PR 前に再実行する。script/template digest が変わるため fresh C19 live trial は残ゲートであり、PR merge と fresh evidence が揃うまで Beads を close しない。詳細は [o4zi 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

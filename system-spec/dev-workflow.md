@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-198 |
+| Web (web) | 確定 | 確定質疑: qa-205 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,41 +24,21 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-198 (対応セル: web)
+### qa-205 (対応セル: web)
 
-**質問**: qa-197-f で定めた決着用の観測を利用者が本番で実行した。
+**質問**: 既存 dev-workflow/web 正本 qa-199 と、それ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。
 
-  curl -s https://harness-hub.daishimanju.workers.dev/harness-hub/signin | grep -o 'callbackUrl[^>]*'
-  → callbackUrl" value="/"
+**回答**: ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。
 
-  curl -s -o /dev/null -w '%{http_code}' https://harness-hub.daishimanju.workers.dev/sheets
-  → 401
+【1. 宣言型 trigger】conditional_required_sections の family 選択は実装へ path 分岐を直書きせず、template-contract.json の conditional_triggers を正本とする。family 以外の条件は source_lineage の同名 field と AND 完全一致させ、条件 0 件、lineage 欠落、型不正では発火させない。
 
-原因を確定してよいか、確定するなら是正は何か。
+【2. 正当な import 形】origin_kind=system-spec-harness かつ source_path=system-spec/index.md の specification は compile 済み index の 4 見出しを許容する。同じ origin_kind でも source_path=system-spec/00-requirements-definition.md の architecture だけは U1-U9 を許容し、通常の章 import には architecture の基本 10 見出しを要求する。完全な基本テンプレート準拠は conditional family 発火時も有効な候補として残す。
 
-**回答**: [出所] 本 entry は appr-038 の委任下で AI が確定した。観測値は利用者が本番で実行した実測である。
+【3. fail-closed 対称性】heading_missing の対象を task / specification / architecture とする。architecture が 10 見出し中 0 件でも implementation_readiness=complete になっていた非対称を解消し、正当な requirements import 以外は不足見出しを列挙して拒否する。
 
-[qa-198-a 根本原因の確定] **本番の signin ページは `callbackUrl` に `/` を送っている。** サインインが成功すると Auth.js はこの値へ戻すため、利用者はサイト直下 `/` に着地する。これが症状 (サインイン後に業務画面へ到達しない) の直接原因である。認証は成功しており、失敗していたのではない。
+【4. 配布同期】plugins/dev-graph/templates/template-contract.json、plugin-plans/dev-graph/templates/template-contract.json、.dev-graph/templates/template-contract.json の 3 コピーを同一バイト列に保ち、fixture は契約正本から見出しを読む。
 
-[qa-198-b 帰属の接地 — どのビルドかまで一意に特定できた] この値は推測ではなく、リポジトリの履歴と直接照合できる。commit 43e06e10 (2026-07-30 14:11:56 +0900) 時点の `tenant-oidc-signin-form.tsx` は `<input type="hidden" name="callbackUrl" value="/" />` を**定数としてベタ書き**していた。commit 150a0f14 (2026-08-03 13:02:33 +0900) がこれを `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` 由来の値へ置き換えた。**本番の実測は 43e06e10 側と一致し、150a0f14 側と一致しない。** したがって本番で動いているビルドは 150a0f14 を含んでいない。
-
-[qa-198-c 是正の内容 — 新規実装は不要である] 修正コードは**既にリポジトリに存在する**。150a0f14 は 2 重の是正を入れている — (i) signin form の callbackUrl を `/sheets` にする、(ii) `app/page.tsx` (`/`) 自体に、有効な session cookie があれば `DEFAULT_POST_SIGNIN_LANDING` へ redirect する処理を足す。(ii) があるため、仮に古い cookie で `/` へ来ても業務画面へ送られる。**是正は「150a0f14 以降を本番へ deploy する」ことに尽きる。** コード変更は不要である。
-
-[qa-198-d 併せて確認できたこと] `/sheets` は未認証で 401 を返した。これは middleware が認可拒否を JSON で返す設計どおりの挙動であり (qa-197-d)、着地先が壊れているのではないことの確認になる。
-
-[qa-198-e なぜ 10 ラウンド以上かかったのか — 本仕様の存在理由] 原因は最終的に **1 回の GET と 1 行の grep** で確定した。それまでに時間を要したのは、次の 2 点が観測不能だったためである。(1) **本番で動いているビルドが、リポジトリのどの commit に対応するかを知る手段が無い。** そのため『コードは直っている』と『本番が直っている』が区別できず、コードを読むほど誤った確信が強まる状態になっていた。(2) **着地先が既定値へ落ちた事象を記録する手段が無い。** 認証失敗なら signin へ戻るので気づけるが、『成功したが意図しない場所へ着地した』は成功として通過し、痕跡が残らない。この 2 点はいずれも本仕様の V2・V6・V7 が対象としている欠落である。**本件は、本仕様が無ければどう迷走するかの実測データそのものになった。**
-
-[qa-198-f 受入基準への反映] 本 entry を根拠に次を要求へ加える。(1) V6 (build 同一性) — 稼働中の成果物から、それがどの commit に対応するかを**認証なしで**確認できること。本件の切り分けを 1 回の GET で終わらせるための最小要件である。(2) V2 (遷移経路の実測) — 『認証は成功したが着地先が既定値へ落ちた』事象を、認証失敗とは区別して記録すること。成功として通過する異常こそ記録の対象である。(3) V7 (deploy 反映) — 本番の稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出すること。本件は 2026-08-03 の修正が 2026-08-07 時点で未反映だった (4 日間)。
-
-[qa-198-g 引き継ぎ] 本 entry は dev-workflow/web の正本を qa-197 から引き継ぐ。qa-197 が保持していた未解決事項 6・9・10 は本 entry が引き継いで保持する。qa-196 の照会規律 8 項目は引き続き有効である。**原因究明は本 entry で完了した。** 未解決事項のうち原因に関するものは解消し、残るのは plugin 側の課題 (6・8・9・10) と実装 verb の既知タスク (V5 検査 script) である。
-
-[qa-198-h 実装 writeback 索引 (2026-08-08)] qa-198-f の V6 (稼働ビルドの素性) / V7 (deploy 反映鮮度) は elicitation（要件の聞き取り）正本のまま維持し、**新規 qa_log は起票しない**（既確定要求の実装であり、聞き取りセルの再オープンを要しない）。実装確定契約の正本は次へ分離した。
-
-- 実装契約: [`specs/harness-hub-build-identity-deploy-freshness-addendum.md`](../specs/harness-hub-build-identity-deploy-freshness-addendum.md)
-- 親追補索引: [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8
-- feature: `feat-build-identity-deploy-freshness` / Beads `HarnessHub-hf9y`
-- 受領書: `docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`
-- 伝播安定性の実装追補（2026-08-08）: `HarnessHub-u9zq` は V7 の既確定要求を再解釈せず、`version_gate`・鮮度検査の後、最初の smoke の直前に deploy 済み version と `/health.version` の連続一致を確認する。これは deploy 成功・HEAD 鮮度とは別の colo 間伝播ムラを fail-closed にする実装上の安全境界であり、新規 qa_log を要しない。
+【5. 製品境界】Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。影響は repository 内の Dev Graph artifact readiness と live-trial fixture の検証契約に限定する。
 
 ### qa-140 (対応セル: desktop-windows)
 

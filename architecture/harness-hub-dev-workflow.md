@@ -178,3 +178,13 @@ hooks の entry point 台帳は `package-contract.json` の `entry_points.hooks`
 ## C16 Beads ready payload 欠落の観測境界 (2026-08-03)
 
 C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
+
+## C11 system-spec import heading readiness (2026-08-08 / `HarnessHub-o4zi`)
+
+- **contract 層**: template contract が `origin_kind + source_path` と conditional required sections の写像を所有する。Python 実装へ system-spec 固有 path を直書きしない。
+- **resolver 層**: `graph_artifact_readiness.py` は rule の全条件を AND 比較し、conditional と base の許容 variant を列挙する。条件無し・lineage 不正は fail-closed に base へ戻す。
+- **validator 層**: `HEADING_MISSING_KINDS` は architecture / specification / task を対称に扱い、不足見出しを readiness evidence として列挙する。
+- **fixture 層**: live-trial fixture は architecture/specification の見出しを契約正本から読み、contract 改訂時の写経 drift を作らない。
+- **配布層**: plugin、導入済み `.dev-graph`、plugin-plan の template contract 3 コピーを同一バイト列に保つ。
+
+製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

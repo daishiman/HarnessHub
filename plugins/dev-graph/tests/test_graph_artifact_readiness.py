@@ -108,10 +108,101 @@ def test_missing_required_headings_resolves_conditional_variants_by_node_trigger
     system_dev_node = {"source_lineage": {"origin_kind": "system-dev-planner"}}
     assert missing_required_headings(artifact, "task", contract, system_dev_node) == []
 
-    # base required_sections ("目的"/"背景") はここでは存在しないが、node が
-    # system-dev-planner trigger を持つ限り base variant は候補に入らない。
+    # base required_sections ("目的"/"背景") は trigger 発火時も候補に残るが (full 準拠は
+    # 定義上どの family より厳しいため)、この artifact はどちらも満たさないので結果は変わらない。
     manual_node = {"source_lineage": {"origin_kind": "manual"}}
     assert missing_required_headings(artifact, "task", contract, manual_node) == ["目的", "背景"]
 
     # node を渡さない呼び出し (specification など既存呼び出し互換) は base のまま。
     assert missing_required_headings(artifact, "task", contract) == ["目的", "背景"]
+
+
+def test_conditional_triggers_match_on_source_path_not_origin_kind_alone(tmp_path):
+    """HarnessHub-o4zi: system-spec-harness の import は origin_kind が同一のまま
+    3 形 (compile 済み index / requirements / 章) を出すため、origin_kind だけで family を
+    決めると章 import まで巻き添えで緩む。contract の conditional_triggers は
+    source_lineage の複数 field を AND で見て、index だけに緩和を効かせる。"""
+    contract = {
+        "artifacts": {
+            "specification": {
+                "required_sections": ["目的と成功状態", "スコープ", "未決事項"],
+                "conditional_required_sections": {"system_spec_index": ["章一覧と集約状態"]},
+                "conditional_triggers": [
+                    {
+                        "family": "system_spec_index",
+                        "origin_kind": "system-spec-harness",
+                        "source_path": "system-spec/index.md",
+                    }
+                ],
+            }
+        }
+    }
+    artifact = tmp_path / "index.md"
+    artifact.write_text("# index\n\n## 章一覧と集約状態\n\n| a |\n", encoding="utf-8")
+
+    index_node = {
+        "source_lineage": {"origin_kind": "system-spec-harness", "source_path": "system-spec/index.md"}
+    }
+    assert missing_required_headings(artifact, "specification", contract, index_node) == []
+
+    # source_path が違えば同じ origin_kind でも緩和しない (章 import の巻き添え防止)。
+    chapter_node = {
+        "source_lineage": {"origin_kind": "system-spec-harness", "source_path": "system-spec/backend.md"}
+    }
+    assert missing_required_headings(artifact, "specification", contract, chapter_node) == [
+        "スコープ",
+        "未決事項",
+        "目的と成功状態",
+    ]
+
+
+def test_conditional_trigger_without_conditions_never_fires(tmp_path):
+    """条件を 1 つも書かない rule は全 node に当たってしまうため無効にする (fail-closed)。"""
+    contract = {
+        "artifacts": {
+            "specification": {
+                "required_sections": ["目的と成功状態"],
+                "conditional_required_sections": {"loose": ["何か"]},
+                "conditional_triggers": [{"family": "loose"}],
+            }
+        }
+    }
+    artifact = tmp_path / "s.md"
+    artifact.write_text("# s\n\n## 何か\n\nx\n", encoding="utf-8")
+
+    assert missing_required_headings(artifact, "specification", contract, {"source_lineage": {}}) == [
+        "目的と成功状態"
+    ]
+
+
+def test_base_variant_remains_acceptable_when_a_conditional_family_fires(tmp_path):
+    """full template 準拠の artifact が family の軽量版と一致しないことを理由に
+    違反判定される、という到達しえない結果を作らない。"""
+    contract = {
+        "artifacts": {
+            "architecture": {
+                "required_sections": ["Architecture overview", "Risks and verification"],
+                "conditional_required_sections": {
+                    "system_spec_requirements": ["U1 本質的目的 (essential_purpose)"]
+                },
+                "conditional_triggers": [
+                    {
+                        "family": "system_spec_requirements",
+                        "origin_kind": "system-spec-harness",
+                        "source_path": "system-spec/00-requirements-definition.md",
+                    }
+                ],
+            }
+        }
+    }
+    artifact = tmp_path / "a.md"
+    artifact.write_text(
+        "# a\n\n## Architecture overview\n\nx\n\n## Risks and verification\n\ny\n", encoding="utf-8"
+    )
+    node = {
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/00-requirements-definition.md",
+        }
+    }
+    assert missing_required_headings(artifact, "architecture", contract, node) == []

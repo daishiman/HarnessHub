@@ -249,3 +249,7 @@ required_sections で検査する。`issue` kind は構造が異なる別課題�
 判断と検証の全量は
 [仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/yzv0-task-conditional-heading-check-spec-reflection-receipt.md)
 を正とする。
+
+### 差分追記 (2026-08-08): system-spec import の C11 heading contract
+
+`HarnessHub-o4zi` は system-spec index と requirements definition の正当な本文形を `conditional_triggers` で表現し、同じ origin の通常章へ緩和が波及しないよう source_path まで完全一致させる。architecture を heading 検査へ加え、base 完全準拠も受理する。製品 API・DB・認証認可・UI は非変更。判断と検証は [仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
