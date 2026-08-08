@@ -3,7 +3,7 @@ status: confirmed
 category: backend
 aggregate: 確定
 spec_cells: [backend.web, backend.mobile, backend.tablet, backend.desktop-windows, backend.desktop-linux, backend.desktop-macos]
-serves_goals: [G1, G2, G3, G4, G5]
+serves_goals: [G1, G2, G4, G5, G3]
 ---
 
 # バックエンド (backend)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-125 |
+| Web (web) | 確定 | 確定質疑: qa-186 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,11 +24,23 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-125 (対応セル: web)
+### qa-186 (対応セル: web)
 
-**質問**: 顧客持ち込み Google OAuth 管理 API と競合制御を backend.web の現行契約へどう統合しますか?
+**質問**: 原因の再調査中に、認証に関わる環境値の読出点が 2 箇所ではなく 3 箇所であることが判明した。また各読出点の失敗が利用者からどう見えるかを実測で確認した。記録せよ。
 
-**回答**: qa-110 の API、principal、共有 callback、credential resolver、状態機械、監査、冪等性契約を全面維持し、Google 専用管理面を追加確定する。【API】/api/v1/admin/oidc-connections と test / rotation / activate / disable を provider-admin 専用とし、状態変更は同一 origin、資源側 tenant scope、列挙 schema を通す。テナント越境の不存在は 404 に畳み、許可された provider-admin 越境は既存監査へ残す。【対象境界】一覧・ID 指定操作とも issuer=https://accounts.google.com の接続だけを対象にし、別 issuer の顧客方式 IdP を列挙・回転・無効化しない。【競合】現行テストは接続 ID・現行暗号文・期待状態、pending テストと昇格は pending 暗号文を CAS 条件に含め、テスト中の差し替え結果を別 credential へ誤適用しない。active/tested の再テストでも last_tested_at を更新する。【応答】secret 全値と Google の自由文応答は返さず、last4、状態、列挙エラーだけを返す。成立した変更は idp.connection_change の metadata.change で registered / credential_staged / mode_switch_staged / reactivation_staged / tested / rotation_* / activated / disabled を区別する。
+**回答**: 3 経路と、それぞれの失敗時の見え方を記録する。**3 つとも安全側に倒れ、3 つとも理由を残さない。**
+
+[qa-186-a 経路 1: middleware (edge)] apps/hub/src/middleware.ts:26-35。module 最上位で process.env.AUTH_SESSION_SECRET を読み、未解決なら provider を差さない createAuthAdapter() を構築する = deny-all。実装のコメントは「秘密が未設定なら provider を差さない = deny-all のまま。『秘密が無いときは検証を飛ばす』実装にすると、環境変数の設定漏れがそのまま認証バイパスになる」と明記しており、**設計判断としては正しい**。問題は倒れ方ではなく、倒れたことが記録されないことである。
+
+[qa-186-b 経路 2: root page (server component)] apps/hub/src/app/page.tsx。同じく process.env.AUTH_SESSION_SECRET を読む。**契約 A は実装済みである** — session が検証できれば DEFAULT_POST_SIGNIN_LANDING へ redirect する。着地先は apps/hub/src/lib/routing/post-signin-landing.ts の `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` であり、src/app/(dashboard)/sheets/page.tsx として**実在する**。すなわち「着地先が未実装だから飛べない」ではない。secret が未解決、または cookie が無い、または検証に失敗した場合に redirect が起きず、稼働状況の表示へ落ちる。**この 3 つの原因はいずれも同じ画面になる。** 報告された症状はこの画面である。
+
+[qa-186-c 経路 3: authRuntime (composition root) — 今回新たに判明] apps/hub/src/lib/authz/runtime.ts:220 の `authRuntime(source: Record<string, string | undefined> = process.env)`。これが例外を投げると、apps/hub/src/app/[tenant_slug]/signin/page.tsx の resolveConnection() が catch して `{ available: false }` を返し、サインイン画面は「認証基盤が未結線です / OIDC の本番 adapter と Auth.js が未結線のため、サインインを開始できません」という警告を表示する。
+この経路は他の 2 つと違い**画面に理由を出している**点で優れている。ADR §10「認証基盤が未結線であることを画面上でも隠さない」の実装であり、同 file は in-memory 実装を本番へ差さない理由も「未結線が 200 応答で隠れる」と明記している。**この設計思想は既に repository にある。** 本 feature が E-3 として求めているのは新しい思想ではなく、既にある思想を残り 2 経路へ及ぼすことである。
+ただしこの画面も、どの環境値が解決できなかったかは示さない。運用者が原因へ到達するには足りない。
+
+[qa-186-d 3 経路の共通性 = 本 feature の欠陥そのもの] 3 つとも process.env を直接読み、3 つとも安全側に倒れ、3 つとも**どの名前が解決できなかったかを残さない**。結果として、テナント未登録・接続無効・secret 未投入・secret 解決失敗・cookie 無し・署名検証失敗のいずれであっても、利用者が見る画面と外形的な応答はほぼ同じになる。本セッションで原因を確定できなかったこと自体が、この欠陥の実証である。
+
+[qa-186-e V6 への影響] V6 の「吸収層の外での環境値の直接読み出しを検出し 0 件でなければ落とす」の**検査対象は 2 箇所ではなく 3 箇所**である。fixture test は middleware.ts / app/page.tsx / lib/authz/runtime.ts の3 つすべてで発火することを固定する。2 箇所と書いていた従来の記述は、実装より狭い列挙であった — **分類語彙で 8 回繰り返した失敗と同じ型が、検査対象の列挙でも起きていた。**
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 
@@ -46,6 +58,49 @@ serves_goals: [G1, G2, G3, G4, G5]
 - 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。
 
 ## 適用された設計知識
+
+### Domain-Driven Design — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/ddd.md`
+
+#### 目的
+
+businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性を適切な境界へ閉じ込め、継続的な学習をsoftwareへ反映する。
+
+#### 解決する問題
+
+- 仕様語、画面語、DB列、code名がずれ、変更時に意味を再解釈する。
+- 異なる業務文脈の同名概念を一modelへ押し込み、巨大で矛盾したmodelになる。
+- invariantとtransaction ownerが不明で、どこからでもdataを変更できる。
+- legacy codeのtechnical構造がbusiness capabilityを隠し、改善順を決められない。
+
+#### 適用条件
+
+- rule、例外、用語、状態遷移が多く、domain expertとの継続的なmodel学習が価値を持つ。
+- team/部門ごとに言葉やownershipが異なり、integrationで翻訳が必要。
+- core domainの差別化がsystemの本質的目的に直結する。
+
+#### 非適用条件
+
+- 単純CRUD、汎用supporting機能、既製serviceで十分なgeneric subdomain。
+- domain expertへアクセスできず、用語とruleを検証するfeedback loopを作れない段階。
+- bounded contextをservice数へ機械変換する目的。monolith内moduleでも境界は成立する。
+
+#### トレードオフ・失敗モード
+
+- workshop、model、mapping、専門語彙の維持に継続的な時間が必要。
+- aggregateを大きくしすぎてlock/latencyを増やす、細かくしすぎてinvariantをeventual consistencyへ漏らす。
+- 「Repository/Entity」等のpattern名だけ採用したanemic modelになり、business ruleがserviceへ散る。
+- bounded contextを組織図やDB tableから決め、実際の言語・capability境界を検証しない。
+- eventを事実でなくcommandとして命名し、ordering/idempotency/failure recoveryを設計しない。
+
+#### goalへの寄与
+
+- U1-U9の語彙をmodelへ接続し、goalがどのcontext/capability/invariantで実現されるかを示す。
+- core domainへ設計投資を集中し、generic領域は無料/低コストserviceや標準実装も比較対象にできる。
+- refactoringは一括rewriteでなく、重要なbusiness rule周辺からstrangler/bubble context等で境界を育てる。
+
+---
 
 ### Clean Architecture — deep knowledge card
 
@@ -128,49 +183,6 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 - mobile/web/desktop間で一貫したbusiness capabilityを共有し、platform別再実装を減らす。
 - reliability goalにはretry-safe operationと明示的error、delivery goalにはcontract testとadditive evolutionを結ぶ。
 - 選択はAPI様式の流行でなく、consumer、latency、consistency、offline、security、cost constraintsへの適合で評価する。
-
----
-
-### Domain-Driven Design — deep knowledge card
-
-- 出典カード: `ref-system-design-knowledge/references/ddd.md`
-
-#### 目的
-
-businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性を適切な境界へ閉じ込め、継続的な学習をsoftwareへ反映する。
-
-#### 解決する問題
-
-- 仕様語、画面語、DB列、code名がずれ、変更時に意味を再解釈する。
-- 異なる業務文脈の同名概念を一modelへ押し込み、巨大で矛盾したmodelになる。
-- invariantとtransaction ownerが不明で、どこからでもdataを変更できる。
-- legacy codeのtechnical構造がbusiness capabilityを隠し、改善順を決められない。
-
-#### 適用条件
-
-- rule、例外、用語、状態遷移が多く、domain expertとの継続的なmodel学習が価値を持つ。
-- team/部門ごとに言葉やownershipが異なり、integrationで翻訳が必要。
-- core domainの差別化がsystemの本質的目的に直結する。
-
-#### 非適用条件
-
-- 単純CRUD、汎用supporting機能、既製serviceで十分なgeneric subdomain。
-- domain expertへアクセスできず、用語とruleを検証するfeedback loopを作れない段階。
-- bounded contextをservice数へ機械変換する目的。monolith内moduleでも境界は成立する。
-
-#### トレードオフ・失敗モード
-
-- workshop、model、mapping、専門語彙の維持に継続的な時間が必要。
-- aggregateを大きくしすぎてlock/latencyを増やす、細かくしすぎてinvariantをeventual consistencyへ漏らす。
-- 「Repository/Entity」等のpattern名だけ採用したanemic modelになり、business ruleがserviceへ散る。
-- bounded contextを組織図やDB tableから決め、実際の言語・capability境界を検証しない。
-- eventを事実でなくcommandとして命名し、ordering/idempotency/failure recoveryを設計しない。
-
-#### goalへの寄与
-
-- U1-U9の語彙をmodelへ接続し、goalがどのcontext/capability/invariantで実現されるかを示す。
-- core domainへ設計投資を集中し、generic領域は無料/低コストserviceや標準実装も比較対象にできる。
-- refactoringは一括rewriteでなく、重要なbusiness rule周辺からstrangler/bubble context等で境界を育てる。
 
 ## 最新ドキュメント出典
 

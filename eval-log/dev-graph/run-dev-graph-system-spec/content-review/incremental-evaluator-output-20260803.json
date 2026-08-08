@@ -1,0 +1,53 @@
+{
+  "rubric_id": "skill-design",
+  "rubric_version": "1.3.0",
+  "rubric_hash": "sha256:content-review-incremental",
+  "composition_hash": "sha256:content-review-incremental",
+  "rubric_refs": [],
+  "target": "plugins/dev-graph/skills/run-dev-graph-system-spec",
+  "score": 88,
+  "threshold": 80,
+  "passed": true,
+  "machine_checks": [
+    {"check": "orchestration-only-no-generation-logic", "passed": true},
+    {"check": "c02-input-deterministic", "passed": true},
+    {"check": "path-containment", "passed": true},
+    {"check": "contract-consistency", "passed": true},
+    {"check": "adapter-test-coverage", "passed": true}
+  ],
+  "findings": [
+    {
+      "id": "FM-REVIEW-001",
+      "severity": "low",
+      "area": "timestamp",
+      "message": "固定 timestamp は決定論を優先するため wall-clock の import 時刻を示さない。",
+      "loc": "plugins/dev-graph/scripts/build-system-spec-import.py:30"
+    },
+    {
+      "id": "FM-REVIEW-002",
+      "severity": "low",
+      "area": "portability",
+      "message": "system-spec-harness manifest の相対位置は plugin layout に依存する。",
+      "loc": "plugins/dev-graph/scripts/build-system-spec-import.py:28"
+    },
+    {
+      "id": "FM-REVIEW-003",
+      "severity": "low",
+      "area": "readability",
+      "message": "contract の本文はインライン文字列であり、将来肥大化した場合に分割を要する。",
+      "loc": "plugins/dev-graph/references/system-spec-import-contract.json"
+    }
+  ],
+  "required_fixes": [],
+  "resolved_feedback": [
+    {
+      "id": "FM-REVIEW-TEST-COVERAGE",
+      "severity": "medium",
+      "resolution": "path traversal、out-dir escape、top-level contract 不正を拒否する 3 回帰テストを追加した。"
+    }
+  ],
+  "pending_human": [],
+  "reviewed_at": "2026-08-03T12:57:14Z",
+  "reviewer": "local-claude-incremental-independent-review",
+  "evidence": "fresh local Claude focused review; scope: SKILL.md, R3-import.md, adapter, contract, and adapter tests"
+}

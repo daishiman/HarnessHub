@@ -4,7 +4,7 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
     "component_id": "C19",
-    "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
+    "skill_md_sha256": "ec6509312aed25d3663942e74b9825de7f3fdf0aa22e2ecc09e7766e8741083e"
   },
   "verdict": "PASS",
   "reviewer": "fresh-claude-live-goal-evaluator-m0bd-c19-r10-clean-fixture-20260804; independent verifier executed within live trial 20260804T083000Z-m0bd-c19-r10-clean-fixture",
@@ -28,14 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/evidence/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/independent-verification.json"
       ],
-      "observed": "main 統合後の fresh live trial (20260804T083000Z-m0bd-c19-r10-clean-fixture) は overall=PASS、nudge=0、gate=0。r2 task 契約に従い doc-fetch が公式一次情報を実 Fetch し、実取得時刻・公式発行元・現在 version を記録した。system-spec-harness の正規4 entry point、48セルの確定・除外、公式参照の鮮度・引用・仕様コンパイル・完全性評価を実行し、C02 upsert-node.py 経由で specification / architecture node を登録した。source digest と evidence reference の検証は exit 0、fresh evaluator と独立 verifier による3観測は PASS、current behavior closure digest=90affd8245f8099d5595cc4c26898eb6cc217f1073577952426352cd2ef313e0。"
+      "observed": "origin/main 再合流後の fresh live trial (20260807T130000-wt22-c19-ledgerfix) は overall=PASS、nudge=0、gate=0。system-spec-harness の正規4 entry point (run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator) を実行し、audit-fork-ledger.jsonl の union-merge 後の内容と completeness-report.json の PASS 記録が一致することを確認、C02 upsert-node.py 経由でのみ specification / architecture node を登録した (graph_revision 0→2)。source digest と evidence reference の検証は exit 0、fresh evaluator と独立 verifier による3観測は PASS、current behavior closure (skill_dir_tree_sha)=e1d2ec6bd48a8729b7ff99e0d2f77450037ddb8855d7cbbe01b03d2d99ff70b2 (現行 skill 実装と一致・stale-sha 解消済み)。"
     }
   }
 }

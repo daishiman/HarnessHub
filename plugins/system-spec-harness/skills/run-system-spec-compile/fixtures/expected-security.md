@@ -81,6 +81,13 @@ serves_goals: [G1]
 - security controlは「導入済み」ではなく、阻止/検知/復旧時間、権限範囲、data exposureで効果を測る。
 - 予算0制約でも、secure default、最小data、短命credential、標準機能、open-source検査を優先し、残余riskを隠さない。
 
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-security (対応セル: web, mobile, tablet) の判断へ適用する
+- 資するゴール: G1
+
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)

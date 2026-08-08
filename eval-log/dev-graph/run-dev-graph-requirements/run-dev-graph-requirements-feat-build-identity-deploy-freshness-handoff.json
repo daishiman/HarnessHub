@@ -1,0 +1,139 @@
+{
+  "schema": "run-dev-graph-requirements/handoff/1.0.0",
+  "generated_at": "2026-08-07T12:45:00Z",
+  "handoff_target": "task-graph",
+  "feature_id": "feat-build-identity-deploy-freshness",
+  "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+  "package_generation": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "package_canonical_digest": "sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "snapshot_digest": "sha256:43e0f4ac2ea27edfa47d9d9332aea09e7d85e4c429404c9d1485a733f3926403",
+  "snapshot_digest_rule": "sha256(canonical JSON of snapshot_inputs; sort_keys=true, separators=(',',':'), UTF-8)",
+  "snapshot_inputs": {
+    "feature_context_digest": "sha256:7bf56a6a0dc09acc304489580452da003fe975d74de8d299906c48364e5c0a3c",
+    "feature_id": "feat-build-identity-deploy-freshness",
+    "feature_source_digest": "sha256:e1ecf64f6bd0dfc66926fc252aae33dd70303563a0bfda48954e3f58f64a9146",
+    "graph_revision": 1238,
+    "graph_sha256": "sha256:22172359e88a382d22b3ec0c4209986e3026cecb78d6d6b2cb158afdbdc58304",
+    "handoff_target": "task-graph",
+    "package_canonical_digest": "sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9"
+  },
+  "graph_revision": 1238,
+  "graph_sha256": "sha256:22172359e88a382d22b3ec0c4209986e3026cecb78d6d6b2cb158afdbdc58304",
+  "requirements_document": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-build-identity-deploy-freshness-document.md",
+  "readiness_matrix": "eval-log/dev-graph/run-dev-graph-requirements/run-dev-graph-requirements-feat-build-identity-deploy-freshness-readiness-matrix.json",
+  "gate_status": {
+    "c11_graph_schema": "PASS",
+    "c02_saved_state": "PASS",
+    "source_digest": "PASS",
+    "validate_system_plan": "PASS"
+  },
+  "gate_evidence": {
+    "c11_graph_schema": "validate-graph-schema.py --graph .dev-graph/state/graph.json --repo-root . → exit 0 / valid=true / violations=[] / implementation_readiness=complete",
+    "c02_saved_state": "closure 16 node すべてが confirmation_status=confirmed / evaluation_status=pass / implementation_readiness.status=complete / missing_sections=[]",
+    "source_digest": "validate-source-digest.py --registered <closure 16 node> → exit 0 / checked=16 / registered_mismatch=[]",
+    "validate_system_plan": "validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness → exit 0 / status=pass / validated_digest=sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9 / phase_refs=P01..P13 / contract_version=1.3.0"
+  },
+  "missing_sections": [],
+  "stale_digest_count": 0,
+  "scope_node_count": 16,
+  "scope_node_ids": [
+    "arch-harness-hub-infrastructure",
+    "arch-harness-hub-testing-qa",
+    "feat-build-identity-deploy-freshness",
+    "SYS-BUILD-IDENTITY-P01",
+    "SYS-BUILD-IDENTITY-P02",
+    "SYS-BUILD-IDENTITY-P03",
+    "SYS-BUILD-IDENTITY-P04",
+    "SYS-BUILD-IDENTITY-P05",
+    "SYS-BUILD-IDENTITY-P06",
+    "SYS-BUILD-IDENTITY-P07",
+    "SYS-BUILD-IDENTITY-P08",
+    "SYS-BUILD-IDENTITY-P09",
+    "SYS-BUILD-IDENTITY-P10",
+    "SYS-BUILD-IDENTITY-P11",
+    "SYS-BUILD-IDENTITY-P12",
+    "SYS-BUILD-IDENTITY-P13"
+  ],
+  "task_entry_points": [
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p01.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p02.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p03.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p04.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p05.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p06.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p07.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p08.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p09.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p10.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p11.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p12.md",
+    "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p13.md"
+  ],
+  "supersedes_snapshot": null,
+  "implementation_code_files_generated": 0,
+  "open_deviations": [
+    {
+      "id": "source-lineage-confirmed-false",
+      "severity": "medium",
+      "note": "package の workstream-inventory.json は source_lineage.confirmed=false のまま昇格している。promotion gate 7 項目に lineage confirmation は含まれないため package は有効だが、各 task spec の Handoff が定める『Ready when: confirmed かつ evaluation pass』は未充足であり、P01 着手前に上流の完成度評価を PASS へ到達させるか、利用者の明示的な緩和判断を要する。"
+    },
+    {
+      "id": "completeness-evaluator-overall-fail",
+      "severity": "medium",
+      "note": "system-spec の完成度 evaluator は総合 FAIL である。利用者は appr-039 で 『完成度 evaluator の総合 PASS を以降の verb の前提とする』点のみを緩和し、他の完了条件は緩めないと明示した。本 handoff はその判断の下で emit している。"
+    },
+    {
+      "id": "feature-artifact-frontmatter-drift",
+      "severity": "low",
+      "note": "register-package / promote が graph node だけを更新するため、feature artifact の frontmatter が draft/pending/incomplete のまま残っていた。本 run で C02 単一 writer 経由で 突合したが、plugin 側で graph と artifact の同時更新を担保する follow-up が要る。"
+    },
+    {
+      "id": "beads-linkage-absent-blocks-execution",
+      "severity": "high",
+      "status": "resolved",
+      "note": "本 feature の 14 node (feature + P01..P13) は beads_linkage=null である。この状態では (a) schedule の scope 内 ready_set が空になり (parity manifest の bd 紐付き投影 nodes[] に載らないため。graph_node_ids[] には載る)、(b) sync-graph.py は remote issue を作成しないため pending_retry (reason=external_linkage_missing) から解消せず収束しない。是正は C28 bd-bridge.py --op create / --op dep-add による起票であり、その後に sync --apply → 再 --dry-run で changes=0 を確認する。ready 0 件を『着手可能な作業なし』と読み替えてはならない。",
+      "recorded_at": "2026-08-07T13:40:00Z",
+      "resolved_at": "2026-08-07T16:15:19Z",
+      "resolution": "C28 bd-bridge.py --op create で 14 issue を起票し、--op dep-add で P01→P13 の直列依存 12 本を張り、さらに C02 upsert-node.py で各 node の beads_linkage を graph へ書き戻して解消した。sync --apply (156 node 適用・body_source は 156/156 が preserved・graph_revision 1253→1409) 後の確認 dry-run で changes=0 / imports=0 / exports=0 / conflicts=0 / write_count=0 に到達し、対象 feature 14 node の pending_retry は 0 になった。next 再算出で feature 1 + SYS-BUILD-IDENTITY-P01 が ready_set へ出現し、ready 0 件を未起票へ帰属させた判断が実測で裏付けられた。",
+      "resolution_evidence": {
+        "bd_issue_ids": {
+          "feat-build-identity-deploy-freshness": "HarnessHub-hf9y",
+          "SYS-BUILD-IDENTITY-P01": "HarnessHub-7sac",
+          "SYS-BUILD-IDENTITY-P02": "HarnessHub-bod6",
+          "SYS-BUILD-IDENTITY-P03": "HarnessHub-8x08",
+          "SYS-BUILD-IDENTITY-P04": "HarnessHub-ivao",
+          "SYS-BUILD-IDENTITY-P05": "HarnessHub-8u3p",
+          "SYS-BUILD-IDENTITY-P06": "HarnessHub-8djt",
+          "SYS-BUILD-IDENTITY-P07": "HarnessHub-oekv",
+          "SYS-BUILD-IDENTITY-P08": "HarnessHub-dgkk",
+          "SYS-BUILD-IDENTITY-P09": "HarnessHub-j05t",
+          "SYS-BUILD-IDENTITY-P10": "HarnessHub-vdhi",
+          "SYS-BUILD-IDENTITY-P11": "HarnessHub-gchm",
+          "SYS-BUILD-IDENTITY-P12": "HarnessHub-rtcd",
+          "SYS-BUILD-IDENTITY-P13": "HarnessHub-gvg3"
+        },
+        "graph_revision_after": 1409,
+        "graph_sha256_after": "sha256:68f3ce81d76c207ffb60e235d8532c1b7607af3a18971b4de0d98de8e6b84db1",
+        "canonical_digest_after": "sha256:769591fcd96c2b1cf03f84750c53c5f580df62dad1e85195b8f87f859d575ed7",
+        "note": "本 object の graph_revision / graph_sha256 (1238 / 2217...) は handoff 発行時点の束縛値であり、snapshot_digest の再計算根拠なので更新しない。是正後の値は本 evidence 側にだけ記録する。"
+      },
+      "derived_plugin_findings": [
+        {
+          "id": "sync-graph-no-external-ref-reverse-lookup",
+          "severity": "high",
+          "note": "sync-graph.py の _collect_remote は beads_linkage.bd_issue_id を起点にしか remote を読まず、issue 側の external_ref (dev-graph:<graph_node_id>) からの逆引きを実装していない。したがって create だけでは remote が見えず external_linkage_missing のまま残る。この linkage 書き戻しは decompose の publication 責務に含まれるべきだが、現状どの verb も自動実行しないため、本 run では C02 経由の手作業で補った。"
+        },
+        {
+          "id": "draft-nodes-accumulate-in-pending-retry",
+          "severity": "medium",
+          "note": "repo 全体の pending_retry 47 件のうち 9 件 (issue 5 / feature 4) は confirmation_status=draft で、decompose 契約が『draft/unconfirmed/readiness incomplete を tracker へ投影しない』と定める起票してはならない node である。これが pending_retry に積まれるため pending_retry=0 が構造的に到達不能になっている。本来は skipped_by_contract のような別分類にすべき。残り 38 件は他 feature の未起票 task で本 run のスコープ外。"
+        },
+        {
+          "id": "bd-bridge-dry-run-skips-arg-validation",
+          "severity": "medium",
+          "note": "bd-bridge.py --op create --dry-run は --title 必須検査より手前で return するため、dry-run が全件 exit 0 でも本実行が create requires --graph-node-id and --title で落ちる。dry-run 成功が本実行の成功を保証しない。"
+        }
+      ]
+    }
+  ]
+}

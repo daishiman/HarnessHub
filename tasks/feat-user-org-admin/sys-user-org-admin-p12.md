@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント/運用 — S17/S18運用手順・PIIガード運用・通知ディスパッチ運用のドキュメント化"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-07T03:37:36Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P11"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-user-org-admin/runbook.md"]

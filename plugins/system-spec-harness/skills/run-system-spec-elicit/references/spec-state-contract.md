@@ -25,7 +25,7 @@
       "<platform_id>": {"state": "未収集"}
     }
   },
-  "qa_log": [{"id": "qa-001", "question": "...", "answer": "..."}],
+  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}}],
   "approval_log": [{"id": "appr-001", "note": "..."}],
   "reopen_log": [{"category": "database", "platform": "web", "reason": "...", "from": "確定"}],
   "category_aggregate": {"<category_id>": "確定|収集中|未着手|対象外"},
@@ -93,7 +93,7 @@ python3 scripts/apply-spec-transition.py set-targets --state spec-state.json \
 
 - **要素 (U1-U9)**: `essential_purpose`(U1 本質的目的) / `background`(U2 背景) / `goals`(U3 ゴール `{id,text}`) / `objectives`(U4 目標 `{id,text,measure}`) / `success_criteria`(U5) / `stakeholders`(U6) / `scope`(U7 `{in,out}`) / `constraints`(U8) / `concrete_intents`(U9 `{id,text,serves:[goal_id]}`) / `confirmed`。
 - **単一 writer**: `requirements_foundation` の書込は `set-foundation` op が唯一の経路。`init` は空 (`empty_foundation`) で初期化するだけ。goals は `id` 必須・重複禁止、`concrete_intents.serves` は実在 goal id を指す (dangling 拒否)。
-- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。未確定なら途中保存として空でも保存できる。
+- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。さらに writer と `--require-foundation` は各 U に対応する canonical id `qa-foundation-u1`〜`qa-foundation-u9` の 1論点 `qa_log` entry を機械的に要求する。対話 entry は `source:{"kind":"user-dialogue"}`、書面 entry は `source:{"kind":"written-requirements","path":"<relative-path>","section":"<section>","sha256":"<sha256(answer)>"}` とし、質問にも path/section、回答にも対応原文を残す。承認ログだけ・AI 要約だけを一次根拠にしてはならない。未確定なら途中保存として空でも保存できる。
 - **serves_goals (トレース)**: 各 `確定` セルは `serves_goals: ["G1", ...]` でどの上位概念 (ゴール) に資するかを明示する。`confirm` op に `serves_goals` を同時付与するか、確定後に `set-serves` op で additive に付与する。`set-serves` は `state=確定` を変えないため確定巻き戻し防御には抵触しない。
 
 ```bash
@@ -104,6 +104,29 @@ python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json 
 python3 scripts/apply-spec-transition.py apply --state spec-state.json \
   --op '{"action":"set-serves","category":"database","platform":"web","serves_goals":["G1"]}'
 ```
+
+### 書面要件の source-index
+
+利用者が `requirements-brief.md` のような書面を渡したとき、内容を AI の回答として再表現して foundation を確定してはならない。`chunk` は `ops: []` の turn でも `qa_log` を append-only で追記できるため、U1-U9 を canonical id ごとに 1論点ずつ索引化してから `set-foundation` を実行する。writer は `source.kind`、書面なら安全な相対 path・非空 section・`answer` 原文と一致する SHA-256・質問中の path/section まで fail-closed で検証する。
+
+```json
+[
+  {
+    "qa_id": "qa-foundation-u1",
+    "question": "書面入力 requirements-brief.md §1 の U1 (本質的目的) は何か",
+    "answer": "利用者が渡した当該 section の原文",
+    "source": {
+      "kind": "written-requirements",
+      "path": "requirements-brief.md",
+      "section": "§1",
+      "sha256": "<sha256(answer)>"
+    },
+    "ops": []
+  }
+]
+```
+
+この index は既存 `qa_log` の逐語を上書きせず、原文・入力位置・原文ハッシュを監査へ渡す。対話で得た U も同じ id を使い、`source:{"kind":"user-dialogue"}` を付ける。1つの entry に U1-U9 や複数の技術判断を束ねることは writer と `R6-audit-hearing` の誘導・遡及性監査で FAIL とする。
 
 ## R0→R1 bootstrap 契約
 

@@ -12,8 +12,8 @@ iteration: null
 title: "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:09:14Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P10"]
 related_nodes: ["feat-tenant-data-retention"]
 resource_scope: ["docs/features/feat-tenant-data-retention/evidence-summary.md"]

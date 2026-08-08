@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 78,
+    "notes": "bootstrap/init/apply_cell_op/apply_turn/run_chunkと責務がやや広く、他5ファイルに比べ『行列初期化+セル状態遷移+ターン適用+チャンク実行』を1モジュールに集約している点でresponsibilityはやや緩い。確定セルの直接変更拒否とreopen経由の強制、set-servesは確定セル限定など状態機械としてのロジックは正しく動作する。error-handlingに弱点があり、apply_turnのfor raw_op in turn.get('ops', [])でraw_opがdictでない場合dict(raw_op)がTypeErrorを送出しTransitionErrorに正規化されない(他関数はほぼ全てisinstanceガード後にTransitionErrorを投げているのと非対称)。derive_aggregateは未収集/対象外混在時のセマンティクスがコメントで説明されておらず読み手が意図を推測する必要がある。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

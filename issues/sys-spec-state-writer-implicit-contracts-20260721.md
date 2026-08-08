@@ -12,8 +12,8 @@ iteration: null
 title: "spec-state writer の暗黙挙動 4 件を契約化し、C06 早期停止の除外ルールを再設計する"
 owners: ["daishiman"]
 created_at: "2026-07-21T10:01:10Z"
-updated_at: "2026-07-21T10:01:10Z"
-status: "draft"
+updated_at: "2026-08-03T23:07:42Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

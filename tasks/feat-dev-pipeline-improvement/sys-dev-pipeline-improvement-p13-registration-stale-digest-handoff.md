@@ -9,10 +9,10 @@ priority: "high"
 start_date: "2026-08-04"
 target_date: null
 iteration: null
-title: "registration receipt stale digest の Phase 13 引継ぎを確定する"
+title: "dev-graph: render の registration receipt が sync 後に必ず stale になる"
 owners: ["daishiman"]
 created_at: "2026-08-04T00:00:00Z"
-updated_at: "2026-08-04T00:00:00Z"
+updated_at: "2026-08-04T04:54:05Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-render-registration-stale-digest-20260803","feat-dev-pipeline-improvement","arch-harness-hub-testing-qa"]

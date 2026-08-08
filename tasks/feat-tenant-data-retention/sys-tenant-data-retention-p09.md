@@ -12,8 +12,8 @@ iteration: null
 title: "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:07:10Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P08"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/lib/scheduled/usage-monitor.ts","apps/hub/src/lib/tenant-data/","docs/features/feat-tenant-data-retention/quality-assurance-report.md","packages/db/migrations/","packages/db/src/backup/tenant-data-tombstones.ts","packages/db/src/repository/tenant-deks.ts","packages/db/src/schema/encryption-keys.ts"]

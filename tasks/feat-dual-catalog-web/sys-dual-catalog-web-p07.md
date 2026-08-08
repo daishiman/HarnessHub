@@ -12,9 +12,9 @@ iteration: null
 title: "受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+updated_at: "2026-08-03T07:47:20Z"
 status: "active"
-depends_on: ["SYS-DUAL-CATALOG-WEB-P06"]
+depends_on: ["SYS-DUAL-CATALOG-WEB-P06","issue-hub-catalog-page-missing-tenant-scope-20260803"]
 related_nodes: ["feat-dual-catalog-web"]
 resource_scope: ["docs/features/feat-dual-catalog-web/acceptance-record.md"]
 purpose: "feat-dual-catalog-web の P07 を実行する: 受入 — axe検出可能違反0のCIゲート存在・CWV全指標good実測・Hub停止中の導入済みSkill動作継続の受入判定"

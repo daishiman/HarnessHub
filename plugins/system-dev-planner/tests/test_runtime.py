@@ -247,21 +247,28 @@ def valid_findings(staging: Path, digest: str) -> dict:
 # audit_delegations[] の fork receipt を持ち、fork 台帳で裏取りできなければならない。
 # dispatch.session_id は write_audit_fork_ledger() が書く台帳行の session_id と一致させる
 # (宣言↔台帳の run/session 束縛; producer issue: HarnessHub-x4o)。
+def _response_sha256(auditor: str, verdict: str = "PASS") -> str:
+    return hashlib.sha256(f"{auditor}:{verdict}".encode("utf-8")).hexdigest()
+
+
 AUDIT_DELEGATIONS = [
     {"aspect": "matrix_coverage", "role": "primary",
      "auditor": "system-spec-matrix-auditor", "component": "C07",
      "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor",
-                  "session_id": "fixture-session"},
+                  "session_id": "fixture-session",
+                  "response_sha256": _response_sha256("system-spec-matrix-auditor")},
      "verdict": "PASS", "evidence": ["fixture: C07 matrix audit fork receipt"]},
     {"aspect": "matrix_coverage", "role": "sub_input",
      "auditor": "system-spec-hearing-auditor", "component": "C06",
      "dispatch": {"tool": "Task", "subagent_type": "system-spec-hearing-auditor",
-                  "session_id": "fixture-session"},
+                  "session_id": "fixture-session",
+                  "response_sha256": _response_sha256("system-spec-hearing-auditor")},
      "verdict": "PASS", "evidence": ["fixture: C06 hearing audit fork receipt"]},
     {"aspect": "doc_freshness", "role": "primary",
      "auditor": "system-spec-doc-freshness-auditor", "component": "C08",
      "dispatch": {"tool": "Task", "subagent_type": "system-spec-doc-freshness-auditor",
-                  "session_id": "fixture-session"},
+                  "session_id": "fixture-session",
+                  "response_sha256": _response_sha256("system-spec-doc-freshness-auditor")},
      "verdict": "PASS", "evidence": ["fixture: C08 doc-freshness audit fork receipt"]},
 ]
 
@@ -271,9 +278,10 @@ def write_audit_fork_ledger(root: Path) -> None:
     ledger = root / "eval-log" / "system-spec-harness" / "audit-fork-ledger.jsonl"
     ledger.parent.mkdir(parents=True, exist_ok=True)
     rows = [
-        {"schema_version": "1.0", "ts": "2026-07-22T00:00:00Z", "session_id": "fixture-session",
+        {"schema_version": "1.1", "ts": "2026-07-22T00:00:00Z", "session_id": "fixture-session",
          "tool_name": "Task", "subagent_type": d["dispatch"]["subagent_type"],
-         "prompt_sha256": None, "cwd": str(root)}
+         "prompt_sha256": "0" * 64, "response_sha256": d["dispatch"]["response_sha256"],
+         "audit_verdict": d["verdict"], "cwd": str(root)}
         for d in AUDIT_DELEGATIONS
     ]
     ledger.write_text(

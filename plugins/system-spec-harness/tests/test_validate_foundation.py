@@ -66,6 +66,18 @@ def _valid_foundation() -> dict:
     }
 
 
+def _foundation_source_indexes() -> list[dict]:
+    return [
+        {
+            "id": f"qa-foundation-u{number}",
+            "question": f"利用者との対話で U{number} は何か",
+            "answer": f"利用者が回答した U{number} の原文",
+            "source": {"kind": "user-dialogue"},
+        }
+        for number in range(1, 10)
+    ]
+
+
 def _valid_state() -> dict:
     """全確定セルが serves_goals で実在 goal へトレースされ、上位概念 U1-U5 が非空の状態。"""
     return {
@@ -78,6 +90,7 @@ def _valid_state() -> dict:
                 "web": {"state": "確定", "qa_ref": "q", "serves_goals": ["G2", "G1"]},
             },
         },
+        "qa_log": _foundation_source_indexes(),
         "approval_log": [{"id": "appr-foundation", "note": "上位概念をユーザーと合意した"}],
         "requirements_foundation": _valid_foundation(),
         "decisions": [],
@@ -87,6 +100,12 @@ def _valid_state() -> dict:
 # ── validate_foundation() 正例 ─────────────────────────────────────────────
 def test_foundation_valid():
     assert c12.validate_foundation(_valid_state()) == []
+
+
+def test_foundation_source_index_is_required_per_u():
+    d = _valid_state()
+    d["qa_log"] = d["qa_log"][:-1]
+    assert any("U9 source-index" in f for f in c12.validate_foundation(d))
 
 
 # ── (a) requirements_foundation 不在 / U1-U5 空 ────────────────────────────
@@ -235,7 +254,7 @@ def _full_valid_matrix() -> dict:
         "categories": [{"id": c, "label": c} for c in CATEGORIES],
         "platforms": PLATFORMS,
         "matrix": matrix,
-        "qa_log": [{"id": "qa-001", "question": "q", "answer": "a"}],
+        "qa_log": [{"id": "qa-001", "question": "q", "answer": "a"}] + _foundation_source_indexes(),
         "approval_log": [{"id": "appr-001"}, {"id": "appr-foundation"}],
         "requirements_foundation": _valid_foundation(),
         "decisions": [],

@@ -156,7 +156,10 @@ def collect(plugin_dir: pathlib.Path) -> dict:
     # 宣言 (package-contract) と突合する「実際に登録されている entry point」。
     # 実体ファイル一覧 (out["hooks"]) とは別軸なので独立に持つ。
     out["plugin_dir"] = plugin_dir
-    out["registered_hooks"] = sorted(registered_hook_files(plugin_dir, out["manifest"]))
+    registered_hooks, out["registered_hooks_error"] = registered_hook_files(
+        plugin_dir, out["manifest"]
+    )
+    out["registered_hooks"] = sorted(registered_hooks)
     out["hook_registration_present"] = (
         (plugin_dir / "hooks" / "hooks.json").is_file()
         or isinstance((out["manifest"] or {}).get("hooks"), dict)
@@ -186,6 +189,12 @@ def validate(
         errs.append(
             f"{plugin_name}: package contract invalid: "
             f"{data['package_contract_error']}"
+        )
+
+    if data.get("registered_hooks_error"):
+        errs.append(
+            f"{plugin_name}: hooks/hooks.json invalid: "
+            f"{data['registered_hooks_error']}"
         )
 
     contract = data.get("package_contract")

@@ -9,11 +9,11 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "audit_decompose_live_trial.py の 4 欠陥により OUT1 の live-trial 判定が検査として成立していない"
+title: "audit_decompose_live_trial.py の 4 欠陥により decompose OUT1 の live-trial 判定が検査として成立していない"
 owners: ["daishiman"]
 created_at: "2026-07-25T22:59:46Z"
-updated_at: "2026-07-26T03:26:44.500539Z"
-status: "draft"
+updated_at: "2026-07-29T01:12:03Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-guard-graph-schema-interpreter-write-coverage-20260726","issue-render-registration-receipt-contract-mismatch-20260726"]
 resource_scope: ["plugins/dev-graph/tests/fixtures/audit_decompose_live_trial.py","plugins/dev-graph/tests/test_decompose_live_trial_audit.py"]

@@ -29,6 +29,7 @@ sources: [system-spec/ui-ux.md, system-spec/frontend.md, system-spec/00-requirem
 | ID | 画面 | 主な role | Stage | 優先度 | 担当 feature | mock id |
 |---|---|---|---|---|---|---|
 | S09 | ダッシュボード (KPI・推移・完了率・ランキング・部門別削減) | member 以上 | 拡張 | P5 (低) | feat-metrics-tracking | dashboard |
+| S09-L | **着地ダッシュボード** (サインイン後の既定着地。所属コンテキスト常時表示＋切替 / 最近の作業を種別横断 / 既存画面への導線 / 稼働状況は異常時のみ) | member 以上 | 拡張 | **P0-P1 (前倒し)** | feat-post-signin-scope-routing 系 | — (S09 の KPI とは別画面) |
 | S10 | ハーネス ヒアリング (4 ステップウィザード・削減試算) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |
 | S11 | ヒアリングシート一覧 | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheets |
 | S12 | ヒアリングシート詳細 (status 変更は admin) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheet-detail |

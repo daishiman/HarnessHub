@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:09Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-28T04:18:30Z"
+status: "closed"
 depends_on: ["SYS-AUTH-TENANCY-P06"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-auth-tenancy/acceptance-record.md"]

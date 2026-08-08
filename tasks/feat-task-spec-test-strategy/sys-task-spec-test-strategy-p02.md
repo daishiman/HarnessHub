@@ -12,8 +12,8 @@ iteration: null
 title: "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:30Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P01"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-task-spec-test-strategy/design.md"]
