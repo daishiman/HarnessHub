@@ -5,16 +5,22 @@
  * URL 直打ち以外でどの画面にも遷移できなかった (P0 シェルにナビゲーションが無かったため)。
  * 各リンクは resolveDashboardScope() 由来の tenantId/workspaceId をクエリへ引き継ぎ、
  * 遷移先の page.tsx が URL クエリを最優先する現行の解決順序と噛み合わせる。
+ *
+ * 見た目は @harness-hub/ui の NavList が持つ。ここで色や余白を書かないのは、
+ * app 側に design token の第 2 の正本を作らないため (shared-layers §1)。
  */
+
+import { NavList, type NavListItem } from '@harness-hub/ui';
 
 interface PrimaryNavProps {
   readonly tenantId: string;
   readonly workspaceId: string;
-}
-
-interface NavItem {
-  readonly href: string;
-  readonly label: string;
+  /**
+   * 現在地。渡すと該当項目へ aria-current が付く。
+   * server component のままにするため pathname は自動取得せず、呼び出し側が渡す
+   * (usePathname を使うと全画面が client bundle に載り First Load JS 予算を圧迫する)。
+   */
+  readonly currentHref?: string | undefined;
 }
 
 function scopedHref(path: string, tenantId: string, workspaceId: string, includeWorkspace: boolean): string {
@@ -25,8 +31,8 @@ function scopedHref(path: string, tenantId: string, workspaceId: string, include
   return query === '' ? path : `${path}?${query}`;
 }
 
-export function PrimaryNav({ tenantId, workspaceId }: PrimaryNavProps) {
-  const items: readonly NavItem[] = [
+export function PrimaryNav({ tenantId, workspaceId, currentHref }: PrimaryNavProps) {
+  const items: readonly NavListItem[] = [
     { href: scopedHref('/sheets', tenantId, workspaceId, true), label: 'ヒアリングシート' },
     { href: scopedHref('/docs', tenantId, workspaceId, true), label: 'ドキュメント' },
     { href: scopedHref('/feedback', tenantId, workspaceId, true), label: '改善要望' },
@@ -37,15 +43,5 @@ export function PrimaryNav({ tenantId, workspaceId }: PrimaryNavProps) {
     { href: scopedHref('/settings/coefficients', tenantId, workspaceId, false), label: '見積係数設定' },
   ];
 
-  return (
-    <nav aria-label="主要ナビゲーション">
-      <ul>
-        {items.map((item) => (
-          <li key={item.href}>
-            <a href={item.href}>{item.label}</a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
+  return <NavList items={items} label="主要ナビゲーション" currentHref={currentHref} />;
 }

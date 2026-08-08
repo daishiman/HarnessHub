@@ -178,6 +178,12 @@ jobs:
           pnpm --filter @harness-hub/schemas run check:drift
       - name: G9 axe a11y (部品単体 + 画面結合の 2 段)
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
+      # 画面状態 (読込中/エラー/見つからない) の敷き漏れは実行時まで表に出ず、
+      # テストも緑のまま通る。route group 単位で静的に落とす。
+      - name: G15 画面状態の敷き漏れ検査 (loading / error / not-found)
+        run: |
+          node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:screen-states
+          pnpm --filter @harness-hub/hub run check:screen-states
       - name: G5 bundle 予算 (Worker gzip 後 3MiB / A2)
         run: pnpm --filter @harness-hub/hub run check:bundle
       # G5 が測るのは Cloudflare へ上げる Worker (サーバー側) であって、ブラウザへ配る client JS ではない。

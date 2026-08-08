@@ -273,7 +273,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
   - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する**。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
-- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) × **2 viewport (1280×800 / 390×844)** + axe 統合。分離テスト等サーバ側は backend-spec 準拠。
+- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md) を正とする。分離テスト等サーバ側は backend-spec 準拠。
 - **セキュリティ (フロント境界)**: sanitize 済み Markdown のみ描画 (SEC7)・外部リンク `rel="noopener noreferrer"`・CSP は security 章準拠・PII (salary) は admin API レスポンス以外に出現させない (SEC4。ログ・エラー通知にも含めない)。
 
 ## 9. 確定記録 (2026-07-17 ユーザー確認 = qa-040 / qa-035)
