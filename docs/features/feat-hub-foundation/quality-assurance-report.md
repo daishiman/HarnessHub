@@ -106,3 +106,16 @@ G7 は migration が存在しない現 scope では対象なしだが、対象�
 | required package script | 欠落・空文字・壊れた package.json は全て非ゼロ |
 
 一次証跡は `evidence/local-verify-2026-07-21.md`、機械可読値は `evidence/{duplicate-scan,shared-layer-ownership,bundle-report}.json` を参照する。
+
+## 8. UI 基盤追補の再検証 (2026-08-08)
+
+| 項目 | 結果 |
+|---|---|
+| `packages/ui` test | 14 files / 307 tests PASS |
+| `apps/hub` test | 136 files / 1474 pass、1 skip、10 todo |
+| 実 Chromium | 3 files / 33 tests PASS |
+| 画面状態 | root / dashboard / workspace の必要 file を全検出 |
+| responsive | 360 / 768 / 1280px で document overflow なし、操作域合格 |
+| VRT | macOS 14 baseline と一致。CPU architecture 誤分離を修正 |
+
+詳細、system-spec 再確定、Linux baseline の残作業は [UI 基盤仕様反映受領書](ui-foundation-spec-reflection-receipt.md) を正とする。

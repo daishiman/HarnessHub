@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1416,
+  "graph_revision": 1426,
   "nodes": [
     {
       "acceptance": [
@@ -51356,6 +51356,252 @@
       "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T06:05:00Z"
+    },
+    {
+      "acceptance": [
+        "5 Beads の対象差分だけが commit される",
+        "task spec と repository quality gate が blocking failure 0 で完了する",
+        "frontend/ui-ux/testing-qa の仕様影響が正規 writer と全文書層へ反映される",
+        "remote main 取込後の devgraph branch が origin へ push され base main の draft PR が作成される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-foundation-final-review-20260808.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "複数の既存 Beads を一つの commit / PR / spec receipt に束ねる独立 final-review issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "4d6201eddc88115e2ed94716435de16cb1596f9e314bfa76ba989995cac65ad6",
+        "evaluator": "final review + system-spec transition writer",
+        "evidence_ref": "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T07:07:57Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-foundation-final-review-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "対象差分だけの commit、正規仕様反映、全品質ゲート、Beads notes、base main の draft PR が同じ UI 基盤契約を指す",
+      "graph_node_id": "issue-ui-foundation-final-review-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T07:07:57Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "5 Beads に分かれた UI 基盤実装を、仕様・設計・検証・公開が一致する単一の final-review closure に束ねる",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/ui-visual.yml",
+        "apps/hub/",
+        "packages/ui/",
+        "pnpm-lock.yaml",
+        "system-spec/",
+        "specs/harness-hub-ui-foundation-addendum.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.md",
+        "issues/ui-foundation-final-review-20260808.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p12.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        "docs/frontend-spec.md",
+        "docs/frontend-ui-foundation-spec.md",
+        "docs/features/feat-hub-foundation/"
+      ],
+      "scope_in": [
+        "AppShell / design token / screen state の最終レビュー",
+        "real browser / VRT / responsive regression の最終レビュー",
+        "system-spec / specs / architecture / features / tasks / docs 反映",
+        "Beads 更新と draft PR 公開"
+      ],
+      "scope_out": [
+        "公開 API・DB schema・認証認可判定の変更",
+        "Cloudflare 本番デプロイ",
+        "既存 user-org-admin skip/todo と U1-U9 source-index debt の解消"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T07:07:57Z",
+        "origin_kind": "manual",
+        "source_digest": "9310f064f5f79d8e2b0ef53d3b1dfc25c8afcb25a51fe92e6890cd4ddc0230e2",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ui-foundation",
+        "browser-test",
+        "vrt",
+        "responsive",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "UI 基盤 wave の最終レビュー・仕様反映・公開",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T07:51:36Z"
+    },
+    {
+      "acceptance": [
+        "packages/ui の公開 layout / token / state contract を apps/hub が利用する",
+        "root / dashboard / workspace の状態 file 欠落を G15 が拒否する",
+        "360x800 / 768x1024 / 1280x800 の responsive regression が実 Chromium で通る",
+        "catalog 7 分類の light / dark VRT が OS baseline と一致する",
+        "UI / Hub の typecheck・lint・unit/a11y と client bundle budget が通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-ui-foundation-addendum.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "qa-201 / qa-203 / qa-204 の確定 UI 契約を横断参照する製品仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9310f064f5f79d8e2b0ef53d3b1dfc25c8afcb25a51fe92e6890cd4ddc0230e2",
+        "evaluator": "final review + system-spec transition writer",
+        "evidence_ref": "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T07:16:25Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-ui-foundation-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "qa-201 / qa-203 / qa-204 と実装・CI・文書が同じ UI 品質契約を参照する",
+      "graph_node_id": "spec-harness-hub-ui-foundation-addendum",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T07:16:25Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "UI 基盤の所有境界、画面状態、breakpoint、実ブラウザ/VRT gate を製品仕様として固定する",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "issue-ui-foundation-final-review-20260808",
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/ui-visual.yml",
+        "specs/harness-hub-ui-foundation-addendum.md",
+        "system-spec/frontend.md",
+        "system-spec/ui-ux.md",
+        "system-spec/testing-qa.md",
+        "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "AppShell / layout / design token の公開契約",
+        "loading / empty / not found / forbidden / unexpected error の表示契約",
+        "responsive breakpoint と局所横スクロール契約",
+        "実 Chromium、catalog VRT、CI failure evidence"
+      ],
+      "scope_out": [
+        "公開 API・DB schema・認証認可判定の変更",
+        "Cloudflare deploy unit と本番 SLO の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T07:16:25Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "9310f064f5f79d8e2b0ef53d3b1dfc25c8afcb25a51fe92e6890cd4ddc0230e2",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ui-foundation",
+        "frontend",
+        "ui-ux",
+        "testing-qa",
+        "browser-test",
+        "vrt"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub UI 基盤・実ブラウザ品質ゲート追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-08T07:47:52Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

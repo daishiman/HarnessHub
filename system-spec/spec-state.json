@@ -124,7 +124,7 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-181",
+        "qa_ref": "qa-201",
         "serves_goals": [
           "G1",
           "G2",
@@ -279,7 +279,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-170",
+        "qa_ref": "qa-203",
         "serves_goals": [
           "G1",
           "G2",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-190",
+        "qa_ref": "qa-204",
         "serves_goals": [
           "G1",
           "G4",
@@ -1421,6 +1421,46 @@
       "id": "qa-199",
       "question": "spec verb の完了条件のうち「完成度 evaluator PASS」は、独立監査 C06 の verdict が FAIL である限り fail-closed 集約により総合 FAIL が機械的に確定する。その FAIL の内訳は (2) 歴史的事実 / (3) 境界外 (plugin 側課題) / 実装 verb の既知タスク のみで、ヒアリング verb の範囲で打てる手は無い(C06 の 2 インスタンスが一致して確認済み・qa-196-c)。実行ルール 2 に字義どおり従えば spec で停止し以降 9 verb を実行しないことになる。この扱いを利用者へ照会した。",
       "answer": "[出所] 本 entry の選択は**利用者本人が AskUserQuestion で行った**。解説と自己点検の部分は appr-038 の委任下で AI が記述した。\n\n[qa-199-a 利用者の判断] 「decompose 以降へ進む」。完成度 evaluator の総合 FAIL を承知の上で、実行ルール 2 の停止条件を今回に限り緩める。承認の逐語は appr-039 に保持する。\n\n[qa-199-b 緩めた条件の範囲を明示する] 緩めたのは「完成度 evaluator の総合 PASS を以降の verb の前提とする」点**のみ**である。他の完了条件 (確定章の登録・source_digest 検証・evidence_ref 検証・各 verb 固有の完了条件) は緩めない。また FAIL の内訳が上記 3 分類を超えた場合 (すなわちヒアリング verb で打てる手が新たに生じた場合) は、承認 (b) に従い**再度停止する**。\n\n[qa-199-c 規律 (6) の 5 度目の再発を自己申告する] 本照会でも、私が予期していた選択肢を先頭に置いた。qa-195-f (6) で「AI が予期している選択肢を先頭に置かない」と明文化し、qa-196-f でそれを引き継いだ直後の照会である。**規律を書いてから 1 回目の照会で破った。** appr-034・035・036・038・039 の 5 問すべてで先頭選択肢が選ばれている。今回は独立監査ではなく**私自身が検出した**が、検出は照会の実施後であり予防にはなっていない。検出が事後である限り、自己申告型の担保の限界 (未解決事項 10) は変わらない。本件は『規律の項目数を増やしても、その規律を適用する主体が同一である限り同じ穴が開き続ける』ことの 5 度目の実測である。\n\n[qa-199-d 引き継ぎ] 本 entry は dev-workflow/web の正本を qa-198 から引き継ぐ。qa-198 が確定した根本原因と、未解決事項 6・9・10 を引き継いで保持する。"
+    },
+    {
+      "id": "qa-200",
+      "question": "既存 frontend/web 正本 qa-170 と、それ以前の確定契約を維持したまま、feat-hub-foundation の UI 基盤実装（AppShell、design token、共通 base CSS、標準 loading/empty/error/forbidden 状態）をどの所有境界で確定するか。",
+      "answer": "[出所] 本 entry は、2026-08-08 の利用者による最終レビュー・正規仕様反映指示と、appr-037 が委任する『コードや公式資料から検証できる技術的事実』の範囲で確定する。利用者の新しい好みを代理決定したものではない。qa-170 とそれ以前の frontend/web 契約は全面維持する。\n\nUI 基盤の唯一の部品所有者を packages/ui とする。AppShell / Container / SidebarLayout / Stack / Cluster / PageHeader / NavList、light/dark・comfortable/compact の design token、focus ring、base CSS は packages/ui が提供し、apps/hub はそれらを組み合わせる consumer とする。apps/hub の root layout が base CSS を一度だけ注入し、個別 route が同じ token や shell を再定義しない。\n\n画面状態は loading / empty / error / forbidden を共通部品として区別する。Next.js App Router の root、dashboard、workspace の loading.tsx / error.tsx / not-found.tsx と global-error.tsx はこの共通表現へ接続し、失敗を空画面や業務データの残像へ潰さない。forbidden は再サインインで解消する unauthorized と区別し、回復手段または管理者への連絡導線を示す。\n\nCatalog、signin、device approval、primary navigation は共通 token / layout primitive を消費する。DataTable の横幅超過は画面全体ではなく data-hh-scroll-x の局所スクロール容器で受け止める。公開 API・DB schema・認証認可判定・Cloudflare deploy unit は変更しない。詳細契約は specs/harness-hub-ui-foundation-addendum.md を正本追補とする。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-201",
+      "question": "既存 ui-ux/web 正本 qa-181 と、それ以前の確定契約を維持したまま、実装済み breakpoint・表示密度・レスポンシブ品質の基準値をどう確定するか。",
+      "answer": "[出所] 本 entry は、2026-08-08 の利用者による最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装と実ブラウザ計測から確定する。qa-181 とそれ以前の ui-ux/web 契約は全面維持する。\n\nレスポンシブ分岐の数値正本は packages/ui の breakpointTokens とし、sm=480px、md=768px、lg=1120px とする。既存 qa-035 の『768px 未満をスマホサイズとして扱う』契約は維持する。一方、旧 Tailwind 既定 sm=640 / lg=1024 という例示値は、実装正本の 480 / 1120 へ置き換える。md=768 で SidebarLayout を 1 列から 2 列へ切り替え、lg=1120 は standard Container の最大幅とする。\n\n検査幅は mobile=360x800、tablet=768x1024、desktop=1280x800 とする。全幅で document 全体の意図しない横スクロールを禁止する。comfortable の操作部品は 44px 以上、compact も 36px 未満にしない。compact は情報密度を高める明示選択であり comfortable の 44px 契約を弱める逃げ道にしない。light/dark と密度は token で一貫させ、文字 4.5:1、非文字境界 3:1 のコントラストを token test で保証する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-202",
+      "question": "既存 testing-qa/web 正本 qa-190 と、それ以前の確定契約を維持したまま、UI 基盤を jsdom だけでなく実ブラウザと画像差分で検証する CI 契約をどう確定するか。",
+      "answer": "[出所] 本 entry は、2026-08-08 の利用者による最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装済み test harness と CI 配線から確定する。qa-190 とそれ以前の testing-qa/web 契約は全面維持する。\n\nVitest Browser Mode + Playwright + Chromium を実ブラウザ検査の正本とする。component catalog は layout / data-display / form-control / feedback / chart の各カテゴリを最低 1 entry 以上持ち、全 entry を light/dark で描画する。VRT は baseline と actual のピクセル差を fail-closed で判定し、意図した差分だけを明示更新する。baseline key は CPU architecture ではなく OS とする。同じ Chromium/macOS の arm64 と Rosetta x64 を別 baseline に分けず、Linux は Linux 固有 baseline を保持する。\n\nレスポンシブ検査は 360 / 768 / 1280px で実レイアウト、document overflow、局所 table scroll、44px / 36px の操作域を数値検査する。画面状態ゲートは root / dashboard / workspace の loading / error / not-found と global-error の欠落を静的に拒否する。CI は ui-visual label または workflow_dispatch で browser job を実行し、失敗時は diff artifact を保存する。jsdom の unit/a11y/coverage gate は維持し、実ブラウザ検査の代替にはしない。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-203",
+      "question": "qa-200 が UI 基盤の公開部品として実装に存在しない Cluster を列挙していた。qa-200 の所有境界と既存 frontend/web 契約を維持しつつ、公開 contract の列挙を実装に一致させるにはどう訂正するか。",
+      "answer": "[出所] 本 entry は appr-037 の技術的事実委任下で、packages/ui/src/index.ts の export 実測に基づいて訂正する。利用者の好みを新たに決定するものではない。qa-200 の逐語は改変せず、本 entry を frontend/web の正本とする。\n\nqa-200 の AppShell / design token / 共通画面状態の所有境界、apps/hub を consumer とする方針、公開 API・DB・認証認可・deploy unit 非変更は全面維持する。訂正は公開部品の列挙だけである。正しい layout 公開 contract は AppShell / Container / SidebarLayout / Stack / Card / PageHeader / NavList とする。Cluster は実装も export も存在しないため列挙から除外する。\n\n画面状態は packages/ui の Skeleton / EmptyState / ErrorState と、apps/hub の LoadingScreen / NotFoundScreen / ForbiddenScreen / ErrorScreen の二層で構成する。route 側の loading.tsx / error.tsx / not-found.tsx / global-error.tsx は薄い配線に留める。その他の qa-200 の契約は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-204",
+      "question": "qa-202 の component catalog 分類名が実装の CatalogGroup と一致せず、responsive 計測と VRT 撮影の viewport も区別が曖昧だった。qa-202 と既存 testing-qa/web 契約を維持しつつ、実装と一致する検査 contract へどう訂正するか。",
+      "answer": "[出所] 本 entry は appr-037 の技術的事実委任下で、apps/hub/tests/browser の実装と CI 配線を実測して訂正する。利用者の好みを新たに決定するものではない。qa-202 の逐語は改変せず、本 entry を testing-qa/web の正本とする。\n\nqa-202 の Vitest Browser Mode + Playwright + Chromium、OS 単位 baseline、fail-closed、画面状態 gate、jsdom gate 維持は全面維持する。catalog の実装上の分類名は layout / form / feedback / data / chart / navigation / overlay の 7 種であり、全公開描画部品をいずれか 1 entry として登録する。全 7 group を light / dark で撮るため baseline は 14 枚となり、VRT 固定 viewport は 1024x768 とする。\n\nresponsive regression の viewport は VRT と別契約で、mobile=360x800、tablet=768x1024、desktop=1280x800 とする。ここでは document overflow、table の局所 scroll、md=768 の列切替、comfortable 44px / compact 36px を数値検査する。CI 起動条件は workflow_dispatch または PR の ui-visual label とし、失敗時 actual / diff artifact を保存する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
     }
   ],
   "approval_log": [
@@ -2872,6 +2912,36 @@
       "category": "dev-workflow",
       "platform": "web",
       "reason": "完成度 evaluator の総合 FAIL を承知の上で decompose 以降へ進むという利用者の承認 (appr-039) を記録するため。緩めたのは evaluator PASS を前提とする点のみで、他の完了条件は緩めない。併せて本照会でも規律 (6) を破っていた事実 (5 度目) を自己申告する。",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "feat-hub-foundation の AppShell / design token / 共通画面状態の実装所有境界を qa-200 として追加確定するため。qa-170 以前の確定契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "実装済み breakpoint 480/768/1120 とレスポンシブ実測値を qa-201 として追加確定し、qa-035 の旧 Tailwind 例示値との drift を解消するため。qa-181 以前の確定契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "component catalog / real browser / VRT / responsive regression を qa-202 の CI 契約として追加確定するため。qa-190 以前の確定契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "qa-200 の公開 contract 列挙に実装不存在の Cluster が混入していたため、実測に一致する qa-203 へ訂正する。qa-200 の所有境界と既存契約は維持する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "qa-202 の catalog 分類名と responsive/VRT viewport 境界を実装へ一致させる qa-204 訂正。qa-202 の品質方針と既存契約は全面維持する",
       "from": "確定"
     }
   ],

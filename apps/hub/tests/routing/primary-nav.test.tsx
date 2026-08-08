@@ -16,12 +16,20 @@ import { describe, expect, it } from 'vitest';
 
 import { PrimaryNav } from '../../src/components/primary-nav.js';
 
-/** 描画結果から href をリンク文言つきで取り出す (テスト側で DOM を組み立てずに済ませる)。 */
+/**
+ * 描画結果から href をリンク文言つきで取り出す (テスト側で DOM を組み立てずに済ませる)。
+ *
+ * 属性は `href` 以外も並ぶ前提で拾う。`<a href="...">` 決め打ちにすると、
+ * 見た目 (style や aria-current) が増えただけで href の契約テストが落ち、
+ * 「導線が壊れた」のか「装飾が付いた」のか区別できなくなるため。
+ */
 function renderLinks(tenantId: string, workspaceId: string): ReadonlyMap<string, string> {
   const html = renderToStaticMarkup(<PrimaryNav tenantId={tenantId} workspaceId={workspaceId} />);
   const links = new Map<string, string>();
-  for (const match of html.matchAll(/<a href="([^"]*)">([^<]*)<\/a>/g)) {
-    links.set(match[2] as string, (match[1] as string).replaceAll('&amp;', '&'));
+  for (const match of html.matchAll(/<a\b([^>]*)>([^<]*)<\/a>/g)) {
+    const href = /\bhref="([^"]*)"/.exec(match[1] as string)?.[1];
+    if (href === undefined) continue;
+    links.set(match[2] as string, href.replaceAll('&amp;', '&'));
   }
   return links;
 }
@@ -75,6 +83,6 @@ describe('TID-PNAV: PrimaryNav の href 生成', () => {
   it('TID-PNAV-06: 支援技術から辿れるよう landmark に名前を付ける', () => {
     const html = renderToStaticMarkup(<PrimaryNav tenantId="tenant-a" workspaceId="ws-1" />);
 
-    expect(html).toContain('<nav aria-label="主要ナビゲーション">');
+    expect(html).toMatch(/<nav\b[^>]*aria-label="主要ナビゲーション"/);
   });
 });
