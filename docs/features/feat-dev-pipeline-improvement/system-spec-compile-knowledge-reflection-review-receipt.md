@@ -145,3 +145,4 @@ blocker はない。architecture 専用章を将来追加する場合は、archi
 | 2026-08-08 | main 再合流に伴う6ファイルのコンフリクト解消(設計知識トポロジカル順序の実装統合、監査台帳union merge、生成物再計算)とMERGE_HEAD事故からの復旧を記録、仕様影響なしを再確認 | Claude |
 | 2026-08-08 | push後CIで検出されたscenario_id/task_contract記載漏れ2件を是正、pytest 963 passedへ復帰、仕様影響なしを再確認 | Claude |
 | 2026-08-08 | push後CIで検出されたsystem-dev-planner側のaudit fork台帳束縛fixture未追従を是正、pytest 197 passedへ復帰、仕様影響なしを再確認 | Claude |
+| 2026-08-08 | push後CIで検出された harness-ratchet 退行 (2026-08-04頃追加の6script が llm_eval 品質記録未添付) を是正。独立エージェントによる実コードレビューで6件の verdict (`eval-log/coverage/scripts/`) を新規生成しfloor復帰、仕様影響なしを再確認 | Claude |
