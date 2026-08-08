@@ -36,7 +36,7 @@ curl -s -H 'Cache-Control: no-cache' "$HUB_HEALTH_URL" | jq '{status, version, c
 手元の HEAD と突き合わせるだけなら、判定込みで次を実行する。
 
 ```bash
-pnpm --filter @harness-hub/hub run check:deploy-freshness -- --health-url "$HUB_HEALTH_URL"
+pnpm --filter @harness-hub/hub run check:deploy-freshness --health-url "$HUB_HEALTH_URL"
 ```
 
 ## 2. 鮮度検査が鳴ったときの対応

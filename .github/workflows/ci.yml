@@ -368,7 +368,9 @@ jobs:
       - name: 稼働ビルドの鮮度検査 (既定 branch HEAD からの乖離が続いていないか)
         id: deploy_freshness
         run: |
-          pnpm --filter @harness-hub/hub run check:deploy-freshness -- \
+          # pnpm 10 は `run <script> -- <args>` の区切り `--` を剥がさず子へ渡すため置かない
+          # (HarnessHub-0yvi / packages/db runbook-invocation が fail-closed で検出する)
+          pnpm --filter @harness-hub/hub run check:deploy-freshness \
             --health-url "$HUB_HEALTH_URL" --json /tmp/deploy-freshness.json
         env:
           HUB_HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}

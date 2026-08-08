@@ -60,7 +60,7 @@ cd apps/hub && /opt/homebrew/bin/node ../../node_modules/vitest/vitest.mjs run t
 pnpm --filter @harness-hub/hub run check:auth-gates
 
 # 鮮度検査そのものを手元から実行（本番 /health に対して）
-pnpm --filter @harness-hub/hub run check:deploy-freshness -- --health-url "$HUB_HEALTH_URL"
+pnpm --filter @harness-hub/hub run check:deploy-freshness --health-url "$HUB_HEALTH_URL"
 ```
 
 `/opt/homebrew/bin/node` を明示するのは、既定 node が x64 スライスで起動して
