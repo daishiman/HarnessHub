@@ -229,3 +229,13 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 
 本設計の検査実装は macro feature `feat-build-identity-deploy-freshness` の V6/V7、
 および `feat-classification-vocabulary-parity` が所有する。
+
+## 2026-08-08 production coverage smoke (qa-205 / `HarnessHub-p0lr`)
+
+- **配置**: deploy job の health、version/freshness、OIDC、data、hearing smoke の後段で `coverage_smoke` を実行する。
+- **credential 境界**: TOKEN/EITHER action は production Device Flow token、SESSION action は route と同じ service/repository + production DB adapter を使う。CI へ Google OIDC や新しい署名 secret を追加しない。
+- **隔離**: 2 個の使い捨て tenant に試験データを閉じ、`ai_jobs` から tenant まで子→親順で削除する。`feedbacks`、`documents`、`builds` も残数検査へ含める。
+- **rollback**: coverage smoke failure は rollback 判断へ入力する。freshness / version 再確認で停止し smoke が未実行なら、未実行を failure と見なして rollback しない。
+- **未確定境界**: provider-admin 越境は現行 edge 404 / audit 0 を診断するが、route の越境監査契約との統一は `HarnessHub-stmx` が所有する。
+
+正本契約と証拠対応は [production coverage smoke 仕様](../specs/harness-hub-production-coverage-smoke-addendum.md) と [仕様反映受領書](../docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md) を参照する。

@@ -425,6 +425,17 @@ jobs:
           HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+      # 未カバーだった 3 領域 (サインイン後 scope 判定 / Feedback Loop / Docs CMS) を毎デプロイ検査する
+      # (HarnessHub-p0lr)。hearing smoke と同じく **新しい secret を要求しない**: session-only の action は
+      # route と同じ server code を本番 DB へ実行し、token 経路は Device Flow の本物の access token を使う。
+      # 使い捨て tenant は検査後に自動削除される (feedbacks / documents / builds も後始末対象)。
+      - name: 本番 scope 判定 / Feedback / Docs CMS スモークテスト (未カバー領域)
+        id: coverage_smoke
+        run: pnpm --filter @harness-hub/hub run smoke:coverage-production
+        env:
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
       # deploy 以降のいずれかが失敗したときの復旧手順。方針は 3 点:
       #   1. DB は自動で戻さない。migration は expand-only (CREATE TABLE のみ) で、巻き戻すと実データを失う。
       #      旧 Worker は新規テーブルを参照しないため、DB を前進させたままでも本番は整合する。
@@ -447,9 +458,10 @@ jobs:
           OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
           HEARING_SMOKE_OUTCOME: ${{ steps.hearing_smoke.outcome }}
+          COVERAGE_SMOKE_OUTCOME: ${{ steps.coverage_smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME} smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME} smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME} coverage_smoke=${COVERAGE_SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
@@ -465,7 +477,8 @@ jobs:
           # 落ちているのは稼働成果物の素性が確認できない/古いという状態であり、ここで直前 version へ
           # 戻せば素性の確認できない版へ後退するだけで、検出したかった状態を自ら作ることになる。
           if [ "${DEPLOY_FRESHNESS_OUTCOME}" != "success" ] && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
-            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ]; then
+            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ] \
+            && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
             echo "鮮度検査で停止 (deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME}) しており smoke は未実行。戻す対象なし"
             exit 0
           fi
@@ -473,7 +486,8 @@ jobs:
           # しかもこの失敗は「配信版が deploy した版で安定していない」状態なので、rollback を打つと
           # どの版へ戻るのかが確定しない。戻す判断ができる材料が無い以上、ここでは戻さない。
           if [ "${SMOKE_VERSION_RECHECK_OUTCOME}" != "success" ] && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
-            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ]; then
+            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ] \
+            && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
             echo "smoke 直前の配信版再確認で停止 (smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME}) しており smoke は未実行。戻す対象なし"
             exit 0
           fi

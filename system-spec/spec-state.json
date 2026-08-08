@@ -355,7 +355,7 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-205",
+        "qa_ref": "qa-206",
         "serves_goals": [
           "G1",
           "G4",
@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-204",
+        "qa_ref": "qa-205",
         "serves_goals": [
           "G1",
           "G4",
@@ -1464,7 +1464,15 @@
     },
     {
       "id": "qa-205",
-      "question": "既存 dev-workflow/web 正本 qa-199 と、それ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。",
+      "question": "既存 testing-qa/web 正本 qa-204 と、それ以前の確定契約を維持したまま、post-signin scope・Feedback Loop・Docs CMS の本番未計測領域を毎デプロイ検査する契約をどう確定するか。",
+      "answer": "ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。\n\n【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。\n\n【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。\n\n【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。\n\n【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。\n\n【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。\n\n【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-206",
+      "question": "既存 dev-workflow/web 正本 qa-205 と、それ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。",
       "answer": "ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。\n\n【1. 宣言型 trigger】conditional_required_sections の family 選択は実装へ path 分岐を直書きせず、template-contract.json の conditional_triggers を正本とする。family 以外の条件は source_lineage の同名 field と AND 完全一致させ、条件 0 件、lineage 欠落、型不正では発火させない。\n\n【2. 正当な import 形】origin_kind=system-spec-harness かつ source_path=system-spec/index.md の specification は compile 済み index の 4 見出しを許容する。同じ origin_kind でも source_path=system-spec/00-requirements-definition.md の architecture だけは U1-U9 を許容し、通常の章 import には architecture の基本 10 見出しを要求する。完全な基本テンプレート準拠は conditional family 発火時も有効な候補として残す。\n\n【3. fail-closed 対称性】heading_missing の対象を task / specification / architecture とする。architecture が 10 見出し中 0 件でも implementation_readiness=complete になっていた非対称を解消し、正当な requirements import 以外は不足見出しを列挙して拒否する。\n\n【4. 配布同期】plugins/dev-graph/templates/template-contract.json、plugin-plans/dev-graph/templates/template-contract.json、.dev-graph/templates/template-contract.json の 3 コピーを同一バイト列に保ち、fixture は契約正本から見出しを読む。\n\n【5. 製品境界】Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。影響は repository 内の Dev Graph artifact readiness と live-trial fixture の検証契約に限定する。",
       "source": {
         "kind": "user-dialogue"
@@ -2953,9 +2961,15 @@
       "from": "確定"
     },
     {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "HarnessHub-p0lr で本番未計測 3 領域の CI smoke と rollback 証拠契約を追加確定するため",
+      "from": "確定"
+    },
+    {
       "category": "dev-workflow",
       "platform": "web",
-      "reason": "HarnessHub-o4zi で system-spec import の見出し契約と architecture fail-closed 判定を追加確定するため",
+      "reason": "main で確定した qa-205 production coverage smoke 契約へ、同時進行だった system-spec import heading 契約を欠落なく追加統合するため",
       "from": "確定"
     }
   ],

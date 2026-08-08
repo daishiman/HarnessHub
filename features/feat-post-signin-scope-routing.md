@@ -109,3 +109,9 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 ## 出典
 
 `specs/harness-hub-post-signin-workspace-scope-addendum.md` A 節・B 節 / `system-spec/spec-state.json` qa-135 【1】【2】【3】・qa-137 【1】【2】【3】【6】
+
+## Production acceptance (2026-08-08 / `HarnessHub-p0lr`)
+
+- OIDC smoke O5 は敵対的な外部 `returnTo` が遷移属性へ入らず、安全な既定 `/sheets` へ落ちることを本番 SSR 応答で検査する。
+- coverage smoke S1〜S8 は scope の欠落・衝突・越境・credential/scope 不足を HTTP status + error code で検査する。
+- provider-admin 越境の設計差は `HarnessHub-stmx` へ分離し、本 feature の P13 は production run 成功まで未完了とする。
