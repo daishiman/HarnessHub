@@ -79,6 +79,11 @@ export function FeedbackDetail({ id, tenantId, workspaceId }: FeedbackDetailProp
 
   return (
     <article>
+      <p>
+        <a href={`/feedback?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}>
+          ← 一覧に戻る
+        </a>
+      </p>
       {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
       <header>
         <h1>{feedback.code}</h1>
