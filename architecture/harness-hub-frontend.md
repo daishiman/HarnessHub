@@ -164,4 +164,4 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `packages/ui` は ShellSidebar / ShellHeader / ShellFooter / MobileTabBar、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet を所有する。`apps/hub` は scope、identity、route と業務内容だけを結線する。
 - navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
 - 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
-- 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-205 / qa-206、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。
+- 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。

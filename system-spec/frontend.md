@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-205 |
+| Web (web) | 確定 | 確定質疑: qa-206 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,7 +24,7 @@ serves_goals: [G1, G2, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-205 (対応セル: web)
+### qa-206 (対応セル: web)
 
 **質問**: qa-203 とそれ以前の frontend/web 契約を維持したまま、認証後の全 route を包む HubShell、session role による navigation 投影、packages/ui と apps/hub の所有境界をどう確定するか。
 
@@ -96,7 +96,7 @@ serves_goals: [G1, G2, G3]
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-205 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-206 (対応セル: web) の判断へ適用する
 - 上記原則は確定内容 qa-007 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
 - 資するゴール: G1, G2, G3
 

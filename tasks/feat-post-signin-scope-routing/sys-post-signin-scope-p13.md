@@ -74,3 +74,4 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 - spec writeback: P13 は実行結果・判断・改善点を確定 system spec と architecture へ書き戻し、次回の外側ループへ引き継ぐ。
 - 仕様反映受領書: `docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md` を正本とし、system-spec/・specs/・architecture/・features/・tasks/・docs/ の反映先または no-change の根拠を記録する。
 - 2026-08-08 追補: RSC の `resolveDashboardScope` と PrimaryNav 最小シェルを実装結線。仕様意味変更ではなく画面側の session scope 再利用。受領書の「追補 (2026-08-08)」節と architecture/features/docs の additive 更新を正本とする。
+- 2026-08-08 production smoke: `smoke:coverage-production` の S1〜S8 と OIDC O5 を実装・CI 結線した。local focused test / typecheck は PASS。production deploy 実走は PR merge 後の外部証拠であり、成功まで本 P13 を close しない。

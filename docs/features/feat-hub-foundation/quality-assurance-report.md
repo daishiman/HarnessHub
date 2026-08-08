@@ -129,7 +129,7 @@ G7 は migration が存在しない現 scope では対象なしだが、対象�
 | `apps/hub` test | 139 files / 1503 pass、10 todo |
 | 実 Chromium / VRT | 3 files / 33 tests PASS、macOS light/dark baseline 一致 |
 | task spec validator | hub foundation / post-signin scope routing の 2 package が PASS、violations 0 |
-| system-spec | qa-205 / qa-206 へ正規再確定、complete / source citation gate PASS |
+| system-spec | main の qa-205 を保持し、UI 契約を qa-206 / qa-207 へ正規再確定。complete / source citation gate PASS |
 | repository gate | `pnpm verify` exit 0 |
 | file granularity | 602 行の catalog を 3 file へ分割。変更した手書き file は 500 行以下 |
 

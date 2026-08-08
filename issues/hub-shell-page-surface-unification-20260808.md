@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub 共通シェル・全ページ表面の統一"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:30:00Z"
-updated_at: "2026-08-08T10:45:00Z"
+updated_at: "2026-08-08T11:17:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-hub-foundation","feat-post-signin-scope-routing","spec-harness-hub-ui-foundation-addendum","arch-harness-hub-frontend"]
@@ -31,7 +31,7 @@ template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524","evaluator":"final review + system-spec transition writer","evidence_ref":"docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"}
+confirmation_evidence: {"evaluated_digest":"a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2","evaluator":"final review + system-spec transition writer","evidence_ref":"docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-08T10:30:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "前回 UI foundation の上に共通 shell と全画面 surface を載せる独立した実装・公開単位"

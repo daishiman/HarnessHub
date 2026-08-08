@@ -2,7 +2,7 @@
 status: accepted
 layer: frontend-implementation-guide
 feature: feat-hub-foundation
-spec_qa_refs: [qa-204, qa-205, qa-206]
+spec_qa_refs: [qa-204, qa-206, qa-207]
 reviewed_at: 2026-08-08
 ---
 

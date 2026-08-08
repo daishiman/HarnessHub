@@ -2,7 +2,10 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { TursoAdapter } from '../connection/turso';
 import { createHearingSmokeDbProbe } from '../repository/composition';
+import { builds } from '../schema/builds/schema';
 import { idpConnections, tenants, users, workspaces } from '../schema/core/identity';
+import { documents } from '../schema/docs-cms/schema';
+import { feedbacks } from '../schema/feedback-loop/schema';
 import { asCore, createLibsqlTestDb } from './support/test-db';
 
 let adapter: TursoAdapter;
@@ -48,7 +51,52 @@ describe('createHearingSmokeDbProbe', () => {
       workerIdpSubject: 'worker-subject',
     });
 
+    const now = Date.now();
+    await adapter.client.insert(feedbacks).values({
+      id: 'feedback-smoke-cleanup',
+      tenantId: fixture.tenantId,
+      workspaceId: fixture.workspaceId,
+      code: 'FR-9001',
+      projectId: 'project-smoke-cleanup',
+      type: 'improvement',
+      priority: 'medium',
+      source: 'manual',
+      body: 'cleanup 対象の feedback',
+      status: 'open',
+      createdBy: fixture.memberUserId,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await adapter.client.insert(documents).values({
+      id: 'document-smoke-cleanup',
+      tenantId: fixture.tenantId,
+      scope: 'tenant',
+      title: 'cleanup 対象の document',
+      bodyMarkdown: '本文',
+      createdBy: fixture.memberUserId,
+      updatedBy: fixture.memberUserId,
+      createdAt: now,
+      updatedAt: now,
+    });
+    await adapter.client.insert(builds).values({
+      id: 'build-smoke-cleanup',
+      tenantId: fixture.tenantId,
+      workspaceId: fixture.workspaceId,
+      type: 'improvement',
+      stage: 'build',
+      feedbackId: 'feedback-smoke-cleanup',
+      createdAt: now,
+      updatedAt: now,
+    });
+
     expect(await adapter.client.select().from(users).where(eq(users.tenantId, fixture.tenantId))).toHaveLength(2);
+    expect(await adapter.client.select().from(feedbacks).where(eq(feedbacks.tenantId, fixture.tenantId))).toHaveLength(
+      1,
+    );
+    expect(await adapter.client.select().from(documents).where(eq(documents.tenantId, fixture.tenantId))).toHaveLength(
+      1,
+    );
+    expect(await adapter.client.select().from(builds).where(eq(builds.tenantId, fixture.tenantId))).toHaveLength(1);
     await expect(probe.cleanupTenant(fixture.tenantId)).resolves.toEqual({ remainingRows: 0, clean: true });
     expect(await adapter.client.select().from(tenants).where(eq(tenants.id, fixture.tenantId))).toEqual([]);
   });

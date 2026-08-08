@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub UI 基盤・実ブラウザ品質ゲート追補"
 owners: ["daishiman"]
 created_at: "2026-08-08T07:16:25Z"
-updated_at: "2026-08-08T10:45:00Z"
+updated_at: "2026-08-08T11:17:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["feat-hub-foundation","feat-post-signin-scope-routing","issue-ui-foundation-final-review-20260808","issue-hub-shell-page-surface-unification-20260808","arch-harness-hub-frontend","arch-harness-hub-testing-qa"]
 resource_scope: ["apps/hub/","packages/ui/","specs/harness-hub-ui-foundation-addendum.md","system-spec/frontend.md","system-spec/ui-ux.md","system-spec/testing-qa.md","architecture/harness-hub-frontend.md","features/feat-hub-foundation.md","features/feat-post-signin-scope-routing.md","tasks/feat-hub-foundation/sys-hub-foundation-p12.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md","docs/frontend-spec.md","docs/frontend-ui-foundation-spec.md","docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"]
 purpose: "UI 基盤の所有境界、画面状態、breakpoint、実ブラウザ/VRT gate を製品仕様として固定する"
-goal: "qa-204 / qa-205 / qa-206 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する"
+goal: "qa-204 / qa-206 / qa-207 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する"
 scope_in: ["AppShell / HubShell / layout / design token の公開契約","loading / empty / not found / forbidden / unexpected error の表示契約","role-aware navigation と desktop/mobile shell","Panel / ScreenHeader / ActionLink と modal layer の操作契約","responsive breakpoint と局所横スクロール契約","実 Chromium、catalog VRT、CI failure evidence"]
 scope_out: ["公開 API・DB schema・認証認可判定の変更","Cloudflare deploy unit と本番 SLO の変更"]
 acceptance: ["packages/ui の公開 shell / layout / token / state contract を apps/hub が利用する","認証後 route が一つの HubShell と main landmark を使う","role 未確定または member へ管理者専用導線を表示しない","破壊操作と modal layer が可逆性・focus・scroll contract を満たす","root / dashboard / workspace の状態 file 欠落を G15 が拒否する","360x800 / 768x1024 / 1280x800 の responsive regression が実 Chromium で通る","catalog 7 分類の light / dark VRT が OS baseline と一致する","UI / Hub の typecheck・lint・unit/a11y と client bundle budget が通る"]
@@ -31,10 +31,10 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524","evaluator":"final review + system-spec transition writer","evidence_ref":"docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-08T10:45:00Z","origin_kind":"system-spec-harness","source_digest":"32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2","evaluator":"final review + system-spec transition writer","evidence_ref":"docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-08T11:17:00Z","origin_kind":"system-spec-harness","source_digest":"a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.99
-classification_reason: "qa-204 / qa-205 / qa-206 の確定 UI shell・surface・quality 契約を横断参照する製品仕様追補"
+classification_reason: "qa-204 / qa-206 / qa-207 の確定 UI shell・surface・quality 契約を横断参照する製品仕様追補"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-ui-foundation-addendum.md","confidence":0.99}]
 issue_linkage: null
 tracker_binding: "none"
@@ -180,7 +180,7 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 
 ## 正本と証跡
 
-- elicitation: `system-spec/spec-state.json` qa-204 / qa-205 / qa-206（qa-205 は qa-203、qa-206 は qa-201 を継承）
+- elicitation: `system-spec/spec-state.json` qa-204 / qa-206 / qa-207（qa-206 は qa-203、qa-207 は qa-201 を継承）
 - compiled chapters: `system-spec/ui-ux.md`、`system-spec/testing-qa.md`、`system-spec/frontend.md`
 - frontend guide: `docs/frontend-ui-foundation-spec.md`
 - architecture: `architecture/harness-hub-frontend.md`

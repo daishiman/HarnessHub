@@ -107,6 +107,6 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 ## 共通シェル・全ページ表面の文書追補 (2026-08-08 / `HarnessHub-imzk`)
 
-- `frontend.web` / `ui-ux.web` を正規 transition writer で qa-205 / qa-206 へ再確定し、HubShell、role-aware navigation、page surface、overlay contract を system-spec / specs / architecture / features / docs へ反映した。
+- `frontend.web` / `ui-ux.web` を正規 transition writer で qa-206 / qa-207 へ再確定し、HubShell、role-aware navigation、page surface、overlay contract を system-spec / specs / architecture / features / docs へ反映した。
 - 旧 PrimaryNav の到達性契約は HubShell と `nav-items.ts` へ移管した。運用時の一次切り分けは post-signin runbook、実装者向けの使い分けは `docs/frontend-ui-foundation-spec.md` を正とする。
 - 仕様影響・品質ゲート・Beads / PR の受領証跡は [共通シェル仕様反映受領書](../../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) に集約する。

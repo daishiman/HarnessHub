@@ -18,7 +18,7 @@ beads_ids:
 ## 2. 結論
 
 - **仕様・設計影響: あり (`reflected`)**。
-- `frontend.web` と `ui-ux.web` を正規 transition writer で R4-reopen し、qa-205 / qa-206 として再確定した。system-spec state digest は `32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524`。
+- `frontend.web` と `ui-ux.web` を正規 transition writer で R4-reopen し、qa-206 / qa-207 として再確定した。system-spec state digest は `a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2`。
 - 公開 API、DB schema、session claim schema、認可の最終判定、Cloudflare deploy unit は変更しない。
 - 実装レビューで role token の不一致、member への管理導線露出、破壊操作での汎用 Modal 使用、mobile の「その他」幅、mobile header title 欠落を検出し、修正と回帰テストを追加した。
 - 602 行だった catalog 定義は `entries.tsx`、`entries-data.tsx`、`entries-shell.tsx` へ責務分割した。生成正本の `.dev-graph/state/graph.json` / `system-spec/spec-state.json` を除き、変更対象の手書きファイルは 500 行以下である。
@@ -36,7 +36,7 @@ beads_ids:
 
 | 層 | 反映内容 |
 |---|---|
-| `system-spec/` | qa-205 の HubShell / role-aware navigation、qa-206 の page surface / overlay contract |
+| `system-spec/` | qa-206 の HubShell / role-aware navigation、qa-207 の page surface / overlay contract |
 | `specs/` | `harness-hub-ui-foundation-addendum.md` の FR-007〜010、NFR、移行・受入条件 |
 | `architecture/` | `packages/ui` owner と `apps/hub` consumer、shell / page surface の境界 |
 | `features/` | hub foundation と post-signin scope routing の post-closeout 追補 |
@@ -67,7 +67,7 @@ beads_ids:
 | repository `pnpm verify` | exit 0。lint、全 workspace typecheck/test、Next/Worker build、auth、tenant、secret、drift、bundle gate を通過 |
 | diff hygiene | `git diff --check` PASS、競合 marker 0、無関係な `eval-log/review-queue.jsonl` は commit 対象外 |
 
-`--require-foundation` は今回以前の HEAD にも存在する U1〜U9 の `qa_log` 参照欠落 9 件で FAIL する。原文・出典を捏造して直さず、通常の `--require-complete` と今回再確定した qa-205 / qa-206 の正規 gate が PASS することを受領条件とした。
+`--require-foundation` は今回以前の HEAD にも存在する U1〜U9 の `qa_log` 参照欠落 9 件で FAIL する。原文・出典を捏造して直さず、通常の `--require-complete` と今回再確定した qa-206 / qa-207 の正規 gate が PASS することを受領条件とした。local `main` 取込時に production coverage smoke が qa-205 を先に使用していたため、単一 transition writer で UI 契約を qa-206 / qa-207 へ再採番した。
 
 ## 7. Beads と公開状態
 

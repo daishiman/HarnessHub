@@ -194,4 +194,4 @@ P05〜P12 で middleware の session scope 合流と着地先解決は結線済�
 到達性の責務を引き継いだ。新たに role-aware navigation と server-rendered current path
 を仕様化したため、この後続分の判断・検証は
 [共通シェル仕様反映受領書](../feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md)
-および system-spec qa-205 / qa-206 を正とする。qa-135 / qa-137 の scope・認可契約は不変である。
+および system-spec qa-206 / qa-207 を正とする。qa-135 / qa-137 の scope・認可契約は不変である。

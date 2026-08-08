@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1433,
+  "graph_revision": 1436,
   "nodes": [
     {
       "acceptance": [
@@ -51331,12 +51331,24 @@
       "pull_request_linkages": [],
       "purpose": "本番へ出ている 3 feature が『測る手段が無い』ために P13 を完了できない状態を解消する。",
       "related_nodes": [
-        "spec-post-signin-landing-observability"
+        "spec-post-signin-landing-observability",
+        "spec-production-coverage-smoke",
+        "issue-authz-provider-admin-edge-route-mismatch-20260808"
       ],
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/scripts",
-        "apps/hub/package.json"
+        "apps/hub/package.json",
+        "apps/hub/tests",
+        "packages/db/repository/hearing-smoke.ts",
+        "packages/db/__tests__/hearing-smoke.test.ts",
+        "system-spec/spec-state.json",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-production-coverage-smoke-addendum.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features",
+        "tasks",
+        "docs/features"
       ],
       "scope_in": [
         "本番 smoke script の新規実装",
@@ -51370,7 +51382,7 @@
       "template_version": "1.0.0",
       "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T06:05:00Z"
+      "updated_at": "2026-08-08T09:52:24.683829Z"
     },
     {
       "acceptance": [
@@ -51525,7 +51537,7 @@
         }
       ],
       "classification_confidence": 0.99,
-      "classification_reason": "qa-204 / qa-205 / qa-206 の確定 UI shell・surface・quality 契約を横断参照する製品仕様追補",
+      "classification_reason": "qa-204 / qa-206 / qa-207 の確定 UI shell・surface・quality 契約を横断参照する製品仕様追補",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -51535,7 +51547,7 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524",
+        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
         "evaluator": "final review + system-spec transition writer",
         "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
       },
@@ -51556,7 +51568,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-204 / qa-205 / qa-206 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する",
+      "goal": "qa-204 / qa-206 / qa-207 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する",
       "graph_node_id": "spec-harness-hub-ui-foundation-addendum",
       "implementation_readiness": {
         "checked_at": "2026-08-08T07:16:25Z",
@@ -51611,9 +51623,9 @@
         "Cloudflare deploy unit と本番 SLO の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-08T10:45:00Z",
+        "imported_at": "2026-08-08T11:17:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524",
+        "source_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -51633,7 +51645,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub UI 基盤・実ブラウザ品質ゲート追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-08T10:45:00Z"
+      "updated_at": "2026-08-08T11:17:00Z"
     },
     {
       "acceptance": [
@@ -51674,7 +51686,7 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "32c57c3112d53095003b0b67e6aac95821e55c8a6e16846cfc711868dc2bc524",
+        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
         "evaluator": "final review + system-spec transition writer",
         "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
       },
@@ -51764,7 +51776,332 @@
       "template_version": "1.0.0",
       "title": "Harness Hub 共通シェル・全ページ表面の統一",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T10:45:00Z"
+      "updated_at": "2026-08-08T11:17:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-production-coverage-smoke-addendum.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "3 feature を横断する本番品質契約であり、500 行目前の総合仕様から独立した specification addendum として分離する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": "user final-review instruction + canonical system-spec qa-205",
+        "evidence_ref": "system-spec/testing-qa.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T10:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-production-coverage-smoke-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "spec-production-coverage-smoke",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T10:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "issue-production-smoke-coverage-gaps-20260808",
+        "spec-post-signin-workspace-scope"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts",
+        "packages/db/repository/hearing-smoke.ts",
+        "docs/features",
+        "features",
+        "tasks"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T10:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "draft",
+      "tags": [
+        "production-smoke",
+        "post-signin",
+        "feedback-loop",
+        "docs-cms"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub production coverage smoke 仕様追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-08T10:00:00Z"
+    },
+    {
+      "acceptance": [
+        "provider-admin の越境要求に対する挙動が edge と route で一致している",
+        "provider.cross_tenant_access 監査行が『必ず出る』か『そもそも契約に無い』かのいずれかに確定している",
+        "本番 smoke S8 が新しい契約の期待値で緑になる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-stmx",
+        "linked_at": "2026-08-08T09:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/authz-provider-admin-edge-route-mismatch-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-p0lr の実装中に判明した、単一 feature に属さない横断的な認可設計の不整合。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:00:00Z",
+      "depends_on": [],
+      "domain": "security",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/authz-provider-admin-edge-route-mismatch-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "edge middleware と route 層 (withAuthz) の provider-admin 越境の扱いを一致させ、本番 smoke S8 の期待値と FL-SEC8-101..104 を新しい契約へ揃える。",
+      "graph_node_id": "issue-authz-provider-admin-edge-route-mismatch-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "provider-admin の越境許可が『契約上は許可・実運用では到達不能』という二枚舌になっている状態を、どちらかへ倒して解消する。",
+      "related_nodes": [
+        "issue-production-smoke-coverage-gaps-20260808"
+      ],
+      "resource_scope": [
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/authz/with-authz.ts",
+        "apps/hub/scripts/smoke-production-coverage.ts",
+        "apps/hub/src/__tests__/feedback-loop"
+      ],
+      "scope_in": [
+        "edge/route いずれへ倒すかの設計判断と実装",
+        "FL-SEC8-102 の契約記述の更新",
+        "本番 smoke S8 の期待値更新"
+      ],
+      "scope_out": [
+        "provider-admin 以外の role の判定順変更",
+        "T-ISO-06 (存在秘匿 404) の方針変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "draft",
+      "tags": [
+        "authz",
+        "multi-tenancy",
+        "audit",
+        "dead-code"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "provider-admin 越境の edge 遮断と route 層監査契約の不整合を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:00:00Z"
+    },
+    {
+      "acceptance": [
+        "3 択のいずれかへ決着し、実装・secret 台帳・運用記録が一致している",
+        "結線を選んだ場合は ci.yml から fail-closed で実行され、失敗時ロールバックの判定にも当該 outcome が追加されている",
+        "廃止を選んだ場合は publish pipeline の退行検出手段が別に存在し、その所在が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pf5o",
+        "linked_at": "2026-08-08T09:53:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/publish-smoke-unwired-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-p0lr が scope_out（新しい secret の追加）を理由に publish smoke の結線を保留した積み残し。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:53:00Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/publish-smoke-unwired-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "publish の本番検証が『走る』か『意図して走らせない』かのどちらかへ確定し、未結線の理由と退行検出手段を追跡できる状態にする。",
+      "graph_node_id": "issue-publish-smoke-unwired-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:53:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "登録済みだが CI から一度も呼ばれていない smoke:publish-production について、結線するか廃止するかを決着させ、実装・台帳・運用判断を一致させる。",
+      "related_nodes": [
+        "issue-production-smoke-coverage-gaps-20260808"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts/smoke-production-publish.ts",
+        "scripts/ci/actions-secrets-registry.json",
+        "docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "Device Flow 化 / secrets 台帳登録 / 廃止 の 3 択の決着",
+        "決着に応じた ci.yml 結線または script 削除",
+        "仕様反映受領書と運用台帳の更新"
+      ],
+      "scope_out": [
+        "既に結線済み 4 smoke の再設計",
+        "wrangler rollback 判定ロジックそのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:53:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "draft",
+      "tags": [
+        "ci",
+        "smoke",
+        "publish",
+        "secrets",
+        "deployment-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "smoke:publish-production を結線するか廃止するか決着させる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:53:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

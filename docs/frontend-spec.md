@@ -75,7 +75,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 部品 | ベース | 一括担保する a11y/品質 | 主な消費画面 |
 |---|---|---|---|
 | Button / Input / Select / Checkbox / Radio / Textarea | shadcn/ui | ラベル紐付け・focus-visible・44px タップ域 (§6.1) | 全画面 |
-| Modal / ConfirmDialog / BottomSheet / navigation disclosure | 自作 (`packages/ui`) | modal は focus trap・Esc・focus 復帰・scroll lock、破壊操作は可逆性明示、navigation disclosure は標準 Tab 順 (qa-206) | 全画面 |
+| Modal / ConfirmDialog / BottomSheet / navigation disclosure | 自作 (`packages/ui`) | modal は focus trap・Esc・focus 復帰・scroll lock、破壊操作は可逆性明示、navigation disclosure は標準 Tab 順 (qa-207) | 全画面 |
 | Tabs / Badge (状態チップ) / Toast / Skeleton / Tooltip | shadcn/ui | 状態語彙統一 (§2.4)・aria-live=polite・CLS 抑制 | 全画面 |
 | DataTable (ソート・cursor ページング・カード化応答) | shadcn Table + 自作 | th scope・ソート aria-sort・モバイルでカードリスト化 (§6.3) | S01/S04/S06/S11/S14/S15/S17 |
 | KPI カード / LineChart / BarChart / DonutChart / Sparkline | 自作 SVG | role="img" + aria-label + 「表で見る」代替テーブル切替・SSR 描画 | S09/S12/S16/S17 |
@@ -210,7 +210,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - `100dvh` 基準・`env(safe-area-inset-*)` 対応 (ノッチ/ホームバー)。入力フォント 16px 以上 (iOS 自動ズーム防止)。
 - 横スクロールは §6.3 で明示した箇所のみ許可 (それ以外の水平オーバーフローは欠陥として扱う)。
 
-### 6.2 ナビゲーション (ボトムタブ + その他 disclosure = qa-206)
+### 6.2 ナビゲーション (ボトムタブ + その他 disclosure = qa-207)
 
 - **ボトムタブ 5 slot (固定)**: ダッシュボード (S09) / ハーネス (S01) / 申請 (S11。新規作成ボタン→S10) / 通知 (未読バッジ) / **その他**。
 - **その他タブ** → `details/summary` disclosure: 実在 route の追加導線だけを表示する。session role は `member` / `workspace-admin` / `provider-admin` の 3 種で出し分け、role 未確定時も管理導線を隠す (deny-by-default)。背景を遮る modal ではないため focus trap / scroll lock は適用しない。
