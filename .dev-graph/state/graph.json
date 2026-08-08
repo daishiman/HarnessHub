@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1436,
+  "graph_revision": 1437,
   "nodes": [
     {
       "acceptance": [
@@ -51700,7 +51700,9 @@
       "file_path": "issues/hub-shell-page-surface-unification-20260808.md",
       "github_project_linkages": [],
       "github_publication": {
-        "labels": [],
+        "labels": [
+          "ui-visual"
+        ],
         "milestone": null,
         "mode": "local_only",
         "project_aliases": []
@@ -51721,7 +51723,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-hub-shell-page-surface-unification-20260808",
+          "linked_at": "2026-08-08T11:44:47Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 683,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/683"
+        }
+      ],
       "purpose": "認証後の全画面を一貫したナビゲーション、画面見出し、面、モーダル契約へ統一し、権限外導線と破壊操作の誤操作を防ぐ",
       "related_nodes": [
         "feat-hub-foundation",
@@ -51776,7 +51791,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub 共通シェル・全ページ表面の統一",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T11:17:00Z"
+      "updated_at": "2026-08-08T11:46:34.607947Z"
     },
     {
       "acceptance": [],

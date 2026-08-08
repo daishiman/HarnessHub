@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub 共通シェル・全ページ表面の統一"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:30:00Z"
-updated_at: "2026-08-08T11:17:00Z"
+updated_at: "2026-08-08T11:46:34.607947Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-hub-foundation","feat-post-signin-scope-routing","spec-harness-hub-ui-foundation-addendum","arch-harness-hub-frontend"]
@@ -39,9 +39,9 @@ classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/hu
 issue_linkage: null
 tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-imzk","linked_at":"2026-08-08T10:34:00Z","sync_state":"linked"}
-github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_publication: {"labels":["ui-visual"],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-hub-shell-page-surface-unification-20260808","linked_at":"2026-08-08T11:44:47Z","merge_commit_sha":null,"merged_at":null,"pr_number":683,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/683"}]
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"linked_pr_merged_all","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-08-08T10:30:00Z","missing_sections":[],"status":"complete"}
@@ -90,14 +90,15 @@ implementation_readiness: {"checked_at":"2026-08-08T10:30:00Z","missing_sections
 
 ## 受入条件
 
-- [ ] 認証後 route が一つの共通 HubShell と main landmark を使う。
-- [ ] role 未確定または member へ管理者専用導線を表示しない。
-- [ ] 破壊操作が可逆性を明示する ConfirmDialog を使う。
-- [ ] modal layer が focus trap、Esc、focus restore、scroll lock を満たす。
-- [ ] 手書きファイルが 500 行以下で全品質ゲートが通る。
-- [ ] 正規仕様反映、受領書、Beads、base main 向け draft PR が揃う。
+- [x] 認証後 route が一つの共通 HubShell と main landmark を使う。
+- [x] role 未確定または member へ管理者専用導線を表示しない。
+- [x] 破壊操作が可逆性を明示する ConfirmDialog を使う。
+- [x] modal layer が focus trap、Esc、focus restore、scroll lock を満たす。
+- [x] 手書きファイルが 500 行以下で全品質ゲートが通る。
+- [x] 正規仕様反映、受領書、Beads、base main 向け draft PR が揃う。
 
 ## 検証証跡
 
-- コマンド/テスト: UI / Hub unit・a11y・typecheck・lint、task spec validator、`pnpm verify`、system-spec gate。
+- コマンド/テスト: UI / Hub unit・a11y・typecheck・lint、task spec validator、`pnpm verify`、system-spec gate、CI-equivalent local gate 139/139 PASS。
 - 証跡 path: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`。
+- 公開証跡: draft PR [#683](https://github.com/daishiman/HarnessHub/pull/683)、Linux VRT run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470)。

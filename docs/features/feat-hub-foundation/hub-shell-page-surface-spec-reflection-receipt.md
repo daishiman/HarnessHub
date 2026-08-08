@@ -19,6 +19,7 @@ beads_ids:
 
 - **仕様・設計影響: あり (`reflected`)**。
 - `frontend.web` と `ui-ux.web` を正規 transition writer で R4-reopen し、qa-206 / qa-207 として再確定した。system-spec state digest は `a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2`。
+- `origin/main` (`35a10b87`) を local `main` (`c3e28a3f`) へ反映し、その local `main` を作業 branch へ merge (`d322100c`) した。正しい base `main` 向け draft PR #683 を公開した。
 - 公開 API、DB schema、session claim schema、認可の最終判定、Cloudflare deploy unit は変更しない。
 - 実装レビューで role token の不一致、member への管理導線露出、破壊操作での汎用 Modal 使用、mobile の「その他」幅、mobile header title 欠落を検出し、修正と回帰テストを追加した。
 - 602 行だった catalog 定義は `entries.tsx`、`entries-data.tsx`、`entries-shell.tsx` へ責務分割した。生成正本の `.dev-graph/state/graph.json` / `system-spec/spec-state.json` を除き、変更対象の手書きファイルは 500 行以下である。
@@ -65,6 +66,7 @@ beads_ids:
 | system-spec coverage | `--require-complete` PASS、未収集 0 |
 | source citation | PASS |
 | repository `pnpm verify` | exit 0。lint、全 workspace typecheck/test、Next/Worker build、auth、tenant、secret、drift、bundle gate を通過 |
+| CI-equivalent local gate | 正本 `scripts/run-ci-checks.sh` を手動完走し、139 PASS / 5 段階導入 warning / 0 FAIL |
 | diff hygiene | `git diff --check` PASS、競合 marker 0、無関係な `eval-log/review-queue.jsonl` は commit 対象外 |
 
 `--require-foundation` は今回以前の HEAD にも存在する U1〜U9 の `qa_log` 参照欠落 9 件で FAIL する。原文・出典を捏造して直さず、通常の `--require-complete` と今回再確定した qa-206 / qa-207 の正規 gate が PASS することを受領条件とした。local `main` 取込時に production coverage smoke が qa-205 を先に使用していたため、単一 transition writer で UI 契約を qa-206 / qa-207 へ再採番した。
@@ -73,13 +75,16 @@ beads_ids:
 
 - `HarnessHub-imzk`: 本変更の実装・仕様・検証・draft PR を追跡し、PR merge までは `in_progress` を維持する。
 - 前回 UI 基盤 5 Beads (`tiqw / snlo / xuhj / xaa3 / 4a2z`): PR #679 の `main` merge を確認し、2026-08-08 に closed へ収束した。
-- branch / PR / Linux VRT の公開証跡は初回 push 後に本節へ追記する。
+- branch: `devgraph/issue-hub-shell-page-surface-unification-20260808`、draft PR: [#683](https://github.com/daishiman/HarnessHub/pull/683)、base: `main`。
+- Linux Chromium VRT: 初回 Actions run [#31255679470](https://github.com/daishiman/HarnessHub/actions/runs/31255679470) は旧 baseline との差で FAIL。artifact の light/dark 8 枚を目視し、今回の shell / surface / overlay の意図した表示だけであることを確認して Linux baseline として受領した。更新後の再実行を待つ。
+- pre-push の Git hook 文脈だけで `jsonschema` を未導入と誤判定する事象は `HarnessHub-sl6o` に分離した。同一の CI-equivalent gate は手動で 139/139 PASS 後、初回 push のみリポジトリ既定の `PUSH_SKIP_CI=1` を使用し、GitHub CI で再検査する。
 
 ## 8. 残課題
 
-1. draft PR 作成後、GitHub Linux Chromium で VRT を再取得し、意図した差分だけを baseline として受領する。
+1. 更新した Linux Chromium baseline の再実行を PASS で受領する。
 2. PR merge 後、`HarnessHub-imzk` と graph node を default branch reconciliation で閉じる。
 3. system-spec U1〜U9 の既存 source-index debt は、原文を特定できる独立 task で扱う。
+4. pre-push の Python 依存誤判定を `HarnessHub-sl6o` で再現・修復する。
 
 ## 9. 説明
 
