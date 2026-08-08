@@ -106,3 +106,19 @@ implementation_readiness: {"checked_at":"2026-08-07T11:35:00Z","missing_sections
 確定仕様追補 [`spec-post-signin-landing-observability`](../specs/harness-hub-post-signin-landing-observability-addendum.md) を macro 分解したもの。
 正本は `system-spec/spec-state.json` (qa-170〜qa-199, digest `e1ecf64f6bd0dfc6…`)。
 本 feature は仕様本文を複製せず、`architecture_refs` と source lineage で参照する。
+
+## 10. 実装状態 (2026-08-08)
+
+P01〜P13 の成果物を実装し、契約・挙動・CI 配線の品質ゲートを緑にした。
+
+| 層 | 参照 |
+|---|---|
+| 実装確定契約 | [`specs/harness-hub-build-identity-deploy-freshness-addendum.md`](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) |
+| 親追補索引 | [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8 |
+| architecture | [`architecture/harness-hub-infrastructure.md`](../architecture/harness-hub-infrastructure.md) 2026-08-08 節 |
+| 運用・証跡 | [`docs/features/feat-build-identity-deploy-freshness/`](../docs/features/feat-build-identity-deploy-freshness/) |
+| 仕様反映受領書 | [`docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`](../docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md) |
+| Beads epic | `HarnessHub-hf9y`（子 P01-P13: `7sac` / `bod6` / `8x08` / `ivao` / `8u3p` / `8djt` / `oekv` / `dgkk` / `j05t` / `vdhi` / `gchm` / `rtcd` / `gvg3`） |
+| dev-graph node | `feat-build-identity-deploy-freshness` / `SYS-BUILD-IDENTITY-P01` 〜 `P13` |
+
+**残課題:** 本番 deploy 後の `/health.commit` 実測と鮮度検査 step の緑確認（`release-record.md` に手順あり。未取得を確認済みと書かない）。

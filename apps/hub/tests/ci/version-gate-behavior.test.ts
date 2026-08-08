@@ -24,7 +24,9 @@ const OLD_VERSION = 'old-2e4a6c5b';
 /** ci.yml の version_gate step から `run:` 本文だけを取り出し、実行可能な bash script にする */
 function extractVersionGateScript(): string {
   const start = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
-  const end = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+  // 直後の step (鮮度検査) の手前で切る。OIDC smoke まで広げると、間に挟まった step の YAML が
+  // bash script の末尾へ紛れ込み、抽出した本文が version_gate 単体でなくなる
+  const end = WORKFLOW.indexOf('- name: 稼働ビルドの鮮度検査');
   expect(start).toBeGreaterThan(-1);
   expect(end).toBeGreaterThan(start);
 

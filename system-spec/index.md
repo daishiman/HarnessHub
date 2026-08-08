@@ -35,6 +35,14 @@ kind: index
 - **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow, testing-qa
 - **対象外**: —
 
+## 実装 writeback 索引 (確定章への追記ではない)
+
+elicitation（要件ヒアリング）確定後に実装へ落とした契約の索引。`spec-state.json` のセル状態は変更せず、実装契約は `specs/` 追補と architecture へ書く。
+
+| 主題 | 要求の出所 | 実装契約 | feature / Beads |
+|---|---|---|---|
+| 稼働ビルドの素性 (acceptance V6) と反映鮮度 (acceptance V7) | `dev-workflow.md` qa-198-f | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y` |
+
 ## 全体ドキュメント出典 (未割当参照)
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |

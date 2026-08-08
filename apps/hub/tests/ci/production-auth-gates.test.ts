@@ -139,3 +139,42 @@ describe('production OIDC / owner authorization release gates', () => {
     expect(step).toContain('if [ "${VERSION_GATE_OUTCOME}" != "success" ]; then');
   });
 });
+
+// 2026-08-07: 着地先を直した commit が 4 日間本番へ反映されないまま、deploy は success を返し続けた。
+// 「稼働している成果物がどの commit か」を問い合わせる手段が無かったことが、この 4 日間の本体である。
+describe('稼働ビルドの素性と鮮度のゲート', () => {
+  it('deploy 時に稼働成果物へ commit を埋め込む (wrangler.jsonc へ値を書かない経路で)', () => {
+    // --var は deploy 時注入なので、設定ファイルへ値を保存しない規約と両立する。
+    // commit sha は公開情報なので secret 扱いにしない
+    expect(WORKFLOW).toContain('--var "HUB_COMMIT_SHA:${GITHUB_SHA}"');
+  });
+
+  it('配信版一致の検査を通した直後、smoke の前に鮮度検査を実行する', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const freshness = WORKFLOW.indexOf('- name: 稼働ビルドの鮮度検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+
+    expect(freshness).toBeGreaterThan(versionGate);
+    expect(oidc).toBeGreaterThan(freshness);
+
+    const step = WORKFLOW.slice(freshness, oidc);
+    // 検査本体は package script 経由で呼ぶ (しきい値と判定を workflow へ二重定義しない)
+    expect(step).toContain('run check:deploy-freshness');
+    expect(step).toContain('id: deploy_freshness');
+    expect(step).toContain('--health-url "$HUB_HEALTH_URL"');
+    // 判定根拠を後から検証できるよう JSON 証跡を残す
+    expect(step).toContain('--json');
+  });
+
+  it('鮮度検査で止まったときは rollback しない (素性の確認できない版へ後退させない)', () => {
+    expect(WORKFLOW).toContain('DEPLOY_FRESHNESS_OUTCOME: ${{ steps.deploy_freshness.outcome }}');
+
+    const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
+    const step = WORKFLOW.slice(rollback);
+
+    // 鮮度検査で止まった時点で後続 smoke は未実行 = 「新しい版が壊れている」証拠が無い。
+    // ここで戻すと、素性を確認できない古い版へ後退するだけになる
+    expect(step).toContain('if [ "${DEPLOY_FRESHNESS_OUTCOME}" != "success" ]');
+    expect(step).toContain('鮮度検査で停止');
+  });
+});

@@ -20,6 +20,7 @@
     "check:bundle": "node scripts/check-bundle.mjs",
     "check:auth-gates": "node scripts/check-auth-gates.mjs",
     "check:client-bundle": "node scripts/check-client-bundle.mjs",
+    "check:deploy-freshness": "node scripts/check-deploy-freshness.mjs",
     "smoke:hearing-production": "tsx scripts/smoke-production-hearing.ts",
     "smoke:publish-production": "tsx scripts/smoke-production-publish.ts",
     "apply:monitoring": "node scripts/apply-better-stack-monitoring.mjs",

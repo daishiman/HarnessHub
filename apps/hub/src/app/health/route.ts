@@ -1,13 +1,15 @@
 // GET /health。外形監視 (Better Stack) と CI が叩く死活エンドポイント (ADR §7 / HF-A3-HEALTH-001..003)
 import { buildHealthResponse, healthHttpStatus } from '@harness-hub/schemas';
 import { type DependencyProbe, defaultProbes, runDependencyProbes } from './probes.js';
-import { readRuntimeEnv, resolveVersion } from './runtime-env.js';
+import { readRuntimeEnv, resolveCommit, resolveVersion } from './runtime-env.js';
 
 // 依存先の現在状態を返す性質上、キャッシュしてはならない
 export const dynamic = 'force-dynamic';
 
 export interface HealthHandlerOptions {
   readonly version: string;
+  /** 稼働成果物が対応する repository の commit。埋込が無い環境では undefined */
+  readonly commit?: string | undefined;
   readonly probes: readonly DependencyProbe[];
   readonly now?: () => Date;
 }
@@ -21,6 +23,7 @@ export async function buildHealthHttpResponse(options: HealthHandlerOptions): Pr
   const dependencies = await runDependencyProbes(options.probes);
   const body = buildHealthResponse({
     version: options.version,
+    commit: options.commit,
     checkedAt: now(),
     dependencies,
   });
@@ -37,6 +40,7 @@ export async function GET(): Promise<Response> {
   const env = await readRuntimeEnv();
   return buildHealthHttpResponse({
     version: resolveVersion(env),
+    commit: resolveCommit(env),
     probes: defaultProbes(env),
   });
 }
