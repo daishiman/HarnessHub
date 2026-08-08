@@ -134,3 +134,55 @@ workspace を指定すると、session 側の自動確定値と衝突し `ambigu
   vitest を実行しないため、この事象は push をブロックしない。
 
 P13 は本番再デプロイと実環境確認が残るため引き続き open のまま維持する。
+
+## 追補 (2026-08-08): RSC 画面の session scope フォールバックと PrimaryNav シェル
+
+### 背景
+
+P05〜P12 で middleware の session scope 合流と着地先解決は結線済みだった。しかし
+既定着地 `/sheets` は URL クエリを持たないため、各 page.tsx が
+`searchParams.tenant` / `.workspace` だけを API ヘッダーへ渡す実装のままだと、
+ログイン直後の client fetch が空の tenant/workspace になり `missing_tenant_scope`
+へ落ちる経路が残っていた。また P0 シェルにナビゲーションが無く、ブラウザ操作での
+画面横断が URL 直打ち以外できなかった。
+
+### 判定: 仕様の意味変更ではない (実装結線の追補)
+
+| 層 | 判定 | 理由 |
+| --- | --- | --- |
+| `system-spec/` | 変更なし | qa-135/137 の scope 2 系統・deny-by-default・着地規則は既に確定。新しい要件セルは不要。 |
+| `specs/` | 変更なし | `harness-hub-post-signin-workspace-scope-addendum.md` A/B 節が session scope と着地を既に規定。RSC フォールバックは同契約の画面側結線。 |
+| `architecture/` | 更新 (additive) | `harness-hub-frontend.md` に `resolveDashboardScope` / PrimaryNav の配置を追記。`harness-hub-security.md` に「クエリは authz 入力にしない」「判定は resolveSessionScope 再利用」を追記。 |
+| `features/` | 更新 | `feat-post-signin-scope-routing.md` の resource_scope / scope_in / acceptance に RSC シェルを追補。段階表示 (qa-018) は引き続き scope_out。 |
+| `tasks/` | 更新 | P13 projection の resource_scope に dashboard-scope / primary-nav と本受領書追補を追加。 |
+| `docs/` | 更新 | frontend-scope-reference・operations-runbook・本受領書・user-journeys に画面側フォールバックと PrimaryNav を記録。 |
+
+### 実装要点
+
+- `apps/hub/src/lib/routing/dashboard-scope.ts`: session cookie 検証後に
+  `resolveSessionScope()` へ委譲。React `cache()` で request 内 1 回。
+- `(dashboard)` / `(workspace)` layout + `PrimaryNav`: scope 付きリンク。
+- 各業務 page: `scopeFromQuery` / `tenantIdFromQuery` で URL 優先・session フォールバック。
+- client-only docs 詳細/編集: Context (`dashboard-scope-context.tsx`) 経由。
+- 付帯: 見積係数設定 UI (`settings/coefficients`) とユーザー CSV エクスポートは
+  既存 API (`/api/v1/tenant/coefficients`, `/api/v1/users/export`) の画面結線。
+  所有 feature は `feat-user-org-admin` だが、PrimaryNav 到達性と tenant ヘッダー
+  付与のため同一シェル作業に含めた。認可規則・API 契約は変更していない。
+
+### 検証 (2026-08-08)
+
+| ゲート | 結果 |
+| --- | --- |
+| task-spec quality gate | `validate-system-plan.py` PASS (P01〜P13, violations 0, contract 1.3.0) |
+| TID-DSCOPE-01〜07 | 7 tests PASS (`tests/routing/dashboard-scope.test.ts`) |
+| post-signin landing + scope-resolution | 26 tests PASS |
+| user-org-admin API acceptance | 19 PASS / 1 todo |
+| `tsc --noEmit` (hub) | PASS |
+| `biome check` (対象ファイル) | PASS |
+
+### 残課題
+
+- `HarnessHub-3sjj.13` は本番デプロイと実 browser session での 6 path 到達確認が残る。
+- サイドバー 9 項目の段階表示 (qa-018) と Workspace 切替 UI は別 feature のまま。
+- 既定着地を `/dashboard` へ移す appr-034 は観測用 addendum 側の将来変更であり、
+  本追補では `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` を維持する。

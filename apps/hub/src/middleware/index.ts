@@ -7,6 +7,7 @@ export {
   type DenyReason,
   isPublicPath,
   PUBLIC_PATH_PREFIXES,
+  resolveSessionScope,
 } from './authz.js';
 
 export {

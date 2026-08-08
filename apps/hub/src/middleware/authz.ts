@@ -151,8 +151,12 @@ function mergeScopes(explicit: RequestedScope, session: RequestedScope | null): 
  * session (ブラウザ通常遷移) 由来の要求スコープを解決する。
  * 明示ヘッダー系統とは独立した第2の入力系統だが、合流と認可判断はこのモジュールにだけ置く。
  * 所属を外れた active workspace は束縛しない (fail-closed)。
+ *
+ * export しているのは (dashboard) 配下の RSC 側 (`lib/routing/dashboard-scope.ts`) が
+ * URL クエリ無しのログイン直後フォールバック用に同じ解決規則を再利用するため。
+ * ここを直接呼ばずに独自実装すると、tenantId/workspaceId をペアで解決/ペアで諦める契約が崩れる。
  */
-function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
+export function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
   const workspaceId = resolveActiveWorkspaceId(cookieHeader, principal.workspaceIds);
   if (workspaceId === null) return null;
 

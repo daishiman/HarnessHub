@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { CatalogReleaseHistory } from '../../../../components/catalog/CatalogReleaseHistory.js';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
   title: 'リリース履歴 | Harness Hub',
@@ -22,7 +23,7 @@ interface PageProps {
 }
 
 export default async function CatalogReleasesPage({ searchParams }: PageProps) {
-  const query = await searchParams;
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const projectId = query.project ?? '';
 
   return (
@@ -31,10 +32,7 @@ export default async function CatalogReleasesPage({ searchParams }: PageProps) {
       {projectId === '' ? (
         <p>業務ツールを選ぶと、その公開履歴を表示します。</p>
       ) : (
-        <CatalogReleaseHistory
-          scope={{ tenantId: query.tenant ?? '', workspaceId: query.workspace ?? '' }}
-          projectId={projectId}
-        />
+        <CatalogReleaseHistory scope={scopeFromQuery(query, scope)} projectId={projectId} />
       )}
     </section>
   );

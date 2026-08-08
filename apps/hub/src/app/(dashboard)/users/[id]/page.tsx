@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { UserDashboard } from './user-dashboard.js';
 
 export const metadata: Metadata = {
@@ -11,12 +12,11 @@ interface PageProps {
 }
 
 export default async function UserDashboardPage({ params, searchParams }: PageProps) {
-  const { id } = await params;
-  const query = await searchParams;
+  const [{ id }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
   return (
     <section aria-labelledby="user-dashboard-heading">
       <h1 id="user-dashboard-heading">ユーザー詳細</h1>
-      <UserDashboard userId={id} tenantId={query.tenant ?? ''} />
+      <UserDashboard userId={id} tenantId={tenantIdFromQuery(query, scope)} />
     </section>
   );
 }

@@ -99,6 +99,11 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   const sections = sheet.generated_sections;
   return (
     <article>
+      <p data-print-exclude="">
+        <a href={`/sheets?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}>
+          ← 一覧に戻る
+        </a>
+      </p>
       {completionNotice ? (
         <Alert tone="success" title="生成完了" description={`${sheet.code} のシート本文が完成しました。`} />
       ) : null}

@@ -10,6 +10,8 @@ import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
 import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope.js';
+import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
 const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
   loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
@@ -33,8 +35,8 @@ const headers = (tenantId: string, workspaceId: string) => ({
 export default function DocumentEditPage({ params, searchParams }: PageProps): ReactNode {
   const { id } = use(params);
   const query = use(searchParams);
-  const tenantId = query.tenant ?? '';
-  const workspaceId = query.workspace ?? '';
+  const scope = useDashboardScope();
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
 
   const [saved, setSaved] = useState<DocumentDetail | null>(null);
   const [title, setTitle] = useState('');

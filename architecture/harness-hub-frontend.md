@@ -67,6 +67,20 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 正本章 (system-spec/frontend.md, system-spec/ui-ux.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**差分追記 (2026-08-08 / `feat-post-signin-scope-routing` / RSC scope シェル)**:
+
+- サインイン後の既定着地 (`DEFAULT_POST_SIGNIN_LANDING` = `/sheets`) は URL クエリを持たない。
+  `(dashboard)` / `(workspace)` 配下の Server Component は
+  `apps/hub/src/lib/routing/dashboard-scope.ts` の `resolveDashboardScope()` で
+  session から tenant/workspace を解決し、page は `query ?? session` の順で API へ渡す。
+- 判定ロジックは `middleware/authz.ts` の `resolveSessionScope()` を export して再利用する。
+  画面側に別の所属検証を置かない (二重実装禁止)。
+- layout は `PrimaryNav` で主要画面へのリンクを描画し、解決済み scope をクエリへ引き継ぐ。
+  これは qa-018 のサイドバー段階表示の本実装ではなく、到達性を埋める最小シェルである。
+- client-only page (docs 詳細/編集) は layout が Context 経由で同じ scope を配る
+  (`dashboard-scope-context.tsx`)。server page は Context を消費できないため各自
+  `resolveDashboardScope()` を呼ぶ (React `cache()` で request 内は 1 回にまとまる)。
+
 ## Goals and non-goals
 
 正本章 (system-spec/frontend.md, system-spec/ui-ux.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
