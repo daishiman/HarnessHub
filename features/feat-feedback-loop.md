@@ -99,3 +99,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## Production acceptance (2026-08-08 / `HarnessHub-p0lr`)
+
+- 本番 Device Flow token で feedback を作成し、`feedback_response` pull / complete、AI 応答書戻し、`open → in_progress → resolved` を 1 run で確認する。
+- session-only read は route と同じ service/repository で検査し、Bearer token が `credential_not_allowed` になることは HTTP で実測する。
+- provider-admin cross-tenant pull + audit の正規契約は `HarnessHub-stmx` で統一するまで未完了とする。

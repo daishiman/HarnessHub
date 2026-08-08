@@ -57,13 +57,30 @@ function authorizationLocation(overrides: Record<string, string> = {}) {
   return url.href;
 }
 
-function successfulFetch(location = authorizationLocation()) {
+const HOSTILE_RETURN_TO = 'https://oidc-smoke-open-redirect.invalid/steal';
+
+/**
+ * O5 が観測する SSR 済みサインインページ。実装が正しいときは callbackUrl が既定の `/sheets`
+ * に落ちている。App Router は router state として query をそのまま payload へ載せるため、
+ * 敵対的 returnTo の**文字列自体**は正常応答にも現れる (それは失敗条件ではない)。
+ */
+function signinPageResponse(body?: string) {
+  const html =
+    body ??
+    `<html><body><script>self.__next_f.push([1,"returnTo=${HOSTILE_RETURN_TO}"])</script>` +
+      '<form method="post"><input type="hidden" name="callbackUrl" value="/sheets" />' +
+      '<button type="submit">Google でログイン</button></form></body></html>';
+  return new Response(html, { status: 200, headers: { 'content-type': 'text/html' } });
+}
+
+function successfulFetch(location = authorizationLocation(), signinPage = signinPageResponse()) {
   return vi
     .fn<typeof fetch>()
     .mockResolvedValueOnce(providersResponse())
     .mockResolvedValueOnce(Response.json({ error: 'tenant_oidc_not_configured' }, { status: 404 }))
     .mockResolvedValueOnce(csrfResponse())
-    .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location } }));
+    .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location } }))
+    .mockResolvedValueOnce(signinPage);
 }
 
 describe('production OIDC start-flow smoke', () => {
@@ -78,10 +95,11 @@ describe('production OIDC start-flow smoke', () => {
         { id: 'O2', name: 'unknown tenant rejection', ok: true },
         { id: 'O3', name: 'CSRF token / cookie pair', ok: true },
         { id: 'O4', name: 'Google redirect / state / nonce / PKCE', ok: true },
+        { id: 'O5', name: 'post-signin landing rejects external returnTo', ok: true },
       ],
     });
 
-    expect(fetchImpl).toHaveBeenCalledTimes(4);
+    expect(fetchImpl).toHaveBeenCalledTimes(5);
     const [signinUrl, signinInit] = fetchImpl.mock.calls[3] ?? [];
     expect(signinUrl).toBe(SIGNIN_URL);
     expect(signinInit).toMatchObject({
@@ -132,5 +150,39 @@ describe('production OIDC start-flow smoke', () => {
     await expect(
       runOidcSmoke({ origin: ORIGIN, tenant: TENANT, fetchImpl: successfulFetch(location) }),
     ).rejects.toThrow(message);
+  });
+
+  it('サインインページを returnTo つきで取得する', async () => {
+    const fetchImpl = successfulFetch();
+
+    await runOidcSmoke({ origin: ORIGIN, tenant: TENANT, fetchImpl });
+
+    const [signinPageUrl] = fetchImpl.mock.calls[4] ?? [];
+    const requested = new URL(String(signinPageUrl));
+    expect(requested.pathname).toBe(`/${TENANT}/signin`);
+    // 敵対的な returnTo を実際に渡さなければ、素通しの有無は観測できない。
+    expect(requested.searchParams.get('returnTo')).toBe(HOSTILE_RETURN_TO);
+  });
+
+  it.each([
+    [
+      '遷移に使われる属性へ素通しされた returnTo',
+      `<form><input name="callbackUrl" value="/sheets" /><a href="${HOSTILE_RETURN_TO}">続ける</a></form>`,
+      'hostile returnTo reached a navigable href attribute',
+    ],
+    [
+      'callbackUrl input の欠落',
+      '<form><button type="submit">Google でログイン</button></form>',
+      'callbackUrl input was missing',
+    ],
+    [
+      '既定の遷移先が /sheets ではない',
+      `<form><input name="callbackUrl" value="${HOSTILE_RETURN_TO}" /></form>`,
+      'server-rendered callbackUrl was not the safe default /sheets',
+    ],
+  ])('%s を拒否する', async (_name, html, message) => {
+    const fetchImpl = successfulFetch(authorizationLocation(), signinPageResponse(html));
+
+    await expect(runOidcSmoke({ origin: ORIGIN, tenant: TENANT, fetchImpl })).rejects.toThrow(message);
   });
 });
