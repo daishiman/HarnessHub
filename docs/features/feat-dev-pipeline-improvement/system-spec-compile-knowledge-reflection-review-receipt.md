@@ -119,6 +119,12 @@ push 後の GitHub Actions で `test_skill_criteria_evidence.py::test_independen
 
 `python3 -m pytest plugins/dev-graph/tests -q` — 963 passed（CI が報告した 961 passed / 2 failed から全件成功へ復帰）。仕様・設計への意味的影響は本追補でも **なし**（証跡ファイルの識別子整合性の是正のみ）。
 
+## 追補 (2026-08-08 その4): push後CIの3件目の失敗を修正 (system-dev-planner)
+
+上記 push 後の CI で `plugins/system-dev-planner/tests/test_runtime.py::PromotionTests` 配下 6 テストが `completeness_evaluation:producer-verification-failed` で FAIL した。本 branch は独立して `audit_fork_attribution.py` へ「PostToolUse hook が記録した `response_sha256` / `audit_verdict` を receipt の `dispatch.response_sha256` および fork 台帳行と突合する fail-closed 検証」(HarnessHub-x4o、2026-08-04 実装、origin/main 未合流) を追加していたが、`test_runtime.py` の fixture (`AUDIT_DELEGATIONS` / `write_audit_fork_ledger`) はこの新要件（`dispatch.response_sha256`、台帳行の `prompt_sha256` / `response_sha256` / `audit_verdict`）を反映しないまま残っていた。同種の正しい fixture 形状は同じ機能を実装した `plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/tests/completeness_test_support.py`（`golden_delegations` / `write_ledger`）に既にあり、これに倣って `response_sha256 = sha256(f"{auditor}:{verdict}")` を dispatch と台帳行の双方へ追記した。
+
+`python3 -m pytest plugins/system-dev-planner/tests/test_runtime.py -q` — 20 passed（6 failed から復帰）。`python3 -m pytest plugins/system-dev-planner -q` — 197 passed。テストの検証ロジック（fixture の束縛整合性）のみの是正であり、製品仕様・設計への意味的影響は **なし**。
+
 ## 残課題
 
 blocker はない。architecture 専用章を将来追加する場合は、architecture node が要件定義章を source artifact としている現在の対応を見直す（低優先度）。
@@ -138,3 +144,4 @@ blocker はない。architecture 専用章を将来追加する場合は、archi
 | 2026-08-08 | hooks entry point parity 検査の是正(構文エラー伝播・CLAUDE_PLUGIN_ROOT 判定・デコード不能ファイル耐性)を追補、回帰テスト追加、仕様影響なしを再確認 | Claude |
 | 2026-08-08 | main 再合流に伴う6ファイルのコンフリクト解消(設計知識トポロジカル順序の実装統合、監査台帳union merge、生成物再計算)とMERGE_HEAD事故からの復旧を記録、仕様影響なしを再確認 | Claude |
 | 2026-08-08 | push後CIで検出されたscenario_id/task_contract記載漏れ2件を是正、pytest 963 passedへ復帰、仕様影響なしを再確認 | Claude |
+| 2026-08-08 | push後CIで検出されたsystem-dev-planner側のaudit fork台帳束縛fixture未追従を是正、pytest 197 passedへ復帰、仕様影響なしを再確認 | Claude |
