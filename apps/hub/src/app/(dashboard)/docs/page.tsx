@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
 import { DocumentList } from './document-list.js';
 
 export const metadata: Metadata = {
@@ -11,14 +12,15 @@ interface PageProps {
 }
 
 export default async function DocumentsPage({ searchParams }: PageProps) {
-  const query = await searchParams;
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   return (
     <section aria-labelledby="docs-heading">
       <h1 id="docs-heading">ドキュメント</h1>
       <p>
-        <a href={`/docs/new?tenant=${query.tenant ?? ''}&workspace=${query.workspace ?? ''}`}>新しく作成</a>
+        <a href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`}>新しく作成</a>
       </p>
-      <DocumentList tenantId={query.tenant ?? ''} workspaceId={query.workspace ?? ''} />
+      <DocumentList tenantId={tenantId} workspaceId={workspaceId} />
     </section>
   );
 }

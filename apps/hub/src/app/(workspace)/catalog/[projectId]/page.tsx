@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { CatalogDetail } from '../../../../components/catalog/CatalogDetail.js';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
   title: '業務ツール詳細 | Harness Hub',
@@ -17,12 +18,6 @@ interface PageProps {
 }
 
 export default async function CatalogDetailPage({ params, searchParams }: PageProps) {
-  const [{ projectId }, query] = await Promise.all([params, searchParams]);
-  return (
-    <CatalogDetail
-      scope={{ tenantId: query.tenant ?? '', workspaceId: query.workspace ?? '' }}
-      projectId={projectId}
-      publishId={query.publish ?? null}
-    />
-  );
+  const [{ projectId }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
+  return <CatalogDetail scope={scopeFromQuery(query, scope)} projectId={projectId} publishId={query.publish ?? null} />;
 }

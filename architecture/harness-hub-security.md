@@ -195,3 +195,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 詳細は [system-spec/auth.md](../system-spec/auth.md) の `qa-137`、
   製品契約は [spec-post-signin-workspace-scope](../specs/harness-hub-post-signin-workspace-scope-addendum.md)
   の B 節を参照する。実装根拠は `apps/hub/src/middleware/authz.ts` の `authorize()`/`mergeScopes()`。
+
+**差分追記 (2026-08-08 / RSC 画面の session scope 再利用)**:
+
+- `(dashboard)` 配下の Server Component が session scope を読む経路は、認可判定を
+  画面へ複製しない。`resolveSessionScope()` を `middleware` 公開境界から export し、
+  `lib/routing/dashboard-scope.ts` が cookie 検証後に同じ関数へ委譲する。
+- URL クエリ (`?tenant=` / `?workspace=`) は互換のための優先入力であり、認可入力の
+  正本ではない。middleware は引き続き明示ヘッダーと session だけを信頼し、
+  クエリ文字列を authz 入力にしない (catalog hard-navigation 契約と整合)。
