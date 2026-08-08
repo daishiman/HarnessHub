@@ -42,14 +42,14 @@ reviewed_at: "2026-08-08"
 - system-spec transition / compile / citation gate: PASS。
 - system-spec foundation gate: 既存 U1〜U9 source-index 9 件欠落で FAIL。今回の qa-205 追加由来ではなく、元発言を捏造できないため `HarnessHub-iys4` へ分離した。
 - full graph schema gate: local main / p0lr branch / o4zi branch の全てが同一の 160 件（frontmatter 44、parity 5、heading 111）で FAIL。今回追加した production coverage / provider-admin / publish follow-up ノードの違反は 0 件で、既存 artifact 移行 debt は `HarnessHub-o4zi` で継続する。
-- production runtime: secret を使う外部実走は未実施。PR merge 後の deploy job が最終証拠となる。
+- production runtime: main `35a10b87` の hub-ci run `31253674292` で deploy job が SUCCESS。coverage smoke は `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 が成功し、使い捨て 2 tenant は削除済み・残存行 0 を確認した。
 
 ## 残課題
 
 - `HarnessHub-stmx`: provider-admin 越境の edge 404 / route 監査契約を統一する。
 - `HarnessHub-pf5o`: publish smoke を Device Flow 化・secret 台帳登録・廃止のどれにするか決着し、CI 結線と運用記録を一致させる。
 - `HarnessHub-iys4`: system-spec foundation の U1〜U9 source-index を、原発言の真正な根拠から復旧する。
-- 3 個の P13 task は production run 成功まで close しない。
+- `HarnessHub-3sjj.13` / `HarnessHub-9wb.13` は production evidence の default-branch 記録後に close する。`HarnessHub-1vb.13` は `HarnessHub-stmx` の越境監査契約が残るため in_progress を維持する。
 
 ## 500 行制約
 

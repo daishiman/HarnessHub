@@ -33,3 +33,7 @@ PR [#649](https://github.com/daishiman/HarnessHub/pull/649) は 2026-08-03 に m
 ## 2026-08-08 production coverage smoke 準備
 
 `HarnessHub-p0lr` の D1〜D6 で document 作成、doc_draft queue、AI 本文書戻し、別 tenant 非可視、Bearer read 拒否を検査できるようにした。runner が作る使い捨て tenant と関連行は成功・失敗にかかわらず cleanup する。local focused test / typecheck は PASS。本番 deploy 実走が成功するまで P13 は未完了のままとする。
+
+## 2026-08-08 production coverage smoke 実走完了
+
+main `35a10b87` の hub-ci run `31253674292` で D1〜D6 が SUCCESS。document create/read/update、`doc_draft` enqueue/pull/complete、AI 本文書戻し、別 tenant 非可視、Bearer read 403 を本番 DB で確認した。使い捨て tenant は削除済みで残存行 0。production acceptance は充足し、default branch へ本証拠が入った時点で P13 を close できる。
