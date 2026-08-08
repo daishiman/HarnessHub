@@ -1,6 +1,6 @@
 {
   "evaluator": "independent-verifier-fresh",
-  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
   "verdict": "PASS",
   "blockers": [],
   "observations": {

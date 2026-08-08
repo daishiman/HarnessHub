@@ -263,7 +263,7 @@ def test_all_mode_passes_on_real_repo() -> None:
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
     assert report["checked"][0]["task"].endswith(
-        "20260804T083000Z-m0bd-c19-r10-clean-fixture/task.md"
+        "20260807T130000-wt22-c19-ledgerfix/task.md"
     )
 
 

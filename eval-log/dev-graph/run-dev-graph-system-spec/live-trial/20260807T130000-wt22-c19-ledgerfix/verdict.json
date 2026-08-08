@@ -42,10 +42,10 @@
     "poll_exit": "DONE",
     "wall_clock_s": null
   },
-  "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
   "scenario_contract": {
     "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
-    "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
     "required_observations": [
       "the declared system-spec-harness plugin is loaded and its canonical flow completes",
       "the imported specification and architecture retain source lineage and evaluator evidence",
@@ -82,10 +82,14 @@
       "matches": true
     },
     "task_contract": {
-      "declared": false,
+      "declared": true,
       "task_file": "task.md",
       "task_file_exists": true,
-      "required_fragments": [],
+      "required_fragments": [
+        "upsert-node.py",
+        "SYSTEM_SPEC_AUDIT_FORK_LEDGER",
+        "doc-fetch は公式ページを実取得して現行 version を記録する"
+      ],
       "forbidden_fragments": [],
       "missing_required_fragments": [],
       "present_forbidden_fragments": [],

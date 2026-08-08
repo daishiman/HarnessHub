@@ -1,4 +1,4 @@
-# タスク: dev-graph:run-dev-graph-system-spec の実走 (scenario C19-OUT1-positive-system-spec-lineage)
+# タスク: dev-graph:run-dev-graph-system-spec の実走 (scenario C19-OUT1-positive-system-spec-lineage-r2)
 
 ## 最重要 — Skill ツールの起動が本 trial の測定対象 (これを外すと trial 全体が無効)
 
@@ -249,7 +249,7 @@ observation 3 は「同等ヒアリング / compile ロジックが dev-graph �
    このファイルに含めてはいけません (報告は最後の 1 行で行います)。
 
 ```json
-{"status": "PASS|FAIL|ERROR", "scenario": "C19-OUT1-positive-system-spec-lineage"}
+{"status": "PASS|FAIL|ERROR", "scenario": "C19-OUT1-positive-system-spec-lineage-r2"}
 ```
 
 その後、「DONE: <status>」と 1 行だけ報告してください。
@@ -269,4 +269,4 @@ observation 3 は「同等ヒアリング / compile ロジックが dev-graph �
 
 ## scenario 契約
 
-scenario_id: `C19-OUT1-positive-system-spec-lineage`
+scenario_id: `C19-OUT1-positive-system-spec-lineage-r2`

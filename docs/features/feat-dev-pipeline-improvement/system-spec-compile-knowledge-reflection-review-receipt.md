@@ -109,6 +109,16 @@ PR #665 が main に対して 6 ファイルの衝突を報告したため、`or
 
 この一連の解消・再生成後も、製品仕様・設計への意味的影響は **なし**。plugin 内部実装の統合と生成物の再計算に閉じており、上表の判断は変わらない。
 
+## 追補 (2026-08-08 その3): push後CIの2件失敗を修正
+
+push 後の GitHub Actions で `test_skill_criteria_evidence.py::test_independent_scenario_receipt_covers_exact_criteria` と `test_live_trial_task_contract.py::test_all_mode_passes_on_real_repo` が失敗した。原因は、その2で追加した fresh live-trial (`20260807T130000-wt22-c19-ledgerfix`) を `scenario-verdict.json` へ反映する際の3つの手直し漏れだった。
+
+- `scenario-verdict.json` の `OUT1.scenario_id` を `"C19-OUT1-positive-system-spec-lineage"` と記録していたが、正本の scenario fixture (`plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json`) は `-r2` 改訂後の `"C19-OUT1-positive-system-spec-lineage-r2"` を要求する。live-trial 側の `task.md` / `verdict.json` / `independent-verification.json` も同じく `-r2` を欠いていた。live-trial が実際に検証した `task_contract.required_fragments`（`upsert-node.py` / `SYSTEM_SPEC_AUDIT_FORK_LEDGER` / doc-fetch の一次情報取得契約）はすべて task.md に verbatim で含まれており、内容面では -r2 契約を満たしていたため、識別子の記載漏れとして4ファイルへ `-r2` を補記した（新たな live-trial 再実走はしていない）。
+- `verdict.json` 内の `scenario_contract.task_contract` ブロックが `declared: false` のまま(旧 scenario 由来のテンプレートが残存)だったため、`declared: true` と実際に充足済みの `required_fragments` / `missing_required_fragments: []` / `matches: true` へ補正した。
+- `test_live_trial_task_contract.py::test_all_mode_passes_on_real_repo` は「receipt が指す最新 PASS run」を固定文字列で照合するテストで、旧 run (`20260804T083000Z-m0bd-c19-r10-clean-fixture`) を期待値としたままだった。receipt の参照先を新 run へ更新した以上、この期待値も同じ run 名へ更新する必要があり、過去の類似リファクタ（`17165fdc`）と同じパターンで追従させた。
+
+`python3 -m pytest plugins/dev-graph/tests -q` — 963 passed（CI が報告した 961 passed / 2 failed から全件成功へ復帰）。仕様・設計への意味的影響は本追補でも **なし**（証跡ファイルの識別子整合性の是正のみ）。
+
 ## 残課題
 
 blocker はない。architecture 専用章を将来追加する場合は、architecture node が要件定義章を source artifact としている現在の対応を見直す（低優先度）。
@@ -127,3 +137,4 @@ blocker はない。architecture 専用章を将来追加する場合は、archi
 | 2026-08-04 | fork verdict 束縛、C19 fresh live trial PASS、仕様影響なしの受領を記録 | Codex |
 | 2026-08-08 | hooks entry point parity 検査の是正(構文エラー伝播・CLAUDE_PLUGIN_ROOT 判定・デコード不能ファイル耐性)を追補、回帰テスト追加、仕様影響なしを再確認 | Claude |
 | 2026-08-08 | main 再合流に伴う6ファイルのコンフリクト解消(設計知識トポロジカル順序の実装統合、監査台帳union merge、生成物再計算)とMERGE_HEAD事故からの復旧を記録、仕様影響なしを再確認 | Claude |
+| 2026-08-08 | push後CIで検出されたscenario_id/task_contract記載漏れ2件を是正、pytest 963 passedへ復帰、仕様影響なしを再確認 | Claude |

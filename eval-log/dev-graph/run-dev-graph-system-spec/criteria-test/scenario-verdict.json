@@ -4,7 +4,7 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
     "component_id": "C19",
-    "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
+    "skill_md_sha256": "ec6509312aed25d3663942e74b9825de7f3fdf0aa22e2ecc09e7766e8741083e"
   },
   "verdict": "PASS",
   "reviewer": "fresh-claude-live-goal-evaluator-m0bd-c19-r10-clean-fixture-20260804; independent verifier executed within live trial 20260804T083000Z-m0bd-c19-r10-clean-fixture",
@@ -27,7 +27,7 @@
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
       "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
       "test_refs": [
         "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260807T130000-wt22-c19-ledgerfix/verdict.json",
