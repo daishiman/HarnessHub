@@ -264,7 +264,7 @@ describe('DC-A11Y / 検査対象が実在すること', () => {
 
   it('DC-A11Y-05: 詳細と履歴も取得結果を描画している', async () => {
     await renderScreen(await detailScreen(), '業務ツール詳細 | Harness Hub');
-    expect(document.querySelector('main h2')?.textContent).toBe(DETAIL.name);
+    expect(document.querySelector('main h1')?.textContent).toBe(DETAIL.name);
     expect(document.querySelector('main')?.textContent ?? '').toContain(DETAIL.summary);
 
     const detailRoot = activeRoot;

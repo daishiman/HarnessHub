@@ -149,3 +149,9 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - `HarnessHub-37h.14` と `HarnessHub-37h.15` は独立した運用 follow-up であり、ユーザーが追加対応不要と判断したため `not_applicable` で閉じた。これは SLO 99.5% 達成を意味しない。
 - qa-019 / qa-116 の 30 日観測、Workers Analytics 5xx 率との複合判定、70% 警告／100% 変更凍結は維持する。再開時は issue を reopen または再起票し、同じ runbook / CLI 契約で検証する。
 - 仕様反映と判断根拠は [feature closeout 仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を正とする。
+
+## Post-closeout UI 基盤追補 (2026-08-08)
+
+- `HarnessHub-tiqw` / `snlo` / `xuhj` / `xaa3` / `4a2z` で、AppShell・design token・標準画面状態・実ブラウザ harness・component catalog / VRT・responsive regression を一つの UI 基盤 wave として実装した。
+- frontend / ui-ux / testing-qa の既確定内容を維持しつつ、R4-reopen → qa-201 / qa-203 / qa-204 で実装値と品質境界を再確定した。
+- 公開 API、DB schema、認証認可判定、Cloudflare deploy unit は非変更。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を参照する。

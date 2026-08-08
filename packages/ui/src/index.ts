@@ -40,7 +40,6 @@ export type {
   DataTableSort,
   TableSortDirection,
 } from './components/DataTable.js';
-
 // --- テーブル / 一覧 ------------------------------------------------------
 export { DataTable } from './components/DataTable.js';
 export type { FieldControlProps, FormFieldProps } from './components/FormField.js';
@@ -93,9 +92,28 @@ export {
   statusToneColors,
   statusVocabulary,
 } from './i18n/status-vocabulary.js';
+export type {
+  AppShellProps,
+  NavListItem,
+  NavListProps,
+  SidebarLayoutProps,
+} from './layout/AppShell.js';
+// --- レイアウト骨格 ------------------------------------------------------
+export { AppShell, NavList, SidebarLayout } from './layout/AppShell.js';
+export type {
+  CardProps,
+  ContainerProps,
+  ContainerSize,
+  PageHeaderProps,
+  StackGap,
+  StackProps,
+} from './layout/primitives.js';
+export { Card, Container, containerSizes, PageHeader, Stack } from './layout/primitives.js';
 export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
 // --- テーマ・表示密度・言語 ----------------------------------------------
 export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';
+// --- design tokens -------------------------------------------------------
+export { buildBaseCss } from './tokens/base-css.js';
 export {
   AA_CONTRAST_LARGE_TEXT,
   AA_CONTRAST_NON_TEXT,
@@ -105,7 +123,9 @@ export {
   parseHexColor,
   relativeLuminance,
 } from './tokens/contrast.js';
+export { focusRingDeclarations, focusRingRule } from './tokens/focus-ring.js';
 export type {
+  BreakpointName,
   ColorTokenName,
   ContrastCheckResult,
   ContrastRequirement,
@@ -116,8 +136,8 @@ export type {
   ThemePreference,
   TypographyTokenName,
 } from './tokens/tokens.js';
-// --- design tokens -------------------------------------------------------
 export {
+  breakpointTokens,
   buildThemeCss,
   chartSeriesTokens,
   checkContrastRequirements,
@@ -126,6 +146,7 @@ export {
   contrastRequirements,
   densityNames,
   densityTokens,
+  mediaUp,
   radiusTokens,
   spacingTokens,
   themeNames,
