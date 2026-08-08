@@ -59,6 +59,8 @@ VRT baseline directory が `${platform}-${arch}` だったため、同じ macOS/
 
 catalog の layout-light、data-dark、form-light、chart-dark を画像で確認した。light/dark の文字・面・状態色、長い表の局所スクロール、フォーム操作域に blocking な崩れは無かった。
 
+GitHub Actions run `31247349849` の Linux/Chromium actual 14 枚も取得し、同じ代表 4 画面を目視した。文字欠け、重なり、意図しない横 overflow、light/dark の判別不能は無かったため、`linux` baseline として受領した。
+
 ## 6. 品質ゲート
 
 | ゲート | 結果 |
@@ -67,6 +69,7 @@ catalog の layout-light、data-dark、form-light、chart-dark を画像で確�
 | UI tests | 14 files / 307 tests PASS |
 | Hub tests | 136 files / 1475 pass、10 todo（既存 user-org-admin 範囲） |
 | browser tests | 3 files / 33 tests PASS（macOS baseline 14 枚を含む） |
+| Linux VRT 初回取得 | run `31247349849` で actual 14 枚を取得・目視し baseline 化 |
 | screen-state gate | root / dashboard / workspace の 3 区分 PASS |
 | UI / Hub typecheck | PASS |
 | UI / Hub lint | PASS |
@@ -82,10 +85,9 @@ catalog の layout-light、data-dark、form-light、chart-dark を画像で確�
 
 ## 7. 残課題
 
-1. Linux VRT baseline は GitHub Actions の実 Chromium で初回 actual を取得し、画像確認後に追加する。
-2. draft PR merge 前の Beads は in_progress を維持し、merge 後に default branch reconciliation で閉じる。
-3. system-spec U1〜U9 source-index の既存欠落は、元の書面・対話原文を特定できる独立 task で扱う。
-4. 既存 dev-graph artifact の新必須見出し移行は `HarnessHub-o4zi` で扱う。
+1. draft PR merge 前の Beads は in_progress を維持し、merge 後に default branch reconciliation で閉じる。
+2. system-spec U1〜U9 source-index の既存欠落は、元の書面・対話原文を特定できる独立 task で扱う。
+3. 既存 dev-graph artifact の新必須見出し移行は `HarnessHub-o4zi` で扱う。
 
 ## 8. 説明
 
