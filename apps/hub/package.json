@@ -22,6 +22,7 @@
     "check:auth-gates": "node scripts/check-auth-gates.mjs",
     "check:client-bundle": "node scripts/check-client-bundle.mjs",
     "check:screen-states": "node scripts/check-screen-states.mjs",
+    "check:dynamic-routes": "node scripts/check-dynamic-routes.mjs",
     "check:deploy-freshness": "node scripts/check-deploy-freshness.mjs",
     "smoke:hearing-production": "tsx scripts/smoke-production-hearing.ts",
     "smoke:publish-production": "tsx scripts/smoke-production-publish.ts",
