@@ -8,7 +8,7 @@
  */
 
 import { createContext, type ReactNode, useContext } from 'react';
-import type { DashboardScope } from '../../lib/routing/dashboard-scope.js';
+import type { DashboardScope } from '../../lib/routing/dashboard-scope-helpers.js';
 
 const DashboardScopeContext = createContext<DashboardScope>({ tenantId: null, workspaceId: null });
 

@@ -1,15 +1,17 @@
 /**
- * (dashboard) 配下の画面が使う既定 tenant/workspace の解決。
+ * (dashboard) 配下の Server Component が使う既定 tenant/workspace の解決。
  *
  * ログイン後の着地先 (`DEFAULT_POST_SIGNIN_LANDING`) は URL クエリを持たない固定パスであるため、
  * 各画面が `searchParams.tenant` / `.workspace` だけを見る実装のままだと、ログイン直後は
  * 常に空文字になり API 呼び出しが認可層で弾かれる (missing_tenant_scope)。
  *
  * ここでは middleware の `resolveSessionScope` (src/middleware/authz.ts) をそのまま呼び、
- * URL クエリが無いときのフォールバックとして各 page.tsx から使えるようにする。
+ * URL クエリが無いときのフォールバックとして各 server page.tsx から使えるようにする。
  * scope の組み立て規則 (無効化ユーザーの排除・workspace 未確定ならペアで諦める) を
  * middleware 側と二重実装しないことが目的で、判定ロジック自体はここに持たない。
- * URL クエリを最優先する現行の互換性は崩さない (呼び出し側が `query.tenant ?? scope.tenantId ?? ''` の形で使う)。
+ *
+ * 注意: 本ファイルは `next/headers` を使う Server Component 専用。
+ * client component は `dashboard-scope-helpers.ts` の純粋関数だけを import すること。
  */
 
 import { cookies } from 'next/headers';
@@ -19,11 +21,10 @@ import { resolveSessionScope } from '../../middleware/index.js';
 import { SESSION_COOKIE_NAME } from '../auth/config.js';
 import { systemAuthClock } from '../auth/ports.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME, verifySessionToken } from '../auth/session.js';
+import type { DashboardScope } from './dashboard-scope-helpers.js';
 
-export interface DashboardScope {
-  readonly tenantId: string | null;
-  readonly workspaceId: string | null;
-}
+export type { DashboardScope } from './dashboard-scope-helpers.js';
+export { scopeFromQuery, tenantIdFromQuery } from './dashboard-scope-helpers.js';
 
 const EMPTY_SCOPE: DashboardScope = { tenantId: null, workspaceId: null };
 
@@ -62,21 +63,3 @@ export const resolveDashboardScope = cache(async (): Promise<DashboardScope> => 
 
   return scope ?? EMPTY_SCOPE;
 });
-
-/**
- * `query.tenant ?? scope.tenantId ?? ''` を各 page.tsx へコピーする代わりにここへ集約する。
- * フォールバック順序 (URL クエリ優先) を変える場合はここ 1 箇所を直せばよい。
- */
-export function tenantIdFromQuery(query: { readonly tenant?: string }, scope: DashboardScope): string {
-  return query.tenant ?? scope.tenantId ?? '';
-}
-
-export function scopeFromQuery(
-  query: { readonly tenant?: string; readonly workspace?: string },
-  scope: DashboardScope,
-): { readonly tenantId: string; readonly workspaceId: string } {
-  return {
-    tenantId: tenantIdFromQuery(query, scope),
-    workspaceId: query.workspace ?? scope.workspaceId ?? '',
-  };
-}

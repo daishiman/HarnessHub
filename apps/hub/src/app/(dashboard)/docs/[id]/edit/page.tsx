@@ -10,7 +10,7 @@ import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
 import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
-import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope.js';
+import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
 const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
