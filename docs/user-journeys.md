@@ -28,7 +28,7 @@ sources: [system-spec/00-requirements-definition.md]
 |---|---|---|---|---|
 | 1 | Hub Web へアクセス → テナント ID を入力 → 会社の SSO でログイン | `/` ランディング → S07 (`/{slug}/signin`) → 顧客 IdP | 未認証の `/` でテナント ID を受け、`/signin` が slug 形を検証して 303。Auth.js + テナント別 OIDC。Hub 独自アカウントなし | qa-005, issue-hub-root-500-signin-20260808 |
 | 1.5 | サインイン完了後、自動的に業務画面へ着地する | S07 → 既定着地 (実装定数は `/sheets`。将来 `/dashboard` へ移す方針は appr-034 だが、着地画面本体は未実装のため現状は `/sheets`) | 遷移元 path があればそこへ、無ければ既定着地。同一 origin の相対 path のみ許可し、不正な戻り先は既定着地へフォールバック (open redirect 防止)。複数 Workspace 未選択時は `/` で選択してから進む。[運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) 参照 | qa-135, qa-137, qa-170, appr-034, feat-post-signin-scope-routing |
-| 1.6 | 着地先で「今どこにいて、次に何をすればいいか」が分かる | 着地画面 + PrimaryNav 最小シェル | session から tenant/workspace を補完し API を呼ぶ (`resolveDashboardScope`)。PrimaryNav が scope 付きリンクで主要業務画面へ導く (段階表示サイドバーの本実装ではない)。シェル常設の切替 UI は feat-workspace-switch-ux | qa-177, appr-035, feat-post-signin-scope-routing |
+| 1.6 | 着地先で「今どこにいて、次に何をすればいいか」が分かる | 着地画面 + 共通シェル (`HubShell`) | session から tenant/workspace を補完し API を呼ぶ (`resolveDashboardScope`)。共通シェルのサイドバー / ボトムタブが scope 付きリンクで主要業務画面へ導く (2026-08-08 に PrimaryNav 最小シェルから置換)。シェル常設の切替 UI は feat-workspace-switch-ux | qa-177, appr-035, feat-post-signin-scope-routing |
 | 1.7 | 認証基盤が使えないときも、自分の操作ミスだと誤解しない | 着地ダッシュボード / サインイン | 秘密の未解決などで認証が縮退した場合、「サインインしてください」と一律表示して無限の再試行へ誘導しない。権限不足 (403) では再サインインへ誘導しない (解決しないためループになる) | qa-162, qa-175, specs/harness-hub-post-signin-landing-observability-addendum.md |
 | 2 | プラグイン Hub で業務ツールを探す | S01 一覧 | Tenant/Workspace スコープ強制 (見えるのは自 Workspace のみ)。複数 Project/target を検索・絞込 | I4, D4 |
 | 3 | 詳細を見る | S02 詳細 | CatalogEntry + Release 情報 | I4 |

@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-206 |
+| Web (web) | 確定 | 確定質疑: qa-208 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,9 +24,9 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-206 (対応セル: web)
+### qa-208 (対応セル: web)
 
-**質問**: 既存 dev-workflow/web 正本 qa-205 と、それ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。
+**質問**: 既存 dev-workflow/web 正本とそれ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。
 
 **回答**: ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。
 

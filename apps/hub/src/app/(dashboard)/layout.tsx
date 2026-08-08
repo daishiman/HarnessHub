@@ -1,6 +1,6 @@
-import { SidebarLayout } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
-import { PrimaryNav } from '../../components/primary-nav.js';
+import { HubShell } from '../../components/shell/hub-shell.js';
+import { resolveShellProps } from '../../components/shell/resolve-shell-props.js';
 import { resolveDashboardScope } from '../../lib/routing/dashboard-scope.js';
 import { DashboardScopeProvider } from './dashboard-scope-context.js';
 
@@ -10,15 +10,23 @@ import { DashboardScopeProvider } from './dashboard-scope-context.js';
  * 消費できないため、各自 resolveDashboardScope() を直接呼ぶ設計になっている。
  * resolveDashboardScope() 自体は React cache() でリクエスト単位にメモ化されているため、
  * 同一リクエスト内で複数回呼んでも session cookie の検証は 1 回しか走らない。
+ *
+ * 画面骨格 (skip link / header / main landmark / nav / footer) は HubShell が唯一の実装を持つ
+ * ((workspace) 側と同じ骨格にするため)。packages/ui の HubShell + SidebarLayout は
+ * サイドバーもフッタも持たない公開画面向けの骨格なので、業務画面ではこちらを使う。
  */
 export default async function DashboardLayout({ children }: { readonly children: ReactNode }) {
-  const scope = await resolveDashboardScope();
+  const [scope, shell] = await Promise.all([resolveDashboardScope(), resolveShellProps()]);
   return (
     <DashboardScopeProvider scope={scope}>
-      {/* ナビゲーションと内容の配置は SidebarLayout が唯一の実装を持つ ((workspace) 側と同じ骨格にするため) */}
-      <SidebarLayout nav={<PrimaryNav tenantId={scope.tenantId ?? ''} workspaceId={scope.workspaceId ?? ''} />}>
+      <HubShell
+        scope={shell.scope}
+        accountName={shell.accountName}
+        accountRole={shell.role}
+        currentHref={shell.currentHref}
+      >
         {children}
-      </SidebarLayout>
+      </HubShell>
     </DashboardScopeProvider>
   );
 }

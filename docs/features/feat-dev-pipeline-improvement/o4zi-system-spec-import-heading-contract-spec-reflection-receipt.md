@@ -26,7 +26,7 @@ reviewed_at: "2026-08-08"
 
 | 層 | 反映 |
 |---|---|
-| `system-spec/` | `dev-workflow.web` を qa-206 へ R4-reopen → 再確定し、compiler で再生成。foundation U1〜U9 の source-index も確定済み QA から正規 transition で復旧。 |
+| `system-spec/` | 最新 main の qa-206 / qa-207 を保持し、`dev-workflow.web` を qa-208 へ R4-reopen → 再確定して compiler で再生成。foundation U1〜U9 の source-index も確定済み QA から正規 transition で復旧。 |
 | `specs/` | dev-graph authority addendum に lineage trigger、fail-closed 対称性、素材の verbatim import と実行ロジック複製の区別を追記。 |
 | `architecture/` | dev-workflow / testing-qa に contract・validator・fixture の責務境界、provenance 復旧、C19 の data / logic 境界を反映。 |
 | `features/` | feat-dev-pipeline-improvement に o4zi の fresh C19 PASS と到達状態を追記。 |
@@ -38,7 +38,7 @@ reviewed_at: "2026-08-08"
 - focused pytest: 3 files / 57 tests PASS（3 contract copy の byte parity test を含む）。
 - full Dev Graph pytest: 975 PASS / 5 subtests PASS / 0 FAIL / 0 xfail。旧 C19 DEGRADED を前提にした固定 path テストも fresh PASS receipt 参照へ是正。
 - 3 contract copy の byte equality: PASS。
-- system-spec foundation / source-citation gate: PASS。system-spec-harness tests は 227 PASS。U1〜U9 の原文は過去の確定済み QA を正とし、推測・捏造 0 件。
+- system-spec foundation / source-citation gate: PASS。最新 `main` 取込後の system-spec-harness tests は 508 PASS。U1〜U9 の原文は過去の確定済み QA を正とし、推測・捏造 0 件。
 - fresh live trial: C01 / C02 / C03 / C04 / C05 / C14 / C18 / C19 の 8 件が独立評価込みですべて PASS。C19 正本 run は `20260808T154500Z-o4zi-c19r3`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `d090d08557e35d65477b10fc7d6f692f0f1b1b146abf8a200dbc1fc78e1832f2`。
 - C19 は target Skill と harness 正規4 Skill を literal call で順番どおり実行し、3件の独立監査、completeness gate、C02 経由の2 node、source / evidence digest、writer 経路、複製ロジック 0 を確認。
 - full graph schema の 160 件（frontmatter 44、parity 5、heading 111）は `origin/main` と同一の既存 baseline。今回変更 node の違反は 0 件で、無関係な過去 artifact を本 commit で一括変更しない。

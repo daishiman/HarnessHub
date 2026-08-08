@@ -5,6 +5,7 @@ import { Alert, Button, Card, PageHeader, Stack, TextInput } from '@harness-hub/
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { PublicShell } from '../components/shell/public-shell.js';
 import { SESSION_COOKIE_NAME, systemAuthClock, verifySessionToken } from '../lib/auth/index.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME } from '../lib/auth/session.js';
 import { DEFAULT_POST_SIGNIN_LANDING } from '../lib/routing/post-signin-landing.js';
@@ -75,7 +76,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         // scope が決まらないのは「2 件以上の workspace に所属していて、まだ選んでいない」場合。
         // そのまま着地先へ送ると missing_tenant_scope で 403 になり、しかも cookie を書く操作が
         // 画面上に無いため利用者は自力で復帰できない。ここで選ばせて動線を閉じる。
-        return <WorkspaceChoice workspaceIds={claims.workspace_ids} />;
+        return (
+          <PublicShell>
+            <WorkspaceChoice workspaceIds={claims.workspace_ids} />
+          </PublicShell>
+        );
       }
     }
   }
@@ -87,30 +92,31 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const lastTenant = readTenantSlug(cookieStore.get(LAST_TENANT_COOKIE_NAME)?.value ?? null);
 
   return (
-    <Stack gap={5}>
-      <PageHeader
-        title="サインイン"
-        description="ご契約のテナント ID を入力すると、そのテナントのサインイン画面へ移動します。"
-      />
-
-      {hasInvalidTenant ? (
-        <Alert
-          tone="danger"
-          title="テナント ID の形式が正しくありません"
-          description="半角の小文字英数字とハイフンだけが使えます (例: harness-hub)。もう一度入力してください。"
+    <PublicShell>
+      <Stack gap={5}>
+        <PageHeader
+          title="サインイン"
+          description="ご契約のテナント ID を入力すると、そのテナントのサインイン画面へ移動します。"
         />
-      ) : null}
 
-      {lastTenant === null ? null : (
-        <Card
-          title="前回のテナント"
-          description="この端末で最後に選んだテナントです。違う場合は下のフォームから入力してください。"
-        >
-          <a href={tenantSigninPath(lastTenant)}>{lastTenant} のサインイン画面へ進む</a>
-        </Card>
-      )}
+        {hasInvalidTenant ? (
+          <Alert
+            tone="danger"
+            title="テナント ID の形式が正しくありません"
+            description="半角の小文字英数字とハイフンだけが使えます (例: harness-hub)。もう一度入力してください。"
+          />
+        ) : null}
 
-      {/*
+        {lastTenant === null ? null : (
+          <Card
+            title="前回のテナント"
+            description="この端末で最後に選んだテナントです。違う場合は下のフォームから入力してください。"
+          >
+            <a href={tenantSigninPath(lastTenant)}>{lastTenant} のサインイン画面へ進む</a>
+          </Card>
+        )}
+
+        {/*
         JavaScript を使わない GET フォームにしている。遷移先が `/{slug}/signin` という
         path であるため form の action だけでは組み立てられず、`/signin` が受けて 303 で送り出す。
         client 側で router.push する形にすると、この入口が client JS の読み込み完了まで機能しない。
@@ -118,34 +124,35 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         差し戻し時の `defaultValue` は空にする。前回値を残すと「自分が打っていない値が入ったまま
         『形式が正しくありません』と言われる」状態になり、どこを直せばよいか分からなくなる。
       */}
-      <Card title="テナント ID を入力">
-        <form method="get" action={SIGNIN_ENTRY_PATH}>
-          <Stack gap={4}>
-            <TextInput
-              label="テナント ID"
-              name={TENANT_QUERY_PARAM}
-              description="サインイン画面の URL に含まれる識別子です (例: harness-hub)。分からない場合は管理者にお問い合わせください。"
-              required
-              autoComplete="organization"
-              spellCheck={false}
-              defaultValue={hasInvalidTenant ? '' : (lastTenant ?? '')}
-            />
-            <div>
-              <Button type="submit" variant="primary">
-                サインイン画面へ進む
-              </Button>
-            </div>
-          </Stack>
-        </form>
-      </Card>
+        <Card title="テナント ID を入力">
+          <form method="get" action={SIGNIN_ENTRY_PATH}>
+            <Stack gap={4}>
+              <TextInput
+                label="テナント ID"
+                name={TENANT_QUERY_PARAM}
+                description="サインイン画面の URL に含まれる識別子です (例: harness-hub)。分からない場合は管理者にお問い合わせください。"
+                required
+                autoComplete="organization"
+                spellCheck={false}
+                defaultValue={hasInvalidTenant ? '' : (lastTenant ?? '')}
+              />
+              <div>
+                <Button type="submit" variant="primary">
+                  サインイン画面へ進む
+                </Button>
+              </div>
+            </Stack>
+          </form>
+        </Card>
 
-      <Alert
-        tone="info"
-        title="Hub の実行基盤は起動しています"
-        description="依存先を含む死活状態は /health で確認できます。"
-        action={<a href="/health">/health を開く</a>}
-      />
-    </Stack>
+        <Alert
+          tone="info"
+          title="Hub の実行基盤は起動しています"
+          description="依存先を含む死活状態は /health で確認できます。"
+          action={<a href="/health">/health を開く</a>}
+        />
+      </Stack>
+    </PublicShell>
   );
 }
 

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1434,
+  "graph_revision": 1440,
   "nodes": [
     {
       "acceptance": [
@@ -834,7 +834,11 @@
       "project_id": "harness-hub",
       "pull_request_linkages": [],
       "purpose": "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する",
-      "related_nodes": [],
+      "related_nodes": [
+        "spec-harness-hub-ui-foundation-addendum",
+        "issue-ui-foundation-final-review-20260808",
+        "issue-hub-shell-page-surface-unification-20260808"
+      ],
       "resource_scope": [
         "features/feat-hub-foundation.md"
       ],
@@ -870,7 +874,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:53:41.905305Z"
+      "updated_at": "2026-08-08T10:45:00Z"
     },
     {
       "acceptance": [
@@ -45209,12 +45213,15 @@
       "acceptance": [
         "遷移元が無いサインイン成功で /sheets に着地し / に留まらない",
         "絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる",
-        "認証済みで / を開くと既定着地へ redirect される",
+        "認証済みで scope 確定済みの / は既定着地へ redirect される",
+        "未認証の / が 200 でテナント入力フォームを描画する",
         "業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない",
         "明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否される",
         "両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)",
         "所属検証を通らない workspace は session へ束縛されない",
-        "戻り先の解決結果に対しても authorize() が適用される"
+        "戻り先の解決結果に対しても authorize() が適用される",
+        "URL クエリ無しの着地直後でも resolveDashboardScope が session から scope を補完する",
+        "/ が prerender-manifest に静的 route として載らない"
       ],
       "architecture_refs": [
         "arch-harness-hub-frontend",
@@ -45286,14 +45293,30 @@
         "spec-post-signin-workspace-scope",
         "feat-auth-tenancy",
         "feat-dual-catalog-web",
+        "spec-harness-hub-ui-foundation-addendum",
+        "issue-hub-shell-page-surface-unification-20260808",
+        "issue-hub-root-500-signin-20260808",
         "arch-harness-hub-frontend",
         "arch-harness-hub-security"
       ],
       "resource_scope": [
         "features/feat-post-signin-scope-routing.md",
+        "apps/hub/src/middleware.ts",
         "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/routing/dashboard-scope.ts",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "apps/hub/src/lib/routing/signin-entry.ts",
+        "apps/hub/src/lib/routing/workspace-entry.ts",
+        "apps/hub/src/lib/routing/deny-navigation.ts",
+        "apps/hub/src/lib/routing/pathname-header.ts",
+        "apps/hub/src/components/shell/",
+        "apps/hub/src/app/(dashboard)/layout.tsx",
+        "apps/hub/src/app/(workspace)/layout.tsx",
         "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
-        "apps/hub/src/app/page.tsx"
+        "apps/hub/src/app/page.tsx",
+        "apps/hub/src/app/signin/route.ts",
+        "apps/hub/src/app/signin/workspace/route.ts",
+        "apps/hub/scripts/check-dynamic-routes.mjs"
       ],
       "scope_in": [
         "scope 解決の 2 系統 (明示ヘッダー / session active tenant-workspace)",
@@ -45301,14 +45324,19 @@
         "session への active workspace 束縛と所属再検証",
         "サインイン後の着地先解決 (遷移元 path -> 既定着地 /sheets)",
         "戻り先の同一 origin 相対 path 制限 (open redirect 防止)",
-        "認証済み / の既定着地への redirect"
+        "認証済み / の既定着地への redirect",
+        "未認証 / のテナント入口と /signin 振り分け",
+        "RSC 画面の session scope フォールバック (resolveDashboardScope)",
+        "HubShell の scope 付き route projection と deny-by-default navigation",
+        "ブラウザ navigation 拒否時の HTML 回復導線",
+        "動的必須 route の静的化防止ゲート"
       ],
       "scope_out": [
         "authorize() の判定順・role 判定・deny-by-default の変更",
         "catalog/sheets API 実装と DB schema の変更",
-        "Workspace 選択画面の UI 実装",
+        "共通シェル常設の Workspace 切替 UI (feat-workspace-switch-ux)",
         "Web 公開ウィザードの導線",
-        "サイドバー段階表示契約の変更"
+        "サイドバー段階表示契約の変更 (qa-018 本実装)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:30:00Z",
@@ -45332,7 +45360,7 @@
       "template_version": "1.0.0",
       "title": "サインイン後のスコープ解決とルーティング結線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-08T12:35:34.200652Z"
     },
     {
       "acceptance": [
@@ -51392,12 +51420,15 @@
       "classification_confidence": 0.99,
       "classification_reason": "複数の既存 Beads を一つの commit / PR / spec receipt に束ねる独立 final-review issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-08T09:21:38Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md",
+          "https://github.com/daishiman/HarnessHub/pull/679"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-08T11:08:55Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "4d6201eddc88115e2ed94716435de16cb1596f9e314bfa76ba989995cac65ad6",
@@ -51478,7 +51509,7 @@
         "source_version": "0.1.0"
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ui-foundation",
         "browser-test",
@@ -51491,11 +51522,14 @@
       "template_version": "1.0.0",
       "title": "UI 基盤 wave の最終レビュー・仕様反映・公開",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T07:51:36Z"
+      "updated_at": "2026-08-08T11:08:55Z"
     },
     {
       "acceptance": [
-        "packages/ui の公開 layout / token / state contract を apps/hub が利用する",
+        "packages/ui の公開 shell / layout / token / state contract を apps/hub が利用する",
+        "認証後 route が一つの HubShell と main landmark を使う",
+        "role 未確定または member へ管理者専用導線を表示しない",
+        "破壊操作と modal layer が可逆性・focus・scroll contract を満たす",
         "root / dashboard / workspace の状態 file 欠落を G15 が拒否する",
         "360x800 / 768x1024 / 1280x800 の responsive regression が実 Chromium で通る",
         "catalog 7 分類の light / dark VRT が OS baseline と一致する",
@@ -51516,7 +51550,7 @@
         }
       ],
       "classification_confidence": 0.99,
-      "classification_reason": "qa-201 / qa-203 / qa-204 の確定 UI 契約を横断参照する製品仕様追補",
+      "classification_reason": "qa-204 / qa-206 / qa-207 の確定 UI shell・surface・quality 契約を横断参照する製品仕様追補",
       "completion_evidence": {
         "completed_at": null,
         "evidence_refs": [],
@@ -51526,9 +51560,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "9310f064f5f79d8e2b0ef53d3b1dfc25c8afcb25a51fe92e6890cd4ddc0230e2",
+        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
         "evaluator": "final review + system-spec transition writer",
-        "evidence_ref": "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md"
+        "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-08T07:16:25Z",
@@ -51547,7 +51581,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "qa-201 / qa-203 / qa-204 と実装・CI・文書が同じ UI 品質契約を参照する",
+      "goal": "qa-204 / qa-206 / qa-207 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する",
       "graph_node_id": "spec-harness-hub-ui-foundation-addendum",
       "implementation_readiness": {
         "checked_at": "2026-08-08T07:16:25Z",
@@ -51567,22 +51601,33 @@
       "purpose": "UI 基盤の所有境界、画面状態、breakpoint、実ブラウザ/VRT gate を製品仕様として固定する",
       "related_nodes": [
         "feat-hub-foundation",
+        "feat-post-signin-scope-routing",
         "issue-ui-foundation-final-review-20260808",
+        "issue-hub-shell-page-surface-unification-20260808",
         "arch-harness-hub-frontend",
         "arch-harness-hub-testing-qa"
       ],
       "resource_scope": [
-        ".github/workflows/ci.yml",
-        ".github/workflows/ui-visual.yml",
+        "apps/hub/",
+        "packages/ui/",
         "specs/harness-hub-ui-foundation-addendum.md",
         "system-spec/frontend.md",
         "system-spec/ui-ux.md",
         "system-spec/testing-qa.md",
-        "docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md"
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.md",
+        "features/feat-post-signin-scope-routing.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p12.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        "docs/frontend-spec.md",
+        "docs/frontend-ui-foundation-spec.md",
+        "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
       ],
       "scope_in": [
-        "AppShell / layout / design token の公開契約",
+        "AppShell / HubShell / layout / design token の公開契約",
         "loading / empty / not found / forbidden / unexpected error の表示契約",
+        "role-aware navigation と desktop/mobile shell",
+        "Panel / ScreenHeader / ActionLink と modal layer の操作契約",
         "responsive breakpoint と局所横スクロール契約",
         "実 Chromium、catalog VRT、CI failure evidence"
       ],
@@ -51591,9 +51636,9 @@
         "Cloudflare deploy unit と本番 SLO の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-08T07:16:25Z",
+        "imported_at": "2026-08-08T11:17:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "9310f064f5f79d8e2b0ef53d3b1dfc25c8afcb25a51fe92e6890cd4ddc0230e2",
+        "source_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
         "source_path": "system-spec/spec-state.json",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -51613,7 +51658,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub UI 基盤・実ブラウザ品質ゲート追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-08T07:47:52Z"
+      "updated_at": "2026-08-08T11:17:00Z"
     },
     {
       "acceptance": [
@@ -52332,6 +52377,152 @@
       "title": "[bug] 本番ランディング `/` が DYNAMIC_SERVER_USAGE で 500 になり、サインイン入口・Workspace 選択・拒否画面が欠落していた",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T12:00:00Z"
+    },
+    {
+      "acceptance": [
+        "認証後 route は共通 HubShell を使い main landmark を一つだけ持つ",
+        "member と role 未確定時に管理者専用導線が DOM に存在しない",
+        "破壊操作は可逆性を明示する ConfirmDialog を使う",
+        "modal layer は focus trap・Esc・focus restore・scroll lock を共通実装する",
+        "変更対象の手書きファイルは 500 行以下である",
+        "task spec と repository quality gate が blocking failure 0 で完了する",
+        "仕様影響が system-spec / specs / architecture / features / tasks / docs と受領書へ反映される",
+        "devgraph branch の draft PR が base main 向けに公開される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-imzk",
+        "linked_at": "2026-08-08T10:34:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-shell-page-surface-unification-20260808.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "前回 UI foundation の上に共通 shell と全画面 surface を載せる独立した実装・公開単位",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
+        "evaluator": "final review + system-spec transition writer",
+        "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T10:30:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-shell-page-surface-unification-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [
+          "ui-visual"
+        ],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "server-first の共通 HubShell、role-aware navigation、共通 page surface、accessible overlay が仕様・実装・テスト・PR で同じ契約を参照する",
+      "graph_node_id": "issue-hub-shell-page-surface-unification-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T10:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-hub-shell-page-surface-unification-20260808",
+          "linked_at": "2026-08-08T11:44:47Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 683,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/683"
+        }
+      ],
+      "purpose": "認証後の全画面を一貫したナビゲーション、画面見出し、面、モーダル契約へ統一し、権限外導線と破壊操作の誤操作を防ぐ",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "feat-post-signin-scope-routing",
+        "spec-harness-hub-ui-foundation-addendum",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/",
+        "packages/ui/",
+        "system-spec/",
+        "specs/harness-hub-ui-foundation-addendum.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.md",
+        "features/feat-post-signin-scope-routing.md",
+        "tasks/feat-hub-foundation/",
+        "docs/",
+        "issues/hub-shell-page-surface-unification-20260808.md"
+      ],
+      "scope_in": [
+        "desktop sidebar / header / footer と mobile tab の共通 HubShell",
+        "実在 route と session role に基づく deny-by-default navigation",
+        "Panel / ScreenHeader / ActionLink / Icon / Modal / BottomSheet の公開 UI contract",
+        "既存業務画面と公開画面の共通 surface 移行",
+        "unit / a11y / catalog / typecheck / lint / repository gate"
+      ],
+      "scope_out": [
+        "公開 API・DB schema・認証認可ルール自体の変更",
+        "未実装 route の新設",
+        "Cloudflare 本番デプロイ",
+        "モバイル native gesture の追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T10:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ui-shell",
+        "page-surface",
+        "accessibility",
+        "responsive",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Harness Hub 共通シェル・全ページ表面の統一",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:46:34.607947Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

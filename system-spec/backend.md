@@ -184,6 +184,14 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 - reliability goalにはretry-safe operationと明示的error、delivery goalにはcontract testとadditive evolutionを結ぶ。
 - 選択はAPI様式の流行でなく、consumer、latency、consistency、offline、security、cost constraintsへの適合で評価する。
 
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-186 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-010 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G1, G2, G4, G5, G3
+
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)

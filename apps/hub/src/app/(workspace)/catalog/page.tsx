@@ -1,4 +1,5 @@
 import type { PublishTarget } from '@harness-hub/schemas';
+import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { CatalogList } from '../../../components/catalog/CatalogList.js';
@@ -24,15 +25,22 @@ function toTarget(value: string | undefined): PublishTarget | undefined {
 
 export default async function CatalogPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const resolved = scopeFromQuery(query, scope);
   return (
-    <section aria-labelledby="catalog-heading">
-      <h1 id="catalog-heading">業務ツール</h1>
-      <p>Workspace で公開されている Skill と Web アプリを探して導入できます。</p>
-      <CatalogList
-        scope={scopeFromQuery(query, scope)}
-        initialTarget={toTarget(query.target)}
-        initialQuery={query.q ?? ''}
+    <>
+      <ScreenHeader
+        id="catalog-heading"
+        title="業務ツール"
+        description="Workspace で公開されている Skill と Web アプリを探して導入できます。"
+        actions={
+          <ActionLink href={`/catalog/releases?tenant=${resolved.tenantId}&workspace=${resolved.workspaceId}`}>
+            リリース履歴
+          </ActionLink>
+        }
       />
-    </section>
+      <Panel flush>
+        <CatalogList scope={resolved} initialTarget={toTarget(query.target)} initialQuery={query.q ?? ''} />
+      </Panel>
+    </>
   );
 }

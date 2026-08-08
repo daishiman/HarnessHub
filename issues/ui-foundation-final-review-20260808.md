@@ -12,8 +12,8 @@ iteration: null
 title: "UI 基盤 wave の最終レビュー・仕様反映・公開"
 owners: ["daishiman"]
 created_at: "2026-08-08T07:07:57Z"
-updated_at: "2026-08-08T07:51:36Z"
-status: "active"
+updated_at: "2026-08-08T11:08:55Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-hub-foundation","arch-harness-hub-frontend"]
 resource_scope: [".github/workflows/ci.yml",".github/workflows/ui-visual.yml","apps/hub/","packages/ui/","pnpm-lock.yaml","system-spec/","specs/harness-hub-ui-foundation-addendum.md","architecture/harness-hub-frontend.md","features/feat-hub-foundation.md","issues/ui-foundation-final-review-20260808.md","tasks/feat-hub-foundation/sys-hub-foundation-p12.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md","docs/frontend-spec.md","docs/frontend-ui-foundation-spec.md","docs/features/feat-hub-foundation/"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-08T09:21:38Z","evidence_refs":["docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md","https://github.com/daishiman/HarnessHub/pull/679"],"policy":"manual","reconciled_at":"2026-08-08T11:08:55Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-08T07:07:57Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -96,8 +96,8 @@ implementation_readiness: {"checked_at":"2026-08-08T07:07:57Z","missing_sections
 - [x] frontend / ui-ux / testing-qa の仕様影響が正規 writer で反映されている。
 - [x] 変更対象の手書きファイルが 500 行以下、Markdown が 300 行以下である。
 - [x] remote main → local main →本 branch の順で同期済みである。
-- [ ] `devgraph/issue-ui-foundation-final-review-20260808` を push し、base `main` の draft PR を作る。
-- [ ] PR 本文が目的・変更・検証・仕様反映・Beads IDs・node ID・残課題を含む。
+- [x] `devgraph/issue-ui-foundation-final-review-20260808` を push し、base `main` の draft PR #679 を作る。
+- [x] PR 本文が目的・変更・検証・仕様反映・Beads IDs・node ID・残課題を含む。
 
 ## 検証証跡
 
@@ -119,4 +119,4 @@ implementation_readiness: {"checked_at":"2026-08-08T07:07:57Z","missing_sections
 
 ## 完了投影
 
-draft PR 作成までは本 issue と 5 Beads を in_progress とする。merge 後に default branch reconciliation（既定 branch から完了状態を同期する処理）で done / closed へ収束させる。
+PR #679 は 2026-08-08 に `main` へ merge 済みである。5 Beads は closed、本 issue は manual reconciliation（マージ結果を正本へ同期する処理）で closed / done へ収束した。

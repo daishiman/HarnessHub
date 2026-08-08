@@ -96,3 +96,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 公開単位は `issue-ui-foundation-final-review-20260808`、branch は `devgraph/issue-ui-foundation-final-review-20260808` とする。閉じた exact-13 に 14 個目の task を追加しない。
 - draft PR までは 5 Beads と issue node を in_progress / active に維持し、merge 後に default branch reconciliation で閉じる。
 - 本追補は UI 基盤と品質ゲートの repository 公開までを扱い、Cloudflare 本番 deploy は行わない。
+
+## 共通シェル wave の公開追補 (2026-08-08 / `HarnessHub-imzk`)
+
+- 公開単位は `issue-hub-shell-page-surface-unification-20260808`、branch は `devgraph/issue-hub-shell-page-surface-unification-20260808` とする。閉じた exact-13 に新しい canonical task は追加しない。
+- draft PR merge 前は Beads を `in_progress`、graph node を `active` に維持する。PR gate を登録し、merge 後の default branch reconciliation で閉じる。
+- repository 公開までを対象とし、Cloudflare 本番 deploy と VRT baseline の無条件更新は行わない。

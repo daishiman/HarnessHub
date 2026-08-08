@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-203 |
+| Web (web) | 確定 | 確定質疑: qa-206 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,15 +24,17 @@ serves_goals: [G1, G2, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-203 (対応セル: web)
+### qa-206 (対応セル: web)
 
-**質問**: qa-200 が UI 基盤の公開部品として実装に存在しない Cluster を列挙していた。qa-200 の所有境界と既存 frontend/web 契約を維持しつつ、公開 contract の列挙を実装に一致させるにはどう訂正するか。
+**質問**: qa-203 とそれ以前の frontend/web 契約を維持したまま、認証後の全 route を包む HubShell、session role による navigation 投影、packages/ui と apps/hub の所有境界をどう確定するか。
 
-**回答**: [出所] 本 entry は appr-037 の技術的事実委任下で、packages/ui/src/index.ts の export 実測に基づいて訂正する。利用者の好みを新たに決定するものではない。qa-200 の逐語は改変せず、本 entry を frontend/web の正本とする。
+**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 が委任するコードから検証できる技術的事実の範囲で確定する。qa-203 とそれ以前の frontend/web 契約は全面維持する。
 
-qa-200 の AppShell / design token / 共通画面状態の所有境界、apps/hub を consumer とする方針、公開 API・DB・認証認可・deploy unit 非変更は全面維持する。訂正は公開部品の列挙だけである。正しい layout 公開 contract は AppShell / Container / SidebarLayout / Stack / Card / PageHeader / NavList とする。Cluster は実装も export も存在しないため列挙から除外する。
+認証後の (dashboard) / (workspace) route は apps/hub の server component HubShell が共通に包み、main landmark を一つだけ持つ。sidebar / header / footer / mobile tab、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet の視覚・操作 contract は packages/ui が所有し、apps/hub は route、tenant/workspace scope、session identity を結線する consumer とする。公開 route は PublicShell を使い、root layout 自体は main landmark を追加しない。
 
-画面状態は packages/ui の Skeleton / EmptyState / ErrorState と、apps/hub の LoadingScreen / NotFoundScreen / ForbiddenScreen / ErrorScreen の二層で構成する。route 側の loading.tsx / error.tsx / not-found.tsx / global-error.tsx は薄い配線に留める。その他の qa-200 の契約は変更しない。
+現在地は middleware が認証認可を通過した内部 request に x-hh-pathname を付与し、server layout が読む。外部 API contract や client bundle を増やす用途には使わない。navigation は実在する route だけを表示し、signed session の active claim から得た SessionRole を使って deny-by-default で投影する。member と role 未確定は account settings のみ、workspace-admin は users / coefficients、provider-admin はそれらに加えて認証設定を表示する。API 認可を最終決定者とする契約は変えず、UI は権限外の導線を DOM に出さない。role token は provider-admin / workspace-admin / member の正規値だけを受け、表示名へ変換する。
+
+公開 API、DB schema、session claim schema、ACTION_RULES、Cloudflare deploy unit は変更しない。PrimaryNav の独自実装は HubShell の route projection へ置き換え、route ごとの shell 再定義を禁止する。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -94,7 +96,7 @@ qa-200 の AppShell / design token / 共通画面状態の所有境界、apps/hu
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-203 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-206 (対応セル: web) の判断へ適用する
 - 上記原則は確定内容 qa-007 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
 - 資するゴール: G1, G2, G3
 
