@@ -54,13 +54,13 @@ implementation_readiness: {"checked_at":"2026-08-08T12:00:00Z","missing_sections
 
 ## 原因
 
-1. **静的化と実行時動的 API の衝突**  
+1. **静的化と実行時動的 API の衝突**
    `cookies()` の呼び出しが `AUTH_SESSION_SECRET` の有無の内側にあった。secret 未設定のビルド環境では動的 API に到達せず Next が `/` を静的 prerender し、実行時 (secret あり) に `DYNAMIC_SERVER_USAGE` で 500 になった。`next dev` / `next start` では再現せず workerd 上の本番ビルドでのみ顕在化した。
 
-2. **入口そのものを HTTP GET していなかった**  
+2. **入口そのものを HTTP GET していなかった**
    既存 smoke は `/health` や API 系のみで、ランディング HTML の描画成功を見ていなかった。
 
-3. **導線の欠落**  
+3. **導線の欠落**
    未認証のテナント ID 入力、複数 Workspace 所属時の選択、ブラウザ拒否時の人間可読 HTML が無く、scope 未解決は JSON 生値の行き止まりになっていた。
 
 ## 修正方針

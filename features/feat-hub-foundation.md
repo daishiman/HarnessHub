@@ -12,10 +12,10 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:53:41.905305Z"
+updated_at: "2026-08-08T10:45:00Z"
 status: "closed"
 depends_on: []
-related_nodes: []
+related_nodes: ["spec-harness-hub-ui-foundation-addendum","issue-ui-foundation-final-review-20260808","issue-hub-shell-page-surface-unification-20260808"]
 resource_scope: ["features/feat-hub-foundation.md"]
 purpose: "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する"
 goal: "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js と共通層の単一実装が動作する状態"
@@ -155,3 +155,9 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - `HarnessHub-tiqw` / `snlo` / `xuhj` / `xaa3` / `4a2z` で、AppShell・design token・標準画面状態・実ブラウザ harness・component catalog / VRT・responsive regression を一つの UI 基盤 wave として実装した。
 - frontend / ui-ux / testing-qa の既確定内容を維持しつつ、R4-reopen → qa-201 / qa-203 / qa-204 で実装値と品質境界を再確定した。
 - 公開 API、DB schema、認証認可判定、Cloudflare deploy unit は非変更。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を参照する。
+
+## Post-closeout 共通シェル・全ページ表面追補 (2026-08-08 / `HarnessHub-imzk`)
+
+- UI 基盤を実際の業務画面へ展開し、認証後 route を desktop sidebar / header / footer と mobile 4+その他 tab の `HubShell` で統一した。
+- navigation は実在 route と active `SessionRole` から deny-by-default で生成し、member または role 未確定時に users / auth / coefficients を DOM へ出さない。
+- 画面は `ScreenHeader` / `Panel` / `ActionLink`、重なりは `Modal` / `BottomSheet`、取り消せない確認は `ConfirmDialog` へ統一した。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、検証は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。

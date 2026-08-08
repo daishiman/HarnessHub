@@ -193,7 +193,7 @@ P05〜P12 で middleware の session scope 合流と着地先解決は結線済�
 
 本番 `/` が `DYNAMIC_SERVER_USAGE` で 500 を返した。post-deploy の `/health`・OIDC・DB/R2・hearing は緑のまま、**入口 GET だけ**が落ちていた。あわせて未認証のテナント入力、複数 Workspace 未選択時の回復、ブラウザ拒否時の人間可読応答が欠けていた。
 
-graph_node_id: `issue-hub-root-500-signin-20260808`  
+graph_node_id: `issue-hub-root-500-signin-20260808`
 Beads: `HarnessHub-3sjj` / `HarnessHub-3sjj.13` / `HarnessHub-f91a`（Workspace 選択の最小結線）
 
 ### 正規フローでの反映判定
@@ -232,3 +232,12 @@ Beads: `HarnessHub-3sjj` / `HarnessHub-3sjj.13` / `HarnessHub-f91a`（Workspace 
 - `HarnessHub-3sjj.13`: 本番 6 系統 scope と open redirect の実環境確認（checklist 未完了分）。
 - `HarnessHub-f91a`: 共通シェル常設の Workspace 切替 UI、切替時の旧 scope 非表示は未実装。
 - 本 issue の PR merge・本番 deploy 後、ランディング smoke が CI で緑になること。
+
+### 後続の共通シェル反映 (2026-08-08 / `HarnessHub-imzk`)
+
+本受領書の `PrimaryNav` は到達性を埋める当初実装の記録として保持する。後続変更で
+`PrimaryNav` は `HubShell` / `nav-items.ts` へ置き換わり、scope 付き link と 6 path
+到達性の責務を引き継いだ。新たに role-aware navigation と server-rendered current path
+を仕様化したため、この後続分の判断・検証は
+[共通シェル仕様反映受領書](../feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md)
+および system-spec qa-206 / qa-207 を正とする。qa-135 / qa-137 の scope・認可契約は不変である。

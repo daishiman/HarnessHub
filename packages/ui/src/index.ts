@@ -53,6 +53,9 @@ export { InlineEditTable } from './components/InlineEditTable.js';
 export type { MarkdownEditorProps, MarkdownViewProps } from './components/Markdown.js';
 // --- Markdown ------------------------------------------------------------
 export { MarkdownEditor, MarkdownView, markdownSanitizeSchema } from './components/Markdown.js';
+// --- 汎用モーダル / ボトムシート ------------------------------------------
+export type { ModalProps, ModalSize } from './components/Modal.js';
+export { Modal } from './components/Modal.js';
 export type { ProgressBarProps, SkeletonProps } from './components/Progress.js';
 // --- 進捗・状態表示 ------------------------------------------------------
 export { ProgressBar, Skeleton } from './components/Progress.js';
@@ -92,6 +95,9 @@ export {
   statusToneColors,
   statusVocabulary,
 } from './i18n/status-vocabulary.js';
+// --- アイコン ------------------------------------------------------------
+export type { IconName, IconProps } from './icons/index.js';
+export { Icon, iconNames } from './icons/index.js';
 export type {
   AppShellProps,
   NavListItem,
@@ -109,6 +115,22 @@ export type {
   StackProps,
 } from './layout/primitives.js';
 export { Card, Container, containerSizes, PageHeader, Stack } from './layout/primitives.js';
+export type { BottomSheetProps } from './shell/BottomSheet.js';
+export { BottomSheet } from './shell/BottomSheet.js';
+export type { MobileTabBarProps } from './shell/MobileTabBar.js';
+export { MobileTabBar, mobileTabPrimarySlots } from './shell/MobileTabBar.js';
+// --- 共通シェル ----------------------------------------------------------
+export type { ShellNavItem } from './shell/nav-model.js';
+export { isCurrentNav } from './shell/nav-model.js';
+export type { ShellFooterLink, ShellFooterProps } from './shell/ShellFooter.js';
+export { ShellFooter } from './shell/ShellFooter.js';
+export type { ShellAccountLink, ShellHeaderProps } from './shell/ShellHeader.js';
+export { ShellHeader } from './shell/ShellHeader.js';
+export type { ShellSidebarProps } from './shell/ShellSidebar.js';
+export { ShellSidebar } from './shell/ShellSidebar.js';
+export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
+export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
+export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
 export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
 // --- テーマ・表示密度・言語 ----------------------------------------------
 export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';

@@ -1,14 +1,20 @@
-import { SidebarLayout } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
-import { PrimaryNav } from '../../components/primary-nav.js';
-import { resolveDashboardScope } from '../../lib/routing/dashboard-scope.js';
+import { HubShell } from '../../components/shell/hub-shell.js';
+import { resolveShellProps } from '../../components/shell/resolve-shell-props.js';
 
+/**
+ * 画面骨格は HubShell が唯一の実装を持つ ((dashboard) 側と同じ骨格にするため)。
+ */
 export default async function WorkspaceLayout({ children }: { readonly children: ReactNode }) {
-  const scope = await resolveDashboardScope();
+  const shell = await resolveShellProps();
   return (
-    // ナビゲーションと内容の配置は SidebarLayout が唯一の実装を持つ ((dashboard) 側と同じ骨格にするため)
-    <SidebarLayout nav={<PrimaryNav tenantId={scope.tenantId ?? ''} workspaceId={scope.workspaceId ?? ''} />}>
+    <HubShell
+      scope={shell.scope}
+      accountName={shell.accountName}
+      accountRole={shell.role}
+      currentHref={shell.currentHref}
+    >
       {children}
-    </SidebarLayout>
+    </HubShell>
   );
 }

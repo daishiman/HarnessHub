@@ -75,8 +75,14 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   session から tenant/workspace を解決し、page は `query ?? session` の順で API へ渡す。
 - 判定ロジックは `middleware/authz.ts` の `resolveSessionScope()` を export して再利用する。
   画面側に別の所属検証を置かない (二重実装禁止)。
-- layout は `PrimaryNav` で主要画面へのリンクを描画し、解決済み scope をクエリへ引き継ぐ。
-  これは qa-018 のサイドバー段階表示の本実装ではなく、到達性を埋める最小シェルである。
+- layout は共通シェル `HubShell` (`apps/hub/src/components/shell/hub-shell.tsx`) で
+  サイドバー / ヘッダー / フッター / ボトムタブを描画し、解決済み scope をリンクのクエリへ
+  引き継ぐ。リンク定義の正本は `components/shell/nav-items.ts` の 1 箇所。
+  (2026-08-08 当初の `PrimaryNav` 最小シェルは本シェルへ置換して削除した。)
+- 画面骨格 (skip link / header / main ランドマーク / nav / footer) は領域ごとに 1 実装だけ持つ。
+  業務画面は `HubShell`、公開画面 (`/`, `/legal`, `/device`, サインイン) は
+  `components/shell/public-shell.tsx` (`packages/ui` の `AppShell`)。root layout は
+  ランドマークを持たない (二重の `main` を作らないため)。
 - client-only page (docs 詳細/編集) は layout が Context 経由で同じ scope を配る
   (`dashboard-scope-context.tsx`)。server page は Context を消費できないため各自
   `resolveDashboardScope()` を呼ぶ (React `cache()` で request 内は 1 回にまとまる)。
@@ -165,3 +171,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - responsive の数値正本は `breakpointTokens` (`480 / 768 / 1120`)。表の超過は局所 scroll container で受け、document 全体の overflow は実 Chromium で拒否する。
 - jsdom gate に加え、Vitest Browser Mode + Playwright で 360 / 768 / 1280px、44px / 36px 操作域、catalog light/dark VRT を検査する。baseline は OS 単位とし CPU architecture では分けない。
 - 規範契約は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、仕様反映経路は [受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 共通 HubShell・page surface 境界
+
+- `(dashboard)` / `(workspace)` layout は server component `HubShell` を共有する。current pathname は認可完了後に middleware が内部 request header `x-hh-pathname` へ載せ、`usePathname()` のためだけに全 shell を client component 化しない。
+- signed session の active claim を `SessionRole` (`member` / `workspace-admin` / `provider-admin`) として読み、実在 route だけを navigation model へ投影する。API 認可を最終決定者としたまま、UI も role 未確定時に管理導線を出さない。
+- `packages/ui` は ShellSidebar / ShellHeader / ShellFooter / MobileTabBar、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet を所有する。`apps/hub` は scope、identity、route と業務内容だけを結線する。
+- navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
+- 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
+- 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。

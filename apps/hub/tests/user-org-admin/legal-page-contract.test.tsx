@@ -27,14 +27,14 @@ const HUB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../
 const LEGAL_APP_DIR = path.join(HUB_ROOT, 'src/app/legal');
 
 function renderLegalPage(): void {
+  // `<main>` をテスト側で敷かないのは、/legal が PublicShell 経由で自前の main ランドマークを
+  // 持つようになったため。ここで包むと main が入れ子になり axe の landmark-main-is-top-level に触れる。
   const html = renderToStaticMarkup(
     <html lang="ja">
       <body>
-        <main>
-          <UiProvider>
-            <LegalPage />
-          </UiProvider>
-        </main>
+        <UiProvider>
+          <LegalPage />
+        </UiProvider>
       </body>
     </html>,
   );
