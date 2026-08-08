@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_common.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 85,
+    "notes": "定数・純粋ヘルパーのみを提供する共有基盤モジュールで、is_https_urlがuserinfo付きURLを拒否するなど地味だが手堅いセキュリティ配慮がある。foundation_missing_fieldsやis_explicit_naのロジックはFOUNDATION_NA_FORBIDDEN(U1-U3必須)との整合が取れており、他モジュール(foundation/knowledge/matrix)からのimportと矛盾がない。責務は『状態遷移共通ロジック』に限定され単一。減点は、モジュールdocstringが1行のみで各関数のPEP257ドキュメントが薄いこと、および例外処理が全てTransitionErrorへの正規化に依存し呼び出し元がdictでない場合の一部(normalize_serves等)はTypeErrorでなくisinstanceチェックで守られているが網羅は完全ではない点。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

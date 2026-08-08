@@ -92,23 +92,22 @@
 - C05 自前評価の観点 (foundation_trace / decision_guidance / design_knowledge_reflection /
   prompt_quality) に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
 - 台帳が無い/空の実行は裏取り 0 件 = fail-closed で violation (緑にしない)。
-- **機械層が保証しない範囲**: 台帳が示すのは「その subagent_type への Task が完了した」ことだけ。
-  監査 prompt が実質を伴うか、返った verdict がレポートへ忠実に転記されたかは意味層
-  (content-review / human) の未閉塞責務。receipt の `verdict` と `aspects[].verdict` の一致検査は
-  「転記の自己矛盾」までしか捕まえられない。
-- **run/session 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.session_id` (宣言) と台帳行の
-  `session_id` (harness 観測) の **両方** を要求し、同一 `(session_id, subagent_type)` の台帳行が
-  実在するときだけ裏取り成立とする。宣言単独では自己申告 (書くだけで通る)、台帳単独では過去 run と
-  区別不能であり、両者の突合で初めて「この報告が名指しする run で fork が完了した」ことに接地する。
+- **機械層が保証する範囲**: receipt の `dispatch.{session_id,tool,subagent_type,response_sha256}` と
+  `verdict` を hook 台帳の同一 response 行へ一致させる。したがって、実 fork 後に FAIL を PASS へ
+  書き換えること、または別 fork の response を流用することは violation になる。
+- **run/session・response 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.session_id` (宣言) と台帳行の
+  `session_id` (harness 観測)、さらに `tool` / `response_sha256` / `audit_verdict` の **全て** を要求する。
+  宣言単独では自己申告、台帳単独では過去 run と別 response を区別できないため、全値の突合で初めて
+  「この報告が名指しする run のこの監査 response がこの判定を返した」ことに接地する。
   さらに必須 receipt 全件の宣言 session が **単一に収束** することを要求し (複数の過去 run からの
   つまみ食い遮断)、`--session` で現在 session を明示されたときは宣言との一致まで検査する
   (過去 run 一式の丸ごと再利用の遮断。CI/probe の事後再検証では省略可 = 宣言↔台帳整合のみ)。
   宣言なし・`"unknown"` 宣言 (hook が session を観測できない環境の記録値) ・台帳に無い session の
   名指しは、いずれも fail-closed で violation ("unknown" 受理は『任意の過去 "unknown" 行で裏取り
   成立』の穴を戻すため拒否する。設計判断の根拠は `ledger_corroborates` の実装コメント参照)。
-- **残余ギャップ (能動的偽装)**: 台帳は読み取り可能なため、過去 run の `session_id` を receipt へ
-  丸写しする能動的偽装は `--session` 併用時を除き機械層では弾けない。表層的 adversarial evasion は
-  設計上許容し、意味層 (content-review / human) の未閉塞責務として開示する。
+- **残余ギャップ (能動的改ざん)**: 監査 prompt の意味的十分性・根拠の妥当性は content-review / human の
+  責務である。また台帳を書き換えられる実行環境では hook 証跡だけで完全な敵対者耐性は得られないため、
+  運用では台帳への書込み権限を hook に分離する。
 
 ## 総合判定 (fail-closed)
 - 全観点PASSかつhigh severity finding 0件のときだけ総合PASS。

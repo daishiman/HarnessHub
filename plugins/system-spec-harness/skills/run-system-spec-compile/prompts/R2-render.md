@@ -24,14 +24,14 @@
 
 ## Layer 3: インフラ層
 - **入力**: R1 章立て構成 / `spec-state.json` / `fetched-references.json` / `../ref-system-design-knowledge/references/*.md` (設計知識・C04) / `../ref-system-design-knowledge/references/knowledge-catalog.json` (知識依存グラフ) / `../ref-system-design-knowledge/references/doctrine-anchor-registry.json` (doctrine anchor 写像)。
-- **決定論ヘルパ**: `scripts/compile-spec-doc.py` の `render_frontmatter` / `render_state_table` / `render_design_refs` / `render_citations` / `render_chapter`。知識反映順は `$CLAUDE_PLUGIN_ROOT/scripts/validate-knowledge-graph.py --profile knowledge --order`、doctrine 上流は `--profile doctrine` の `category_concern_mapping` を参照。
-- **設計知識対応**: カテゴリ→設計知識参照は `CATEGORY_DESIGN_REFS` (resource-map の read_when 対応を写像) を知識グラフ topo_order で並べ替えて反映。例: security→secure-by-design / backend→clean-architecture+api-design-patterns+ddd (depends_on 先の clean-architecture を先に踏まえる)。カテゴリ→concern→authority は doctrine-anchor-registry を正本とする。
+- **決定論ヘルパ**: `scripts/compile-spec-doc.py` の `render_frontmatter` / `render_state_table` / `render_design_refs` / `render_citations` / `render_chapter`。知識反映順は同ファイルの `_knowledge_topo_order()` が `knowledge-catalog.json` から `validate-knowledge-graph.py --profile knowledge --order` と同一アルゴリズム (Kahn 法) を再実装して導出し (二重実装の一致は test_knowledge_topo_order_matches_validator_script が回帰検知)、doctrine 上流は `--profile doctrine` の `category_concern_mapping` を参照。
+- **設計知識対応**: カテゴリ→設計知識参照は `CATEGORY_DESIGN_REFS` (resource-map の read_when 対応で対象ファイル集合を写像) を `category_design_refs` 内で知識グラフ topo_order で並べ替えて反映する。例: security→secure-by-design / backend→ddd+clean-architecture+api-design-patterns (depends_on 先の ddd を clean-architecture より先に、clean-architecture を api-design-patterns より先に踏まえる)。カテゴリ→concern→authority は doctrine-anchor-registry を正本とする。
 
 ## Layer 4: 共通ポリシー層
 - 各章 frontmatter に確定マーカー (status/category/aggregate/spec_cells) と `serves_goals` (上位概念トレース) を付与する。
 - 本文に (a) カテゴリ別収集状態表、(b) 設計知識cardの目的・解決問題・適用/非適用条件・トレードオフ/失敗モード・goal寄与、(c) 最新ドキュメント出典表を並べる。参照pathだけでは完了しない。
 - 出典は target の category で該当章へ割り当て、未割当は index へ回す (章に無理に重複させない)。
-- card全文の無目的な転載はしない。章のgoalとカテゴリに対応する深度項目を実体レンダリングし、適用理由を評価可能にする。
+- card全文の無目的な転載はしない。章のgoalとカテゴリに対応する深度項目を実体レンダリングし、適用理由を評価可能にする。card本文は汎用原則の逐語転記のため、末尾に確定qa_ref・対応セル・serves_goalsへ機械的に紐付ける「本章での適用」節を必ず添え、章固有の適用先を明示する (捏造した解釈文ではなく正本からの導出)。
 
 ## Layer 5: エージェント層 (l5-contract v2.0.0)
 
@@ -52,6 +52,7 @@
 - [ ] 各確定セルの qa_ref が章本文から追跡できる
 - [ ] 各対象外セルの除外根拠が章本文から追跡できる
 - [ ] 設計知識が解決問題と目的達成寄与を説明している
+- [ ] 設計知識card群の直後に「本章での適用」節があり、原則を本章の確定 qa_ref・対応セル・serves_goals へ紐付けている (確定セルなしは未確定を明示)
 - [ ] 設計知識が知識グラフ topo_order (上位概念→下位概念) の順で反映されている (C14)
 - [ ] 各カテゴリ章に doctrine anchor (concern authority) が上流指針として反映されている (C15)
 - [ ] 割当済み出典が公式 URL と版情報を保持している
