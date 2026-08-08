@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:44:42Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P07"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-docs-cms/refactoring-migration-note.md","packages/db/schema/docs-cms/"]

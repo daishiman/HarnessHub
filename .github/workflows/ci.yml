@@ -270,7 +270,24 @@ jobs:
         run: pnpm --filter @harness-hub/hub run build:worker
       - name: wrangler deploy
         id: deploy
-        run: pnpm --filter @harness-hub/hub exec wrangler deploy
+        # Cloudflare Workers は「version (アップロードされた版)」と「deployment (実際に配信される版)」が
+        # 別概念で、deploy が成功しても配信が入れ替わらない状態が成立し得る。後段の一致検査へ渡すため、
+        # 今アップロードした version id を出力へ控える (表示はそのまま残す)。
+        #
+        # あわせて稼働成果物へ commit を埋め込む (V6)。version id は Cloudflare の採番なので、
+        # 「いま配信されている版」は分かっても「それが repository のどの commit か」は分からない。
+        # 2026-08-07 の障害はまさにその対応が取れず、修正済みコードが 4 日間未反映であることに
+        # 誰も気づけなかった事案だった。値は wrangler.jsonc へ書かず (設定ファイルへ値を保存しない規約)、
+        # deploy 時に --var で渡す。commit sha は公開情報なので secret 扱いにはしない。
+        run: |
+          set -euo pipefail
+          pnpm --filter @harness-hub/hub exec wrangler deploy --var "HUB_COMMIT_SHA:${GITHUB_SHA}" 2>&1 | tee /tmp/wrangler-deploy.log
+          version="$(grep -oE 'Current Version ID: [0-9a-fA-F-]+' /tmp/wrangler-deploy.log | tail -1 | awk '{print $NF}')"
+          if [ -z "$version" ]; then
+            echo "::error::wrangler deploy の出力から Current Version ID を取得できなかった。配信版の一致検査ができないため中止する"
+            exit 1
+          fi
+          echo "deployed_version=$version" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -283,6 +300,93 @@ jobs:
           code=$(curl -s -o /tmp/health.json -w "%{http_code}" "$url")
           echo "health: $code"; cat /tmp/health.json
           [ "$code" = "200" ]
+      # 2026-08-07 に実際に踏んだ欠落を埋める step。deploy は 2 run 連続で success を返していたのに、
+      # 配信されていたのは 8/4 の失敗時 rollback で固定された古い version (2e4a6c5b) のままだった。
+      # 直後の smoke は古いコードを検査するので、修正済みの契約 (tenant_mismatch=404) が直っていないように見え、
+      # その失敗でまた rollback が走って古い版の固定が強まる、という悪循環になっていた。
+      # /health は CF_VERSION_METADATA から「いま実行されている version」を返すので、判定材料は最初から
+      # 応答に載っていた。deploy した版と突き合わせていなかっただけなので、ここで fail-closed にする。
+      - name: 配信版が今デプロイした版であることの検査 (deploy 成功 ≠ 配信更新)
+        id: version_gate
+        env:
+          DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}
+          HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          # 伝播には数秒かかる。「まだ伝播していない」と「そもそも昇格していない」を取り違えないよう、
+          # 一定時間は再試行してから落とす。
+          #
+          # 一致は 1 回では足りない。Cloudflare は colo (エッジ拠点) ごとに切替タイミングが違うので、
+          # 単発の一致で通すと、直後の smoke が別 colo の旧版へ当たる窓が残る。2026-08-07 の run
+          # 31221676748 で実際に起きた: /health は 1.3 秒後に新版へ切替わってゲートは通ったのに、
+          # 続く hearing smoke は修正前のコード (tenant_mismatch=403) を叩いて落ちた。
+          # そのため VERSION_GATE_STREAK 回「連続で」一致することを通過条件にする。
+          # 判定材料は /health の JSON だけに寄せる。wrangler の一覧出力は表示仕様が変わりうるため、
+          # 通過判定には使わず診断表示に留める (パース失敗が空文字になって素通りするのを避ける)。
+          required_streak="${VERSION_GATE_STREAK:-3}"
+          interval="${VERSION_GATE_INTERVAL_SECONDS:-3}"
+          timeout_seconds="${VERSION_GATE_TIMEOUT_SECONDS:-90}"
+          deadline=$(( SECONDS + timeout_seconds ))
+          streak=0
+          attempt=0
+          served=""
+          observed_colos=""
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            attempt=$(( attempt + 1 ))
+            headers="/tmp/version-gate-headers.txt"
+            # cache-buster と no-cache で、途中のキャッシュされた応答を「配信中の版」と誤認しない
+            served="$(curl -sf -D "$headers" -H 'Cache-Control: no-cache' "${HEALTH_URL}?_version_gate=${attempt}" | jq -r '.version // ""' || true)"
+            # cf-ray の末尾が応答した colo。どの拠点を何回観測したうえで通したかを後から検証できるようにする
+            colo="$(grep -i '^cf-ray:' "$headers" 2>/dev/null | tr -d '\r' | awk -F'-' '{print $NF}' || true)"
+            case " $observed_colos " in
+              *" ${colo:-unknown} "*) ;;
+              *) observed_colos="${observed_colos} ${colo:-unknown}" ;;
+            esac
+            if [ "$served" = "$DEPLOYED_VERSION" ]; then
+              streak=$(( streak + 1 ))
+            else
+              streak=0
+            fi
+            echo "attempt=${attempt} colo=${colo:-unknown} served=${served:-none} streak=${streak}/${required_streak}"
+            if [ "$streak" -ge "$required_streak" ]; then break; fi
+            sleep "$interval"
+          done
+          echo "deployed=${DEPLOYED_VERSION} served=${served} streak=${streak}/${required_streak} colos=${observed_colos# }"
+          if [ "$streak" -lt "$required_streak" ]; then
+            echo "::error::配信版が ${timeout_seconds} 秒以内に ${required_streak} 回連続で一致しなかった (deployed=${DEPLOYED_VERSION} served=${served})。以降の smoke は古いコードを検査することになるため中止する"
+            echo "--- 診断: 現在の deployment / version 一覧 ---"
+            pnpm --filter @harness-hub/hub exec wrangler deployments list || true
+            pnpm --filter @harness-hub/hub exec wrangler versions list || true
+            exit 1
+          fi
+      # V7: 稼働ビルドが既定 branch の HEAD より古い状態で放置されていないかを検査する。
+      # version_gate は「今 deploy した版が配信されたか」しか見ないので、deploy 自体が長期間
+      # 走っていない状態 (= 2026-08-03 の修正が 08-07 まで 4 日間未反映だった本件) は捉えられない。
+      # こちらは commit を突き合わせるので、deploy 経路が止まっていること自体を検出できる。
+      - name: 稼働ビルドの鮮度検査 (既定 branch HEAD からの乖離が続いていないか)
+        id: deploy_freshness
+        run: |
+          # pnpm 10 は `run <script> -- <args>` の区切り `--` を剥がさず子へ渡すため置かない
+          # (HarnessHub-0yvi / packages/db runbook-invocation が fail-closed で検出する)
+          pnpm --filter @harness-hub/hub run check:deploy-freshness \
+            --health-url "$HUB_HEALTH_URL" --json /tmp/deploy-freshness.json
+        env:
+          HUB_HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+      # version_gate を通したあとも、smoke が始まるまでに鮮度検査が挟まる。その間に別 colo の旧版へ
+      # smoke が当たる窓が残っていた (HarnessHub-u9zq)。version_gate が「届いたか」を見るのに対し、
+      # ここは「いま直前も届いたままか」を見る。不一致は待てば直る途中経過ではなく smoke が旧版を
+      # 検査する状態そのものなので、有限回だけ再試行して届かなければ落とす (待っただけで通さない)。
+      - name: smoke 直前の配信版再確認 (ゲート通過後に残る colo 間の伝播ムラ)
+        id: smoke_version_recheck
+        env:
+          DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}
+          HEALTH_URL: ${{ vars.HUB_HEALTH_URL }}
+        run: |
+          node scripts/ci/assert-served-version.mjs \
+            --health-url "$HEALTH_URL" --expect "$DEPLOYED_VERSION" \
+            --json /tmp/smoke-version-recheck.json
       # Google 資格情報を CI に保存せず、tenant provider → CSRF → native form POST →
       # Google authorization redirect (state / nonce / PKCE) までを本番 URL で確認する。
       - name: 本番 OIDC start-flow smoke (tenant / CSRF / Google redirect)
@@ -331,15 +435,40 @@ jobs:
           MIGRATE_OUTCOME: ${{ steps.migrate.outcome }}
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
           HEALTH_OUTCOME: ${{ steps.health.outcome }}
+          VERSION_GATE_OUTCOME: ${{ steps.version_gate.outcome }}
+          DEPLOY_FRESHNESS_OUTCOME: ${{ steps.deploy_freshness.outcome }}
+          SMOKE_VERSION_RECHECK_OUTCOME: ${{ steps.smoke_version_recheck.outcome }}
           OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
           HEARING_SMOKE_OUTCOME: ${{ steps.hearing_smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME} smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
+            exit 0
+          fi
+          # 配信版が入れ替わっていないなら、本番に出ているのは元から旧版であって「壊れた新 version」ではない。
+          # ここで rollback を打つと、未昇格の原因である古い版への固定をこちらから強めてしまう (2026-08-07 の実例)。
+          if [ "${VERSION_GATE_OUTCOME}" != "success" ]; then
+            echo "配信版が今デプロイした版に入れ替わっていない (version_gate=${VERSION_GATE_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
+            exit 0
+          fi
+          # 鮮度検査が落ちた時点で後続 smoke は走っていない = 「新 version が壊れている」証拠はまだ無い。
+          # 落ちているのは稼働成果物の素性が確認できない/古いという状態であり、ここで直前 version へ
+          # 戻せば素性の確認できない版へ後退するだけで、検出したかった状態を自ら作ることになる。
+          if [ "${DEPLOY_FRESHNESS_OUTCOME}" != "success" ] && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
+            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ]; then
+            echo "鮮度検査で停止 (deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME}) しており smoke は未実行。戻す対象なし"
+            exit 0
+          fi
+          # smoke 直前の再確認で止まったなら、smoke は 1 件も走っていない = 新しい版が壊れている証拠は無い。
+          # しかもこの失敗は「配信版が deploy した版で安定していない」状態なので、rollback を打つと
+          # どの版へ戻るのかが確定しない。戻す判断ができる材料が無い以上、ここでは戻さない。
+          if [ "${SMOKE_VERSION_RECHECK_OUTCOME}" != "success" ] && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
+            && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ]; then
+            echo "smoke 直前の配信版再確認で停止 (smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME}) しており smoke は未実行。戻す対象なし"
             exit 0
           fi
           echo "::warning::post-deploy 検証が失敗したため Worker を直前 version へ戻す"

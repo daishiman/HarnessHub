@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:57:14Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P02"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-tenant-data-retention/design-review-notes.md"]

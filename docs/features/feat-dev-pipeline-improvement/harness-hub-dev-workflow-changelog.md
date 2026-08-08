@@ -236,3 +236,16 @@ projection により `updated_at` が前進する場合だけを同一状態と�
 により 500 行を超えた registration script と test を責務分離し、公開 CLI・graph schema・
 source digest・receipt contract は維持する。製品 runtime の component 境界は変更しない。詳細は
 [仕様反映受領書](register-package-projection-idempotency-spec-reflection-receipt.md) を正とする。
+
+### 差分追記 (2026-08-07): task kind の C11 conditional_templates 見出し検査解決
+
+`HarnessHub-yzv0` は `HarnessHub-85z0` が `specification` のみへ限定していた
+`HEADING_MISSING_KINDS` (C11 本文見出し欠落検査対象 kind) を `task` へ拡張した。
+system-dev-planner 由来 task は `source_lineage.origin_kind` を条件分岐トリガーに、
+`conditional_required_sections` の複数 variant (フル19見出し / 軽量3見出し) のいずれかに
+一致すれば heading_missing なしと判定する。manual origin task は従来通り base
+required_sections で検査する。`issue` kind は構造が異なる別課題としてスコープ外へ切り出した。
+製品 API・state・security・UI の契約は非変更のため `system-spec/`・`specs/` の本文は非変更。
+判断と検証の全量は
+[仕様反映受領書](../../../docs/features/feat-dev-pipeline-improvement/yzv0-task-conditional-heading-check-spec-reflection-receipt.md)
+を正とする。

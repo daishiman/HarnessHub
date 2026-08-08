@@ -12,8 +12,8 @@ iteration: null
 title: "schedule-graph が依存未充足 task の除外理由を report しない"
 owners: ["daishiman"]
 created_at: "2026-07-28T05:55:00Z"
-updated_at: "2026-07-28T05:55:49.46351Z"
-status: "draft"
+updated_at: "2026-08-01T05:55:26Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-register-package-projection-idempotency-drift-20260728"]
 resource_scope: ["plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/references/execution-tracker-contract.md","issues/sys-schedule-blocked-exclusion-unreported-20260728.md"]

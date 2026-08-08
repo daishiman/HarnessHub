@@ -1,0 +1,21 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "C01-OUT1-positive-idempotence-r17",
+      "component_id": "C01",
+      "skill": "run-dev-graph-init",
+      "criterion_id": "OUT1",
+      "mode": "positive",
+      "task_args_template": "--repo-root <contained-fixture-repo> --hook-source plugin",
+      "fixture_contract": "A contained git repository that is NOT yet dev-graph initialized, so that the first pass's creation of the six content roots, the routing policy and the graph store is attributable to the skill rather than to the fixture. Between the two passes the trial must edit one scaffolded canonical template and register one node through C02, so the second pass exercises non-overwrite against real user bytes and C11 cannot pass vacuously on an empty graph. The second pass must re-invoke the skill itself, not a hand-written existence check.",
+      "required_observations": [
+        "the first pass creates the six content roots, the routing policy and the graph store",
+        "the second pass re-invokes the skill and reports zero planned changes",
+        "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+        "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+        "config stores no absolute path and no token or node id",
+        "C11 passes against a graph that contains at least one node"
+      ]
+    }
+  ]
+}

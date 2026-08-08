@@ -120,14 +120,18 @@ def _registration(
     lineage_digest = digest.removeprefix("sha256:")
     if any((node.get("source_lineage") or {}).get("source_digest") != lineage_digest for node in child_nodes):
         raise ContractError("rendered nodes do not match registration receipt source_digest")
-    if receipt["graph_digest_after"] != f"sha256:{graph_sha}":
-        raise ContractError("registration receipt graph digest is stale")
+    # node_ids/applied_count/source_digest/source_lineage above are the authoritative
+    # registration checks; graph_digest_after is bound to the graph revision at
+    # registration time and is routinely advanced by a later sync, so a mismatch here
+    # is reported as a stale partial match rather than fail-closed (HarnessHub-0ui0).
+    graph_digest_match = receipt["graph_digest_after"] == f"sha256:{graph_sha}"
     return {
         "path": receipt_path.relative_to(root).as_posix(),
         "parent_feature": parent,
         "source_digest": digest,
         "expected_count": receipt["expected_count"],
         "applied_count": receipt["applied_count"],
+        "graph_digest_match": graph_digest_match,
     }
 
 
@@ -210,11 +214,20 @@ def _render(args: argparse.Namespace, source: Path, root: Path) -> int:
         json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     )
     registration = _registration(root, args.registration_receipt, args.scope, selected_nodes, canonical_graph_digest)
-    registration_verification = (
-        {"status": "verified", "reason": None}
-        if registration is not None
-        else {"status": "not_performed", "reason": "registration_receipt_not_provided"}
-    )
+    if registration is None:
+        registration_verification = {
+            "status": "not_performed",
+            "reason": "registration_receipt_not_provided",
+            "graph_digest_match": None,
+        }
+    elif registration["graph_digest_match"]:
+        registration_verification = {"status": "verified", "reason": None, "graph_digest_match": True}
+    else:
+        registration_verification = {
+            "status": "partial",
+            "reason": "graph_digest_stale",
+            "graph_digest_match": "stale",
+        }
     normalized, feature_progress = _render_model(selected_nodes)
 
     width, row_height = 1000, 72
@@ -247,10 +260,16 @@ def _render(args: argparse.Namespace, source: Path, root: Path) -> int:
     }, ensure_ascii=False, sort_keys=True).replace("<", "\\u003c")
     if registration is None:
         verification_detail = "No registration receipt was provided; counts and source digest were not verified."
-    else:
+    elif registration_verification["status"] == "verified":
         verification_detail = (
             f'{registration["applied_count"]}/{registration["expected_count"]} nodes; '
             f'source {registration["source_digest"]}'
+        )
+    else:
+        verification_detail = (
+            f'{registration["applied_count"]}/{registration["expected_count"]} nodes; '
+            f'source {registration["source_digest"]}; '
+            'graph digest is stale (a later sync advanced the graph past registration)'
         )
     verification_banner = (
         f'<aside id="registration-verification" '
@@ -261,7 +280,7 @@ def _render(args: argparse.Namespace, source: Path, root: Path) -> int:
         f'<span>{html.escape(verification_detail)}</span></aside>'
     )
     document = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>dev-graph</title><style>body{{font:14px system-ui;margin:0;background:#0b1020;color:#e5e7eb}}header{{position:sticky;top:0;padding:16px;background:#111827;z-index:2}}aside{{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid #475569}}aside span{{color:#cbd5e1}}.registration-verified{{background:#052e16}}.registration-not_performed{{background:#422006}}input{{padding:8px;width:min(420px,70vw)}}svg{{min-width:{width}px;height:{height}px}}path{{stroke:#64748b;fill:none;stroke-width:2}}.node rect{{fill:#1f2937;stroke:#64748b}}.node text{{fill:#f8fafc}}.node .title{{fill:#cbd5e1;font-size:12px}}.status-done rect,.status-closed rect{{stroke:#22c55e}}.hidden{{display:none}}</style>
+<title>dev-graph</title><style>body{{font:14px system-ui;margin:0;background:#0b1020;color:#e5e7eb}}header{{position:sticky;top:0;padding:16px;background:#111827;z-index:2}}aside{{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid #475569}}aside span{{color:#cbd5e1}}.registration-verified{{background:#052e16}}.registration-not_performed{{background:#422006}}.registration-partial{{background:#1e1b4b}}input{{padding:8px;width:min(420px,70vw)}}svg{{min-width:{width}px;height:{height}px}}path{{stroke:#64748b;fill:none;stroke-width:2}}.node rect{{fill:#1f2937;stroke:#64748b}}.node text{{fill:#f8fafc}}.node .title{{fill:#cbd5e1;font-size:12px}}.status-done rect,.status-closed rect{{stroke:#22c55e}}.hidden{{display:none}}</style>
 <header><strong>dev-graph</strong> <input id="q" aria-label="Filter nodes" placeholder="Filter id/title/status"></header>
 {verification_banner}
 <svg viewBox="0 0 {width} {height}" role="img" aria-label="Task dependency graph"><g class="edges">{''.join(lines)}</g>{''.join(cards)}</svg>

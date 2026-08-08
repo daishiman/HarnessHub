@@ -12,8 +12,8 @@ iteration: null
 title: "feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)"
 owners: ["daishiman"]
 created_at: "2026-07-25T00:37:03Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "draft"
+updated_at: "2026-07-28T04:12:10Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-auth-tenancy"]
 resource_scope: ["feature-package/feat-auth-tenancy/task-specs/"]

@@ -1,40 +1,41 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-render",
-    "component_id": "C05",
-    "skill_md_sha256": "128c9ae12517217a4530d64750a1d2f276a71a28082215805501de086f761369"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "Fresh evaluator independently inspected the guard-clean live trial and found inline SVG with no external script/link. Focused tests confirm exact receipt=verified, graph digest alone stale=partial/graph_digest_stale, and no receipt=not_performed while the other registration-evidence mismatches remain fail-closed.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_render_and_schedule",
         "plugins/dev-graph/tests/test_render_registration_verification.py::test_render_scope_containment_and_registration_receipt",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260730T053500Z-wt18-35ai-render/independent-verification.json"
+        "plugins/dev-graph/tests/test_render_registration_verification.py::test_render_registration_receipt_stale_graph_digest_is_partial_not_fail_closed",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
       ],
-      "observed": "Fresh read-only evaluator independently inspected the generated HTML and measured external script src=0, external link href=0, HTTP(S)/CDN runtime references=0, with SVG and inline filter JavaScript present. Focused renderer tests passed and graph input bytes remained unchanged."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
+      "observed": "Fresh guard-clean live trial 20260806T030000Z-0ui0-render-guardclean is overall=PASS with nudge=0 and gate=0. A fresh independent evaluator confirmed every C05 observation from artifacts: inline SVG/HTML, 13=applied=expected denominator, independently recomputed 4 numerator, and matching source digest; the C02 receipt-write bypass guard produced no violations.",
       "scenario_id": "C05-OUT1-positive-feature-progress",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T010000Z-f84o-postmain-c05/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T010000Z-f84o-postmain-c05/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T010000Z-f84o-postmain-c05/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T010000Z-f84o-postmain-c05/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T010000Z-f84o-postmain-c05/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c05 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=d426c9f6769f7ae4f39547b126c030cabd85baec628d4c8514be4f969c51664c。"
+      "verify_by": "live-trial"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-0ui0-20260806",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C05",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-render",
+    "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
+  },
+  "verdict": "PASS"
 }

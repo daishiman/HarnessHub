@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "C14 scenario が canonical schema 上ありえない検体を要求しており OUT1 後半が原理的に検証不能な状態を解消する"
+title: "C14 scenario が canonical schema 上ありえない検体を要求しており OUT1 後半が原理的に検証不能"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T03:40:00Z"
+updated_at: "2026-07-28T23:44:44Z"
 status: "done"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725"]

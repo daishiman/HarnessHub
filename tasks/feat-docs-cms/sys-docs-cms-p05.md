@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:10:41Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P04"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/(dashboard)/docs/","apps/hub/src/app/api/v1/docs/","apps/hub/src/features/docs-cms/","apps/hub/src/features/docs-cms/ai-job-adapter/","packages/db/schema/docs-cms/","packages/schemas/docs-cms/"]

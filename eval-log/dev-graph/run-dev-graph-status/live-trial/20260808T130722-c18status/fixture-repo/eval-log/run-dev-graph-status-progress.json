@@ -1,0 +1,67 @@
+{
+  "skill": "run-dev-graph-status",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "loop": 1,
+  "max_loops": 5,
+  "repo_context_receipt": {
+    "source": "resolve-repo-context.py --mode read",
+    "repo_root_equals_content_roots_repository_realpath": true,
+    "repository_id": "local:sha256:af311a6cbc09e26973aa2e9e9b38a583075e7cb225f9cdfd7d41306596714afb",
+    "worktree_id": "wt_ca2960cd2ec29459",
+    "head_sha": "d24fa1ab74d91c1f651678c3777d84c8d8b405f8"
+  },
+  "checklist": [
+    {
+      "item": "query は許可 filter field と明示 tag match mode だけを持つ",
+      "status": "PASS",
+      "evidence": "eval-log/query-a-raw.json filters = {kind,project,domain,status,tags,tag_match=all,id=null,keyword=null}。status-graph.py の argparse 許可 field のみ。未知 field 0。"
+    },
+    {
+      "item": "validate-graph-schema.py が exit0 で root 外 file_path と dangling dependency が0件である",
+      "status": "PASS",
+      "evidence": "eval-log/c11-validate.json: valid=true, violations=[], exit=0"
+    },
+    {
+      "item": "report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致する",
+      "status": "PASS",
+      "evidence": "eval-log/status-report.json: field_comparisons 10/10 match (2 node x 5 field)。tracker_binding/issue_linkage/beads_linkage も report 側 none/null で store と一致。"
+    },
+    {
+      "item": "該当なしが空 result の成功として返る",
+      "status": "PASS",
+      "evidence": "eval-log/query-c-raw.json (kind=task AND status=closed) count=0 ok=true exit=0; query-d-raw.json (id AND kind 不整合) count=0 ok=true exit=0"
+    },
+    {
+      "item": "実行前後の graph/config/content digest が同一で外部 write が0件である",
+      "status": "PASS",
+      "evidence": "eval-log/side-effect-audit.json: 4 file 全て before==after、git porcelain は '?? eval-log/' のみ、gh/GitHub API/Beads 呼出 0"
+    },
+    {
+      "item": "全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される",
+      "status": "PASS",
+      "evidence": "status-graph.py が read_only=true と authority digest before/after 一致を自己申告し、--eval-log は repository の eval-log/ 配下 (相対 eval-log/run-dev-graph-status-execution.json) へ containment 済み。pending WAL は不在で失敗経路に落ちず ok=true。"
+    }
+  ],
+  "feedback_criteria": [
+    {
+      "id": "IN1",
+      "loop_scope": "inner",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py violations=0、report 必須キー欠落 0 (graph_node_id/artifact_kind/project_id/domain/tags/file_path/status/closed_at/depends_on/dependents/parent_feature/feature_package_id/tracker_binding/linkage 全て存在)"
+    },
+    {
+      "id": "OUT1",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "eval-log/status-report.json + eval-log/readiness-comparison.json"
+    },
+    {
+      "id": "OUT2",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "eval-log/side-effect-audit.json"
+    }
+  ],
+  "unmet": [],
+  "verdict": "PASS"
+}

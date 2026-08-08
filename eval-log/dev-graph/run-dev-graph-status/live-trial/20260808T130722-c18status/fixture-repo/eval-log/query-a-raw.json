@@ -1,0 +1,75 @@
+{
+  "authority_sha256_after": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+  "authority_sha256_before": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+  "count": 2,
+  "eval_log": "eval-log/run-dev-graph-status-execution.json",
+  "executed_at": "2026-08-08T04:10:41.464166Z",
+  "filters": {
+    "domain": "documentation",
+    "id": null,
+    "keyword": null,
+    "kind": "task",
+    "project": "live-trial-fixture",
+    "status": "active",
+    "tag_match": "all",
+    "tags": [
+      "live-trial",
+      "fixture"
+    ]
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+  "graph_sha256_before": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "LT-TASK-002"
+      ],
+      "depends_on": [],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-001.md",
+      "graph_node_id": "LT-TASK-001",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "live-trial fixture の基点タスク",
+      "tracker_binding": "none"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "LT-TASK-001"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-002.md",
+      "graph_node_id": "LT-TASK-002",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "LT-TASK-001 に依存する後続タスク",
+      "tracker_binding": "none"
+    }
+  ]
+}

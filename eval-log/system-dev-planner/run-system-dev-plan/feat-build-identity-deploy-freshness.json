@@ -1,0 +1,92 @@
+{
+  "verb": "plan",
+  "result": "PASS",
+  "skill": "run-system-dev-plan",
+  "session_id": "2a867db2-97cd-44c5-a79b-0201576fee3a",
+  "feature_id": "feat-build-identity-deploy-freshness",
+  "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+  "canonical_digest": "sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "generation_dir": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "summary": "1 feature を exact-13 (P01..P13) の実行可能 task spec へ分解し、C12 決定論検証と fork evaluator C1..C4 を同一 canonical digest で PASS させたうえで C11 atomic promotion を行った。dev-graph C02 register-package で 13 task node を atomic 登録し (graph_revision 1221→1222)、tasks/feat-build-identity-deploy-freshness/ の 13 projection を C02 単一 writer で materialize した。lineage 検査と task projection 再実行検査はともに exit 0。",
+  "completion_conditions": [
+    {
+      "id": "c12-deterministic-validation",
+      "status": "PASS",
+      "evidence": "validate-system-plan.py --staging が status=pass / violations=[] / contract_version=1.3.0 / validated_digest=sha256:9a7908d1…。promote 直前に再実行し、plan-findings.json へ記録済みの stdout と byte 一致することを確認した (記録の後追い改変ではない)。"
+    },
+    {
+      "id": "fork-evaluator-c1-c4",
+      "status": "PASS",
+      "evidence": "system-dev-plan-evaluator を Agent で実 fork し 3 周回した (1 周目 FAIL → 是正 → 2 周目 PASS → low 是正 → 3 周目 PASS)。最終 verdict=PASS、C1..C4 全 PASS、high finding 0 件。各周回で digest が変わるため前世代 verdict (sha256:983220e2… / sha256:33d388de…) は staleness_rule により破棄。"
+    },
+    {
+      "id": "c11-atomic-promotion",
+      "status": "PASS",
+      "evidence": "promote-system-plan.py が status=promoted / promotion_method=same-filesystem-atomic-rename / generation_id=9a7908d1… / supersedes=null。quality_conditions は no_contradiction・no_missing・consistent・dependency_integrity の 4 件すべて PASS。"
+    },
+    {
+      "id": "exact-13-registration",
+      "status": "PASS",
+      "evidence": "register-package register が applied_count=13 / expected_count=13 / phase_refs=P01..P13 / operation=registered。2 回目の --dry-run が idempotent=true / write 0。"
+    },
+    {
+      "id": "generation-lineage",
+      "status": "PASS",
+      "evidence": "validate-generation-lineage.py --package feature-package-feat-build-identity-deploy-freshness が exit 0 (checked=1 / violations=[])。"
+    },
+    {
+      "id": "task-projection-rerun",
+      "status": "PASS",
+      "evidence": "build-task-projection-rerun.py --feature-package … --check が exit 0 (checked=13 / missing=[])。配線前は checked=0 で exit 2 だった。"
+    },
+    {
+      "id": "second-run-structure-unchanged",
+      "status": "PASS",
+      "evidence": "register-package --dry-run が idempotent=true、projection の 13 node すべてが upsert-node.py --dry-run で operation=noop / write_count=0。"
+    },
+    {
+      "id": "common-completion-reports",
+      "status": "PASS",
+      "evidence": "project-task-status.py が plan-structure-report.html / plan-structure.md / plan-structure-status.json を、render-spec-browser.py が task-specs.html (spec_count=13) を生成 (best-effort・非ゲート)。"
+    }
+  ],
+  "promotion_gate_deviations": [
+    {
+      "id": "source-lineage-confirmed-false",
+      "severity": "medium",
+      "observation": "workstream-inventory.json の source_lineage.confirmed は false のままである。引用元 spec node は confirmation_status=confirmed だが evaluation_status=fail であり、schema の定義 (confirmed かつ pass の写し) に照らすと正直な値は false になる。true と書けば下流ゲートは通るが評価結果の偽装になるため書かない。",
+      "consequence": "promotion gate 7 項目に lineage confirmation は含まれないため promotion は成立する。ただし各 task spec の Handoff が定める『Ready when: confirmed かつ evaluation pass』は未充足であり、promotion が可能でも実行着手条件は満たされない。P01 着手前に上流の完成度評価を PASS へ到達させるか、利用者の明示的な緩和判断 (appr-039 と同種) を要する。",
+      "recorded_by": "system-dev-plan-evaluator (3 周目 finding / medium・据え置き)"
+    },
+    {
+      "id": "readiness-absolute-path",
+      "severity": "low",
+      "observation": "readiness.json の probes.source_plugin_manifest.path が絶対 path のまま。check-implementation-readiness.py の実出力であり、手で書き換えると実行結果の改変になるため触っていない。realpath は repo root 配下で containment 違反ではない。",
+      "consequence": "本 package の是正対象ではなく、script 側 (check-implementation-readiness.py) を repo 相対出力へ直す別 issue とする。"
+    },
+    {
+      "id": "findings-contract-normalization",
+      "severity": "info",
+      "observation": "promote gate が 3 点で fail-closed したため、evaluator 出力 plan-findings.json の宣言形式のみを契約に合わせて正規化した。(a) deterministic-validation gate の conditions を {C2,C3,C4} → {C1,C2,C3,C4} (validate-system-plan.py は 4 artifact 間の相互一致を突き合わせるため C1 の証拠担体でもある)。(b) evaluated_inputs から manifest 非束縛の goal-spec.json / readiness.json / validation.json を除去し manifest exact-set に一致させた。(c) staging 外の path を指す evidence 4 件 (goal-spec.json#scope_out・spec-state.json#qa_log/qa-198・#qa-199・features/<feat>.context.json#sha256) を evidence 欄から外し、同内容を各 condition の summary 本文へ逐語で残した。verdict・status・gate stdout・findings 本文はいずれも変更していない。"
+    }
+  ],
+  "artifacts": {
+    "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9/atomic-promotion-receipt.json",
+    "registration_receipt": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9/dev-graph-registration-receipt.json",
+    "task_projections": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p01.md 〜 p13.md (13 件)",
+    "plan_structure_report": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9/plan-structure-report.html",
+    "spec_browser": ".dev-graph/plans/generations/feature-package-feat-build-identity-deploy-freshness/9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9/task-specs.html"
+  },
+  "lock": {
+    "action": "release",
+    "status": "released",
+    "run_id": "run-feat-build-identity-deploy-freshness-bba613c5"
+  },
+  "follow_up_issue_candidates": [
+    "check-implementation-readiness.py が絶対 path を出力する (repo 相対へ)",
+    "C08 readiness gate の既定 completeness report path が harness の出力名 (completeness-report.json) と不一致",
+    "C08 readiness gate が上流 verdict を判定に使っていない",
+    "register-package が task node の purpose/goal/scope_in/scope_out/acceptance/architecture_refs を graph へ書かないため、projection materialize 時に package からの転記が必要になる",
+    "feature-package-feat-post-signin-scope-routing の generations に CURRENT 相当が 2 つ存在し、うち 1 世代 (f5f2a30f…) は validation.json も SUPERSEDED marker も持たない不完全世代"
+  ]
+}

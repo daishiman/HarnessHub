@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T03:46:25Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P03"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/api/v1/feedback/","apps/hub/src/features/feedback-loop/__tests__/","docs/features/feat-feedback-loop/test-design.md","packages/db/schema/feedback-loop/","packages/schemas/feedback-loop/"]

@@ -234,6 +234,44 @@ def test_latest_run_id_wins_newer_pass(lint):
     assert lint.run_lint() == 0
 
 
+def test_criteria_receipt_pass_wins_over_future_dated_historical_run(lint):
+    """criteria receipt が採用した PASS は run-id 辞書順より優先される。"""
+    skill_dir = lint.PLUGINS_DIR / "dev-graph" / "skills" / "run-demo"
+    (skill_dir / "scripts").mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        SKILL_MD_DECLARING.format(name="run-demo"), encoding="utf-8"
+    )
+    (skill_dir / "scripts" / "x.py").write_text("print('x')\n", encoding="utf-8")
+    good = _valid_doc(lint, skill_dir)
+    good["target_skill"] = "dev-graph:run-demo"
+    good_path = lint.EVAL_LOG / "dev-graph" / "run-demo" / "live-trial" / "20260804T015000Z-r7"
+    good_path.mkdir(parents=True)
+    (good_path / "verdict.json").write_text(json.dumps(good), encoding="utf-8")
+    (good_path / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+
+    stale = dict(good)
+    stale["overall"] = dict(good["overall"], verdict="FAIL")
+    stale_path = lint.EVAL_LOG / "dev-graph" / "run-demo" / "live-trial" / "20260806T020000Z-history"
+    stale_path.mkdir(parents=True)
+    (stale_path / "verdict.json").write_text(json.dumps(stale), encoding="utf-8")
+    (stale_path / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+
+    receipt = lint.EVAL_LOG / "dev-graph" / "run-demo" / "criteria-test" / "scenario-verdict.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps({
+        "criteria_results": {
+            "OUT1": {
+                "live_trial_verdict_ref": (
+                    "eval-log/dev-graph/run-demo/live-trial/20260804T015000Z-r7/verdict.json"
+                )
+            }
+        }
+    }), encoding="utf-8")
+
+    assert lint.latest_verdict_path("dev-graph", "run-demo") == good_path / "verdict.json"
+    assert lint.run_lint() == 0
+
+
 # --- self-test 経路 -----------------------------------------------------------
 
 def test_self_test_passes():

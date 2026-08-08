@@ -12,8 +12,8 @@ iteration: null
 title: "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:09:08Z"
-updated_at: "2026-07-26T01:19:20.811908Z"
-status: "active"
+updated_at: "2026-07-28T04:12:26Z"
+status: "closed"
 depends_on: ["SYS-TASK-SPEC-TEST-STRATEGY-P06"]
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-task-spec-test-strategy/acceptance-report.md"]

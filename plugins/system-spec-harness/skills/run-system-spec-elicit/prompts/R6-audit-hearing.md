@@ -20,14 +20,14 @@
 - **不変則**: 証跡 (状態値・`qa_ref`・`qa_log`) の実在に基づき判定し、証跡なきものを「問題なし」と楽観しない。疑いは検出側に倒す (安全側)。
 
 ## Layer 2: ドメイン層
-- **用語**: `matrix.<cat>.<pf>.state`=カテゴリ×プラットフォームのセル状態 (`確定` / 未収集 / `対象外` 等) / `qa_ref`=確定セルの根拠となる質疑 id / `qa_log[]`=`{id, question, answer}` の往復ログ / `hearing_progress`=`{loop_count, next_question, complete}` のヒアリング進捗。
+- **用語**: `matrix.<cat>.<pf>.state`=カテゴリ×プラットフォームのセル状態 (`確定` / 未収集 / `対象外` 等) / `qa_ref`=確定セルの根拠となる質疑 id / `qa_log[]`=`{id, question, answer, source?}` の往復ログ。利用者が渡した書面要件は、質問に入力 path/section、回答に対応原文、`source.kind=written-requirements` と原文 SHA-256 を持つ 1論点 source-index として同じ `qa_log` に記録する。対話入力は `source.kind=user-dialogue` とする / `hearing_progress`=`{loop_count, next_question, complete}` のヒアリング進捗。
 - **未収集セルの定義**: `state` が `確定` でも「正当な理由付き `対象外`」でもないセル。1 つでも残れば収集は未完。
 - **監査 5 軸**:
   1. **聞き漏れ (missed collection)**: 未収集セルが残るのに `hearing_progress.next_question=null` かつ `complete` 未達成で停止していないか。次の質問が立たず放置されたセルを検出する。
   2. **誘導質問 (leading question)**: `qa_log[].question` が回答を誘導し中立性を欠かないか。判定観点 = (a) 断定・前提埋め込み型 (「〜ですよね」「当然〜」)、(b) 望ましい答えを暗示する片側 Yes/No、(c) 複数論点を 1 問に束ね中立回答を妨げる。該当 `id` を検出する。
   3. **早期停止 (premature stop)**: (a) 未収集セルが残るのに `hearing_progress.complete=true`、(b) `loop_count` が上限 5 周に達したのに未完了状態・`next_question` が保存されず resume 不能に打ち切られている、を検出する。5 周到達は「状態保存 + 未完了明示 + resume 可能」が要件で、未収集を完了扱いにしていないか見る。**(a) の除外条件 (セル単位・state 単位ではない)**: `hearing_progress` は chunk 書込時点の不変則しか表さないため、chunk 後の `reopen` / `add-category` で未収集>0 かつ `complete=true` が正常に生じる。除外してよいのは (i) `reopened_from` / `reopen_reason` を持つ未収集セル、(ii) `category_aggregate` が `未着手` のカテゴリに属する未収集セル、の 2 種だけで、これらを除いてなお未収集セルが残るなら早期停止として検出する。`reopen_log` は追記専用で消えないため **「`reopen_log` に記録があるから除外」という判定はしない** (真の早期停止を恒久的に見逃す)。**この除外は完全ではない**: reopen 後に再収集されず放置されたセルは (i) で外れ続け、`add-category` 後に `apply` で一部セルだけ埋めたカテゴリは `収集中` へ移って (ii) から外れる。該当が疑われる場合は pass と断定せず「除外したが要再確認」として finding に残す (未収集0の最終保証は C05 `--require-complete` と C07 が担う)。契約: `references/spec-state-contract.md`「hearing_progress の意味論 (SSOT)」。
   4. **トレーサビリティ (qa_ref)**: `state=確定` の各セルが `qa_ref` を持ち、その値が `qa_log[].id` に実在し当該 Q&A へ遡れるか。欠落 (`qa_ref` なし)・dangling (`qa_log` に無い参照) を検出する。
-  5. **上位概念の遡及性 (foundation challenger)**: `requirements_foundation.confirmed=true` のとき、U1-U9 の各値が AI の誘導・推測でなく `qa_log[]` のユーザー発言へ遡れるか (challenger 視点)。判定観点 = (a) U1-U9 の値がユーザー回答に根拠を持たず AI が代弁・創作していないか、(b) `confirmed=true` なのに承認 `approval_ref` が `approval_log[].id` に実在するか (無ければユーザー未承認の勝手確定)、(c) U1/U2/U3 が値でなく N/A で埋められていないか (値必須の違反)。ユーザー発言へ遡れない U 項目・dangling な `approval_ref` を検出する。
+  5. **上位概念の遡及性 (foundation challenger)**: `requirements_foundation.confirmed=true` のとき、U1-U9 の各値が AI の誘導・推測でなく canonical id `qa-foundation-u1`〜`qa-foundation-u9` の利用者一次入力へ遡れるか (challenger 視点)。対話入力は `source.kind=user-dialogue`、書面要件は質問の path/section・回答の原文・`source.kind=written-requirements` と原文 SHA-256 を持つ**Uごとの 1論点 source-index**を根拠とする。承認ログの文書名だけ、複数論点を束ねた質問、または AI 要約だけでは根拠にしない。判定観点 = (a) U1-U9 の値がこの根拠を持たず AI が代弁・創作していないか、(b) `confirmed=true` なのに承認 `approval_ref` が `approval_log[].id` に実在するか (無ければユーザー未承認の勝手確定)、(c) U1/U2/U3 が値でなく N/A で埋められていないか (値必須の違反)。利用者一次入力へ遡れない U 項目・dangling な `approval_ref` を検出する。
 - **非担当 (境界)**: マトリクスの対象外理由の妥当性は C07 (`system-spec-matrix-auditor`)、取得ドキュメント鮮度は C08 (`system-spec-doc-freshness-auditor`)、収集完了の最終ゲートは C05 (completeness-evaluator)。本責務は「ヒアリングの進め方」だけを見る。
 
 ## Layer 3: インフラ層
@@ -61,7 +61,7 @@
 - [ ] 全 qa_log 質問が誘導性評価の対象になっている
 - [ ] hearing_progress が早期停止条件と照合されている
 - [ ] 全確定セルの qa_ref が実在ログと照合されている
-- [ ] requirements_foundation が確定なら U1-U9 の各値がユーザー発言 (qa_log) へ遡及照合され、AI 誘導・推測が検出されている
+- [ ] requirements_foundation が確定なら U1-U9 の各値が利用者の対話回答または書面要件 source-index (qa_log) へ 1論点単位で遡及照合され、AI 誘導・推測が検出されている
 - [ ] requirements_foundation が確定なら approval_ref が approval_log に実在し U1/U2/U3 が値 (N/A不可) であることが照合されている
 - [ ] 各 finding がセルまたは質問IDまたはU項目IDへ追跡できる
 - [ ] verdict が finding と入力状態から一意に導出されている
@@ -76,4 +76,4 @@
 - 修正や再質問は実行せず、根拠だけを C01/C05 へ返す。
 
 ## Layer 7: ユーザーインタラクション層
-- ユーザー対話はない。自動監査結果として PASS・FAIL・INDETERMINATE と根拠を返す。
+- ユーザー対話はない。自動監査結果として PASS・FAIL・INDETERMINATE と根拠を返す。**応答の最終行は必ず `AUDIT_VERDICT: PASS`、`AUDIT_VERDICT: FAIL`、または `AUDIT_VERDICT: INDETERMINATE` のいずれか 1 行だけにする**。この marker は PostToolUse hook が実際の監査判定を C05 の receipt に束縛するための機械可読な証跡であり、本文中・コードブロック中へ重複して書かない。

@@ -1,0 +1,67 @@
+{
+  "skill": "run-dev-graph-render",
+  "scenario": "C05-OUT1-positive-feature-progress",
+  "loop": 1,
+  "overall": "PASS",
+  "checklist": [
+    {
+      "id": "CL1",
+      "status": "PASS",
+      "evidence": "C24 resolve-repo-context.py --mode read: repo_root==content_roots.repository realpath (fixture-repo), root_trust_evidence.git_toplevel_verified=true。C11 validate-graph-schema.py: valid=true / violations=[] / implementation_readiness=complete。output realpath=.dev-graph/render/index.html (caller repo 内)。"
+    },
+    {
+      "id": "CL2",
+      "status": "PASS",
+      "evidence": "renderer receipt nodes=15 edges=12 feature_progress LT-FEATURE-001 done=4/total=13。graph.json 独立集計: parent_feature=LT-FEATURE-001 の子 task 13 件、status={done:4, active:1, blocked:1, draft:7} → done|closed=4。一致。"
+    },
+    {
+      "id": "CL3",
+      "status": "PASS",
+      "evidence": "index.html (11240 bytes) 走査: <script src>=0, <link href>=0, <iframe>=0, import/@import/require()=0, 絶対/protocol-relative URL=0, CDN 参照=0。inline <style> 1 ブロック (669B), inline <script> 3 ブロック (3382B), <svg> 1 (rect 30 / path 12 / text 45 / g 16)。"
+    },
+    {
+      "id": "CL4",
+      "status": "PASS",
+      "evidence": "receipt input_sha256=90b00ad6...cb36bd == 実 graph.json sha256。receipt output_sha256=e44e147a...2a5ac == 実 index.html sha256。"
+    },
+    {
+      "id": "CL5",
+      "status": "PASS",
+      "evidence": "registration receipt 指定あり。render-metadata / CLI receipt / HTML banner の三面すべてで registration_verification.status=verified (reason=null, graph_digest_match=true)。node_ids 13 一致、applied_count=expected_count=13、source_digest=sha256:d23642a8...c2807、子 13 件の source_lineage.source_digest 全一致、canonical graph digest=sha256:e7be1a13...45ad8 == receipt graph_digest_after。"
+    },
+    {
+      "id": "CL6",
+      "status": "PASS",
+      "evidence": "Chrome (file:// で直接 open, 追加 runtime なし) の DOM dump: svg=1 / rect=30 / path=12 / text=45、external src|href=0、feature 進捗テキスト 'active · feature · 4/13' と data-status=\"verified\" banner が描画済み。"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "IN1",
+      "loop_scope": "inner",
+      "status": "PASS",
+      "verify_by": "script",
+      "evidence": "外部 script/link/CDN/npm 参照 0 件をファイル走査で実測。"
+    },
+    {
+      "id": "OUT1",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "verify_by": "live-trial",
+      "evidence": "ブラウザ描画で SVG と feature X/Y=4/13 を確認。総数 Y=13 は receipt applied_count/expected_count と一致、node IDs・source_digest・source lineage・graph digest すべて一致で verified。"
+    }
+  ],
+  "fail_closed_probes": [
+    {
+      "probe": "applied_count(12) != expected_count(13)",
+      "result": "ContractError 'registration receipt expected_count/applied_count disagree', exit=1, HTML 未生成"
+    },
+    {
+      "probe": "applied_count=expected_count=12 だが graph 実子は 13",
+      "result": "ContractError 'rendered feature children do not match registration receipt node_ids', HTML 未生成"
+    },
+    {
+      "note": "probes は fixture の複製 (scratchpad/probe-repo) 上で実施。fixture 本体の receipt/graph は無改変 (applied/expected=13/13, node_ids=13)。"
+    }
+  ]
+}

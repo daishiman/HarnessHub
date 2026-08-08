@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-03T09:45:00Z"
+updated_at: "2026-08-04T05:43:46.944032Z"
 status: "active"
 depends_on: []
-related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
+related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
 purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
-goal: "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する"
+goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140、C16 qa-141/qa-142、qa-143 の dev-workflow 契約を正本から追跡できる状態を維持する"
 scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-03T09:45:00Z","origin_kind":"system-spec-harness","source_digest":"f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -343,18 +343,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
-**開発品質反映 (2026-07-30 / `HarnessHub-35ai`)**:
+**開発品質反映 (2026-07-30 / `HarnessHub-35ai`、2026-08-04 / `HarnessHub-0ui0`)**:
 
-- feature scope の renderer は registration receipt を検証できた場合だけ
-  `verified` を表示し、receipt 未指定の探索表示は `not_performed` とする。
+- feature scope の renderer は registration receipt の node IDs、件数、source digest、
+  source lineage、graph digest を検証する。すべて一致時だけ `verified`、後続 sync により
+  graph digest だけが古い場合は `partial` / `graph_digest_stale`、receipt 未指定の探索表示は
+  `not_performed` とする。他の証拠不一致は引き続き fail-closed とする。
 - 同じ 13 child graph を receipt 有り／無しで描画する正負の回帰テストにより、
   見かけの task 件数だけで登録成功を推測する偽陽性を禁止する。
 - CLI receipt、可視 HTML banner、埋込み metadata は同じ判定を返す。
   影響は repository 内の検証契約に限定され、製品 API、DB schema、認証認可、
   UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
-- 反映先と検証は
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
-  を正とする。
+- 反映先と検証は [初回受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) と
+  [stale digest 受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
 
 ## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
 
@@ -487,3 +488,9 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - `python -c` / heredoc の変数、Path 式、join、format、import 別名を AST 定数伝播で復元し、graph authority への書込みを C02 writer 迂回として遮断する。rename / move は元と宛先の双方を変更対象とする。
 - 遮断経路は subprocess / network / graph 全件検証を起動せず、未解決でも authority prefix または graph store 末尾が確定すれば fail-closed にする。読取と tmp/cache/templates は巻き込まない。
 - `exec` / `eval` 内の再帰 source、任意文字列変換、別 script 本文は性能境界から対象外とし、PostToolUse 監査と C02 規約で補完する。製品 runtime 契約は非変更。判断と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を参照する。
+
+## C16 Beads ready payload 欠落報告 (2026-08-03 / HarnessHub-xz0u / qa-141・qa-142)
+
+- 選択範囲内かつ schedulable な Beads node が bd ready payload に無いとき、C16 は node を黙って除外せず unmapped[] に reason=ready_payload_entry_absent と source=schedule-graph を記録する。
+- pre-lease は ready set と unmapped、最終 report は active lease/resource conflict の conflicts を加えた和で候補 node を被覆する。P01 parent / dependency 形状は fail-closed、parity dependency は順序非依存で比較し、依存未充足・parity・manifest 分類とは別 reason とする。復旧は C03/C28 の同期・linkage 修復・fresh parity manifest の後に再実行し、欠落 node を推測で ready set へ加えない。
+- 変更は repository 内の Dev Graph 開発品質契約に限り、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正規反映と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を参照する。

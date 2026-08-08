@@ -41,15 +41,21 @@ false の明示宣言が無ければ fail-closed で違反」とすることで�
 
 検出 (validate) と予防 (--fix) を同一ファイルに同居させ、両者が単一 SSOT として
 drift しないようにしている。
+
+hooks の entry point は宣言・登録・実体の 3 者一致 (HK-001..003) で検査する。
+``entry_points.hooks`` の宣言だけを実体と突合すると「宣言 ⊆ 実体」しか見えず、
+hooks.json へ登録済みなのに宣言していない hook (台帳の過少申告) を素通りさせる。
+台帳が実体より少ないと live-trial 被覆計算と配布物検査がともに実態より楽観的な値を
+返すため、逆方向 (登録 ⊆ 宣言) を repo 全 plugin へ適用する。
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import pathlib
 import re
-import shlex
 import sys
 
 
@@ -63,6 +69,27 @@ MARKETPLACE_JSON = ROOT / ".claude-plugin" / "marketplace.json"
 # 削除されても (= フラグ駆動の MK-004 逆ガードが無効化されても) この固有名検査が
 # fail-closed で再配布を阻止する多層防御。配布化する正当な決定が出た場合のみ本集合から外す。
 NEVER_DISTRIBUTE = frozenset({"harness-creator", "prompt-creator", "plugin-dev-planner"})
+
+
+def _load_hook_contract_module():
+    """500 行上限のため分離した hooks 契約 module を同居 directory から読む。"""
+    path = pathlib.Path(__file__).with_name("validate-plugin-hooks.py")
+    spec = importlib.util.spec_from_file_location("validate_plugin_hooks", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load hook contract module: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_HOOK_CONTRACT = _load_hook_contract_module()
+HOOK_SUFFIXES = _HOOK_CONTRACT.HOOK_SUFFIXES
+load_package_contract = _HOOK_CONTRACT.load_package_contract
+harness_metadata = _HOOK_CONTRACT.harness_metadata
+hook_files_in_event_map = _HOOK_CONTRACT.hook_files_in_event_map
+registered_hook_files = _HOOK_CONTRACT.registered_hook_files
+is_import_only_support_module = _HOOK_CONTRACT.is_import_only_support_module
+validate_hook_entry_point_parity = _HOOK_CONTRACT.validate_hook_entry_point_parity
 
 
 def load_bundle_members() -> set[str]:
@@ -94,51 +121,12 @@ def load_marketplace_entries() -> dict[str, str]:
     return entries
 
 
-def load_package_contract(plugin_dir: pathlib.Path) -> tuple[dict | None, str | None]:
-    """Harness-only package metadata sidecar を読む。
-
-    公式 Claude plugin manifest の schema には entry_points / distribution /
-    depends_on を混在させない。sidecar が無い既存 plugin は後方互換の
-    manifest fallback を使うが、sidecar が存在するのに壊れている場合は
-    fail-closed でエラーを返す。
-    """
-    path = plugin_dir / "references" / "package-contract.json"
-    if not path.exists():
-        return None, None
-    try:
-        contract = json.loads(path.read_text())
-        if not isinstance(contract, dict):
-            raise ValueError("top level must be an object")
-        return contract, None
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
-        return None, f"{path}: {exc}"
-
-
-def harness_metadata(manifest: dict, contract: dict | None) -> dict:
-    """sidecar-first で harness 固有の配布メタデータを正規化する。"""
-    distribution = contract.get("distribution", {}) if isinstance(contract, dict) else {}
-    if not isinstance(distribution, dict):
-        distribution = {}
-    return {
-        "distributable": distribution.get(
-            "distributable", manifest.get("distributable", True)
-        ),
-        "bundle_targets": distribution.get(
-            "bundle_targets", manifest.get("bundle_targets") or manifest.get("bundles") or []
-        ),
-        "category": distribution.get("category", manifest.get("category")),
-        "tags": distribution.get(
-            "tags", manifest.get("tags") or manifest.get("keywords") or []
-        ),
-    }
-
-
 def collect(plugin_dir: pathlib.Path) -> dict:
     out = {
         "skills": sorted(p.parent.name for p in plugin_dir.glob("skills/*/SKILL.md")),
         "agents": sorted(p.name for p in plugin_dir.glob("agents/*.md")),
         "commands": sorted(p.name for p in plugin_dir.glob("commands/*.md")),
-        "hooks": sorted(p.name for p in plugin_dir.glob("hooks/*") if p.suffix in {".sh", ".py"}),
+        "hooks": sorted(p.name for p in plugin_dir.glob("hooks/*") if p.suffix in HOOK_SUFFIXES),
         "scripts": sorted(p.name for p in plugin_dir.rglob("scripts/**/*.py")),
         "config": sorted(p.name for p in plugin_dir.glob("config/*.json")),
     }
@@ -165,6 +153,17 @@ def collect(plugin_dir: pathlib.Path) -> dict:
             out["manifest"] = normalized
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             out["manifest_hook_error"] = f"{hook_ref}: {exc}"
+    # 宣言 (package-contract) と突合する「実際に登録されている entry point」。
+    # 実体ファイル一覧 (out["hooks"]) とは別軸なので独立に持つ。
+    out["plugin_dir"] = plugin_dir
+    registered_hooks, out["registered_hooks_error"] = registered_hook_files(
+        plugin_dir, out["manifest"]
+    )
+    out["registered_hooks"] = sorted(registered_hooks)
+    out["hook_registration_present"] = (
+        (plugin_dir / "hooks" / "hooks.json").is_file()
+        or isinstance((out["manifest"] or {}).get("hooks"), dict)
+    )
     return out
 
 
@@ -190,6 +189,12 @@ def validate(
         errs.append(
             f"{plugin_name}: package contract invalid: "
             f"{data['package_contract_error']}"
+        )
+
+    if data.get("registered_hooks_error"):
+        errs.append(
+            f"{plugin_name}: hooks/hooks.json invalid: "
+            f"{data['registered_hooks_error']}"
         )
 
     contract = data.get("package_contract")
@@ -229,6 +234,12 @@ def validate(
                         f"{plugin_name}: package-contract declares {kind} not on disk: "
                         f"{sorted(missing_entry_points)}"
                     )
+                if kind == "hooks":
+                    # 宣言 ⊆ 実体 (上) だけでは台帳の過少申告を検出できないため、
+                    # 登録内容との双方向 parity をここで併せて検査する。
+                    errs.extend(
+                        validate_hook_entry_point_parity(plugin_name, data, declared)
+                    )
 
     for required in ("name", "version", "description"):
         if required not in m:
@@ -237,24 +248,9 @@ def validate(
     if m.get("name") != plugin_name:
         errs.append(f"{plugin_name}: manifest.name '{m.get('name')}' != directory name")
 
-    declared_hooks = set()
-    hook_map = m.get("hooks") or {}
-    if not isinstance(hook_map, dict):
-        # collect() records the actionable path/parse error for referenced
-        # configs.  Keep validation fail-closed without crashing on that
-        # malformed value.
-        hook_map = {}
-    for hook_event, entries in hook_map.items():
-        for entry in entries:
-            for h in entry.get("hooks", []):
-                cmd = h.get("command", "")
-                try:
-                    tokens = shlex.split(cmd)
-                except ValueError:
-                    tokens = cmd.split()
-                for token in tokens:
-                    if "CLAUDE_PLUGIN_ROOT" in token and "/hooks/" in token:
-                        declared_hooks.add(token.split("/hooks/", 1)[1])
+    # collect() records the actionable path/parse error for referenced configs.
+    # Keep validation fail-closed without crashing on a malformed value.
+    declared_hooks = hook_files_in_event_map(m.get("hooks"), require_plugin_root=True)
     on_disk_hooks = set(data["hooks"])
     missing = declared_hooks - on_disk_hooks
     if missing:

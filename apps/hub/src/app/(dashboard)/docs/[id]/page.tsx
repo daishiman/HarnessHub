@@ -8,6 +8,8 @@ import type { DocumentDetail } from '@harness-hub/schemas';
 import { Alert, Button, ScopeChip, StatusChip } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
+import { useDashboardScope } from '../../dashboard-scope-context.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -27,8 +29,8 @@ const headers = (tenantId: string, workspaceId: string) => ({
 export default function DocumentDetailPage({ params, searchParams }: PageProps): ReactNode {
   const { id } = use(params);
   const query = use(searchParams);
-  const tenantId = query.tenant ?? '';
-  const workspaceId = query.workspace ?? '';
+  const scope = useDashboardScope();
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
 
   const [doc, setDoc] = useState<DocumentDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +58,11 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
 
   return (
     <article>
+      <p>
+        <a href={`/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}>
+          ← 一覧に戻る
+        </a>
+      </p>
       <header>
         <h1>{doc.title}</h1>
         <p>

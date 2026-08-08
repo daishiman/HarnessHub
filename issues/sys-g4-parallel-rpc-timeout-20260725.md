@@ -12,8 +12,8 @@ iteration: null
 title: "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-25T11:02:02Z"
-updated_at: "2026-07-30T13:37:07Z"
-status: "active"
+updated_at: "2026-08-01T04:50:32Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: ["pnpm-workspace.yaml","scripts/ci/check-pnpm-only.mjs","apps/hub/tests/ci/pnpm-only.test.ts","docs/shared-layers.md","docs/features/feat-hub-foundation/architecture-decision-record.md","docs/features/feat-hub-foundation/test-design.md","docs/features/feat-hub-foundation/g4-workspace-test-concurrency-spec-reflection-receipt.md","features/feat-hub-foundation.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","tasks/feat-hub-foundation/sys-hub-foundation-p04.md","issues/sys-g4-parallel-rpc-timeout-20260725.md"]

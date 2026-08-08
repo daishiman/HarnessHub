@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # /// script
 # name: record-audit-fork
-# version: 0.1.0
-# purpose: 監査 sub-agent への Task fork が実際に完了したことを PostToolUse で append-only 台帳へ記録する
-#          (completeness-report の auditor 帰属を自己申告でなく実 fork 証跡へ接地させるための証跡 writer)。
+# version: 0.2.0
+# purpose: 監査 sub-agent への Task fork が実際に完了したことと、その監査 verdict を
+#          PostToolUse で append-only 台帳へ記録する (completeness-report の auditor 帰属と
+#          verdict を自己申告でなく実 fork 証跡へ接地させるための証跡 writer)。
 # inputs:
 #   - stdin: PostToolUse hook JSON ({session_id, tool_name, tool_input{subagent_type, prompt}, tool_response})
 #   - env: CLAUDE_PROJECT_DIR (台帳の書込起点。未設定時は cwd)
@@ -32,8 +33,8 @@
 
 監査 agent (`system-spec-{matrix,hearing,doc-freshness}-auditor`) は `tools: Read[, Bash]` のみで
 **Write を持たない** ため、自力ではディスク上に「自分が走った」痕跡を残せない。そこで
-「モデルが書けない層」である hook が fork の完了を記録する。台帳はモデルの出力ではなく harness の
-副作用なので、レポート側の宣言と独立した corroboration (裏取り) になる。
+「モデルが書けない層」である hook が fork の完了、response digest、最終 verdict marker を記録する。
+台帳はモデルの出力ではなく harness の副作用なので、レポート側の宣言と独立した corroboration (裏取り) になる。
 
 ## 記録対象
 
@@ -46,12 +47,13 @@ qualifier だけを受理して stem へ正規化する。無関係な Task で�
 
 ## 記録しないもの
 
-prompt 本文は記録せず sha256 のみ (機微情報を台帳へ持ち込まない)。tool_response 本文も記録しない。
+prompt / tool_response 本文は記録せず sha256 のみ (機微情報を台帳へ持ち込まない)。response の最終行に
+1 回だけ現れる `AUDIT_VERDICT: PASS|FAIL|INDETERMINATE` は、本文を保存せず enum として記録する。
 
 ## 既知の限界 (正直な境界)
 
-- 台帳が証明するのは「その subagent_type への Task が完了した」ことだけ。監査 prompt が実質を伴うか、
-  返った verdict がレポートへ忠実に転記されたかは機械層では判定できない (意味層 = content-review/human)。
+- 台帳は同一 response digest の verdict を receipt が忠実に転記したことまで照合できる。監査 prompt が
+  実質を伴うか、根拠が妥当かは機械層では判定できない (意味層 = content-review/human)。
 - hook が無効化された環境では台帳が空になる。その場合 `aggregate-completeness.py` は
   fail-closed で「帰属未接地」の violation を出す (緑にはならない = 安全側)。
 """
@@ -61,10 +63,11 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 HOOK_NAME = "record-audit-fork"
 PLUGIN_NAME = "system-spec-harness"
 # subagent 起動ツール名はハーネス世代で異なる (旧/Codex 系='Task', 現行 Claude Code='Agent')。
@@ -74,6 +77,8 @@ PLUGIN_NAME = "system-spec-harness"
 AUDIT_FORK_TOOL_NAMES = ("Task", "Agent")
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
+AUDIT_VERDICTS = {"PASS", "FAIL", "INDETERMINATE"}
+AUDIT_VERDICT_LINE_RE = re.compile(r"(?m)^AUDIT_VERDICT: (PASS|FAIL|INDETERMINATE)\s*$")
 
 
 def plugin_root() -> Path:
@@ -131,6 +136,36 @@ def normalize_subagent_type(subagent_type: object, known_agents: set[str]) -> st
     return agent if agent in known_agents else None
 
 
+def _response_texts(value: object):
+    """hook payload の tool_response から text 値だけを再帰的に取り出す。"""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, list):
+        for item in value:
+            yield from _response_texts(item)
+    elif isinstance(value, dict):
+        text = value.get("text")
+        if isinstance(text, str):
+            yield text
+        else:
+            for item in value.values():
+                yield from _response_texts(item)
+
+
+def audited_response_metadata(tool_response: object) -> tuple[str, str | None]:
+    """非機微な response digest と、厳密な最終 verdict marker を返す。
+
+    auditor は最終行を ``AUDIT_VERDICT: <PASS|FAIL|INDETERMINATE>`` と返す契約である。
+    0 件または複数件なら verdict は未確定として下流で fail-closed に扱う。
+    """
+    canonical = json.dumps(tool_response, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    matches = []
+    for text in _response_texts(tool_response):
+        matches.extend(AUDIT_VERDICT_LINE_RE.findall(text))
+    verdict = matches[0] if len(matches) == 1 and matches[0] in AUDIT_VERDICTS else None
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest(), verdict
+
+
 def build_record(payload: dict, known_agents: set[str]) -> dict | None:
     """記録対象なら台帳 1 行を組み立てる。対象外なら None。
 
@@ -150,6 +185,7 @@ def build_record(payload: dict, known_agents: set[str]) -> dict | None:
     prompt_sha256 = (
         hashlib.sha256(prompt.encode("utf-8")).hexdigest() if isinstance(prompt, str) and prompt else None
     )
+    response_sha256, audit_verdict = audited_response_metadata(payload.get("tool_response"))
     return {
         "schema_version": SCHEMA_VERSION,
         "ts": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -157,6 +193,8 @@ def build_record(payload: dict, known_agents: set[str]) -> dict | None:
         "tool_name": ledger_tool_name,
         "subagent_type": subagent_type,
         "prompt_sha256": prompt_sha256,
+        "response_sha256": response_sha256,
+        "audit_verdict": audit_verdict,
         "cwd": payload.get("cwd") or str(Path.cwd()),
     }
 

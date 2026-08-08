@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { HearingIntakeWizard } from './hearing-intake-wizard.js';
 
 export const metadata: Metadata = {
@@ -10,12 +11,13 @@ interface PageProps {
 }
 
 export default async function HearingIntakePage({ searchParams }: PageProps) {
-  const query = await searchParams;
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   return (
     <section aria-labelledby="hearing-intake-heading">
       <h1 id="hearing-intake-heading">業務の困りごとを登録</h1>
       <p>4 つのステップで入力すると、受付番号を発行してシート生成を開始します。</p>
-      <HearingIntakeWizard tenantId={query.tenant ?? ''} workspaceId={query.workspace ?? ''} />
+      <HearingIntakeWizard tenantId={tenantId} workspaceId={workspaceId} />
     </section>
   );
 }

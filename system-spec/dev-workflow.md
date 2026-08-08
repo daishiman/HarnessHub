@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-139 |
+| Web (web) | 確定 | 確定質疑: qa-198 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
@@ -24,23 +24,41 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-139 (対応セル: web)
+### qa-198 (対応セル: web)
 
-**質問**: C02 atomic writer の単一書込み境界を維持しながら、inline Python が変数や Path 式で graph authority を組み立てる迂回を C10 PreToolUse でどう扱いますか?
+**質問**: qa-197-f で定めた決着用の観測を利用者が本番で実行した。
 
-**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映・公開指示を明示承認として、qa-122 と最新 main の qa-138 を全面維持し、C10 の inline Python 書込み検出を追加確定する。
+  curl -s https://harness-hub.daishimanju.workers.dev/harness-hub/signin | grep -o 'callbackUrl[^>]*'
+  → callbackUrl" value="/"
 
-【1. 保護境界】graph authority は `.dev-graph/state/`、`.dev-graph/config.json`、`graph-node.schema.json` とし、初期 config / graph は正規 writer、node 更新は C02 `upsert-node.py` だけが書く。`.dev-graph/tmp/`、`cache/`、`templates/` は再生成領域なので一律遮断しない。
+  curl -s -o /dev/null -w '%{http_code}' https://harness-hub.daishimanju.workers.dev/sheets
+  → 401
 
-【2. AST 静的検出】`python -c` と heredoc の本文は実行せず AST で解析し、変数代入、Path の `/`・`joinpath`・`parent`・`with_name`・`with_suffix`、`os.path.join`、f-string、`%` / `format`、list/tuple join、import 別名、`str` / `os.fspath` 包み、bytes path を定数伝播で評価する。`open` / `os.open` / Path 書込み / shutil / os rename・remove 系を対象とし、rename / move は元と宛先の双方を変更対象として判定する。
+原因を確定してよいか、確定するなら是正は何か。
 
-【3. fail-closed と性能】評価不能な式でも `.dev-graph/` prefix または `state/graph.json` 末尾が確定すれば安全側で遮断する。遮断判定は subprocess、network、graph 全件検証を起動せず、PreToolUse timeout が許可窓になる構造を作らない。読取専用と保護外領域は通し、誤遮断で正規手順を壊さない。
+**回答**: [出所] 本 entry は appr-038 の委任下で AI が確定した。観測値は利用者が本番で実行した実測である。
 
-【4. 意図的な限界】`exec` / `eval` 内の再帰的 source、任意の文字列変換、別 script file の本文解析は C10 の範囲外とする。再帰実行や任意 file 読込みは遮断時間を入力に依存させるためで、script 経由の drift は PostToolUse 監査と C02 writer 規約で補完する。
+[qa-198-a 根本原因の確定] **本番の signin ページは `callbackUrl` に `/` を送っている。** サインインが成功すると Auth.js はこの値へ戻すため、利用者はサイト直下 `/` に着地する。これが症状 (サインイン後に業務画面へ到達しない) の直接原因である。認証は成功しており、失敗していたのではない。
 
-【5. 回帰と責務分離】BLOCK / PASS、実プロセス exit 2、subprocess 非起動、深さ上限、性能余裕、既知の限界を自動テストで固定する。path 評価、書込み対象収集、hook entrypoint、境界テストを責務別ファイルへ分離する。
+[qa-198-b 帰属の接地 — どのビルドかまで一意に特定できた] この値は推測ではなく、リポジトリの履歴と直接照合できる。commit 43e06e10 (2026-07-30 14:11:56 +0900) 時点の `tenant-oidc-signin-form.tsx` は `<input type="hidden" name="callbackUrl" value="/" />` を**定数としてベタ書き**していた。commit 150a0f14 (2026-08-03 13:02:33 +0900) がこれを `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` 由来の値へ置き換えた。**本番の実測は 43e06e10 側と一致し、150a0f14 側と一致しない。** したがって本番で動いているビルドは 150a0f14 を含んでいない。
 
-【6. 製品境界】変更は repository 内の Dev Graph 開発品質ゲートに限定し、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+[qa-198-c 是正の内容 — 新規実装は不要である] 修正コードは**既にリポジトリに存在する**。150a0f14 は 2 重の是正を入れている — (i) signin form の callbackUrl を `/sheets` にする、(ii) `app/page.tsx` (`/`) 自体に、有効な session cookie があれば `DEFAULT_POST_SIGNIN_LANDING` へ redirect する処理を足す。(ii) があるため、仮に古い cookie で `/` へ来ても業務画面へ送られる。**是正は「150a0f14 以降を本番へ deploy する」ことに尽きる。** コード変更は不要である。
+
+[qa-198-d 併せて確認できたこと] `/sheets` は未認証で 401 を返した。これは middleware が認可拒否を JSON で返す設計どおりの挙動であり (qa-197-d)、着地先が壊れているのではないことの確認になる。
+
+[qa-198-e なぜ 10 ラウンド以上かかったのか — 本仕様の存在理由] 原因は最終的に **1 回の GET と 1 行の grep** で確定した。それまでに時間を要したのは、次の 2 点が観測不能だったためである。(1) **本番で動いているビルドが、リポジトリのどの commit に対応するかを知る手段が無い。** そのため『コードは直っている』と『本番が直っている』が区別できず、コードを読むほど誤った確信が強まる状態になっていた。(2) **着地先が既定値へ落ちた事象を記録する手段が無い。** 認証失敗なら signin へ戻るので気づけるが、『成功したが意図しない場所へ着地した』は成功として通過し、痕跡が残らない。この 2 点はいずれも本仕様の V2・V6・V7 が対象としている欠落である。**本件は、本仕様が無ければどう迷走するかの実測データそのものになった。**
+
+[qa-198-f 受入基準への反映] 本 entry を根拠に次を要求へ加える。(1) V6 (build 同一性) — 稼働中の成果物から、それがどの commit に対応するかを**認証なしで**確認できること。本件の切り分けを 1 回の GET で終わらせるための最小要件である。(2) V2 (遷移経路の実測) — 『認証は成功したが着地先が既定値へ落ちた』事象を、認証失敗とは区別して記録すること。成功として通過する異常こそ記録の対象である。(3) V7 (deploy 反映) — 本番の稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出すること。本件は 2026-08-03 の修正が 2026-08-07 時点で未反映だった (4 日間)。
+
+[qa-198-g 引き継ぎ] 本 entry は dev-workflow/web の正本を qa-197 から引き継ぐ。qa-197 が保持していた未解決事項 6・9・10 は本 entry が引き継いで保持する。qa-196 の照会規律 8 項目は引き続き有効である。**原因究明は本 entry で完了した。** 未解決事項のうち原因に関するものは解消し、残るのは plugin 側の課題 (6・8・9・10) と実装 verb の既知タスク (V5 検査 script) である。
+
+[qa-198-h 実装 writeback 索引 (2026-08-08)] qa-198-f の V6 (稼働ビルドの素性) / V7 (deploy 反映鮮度) は elicitation（要件の聞き取り）正本のまま維持し、**新規 qa_log は起票しない**（既確定要求の実装であり、聞き取りセルの再オープンを要しない）。実装確定契約の正本は次へ分離した。
+
+- 実装契約: [`specs/harness-hub-build-identity-deploy-freshness-addendum.md`](../specs/harness-hub-build-identity-deploy-freshness-addendum.md)
+- 親追補索引: [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8
+- feature: `feat-build-identity-deploy-freshness` / Beads `HarnessHub-hf9y`
+- 受領書: `docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`
+- 伝播安定性の実装追補（2026-08-08）: `HarnessHub-u9zq` は V7 の既確定要求を再解釈せず、`version_gate`・鮮度検査の後、最初の smoke の直前に deploy 済み version と `/health.version` の連続一致を確認する。これは deploy 成功・HEAD 鮮度とは別の colo 間伝播ムラを fail-closed にする実装上の安全境界であり、新規 qa_log を要しない。
 
 ### qa-140 (対応セル: desktop-windows)
 

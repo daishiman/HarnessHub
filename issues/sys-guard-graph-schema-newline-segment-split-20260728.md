@@ -9,11 +9,11 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "guard-graph-schema の Bash git 分岐が改行区切りの複数コマンドを1コマンドとして誤結合し無関係パスを誤って BLOCK する"
+title: "dev-graph: guard-graph-schema の Bash git 分岐が改行区切りコマンドを誤って1コマンドとして解釈し無関係パスを誤遮断する"
 owners: ["daishiman"]
 created_at: "2026-07-28T11:40:00Z"
-updated_at: "2026-07-28T11:40:00Z"
-status: "draft"
+updated_at: "2026-08-03T11:52:18Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/dev-graph/hooks/guard_graph_commands.py"]
@@ -47,7 +47,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-07-28T11:40:00Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 

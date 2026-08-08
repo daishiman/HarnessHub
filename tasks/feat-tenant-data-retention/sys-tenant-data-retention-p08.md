@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:02:19Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P07"]
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/lib/scheduled/usage-monitor.ts","docs/features/feat-tenant-data-retention/refactoring-migration-note.md","packages/db/migrations/","packages/db/src/backup/tenant-data-tombstones.ts","packages/db/src/repository/tenant-deks.ts","packages/db/src/schema/encryption-keys.ts"]

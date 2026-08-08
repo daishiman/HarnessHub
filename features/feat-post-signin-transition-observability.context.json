@@ -1,0 +1,34 @@
+{
+  "graph_node_id": "feat-post-signin-transition-observability",
+  "artifact_kind": "feature",
+  "purpose": "認証に失敗すればサインイン画面へ戻るので気付ける。しかし『認証は成功したが意図しない場所へ着地した』は成功として通過し、痕跡が残らない。この静かな異常を記録の対象にする。",
+  "goal": "縮退した事実と解決できなかった名前が 6 種を互いに区別できる形で記録され、着地先が既定値へ後退した事象を認証失敗と区別して事後に判別できる状態にする。",
+  "scope_in": [
+    "縮退の記録点の統一 (どこで縮退しても同じ形で残る)",
+    "縮退 6 種 (テナント未解決・テナント非 active・OIDC 接続未登録・環境値未解決 (名前)・cookie 不在・署名検証失敗) の相互区別",
+    "認証成功のまま着地先が既定値へ後退した事象の記録 (V2)",
+    "どの経路・どの environment から環境値を解決したかの記録",
+    "縮退の観測可能性そのものを検査する仕組み"
+  ],
+  "scope_out": [
+    "値の記録 (token・cookie 値・claim 本文・個人データは記録しない)",
+    "authorize() の判定順・role 判定の変更",
+    "着地画面の内容そのもの (feat-post-signin-landing-surface の担当)"
+  ],
+  "acceptance": [
+    "縮退時に、縮退した事実と解決できなかった名前が記録され、値は記録されない",
+    "縮退の記録が、テナント未解決・テナント非 active・OIDC 接続未登録・環境値未解決 (名前)・cookie 不在・署名検証失敗の 6 種を互いに区別できる",
+    "認証は成功したが着地先が既定値へ後退した事象が、認証失敗とは区別して記録される",
+    "縮退の記録に、どの経路・どの environment から環境値を解決したかが含まれる",
+    "scope 未解決時に生の 403 でなく回復手段が提示される",
+    "認証基盤が使えない状態が利用者の操作ミスに見える文言で表示されない",
+    "権限不足 (403) で再サインインへ誘導せずループを作らない",
+    "既定着地の値がテストで複製されず実装定数を import している"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-security.md",
+    "architecture/harness-hub-frontend.md",
+    "specs/harness-hub-post-signin-landing-observability-addendum.md"
+  ],
+  "updated_at": "2026-08-07T11:12:00Z"
+}

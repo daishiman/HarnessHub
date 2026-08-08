@@ -129,8 +129,9 @@ feedback_contract:
 - 証跡台帳: `eval-log/system-spec-harness/audit-fork-ledger.jsonl` (writer = `hooks/record-audit-fork.py` / PostToolUse: `Task|Agent`)。`--fork-ledger` または env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。
 - C05 自前評価の 4 観点に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
 - 台帳が無い/空 = 裏取り 0 件 → fail-closed で violation (緑にしない)。
-- **run/session 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.session_id` (宣言) と台帳行の `session_id` (harness 観測) の両方を要求し、同一 `(session_id, subagent_type)` の台帳行が実在するときだけ裏取り成立。必須 receipt 全件の宣言 session は単一に収束すること (複数 run のつまみ食い遮断)。`--session <id>` で現在 session を明示すると宣言との一致まで検査する (事後再検証では省略可)。
-- **機械層の限界 (正直な境界)**: 台帳が示すのは「その subagent_type への fork がその session で完了した」ことだけ。監査 prompt が実質を伴うか、返った verdict が忠実に転記されたかは意味層 (content-review / human) の未閉塞責務。また台帳は読み取り可能なため、過去 run の `session_id` を receipt へ丸写しする能動的偽装は `--session` 併用時を除き機械層では弾けない。
+- **run/session・response 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.{session_id,tool,subagent_type,response_sha256}` と receipt `verdict` を、台帳が hook 観測した同一 response の値へ全一致で束縛する。必須 receipt の session は単一 run に収束させ、`--session <id>` で現在 session との一致まで検査する。これにより、実 fork はしたが FAIL を PASS と書く緑化を拒否する。
+- **台帳の書込み権限**: `audit-fork-ledger.jsonl` は PostToolUse hook の append-only 出力であり、評価者が手書き・補正してはならない。`prompt_sha256` / `response_sha256` が空・`manual`・64桁16進数以外、または response 最終行の `AUDIT_VERDICT` marker が無効な行は集約対象から除外される。
+- **機械層の限界 (正直な境界)**: 台帳は実際の response が返した verdict の書換えを拒否するが、監査 prompt の意味的十分性や証拠の妥当性そのものは content-review / human が検証する。台帳ファイルを意図的に改ざん可能な実行環境では hook 証跡だけで完全な敵対者耐性は得られないため、書込み権限の分離も必要である。
 
 ## 総合判定 (fail-closed 集約)
 

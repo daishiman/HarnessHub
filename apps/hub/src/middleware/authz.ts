@@ -13,7 +13,9 @@ export type DenyReason =
 
 export type AuthzDecision =
   | { readonly allowed: true; readonly scope: RequestedScope }
-  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 };
+  // 404 は `tenant_mismatch` の存在秘匿専用 (T-ISO-06)。route 層の `denyStatusFor` と同じ対応表を
+  // 使う必要があるため、片側だけ status を足すと本層が先に応答する経路で契約が崩れる。
+  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 | 404 };
 
 /**
  * 認証不要で到達できる path の**明示**allowlist。
@@ -50,6 +52,14 @@ export interface AuthzInput {
   readonly headers: ReadonlyMap<string, string>;
   /** 認証できなかった場合は null。null をそのまま許可へ倒さないこと */
   readonly principal: Principal | null;
+  /**
+   * session (browser cookie) 由来の active workspace 解決を許すか。既定 true。
+   * Bearer token (Device Flow access token 等の機械クライアント) は cookie を送らない前提であり、
+   * `resolveActiveWorkspaceId` の「所属が1件なら cookie 無しでも自動確定する」規則を適用すると、
+   * 明示ヘッダーで別 workspace を指定した要求が意図せず ambiguous_scope に落ちる。
+   * 呼び出し元が Bearer token 経路と分かっている場合は false を渡すこと。
+   */
+  readonly allowSessionScope?: boolean;
 }
 
 export function isPublicPath(pathname: string): boolean {
@@ -85,7 +95,10 @@ export function authorize(input: AuthzInput): AuthzDecision {
   // scope 入力の第2系統: session の active tenant/workspace (通常のブラウザ遷移向け)。
   // 明示ヘッダー系統 (API / 機械クライアント向け) とはここで初めて合流させ、
   // 判定順「public判定→認証→スコープ一意性→tenant一致→workspace所属」自体は変更しない。
-  const sessionScope = resolveSessionScope(input.principal, input.headers.get('cookie') ?? null);
+  const sessionScope =
+    input.allowSessionScope === false
+      ? null
+      : resolveSessionScope(input.principal, input.headers.get('cookie') ?? null);
   const merged = mergeScopes(explicitResolution.scope, sessionScope);
   if (merged === 'ambiguous_scope') {
     return { allowed: false, reason: 'ambiguous_scope', status: 403 };
@@ -98,8 +111,12 @@ export function authorize(input: AuthzInput): AuthzDecision {
     return { allowed: false, reason: 'missing_tenant_scope', status: 403 };
   }
 
+  // 存在秘匿 (T-ISO-06): 他テナントの資源は 404 で返す。403 だと「その ID の資源が他テナントに在る」
+  // ことが応答から伝わってしまう。route 層の `denyStatusFor` は同じ理由で既に 404 を返していたが、
+  // 本 middleware が先に応答するため route 側の 404 は到達不能で、本番だけ 403 になっていた
+  // (route 単体テストは withAuthz を直接呼ぶので緑のまま素通りする)。対応表は両層で一致させる。
   if (scope.tenantId !== input.principal.tenantId) {
-    return { allowed: false, reason: 'tenant_mismatch', status: 403 };
+    return { allowed: false, reason: 'tenant_mismatch', status: 404 };
   }
 
   if (scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
@@ -134,8 +151,12 @@ function mergeScopes(explicit: RequestedScope, session: RequestedScope | null): 
  * session (ブラウザ通常遷移) 由来の要求スコープを解決する。
  * 明示ヘッダー系統とは独立した第2の入力系統だが、合流と認可判断はこのモジュールにだけ置く。
  * 所属を外れた active workspace は束縛しない (fail-closed)。
+ *
+ * export しているのは (dashboard) 配下の RSC 側 (`lib/routing/dashboard-scope.ts`) が
+ * URL クエリ無しのログイン直後フォールバック用に同じ解決規則を再利用するため。
+ * ここを直接呼ばずに独自実装すると、tenantId/workspaceId をペアで解決/ペアで諦める契約が崩れる。
  */
-function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
+export function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
   const workspaceId = resolveActiveWorkspaceId(cookieHeader, principal.workspaceIds);
   if (workspaceId === null) return null;
 

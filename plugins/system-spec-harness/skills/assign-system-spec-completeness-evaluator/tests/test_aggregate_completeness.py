@@ -55,7 +55,7 @@ def test_golden_pass_and_fail_report_validation():
     assert MOD.validate_report(golden_report(), golden_ledger()) == []
     assert MOD.validate_report(
         golden_report(verdict="FAIL", verdicts={"doc_freshness": "FAIL"}, gaps=["rerun C08"]),
-        golden_ledger(),
+        golden_ledger(verdicts={"doc_freshness": "FAIL"}),
     ) == []
 
 
@@ -103,7 +103,9 @@ def test_schema_and_rubric_match_the_aggregate_contract():
     assert schema["properties"]["verdict"]["enum"] == ["PASS", "FAIL"]
     delegation = schema["definitions"]["audit_delegation"]
     assert "audit_delegations" in schema["required"]
-    assert set(delegation["properties"]["dispatch"]["required"]) == {"tool", "subagent_type", "session_id"}
+    assert set(delegation["properties"]["dispatch"]["required"]) == {
+        "tool", "subagent_type", "session_id", "response_sha256",
+    }
     rubric = json.loads((SKILL_DIR / "references" / "scoring-rubric.json").read_text(encoding="utf-8"))
     assert rubric["aspect_to_auditor"] == {key: value["auditor"] for key, value in MOD.ASPECTS.items()}
 

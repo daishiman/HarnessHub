@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:18:12Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-02T06:40:52Z"
+status: "closed"
 depends_on: ["SYS-PUBLISHER-PLUGIN-P03"]
 related_nodes: ["feat-publisher-plugin","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["apps/publisher/","apps/publisher/src/__tests__/","docs/features/feat-publisher-plugin/test-design.md","packages/schemas/publisher-plugin/","plugins/harness-hub-publisher/"]

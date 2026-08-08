@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G2, G5]
+serves_goals: [G1, G4, G5]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-134 |
+| Web (web) | 確定 | 確定質疑: qa-190 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
@@ -24,19 +24,19 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-134 (対応セル: web)
+### qa-190 (対応セル: web)
 
-**質問**: system-dev-planner が生成する task 仕様書の C12 検証コマンドを、promotion 前後のどちらでも誤解なく再実行できる品質契約へどう更新しますか?
+**質問**: C07 独立監査ラウンド12 (verdict PASS) が MEDIUM として、qa-188 の論点束ねを指摘した。qa-188 の (a)〜(d) は『tenants.status を段0 語彙へ追加する』という 1 論点として妥当だが、(e)『DeviceAuthorizationStatus の三重定義と V7 の第3情報源化』は独立した別論点である、という判定である。理由は、対象ドメインが異なる (前者=認証の前提状態、後者=検査ツールの網羅範囲) こと、影響先も異なる (前者=段0 マトリクス、後者=V7 acceptance) ことの 2 点。spec-state 契約『qa_log の論点分離』は既登録 entry の逐語改変を禁じ、束ねが後から判明した場合は分離索引を新規 entry として追記せよと定めている。この扱いを決めよ。
 
-**回答**: ユーザーの 2026-08-02 最終レビュー・仕様反映指示を明示承認として、qa-076〜qa-081、qa-089、qa-095、qa-100、qa-108、qa-109、qa-119、qa-130〜qa-132 の testing-qa.web 契約を全面維持し、task 仕様書の世代非依存 rerun command 契約を追加確定する。
+**回答**: C07 の判定を受け入れ、**qa-188-e を本 entry へ分離索引として切り出す**。qa-188 の逐語は一切改変しない。matrix.maintenance-ops.web.qa_ref も qa-188 のまま据え置く。
 
-【1. lifecycle 分離】promotion 前の planner 内部検証は、実際に生成した staging generation path を `validate-system-plan.py --staging <actual-generation-path>` へ渡す。promotion 後に利用者が task 仕様書から再検証する場合は、atomic rename で消滅する staging path を公開せず、`--feature-package <self-package-id>` で feature 別 current pointer から現行世代を解決する。
+[qa-190-a 束ねであったことを認める] qa-188 は『tenants.status を段0 語彙へ追加する』を主題として書かれ、その末尾に (e) として DeviceAuthorizationStatus の三重定義を付けた。両者に共通していたのは『C07 が継続指摘している未対応項目である』という**由来だけ**であり、内容の関係ではない。由来の共通性で束ねるのは、まさに論点分離契約が禁じている形である。C06 が論点別に中立性を検証できなくなるため、分離する。
 
-【2. fail-closed 検証】contract 1.3.0 以降の task spec が fenced code block または inline code として `validate-system-plan.py` を提示する場合、`--staging`、`--feature-package` 欠落、別 package id のコピーを validator violation とする。CommonMark の backtick/tilde fence、行継続、未閉じ fence も解析対象とし、散文中の単なる script 名は実行コマンドと誤判定しない。
+[qa-190-b 分離した論点の内容] `DeviceAuthorizationStatus` は同一のリテラル union が 3 箇所に独立して存在する: `packages/schemas/auth-tenancy/src/ports.ts:117` (TypeScript 型宣言)、`packages/schemas/auth-tenancy/src/repository/device-flow.ts:23` (zod の z.enum)、drizzle schema `publish.ts:106` (text(col, {enum: [...]}))。V7 (同一リテラル union の重複定義を検出する検査) が突合すべき情報源は、したがって **型宣言 / zod / ORM schema の 3 経路**である。型宣言と zod の 2 経路だけを実装すると、3 件目 (ORM schema) が検査をすり抜ける。これは検査ツールの網羅範囲の問題であり、認証の前提状態語彙 (qa-188 の主題) とは別の層にある。
 
-【3. immutable package 互換】content-addressed で既に promote 済みの contract 1.0.0〜1.2.0 package は本文 digest を変更できないため、当時の検査集合で再検証する。新規生成 package だけを 1.3.0 へ進め、既存 package の再現可能性を壊さない。
+[qa-190-c 本 entry を testing-qa/web に束縛する理由] この論点の影響先は V7 の acceptance、すなわち検査ツールが何を情報源とするかである。段0 マトリクス (maintenance-ops) ではなく testing-qa の管轄にあたる。分離索引を主題に近いカテゴリへ置くことで、後から読む者が『V7 の網羅範囲はどこで決まったか』を categoryから辿れる。
 
-【4. 回帰と証跡】生成 prompt、正本 template、配布用 template、package contract、baseline、validator、単体テストを同一変更で更新する。正しい自 package、`--staging`、flag 欠落、package mismatch、inline code、backtick/tilde fence、複数行、散文、旧 contract 互換を自動テストし、実 package の validate/projection check と plugin 全テストを PR 前に再実行する。結果と仕様反映範囲を受領書および Beads notes へ残す。
+[qa-190-d 由来の明示] 本 entry の内容は qa-188 の (e) に由来する。qa-188 側にはこの分離を指す逆参照が無い (未解決事項 6 と同じ構造的欠落である)。本 entry から qa-188 を参照する片方向の索引として記録する。qa-188 の逐語を書き換えて双方向にすることは、契約が禁じているため行わない。
 
 ### qa-095 (対応セル: desktop-windows, desktop-macos)
 
@@ -73,6 +73,6 @@ serves_goals: [G1, G2, G5]
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
-| playwright | 1.61.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
-| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-07-24T11:48:06Z | 2026-07-24T11:48:06Z |
+| vitest | 4.1.10 | VoidZero / Vitest team (vitest.dev) | https://vitest.dev/blog/vitest-4-1.html | 2026-08-07T03:26:46Z | 2026-08-07T03:26:46Z |
+| playwright | 1.62.1 | Microsoft (playwright.dev) | https://playwright.dev/docs/release-notes | 2026-08-07T03:26:57Z | 2026-08-07T03:26:57Z |
+| testing-library | @testing-library/react 16.3.2 | Testing Library (OSS) (testing-library.com) | https://testing-library.com/docs/react-testing-library/intro/ | 2026-08-07T03:27:06Z | 2026-08-07T03:27:06Z |

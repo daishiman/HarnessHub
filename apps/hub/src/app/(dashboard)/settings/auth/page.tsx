@@ -9,6 +9,7 @@
 
 import type { Metadata } from 'next';
 
+import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { OidcConnectionAdmin } from './oidc-connection-admin.js';
 
 export const metadata: Metadata = {
@@ -21,8 +22,8 @@ interface AuthSettingsPageProps {
 }
 
 export default async function AuthSettingsPage({ searchParams }: AuthSettingsPageProps) {
-  const query = await searchParams;
-  const tenantId = query.tenant ?? '';
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const tenantId = tenantIdFromQuery(query, scope);
 
   return (
     <section aria-labelledby="auth-settings-heading">
@@ -33,7 +34,7 @@ export default async function AuthSettingsPage({ searchParams }: AuthSettingsPag
       </p>
       {tenantId === '' ? (
         <p>
-          対象テナントが指定されていません (URL の <code>?tenant=</code> を確認してください)。
+          テナントを特定できませんでした。ログインし直すか、URL に <code>?tenant=</code> を付けてアクセスしてください。
         </p>
       ) : (
         <OidcConnectionAdmin tenantId={tenantId} />

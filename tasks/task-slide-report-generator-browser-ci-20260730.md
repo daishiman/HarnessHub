@@ -9,11 +9,11 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "slide-report-generator の実 Chromium 受入試験を CI へ接続する"
+title: "孤児救出: slide-report-generator の Playwright 対応 85 件が未コミット・未起票で主WTに滞留していた"
 owners: ["daishiman"]
 created_at: "2026-07-30T11:41:12Z"
-updated_at: "2026-07-30T11:41:12Z"
-status: "active"
+updated_at: "2026-08-01T05:18:37Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-task-spec-test-strategy","arch-harness-hub-testing-qa"]
 resource_scope: [".github/workflows/slide-report-generator-ci.yml","plugins/slide-report-generator/","system-spec/spec-state.json","system-spec/testing-qa.md","specs/harness-hub-system-specification.md","architecture/harness-hub-testing-qa.md","features/feat-task-spec-test-strategy.md","tasks/task-slide-report-generator-browser-ci-20260730.md","docs/features/feat-task-spec-test-strategy/slide-report-browser-ci-spec-reflection-receipt.md"]

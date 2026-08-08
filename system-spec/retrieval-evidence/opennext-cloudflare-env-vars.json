@@ -1,0 +1,26 @@
+{
+  "allowed_domains": [
+    "opennext.js.org"
+  ],
+  "findings": [
+    "binding は Next.js のどの route からでも getCloudflareContext().env.<NAME> で読める。戻り値は { env, cf, ctx } を持つ",
+    "SSG route では async mode が必須で、await getCloudflareContext({ async: true }) と書く",
+    "Cloudflare 上では環境値を Environment variables と Secrets のどちらかとして持てる。違いは、Secrets が作成後に dashboard / CLI から読み戻せない点",
+    "公式の推奨は、実行時の環境変数を Cloudflare dashboard 側に置き、deploy で消えないようopennextjs-cloudflare deploy -- --keep-vars を使うこと",
+    "next dev から Cloudflare リソースへ触るには next config で initOpenNextCloudflareForDev() を呼ぶ必要がある",
+    "local 開発では wrangler config や .dev.vars の値は next dev 配下で env に現れない。Next.js の .env を使うことが推奨される",
+    "SSG 実行時に .dev.vars の secret や local binding の値が静的生成へ使われる点に注意喚起がある"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。",
+  "retrieval_query": "getCloudflareContext env bindings environment variables secrets opennextjs cloudflare",
+  "retrieved_at": "2026-08-07T07:17:12Z",
+  "returned_official_urls": [
+    "https://opennext.js.org/cloudflare/bindings",
+    "https://opennext.js.org/cloudflare/howtos/env-vars",
+    "https://opennext.js.org/cloudflare/howtos/dev-deploy",
+    "https://opennext.js.org/cloudflare/get-started",
+    "https://opennext.js.org/cloudflare/troubleshooting"
+  ],
+  "target_id": "opennext-cloudflare-env-vars"
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:00:00Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "draft"
+updated_at: "2026-08-03T22:54:50Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["issues/sys-scenario-verdict-stale-live-trial-ref-20260721.md"]
