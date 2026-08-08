@@ -282,11 +282,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 2026-08-08 稼働ビルドの素性と反映鮮度 — 実装確定
 
-上節の macro feature `feat-build-identity-deploy-freshness` を実装した。要点は 4 つ:
+上節の macro feature `feat-build-identity-deploy-freshness` を実装した。要点は 5 つ:
 (1) `/health` へ optional `commit` (40 桁 hex) を載せ、deploy 時 `--var HUB_COMMIT_SHA` で注入する
 (2) version_gate 直後に鮮度検査を置き、deploy 経路自体の長期停止を捉える
 (3) 不一致ではなく HEAD 到達からの**乖離継続時間**で判定し、しきい値正本は script 定数 1 箇所
 (4) 鮮度検査失敗は rollback 対象外（smoke 未実行＝新版故障の証拠なし）
+(5) `HarnessHub-u9zq` では、鮮度検査の後・最初の smoke の前に deployment version と `/health.version` の連続一致を再確認する。これは「届いたか」（version gate）と「古いままではないか」（鮮度）の双方では検出できない、colo 間の伝播ムラを防ぐ境界である。不一致・通信失敗・version 欠落は fail-closed とし、smoke 未実行なので rollback は打たない。
 
 契約正本: [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) /
 判断根拠: `docs/features/feat-build-identity-deploy-freshness/architecture-decision.md` /

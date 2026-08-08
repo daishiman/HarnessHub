@@ -166,6 +166,37 @@ describe('稼働ビルドの素性と鮮度のゲート', () => {
     expect(step).toContain('--json');
   });
 
+  // HarnessHub-u9zq: version_gate を通しても、鮮度検査を挟んだあとの smoke が別 colo の旧版へ
+  // 当たる窓が残っていた。最初の smoke の直前でもう一度、配信版が deploy した版のままかを確かめる。
+  it('鮮度検査のあと・最初の smoke の前に、配信版をもう一度確認する', () => {
+    const freshness = WORKFLOW.indexOf('- name: 稼働ビルドの鮮度検査');
+    const recheck = WORKFLOW.indexOf('- name: smoke 直前の配信版再確認');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+
+    expect(recheck).toBeGreaterThan(freshness);
+    // 再確認が smoke より後ろだと、旧版を検査してから気づくことになり意味がない
+    expect(oidc).toBeGreaterThan(recheck);
+
+    const step = WORKFLOW.slice(recheck, oidc);
+    expect(step).toContain('id: smoke_version_recheck');
+    // 判定と再試行方針は script 側の単一実装に置き、workflow へ二重定義しない
+    expect(step).toContain('scripts/ci/assert-served-version.mjs');
+    // 比較対象は deploy step が控えた実 version id (固定文字列や自己申告ではない)
+    expect(step).toContain('DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}');
+    // 判定根拠を後から検証できるよう JSON 証跡を残す
+    expect(step).toContain('--json');
+  });
+
+  it('smoke 直前の再確認で止まったときは rollback しない (どの版へ戻るか確定しないため)', () => {
+    expect(WORKFLOW).toContain('SMOKE_VERSION_RECHECK_OUTCOME: ${{ steps.smoke_version_recheck.outcome }}');
+
+    const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
+    const step = WORKFLOW.slice(rollback);
+
+    expect(step).toContain('if [ "${SMOKE_VERSION_RECHECK_OUTCOME}" != "success" ]');
+    expect(step).toContain('smoke 直前の配信版再確認で停止');
+  });
+
   it('鮮度検査で止まったときは rollback しない (素性の確認できない版へ後退させない)', () => {
     expect(WORKFLOW).toContain('DEPLOY_FRESHNESS_OUTCOME: ${{ steps.deploy_freshness.outcome }}');
 

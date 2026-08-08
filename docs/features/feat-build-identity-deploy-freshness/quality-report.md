@@ -61,3 +61,18 @@ export const DEFAULT_MAX_LAG_MINUTES = 30;
 - 本番環境での実測（実際に `/health` から `commit` が返ること）は、**この feature の merge と deploy 後**にしか
   取れない。P13 の release-record に確認手順を残し、初回 deploy 後に追記する。
 - 本番 `curl` は本セッションで許可されていないため、実測は未取得のままである（未取得を「確認済み」とはしない）。
+
+## `HarnessHub-u9zq` 最終再検証 (2026-08-08)
+
+smoke 直前の配信版再確認を追加した後、次を再実行した。
+
+| ゲート | 結果 |
+|---|---|
+| task specification contract | `validate-system-plan.py --feature-package feature-package/feat-build-identity-deploy-freshness` → contract `1.3.0` / `violations: []` |
+| 実挙動・CI 順序 | `smoke-version-recheck.test.ts` 8 件 + `production-auth-gates.test.ts` 14 件 → **22 PASS** |
+| 無応答境界 | 実 HTTP server が応答を終えないケースで、全体 deadline 内に exit 1 となることを上記 8 件へ追加 |
+| format / lint | 対象 4 ファイルの `biome check` → PASS |
+| 型 | `pnpm --filter @harness-hub/hub run typecheck` → PASS |
+| graph / diff | `validate-graph-schema.py` と `git diff --check` → PASS |
+
+本番の Cloudflare 伝播は merge 後の deploy でしか確認できないため、local PASS を本番実測の代わりにはしない。
