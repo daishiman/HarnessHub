@@ -1,0 +1,11 @@
+{
+  "graph_node_id": "iss-c02-mixed-routing",
+  "patch": {
+    "related_nodes": [
+      "spec-c02-mixed-batch-contract",
+      "arch-c02-writer-boundary",
+      "task-c02-verify-mixed-routing",
+      "doc-c02-mixed-batch-runbook"
+    ]
+  }
+}

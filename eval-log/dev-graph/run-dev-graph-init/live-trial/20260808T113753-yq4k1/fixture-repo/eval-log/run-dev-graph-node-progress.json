@@ -1,0 +1,35 @@
+{
+  "loop": 1,
+  "checklist": [
+    {
+      "item": "read/write realpath containment + repository_id 一致",
+      "status": "pass",
+      "evidence": "upsert-node.py --repo-root <fixture-repo> exit0; input/body/artifact all repo-relative"
+    },
+    {
+      "item": "classification decision の証跡",
+      "status": "pass",
+      "evidence": "caller が --kind document を明示; classification_confidence=1.0 / candidates=[] を node へ記録"
+    },
+    {
+      "item": "frontmatter/body/path/template metadata が schema と一致",
+      "status": "pass",
+      "evidence": "dry-run が schema 検証を通過 (write_count=0) 後、同一入力で apply; template_id=document template_version=1.0.0"
+    },
+    {
+      "item": "package gate",
+      "status": "not_applicable",
+      "evidence": "single normal artifact 登録のため exact-13 package 経路は未使用"
+    },
+    {
+      "item": "receipt の graph_revision / node id が commit 後 graph と一致",
+      "status": "pass",
+      "evidence": "receipt graph_revision_after=1 node=doc-c01-idempotence-live-trial-seed"
+    },
+    {
+      "item": "WAL 収束",
+      "status": "pass",
+      "evidence": "recovered_interrupted_transaction=False; status=applied write_count=2"
+    }
+  ]
+}

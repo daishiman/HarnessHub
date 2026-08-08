@@ -36,6 +36,14 @@ def call_main(module, monkeypatch, capsys, *argv):
 
 def markdown(node_id: str, *, status: str = "active", phase: str | None = None, evidence: str = "evidence/run.json") -> str:
     phase_line = f'phase_ref: "{phase}"\n' if phase else ""
+    # node_fixture() の source_lineage.origin_kind は "manual" のため、C11 は base
+    # required_sections (13 見出し) をそのまま要求する (HarnessHub-yzv0)。
+    # "## Verification and evidence" 以降は既存テストが split で切り出す境界なので、
+    # 他見出しはその手前にまとめて置く。_validate_task_artifact の _section() は
+    # ("Verification and evidence", "検証方法") を同義語として扱い先に一致した方を採用する
+    # ため、"## 検証方法" にも同一の検証手順文言を複製する (中身が空だと placeholder_only_section
+    # で C11 に落ち、内容が食い違うと lifecycle 系テストの evidence 参照突合が壊れる)。
+    verification_body = f"- Automated commands: `python3 -m pytest`\n- Required evidence: {evidence}\n"
     return (
         "---\n"
         f'graph_node_id: "{node_id}"\n'
@@ -43,9 +51,21 @@ def markdown(node_id: str, *, status: str = "active", phase: str | None = None, 
         f"{phase_line}"
         "---\n"
         "# Task\n\n"
+        "## 目的\n\n検証用の実文。\n\n"
+        "## 背景\n\n検証用の実文。\n\n"
+        "## 入力と前提条件\n\n検証用の実文。\n\n"
+        "## 出力と成果物\n\n検証用の実文。\n\n"
+        "## 依存関係\n\n検証用の実文。\n\n"
+        "## 実装対象\n\n検証用の実文。\n\n"
+        "## Write scope と競合制約\n\n検証用の実文。\n\n"
+        "## GitHub publication\n\n検証用の実文。\n\n"
+        "## 実行手順\n\n検証用の実文。\n\n"
+        "## 受入条件\n\n検証用の実文。\n\n"
+        f"## 検証方法\n\n{verification_body}\n"
+        "## リスクとロールバック\n\n検証用の実文。\n\n"
+        "## Handoff\n\n検証用の実文。\n\n"
         "## Verification and evidence\n\n"
-        "- Automated commands: `python3 -m pytest`\n"
-        f"- Required evidence: {evidence}\n"
+        f"{verification_body}"
     )
 
 
@@ -118,11 +138,7 @@ def lifecycle_workspace(tmp_path: Path) -> tuple[Path, Path, Path]:
         json.dumps(
             {
                 "node": node,
-                "body": (
-                    "# Task\n\n"
-                    "## Verification and evidence\n\n"
-                    "- Automated commands: `python3 -m pytest`\n"
-                ),
+                "body": markdown("G", evidence="evidence/run.json").split("---\n", 2)[-1],
             }
         ),
         encoding="utf-8",
@@ -705,14 +721,29 @@ def test_c26_boundary_helpers_fail_closed_with_typed_receipts(tmp_path, monkeypa
     with pytest.raises(module.ContractError, match="escapes"):
         module._local_evidence(tmp_path, "/outside.json")
 
+    # _validate_task_artifact を直接呼ぶ以下は upsert-node.py の artifact_findings
+    # (C11) を経由しないため、markdown() のフル 13 見出し本文は不要。ここだけ
+    # "## Verification and evidence" 単体の最小本文を使い、_section() の同義語
+    # ("検証方法") と衝突させない。
+    def minimal_body(node_id: str, *, verification: str) -> str:
+        return (
+            "---\n"
+            f'graph_node_id: "{node_id}"\n'
+            'status: "active"\n'
+            "---\n"
+            "# Task\n\n"
+            "## Verification and evidence\n\n"
+            f"{verification}\n"
+        )
+
     tasks = tmp_path / "tasks"
     tasks.mkdir()
     task = tasks / "G.md"
-    task.write_text(markdown("wrong"), encoding="utf-8")
+    task.write_text(minimal_body("wrong", verification="- Automated commands: `python3 -m pytest`"), encoding="utf-8")
     node = {"graph_node_id": "G", "file_path": "tasks/G.md"}
     with pytest.raises(module.ContractError, match="does not match graph"):
         module._validate_task_artifact(tmp_path, node)
-    task.write_text(markdown("G").replace("`python3 -m pytest`", "TODO"), encoding="utf-8")
+    task.write_text(minimal_body("G", verification="- Automated commands: TODO"), encoding="utf-8")
     with pytest.raises(module.ContractError, match="incomplete verification"):
         module._validate_task_artifact(tmp_path, node)
 
@@ -723,7 +754,7 @@ def test_c26_boundary_helpers_fail_closed_with_typed_receipts(tmp_path, monkeypa
         "- Required evidence: evidence/run.json\n",
         encoding="utf-8",
     )
-    projection = markdown("G").split("## Verification and evidence", 1)[0]
+    projection = "---\ngraph_node_id: \"G\"\nstatus: \"active\"\n---\n\n# Task\n\n"
     task.write_text(projection, encoding="utf-8")
     projected_node = {**node, "source_lineage": {"source_path": "published-task.md"}}
     result = module._validate_task_artifact(tmp_path, projected_node)

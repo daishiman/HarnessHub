@@ -16,7 +16,10 @@
       "template": "task.md",
       "required_sections": ["目的", "背景", "入力と前提条件", "出力と成果物", "依存関係", "実装対象", "Write scope と競合制約", "GitHub publication", "実行手順", "受入条件", "検証方法", "リスクとロールバック", "Handoff"],
       "conditional_templates": {"system_development": "system-task-spec.md"},
-      "conditional_required_sections": {"system_development": ["Workstream applicability", "Architecture and deploy unit", "Verification and evidence", "Rollout and rollback", "Tracker publication and completion intent"]}
+      "conditional_required_sections": {
+        "system_development": ["Machine-readable registration fields", "目的", "背景", "前提条件", "Workstream applicability", "Architecture and deploy unit", "成果物", "Tracker publication and completion", "Branch and worktree execution", "スコープ外", "Verification and evidence", "Inner goal-seek execution loop", "Rollout and rollback", "Handoff", "参照情報"],
+        "system_development_baseline": ["正本仕様書", "依存", "実行契約"]
+      }
     },
     "document": {
       "template": "document.md",

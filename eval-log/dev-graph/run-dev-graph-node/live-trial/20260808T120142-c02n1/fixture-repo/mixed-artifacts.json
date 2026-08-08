@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "batch_id": "c02-live-trial-mixed-artifacts",
+  "project_id": "c02fix",
+  "artifacts": [
+    {
+      "graph_node_id": "iss-c02-mixed-routing",
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "title": "混在バッチ登録で issue が canonical root へ routing されない懸念",
+      "domain": "dev-workflow",
+      "layer": "operations",
+      "status": "draft",
+      "owners": ["dev-graph-harness"],
+      "tags": ["live-trial", "c02-out1", "issue"],
+      "body": "## 背景\n\nC02 の単一 writer が issue/task/specification/architecture/document の混在入力を 1 バッチで受けたとき、各成果物が kind ごとの canonical content root へ決定論的に振り分けられるかを実走で確認する必要がある。\n\n## 事象\n\n混在バッチの登録経路は fork acceptance では観測できず、routing の実挙動が未検証のまま残っている。\n\n## 期待\n\nissue は issues/ 配下へ保存され、frontmatter の kind と保存 path が一致する。"
+    },
+    {
+      "graph_node_id": "task-c02-verify-mixed-routing",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "混在バッチ routing と連続更新の整合を検証する",
+      "domain": "dev-workflow",
+      "layer": "operations",
+      "status": "draft",
+      "owners": ["dev-graph-harness"],
+      "tags": ["live-trial", "c02-out1", "task"],
+      "body": "## 目的\n\n混在バッチ登録後に同じノードを連続更新しても frontmatter の kind と保存 path が食い違わないことを確認する。\n\n## 完了条件\n\n- 5 種すべてが canonical kind path へ保存される\n- 連続更新後も frontmatter kind と保存 path が一致する\n- features/ に C14 macro-feature 契約外のノードが生成されない"
+    },
+    {
+      "graph_node_id": "spec-c02-mixed-batch-contract",
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "title": "混在バッチ登録の入出力契約",
+      "domain": "dev-workflow",
+      "layer": "specification",
+      "status": "draft",
+      "owners": ["dev-graph-harness"],
+      "tags": ["live-trial", "c02-out1", "specification"],
+      "api_change": false,
+      "body": "## 概要\n\n1 回の入力バッチが issue/task/specification/architecture/document を 1 件ずつ含むときの登録契約を定める。\n\n## 入力契約\n\nバッチ内の各成果物は artifact_kind と本文を持ち、kind ごとの canonical content root へ写像される。\n\n## 出力契約\n\n登録は atomic とし、部分適用を残さない。API 変更は伴わない。"
+    },
+    {
+      "graph_node_id": "arch-c02-writer-boundary",
+      "artifact_kind": "architecture",
+      "artifact_subtypes": ["backend", "data"],
+      "title": "単一 writer の書込境界と graph store の整合",
+      "domain": "dev-workflow",
+      "layer": "architecture",
+      "status": "draft",
+      "owners": ["dev-graph-harness"],
+      "tags": ["live-trial", "c02-out1", "architecture"],
+      "body": "## 構成\n\ncontent artifact と graph store の 2 ファイル更新を単一 transaction として扱う。\n\n## backend\n\n書込は C02 単一 writer に集約し、他経路からの直接書込を許さない。\n\n## data\n\ngraph.json は nodes 配列を正本とし、node と content path の対応を一意に保つ。"
+    },
+    {
+      "graph_node_id": "doc-c02-mixed-batch-runbook",
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "title": "混在バッチ登録の実走 runbook",
+      "domain": "dev-workflow",
+      "layer": "operations",
+      "status": "draft",
+      "owners": ["dev-graph-harness"],
+      "tags": ["live-trial", "c02-out1", "document"],
+      "body": "## 手順\n\n1. 混在バッチを dry-run で検証する\n2. 同じ入力で apply する\n3. 1 件を連続更新し frontmatter kind と保存 path の一致を再確認する\n\n## 記録\n\n各手順の receipt と graph_revision を残す。"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "skill": "run-dev-graph-init",
+  "original_goal": "symlinkで配布された任意の呼出し元repository/worktreeを解決し、そのrepo内だけに6 content root (issues/tasks/specs/architecture/features/docs)、repo-local config/template/stateと選択式Claude hook配線を冪等初期化できる状態になっている",
+  "repo_root_binding": "resolve-repo-context.py --mode write receipt.repo_root",
+  "repository_id": "local:sha256:d47b8566486476522cbd54c68c6565416e04e5aba23105ff69aac4300e70302a",
+  "hook_source_requested": "plugin",
+  "checklist": [
+    "resolve-repo-context.py receipt の repository_id/common-dir/content root が caller repo と一致する",
+    "issues/tasks/specs/architecture/features/docs と .dev-graph/{config.json,state/graph.json,cache,locks} が実在する",
+    "template-contract.json 列挙資産が欠落0で、利用者編集済み template の digest が不変である",
+    "effective hook は plugin または許可済み fallback の一経路だけで、既存 settings key/hash の変更が0件である",
+    "validate-repo-config.py --require-content-roots <6 root> が exit0 である",
+    "validate-graph-schema.py が exit0 で、二回目 init の planned changes が0件である"
+  ]
+}
