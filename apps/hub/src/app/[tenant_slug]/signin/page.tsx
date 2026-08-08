@@ -12,6 +12,7 @@ import { signinRouteParamsSchema } from '@harness-hub/schemas';
 import { Alert } from '@harness-hub/ui';
 import { notFound } from 'next/navigation';
 
+import { PublicShell } from '../../../components/shell/public-shell.js';
 import { resolveTenantOidcConfig } from '../../../lib/auth/index.js';
 import { authRuntime } from '../../../lib/authz/index.js';
 import { tenantOidcCsrfAction, tenantOidcSigninAction } from './tenant-oidc-action.js';
@@ -21,7 +22,12 @@ interface SigninPageProps {
   readonly params: Promise<{ tenant_slug: string }>;
 }
 
-export default async function SigninPage({ params }: SigninPageProps) {
+export default async function SigninPage(props: SigninPageProps) {
+  // 画面骨格はここで 1 度だけ包む。本体は状態ごとに早期 return するため関数を分けている
+  return <PublicShell>{await renderSigninBody(props)}</PublicShell>;
+}
+
+async function renderSigninBody({ params }: SigninPageProps) {
   const parsed = signinRouteParamsSchema.safeParse(await params);
   // slug の形が不正な時点で 404。存在するテナントかどうかは、この先も画面上では区別しない
   if (!parsed.success) notFound();

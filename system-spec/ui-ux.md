@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-201 |
+| Web (web) | 確定 | 確定質疑: qa-206 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,15 +24,17 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-201 (対応セル: web)
+### qa-206 (対応セル: web)
 
-**質問**: 既存 ui-ux/web 正本 qa-181 と、それ以前の確定契約を維持したまま、実装済み breakpoint・表示密度・レスポンシブ品質の基準値をどう確定するか。
+**質問**: qa-201 とそれ以前の ui-ux/web 契約を維持したまま、desktop/mobile shell、その他 navigation、page surface、overlay の操作規則を実装と一致する形でどう確定するか。
 
-**回答**: [出所] 本 entry は、2026-08-08 の利用者による最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装と実ブラウザ計測から確定する。qa-181 とそれ以前の ui-ux/web 契約は全面維持する。
+**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。
 
-レスポンシブ分岐の数値正本は packages/ui の breakpointTokens とし、sm=480px、md=768px、lg=1120px とする。既存 qa-035 の『768px 未満をスマホサイズとして扱う』契約は維持する。一方、旧 Tailwind 既定 sm=640 / lg=1024 という例示値は、実装正本の 480 / 1120 へ置き換える。md=768 で SidebarLayout を 1 列から 2 列へ切り替え、lg=1120 は standard Container の最大幅とする。
+md=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。
 
-検査幅は mobile=360x800、tablet=768x1024、desktop=1280x800 とする。全幅で document 全体の意図しない横スクロールを禁止する。comfortable の操作部品は 44px 以上、compact も 36px 未満にしない。compact は情報密度を高める明示選択であり comfortable の 44px 契約を弱める逃げ道にしない。light/dark と密度は token で一貫させ、文字 4.5:1、非文字境界 3:1 のコントラストを token test で保証する。
+各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。
+
+既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

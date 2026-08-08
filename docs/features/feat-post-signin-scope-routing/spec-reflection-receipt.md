@@ -186,3 +186,12 @@ P05〜P12 で middleware の session scope 合流と着地先解決は結線済�
 - サイドバー 9 項目の段階表示 (qa-018) と Workspace 切替 UI は別 feature のまま。
 - 既定着地を `/dashboard` へ移す appr-034 は観測用 addendum 側の将来変更であり、
   本追補では `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` を維持する。
+
+### 後続の共通シェル反映 (2026-08-08 / `HarnessHub-imzk`)
+
+本受領書の `PrimaryNav` は到達性を埋める当初実装の記録として保持する。後続変更で
+`PrimaryNav` は `HubShell` / `nav-items.ts` へ置き換わり、scope 付き link と 6 path
+到達性の責務を引き継いだ。新たに role-aware navigation と server-rendered current path
+を仕様化したため、この後続分の判断・検証は
+[共通シェル仕様反映受領書](../feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md)
+および system-spec qa-205 / qa-206 を正とする。qa-135 / qa-137 の scope・認可契約は不変である。

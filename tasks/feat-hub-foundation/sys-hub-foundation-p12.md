@@ -104,3 +104,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - `HarnessHub-tiqw` / `snlo` / `xuhj` / `xaa3` / `4a2z` の AppShell、画面状態、実ブラウザ、VRT、responsive 実装を post-closeout follow-up として文書化した。
 - `frontend.web` / `ui-ux.web` / `testing-qa.web` は正規 transition writer で qa-201 / qa-203 / qa-204 へ再確定し、specs / architecture / feature / docs へ同じ境界を反映した。
 - 正本追補は [UI 基盤仕様](../../specs/harness-hub-ui-foundation-addendum.md)、判断・検証・残課題は [仕様反映受領書](../../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を参照する。
+
+## 共通シェル・全ページ表面の文書追補 (2026-08-08 / `HarnessHub-imzk`)
+
+- `frontend.web` / `ui-ux.web` を正規 transition writer で qa-205 / qa-206 へ再確定し、HubShell、role-aware navigation、page surface、overlay contract を system-spec / specs / architecture / features / docs へ反映した。
+- 旧 PrimaryNav の到達性契約は HubShell と `nav-items.ts` へ移管した。運用時の一次切り分けは post-signin runbook、実装者向けの使い分けは `docs/frontend-ui-foundation-spec.md` を正とする。
+- 仕様影響・品質ゲート・Beads / PR の受領証跡は [共通シェル仕様反映受領書](../../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) に集約する。

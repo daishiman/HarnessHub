@@ -230,6 +230,12 @@ describe('ConfirmDialog', () => {
     expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true);
   });
 
+  it('開いているあいだは背面のスクロールを止める', () => {
+    setup(true);
+
+    expect(document.body.style.overflow).toBe('hidden');
+  });
+
   it('Tab がダイアログの外へ抜けない', async () => {
     const user = userEvent.setup();
     setup(true);

@@ -4,6 +4,7 @@ import { Alert } from '@harness-hub/ui';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { PublicShell } from '../components/shell/public-shell.js';
 import { SESSION_COOKIE_NAME, systemAuthClock, verifySessionToken } from '../lib/auth/index.js';
 import { DEFAULT_POST_SIGNIN_LANDING } from '../lib/routing/post-signin-landing.js';
 
@@ -26,14 +27,16 @@ export default async function HomePage() {
   }
 
   return (
-    <section aria-labelledby="status-heading">
-      <h1 id="status-heading">稼働状況</h1>
-      <Alert
-        tone="success"
-        title="Hub の実行基盤が起動しています"
-        description="依存先を含む死活状態は /health で確認できます。"
-        action={<a href="/health">/health を開く</a>}
-      />
-    </section>
+    <PublicShell>
+      <section aria-labelledby="status-heading">
+        <h1 id="status-heading">稼働状況</h1>
+        <Alert
+          tone="success"
+          title="Hub の実行基盤が起動しています"
+          description="依存先を含む死活状態は /health で確認できます。"
+          action={<a href="/health">/health を開く</a>}
+        />
+      </section>
+    </PublicShell>
   );
 }

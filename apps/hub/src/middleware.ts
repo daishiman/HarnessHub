@@ -11,6 +11,7 @@ import {
 // 認可層は公開入口 (src/middleware/index.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
 import { createSessionAuthProvider, systemAuthClock } from './lib/auth/index.js';
 import { readBearerToken, resolveAccessTokenPrincipal } from './lib/authz/index.js';
+import { PATHNAME_HEADER } from './lib/routing/pathname-header.js';
 import { authorize, TENANT_HEADER, WORKSPACE_HEADER } from './middleware/index.js';
 import { createAuthAdapter, type Principal, toAuthRequestContext } from './shared/auth/index.js';
 
@@ -150,7 +151,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: decision.reason }, { status: decision.status });
   }
 
-  return NextResponse.next();
+  // 共通シェル (サイドバー / ボトムタブ) が「いま自分がどの画面にいるか」を
+  // server component のまま知るための唯一の手段。layout は pathname を受け取れず、
+  // usePathname() を使うと nav 全体が client bundle へ移ってしまう。
+  // 認可判定はすでに終わっているので、ここでの header 追加は判定へ影響しない。
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(PATHNAME_HEADER, request.nextUrl.pathname);
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

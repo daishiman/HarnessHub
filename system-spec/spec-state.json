@@ -124,7 +124,7 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-201",
+        "qa_ref": "qa-206",
         "serves_goals": [
           "G1",
           "G2",
@@ -279,7 +279,7 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-203",
+        "qa_ref": "qa-205",
         "serves_goals": [
           "G1",
           "G2",
@@ -1458,6 +1458,22 @@
       "id": "qa-204",
       "question": "qa-202 の component catalog 分類名が実装の CatalogGroup と一致せず、responsive 計測と VRT 撮影の viewport も区別が曖昧だった。qa-202 と既存 testing-qa/web 契約を維持しつつ、実装と一致する検査 contract へどう訂正するか。",
       "answer": "[出所] 本 entry は appr-037 の技術的事実委任下で、apps/hub/tests/browser の実装と CI 配線を実測して訂正する。利用者の好みを新たに決定するものではない。qa-202 の逐語は改変せず、本 entry を testing-qa/web の正本とする。\n\nqa-202 の Vitest Browser Mode + Playwright + Chromium、OS 単位 baseline、fail-closed、画面状態 gate、jsdom gate 維持は全面維持する。catalog の実装上の分類名は layout / form / feedback / data / chart / navigation / overlay の 7 種であり、全公開描画部品をいずれか 1 entry として登録する。全 7 group を light / dark で撮るため baseline は 14 枚となり、VRT 固定 viewport は 1024x768 とする。\n\nresponsive regression の viewport は VRT と別契約で、mobile=360x800、tablet=768x1024、desktop=1280x800 とする。ここでは document overflow、table の局所 scroll、md=768 の列切替、comfortable 44px / compact 36px を数値検査する。CI 起動条件は workflow_dispatch または PR の ui-visual label とし、失敗時 actual / diff artifact を保存する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-205",
+      "question": "qa-203 とそれ以前の frontend/web 契約を維持したまま、認証後の全 route を包む HubShell、session role による navigation 投影、packages/ui と apps/hub の所有境界をどう確定するか。",
+      "answer": "[出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 が委任するコードから検証できる技術的事実の範囲で確定する。qa-203 とそれ以前の frontend/web 契約は全面維持する。\n\n認証後の (dashboard) / (workspace) route は apps/hub の server component HubShell が共通に包み、main landmark を一つだけ持つ。sidebar / header / footer / mobile tab、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet の視覚・操作 contract は packages/ui が所有し、apps/hub は route、tenant/workspace scope、session identity を結線する consumer とする。公開 route は PublicShell を使い、root layout 自体は main landmark を追加しない。\n\n現在地は middleware が認証認可を通過した内部 request に x-hh-pathname を付与し、server layout が読む。外部 API contract や client bundle を増やす用途には使わない。navigation は実在する route だけを表示し、signed session の active claim から得た SessionRole を使って deny-by-default で投影する。member と role 未確定は account settings のみ、workspace-admin は users / coefficients、provider-admin はそれらに加えて認証設定を表示する。API 認可を最終決定者とする契約は変えず、UI は権限外の導線を DOM に出さない。role token は provider-admin / workspace-admin / member の正規値だけを受け、表示名へ変換する。\n\n公開 API、DB schema、session claim schema、ACTION_RULES、Cloudflare deploy unit は変更しない。PrimaryNav の独自実装は HubShell の route projection へ置き換え、route ごとの shell 再定義を禁止する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-206",
+      "question": "qa-201 とそれ以前の ui-ux/web 契約を維持したまま、desktop/mobile shell、その他 navigation、page surface、overlay の操作規則を実装と一致する形でどう確定するか。",
+      "answer": "[出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。\n\nmd=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。\n\n各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。\n\n既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。",
       "source": {
         "kind": "user-dialogue"
       }
@@ -2943,6 +2959,18 @@
       "platform": "web",
       "reason": "qa-202 の catalog 分類名と responsive/VRT viewport 境界を実装へ一致させる qa-204 訂正。qa-202 の品質方針と既存契約は全面維持する",
       "from": "確定"
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "認証後全 route の HubShell、SessionRole に基づく deny-by-default navigation、middleware pathname header、packages/ui と apps/hub の所有境界を qa-205 として追加確定するため。qa-203 以前の契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "desktop/mobile shell、navigation disclosure と modal BottomSheet の区別、page surface、破壊操作と overlay accessibility を qa-206 として実装に一致させるため。qa-201 以前の契約は全面維持する",
+      "from": "確定"
     }
   ],
   "category_aggregate": {
@@ -4192,7 +4220,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

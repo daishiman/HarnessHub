@@ -6,6 +6,7 @@
  * `withAuthz` 側に閉じ、画面は API の応答 (403) をそのまま扱う。
  */
 
+import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
@@ -24,16 +25,24 @@ export default async function CoefficientsSettingsPage({ searchParams }: PagePro
   const tenantId = tenantIdFromQuery(query, scope);
 
   return (
-    <section aria-labelledby="coefficients-settings-heading">
-      <h1 id="coefficients-settings-heading">見積係数設定</h1>
-      <p>ヒアリングシートの工数見積りに使う、テナント共通の係数を設定します。</p>
+    <>
+      <ScreenHeader
+        id="coefficients-settings-heading"
+        title="見積係数設定"
+        description="ヒアリングシートの工数見積りに使う、テナント共通の係数を設定します。"
+        breadcrumbs={[{ href: '/settings/account', label: '設定' }, { label: '見積係数設定' }]}
+        breadcrumbsLabel="現在地"
+      />
       {tenantId === '' ? (
-        <p>
-          テナントを特定できませんでした。ログインし直すか、URL に <code>?tenant=</code> を付けてアクセスしてください。
-        </p>
+        <Panel>
+          <p style={{ margin: 0 }}>
+            テナントを特定できませんでした。ログインし直すか、URL に <code>?tenant=</code>{' '}
+            を付けてアクセスしてください。
+          </p>
+        </Panel>
       ) : (
         <CoefficientsSettings tenantId={tenantId} />
       )}
-    </section>
+    </>
   );
 }

@@ -15,12 +15,15 @@
  */
 import { lazy, Suspense } from 'react';
 
-const ErrorScreen = lazy(() => import('../components/error-screen.js').then((m) => ({ default: m.ErrorScreen })));
+// 骨格ごと差し替える版を読む。この境界は route group の外 (公開画面) 専用
+const PublicErrorScreen = lazy(() =>
+  import('../components/shell/public-error-screen.js').then((m) => ({ default: m.PublicErrorScreen })),
+);
 
 export default function RouteError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <Suspense fallback={null}>
-      <ErrorScreen error={error} reset={reset} />
+      <PublicErrorScreen error={error} reset={reset} />
     </Suspense>
   );
 }
