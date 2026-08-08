@@ -12,11 +12,11 @@ iteration: null
 title: "post-deploy smoke が配信伝播完了前に走る窓を塞ぐ"
 owners: ["daishiman"]
 created_at: "2026-08-08T00:00:00Z"
-updated_at: "2026-08-07T22:19:22Z"
+updated_at: "2026-08-08T06:00:11.313290Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-build-identity-deploy-freshness","spec-post-signin-landing-observability"]
-resource_scope: [".github/workflows/ci.yml","apps/hub/tests/ci/production-auth-gates.test.ts","docs/infrastructure-spec.md","specs/harness-hub-post-signin-landing-observability-addendum.md"]
+resource_scope: [".github/workflows/ci.yml","scripts/ci/assert-served-version.mjs","apps/hub/tests/ci/production-auth-gates.test.ts","apps/hub/tests/ci/smoke-version-recheck.test.ts","docs/infrastructure-spec.md","specs/harness-hub-post-signin-landing-observability-addendum.md"]
 purpose: "配信版一致ゲート通過後も残る colo 間伝播ムラの窓を塞ぎ、smoke が旧版を検査して偽の赤を出すことを防ぐ。"
 goal: "伝播が遅い状況で smoke が旧版へ当たる前に fail-closed で停止し、正常時は deploy 所要時間を実用範囲に保つ。"
 scope_in: ["version_gate の連続一致要求または smoke 直前の version 再確認","追加検査が fail-open でないことの契約テスト","infrastructure-spec / addendum への反映"]
@@ -93,9 +93,14 @@ implementation_readiness: {"checked_at":"2026-08-08T00:00:00Z","missing_sections
 - 応答の `cf-ray` から当たった colo を記録し、何拠点を観測したうえで通したかを後から検証できるようにした。
 - 通過判定の根拠は `/health` の JSON だけに置いた。`wrangler deployments list` の出力は表示仕様が変わりうるため、パース失敗が空文字になって素通りする (fail-open) 危険があり、診断表示に限定した。
 
-### 採らなかった案と理由
+### 一度は採らなかった案と、その撤回 (2026-08-08)
 
-**(2) smoke 実行直前の version 再確認**は採らなかった。`version_gate` 自体が smoke 群の直前に位置しており、連続一致がその役割を果たすため。smoke の実行中 (数分) に配信が旧版へ戻る事象は観測されていない。もし観測されたらこの判断を見直す。
+当初 **(2) smoke 実行直前の version 再確認**は「`version_gate` 自体が smoke 群の直前に位置しており、連続一致がその役割を果たす」として採らなかった。**この判断は撤回した。** 理由は 2 つとも前提が成り立っていなかったこと。
+
+1. `version_gate` は smoke の直前ではない。実際の step 順は `version_gate` → **稼働ビルド鮮度検査** → 最初の smoke で、間に検査が 1 つ挟まる。鮮度検査はしきい値まで再試行しうるため、ゲート通過から smoke 開始まで無視できない時間差がある。
+2. run 31224919542 の実測で、切替が **同一 colo 内でも段階的に進む**ことが判明した。粒度がそこまで細かいなら、連続 3 回一致が保証するのは *その観測時点で* 安定していたことだけで、数十秒後まで保たれることではない。
+
+よって (2) を追加実装した。詳細は下記。
 
 ### 検証
 
@@ -126,4 +131,40 @@ implementation_readiness: {"checked_at":"2026-08-08T00:00:00Z","missing_sections
 
 ### 残る限界
 
-連続一致は伝播ムラに対する**確率的な**緩和であり、確定的な保証ではない。どの経路に当たるかは呼び出し側で制御できないため、「3 回とも先に切替わった側に当たった」場合は依然として通過しうる。上の実測が示すとおり切替は同一 colo 内でも段階的なので、この可能性は colo 単位で考えるより高いと見るべきである。`cf-ray` の記録は、この限界が実際に起きたかを事後に判別するために入れてある。観測されたら次の手 (拠点を分散させる観測、または Cloudflare API による deployment 状態の直接確認) を検討する。
+連続一致は伝播ムラに対する**確率的な**緩和であり、確定的な保証ではない (この限界は候補 (2) を足した後も変わらない)。どの経路に当たるかは呼び出し側で制御できないため、「3 回とも先に切替わった側に当たった」場合は依然として通過しうる。上の実測が示すとおり切替は同一 colo 内でも段階的なので、この可能性は colo 単位で考えるより高いと見るべきである。`cf-ray` の記録は、この限界が実際に起きたかを事後に判別するために入れてある。観測されたら次の手 (拠点を分散させる観測、または Cloudflare API による deployment 状態の直接確認) を検討する。
+
+## 追加実装 — 候補 (2) smoke 直前の配信版再確認 (2026-08-08)
+
+`scripts/ci/assert-served-version.mjs` を新設し、`ci.yml` の鮮度検査と最初の smoke (OIDC) の間へ step `smoke_version_recheck` として結線した。
+
+- 連続 3 回一致 (間隔 2 秒・上限 60 秒) に達したときだけ exit 0。それ以外の経路 (期限切れ / 通信失敗 / HTTP エラー / JSON 不正 / `version` 欠落 / 想定外の例外) はすべて exit 1 とし、fail-open の枝を残さない。
+- 応答が取れなかった試行は**不一致として数え**、連続計数を 0 へ戻す。「取得できなかった」を「変化なし」と読み替えない。
+- 一度一致してから崩れた場合を `flapped=true` として区別する。これが立っていれば「まだ届いていない」ではなく「拠点内で新旧が混ざっている」= 本 issue が塞ぐ状態そのもの、と事後に判別できる。
+- 観測ごとの `cf-ray` 由来 colo・served・一致可否を `--json` の証跡へ残す。
+- **この検査の失敗では rollback しない。** smoke が 1 件も走っていないため「新 version が壊れている」証拠が無く (V7-d / 鮮度検査と同型)、さらに「配信版が安定していない」状態なので rollback を打ってもどの版へ戻るか確定しない。`ci.yml` の rollback step に抑止分岐を追加した。
+
+### 検証
+
+`apps/hub/tests/ci/smoke-version-recheck.test.ts` (8 件) を新設。実 HTTP サーバ (`node:http`) を立て、script を実プロセスとして起動して exit code で固定する。無応答の `/health` も全体期限内で request を中断して失敗することを含める。
+
+| ケース | 期待 | 結果 |
+|---|---|---|
+| 安定して一致 (正常時) | 通過 | exit 0・`streak=3/3` `flapped=false` |
+| 新旧が混ざる (伝播ムラ) | **通過させない** | exit 1・`flapped=true` |
+| 旧版のまま期限切れ | 失敗 (待っただけで通さない) | exit 1 |
+| `/health` が 5xx | 「変化なし」と読み替えない | exit 1 |
+| `version` フィールド欠落 | 一致とみなさない | exit 1 |
+| 接続不能 | success へ倒れない | exit 1・`colo=unreachable` |
+| JSON 証跡 | 判定根拠が残る | `status=pass`・colo 記録あり |
+
+**テスト自体の効き目も裏取りした。** 合否判定 `if (!passed)` を `if (false)` へ差し替える変異を入れると、正常系と JSON 証跡を除く 5 件が赤へ反転した。テストが「workflow に何が書いてあるか」ではなく「実際に落ちるか」を見ていることの確認である。
+
+記述面の契約は `apps/hub/tests/ci/production-auth-gates.test.ts` に 2 件追加した (step 順序が 鮮度検査 < 再確認 < 最初の smoke であること、rollback 抑止分岐が存在すること)。既存分とあわせ 3 ファイル 26 件すべて緑。
+
+### 受入条件との対応
+
+| 受入条件 | 対応 |
+|---|---|
+| 伝播が遅い状況で smoke より前に赤で停止することを再現できる | 「新旧が混ざる」ケースを実 HTTP で再現し exit 1 を固定 |
+| 追加した待機・再試行が fail-open でないことがテストで固定されている | 失敗 5 経路すべてを exit code で固定・変異テストで反転を確認 |
+| 正常時の deploy 所要時間の増分が実用範囲 | 正常時は 3 回連続一致で即通過するため間隔 2 秒 × 2 = **約 4 秒**。上限 60 秒は異常時のみ |

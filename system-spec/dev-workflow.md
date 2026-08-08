@@ -58,6 +58,7 @@ serves_goals: [G1, G4, G5]
 - 親追補索引: [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8
 - feature: `feat-build-identity-deploy-freshness` / Beads `HarnessHub-hf9y`
 - 受領書: `docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`
+- 伝播安定性の実装追補（2026-08-08）: `HarnessHub-u9zq` は V7 の既確定要求を再解釈せず、`version_gate`・鮮度検査の後、最初の smoke の直前に deploy 済み version と `/health.version` の連続一致を確認する。これは deploy 成功・HEAD 鮮度とは別の colo 間伝播ムラを fail-closed にする実装上の安全境界であり、新規 qa_log を要しない。
 
 ### qa-140 (対応セル: desktop-windows)
 

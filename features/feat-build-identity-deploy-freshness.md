@@ -122,3 +122,9 @@ P01〜P13 の成果物を実装し、契約・挙動・CI 配線の品質ゲー�
 | dev-graph node | `feat-build-identity-deploy-freshness` / `SYS-BUILD-IDENTITY-P01` 〜 `P13` |
 
 **残課題:** 本番 deploy 後の `/health.commit` 実測と鮮度検査 step の緑確認（`release-record.md` に手順あり。未取得を確認済みと書かない）。
+
+## 11. 伝播安定性 follow-up (2026-08-08)
+
+`HarnessHub-u9zq` は V7 の既確定要件を変更せず、実装後に見つかった **smoke が旧 colo（エッジ拠点）の版へ当たる時間帯**を塞ぐ follow-up である。`version_gate` は新版の到達、鮮度検査は既定 branch からの長期乖離を確認するが、どちらも通過後の短い伝播ムラは別に確認する必要がある。
+
+CI は最初の smoke の直前に deployment version と `/health.version` の連続一致を要求する。不一致、通信失敗、version 欠落は smoke を走らせず失敗にし、smoke 未実行なので rollback もしない。実装・設計根拠・検証は `specs/harness-hub-build-identity-deploy-freshness-addendum.md`、`architecture/harness-hub-infrastructure.md`、`docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md` を正本とする。

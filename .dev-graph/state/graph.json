@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1413,
+  "graph_revision": 1416,
   "nodes": [
     {
       "acceptance": [
@@ -51090,7 +51090,9 @@
       ],
       "resource_scope": [
         ".github/workflows/ci.yml",
+        "scripts/ci/assert-served-version.mjs",
         "apps/hub/tests/ci/production-auth-gates.test.ts",
+        "apps/hub/tests/ci/smoke-version-recheck.test.ts",
         "docs/infrastructure-spec.md",
         "specs/harness-hub-post-signin-landing-observability-addendum.md"
       ],
@@ -51126,7 +51128,7 @@
       "template_version": "1.0.0",
       "title": "post-deploy smoke が配信伝播完了前に走る窓を塞ぐ",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T22:19:22Z"
+      "updated_at": "2026-08-08T06:00:11.313290Z"
     },
     {
       "acceptance": [
@@ -51240,6 +51242,120 @@
       "title": "稼働ビルドの素性と反映鮮度 — 実装確定追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-08T11:00:00Z"
+    },
+    {
+      "acceptance": [
+        "3 feature の未カバー項目が本番 smoke として実行され、失敗時に fail-closed で deploy job を赤にできる",
+        "新しい secret を要求せず、使い捨て tenant が検査後に自動削除される",
+        "smoke:publish-production を結線するか外すかが決まり記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-p0lr",
+        "linked_at": "2026-08-08T06:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/production-smoke-coverage-gaps-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "3 つの P13 task に共通する根本原因 (smoke 未実装) を、各 feature package から分離して追跡する issue。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "890fca92b19c4bec3739128692d6d1fe4742712767e972969fb6bd331598fa4d",
+        "evaluator": "CI 実測 (hub-ci run 31240466397) と apps/hub/scripts の smoke 一覧突合",
+        "evidence_ref": "docs/features/feat-feedback-loop/release-notes.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T00:00:00Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/production-smoke-coverage-gaps-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "post-signin scope 判定 6 系統・open redirect フォールバック・Feedback 3 項目・Docs CMS round-trip を本番 smoke として自動化し、ci.yml で毎デプロイ実行する。",
+      "graph_node_id": "issue-production-smoke-coverage-gaps-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本番へ出ている 3 feature が『測る手段が無い』ために P13 を完了できない状態を解消する。",
+      "related_nodes": [
+        "spec-post-signin-landing-observability"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts",
+        "apps/hub/package.json"
+      ],
+      "scope_in": [
+        "本番 smoke script の新規実装",
+        "ci.yml smoke 群への結線",
+        "smoke:publish-production が未結線である件の判断と記録"
+      ],
+      "scope_out": [
+        "認可判定ロジックそのものの変更",
+        "新しい secret の追加",
+        "rollback 方針の再設計"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ci",
+        "smoke",
+        "production",
+        "fail-closed",
+        "test-coverage"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T06:05:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
