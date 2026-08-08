@@ -1,0 +1,6 @@
+{
+  "skill": "run-dev-graph-node",
+  "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ",
+  "invocation": "--repo-root <fixture-repo> --kind document --title \"C01 idempotence live trial seed document\"",
+  "scope": "single normal artifact (document). package registration path not exercised in this run."
+}

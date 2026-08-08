@@ -1,0 +1,83 @@
+{
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "required_observation": "the run leaves graph, config, content and GitHub state unchanged",
+  "measurement_method": "skill 実行 前 (eval-log/pre-hashes.txt) と 後 (eval-log/post-hashes.txt) の SHA-256 実測値を並置",
+  "digest_comparison": [
+    {
+      "path": ".dev-graph/state/graph.json",
+      "sha256_before": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+      "sha256_after": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+      "unchanged": true
+    },
+    {
+      "path": ".dev-graph/config.json",
+      "sha256_before": "08b32a7da2a870769228f488d416879d46929712766b6ec437205fa894d7c922",
+      "sha256_after": "08b32a7da2a870769228f488d416879d46929712766b6ec437205fa894d7c922",
+      "unchanged": true
+    },
+    {
+      "path": "tasks/lt-task-001.md",
+      "sha256_before": "338775a2ab80e373a5dd5a2cb3cfb7769bef84d8ad807077397cee2345a63351",
+      "sha256_after": "338775a2ab80e373a5dd5a2cb3cfb7769bef84d8ad807077397cee2345a63351",
+      "unchanged": true
+    },
+    {
+      "path": "tasks/lt-task-002.md",
+      "sha256_before": "1eaf9844eb79a5431e568750665c250c6c2ef707c5cf54322c88c7a71899278a",
+      "sha256_after": "1eaf9844eb79a5431e568750665c250c6c2ef707c5cf54322c88c7a71899278a",
+      "unchanged": true
+    }
+  ],
+  "all_digests_unchanged": true,
+  "status_graph_internal_digest_guard": {
+    "graph_sha256_before": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+    "graph_sha256_after": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+    "authority_sha256_before": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+    "authority_sha256_after": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+    "read_only_flag": true,
+    "matches_external_measurement": true,
+    "note": "status-graph.py 自身が検索前後で比較した digest。外部実測 (shasum) と一致する。"
+  },
+  "git_status_porcelain": [
+    "?? eval-log/"
+  ],
+  "entries_outside_eval_log": [],
+  "worktree_clean_outside_eval_log": true,
+  "external_commands": {
+    "gh_invocations": 0,
+    "github_api_invocations": 0,
+    "beads_bd_invocations": 0,
+    "writer_sync_render_script_invocations": 0,
+    "commands_actually_executed": [
+      "plugins/dev-graph/scripts/resolve-repo-context.py --mode read",
+      "plugins/dev-graph/scripts/validate-graph-schema.py",
+      "plugins/dev-graph/scripts/status-graph.py (x4)",
+      "shasum -a 256",
+      "git status --porcelain (計測用の read-only 参照のみ)"
+    ],
+    "config_corroboration": {
+      "github.enabled": false,
+      "execution_tracker.beads.server_mode": false,
+      "execution_tracker.beads.github_mirror": "none",
+      "note": "fixture config も GitHub 無効・Beads server 無効であり、外部照会経路自体が閉じている。"
+    }
+  },
+  "writes_performed": {
+    "scope": "eval-log/ 配下のみ",
+    "files": [
+      "c11-validate.json",
+      "post-hashes.txt",
+      "pre-hashes.txt",
+      "query-a-raw.json",
+      "query-b-raw.json",
+      "query-c-raw.json",
+      "query-d-raw.json",
+      "readiness-comparison.json",
+      "run-dev-graph-status-execution.json",
+      "run-dev-graph-status-goal-spec.json",
+      "run-dev-graph-status-intermediate.jsonl",
+      "status-report.json"
+    ]
+  },
+  "verdict": "PASS"
+}
