@@ -83,4 +83,8 @@ quality_constraints 8 件は 8 件とも PASS([final-review-notes.md](final-revi
 
 ## Rollback
 
-いずれかのスモークテストが失敗した場合、cloudflare-workers/hub を直前バージョンへロールバックする。migration が適用済みの場合は down migration を実行してから、原因調査を P05(実装)/P08(migration)へ差し戻す。
+いずれかのスモークテストが失敗した場合、cloudflare-workers/hub を直前バージョンへロールバックする。migration は expand-only の既定契約に従い自動 down せず、DB を前進させたまま原因調査を P05(実装)/P08(migration)へ差し戻す。
+
+## 2026-08-08 production coverage smoke 準備
+
+`HarnessHub-p0lr` の F1〜F5 で投稿、AI queue pull/complete、応答書戻し、状態遷移を同じ使い捨て tenant で検査できるようにした。local focused test / typecheck は PASS。provider-admin 越境の edge/route 不一致 (`HarnessHub-stmx`) と production run は残課題であり、P13 は未完了のままとする。

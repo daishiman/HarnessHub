@@ -394,7 +394,7 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-204",
+        "qa_ref": "qa-205",
         "serves_goals": [
           "G1",
           "G4",
@@ -1458,6 +1458,14 @@
       "id": "qa-204",
       "question": "qa-202 の component catalog 分類名が実装の CatalogGroup と一致せず、responsive 計測と VRT 撮影の viewport も区別が曖昧だった。qa-202 と既存 testing-qa/web 契約を維持しつつ、実装と一致する検査 contract へどう訂正するか。",
       "answer": "[出所] 本 entry は appr-037 の技術的事実委任下で、apps/hub/tests/browser の実装と CI 配線を実測して訂正する。利用者の好みを新たに決定するものではない。qa-202 の逐語は改変せず、本 entry を testing-qa/web の正本とする。\n\nqa-202 の Vitest Browser Mode + Playwright + Chromium、OS 単位 baseline、fail-closed、画面状態 gate、jsdom gate 維持は全面維持する。catalog の実装上の分類名は layout / form / feedback / data / chart / navigation / overlay の 7 種であり、全公開描画部品をいずれか 1 entry として登録する。全 7 group を light / dark で撮るため baseline は 14 枚となり、VRT 固定 viewport は 1024x768 とする。\n\nresponsive regression の viewport は VRT と別契約で、mobile=360x800、tablet=768x1024、desktop=1280x800 とする。ここでは document overflow、table の局所 scroll、md=768 の列切替、comfortable 44px / compact 36px を数値検査する。CI 起動条件は workflow_dispatch または PR の ui-visual label とし、失敗時 actual / diff artifact を保存する。",
+      "source": {
+        "kind": "user-dialogue"
+      }
+    },
+    {
+      "id": "qa-205",
+      "question": "既存 testing-qa/web 正本 qa-204 と、それ以前の確定契約を維持したまま、post-signin scope・Feedback Loop・Docs CMS の本番未計測領域を毎デプロイ検査する契約をどう確定するか。",
+      "answer": "ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。\n\n【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。\n\n【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。\n\n【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。\n\n【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。\n\n【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。\n\n【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。",
       "source": {
         "kind": "user-dialogue"
       }
@@ -2942,6 +2950,12 @@
       "category": "testing-qa",
       "platform": "web",
       "reason": "qa-202 の catalog 分類名と responsive/VRT viewport 境界を実装へ一致させる qa-204 訂正。qa-202 の品質方針と既存契約は全面維持する",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "HarnessHub-p0lr で本番未計測 3 領域の CI smoke と rollback 証拠契約を追加確定するため",
       "from": "確定"
     }
   ],
