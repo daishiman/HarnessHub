@@ -54,3 +54,4 @@
 {"requested_at": "2026-08-04T08:04:54.772217+00:00", "reason": "評価対象 artifact の変更を検出 (1 件): plugins/dev-graph/skills/run-dev-graph-render/SKILL.md", "changed_skills": ["plugins/dev-graph/skills/run-dev-graph-render/SKILL.md"], "trigger": "Stop"}
 {"requested_at": "2026-08-07T23:04:52.178148+00:00", "reason": "評価対象 artifact の変更を検出 (1 件): plugins/harness-creator/skills/run-skill-live-trial/SKILL.md", "changed_skills": ["plugins/harness-creator/skills/run-skill-live-trial/SKILL.md"], "trigger": "Stop"}
 {"requested_at": "2026-08-07T23:24:06.914467+00:00", "reason": "git 変更ファイルが 22 件 (閾値 20)", "changed_skills": [], "trigger": "Stop"}
+{"requested_at": "2026-08-08T06:52:07.831178+00:00", "reason": "評価対象 artifact の変更を検出 (1 件): plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md", "changed_skills": ["plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md"], "trigger": "Stop"}

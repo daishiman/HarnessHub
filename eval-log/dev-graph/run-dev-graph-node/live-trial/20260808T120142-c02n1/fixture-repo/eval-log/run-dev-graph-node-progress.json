@@ -1,0 +1,42 @@
+{
+  "skill": "run-dev-graph-node",
+  "loop": 2,
+  "updated_at": "2026-08-08T03:12:36Z",
+  "checklist": [
+    {
+      "item": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write receipt: repo_root=<caller-repository>, repository_id=local:sha256:02ea3e79..., root_trust_evidence.git_toplevel_verified=true; 全 read/write path は repository-relative"
+    },
+    {
+      "item": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+      "status": "PASS",
+      "evidence": "5 件とも classification_confidence=0.99、第2候補 0.15-0.20、margin 0.79-0.84 >= 0.15 のため decision_source=automatic (user confirmation 不要)"
+    },
+    {
+      "item": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py valid=true / violations=0 (登録後・連続更新後の2回)。missing_required_headings と placeholder_sections が 5 kind とも 0 件。frontmatter の artifact_kind・file_path が graph node と 5 件とも一致"
+    },
+    {
+      "item": "package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である",
+      "status": "NOT_APPLICABLE",
+      "evidence": "本 run は通常 5 artifact の add のみで exact-13 package 登録を含まない (register-package は未実行)"
+    },
+    {
+      "item": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+      "status": "PASS",
+      "evidence": "receipt graph_revision 0->1->2->3->4->5 (add 5件)、5->6 (連続更新)。commit 後 graph.json graph_revision=6、nodes 5 件が registered id と一致。同一入力の再実行は operation=noop / write_count=0"
+    },
+    {
+      "item": "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる",
+      "status": "PASS",
+      "evidence": "doc ノード初回 apply が placeholder_only_section (本文) で fail-closed し write_count=0・docs/ 未生成・graph_revision=4 のまま before-image へ収束。WAL/pending 残存なし (.dev-graph/state は graph.json と lock のみ)"
+    }
+  ],
+  "observations": {
+    "1": "issues/iss-c02-mixed-routing.md, tasks/task-c02-verify-mixed-routing.md, specs/spec-c02-mixed-batch-contract.md, architecture/arch-c02-writer-boundary.md, docs/doc-c02-mixed-batch-runbook.md の 5 件が canonical kind path へ routing 済み",
+    "2": "iss-c02-mixed-routing を patch 更新 (graph_revision 5->6, body_source=preserved) 後も frontmatter artifact_kind=issue / file_path=issues/iss-c02-mixed-routing.md が graph node と一致",
+    "3": "features/ 実ファイル 0 件、graph 上 feature ノード 0 件 (C14 macro contract 外の feature 生成なし)"
+  }
+}

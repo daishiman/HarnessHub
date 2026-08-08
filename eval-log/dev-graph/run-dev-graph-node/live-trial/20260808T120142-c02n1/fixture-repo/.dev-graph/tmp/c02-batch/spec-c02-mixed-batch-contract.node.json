@@ -1,0 +1,98 @@
+{
+  "node": {
+    "graph_node_id": "spec-c02-mixed-batch-contract",
+    "artifact_kind": "specification",
+    "artifact_subtypes": [],
+    "title": "混在バッチ登録の入出力契約",
+    "project_id": "c02fix",
+    "domain": "dev-workflow",
+    "status": "draft",
+    "owners": [
+      "dev-graph-harness"
+    ],
+    "tags": [
+      "live-trial",
+      "c02-out1",
+      "specification"
+    ],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-08T03:10:03Z",
+    "updated_at": "2026-08-08T03:10:03Z",
+    "depends_on": [],
+    "related_nodes": [
+      "iss-c02-mixed-routing"
+    ],
+    "resource_scope": [
+      "specs/spec-c02-mixed-batch-contract.md"
+    ],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "specs/spec-c02-mixed-batch-contract.md",
+    "template_id": "specification",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": "mixed-artifacts.json",
+      "source_version": null,
+      "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+      "imported_at": "2026-08-08T03:10:03Z"
+    },
+    "classification_confidence": 0.99,
+    "classification_reason": "入力契約/出力契約を定義する規範文書であるため specification へ写像した",
+    "classification_candidates": [
+      {
+        "artifact_kind": "specification",
+        "confidence": 0.99,
+        "candidate_path": "specs/spec-c02-mixed-batch-contract.md"
+      },
+      {
+        "artifact_kind": "document",
+        "confidence": 0.15,
+        "candidate_path": "docs/spec-c02-mixed-batch-contract.md"
+      }
+    ],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "complete",
+      "missing_sections": [],
+      "checked_at": "2026-08-08T03:10:03Z"
+    }
+  }
+}

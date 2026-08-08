@@ -1,0 +1,137 @@
+{
+  "config_inspection": {
+    "absolute_paths": [],
+    "github_enabled": false,
+    "github_node_id_hits": [],
+    "github_section_keys": [
+      "completion_policy",
+      "enabled",
+      "issue_repository",
+      "projects"
+    ],
+    "host_specific_paths": [],
+    "stored_paths_policy": "repository-relative",
+    "string_values_scanned": 56,
+    "token_prefix_hits": []
+  },
+  "content_roots": {
+    "architecture": "architecture",
+    "documents": "docs",
+    "features": "features",
+    "issues": "issues",
+    "specifications": "specs",
+    "system_spec": "system-spec",
+    "tasks": "tasks"
+  },
+  "created": [],
+  "hook_source": {
+    "checks": {
+      "caller_dev_graph_registrations": 0,
+      "caller_project_plugin_link_present": false,
+      "caller_project_settings_local_present": false,
+      "caller_project_settings_present": false,
+      "declared_events": [
+        "PostToolUse",
+        "PreToolUse",
+        "SessionStart",
+        "TaskCompleted"
+      ],
+      "manifest_declares_hooks": true,
+      "missing_hook_scripts": [],
+      "plugin_hooks_json_present": true,
+      "plugin_manifest_present": true,
+      "required_events_covered": true,
+      "session_enabled_dev_graph_plugins": {}
+    },
+    "diagnostics": [
+      "hook_source=plugin accepted: plugin manifest declares ./hooks/hooks.json and all 4 C10/C25 events (PostToolUse, PreToolUse, SessionStart, TaskCompleted) resolve to existing scripts under the resolved plugin_source; command strings reference only ${CLAUDE_PLUGIN_ROOT}/${CLAUDE_PROJECT_DIR}.",
+      "no project fallback written: caller repo has no .claude/settings.json and no dev-graph hook registration, so effective wiring stays on the single plugin path (duplicate registrations=0, existing settings key/hash changes=0).",
+      "advisory (not a rejection): dev-graph is not listed in the user's enabledPlugins, so a Claude session rooted at this caller repo would not load the plugin hooks until the plugin is installed/enabled or the operator re-runs init with --hook-source project-fallback (which requires the plain symlink .claude/dev-graph-plugin)."
+    ],
+    "effective_hook_path_count": 1,
+    "requested": "plugin",
+    "resolution": "accepted"
+  },
+  "local_state": {
+    "cache": ".dev-graph/cache",
+    "graph": ".dev-graph/state/graph.json",
+    "locks": ".dev-graph/locks"
+  },
+  "migration_preview": [
+    {
+      "installed_bytes": 664,
+      "installed_sha256": "48986cdca0787b51248d362e9c28db1360eb839c5a5bc89afb7eae4295a4ed99",
+      "plugin_bytes": 483,
+      "plugin_sha256": "6c4311bad222591e47f7d279c8f533a8b8ab6e75fc4b10705b3447ea4186d59c",
+      "reason": "user_edited_not_overwritten",
+      "template": "document.md"
+    }
+  ],
+  "pass": 2,
+  "planned_change_count": 0,
+  "planned_changes": {
+    "config_changed": false,
+    "config_write": "unchanged",
+    "content_roots_created": 0,
+    "graph_store_changed": false,
+    "graph_store_write": "preserved_existing",
+    "local_state_dirs_created": 0,
+    "settings_json_writes": 0,
+    "templates_created": 0
+  },
+  "preserved": [
+    "README.md",
+    "api-contract.md",
+    "architecture-backend.md",
+    "architecture-data.md",
+    "architecture-frontend.md",
+    "architecture-infrastructure.md",
+    "architecture-security.md",
+    "architecture.md",
+    "claude-settings.example.json",
+    "common-frontmatter.md",
+    "feature.md",
+    "issue.md",
+    "repo-config.example.json",
+    "specification.md",
+    "system-phase-spec.md",
+    "system-plan-contract.json",
+    "system-task-spec.md",
+    "task-graph-node.md",
+    "task.md",
+    "template-contract.json"
+  ],
+  "repository_id": "local:sha256:d47b8566486476522cbd54c68c6565416e04e5aba23105ff69aac4300e70302a",
+  "schema_result": {
+    "validate-graph-schema.py": {
+      "exit_code": 0,
+      "stdout": {
+        "implementation_readiness": "complete",
+        "missing_sections": [],
+        "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/plugins/dev-graph/schemas/graph-node.schema.json",
+        "valid": true,
+        "violations": []
+      }
+    },
+    "validate-repo-config.py": {
+      "exit_code": 0,
+      "stdout": {
+        "config": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T113753-yq4k1/fixture-repo/.dev-graph/config.json",
+        "missing_sections": [],
+        "repository_id": "local:sha256:d47b8566486476522cbd54c68c6565416e04e5aba23105ff69aac4300e70302a",
+        "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/plugins/dev-graph/schemas/repo-config.schema.json",
+        "valid": true,
+        "violations": []
+      }
+    }
+  },
+  "skill": "run-dev-graph-init",
+  "template_counts": {
+    "contract_enumerated": 16,
+    "created": 0,
+    "migration_preview": 1,
+    "missing_in_plugin": 0,
+    "preserved_identical": 20,
+    "scaffolded_total": 21
+  }
+}

@@ -225,12 +225,27 @@ def task_node(node_id: str, title: str, slug: str, depends_on: list[str]) -> dic
     }
 
 
+# task の必須見出しは source_lineage.origin_kind で分岐する (HarnessHub-yzv0 で task を
+# HEADING_MISSING_KINDS へ追加)。origin_kind=manual (task_node() の既定) は base
+# required_sections (13 見出し) を、origin_kind=system-dev-planner (shape_requirements の
+# _package_task_node() など) は conditional_required_sections の system_development_baseline
+# variant (軽量3見出し) を満たす必要がある。
+_TASK_REQUIRED_SECTIONS = [
+    "目的", "背景", "入力と前提条件", "出力と成果物", "依存関係", "実装対象",
+    "Write scope と競合制約", "GitHub publication", "実行手順", "受入条件",
+    "検証方法", "リスクとロールバック", "Handoff",
+]
+_SYSTEM_DEV_PLANNER_BASELINE_SECTIONS = ["正本仕様書", "依存", "実行契約"]
+
+
 def markdown_for(node: dict[str, Any]) -> str:
     """frontmatter_of (行指向スカラパーサ) が読める 1 行 1 key の frontmatter を組む。
 
     C11 artifact_findings は graph node と frontmatter の parity を
     graph_node_id/artifact_kind/file_path/template_id/template_version で照合するため、
-    node の値をそのまま JSON スカラとして書き出す。
+    node の値をそのまま JSON スカラとして書き出す。artifact_kind が task の場合は
+    required_sections も満たす必要があるため、origin_kind に応じた固定文言の見出しを
+    併せて書く。
     """
     lines = ["---"]
     for key, value in node.items():
@@ -247,6 +262,15 @@ def markdown_for(node: dict[str, Any]) -> str:
             "",
         ]
     )
+    if node.get("artifact_kind") == "task":
+        origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+        sections = (
+            _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS
+            if origin_kind == "system-dev-planner"
+            else _TASK_REQUIRED_SECTIONS
+        )
+        for section in sections:
+            lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
     return "\n".join(lines)
 
 

@@ -1,0 +1,1452 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/lt-arch-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture の feature が参照する固定 architecture ノード",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "70030983f5af3833a68e659c230fa696f5fc125c9ca2394563b47f6657bae008",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "architecture/lt-arch-001.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/lt-arch-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-ARCH-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "live-trial fixture の参照アーキテクチャ",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "描画された feature progress が graph 上の done 件数と一致する"
+      ],
+      "architecture_refs": [
+        "LT-ARCH-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/lt-feature-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture の progress 集約対象として決定論生成された feature ノード",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a01c1285b46204e95e8cc04aaa6057d2c94fe096faf64e7aab2b3c7f68de3e9f",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "features/lt-feature-001.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/lt-feature-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "配下 exact-13 task の完了数が X/Y として描画された状態",
+      "graph_node_id": "LT-FEATURE-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "render の feature progress 集約を実 graph 値で観測できるようにするための固定 feature",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "配下 13 task の進捗集約表示"
+      ],
+      "scope_out": [
+        "実 repository の feature 定義"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "live-trial fixture の可視化対象 feature",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p01.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": "2026-07-21T00:00:00Z",
+        "evidence_refs": [
+          "tasks/lt-feature-001-p01.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-21T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "948fd44e4c2f65948e1a30897036e6eccf8ba0948fac465eb67f2b8e14e2c65e",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p01.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P01: 入力契約の確定",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p02.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": "2026-07-21T00:00:00Z",
+        "evidence_refs": [
+          "tasks/lt-feature-001-p02.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-21T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "4c3a521b87d1b806750d76042c1ca9cf63c72af7a0451ed53c9dc1c1810871a0",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p02.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P01"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P02: データモデル定義",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p03.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": "2026-07-21T00:00:00Z",
+        "evidence_refs": [
+          "tasks/lt-feature-001-p03.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-21T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a5dc82bbb82fce2dc96f01f052283edd6b292eb3684adc1e2f48b001bf113d8b",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p03.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P02"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P03: 永続化層の実装",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p04.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": "2026-07-21T00:00:00Z",
+        "evidence_refs": [
+          "tasks/lt-feature-001-p04.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-07-21T00:00:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b523225c23e8a18c1b6ad39b12b875cd5e6b5cab947f9adc7a42e0432954ca01",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p04.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P03"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P04: ドメインロジックの実装",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p05.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7b215cf6e1c88240d0be4d60e45ae1e5666b8bc75ce8c9b0160357a91b437d62",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p05.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P04"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P05: API ハンドラの実装",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p06.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1cd781f593783bc9949b6dccce5d60f2d1289daefb09acb64e0a67b7c33cd99f",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p06.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P05"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "blocked",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P06: 認可と入力検証",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p07.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9227eb33d35b1a3ce103d72adf9d3e9eba83538fb690a9edd3f66ad39cbaab93",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p07.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P06"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P07: 単体テスト",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p08.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "63c07b95403f6249406decda93c3aa5ff64bd2a07a1e939d110e98e1544578f4",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p08.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P07"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P08: 結合テスト",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p09.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "fb4b0423eb87da092e2800e15003c11f80ac1337e09d04da70c03b78ac0bfaf0",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p09.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P08"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P09: エラー処理と回復",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p10.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "193d9a0f7c81fb6be22154f9fc1510fdbd6eec1d9c4e525c4c920ae99180c585",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p10.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P09"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P10: 可観測性の配線",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p11.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "07aea382086442c2b25afaa65131531d4f590b4f4e1ed928d19877cbdc31dfd7",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p11.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P10"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P11: 受入テスト",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p12.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "3c16fbc61c457d80b29143eb62ed75a788c445fe70499e7c7466857fb20ae7aa",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p12.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P11"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P12: 移行とロールバック手順",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/lt-feature-001-p13.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "590f3bde16d105b522e1596a56033902d2c94eb7cc72cedbbf1661223cfea19c",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "tasks/lt-feature-001-p13.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "LT-FEATURE-001-P12"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/LT-FEATURE-001",
+      "file_path": "tasks/lt-feature-001-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "graph 実値と skill 出力の一致を観測できる状態",
+      "graph_node_id": "LT-FEATURE-001-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "LT-FEATURE-001",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "live-trial の被験 skill を実 repo から隔離して実走させるための固定 fixture node",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807",
+        "source_path": "system-plan/LT-FEATURE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "1.0.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "live-trial",
+        "fixture",
+        "render"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "P13: リリースと引き継ぎ",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    }
+  ],
+  "repository_id": "local:sha256:3a3c0720410a659ec648560a68a65efc6f70f500c14dce936e36bd54cbfaaffe",
+  "schema_version": "1.0.0"
+}
