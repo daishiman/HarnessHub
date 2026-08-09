@@ -90,7 +90,8 @@
         "serves_goals": [
           "G2",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-033"
       },
       "mobile": {
         "state": "対象外",
@@ -106,7 +107,8 @@
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-010"
       },
       "desktop-linux": {
         "state": "対象外",
@@ -118,7 +120,8 @@
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-010"
       }
     },
     "ui-ux": {
@@ -130,7 +133,8 @@
           "G2",
           "G3",
           "G5"
-        ]
+        ],
+        "approval_ref": "appr-037"
       },
       "mobile": {
         "state": "対象外",
@@ -166,7 +170,8 @@
         "serves_goals": [
           "G4",
           "G5"
-        ]
+        ],
+        "approval_ref": "appr-033"
       },
       "mobile": {
         "state": "対象外",
@@ -182,7 +187,8 @@
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-010"
       },
       "desktop-linux": {
         "state": "対象外",
@@ -194,7 +200,8 @@
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-010"
       }
     },
     "infrastructure": {
@@ -284,7 +291,8 @@
           "G1",
           "G2",
           "G3"
-        ]
+        ],
+        "approval_ref": "appr-037"
       },
       "mobile": {
         "state": "対象外",
@@ -355,12 +363,13 @@
     "dev-workflow": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-208",
+        "qa_ref": "qa-216",
         "serves_goals": [
           "G1",
           "G4",
           "G5"
-        ]
+        ],
+        "approval_ref": "appr-041"
       },
       "mobile": {
         "state": "対象外",
@@ -372,11 +381,12 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-140",
+        "qa_ref": "qa-216",
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-041"
       },
       "desktop-linux": {
         "state": "対象外",
@@ -384,22 +394,24 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-102",
+        "qa_ref": "qa-216",
         "serves_goals": [
           "G1",
           "G4"
-        ]
+        ],
+        "approval_ref": "appr-041"
       }
     },
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-205",
+        "qa_ref": "qa-217",
         "serves_goals": [
           "G1",
           "G4",
           "G5"
-        ]
+        ],
+        "approval_ref": "appr-041"
       },
       "mobile": {
         "state": "対象外",
@@ -411,7 +423,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-095",
+        "qa_ref": "qa-211",
         "serves_goals": [
           "G1",
           "G5"
@@ -423,7 +435,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-095",
+        "qa_ref": "qa-211",
         "serves_goals": [
           "G1",
           "G5"
@@ -1488,80 +1500,64 @@
     },
     {
       "id": "qa-208",
-      "question": "既存 dev-workflow/web 正本とそれ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。",
-      "answer": "ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。\n\n【1. 宣言型 trigger】conditional_required_sections の family 選択は実装へ path 分岐を直書きせず、template-contract.json の conditional_triggers を正本とする。family 以外の条件は source_lineage の同名 field と AND 完全一致させ、条件 0 件、lineage 欠落、型不正では発火させない。\n\n【2. 正当な import 形】origin_kind=system-spec-harness かつ source_path=system-spec/index.md の specification は compile 済み index の 4 見出しを許容する。同じ origin_kind でも source_path=system-spec/00-requirements-definition.md の architecture だけは U1-U9 を許容し、通常の章 import には architecture の基本 10 見出しを要求する。完全な基本テンプレート準拠は conditional family 発火時も有効な候補として残す。\n\n【3. fail-closed 対称性】heading_missing の対象を task / specification / architecture とする。architecture が 10 見出し中 0 件でも implementation_readiness=complete になっていた非対称を解消し、正当な requirements import 以外は不足見出しを列挙して拒否する。\n\n【4. 配布同期】plugins/dev-graph/templates/template-contract.json、plugin-plans/dev-graph/templates/template-contract.json、.dev-graph/templates/template-contract.json の 3 コピーを同一バイト列に保ち、fixture は契約正本から見出しを読む。\n\n【5. 製品境界】Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。影響は repository 内の Dev Graph artifact readiness と live-trial fixture の検証契約に限定する。",
+      "question": "品質検証が一律最大深度で実行され、1 周 2〜3 時間から 10 時間超に達して MVP 原則 (まず動くものを速く出し、そこから検証する) に反しています。検証時間の上限値ではなく検証深度の基準そのものを変えるとき、どの深度をどの根拠で選ぶかを CI 側でどう決定論的に定めますか?",
+      "answer": "ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-143 の plugin hook entry point 3 者一致契約および qa-142 以前の dev-workflow.web 契約を全面維持したまま、検証深度を risk 比例で決める verification profile を追加確定する。時間上限を成功基準にしない (実行すべき検証量は変更内容と物量に依存し、一律の時間予算は検証の形骸化 = Goodhart 化を招くため)。\n\n【1. 3 tier と決定論的選択】検証深度を mvp / standard / critical の 3 tier とし、tier は人の裁量ではなく変更差分から決定論的に導出する。導出入力は (a) 変更 path 集合、(b) 逆転不能性、(c) 公開面の 3 つだけとする。critical は認証認可・DB migration・データ削除経路・production deploy unit・公開 catalog のいずれかに触れた場合。standard は製品 runtime コード (外部 API / UI / DB 読み取り経路) に触れた場合。いずれにも該当しない repository 内 tooling・plugin・spec 文書・未公開 feature 実装は mvp とする。判定は scripts/select-verification-tier.py が変更 path から算出し、算出根拠 (該当した規則 id と path) を JSON で出力する。同じ差分に対して常に同じ tier を返し、環境や実行者で揺れない。\n\n【2. tier 引き上げの自動性と引き下げの記録義務】規則が上位 tier を指す場合は自動的に引き上げる。人が算出結果より低い tier で実行する場合は --downgrade-to <tier> --reason <理由> を必須とし、理由と算出根拠を eval-log へ残したうえで後述の deferred issue を必ず起票する。無記録の引き下げは fail-closed で拒否する。\n\n【3. tier に依らず常時 fail-closed の 3 ゲート】secret / credential 漏洩検査、データ破壊・worktree clobber ガード (qa-140 の pre-commit 整合性ガード)、build / type check の 3 種は全 tier で blocking を維持する。理由はいずれも失敗の代償が検証時間を上回る不可逆事故 (公開後に取り消せない漏洩・作業そのものの消失・壊れたものを動くものとして出荷) であり、MVP の速度目的と衝突しないためである。\n\n【4. tier 別の blocking 集合】mvp は上記 3 ゲートに加えて、変更 module に対する focused test だけを blocking とする。standard は加えて該当 package の単体・結合テストと契約検証を blocking とする。critical は従来どおり全深度 (完成度 evaluator 全 aspect・独立監査 fork・live-trial 全 scenario) を blocking として維持する。blocking から外れた検査は無効化せず advisory として実行し、結果は run を止めずに報告する。\n\n【5. 降格分の被覆保全 (放棄でなく延期)】advisory へ降格した検査の finding は 0 件へ潰さず、bd の follow-up issue として必ず起票する。issue は元ゲート名・算出 tier・降格根拠・対象 path・再実行コマンドを持ち、deferred-verification ラベルで台帳化する。起票に失敗した場合は降格自体を fail-closed で拒否する (降格が黙って被覆を消す経路を作らない)。Stage 1 公開判定の直前に 1 箇所だけ deferred-verification の未解決 0 件ゲートを置き、MVP 期間中に積んだ延期分をそこで必ず回収する。\n\n【6. 製品境界】変更は repository 内の CI・品質ゲート・plugin 配布に限定する。Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-144 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-208 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。",
+      "source": "renumbered_from=qa-144 (main 取込時の qa id 衝突解消 2026-08-09)"
+    },
+    {
+      "id": "qa-209",
+      "question": "作者のローカル desktop 環境 (macOS 主 / Windows 従) で、CI と同じ verification profile を再現しつつ、goal-seek ループ・独立監査 fork・live-trial といった重い検証をどこまで既定で省略しますか?",
+      "answer": "ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-140 の並列 worktree 安全契約・更新時刻クラスタ診断契約と qa-102 の C11 本文 readiness・C02 lifecycle / document layer parity・live-trial session 環境隔離契約を全面維持したまま、ローカル実行側の verification profile を追加確定する。\n\n【1. tier 正本の一元化】tier 算出の正本は scripts/select-verification-tier.py の 1 実装とし、ローカルも CI も同じ script を同じ入力で呼ぶ。ローカル専用の緩い判定表を別に持たない。macOS と Windows で同一の pnpm script から起動でき、パス区切り・改行・特定 shell に依存しない。\n\n【2. 既定 tier と goal-seek ループ回数】ローカル既定は mvp とする。skill の goal_seek.max_loops は tier 別に mvp=1 / standard=3 / critical=5 とし、frontmatter の固定値 5 を tier 解決値で上書きする。max_loops に達して未達が残る場合、mvp では失敗にせず未達 checklist を deferred-verification issue へ落として正常終了する (critical では従来どおり未達を fail とする)。\n\n【3. 独立監査 fork と live-trial の起動条件】assign-*-evaluator の独立監査 fork と run-skill-live-trial は tier=critical でのみ必須とする。mvp / standard では既定で起動せず、起動を省略した事実と対象を deferred-verification issue へ記録する。--tier critical または --force で明示起動する経路は残し、必要時にいつでも全深度へ戻せるようにする。\n\n【4. 常時 fail-closed の維持】qa-140 の pre-commit 整合性ガード (index tree が HEAD 同一内容の祖先 tree に一致する場合と staged 削除が安全閾値を超える場合の拒否)、reference-transaction hook、secret scan、build / type check はローカルでも tier に依らず維持する。並列 worktree の巻き戻しはデータ消失であり、短縮対象にしない。\n\n【5. 回帰と境界】tier 算出の正負例 (path 別・逆転不能性別・公開面別)、downgrade の理由必須、deferred issue 起票失敗時の fail-closed、max_loops の tier 別解決、fork / live-trial の起動条件を自動テストする。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-145 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-209 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。",
+      "source": "renumbered_from=qa-145 (main 取込時の qa id 衝突解消 2026-08-09)"
+    },
+    {
+      "id": "qa-210",
+      "question": "タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?",
+      "answer": "ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。\n\n【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。\n\n【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。\n\n【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。\n\n【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。\n\n【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。",
+      "source": "renumbered_from=qa-146 (main 取込時の qa id 衝突解消 2026-08-09)"
+    },
+    {
+      "id": "qa-211",
+      "question": "ローカル desktop でテストを実行するとき、mvp tier の focused test をどう選び、広域回帰をどう扱いますか?",
+      "answer": "ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維持したまま、tier 別のテスト選択契約を追加確定する。\n\n【1. focused test の決定論的選択】mvp tier の blocking テストは、変更 path から到達する package の focused test に限定する。選択は scripts/select-verification-tier.py が出力する影響 package 集合を入力とし、実行者の勘で選ばない。該当 package が特定できない変更 (共有 utility や設定) は standard へ自動昇格させ、選択不能を暗黙の省略にしない。\n\n【2. 広域回帰の非同期化】実際の実行順序を再現する広域回帰は mvp tier の blocking から外し、CI の非同期 job として実行する。失敗は当該変更の merge を止めず deferred-verification issue として起票し、次の standard 以上の実行または Stage 1 公開判定ゲートで回収する。critical tier では従来どおり広域回帰を同期 blocking として維持する。\n\n【3. 層別方針の維持】frontend は behavior ベース、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界という層別方針は tier に依らず維持する。pixel・DOM 内部構造・一時生成物の物理配置へ品質判定を密結合させない方針も維持する。tier が変えるのは検証の量と同期性であって、検証の当たり所ではない。\n\n【4. 生成物境界の維持】skill 構造 lint が dot cache および __pycache__ / .pyc を構造判定から除外する qa-095 の契約は tier に依らず維持する。\n\n【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。",
+      "source": "renumbered_from=qa-147 (main 取込時の qa id 衝突解消 2026-08-09)"
+    },
+    {
+      "id": "qa-212",
+      "question": "MVP tier で省略・降格した検査を、後から「本当に省略しただけで、落ちていたわけではない」と検証できるようにするには、tier 選択と検査結果をどう残すべきか。また select-verification-tier.py が未実装の間、実行系はどの tier で動くべきか。",
+      "answer": "【1. 検査結果の履歴保存 (施策1)】\ntier 選択のたびに `eval-log/verification-tier/<run-id>/tier-decision.json` を 1 件生成する。必須フィールドは次のとおりとする。\n\n- `run_id` / `decided_at` (UTC ISO8601) / `target` (feature id または task id)\n- `tier` (mvp | standard | full) と `matched_rules` (tier を決めた規則 id の配列)\n- `inputs`: tier 導出に使った決定入力の実測値 (変更 path 集合・変更 file 数・実効変更行数・影響 package 数)\n- `checks`: 検査ごとに `{id, disposition, reason}`。`disposition` は `executed` | `deferred` | `skipped` の 3 値\n- `deferred_issue_refs`: `deferred` にした検査を受け止める beads issue id の配列 (空配列を許さない。deferred が 1 件でもあれば必須)\n\n`skipped` と `deferred` を同じ値に潰さない。`skipped` は「この tier では恒久的に実行しない」、`deferred` は「この周回では実行しないが、後続で必ず実行する」であり、後者だけが issue 追跡義務を負う。両者を潰すと「省略した」と「落ちた」が事後に区別できなくなる。\n\n保存は append-only とし、既存 run の tier-decision.json を上書き・削除しない。full tier へ昇格したときも過去の mvp 判定を消さず、`supersedes` に旧 run_id を書いて連鎖を残す。\n\n【2. evaluator 結果の cache (施策2)】\n同一入力に対する evaluator の再実行を避けるため、`eval-log/verification-tier/cache/<cache-key>.json` に結果を保存する。`cache_key` は次の 3 要素の sha256 とする。\n\n- 評価対象の実体 digest (対象 file 群の内容 sha256 を path 昇順で連結したもの。mtime や path 単体は使わない)\n- evaluator の識別子と version (rubric 改訂で cache が自動失効するため)\n- 評価に効く設定値 (tier、閾値、有効化した検査 id 集合)\n\ncache hit を採用した場合も `checks[].disposition` は `executed` とし、`cache_hit: true` と `cache_key` を併記する。cache を根拠に「実行した」と申告しつつ、どの入力に対する結果かを追えない状態を作らない。cache miss と cache 破損 (schema 不適合・digest 不一致) は区別し、破損時は cache を使わず再実行する (fail-open で古い PASS を再利用しない)。\n\n【3. select-verification-tier.py 未実装時の既定 (施策4)】\n本仕様が参照する `select-verification-tier.py` は 2026-08-09 時点で未実装である。実装が存在しない間、実行系は tier を推測せず **standard tier を既定**とし、`tier-decision.json` に `tier_selector: \"absent\"` と `fallback_reason` を明記する。\n\nmvp を既定にしない。mvp は「速度のために検査を意図的に削る」判断であり、その判断主体が存在しないまま削減だけが既定になると、誰も決めていない省略が既定値として恒久化する。full を既定にしないのは、未実装を理由に全 run を最も重い経路へ倒すと本仕様の目的 (1 周の所要時間短縮) が達成前に破綻するためである。standard は「削減も過剰もしない」中立点として選ぶ。\n\nselector が実装されたら `tier_selector` に script の path と source digest を記録し、`absent` を出さないこと。`absent` が残っている run は tier 判定の根拠を持たないので、full tier 相当の再検証が必要であるとみなす。",
+      "source": "2026-08-09 elegant-review run-20260809-mvp-tiering の施策 1/2/4 (F-0011 履歴保存欠落 / F-0012 再実行コスト / select-verification-tier.py 未実装) を反映"
+    },
+    {
+      "id": "qa-213",
+      "question": "web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。",
+      "answer": "【1. execution 軸の導入 (施策3)】\n検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。\n\n- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。\n- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。\n\n| execution | 意味 | wall-clock への寄与 |\n|---|---|---|\n| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |\n| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |\n| `skip` | この tier では実行しない | 加算されない |\n\n従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。\n\n【2. tier ごとの既定】\n- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。\n- standard: 全検査 `sync`。\n- full: 全検査 `sync` かつ全て `blocking`。\n\n`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。\n\n【3. 適用範囲】\n本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。",
+      "source": "2026-08-09 elegant-review run-20260809-mvp-tiering の施策 3 (F-0003 advisory 化では wall-clock が縮まない) を反映"
+    },
+    {
+      "id": "qa-214",
+      "question": "dev-workflow の MVP-first 品質検証 tiering 契約を、章だけを読んで実装できる形に統合すると、どうなるか。",
+      "answer": "【本 entry の位置づけ】\n本 entry は qa-208 / qa-209 / qa-212 を統合した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。\n\n===== web (CI/CD) の 3 tier と決定論的選択 (統合元: qa-208) =====\n【当該 entry の質問】品質検証が一律最大深度で実行され、1 周 2〜3 時間から 10 時間超に達して MVP 原則 (まず動くものを速く出し、そこから検証する) に反しています。検証時間の上限値ではなく検証深度の基準そのものを変えるとき、どの深度をどの根拠で選ぶかを CI 側でどう決定論的に定めますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-143 の plugin hook entry point 3 者一致契約および qa-142 以前の dev-workflow.web 契約を全面維持したまま、検証深度を risk 比例で決める verification profile を追加確定する。時間上限を成功基準にしない (実行すべき検証量は変更内容と物量に依存し、一律の時間予算は検証の形骸化 = Goodhart 化を招くため)。\n\n【1. 3 tier と決定論的選択】検証深度を mvp / standard / critical の 3 tier とし、tier は人の裁量ではなく変更差分から決定論的に導出する。導出入力は (a) 変更 path 集合、(b) 逆転不能性、(c) 公開面の 3 つだけとする。critical は認証認可・DB migration・データ削除経路・production deploy unit・公開 catalog のいずれかに触れた場合。standard は製品 runtime コード (外部 API / UI / DB 読み取り経路) に触れた場合。いずれにも該当しない repository 内 tooling・plugin・spec 文書・未公開 feature 実装は mvp とする。判定は scripts/select-verification-tier.py が変更 path から算出し、算出根拠 (該当した規則 id と path) を JSON で出力する。同じ差分に対して常に同じ tier を返し、環境や実行者で揺れない。\n\n【2. tier 引き上げの自動性と引き下げの記録義務】規則が上位 tier を指す場合は自動的に引き上げる。人が算出結果より低い tier で実行する場合は --downgrade-to <tier> --reason <理由> を必須とし、理由と算出根拠を eval-log へ残したうえで後述の deferred issue を必ず起票する。無記録の引き下げは fail-closed で拒否する。\n\n【3. tier に依らず常時 fail-closed の 3 ゲート】secret / credential 漏洩検査、データ破壊・worktree clobber ガード (qa-140 の pre-commit 整合性ガード)、build / type check の 3 種は全 tier で blocking を維持する。理由はいずれも失敗の代償が検証時間を上回る不可逆事故 (公開後に取り消せない漏洩・作業そのものの消失・壊れたものを動くものとして出荷) であり、MVP の速度目的と衝突しないためである。\n\n【4. tier 別の blocking 集合】mvp は上記 3 ゲートに加えて、変更 module に対する focused test だけを blocking とする。standard は加えて該当 package の単体・結合テストと契約検証を blocking とする。critical は従来どおり全深度 (完成度 evaluator 全 aspect・独立監査 fork・live-trial 全 scenario) を blocking として維持する。blocking から外れた検査は無効化せず advisory として実行し、結果は run を止めずに報告する。\n\n【5. 降格分の被覆保全 (放棄でなく延期)】advisory へ降格した検査の finding は 0 件へ潰さず、bd の follow-up issue として必ず起票する。issue は元ゲート名・算出 tier・降格根拠・対象 path・再実行コマンドを持ち、deferred-verification ラベルで台帳化する。起票に失敗した場合は降格自体を fail-closed で拒否する (降格が黙って被覆を消す経路を作らない)。Stage 1 公開判定の直前に 1 箇所だけ deferred-verification の未解決 0 件ゲートを置き、MVP 期間中に積んだ延期分をそこで必ず回収する。\n\n【6. 製品境界】変更は repository 内の CI・品質ゲート・plugin 配布に限定する。Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-144 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-208 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== desktop ローカル環境での tier 再現 (統合元: qa-209) =====\n【当該 entry の質問】作者のローカル desktop 環境 (macOS 主 / Windows 従) で、CI と同じ verification profile を再現しつつ、goal-seek ループ・独立監査 fork・live-trial といった重い検証をどこまで既定で省略しますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-140 の並列 worktree 安全契約・更新時刻クラスタ診断契約と qa-102 の C11 本文 readiness・C02 lifecycle / document layer parity・live-trial session 環境隔離契約を全面維持したまま、ローカル実行側の verification profile を追加確定する。\n\n【1. tier 正本の一元化】tier 算出の正本は scripts/select-verification-tier.py の 1 実装とし、ローカルも CI も同じ script を同じ入力で呼ぶ。ローカル専用の緩い判定表を別に持たない。macOS と Windows で同一の pnpm script から起動でき、パス区切り・改行・特定 shell に依存しない。\n\n【2. 既定 tier と goal-seek ループ回数】ローカル既定は mvp とする。skill の goal_seek.max_loops は tier 別に mvp=1 / standard=3 / critical=5 とし、frontmatter の固定値 5 を tier 解決値で上書きする。max_loops に達して未達が残る場合、mvp では失敗にせず未達 checklist を deferred-verification issue へ落として正常終了する (critical では従来どおり未達を fail とする)。\n\n【3. 独立監査 fork と live-trial の起動条件】assign-*-evaluator の独立監査 fork と run-skill-live-trial は tier=critical でのみ必須とする。mvp / standard では既定で起動せず、起動を省略した事実と対象を deferred-verification issue へ記録する。--tier critical または --force で明示起動する経路は残し、必要時にいつでも全深度へ戻せるようにする。\n\n【4. 常時 fail-closed の維持】qa-140 の pre-commit 整合性ガード (index tree が HEAD 同一内容の祖先 tree に一致する場合と staged 削除が安全閾値を超える場合の拒否)、reference-transaction hook、secret scan、build / type check はローカルでも tier に依らず維持する。並列 worktree の巻き戻しはデータ消失であり、短縮対象にしない。\n\n【5. 回帰と境界】tier 算出の正負例 (path 別・逆転不能性別・公開面別)、downgrade の理由必須、deferred issue 起票失敗時の fail-closed、max_loops の tier 別解決、fork / live-trial の起動条件を自動テストする。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-145 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-209 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== 検査結果の履歴保存・evaluator cache・未実装時の既定 (統合元: qa-212) =====\n【当該 entry の質問】MVP tier で省略・降格した検査を、後から「本当に省略しただけで、落ちていたわけではない」と検証できるようにするには、tier 選択と検査結果をどう残すべきか。また select-verification-tier.py が未実装の間、実行系はどの tier で動くべきか。\n\n【1. 検査結果の履歴保存 (施策1)】\ntier 選択のたびに `eval-log/verification-tier/<run-id>/tier-decision.json` を 1 件生成する。必須フィールドは次のとおりとする。\n\n- `run_id` / `decided_at` (UTC ISO8601) / `target` (feature id または task id)\n- `tier` (mvp | standard | full) と `matched_rules` (tier を決めた規則 id の配列)\n- `inputs`: tier 導出に使った決定入力の実測値 (変更 path 集合・変更 file 数・実効変更行数・影響 package 数)\n- `checks`: 検査ごとに `{id, disposition, reason}`。`disposition` は `executed` | `deferred` | `skipped` の 3 値\n- `deferred_issue_refs`: `deferred` にした検査を受け止める beads issue id の配列 (空配列を許さない。deferred が 1 件でもあれば必須)\n\n`skipped` と `deferred` を同じ値に潰さない。`skipped` は「この tier では恒久的に実行しない」、`deferred` は「この周回では実行しないが、後続で必ず実行する」であり、後者だけが issue 追跡義務を負う。両者を潰すと「省略した」と「落ちた」が事後に区別できなくなる。\n\n保存は append-only とし、既存 run の tier-decision.json を上書き・削除しない。full tier へ昇格したときも過去の mvp 判定を消さず、`supersedes` に旧 run_id を書いて連鎖を残す。\n\n【2. evaluator 結果の cache (施策2)】\n同一入力に対する evaluator の再実行を避けるため、`eval-log/verification-tier/cache/<cache-key>.json` に結果を保存する。`cache_key` は次の 3 要素の sha256 とする。\n\n- 評価対象の実体 digest (対象 file 群の内容 sha256 を path 昇順で連結したもの。mtime や path 単体は使わない)\n- evaluator の識別子と version (rubric 改訂で cache が自動失効するため)\n- 評価に効く設定値 (tier、閾値、有効化した検査 id 集合)\n\ncache hit を採用した場合も `checks[].disposition` は `executed` とし、`cache_hit: true` と `cache_key` を併記する。cache を根拠に「実行した」と申告しつつ、どの入力に対する結果かを追えない状態を作らない。cache miss と cache 破損 (schema 不適合・digest 不一致) は区別し、破損時は cache を使わず再実行する (fail-open で古い PASS を再利用しない)。\n\n【3. select-verification-tier.py 未実装時の既定 (施策4)】\n本仕様が参照する `select-verification-tier.py` は 2026-08-09 時点で未実装である。実装が存在しない間、実行系は tier を推測せず **standard tier を既定**とし、`tier-decision.json` に `tier_selector: \"absent\"` と `fallback_reason` を明記する。\n\nmvp を既定にしない。mvp は「速度のために検査を意図的に削る」判断であり、その判断主体が存在しないまま削減だけが既定になると、誰も決めていない省略が既定値として恒久化する。full を既定にしないのは、未実装を理由に全 run を最も重い経路へ倒すと本仕様の目的 (1 周の所要時間短縮) が達成前に破綻するためである。standard は「削減も過剰もしない」中立点として選ぶ。\n\nselector が実装されたら `tier_selector` に script の path と source digest を記録し、`absent` を出さないこと。`absent` が残っている run は tier 判定の根拠を持たないので、full tier 相当の再検証が必要であるとみなす。",
+      "source": "2026-08-09 章本文の欠落復旧 (qa-208 + qa-209 + qa-212 の統合)。承認証跡は appr-040"
+    },
+    {
+      "id": "qa-215",
+      "question": "testing-qa の web セルにおける tier 別検証契約を、章だけを読んで実装できる形に統合すると、どうなるか。",
+      "answer": "【本 entry の位置づけ】\n本 entry は qa-210 / qa-213 を統合した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。\n\n===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====\n【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。\n\n【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。\n\n【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。\n\n【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。\n\n【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。\n\n【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====\n【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。\n\n【1. execution 軸の導入 (施策3)】\n検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。\n\n- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。\n- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。\n\n| execution | 意味 | wall-clock への寄与 |\n|---|---|---|\n| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |\n| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |\n| `skip` | この tier では実行しない | 加算されない |\n\n従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。\n\n【2. tier ごとの既定】\n- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。\n- standard: 全検査 `sync`。\n- full: 全検査 `sync` かつ全て `blocking`。\n\n`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。\n\n【3. 適用範囲】\n本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。",
+      "source": "2026-08-09 章本文の欠落復旧 (qa-210 + qa-213 の統合)。承認証跡は appr-040"
+    },
+    {
+      "id": "qa-216",
+      "question": "実装済み selector と現行配線に合わせて dev-workflow の stale 記述と tier 語彙をどう補正するか。",
+      "answer": "【本 entry の位置づけ】\n本 entry は qa-214 を全面継承し、2026-08-09 の selector 実装済み事実と tier 語彙の統一を反映した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。\n\n===== web (CI/CD) の 3 tier と決定論的選択 (統合元: qa-208) =====\n【当該 entry の質問】品質検証が一律最大深度で実行され、1 周 2〜3 時間から 10 時間超に達して MVP 原則 (まず動くものを速く出し、そこから検証する) に反しています。検証時間の上限値ではなく検証深度の基準そのものを変えるとき、どの深度をどの根拠で選ぶかを CI 側でどう決定論的に定めますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-143 の plugin hook entry point 3 者一致契約および qa-142 以前の dev-workflow.web 契約を全面維持したまま、検証深度を risk 比例で決める verification profile を追加確定する。時間上限を成功基準にしない (実行すべき検証量は変更内容と物量に依存し、一律の時間予算は検証の形骸化 = Goodhart 化を招くため)。\n\n【1. 3 tier と決定論的選択】検証深度を mvp / standard / critical の 3 tier とし、tier は人の裁量ではなく変更差分から決定論的に導出する。導出入力は (a) 変更 path 集合、(b) 逆転不能性、(c) 公開面の 3 つだけとする。critical は認証認可・DB migration・データ削除経路・production deploy unit・公開 catalog のいずれかに触れた場合。standard は製品 runtime コード (外部 API / UI / DB 読み取り経路) に触れた場合。いずれにも該当しない repository 内 tooling・plugin・spec 文書・未公開 feature 実装は mvp とする。判定は scripts/select-verification-tier.py が変更 path から算出し、算出根拠 (該当した規則 id と path) を JSON で出力する。同じ差分に対して常に同じ tier を返し、環境や実行者で揺れない。\n\n【2. tier 引き上げの自動性と引き下げの記録義務】規則が上位 tier を指す場合は自動的に引き上げる。人が算出結果より低い tier で実行する場合は --downgrade-to <tier> --reason <理由> を必須とし、理由と算出根拠を eval-log へ残したうえで後述の deferred issue を必ず起票する。無記録の引き下げは fail-closed で拒否する。\n\n【3. tier に依らず常時 fail-closed の 3 ゲート】secret / credential 漏洩検査、データ破壊・worktree clobber ガード (qa-140 の pre-commit 整合性ガード)、build / type check の 3 種は全 tier で blocking を維持する。理由はいずれも失敗の代償が検証時間を上回る不可逆事故 (公開後に取り消せない漏洩・作業そのものの消失・壊れたものを動くものとして出荷) であり、MVP の速度目的と衝突しないためである。\n\n【4. tier 別の blocking 集合】mvp は上記 3 ゲートに加えて、変更 module に対する focused test だけを blocking とする。standard は加えて該当 package の単体・結合テストと契約検証を blocking とする。critical は従来どおり全深度 (完成度 evaluator 全 aspect・独立監査 fork・live-trial 全 scenario) を blocking として維持する。blocking から外れた検査は無効化せず advisory として実行し、結果は run を止めずに報告する。\n\n【5. 降格分の被覆保全 (放棄でなく延期)】advisory へ降格した検査の finding は 0 件へ潰さず、bd の follow-up issue として必ず起票する。issue は元ゲート名・算出 tier・降格根拠・対象 path・再実行コマンドを持ち、deferred-verification ラベルで台帳化する。起票に失敗した場合は降格自体を fail-closed で拒否する (降格が黙って被覆を消す経路を作らない)。Stage 1 公開判定の直前に 1 箇所だけ deferred-verification の未解決 0 件ゲートを置き、MVP 期間中に積んだ延期分をそこで必ず回収する。\n\n【6. 製品境界】変更は repository 内の CI・品質ゲート・plugin 配布に限定する。Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-144 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-208 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== desktop ローカル環境での tier 再現 (統合元: qa-209) =====\n【当該 entry の質問】作者のローカル desktop 環境 (macOS 主 / Windows 従) で、CI と同じ verification profile を再現しつつ、goal-seek ループ・独立監査 fork・live-trial といった重い検証をどこまで既定で省略しますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-140 の並列 worktree 安全契約・更新時刻クラスタ診断契約と qa-102 の C11 本文 readiness・C02 lifecycle / document layer parity・live-trial session 環境隔離契約を全面維持したまま、ローカル実行側の verification profile を追加確定する。\n\n【1. tier 正本の一元化】tier 算出の正本は scripts/select-verification-tier.py の 1 実装とし、ローカルも CI も同じ script を同じ入力で呼ぶ。ローカル専用の緩い判定表を別に持たない。macOS と Windows で同一の pnpm script から起動でき、パス区切り・改行・特定 shell に依存しない。\n\n【2. 既定 tier と goal-seek ループ回数】ローカル既定は mvp とする。skill の goal_seek.max_loops は tier 別に mvp=1 / standard=3 / critical=5 とし、frontmatter の固定値 5 を tier 解決値で上書きする。max_loops に達して未達が残る場合、mvp では失敗にせず未達 checklist を deferred-verification issue へ落として正常終了する (critical では従来どおり未達を fail とする)。\n\n【3. 独立監査 fork と live-trial の起動条件】assign-*-evaluator の独立監査 fork と run-skill-live-trial は tier=critical でのみ必須とする。mvp / standard では既定で起動せず、起動を省略した事実と対象を deferred-verification issue へ記録する。--tier critical または --force で明示起動する経路は残し、必要時にいつでも全深度へ戻せるようにする。\n\n【4. 常時 fail-closed の維持】qa-140 の pre-commit 整合性ガード (index tree が HEAD 同一内容の祖先 tree に一致する場合と staged 削除が安全閾値を超える場合の拒否)、reference-transaction hook、secret scan、build / type check はローカルでも tier に依らず維持する。並列 worktree の巻き戻しはデータ消失であり、短縮対象にしない。\n\n【5. 回帰と境界】tier 算出の正負例 (path 別・逆転不能性別・公開面別)、downgrade の理由必須、deferred issue 起票失敗時の fail-closed、max_loops の tier 別解決、fork / live-trial の起動条件を自動テストする。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-145 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-209 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== 検査結果の履歴保存・evaluator cache・selector 利用不能時の境界 (統合元: qa-212、現行補正: qa-216) =====\n【当該 entry の質問】MVP tier で省略・降格した検査を後から検証できるように tier 選択と検査結果をどう残すべきか。また実装済み selector が利用不能になった場合、実行系はどう失敗を扱うべきか。\n\n【1. 検査結果の履歴保存 (施策1)】\ntier 選択のたびに `eval-log/verification-tier/<run-id>/tier-decision.json` を 1 件生成する。必須フィールドは次のとおりとする。\n\n- `run_id` / `decided_at` (UTC ISO8601) / `target` (feature id または task id)\n- `tier` (mvp | standard | critical) と `matched_rules` (tier を決めた規則 id の配列)\n- `inputs`: tier 導出に使った決定入力の実測値 (変更 path 集合・変更 file 数・実効変更行数・影響 package 数)\n- `checks`: 検査ごとに `{id, disposition, reason}`。`disposition` は `executed` | `deferred` | `skipped` の 3 値\n- `deferred_issue_refs`: `deferred` にした検査を受け止める beads issue id の配列 (空配列を許さない。deferred が 1 件でもあれば必須)\n\n`skipped` と `deferred` を同じ値に潰さない。`skipped` は「この tier では恒久的に実行しない」、`deferred` は「この周回では実行しないが、後続で必ず実行する」であり、後者だけが issue 追跡義務を負う。両者を潰すと「省略した」と「落ちた」が事後に区別できなくなる。\n\n保存は append-only とし、既存 run の tier-decision.json を上書き・削除しない。critical tier へ昇格したときも過去の mvp 判定を消さず、`supersedes` に旧 run_id を書いて連鎖を残す。\n\n【2. evaluator 結果の cache (施策2)】\n同一入力に対する evaluator の再実行を避けるため、`eval-log/verification-tier/cache/<cache-key>.json` に結果を保存する。`cache_key` は次の 3 要素の sha256 とする。\n\n- 評価対象の実体 digest (対象 file 群の内容 sha256 を path 昇順で連結したもの。mtime や path 単体は使わない)\n- evaluator の識別子と version (rubric 改訂で cache が自動失効するため)\n- 評価に効く設定値 (tier、閾値、有効化した検査 id 集合)\n\ncache hit を採用した場合も `checks[].disposition` は `executed` とし、`cache_hit: true` と `cache_key` を併記する。cache を根拠に「実行した」と申告しつつ、どの入力に対する結果かを追えない状態を作らない。cache miss と cache 破損 (schema 不適合・digest 不一致) は区別し、破損時は cache を使わず再実行する (fail-open で古い PASS を再利用しない)。\n\n【3. selector の現行実装と利用不能時の境界 (施策4・2026-08-09 補正)】\n`scripts/select-verification-tier.py` は 2026-08-09 に実装済みであり、変更 path から mvp / standard / critical を決定論的に算出する。CI は `.github/workflows/governance-check.yml` から同 script を 1 回だけ起動し、`--derive-checks` で gate 台帳を一方向に導出して `tier-decision.json` を保存する。`tier_selector` には script path・source digest・rules digest を記録し、`scripts/validate-tier-decision.py` は `tier_selector: \"absent\"` を受理しない。\n\nselector の欠落・破損・base ref 解決不能・変更 path 空集合は、通常運用では standard への黙示 fallback にせず run を fail-closed で停止する。過去または bootstrap 環境で `tier_selector: \"absent\"` を記録済みの run は有効な tier 判定とみなさず、critical tier 相当の再検証対象とする。これにより、判断主体が不在のまま mvp の検査削減だけが既定化する経路を閉じる。\n\n現行 CI 配線は tier・blocking/advisory/deferred 集合の算出、妥当性検査、artifact 保存までを実装済みである。一方、下流 gate の実行自体を tier に応じて切り替える処理は未実装であり、`HarnessHub-xcl3` で追跡する。evaluator cache の writer/lookup/store 機構は `scripts/build-evaluator-cache.py` に実装済みだが、実 evaluator 呼出元への接続は未完了であり `HarnessHub-6nf1` で追跡する。実装済み機構と実運用で効いている機能を混同しない。",
       "source": {
         "kind": "user-dialogue"
       }
     },
     {
-      "id": "qa-foundation-u1",
-      "question": "利用者との R0 対話で U1 の本質的目的として選択・確認された内容は何か",
-      "answer": "U1=非エンジニアのAI自己解決の実現 (エンジニアを介さず作者自身が Skill/WebApp を公開・配布できる状態)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u2",
-      "question": "利用者との R0 対話で U2 の背景として選択・確認された内容は何か",
-      "answer": "U2=代理作業の限界を実感した (提供者が publish 作業を代行するモデルはスケールしない)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u3",
-      "question": "利用者との R0 対話で U3 のゴールとして選択・確認された内容は何か",
-      "answer": "U3=提示した 4 ゴールを全て選択 (G1 作者の自己完結 publish / G2 統制と安全性の担保 / G3 既存資産の再利用による最小工数 / G4 複数顧客への同時展開基盤)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u4",
-      "question": "利用者との R0 対話で U4 の定量目標として選択・確認された内容は何か",
-      "answer": "U4=提示した 4 定量目標を全て選択 (O1: H1 作者の自己完結 publish 成功率 80% / O2: H4 提供者の代理作業比率 30% 以下 / O3: H5 公開までのリードタイム短縮 / O4: H8 初回 publish 15 分以内)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u5",
-      "question": "利用者との R0 対話で U5 の成功基準として選択・確認された内容は何か",
-      "answer": "U5=複数顧客での同時稼働 (2 社以上の顧客 Workspace で同時稼働している状態を成功とする)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u6",
-      "question": "利用者との R0 対話で U6 の主要ステークホルダーとして選択・確認された内容は何か",
-      "answer": "U6=複数顧客へ同時展開 (顧客 Workspace の作者・利用者・管理者、および提供者 = Platform 運用者)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u7",
-      "question": "利用者との R0 対話で U7 のスコープ境界として選択・確認された内容は何か",
-      "answer": "U7=マルチテナントの論理分離を Stage 1 から実装 (Stage 0-2 を仕様化スコープ、Stage 3 以降は除外)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u8",
-      "question": "利用者との R0 対話で U8 の前提制約として選択・確認された内容は何か",
-      "answer": "U8=個人+AI のみの開発体制 (C1)・インフラコスト最小化 (C2)・既存資産 (harness-creator 等) の再利用前提 (C3)。",
-      "source": {
-        "kind": "user-dialogue"
-      }
-    },
-    {
-      "id": "qa-foundation-u9",
-      "question": "利用者との R0 対話で U9 の具体的意図を含む確定要約を承認したか",
-      "answer": "U1-U9 承認=「承認する」を選択 (approval_log: appr-001)。",
+      "id": "qa-217",
+      "question": "testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。",
+      "answer": "【本 entry の位置づけ】\n本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。\n\n===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====\n【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。\n\n【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。\n\n【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。\n\n【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。\n\n【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。\n\n【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====\n【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。\n\n【1. execution 軸の導入 (施策3)】\n検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。\n\n- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。\n- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。\n\n| execution | 意味 | wall-clock への寄与 |\n|---|---|---|\n| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |\n| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |\n| `skip` | この tier では実行しない | 加算されない |\n\n従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。\n\n【2. tier ごとの既定】\n- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。\n- standard: 全検査 `sync`。\n- critical: 全検査 `sync` かつ全て `blocking`。\n\n`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。\n\n【3. 適用範囲】\n本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。\n\n【4. tier 語彙の正本 (2026-08-09 補正)】\n検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。",
       "source": {
         "kind": "user-dialogue"
       }
@@ -1719,6 +1715,14 @@
     {
       "id": "appr-039",
       "note": "[逐語] 質問文: 「原因は確定しましたが、完成度 evaluator は独立監査の verdict が FAIL のため総合 FAIL が機械的に確定します。この FAIL の内訳は「過去に起きた事実の記録」「plugin 側で直すべき課題」「実装フェーズでやる作業」のみで、ヒアリング側で打てる手は残っていません。以降の verb をどう扱いますか。」\n\n[逐語] 選択肢 (提示順のまま):\n(1)「decompose 以降へ進む」— 得られること: 原因が確定したので feature 分解・タスク計画・要件導出まで一気に進み、再デプロイと V2/V6/V7 の実装計画が形になる。生じること: 完成度 evaluator が総合 FAIL のまま先へ進むことになり、実行ルール 2 が定めた「完了条件を満たしてから次へ」を今回だけ緩めることになる。FAIL の内訳は打てる手が無いものだけだが、その判断自体が私ではなく利用者の承認に基づくものになる。停止条件を緩めた記録はspec-state と最終ドキュメントの両方に残す。\n(2)「spec で停止したまま報告」— 得られること: 実行ルール 2 を字義どおり守り、完了条件を満たさない verb で先へ進まないという原則が維持される。生じること: 原因が確定し是正内容も判明しているのに、再デプロイの計画やタスク化が今回のセッションでは形にならない。以降 9 verb は未実行のまま結果一覧を報告することになり、再開時に改めて判断が要る。FAIL の内訳に打てる手が無い点は変わらないため、待っても状況は自動的には解消しない。\n(3)「再デプロイを先に扱う」— 得られること: 原因が確定した直後に、症状そのものを止める是正 (150a0f14 以降のデプロイ) の手順確認を優先でき、利用者の当初の困りごとが最短で解消に向かう。生じること: dev-graph の 11 verb 一括実行という依頼の形からは外れ、decompose 以降は別途の判断が必要になる。デプロイ操作自体は私からは実行せず、手順の提示と確認までにとどまる(commit・push・デプロイは明示の許可が要るため)。\n\n[逐語] 利用者の選択: 「decompose 以降へ進む」\n\n[対称性の自己点検] 規律 8 項目のうち **(6) を再び破った**。コスト文は各選択肢 4 文で節構造も揃え、語調も事実記述に統一し、問いに先行する箇所へ評価的結論を置かなかった ((1)〜(5)(7)(8) は満たした)。しかし **AI が結果として予期していた選択肢「decompose 以降へ進む」を先頭に置いた**。これで appr-034・035・036・038・039 の 5 問すべてで先頭選択肢が選ばれている。**規律 (6) は、それを明文化した直後の照会で破られた。**\n\n[承認の内容] (a) 完成度 evaluator の総合 FAIL を承知の上で decompose 以降へ進む。(b) FAIL の内訳が「歴史的事実 / plugin 側課題 / 実装 verb の既知タスク」に限られることを前提とし、この前提が崩れた場合は再度停止する。(c) 実行ルール 2 を緩めた事実と、その承認が利用者のものであることを記録に残す。"
+    },
+    {
+      "id": "appr-040",
+      "note": "[appr-040] 2026-08-08〜08-09 のユーザー指示「これらの内容をすべて漏れなく並列、直列実行してタスクを完了させてください。すべてのタスクです。すべての内容を今回で実行完了させてください。」を、MVP-first 品質検証 tiering 仕様に対する施策の適用承認として記録する。対象は qa-208〜qa-213 (dev-workflow / testing-qa の tier 別検証深度契約、検査結果の履歴保存、evaluator 結果の cache、blocking 軸と execution 軸の分離、select-verification-tier.py 未実装時の既定 tier)。\n\n本 entry を起こした理由は 2 つある。第一に、qa-208〜qa-211 は起票時に「ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として」と回答冒頭で述べながら、approval_log に対応する entry を持たなかった (elegant-review run-20260809-mvp-tiering の F-0025)。承認を主張する文言だけがあって証跡がない状態を解消する。第二に、qa-212 / qa-213 の施策適用も同じ指示を根拠にしているため、同一の証跡へ束ねる。\n\n既知の限界を 2 点明記する。(a) matrix セルの schema は confirm 時に approval_ref を保持しないため、qa-208〜213 が確定させたセルへ approval_ref を直接付与することは現行 writer では不可能である。追跡は本 entry と各 qa answer の相互参照に依存する (follow-up: セル schema への approval_ref 追加)。(b) 本承認は「施策を適用してよい」という範囲の承認であり、個々の技術判断 (既定 tier を standard にする、execution 軸を web に限定する等) の内容そのものをユーザーが逐条確認したものではない。内容の妥当性は elegant-review の findings と独立監査で担保する。\n\n登録経緯: 当初 appr-039 として登録を試みたが、同 id は並行セッションが別論点 (完成度 evaluator FAIL 後の verb 継続可否) で先に使用済みであった。writer は既存 id を検出すると append を黙って skip するため、最初の適用では本 note が書かれていなかった。appr-040 へ採番し直して再登録している。"
+    },
+    {
+      "id": "appr-041",
+      "note": "[appr-041] 2026-08-09 のユーザー指示を、今回の実装差分に伴う system-spec 正規更新の明示承認として記録する。逐語抜粋: 「本変更分に仕様・設計への影響が無いかを確認し、影響がある場合は system-spec/・specs/・architecture/ へ正規フローで反映してから、仕様反映の受領書を記録してください」「docs/, features/, system-spec/, architecture/, tasks/のドキュメントにも反映させること」。対象は (a) 実装済み `select-verification-tier.py` を未実装と記した qa-214 の stale 記述の撤回、(b) `full` / `critical` の tier 語彙 drift の `critical` への統一、(c) selector 配線が現時点では判定記録までで下流 gate 切替は未実装、evaluator cache は機構のみで実 caller 接続は未完了という現在境界の明記である。既存の 3 tier 方針・fail-closed・deferred issue 回収契約は変更しない。"
     }
   ],
   "reopen_log": [
@@ -3069,7 +3073,109 @@
     {
       "category": "dev-workflow",
       "platform": "web",
-      "reason": "main で qa-206 HubShell と qa-207 UI shell 契約が先に確定されたため、同時進行だった system-spec import heading 契約を欠落なく qa-208 へ正規再採番して追加統合するため",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-windows",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "desktop-macos",
+      "reason": "2026-08-08 ユーザー指示: 品質検証が一律最大深度で実行され 1 周 2〜3 時間〜10 時間超に達し MVP 原則 (まず動くものを速く出す) に反している。時間上限ではなく検証深度の基準そのものを risk 比例へ変える構造変更のため再オープンする。",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "MVP tier の検査省略を事後検証可能にする履歴保存契約と、select-verification-tier.py 未実装時の既定 tier を追記するため (qa-212)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "MVP tier の検査省略を事後検証可能にする履歴保存契約と、select-verification-tier.py 未実装時の既定 tier を追記するため (qa-212)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "MVP tier の検査省略を事後検証可能にする履歴保存契約と、select-verification-tier.py 未実装時の既定 tier を追記するため (qa-212)",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "blocking 軸と execution 軸を分離し、advisory 化が高速化にならない誤りを訂正するため (qa-213)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "qa-212 が qa-208 / qa-209 を supersede した結果、dev-workflow.md から 3 tier の定義本文が消えた。基礎契約を引き継いだ自己完結 entry へ差し替えるため (qa-214)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "qa-212 が qa-208 / qa-209 を supersede した結果、dev-workflow.md から 3 tier の定義本文が消えた。基礎契約を引き継いだ自己完結 entry へ差し替えるため (qa-214)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "qa-212 が qa-208 / qa-209 を supersede した結果、dev-workflow.md から 3 tier の定義本文が消えた。基礎契約を引き継いだ自己完結 entry へ差し替えるため (qa-214)",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "qa-213 が qa-210 を supersede した結果、testing-qa.md から tier 別必須ゲート集合の本文が消えた。基礎契約を引き継いだ自己完結 entry へ差し替えるため (qa-215)",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "web",
+      "reason": "selector 実装後も qa-214 が未実装と記し、full/critical 語彙も混在しているため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-windows",
+      "reason": "web と共通の tier 正本を参照する確定セルの qa_ref を統合 entry へ揃えるため",
+      "from": "確定"
+    },
+    {
+      "category": "dev-workflow",
+      "platform": "desktop-macos",
+      "reason": "web と共通の tier 正本を参照する確定セルの qa_ref を統合 entry へ揃えるため",
+      "from": "確定"
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "qa-215 に full と critical が同一 tier を指す語彙 drift が残っているため",
       "from": "確定"
     }
   ],
@@ -4320,7 +4426,7 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 4,
+    "loop_count": 2,
     "next_question": null,
     "complete": true
   }

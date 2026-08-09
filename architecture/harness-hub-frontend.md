@@ -59,6 +59,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
 - 取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は frontend の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/frontend.md` と `system-spec/ui-ux.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+専門知識のない利用者でも、Hub Web から安全かつ迷わず AI ワークフローを扱える画面を提供する。
+
+### U2 背景 (background)
+
+画面ごとの独自実装や scope 解決の重複は、到達不能・認可差異・アクセシビリティ低下を招く。
+
+### U3 ゴール (goals)
+
+Next.js App Router 上で、共通ナビゲーション、共有 scope 解決、理解しやすい状態表示を一貫させる。
+
+### U4 目標 (objectives)
+
+WCAG 2.2 AA、Core Web Vitals good、Server Component 優先という確定基準を各画面へ適用する。
+
+### U5 成功基準 (success_criteria)
+
+主要導線が到達可能で、認証済み scope が正しく継承され、品質ゲートと UI 回帰試験が通ることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、Workspace 管理者、frontend 開発者、アクセシビリティと運用品質の担当者を対象とする。
+
+### U7 スコープ (scope)
+
+Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビリティ、性能境界を扱う。
+
+### U8 制約 (constraints)
+
+認可の再実装、client-only への不要な退行、確定 system-spec の複製を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+利用者がサインイン後に目的画面へ到達し、現在の tenant/workspace と操作結果を理解できるようにする。
+
+### 意思決定支援 (decisions)
+
+画面固有の利便性と共通契約が競合するときは、認可の一貫性、到達性、アクセシビリティを優先する。
+
 ## Architecture overview
 
 正本: system-spec/frontend.md (Next.js 16 App Router + TypeScript + pnpm) と system-spec/ui-ux.md (WCAG 2.2 AA・CWV good・HIG 快適性)。doctrine anchor: Apple HIG + Clean Architecture。

@@ -72,13 +72,34 @@ def test_render_deepened_project_candidate_into_goal_related_chapter():
 
 
 def test_render_design_refs_ties_principle_to_chapter_confirmed_decision():
-    # design_knowledge_reflection 観点 (HarnessHub-byt6): card は汎用原則の逐語転記のため、
-    # 「本章での適用」節で確定 qa_ref・対応セル・serves_goals へ機械的に紐付ける (章固有の適用記述)。
-    rendered = mod.render_design_refs("database", _spec())
+    # card の汎用原則を固定文で「適用済み」にせず、caller が記録した章固有の採否・理由・
+    # trade-off を qa_ref と共に描画する (HarnessHub-a0zd)。
+    spec = _spec()
+    qa = next(item for item in spec["qa_log"] if item["id"] == "qa-database")
+    qa["design_applications"] = [
+        {
+            "knowledge_ref": "ddd.md#Bounded Context / Context Map",
+            "principle": "Bounded Context / Context Map",
+            "applicability": "not_applicable",
+            "rationale": "単一利用者の単純 CRUD で文脈間翻訳が無いため、境界分割は採用しない",
+            "tradeoffs": ["将来複数の業務語彙が生じた場合は再評価する"],
+        }
+    ]
+    rendered = mod.render_design_refs("database", spec)
     assert "#### 本章での適用" in rendered
     assert "確定内容 qa-database" in rendered
     assert "対応セル: web, mobile, tablet, desktop-windows, desktop-linux, desktop-macos" in rendered
+    assert "Bounded Context / Context Map" in rendered
+    assert "`not_applicable`" in rendered
+    assert "単一利用者の単純 CRUD" in rendered
+    assert "将来複数の業務語彙" in rendered
     assert "資するゴール: G1" in rendered
+
+
+def test_render_design_refs_missing_application_is_fail_visible_not_generic_pass():
+    rendered = mod.render_design_refs("database", _spec())
+    assert "qa_log[].design_applications を writer 経由で補完" in rendered
+    assert "上記原則は確定内容" not in rendered
 
 
 def test_render_design_refs_application_note_explicit_when_no_confirmed_cell():

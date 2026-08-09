@@ -149,4 +149,17 @@ HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着�
 
 HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
 
-`HarnessHub-o4zi` では system-spec import の index / requirements / 通常章を source lineage で区別し、正当な短縮形だけを許容する宣言型 heading contract を追加した。同時に architecture を C11 `heading_missing` の対象へ入れ、空の設計書が complete になる非対称を解消した。fresh C19 live trial は正規4スキル・独立監査・C02登録を含め PASS した。最終 gate で検出された旧 specification 5 件・task 2 件も標準見出しへ移行し、full graph schema を violation 0 へ収束させた。製品 runtime は変えず、設計・検証の確定結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+`HarnessHub-3vmz` と `HarnessHub-o4zi` の最終レビューでは、独立監査結果の偽装を
+fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C19 import の条件付き
+見出し契約を再確認した。製品 API・DB・認証認可・UI・配備は不変で、内部仕様・設計、
+既存文書の見出し移行、検証結果は
+[最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
+を正とする。
+
+`HarnessHub-o4zi` の branch 最終 gate では、条件付き見出し契約を repository 全体へ適用した際に残っていた旧 specification 5 件・task 2 件も標準セクションへ移行し、full graph schema を violation 0 へ収束させた。500 行を超える着地観測 addendum は、短い正規 contract と詳細履歴へ分離した。対象、検証、製品 runtime 非変更の判断は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) に記録する。
+
+## 2026-08-09 検証 tier と review 証拠整合
+
+変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。
+
+同日の C19 追補では、live-trial scenario に時間・token の引上げ不能な上限を追加し、確認済み system-spec bundle を digest 検証して再利用する経路を実装した。従来の 2,820 秒の全生成 trial を、同一受入目的の正式な fresh bounded trial r5（90.186 秒・290,770 token）へ短縮し、上流 Skill と network call が 0 であることを transcript に束縛した。poll-state は開始時に永続化され、再開しても時間上限をリセットできず、usage 不明の token は PASS にしない。仕様上は既存 `qa-216` / `qa-217` の「重い検証を必要時だけ起動し、証拠を厳格に残す」契約の実装具体化であり、新しい製品要件は追加しない。

@@ -15,62 +15,89 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-208 |
+| Web (web) | 確定 | 確定質疑: qa-216 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント環境として使わない (既存 auth/security の mobile 行と同根拠)。Hub 本体の開発フローは web 行 (CI/CD) と desktop-windows/desktop-macos 行 (作者ローカル環境) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント環境として使わない (既存 auth/security の tablet 行と同根拠)。Hub 本体の開発フローは web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-140 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-216 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。既存 auth/security の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner は Linux 上で動作するが、これは開発者の client platform ではなく CI 実行基盤であり web 行 (qa-038) の CI/CD 要件としてカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-102 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-216 |
 
 ## 確定内容 (質疑録)
 
-### qa-208 (対応セル: web)
+### qa-216 (対応セル: web, desktop-windows, desktop-macos)
 
-**質問**: 既存 dev-workflow/web 正本とそれ以前の確定契約を維持したまま、system-spec import の正当な見出し差を許容しつつ空の architecture を fail-closed に拒否する C11 契約をどう確定するか。
+**質問**: 実装済み selector と現行配線に合わせて dev-workflow の stale 記述と tier 語彙をどう補正するか。
 
-**回答**: ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存 C02 artifact body readiness、C11 graph schema、C19 live-trial 契約を全面維持し、次の system-spec import heading 契約を追加確定する。
+**回答**: 【本 entry の位置づけ】
+本 entry は qa-214 を全面継承し、2026-08-09 の selector 実装済み事実と tier 語彙の統一を反映した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
 
-【1. 宣言型 trigger】conditional_required_sections の family 選択は実装へ path 分岐を直書きせず、template-contract.json の conditional_triggers を正本とする。family 以外の条件は source_lineage の同名 field と AND 完全一致させ、条件 0 件、lineage 欠落、型不正では発火させない。
+===== web (CI/CD) の 3 tier と決定論的選択 (統合元: qa-208) =====
+【当該 entry の質問】品質検証が一律最大深度で実行され、1 周 2〜3 時間から 10 時間超に達して MVP 原則 (まず動くものを速く出し、そこから検証する) に反しています。検証時間の上限値ではなく検証深度の基準そのものを変えるとき、どの深度をどの根拠で選ぶかを CI 側でどう決定論的に定めますか?
 
-【2. 正当な import 形】origin_kind=system-spec-harness かつ source_path=system-spec/index.md の specification は compile 済み index の 4 見出しを許容する。同じ origin_kind でも source_path=system-spec/00-requirements-definition.md の architecture だけは U1-U9 を許容し、通常の章 import には architecture の基本 10 見出しを要求する。完全な基本テンプレート準拠は conditional family 発火時も有効な候補として残す。
+ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-143 の plugin hook entry point 3 者一致契約および qa-142 以前の dev-workflow.web 契約を全面維持したまま、検証深度を risk 比例で決める verification profile を追加確定する。時間上限を成功基準にしない (実行すべき検証量は変更内容と物量に依存し、一律の時間予算は検証の形骸化 = Goodhart 化を招くため)。
 
-【3. fail-closed 対称性】heading_missing の対象を task / specification / architecture とする。architecture が 10 見出し中 0 件でも implementation_readiness=complete になっていた非対称を解消し、正当な requirements import 以外は不足見出しを列挙して拒否する。
+【1. 3 tier と決定論的選択】検証深度を mvp / standard / critical の 3 tier とし、tier は人の裁量ではなく変更差分から決定論的に導出する。導出入力は (a) 変更 path 集合、(b) 逆転不能性、(c) 公開面の 3 つだけとする。critical は認証認可・DB migration・データ削除経路・production deploy unit・公開 catalog のいずれかに触れた場合。standard は製品 runtime コード (外部 API / UI / DB 読み取り経路) に触れた場合。いずれにも該当しない repository 内 tooling・plugin・spec 文書・未公開 feature 実装は mvp とする。判定は scripts/select-verification-tier.py が変更 path から算出し、算出根拠 (該当した規則 id と path) を JSON で出力する。同じ差分に対して常に同じ tier を返し、環境や実行者で揺れない。
 
-【4. 配布同期】plugins/dev-graph/templates/template-contract.json、plugin-plans/dev-graph/templates/template-contract.json、.dev-graph/templates/template-contract.json の 3 コピーを同一バイト列に保ち、fixture は契約正本から見出しを読む。
+【2. tier 引き上げの自動性と引き下げの記録義務】規則が上位 tier を指す場合は自動的に引き上げる。人が算出結果より低い tier で実行する場合は --downgrade-to <tier> --reason <理由> を必須とし、理由と算出根拠を eval-log へ残したうえで後述の deferred issue を必ず起票する。無記録の引き下げは fail-closed で拒否する。
 
-【5. 製品境界】Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。影響は repository 内の Dev Graph artifact readiness と live-trial fixture の検証契約に限定する。
+【3. tier に依らず常時 fail-closed の 3 ゲート】secret / credential 漏洩検査、データ破壊・worktree clobber ガード (qa-140 の pre-commit 整合性ガード)、build / type check の 3 種は全 tier で blocking を維持する。理由はいずれも失敗の代償が検証時間を上回る不可逆事故 (公開後に取り消せない漏洩・作業そのものの消失・壊れたものを動くものとして出荷) であり、MVP の速度目的と衝突しないためである。
 
-### qa-140 (対応セル: desktop-windows)
+【4. tier 別の blocking 集合】mvp は上記 3 ゲートに加えて、変更 module に対する focused test だけを blocking とする。standard は加えて該当 package の単体・結合テストと契約検証を blocking とする。critical は従来どおり全深度 (完成度 evaluator 全 aspect・独立監査 fork・live-trial 全 scenario) を blocking として維持する。blocking から外れた検査は無効化せず advisory として実行し、結果は run を止めずに報告する。
 
-**質問**: qa-088 の並列 worktree 安全契約を情報欠落なく継承しながら、2026-07-31 の更新時刻クラスタの原因訂正と、再発診断ツールの運用境界をどのように確定しますか?
+【5. 降格分の被覆保全 (放棄でなく延期)】advisory へ降格した検査の finding は 0 件へ潰さず、bd の follow-up issue として必ず起票する。issue は元ゲート名・算出 tier・降格根拠・対象 path・再実行コマンドを持ち、deferred-verification ラベルで台帳化する。起票に失敗した場合は降格自体を fail-closed で拒否する (降格が黙って被覆を消す経路を作らない)。Stage 1 公開判定の直前に 1 箇所だけ deferred-verification の未解決 0 件ゲートを置き、MVP 期間中に積んだ延期分をそこで必ず回収する。
 
-**回答**: ユーザーの 2026-08-03 最終レビュー・仕様反映指示を明示承認として、qa-088 の契約を次のとおり自己完結して再確定する。
+【6. 製品境界】変更は repository 内の CI・品質ゲート・plugin 配布に限定する。Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-【1. ローカル環境と CI 整合】Claude Code または Codex、corepack 経由の pnpm、git、wrangler CLI を使う。macOS を主環境、Windows を従環境とし、両者で同じ pnpm script が動くようパス区切り・改行・特定 shell への依存を避ける。PR の required status checks と同じ実装を pnpm script から実行できるようにし、merge 前ゲートの正本は CI とする。
+【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-144 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-208 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
 
-【2. commit 前の防御】lint、format、secret scan は早期検知の補助として local から実行可能にする。一方、並列 worktree による既存変更の巻き戻しはデータ消失リスクなので、通常の lint/format と分離した整合性ガードとして fail-closed にする。index tree が HEAD と同一内容の祖先 tree に一致する場合、または staged 削除が安全閾値を超える場合は pre-commit で拒否する。
+===== desktop ローカル環境での tier 再現 (統合元: qa-209) =====
+【当該 entry の質問】作者のローカル desktop 環境 (macOS 主 / Windows 従) で、CI と同じ verification profile を再現しつつ、goal-seek ループ・独立監査 fork・live-trial といった重い検証をどこまで既定で省略しますか?
 
-【3. 並列 worktree と復旧】全 worktree が共有する git common dir 配下へ hook bundle を設置し、core.hooksPath はその絶対パスを指す。reference-transaction hook は、別 worktree が checkout 中の refs/heads/* への直接更新を transaction 確定前に拒否する。ref 更新は修復にも必要な根幹経路なので worktree 情報を取得できない場合は fail-open とし、前項の pre-commit が二層目として fail-closed で止める。共有 bundle は現在の worktree の beads hook へ委譲し、tracked template、installed bundle、core.hooksPath、beads 保険経路の欠落・陳腐化は pre-push と CI で検知する。並列環境の stash は stash@{N} を永続識別子にせず、固有メッセージから commit SHA を直接取得して復元する。
+ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-140 の並列 worktree 安全契約・更新時刻クラスタ診断契約と qa-102 の C11 本文 readiness・C02 lifecycle / document layer parity・live-trial session 環境隔離契約を全面維持したまま、ローカル実行側の verification profile を追加確定する。
 
-【4. 更新時刻クラスタ診断】複数の独立ディレクトリに分単位で一致する mtime (更新時刻) クラスタは一括書込みの調査開始点であって、非 Git 系 clobber の確定証拠ではない。2026-07-31 06:56 の事象は reflog の `reset: moving to HEAD` と直後の `pull: Fast-forward` が秒単位で一致する直接証拠により、`git reset --hard` + `git pull` が最有力原因である。`scripts/lint-worktree-clobber-mtime.py` は変更・未追跡ファイルを直接集計し、閾値以上のファイル数と独立ディレクトリ数を持つクラスタを JSON または人間向けに報告する診断専用ツールとする。検知時は exit 1 だが hook / commit blocking へ配線せず、Git 状態を取得できない場合は exit 0 の fail-open とする。説明不能なテスト失敗や大量差分を見た利用者は runbook の reflog・差分・実体照合で裏取りしてから復旧判断を行う。
+【1. tier 正本の一元化】tier 算出の正本は scripts/select-verification-tier.py の 1 実装とし、ローカルも CI も同じ script を同じ入力で呼ぶ。ローカル専用の緩い判定表を別に持たない。macOS と Windows で同一の pnpm script から起動でき、パス区切り・改行・特定 shell に依存しない。
 
-【5. 製品境界】production への wrangler deploy と production Turso migration の正本経路は CI とし、ローカルからの日常実行を禁止する。緊急実行時は事後に PR または commit へ記録する。Hub 本体の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【2. 既定 tier と goal-seek ループ回数】ローカル既定は mvp とする。skill の goal_seek.max_loops は tier 別に mvp=1 / standard=3 / critical=5 とし、frontmatter の固定値 5 を tier 解決値で上書きする。max_loops に達して未達が残る場合、mvp では失敗にせず未達 checklist を deferred-verification issue へ落として正常終了する (critical では従来どおり未達を fail とする)。
 
-### qa-102 (対応セル: desktop-macos)
+【3. 独立監査 fork と live-trial の起動条件】assign-*-evaluator の独立監査 fork と run-skill-live-trial は tier=critical でのみ必須とする。mvp / standard では既定で起動せず、起動を省略した事実と対象を deferred-verification issue へ記録する。--tier critical または --force で明示起動する経路は残し、必要時にいつでも全深度へ戻せるようにする。
 
-**質問**: qa-092 の C11 本文 readiness を維持しながら、C02 の lifecycle・document layer 整合性と live-trial の session 環境隔離を、自己完結した dev-workflow.desktop-macos 契約としてどう統合しますか?
+【4. 常時 fail-closed の維持】qa-140 の pre-commit 整合性ガード (index tree が HEAD 同一内容の祖先 tree に一致する場合と staged 削除が安全閾値を超える場合の拒否)、reference-transaction hook、secret scan、build / type check はローカルでも tier に依らず維持する。並列 worktree の巻き戻しはデータ消失であり、短縮対象にしない。
 
-**回答**: ユーザーの 2026-07-30 CI 失敗修正・最終レビュー・仕様反映指示を明示承認として、qa-090 の live-trial session 所有権境界、qa-092 の C11 本文 readiness、HarnessHub-bk8v の C02 lifecycle 保全を維持し、C02 document layer parity と tmux session 環境隔離を統合した次の契約を確定する。
+【5. 回帰と境界】tier 算出の正負例 (path 別・逆転不能性別・公開面別)、downgrade の理由必須、deferred issue 起票失敗時の fail-closed、max_loops の tier 別解決、fork / live-trial の起動条件を自動テストする。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
-【1. C11 本文 readiness】C11 は YAML frontmatter と fenced code example を本文判定から除外し、template-contract.json が artifact kind ごとに定める required section を検査する。空節、canonical placeholder、TBD / TODO / 未定だけの本文は implementation_readiness=incomplete とし、C02 は本文なしの新規生成と --regenerate-body による placeholder 復帰を transaction rollback 付きで拒否する。既存の実内容を metadata-only update で保持する経路と、substantive な --body-file / input body による作成・復旧は維持する。
+【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-145 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-209 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
 
-【2. C02 lifecycle と document layer parity】昇格済み feature に古い full snapshot が再送され、status / confirmation_status / evaluation_status / implementation_readiness.status が後退する場合、C02 は stale before-image として dry-run / apply の双方で無変更のまま拒否する。artifact_kind=document は graph-node.schema.json#/$defs/documentLayer に適合する空でない小文字 kebab-case の layer を必須とし、非 document node では layer を禁止する。旧 document node だけが graph に layer を持たず既存 artifact frontmatter に単一 scalar を持つ場合、C02 はその値を一度だけ graph へ移行する。新規 document の暗黙 default、欠落、重複、形式不正を fail-closed にし、既存本文を byte-for-byte 保持して再実行を noop にする。docs 配置 lint は同じ schema 定義を読み、別の許容値表を持たない。
+===== 検査結果の履歴保存・evaluator cache・selector 利用不能時の境界 (統合元: qa-212、現行補正: qa-216) =====
+【当該 entry の質問】MVP tier で省略・降格した検査を後から検証できるように tier 選択と検査結果をどう残すべきか。また実装済み selector が利用不能になった場合、実行系はどう失敗を扱うべきか。
 
-【3. live-trial session 環境の正本】tmux server が保持する global environment は live-trial の routing 正本にしない。hook の証拠出力先など trial 固有の環境変数は、boot 呼び出し元の現在値を new-session -e で対象 session へ明示的に上書きする。呼び出し元で未設定なら空値を渡し、過去 trial の値へ fallback しない。backend は環境変数名を identifier 形式に限定し、値に NUL・改行・復帰を許さない。転送対象は harness が宣言した session-scoped allow-list に限定する。
+【1. 検査結果の履歴保存 (施策1)】
+tier 選択のたびに `eval-log/verification-tier/<run-id>/tier-decision.json` を 1 件生成する。必須フィールドは次のとおりとする。
 
-【4. 監査証拠の接地】system-spec 監査台帳は contained fixture 内の path と current session id に束縛し、canonical aggregate gate が report・ledger・session の三点を突合して exit 0 になった場合だけ C02 import と live-trial PASS を許す。台帳欠落・別 session・別 path は fail-closed とし、手作業で台帳を複製または捏造しない。失敗 run は上書きせず append-only に保持する。
+- `run_id` / `decided_at` (UTC ISO8601) / `target` (feature id または task id)
+- `tier` (mvp | standard | critical) と `matched_rules` (tier を決めた規則 id の配列)
+- `inputs`: tier 導出に使った決定入力の実測値 (変更 path 集合・変更 file 数・実効変更行数・影響 package 数)
+- `checks`: 検査ごとに `{id, disposition, reason}`。`disposition` は `executed` | `deferred` | `skipped` の 3 値
+- `deferred_issue_refs`: `deferred` にした検査を受け止める beads issue id の配列 (空配列を許さない。deferred が 1 件でもあれば必須)
 
-【5. 回帰と境界】document migration、本文保持、lifecycle 後退、layer 正負例、fake tmux の new-session -e argv、実 tmux の stale global 値上書き、C19 の正規四 entry point・三監査・canonical aggregate・C02 import を検証する。変更は repository 内の Dev Graph metadata、live-trial transport、開発品質証拠に限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+`skipped` と `deferred` を同じ値に潰さない。`skipped` は「この tier では恒久的に実行しない」、`deferred` は「この周回では実行しないが、後続で必ず実行する」であり、後者だけが issue 追跡義務を負う。両者を潰すと「省略した」と「落ちた」が事後に区別できなくなる。
+
+保存は append-only とし、既存 run の tier-decision.json を上書き・削除しない。critical tier へ昇格したときも過去の mvp 判定を消さず、`supersedes` に旧 run_id を書いて連鎖を残す。
+
+【2. evaluator 結果の cache (施策2)】
+同一入力に対する evaluator の再実行を避けるため、`eval-log/verification-tier/cache/<cache-key>.json` に結果を保存する。`cache_key` は次の 3 要素の sha256 とする。
+
+- 評価対象の実体 digest (対象 file 群の内容 sha256 を path 昇順で連結したもの。mtime や path 単体は使わない)
+- evaluator の識別子と version (rubric 改訂で cache が自動失効するため)
+- 評価に効く設定値 (tier、閾値、有効化した検査 id 集合)
+
+cache hit を採用した場合も `checks[].disposition` は `executed` とし、`cache_hit: true` と `cache_key` を併記する。cache を根拠に「実行した」と申告しつつ、どの入力に対する結果かを追えない状態を作らない。cache miss と cache 破損 (schema 不適合・digest 不一致) は区別し、破損時は cache を使わず再実行する (fail-open で古い PASS を再利用しない)。
+
+【3. selector の現行実装と利用不能時の境界 (施策4・2026-08-09 補正)】
+`scripts/select-verification-tier.py` は 2026-08-09 に実装済みであり、変更 path から mvp / standard / critical を決定論的に算出する。CI は `.github/workflows/governance-check.yml` から同 script を 1 回だけ起動し、`--derive-checks` で gate 台帳を一方向に導出して `tier-decision.json` を保存する。`tier_selector` には script path・source digest・rules digest を記録し、`scripts/validate-tier-decision.py` は `tier_selector: "absent"` を受理しない。
+
+selector の欠落・破損・base ref 解決不能・変更 path 空集合は、通常運用では standard への黙示 fallback にせず run を fail-closed で停止する。過去または bootstrap 環境で `tier_selector: "absent"` を記録済みの run は有効な tier 判定とみなさず、critical tier 相当の再検証対象とする。これにより、判断主体が不在のまま mvp の検査削減だけが既定化する経路を閉じる。
+
+現行 CI 配線は tier・blocking/advisory/deferred 集合の算出、妥当性検査、artifact 保存までを実装済みである。一方、下流 gate の実行自体を tier に応じて切り替える処理は未実装であり、`HarnessHub-xcl3` で追跡する。evaluator cache の writer/lookup/store 機構は `scripts/build-evaluator-cache.py` に実装済みだが、実 evaluator 呼出元への接続は未完了であり `HarnessHub-6nf1` で追跡する。実装済み機構と実運用で効いている機能を混同しない。
 
 ## 上流指針 (doctrine anchor)
 

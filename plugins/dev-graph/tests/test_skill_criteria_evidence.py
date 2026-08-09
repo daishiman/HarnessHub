@@ -125,10 +125,9 @@ def _assert_scenario_contract(
         _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
-# component_id -> (Beads issue, 既知バグの説明)。対象の新規不具合を
-# live-trial で確認した場合だけ、厳格な xfail として一時登録する。
-# HarnessHub-o4zi の C19 は fresh PASS 受領済みのため登録を解除した。
-_KNOWN_LIVE_TRIAL_FAILURES = {}
+# Fix 済みの既知 live-trial failure は残さない。strict xfail を残すと fresh PASS が
+# XPASS になり、回帰修正そのものを CI failure として扱ってしまう。
+_KNOWN_LIVE_TRIAL_FAILURES: dict[str, str] = {}
 
 
 def _targets_with_known_xfail() -> list:

@@ -108,8 +108,8 @@ def test_missing_required_headings_resolves_conditional_variants_by_node_trigger
     system_dev_node = {"source_lineage": {"origin_kind": "system-dev-planner"}}
     assert missing_required_headings(artifact, "task", contract, system_dev_node) == []
 
-    # base required_sections ("目的"/"背景") は trigger 発火時も候補に残るが (full 準拠は
-    # 定義上どの family より厳しいため)、この artifact はどちらも満たさないので結果は変わらない。
+    # base required_sections ("目的"/"背景") はここでは存在しないが、node が
+    # system-dev-planner trigger を持つ限り base variant は候補に入らない。
     manual_node = {"source_lineage": {"origin_kind": "manual"}}
     assert missing_required_headings(artifact, "task", contract, manual_node) == ["目的", "背景"]
 
@@ -118,10 +118,7 @@ def test_missing_required_headings_resolves_conditional_variants_by_node_trigger
 
 
 def test_conditional_triggers_match_on_source_path_not_origin_kind_alone(tmp_path):
-    """HarnessHub-o4zi: system-spec-harness の import は origin_kind が同一のまま
-    3 形 (compile 済み index / requirements / 章) を出すため、origin_kind だけで family を
-    決めると章 import まで巻き添えで緩む。contract の conditional_triggers は
-    source_lineage の複数 field を AND で見て、index だけに緩和を効かせる。"""
+    """HarnessHub-o4zi: 同じ origin の章 import まで軽量契約へ巻き込まない。"""
     contract = {
         "artifacts": {
             "specification": {
@@ -141,13 +138,18 @@ def test_conditional_triggers_match_on_source_path_not_origin_kind_alone(tmp_pat
     artifact.write_text("# index\n\n## 章一覧と集約状態\n\n| a |\n", encoding="utf-8")
 
     index_node = {
-        "source_lineage": {"origin_kind": "system-spec-harness", "source_path": "system-spec/index.md"}
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/index.md",
+        }
     }
     assert missing_required_headings(artifact, "specification", contract, index_node) == []
 
-    # source_path が違えば同じ origin_kind でも緩和しない (章 import の巻き添え防止)。
     chapter_node = {
-        "source_lineage": {"origin_kind": "system-spec-harness", "source_path": "system-spec/backend.md"}
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/backend.md",
+        }
     }
     assert missing_required_headings(artifact, "specification", contract, chapter_node) == [
         "スコープ",
@@ -157,7 +159,7 @@ def test_conditional_triggers_match_on_source_path_not_origin_kind_alone(tmp_pat
 
 
 def test_conditional_trigger_without_conditions_never_fires(tmp_path):
-    """条件を 1 つも書かない rule は全 node に当たってしまうため無効にする (fail-closed)。"""
+    """空条件 rule が全 node に一致しないよう fail-closed にする。"""
     contract = {
         "artifacts": {
             "specification": {
@@ -170,14 +172,13 @@ def test_conditional_trigger_without_conditions_never_fires(tmp_path):
     artifact = tmp_path / "s.md"
     artifact.write_text("# s\n\n## 何か\n\nx\n", encoding="utf-8")
 
-    assert missing_required_headings(artifact, "specification", contract, {"source_lineage": {}}) == [
-        "目的と成功状態"
-    ]
+    assert missing_required_headings(
+        artifact, "specification", contract, {"source_lineage": {}}
+    ) == ["目的と成功状態"]
 
 
 def test_base_variant_remains_acceptable_when_a_conditional_family_fires(tmp_path):
-    """full template 準拠の artifact が family の軽量版と一致しないことを理由に
-    違反判定される、という到達しえない結果を作らない。"""
+    """full template 準拠 artifact も conditional trigger 発火時に受理する。"""
     contract = {
         "artifacts": {
             "architecture": {
@@ -197,7 +198,8 @@ def test_base_variant_remains_acceptable_when_a_conditional_family_fires(tmp_pat
     }
     artifact = tmp_path / "a.md"
     artifact.write_text(
-        "# a\n\n## Architecture overview\n\nx\n\n## Risks and verification\n\ny\n", encoding="utf-8"
+        "# a\n\n## Architecture overview\n\nx\n\n## Risks and verification\n\ny\n",
+        encoding="utf-8",
     )
     node = {
         "source_lineage": {

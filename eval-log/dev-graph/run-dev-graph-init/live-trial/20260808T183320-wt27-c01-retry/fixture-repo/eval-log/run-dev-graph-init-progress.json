@@ -1,0 +1,42 @@
+{
+  "loop": 2,
+  "checklist": [
+    {
+      "id": "CL1",
+      "text": "C24 receipt の repository_id/common-dir/content root が caller repo と一致する",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write exit 0; repository_id=local:sha256:fb79f3bd...327536; git_common_dir=<repo>/.git; content_roots all under repo_root; root_trust_evidence all verified"
+    },
+    {
+      "id": "CL2",
+      "text": "6 content root と .dev-graph/{config.json,state/graph.json,cache,locks} が実在する",
+      "status": "PASS",
+      "evidence": "issues/tasks/specs/architecture/features/docs + .dev-graph/{config.json,state/graph.json,cache,locks} 実在 (ls 実測)"
+    },
+    {
+      "id": "CL3",
+      "text": "template-contract.json 列挙資産が欠落0で、利用者編集済み template の digest が不変である",
+      "status": "PASS",
+      "evidence": "template-contract 列挙 17 件 missing=0、2回目 copy=0"
+    },
+    {
+      "id": "CL4",
+      "text": "effective hook は一経路だけで、既存 settings key/hash の変更が0件である",
+      "status": "PASS",
+      "evidence": "hook_source=plugin 受理、.claude/ 不在で settings 変更 0 件"
+    },
+    {
+      "id": "CL5",
+      "text": "validate-repo-config.py --require-content-roots <6 root> が exit0",
+      "status": "PASS",
+      "evidence": "validate-repo-config.py --require-content-roots 6root exit 0 violations=[]"
+    },
+    {
+      "id": "CL6",
+      "text": "validate-graph-schema.py が exit0 で、二回目 init の planned changes が0件である",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py exit 0 (nodes=1, violations=[]); 第2パス planned changes 0 件 (config action=unchanged / graph action=preserved_existing / dir 作成 0 / template copy 0 / settings 書込 0)"
+    }
+  ],
+  "result": "PASS"
+}

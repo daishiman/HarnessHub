@@ -1,0 +1,13 @@
+{
+  "target_id": "fastapi",
+  "fetch_tool": "WebFetch",
+  "requested_url": "https://fastapi.tiangolo.com/release-notes/",
+  "recorded_at": "2026-08-08T11:00:34.286Z",
+  "official_host": "fastapi.tiangolo.com",
+  "official_publisher": "Sebastián Ramírez (tiangolo) / FastAPI",
+  "extracted_facts": "最新リリース 0.141.1 (2026-07-29) / 直前 0.141.0 (2026-07-29)",
+  "version": "0.141.1",
+  "last_updated": "2026-07-29",
+  "doc_index_url": "https://fastapi.tiangolo.com/",
+  "security_guide_url": "https://fastapi.tiangolo.com/tutorial/security/"
+}

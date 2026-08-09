@@ -1,0 +1,701 @@
+{
+  "fresh_evaluator": "fresh-independent-goal-evaluator-c14",
+  "fresh_goal_verdict": "PASS",
+  "fresh_goal_blockers": [],
+  "observation_1": {
+    "claim": "produced feature/architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold",
+    "measured_from": "each fixture's persisted .dev-graph/state/graph.json",
+    "per_run": {
+      "beads": {
+        "acyclic": true,
+        "architecture_node_ids": [
+          "arch-portal-data-notify-001",
+          "arch-portal-platform-001"
+        ],
+        "artifact_kind_counts": {
+          "architecture": 2,
+          "feature": 4
+        },
+        "cycles_found": [],
+        "declared_max_value": 3,
+        "edges_measured": {
+          "feat-account-login-001": [
+            "arch-portal-platform-001"
+          ],
+          "feat-assignment-dashboard-001": [
+            "arch-portal-data-notify-001",
+            "arch-portal-platform-001",
+            "feat-account-login-001"
+          ],
+          "feat-deadline-notification-001": [
+            "arch-portal-data-notify-001",
+            "feat-assignment-dashboard-001"
+          ],
+          "feat-progress-report-001": [
+            "arch-portal-data-notify-001",
+            "arch-portal-platform-001",
+            "feat-account-login-001",
+            "feat-assignment-dashboard-001"
+          ]
+        },
+        "measured_max": 2,
+        "metric": "max_inter_feature_depends_on_per_feature",
+        "node_count": 6,
+        "per_feature_inter_feature_depends_on": {
+          "feat-account-login-001": 0,
+          "feat-assignment-dashboard-001": 1,
+          "feat-deadline-notification-001": 1,
+          "feat-progress-report-001": 2
+        },
+        "task_granularity_nodes": 0,
+        "within_threshold": true
+      },
+      "none": {
+        "acyclic": true,
+        "architecture_node_ids": [
+          "arch-portal-data-notify-001",
+          "arch-portal-platform-001"
+        ],
+        "artifact_kind_counts": {
+          "architecture": 2,
+          "feature": 4
+        },
+        "cycles_found": [],
+        "declared_max_value": 3,
+        "edges_measured": {
+          "feat-account-login-001": [
+            "arch-portal-platform-001"
+          ],
+          "feat-assignment-dashboard-001": [
+            "arch-portal-data-notify-001",
+            "arch-portal-platform-001",
+            "feat-account-login-001"
+          ],
+          "feat-deadline-notification-001": [
+            "arch-portal-data-notify-001",
+            "feat-assignment-dashboard-001"
+          ],
+          "feat-progress-report-001": [
+            "arch-portal-data-notify-001",
+            "arch-portal-platform-001",
+            "feat-account-login-001",
+            "feat-assignment-dashboard-001"
+          ]
+        },
+        "measured_max": 2,
+        "metric": "max_inter_feature_depends_on_per_feature",
+        "node_count": 6,
+        "per_feature_inter_feature_depends_on": {
+          "feat-account-login-001": 0,
+          "feat-assignment-dashboard-001": 1,
+          "feat-deadline-notification-001": 1,
+          "feat-progress-report-001": 2
+        },
+        "task_granularity_nodes": 0,
+        "within_threshold": true
+      }
+    },
+    "verdict": "PASS"
+  },
+  "observation_2": {
+    "claim": "in a run that writes for real, pre-evaluation draft features publish zero issues, and every zero carries the reason it is zero",
+    "per_run": {
+      "beads": {
+        "distinct_zeros_kept_separate": {
+          "absence_of_live_candidate": {
+            "applies": false,
+            "count": 0,
+            "meaning": "does NOT apply: this graph holds exactly one live publication candidate, so the zero above cannot be explained by 'nothing was eligible'"
+          },
+          "binding_route_publishes_nothing_by_design": {
+            "applies": false,
+            "count": 0,
+            "meaning": "tracker_binding=none has no external publication route at all"
+          },
+          "binding_route_unreachable_github": {
+            "applies": false,
+            "count": 0,
+            "meaning": "no node in this graph declares tracker_binding=github; the github route is unreachable for a macro-only run (see observation_4.github_unreachable)"
+          },
+          "draft_gate_suppression": {
+            "applies": true,
+            "count": 3,
+            "meaning": "live produced nodes exist and were withheld by the publication gate"
+          },
+          "live_trial_external_mutation_withheld": {
+            "applies": true,
+            "count": 1,
+            "meaning": "the single candidate's beads route was exercised in adapter dry-run only, by live-trial constraint"
+          }
+        },
+        "issues_published_by_pre_evaluation_drafts": 0,
+        "per_node_zero_attribution": [
+          {
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "graph_node_id": "feat-account-login-001",
+            "implementation_readiness_status": "complete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "beads",
+            "zero_reason": "sole publication candidate; the beads route was proven reachable by bd-bridge.py --dry-run only, because the live-trial forbids writing to the real tracker",
+            "zero_reason_id": "live_trial_external_mutation_withheld"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-assignment-dashboard-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "beads",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-deadline-notification-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "beads",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-progress-report-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "beads",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          }
+        ],
+        "pre_evaluation_draft_features": 3,
+        "run_wrote_for_real": true,
+        "zero_reason_index": {
+          "absence_of_live_candidate": [],
+          "binding_route_unreachable_github": [],
+          "draft_gate_suppression": [
+            "feat-assignment-dashboard-001",
+            "feat-deadline-notification-001",
+            "feat-progress-report-001"
+          ],
+          "live_trial_external_mutation_withheld": [
+            "feat-account-login-001"
+          ]
+        }
+      },
+      "none": {
+        "distinct_zeros_kept_separate": {
+          "absence_of_live_candidate": {
+            "applies": false,
+            "count": 0,
+            "meaning": "does NOT apply: this graph holds exactly one live publication candidate, so the zero above cannot be explained by 'nothing was eligible'"
+          },
+          "binding_route_publishes_nothing_by_design": {
+            "applies": true,
+            "count": 1,
+            "meaning": "tracker_binding=none has no external publication route at all"
+          },
+          "binding_route_unreachable_github": {
+            "applies": false,
+            "count": 0,
+            "meaning": "no node in this graph declares tracker_binding=github; the github route is unreachable for a macro-only run (see observation_4.github_unreachable)"
+          },
+          "draft_gate_suppression": {
+            "applies": true,
+            "count": 3,
+            "meaning": "live produced nodes exist and were withheld by the publication gate"
+          },
+          "live_trial_external_mutation_withheld": {
+            "applies": false,
+            "count": 0,
+            "meaning": "the single candidate's beads route was exercised in adapter dry-run only, by live-trial constraint"
+          }
+        },
+        "issues_published_by_pre_evaluation_drafts": 0,
+        "per_node_zero_attribution": [
+          {
+            "confirmation_status": "confirmed",
+            "evaluation_status": "pass",
+            "graph_node_id": "feat-account-login-001",
+            "implementation_readiness_status": "complete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "none",
+            "zero_reason": "sole publication candidate; tracker_binding=none publishes to no external tracker by definition, so its zero is a route property, not a gate decision",
+            "zero_reason_id": "binding_route_publishes_nothing_by_design"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-assignment-dashboard-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "none",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-deadline-notification-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "none",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          },
+          {
+            "confirmation_status": "draft",
+            "evaluation_status": "pending",
+            "graph_node_id": "feat-progress-report-001",
+            "implementation_readiness_status": "incomplete",
+            "issues_published": 0,
+            "tracker_binding_persisted": "none",
+            "zero_reason": "pre-evaluation draft: the implementation publication gate withheld this live node; it was produced and persisted, so this zero is a gate decision, not an absent node",
+            "zero_reason_id": "draft_gate_suppression"
+          }
+        ],
+        "pre_evaluation_draft_features": 3,
+        "run_wrote_for_real": true,
+        "zero_reason_index": {
+          "absence_of_live_candidate": [],
+          "binding_route_publishes_nothing_by_design": [
+            "feat-account-login-001"
+          ],
+          "binding_route_unreachable_github": [],
+          "draft_gate_suppression": [
+            "feat-assignment-dashboard-001",
+            "feat-deadline-notification-001",
+            "feat-progress-report-001"
+          ]
+        }
+      }
+    },
+    "verdict": "PASS"
+  },
+  "observation_3": {
+    "claim": "at least one produced draft feature remains excluded while one produced feature advanced to confirmed/pass/complete becomes the sole publication candidate",
+    "per_run": {
+      "beads": {
+        "candidate_count": 1,
+        "candidate_ids": [
+          "feat-account-login-001"
+        ],
+        "draft_excluded_count": 3,
+        "draft_excluded_ids": [
+          "feat-assignment-dashboard-001",
+          "feat-deadline-notification-001",
+          "feat-progress-report-001"
+        ],
+        "proof_the_run_wrote_something": {
+          "file_count_after": 34,
+          "file_count_before": 9,
+          "graph_revision_after": 7,
+          "graph_revision_before": 0,
+          "graph_sha256_after": "00ae49c7353f3d3bda5166939f3f5950994192b3f77d6dd335fb266d37ed3684",
+          "graph_sha256_before": "d8ff1908392ac78aacd78ddb65eb66e788e6649210cb001da8fb5d27ee08525b",
+          "node_count_after": 6,
+          "node_count_before": 0
+        }
+      },
+      "none": {
+        "candidate_count": 1,
+        "candidate_ids": [
+          "feat-account-login-001"
+        ],
+        "draft_excluded_count": 3,
+        "draft_excluded_ids": [
+          "feat-assignment-dashboard-001",
+          "feat-deadline-notification-001",
+          "feat-progress-report-001"
+        ],
+        "proof_the_run_wrote_something": {
+          "file_count_after": 31,
+          "file_count_before": 9,
+          "graph_revision_after": 7,
+          "graph_revision_before": 0,
+          "graph_sha256_after": "f561fba81fb554c2a0cfe22786405299a4e28d3c731a550fa475303e4511007b",
+          "graph_sha256_before": "7bba3421a99516ae3a8ce14abedd44b4aeaafb4f2b3348c358a15ec641177a6c",
+          "node_count_after": 6,
+          "node_count_before": 0
+        }
+      }
+    },
+    "verdict": "PASS"
+  },
+  "observation_4": {
+    "claim": "beads and none bindings are two separate runs whose recorded publication routes differ; github is recorded unreachable for a macro-only run with the schema rule that makes it so; every figure derives from the persisted tracker_binding",
+    "github_unreachable": {
+      "memory_only_demonstration": {
+        "exit_code": 1,
+        "mutation": "feat-deadline-notification-001.tracker_binding := github (github_publication.mode left at local_only)",
+        "rejected": true,
+        "report": {
+          "implementation_readiness": "incomplete",
+          "missing_sections": [],
+          "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/dev-graph/schemas/graph-node.schema.json",
+          "valid": false,
+          "violations": [
+            {
+              "code": "schema_violation",
+              "detail": "$.github_publication.mode: not in enum ['issue', 'issue_and_projects']",
+              "node": "feat-deadline-notification-001"
+            }
+          ]
+        },
+        "validator": "validate-graph-schema.py --graph - (stdin)"
+      },
+      "reason": "an unpublished macro node carries github_publication.mode=local_only; the graph-node schema requires tracker_binding=github to carry mode issue or issue_and_projects, and additionally restricts those modes to artifact_kind issue/task, so a feature or architecture node declaring github is rejected before it lands in the graph",
+      "rule_1_lines": "1434-1459",
+      "rule_1_verbatim": "      \"if\": {\n        \"properties\": {\n          \"tracker_binding\": {\n            \"const\": \"github\"\n          }\n        }\n      },\n      \"then\": {\n        \"properties\": {\n          \"beads_linkage\": {\n            \"const\": null\n          },\n          \"github_publication\": {\n            \"properties\": {\n              \"mode\": {\n                \"enum\": [\n                  \"issue\",\n                  \"issue_and_projects\"\n                ]\n              }\n            }\n          }\n        }\n      }\n    },\n    {",
+      "rule_2_lines": "1228-1265",
+      "rule_2_verbatim": "    {\n      \"if\": {\n        \"properties\": {\n          \"github_publication\": {\n            \"properties\": {\n              \"mode\": {\n                \"enum\": [\n                  \"issue\",\n                  \"issue_and_projects\"\n                ]\n              }\n            }\n          }\n        }\n      },\n      \"then\": {\n        \"properties\": {\n          \"artifact_kind\": {\n            \"enum\": [\n              \"issue\",\n              \"task\"\n            ]\n          },\n          \"confirmation_status\": {\n            \"const\": \"confirmed\"\n          },\n          \"evaluation_status\": {\n            \"const\": \"pass\"\n          },\n          \"implementation_readiness\": {\n            \"properties\": {\n              \"status\": {\n                \"const\": \"complete\"\n              }\n            }\n          }\n        }\n      }",
+      "schema_file": "plugins/dev-graph/schemas/graph-node.schema.json"
+    },
+    "per_run": {
+      "beads": {
+        "derived_from": "tracker_binding field read back out of the run's persisted graph.json (not from the CLI argument)",
+        "distinct_values": [
+          "beads"
+        ],
+        "publication_route": "beads: C28 bd create/dep-add route (adapter dry-run proven reachable)",
+        "tracker_binding_counts": {
+          "beads": 6
+        }
+      },
+      "none": {
+        "derived_from": "tracker_binding field read back out of the run's persisted graph.json (not from the CLI argument)",
+        "distinct_values": [
+          "none"
+        ],
+        "publication_route": "none: local graph only, no external tracker route exists",
+        "tracker_binding_counts": {
+          "none": 6
+        }
+      }
+    },
+    "routes_differ": true,
+    "verdict": "PASS"
+  },
+  "observation_5": {
+    "claim": "local/Beads/GitHub/Projects write counts derive from before/after repository state differencing, and the preview graph is validated through the stdin path with no temporary file inside the managed repository",
+    "per_run": {
+      "beads": {
+        "added_files": [
+          ".dev-graph/cache/c14-inputs/arch-portal-data-notify-001.body.md",
+          ".dev-graph/cache/c14-inputs/arch-portal-data-notify-001.json",
+          ".dev-graph/cache/c14-inputs/arch-portal-platform-001.body.md",
+          ".dev-graph/cache/c14-inputs/arch-portal-platform-001.json",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.json",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.promote.json",
+          ".dev-graph/cache/c14-inputs/feat-assignment-dashboard-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-assignment-dashboard-001.json",
+          ".dev-graph/cache/c14-inputs/feat-deadline-notification-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-deadline-notification-001.json",
+          ".dev-graph/cache/c14-inputs/feat-progress-report-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-progress-report-001.json",
+          ".dev-graph/state/.graph.json.register.lock",
+          "architecture/arch-portal-data-notify-001.md",
+          "architecture/arch-portal-platform-001.md",
+          "docs/want.md",
+          "eval-log/c14-promotion-evaluation.json",
+          "eval-log/run-dev-graph-decompose-goal-spec.json",
+          "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+          "eval-log/run-dev-graph-decompose-progress.json",
+          "features/feat-account-login-001.md",
+          "features/feat-assignment-dashboard-001.md",
+          "features/feat-deadline-notification-001.md",
+          "features/feat-progress-report-001.md"
+        ],
+        "beads_evidence": {
+          "beads_store_paths_in_repo_after": [],
+          "note": "no beads store was created inside the fixture; the beads route was exercised with bd-bridge.py --dry-run only"
+        },
+        "beads_write_count": 0,
+        "derivation": "set difference of the repository file inventory and graph digest captured before and after the run; not restated from any skill report",
+        "github_evidence": "gh-bridge.py --op issue-create --dry-run returned mutation_suppressed=true; no gh mutation call was issued and github.enabled is false in .dev-graph/config.json",
+        "github_write_count": 0,
+        "local_file_write_count": 26,
+        "local_files_added": 25,
+        "local_files_modified": 1,
+        "local_files_removed": 0,
+        "modified_files": [
+          ".dev-graph/state/graph.json"
+        ],
+        "projects_evidence": "github.projects is [] in .dev-graph/config.json and no node carries github_publication.mode=issue_and_projects, so R4-project had zero targets",
+        "projects_write_count": 0
+      },
+      "none": {
+        "added_files": [
+          ".dev-graph/cache/c14-inputs/arch-portal-data-notify-001.body.md",
+          ".dev-graph/cache/c14-inputs/arch-portal-data-notify-001.json",
+          ".dev-graph/cache/c14-inputs/arch-portal-platform-001.body.md",
+          ".dev-graph/cache/c14-inputs/arch-portal-platform-001.json",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.json",
+          ".dev-graph/cache/c14-inputs/feat-account-login-001.promote.json",
+          ".dev-graph/cache/c14-inputs/feat-assignment-dashboard-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-assignment-dashboard-001.json",
+          ".dev-graph/cache/c14-inputs/feat-deadline-notification-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-deadline-notification-001.json",
+          ".dev-graph/cache/c14-inputs/feat-progress-report-001.body.md",
+          ".dev-graph/cache/c14-inputs/feat-progress-report-001.json",
+          ".dev-graph/state/.graph.json.register.lock",
+          "architecture/arch-portal-data-notify-001.md",
+          "architecture/arch-portal-platform-001.md",
+          "docs/want.md",
+          "eval-log/c14-promotion-evaluation.json",
+          "features/feat-account-login-001.md",
+          "features/feat-assignment-dashboard-001.md",
+          "features/feat-deadline-notification-001.md",
+          "features/feat-progress-report-001.md"
+        ],
+        "beads_evidence": {
+          "beads_store_paths_in_repo_after": [],
+          "note": "no beads store was created inside the fixture; the beads route was exercised with bd-bridge.py --dry-run only"
+        },
+        "beads_write_count": 0,
+        "derivation": "set difference of the repository file inventory and graph digest captured before and after the run; not restated from any skill report",
+        "github_evidence": "gh-bridge.py --op issue-create --dry-run returned mutation_suppressed=true; no gh mutation call was issued and github.enabled is false in .dev-graph/config.json",
+        "github_write_count": 0,
+        "local_file_write_count": 23,
+        "local_files_added": 22,
+        "local_files_modified": 1,
+        "local_files_removed": 0,
+        "modified_files": [
+          ".dev-graph/state/graph.json"
+        ],
+        "projects_evidence": "github.projects is [] in .dev-graph/config.json and no node carries github_publication.mode=issue_and_projects, so R4-project had zero targets",
+        "projects_write_count": 0
+      }
+    },
+    "preview_validation": {
+      "command": "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph - --repo-root <FIXTURE>",
+      "note": "the preview graph was piped on stdin; the only files written inside each fixture are the canonical artifacts, the graph store, the want source and the C02 node input/body files listed in added_files",
+      "path": "stdin",
+      "temporary_preview_files_found_in_repo": {
+        "beads": [],
+        "none": []
+      }
+    },
+    "verdict": "PASS"
+  },
+  "observation_6": {
+    "claim": "confirmation_evidence of every promoted feature is recomputed from the final persisted node excluding only confirmation_evidence and matches",
+    "per_run": {
+      "beads": {
+        "promoted_features": [
+          {
+            "evaluator": "run-dev-graph-decompose/live-trial C14-OUT1-positive-macro-decomposition-r9",
+            "evidence_ref": "eval-log/c14-promotion-evaluation.json",
+            "graph_node_id": "feat-account-login-001",
+            "matches": true,
+            "recomputed_digest": "ad38c952ad2260200582c84e3f400d6fa8b418c26430c67336f9b21cd2d55ed5",
+            "recorded_evaluated_digest": "ad38c952ad2260200582c84e3f400d6fa8b418c26430c67336f9b21cd2d55ed5"
+          }
+        ],
+        "recomputed_from": "the final persisted node content excluding only confirmation_evidence"
+      },
+      "none": {
+        "promoted_features": [
+          {
+            "evaluator": "run-dev-graph-decompose/live-trial C14-OUT1-positive-macro-decomposition-r9",
+            "evidence_ref": "eval-log/c14-promotion-evaluation.json",
+            "graph_node_id": "feat-account-login-001",
+            "matches": true,
+            "recomputed_digest": "3e1ae972c6361f393dbba86e23a6f37413704340f24be14813f38b605b1ff195",
+            "recorded_evaluated_digest": "3e1ae972c6361f393dbba86e23a6f37413704340f24be14813f38b605b1ff195"
+          }
+        ],
+        "recomputed_from": "the final persisted node content excluding only confirmation_evidence"
+      }
+    },
+    "verdict": "PASS"
+  },
+  "observation_7": {
+    "claim": "gate violations synthesised from this run's final graph are rejected by the canonical schema validator, so the publication gate is falsifiable on the same data",
+    "per_run": {
+      "beads": [
+        {
+          "control": "evaluation_status=pass with implementation_readiness.status != complete",
+          "exit_code": 1,
+          "mutation": "feat-account-login-001.implementation_readiness.status := incomplete (evaluation_status stays pass)",
+          "rejected": true,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "active_not_ready",
+                "detail": "active requires confirmed/pass/complete",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.checked_at: expected type ['string'], got NoneType",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login-001"
+              }
+            ]
+          },
+          "synthesised_in_memory": true,
+          "validator_path": "stdin (--graph -)"
+        },
+        {
+          "control": "blocked draft feature carrying publication intent",
+          "exit_code": 1,
+          "mutation": "feat-deadline-notification-001.status := blocked and github_publication.mode := issue while confirmation_status stays draft",
+          "rejected": true,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "beads_publication",
+                "detail": "beads requires local_only",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.artifact_kind: not in enum ['issue', 'task']",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.confirmation_status: expected const 'confirmed'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.evaluation_status: expected const 'pass'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.github_publication.mode: expected const 'local_only'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-deadline-notification-001"
+              }
+            ]
+          },
+          "synthesised_in_memory": true,
+          "validator_path": "stdin (--graph -)"
+        }
+      ],
+      "none": [
+        {
+          "control": "evaluation_status=pass with implementation_readiness.status != complete",
+          "exit_code": 1,
+          "mutation": "feat-account-login-001.implementation_readiness.status := incomplete (evaluation_status stays pass)",
+          "rejected": true,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "active_not_ready",
+                "detail": "active requires confirmed/pass/complete",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.checked_at: expected type ['string'], got NoneType",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login-001"
+              }
+            ]
+          },
+          "synthesised_in_memory": true,
+          "validator_path": "stdin (--graph -)"
+        },
+        {
+          "control": "blocked draft feature carrying publication intent",
+          "exit_code": 1,
+          "mutation": "feat-deadline-notification-001.status := blocked and github_publication.mode := issue while confirmation_status stays draft",
+          "rejected": true,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "schema_violation",
+                "detail": "$.artifact_kind: not in enum ['issue', 'task']",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.confirmation_status: expected const 'confirmed'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.evaluation_status: expected const 'pass'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.github_publication.mode: expected const 'local_only'",
+                "node": "feat-deadline-notification-001"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-deadline-notification-001"
+              }
+            ]
+          },
+          "synthesised_in_memory": true,
+          "validator_path": "stdin (--graph -)"
+        }
+      ]
+    },
+    "validator": "plugins/dev-graph/scripts/validate-graph-schema.py",
+    "verdict": "PASS"
+  },
+  "overall_verdict": "PASS",
+  "runs": {
+    "run_A": {
+      "binding": "beads",
+      "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T183312-wt27-c14-final/fixture-beads"
+    },
+    "run_B": {
+      "binding": "none",
+      "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T183312-wt27-c14-final/fixture-none"
+    }
+  },
+  "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+  "skill": "dev-graph:run-dev-graph-decompose"
+}

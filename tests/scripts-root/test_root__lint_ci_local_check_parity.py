@@ -148,6 +148,35 @@ def test_plugin_working_directory_does_not_masquerade_as_repo_root_script(tmp_pa
     assert all(item.script != "scripts/plugin-check.py" for item in result.ci_blocking)
 
 
+def test_command_substitution_is_not_a_silent_escape_hatch(tmp_path: Path):
+    """``VAR=$(python3 scripts/x.py ...)`` を抽出漏れにしない (fail-open の封鎖)。
+
+    剥がさないと shlex は ``VAR=$(python3`` を 1 トークンにするため、python3 の一致検査を
+    すり抜け、CI にしか無い検査が「CI-only 0 件」として通ってしまう。
+    """
+    root = _repo(
+        tmp_path,
+        ci_run="TIER=$(python3 scripts/pick.py --from-git origin/main)",
+        local_run='run "other" python3 scripts/other.py\n',
+    )
+    result = MOD.audit(root)
+    assert any(
+        "CI-only (blocking): scripts/pick.py --from-git=origin/main" in error
+        for error in result.errors
+    ), result.errors
+
+
+def test_unparseable_python_invocation_fails_loudly(tmp_path: Path):
+    """解析器が知らない書き方は 0 件で握り潰さず、解析不能として落とす。"""
+    root = _repo(
+        tmp_path,
+        ci_run='eval "python3 scripts/hidden.py --check"',
+        local_run='run "other" python3 scripts/other.py\n',
+    )
+    result = MOD.audit(root)
+    assert any("解析できない" in error for error in result.errors), result.errors
+
+
 def test_current_repository_has_ci_local_parity_and_all_three_entrypoints():
     result = MOD.audit(ROOT)
     assert result.errors == []

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # name: record-audit-fork
-# version: 0.2.0
+# version: 0.2.1
 # purpose: 監査 sub-agent への Task fork が実際に完了したことと、その監査 verdict を
 #          PostToolUse で append-only 台帳へ記録する (completeness-report の auditor 帰属と
 #          verdict を自己申告でなく実 fork 証跡へ接地させるための証跡 writer)。
@@ -47,8 +47,9 @@ qualifier だけを受理して stem へ正規化する。無関係な Task で�
 
 ## 記録しないもの
 
-prompt / tool_response 本文は記録せず sha256 のみ (機微情報を台帳へ持ち込まない)。response の最終行に
-1 回だけ現れる `AUDIT_VERDICT: PASS|FAIL|INDETERMINATE` は、本文を保存せず enum として記録する。
+prompt / tool_response 本文は記録せず sha256 のみ (機微情報を台帳へ持ち込まない)。response の最終非空行が
+`AUDIT_VERDICT: PASS|FAIL|INDETERMINATE` のいずれかなら、本文を保存せず enum として記録する。
+tool_response が prompt を内包していても、prompt 内の説明用 marker は判定に数えない。
 
 ## 既知の限界 (正直な境界)
 
@@ -78,7 +79,7 @@ AUDIT_FORK_TOOL_NAMES = ("Task", "Agent")
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
 AUDIT_VERDICTS = {"PASS", "FAIL", "INDETERMINATE"}
-AUDIT_VERDICT_LINE_RE = re.compile(r"(?m)^AUDIT_VERDICT: (PASS|FAIL|INDETERMINATE)\s*$")
+AUDIT_VERDICT_LINE_RE = re.compile(r"^AUDIT_VERDICT: (PASS|FAIL|INDETERMINATE)\s*$")
 
 
 def plugin_root() -> Path:
@@ -137,7 +138,14 @@ def normalize_subagent_type(subagent_type: object, known_agents: set[str]) -> st
 
 
 def _response_texts(value: object):
-    """hook payload の tool_response から text 値だけを再帰的に取り出す。"""
+    """tool_response の応答本文だけから text 値を取り出す。
+
+    Agent の PostToolUse payload には ``prompt`` や ``agentId``、status などの
+    metadata も含まれる。任意の dict value を再帰走査すると、応答本文の最終 marker
+    より後にある metadata 文字列を「最終行」と誤認するため、既知の応答本文 key だけを
+    降りる。content block 自体は ``{"type": "text", "text": ...}`` なので direct
+    ``text`` を最優先する。
+    """
     if isinstance(value, str):
         yield value
     elif isinstance(value, list):
@@ -147,22 +155,30 @@ def _response_texts(value: object):
         text = value.get("text")
         if isinstance(text, str):
             yield text
-        else:
-            for item in value.values():
-                yield from _response_texts(item)
+            return
+        for key in ("content", "output", "result", "response", "message"):
+            if key in value:
+                yield from _response_texts(value[key])
+                return
 
 
 def audited_response_metadata(tool_response: object) -> tuple[str, str | None]:
     """非機微な response digest と、厳密な最終 verdict marker を返す。
 
     auditor は最終行を ``AUDIT_VERDICT: <PASS|FAIL|INDETERMINATE>`` と返す契約である。
-    0 件または複数件なら verdict は未確定として下流で fail-closed に扱う。
+    hook payload の tool_response は fork prompt と応答後 metadata を含む場合があるため、
+    payload 全体の marker 数や任意文字列の順序は判定材料にしない。応答本文 key 配下の text
+    node を観測順に連結したときの最終非空行だけを受理し、最終行が marker でなければ
+    未確定として下流で fail-closed に扱う。
     """
     canonical = json.dumps(tool_response, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    matches = []
+    final_line = None
     for text in _response_texts(tool_response):
-        matches.extend(AUDIT_VERDICT_LINE_RE.findall(text))
-    verdict = matches[0] if len(matches) == 1 and matches[0] in AUDIT_VERDICTS else None
+        for line in text.splitlines():
+            if line.strip():
+                final_line = line.strip()
+    match = AUDIT_VERDICT_LINE_RE.fullmatch(final_line or "")
+    verdict = match.group(1) if match and match.group(1) in AUDIT_VERDICTS else None
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest(), verdict
 
 

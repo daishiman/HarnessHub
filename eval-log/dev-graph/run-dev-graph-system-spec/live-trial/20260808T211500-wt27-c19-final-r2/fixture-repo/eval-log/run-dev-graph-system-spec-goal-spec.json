@@ -1,0 +1,17 @@
+{
+  "skill": "dev-graph:run-dev-graph-system-spec",
+  "original_goal": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
+  "original_goal_hash": "30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454",
+  "why": "system-spec-harnessが既に持つヒアリング、カテゴリ×platform matrix、公式出典、確定章保護、独立完成度評価を複製せず引用し、dev-graphはグラフ登録とlineage維持だけを担うため。",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T211500-wt27-c19-final-r2/fixture-repo",
+  "checklist": [
+    "system_spec content root が caller repo 内で repository_id/common-dir と一致する",
+    "system-spec-harness が version >=0.1.0 <1.0.0 と required 4 entry points を満たす",
+    "elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される",
+    "coverage/source-citation/evaluator gate が全て PASS である",
+    "C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である",
+    "validate-source-digest.py --progress が exit 0",
+    "validate-evidence-refs.py --progress が exit 0",
+    "dev-graph 内に同等 elicitation/compile logic の複製が0件である"
+  ]
+}

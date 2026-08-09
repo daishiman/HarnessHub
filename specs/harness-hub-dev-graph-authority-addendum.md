@@ -49,6 +49,26 @@ implementation_readiness: {"checked_at":"2026-08-02T12:13:53Z","missing_sections
 
 # Harness Hub Dev Graph / Beads authority 追補
 
+## システム構築仕様書 index
+
+Dev Graph と Beads の authority 境界を確定 system-spec へ結ぶ仕様追補の入口である。
+
+## 要件定義書 (上位概念・憲法)
+
+開発自動化の本質的目的と全体制約は [上位要件](../system-spec/00-requirements-definition.md) を正とする。
+
+## 章一覧と集約状態
+
+対象章は dev-workflow と testing-qa であり、状態は `system-spec/spec-state.json` から集約する。
+
+## 集約状態サマリ
+
+confirmed かつ evaluator PASS の authority 契約だけを実装と監査の根拠として扱う。
+
+## 全体ドキュメント出典 (未割当参照)
+
+未割当の参考資料は system-spec の source ledger を正とし、この追補へ複製しない。
+
 ## 目的と成功状態
 
 Dev Graph と Beads の正本更新を、事前遮断・実行後監査・保存時検証・単一 mutation bridge の四境界で守り、script file や inline command からの迂回を検出できる状態を維持する。

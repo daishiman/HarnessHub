@@ -1,0 +1,78 @@
+{
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "contract_digest": "4e8b6d0bd0022630",
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "task_contract_terms": [
+    "upsert-node.py",
+    "validate-system-spec-resume.py",
+    "reuse-confirmed",
+    "--resume"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import",
+    "command": "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root <fixture-repo>",
+    "invocations": 1,
+    "mode": "reuse-confirmed",
+    "status": "PASS",
+    "network_calls": 0,
+    "upstream_skill_invocations": 0,
+    "registered_this_run": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ],
+    "resume": {
+      "validator": "validate-system-spec-resume",
+      "valid": true,
+      "plugin_version": "0.1.0",
+      "required_entry_points": [
+        "assign-system-spec-completeness-evaluator",
+        "run-system-spec-compile",
+        "run-system-spec-doc-fetch",
+        "run-system-spec-elicit"
+      ],
+      "artifacts": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json",
+        "system-spec/fetched-references.json",
+        "system-spec/index.md",
+        "system-spec/spec-state.json"
+      ],
+      "failures": []
+    },
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "gate-boundary", "exit_code": 0},
+      {"label": "gate-source-and-evidence-bindings", "exit_code": 0},
+      {"label": "gate-graph-preview", "exit_code": 0},
+      {"label": "c02-dry-run-architecture", "exit_code": 0},
+      {"label": "c02-dry-run-specification", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0}
+    ],
+    "all_steps_exit_zero": true
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py step exit 0 with valid=true, mode=reuse-confirmed, plugin_version=0.1.0 and all 4 declared entry points (run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator) present; failures=[] over the 5 digest-bound artifacts. runner reports upstream_skill_invocations=0 and network_calls=0, so no upstream regeneration occurred on this --resume run."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "graph.json arch-system-spec-overview carries source_lineage={origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_version=0.1.0, source_path=system-spec/00-requirements-definition.md, source_digest=f2f24d65…, imported_at=2026-08-09T13:27:45Z}, confirmation_status=confirmed and confirmation_evidence={evaluator=system-spec-harness/assign-system-spec-completeness-evaluator, evidence_ref=system-spec/completeness-report.json, evaluated_digest=6d26ebde…}; spec-system-spec-index carries the same lineage/confirmation shape and architecture_refs=[arch-system-spec-overview]. gate-source-and-evidence-bindings (source_digest + evidence_ref validators) exit 0."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "The only write steps are c02-upsert-architecture / c02-upsert-specification via upsert-node.py (each preceded by a C02 dry-run, all exit 0); gate-boundary exit 0 confirms no duplicated elicitation/compile logic in dev-graph, and graph.json holds exactly the 2 imported nodes with registered_this_run=[arch-system-spec-overview, spec-system-spec-index] (0 duplicates)."
+    }
+  ],
+  "blockers": []
+}

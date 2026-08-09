@@ -25,7 +25,7 @@ def load():
 
 
 def test_template_contract_copies_are_byte_identical():
-    """HarnessHub-o4zi: plugin だけ更新すると実行場所で heading 判定が分岐する。"""
+    """HarnessHub-o4zi: 実行場所で heading 判定が分岐しない。"""
     root = PLUGIN.parents[1]
     canonical = (PLUGIN / "templates/template-contract.json").read_bytes()
 
@@ -246,9 +246,7 @@ def test_heading_missing_resolves_system_dev_planner_task_variants(tmp_path):
 
 
 def test_architecture_is_subject_to_heading_missing_like_specification(tmp_path):
-    """HarnessHub-o4zi 非対称バグ: architecture が HEADING_MISSING_KINDS から漏れていたため、
-    10 見出し中 0 件充足でも readiness=complete のまま記録できていた。specification と
-    同じ検査に乗ること、かつ system-spec 要件定義 import は conditional 緩和で通ることを固定する。"""
+    """architecture も heading gate 対象にし、要件定義 import だけを条件付きで受理する。"""
     mod = load()
     assert mod.HEADING_MISSING_KINDS == {"architecture", "specification", "task"}
 
@@ -275,7 +273,8 @@ def test_architecture_is_subject_to_heading_missing_like_specification(tmp_path)
     bare = tmp_path / "architecture" / "bare.md"
     bare.parent.mkdir()
     bare.write_text(
-        frontmatter_for("bare-arch", "architecture/bare.md") + "# 章 wrapper\n\n## 正本 (source of truth)\n\n参照。\n",
+        frontmatter_for("bare-arch", "architecture/bare.md")
+        + "# 章 wrapper\n\n## 正本 (source of truth)\n\n参照。\n",
         encoding="utf-8",
     )
     bare_node = {
@@ -284,15 +283,15 @@ def test_architecture_is_subject_to_heading_missing_like_specification(tmp_path)
         "file_path": "architecture/bare.md",
         "template_id": "architecture",
         "template_version": "1.0.0",
-        "source_lineage": {"origin_kind": "system-spec-harness", "source_path": "system-spec/testing-qa.md"},
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/testing-qa.md",
+        },
     }
-
     findings = mod.artifact_findings([bare_node], tmp_path, artifact_contract)
     assert {item["code"] for item in findings} == {"heading_missing"}
     assert {item["detail"] for item in findings} == set(required)
 
-    # 要件定義書 import は U1-U9 の形が正当。conditional_triggers で緩和され、
-    # 同じ origin_kind でも source_path が違う章 import (上の bare_node) は緩和されない。
     requirements = tmp_path / "architecture" / "requirements.md"
     requirements.write_text(
         frontmatter_for("req-arch", "architecture/requirements.md")

@@ -1,0 +1,4 @@
+2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6  .dev-graph/state/graph.json
+bb58a09a9f20ec998eeb0cdb366664a9497b99e8d2997c7d7b8005b3651abf7b  .dev-graph/config.json
+338775a2ab80e373a5dd5a2cb3cfb7769bef84d8ad807077397cee2345a63351  tasks/lt-task-001.md
+1eaf9844eb79a5431e568750665c250c6c2ef707c5cf54322c88c7a71899278a  tasks/lt-task-002.md
