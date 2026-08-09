@@ -226,3 +226,11 @@ branch は `devgraph/issue-task-conditional-heading-check-resolution-20260807`�
 対象実装・テスト・仕様層・Beads 記録だけを commit し、無関係な既存差分を除外する。
 目的、変更、検証、仕様反映、Beads/node ID、残課題を本文に持つ draft PR を作る。詳細は
 [yzv0 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 `HarnessHub-o4zi` Phase 13 引き継ぎ
+
+branch は `devgraph/issue-system-spec-import-heading-contract-20260808`、base は `main`。system-spec index / requirements の正当形を declarative trigger で許容し、通常 architecture の不足を fail-closed にする。focused regression、contract copy parity、C01 / C02 / C03 / C04 / C05 / C14 / C18 / C19 の fresh live trial はすべて PASS し、system-spec foundation U1〜U9 の source-index も正規 transition で復旧した。新契約で検出した旧 specification 5 件・task 2 件を標準見出しへ移行し、full graph schema は violation 0。`origin/main` → local `main` → branch の順で同期し、競合後は最新 main の qa-216 / qa-217 を保持しつつ、事前に正規生成済みだった foundation source-index 9 entry を意味マージした。Draft PR の CI と merge が残るため、merge 後の default-branch reconciliation まで `HarnessHub-o4zi` は close しない。詳細は [o4zi 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-09 `HarnessHub-o4zi` 最終レビュー引き継ぎ
+
+origin/main (`2049626d` / #686) を local main 経由で branch へ再同期済み。C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に更新し、branch 重複 run を削除した。focused 82 tests・contract parity・graph schema violation 0・system-spec foundation/source citation・task spec exact-13 を再確認し、Draft PR #680 の required check 6 件もすべて SUCCESS。残作業は review/merge と merge 後 reconciliation のみ。

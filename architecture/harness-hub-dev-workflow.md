@@ -223,6 +223,16 @@ hooks の entry point 台帳は `package-contract.json` の `entry_points.hooks`
 
 C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
 
+## C11 system-spec import heading readiness (2026-08-09 / `HarnessHub-o4zi`)
+
+- template contract が `origin_kind + source_path` と conditional required sections の写像を所有し、resolver は全条件を AND 比較する。条件無し・lineage 不正は fail-closed に base へ戻す。
+- validator は architecture / specification / task を対称に検査し、不足見出しを readiness evidence として列挙する。完全な base template は conditional family 発火時も有効である。
+- plugin、導入済み `.dev-graph`、plugin-plan の contract copy は byte parity を保ち、fixture は契約正本から見出しを取得する。
+- gate が検出した旧 specification / task は標準見出しへ移行し、500 行を超える詳細仕様は短い正規 contract と調査履歴へ責務分離する。
+- foundation U1〜U9 の source-index は新しい要件文で補わず、記録済みユーザー発言を正規 transition で結び付ける。受理は coverage / source citation の同時 PASS を必須にする。
+
+C19 の source-derived body は source artifact と byte 同一に保つ。adapter は node shape と source 読取り、C02 writer は node と graph store の書込みを所有し、elicitation / compile 実行ロジックを Dev Graph 側へ複製しない。製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
 ## 検証 tier の責務境界 (2026-08-09 / qa-216)
 
 `select-verification-tier.py` は変更 path と規則表だけから `mvp / standard / critical` の最高一致 tier を返し、規則/source digest を証拠へ残す。`verification-gate-ledger.json` は gate 定義の SSOT（正本）で、plan builder が blocking・advisory・deferred を導出する。decision validator は selector absent、非仕様語彙、受け皿の無い延期を拒否する。

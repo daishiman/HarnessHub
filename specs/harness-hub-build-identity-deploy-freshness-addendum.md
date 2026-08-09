@@ -1,15 +1,55 @@
 ---
+graph_node_id: "spec-build-identity-deploy-freshness-addendum"
+artifact_kind: "specification"
+artifact_subtypes: []
+project_id: "harness-hub"
+domain: "platform"
+tags: ["build-identity","deploy","observability","ci","web-only"]
+priority: "high"
+start_date: null
+target_date: null
+iteration: null
 title: "稼働ビルドの素性と反映鮮度 — 実装確定追補"
-layer: "system-spec-addendum"
-feature: "feat-build-identity-deploy-freshness"
-parent_addendum: "specs/harness-hub-post-signin-landing-observability-addendum.md"
-recorded_at: "2026-08-08"
-status: "confirmed"
+owners: ["daishiman"]
+created_at: "2026-08-08T11:00:00Z"
+updated_at: "2026-08-08T14:56:41.578322Z"
+status: "active"
+depends_on: ["spec-post-signin-landing-observability","feat-build-identity-deploy-freshness"]
+related_nodes: ["spec-post-signin-landing-observability","feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure"]
+resource_scope: ["specs/harness-hub-build-identity-deploy-freshness-addendum.md","docs/features/feat-build-identity-deploy-freshness"]
+purpose: "qa-198-f の稼働ビルド素性 (V6) と deploy 反映鮮度 (V7) を実装確定契約として固定する"
+goal: "実装・CI・運用が参照できる単一の実装確定契約境界を維持する"
+scope_in: ["/health への commit 露出契約","deploy 時 HUB_COMMIT_SHA 注入","鮮度検査の判定と rollback 境界"]
+scope_out: ["deploy 操作そのもの","preview Worker への鮮度検査適用"]
+acceptance: ["稼働成果物から commit を認証なしで確認できる","HEAD より古い稼働版の継続を CI が検出できる","鮮度検査失敗では自動 rollback しない"]
+architecture_refs: ["arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "specs/harness-hub-build-identity-deploy-freshness-addendum.md"
+template_id: "specification"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9","evaluator":"final-review","evidence_ref":"docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-08T11:00:00Z","origin_kind":"manual","source_digest":"9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9","source_path":"features/feat-build-identity-deploy-freshness.md","source_plugin":"manual-final-review","source_version":"0.1.0"}
+classification_confidence: 0.95
+classification_reason: "feat-build-identity-deploy-freshness 実装確定契約の製品仕様追補"
+classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-build-identity-deploy-freshness-addendum.md","confidence":0.95}]
+issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-08-08T11:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # 稼働ビルドの素性と反映鮮度 — 実装確定追補 (2026-08-08)
 
-親追補 [`harness-hub-post-signin-landing-observability-addendum.md`](./harness-hub-post-signin-landing-observability-addendum.md) の acceptance にある次の 2 点を、macro feature `feat-build-identity-deploy-freshness` として実装した。
+親追補 [landing observability investigation](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) の acceptance にある次の 2 点を、macro feature `feat-build-identity-deploy-freshness` として実装した。
 
 1. 稼働中の成果物から、それが repository のどの commit に対応するかを**認証なしで**確認できる（acceptance 括弧表記の V6 = 稼働ビルドの素性）
 2. 本番の稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出できる（acceptance 括弧表記の V7 = 反映鮮度）
@@ -54,3 +94,71 @@ status: "confirmed"
 | 運用・証跡 | `docs/features/feat-build-identity-deploy-freshness/` |
 | architecture | `architecture/harness-hub-infrastructure.md`（2026-08-08 節） |
 | 実装 | `apps/hub/scripts/check-deploy-freshness.mjs`、`packages/schemas/src/health.ts`、`apps/hub/src/app/health/*`、`.github/workflows/ci.yml` |
+
+## 目的と成功状態
+
+稼働中の Hub がどの commit かを `/health` から確認でき、既定 branch より古い状態が許容時間を超えて継続した場合に CI が検出する。
+
+## 用語と主体
+
+「稼働版」は Cloudflare から応答する build、「既定版」は既定 branch の HEAD を指す。CI が比較主体で、運用者が失敗時の調査主体となる。
+
+## スコープ
+
+commit SHA の deploy 時注入、`/health` での公開、反映鮮度検査、smoke 直前の配信版再確認を対象とする。
+
+## ユースケースとユーザーフロー
+
+運用者は `/health` の `commit` を確認し、CI は既定版との差と経過時間を評価してから smoke test へ進む。
+
+## 機能要件
+
+40 桁小文字 hex の commit を公開し、欠落・形式不正・到達不能・許容時間超過・連続一致不足を非 0 終了で拒否する。
+
+## ビジネスルールと検証
+
+更新直後の差は許容するが、差が継続する場合は失敗とする。鮮度検査の失敗だけを理由に古い版へ rollback しない。
+
+## データモデル
+
+`/health.commit` は optional な 40 桁 SHA。未注入時は key 自体を省略し、代替文字列を保存しない。
+
+## API契約
+
+既存 `/health` 応答へ後方互換な optional `commit` を加える。専用 endpoint は追加しない。
+
+## イベント・非同期処理
+
+GitHub Actions の deploy、鮮度検査、配信版の連続確認、smoke の順序を固定する。
+
+## UI・状態遷移
+
+製品 UI は変更しない。CI 状態だけが pass / fail として遷移する。
+
+## 認証・認可
+
+commit SHA は公開情報なので `/health` では認証を要求せず、secret として扱わない。
+
+## 非機能要件
+
+検査は有限時間・決定論的・fail-closed とし、しきい値は検査 script の一箇所を正本とする。
+
+## エラー・例外・回復
+
+欠落、形式不正、到達不能、stale、colo 間不一致は原因を区別して報告する。鮮度失敗時は調査し、無根拠な rollback を行わない。
+
+## 可観測性
+
+稼働 commit、既定 commit、経過分、配信 version の一致回数を CI log に残す。
+
+## 互換性・移行・リリース
+
+`commit` は optional なので既存 consumer を壊さない。deploy 後の実測結果は release record へ追記する。
+
+## テストと受入条件
+
+schema、health route、freshness script、workflow 配線、連続 3 回一致を自動テストし、実測前は確認済みと扱わない。
+
+## 未決事項
+
+本番実測は merge と deploy 後に取得する。V6 / V7 の既存重複 ID は本変更では再採番しない。

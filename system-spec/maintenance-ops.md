@@ -97,6 +97,14 @@ codeを、次の変更者が意図・制約・failureを短時間で理解し、
 - maintenance objectiveには変更lead time、review指摘、escaped defect、rollback率などのoutcomeを使う。
 - 無料toolの導入自体を成功とせず、teamが継続運用でき、重要riskを減らすかで判断する。
 
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-188 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-044 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G1, G2, G3, G4, G5
+
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)

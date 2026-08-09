@@ -65,3 +65,71 @@ implementation_readiness: {"checked_at":"2026-08-03T09:45:00Z","missing_sections
 ## 影響境界
 
 本追補は repository の開発・復旧運用だけを対象とし、Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit を変更しない。正本は `system-spec/dev-workflow.md` の `qa-140`、設計参照は `architecture/harness-hub-dev-workflow.md`、操作手順は `docs/worktree-desync-recovery-runbook.md` とする。
+
+## 目的と成功状態
+
+mtime クラスタを異常の手掛かりとして検知しつつ、直接証拠なしに clobber 原因を断定しない復旧判断を成功状態とする。
+
+## 用語と主体
+
+mtime はファイル更新時刻、クラスタは近接時刻の変更群。診断 script が観測し、作業者が reflog と diff で判断する。
+
+## スコープ
+
+並列 worktree の診断と復旧判断だけを対象とし、製品 runtime と通常の commit gate は対象外とする。
+
+## ユースケースとユーザーフロー
+
+作業者は異常な一括更新を疑ったとき診断を実行し、報告された群を reflog・diff・実体照合で確認する。
+
+## 機能要件
+
+変更・未追跡 file の mtime クラスタを列挙し、検知時は exit 1 で診断材料を返す。
+
+## ビジネスルールと検証
+
+mtime 単独を原因確定に使わず、Git の直接証拠を優先する。診断不能は通常開発を止めない。
+
+## データモデル
+
+入力は path、mtime、Git 追跡状態。出力は閾値内の path 群と診断理由であり、永続 DB は持たない。
+
+## API契約
+
+CLI はクラスタなしで exit 0、検知で exit 1、Git 状態取得不能では診断用 fail-open として exit 0 を返す。
+
+## イベント・非同期処理
+
+手動実行の同期診断であり、hook・queue・定期 job へは配線しない。
+
+## UI・状態遷移
+
+製品 UI は変更しない。terminal の診断結果だけを提供する。
+
+## 認証・認可
+
+認証認可への影響はない。対象 repository を読めるローカル権限だけを使う。
+
+## 非機能要件
+
+読み取り専用、有限時間、path を明示する再現可能な診断とする。
+
+## エラー・例外・回復
+
+Git 状態を読めない場合は原因断定を避けて診断不能を返し、作業者が repository path と worktree 状態を確認する。
+
+## 可観測性
+
+検知した時刻帯、対象 path、件数を出力し、reflog・diff の確認へつなげる。
+
+## 互換性・移行・リリース
+
+既存 hook や commit 動線へ追加しないため互換性影響はない。診断 script の単独提供を維持する。
+
+## テストと受入条件
+
+mtime 群の検出、群なし、Git 状態取得不能、直接証拠優先の契約を fixture で検証する。
+
+## 未決事項
+
+blocking な未決事項はない。mtime を gate に昇格する場合は別仕様で false positive と復旧手順を確定する。

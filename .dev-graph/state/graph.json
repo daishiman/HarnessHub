@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1447,
+  "graph_revision": 1449,
   "nodes": [
     {
       "acceptance": [
@@ -48842,7 +48842,7 @@
       "classification_candidates": [
         {
           "artifact_kind": "specification",
-          "candidate_path": "specs/harness-hub-post-signin-landing-observability-addendum.md",
+          "candidate_path": "specs/harness-hub-post-signin-landing-observability-contract.md",
           "confidence": 0.99
         },
         {
@@ -48876,7 +48876,7 @@
       "evaluation_status": "fail",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "specs/harness-hub-post-signin-landing-observability-addendum.md",
+      "file_path": "specs/harness-hub-post-signin-landing-observability-contract.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -48911,7 +48911,8 @@
         "arch-harness-hub-testing-qa"
       ],
       "resource_scope": [
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "specs/harness-hub-post-signin-landing-observability-contract.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "system-spec/frontend.md",
         "system-spec/ui-ux.md",
         "system-spec/infrastructure.md",
@@ -48963,7 +48964,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub サインイン後 着地不達の原因究明と遷移経路の継続検証 仕様追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-07T10:59:42Z"
+      "updated_at": "2026-08-08T15:01:54.446911Z"
     },
     {
       "acceptance": [
@@ -51004,12 +51005,12 @@
       ],
       "resource_scope": [
         "docs/features/feat-build-identity-deploy-freshness/release-record.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "architecture/harness-hub-infrastructure.md"
       ],
       "scope_in": [
         "docs/features/feat-build-identity-deploy-freshness/release-record.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "architecture/harness-hub-infrastructure.md"
       ],
       "scope_out": [
@@ -51077,7 +51078,7 @@
       "confirmation_evidence": {
         "evaluated_digest": "3785a2c548943b38839c405c936aff16d43cc696ee847a84fabc463b14bfb5d7",
         "evaluator": "CI 実測 (hub-ci run 31221676748 / 31222374425) による原因確定",
-        "evidence_ref": "specs/harness-hub-post-signin-landing-observability-addendum.md"
+        "evidence_ref": "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-08T00:00:00Z",
@@ -51122,7 +51123,7 @@
         "apps/hub/tests/ci/production-auth-gates.test.ts",
         "apps/hub/tests/ci/smoke-version-recheck.test.ts",
         "docs/infrastructure-spec.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md"
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"
       ],
       "scope_in": [
         "version_gate の連続一致要求または smoke 直前の version 再確認",
@@ -51269,7 +51270,7 @@
       "template_version": "1.0.0",
       "title": "稼働ビルドの素性と反映鮮度 — 実装確定追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-08T11:00:00Z"
+      "updated_at": "2026-08-08T14:56:41.578322Z"
     },
     {
       "acceptance": [
@@ -51396,231 +51397,6 @@
       "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T09:52:24.683829Z"
-    },
-    {
-      "acceptance": [
-        "同一 message の複数監査 dispatch がすべて非 null verdict で記録される",
-        "tool_use_id・response_sha256・verdict の対応違いを fail-closed 拒否する",
-        "単一 dispatch の既存挙動を維持する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow",
-        "arch-harness-hub-testing-qa"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-uypz",
-        "linked_at": "2026-08-08T11:05:16.215042Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
-          "confidence": 0.96
-        }
-      ],
-      "classification_confidence": 0.96,
-      "classification_reason": "最終 C01-C19 live-trial 監査で、同一 assistant message の複数 dispatch が audit_verdict=null となり同期再 fork を要求する事象を実測した。",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "not_applicable"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-08T11:00:00Z",
-      "depends_on": [],
-      "domain": "dev-workflow",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "複数 dispatch の全 event が audit_verdict 非 null と正しい response_sha256 を持ち、fresh live-trial の不要な再 fork を発生させない",
-      "graph_node_id": "issue-audit-multi-dispatch-null-verdict-20260808",
-      "implementation_readiness": {
-        "checked_at": "2026-08-08T11:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "1つの assistant message に複数の監査 Agent dispatch がある場合も、各 response の生 verdict を対応する台帳 event へ結び付ける",
-      "related_nodes": [
-        "issue-audit-fork-ledger-forgery-20260728"
-      ],
-      "resource_scope": [
-        "plugins/system-spec-harness/hooks/record-audit-fork.py",
-        "eval-log/system-spec-harness/audit-fork-ledger.jsonl"
-      ],
-      "scope_in": [
-        "複数 tool_use と複数 tool_result の対応付け",
-        "event ごとの AUDIT_VERDICT 抽出",
-        "回帰テスト"
-      ],
-      "scope_out": [
-        "監査 evaluator の採点基準変更",
-        "製品 API・DB・UI の変更"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-08T11:00:00Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "system-spec-harness",
-        "audit-ledger",
-        "follow-up"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "複数監査 dispatch の台帳 verdict=null を原子的に記録する",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-08T11:05:42.334830Z"
-    },
-    {
-      "acceptance": [
-        "complete 時の blocking_items prose と machine array が矛盾しない",
-        "--require-foundation が U1-U9 全件 PASS する",
-        "compile diff が0件、または意図的差分を機械判定できる"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow",
-        "arch-harness-hub-testing-qa"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-duej",
-        "linked_at": "2026-08-08T11:05:26.131720Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
-          "confidence": 0.94
-        }
-      ],
-      "classification_confidence": 0.94,
-      "classification_reason": "最終品質ゲートで certificate の prose/array 不一致、foundation U1-U9 qa_log 欠落9件、compile と checked-in writeback の既存 drift を同じ証拠 projection 境界で確認した。",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "not_applicable"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-08T11:00:00Z",
-      "depends_on": [],
-      "domain": "documentation",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "blocking_items の文章と配列が一致し、U1-U9 source-index が qa_log から追跡でき、compile 出力と正本 writeback の差が意図的か stale か判定できる",
-      "graph_node_id": "issue-system-spec-evidence-projection-parity-20260808",
-      "implementation_readiness": {
-        "checked_at": "2026-08-08T11:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "medium",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "同じ system-spec 証拠から作る certificate、foundation qa_log、compile 出力の意味を一致させる",
-      "related_nodes": [
-        "issue-audit-fork-ledger-forgery-20260728"
-      ],
-      "resource_scope": [
-        "system-spec/spec-state.json",
-        "system-spec/coverage-matrix.json",
-        "system-spec/coverage-certificate.json",
-        "system-spec/index.md",
-        "specs/",
-        "architecture/"
-      ],
-      "scope_in": [
-        "coverage_certificate.blocking_items の意味統一",
-        "U1-U9 source-index と qa_log の同期",
-        "compile 出力と手動 writeback drift の分類・解消"
-      ],
-      "scope_out": [
-        "新しい製品要求の追加",
-        "既存 writeback の証拠なし一括上書き"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-08T11:00:00Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "system-spec-harness",
-        "evidence",
-        "projection",
-        "follow-up"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "system-spec 証拠 projection の certificate・qa_log・compile parity を揃える",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-08T11:06:29.987762Z"
     },
     {
       "acceptance": [
@@ -51887,68 +51663,68 @@
     },
     {
       "acceptance": [
-        "認証後 route は共通 HubShell を使い main landmark を一つだけ持つ",
-        "member と role 未確定時に管理者専用導線が DOM に存在しない",
-        "破壊操作は可逆性を明示する ConfirmDialog を使う",
-        "modal layer は focus trap・Esc・focus restore・scroll lock を共通実装する",
-        "変更対象の手書きファイルは 500 行以下である",
-        "task spec と repository quality gate が blocking failure 0 で完了する",
-        "仕様影響が system-spec / specs / architecture / features / tasks / docs と受領書へ反映される",
-        "devgraph branch の draft PR が base main 向けに公開される"
+        "index と requirements の正当形だけが conditional 緩和で PASS する",
+        "通常 architecture の不足見出しが fail-closed になる",
+        "3 contract copy が一致する",
+        "focused regression が PASS する",
+        "fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する",
+        "repository 全体の graph schema gate が違反 0 で PASS する"
       ],
       "architecture_refs": [
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
       ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
       "beads_linkage": {
-        "bd_issue_id": "HarnessHub-imzk",
-        "linked_at": "2026-08-08T10:34:00Z",
+        "bd_issue_id": "HarnessHub-o4zi",
+        "linked_at": "2026-08-08T10:00:00Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
-          "candidate_path": "issues/hub-shell-page-surface-unification-20260808.md",
+          "candidate_path": "issues/system-spec-import-heading-contract-20260808.md",
           "confidence": 0.99
         }
       ],
       "classification_confidence": 0.99,
-      "classification_reason": "前回 UI foundation の上に共通 shell と全画面 surface を載せる独立した実装・公開単位",
+      "classification_reason": "system-spec import と dev-graph C11 readiness の横断的な repository tooling bug。",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
-        "policy": "linked_pr_merged_all",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"
+        ],
+        "policy": "manual",
         "reconciled_at": null,
         "source": null,
-        "status": "open"
+        "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
-        "evaluator": "final review + system-spec transition writer",
-        "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
+        "evaluated_digest": "35d086703261948e3761e3a72df5c84b8b105b226657952c4840eb5c2b4dd913",
+        "evaluator": "focused regression + latest main C19 independent final review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-08T10:30:00Z",
+      "created_at": "2026-08-08T10:00:00Z",
       "depends_on": [],
-      "domain": "frontend",
+      "domain": "dev-workflow",
       "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "issues/hub-shell-page-surface-unification-20260808.md",
+      "file_path": "issues/system-spec-import-heading-contract-20260808.md",
       "github_project_linkages": [],
       "github_publication": {
-        "labels": [
-          "ui-visual"
-        ],
+        "labels": [],
         "milestone": null,
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "server-first の共通 HubShell、role-aware navigation、共通 page surface、accessible overlay が仕様・実装・テスト・PR で同じ契約を参照する",
-      "graph_node_id": "issue-hub-shell-page-surface-unification-20260808",
+      "goal": "source lineage に基づく宣言型見出し contract と architecture/specification/task の対称な readiness 判定を確立する。",
+      "graph_node_id": "issue-system-spec-import-heading-contract-20260808",
       "implementation_readiness": {
-        "checked_at": "2026-08-08T10:30:00Z",
+        "checked_at": "2026-08-08T14:20:00Z",
         "missing_sections": [],
         "status": "complete"
       },
@@ -51965,50 +51741,47 @@
         {
           "base_branch": "main",
           "closing_reference_verified": false,
-          "head_branch": "devgraph/issue-hub-shell-page-surface-unification-20260808",
-          "linked_at": "2026-08-08T11:44:47Z",
+          "head_branch": "devgraph/issue-system-spec-import-heading-contract-20260808",
+          "linked_at": "2026-08-08T14:20:00Z",
           "merge_commit_sha": null,
           "merged_at": null,
-          "pr_number": 683,
+          "pr_number": 680,
           "repo": "daishiman/HarnessHub",
           "state": "open",
-          "url": "https://github.com/daishiman/HarnessHub/pull/683"
+          "url": "https://github.com/daishiman/HarnessHub/pull/680"
         }
       ],
-      "purpose": "認証後の全画面を一貫したナビゲーション、画面見出し、面、モーダル契約へ統一し、権限外導線と破壊操作の誤操作を防ぐ",
+      "purpose": "system-spec import の正当な本文形だけを許容し、不完全な architecture を fail-closed に拒否する。",
       "related_nodes": [
-        "feat-hub-foundation",
-        "feat-post-signin-scope-routing",
-        "spec-harness-hub-ui-foundation-addendum",
-        "arch-harness-hub-frontend"
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
       ],
       "resource_scope": [
-        "apps/hub/",
-        "packages/ui/",
-        "system-spec/",
-        "specs/harness-hub-ui-foundation-addendum.md",
-        "architecture/harness-hub-frontend.md",
-        "features/feat-hub-foundation.md",
-        "features/feat-post-signin-scope-routing.md",
-        "tasks/feat-hub-foundation/",
-        "docs/",
-        "issues/hub-shell-page-surface-unification-20260808.md"
+        "plugins/dev-graph",
+        ".dev-graph/templates/template-contract.json",
+        "plugin-plans/dev-graph/templates/template-contract.json",
+        "system-spec",
+        "specs",
+        "architecture",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement",
+        "docs/features/feat-dev-pipeline-improvement"
       ],
       "scope_in": [
-        "desktop sidebar / header / footer と mobile tab の共通 HubShell",
-        "実在 route と session role に基づく deny-by-default navigation",
-        "Panel / ScreenHeader / ActionLink / Icon / Modal / BottomSheet の公開 UI contract",
-        "既存業務画面と公開画面の共通 surface 移行",
-        "unit / a11y / catalog / typecheck / lint / repository gate"
+        "conditional trigger の contract 化",
+        "architecture heading_missing の有効化",
+        "3 template contract copy の同期",
+        "fixture と focused regression",
+        "新契約で検出された旧 specification / task artifact の標準見出し移行"
       ],
       "scope_out": [
-        "公開 API・DB schema・認証認可ルール自体の変更",
-        "未実装 route の新設",
-        "Cloudflare 本番デプロイ",
-        "モバイル native gesture の追加"
+        "issue kind の見出し慣習整理",
+        "Harness Hub 製品 runtime",
+        "system-spec の意味内容変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-08T10:30:00Z",
+        "imported_at": "2026-08-08T10:00:00Z",
         "origin_kind": "manual",
         "source_digest": null,
         "source_path": null,
@@ -52018,18 +51791,139 @@
       "start_date": "2026-08-08",
       "status": "active",
       "tags": [
-        "ui-shell",
-        "page-surface",
-        "accessibility",
-        "responsive",
-        "final-review"
+        "dev-graph",
+        "system-spec",
+        "heading-readiness",
+        "fail-closed"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "Harness Hub 共通シェル・全ページ表面の統一",
+      "title": "system-spec import の見出し契約と architecture readiness を一致させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T11:46:34.607947Z"
+      "updated_at": "2026-08-09T14:00:00Z"
+    },
+    {
+      "acceptance": [
+        "U1〜U9 の 9 件すべてが実在する source-index を持つ",
+        "source citation と foundation coverage が PASS する",
+        "compiler 再生成差分が正規状態と一致する",
+        "推測または捏造した source text が 0 件である"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-iys4",
+        "linked_at": "2026-08-08T10:10:38Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/system-spec-foundation-source-index-recovery-20260808.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "system-spec foundation の既存 provenance debt を独立して復旧する監査課題。",
+      "completion_evidence": {
+        "completed_at": "2026-08-08T13:32:54Z",
+        "evidence_refs": [
+          "system-spec/spec-state.json",
+          "system-spec/source-citation-report.json",
+          "system-spec/coverage-report.json",
+          "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-08T13:32:54Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9c39bd48c2ae427aad083db9eecc890e3e53cfeba09bc644722a5571e296c5da",
+        "evaluator": "2026-08-08 final review deterministic gates",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T11:00:00Z",
+      "depends_on": [],
+      "domain": "testing-qa",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/system-spec-foundation-source-index-recovery-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "foundation coverage が実在する原文証跡だけで PASS する状態を回復する。",
+      "graph_node_id": "issue-system-spec-foundation-source-index-recovery-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T11:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "U1〜U9 の source-index 欠落を、推測せず正規 provenance から復旧する。",
+      "related_nodes": [
+        "arch-harness-hub-testing-qa",
+        "spec-harness-hub-requirements",
+        "issue-system-spec-import-heading-contract-20260808"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "system-spec/00-requirements-definition.md",
+        "system-spec/source-citation-report.json",
+        "system-spec/coverage-report.json",
+        "plugins/system-spec-harness"
+      ],
+      "scope_in": [
+        "U1〜U9 の実在する source lineage 調査",
+        "transition writer からの source-index 更新",
+        "compiler と決定論ゲートの再実行"
+      ],
+      "scope_out": [
+        "要件内容の推測変更",
+        "架空の原文または承認の作成",
+        "Harness Hub 製品 runtime の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T11:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "closed",
+      "tags": [
+        "system-spec",
+        "foundation",
+        "source-index",
+        "provenance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec foundation の U1〜U9 source-index を復旧する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T13:32:54Z"
     },
     {
       "acceptance": [],
@@ -52486,6 +52380,377 @@
       "title": "[bug] 本番ランディング `/` が DYNAMIC_SERVER_USAGE で 500 になり、サインイン入口・Workspace 選択・拒否画面が欠落していた",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T12:00:00Z"
+    },
+    {
+      "acceptance": [
+        "認証後 route は共通 HubShell を使い main landmark を一つだけ持つ",
+        "member と role 未確定時に管理者専用導線が DOM に存在しない",
+        "破壊操作は可逆性を明示する ConfirmDialog を使う",
+        "modal layer は focus trap・Esc・focus restore・scroll lock を共通実装する",
+        "変更対象の手書きファイルは 500 行以下である",
+        "task spec と repository quality gate が blocking failure 0 で完了する",
+        "仕様影響が system-spec / specs / architecture / features / tasks / docs と受領書へ反映される",
+        "devgraph branch の draft PR が base main 向けに公開される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-imzk",
+        "linked_at": "2026-08-08T10:34:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-shell-page-surface-unification-20260808.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "前回 UI foundation の上に共通 shell と全画面 surface を載せる独立した実装・公開単位",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "a9b2b7930df43920ef68b9854c3c0c6473cba5bdfc71596bed4c04a608fbe3d2",
+        "evaluator": "final review + system-spec transition writer",
+        "evidence_ref": "docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T10:30:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-shell-page-surface-unification-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [
+          "ui-visual"
+        ],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "server-first の共通 HubShell、role-aware navigation、共通 page surface、accessible overlay が仕様・実装・テスト・PR で同じ契約を参照する",
+      "graph_node_id": "issue-hub-shell-page-surface-unification-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T10:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-hub-shell-page-surface-unification-20260808",
+          "linked_at": "2026-08-08T11:44:47Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 683,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/683"
+        }
+      ],
+      "purpose": "認証後の全画面を一貫したナビゲーション、画面見出し、面、モーダル契約へ統一し、権限外導線と破壊操作の誤操作を防ぐ",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "feat-post-signin-scope-routing",
+        "spec-harness-hub-ui-foundation-addendum",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "apps/hub/",
+        "packages/ui/",
+        "system-spec/",
+        "specs/harness-hub-ui-foundation-addendum.md",
+        "architecture/harness-hub-frontend.md",
+        "features/feat-hub-foundation.md",
+        "features/feat-post-signin-scope-routing.md",
+        "tasks/feat-hub-foundation/",
+        "docs/",
+        "issues/hub-shell-page-surface-unification-20260808.md"
+      ],
+      "scope_in": [
+        "desktop sidebar / header / footer と mobile tab の共通 HubShell",
+        "実在 route と session role に基づく deny-by-default navigation",
+        "Panel / ScreenHeader / ActionLink / Icon / Modal / BottomSheet の公開 UI contract",
+        "既存業務画面と公開画面の共通 surface 移行",
+        "unit / a11y / catalog / typecheck / lint / repository gate"
+      ],
+      "scope_out": [
+        "公開 API・DB schema・認証認可ルール自体の変更",
+        "未実装 route の新設",
+        "Cloudflare 本番デプロイ",
+        "モバイル native gesture の追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T10:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "ui-shell",
+        "page-surface",
+        "accessibility",
+        "responsive",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Harness Hub 共通シェル・全ページ表面の統一",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:46:34.607947Z"
+    },
+    {
+      "acceptance": [
+        "同一 message の複数監査 dispatch がすべて非 null verdict で記録される",
+        "tool_use_id・response_sha256・verdict の対応違いを fail-closed 拒否する",
+        "単一 dispatch の既存挙動を維持する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uypz",
+        "linked_at": "2026-08-08T11:05:16.215042Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "最終 C01-C19 live-trial 監査で、同一 assistant message の複数 dispatch が audit_verdict=null となり同期再 fork を要求する事象を実測した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T11:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "複数 dispatch の全 event が audit_verdict 非 null と正しい response_sha256 を持ち、fresh live-trial の不要な再 fork を発生させない",
+      "graph_node_id": "issue-audit-multi-dispatch-null-verdict-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T11:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "1つの assistant message に複数の監査 Agent dispatch がある場合も、各 response の生 verdict を対応する台帳 event へ結び付ける",
+      "related_nodes": [
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl"
+      ],
+      "scope_in": [
+        "複数 tool_use と複数 tool_result の対応付け",
+        "event ごとの AUDIT_VERDICT 抽出",
+        "回帰テスト"
+      ],
+      "scope_out": [
+        "監査 evaluator の採点基準変更",
+        "製品 API・DB・UI の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T11:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "audit-ledger",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "複数監査 dispatch の台帳 verdict=null を原子的に記録する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:05:42.334830Z"
+    },
+    {
+      "acceptance": [
+        "complete 時の blocking_items prose と machine array が矛盾しない",
+        "--require-foundation が U1-U9 全件 PASS する",
+        "compile diff が0件、または意図的差分を機械判定できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-duej",
+        "linked_at": "2026-08-08T11:05:26.131720Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
+          "confidence": 0.94
+        }
+      ],
+      "classification_confidence": 0.94,
+      "classification_reason": "最終品質ゲートで certificate の prose/array 不一致、foundation U1-U9 qa_log 欠落9件、compile と checked-in writeback の既存 drift を同じ証拠 projection 境界で確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T11:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "blocking_items の文章と配列が一致し、U1-U9 source-index が qa_log から追跡でき、compile 出力と正本 writeback の差が意図的か stale か判定できる",
+      "graph_node_id": "issue-system-spec-evidence-projection-parity-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T11:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "同じ system-spec 証拠から作る certificate、foundation qa_log、compile 出力の意味を一致させる",
+      "related_nodes": [
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "system-spec/coverage-matrix.json",
+        "system-spec/coverage-certificate.json",
+        "system-spec/index.md",
+        "specs/",
+        "architecture/"
+      ],
+      "scope_in": [
+        "coverage_certificate.blocking_items の意味統一",
+        "U1-U9 source-index と qa_log の同期",
+        "compile 出力と手動 writeback drift の分類・解消"
+      ],
+      "scope_out": [
+        "新しい製品要求の追加",
+        "既存 writeback の証拠なし一括上書き"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T11:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "evidence",
+        "projection",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec 証拠 projection の certificate・qa_log・compile parity を揃える",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:06:29.987762Z"
     },
     {
       "acceptance": [

@@ -117,6 +117,46 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **一時生成物の境界 (qa-095)**: skill 構造 lint は dot directory、`__pycache__`、`.pyc` を test tool の生成物として構造判定から除外し、通常の nested directory 違反は維持する。root / plugin 実装の byte parity と per-plugin → repository の実行順序回帰を固定する。
 - **世代非依存 rerun command (qa-134)**: promotion 前は planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。contract 1.3.0 は `--staging`、flag 欠落、別 package id を fail-closed に拒否し、1.2.0 以前の immutable package は当時の契約で再検証する。
 
+## Architecture overview
+
+正本: system-spec/testing-qa.md。テストレベル網羅 (qa-076)・カバレッジ品質ゲート (qa-077)・層別方針 (qa-095)・実走証拠の完全性 (qa-089) を束ねた品質ゲートのアーキテクチャ。doctrine anchor: テストピラミッド。
+
+## Context and drivers
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Goals and non-goals
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## System context and boundaries
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Container and component view
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Cross-cutting contracts
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Subtype architecture
+
+- subtype: infrastructure — 詳細は正本章を参照 (複製しない)
+
+## Architecture decisions
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。個別の確定は下記の日付別「実装反映」節に差分追記されている (全書換禁止・要件 C18/C19)。
+
+## Delivery, migration and rollback
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Risks and verification
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
 ## 2026-07-29 実装反映
 
 `HarnessHub-9ndl` / `HarnessHub-dyxr` で上記境界を `run-skill-live-trial` と C14 decompose 監査へ実装した。製品 API・DB・認証認可・UI・deploy unit への影響は無く、設計影響は開発品質ゲートの証拠経路に限定される。反映と検証の対応は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/live-trial-acceptance-hardening-spec-reflection.md) を参照する。
@@ -205,9 +245,6 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md)
 を参照する。
 
-## 上流指針 (doctrine anchor)
-
-- reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。
 
 ## 2026-08-02 顧客持ち込み Google OAuth 回帰設計
 
@@ -256,3 +293,7 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 - **未確定境界**: provider-admin 越境は現行 edge 404 / audit 0 を診断するが、route の越境監査契約との統一は `HarnessHub-stmx` が所有する。
 
 正本契約と証拠対応は [production coverage smoke 仕様](../specs/harness-hub-production-coverage-smoke-addendum.md) と [仕様反映受領書](../docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md) を参照する。
+
+## 関連追補
+
+- system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。

@@ -445,6 +445,60 @@
   },
   "qa_log": [
     {
+      "id": "qa-foundation-u1",
+      "question": "利用者との R0 対話で U1 の本質的目的として選択・確認された内容は何か",
+      "answer": "U1=非エンジニアのAI自己解決の実現 (エンジニアを介さず作者自身が Skill/WebApp を公開・配布できる状態)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u2",
+      "question": "利用者との R0 対話で U2 の背景として選択・確認された内容は何か",
+      "answer": "U2=代理作業の限界を実感した (提供者が publish 作業を代行するモデルはスケールしない)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u3",
+      "question": "利用者との R0 対話で U3 のゴールとして選択・確認された内容は何か",
+      "answer": "U3=提示した 4 ゴールを全て選択 (G1 作者の自己完結 publish / G2 統制と安全性の担保 / G3 既存資産の再利用による最小工数 / G4 複数顧客への同時展開基盤)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u4",
+      "question": "利用者との R0 対話で U4 の定量目標として選択・確認された内容は何か",
+      "answer": "U4=提示した 4 定量目標を全て選択 (O1: H1 作者の自己完結 publish 成功率 80% / O2: H4 提供者の代理作業比率 30% 以下 / O3: H5 公開までのリードタイム短縮 / O4: H8 初回 publish 15 分以内)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u5",
+      "question": "利用者との R0 対話で U5 の成功基準として選択・確認された内容は何か",
+      "answer": "U5=複数顧客での同時稼働 (2 社以上の顧客 Workspace で同時稼働している状態を成功とする)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u6",
+      "question": "利用者との R0 対話で U6 の主要ステークホルダーとして選択・確認された内容は何か",
+      "answer": "U6=複数顧客へ同時展開 (顧客 Workspace の作者・利用者・管理者、および提供者 = Platform 運用者)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u7",
+      "question": "利用者との R0 対話で U7 のスコープ境界として選択・確認された内容は何か",
+      "answer": "U7=マルチテナントの論理分離を Stage 1 から実装 (Stage 0-2 を仕様化スコープ、Stage 3 以降は除外)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u8",
+      "question": "利用者との R0 対話で U8 の前提制約として選択・確認された内容は何か",
+      "answer": "U8=個人+AI のみの開発体制 (C1)・インフラコスト最小化 (C2)・既存資産 (harness-creator 等) の再利用前提 (C3)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
+      "id": "qa-foundation-u9",
+      "question": "利用者との R0 対話で U9 の具体的意図を含む確定要約を承認したか",
+      "answer": "U1-U9 承認=「承認する」を選択 (approval_log: appr-001)。",
+      "source": {"kind": "user-dialogue"}
+    },
+    {
       "id": "qa-001",
       "question": "対象プラットフォームの範囲: (1) Hub Web (管理面) の対応範囲、(2) 作者の作業環境 (Claude Code / Codex + Publisher が動く desktop OS)、(3) ユーザー作成 Web App (出口B) の対象ブラウザは?",
       "answer": "(1) Hub Web は PC ブラウザ中心 + mobile/tablet ブラウザでの閲覧 (Catalog 閲覧・Web アプリを開く) をレスポンシブ対応。管理操作 (承認・rollback・設定) は PC 前提。(2) 作者環境は macOS + Windows。desktop Linux は対象外 (非エンジニアの業務 PC に存在しないため)。(3) Web App 出口は PC + モバイルブラウザを対象とするが、Hub の検査は HTTP health 確認までで、モバイル UI 品質は作者の owner acceptance 責任と明記する。native モバイル/タブレットアプリは全カテゴリで作らない (ブラウザ経由提供。web 行のレスポンシブでカバー)。"

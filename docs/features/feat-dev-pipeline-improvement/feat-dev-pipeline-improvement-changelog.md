@@ -291,3 +291,10 @@ close した。
 - `issue` kind は実測の結果 task とは異なる構造課題と判断しスコープ外へ切り出した。
 - 判断・検証結果の全量は
   [仕様反映受領書](yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 追記: system-spec import heading contract
+
+- `HarnessHub-o4zi` で specification / architecture の正当な system-spec import 形を `origin_kind + source_path` の宣言型 trigger へ分離した。
+- architecture を `HEADING_MISSING_KINDS` へ追加し、3 contract copy と fixture を同期して 0/10 見出しでも complete になる非対称を解消した。
+- C19 と foundation U1〜U9 を正規経路で復旧し、旧 artifact 160 違反を 0 件へ収束。570 行の着地観測詳細は 122 行の正規 contract と履歴へ分離した。
+- 2026-08-09: main の C19 正本 `20260809T132550Z-wt27-c19-ci-r1` へ更新し、重複証拠を削除。focused 82 PASS。詳細は [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
