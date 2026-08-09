@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # /// script
 # name: validate-system-spec-evaluator-completion
-# purpose: C19 live trial の evaluator fork 完了と C02 import の順序・非代筆を transcript から検証する。
-# inputs: [argv --transcript]
+# purpose: C19 live trial の build/resume 別完了境界と C02 import の正当性を検証する。
+# inputs: [argv --transcript, optional argv --resume-report]
 # outputs: [stdout JSON, exit 0 pass, exit 2 fail-closed]
 # contexts: [E]
 # network: false
@@ -20,8 +20,10 @@ subagent 一覧には ``TaskOutput`` と互換でない短縮 ID が表示され
 3. その完了通知より後に初めて upsert-node.py (C02 import) が実行される。
 4. 待機中に TaskStop を使わず、outer session が completeness-report.json を代筆しない。
 
-一つでも証明できなければ exit 2 とする。TaskOutput は runtime が互換 ID を公開した場合の
-任意の待機手段であり、本 gate の authority は完全 agentId に結びついた native notification。
+``--resume-report`` が無い build 経路は上記の因果関係を要求する。指定された resume 経路は
+evaluator を再実行せず、digest-bound PASS receipt を検証した決定論 runner が全 C02 step を
+完走したこと、runner stdout と report が同一であること、upstream Skill/Agent/direct upsert が
+0 件であることを要求する。一つでも証明できなければ exit 2 とする。
 """
 from __future__ import annotations
 
@@ -34,7 +36,30 @@ from typing import Any, Iterable
 
 
 EVALUATOR_SKILL = "system-spec-harness:assign-system-spec-completeness-evaluator"
+TARGET_SKILL = "dev-graph:run-dev-graph-system-spec"
 REPORT_NAME = "completeness-report.json"
+RESUME_REPORT_NAME = "run-dev-graph-system-spec-resume-report.json"
+REQUIRED_RESUME_STEPS = {
+    "resolve-context",
+    "validate-resume",
+    "build-import",
+    "gate-boundary",
+    "gate-source-and-evidence-bindings",
+    "gate-graph-preview",
+    "c02-dry-run-architecture",
+    "c02-dry-run-specification",
+    "c02-upsert-architecture",
+    "c02-upsert-specification",
+    "gate-evidence-refs",
+    "gate-source-digest",
+}
+# The bounded C19 live-trial fixture declares these two node IDs. This is not a
+# universal caller-repository contract; a different fixture needs its own
+# report contract instead of reusing this validator unchanged.
+LIVE_TRIAL_FIXTURE_RESUME_NODES = [
+    "arch-system-spec-overview",
+    "spec-system-spec-index",
+]
 UPSERT_EXECUTION = re.compile(
     r"^\s*(?:python(?:3(?:\.\d+)?)?|uv\s+run\s+python(?:3(?:\.\d+)?)?)\s+"
     r"(?:\"[^\"\n]*upsert-node\.py\"|'[^'\n]*upsert-node\.py'|[^\s;\n]*upsert-node\.py)"
@@ -43,6 +68,7 @@ UPSERT_EXECUTION = re.compile(
 )
 LOOPING_SLEEP = re.compile(r"\b(?:until|while|for)\b[\s\S]*\bsleep\b")
 LONG_SLEEP = re.compile(r"\bsleep\s+(?P<seconds>\d+(?:\.\d+)?)\b")
+RESUME_RUNNER = re.compile(r"(?:^|[\s/])build-system-spec-resume-import\.py(?:\s|$)")
 
 
 def _blocks(record: dict[str, Any]) -> Iterable[dict[str, Any]]:
@@ -108,7 +134,97 @@ def _is_upsert_mutation(command: str) -> bool:
     return False
 
 
-def validate(records: list[dict[str, Any]]) -> dict[str, Any]:
+def _write_target(inputs: dict[str, Any]) -> str | None:
+    """Write/Edit の実 target だけを返し、content 内の path 言及を除外する。"""
+    for key in ("file_path", "path"):
+        value = inputs.get(key)
+        if isinstance(value, str):
+            return value
+    return None
+
+
+def _result_json(
+    result_entry: tuple[int, dict[str, Any], dict[str, Any]] | None,
+) -> dict[str, Any] | None:
+    if result_entry is None:
+        return None
+    _, record, result = result_entry
+    candidates = [result.get("content")]
+    tool_result = record.get("toolUseResult")
+    if isinstance(tool_result, dict):
+        candidates.append(tool_result.get("stdout"))
+    for candidate in candidates:
+        if not isinstance(candidate, str):
+            continue
+        try:
+            value = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict):
+            return value
+    return None
+
+
+def _validate_resume_report(report: Any) -> list[dict[str, Any]]:
+    violations: list[dict[str, Any]] = []
+    if not isinstance(report, dict):
+        return [{"rule": "EV-013", "detail": "resume report が JSON object でない"}]
+    required_values = {
+        "runner": "build-system-spec-resume-import",
+        "mode": "reuse-confirmed",
+        "status": "PASS",
+        "network_calls": 0,
+        "upstream_skill_invocations": 0,
+    }
+    for key, expected in required_values.items():
+        if report.get(key) != expected:
+            violations.append({
+                "rule": "EV-014",
+                "detail": f"resume report {key}={report.get(key)!r}; expected {expected!r}",
+            })
+    if report.get("registered_this_run") != LIVE_TRIAL_FIXTURE_RESUME_NODES:
+        violations.append({
+            "rule": "EV-015",
+            "detail": (
+                "resume report の registered_this_run が C19 live-trial fixture の"
+                " 2 node と一致しない"
+            ),
+        })
+    resume = report.get("resume")
+    if not isinstance(resume, dict) or resume.get("valid") is not True:
+        violations.append({"rule": "EV-016", "detail": "digest-bound resume 検証が valid=true でない"})
+    steps = report.get("steps")
+    step_codes = {
+        step.get("label"): step.get("exit_code")
+        for step in steps if isinstance(step, dict)
+    } if isinstance(steps, list) else {}
+    missing = sorted(REQUIRED_RESUME_STEPS - step_codes.keys())
+    failed = sorted(label for label, code in step_codes.items() if code != 0)
+    if missing or failed:
+        violations.append({
+            "rule": "EV-017",
+            "detail": f"resume closure step 不備: missing={missing}, nonzero={failed}",
+        })
+    contract = report.get("completion_contract")
+    if not isinstance(contract, dict) or contract.get("version") != "system-spec-resume-closure/v1":
+        violations.append({"rule": "EV-018", "detail": "resume completion contract v1 が無い"})
+    checklist = report.get("checklist")
+    if not isinstance(checklist, list) or not checklist:
+        violations.append({"rule": "EV-019", "detail": "resume checklist evidence が無い"})
+    elif any(
+        not isinstance(item, dict)
+        or item.get("status") != "pass"
+        or not isinstance(item.get("evidence"), str)
+        or not item["evidence"].strip()
+        for item in checklist
+    ):
+        violations.append({"rule": "EV-019", "detail": "resume checklist に PASS/evidence 欠落がある"})
+    return violations
+
+
+def validate(
+    records: list[dict[str, Any]], *, resume_report: dict[str, Any] | None = None
+) -> dict[str, Any]:
     violations: list[dict[str, Any]] = []
     launches: list[dict[str, Any]] = []
     result_by_use_id: dict[str, tuple[int, dict[str, Any], dict[str, Any]]] = {}
@@ -169,21 +285,43 @@ def validate(records: list[dict[str, Any]]) -> dict[str, Any]:
     foreground_blocking_waits: list[dict[str, Any]] = []
     notifications: list[dict[str, Any]] = []
     task_output_attempts: list[dict[str, Any]] = []
+    resume_runner_events: list[dict[str, Any]] = []
+    target_skill_events: list[dict[str, Any]] = []
+    upstream_skill_events: list[dict[str, Any]] = []
+    agent_events: list[dict[str, Any]] = []
 
     for index, record in enumerate(records):
         for tool in _tool_uses(record):
             name = tool.get("name")
             inputs = tool.get("input") if isinstance(tool.get("input"), dict) else {}
-            rendered = json.dumps(inputs, ensure_ascii=False, sort_keys=True)
-            event = {"line": record.get("_line"), "index": index, "input": inputs}
+            event = {
+                "line": record.get("_line"),
+                "index": index,
+                "input": inputs,
+                "tool_use_id": tool.get("id"),
+            }
             command = inputs.get("command")
             if name == "Bash" and isinstance(command, str) and _is_upsert_mutation(command):
                 import_events.append(event)
+            if name == "Bash" and isinstance(command, str) and RESUME_RUNNER.search(command):
+                resume_runner_events.append(event)
+            if name == "Skill" and inputs.get("skill") == TARGET_SKILL:
+                target_skill_events.append(event)
+            if name == "Skill" and str(inputs.get("skill", "")).startswith("system-spec-harness:"):
+                upstream_skill_events.append(event)
+            if name == "Agent":
+                agent_events.append(event)
             if name == "TaskStop":
                 stop_events.append(event)
             if name == "TaskOutput":
                 task_output_attempts.append(event)
-            if name in {"Write", "Edit"} and REPORT_NAME in rendered and not record.get("isSidechain", False):
+            target = _write_target(inputs)
+            if (
+                name in {"Write", "Edit"}
+                and isinstance(target, str)
+                and Path(target).name in {REPORT_NAME, RESUME_REPORT_NAME}
+                and not record.get("isSidechain", False)
+            ):
                 outer_report_writes.append(event)
             if name == "Bash" and isinstance(command, str) and not inputs.get("run_in_background", False):
                 long_sleeps = [
@@ -209,10 +347,38 @@ def validate(records: list[dict[str, Any]]) -> dict[str, Any]:
             "result": _tag(prompt, "result"),
         })
 
-    if not launches:
-        violations.append({"rule": "EV-006", "detail": "evaluator Skill 起動が 0 件"})
-    if not import_events:
-        violations.append({"rule": "EV-007", "detail": "upsert-node.py による C02 import が 0 件"})
+    resume_mode = resume_report is not None
+    if resume_mode:
+        violations.extend(_validate_resume_report(resume_report))
+        if launches or upstream_skill_events or agent_events:
+            violations.append({
+                "rule": "EV-020",
+                "detail": "resume 経路で evaluator/upstream Skill/Agent が起動された",
+            })
+        if import_events:
+            violations.append({
+                "rule": "EV-021",
+                "detail": "resume 経路で runner 外の direct upsert-node.py が実行された",
+            })
+        if len(target_skill_events) != 1 or len(resume_runner_events) != 1:
+            violations.append({
+                "rule": "EV-022",
+                "detail": (
+                    "resume 経路は target Skill と deterministic runner を各1回要求する: "
+                    f"skill={len(target_skill_events)}, runner={len(resume_runner_events)}"
+                ),
+            })
+        elif _result_json(result_by_use_id.get(str(resume_runner_events[0]["tool_use_id"]))) != resume_report:
+            violations.append({
+                "rule": "EV-023",
+                "line": resume_runner_events[0]["line"],
+                "detail": "runner tool_result JSON と resume report が一致しない",
+            })
+    else:
+        if not launches:
+            violations.append({"rule": "EV-006", "detail": "evaluator Skill 起動が 0 件"})
+        if not import_events:
+            violations.append({"rule": "EV-007", "detail": "upsert-node.py による C02 import が 0 件"})
 
     first_import = min(import_events, key=lambda item: item["index"]) if import_events else None
     for launch in launches:
@@ -279,12 +445,14 @@ def validate(records: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     return {
         "status": "PASS" if not violations else "FAIL",
+        "mode": "resume-reuse" if resume_mode else "build",
         "evaluator_launches": public_launches,
         "first_import_line": first_import["line"] if first_import else None,
         "task_output_attempts": len(task_output_attempts),
         "task_stop_events": len(stop_events),
         "outer_report_writes": len(outer_report_writes),
         "foreground_blocking_waits": len(foreground_blocking_waits),
+        "resume_runner_invocations": len(resume_runner_events),
         "violations": violations,
     }
 
@@ -292,9 +460,22 @@ def validate(records: list[dict[str, Any]]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--transcript", required=True, type=Path)
+    parser.add_argument("--resume-report", type=Path)
     args = parser.parse_args()
     records, load_violations = _load(args.transcript)
-    report = validate(records)
+    resume_report: dict[str, Any] | None = None
+    if args.resume_report:
+        try:
+            loaded = json.loads(args.resume_report.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                resume_report = loaded
+            else:
+                load_violations.append({"rule": "EV-013", "detail": "resume report が object でない"})
+                resume_report = {}
+        except (OSError, json.JSONDecodeError) as exc:
+            load_violations.append({"rule": "EV-013", "detail": f"resume report を読めない: {exc}"})
+            resume_report = {}
+    report = validate(records, resume_report=resume_report)
     if load_violations:
         report["status"] = "FAIL"
         report["violations"] = load_violations + report["violations"]

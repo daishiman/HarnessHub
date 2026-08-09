@@ -85,3 +85,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - marketplace の response header と body `source_status` の Stage 0 verdict 整合を確認する。
 
 上記が未完の間、P13 と親 feature は完了扱いにしない。
+
+## 2026-08-10 PR 引き継ぎ
+
+`HarnessHub-aqi` の validator load boundary と文書訂正を current branch の draft PR に含める。focused test・typecheck・task-spec gate・仕様反映受領書を確認し、merge 後も fresh CWV で TBT ≤ 200ms が確定するまで Beads は in_progress を維持する。

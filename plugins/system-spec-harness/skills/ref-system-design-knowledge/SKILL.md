@@ -52,6 +52,10 @@ allowed-tools:
 | Secure by Design | `references/secure-by-design.md` | 攻撃者前提で被害を封じ込める設計 (最小権限/多層防御/fail-closed/脅威モデル) |
 | DDD (ドメイン駆動設計) | `references/ddd.md` | ドメインの複雑さに境界と共通言語で対処 (境界づけられたコンテキスト/集約/コアドメイン) |
 | Clean Code | `references/clean-code.md` | 変更し続けられる可読性を保つ (意図の命名/単一責務/副作用局所化/テスト容易性) |
+| Usability & Accessibility | `references/usability-accessibility.md` | 対象利用者が目的を完了できる操作契約 (状態可視性/回復導線/POUR/適合水準の受入基準化) |
+| Test Strategy | `references/test-strategy.md` | どの失敗をどの層で検出するかを配分する (テストサイズ/契約テスト/カバレッジのGoodhart化回避) |
+| Continuous Delivery | `references/continuous-delivery.md` | 変更が安全・短時間・追跡可能に本番へ届く経路 (パイプライン/成果物昇格/稼働ビルドの素性) |
+| Site Reliability Engineering | `references/site-reliability-engineering.md` | 目標信頼性から基盤構成を導く (SLI/SLO/エラーバジェット/観測可能性/環境再現性) |
 | システム構成 taxonomy | `references/system-category-taxonomy.json` | カテゴリ×canonical platform id (C01 初期集合の正本) |
 | Open-world lifecycle | `references/open-world-knowledge-lifecycle.md` | discover→qualify→deepen→goal map→candidate→promotion→freshness audit |
 | Knowledge catalog | `references/knowledge-catalog.json` | seed/card metadata と深度・鮮度 + typed 辺 (depends_on/refines/conflicts_with) の知識依存グラフ (goal-spec C13) |

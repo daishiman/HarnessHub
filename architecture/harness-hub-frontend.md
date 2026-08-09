@@ -224,3 +224,7 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 - navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
 - 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
 - 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。
+
+## Catalog validator の遅延読込境界 (2026-08-10)
+
+catalog adapter は HTTP error を分類してから response schema を遅延読込する。成功時は JSON decode と薄い schema 再輸出 module の取得を並行し、Zod 検証を省略しない。これにより失敗経路へ不要な client JS を載せず、API・認可・cache の意味は維持する。詳細は [追補仕様](../specs/harness-hub-dual-catalog-cache-addendum.md) と [受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を参照する。

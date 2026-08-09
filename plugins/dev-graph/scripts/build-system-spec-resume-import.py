@@ -29,6 +29,13 @@ ORIGINAL_GOAL = (
     "出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architecture"
     "ノードへ取り込んだ状態になっている"
 )
+COMPLETION_CONTRACT = {
+    "version": "system-spec-resume-closure/v1",
+    "path": "resume-reuse",
+    "authority": "digest-bound-resume-receipt",
+    "evaluator_execution": "reused-current-pass",
+    "import_writer": "C02",
+}
 
 
 class RunFailure(Exception):
@@ -243,9 +250,33 @@ def main(argv: list[str] | None = None) -> int:
             if str(parse_stdout(upsert_step)["graph_node_id"]) != expected_id:
                 raise RunFailure(f"c02-upsert-{name} returned an unexpected graph node id")
 
+        evidence_step = run(
+            [sys.executable, str(HERE / "validate-evidence-refs.py"),
+             "--repo-root", str(root), "--progress", str(progress_path)],
+            label="gate-evidence-refs",
+        )
+        steps.append(evidence_step)
+        digest_step = run(
+            [sys.executable, str(HERE / "validate-source-digest.py"),
+             "--repo-root", str(root), "--progress", str(progress_path)],
+            label="gate-source-digest",
+        )
+        steps.append(digest_step)
+
         progress = json.loads(progress_path.read_text(encoding="utf-8"))
         progress["status"] = "complete"
         progress["gate_exit_codes"] = {step["label"]: step["exit_code"] for step in steps}
+        progress["checklist"] = [
+            {"id": "content-root", "status": "pass", "evidence": "resolve-context exit 0"},
+            {"id": "harness-contract", "status": "pass", "evidence": "validate-resume exit 0"},
+            {"id": "upstream-selection", "status": "pass", "evidence": "current receipt reused; upstream Skill count 0"},
+            {"id": "upstream-gates", "status": "pass", "evidence": "digest-bound evaluator/coverage/source gates current"},
+            {"id": "live-trial-outer-closure", "status": "pending-external", "evidence": "post-run transcript gate validates this runner report"},
+            {"id": "c02-node-integrity", "status": "pass", "evidence": "C02 dry-run and upsert steps exit 0"},
+            {"id": "source-digest", "status": "pass", "evidence": "gate-source-digest exit 0"},
+            {"id": "evidence-refs", "status": "pass", "evidence": "gate-evidence-refs exit 0"},
+            {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+        ]
         write_json(progress_path, progress)
         intermediate = {
             "original_goal": ORIGINAL_GOAL,
@@ -258,13 +289,23 @@ def main(argv: list[str] | None = None) -> int:
         inter_path = eval_root / f"{SKILL}-intermediate.jsonl"
         append_intermediate(inter_path, intermediate)
 
+        checklist = [
+            {"id": "context", "status": "pass", "evidence": "resolve-context exit 0"},
+            {"id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true"},
+            {"id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0"},
+            {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+            {"id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0"},
+            {"id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0"},
+        ]
         report = {
             "runner": "build-system-spec-resume-import",
             "mode": "reuse-confirmed",
             "status": "PASS",
+            "completion_contract": COMPLETION_CONTRACT,
             "network_calls": 0,
             "upstream_skill_invocations": 0,
             "registered_this_run": registered,
+            "checklist": checklist,
             "resume": resume,
             "build": build,
             "steps": [{"label": step["label"], "exit_code": step["exit_code"]} for step in steps],

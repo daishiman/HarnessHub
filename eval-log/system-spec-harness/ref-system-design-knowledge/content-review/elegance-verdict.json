@@ -1,0 +1,39 @@
+{
+  "target": {
+    "plugin": "system-spec-harness",
+    "skill": "ref-system-design-knowledge",
+    "skill_md_sha256": "acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1"
+  },
+  "review_kind": "elegance",
+  "verdict": "PASS",
+  "reviewer": "incremental-focused-combined-reviewer",
+  "reviewed_at": "2026-08-08T08:57:43Z",
+  "iterations": 1,
+  "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 1,
+    "dependency_break": 0,
+    "smell": 1
+  },
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["knowledge-graph-wellformedness", "card-schema-conformance"],
+    "positive_feedback": [
+      "既存の良設計判断が破壊されていない: (a) C04 は ref/effect:none で発見・取得・永続化をしないという境界、(b) system-category-taxonomy.json を C01 初期集合の SSOT とする一本化、(c) 『seed examples であって網羅リストではない』という open-world 前提、(d) 辺の well-formedness は validator / 意味妥当性は content-review という責務分割。いずれも今回の追記で緩んでいない。",
+      "追加の仕方が既存構造への同型追加になっている。4 領域とも『参照表 1 行 + resource-map の read_when 1 entry + catalog の typed 辺 1 entry + 11 節カード 1 枚』という同じ 4 点セットで入っており、既存 6 領域と非対称な特別扱いが無い。新領域を足すコストが一定に保たれている。",
+      "read_when が カテゴリ id (ui-ux / testing-qa / dev-workflow / infrastructure) に接地しており、C03 が『どの章でどのカードを引くか』を推測でなく索引で決められる。従来の 6 枚が backend/frontend/security/database/maintenance-ops を覆っていた空白 4 カテゴリを、ちょうど埋める形になっている。",
+      "SSOT 衝突の芽を先回りで潰している。resource-map.yaml の並びと knowledge-catalog.json の topo_order という『2 つの順序』が生まれる構造だったところへ、冒頭注記で役割を分け (集合 = read_when / 順序 = depends_on)、かつ物理的な並びも topo_order へ揃えて食い違いが起きない状態にしている。"
+    ],
+    "negative_feedback": [
+      "[low/inconsistency] SKILL.md frontmatter の last-audited が 2026-07-11 のままで、参照知識領域 6 → 10 の拡張が鮮度表示へ反映されていない。audit-trigger: official-update の定義上は違反ではないが、カード枚数が実質倍近くになった変更としては監査日を進めるのが素直。",
+      "[low/smell] knowledge-catalog の depends_on 鎖が test-strategy → continuous-delivery → site-reliability-engineering と一直線に伸び、usability-accessibility が第 2 root として並置された。形状は DAG として正当 (validator exit 0) だが、『運用系 3 枚が直列』という順序付けは意味的に必然とまでは言えず、後から並列化したくなる可能性がある。現時点で実害は無く、辺の意味妥当性は SKILL.md L40 が明記するとおり human/content-review の未閉塞責務なのでここに記録のみ残す。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "Stop",
+    "next_action": "none"
+  },
+  "notes": "incremental focused combined review (not exhaustive 30-thought): HarnessHub-ldq の未コミット差分を起点に、現 SKILL.md (sha256=acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1) を全文読了し 4 条件 (単一責務 / 境界 / SSOT / 上位概念への接地) と elegance 観点で評価。検証は宣言の読み合わせに留めず実行して確認: validate-knowledge-graph.py --profile knowledge --order exit 0 (topo_order 10 件、新 4 件を含む)、--profile doctrine exit 0、pytest plugins/system-spec-harness 配下 53 件 pass。新規 4 カードの節構成 (11 節) が既存カードと一致し、schema required 14 概念を満たすことを確認。参照表 / resource-map / catalog の三者が同一 10 領域を指し、全参照ファイルが実在。doctrine-anchor-registry は無変更だが presentation / reliability / operations concern が既存で、新カードの対象カテゴリはいずれも写像済みのため未帰属 pending は発生していない。high severity 0、low inconsistency 1 + low smell 1 のみ。"
+}
