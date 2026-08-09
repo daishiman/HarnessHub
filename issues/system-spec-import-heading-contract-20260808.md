@@ -12,7 +12,7 @@ iteration: null
 title: "system-spec import の見出し契約と architecture readiness を一致させる"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:00:00Z"
-updated_at: "2026-08-08T15:06:37.565871Z"
+updated_at: "2026-08-09T14:00:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
@@ -31,7 +31,7 @@ template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"22d2ad06076392ac4808817f063148823fde66cc725ad4da0844f235cb44ec00","evaluator":"focused regression + fresh C19 independent final review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"}
+confirmation_evidence: {"evaluated_digest":"35d086703261948e3761e3a72df5c84b8b105b226657952c4840eb5c2b4dd913","evaluator":"focused regression + latest main C19 independent final review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-08T10:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "system-spec import と dev-graph C11 readiness の横断的な repository tooling bug。"
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-system-spec-import-heading-contract-20260808","linked_at":"2026-08-08T14:20:00Z","merge_commit_sha":null,"merged_at":null,"pr_number":680,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/680"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T154500Z-o4zi-c19r3/verdict.json"],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-08-08T14:20:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -102,4 +102,4 @@ priority: high。正当な system-spec import が構造的に登録不能であ�
 
 ## 検証証跡
 
-`plugins/dev-graph/tests/test_graph_artifact_readiness.py`、`test_validate_graph_schema_c11_heading_readiness.py`、`test_live_trial_fixture_builders.py` の 57 test と、Dev Graph 全体 975 test / 5 subtests はすべて PASS。3 contract copy の byte parity も PASS。fresh C19 正本 run `20260808T154500Z-o4zi-c19r3` は actual model `claude-opus-5`、nudge=0、gate=0、独立評価と機械 verdict がともに PASS。旧 artifact 160 違反も正規見出し移行後に 0 件へ収束した。詳細は仕様反映受領書を正とする。
+main マージ前の Dev Graph 全体 975 test / 5 subtests、マージ後の対象 5 files / 82 tests はすべて PASS。3 contract copy の byte parity も PASS。C19 は最新 main の正本 run `20260809T132550Z-wt27-c19-ci-r1`（独立評価 PASS、90.067 秒、network / upstream Skill call 0）を採用する。旧 artifact 160 違反も正規見出し移行後に 0 件へ収束した。詳細は仕様反映受領書を正とする。

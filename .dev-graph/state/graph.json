@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1448,
+  "graph_revision": 1449,
   "nodes": [
     {
       "acceptance": [
@@ -51694,7 +51694,7 @@
         "completed_at": null,
         "evidence_refs": [
           "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T154500Z-o4zi-c19r3/verdict.json"
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"
         ],
         "policy": "manual",
         "reconciled_at": null,
@@ -51702,8 +51702,8 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "22d2ad06076392ac4808817f063148823fde66cc725ad4da0844f235cb44ec00",
-        "evaluator": "focused regression + fresh C19 independent final review",
+        "evaluated_digest": "35d086703261948e3761e3a72df5c84b8b105b226657952c4840eb5c2b4dd913",
+        "evaluator": "focused regression + latest main C19 independent final review",
         "evidence_ref": "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
@@ -51801,7 +51801,7 @@
       "template_version": "1.0.0",
       "title": "system-spec import の見出し契約と architecture readiness を一致させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T15:06:37.565871Z"
+      "updated_at": "2026-08-09T14:00:00Z"
     },
     {
       "acceptance": [
