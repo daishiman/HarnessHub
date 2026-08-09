@@ -108,9 +108,16 @@ def _conditional_trigger(kind: str, node: dict[str, Any] | None) -> str | None:
     テンプレートの世代 (HarnessHub-yzv0 実測: 20 feature 中 17 が軽量3見出し、
     3 がフル19見出し。phase_ref は世代と相関しない) を区別する情報を持たない。
     """
-    if kind != "task" or not node:
+    if not node:
         return None
     origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+    if origin_kind == "system-spec-harness" and kind in {
+        "specification",
+        "architecture",
+    }:
+        return "system_spec_harness"
+    if kind != "task":
+        return None
     if origin_kind == "system-dev-planner":
         return "system_development"
     return None

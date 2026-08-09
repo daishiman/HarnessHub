@@ -2,13 +2,13 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "run-system-spec-elicit",
-    "skill_md_sha256": "f80a47182624a79b04bf8ff24564b13f17388654dc7f7617ae5707d8c9db66d2"
+    "skill_md_sha256": "d098d2a7d624a5174c305ff2741dc1cdce8197c2d1ca07bdc392f5d0d4190cd7"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator",
-  "reviewed_at": "2026-08-04T00:00:00Z",
-  "iterations": 1,
+  "reviewer": "codex-fresh-independent-combined-review",
+  "reviewed_at": "2026-08-08T12:28:34Z",
+  "iterations": 4,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
@@ -19,21 +19,27 @@
   },
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2", "a-contradiction", "b-omission", "c-implementation-consistency", "d-dependency", "e-rubric"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2",
+      "C1-contract",
+      "C2-compatibility",
+      "C3-documentation",
+      "C4-test-boundary",
+      "C5-session-evidence"
+    ],
     "positive_feedback": [
-      "本レビューは前回 verdict (sha256=460d77b2...) のSHAを流用せず、現在の working tree (sha256=f80a4718...) を対象に独立採点した。ref-skill-design-rubric の high rule を実測: FM-001 (frontmatter name=`run-system-spec-elicit` が `^(run|ref|assign|wrap|delegate)-[a-z0-9][a-z0-9-]*$` に合致・22文字<=60)・BD-001 (`## Purpose & Output Contract` 見出し実在)・BD-003 (body 91行、上限300行に十分な余裕)・NM-001 (dir名 `run-system-spec-elicit` == frontmatter.name) を全てPASS。",
-      "SKILL.md が前回レビュー後に受けた変更は、完了条件節・R0行・使い方Step2・Gotcha6 の qa_log source-index 記述をより明示的にする文言修正であり、`git diff HEAD` で該当5箇所を確認した。writer (`state_transition_foundation.py`) / validator (`coverage_foundation.py`) のロジック自体・テスト・fixture には変更が無く、rubric『実装との整合性』観点で新規の乖離は生じていない。",
-      "fail-closed 契約 (書面要件は1論点 append-only qa_log source-index 化してから確定する) が machine gate として検証可能であることを再確認した: `foundation_provenance.py::validate_foundation_source_indexes()` が writer側 `set_foundation()` L72-74 と validator側 `validate_foundation()` L276 の両方から呼ばれ、`python3 -m pytest tests/test_spec_transition.py tests/test_spec_transition_foundation.py tests/test_spec_transition_knowledge.py ../../tests/test_validate_foundation.py -q` で117 passed (0 failed) を実測した。",
-      "否定テストの網羅性を rubric『検証可能性』観点で再点検した: writer側に `test_set_foundation_confirm_rejects_missing_source_index` (qa_log 空 → TransitionError \"source-index\")・`test_set_foundation_confirm_rejects_written_source_hash_mismatch` (sha256 改竄 → \"sha256 が answer 原文と不一致\") の2件、validator側に `test_foundation_source_index_is_required_per_u` (qa_log から1件除去 → \"U9 source-index\" finding) が存在し、writer/validator 双方の拒否経路が regression として担保されている。",
-      "テスト分割 (`test_spec_transition.py` → 本体 + `test_spec_transition_foundation.py` + `test_spec_transition_knowledge.py` + `tests/spec_transition_support.py`) はカバレッジを欠落させていない: HEAD (5885ebe7) 版旧ファイルの `def test_` 68関数を抽出し現在の分割後3ファイルの関数集合と `comm` で機械比較した結果、実体欠落0件・新規3件 (`test_written_foundation_source_indexes_are_append_only_and_preserve_matrix` を含む) を確認した。共有 fixture への集約は rubric『簡潔性・重複排除』観点でプラスと判断する。",
-      "依存関係整合 (d): SKILL.md の responsibility_refs 6件・reference_refs 4件・script_refs 2件・schema_refs 1件、および `state_transition_foundation.py`→`foundation_provenance.py`・`coverage_foundation.py`→`foundation_provenance.py` の import 経路を実ファイル存在確認し、dependency_break は0件。",
-      "`fixtures/expected-final-spec-state.json` を実測し、qa-foundation-u1〜u9 の全 canonical id が `source.kind=user-dialogue` entry として揃い `requirements_foundation.confirmed=true` であることを確認した。テスト資産とプロダクションコードが同一契約を共有しており、rubric『実装との整合性』を裏付ける。"
+      "書面 source-index は指定 path/section の逐語 answer と answer UTF-8 bytes の SHA-256 を要求し、AI 要約を一次根拠にしない。",
+      "既存書面承認だけを利用し、新規利用者入力がなければ AI 自己承認を作らない fail-closed 契約になっている。",
+      "fixture は欠落回答を推論せず、五つの設計原則を具体要件へ適用して §3 の確定内容を §7 の既存承認へ接続する。",
+      "R0 直接検査、具体適用五件、§3→§7 接続を回帰テストが固定し、独立 focused suite は 128 passed。"
     ],
     "negative_feedback": [],
-    "iteration": 1,
-    "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "iteration": 4,
+    "iteration_limit": 4,
+    "hook_trigger": "incremental-focused-combined-review-final",
     "next_action": "none"
   },
-  "notes": "実施形態: incremental の focused combined review (1 context) で (a)矛盾なし (b)漏れなし (c)実装整合 (d)依存関係整合 (e)rubric high severity を一度に判定した。前回 verdict (sha256=460d77b2...) は SKILL.md の文言修正で無効化されているため再利用せず、現在の working tree を独立に採点し genuine に再生成した (JSON手書き複製・SHAのみ差し替えではない)。修正は行っていない (レビュー専任・source/docs/tests 不変更の指示に従う)。【検証方法】(1) 前回 verdict 2件・content-review-protocol.md・content-review-verdict.schema.json・ref-skill-design-rubric/references/rubric.json (FM-001/BD-001/BD-003/NM-001 含む high rule 一覧) を読解。(2) 現在の SKILL.md 全文、R0-foundation.md 全文、R6-audit-hearing.md 全文、R2-interview.md/spec-state-contract.md の該当箇所を読解。(3) `foundation_provenance.py` 全文、`state_transition_foundation.py::set_foundation()`、`coverage_foundation.py::validate_foundation()` を読解し writer/validator 共有経路を確認。(4) `python3 -m pytest tests/test_spec_transition.py tests/test_spec_transition_foundation.py tests/test_spec_transition_knowledge.py ../../tests/test_validate_foundation.py -q` を実行し117 passed を実測 (レビュアー自身が実行)。(5) HEAD (5885ebe7) 版旧 `test_spec_transition.py` の `def test_` 68関数を現在の分割後3ファイルの関数集合と `comm` で比較し欠落0・新規3を確認。(6) `test_validate_foundation.py::test_foundation_source_index_is_required_per_u` を読解し validator 側否定テストを確認。(7) `fixtures/expected-final-spec-state.json` の qa-foundation-u1〜u9 entry を実測。(8) SKILL.md 参照先14件を実ファイル存在確認。(9) rubric high rule (FM-001/BD-001/BD-003 body実測91行/NM-001) を再計算し退行なしを確認。【scope外】required-info-catalog.json / validate-knowledge-graph.py 自体は対象外 (diff無し)。【OUT2 (live-trial)】未実行。今回差分はwriter/validatorの決定論コードに影響しない文言修正のみであり、直近確定した回帰テスト2件がfail-closed経路を機械担保しているため、live-trial未実行によるリスクは限定的と判断しPASSの結論に影響しないとした。"
+  "notes": "fresh independent combined review。C4 の初回 finding をテストで解消後、現行 SHA の C1-C5 を全件 PASS、findings 0 と再判定した。"
 }

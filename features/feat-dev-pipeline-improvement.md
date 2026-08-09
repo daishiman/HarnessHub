@@ -148,3 +148,10 @@ node ID・件数・source digest・lineage が一致する登録証拠を失わ�
 HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着手可能 node を黙って落とさず、ready_payload_entry_absent と source=schedule-graph を持つ unmapped[] として報告するようにした。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆し、不正な依存形状は停止、dependency 配列順だけの parity 不一致は除く。これは製品 runtime を変えず、開発管理パイプラインの観測可能性（原因を後から判断できる性質）を改善する内部契約である。正規 C01/C03 仕様反映、復旧境界、検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
 
 HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
+
+`HarnessHub-3vmz` と `HarnessHub-o4zi` の最終レビューでは、独立監査結果の偽装を
+fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C19 import の条件付き
+見出し契約を再確認した。製品 API・DB・認証認可・UI・配備は不変で、内部仕様・設計、
+既存文書の見出し移行、検証結果は
+[最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
+を正とする。

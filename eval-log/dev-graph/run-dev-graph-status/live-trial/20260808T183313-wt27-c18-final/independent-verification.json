@@ -1,0 +1,12 @@
+{
+  "evaluator": "fresh-independent-goal-evaluator-c18",
+  "scenario_id": "C18-OUT1-positive-read-only-status",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {"met": true, "evidence": "fixture-repo/eval-log/status-report.json compares ten status/closed_at/dependency fields one by one with zero mismatches."},
+    "2": {"met": true, "evidence": "fixture-repo/eval-log/readiness-comparison.json identifies the predecessor as ready and the dependent task as blocked from the stored edge direction."},
+    "3": {"met": true, "evidence": "fixture-repo/eval-log/side-effect-audit.json records identical graph/config/content hashes, no non-eval-log git change, and zero gh/GitHub/Beads calls."}
+  },
+  "goal_evidence": "The transcript and three independent comparison artifacts establish field-level accuracy, dependency-derived readiness, and read-only behavior."
+}

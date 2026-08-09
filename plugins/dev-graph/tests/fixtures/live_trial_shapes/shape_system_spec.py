@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """C19 (`run-dev-graph-system-spec`) 用の fixture 形状。
 
-scenario: ``C19-OUT1-positive-system-spec-lineage-r2``
+scenario: ``C19-OUT1-positive-system-spec-lineage-r5``
 契約: live-trial-positive-scenarios.json の fixture_contract
   "The contained system-spec workspace holds only system-spec/requirements-brief.md;
    spec-state.json, fetched-references.json, completeness-report.json and index.md are
@@ -99,10 +99,12 @@ BRIEF = f"""# 要求 brief: ローカル専用 TODO REST API
 
 ### U4 目標 (objectives)
 
-- G1: 実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。
-- G2: すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。
-- G3: 永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。
-- G4: 起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。
+| objective_id | text | measure |
+| --- | --- | --- |
+| O1 | G1: 実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。 | 依存関係と実装のレビューで外部 host への送信処理が 0 件、起動時の外向き通信が 0 件であることを確認する。 |
+| O2 | G2: すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。 | 受入テストで未認証要求が全 TODO エンドポイントで 401 になることを確認する。 |
+| O3 | G3: 永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。 | 受入テストで作成、プロセス再起動、一覧取得を行い、作成した TODO が全件戻ることを確認する。 |
+| O4 | G4: 起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。 | 運用手順に起動 1 コマンドとバックアップ 1 ファイルコピーが記載され、手順どおり成功することを確認する。 |
 
 ### U5 成功基準 (success_criteria)
 
@@ -157,14 +159,14 @@ platform 軸は「本システムが成果物を提供する対象クライア�
 
 | category | 確定内容 | serves_goals |
 | --- | --- | --- |
-| database | SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。 | G1, G3, G4 |
-| auth | 単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。 | G2 |
-| ui-ux | UI は持たない。API の使い勝手として、エラー応答を `{{"error": {{"code", "message"}}}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。 | G2, G4 |
-| security | localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。 | G1, G2 |
-| infrastructure | 常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。 | G1, G4 |
-| backend | Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。 | G2, G3 |
-| frontend | 専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。 | G4 |
-| maintenance-ops | 構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。 | G3, G4 |
+| database | SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。DDD の transaction owner 原則を適用し、TODO 状態遷移と認証資格更新を別の集約・更新経路に分ける。 | G1, G3, G4 |
+| auth | 単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。OWASP ASVS の認証秘密保護原則を適用し、平文 token を永続化しない。 | G2 |
+| ui-ux | UI は持たない。API の使い勝手として、エラー応答を `{{"error": {{"code", "message"}}}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。Apple HIG の consistency 原則は、GUI ではなく API 応答形式と OpenAPI 表現の一貫性として適用する。 | G2, G4 |
+| security | localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。OWASP ASVS の入力検証と least privilege 原則を、ローカル公開面の最小化と永続化境界の検証に具体化する。 | G1, G2 |
+| infrastructure | 常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。Google SRE の toil 削減と反復可能な復旧原則を、起動 1 コマンドと復旧 1 ファイルに具体化する。 | G1, G4 |
+| backend | Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。Clean Architecture の Dependency Rule を適用し、依存方向を router → service → repository interface に固定し、SQLite 実装を外側の詳細に留める。 | G2, G3 |
+| frontend | 専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。Clean Architecture の境界原則に従い、OpenAPI を外部クライアントと内部 API の単一契約境界にする。 | G4 |
+| maintenance-ops | 構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。Google SRE の可観測性原則と Clean Code の意図明示原則を、外部監視を追加せず再現可能なログ・health・運用手順として適用する。 | G3, G4 |
 
 ## 4. 技術選定の候補と公式出典 (doc-fetch 対象)
 
@@ -177,6 +179,10 @@ platform 軸は「本システムが成果物を提供する対象クライア�
 | D1 | 永続化先 | `sqlite` / `postgresql` | https://www.sqlite.org/docs.html (www.sqlite.org) / https://www.postgresql.org/docs/ (www.postgresql.org) | `sqlite` (常駐プロセスを増やさない・単一ファイルで G1/G4 に適合) |
 | D2 | API framework | `fastapi` / `flask` | https://fastapi.tiangolo.com/ (fastapi.tiangolo.com) / https://flask.palletsprojects.com/ (flask.palletsprojects.com) | `fastapi` (OpenAPI 自動生成と schema 検証が G2/U9 に直結) |
 | D3 | 認証方式 | `local-bearer-token` / `oauth2-password-jwt` | https://fastapi.tiangolo.com/tutorial/security/ (fastapi.tiangolo.com) / https://datatracker.ietf.org/doc/html/rfc6749 (datatracker.ietf.org) | `local-bearer-token` (単一利用者・外部 IdP なしで G2 を満たす最小構成) |
+
+doc-fetch の `targets[]` には採択案だけでなく、**比較候補6件すべて** (`sqlite` / `postgresql` /
+`fastapi` / `flask` / `local-bearer-token` / `oauth2-password-jwt`) を含め、両側の公式出典を
+同じ鮮度検証へ通す。不採択案を取得対象外にしない。
 
 serves_goals: D1 → G1, G3, G4 / D2 → G2, G4 / D3 → G2。
 
@@ -191,8 +197,14 @@ serves_goals: D1 → G1, G3, G4 / D2 → G2, G4 / D3 → G2。
 
 - 本 brief に答えがある問いは、brief の記述をユーザー回答とみなす。`AskUserQuestion` で
   人へ聞き返さない (live-trial は非対話で完走する必要がある)。
-- 本 brief に答えがない問いが生じた場合は、§1 の U1-U9 と §5 の非対象から導ける
-  最小構成を採り、その判断根拠を該当セル/decision の記述に残す。
+- 本 brief に答えがない問いが生じた場合は、AI が最小構成を新しい利用者要件として
+  確定せず、該当セル/decision を未収集のまま fail-closed に残す。本 fixture の確定対象は
+  §1〜§4・§7 に全件が明記されているため、正常経路でこの分岐は発生しない。
+- `source.kind=written-requirements` の `answer` は、指定 path/section に実在する
+  本 brief の逐語 excerpt とする。`source.sha256` はその `answer` の UTF-8 bytes
+  から計算し、AI が生成した要約・判断・qa entry 自身の digest を代用しない。
+- 本 trial 中に新しい利用者入力は生じない。既存の§7 一括承認を根拠にし、
+  AI 自身を承認者とする新規 approval を作らない。
 
 ## 7. 一括承認 (approval_log の根拠)
 
@@ -221,7 +233,7 @@ PLACED_CONTENT: dict[str, str] = {BRIEF_PATH: BRIEF}
 # (scenario_id だけは突合キーとして持つ)。lint が両者を突合するので、
 # どちらか一方だけ動かすと drift として検出される。
 TASK_CONTRACT: dict[str, object] = {
-    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+    "scenario_id": "C19-OUT1-positive-system-spec-lineage-r5",
     # 被験 skill が委譲する先の plugin。task.md はこの plugin 名を明示して
     # 「宣言済み plugin を読み込む」観測条件 (required_observations[0]) に接地させる。
     "harness_plugin": "system-spec-harness",
@@ -241,6 +253,13 @@ TASK_CONTRACT: dict[str, object] = {
         "run-system-spec-doc-fetch",
         "run-system-spec-compile",
         "assign-system-spec-completeness-evaluator",
+    ),
+    # Observation 3 の duplicate-logic negative control は実行可能な dev-graph 実装だけを
+    # 対象にする。tests/fixtures の説明コメントを検索対象にすると、「実装が無い」ことではなく
+    # 文章が core implementation 名を引用したことを測ってしまうため、契約を明示する。
+    "negative_control_roots": (
+        "plugins/dev-graph/skills",
+        "plugins/dev-graph/scripts",
     ),
     # required_observations (scenario 正本) と同数・同順。各 observation が task.md 上で
     # 要求されていることを機械判定するためのキーワード群で、内側 tuple は AND 条件。

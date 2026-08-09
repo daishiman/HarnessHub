@@ -448,6 +448,7 @@
   "hearing_progress": {
     "loop_count": 4,
     "next_question": null,
-    "complete": true
+    "complete": true,
+    "max_loops": 5
   }
 }

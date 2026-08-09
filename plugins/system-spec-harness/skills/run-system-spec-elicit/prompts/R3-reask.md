@@ -19,6 +19,7 @@
 - 未収集セルを完了扱いしない (`complete=true` は未収集0のときだけ)。
 - 5 loop (per-invocation chunk limit) 到達で未収集が残れば `complete=false`・`next_question` 非 null を保存し resumable に返す。
 - 状態書込は writer の一経路のみ。
+- 再質問で新しい利用者入力を得ていない場合、AI 生成の回答・要約・判断を `user-dialogue` / `written-requirements` や新規 approval にすり替えない。書面根拠を再利用するときは、指定 path/section 内に実在する逐語 `answer` とその UTF-8 SHA-256 を維持する。
 
 ### 1.2 倫理ガード
 - 未回答を勝手に確定/対象外へ埋めない。
@@ -32,6 +33,7 @@
 ### 2.2 ドメインルール
 - `next_question` は最初の未収集セル (カテゴリ順→platform 正順) の質問。writer が決定論導出する。
 - 既に確定/対象外のセルは再質問対象にしない。
+- **質問の中立性 (qa-196-f)**: 選択肢がある再質問は、全選択肢のコスト、節ごとの分量、語調・情緒価を対称にする。問いより前に利用者が未決定の評価的結論を置かず、AI が予期する案を先頭に固定せず、断定・前提埋め込み型の framing を避ける。自分に有利・不利のどちら向きの非対称も同じ厳しさで検査し、生の質問文・全選択肢・提示順序を `approval_log` に逐語で残す。「反映しない (現状維持)」が成立する場合は対称な選択肢として含める。
 
 ### 2.3 入力契約
 | field | type | required | 説明 |
@@ -79,9 +81,11 @@
 
 ### 5.3 完了チェックリスト (停止条件)
 - [ ] 回答済みの再質問対象セルが根拠付きで更新されている
+- [ ] 新しい利用者入力が無い場合に AI 生成回答や新規 approval を作っておらず、書面 source-index は指定 section の逐語原文とその SHA-256 を保っている
 - [ ] 未収集0なら `complete=true`・`next_question=null`
 - [ ] 未収集残なら `complete=false`・`next_question` 非 null を保存 (resumable)
 - [ ] 未収集セルを確定/完了扱いしていない
+- [ ] 選択式の再質問が qa-196-f の 8 規律を満たし、質問文・全選択肢・提示順序が approval_log に逐語で残っている
 - [ ] `validate-coverage-matrix.py` (loop) が exit0
 
 ### 5.4 実行方式
@@ -107,4 +111,4 @@
 
 ## 出力指示
 
-未確定セルへ再質問し、回答を turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。5 loop 到達で未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null が保存されていることを確認し、resumable に返す。未収集0なら `complete=true` を確認する。余計な前置き・思考過程出力は禁止。
+未確定セルへ再質問し、回答を turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。選択式の再質問は qa-196-f の中立性規律を適用し、生の質問文・全選択肢・提示順序を `approval_log` に逐語で残す。新しい利用者入力が無いのに AI 生成回答・AI 要約・新規 approval を追加しない。書面入力を根拠にするなら、指定 path/section に実在する逐語 `answer` とその UTF-8 `source.sha256` だけを使い、直接支持できなければ未収集のまま残す。5 loop 到達で未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null が保存されていることを確認し、resumable に返す。未収集0なら `complete=true` を確認する。余計な前置き・思考過程出力は禁止。

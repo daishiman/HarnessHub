@@ -14,15 +14,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123537-c04req/verdict.json",
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c04 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=d5033c34ba50dcabd525c707ba8161f140c2708c586857883c745c9e8194c3b6。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/verdict.json",
+      "observed": "fresh retry 20260808T183330-wt27-c04-retry は actual_model=claude-opus-5、overall=PASS、nudge=0、gate=0。four gates、exact-13 handoff、feature/source digest 束縛、実装 source 0 件を fresh evaluator が確認した。behavior closure digest=9296d8ee002cc5908c6b25721212de2f2b084a63235f20f11f2a4dd89b16cf57。",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123537-c04req/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/independent-verification.json"
       ],
       "verify_by": "live-trial"
     },
@@ -39,7 +39,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-goal-evaluator-c04-retry-20260808",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C04",

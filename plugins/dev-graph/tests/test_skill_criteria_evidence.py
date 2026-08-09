@@ -125,18 +125,9 @@ def _assert_scenario_contract(
         _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
-# component_id -> (Beads issue, 既知バグの説明)。live-trial 実測で確定した本物のバグに
-# よりこの1件だけ受領書が PASS を宣言できない。ここで xfail(strict) 化することで、
-# 他7スキルの厳格な PASS 契約検証を弱めずに CI を緑化しつつ、バグが直って受領書が再び
-# PASS になった瞬間に XPASS として気づけるようにする。
-_KNOWN_LIVE_TRIAL_FAILURES = {
-    "C19": (
-        "HarnessHub-o4zi: system-spec-harness が生成する specification 本文が "
-        "dev-graph specification テンプレートの17見出し要求を満たさず、C11 heading "
-        "検査で registration が拒否される (fixture 品質起因ではなく2回の独立 live-trial "
-        "で再現した本物のバグ)"
-    ),
-}
+# component_id -> 既知バグの説明。HarnessHub-o4zi は source-lineage 別の見出し契約と
+# fresh C19 PASS で解消したため、現行 closure に隔離対象はない。
+_KNOWN_LIVE_TRIAL_FAILURES: dict[str, str] = {}
 
 
 def _targets_with_known_xfail() -> list:
@@ -247,6 +238,23 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         assert verdict["skill_dir_tree_sha"] == live_verdict_module.skill_dir_tree_sha(
             skill_path.parent
         ), f"{component_id}/{criterion_id}: stale behavior closure digest"
+        # live_trial_verdict_ref は run を明示パスで指すため、lint-live-trial-verdict.py
+        # (skill ごとに最新 run しか見ない) を緑にする再 trial があっても参照自体は
+        # 更新しない限り古い run を掴んだまま検査対象から外れる (HarnessHub-yg3。
+        # 184acbc の skill_dir_tree_sha のみ書き換えが 4 skill で見落とされた実例)。
+        # 参照先が当該 skill の実在する最新 run であることを機械検査する。
+        live_trial_run_dirs = sorted(
+            p.name for p in expected_live_root.iterdir() if p.is_dir()
+        )
+        assert live_trial_run_dirs, (
+            f"{component_id}/{criterion_id}: no live-trial runs found under {expected_live_root}"
+        )
+        latest_run_dir = live_trial_run_dirs[-1]
+        assert verdict_path.parent.name == latest_run_dir, (
+            f"{component_id}/{criterion_id}: live_trial_verdict_ref points to stale run "
+            f"{verdict_path.parent.name!r}; latest available run is {latest_run_dir!r}. "
+            "再 trial で新しい run を作っても参照を更新しない限り古い受入根拠を掴んだままになる"
+        )
 
 
 def test_live_trial_acceptance_rejects_missing_or_incomplete_scenario_contract() -> None:

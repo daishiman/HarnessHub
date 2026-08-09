@@ -9,8 +9,8 @@ prefix: run
 hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--resume]"
-allowed-tools: [Read, Bash, Skill, Agent, AskUserQuestion]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py]
+allowed-tools: [Read, Bash, Skill, Agent, TaskOutput, AskUserQuestion]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py, ../../scripts/validate-system-spec-evaluator-completion.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R0-context.md
@@ -68,7 +68,7 @@ feedback_contract:
 
 1. C24 で caller repo の `system-spec/` を解決し、plugin source/別 repo の content を拒否する。
 2. `plugins/system-spec-harness/.claude-plugin/plugin.json` の name/version が `>=0.1.0 <1.0.0`、かつ `references/package-contract.json#entry_points.skills` が `run-system-spec-elicit`, `run-system-spec-doc-fetch`, `run-system-spec-compile`, `assign-system-spec-completeness-evaluator` を持つことを確認する。公式manifestへharness専用キーを混在させず、不在/不一致は fallback を実装せず停止する。
-3. Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲する。
+3. Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲する。`context: fork` の evaluator は、Skill 起動結果の完全な `agentId` と一致する native `task-notification` (`status=completed`、完全 response あり) まで待ち、起動応答だけを receipt にしない。runtime が互換 task id を公開した場合は `TaskOutput(block=true)` を使ってよいが、表示用の短縮 ID を推測してはならない。native notification を処理できるよう、foreground の待機は1回30秒以内の有限操作にし、`until` / `while` / `for` + `sleep` や30秒超の sleep で main tool boundary を塞がない。evaluator を `TaskStop` せず、outer session が report を代筆しない。
 4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。
 
 出力は import report (`system-spec/index.md`, imported node ids, lineage, confirmation_status, readiness)。feature は `architecture_refs` で参照し、内容を複製しない。1 feature→13 task は system-dev-planner の責務であり本 skill は扱わない。
@@ -89,6 +89,7 @@ system-spec-harnessが既に持つヒアリング、カテゴリ×platform matri
 - [ ] system-spec-harness が version `>=0.1.0 <1.0.0` と required 4 entry points を満たす
 - [ ] elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される
 - [ ] coverage/source-citation/evaluator gate が全て PASS である
+- [ ] live trial では `validate-system-spec-evaluator-completion.py --transcript <transcript.jsonl>` が exit 0 (完全 agentId の完了通知が C02 import より先、TaskStop/outer report 代筆/foreground blocking wait が0件)
 - [ ] C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である
 - [ ] `validate-source-digest.py --progress <progress.json>` が exit 0 (各登録 node の source_digest が自 source_path の実 sha256 と一致することを script の exit code で担保)
 - [ ] `validate-evidence-refs.py --progress <progress.json>` が exit 0 (本 run 登録 node の evidence_ref dangling 0件を script の exit code で担保)
@@ -150,4 +151,6 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-source-digest
 - system-spec-harness 不在や version/entry-point 不一致時に、簡易 fallback を dev-graph 内へ実装しない。
 - plugin source 側や別 repo の `system-spec/` を読まず、C24 receipt の caller repo だけを content authority にする。
 - evaluator PASS と confirmed の両方が揃わない章を C02 へ登録しない。
+- completeness evaluator の fork が completed になる前に R3 へ進まない。fork の停止・失敗時に outer session が `completeness-report.json` を Write/Edit して PASS を代筆しない。
+- live trial の完了境界は `validate-system-spec-evaluator-completion.py` の transcript 検査で閉じる。UI 一覧の短縮 ID を `TaskOutput` 用 ID と推測せず、Skill 起動結果の完全 `agentId` と一致する native completion を authority にする。待機は1回30秒以内の有限 foreground 操作だけにし、loop/sentinel wait で通知 delivery を塞がない。
 - feature に仕様本文を複製せず、`architecture_refs` と source lineage で参照する。

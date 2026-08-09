@@ -1,0 +1,123 @@
+---
+status: recorded
+layer: final-review-and-spec-reflection
+beads_ids:
+  - HarnessHub-3vmz
+  - HarnessHub-d15
+  - HarnessHub-4z0
+  - HarnessHub-dxfe
+  - HarnessHub-iuoq
+  - HarnessHub-ntj
+  - HarnessHub-yg3
+  - HarnessHub-o4zi
+  - HarnessHub-uypz
+  - HarnessHub-duej
+dev_graph_node_id: issue-audit-fork-ledger-forgery-20260728
+parent_feature: feat-dev-pipeline-improvement
+spec_impact: internal-development-contract
+reviewed_at: 2026-08-09
+---
+
+# 監査台帳・状態遷移・C19 見出し契約 — 最終レビュー兼仕様反映受領書
+
+## 目的と背景
+
+独立監査の結果を上位 agent が書き換えたり、監査台帳を直接偽装したりしても合格できた問題を閉じるため、監査結果の帰属、聞き取り状態遷移、live-trial（実環境に近い試験）の入力契約を最終確認した。あわせて C19 system-spec import で specification と architecture の必須見出しが実際の生成物に合わず、正規 C02 登録が失敗していた問題を解消した。
+
+## 結論
+
+本変更は HarnessHub 製品の画面、公開 API、DB、認証認可、Cloudflare 配備単位を変更しない。一方で、開発管理パイプラインの内部仕様・設計には影響があるため、次を正規反映した。
+
+- system-spec 監査を五軸で統一し、foundation U1-U9 の出典と承認参照を停止条件に含める。
+- 状態遷移は保存済み `max_loops` の実値、破棄履歴、再開後 progress を正しく保持する。
+- live-trial の negative control（存在してはいけない実装の検査）対象を fixture root に限定する。
+- specification / architecture の C11 必須見出しを生成物の lineage（出所のつながり）に応じて判定する。
+- 既存の architecture 7 文書と specification 3 文書を新しい見出し契約へ移行する。
+
+`system-spec/spec-state.json` は変更しない。新しいユーザー要求、QA 回答、製品の承認判断は発生しておらず、開発ツール内部の検証契約を製品要求の正本へ複製すると二重正本になるためである。
+
+## 層別の反映
+
+| 層 | 反映 | 判断 |
+| --- | --- | --- |
+| `docs/` | 本書 | 目的、差分、検証、残課題の詳細な正本を記録する。 |
+| `features/` | feature 変更履歴へ追記 | `feat-dev-pipeline-improvement` に今回の内部品質契約を関連付ける。 |
+| `system-spec/` | receipt を追加、spec-state は非変更 | 製品要求は不変であることと、非変更理由を記録する。 |
+| `specs/` | 既存3文書の見出し移行、receipt を追加 | C11 が必要とする index 見出しを追加する。500行超過を避け、実装 writeback を別冊化する。 |
+| `architecture/` | 既存7文書の見出し移行、receipt を追加 | U1-U9 と決定事項を明示し、architecture の readiness を対称に検査できるようにする。 |
+| `tasks/` | receipt を追加 | 凍結済み exact-13 task 本文は手編集せず、最終ゲート結果と Beads 対応を記録する。 |
+
+## 実装と設計の要点
+
+### 監査証拠の真正性
+
+監査 hook の台帳行を raw response digest と auditor verdict に結び付け、上位 agent の自己申告だけでは PASS にできない。completeness evaluator と hearing auditor の契約は五軸へ統一し、foundation evidence と approval reference が欠ける場合は fail-closed（安全側に失敗）とする。
+
+### 状態遷移
+
+matrix 更新後に progress を再計算し、確定済みセルを初期化で巻き戻す操作を拒否する。reopen では破棄した証拠の trace を残し、`max_loops` は固定の 5 ではなく保存した値を監査する。
+
+### live-trial と C19
+
+task contract lint は negative control を fixture の対象 root だけで探索する。C19 import は system-spec-harness の lineage を解決して、生成された specification / architecture に適用すべき見出し集合を選ぶ。architecture も specification / task と同じく全 graph 検査の対象にした。
+
+completeness evaluator の完了境界は、Skill 起動結果の完全な `agentId` と native
+`task-notification` を transcript 上で対応付け、完了通知より後にだけ実登録が始まることを
+`validate-system-spec-evaluator-completion.py` で検査する。`upsert-node.py --help` は read-only
+（説明表示だけ）なので mutation から除外し、実登録コマンドだけを順序判定へ使う。
+
+## 検証記録
+
+- task specification: P01-P13 exact、digest `af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6`、violations 0。
+- focused pytest: system-spec / dev-graph の変更境界 202件 PASS。criteria / fixture 63件 PASS。hearing auditor 契約 7件 PASS。
+- MVP 初回 combined pytest: 84件 PASS / 1件 FAIL。FAIL は、r6 の改変不能な旧 observer FAIL を理由に current formal live receipt を未達とする既知の1件だけだった。最終再実行ではその外部 gate だけを明示的に deselect し、変更境界は64件 PASS / 1件 deselected。現行 task contract 単体は41件 PASS / violation 0、observer 回帰は7件 PASS。
+- MVP 最終ゲート: task package validator、変更境界の focused pytest、lint、diff check を実行し、
+  plugin-wide/exhaustive live-trial は Draft PR 後の追加評価へ回す。
+- system-spec coverage `--require-complete`: PASS。
+- source citation（spec-state 対象）: PASS。
+- system-spec compile: 一時ディレクトリへの生成は成功。既存の手動 writeback による checked-in 文書との差は、本変更で上書きしない。
+- content review: fresh independent reviewer が C1-C5 を全件 PASS。初回の high 1件（四軸/五軸矛盾）と medium 1件（回帰テスト不足）は修正後に解消した。
+- C01/C02/C03/C04/C05/C14/C18: fresh live-trial 7件 PASS。
+- C19 r6: 正規4 entry point、fresh evaluator、C02 import、lineage/evidence gate は完走した。
+  run 内の旧 validator は `upsert-node.py --help` を実登録と誤認して status=FAIL としたため証跡を
+  書き換えず保持した。修正後の current validator で同じ一次 transcript を再検査すると、evaluator
+  completion line 623、最初の実登録 line 638、TaskStop/outer report write/foreground blocking wait
+  すべて0件、violations 0で PASS。receipt は
+  `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T000500-wt27-c19-final-r6/posthoc-transcript-validation.json`。
+- `git diff --check`: PASS。
+- `make lint`: PASS。文書行数 lint の検査対象639文書はすべて300行以下。infrastructure の運用追補を `architecture/harness-hub-infrastructure-operations-addenda.md` へ責務分割した。
+
+全 graph validator は origin/main でも 160件の既存違反を持つ。本変更後は同じ7ノードに限定された112件へ減少し、新規 failing node と architecture failure は 0 件である。残る既存 debt は今回の機能差分に混ぜず Beads で追跡する。
+
+`--require-foundation` が示す U1-U9 source-index の qa_log 未登録9件、coverage certificate の文言と配列値の不一致、複数監査 dispatch 時の null verdict、compile 出力と手動 writeback の drift は follow-up として追跡し、今回の合格条件を偽って消さない。
+
+MVP のため r6 の改変不能な `out/status.json` は FAIL のまま保全し、posthoc PASS へ書き換えない。
+現行 behavior closure の formal live verdict 再取得は `HarnessHub-o4zi` の Draft PR review gate として残し、
+本 PR では決定論 replay と focused gate を受入根拠にする。
+
+- `HarnessHub-uypz`: 複数監査 dispatch の `audit_verdict=null` を原子的に記録する。
+- `HarnessHub-duej`: certificate・foundation qa_log・compile writeback の証拠 projection を揃える。
+
+## 中学生向けの説明
+
+これは、先生が採点した答案を、生徒があとから勝手に「合格」に書き換えられないようにする仕組みである。採点した人、採点内容、元の答えを指紋のような番号で結び、違えば止める。また、提出物の見出しが説明書とずれて受付で落ちる問題も直した。Web サイトの画面や利用者データは変わらないが、開発者が間違った証拠で合格させにくくなる。
+
+## 専門的な説明
+
+audit-fork ledger の event identity、`response_sha256`、生 `AUDIT_VERDICT`、session attribution を集約時に照合し、stale/malformed/latest-event mismatch を拒否する。state transition matrix は mutation 後の derived progress、confirmed-cell initialization guard、discarded trace preservation、persisted `max_loops` を invariant（常に守る条件）としてテストする。C19 は `graph_artifact_readiness.py` が system-spec-harness lineage を解決し、`template-contract.json` の conditional headings を specification と architecture に適用する。全体 schema validator に architecture heading readiness を追加し、局所 upsert と全体検査の非対称を解消した。
+
+## Beads と Dev Graph
+
+- 主課題: `HarnessHub-3vmz`
+- 関連完了課題: `HarnessHub-d15`, `HarnessHub-4z0`, `HarnessHub-dxfe`, `HarnessHub-iuoq`, `HarnessHub-ntj`, `HarnessHub-yg3`
+- C19 見出し契約: `HarnessHub-o4zi`
+- 最終レビューで起票した残課題: `HarnessHub-uypz`, `HarnessHub-duej`
+- Dev Graph node: `issue-audit-fork-ledger-forgery-20260728`
+
+Beads の更新は `bd-bridge.py` 経由で行う。Draft PR の review / CI / merge は外部 gate のため、PR 作成時点では主課題と C19 課題を `in_progress` のまま維持し、PR URL と検証証拠を notes に追記する。
+
+## 行数と残課題
+
+本書と各 receipt、および通常の実装・仕様ファイルは500行未満である。`specs/harness-hub-system-specification.md` は500行を超えないよう、実装 writeback を `specs/harness-hub-system-specification-implementation-writebacks.md` へ意味単位で分冊した。transcript JSONL、pane capture、fixture の graph/state JSON は、時系列または schema が単一 artifact を要求する生成済み一次証拠なので分割しない。
+
+残課題は Beads に起票し、今回の対象 commit から独立させる。旧 Draft PR #680 は未マージのため勝手に閉じず、今回作る最終 Draft PR との関係を notes に記録する。

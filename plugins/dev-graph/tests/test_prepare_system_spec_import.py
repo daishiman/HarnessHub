@@ -10,6 +10,8 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "build-system-spec-import.py"
 CONTRACT = Path(__file__).resolve().parents[1] / "references" / "system-spec-import-contract.json"
+PLUGIN = Path(__file__).resolve().parents[1]
+TEMPLATE_CONTRACT = PLUGIN / "templates" / "template-contract.json"
 
 
 def build_confirmed_system_spec(tmp_path: Path, verdict: str = "PASS") -> Path:
@@ -78,6 +80,82 @@ def test_prepares_two_schema_shaped_c02_inputs_and_source_derived_bodies(tmp_pat
     assert (out / "specification.body.md").read_text(encoding="utf-8") == (
         "# compiled specification\n\nIndex source fact.\n"
     )
+
+
+def test_source_derived_bodies_register_through_c02_with_lineage_contract(
+    tmp_path: Path,
+) -> None:
+    """HarnessHub-o4zi: adapter output must pass the downstream C11 gate."""
+    root = build_confirmed_system_spec(tmp_path)
+    templates = json.loads(TEMPLATE_CONTRACT.read_text(encoding="utf-8"))
+
+    def body(kind: str) -> str:
+        headings = templates["artifacts"][kind]["conditional_required_sections"][
+            "system_spec_harness"
+        ]
+        return "\n".join(
+            f"## {heading}\n\n確定済みの実質的な本文。" for heading in headings
+        ) + "\n"
+
+    (root / "system-spec/index.md").write_text(
+        body("specification"), encoding="utf-8"
+    )
+    (root / "system-spec/00-requirements-definition.md").write_text(
+        body("architecture"), encoding="utf-8"
+    )
+    prepared = run(root)
+    assert prepared.returncode == 0, prepared.stdout + prepared.stderr
+
+    config = root / ".dev-graph/config.json"
+    config.write_text(
+        json.dumps(
+            {
+                "repository_id": "local:sha256:" + "a" * 64,
+                "local_state": {"graph": ".dev-graph/state/graph.json"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    initialized = subprocess.run(
+        [
+            sys.executable,
+            str(PLUGIN / "scripts/build-graph-store.py"),
+            "--repo-root",
+            str(root),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert initialized.returncode == 0, initialized.stdout + initialized.stderr
+
+    out = root / ".dev-graph/tmp/import"
+    for kind in ("architecture", "specification"):
+        registered = subprocess.run(
+            [
+                sys.executable,
+                str(PLUGIN / "scripts/upsert-node.py"),
+                "--repo-root",
+                str(root),
+                "--input",
+                str(out / f"{kind}.node.json"),
+                "--body-file",
+                str(out / f"{kind}.body.md"),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert registered.returncode == 0, registered.stdout + registered.stderr
+
+    graph = json.loads(
+        (root / ".dev-graph/state/graph.json").read_text(encoding="utf-8")
+    )
+    assert graph["graph_revision"] == 2
+    assert {node["artifact_kind"] for node in graph["nodes"]} == {
+        "architecture",
+        "specification",
+    }
 
 
 def test_source_content_change_changes_only_its_matching_import_body(tmp_path: Path) -> None:

@@ -107,7 +107,7 @@ feedback_contract:
 
 **入力**: ヒアリング応答 (対話) / 既存 `spec-state.json` (resume 時) / C04 taxonomy。
 **出力**: `spec-state.json` (`references/spec-state-contract.md` の形状。plugin 共有データ契約。上位概念 `requirements_foundation` を含む)。
-**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、各 U が 1論点の `qa_log` entry へ遡及できる。対話 entry は `source.kind=user-dialogue`、書面要件 entry は質問の入力 path/section、回答の原文、`source.sha256` (原文の SHA-256) を持つ。全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の `coverage_certificate.blocking_items` が空 (`missing_effect=block` の必須情報が全て確定に接地) である。
+**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、各 U が 1論点の `qa_log` entry へ遡及できる。対話 entry は `source.kind=user-dialogue`、書面要件 entry は質問の入力 path/section、指定 section 内に実在する逐語 `answer`、その UTF-8 bytes の `source.sha256` を持つ。AI 生成文の digest は利用者一次根拠に代用できず、新しい利用者入力が無い場合に新規 approval を作らない。全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` (空であるべき未解決一覧ではなく、`missing_effect=block` の収集必須 item ID 一覧) の各 item が確定 foundation/matrix/decision の根拠へ接地していることを completeness evaluator の意味層で確認する。
 
 - **platforms (6)**: `web` / `mobile` / `tablet` / `desktop-windows` / `desktop-linux` / `desktop-macos`。
 - **cell states (3値, loop 中)**: `未収集` / `対象外` / `確定`。最終時は `未収集` を0にする。
@@ -134,7 +134,7 @@ feedback_contract:
 | R2-interview | `prompts/R2-interview.md` | 未収集セルを対象に 質問→回答→仕様反映 の往復で各セルを `確定` か `対象外+理由` へ遷移。 |
 | R3-reask | `prompts/R3-reask.md` | 未確定セルを再質問。1 invocation の 5 loop 到達時は未完了状態と next_question を保存し resumable な結果を返す。未収集を完了扱いしない。 |
 | R4-reopen | `prompts/R4-reopen.md` | 確定済みセルを根拠付きで再オープンし追加質問サイクルへ戻す。reopen 非経由の確定直接変更は writer が遮断する。 |
-| R5-decision-guide | `prompts/R5-decision-guide.md` | `needs_guidance` を最新公式情報とC04 deep knowledgeから2〜3案へ展開し、無料/低コスト案を含めgoal fit/TCO/security/operations/lock-inで比較。AI推奨は`recommended_pending_confirmation`、ユーザー選択だけを`confirmed`にする。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の `coverage_certificate.blocking_items` (`missing_effect=block` の未充足 item) が空になるまで当該 domain の確定セルの `confirmed` を禁じる収集ゲートを課し、`--profile knowledge --order` の topo_order (上位概念→下位概念) 順で知識を消費する。 |
+| R5-decision-guide | `prompts/R5-decision-guide.md` | `needs_guidance` を最新公式情報とC04 deep knowledgeから2〜3案へ展開し、無料/低コスト案を含めgoal fit/TCO/security/operations/lock-inで比較。AI推奨は`recommended_pending_confirmation`、ユーザー選択だけを`confirmed`にする。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の exit0 を要求し、`coverage_certificate.blocking_items` (`missing_effect=block` の収集必須 item ID 一覧) を確定 foundation/matrix/decision の根拠へ接地できるまで当該 domain の `confirmed` を禁じる収集ゲートを課す。`--profile knowledge --order` の topo_order (上位概念→下位概念) 順で知識を消費する。 |
 
 ## ゴールシーク実行
 
@@ -148,7 +148,7 @@ feedback_contract:
 
 - **IN1 (inner / script)**: `python3 ../../scripts/validate-coverage-matrix.py --matrix spec-state.json` が exit0 (loop 中の網羅性)。R0-foundation 完了後は `--require-foundation` を付けて `python3 ../../scripts/validate-coverage-matrix.py --matrix spec-state.json --require-foundation` も exit0 とし、上位概念 U1-U9・decisions 契約・serves_goals トレースを段階的に課す (foundation 未確定の R0 完了前には課さない)。
 - **OUT1 (outer / test)**: 最終 `spec-state.json` を `--require-complete` が exit0 で受理し、受入テスト (`tests/`) が resume 保存を含めて再現する。
-- **収集ゲート (C16 / IN1 補完)**: `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 かつ `coverage_certificate.blocking_items` が空。`missing_effect=block` の必須情報 (product-goal / target-platforms / domain-model / auth-model / security-posture) が確定に接地するまで当該 domain の確定セルの `confirmed` を許さない (R5 が prose ゲートとして施行し、決定論 writer=apply-spec-transition への block 検査組込は follow-up)。
+- **収集ゲート (C16 / IN1 補完)**: `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` に列挙された収集必須 item (product-goal / target-platforms / domain-model / auth-model / security-posture) が確定 foundation/matrix/decision の根拠へ接地していることを意味層で確認する。未接地なら当該 domain の `confirmed` を許さない (R5 が prose ゲートとして施行し、決定論 writer=apply-spec-transition への接地検査組込は follow-up)。
 
 ## 使い方 (ゴールへ向けた反復)
 

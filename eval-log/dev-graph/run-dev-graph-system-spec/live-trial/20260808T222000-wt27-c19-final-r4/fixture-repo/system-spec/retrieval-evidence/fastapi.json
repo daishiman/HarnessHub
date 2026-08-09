@@ -1,0 +1,21 @@
+{
+  "target_id": "fastapi",
+  "source_url": "https://fastapi.tiangolo.com/release-notes/",
+  "official_host": "fastapi.tiangolo.com",
+  "retrieval_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T13:27:14Z",
+  "fetch_log": [
+    {
+      "url": "https://fastapi.tiangolo.com/",
+      "fetched_at": "2026-08-08T13:26:48Z",
+      "tool": "WebFetch",
+      "observed": "OpenAPI/JSON Schema 準拠の自動ドキュメント (Swagger UI /docs, ReDoc /redoc) と Pydantic による自動検証を確認。version 番号の記載はなし。"
+    },
+    {
+      "url": "https://fastapi.tiangolo.com/release-notes/",
+      "fetched_at": "2026-08-08T13:27:14Z",
+      "tool": "WebFetch",
+      "observed": "release notes 冒頭: `0.141.1 (2026-07-29)` (逐語)。"
+    }
+  ]
+}

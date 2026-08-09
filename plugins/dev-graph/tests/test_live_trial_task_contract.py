@@ -13,7 +13,7 @@
    生成器 (--kind system-spec) の実出力と一致する。宣言だけ直して build を直さない
    (あるいは逆) と、task.md 側の前提検査が全て緑のまま実 fixture だけ旧前提へ戻る。
 4. **正本変更の伝播**: scenario_id / task_args_template / required_observations /
-   fixture contract のいずれが動いても contract_digest が動く。受入条件5「4 種の変更が
+   task_contract / fixture contract のいずれが動いても contract_digest が動く。受入条件5「5 種の変更が
    1 つの検証経路へ束ねられる」を digest 1 個で成立させているので、ここが崩れると
    premise block が陳腐化しても気づけない。
 """
@@ -34,8 +34,8 @@ BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 TRIALS = REPO / "eval-log" / "dev-graph" / "run-dev-graph-system-spec" / "live-trial"
 # fixture 契約と矛盾する旧前提で走り FAIL した run (verdict.json を持たない)。
 STALE_TASK = TRIALS / "20260726T040700Z-sysspec-final" / "task.md"
-# 現行 scenario/task_contract に合わせて PASS を再取得した run。
-FRESH_TASK = TRIALS / "20260806T020000Z-m0bd-c19-r3-postmain" / "task.md"
+# 現行 scenario/task_contract と現行 behavior closure で PASS を再取得した run。
+FRESH_TASK = TRIALS / "20260809T000500-wt27-c19-final-r6" / "task.md"
 SHAPE = "system-spec"
 
 
@@ -132,7 +132,10 @@ def test_stale_task_reports_resume_flag_drift() -> None:
 def test_extra_arg_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        ("m0bd-c19-r3-postmain-20260806\"})", "m0bd-c19-r3-postmain-20260806 --resume\"})"),
+        (
+            "20260809T000500-wt27-c19-final-r6/fixture-repo\"})",
+            "20260809T000500-wt27-c19-final-r6/fixture-repo --resume\"})",
+        ),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -209,7 +212,18 @@ def test_entry_point_without_skill_requirement_is_rejected(tmp_path: Path) -> No
     """
     task = _mutated(
         tmp_path,
-        ("各 entry point は必ず `Skill` ツールで呼び出してください (", "各手順を実行してください ("),
+        (
+            "各 entry point は必ず `Skill` ツールで呼び出してください。",
+            "各 entry point を実行してください。",
+        ),
+        (
+            "system-spec-harness の正規 4 entry point を `Skill` ツールで呼んだ実行記録",
+            "system-spec-harness の正規 4 entry point の実行記録",
+        ),
+        (
+            "`Skill` 経由で完走し、coverage / source / evaluator gate が PASS",
+            "完走し、coverage / source / evaluator gate が PASS",
+        ),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -252,24 +266,59 @@ def test_emitted_premise_round_trips(tmp_path: Path) -> None:
     assert report["checked"][0]["has_premise_block"] is True
 
 
+def test_emitted_premise_contains_every_required_task_fragment() -> None:
+    premise = _emit_premise()
+
+    for fragment in _scenario()["task_contract"]["required_fragments"]:
+        assert fragment in premise
+
+
+@pytest.mark.parametrize(
+    "fragment",
+    _scenario()["task_contract"]["required_fragments"],
+)
+def test_each_required_task_fragment_is_fail_closed(
+    tmp_path: Path, fragment: str
+) -> None:
+    text = _emit_premise() + "\n" + FRESH_TASK.read_text(encoding="utf-8")
+    assert fragment in text
+    task = tmp_path / "task.md"
+    task.write_text(text.replace(fragment, "<required-fragment-removed>"), encoding="utf-8")
+
+    code, report = _lint("--task", str(task))
+
+    assert code == 2
+    assert "LT-012" in _rules(report)
+
+
+def test_forbidden_task_fragment_is_fail_closed() -> None:
+    contract, scenario = _contract(), dict(_scenario())
+    task_contract = dict(scenario["task_contract"])
+    task_contract["forbidden_fragments"] = ["FORBIDDEN_SENTINEL"]
+    scenario["task_contract"] = task_contract
+    text = _emit_premise() + "\n" + FRESH_TASK.read_text(encoding="utf-8")
+    violations = MODULE.check_task(
+        text + "\nFORBIDDEN_SENTINEL\n",
+        contract=contract,
+        scenario=scenario,
+        scenarios={scenario["scenario_id"]: scenario},
+    )
+
+    assert "LT-013" in {item["rule"] for item in violations}
+
+
 def test_premise_emission_is_deterministic() -> None:
     assert _emit_premise() == _emit_premise()
 
 
 def test_all_mode_passes_on_real_repo() -> None:
-    """receipt 採用済み PASS run を優先し、時計ずれの古い run を選ばない。
-
-    C19 (run-dev-graph-system-spec) は既知バグ HarnessHub-o4zi により受領書が
-    PASS verdict を採用していない (DEGRADED を正直に記録)。この場合
-    ``verdict_path_from_criteria_receipt`` は None を返し、最新 run-id (辞書順最大) の
-    task.md へ後退する — それが本テストが検証する fallback 経路そのものである。
-    """
+    """receipt 採用済みの現行 PASS run を優先する。"""
     code, report = _lint("--all")
     assert code == 0, report["violations"]
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
     assert report["checked"][0]["task"].endswith(
-        "20260808T140907-c19specr2/task.md"
+        "20260808T222000-wt27-c19-final-r4/task.md"
     )
 
 
@@ -340,6 +389,14 @@ def test_required_entry_points_match_harness_package_contract() -> None:
     assert set(_contract()["required_entry_points"]) <= set(declared)
 
 
+def test_negative_control_roots_are_executable_dev_graph_paths() -> None:
+    """Observation 3 は fixture の説明文でなく実行コードだけを検査する。"""
+    roots = tuple(_contract()["negative_control_roots"])
+    assert roots == ("plugins/dev-graph/skills", "plugins/dev-graph/scripts")
+    assert all((REPO / root).is_dir() for root in roots)
+    assert all("tests" not in Path(root).parts for root in roots)
+
+
 # --- 契約: 正本変更の伝播 (受入条件 5) --------------------------------------------
 
 
@@ -354,6 +411,7 @@ def test_digest_is_deterministic() -> None:
         ("scenario_id", "C19-OUT1-renamed"),
         ("task_args_template", "--repo-root <contained-fixture-repo> --resume"),
         ("required_observations", ["only one observation"]),
+        ("task_contract", {"required_fragments": ["new-boundary"], "forbidden_fragments": []}),
     ],
 )
 def test_digest_moves_when_scenario_moves(key: str, value: object) -> None:

@@ -115,3 +115,50 @@ def test_missing_required_headings_resolves_conditional_variants_by_node_trigger
 
     # node を渡さない呼び出し (specification など既存呼び出し互換) は base のまま。
     assert missing_required_headings(artifact, "task", contract) == ["目的", "背景"]
+
+
+def test_system_spec_import_uses_lineage_specific_heading_variants(tmp_path):
+    """HarnessHub-o4zi: immutable system-spec bodies use their source contract."""
+    contract = {
+        "artifacts": {
+            "specification": {
+                "required_sections": ["generic-a", "generic-b"],
+                "conditional_required_sections": {
+                    "system_spec_harness": ["index", "chapters"],
+                    "system_spec_harness_with_writeback": [
+                        "index",
+                        "chapters",
+                        "writeback",
+                    ],
+                },
+            },
+            "architecture": {
+                "required_sections": ["generic-architecture"],
+                "conditional_required_sections": {
+                    "system_spec_harness": ["U1", "U2"],
+                },
+            },
+        }
+    }
+    imported = {"source_lineage": {"origin_kind": "system-spec-harness"}}
+
+    specification = tmp_path / "specification.md"
+    specification.write_text(
+        "# index\n\nbody\n\n## chapters\n\nbody\n", encoding="utf-8"
+    )
+    assert missing_required_headings(
+        specification, "specification", contract, imported
+    ) == []
+    assert missing_required_headings(specification, "specification", contract) == [
+        "generic-a",
+        "generic-b",
+    ]
+
+    architecture = tmp_path / "architecture.md"
+    architecture.write_text("# U1\n\nbody\n\n## U2\n\nbody\n", encoding="utf-8")
+    assert missing_required_headings(
+        architecture, "architecture", contract, imported
+    ) == []
+    assert missing_required_headings(architecture, "architecture", contract) == [
+        "generic-architecture"
+    ]

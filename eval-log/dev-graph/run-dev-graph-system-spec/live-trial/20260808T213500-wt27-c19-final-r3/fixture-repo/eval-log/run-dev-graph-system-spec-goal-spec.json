@@ -1,0 +1,22 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "original_goal": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
+  "why": "system-spec-harnessが既に持つヒアリング、カテゴリ×platform matrix、公式出典、確定章保護、独立完成度評価を複製せず引用し、dev-graphはグラフ登録とlineage維持だけを担うため。",
+  "checklist": [
+    {"id": "C1", "text": "system_spec content root が caller repo 内で repository_id/common-dir と一致する", "status": "pending"},
+    {"id": "C2", "text": "system-spec-harness が version >=0.1.0 <1.0.0 と required 4 entry points を満たす", "status": "pending"},
+    {"id": "C3", "text": "elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される", "status": "pending"},
+    {"id": "C4", "text": "coverage/source-citation/evaluator gate が全て PASS である", "status": "pending"},
+    {"id": "C5", "text": "C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である", "status": "pending"},
+    {"id": "C6", "text": "validate-source-digest.py --progress が exit 0", "status": "pending"},
+    {"id": "C7", "text": "validate-evidence-refs.py --progress が exit 0", "status": "pending"},
+    {"id": "C8", "text": "dev-graph 内に同等 elicitation/compile logic の複製が0件である", "status": "pending"}
+  ],
+  "repo_context_receipt": {
+    "repo_root_matches_content_roots_repository": true,
+    "repository_id": "local:sha256:ae74ba4d29f573e457a1bca847dc0e227bf4918676ccf18adb079e82549ee8a8",
+    "worktree_id": "wt_e35ad93cce0d1e98",
+    "mode": "write"
+  },
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2"
+}

@@ -1,0 +1,50 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+  "started_at": "2026-08-08T08:39:39Z",
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "checklist_status": {
+    "system_spec content root": {
+      "status": "PASS",
+      "evidence": "resolve-repo-context --mode write receipt repo_root == FIXTURE realpath"
+    },
+    "harness version/entry points": {
+      "status": "PASS",
+      "evidence": "plugin.json version=0.1.0; package-contract entry_points.skills に required 4"
+    },
+    "canonical 4 entry points via Skill": {
+      "status": "PASS",
+      "evidence": "elicit/doc-fetch/compile/evaluator を Skill ツールで起動"
+    },
+    "coverage/source-citation/evaluator gate": {
+      "status": "PASS",
+      "evidence": "validate-coverage-matrix --require-complete --require-foundation exit0 / validate-source-citation exit0 / completeness-report verdict=PASS + aggregate-completeness --session exit0"
+    },
+    "C02 lineage/confirmation/evidence/readiness": {
+      "status": "PASS",
+      "evidence": "upsert-node.py receipts (graph_revision 0->2)"
+    },
+    "validate-source-digest": {
+      "status": "PASS",
+      "evidence": "checked=2 / registered_mismatch=[] / exit 0"
+    },
+    "validate-evidence-refs": {
+      "status": "PASS",
+      "evidence": "scanned=2 / registered_dangling=[] / exit 0"
+    },
+    "no duplicated elicitation/compile logic": {
+      "status": "PASS",
+      "evidence": "陽性対照つき対照実験 (harness N>0 / dev-graph 0)"
+    }
+  },
+  "updated_at": "2026-08-08T09:20:49Z",
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  },
+  "completed_at": "2026-08-08T09:22:21Z"
+}

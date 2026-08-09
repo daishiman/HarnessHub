@@ -1,0 +1,13 @@
+{
+  "target_id": "flask",
+  "fetch_tool": "WebFetch",
+  "requested_url": "https://flask.palletsprojects.com/en/stable/changes/",
+  "recorded_at": "2026-08-08T11:17:11.438Z",
+  "official_host": "flask.palletsprojects.com",
+  "official_publisher": "Pallets",
+  "extracted_facts": "公式 changes ページ先頭 'Version 3.1.3 / Released 2026-02-18' を逐語確認。last_updated は取得日ではなく当該リリース日を採る。",
+  "version": "3.1.3",
+  "last_updated": "2026-02-18",
+  "last_updated_basis": "公式ページ記載のリリース日 (取得日の流用ではない)",
+  "refetch_reason": "C08 system-spec-doc-freshness-auditor が last_updated と公式実更新根拠の乖離を検出したための再取得"
+}

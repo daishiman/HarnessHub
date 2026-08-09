@@ -1,0 +1,79 @@
+{
+  "references": [
+    {
+      "target_id": "sqlite",
+      "retrieved_at": "2026-08-08T13:26:33Z",
+      "source_url": "https://www.sqlite.org/changes.html",
+      "official_publisher": "SQLite Consortium (sqlite.org)",
+      "official_host": "www.sqlite.org",
+      "version": "3.53.4",
+      "last_updated": "2026-07-24",
+      "latest_checked_at": "2026-08-08T13:26:33Z",
+      "evidence_ref": "system-spec/retrieval-evidence/sqlite.json",
+      "evidence_sha256": "eaab0d6179d476be3834e711c9a499bdbc8f5b86cb802ee4d3288ef18027f335",
+      "summary": "SQLite 公式 change log。最新リリースは 3.53.4 (2026-07-24)。単一ファイル・サーバレスの組込み DB として常駐プロセスを増やさず永続化できる (D1 の採択根拠)。"
+    },
+    {
+      "target_id": "postgresql",
+      "retrieved_at": "2026-08-08T13:26:41Z",
+      "source_url": "https://www.postgresql.org/docs/",
+      "official_publisher": "PostgreSQL Global Development Group",
+      "official_host": "www.postgresql.org",
+      "version": "18",
+      "latest_checked_at": "2026-08-08T13:26:41Z",
+      "evidence_ref": "system-spec/retrieval-evidence/postgresql.json",
+      "evidence_sha256": "bbe2d3acbd934cace0972ad42a3817e9eeed734fb44590b37cc03482f7838cfb",
+      "summary": "PostgreSQL 公式ドキュメント索引。現行最新の supported release は 18 (`18 / Current`)。19 Beta 2 が 2026-07-16 に公開済み。常駐 DB サーバープロセスを要するため本 system の U8 制約に適合せず D1 で不採択。"
+    },
+    {
+      "target_id": "fastapi",
+      "retrieved_at": "2026-08-08T13:27:14Z",
+      "source_url": "https://fastapi.tiangolo.com/release-notes/",
+      "official_publisher": "FastAPI (Sebastián Ramírez / tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "last_updated": "2026-07-29",
+      "latest_checked_at": "2026-08-08T13:27:14Z",
+      "evidence_ref": "system-spec/retrieval-evidence/fastapi.json",
+      "evidence_sha256": "c114425c2ddb6330a4937cce01e39a65e303c7ccee97b649ce4b8f21a80dc24c",
+      "summary": "FastAPI 公式 release notes。最新リリースは 0.141.1 (2026-07-29)。公式 landing page は OpenAPI 自動生成 (/docs, /redoc) と Pydantic による入力検証を明示しており、D2 の採択根拠 (G2/U9 の OpenAPI 提供・schema 検証) を満たす。"
+    },
+    {
+      "target_id": "flask",
+      "retrieved_at": "2026-08-08T13:27:22Z",
+      "source_url": "https://flask.palletsprojects.com/",
+      "official_publisher": "Pallets",
+      "official_host": "flask.palletsprojects.com",
+      "version": "3.1.3",
+      "latest_checked_at": "2026-08-08T13:27:22Z",
+      "evidence_ref": "system-spec/retrieval-evidence/flask.json",
+      "evidence_sha256": "958139ba8e055839464a911af785bd148e3c369d53ee8645cf0b01630b6f6258",
+      "summary": "Flask 公式ドキュメント (stable)。ヘッダ表記は `Flask Documentation (3.1.x)`、Changes の最上位 entry は `Version 3.1.3`。WSGI micro framework で OpenAPI 生成は標準では持たないため D2 で不採択。"
+    },
+    {
+      "target_id": "local-bearer-token",
+      "retrieved_at": "2026-08-08T13:27:30Z",
+      "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+      "official_publisher": "FastAPI (Sebastián Ramírez / tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "latest_checked_at": "2026-08-08T13:27:30Z",
+      "evidence_ref": "system-spec/retrieval-evidence/local-bearer-token.json",
+      "evidence_sha256": "13d5d307793e6d54a76843238ea7d1fbd4f0991790bdc8aeb3a26c6a28791037",
+      "summary": "FastAPI 公式 Security tutorial。OpenAPI security scheme の `bearer` を「a header `Authorization` with a value of `Bearer` plus a token」と定義し、後続章で Bearer/JWT 実装を扱う。D3 の採択 (単一利用者 bearer token) の一次資料。version は当ページに表示が無く、同一公式 host の release-notes で確認した現行 FastAPI release 0.141.1 を記録した (導出元を本証跡に明示)。"
+    },
+    {
+      "target_id": "oauth2-password-jwt",
+      "retrieved_at": "2026-08-08T13:27:43Z",
+      "source_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+      "official_publisher": "IETF",
+      "official_host": "datatracker.ietf.org",
+      "version": "RFC 6749 (Proposed Standard)",
+      "last_updated": "2012-10",
+      "latest_checked_at": "2026-08-08T13:27:43Z",
+      "evidence_ref": "system-spec/retrieval-evidence/oauth2-password-jwt.json",
+      "evidence_sha256": "09606635b99ec3c8b8a9622e3b104a4d7408868db2261e1c8e6a34fbe1134c7f",
+      "summary": "RFC 6749 The OAuth 2.0 Authorization Framework (October 2012, Proposed Standard)。Updated by RFC 8252 / RFC 8996 / RFC 9700。外部 IdP を前提とする認可フレームワークであり、単一利用者・外部通信 0 の本 system では過剰なため D3 で不採択。"
+    }
+  ]
+}

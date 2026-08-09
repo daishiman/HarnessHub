@@ -16,15 +16,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T113753-yq4k1/verdict.json",
-      "observed": "最新 main 統合後の fresh live trial 20260806T011000Z-f84o-postmain-c01-r2 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=9fa4b678db3facd7e274c40152896c9235a85e9c78eed726c434c16cbc53c722。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T183320-wt27-c01-retry/verdict.json",
+      "observed": "fresh live trial 20260808T183320-wt27-c01-retry は actual_model=claude-opus-5、overall=PASS、nudge=0、gate=0。6 観測に加えて Agent fork 8 回と同一 init Skill の第2パスを fresh evaluator が確認した。behavior closure digest=b279ff1f4b281c540c3c7a15230cf239df11c63eaa7f2513bfe0a7b983c54a7e。",
       "scenario_id": "C01-OUT1-positive-idempotence-r17",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T113753-yq4k1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260806T011000Z-f84o-postmain-c01-r2/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T183320-wt27-c01-retry/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T183320-wt27-c01-retry/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T183320-wt27-c01-retry/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T183320-wt27-c01-retry/independent-verification.json"
       ],
       "verify_by": "live-trial"
     },
@@ -90,7 +90,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-goal-evaluator-c01-retry-20260808",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C01",

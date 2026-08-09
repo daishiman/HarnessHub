@@ -46,6 +46,14 @@ def count_unresolved(state: dict) -> int:
     )
 
 
+def _refresh_hearing_progress(state: dict) -> None:
+    """Keep the resumable progress fields consistent with the matrix."""
+    progress = state.setdefault("hearing_progress", {})
+    unresolved = count_unresolved(state)
+    progress["complete"] = unresolved == 0
+    progress["next_question"] = None if unresolved == 0 else next_unresolved_question(state)
+
+
 def bootstrap_state() -> dict:
     return {
         "schema_version": "1.0", "categories": [], "platforms": list(CANONICAL_PLATFORMS),
@@ -71,6 +79,16 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
     ids = [item.get("id") for item in categories if isinstance(item, dict)]
     if len(ids) != len(categories) or len(set(ids)) != len(ids):
         raise TransitionError("taxonomy.categories の id が不正または重複")
+    if existing_state and any(
+        isinstance(cell, dict) and cell.get("state") == "確定"
+        for row in existing_state.get("matrix", {}).values()
+        if isinstance(row, dict)
+        for cell in row.values()
+    ):
+        raise TransitionError(
+            "init --state は matrix 未着手の bootstrap state 専用。"
+            "確定セルを含む state の再初期化は R4-reopen を迂回するため拒否"
+        )
     state = dict(existing_state or bootstrap_state())
     state["schema_version"] = "1.0"
     state["categories"] = [{"id": item["id"], "label": item["label"]} for item in categories]
@@ -86,8 +104,9 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
     state.setdefault("requirements_foundation", empty_foundation())
     state.setdefault("decisions", [])
     state.setdefault("knowledge_candidates", [])
-    state["hearing_progress"] = {"loop_count": 0, "next_question": next_unresolved_question(state), "complete": False}
+    state["hearing_progress"] = {"loop_count": 0, "next_question": None, "complete": False}
     recompute_aggregates(state)
+    _refresh_hearing_progress(state)
     return state
 
 
@@ -107,7 +126,7 @@ def add_category(state: dict, category: dict) -> None:
     state["categories"].append({"id": category_id, "label": label})
     state["matrix"][category_id] = {platform: {"state": "未収集"} for platform in CANONICAL_PLATFORMS}
     recompute_aggregates(state)
-    state["hearing_progress"]["next_question"] = next_unresolved_question(state)
+    _refresh_hearing_progress(state)
 
 
 def _cell(state: dict, category: str, platform: str) -> dict:
@@ -127,7 +146,20 @@ def apply_cell_op(state: dict, op: dict) -> None:
             raise TransitionError(f"reopen 不可: {category}/{platform} は '{current}' (確定セルのみ reopen できる)")
         if not op.get("reason"):
             raise TransitionError(f"reopen には reason が必須: {category}/{platform}")
-        state.setdefault("reopen_log", []).append({"category": category, "platform": platform, "reason": op["reason"], "from": "確定"})
+        discarded = {
+            key: list(cell[key]) if isinstance(cell[key], list) else cell[key]
+            for key in ("qa_ref", "serves_goals", "serves_intents")
+            if key in cell
+        }
+        log_entry = {
+            "category": category,
+            "platform": platform,
+            "reason": op["reason"],
+            "from": "確定",
+        }
+        if discarded:
+            log_entry["discarded"] = discarded
+        state.setdefault("reopen_log", []).append(log_entry)
         state["matrix"][category][platform] = {"state": "未収集", "reopened_from": "確定", "reopen_reason": op["reason"]}
         return
     if action == "set-serves":
@@ -202,6 +234,7 @@ def apply_turn(state: dict, turn: dict) -> None:
             op["approval_ref"] = approval_id
         apply_cell_op(state, op)
     recompute_aggregates(state)
+    _refresh_hearing_progress(state)
 
 
 def next_unresolved_question(state: dict) -> str | None:
@@ -223,9 +256,7 @@ def run_chunk(state: dict, turns: list[dict], max_loops: int = 5) -> int:
         apply_turn(state, turn)
         processed += 1
         state["hearing_progress"]["loop_count"] = processed
-    if count_unresolved(state) == 0:
-        state["hearing_progress"].update({"complete": True, "next_question": None})
-    else:
-        state["hearing_progress"].update({"complete": False, "next_question": next_unresolved_question(state)})
     recompute_aggregates(state)
+    _refresh_hearing_progress(state)
+    state["hearing_progress"]["max_loops"] = max_loops
     return processed

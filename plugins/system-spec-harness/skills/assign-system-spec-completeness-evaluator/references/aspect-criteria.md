@@ -15,7 +15,7 @@
 | `doc_freshness` | 最新ドキュメント出典 | `system-spec-doc-freshness-auditor` (C08) | `fetched-references.json` | `validate-source-citation.py` (C08 内実行) |
 | `prompt_quality` | prompt-creator準拠 | C05 R1-score | 全`prompts/*.md` | `verify-completeness.py` + `validate-prompt.py` |
 
-> C06 (hearing-auditor) は `system-spec/*.md` を読まずヒアリング品質 (聞き漏れ/誘導/早期停止/トレーサビリティ) のみを監査するため、`design_knowledge_reflection` へ束縛するのは虚偽対応だった。C06 は `matrix_coverage` の sub-input (網羅性・トレースの補助根拠) へ再配置し、設計知識反映は C05 が `system-spec/*.md` と `resource-map.yaml` から自前評価する。
+> C06 (hearing-auditor) はヒアリング品質の 5 軸 (聞き漏れ/誘導/早期停止/トレーサビリティ/foundation 利用者根拠) を `spec-state.json` と利用者一次入力から監査するが、生成済み `system-spec/*.md` の設計知識反映は読まない。そのため `design_knowledge_reflection` へ束縛するのは虚偽対応であり、C06 は `matrix_coverage` の sub-input (網羅性・トレースの補助根拠) に限定する。設計知識反映は C05 が `system-spec/*.md` と `resource-map.yaml` から自前評価する。
 
 ## 観点別の合否判定
 
@@ -29,9 +29,9 @@
   canonical platform 行の欠落を FAIL 要因として拾う。
 - スクリプトが通っても、matrix-auditor の意味層 (対象外理由の具体性・qa_ref が確定を裏付けるか) が
   FAIL を出せば観点 FAIL。
-- **sub-input (C06 hearing-auditor)**: ヒアリング品質の 4 軸 (聞き漏れ / 誘導質問 / 早期停止 /
-  トレーサビリティ) を網羅性・トレースの補助根拠として併せる。設計判断が誘導なく漏れなく引き出され、
-  確定セルが Q&A に遡れることを確認する。ヒアリングが不健全なら網羅性の裏付けが崩れるため
+- **sub-input (C06 hearing-auditor)**: ヒアリング品質の 5 軸 (聞き漏れ / 誘導質問 / 早期停止 /
+  トレーサビリティ / foundation 利用者根拠) を網羅性・トレースの補助根拠として併せる。設計判が誘導なく漏れなく引き出され、
+  確定セルが Q&A と利用者一次入力に遡れることを確認する。ヒアリングが不健全なら網羅性の裏付けが崩れるため
   matrix_coverage を FAIL に寄せうる。
 - **C16 必須情報カタログ被覆 (追加次元)**: `validate-knowledge-graph.py --profile required-info` の
   exit0 (全 in-scope domain 被覆・item 最低形状・収集順序・coverage certificate) を機械層根拠にする。

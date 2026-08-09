@@ -234,3 +234,86 @@ def test_heading_missing_resolves_system_dev_planner_task_variants(tmp_path):
             by_node.setdefault(item["node"], []).append(item["detail"])
     assert "baseline-task" not in by_node
     assert set(by_node["incomplete-task"]) == {"正本仕様書", "実行契約"}
+
+
+def test_system_spec_import_checks_both_specification_and_architecture_headings(
+    tmp_path,
+):
+    """HarnessHub-o4zi: imported bodies pass their own shape; manual bodies do not."""
+    mod = load()
+    assert {"specification", "architecture"} <= mod.HEADING_MISSING_KINDS
+    canonical = json.loads(
+        (PLUGIN / "templates/template-contract.json").read_text(encoding="utf-8")
+    )
+    contract = {
+        "placeholder_tokens": canonical["placeholder_tokens"],
+        "common_frontmatter": {"required": []},
+        "artifacts": {
+            kind: canonical["artifacts"][kind]
+            for kind in ("specification", "architecture")
+        },
+    }
+
+    def write_artifact(kind: str, path: str, node_id: str, headings: list[str]):
+        artifact = tmp_path / path
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        frontmatter = "\n".join(
+            [
+                "---",
+                f"graph_node_id: {node_id}",
+                f"artifact_kind: {kind}",
+                f"file_path: {path}",
+                f"template_id: {kind}",
+                "template_version: 1.0.0",
+                "---",
+                "",
+            ]
+        )
+        body = "\n".join(
+            f"## {heading}\n\n確定済みの実質的な本文。" for heading in headings
+        )
+        artifact.write_text(frontmatter + body + "\n", encoding="utf-8")
+
+    imported_nodes = []
+    for kind, path in (
+        ("architecture", "architecture/system-spec-overview.md"),
+        ("specification", "specs/system-spec-index.md"),
+    ):
+        headings = canonical["artifacts"][kind]["conditional_required_sections"][
+            "system_spec_harness"
+        ]
+        node_id = f"imported-{kind}"
+        write_artifact(kind, path, node_id, headings)
+        imported_nodes.append(
+            {
+                "graph_node_id": node_id,
+                "artifact_kind": kind,
+                "file_path": path,
+                "template_id": kind,
+                "template_version": "1.0.0",
+                "source_lineage": {"origin_kind": "system-spec-harness"},
+            }
+        )
+
+    assert mod.artifact_findings(imported_nodes, tmp_path, contract) == []
+
+    manual_path = "architecture/manual.md"
+    write_artifact("architecture", manual_path, "manual-architecture", ["unrelated"])
+    manual_findings = mod.artifact_findings(
+        [
+            {
+                "graph_node_id": "manual-architecture",
+                "artifact_kind": "architecture",
+                "file_path": manual_path,
+                "template_id": "architecture",
+                "template_version": "1.0.0",
+                "source_lineage": {"origin_kind": "manual"},
+            }
+        ],
+        tmp_path,
+        contract,
+    )
+    assert {item["code"] for item in manual_findings} == {"heading_missing"}
+    assert {item["detail"] for item in manual_findings} == set(
+        canonical["artifacts"]["architecture"]["required_sections"]
+    )

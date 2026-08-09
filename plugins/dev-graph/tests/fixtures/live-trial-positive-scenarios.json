@@ -44,7 +44,7 @@
       ]
     },
     {
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r5",
       "component_id": "C19",
       "skill": "run-dev-graph-system-spec",
       "criterion_id": "OUT1",
@@ -54,7 +54,13 @@
         "required_fragments": [
           "upsert-node.py",
           "SYSTEM_SPEC_AUDIT_FORK_LEDGER",
-          "doc-fetch は公式ページを実取得して現行 version を記録する"
+          "doc-fetch は公式ページを実取得して現行 version を記録する",
+          "完全な agentId と一致する native task-notification",
+          "validate-system-spec-evaluator-completion.py",
+          "待機は1回30秒以内の有限操作",
+          "比較候補6件すべて",
+          "evaluator fork を TaskStop してはならない",
+          "outer session が completeness-report.json を Write/Edit してはならない"
         ],
         "forbidden_fragments": []
       },

@@ -58,6 +58,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
 - 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は backend の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/backend.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+利用者の操作を、予測可能で検証可能な API と状態遷移として安全に実行する。
+
+### U2 背景 (background)
+
+入力検証、API 定義、状態機械が分散すると、クライアント間の不一致と回復不能な更新が生じる。
+
+### U3 ゴール (goals)
+
+zod を単一ソースとする REST/OpenAPI 契約と、明示的な PublishRequest 状態機械を維持する。
+
+### U4 目標 (objectives)
+
+接続層、認証アダプタ、ドメインロジックを分離し、同じ検証規則を全入口で共有する。
+
+### U5 成功基準 (success_criteria)
+
+API 契約試験、状態遷移試験、認可境界試験が通り、不正入力が一貫したエラーとして拒否されることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+Web/CLI 利用者、backend 開発者、連携先、セキュリティおよび運用担当者を対象とする。
+
+### U7 スコープ (scope)
+
+Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を扱う。
+
+### U8 制約 (constraints)
+
+認証情報の直書き、入口ごとの検証重複、定義と実装が分離した API 契約を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+同じ要求がどのクライアントから届いても、同じ検証・認可・状態遷移を再現できるようにする。
+
+### 意思決定支援 (decisions)
+
+短期的な実装速度と契約の一貫性が競合するときは、単一ソースと回復可能な状態遷移を優先する。
+
 ## Architecture overview
 
 正本: system-spec/backend.md。Route Handlers + zod → OpenAPI 生成、PublishRequest 状態機械 (§7.2)、検査ロジック共有パッケージ、qa-020 のコード構造規約。doctrine anchor: Clean Architecture。

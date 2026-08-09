@@ -26,6 +26,7 @@
 ### 受入条件
 
 - 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる。
+- `context: fork` の completeness evaluator は、Skill 起動応答を完了 receipt にせず、起動結果の完全な `agentId` と一致する native `task-notification` (`status=completed`、完全 response あり) まで待ち、その fork 自身が書いた report だけを evaluator evidence にする。runtime が互換 task id を公開した場合だけ `TaskOutput(block=true)` を使い、表示用の短縮 ID を推測しない。foreground 待機は1回30秒以内の有限操作にし、loop/sentinel wait で native notification の delivery を塞がない。
 
 ## Layer 3: インフラ層
 
@@ -56,6 +57,7 @@
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる
+- [ ] completeness evaluator fork の完全 response を完全 `agentId` と一致する native completion で回収し、outer session による report の代筆と foreground blocking wait が0件である
 
 ### 5.4 実行方式
 
@@ -65,6 +67,7 @@
 
 - confirmed artifacts/evidenceをR3へ渡す。
 - 前段 receipt/digest と後段 input digest を一致させ、stale handoff を拒否する。
+- `assign-system-spec-completeness-evaluator` は `context: fork` のため Skill 起動後に完全な `agentId` を返す。対応する native `task-notification` が `status=completed` と完全 response を返すまで R3 へ進まない。runtime が互換 task id を明示した場合は `TaskOutput(block=true)` を使ってよいが、subagent 一覧の短縮 ID を task id と推測しない。待機は1回30秒以内の有限 foreground 操作に限定し、`until` / `while` / `for` + `sleep` や30秒超の sleep を foreground で実行しない。`TaskStop` で evaluator を中断したり、outer session が `completeness-report.json` を Write/Edit して代替したりしない。evaluator が失敗・停止した場合は本 responsibility を FAIL として返す。live trial では `validate-system-spec-evaluator-completion.py` の exit 0 を完了順序の receipt にする。
 
 ## Layer 7: UserInput
 
@@ -74,4 +77,3 @@
 ## 出力指示
 
 Layer 2 の入力・出力・責務境界・受入条件を正本としてこの単一責務だけを実行し、思考過程を出力せず、artifact/receipt、検証結果、未達 blocker だけを返す。
-

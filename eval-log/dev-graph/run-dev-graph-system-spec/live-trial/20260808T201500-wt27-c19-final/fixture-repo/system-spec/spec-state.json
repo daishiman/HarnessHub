@@ -1,0 +1,1743 @@
+{
+  "schema_version": "1.0",
+  "categories": [
+    {
+      "id": "database",
+      "label": "データベース"
+    },
+    {
+      "id": "auth",
+      "label": "認証(ログイン)"
+    },
+    {
+      "id": "ui-ux",
+      "label": "UI-UX"
+    },
+    {
+      "id": "security",
+      "label": "セキュリティ"
+    },
+    {
+      "id": "infrastructure",
+      "label": "インフラ"
+    },
+    {
+      "id": "backend",
+      "label": "バックエンド"
+    },
+    {
+      "id": "frontend",
+      "label": "フロントエンド"
+    },
+    {
+      "id": "maintenance-ops",
+      "label": "保守運用管理"
+    }
+  ],
+  "platforms": [
+    "web",
+    "mobile",
+    "tablet",
+    "desktop-windows",
+    "desktop-linux",
+    "desktop-macos"
+  ],
+  "matrix": {
+    "database": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-021",
+        "serves_goals": [
+          "G1",
+          "G3",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "auth": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-022",
+        "serves_goals": [
+          "G2"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "ui-ux": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-023",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "security": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-024",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "infrastructure": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-025",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "backend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-026",
+        "serves_goals": [
+          "G2",
+          "G3"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "frontend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-027",
+        "serves_goals": [
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "maintenance-ops": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-028",
+        "serves_goals": [
+          "G3",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "requirements-brief.md §2 platform 方針: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    }
+  },
+  "qa_log": [
+    {
+      "id": "qa-foundation-u1",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U1 (本質的目的) として利用者が確定した原文は何か",
+      "answer": "自分の TODO を、いかなる外部サービスにもデータを渡さずに、手元の 1 プロセスだけで\n管理・自動化できる状態にする。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U1",
+        "sha256": "834e466ed3908b3e0e9347f6f1777cf2d52122d6e14f3a9ab8185f94a2626391"
+      }
+    },
+    {
+      "id": "qa-foundation-u2",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U2 (背景) として利用者が確定した原文は何か",
+      "answer": "既存の SaaS 型 TODO 管理はデータが外部に保管され、オフラインでは使えず、\nスクリプトからの自動操作にも制約がある。API として手元に持てれば、\n自作クライアントや shell script から自由に組み合わせられる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U2",
+        "sha256": "f2f3e48e24ce864b9fbf81384169e790b23a87e05c6de602220f77e7c6e09f86"
+      }
+    },
+    {
+      "id": "qa-foundation-u3",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U3 (ゴール) として利用者が確定した原文は何か",
+      "answer": "| goal_id | text |\n| --- | --- |\n| G1 | TODO データが端末外へ出ない (外部 network 送信 0 件) |\n| G2 | 認証された利用者だけが自分の TODO を作成・参照・更新・削除できる |\n| G3 | プロセス再起動後も TODO が失われない |\n| G4 | 追加の常駐ミドルウェアなしに 1 コマンドで起動・停止・バックアップできる |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U3",
+        "sha256": "355fdd7ea4018583fdfb60b089aa2c1856f949bf0cbeb69d1587a43235ab206e"
+      }
+    },
+    {
+      "id": "qa-foundation-u4",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U4 (目標) として利用者が確定した原文は何か",
+      "answer": "- G1: 実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。\n- G2: すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。\n- G3: 永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。\n- G4: 起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U4",
+        "sha256": "3b45154f27d6052ab9f40abc79e115dacbeea227bf18b5116d0c008f622cead5"
+      }
+    },
+    {
+      "id": "qa-foundation-u5",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U5 (成功基準) として利用者が確定した原文は何か",
+      "answer": "- 受入テストで、未認証要求が全 TODO エンドポイントで 401 になる。\n- 受入テストで、作成 → プロセス再起動 → 一覧取得を行い、作成した TODO が戻る。\n- 依存関係と実装に外部 host への送信処理が 0 件であることをレビューで確認する。\n- 起動手順が 1 コマンド、バックアップ手順が 1 ファイルコピーで記述できる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U5",
+        "sha256": "8e792e47210fe953068565c330f097aff07d32afccad8a6dd0fe791e6f44ca96"
+      }
+    },
+    {
+      "id": "qa-foundation-u6",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U6 (ステークホルダー) として利用者が確定した原文は何か",
+      "answer": "- 利用者兼開発者 (本人): 唯一の利用者であり、要求の確定権限を持つ。\n- 運用者 (本人): 起動・停止・バックアップを行う。第三者運用は想定しない。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U6",
+        "sha256": "b6553a39f207ef3e8f88dbab13fb1f446f620cbeea3b7145775dcc45e35d87d4"
+      }
+    },
+    {
+      "id": "qa-foundation-u7",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U7 (スコープ) として利用者が確定した原文は何か",
+      "answer": "- in: 認証、TODO の CRUD、SQLite 永続化、localhost での HTTP 提供、起動/バックアップ手順。\n- out: GUI クライアント実装、複数ユーザー間の共有、外部同期、クラウド配備、通知機能。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U7",
+        "sha256": "b29c0214592d98a8c416f615a172c9cafabc6e57144b0457663d475775923fcf"
+      }
+    },
+    {
+      "id": "qa-foundation-u8",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U8 (制約) として利用者が確定した原文は何か",
+      "answer": "- 外部 network への送信を実装に含めない (実行時の外向き通信 0)。\n- 常駐ミドルウェア (別プロセスの DB サーバー等) を増やさない。\n- 費用は 0 円 (無料・OSS のみ)。\n- 単一プロセス・単一データファイルで完結させる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U8",
+        "sha256": "c33df0c4f6b19f2387d98d624a6e539f15abe0e62b596c782b59ef1adf8137b7"
+      }
+    },
+    {
+      "id": "qa-foundation-u9",
+      "question": "書面入力 system-spec/requirements-brief.md の §1 U9 (具体的にやりたいこと) として利用者が確定した原文は何か",
+      "answer": "- TODO の作成・一覧・単体取得・更新・完了・削除。\n- 単一利用者向けの token 認証。\n- SQLite ファイルへの永続化とスキーマ初期化。\n- localhost バインドでの HTTP 提供と OpenAPI 定義の提供。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§1 U9",
+        "sha256": "74218d5bcfa930561998b9cf4eaee11b9624f498d5964a63c87de4b77759fc8d"
+      }
+    },
+    {
+      "id": "qa-001",
+      "question": "database × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 database",
+        "sha256": "e325c6df4e2010a52dc1998e46ffbf25263c82c126fe663031e6d34f660c03af"
+      }
+    },
+    {
+      "id": "qa-002",
+      "question": "auth × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 auth",
+        "sha256": "d6a3bef5046edf3630b87bc02d92a8313e8c6c44a298c27764b4c0d03be372af"
+      }
+    },
+    {
+      "id": "qa-003",
+      "question": "ui-ux × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "UI は持たない。API の使い勝手として、エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 ui-ux",
+        "sha256": "4905176e3ac4d72b3ff898a21f7888dca81297ba5a4eae52edaff8bec729977f"
+      }
+    },
+    {
+      "id": "qa-004",
+      "question": "security × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 security",
+        "sha256": "3277294b3e8fa5484eeff132cb2214d4c973c6c370afeba28566bc677b69bdb8"
+      }
+    },
+    {
+      "id": "qa-005",
+      "question": "infrastructure × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 infrastructure",
+        "sha256": "2c929dd3e9350e4400119e92bf35a1057ed946a716ed1193c60d1dd2867d6115"
+      }
+    },
+    {
+      "id": "qa-006",
+      "question": "backend × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 backend",
+        "sha256": "d3c59b3eab5755f7fab894c8543c93a50d2d8a8050fb52cc56589fb98c0b2410"
+      }
+    },
+    {
+      "id": "qa-007",
+      "question": "frontend × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 frontend",
+        "sha256": "b609b51cc37c8e1d55ede808256a203ad5ba688c0c41718cdcb7f943aca6808e"
+      }
+    },
+    {
+      "id": "qa-008",
+      "question": "maintenance-ops × Web (web) の要件はどうするか (書面入力 system-spec/requirements-brief.md §3 の当該行)",
+      "answer": "構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 maintenance-ops",
+        "sha256": "19539d5897bbaa00444ba4405a543dcfa3894cccc8b10aedd4fdf2c037f25162"
+      }
+    },
+    {
+      "id": "qa-011",
+      "question": "database × Web (web): 確定内容はそのままに、上流指針 (Robert C. Martin — Clean Architecture (data-access) / Google SRE (reliability)) と deep knowledge card (ddd.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- DDD (`ddd.md`) の「invariant と transaction owner を集約へ閉じる」原則 → 確定内容の `todos` と `api_tokens` の 2 テーブル分離 → TODO の状態遷移 (未完了→完了) の不変条件を todos 側が単独で持ち、認証資格の更新経路と業務データの更新経路が同一 transaction に混ざらないようにするため (G2 の認可判定が業務更新へ巻き込まれない)。\n- Clean Architecture (data-access concern) の「永続化は詳細であり内側の規則を汚染しない」原則 → 確定内容の『起動時に冪等なスキーマ作成 + 単調増加 SQL 版数のマイグレーション』 → 版数を単調増加に固定することで、再起動時に到達しうるスキーマ状態を一意にし、上位層を変更せずに G3 (再起動後も全件復元) を保証できるため。\n- Google SRE (reliability concern) の「復旧経路を単純に保つ」原則 → 確定内容の『SQLite ファイル 1 個 (`todo.db`)』 → 復旧単位をファイル 1 個に一致させ、バックアップ/復旧の分岐を無くすことで G4 (1 ファイルコピーでバックアップ) を満たすため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 database (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/ddd.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-012",
+      "question": "auth × Web (web): 確定内容はそのままに、上流指針 (OWASP ASVS + Secrets Management Cheat Sheet (authentication, security)) と deep knowledge card (secure-by-design.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- OWASP ASVS (authentication) の「認証秘密を平文で保存しない」検証要件 → 確定内容の『token をハッシュ化して保存』 → 保存済みデータが読まれても token をそのまま再利用できない状態にし、G2 (認証された利用者だけが操作できる) を保存層の侵害に対しても維持するため。\n- Secrets Management Cheat Sheet の「秘密は生成時にのみ平文で扱い、以後は保持しない」原則 → 確定内容の『token は初回起動時にローカル生成』 → 外部 IdP を持たない U8 制約下で秘密の配布経路を端末内に閉じ、G1 (外部 network 送信 0) と両立させるため。\n- secure-by-design (`secure-by-design.md`) の「安全な既定値 (secure by default)」原則 → 確定内容の『全 TODO エンドポイントで認証必須・未認証は 401』 → 認証を各エンドポイントの任意追加ではなく既定にすることで、エンドポイント追加時の付け忘れによる認可漏れを構造的に発生させないため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 auth (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/secure-by-design.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-013",
+      "question": "ui-ux × Web (web): 確定内容はそのままに、上流指針 (Apple Human Interface Guidelines (presentation)) と deep knowledge card (該当 card なし (doctrine anchor のみ)) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "UI は持たない。API の使い勝手として、エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- Apple HIG (presentation concern) の consistency 原則を、UI を持たない本システムでは『API 応答の一貫性』へ適用 → 確定内容の『エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一』 → 呼び出し側 (curl や自作 script) が失敗理由を経路ごとの個別解釈なしに判別でき、G2 の認証失敗 (401) を含む異常系を一様に扱えるため。\n- Apple HIG の discoverability 原則を『操作可能性の発見』へ適用 → 確定内容の『OpenAPI 定義を `/openapi.json` で提供』 → 専用クライアントを持たない構成 (U7 out) でも利用可能な操作の全体像を利用者が発見でき、G4 (追加ミドルウェアなしで使える) を損なわないため。\n- 同 HIG 適用時の制約として、定義の提供先を localhost に限定 → 確定内容の『ローカル提供』 → 発見可能性の向上が外部への情報送出にならないようにし G1 を侵さないため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 ui-ux (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-014",
+      "question": "security × Web (web): 確定内容はそのままに、上流指針 (OWASP ASVS + Secrets Management Cheat Sheet (security)) と deep knowledge card (secure-by-design.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- OWASP ASVS の入力検証要件 → 確定内容の『入力は schema 検証』 → 検証されない値が service / repository へ到達する経路を無くし、想定外の型・範囲が永続化されて G3 の復元結果を壊さないようにするため。\n- OWASP ASVS の injection 対策要件 → 確定内容の『SQL は必ずパラメータバインド』 → 文字列連結による問い合わせ構築を禁止し、TODO 本文に含まれる任意文字列が SQL 構文として解釈されないようにするため (G2 の認可を迂回する読み書きを防ぐ)。\n- secure-by-design (`secure-by-design.md`) の「攻撃面を減らす」原則 → 確定内容の『127.0.0.1 バインド固定・外向き通信なし・token はハッシュ保存』 → 到達可能な経路を端末内に限定することで G1 (データが端末外へ出ない) を設定値ではなく実装の既定として担保するため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 security (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/secure-by-design.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-015",
+      "question": "infrastructure × Web (web): 確定内容はそのままに、上流指針 (Google SRE (reliability, operations)) と deep knowledge card (該当 card なし (doctrine anchor のみ)) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- Google SRE (operations concern) の toil 削減原則 → 確定内容の『常駐ミドルウェアなし・1 コマンド起動』 → 起動のたびに人手で複数プロセスを整える作業を無くし、G4 (1 コマンドで起動・停止) を運用手順ではなく構成で満たすため。\n- Google SRE (reliability concern) の「復旧手順は単純で反復可能に」原則 → 確定内容の『データはファイル 1 個・バックアップはそのコピー』 → 復旧が『ファイルを戻す』の 1 手順に収束し、手順の分岐に起因する復旧失敗を無くして G3 を守るため。\n- 同原則の帰結として外部依存を持たない構成を採用 → 確定内容の『追加の常駐ミドルウェアを増やさない』 → 障害面を端末内に閉じ、外部サービス障害が可用性と G1 の両方に波及しないようにするため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 infrastructure (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-016",
+      "question": "backend × Web (web): 確定内容はそのままに、上流指針 (Robert C. Martin — Clean Architecture (application-architecture, data-access)) と deep knowledge card (ddd.md, clean-architecture.md, api-design-patterns.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- Clean Architecture (`clean-architecture.md`) の Dependency Rule → 確定内容の『router / service / repository の 3 層』 → 依存を router → service → repository の一方向に固定し、repository の interface は内側の service が所有して SQLite 実装を外側に置くことで、永続化 (詳細) を差し替えても業務規則が変わらない状態にするため (D1 で SQLite を採ったこと自体を内側へ漏らさない)。\n- DDD (`ddd.md`) の「業務規則を集約の振る舞いへ置く」原則 → 確定内容の『`/todos` の CRUD と完了操作』 → 完了操作を単なる UPDATE ではなく TODO の状態遷移として service 側に置き、G2 の所有者判定と G3 の永続化順序を HTTP 層へ散らさないため。\n- API Design Patterns (`api-design-patterns.md`) の「運用資源と業務資源を分離する」原則 → 確定内容の『`/health`』 → 稼働確認を業務エンドポイントと別資源に切り出し、認証必須の既定 (G2) を崩さずに死活監視できるようにするため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 backend (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/ddd.md",
+          "ref-system-design-knowledge/references/clean-architecture.md",
+          "ref-system-design-knowledge/references/api-design-patterns.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-017",
+      "question": "frontend × Web (web): 確定内容はそのままに、上流指針 (Apple Human Interface Guidelines (presentation) / Clean Architecture (application-architecture)) と deep knowledge card (clean-architecture.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- Clean Architecture (`clean-architecture.md`) の境界原則 → 確定内容の『専用フロントエンドを実装しない』 → システム境界を HTTP + OpenAPI の契約に置き、U7 out (GUI クライアント実装) を守りながら境界の外側を後から自由に足せる状態にするため。\n- 同じ境界原則の検証側への適用 → 確定内容の『動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う』 → 契約そのものを検証手段にすることで、クライアント実装を持たなくても受入基準 (未認証 401 / 再起動後の全件復元) を確認でき、G4 を損なわないため。\n- Apple HIG (presentation concern) は本章では UI 成果物を持たないため適用先を『契約の可読性』に限定 → OpenAPI 定義を唯一の利用者向け表現とする → 表現の正本を 1 つに保ち、UI 不在が発見可能性の欠落にならないようにするため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 frontend (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/clean-architecture.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-018",
+      "question": "maintenance-ops × Web (web): 確定内容はそのままに、上流指針 (Google SRE (operations)) と deep knowledge card (clean-code.md) のどの原則が、確定内容のどの要素を、なぜその要件にしたのかを述べてください (C05 design_knowledge_reflection FAIL の差し戻し再質問)",
+      "answer": "構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。\n\n【適用した設計原則と、その原則がこの要件になった理由】\n- Google SRE (operations concern) の可観測性原則 → 確定内容の『構造化ログを標準出力へ・`/health` で稼働確認』 → 監視基盤を別途常駐させずに状態を判別できるようにし、G4 (追加ミドルウェアなし) を守りながら G3 の異常検知を可能にするため。\n- 同 SRE 原則の「監視は目的に従属する」帰結 → 確定内容の『監視の外部送信は行わない』 → 可観測性の追加が G1 (データが端末外へ出ない) を侵さないよう、送出先を標準出力とローカル参照に限定するため。\n- Clean Code (`clean-code.md`) の「意図を明示する」原則を運用文書へ適用 → 確定内容の『バックアップ/復旧手順を README 化』 → 唯一の運用者 (本人) が時間を置いても手順を再現でき、G4 のバックアップ運用が属人的記憶に依存しないようにするため。",
+      "source": {
+        "kind": "derived-requirements",
+        "requirement_text_from": "system-spec/requirements-brief.md §3 maintenance-ops (逐語)",
+        "rationale_derived_from": [
+          "system-spec/requirements-brief.md §1 (U1-U9)",
+          "system-spec/requirements-brief.md §4 (採択根拠 D1-D3)",
+          "ref-system-design-knowledge/references/doctrine-anchor-registry.json",
+          "ref-system-design-knowledge/references/clean-code.md"
+        ],
+        "note": "確定要件の本文は brief §3 の逐語を保持し、適用原則と理由は brief §1/§4 と doctrine anchor / deep card から導出した (brief §6 の最小判断規定)。新しい要求は足していない。"
+      }
+    },
+    {
+      "id": "qa-021",
+      "question": "データベース × Web (web) について、永続化方式・テーブル構成・スキーマ移行をどうしますか。その構成を選んだ設計上の理由と、他の構成を採らなかった理由も併せて教えてください。",
+      "answer": "SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- DDD (`ddd.md`) の「invariant と transaction owner を集約へ閉じる」原則 → 確定内容の `todos` と `api_tokens` の 2 テーブル分離 → TODO の状態遷移 (未完了→完了) の不変条件を todos 側が単独で持ち、認証資格の更新経路と業務データの更新経路が同一 transaction に混ざらないようにするため (G2 の認可判定が業務更新へ巻き込まれない)。\n- Clean Architecture (data-access concern) の「永続化は詳細であり内側の規則を汚染しない」原則 → 確定内容の『起動時に冪等なスキーマ作成 + 単調増加 SQL 版数のマイグレーション』 → 版数を単調増加に固定することで再起動時に到達しうるスキーマ状態を一意にし、上位層を変更せずに G3 (再起動後も全件復元) を保証できるため。\n- Google SRE (reliability concern) の「復旧経路を単純に保つ」原則 → 確定内容の『SQLite ファイル 1 個 (`todo.db`)』 → 復旧単位をファイル 1 個に一致させ、バックアップ/復旧の分岐を無くすことで G4 (1 ファイルコピーでバックアップ) を満たすため。PostgreSQL を採らなかったのは常駐プロセスが G4 と U8 制約に反するため (D1)。\n\n(上流指針: Clean Architecture (data-access) / Google SRE (reliability) / deep card: ddd.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-021-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 database (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "d85189dcff4098f8d077659798092aadcfa4af66891b92c1e809fa50ceecab14",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 database の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル database.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-022",
+      "question": "認証(ログイン) × Web (web) について、認証方式・資格情報の保存方法・未認証時の扱いをどうしますか。その方式を選んだ設計上の理由と、他の方式を採らなかった理由も併せて教えてください。",
+      "answer": "単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- OWASP ASVS (authentication) の「認証秘密を平文で保存しない」検証要件 → 確定内容の『token をハッシュ化して保存』 → 保存済みデータが読まれても token をそのまま再利用できない状態にし、G2 を保存層の侵害に対しても維持するため。\n- Secrets Management Cheat Sheet の「秘密は生成時にのみ平文で扱い以後は保持しない」原則 → 確定内容の『token は初回起動時にローカル生成』 → 外部 IdP を持たない U8 制約下で秘密の配布経路を端末内に閉じ、G1 (外部 network 送信 0) と両立させるため。OAuth2/JWT を採らなかったのは鍵管理と失効運用が単一利用者に対して過剰なため (D3)。\n- secure-by-design (`secure-by-design.md`) の「安全な既定値 (secure by default)」原則 → 確定内容の『全 TODO エンドポイントで認証必須・未認証は 401』 → 認証を各エンドポイントの任意追加ではなく既定にすることで、エンドポイント追加時の付け忘れによる認可漏れを構造的に発生させないため。\n\n(上流指針: OWASP ASVS + Secrets Management Cheat Sheet (authentication, security) / deep card: secure-by-design.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-022-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 auth (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "3500c83218074734f2d0a9f448090ca77ae80c4398f9cc075dedf2a1c3f21e5b",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 auth の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル auth.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-023",
+      "question": "UI-UX × Web (web) について、利用者との接点をどう設計しますか。画面を持つ/持たないの判断と、その判断に至った設計上の理由を教えてください。",
+      "answer": "UI は持たない。API の使い勝手として、エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- Apple HIG (presentation concern) の consistency 原則を、UI を持たない本システムでは『API 応答の一貫性』へ適用 → 確定内容の『エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一』 → 呼び出し側 (curl や自作 script) が失敗理由を経路ごとの個別解釈なしに判別でき、G2 の認証失敗 (401) を含む異常系を一様に扱えるため。\n- Apple HIG の discoverability 原則を『操作可能性の発見』へ適用 → 確定内容の『OpenAPI 定義を `/openapi.json` で提供』 → 専用クライアントを持たない構成 (U7 out) でも利用可能な操作の全体像を利用者が発見でき、G4 を損なわないため。\n- 上記 HIG 適用時の制約として提供先を localhost に限定 → 確定内容の『ローカル提供』 → 発見可能性の向上が外部への情報送出にならないようにし G1 を侵さないため。画面を持たない判断は U7 out (GUI クライアント実装) に従う。\n\n(上流指針: Apple Human Interface Guidelines (presentation) / deep card: 該当なし。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-023-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 ui-ux (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "71bf3c888cb86322e338171f54833d7f3b1f3e9e912449ff05faec20bfd09b55",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 ui-ux の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル ui-ux.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-024",
+      "question": "セキュリティ × Web (web) について、待ち受け範囲・入力検証・問い合わせ構築・秘密の保存をどうしますか。その方針にした設計上の理由を教えてください。",
+      "answer": "localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- OWASP ASVS の入力検証要件 → 確定内容の『入力は schema 検証』 → 検証されない値が service / repository へ到達する経路を無くし、想定外の型・範囲が永続化されて G3 の復元結果を壊さないようにするため。\n- OWASP ASVS の injection 対策要件 → 確定内容の『SQL は必ずパラメータバインド』 → 文字列連結による問い合わせ構築を禁止し、TODO 本文に含まれる任意文字列が SQL 構文として解釈されないようにするため (G2 の認可を迂回する読み書きを防ぐ)。\n- secure-by-design (`secure-by-design.md`) の「攻撃面を減らす」原則 → 確定内容の『127.0.0.1 バインド固定・外向き通信なし・token はハッシュ保存』 → 到達可能な経路を端末内に限定することで G1 を設定値ではなく実装の既定として担保するため。\n\n(上流指針: OWASP ASVS + Secrets Management Cheat Sheet (security) / deep card: secure-by-design.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-024-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 security (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "47d4b2321cf69d4083dfeecd36186cd6e2ee76e27925c622c8d10afd3e3fcb90",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 security の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル security.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-025",
+      "question": "インフラ × Web (web) について、実行構成・起動方法・バックアップ方法をどうしますか。その構成にした設計上の理由と、他の構成を採らなかった理由も併せて教えてください。",
+      "answer": "常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- Google SRE (operations concern) の toil 削減原則 → 確定内容の『常駐ミドルウェアなし・1 コマンド起動』 → 起動のたびに人手で複数プロセスを整える作業を無くし、G4 を運用手順ではなく構成で満たすため。\n- Google SRE (reliability concern) の「復旧手順は単純で反復可能に」原則 → 確定内容の『データはファイル 1 個・バックアップはそのコピー』 → 復旧が『ファイルを戻す』の 1 手順に収束し、手順の分岐に起因する復旧失敗を無くして G3 を守るため。\n- 同原則の帰結として外部依存を持たない構成を採用 → 確定内容の『追加の常駐ミドルウェアを増やさない』 → 障害面を端末内に閉じ、外部サービス障害が可用性と G1 の両方へ波及しないようにするため。クラウド配備を採らなかったのは U7 out と U8 の費用 0 制約による。\n\n(上流指針: Google SRE (reliability, operations) / deep card: 該当なし。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-025-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 infrastructure (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "965c5e9d60e0750c5e75b422ad56326549cb78f17bc88c50c438f7e78154ebec",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 infrastructure の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル infrastructure.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-026",
+      "question": "バックエンド × Web (web) について、API の構成・提供するエンドポイント・内部の層構成をどうしますか。その層構成にした設計上の理由を教えてください。",
+      "answer": "Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- Clean Architecture (`clean-architecture.md`) の Dependency Rule → 確定内容の『router / service / repository の 3 層』 → 依存を router → service → repository の一方向に固定し、repository の interface は内側の service が所有して SQLite 実装を外側に置くことで、永続化 (詳細) を差し替えても業務規則が変わらない状態にするため (D1 で SQLite を採ったこと自体を内側へ漏らさない)。\n- DDD (`ddd.md`) の「業務規則を集約の振る舞いへ置く」原則 → 確定内容の『`/todos` の CRUD と完了操作』 → 完了操作を単なる UPDATE ではなく TODO の状態遷移として service 側に置き、G2 の所有者判定と G3 の永続化順序を HTTP 層へ散らさないため。主要エンティティは todos (TODO 本体) と api_tokens (認証資格) で、両者の不変条件は別集約として扱う。\n- API Design Patterns (`api-design-patterns.md`) の「運用資源と業務資源を分離する」原則 → 確定内容の『`/health`』 → 稼働確認を業務エンドポイントと別資源に切り出し、認証必須の既定 (G2) を崩さずに死活監視できるようにするため。\n\n(上流指針: Clean Architecture (application-architecture, data-access) / deep card: ddd.md, clean-architecture.md, api-design-patterns.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-026-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 backend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "a4799e91cee83836c18d3a2e9473b3941097095572b52c0d86051c7d3c333f17",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 backend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md, clean-architecture.md, api-design-patterns.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル backend.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-027",
+      "question": "フロントエンド × Web (web) について、クライアント実装の有無と動作確認の手段をどうしますか。その判断に至った設計上の理由を教えてください。",
+      "answer": "専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- Clean Architecture (`clean-architecture.md`) の境界原則 → 確定内容の『専用フロントエンドを実装しない』 → システム境界を HTTP + OpenAPI の契約に置き、U7 out (GUI クライアント実装) を守りながら境界の外側を後から自由に足せる状態にするため。\n- 同じ境界原則の検証側への適用 → 確定内容の『動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う』 → 契約そのものを検証手段にすることで、クライアント実装を持たなくても受入基準 (未認証 401 / 再起動後の全件復元) を確認でき、G4 を損なわないため。\n- Apple HIG (presentation concern) は本章では UI 成果物を持たないため適用先を『契約の可読性』に限定 → OpenAPI 定義を唯一の利用者向け表現とする → 表現の正本を 1 つに保ち、UI 不在が発見可能性の欠落にならないようにするため。\n\n(上流指針: Apple HIG (presentation) / Clean Architecture (application-architecture) / deep card: clean-architecture.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-027-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 frontend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "4d3c40a504e89b9cff3ae2872b7d63f9a9bd426b9d483e4f68c49b2f3e40ab8f",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 frontend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-architecture.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル frontend.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-028",
+      "question": "保守運用管理 × Web (web) について、ログ・稼働確認・バックアップ/復旧手順の運用をどうしますか。その運用にした設計上の理由と、監視の送信先をどう扱うかも併せて教えてください。",
+      "answer": "構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。\n\n【適用した上流指針・設計原則と、その原則がこの要件になった理由】\n- Google SRE (operations concern) の可観測性原則 → 確定内容の『構造化ログを標準出力へ・`/health` で稼働確認』 → 監視基盤を別途常駐させずに状態を判別できるようにし、G4 を守りながら G3 の異常検知を可能にするため。\n- 同 SRE 原則の「監視は目的に従属する」帰結 → 確定内容の『監視の外部送信は行わない』 → 可観測性の追加が G1 を侵さないよう、送出先を標準出力とローカル参照に限定するため。\n- Clean Code (`clean-code.md`) の「意図を明示する」原則を運用文書へ適用 → 確定内容の『バックアップ/復旧手順を README 化』 → 唯一の運用者 (本人) が時間を置いても手順を再現でき、G4 のバックアップ運用が属人的記憶に依存しないようにするため。\n\n(上流指針: Google SRE (operations) / deep card: clean-code.md。上の各 - は 1 論点で、spec-state-contract の「qa_log の論点分離」に従い qa-028-p1..p3 として分離索引 entry も追記している。)",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 maintenance-ops (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "f47052a6dbe50a296f3677ff6d5e63ef3a82963c742690059c65ec73685f0ef1",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 maintenance-ops の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-code.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "確定セル maintenance-ops.web が参照する主 entry。"
+      }
+    },
+    {
+      "id": "qa-021-p1",
+      "question": "database × Web (web) の設計根拠のうち「DDD の集約境界」の 1 論点だけを分離して記録すると何になりますか (qa-021 の分離索引)",
+      "answer": "DDD (`ddd.md`) の「invariant と transaction owner を集約へ閉じる」原則 → 確定内容の `todos` と `api_tokens` の 2 テーブル分離 → TODO の状態遷移 (未完了→完了) の不変条件を todos 側が単独で持ち、認証資格の更新経路と業務データの更新経路が同一 transaction に混ざらないようにするため (G2 の認可判定が業務更新へ巻き込まれない)。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 database (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "459e3074adce23637742b8200289994945e762aec410b5dc73355c8371a3db07",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 database の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-021 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-021-p2",
+      "question": "database × Web (web) の設計根拠のうち「Clean Architecture の永続化境界」の 1 論点だけを分離して記録すると何になりますか (qa-021 の分離索引)",
+      "answer": "Clean Architecture (data-access concern) の「永続化は詳細であり内側の規則を汚染しない」原則 → 確定内容の『起動時に冪等なスキーマ作成 + 単調増加 SQL 版数のマイグレーション』 → 版数を単調増加に固定することで再起動時に到達しうるスキーマ状態を一意にし、上位層を変更せずに G3 (再起動後も全件復元) を保証できるため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 database (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "982cce4c4557ad3a8e5f89de75453dc3c58816fed40c1457598fce1231ed0895",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 database の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-021 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-021-p3",
+      "question": "database × Web (web) の設計根拠のうち「SRE の復旧単純化」の 1 論点だけを分離して記録すると何になりますか (qa-021 の分離索引)",
+      "answer": "Google SRE (reliability concern) の「復旧経路を単純に保つ」原則 → 確定内容の『SQLite ファイル 1 個 (`todo.db`)』 → 復旧単位をファイル 1 個に一致させ、バックアップ/復旧の分岐を無くすことで G4 (1 ファイルコピーでバックアップ) を満たすため。PostgreSQL を採らなかったのは常駐プロセスが G4 と U8 制約に反するため (D1)。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 database (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "c34e27892767ce0f509ce0a83f266d8b127cad467066f833f8e7d33731c7fcac",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 database の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-021 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-022-p1",
+      "question": "auth × Web (web) の設計根拠のうち「ASVS の秘密保存要件」の 1 論点だけを分離して記録すると何になりますか (qa-022 の分離索引)",
+      "answer": "OWASP ASVS (authentication) の「認証秘密を平文で保存しない」検証要件 → 確定内容の『token をハッシュ化して保存』 → 保存済みデータが読まれても token をそのまま再利用できない状態にし、G2 を保存層の侵害に対しても維持するため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 auth (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "379af8b1b9e067350a0004ae1117ac3dce86614b35842921bdbfb333efb00a60",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 auth の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-022 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-022-p2",
+      "question": "auth × Web (web) の設計根拠のうち「Secrets Management の生成・保持」の 1 論点だけを分離して記録すると何になりますか (qa-022 の分離索引)",
+      "answer": "Secrets Management Cheat Sheet の「秘密は生成時にのみ平文で扱い以後は保持しない」原則 → 確定内容の『token は初回起動時にローカル生成』 → 外部 IdP を持たない U8 制約下で秘密の配布経路を端末内に閉じ、G1 (外部 network 送信 0) と両立させるため。OAuth2/JWT を採らなかったのは鍵管理と失効運用が単一利用者に対して過剰なため (D3)。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 auth (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "9aa68cd3ac6c2d7e75d0cce56c885fb0116725ae588195c4d04445bdb4f236ac",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 auth の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-022 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-022-p3",
+      "question": "auth × Web (web) の設計根拠のうち「secure-by-design の安全な既定値」の 1 論点だけを分離して記録すると何になりますか (qa-022 の分離索引)",
+      "answer": "secure-by-design (`secure-by-design.md`) の「安全な既定値 (secure by default)」原則 → 確定内容の『全 TODO エンドポイントで認証必須・未認証は 401』 → 認証を各エンドポイントの任意追加ではなく既定にすることで、エンドポイント追加時の付け忘れによる認可漏れを構造的に発生させないため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 auth (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "afba55a4e54f689ddd4e265a0b668a2ce70322907d3c9e9734b90769e17b4e2c",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 auth の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-022 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-023-p1",
+      "question": "ui-ux × Web (web) の設計根拠のうち「HIG の一貫性」の 1 論点だけを分離して記録すると何になりますか (qa-023 の分離索引)",
+      "answer": "Apple HIG (presentation concern) の consistency 原則を、UI を持たない本システムでは『API 応答の一貫性』へ適用 → 確定内容の『エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一』 → 呼び出し側 (curl や自作 script) が失敗理由を経路ごとの個別解釈なしに判別でき、G2 の認証失敗 (401) を含む異常系を一様に扱えるため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 ui-ux (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "a4e63f47365b99e866cefbe571551eb524e48e260d9b3b3b04c9c700c27f2420",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 ui-ux の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-023 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-023-p2",
+      "question": "ui-ux × Web (web) の設計根拠のうち「HIG の発見可能性」の 1 論点だけを分離して記録すると何になりますか (qa-023 の分離索引)",
+      "answer": "Apple HIG の discoverability 原則を『操作可能性の発見』へ適用 → 確定内容の『OpenAPI 定義を `/openapi.json` で提供』 → 専用クライアントを持たない構成 (U7 out) でも利用可能な操作の全体像を利用者が発見でき、G4 を損なわないため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 ui-ux (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "189d56954f7ce90bae2095c65b6babb9ffb2fecd04e914b91b69d55c0417ca76",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 ui-ux の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-023 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-023-p3",
+      "question": "ui-ux × Web (web) の設計根拠のうち「発見可能性と G1 の両立」の 1 論点だけを分離して記録すると何になりますか (qa-023 の分離索引)",
+      "answer": "上記 HIG 適用時の制約として提供先を localhost に限定 → 確定内容の『ローカル提供』 → 発見可能性の向上が外部への情報送出にならないようにし G1 を侵さないため。画面を持たない判断は U7 out (GUI クライアント実装) に従う。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 ui-ux (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "d3318b0b5c9d6f32b9832146aca3a6d32fabca2a04cdf7ab7468118038c549e5",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 ui-ux の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-023 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-024-p1",
+      "question": "security × Web (web) の設計根拠のうち「ASVS の入力検証」の 1 論点だけを分離して記録すると何になりますか (qa-024 の分離索引)",
+      "answer": "OWASP ASVS の入力検証要件 → 確定内容の『入力は schema 検証』 → 検証されない値が service / repository へ到達する経路を無くし、想定外の型・範囲が永続化されて G3 の復元結果を壊さないようにするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 security (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "252376b263b29d60e88bec883ee760b003dbe724d1d84ca1d2d7d7e86f98d57e",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 security の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-024 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-024-p2",
+      "question": "security × Web (web) の設計根拠のうち「ASVS の injection 対策」の 1 論点だけを分離して記録すると何になりますか (qa-024 の分離索引)",
+      "answer": "OWASP ASVS の injection 対策要件 → 確定内容の『SQL は必ずパラメータバインド』 → 文字列連結による問い合わせ構築を禁止し、TODO 本文に含まれる任意文字列が SQL 構文として解釈されないようにするため (G2 の認可を迂回する読み書きを防ぐ)。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 security (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "133b32a3be96a03ffa089f1b26e8f827adbb7d624c1f3f8dae354c3b0e4d7be7",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 security の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-024 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-024-p3",
+      "question": "security × Web (web) の設計根拠のうち「攻撃面の縮小」の 1 論点だけを分離して記録すると何になりますか (qa-024 の分離索引)",
+      "answer": "secure-by-design (`secure-by-design.md`) の「攻撃面を減らす」原則 → 確定内容の『127.0.0.1 バインド固定・外向き通信なし・token はハッシュ保存』 → 到達可能な経路を端末内に限定することで G1 を設定値ではなく実装の既定として担保するため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 security (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "19aa9979642a49c2a29351c93ad6f136a1e95af7ede5784ef79db24f6623b6d5",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 security の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / secure-by-design.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-024 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-025-p1",
+      "question": "infrastructure × Web (web) の設計根拠のうち「SRE の toil 削減」の 1 論点だけを分離して記録すると何になりますか (qa-025 の分離索引)",
+      "answer": "Google SRE (operations concern) の toil 削減原則 → 確定内容の『常駐ミドルウェアなし・1 コマンド起動』 → 起動のたびに人手で複数プロセスを整える作業を無くし、G4 を運用手順ではなく構成で満たすため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 infrastructure (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "f34bae8a713e0cce9c6ac627fd6daa89b9faf6d044d354c7ee5e02d5483bf4fb",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 infrastructure の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-025 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-025-p2",
+      "question": "infrastructure × Web (web) の設計根拠のうち「SRE の復旧反復性」の 1 論点だけを分離して記録すると何になりますか (qa-025 の分離索引)",
+      "answer": "Google SRE (reliability concern) の「復旧手順は単純で反復可能に」原則 → 確定内容の『データはファイル 1 個・バックアップはそのコピー』 → 復旧が『ファイルを戻す』の 1 手順に収束し、手順の分岐に起因する復旧失敗を無くして G3 を守るため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 infrastructure (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "cff7c39268b7ff349160cd88782e737e24aa0bc36fdcc37d2bfd747352f22fb1",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 infrastructure の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-025 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-025-p3",
+      "question": "infrastructure × Web (web) の設計根拠のうち「外部依存を持たない構成」の 1 論点だけを分離して記録すると何になりますか (qa-025 の分離索引)",
+      "answer": "同原則の帰結として外部依存を持たない構成を採用 → 確定内容の『追加の常駐ミドルウェアを増やさない』 → 障害面を端末内に閉じ、外部サービス障害が可用性と G1 の両方へ波及しないようにするため。クラウド配備を採らなかったのは U7 out と U8 の費用 0 制約による。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 infrastructure (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "e316e3956e3603eb40f750872c37d158336ae01f1443ed99a775c165c71d15bd",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 infrastructure の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / (該当 deep card なし・doctrine anchor のみ)。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-025 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-026-p1",
+      "question": "backend × Web (web) の設計根拠のうち「Dependency Rule」の 1 論点だけを分離して記録すると何になりますか (qa-026 の分離索引)",
+      "answer": "Clean Architecture (`clean-architecture.md`) の Dependency Rule → 確定内容の『router / service / repository の 3 層』 → 依存を router → service → repository の一方向に固定し、repository の interface は内側の service が所有して SQLite 実装を外側に置くことで、永続化 (詳細) を差し替えても業務規則が変わらない状態にするため (D1 で SQLite を採ったこと自体を内側へ漏らさない)。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 backend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "cf0d3e1082d6e51e5a9b69a2ab49a452ebd29df0bb28f5f4e42c88515f8de348",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 backend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md, clean-architecture.md, api-design-patterns.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-026 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-026-p2",
+      "question": "backend × Web (web) の設計根拠のうち「業務規則の置き場所」の 1 論点だけを分離して記録すると何になりますか (qa-026 の分離索引)",
+      "answer": "DDD (`ddd.md`) の「業務規則を集約の振る舞いへ置く」原則 → 確定内容の『`/todos` の CRUD と完了操作』 → 完了操作を単なる UPDATE ではなく TODO の状態遷移として service 側に置き、G2 の所有者判定と G3 の永続化順序を HTTP 層へ散らさないため。主要エンティティは todos (TODO 本体) と api_tokens (認証資格) で、両者の不変条件は別集約として扱う。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 backend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "69c8e80eaf586d53393f5ebea556fea18a1ffded9d45926cc8b5dceb6bbd5ed9",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 backend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md, clean-architecture.md, api-design-patterns.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-026 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-026-p3",
+      "question": "backend × Web (web) の設計根拠のうち「運用資源の分離」の 1 論点だけを分離して記録すると何になりますか (qa-026 の分離索引)",
+      "answer": "API Design Patterns (`api-design-patterns.md`) の「運用資源と業務資源を分離する」原則 → 確定内容の『`/health`』 → 稼働確認を業務エンドポイントと別資源に切り出し、認証必須の既定 (G2) を崩さずに死活監視できるようにするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 backend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "469cb607f6ef7d09f2ccd2b2b2144c10463f155f491c123035021e6178129faa",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 backend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / ddd.md, clean-architecture.md, api-design-patterns.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-026 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-027-p1",
+      "question": "frontend × Web (web) の設計根拠のうち「境界の置き場所」の 1 論点だけを分離して記録すると何になりますか (qa-027 の分離索引)",
+      "answer": "Clean Architecture (`clean-architecture.md`) の境界原則 → 確定内容の『専用フロントエンドを実装しない』 → システム境界を HTTP + OpenAPI の契約に置き、U7 out (GUI クライアント実装) を守りながら境界の外側を後から自由に足せる状態にするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 frontend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "9a46333421ec417b7036f8e55c6be7c43c46d3e5b53af0fc10dab13e854abbbf",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 frontend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-architecture.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-027 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-027-p2",
+      "question": "frontend × Web (web) の設計根拠のうち「契約を検証手段にする」の 1 論点だけを分離して記録すると何になりますか (qa-027 の分離索引)",
+      "answer": "同じ境界原則の検証側への適用 → 確定内容の『動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う』 → 契約そのものを検証手段にすることで、クライアント実装を持たなくても受入基準 (未認証 401 / 再起動後の全件復元) を確認でき、G4 を損なわないため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 frontend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "37fd84bf8400945499eff12511a334fa76be7a358c42c74885700b283af5e6d4",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 frontend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-architecture.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-027 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-027-p3",
+      "question": "frontend × Web (web) の設計根拠のうち「表現の正本を 1 つに保つ」の 1 論点だけを分離して記録すると何になりますか (qa-027 の分離索引)",
+      "answer": "Apple HIG (presentation concern) は本章では UI 成果物を持たないため適用先を『契約の可読性』に限定 → OpenAPI 定義を唯一の利用者向け表現とする → 表現の正本を 1 つに保ち、UI 不在が発見可能性の欠落にならないようにするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 frontend (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "a5030639098b7d7a4e97d454cf65f9882dfbe22890be9d1667bbaeb2ca0f1c54",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 frontend の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-architecture.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-027 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-028-p1",
+      "question": "maintenance-ops × Web (web) の設計根拠のうち「SRE の可観測性」の 1 論点だけを分離して記録すると何になりますか (qa-028 の分離索引)",
+      "answer": "Google SRE (operations concern) の可観測性原則 → 確定内容の『構造化ログを標準出力へ・`/health` で稼働確認』 → 監視基盤を別途常駐させずに状態を判別できるようにし、G4 を守りながら G3 の異常検知を可能にするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 maintenance-ops (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "8f86a74abe08a89069ef0f125d6f3aecde54289bada31f2bc1ef551f40471606",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 maintenance-ops の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-code.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-028 の論点分離索引 (1/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-028-p2",
+      "question": "maintenance-ops × Web (web) の設計根拠のうち「監視の送信先」の 1 論点だけを分離して記録すると何になりますか (qa-028 の分離索引)",
+      "answer": "同 SRE 原則の「監視は目的に従属する」帰結 → 確定内容の『監視の外部送信は行わない』 → 可観測性の追加が G1 を侵さないよう、送出先を標準出力とローカル参照に限定するため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 maintenance-ops (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "643102fa2ee4840be6651a69aa29cce851d2b2bfa7c2cbbb0d4e89169c1286d4",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 maintenance-ops の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-code.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-028 の論点分離索引 (2/3)。既登録 entry の逐語は改変していない。"
+      }
+    },
+    {
+      "id": "qa-028-p3",
+      "question": "maintenance-ops × Web (web) の設計根拠のうち「運用手順の明示」の 1 論点だけを分離して記録すると何になりますか (qa-028 の分離索引)",
+      "answer": "Clean Code (`clean-code.md`) の「意図を明示する」原則を運用文書へ適用 → 確定内容の『バックアップ/復旧手順を README 化』 → 唯一の運用者 (本人) が時間を置いても手順を再現でき、G4 のバックアップ運用が属人的記憶に依存しないようにするため。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "§3 maintenance-ops (確定内容の逐語) / §1 U1-U9 と §4 D1-D3 (適用根拠の導出元)",
+        "sha256": "ef6a6381d58f2f2d97923d292ae32b4ce75d0a00e160c17aa07d6c51f7a342cb",
+        "verbatim_span": "回答冒頭の確定内容 1 段落は system-spec/requirements-brief.md §3 maintenance-ops の逐語",
+        "derivation": "「適用した設計原則と理由」は system-spec/requirements-brief.md §6 の授権 (brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、判断根拠を該当セルへ残す) に基づく導出。導出元は上記 path/section と doctrine-anchor-registry.json / clean-code.md。新しい要求は追加していない。",
+        "approval_ref": "appr-002",
+        "note": "qa-028 の論点分離索引 (3/3)。既登録 entry の逐語は改変していない。"
+      }
+    }
+  ],
+  "approval_log": [
+    {
+      "id": "appr-001",
+      "note": "利用者は 2026-07-21T00:00:00Z 時点で requirements-brief.md §7 により U1-U9 要約・§2 platform 方針 (40 セル対象外)・§3 カテゴリ別確定内容・§4 採択 (D1 sqlite / D2 fastapi / D3 local-bearer-token) を一括承認済み。"
+    },
+    {
+      "id": "appr-002",
+      "note": "2026-08-08 の再確定 (qa-021..qa-028) の授権記録。新規のユーザー承認行為ではなく、requirements-brief.md §7 の一括承認 (2026-07-21T00:00:00Z) が §3 の確定内容を、同 §6 が『brief に答えの無い最小判断は §1 U1-U9 と §5 非対象から導き、その判断根拠を該当セル/decision の記述に残す』ことを授権していることに接地する。確定内容は §3 の逐語から変えておらず、追加したのは適用原則と理由の記述のみで、新しい要求は足していない。"
+    }
+  ],
+  "reopen_log": [
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-001",
+        "serves_goals": [
+          "G1",
+          "G3",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-002",
+        "serves_goals": [
+          "G2"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-003",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-004",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      }
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-005",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-006",
+        "serves_goals": [
+          "G2",
+          "G3"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "C05 assign-system-spec-completeness-evaluator が design_knowledge_reflection を FAIL と判定し (2026-08-08 report findings[0] high / findings[1] medium)、掲げた deep knowledge card と doctrine anchor の原則が確定セル要件へどう効いたかの根拠が確定内容に無いと指摘したため、根拠を補って再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-008",
+        "serves_goals": [
+          "G3",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-011",
+        "serves_goals": [
+          "G1",
+          "G3",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-012",
+        "serves_goals": [
+          "G2"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-013",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-014",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      }
+    },
+    {
+      "category": "infrastructure",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-015",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-016",
+        "serves_goals": [
+          "G2",
+          "G3"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-017",
+        "serves_goals": [
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "web",
+      "reason": "C06 system-spec-hearing-auditor が、qa-011..qa-018 の再確定を誘導質問 (結論固定句) ・契約外 provenance (kind='derived-requirements'・導出元 path/section 欠落) ・再確定時点の承認記録欠落として FAIL と判定したため、記録形式と承認の時系列を是正して再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-018",
+        "serves_goals": [
+          "G3",
+          "G4"
+        ]
+      }
+    }
+  ],
+  "category_aggregate": {
+    "database": "確定",
+    "auth": "確定",
+    "ui-ux": "確定",
+    "security": "確定",
+    "infrastructure": "確定",
+    "backend": "確定",
+    "frontend": "確定",
+    "maintenance-ops": "確定"
+  },
+  "targets": [
+    {
+      "target_id": "sqlite",
+      "category": "database"
+    },
+    {
+      "target_id": "postgresql",
+      "category": "database"
+    },
+    {
+      "target_id": "fastapi",
+      "category": "backend"
+    },
+    {
+      "target_id": "flask",
+      "category": "backend"
+    },
+    {
+      "target_id": "oauth2-rfc6749",
+      "category": "auth"
+    }
+  ],
+  "requirements_foundation": {
+    "essential_purpose": "自分の TODO を、いかなる外部サービスにもデータを渡さずに、手元の 1 プロセスだけで管理・自動化できる状態にする。",
+    "background": "既存の SaaS 型 TODO 管理はデータが外部に保管され、オフラインでは使えず、スクリプトからの自動操作にも制約がある。API として手元に持てれば、自作クライアントや shell script から自由に組み合わせられる。",
+    "goals": [
+      {
+        "id": "G1",
+        "text": "TODO データが端末外へ出ない (外部 network 送信 0 件)"
+      },
+      {
+        "id": "G2",
+        "text": "認証された利用者だけが自分の TODO を作成・参照・更新・削除できる"
+      },
+      {
+        "id": "G3",
+        "text": "プロセス再起動後も TODO が失われない"
+      },
+      {
+        "id": "G4",
+        "text": "追加の常駐ミドルウェアなしに 1 コマンドで起動・停止・バックアップできる"
+      }
+    ],
+    "objectives": [
+      {
+        "id": "O1",
+        "text": "実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。",
+        "measure": "外向き通信処理 0 件 (レビューで確認)",
+        "serves": [
+          "G1"
+        ]
+      },
+      {
+        "id": "O2",
+        "text": "すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。",
+        "measure": "全 TODO エンドポイントで未認証要求が 401",
+        "serves": [
+          "G2"
+        ]
+      },
+      {
+        "id": "O3",
+        "text": "永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。",
+        "measure": "再起動後の一覧取得で全件復元",
+        "serves": [
+          "G3"
+        ]
+      },
+      {
+        "id": "O4",
+        "text": "起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。",
+        "measure": "起動 1 コマンド・バックアップ 1 ファイルコピー",
+        "serves": [
+          "G4"
+        ]
+      }
+    ],
+    "success_criteria": [
+      "受入テストで、未認証要求が全 TODO エンドポイントで 401 になる。",
+      "受入テストで、作成 → プロセス再起動 → 一覧取得を行い、作成した TODO が戻る。",
+      "依存関係と実装に外部 host への送信処理が 0 件であることをレビューで確認する。",
+      "起動手順が 1 コマンド、バックアップ手順が 1 ファイルコピーで記述できる。"
+    ],
+    "stakeholders": [
+      "利用者兼開発者 (本人): 唯一の利用者であり、要求の確定権限を持つ。",
+      "運用者 (本人): 起動・停止・バックアップを行う。第三者運用は想定しない。"
+    ],
+    "scope": {
+      "in": [
+        "認証",
+        "TODO の CRUD",
+        "SQLite 永続化",
+        "localhost での HTTP 提供",
+        "起動/バックアップ手順"
+      ],
+      "out": [
+        "GUI クライアント実装",
+        "複数ユーザー間の共有",
+        "外部同期",
+        "クラウド配備",
+        "通知機能"
+      ]
+    },
+    "constraints": [
+      "外部 network への送信を実装に含めない (実行時の外向き通信 0)。",
+      "常駐ミドルウェア (別プロセスの DB サーバー等) を増やさない。",
+      "費用は 0 円 (無料・OSS のみ)。",
+      "単一プロセス・単一データファイルで完結させる。"
+    ],
+    "concrete_intents": [
+      {
+        "id": "I1",
+        "text": "TODO の作成・一覧・単体取得・更新・完了・削除。",
+        "serves": [
+          "G2"
+        ]
+      },
+      {
+        "id": "I2",
+        "text": "単一利用者向けの token 認証。",
+        "serves": [
+          "G2"
+        ]
+      },
+      {
+        "id": "I3",
+        "text": "SQLite ファイルへの永続化とスキーマ初期化。",
+        "serves": [
+          "G3"
+        ]
+      },
+      {
+        "id": "I4",
+        "text": "localhost バインドでの HTTP 提供と OpenAPI 定義の提供。",
+        "serves": [
+          "G1",
+          "G4"
+        ]
+      }
+    ],
+    "confirmed": true,
+    "approval_ref": "appr-001"
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "永続化先を SQLite と PostgreSQL のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G3",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "sqlite",
+          "label": "SQLite (単一ファイル埋め込み DB)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "ライセンス費 0 円。追加プロセスが無いため運用工数も最小で、撤退はデータファイル 1 個の削除で完了する"
+          },
+          "free_tier_limits": "パブリックドメインで機能制限なし",
+          "goal_fit": "単一プロセス・単一ファイルという U8 制約と G4 に完全適合し、G3 の永続化も満たす",
+          "security_fit": "network を張らないファイル DB のため G1 (外部送信 0) に構造的に適合する",
+          "pros": [
+            "常駐ミドルウェアを増やさない",
+            "バックアップがファイル 1 個のコピーで済む",
+            "起動が 1 コマンドで完結する"
+          ],
+          "cons": [
+            "高並行の書込みには向かない",
+            "ネットワーク越しの共有利用ができない"
+          ],
+          "risks": [
+            "将来の多利用者化では移行が必要になる"
+          ],
+          "lock_in": "低 (SQL 標準の範囲で移行可能)",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://www.sqlite.org/docs.html"
+          ]
+        },
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL (サーバー型 RDBMS)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS ライセンス費 0 円だが、常駐サーバーの導入・更新・バックアップ運用の工数が加算される"
+          },
+          "free_tier_limits": "OSS で機能制限なし",
+          "goal_fit": "多利用者・高並行には適合するが、常駐ミドルウェアを増やさない U8 制約と G4 に反する",
+          "security_fit": "既定で TCP listen するため G1 の外向き通信 0 方針に対し追加の遮断設定を要する",
+          "pros": [
+            "高い並行性能",
+            "豊富な拡張機能"
+          ],
+          "cons": [
+            "別プロセスの常駐が必要",
+            "バックアップ手順がファイルコピーで完結しない"
+          ],
+          "risks": [
+            "単一利用者用途に対して運用負荷が過大になる"
+          ],
+          "lock_in": "低 (OSS・標準 SQL)",
+          "ops_burden": "高",
+          "evidence_refs": [
+            "https://www.postgresql.org/docs/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "sqlite",
+        "rationale": "常駐プロセスを増やさず単一ファイルで完結するため U8 制約下で G1/G3/G4 を同時に満たす唯一の候補である",
+        "comparison_basis": {
+          "goal_fit": "sqlite は単一プロセス制約に適合、postgresql は常駐が必要で G4 に反する",
+          "tco": "両者ともライセンス 0 円だが postgresql は運用工数が加算される",
+          "security": "sqlite は listen せず G1 の外向き通信 0 に構造的に適合する",
+          "operations": "sqlite はバックアップがファイル 1 個のコピーで完結する",
+          "lock_in": "両者とも標準 SQL の範囲で低い"
+        },
+        "caveats": [
+          "将来多利用者化する場合はサーバー型 RDBMS への移行を再検討する",
+          "採択時点の現行 version は doc-fetch の fetched-references.json で裏取りする"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-21T00:00:00Z"
+      },
+      "user_decision": {
+        "option_id": "sqlite",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "requirements-brief.md §4/§7 の一括承認により確定"
+      }
+    },
+    {
+      "id": "D2",
+      "question": "API framework を FastAPI と Flask のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "fastapi",
+          "label": "FastAPI (ASGI・型注釈ベース)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "MIT ライセンスで 0 円。OpenAPI 自動生成により定義の手書き保守工数が発生しない"
+          },
+          "free_tier_limits": "OSS で機能制限なし",
+          "goal_fit": "OpenAPI 定義の提供という U9 の要求と、schema 検証による G2 の入力健全性へ直結する",
+          "security_fit": "リクエスト schema 検証と依存性注入による認証必須化を framework 機能として持つ",
+          "pros": [
+            "OpenAPI 定義を自動生成する",
+            "型注釈から入力検証が導出される",
+            "依存性注入で認証を全経路へ強制しやすい"
+          ],
+          "cons": [
+            "型注釈の記述量が増える"
+          ],
+          "risks": [
+            "メジャー更新時に型まわりの破壊的変更が入りうる"
+          ],
+          "lock_in": "中 (ルーティングと依存性注入が framework 固有)",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://fastapi.tiangolo.com/"
+          ]
+        },
+        {
+          "id": "flask",
+          "label": "Flask (WSGI・最小構成)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "BSD ライセンスで 0 円。ただし OpenAPI 定義と入力検証は追加実装・追加保守が必要"
+          },
+          "free_tier_limits": "OSS で機能制限なし",
+          "goal_fit": "REST 提供自体は満たすが、OpenAPI 定義提供 (U9) は拡張実装が前提になる",
+          "security_fit": "入力検証を自前で組む必要があり、検証漏れの余地が残る",
+          "pros": [
+            "最小の依存で軽量",
+            "学習コストが低い"
+          ],
+          "cons": [
+            "OpenAPI 定義を自動生成しない",
+            "入力 schema 検証を別途導入する必要がある"
+          ],
+          "risks": [
+            "検証実装の自作により入力健全性の抜けが生じうる"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://flask.palletsprojects.com/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "fastapi",
+        "rationale": "OpenAPI 自動生成と schema 検証が U9 の成果物要求と G2 の入力健全性を追加実装なしで満たす",
+        "comparison_basis": {
+          "goal_fit": "fastapi は OpenAPI 提供を標準で満たし flask は追加実装を要する",
+          "tco": "両者 0 円だが flask は OpenAPI と検証の自作保守が加算される",
+          "security": "fastapi は schema 検証を framework 機能として持つ",
+          "operations": "fastapi は単一プロセス起動で 1 コマンド運用に適合する",
+          "lock_in": "fastapi は中程度だが層分離 (router/service/repository) で局所化できる"
+        },
+        "caveats": [
+          "framework 固有 API を router 層に閉じ込めて lock-in を局所化する",
+          "採択時点の現行 version は doc-fetch の fetched-references.json で裏取りする"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-21T00:00:00Z"
+      },
+      "user_decision": {
+        "option_id": "fastapi",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "requirements-brief.md §4/§7 の一括承認により確定"
+      }
+    },
+    {
+      "id": "D3",
+      "question": "認証方式をローカル bearer token と OAuth2 password/JWT のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2"
+      ],
+      "options": [
+        {
+          "id": "local-bearer-token",
+          "label": "ローカル生成 bearer token (単一利用者)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "外部 IdP を持たないため利用料 0 円。token 再生成手順のみが運用作業になる"
+          },
+          "free_tier_limits": "外部サービスに依存しないため上限なし",
+          "goal_fit": "単一利用者で G2 を満たす最小構成であり、外部 IdP 通信が無いため G1 とも両立する",
+          "security_fit": "token をハッシュ保存し全 TODO エンドポイントで必須化することで未認証 401 を担保する",
+          "pros": [
+            "外部依存が 0 で G1 に適合する",
+            "実装と運用が最小"
+          ],
+          "cons": [
+            "利用者間の権限分離には拡張が必要"
+          ],
+          "risks": [
+            "token 漏洩時は再生成が必要になる"
+          ],
+          "lock_in": "低 (自前実装)",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://fastapi.tiangolo.com/tutorial/security/"
+          ]
+        },
+        {
+          "id": "oauth2-password-jwt",
+          "label": "OAuth2 password grant + JWT",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "自前実装なら 0 円だが、鍵管理・失効・有効期限運用の工数が継続的に加算される"
+          },
+          "free_tier_limits": "自前実装のため上限なし",
+          "goal_fit": "多利用者・多クライアントには適合するが、単一利用者の G2 に対しては過剰である",
+          "security_fit": "標準に沿うが鍵管理と失効設計を誤ると単一利用者用途では逆にリスクが増える",
+          "pros": [
+            "標準化された枠組み",
+            "将来の多クライアント化に拡張しやすい"
+          ],
+          "cons": [
+            "鍵管理と失効の設計が必要",
+            "単一利用者に対して構成が過剰"
+          ],
+          "risks": [
+            "鍵運用の誤りによる認証迂回"
+          ],
+          "lock_in": "低 (標準仕様)",
+          "ops_burden": "高",
+          "evidence_refs": [
+            "https://datatracker.ietf.org/doc/html/rfc6749"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "local-bearer-token",
+        "rationale": "利用者が 1 名で外部 IdP を持たない前提では、G2 を満たす最小かつ外向き通信 0 の構成である",
+        "comparison_basis": {
+          "goal_fit": "local-bearer-token は単一利用者の G2 に必要十分で oauth2 は過剰",
+          "tco": "両者 0 円だが oauth2 は鍵運用工数が継続的に加算される",
+          "security": "local-bearer-token はハッシュ保存と全経路必須化で 401 を担保できる",
+          "operations": "local-bearer-token は token 再生成のみが運用作業",
+          "lock_in": "両者とも低い"
+        },
+        "caveats": [
+          "token は平文保存せずハッシュ保存する",
+          "多利用者化する場合は認証方式を再検討する",
+          "採択時点の現行 version は doc-fetch の fetched-references.json で裏取りする"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-07-21T00:00:00Z"
+      },
+      "user_decision": {
+        "option_id": "local-bearer-token",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "requirements-brief.md §4/§7 の一括承認により確定"
+      }
+    }
+  ],
+  "knowledge_candidates": [],
+  "hearing_progress": {
+    "loop_count": 4,
+    "next_question": null,
+    "complete": true,
+    "max_loops": 5
+  }
+}

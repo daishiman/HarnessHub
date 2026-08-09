@@ -1,54 +1,8 @@
-"""live-trial task 契約 lint の決定論的な解析・検査ロジック。
+"""live-trial の fixture / scenario / task 契約を決定論的に突合する。
 
-正本契約: issues/sys-c19-live-trial-task-fixture-contract-drift-20260726.md (HarnessHub-768b)。
-
-## なぜ必要か
-
-live-trial の task.md は run-skill-live-trial の準備局面で
-``references/task-template.md`` を cp し、人が placeholder を埋めて作る。scenario 固有の
-「入力前提」は template に無いため、実運用では過去の成功 run の task.md を複製していた。
-その結果 C19 で、fixture 生成器 (shape_system_spec.py) が brief 1 file しか置かないのに
-task.md が「確定成果物は事前配置済み・正規フローの再実行は禁止」と仮定する矛盾が生まれ、
-被験 skill が正規フローを実行できず FAIL した。前提の食い違いを誰も機械検査していなかった。
-
-本 lint は 3 つの正本を 1 経路で突合する:
-
-  1. fixture 形状   plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_*.py の TASK_CONTRACT
-  2. scenario       plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json
-  3. task 指示      eval-log/<plugin>/<skill>/live-trial/<run-id>/task.md
-
-## 二層の検査
-
-- 層A (決定論生成・強制): task.md が premise block マーカーを持つ場合、その
-  ``contract-digest`` が 1 と 2 から再導出した digest と一致しなければ違反。
-  ``--emit-premise`` が生成する block をそのまま貼れば一致する。scenario の args や
-  観測条件、fixture の配置物が動けば digest が変わり、task を更新しない限り落ちる。
-- 層B (後方互換・自然文): マーカーを持たない既存 task.md も、args のトークン一致 /
-  entry point の明示 / 旧前提フレーズの不在 / 観測条件の被覆を検査する。既に取得済みの
-  合格証跡 (改変してはならない) を再検査できるようにするため、層B を残す。
-
-## 検出 rule
-
-  LT-001  scenario-unstated        task.md が既知 scenario_id を 1 つも含まない
-  LT-002  scenario-unknown         含む scenario_id が scenario 正本に無い
-  LT-003  placed-input-unstated    fixture が置く入力への言及が無い
-  LT-004  absent-artifact-asserted fixture が置かない成果物を「事前配置済み」と主張している
-  LT-005  stale-premise-phrase     正規フローの再実行を禁じる旧前提が残っている
-  LT-006  args-drift               Skill 呼出しの args が task_args_template とトークン不一致
-  LT-007  entry-point-unstated     required entry point の記載漏れ
-  LT-008  skill-tool-unrequired    委譲先 entry point を Skill ツールで呼ぶ要求が無い
-  LT-009  observation-uncovered    required_observations の被覆キーワードが揃っていない
-  LT-010  observation-contract-drift  observation_keywords 件数 != required_observations 件数
-  LT-011  premise-digest-mismatch  premise block の contract-digest が正本と不一致
-  LT-012  task-missing             --all で対象 run の task.md が見つからない
-
-Exit codes:
-  0  違反 0 件
-  1  一般エラー (repo-root 不正・正本欠落・shape import 失敗)
-  2  違反検出 (fail-closed)
-
-CLI と前提節の出力処理は ``scripts/lint-live-trial-task-contract.py`` に分離する。この module は
-fixture/scenario/task の契約照合だけを担い、単一責務を維持する。
+検査の背景、二層モデル、LT-001〜LT-014、終了コードは
+``references/live-trial-task-contract-rules.md`` を参照する。本 module は解析と契約照合、
+``scripts/lint-live-trial-task-contract.py`` は CLI と premise 出力を担当する。
 """
 from __future__ import annotations
 
@@ -214,16 +168,23 @@ def contract_digest(contract: dict[str, Any], scenario: dict[str, Any]) -> str:
     """fixture 契約と scenario 契約を 1 つの digest へ束ねる (16 hex)。
 
     task.md の premise block はこの digest を持つ。どちらの正本が動いても digest が
-    変わるので、「scenario ID / task args / required observations / fixture contract の
-    変更が 1 つの検証経路へ束ねられる」(受入条件 5) が digest 1 個で成立する。
+    変わるので、「scenario ID / task args / required observations / task contract /
+    fixture contract の変更が 1 つの検証経路へ束ねられる」(受入条件 5) が
+    digest 1 個で成立する。
     fixture の実 path は run ごとに違うため digest の入力に含めない。
     """
     payload = {
         "contract": _canonical(contract),
         "scenario": {
             key: _canonical(scenario.get(key))
-            for key in ("scenario_id", "skill", "task_args_template",
-                        "fixture_contract", "required_observations")
+            for key in (
+                "scenario_id",
+                "skill",
+                "task_args_template",
+                "fixture_contract",
+                "required_observations",
+                "task_contract",
+            )
         },
     }
     blob = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -389,6 +350,29 @@ def check_task(
             "委譲先 entry point を `Skill` ツールで呼ぶ要求が task.md に無い "
             "(被験 skill 自身の起動要求だけでは、委譲が Skill 経由か Bash 直叩きかを測れない)",
         )
+
+    task_contract = scenario.get("task_contract", {})
+    if not isinstance(task_contract, dict):
+        add("LT-012", "scenario.task_contract が object でない")
+    else:
+        required_fragments = task_contract.get("required_fragments", [])
+        forbidden_fragments = task_contract.get("forbidden_fragments", [])
+        if not isinstance(required_fragments, list) or not all(
+            isinstance(item, str) and item for item in required_fragments
+        ):
+            add("LT-012", "scenario.task_contract.required_fragments が非空文字列配列でない")
+        else:
+            for fragment in required_fragments:
+                if fragment not in text:
+                    add("LT-012", f"task_contract required fragment の記載漏れ: {fragment}")
+        if not isinstance(forbidden_fragments, list) or not all(
+            isinstance(item, str) and item for item in forbidden_fragments
+        ):
+            add("LT-013", "scenario.task_contract.forbidden_fragments が非空文字列配列でない")
+        else:
+            for fragment in forbidden_fragments:
+                if fragment in text:
+                    add("LT-013", f"task_contract forbidden fragment を検出: {fragment}")
 
     observations = scenario.get("required_observations")
     keywords = contract.get("observation_keywords", ())

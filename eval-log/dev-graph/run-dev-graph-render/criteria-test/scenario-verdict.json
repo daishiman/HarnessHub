@@ -14,22 +14,22 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
-      "observed": "Fresh guard-clean live trial 20260806T030000Z-0ui0-render-guardclean is overall=PASS with nudge=0 and gate=0. A fresh independent evaluator confirmed every C05 observation from artifacts: inline SVG/HTML, 13=applied=expected denominator, independently recomputed 4 numerator, and matching source digest; the C02 receipt-write bypass guard produced no violations.",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/verdict.json",
+      "observed": "fresh live trial 20260808T183311-wt27-c05-final は actual_model=claude-opus-5、overall=PASS、nudge=0、gate=0。self-contained SVG/HTML、13 分母、独立集計 4 分子、verified source digest を fresh evaluator が確認した。behavior closure digest=44d2ce7e8012cf0f6a8744035822c00a9b28e663e62e1d94459e322750addf0d。",
       "scenario_id": "C05-OUT1-positive-feature-progress",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/independent-verification.json"
       ],
       "verify_by": "live-trial"
     }
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-0ui0-20260806",
+  "reviewer": "fresh-independent-goal-evaluator-c05-20260808",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C05",

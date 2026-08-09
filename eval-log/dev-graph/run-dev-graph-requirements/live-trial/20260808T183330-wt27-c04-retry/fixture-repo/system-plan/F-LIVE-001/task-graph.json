@@ -1,0 +1,122 @@
+{
+  "feature_package_id": "feature-package/F-LIVE-001",
+  "nodes": [
+    {
+      "depends_on": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P01",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P01"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P01"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P02",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P02"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P02"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P03",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P03"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P03"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P04",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P04"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P04"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P05",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P05"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P05"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P06",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P06"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P06"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P07",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P07"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P07"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P08",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P08"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P08"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P09",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P09"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P09"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P10",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P10"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P10"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P11",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P11"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P11"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P12",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P12"
+    },
+    {
+      "depends_on": [
+        "SYS-LIVE-001-P12"
+      ],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "id": "SYS-LIVE-001-P13",
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P13"
+    }
+  ],
+  "parent_feature": "F-LIVE-001",
+  "schema_version": "1.0.0"
+}

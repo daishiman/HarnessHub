@@ -1,0 +1,8 @@
+{
+  "feature_package_id": "feature-package/F-LIVE-001",
+  "generation_id": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "published_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "published_path": "system-plan/F-LIVE-001",
+  "receipt": "system-plan/F-LIVE-001/atomic-promotion-receipt.json",
+  "schema_version": "1.0.0"
+}

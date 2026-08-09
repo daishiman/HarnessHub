@@ -13,15 +13,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T130722-c18status/verdict.json",
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c18 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=64a9eac953469ecbfb01a5510f39ae6f9dfb22625e74f4ca67544291bbac1bf4。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/verdict.json",
+      "observed": "fresh live trial 20260808T183313-wt27-c18-final は actual_model=claude-opus-5、overall=PASS、nudge=0、gate=0。field-by-field status/edge parity、ready/blocked 判定、graph/config/content/GitHub 無変更を fresh evaluator が確認した。behavior closure digest=f659b9fd686eea7313062b1fd9f67e8da1e9322f3af813280777fb9ded05ab62。",
       "scenario_id": "C18-OUT1-positive-read-only-status",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T130722-c18status/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260806T010000Z-f84o-postmain-c18/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/independent-verification.json"
       ],
       "verify_by": "live-trial"
     },
@@ -40,7 +40,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "reviewer": "fresh-independent-goal-evaluator-c18-20260808",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C18",

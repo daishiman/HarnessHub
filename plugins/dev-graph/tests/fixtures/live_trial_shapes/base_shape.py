@@ -31,6 +31,7 @@ from typing import Any
 
 FIXTURES_DIR = Path(__file__).resolve().parents[1]
 BASE_MODULE_NAME = "build_live_trial_fixture"
+TEMPLATE_CONTRACT = Path(__file__).resolve().parents[3] / "templates" / "template-contract.json"
 
 # 固定 timestamp。再生成のたびに fixture の digest が動くと trial の再現性が失われる。
 # base の CREATED_AT (C03 sync の remote fixture 用) とは別系列の値で、
@@ -238,6 +239,16 @@ _TASK_REQUIRED_SECTIONS = [
 _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS = ["正本仕様書", "依存", "実行契約"]
 
 
+def _artifact_sections(artifact_kind: str, origin_kind: str | None) -> list[str]:
+    """fixture の見出しを production 契約の正本から読む。"""
+    contract = json.loads(TEMPLATE_CONTRACT.read_text(encoding="utf-8"))
+    artifact = contract["artifacts"].get(artifact_kind, {})
+    if origin_kind == "system-spec-harness":
+        conditional = artifact.get("conditional_required_sections", {})
+        return list(conditional.get("system_spec_harness", []))
+    return list(artifact.get("required_sections", []))
+
+
 def markdown_for(node: dict[str, Any]) -> str:
     """frontmatter_of (行指向スカラパーサ) が読める 1 行 1 key の frontmatter を組む。
 
@@ -262,14 +273,18 @@ def markdown_for(node: dict[str, Any]) -> str:
             "",
         ]
     )
-    if node.get("artifact_kind") == "task":
-        origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+    artifact_kind = node.get("artifact_kind")
+    origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+    if artifact_kind == "task":
         sections = (
             _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS
             if origin_kind == "system-dev-planner"
             else _TASK_REQUIRED_SECTIONS
         )
         for section in sections:
+            lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
+    elif artifact_kind in {"architecture", "specification"}:
+        for section in _artifact_sections(artifact_kind, origin_kind):
             lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
     return "\n".join(lines)
 

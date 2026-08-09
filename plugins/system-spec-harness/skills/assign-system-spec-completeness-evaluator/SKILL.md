@@ -70,7 +70,7 @@ feedback_contract:
 
 | 観点 (aspect id) | ラベル | 評価主体 (component) | 一次根拠 |
 |---|---|---|---|
-| `matrix_coverage` | マトリクス網羅性 | `system-spec-matrix-auditor` (C07) + sub-input `system-spec-hearing-auditor` (C06) | `validate-coverage-matrix.py --require-complete` の exit0 + 意味層。C06 の 4 軸 (聞き漏れ/誘導/早期停止/トレーサビリティ) を網羅性・トレースの補助根拠に併せる |
+| `matrix_coverage` | マトリクス網羅性 | `system-spec-matrix-auditor` (C07) + sub-input `system-spec-hearing-auditor` (C06) | `validate-coverage-matrix.py --require-complete` の exit0 + 意味層。C06 の 5 軸 (聞き漏れ/誘導/早期停止/セルのトレーサビリティ/foundation の利用者根拠) を網羅性・トレースの補助根拠に併せる |
 | `design_knowledge_reflection` | 設計知識反映 | C05 R1-score が自前評価 (**独立 auditor なし**) | 機械層=各章の設計知識ポインタ存在 (compile 注入) + 意味層=そのポインタ原則の確定セルへの具体適用 (存在確認だけで PASS にしない = Goodhart 防止) |
 | `doc_freshness` | 最新ドキュメント出典 | `system-spec-doc-freshness-auditor` (C08) | 二層監査 (形式=`validate-source-citation.py` / 内容鮮度=公式再照合) |
 
@@ -130,6 +130,7 @@ feedback_contract:
 - C05 自前評価の 4 観点に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
 - 台帳が無い/空 = 裏取り 0 件 → fail-closed で violation (緑にしない)。
 - **run/session・response 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.{session_id,tool,subagent_type,response_sha256}` と receipt `verdict` を、台帳が hook 観測した同一 response の値へ全一致で束縛する。必須 receipt の session は単一 run に収束させ、`--session <id>` で現在 session との一致まで検査する。これにより、実 fork はしたが FAIL を PASS と書く緑化を拒否する。
+- **dispatch の直列化**: 3 監査は独立 context だが、1 回の assistant message で複数の Task/Agent tool call を同時起動しない。1 件ずつ foreground で実行し、完全 response の最終行 `AUDIT_VERDICT` と PostToolUse 台帳行を確定してから次の 1 件を起動する。background/非同期起動で得る「起動済み」応答は最終 verdict ではなく、`response_sha256` / `audit_verdict` が null の台帳行は receipt に使えない。
 - **台帳の書込み権限**: `audit-fork-ledger.jsonl` は PostToolUse hook の append-only 出力であり、評価者が手書き・補正してはならない。`prompt_sha256` / `response_sha256` が空・`manual`・64桁16進数以外、または response 最終行の `AUDIT_VERDICT` marker が無効な行は集約対象から除外される。
 - **機械層の限界 (正直な境界)**: 台帳は実際の response が返した verdict の書換えを拒否するが、監査 prompt の意味的十分性や証拠の妥当性そのものは content-review / human が検証する。台帳ファイルを意図的に改ざん可能な実行環境では hook 証跡だけで完全な敵対者耐性は得られないため、書込み権限の分離も必要である。
 
@@ -153,7 +154,7 @@ feedback_contract:
 正本責務は `prompts/R1-score.md` (スコアリング) と `prompts/R2-delegate.md` (監査 fork 集約)。要約:
 
 ### Step 1: 観点別監査を独立 context で集約 (R2-delegate)
-Task tool で監査 sub-agent (`system-spec-matrix-auditor` (C07) / `system-spec-hearing-auditor` (C06) / `system-spec-doc-freshness-auditor` (C08)) をそれぞれ fork する。C07 は matrix_coverage、C08 は doc_freshness の一次根拠。C06 はヒアリング品質を監査し matrix_coverage の sub-input として併せる。design_knowledge_reflection は独立 auditor を立てず Step 3 で C05 自身が評価する。
+Task tool で監査 sub-agent (`system-spec-matrix-auditor` (C07) / `system-spec-hearing-auditor` (C06) / `system-spec-doc-freshness-auditor` (C08)) をそれぞれ fork する。帰属台帳に完全 response を残すため、1 message = 1 foreground fork で直列実行する。C07 は matrix_coverage、C08 は doc_freshness の一次根拠。C06 はヒアリング品質を監査し matrix_coverage の sub-input として併せる。design_knowledge_reflection は独立 auditor を立てず Step 3 で C05 自身が評価する。
 
 ### Step 2: マトリクス網羅性の決定論ゲート
 ```bash

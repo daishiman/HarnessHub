@@ -45,12 +45,10 @@ ROOT_BY_KIND = {
     "feature": "features",
     "document": "docs",
 }
-# task は template-contract.json の conditional_required_sections (system_development
-# 系統) を graph_artifact_readiness.missing_required_headings() が node 引数経由で解決
-# するため有効化できる (HarnessHub-yzv0)。issue の required_sections には conditional
-# 機構が無く、実測で最多パターン (32/76件) が単に「概要」見出しを省略する慣習と契約の
-# 齟齬でしかないため、誤検出源として issue は対象外のまま残す (別課題で扱う)。
-HEADING_MISSING_KINDS = {"specification", "task"}
+# task と system-spec-harness 由来の specification / architecture は
+# conditional_required_sections を source_lineage から解決できるため、3 kind とも
+# 見出し欠落を fail-closed で検査する。issue は既存文書との契約齟齬を別課題で扱う。
+HEADING_MISSING_KINDS = {"architecture", "specification", "task"}
 def nodes_of(data: Any) -> list[dict[str, Any]]:
     values = data.get("nodes") if isinstance(data, dict) else data
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):

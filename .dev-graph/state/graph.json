@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1416,
+  "graph_revision": 1420,
   "nodes": [
     {
       "acceptance": [
@@ -51356,6 +51356,231 @@
       "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
       "tracker_binding": "beads",
       "updated_at": "2026-08-08T06:05:00Z"
+    },
+    {
+      "acceptance": [
+        "同一 message の複数監査 dispatch がすべて非 null verdict で記録される",
+        "tool_use_id・response_sha256・verdict の対応違いを fail-closed 拒否する",
+        "単一 dispatch の既存挙動を維持する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uypz",
+        "linked_at": "2026-08-08T11:05:16.215042Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "最終 C01-C19 live-trial 監査で、同一 assistant message の複数 dispatch が audit_verdict=null となり同期再 fork を要求する事象を実測した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T11:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-audit-multi-dispatch-null-verdict-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "複数 dispatch の全 event が audit_verdict 非 null と正しい response_sha256 を持ち、fresh live-trial の不要な再 fork を発生させない",
+      "graph_node_id": "issue-audit-multi-dispatch-null-verdict-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T11:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "1つの assistant message に複数の監査 Agent dispatch がある場合も、各 response の生 verdict を対応する台帳 event へ結び付ける",
+      "related_nodes": [
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl"
+      ],
+      "scope_in": [
+        "複数 tool_use と複数 tool_result の対応付け",
+        "event ごとの AUDIT_VERDICT 抽出",
+        "回帰テスト"
+      ],
+      "scope_out": [
+        "監査 evaluator の採点基準変更",
+        "製品 API・DB・UI の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T11:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "audit-ledger",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "複数監査 dispatch の台帳 verdict=null を原子的に記録する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:05:42.334830Z"
+    },
+    {
+      "acceptance": [
+        "complete 時の blocking_items prose と machine array が矛盾しない",
+        "--require-foundation が U1-U9 全件 PASS する",
+        "compile diff が0件、または意図的差分を機械判定できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-duej",
+        "linked_at": "2026-08-08T11:05:26.131720Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
+          "confidence": 0.94
+        }
+      ],
+      "classification_confidence": 0.94,
+      "classification_reason": "最終品質ゲートで certificate の prose/array 不一致、foundation U1-U9 qa_log 欠落9件、compile と checked-in writeback の既存 drift を同じ証拠 projection 境界で確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T11:00:00Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-system-spec-evidence-projection-parity-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "blocking_items の文章と配列が一致し、U1-U9 source-index が qa_log から追跡でき、compile 出力と正本 writeback の差が意図的か stale か判定できる",
+      "graph_node_id": "issue-system-spec-evidence-projection-parity-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T11:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "同じ system-spec 証拠から作る certificate、foundation qa_log、compile 出力の意味を一致させる",
+      "related_nodes": [
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "system-spec/spec-state.json",
+        "system-spec/coverage-matrix.json",
+        "system-spec/coverage-certificate.json",
+        "system-spec/index.md",
+        "specs/",
+        "architecture/"
+      ],
+      "scope_in": [
+        "coverage_certificate.blocking_items の意味統一",
+        "U1-U9 source-index と qa_log の同期",
+        "compile 出力と手動 writeback drift の分類・解消"
+      ],
+      "scope_out": [
+        "新しい製品要求の追加",
+        "既存 writeback の証拠なし一括上書き"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T11:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "system-spec-harness",
+        "evidence",
+        "projection",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec 証拠 projection の certificate・qa_log・compile parity を揃える",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T11:06:29.987762Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

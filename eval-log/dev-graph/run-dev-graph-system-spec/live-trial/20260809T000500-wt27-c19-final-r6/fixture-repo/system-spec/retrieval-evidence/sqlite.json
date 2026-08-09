@@ -1,0 +1,12 @@
+{
+  "target_id": "sqlite",
+  "source_url": "https://www.sqlite.org/changes.html",
+  "official_host": "www.sqlite.org",
+  "retrieved_at": "2026-08-08T15:11:17Z",
+  "retrieval_tool": "WebFetch",
+  "observed": "変更履歴の先頭 release が 3.53.4 / 2026-07-24。",
+  "quoted_excerpt": "### 2026-07-24 (3.53.4)",
+  "landing_note": "https://www.sqlite.org/docs.html (brief §4 記載の入口) を先に取得したが版表記が無かったため、同一公式 host の changes.html で現行版を確認した。",
+  "version": "3.53.4",
+  "last_updated": "2026-07-24"
+}

@@ -1,0 +1,216 @@
+---
+status: confirmed
+category: backend
+aggregate: 確定
+spec_cells: [backend.web, backend.mobile, backend.tablet, backend.desktop-windows, backend.desktop-linux, backend.desktop-macos]
+serves_goals: [G2, G3]
+---
+
+# バックエンド (backend)
+
+- カテゴリ集約状態: **確定**
+- 章確定マーカー: `status: confirmed`
+
+## カテゴリ別収集状態
+
+| プラットフォーム | 状態 | 根拠 |
+|---|---|---|
+| Web (web) | 確定 | 確定質疑: qa-backend-web |
+| モバイル (mobile) | 対象外 | 理由: 本システムはクライアント実装を含まず、モバイル向け成果物を作らないため |
+| タブレット (tablet) | 対象外 | 理由: 本システムはクライアント実装を含まず、タブレット向け成果物を作らないため |
+| デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため |
+| デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため |
+| デスクトップ (macOS) (desktop-macos) | 対象外 | 理由: 本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため |
+
+## 確定内容 (質疑録)
+
+### qa-backend-web (対応セル: web)
+
+**質問**: カテゴリ backend × platform web の要件は何か (system-spec/requirements-brief.md §3 の確定回答を一次入力とする)
+
+**回答**: Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。
+
+## 上流指針 (doctrine anchor)
+
+| concern | authority (正本) | 導く上流原則 | 出典 |
+|---|---|---|---|
+| application-architecture | Robert C. Martin — Clean Architecture | レイヤ境界・依存方向 (内向き)・ユースケース中心設計 | Clean Architecture (2017), the Dependency Rule |
+| data-access | Robert C. Martin — Clean Architecture | 永続化を境界の外側へ追い出し interface adapter で隔離する | Clean Architecture — gateways/repositories boundary |
+
+- 本章の確定内容 (質疑録) は上記 authority を上流指針として適用する。具体技術の選定はこの指針に従属し、指針との乖離は再オープン (R4-reopen) の根拠になる。
+
+## 適用された設計知識
+
+### Domain-Driven Design — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/ddd.md`
+
+#### 目的
+
+businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性を適切な境界へ閉じ込め、継続的な学習をsoftwareへ反映する。
+
+#### 解決する問題
+
+- 仕様語、画面語、DB列、code名がずれ、変更時に意味を再解釈する。
+- 異なる業務文脈の同名概念を一modelへ押し込み、巨大で矛盾したmodelになる。
+- invariantとtransaction ownerが不明で、どこからでもdataを変更できる。
+- legacy codeのtechnical構造がbusiness capabilityを隠し、改善順を決められない。
+
+#### 適用条件
+
+- rule、例外、用語、状態遷移が多く、domain expertとの継続的なmodel学習が価値を持つ。
+- team/部門ごとに言葉やownershipが異なり、integrationで翻訳が必要。
+- core domainの差別化がsystemの本質的目的に直結する。
+
+#### 非適用条件
+
+- 単純CRUD、汎用supporting機能、既製serviceで十分なgeneric subdomain。
+- domain expertへアクセスできず、用語とruleを検証するfeedback loopを作れない段階。
+- bounded contextをservice数へ機械変換する目的。monolith内moduleでも境界は成立する。
+
+#### トレードオフ・失敗モード
+
+- workshop、model、mapping、専門語彙の維持に継続的な時間が必要。
+- aggregateを大きくしすぎてlock/latencyを増やす、細かくしすぎてinvariantをeventual consistencyへ漏らす。
+- 「Repository/Entity」等のpattern名だけ採用したanemic modelになり、business ruleがserviceへ散る。
+- bounded contextを組織図やDB tableから決め、実際の言語・capability境界を検証しない。
+- eventを事実でなくcommandとして命名し、ordering/idempotency/failure recoveryを設計しない。
+
+#### goalへの寄与
+
+- U1-U9の語彙をmodelへ接続し、goalがどのcontext/capability/invariantで実現されるかを示す。
+- core domainへ設計投資を集中し、generic領域は無料/低コストserviceや標準実装も比較対象にできる。
+- refactoringは一括rewriteでなく、重要なbusiness rule周辺からstrangler/bubble context等で境界を育てる。
+
+---
+
+### Clean Architecture — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/clean-architecture.md`
+
+#### 目的
+
+変化しやすいUI、DB、framework、外部サービスから、長く保持したい業務ルールとuse caseを隔離し、技術交換やテストを目的達成の阻害要因にしない。
+
+#### 解決する問題
+
+- 業務ルールがcontroller/ORM/UI lifecycleへ埋まり、単体で検証できない。
+- 外部技術変更が内側のuse caseまで波及し、置換費用を予測できない。
+- 入出力形式やvendor型が境界を越え、責務と所有者が曖昧になる。
+
+#### 適用条件
+
+- business ruleが外部I/Oより長寿命で、UI/DB/providerの変更可能性がある。
+- 複数delivery channelや外部integrationから同じuse caseを再利用する。
+- 重要なpolicyを高速・決定論的にテストする価値が、境界導入費を上回る。
+
+#### 非適用条件
+
+- 寿命の短い検証用prototypeで、交換可能性より学習速度が明確に優先される。
+- domain ruleがほぼ無い単純変換scriptで、port/adapterが実質的な抽象を生まない。
+- 外部製品そのものがsystemの目的で、抽象化すると必要機能が失われる。ただしsecurity/audit boundaryは別途必要。
+
+#### トレードオフ・失敗モード
+
+- 境界、DTO、mapping、dependency injectionの量が増え、小規模systemでは認知負荷が先行する。
+- 「4層を作ること」が目的化すると、変化軸のないinterfaceやpass-through use caseが増える。
+- domain modelを万能化してdelivery固有の制約を隠すと、現実のlatency/transaction/error semanticsを見失う。
+- portを外側が定義したりinner layerがORM型を返したりすると、名前だけcleanな依存逆転になる。
+
+#### goalへの寄与
+
+- `essential_purpose`に直結するpolicyを外部詳細から守り、goal達成ロジックの検証を速くする。
+- 制約に「vendor lock-in低減」「複数platform」「高い変更頻度」がある場合、変更範囲と移行riskを局所化する。
+- 適用判断は「何層あるか」でなく、守るgoal、予想される変更、boundary testで観測する。
+
+---
+
+### API Design Patterns — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/api-design-patterns.md`
+
+#### 目的
+
+consumerとproviderの独立変更を支える安定した契約を作り、再試行、失敗、並行更新、pagination、evolutionを予測可能にする。
+
+#### 解決する問題
+
+- resource/operationの意味、error、null、time、identifierがendpointごとに揺れる。
+- timeout後の再試行で二重処理が起き、clientが成功/失敗を判断できない。
+- collection増大や並行更新でoffset paginationと全件responseが破綻する。
+- version/evolution方針がなく、provider変更がconsumerを突然壊す。
+
+#### 適用条件
+
+- 複数client/team/organizationが独立releaseで同じservice boundaryを利用する。
+- network failureとretryが通常事象で、operation結果の重複や不明状態を制御する必要がある。
+- contractの長期互換性とobservabilityが局所的な実装簡潔性より重要。
+
+#### 非適用条件
+
+- 同一process内のprivate callで、network boundaryや独立versioningが存在しない。
+- hard real-time stream、双方向session、巨大event flowなど、request/response RESTが問題形状に合わない。
+- 単純CRUD表面化がdomain invariantを迂回させる場合。use-case operationまたは別interaction modelを選ぶ。
+
+#### トレードオフ・失敗モード
+
+- version、idempotency ledger、schema governance、compatibility testに運用費がかかる。
+- 「名詞URL」だけ守ってtransaction、authorization、error semanticsを設計しない表層RESTになる。
+- offset paginationは簡単だが大規模/更新中datasetで遅延・重複・欠落を起こす。
+- idempotency keyのscope/TTL/payload bindingが曖昧だと、別requestを誤って同一視する。
+- breaking changeを新versionで逃がし続けると、複数version保守とsecurity patch負担が増える。
+
+#### goalへの寄与
+
+- mobile/web/desktop間で一貫したbusiness capabilityを共有し、platform別再実装を減らす。
+- reliability goalにはretry-safe operationと明示的error、delivery goalにはcontract testとadditive evolutionを結ぶ。
+- 選択はAPI様式の流行でなく、consumer、latency、consistency、offline、security、cost constraintsへの適合で評価する。
+
+---
+
+### router / service / repository と依存規則の対応
+
+- project candidate: `three-layer-dependency-rule-mapping` (`deepened`)
+- 解決対象: 確定内容の 3 層が、どの依存方向で外部詳細 (HTTP・SQLite) を隔離するのかが明示されないと層分けが名目化する
+
+#### 目的
+
+確定内容 (router / service / repository の 3 層・/todos の CRUD と完了操作・/health) を依存規則へ接地させ、SQLite と HTTP framework を外側の詳細として隔離することを明文化する
+
+#### 解決する問題
+
+- 3 層に分けても依存が外向きに漏れると、永続化先や framework の差し替えが業務ロジックへ波及する
+
+#### 適用条件
+
+- 永続化先や framework を将来差し替える可能性を残したい本システムの構成
+
+#### 非適用条件
+
+- 業務規則が CRUD 以外に無い場合に、集約・値オブジェクト・ドメインイベント等の DDD 戦術要素まで持ち込むこと。本システムは todos / api_tokens の単純 CRUD であり DDD 戦術パターンは非適用と判断する (依存規則のみ採る)
+
+#### トレードオフ
+
+- 層をまたぐ変換コードが増える代わりに、D1/D2 の再評価が service へ波及しない
+
+#### 失敗モード
+
+- repository が SQLite の行や例外をそのまま service へ返し依存が反転する。戻り値をドメイン型へ変換して防ぐ
+
+#### goalへの寄与
+
+G2 (認証を router で必須化し use case を汚さない) / G3 (永続化詳細を repository に閉じる)
+
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-backend-web (対応セル: web) の判断へ適用する
+- 資するゴール: G2, G3
+
+## 最新ドキュメント出典
+
+| 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
+|---|---|---|---|---|---|
+| fastapi | 0.141.1 | FastAPI (Sebastián Ramírez) (fastapi.tiangolo.com) | https://fastapi.tiangolo.com/release-notes/ | 2026-08-08T08:45:43.787Z | 2026-08-08T08:45:43.787Z |
+| flask | 3.1.x (stable; Changes 先頭は 3.1.3) | Pallets (flask.palletsprojects.com) | https://flask.palletsprojects.com/ | 2026-08-08T08:45:43.799Z | 2026-08-08T08:45:43.799Z |

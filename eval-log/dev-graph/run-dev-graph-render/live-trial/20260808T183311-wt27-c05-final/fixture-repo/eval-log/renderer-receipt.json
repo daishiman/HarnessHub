@@ -1,0 +1,38 @@
+{
+  "edges": 12,
+  "feature_progress": {
+    "aggregate": {
+      "done": 4,
+      "total": 13
+    },
+    "by_feature": {
+      "LT-FEATURE-001": {
+        "done": 4,
+        "total": 13
+      }
+    }
+  },
+  "graph_sha256_after": "a19f5235089531a0947445bfea59045c2f8ba8c0b8335f2a713f720ee1a62f2a",
+  "graph_sha256_before": "a19f5235089531a0947445bfea59045c2f8ba8c0b8335f2a713f720ee1a62f2a",
+  "input_sha256": "a19f5235089531a0947445bfea59045c2f8ba8c0b8335f2a713f720ee1a62f2a",
+  "nodes": 14,
+  "ok": true,
+  "out": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/fixture-repo/.dev-graph/render/index.html",
+  "out_relative": ".dev-graph/render/index.html",
+  "output_sha256": "0312dd93fc72444217163e1919f1c10693930aace1f859414d9d07f19b3d45e7",
+  "registration": {
+    "applied_count": 13,
+    "expected_count": 13,
+    "graph_digest_match": true,
+    "parent_feature": "LT-FEATURE-001",
+    "path": "system-plan/LT-FEATURE-001/dev-graph-registration-receipt.json",
+    "source_digest": "sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807"
+  },
+  "registration_verification": {
+    "graph_digest_match": true,
+    "reason": null,
+    "status": "verified"
+  },
+  "scope": "LT-FEATURE-001",
+  "self_contained": true
+}
