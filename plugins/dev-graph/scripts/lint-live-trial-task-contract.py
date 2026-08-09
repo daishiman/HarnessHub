@@ -56,6 +56,7 @@ def render_premise(
     placed = [str(item) for item in contract.get("placed_inputs", ())]
     absent = [str(item) for item in contract.get("absent_artifacts", ())]
     entry_points = [str(item) for item in contract.get("required_entry_points", ())]
+    workflow_mode = str(contract.get("workflow_mode", "build"))
     observations = scenario.get("required_observations")
 
     lines: list[str] = [
@@ -69,22 +70,33 @@ def render_premise(
         "",
     ]
     lines.extend(f"- `{relative}`" for relative in placed)
-    lines.extend([
-        "",
-        "次の成果物は fixture が先回りして作っていません。これらを生成するところからが"
-        "本 scenario の測定対象です:",
-        "",
-    ])
-    lines.extend(f"- `{relative}`" for relative in absent)
-    if entry_points:
+    if absent:
         lines.extend([
             "",
-            f"R0-context / R1-preflight を省略せず、その後に宣言済みの {harness} を"
-            "次の正規 entry point で委譲実行し、正規フローを最後まで完走させてください。"
-            "各 entry point は必ず `Skill` ツールで呼び出してください "
-            "(script を Bash から直接叩いて代替してはいけません)。",
+            "次の成果物は fixture が先回りして作っていません。これらを生成するところからが"
+            "本 scenario の測定対象です:",
             "",
         ])
+        lines.extend(f"- `{relative}`" for relative in absent)
+    if entry_points:
+        if workflow_mode == "reuse-confirmed":
+            lines.extend([
+                "",
+                f"R0-context / R1-preflight で宣言済みの {harness} と次の entry point の"
+                "実在を確認してください。fixture の digest-bound PASS receipt は current な"
+                "ため、これら upstream entry point は呼び出さず、"
+                "`validate-system-spec-resume.py` の `reuse-confirmed` 検証だけを実行します。",
+                "",
+            ])
+        else:
+            lines.extend([
+                "",
+                f"R0-context / R1-preflight を省略せず、その後に宣言済みの {harness} を"
+                "次の正規 entry point で委譲実行し、正規フローを最後まで完走させてください。"
+                "各 entry point は必ず `Skill` ツールで呼び出してください "
+                "(script を Bash から直接叩いて代替してはいけません)。",
+                "",
+            ])
         lines.extend(
             f"{index}. `{harness}:{name}`" for index, name in enumerate(entry_points, start=1)
         )

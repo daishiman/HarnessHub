@@ -1,0 +1,86 @@
+{
+  "verdict": "PASS",
+  "evaluated_at": "2026-08-08T14:36:52Z",
+  "evaluator": "Codex fresh independent evaluator /root/c14_r11_final_evaluator",
+  "observation_1": {
+    "verdict": "PASS",
+    "summary": "Both persisted macro graphs are canonical, acyclic feature/architecture DAGs with no task nodes; the declared max_inter_feature_depends_on_per_feature is 3 and the independently measured maximum is 3 in each fixture.",
+    "evidence": [
+      "scenario.json#C14-OUT1-positive-macro-decomposition-r15: declared_granularity_threshold={metric:max_inter_feature_depends_on_per_feature,max_value:3}",
+      "fixture-beads/.dev-graph/state/graph.json: graph_revision=8, nodes=7, feature=5, architecture=2, task=0, acyclic=true, measured_max=3",
+      "fixture-none/.dev-graph/state/graph.json: graph_revision=8, nodes=7, feature=5, architecture=2, task=0, acyclic=true, measured_max=3",
+      "plugins/dev-graph/scripts/validate-graph-schema.py rerun: exit=0, valid=true, violations=[] for both canonical stores",
+      "plugins/dev-graph/scripts/validate-source-digest.py rerun with all seven registered node IDs: checked=7, registered_mismatch=[] for each fixture"
+    ]
+  },
+  "observation_2": {
+    "verdict": "PASS",
+    "summary": "Each real-writing run retains four generated pre-evaluation draft features and attributes every zero separately: draft-gate suppression, schema-unreachable GitHub binding, and a live candidate whose external projection was intentionally limited to adapter dry-run.",
+    "evidence": [
+      "pre-state.json: both graphs started at graph_revision=0,node_count=0; final graphs are graph_revision=8,node_count=7, so the zero-publication finding is not a no-write run",
+      "fixture-beads/.dev-graph/state/graph.json: draft feature IDs=[feat-work-assignment,feat-personal-dashboard,feat-deadline-notification,feat-admin-progress-report], persisted tracker_binding set=[beads]",
+      "fixture-none/.dev-graph/state/graph.json: the same four feature IDs remain draft/pending/incomplete, persisted tracker_binding set=[none]",
+      "support/verify.py and the pre-marker verification evidence use distinct reason codes suppressed_by_draft_gate, binding_route_unreachable_by_schema, and candidate_present_but_projection_not_executed_in_this_run",
+      "external-before.json == external-after.json by JSON value; beads_issue_count=0, github_issue_count=0, projects_item_count=0, beads_local_artifacts=[]"
+    ]
+  },
+  "observation_3": {
+    "verdict": "PASS",
+    "summary": "Exactly one generated feature per fixture, feat-account-login, was promoted through ordinary C02 upsert to confirmed/pass/complete and is the sole candidate; four other generated features remain excluded drafts.",
+    "evidence": [
+      "transcript.jsonl:94 and :124 invoke plugins/dev-graph/scripts/upsert-node.py for seven generated macro nodes; :137 applies feat-account-login.promote.json with --body-file to both fixtures",
+      "transcript.jsonl:142 receipts: operation=updated, graph_revision 7->8, write_count=2, body_source=from_file for both promotion upserts",
+      "fixture-beads/.dev-graph/state/graph.json: candidate_count=1,candidates=[feat-account-login],draft_excluded_count=4",
+      "fixture-none/.dev-graph/state/graph.json: candidate_count=1,candidates=[feat-account-login],draft_excluded_count=4",
+      "fixture HEAD stores and pre-state.json both contain node_count=0; all final feature/architecture nodes are attributable to this run"
+    ]
+  },
+  "observation_4": {
+    "verdict": "PASS",
+    "summary": "The transcript contains exactly two literal dev-graph:run-dev-graph-decompose calls with identical want text and only the fixture repo path changed; persisted bindings derive the distinct routes. Generated node semantics match after repository identity and binding-dependent evidence are normalized.",
+    "evidence": [
+      "transcript.jsonl tool sequence: line 5 task Read, line 9 the single permitted framework-memory Read, line 13 preflight Bash, line 20 first literal Skill",
+      "transcript.jsonl:20 and :108 are the only Skill tool_use events; both target dev-graph:run-dev-graph-decompose, use the exact required want, and point respectively to fixture-beads and fixture-none; Task/Agent count=0",
+      "persisted tracker_binding values: fixture-beads=[beads], fixture-none=[none]; github_publication.mode=[local_only] in both graphs",
+      "plugins/dev-graph/schemas/graph-node.schema.json allOf[15]: tracker_binding=github requires github_publication.mode in [issue,issue_and_projects]",
+      "plugins/dev-graph/schemas/graph-node.schema.json allOf[10]: issue/issue_and_projects requires artifact_kind in [issue,task] plus confirmed/pass/complete, making github unreachable for feature/architecture-only macro nodes",
+      "Raw graph differences are only repository_id, seven tracker_binding fields, and the promoted evaluated_digest; the digest difference is the required SHA-256 consequence of hashing the binding-inclusive final node. All seven artifact bodies are byte-equal after frontmatter normalization."
+    ]
+  },
+  "observation_5": {
+    "verdict": "PASS",
+    "summary": "Prestate, external baselines, preview ordering, local write counts, adapter reachability, and append-only goal-seek evidence are all supported by before/after state and transcript order rather than by the skill report.",
+    "evidence": [
+      "transcript.jsonl:13-18 runs preflight.py before the first Skill; its stdout records subprocess command support/external-snapshot.py, pre-state.json, external-before.json, and goal-seek rows=1",
+      "pre-state.json: fixture-beads sha256=4b5086c0ab793be0f8f3daecf3b91aec3c8d24cd5c4314df94b1d3d4b8ff27e9, fixture-none sha256=bbac8410c9a5626dfdfafbfc2ef41a4277d9390e860cae23d74ced1f73fbcc88, each revision=0,node_count=0,managed_files=9,git_status=[]",
+      "transcript.jsonl:87-92 validates beads preview via --graph - at 14:25:44Z-14:25:45Z with file count 28->28; first graph write starts 14:25:55Z. Lines 117-122 validate none preview at 14:26:40Z-14:26:41Z with file count 25->25 and pristine graph SHA; first write starts 14:26:50Z",
+      "No filename containing preview exists in RUN or either fixture; transcript has no preview delete command and both preview documents are emitted directly from Python stdout into canonical validator stdin",
+      "Independent pre-state file-list difference: beads created=29,changed=1,local_write_count=30; none created=26,changed=1,local_write_count=27; values are JSON integers",
+      "transcript.jsonl:150-155 and independent rerun: bd-bridge create dry-run exit=0 registration.registered=true; gh-bridge issue-create dry-run exit=0 mutation_suppressed=true; project-item-add dry-run exit=0 mutation_suppressed=true",
+      "transcript.jsonl:156 uses the same support/external-snapshot.py for external-after.json; before and after JSON values are equal and all three external counts are 0",
+      "transcript.jsonl:176 reports ROWS_BEFORE=1 after verification; :182 appends with >>, reports ROWS_AFTER=2, and runs the SKILL.md goal-seek validator to PASS before status creation"
+    ]
+  },
+  "observation_6": {
+    "verdict": "PASS",
+    "summary": "The confirmation_evidence digest of the sole promoted feature in each graph independently recomputes from the final persisted node with only confirmation_evidence excluded and is not a placeholder.",
+    "evidence": [
+      "fixture-beads/.dev-graph/state/graph.json feat-account-login: recorded=recomputed=ab54e39c2d6c9f793501605cb38a4ae96b6f3146fbe84c6edffae17ff1ac5083",
+      "fixture-none/.dev-graph/state/graph.json feat-account-login: recorded=recomputed=7b5fec87be733658fdfb8a22b76b4c993213a87f1dbbdbe64b8ff8af779ff81c",
+      "Recomputation used ensure_ascii=False, sort_keys=True, separators=(',',':') over every final node field except confirmation_evidence",
+      "transcript.jsonl:143-148 independently prints both recorded and recomputed values as MATCH after the final promotion upserts"
+    ]
+  },
+  "observation_7": {
+    "verdict": "PASS",
+    "summary": "Both required in-memory gate mutations are falsified by the canonical stdin validator, and the completion marker sequence is fail-closed: live-transcript final_check, immediate status Write, then the sole report DONE: PASS.",
+    "evidence": [
+      "Independent canonical-validator rerun for each fixture: evaluation-pass plus readiness-incomplete => exit=1,valid=false; blocked draft plus publication intent => exit=1,valid=false",
+      "support/verify.py synthesizes both controls with copy.deepcopy from each final persisted graph and passes JSON only through stdin to plugins/dev-graph/scripts/validate-graph-schema.py",
+      "final_check.py reads /Users/dm/.claude/projects/-private-tmp-harnesshub-o4zi-Gv5hFK/b1361ecc-d2b5-495f-a6ec-7653ae796bcd.jsonl; that live file is byte-identical to transcript.jsonl (sha256=09bcce5e08731c2a6222a0129f380694008f3e6df2db7000c0c0d20c8e98ea2c)",
+      "transcript.jsonl:189 executes final_check.py; :194 reports pass=true,status_absent_before_marker=true,literal_target_skill_call_count=2,task_agent_call_count=0,candidate_count=1 each,draft_excluded_count=4 each,external snapshots equal,all external counts=0",
+      "transcript.jsonl tool-use tail is line 189 Bash(final_check.py) then line 195 Write(out/status.json); line 200 is the only following assistant report and is exactly DONE: PASS",
+      "out/status.json={status:PASS,scenario:C14-OUT1-positive-macro-decomposition-r15}; pane.txt tail independently displays the same final_check -> Write -> DONE order"
+    ]
+  }
+}

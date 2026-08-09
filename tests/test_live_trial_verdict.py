@@ -29,6 +29,31 @@ def _fake_skill_dir(tmp_path: Path) -> Path:
 
 def _run_verdict(tmp_path, transcript: Path, extra: list[str]) -> tuple[int, Path]:
     workdir = tmp_path / "workdir"
+    workdir.mkdir(parents=True, exist_ok=True)
+    evidence = workdir / "evaluator-evidence.json"
+    evidence.write_text("{}\n", encoding="utf-8")
+    goal_result = "FAIL"
+    if "--goal-result" in extra:
+        goal_result = extra[extra.index("--goal-result") + 1]
+    goal_blockers = [
+        extra[index + 1]
+        for index, value in enumerate(extra[:-1])
+        if value == "--blocker"
+    ]
+    goal_eval_args: list[str] = []
+    if "--goal-result" in extra:
+        goal_evaluation = workdir / "goal-evaluation.json"
+        goal_evaluation.write_text(json.dumps({
+            "result": goal_result,
+            "blockers": goal_blockers,
+            "evaluator": {
+                "mode": "fresh-independent-context",
+                "id": "pytest-live-trial-goal-evaluator",
+            },
+            "transcript_sha256": verdict_mod.sha256_file(transcript),
+            "evidence_refs": ["evaluator-evidence.json"],
+        }), encoding="utf-8")
+        goal_eval_args = ["--goal-evaluation", str(goal_evaluation)]
     skill_dir = _fake_skill_dir(tmp_path)
     argv = [
         "--workdir", str(workdir),
@@ -37,7 +62,7 @@ def _run_verdict(tmp_path, transcript: Path, extra: list[str]) -> tuple[int, Pat
         "--transcript", str(transcript),
         "--launch", "PASS", "--completion", "PASS",
         "--poll-exit", "DONE",
-    ] + extra
+    ] + goal_eval_args + extra
     rc = verdict_mod.main(argv)
     return rc, workdir / "verdict.json"
 

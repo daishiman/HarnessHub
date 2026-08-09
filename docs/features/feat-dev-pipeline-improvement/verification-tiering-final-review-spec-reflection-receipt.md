@@ -67,6 +67,9 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - decision validator は selector absent、非仕様 disposition、受け皿の無い延期、cache hit の不正表現、理由の無い降格を拒否する。
 - evaluator cache は対象内容 digest、evaluator ID/version、設定で key を作り、corrupt を miss 同様に再実行へ倒す。同一 key の異結果上書きは拒否する。
 - elegant-review は `contradiction→C1`、`omission→C2`、`inconsistency→C3`、`dependency_break→C4` を検査し、`smell` は condition 無しとする。2026-08-09 以降の run は自動 strict、古い run は WARN とする。
+- live-trial は scenario ごとの時間・token 上限を poll/verdict の二重 gate で強制し、transcript から input/cache/output token を message ID 重複排除後に実測する。計測不能・超過は PASS 不可とする。
+- C19 は current な digest-bound PASS receipt を検証して再利用し、不在/stale 時だけ正規生成する。再利用時は上流 Skill/network 0、C02-only import、source lineage/evaluator evidence 保持を要求する。
+- system-spec-harness は design application contract 1.1 を導入し、確定 turn ごとに適用原則または非適用理由を構造化する。legacy 1.0 は暗黙変換せず read-only とし、明示 `init` だけが migration を担う。
 - 561 行だった phase-order validator は主 CLI 343 行と support module 215 行へ分離した。
 - 手書きの変更ファイルは 500 行以下とした。500 行を超える `.dev-graph/state/graph.json` と `system-spec/spec-state.json` は、固定 path/schema を読む生成済み集約正本であり、分割すると既存の読取契約を壊すため対象外とした。live-trial の `pane.txt` / `transcript.jsonl` も transcript digest と時系列を保持する改変不能な機械証拠のため分割対象外とする。
 
@@ -74,7 +77,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 
 | 層 | 反映 | 理由 |
 |---|---|---|
-| `system-spec/` | `qa-216`、`qa-217`、`appr-041` と再 compile | selector 実装済み事実と `critical` 語彙を正本化するため |
+| `system-spec/` | `qa-216`、`qa-217`、`appr-041` と再 compile | selector、重い検証の条件付き起動、証拠厳格化を正本化済み。本追補の資源上限・再利用はその実装具体化であり、legacy 1.0 state を追加 reopen しない |
 | `specs/` | verification tier 追補 | 496 行の総合仕様を 500 行超にせず契約を独立させるため |
 | `architecture/` | selector、gate ledger、証拠、未配線境界 | 開発品質の責務分担と fail-closed 境界が変わるため |
 | `features/`・`docs/` | feature 追記と本受領書 | 目的、変更、非変更、追跡を 1 箇所で確認するため |
@@ -86,19 +89,22 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - 未完了: `HarnessHub-6nf1`（cache の evaluator 呼出元配線）、`HarnessHub-xcl3`（tier による下流 CI 切替）。
 - 仕様陳腐化の解消: `HarnessHub-true`（selector 未実装記述）、`issues/dev-workflow-tier-vocabulary-full-vs-critical-20260809.md`（旧 `full` 語彙）。
 - 延期の受け皿: `HarnessHub-sy31`。関連監査は `HarnessHub-ic7w`、`HarnessHub-w0sv`、`HarnessHub-lg8s`、`HarnessHub-o3qb`。
-- 公開前 gate の残課題: `HarnessHub-p65r`（現行 SHA の live-trial は `DEGRADED`。上流修正後に再実行）、`HarnessHub-a0zd`（設計知識適用文が定型固定）、`HarnessHub-74mb`（監査 marker 複数一致で receipt が無効化）、`HarnessHub-n7gg`（HEAD 由来 7 artifact の template 移行）。
+- 公開前 gate の解消: `HarnessHub-a0zd`、`HarnessHub-74mb`、`HarnessHub-xbzu` を修正し、`HarnessHub-p65r` の current behavior live-trial を bounded PASS で更新した。
+- 別スコープ残課題: `HarnessHub-n7gg`（HEAD 由来 7 artifact の template 移行）。
 - PR の代表 node: `issue-verification-evaluator-cache-20260809`。cache 配線未完了を含むため draft とする。
 
 ## 検証記録
 
-- focused pytest: 136 passed。
+- focused pytest（C19 criteria/task/mass-production）: 79 passed。独立 content review focused suite: 205 passed。
 - signal consistency focused pytest（validator 分割後）: 7 passed。
 - Python compile、JSON parse、`git diff --check`: pass。
 - system-spec compile と coverage matrix `--require-complete`: pass。
 - task 仕様書品質ゲート: pass（P01..P13、legacy contract exemption を含め違反 0）。
 - content review: 77 skills pass。script LLM coverage: 62.2% から 63.8% へ回復し ratchet pass。
 - GitHub macOS/Python 3.11 で validator 分割後の sibling import 不足を検出し修正。既存 importlib test 2 系統を含む 78 tests が pass。
-- main 取り込み後の repository CI: 139 pass / 5 staged warning / 1 fail。`run-dev-graph-system-spec` を現行 behavior SHA `2e2bb6ad...` で 2,820 秒実走し、起動・完走・正規 entry point 呼出は PASS、goal fit は FAIL、overall は `DEGRADED` だった。これにより stale SHA は解消したが、上流 `system-spec-harness` の `HarnessHub-a0zd` / `HarnessHub-74mb` が evaluator PASS と node 登録を阻み、live-trial lint は downgraded / `DEGRADED` の 2 violation を維持する。修正後の再試走は `HarnessHub-p65r` で追跡する。
+- 旧 C19 trial は全生成を行い 2,820 秒で `DEGRADED` だった。上流 blocker 修正と bounded resume 経路の導入後、正式な fresh run は 75.065 秒・201,366 token で PASS。上流 Skill/network は 0 で、現行受領書は behavior closure SHA、transcript SHA、開始時刻を保持する poll-state SHA、独立 goal-evaluation に束縛した。再開時の時間リセットや usage 不明 token の受理は fail-closed で拒否する。
+- `lint-live-trial-verdict.py --all`: 9 verified / 6 missing warning（D13 record-only）/ violation 0。`lint-live-trial-task-contract.py --all`: violation 0。
+- system-spec-harness: 542 passed。harness-creator/live-trial: 1,043 passed。dev-graph: 981 passed。いずれも最終 content review と bounded evidence 更新後に全件再実行した。
 - global graph gate: 今回追加 node は適合。HEAD 由来 specification 5 件・task 2 件の frontmatter/heading 不足で fail し、`HarnessHub-n7gg` へ分離した。
 - repository に独立した `verify-pr-ready.sh` は存在しないため、上記 repository CI、focused test、task 仕様、system-spec、graph、`git diff --check` を公開前ゲートとして最終 HEAD で実行した。
 

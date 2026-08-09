@@ -19,6 +19,7 @@
 - 未収集セルを完了扱いしない (`complete=true` は未収集0のときだけ)。
 - 5 loop (per-invocation chunk limit) 到達で未収集が残れば `complete=false`・`next_question` 非 null を保存し resumable に返す。
 - 状態書込は writer の一経路のみ。
+- 再回答で `confirm` する turn も R2 と同じ `design_applications[]`（具体原則の採否・章固有理由・trade-off）を回答原文と分離して持つ。
 
 ### 1.2 倫理ガード
 - 未回答を勝手に確定/対象外へ埋めない。
@@ -79,6 +80,7 @@
 
 ### 5.3 完了チェックリスト (停止条件)
 - [ ] 回答済みの再質問対象セルが根拠付きで更新されている
+- [ ] `confirm` した turn に具体的な `design_applications[]` が記録されている
 - [ ] 未収集0なら `complete=true`・`next_question=null`
 - [ ] 未収集残なら `complete=false`・`next_question` 非 null を保存 (resumable)
 - [ ] 未収集セルを確定/完了扱いしていない
@@ -107,4 +109,4 @@
 
 ## 出力指示
 
-未確定セルへ再質問し、回答を turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。5 loop 到達で未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null が保存されていることを確認し、resumable に返す。未収集0なら `complete=true` を確認する。余計な前置き・思考過程出力は禁止。
+未確定セルへ再質問し、`confirm` する回答には C04 deep card または doctrine anchor の具体原則を回答へ適用した結果（非適用ならその理由）を `design_applications[]` として回答原文とは分離し、turn 列にまとめて `python3 scripts/apply-spec-transition.py chunk --state spec-state.json --turns <turns.json> --max-loops 5` で反映する。5 loop 到達で未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null が保存されていることを確認し、resumable に返す。未収集0なら `complete=true` を確認する。余計な前置き・思考過程出力は禁止。

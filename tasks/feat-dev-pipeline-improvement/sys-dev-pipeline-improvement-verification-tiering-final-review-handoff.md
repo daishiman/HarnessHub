@@ -74,6 +74,9 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - `HarnessHub-hz8m`: `condition` と `condition_signal` の対応、smell 分離、strict 日付境界、verdict 導出。
 - 561 行の validator を主 CLI と phase-order support module に分離。
 - `qa-216` / `qa-217` と specs/architecture/feature/docs/task へ仕様・設計を反映。
+- live-trial scenario ごとの wall-clock/token 上限、transcript token の重複排除集計、計測不能/超過時の fail-closed。
+- C19 の digest-bound PASS receipt 再利用、C02-only import、上流 Skill/network 0、陽性対照付き重複ロジック検査。
+- system-spec state schema 1.1 の design application 必須化と、legacy 1.0 の read-only/明示 migration 境界。
 
 ## Write scope と競合制約
 
@@ -117,6 +120,8 @@ branch は `devgraph/issue-verification-evaluator-cache-20260809`、base は rep
 - `HarnessHub-6nf1`: evaluator cache を実 evaluator 起動点へ配線する。
 - `HarnessHub-xcl3`: tier decision を下流 CI step の起動・blocking 集合へ配線する。
 - `HarnessHub-sy31`: deferred gate を定期的に消化する。
-- `HarnessHub-a0zd`: system-spec 章ごとに、確定要件へ作用した設計原則と非適用理由を具体描画できるよう compiler を修正する。
-- `HarnessHub-74mb`: audit verdict marker の探索を応答最終行へ限定し、prompt 内 marker で receipt が無効化されないようにする。
-- `HarnessHub-p65r`: 上記上流修正後に `run-dev-graph-system-spec` の live-trial を再実行し、goal fit `PASS` を取得する。
+- `HarnessHub-a0zd`: design application contract 1.1 と章別描画で解消し、system-spec-harness 537 tests PASS を確認した。
+- `HarnessHub-74mb`: hook の応答本文限定 marker 抽出と回帰 test で解消した。
+- `HarnessHub-xbzu`: C06 から担当外 decisions 監査を除外して解消した。
+- `HarnessHub-p65r`: bounded C19 live-trial r3 が 75.065 秒・201,366 token、goal fit/overall `PASS`。上流 Skill/network 0、C02-only 2 node 登録を現行 behavior digest、transcript SHA、poll-state SHA に束縛した。
+- 未完了は `HarnessHub-6nf1`、`HarnessHub-xcl3`、`HarnessHub-sy31` の既存 3 件であり、本追補はそれらを完了扱いにしない。

@@ -14,7 +14,8 @@
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "design_application_contract_version": "1.0",
   "categories": [{"id": "database", "label": "データベース"}],
   "platforms": ["web", "mobile", "tablet", "desktop-windows", "desktop-linux", "desktop-macos"],
   "matrix": {
@@ -25,7 +26,7 @@
       "<platform_id>": {"state": "未収集"}
     }
   },
-  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}}],
+  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}, "design_applications": [{"knowledge_ref": "ddd.md#Bounded Context", "principle": "Bounded Context", "applicability": "applied", "rationale": "...", "tradeoffs": ["..."]}]}],
   "approval_log": [{"id": "appr-001", "note": "..."}],
   "reopen_log": [{"category": "database", "platform": "web", "reason": "...", "from": "確定"}],
   "category_aggregate": {"<category_id>": "確定|収集中|未着手|対象外"},
@@ -248,6 +249,18 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - 複数論点を 1 entry へ束ねると、後段で論点ごとの中立性・遡及性を分離検証できない (C06 2026-07-17 の qa-014 指摘がこの型)。
 - 既登録 entry の `question` / `answer` は **逐語のまま改変しない** (writer は既存 `id` を上書きしない)。束ねが後から判明した場合は、既存 entry を編集せず **分離索引を新規 entry として追記** し、そこから元 entry を参照する (前例: qa-047 の再登録・qa-049 の逐語補記)。
 - **追記の実行経路と副作用**: qa_log 専用の op は存在しない。`apply_turn` は turn に `qa_id` があれば **`ops` の有無にかかわらず** entry を追記する (同 `id` が既存なら追記しない)。したがって通常の `confirm` turn も qa_log を残す。一方 `apply --op` は turn に `qa_id` を載せられないため、**qa_log を追記できるのは `chunk --turns` 経路だけ**である。matrix を動かさずに索引だけ追記したいときは `{"qa_id": "...", "question": "...", "answer": "...", "ops": []}` (セル op 空) の turn を渡す。ただしこの経路も `loop_count` を 0 から数え直し `complete` / `next_question` を再計算する (`run_chunk` の副作用) ため、matrix を動かさない索引追記でも `hearing_progress` が書き換わる点を承知して使うこと。
+
+### design_applications（回答原文と設計解釈の分離）
+
+セルを `confirm` する qa entry は、C04 deep card または doctrine anchor の具体原則が当該回答へどう効いたかを `design_applications[]` に記録する。これは利用者の発言を改変しないため `answer` へ混ぜず、compiler が章固有の適用根拠を描画するための設計解釈として分離する。
+
+- `knowledge_ref`: deep card path + section、または doctrine concern/authority を指す非空文字列。
+- `principle`: 採否を判断した具体原則名。単なる「設計知識」「上記原則」は不可。
+- `applicability`: `applied` / `not_applicable`。非適用も隠さず、理由を残す。
+- `rationale`: 確定回答に即した章固有の採否理由。全章同一の定型文は禁止。
+- `tradeoffs`: 採用費用、非採用時の損失、再評価条件などを最低1件持つ非空文字列配列。
+
+writer は上記形状を検証して qa entry に保存する。新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持ち、`validate-coverage-matrix.py --require-complete` が確定セルから参照される全 qa entry の非空・形状を fail-closed に再検査する。marker の無い旧 `schema_version: "1.0"` state は読み取りだけ可能で、writer の更新操作は fail-closed に拒否する。再開時は R1 の `init --state` を明示実行し、matrix を未収集へ戻して 1.1 へ移行する。この schema 境界が legacy 免除の終了条件であり、1.1 以降で marker 欠落を許さない。C03 は旧 entry を「未記録」と fail-visible に描画し、C05 の `design_knowledge_reflection` を存在確認だけで緑化させない。
 
 ## 単一 transition writer 契約
 

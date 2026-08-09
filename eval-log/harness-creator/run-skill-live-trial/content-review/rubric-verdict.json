@@ -1,35 +1,25 @@
 {
-  "target": {
-    "plugin": "harness-creator",
-    "skill": "run-skill-live-trial",
-    "skill_md_sha256": "a8cd7ffe36047610b892327fc847649731ffedc28ff148a29947814727045f6a"
-  },
+  "target": {"plugin": "harness-creator", "skill": "run-skill-live-trial", "skill_md_sha256": "153d02fc4025b02b8be70a4b98fa3c541df55d6b7fa984db1e187a83d7dc160a"},
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent-rubric-eval_c19-audit-fork-ledger-scope_20260804b",
-  "reviewed_at": "2026-08-04T13:25:00Z",
-  "iterations": 1,
+  "reviewer": "independent changed-skills content reviewer (focused combined rubric context)",
+  "reviewed_at": "2026-08-09T10:10:35Z",
+  "iterations": 2,
   "human_review_required": false,
+  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": [
-      "IN1",
-      "IN2",
-      "OUT1",
-      "OUT2",
-      "OUT3"
-    ],
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "least-privilege な権限境界: --audit-fork-ledger は trial repo (cwd) 直下かつファイル名 audit-fork-ledger.jsonl 固定でのみ受理され、resolve_audit_fork_ledger の relative_to(root) 検査と basename 検査という別軸の二重ガードで任意パスへの台帳投入や別名ファイルへのすり替えを構造的に排除している。",
-      "producer/consumer の env 変数名が同期している: live-trial-boot.py の _SESSION_SCOPED_ENV = (\"SYSTEM_SPEC_AUDIT_FORK_LEDGER\",) と plugins/system-spec-harness/hooks/record-audit-fork.py の LEDGER_ENV = \"SYSTEM_SPEC_AUDIT_FORK_LEDGER\" が完全一致しており、SKILL.md が説明する配線が実在するコードパスを指している (架空配線ではない)。",
-      "後方互換性が保たれている: 明示指定なし (audit_fork_ledger == \"\") のケースでは environment_overrides が従来どおり os.environ.get(name, \"\") にフォールバックし、『hook routing 変数は session 単位で呼び出し元の現在値を上書きし、過去 trial の残留値を継承させない』という既存不変条件を退行させていない。",
-      "エラーメッセージの診断性が高い: 『audit fork ledger escapes trial repo: <resolved path>』『audit fork ledger filename must be audit-fork-ledger.jsonl』は失敗の原因と実際に解決されたパスを呼び出し元へ明示し、fail-closed の理由が運用者に伝わる設計になっている。"
+      "IN1 の status/poll/state/resource budget は正負テストで二値化され、scenario cap の延長経路を閉じている。",
+      "IN2 は schema 自己検証、OUT1 は digest-bound fresh evaluator、OUT2 は transcript actual model、OUT3 は denylist と exact scoped reaper にそれぞれ機械証拠がある。",
+      "文書の8項目 task contract、immutable budget、poll-state/finalizer command が実装と一致する。"
     ],
     "negative_feedback": [],
-    "iteration": 1,
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "SKILL.md の per-trial SYSTEM_SPEC_AUDIT_FORK_LEDGER 記述 (187-190行) と live-trial-boot.py の resolve_audit_fork_ledger / boot() / main() を、権限境界の妥当性・producer/consumer 契約整合・後方互換・エラー診断性の観点で規範採点した。schemas/live-trial-verdict.schema.json 側 (verdict.json のスキーマ) への影響はなし。pytest tests/test_live_trial_*.py 一式 (88 passed) および tests/test_live_trial_boot_send.py + tests/test_live_trial_backend.py の絞り込み実行 (42 passed) の双方が green であることを確認した。issues/sys-audit-fork-ledger-forgery-20260728.md (台帳への直接 Write 偽装問題、未解決) は本変更のスコープ外であり、本変更自体はその脆弱性を悪化させも解消もしない (台帳パスの per-trial スコープ限定のみを扱う) ことを確認した。未解決 finding は 0 件。"
+  "notes": "Incremental focused combined rubric review。rubric 構造だけでなく prior blockers の負例と205 focused testsを確認した。"
 }

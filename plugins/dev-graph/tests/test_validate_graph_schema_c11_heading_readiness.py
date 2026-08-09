@@ -24,6 +24,15 @@ def load():
     return module
 
 
+def test_template_contract_copies_are_byte_identical():
+    """HarnessHub-o4zi: 実行場所で heading 判定が分岐しない。"""
+    root = PLUGIN.parents[1]
+    canonical = (PLUGIN / "templates/template-contract.json").read_bytes()
+
+    assert (root / ".dev-graph/templates/template-contract.json").read_bytes() == canonical
+    assert (root / "plugin-plans/dev-graph/templates/template-contract.json").read_bytes() == canonical
+
+
 @pytest.mark.parametrize(
     ("kind", "content_root"),
     [
@@ -234,3 +243,75 @@ def test_heading_missing_resolves_system_dev_planner_task_variants(tmp_path):
             by_node.setdefault(item["node"], []).append(item["detail"])
     assert "baseline-task" not in by_node
     assert set(by_node["incomplete-task"]) == {"正本仕様書", "実行契約"}
+
+
+def test_architecture_is_subject_to_heading_missing_like_specification(tmp_path):
+    """architecture も heading gate 対象にし、要件定義 import だけを条件付きで受理する。"""
+    mod = load()
+    assert mod.HEADING_MISSING_KINDS == {"architecture", "specification", "task"}
+
+    canonical = json.loads((PLUGIN / "templates/template-contract.json").read_text(encoding="utf-8"))
+    artifact_contract = {
+        "placeholder_tokens": canonical["placeholder_tokens"],
+        "common_frontmatter": {"required": []},
+        "artifacts": {"architecture": canonical["artifacts"]["architecture"]},
+    }
+    required = canonical["artifacts"]["architecture"]["required_sections"]
+
+    def frontmatter_for(node_id: str, path: str) -> str:
+        return "\n".join([
+            "---",
+            f"graph_node_id: {node_id}",
+            "artifact_kind: architecture",
+            f"file_path: {path}",
+            "template_id: architecture",
+            "template_version: 1.0.0",
+            "---",
+            "",
+        ])
+
+    bare = tmp_path / "architecture" / "bare.md"
+    bare.parent.mkdir()
+    bare.write_text(
+        frontmatter_for("bare-arch", "architecture/bare.md")
+        + "# 章 wrapper\n\n## 正本 (source of truth)\n\n参照。\n",
+        encoding="utf-8",
+    )
+    bare_node = {
+        "graph_node_id": "bare-arch",
+        "artifact_kind": "architecture",
+        "file_path": "architecture/bare.md",
+        "template_id": "architecture",
+        "template_version": "1.0.0",
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/testing-qa.md",
+        },
+    }
+    findings = mod.artifact_findings([bare_node], tmp_path, artifact_contract)
+    assert {item["code"] for item in findings} == {"heading_missing"}
+    assert {item["detail"] for item in findings} == set(required)
+
+    requirements = tmp_path / "architecture" / "requirements.md"
+    requirements.write_text(
+        frontmatter_for("req-arch", "architecture/requirements.md")
+        + "".join(
+            f"## {section}\n\n実装・検証済みの具体的内容。\n\n"
+            for section in canonical["artifacts"]["architecture"]["conditional_required_sections"][
+                "system_spec_requirements"
+            ]
+        ),
+        encoding="utf-8",
+    )
+    requirements_node = {
+        "graph_node_id": "req-arch",
+        "artifact_kind": "architecture",
+        "file_path": "architecture/requirements.md",
+        "template_id": "architecture",
+        "template_version": "1.0.0",
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/00-requirements-definition.md",
+        },
+    }
+    assert mod.artifact_findings([requirements_node], tmp_path, artifact_contract) == []

@@ -142,6 +142,14 @@ run ID、target、変更 path、matched rules、rules/source digest、checks、d
 
 selector、plan、decision、cache、signal consistency の focused pytest、system-spec coverage、task plan、repository CI、PR-ready gate を main 取り込み後の最終 HEAD で通す。
 
+### live-trial の資源予算と再利用契約
+
+- canonical positive scenario は `max_wall_clock_s` と `max_total_tokens` を正の整数で必須宣言する。poll と verdict の双方が同じ scenario を読み、環境変数や再試行で上限を引き上げてはならない。
+- token 使用量は main/subagent transcript の assistant message ID を重複排除し、input、cache creation、cache read、output の合計として記録する。計測不能または超過時は PASS を禁止する。
+- digest-bound PASS receipt が current な system-spec bundle は、version、artifact digest、coverage、source citation、evaluator verdict を検証して再利用できる。不在または stale の場合だけ正規の elicit→必要時 doc-fetch→compile→evaluator を実行する。
+- 再利用経路は上流 Skill 呼出し 0、network call 0、C02-only registration、source lineage/evaluator evidence 保持を受入条件とする。重複ロジック 0 の検査は upstream runtime の陽性対照を必須とし、検査対象 0 件による空の PASS を禁止する。
+- system-spec state schema 1.0 は read-only compatibility とし、design application を持つ 1.1 への移行は明示 `init` だけに限定する。既存確定状態を暗黙変換しない。
+
 ## 未決事項
 
 evaluator cache の実呼出元配線は `HarnessHub-6nf1`、tier による下流 CI 切替は `HarnessHub-xcl3`、deferred backlog の定期消化は `HarnessHub-sy31` が所有する。
@@ -155,3 +163,4 @@ evaluator cache の実呼出元配線は `HarnessHub-6nf1`、tier による下�
 - 正本: `system-spec/dev-workflow.md` の `qa-216` と `system-spec/testing-qa.md` の `qa-217`。
 - 仕様反映受領書: `docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md`。
 - 主な Beads: `HarnessHub-jb6r`、`HarnessHub-6fct`、`HarnessHub-hz8m`、`HarnessHub-6nf1`、`HarnessHub-xcl3`、`HarnessHub-true`、`HarnessHub-sy31`。
+- bounded C19 と上流修正: `HarnessHub-p65r`、`HarnessHub-a0zd`、`HarnessHub-74mb`、`HarnessHub-xbzu`。

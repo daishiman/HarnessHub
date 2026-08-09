@@ -1,35 +1,35 @@
 # Prompt: R2-delegate
 
-> run-system-spec-elicit→必要時run-system-spec-doc-fetch→run-system-spec-compile→assign-system-spec-completeness-evaluatorを引用実行する
+> digest-bound PASS receipt が current なら検証して再利用し、不在/stale 時だけ elicit→必要時doc-fetch→compile→evaluatorを引用実行する
 
 ## Layer 1: 基本定義層
 
 - `responsibility_id`: `R2-delegate`
 - `skill`: `run-dev-graph-system-spec`
-- 不変目的: run-system-spec-elicit→必要時run-system-spec-doc-fetch→run-system-spec-compile→assign-system-spec-completeness-evaluatorを引用実行する
+- 不変目的: digest-bound PASS receipt が current なら検証して再利用し、不在/stale 時だけ elicit→必要時doc-fetch→compile→evaluatorを引用実行する
 - 成功条件は Layer 2 の受入条件と Layer 5 の二値 checklist の同時充足とする。
 
 ## Layer 2: ドメイン層
 
 ### 入力契約
 
-- PASS preflight、spec state、user answers、doc-fetch必要性。
+- PASS preflight、任意の `system-spec/resume-receipt.json`、spec state、user answers、doc-fetch必要性。
 
 ### 出力契約
 
-- elicit/条件付きdoc-fetch/compile/evaluator receiptsとconfirmed artifacts。
+- current receipt の再利用検証結果、または elicit/条件付きdoc-fetch/compile/evaluator receipts と confirmed artifacts。
 
 ### 責務境界
 
-- 各ロジックを複製せずevaluatorを書換えずFAIL成果をimportしない。
+- receipt の digest/version/gate を検証せず再利用しない。各ロジックを複製せず evaluator を書換えず FAIL 成果を import しない。
 
 ### 受入条件
 
-- 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる。
+- resume 時は `validate-system-spec-resume.py` が exit 0 かつ upstream Skill 呼出し 0 件。build 時は正規 Skill 呼出しだけで coverage/source/evaluator gate 全 PASS になる。
 
 ## Layer 3: インフラ層
 
-- 使用資産: 4 system-spec-harness Skills。
+- 使用資産: `validate-system-spec-resume.py` と 4 system-spec-harness Skills (build 時のみ)。
 - path は caller repository context または skill-relative reference から解決し、環境固有の絶対 path を成果物へ保存しない。
 
 ## Layer 4: 共通ポリシー層
@@ -46,16 +46,16 @@
 
 ### 5.2 ゴール定義
 
-- 目的: run-system-spec-elicit→必要時run-system-spec-doc-fetch→run-system-spec-compile→assign-system-spec-completeness-evaluatorを引用実行する
+- 目的: digest-bound PASS receipt が current なら検証して再利用し、不在/stale 時だけ elicit→必要時doc-fetch→compile→evaluatorを引用実行する
 - 背景: この責務を隣接 responsibility から分離し、入力・出力・authority を一意にする。
-- 達成ゴール: elicit/条件付きdoc-fetch/compile/evaluator receiptsとconfirmed artifactsが生成され、受入条件を満たした状態になっている。
+- 達成ゴール: current receipt の再利用検証、または新規 canonical receipts と confirmed artifacts が受入条件を満たしている。
 
 ### 5.3 完了チェックリスト (ゴール到達の停止条件)
 
 - [ ] 宣言した入力が全て検証済みである
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
-- [ ] 正規Skill呼出しだけでcoverage/source/evaluator gate全PASSになる
+- [ ] resume/build の条件分岐どおりに coverage/source/evaluator gate 全 PASS が確認されている
 
 ### 5.4 実行方式
 
@@ -74,4 +74,3 @@
 ## 出力指示
 
 Layer 2 の入力・出力・責務境界・受入条件を正本としてこの単一責務だけを実行し、思考過程を出力せず、artifact/receipt、検証結果、未達 blocker だけを返す。
-

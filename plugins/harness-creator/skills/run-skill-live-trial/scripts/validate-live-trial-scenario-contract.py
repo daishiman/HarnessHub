@@ -39,6 +39,16 @@ def load_scenario(scenario_file: Path, scenario_id: str) -> dict:
         raise ValueError(
             f"scenario {scenario_id!r} must declare non-empty required_observations strings"
         )
+    # Every canonical scenario must be bounded.  Import lazily so this support
+    # module remains directly executable in isolation.
+    import importlib.util
+
+    budget_path = Path(__file__).resolve().parent / "live-trial-resource-budget.py"
+    spec = importlib.util.spec_from_file_location("live_trial_resource_budget", budget_path)
+    assert spec and spec.loader
+    budget_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(budget_module)
+    budget_module.resource_budget(matched[0])
     return matched[0]
 
 
@@ -185,6 +195,23 @@ def validate_task_contract(scenario: dict, task_path: Path) -> dict:
     }
 
 
+def validate_invocation_contract(scenario: dict, invoked_skills: list[str]) -> dict:
+    """Reject expensive or invalid nested Skill calls declared by the scenario."""
+    raw = scenario.get("forbidden_invoked_skills", [])
+    if not isinstance(raw, list) or not all(
+        isinstance(value, str) and value.strip() for value in raw
+    ):
+        raise ValueError("scenario forbidden_invoked_skills must be a string array")
+    if len(set(raw)) != len(raw):
+        raise ValueError("scenario forbidden_invoked_skills contains duplicates")
+    present = sorted(set(raw) & set(invoked_skills))
+    return {
+        "forbidden_invoked_skills": raw,
+        "present_forbidden_invoked_skills": present,
+        "matches": not present,
+    }
+
+
 def scenario_contract_blockers(contract: dict) -> list[str]:
     """scenario 契約の破れを goal blocker 文字列へ落とす。"""
     blockers: list[str] = []
@@ -221,5 +248,17 @@ def scenario_contract_blockers(contract: dict) -> list[str]:
         blockers.append(
             f"scenario {contract['scenario_id']} の task.md 手順契約が不一致: "
             + " / ".join(detail)
+        )
+    resource = contract.get("resource_usage")
+    if isinstance(resource, dict) and resource.get("violations"):
+        blockers.append(
+            f"scenario {contract['scenario_id']} の resource budget 違反: "
+            + " / ".join(resource["violations"])
+        )
+    invocations = contract.get("invocation_contract")
+    if isinstance(invocations, dict) and not invocations.get("matches", False):
+        blockers.append(
+            f"scenario {contract['scenario_id']} の禁止 Skill が実行された: "
+            + ", ".join(invocations["present_forbidden_invoked_skills"])
         )
     return blockers

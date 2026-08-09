@@ -1,0 +1,32 @@
+{
+  "result": "PASS",
+  "adoption": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": "初期状態から6つの content root、routing policy、graph store が第1パスで作成された。根拠: transcript.jsonl, fixture-repo/eval-log/run-dev-graph-init-receipt-pass1.json",
+    "2": "同一引数で init Skill を再実行し、36ファイルの集合・内容差分がゼロ。config=unchanged、graph=preserved_existing。根拠: transcript.jsonl, fixture-repo/eval-log/run-dev-graph-init-receipt-pass2.json",
+    "3": "編集した document.md の SHA-256 3e98e53acda7d2feca5f1df1bbe60f55f929ba25c118907380939cd997f162ab を第2パス後も保持。根拠: fixture-repo/.dev-graph/templates/document.md",
+    "4": "plugin.json から hooks/hooks.json が解決され、plugin 経路を受理し project fallback は重複防止理由付きで不適用。根拠: fixture-repo/eval-log/run-dev-graph-init-receipt-pass2.json, transcript.jsonl",
+    "5": "config の55文字列を再走査し、絶対パス、token、GitHub node ID、host固有パスはいずれもゼロ。根拠: fixture-repo/.dev-graph/config.json",
+    "6": "graph_revision=1、node_count=1 の非空グラフで C11 は valid=true、violations=[]。根拠: fixture-repo/.dev-graph/state/graph.json"
+  },
+  "skill_invocation_sequence": [
+    "dev-graph:run-dev-graph-init",
+    "dev-graph:run-dev-graph-node",
+    "dev-graph:run-dev-graph-init"
+  ],
+  "goal_seek_result": {
+    "result": "PASS",
+    "loops": 2,
+    "checklist": "6/6 PASS",
+    "blockers": [],
+    "original_goal_hash": "4e3fee6288f589997e759a2d929f4a7a7489caf16ec31a95abd9c4ca1b80e1ec"
+  },
+  "exit_codes": {
+    "validate_repo_config": 0,
+    "validate_graph_schema_C11": 0,
+    "goal_seek_structural_validation": 0,
+    "hook_contract_validation": 0,
+    "independent_composite_audit": 0
+  }
+}

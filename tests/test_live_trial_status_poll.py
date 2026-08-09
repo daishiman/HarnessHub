@@ -24,6 +24,7 @@ def _load(stem: str):
 
 status_mod = _load("live-trial-status")
 poll_mod = _load("live-trial-poll")
+finalize_mod = _load("live-trial-finalize")
 
 
 # ---- 合成 transcript fixture -------------------------------------------------
@@ -174,6 +175,58 @@ def test_poll_hard_cap(monkeypatch, tmp_path, capsys):
     assert "HARD_CAP" in out
 
 
+def _scenario_file(tmp_path, *, wall=60, tokens=1000):
+    path = tmp_path / "scenarios.json"
+    path.write_text(json.dumps({
+        "scenarios": [{
+            "scenario_id": "bounded",
+            "required_observations": ["bounded run completes"],
+            "resource_budget": {
+                "max_wall_clock_s": wall,
+                "max_total_tokens": tokens,
+            },
+        }],
+    }), encoding="utf-8")
+    return path
+
+
+def test_poll_scenario_wall_cap_cannot_be_raised_by_environment(
+    monkeypatch, tmp_path, capsys
+):
+    projects = _poll_env(monkeypatch, tmp_path, INTERVAL="1", HARD_CAP="7200")
+    _write_jsonl(projects / "u-1.jsonl", [dict(e) for e in FIXTURES["busy_gen"]])
+    rc = poll_mod.main([
+        "--state-file", str(tmp_path / "poll-state.json"),
+        "--scenario-file", str(_scenario_file(tmp_path, wall=1)),
+        "--scenario-id", "bounded",
+        str(tmp_path / "out" / "status.json"), "lt-test",
+    ])
+    assert rc == poll_mod.EXIT_HARD_CAP
+    assert "1s 到達" in capsys.readouterr().out
+
+
+def test_poll_scenario_token_cap_stops_immediately(monkeypatch, tmp_path, capsys):
+    projects = _poll_env(monkeypatch, tmp_path)
+    transcript = projects / "u-1.jsonl"
+    _write_jsonl(transcript, [{
+        "type": "assistant",
+        "message": {
+            "id": "msg-1",
+            "model": "claude-test",
+            "content": [],
+            "usage": {"input_tokens": 1, "output_tokens": 1},
+        },
+    }])
+    rc = poll_mod.main([
+        "--state-file", str(tmp_path / "poll-state.json"),
+        "--scenario-file", str(_scenario_file(tmp_path, tokens=2)),
+        "--scenario-id", "bounded",
+        str(tmp_path / "out" / "status.json"), "lt-test",
+    ])
+    assert rc == poll_mod.EXIT_TOKEN_CAP
+    assert "TOKEN_CAP (2 >= 2)" in capsys.readouterr().out
+
+
 def test_poll_state_file_persists_counters(monkeypatch, tmp_path):
     projects = _poll_env(monkeypatch, tmp_path, INTERVAL="1")
     _write_jsonl(projects / "u-1.jsonl", [dict(e) for e in FIXTURES["busy_gen"]])
@@ -198,7 +251,7 @@ def test_poll_state_file_persists_counters(monkeypatch, tmp_path):
     assert json.loads(state_file.read_text())["elapsed"] >= 1
 
 
-def test_poll_corrupt_state_file_recovers(monkeypatch, tmp_path):
+def test_poll_corrupt_state_file_fails_closed_without_reset(monkeypatch, tmp_path, capsys):
     projects = _poll_env(monkeypatch, tmp_path)
     _write_jsonl(projects / "u-1.jsonl", [dict(e) for e in FIXTURES["idle"]])
     state_file = tmp_path / "state.json"
@@ -207,4 +260,79 @@ def test_poll_corrupt_state_file_recovers(monkeypatch, tmp_path):
     marker.parent.mkdir()
     marker.write_text("{}", encoding="utf-8")
     assert poll_mod.main(["--state-file", str(state_file),
-                          str(marker), "lt-test"]) == poll_mod.EXIT_DONE
+                          str(marker), "lt-test"]) == poll_mod.EXIT_BLOCKED
+    assert "STATE_CORRUPT" in capsys.readouterr().out
+
+
+def test_poll_missing_usage_fails_closed(monkeypatch, tmp_path, capsys):
+    projects = _poll_env(monkeypatch, tmp_path)
+    _write_jsonl(projects / "u-1.jsonl", [{
+        "type": "assistant",
+        "message": {"id": "msg-no-usage", "model": "claude-test", "content": []},
+    }])
+    rc = poll_mod.main([
+        "--state-file", str(tmp_path / "poll-state.json"),
+        "--scenario-file", str(_scenario_file(tmp_path)),
+        "--scenario-id", "bounded",
+        str(tmp_path / "out" / "status.json"), "lt-test",
+    ])
+    assert rc == poll_mod.EXIT_BLOCKED
+    assert "TOKEN_UNMEASURED" in capsys.readouterr().out
+
+
+def test_scenario_poll_requires_persisted_state_file(monkeypatch, tmp_path):
+    _poll_env(monkeypatch, tmp_path)
+    with pytest.raises(SystemExit):
+        poll_mod.main([
+            "--scenario-file", str(_scenario_file(tmp_path)),
+            "--scenario-id", "bounded",
+            str(tmp_path / "out" / "status.json"), "lt-test",
+        ])
+
+
+def test_finalizer_reaps_even_when_verdict_fails():
+    calls = []
+
+    class Backend:
+        @staticmethod
+        def valid_session_name(value): return True
+        @staticmethod
+        def valid_run_id(value): return True
+        @staticmethod
+        def session_belongs_to_run(session, run_id): return True
+        @staticmethod
+        def reap(run_id, owner_pid): calls.append(("reap", run_id, owner_pid)); return []
+        @staticmethod
+        def has_session(session): return False
+
+    class Verdict:
+        @staticmethod
+        def main(_args): raise SystemExit(2)
+
+    rc = finalize_mod.finalize(
+        session="lt-run-1", run_id="run-1", owner_pid=123,
+        verdict_args=["--bad"], backend=Backend, verdict=Verdict,
+    )
+    assert rc == 2
+    assert calls == [("reap", "run-1", 123)]
+
+
+def test_finalizer_never_kills_session_when_tmux_ownership_mismatches():
+    calls = []
+
+    class Backend:
+        valid_session_name = staticmethod(lambda _value: True)
+        valid_run_id = staticmethod(lambda _value: True)
+        session_belongs_to_run = staticmethod(lambda _session, _run_id: True)
+        reap = staticmethod(lambda run_id, owner_pid: calls.append(("reap", run_id, owner_pid)) or [])
+        has_session = staticmethod(lambda _session: True)
+
+    class Verdict:
+        main = staticmethod(lambda _args: 0)
+
+    rc = finalize_mod.finalize(
+        session="lt-run-1", run_id="run-1", owner_pid=123,
+        verdict_args=["--ok"], backend=Backend, verdict=Verdict,
+    )
+    assert rc == 1
+    assert calls == [("reap", "run-1", 123)]

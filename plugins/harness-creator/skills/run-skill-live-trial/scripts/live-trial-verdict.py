@@ -151,12 +151,80 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def load_goal_evaluation(
+    workdir: Path, evaluation_path: Path | None, transcript_sha: str | None
+) -> tuple[dict | None, list[str]]:
+    """Bind a fresh evaluator artifact to the exact collected transcript."""
+    if evaluation_path is None:
+        return None, ["fresh evaluator artifact missing (--goal-evaluation required)"]
+    try:
+        resolved = evaluation_path.resolve(strict=True)
+        resolved.relative_to(workdir.resolve())
+    except (OSError, ValueError):
+        return None, ["goal evaluation must be an existing file inside workdir"]
+    try:
+        raw = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return None, [f"goal evaluation unreadable: {exc}"]
+    expected = {"result", "blockers", "evaluator", "transcript_sha256", "evidence_refs"}
+    errors: list[str] = []
+    if not isinstance(raw, dict) or set(raw) != expected:
+        return None, ["goal evaluation must contain exactly result/blockers/evaluator/"
+                      "transcript_sha256/evidence_refs"]
+    if raw.get("result") not in {"PASS", "FAIL"}:
+        errors.append("goal evaluation result must be PASS|FAIL")
+    blockers = raw.get("blockers")
+    if not isinstance(blockers, list) or any(
+        not isinstance(value, str) or not value.strip() for value in blockers
+    ):
+        errors.append("goal evaluation blockers must be a string array")
+    evaluator = raw.get("evaluator")
+    if (
+        not isinstance(evaluator, dict)
+        or set(evaluator) != {"mode", "id"}
+        or evaluator.get("mode") != "fresh-independent-context"
+        or not isinstance(evaluator.get("id"), str)
+        or not evaluator["id"].strip()
+    ):
+        errors.append("goal evaluation evaluator must identify a fresh-independent-context")
+    if transcript_sha is None or raw.get("transcript_sha256") != transcript_sha:
+        errors.append("goal evaluation transcript_sha256 does not match collected transcript")
+    refs = raw.get("evidence_refs")
+    if not isinstance(refs, list) or not refs:
+        errors.append("goal evaluation evidence_refs must be a non-empty array")
+    else:
+        for ref in refs:
+            if not isinstance(ref, str) or not ref:
+                errors.append("goal evaluation evidence_ref must be a non-empty string")
+                continue
+            target = (workdir / ref.partition("#")[0]).resolve()
+            try:
+                target.relative_to(workdir.resolve())
+            except ValueError:
+                errors.append(f"goal evaluation evidence_ref escapes workdir: {ref}")
+                continue
+            if not target.is_file():
+                errors.append(f"goal evaluation evidence_ref missing: {ref}")
+    if errors:
+        return None, errors
+    return {
+        "evidence_ref": str(resolved.relative_to(workdir.resolve())),
+        "sha256": sha256_file(resolved),
+        "result": raw["result"],
+        "blockers": blockers,
+        "evaluator": evaluator,
+        "transcript_sha256": raw["transcript_sha256"],
+        "evidence_refs": refs,
+    }, []
+
+
 _BEHAVIOR = _load_sibling("build-skill-behavior-closure")
 behavior_closure_files = _BEHAVIOR.behavior_closure_files
 skill_dir_tree_sha = _BEHAVIOR.skill_dir_tree_sha
 
 
 _SCENARIO = _load_sibling("validate-live-trial-scenario-contract")
+_BUDGET = _load_sibling("live-trial-resource-budget")
 _FLAG_PATTERN = _SCENARIO._FLAG_PATTERN
 load_scenario = _SCENARIO.load_scenario
 parse_observation_claims = _SCENARIO.parse_observation_claims
@@ -164,7 +232,12 @@ validate_evidence_claims = _SCENARIO.validate_evidence_claims
 observation_coverage = _SCENARIO.observation_coverage
 args_divergence = _SCENARIO.args_divergence
 validate_task_contract = _SCENARIO.validate_task_contract
+validate_invocation_contract = _SCENARIO.validate_invocation_contract
 scenario_contract_blockers = _SCENARIO.scenario_contract_blockers
+resource_budget = _BUDGET.resource_budget
+transcript_token_usage = _BUDGET.transcript_token_usage
+budget_violations = _BUDGET.budget_violations
+poll_wall_usage = _BUDGET.poll_wall_usage
 
 
 def derive_overall(*, launch: str, completion: str, goal_result: str | None,
@@ -282,6 +355,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--completion", required=True, choices=["PASS", "FAIL"])
     ap.add_argument("--goal-result", default="", choices=["", "PASS", "FAIL"],
                     help="fresh evaluator の達成判定。未実施は省略 (--no-goal-eval 相当)")
+    ap.add_argument(
+        "--goal-evaluation",
+        default="",
+        help="fresh evaluator の JSON artifact (workdir 内・transcript digest 束縛)",
+    )
     ap.add_argument("--blocker", action="append", default=[], help="goal 未達点 (複数可)")
     ap.add_argument("--nudge-count", type=int, default=0)
     ap.add_argument("--gate-response-count", type=int, default=0)
@@ -299,6 +377,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--permissions-mode", default="bypassPermissions")
     ap.add_argument("--boot-s", type=float, default=None)
     ap.add_argument("--poll-exit", default="")
+    ap.add_argument("--poll-state", default="", help="scenario wall time の正本 poll-state.json")
     ap.add_argument("--wall-clock-s", type=float, default=None)
     ns = ap.parse_args(argv)
 
@@ -337,7 +416,22 @@ def main(argv: list[str] | None = None) -> int:
 
     goal_result = ns.goal_result or None
     blockers = list(ns.blocker)
-    if goal_result is None and not blockers:
+    goal_evaluation, goal_evaluation_errors = load_goal_evaluation(
+        workdir,
+        Path(ns.goal_evaluation) if ns.goal_evaluation else None,
+        transcript_sha,
+    )
+    if goal_evaluation is not None:
+        if goal_result is not None and goal_result != goal_evaluation["result"]:
+            goal_evaluation_errors.append(
+                "--goal-result does not match bound goal evaluation artifact"
+            )
+        goal_result = goal_evaluation["result"]
+        blockers.extend(goal_evaluation["blockers"])
+    if goal_evaluation_errors and not ns.blocked:
+        goal_result = "FAIL"
+        blockers.extend(goal_evaluation_errors)
+    elif goal_result is None and not blockers:
         blockers = ["goal 判定未実施 (trial が完走せず fresh evaluator を起動できない)"]
 
     # 起動の機械 gate: transcript が取れているのに被験 skill の Skill 呼出しが1件も無ければ
@@ -398,6 +492,24 @@ def main(argv: list[str] | None = None) -> int:
             print(f"[ERROR] {exc}", file=sys.stderr)
             return 2
         observed, unobserved = observation_coverage(required_observations, claims)
+        budget = resource_budget(scenario)
+        token_usage = transcript_token_usage(transcript_dst)
+        try:
+            wall_usage = poll_wall_usage(
+                workdir, Path(ns.poll_state) if ns.poll_state else None
+            )
+            measured_wall_clock_s = wall_usage["wall_clock_s"]
+        except ValueError as exc:
+            wall_usage = {
+                "wall_clock_s": None,
+                "poll_state_ref": None,
+                "poll_state_sha256": None,
+            }
+            measured_wall_clock_s = None
+            blockers.append(f"poll-state-invalid:{exc}")
+        resource_violations = budget_violations(
+            budget, wall_clock_s=measured_wall_clock_s, token_usage=token_usage
+        )
         scenario_contract = {
             "scenario_file": ns.scenario_file,
             "scenario_id": ns.scenario_id,
@@ -408,11 +520,21 @@ def main(argv: list[str] | None = None) -> int:
                 scenario.get("task_args_template", ""), ns.trial_args
             ),
             "task_contract": validate_task_contract(scenario, workdir / "task.md"),
+            "invocation_contract": validate_invocation_contract(scenario, invoked_skills),
+            "resource_budget": budget,
+            "resource_usage": {
+                **wall_usage,
+                "tokens": token_usage,
+                "violations": resource_violations,
+            },
         }
         contract_blockers = scenario_contract_blockers(scenario_contract)
         if contract_blockers and not ns.blocked:
             goal_result = "FAIL"
             blockers.extend(contract_blockers)
+
+        if resource_violations and not ns.blocked:
+            ns.completion = "FAIL"
 
     goal_fit, verdict, auto_reason = derive_overall(
         launch=launch, completion=ns.completion, goal_result=goal_result,
@@ -431,6 +553,7 @@ def main(argv: list[str] | None = None) -> int:
             "result": goal_result or "FAIL",
             "blockers": blockers,
         },
+        "goal_evaluation": goal_evaluation,
         "invoked_skills": invoked_skills,
         "missing_goal_seek_artifacts": missing_wiring,
         "goal_seek_evidence_violations": wiring_violations,
@@ -454,7 +577,10 @@ def main(argv: list[str] | None = None) -> int:
         "timeline": {
             "boot_s": ns.boot_s,
             "poll_exit": ns.poll_exit or None,
-            "wall_clock_s": ns.wall_clock_s,
+            "wall_clock_s": (
+                scenario_contract["resource_usage"]["wall_clock_s"]
+                if scenario_contract is not None else ns.wall_clock_s
+            ),
         },
     }
     if ns.scenario_id:

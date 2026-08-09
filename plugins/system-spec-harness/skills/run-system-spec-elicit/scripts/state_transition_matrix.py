@@ -12,8 +12,47 @@ from state_transition_common import (
     has_entry,
     normalize_serves,
 )
-
 CATEGORY_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+APPLICATION_STATES = {"applied", "not_applicable"}
+DESIGN_APPLICATION_CONTRACT_VERSION = "1.0"
+CURRENT_STATE_SCHEMA_VERSION = "1.1"
+
+
+def normalize_design_applications(raw: object) -> list[dict]:
+    """Validate chapter-specific design interpretation separately from Q&A text."""
+    if not isinstance(raw, list) or not raw:
+        raise TransitionError("design_applications は非空配列必須")
+    normalized: list[dict] = []
+    for index, item in enumerate(raw):
+        label = f"design_applications[{index}]"
+        if not isinstance(item, dict):
+            raise TransitionError(f"{label} は object 必須")
+        for key in ("knowledge_ref", "principle", "rationale"):
+            value = item.get(key)
+            if not isinstance(value, str) or not value.strip():
+                raise TransitionError(f"{label}.{key} は非空文字列必須")
+        applicability = item.get("applicability")
+        if applicability not in APPLICATION_STATES:
+            raise TransitionError(
+                f"{label}.applicability={applicability!r} は applied|not_applicable 必須"
+            )
+        tradeoffs = item.get("tradeoffs")
+        if (
+            not isinstance(tradeoffs, list)
+            or not tradeoffs
+            or any(not isinstance(value, str) or not value.strip() for value in tradeoffs)
+        ):
+            raise TransitionError(f"{label}.tradeoffs は非空文字列の配列必須")
+        normalized.append(
+            {
+                "knowledge_ref": item["knowledge_ref"].strip(),
+                "principle": item["principle"].strip(),
+                "applicability": applicability,
+                "rationale": item["rationale"].strip(),
+                "tradeoffs": [value.strip() for value in tradeoffs],
+            }
+        )
+    return normalized
 
 
 def derive_aggregate(cells: list[str]) -> str:
@@ -48,7 +87,9 @@ def count_unresolved(state: dict) -> int:
 
 def bootstrap_state() -> dict:
     return {
-        "schema_version": "1.0", "categories": [], "platforms": list(CANONICAL_PLATFORMS),
+        "schema_version": CURRENT_STATE_SCHEMA_VERSION,
+        "design_application_contract_version": DESIGN_APPLICATION_CONTRACT_VERSION,
+        "categories": [], "platforms": list(CANONICAL_PLATFORMS),
         "matrix": {}, "qa_log": [], "approval_log": [], "reopen_log": [],
         "category_aggregate": {}, "targets": [], "requirements_foundation": empty_foundation(),
         "decisions": [], "knowledge_candidates": [],
@@ -71,8 +112,34 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
     ids = [item.get("id") for item in categories if isinstance(item, dict)]
     if len(ids) != len(categories) or len(set(ids)) != len(ids):
         raise TransitionError("taxonomy.categories の id が不正または重複")
-    state = dict(existing_state or bootstrap_state())
-    state["schema_version"] = "1.0"
+    if existing_state is None:
+        state = bootstrap_state()
+    else:
+        if not isinstance(existing_state, dict):
+            raise TransitionError("既存 state は object 必須")
+        schema_version = existing_state.get("schema_version")
+        contract_version = existing_state.get("design_application_contract_version")
+        if schema_version == "1.0":
+            if contract_version is not None:
+                raise TransitionError(
+                    "legacy schema 1.0 は design_application_contract_version 欠落時だけ"
+                    "明示 migration 可能"
+                )
+        elif schema_version == CURRENT_STATE_SCHEMA_VERSION:
+            if contract_version != DESIGN_APPLICATION_CONTRACT_VERSION:
+                raise TransitionError(
+                    "schema 1.1 は design_application_contract_version=1.0 必須。"
+                    "marker 欠落/不一致を init で修復してはならない"
+                )
+        else:
+            raise TransitionError(
+                "既存 state の schema_version は exact 1.0 legacy または exact 1.1 current 必須"
+            )
+        state = dict(existing_state)
+    # init は legacy 1.0 state の明示 migration boundary でもある。matrix は未収集へ
+    # 再初期化されるため、旧 qa entry を design-app contract 適合と偽装せず 1.1 へ進められる。
+    state["schema_version"] = CURRENT_STATE_SCHEMA_VERSION
+    state["design_application_contract_version"] = DESIGN_APPLICATION_CONTRACT_VERSION
     state["categories"] = [{"id": item["id"], "label": item["label"]} for item in categories]
     state["platforms"] = list(CANONICAL_PLATFORMS)
     state["matrix"] = {
@@ -206,15 +273,44 @@ def set_targets(state: dict, targets: list) -> None:
 
 def apply_turn(state: dict, turn: dict) -> None:
     qa_id = turn.get("qa_id")
+    ops = turn.get("ops", [])
+    normalized_design_applications: list[dict] | None = None
+    if state.get("design_application_contract_version") == DESIGN_APPLICATION_CONTRACT_VERSION:
+        confirmed_refs = {
+            op.get("qa_ref") or qa_id
+            for op in ops
+            if isinstance(op, dict) and op.get("action") == "confirm"
+        }
+        for qa_ref in confirmed_refs:
+            if not qa_ref:
+                continue
+            if qa_ref == qa_id and not has_entry(state["qa_log"], qa_ref):
+                normalized_design_applications = normalize_design_applications(
+                    turn.get("design_applications")
+                )
+                continue
+            existing = next(
+                (entry for entry in state["qa_log"] if entry.get("id") == qa_ref),
+                None,
+            )
+            if existing is None:
+                raise TransitionError(
+                    f"schema 1.1 の confirm は qa_log entry を参照する必要がある: {qa_ref}"
+                )
+            normalize_design_applications(existing.get("design_applications"))
     if qa_id and not has_entry(state["qa_log"], qa_id):
         entry = {"id": qa_id, "question": turn.get("question", ""), "answer": turn.get("answer", "")}
         if "source" in turn:
             entry["source"] = turn["source"]
+        if normalized_design_applications is not None:
+            entry["design_applications"] = normalized_design_applications
+        elif "design_applications" in turn:
+            entry["design_applications"] = normalize_design_applications(turn["design_applications"])
         state["qa_log"].append(entry)
     approval_id = turn.get("approval_id")
     if approval_id and not has_entry(state["approval_log"], approval_id):
         state["approval_log"].append({"id": approval_id, "note": turn.get("approval_note", "")})
-    for raw_op in turn.get("ops", []):
+    for raw_op in ops:
         op = dict(raw_op)
         if op.get("action") == "confirm" and not op.get("qa_ref") and qa_id:
             op["qa_ref"] = qa_id

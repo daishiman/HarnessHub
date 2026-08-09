@@ -20,7 +20,7 @@ prefix: run
 effect: local-artifact
 owner: team-platform
 since: 2026-07-02
-version: 0.2.0
+version: 0.3.0
 schema_refs:
   - schemas/live-trial-verdict.schema.json
 reference_refs:
@@ -36,7 +36,9 @@ script_refs:
   - scripts/live-trial-send.py
   - scripts/live-trial-status.py
   - scripts/live-trial-poll.py
+  - scripts/live-trial-resource-budget.py
   - scripts/live-trial-verdict.py
+  - scripts/live-trial-finalize.py
   - scripts/build-skill-behavior-closure.py
   - scripts/validate-live-trial-scenario-contract.py
   - scripts/validate-goal-seek-evidence.py
@@ -52,7 +54,7 @@ feedback_contract: # per-skill 評価基準(SSOT=scripts/feedback_contract_ssot.
   criteria:
     - id: IN1
       loop_scope: inner
-      text: live-trial-status の4状態分類と live-trial-poll の終端4分岐および state-file 永続化が合成 transcript fixture の pytest で機械検証される
+      text: live-trial-status の4状態分類と live-trial-poll の終端分岐、scenario 時間/token 予算、state-file 永続化が合成 transcript fixture の pytest で機械検証される
       verify_by: test
     - id: IN2
       loop_scope: inner
@@ -117,7 +119,7 @@ fork subagent では自走 / 入れ子 Skill / 対話 gate / 本番 hook ロー�
 ### 完了チェックリスト (Checklist)
 
 - [ ] 被験 skill が denylist 外で、workdir が `eval-log/<plugin>/<skill>/live-trial/<run-id>/` に作られた
-- [ ] task.md が契約 7 項目 (下表) を満たし、`READY:` 確認後にファイル経由で送信された
+- [ ] task.md が契約 8 項目 (下表) を満たし、`READY:` 確認後にファイル経由で送信された
 - [ ] poll が終端 exit (DONE / STALL / GATE / HARD_CAP) で閉じ、`--state-file` で counter が呼び越し永続化された
 - [ ] out/ + pane.txt + transcript.jsonl の 3 点が workdir に揃った (回収完了条件)
 - [ ] fresh evaluator が PASS | FAIL + blocker 列挙のみを返した (点数出力なし。正本 = goal-seek-paradigm.md 達成判定節)
@@ -155,7 +157,7 @@ python3 "$SCRIPTS/plan-live-trials.py" \
 - session 名 = `lt-<run-id>-<slug>` (一意。固定名は並行 trial が boot の kill-session で互いを殺す)
 - `references/task-template.md` を `<workdir>/task.md` へ cp し `{{...}}` を Edit で置換 (作文より速く契約漏れを防ぐ)
 
-**task.md 契約 (7 項目必須 — テンプレの構造がこれを満たす)**:
+**task.md 契約 (8 項目必須 — テンプレの構造がこれを満たす)**:
 
 | # | 項目 | 形 |
 |---|---|---|
@@ -166,6 +168,7 @@ python3 "$SCRIPTS/plan-live-trials.py" \
 | 5 | 裁量封じ | 「skill の手順に忠実に従い、人手の追加判断・省略をしない」を明記 |
 | 6 | scenario 契約の転記 | scenario がある run では、`args` は `task_args_template` の placeholder だけを実値へ置換して起こし、`required_observations` を**逐語で**転記する (要約・言い換え・取捨選択は禁止) |
 | 7 | task 手順契約 | scenario に `task_contract` がある場合、`required_fragments` を含み `forbidden_fragments` を含まない task.md にする |
+| 8 | resource 予算 | scenario の `resource_budget.max_wall_clock_s` / `max_total_tokens` を poll と verdict の両方で強制する |
 
 項目 6 の理由: task.md が scenario 契約から逸れると、判定の正本が「scenario」と「その run の task.md」の 2 つに分裂し、verdict は後者に対して緑になる。実際 `run-dev-graph-decompose` の再走で、契約が明文で「満たさない」と否定した状態のまま verdict が PASS になる事故が起きた。契約に合わない args で走らせたくなったときは、**task.md を書き換えるのではなく scenario を改訂して `scenario_id` を bump する** — bump は `plan-live-trials.py` が旧証跡を `scenario-contract-superseded` として失効させる操作でもある。
 
@@ -205,10 +208,12 @@ SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-send.py "$SESSION" "$WORKDI
 ### poll
 
 ```bash
-SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORKDIR/poll-state.json" "$WORKDIR/out/status.json" "$SESSION"
+SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORKDIR/poll-state.json" \
+  --scenario-file "$SCENARIO_FILE" --scenario-id "$SCENARIO_ID" \
+  "$WORKDIR/out/status.json" "$SESSION"
 ```
 
-**ロングラン前提・成果物ベース**。glob は完了マーカー限定 (契約 #2)。Bash ツールの timeout 上限 (600s) で poll が切れたら**同一コマンド (同じ `--state-file`) をそのまま再呼び**する — state-file が counter を JSON で呼び越し永続化するので上限判定が実効する (`--max-ticks` の exit 5 も同じ「継続の合図」)。state-file なしの長時間 poll は STALL / 絶対打切りが構造的に観測不能 — 禁止。`WARN: HARD_CAP 80%` 行が出たら残り時間内に終端する見込みを評価し、正常進行なら env `HARD_CAP` を上げて続行 (到達後 kill は run 全損)。長い無音 tool 呼び (codex 委譲等) を含む被験 skill は env `STALL_LIMIT` を実測より長く前置する。
+**成果物ベースかつ scenario 予算内**で実行する。glob は完了マーカー限定 (契約 #2)。scenario run では `--scenario-file` / `--scenario-id` を省略してはいけない。poll は scenario 上限と env 上限の小さい方を採用するため、`HARD_CAP` を上げても scenario 予算は延長できない。token は main/subagent transcript の assistant message id を重複排除し、input/cache creation/cache read/output の合計で数える。Bash ツールの timeout で poll が切れた場合だけ、同一 `--state-file` で再呼びする。
 
 | exit | 意味 | 次の行動 |
 |---|---|---|
@@ -217,6 +222,7 @@ SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORK
 | 2 STALL | 進捗停止 | 下の STALL 分岐表を上から順に |
 | 1 HARD_CAP | 絶対打切り (安全弁) | 記録 → kill-session → verdict `--blocked` |
 | 5 TICK_BUDGET | tick 予算消化 | 同一 state-file で再呼び (エラーではない) |
+| 6 TOKEN_CAP | scenario token 予算到達 | 記録 → kill-session → verdict `--blocked`。上限延長禁止 |
 
 ### STALL 分岐表 (上から順。各行 1 回判定で次へ — 裁量で順序を入れ替えない)
 
@@ -235,23 +241,25 @@ SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORK
 
 ### goal verification (fresh evaluator)
 
-**Agent ツールで fresh evaluator** (orchestrator と別個体) を起動し、成果物 + `transcript.jsonl` (ツール呼び・入れ子 Skill・エラーが残る一次情報) を渡して **target skill の goal を満たすか**を独立判定させる。出力は **PASS | FAIL + blocker 列挙のみ。点数出力は禁止** — 正本は `goal-seek-paradigm.md` の達成判定 (GOAL VERIFICATION) 節。「起動/完走したか」ではなく「description が約束した成果が出ているか」を問う。
+**Agent ツールで fresh evaluator** (orchestrator と別個体) を起動し、成果物 + `transcript.jsonl` (ツール呼び・入れ子 Skill・エラーが残る一次情報) を渡して **target skill の goal を満たすか**を独立判定させる。出力は **PASS | FAIL + blocker 列挙のみ。点数出力は禁止** — 正本は `goal-seek-paradigm.md` の達成判定 (GOAL VERIFICATION) 節。「起動/完走したか」ではなく「description が約束した成果が出ているか」を問う。結果は workdir 内 `goal-evaluation.json` に保存し、`evaluator.mode=fresh-independent-context`、評価者 ID、evidence refs、回収済み transcript の SHA-256 を必須にする。verdict はこの artifact の digest と transcript digest の一致を検証し、`--goal-result` の自己申告だけでは PASS にしない。
 
 ### verdict + 掃除
 
 ```bash
-python3 $SCRIPTS/live-trial-verdict.py --workdir "$WORKDIR" --target-skill "<plugin:skill>" \
+python3 $SCRIPTS/live-trial-finalize.py --session "$SESSION" --run-id "$RUN_ID" \
+  --owner-pid "$OWNER_PID" -- \
+  --workdir "$WORKDIR" --target-skill "<plugin:skill>" \
   --skill-dir "<被験skillディレクトリ>" --session-id "$SESSION_ID" --requested-model "$MODEL" \
+  --goal-evaluation "$WORKDIR/goal-evaluation.json" \
+  --poll-state "$WORKDIR/poll-state.json" \
   --goal-seek-eval-root "<被験repoのeval-log>" \
   --launch PASS --completion PASS --goal-result PASS --nudge-count 0 --gate-response-count 0 \
   --poll-exit DONE [--proof] [--blocked] \
   [--scenario-id "<stable id>" --scenario-file "<required_observations の正本 JSON>" \
    --observation "1=<evidence ref>" --observation "2=<evidence ref>" ...]
-python3 $SCRIPTS/live-trial-backend.py kill-session "$SESSION"
-python3 $SCRIPTS/live-trial-backend.py reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"
 ```
 
-verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts、`script_refs`/`reference_refs`/`responsibility_refs`/`schema_refs`、native manifest/hooks/package-contract、direct dependency manifest/hooksを含み、missing/escape/undeclared cross-plugin refはfail-closed / `transcript_sha256` / `scenario_origin` / `environment` / `tier` + `downgrade_reason` を含む)。**DONE / STALL / HARD_CAP / 中断のどの経路でも kill-session + `reap --run-id "$RUN_ID" --owner-pid "$OWNER_PID"` を必ず実行** (残すと claude プロセスがリークする)。boot は tmux session に `@lt_run_id` と `@lt_owner_pid` を記録し、通常の reap は session 名の prefix・`@lt_run_id`・READY が返した `@lt_owner_pid` の 3 点が一致する自分の trial だけを回収する。同じ run-id の並列 sibling は PID が違うため対象外。tmux server 全体の孤児を管理者が回収するときだけ `reap --all` を明示する。引数なしの reap は安全のため拒否される。
+verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts/宣言 refs、native manifest/hooks/package-contract、direct dependency manifest/hooksを含む)。scenario の wall-clock は呼出側 `--wall-clock-s` でなく、必須 `poll-state.json` の開始・最終観測時刻/elapsed から再計算し、その SHA を verdict へ束縛する。**DONE / STALL / HARD_CAP / 中断の全経路で必ず `live-trial-finalize.py` を使う**。finalizer は verdict が usage/schema error で失敗しても `finally` で scoped `reap(run-id, owner PID)` を実行し、所有 metadata が一致しない session を直接 kill しない。boot は tmux session に `@lt_run_id` と `@lt_owner_pid` を記録し、通常の reap は session 名の prefix・`@lt_run_id`・READY が返した `@lt_owner_pid` の 3 点が一致する自分の trial だけを回収する。同じ run-id 内の別 owner も対象外である。
 
 ## 判定ロジック
 
@@ -285,7 +293,7 @@ python3 -m pytest -q tests/test_live_trial_*.py       # 責務別 fixture の po
 - **完了検知の急所**: busy 中の jsonl は完全無音 (長 Bash で 200s 級) — 経過時間で busy 判定しない。kill/crash したセッションは jsonl 上 BUSY_GENERATING のまま凍結 → tmux 生存確認が最終 fallback。TUI 層の busy 判定は ASCII マーカー (経過秒/token) のみ。詳細と版依存性は `references/transcript-jsonl.md` (spec-drift 監視対象)。
 - **claude 起動は `--dangerously-skip-permissions`**。trust 済み project が前提 (未 trust だと boot がプロンプトで止まる)。
 - **外部 CLI 依存 skill** (codex/cursor 委譲等) は usage limit で成果物が空振りしうる。
-- **絶対 timeout は持たない** (ロングラン前提)。進捗停止 (`stall_limit_s`) と安全弁 (`hard_cap_s`) のみ。
+- **scenario の絶対上限を持つ**。`max_wall_clock_s` / `max_total_tokens` は実行中に延長せず、到達または計測不能で BLOCKED とする。
 - **tmux 依存**: 輸送層の唯一の境界は `live-trial-backend.py` (版依存モジュール境界)。plugin.json `requirements.external_clis` に登録済み。不在は BLOCKED。
 
 ## 関連
