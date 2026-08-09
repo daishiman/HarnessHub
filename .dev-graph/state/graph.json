@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1441,
+  "graph_revision": 1447,
   "nodes": [
     {
       "acceptance": [
@@ -54067,6 +54067,350 @@
       "title": "HEAD 由来の dev-graph artifact 7 件を現 template 契約へ移行する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-09T04:02:01.436145Z"
+    },
+    {
+      "acceptance": [
+        "通常文書が500行を超えない",
+        "移動前の意味と参照を保持する",
+        "artifact placement と graph schema を通過する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-system-specification-implementation-writebacks.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "総合仕様の500行上限を守るため、既存の実装反映索引を単一責務の仕様分冊として登録する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-09T00:00:00Z",
+      "depends_on": [
+        "spec-harness-hub-requirements"
+      ],
+      "domain": "platform",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-system-specification-implementation-writebacks.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる",
+      "graph_node_id": "spec-harness-hub-system-specification-implementation-writebacks",
+      "implementation_readiness": {
+        "checked_at": "2026-08-09T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する",
+      "related_nodes": [
+        "arch-harness-hub-dev-workflow",
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-system-specification-implementation-writebacks.md",
+        "specs/harness-hub-system-specification.md",
+        "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+      ],
+      "scope_in": [
+        "共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の既存実装 writeback"
+      ],
+      "scope_out": [
+        "新しい製品要求",
+        "公開 API・DB schema・認証認可・UI・配備単位の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-09T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "40ff8d45a094fe76e250d4585094cf5fe26f6329e4025db6fc6a9fe613347aff",
+        "source_path": "specs/harness-hub-system-specification.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-09",
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "writeback",
+        "document-split",
+        "traceability"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub システム要件仕様 — 実装 writeback 分冊",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-09T13:10:16.743319Z"
+    },
+    {
+      "acceptance": [
+        "親文書との相互リンクがある",
+        "通常文書が500行を超えない",
+        "artifact placement と graph schema を通過する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "infrastructure"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-infrastructure-operations-addenda.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "infrastructure 本体の行数上限を守るため、運用履歴を infrastructure subtype の追補へ責務分割する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-09T00:00:00Z",
+      "depends_on": [
+        "arch-harness-hub-infrastructure"
+      ],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/harness-hub-infrastructure-operations-addenda.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "SLO、OAuth rollout、deploy 鮮度の各判断から親 architecture、system-spec、受領書へ到達できる",
+      "graph_node_id": "arch-harness-hub-infrastructure-operations-addenda",
+      "implementation_readiness": {
+        "checked_at": "2026-08-09T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "infrastructure 本体を300行以下に保ちながら確定済み運用履歴の追跡性を維持する",
+      "related_nodes": [
+        "spec-harness-hub-requirements",
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "resource_scope": [
+        "architecture/harness-hub-infrastructure-operations-addenda.md",
+        "architecture/harness-hub-infrastructure.md",
+        "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+      ],
+      "scope_in": [
+        "確定済み SLO 運用",
+        "OAuth rollout",
+        "build identity と deploy 鮮度の運用履歴"
+      ],
+      "scope_out": [
+        "Cloudflare 構成変更",
+        "認証方式変更",
+        "SLO 値変更",
+        "新しい配備単位"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-09T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "476b0ddc8e552604c5b4cf463dac4982a48c459136ad9e0d3ea00a67ec21a585",
+        "source_path": "architecture/harness-hub-infrastructure.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-09",
+      "status": "active",
+      "tags": [
+        "infrastructure",
+        "operations",
+        "document-split",
+        "traceability"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "Harness Hub infrastructure 運用追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-09T13:10:51.293550Z"
+    },
+    {
+      "acceptance": [
+        "中央受領書に検証と仕様影響を記録する",
+        "対象 branch を main 同期後に Draft PR として公開する",
+        "stale formal evidence は残課題として fail-open にしない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3vmz",
+        "linked_at": "2026-08-09T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-audit-ledger-c19-final-review-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "exact-13 の凍結本文を変更せず最終公開条件だけを追跡する単一責務の P13 handoff",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-09T00:00:00Z",
+      "depends_on": [
+        "issue-audit-fork-ledger-forgery-20260728"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-audit-ledger-c19-final-review-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "commit、Draft PR、Beads、Dev Graph、検証証拠が同じ変更境界を参照する",
+      "graph_node_id": "task-audit-ledger-c19-final-review-handoff-20260809",
+      "implementation_readiness": {
+        "checked_at": "2026-08-09T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "凍結済み exact-13 task を変更せず、今回の最終レビュー、公開条件、残課題を追跡する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-audit-ledger-c19-final-review-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md",
+        "plugins/dev-graph/skills/run-dev-graph-system-spec/",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/"
+      ],
+      "scope_in": [
+        "最終差分レビュー",
+        "品質ゲート",
+        "仕様影響判断",
+        "main 同期",
+        "Draft PR と Beads 更新"
+      ],
+      "scope_out": [
+        "製品 runtime の追加機能",
+        "stale 証跡の手編集",
+        "無関係な既存差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-09T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779",
+        "source_path": "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-09",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "audit-ledger",
+        "system-spec",
+        "c19",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "監査台帳・状態遷移・C19 最終レビュー handoff",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-09T13:11:25.607829Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

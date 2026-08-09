@@ -1,6 +1,131 @@
+---
+graph_node_id: "spec-harness-hub-system-specification-implementation-writebacks"
+artifact_kind: "specification"
+artifact_subtypes: []
+project_id: "harness-hub"
+domain: "platform"
+tags: ["system-spec","writeback","document-split","traceability"]
+priority: "high"
+start_date: "2026-08-09"
+target_date: null
+iteration: null
+title: "Harness Hub システム要件仕様 — 実装 writeback 分冊"
+owners: ["daishiman"]
+created_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-09T13:10:16.743319Z"
+status: "active"
+depends_on: ["spec-harness-hub-requirements"]
+related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728"]
+resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"]
+purpose: "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する"
+goal: "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる"
+scope_in: ["共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の既存実装 writeback"]
+scope_out: ["新しい製品要求","公開 API・DB schema・認証認可・UI・配備単位の変更"]
+acceptance: ["通常文書が500行を超えない","移動前の意味と参照を保持する","artifact placement と graph schema を通過する"]
+architecture_refs: ["arch-harness-hub-dev-workflow"]
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "specs/harness-hub-system-specification-implementation-writebacks.md"
+template_id: "specification"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779","evaluator":"final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"}
+source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"manual","source_digest":"40ff8d45a094fe76e250d4585094cf5fe26f6329e4025db6fc6a9fe613347aff","source_path":"specs/harness-hub-system-specification.md","source_plugin":"final-review","source_version":"0.1.0"}
+classification_confidence: 0.99
+classification_reason: "総合仕様の500行上限を守るため、既存の実装反映索引を単一責務の仕様分冊として登録する"
+classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification-implementation-writebacks.md","confidence":0.99}]
+issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections":[],"status":"complete"}
+---
+
 # Harness Hub システム要件仕様 — 実装 writeback 分冊
 
 この文書は [システム要件仕様 wrapper](harness-hub-system-specification.md) から分離した実装反映の索引である。要件の正本は `system-spec/`、判断と検証の正本は各仕様反映受領書に置く。
+
+## 目的と成功状態
+
+総合 wrapper を500行以下に保ちながら、既存の実装確定事項と正本・受領書の参照関係を失わない。
+
+## スコープ
+
+- In: 共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の実装 writeback 索引。
+- Out: 新しい製品要求、公開 API、DB schema、認証認可判断、UI、配備単位の追加・変更。
+
+## 用語と主体
+
+| Term/Actor | Definition/Responsibility |
+|---|---|
+| writeback | 確定した実装境界を仕様索引へ戻す記録。要件正本ではない。 |
+| system-spec | 製品要求と利用者判断の正本。 |
+| Dev Graph | 本分冊の所在と依存関係を登録する台帳。 |
+
+## ユースケースとユーザーフロー
+
+1. 開発者または agent が総合 wrapper から本分冊を開き、対象実装の正本章と受領書へ移動する。
+
+## 機能要件
+
+- `FR-WB-001`: 移動前に総合 wrapper が示した各実装確定事項を意味単位で保持する。
+- `FR-WB-002`: 各節から要件正本と仕様反映受領書へ到達できる。
+
+## 非機能要件
+
+- Maintainability: 本文は500行以下を維持し、新しい独立責務は別の登録済み分冊へ置く。
+- Security/Privacy: secret の値や利用者データを記録しない。
+
+## UI・状態遷移
+
+N/A: 文書索引であり、製品 UI や runtime 状態遷移を提供しない。
+
+## ビジネスルールと検証
+
+- `BR-WB-001`: 本分冊だけを製品要求の承認根拠として使用しない。
+
+## API契約
+
+N/A: 公開または内部 API の契約を変更しない。
+
+## データモデル
+
+N/A: DB、object storage、cache の schema を変更しない。
+
+## 認証・認可
+
+N/A: 認証方式と権限判定を変更せず、確定済み契約への索引だけを保持する。
+
+## エラー・例外・回復
+
+リンク切れまたは正本との不一致を検出した場合は更新を止め、対応する受領書と Dev Graph node を修復する。
+
+## イベント・非同期処理
+
+N/A: runtime event、queue、非同期配信を追加しない。
+
+## 可観測性
+
+Dev Graph の artifact placement、schema、link 検査を文書の観測手段とする。
+
+## 互換性・移行・リリース
+
+総合 wrapper から本文を移し、元位置に本分冊へのリンクを残す。問題時は同じ意味単位を wrapper へ戻して登録 node を閉じる。
+
+## テストと受入条件
+
+- [x] `AC-WB-001`: wrapper と本分冊の合計で移動前の実装 writeback を保持する。
+- [x] `AC-WB-002`: artifact placement と graph schema の検査を通過する。
+
+## 未決事項
+
+N/A: 今回の分冊に伴う製品判断はない。
 
 ## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
 

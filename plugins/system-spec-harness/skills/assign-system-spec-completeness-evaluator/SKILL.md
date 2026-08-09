@@ -41,9 +41,11 @@ reference_refs:
 script_refs:
   - scripts/aggregate-completeness.py
   - scripts/audit_fork_attribution.py
+  - scripts/build-resume-receipt.py
   - ../../scripts/validate-coverage-matrix.py
 schema_refs:
   - schemas/completeness-findings.schema.json
+  - schemas/resume-receipt.schema.json
 agent_refs:
   - ../../agents/system-spec-matrix-auditor.md
   - ../../agents/system-spec-hearing-auditor.md
@@ -59,8 +61,8 @@ feedback_contract:
 ## Purpose & Output Contract
 
 **入力**: `system-spec/*.md` + index (C03 出力) / `spec-state.json` (C01) / `fetched-references.json` (C02)
-**出力**: 評価レポート (`schemas/completeness-findings.schema.json` 準拠) — 観点別スコア + 総合判定 + 不足事項一覧
-**完了条件**: 全観点 verdict 付与 + findings[] (info 以上を最低 1 件) + 総合判定が観点スコアからの fail-closed 再導出値と一致 + 総合 FAIL 時は不足事項一覧が非空。
+**出力**: 評価レポート (`schemas/completeness-findings.schema.json` 準拠) — 観点別スコア + 総合判定 + 不足事項一覧。PASS 時は正規 validator と fork 台帳へ束縛した `system-spec/resume-receipt.json` も生成する。
+**完了条件**: 全観点 verdict 付与 + findings[] (info 以上を最低 1 件) + 総合判定が観点スコアからの fail-closed 再導出値と一致 + 総合 FAIL 時は不足事項一覧が非空。PASS の再利用は `build-resume-receipt.py` が作った schema 1.1 receipt に限る。
 
 各 skill 単独では見えない全体網羅性の欠落を、生成物から独立した context で評価し客観的合否を返す。
 
@@ -171,6 +173,16 @@ C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-k
 ### Step 4: レポート出力と整合検査
 `schemas/completeness-findings.schema.json` 準拠で評価レポートを出力し、Step 1 で実際に fork した監査を `audit_delegations[]` へ receipt として記録する。`scripts/aggregate-completeness.py --report <report.json>` で形状 + 総合判定整合 (fail-closed 再導出との一致) + 帰属の fork 証跡接地を検証する。
 
+総合 PASS の場合だけ、同じ report・fork ledger・具体的 session を production writer へ渡す。writer は `G-matrix` / `G-source-citation` の exit 0、report digest、ledger の response/session 帰属を再検査してから atomic に receipt を生成する。手書き receipt や test fixture の producer を実行時に使わない。
+
+```bash
+python3 scripts/build-resume-receipt.py --repo-root "$CLAUDE_PROJECT_DIR" \
+  --report system-spec/completeness-report.json \
+  --fork-ledger eval-log/system-spec-harness/audit-fork-ledger.jsonl \
+  --session <current-evaluator-session> \
+  --output system-spec/resume-receipt.json
+```
+
 ## Gotchas
 
 1. 観点↔評価主体を取り違えない (マトリクス=C07 + C06 ヒアリング品質 sub-input / 設計知識=C05 自前評価・独立 auditor なし / 出典鮮度=C08)。C06 は system-spec/*.md を読まないため設計知識反映へ束縛しない。
@@ -187,6 +199,7 @@ C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-k
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
 - `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論)
 - `scripts/audit_fork_attribution.py` — fork 台帳集計・receipt 照合・run/session 束縛を担う import 専用モジュール。公開 CLI と総合判定は `aggregate-completeness.py` が継続して所有する
+- `scripts/build-resume-receipt.py` / `schemas/resume-receipt.schema.json` — canonical PASS report、gate 結果、fork ledger session、artifact digest に束縛した再利用 receipt の production writer / schema
 - `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (PostToolUse: `Task|Agent`)。帰属検証の証跡正本
 - `prompts/R1-score.md` / `prompts/R2-delegate.md` — R1 (スコアリング) / R2 (監査 fork 集約) 責務正本
 - fork 先 agent: `../../agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md`

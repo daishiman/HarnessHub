@@ -10,6 +10,7 @@ effect: local-artifact
 owner: team-platform
 since: 2026-07-11
 version: 0.1.0
+source: plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md
 output_language: ja
 argument-hint: "[--spec-state <path>] [--resume]"
 allowed-tools:
@@ -143,8 +144,8 @@ feedback_contract:
 
 - engine=inline / fork=subagent / max_loops=5 / loop_semantics = **per-invocation chunk limit**。
 - 1 invocation で最大 5 loop (質問→回答→反映) を回す。5 loop 到達で未収集が残れば `hearing_progress.complete=false` と `next_question` を保存し、resumable に返す (`--resume` で続行)。
-- chunk は未収集0を満たしたときだけ `complete=true`・`next_question=null` を書く。未収集セルを完了扱いしない。ただしこれは **chunk 書込時点の不変則**であり、その後の `reopen` / `add-category` で `hearing_progress` は stale になり得る。
-- `hearing_progress` の各 field の意味論 (`loop_count` = 直近 chunk の turn 数で累計ではない / `complete` を `true` へ進めるのは chunk のみ / reopen・add-category 後の stale) の正本は `references/spec-state-contract.md`「hearing_progress の意味論 (SSOT)」。完了判定には `complete` 単独でなく `--require-complete` を使う。
+- chunk は未収集0を満たしたときだけ `complete=true`・`next_question=null` を書く。未収集セルを完了扱いしない。`reopen` / `add-category` / `apply` を含む全 matrix writer も同じ不変則へ再同期するため、更新後の `hearing_progress` を stale のまま残さない。
+- `hearing_progress` の各 field の意味論 (`loop_count` = 直近 chunk の turn 数で累計ではない / 全 matrix writer が `complete` と `next_question` を再同期する) の正本は `references/spec-state-contract.md`「hearing_progress の意味論 (SSOT)」。完了判定には `complete` 単独でなく `--require-complete` を使う。
 - ループの各周回は「未達 = 未収集セル」を最小化する手順を都度立案→ writer で適用→ `validate-coverage-matrix.py` で検証、を繰り返す (固定手順を持たない)。
 
 ## feedback-contract (with-feedback-contract)

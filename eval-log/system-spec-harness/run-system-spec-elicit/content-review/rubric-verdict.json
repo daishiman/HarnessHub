@@ -1,9 +1,9 @@
 {
-  "target": {"plugin": "system-spec-harness", "skill": "run-system-spec-elicit", "skill_md_sha256": "10d5d166a5a069609e71ad45b9656004598524e1087a586a4e19f23865e26cb0"},
+  "target": {"plugin": "system-spec-harness", "skill": "run-system-spec-elicit", "skill_md_sha256": "377d2e88a06326d48f607d2180ef838d1ce4b174dc6f58899ce5fb024e80f5e6"},
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent changed-skills content reviewer (focused combined rubric context)",
-  "reviewed_at": "2026-08-09T10:10:35Z",
+  "reviewer": "independent final-review fresh context",
+  "reviewed_at": "2026-08-09T13:05:22Z",
   "iterations": 2,
   "human_review_required": false,
   "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
@@ -11,15 +11,14 @@
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2"],
     "positive_feedback": [
-      "IN1 は matrix/foundation/design application/migration の機械検証を具体化し、OUT1 は complete/resume、OUT2 は根拠付き候補・低コスト案・AI推奨保留・ユーザー確認・未収集0を要求する。",
-      "Schema/marker の不正状態を init で直したことにする経路は負例テストで拒否される。",
-      "Criteria と C01/C05 境界が実装責務および verification method に一致する。"
+      "schema 1.0/1.1 境界、design application marker、foundation bootstrap、legacy migration が prompt/writer/schema/test 間で整合する。",
+      "全 matrix writer が hearing_progress を再同期し、未収集を完了扱いしない。"
     ],
     "negative_feedback": [],
     "iteration": 2,
     "iteration_limit": 3,
-    "hook_trigger": "manual",
+    "hook_trigger": "manual-final-review",
     "next_action": "none"
   },
-  "notes": "Incremental focused combined rubric review。現行 criteria 3件を exact に評価した。"
+  "notes": "Static adequacy PASS。OUT2 の current live evidence は未検証として分離。"
 }

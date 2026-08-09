@@ -42,10 +42,10 @@ reviewed_at: 2026-08-09
 | --- | --- | --- |
 | `docs/` | 本書 | 目的、差分、検証、残課題の詳細な正本を記録する。 |
 | `features/` | feature 変更履歴へ追記 | `feat-dev-pipeline-improvement` に今回の内部品質契約を関連付ける。 |
-| `system-spec/` | receipt を追加、spec-state は非変更 | 製品要求は不変であることと、非変更理由を記録する。 |
-| `specs/` | 既存3文書の見出し移行、receipt を追加 | C11 が必要とする index 見出しを追加する。500行超過を避け、実装 writeback を別冊化する。 |
-| `architecture/` | 既存7文書の見出し移行、receipt を追加 | U1-U9 と決定事項を明示し、architecture の readiness を対称に検査できるようにする。 |
-| `tasks/` | receipt を追加 | 凍結済み exact-13 task 本文は手編集せず、最終ゲート結果と Beads 対応を記録する。 |
+| `system-spec/` | 正本は非変更 | 新しい利用者要求や承認判断がないため変更せず、本書に非影響の理由を記録する。 |
+| `specs/` | 既存3文書の見出し移行、分冊を正規登録 | C11 が必要とする index 見出しを追加する。500行超過を避け、実装 writeback を別冊化する。 |
+| `architecture/` | 既存7文書の見出し移行、分冊を正規登録 | U1-U9 と決定事項を明示し、architecture の readiness を対称に検査できるようにする。 |
+| `tasks/` | P13 handoff を正規登録 | 凍結済み exact-13 task 本文は手編集せず、最終ゲート結果と Beads 対応を別 task に記録する。 |
 
 ## 実装と設計の要点
 
@@ -60,6 +60,21 @@ matrix 更新後に progress を再計算し、確定済みセルを初期化で
 ### live-trial と C19
 
 task contract lint は negative control を fixture の対象 root だけで探索する。C19 import は system-spec-harness の lineage を解決して、生成された specification / architecture に適用すべき見出し集合を選ぶ。architecture も specification / task と同じく全 graph 検査の対象にした。
+
+C19 の confirmed bundle 再利用は、単なる `verdict: PASS` では通さない。正規 completeness
+report の全観点、`G-matrix` / `G-source-citation`、fork 台帳の session と response digest、
+対象 artifact の SHA-256、対応 plugin の semver 範囲を再検査する。新しい
+`build-resume-receipt.py` は completeness evaluator の PASS 後だけ schema 1.1 の受領書を
+atomic（途中状態を見せず一括置換）に生成する。
+
+import runner は graph を変更する前に boundary、source/evidence digest、2 node 合成後の graph
+schema、各 C02 dry-run をすべて通す。したがって preflight の不合格で graph の一部だけが残らない。
+goal-seek の `intermediate.jsonl` も上書きせず、既存行と original goal を検査して追記する。
+
+system-spec elicit は、legacy schema 1.0 を読み取り専用、schema 1.1 +
+`design_application_contract_version: 1.0` を現行更新契約として JSON Schema に明示した。
+`bootstrap → R0-foundation → R1-init` の順序、legacy 1.0 だけに許す明示 migration、全 matrix
+writer が `hearing_progress` を再同期する挙動を、SKILL・prompt・writer の説明で統一した。
 
 completeness evaluator の完了境界は、Skill 起動結果の完全な `agentId` と native
 `task-notification` を transcript 上で対応付け、完了通知より後にだけ実登録が始まることを
@@ -77,6 +92,10 @@ completeness evaluator の完了境界は、Skill 起動結果の完全な `agen
   ローカル `main` を本ブランチへ取り込み、競合は各仕様の新旧契約を統合して解消した。
 - main 取込み後の focused pytest は dev-graph 69件、system-spec 71件が PASS（合計140件）。
   task package validator、`make lint`、coverage、diff check も再度 PASS した。
+- 最終レビュー指摘の修正後は、C19 import / evaluator completion の focused test 29件、
+  system-spec harness の関連 suite 382件が PASS。production receipt の閉ループ、自己申告
+  gate 欠落、fork ledger 不一致、semver 境界、preflight 不合格時の graph 非変更、JSONL
+  履歴保持、spec-state schema 1.0/1.1 境界を回帰テストへ追加した。
 - criteria evidence gate は22件中20件 PASS、2件 FAIL。失敗は C19 Skill の統合後に、main
   由来の criteria / content-review 受領書へ記録された `skill_md_sha256` が旧値になったためで、
   実装テストの失敗ではない。受領書を手編集せず、正規 live-trial と review の再取得を
@@ -84,7 +103,13 @@ completeness evaluator の完了境界は、Skill 起動結果の完全な `agen
 - system-spec coverage `--require-complete`: PASS。
 - source citation（spec-state 対象）: PASS。
 - system-spec compile: 一時ディレクトリへの生成は成功。既存の手動 writeback による checked-in 文書との差は、本変更で上書きしない。
-- content review: fresh independent reviewer が C1-C5 を全件 PASS。初回の high 1件（四軸/五軸矛盾）と medium 1件（回帰テスト不足）は修正後に解消した。
+- content review: fresh independent reviewer の初回レビューで、C19 に high 2件 / medium 2件、
+  system-spec elicit に medium 3件 / low 1件を検出した。自己申告 receipt、mutation 順序、
+  production writer 不在、semver、JSONL 上書き、state 契約説明/schema、receipt の canonical
+  path と exact-field parity の各指摘を実装修正し、
+  focused suite を再実行した。最終 independent static verdict は3 Skillとも findings 0で PASSし、
+  current Skill SHA に束縛した6件の content-review verdict を記録した。実走証拠の stale は
+  static PASS で代替していない。
 - C01/C02/C03/C04/C05/C14/C18: fresh live-trial 7件 PASS。
 - C19 r6: 正規4 entry point、fresh evaluator、C02 import、lineage/evidence gate は完走した。
   run 内の旧 validator は `upsert-node.py --help` を実登録と誤認して status=FAIL としたため証跡を
@@ -105,6 +130,12 @@ main から取り込んだ bounded-resume の formal evidence は取込み前の
 なった。現行 behavior closure の formal live verdict と content review の再取得は
 `HarnessHub-o4zi` の Draft PR review gate として残し、本 PR では決定論 replay と focused gate を
 MVP の受入根拠にする。
+
+pre-push 相当チェックの初回実行では、誤った receipt 配置、stale content-review、stale
+live-trial、LLM coverage ledger、実行 bit 欠落の5分類を検出した。配置は中央受領書 + 正規登録済み
+P13 handoff へ集約し、coverage と package 契約を更新した。current formal live-trial だけは実対話を
+要するため `HarnessHub-o4zi` の Draft PR gate として残し、緊急回避を使う場合も PR と Beads に
+明示して CI の失敗を隠さない。
 
 - `HarnessHub-uypz`: 複数監査 dispatch の `audit_verdict=null` を原子的に記録する。
 - `HarnessHub-duej`: certificate・foundation qa_log・compile writeback の証拠 projection を揃える。
@@ -129,6 +160,6 @@ Beads の更新は `bd-bridge.py` 経由で行う。Draft PR の review / CI / m
 
 ## 行数と残課題
 
-本書と各 receipt、および通常の実装・仕様ファイルは500行未満である。`specs/harness-hub-system-specification.md` は500行を超えないよう、実装 writeback を `specs/harness-hub-system-specification-implementation-writebacks.md` へ意味単位で分冊した。transcript JSONL、pane capture、fixture の graph/state JSON は、時系列または schema が単一 artifact を要求する生成済み一次証拠なので分割しない。
+本書と正規登録した handoff、および通常の実装・仕様ファイルは500行以下である。`specs/harness-hub-system-specification.md` は500行を超えないよう、実装 writeback を `specs/harness-hub-system-specification-implementation-writebacks.md` へ意味単位で分冊した。transcript JSONL、pane capture、fixture の graph/state JSON は、時系列または schema が単一 artifact を要求する生成済み一次証拠なので分割しない。
 
 残課題は Beads に起票し、今回の対象 commit から独立させる。旧 Draft PR #680 は未マージのため勝手に閉じず、今回作る最終 Draft PR との関係を notes に記録する。

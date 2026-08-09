@@ -52,7 +52,7 @@
 ### 2.3 入力契約
 | field | type | required | 説明 |
 |---|---|---|---|
-| spec_state | path | yes | 現在の spec-state.json (init 済み・requirements_foundation は空) |
+| spec_state | path | yes | 現在の spec-state.json (`bootstrap` 済み・matrix 未初期化・requirements_foundation は空) |
 | answers | 対話または利用者の書面要件 | yes | 深掘りヒアリング応答。書面入力なら U1-U9 の 1論点 source-index を先に残す。 |
 
 ### 2.4 出力契約

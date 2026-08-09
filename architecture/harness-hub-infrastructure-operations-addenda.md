@@ -1,13 +1,132 @@
 ---
-status: active
-layer: architecture-operations-addenda
-parent: architecture/harness-hub-infrastructure.md
+graph_node_id: "arch-harness-hub-infrastructure-operations-addenda"
+artifact_kind: "architecture"
+artifact_subtypes: ["infrastructure"]
+project_id: "harness-hub"
+domain: "infrastructure"
+tags: ["infrastructure","operations","document-split","traceability"]
+priority: "high"
+start_date: "2026-08-09"
+target_date: null
+iteration: null
+title: "Harness Hub infrastructure 運用追補"
+owners: ["daishiman"]
+created_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-09T13:10:51.293550Z"
+status: "active"
+depends_on: ["arch-harness-hub-infrastructure"]
+related_nodes: ["spec-harness-hub-requirements","issue-audit-fork-ledger-forgery-20260728"]
+resource_scope: ["architecture/harness-hub-infrastructure-operations-addenda.md","architecture/harness-hub-infrastructure.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"]
+purpose: "infrastructure 本体を300行以下に保ちながら確定済み運用履歴の追跡性を維持する"
+goal: "SLO、OAuth rollout、deploy 鮮度の各判断から親 architecture、system-spec、受領書へ到達できる"
+scope_in: ["確定済み SLO 運用","OAuth rollout","build identity と deploy 鮮度の運用履歴"]
+scope_out: ["Cloudflare 構成変更","認証方式変更","SLO 値変更","新しい配備単位"]
+acceptance: ["親文書との相互リンクがある","通常文書が500行を超えない","artifact placement と graph schema を通過する"]
+architecture_refs: ["arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
+parent_feature: null
+feature_package_id: null
+phase_ref: null
+file_path: "architecture/harness-hub-infrastructure-operations-addenda.md"
+template_id: "architecture"
+template_version: "1.0.0"
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"1dd8b46509c53dec769288b60792b7f3bbd4e781842742b280ee131a092fa779","evaluator":"final-review","evidence_ref":"docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"}
+source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"manual","source_digest":"476b0ddc8e552604c5b4cf463dac4982a48c459136ad9e0d3ea00a67ec21a585","source_path":"architecture/harness-hub-infrastructure.md","source_plugin":"final-review","source_version":"0.1.0"}
+classification_confidence: 0.99
+classification_reason: "infrastructure 本体の行数上限を守るため、運用履歴を infrastructure subtype の追補へ責務分割する"
+classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure-operations-addenda.md","confidence":0.99}]
+issue_linkage: null
+tracker_binding: "none"
+beads_linkage: null
+github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
+github_project_linkages: []
+pull_request_linkages: []
+execution_contexts: []
+completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
+implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub infrastructure 運用追補
 
 本書は [infrastructure アーキテクチャ](harness-hub-infrastructure.md) から分離した運用履歴である。
 製品要求の正本は各節から参照する `system-spec/` 文書に置く。
+
+## Architecture overview
+
+Harness Hub の infrastructure 本体から、確定済みの運用判断と rollout 記録を責務単位で分離する。
+
+## Context and drivers
+
+- 300行の文書上限を守りつつ、SLO、OAuth rollout、deploy 鮮度の履歴を失わない。
+- 製品要求は `system-spec/`、現在の構成判断は親 architecture、履歴は本書に分ける。
+
+## Goals and non-goals
+
+- Goal: 親文書から各運用判断の正本と受領書へ追跡できるようにする。
+- Non-goal: Cloudflare 構成、認証方式、SLO 値、配備単位を新たに変更すること。
+
+## System context and boundaries
+
+利用者、外部サービス、trust boundary は親文書を正とし、本書は CI・運用者・監視サービスの手順境界だけを索引化する。
+
+## Container and component view
+
+| Container/Component | Responsibility | Interface | Data owner | Deployment unit |
+|---|---|---|---|---|
+| operations addenda | 確定済み運用履歴の参照 | Markdown link | repository | N/A: 文書のみ |
+
+## Cross-cutting contracts
+
+- Identity/access: secret 値を repository へ保存しない。
+- Observability/audit: 公開実測、release record、受領書を証拠として参照する。
+- Compatibility/versioning: 親文書と system-spec の判断を上書きしない。
+
+## Subtype architecture
+
+- Infrastructure: 運用追補として親 `harness-hub-infrastructure.md` と組み合わせる。
+- Frontend / Backend / Data / Security: N/A: 各 subtype の親文書を正とする。
+
+## Architecture decisions
+
+| ADR | Decision | Alternatives | Trade-on rationale | Consequences |
+|---|---|---|---|---|
+| OPS-SPLIT-001 | 運用履歴を登録済み追補へ分冊する | 親文書を上限超過のまま維持 | 読みやすさと追跡性 | 参照リンクと graph 登録が必須になる |
+
+## Delivery, migration and rollback
+
+親文書から節を移し、親に追補リンクを残す。リンクまたは登録が壊れた場合は、修復完了まで文書変更を公開しない。
+
+## Risks and verification
+
+- Risk: 分冊が orphan artifact になる。
+- Verification: artifact placement、graph schema、doc line limit を実行する。
+
+## Infrastructure architecture
+
+### Environments and topology
+
+環境構成と network boundary は親文書を正とし、本書では rollout 順序だけを記録する。
+
+### Compute and storage
+
+runtime、D1/R2/KV、容量契約は変更しない。
+
+### IaC and delivery
+
+既存の CI/CD と配備証跡を参照し、新しい配備経路は追加しない。
+
+### Secrets and access
+
+secret authority と rotation の具体値を保存せず、既存 runbook への参照だけを持つ。
+
+### Reliability and recovery
+
+SLO、rollback、鮮度判断は以下の確定済み各節を正とする。
+
+### Infrastructure verification
+
+親文書との相互リンク、行数上限、Dev Graph 登録、関連受領書の存在を検査する。
 
 ## SLO 公開実測の差分追記 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
 
