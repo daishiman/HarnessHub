@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1468,
+  "graph_revision": 1440,
   "nodes": [
     {
       "acceptance": [
@@ -47197,48 +47197,52 @@
     },
     {
       "acceptance": [
-        "新規 live-trial run で doc-fetch 区間に WebFetch 実行痕跡がある",
-        "scenario-verdict.json の OUT1 が新 run を参照する",
-        "test_skill_criteria_evidence.py と test_live_trial_task_contract.py が全て green"
+        "章ごとに確定 qa_ref・対応セル・serves_goals を示す適用節を生成する",
+        "knowledge-catalog の depends_on topo order と表示順が一致する",
+        "監査 PASS が実 fork 台帳、response digest、最終 AUDIT_VERDICT と一致する",
+        "C02 が caller repository の source artifact 本文だけを登録する",
+        "製品仕様層への意味的影響なしを理由付きで記録する"
       ],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-m0bd",
-        "linked_at": "2026-08-03T08:49:22Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-c19-live-trial-rerun-task-contract-r2-20260803.md",
-          "confidence": 0.9
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "confidence": 0.96
         }
       ],
-      "classification_confidence": 0.9,
-      "classification_reason": "HarnessHub-eiky の task_contract 修正で C19 scenario_id を bump した結果、既存受領書/task.md が stale になった (scenario-contract-superseded)。追跡用 follow-up issue。",
+      "classification_confidence": 0.96,
+      "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-04T03:21:00Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "not_applicable"
+        "reconciled_at": "2026-08-04T03:21:00Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "0978faf297121ab095888b3a70d1d89f6a41180a06c2e626d4197f1b37a7ddfc",
+        "evaluator": "independent-live-trial-acceptance-evaluator",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
       },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-03T08:42:04Z",
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T00:00:00Z",
       "depends_on": [],
-      "domain": "documentation",
-      "evaluation_status": "pending",
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "issues/sys-c19-live-trial-rerun-task-contract-r2-20260803.md",
+      "file_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -47246,10 +47250,125 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "run-dev-graph-system-spec の C19-OUT1 live-trial を task_contract r2 条件下で再実行し、scenario-verdict.json / test_skill_criteria_evidence.py / test_live_trial_task_contract.py を green へ戻す",
-      "graph_node_id": "issue-c19-live-trial-rerun-task-contract-r2-20260803",
+      "goal": "plugin 内部契約の修正が回帰せず、製品仕様に不要な二重正本を作らず、reviewer が検証と影響境界を追跡できる状態",
+      "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
       "implementation_readiness": {
-        "checked_at": "2026-08-03T08:42:04Z",
+        "checked_at": "2026-08-04T03:21:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-evidence",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "設計知識表示、監査 verdict 束縛、C02 import の最終レビューと仕様影響判定を単一の受領書として残す",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/skills/run-system-spec-compile",
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "plugins/dev-graph/scripts/build-system-spec-import.py",
+        "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+      ],
+      "scope_in": [
+        "compiler の設計知識表示規則と回帰テスト",
+        "foundation source provenance",
+        "completion evaluator の fork 台帳と response verdict 束縛",
+        "C02 import adapter と live-trial",
+        "仕様影響なしの受領記録"
+      ],
+      "scope_out": [
+        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit",
+        "確定済み system-spec/specs/architecture/features/tasks の内部契約への重複記載"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T13:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
+        "source_path": "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.2.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "system-spec-harness",
+        "final-review",
+        "spec-impact"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T03:21:00Z"
+    },
+    {
+      "acceptance": [
+        "対象 6 skill に current behavior closure と一致する verdict.json がある",
+        "各 verdict が nudge_count=0 / gate_count=0 と独立評価を満たす",
+        "python3 scripts/lint-live-trial-verdict.py --all --enforce が PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pjcb",
+        "linked_at": "2026-08-03T10:16:18.942006Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
+          "confidence": 1
+        }
+      ],
+      "classification_confidence": 1,
+      "classification_reason": "f84o 最終レビューで origin/main にも再現する repository-wide verdict 不在 6 件を検出し、本変更と分離して追跡する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T10:15:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "6 skill の current behavior closure に一致する独立検証済み verdict を取得し、lint-live-trial-verdict.py --all --enforce を PASS にする",
+      "graph_node_id": "issue-live-trial-verdict-baseline-six-skills-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-03T10:15:00Z",
         "missing_sections": [],
         "status": "complete"
       },
@@ -47260,50 +47379,54 @@
       ],
       "parent_feature": null,
       "phase_ref": null,
-      "priority": "high",
+      "priority": "medium",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "HarnessHub-eiky の恒久対策 (C19 scenario への task_contract 追加 + scenario_id bump) が stale にした既存受領書・task.md を解消する",
-      "related_nodes": [],
+      "purpose": "origin/main に既存の repository-wide live-trial verdict 不在 6 件を、今回変更の品質判定から分離して追跡する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "issue-guard-graph-schema-inline-python-variable-path-20260726"
+      ],
       "resource_scope": [
-        "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
-        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py",
-        "eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/",
-        "docs/features/feat-dev-pipeline-improvement/c19-task-contract-r2-followup-spec-reflection-receipt.md",
-        "docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md"
+        "eval-log/skill-intake/run-intake-option-catalog/",
+        "eval-log/spec-drift-guardian/run-rubric-sync/",
+        "eval-log/system-dev-planner/run-system-dev-plan/",
+        "eval-log/system-spec-harness/run-system-spec-elicit/",
+        "eval-log/ubm-goal-setting/run-ubm-consult/",
+        "eval-log/ubm-goal-setting/run-ubm-goal-setting/"
       ],
       "scope_in": [
-        "run-dev-graph-system-spec の新規 live-trial 実走 (doc-fetch 区間で実 WebFetch が発生することを transcript で確認)",
-        "eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json の OUT1 更新",
-        "test_skill_criteria_evidence.py / test_live_trial_task_contract.py の green 復帰確認"
+        "対象 6 skill の fresh live-trial と独立 evaluator",
+        "verdict lineage と behavior closure の検証",
+        "repository-wide verdict lint の再実行"
       ],
       "scope_out": [
-        "validate-source-citation.py 側のゲート強化 (HarnessHub-p1ql のスコープ)",
-        "R2-fetch.md / build-fetched-references.py 本体の仕様変更"
+        "HarnessHub-f84o の 9 Dev Graph skill 証跡",
+        "対象 skill の機能仕様変更",
+        "Harness Hub 製品 runtime の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T08:42:04Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
+        "imported_at": "2026-08-03T10:15:00Z",
+        "origin_kind": "generated",
+        "source_digest": "491effc86e609461d97aef1133f77cbfbeac4d2f88f893aa89d61f7b2b38693e",
+        "source_path": "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md",
+        "source_plugin": "dev-graph",
         "source_version": null
       },
       "start_date": null,
       "status": "draft",
       "tags": [
-        "dev-graph",
+        "quality",
         "live-trial",
-        "system-spec-harness",
+        "evidence",
         "follow-up"
       ],
       "target_date": null,
       "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "C19 live-trial 再実行: scenario_id r2 bump 後の scenario-contract-superseded を解消し受領書を更新する",
+      "title": "live-trial: repository-wide 6 skill の verdict 不在を解消する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T09:14:42.732349Z"
+      "updated_at": "2026-08-03T10:16:37.658382Z"
     },
     {
       "acceptance": [
@@ -47427,122 +47550,6 @@
       "title": "[bug] catalog一覧(/catalog)が一般ユーザーの通常ナビゲーションで missing_tenant_scope (403) を返し到達不能",
       "tracker_binding": "beads",
       "updated_at": "2026-08-03T07:45:55Z"
-    },
-    {
-      "acceptance": [
-        "対象 6 skill に current behavior closure と一致する verdict.json がある",
-        "各 verdict が nudge_count=0 / gate_count=0 と独立評価を満たす",
-        "python3 scripts/lint-live-trial-verdict.py --all --enforce が PASS する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow"
-      ],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-pjcb",
-        "linked_at": "2026-08-03T10:16:18.942006Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
-          "confidence": 1
-        }
-      ],
-      "classification_confidence": 1,
-      "classification_reason": "f84o 最終レビューで origin/main にも再現する repository-wide verdict 不在 6 件を検出し、本変更と分離して追跡する",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-03T10:15:00Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-live-trial-verdict-baseline-six-skills-20260803.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "6 skill の current behavior closure に一致する独立検証済み verdict を取得し、lint-live-trial-verdict.py --all --enforce を PASS にする",
-      "graph_node_id": "issue-live-trial-verdict-baseline-six-skills-20260803",
-      "implementation_readiness": {
-        "checked_at": "2026-08-03T10:15:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "medium",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "origin/main に既存の repository-wide live-trial verdict 不在 6 件を、今回変更の品質判定から分離して追跡する",
-      "related_nodes": [
-        "feat-dev-pipeline-improvement",
-        "issue-guard-graph-schema-inline-python-variable-path-20260726"
-      ],
-      "resource_scope": [
-        "eval-log/skill-intake/run-intake-option-catalog/",
-        "eval-log/spec-drift-guardian/run-rubric-sync/",
-        "eval-log/system-dev-planner/run-system-dev-plan/",
-        "eval-log/system-spec-harness/run-system-spec-elicit/",
-        "eval-log/ubm-goal-setting/run-ubm-consult/",
-        "eval-log/ubm-goal-setting/run-ubm-goal-setting/"
-      ],
-      "scope_in": [
-        "対象 6 skill の fresh live-trial と独立 evaluator",
-        "verdict lineage と behavior closure の検証",
-        "repository-wide verdict lint の再実行"
-      ],
-      "scope_out": [
-        "HarnessHub-f84o の 9 Dev Graph skill 証跡",
-        "対象 skill の機能仕様変更",
-        "Harness Hub 製品 runtime の変更"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-03T10:15:00Z",
-        "origin_kind": "generated",
-        "source_digest": "491effc86e609461d97aef1133f77cbfbeac4d2f88f893aa89d61f7b2b38693e",
-        "source_path": "docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md",
-        "source_plugin": "dev-graph",
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "quality",
-        "live-trial",
-        "evidence",
-        "follow-up"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "live-trial: repository-wide 6 skill の verdict 不在を解消する",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-03T10:16:37.658382Z"
     },
     {
       "acceptance": [
@@ -47758,236 +47765,6 @@
       "title": "並列 worktree 更新時刻診断の追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-03T09:45:00Z"
-    },
-    {
-      "acceptance": [],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": null,
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-render-registration-stale-digest-20260803.md",
-          "confidence": 0.95
-        }
-      ],
-      "classification_confidence": 0.95,
-      "classification_reason": "registration 時点の graph_digest_after と sync 後の canonical graph digest が 11 verb 順序で構造的に異なるため、registration proof の部分照合を明示する品質不具合として分類した",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-03T21:15:05.909349Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-render-registration-stale-digest-20260803.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": null,
-      "graph_node_id": "issue-render-registration-stale-digest-20260803",
-      "implementation_readiness": {
-        "checked_at": "2026-08-04T00:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "mvp_alignment": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": null,
-      "related_nodes": [
-        "issue-render-registration-receipt-contract-mismatch-20260726",
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-testing-qa"
-      ],
-      "resource_scope": [
-        "plugins/dev-graph/scripts/render-graph-html.py",
-        "plugins/dev-graph/tests/test_render_registration_verification.py",
-        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
-        "plugins/dev-graph/references/execution-tracker-contract.md",
-        "system-spec/testing-qa.md",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-testing-qa.md",
-        "features/feat-dev-pipeline-improvement.md",
-        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-        "docs/features/feat-dev-pipeline-improvement/",
-        "eval-log/dev-graph/run-dev-graph-render/",
-        "issues/sys-render-registration-stale-digest-20260803.md"
-      ],
-      "scope_in": [],
-      "scope_out": [],
-      "source_lineage": {
-        "imported_at": null,
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "quality",
-        "dev-graph",
-        "render",
-        "registration-receipt",
-        "graph-digest",
-        "stale"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-07T12:55:00Z"
-    },
-    {
-      "acceptance": [
-        "graph digest だけが stale の場合に partial/graph_digest_stale として HTML を生成する",
-        "node ID・件数・source digest・source lineage の不一致は fail-closed を維持する",
-        "task 文書、graph node、Beads、draft PR の追跡情報が一致する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-testing-qa"
-      ],
-      "artifact_kind": "task",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-0ui0",
-        "linked_at": "2026-08-04T00:00:00Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "task",
-          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-          "confidence": 0.99
-        }
-      ],
-      "classification_confidence": 0.99,
-      "classification_reason": "P13 本体の 300 行上限を超えず、stale digest 変更の統合条件だけを単一責務で追跡する補助 task である",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669",
-        "evaluator": "final-review",
-        "evidence_ref": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json"
-      },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-04T00:00:00Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pass",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "文書、graph、Beads、draft PR が同じ Beads ID と three-state verification 契約を参照し、main への取り込み後に再現可能な証跡を残す",
-      "graph_node_id": "task-render-registration-stale-digest-handoff-20260804",
-      "implementation_readiness": {
-        "checked_at": "2026-08-04T00:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "Phase 13 の補助引継ぎとして、registration receipt の stale graph digest を安全に部分照合する変更の統合条件と検証証跡を追跡可能にする",
-      "related_nodes": [
-        "issue-render-registration-stale-digest-20260803",
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-testing-qa"
-      ],
-      "resource_scope": [
-        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-        "docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md",
-        "plugins/dev-graph/scripts/render-graph-html.py",
-        "plugins/dev-graph/tests/test_render_registration_verification.py",
-        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
-        "system-spec/testing-qa.md",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-testing-qa.md",
-        "features/feat-dev-pipeline-improvement.md",
-        "eval-log/dev-graph/run-dev-graph-render/"
-      ],
-      "scope_in": [
-        "renderer の stale graph digest 表示契約",
-        "回帰テストと fresh live trial",
-        "system-spec/specs/architecture/features/tasks/docs への反映",
-        "Beads/graph/PR の相互記録"
-      ],
-      "scope_out": [
-        "製品 API、DB schema、認証認可、製品 UI、Cloudflare deploy unit",
-        "registration receipt の digest 値の書き換え"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-04T00:00:00Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": "2026-08-04",
-      "status": "active",
-      "tags": [
-        "dev-graph",
-        "render",
-        "registration-receipt",
-        "stale-digest",
-        "phase-13"
-      ],
-      "target_date": null,
-      "template_id": "task",
-      "template_version": "1.0.0",
-      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-04T04:54:05Z"
     },
     {
       "acceptance": [
@@ -48235,6 +48012,236 @@
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
       "updated_at": "2026-08-04T01:31:46.475830Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-render-registration-stale-digest-20260803.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "registration 時点の graph_digest_after と sync 後の canonical graph digest が 11 verb 順序で構造的に異なるため、registration proof の部分照合を明示する品質不具合として分類した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T21:15:05.909349Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-render-registration-stale-digest-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "issue-render-registration-stale-digest-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "issue-render-registration-receipt-contract-mismatch-20260726",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/",
+        "eval-log/dev-graph/run-dev-graph-render/",
+        "issues/sys-render-registration-stale-digest-20260803.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "graph-digest",
+        "stale"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-07T12:55:00Z"
+    },
+    {
+      "acceptance": [
+        "graph digest だけが stale の場合に partial/graph_digest_stale として HTML を生成する",
+        "node ID・件数・source digest・source lineage の不一致は fail-closed を維持する",
+        "task 文書、graph node、Beads、draft PR の追跡情報が一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0ui0",
+        "linked_at": "2026-08-04T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "P13 本体の 300 行上限を超えず、stale digest 変更の統合条件だけを単一責務で追跡する補助 task である",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669",
+        "evaluator": "final-review",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "文書、graph、Beads、draft PR が同じ Beads ID と three-state verification 契約を参照し、main への取り込み後に再現可能な証跡を残す",
+      "graph_node_id": "task-render-registration-stale-digest-handoff-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Phase 13 の補助引継ぎとして、registration receipt の stale graph digest を安全に部分照合する変更の統合条件と検証証跡を追跡可能にする",
+      "related_nodes": [
+        "issue-render-registration-stale-digest-20260803",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md",
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "eval-log/dev-graph/run-dev-graph-render/"
+      ],
+      "scope_in": [
+        "renderer の stale graph digest 表示契約",
+        "回帰テストと fresh live trial",
+        "system-spec/specs/architecture/features/tasks/docs への反映",
+        "Beads/graph/PR の相互記録"
+      ],
+      "scope_out": [
+        "製品 API、DB schema、認証認可、製品 UI、Cloudflare deploy unit",
+        "registration receipt の digest 値の書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "stale-digest",
+        "phase-13"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T04:54:05Z"
     },
     {
       "acceptance": [
@@ -48685,52 +48692,48 @@
     },
     {
       "acceptance": [
-        "章ごとに確定 qa_ref・対応セル・serves_goals を示す適用節を生成する",
-        "knowledge-catalog の depends_on topo order と表示順が一致する",
-        "監査 PASS が実 fork 台帳、response digest、最終 AUDIT_VERDICT と一致する",
-        "C02 が caller repository の source artifact 本文だけを登録する",
-        "製品仕様層への意味的影響なしを理由付きで記録する"
+        "新規 live-trial run で doc-fetch 区間に WebFetch 実行痕跡がある",
+        "scenario-verdict.json の OUT1 が新 run を参照する",
+        "test_skill_criteria_evidence.py と test_live_trial_task_contract.py が全て green"
       ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow"
-      ],
-      "artifact_kind": "document",
+      "architecture_refs": [],
+      "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-m0bd",
+        "linked_at": "2026-08-03T08:49:22Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
-          "artifact_kind": "document",
-          "candidate_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
-          "confidence": 0.96
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-c19-live-trial-rerun-task-contract-r2-20260803.md",
+          "confidence": 0.9
         }
       ],
-      "classification_confidence": 0.96,
-      "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
+      "classification_confidence": 0.9,
+      "classification_reason": "HarnessHub-eiky の task_contract 修正で C19 scenario_id を bump した結果、既存受領書/task.md が stale になった (scenario-contract-superseded)。追跡用 follow-up issue。",
       "completion_evidence": {
-        "completed_at": "2026-08-04T03:21:00Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-08-04T03:21:00Z",
-        "source": "manual",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "0978faf297121ab095888b3a70d1d89f6a41180a06c2e626d4197f1b37a7ddfc",
-        "evaluator": "independent-live-trial-acceptance-evaluator",
-        "evidence_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
       },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-03T00:00:00Z",
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T08:42:04Z",
       "depends_on": [],
-      "domain": "dev-workflow",
-      "evaluation_status": "pass",
+      "domain": "documentation",
+      "evaluation_status": "pending",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+      "file_path": "issues/sys-c19-live-trial-rerun-task-contract-r2-20260803.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -48738,67 +48741,64 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "plugin 内部契約の修正が回帰せず、製品仕様に不要な二重正本を作らず、reviewer が検証と影響境界を追跡できる状態",
-      "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
+      "goal": "run-dev-graph-system-spec の C19-OUT1 live-trial を task_contract r2 条件下で再実行し、scenario-verdict.json / test_skill_criteria_evidence.py / test_live_trial_task_contract.py を green へ戻す",
+      "graph_node_id": "issue-c19-live-trial-rerun-task-contract-r2-20260803",
       "implementation_readiness": {
-        "checked_at": "2026-08-04T03:21:00Z",
+        "checked_at": "2026-08-03T08:42:04Z",
         "missing_sections": [],
         "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
-      "layer": "feature-evidence",
       "owners": [
         "daishiman"
       ],
       "parent_feature": null,
       "phase_ref": null,
-      "priority": "medium",
+      "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "設計知識表示、監査 verdict 束縛、C02 import の最終レビューと仕様影響判定を単一の受領書として残す",
-      "related_nodes": [
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-dev-workflow"
-      ],
+      "purpose": "HarnessHub-eiky の恒久対策 (C19 scenario への task_contract 追加 + scenario_id bump) が stale にした既存受領書・task.md を解消する",
+      "related_nodes": [],
       "resource_scope": [
-        "plugins/system-spec-harness/skills/run-system-spec-compile",
-        "plugins/system-spec-harness/hooks/record-audit-fork.py",
-        "plugins/dev-graph/scripts/build-system-spec-import.py",
-        "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+        "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+        "plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py",
+        "eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/",
+        "docs/features/feat-dev-pipeline-improvement/c19-task-contract-r2-followup-spec-reflection-receipt.md",
+        "docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md"
       ],
       "scope_in": [
-        "compiler の設計知識表示規則と回帰テスト",
-        "foundation source provenance",
-        "completion evaluator の fork 台帳と response verdict 束縛",
-        "C02 import adapter と live-trial",
-        "仕様影響なしの受領記録"
+        "run-dev-graph-system-spec の新規 live-trial 実走 (doc-fetch 区間で実 WebFetch が発生することを transcript で確認)",
+        "eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json の OUT1 更新",
+        "test_skill_criteria_evidence.py / test_live_trial_task_contract.py の green 復帰確認"
       ],
       "scope_out": [
-        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit",
-        "確定済み system-spec/specs/architecture/features/tasks の内部契約への重複記載"
+        "validate-source-citation.py 側のゲート強化 (HarnessHub-p1ql のスコープ)",
+        "R2-fetch.md / build-fetched-references.py 本体の仕様変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T13:30:00Z",
+        "imported_at": "2026-08-03T08:42:04Z",
         "origin_kind": "manual",
-        "source_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
-        "source_path": "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.2.0"
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
       },
       "start_date": null,
-      "status": "done",
+      "status": "draft",
       "tags": [
+        "dev-graph",
+        "live-trial",
         "system-spec-harness",
-        "final-review",
-        "spec-impact"
+        "follow-up"
       ],
       "target_date": null,
-      "template_id": "document",
+      "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
-      "tracker_binding": "none",
-      "updated_at": "2026-08-04T03:21:00Z"
+      "title": "C19 live-trial 再実行: scenario_id r2 bump 後の scenario-contract-superseded を解消し受領書を更新する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-03T09:14:42.732349Z"
     },
     {
       "acceptance": [
