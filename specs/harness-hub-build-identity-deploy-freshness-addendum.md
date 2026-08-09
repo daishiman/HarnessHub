@@ -49,7 +49,7 @@ implementation_readiness: {"checked_at":"2026-08-08T11:00:00Z","missing_sections
 
 # 稼働ビルドの素性と反映鮮度 — 実装確定追補 (2026-08-08)
 
-親追補 [`harness-hub-post-signin-landing-observability-addendum.md`](./harness-hub-post-signin-landing-observability-addendum.md) の acceptance にある次の 2 点を、macro feature `feat-build-identity-deploy-freshness` として実装した。
+親追補 [landing observability investigation](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) の acceptance にある次の 2 点を、macro feature `feat-build-identity-deploy-freshness` として実装した。
 
 1. 稼働中の成果物から、それが repository のどの commit に対応するかを**認証なしで**確認できる（acceptance 括弧表記の V6 = 稼働ビルドの素性）
 2. 本番の稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出できる（acceptance 括弧表記の V7 = 反映鮮度）

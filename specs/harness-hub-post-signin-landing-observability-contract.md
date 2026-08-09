@@ -16,7 +16,7 @@ updated_at: "2026-08-08T15:01:54.446911Z"
 status: "draft"
 depends_on: ["spec-harness-hub-requirements","spec-post-signin-workspace-scope"]
 related_nodes: ["spec-harness-hub-requirements","spec-post-signin-workspace-scope","arch-harness-hub-frontend","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
-resource_scope: ["specs/harness-hub-post-signin-landing-observability-contract.md","specs/harness-hub-post-signin-landing-observability-addendum.md","system-spec/frontend.md","system-spec/ui-ux.md","system-spec/infrastructure.md","system-spec/testing-qa.md","system-spec/maintenance-ops.md"]
+resource_scope: ["specs/harness-hub-post-signin-landing-observability-contract.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md","system-spec/frontend.md","system-spec/ui-ux.md","system-spec/infrastructure.md","system-spec/testing-qa.md","system-spec/maintenance-ops.md"]
 purpose: "サインイン後に稼働状況しか表示されない不具合について、安全側の縮退が観測できず静かな全面停止と区別できない状態を是正し、原因を事後に判別できる状態を作る (本件の原因は qa-198 で確定した = 本番の稼働ビルドが着地先を直した commit 150a0f14 を含んでいなかった。是正はコード変更ではなく再デプロイ。本追補が固定するのは、その確定に 10 ラウンド以上を要した観測不能状態のほうである)"
 goal: "qa-170〜qa-199 と appr-034 / appr-035 / appr-037 / appr-038 / appr-039 を実装計画が参照できる単一の仕様境界として維持し、再発を CI が検出できる状態にする"
 scope_in: ["着地不達の原因を事後に判別可能にする仕組み (縮退の記録点の統一)","環境値の解決層の一本化と module 最上位での構築禁止","縮退した事実と解決できなかった名前の記録 (値は記録しない)","既定着地 /dashboard と着地画面の内容 (利用者の直接決定)","分類語彙の列挙一致を到達可能性ベースで検査する仕組み","縮退の観測可能性を検査する仕組み","既存の deploy 時ゲート (必須 secret の実投入検査) の限界の明記と回帰防止","稼働中の成果物と repository の commit の対応を認証なしで確認できる仕組み (build 同一性)","認証成功したまま着地先が既定値へ後退した事象を、認証失敗と区別して記録する仕組み","本番の稼働ビルドが既定 branch の HEAD より古い状態が続くことの検出"]
@@ -50,7 +50,7 @@ implementation_readiness: {"checked_at":"2026-08-07T10:59:42Z","missing_sections
 # サインイン後の着地と観測可能性 — 正規 contract
 
 詳細な調査経緯、反証、監査記録は
-[`harness-hub-post-signin-landing-observability-addendum.md`](./harness-hub-post-signin-landing-observability-addendum.md)
+[`harness-hub-post-signin-landing-observability-addendum.md`](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md)
 に保持する。本書は Dev Graph の specification template に沿った実装契約の正本であり、詳細資料の内容を重複させない。
 
 ## 目的と成功状態

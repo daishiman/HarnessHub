@@ -48912,7 +48912,7 @@
       ],
       "resource_scope": [
         "specs/harness-hub-post-signin-landing-observability-contract.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "system-spec/frontend.md",
         "system-spec/ui-ux.md",
         "system-spec/infrastructure.md",
@@ -51005,12 +51005,12 @@
       ],
       "resource_scope": [
         "docs/features/feat-build-identity-deploy-freshness/release-record.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "architecture/harness-hub-infrastructure.md"
       ],
       "scope_in": [
         "docs/features/feat-build-identity-deploy-freshness/release-record.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md",
         "architecture/harness-hub-infrastructure.md"
       ],
       "scope_out": [
@@ -51078,7 +51078,7 @@
       "confirmation_evidence": {
         "evaluated_digest": "3785a2c548943b38839c405c936aff16d43cc696ee847a84fabc463b14bfb5d7",
         "evaluator": "CI 実測 (hub-ci run 31221676748 / 31222374425) による原因確定",
-        "evidence_ref": "specs/harness-hub-post-signin-landing-observability-addendum.md"
+        "evidence_ref": "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-08T00:00:00Z",
@@ -51123,7 +51123,7 @@
         "apps/hub/tests/ci/production-auth-gates.test.ts",
         "apps/hub/tests/ci/smoke-version-recheck.test.ts",
         "docs/infrastructure-spec.md",
-        "specs/harness-hub-post-signin-landing-observability-addendum.md"
+        "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"
       ],
       "scope_in": [
         "version_gate の連続一致要求または smoke 直前の version 再確認",

@@ -103,7 +103,7 @@ implementation_readiness: {"checked_at":"2026-08-07T11:35:00Z","missing_sections
 
 ## 9. 出所
 
-確定仕様追補 [`spec-post-signin-landing-observability`](../specs/harness-hub-post-signin-landing-observability-addendum.md) を macro 分解したもの。
+確定仕様追補 [`spec-post-signin-landing-observability`](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) を macro 分解したもの。
 正本は `system-spec/spec-state.json` (qa-170〜qa-199, digest `e1ecf64f6bd0dfc6…`)。
 本 feature は仕様本文を複製せず、`architecture_refs` と source lineage で参照する。
 
@@ -114,7 +114,7 @@ P01〜P13 の成果物を実装し、契約・挙動・CI 配線の品質ゲー�
 | 層 | 参照 |
 |---|---|
 | 実装確定契約 | [`specs/harness-hub-build-identity-deploy-freshness-addendum.md`](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) |
-| 親追補索引 | [`specs/harness-hub-post-signin-landing-observability-addendum.md`](../specs/harness-hub-post-signin-landing-observability-addendum.md) §8 |
+| 親追補索引 | [`docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md`](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) §8 |
 | architecture | [`architecture/harness-hub-infrastructure.md`](../architecture/harness-hub-infrastructure.md) 2026-08-08 節 |
 | 運用・証跡 | [`docs/features/feat-build-identity-deploy-freshness/`](../docs/features/feat-build-identity-deploy-freshness/) |
 | 仕様反映受領書 | [`docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md`](../docs/features/feat-build-identity-deploy-freshness/spec-reflection-receipt.md) |

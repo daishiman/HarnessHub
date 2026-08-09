@@ -16,10 +16,10 @@ updated_at: "2026-08-07T14:16:31.150745Z"
 status: "active"
 depends_on: ["SYS-BUILD-IDENTITY-P12"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
-resource_scope: ["docs/features/feat-build-identity-deploy-freshness/release-record.md","specs/harness-hub-post-signin-landing-observability-addendum.md","architecture/harness-hub-infrastructure.md"]
+resource_scope: ["docs/features/feat-build-identity-deploy-freshness/release-record.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md","architecture/harness-hub-infrastructure.md"]
 purpose: "feat-build-identity-deploy-freshness の P13 を実行する: リリース判定と確定仕様・アーキテクチャへの書き戻し"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す"
-scope_in: ["docs/features/feat-build-identity-deploy-freshness/release-record.md","specs/harness-hub-post-signin-landing-observability-addendum.md","architecture/harness-hub-infrastructure.md"]
+scope_in: ["docs/features/feat-build-identity-deploy-freshness/release-record.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md","architecture/harness-hub-infrastructure.md"]
 scope_out: ["deploy そのものの実行 (運用操作であり本 feature の成果物ではない)","deploy pipeline の構成変更 (GitHub Actions 経由という既存経路を維持する)","認証を要する管理画面での表示 (認証なしで読めることが要件のため)"]
 acceptance: ["反映可否の判定と、反映後に確認すべき事項 (稼働ビルドの commit が既定 branch の HEAD と一致すること) が release-record.md に確定している","鮮度検出の継続時間しきい値が、反映直後の一時的な乖離では発火しない値であることが記録されている","本 feature で得た判断と改善点が確定仕様と architecture へ書き戻されている","書き戻しが既存の確定章を上書きせず、追補として追加されている"]
 architecture_refs: ["arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]

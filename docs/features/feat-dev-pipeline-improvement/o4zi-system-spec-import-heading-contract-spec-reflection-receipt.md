@@ -62,6 +62,8 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 - C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に束縛。branch 固有の重複 run `20260808T154500Z-o4zi-c19r3` は削除した。
 - リモート `origin/main` (`2049626d`) は local `main` 経由で本 branch に取り込み済み。Draft PR を再 push して CI を再判定する。
 
+
+- 旧 570 行の着地観測 addendum は docs の 300 行 gate に合わせ、`docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md` 索引 + part1..3 へ移設した。正規 graph contract は 122 行の specs 側のまま。
 ## 残課題
 
 - Draft PR #680 の CI と review / merge。merge 後の default-branch reconciliation まで `HarnessHub-o4zi` は in_progress を維持する。
