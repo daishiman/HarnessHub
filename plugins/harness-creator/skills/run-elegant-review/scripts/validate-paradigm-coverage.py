@@ -46,6 +46,12 @@ import json
 import sys
 from pathlib import Path
 
+# `spec_from_file_location()` で本ファイルだけを直接ロードする既存テストでも、
+# 分離した sibling module を解決できるよう script directory を明示する。
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
 from validate_phase_order import check_phase_order_tree
 
 # Each paradigm: id -> list of acceptance tokens (ja + en, lowercased substring match)

@@ -96,6 +96,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - system-spec compile と coverage matrix `--require-complete`: pass。
 - task 仕様書品質ゲート: pass（P01..P13、legacy contract exemption を含め違反 0）。
 - content review: 77 skills pass。script LLM coverage: 62.2% から 63.8% へ回復し ratchet pass。
+- GitHub macOS/Python 3.11 で validator 分割後の sibling import 不足を検出し修正。既存 importlib test 2 系統を含む 78 tests が pass。
 - main 取り込み後の repository CI: 139 pass / 5 staged warning / 1 fail。唯一の failing check は live-trial lint で、同一の旧 verdict に対する stale SHA・downgraded・`DEGRADED` の 3 violation である。`HarnessHub-p65r` で再試走を追跡する。
 - global graph gate: 今回追加 node は適合。HEAD 由来 specification 5 件・task 2 件の frontmatter/heading 不足で fail し、`HarnessHub-n7gg` へ分離した。
 - repository に独立した `verify-pr-ready.sh` は存在しないため、上記 repository CI、focused test、task 仕様、system-spec、graph、`git diff --check` を公開前ゲートとして最終 HEAD で実行した。
