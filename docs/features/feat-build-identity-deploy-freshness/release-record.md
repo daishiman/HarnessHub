@@ -50,7 +50,7 @@ curl -s -H 'Cache-Control: no-cache' "$HUB_HEALTH_URL" | jq '{version, commit}'
 | 先 | 内容 |
 |---|---|
 | `specs/harness-hub-build-identity-deploy-freshness-addendum.md` | V6/V7 の実装確定契約（親 addendum が 500 行超になるため分離） |
-| `specs/harness-hub-post-signin-landing-observability-addendum.md` | §8 は索引のみ（契約本文は上記追補へ） |
+| `docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md` | §8 は索引のみ（契約本文は上記追補へ） |
 | `architecture/harness-hub-infrastructure.md` | 2026-08-08 節へ実装確定を追記 |
 | `docs/infrastructure-spec.md` | `/health.commit`・鮮度検査 step・rollback 除外 |
 | `system-spec/dev-workflow.md` / `index.md` | 実装 writeback 索引（elicitation セルは再オープンしない） |

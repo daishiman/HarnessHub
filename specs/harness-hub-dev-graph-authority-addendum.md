@@ -164,3 +164,23 @@ PostToolUse が tool 完了後に監査する。非同期 queue や製品イベ�
 - 今回の判断と検証: `docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md`
 - C28 継承判断: `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
 - bridge 内部分割: `docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
+
+## system-spec import の見出し contract (2026-08-08 / `HarnessHub-o4zi`)
+
+- conditional family は `template-contract.json` の `conditional_triggers` を正本とし、`family` 以外の key を `source_lineage` へ AND 完全一致させる。
+- `system-spec/index.md` の specification は compile 済み index の 4 見出し、`system-spec/00-requirements-definition.md` の architecture は U1〜U9 を許容する。
+- 同じ `origin_kind=system-spec-harness` でも通常章へ conditional 緩和を波及させず、architecture 基本 10 見出しを要求する。
+- task / specification / architecture は同じ `heading_missing` 経路で fail-closed に検査し、空条件 rule と不正 lineage は発火させない。
+- 完全な base template 準拠は conditional family 発火時も正当な variant として残す。
+
+反映と検証は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
+## system-spec import の data / logic 分離契約
+
+- `build-system-spec-import.py` は confirmed source artifact の frontmatter を除いた本文を
+  byte-for-byte で C02 body へ渡す。これは source lineage/digest と本文を同じ出典へ
+  結び付ける data import である。
+- elicitation state transition、coverage matrix、chapter compile、source citation 判定は
+  system-spec-harness が所有し、dev-graph 側に同等ロジックを置かない。
+- C19 OUT1 の「複製 0」は後者の処理ロジックだけを指す。前者の verbatim body
+  import を理由に受理を拒否しない。

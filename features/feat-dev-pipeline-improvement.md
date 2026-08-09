@@ -156,6 +156,8 @@ fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C
 [最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
 を正とする。
 
+`HarnessHub-o4zi` の branch 最終 gate では、条件付き見出し契約を repository 全体へ適用した際に残っていた旧 specification 5 件・task 2 件も標準セクションへ移行し、full graph schema を violation 0 へ収束させた。500 行を超える着地観測 addendum は、短い正規 contract と詳細履歴へ分離した。対象、検証、製品 runtime 非変更の判断は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) に記録する。
+
 ## 2026-08-09 検証 tier と review 証拠整合
 
 変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。

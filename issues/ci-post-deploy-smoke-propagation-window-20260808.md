@@ -16,7 +16,7 @@ updated_at: "2026-08-08T06:00:11.313290Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-build-identity-deploy-freshness","spec-post-signin-landing-observability"]
-resource_scope: [".github/workflows/ci.yml","scripts/ci/assert-served-version.mjs","apps/hub/tests/ci/production-auth-gates.test.ts","apps/hub/tests/ci/smoke-version-recheck.test.ts","docs/infrastructure-spec.md","specs/harness-hub-post-signin-landing-observability-addendum.md"]
+resource_scope: [".github/workflows/ci.yml","scripts/ci/assert-served-version.mjs","apps/hub/tests/ci/production-auth-gates.test.ts","apps/hub/tests/ci/smoke-version-recheck.test.ts","docs/infrastructure-spec.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"]
 purpose: "配信版一致ゲート通過後も残る colo 間伝播ムラの窓を塞ぎ、smoke が旧版を検査して偽の赤を出すことを防ぐ。"
 goal: "伝播が遅い状況で smoke が旧版へ当たる前に fail-closed で停止し、正常時は deploy 所要時間を実用範囲に保つ。"
 scope_in: ["version_gate の連続一致要求または smoke 直前の version 再確認","追加検査が fail-open でないことの契約テスト","infrastructure-spec / addendum への反映"]
@@ -31,7 +31,7 @@ template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"3785a2c548943b38839c405c936aff16d43cc696ee847a84fabc463b14bfb5d7","evaluator":"CI 実測 (hub-ci run 31221676748 / 31222374425) による原因確定","evidence_ref":"specs/harness-hub-post-signin-landing-observability-addendum.md"}
+confirmation_evidence: {"evaluated_digest":"3785a2c548943b38839c405c936aff16d43cc696ee847a84fabc463b14bfb5d7","evaluator":"CI 実測 (hub-ci run 31221676748 / 31222374425) による原因確定","evidence_ref":"docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"}
 source_lineage: {"imported_at":"2026-08-08T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.97
 classification_reason: "version_gate 実装後に残った運用上の窓を、変更本体から分離して追跡する issue。"
@@ -80,7 +80,7 @@ implementation_readiness: {"checked_at":"2026-08-08T00:00:00Z","missing_sections
 
 ## 根拠文書
 
-- `specs/harness-hub-post-signin-landing-observability-addendum.md` §2.11 (V7-a..d)
+- `docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md` §2.11 (V7-a..d)
 - `docs/infrastructure-spec.md` §7 (deploy job の内容 / rollback step の契約)
 - `apps/hub/tests/ci/production-auth-gates.test.ts` (version_gate の順序と rollback 抑止の契約テスト)
 

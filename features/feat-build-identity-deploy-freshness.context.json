@@ -24,7 +24,7 @@
   "architecture_refs": [
     "architecture/harness-hub-infrastructure.md",
     "architecture/harness-hub-testing-qa.md",
-    "specs/harness-hub-post-signin-landing-observability-addendum.md"
+    "docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"
   ],
   "updated_at": "2026-08-07T11:12:00Z"
 }

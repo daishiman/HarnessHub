@@ -88,3 +88,7 @@ quality_constraints 8 件は 8 件とも PASS([final-review-notes.md](final-revi
 ## 2026-08-08 production coverage smoke 準備
 
 `HarnessHub-p0lr` の F1〜F5 で投稿、AI queue pull/complete、応答書戻し、状態遷移を同じ使い捨て tenant で検査できるようにした。local focused test / typecheck は PASS。provider-admin 越境の edge/route 不一致 (`HarnessHub-stmx`) と production run は残課題であり、P13 は未完了のままとする。
+
+## 2026-08-08 production coverage smoke 実走結果
+
+main `35a10b87` の hub-ci run `31253674292` で F1〜F5 が SUCCESS。feedback 作成、`feedback_response` pull/complete、AI 応答書戻し、`open → in_progress → resolved` を本番 DB で確認し、cleanup 後の残存行は 0 だった。ただし S8 は provider-admin 越境を edge が 404 で止め、`provider.cross_tenant_access` 監査行は 0 の現行挙動を確認した。これは `HarnessHub-stmx` の未解決契約そのものなので、Feedback P13 は in_progress を維持する。
