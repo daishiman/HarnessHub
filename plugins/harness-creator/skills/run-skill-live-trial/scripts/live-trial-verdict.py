@@ -224,7 +224,7 @@ skill_dir_tree_sha = _BEHAVIOR.skill_dir_tree_sha
 
 
 _SCENARIO = _load_sibling("validate-live-trial-scenario-contract")
-_BUDGET = _load_sibling("live-trial-resource-budget")
+_BUDGET = _load_sibling("validate-live-trial-resource-budget")
 _FLAG_PATTERN = _SCENARIO._FLAG_PATTERN
 load_scenario = _SCENARIO.load_scenario
 parse_observation_claims = _SCENARIO.parse_observation_claims

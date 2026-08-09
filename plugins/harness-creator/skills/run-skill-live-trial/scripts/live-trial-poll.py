@@ -176,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
         if not ns.state_file:
             ap.error("scenario poll requires --state-file to preserve immutable wall time")
         scenario_mod = _load_sibling("validate-live-trial-scenario-contract")
-        budget_mod = _load_sibling("live-trial-resource-budget")
+        budget_mod = _load_sibling("validate-live-trial-resource-budget")
         scenario = scenario_mod.load_scenario(Path(ns.scenario_file), ns.scenario_id)
         budget = budget_mod.resource_budget(scenario)
         scenario_wall_cap = budget["max_wall_clock_s"]
@@ -219,7 +219,7 @@ def main(argv: list[str] | None = None) -> int:
             bytes_total = status_mod.transcript_bytes(jsonl_path)
             progress = f"jsonl:{bytes_total}:{state_label}"
             if token_cap:
-                budget_mod = _load_sibling("live-trial-resource-budget")
+                budget_mod = _load_sibling("validate-live-trial-resource-budget")
                 usage = budget_mod.transcript_token_usage(jsonl_path)
                 if usage["assistant_message_ids"] and not usage["measured"]:
                     save_state(ns.state_file, st)

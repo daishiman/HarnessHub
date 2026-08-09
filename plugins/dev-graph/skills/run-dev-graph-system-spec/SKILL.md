@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--resume]"
 allowed-tools: [Read, Bash, Skill, Agent, AskUserQuestion]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-system-spec-resume.py, ../../scripts/validate-system-spec-boundary.py, ../../scripts/run-system-spec-resume-import.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-system-spec-resume.py, ../../scripts/validate-system-spec-boundary.py, ../../scripts/build-system-spec-resume-import.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R0-context.md
@@ -69,7 +69,7 @@ feedback_contract:
 1. C24 で caller repo の `system-spec/` を解決し、plugin source/別 repo の content を拒否する。
 2. `plugins/system-spec-harness/.claude-plugin/plugin.json` の name/version が `>=0.1.0 <1.0.0`、かつ `references/package-contract.json#entry_points.skills` が `run-system-spec-elicit`, `run-system-spec-doc-fetch`, `run-system-spec-compile`, `assign-system-spec-completeness-evaluator` を持つことを確認する。公式manifestへharness専用キーを混在させず、不在/不一致は fallback を実装せず停止する。
 3. `system-spec/resume-receipt.json` がある場合は `validate-system-spec-resume.py` で plugin version・required entry points・3 gate・artifact digest を検証する。exit 0 なら upstream 成果物を再生成せず R3 へ進む。不在/stale の場合だけ Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲し、新しい receipt を得る。resume 検証失敗を無視した import は禁止する。
-   resume 経路は判断分岐が無いため `run-system-spec-resume-import.py --repo-root <root>` 1 コマンドへ集約し、R0/R2/R3 の validator・C02 upsert・goal-seek evidence を決定論的に完了させる。この経路では `Agent` fork と upstream `Skill` 呼出しを行わない。
+   resume 経路は判断分岐が無いため `build-system-spec-resume-import.py --repo-root <root>` 1 コマンドへ集約し、R0/R2/R3 の validator・C02 upsert・goal-seek evidence を決定論的に完了させる。この経路では `Agent` fork と upstream `Skill` 呼出しを行わない。
 4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。この source body の verbatim import (素材の取込み) は、elicitation/compile の処理ロジックを dev-graph へ再実装する「複製」には含めない。取込み元本文と node body の一致は、`source_digest` が示す成果物を忠実に参照した証拠として扱う。
 
 出力は import report (`system-spec/index.md`, imported node ids, lineage, confirmation_status, readiness)。feature は `architecture_refs` で参照し、内容を複製しない。1 feature→13 task は system-dev-planner の責務であり本 skill は扱わない。

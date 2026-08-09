@@ -199,9 +199,9 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 
 - scenario が時間・token の不変上限を所有し、poll は実行中の停止、verdict は事後の PASS 禁止を所有する。片側だけの検査にしない。
 - transcript 集計器は main/subagent を横断して assistant message ID を重複排除する。計測不能を 0 token と扱わず fail-closed にする。
-- C19 の current receipt 再利用では `validate-system-spec-resume.py` が digest/version/gate を検証し、`run-system-spec-resume-import.py` が C02 writer と各 gate を一度だけ合成実行する。上流生成 Skill と network は呼ばない。
+- C19 の current receipt 再利用では `validate-system-spec-resume.py` が digest/version/gate を検証し、`build-system-spec-resume-import.py` が C02 writer と各 gate を一度だけ合成実行する。上流生成 Skill と network は呼ばない。
 - `validate-system-spec-boundary.py` は system-spec-harness 側の runtime signature が実在することを陽性対照として確認してから、dev-graph 側の同等実装 0 を判定する。
-- 正式な現行証拠は同一 scenario の fresh run で PASS（75.065 秒・201,366 token）。上限は 360 秒・2,000,000 token、上流 Skill/network は 0 である。開始時刻を永続化した poll-state と transcript の SHA を verdict に束縛し、再開しても時間上限をリセットできない。
+- 正式な現行証拠は同一 scenario の fresh run r5 で PASS（90.186 秒・290,770 token）。上限は 360 秒・2,000,000 token、上流 Skill/network は 0 である。開始時刻を永続化した poll-state と transcript の SHA を verdict に束縛し、再開しても時間上限をリセットできない。
 
 ## 2026-08-08 production coverage smoke (qa-205 / `HarnessHub-p0lr`)
 

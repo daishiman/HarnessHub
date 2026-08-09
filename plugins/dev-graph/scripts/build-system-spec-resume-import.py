@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# name: run-system-spec-resume-import
+# name: build-system-spec-resume-import
 # purpose: Execute C19's deterministic cached PASS validation and C02 import path.
 # inputs: [argv --repo-root PATH]
 # outputs: [graph nodes, eval-log goal/progress/intermediate/import receipts, stdout JSON]
@@ -156,7 +156,7 @@ def main(argv: list[str] | None = None) -> int:
         inter_path.write_text(json.dumps(intermediate, ensure_ascii=False) + "\n", encoding="utf-8")
 
         report = {
-            "runner": "run-system-spec-resume-import",
+            "runner": "build-system-spec-resume-import",
             "mode": "reuse-confirmed",
             "status": "PASS",
             "network_calls": 0,
@@ -171,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     except (OSError, KeyError, RunFailure, json.JSONDecodeError) as exc:
         print(json.dumps({
-            "runner": "run-system-spec-resume-import",
+            "runner": "build-system-spec-resume-import",
             "mode": "reuse-confirmed",
             "status": "FAIL",
             "error": str(exc),

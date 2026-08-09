@@ -24,7 +24,7 @@ def _load(stem: str):
 
 status_mod = _load("live-trial-status")
 poll_mod = _load("live-trial-poll")
-finalize_mod = _load("live-trial-finalize")
+finalize_mod = _load("build-live-trial-verdict")
 
 
 # ---- 合成 transcript fixture -------------------------------------------------

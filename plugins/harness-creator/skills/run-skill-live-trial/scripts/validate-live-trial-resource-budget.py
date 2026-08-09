@@ -1,4 +1,4 @@
-"""Scenario-bound live-trial resource budgets and transcript token accounting.
+"""Validate scenario-bound live-trial budgets and transcript token accounting.
 
 The budget is part of the scenario contract, not an operator-tunable hint.  A
 caller may choose a stricter poll limit, but cannot raise the scenario limit.

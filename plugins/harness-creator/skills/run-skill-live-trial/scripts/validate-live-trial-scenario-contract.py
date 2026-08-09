@@ -43,7 +43,7 @@ def load_scenario(scenario_file: Path, scenario_id: str) -> dict:
     # module remains directly executable in isolation.
     import importlib.util
 
-    budget_path = Path(__file__).resolve().parent / "live-trial-resource-budget.py"
+    budget_path = Path(__file__).resolve().parent / "validate-live-trial-resource-budget.py"
     spec = importlib.util.spec_from_file_location("live_trial_resource_budget", budget_path)
     assert spec and spec.loader
     budget_module = importlib.util.module_from_spec(spec)

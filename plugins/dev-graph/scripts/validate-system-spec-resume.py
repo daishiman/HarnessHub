@@ -22,17 +22,14 @@ from typing import Any
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 HARNESS_ROOT = PLUGIN_ROOT.parent / "system-spec-harness"
+IMPORT_CONTRACT_PATH = PLUGIN_ROOT / "references" / "system-spec-import-contract.json"
 REQUIRED_ENTRY_POINTS = {
     "run-system-spec-elicit",
     "run-system-spec-doc-fetch",
     "run-system-spec-compile",
     "assign-system-spec-completeness-evaluator",
 }
-REQUIRED_ARTIFACTS = {
-    "system-spec/index.md",
-    "system-spec/00-requirements-definition.md",
-    "system-spec/completeness-report.json",
-}
+REQUIRED_ARTIFACT_ROLES = {"index", "requirements", "completeness"}
 REQUIRED_GATES = {"coverage", "source_citation", "evaluator"}
 
 
@@ -63,7 +60,17 @@ def contained_file(root: Path, relative: str) -> Path:
 
 def validate(root: Path) -> dict[str, Any]:
     root = root.resolve(strict=True)
-    receipt_path = contained_file(root, "system-spec/resume-receipt.json")
+    import_contract = load_json(IMPORT_CONTRACT_PATH)
+    artifact_paths = import_contract.get("artifacts")
+    if (
+        not isinstance(artifact_paths, dict)
+        or set(artifact_paths) != REQUIRED_ARTIFACT_ROLES
+        or any(not isinstance(value, str) or not value for value in artifact_paths.values())
+    ):
+        raise ValueError("system-spec import contract artifact roles are invalid")
+    required_artifacts = set(artifact_paths.values())
+    receipt_relative = str(Path(artifact_paths["index"]).parent / "resume-receipt.json")
+    receipt_path = contained_file(root, receipt_relative)
     receipt = load_json(receipt_path)
     manifest = load_json(HARNESS_ROOT / ".claude-plugin" / "plugin.json")
     package = load_json(HARNESS_ROOT / "references" / "package-contract.json")
@@ -95,10 +102,10 @@ def validate(root: Path) -> dict[str, Any]:
         failures.append("gate-not-pass")
 
     artifacts = receipt.get("artifacts")
-    if not isinstance(artifacts, dict) or set(artifacts) != REQUIRED_ARTIFACTS:
+    if not isinstance(artifacts, dict) or set(artifacts) != required_artifacts:
         failures.append("artifact-set-invalid")
     else:
-        for relative in sorted(REQUIRED_ARTIFACTS):
+        for relative in sorted(required_artifacts):
             try:
                 actual = sha256(contained_file(root, relative))
             except ValueError as exc:
@@ -108,11 +115,11 @@ def validate(root: Path) -> dict[str, Any]:
                 failures.append(f"artifact-digest-stale:{relative}")
 
     try:
-        report = load_json(contained_file(root, "system-spec/completeness-report.json"))
+        report = load_json(contained_file(root, artifact_paths["completeness"]))
         if report.get("verdict") != "PASS":
             failures.append("completeness-verdict-not-pass")
         requirements = contained_file(
-            root, "system-spec/00-requirements-definition.md"
+            root, artifact_paths["requirements"]
         ).read_text(encoding="utf-8")
         if not requirements.startswith("---\n") or "\nstatus: confirmed\n" not in requirements:
             failures.append("requirements-not-confirmed")
@@ -125,7 +132,7 @@ def validate(root: Path) -> dict[str, Any]:
         "mode": "reuse-confirmed",
         "plugin_version": manifest.get("version"),
         "required_entry_points": sorted(REQUIRED_ENTRY_POINTS),
-        "artifacts": sorted(REQUIRED_ARTIFACTS),
+        "artifacts": sorted(required_artifacts),
         "failures": failures,
     }
 

@@ -100,9 +100,9 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - Python compile、JSON parse、`git diff --check`: pass。
 - system-spec compile と coverage matrix `--require-complete`: pass。
 - task 仕様書品質ゲート: pass（P01..P13、legacy contract exemption を含め違反 0）。
-- content review: 77 skills pass。script LLM coverage: 62.2% から 63.8% へ回復し ratchet pass。
+- content review: 77 skills pass。script LLM coverage: ratchet base 62.2% に対して、新規 bounded/finalizer scripts 追加後も 63.1% で pass。
 - GitHub macOS/Python 3.11 で validator 分割後の sibling import 不足を検出し修正。既存 importlib test 2 系統を含む 78 tests が pass。
-- 旧 C19 trial は全生成を行い 2,820 秒で `DEGRADED` だった。上流 blocker 修正と bounded resume 経路の導入後、正式な fresh run は 75.065 秒・201,366 token で PASS。上流 Skill/network は 0 で、現行受領書は behavior closure SHA、transcript SHA、開始時刻を保持する poll-state SHA、独立 goal-evaluation に束縛した。再開時の時間リセットや usage 不明 token の受理は fail-closed で拒否する。
+- 旧 C19 trial は全生成を行い 2,820 秒で `DEGRADED` だった。上流 blocker 修正と bounded resume 経路の導入後、正式な fresh run r5 は 90.186 秒・290,770 token で PASS。上流 Skill/network は 0 で、現行受領書は behavior closure SHA、transcript SHA、開始時刻を保持する poll-state SHA、独立 goal-evaluation に束縛した。再開時の時間リセットや usage 不明 token の受理は fail-closed で拒否する。
 - `lint-live-trial-verdict.py --all`: 9 verified / 6 missing warning（D13 record-only）/ violation 0。`lint-live-trial-task-contract.py --all`: violation 0。
 - system-spec-harness: 542 passed。harness-creator/live-trial: 1,043 passed。dev-graph: 981 passed。いずれも最終 content review と bounded evidence 更新後に全件再実行した。
 - global graph gate: 今回追加 node は適合。HEAD 由来 specification 5 件・task 2 件の frontmatter/heading 不足で fail し、`HarnessHub-n7gg` へ分離した。

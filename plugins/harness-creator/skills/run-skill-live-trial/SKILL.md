@@ -36,9 +36,9 @@ script_refs:
   - scripts/live-trial-send.py
   - scripts/live-trial-status.py
   - scripts/live-trial-poll.py
-  - scripts/live-trial-resource-budget.py
+  - scripts/validate-live-trial-resource-budget.py
   - scripts/live-trial-verdict.py
-  - scripts/live-trial-finalize.py
+  - scripts/build-live-trial-verdict.py
   - scripts/build-skill-behavior-closure.py
   - scripts/validate-live-trial-scenario-contract.py
   - scripts/validate-goal-seek-evidence.py
@@ -246,7 +246,7 @@ SESSION_ID="$SESSION_ID" python3 $SCRIPTS/live-trial-poll.py --state-file "$WORK
 ### verdict + 掃除
 
 ```bash
-python3 $SCRIPTS/live-trial-finalize.py --session "$SESSION" --run-id "$RUN_ID" \
+python3 $SCRIPTS/build-live-trial-verdict.py --session "$SESSION" --run-id "$RUN_ID" \
   --owner-pid "$OWNER_PID" -- \
   --workdir "$WORKDIR" --target-skill "<plugin:skill>" \
   --skill-dir "<被験skillディレクトリ>" --session-id "$SESSION_ID" --requested-model "$MODEL" \
@@ -259,7 +259,7 @@ python3 $SCRIPTS/live-trial-finalize.py --session "$SESSION" --run-id "$RUN_ID" 
    --observation "1=<evidence ref>" --observation "2=<evidence ref>" ...]
 ```
 
-verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts/宣言 refs、native manifest/hooks/package-contract、direct dependency manifest/hooksを含む)。scenario の wall-clock は呼出側 `--wall-clock-s` でなく、必須 `poll-state.json` の開始・最終観測時刻/elapsed から再計算し、その SHA を verdict へ束縛する。**DONE / STALL / HARD_CAP / 中断の全経路で必ず `live-trial-finalize.py` を使う**。finalizer は verdict が usage/schema error で失敗しても `finally` で scoped `reap(run-id, owner PID)` を実行し、所有 metadata が一致しない session を直接 kill しない。boot は tmux session に `@lt_run_id` と `@lt_owner_pid` を記録し、通常の reap は session 名の prefix・`@lt_run_id`・READY が返した `@lt_owner_pid` の 3 点が一致する自分の trial だけを回収する。同じ run-id 内の別 owner も対象外である。
+verdict は `schemas/live-trial-verdict.schema.json` を自己検証してから書き出される (`skill_dir_tree_sha` = 互換field名を維持した宣言済み挙動閉包 digest。SKILL.md、local scripts/prompts/宣言 refs、native manifest/hooks/package-contract、direct dependency manifest/hooksを含む)。scenario の wall-clock は呼出側 `--wall-clock-s` でなく、必須 `poll-state.json` の開始・最終観測時刻/elapsed から再計算し、その SHA を verdict へ束縛する。**DONE / STALL / HARD_CAP / 中断の全経路で必ず `build-live-trial-verdict.py` を使う**。finalizer は verdict が usage/schema error で失敗しても `finally` で scoped `reap(run-id, owner PID)` を実行し、所有 metadata が一致しない session を直接 kill しない。boot は tmux session に `@lt_run_id` と `@lt_owner_pid` を記録し、通常の reap は session 名の prefix・`@lt_run_id`・READY が返した `@lt_owner_pid` の 3 点が一致する自分の trial だけを回収する。同じ run-id 内の別 owner も対象外である。
 
 ## 判定ロジック
 

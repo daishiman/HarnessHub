@@ -2,12 +2,12 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
-    "skill_md_sha256": "9ec09c0022f195d03009f5a925a41a92f9b7e838acea398a587096d3d3bd9f22"
+    "skill_md_sha256": "68955ae745710df24026cfd75ad38525c7743413d0f2db9a1a0bb9561cf5a185"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "independent C19 content reviewer (fresh read-only context)",
-  "reviewed_at": "2026-08-09T09:50:25Z",
+  "reviewed_at": "2026-08-09T10:45:09Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
@@ -23,7 +23,7 @@
     "positive_feedback": [
       "SKILL、R2、inventory、brief は current receipt 再利用と absent/stale 時 build の境界を同じ文言で宣言している。",
       "elicitation、doc-fetch、compile、evaluator は system-spec-harness に残し、dev-graph は digest 検証、source-derived body の adapter、C02 経由 import だけを担当するため責務の重複がない。",
-      "resume は no-network/no-LLM の単一決定論 runner で、digest、version、gate を fail-closed に検査する。重複ロジック検査には upstream の陽性対照があり、空集合による偽 PASS を避けている。",
+      "build-system-spec-resume-import.py は no-network/no-LLM の単一決定論 runner で、artifact path を import contract から読み、digest、version、gate を fail-closed に検査する。重複ロジック検査には upstream の陽性対照があり、空集合による偽 PASS を避けている。",
       "bounded scenario は max_wall_clock_s=360、max_total_tokens=2000000 を固定し、reuse 時の上流 4 Skill 呼出しを禁止する。"
     ],
     "negative_feedback": [],

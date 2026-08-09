@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the verdict and always reap the exactly-owned tmux session."""
+"""Build the verdict and always reap the exactly-owned tmux session."""
 from __future__ import annotations
 
 import argparse

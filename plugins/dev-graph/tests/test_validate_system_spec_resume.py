@@ -10,7 +10,7 @@ from pathlib import Path
 PLUGIN = Path(__file__).resolve().parents[1]
 BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 SCRIPT = PLUGIN / "scripts" / "validate-system-spec-resume.py"
-RUNNER = PLUGIN / "scripts" / "run-system-spec-resume-import.py"
+RUNNER = PLUGIN / "scripts" / "build-system-spec-resume-import.py"
 BOUNDARY = PLUGIN / "scripts" / "validate-system-spec-boundary.py"
 
 

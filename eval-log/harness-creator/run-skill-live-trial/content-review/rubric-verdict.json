@@ -1,9 +1,9 @@
 {
-  "target": {"plugin": "harness-creator", "skill": "run-skill-live-trial", "skill_md_sha256": "153d02fc4025b02b8be70a4b98fa3c541df55d6b7fa984db1e187a83d7dc160a"},
+  "target": {"plugin": "harness-creator", "skill": "run-skill-live-trial", "skill_md_sha256": "ed1e89d06f9c11e6e4ae69301745369183434e007a8adfd5d6e0becf888890f5"},
   "review_kind": "rubric",
   "verdict": "PASS",
   "reviewer": "independent changed-skills content reviewer (focused combined rubric context)",
-  "reviewed_at": "2026-08-09T10:10:35Z",
+  "reviewed_at": "2026-08-09T10:45:09Z",
   "iterations": 2,
   "human_review_required": false,
   "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
