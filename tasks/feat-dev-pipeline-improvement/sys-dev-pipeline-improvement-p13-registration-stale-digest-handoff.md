@@ -53,3 +53,55 @@ implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections
 - `origin/main` と local `main` の一致を確認後、local `main` からこの branch を作成する。focused test、plugin 回帰、task package、fresh live trial、repository CI を同じ tree で再検証する。
 - 反映先は `system-spec/testing-qa.md`、`specs/harness-hub-system-specification.md`、`architecture/harness-hub-testing-qa.md`、feature/doc 更新。正本の受領書は `docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md`。
 - 製品 API・DB・認証認可・UI・Cloudflare deploy unit は非変更。Beads `HarnessHub-0ui0`、issue node `issue-render-registration-stale-digest-20260803`、本補助 task node に commit、Draft PR、検証結果を記録する。
+
+## 目的
+
+registration receipt の stale graph digest を安全に部分一致として扱う変更の統合条件を固定する。
+
+## 背景
+
+sync 後は graph digest だけが変わるため、全項目一致だけを要求すると正しい receipt まで恒常的に stale になっていた。
+
+## 入力と前提条件
+
+render 実装、three-state verification 契約、fresh live trial、`HarnessHub-0ui0` の記録を入力とする。
+
+## 実装対象
+
+renderer の receipt 照合、表示状態、回帰 test、関連仕様と証跡の統合を対象とする。
+
+## 実行手順
+
+差分と正本 digest を確認し、focused / plugin / live-trial / repository gate を同じ tree で実行する。
+
+## 出力と成果物
+
+verified / partial / not_performed の判定、検証証跡、仕様反映受領書、draft PR を成果物とする。
+
+## 依存関係
+
+`issue-render-registration-stale-digest-20260803`、render skill、testing-qa architecture、Beads `HarnessHub-0ui0` に依存する。
+
+## Write scope と競合制約
+
+frontmatter の `resource_scope` 内だけを書き、receipt の既存 digest 値を検査通過目的で書き換えない。
+
+## 受入条件
+
+graph digest だけの stale は partial、その他の不一致は fail-closed、receipt なしは not_performed となる。
+
+## 検証方法
+
+focused test、plugin 回帰、task package、fresh render live trial、repository CI を実行する。
+
+## リスクとロールバック
+
+緩和が source / lineage 不一致へ波及するリスクがある。問題時は対象 commit を revert して完全一致へ戻す。
+
+## GitHub publication
+
+検証状態、Beads / issue / task node、仕様反映、残課題を draft PR 本文へ記録する。
+
+## Handoff
+
+main merge 後に同じ tree で receipt を再検証し、default branch の記録と Beads を reconcile する。

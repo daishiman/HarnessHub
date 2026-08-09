@@ -1,0 +1,69 @@
+{
+  "references": [
+    {
+      "target_id": "sqlite",
+      "retrieved_at": "2026-08-08T11:00:34.281Z",
+      "source_url": "https://www.sqlite.org/changes.html",
+      "official_publisher": "SQLite Consortium (sqlite.org)",
+      "official_host": "www.sqlite.org",
+      "version": "3.53.4",
+      "last_updated": "2026-07-24",
+      "latest_checked_at": "2026-08-08T11:00:34.281Z",
+      "evidence_ref": "system-spec/retrieval-evidence/sqlite.json",
+      "evidence_sha256": "e6a5a34b38fd389b4c3993b6275fca743460eacd6ea7eee1d836181403e55aca",
+      "summary": "SQLite 公式 change log。現行最新リリースは 3.53.4 (2026-07-24) で、3.53.0-3.53.3 の不具合修正版。単一ファイル埋め込み DB として常駐サーバーを持たず、D1 の採択根拠 (G1/G4) を裏付ける。"
+    },
+    {
+      "target_id": "postgresql",
+      "retrieved_at": "2026-08-08T11:17:11.432Z",
+      "source_url": "https://www.postgresql.org/docs/release/18.4/",
+      "official_publisher": "PostgreSQL Global Development Group",
+      "official_host": "www.postgresql.org",
+      "version": "18.4",
+      "last_updated": "2026-05-14",
+      "latest_checked_at": "2026-08-08T11:17:11.432Z",
+      "evidence_ref": "system-spec/retrieval-evidence/postgresql.json",
+      "evidence_sha256": "a15de9a36df7898b48077eb1b58e799e5269e24133d319840e2de1d8516941a0",
+      "summary": "PostgreSQL 公式リリースノート 18.4 (Release date 2026-05-14)。18 系が現行 major の最新 point release。サーバー型 RDBMS のため常駐プロセスが必要で、D1 では非採択となった比較対象。"
+    },
+    {
+      "target_id": "fastapi",
+      "retrieved_at": "2026-08-08T11:00:34.286Z",
+      "source_url": "https://fastapi.tiangolo.com/release-notes/",
+      "official_publisher": "Sebastián Ramírez (tiangolo) / FastAPI",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "last_updated": "2026-07-29",
+      "latest_checked_at": "2026-08-08T11:00:34.286Z",
+      "evidence_ref": "system-spec/retrieval-evidence/fastapi.json",
+      "evidence_sha256": "24e4b64d4e7dc040d1578561fc0729e1ddace06423bd6fee734755dcfc7064af",
+      "summary": "FastAPI 公式リリースノート。現行最新は 0.141.1 (2026-07-29)。OpenAPI 自動生成と型注釈ベースの入力 schema 検証を標準で持ち、D2 の採択根拠 (G2/G4・U9 の OpenAPI 提供) を裏付ける。"
+    },
+    {
+      "target_id": "flask",
+      "retrieved_at": "2026-08-08T11:17:11.438Z",
+      "source_url": "https://flask.palletsprojects.com/en/stable/changes/",
+      "official_publisher": "Pallets",
+      "official_host": "flask.palletsprojects.com",
+      "version": "3.1.3",
+      "last_updated": "2026-02-18",
+      "latest_checked_at": "2026-08-08T11:17:11.438Z",
+      "evidence_ref": "system-spec/retrieval-evidence/flask.json",
+      "evidence_sha256": "7939c5df7b179382a830de854814a4b2c542de4f83041fca70af4ab0a77f227b",
+      "summary": "Flask 公式 changes (stable)。現行最新は 3.1.3 で公式記載のリリース日は 2026-02-18。軽量 WSGI framework だが OpenAPI 定義と入力 schema 検証は追加実装が必要で、D2 では非採択となった比較対象。"
+    },
+    {
+      "target_id": "oauth2-rfc6749",
+      "retrieved_at": "2026-08-08T11:00:34.286Z",
+      "source_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+      "official_publisher": "IETF (Internet Engineering Task Force)",
+      "official_host": "datatracker.ietf.org",
+      "version": "RFC 6749 (Proposed Standard)",
+      "last_updated": "2012-10",
+      "latest_checked_at": "2026-08-08T11:00:34.286Z",
+      "evidence_ref": "system-spec/retrieval-evidence/oauth2-rfc6749.json",
+      "evidence_sha256": "d628b4054904b595304c7fc867fa73356ac1dde06f7b781e18126c7265d709e5",
+      "summary": "OAuth 2.0 Authorization Framework (RFC 6749、2012年10月、Proposed Standard)。RFC 8252 / 8996 / 9700 により更新済み。単一利用者・外部 IdP なしの本システムには過剰構成であり、D3 では非採択となった比較対象。"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "target_id": "local-bearer-token",
+  "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+  "retrieved_at": "2026-08-08T12:42:18Z",
+  "retrieval_method": "WebFetch (run-system-spec-doc-fetch R2)",
+  "official_host": "fastapi.tiangolo.com",
+  "observed": [
+    "当該ページ自体は version 表記も最終更新日も持たない (実取得で確認)",
+    "version は同一公式 host の https://fastapi.tiangolo.com/release-notes/ を本セッションで実取得して得た現行版 0.141.1 を採用"
+  ],
+  "also_fetched": [
+    "https://fastapi.tiangolo.com/release-notes/"
+  ]
+}

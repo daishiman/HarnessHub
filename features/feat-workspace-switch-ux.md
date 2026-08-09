@@ -92,3 +92,15 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
 ## 出典
 
 `specs/harness-hub-post-signin-workspace-scope-addendum.md` C 節・F 節 / `system-spec/spec-state.json` qa-135 【4】・qa-136 【4】【5】
+
+## 実装進捗メモ (2026-08-08 / issue-hub-root-500-signin-20260808)
+
+入口側の最小結線を `feat-post-signin-scope-routing` 側で先行した。本 feature の完了にはならない。
+
+| 受入 | 状態 | 備考 |
+| --- | --- | --- |
+| 所属 1 件は選択画面なし | 実装済み | `resolveSessionScope` の singleton 自動確定 |
+| 所属 2 件以上は選択後に進む | 入口のみ実装 | `/` の Workspace 選択 + `/signin/workspace` cookie。シェル常設切替は未 |
+| 共通シェルから常時切替 | 未実装 | 本 feature の本体 |
+| 切替時の旧 scope 非表示 | 未実装 | 本 feature の本体 |
+| 403 生値を出さず回復導線 | 部分実装 | middleware の navigation HTML + `/` へのリンク。ErrorState 画面側の文言整備は残 |

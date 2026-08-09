@@ -44,6 +44,8 @@ from state_transition_common import (
 from state_transition_foundation import set_decision, set_foundation
 from state_transition_knowledge import set_knowledge_candidate
 from state_transition_matrix import (
+    CURRENT_STATE_SCHEMA_VERSION,
+    DESIGN_APPLICATION_CONTRACT_VERSION,
     add_category,
     apply_cell_op,
     apply_turn,
@@ -56,6 +58,19 @@ from state_transition_matrix import (
     run_chunk,
     set_targets,
 )
+
+
+def _require_writable_state(state: dict) -> None:
+    """Legacy state は読み取り専用とし、明示 init migration を強制する。"""
+    if (
+        state.get("schema_version") != CURRENT_STATE_SCHEMA_VERSION
+        or state.get("design_application_contract_version")
+        != DESIGN_APPLICATION_CONTRACT_VERSION
+    ):
+        raise TransitionError(
+            "legacy spec-state は読み取り専用。init --state で schema 1.1 / "
+            "design_application_contract_version 1.0 へ移行してから更新すること"
+        )
 
 
 def load_json(path: str) -> dict:
@@ -130,6 +145,7 @@ def main(argv: list[str]) -> int:
             _emit(init_state(load_json(args.taxonomy), load_json(args.state) if args.state else None), args.out)
         else:
             state = load_json(args.state)
+            _require_writable_state(state)
             if args.cmd == "add-category":
                 add_category(state, load_json_arg(args.category))
             elif args.cmd == "apply":

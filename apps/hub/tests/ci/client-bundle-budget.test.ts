@@ -24,6 +24,9 @@ type Fixture = {
   reportPath: string;
   layoutChunk: string;
   dynamicPageChunk: string;
+  rootErrorChunk: string;
+  siblingPageChunk: string;
+  foreignGroupErrorChunk: string;
 };
 
 function writeJson(filePath: string, value: unknown): void {
@@ -57,6 +60,12 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
   const dynamicPageChunk = 'static/chunks/app/[tenant_slug]/signin/page.js';
   /** 同一ファイルを指す URL 表記。client reference manifest 側はこちらで記録される */
   const dynamicPageChunkAsUrl = 'static/chunks/app/%5Btenant_slug%5D/signin/page.js';
+  /** root の error 境界。祖先セグメント由来なのでブラウザは実際に読む (落としてはいけない) */
+  const rootErrorChunk = 'static/chunks/app/error.js';
+  /** 別 route の page 専用 chunk。共有 client 部品と同居しただけで manifest に現れる */
+  const siblingPageChunk = 'static/chunks/app/sibling/page.js';
+  /** 別 route group の境界 chunk。この route の鎖に入らない */
+  const foreignGroupErrorChunk = 'static/chunks/app/(other)/error.js';
 
   writeJson(path.join(buildRoot, 'app-build-manifest.json'), {
     pages: {
@@ -90,6 +99,25 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
         id: 2,
         name: '*',
         chunks: ['102', pageChunk],
+        async: false,
+      },
+      '/workspace/apps/hub/src/app/error.tsx': {
+        id: 5,
+        name: '*',
+        chunks: ['105', rootErrorChunk],
+        async: false,
+      },
+      // 別 route の client 部品。webpack が同じ共有 chunk へ同居させると、その専用 chunk まで付いてくる
+      '/workspace/apps/hub/src/components/SharedWidget.tsx': {
+        id: 6,
+        name: '*',
+        chunks: ['102', siblingPageChunk],
+        async: false,
+      },
+      '/workspace/apps/hub/src/app/(other)/error.tsx': {
+        id: 7,
+        name: '*',
+        chunks: ['107', foreignGroupErrorChunk],
         async: false,
       },
     },
@@ -132,6 +160,10 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
 
   writeChunk(buildRoot, commonChunk, 'export const common = true;\n');
   writeChunk(buildRoot, dynamicPageChunk, 'export const signin = true;\n');
+  writeChunk(buildRoot, rootErrorChunk, 'export const rootError = true;\n');
+  // 実体を置く。置かないと「除外できた」のか「fail-closed で止まった」のか区別できない
+  writeChunk(buildRoot, siblingPageChunk, 'export const sibling = true;\n');
+  writeChunk(buildRoot, foreignGroupErrorChunk, 'export const foreignError = true;\n');
   writeChunk(
     buildRoot,
     layoutChunk,
@@ -153,6 +185,9 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
     reportPath: path.join(buildRoot, 'reports/client-bundle.json'),
     layoutChunk,
     dynamicPageChunk,
+    rootErrorChunk,
+    siblingPageChunk,
+    foreignGroupErrorChunk,
   };
 }
 
@@ -191,8 +226,30 @@ describe('client JS 予算ゲート', () => {
 
     const root = report.routes.find((route: { route: string }) => route.route === '/');
     expect(root.kind).toBe('page');
-    expect(root.chunkCount).toBe(3);
+    // common + page + layout + root error 境界
+    expect(root.chunkCount).toBe(4);
     expect(root.largestChunks.map((chunk: { path: string }) => chunk.path)).toContain(fixture.layoutChunk);
+  });
+
+  /**
+   * clientModules は「その module を含む chunk」を列挙するため、共有 chunk へ同居した別 route の部品を
+   * 起点に、その route 専用の chunk まで芋づるで付いてくる。実測 (2026-08-08) では
+   * /catalog/[projectId] が一覧専用 chunk と別 route group の error 境界を拾い、
+   * Next 自身の First Load JS より 6KiB 大きい値を出して予算超過を誤検知した。
+   * 過大計測は「厳しめ」ではなく単なる誤りなので、両方向 (落とす / 落とさない) を固定する。
+   */
+  it('別 route 専用 chunk と別 route group の境界を初期読み込みへ数えない', () => {
+    const fixture = makeFixture();
+    runCheck(fixture.buildRoot, ['--report', fixture.reportPath]);
+
+    const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+    const root = report.routes.find((route: { route: string }) => route.route === '/');
+    const paths = root.largestChunks.map((chunk: { path: string }) => chunk.path);
+
+    expect(paths).not.toContain(fixture.siblingPageChunk);
+    expect(paths).not.toContain(fixture.foreignGroupErrorChunk);
+    // 祖先セグメントの境界は実際に読まれるので残す (絞りすぎて過小計測にしない)
+    expect(paths).toContain(fixture.rootErrorChunk);
   });
 
   it('layout だけが肥大化した場合も route の予算超過として検出する', () => {

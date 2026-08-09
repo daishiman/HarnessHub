@@ -121,12 +121,58 @@ function toFsRelativePath(chunkPath) {
 }
 
 /**
+ * route key (`/(workspace)/catalog/[projectId]/page`) から、初期表示で読み得るセグメント dir の集合を作る。
+ * 祖先セグメントは layout / error / loading / not-found を提供するので鎖の全段が対象になる。
+ */
+function segmentChain(manifestKey) {
+  const parts = manifestKey
+    .replace(/\/(page|route)$/, '')
+    .split('/')
+    .filter(Boolean);
+  const chain = [''];
+  let current = '';
+  for (const part of parts) {
+    current = current === '' ? part : `${current}/${part}`;
+    chain.push(current);
+  }
+  return new Set(chain);
+}
+
+/**
+ * RSC manifest 由来の chunk のうち、この route では読まれないものを落とす。
+ *
+ * clientModules は「その module を含む chunk」を列挙するため、webpack が別 route の client 部品と
+ * 同じ共有 chunk へ同居させると、同居相手の *専用* chunk まで芋づるで付いてくる。
+ * 実測 (2026-08-08): /catalog/[projectId] に CatalogList が現れ、一覧専用の
+ * `app/(workspace)/catalog/page-*.js` (5.3 KiB) と、別 route group の `(dashboard)/error-*.js` が計上され、
+ * Next 自身の First Load JS (115 kB) に対しゲートが 121.0 KiB を出していた。
+ * script 冒頭が置いている「Next の First Load JS と一致する」という前提が崩れ、
+ * 実際には増えていない route を予算超過と判定してしまう (過大計測は fail-closed ではなく単なる誤検知)。
+ *
+ * 判定は 2 段。`static/chunks/app/**` は route のセグメント鎖に属するものだけ残し、
+ * さらに `page-*` は自分自身のセグメントのものに限る (祖先が page を提供することはない)。
+ * `app/` 配下でない共有 chunk (vendor や 6463 のような共有 client chunk) はブラウザが実際に読むので残す。
+ */
+function isChunkOnRoute(chunkPath, ownSegment, chain) {
+  const match = /^static\/chunks\/app\/(.*)$/.exec(chunkPath);
+  if (match === null) return true;
+  const rest = match[1];
+  const lastSlash = rest.lastIndexOf('/');
+  const dir = lastSlash === -1 ? '' : rest.slice(0, lastSlash);
+  const base = lastSlash === -1 ? rest : rest.slice(lastSlash + 1);
+  if (!chain.has(dir)) return false;
+  if (base.startsWith('page-')) return dir === ownSegment;
+  return true;
+}
+
+/**
  * route 固有の client reference manifest から、layout を含む client component chunk を取り出す。
  *
  * app-build-manifest の pages["/page"] は page entry しか列挙せず、root layout の entry は
  * pages["/layout"] に分かれている。page entry だけを合計すると、実ブラウザが初期表示で読む
  * layout chunk を見落とす。実際の HTML も page と layout の両方を script src に持つため、
  * route ごとの client reference manifest を併用して完全な集合へ戻す。
+ * ただし同居 chunk の巻き込みは isChunkOnRoute で落とす。
  */
 async function clientReferenceChunks(appPath, serverEntry) {
   const manifestPath = path.join(SERVER_ROOT, serverEntry.replace(/\.js$/, '_client-reference-manifest.js'));
@@ -142,10 +188,18 @@ async function clientReferenceChunks(appPath, serverEntry) {
     .trim()
     .replace(/;$/, '');
   const manifest = JSON.parse(serialized);
+  const chain = segmentChain(appPath);
+  const ownSegment = appPath
+    .replace(/\/(page|route)$/, '')
+    .split('/')
+    .filter(Boolean)
+    .join('/');
   const chunks = new Set();
   for (const module of Object.values(manifest.clientModules ?? {})) {
     for (const value of module.chunks ?? []) {
-      if (typeof value === 'string' && value.endsWith('.js')) chunks.add(toFsRelativePath(value));
+      if (typeof value !== 'string' || !value.endsWith('.js')) continue;
+      const relative = toFsRelativePath(value);
+      if (isChunkOnRoute(relative, ownSegment, chain)) chunks.add(relative);
     }
   }
   return chunks;

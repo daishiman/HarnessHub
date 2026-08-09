@@ -1,0 +1,21 @@
+{
+  "acceptance": {
+    "inner": "criteria:IN1 — validate-graph-schema.py で生成 node の必須キー欠落 0 件",
+    "outer": "criteria:OUT1 — feature+architecture DAG は循環なし・task 粒度混入なし、評価前 draft の Issue 起票 0 件、tracker 投影は confirmed/pass/readiness complete のみ"
+  },
+  "declared_granularity_threshold": {
+    "max_value": 3,
+    "metric": "max_inter_feature_depends_on_per_feature"
+  },
+  "engine": "inline",
+  "fork": "subagent",
+  "max_loops": 5,
+  "original_goal": "社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者は全社の進捗を集計したレポートを閲覧できる。",
+  "original_goal_hash": "3f082c5e355a245ad6db2bfcfd569f8a795af23a87cd95e3515fcb7da8bd28ad",
+  "repo_roots": {
+    "beads": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T183312-wt27-c14-final/fixture-beads",
+    "none": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T183312-wt27-c14-final/fixture-none"
+  },
+  "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+  "skill": "dev-graph:run-dev-graph-decompose"
+}

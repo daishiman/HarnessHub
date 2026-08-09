@@ -15,44 +15,103 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-190 |
+| Web (web) | 確定 | 確定質疑: qa-217 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-095 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-211 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop を開発者クライアント環境として使わない (作者環境は macOS + Windows。dev-workflow の desktop-linux 行と同根拠)。GitHub Actions の ubuntu-latest runner 上のテスト実行は CI 実行基盤として web 行の品質ゲート要件でカバーする |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-095 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-211 |
 
 ## 確定内容 (質疑録)
 
-### qa-190 (対応セル: web)
+### qa-217 (対応セル: web)
 
-**質問**: C07 独立監査ラウンド12 (verdict PASS) が MEDIUM として、qa-188 の論点束ねを指摘した。qa-188 の (a)〜(d) は『tenants.status を段0 語彙へ追加する』という 1 論点として妥当だが、(e)『DeviceAuthorizationStatus の三重定義と V7 の第3情報源化』は独立した別論点である、という判定である。理由は、対象ドメインが異なる (前者=認証の前提状態、後者=検査ツールの網羅範囲) こと、影響先も異なる (前者=段0 マトリクス、後者=V7 acceptance) ことの 2 点。spec-state 契約『qa_log の論点分離』は既登録 entry の逐語改変を禁じ、束ねが後から判明した場合は分離索引を新規 entry として追記せよと定めている。この扱いを決めよ。
+**質問**: testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。
 
-**回答**: C07 の判定を受け入れ、**qa-188-e を本 entry へ分離索引として切り出す**。qa-188 の逐語は一切改変しない。matrix.maintenance-ops.web.qa_ref も qa-188 のまま据え置く。
+**回答**: 【本 entry の位置づけ】
+本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
 
-[qa-190-a 束ねであったことを認める] qa-188 は『tenants.status を段0 語彙へ追加する』を主題として書かれ、その末尾に (e) として DeviceAuthorizationStatus の三重定義を付けた。両者に共通していたのは『C07 が継続指摘している未対応項目である』という**由来だけ**であり、内容の関係ではない。由来の共通性で束ねるのは、まさに論点分離契約が禁じている形である。C06 が論点別に中立性を検証できなくなるため、分離する。
+===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====
+ユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。
 
-[qa-190-b 分離した論点の内容] `DeviceAuthorizationStatus` は同一のリテラル union が 3 箇所に独立して存在する: `packages/schemas/auth-tenancy/src/ports.ts:117` (TypeScript 型宣言)、`packages/schemas/auth-tenancy/src/repository/device-flow.ts:23` (zod の z.enum)、drizzle schema `publish.ts:106` (text(col, {enum: [...]}))。V7 (同一リテラル union の重複定義を検出する検査) が突合すべき情報源は、したがって **型宣言 / zod / ORM schema の 3 経路**である。型宣言と zod の 2 経路だけを実装すると、3 件目 (ORM schema) が検査をすり抜ける。これは検査ツールの網羅範囲の問題であり、認証の前提状態語彙 (qa-188 の主題) とは別の層にある。
+【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-[qa-190-c 本 entry を testing-qa/web に束縛する理由] この論点の影響先は V7 の acceptance、すなわち検査ツールが何を情報源とするかである。段0 マトリクス (maintenance-ops) ではなく testing-qa の管轄にあたる。分離索引を主題に近いカテゴリへ置くことで、後から読む者が『V7 の網羅範囲はどこで決まったか』を categoryから辿れる。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
 
-[qa-190-d 由来の明示] 本 entry の内容は qa-188 の (e) に由来する。qa-188 側にはこの分離を指す逆参照が無い (未解決事項 6 と同じ構造的欠落である)。本 entry から qa-188 を参照する片方向の索引として記録する。qa-188 の逐語を書き換えて双方向にすることは、契約が禁じているため行わない。
+【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 
-### qa-095 (対応セル: desktop-windows, desktop-macos)
+【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
 
-**質問**: 作者のローカル desktop 環境で skill 構造 lint を実行するとき、pytest などが生成した隠し cache を人が設計した skill tree と誤認せず、同じ品質基準を Windows と macOS で再現するには何を必須としますか?
+【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。
 
-**回答**: ユーザーの 2026-07-29 最終レビュー・仕様反映指示を明示承認として、qa-078 と qa-081 の既存契約を全面維持し、skill 構造 lint の生成物境界を追補する。
+【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。
 
-【1. テスト戦略】タスク仕様書は単体・結合・境界値・既存回帰の各テストを変更内容から選び、focused test と実際の実行順序を再現する広域回帰の両方を記録する。失敗時は原因分析、修正、同一コマンド再実行の改善ループを回す。
+【実装後の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。これにより【5】の「実走証拠」条件は充足済み。P13 close は default-branch reconciliation と `HarnessHub-stmx` の契約状態に従う。
 
-【2. 層別方針】frontend は behavior ベースの component / 操作フロー、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界を検証する。pixel・DOM 内部構造・一時生成物の物理配置など、本来の設計契約ではない実装詳細へ品質判定を密結合させない。
+===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====
+【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?
 
-【3. skill tree の生成物境界】skill 構造 lint は人が管理する SKILL.md、許可 directory、命名、深さを検査する。一方、pytest・mypy 等の test tool が skill 配下へ作る dot で始まる directory とその配下、Python の __pycache__ / .pyc は生成物として構造判定から除外する。許可 directory 集合に dot directory は含めず、個別 cache 名の列挙ではなく同じ性質を持つ生成物へ一般化する。
+ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。
 
-【4. 複製と回帰】repository root の scripts/lint-skill-tree.py と配布 plugin 内の実装は同一バイト列を維持する。回帰テストは .pytest_cache だけでなく .mypy_cache と任意の dot cache を含め、通常の nested directory 違反は引き続き検出する。per-plugin pytest の直後に repository criteria test を実行しても結果が変わらないことを確認する。
+【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。
 
-【5. platform と製品境界】同じ Python 実装と同じ pytest コマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。
+
+【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。
+
+【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。
+
+【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。
+
+【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
+
+===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====
+【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。
+
+【1. execution 軸の導入 (施策3)】
+検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。
+
+- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。
+- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。
+
+| execution | 意味 | wall-clock への寄与 |
+|---|---|---|
+| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |
+| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |
+| `skip` | この tier では実行しない | 加算されない |
+
+従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。
+
+【2. tier ごとの既定】
+- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。
+- standard: 全検査 `sync`。
+- critical: 全検査 `sync` かつ全て `blocking`。
+
+`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。
+
+【3. 適用範囲】
+本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。
+
+【4. tier 語彙の正本 (2026-08-09 補正)】
+検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
+
+### qa-211 (対応セル: desktop-windows, desktop-macos)
+
+**質問**: ローカル desktop でテストを実行するとき、mvp tier の focused test をどう選び、広域回帰をどう扱いますか?
+
+**回答**: ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維持したまま、tier 別のテスト選択契約を追加確定する。
+
+【1. focused test の決定論的選択】mvp tier の blocking テストは、変更 path から到達する package の focused test に限定する。選択は scripts/select-verification-tier.py が出力する影響 package 集合を入力とし、実行者の勘で選ばない。該当 package が特定できない変更 (共有 utility や設定) は standard へ自動昇格させ、選択不能を暗黙の省略にしない。
+
+【2. 広域回帰の非同期化】実際の実行順序を再現する広域回帰は mvp tier の blocking から外し、CI の非同期 job として実行する。失敗は当該変更の merge を止めず deferred-verification issue として起票し、次の standard 以上の実行または Stage 1 公開判定ゲートで回収する。critical tier では従来どおり広域回帰を同期 blocking として維持する。
+
+【3. 層別方針の維持】frontend は behavior ベース、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界という層別方針は tier に依らず維持する。pixel・DOM 内部構造・一時生成物の物理配置へ品質判定を密結合させない方針も維持する。tier が変えるのは検証の量と同期性であって、検証の当たり所ではない。
+
+【4. 生成物境界の維持】skill 構造 lint が dot cache および __pycache__ / .pyc を構造判定から除外する qa-095 の契約は tier に依らず維持する。
+
+【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+
+【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
 
 ## 上流指針 (doctrine anchor)
 

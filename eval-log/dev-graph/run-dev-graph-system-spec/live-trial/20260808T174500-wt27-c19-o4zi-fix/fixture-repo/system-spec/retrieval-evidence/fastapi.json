@@ -1,0 +1,11 @@
+{
+  "target_id": "fastapi",
+  "source_url": "https://fastapi.tiangolo.com/release-notes/",
+  "fetch_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T08:45:43.787Z",
+  "official_host": "fastapi.tiangolo.com",
+  "observed_version": "0.141.1",
+  "observed_last_updated": "2026-07-29",
+  "note": "WebFetch でトップページと release-notes を取得し、版の一次根拠に release-notes を採った。",
+  "extract": "公式 release notes 先頭が 0.141.1 (2026-07-29)。0.x 系のため minor 更新に破壊的変更が入り得る点に注意。Pydantic による schema 検証と OpenAPI 自動生成 (/docs, /redoc) を標準で備え、/openapi.json 提供という U9 要求に直結する。同 run で https://fastapi.tiangolo.com/ も取得したが版表記が無い。"
+}

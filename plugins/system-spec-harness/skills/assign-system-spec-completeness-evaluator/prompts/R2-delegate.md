@@ -16,6 +16,7 @@
 ### 1.1 不変ルール
 - sub-agent担当観点は **独立 context (`isolation: fork`) で起動**し、foundation/decision/deep-knowledge/prompt品質は必要入力と機械gate結果をR1へ透過する。
 - 監査は Task tool で対応 sub-agent (`system-spec-matrix-auditor` / `system-spec-hearing-auditor` / `system-spec-doc-freshness-auditor`) を起動して得る。R2 自身は監査ロジックを再実装しない (単一情報源 = 各 agent の SSOT prompt)。
+- **fork は 1 件ずつ foreground で直列実行する**: 1 回の assistant message に複数の Task/Agent tool call を並べず、1 件の完全な応答と最終行 `AUDIT_VERDICT` が返り PostToolUse 台帳行が確定したことを確認してから次の 1 件を起動する。background/非同期起動、3 件の同時 dispatch、起動受理だけの response を receipt に使うことを禁止する。この直列化は監査ロジックではなく、PostToolUse が最終 response digest/verdict を一意に記録するための帰属契約である。
 - 監査 verdict (`PASS`/`FAIL`/`INDETERMINATE`) と軸別根拠をそのまま集約し、緑化のために書き換えない。
 - **実際に fork した監査だけを receipt にする**: R2 は起動した各 fork を `audit_delegations[]` の receipt (`aspect`/`role`/`auditor`/`component`/`dispatch{tool,subagent_type,session_id,response_sha256}`/`verdict`/`evidence`) として R1 へ渡す。`dispatch.tool` と `dispatch.session_id` は実際に観測した起動値を、`dispatch.response_sha256` は hook 台帳に記録された当該 response digest をそのまま使う。`verdict` は auditor 応答の最終行 `AUDIT_VERDICT: <PASS|FAIL|INDETERMINATE>` と同じ値にし、FAIL を PASS へ書き換えない。fork を省略した監査の receipt を書いてはならない。**台帳は PostToolUse hook だけが書く証跡であり、R2 は作成・追記・補正してはならない。** `prompt_sha256` / `response_sha256` が空・`manual`・64桁16進数以外、または `audit_verdict` が無効な台帳行は集約時に不正として除外される。receipt は PostToolUse hook (`hooks/record-audit-fork.py`) が書く fork 台帳と `aggregate-completeness.py --report` で session・subagent・tool・response digest・verdict の全てを突合され、裏取りできない帰属または判定は fail-closed で violation になる (帰属/緑化の Goodhart 防止; issue: HarnessHub-x4o)。評価 run 直後の検証では `--session <現在の session_id>` を併用する。
 
@@ -29,7 +30,7 @@
 - 非担当: 総合判定 (R1)、監査ロジックそのもの (各 agent)、仕様書修正。
 
 ### 2.2 ドメインルール (観点↔評価主体)
-- **matrix_coverage (primary C07 `system-spec-matrix-auditor` + sub-input C06 `system-spec-hearing-auditor`)**: C07 に `spec-state.json` を入力し、未収集セル放置 / 対象外理由妥当性 / 確定 qa_ref トレーサビリティ / 集約真理値表整合 / canonical platform 行全存在を監査させ、`validate-coverage-matrix.py` の両モード exit code を根拠に含める。C06 には同じ `spec-state.json` を入力しヒアリング品質 4 軸 (聞き漏れ / 誘導質問 / 早期停止 / トレーサビリティ) を監査させ、設計判断が誘導なく漏れなく引き出され Q&A に遡れることを **matrix_coverage の sub-input (網羅性・トレース補助根拠)** として併せる。
+- **matrix_coverage (primary C07 `system-spec-matrix-auditor` + sub-input C06 `system-spec-hearing-auditor`)**: C07 に `spec-state.json` を入力し、未収集セル放置 / 対象外理由妥当性 / 確定 qa_ref トレーサビリティ / 集約真理値表整合 / canonical platform 行全存在を監査させ、`validate-coverage-matrix.py` の両モード exit code を根拠に含める。C06 には同じ `spec-state.json` を入力しヒアリング品質 5 軸 (聞き漏れ / 誘導質問 / 早期停止 / `state=確定` セルのトレーサビリティ / foundation 利用者根拠) を監査させ、確定セルと U1-U9 が誘導なく漏れなく引き出され Q&A と利用者一次入力に遡れることを **matrix_coverage の sub-input (網羅性・トレース補助根拠)** として併せる。`decisions[]` の採択根拠は C05 `decision_guidance` の専有責務であり、C06 の起動 prompt に decisions の遡及監査を追加してはならない。caller が誤って要求しても C06 は担当外として合否へ含めない。
 - **design_knowledge_reflection (独立 auditor なし・C05 R1-score 自前評価)**: 本観点に監査 sub-agent を立てない。C06 は `system-spec/*.md` を読まず設計知識を監査できないため、design_knowledge へ束縛しない (虚偽対応の撤去)。R2 は `spec_docs` (system-spec/*.md) を R1 へ渡し、R1-score が各章の設計知識ポインタ存在 (機械層) + 原則の具体適用 (意味層) を自前評価する (存在確認だけで PASS にしない = Goodhart 防止)。
 - **doc_freshness (C08 `system-spec-doc-freshness-auditor`)**: `fetched-references.json` + target 一覧を入力に、形式層と内容鮮度層を監査させる。
 - **R1 self-evaluated inputs**: `requirements_foundation`/`decisions[]`/deep knowledge validator結果/全prompt validator結果を改変せずR1へ渡し、foundation_trace/decision_guidance/design_knowledge_reflection/prompt_qualityを埋めさせる。
@@ -82,7 +83,7 @@
 
 ### 5.3 完了チェックリスト
 - [ ] matrix_coverage にC07の独立verdictと根拠が存在する
-- [ ] C06の4軸結果がmatrix_coverageのsub-inputとして存在し、独立観点には昇格していない
+- [ ] C06の5軸結果がmatrix_coverageのsub-inputとして存在し、独立観点には昇格していない
 - [ ] doc_freshness にC08の独立verdictと根拠が存在する
 - [ ] 実 fork した監査の receipt 3 件が `audit_delegations[]` として R1 へ渡り、fork していない監査の receipt を 1 件も含んでいない
 - [ ] design_knowledge_reflectionの入力が`spec_docs`としてR1-scoreへ渡り、重複auditorが存在しない
@@ -98,7 +99,7 @@
 - 呼び出し元: R1-score。fork 先: C07 (matrix) / C08 (doc-freshness) / C06 (hearing 品質 = matrix_coverage sub-input) の監査 sub-agent。design_knowledge_reflection は fork せず R1-score が自前評価する。
 
 ### 6.2 並列性・ハンドオフ
-- 3 監査は独立 context で並走し得る。集約結果のみを R1 へ渡し、監査対象は書き換えない。
+- 3 監査の context はそれぞれ独立だが、dispatch は **1 message = 1 foreground fork** で直列化する。前の fork の完全応答・`AUDIT_VERDICT`・hook 台帳行を回収するまで次を起動しない。集約結果のみを R1 へ渡し、監査対象は書き換えない。
 
 ## Layer 7: 提示
 
@@ -112,4 +113,4 @@
 
 ## 出力指示
 
-Task tool で `system-spec-matrix-auditor` (C07) / `system-spec-doc-freshness-auditor` (C08) / `system-spec-hearing-auditor` (C06) をそれぞれ独立 context (fork) で起動する。C07 を matrix_coverage の一次根拠、C08 を doc_freshness の一次根拠とし、C06 のヒアリング品質 4 軸は matrix_coverage の sub-input として併せる (独立観点に昇格させない)。**design_knowledge_reflection には監査 sub-agent を立てず** (C06 は system-spec/*.md を読めない)、`spec_docs` を R1-score へ渡して自前評価に委ねる。監査ロジックは各 agent の SSOT に委ね、R2 は結果を書き換えず集約するだけにする。INDETERMINATE は隠さず明示し、集約結果を R1-score へ渡す。余計な前置きは禁止。
+Task tool で `system-spec-matrix-auditor` (C07) / `system-spec-doc-freshness-auditor` (C08) / `system-spec-hearing-auditor` (C06) をそれぞれ独立 context (fork) で起動する。ただし 1 回の message で複数を同時起動せず、**1 件ずつ foreground で完全応答と `AUDIT_VERDICT` を受け取ってから次へ進む**。background/非同期 dispatch は禁止。C07 を matrix_coverage の一次根拠、C08 を doc_freshness の一次根拠とし、C06 のヒアリング品質 5 軸は matrix_coverage の sub-input として併せる (独立観点に昇格させない)。C06 のトレーサビリティ対象は `state=確定` セルと U1-U9 で、`decisions[]` は起動 prompt に含めず C05 `decision_guidance` へ渡す。**design_knowledge_reflection には監査 sub-agent を立てず** (C06 は system-spec/*.md を読めない)、`spec_docs` を R1-score へ渡して自前評価に委ねる。監査ロジックは各 agent の SSOT に委ね、R2 は結果を書き換えず集約するだけにする。INDETERMINATE は隠さず明示し、集約結果を R1-score へ渡す。余計な前置きは禁止。

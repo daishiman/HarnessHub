@@ -1,0 +1,11 @@
+{
+  "target_id": "postgresql",
+  "source_url": "https://www.postgresql.org/docs/",
+  "retrieved_at": "2026-08-08T12:42:15Z",
+  "retrieval_method": "WebFetch (run-system-spec-doc-fetch R2)",
+  "official_host": "www.postgresql.org",
+  "observed": [
+    "manual 一覧で 18 が Current と明示 (18 / Current)",
+    "14〜19 beta が選択可能、19 は beta"
+  ]
+}

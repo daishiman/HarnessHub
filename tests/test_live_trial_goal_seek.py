@@ -9,6 +9,7 @@ import pytest
 from live_trial_test_support import (
     SCHEMA,
     _prompt,
+    _goal_evaluation_args,
     _run_verdict,
     _tool_result,
     _tool_use,
@@ -87,6 +88,7 @@ def _run_verdict_with_skill_dir(
     tmp_path, transcript: Path, skill_dir: Path, extra: list[str], eval_root: Path | None = None
 ):
     workdir = tmp_path / "workdir"
+    goal_eval_args = _goal_evaluation_args(workdir, transcript, extra)
     argv = [
         "--workdir", str(workdir),
         "--target-skill", "some-plugin:run-something",
@@ -97,6 +99,7 @@ def _run_verdict_with_skill_dir(
     ]
     if eval_root is not None:
         argv.extend(["--goal-seek-eval-root", str(eval_root)])
+    argv.extend(goal_eval_args)
     argv.extend(extra)
     return verdict_mod.main(argv), workdir / "verdict.json"
 

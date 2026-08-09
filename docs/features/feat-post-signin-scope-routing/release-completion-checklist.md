@@ -40,3 +40,4 @@ gh run list --workflow ci.yml --branch main --limit 1   # deploy 状態の確認
 | 6 系統 scope 判定の実環境確認 | 未実施 | operations-runbook.md 分岐 A〜C。**人手のブラウザ確認は再現性が無く、次のデプロイで壊れても気付けない。** 1〜5 は session cookie / scope ヘッダーの組合せで HTTP 応答 status が決まるため、`apps/hub/scripts/smoke-production-hearing.ts` と同型の本番 smoke として自動化し、`ci.yml` の smoke 群へ結線するのが望ましい (6 のみ着地 path の確認が要る) |
 | open redirect フォールバック確認 | 未実施 | 同上。戻り先の判定は `returnTo` を変えた HTTP 応答の `Location` で機械的に測れるため、上記 smoke に含められる |
 | PR merge / default branch reconciliation | 完了 | dev-graph PR linkage の記録（`reconcile-github-lifecycle.py --mode check`）を実施する |
+| ランディング `/` 500 修復と入口 smoke | 実装済み・本番反映待ち | issue `issue-hub-root-500-signin-20260808`。CI に `check:dynamic-routes` と本番 `GET /` smoke（200 + `name="tenant"`）を追加。merge 後の hub-ci deploy で green を確認する |

@@ -12,11 +12,11 @@ iteration: null
 title: "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)"
 owners: ["daishiman"]
 created_at: "2026-08-08T00:00:00Z"
-updated_at: "2026-08-08T06:05:00Z"
+updated_at: "2026-08-09T00:00:00Z"
 status: "active"
 depends_on: []
-related_nodes: ["spec-post-signin-landing-observability"]
-resource_scope: [".github/workflows/ci.yml","apps/hub/scripts","apps/hub/package.json"]
+related_nodes: ["spec-post-signin-landing-observability","spec-production-coverage-smoke","issue-authz-provider-admin-edge-route-mismatch-20260808"]
+resource_scope: [".github/workflows/ci.yml","apps/hub/scripts","apps/hub/package.json","apps/hub/tests","packages/db/repository/hearing-smoke.ts","packages/db/__tests__/hearing-smoke.test.ts","system-spec/spec-state.json","system-spec/testing-qa.md","specs/harness-hub-production-coverage-smoke-addendum.md","architecture/harness-hub-testing-qa.md","features","tasks","docs/features"]
 purpose: "本番へ出ている 3 feature が『測る手段が無い』ために P13 を完了できない状態を解消する。"
 goal: "post-signin scope 判定 6 系統・open redirect フォールバック・Feedback 3 項目・Docs CMS round-trip を本番 smoke として自動化し、ci.yml で毎デプロイ実行する。"
 scope_in: ["本番 smoke script の新規実装","ci.yml smoke 群への結線","smoke:publish-production が未結線である件の判断と記録"]
@@ -77,7 +77,7 @@ main `44109782` の hub-ci run [31240466397](https://github.com/daishiman/Harnes
 1. 未認証 (`unauthenticated`, 401)
 2. scope 未申告 (`missing_tenant_scope`, 403)
 3. 二重申告・ヘッダーと session の不一致 (`ambiguous_scope`, 403)
-4. tenant 越境 (`tenant_mismatch`, 403)
+4. tenant 越境 (`tenant_mismatch`, **404**)
 5. workspace 非所属 (`workspace_not_member`, 403)
 6. 正常到達 (`/sheets` または安全な `returnTo` の同一 origin 相対 path)
 
@@ -108,3 +108,45 @@ main `44109782` の hub-ci run [31240466397](https://github.com/daishiman/Harnes
 ## 副次的に判明した論点
 
 `apps/hub/package.json` に `smoke:publish-production` (336 行) が登録されているが、`ci.yml` のどの step からも呼ばれていない。書かれてはいるが一度も本番で走っていない。本課題の実装と同時に、結線するのか意図的に外しているのかを決めて記録する。
+
+## 実装記録 (2026-08-08)
+
+### 何を足したか
+
+| 追加 | 実体 | 検査 |
+|---|---|---|
+| 未カバー 3 領域の本番 smoke | `apps/hub/scripts/smoke-production-coverage.ts` (`smoke:coverage-production`) | S1-S8 / F1-F5 / D1-D6 |
+| open redirect の本番実測 | `apps/hub/scripts/smoke-production-oidc.mjs` の O5 | SSR 済みサインインページの `callbackUrl` が既定 `/sheets` へ倒れ、敵対的 `returnTo` が遷移属性へ入らない |
+| 使い捨て tenant の後始末拡張 | `packages/db/repository/hearing-smoke.ts` | `feedbacks` / `documents` / `builds` の削除と残数計上 |
+| CI 結線 | `.github/workflows/ci.yml` の `coverage_smoke` step | 失敗時ロールバックの判定材料 (`COVERAGE_SMOKE_OUTCOME`) にも含める |
+| 契約テスト | `apps/hub/tests/hub-foundation/production-coverage-smoke-script.test.ts` | 資格情報なしの `--help` 起動・各検査の存在・CI 結線 |
+
+session-only の action (`feedback.read`・`docs.*`) は Google OIDC なしに HTTP から駆動できないため、**route と同じ server code を本番 DB へ実行**し、HTTP 側は「Bearer では通らないこと」だけを実測する。これは `smoke-production-hearing.ts` と同じ切り分けで、新しい secret を 1 つも増やさない。
+
+### `smoke:publish-production` の判断: **結線しない (現状維持)**
+
+理由は 1 つで、この smoke が `PUBLISH_ACCESS_TOKEN` (publish:write を持つ短命 owner token) と `CLOUDFLARE_API_TOKEN` を要求するため。前者は台帳に無い**新しい secret** であり、本課題の `scope_out` (新しい secret の追加) に真正面から当たる。
+
+したがって `smoke:publish-production` は「手動・オンデマンドで走らせる runner」と位置づける。CI へ載せたい場合は、hearing / coverage smoke と同じく Device Flow で `publish:write` scope の token を本番から取る作りへ変える必要があり、それは publish 経路の権限設計 (owner role 必須) を触る別課題になる。
+
+### 実装中に判明した設計上の不整合 (別課題へ送る)
+
+`withAuthz` は provider-admin の越境要求を許可して `provider.cross_tenant_access` を監査する契約 (FL-SEC8-102)。しかし edge middleware の `authorize()` は role を見ずに `scope.tenantId !== principal.tenantId` を 404 で落とすため、**本番では route 層の越境監査に到達しない**。route 単体テストは `withAuthz` を直接呼ぶので緑のまま素通りする — `tenant_mismatch` の 403/404 不一致とまったく同じ構図。
+
+本課題の `scope_out` が認可判定ロジックの変更を除いているため、ここでは **S8 で現行挙動 (edge 遮断・監査行 0 件) を実測して固定する**に留める。provider-admin の越境を本当に許すのか、route 層の監査を dead code として畳むのかは設計判断であり、別課題 `HarnessHub-stmx` (`issues/authz-provider-admin-edge-route-mismatch-20260808.md`) で扱う。
+
+## 最終レビュー (2026-08-09)
+
+### 本番実走
+
+PR #681 merge 後の main `35a10b87` / hub-ci run `31253674292` で `coverage_smoke` が SUCCESS。S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 を確認。実装本体は main 済み。
+
+### 本 branch の残差分
+
+production evidence を `docs/` / `features/` / `tasks/` へ記録し、main 取込後に落ちていた `qa-205` 契約本文を `qa-217` 統合 entry へ復元する。draft PR #682 で default-branch へ載せる。
+
+### 品質ゲート (最小)
+
+- task-spec: feat-post-signin-scope-routing / feat-feedback-loop / feat-docs-cms の 3 package PASS
+- Hub focused: coverage 9 + oidc 12 = 21 PASS
+- DB hearing-smoke: 2 PASS

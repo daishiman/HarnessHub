@@ -1,0 +1,53 @@
+{
+  "loop": 2,
+  "checklist": [
+    {
+      "item": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write receipt: repo_root=fixture-repo, repository_id=local:sha256:5c756b3e...58a4 が config/graph と一致、root_trust_evidence すべて verified"
+    },
+    {
+      "item": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+      "status": "PASS",
+      "evidence": "5 件とも confidence>=0.96、第2候補との margin>=0.75 のため automatic 確定 (AskUserQuestion 不使用)"
+    },
+    {
+      "item": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py valid=true violations=[] implementation_readiness=complete、frontmatter kind/file_path と保存 path の parity 5/5"
+    },
+    {
+      "item": "package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である",
+      "status": "N/A",
+      "evidence": "本入力に system-dev-planner package を含まないため register-package 経路は非該当 (通常 artifact 5 件のみ)"
+    },
+    {
+      "item": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+      "status": "PASS",
+      "evidence": "receipt graph_revision 0->1->2->3->4->5、commit 後 graph.json の graph_revision=5 / nodes=5 と一致"
+    },
+    {
+      "item": "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる",
+      "status": "PASS",
+      "evidence": "全 apply が recovered_interrupted_transaction=false で完了し WAL 残存なし。dangling_reference 違反時の dry-run は write_count=0 で部分適用を残さず fail-closed"
+    }
+  ],
+  "criteria": {
+    "IN1": "PASS",
+    "OUT1": "PASS",
+    "OUT2": "PASS",
+    "OUT3": "N/A"
+  },
+  "update_pass": {
+    "graph_node_id": "spec-rest-api-v2-migration",
+    "operation": "updated",
+    "graph_revision": "5->6",
+    "write_count": 2,
+    "body_source": "preserved",
+    "replaced_body_lines": null,
+    "frontmatter_kind": "specification",
+    "stored_path": "specs/spec-rest-api-v2-migration.md",
+    "parity": "frontmatter kind/file_path と実保存 path と graph node file_path が一致",
+    "idempotent_reapply": "operation=noop / write_count=0"
+  }
+}

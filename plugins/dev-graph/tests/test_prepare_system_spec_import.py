@@ -80,6 +80,17 @@ def test_prepares_two_schema_shaped_c02_inputs_and_source_derived_bodies(tmp_pat
     )
 
 
+def test_verbatim_source_body_is_import_data_not_duplicated_compile_logic() -> None:
+    """C19 OUT1 の「ロジック複製 0」を source body 複写禁止と誤読させない。"""
+    skill = (SCRIPT.parents[1] / "skills" / "run-dev-graph-system-spec" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "source body の verbatim import (素材の取込み)" in skill
+    assert "elicitation/compile の処理ロジック" in skill
+    assert "後者だけが OUT1 の禁止対象" in skill
+
+
 def test_source_content_change_changes_only_its_matching_import_body(tmp_path: Path) -> None:
     root = build_confirmed_system_spec(tmp_path)
     (root / "system-spec" / "index.md").write_text(

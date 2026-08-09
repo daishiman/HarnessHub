@@ -102,6 +102,6 @@ implementation_readiness: {"checked_at":"2026-08-07T11:12:00Z","missing_sections
 
 ## 9. 出所
 
-確定仕様追補 [`spec-post-signin-landing-observability`](../specs/harness-hub-post-signin-landing-observability-addendum.md) を macro 分解したもの。
+確定仕様追補 [`spec-post-signin-landing-observability`](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) を macro 分解したもの。
 正本は `system-spec/spec-state.json` (qa-170〜qa-199, digest `e1ecf64f6bd0dfc6…`)。
 本 feature は仕様本文を複製せず、`architecture_refs` と source lineage で参照する。

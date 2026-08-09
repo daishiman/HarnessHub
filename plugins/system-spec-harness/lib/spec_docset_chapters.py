@@ -255,21 +255,53 @@ def _render_candidate_card(candidate: dict) -> list[str]:
 
 
 def _render_chapter_application(spec: dict, cat_id: str) -> list[str]:
-    """設計知識 card 群を、本章固有の確定判断へ紐付ける (design_knowledge_reflection 観点)。
+    """caller が記録した章固有の原則採否を確定判断へ紐付けて描画する。
 
     card 自体は ref-system-design-knowledge の汎用原則の逐語転記であり章固有ではない
     (aspect-criteria.md の「具体原則の適用が無く汎用ポインタだけの章」FAIL 要因)。
-    解釈文を捏造する代わりに、正本 (確定 qa_ref・対応セル・serves_goals) から
-    「上記原則をどの確定判断へ照合すべきか」を機械描画し、C05 意味層評価の接地点にする。
+    compiler が解釈を捏造せず、qa_log[].design_applications に明記された具体原則、
+    applied/not_applicable、理由、trade-off をそのまま描画する。欠落は定型文で緑化せず
+    fail-visible にし、C05 意味層評価へ差し戻す。
     """
     confirmed = _confirmed_cells_by_qa_ref(spec, cat_id)
     goals = chapter_serves_goals(spec, cat_id)
+    qa_map = _qa_by_id(spec)
     lines = ["#### 本章での適用", ""]
     if not confirmed:
         lines.append("- (確定セルなし。本章は対象外または収集中のため上記原則の適用先は未確定)")
         return lines
     for ref, cells in confirmed:
-        lines.append(f"- 上記原則は確定内容 {ref} (対応セル: {', '.join(cells)}) の判断へ適用する")
+        qa = qa_map.get(ref) or {}
+        lines.extend(
+            [
+                f"##### 確定内容 {ref} (対応セル: {', '.join(cells)})",
+                "",
+                f"- 確定要件: {qa.get('answer', '(qa_log 本文欠落)')}",
+            ]
+        )
+        applications = qa.get("design_applications")
+        if not isinstance(applications, list) or not applications:
+            lines.append(
+                "- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)"
+            )
+            continue
+        for application in applications:
+            if not isinstance(application, dict):
+                continue
+            lines.extend(
+                [
+                    f"- 原則: {application.get('principle', '(未記入)')} "
+                    f"(`{application.get('knowledge_ref', '-')}`)",
+                    f"  - 採否: `{application.get('applicability', '-')}`",
+                    f"  - 章固有の根拠: {application.get('rationale', '(未記入)')}",
+                    "  - トレードオフ:",
+                ]
+            )
+            tradeoffs = application.get("tradeoffs")
+            if isinstance(tradeoffs, list) and tradeoffs:
+                lines.extend(f"    - {value}" for value in tradeoffs)
+            else:
+                lines.append("    - (未記入)")
     if goals:
         lines.append(f"- 資するゴール: {', '.join(goals)}")
     return lines
@@ -281,7 +313,7 @@ def render_design_refs(cat_id: str, spec: dict | None = None) -> str:
     card 本文 (目的/解決する問題/適用条件/非適用条件/トレードオフ/goal寄与) は
     ref-system-design-knowledge の汎用原則の逐語転記であり、それだけでは章固有ではない。
     spec 指定時は末尾に `_render_chapter_application` で「本章での適用」節を添え、
-    上記原則を本章のどの確定判断 (qa_ref・対応セル・serves_goals) へ照合すべきか明示する。
+    qa_log[].design_applications の具体的な原則採否を qa_ref・対応セル・serves_goals へ束縛する。
     """
     refs = category_design_refs(cat_id)
     lines = ["## 適用された設計知識", ""]
@@ -309,9 +341,8 @@ def render_design_refs(cat_id: str, spec: dict | None = None) -> str:
         for candidate in candidates:
             lines.extend(["", "---", ""])
             lines.extend(_render_candidate_card(candidate))
-        if refs or candidates:
-            lines.extend(["", "---", ""])
-            lines.extend(_render_chapter_application(spec, cat_id))
+        lines.extend(["", "---", ""])
+        lines.extend(_render_chapter_application(spec, cat_id))
     return "\n".join(lines)
 
 

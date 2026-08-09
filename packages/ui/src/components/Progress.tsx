@@ -1,6 +1,11 @@
-'use client';
-
-/** 進捗・読み込み状態の表示。ポーリング中の PublishRequest / AiJob と、CLS を抑えるスケルトンを担う。 */
+/**
+ * 進捗・読み込み状態の表示。ポーリング中の PublishRequest / AiJob と、CLS を抑えるスケルトンを担う。
+ *
+ * `'use client'` を付けないのは、どちらも状態も event handler も持たない純粋な表示だから。
+ * 付けると `loading.tsx` (全 route に敷く) がこのファイルを client bundle へ引き込み、
+ * 「読み込み中の絵を出すためだけに JS を配る」ことになる (First Load JS 予算 120KiB を圧迫する)。
+ * client component から import しても問題なく動く (その場合は client 側へ取り込まれるだけ)。
+ */
 import type { CSSProperties, ReactNode } from 'react';
 
 import { colorVar, radiusVar } from '../internal/style.js';

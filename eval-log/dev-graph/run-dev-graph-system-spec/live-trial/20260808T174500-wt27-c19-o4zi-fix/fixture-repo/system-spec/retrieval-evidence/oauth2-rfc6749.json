@@ -1,0 +1,11 @@
+{
+  "target_id": "oauth2-rfc6749",
+  "source_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+  "fetch_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T08:45:43.824Z",
+  "official_host": "datatracker.ietf.org",
+  "observed_version": "RFC 6749 (Proposed Standard; updated by RFC 8252 / 8996 / 9700)",
+  "observed_last_updated": "2012-10",
+  "note": "WebFetch で IETF Datatracker の RFC 本文を取得し、状態と updated-by を確認した。",
+  "extract": "The OAuth 2.0 Authorization Framework (2012-10, Standards Track)。authorization code / implicit / resource owner password credentials / client credentials の 4 grant を定義し、implicit は access token 露出リスクがあるとする。外部 IdP・認可サーバを前提とする枠組みであり、単一利用者・外部 network 送信 0 の制約下では過剰になる比較対照として記録する。"
+}
