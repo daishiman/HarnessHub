@@ -53,7 +53,13 @@ REQUIRED_RESUME_STEPS = {
     "gate-evidence-refs",
     "gate-source-digest",
 }
-EXPECTED_RESUME_NODES = ["arch-system-spec-overview", "spec-system-spec-index"]
+# The bounded C19 live-trial fixture declares these two node IDs. This is not a
+# universal caller-repository contract; a different fixture needs its own
+# report contract instead of reusing this validator unchanged.
+LIVE_TRIAL_FIXTURE_RESUME_NODES = [
+    "arch-system-spec-overview",
+    "spec-system-spec-index",
+]
 UPSERT_EXECUTION = re.compile(
     r"^\s*(?:python(?:3(?:\.\d+)?)?|uv\s+run\s+python(?:3(?:\.\d+)?)?)\s+"
     r"(?:\"[^\"\n]*upsert-node\.py\"|'[^'\n]*upsert-node\.py'|[^\s;\n]*upsert-node\.py)"
@@ -176,10 +182,13 @@ def _validate_resume_report(report: Any) -> list[dict[str, Any]]:
                 "rule": "EV-014",
                 "detail": f"resume report {key}={report.get(key)!r}; expected {expected!r}",
             })
-    if report.get("registered_this_run") != EXPECTED_RESUME_NODES:
+    if report.get("registered_this_run") != LIVE_TRIAL_FIXTURE_RESUME_NODES:
         violations.append({
             "rule": "EV-015",
-            "detail": "resume report の registered_this_run が canonical 2 node と一致しない",
+            "detail": (
+                "resume report の registered_this_run が C19 live-trial fixture の"
+                " 2 node と一致しない"
+            ),
         })
     resume = report.get("resume")
     if not isinstance(resume, dict) or resume.get("valid") is not True:

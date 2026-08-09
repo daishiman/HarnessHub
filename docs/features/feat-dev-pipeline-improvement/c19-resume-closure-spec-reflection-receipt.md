@@ -1,3 +1,15 @@
+---
+status: confirmed
+layer: spec-reflection-receipt
+feature_id: feat-dev-pipeline-improvement
+beads_id: HarnessHub-6fgb
+graph_node_id: issue-c19-resume-closure-contract-20260810
+branch: devgraph/issue-resource-map-deep-cards-20260722
+base_branch: main
+spec_impact: reflected
+reviewed_at: 2026-08-10
+---
+
 # C19 resume completion contract 仕様反映受領書
 
 ## 対象と判断
@@ -20,6 +32,7 @@ fresh evaluator は実際の system-spec import、source lineage、evaluator evi
 | `architecture/` | authority、single-writer、report/stdout 束縛を追記 | 実装境界の明示 |
 | `features/` | pipeline feature の C19 追補を追記 | feature 目的への trace |
 | `tasks/` | P13 の発見・修正・再検証を追記 | リリース gate の実行記録 |
+| `issues/` | C19 の修正と PR merge 後 reconciliation を追跡する issue node を追加 | Beads と dev-graph の完了状態を同じ対象へ束縛 |
 | `docs/` | 本受領書を追加 | 影響判断と検証証拠の保存 |
 
 ## 実装契約
