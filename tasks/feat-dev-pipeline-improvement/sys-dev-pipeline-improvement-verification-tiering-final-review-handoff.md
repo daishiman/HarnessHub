@@ -117,3 +117,6 @@ branch は `devgraph/issue-verification-evaluator-cache-20260809`、base は rep
 - `HarnessHub-6nf1`: evaluator cache を実 evaluator 起動点へ配線する。
 - `HarnessHub-xcl3`: tier decision を下流 CI step の起動・blocking 集合へ配線する。
 - `HarnessHub-sy31`: deferred gate を定期的に消化する。
+- `HarnessHub-a0zd`: system-spec 章ごとに、確定要件へ作用した設計原則と非適用理由を具体描画できるよう compiler を修正する。
+- `HarnessHub-74mb`: audit verdict marker の探索を応答最終行へ限定し、prompt 内 marker で receipt が無効化されないようにする。
+- `HarnessHub-p65r`: 上記上流修正後に `run-dev-graph-system-spec` の live-trial を再実行し、goal fit `PASS` を取得する。

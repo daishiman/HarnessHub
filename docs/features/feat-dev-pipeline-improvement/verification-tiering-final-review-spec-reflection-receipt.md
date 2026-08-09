@@ -68,7 +68,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - evaluator cache は対象内容 digest、evaluator ID/version、設定で key を作り、corrupt を miss 同様に再実行へ倒す。同一 key の異結果上書きは拒否する。
 - elegant-review は `contradiction→C1`、`omission→C2`、`inconsistency→C3`、`dependency_break→C4` を検査し、`smell` は condition 無しとする。2026-08-09 以降の run は自動 strict、古い run は WARN とする。
 - 561 行だった phase-order validator は主 CLI 343 行と support module 215 行へ分離した。
-- 手書きの変更ファイルは 500 行以下とした。500 行を超える `.dev-graph/state/graph.json` と `system-spec/spec-state.json` は、固定 path/schema を読む生成済み集約正本であり、分割すると既存の読取契約を壊すため対象外とした。
+- 手書きの変更ファイルは 500 行以下とした。500 行を超える `.dev-graph/state/graph.json` と `system-spec/spec-state.json` は、固定 path/schema を読む生成済み集約正本であり、分割すると既存の読取契約を壊すため対象外とした。live-trial の `pane.txt` / `transcript.jsonl` も transcript digest と時系列を保持する改変不能な機械証拠のため分割対象外とする。
 
 ## 層別の正規反映
 
@@ -86,7 +86,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - 未完了: `HarnessHub-6nf1`（cache の evaluator 呼出元配線）、`HarnessHub-xcl3`（tier による下流 CI 切替）。
 - 仕様陳腐化の解消: `HarnessHub-true`（selector 未実装記述）、`issues/dev-workflow-tier-vocabulary-full-vs-critical-20260809.md`（旧 `full` 語彙）。
 - 延期の受け皿: `HarnessHub-sy31`。関連監査は `HarnessHub-ic7w`、`HarnessHub-w0sv`、`HarnessHub-lg8s`、`HarnessHub-o3qb`。
-- 公開前 gate の残課題: `HarnessHub-p65r`（`run-dev-graph-system-spec` の live-trial 再実行）、`HarnessHub-n7gg`（HEAD 由来 7 artifact の template 移行）。
+- 公開前 gate の残課題: `HarnessHub-p65r`（現行 SHA の live-trial は `DEGRADED`。上流修正後に再実行）、`HarnessHub-a0zd`（設計知識適用文が定型固定）、`HarnessHub-74mb`（監査 marker 複数一致で receipt が無効化）、`HarnessHub-n7gg`（HEAD 由来 7 artifact の template 移行）。
 - PR の代表 node: `issue-verification-evaluator-cache-20260809`。cache 配線未完了を含むため draft とする。
 
 ## 検証記録
@@ -98,7 +98,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - task 仕様書品質ゲート: pass（P01..P13、legacy contract exemption を含め違反 0）。
 - content review: 77 skills pass。script LLM coverage: 62.2% から 63.8% へ回復し ratchet pass。
 - GitHub macOS/Python 3.11 で validator 分割後の sibling import 不足を検出し修正。既存 importlib test 2 系統を含む 78 tests が pass。
-- main 取り込み後の repository CI: 139 pass / 5 staged warning / 1 fail。唯一の failing check は live-trial lint で、同一の旧 verdict に対する stale SHA・downgraded・`DEGRADED` の 3 violation である。`HarnessHub-p65r` で再試走を追跡する。
+- main 取り込み後の repository CI: 139 pass / 5 staged warning / 1 fail。`run-dev-graph-system-spec` を現行 behavior SHA `2e2bb6ad...` で 2,820 秒実走し、起動・完走・正規 entry point 呼出は PASS、goal fit は FAIL、overall は `DEGRADED` だった。これにより stale SHA は解消したが、上流 `system-spec-harness` の `HarnessHub-a0zd` / `HarnessHub-74mb` が evaluator PASS と node 登録を阻み、live-trial lint は downgraded / `DEGRADED` の 2 violation を維持する。修正後の再試走は `HarnessHub-p65r` で追跡する。
 - global graph gate: 今回追加 node は適合。HEAD 由来 specification 5 件・task 2 件の frontmatter/heading 不足で fail し、`HarnessHub-n7gg` へ分離した。
 - repository に独立した `verify-pr-ready.sh` は存在しないため、上記 repository CI、focused test、task 仕様、system-spec、graph、`git diff --check` を公開前ゲートとして最終 HEAD で実行した。
 
