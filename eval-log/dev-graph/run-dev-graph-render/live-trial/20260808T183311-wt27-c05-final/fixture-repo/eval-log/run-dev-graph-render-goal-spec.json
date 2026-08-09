@@ -1,0 +1,17 @@
+{
+  "checklist": [
+    "input graph/scope が schema PASS で output realpath が caller repo 内にある",
+    "render model の node/edge/feature progress counts が input graph と一致する",
+    "生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する",
+    "renderer receipt の input/output digest と実ファイル digest が一致する",
+    "registration receipt 指定時は照合状態が verified、未指定時は HTML と render-metadata の双方で not_performed になっている",
+    "ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される"
+  ],
+  "engine": "inline",
+  "max_loops": 5,
+  "original_goal": "タスクグラフ情報から追加ランタイム依存なしでブラウザ表示可能な SVG + インライン JS 可視化済み静的 HTML/CSS が生成された状態になっている",
+  "original_goal_hash": "1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T183311-wt27-c05-final/fixture-repo",
+  "scenario": "C05-OUT1-positive-feature-progress",
+  "skill": "dev-graph:run-dev-graph-render"
+}

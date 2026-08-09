@@ -78,4 +78,4 @@
 - 修正は実行せず、根拠だけを C02/C05 へ返す。
 
 ## Layer 7: ユーザーインタラクション層
-- ユーザー対話はない。自動監査結果として PASS・FAIL・INDETERMINATE と target 別根拠を返す。
+- ユーザー対話はない。自動監査結果として PASS・FAIL・INDETERMINATE と target 別根拠を返す。**応答の最終行は必ず `AUDIT_VERDICT: PASS`、`AUDIT_VERDICT: FAIL`、または `AUDIT_VERDICT: INDETERMINATE` のいずれか 1 行だけにする**。この marker は PostToolUse hook が実際の監査判定を C05 の receipt に束縛するための機械可読な証跡であり、本文中・コードブロック中へ重複して書かない。

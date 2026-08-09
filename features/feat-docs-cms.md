@@ -98,3 +98,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## Production acceptance (2026-08-08 / `HarnessHub-p0lr`)
+
+- production DB で document 作成、`doc_draft` enqueue/pull/complete、本文書戻しを 1 run で確認する。
+- 別 tenant context では detail/list の双方から tenant document が見えず、Bearer read は `credential_not_allowed` になることを確認する。
+- main `35a10b87` / hub-ci run `31253674292` で D1〜D6 と cleanup 残存行 0 を確認し、production acceptance を充足した。

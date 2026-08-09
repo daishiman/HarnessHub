@@ -134,3 +134,110 @@ workspace を指定すると、session 側の自動確定値と衝突し `ambigu
   vitest を実行しないため、この事象は push をブロックしない。
 
 P13 は本番再デプロイと実環境確認が残るため引き続き open のまま維持する。
+
+## 追補 (2026-08-08): RSC 画面の session scope フォールバックと PrimaryNav シェル
+
+### 背景
+
+P05〜P12 で middleware の session scope 合流と着地先解決は結線済みだった。しかし
+既定着地 `/sheets` は URL クエリを持たないため、各 page.tsx が
+`searchParams.tenant` / `.workspace` だけを API ヘッダーへ渡す実装のままだと、
+ログイン直後の client fetch が空の tenant/workspace になり `missing_tenant_scope`
+へ落ちる経路が残っていた。また P0 シェルにナビゲーションが無く、ブラウザ操作での
+画面横断が URL 直打ち以外できなかった。
+
+### 判定: 仕様の意味変更ではない (実装結線の追補)
+
+| 層 | 判定 | 理由 |
+| --- | --- | --- |
+| `system-spec/` | 変更なし | qa-135/137 の scope 2 系統・deny-by-default・着地規則は既に確定。新しい要件セルは不要。 |
+| `specs/` | 変更なし | `harness-hub-post-signin-workspace-scope-addendum.md` A/B 節が session scope と着地を既に規定。RSC フォールバックは同契約の画面側結線。 |
+| `architecture/` | 更新 (additive) | `harness-hub-frontend.md` に `resolveDashboardScope` / PrimaryNav の配置を追記。`harness-hub-security.md` に「クエリは authz 入力にしない」「判定は resolveSessionScope 再利用」を追記。 |
+| `features/` | 更新 | `feat-post-signin-scope-routing.md` の resource_scope / scope_in / acceptance に RSC シェルを追補。段階表示 (qa-018) は引き続き scope_out。 |
+| `tasks/` | 更新 | P13 projection の resource_scope に dashboard-scope / primary-nav と本受領書追補を追加。 |
+| `docs/` | 更新 | frontend-scope-reference・operations-runbook・本受領書・user-journeys に画面側フォールバックと PrimaryNav を記録。 |
+
+### 実装要点
+
+- `apps/hub/src/lib/routing/dashboard-scope.ts`: session cookie 検証後に
+  `resolveSessionScope()` へ委譲。React `cache()` で request 内 1 回。
+- `(dashboard)` / `(workspace)` layout + `PrimaryNav`: scope 付きリンク。
+- 各業務 page: `scopeFromQuery` / `tenantIdFromQuery` で URL 優先・session フォールバック。
+- client-only docs 詳細/編集: Context (`dashboard-scope-context.tsx`) 経由。
+- 付帯: 見積係数設定 UI (`settings/coefficients`) とユーザー CSV エクスポートは
+  既存 API (`/api/v1/tenant/coefficients`, `/api/v1/users/export`) の画面結線。
+  所有 feature は `feat-user-org-admin` だが、PrimaryNav 到達性と tenant ヘッダー
+  付与のため同一シェル作業に含めた。認可規則・API 契約は変更していない。
+
+### 検証 (2026-08-08)
+
+| ゲート | 結果 |
+| --- | --- |
+| task-spec quality gate | `validate-system-plan.py` PASS (P01〜P13, violations 0, contract 1.3.0) |
+| TID-DSCOPE-01〜07 | 7 tests PASS (`tests/routing/dashboard-scope.test.ts`) |
+| post-signin landing + scope-resolution | 26 tests PASS |
+| user-org-admin API acceptance | 19 PASS / 1 todo |
+| `tsc --noEmit` (hub) | PASS |
+| `biome check` (対象ファイル) | PASS |
+
+### 残課題
+
+- `HarnessHub-3sjj.13` は本番デプロイと実 browser session での 6 path 到達確認が残る。
+- サイドバー 9 項目の段階表示 (qa-018) と Workspace 切替 UI は別 feature のまま。
+- 既定着地を `/dashboard` へ移す appr-034 は観測用 addendum 側の将来変更であり、
+  本追補では `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` を維持する。
+
+## 追補 (2026-08-08): ランディング 500 修復とサインイン入口・Workspace 選択・拒否 HTML
+
+### 背景
+
+本番 `/` が `DYNAMIC_SERVER_USAGE` で 500 を返した。post-deploy の `/health`・OIDC・DB/R2・hearing は緑のまま、**入口 GET だけ**が落ちていた。あわせて未認証のテナント入力、複数 Workspace 未選択時の回復、ブラウザ拒否時の人間可読応答が欠けていた。
+
+graph_node_id: `issue-hub-root-500-signin-20260808`
+Beads: `HarnessHub-3sjj` / `HarnessHub-3sjj.13` / `HarnessHub-f91a`（Workspace 選択の最小結線）
+
+### 正規フローでの反映判定
+
+| 層 | 判定 | 記録または反映内容 |
+| --- | --- | --- |
+| `system-spec/` | 変更なし | qa-135/136/137 の着地・scope 2 系統・選択・403 非露出は既確定。新しい要件セルは不要。実現手段（`/` のテナント入力・`PUBLIC_EXACT_PATHS`・navigation HTML）は下位層へ。 |
+| `specs/` | 更新 (additive) | `harness-hub-post-signin-workspace-scope-addendum.md` に A' 節（ランディング入口・動的 route・拒否 HTML）を追記。 |
+| `architecture/` | 更新 (additive) | `harness-hub-frontend.md` / `harness-hub-security.md` に `/` 動的強制、signin-entry、workspace-entry、deny-navigation、exact public paths を追記。 |
+| `features/` | 更新 | `feat-post-signin-scope-routing.md` の `/` 扱いと resource_scope を追補。`feat-workspace-switch-ux.md` に入口選択の部分実装を記録。 |
+| `tasks/` | 更新 | P13 projection の resource_scope と本受領書追補を追加。 |
+| `docs/` | 更新 | frontend-scope-reference・operations-runbook・user-journeys・screen-inventory・本受領書。 |
+| `issues/` | 新規 | `issues/hub-root-500-signin-20260808.md` |
+
+### 実装要点
+
+- `apps/hub/src/app/page.tsx`: 無条件 `cookies()` + `dynamic = 'force-dynamic'`。未認証はテナント入力、認証済みは `resolveSessionScope` 後に着地 or Workspace 選択。
+- `apps/hub/src/app/signin/route.ts` / `signin-entry.ts`: GET フォーム → 303 で `/{slug}/signin`。slug 形のみ検証（存在有無は答えない）。
+- `apps/hub/src/app/signin/workspace/route.ts` / `workspace-entry.ts`: 所属一覧に無い ID は cookie にしない fail-closed。`withAuthz` 免除（scope 未確定の解消口）。
+- `apps/hub/src/lib/routing/deny-navigation.ts` + middleware: ブラウザ navigation のみ HTML。API/Bearer は JSON 維持。
+- `authz.ts`: `PUBLIC_EXACT_PATHS` と `tenantSlugSchema` で public 判定の過剰前方一致を防ぐ。
+- CI: `check:dynamic-routes`（prerender-manifest）と本番ランディング smoke（200 + `name="tenant"`）。
+
+### 検証 (2026-08-08)
+
+| ゲート | 結果 |
+| --- | --- |
+| task-spec quality gate | `validate-system-plan.py` PASS (P01〜P13, violations 0, contract 1.3.0) |
+| focused routing/authz/ci | 9 files / 111 tests PASS |
+| a11y hub-screens | 5 tests PASS |
+| auth gates (adapter / single-authz / dev-provider) | PASS（route 例外 6 件一致） |
+| `tsc --noEmit` / biome (対象 24 files) | PASS |
+
+### 残課題
+
+- `HarnessHub-3sjj.13`: 本番 6 系統 scope と open redirect の実環境確認（checklist 未完了分）。
+- `HarnessHub-f91a`: 共通シェル常設の Workspace 切替 UI、切替時の旧 scope 非表示は未実装。
+- 本 issue の PR merge・本番 deploy 後、ランディング smoke が CI で緑になること。
+
+### 後続の共通シェル反映 (2026-08-08 / `HarnessHub-imzk`)
+
+本受領書の `PrimaryNav` は到達性を埋める当初実装の記録として保持する。後続変更で
+`PrimaryNav` は `HubShell` / `nav-items.ts` へ置き換わり、scope 付き link と 6 path
+到達性の責務を引き継いだ。新たに role-aware navigation と server-rendered current path
+を仕様化したため、この後続分の判断・検証は
+[共通シェル仕様反映受領書](../feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md)
+および system-spec qa-206 / qa-207 を正とする。qa-135 / qa-137 の scope・認可契約は不変である。

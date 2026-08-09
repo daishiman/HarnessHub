@@ -1,7 +1,24 @@
 {
-  "target_id": "authjs",
-  "source_url": "https://authjs.dev/getting-started",
-  "retrieved_at": "2026-08-04T03:40:27Z",
-  "publisher": "Auth.js",
-  "observed": "Auth.js の公式 Getting Started ページを取得し、認証ライブラリの公式導入資料であることを確認した。"
+  "npm_package": "next-auth",
+  "payload": {
+    "dist-tags": {
+      "beta": "5.0.0-beta.32",
+      "canary": "3.24.0-canary.0",
+      "experimental": "0.0.0-manual.2824fa11",
+      "latest": "4.24.15",
+      "next": "4.0.0-next.26",
+      "next-auth-3": "3.29.10"
+    },
+    "homepage": "https://authjs.dev",
+    "license": "ISC",
+    "repository.url": "git+https://github.com/nextauthjs/next-auth.git",
+    "time.modified": "2026-07-20T23:19:38.192Z",
+    "version": "4.24.15"
+  },
+  "registry": "https://registry.npmjs.org",
+  "retrieval_channel": "npm-registry",
+  "retrieval_command": "pnpm view next-auth <field> --json",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+  "retrieved_at": "2026-08-07T03:26:21Z",
+  "target_id": "authjs"
 }

@@ -250,7 +250,7 @@ grep -c "method: '" apps/hub/src/lib/catalog/http-adapter.ts   # => 5 (GET 4 + P
 
 | 項目 | 再現できない理由 | 再現可能になる条件 |
 |---|---|---|
-| CWV 実測 (LCP/INP/CLS) | **`/catalog` が未認証で 401 を返し Lighthouse が読めない** (2026-08-02 実測 / run `30736055772`)。デプロイ済のため「未デプロイ」は理由でない | `cwv.yml` に認証付き計測経路を追加後 (feat-hub-foundation 所管) |
+| CWV 実測 (LCP/INP/CLS) | 2026-08-02 の run `30736055772` は未認証 401 で失敗。現在は署名付き短命 `__cwv_probe` 経路があり、原理的な計測不能ではない | `hub-cwv` を再実行し、TBT ≤ 200ms を含む fresh artifact で確定 (`HarnessHub-aqi`) |
 | SLO ダッシュボードの CWV 反映 | `slo-dashboard.json` に CWV panel が無い (Write scope 外) | P09 §3.3 の follow-up 完了後 |
 | 実 API 経路の疎通 | `/api/v1/harnesses*` が未実装 | feat-publish-pipeline の実装完了後 |
 | E2E (J1/J2) | Playwright 未導入 | 導入 follow-up 完了後 |

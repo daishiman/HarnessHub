@@ -1,0 +1,64 @@
+{
+  "skill": "run-dev-graph-sync",
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "loops_used": 1,
+  "max_loops": 5,
+  "checklist": [
+    {
+      "item": "全 Issue/Project 差分が3-way planの一分類と snapshot digest を持つ",
+      "status": "pass",
+      "evidence": "pass1/pass2 report: imports[0]=title import, exports[0]=project-field-update(Status)。各 report に graph/snapshot/remote の sha256 before/after を保持 (snapshot ae94bd6d...)"
+    },
+    {
+      "item": "task ごとの mutation authority が beads/C28、github/C12、none の一経路だけである",
+      "status": "pass",
+      "evidence": "LT-TASK-001 tracker_binding=github のみ。remote.json の beads={} で beads 経路は不使用。apply の external receipt は fixture adapter 1 件だけ"
+    },
+    {
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "pass",
+      "evidence": "pass1 write_count=0 / pass3 write_count=0。両 dry-run で graph/snapshot/remote の sha256 before==after"
+    },
+    {
+      "item": "双方変更は manual conflict、片側変更は mapping どおりの反映 receipt を持つ",
+      "status": "pass_partial",
+      "evidence": "本 scenario は片側変更のみ注入。remote 側 title 変更→import、local status=active→option_map で Status='In Progress'(OPT_InProgress001) へ export、conflicts=[]。双方変更ケースは OUT7 の担当 scenario"
+    },
+    {
+      "item": "close/delete は graph_node_id を保持した tombstone/status transition になる",
+      "status": "not_exercised",
+      "evidence": "fixture remote state=open のため close/delete 未注入。tombstones=[] (OUT3 担当 scenario)"
+    },
+    {
+      "item": "default-branch merge evidence を満たす場合だけ done となり、dirty/feature worktree event は pending に残る",
+      "status": "not_exercised",
+      "evidence": "pull_request_linkages=[] のため lifecycle 未発火。completion_evidence.status=in_progress のまま (OUT9 担当 scenario)"
+    },
+    {
+      "item": "同一状態の二回目 sync の imports/exports/Project item add が0件である",
+      "status": "pass",
+      "evidence": "pass3: imports=[] exports=[] changes=0 converged=true pending_retry=[]。item_id PVTI_lADOFixture001 は 1 件のまま"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "IN1",
+      "loop_scope": "inner",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py: valid=true violations=0 (apply 前後とも)。同期 payload の必須キーは sync report の fixture receipt / operation (field_id, option_id, item_id, project_id, value_type) が欠落0で保持。gh-bridge.py と gh は外部依存ゼロ要件により一度も起動していない"
+    },
+    {
+      "id": "OUT1",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "pass2 で imports 1 + exports 1 を適用 (write_count=3)、pass3 で changes=0 / converged=true。graph 08a942a6.. snapshot ae94bd6d.. remote 37bd517b.. が pass2 直後と pass3 直後で完全一致"
+    },
+    {
+      "id": "OUT4",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "pass1/pass3 とも write_count=0 かつ全 sha256 before==after"
+    }
+  ],
+  "outcome": "PASS"
+}

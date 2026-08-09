@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/dev-graph/scripts/build-system-spec-import.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 84,
+    "notes": "argparseの前にscript-headerとモジュールdocstringが完備し、目的・入出力・write-scopeが明記されている。repo-root配下へのパス脱出防止(require_file/out-dir境界チェック)・evidence報告のverdict=PASS必須・source_digestのSHA256束縛など健全な検証を持つ。減点点は2つ:(1) ヘッダで宣言する『write-scope: caller-repo/.dev-graph/tmp only』を実コードでは強制しておらず、--out-dirがrepo-root配下ならどこでも書き込める(記述と実装の不一致)。(2) main()の例外捕捉は(KeyError, ValueError)限定でTypeError等の想定外契約構造には未対応。責務は『C02インポート素材の生成のみ』に集中しており単一責任。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

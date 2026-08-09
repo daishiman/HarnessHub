@@ -133,3 +133,158 @@ R5/R6/R7/R8 はいずれも「P02 の architecture decision が誤っている�
 | H6 | P07 | acceptance 2 を「実測待ち」として記録し、達成と書かない (R7) |
 | H7 | P08/P11 | `vitest.config.ts` の Write scope 最小逸脱を追跡対象として明記する (R6) |
 | H8 | P12 | route drift (`/harnesses` vs `/catalog`、S04 の配置) を frontend-spec へ追補する (R1) |
+
+## 5. 実装後の再検証 (2026-08-08)
+
+> **背景**: §1-§4 は実装着手前に ADR だけを対象に行ったレビューである。P05-P13 が完了し実装が main
+> に入った現在、同じ 6 観点を**実コードへ当て直して**再検証した。ADR の記述を信じず、
+> 実ファイル・実テスト・実 CI 定義に当たっている。指摘は「観点 → verdict → 根拠 (file:line)」で記す。
+
+- **再検証の総合判定**: **pass-with-corrections (継続)** — 設計判断そのものの誤りは検出していない。
+  一方で **CONCERN 4 件** (うち 1 件は実装挙動、3 件は文書の陳腐化) を新規に検出した。
+- **CWV は PASS と書かない**。予算未達が未解消のまま残っている (§5.5)。
+
+| # | 観点 | verdict |
+|---|---|---|
+| V1 | S01-S04 画面構成・状態管理境界 (ADR §1) | PASS |
+| V2 | install descriptor 契約 (ADR §2.1) | PASS |
+| V3 | ポーリング設計 (ADR §2.2 / §2.4) | **CONCERN** |
+| V4 | marketplace.json 生成方式 (ADR §3) | **CONCERN (軽微)** |
+| V5 | CWV バンドル予算 (ADR §4) | **未達 (既知・未解消)** |
+| V6 | feature 境界の遵守 (ADR §5) | PASS |
+
+### 5.1 V1 — S01-S04 画面構成・状態管理境界: **PASS**
+
+- 3 層分離は実在する。route 層 = `apps/hub/src/app/(workspace)/catalog/{page.tsx, [projectId]/page.tsx, releases/page.tsx}`、
+  client 部品 = `apps/hub/src/components/catalog/` の 5 ファイル、純粋ロジック = `apps/hub/src/lib/catalog/`。
+  route 層にデータ取得は無く、`page.tsx:25-37` は `searchParams` と scope の解決のみを行う。
+- S03 が独立 route を持たない決定 (ADR §1.1) は守られている。`catalog/` 配下の動的 route は `[projectId]` だけで、
+  `CatalogPublishStatus` は S02 のタブ部品として存在する。
+- **状態管理境界は ADR より厳しく作られている**。ADR §1.1 は「サーバ状態 = `useState`」としか書いていないが、
+  実装は scope 切替時の stale 描画を明示的に閉じている: `CatalogList.tsx:43-45` が `scopeKey` を状態として持ち、
+  `CatalogList.tsx:91-92` で `entriesScopeKey !== scopeKey` の間は前 tenant の行を 1 frame も出さない。
+  `authorization-cache-boundary.test.tsx:127-198` (DC-TEN-06..10) が固定している。
+- **軽微な差分 (記録のみ)**: ADR §1.2 / §6 は `lib/catalog/` を 6 ファイルと列挙するが、実装は 7 ファイル
+  (`publish-status.ts` が追加。`PublishRequestState` → StatusChip 値の写像)。Write scope 内の追加であり逸脱ではない。
+
+### 5.2 V2 — install descriptor 契約: **PASS**
+
+- 「UI 側で descriptor を組み立てない」制約が実装で守られている。`CatalogInstallPanel.tsx:84-107` は
+  `descriptor.command` / `download_url` / `launch_url` を**そのまま**描画するだけで、R2 key や URL の合成が無い。
+  `scope-boundary.test.ts:75` (DC-SCOPE-04) が回帰を固定。
+- `Idempotency-Key` は契約どおり client 生成 UUID で、**同一導入操作では鍵を再利用**する
+  (`CatalogInstallPanel.tsx:42,46` の `useRef` + `??=`)。再試行のたびに鍵を作り直す実装なら download count が
+  重複加算されるが、そうなっていない。送出は `http-adapter.ts:175-181` の 1 箇所に閉じている。
+- port の型 (`ports.ts:63-72`) と HTTP 実装 (`http-adapter.ts:175-181`) の引数が一致し、契約と実装の乖離は無い。
+
+### 5.3 V3 — ポーリング設計: **CONCERN** (穴 2 件)
+
+純関数側 (`polling.ts`) は ADR §2.4 を過不足なく実装している (連続失敗 5 = `:15`、総試行 15 分 = `:17`、
+`Retry-After` 優先 = `:100-103`)。問題は**呼び出し側の hook にある**。
+
+- **C1 (実質的な指摘) — 認可失敗を「一時的な失敗」と同じに扱っている**。
+  `CatalogPublishStatus.tsx:72-76` は失敗の種別を見ずに `consecutiveFailures` を加算するだけで、
+  `shouldContinuePolling` (`polling.ts:70-77`) の入力にも失敗種別が無い。
+  結果として **403 (権限なし) でも 5 回叩いてから止まる**。`degradation.ts:52` は「権限不足は
+  サインインし直しても解決しない」と正しく述べており、その理屈はリトライにもそのまま当てはまる。
+  401 も同様で、`catalogCapabilities` が `requiresSignIn: true` を返せる情報を hook が使っていない。
+  → **是正指示 (follow-up)**: `PollingState` に失敗種別を渡し、`unauthorized` / `forbidden` / `fatal` は
+  1 回目で停止させる。判定は `polling.ts` の純関数側に置く (hook に条件を書くと §2.4 の「停止条件を 1 箇所に集める」が崩れる)。
+- **C2 — 不可視タブからの復帰でポーリングが再開しない**。
+  ADR §2.2 は frontend-spec の `refetchIntervalInBackground: false` と同義と述べており、これは
+  「一時停止して復帰時に再開」を意味する。しかし実装は `CatalogPublishStatus.tsx:78-89` で
+  `documentVisible: false` を受けると `stopped = true` を立てて effect を抜け、
+  `visibilitychange` の購読はコードベース全体に存在しない (`apps/hub/src` 全文検索で 0 件)。
+  タブを離れて戻ると自動更新は**永久に**戻らず、利用者が「再試行」を押す必要がある。
+  緩和要因として「自動更新を停止しました」+ 再試行ボタンが出る (`:122-133`) ため、
+  黙って古い値を表示し続ける最悪形ではない。
+  → **是正指示 (follow-up)**: `visibilitychange` で復帰時に `retry()` 相当を発火させるか、
+  ADR §2.2 を「復帰しない前提の停止」と改訂して意図を一致させる。どちらでもよいが、
+  現状は**設計文と実装の意味が食い違ったまま**である。
+- **C3 (文書側) — 終端 status の定義が ADR と実装で違う**。ADR §2.2 は終端を
+  `Published` / `Failed` / `Draft` の 3 つとするが、実装の pollable 集合は
+  `validating` / `approved` / `publishing` の 3 状態のみ (`polling.ts:27-31`)。
+  実装は `needs_fix` / `ready` / `approval_pending` (= 人の操作待ち) も叩かない**より正しい**判断だが、
+  ADR が追随していない。→ ADR §2.2 の表を実装に合わせて改訂する。
+- `429` の扱いに穴は無い。`Retry-After` を数値形式のみ受理し空文字を 0 秒と誤読しない
+  (`polling.ts:83-92`)、異常値は総試行上限でクランプする (`:102`)。`polling-contract.test.ts` の
+  DC-POLL-09/10 が両分岐を固定している。
+- 同時実行も設計どおり。`run` を直列に繋ぎ (`CatalogPublishStatus.tsx:91-93`)、unmount 時に
+  `AbortController` で中断する (`:98-102`)。
+
+### 5.4 V4 — marketplace.json 生成方式: **CONCERN (軽微)**
+
+- スキーマは正本と一致している。`marketplace-document.test.ts:69-86` (DC-MKT-01) が
+  `.claude-plugin/marketplace.json` を実読みし、**追加キーが `source_status` の 1 つだけ**であること、
+  `plugins[]` の要素キーが完全一致することを固定する。新形式の発明は起きていない。
+- 生成は純関数で決定的 (`marketplace.ts:62-78`)、fail-closed も実装済み。
+  `resolveAdoptedSourceResolver()` は `null` を返し (`marketplace.ts:93-95`)、
+  route は entry を読みに行かずに空を返す (`route.ts:40-44`)。
+- **§2 の R5 是正は履行されている**。「0 件」と「経路未確定」の区別が body (`marketplace.ts:76`) と
+  header (`route.ts:57`) の**両方**で表明されている。当時の是正指示どおり。
+- **CONCERN**: `GET /marketplace.json` は `withAuthz` 配下 (`route.ts:32-38`) にあり、**未認証では取得できない**。
+  現状は plugins が常に空なので実害は無い。しかし H7 確定後に URL 型 marketplace として消費させる場合、
+  一般の marketplace クライアントは session を持たない。ADR §3 は「配布出口」とだけ述べ、
+  **未認証消費者の経路を決めていない**。→ H7 確定と同時に「認証必須の workspace カタログ」と
+  「未認証の配布出口」を分けるか統合するかを ADR で決める必要がある (経路確定前なので今は差し戻さない)。
+
+### 5.5 V5 — CWV バンドル予算: **未達 (既知・未解消)。PASS ではない**
+
+- 予算の実体: `.github/workflows/cwv.yml:71-73` が LCP ≤ 2500ms / CLS ≤ 0.1 /
+  **TBT ≤ 200ms (INP の lab 代理指標)** を fail-closed で判定する。
+- **未達の事実**: `HarnessHub-aqi` は現在も **IN_PROGRESS** であり、close 条件は「本番 CWV 実測で TBT ≤ 200ms」。
+  初回本番実測 **TBT 926ms (予算 200ms)** に対する是正 (`next.config.ts` の `optimizePackageImports`) は
+  入っているが、**是正後の本番実測が取れておらず、予算内に収まった証跡が無い**。
+  本 feature の acceptance 2 も `acceptance-record.md:20` で「未達 (未計測)」と記録されており、
+  §2 の R7 / 引き継ぎ H6 (「達成と書かない」) は守られている。**この点は履行済み**。
+- 代理指標のみ緑。client JS 予算は `/catalog/[projectId]` 119.0 KiB / 120.0 KiB で
+  **余裕 1.0 KiB** (`evidence-summary.md` §1.4)。ADR §4.2 の dynamic import 方針は実装されており
+  (`http-adapter.ts:56-83` が zod 契約一式 18.3 KiB を遅延化)、それでこの余裕である。
+  → **注意喚起**: catalog に import を 1 つ足すだけで G13 が落ちうる。代理指標が緑なことを
+  CWV good の根拠に使わないこと (予算超過の TBT 926ms と代理指標の緑は両立する)。
+- **CONCERN (文書の陳腐化)**: 本 feature の複数文書が「CWV は原理的に測れない」と記すが、**この前提は既に無効**。
+  `runbook-follow-ups.md:30` / `evidence-summary.md:96-101` / `release-record.md:112` は
+  「`/catalog` が未認証 401 で Lighthouse が読めない」を阻害要因とするが、現在の main には
+  署名付き短命 credential による計測経路が存在する: `cwv.yml:22-42` が
+  `HUB_CWV_PROBE_SECRET` 等を fail-closed で要求して `mint-cwv-probe.mjs` で ticket を発行し、
+  `apps/hub/src/middleware.ts:46-68` がこれを検証して cookie へ移す。
+  → **follow-up**: 阻害要因は解消済みなので、`gh workflow run hub-cwv` を実行して acceptance 2 を
+  実測で確定させる。同時に上記 3 文書の「計測不能」記述を訂正する (本 P03 の Write scope 外)。
+
+### 5.6 V6 — feature 境界の遵守: **PASS**
+
+- 書込操作の越境は無い。`lib/catalog/` 内の `POST` は install descriptor 取得 1 本のみ
+  (`http-adapter.ts:177`)、promote / rollback / pointer 更新の口は存在しない。
+  `scope-boundary.test.ts:29-80` (DC-SCOPE-01..04) と `tenant-isolation.test.ts:126` (DC-TEN-04
+  「`lib/catalog/` に認可判定を複製しない」) が構造として固定している。
+- 認可の単一化 (ADR §5 境界 3) は守られている。marketplace route は `withAuthz` 経由 (`route.ts:32-38`)、
+  画面側の取得は `http-adapter.ts:36-41` が scope 空を `forbidden` に倒して API の deny-by-default に委ねる。
+- 承認キュー UI (Stage 2 / scope out) は未実装 (DC-SCOPE-02)。
+
+### 5.7 ADR §7 #5 の記述が実装に追い越されている — **CONCERN (文書)**
+
+ADR §7 #5 は「通常 session の `GET /catalog` ハードナビゲーションは**到達不能**」「クエリあり/なし双方が
+`403 missing_tenant_scope`」「`/catalog` への通常 nav link は依然として無く、一般利用者向けの公開経路は
+現状未提供」と述べる。**現在の実装はいずれとも一致しない。**
+
+- `apps/hub/src/components/primary-nav.tsx:33` に「業務ツール」として `/catalog` への nav link が実在する。
+- ADR が根拠として挙げる回帰テスト自体が到達可能を固定している:
+  `catalog-hard-navigation-scope.test.ts:78-92` は単一 workspace 所属の通常 session が
+  クエリなし GET でも `200` を返すことを assert する。403 が残るのは
+  「複数 workspace 所属で active workspace 未選択」の場合だけ (`:94-101`)。
+- 認可入力に query を使わない原則は維持されている (`:85-92`)。§1.1 の「表示用スコープであって認可判定ではない」
+  という整理は依然として正しい。
+
+→ **follow-up**: ADR §7 #5 を現状 (単一認可層内で session から active scope を解決する形で到達可能になった)
+に改訂する。設計原則の変更ではなく記述の陳腐化であり、P02 への差し戻しは要さない。
+
+### 5.8 再検証の follow-up 一覧
+
+| # | 内容 | 引き継ぎ先 | 種別 |
+|---|---|---|---|
+| F1 | ポーリングが 401/403/契約不正でも 5 回リトライする。失敗種別を `shouldContinuePolling` へ渡し即時停止させる (§5.3 C1) | `HarnessHub-h2pe` | 実装 |
+| F2 | 不可視タブ復帰でポーリングが再開しない。現行 ADR は明示 Retry として同期し、自動再開実装は `HarnessHub-h2pe` で追跡 (§5.3 C2) | `HarnessHub-h2pe` | 実装/文書 |
+| F3 | **本変更で解消**: ADR §2.2 の終端 status 定義を実装 (`POLLABLE_PUBLISH_STATES`) に合わせて改訂 (§5.3 C3) | ADR | 文書 |
+| F4 | `marketplace.json` の未認証消費者経路を H7 確定と同時に決める (§5.4) | `HarnessHub-dctf` | 設計 |
+| F5 | **文書訂正は本変更で解消、実測は継続**: `__cwv_probe` を現行経路として 3 文書へ反映。`hub-cwv` の fresh 実測は `HarnessHub-aqi` で継続 (§5.5) | 運用 + 各文書 | 文書/運用 |
+| F6 | **本変更で解消**: ADR §7 #5 を primary navigation・active scope 再検証・複数 workspace の 403 へ改訂 (§5.7) | ADR | 文書 |

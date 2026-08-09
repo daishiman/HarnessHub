@@ -43,7 +43,7 @@ def _payload(subagent_type: str, tool_name: str = "Task", prompt: str = "監査�
         "cwd": "/tmp/project",
         "tool_name": tool_name,
         "tool_input": {"subagent_type": subagent_type, "prompt": prompt},
-        "tool_response": {"success": True},
+        "tool_response": {"content": [{"type": "text", "text": "監査完了\nAUDIT_VERDICT: PASS"}]},
     }
 
 
@@ -72,6 +72,49 @@ class BuildRecordTest(unittest.TestCase):
         self.assertEqual(rec["schema_version"], hook.SCHEMA_VERSION)
         self.assertTrue(rec["ts"].endswith("Z"))
         self.assertEqual(len(rec["prompt_sha256"]), 64)
+        self.assertEqual(len(rec["response_sha256"]), 64)
+        self.assertEqual(rec["audit_verdict"], "PASS")
+
+    def test_requires_canonical_audit_verdict_marker_on_final_nonempty_line(self):
+        payload = _payload(_MATRIX_AUDITOR)
+        payload["tool_response"] = {"text": "verdict: PASS"}
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertIsNone(rec["audit_verdict"])
+        payload["tool_response"] = {"text": "AUDIT_VERDICT: PASS\nAUDIT_VERDICT: FAIL"}
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["audit_verdict"], "FAIL")
+
+    def test_ignores_prompt_markers_embedded_before_final_response_marker(self):
+        payload = _payload(_MATRIX_AUDITOR)
+        payload["tool_response"] = {
+            "status": "completed",
+            "prompt": {
+                "text": "許容値:\nAUDIT_VERDICT: PASS\nAUDIT_VERDICT: FAIL\nAUDIT_VERDICT: INDETERMINATE"
+            },
+            "agentId": "agent-123",
+            "content": [{"type": "text", "text": "監査完了\nAUDIT_VERDICT: PASS\n"}],
+            "usage": {"service_tier": "standard"},
+        }
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["audit_verdict"], "PASS")
+
+    def test_ignores_metadata_strings_after_response_content(self):
+        """実 Agent payload の応答後 metadata を最終行として誤認しない。"""
+        payload = _payload(_MATRIX_AUDITOR)
+        payload["tool_response"] = {
+            "content": [{"type": "text", "text": "監査完了\nAUDIT_VERDICT: FAIL"}],
+            "totalDurationMs": 1234,
+            "agentId": "a9c9192ad9ad21e63",
+            "status": "completed",
+        }
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["audit_verdict"], "FAIL")
+
+    def test_rejects_marker_when_final_nonempty_line_is_not_marker(self):
+        payload = _payload(_MATRIX_AUDITOR)
+        payload["tool_response"] = {"text": "AUDIT_VERDICT: PASS\n追加説明"}
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertIsNone(rec["audit_verdict"])
 
     def test_records_agent_tool_fork_with_observed_name(self):
         """現行ハーネスの起動ツール名 'Agent' も記録対象。台帳へは観測名をそのまま書く

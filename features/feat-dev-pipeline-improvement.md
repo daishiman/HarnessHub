@@ -12,13 +12,13 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-04T08:01:08.315058Z"
+updated_at: "2026-08-04T07:14:11.105269Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","issue-required-heading-presence-validation-20260729","issue-hooks-entry-point-parity-generalization-20260728","task-live-trial-evidence-selection-handoff-20260804","task-hooks-entry-point-parity-final-review-handoff-20260804"]
-resource_scope: ["features/feat-dev-pipeline-improvement.md","system-spec/dev-workflow.md","docs/features/feat-dev-pipeline-improvement/live-trial-evidence-selection-spec-reflection-receipt.md","docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-live-trial-evidence-selection-handoff.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md","specs/harness-hub-plugin-hook-governance-addendum.md"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
+resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
-goal: "qa-067 の 8 要件と qa-071 の方法論要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束する。加えて qa-146 の C11/C14/C16、live-trial 証跡選択、全 plugin hook parity 契約が仕様・設計・Phase 13 handoff に trace される状態"
+goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
 scope_in: ["lifecycle close-loop の機械化 (open 残置検出と md/graph/beads 3 表現の同時 close 導線)","eval-log/ 配置規約の明文化と CI lint 強制","improvement-handoff schema への disposition 必須化と未消化 findings の beads 起票","tasks/ frontmatter status の意味論明記","graph.json 肥大対策の再検討トリガー記録","dev-graph 中核 handoff 31 findings の差分監査と disposition 遡及付与","spec-drift-guardian の verdict close gate 配線","陳腐化文書の定期棚卸し GC の sync verb 運用組込み","qa-071 方法論要件 (外側/内側ループ・スコープ分離・情報配置・P13 書き戻し) の feature context・goal-spec・P01..P13 task spec への意味的伝播と semantic coverage 検査の恒常化"]
 scope_out: ["Hub プロダクト本体機能 (Web/API/DB) の変更","dev-graph への新 verb 追加","bd CLI 本体の変更","graph.json 分割の実装 (トリガー記録のみ)"]
 acceptance: ["解決済み事象の open 残置を検出する決定論検査が存在し、issue-bd-bridge-notes-passthrough-20260721 が close-loop で閉じている","eval-log/ 配置規約が README に明文化され、CI lint が直下残置・バイト同一重複・1MB 超の git 追跡を遮断する","improvement-handoff schema に per-finding disposition と根拠 ref が必須化され、既存 21 ファイル 94 findings に消化状態が付与されている","task template に status = 文書ライフサイクル (active/superseded) の意味論が明記され、実行状態の二重正本が無い","graph.json 分割の再検討トリガーが仕様に記録されている","spec-drift-guardian の C03/C04 verdict が close gate に配線され、proposal のみでの close が遮断される","陳腐化文書の棚卸し手順が sync verb 運用に組み込まれている","feature の purpose/goal/scope_in/acceptance と context JSON・goal-spec が qa-071 の方法論要件 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を明示的に保持している","P01..P13 の task spec が外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復契約・スコープ分離・情報配置 (正本への参照と lineage のみ)・P13 の仕様/architecture への書き戻しを実行可能な形で trace している","validate-system-plan.py と system-dev-plan-evaluator が、feature 宣言 qa 要件の spec-state qa_log 登録と goal-spec/task spec への semantic coverage を tag/lineage 一致だけで PASS にせず fail-closed 検証している"]
@@ -32,13 +32,13 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-dev-pipeline-improvement/af8a73df2d7518c1dcfb972254b44ca993801e7ddac1dd1f98ab60e7d1affda6/plan-findings.json"}
-source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"generated","source_digest":"89f42b29a1af7b635ec8534fe3bdf452d8f878309696305200484e0d2c8c4ec6","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
+source_lineage: {"imported_at":"2026-07-30T12:05:00Z","origin_kind":"generated","source_digest":"ab4bd2e75bae0aefdb5d4e60ceb5f13e444bdf0ef1fbb0b9e020edcba7995837","source_path":"system-spec/dev-workflow.md","source_plugin":"dev-graph","source_version":null}
 classification_confidence: 0.9
 classification_reason: "C14 マクロ分解 (確定 qa-067 開発管理パイプライン改善 8 要件から導出)"
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-dev-pipeline-improvement.md","confidence":0.9}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-k2u","linked_at":"2026-07-21T16:50:00Z","sync_state":"linked"}
+beads_linkage: {"bd_issue_id":"HarnessHub-y7aj","linked_at":"2026-08-04T03:15:46Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -147,11 +147,25 @@ node ID・件数・source digest・lineage が一致する登録証拠を失わ�
 
 HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着手可能 node を黙って落とさず、ready_payload_entry_absent と source=schedule-graph を持つ unmapped[] として報告するようにした。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆し、不正な依存形状は停止、dependency 配列順だけの parity 不一致は除く。これは製品 runtime を変えず、開発管理パイプラインの観測可能性（原因を後から判断できる性質）を改善する内部契約である。正規 C01/C03 仕様反映、復旧境界、検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
 
-`HarnessHub-85z0` と `HarnessHub-3tw` では、C11 が specification の必須見出し不在を
-`heading_missing` として fail-closed にし、C14 dry-run の stdin preview は未書込み artifact
-だけを許容するようにした。既存 specification 2 件を canonical template の全見出しへ移行し、
-task / issue の conditional template は `HarnessHub-yzv0` に切り分けた。これは Hub 製品 runtime
-を変えず、開発管理パイプラインの入力品質と dry-run の安全性を改善する内部契約である。
-C01 `qa-143` / `appr-032`、C02 取得証跡、C03 compile、全層の判断は
-[仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c11-heading-presence-preview-spec-reflection-receipt.md)
+HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
+
+`HarnessHub-3vmz` と `HarnessHub-o4zi` の最終レビューでは、独立監査結果の偽装を
+fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C19 import の条件付き
+見出し契約を再確認した。製品 API・DB・認証認可・UI・配備は不変で、内部仕様・設計、
+既存文書の見出し移行、検証結果は
+[最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
 を正とする。
+
+`HarnessHub-o4zi` の branch 最終 gate では、条件付き見出し契約を repository 全体へ適用した際に残っていた旧 specification 5 件・task 2 件も標準セクションへ移行し、full graph schema を violation 0 へ収束させた。500 行を超える着地観測 addendum は、短い正規 contract と詳細履歴へ分離した。対象、検証、製品 runtime 非変更の判断は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) に記録する。
+
+## 2026-08-09 検証 tier と review 証拠整合
+
+変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。
+
+同日の C19 追補では、live-trial scenario に時間・token の引上げ不能な上限を追加し、確認済み system-spec bundle を digest 検証して再利用する経路を実装した。従来の 2,820 秒の全生成 trial を、同一受入目的の正式な fresh bounded trial r5（90.186 秒・290,770 token）へ短縮し、上流 Skill と network call が 0 であることを transcript に束縛した。poll-state は開始時に永続化され、再開しても時間上限をリセットできず、usage 不明の token は PASS にしない。仕様上は既存 `qa-216` / `qa-217` の「重い検証を必要時だけ起動し、証拠を厳格に残す」契約の実装具体化であり、新しい製品要件は追加しない。
+
+## 2026-08-10 system design knowledge の深掘り (`HarnessHub-ldq`)
+
+ui-ux・testing-qa・dev-workflow・infrastructure に章固有の deep card を追加し、resource map と catalog の順序を検査可能な宣言へ揃えた。canonical compiler が 4 章だけへ投影し、製品 API・DB・認証認可・UI runtime・deploy unit は変えない。C04 の設計影響と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を正とする。
+
+同日の C19 最終 gate では、初回 build と確認済み receipt の resume を別の完了境界として検証する。resume は evaluator を再起動せず、`system-spec-resume-closure/v1` report、runner stdout、C02・lineage・evidence の exit 0 を post-run transcript gate で束縛する。製品要求は変えず、`qa-216` / `qa-217` の実装具体化とする。詳細は [C19 resume closure 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。

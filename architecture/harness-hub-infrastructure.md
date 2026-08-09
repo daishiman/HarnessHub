@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub infrastructure アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T09:40:38.296426Z"
+updated_at: "2026-08-07T12:30:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-dev-workflow"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
-source_lineage: {"imported_at":"2026-08-02T09:32:20Z","origin_kind":"system-spec-harness","source_digest":"783b0e040c2e827a093cd5b8cb1165ce7f71ea5c8b96d94d7ef61ecbf166cd54","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-07T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"ab47365337dc37f3e517aa522fd1523913cb5f4621f67659790258c84a341102","source_path":"system-spec/infrastructure.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-infrastructure.md","confidence":0.95}]
@@ -47,17 +47,62 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # Harness Hub infrastructure アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `47d9b82aba718106…`)
-- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `960ed37334a8cbcf…`)
+- [system-spec/infrastructure.md](../system-spec/infrastructure.md) (sha256: `ab47365337dc37f3…`)
+- [system-spec/maintenance-ops.md](../system-spec/maintenance-ops.md) (sha256: `fc10ded7f295f685…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（SLO 運用契約を維持し、delivery closure を qa-123 で分離）
-- 再取込日時: 2026-08-02T05:37:45Z / plugin: system-spec-harness v0.1.0
+- 再取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
+
+## 要件定義書 (上位概念)
+
+この wrapper は infrastructure の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/infrastructure.md` と `system-spec/maintenance-ops.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+小さな運用負担と予算で、利用者が継続して Harness Hub を使える実行基盤を提供する。
+
+### U2 背景 (background)
+
+常設環境の増加、手作業 deploy、観測不能な障害は、無料枠と少人数運用を破綻させる。
+
+### U3 ゴール (goals)
+
+Cloudflare Workers を中心に、再現可能な CI/CD、使い捨て preview、測定可能な SLO を維持する。
+
+### U4 目標 (objectives)
+
+production 1 組、PR preview、main 自動 deploy、無料枠監視、復旧手順を機械化する。
+
+### U5 成功基準 (success_criteria)
+
+品質ゲート、deploy 検証、SLO 観測、rollback/restore drill が再現可能に成功することを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、開発者、release 担当者、SRE、Cloudflare/GitHub 管理者を対象とする。
+
+### U7 スコープ (scope)
+
+Workers、ストレージ binding、CI/CD、preview、監視、障害対応、容量管理を扱う。
+
+### U8 制約 (constraints)
+
+本番の手作業変更、常設 staging、secret の平文配置、根拠のない SLO 達成宣言を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+変更を PR から安全に届け、稼働版の素性と反映鮮度を追跡し、障害時に戻せるようにする。
+
+### 意思決定支援 (decisions)
+
+環境数と運用容易性が競合するときは、自動化された preview と単一 production を優先する。
 
 ## Architecture overview
 
@@ -224,35 +269,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
   repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。
 
-## SLO 公開実測の差分追記 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
+## SLO・認証 rollout・deploy 鮮度の運用追補
 
-- **実測境界**: Better Stack の設定申告ではなく、認証不要の status page `/index.json` を読み、resource `external_id` を主鍵に現在状態と日次履歴を突合する。取得不能は fail-closed とする。
-- **観測窓**: UTC の完了日だけを数え、進行中の当日と `not_monitored` を除外する。30 日未満は `collecting`、外形単独の目標判定は `null` を維持する。
-- **最終判定**: 30 日到達後も Workers Analytics 5xx 率が揃うまで `observation_complete_pending_application_error_rate` とし、外形監視だけで 99.5% 達成を主張しない。
-- **再現性と秘密**: 検証 CLI は一致 0 / 不一致 1 / 取得・入力不能 2 を返し、公開 URL だけを読む。API token と heartbeat URL を証跡へ保存しない。
-- 正本は [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-116、実装・検証・残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
-
-## Delivery closure と SLO verdict の分離 (2026-08-02 / qa-123)
-
-- SLO target、観測窓、複合算定、エラーバジェットは qa-019 / qa-116 を維持する。
-- feature / P13 の delivery lifecycle は exact-13、release、health、bundle、共通層の証跡で閉じ、ユーザーが不要とした運用 follow-up は `not_applicable` として非 blocker にする。
-- waiver を稼働品質 PASS へ変換しない。観測再開時は同一 issue の reopen または新 issue と、既存 runbook / CLI / 生データを必要とする。
-- この変更は acceptance governance の境界だけで、API、DB schema、認証認可、UI、Worker deploy unit の構造を変えない。詳細は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
-
-**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-113・qa-114)**:
-
-- 環境ごとに Google OAuth client を 1 件作り、redirect URI は
-  `AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc` の 1 本に固定する。
-  tenant 追加ごとの client/URI 登録は行わない。
-- `SHARED_GOOGLE_OAUTH_CLIENT_ID` と `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` は
-  Cloudflare Worker の環境 secret とし、repository と GitHub Actions Secrets を
-  受渡し元にしない。共有 tenant がない環境では未設定を許す。
-- rollout は backup/dry-run → migration 0003 → secret 投入 → Worker deploy →
-  tenant mode 変更 → 共有/顧客両方式 smoke の順。個人 Google、別 Workspace、
-  tenant state 差し替えの拒否も確認する。
-- rollback は tenant を customer mode へ戻し、旧 callback の成功を確認してから
-  Worker code を戻す。DB migration と証跡は自動で戻さない。
-- secret rotation は新 secret 投入 → Worker 反映 → login 確認 → 旧 secret revoke。
-  手順と証跡は
-  [rollout runbook](../docs/features/feat-auth-tenancy/runbook-shared-google-oidc-rollout.md)
-  を正とする。
+運用履歴の責務を分離して300行上限を守るため、SLO 公開実測、shared Google rollout、
+build identity と deploy 鮮度の追補は
+[infrastructure operations addenda](harness-hub-infrastructure-operations-addenda.md) へ分冊する。

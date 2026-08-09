@@ -12,9 +12,9 @@ iteration: "Stage 1"
 title: "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:52:37.353128Z"
+updated_at: "2026-08-02T06:50:00Z"
 status: "active"
-depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
+depends_on: ["feat-stage0-distribution-gate"]
 related_nodes: []
 resource_scope: ["features/feat-dual-catalog-web.md"]
 purpose: "利用者・管理者が Skill/WebApp を発見・導入できる dual catalog UI と配布出口 (marketplace 出力 / Bootstrap Installer 連携) を、WCAG 2.2 AA + CWV good (qa-018) の品質で提供する"
@@ -103,3 +103,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - `/marketplace.json` は private cache + Cookie/tenant/workspace `Vary` へ改訂し、Hub 停止時の同一 scope 継続性を残したまま shared cache のテナント漏えい窓を閉じた。
 - 一覧の入力値と適用 query を分離し、入力中の自動取得と submit 時の二重取得を解消した。
 - dual catalog の仕様正本は `qa-117`〜`qa-119`、main との security 統合正本は `qa-120`。設計は [frontend](../architecture/harness-hub-frontend.md)・[security](../architecture/harness-hub-security.md)・[testing-qa](../architecture/harness-hub-testing-qa.md)、検証と残課題は [仕様反映受領書](../docs/features/feat-dual-catalog-web/spec-reflection-receipt.md) を参照する。
+
+## 2026-08-10 Catalog validator load boundary
+
+HTTP error 経路では response schema chunk を読み込まず、成功時だけ JSON decode と schema load を並行する。Zod の fail-closed 検証、API・認可・DB 契約は維持する。TBT の最終受入は `HarnessHub-aqi` の本番 CWV 再計測待ち。反映範囲と検証は [仕様反映受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を正とする。

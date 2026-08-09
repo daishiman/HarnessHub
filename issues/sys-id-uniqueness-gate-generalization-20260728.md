@@ -12,8 +12,8 @@ iteration: null
 title: "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)"
 owners: ["daishiman"]
 created_at: "2026-07-28T01:25:04Z"
-updated_at: "2026-07-30T02:47:04.316273Z"
-status: "draft"
+updated_at: "2026-07-30T02:59:57Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-qa-log-id-uniqueness-gate-20260726"]
 resource_scope: ["plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph.py","plugins/plugin-dev-planner/skills/run-plugin-dev-plan/scripts/validate-task-graph-shapes.py","plugins/ubm-goal-setting/scripts/validate-consult-session.py","plugins/harness-creator/skills/run-build-skill/scripts/validate-route-build-reports.py","plugins/harness-creator/skills/run-build-skill/scripts/validate-route-report-contract.py"]

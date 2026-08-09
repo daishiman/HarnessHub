@@ -45,11 +45,15 @@ ROOT_BY_KIND = {
     "feature": "features",
     "document": "docs",
 }
-# task/issue の required_sections は template-contract.json の
-# conditional_templates/conditional_required_sections (system_development 系統)
-# を解決するコードがまだ存在せず、system-dev-planner 由来の見出し体系と単純照合すると
-# 誤検出になる (HarnessHub-85z0 調査で発覚、解消は別課題)。specification のみ有効化する。
-HEADING_MISSING_KINDS = {"specification"}
+# task は template-contract.json の conditional_required_sections (system_development
+# 系統) を graph_artifact_readiness.missing_required_headings() が node 引数経由で解決
+# するため有効化できる (HarnessHub-yzv0)。issue の required_sections には conditional
+# 機構が無く、実測で最多パターン (32/76件) が単に「概要」見出しを省略する慣習と契約の
+# 齟齬でしかないため、誤検出源として issue は対象外のまま残す (別課題で扱う)。
+# architecture が抜けた 0/10 見出し complete を、conditional_triggers により他 kind と対称化する (HarnessHub-o4zi)。
+HEADING_MISSING_KINDS = {"architecture", "specification", "task"}
+
+
 def nodes_of(data: Any) -> list[dict[str, Any]]:
     values = data.get("nodes") if isinstance(data, dict) else data
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):
@@ -293,7 +297,7 @@ def artifact_findings(
             if key in node and frontmatter.get(key) != node.get(key):
                 findings.append({"node": node_id, "code": "frontmatter_parity_error", "detail": key})
         if kind in HEADING_MISSING_KINDS:
-            for section in missing_required_headings(artifact, str(kind), template_contract):
+            for section in missing_required_headings(artifact, str(kind), template_contract, node):
                 findings.append(
                     {
                         "node": node_id,

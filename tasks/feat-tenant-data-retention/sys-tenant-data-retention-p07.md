@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:00:31Z"
+status: "closed"
 depends_on: ["SYS-TENANT-DATA-RETENTION-P06"]
 related_nodes: ["feat-tenant-data-retention"]
 resource_scope: ["docs/features/feat-tenant-data-retention/acceptance-record.md"]

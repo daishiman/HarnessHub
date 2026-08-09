@@ -1,0 +1,81 @@
+{
+  "verdict": "PASS",
+  "observations": [
+    {
+      "id": "OBS-1",
+      "text": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "verdict": "PASS",
+      "evidence": [
+        "fixture baseline confirmed independently: `git ls-tree -r HEAD --name-only` lists only `.dev-graph/config.json`, `.dev-graph/state/graph.json`, 6 `.gitkeep` and `system-spec/requirements-brief.md`. spec-state.json / fetched-references.json / completeness-report.json / index.md are all untracked, i.e. produced by this run, not pre-planted by the fixture.",
+        "`git diff --stat HEAD -- system-spec/requirements-brief.md` is empty: the fixture input brief was not rewritten to fit the output.",
+        "elicit: spec-state.json holds 8 categories x 6 platforms = 48 cells, counted directly = {確定: 8, 対象外: 40}, 未収集 0; qa_log 26 / approval_log 2 / reopen_log 8; requirements_foundation.confirmed=true; hearing_progress={loop_count:3, next_question:null, complete:true}; decisions D1/D2/D3.",
+        "compile: `system-spec/00-requirements-definition.md` + 8 category chapters (database/auth/ui-ux/security/infrastructure/backend/frontend/maintenance-ops) + `index.md` all exist (10 files).",
+        "evaluator: `system-spec/completeness-report.json` verdict=PASS, 6 aspects all PASS, high findings 0. An earlier FAIL report is preserved at `eval-log/system-spec-harness/completeness-report.json` (verdict=FAIL, foundation_trace FAIL + design_knowledge_reflection FAIL), so the PASS is the result of a real fail-closed remediation cycle, not a first-shot green.",
+        "R1-preflight independently confirmed: `plugins/system-spec-harness/.claude-plugin/plugin.json` version=0.1.0 (in >=0.1.0 <1.0.0); `references/package-contract.json` entry_points.skills contains all 4 declared entry points.",
+        "doc-fetch is a REAL fetch, verified by me against the live official pages (not taken from the executor's claim): sqlite.org/changes.html top entry is '### 2026-07-24 (3.53.4)' — byte-identical to the verbatim_excerpt stored in `system-spec/retrieval-evidence/sqlite.json`; fastapi.tiangolo.com/release-notes/ latest = 0.141.1 (2026-07-29); flask.palletsprojects.com/en/stable/changes/ newest = 3.1.3 Released 2026-02-18; postgresql.org/docs/ Manuals table Current = 18. All four match the recorded values exactly. No stale pinning, no fabricated citation.",
+        "`retrieved_at` is distinct for all 5 records (06:40:44Z / 06:40:51Z / 06:40:56Z / 06:41:02Z / 06:41:07Z) — not a single stamped timestamp.",
+        "I recomputed sha256 of all 5 files under `system-spec/retrieval-evidence/`: every one matches its `evidence_sha256` in fetched-references.json (5/5 exists + sha_match)."
+      ]
+    },
+    {
+      "id": "OBS-2",
+      "text": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "verdict": "PASS",
+      "evidence": [
+        "`.dev-graph/state/graph.json` (graph_revision=2) holds exactly 2 nodes; both carry all 6 `source_lineage` fields (origin_kind=system-spec-harness / source_plugin=system-spec-harness / source_path / source_version=0.1.0 / source_digest / imported_at=2026-08-04T07:10:00Z) with no missing key.",
+        "Both carry `confirmation_evidence` with all 3 fields (evaluator=assign-system-spec-completeness-evaluator, evidence_ref=system-spec/completeness-report.json, evaluated_digest), plus confirmation_status=confirmed / evaluation_status=pass / implementation_readiness.status=complete, missing_sections=[].",
+        "I recomputed sha256 myself: `system-spec/00-requirements-definition.md` = 104382b2e4e38e50d602deed6cf67769987a84cfd12263b5325efbe4b24b19c9 == spec node source_digest; `system-spec/index.md` = cad25dcfbc7a7db0e5b33c004ede3120d5f5383c4bf8370405668d2e308030f3 == architecture node source_digest. Each digest is of its OWN source_path — no digest borrowed from another file.",
+        "The two digests are different values, so there is no single-digest reuse across nodes.",
+        "evidence_ref `system-spec/completeness-report.json` exists on disk (validate-evidence-refs.py reports 0 dangling).",
+        "architecture node's source is `system-spec/index.md` and its canonical-index nature IS stated in the artifact body: `architecture/arch-local-todo-api-system-spec.md` line 52 (Architecture overview) states the source is the 正本索引 bundling the 8 category chapters + the requirements definition, and line 124 (## 取り込み lineage) repeats it and states the chapter contents are referenced, not duplicated. `index.md` itself does present the 8-chapter table with aggregate state, serves_goals and cell mapping, so the claim is true of the file, not just asserted.",
+        "Node Markdown frontmatter in `specs/spec-local-todo-api-system-spec.md` and `architecture/arch-local-todo-api-system-spec.md` carries the same source_lineage / confirmation_evidence values as graph.json (no graph-only lineage)."
+      ]
+    },
+    {
+      "id": "OBS-3",
+      "text": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "verdict": "PASS",
+      "evidence": [
+        "C02 writer signature present: `.dev-graph/state/graph.json` and both node Markdown files are mode 0600 (rw-------) — the atomic tempfile+os.replace pattern of `upsert-node.py` (scripts/upsert-node.py:78). Every other file in the fixture is 0644. Files written by Write/Edit or a shell redirect would be 0644.",
+        "`.dev-graph/state/.graph.json.register.lock` exists — the register lock that only upsert-node.py's registration path creates.",
+        "`.dev-graph/cache/c02-import/` contains `specification-node.json`, `architecture-node.json`, `specification-body.md`, `architecture-body.md` and `build-nodes.py` — i.e. the node input JSON + `--body-file` bodies staged for upsert-node.py, matching the `--input`/`--body-file` CLI contract. `build-nodes.py` computes the digests from the real source files and explicitly writes only under `.dev-graph/cache/`, never into the confirmed chapters.",
+        "graph_revision progressed 0 (HEAD) -> 2, consistent with two upsert operations rather than a hand-authored file.",
+        "`validate-graph-schema.py --graph .dev-graph/state/graph.json` exit 0.",
+        "Duplicate-logic check WITH positive control (harness must hit, dev-graph must not) over whole plugin trees: apply-spec-transition harness=21 / dev-graph=1; compile-spec-doc 13 / 1; requirements_foundation 28 / 1; hearing_progress 15 / 0; category_aggregate 22 / 0; qa_log 23 / 0; spec_cells 14 / 0; next_question 14 / 0; 未収集 37 / 1.",
+        "Every dev-graph hit resolves to a single file: `plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py`, which I read — it is the fixture-shape generator whose docstring explains why those artifacts are deliberately NOT pre-created. It is prose/fixture scaffolding, not elicitation or compile logic.",
+        "Restricting to the executable surface (`dev-graph/scripts`, `skills`, `agents`, `hooks`): all 9 probe terms return 0 files, including the harness writer function names `def set_foundation` / `def apply_cell_op` / `def run_chunk` (present in harness, absent in dev-graph). No reimplementation exists."
+      ]
+    }
+  ],
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "All three files exist with the exact required names: `eval-log/run-dev-graph-system-spec-goal-spec.json`, `-progress.json`, `-intermediate.jsonl`.",
+      "I ran the supplied invariant script myself: output `OK 6`, exit 0. 6 rows, every row carries all 6 required keys, `original_goal` verbatim-equal to goal-spec, and `original_goal_hash` equal to the recomputed sha256 of `original_goal`.",
+      "The 6 rows form a coherent progression (step 0 baseline -> R0/R1 preflight -> doc-fetch -> compile -> evaluator FAIL -> evaluator PASS + C02 write), not padding. drift_signal=none on all rows; row 5 explicitly reasons that an evaluator FAIL is a fail-closed rejection rather than goal drift, which is the correct reading."
+    ]
+  },
+  "gate_results": [
+    {"gate": "goal-seek invariant script (original_goal / hash / 6 required keys)", "exit_code": 0, "note": "OK 6 — 6 non-empty rows, all consistent"},
+    {"gate": "dev-graph validate-source-digest.py --progress eval-log/run-dev-graph-system-spec-progress.json", "exit_code": 0, "note": "checked=2 (NON-ZERO, not a vacuous green), registered_mismatch=[]; I re-derived both sha256 by hand and they match"},
+    {"gate": "dev-graph validate-evidence-refs.py --progress eval-log/run-dev-graph-system-spec-progress.json", "exit_code": 0, "note": "scanned_nodes_with_evidence=2 (NON-ZERO), registered_dangling=[], existing_dangling=[]"},
+    {"gate": "dev-graph validate-graph-schema.py --graph .dev-graph/state/graph.json", "exit_code": 0, "note": "silent pass"},
+    {"gate": "dev-graph resolve-repo-context.py --mode write (C24)", "exit_code": 0, "note": "content_roots.system_spec inside the fixture repo; root_trust_evidence git_toplevel_verified/git_common_dir_ownership_verified true"},
+    {"gate": "harness validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete --require-foundation", "exit_code": 0, "note": "OK: 未収集 0 + foundation trace satisfied"},
+    {"gate": "harness validate-source-citation.py --targets <from spec-state.targets> --references system-spec/fetched-references.json --repo-root REPO --state system-spec/spec-state.json", "exit_code": 0, "note": "5 targets vs 5 references all matched; official host, timestamps and evidence sha256 all consistent"},
+    {"gate": "harness aggregate-completeness.py --report system-spec/completeness-report.json --fork-ledger eval-log/system-spec-harness/audit-fork-ledger.jsonl", "exit_code": 0, "note": "verdict=PASS, report shape + auditor attribution grounded in fork evidence"},
+    {"gate": "harness aggregate-completeness.py ... --session 82eafac6-2945-43e6-8fad-4e145fea3bda", "exit_code": 0, "note": "session-bound variant also passes; 6 grounding forks found"},
+    {"gate": "NEGATIVE CONTROL: aggregate-completeness.py with an empty fork ledger", "exit_code": 1, "note": "3 VIOLATIONs (matrix/doc-freshness/hearing auditor missing) — proves the ledger gate is non-vacuous"},
+    {"gate": "NEGATIVE CONTROL: aggregate-completeness.py with a bogus --session", "exit_code": 1, "note": "VIOLATION: declared session does not match evaluation run session — proves cross-run ledger reuse is detected"}
+  ],
+  "blockers": [],
+  "notes": [
+    "Audit ledger verified, not modified. `eval-log/system-spec-harness/audit-fork-ledger.jsonl` holds 6 rows: 3 at 2026-08-04T06:44:36/44/52Z and 3 fresh ones at 07:01:35/44/54Z, covering system-spec-matrix-auditor, system-spec-hearing-auditor and system-spec-doc-freshness-auditor in both rounds. All 6 carry session_id 82eafac6-2945-43e6-8fad-4e145fea3bda, which is the SAME live session id as this trial (independently confirmed: it is my own session's scratchpad path component). All 6 prompt_sha256 values are distinct, so the second round is a genuine re-fork, not a replay of the first. Ordering is coherent: last fork 07:01:54Z precedes the final report mtime 07:09Z. Ledger md5 after my run = 14e1818e83aafef34ccab51d0039d592; I performed no writes.",
+    "The ledger's tamper-independence is structurally supported: `plugins/system-spec-harness/hooks/hooks.json` registers `record-audit-fork.py` as a PostToolUse hook on matcher Task|Agent, so the rows are hook-written rather than model-written.",
+    "The report's `audit_delegations` faithfully transcribes a FAIL from the hearing auditor (sub_input role, leading-question finding on qa-f10) instead of laundering it into a PASS, and surfaces it as a medium finding + gap. That is evidence of honest transcription rather than result-shopping.",
+    "Read-only discipline maintained: `git status --porcelain` after my verification is identical to the pre-existing executor state; my only writes were two throwaway targets JSON files and an empty-ledger negative control inside the session scratchpad, all outside the fixture.",
+    "MINOR INCONSISTENCY (not a blocker, no gate covers it): `.dev-graph/state/graph.json` still carries repository_id `local:sha256:2dfbed10be92be7ce1fc62040e6da212ba4744bce180fb08b825132ac8c50d70` (the value committed at fixture init), while `.dev-graph/config.json` was updated this run to `local:sha256:7ee130b1bf892e4566547df89067e397c64dda907232025f989797fa2d5eeb67` — which is also what resolve-repo-context.py returns. So graph.json and config.json disagree on repository_id. validate-graph-schema.py exits 0 regardless, and progress.json's claim is about the C24 receipt (accurate as worded), but the parity gap suggests upsert-node.py does not refresh graph.json's repository_id when config.json is re-derived. Worth a follow-up on the dev-graph side; it does not affect any of the 3 required observations.",
+    "MINOR TOOL ROBUSTNESS ISSUE (harness plugin, not the fixture): `plugins/system-spec-harness/scripts/validate-source-citation.py` raises AttributeError at line 144/75 (`'list' object has no attribute 'get'`) when `--targets` is handed a bare JSON array together with `--state`. spec-state.json's `targets` is a bare list, so the natural way to build the targets file crashes the script; it must be wrapped as `{\"targets\": [...]}`. Wrapped, it exits 0. Consider normalizing `_target_ids` to accept both shapes.",
+    "Ledger rows 1-3 (06:44) record cwd inside the plugin skill directory while rows 4-6 (07:01) record the fixture repo root. The gate binds on subagent_type + session, not cwd, so this is not a violation, but the cwd drift between rounds is noted."
+  ]
+}

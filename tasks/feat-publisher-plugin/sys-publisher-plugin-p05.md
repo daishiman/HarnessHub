@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:18:12Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-02T06:40:57Z"
+status: "closed"
 depends_on: ["SYS-PUBLISHER-PLUGIN-P04"]
 related_nodes: ["feat-publisher-plugin","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["apps/publisher/","docs/features/feat-publisher-plugin/implementation-notes.md","packages/schemas/publisher-plugin/","plugins/harness-hub-publisher/"]

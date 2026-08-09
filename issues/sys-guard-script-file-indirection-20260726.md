@@ -12,8 +12,8 @@ iteration: null
 title: "dev-graph: guard-graph-schema の共起判定はコマンド文字列しか見ないため script file へ隠した graph authority 書込みを遮断できない"
 owners: ["daishiman"]
 created_at: "2026-07-25T23:05:02Z"
-updated_at: "2026-07-25T23:05:02Z"
-status: "draft"
+updated_at: "2026-08-03T11:52:14Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

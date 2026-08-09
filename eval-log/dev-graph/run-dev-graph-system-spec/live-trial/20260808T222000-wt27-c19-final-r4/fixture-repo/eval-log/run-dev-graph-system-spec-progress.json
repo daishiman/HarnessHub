@@ -1,0 +1,31 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T222000-wt27-c19-final-r4/fixture-repo",
+  "started_at": "2026-08-08T13:19:57Z",
+  "loop": 1,
+  "checklist_status": {
+    "R0-context": "PASS",
+    "R1-preflight": "PASS",
+    "R2-delegate": "PASS",
+    "R3-import": "PASS"
+  },
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "evaluator_verdict": "PASS",
+  "updated_at": "2026-08-08T13:51:07Z",
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  },
+  "gates": {
+    "validate-graph-schema": 0,
+    "validate-source-digest": 0,
+    "validate-evidence-refs": 0,
+    "validate-coverage-matrix --require-complete --require-foundation": 0,
+    "validate-source-citation": 0,
+    "aggregate-completeness": 0
+  }
+}

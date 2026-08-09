@@ -1,0 +1,686 @@
+{
+  "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+  "skill": "dev-graph:run-dev-graph-decompose",
+  "verdict": "PASS",
+  "runs": {
+    "run_A": {
+      "fixture": "fixture-beads",
+      "declared_tracker_binding": "beads",
+      "suppression_flags": [],
+      "skill_tool_use": "literal Skill(dev-graph:run-dev-graph-decompose) #1"
+    },
+    "run_B": {
+      "fixture": "fixture-none",
+      "declared_tracker_binding": "none",
+      "suppression_flags": [],
+      "skill_tool_use": "literal Skill(dev-graph:run-dev-graph-decompose) #2"
+    }
+  },
+  "observation_1_acyclic_dag_within_granularity_threshold": {
+    "claim": "生成された feature/architecture node は循環のない DAG を成し、inter-feature depends_on は declared_granularity_threshold 以内である",
+    "declared_granularity_threshold": {
+      "metric": "max_inter_feature_depends_on_per_feature",
+      "max_value": 3,
+      "source": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json"
+    },
+    "metric_definition_applied": "1 feature が兄弟 feature へ張る depends_on の本数の最大値 (architecture_refs は inter-feature depends_on ではないので数えない)",
+    "measured_from": "各 FIXTURE の .dev-graph/state/graph.json (永続 store)",
+    "per_fixture": {
+      "fixture-beads": {
+        "node_count": 9,
+        "feature_count": 5,
+        "architecture_count": 4,
+        "task_kind_node_count": 0,
+        "kinds_present": [
+          "architecture",
+          "feature"
+        ],
+        "acyclic": true,
+        "cycles": [],
+        "inter_feature_depends_on_per_feature": {
+          "feat-account-login": 0,
+          "feat-work-assignment": 1,
+          "feat-assigned-work-dashboard": 2,
+          "feat-deadline-notification": 1,
+          "feat-admin-progress-report": 2
+        },
+        "max_inter_feature_depends_on_per_feature": 2,
+        "within_threshold": true,
+        "canonical_validator_on_persisted_store": "valid=true, violations=[]"
+      },
+      "fixture-none": {
+        "node_count": 9,
+        "feature_count": 5,
+        "architecture_count": 4,
+        "task_kind_node_count": 0,
+        "kinds_present": [
+          "architecture",
+          "feature"
+        ],
+        "acyclic": true,
+        "cycles": [],
+        "inter_feature_depends_on_per_feature": {
+          "feat-account-login": 0,
+          "feat-work-assignment": 1,
+          "feat-assigned-work-dashboard": 2,
+          "feat-deadline-notification": 1,
+          "feat-admin-progress-report": 2
+        },
+        "max_inter_feature_depends_on_per_feature": 2,
+        "within_threshold": true,
+        "canonical_validator_on_persisted_store": "valid=true, violations=[]"
+      }
+    },
+    "result": "PASS"
+  },
+  "observation_2_zero_issues_each_with_its_own_reason": {
+    "claim": "実書込みを行った run で評価前 draft feature の Issue 起票は 0 件であり、各 0 が別々の理由に帰属している",
+    "run_wrote_for_real": {
+      "fixture-beads": {
+        "local_files_added": 35,
+        "graph_revision": 10,
+        "nodes_persisted": 9
+      },
+      "fixture-none": {
+        "local_files_added": 32,
+        "graph_revision": 10,
+        "nodes_persisted": 9
+      }
+    },
+    "attributed_zeros": {
+      "fixture-beads": [
+        {
+          "zero": "beads_issues_for_pre_evaluation_draft_features",
+          "value": 0,
+          "reason_code": "draft_gate_suppression",
+          "reason": "実生成された draft feature 4 件が confirmation_status=draft / evaluation_status=pending / implementation_readiness=incomplete のため publication candidate に昇らない。node は実在し local には書かれている (0 は不在ではなく抑止)。",
+          "evidence": {
+            "draft_features": [
+              "feat-work-assignment",
+              "feat-assigned-work-dashboard",
+              "feat-deadline-notification",
+              "feat-admin-progress-report"
+            ],
+            "their_lifecycle": [
+              {
+                "feat-work-assignment": [
+                  "draft",
+                  "pending",
+                  "incomplete"
+                ]
+              },
+              {
+                "feat-assigned-work-dashboard": [
+                  "draft",
+                  "pending",
+                  "incomplete"
+                ]
+              },
+              {
+                "feat-deadline-notification": [
+                  "draft",
+                  "pending",
+                  "incomplete"
+                ]
+              },
+              {
+                "feat-admin-progress-report": [
+                  "draft",
+                  "pending",
+                  "incomplete"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "zero": "beads_issues_for_the_sole_publication_candidate",
+          "value": 0,
+          "reason_code": "live_trial_constraint_no_real_tracker_mutation",
+          "reason": "candidate は 1 件実在する (feat-account-login)。0 の理由は draft gate でも候補不在でもなく、本 live-trial が実トラッカーへの書込みを禁じ adapter を dry-run 経路でしか実行していないこと。経路自体は bd-bridge --op create/dep-add の dry-run で到達可能と実測済み。",
+          "evidence": {
+            "candidate": "feat-account-login",
+            "candidate_count": 1,
+            "bd_bridge_dry_run": "op=create / op=dep-add ともに dry_run_preview を返し mutation 0、.beads store 生成 0、既存 Beads workspace の 115 issue のいずれも本 run の node id を含まない"
+          }
+        },
+        {
+          "zero": "github_issues",
+          "value": 0,
+          "reason_code": "binding_route_unreachable_and_disabled",
+          "reason": "永続 node の tracker_binding は beads であり github ではない。加えて macro-only run の feature/architecture node は schema allOf[15]+allOf[10] により github binding へ構造的に到達できない。repo config も github.enabled=false。",
+          "evidence": {
+            "persisted_tracker_binding": [
+              "beads"
+            ],
+            "config_github_enabled": false,
+            "schema_rule": "#/allOf/15 (+#/allOf/10)"
+          }
+        },
+        {
+          "zero": "github_projects_items",
+          "value": 0,
+          "reason_code": "projects_route_not_configured",
+          "reason": "config の github.projects が空配列であり、Projects 投影は tracker_binding=github かつ mode=issue_and_projects の task にしか起きない。上流の Issue が 0 なので追加対象自体が存在しない。",
+          "evidence": {
+            "config_github_projects": []
+          }
+        }
+      ],
+      "fixture-none": [
+        {
+          "zero": "tracker_issues_for_pre_evaluation_draft_features",
+          "value": 0,
+          "reason_code": "draft_gate_suppression",
+          "reason": "実生成された draft feature 4 件が評価前のため publication candidate に昇らない。",
+          "evidence": {
+            "draft_features": [
+              "feat-work-assignment",
+              "feat-assigned-work-dashboard",
+              "feat-deadline-notification",
+              "feat-admin-progress-report"
+            ]
+          }
+        },
+        {
+          "zero": "beads_issues",
+          "value": 0,
+          "reason_code": "binding_none_local_only_by_design",
+          "reason": "永続 node の tracker_binding は none であり、draft gate とは独立に local graph へだけ投影する設計。候補が 1 件昇格しても Beads へは投影されない。",
+          "evidence": {
+            "persisted_tracker_binding": [
+              "none"
+            ],
+            "candidate_count": 1
+          }
+        },
+        {
+          "zero": "github_issues_and_projects_items",
+          "value": 0,
+          "reason_code": "binding_route_unreachable_and_disabled",
+          "reason": "binding=none は github 投影を持たず、macro-only feature node は schema 上 github binding へ到達できない。config も github.enabled=false / projects=[]。",
+          "evidence": {
+            "config_github_enabled": false,
+            "config_github_projects": []
+          }
+        }
+      ]
+    },
+    "reason_codes_are_disjoint": true,
+    "live_candidate_absent_is_not_a_reason_in_this_run": {
+      "fixture-beads": {
+        "candidate_count": 1
+      },
+      "fixture-none": {
+        "candidate_count": 1
+      },
+      "note": "両 graph とも candidate_count=1 なので「live candidate 不在」はどの 0 の理由にもならない"
+    },
+    "result": "PASS"
+  },
+  "observation_3_draft_excluded_while_one_advanced_is_sole_candidate": {
+    "claim": "実生成された draft feature が除外され、昇格させた feature が唯一の publication candidate になった。0 は「何も書かなかった」ことの副作用ではない",
+    "per_fixture": {
+      "fixture-beads": {
+        "candidate_count": 1,
+        "candidate": [
+          "feat-account-login"
+        ],
+        "candidate_lifecycle": [
+          {
+            "feat-account-login": {
+              "status": "active",
+              "confirmation_status": "confirmed",
+              "evaluation_status": "pass",
+              "implementation_readiness": "complete"
+            }
+          }
+        ],
+        "draft_excluded_count": 4,
+        "draft_excluded": [
+          "feat-work-assignment",
+          "feat-assigned-work-dashboard",
+          "feat-deadline-notification",
+          "feat-admin-progress-report"
+        ],
+        "promotion_writer": "plugins/dev-graph/scripts/upsert-node.py --input <patch.json> --repo-root <FIXTURE> --body-file <本文> (C02 通常 upsert / lifecycle 遷移 operation は不使用)",
+        "promoted_node_is_skill_generated": true,
+        "fixture_seeded_nodes": 0,
+        "before_after_proof": {
+          "pre_run_graph_sha256": "e236e51097ecacaf2163062ec18b76d4c1ff175efbaa059bde6149b6cfa1cf31",
+          "pre_run_node_count": 0,
+          "pre_run_graph_revision": 0,
+          "pre_run_file_count_excluding_git": 9,
+          "post_run_node_count": 9,
+          "post_run_graph_revision": 10,
+          "post_run_local_files_added": 35,
+          "graph_store_changed": [
+            "./.dev-graph/state/graph.json"
+          ]
+        }
+      },
+      "fixture-none": {
+        "candidate_count": 1,
+        "candidate": [
+          "feat-account-login"
+        ],
+        "candidate_lifecycle": [
+          {
+            "feat-account-login": {
+              "status": "active",
+              "confirmation_status": "confirmed",
+              "evaluation_status": "pass",
+              "implementation_readiness": "complete"
+            }
+          }
+        ],
+        "draft_excluded_count": 4,
+        "draft_excluded": [
+          "feat-work-assignment",
+          "feat-assigned-work-dashboard",
+          "feat-deadline-notification",
+          "feat-admin-progress-report"
+        ],
+        "promotion_writer": "plugins/dev-graph/scripts/upsert-node.py --input <patch.json> --repo-root <FIXTURE> --body-file <本文> (C02 通常 upsert / lifecycle 遷移 operation は不使用)",
+        "promoted_node_is_skill_generated": true,
+        "fixture_seeded_nodes": 0,
+        "before_after_proof": {
+          "pre_run_graph_sha256": "d125ab82a23610d637a92996ce6478d31a2e1c2305c379922e0b140c002ba8f0",
+          "pre_run_node_count": 0,
+          "pre_run_graph_revision": 0,
+          "pre_run_file_count_excluding_git": 9,
+          "post_run_node_count": 9,
+          "post_run_graph_revision": 10,
+          "post_run_local_files_added": 32,
+          "graph_store_changed": [
+            "./.dev-graph/state/graph.json"
+          ]
+        }
+      }
+    },
+    "result": "PASS"
+  },
+  "observation_4_two_runs_with_different_recorded_publication_routes": {
+    "claim": "beads と none は 2 本の別 run として実行され、記録された publication route が実際に異なる。値は audit の引数ではなく各 run の graph に永続化された tracker_binding から導出した",
+    "derivation": "各 FIXTURE の .dev-graph/state/graph.json を読み、全 node の tracker_binding 実値集合を取った。invocation 引数は測定に使っていない。",
+    "per_fixture": {
+      "fixture-beads": {
+        "persisted_tracker_binding_values": [
+          "beads"
+        ],
+        "node_count_by_binding": {
+          "beads": 9
+        },
+        "persisted_github_publication_modes": [
+          "local_only"
+        ],
+        "persisted_beads_linkage_present": 0,
+        "persisted_issue_linkage_present": 0,
+        "publication_route": "C28 bd-bridge (issue + blocks edge)"
+      },
+      "fixture-none": {
+        "persisted_tracker_binding_values": [
+          "none"
+        ],
+        "node_count_by_binding": {
+          "none": 9
+        },
+        "persisted_github_publication_modes": [
+          "local_only"
+        ],
+        "persisted_beads_linkage_present": 0,
+        "persisted_issue_linkage_present": 0,
+        "publication_route": "local graph only"
+      }
+    },
+    "routes_differ": true,
+    "github_binding": {
+      "status": "unreachable_for_macro_only_run",
+      "schema_rule": {
+        "file": "plugins/dev-graph/schemas/graph-node.schema.json",
+        "json_pointer": "#/allOf/15",
+        "lines": "1433-1458",
+        "verbatim": {
+          "if": {
+            "properties": {
+              "tracker_binding": {
+                "const": "github"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "beads_linkage": {
+                "const": null
+              },
+              "github_publication": {
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "issue",
+                      "issue_and_projects"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "companion_rule": {
+          "json_pointer": "#/allOf/10",
+          "verbatim": {
+            "if": {
+              "properties": {
+                "github_publication": {
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "issue",
+                        "issue_and_projects"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "artifact_kind": {
+                  "enum": [
+                    "issue",
+                    "task"
+                  ]
+                },
+                "confirmation_status": {
+                  "const": "confirmed"
+                },
+                "evaluation_status": {
+                  "const": "pass"
+                },
+                "implementation_readiness": {
+                  "properties": {
+                    "status": {
+                      "const": "complete"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "why_unreachable_for_macro_only_run": "未 publish の macro node は github_publication.mode=local_only である。allOf[15] は tracker_binding=github に mode ∈ {issue, issue_and_projects} を要求するため local_only のまま github を宣言した node は graph へ着地できない。さらに allOf[10] は mode ∈ {issue, issue_and_projects} を artifact_kind ∈ {issue, task} に限定するため、macro-only run が生む feature/architecture node は mode を上げることでも github binding へ到達できない。"
+      },
+      "empirically_confirmed": {
+        "fixture-beads": {
+          "synthesised_control": "final graph の feat-account-login を tracker_binding=github に書き換え stdin で canonical validator へ渡した",
+          "rejected": true,
+          "violations": [
+            {
+              "code": "schema_violation",
+              "detail": "$.github_publication.mode: 'local_only' is not one of ['issue', 'issue_and_projects']",
+              "node": "feat-account-login"
+            }
+          ]
+        },
+        "fixture-none": {
+          "synthesised_control": "final graph の feat-account-login を tracker_binding=github に書き換え stdin で canonical validator へ渡した",
+          "rejected": true,
+          "violations": [
+            {
+              "code": "schema_violation",
+              "detail": "$.github_publication.mode: 'local_only' is not one of ['issue', 'issue_and_projects']",
+              "node": "feat-account-login"
+            }
+          ]
+        }
+      }
+    },
+    "result": "PASS"
+  },
+  "observation_5_write_counts_by_differencing_and_stdin_preview": {
+    "claim": "local/Beads/GitHub/Projects の write count は run 前後の repository 状態の差分から導出した。skill 自身の report は書き写していない。preview graph は stdin 経路でのみ検証し管理対象 repository 内に一時ファイルを作っていない",
+    "method": "工程0で全ファイル一覧と SHA-256 を取得し、run 後に再取得して comm/hash 比較した",
+    "local_writes": {
+      "fixture-beads": {
+        "files_added": 35,
+        "files_removed": 0,
+        "files_changed": 1,
+        "changed_paths": [
+          "./.dev-graph/state/graph.json"
+        ],
+        "added_by_category": {
+          "graph_store": 1,
+          "writer_input_payload": 21,
+          "canonical_artifact": 9,
+          "macro_contract_source": 1,
+          "goal_seek_wiring": 3
+        },
+        "category_meaning": {
+          "graph_store": ".dev-graph/state/.graph.json.register.lock (正規 writer の lock 残置)",
+          "writer_input_payload": "upsert-node.py --input/--body-file が repository 内包を要求するための node/body payload (.dev-graph/tmp/)",
+          "canonical_artifact": "features/*.md と architecture/*.md の正規 artifact 9 件",
+          "macro_contract_source": "docs/macro-want.md (source_lineage.source_path の実体)",
+          "goal_seek_wiring": "eval-log/ の goal-spec / progress / intermediate (工程5、fixture-beads のみ)"
+        },
+        "graph_store_sha256_before": "e236e51097ecacaf2163062ec18b76d4c1ff175efbaa059bde6149b6cfa1cf31",
+        "graph_store_sha256_after": "7c0e1284ea09fd4c24eb562535226927f50b9feab18f487f86abe649a08be4b4"
+      },
+      "fixture-none": {
+        "files_added": 32,
+        "files_removed": 0,
+        "files_changed": 1,
+        "changed_paths": [
+          "./.dev-graph/state/graph.json"
+        ],
+        "added_by_category": {
+          "graph_store": 1,
+          "writer_input_payload": 21,
+          "canonical_artifact": 9,
+          "macro_contract_source": 1
+        },
+        "category_meaning": {
+          "graph_store": ".dev-graph/state/.graph.json.register.lock (正規 writer の lock 残置)",
+          "writer_input_payload": "upsert-node.py --input/--body-file が repository 内包を要求するための node/body payload (.dev-graph/tmp/)",
+          "canonical_artifact": "features/*.md と architecture/*.md の正規 artifact 9 件",
+          "macro_contract_source": "docs/macro-want.md (source_lineage.source_path の実体)",
+          "goal_seek_wiring": "eval-log/ の goal-spec / progress / intermediate (工程5、fixture-beads のみ)"
+        },
+        "graph_store_sha256_before": "d125ab82a23610d637a92996ce6478d31a2e1c2305c379922e0b140c002ba8f0",
+        "graph_store_sha256_after": "0e94ebbb10ecfd0411826296db1217658b14620c48994a0e5fb926aec1b96d03"
+      }
+    },
+    "external_writes": {
+      "beads_issues_created": 0,
+      "beads_dependency_edges_created": 0,
+      "github_issues_created": 0,
+      "github_projects_items_created": 0,
+      "derivation": "run 前: 両 FIXTURE とも .beads 不在 (bd list = no beads database found)、gh api repos/example/dev-graph-live-trial = 404。run 後: 同一。加えて ambient Beads workspace の全 115 issue を走査し本 run の graph_node_id を含む issue が 0 件であることを確認した。"
+    },
+    "adapter_route_reachability_dry_run_only": {
+      "bd-bridge.py": {
+        "ops": [
+          "create",
+          "dep-add"
+        ],
+        "dry_run": true,
+        "result": "dry_run_preview を返し registration.registered=true / workspace_identity 解決に成功。mutation は実行されていない",
+        "files_created_by_dry_run": 0
+      },
+      "gh-bridge.py": {
+        "ops": [
+          "issue-create",
+          "project-item-add"
+        ],
+        "dry_run": true,
+        "result": "dry_run=true / mutation_suppressed=true の preview を返す",
+        "files_created_by_dry_run": 0
+      }
+    },
+    "preview_graph_validated_via_stdin": {
+      "command": "python3 plugins/dev-graph/scripts/validate-graph-schema.py --graph - --repo-root <FIXTURE>",
+      "run_A_preview_valid": true,
+      "run_B_preview_valid": true,
+      "preview_payload_location": "scratchpad (管理対象 repository の外)",
+      "preview_files_found_inside_managed_repositories": {
+        "fixture-beads": [],
+        "fixture-none": []
+      },
+      "temp_preview_file_created_inside_repo": false
+    },
+    "result": "PASS"
+  },
+  "observation_6_confirmation_evidence_digest_recomputed": {
+    "claim": "昇格した全 feature について、最終的に永続化された node から confirmation_evidence だけを除いて digest を再計算し、記録値と一致した",
+    "method": "payload = {k:v for k,v in node.items() if k != 'confirmation_evidence'} ; sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',',':')).encode('utf-8'))",
+    "per_fixture": {
+      "fixture-beads": {
+        "promoted_features": 1,
+        "digests": [
+          {
+            "graph_node_id": "feat-account-login",
+            "stored_evaluated_digest": "4ba1fa5103948772fe494a868b36e5162de7d4869e48c51e76cdb82d681f6b10",
+            "recomputed_digest": "4ba1fa5103948772fe494a868b36e5162de7d4869e48c51e76cdb82d681f6b10",
+            "match": true,
+            "evaluator": "dev-graph:run-dev-graph-decompose live-trial C14-OUT1-positive-macro-decomposition-r9",
+            "evidence_ref": ".dev-graph/tmp/promotion-evaluation-feat-account-login.md",
+            "is_placeholder_64hex": false
+          }
+        ],
+        "all_match": true
+      },
+      "fixture-none": {
+        "promoted_features": 1,
+        "digests": [
+          {
+            "graph_node_id": "feat-account-login",
+            "stored_evaluated_digest": "b6bd1de93e590ce5417fa7f69899e30450dafa488723f5782fa7aedb0b7d7608",
+            "recomputed_digest": "b6bd1de93e590ce5417fa7f69899e30450dafa488723f5782fa7aedb0b7d7608",
+            "match": true,
+            "evaluator": "dev-graph:run-dev-graph-decompose live-trial C14-OUT1-positive-macro-decomposition-r9",
+            "evidence_ref": ".dev-graph/tmp/promotion-evaluation-feat-account-login.md",
+            "is_placeholder_64hex": false
+          }
+        ],
+        "all_match": true
+      }
+    },
+    "result": "PASS"
+  },
+  "observation_7_negative_controls_rejected_by_canonical_validator": {
+    "claim": "本 run の最終 graph からメモリ上で合成した gate 違反を正規 schema validator (stdin 経路) が拒否した",
+    "validator": "plugins/dev-graph/scripts/validate-graph-schema.py --graph - --repo-root <FIXTURE>",
+    "synthesised_in_memory_only": true,
+    "controls": {
+      "fixture-beads": {
+        "evaluation_pass_but_readiness_not_complete": {
+          "rejected": true,
+          "violations": [
+            {
+              "code": "active_not_ready",
+              "detail": "active requires confirmed/pass/complete",
+              "node": "feat-account-login"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-account-login"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-account-login"
+            }
+          ]
+        },
+        "blocked_draft_feature_with_publication_intent": {
+          "rejected": true,
+          "violations": [
+            {
+              "code": "beads_publication",
+              "detail": "beads requires local_only",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.artifact_kind: 'feature' is not one of ['issue', 'task']",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.confirmation_status: 'confirmed' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.evaluation_status: 'pass' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.github_publication.mode: 'local_only' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-deadline-notification"
+            }
+          ]
+        }
+      },
+      "fixture-none": {
+        "evaluation_pass_but_readiness_not_complete": {
+          "rejected": true,
+          "violations": [
+            {
+              "code": "active_not_ready",
+              "detail": "active requires confirmed/pass/complete",
+              "node": "feat-account-login"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-account-login"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-account-login"
+            }
+          ]
+        },
+        "blocked_draft_feature_with_publication_intent": {
+          "rejected": true,
+          "violations": [
+            {
+              "code": "schema_violation",
+              "detail": "$.artifact_kind: 'feature' is not one of ['issue', 'task']",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.confirmation_status: 'confirmed' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.evaluation_status: 'pass' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.github_publication.mode: 'local_only' was expected",
+              "node": "feat-deadline-notification"
+            },
+            {
+              "code": "schema_violation",
+              "detail": "$.implementation_readiness.status: 'complete' was expected",
+              "node": "feat-deadline-notification"
+            }
+          ]
+        }
+      }
+    },
+    "result": "PASS"
+  }
+}

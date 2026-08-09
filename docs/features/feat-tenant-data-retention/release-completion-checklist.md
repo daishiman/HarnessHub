@@ -10,8 +10,8 @@ layer: feature-release
 ## 1. 完了条件
 
 - [x] PR merge — PR #650（`feat: テナント業務データ保管を追加`）は main へ merge 済み
-- [ ] `ci.yml` deploy job が success（上記 merge を含む main の反映分）
-- [ ] Turso Platform API secret（`TURSO_API_TOKEN` / `TURSO_ORG_SLUG` / `TURSO_DATABASE_NAME`）を投入する。現状 `scripts/ci/worker-secrets-registry.json` で `requirement: "planned"` のまま未投入
+- [x] `ci.yml` deploy job が success（上記 merge を含む main の反映分）— **2026-08-08 実測で確定**: main `44109782` の hub-ci run [31240466397](https://github.com/daishiman/HarnessHub/actions/runs/31240466397) は deploy job の全 step が success（preflight / 本番 Worker secret の実投入検査 / production migration / opennext build / wrangler deploy / `/health` 疎通 / 配信版一致ゲート / 稼働ビルド鮮度検査 / OIDC smoke / DB・R2 smoke 6 項目 / hearing smoke）、`失敗時ロールバック` は skipped。PR #650 は既に main へ merge 済みなので、この run が配備した main にも本 feature の migration が含まれる
+- [ ] Turso Platform API secret（`TURSO_API_TOKEN` / `TURSO_ORG_SLUG` / `TURSO_DATABASE_NAME`）を投入する。現状 `scripts/ci/worker-secrets-registry.json` で `requirement: "planned"` のまま未投入。**2026-08-08 実測**: 3 件は Actions secret 台帳 (`scripts/ci/actions-secrets-registry.json`) には登録されておらず、GitHub Actions 側にも投入されていない (`gh api repos/:owner/:repo/actions/{secrets,variables}` で確認できるのは `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` の 2 件のみ)。これは正しい状態で、この 3 件は **Worker secret** (`wrangler secret put`) であり Actions secret ではない。台帳の `setup` も「実投入は Turso Platform API token 発行手順の確定後」としており、**投入し忘れではなく token 発行手順が未確定であることがブロック要因**である。したがって deploy job の「本番 Worker secret の実投入検査」が success なのは `planned` を検査対象外としているためで、緑であること自体は監視の有効化を意味しない
 - [ ] R2 使用量監視（`runbook.md` §2）の critical/warning 通知が本番 cron で実際に発火することを確認する
 - [ ] Turso 側使用量監視（rows_read/rows_written/storage_bytes）が secret 投入後に有効化されることを確認する
 - [ ] 削除 → backup restore drill（`runbook.md` §1.5、tombstone manifest 必須・古い manifest は fail-closed で停止すること含む）を実環境で 1 回実施する
@@ -52,8 +52,8 @@ R2 使用量監視・restore drill・encryption_keys ローテーションは本
 | 項目 | 状態 | 次のアクション |
 |---|---|---|
 | 実装・テスト・文書 | 完了 | — (PR #650 merge 済み) |
-| 本番デプロイ | 未確認 | 上記コマンドで deploy job の成否を確認する |
-| Turso Platform API secret 投入 | 未実施 | 上記コマンドで投入し、台帳の requirement を更新する（外部認証情報のため事前承認必須） |
+| 本番デプロイ | **完了 (2026-08-08 実測)** | — (run 31240466397 / main `44109782` で deploy job 全 step success) |
+| Turso Platform API secret 投入 | 未実施 (ブロック要因を特定済み) | ブロックは「投入し忘れ」ではなく **Turso Platform API token の発行手順が未確定**であること。手順確定 → 投入 → 台帳 `requirement` を `planned` → `required` へ更新、の順で進める（外部認証情報のため事前承認必須） |
 | R2/Turso 使用量監視の実発火確認 | 未実施 | 本番 cron 実行後に通知ログを確認する |
 | restore drill | 未実施 | runbook.md §1.5 の手順で 1 回実施する |
 | encryption_keys ローテーション | 未実施 | runbook.md §3 の手順で 1 回実施する |

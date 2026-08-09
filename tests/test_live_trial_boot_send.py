@@ -63,6 +63,18 @@ def test_boot_denylist_and_validation(tmp_path, capsys):
     ]) == 2
 
 
+def test_boot_audit_ledger_stays_inside_trial_repo(tmp_path):
+    ledger = tmp_path / "eval-log" / "system-spec-harness" / "audit-fork-ledger.jsonl"
+    assert boot_mod.resolve_audit_fork_ledger(str(ledger), str(tmp_path)) == str(ledger)
+    assert boot_mod.resolve_audit_fork_ledger(
+        "eval-log/system-spec-harness/audit-fork-ledger.jsonl", str(tmp_path)
+    ) == str(ledger)
+    with pytest.raises(ValueError, match="escapes trial repo"):
+        boot_mod.resolve_audit_fork_ledger("/tmp/audit-fork-ledger.jsonl", str(tmp_path))
+    with pytest.raises(ValueError, match="filename"):
+        boot_mod.resolve_audit_fork_ledger("eval-log/other.jsonl", str(tmp_path))
+
+
 def _write_trial_plugin(
     root: Path, directory_name: str, manifest_name: str,
     skill_name: str = "run-dev-graph-init",
@@ -351,8 +363,9 @@ def test_boot_ready_line_contract(monkeypatch, capsys):
         "SYSTEM_SPEC_AUDIT_FORK_LEDGER", "/tmp/current-session-ledger.jsonl"
     )
     fb = FakeBootBackend(["Type /help for shortcuts\n❯ "], ["2.1.173"])
+    explicit_ledger = "/tmp/fixture/eval-log/system-spec-harness/audit-fork-ledger.jsonl"
     rc = boot_mod.boot(fb, "lt-x", "x", "/tmp", "claude-opus-4-8", "u-1",
-                       timeout=5, grace=1)
+                       timeout=5, grace=1, audit_fork_ledger=explicit_ledger)
     assert rc == 0
     out = capsys.readouterr().out
     # SESSION_ID: は行末固定 (parse 互換) / MODEL: は requested の echo
@@ -362,9 +375,7 @@ def test_boot_ready_line_contract(monkeypatch, capsys):
     assert "--model claude-opus-4-8" in fb.sent
     assert "--setting-sources local" in fb.sent
     assert fb.argv == boot_mod.build_claude_argv("u-1", "claude-opus-4-8")
-    assert fb.environment_overrides["SYSTEM_SPEC_AUDIT_FORK_LEDGER"] == (
-        "/tmp/current-session-ledger.jsonl"
-    )
+    assert fb.environment_overrides["SYSTEM_SPEC_AUDIT_FORK_LEDGER"] == explicit_ledger
     assert fb.run_id == "x"
     assert f"OWNER_PID:{fb.owner_pid}" in out
     assert fb.send_calls == 0  # 対話 shell への send-line を経由しない

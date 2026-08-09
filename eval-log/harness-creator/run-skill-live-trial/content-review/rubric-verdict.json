@@ -1,34 +1,25 @@
 {
-  "target": {
-    "plugin": "harness-creator",
-    "skill": "run-skill-live-trial",
-    "skill_md_sha256": "17623ca618144c0b6f09d5aef69f92ba03e4a063a47b404ae57eb232eb5e83ef"
-  },
+  "target": {"plugin": "harness-creator", "skill": "run-skill-live-trial", "skill_md_sha256": "ed1e89d06f9c11e6e4ae69301745369183434e007a8adfd5d6e0becf888890f5"},
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "fresh-agent-eval_c01_live_trial",
-  "reviewed_at": "2026-07-30T11:15:19Z",
-  "iterations": 3,
+  "reviewer": "independent changed-skills content reviewer (focused combined rubric context)",
+  "reviewed_at": "2026-08-09T10:45:09Z",
+  "iterations": 2,
   "human_review_required": false,
+  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": [
-      "IN1",
-      "IN2",
-      "OUT1",
-      "OUT2",
-      "OUT3"
-    ],
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "環境変数名は identifier 形式、値は NUL/LF/CR 不在を fail-closed 検証し、値そのものを例外へ露出しない。",
-      "boot allowlist は caller の現在値を渡し、未設定時も空値を明示して tmux server の stale routing 値を継承しない。",
-      "実 tmux regression は利用中 server と socket 単位で隔離され、global state mutation 前の socket_path assertion と finally cleanup を持つ。"
+      "IN1 の status/poll/state/resource budget は正負テストで二値化され、scenario cap の延長経路を閉じている。",
+      "IN2 は schema 自己検証、OUT1 は digest-bound fresh evaluator、OUT2 は transcript actual model、OUT3 は denylist と exact scoped reaper にそれぞれ機械証拠がある。",
+      "文書の8項目 task contract、immutable budget、poll-state/finalizer command が実装と一致する。"
     ],
     "negative_feedback": [],
-    "iteration": 3,
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "focused incremental rubric projection。全 criteria と実 tmux の stale environment regression を再確認し、zero-high-severity を含む全評価次元が PASS。未解決 finding は 0 件。"
+  "notes": "Incremental focused combined rubric review。rubric 構造だけでなく prior blockers の負例と205 focused testsを確認した。"
 }

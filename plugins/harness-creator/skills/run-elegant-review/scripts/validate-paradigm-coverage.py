@@ -20,11 +20,20 @@ Usage:
   validate-paradigm-coverage.py --phase-order <run-dir | tree-root>
 
 --phase-order は elegant-review run ディレクトリ
-(eval-log/**/elegant-review/<run-id>/) の Phase1→2→3 成果物の存在+順序を検査する
-(enforcement 名: run-elegant-review/scripts/validate-paradigm-coverage.py (phase order check))。
+(eval-log/**/elegant-review/<run-id>/) の Phase1→2→3 成果物の存在+順序を検査し、
+あわせて各 run の findings が condition と condition_signal の対応を守っているかを
+検査する (enforcement 名: run-elegant-review/scripts/validate-paradigm-coverage.py
+(phase order check))。
 tolerant 契約: 3 phase の成果物 (shared_state.md / findings-phase2-*.json /
 findings.json 等) が全て揃う run のみ順序検査し、どれかを欠く旧 run は skip する
 (遡及 fail させない)。順序は mtime 比較で同時刻を許容する (fresh checkout 耐性)。
+
+condition/condition_signal 対応検査の遡及免除には**終了条件がある**。run ディレクトリ名
+`run-YYYYMMDD-*` から run 作成日を読み、STRICT_SIGNAL_FROM 以降の run は error、
+それより前 (および日付を読めない run) は WARN 止まりとする。免除に終了条件を持たせない
+と「旧 run を守るための WARN 既定」が恒久化し、検査が永久に自己申告のまま骨抜きになる
+(この欠陥自体が本 script のレビューで SS-02 として検出された)。`--strict-signal` を
+明示した場合は日付に関わらず全 run を error 扱いにする。
 
 Exit codes:
   0 -> all 30 covered with structured findings or markdown mentions / phase order OK
@@ -34,11 +43,27 @@ Exit codes:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
 
+# `spec_from_file_location()` で本ファイルだけを直接ロードする既存テストでも、
+# 分離した sibling module を解決できるよう script directory を明示する。
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from validate_phase_order import check_phase_order_tree
+
 # Each paradigm: id -> list of acceptance tokens (ja + en, lowercased substring match)
+# condition_signal (機械観測 signal) と condition (4 条件) の唯一の対応表。
+# smell はどの condition にも対応しない警告枠なので、この表に持たない。
+SIGNAL_TO_CONDITION: dict[str, str] = {
+    "contradiction": "C1",
+    "omission": "C2",
+    "inconsistency": "C3",
+    "dependency_break": "C4",
+}
+
 PARADIGMS: dict[int, list[str]] = {
     1: ["批判的思考", "critical"],
     2: ["演繹思考", "演繹", "deductive"],
@@ -106,12 +131,13 @@ EXPECTED_META: dict[int, tuple[str, str, str]] = {
 }
 
 
-def validate_structured_json(path: Path) -> tuple[bool, list[str]]:
+def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[bool, list[str]]:
     raw = path.read_text(encoding="utf-8")
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
         return False, ["invalid json"]
+    warnings: list[str] = []
     findings = data.get("paradigm_findings")
     if not isinstance(findings, list):
         return False, ["missing paradigm_findings"]
@@ -176,7 +202,7 @@ def validate_structured_json(path: Path) -> tuple[bool, list[str]]:
     if missing:
         errors.append(f"missing paradigm_findings ids without skip_reason: {missing}")
 
-    valid_conditions = {"C1", "C2", "C3", "C4"}
+    valid_conditions = set(SIGNAL_TO_CONDITION.values())
     valid_severities = {"critical", "high", "medium", "low"}
     for pid in sorted(set(PARADIGMS) & set(by_id)):
         item = by_id[pid]
@@ -213,14 +239,34 @@ def validate_structured_json(path: Path) -> tuple[bool, list[str]]:
             if not isinstance(issue, dict):
                 errors.append(f"paradigm {pid} issue {i}: not an object")
                 continue
-            if issue.get("condition") not in valid_conditions:
-                errors.append(f"paradigm {pid} issue {i}: invalid condition")
-            if issue.get("severity") not in valid_severities:
-                errors.append(f"paradigm {pid} issue {i}: invalid severity")
             signal = issue.get("condition_signal")
-            valid_signals = {"contradiction", "omission", "inconsistency", "dependency_break", "smell"}
+            valid_signals = set(SIGNAL_TO_CONDITION) | {"smell"}
             if signal is not None and signal not in valid_signals:
                 errors.append(f"paradigm {pid} issue {i}: invalid condition_signal")
+            condition = issue.get("condition")
+            # condition (4 値) と condition_signal (5 値) は濃度が一致しない。
+            # smell の issue に C1 等の便宜値を持たせる二重帳簿を避けるため、
+            # smell のときだけ condition の省略を許す (findings.schema.json と同契約)。
+            if signal == "smell":
+                if condition is not None:
+                    # schema が condition を required にしていた時代の findings は
+                    # smell にも便宜値を持つ。過去 run を遡って赤にしないため warning に留める。
+                    warnings.append(
+                        f"paradigm {pid} issue {i}: condition_signal=smell に便宜値 condition={condition} が残っている "
+                        f"(新規 run では省略すること。verdict には算入されない)"
+                    )
+            elif condition not in valid_conditions:
+                errors.append(f"paradigm {pid} issue {i}: invalid condition")
+            elif signal is not None and SIGNAL_TO_CONDITION[signal] != condition:
+                msg = (
+                    f"paradigm {pid} issue {i}: condition={condition} と condition_signal={signal} が対応しない "
+                    f"(期待 condition={SIGNAL_TO_CONDITION[signal]})"
+                )
+                # --phase-order と同じ tolerant 契約: 旧 run を遡及 fail させない。
+                # 新規 run は Phase 3 完了判定で --strict-signal を付けて error に昇格させる。
+                (errors if strict_signal else warnings).append(msg)
+            if issue.get("severity") not in valid_severities:
+                errors.append(f"paradigm {pid} issue {i}: invalid severity")
             if not str(issue.get("description", "")).strip():
                 errors.append(f"paradigm {pid} issue {i}: missing description")
             if not str(issue.get("recommended_intervention", "")).strip():
@@ -239,6 +285,8 @@ def validate_structured_json(path: Path) -> tuple[bool, list[str]]:
         if not str(var.get("variable_name", "")).startswith("{{"):
             errors.append(f"variable_abstraction[{idx}].variable_name must be template variable")
 
+    for warn in warnings:
+        print(f"WARN: {warn}", file=sys.stderr)
     return not errors, errors
 
 
@@ -246,80 +294,13 @@ def extract_text(path: Path) -> str:
     return path.read_text(encoding="utf-8").lower()
 
 
-# --- Phase 順序検査 (enforcement: phase order check) ---
-
-_PHASE1_NAME = "shared_state.md"
-_PHASE2_GLOB = "findings-phase2-*.json"
-# Phase3 成果物は findings.json (集約) または phase3-*.json (batch 実行結果)。
-_PHASE3_NAME = "findings.json"
-_PHASE3_GLOB = "phase3-*.json"
-
-
-def check_phase_order(run_dir: Path) -> tuple[str, list[str]]:
-    """1 つの run dir の Phase1→2→3 成果物の存在+順序を検査する。
-
-    returns (status, errors)  status: "ok" | "skipped" | "violation"
-    3 phase の成果物が全て揃う run のみ順序検査する (揃わない旧 run は skipped)。
-    順序は mtime で判定し、同時刻 (checkout で mtime が揃う) は許容する。
-
-    Phase1 (shared_state.md) は存在のみ検査する: shared_state.md は Phase3 以降も
-    申し送りとして更新される living document であり、mtime は run 終端を指すのが
-    正常のため順序判定に使えない (実 run 4 件で実測)。mtime 順序が機械的に意味を
-    持つのは「Phase2 findings → Phase3 成果物」の一辺のみ。
-    """
-    phase1 = run_dir / _PHASE1_NAME
-    phase2 = sorted(run_dir.glob(_PHASE2_GLOB))
-    phase3 = [p for p in [run_dir / _PHASE3_NAME] if p.is_file()]
-    phase3 += sorted(run_dir.glob(_PHASE3_GLOB))
-    if not (phase1.is_file() and phase2 and phase3):
-        return "skipped", []
-    try:
-        t2_max = max(p.stat().st_mtime for p in phase2)
-        t3 = max(p.stat().st_mtime for p in phase3)
-    except OSError as exc:
-        return "skipped", [f"{run_dir}: stat failed, skipped: {exc}"]
-    errors: list[str] = []
-    if t2_max > t3:
-        errors.append(
-            f"{run_dir}: phase order violation: {_PHASE2_GLOB} (Phase2) is newer "
-            "than Phase3 artifacts (findings.json / phase3-*.json)"
-        )
-    return ("violation", errors) if errors else ("ok", [])
-
-
-def iter_run_dirs(base: Path):
-    """base が run dir ならそれ自身、tree なら **/elegant-review/<run-id>/ を列挙する。"""
-    if (base / _PHASE1_NAME).is_file() or any(base.glob(_PHASE2_GLOB)):
-        yield base
-        return
-    for child in sorted(base.glob("**/elegant-review/*")):
-        if child.is_dir():
-            yield child
-
-
-def check_phase_order_tree(base: Path) -> int:
-    ok = skipped = 0
-    all_errors: list[str] = []
-    for run_dir in iter_run_dirs(base):
-        status, errors = check_phase_order(run_dir)
-        if status == "skipped":
-            skipped += 1
-        elif status == "ok":
-            ok += 1
-        else:
-            all_errors.extend(errors)
-    if all_errors:
-        for err in all_errors:
-            print(err, file=sys.stderr)
-        return 1
-    print(f"OK: phase order verified for {ok} run(s), skipped {skipped} incomplete run(s)")
-    return 0
-
-
 def main(argv: list[str]) -> int:
+    argv = list(argv)
+    strict_signal = "--strict-signal" in argv
+    argv = [a for a in argv if a != "--strict-signal"]
     if len(argv) < 2:
         print(
-            "usage: validate-paradigm-coverage.py <file> | --phase-order <dir>",
+            "usage: validate-paradigm-coverage.py [--strict-signal] <file> | --phase-order <dir>",
             file=sys.stderr,
         )
         return 2
@@ -331,10 +312,14 @@ def main(argv: list[str]) -> int:
         if not base.is_dir():
             print(f"not a directory: {base}", file=sys.stderr)
             return 2
-        return check_phase_order_tree(base)
+        return check_phase_order_tree(
+            base,
+            SIGNAL_TO_CONDITION,
+            strict_signal=strict_signal,
+        )
     path = Path(argv[1])
     if path.suffix == ".json":
-        ok, errors = validate_structured_json(path)
+        ok, errors = validate_structured_json(path, strict_signal=strict_signal)
         if not ok:
             for err in errors:
                 print(err, file=sys.stderr)

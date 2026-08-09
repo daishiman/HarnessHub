@@ -12,8 +12,8 @@ iteration: null
 title: "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-22T09:30:00Z"
-status: "draft"
+updated_at: "2026-08-03T22:44:19Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-d7-hearing-trace-20260721","feat-dev-pipeline-improvement"]
 resource_scope: ["system-spec/spec-state.json"]

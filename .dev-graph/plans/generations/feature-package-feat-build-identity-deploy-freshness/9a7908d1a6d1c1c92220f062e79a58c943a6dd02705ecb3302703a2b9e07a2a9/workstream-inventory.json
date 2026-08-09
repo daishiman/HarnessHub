@@ -1,0 +1,1116 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+  "parent_feature": "feat-build-identity-deploy-freshness",
+  "repo_context": {
+    "config_path": ".dev-graph/config.json",
+    "repo_identity": "github:daishiman/HarnessHub",
+    "root_resolution_source": "explicit-cli"
+  },
+  "source_lineage": {
+    "source_plugin": "system-spec-harness",
+    "source_version": "0.1.0",
+    "compile_entrypoint": "run-system-spec-compile",
+    "completeness_entrypoint": "assign-system-spec-completeness-evaluator",
+    "source_paths": [
+      "goal-spec.json",
+      "features/feat-build-identity-deploy-freshness.md",
+      "features/feat-build-identity-deploy-freshness.context.json",
+      "specs/harness-hub-post-signin-landing-observability-addendum.md",
+      "architecture/harness-hub-infrastructure.md",
+      "architecture/harness-hub-testing-qa.md"
+    ],
+    "confirmed": false
+  },
+  "p01_entry_gate": {
+    "selector": "parent_feature.depends_on",
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "SYS-BUILD-IDENTITY-P01",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "要件ベースライン確定 — 稼働ビルドの素性確認 (V6) と deploy 反映鮮度検出 (V7) の要件確定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p01"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P01",
+      "depends_on": [],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/requirements-baseline.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P01 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p01.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "docs/features/feat-build-identity-deploy-freshness/requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 4 件/scope_out 3 件/acceptance 5 件が逐語一致で転記されている",
+        "露出してよい情報の範囲 (commit 識別子まで) と、露出してはならないもの (内部 path・secret・個人データ) が明示されている",
+        "鮮度検出が『古いこと』ではなく『古い状態が継続していること』を見る要件であることが、実測 (2026-08-03 の修正が 2026-08-07 時点で未反映 = 4 日継続) を根拠に記述されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P01",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p01.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P01"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "goal-spec と feature context の内容不一致が判明した場合、requirements-baseline.md を作成前状態 (ファイル未作成) へ戻し、goal-spec 側の再確定を dev-graph へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P02",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "アーキテクチャ決定 — commit 識別子の埋込経路・公開読出経路・鮮度判定の所在",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p02"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure",
+        "backend"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P02",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P01"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/architecture-decision.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P02 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p02.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "commit 識別子の埋込が CI の build 時に行われ、手動更新を必要としない経路として決定されている",
+        "読出経路が認証を要求しないこと、および露出する field が commit 識別子と build 時刻に限られることが契約として書かれている",
+        "鮮度判定の所在 (CI 側か稼働側か) と、判定に使う 2 値 (稼働ビルドの commit / 既定 branch の HEAD) の取得元が決定されている",
+        "継続時間しきい値が単一の設定値として一箇所に置かれ、判定ロジックへ散らばらない"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P02",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p02.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P02"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "決定が P01 baseline と矛盾する場合、architecture-decision.md を作成前状態へ戻し P01 へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P03",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "設計レビュー — 情報露出・deploy 直後の誤検出・CI 依存の 3 リスク検証",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p03"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P03",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P02"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/design-review.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P03 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p03.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "認証なし読出経路が露出する情報に、内部 path・secret・個人データが含まれないことが設計上示されている",
+        "deploy 直後の一時的な乖離で検出が発火しないことが、継続時間しきい値の設計から示されている",
+        "CI が動かない状態 (workflow 失敗・skip) でも鮮度検出の欠測が静かに『正常』へ倒れないことが示されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P03",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p03.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P03"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "リスクが設計で解消できない場合、P02 の決定へ差し戻し architecture-decision.md を再確定する",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P04",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "テスト設計 — 埋込・公開読出・鮮度検出の実行可能テスト定義",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure",
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P04",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P03"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/test-design.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P04 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p04.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance 5 件すべてに対応するテスト ID が定義され、対応が表で示されている",
+        "鮮度検出については、しきい値超過を再現する fixture で検査が落ちること (発火の確認) がテスト ID として定義されている",
+        "検査が発火しない状態 (対象が無い・入力が空) と、発火して合格した状態が別のテスト ID として区別されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P04",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p04.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P04"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "acceptance との対応に欠落があれば test-design.md を再作成し、欠落の原因が要件側なら P01 へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P05",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "実装 — build 時の commit 識別子埋込・認証なし読出経路・鮮度検査 script",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "infrastructure",
+        "phase-p05"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "infrastructure",
+      "secondary_workstreams": [
+        "backend",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P05",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P04"
+      ],
+      "write_scope": [
+        "apps/hub/src/app/api/health",
+        "apps/hub/scripts/check-deploy-freshness.mjs",
+        ".github/workflows/ci.yml"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P05 の単一責務 (infrastructure) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p05.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "稼働中の成果物から、それが repository のどの commit に対応するかを認証なしで確認できる",
+        "commit 識別子の埋込が CI の build 時に自動で行われ、手動更新に依存しない",
+        "稼働ビルドが既定 branch の HEAD より古い状態が続いていることを検出できる",
+        "commit 識別子の露出が、内部 path・secret・個人データを含まない"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P05",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p05.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P05"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "実装が既存 CI を壊す場合、write scope の 3 path を変更前へ戻し、P03 の制約事項へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P06",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "テスト実行 — P04 のテスト ID 実行と結果証跡の収集",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P06",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P05"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/test-results.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P06 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p06.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "P04 の全テスト ID が実行され、結果が記録されている",
+        "しきい値超過 fixture で鮮度検査が実際に落ちたことが実行出力で示されている",
+        "各結果に再実行可能なコマンドが添えられている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P06",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p06.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P06"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "テストが落ちた場合は P05 へ差し戻し、test-results.md には落ちた事実を残す (削除しない)",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P07",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "受入判定 — goal-spec acceptance 5 件の実測証跡による判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p07"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P07",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P06"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/acceptance-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P07 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p07.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "acceptance 5 件すべてに判定と根拠証跡が対応している",
+        "未実測の項目が PASS と書かれていない (未実測は未実測として残る)",
+        "稼働物の観測を要する acceptance は、既に稼働している成果物への認証なし読出しかローカル稼働で判定し、判定のために本番 deploy を実行しない (deploy は feature context の scope_out)"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P07",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p07.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P07"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "未達 acceptance があれば該当 phase へ差し戻し、report には未達として残す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P08",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "リファクタリングと移行 — しきい値の単一定数化と既存 check 系列への整列",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "backend",
+        "phase-p08"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "backend",
+      "secondary_workstreams": [
+        "infrastructure",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P08",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P07"
+      ],
+      "write_scope": [
+        "apps/hub/scripts/check-deploy-freshness.mjs",
+        "apps/hub/src/app/api/health"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P08 の単一責務 (backend) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p08.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "しきい値が単一箇所から解決され、判定ロジック側に literal で散らばっていない",
+        "鮮度検査 script の呼出し規約と出力形式が既存 check-*.mjs 系列と揃っている",
+        "P06 のテスト ID が引き続き全件通る (回帰 0 件)"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P08",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p08.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P08"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "回帰が出た場合は整列前へ戻し、P06 のテスト結果を正本として再検討する",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P09",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "品質保証 — 露出範囲の非退行と検査の発火性の固定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security",
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P09",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P08"
+      ],
+      "write_scope": [
+        "apps/hub/src/__tests__",
+        "docs/features/feat-build-identity-deploy-freshness/quality-report.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P09 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p09.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "検出のしきい値を超えた状態を再現する fixture で、検査が実際に落ちることが test で固定されている",
+        "露出 field が commit 識別子と build 時刻を超えて増えた場合に test が落ちる",
+        "検査を意図的に無効化した変異版で test が反転することが確認されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P09",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p09.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P09"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "test が変異版でも通る (発火しない) 場合、その test は証拠にならないため作り直す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P10",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p10"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "quality",
+      "secondary_workstreams": [
+        "security"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P10",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P09"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/final-review.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P10 の単一責務 (quality) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p10.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "判定の根拠がすべて実行済み証跡への参照であり、未実行の予定が根拠に含まれていない",
+        "未達項目がある場合、それがリリース可否にどう影響するかが明示されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P10",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p10.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P10"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "判定不能な場合は該当 phase へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P11",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "証跡固定 — source digest と再実行コマンドの保存",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P11",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P10"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/evidence.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P11 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p11.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "各証跡に digest と取得時刻が付いている",
+        "再実行コマンドが世代非依存であり、staging path のような消滅する参照を含まない"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P11",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p11.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P11"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "digest が再現しない証跡は evidence から外し、再取得を該当 phase へ差し戻す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P12",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "ドキュメントと運用 — 稼働ビルドの確認手順と鮮度警告時の対応手順",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P12",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P11"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/operations.md",
+        "docs"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P12 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p12.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "稼働ビルドの commit を確認する手順が、認証情報を必要としない形で書かれている",
+        "鮮度警告が出たときの対応手順 (再デプロイの判断・誤検出時の扱い) が書かれている",
+        "手順が実際のコマンド/URL を含み、読み手が読み替えを要求されない"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P12",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p12.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P12"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "手順が実機で再現しない場合、operations.md を差し戻して実測で書き直す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    },
+    {
+      "id": "SYS-BUILD-IDENTITY-P13",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p13"
+      ],
+      "related_nodes": [
+        "feat-build-identity-deploy-freshness",
+        "arch-harness-hub-infrastructure",
+        "arch-harness-hub-testing-qa"
+      ],
+      "workstream_kind": "documentation",
+      "secondary_workstreams": [
+        "infrastructure",
+        "operations",
+        "quality"
+      ],
+      "build_target_kind": "application-code",
+      "phase_ref": "P13",
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P12"
+      ],
+      "write_scope": [
+        "docs/features/feat-build-identity-deploy-freshness/release-record.md",
+        "specs/harness-hub-post-signin-landing-observability-addendum.md",
+        "architecture/harness-hub-infrastructure.md"
+      ],
+      "deploy_unit": "cloudflare-workers/hub",
+      "source_lineage": [
+        "goal-spec.json"
+      ],
+      "classification": {
+        "confidence": 0.92,
+        "reason": "goal-spec.json を入力に P13 の単一責務 (documentation) を実行する task",
+        "candidates": [
+          {
+            "artifact_kind": "task",
+            "confidence": 0.92,
+            "candidate_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p13.md"
+          }
+        ]
+      },
+      "tracker_binding_intent": "beads",
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "pr_completion_policy": "linked_pr_merged_all",
+      "branch_policy": {
+        "strategy": "one-task-one-branch",
+        "worktree_lease_required": true,
+        "completion_projection": "default-branch-reconciliation",
+        "assignment_owner": "dev-graph-scheduler"
+      },
+      "acceptance": [
+        "反映可否の判定と、反映後に確認すべき事項 (稼働ビルドの commit が既定 branch の HEAD と一致すること) が release-record.md に確定している",
+        "鮮度検出の継続時間しきい値が、反映直後の一時的な乖離では発火しない値であることが記録されている",
+        "本 feature で得た判断と改善点が確定仕様と architecture へ書き戻されている",
+        "書き戻しが既存の確定章を上書きせず、追補として追加されている"
+      ],
+      "graph_node_registration": {
+        "graph_node_id": "SYS-BUILD-IDENTITY-P13",
+        "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p13.md",
+        "parent_feature": "feat-build-identity-deploy-freshness",
+        "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+        "phase_ref": "P13"
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-07T11:35:00Z"
+      },
+      "rollback": "書き戻し内容が確定仕様と矛盾する場合は追補を書き戻し前へ戻し、release-record には判断の経緯を残す",
+      "verification": [
+        "python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-identity-deploy-freshness"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "node": {
+    "acceptance": [],
+    "architecture_refs": [],
+    "artifact_kind": "architecture",
+    "artifact_subtypes": [
+      "frontend",
+      "backend",
+      "security"
+    ],
+    "beads_linkage": null,
+    "classification_candidates": [],
+    "classification_confidence": 1.0,
+    "classification_reason": "ログイン・画面配信・API を共有する業務ポータル本体の基盤アーキテクチャ",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-08-08T18:33:12Z",
+    "depends_on": [],
+    "domain": "internal-portal",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "architecture/arch-portal-platform-001.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": null,
+    "graph_node_id": "arch-portal-platform-001",
+    "implementation_readiness": {
+      "checked_at": null,
+      "missing_sections": [],
+      "status": "incomplete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "owners": [],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": null,
+    "project_id": "internal-business-portal",
+    "pull_request_linkages": [],
+    "purpose": null,
+    "related_nodes": [],
+    "resource_scope": [
+      "src/portal/web",
+      "src/portal/api",
+      "src/portal/auth"
+    ],
+    "scope_in": [],
+    "scope_out": [],
+    "source_lineage": {
+      "imported_at": "2026-08-08T18:33:12Z",
+      "origin_kind": "generated",
+      "source_digest": "aae36bba439a0ba94b4761689cbdd4651b39cbb65900c2331091fd6c199e139a",
+      "source_path": "docs/want.md",
+      "source_plugin": "run-dev-graph-decompose",
+      "source_version": "0.1.0"
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": [
+      "portal",
+      "authentication",
+      "web-application",
+      "session"
+    ],
+    "target_date": null,
+    "template_id": "architecture",
+    "template_version": "1.0.0",
+    "title": "業務ポータル アプリケーション基盤",
+    "tracker_binding": "beads",
+    "updated_at": "2026-08-08T18:33:12Z"
+  }
+}

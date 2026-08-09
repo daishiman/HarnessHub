@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "detail": "feature は purpose/goal/scope_in/scope_out/acceptance/architecture_refs を保持し phase task を含まない",
+      "id": "macro-shape",
+      "result": "pass"
+    },
+    {
+      "detail": "feature/architecture の depends_on と architecture_refs に循環が無い",
+      "id": "acyclic-dag",
+      "result": "pass"
+    },
+    {
+      "detail": "max_inter_feature_depends_on_per_feature <= 3",
+      "id": "granularity-threshold",
+      "result": "pass"
+    },
+    {
+      "detail": "feature 本文の required_sections が全て存在し placeholder のみの節が無い",
+      "id": "readiness-sections",
+      "result": "pass"
+    }
+  ],
+  "evaluated_at": "2026-08-08T18:40:00Z",
+  "evaluated_feature": "feat-account-login-001",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+  "skill": "dev-graph:run-dev-graph-decompose",
+  "tracker_binding": "none",
+  "verdict": "pass"
+}

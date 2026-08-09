@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-04T03:55:44.841174Z"
+updated_at: "2026-08-09T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"35734582ec2ff446eda197e3cac4069a1bd3440347208dacecf31501cb64ca4f","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/testing-qa.md"}
-source_lineage: {"imported_at":"2026-08-04T03:51:09Z","origin_kind":"system-spec-harness","source_digest":"35734582ec2ff446eda197e3cac4069a1bd3440347208dacecf31501cb64ca4f","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","evaluator":"validate-coverage-matrix.py --require-complete (qa-217)","evidence_ref":"system-spec/testing-qa.md"}
+source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -53,10 +53,54 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `35734582ec2ff446…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `15d8e29b3bb327bc…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
-- 取込日時: 2026-08-04T03:51:09Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
+
+## 要件定義書 (上位概念)
+
+この wrapper は testing/QA の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/testing-qa.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+変更が利用者の期待を壊していないことを、実行可能で改ざんしにくい証拠として示す。
+
+### U2 背景 (background)
+
+自己申告だけの PASS、恒真条件、古い証跡の再利用は、実際の不具合を隠してしまう。
+
+### U3 ゴール (goals)
+
+単体・結合・境界値・回帰試験と fresh live-trial を一貫した受領契約で運用する。
+
+### U4 目標 (objectives)
+
+80% 以上の適切なカバレッジ、negative control、挙動閉包、独立 evaluator verdict を機械検証する。
+
+### U5 成功基準 (success_criteria)
+
+必要な観測が同じ run 内の実在証跡へ結び付き、変更後 closure に対する独立 PASS が得られることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、開発者、reviewer、QA/SRE、live-trial を実行する agent を対象とする。
+
+### U7 スコープ (scope)
+
+テスト戦略、品質ゲート、live-trial、証跡鮮度、独立評価、回帰防止を扱う。
+
+### U8 制約 (constraints)
+
+古い verdict の流用、評価結果の上書き、未実行観測の PASS 化、fixture 内だけの自己完結証拠を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+変更した挙動を正の試験と失敗対照の両方で確認し、第三者が同じ結論を再現できるようにする。
+
+### 意思決定支援 (decisions)
+
+実行時間と証拠の信頼性が競合するときは、リスクに比例した fresh run と独立評価を優先する。
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -72,6 +116,46 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - **変更境界 (qa-100)**: 変更は証拠を受領するテスト層に閉じる。C15 schedule の新規 run は現行動作の再観測であり、scheduler、公開 API、DB、認証認可、UI、deploy unit の構造は変えない。
 - **一時生成物の境界 (qa-095)**: skill 構造 lint は dot directory、`__pycache__`、`.pyc` を test tool の生成物として構造判定から除外し、通常の nested directory 違反は維持する。root / plugin 実装の byte parity と per-plugin → repository の実行順序回帰を固定する。
 - **世代非依存 rerun command (qa-134)**: promotion 前は planner が実際の staging generation path を内部検証し、promotion 後の task spec は `--feature-package <self-package-id>` で current pointer から現行世代を解決する。contract 1.3.0 は `--staging`、flag 欠落、別 package id を fail-closed に拒否し、1.2.0 以前の immutable package は当時の契約で再検証する。
+
+## Architecture overview
+
+正本: system-spec/testing-qa.md。テストレベル網羅 (qa-076)・カバレッジ品質ゲート (qa-077)・層別方針 (qa-095)・実走証拠の完全性 (qa-089) を束ねた品質ゲートのアーキテクチャ。doctrine anchor: テストピラミッド。
+
+## Context and drivers
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Goals and non-goals
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## System context and boundaries
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Container and component view
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Cross-cutting contracts
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Subtype architecture
+
+- subtype: infrastructure — 詳細は正本章を参照 (複製しない)
+
+## Architecture decisions
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。個別の確定は下記の日付別「実装反映」節に差分追記されている (全書換禁止・要件 C18/C19)。
+
+## Delivery, migration and rollback
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## Risks and verification
+
+正本章 (system-spec/testing-qa.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
 ## 2026-07-29 実装反映
 
@@ -161,9 +245,6 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md)
 を参照する。
 
-## 上流指針 (doctrine anchor)
-
-- reliability + operations (Google SRE)。doctrine-anchor-registry.json の pending_exceptions に approved 登録済み (owner: daishiman, 2026-07-24)。
 
 ## 2026-08-02 顧客持ち込み Google OAuth 回帰設計
 
@@ -173,3 +254,46 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 - UI は実見出し階層で axe-core 違反 0、password/autocomplete、Workspace domain 正規化を検査する。
   Google 実 client、Playwright、production migration は別の外部実測として残す。
 - 正本は [system-spec/testing-qa.md](../system-spec/testing-qa.md) の `qa-130`。
+
+## 2026-08-07 検査の情報源網羅と論点分離の反映
+
+確定章 [system-spec/testing-qa.md](../system-spec/testing-qa.md) の qa-190 が次を確定した。
+本節は参照索引であり、内容の正本は確定章側にある。
+
+- **V7 の情報源は 3 経路 (qa-190-b)**: 同一リテラル union の重複定義を検出する検査は、
+  TypeScript 型宣言・zod schema・ORM schema の 3 経路を突合する。型宣言と zod の 2 経路だけを
+  実装すると ORM schema 側の定義が検査をすり抜ける。
+- **論点分離の適用 (qa-190-a/-c/-d)**: 由来が同じ (同一監査の継続指摘) というだけで別ドメインの
+  論点を 1 entry に束ねない。束ねが後から判明した場合は既登録 entry の逐語を改変せず、
+  分離索引を新規 entry として追記し、主題に近い category へ束縛する。
+
+本設計の検査実装は macro feature `feat-build-identity-deploy-freshness` の V6/V7、
+および `feat-classification-vocabulary-parity` が所有する。
+
+## 検証 tier と証拠語彙 (2026-08-09 / qa-217)
+
+最高 tier の正規名は `critical` とし、旧 `full` は過去資料の読み替えにだけ使う。新規の selector、gate 台帳、decision、受領書は `mvp / standard / critical` の三値を出力する。検査を実行したか、延期したか、恒久的に対象外かは `executed / deferred / skipped` を潰さず記録し、cache hit は `executed` の補助属性として表す。
+
+elegant-review の signal は `contradiction / omission / inconsistency / dependency_break` を C1..C4 へ対応させ、`smell` は合否条件を持たない警告として分離する。新規 run の対応不整合は error、日付境界より前の既存証拠は WARN とし、過去証拠を一括改変せず新規証拠を厳格化する。詳細は [検証 tier 仕様追補](../specs/harness-hub-verification-tiering-addendum.md) を参照する。
+
+### bounded live-trial の責務分離
+
+- scenario が時間・token の不変上限を所有し、poll は実行中の停止、verdict は事後の PASS 禁止を所有する。片側だけの検査にしない。
+- transcript 集計器は main/subagent を横断して assistant message ID を重複排除する。計測不能を 0 token と扱わず fail-closed にする。
+- C19 の current receipt 再利用では `validate-system-spec-resume.py` が digest/version/gate を検証し、`build-system-spec-resume-import.py` が C02 writer と各 gate を一度だけ合成実行する。上流生成 Skill と network は呼ばない。
+- `validate-system-spec-boundary.py` は system-spec-harness 側の runtime signature が実在することを陽性対照として確認してから、dev-graph 側の同等実装 0 を判定する。
+- 正式な現行証拠は同一 scenario の fresh run r5 で PASS（90.186 秒・290,770 token）。上限は 360 秒・2,000,000 token、上流 Skill/network は 0 である。開始時刻を永続化した poll-state と transcript の SHA を verdict に束縛し、再開しても時間上限をリセットできない。
+
+## 2026-08-08 production coverage smoke (qa-205 / `HarnessHub-p0lr`)
+
+- **配置**: deploy job の health、version/freshness、OIDC、data、hearing smoke の後段で `coverage_smoke` を実行する。
+- **credential 境界**: TOKEN/EITHER action は production Device Flow token、SESSION action は route と同じ service/repository + production DB adapter を使う。CI へ Google OIDC や新しい署名 secret を追加しない。
+- **隔離**: 2 個の使い捨て tenant に試験データを閉じ、`ai_jobs` から tenant まで子→親順で削除する。`feedbacks`、`documents`、`builds` も残数検査へ含める。
+- **rollback**: coverage smoke failure は rollback 判断へ入力する。freshness / version 再確認で停止し smoke が未実行なら、未実行を failure と見なして rollback しない。
+- **未確定境界**: provider-admin 越境は現行 edge 404 / audit 0 を診断するが、route の越境監査契約との統一は `HarnessHub-stmx` が所有する。
+
+正本契約と証拠対応は [production coverage smoke 仕様](../specs/harness-hub-production-coverage-smoke-addendum.md) と [仕様反映受領書](../docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md) を参照する。
+
+## 関連追補
+
+- system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。

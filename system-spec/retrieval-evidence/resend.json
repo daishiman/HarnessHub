@@ -1,7 +1,24 @@
 {
-  "target_id": "resend",
-  "source_url": "https://resend.com/pricing",
-  "retrieved_at": "2026-08-04T03:40:34Z",
-  "publisher": "Resend, Inc.",
-  "observed": "Resend の公式 Pricing ページを取得し、メール送信サービスのプラン情報を確認した。"
+  "allowed_domains": [
+    "resend.com"
+  ],
+  "findings": [
+    "Free: $0/mo で 3,000 通/月、かつ 100 通/日の日次上限あり。domain 1 件",
+    "Pro: $20/mo で 50,000 通/月 (超過 $0.90/1,000通)。domain 10 件",
+    "Scale: $90/mo で 100,000 通/月 以上の段階制。dedicated IP は $30/mo",
+    "To / CC / BCC の複数宛先はそれぞれ別の 1 通として計上される",
+    "有料プランに日次送信上限は無い",
+    "marketing plan は送信数ではなく contact 数課金 (Free 1,000 contacts)"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "Resend pricing plans emails per month",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://resend.com/pricing",
+    "https://resend.com/docs/knowledge-base/what-is-resend-pricing",
+    "https://resend.com/changelog/pay-as-you-go-pricing",
+    "https://resend.com/blog/new-free-tier"
+  ],
+  "target_id": "resend"
 }

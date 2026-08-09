@@ -1,0 +1,46 @@
+{
+  "skill": "run-dev-graph-render",
+  "original_goal": "タスクグラフ情報から追加ランタイム依存なしでブラウザ表示可能な SVG + インライン JS 可視化済み静的 HTML/CSS が生成された状態になっている",
+  "original_goal_hash": "1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8",
+  "why": "グラフ情報を人間が俯瞰するにはゼロ依存の静的可視化が必要で、コミットまたは CI 生成可能な成果物にすることで導入先リポジトリ内で完結させるため。feature ノードは配下 task (parent_feature 参照) の完了進捗 (X/Y) を集約表示し、機能単位のオーケストレーション状況を俯瞰できるようにする",
+  "scenario": "C05-OUT1-positive-feature-progress",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-2/eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/fixture-repo",
+  "checklist": [
+    {
+      "id": "CL1",
+      "text": "input graph/scope が schema PASS で output realpath が caller repo 内にある"
+    },
+    {
+      "id": "CL2",
+      "text": "render model の node/edge/feature progress counts が input graph と一致する"
+    },
+    {
+      "id": "CL3",
+      "text": "生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する"
+    },
+    {
+      "id": "CL4",
+      "text": "renderer receipt の input/output digest と実ファイル digest が一致する"
+    },
+    {
+      "id": "CL5",
+      "text": "registration receipt 指定時は照合状態が verified、未指定時は HTML と render-metadata の双方で not_performed になっている"
+    },
+    {
+      "id": "CL6",
+      "text": "ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される"
+    }
+  ],
+  "feedback_contract": {
+    "max_iterations": 3,
+    "criteria": [
+      "IN1",
+      "OUT1"
+    ]
+  },
+  "goal_seek": {
+    "engine": "inline",
+    "fork": "subagent",
+    "max_loops": 5
+  }
+}

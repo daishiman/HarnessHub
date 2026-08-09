@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/harness-creator/skills/run-elegant-review/scripts/build-review-report.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 88,
+    "notes": "findings から人間可読 report を決定論的に組み立てる単一責務。入力 shape を検査し、signal/condition/smell の違いを潰さず表示する。副作用は指定出力への書込みだけで、review 証拠の二重手書きを避ける。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

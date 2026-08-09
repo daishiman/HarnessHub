@@ -1,0 +1,101 @@
+{
+  "node": {
+    "graph_node_id": "doc-c02-mixed-batch-runbook",
+    "artifact_kind": "document",
+    "artifact_subtypes": [],
+    "title": "混在バッチ登録の実走 runbook",
+    "project_id": "c02fix",
+    "domain": "dev-workflow",
+    "status": "draft",
+    "owners": [
+      "dev-graph-harness"
+    ],
+    "tags": [
+      "live-trial",
+      "c02-out1",
+      "document"
+    ],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-08T03:10:03Z",
+    "updated_at": "2026-08-08T03:10:03Z",
+    "depends_on": [],
+    "related_nodes": [
+      "spec-c02-mixed-batch-contract",
+      "arch-c02-writer-boundary",
+      "task-c02-verify-mixed-routing"
+    ],
+    "resource_scope": [
+      "docs/doc-c02-mixed-batch-runbook.md"
+    ],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "docs/doc-c02-mixed-batch-runbook.md",
+    "template_id": "document",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": "mixed-artifacts.json",
+      "source_version": null,
+      "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+      "imported_at": "2026-08-08T03:10:03Z"
+    },
+    "classification_confidence": 0.99,
+    "classification_reason": "手順と記録を伝える運用 runbook であるため document へ写像した",
+    "classification_candidates": [
+      {
+        "artifact_kind": "document",
+        "confidence": 0.99,
+        "candidate_path": "docs/doc-c02-mixed-batch-runbook.md"
+      },
+      {
+        "artifact_kind": "specification",
+        "confidence": 0.17,
+        "candidate_path": "specs/doc-c02-mixed-batch-runbook.md"
+      }
+    ],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "complete",
+      "missing_sections": [],
+      "checked_at": "2026-08-08T03:10:03Z"
+    },
+    "layer": "operations"
+  }
+}

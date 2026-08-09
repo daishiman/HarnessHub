@@ -65,4 +65,147 @@ describe('production OIDC / owner authorization release gates', () => {
     expect(WORKFLOW).toContain('OIDC_SMOKE_OUTCOME: ${{ steps.oidc_smoke.outcome }}');
     expect(WORKFLOW).toContain('PREFLIGHT_OUTCOME: ${{ steps.preflight.outcome }}');
   });
+
+  // 2026-08-07: deploy が 2 run 連続で success を返しながら、配信されていたのは 8/4 の rollback で
+  // 固定された古い version のままだった。以降の smoke は古いコードを検査するため、修正済みの契約が
+  // 直っていないように見え、その失敗がまた rollback を呼んで固定を強めていた。
+  // 「deploy した版 == 配信中の版」を突き合わせる step が、この一連の検証の前提になる。
+  it('deploy した version と /health の配信 version を突合し、不一致なら smoke より前で止める', () => {
+    const health = WORKFLOW.indexOf('- name: デプロイ後 /health');
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    expect(versionGate).toBeGreaterThan(health);
+    // 古い版に対して smoke を走らせない。順序が逆だと「無関係な差分で赤くなる」状態に戻る
+    expect(oidc).toBeGreaterThan(versionGate);
+
+    const step = WORKFLOW.slice(versionGate, oidc);
+    // 比較対象は deploy step が控えた実 version id であり、固定文字列や自己申告ではない
+    expect(step).toContain('DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}');
+    expect(step).toContain('.version // ""');
+    expect(step).toContain('exit 1');
+    expect(WORKFLOW).toContain('echo "deployed_version=$version" >> "$GITHUB_OUTPUT"');
+  });
+
+  // 2026-08-07 の run 31221676748: /health は 1.3 秒後に新版へ切替わりゲートは通ったが、続く hearing
+  // smoke は修正前のコード (tenant_mismatch=403) を叩いて落ちた。colo ごとに切替時刻が違うため、
+  // 単発の一致では「全拠点で入れ替わった」ことにならない。連続一致を通過条件にして窓を狭める。
+  it('配信版の一致は連続 N 回を要求し、単発の一致では smoke へ進まない', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    // 連続一致の回数を数え、不一致で streak を 0 へ戻す (通算一致回数で代用しない)
+    expect(step).toContain('required_streak="${VERSION_GATE_STREAK:-3}"');
+    expect(step).toContain('streak=$(( streak + 1 ))');
+    expect(step).toContain('streak=0');
+    expect(step).toContain('if [ "$streak" -ge "$required_streak" ]; then break; fi');
+    // 期限切れは fail-open にしない。streak 未達のまま抜けたら必ず落とす
+    expect(step).toContain('if [ "$streak" -lt "$required_streak" ]; then');
+    expect(step).toContain('exit 1');
+  });
+
+  it('配信版の観測はキャッシュ済み応答を配信中の版と誤認せず、観測した colo を記録する', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    expect(step).toContain("-H 'Cache-Control: no-cache'");
+    expect(step).toContain('?_version_gate=${attempt}');
+    // どの拠点を観測したうえで通したかを後から検証できるようにする
+    expect(step).toContain('cf-ray');
+    expect(step).toContain('colos=');
+  });
+
+  // 判定材料を wrangler の一覧出力に置くと、表示仕様が変わったときパース失敗が空文字になって素通りしうる。
+  // 通過判定は /health の JSON だけに寄せ、wrangler は診断表示に留める。
+  it('通過判定は /health の JSON だけを根拠にし、wrangler の一覧出力は診断に留める', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+    const step = WORKFLOW.slice(versionGate, oidc);
+
+    const listIndex = step.indexOf('wrangler deployments list');
+    const diagIndex = step.indexOf('--- 診断: 現在の deployment / version 一覧 ---');
+    expect(listIndex).toBeGreaterThan(-1);
+    // wrangler 呼び出しは診断ブロックより後にだけ現れる = 判定には使われていない
+    expect(listIndex).toBeGreaterThan(diagIndex);
+    expect(step).toContain('|| true');
+  });
+
+  it('配信版が入れ替わっていないときは rollback しない (古い版への固定を強めないため)', () => {
+    expect(WORKFLOW).toContain('VERSION_GATE_OUTCOME: ${{ steps.version_gate.outcome }}');
+    const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
+    expect(rollback).toBeGreaterThan(-1);
+    const step = WORKFLOW.slice(rollback);
+    expect(step).toContain('if [ "${VERSION_GATE_OUTCOME}" != "success" ]; then');
+  });
+});
+
+// 2026-08-07: 着地先を直した commit が 4 日間本番へ反映されないまま、deploy は success を返し続けた。
+// 「稼働している成果物がどの commit か」を問い合わせる手段が無かったことが、この 4 日間の本体である。
+describe('稼働ビルドの素性と鮮度のゲート', () => {
+  it('deploy 時に稼働成果物へ commit を埋め込む (wrangler.jsonc へ値を書かない経路で)', () => {
+    // --var は deploy 時注入なので、設定ファイルへ値を保存しない規約と両立する。
+    // commit sha は公開情報なので secret 扱いにしない
+    expect(WORKFLOW).toContain('--var "HUB_COMMIT_SHA:${GITHUB_SHA}"');
+  });
+
+  it('配信版一致の検査を通した直後、smoke の前に鮮度検査を実行する', () => {
+    const versionGate = WORKFLOW.indexOf('- name: 配信版が今デプロイした版であることの検査');
+    const freshness = WORKFLOW.indexOf('- name: 稼働ビルドの鮮度検査');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+
+    expect(freshness).toBeGreaterThan(versionGate);
+    expect(oidc).toBeGreaterThan(freshness);
+
+    const step = WORKFLOW.slice(freshness, oidc);
+    // 検査本体は package script 経由で呼ぶ (しきい値と判定を workflow へ二重定義しない)
+    expect(step).toContain('run check:deploy-freshness');
+    expect(step).toContain('id: deploy_freshness');
+    expect(step).toContain('--health-url "$HUB_HEALTH_URL"');
+    // 判定根拠を後から検証できるよう JSON 証跡を残す
+    expect(step).toContain('--json');
+  });
+
+  // HarnessHub-u9zq: version_gate を通しても、鮮度検査を挟んだあとの smoke が別 colo の旧版へ
+  // 当たる窓が残っていた。最初の smoke の直前でもう一度、配信版が deploy した版のままかを確かめる。
+  it('鮮度検査のあと・最初の smoke の前に、配信版をもう一度確認する', () => {
+    const freshness = WORKFLOW.indexOf('- name: 稼働ビルドの鮮度検査');
+    const recheck = WORKFLOW.indexOf('- name: smoke 直前の配信版再確認');
+    const oidc = WORKFLOW.indexOf('- name: 本番 OIDC start-flow smoke');
+
+    expect(recheck).toBeGreaterThan(freshness);
+    // 再確認が smoke より後ろだと、旧版を検査してから気づくことになり意味がない
+    expect(oidc).toBeGreaterThan(recheck);
+
+    const step = WORKFLOW.slice(recheck, oidc);
+    expect(step).toContain('id: smoke_version_recheck');
+    // 判定と再試行方針は script 側の単一実装に置き、workflow へ二重定義しない
+    expect(step).toContain('scripts/ci/assert-served-version.mjs');
+    // 比較対象は deploy step が控えた実 version id (固定文字列や自己申告ではない)
+    expect(step).toContain('DEPLOYED_VERSION: ${{ steps.deploy.outputs.deployed_version }}');
+    // 判定根拠を後から検証できるよう JSON 証跡を残す
+    expect(step).toContain('--json');
+  });
+
+  it('smoke 直前の再確認で止まったときは rollback しない (どの版へ戻るか確定しないため)', () => {
+    expect(WORKFLOW).toContain('SMOKE_VERSION_RECHECK_OUTCOME: ${{ steps.smoke_version_recheck.outcome }}');
+
+    const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
+    const step = WORKFLOW.slice(rollback);
+
+    expect(step).toContain('if [ "${SMOKE_VERSION_RECHECK_OUTCOME}" != "success" ]');
+    expect(step).toContain('smoke 直前の配信版再確認で停止');
+  });
+
+  it('鮮度検査で止まったときは rollback しない (素性の確認できない版へ後退させない)', () => {
+    expect(WORKFLOW).toContain('DEPLOY_FRESHNESS_OUTCOME: ${{ steps.deploy_freshness.outcome }}');
+
+    const rollback = WORKFLOW.indexOf('- name: 失敗時ロールバック');
+    const step = WORKFLOW.slice(rollback);
+
+    // 鮮度検査で止まった時点で後続 smoke は未実行 = 「新しい版が壊れている」証拠が無い。
+    // ここで戻すと、素性を確認できない古い版へ後退するだけになる
+    expect(step).toContain('if [ "${DEPLOY_FRESHNESS_OUTCOME}" != "success" ]');
+    expect(step).toContain('鮮度検査で停止');
+  });
 });

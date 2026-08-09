@@ -1,0 +1,12 @@
+{
+  "evaluator": "fresh-independent-goal-evaluator-c03-retry",
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {"met": true, "evidence": "The apply report records one title import and one project-field export through the repository-local remote-state adapter."},
+    "2": {"met": true, "evidence": "The confirmation dry-run records imports=[], exports=[], changes=0, and converged=true."},
+    "3": {"met": true, "evidence": "Graph, snapshot, remote-state digests and stable Project IDs match exactly after apply and confirmation dry-run."}
+  },
+  "goal_evidence": "transcript.jsonl and the progress receipt confirm the three-pass skill flow, zero writes on dry-runs, no gh/gh-bridge command invocation, and deterministic convergence."
+}

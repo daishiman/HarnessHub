@@ -2,12 +2,12 @@
 title: "Live-trial 証跡選択と C02 receipt 検出 — 仕様反映受領書"
 status: "recorded"
 layer: "feature-spec-reflection"
-reviewed_at: "2026-08-04"
+reviewed_at: "2026-08-10"
 beads_ids: ["HarnessHub-85z0", "HarnessHub-3tw"]
 dev_graph_node_id: "issue-required-heading-presence-validation-20260729"
-system_spec_qa: "qa-145"
-approval_ids: ["appr-033", "appr-034"]
-spec_impact: "reflected"
+system_spec_qa: null
+approval_ids: []
+spec_impact: "none"
 ---
 
 # Live-trial 証跡選択と C02 receipt 検出 — 仕様反映受領書
@@ -21,9 +21,17 @@ spec_impact: "reflected"
 
 ## 結論
 
-**開発品質・証跡受領の仕様には影響あり、Harness Hub 製品 runtime には影響なし**。承認済み
+**今回の再統合では製品仕様・設計への新規影響なし**。承認済み
 criteria receipt がある skill は receipt が指す唯一の verdict を検査する。receipt が不正なら
 fallback せず失敗する。C02 scanner は receipt そのものへの変更だけを拒否する。
+
+## 2026-08-10 再統合判断
+
+旧 branch 内で用いた `qa-145` / `qa-146` は current `main` では別の製品機能へ再採番済みであり、
+本変更の正本として再利用しない。今回の差分は dev-graph の内部 lint を不正 receipt で
+fail-closed に戻すものだけで、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、
+`system-spec/`、`architecture/` の新規変更はない。このため C01/C03 は実行せず、HEAD 束縛の
+機械受領書へ `spec-impact=none` と判断理由を記録する。
 
 ## 中学生向けの説明
 
@@ -35,13 +43,10 @@ fallback せず失敗する。C02 scanner は receipt そのものへの変更�
 
 | 層 | 反映内容 |
 |---|---|
-| C01 / `system-spec/spec-state.json` | R4 reopen → `qa-145` / `appr-033` / `appr-034` で C11/C14/C16 を保全しつつ証跡選択・scanner 契約を再確定 |
-| C03 / `system-spec/` | `compile-spec-doc.py` で `dev-workflow.md` を再生成。coverage/foundation gate が PASS |
-| `specs/` | C02 で source lineage を新しい `spec-state.json` digest へ更新 |
-| `architecture/` | C02 で `dev-workflow.md` の新 digest と qa-145 を architecture wrapper へ反映 |
-| `features/` | C02 で feature の `dev-workflow.md` lineage と受領書参照を更新 |
-| `tasks/` | P13 の補助 handoff を C02 writer で登録し、CI/PR の最終確認条件を固定 |
-| `docs/` | 本受領書に判断、実走証跡、検証、残課題を記録 |
+| `system-spec/` / `architecture/` | current `main` の正本を維持 | branch-local QA ID を再利用しない |
+| `specs/` | requirements 索引を current `main` に整合 | 現行 hook parity は `qa-143` を参照 |
+| `features/` / `tasks/` | handoff と変更履歴の参照を再採番 | linter 強化の製品仕様への波及はない |
+| `docs/` | 本受領書へ再統合判断を追記 | 判断根拠と検証を追跡する |
 
 外部技術の新事実を導入していないため、C02 source fetch は不要である。既存の
 `fetched-references.json` を用いた C03 compile は実行した。

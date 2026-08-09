@@ -12,8 +12,8 @@ iteration: null
 title: "エビデンス収集 — 再現可能な検証証跡の集約"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:54:14Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P10"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-docs-cms/evidence/"]

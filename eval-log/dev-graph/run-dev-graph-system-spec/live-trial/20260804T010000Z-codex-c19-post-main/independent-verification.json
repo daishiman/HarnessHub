@@ -1,0 +1,16 @@
+{
+  "evaluator": "independent-read-only-evaluator",
+  "session_id": "e732fbcc-6538-4c50-ba4f-de2b00185cd1",
+  "result": "PASS",
+  "evidence": [
+    "Imported architecture/specification bodies match their caller-repository source artifacts after destination frontmatter removal; both source_lineage.source_digest values match independently computed SHA-256 values.",
+    "build-system-spec-import.py writes only caller-repository .dev-graph/tmp output and the intermediate/progress records show C02 upsert-node.py registration in architecture-to-specification order.",
+    "completeness-report.json records a real source-citation gate command with exit_code=0, and its C06/C07/C08 response SHA-256 values, session ID, and PASS verdicts match audit-fork-ledger.jsonl.",
+    "The imported nodes' confirmation evidence digest matches the live completeness report SHA-256."
+  ],
+  "rationale": "The C19 source body, digest, canonical registration, citation gate, and fork-verdict fidelity claims are supported by independently checked files and byte-level digest comparisons.",
+  "residual_risks": [
+    "Four C05 aspects remain evaluator self-assessments rather than independently forked audits; the completeness report discloses this boundary.",
+    "The graph source/evidence validator exit-zero claims are preserved in the progress checklist rather than a separate raw command log."
+  ]
+}

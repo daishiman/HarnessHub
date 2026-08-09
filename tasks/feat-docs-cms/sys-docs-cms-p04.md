@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T04:47:12Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P03"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/docs/","apps/hub/src/features/docs-cms/__tests__/","apps/hub/src/features/docs-cms/ai-job-adapter/","docs/features/feat-docs-cms/test-design.md","packages/schemas/docs-cms/"]

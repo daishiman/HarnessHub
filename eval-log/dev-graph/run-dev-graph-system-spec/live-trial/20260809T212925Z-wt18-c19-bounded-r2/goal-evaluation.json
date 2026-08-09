@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "c19_wt18_r2_goal_evaluator"
+  },
+  "transcript_sha256": "ab1219b9b1bcfec8745dfcad734b07af301477bf1bb0f368cd768fc2dfcfa536",
+  "evidence_refs": [
+    "task.md",
+    "transcript.jsonl",
+    "out/status.json",
+    "pane.txt",
+    "poll-state.json",
+    "fixture-repo/.dev-graph/state/graph.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-resume-report.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-progress.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-goal-spec.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-intermediate.jsonl",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-receipt.json",
+    "fixture-repo/eval-log/system-spec-harness/audit-fork-ledger.jsonl",
+    "fixture-repo/architecture/system-spec-overview.md",
+    "fixture-repo/specs/system-spec-index.md",
+    "fixture-repo/system-spec/resume-receipt.json",
+    "fixture-repo/system-spec/completeness-report.json",
+    "fixture-repo/system-spec/00-requirements-definition.md",
+    "fixture-repo/system-spec/index.md"
+  ]
+}

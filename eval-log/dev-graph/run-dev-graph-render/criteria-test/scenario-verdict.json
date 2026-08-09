@@ -1,41 +1,41 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-render",
-    "component_id": "C05",
-    "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260804-c05-r2",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "Fresh evaluator independently inspected the guard-clean live trial and found inline SVG with no external script/link. Focused tests confirm exact receipt=verified, graph digest alone stale=partial/graph_digest_stale, and no receipt=not_performed while the other registration-evidence mismatches remain fail-closed.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_render_and_schedule",
         "plugins/dev-graph/tests/test_render_registration_verification.py::test_render_scope_containment_and_registration_receipt",
         "plugins/dev-graph/tests/test_render_registration_verification.py::test_render_registration_receipt_stale_graph_digest_is_partial_not_fail_closed",
         "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
       ],
-      "observed": "Fresh evaluator independently inspected the guard-clean live trial and found inline SVG with no external script/link. Focused tests confirm exact receipt=verified, graph digest alone stale=partial/graph_digest_stale, and no receipt=not_performed while the other registration-evidence mismatches remain fail-closed."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T132000Z-o4zi-exh-c05r2 は overall=PASS、nudge=0、gate=0。Skill-first と nested Agent fork を満たし、inline SVG/HTML、13=applied=expected denominator、独立再計算した numerator=4、source digest 一致、write scope を fresh independent evaluator が再実測して PASS。behavior closure digest=7ec3b5614b3dfa84309a06dfb9d20bf9ecef210d0467a5ddfdc6cb3af6a6b3b9。",
       "scenario_id": "C05-OUT1-positive-feature-progress",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260804T062000Z-ci-c05-r2/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/independent-verification.json"
       ],
-      "observed": "main 統合後の fresh live trial 20260804T062000Z-ci-c05-r2 は overall=PASS、nudge=0、gate=0。別 fresh evaluator が実体成果物から、外部依存なしの inline SVG/HTML、13=applied=expected の分母、graph store から独立再計算した分子 4、source digest と child lineage の一致を全件 PASS と判定した。behavior closure digest=7cd173c59c3136347df7fe03a31872fe1e2d206d242c8cb656acef32366e330a。"
+      "verify_by": "live-trial"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-0ui0-20260806",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C05",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-render",
+    "skill_md_sha256": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669"
+  },
+  "verdict": "PASS"
 }

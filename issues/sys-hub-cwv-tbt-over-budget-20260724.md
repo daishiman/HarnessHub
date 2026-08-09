@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 client JS 削減と PR 段階の予算ゲート新設"
+title: "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 JS 削減の是正"
 owners: ["daishiman"]
 created_at: "2026-07-24T00:00:00Z"
-updated_at: "2026-07-25T09:27:54Z"
+updated_at: "2026-07-28T04:12:43Z"
 status: "draft"
 depends_on: []
 related_nodes: []

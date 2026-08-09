@@ -5,7 +5,7 @@ artifact_subtypes: []
 layer: "feature-spec-reflection"
 project_id: "harness-hub"
 domain: "dev-workflow"
-tags: ["spec-reflection","plugin-governance","hooks","qa-146"]
+tags: ["spec-reflection","plugin-governance","hooks","qa-143"]
 priority: "high"
 start_date: "2026-08-04"
 target_date: null
@@ -19,10 +19,10 @@ depends_on: []
 related_nodes: ["issue-hooks-entry-point-parity-generalization-20260728","issue-fetched-reference-evidence-provenance-20260804","feat-dev-pipeline-improvement","spec-harness-hub-plugin-hook-governance-20260804","arch-harness-hub-dev-workflow","task-hooks-entry-point-parity-final-review-handoff-20260804","task-live-trial-evidence-selection-handoff-20260804"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md","docs/features/feat-dev-pipeline-improvement/live-trial-evidence-selection-spec-reflection-receipt.md","system-spec/dev-workflow.md","system-spec/spec-state.json","specs/harness-hub-plugin-hook-governance-addendum.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-hooks-parity-final-review-handoff.md"]
 purpose: "HarnessHub-vf66、HarnessHub-85z0、HarnessHub-3tw の仕様・設計影響、製品非変更境界、検証と公開前受領を人間・機械双方で追跡する。"
-goal: "競合した qa-143 を qa-146 へ統合し、各文書層、Beads、commit、draft PR と矛盾なく結び付ける。"
+goal: "現行 qa-143 の hook parity 契約と、各文書層、Beads、commit、draft PR を矛盾なく結び付ける。"
 scope_in: ["仕様反映の根拠","検証結果","製品非変更の判断","公開前の追跡情報"]
 scope_out: ["製品 API、DB schema、認証認可、UI、Cloudflare deploy unit の変更"]
-acceptance: ["仕様影響ありの理由と反映先を明記する","中学生向けと技術的な説明を併記する","残課題と Beads ID を記録する","qa-146 への QA ID 統合理由を記録する"]
+acceptance: ["仕様影響ありの理由と反映先を明記する","中学生向けと技術的な説明を併記する","残課題と Beads ID を記録する","現行 qa-143 の参照を記録する"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
@@ -32,7 +32,7 @@ template_id: "document"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"4b0c134b7643358cf7928fb2bf2327539278030d546f247046bdad84980a96a1","evaluator":"final-review + system-spec-harness (qa-146)","evidence_ref":"system-spec/dev-workflow.md"}
+confirmation_evidence: {"evaluated_digest":"db16d677ab51ca14f8d75f55a7132c446b1c7401bf78682c8add3c58e2a70589","evaluator":"2026-08-10 final-review + current main rebase (qa-143)","evidence_ref":"system-spec/dev-workflow.md"}
 source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "競合した開発品質契約の仕様反映と製品非変更境界の受領記録を独立 document として残す。"
@@ -53,6 +53,11 @@ implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections
 ## 結論
 
 **仕様・設計への影響あり（開発品質契約のみ）。** 全 plugin の hook に対し、台帳・登録・実体を一致させる fail-closed の検査を、live-trial 証跡選択・C02 receipt 検出契約とともに `qa-146` として正規反映した。別ブランチで意味の異なる変更に同じ `qa-143` が使われていたため、C01 で新しい統合 ID を発行して曖昧さを除いた。Harness Hub の製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更していない。
+
+## 2026-08-10 再統合補足
+
+前段の `qa-146` は branch-local の暫定 ID であり、current `main` では別の製品機能へ割り当て済みである。現行の hook parity 正本は `qa-143` と
+`specs/harness-hub-plugin-hook-governance-addendum.md` とする。今回の receipt 選択 lint の fail-closed 修正は、製品仕様や hook parity の要件を追加変更しない内部検査修正である。
 
 ## 中学生向けの説明
 

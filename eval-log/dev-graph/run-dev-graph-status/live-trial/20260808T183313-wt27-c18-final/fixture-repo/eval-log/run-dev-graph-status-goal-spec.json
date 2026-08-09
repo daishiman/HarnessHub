@@ -1,0 +1,24 @@
+{
+  "skill": "dev-graph:run-dev-graph-status",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "original_goal": "特定のissue/task/specification/architecture/documentをgraph_node_id/artifact_kind/project_id/domain/status/tagsで検索し、依存関係・close/tombstone状態をread-onlyで確認できる状態になっている",
+  "goal_source": "plugins/dev-graph/skills/run-dev-graph-status/SKILL.md#ゴール (Goal)",
+  "why": "特定ノードの検索・状態確認 (要件C11) を独立の読取り専用経路として提供しないと、状態確認のたびに sync/render 相当の重い処理を経由せざるを得ず、副作用のない検索操作が書込みを伴う操作と混同されるリスクがあるため",
+  "engine": "inline",
+  "fork": "subagent",
+  "max_loops": 5,
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T183313-wt27-c18-final/fixture-repo",
+  "checklist": [
+    "query は許可 filter field と明示 tag match mode だけを持つ",
+    "`validate-graph-schema.py` が exit0 で root 外 file_path と dangling dependency が0件である",
+    "report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致する",
+    "該当なしが空 result の成功として返る",
+    "実行前後の graph/config/content digest が同一で外部 write が0件である",
+    "全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される"
+  ],
+  "required_observations": [
+    "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+    "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+    "the run leaves graph, config, content and GitHub state unchanged"
+  ]
+}

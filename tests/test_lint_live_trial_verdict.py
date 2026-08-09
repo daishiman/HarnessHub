@@ -112,21 +112,6 @@ def _write_verdict(lint, doc, skill="run-demo", run_id="20260702T000000"):
     return vdir / "verdict.json"
 
 
-def _write_criteria_receipt(lint, ref, skill="run-demo"):
-    receipt = lint.EVAL_LOG / "demo-plugin" / skill / "criteria-test" / "scenario-verdict.json"
-    receipt.parent.mkdir(parents=True, exist_ok=True)
-    receipt.write_text(json.dumps({
-        "criteria_results": {
-            "OUT1": {
-                "status": "PASS",
-                "verify_by": "live-trial",
-                "live_trial_verdict_ref": ref,
-            }
-        }
-    }), encoding="utf-8")
-    return receipt
-
-
 # --- 正 fixture -------------------------------------------------------------
 
 def test_valid_pass_verdict_exit0(lint, capsys):
@@ -249,22 +234,59 @@ def test_latest_run_id_wins_newer_pass(lint):
     assert lint.run_lint() == 0
 
 
-def test_criteria_receipt_selects_accepted_verdict_despite_later_run_id(lint):
-    """run-id の時計ずれで後発 directory を誤って採用しない。"""
-    skill_dir = _make_skill(lint)
-    accepted = _write_verdict(lint, _valid_doc(lint, skill_dir), run_id="20260701T000000")
-    stale = _valid_doc(lint, skill_dir)
-    stale["overall"]["verdict"] = "FAIL"
-    _write_verdict(lint, stale, run_id="20260899T000000")
-    _write_criteria_receipt(lint, accepted.relative_to(lint.EVAL_LOG.parent).as_posix())
+def test_criteria_receipt_pass_wins_over_future_dated_historical_run(lint):
+    """criteria receipt が採用した PASS は run-id 辞書順より優先される。"""
+    skill_dir = lint.PLUGINS_DIR / "dev-graph" / "skills" / "run-demo"
+    (skill_dir / "scripts").mkdir(parents=True)
+    (skill_dir / "SKILL.md").write_text(
+        SKILL_MD_DECLARING.format(name="run-demo"), encoding="utf-8"
+    )
+    (skill_dir / "scripts" / "x.py").write_text("print('x')\n", encoding="utf-8")
+    good = _valid_doc(lint, skill_dir)
+    good["target_skill"] = "dev-graph:run-demo"
+    good_path = lint.EVAL_LOG / "dev-graph" / "run-demo" / "live-trial" / "20260804T015000Z-r7"
+    good_path.mkdir(parents=True)
+    (good_path / "verdict.json").write_text(json.dumps(good), encoding="utf-8")
+    (good_path / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+
+    stale = dict(good)
+    stale["overall"] = dict(good["overall"], verdict="FAIL")
+    stale_path = lint.EVAL_LOG / "dev-graph" / "run-demo" / "live-trial" / "20260806T020000Z-history"
+    stale_path.mkdir(parents=True)
+    (stale_path / "verdict.json").write_text(json.dumps(stale), encoding="utf-8")
+    (stale_path / "transcript.jsonl").write_bytes(TRANSCRIPT_BODY)
+
+    receipt = lint.EVAL_LOG / "dev-graph" / "run-demo" / "criteria-test" / "scenario-verdict.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps({
+        "criteria_results": {
+            "OUT1": {
+                "live_trial_verdict_ref": (
+                    "eval-log/dev-graph/run-demo/live-trial/20260804T015000Z-r7/verdict.json"
+                )
+            }
+        }
+    }), encoding="utf-8")
+
+    assert lint.latest_verdict_path("dev-graph", "run-demo") == good_path / "verdict.json"
     assert lint.run_lint() == 0
 
 
 def test_invalid_criteria_receipt_ref_hard_fails_without_legacy_fallback(lint, capsys):
-    """受領書があれば ref 不正を最新 run-id で隠さず fail-closed にする。"""
+    """存在する receipt の外部参照を新しい run-id で隠してはならない。"""
     skill_dir = _make_skill(lint)
-    _write_verdict(lint, _valid_doc(lint, skill_dir))
-    _write_criteria_receipt(lint, "eval-log/other-plugin/other-skill/live-trial/x/verdict.json")
+    _write_verdict(lint, _valid_doc(lint, skill_dir), run_id="20260806T020000Z-history")
+    receipt = lint.EVAL_LOG / "demo-plugin" / "run-demo" / "criteria-test" / "scenario-verdict.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps({
+        "criteria_results": {
+            "OUT1": {
+                "verify_by": "live-trial",
+                "live_trial_verdict_ref": "eval-log/other-plugin/other-skill/live-trial/x/verdict.json",
+            }
+        }
+    }), encoding="utf-8")
+
     assert lint.run_lint() == 1
     assert "criteria-receipt-outside-live-trial" in capsys.readouterr().out
 

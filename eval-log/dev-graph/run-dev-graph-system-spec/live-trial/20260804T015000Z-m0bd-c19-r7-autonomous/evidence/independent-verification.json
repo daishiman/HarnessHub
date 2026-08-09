@@ -1,0 +1,103 @@
+{
+  "verdict": "PASS",
+  "observations": [
+    {
+      "id": "OBS-1",
+      "verdict": "PASS",
+      "evidence": [
+        "plugins/system-spec-harness/.claude-plugin/plugin.json: name=\"system-spec-harness\", version=\"0.1.0\" — satisfies >=0.1.0 <1.0.0.",
+        "plugins/system-spec-harness/references/package-contract.json entry_points.skills = [run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, ref-system-design-knowledge, assign-system-spec-completeness-evaluator] — all four required skills present.",
+        "Canonical-flow artifacts all exist in the fixture: system-spec/spec-state.json (87KB, 48 cells = 8 categories x 6 platforms, 8 confirmed / 40 excluded / 0 unresolved, hearing_progress.complete=true, 3 confirmed decisions), system-spec/fetched-references.json (7 records) + system-spec/retrieval-evidence/*.json (7 files), 8 chapter Markdown files (database/auth/ui-ux/security/infrastructure/backend/frontend/maintenance-ops) + 00-requirements-definition.md + system-spec/index.md. Chapters carry `status: confirmed` frontmatter; index.md cross-references all 8 chapters with aggregate states.",
+        "Completeness report location found: <fixture>/eval-log/system-spec-harness/completeness-report.json (43,744 bytes, written 2026-08-04T04:28Z). It is NOT under system-spec/.",
+        "Re-ran validate-coverage-matrix.py --require-complete --require-foundation myself: exit 0, stdout 'OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす'.",
+        "Re-ran validate-source-citation.py with a targets JSON I built myself from spec-state.targets (7 entries) + --repo-root <fixture>: exit 0, 'OK: 出典記録が全件対応・必須フィールド・公式 host・時刻・取得証跡の一致を満たす'.",
+        "Re-ran aggregate-completeness.py --report --fork-ledger --session 83d80f2d-... --matrix --require-complete --knowledge-graph: exit 0, 'OK: レポート形状・総合判定整合・独立 auditor 帰属の fork 証跡接地を満たす (verdict=PASS)'; embedded G-matrix exit 0 and G-knowledge-graph 4 subgates (knowledge/doctrine/required-info/cross) all exit 0.",
+        "Report verdict field = 'PASS'; all 6 aspects (foundation_trace, decision_guidance, matrix_coverage, design_knowledge_reflection, doc_freshness, prompt_quality) PASS; evaluator.context='fork'; gaps=[].",
+        "3 fresh audit forks for the passing attempt are in the ledger: system-spec-matrix-auditor @04:08:12Z, system-spec-hearing-auditor @04:08:25Z, system-spec-doc-freshness-auditor @04:18:13Z — all after attempt-2 FAIL (04:06:53Z) and before the report was written (04:28Z). All 9 ledger rows have unique prompt_sha256, so these 3 are genuinely distinct forks, not replays of the earlier batches.",
+        "NON-VACUITY CONTROLS I ran myself (on scratchpad copies, fixture untouched): flipping one matrix cell state to 未収集 -> coverage gate exit 1 with 2 violations; appending a byte to retrieval-evidence/sqlite.json -> citation gate exit 1 ('evidence_sha256 が evidence_ref の内容と不一致'); deleting the matrix-auditor rows from the ledger -> aggregate gate exit 1 ('fork 台帳に ... の完了記録が無い'). All three gates are therefore load-bearing, not vacuous."
+      ],
+      "concerns": [
+        "The completeness report lives in eval-log/system-spec-harness/, not under system-spec/; anyone looking only in the spec dir would conclude it is missing.",
+        "The aggregate gate only checks that a (session_id, subagent_type) row exists in the ledger — it cannot distinguish attempt-3 forks from attempt-1/2 forks in the same session. Freshness rests on ledger timestamps + unique prompt hashes, which I checked manually. The run's own report discloses this limitation as a low finding (bucket 'attribution')."
+      ]
+    },
+    {
+      "id": "OBS-2",
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json (graph_revision=4, schema_version 1.0.0) contains exactly the 2 nodes registered by this run: spec-local-todo-api-system-spec and arch-local-todo-api-backend.",
+        "spec node source_lineage: origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/00-requirements-definition.md', source_version='0.1.0', source_digest='ac7c9f3d...1777', imported_at='2026-08-04T04:29:57Z' — all six non-null.",
+        "arch node source_lineage: origin_kind='system-spec-harness', source_plugin='system-spec-harness', source_path='system-spec/backend.md', source_version='0.1.0', source_digest='67c87c6a...31be', imported_at='2026-08-04T04:29:57Z' — all six non-null.",
+        "INDEPENDENT sha256 recomputation (shasum -a 256): system-spec/00-requirements-definition.md = ac7c9f3d4cc9e4e96931ddd4edbc435aaa5da954d2bf0dfd1eb9cfa600391777 (matches spec node); system-spec/backend.md = 67c87c6af76509bf6bf2d767097a4879eb126772f0e1dd1b3e1d5288dad831be (matches arch node). The two digests are DIFFERENT — no digest reuse across files.",
+        "confirmation_evidence present on both nodes: evaluator='assign-system-spec-completeness-evaluator', evidence_ref='eval-log/system-spec-harness/completeness-report.json' (file EXISTS in the fixture, 43,744 bytes), evaluated_digest present (64-hex).",
+        "confirmation_status='confirmed' and evaluation_status='pass' on both nodes; implementation_readiness.status='complete' with missing_sections=[].",
+        "validate-source-digest.py --repo-root --progress: exit 0, output {\"checked\": 2, \"registered_mismatch\": []} — 2 items actually checked.",
+        "validate-evidence-refs.py --repo-root --progress: exit 0, output {\"scanned_nodes_with_evidence\": 2, \"registered_dangling\": [], \"existing_dangling\": []} — 2 items actually scanned.",
+        "validate-graph-schema.py --graph --repo-root: exit 0, {\"valid\": true, \"violations\": [], \"implementation_readiness\": \"complete\"}. This script prints no count, so I built a negative control: a scratchpad copy with node[0].confirmation_status='bogus-value' and node[1].file_path='specs/does-not-exist.md' produced exit 1 with 5 violations naming BOTH node ids (path_parity_error on arch-local-todo-api-backend, active_not_ready + 3 schema_violations on spec-local-todo-api-system-spec). Both nodes are therefore genuinely inspected."
+      ],
+      "concerns": [
+        "confirmation_evidence.evaluated_digest is byte-identical to source_lineage.source_digest on both nodes (i.e. it is the digest of the source chapter file, not of the evaluated report nor of the final node content). dev-graph's own decompose live-trial contract defines evaluated_digest as the SHA-256 of the node JSON minus confirmation_evidence, so the semantics differ across scenarios. No gate enforces evaluated_digest here (validate-evidence-refs only checks evidence_ref existence), so this is unverified-by-machine rather than wrong — but it makes the field carry no information beyond source_digest in this run."
+      ]
+    },
+    {
+      "id": "OBS-3",
+      "verdict": "PASS",
+      "evidence": [
+        "Registration went through C02: graph.json, specs/spec-local-todo-api-system-spec.md and architecture/arch-local-todo-api-backend.md all have mode 0600, while every other file the run produced (system-spec/*.md, eval-log/*.json, eval-log/registration/*) is 0644. upsert-node.py writes via tempfile.mkstemp + os.replace (lines 72/78), which yields 0600 — the Write tool would yield 0644. The 0600/0644 split is exactly the C02-writer signature.",
+        "Residual .dev-graph/state/.graph.json.register.lock (0 bytes) is created by upsert-node.py:279-282 and never unlinked — further positive evidence that upsert-node.py, not a hand edit, produced the graph.",
+        "graph_revision 0 -> 4 (2 creates + 2 relation patches), matching eval-log/registration/{spec,arch}-node.json (create inputs) and {spec,arch}-patch.json (related_nodes/architecture_refs patches). Those patch/body inputs are 0644 Write-tool files, which is correct — they are INPUTS to upsert-node.py, not the authority.",
+        "Nodes are in the canonical roots (specs/ and architecture/) with full schema-valid frontmatter (graph_node_id, artifact_kind, template_id/version, confirmation_status, evaluation_status, confirmation_evidence, source_lineage, file_path, resource_scope, ...); validate-graph-schema.py exit 0 confirms.",
+        "git status in the fixture shows only the run's outputs as untracked/modified; git log has a single fixture-init commit (f72a3488) — no evidence of a hand-authored graph or node Markdown being committed in.",
+        "Duplication search, POSITIVE CONTROL (harness file counts, __pycache__ excluded): apply-spec-transition=21, spec-state=56, requirements_foundation=28, qa_log=23, category_aggregate=22, compile-spec-doc=13, fetched-references=32, hearing_progress=15, 収集マトリクス=19, 確定セル=34. All non-zero, so the search works.",
+        "Same search over plugins/dev-graph: apply-spec-transition=1, spec-state=3, requirements_foundation=1, qa_log=0, category_aggregate=0, compile-spec-doc=1, fetched-references=3, hearing_progress=0, 収集マトリクス=1, 確定セル=0. Only 3 distinct files hit at all: plugins/dev-graph/tests/fixtures/live_trial_shapes/shape_system_spec.py, plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json, plugins/dev-graph/references/live-trial-task-contract.md.",
+        "I read shape_system_spec.py (277 lines): it is a live-trial FIXTURE BUILDER. It writes only system-spec/requirements-brief.md and its docstring explicitly states it must NOT create spec-state.json / chapters / fetched-references.json / completeness-report.json because those belong to the harness's canonical writers (apply-spec-transition.py as single transition writer). The harness terms appear only as prose explaining what the fixture deliberately omits, plus a list of expected-absent paths. No elicitation loop, no matrix state machine, no compile logic.",
+        "The other two hits are contract/scenario documents (references/live-trial-task-contract.md, tests/fixtures/live-trial-positive-scenarios.json) that name harness artifacts as required observations — declarative text, not logic.",
+        "plugins/dev-graph/skills/run-dev-graph-system-spec/SKILL.md hit ZERO of the terms; its allowed-tools include Skill and line 71 states the flow is delegated via Skill calls to elicit -> doc-fetch -> compile -> evaluator. progress.json entry_points records all four invoked as 'system-spec-harness:<skill> (Skill tool)'.",
+        "Conclusion: 0 reimplementations of elicitation/compile logic in dev-graph."
+      ],
+      "concerns": []
+    }
+  ],
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "All three files exist with exactly the required names: eval-log/run-dev-graph-system-spec-goal-spec.json (2182 B), -progress.json (23655 B), -intermediate.jsonl (9833 B).",
+      "original_goal_hash verified independently: sha256(goal-spec.original_goal) = 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454 == declared original_goal_hash.",
+      "intermediate.jsonl has 7 rows. Every row carries all six required fields (original_goal, original_goal_hash, current_goal_snapshot, delta_from_original, merged_directive_for_next, drift_signal) — zero missing on all 7. Every row's original_goal_hash equals the goal-spec hash and every row's original_goal string equals the goal-spec original_goal verbatim.",
+      "Row 0 is a genuine PRE-EXECUTION row: phase='pre-execution', ts=2026-08-04T03:16:40Z, identical to goal-spec.recorded_at. Substantive work starts in row 1 (03:22:38Z, elicit complete). Rows are strictly time-ordered and append-only: 03:16:40 -> 03:22:38 -> 03:27:33 (doc-fetch) -> 03:28:53 (compile) -> 03:50:37 (evaluator attempt1 FAIL) -> 04:06:53 (attempt2 FAIL) -> 04:32:02 (R3-import after PASS). Fixture dir mtime (12:14 local = 03:14Z) confirms nothing pre-existed.",
+      "progress.json records registered_this_run=[spec-local-todo-api-system-spec, arch-local-todo-api-backend], 18 gate entries with cmd+exit (all exit 0), 3 evidence entries (spec-state / fetched-references / spec-doc-set), 6 entry_points entries, 2 remediation entries, c02_import block (graph_revision_before=0, after=4, entry_point='dev-graph:run-dev-graph-node (Skill) -> upsert-node.py (C02 単一 writer)'), evidence_ref_audit, and known_followups.",
+      "A separate nested goal-seek trio exists for the C02 sub-skill (run-dev-graph-node-{goal-spec,intermediate,progress}), whose single intermediate row also carries all six fields with a self-consistent hash — consistent with C02 being invoked as a real skill rather than inlined."
+    ],
+    "concerns": [
+      "All 8 completion_checklist entries in progress.json are still status='pending', even though the gates section records every corresponding gate at exit 0 and the run finished. The checklist was never reconciled — bookkeeping gap, not a functional failure (the underlying gates are recorded and I re-ran them)."
+    ]
+  },
+  "integrity_checks": {
+    "verdict": "PASS",
+    "evidence": [
+      "AUDIT FORK LEDGER — no hand-editing found. All 9 rows parse as JSON, every row has the identical 7-key schema (cwd, prompt_sha256, schema_version, session_id, subagent_type, tool_name, ts), and every row is BYTE-IDENTICAL to json.dumps(row, ensure_ascii=False, sort_keys=True)+'\\n', i.e. exactly the serialization record-audit-fork.py:append_record produces. A hand-written or re-serialized row would almost certainly differ in key order or spacing. Timestamps are strictly monotonic and cluster into 3 fork batches (03:29-03:30Z, 03:51-03:52Z, 04:08-04:18Z) matching the 3 evaluator attempts recorded in intermediate.jsonl. All 9 prompt_sha256 values are distinct; single session_id; tool_name uniformly 'Agent'; subagent_type restricted to the 3 plugin-registered auditors.",
+      "PLUGIN CODE — the run did not modify it. `find plugins -newermt '2026-08-04 12:00:00'` (run window is 12:16-13:32 local) returns ONLY .pytest_cache entries; no plugin source, skill, script, or doc file has an mtime inside the run window. Every dirty file under plugins/ predates the run: system-spec-harness staged changes at 07:09:50, compile-spec-doc.py/knowledge_order.py/test_compile_spec_doc.py at 08:28-08:29, harness-creator live-trial files at 09:37-09:38 — all hours before the fixture dir was created at 12:14.",
+      "uvicorn/pydantic SCOPING — legitimate, not gate-gaming, on net. progress.json discloses the uvicorn fetch failures verbatim (uvicorn.org -> ENOTFOUND x2, uvicorn.dev -> 403 x2) and states it refused to backfill from unofficial sources. Crucially the rescope was 6 -> 7 targets: it removed uvicorn+pydantic but ADDED postgresql, flask and oauth2-authorization-framework (the D1/D2/D3 comparison candidates named in requirements-brief §4). That INCREASES the citation burden — the opposite of what gate-gaming would do. pydantic, which the run says fetched successfully, was removed under the same rule, so the rule was applied symmetrically rather than to dodge a failure. Neither name appears in any confirmed matrix cell, in requirements-brief.md, in any chapter Markdown (backend.md: 0 hits), or in the registered node bodies — the spec never commits to an ASGI server or validation library.",
+      "EVALUATOR FAILURES — recorded honestly, not hidden. progress.json entry_points contains attempt 1 status='FAIL' (completed 03:50:37Z, design_knowledge_reflection), attempt 2 status='FAIL' (completed 04:06:53Z, doc_freshness high: postgresql last_updated fabricated), attempt 3 status='PASS' (04:32:02Z). progress.json also has a `remediation` array with 2 entries naming the exact trigger for each failure, including the self-incriminating one: 'evaluator attempt 2 = FAIL (doc_freshness high: postgresql last_updated 捏造) ... 指摘は当方の誤りとして受理'. intermediate.jsonl rows 4 and 5 independently record both FAILs. The final completeness-report.json also carries 3 `info` findings describing what attempt 1/2 had flagged and how it was fixed."
+    ],
+    "concerns": [
+      "The rescope rationale in progress.json says uvicorn and pydantic are '確定セル・decision のどこにも名指しがなく' (named nowhere in confirmed cells or decisions). That is not strictly accurate: uvicorn appears 3 times and pydantic once inside confirmed decision D2's ADOPTED option (fastapi) — 'pydantic schema 検証が ... G2 に直結し、G4 も uvicorn 単体で満たす' (goal_fit), 'ASGI サーバー (uvicorn 等) の同梱が必要' (cons), and in recommendation.caveats. They are exemplar/transitive mentions, not adoption axes, so the removal is still defensible — but the stated justification overstates the case, and removing an unreachable target is precisely what lets validate-source-citation pass. I judge this legitimate scoping with an inaccurate justification, not gate-gaming, because of the net +1 target and the symmetric removal of the successfully-fetched pydantic.",
+      "The worktree's plugins/system-spec-harness is DIRTY relative to HEAD (compile-spec-doc.py modified + new untracked knowledge_order.py changing design-knowledge card ordering, plus ~28 staged files). The run did not cause this, but it means the trial exercised locally-modified harness code rather than committed code — a reproducibility caveat for whoever consumes this trial.",
+      "6 of the 9 ledger rows record cwd=/Users/.../plugins/system-spec-harness rather than the fixture root, implying the ledger path came from the SYSTEM_SPEC_AUDIT_FORK_LEDGER env override rather than CLAUDE_PROJECT_DIR resolution. The hook supports this explicitly ('テスト・live-trial 用') and no gate reads cwd, so it is not tampering — but it does mean cwd is not a usable cross-check on where the forks ran."
+    ]
+  },
+  "gate_exit_codes": {
+    "validate-coverage-matrix.py --require-complete --require-foundation": {"exit": 0, "items_checked": 48},
+    "validate-source-citation.py --targets --references --repo-root": {"exit": 0, "items_checked": 7},
+    "aggregate-completeness.py --report --fork-ledger --session --matrix --require-complete --knowledge-graph": {"exit": 0, "items_checked": 6},
+    "validate-source-digest.py --repo-root --progress": {"exit": 0, "items_checked": 2},
+    "validate-evidence-refs.py --repo-root --progress": {"exit": 0, "items_checked": 2},
+    "validate-graph-schema.py --graph --repo-root": {"exit": 0, "items_checked": 2},
+    "NEGCTRL validate-coverage-matrix (1 cell forced 未収集)": {"exit": 1, "items_checked": 48},
+    "NEGCTRL validate-source-citation (tampered retrieval-evidence/sqlite.json)": {"exit": 1, "items_checked": 7},
+    "NEGCTRL aggregate-completeness (matrix-auditor rows stripped from ledger)": {"exit": 1, "items_checked": 6},
+    "NEGCTRL validate-graph-schema (bad confirmation_status + bad file_path)": {"exit": 1, "items_checked": 2}
+  },
+  "blockers": [],
+  "notes": "All six required gates re-run by me from the plugin sources exit 0, and I confirmed none of them is vacuous: validate-source-digest/validate-evidence-refs print explicit counts (checked=2, scanned_nodes_with_evidence=2), and for the four gates that print no count I constructed negative controls on scratchpad copies (the fixture itself was never written to) — every one flipped to exit 1 with a violation naming the mutated item. Digests were recomputed independently with shasum and match per-file with no reuse. The 3 attempt-3 audit forks are grounded in a ledger that is byte-identical to the hook's own serializer, with 9 unique prompt hashes and monotonic timestamps that bracket correctly around the two disclosed evaluator FAILs. mtime analysis proves no plugin source file was touched during the 12:16-13:32 local run window. The C02-only registration claim is corroborated structurally: graph.json and both node Markdown files are 0600 (tempfile.mkstemp signature of upsert-node.py) while every Write-tool artifact in the fixture is 0644, and a leftover .graph.json.register.lock created at upsert-node.py:279 is present. Remaining issues are all sub-blocker: an unreconciled all-'pending' completion checklist in progress.json; evaluated_digest being a copy of source_digest rather than an independent node/report digest (unenforced by any gate, and semantically inconsistent with dev-graph's decompose contract); an overstated rationale sentence for the uvicorn/pydantic rescope (they ARE mentioned in confirmed decision D2's adopted-option prose, though only as exemplars — and the rescope raised the target count 6->7 and removed the successfully-fetched pydantic under the same rule, which argues against gate-gaming); and a pre-existing dirty plugins/system-spec-harness working tree that makes the trial non-reproducible against committed plugin code even though the run did not cause it."
+}

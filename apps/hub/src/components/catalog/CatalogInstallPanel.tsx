@@ -59,7 +59,7 @@ export function CatalogInstallPanel({
 
   return (
     <section aria-labelledby="catalog-install-heading">
-      <h3 id="catalog-install-heading">導入する</h3>
+      <h2 id="catalog-install-heading">導入する</h2>
 
       {releaseId === null ? (
         <p>公開されている版がまだありません。</p>

@@ -1,52 +1,52 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-status",
-    "component_id": "C18",
-    "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260804-c18-r2",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "test_validate_graph_schema_and_main and test_c11_uses_canonical_schema_and_frontmatter_path_contract PASSED (C11 reads via the canonical schema + frontmatter path contract). Independent validate-graph-schema.py on r3-status (1 node) and r2-status (1 node) returned exit0 with valid=true, violations=[], missing_sections=[]: the read result carries the full required-key set with zero missing keys, matching the graph store's actual state.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
         "plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py::test_c11_uses_canonical_schema_and_frontmatter_path_contract",
         "independent: scripts/validate-graph-schema.py --graph eval-log/dev-graph/live-trial-fixtures/r3-status/.dev-graph/state/graph.json"
       ],
-      "observed": "test_validate_graph_schema_and_main and test_c11_uses_canonical_schema_and_frontmatter_path_contract PASSED (C11 reads via the canonical schema + frontmatter path contract). Independent validate-graph-schema.py on r3-status (1 node) and r2-status (1 node) returned exit0 with valid=true, violations=[], missing_sections=[]: the read result carries the full required-key set with zero missing keys, matching the graph store's actual state."
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T125000Z-o4zi-exh-c18 は overall=PASS、nudge=0、gate=0。status/closed_at/dependency の field-by-field 一致、ready/blocked 判定、graph/config/content hash 不変、external tracker write 0件を fresh independent evaluator が再実測して PASS。behavior closure digest=da4c3d51feda90e061c4c680a58dff74362ec9af88bd5ea2814480edfeaee3b9。",
       "scenario_id": "C18-OUT1-positive-read-only-status",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T125000Z-o4zi-exh-c18/independent-verification.json"
       ],
-      "observed": "main 統合後の fresh live trial 20260804T071000Z-ci-c18-r2 は overall=PASS、nudge=0、gate=0。別 fresh evaluator が 2 nodes × 17 fields の全項目照合、依存 edge からの ready/blocked 再導出、Git 差分・hash・GitHub state の非変更を実体証拠から PASS と判定した。behavior closure digest=92db4c414b7ac609b3f519e94ccb1ee9a2b3daf6ac94cf8a8579f4ea31cc6326。"
+      "verify_by": "live-trial"
     },
     "OUT2": {
-      "status": "PASS",
-      "verify_by": "test",
       "evidence_kind": "hybrid",
+      "observed": "Independent 2026-07-20 audit confirmed graph/config/content authority mutation is rejected, the reader holds a shared graph lock for the whole query, and pending WAL is fail-closed. An eval-log root symlink was rejected before write with the outside directory remaining empty; graph/content/tracker bytes were unchanged.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_semantic_contract_boundaries_c10_c11_c24.py::test_c10_invokes_c11_then_still_rejects_direct_mutation",
         "plugins/dev-graph/tests/test_operational_loop_v2.py::test_readers_reject_eval_log_symlink_escape_before_writing",
         "plugins/dev-graph/tests/test_operational_loop_v2.py::test_node_writer_waits_for_whole_reader_operation_lock",
         "independent: KeyboardInterrupt/WAL/authority mutation probes"
       ],
-      "observed": "Independent 2026-07-20 audit confirmed graph/config/content authority mutation is rejected, the reader holds a shared graph lock for the whole query, and pending WAL is fail-closed. An eval-log root symlink was rejected before write with the outside directory remaining empty; graph/content/tracker bytes were unchanged."
+      "verify_by": "test"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C18",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-status",
+    "skill_md_sha256": "2cc7359b79195da6c920f25d56416c7b666a2a8b72fd1f2c7c30b3211a7697d7"
+  },
+  "verdict": "PASS"
 }

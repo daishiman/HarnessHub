@@ -1,0 +1,73 @@
+{
+  "feature_package_id": "feature-package/LT-FEATURE-001",
+  "generated_by": "build_live_trial_fixture.py --kind render",
+  "parent_feature": "LT-FEATURE-001",
+  "phases": [
+    {
+      "graph_node_id": "LT-FEATURE-001-P01",
+      "phase_ref": "P01",
+      "title": "入力契約の確定"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P02",
+      "phase_ref": "P02",
+      "title": "データモデル定義"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P03",
+      "phase_ref": "P03",
+      "title": "永続化層の実装"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P04",
+      "phase_ref": "P04",
+      "title": "ドメインロジックの実装"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P05",
+      "phase_ref": "P05",
+      "title": "API ハンドラの実装"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P06",
+      "phase_ref": "P06",
+      "title": "認可と入力検証"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P07",
+      "phase_ref": "P07",
+      "title": "単体テスト"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P08",
+      "phase_ref": "P08",
+      "title": "結合テスト"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P09",
+      "phase_ref": "P09",
+      "title": "エラー処理と回復"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P10",
+      "phase_ref": "P10",
+      "title": "可観測性の配線"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P11",
+      "phase_ref": "P11",
+      "title": "受入テスト"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P12",
+      "phase_ref": "P12",
+      "title": "移行とロールバック手順"
+    },
+    {
+      "graph_node_id": "LT-FEATURE-001-P13",
+      "phase_ref": "P13",
+      "title": "リリースと引き継ぎ"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

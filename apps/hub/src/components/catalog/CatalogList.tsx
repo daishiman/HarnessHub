@@ -98,6 +98,14 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
 
       <form
         aria-label="カタログの絞り込み"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'flex-end',
+          gap: 'var(--hh-space-3)',
+          padding: 'var(--hh-space-4)',
+          borderBlockEnd: '1px solid var(--hh-color-border)',
+        }}
         onSubmit={(event) => {
           event.preventDefault();
           setAppliedTarget(target);

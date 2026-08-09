@@ -51,7 +51,13 @@ def harness_metadata(manifest: dict, contract: dict | None) -> dict:
 def _hook_file_from_token(token: str) -> str | None:
     """command token から plugin-relative ``hooks/`` のファイル名を返す。"""
     if "/hooks/" in token:
-        return token.split("/hooks/", 1)[1]
+        prefix, rest = token.split("/hooks/", 1)
+        # プラグイン自身の hooks/ だけを対象にする。CLAUDE_PLUGIN_ROOT 展開を
+        # 経由しない "/hooks/" 部分文字列 (.git/hooks/pre-commit 等) は無関係だが、
+        # "./hooks/foo.py" のように非該当プレフィックスでも下の相対記法チェックへ
+        # 続ける必要があるため、ここでは None を確定させない。
+        if prefix.rstrip("}").endswith("CLAUDE_PLUGIN_ROOT"):
+            return rest
     if token.startswith("./hooks/"):
         return token.removeprefix("./hooks/")
     if token.startswith("hooks/"):
@@ -96,27 +102,37 @@ def hook_files_in_event_map(event_map, *, require_plugin_root: bool = False) -> 
     return files
 
 
-def registered_hook_files(plugin_dir: pathlib.Path, manifest: dict | None) -> set[str]:
-    """manifest inline と hooks/hooks.json の登録を和集合で返す。"""
+def registered_hook_files(
+    plugin_dir: pathlib.Path, manifest: dict | None
+) -> tuple[set[str], str | None]:
+    """manifest inline と hooks/hooks.json の登録を和集合で返す。
+
+    hooks.json の構文エラーは黙って握りつぶさず error として返す。呼び出し側が
+    握りつぶすと、実際は登録済みの hook が HK-002 (未登録) 扱いで誤検出される。
+    """
     files = hook_files_in_event_map((manifest or {}).get("hooks"))
     hooks_json = plugin_dir / "hooks" / "hooks.json"
     if hooks_json.is_file():
         try:
             document = json.loads(hooks_json.read_text())
-        except (OSError, ValueError, json.JSONDecodeError):
-            return files
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            return files, f"{hooks_json}: {exc}"
         if isinstance(document, dict):
             files |= hook_files_in_event_map(document.get("hooks"))
-    return files
+    return files, None
 
 
 def is_import_only_support_module(path: pathlib.Path) -> bool:
-    """hooks/ の未宣言ファイルが import 専用 support module かを判定する。"""
+    """hooks/ の未宣言ファイルが import 専用 support module かを判定する。
+
+    stem が isidentifier() でない (kebab-case 等) 場合は import 文で読み込めない
+    ため、常に entry point 命名として扱う (support module 扱いにしない)。
+    """
     if path.suffix != ".py" or not path.stem.isidentifier():
         return False
     try:
         text = path.read_text(encoding="utf-8")
-    except OSError:
+    except (OSError, UnicodeDecodeError):
         return False
     if text.startswith("#!"):
         return False
