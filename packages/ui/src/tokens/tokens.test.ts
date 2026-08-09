@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  breakpointTokens,
   buildThemeCss,
   chartSeriesTokens,
   checkContrastRequirements,
@@ -11,6 +12,7 @@ import {
   contrastRequirements,
   densityNames,
   densityTokens,
+  mediaUp,
   radiusTokens,
   spacingTokens,
   themeNames,
@@ -138,5 +140,25 @@ describe('buildThemeCss', () => {
   it('余白・書体の変数を出力する', () => {
     expect(css).toContain('--hh-space-4: 16px;');
     expect(css).toContain('--hh-font-size-md: 16px;');
+  });
+
+  /**
+   * breakpoint を CSS 変数として出しておくと、部品や app 側が「今どこで折り返しているか」を
+   * 数値の直書きなしに参照できる。分岐そのものは @media (= base 層) が持つ。
+   */
+  it('breakpoint を CSS 変数として配る', () => {
+    expect(css).toContain(`--hh-breakpoint-md: ${breakpointTokens.md}px;`);
+    expect(css).toContain(`--hh-breakpoint-lg: ${breakpointTokens.lg}px;`);
+  });
+
+  /** 段階が逆転すると @media の条件が重なり、狭い方の規則が広い方を上書きしてしまう。 */
+  it('breakpoint は昇順で重複しない', () => {
+    const values = Object.values(breakpointTokens);
+    expect([...values].sort((a, b) => a - b)).toEqual(values);
+    expect(new Set(values).size).toBe(values.length);
+  });
+
+  it('mediaUp が token の値から @media 前置きを組み立てる', () => {
+    expect(mediaUp('md')).toBe(`@media (min-width: ${breakpointTokens.md}px)`);
   });
 });

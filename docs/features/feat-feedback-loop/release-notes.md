@@ -1,6 +1,6 @@
 ---
 title: "feat-feedback-loop リリース記録 (P13)"
-status: rolled_back_pending_feedback_production_smoke
+status: deployed_pending_feedback_production_smoke
 layer: feature-release
 graph_node_id: "SYS-FEEDBACK-LOOP-P13"
 beads_linkage: "HarnessHub-1vb.13"
@@ -54,10 +54,28 @@ P01〜P12 は全て CLOSED、mandatory evidence 6 項目は全て PASS 済み([e
 
 quality_constraints 8 件は 8 件とも PASS([final-review-notes.md](final-review-notes.md))。
 
+## 実測による更新 (2026-08-08)
+
+上記「ロールバック後」の記述は、**現在の本番状態とは食い違う**ため以下で是正する。main `44109782` の hub-ci run [31240466397](https://github.com/daishiman/HarnessHub/actions/runs/31240466397) は deploy job の全 step が success で、`失敗時ロールバック` は **skipped** だった。
+
+| 項目 | 状態 |
+|---|---|
+| production migration 適用 | success |
+| wrangler deploy | success |
+| `/health` 疎通・配信版一致ゲート・稼働ビルド鮮度検査 | いずれも success |
+| 本番 OIDC smoke | success |
+| 本番 DB / R2 smoke (6 項目) | success |
+| 本番 hearing smoke (`tenant_mismatch` の 404/403 乖離) | **success** — 乖離は既存契約へ収束済み |
+| 失敗時ロールバック | skipped |
+
+したがって「残る実施順序」の 1・2 は完了、Worker はロールバック状態ではなく本 feature を含む main が配信されている。frontmatter の `status` を `rolled_back_pending_feedback_production_smoke` → `deployed_pending_feedback_production_smoke` へ改めた。
+
+**残っているのは Feedback 固有の 3 項目 (下記 3〜5) だけであり、その未測定の理由は「デプロイされていないから」ではなく「測る手段が実装されていないから」である。** `apps/hub/scripts/` に存在する本番 smoke は hearing / publish / oidc の 3 系統のみで、Feedback 用は無い。人手確認で済ませると次のデプロイで壊れても気付けないため、`smoke-production-hearing.ts` と同型の `smoke-production-feedback.ts` を実装し `ci.yml` の smoke 群へ結線するのが正しい塞ぎ方である。
+
 ## 残る実施順序
 
-1. Hearing スモークの期待 HTTP status（404）と実際の `tenant_mismatch`（403）の乖離を、担当 P13 で既存契約へ収束させる。
-2. successful `hub-ci` run で `0007_feedback-loop-builds.sql` の適用を再確認する(`feedbacks` は新規テーブルのため backfill 不要)。
+1. ~~Hearing スモークの期待 HTTP status（404）と実際の `tenant_mismatch`（403）の乖離を、担当 P13 で既存契約へ収束させる。~~ **完了 (run 31240466397 で hearing smoke success)**
+2. ~~successful `hub-ci` run で `0007_feedback-loop-builds.sql` の適用を再確認する~~ **完了 (同 run の production migration step success)**
 3. S14 (`/feedback`) の本番到達性を確認する。
 4. feedback API (`POST/GET /api/v1/feedback`) の本番疎通を確認する。
 5. AI キュー pull 疎通を確認する: workspace-admin による自 tenant pull、provider-admin による cross-tenant pull と `provider.cross_tenant_access` 監査記録。
@@ -65,4 +83,12 @@ quality_constraints 8 件は 8 件とも PASS([final-review-notes.md](final-revi
 
 ## Rollback
 
-いずれかのスモークテストが失敗した場合、cloudflare-workers/hub を直前バージョンへロールバックする。migration が適用済みの場合は down migration を実行してから、原因調査を P05(実装)/P08(migration)へ差し戻す。
+いずれかのスモークテストが失敗した場合、cloudflare-workers/hub を直前バージョンへロールバックする。migration は expand-only の既定契約に従い自動 down せず、DB を前進させたまま原因調査を P05(実装)/P08(migration)へ差し戻す。
+
+## 2026-08-08 production coverage smoke 準備
+
+`HarnessHub-p0lr` の F1〜F5 で投稿、AI queue pull/complete、応答書戻し、状態遷移を同じ使い捨て tenant で検査できるようにした。local focused test / typecheck は PASS。provider-admin 越境の edge/route 不一致 (`HarnessHub-stmx`) と production run は残課題であり、P13 は未完了のままとする。
+
+## 2026-08-08 production coverage smoke 実走結果
+
+main `35a10b87` の hub-ci run `31253674292` で F1〜F5 が SUCCESS。feedback 作成、`feedback_response` pull/complete、AI 応答書戻し、`open → in_progress → resolved` を本番 DB で確認し、cleanup 後の残存行は 0 だった。ただし S8 は provider-admin 越境を edge が 404 で止め、`provider.cross_tenant_access` 監査行は 0 の現行挙動を確認した。これは `HarnessHub-stmx` の未解決契約そのものなので、Feedback P13 は in_progress を維持する。

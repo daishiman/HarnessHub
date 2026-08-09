@@ -125,10 +125,24 @@ def _assert_scenario_contract(
         _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
+# Fix 済みの既知 live-trial failure は残さない。strict xfail を残すと fresh PASS が
+# XPASS になり、回帰修正そのものを CI failure として扱ってしまう。
+_KNOWN_LIVE_TRIAL_FAILURES: dict[str, str] = {}
+
+
+def _targets_with_known_xfail() -> list:
+    params = []
+    for target in _targets():
+        component_id = target[0]
+        reason = _KNOWN_LIVE_TRIAL_FAILURES.get(component_id)
+        marks = [pytest.mark.xfail(reason=reason, strict=True)] if reason else []
+        params.append(pytest.param(*target, id=component_id, marks=marks))
+    return params
+
+
 @pytest.mark.parametrize(
     ("component_id", "skill_name", "skill_path", "criteria_ids"),
-    _targets(),
-    ids=lambda value: value if isinstance(value, str) else None,
+    _targets_with_known_xfail(),
 )
 def test_independent_scenario_receipt_covers_exact_criteria(
     component_id: str,

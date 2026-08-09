@@ -59,9 +59,15 @@ interface CatalogRequestInit {
  * **初回チャンク**に載り、`/catalog/[projectId]` が 139.6 KiB と予算 120.0 KiB を超えた。
  * 検証を外す選択は取らない — 契約違反の応答をそのまま描くと誤った導入情報を出しうる (§2.1)。
  * 初回描画に検証器は要らないので、必要になる瞬間まで読み込みを遅らせるだけにする。
- * import は fetch の**前**に開始して並走させるため、往復が増えることはない。
+ *
+ * 読み込み開始点は「fetch の前」から「**検証すべき本文があると分かった後**」へ移した (HarnessHub-aqi)。
+ * 実測 (2026-08-08, Lighthouse mobile / CPU 4x / benchmarkIndex 2830): `/catalog` の TBT 41ms のうち
+ * 32ms が検証器チャンクの評価 (82ms の long task) で、その全量が捨てられていた。
+ * 消費先 `/api/v1/harnesses*` は未実装 (ports.ts / ADR §0 A2) のため応答は 404 で、
+ * 検証へ到達しないまま zod 一式を評価していたからである。
+ * 往復については、本文の読み出し (`response.json()`) と chunk 取得を並走させることで取り返している。
  */
-type CatalogSchemas = typeof import('@harness-hub/schemas');
+type CatalogSchemas = typeof import('./response-schemas.js').catalogResponseSchemas;
 type SchemaSelector<T> = (schemas: CatalogSchemas) => ZodType<T>;
 
 async function request<T>(
@@ -74,13 +80,6 @@ async function request<T>(
   if (headers === null) {
     return failure('forbidden', null, 'Workspace が特定できないため表示できません。');
   }
-
-  // scope 検証を通ってから読み込む。送らない要求のために chunk を取りに行かない。
-  // 応答が失敗して検証まで到達しない経路でも未処理の拒否を残さないよう、ここで結果を包んでおく
-  const schemasPromise = import('@harness-hub/schemas').then(
-    (schemas) => schemas,
-    () => null,
-  );
 
   const requestInit: RequestInit = {
     method: init.method,
@@ -104,13 +103,21 @@ async function request<T>(
     return failure(kind, response.status, failureMessage(kind), retryAfterSeconds);
   }
 
+  // ここで初めて検証器を取りに行く。chunk 取得と本文の読み出しは並走させる。
+  // 応答が失敗して検証まで到達しない経路でも未処理の拒否を残さないよう、ここで結果を包んでおく
+  const schemasPromise = import('./response-schemas.js').then(
+    (module) => module.catalogResponseSchemas,
+    () => null,
+  );
+  const payload = await response.json().catch(() => null);
+
   const schemas = await schemasPromise;
   if (schemas === null) {
     // 検証器そのものを取得できない = 実質オフライン。Hub 停止と同じ縮退へ寄せる (§6.1)
     return failure('degraded', response.status, 'Hub に接続できません。導入済みのツールはそのまま使えます。');
   }
 
-  const parsed = selectSchema(schemas).safeParse(await response.json().catch(() => null));
+  const parsed = selectSchema(schemas).safeParse(payload);
   if (!parsed.success) {
     // 契約違反の応答を UI が推測で補完すると、誤った導入情報を表示しうる
     return failure('fatal', response.status, '表示できない形式のデータが返りました。');

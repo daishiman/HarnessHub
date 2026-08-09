@@ -12,8 +12,8 @@ iteration: null
 title: "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:36:11Z"
-updated_at: "2026-07-24T12:36:11Z"
-status: "draft"
+updated_at: "2026-08-04T07:56:17Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

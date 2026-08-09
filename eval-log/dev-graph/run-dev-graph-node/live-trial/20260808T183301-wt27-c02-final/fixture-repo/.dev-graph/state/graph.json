@@ -1,0 +1,496 @@
+{
+  "graph_revision": 6,
+  "nodes": [
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/arch-order-processing-backend.md",
+          "confidence": 0.98
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/arch-order-processing-backend.md",
+          "confidence": 0.17
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "系全体の構成・境界・subtype (backend/security) を定義するため architecture へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:37:12Z",
+      "depends_on": [],
+      "domain": "product-platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/arch-order-processing-backend.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "arch-order-processing-backend",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:37:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02final",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [],
+      "resource_scope": [
+        "architecture/arch-order-processing-backend.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:37:12Z",
+        "origin_kind": "manual",
+        "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "architecture",
+        "backend",
+        "security",
+        "infrastructure"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:37:12Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/spec-rest-api-v2-migration.md",
+          "confidence": 0.98
+        },
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/spec-rest-api-v2-migration.md",
+          "confidence": 0.18
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "機能要件・API契約・互換性/移行を定める仕様であり、破壊的変更を含むため specification へ写像し api-contract overlay を合成した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:37:12Z",
+      "depends_on": [],
+      "domain": "product-platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/spec-rest-api-v2-migration.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "spec-rest-api-v2-migration",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:37:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02final",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "arch-order-processing-backend",
+        "task-public-api-rate-limit"
+      ],
+      "resource_scope": [
+        "specs/spec-rest-api-v2-migration.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:37:12Z",
+        "origin_kind": "manual",
+        "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "api",
+        "specification",
+        "migration",
+        "breaking-change"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "REST API v2 移行仕様",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:42:51.866278Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/task-public-api-rate-limit.md",
+          "confidence": 0.96
+        },
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/task-public-api-rate-limit.md",
+          "confidence": 0.2
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "目的・入力と前提条件・実行手順・受入条件を持つ実行単位のため task へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:37:12Z",
+      "depends_on": [],
+      "domain": "product-platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/task-public-api-rate-limit.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "task-public-api-rate-limit",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:37:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02final",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "spec-rest-api-v2-migration",
+        "arch-order-processing-backend"
+      ],
+      "resource_scope": [
+        "tasks/task-public-api-rate-limit.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:37:12Z",
+        "origin_kind": "manual",
+        "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "backend",
+        "api",
+        "rate-limiting"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "公開 API エンドポイントへレートリミットを実装する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:37:12Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/iss-session-timeout-not-enforced.md",
+          "confidence": 0.97
+        },
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/iss-session-timeout-not-enforced.md",
+          "confidence": 0.21
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "既存挙動の不具合報告 (現在の挙動・期待する挙動・再現手順) の構造を持つため issue へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:37:12Z",
+      "depends_on": [],
+      "domain": "product-platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/iss-session-timeout-not-enforced.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "iss-session-timeout-not-enforced",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:37:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02final",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "arch-order-processing-backend",
+        "spec-rest-api-v2-migration"
+      ],
+      "resource_scope": [
+        "issues/iss-session-timeout-not-enforced.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:37:12Z",
+        "origin_kind": "manual",
+        "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "bug",
+        "security",
+        "session-management"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ログインセッションのタイムアウトが強制されない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:37:12Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/doc-dev-environment-setup.md",
+          "confidence": 0.97
+        },
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/doc-dev-environment-setup.md",
+          "confidence": 0.16
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "対象読者へ手順と運用を伝える解説文書のため document へ写像した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-08T09:37:12Z",
+      "depends_on": [],
+      "domain": "product-platform",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/doc-dev-environment-setup.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "doc-dev-environment-setup",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T09:37:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "onboarding",
+      "owners": [
+        "dev-graph-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "c02final",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "arch-order-processing-backend"
+      ],
+      "resource_scope": [
+        "docs/doc-dev-environment-setup.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": "2026-08-08T09:37:12Z",
+        "origin_kind": "manual",
+        "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+        "source_path": "mixed-artifacts.json",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "documentation",
+        "onboarding",
+        "developer-guide"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "開発環境セットアップの手引き",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-08T09:37:12Z"
+    }
+  ],
+  "repository_id": "local:sha256:5c756b3e5636b3dc14df8a658660e22470d6afb72789eb198991c5f1f01458a4",
+  "schema_version": "1.0.0"
+}

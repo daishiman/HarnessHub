@@ -14,7 +14,8 @@ source_digest: sha256:2b8b98b7ea12e01a3628583051d98647558e7cae652c5e38aee39a4e87
 | P07 | [acceptance-report.md](../acceptance-report.md) | acceptance 3件の判定、quality constraint 9 ID exact-set |
 | P09 | [quality-assurance-report.md](../quality-assurance-report.md) | axe、Tenant分離、PII運用readiness、認可単一middleware、Worker/Client bundle |
 | P10 | [final-review-notes.md](../final-review-notes.md) | acceptance 3件・quality constraint 9件の最終再突合 |
-| Review | [final-review-receipt.md](../final-review-receipt.md) | 2026-08-04 再レビューの判定、仕様影響なしの理由、受入・品質ゲートの再実行結果 |
+| Review | [final-review-receipt.md](../final-review-receipt.md) | 仕様影響なしの理由、受入・品質ゲートの再実行結果 |
+| Post-merge | [post-merge-lifecycle-receipt.md](../post-merge-lifecycle-receipt.md) | 2026-08-07: PR #657 merge 後の main 再検証、Beads P05〜P12 close、P13 残置 |
 
 ## salary 読取監査ログ / 係数変更監査 event ログの一次証跡
 

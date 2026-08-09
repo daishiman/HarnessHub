@@ -1,0 +1,24 @@
+{
+  "skill": "dev-graph:run-dev-graph-requirements",
+  "scenario": "C04-OUT1-positive-ready-handoff",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T183330-wt27-c04-retry/fixture-repo",
+  "feature_id": "F-LIVE-001",
+  "original_goal": "system-spec-harness確定成果物とsystem development task planを含むグラフ情報から実装要件を導出し、implementation-readiness完了時だけcapability-build/task-graph buildへ実装をhandoffした状態になっている",
+  "original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+  "why": "実装コード生成は capability-build/task-graph build へ責務分離し、本 skill は readiness を機械判定して要件定義と handoff までを担う (要件C20)。",
+  "checklist": [
+    "scope 内 node の feature/package/system-spec lineage closure が欠落0である",
+    "C11 report と C02 保存済み readiness/evaluation が一致する",
+    "lineage closure 全件を --registered に渡した validate-source-digest.py が exit 0 である",
+    "validate-system-plan.py --repo-root <root> --feature-package <feature_package_id> が PASS する",
+    "incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される",
+    "全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される",
+    "本 skill が生成した実装 code file が0件である"
+  ],
+  "goal_seek": {
+    "engine": "inline",
+    "fork": "subagent",
+    "max_loops": 5
+  },
+  "created_before_skill_execution": true
+}

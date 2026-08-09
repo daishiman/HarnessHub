@@ -1,0 +1,102 @@
+{
+  "node": {
+    "graph_node_id": "arch-c02-writer-boundary",
+    "artifact_kind": "architecture",
+    "artifact_subtypes": [
+      "backend",
+      "data"
+    ],
+    "title": "単一 writer の書込境界と graph store の整合",
+    "project_id": "c02fix",
+    "domain": "dev-workflow",
+    "status": "draft",
+    "owners": [
+      "dev-graph-harness"
+    ],
+    "tags": [
+      "live-trial",
+      "c02-out1",
+      "architecture"
+    ],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-08T03:10:03Z",
+    "updated_at": "2026-08-08T03:10:03Z",
+    "depends_on": [],
+    "related_nodes": [
+      "iss-c02-mixed-routing",
+      "spec-c02-mixed-batch-contract"
+    ],
+    "resource_scope": [
+      "architecture/arch-c02-writer-boundary.md"
+    ],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "architecture/arch-c02-writer-boundary.md",
+    "template_id": "architecture",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": "mixed-artifacts.json",
+      "source_version": null,
+      "source_digest": "db95e0994a17f656d563447b0d7398f43cff896ba1081cfec061711e06001ad8",
+      "imported_at": "2026-08-08T03:10:03Z"
+    },
+    "classification_confidence": 0.99,
+    "classification_reason": "構成と subtype (backend/data) の境界を定義するため architecture へ写像した",
+    "classification_candidates": [
+      {
+        "artifact_kind": "architecture",
+        "confidence": 0.99,
+        "candidate_path": "architecture/arch-c02-writer-boundary.md"
+      },
+      {
+        "artifact_kind": "specification",
+        "confidence": 0.19,
+        "candidate_path": "specs/arch-c02-writer-boundary.md"
+      }
+    ],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "complete",
+      "missing_sections": [],
+      "checked_at": "2026-08-08T03:10:03Z"
+    }
+  }
+}

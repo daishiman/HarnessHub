@@ -1,0 +1,12 @@
+{
+  "target_id": "sqlite",
+  "tool": "WebFetch",
+  "requested_url": "https://www.sqlite.org/changes.html",
+  "official_host": "www.sqlite.org",
+  "extracted": {
+    "current_release_version": "3.53.4",
+    "current_release_date": "2026-07-24"
+  },
+  "note": "SQLite 公式 documentation index (https://www.sqlite.org/docs.html) は現行版番号を表示しないため、同一公式 host の Release History ページを版数の一次出典として取得した。",
+  "retrieved_at": "2026-08-08T14:18:30Z"
+}

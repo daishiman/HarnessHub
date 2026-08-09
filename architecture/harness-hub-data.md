@@ -58,6 +58,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
 - 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は data 層の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/database.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+利用者の設定と実行履歴を、消失や tenant 間混同を防ぎながら継続的に保存する。
+
+### U2 背景 (background)
+
+単一サービスへの固定や復元未検証のバックアップは、障害時の継続性とデータ信頼性を損なう。
+
+### U3 ゴール (goals)
+
+SQLite 互換のデータ境界、移植可能な ORM、検証済みの export/restore 経路を維持する。
+
+### U4 目標 (objectives)
+
+Turso/libSQL を現行系、D1 を退避可能な経路とし、expand/contract で安全に schema を更新する。
+
+### U5 成功基準 (success_criteria)
+
+境界値・migration・tenant 分離試験と定期 restore drill が成功することを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、Workspace 管理者、data/backend 開発者、バックアップと障害復旧の担当者を対象とする。
+
+### U7 スコープ (scope)
+
+control-plane DB、schema migration、保存形式、export、restore、データアクセス境界を扱う。
+
+### U8 制約 (constraints)
+
+破壊的 migration、検証されない JSON、復元不能なバックアップ、tenant 無指定アクセスを禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+通常運用では一貫して保存し、障害時には証跡付きで別経路へ復元できるようにする。
+
+### 意思決定支援 (decisions)
+
+固有機能と移植性が競合するときは、SQLite 方言互換と復元可能性を優先する。
+
 ## Architecture overview
 
 正本: system-spec/database.md。Turso Free + Drizzle (D1 両対応で退避経路温存)、R2 = immutable PackageRegistry、日次 export + 四半期 restore drill (qa-019)。doctrine anchor: Clean Architecture (data-access) + Google SRE (reliability)。

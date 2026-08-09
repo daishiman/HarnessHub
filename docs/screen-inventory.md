@@ -22,6 +22,7 @@ sources: [system-spec/ui-ux.md, system-spec/frontend.md, system-spec/00-requirem
 | S05 | 承認キュー (Yellow review) | workspace-admin | 2 | P5 (低) | feat-workspace-governance | I8 |
 | S06 | 監査ログ・export | workspace-admin | 2 | P5 (低) | feat-workspace-governance | I8 |
 | S07 | サインイン (テナント解決 → IdP redirect) | 全員 (未認証) | 1 | **P0 (最初)** | feat-auth-tenancy | qa-005 |
+| S07-L | **ランディング入口** (`/` テナント ID 入力・前回テナント導線・稼働確認。認証済みは着地 redirect または Workspace 選択) | 全員 | 1 | **P0 (最初)** | feat-post-signin-scope-routing (+ 入口選択は feat-workspace-switch-ux 一部) | qa-005, qa-135, issue-hub-root-500-signin-20260808 |
 | S08 | Device 承認 (Publisher の verification code 確認) | owner | 1 | **P0 (最初)** | feat-auth-tenancy | qa-008 |
 
 ### Harness Studio mockup 由来の追加画面 (2026-07-17 反映。根拠: [mockups/harness-studio-v2-analysis.md](mockups/harness-studio-v2-analysis.md))
@@ -29,6 +30,7 @@ sources: [system-spec/ui-ux.md, system-spec/frontend.md, system-spec/00-requirem
 | ID | 画面 | 主な role | Stage | 優先度 | 担当 feature | mock id |
 |---|---|---|---|---|---|---|
 | S09 | ダッシュボード (KPI・推移・完了率・ランキング・部門別削減) | member 以上 | 拡張 | P5 (低) | feat-metrics-tracking | dashboard |
+| S09-L | **着地ダッシュボード** (サインイン後の既定着地。所属コンテキスト常時表示＋切替 / 最近の作業を種別横断 / 既存画面への導線 / 稼働状況は異常時のみ) | member 以上 | 拡張 | **P0-P1 (前倒し)** | feat-post-signin-scope-routing 系 | — (S09 の KPI とは別画面) |
 | S10 | ハーネス ヒアリング (4 ステップウィザード・削減試算) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |
 | S11 | ヒアリングシート一覧 | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheets |
 | S12 | ヒアリングシート詳細 (status 変更は admin) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheet-detail |

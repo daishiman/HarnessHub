@@ -1,0 +1,18 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+      "component_id": "C02",
+      "skill": "run-dev-graph-node",
+      "criterion_id": "OUT1",
+      "mode": "positive",
+      "task_args_template": "add --repo-root <contained-fixture-repo> --input <contained-fixture-repo>/mixed-artifacts.json",
+      "fixture_contract": "A contained initialized repository supplies one valid issue, task, specification, architecture, and document artifact in a single input batch.",
+      "required_observations": [
+        "all five artifacts are routed to canonical kind paths",
+        "frontmatter kind and stored path agree after a consecutive update",
+        "no feature is created outside the C14 macro-feature contract"
+      ]
+    }
+  ]
+}

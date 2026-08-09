@@ -1,29 +1,22 @@
 {
- "schema": "run-dev-graph-decompose/goal-spec/1.0.0",
- "recorded_at": "2026-07-24T20:58:52Z",
- "original_goal": "自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready featureごとにsystem-dev-planner(ミクロ層)を自動起動または手動`/system-dev-plan`実行結果を受理してpromoted typed task群をparent_feature付きでC02へatomic登録し、binding=beadsはC28へissue/依存edge、binding=githubはC12へIssue/任意Projects、binding=noneはローカルのみへ冪等投影した状態になっている",
- "arguments": {
-  "want": "タスク仕様書がテスト戦略 (単体・結合・境界値・回帰の4レベル網羅、カバレッジ80%目標、層別方針、保守性制約) を必ず持つよう system-dev-planner の task spec テンプレートへ必須セクションとして組み込み、欠落を fail-closed で拒否する仕組みを作る",
-  "input_source": "system-spec/testing-qa.md (confirmed, qa-070/qa-072/qa-073/qa-075 + D8) + arch-harness-hub-testing-qa",
-  "granularity": "feature 単位 macro 1件のみ（P01..P13 task 細分解は system-dev-planner へ委譲）。ユーザー判断で F1 のみ採用、層別テスト方針 (F4) は F1 の scope_in へ内包",
-  "dependency_policy": "既存 graph の feature を突き合わせ、変更対象領域 (plugins/system-dev-planner) が独立で先行依存を持たないため depends_on=[] とし ready 状態で登録。関連は related_nodes で表現 (graph_node_id+source_digest 冪等キー、二重登録 0)",
-  "dry_run": false,
-  "tracker_binding": "beads (execution_tracker.mode=beads, github.enabled=false)"
- },
- "repo_context": {
-  "repo_root": "resolved via C24 resolve-repo-context.py --mode write",
-  "head_sha": "abd46e5ac2e2413235b39d77b1c1912a6fd6f262",
-  "branch": null,
-  "repository_id": "github:daishiman/HarnessHub",
-  "worktree_id": "wt_c7ad933de460679c"
- },
- "checklist": [
-  {"id": "CL1", "text": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である"},
-  {"id": "CL2", "text": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である"},
-  {"id": "CL3", "text": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす"},
-  {"id": "CL4", "text": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である"},
-  {"id": "CL5", "text": "beads/github/none の各 task が単一 projection authority と linkage を持つ"},
-  {"id": "CL6", "text": "--dry-run の local/Beads/GitHub/Projects write count が0である（本 run は dry-run 非指定だが preview 段は stdin 経路で write 0 を維持）"}
- ],
- "run_note": "2026-07-24 wt-8: 確定 testing-qa 章を入力にした macro decompose。新規 feature 1件 (feat-task-spec-test-strategy) を draft/pending/incomplete で登録し、tracker 投影は plan verb の evaluator PASS 後まで行わない。F2〜F5 (実行基盤/カバレッジゲート/再現性) は本 run の対象外で後続 run へ繰り延べ。"
+  "verb": "decompose",
+  "original_goal": "確定仕様追補 spec-post-signin-landing-observability を入力に、サインイン後に業務画面へ到達できない問題の原因究明と遷移経路の継続検証の仕組みを、feature ノード群 + architecture 参照 + 機能間 depends_on のマクロ分解として dev-graph へ登録し、ready feature ごとに system-dev-planner (ミクロ層) へ渡せる状態にする。phase task の独自生成は行わない。",
+  "original_goal_hash": "3e70234bda54040b24bc0cada031c9b2edcf74ce95e7863b23739e14fa280370",
+  "session_id": "2a867db2-97cd-44c5-a79b-0201576fee3a",
+  "input": {
+    "spec_node": "spec-post-signin-landing-observability",
+    "spec_source_digest": "e1ecf64f6bd0dfc66926fc252aae33dd70303563a0bfda48954e3f58f64a9146",
+    "spec_evaluation_status": "fail",
+    "spec_status": "draft",
+    "user_decision_ref": "appr-039",
+    "user_decision_note": "完成度 evaluator の総合 FAIL を承知の上で decompose 以降へ進む判断を利用者が下した (appr-039)。緩めたのは『evaluator 総合 PASS を以降の verb の前提とする』点のみ。"
+  },
+  "tracker_binding": "beads",
+  "planned_features": [
+    "feat-build-identity-deploy-freshness",
+    "feat-runtime-env-resolution-discipline",
+    "feat-post-signin-transition-observability",
+    "feat-classification-vocabulary-parity",
+    "feat-post-signin-landing-surface"
+  ]
 }

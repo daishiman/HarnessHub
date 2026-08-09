@@ -107,16 +107,19 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
 |---|---|---|
 | `subagent_type` が本 plugin 同梱 agent (`agents/*.md` の stem)、または `system-spec-harness:<stem>` の `Task` | ✅ | pinned plugin の実 payload は qualified 名。本 plugin qualifier のみ受理して stem へ正規化し、レジストリ追加に自動追従する |
 | それ以外の `Task` (他 plugin の agent・汎用 agent) | ❌ | 台帳の肥大化を避ける。帰属検証に使わない |
-| `session_id` / `ts` / `cwd` / `prompt` の sha256 | ✅ | 突合と再現性のための最小メタ |
+| `session_id` / `ts` / `cwd` / `prompt`・`tool_response` の sha256 / `AUDIT_VERDICT` enum | ✅ | response 本文を保存せず判定忠実性を突合する最小メタ |
 | `prompt` 本文 / `tool_response` 本文 | ❌ | 機微情報を台帳へ持ち込まない |
+
+`audit_verdict` は tool_response の応答本文 key (`content` / `output` / `result` / `response` / `message`) 配下だけを走査し、**応答本文の最終非空行**が canonical `AUDIT_VERDICT` marker のときだけ記録する。Claude Code の payload が fork prompt や応答後 metadata (`agentId` / `status` / usage) を内包していても、prompt 内の説明用 marker や metadata 文字列を応答本文と混同しない。応答本文の最終非空行が marker でなければ従来どおり null とし、consumer が fail-closed で除外する。
 
 台帳位置: `<CLAUDE_PROJECT_DIR>/eval-log/system-spec-harness/audit-fork-ledger.jsonl`
 (env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。consumer 側 `aggregate-completeness.py` と同一規則)。
 
 ### 6.3 既知の限界 (正直な境界)
 
-- 台帳が示すのは「その `subagent_type` への Task が完了した」ことだけ。**監査 prompt が実質を伴うか、
-  返った verdict がレポートへ忠実に転記されたかは判定できない** (意味層 = content-review / human の責務)。
+- 台帳は同一 response digest の `AUDIT_VERDICT` と receipt `verdict` の一致を検査できるため、
+  **実監査の FAIL を PASS へ書き換えることは拒否する**。監査 prompt が実質を伴うか、根拠が妥当かは
+  意味層 (content-review / human) の責務である。
 - hook が無効化された環境では台帳が空になる。その場合 consumer は fail-closed で「帰属未接地」の
   violation を出す (緑にはならない = 安全側)。
 - guard hook と同じく **表層的な adversarial evasion は設計上許容**する。狙いは「fork を省略した実行が

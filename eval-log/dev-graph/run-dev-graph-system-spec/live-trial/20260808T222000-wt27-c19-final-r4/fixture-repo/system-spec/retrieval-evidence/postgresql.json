@@ -1,0 +1,15 @@
+{
+  "target_id": "postgresql",
+  "source_url": "https://www.postgresql.org/docs/",
+  "official_host": "www.postgresql.org",
+  "retrieval_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T13:26:41Z",
+  "fetch_log": [
+    {
+      "url": "https://www.postgresql.org/docs/",
+      "fetched_at": "2026-08-08T13:26:41Z",
+      "tool": "WebFetch",
+      "observed": "索引に `18 / Current` を確認。18 自体の release date 表示なし。PostgreSQL 19 Beta 2 は 2026-07-16 リリースと記載。"
+    }
+  ]
+}

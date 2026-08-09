@@ -1,51 +1,51 @@
 {
-  "schema_version": "1.1.0",
-  "target": {
-    "plugin": "dev-graph",
-    "skill": "run-dev-graph-requirements",
-    "component_id": "C04",
-    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
-  },
-  "verdict": "PASS",
-  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
-  "loop_scope": "both",
-  "iteration_limit": 3,
   "criteria_results": {
     "IN1": {
-      "status": "PASS",
-      "verify_by": "script",
       "evidence_kind": "hybrid",
+      "observed": "選択 feature・architecture_refs・P01..P13 task の 15-node lineage closure を validate-source-digest.py へ全件渡す fixture test が PASS し、promotion 後の current pointer を validate-system-plan.py --feature-package feature-package/F-LIVE-001 が解決した。task 13件だけ、--staging、package 引数なしの検査は契約上拒否される。",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
         "plugins/dev-graph/tests/test_validate_source_digest.py::test_c04_validates_full_lineage_closure_and_current_package",
         "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_scope_closure_passes_source_digest",
         "plugins/dev-graph/tests/test_live_trial_fixture_builders.py::test_requirements_fixture_resolves_published_package_from_current_pointer"
       ],
-      "observed": "選択 feature・architecture_refs・P01..P13 task の 15-node lineage closure を validate-source-digest.py へ全件渡す fixture test が PASS し、promotion 後の current pointer を validate-system-plan.py --feature-package feature-package/F-LIVE-001 が解決した。task 13件だけ、--staging、package 引数なしの検査は契約上拒否される。"
+      "verify_by": "script"
     },
     "OUT1": {
-      "status": "PASS",
-      "verify_by": "live-trial",
       "evidence_kind": "live-trial",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T123500Z-o4zi-exh-c04 は overall=PASS、nudge=0、gate=0。exact-13 handoff、feature/package/source digest 束縛、implementation source 0件、4 gate、goal-seek 7/7 を fresh independent evaluator が再実測して PASS。behavior closure digest=6c89805fa56b4badd51530c54bc65182e06a172ca863b71c9838402dc4fa1384。",
       "scenario_id": "C04-OUT1-positive-ready-handoff",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
+      "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260806T010000Z-f84o-postmain-c04/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-requirements/live-trial/20260808T123500Z-o4zi-exh-c04/independent-verification.json"
       ],
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c04 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=d5033c34ba50dcabd525c707ba8161f140c2708c586857883c745c9e8194c3b6。"
+      "verify_by": "live-trial"
     },
     "OUT2": {
-      "status": "PASS",
-      "verify_by": "test",
       "evidence_kind": "hybrid",
+      "observed": "test_domain_dag_exact13_evidence_and_readiness_boundaries PASSED: injecting a member with implementation_readiness={status:incomplete}, confirmation_status=draft, evaluation_status=pending makes domain_findings surface {active_not_ready, premature_feature_done, feature_evidence_missing}, so the incomplete node is flagged and the package is not clean for handoff. Independently, validate-graph-schema.py reports the readiness/missing_sections fields directly (missing_sections=[] on the all-complete r3-requirements fixture), confirming the surfaced-vs-clean distinction that gates handoff.",
+      "status": "PASS",
       "test_refs": [
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_domain_dag_exact13_evidence_and_readiness_boundaries",
         "independent: scripts/validate-graph-schema.py readiness/missing_sections observation on r3-requirements"
       ],
-      "observed": "test_domain_dag_exact13_evidence_and_readiness_boundaries PASSED: injecting a member with implementation_readiness={status:incomplete}, confirmation_status=draft, evaluation_status=pending makes domain_findings surface {active_not_ready, premature_feature_done, feature_evidence_missing}, so the incomplete node is flagged and the package is not clean for handoff. Independently, validate-graph-schema.py reports the readiness/missing_sections fields directly (missing_sections=[] on the all-complete r3-requirements fixture), confirming the surfaced-vs-clean distinction that gates handoff."
+      "verify_by": "test"
     }
-  }
+  },
+  "iteration_limit": 3,
+  "loop_scope": "both",
+  "reviewer": "fresh-independent-live-trial-evaluator-HarnessHub-f84o-postmain-20260806",
+  "schema_version": "1.1.0",
+  "target": {
+    "component_id": "C04",
+    "plugin": "dev-graph",
+    "skill": "run-dev-graph-requirements",
+    "skill_md_sha256": "95bb1cee258f1c17980312a1d7480375a3fc3191e6c5cd4bbafb3e39545921d6"
+  },
+  "verdict": "PASS"
 }

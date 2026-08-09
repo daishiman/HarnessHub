@@ -1,0 +1,20 @@
+{
+  "evaluated_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "generation_id": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "implementation_readiness": "complete",
+  "promoted_at": "2026-07-21T00:00:00Z",
+  "promotion_method": "same-filesystem-atomic-rename",
+  "published_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "quality_conditions": {
+    "consistent": "PASS",
+    "dependency_integrity": "PASS",
+    "no_contradiction": "PASS",
+    "no_missing": "PASS"
+  },
+  "registration_manifest": "system-plan/F-LIVE-001/dev-graph-registration.json",
+  "repo_identity": "local:sha256:7209f443a2a2b0ffc66cbc1b89766220c0920c7e0568ec7275e7fbb565b1794b",
+  "schema_version": "1.0.0",
+  "staging_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "status": "promoted",
+  "supersedes": null
+}

@@ -29,6 +29,25 @@ export const healthResponseSchema = z.object({
   status: healthStatusSchema,
   /** デプロイ済みリビジョンの識別子。ロールバック後の版判定に使う。 */
   version: z.string().min(1).max(128),
+  /**
+   * 稼働中の成果物が対応する repository の commit (40 桁 hex)。
+   *
+   * `version` は Cloudflare が採番する版 id なので、「いま配信されている版」は分かっても
+   * 「その版が repository のどの commit か」は分からない。2026-08-07 の障害では、この対応が
+   * 取れないために「コードは直っている」と「本番が直っている」を区別できず、1 回の GET で
+   * 決まるはずの事実の確定に 10 ラウンド以上を要した (仕様追補 §2.10)。
+   *
+   * **認証なしで読めること**が要件である。認証が壊れている疑いがあるときに認証を要する経路でしか
+   * 素性を確認できなければ、同じ袋小路に入る。露出してよいのは commit 識別子までで、
+   * 内部 path・secret・個人データを混ぜない (security-spec §5.2)。
+   *
+   * 埋込が無い環境 (ローカル / 旧版) では欠落しうるため optional にする。必須にすると、
+   * 埋込前の稼働版が schema 違反で 500 を返し、素性確認そのものができなくなる。
+   */
+  commit: z
+    .string()
+    .regex(/^[0-9a-f]{40}$/, 'commit は 40 桁の小文字 hex (git の完全 SHA-1) でなければならない')
+    .optional(),
   /** 検査を実施したサーバ時刻。クライアント時刻は使わない。 */
   checkedAt: isoDateTimeSchema,
   dependencies: z.array(dependencyCheckSchema),
@@ -62,12 +81,21 @@ export function healthHttpStatus(status: HealthStatus): 200 | 503 {
 /** 依存検査の結果から応答 body を組み立てる。`status` の導出漏れを防ぐための唯一の組立口。 */
 export function buildHealthResponse(input: {
   version: string;
+  /**
+   * 埋込が無い環境では省略する。空文字や 'unknown' を入れて偽の素性を作らない。
+   * `| undefined` を明示するのは exactOptionalPropertyTypes 下で「解決できなかった」を
+   * そのまま渡せるようにするため (呼び出し側で条件分岐を書かせない)
+   */
+  commit?: string | undefined;
   checkedAt: Date;
   dependencies: readonly DependencyCheck[];
 }): HealthResponse {
   return healthResponseSchema.parse({
     status: deriveHealthStatus(input.dependencies),
     version: input.version,
+    // 未埋込を空文字で埋めると schema を通ってしまい「素性不明」と「素性 = 空」が区別できなくなる。
+    // key ごと落として欠落を欠落のまま表す
+    ...(input.commit ? { commit: input.commit } : {}),
     checkedAt: input.checkedAt.toISOString(),
     dependencies: input.dependencies,
   });

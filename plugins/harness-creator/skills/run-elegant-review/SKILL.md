@@ -165,12 +165,14 @@ options:
 - `thought_method_coverage` — `{used: [], skipped_with_reason: [], total: 30}`
 - `verdict` — `{矛盾なし: PASS|FAIL, 漏れなし: PASS|FAIL, 整合性あり: PASS|FAIL, 依存関係整合: PASS|FAIL}`
 - `review-<scope_mode>.md` — 人間可読レポート
-- `eval-log/<plugin>/<skill>/elegant-review/<run-id>/` — 27 章 §3.1 規約準拠の保存先
+- `eval-log/<plugin>/<skill>/elegant-review/<run-id>/` — 27 章 §3.1 規約準拠の保存先。`<plugin>` / `<skill>` は**実行主体ではなくレビュー対象**を指す。`scope_mode=repo` は対象が単一 skill に定まらないため **`<skill>` セグメントを省略**し `eval-log/<plugin>/elegant-review/<run-id>/` とする（`verdict.json` の `skill` には代表 skill を記録する）。`<plugin>` は finding 数が最多の plugin を代表として選ぶ
 - 改善 PR ブランチ — `auto_fixable=true` の finding を自動 commit、`auto_fixable=false` は人間判断
 
 ### 完了条件（4 条件 → 観測 signal）
 
-各条件の PASS signal は上記ゴールシーク Checklist（`fail_counts.<signal> == 0`）と下記「検証 4 条件」テーブルを正本とする。`issues[].severity` は low/medium/high/critical の優先度、`condition_signal` は contradiction/omission/inconsistency/dependency_break/smell の機械観測 signal として分離する。`smell` は警告枠（PASS を妨げない）。判定は `scripts/validate-paradigm-coverage.py` と `verdict.json` で機械実行。
+各条件の PASS signal は上記ゴールシーク Checklist（`fail_counts.<signal> == 0`）と下記「検証 4 条件」テーブルを正本とする。`issues[].severity` は low/medium/high/critical の優先度、`condition_signal` は contradiction/omission/inconsistency/dependency_break/smell の機械観測 signal として分離する。`smell` は警告枠（PASS を妨げない）。`condition`（C1-C4 の 4 値）と `condition_signal`（smell を含む 5 値）は濃度が一致しないため、**`condition_signal=smell` の issue は `condition` を持たない**（schema 上も required から外してある）。smell 以外は `contradiction→C1 / omission→C2 / inconsistency→C3 / dependency_break→C4` の対応を守る。判定は `scripts/validate-paradigm-coverage.py` と `verdict.json` で機械実行する。`verdict.json` は手書きせず `scripts/build-verdict.py` で `findings.json` から導出する（CI では `--check` で drift を検出する）。
+
+対応検査の遡及免除には**終了条件がある**: run ディレクトリ名 `run-YYYYMMDD-*` の日付が `STRICT_SIGNAL_FROM`（現在 `20260809`）以降なら error、それより前および日付を読めない run は WARN 止まり。`--strict-signal` を明示すれば日付に関わらず全 run が error になる。CI（`--phase-order eval-log`）はこの日付境界で自動的に新規 run だけを縛るため旗を付けない。**終了条件のない免除は検査を恒久的に骨抜きにする**ため、tolerant 契約を足すときは必ず解除条件を同時に定めること。
 
 ---
 
@@ -299,6 +301,7 @@ emit event の具体例 (4 条件 FAIL / safety_valve_fired=true 双方) は `re
 ## Gotchas
 
 1. **30 思考法すべて省略禁止**: `scripts/validate-paradigm-coverage.py` が `thought_method_coverage.used + skipped_with_reason == 30` を機械検証。欠落で exit 1
+1. **`condition` と `condition_signal` の二重帳簿を作らない**: smell に C1 等の便宜値を入れると `fail_counts` と `issues[].condition` の集計が恒常的にずれる。smell は `condition` を省略する。Phase 3 完了判定は `--strict-signal` 付きで実行する
 2. **Phase 1 必須経由（C3）**: スキップ不可。リセット未経由のレビューは C2/C3 が偽陽性 PASS する
 3. **Goodhart の罠**: score 最大化のために本質を歪めない
 4. **Phase 2 並列前提**: 3 SubAgent は互いの中間結果を参照しない（独立性確保、SubAgent context 分離で強制）

@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/harness-creator/skills/run-elegant-review/scripts/validate_phase_order.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 91,
+    "notes": "561 行の validator から phase-order tree と signal/verdict 整合を 215 行へ分離した import 専用 module。20260809 以降を error、過去 run を WARN とする終了条件付き移行で、遡及破壊と恒久免除の双方を避ける。focused 7 tests pass。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

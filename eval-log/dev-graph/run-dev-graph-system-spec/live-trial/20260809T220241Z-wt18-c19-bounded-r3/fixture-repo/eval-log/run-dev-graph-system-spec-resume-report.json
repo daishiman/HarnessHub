@@ -1,0 +1,127 @@
+{
+  "runner": "build-system-spec-resume-import",
+  "mode": "reuse-confirmed",
+  "status": "PASS",
+  "completion_contract": {
+    "version": "system-spec-resume-closure/v1",
+    "path": "resume-reuse",
+    "authority": "digest-bound-resume-receipt",
+    "evaluator_execution": "reused-current-pass",
+    "import_writer": "C02"
+  },
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "checklist": [
+    {
+      "id": "context",
+      "status": "pass",
+      "evidence": "resolve-context exit 0"
+    },
+    {
+      "id": "resume-authority",
+      "status": "pass",
+      "evidence": "validate-resume valid=true"
+    },
+    {
+      "id": "no-upstream-regeneration",
+      "status": "pass",
+      "evidence": "network and upstream Skill counts are 0"
+    },
+    {
+      "id": "logic-boundary",
+      "status": "pass",
+      "evidence": "gate-boundary exit 0"
+    },
+    {
+      "id": "c02-import",
+      "status": "pass",
+      "evidence": "two dry-runs and two upserts exit 0"
+    },
+    {
+      "id": "lineage-evidence",
+      "status": "pass",
+      "evidence": "source digest and evidence refs gates exit 0"
+    }
+  ],
+  "resume": {
+    "validator": "validate-system-spec-resume",
+    "valid": true,
+    "mode": "reuse-confirmed",
+    "plugin_version": "0.1.0",
+    "required_entry_points": [
+      "assign-system-spec-completeness-evaluator",
+      "run-system-spec-compile",
+      "run-system-spec-doc-fetch",
+      "run-system-spec-elicit"
+    ],
+    "artifacts": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/completeness-report.json",
+      "system-spec/fetched-references.json",
+      "system-spec/index.md",
+      "system-spec/spec-state.json"
+    ],
+    "failures": []
+  },
+  "build": {
+    "out_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/fixture-repo/.dev-graph/tmp/system-spec-import",
+    "node_ids": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ]
+  },
+  "steps": [
+    {
+      "label": "resolve-context",
+      "exit_code": 0
+    },
+    {
+      "label": "validate-resume",
+      "exit_code": 0
+    },
+    {
+      "label": "build-import",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-boundary",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-source-and-evidence-bindings",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-graph-preview",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-dry-run-architecture",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-dry-run-specification",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-upsert-architecture",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-upsert-specification",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-evidence-refs",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-source-digest",
+      "exit_code": 0
+    }
+  ]
+}

@@ -172,4 +172,4 @@ C02 (`run-system-spec-doc-fetch`) が出力した `fetched-references.json` を�
 
 ## Self-Evaluation
 
-返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (全 target に形式層 C13 と内容鮮度層の公式サイト再照合を漏れなく適用し、到達不能分を鮮度未確認として明示) と **検証可能性** (各検出が target_id 単位で根拠を追える) と **一貫性** (監査 SSOT と `fetched-references.json` のフィールド key・値語彙、C13 の検査範囲に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-doc-fetch/prompts/R4-audit-doc-freshness.md` を優先し、差分をサマリに明示する。
+返す前に Layer 5.5 の停止ゲート (**完全性** / **検証可能性** / **一貫性** / 参照専用) を全て YES で満たすまで完了しない。特に **完全性** (全 target に形式層 C13 と内容鮮度層の公式サイト再照合を漏れなく適用し、到達不能分を鮮度未確認として明示) と **検証可能性** (各検出が target_id 単位で根拠を追える) と **一貫性** (監査 SSOT と `fetched-references.json` のフィールド key・値語彙、C13 の検査範囲に矛盾しない) を満たすこと。本ファイルと監査 SSOT に差分がある場合は `../skills/run-system-spec-doc-fetch/prompts/R4-audit-doc-freshness.md` を優先し、差分をサマリに明示する。応答の最終行には `AUDIT_VERDICT: PASS` / `AUDIT_VERDICT: FAIL` / `AUDIT_VERDICT: INDETERMINATE` を 1 行だけ出力する (本文中・コードブロック中に重複させない)。

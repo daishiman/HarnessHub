@@ -3,7 +3,7 @@ status: confirmed
 category: frontend
 aggregate: 確定
 spec_cells: [frontend.web, frontend.mobile, frontend.tablet, frontend.desktop-windows, frontend.desktop-linux, frontend.desktop-macos]
-serves_goals: [G1, G2, G3, G5]
+serves_goals: [G1, G2, G3]
 ---
 
 # フロントエンド (frontend)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-135 |
+| Web (web) | 確定 | 確定質疑: qa-206 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,11 +24,17 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-135 (対応セル: web)
+### qa-206 (対応セル: web)
 
-**質問**: ログイン成功後の着地先・`/` の扱い・ブラウザ通常遷移でのテナントスコープ伝搬・active workspace の選択を、既存 frontend.web 契約へどう統合しますか?
+**質問**: qa-203 とそれ以前の frontend/web 契約を維持したまま、認証後の全 route を包む HubShell、session role による navigation 投影、packages/ui と apps/hub の所有境界をどう確定するか。
 
-**回答**: 既存 frontend.web の画面構成、認可後データ境界、レスポンシブ、OAuth 管理面、dual catalog 縮退表示を維持する。サインイン開始時の安全な相対戻り先を優先し、無い場合は既定着地 `/sheets` を単一定数から解決する。絶対 URL、スキーム付き、protocol-relative は既定着地へ落とす。未認証の `/` は稼働確認表示を保ち、認証済みの `/` は業務画面終着点にせず既定着地へ redirect する。ブラウザ業務画面は session principal の active tenant/workspace から server 側で scope を解決し、API/機械クライアントの明示ヘッダー経路と同じ authorize() に収束させる。workspace が 1 件なら自動選択、複数なら選択画面を出し、切替時は新 scope の応答前に旧 scope 表示を消す。scope 未解決の業務画面描画、認可規則の二重実装、未実装ナビゲーションの前倒し表示は許可しない。
+**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 が委任するコードから検証できる技術的事実の範囲で確定する。qa-203 とそれ以前の frontend/web 契約は全面維持する。
+
+認証後の (dashboard) / (workspace) route は apps/hub の server component HubShell が共通に包み、main landmark を一つだけ持つ。sidebar / header / footer / mobile tab、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet の視覚・操作 contract は packages/ui が所有し、apps/hub は route、tenant/workspace scope、session identity を結線する consumer とする。公開 route は PublicShell を使い、root layout 自体は main landmark を追加しない。
+
+現在地は middleware が認証認可を通過した内部 request に x-hh-pathname を付与し、server layout が読む。外部 API contract や client bundle を増やす用途には使わない。navigation は実在する route だけを表示し、signed session の active claim から得た SessionRole を使って deny-by-default で投影する。member と role 未確定は account settings のみ、workspace-admin は users / coefficients、provider-admin はそれらに加えて認証設定を表示する。API 認可を最終決定者とする契約は変えず、UI は権限外の導線を DOM に出さない。role token は provider-admin / workspace-admin / member の正規値だけを受け、表示名へ変換する。
+
+公開 API、DB schema、session claim schema、ACTION_RULES、Cloudflare deploy unit は変更しない。PrimaryNav の独自実装は HubShell の route projection へ置き換え、route ごとの shell 再定義を禁止する。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -85,6 +91,14 @@ serves_goals: [G1, G2, G3, G5]
 - `essential_purpose`に直結するpolicyを外部詳細から守り、goal達成ロジックの検証を速くする。
 - 制約に「vendor lock-in低減」「複数platform」「高い変更頻度」がある場合、変更範囲と移行riskを局所化する。
 - 適用判断は「何層あるか」でなく、守るgoal、予想される変更、boundary testで観測する。
+
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-206 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-007 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G1, G2, G3
 
 ## 最新ドキュメント出典
 

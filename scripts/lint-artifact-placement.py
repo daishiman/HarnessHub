@@ -61,6 +61,14 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "completeness-report.json",
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
 }
+# system-spec/ 直下に置いてよい既知サブディレクトリ。混入遮断の目的は「雑多なファイルの流入防止」
+# であって、正本 JSON が参照する名前付きの資料までは禁じない。
+# retrieval-evidence/ は run-system-spec-doc-fetch の契約が置き場所を
+# `system-spec/retrieval-evidence/<target_id>.json` と固定しており、fetched-references.json の
+# evidence_ref がここを指す。禁止すると出典の取得証跡そのものが置けなくなる。
+SYSTEM_SPEC_DIR_ALLOWLIST = {
+    "retrieval-evidence",
+}
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
 DOCS_REQUIRED_FRONTMATTER_KEYS = ("status", "layer")
 GRAPH_NODE_SCHEMA_PATH = (
@@ -258,9 +266,13 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
         for p in sorted(ss_root.iterdir()):
             rp = p.relative_to(repo_root).as_posix()
             if p.is_dir():
+                if p.name in SYSTEM_SPEC_DIR_ALLOWLIST:
+                    continue
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp}/ (サブディレクトリ) は置かない。"
-                    "system-spec/ 直下はコンパイラ出力と正本 JSON のみ"
+                    "system-spec/ 直下はコンパイラ出力と正本 JSON、および "
+                    + " / ".join(sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
+                    + "/ のみ"
                 )
             elif p.suffix == ".md" or p.name in SYSTEM_SPEC_JSON_ALLOWLIST:
                 continue
@@ -384,6 +396,20 @@ def self_test() -> int:
         v, _ = lint(root)
         assert any("unlabeled.md" in line for line in v), "docs_root の marker で規則全体が無効化された"
         (root / "docs" / "unlabeled.md").unlink()
+
+        # allowlist 済みサブディレクトリ (doc-fetch の取得証跡) は通し、
+        # 未知のサブディレクトリは従来どおり弾く。「サブディレクトリ全部素通り」まで穴を広げない。
+        (root / "system-spec" / "retrieval-evidence").mkdir()
+        (root / "system-spec" / "retrieval-evidence" / "react.json").write_text(
+            "{}", encoding="utf-8")
+        v, _ = lint(root)
+        assert v == [], f"allowlist 済みの system-spec サブディレクトリを違反にした: {v}"
+        (root / "system-spec" / "unknown-dir").mkdir()
+        v, _ = lint(root)
+        assert any(
+            "unknown-dir" in line and "system-spec-stray" in line for line in v
+        ), "未知の system-spec サブディレクトリを見逃している"
+        (root / "system-spec" / "unknown-dir").rmdir()
 
         # 4 種の違反を 1 つずつ検出できるか
         (root / "specs" / "orphan.md").write_text("x", encoding="utf-8")

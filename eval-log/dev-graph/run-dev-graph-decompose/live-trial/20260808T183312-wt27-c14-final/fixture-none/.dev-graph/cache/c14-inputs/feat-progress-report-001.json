@@ -1,0 +1,102 @@
+{
+  "node": {
+    "acceptance": [
+      "管理者は全社の進捗を集計したレポートを閲覧できる",
+      "管理者でない利用者のレポート閲覧要求は拒否される",
+      "レポートの集計値がダッシュボードと同一の割当データから導出される"
+    ],
+    "architecture_refs": [
+      "arch-portal-platform-001",
+      "arch-portal-data-notify-001"
+    ],
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "beads_linkage": null,
+    "classification_candidates": [],
+    "classification_confidence": 1.0,
+    "classification_reason": "自然文 want の「管理者は全社の進捗を集計したレポートを閲覧できる」を独立価値の機能単位として切り出した",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-08-08T18:33:12Z",
+    "depends_on": [
+      "feat-account-login-001",
+      "feat-assignment-dashboard-001"
+    ],
+    "domain": "internal-portal",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "features/feat-progress-report-001.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": "管理者が全社の進捗を集計したレポートを閲覧できる状態",
+    "graph_node_id": "feat-progress-report-001",
+    "implementation_readiness": {
+      "checked_at": null,
+      "missing_sections": [],
+      "status": "incomplete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "owners": [],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": null,
+    "project_id": "internal-business-portal",
+    "pull_request_linkages": [],
+    "purpose": "管理者が全社の作業進捗を集計された形で把握できる状態を作り、遅延の偏りを判断可能にする",
+    "related_nodes": [],
+    "resource_scope": [
+      "src/portal/web/report",
+      "src/portal/data/aggregate"
+    ],
+    "scope_in": [
+      "全社進捗の集計",
+      "レポート閲覧画面",
+      "管理者権限による閲覧制御"
+    ],
+    "scope_out": [
+      "レポートの外部エクスポート",
+      "任意条件のアドホック分析",
+      "個人評価指標の算出"
+    ],
+    "source_lineage": {
+      "imported_at": "2026-08-08T18:33:12Z",
+      "origin_kind": "generated",
+      "source_digest": "aae36bba439a0ba94b4761689cbdd4651b39cbb65900c2331091fd6c199e139a",
+      "source_path": "docs/want.md",
+      "source_plugin": "run-dev-graph-decompose",
+      "source_version": "0.1.0"
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": [
+      "reporting",
+      "aggregation",
+      "admin"
+    ],
+    "target_date": null,
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "title": "管理者向け全社進捗レポート",
+    "tracker_binding": "none",
+    "updated_at": "2026-08-08T18:33:12Z"
+  }
+}

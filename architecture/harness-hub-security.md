@@ -59,6 +59,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
 - 再取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は security の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/security.md` と `system-spec/auth.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+正しい本人だけが、許可された tenant/workspace の情報と操作へ到達できる状態を守る。
+
+### U2 背景 (background)
+
+認証と認可の分散、secret の誤配置、scope 未指定アクセスは情報漏えいへ直結する。
+
+### U3 ゴール (goals)
+
+deny-by-default、単一認可境界、環境 binding による secret 管理を全経路で維持する。
+
+### U4 目標 (objectives)
+
+OIDC/Device Flow の本人確認と、tenant/workspace 行レベル scope を分離して検証する。
+
+### U5 成功基準 (success_criteria)
+
+越境アクセス、権限不足、期限切れ token、secret 欠落が fail-closed で拒否され監査可能であることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、Workspace 管理者、セキュリティ担当者、認証連携先、運用担当者を対象とする。
+
+### U7 スコープ (scope)
+
+認証、認可、token/secret、tenant 分離、監査に関する設計境界を扱う。
+
+### U8 制約 (constraints)
+
+資格情報のリポジトリ保存、暗黙 allow、画面/API ごとの独自認可、scope の推測を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+各要求を本人・所属・権限の順で確認し、拒否理由を機密情報なしで追跡できるようにする。
+
+### 意思決定支援 (decisions)
+
+利便性と分離保証が競合するときは、deny-by-default と最小権限を優先する。
+
 ## Architecture overview
 
 正本: system-spec/security.md と system-spec/auth.md。認可の単一ミドルウェア集約、secret は環境 binding のみ、OS 資格情報域への token 保存 (qa-008)。doctrine anchor: OWASP ASVS + Secrets Management。
@@ -195,3 +239,26 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 詳細は [system-spec/auth.md](../system-spec/auth.md) の `qa-137`、
   製品契約は [spec-post-signin-workspace-scope](../specs/harness-hub-post-signin-workspace-scope-addendum.md)
   の B 節を参照する。実装根拠は `apps/hub/src/middleware/authz.ts` の `authorize()`/`mergeScopes()`。
+
+**差分追記 (2026-08-08 / RSC 画面の session scope 再利用)**:
+
+- `(dashboard)` 配下の Server Component が session scope を読む経路は、認可判定を
+  画面へ複製しない。`resolveSessionScope()` を `middleware` 公開境界から export し、
+  `lib/routing/dashboard-scope.ts` が cookie 検証後に同じ関数へ委譲する。
+- URL クエリ (`?tenant=` / `?workspace=`) は互換のための優先入力であり、認可入力の
+  正本ではない。middleware は引き続き明示ヘッダーと session だけを信頼し、
+  クエリ文字列を authz 入力にしない (catalog hard-navigation 契約と整合)。
+
+**差分追記 (2026-08-08 / `issue-hub-root-500-signin-20260808` / public exact paths と拒否表現)**:
+
+- public path は **完全一致** (`PUBLIC_EXACT_PATHS`: `/`, `/signin`, `/signin/workspace`, `/device`)
+  と **前方一致** (`PUBLIC_PATH_PREFIXES`: `/health`, `/api/auth`, Device Flow 発行経路等) に分ける。
+  入口 1 枚だけを開ける path を前方一致に載せると、将来の子 route が黙って公開になる。
+- `/{tenant_slug}/signin` の slug 形は `tenantSlugSchema` を唯一の正本とする。
+  middleware と画面で文字集合がずれると「middleware は public、画面は 404」の入口差が生まれる。
+- `GET /signin/workspace` は scope 未確定を解消する受け口のため `withAuthz` を掛けない
+  (掛けると `missing_tenant_scope` で自分自身を弾く)。代わりに route が session の
+  署名・期限・`status === 'active'` と所属一覧を再検証し、所属外 ID は cookie にしない。
+- 認可拒否の **判定** は `authz.ts` 単一層のまま。**表現**だけを middleware が分ける:
+  navigation (GET + `Accept: text/html` + Bearer 無し + 非 `/api`) → HTML、
+  それ以外 → JSON。`tenant_mismatch` は HTML でも理由を明かさず 404 相当の文言にする。

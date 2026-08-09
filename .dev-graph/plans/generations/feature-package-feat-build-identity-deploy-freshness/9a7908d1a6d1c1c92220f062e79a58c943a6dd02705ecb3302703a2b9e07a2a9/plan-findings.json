@@ -1,0 +1,305 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-build-identity-deploy-freshness",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "sha256:33d388de… で FAIL とした deploy scope の矛盾は sha256:983220e2… で解消され、本世代でも維持されている。13 spec 全件の Deploy unit 行が『本 feature は deploy の実行を scope_out とするため、いずれの task もデプロイを行わない』で統一 (13/13 実測)、deploy 実行を主張する記述は package 内に 0 件。phase-13 は目的・スコープ外・Workstream (Infrastructure=applicable + no change)・Rollout/Rollback・Required evidence が『反映可否の判定と反映後の確認事項の引き渡し』『確定仕様と architecture への書き戻し』に限定され、feature context の scope_out[0] と一致する。本世代で追加された Required evidence の全件列挙も goal-spec の purpose/goal/scope_in 4 件/scope_out 3 件/acceptance 5 件と矛盾せず、P07 の追加規律 (稼働物の観測を要する acceptance で本番 deploy を実行しない) は scope_out を強化する方向で整合している。なお参照した goal-spec.json#scope_out (staging 内・canonical digest 非束縛) は evidence 欄の契約 (manifest 束縛 path か gate: 参照のみ) の対象外のため本文に記す。",
+      "evidence": [
+        "task-specs/phase-13-release-deploy.md#目的",
+        "task-specs/phase-13-release-deploy.md#スコープ外",
+        "task-specs/phase-07-acceptance.md#Verification and evidence",
+        "gate:scope-contradiction-rescan#deploy 実行記述 0 件"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "上流 qa 要件 (qa-198 原因の確定 / qa-199 是正範囲) は system-spec/spec-state.json の qa_log に実在登録され、goal-spec の purpose へ意味反映され、13 spec 全件が確定出典行・背景・参照情報の 3 箇所で trace している (13/13 で各 3 件)。V6/V7 も 13 spec 全件に出現し、scope_in 4 件・scope_out 3 件・acceptance 5 件は全 spec の Current canonical feature baseline に保持されている。本世代の是正で前回 low とした『inventory にのみ存在する受入条件』の漏れが解消された — 13 phase 全件について spec の Required evidence 箇条書きと workstream-inventory.json の acceptance 配列を機械比較し、件数・順序・逐語すべてが完全一致 (ALL MATCH: True) することを実測した。P07 の acceptance[2] (稼働物の観測を要する acceptance は既に稼働している成果物への認証なし読出しかローカル稼働で判定し、判定のために本番 deploy を実行しない) も spec 本文から読める。必須 section は 13 spec 全件 17 見出しで欠落なし、qa-ref-unregistered / qa-semantic-coverage / qa-task-trace の違反は検出されない。上流 qa 出典 system-spec/spec-state.json#qa_log/qa-198 および #qa_log/qa-199 は staging 外の repository 文書であり、evidence 欄の契約 (manifest 束縛 path か gate: 参照のみ) の対象外のため本文に記す。",
+      "evidence": [
+        "gate:acceptance-parity#ALL MATCH=True (13/13)",
+        "task-specs/phase-07-acceptance.md#Verification and evidence",
+        "workstream-inventory.json#tasks[P07]/acceptance",
+        "gate:deterministic-validation#violations=0"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "staging-manifest.json の 17 files を全件 SHA-256 再計算して一致を確認し、validate-system-plan.py の validated_digest・staging-manifest.json の canonical_digest・coordinator 提示値の 3 者が sha256:9a7908d1… で一致した。前世代 sha256:983220e2… および sha256:33d388de… の verdict は stale として破棄する。handoff は再生成されており (build-system-handoff.py)、self hash が manifest#files と handoff_contract.sha256 で一致、source_inputs 16 件も manifest と一致、自己参照循環なし。feature_package_id / parent_feature は 4 artifact で同一、source_feature_digest sha256:7bf56a6a… は feature-package.json・handoff identity・goal-spec の feature_context_digest・features/feat-build-identity-deploy-freshness.context.json の実測 shasum の 4 者で一致。exact-13 (P01〜P13 各 1 件、12 でも 14 でもない) を 4 artifact で確認。13 spec は契約 1.3.0 の必須 section を全件 17 見出しで保持し、目的・成果物・write scope は 13 本とも相異なる単一責務。repository boundary は symlink 0 件、staging 外への書込指示なし、task spec 本文の absolute path 0 件 (readiness.json の絶対 path 1 件は下記 finding、realpath は repo root 配下)。突合に用いた features/feat-build-identity-deploy-freshness.context.json の実測 shasum は 7bf56a6a0dc09acc304489580452da003fe975d74de8d299906c48364e5c0a3c であり、staging 外の repository 文書のため evidence 欄の契約 (manifest 束縛 path か gate: 参照のみ) の対象外として本文に記す。",
+      "evidence": [
+        "staging-manifest.json#canonical_digest",
+        "gate:deterministic-validation#validated_digest",
+        "gate:manifest-hash-recompute#MISMATCH=[]",
+        "system-build-handoff.json#source_inputs",
+        "feature-package.json#source_feature_digest"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json の 13 node は P01 の depends_on=[] を起点に P02→P13 まで直前 phase 1 件のみを参照する前方線形 DAG で、循環・自己参照・欠落 node は無い。workstream-inventory.json の tasks 13 件・system-build-handoff.json の execution_tasks 13 件・feature-package.json の task_node_ids 13 件は id 順・depends_on ともに task-graph と完全一致 (機械照合で True)。外部 feature への execution dependency は無く、feature 横断依存は p01_entry_gate (parent_feature.depends_on all done|closed) に置かれ task edge へ複製されていない。本世代の変更は Required evidence 節の追記のみで、依存構造は前世代から不変 (task-graph.json の hash も不変)。",
+      "evidence": [
+        "task-graph.json#nodes",
+        "system-build-handoff.json#execution_tasks",
+        "workstream-inventory.json#tasks",
+        "system-build-handoff.json#p01_entry_gate",
+        "gate:dag-crosscheck#exact13/ids/deps=True"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-0",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-build-identity-deploy-freshness"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"schema_version\":\"1.0.0\",\"status\":\"pass\",\"validated_digest\":\"sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9\",\"feature_package_id\":\"feature-package/feat-build-identity-deploy-freshness\",\"parent_feature\":\"feat-build-identity-deploy-freshness\",\"phase_refs\":[\"P01\",\"P02\",\"P03\",\"P04\",\"P05\",\"P06\",\"P07\",\"P08\",\"P09\",\"P10\",\"P11\",\"P12\",\"P13\"],\"contract_version\":\"1.3.0\",\"contract_baseline_exemption\":false,\"test_strategy_contract\":{\"mode\":\"enforced\",\"contract_version\":\"1.3.0\",\"enforced_from\":\"1.2.0\"},\"rerun_command_contract\":{\"mode\":\"enforced\",\"contract_version\":\"1.3.0\",\"enforced_from\":\"1.3.0\"},\"violations\":[]}",
+      "stderr": "",
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ]
+    },
+    {
+      "id": "acceptance-parity",
+      "name": "spec Required evidence vs inventory acceptance verbatim comparison",
+      "command": [
+        "python3",
+        "-c",
+        "for each of 13 phases: parse '## Verification and evidence' bullets after 'Required evidence' in task spec and compare list equality (order and verbatim) with workstream-inventory.json tasks[].acceptance"
+      ],
+      "exit_code": 0,
+      "stdout": "P01..P13 each MATCH: True; ALL MATCH: True (13/13, 件数・順序・逐語すべて一致。P07 は 3 件で acceptance[2]=稼働物の観測を要する acceptance は…本番 deploy を実行しない を含む)",
+      "stderr": "",
+      "conditions": [
+        "C2",
+        "C3"
+      ]
+    },
+    {
+      "id": "manifest-hash-recompute",
+      "name": "sha256-recompute-of-manifest-files",
+      "command": [
+        "python3",
+        "-c",
+        "recompute sha256 for all staging-manifest.json#files entries; compare handoff self-hash and source_inputs"
+      ],
+      "exit_code": 0,
+      "stdout": "canonical: sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9; MISMATCH []; handoff self hash ok: True; source_inputs ok: True",
+      "stderr": "",
+      "conditions": [
+        "C3"
+      ]
+    },
+    {
+      "id": "dag-crosscheck",
+      "name": "exact-13 and dependency cross-check",
+      "command": [
+        "python3",
+        "-c",
+        "compare task_count/ids/phase_refs/depends_on across feature-package.json, task-graph.json, workstream-inventory.json, system-build-handoff.json"
+      ],
+      "exit_code": 0,
+      "stdout": "exact13: True; ids: True; deps ok: True; phases: P01..P13; parent/pkg uniform: True",
+      "stderr": "",
+      "conditions": [
+        "C4",
+        "C3"
+      ]
+    },
+    {
+      "id": "repository-boundary",
+      "name": "symlink-and-absolute-path-scan",
+      "command": [
+        "find",
+        ".",
+        "-type",
+        "l"
+      ],
+      "exit_code": 0,
+      "stdout": "symlinks:0; task-specs absolute path hits:0 (13/13); JSON absolute path hits:1 (readiness.json#probes/source_plugin_manifest/path, realpath は repo root 配下)",
+      "stderr": "",
+      "conditions": [
+        "C3"
+      ]
+    },
+    {
+      "id": "scope-contradiction-rescan",
+      "name": "deploy-execution claim scan across 13 specs",
+      "command": [
+        "grep",
+        "-nE",
+        "本番へ反映する|deploy を実行する|デプロイを実行",
+        "task-specs/*.md"
+      ],
+      "exit_code": 0,
+      "stdout": "hits: 0。13/13 spec の Deploy unit 行が『いずれの task もデプロイを行わない』で統一。phase-10 の『本番反映してよいかを判定する』は判定行為であり実行ではない。",
+      "stderr": "",
+      "conditions": [
+        "C1"
+      ]
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "d0b6c447cb0b005d9c9ede579e1e6af99dc005c222e15b1f2c1406d15939c46b"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "45b17fb2d471a08da5ffed97b62c9f860a619dbc8b2290c367f31b3015c15477"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "5c5f7697613b204c585fdc222f6bcc1e38b13e1477891d27d0c2005527fac46e"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "1ea337646daa724b57b9998c3c2fbd64b2dd6b48ee012af332727264b2d73358"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "f226c597bdbcf9a33c2c51cd54dfd65a5cc5f1076fa85e3e2b967969ff7d3f68"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "e87efa27654416ae4d4a1155442c566c178086c8e2fd6824ba473d198743130d"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "5831b0e9ebc3653d0820a7e43422b72779d22ea775f4302303875ee1f71a164c"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "3d93b569b12f63626a3e305ca067d8f1ba5fc38761588ea3f7e66ebbbc83f02e"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "50c5c3ced19120f0f393fd4309049ff52ea4e3c3a3684bbcd14b1b683e5ad52e"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "a6d24b430e04e9f6cf6d630150977a01e14505d52506215cecc449ba476e871f"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "95bbc1a2b643bd7558d85b2e9f05c4008d5ab1f2656052ad07507b328416f004"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f93c3568194fc1aa9751b6167bd2678e72deff9c2148919ffd07e31efe568294"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "252cd9bb013edee67ca7b9cf73c24832920b3b3c7b16065e4cb2feca152f6df9"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "f1f6fbb8674a4463c5c5c28cd3189c9acddb6ef5e649a82683fadf38cae07420"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e15be94322e1bce4acada5562c6e75e7c316713853552c247a2d76166c2f6c2e"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "9baaf94d691f134493101616f7d85bb0db3307cb528367a832fbc784da9fb481"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "5deb042aa2e2c4ba06efcfd9f355acf3256f62e873f6070262fc67a4eec56df6"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "ada6f4b20fe6d7fa59ddcd6560b43cc72520fc6fc829bee5de3a10c3847829d8"
+    }
+  ],
+  "staleness_rule": "本 findings は evaluated_digest=sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9 と evaluated_inputs 全 21 件の SHA-256 に束縛される。前世代 sha256:33d388de… (FAIL) と sha256:983220e2… (PASS) の verdict は本 findings により破棄され、以後参照しない。canonical digest または 21 件のいずれかの hash が変化した時点で本 PASS は stale となり、C11 は再評価なしに promotion してはならない。",
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "lineage-not-confirmed",
+      "observation": "workstream-inventory.json の source_lineage.confirmed は false のまま (coordinator も未対応と申告、実測でも False)。親 feature node features/feat-build-identity-deploy-freshness.md は confirmation_status=draft / evaluation_status=pending / implementation_readiness.status=incomplete であり、引用元の確定仕様 node spec-post-signin-landing-observability は confirmed だが evaluation_status=fail、完成度 evaluator の総合 verdict は FAIL のままである。承認 appr-039 (qa-199-a/b) が緩めたのは『完成度 evaluator の総合 PASS を以降の verb の前提とする』点のみで、他の完了条件は緩められていない。本評価は false を false のまま扱い、これを PASS の根拠に一切用いていない。atomic-promotion-contract の promotion gate 7 項目に lineage confirmation は含まれないため単独の FAIL 要因とはしないが、各 task spec の Handoff『Ready when: confirmed かつ evaluation pass かつ readiness complete…』は現時点で未充足であり、promotion しても実行着手条件は満たされない。推奨対応: C11 promotion receipt へ source_lineage.confirmed=false を明示記録し、dev-graph 登録後の実行 claim 前に親 feature node の confirmation_status/evaluation_status を確定させる。",
+      "evidence": [
+        "workstream-inventory.json#source_lineage/confirmed=false",
+        "features/feat-build-identity-deploy-freshness.md#frontmatter/confirmation_status",
+        "system-spec/spec-state.json#qa_log/qa-199",
+        "task-specs/phase-01-requirements.md#Handoff",
+        "plugins/system-dev-planner/references/atomic-promotion-contract.md#Promotion gates"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "repository-boundary",
+      "observation": "readiness.json の probes.source_plugin_manifest.path は絶対 path '/Users/dm/orca/workspaces/HarnessHub/wt-0/plugins/system-spec-harness/references/package-contract.json' のまま。coordinator の未対応理由 (check-implementation-readiness.py の実出力であり、手で書き換えると実行結果の改変になる) は妥当と判定する — 生成物を後から人手で書き換えない規律は本評価系の前提と一致するため、artifact 側での修正は求めない。realpath は repo root 配下に収まるため containment 違反ではなく、staging 外への書込指示でもない。ただし全 task spec が前提条件で宣言する『全 path は repository 相対とし absolute path は使用しない』に反し machine 依存で可搬性が無いこと、先行 promoted 世代 (feat-post-signin-scope-routing) の readiness.json には絶対 path が無いことから逸脱として記録する。推奨対応: 本 package ではなく check-implementation-readiness.py 側を repo 相対 path 出力へ修正し、次回 run で解消する (別 issue 化)。",
+      "evidence": [
+        "readiness.json#probes/source_plugin_manifest/path",
+        "task-specs/phase-01-requirements.md#前提条件 (Repository context)"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "readiness-probe-semantics",
+      "observation": "readiness.json は status=complete かつ probes.completeness_evaluation.verified=true だが detail は『(verdict=FAIL)』と記録している。probe は『レポート形状・総合判定整合・独立 auditor 帰属の fork 証跡接地』の充足のみを verified としており、上流 verdict の FAIL を PASS へ読み替えてはいない。appr-039 の緩和範囲内であることを確認したうえで、promotion gate 1 (C08 readiness=complete) の充足根拠が上流 FAIL と両立している事実を明示記録する。",
+      "evidence": [
+        "readiness.json#probes/completeness_evaluation/detail",
+        "plugins/system-dev-planner/references/atomic-promotion-contract.md#Promotion gates"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "resolved-in-this-generation",
+      "observation": "前世代 sha256:983220e2… で low とした『P07 の追加受入条件が workstream-inventory.json にのみ存在し spec 本文から読めない』は本世代で解消した。13 spec 全件の Required evidence が inventory acceptance と件数・順序・逐語まで一致することを機械比較で実測 (ALL MATCH: True) し、『inventory の acceptance と本節は同一内容であり、片方だけを見て判定しない』という参照規律も明記されている。sha256:33d388de… で high とした deploy scope 矛盾も引き続き解消状態を維持している。",
+      "evidence": [
+        "gate:acceptance-parity#ALL MATCH=True",
+        "task-specs/phase-07-acceptance.md#Verification and evidence"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "identity-casing",
+      "observation": "workstream-inventory.json の graph_node_registration.graph_node_id は大文字 (SYS-BUILD-IDENTITY-P01)、task-graph.json の graph_node_id と task spec 本文・file_path は小文字 (sys-build-identity-p01) で表記が揺れている。先行 promoted 世代も同一パターンで本 package 固有の退行ではないため info とする。dev-graph 登録時の node id 解決は小文字側 (task-graph.json / file_path) を正とすべき。",
+      "evidence": [
+        "workstream-inventory.json#tasks[].graph_node_registration/graph_node_id",
+        "task-graph.json#nodes[].graph_node_id"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "digest-binding-scope",
+      "observation": "goal-spec.json・readiness.json・validation.json は staging-manifest.json#files に含まれず canonical digest に束縛されない (先行 promoted 世代と同じ manifest scope であり契約どおり)。13 task spec の意味的出典は goal-spec.json であるため、本 findings では 3 ファイルを evaluated_inputs へ含め staleness を束縛した。validation.json の validated_digest は本評価の再実行結果と一致することを確認済み。",
+      "evidence": [
+        "staging-manifest.json#files",
+        "validation.json#validated_digest"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "planned-implementation",
+      "observation": "本 package は仕様・設計と exact-13 実行計画の確定であり、commit 識別子の埋込・認証なし読出経路・鮮度検査 script の実装と実測は P01〜P13 の未着手 task として残る。本 feature は deploy 実行を scope_out とするため、稼働物の観測を要する acceptance の最終確認は運用側の反映後に持ち越される。",
+      "evidence": [
+        "workstream-inventory.json#tasks",
+        "task-specs/phase-05-implementation.md#成果物",
+        "task-specs/phase-13-release-deploy.md#目的"
+      ]
+    }
+  ]
+}

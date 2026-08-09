@@ -1,0 +1,27 @@
+{
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+  "evaluator": "fresh Agent instance, independent of the trial orchestrator",
+  "verdict": "FAIL",
+  "blockers": [
+    "No specification node was registered. fixture-repo/.dev-graph/state/graph.json holds exactly one node (arch-system-spec-overview, artifact_kind=architecture) at graph_revision=1, and fixture-repo/specs/ contains only .gitkeep. The specification half of the skill's promised outcome is unmet.",
+    "The trial session's claim of a plugin-side contract contradiction was independently confirmed by reading the sources: references/system-spec-import-contract.json pins nodes.specification.source_artifact to artifacts.index = system-spec/index.md; scripts/build-system-spec-import.py:199 forbids body substitution because the source_artifact is the body authority; templates/template-contract.json requires 17 specification headings with an empty conditional_required_sections; and scripts/graph_artifact_readiness.py:111 _conditional_trigger returns None unless kind == 'task', so kind=specification has no conditional path. The compiled index.md carries 5 headings, so upsert-node.py exits 2 with heading_missing x17 and write_count 0. The only workarounds are fabricating body text (forbidden by build-system-spec-import.py) or editing template-contract.json (forbidden by the scenario), so this is a plugin defect rather than a run error.",
+    "Derived asymmetry on the other side of the same contract: scripts/validate-graph-schema.py:53 defines HEADING_MISSING_KINDS = {'specification', 'task'} without architecture, so the architecture node was admitted with a body that satisfies none of the 10 required architecture headings and was still recorded as implementation_readiness.status=complete with missing_sections=[]. specification is unconditionally fail-closed while architecture is unconditionally fail-open."
+  ],
+  "observations": {
+    "1": {
+      "observation": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "status": "MET",
+      "evidence": "transcript.jsonl records Skill invocations at indices 18 (dev-graph:run-dev-graph-system-spec), 62 (run-system-spec-elicit), 194 (run-system-spec-doc-fetch), 258 (run-system-spec-compile) and 277/789 (assign-system-spec-completeness-evaluator); no script was called in place of an entry point. Artifacts corroborate completion: system-spec/spec-state.json covers 8 categories, 9 confirmed chapters plus index.md carry confirmed markers, system-spec/fetched-references.json holds 6 records with real fetched versions (3.53.4, 18, 0.141.1, 3.1.3, RFC 6749) and retrieved_at values between 2026-08-08T04:17Z and 04:32Z from 9 WebFetch calls, and system-spec/completeness-report.json has verdict=PASS. The canonical gate aggregate-completeness.py --report ... --fork-ledger ... --session 90d2af97-df46-4734-ae41-2fdc5709df63 exited 0 with 3 audit_delegations grounded in the fork ledger."
+    },
+    "2": {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "status": "UNMET",
+      "evidence": "The registered artifact_kind set is {architecture} only. The architecture node carries all six non-null source_lineage fields (origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path=system-spec/00-requirements-definition.md, source_version=0.1.0, source_digest=fc6dcf56adbf5bd24b3b7a8822a156e4eca5b2330c8189be196089596170040b, imported_at=2026-08-08T04:44:37Z) and the digest matches an independent shasum -a 256 of that source_path; confirmation_status=confirmed with confirmation_evidence.evidence_ref=system-spec/completeness-report.json. validate-source-digest.py and validate-evidence-refs.py both exit 0 but inspect only checked=1 / scanned=1. No specification lineage exists, so the observation as a whole is unmet. progress.json lists registered_this_run=['arch-system-spec-overview'] and leaves spec-system-spec-index in attempted_this_run with a blocker."
+    },
+    "3": {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "status": "MET",
+      "evidence": "Exhaustive trace check: all 11 Write/Edit operations in transcript.jsonl target the scratchpad or the final out/status.json; zero Write/Edit touched the graph store, specs/ or architecture/. The only graph-store mutation was one upsert-node.py run (receipt owner=C02/run-dev-graph-node, operation=added, graph_revision 0 to 1), matching the fixture's actual graph_revision=1. The writer-path check used a positive control: searching atomic_json( hits build-graph-store.py:149 for initialization and upsert-node.py for mutation, confirming the split of responsibility. The duplication check was run as a controlled experiment: the terms awaiting_confirmation, apply-spec-transition, compile-spec-doc, validate-coverage-matrix and validate-source-citation all return N>0 hits inside plugins/system-spec-harness (compile-spec-doc.py, apply-spec-transition.py, guard-confirmed-chapter-overwrite.py, spec_docset_catalog.py) while returning zero implementation hits inside plugins/dev-graph, the only match being two descriptive comment lines in tests/fixtures/live_trial_shapes/shape_system_spec.py. The registered architecture node references harness output through source_lineage rather than copying elicitation or compile logic."
+    }
+  }
+}

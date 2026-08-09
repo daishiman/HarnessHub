@@ -1,0 +1,13 @@
+{
+  "evaluator": "fresh-independent-goal-evaluator-c05",
+  "scenario_id": "C05-OUT1-positive-feature-progress",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {"met": true, "evidence": "The generated HTML contains inline CSS/JS and SVG, has zero external script/link/CDN/npm references, and rendered successfully from file://."},
+    "2": {"met": true, "evidence": "The displayed denominator is 13 and matches both registration receipt applied_count and expected_count; a mismatched negative control emitted no HTML."},
+    "3": {"met": true, "evidence": "Independent graph aggregation finds four done/closed children and the HTML displays 4/13."},
+    "4": {"met": true, "evidence": "Receipt source_digest matches all child source_lineage digests and render metadata reports registration_verification.status=verified."}
+  },
+  "goal_evidence": "The renderer produced a self-contained graph with verified registration, exact 4/13 progress, matching input/output digests, and no graph mutation."
+}

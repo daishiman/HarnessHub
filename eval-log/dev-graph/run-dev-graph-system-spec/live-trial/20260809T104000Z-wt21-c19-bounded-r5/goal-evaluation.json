@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "c19_r5_goal_evaluator"
+  },
+  "transcript_sha256": "ad9bb975895a7e598c6363f9b6357730a1309798df096716f85e88a957774071",
+  "evidence_refs": [
+    "out/status.json",
+    "transcript.jsonl"
+  ]
+}

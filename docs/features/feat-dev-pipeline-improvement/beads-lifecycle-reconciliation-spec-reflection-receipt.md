@@ -48,6 +48,24 @@ Web/API、データベース、認可、UI、外部連携、デプロイ、品�
 - `lint-artifact-placement.py`、`lint-doc-line-limit.py --ratchet-base origin/main`、`git diff --check` を実行する。
 - `scripts/run-ci-checks.sh` と `pnpm verify` を、コミット前の最終ゲートとして実行する。
 
+## 2026-08-10 再レビューと main 同期
+
+最新の `origin/main`（`c26ee1e8`）をローカル `main` にマージし、その結果
+`99802196` をこの P13 ブランチへマージした。競合した 3 ノードは、main の追加ノードを
+構造マージで保持しつつ、このブランチで Beads から再照合済みのライフサイクル投影を採用した。
+
+再実行した最小 MVP 品質ゲートはすべて成功した。
+
+- `git diff --cached origin/main --check`
+- `validate-graph-schema.py`（472 ノード）
+- `validate-system-plan.py --feature-package feature-package/feat-dev-pipeline-improvement`（P01–P13、violations 0）
+- `lint-artifact-placement.py`
+- `lint-doc-line-limit.py --ratchet-base origin/main`（658 文書、上限 300 行）
+
+`origin/main` が含む `system-spec/`・`specs/`・`architecture/`・`docs/`・`features/`・`tasks/`
+の更新は、すでに base branch 側で受領済みの別機能の変更である。本 PR 固有の差分は
+ライフサイクル投影とこの受領書であり、前節の「影響なし」判定を維持する。
+
 ## 中学生向けの説明
 
 この変更は新しい画面を作るものではない。学校の「宿題リスト」「先生の進み具合表」「提出ノート」で、

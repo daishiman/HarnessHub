@@ -1,0 +1,370 @@
+{
+  "code_generation_policy": "dev-graph は実装コードを生成しない。実装は capability-build/task-graph build が本 handoff を入力に実施する。",
+  "consumer": "capability-build / task-graph build",
+  "digest_binding": {
+    "feature_confirmation_evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+    "feature_source_lineage_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+    "feature_source_path": "system-spec/00-requirements-definition.md",
+    "graph_snapshot_digest": "sha256:6ca5bf7b77755061f4997cb2632ac8e56fe2ffc7fc605681d577aa453cf88313",
+    "package_canonical_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+    "promotion_evaluated_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+    "published_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+    "source_feature_digest": "sha256:9ea5885dab34301e5feb131e8f54b5f10d95a658816c283d4747cc9f25ddf998",
+    "system_build_handoff_sha256": "e54159b7e759def0655e75b589da33e287a809c011d10a221f9753550db625db",
+    "task_node_source_digest": [
+      "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46"
+    ]
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P01",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P01",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p01.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-01-requirements.md",
+      "task_spec_sha256": "f0a6cbf977e980373a0b8c3d7b8d5ad1677b60f25a6029f9d68984e8d7627d53",
+      "title": "要件ベースライン確定 (P01)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P01"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P02",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P02",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p02.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-02-architecture.md",
+      "task_spec_sha256": "e30413c7f8cd020174f0b07207df605c02e01c27c006e5dca07460b44976bd3e",
+      "title": "アーキテクチャとワークストリーム設計 (P02)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P02"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P03",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P03",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p03.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-03-design-review.md",
+      "task_spec_sha256": "855f29b01d982548569f55c8aab72ace68ecf2a0f359c0101dfdb6f084005fd5",
+      "title": "独立設計レビュー (P03)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P03"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P04",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P04",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p04.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-04-test-design.md",
+      "task_spec_sha256": "6408f9e1c167ab01d80057241137fd68ffb118e49c102296db5c7c8065133065",
+      "title": "テストファースト設計 (P04)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P04"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P05",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P05",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p05.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-05-implementation.md",
+      "task_spec_sha256": "1d1510e0b1c7996d180906b17363e6a97ae9fb0e17745780a836020ccaf34dc4",
+      "title": "実装 (P05)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P05"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P06",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P06",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p06.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-06-test-run.md",
+      "task_spec_sha256": "67364adaf7195d3cdec775ac9e161b382123cbe582db5e251a688fa2a102fb44",
+      "title": "テスト実行 (P06)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P06"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P07",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P07",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p07.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-07-acceptance.md",
+      "task_spec_sha256": "af06ea4ac437953228dbfdbfe4bd5b27a53145b48db4e67778cae725cb3671c3",
+      "title": "feature 受入判定 (P07)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P07"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P08",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P08",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p08.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-08-refactoring-migration.md",
+      "task_spec_sha256": "5e7927cd1ecafa2a242fb929af4221ae46dfb6a4109960cd7fb3f7ce2f7eb5ab",
+      "title": "リファクタリングと移行 (P08)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P08"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P09",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P09",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p09.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-09-quality-assurance.md",
+      "task_spec_sha256": "6ddf69f0ed27127df3aeca7c7e529ae6c3253f14403fd329c3d1f6ba4993e5ad",
+      "title": "品質・セキュリティ・運用保証 (P09)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P09"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P10",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P10",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p10.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-10-final-review.md",
+      "task_spec_sha256": "c01bee461aa32f121ffc37d2d48a76663035a5e495f18b978ae18f4721457113",
+      "title": "独立最終レビュー (P10)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P10"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P11",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P11",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p11.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-11-evidence.md",
+      "task_spec_sha256": "553cbaeaab5b8e9119b948972d0fabb8c705f2d7e54134d6ad0e6067ea658475",
+      "title": "再現可能な証跡整備 (P11)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P11"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P12",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P12",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p12.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-12-documentation-operations.md",
+      "task_spec_sha256": "8b510a2fb9528d9e5bac3dc19aeb0eaebbcb0c57325113f66d90435e227eb43a",
+      "title": "ドキュメントと運用手順 (P12)"
+    },
+    {
+      "build_target_kind": "application-code",
+      "confirmation_status": "confirmed",
+      "depends_on": [
+        "SYS-LIVE-001-P12"
+      ],
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "phase_ref": "P13",
+      "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "task_node_id": "SYS-LIVE-001-P13",
+      "task_node_path": "tasks/F-LIVE-001/sys-live-001-p13.md",
+      "task_spec_path": "system-plan/F-LIVE-001/task-specs/phase-13-release-deploy.md",
+      "task_spec_sha256": "5d8931b26aa2d540746ed9eb1a4156574687ecf6d5a9b2e71071ac9e5f258d02",
+      "title": "リリースとクローズアウト (P13)"
+    }
+  ],
+  "gate_evidence": {
+    "C02_saved_readiness_evaluation": {
+      "implementation_readiness": "complete",
+      "match_with_c11": true,
+      "published_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+      "quality_conditions": {
+        "consistent": "PASS",
+        "dependency_integrity": "PASS",
+        "no_contradiction": "PASS",
+        "no_missing": "PASS"
+      },
+      "source": [
+        ".dev-graph/plan-state/current/feature-package-F-LIVE-001.json",
+        "system-plan/F-LIVE-001/atomic-promotion-receipt.json",
+        "system-plan/F-LIVE-001/dev-graph-registration-receipt.json"
+      ]
+    },
+    "C11_validate_graph_schema": {
+      "command": "python3 $DEV_GRAPH_PLUGIN/scripts/validate-graph-schema.py --graph $DEV_GRAPH_ROOT/.dev-graph/state/graph.json --repo-root $DEV_GRAPH_ROOT",
+      "exit_code": 0,
+      "report": {
+        "implementation_readiness": "complete",
+        "missing_sections": [],
+        "valid": true,
+        "violations": []
+      }
+    },
+    "validate_source_digest": {
+      "command": "python3 $DEV_GRAPH_PLUGIN/scripts/validate-source-digest.py --repo-root $DEV_GRAPH_ROOT --registered <lineage closure 15 件>",
+      "exit_code": 0,
+      "registered": [
+        "F-LIVE-001",
+        "LT-ARCH-001",
+        "SYS-LIVE-001-P01",
+        "SYS-LIVE-001-P02",
+        "SYS-LIVE-001-P03",
+        "SYS-LIVE-001-P04",
+        "SYS-LIVE-001-P05",
+        "SYS-LIVE-001-P06",
+        "SYS-LIVE-001-P07",
+        "SYS-LIVE-001-P08",
+        "SYS-LIVE-001-P09",
+        "SYS-LIVE-001-P10",
+        "SYS-LIVE-001-P11",
+        "SYS-LIVE-001-P12",
+        "SYS-LIVE-001-P13"
+      ],
+      "registered_count": 15,
+      "report": {
+        "checked": 15,
+        "registered_mismatch": []
+      }
+    },
+    "validate_system_plan": {
+      "command": "python3 $SYSTEM_DEV_PLANNER/scripts/validate-system-plan.py --repo-root $DEV_GRAPH_ROOT --feature-package feature-package/F-LIVE-001",
+      "exit_code": 0,
+      "report": {
+        "phase_refs": [
+          "P01",
+          "P02",
+          "P03",
+          "P04",
+          "P05",
+          "P06",
+          "P07",
+          "P08",
+          "P09",
+          "P10",
+          "P11",
+          "P12",
+          "P13"
+        ],
+        "status": "pass",
+        "validated_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "violations": []
+      },
+      "used_staging_flag": false
+    }
+  },
+  "handoff_status": "ready",
+  "identity": {
+    "feature_id": "F-LIVE-001",
+    "feature_node_path": "features/f-live-001.md",
+    "feature_package_id": "feature-package/F-LIVE-001",
+    "parent_feature": "F-LIVE-001",
+    "repository_id": "local:sha256:7209f443a2a2b0ffc66cbc1b89766220c0920c7e0568ec7275e7fbb565b1794b"
+  },
+  "kind": "capability-build-task-graph-handoff",
+  "missing_sections": [],
+  "package_reference": {
+    "manifest": "system-plan/F-LIVE-001/staging-manifest.json",
+    "phase_refs": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13"
+    ],
+    "promotion_receipt": "system-plan/F-LIVE-001/atomic-promotion-receipt.json",
+    "published_path": "system-plan/F-LIVE-001",
+    "registration_receipt": "system-plan/F-LIVE-001/dev-graph-registration-receipt.json",
+    "system_build_handoff": "system-plan/F-LIVE-001/system-build-handoff.json",
+    "task_count": 13,
+    "task_node_ids": [
+      "SYS-LIVE-001-P01",
+      "SYS-LIVE-001-P02",
+      "SYS-LIVE-001-P03",
+      "SYS-LIVE-001-P04",
+      "SYS-LIVE-001-P05",
+      "SYS-LIVE-001-P06",
+      "SYS-LIVE-001-P07",
+      "SYS-LIVE-001-P08",
+      "SYS-LIVE-001-P09",
+      "SYS-LIVE-001-P10",
+      "SYS-LIVE-001-P11",
+      "SYS-LIVE-001-P12",
+      "SYS-LIVE-001-P13"
+    ],
+    "upstream_p01_entry_gate": {
+      "operator": "all",
+      "required_statuses": [
+        "done",
+        "closed"
+      ],
+      "selector": "parent_feature.depends_on"
+    }
+  },
+  "producer": "dev-graph/run-dev-graph-requirements (R3-handoff)",
+  "remediation_owners": [],
+  "requirements_reference": {
+    "document": "docs/requirements/F-LIVE-001/requirements.md",
+    "graph_snapshot_digest_doc": "docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+    "readiness_matrix": "docs/requirements/F-LIVE-001/readiness-matrix.json"
+  },
+  "schema_version": "1.0.0",
+  "self_generated_implementation_files": []
+}

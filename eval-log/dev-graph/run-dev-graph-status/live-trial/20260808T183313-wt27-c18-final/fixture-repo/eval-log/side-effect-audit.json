@@ -1,0 +1,78 @@
+{
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "observation": "the run leaves graph, config, content and GitHub state unchanged",
+  "digest_comparison": [
+    {
+      "path": ".dev-graph/config.json",
+      "class": "config",
+      "sha256_before_skill_run": "bb58a09a9f20ec998eeb0cdb366664a9497b99e8d2997c7d7b8005b3651abf7b",
+      "sha256_after_skill_run": "bb58a09a9f20ec998eeb0cdb366664a9497b99e8d2997c7d7b8005b3651abf7b",
+      "identical": true
+    },
+    {
+      "path": ".dev-graph/state/graph.json",
+      "class": "graph",
+      "sha256_before_skill_run": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+      "sha256_after_skill_run": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+      "identical": true
+    },
+    {
+      "path": "tasks/lt-task-001.md",
+      "class": "content",
+      "sha256_before_skill_run": "338775a2ab80e373a5dd5a2cb3cfb7769bef84d8ad807077397cee2345a63351",
+      "sha256_after_skill_run": "338775a2ab80e373a5dd5a2cb3cfb7769bef84d8ad807077397cee2345a63351",
+      "identical": true
+    },
+    {
+      "path": "tasks/lt-task-002.md",
+      "class": "content",
+      "sha256_before_skill_run": "1eaf9844eb79a5431e568750665c250c6c2ef707c5cf54322c88c7a71899278a",
+      "sha256_after_skill_run": "1eaf9844eb79a5431e568750665c250c6c2ef707c5cf54322c88c7a71899278a",
+      "identical": true
+    }
+  ],
+  "all_digests_identical": true,
+  "script_internal_digest_guard": {
+    "source": "eval-log/run-dev-graph-status-execution.json",
+    "graph_sha256_before": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+    "graph_sha256_after": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+    "graph_identical": true,
+    "authority_sha256_before": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+    "authority_sha256_after": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+    "authority_identical": true,
+    "read_only_flag": true,
+    "note": "authority digest は config.json + graph.json + 全 node file_path を連結した SHA-256 (status-graph.py _authority_digest)"
+  },
+  "git_status_porcelain": [
+    "?? eval-log/"
+  ],
+  "entries_outside_eval_log": [],
+  "worktree_clean_outside_eval_log": true,
+  "external_calls": {
+    "github_api": 0,
+    "gh_cli": 0,
+    "beads_bd_cli": 0,
+    "commands_executed_during_run": [
+      "shasum -a 256 (read-only digest capture, pre/post)",
+      "git status --porcelain (read-only)",
+      "python3 resolve-repo-context.py --mode read (C24 receipt)",
+      "python3 validate-graph-schema.py --graph ... --repo-root ... (C11 read-only validation)",
+      "python3 status-graph.py --repo-root ... <AND filters> --eval-log eval-log/... (C18 read-only query, network:false)",
+      "python3 (inline verification scripts, writes limited to eval-log/)"
+    ],
+    "writer_sync_render_skills_invoked": [],
+    "note": "gh / GitHub REST/GraphQL / bd (Beads) は 1 度も呼び出していない。config.github.enabled=false、execution_tracker.beads.server_mode=false、全 node の tracker_binding=none で外部同期経路自体が非活性である"
+  },
+  "writes_performed": [
+    "eval-log/_post-hashes.txt",
+    "eval-log/_pre-hashes.txt",
+    "eval-log/readiness-comparison.json",
+    "eval-log/run-dev-graph-status-empty-query.json",
+    "eval-log/run-dev-graph-status-execution.json",
+    "eval-log/run-dev-graph-status-goal-spec.json",
+    "eval-log/run-dev-graph-status-intermediate.jsonl",
+    "eval-log/status-report.json"
+  ],
+  "write_scope_containment": "全書込みは <repo_root>/eval-log/ 配下のみ",
+  "verdict": "PASS"
+}

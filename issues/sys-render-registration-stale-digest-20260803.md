@@ -12,7 +12,7 @@ iteration: null
 title: "dev-graph: render の registration receipt が sync 後に必ず stale になる"
 owners: ["daishiman"]
 created_at: "2026-08-03T21:15:05.909349Z"
-updated_at: "2026-08-03T21:45:57.713524Z"
+updated_at: "2026-08-07T12:55:00Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-render-registration-receipt-contract-mismatch-20260726","feat-dev-pipeline-improvement","arch-harness-hub-testing-qa"]
@@ -39,7 +39,7 @@ classification_reason: "registration 時点の graph_digest_after と sync 後�
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-render-registration-stale-digest-20260803.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-0ui0","linked_at":"2026-08-04T00:00:00Z","sync_state":"linked"}
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -47,6 +47,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 概要
 

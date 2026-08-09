@@ -105,12 +105,12 @@ P03〜P11 の各文書は「`vars.HUB_PUBLIC_URL` が未設定のため計測対
 1. ~~本 feature の catalog route がまだ本番に出ていない~~ → **2026-08-02 に解消** (§2.1)。
 2. **`cwv.yml` は既定でルート URL しか測らない**。`vars.HUB_PUBLIC_URL` をそのまま Lighthouse に渡す実装であり、
    `/catalog` を測るには `workflow_dispatch` の `target_url` 入力で明示する必要がある。
-3. **`/catalog` は未認証で 401 を返し、Lighthouse がページを読み込めない** (2026-08-02 実測)。
+3. **2026-08-02 時点では `/catalog` が未認証 401 を返し、Lighthouse がページを読み込めなかった。**
    1・2 を解消したうえで `gh workflow run hub-cwv -f target_url=<HUB_PUBLIC_URL>/catalog` を実行したところ、
    run `30736055772` が `Lighthouse was unable to reliably load the page you requested. (Status code: 401)`
-   で失敗した。401 は deny-by-default の設計どおりの応答であり、**障害ではなく計測経路の欠落**である。
-   `cwv.yml` は認証済みセッションを持たないため、認証必須 route の CWV は現行経路では原理的に測れない。
-   同 workflow は feat-hub-foundation 所管で本 feature の Write scope 外のため、追跡課題として引き渡す。
+   で失敗した。401 は deny-by-default の設計どおりの応答である。その後、署名・origin・固定 scope・
+   5 分 TTL を検証する短命 `__cwv_probe` が導入され、現在は認証必須 route の計測経路が存在する。
+   `HarnessHub-aqi` で `hub-cwv` を再実行し、fresh artifact が得られるまで acceptance 2 は未達を維持する。
 
 この取り違えは「変数を設定すれば完了」という誤った作業計画を生む。
 該当箇所は `acceptance-record.md` §2.2 / `final-review-record.md` §2・§5 / `quality-assurance-report.md` §4 /
@@ -219,8 +219,8 @@ curl -sSI "$HUB_PUBLIC_URL/marketplace.json" -b "$SESSION_COOKIE" \
 ### 3.6 CWV ゲート通過
 
 - **pass 条件**: LCP ≤ 2500ms / CLS ≤ 0.1 / TBT ≤ 200ms (INP の lab 代理指標)。
-- **現状: 未計測 = 未達。** deploy 完了後に実行した run `30736055772` は 401 で Lighthouse が失敗した (§2.3-3)。
-  **計測経路が存在しないことが確定した**ため、acceptance 2 は認証付き計測経路の整備まで pass にできない。
+- **現状: fresh 計測待ち = 未達。** run `30736055772` は 401 で失敗したが、現在は `__cwv_probe` がある (§2.3-3)。
+  `hub-cwv` の fresh artifact で TBT ≤ 200ms を確認するまで pass にしない。
 
 ### 3.7 現在の状態まとめ
 
@@ -231,7 +231,7 @@ curl -sSI "$HUB_PUBLIC_URL/marketplace.json" -b "$SESSION_COOKIE" \
 | 3 | publish 状況ポーリング | **未実行** | 同上 (加えて実 publishId の入手性に依存) |
 | 4 | `marketplace.json` 配信 | **未実行** | 同上 |
 | 5 | axe ゲート | **pass** | ローカル実測 (test:a11y 3 tests / 契約テスト 63 tests) |
-| 6 | CWV ゲート | **未達 (計測不能)** | run `30736055772` が 401 で失敗。計測経路が無い (§2.3-3) |
+| 6 | CWV ゲート | **未達 (再計測待ち)** | 旧 run `30736055772` は 401。現在は `__cwv_probe` があり、`HarnessHub-aqi` で fresh 実測を待つ (§2.3-3) |
 
 ---
 

@@ -53,6 +53,14 @@ PENDING_RENAME_PATTERNS = [
 # 暫定例外: 個別パス (初回投入時の既存スクリプト群、33章 Change Governance 管理下)
 # リネーム計画は .claude/changelog/governance-log.jsonl 参照
 PENDING_RENAME_PATHS = {
+    # system-spec transition writer is split into importable Python modules.
+    # These modules are imported by apply-spec-transition.py and by focused
+    # tests, so kebab-case is not a valid Python module name (§4.3 exception).
+    "plugins/system-spec-harness/scripts/foundation_provenance.py",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_common.py",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_foundation.py",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_knowledge.py",
+    "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py",
     # Multi-tenant public CLI names are fixed by doc/マルチ企業展開. Python module
     # helpers retain underscores because they are imported by standalone plugins.
     "scripts/tenant-init.py",

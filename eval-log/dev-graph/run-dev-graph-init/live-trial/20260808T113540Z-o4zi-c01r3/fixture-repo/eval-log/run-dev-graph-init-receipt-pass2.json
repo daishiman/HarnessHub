@@ -1,0 +1,84 @@
+{
+  "pass": 2,
+  "repository_id": "local:sha256:4ebc70c4e51d6bb7e8cc65ec9e43ccd2d2678b9895fb6486e56fa23fa957bdac",
+  "content_roots_repo_relative": {
+    "issues": "issues",
+    "tasks": "tasks",
+    "specifications": "specs",
+    "architecture": "architecture",
+    "features": "features",
+    "documents": "docs"
+  },
+  "local_state_repo_relative": {
+    "config": ".dev-graph/config.json",
+    "graph": ".dev-graph/state/graph.json",
+    "cache": ".dev-graph/cache",
+    "locks": ".dev-graph/locks",
+    "templates": ".dev-graph/templates"
+  },
+  "created": [],
+  "preserved": [
+    "issues", "tasks", "specs", "architecture", "features", "docs",
+    ".dev-graph/config.json", ".dev-graph/state/graph.json",
+    ".dev-graph/cache", ".dev-graph/locks",
+    ".dev-graph/templates (21 files)"
+  ],
+  "migration_preview": [
+    {
+      "path": ".dev-graph/templates/document.md",
+      "state": "user_edited",
+      "action": "preserved_not_overwritten",
+      "plugin_sha256": "6c4311bad222591e47f7d279c8f533a8b8ab6e75fc4b10705b3447ea4186d59c",
+      "local_sha256_before_pass2": "3e98e53acda7d2feca5f1df1bbe60f55f929ba25c118907380939cd997f162ab",
+      "local_sha256_after_pass2": "3e98e53acda7d2feca5f1df1bbe60f55f929ba25c118907380939cd997f162ab",
+      "diff_summary": "利用者が「## 対象読者」節の直後へ HTML コメント 1 行 (LOCAL EDIT c01r3) を追加。plugin 側の更新は適用せず preview のみ記録する"
+    }
+  ],
+  "template_scaffold": {
+    "created": 0,
+    "unchanged": 20,
+    "user_edited_preserved": 1,
+    "missing_from_contract": 0
+  },
+  "hook_source": {
+    "requested": "plugin",
+    "decision": "plugin",
+    "diagnosis": "accepted",
+    "plugin_manifest": "plugins/dev-graph/.claude-plugin/plugin.json -> ./hooks/hooks.json",
+    "plugin_hooks_sha256": "59c573b2f424a8b05ec78c9f00931e2a66a4997959654a1a0c2567c107005227",
+    "events_wired": ["PreToolUse", "SessionStart", "PostToolUse", "TaskCompleted"],
+    "project_fallback_applied": false,
+    "project_fallback_rejection_reason": "effective plugin hook is present, so adding a project fallback would create a duplicate registration; fallback is only permitted when a plain-symlink plugin link exists and no effective plugin hook is visible",
+    "caller_settings_path": ".claude/settings.json",
+    "caller_settings_present": false,
+    "caller_settings_keys_changed": 0,
+    "duplicate_registrations": 0,
+    "rollback_manifest": null
+  },
+  "planned_changes": {
+    "count": 0,
+    "method": "sha256 snapshot of every tracked file (excluding .git) taken immediately before pass 2 and compared immediately after pass 2",
+    "file_set_diff": "empty",
+    "content_diff": "empty",
+    "files_compared": 36
+  },
+  "graph_state": {
+    "graph_revision": 1,
+    "node_count": 1,
+    "node_ids": ["doc-c01r3-init-idempotence-note"]
+  },
+  "config_secret_scan": {
+    "strings_scanned": 55,
+    "absolute_paths": 0,
+    "token_or_node_id_values": 0,
+    "host_specific_fragments": 0,
+    "github_enabled": false,
+    "github_retained": ["issue_repository", "owner_type", "owner_login", "project_number", "auto_add", "field_mappings.project_field_name"]
+  },
+  "schema_result": {
+    "build_repo_config": {"action": "unchanged", "changed": false, "valid": true, "violations": [], "digest": "sha256:8d6e4945d5d7166dfdacce4028cf0044704d36b06cee51ec582225de912cb4c8"},
+    "build_graph_store": {"action": "preserved_existing", "changed": false, "valid": true, "violations": [], "graph_revision": 1, "digest": "sha256:123c8b2f57a9869aa598d0eb8d9d68a444d3098d3ddef459154d04fb4502debd"},
+    "validate_repo_config": {"exit": 0, "valid": true, "violations": [], "missing_sections": []},
+    "validate_graph_schema": {"exit": 0, "valid": true, "violations": [], "missing_sections": [], "implementation_readiness": "complete", "nodes_validated": 1}
+  }
+}
