@@ -12,7 +12,7 @@ iteration: null
 title: "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T12:25:36Z"
+updated_at: "2026-08-04T03:41:09.138651Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P07"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "本 feature は packages/db/schema/ を write_scope に�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p08.md","confidence":0.85}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.8","linked_at":"2026-08-04T03:14:02Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立
 

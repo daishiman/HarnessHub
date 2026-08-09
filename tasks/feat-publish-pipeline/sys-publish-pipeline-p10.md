@@ -12,7 +12,7 @@ iteration: null
 title: "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T13:53:46.505526Z"
+updated_at: "2026-08-04T03:42:11.361422Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P09"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "P03 の設計時レビューとは独立して、実装�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p10.md","confidence":0.86}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.10","linked_at":"2026-08-04T03:14:07Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認
 

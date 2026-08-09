@@ -12,9 +12,9 @@ iteration: "Studio 拡張"
 title: "Studio: 構築パイプライン可視化 (7 工程ボード)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T20:48:29.790996Z"
+updated_at: "2026-07-28T04:18:24Z"
 status: "active"
-depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy","feat-publish-pipeline","feat-hearing-intake"]
+depends_on: ["feat-auth-tenancy","feat-domain-model-db","feat-hearing-intake","feat-hub-foundation"]
 related_nodes: []
 resource_scope: ["features/feat-build-pipeline-board.md"]
 purpose: "ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する"

@@ -12,9 +12,9 @@ iteration: "Studio 拡張"
 title: "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T20:53:25.998215Z"
+updated_at: "2026-08-03T12:06:33Z"
 status: "active"
-depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy","feat-publish-pipeline"]
+depends_on: ["feat-auth-tenancy","feat-domain-model-db","feat-hub-foundation"]
 related_nodes: []
 resource_scope: ["features/feat-feedback-loop.md"]
 purpose: "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する"

@@ -12,7 +12,7 @@ iteration: null
 title: ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:35:37Z"
-updated_at: "2026-07-25T02:35:37Z"
+updated_at: "2026-08-04T03:59:23.146697Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
@@ -38,7 +38,7 @@ classification_reason: "2026-07-25 の stash pop 中断で発生した .beads/in
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-beads-jsonl-stash-conflict-20260725.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-su8y","linked_at":"2026-08-04T03:57:52.184479Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

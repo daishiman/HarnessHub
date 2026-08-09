@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1459,
+  "graph_revision": 1460,
   "nodes": [
     {
       "acceptance": [
@@ -1118,8 +1118,8 @@
       "artifact_kind": "feature",
       "artifact_subtypes": [],
       "beads_linkage": {
-        "bd_issue_id": "HarnessHub-dfm",
-        "linked_at": "2026-07-18T16:04:15Z",
+        "bd_issue_id": "HarnessHub-krc7",
+        "linked_at": "2026-08-04T03:13:41Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
@@ -1146,10 +1146,7 @@
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:38:30Z",
-      "depends_on": [
-        "feat-domain-model-db",
-        "feat-auth-tenancy"
-      ],
+      "depends_on": [],
       "domain": "backend",
       "evaluation_status": "pass",
       "execution_contexts": [],
@@ -1204,7 +1201,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "closed",
+      "status": "active",
       "tags": [
         "macro-feature",
         "stage-1",
@@ -1215,7 +1212,7 @@
       "template_version": "1.0.0",
       "title": "PublishRequest パイプライン (状態機械・検査・promote/rollback)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T23:37:34Z"
+      "updated_at": "2026-08-04T03:13:41Z"
     },
     {
       "acceptance": [
@@ -1259,7 +1256,6 @@
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:38:30Z",
       "depends_on": [
-        "feat-publish-pipeline",
         "feat-stage0-distribution-gate"
       ],
       "domain": "backend",
@@ -1327,7 +1323,7 @@
       "template_version": "1.0.0",
       "title": "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:56:00.450300Z"
+      "updated_at": "2026-08-02T09:35:37Z"
     },
     {
       "acceptance": [
@@ -1371,7 +1367,6 @@
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:38:30Z",
       "depends_on": [
-        "feat-publish-pipeline",
         "feat-stage0-distribution-gate"
       ],
       "domain": "frontend",
@@ -1439,7 +1434,7 @@
       "template_version": "1.0.0",
       "title": "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:52:37.353128Z"
+      "updated_at": "2026-08-02T06:50:00Z"
     },
     {
       "acceptance": [
@@ -3665,11 +3660,10 @@
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T10:44:09Z",
       "depends_on": [
-        "feat-hub-foundation",
-        "feat-domain-model-db",
         "feat-auth-tenancy",
-        "feat-publish-pipeline",
-        "feat-hearing-intake"
+        "feat-domain-model-db",
+        "feat-hearing-intake",
+        "feat-hub-foundation"
       ],
       "domain": "frontend",
       "evaluation_status": "pass",
@@ -3735,7 +3729,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 構築パイプライン可視化 (7 工程ボード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:48:29.790996Z"
+      "updated_at": "2026-07-28T04:18:24Z"
     },
     {
       "acceptance": [
@@ -3779,10 +3773,9 @@
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T10:44:09Z",
       "depends_on": [
-        "feat-hub-foundation",
-        "feat-domain-model-db",
         "feat-auth-tenancy",
-        "feat-publish-pipeline"
+        "feat-domain-model-db",
+        "feat-hub-foundation"
       ],
       "domain": "backend",
       "evaluation_status": "pass",
@@ -3849,7 +3842,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:53:25.998215Z"
+      "updated_at": "2026-08-03T12:06:33Z"
     },
     {
       "acceptance": [
@@ -16205,7 +16198,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.1",
+        "linked_at": "2026-08-04T03:13:44Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16297,7 +16294,7 @@
       "template_version": "1.1.0",
       "title": "PublishRequest 状態機械・検査 pipeline・promote/rollback 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:52:26.136966Z"
+      "updated_at": "2026-08-04T03:37:16.697468Z"
     },
     {
       "acceptance": [
@@ -16312,7 +16309,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.2",
+        "linked_at": "2026-08-04T03:13:46Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16406,7 +16407,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:37:50.064630Z"
     },
     {
       "acceptance": [
@@ -16421,7 +16422,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.3",
+        "linked_at": "2026-08-04T03:13:49Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16515,7 +16520,7 @@
       "template_version": "1.1.0",
       "title": "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:38:21.799250Z"
     },
     {
       "acceptance": [
@@ -16530,7 +16535,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.4",
+        "linked_at": "2026-08-04T03:13:51Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16634,7 +16643,7 @@
       "template_version": "1.1.0",
       "title": "テストファースト設計 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:52:48.250425Z"
+      "updated_at": "2026-08-04T03:39:00.824132Z"
     },
     {
       "acceptance": [
@@ -16649,7 +16658,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.5",
+        "linked_at": "2026-08-04T03:13:54Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16759,7 +16772,7 @@
       "template_version": "1.1.0",
       "title": "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:39:32.288442Z"
     },
     {
       "acceptance": [
@@ -16774,7 +16787,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.6",
+        "linked_at": "2026-08-04T03:13:57Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16876,7 +16893,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:53:04.708092Z"
+      "updated_at": "2026-08-04T03:40:06.286747Z"
     },
     {
       "acceptance": [
@@ -16891,7 +16908,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.7",
+        "linked_at": "2026-08-04T03:13:59Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -16985,7 +17006,7 @@
       "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:40:37.785745Z"
     },
     {
       "acceptance": [
@@ -16999,7 +17020,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.8",
+        "linked_at": "2026-08-04T03:14:02Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17101,7 +17126,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:41:09.138651Z"
     },
     {
       "acceptance": [
@@ -17115,7 +17140,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.9",
+        "linked_at": "2026-08-04T03:14:05Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17217,7 +17246,7 @@
       "template_version": "1.1.0",
       "title": "品質・セキュリティ・運用保証 — レート制限・Idempotency-Key・tenant 分離・secret scan CI ゲート確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:41:40.099750Z"
     },
     {
       "acceptance": [
@@ -17232,7 +17261,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.10",
+        "linked_at": "2026-08-04T03:14:07Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17326,7 +17359,7 @@
       "template_version": "1.1.0",
       "title": "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:53:46.505526Z"
+      "updated_at": "2026-08-04T03:42:11.361422Z"
     },
     {
       "acceptance": [
@@ -17340,7 +17373,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.11",
+        "linked_at": "2026-08-04T03:14:46Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17433,7 +17470,7 @@
       "template_version": "1.1.0",
       "title": "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T13:53:21.882018Z"
+      "updated_at": "2026-08-04T03:42:42.872478Z"
     },
     {
       "acceptance": [
@@ -17447,7 +17484,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.12",
+        "linked_at": "2026-08-04T03:14:49Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17540,7 +17581,7 @@
       "template_version": "1.1.0",
       "title": "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:43:14.099294Z"
     },
     {
       "acceptance": [
@@ -17555,7 +17596,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-krc7.13",
+        "linked_at": "2026-08-04T03:14:51Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -17659,7 +17704,7 @@
       "template_version": "1.1.0",
       "title": "リリース/デプロイ — apps/hub publish endpoint 本番デプロイと full smoke test",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T12:25:36Z"
+      "updated_at": "2026-08-04T03:43:45.399996Z"
     },
     {
       "acceptance": [
@@ -25316,8 +25361,8 @@
       "artifact_kind": "feature",
       "artifact_subtypes": [],
       "beads_linkage": {
-        "bd_issue_id": "HarnessHub-k2u",
-        "linked_at": "2026-07-21T16:50:00Z",
+        "bd_issue_id": "HarnessHub-y7aj",
+        "linked_at": "2026-08-04T03:15:46Z",
         "sync_state": "linked"
       },
       "classification_candidates": [
@@ -25420,7 +25465,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "closed",
+      "status": "active",
       "tags": [
         "macro-feature",
         "dev-pipeline",
@@ -25433,7 +25478,7 @@
       "template_version": "1.0.0",
       "title": "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T04:14:17Z"
+      "updated_at": "2026-08-04T07:14:11.105269Z"
     },
     {
       "acceptance": [
@@ -25446,7 +25491,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.1",
+        "linked_at": "2026-08-04T03:15:49Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25540,7 +25589,7 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:52:03.400821Z"
+      "updated_at": "2026-08-04T03:22:10.971179Z"
     },
     {
       "acceptance": [
@@ -25556,7 +25605,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.2",
+        "linked_at": "2026-08-04T03:15:52Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25652,7 +25705,7 @@
       "template_version": "1.1.0",
       "title": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:52:26.342269Z"
+      "updated_at": "2026-08-04T03:22:43.819589Z"
     },
     {
       "acceptance": [
@@ -25664,7 +25717,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.3",
+        "linked_at": "2026-08-04T03:15:54Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25760,7 +25817,7 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:52:52.655407Z"
+      "updated_at": "2026-08-04T03:23:18.483865Z"
     },
     {
       "acceptance": [
@@ -25774,7 +25831,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.4",
+        "linked_at": "2026-08-04T03:15:57Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -25870,7 +25931,7 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:53:26.151657Z"
+      "updated_at": "2026-08-04T03:23:58.797752Z"
     },
     {
       "acceptance": [
@@ -25884,7 +25945,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.5",
+        "linked_at": "2026-08-04T03:15:59Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26000,7 +26065,7 @@
       "template_version": "1.1.0",
       "title": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:53:54.327678Z"
+      "updated_at": "2026-08-04T03:24:31.527301Z"
     },
     {
       "acceptance": [
@@ -26012,7 +26077,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.6",
+        "linked_at": "2026-08-04T03:16:02Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26108,7 +26177,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 回帰テスト全件と lint 実測の記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:54:18.356033Z"
+      "updated_at": "2026-08-04T03:25:03.595970Z"
     },
     {
       "acceptance": [
@@ -26120,7 +26189,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.7",
+        "linked_at": "2026-08-04T03:16:04Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26216,7 +26289,7 @@
       "template_version": "1.1.0",
       "title": "受入判定 — 8 acceptance の突合と未達の差し戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:54:44.875336Z"
+      "updated_at": "2026-08-04T03:25:35.369756Z"
     },
     {
       "acceptance": [
@@ -26231,7 +26304,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.8",
+        "linked_at": "2026-08-04T03:16:07Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26331,7 +26408,7 @@
       "template_version": "1.1.0",
       "title": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-01T12:00:37Z"
+      "updated_at": "2026-08-04T03:26:07.993893Z"
     },
     {
       "acceptance": [
@@ -26343,7 +26420,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.9",
+        "linked_at": "2026-08-04T03:16:10Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26439,7 +26520,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — fail-closed 実効性の悪性ケース実測",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:55:39.527178Z"
+      "updated_at": "2026-08-04T03:27:35.011681Z"
     },
     {
       "acceptance": [
@@ -26451,7 +26532,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.10",
+        "linked_at": "2026-08-04T03:16:12Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26547,7 +26632,7 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 全 phase 成果の横断整合確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T16:56:08.038751Z"
+      "updated_at": "2026-08-04T03:28:08.342178Z"
     },
     {
       "acceptance": [
@@ -26559,7 +26644,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.11",
+        "linked_at": "2026-08-04T03:16:15Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26655,7 +26744,7 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — 実測ログと digest の evidence manifest 化",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-30T01:53:05Z"
+      "updated_at": "2026-08-04T03:28:42.109995Z"
     },
     {
       "acceptance": [
@@ -26667,7 +26756,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.12",
+        "linked_at": "2026-08-04T03:16:17Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26763,7 +26856,7 @@
       "template_version": "1.1.0",
       "title": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T04:40:00Z"
+      "updated_at": "2026-08-04T03:29:14.118964Z"
     },
     {
       "acceptance": [
@@ -26775,7 +26868,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y7aj.13",
+        "linked_at": "2026-08-04T03:16:20Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -26872,7 +26969,7 @@
       "template_version": "1.1.0",
       "title": "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-03T04:40:00Z"
+      "updated_at": "2026-08-04T03:29:48.656827Z"
     },
     {
       "acceptance": [
@@ -32155,7 +32252,11 @@
       "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9i1b",
+        "linked_at": "2026-08-04T03:57:49.404582Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -32249,7 +32350,7 @@
       "template_version": "1.0.0",
       "title": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-24T08:23:21Z"
+      "updated_at": "2026-08-04T03:58:30.768368Z"
     },
     {
       "acceptance": [
@@ -33362,7 +33463,11 @@
       "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-su8y",
+        "linked_at": "2026-08-04T03:57:52.184479Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -33459,7 +33564,7 @@
       "template_version": "1.0.0",
       "title": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-25T02:35:37Z"
+      "updated_at": "2026-08-04T03:59:23.146697Z"
     },
     {
       "acceptance": [
@@ -42848,7 +42953,11 @@
       ],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5iuq",
+        "linked_at": "2026-07-28T06:31:28Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -42940,7 +43049,7 @@
       "template_version": "1.0.0",
       "title": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T06:23:05Z"
+      "updated_at": "2026-08-04T03:59:56.419451Z"
     },
     {
       "acceptance": [
@@ -43358,7 +43467,11 @@
       "architecture_refs": [],
       "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ntip",
+        "linked_at": "2026-07-28T21:43:40Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "issue",
@@ -43453,7 +43566,7 @@
       "template_version": "1.0.0",
       "title": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T21:40:43Z"
+      "updated_at": "2026-08-04T04:00:27.875270Z"
     },
     {
       "acceptance": [
@@ -43826,7 +43939,7 @@
       "template_version": "1.0.0",
       "title": "required heading 欠落を C11 readiness で専用拒否する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T07:41:06Z"
+      "updated_at": "2026-08-04T04:22:19Z"
     },
     {
       "acceptance": [
@@ -45719,9 +45832,21 @@
       "updated_at": "2026-08-02T12:41:31.987120Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/requirements-baseline.md (要件ベースライン文書。purpose/goal/scope_in 10 件/scope_out 6 件/acceptance 8 件/quality_constraints 6 件の確定転記と cross-feature 境界の P02 必須解消事項を含む)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.1",
+        "linked_at": "2026-08-02T08:05:35Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -45759,6 +45884,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P01",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -45775,6 +45901,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P01 を実行する: 要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -45782,6 +45909,16 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "authorize() の判定順・role 判定・deny-by-default そのものの変更 (owner=feat-auth-tenancy)",
+        "業務画面本体の実装 (owner=feat-dual-catalog-web)",
+        "Workspace 選択画面の UI 実装 (owner=feat-workspace-switch-ux)",
+        "Web 公開ウィザードの導線 (owner=feat-web-only-publish-journey)",
+        "実装コードの作成 (本 task は要件確定のみ)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -45804,12 +45941,24 @@
       "template_version": "1.1.0",
       "title": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:49:14.420172Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/architecture-decision.md (scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と入出力契約・既定着地の単一定数化を決定として記録した文書)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.2",
+        "linked_at": "2026-08-02T08:05:41Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -45849,6 +45998,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P02",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -45865,6 +46015,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P02 を実行する: アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -45872,6 +46023,15 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/architecture-decision.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/architecture-decision.md"
+      ],
+      "scope_out": [
+        "authorize() の判定順・role 判定・deny-by-default そのものの変更 (owner=feat-auth-tenancy)",
+        "実装コードの作成 (owner=P05)",
+        "Workspace 選択画面の UI 設計 (owner=feat-workspace-switch-ux)",
+        "テスト ID の定義 (owner=P04)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -45894,12 +46054,24 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:50:41.340531Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/design-review.md (3 リスク観点の審査結果。指摘・結論・対応 phase を含む)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.3",
+        "linked_at": "2026-08-02T08:06:00Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -45939,6 +46111,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P03",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -45955,6 +46128,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P03 を実行する: 設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -45962,6 +46136,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/design-review.md"
+      ],
+      "scope_out": [
+        "設計そのものの変更 (指摘は P02 へ差し戻す)",
+        "テスト ID の定義 (owner=P04)",
+        "実装コードの作成 (owner=P05)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -45984,12 +46166,24 @@
       "template_version": "1.1.0",
       "title": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:51:14.089491Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/test-design.md (scope 解決 4 組合せ・着地先 5 分類・acceptance 8 件との対応表を含むテスト設計書)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.4",
+        "linked_at": "2026-08-02T08:06:05Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46029,6 +46223,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P04",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46045,6 +46240,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P04 を実行する: テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46052,6 +46248,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/test-design.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/test-design.md"
+      ],
+      "scope_out": [
+        "テストコードの実装と実行 (owner=P06)",
+        "本体実装 (owner=P05)",
+        "受入判定 (owner=P07)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46074,12 +46278,24 @@
       "template_version": "1.1.0",
       "title": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:51:46.650735Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: apps/hub/src/lib/routing/post-signin-landing.ts (新設)、および apps/hub/src/lib/authz/resource.ts・apps/hub/src/lib/authz/types.ts・apps/hub/src/middleware/authz.ts・apps/hub/src/lib/auth/session.ts・apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx・apps/hub/src/app/page.tsx の変更",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.5",
+        "linked_at": "2026-08-02T08:06:12Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46119,6 +46335,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P05",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46135,6 +46352,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P05 を実行する: 実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46148,6 +46366,22 @@
         "apps/hub/src/lib/routing/post-signin-landing.ts",
         "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
         "apps/hub/src/app/page.tsx"
+      ],
+      "scope_in": [
+        "apps/hub/src/lib/authz/resource.ts",
+        "apps/hub/src/lib/authz/types.ts",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
+        "apps/hub/src/app/page.tsx"
+      ],
+      "scope_out": [
+        "authorize() の判定順・role 判定・deny-by-default そのものの変更 (owner=feat-auth-tenancy)",
+        "業務画面本体の実装 (owner=feat-dual-catalog-web)",
+        "Workspace 選択画面の UI 実装 (owner=feat-workspace-switch-ux)",
+        "テストの実行と証跡化 (owner=P06)",
+        "仕様文書の更新 (owner=P12)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46170,12 +46404,24 @@
       "template_version": "1.1.0",
       "title": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:52:18.369769Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/test-run-record.md (全テスト ID の実行結果と再実行コマンド)、および apps/hub/test 配下のテストコード",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.6",
+        "linked_at": "2026-08-02T08:06:23Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46215,6 +46461,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P06",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46231,6 +46478,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P06 を実行する: テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46241,6 +46489,17 @@
         "apps/hub/test/authz/scope-resolution.test.ts",
         "apps/hub/test/routing/post-signin-landing.test.ts",
         "apps/hub/test/auth/session-workspace-binding.test.ts"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "apps/hub/test/authz/scope-resolution.test.ts",
+        "apps/hub/test/routing/post-signin-landing.test.ts",
+        "apps/hub/test/auth/session-workspace-binding.test.ts"
+      ],
+      "scope_out": [
+        "本体実装の変更 (owner=P05。テスト実行で欠陥が判明した場合は P05 へ差し戻す)",
+        "受入判定 (owner=P07)",
+        "品質ゲートの fail-closed 化 (owner=P09)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46263,12 +46522,24 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:52:50.375403Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/acceptance-record.md (acceptance 8 件の判定結果と根拠証跡の対応表)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.7",
+        "linked_at": "2026-08-02T08:06:54Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46308,6 +46579,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P07",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46324,6 +46596,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P07 を実行する: 受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46331,6 +46604,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/acceptance-record.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/acceptance-record.md"
+      ],
+      "scope_out": [
+        "本体実装の変更 (owner=P05)",
+        "テストの実行 (owner=P06)",
+        "リリース可否の最終判定 (owner=P10)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46353,12 +46634,24 @@
       "template_version": "1.1.0",
       "title": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:53:21.807658Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/refactoring-record.md (集約前後の構造と、テスト結果同一性の確認記録)、および実装ファイルの整理",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.8",
+        "linked_at": "2026-08-02T08:07:02Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46398,6 +46691,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P08",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46414,6 +46708,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P08 を実行する: リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46428,6 +46723,21 @@
         "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
         "apps/hub/src/app/page.tsx",
         "docs/features/feat-post-signin-scope-routing/refactoring-record.md"
+      ],
+      "scope_in": [
+        "apps/hub/src/lib/authz/resource.ts",
+        "apps/hub/src/lib/authz/types.ts",
+        "apps/hub/src/middleware/authz.ts",
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx",
+        "apps/hub/src/app/page.tsx",
+        "docs/features/feat-post-signin-scope-routing/refactoring-record.md"
+      ],
+      "scope_out": [
+        "外部契約 (reason と status) の変更",
+        "新規機能の追加",
+        "仕様文書の更新 (owner=P12)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46450,12 +46760,24 @@
       "template_version": "1.1.0",
       "title": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:53:54.137829Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/quality-assurance-record.md (3 検査の fail-closed 化と変異版反転の確認記録)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.9",
+        "linked_at": "2026-08-02T08:07:15Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46495,6 +46817,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P09",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46511,6 +46834,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P09 を実行する: 品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46518,6 +46842,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/quality-assurance-record.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/quality-assurance-record.md"
+      ],
+      "scope_out": [
+        "本体実装の機能変更 (owner=P05)",
+        "受入判定 (owner=P07)",
+        "リリース可否判定 (owner=P10)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46540,12 +46872,24 @@
       "template_version": "1.1.0",
       "title": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:54:24.362410Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/final-review.md (リリース可否判定と根拠証跡の一覧)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.10",
+        "linked_at": "2026-08-02T08:07:27Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46585,6 +46929,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P10",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46601,6 +46946,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P10 を実行する: 最終レビュー — 実行済み証跡のみによるリリース可否判定",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46608,6 +46954,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/final-review.md"
+      ],
+      "scope_out": [
+        "本体実装の変更 (owner=P05)",
+        "証跡の固定 (owner=P11)",
+        "本番反映 (owner=P13)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46630,12 +46984,24 @@
       "template_version": "1.1.0",
       "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:54:54.591984Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/features/feat-post-signin-scope-routing/evidence-record.md (source digest・再実行コマンド・証跡参照先の一覧)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.11",
+        "linked_at": "2026-08-02T08:07:36Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46675,6 +47041,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P11",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46691,6 +47058,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P11 を実行する: 証跡固定 — source digest と再実行コマンドの保存",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46698,6 +47066,14 @@
       ],
       "resource_scope": [
         "docs/features/feat-post-signin-scope-routing/evidence-record.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-post-signin-scope-routing/evidence-record.md"
+      ],
+      "scope_out": [
+        "新規の検査追加 (owner=P09)",
+        "仕様文書の更新 (owner=P12)",
+        "本番反映 (owner=P13)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46720,12 +47096,24 @@
       "template_version": "1.1.0",
       "title": "証跡固定 — source digest と再実行コマンドの保存",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:55:28.399151Z"
     },
     {
+      "acceptance": [
+        "published task spec の Produced artifacts が実在する: docs/frontend-spec.md と docs/user-journeys.md の更新、および docs/features/feat-post-signin-scope-routing/operations-runbook.md (scope 未解決時の一次切り分け手順)",
+        "published task spec の Automated commands が全て PASS し、Required evidence が全件保存されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-3sjj.12",
+        "linked_at": "2026-08-02T08:07:46Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -46765,6 +47153,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す",
       "graph_node_id": "SYS-POST-SIGNIN-SCOPE-P12",
       "implementation_readiness": {
         "checked_at": "2026-08-02T05:45:00Z",
@@ -46781,6 +47170,7 @@
       "priority": null,
       "project_id": "feature-package-feat-post-signin-scope-routing",
       "pull_request_linkages": [],
+      "purpose": "feat-post-signin-scope-routing の P12 を実行する: ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
       "related_nodes": [
         "feat-post-signin-scope-routing",
         "arch-harness-hub-frontend",
@@ -46790,6 +47180,16 @@
         "docs/frontend-spec.md",
         "docs/user-journeys.md",
         "docs/features/feat-post-signin-scope-routing/operations-runbook.md"
+      ],
+      "scope_in": [
+        "docs/frontend-spec.md",
+        "docs/user-journeys.md",
+        "docs/features/feat-post-signin-scope-routing/operations-runbook.md"
+      ],
+      "scope_out": [
+        "確定 spec と architecture の正本への書き戻し (owner=P13)",
+        "本体実装の変更 (owner=P05)",
+        "本番反映 (owner=P13)"
       ],
       "source_lineage": {
         "imported_at": "2026-08-02T12:47:00Z",
@@ -46812,7 +47212,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T12:47:00Z"
+      "updated_at": "2026-08-04T03:56:00.327920Z"
     },
     {
       "acceptance": [
@@ -47197,52 +47597,49 @@
     },
     {
       "acceptance": [
-        "章ごとに確定 qa_ref・対応セル・serves_goals を示す適用節を生成する",
-        "knowledge-catalog の depends_on topo order と表示順が一致する",
-        "監査 PASS が実 fork 台帳、response digest、最終 AUDIT_VERDICT と一致する",
-        "C02 が caller repository の source artifact 本文だけを登録する",
-        "製品仕様層への意味的影響なしを理由付きで記録する"
+        "retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する",
+        "複数 record の retrieved_at 完全一致を exit 非0で検出する",
+        "各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する",
+        "20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する"
       ],
-      "architecture_refs": [
-        "arch-harness-hub-dev-workflow"
-      ],
-      "artifact_kind": "document",
+      "architecture_refs": [],
+      "artifact_kind": "issue",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-p1ql",
+        "linked_at": "2026-08-03T08:16:11Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
-          "artifact_kind": "document",
-          "candidate_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
           "confidence": 0.96
         }
       ],
       "classification_confidence": 0.96,
-      "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
+      "classification_reason": "system-spec-harness の C13 citation validation 契約を強化する単独 bug 修正であり、issue artifact として issues/ へ正規配置する",
       "completion_evidence": {
-        "completed_at": "2026-08-04T03:21:00Z",
-        "evidence_refs": [
-          "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/verdict.json",
-          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
-        ],
+        "completed_at": null,
+        "evidence_refs": [],
         "policy": "manual",
-        "reconciled_at": "2026-08-04T03:21:00Z",
-        "source": "manual",
-        "status": "done"
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "0978faf297121ab095888b3a70d1d89f6a41180a06c2e626d4197f1b37a7ddfc",
-        "evaluator": "independent-live-trial-acceptance-evaluator",
-        "evidence_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
+        "evaluated_digest": "feca098df82289522ed3ff10aba3f9dd14e31cee65915942600872ce65343596",
+        "evaluator": "Codex final review",
+        "evidence_ref": "issues/sys-source-citation-retrieval-integrity-20260803.md"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-08-03T00:00:00Z",
+      "created_at": "2026-08-03T08:28:16Z",
       "depends_on": [],
-      "domain": "dev-workflow",
+      "domain": "documentation",
       "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+      "file_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -47250,67 +47647,65 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "plugin 内部契約の修正が回帰せず、製品仕様に不要な二重正本を作らず、reviewer が検証と影響境界を追跡できる状態",
-      "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
+      "goal": "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる",
+      "graph_node_id": "issue-source-citation-retrieval-integrity-20260803",
       "implementation_readiness": {
-        "checked_at": "2026-08-04T03:21:00Z",
+        "checked_at": "2026-08-03T08:28:16Z",
         "missing_sections": [],
         "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
-      "layer": "feature-evidence",
       "owners": [
         "daishiman"
       ],
       "parent_feature": null,
       "phase_ref": null,
-      "priority": "medium",
+      "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "設計知識表示、監査 verdict 束縛、C02 import の最終レビューと仕様影響判定を単一の受領書として残す",
-      "related_nodes": [
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-dev-workflow"
-      ],
+      "purpose": "モデル記憶で作られた citation と将来日時を形式だけで通す C13 の穴を塞ぎ、仕様書の出典を再検証可能にする",
+      "related_nodes": [],
       "resource_scope": [
-        "plugins/system-spec-harness/skills/run-system-spec-compile",
-        "plugins/system-spec-harness/hooks/record-audit-fork.py",
-        "plugins/dev-graph/scripts/build-system-spec-import.py",
-        "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+        "plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "plugins/system-spec-harness/skills/run-system-spec-doc-fetch/",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/",
+        "plugins/system-spec-harness/schemas/fetched-references.schema.json",
+        "plugins/system-spec-harness/tests/",
+        "docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md",
+        "issues/sys-source-citation-retrieval-integrity-20260803.md"
       ],
       "scope_in": [
-        "compiler の設計知識表示規則と回帰テスト",
-        "foundation source provenance",
-        "completion evaluator の fork 台帳と response verdict 束縛",
-        "C02 import adapter と live-trial",
-        "仕様影響なしの受領記録"
+        "validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証",
+        "R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期",
+        "fixture と回帰テストによる C19 r2 捏造パターンの固定"
       ],
       "scope_out": [
-        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit",
-        "確定済み system-spec/specs/architecture/features/tasks の内部契約への重複記載"
+        "WebFetch 実行自体を強制する live-trial fixture の改修 (HarnessHub-eiky が所有)",
+        "公式 host の意味的な鮮度判定 (既存 C08 の責務)",
+        "HarnessHub 製品の API、DB schema、認証認可、UI、Cloudflare 配置の変更"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-03T13:30:00Z",
+        "imported_at": "2026-08-03T08:28:16Z",
         "origin_kind": "manual",
-        "source_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
-        "source_path": "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
-        "source_plugin": "system-spec-harness",
-        "source_version": "0.2.0"
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
       },
       "start_date": null,
-      "status": "done",
+      "status": "active",
       "tags": [
         "system-spec-harness",
-        "final-review",
-        "spec-impact"
+        "citation",
+        "integrity"
       ],
       "target_date": null,
-      "template_id": "document",
+      "template_id": "issue",
       "template_version": "1.0.0",
-      "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
-      "tracker_binding": "none",
-      "updated_at": "2026-08-04T03:21:00Z"
+      "title": "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T02:12:33Z"
     },
     {
       "acceptance": [
@@ -47553,118 +47948,6 @@
     },
     {
       "acceptance": [
-        "retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する",
-        "複数 record の retrieved_at 完全一致を exit 非0で検出する",
-        "各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する",
-        "20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する"
-      ],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-p1ql",
-        "linked_at": "2026-08-03T08:16:11Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
-          "confidence": 0.96
-        }
-      ],
-      "classification_confidence": 0.96,
-      "classification_reason": "system-spec-harness の C13 citation validation 契約を強化する単独 bug 修正であり、issue artifact として issues/ へ正規配置する",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": "feca098df82289522ed3ff10aba3f9dd14e31cee65915942600872ce65343596",
-        "evaluator": "Codex final review",
-        "evidence_ref": "issues/sys-source-citation-retrieval-integrity-20260803.md"
-      },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-03T08:28:16Z",
-      "depends_on": [],
-      "domain": "documentation",
-      "evaluation_status": "pass",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-source-citation-retrieval-integrity-20260803.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる",
-      "graph_node_id": "issue-source-citation-retrieval-integrity-20260803",
-      "implementation_readiness": {
-        "checked_at": "2026-08-03T08:28:16Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "モデル記憶で作られた citation と将来日時を形式だけで通す C13 の穴を塞ぎ、仕様書の出典を再検証可能にする",
-      "related_nodes": [],
-      "resource_scope": [
-        "plugins/system-spec-harness/scripts/validate-source-citation.py",
-        "plugins/system-spec-harness/skills/run-system-spec-doc-fetch/",
-        "plugins/system-spec-harness/skills/run-system-spec-compile/",
-        "plugins/system-spec-harness/schemas/fetched-references.schema.json",
-        "plugins/system-spec-harness/tests/",
-        "docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md",
-        "issues/sys-source-citation-retrieval-integrity-20260803.md"
-      ],
-      "scope_in": [
-        "validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証",
-        "R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期",
-        "fixture と回帰テストによる C19 r2 捏造パターンの固定"
-      ],
-      "scope_out": [
-        "WebFetch 実行自体を強制する live-trial fixture の改修 (HarnessHub-eiky が所有)",
-        "公式 host の意味的な鮮度判定 (既存 C08 の責務)",
-        "HarnessHub 製品の API、DB schema、認証認可、UI、Cloudflare 配置の変更"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-03T08:28:16Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "active",
-      "tags": [
-        "system-spec-harness",
-        "citation",
-        "integrity"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-04T02:12:33Z"
-    },
-    {
-      "acceptance": [
         "mtime クラスタが診断専用である",
         "reflog 等の直接証拠で原因を確認する"
       ],
@@ -47765,6 +48048,236 @@
       "title": "並列 worktree 更新時刻診断の追補",
       "tracker_binding": "none",
       "updated_at": "2026-08-03T09:45:00Z"
+    },
+    {
+      "acceptance": [],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-render-registration-stale-digest-20260803.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "registration 時点の graph_digest_after と sync 後の canonical graph digest が 11 verb 順序で構造的に異なるため、registration proof の部分照合を明示する品質不具合として分類した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-03T21:15:05.909349Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-render-registration-stale-digest-20260803.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": null,
+      "graph_node_id": "issue-render-registration-stale-digest-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": null,
+      "related_nodes": [
+        "issue-render-registration-receipt-contract-mismatch-20260726",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "plugins/dev-graph/references/execution-tracker-contract.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/",
+        "eval-log/dev-graph/run-dev-graph-render/",
+        "issues/sys-render-registration-stale-digest-20260803.md"
+      ],
+      "scope_in": [],
+      "scope_out": [],
+      "source_lineage": {
+        "imported_at": null,
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "graph-digest",
+        "stale"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-07T12:55:00Z"
+    },
+    {
+      "acceptance": [
+        "graph digest だけが stale の場合に partial/graph_digest_stale として HTML を生成する",
+        "node ID・件数・source digest・source lineage の不一致は fail-closed を維持する",
+        "task 文書、graph node、Beads、draft PR の追跡情報が一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-0ui0",
+        "linked_at": "2026-08-04T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "P13 本体の 300 行上限を超えず、stale digest 変更の統合条件だけを単一責務で追跡する補助 task である",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669",
+        "evaluator": "final-review",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-04T00:00:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "文書、graph、Beads、draft PR が同じ Beads ID と three-state verification 契約を参照し、main への取り込み後に再現可能な証跡を残す",
+      "graph_node_id": "task-render-registration-stale-digest-handoff-20260804",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Phase 13 の補助引継ぎとして、registration receipt の stale graph digest を安全に部分照合する変更の統合条件と検証証跡を追跡可能にする",
+      "related_nodes": [
+        "issue-render-registration-stale-digest-20260803",
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md",
+        "plugins/dev-graph/scripts/render-graph-html.py",
+        "plugins/dev-graph/tests/test_render_registration_verification.py",
+        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
+        "system-spec/testing-qa.md",
+        "specs/harness-hub-system-specification.md",
+        "architecture/harness-hub-testing-qa.md",
+        "features/feat-dev-pipeline-improvement.md",
+        "eval-log/dev-graph/run-dev-graph-render/"
+      ],
+      "scope_in": [
+        "renderer の stale graph digest 表示契約",
+        "回帰テストと fresh live trial",
+        "system-spec/specs/architecture/features/tasks/docs への反映",
+        "Beads/graph/PR の相互記録"
+      ],
+      "scope_out": [
+        "製品 API、DB schema、認証認可、製品 UI、Cloudflare deploy unit",
+        "registration receipt の digest 値の書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-04T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-04",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "render",
+        "registration-receipt",
+        "stale-digest",
+        "phase-13"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-04T04:54:05Z"
     },
     {
       "acceptance": [
@@ -48012,236 +48525,6 @@
       "title": "bd ready payload entry 欠落報告の仕様反映受領書",
       "tracker_binding": "none",
       "updated_at": "2026-08-04T01:31:46.475830Z"
-    },
-    {
-      "acceptance": [],
-      "architecture_refs": [],
-      "artifact_kind": "issue",
-      "artifact_subtypes": [],
-      "beads_linkage": null,
-      "classification_candidates": [
-        {
-          "artifact_kind": "issue",
-          "candidate_path": "issues/sys-render-registration-stale-digest-20260803.md",
-          "confidence": 0.95
-        }
-      ],
-      "classification_confidence": 0.95,
-      "classification_reason": "registration 時点の graph_digest_after と sync 後の canonical graph digest が 11 verb 順序で構造的に異なるため、registration proof の部分照合を明示する品質不具合として分類した",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
-      },
-      "confirmation_status": "draft",
-      "created_at": "2026-08-03T21:15:05.909349Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pending",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "issues/sys-render-registration-stale-digest-20260803.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": null,
-      "graph_node_id": "issue-render-registration-stale-digest-20260803",
-      "implementation_readiness": {
-        "checked_at": "2026-08-04T00:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "mvp_alignment": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": null,
-      "related_nodes": [
-        "issue-render-registration-receipt-contract-mismatch-20260726",
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-testing-qa"
-      ],
-      "resource_scope": [
-        "plugins/dev-graph/scripts/render-graph-html.py",
-        "plugins/dev-graph/tests/test_render_registration_verification.py",
-        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
-        "plugins/dev-graph/references/execution-tracker-contract.md",
-        "system-spec/testing-qa.md",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-testing-qa.md",
-        "features/feat-dev-pipeline-improvement.md",
-        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-        "docs/features/feat-dev-pipeline-improvement/",
-        "eval-log/dev-graph/run-dev-graph-render/",
-        "issues/sys-render-registration-stale-digest-20260803.md"
-      ],
-      "scope_in": [],
-      "scope_out": [],
-      "source_lineage": {
-        "imported_at": null,
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": null,
-      "status": "draft",
-      "tags": [
-        "quality",
-        "dev-graph",
-        "render",
-        "registration-receipt",
-        "graph-digest",
-        "stale"
-      ],
-      "target_date": null,
-      "template_id": "issue",
-      "template_version": "1.0.0",
-      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-07T12:55:00Z"
-    },
-    {
-      "acceptance": [
-        "graph digest だけが stale の場合に partial/graph_digest_stale として HTML を生成する",
-        "node ID・件数・source digest・source lineage の不一致は fail-closed を維持する",
-        "task 文書、graph node、Beads、draft PR の追跡情報が一致する"
-      ],
-      "architecture_refs": [
-        "arch-harness-hub-testing-qa"
-      ],
-      "artifact_kind": "task",
-      "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-0ui0",
-        "linked_at": "2026-08-04T00:00:00Z",
-        "sync_state": "linked"
-      },
-      "classification_candidates": [
-        {
-          "artifact_kind": "task",
-          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-          "confidence": 0.99
-        }
-      ],
-      "classification_confidence": 0.99,
-      "classification_reason": "P13 本体の 300 行上限を超えず、stale digest 変更の統合条件だけを単一責務で追跡する補助 task である",
-      "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
-      },
-      "confirmation_evidence": {
-        "evaluated_digest": "d21c363fbb6264e759a30f2d5c02aa4c84783ab90c655208251d7c5b87f79669",
-        "evaluator": "final-review",
-        "evidence_ref": "eval-log/dev-graph/run-dev-graph-render/criteria-test/scenario-verdict.json"
-      },
-      "confirmation_status": "confirmed",
-      "created_at": "2026-08-04T00:00:00Z",
-      "depends_on": [],
-      "domain": "quality",
-      "evaluation_status": "pass",
-      "execution_contexts": [],
-      "feature_package_id": null,
-      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-      "github_project_linkages": [],
-      "github_publication": {
-        "labels": [],
-        "milestone": null,
-        "mode": "local_only",
-        "project_aliases": []
-      },
-      "goal": "文書、graph、Beads、draft PR が同じ Beads ID と three-state verification 契約を参照し、main への取り込み後に再現可能な証跡を残す",
-      "graph_node_id": "task-render-registration-stale-digest-handoff-20260804",
-      "implementation_readiness": {
-        "checked_at": "2026-08-04T00:00:00Z",
-        "missing_sections": [],
-        "status": "complete"
-      },
-      "issue_linkage": null,
-      "iteration": null,
-      "owners": [
-        "daishiman"
-      ],
-      "parent_feature": null,
-      "phase_ref": null,
-      "priority": "high",
-      "project_id": "harness-hub",
-      "pull_request_linkages": [],
-      "purpose": "Phase 13 の補助引継ぎとして、registration receipt の stale graph digest を安全に部分照合する変更の統合条件と検証証跡を追跡可能にする",
-      "related_nodes": [
-        "issue-render-registration-stale-digest-20260803",
-        "feat-dev-pipeline-improvement",
-        "arch-harness-hub-testing-qa"
-      ],
-      "resource_scope": [
-        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13-registration-stale-digest-handoff.md",
-        "docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md",
-        "plugins/dev-graph/scripts/render-graph-html.py",
-        "plugins/dev-graph/tests/test_render_registration_verification.py",
-        "plugins/dev-graph/skills/run-dev-graph-render/SKILL.md",
-        "system-spec/testing-qa.md",
-        "specs/harness-hub-system-specification.md",
-        "architecture/harness-hub-testing-qa.md",
-        "features/feat-dev-pipeline-improvement.md",
-        "eval-log/dev-graph/run-dev-graph-render/"
-      ],
-      "scope_in": [
-        "renderer の stale graph digest 表示契約",
-        "回帰テストと fresh live trial",
-        "system-spec/specs/architecture/features/tasks/docs への反映",
-        "Beads/graph/PR の相互記録"
-      ],
-      "scope_out": [
-        "製品 API、DB schema、認証認可、製品 UI、Cloudflare deploy unit",
-        "registration receipt の digest 値の書き換え"
-      ],
-      "source_lineage": {
-        "imported_at": "2026-08-04T00:00:00Z",
-        "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
-        "source_plugin": null,
-        "source_version": null
-      },
-      "start_date": "2026-08-04",
-      "status": "active",
-      "tags": [
-        "dev-graph",
-        "render",
-        "registration-receipt",
-        "stale-digest",
-        "phase-13"
-      ],
-      "target_date": null,
-      "template_id": "task",
-      "template_version": "1.0.0",
-      "title": "dev-graph: render の registration receipt が sync 後に必ず stale になる",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-04T04:54:05Z"
     },
     {
       "acceptance": [
@@ -48689,6 +48972,123 @@
       "title": "fetched reference の evidence provenance 欠落を解消する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-04T08:06:05Z"
+    },
+    {
+      "acceptance": [
+        "章ごとに確定 qa_ref・対応セル・serves_goals を示す適用節を生成する",
+        "knowledge-catalog の depends_on topo order と表示順が一致する",
+        "監査 PASS が実 fork 台帳、response digest、最終 AUDIT_VERDICT と一致する",
+        "C02 が caller repository の source artifact 本文だけを登録する",
+        "製品仕様層への意味的影響なしを理由付きで記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "plugin compiler correction の最終レビューと仕様反映判断を記録する document artifact",
+      "completion_evidence": {
+        "completed_at": "2026-08-04T03:21:00Z",
+        "evidence_refs": [
+          "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/verdict.json",
+          "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-04T03:21:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "0978faf297121ab095888b3a70d1d89f6a41180a06c2e626d4197f1b37a7ddfc",
+        "evaluator": "independent-live-trial-acceptance-evaluator",
+        "evidence_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T010000Z-codex-c19-post-main/independent-verification.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-03T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "plugin 内部契約の修正が回帰せず、製品仕様に不要な二重正本を作らず、reviewer が検証と影響境界を追跡できる状態",
+      "graph_node_id": "doc-system-spec-compile-knowledge-reflection-review-20260803",
+      "implementation_readiness": {
+        "checked_at": "2026-08-04T03:21:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-evidence",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "設計知識表示、監査 verdict 束縛、C02 import の最終レビューと仕様影響判定を単一の受領書として残す",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "arch-harness-hub-dev-workflow"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/skills/run-system-spec-compile",
+        "plugins/system-spec-harness/hooks/record-audit-fork.py",
+        "plugins/dev-graph/scripts/build-system-spec-import.py",
+        "docs/features/feat-dev-pipeline-improvement/system-spec-compile-knowledge-reflection-review-receipt.md"
+      ],
+      "scope_in": [
+        "compiler の設計知識表示規則と回帰テスト",
+        "foundation source provenance",
+        "completion evaluator の fork 台帳と response verdict 束縛",
+        "C02 import adapter と live-trial",
+        "仕様影響なしの受領記録"
+      ],
+      "scope_out": [
+        "Harness Hub 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit",
+        "確定済み system-spec/specs/architecture/features/tasks の内部契約への重複記載"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-03T13:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": "6aeabe2e215ea27a0d51013c94639bfce6fa05aceddd82050234c216b7342c6d",
+        "source_path": "plugins/system-spec-harness/skills/run-system-spec-compile/scripts/compile-spec-doc.py",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.2.0"
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "system-spec-harness",
+        "final-review",
+        "spec-impact"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "system-spec compiler knowledge reflection 最終レビュー受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-04T03:21:00Z"
     },
     {
       "acceptance": [

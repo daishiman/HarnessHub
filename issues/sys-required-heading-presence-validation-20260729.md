@@ -12,7 +12,7 @@ iteration: null
 title: "required heading 欠落を C11 readiness で専用拒否する"
 owners: ["daishiman"]
 created_at: "2026-07-29T09:35:58Z"
-updated_at: "2026-08-04T07:41:06Z"
+updated_at: "2026-08-04T04:22:19Z"
 status: "closed"
 depends_on: ["issue-implementation-readiness-body-validation-20260728"]
 related_nodes: ["issue-implementation-readiness-body-validation-20260728","feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]

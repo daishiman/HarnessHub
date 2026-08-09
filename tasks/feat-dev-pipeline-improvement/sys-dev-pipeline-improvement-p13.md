@@ -12,7 +12,7 @@ iteration: null
 title: "リリース — main 反映と issue/graph/beads 3 表現の close-loop 実証"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-03T04:40:00Z"
+updated_at: "2026-08-04T03:29:48.656827Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P12"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","issue-register-package-projection-idempotency-drift-20260728"]
@@ -38,7 +38,7 @@ classification_reason: "qa-067 の開発管理パイプライン改善 8 要件�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md","confidence":0.87}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-y7aj.13","linked_at":"2026-08-04T03:16:20Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

@@ -12,9 +12,9 @@ iteration: "Stage 1"
 title: "Hub Web: Thin Dual Catalog (Skill + WebApp) と配布出口"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:52:37.353128Z"
+updated_at: "2026-08-02T06:50:00Z"
 status: "active"
-depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
+depends_on: ["feat-stage0-distribution-gate"]
 related_nodes: []
 resource_scope: ["features/feat-dual-catalog-web.md"]
 purpose: "利用者・管理者が Skill/WebApp を発見・導入できる dual catalog UI と配布出口 (marketplace 出力 / Bootstrap Installer 連携) を、WCAG 2.2 AA + CWV good (qa-018) の品質で提供する"
