@@ -83,7 +83,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 
 1. status/diff と Beads を照合する。
 2. 仕様を正規 writer で反映し、docs/specs/architecture/features/tasks を同期する。
-3. focused gate、task plan、repository CI、PR-ready gate を実行する。
+3. focused gate、task plan、repository CI、system-spec/graph gate を実行する。
 4. remote main を local main に取り込み、local main を branch へ merge して再検証する。
 5. 対象だけを commit/push し、main 向け draft PR を作成して Beads を更新する。
 
@@ -96,13 +96,13 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 ## 受入条件
 
 - 完了対象の focused test と正本の coverage が PASS する。
-- 人手管理コード／文書が 500 行以下で、graph/schema/frontmatter gate が PASS する。
-- main 取り込み後も repository CI と PR-ready gate が PASS する。
+- 人手管理コード／文書が 500 行以下で、今回追加・更新した graph node が schema/frontmatter に適合する。
+- main 取り込み後の repository CI で今回差分の退行がなく、repo 既存の失敗は Beads へ分離される。
 - commit に無関係差分が含まれず、未配線課題が open のまま明記される。
 
 ## 検証方法
 
-focused pytest、`validate-coverage-matrix.py --require-complete`、`validate-system-plan.py`、`scripts/run-ci-checks.sh`、`scripts/verify-pr-ready.sh`、`git diff --check`、graph schema を最終 HEAD で実行する。
+focused pytest、`validate-coverage-matrix.py --require-complete`、`validate-system-plan.py`、`scripts/run-ci-checks.sh`、`git diff --check`、graph schema を最終 HEAD で実行する。独立した `scripts/verify-pr-ready.sh` は repository に存在しないため、これらを公開前ゲートとする。
 
 ## リスクとロールバック
 
