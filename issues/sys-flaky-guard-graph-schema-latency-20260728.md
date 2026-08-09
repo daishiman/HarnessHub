@@ -12,7 +12,7 @@ iteration: null
 title: "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる"
 owners: ["daishiman"]
 created_at: "2026-07-28T06:23:05Z"
-updated_at: "2026-07-28T06:23:05Z"
+updated_at: "2026-08-04T03:59:56.419451Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "既存テストの判定基準に起因する再現性�
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-flaky-guard-graph-schema-latency-20260728.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-5iuq","linked_at":"2026-07-28T06:31:28Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
