@@ -1,0 +1,73 @@
+{
+  "beads": {},
+  "github": {
+    "LT-TASK-001": {
+      "id": "I_kwDOFixture001",
+      "number": 1,
+      "projects": {
+        "planning": {
+          "definitions": {
+            "Priority": {
+              "id": "PVTF_Priority001",
+              "options": [
+                {
+                  "id": "OPT_High001",
+                  "name": "High"
+                },
+                {
+                  "id": "OPT_Medium001",
+                  "name": "Medium"
+                },
+                {
+                  "id": "OPT_Low001",
+                  "name": "Low"
+                }
+              ]
+            },
+            "Status": {
+              "id": "PVTF_Status001",
+              "options": [
+                {
+                  "id": "OPT_InProgress001",
+                  "name": "In Progress"
+                },
+                {
+                  "id": "OPT_Done001",
+                  "name": "Done"
+                },
+                {
+                  "id": "OPT_Blocked001",
+                  "name": "Blocked"
+                },
+                {
+                  "id": "OPT_Backlog001",
+                  "name": "Backlog"
+                }
+              ]
+            }
+          },
+          "fields": {
+            "Priority": {
+              "field_id": "PVTF_Priority001",
+              "option_id": "OPT_Medium001",
+              "updated_at": "2026-07-13T07:55:00Z",
+              "value": "Medium"
+            },
+            "Status": {
+              "field_id": "PVTF_Status001",
+              "option_id": "OPT_InProgress001",
+              "updated_at": "2026-08-08T09:51:08.042353Z",
+              "value": "In Progress"
+            }
+          },
+          "item_id": "PVTI_lADOFixture001"
+        }
+      },
+      "repo": "example/dev-graph-live-trial",
+      "state": "open",
+      "title": "Validate isolated live trial (updated remotely r7)",
+      "updated_at": "2026-08-08T09:51:08.042353Z"
+    }
+  },
+  "schema_version": "1.0"
+}

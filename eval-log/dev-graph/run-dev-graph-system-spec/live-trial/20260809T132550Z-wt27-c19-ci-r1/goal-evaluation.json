@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "c19_ci_goal_evaluator"
+  },
+  "transcript_sha256": "6bbafe87d0162e35c345623dfb79a217c39fb93d0d41a80d58dd3d0708c2746b",
+  "evidence_refs": [
+    "transcript.jsonl",
+    "out/status.json",
+    "task.md",
+    "poll-state.json",
+    "fixture-repo/.dev-graph/state/graph.json",
+    "fixture-repo/system-spec/resume-receipt.json",
+    "fixture-repo/system-spec/completeness-report.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-resume-report.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-progress.json"
+  ]
+}

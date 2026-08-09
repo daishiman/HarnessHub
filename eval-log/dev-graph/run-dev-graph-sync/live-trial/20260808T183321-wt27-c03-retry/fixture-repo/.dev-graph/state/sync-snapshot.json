@@ -1,0 +1,31 @@
+{
+  "nodes": {
+    "LT-TASK-001": {
+      "binding": "github",
+      "issue": {
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Validate isolated live trial (updated remotely r7)",
+          "remote": "Validate isolated live trial (updated remotely r7)"
+        }
+      },
+      "projects": {
+        "planning": {
+          "priority": {
+            "local": "Medium",
+            "remote": "Medium"
+          },
+          "status": {
+            "local": "In Progress",
+            "remote": "In Progress"
+          }
+        }
+      }
+    }
+  },
+  "schema_version": "1.0",
+  "updated_at": "2026-07-13T07:55:00Z"
+}

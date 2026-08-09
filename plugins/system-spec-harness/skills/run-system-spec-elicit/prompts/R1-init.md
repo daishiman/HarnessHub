@@ -38,7 +38,7 @@
 | field | type | required | 説明 |
 |---|---|---|---|
 | taxonomy_path | path | yes | C04 system-category-taxonomy.json |
-| existing_spec_state | path | no | 既存があれば再初期化しない (差分は R2/R3) |
+| existing_spec_state | path | no | bootstrap state、または明示移行対象の exact legacy 1.0 state。current 1.1 の差分は R2/R3/R4 で扱い、再初期化しない。 |
 
 ### 2.4 出力契約
 - `spec-state.json` (全セル `未収集`、`hearing_progress.complete=false`、`next_question` に最初の未収集セル質問)。
@@ -60,7 +60,7 @@
 - 必須 platform が taxonomy に欠落 → writer が `TransitionError`。停止して報告 (fail-closed)。
 
 ### 4.2 最大反復
-- 初期化は 1 回。再実行は既存 spec-state を上書きしない (存在時 skip)。
+- 初期化は原則 1 回。current 1.1 state は存在時 skip し、確定内容を再初期化しない。例外として marker のない exact legacy 1.0 state は `init --state` を明示実行し、matrix を未収集へ戻して schema 1.1 / design contract 1.0 へ移行する。
 
 ### 4.3 観測
 - 初期化後に `validate-coverage-matrix.py --matrix spec-state.json` (loop) が exit0 を確認。

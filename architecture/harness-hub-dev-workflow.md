@@ -59,6 +59,50 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
   ([f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) / [exact-13 再登録受領書](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md))
 - 取込日時: 2026-08-03T09:45:00Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は開発フローの設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/dev-workflow.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+人と AI agent が同じ証拠と安全境界を使い、変更を繰り返し再現できる形で届ける。
+
+### U2 背景 (background)
+
+正本の多重化、検査の迂回、証跡の自己申告、worktree 間の競合は誤った完了判定を生む。
+
+### U3 ゴール (goals)
+
+仕様、Dev Graph、Beads、GitHub、live-trial の責務を分離しながら相互追跡可能にする。
+
+### U4 目標 (objectives)
+
+fail-closed な品質ゲート、独立評価、正準 bridge、branch/worktree 規律を自動検証する。
+
+### U5 成功基準 (success_criteria)
+
+task の Phase 1〜13、fresh live-trial、独立 verdict、対象限定 diff、PR 証跡がすべて再検証可能であることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+開発者、AI agent、reviewer、repository 管理者、仕様と課題の運用担当者を対象とする。
+
+### U7 スコープ (scope)
+
+仕様策定、task 分解、実装、検証、証跡、課題同期、branch/PR 公開の開発ライフサイクルを扱う。
+
+### U8 制約 (constraints)
+
+Graph/Beads の直書き、独立監査の上書き、証跡の偽装、無関係差分の commit を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+入力から PR までの各判断を機械検証できる台帳へ結び、失敗時は原因の段階へ戻れるようにする。
+
+### 意思決定支援 (decisions)
+
+速度と証拠完全性が競合するときは、再現可能な証拠、独立評価、正本の一意性を優先する。
+
 ## Architecture overview
 
 正本: system-spec/dev-workflow.md (qa-038: GitHub Flow + PR 必須・required status checks 8 種・PR preview + production・main merge 自動デプロイ・expand/contract migration 強制 / qa-039: 作者ローカル環境 macOS 主・Windows 従・CI と同一の pnpm verify・本番操作の CI 一本化 / qa-066: features README と 11 requirements-baseline を P0〜P5 の派生投影として参照し、循環する二重正本を作らない / qa-139: inline Python の Graph authority 書込みを AST で fail-closed 検出 / qa-140: mtime クラスタを診断に限定し reflog で原因確認)。

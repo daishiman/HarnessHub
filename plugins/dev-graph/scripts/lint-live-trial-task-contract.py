@@ -56,8 +56,17 @@ def render_premise(
     placed = [str(item) for item in contract.get("placed_inputs", ())]
     absent = [str(item) for item in contract.get("absent_artifacts", ())]
     entry_points = [str(item) for item in contract.get("required_entry_points", ())]
+    negative_control_roots = [
+        str(item) for item in contract.get("negative_control_roots", ())
+    ]
     workflow_mode = str(contract.get("workflow_mode", "build"))
     observations = scenario.get("required_observations")
+    task_contract = scenario.get("task_contract", {})
+    required_fragments = (
+        [str(item) for item in task_contract.get("required_fragments", ())]
+        if isinstance(task_contract, dict)
+        else []
+    )
 
     lines: list[str] = [
         f"<!-- live-trial-premise:begin scenario={scenario_id} contract-digest={digest} -->",
@@ -100,6 +109,15 @@ def render_premise(
         lines.extend(
             f"{index}. `{harness}:{name}`" for index, name in enumerate(entry_points, start=1)
         )
+    if negative_control_roots:
+        lines.extend([
+            "",
+            "duplicate-logic の negative control は、次の実行可能な実装 root だけを検索対象に"
+            "してください。tests/fixtures・コメント・受領書は実装複製の有無を示さないため"
+            "対象外です:",
+            "",
+        ])
+        lines.extend(f"- `{relative}`" for relative in negative_control_roots)
     if isinstance(observations, list) and observations:
         lines.extend([
             "",
@@ -107,6 +125,13 @@ def render_premise(
             "",
         ])
         lines.extend(f"- {str(item)}" for item in observations)
+    if required_fragments:
+        lines.extend([
+            "",
+            "本 scenario の必須 task contract (次の文言を省略しないこと):",
+            "",
+        ])
+        lines.extend(f"- {fragment}" for fragment in required_fragments)
     lines.extend(["", PREMISE_END, ""])
     return "\n".join(lines)
 
@@ -157,7 +182,7 @@ def run_lint(
         scenario_id = str(scenario.get("scenario_id", ""))
         if path is None:
             violations.append({
-                "rule": "LT-012",
+                "rule": "LT-014",
                 "task": "",
                 "detail": (
                     f"shape {name} (scenario {scenario_id}) の最新 verdict 保有 run に "

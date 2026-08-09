@@ -1,0 +1,216 @@
+{
+  "graph_revision": 2,
+  "nodes": [
+    {
+      "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "C02 でのみ登録する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/system-spec-overview.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が確定した architecture context の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-08T15:28:19Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-08T15:28:19Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "48217d84df1a06e052f9e6bea6b899d3b91d0677027895db83d703342c40ffb5",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T15:28:19Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/system-spec-overview.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様由来の architecture context を feature から参照できる状態。",
+      "graph_node_id": "arch-system-spec-overview",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T15:28:19Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の architecture context を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec requirements artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T15:28:19Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "46a98ebd4f77b43ebff85645c753af57398121010a33ea5cf0b34bdb11510b52",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "system-spec architecture overview",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-08T15:28:19Z"
+    },
+    {
+      "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "architecture node を参照する"
+      ],
+      "architecture_refs": [
+        "arch-system-spec-overview"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api",
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/system-spec-index.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が compile した specification index の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-08T15:28:19Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-08T15:28:19Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "48217d84df1a06e052f9e6bea6b899d3b91d0677027895db83d703342c40ffb5",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T15:28:19Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/system-spec-index.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様と architecture context を source lineage 付きで結ぶ。",
+      "graph_node_id": "spec-system-spec-index",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T15:28:19Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の index を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/index.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec index artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T15:28:19Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "7afe0d57e448880bb57b4dfd7db2c56df1ede643dfc73a74f9450ee98702eefd",
+        "source_path": "system-spec/index.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "system-spec compiled specification",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-08T15:28:19Z"
+    }
+  ],
+  "repository_id": "local:sha256:16df19ad6d0699e6f5c403b84aed65b0f9bfcf05ef85a4819b04ce63e1cae24e",
+  "schema_version": "1.0.0"
+}

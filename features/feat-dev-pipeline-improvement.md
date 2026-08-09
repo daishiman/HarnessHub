@@ -149,6 +149,13 @@ HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着�
 
 HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
 
+`HarnessHub-3vmz` と `HarnessHub-o4zi` の最終レビューでは、独立監査結果の偽装を
+fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C19 import の条件付き
+見出し契約を再確認した。製品 API・DB・認証認可・UI・配備は不変で、内部仕様・設計、
+既存文書の見出し移行、検証結果は
+[最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
+を正とする。
+
 ## 2026-08-09 検証 tier と review 証拠整合
 
 変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。

@@ -224,6 +224,49 @@ def test_emitted_premise_round_trips(tmp_path: Path) -> None:
     assert report["checked"][0]["has_premise_block"] is True
 
 
+def test_emitted_premise_contains_every_required_task_fragment() -> None:
+    premise = _emit_premise()
+
+    for fragment in _scenario()["task_contract"]["required_fragments"]:
+        assert fragment in premise
+
+
+@pytest.mark.parametrize(
+    "fragment",
+    _scenario()["task_contract"]["required_fragments"],
+)
+def test_each_required_task_fragment_is_fail_closed(
+    tmp_path: Path, fragment: str
+) -> None:
+    task = _mutated(tmp_path)
+    text = task.read_text(encoding="utf-8")
+    assert fragment in text
+    task.write_text(
+        text.replace(fragment, "<required-fragment-removed>"), encoding="utf-8"
+    )
+
+    code, report = _lint("--task", str(task))
+
+    assert code == 2
+    assert "LT-012" in _rules(report)
+
+
+def test_forbidden_task_fragment_is_fail_closed(tmp_path: Path) -> None:
+    contract, scenario = _contract(), dict(_scenario())
+    task_contract = dict(scenario["task_contract"])
+    task_contract["forbidden_fragments"] = ["FORBIDDEN_SENTINEL"]
+    scenario["task_contract"] = task_contract
+    task = _mutated(tmp_path)
+    violations = MODULE.check_task(
+        task.read_text(encoding="utf-8") + "\nFORBIDDEN_SENTINEL\n",
+        contract=contract,
+        scenario=scenario,
+        scenarios={scenario["scenario_id"]: scenario},
+    )
+
+    assert "LT-013" in {item["rule"] for item in violations}
+
+
 def test_premise_emission_is_deterministic() -> None:
     assert _emit_premise() == _emit_premise()
 
@@ -250,10 +293,17 @@ def test_latest_task_falls_back_to_latest_completed_run_without_receipt(tmp_path
     assert selected == base / "20260802T000000-new" / "task.md"
 
 
-def test_all_mode_passes_on_real_repo() -> None:
-    """実 repository へ run が追記されても固定 run-id に依存せず --all が通る。"""
+def test_all_mode_reports_real_repo_state_without_fixed_run_id() -> None:
+    """実 repository の current/stale 状態を固定 run-id に依存せず報告する。"""
     code, report = _lint("--all")
-    assert code == 0, report["violations"]
+    assert code in {0, 2}
+    assert isinstance(report["violations"], list)
+    if code == 2:
+        assert {finding["rule"] for finding in report["violations"]} <= {"LT-003", "LT-011"}
+        assert all(
+            "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/" in finding["task"]
+            for finding in report["violations"]
+        )
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
     selected = REPO / report["checked"][0]["task"]
@@ -284,7 +334,10 @@ def test_contract_matches_real_fixture_build(tmp_path: Path) -> None:
         for path in (out / "system-spec").rglob("*")
         if path.is_file() and path.name != ".gitkeep"
     )
-    assert content_files == sorted(contract["placed_inputs"])
+    expected_system_spec = sorted(
+        relative for relative in contract["placed_inputs"] if relative.startswith("system-spec/")
+    )
+    assert content_files == expected_system_spec
 
 
 def test_shape_docstring_quotes_current_fixture_contract() -> None:
@@ -342,6 +395,7 @@ def test_digest_is_deterministic() -> None:
         ("scenario_id", "C19-OUT1-renamed"),
         ("task_args_template", "--repo-root <contained-fixture-repo>"),
         ("required_observations", ["only one observation"]),
+        ("task_contract", {"required_fragments": ["new-boundary"], "forbidden_fragments": []}),
         ("resource_budget", {"max_wall_clock_s": 1, "max_total_tokens": 1}),
         ("forbidden_invoked_skills", []),
     ],

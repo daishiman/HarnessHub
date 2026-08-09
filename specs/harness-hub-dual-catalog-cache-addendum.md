@@ -49,6 +49,26 @@ implementation_readiness: {"checked_at":"2026-08-01T09:00:00Z","missing_sections
 
 # Harness Hub Dual Catalog cache・認可境界追補
 
+## システム構築仕様書 index
+
+Dual Catalog の cache・認可境界を確定 system-spec へ結ぶ仕様追補の入口である。
+
+## 要件定義書 (上位概念・憲法)
+
+利用者価値と全体制約は [上位要件](../system-spec/00-requirements-definition.md) を正とする。
+
+## 章一覧と集約状態
+
+対象章は frontend、backend、security、testing-qa であり、状態は `system-spec/spec-state.json` から集約する。
+
+## 集約状態サマリ
+
+qa-110〜qa-112 の confirmed / evaluator PASS 契約だけを実装根拠として扱う。
+
+## 全体ドキュメント出典 (未割当参照)
+
+未割当の参考資料は system-spec の source ledger を正とし、この追補へ複製しない。
+
 ## 目的と成功状態
 
 認証済み catalog の cache と失敗時表示が tenant 境界を越えず、同一 scope の一時障害だけ安全に継続表示できる状態を維持する。

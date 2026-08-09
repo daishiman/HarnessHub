@@ -40,8 +40,12 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def run(command: list[str], *, label: str) -> dict[str, Any]:
-    proc = subprocess.run(command, capture_output=True, text=True, check=False)
+def run(
+    command: list[str], *, label: str, input_text: str | None = None
+) -> dict[str, Any]:
+    proc = subprocess.run(
+        command, input=input_text, capture_output=True, text=True, check=False
+    )
     record = {
         "label": label,
         "command": command,
@@ -52,6 +56,74 @@ def run(command: list[str], *, label: str) -> dict[str, Any]:
     if proc.returncode != 0:
         raise RunFailure(f"{label} failed ({proc.returncode}): {proc.stderr or proc.stdout}")
     return record
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def contained_file(root: Path, value: Any, *, label: str) -> Path:
+    if not isinstance(value, str) or not value:
+        raise RunFailure(f"{label} must be a non-empty repository-relative path")
+    path = (root / value).resolve()
+    try:
+        path.relative_to(root)
+    except ValueError as exc:
+        raise RunFailure(f"{label} escapes the repository: {value}") from exc
+    if not path.is_file():
+        raise RunFailure(f"{label} is missing: {value}")
+    return path
+
+
+def validate_import_bindings(root: Path, nodes: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate generated source/evidence bindings before the first graph write."""
+    checked: list[str] = []
+    for node in nodes:
+        node_id = str(node.get("graph_node_id") or "?")
+        lineage = node.get("source_lineage")
+        evidence = node.get("confirmation_evidence")
+        if not isinstance(lineage, dict) or not isinstance(evidence, dict):
+            raise RunFailure(f"{node_id} lacks source_lineage or confirmation_evidence")
+        source = contained_file(root, lineage.get("source_path"), label=f"{node_id}.source_path")
+        if lineage.get("source_digest") != sha256(source):
+            raise RunFailure(f"{node_id} source digest does not match source bytes")
+        receipt = contained_file(root, evidence.get("evidence_ref"), label=f"{node_id}.evidence_ref")
+        if evidence.get("evaluated_digest") != sha256(receipt):
+            raise RunFailure(f"{node_id} evidence digest does not match evidence bytes")
+        checked.append(node_id)
+    return {"valid": True, "checked": checked}
+
+
+def proposed_graph(graph_path: Path, generated: list[dict[str, Any]]) -> dict[str, Any]:
+    document = json.loads(graph_path.read_text(encoding="utf-8"))
+    nodes = document.get("nodes")
+    if not isinstance(nodes, list):
+        raise RunFailure("canonical graph lacks nodes[]")
+    replacements = {str(node["graph_node_id"]): node for node in generated}
+    merged = [
+        replacements.pop(str(node.get("graph_node_id")), node)
+        if isinstance(node, dict) else node
+        for node in nodes
+    ]
+    merged.extend(replacements.values())
+    return {**document, "nodes": merged}
+
+
+def append_intermediate(path: Path, value: dict[str, Any]) -> None:
+    """Preserve the append-only goal-seek history and reject cross-goal reuse."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_file():
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if not line.strip():
+                continue
+            try:
+                previous = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise RunFailure(f"intermediate JSONL line {number} is invalid: {exc}") from exc
+            if previous.get("original_goal") not in (None, ORIGINAL_GOAL):
+                raise RunFailure("intermediate history belongs to a different original goal")
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(value, ensure_ascii=False) + "\n")
 
 
 def parse_stdout(record: dict[str, Any]) -> dict[str, Any]:
@@ -102,8 +174,64 @@ def main(argv: list[str] | None = None) -> int:
         steps.append(build_step)
         build = parse_stdout(build_step)
 
-        registered: list[str] = []
+        generated = [
+            json.loads((import_dir / f"{name}.node.json").read_text(encoding="utf-8"))
+            for name in ("architecture", "specification")
+        ]
+        registered = [str(node["graph_node_id"]) for node in generated]
+        goal_hash = hashlib.sha256(ORIGINAL_GOAL.encode("utf-8")).hexdigest()
+        write_json(eval_root / f"{SKILL}-goal-spec.json", {
+            "original_goal": ORIGINAL_GOAL,
+            "mode": "reuse-confirmed",
+        })
+        write_json(progress_path, {
+            "mode": "reuse-confirmed",
+            "status": "preflight",
+            "registered_this_run": registered,
+            "resume_receipt_valid": resume["valid"],
+        })
+
+        # All gates that can reject the generated import run before C02 mutates
+        # the canonical graph.  A rejected preview therefore leaves revision and
+        # artifacts untouched instead of producing a partial import.
+        boundary_step = run(
+            [sys.executable, str(HERE / "validate-system-spec-boundary.py")],
+            label="gate-boundary",
+        )
+        steps.append(boundary_step)
+        binding_result = validate_import_bindings(root, generated)
+        steps.append({
+            "label": "gate-source-and-evidence-bindings",
+            "command": ["internal:validate-import-bindings"],
+            "exit_code": 0,
+            "stdout": json.dumps(binding_result),
+            "stderr": "",
+        })
+        preview = proposed_graph(graph, generated)
+        preview_path = import_dir / "preflight.graph.json"
+        write_json(preview_path, preview)
+        preview_step = run(
+            [sys.executable, str(HERE / "validate-graph-schema.py"),
+             "--repo-root", str(root), "--graph", "-", "--require-canonical-envelope"],
+            label="gate-graph-preview",
+            input_text=json.dumps(preview, ensure_ascii=False),
+        )
+        steps.append(preview_step)
         for name in ("architecture", "specification"):
+            dry_run_step = run(
+                [sys.executable, str(HERE / "upsert-node.py"),
+                 "--repo-root", str(root),
+                 "--graph", str(preview_path),
+                 "--input", str(import_dir / f"{name}.node.json"),
+                 "--body-file", str(import_dir / f"{name}.body.md"),
+                 "--dry-run"],
+                label=f"c02-dry-run-{name}",
+            )
+            steps.append(dry_run_step)
+
+        for name, expected_id in zip(
+            ("architecture", "specification"), registered, strict=True
+        ):
             upsert_step = run(
                 [sys.executable, str(HERE / "upsert-node.py"),
                  "--repo-root", str(root),
@@ -112,33 +240,8 @@ def main(argv: list[str] | None = None) -> int:
                 label=f"c02-upsert-{name}",
             )
             steps.append(upsert_step)
-            registered.append(str(parse_stdout(upsert_step)["graph_node_id"]))
-
-        goal_hash = hashlib.sha256(ORIGINAL_GOAL.encode("utf-8")).hexdigest()
-        write_json(eval_root / f"{SKILL}-goal-spec.json", {
-            "original_goal": ORIGINAL_GOAL,
-            "mode": "reuse-confirmed",
-        })
-        write_json(progress_path, {
-            "mode": "reuse-confirmed",
-            "status": "verifying",
-            "registered_this_run": registered,
-            "resume_receipt_valid": resume["valid"],
-        })
-
-        gates = [
-            [sys.executable, str(HERE / "validate-system-spec-boundary.py")],
-            [sys.executable, str(HERE / "validate-graph-schema.py"),
-             "--repo-root", str(root), "--graph", str(graph),
-             "--require-canonical-envelope"],
-            [sys.executable, str(HERE / "validate-source-digest.py"),
-             "--repo-root", str(root), "--progress", str(progress_path)],
-            [sys.executable, str(HERE / "validate-evidence-refs.py"),
-             "--repo-root", str(root), "--progress", str(progress_path)],
-        ]
-        for index, command in enumerate(gates, start=1):
-            step = run(command, label=f"gate-{index}")
-            steps.append(step)
+            if str(parse_stdout(upsert_step)["graph_node_id"]) != expected_id:
+                raise RunFailure(f"c02-upsert-{name} returned an unexpected graph node id")
 
         progress = json.loads(progress_path.read_text(encoding="utf-8"))
         progress["status"] = "complete"
@@ -153,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
             "drift_signal": False,
         }
         inter_path = eval_root / f"{SKILL}-intermediate.jsonl"
-        inter_path.write_text(json.dumps(intermediate, ensure_ascii=False) + "\n", encoding="utf-8")
+        append_intermediate(inter_path, intermediate)
 
         report = {
             "runner": "build-system-spec-resume-import",

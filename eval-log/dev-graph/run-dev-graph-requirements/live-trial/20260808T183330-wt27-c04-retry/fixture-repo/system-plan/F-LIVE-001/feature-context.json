@@ -1,0 +1,21 @@
+{
+  "acceptance": [
+    "13 task 全件が implementation_readiness=complete である"
+  ],
+  "architecture_refs": [
+    "architecture/lt-arch-001.md"
+  ],
+  "artifact_kind": "feature",
+  "goal": "exact-13 package が readiness 完了状態で handoff できる状態",
+  "graph_node_id": "F-LIVE-001",
+  "purpose": "live-trial で requirements handoff を実走させるための確定 feature",
+  "scope_in": [
+    "確定 system-spec からの要件導出",
+    "exact-13 package の readiness 判定"
+  ],
+  "scope_out": [
+    "実装コードの生成",
+    "実 repository への書き込み"
+  ],
+  "updated_at": "2026-07-21T00:00:00Z"
+}

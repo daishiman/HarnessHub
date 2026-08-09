@@ -1,0 +1,38 @@
+{
+  "checklist": [
+    {
+      "evidence": "C24 resolve-repo-context --mode read の repo_root が content_roots.repository の realpath と一致し DEV_GRAPH_ROOT に固定。C11 validate-graph-schema.py の violations 10 件はすべて scope 外 LT-ARCH-001 の heading_missing で、rendered scope (LT-FEATURE-001 + 13 child = 14 node) の in-scope violations は 0 件。out_relative=.dev-graph/render/index.html (repo 内)。",
+      "item": "input graph/scope が schema PASS で output realpath が caller repo 内にある",
+      "status": "PASS"
+    },
+    {
+      "evidence": "renderer receipt nodes=14 edges=12 feature_progress.by_feature['LT-FEATURE-001']={done:4,total:13}。graph.json 独立集計でも children=13, done|closed=4 (P01-P04)。",
+      "item": "render model の node/edge/feature progress counts が input graph と一致する",
+      "status": "PASS"
+    },
+    {
+      "evidence": "実走査: script_src=0 link_tag=0 http(s)://=0 protocol_relative=0 cdn/npm token=0 fetch/@import=0。inline: <svg>=1 <path>=12 <rect>=28 <style>=1 <script>=3 (すべて inline; うち 2 件は application/json data block)。",
+      "item": "生成 HTML の外部 script/link/CDN/npm reference が0件で SVG と inline JS が実在する",
+      "status": "PASS"
+    },
+    {
+      "evidence": "input_sha256=a19f5235089531a0947445bfea59045c2f8ba8c0b8335f2a713f720ee1a62f2a (graph.json 実 digest と一致)、output_sha256=0312dd93fc72444217163e1919f1c10693930aace1f859414d9d07f19b3d45e7 (index.html 実 digest と一致)。graph_sha256_before==after で read-only。",
+      "item": "renderer receipt の input/output digest と実ファイル digest が一致する",
+      "status": "PASS"
+    },
+    {
+      "evidence": "receipt 指定 run。render-metadata.registration_verification={status:verified, reason:null, graph_digest_match:true}、HTML banner data-status=\"verified\"。node_ids 13 件一致、applied_count=expected_count=13、source_digest=sha256:d23642a8...c2807 が全 child の source_lineage.source_digest と一致、graph_digest_after を再計算値と突合して一致。negative 対照 (scratchpad 複製で expected_count=12) は exit 1 / HTML 未生成で fail-closed を確認。",
+      "item": "registration receipt 指定時は照合状態が verified、未指定時は HTML と render-metadata の双方で not_performed になっている",
+      "status": "PASS"
+    },
+    {
+      "evidence": "headless Chrome で file:// から描画しスクリーンショット取得。SVG 14 node card + 12 edge、feature card に 'active · feature · 4/13'、上部に 'Registration verification: VERIFIED 13/13 nodes; source sha256:d23642a8...' を表示。外部取得なしで完成描画。",
+      "item": "ブラウザ live trial で追加 runtime なしに SVG と feature X/Y progress が表示される",
+      "status": "PASS"
+    }
+  ],
+  "loop": 1,
+  "overall": "PASS",
+  "scenario": "C05-OUT1-positive-feature-progress",
+  "skill": "dev-graph:run-dev-graph-render"
+}

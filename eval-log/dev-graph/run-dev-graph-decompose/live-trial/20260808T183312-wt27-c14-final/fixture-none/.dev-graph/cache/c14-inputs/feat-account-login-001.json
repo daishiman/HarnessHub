@@ -1,0 +1,98 @@
+{
+  "node": {
+    "acceptance": [
+      "有効な資格情報でログインすると認証セッションが発行される",
+      "無効な資格情報のログイン試行は拒否されセッションが発行されない",
+      "ログイン済み利用者は再認証なしで後続画面へ遷移できる"
+    ],
+    "architecture_refs": [
+      "arch-portal-platform-001"
+    ],
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "beads_linkage": null,
+    "classification_candidates": [],
+    "classification_confidence": 1.0,
+    "classification_reason": "自然文 want の「自分のアカウントでログインできる」を独立価値の機能単位として切り出した",
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "confirmation_evidence": {
+      "evaluated_digest": null,
+      "evaluator": null,
+      "evidence_ref": null
+    },
+    "confirmation_status": "draft",
+    "created_at": "2026-08-08T18:33:12Z",
+    "depends_on": [],
+    "domain": "internal-portal",
+    "evaluation_status": "pending",
+    "execution_contexts": [],
+    "feature_package_id": null,
+    "file_path": "features/feat-account-login-001.md",
+    "github_project_linkages": [],
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "goal": "利用者が自分のアカウント資格情報でログインでき、ログイン状態が後続画面へ引き継がれている状態",
+    "graph_node_id": "feat-account-login-001",
+    "implementation_readiness": {
+      "checked_at": null,
+      "missing_sections": [],
+      "status": "incomplete"
+    },
+    "issue_linkage": null,
+    "iteration": null,
+    "owners": [],
+    "parent_feature": null,
+    "phase_ref": null,
+    "priority": null,
+    "project_id": "internal-business-portal",
+    "pull_request_linkages": [],
+    "purpose": "利用者が自分のアカウントで業務ポータルへ入れる状態を作り、以降の全機能の利用者識別を成立させる",
+    "related_nodes": [],
+    "resource_scope": [
+      "src/portal/auth"
+    ],
+    "scope_in": [
+      "ログイン画面",
+      "資格情報の検証",
+      "認証セッションの発行と維持",
+      "ログアウト"
+    ],
+    "scope_out": [
+      "パスワードリセット",
+      "二要素認証",
+      "社外 IdP 連携"
+    ],
+    "source_lineage": {
+      "imported_at": "2026-08-08T18:33:12Z",
+      "origin_kind": "generated",
+      "source_digest": "aae36bba439a0ba94b4761689cbdd4651b39cbb65900c2331091fd6c199e139a",
+      "source_path": "docs/want.md",
+      "source_plugin": "run-dev-graph-decompose",
+      "source_version": "0.1.0"
+    },
+    "start_date": null,
+    "status": "draft",
+    "tags": [
+      "authentication",
+      "login",
+      "session"
+    ],
+    "target_date": null,
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "title": "アカウントログインと認証セッション",
+    "tracker_binding": "none",
+    "updated_at": "2026-08-08T18:33:12Z"
+  }
+}

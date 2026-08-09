@@ -1,0 +1,21 @@
+{
+  "target_id": "sqlite",
+  "source_url": "https://www.sqlite.org/changes.html",
+  "official_host": "www.sqlite.org",
+  "retrieval_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T13:26:33Z",
+  "fetch_log": [
+    {
+      "url": "https://www.sqlite.org/docs.html",
+      "fetched_at": "2026-08-08T13:26:10Z",
+      "tool": "WebFetch",
+      "observed": "公式ドキュメント索引。現行 version 番号および最終更新日の記載なしを確認したため、同一公式 host の change log を追加取得した。"
+    },
+    {
+      "url": "https://www.sqlite.org/changes.html",
+      "fetched_at": "2026-08-08T13:26:33Z",
+      "tool": "WebFetch",
+      "observed": "change log 冒頭の最新リリース: version 3.53.4 / release date 2026-07-24 (逐語)。"
+    }
+  ]
+}
