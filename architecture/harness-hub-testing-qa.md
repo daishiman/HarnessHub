@@ -252,3 +252,5 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
   二重実装しない意味である。確定済み source artifact の本文を node body へ verbatim
   import することは lineage と本文の同一性を保つ正規 R3 契約であり、複製ロジックと
   判定しない。
+- 最終 graph schema gate は baseline failure を許容しない。新契約で検出した旧 artifact は
+  標準見出しへ移行し、`valid=true`、violations 0、readiness complete を受入条件とする。

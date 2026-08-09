@@ -12,16 +12,16 @@ iteration: null
 title: "system-spec import の見出し契約と architecture readiness を一致させる"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:00:00Z"
-updated_at: "2026-08-08T14:20:00Z"
+updated_at: "2026-08-08T15:06:37.565871Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
-resource_scope: ["plugins/dev-graph",".dev-graph/templates/template-contract.json","plugin-plans/dev-graph/templates/template-contract.json","system-spec","specs/harness-hub-dev-graph-authority-addendum.md","architecture","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement","docs/features/feat-dev-pipeline-improvement"]
+resource_scope: ["plugins/dev-graph",".dev-graph/templates/template-contract.json","plugin-plans/dev-graph/templates/template-contract.json","system-spec","specs","architecture","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement","docs/features/feat-dev-pipeline-improvement"]
 purpose: "system-spec import の正当な本文形だけを許容し、不完全な architecture を fail-closed に拒否する。"
 goal: "source lineage に基づく宣言型見出し contract と architecture/specification/task の対称な readiness 判定を確立する。"
-scope_in: ["conditional trigger の contract 化","architecture heading_missing の有効化","3 template contract copy の同期","fixture と focused regression"]
+scope_in: ["conditional trigger の contract 化","architecture heading_missing の有効化","3 template contract copy の同期","fixture と focused regression","新契約で検出された旧 specification / task artifact の標準見出し移行"]
 scope_out: ["issue kind の見出し慣習整理","Harness Hub 製品 runtime","system-spec の意味内容変更"]
-acceptance: ["index と requirements の正当形だけが conditional 緩和で PASS する","通常 architecture の不足見出しが fail-closed になる","3 contract copy が一致する","focused regression が PASS する","fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する"]
+acceptance: ["index と requirements の正当形だけが conditional 緩和で PASS する","通常 architecture の不足見出しが fail-closed になる","3 contract copy が一致する","focused regression が PASS する","fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する","repository 全体の graph schema gate が違反 0 で PASS する"]
 architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
@@ -63,6 +63,7 @@ C19 live trial で `system-spec/index.md` を specification として登録す�
 - requirements definition は U1〜U9、通常 architecture は base 10 見出しを要求し、不足は `heading_missing` で fail-closed になる。
 - trigger は template contract の宣言データから解決され、3 コピーは byte 一致をテストする。
 - C19 で取り込む node body と source body の一致は、実行ロジックの複製ではなく lineage 付き素材の verbatim import として受理する。
+- 新契約で検出された旧 specification 5 件・task 2 件を標準見出しへ移行した。500 行超の着地観測仕様は 122 行の正規 contract と既存の詳細調査資料へ責務分離した。
 
 ## 期待する挙動
 
@@ -97,7 +98,8 @@ priority: high。正当な system-spec import が構造的に登録不能であ�
 - base template 完全準拠は conditional family 発火時も受理される。
 - 空条件 rule は発火しない。
 - 3 contract copy が一致し、focused regression が PASS する。
+- repository 全体の graph schema gate が違反 0 で PASS する。
 
 ## 検証証跡
 
-`plugins/dev-graph/tests/test_graph_artifact_readiness.py`、`test_validate_graph_schema_c11_heading_readiness.py`、`test_live_trial_fixture_builders.py` の 57 test と、Dev Graph 全体 975 test / 5 subtests はすべて PASS。3 contract copy の byte parity も PASS。fresh C19 正本 run `20260808T154500Z-o4zi-c19r3` は actual model `claude-opus-5`、nudge=0、gate=0、独立評価と機械 verdict がともに PASS。詳細は仕様反映受領書を正とする。
+`plugins/dev-graph/tests/test_graph_artifact_readiness.py`、`test_validate_graph_schema_c11_heading_readiness.py`、`test_live_trial_fixture_builders.py` の 57 test と、Dev Graph 全体 975 test / 5 subtests はすべて PASS。3 contract copy の byte parity も PASS。fresh C19 正本 run `20260808T154500Z-o4zi-c19r3` は actual model `claude-opus-5`、nudge=0、gate=0、独立評価と機械 verdict がともに PASS。旧 artifact 160 違反も正規見出し移行後に 0 件へ収束した。詳細は仕様反映受領書を正とする。

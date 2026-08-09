@@ -5,7 +5,7 @@ feature_id: feat-dev-pipeline-improvement
 graph_node_id: issue-system-spec-import-heading-contract-20260808
 beads_id: HarnessHub-o4zi
 spec_impact: reflected-internal-design
-reviewed_at: "2026-08-08"
+reviewed_at: "2026-08-09"
 ---
 
 # system-spec import heading contract — 仕様反映受領書
@@ -27,10 +27,10 @@ reviewed_at: "2026-08-08"
 | 層 | 反映 |
 |---|---|
 | `system-spec/` | 最新 main の qa-206 / qa-207 を保持し、`dev-workflow.web` を qa-208 へ R4-reopen → 再確定して compiler で再生成。foundation U1〜U9 の source-index も確定済み QA から正規 transition で復旧。 |
-| `specs/` | dev-graph authority addendum に lineage trigger、fail-closed 対称性、素材の verbatim import と実行ロジック複製の区別を追記。 |
+| `specs/` | dev-graph authority addendum に lineage trigger、fail-closed 対称性、素材の verbatim import と実行ロジック複製の区別を追記。新契約で検出された旧 specification 5 件も標準セクションへ移行。500 行超の着地観測仕様は 122 行の正規 contract と既存の詳細調査資料へ責務分離。 |
 | `architecture/` | dev-workflow / testing-qa に contract・validator・fixture の責務境界、provenance 復旧、C19 の data / logic 境界を反映。 |
 | `features/` | feat-dev-pipeline-improvement に o4zi の fresh C19 PASS と到達状態を追記。 |
-| `tasks/` | P13 handoff へ C19 / foundation の解決と、PR merge 後 reconciliation のみが残ることを記録。 |
+| `tasks/` | P13 handoff へ C19 / foundation の解決と、PR merge 後 reconciliation のみが残ることを記録。旧補助 task 2 件も実行可能な 13 セクションへ移行。 |
 | `docs/` | feature / workflow changelog と本受領書へ実装・検証・残課題を記録。 |
 
 ## 検証
@@ -42,7 +42,7 @@ reviewed_at: "2026-08-08"
 - fresh live trial: C01 / C02 / C03 / C04 / C05 / C14 / C18 / C19 の 8 件が独立評価込みですべて PASS。C14 正本 run は `20260808T190000Z-o4zi-c14r11`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `b0c1f6192f5f0322a5b61f442ca7d2acdc2c2a3163b7554ea3fce79df797d4e8`。C19 正本 run は `20260808T154500Z-o4zi-c19r3`、actual model `claude-opus-5`、nudge=0、gate=0、behavior closure `d090d08557e35d65477b10fc7d6f692f0f1b1b146abf8a200dbc1fc78e1832f2`。
 - main 同期: `origin/main` の `2209f8ad` を local `main` の `d7b1bbc9` へ統合し、その local `main` を本 branch へ `5fddb2ac` でマージ。`spec-state.json` の競合は qa-206 / qa-207 / qa-208 として双方の確定仕様を保持した。
 - C19 は target Skill と harness 正規4 Skill を literal call で順番どおり実行し、3件の独立監査、completeness gate、C02 経由の2 node、source / evidence digest、writer 経路、複製ロジック 0 を確認。
-- full graph schema の 160 件（frontmatter 44、parity 5、heading 111）は `origin/main` と同一の既存 baseline。今回変更 node の違反は 0 件で、無関係な過去 artifact を本 commit で一括変更しない。
+- full graph schema: 旧 specification 5 件・task 2 件に残っていた 160 件（frontmatter 44、parity 5、heading 111）を正規 writer と明示 migration で解消し、`valid=true` / violation 0 / readiness complete へ収束。
 
 ## レビューで是正した点
 
@@ -50,11 +50,12 @@ reviewed_at: "2026-08-08"
 
 C19 初回証跡は compile の literal Skill call が欠落したため採用せず、必須4 call が揃う fresh run を独立再評価した。また、node body と source body の一致は「ロジック複製」ではなく、lineage 付き素材を保存する正規 verbatim import であることを skill / fixture / test / 仕様へ明記した。
 
+最終 gate で旧 artifact 160 件が検出されたため、失敗を baseline として残さず標準見出しへ移行した。詳細な調査履歴が 500 行を超える着地観測仕様は、短い正規 contract を新設し、既存 addendum を履歴資料として保持する形に分離した。
+
 ## 残課題
 
 - Draft PR の CI と review / merge。merge 後の default-branch reconciliation まで `HarnessHub-o4zi` は in_progress を維持する。
-- `origin/main` 由来の既存 artifact 見出し・frontmatter 160 件は、本変更と切り離した段階移行対象とする。
 
 ## 500 行制約
 
-変更した手書きの実装・文書はいずれも 500 行以下。500 行を超えるのは機械生成された C19 transcript、`.dev-graph/state/graph.json`、`system-spec/spec-state.json` だけである。いずれも改変防止用 digest、遷移履歴、参照位置を一体で検証する単一証拠／状態正本（SSOT＝唯一の正しい保存先）のため分割しない。これらは生成物であり、手書きファイルの責務分割上限には数えない。
+変更した手書きの実装・文書はいずれも 500 行以下。旧 570 行の着地観測 addendum は直接変更せず、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として分離した。500 行を超えるのは機械生成された C19 transcript、`.dev-graph/state/graph.json`、`system-spec/spec-state.json` だけである。いずれも改変防止用 digest、遷移履歴、参照位置を一体で検証する単一証拠／状態正本（SSOT＝唯一の正しい保存先）のため分割しない。

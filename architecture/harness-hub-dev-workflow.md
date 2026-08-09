@@ -186,6 +186,7 @@ C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C2
 - **validator 層**: `HEADING_MISSING_KINDS` は architecture / specification / task を対称に扱い、不足見出しを readiness evidence として列挙する。
 - **fixture 層**: live-trial fixture は architecture/specification の見出しを契約正本から読み、contract 改訂時の写経 drift を作らない。
 - **配布層**: plugin、導入済み `.dev-graph`、plugin-plan の template contract 3 コピーを同一バイト列に保つ。
+- **既存 artifact 移行**: 新しい fail-closed gate が検出した旧 specification 5 件・task 2 件は標準見出しへ移行する。500 行超の詳細仕様は正規 contract と調査履歴へ責務分離し、全 graph gate を violation 0 へ収束させる。
 
 製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
 

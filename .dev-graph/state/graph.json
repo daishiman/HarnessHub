@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1440,
+  "graph_revision": 1444,
   "nodes": [
     {
       "acceptance": [
@@ -48842,7 +48842,7 @@
       "classification_candidates": [
         {
           "artifact_kind": "specification",
-          "candidate_path": "specs/harness-hub-post-signin-landing-observability-addendum.md",
+          "candidate_path": "specs/harness-hub-post-signin-landing-observability-contract.md",
           "confidence": 0.99
         },
         {
@@ -48876,7 +48876,7 @@
       "evaluation_status": "fail",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "specs/harness-hub-post-signin-landing-observability-addendum.md",
+      "file_path": "specs/harness-hub-post-signin-landing-observability-contract.md",
       "github_project_linkages": [],
       "github_publication": {
         "labels": [],
@@ -48911,6 +48911,7 @@
         "arch-harness-hub-testing-qa"
       ],
       "resource_scope": [
+        "specs/harness-hub-post-signin-landing-observability-contract.md",
         "specs/harness-hub-post-signin-landing-observability-addendum.md",
         "system-spec/frontend.md",
         "system-spec/ui-ux.md",
@@ -48963,7 +48964,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub サインイン後 着地不達の原因究明と遷移経路の継続検証 仕様追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-07T10:59:42Z"
+      "updated_at": "2026-08-08T15:01:54.446911Z"
     },
     {
       "acceptance": [
@@ -51269,7 +51270,7 @@
       "template_version": "1.0.0",
       "title": "稼働ビルドの素性と反映鮮度 — 実装確定追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-08T11:00:00Z"
+      "updated_at": "2026-08-08T14:56:41.578322Z"
     },
     {
       "acceptance": [
@@ -51666,7 +51667,8 @@
         "通常 architecture の不足見出しが fail-closed になる",
         "3 contract copy が一致する",
         "focused regression が PASS する",
-        "fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する"
+        "fresh C19 live trial が正規4 Skill・独立監査・C02登録を含め PASS する",
+        "repository 全体の graph schema gate が違反 0 で PASS する"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow",
@@ -51760,7 +51762,7 @@
         ".dev-graph/templates/template-contract.json",
         "plugin-plans/dev-graph/templates/template-contract.json",
         "system-spec",
-        "specs/harness-hub-dev-graph-authority-addendum.md",
+        "specs",
         "architecture",
         "features/feat-dev-pipeline-improvement.md",
         "tasks/feat-dev-pipeline-improvement",
@@ -51770,7 +51772,8 @@
         "conditional trigger の contract 化",
         "architecture heading_missing の有効化",
         "3 template contract copy の同期",
-        "fixture と focused regression"
+        "fixture と focused regression",
+        "新契約で検出された旧 specification / task artifact の標準見出し移行"
       ],
       "scope_out": [
         "issue kind の見出し慣習整理",
@@ -51798,7 +51801,7 @@
       "template_version": "1.0.0",
       "title": "system-spec import の見出し契約と architecture readiness を一致させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T14:20:00Z"
+      "updated_at": "2026-08-08T15:06:37.565871Z"
     },
     {
       "acceptance": [

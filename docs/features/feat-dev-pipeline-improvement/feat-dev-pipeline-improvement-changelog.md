@@ -298,3 +298,4 @@ close した。
 - architecture を `HEADING_MISSING_KINDS` へ追加し、0/10 見出しでも complete になっていた非対称を解消した。
 - plugin / installed / plan の template contract 3 コピーを同期し、fixture は required sections を正本から読む。
 - fresh C19 live trial は正規4スキル、独立 completeness 監査、C02 経由の2ノード登録、source digest / evidence ref 再検証をすべて PASS した。同時に foundation U1〜U9 の source-index 欠落も確定済み QA の正規 transition で復旧した。製品 runtime は非変更。確定した仕様層と検証結果は [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+- 最終 graph gate で検出した旧 artifact 160 違反は、specification 5 件・task 2 件の標準見出し移行と frontmatter 再生成で 0 件へ収束した。570 行の着地観測詳細は 122 行の正規 contract と既存調査履歴へ責務分離した。
