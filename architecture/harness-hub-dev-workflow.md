@@ -229,6 +229,7 @@ C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C2
 - validator は architecture / specification / task を対称に検査し、不足見出しを readiness evidence として列挙する。完全な base template は conditional family 発火時も有効である。
 - plugin、導入済み `.dev-graph`、plugin-plan の contract copy は byte parity を保ち、fixture は契約正本から見出しを取得する。
 - gate が検出した旧 specification / task は標準見出しへ移行し、500 行を超える詳細仕様は短い正規 contract と調査履歴へ責務分離する。
+- foundation U1〜U9 の source-index は新しい要件文で補わず、記録済みユーザー発言を正規 transition で結び付ける。受理は coverage / source citation の同時 PASS を必須にする。
 
 C19 の source-derived body は source artifact と byte 同一に保つ。adapter は node shape と source 読取り、C02 writer は node と graph store の書込みを所有し、elicitation / compile 実行ロジックを Dev Graph 側へ複製しない。製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
 

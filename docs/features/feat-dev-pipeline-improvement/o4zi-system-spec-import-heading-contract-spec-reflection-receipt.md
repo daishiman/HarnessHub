@@ -69,4 +69,4 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 
 ## 500 行制約
 
-変更した手書きの実装・文書はいずれも 500 行以下。旧 570 行の着地観測 addendum は直接変更せず、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として分離した。500 行を超えるのは `.dev-graph/state/graph.json` と `system-spec/spec-state.json` だけであり、いずれも遷移履歴と参照位置を一体で検証する生成状態の正本（SSOT＝唯一の正しい保存先）のため分割しない。
+変更した手書きの実装・文書はいずれも 500 行以下で、repository のより厳しい 300 行 gate も 649 文書・違反 0 で PASS した。旧 570 行の着地観測 addendum は直接変更せず、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として分離した。500 行を超えるのは `.dev-graph/state/graph.json` と `system-spec/spec-state.json` だけであり、いずれも遷移履歴と参照位置を一体で検証する生成状態の正本（SSOT＝唯一の正しい保存先）のため分割しない。
