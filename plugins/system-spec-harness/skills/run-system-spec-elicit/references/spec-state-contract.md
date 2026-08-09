@@ -95,6 +95,7 @@ python3 scripts/apply-spec-transition.py set-targets --state spec-state.json \
 - **単一 writer**: `requirements_foundation` の書込は `set-foundation` op が唯一の経路。`init` は空 (`empty_foundation`) で初期化するだけ。goals は `id` 必須・重複禁止、`concrete_intents.serves` は実在 goal id を指す (dangling 拒否)。
 - **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。さらに writer と `--require-foundation` は各 U に対応する canonical id `qa-foundation-u1`〜`qa-foundation-u9` の 1論点 `qa_log` entry を機械的に要求する。対話 entry は `source:{"kind":"user-dialogue"}`、書面 entry は `source:{"kind":"written-requirements","path":"<relative-path>","section":"<section>","sha256":"<sha256(answer)>"}` とし、質問にも path/section、回答にも対応原文を残す。承認ログだけ・AI 要約だけを一次根拠にしてはならない。未確定なら途中保存として空でも保存できる。
 - **serves_goals (トレース)**: 各 `確定` セルは `serves_goals: ["G1", ...]` でどの上位概念 (ゴール) に資するかを明示する。`confirm` op に `serves_goals` を同時付与するか、確定後に `set-serves` op で additive に付与する。`set-serves` は `state=確定` を変えないため確定巻き戻し防御には抵触しない。
+- **approval_ref (承認記録へのトレース)**: `対象外` セルは `exclude` op で `approval_ref` を持てるが、`確定` セルには対応経路が無く、「回答本文は明示承認を根拠に引用しているのに、セルから承認記録へ機械追跡できない」状態が生じていた (F-0025)。確定セル限定の後付け annotation である **`set-approval` op** で `approval_ref` を additive に付与する。`set-serves` と同型で `state=確定` を変えないため確定巻き戻し防御には抵触しない。writer は `approval_log` に実在する id だけを受理する (dangling 拒否)。`chunk` で同 turn に `approval_id` を持つ場合は省略でき、その turn の承認 id が自動で紐づく。
 
 ```bash
 # 上位概念 U1-U9 を確定 (JSON 文字列 or ファイルパス)
@@ -103,6 +104,9 @@ python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json 
 # 確定セルへ serves_goals を付与 (トレース)
 python3 scripts/apply-spec-transition.py apply --state spec-state.json \
   --op '{"action":"set-serves","category":"database","platform":"web","serves_goals":["G1"]}'
+# 確定セルへ approval_ref を付与 (承認記録へのトレース)
+python3 scripts/apply-spec-transition.py apply --state spec-state.json \
+  --op '{"action":"set-approval","category":"database","platform":"web","approval_ref":"appr-040"}'
 ```
 
 ### 書面要件の source-index
@@ -253,7 +257,7 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
 - **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` (5) turn を適用。未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null を保存 (resumable)。書込時点で未収集0のときだけ `complete=true` (書込後の `reopen` / `add-category` で stale 化する。上記「hearing_progress の意味論 (SSOT)」参照)。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
-- **set-foundation / set-serves / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。
+- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定の additive annotation で `state` を変えない。
 
 ## 検証 (deterministic gate)
 

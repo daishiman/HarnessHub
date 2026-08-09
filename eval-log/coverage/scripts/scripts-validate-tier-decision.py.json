@@ -1,0 +1,18 @@
+{
+  "artifact": "scripts/validate-tier-decision.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 92,
+    "notes": "tier 判定ロジックと記録検査を分離し、必須 field、selector absent、閉列挙 disposition、受け皿無し deferred、不正 cache_hit、無根拠降格を拒否する。過去判定規則を動かさず証拠 shape だけを検査する責務が明確。18 tests pass。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

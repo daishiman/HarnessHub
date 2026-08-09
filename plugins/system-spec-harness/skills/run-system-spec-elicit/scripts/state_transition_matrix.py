@@ -138,6 +138,26 @@ def apply_cell_op(state: dict, op: dict) -> None:
             raise TransitionError(f"set-serves には非空 serves_goals が必須: {category}/{platform}")
         cell["serves_goals"] = serves
         return
+    if action == "set-approval":
+        # exclude は approval_ref を cell へ持てるのに confirm は持てない、という非対称が
+        # 「回答本文は承認を主張しているが、確定セルから承認記録へ機械追跡できない」
+        # (F-0025) の直接原因だった。confirm の action 定義を変えると確定条件そのものへ
+        # 触れることになるため、確定セル限定の後付け annotation である set-serves と
+        # 同型の action を新設して対称化する (単一 writer 契約・確定巻き戻し拒否は不変)。
+        if current != "確定":
+            raise TransitionError(
+                f"set-approval 不可: {category}/{platform} は '{current}' (確定セルのみ approval_ref を付与できる)"
+            )
+        approval_ref = op.get("approval_ref")
+        if not isinstance(approval_ref, str) or not approval_ref.strip():
+            raise TransitionError(f"set-approval には非空 approval_ref が必須: {category}/{platform}")
+        approval_ref = approval_ref.strip()
+        if not has_entry(state.get("approval_log", []), approval_ref):
+            raise TransitionError(
+                f"set-approval: approval_log に存在しない approval_ref: {approval_ref} ({category}/{platform})"
+            )
+        cell["approval_ref"] = approval_ref
+        return
     if current == "確定":
         raise TransitionError(f"確定セルの直接変更は拒否: {category}/{platform}。変更は R4-reopen を経由すること")
     if action == "confirm":
@@ -199,6 +219,10 @@ def apply_turn(state: dict, turn: dict) -> None:
         if op.get("action") == "confirm" and not op.get("qa_ref") and qa_id:
             op["qa_ref"] = qa_id
         if op.get("action") == "exclude" and not op.get("reason") and not op.get("approval_ref") and approval_id:
+            op["approval_ref"] = approval_id
+        # confirm と同 turn で承認を得た場合、その turn の approval_id を確定セルへ紐づける。
+        # turn 境界は state に永続化されないため (LS-04)、この場でしか対応を残せない。
+        if op.get("action") == "set-approval" and not op.get("approval_ref") and approval_id:
             op["approval_ref"] = approval_id
         apply_cell_op(state, op)
     recompute_aggregates(state)

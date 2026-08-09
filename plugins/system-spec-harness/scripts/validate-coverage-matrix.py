@@ -54,8 +54,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
+
+# 回答本文が引用する承認 id の形 (approval_log の canonical id は appr-NNN)。
+_APPROVAL_ID_RE = re.compile(r"appr-\d+")
 
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
@@ -183,6 +187,13 @@ def validate(data: dict, require_complete: bool = False) -> list[str]:
             f"qa_log/approval_log: id {collision} が両ログに重複 (qa_ref の参照先が一意に定まらない)"
         )
     ref_ids = qa_ids | approval_ids
+    # 承認主張の突合用に qa_log entry の本文 (question + answer) を id 索引する。
+    qa_entry_text: dict[str, str] = {}
+    for entry in data.get("qa_log") or []:
+        if isinstance(entry, dict) and isinstance(entry.get("id"), str):
+            qa_entry_text[entry["id"]] = " ".join(
+                str(entry.get(key, "")) for key in ("question", "answer")
+            )
 
     unresolved = 0
     for cat_id in cat_ids:
@@ -226,6 +237,22 @@ def validate(data: dict, require_complete: bool = False) -> list[str]:
                     findings.append(
                         f"matrix[{cat_id}][{pf}]: 確定 qa_ref={qa_ref!r} が qa_log/approval_log に不在"
                     )
+                approval_ref = cell.get("approval_ref")
+                if approval_ref is not None and approval_ref not in approval_ids:
+                    findings.append(
+                        f"matrix[{cat_id}][{pf}]: 確定 approval_ref={approval_ref!r} が approval_log に不在"
+                    )
+                # 承認主張 × 承認記録の突合 (F-0025)。回答本文が承認 id を引用しているのに
+                # セルに approval_ref が無いと、確定セルから承認記録へ機械追跡できない。
+                # 誤検出を避けるため「承認」という語ではなく appr-NNN の明示引用だけを見る。
+                if approval_ref is None and qa_ref in qa_entry_text:
+                    cited = _APPROVAL_ID_RE.findall(qa_entry_text[qa_ref])
+                    known = sorted({c for c in cited if c in approval_ids})
+                    if known:
+                        findings.append(
+                            f"matrix[{cat_id}][{pf}]: 確定の根拠 {qa_ref} が承認 {known} を引用しているが "
+                            f"セルに approval_ref が無い (set-approval op で付与すること)"
+                        )
 
         # 集約状態の真理値表照合 (宣言があれば)
         declared = (data.get("category_aggregate") or {}).get(cat_id)

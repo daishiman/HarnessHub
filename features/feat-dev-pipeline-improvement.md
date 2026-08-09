@@ -148,3 +148,7 @@ node ID・件数・source digest・lineage が一致する登録証拠を失わ�
 HarnessHub-xz0u では、C16 schedule が Beads の ready payload に無い着手可能 node を黙って落とさず、ready_payload_entry_absent と source=schedule-graph を持つ unmapped[] として報告するようにした。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆し、不正な依存形状は停止、dependency 配列順だけの parity 不一致は除く。これは製品 runtime を変えず、開発管理パイプラインの観測可能性（原因を後から判断できる性質）を改善する内部契約である。正規 C01/C03 仕様反映、復旧境界、検証結果は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
 
 HarnessHub-vf66 では、全 plugin の hook 台帳・Claude Code 登録・実体を同じ全体ゲートで照合し、手動スクリプトを自動 hook の置場から分離した。外部 API・DB・認証認可・UI・deploy unit は変えず、`qa-143` の正規反映と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-09 検証 tier と review 証拠整合
+
+変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。

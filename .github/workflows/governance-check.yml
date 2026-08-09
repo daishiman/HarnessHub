@@ -30,6 +30,59 @@ jobs:
           python-version: '3.12'
       - name: guard change category (P0/P1 proposal gate)
         run: python3 scripts/guard-change-category.py --base origin/main --bypass-cooldown
+      # ── 検証 tier の算出と記録 (dev-workflow.md【1】【4】【5】/ HarnessHub-xcl3) ──
+      # 本 step は tier を「記録する」ところまでを担い、下流 step の実行/非実行はまだ
+      # 切り替えない。切替を先に入れると、判定が壊れた瞬間に検査が黙って消える。
+      # 記録が安定して読めるようになってから blocking 集合の切替へ進む。
+      #
+      # --deferred-issue は常設の受け皿 HarnessHub-sy31
+      # (issues/deferred-verification-backlog-20260809.md)。critical 未満の tier で
+      # 起動しない重い検査 (completeness-evaluator / independent-audit-fork / live-trial)
+      # を回収可能な形で 1 箇所に集める。受け皿を渡さないと checks 導出が exit 2 で落ちる。
+      #
+      # selector の起動は 1 回だけにする。tier を取るために 1 回、checks を入れるために
+      # もう 1 回起動すると、同じ差分を 2 度測ることになり、その間に規則表が動けば
+      # 1 回目と 2 回目で tier がズレる。--derive-checks は tier 決定後に台帳を引く
+      # 一方向の導出なので、この経路自体が生まれない。
+      - name: "select verification tier (変更 path から tier を算出し tier-decision.json を残す)"
+        run: |
+          set -euo pipefail
+          RUN_DIR="eval-log/verification-tier/gh-${{ github.run_id }}-${{ github.run_attempt }}"
+          mkdir -p "$RUN_DIR"
+          # push 起動では origin/main...HEAD が空集合になり、変更 path 無しの既定 mvp が
+          # 記録される。最も検査を削る判定が最も根拠の薄い経路から生まれるため、
+          # event に応じて base を選び直す。解決できなければ selector が空集合を
+          # fail-closed で拒否するので、誤った mvp が台帳に残ることはない。
+          BASE="origin/main"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            BASE="${{ github.event.before }}"
+          fi
+          if ! git rev-parse --verify --quiet "$BASE^{commit}" > /dev/null; then
+            BASE="HEAD~1"
+          fi
+          echo "tier base ref: $BASE"
+          python3 scripts/select-verification-tier.py \
+            --from-git "$BASE" \
+            --derive-checks \
+            --deferred-issue HarnessHub-sy31 \
+            --run-id "gh-${{ github.run_id }}-${{ github.run_attempt }}" \
+            --target "${{ github.repository }}@${{ github.sha }}" \
+            --out "$RUN_DIR/tier-decision.json" > /dev/null
+          python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); c=d["checks"]; g=lambda f: ", ".join(x["id"] for x in c if f(x)) or "(なし)"; print("tier:", d["tier"]); print("blocking:", g(lambda x: x["blocking"])); print("advisory:", g(lambda x: not x["blocking"] and x["disposition"] == "executed")); print("deferred:", g(lambda x: x["disposition"] == "deferred"))' "$RUN_DIR/tier-decision.json"
+        continue-on-error: false
+      # 記録が後から検証できる形かを機械検査する。tier_selector が absent の run、
+      # 受け皿の無い deferred、disposition の非仕様値をここで落とす。
+      - name: "validate tier decision (判定根拠・延期の受け皿・disposition 語彙の fail-closed 検査)"
+        run: python3 scripts/validate-tier-decision.py --scan eval-log/verification-tier
+        continue-on-error: false
+      - name: "upload tier decision (run 記録は CI 上で消えるため artifact として残す)"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-tier-gh-${{ github.run_id }}-${{ github.run_attempt }}
+          path: eval-log/verification-tier/
+          if-no-files-found: warn
+          retention-days: 30
       - name: lint script naming (28章 §4)
         run: python3 scripts/lint-script-naming.py
       - name: lint artifact placement self-test (配置規約検査器の分岐検査)
@@ -257,7 +310,10 @@ jobs:
       - name: validate build trace (再現性証跡 + RTM 段階導入 WARN)
         run: python3 plugins/harness-creator/skills/run-build-skill/scripts/validate-build-trace.py eval-log/skill-build-trace.json
         continue-on-error: false
-      - name: validate elegant-review phase order (Phase1→2→3 順序, composition invariant 対向)
+      # signal 対応検査は同 script 内で日付境界 (STRICT_SIGNAL_FROM) により自動で strict 化する。
+      # ここに --strict-signal を足すと旧 run 全件が赤化するため付けない (遡及免除の終了条件は
+      # コード側に持たせてある)。旗を足しても no-op だった配線断は LS-05 として修正済み。
+      - name: validate elegant-review phase order + signal consistency (Phase1→2→3 順序 / condition↔condition_signal)
         run: python3 plugins/harness-creator/skills/run-elegant-review/scripts/validate-paradigm-coverage.py --phase-order eval-log
         continue-on-error: false
       - name: criteria roster parity (量産追随の fail-closed。新 loop-kind skill は roster 再生成が必要)
