@@ -1,0 +1,10 @@
+{
+  "target_id": "local-bearer-token",
+  "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+  "official_host": "fastapi.tiangolo.com",
+  "retrieved_at": "2026-08-08T15:12:17Z",
+  "retrieval_tool": "WebFetch",
+  "observed": "当該ページ自体には版表記が無い。version は同一公式 host の release-notes (0.141.1 / 2026-07-29) を本 run 内で確認した現行版を記録した。",
+  "quoted_excerpt": "the `bearer` scheme ... an `Authorization` header with a token value",
+  "version": "0.141.1"
+}

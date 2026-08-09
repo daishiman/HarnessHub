@@ -1,0 +1,50 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "original_goal": "仕様書・アーキテクチャをplugins/system-spec-harness/の正規フローで構築し、出典・確定状態・上位目的traceを保ったままdev-graphのspecification/architectureノードへ取り込んだ状態になっている",
+  "original_goal_hash": "30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454",
+  "recorded_at": "2026-08-08T10:53:39Z",
+  "engine": "inline",
+  "max_loops": 5,
+  "checklist": [
+    {
+      "id": "system_spec_root",
+      "text": "system_spec content root が caller repo 内で repository_id/common-dir と一致する",
+      "status": "pending"
+    },
+    {
+      "id": "harness_preflight",
+      "text": "system-spec-harness が version >=0.1.0 <1.0.0 と required 4 entry points を満たす",
+      "status": "pending"
+    },
+    {
+      "id": "delegate_skills_only",
+      "text": "elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される",
+      "status": "pending"
+    },
+    {
+      "id": "gates_pass",
+      "text": "coverage/source-citation/evaluator gate が全て PASS である",
+      "status": "pending"
+    },
+    {
+      "id": "c02_lineage",
+      "text": "C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である",
+      "status": "pending"
+    },
+    {
+      "id": "validate_source_digest",
+      "text": "validate-source-digest.py --progress が exit 0",
+      "status": "pending"
+    },
+    {
+      "id": "validate_evidence_refs",
+      "text": "validate-evidence-refs.py --progress が exit 0",
+      "status": "pending"
+    },
+    {
+      "id": "no_duplicate_logic",
+      "text": "dev-graph 内に同等 elicitation/compile logic の複製が0件である",
+      "status": "pending"
+    }
+  ]
+}

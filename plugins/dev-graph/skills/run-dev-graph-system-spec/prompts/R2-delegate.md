@@ -26,6 +26,7 @@
 ### 受入条件
 
 - resume 時は `validate-system-spec-resume.py` が exit 0 かつ upstream Skill 呼出し 0 件。build 時は正規 Skill 呼出しだけで coverage/source/evaluator gate 全 PASS になる。
+- build 時の `context: fork` evaluator は、Skill 起動結果の完全な `agentId` と一致する native `task-notification` (`status=completed`、完全 response あり) まで待ち、その fork 自身が書いた report だけを evaluator evidence にする。foreground 待機は1回30秒以内の有限操作に限定し、loop/sentinel wait、`TaskStop`、outer session の代筆を禁止する。
 
 ## Layer 3: インフラ層
 
@@ -56,6 +57,7 @@
 - [ ] 出力が宣言した shape と authority を満たす
 - [ ] 責務境界に反する read/write/delegation が0件である
 - [ ] resume/build の条件分岐どおりに coverage/source/evaluator gate 全 PASS が確認されている
+- [ ] build 経路では completeness evaluator fork の完全 response を完全 `agentId` と一致する native completion で回収し、outer session による report の代筆と foreground blocking wait が0件である
 
 ### 5.4 実行方式
 
@@ -65,6 +67,7 @@
 
 - confirmed artifacts/evidenceをR3へ渡す。
 - 前段 receipt/digest と後段 input digest を一致させ、stale handoff を拒否する。
+- `assign-system-spec-completeness-evaluator` は `context: fork` のため Skill 起動後に完全な `agentId` を返す。対応する native `task-notification` が `status=completed` と完全 response を返すまで R3 へ進まない。subagent 一覧の短縮 ID を別 tool の task id と推測せず、待機は1回30秒以内の有限 foreground 操作に限定する。`until` / `while` / `for` + `sleep` や30秒超の sleep を foreground で実行しない。`TaskStop` で evaluator を中断したり、outer session が `completeness-report.json` を Write/Edit して代替したりしない。evaluator が失敗・停止した場合は本 responsibility を FAIL として返す。live trial では `validate-system-spec-evaluator-completion.py` の exit 0 を完了順序の receipt にする。
 
 ## Layer 7: UserInput
 

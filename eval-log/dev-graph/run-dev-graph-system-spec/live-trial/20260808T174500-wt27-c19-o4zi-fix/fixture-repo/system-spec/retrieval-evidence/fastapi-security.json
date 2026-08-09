@@ -1,0 +1,11 @@
+{
+  "target_id": "fastapi-security",
+  "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+  "fetch_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T08:45:43.812Z",
+  "official_host": "fastapi.tiangolo.com",
+  "observed_version": "0.141.1 (docs site 現行版・同 run の release-notes 取得で確認)",
+  "observed_last_updated": null,
+  "note": "WebFetch で security tutorial を取得。ページに版表記が無いため版は release-notes 由来と明示した。",
+  "extract": "OpenAPI の securitySchemes として apiKey / http (bearer・basic・digest) / oauth2 (implicit, clientCredentials, authorizationCode, password) / openIdConnect を説明し、Authorization: Bearer <token> が OAuth2 由来の標準ヘッダであることを示す。OAuth2 は暗号化を規定しないため HTTPS 提供が前提と明記。本ページ自体に版表記は無く、docs site の現行版は同 run の公式 release-notes から採った。"
+}

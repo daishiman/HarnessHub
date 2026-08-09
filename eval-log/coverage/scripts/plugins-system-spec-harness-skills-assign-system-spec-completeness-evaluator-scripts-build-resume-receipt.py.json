@@ -1,0 +1,13 @@
+{
+  "artifact": "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/build-resume-receipt.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "soundness=canonical aggregate-completeness.py の report/fork-ledger/session 検証、G-matrix/G-source-citation exit 0、artifact SHA-256 を再確認した場合だけ schema 1.1 receipt を生成するため自己申告 PASS を拒否する。responsibility=評価済み bundle の再開受領書生成だけに限定。error-handling=path escape、欠落、unsupported semver、unknown session、validator failure を exit 2 で fail-closed。side-effect-safety=network:false、出力は repo-root 内へ containment し tempfile+fsync+os.replace で atomic 書込。frontmatter=入出力・依存・write-scope を明示。focused test は production writer から生成した receipt を resume validator が受理する閉ループを検証する。",
+    "score_scale": "0-100"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": ["soundness", "responsibility", "error-handling", "side-effect-safety", "frontmatter"]
+}

@@ -58,6 +58,50 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
 - 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は testing/QA の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/testing-qa.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+変更が利用者の期待を壊していないことを、実行可能で改ざんしにくい証拠として示す。
+
+### U2 背景 (background)
+
+自己申告だけの PASS、恒真条件、古い証跡の再利用は、実際の不具合を隠してしまう。
+
+### U3 ゴール (goals)
+
+単体・結合・境界値・回帰試験と fresh live-trial を一貫した受領契約で運用する。
+
+### U4 目標 (objectives)
+
+80% 以上の適切なカバレッジ、negative control、挙動閉包、独立 evaluator verdict を機械検証する。
+
+### U5 成功基準 (success_criteria)
+
+必要な観測が同じ run 内の実在証跡へ結び付き、変更後 closure に対する独立 PASS が得られることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、開発者、reviewer、QA/SRE、live-trial を実行する agent を対象とする。
+
+### U7 スコープ (scope)
+
+テスト戦略、品質ゲート、live-trial、証跡鮮度、独立評価、回帰防止を扱う。
+
+### U8 制約 (constraints)
+
+古い verdict の流用、評価結果の上書き、未実行観測の PASS 化、fixture 内だけの自己完結証拠を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+変更した挙動を正の試験と失敗対照の両方で確認し、第三者が同じ結論を再現できるようにする。
+
+### 意思決定支援 (decisions)
+
+実行時間と証拠の信頼性が競合するときは、リスクに比例した fresh run と独立評価を優先する。
+
 ## 確定内容の要点 (参照のみ・正本は上記)
 
 - **テストレベル網羅 (qa-076)**: タスク仕様書は単体・結合・境界値・既存回帰の 4 レベルを必須テスト戦略セクションとして持ち、変更内容からテスト種別を導出する。

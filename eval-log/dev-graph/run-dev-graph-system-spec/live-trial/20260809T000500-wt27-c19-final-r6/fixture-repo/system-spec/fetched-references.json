@@ -1,0 +1,79 @@
+{
+  "references": [
+    {
+      "target_id": "sqlite",
+      "retrieved_at": "2026-08-08T15:11:17Z",
+      "source_url": "https://www.sqlite.org/changes.html",
+      "official_publisher": "SQLite Development Team (Hwaci)",
+      "official_host": "www.sqlite.org",
+      "version": "3.53.4",
+      "last_updated": "2026-07-24",
+      "latest_checked_at": "2026-08-08T15:11:17Z",
+      "evidence_ref": "system-spec/retrieval-evidence/sqlite.json",
+      "evidence_sha256": "ff4d156cf1c0d7f1c70fdd11040e9b5525863193976ffb9a689abaa56d679e57",
+      "summary": "SQLite 公式変更履歴。現行 release は 3.53.4 (2026-07-24)。単一ファイル埋込 DB として常駐プロセスを増やさず永続化できることを裏取りする一次資料。"
+    },
+    {
+      "target_id": "postgresql",
+      "retrieved_at": "2026-08-08T15:11:29Z",
+      "source_url": "https://www.postgresql.org/docs/",
+      "official_publisher": "PostgreSQL Global Development Group",
+      "official_host": "www.postgresql.org",
+      "version": "18",
+      "latest_checked_at": "2026-08-08T15:11:29Z",
+      "evidence_ref": "system-spec/retrieval-evidence/postgresql.json",
+      "evidence_sha256": "a1160555f1c13c4f1850727542355f19fd27b0b80add9b7c1145bb81140449ea",
+      "summary": "PostgreSQL 公式ドキュメント索引。現行 stable major は 18。別プロセスの DB server を要するため本 scenario の常駐ミドルウェア不追加制約との適合を比較するための不採択候補側一次資料。"
+    },
+    {
+      "target_id": "fastapi",
+      "retrieved_at": "2026-08-08T15:11:55Z",
+      "source_url": "https://fastapi.tiangolo.com/release-notes/",
+      "official_publisher": "FastAPI (Sebastian Ramirez / tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "last_updated": "2026-07-29",
+      "latest_checked_at": "2026-08-08T15:11:55Z",
+      "evidence_ref": "system-spec/retrieval-evidence/fastapi.json",
+      "evidence_sha256": "dc6ae7855c9dd43560056cdba3d42d3369151326117d6d35e87f32b1b75e7d23",
+      "summary": "FastAPI 公式リリースノート。最新 released version は 0.141.1 (2026-07-29)。OpenAPI 自動生成と schema 検証を持つ ASGI framework であることの版付き一次資料。"
+    },
+    {
+      "target_id": "flask",
+      "retrieved_at": "2026-08-08T15:12:08Z",
+      "source_url": "https://flask.palletsprojects.com/",
+      "official_publisher": "Pallets",
+      "official_host": "flask.palletsprojects.com",
+      "version": "3.1.3",
+      "latest_checked_at": "2026-08-08T15:12:08Z",
+      "evidence_ref": "system-spec/retrieval-evidence/flask.json",
+      "evidence_sha256": "e05ee833a81dbeefa589d221ef656322b6578f3637fbd314076074d392ee44c2",
+      "summary": "Flask 公式ドキュメント。ドキュメント系列は 3.1.x で Changes 先頭は 3.1.3。WSGI micro framework で OpenAPI は標準添付されないことを確認する不採択候補側一次資料。"
+    },
+    {
+      "target_id": "local-bearer-token",
+      "retrieved_at": "2026-08-08T15:12:17Z",
+      "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+      "official_publisher": "FastAPI (Sebastian Ramirez / tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "latest_checked_at": "2026-08-08T15:12:17Z",
+      "evidence_ref": "system-spec/retrieval-evidence/local-bearer-token.json",
+      "evidence_sha256": "093d7224a0a2810e10d8733f3a2476e9063bd8d5b766c81b73cdee8654480c86",
+      "summary": "FastAPI 公式 security tutorial。fastapi.security が bearer scheme (Authorization ヘッダ + token) を提供することの一次資料。ページ自体に版表記は無く、version は同一公式 host の release-notes で確認した現行版 0.141.1。"
+    },
+    {
+      "target_id": "oauth2-password-jwt",
+      "retrieved_at": "2026-08-08T15:12:30Z",
+      "source_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+      "official_publisher": "IETF (Internet Engineering Task Force)",
+      "official_host": "datatracker.ietf.org",
+      "version": "RFC 6749",
+      "last_updated": "2012-10",
+      "latest_checked_at": "2026-08-08T15:12:30Z",
+      "evidence_ref": "system-spec/retrieval-evidence/oauth2-password-jwt.json",
+      "evidence_sha256": "4e9d143e36a7b6976d0eae4743bb94ba8b6a3e1f03e6ec1df262e612255046cc",
+      "summary": "OAuth 2.0 Authorization Framework (RFC 6749, 2012-10, Standards Track)。RFC 8252 / 8996 / 9700 で更新済み。外部 IdP を伴う認可委譲の一次規格で、単一利用者・外部通信 0 要求に対する不採択候補側の根拠。"
+    }
+  ]
+}

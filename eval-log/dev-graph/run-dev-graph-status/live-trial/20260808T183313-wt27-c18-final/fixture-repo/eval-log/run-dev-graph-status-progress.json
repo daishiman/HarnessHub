@@ -1,0 +1,82 @@
+{
+  "skill": "dev-graph:run-dev-graph-status",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "loop": 1,
+  "max_loops": 5,
+  "original_goal": "特定のissue/task/specification/architecture/documentをgraph_node_id/artifact_kind/project_id/domain/status/tagsで検索し、依存関係・close/tombstone状態をread-onlyで確認できる状態になっている",
+  "original_goal_hash": "24dc23d4cf800a092b7f9970a465ab921b4cdf5d20b95ce2a1fd212884b45b5c",
+  "checklist": [
+    {
+      "item": "query は許可 filter field と明示 tag match mode だけを持つ",
+      "status": "PASS",
+      "evidence": "status-graph.py の filters は kind/project/domain/status/tags/tag_match のみ、未知 field 0、tag_match=all を明示: {\"domain\": \"documentation\", \"id\": null, \"keyword\": null, \"kind\": \"task\", \"project\": \"live-trial-fixture\", \"status\": \"active\", \"tag_match\": \"all\", \"tags\": [\"live-trial\", \"fixture\"]}"
+    },
+    {
+      "item": "`validate-graph-schema.py` が exit0 で root 外 file_path と dangling dependency が0件である",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py --require-canonical-envelope → exit 0, valid=true, violations=[] (root 外 file_path 0 / dangling dependency 0)"
+    },
+    {
+      "item": "report の status/closed_at/depends_on/dependents/linkage が graph snapshot と一致する",
+      "status": "PASS",
+      "evidence": "eval-log/status-report.json: 10 field 比較すべて一致、mismatch 0、node id 集合一致=True"
+    },
+    {
+      "item": "該当なしが空 result の成功として返る",
+      "status": "PASS",
+      "evidence": "eval-log/run-dev-graph-status-empty-query.json: --kind task --domain security --tag live-trial で ok=True count=0 results=[] (AND 維持、error ではなく成功)"
+    },
+    {
+      "item": "実行前後の graph/config/content digest が同一で外部 write が0件である",
+      "status": "PASS",
+      "evidence": "eval-log/side-effect-audit.json: 4 authority path の pre/post SHA-256 が全一致、git status は eval-log/ 以外 0 件、gh/GitHub/Beads 呼出 0"
+    },
+    {
+      "item": "全読取り中の共有lock、pending WAL拒否、eval-log root/target realpath containmentが受入テストで確認される",
+      "status": "PASS",
+      "evidence": "status-graph.py は graph_operation_lock(exclusive=False) 下で読み、ensure_no_pending_transaction で pending WAL を拒否、--eval-log は repository_eval_root への contained() を通過して eval-log/run-dev-graph-status-execution.json に着地。scripted 受入は plugins/dev-graph/tests 側 OUT2 が担保"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "IN1",
+      "loop_scope": "inner",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py 通過後の全 result に必須キー欠落 0 (graph_node_id/artifact_kind/project_id/domain/tags/file_path/status/closed_at/depends_on/dependents/parent_feature/feature_package_id/tracker_binding/linkage が全 node に存在)"
+    },
+    {
+      "id": "OUT1",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "status-report.json verdict=PASS / readiness-comparison.json verdict=PASS"
+    },
+    {
+      "id": "OUT2",
+      "loop_scope": "outer",
+      "status": "PASS",
+      "evidence": "side-effect-audit.json verdict=PASS"
+    }
+  ],
+  "required_observations": [
+    {
+      "id": 1,
+      "text": "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+      "status": "SATISFIED",
+      "artifact": "eval-log/status-report.json"
+    },
+    {
+      "id": 2,
+      "text": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+      "status": "SATISFIED",
+      "artifact": "eval-log/readiness-comparison.json"
+    },
+    {
+      "id": 3,
+      "text": "the run leaves graph, config, content and GitHub state unchanged",
+      "status": "SATISFIED",
+      "artifact": "eval-log/side-effect-audit.json"
+    }
+  ],
+  "unmet": [],
+  "verdict": "PASS"
+}

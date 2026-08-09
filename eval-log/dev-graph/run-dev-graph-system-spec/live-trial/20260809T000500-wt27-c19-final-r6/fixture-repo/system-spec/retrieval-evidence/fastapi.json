@@ -1,0 +1,12 @@
+{
+  "target_id": "fastapi",
+  "source_url": "https://fastapi.tiangolo.com/release-notes/",
+  "official_host": "fastapi.tiangolo.com",
+  "retrieved_at": "2026-08-08T15:11:55Z",
+  "retrieval_tool": "WebFetch",
+  "observed": "Latest Changes の直下に並ぶ最新 released version が 0.141.1 (2026-07-29)。",
+  "quoted_excerpt": "0.141.1 (2026-07-29)",
+  "landing_note": "https://fastapi.tiangolo.com/ (brief §4 記載の入口) を先に取得したが版表記が無かったため、同一公式 host の release-notes で現行版を確認した。",
+  "version": "0.141.1",
+  "last_updated": "2026-07-29"
+}

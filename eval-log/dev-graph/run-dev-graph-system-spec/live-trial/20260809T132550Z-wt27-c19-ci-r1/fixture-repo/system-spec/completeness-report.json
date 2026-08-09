@@ -1,0 +1,134 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "verdict": "PASS",
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "foundation_trace fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "decision_guidance fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "PASS",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "matrix_coverage fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "design_knowledge_reflection fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "doc_freshness fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "prompt_quality fixture PASS",
+      "evidence": [
+        "deterministic fixture"
+      ]
+    }
+  },
+  "audit_delegations": [
+    {
+      "aspect": "matrix_coverage",
+      "role": "primary",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-matrix-auditor",
+        "session_id": "fixture-c19-resume-session",
+        "response_sha256": "437886a6f583078a708527d99a63c8b76c9a4971849afe3014d941b5fbfbfedb"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "system-spec-matrix-auditor deterministic fixture response"
+      ]
+    },
+    {
+      "aspect": "matrix_coverage",
+      "role": "sub_input",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-hearing-auditor",
+        "session_id": "fixture-c19-resume-session",
+        "response_sha256": "0f58725b5cca702aa7cf8e9a3e810538f1344b3a1397a0d13192727fa7022100"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "system-spec-hearing-auditor deterministic fixture response"
+      ]
+    },
+    {
+      "aspect": "doc_freshness",
+      "role": "primary",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "dispatch": {
+        "tool": "Task",
+        "subagent_type": "system-spec-doc-freshness-auditor",
+        "session_id": "fixture-c19-resume-session",
+        "response_sha256": "07ec6ae6a667924c7d70cca21da71ed68d56680412baacc1497d8de9c885fbd2"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "system-spec-doc-freshness-auditor deterministic fixture response"
+      ]
+    }
+  ],
+  "gate_results": [
+    {
+      "id": "G-matrix",
+      "name": "validate-coverage-matrix",
+      "exit_code": 0
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation",
+      "exit_code": 0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "fixture",
+      "observation": "all canonical gates passed"
+    }
+  ],
+  "gaps": []
+}

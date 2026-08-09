@@ -1,0 +1,13 @@
+{
+  "target_id": "postgresql",
+  "fetch_tool": "WebFetch",
+  "requested_url": "https://www.postgresql.org/docs/release/18.4/",
+  "recorded_at": "2026-08-08T11:17:11.432Z",
+  "official_host": "www.postgresql.org",
+  "official_publisher": "PostgreSQL Global Development Group",
+  "extracted_facts": "公式リリースノート 18.4 の 'Release date: 2026-05-14' を逐語確認。索引ページ掲載の 19 Beta 2 告知日 (2026-07-16) は記録対象 v18 の更新日ではないため採らない。",
+  "version": "18.4",
+  "last_updated": "2026-05-14",
+  "last_updated_basis": "公式ページ記載のリリース日 (取得日の流用ではない)",
+  "refetch_reason": "C08 system-spec-doc-freshness-auditor が last_updated と公式実更新根拠の乖離を検出したための再取得"
+}

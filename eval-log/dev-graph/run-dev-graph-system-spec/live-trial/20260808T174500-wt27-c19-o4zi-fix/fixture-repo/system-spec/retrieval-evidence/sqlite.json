@@ -1,0 +1,11 @@
+{
+  "target_id": "sqlite",
+  "source_url": "https://www.sqlite.org/index.html",
+  "fetch_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T08:45:43.761Z",
+  "official_host": "www.sqlite.org",
+  "observed_version": "3.53.4",
+  "observed_last_updated": "2026-07-24",
+  "note": "WebFetch でトップページを取得し Latest Release の版と日付を確認した。",
+  "extract": "公式サイトの Latest Release に現行版 3.53.4 (2026-07-24 リリース) が明示されている。単一ファイル・サーバレスの組込み DB で、常駐プロセスを増やさずファイル 1 個で永続化できる。同一 run で https://www.sqlite.org/docs.html も取得したが版表記が無いため、版の一次根拠は本ページを採る。"
+}
