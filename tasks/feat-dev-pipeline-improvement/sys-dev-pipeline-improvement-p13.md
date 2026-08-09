@@ -234,3 +234,8 @@ branch は `devgraph/issue-system-spec-import-heading-contract-20260808`、base 
 ## 2026-08-09 `HarnessHub-o4zi` 最終レビュー引き継ぎ
 
 origin/main (`2049626d` / #686) を local main 経由で branch へ再同期済み。C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に更新し、branch 重複 run を削除した。focused 82 tests・contract parity・graph schema violation 0・system-spec foundation/source citation・task spec exact-13 を再確認し、Draft PR #680 の required check 6 件もすべて SUCCESS。残作業は review/merge と merge 後 reconciliation のみ。
+
+## 2026-08-10 `HarnessHub-ldq` / `HarnessHub-o4zi` 追補
+
+deep knowledge card 4 件を宣言・検査・compile し、C04 の内部設計影響を全仕様層へ反映した。main 取り込み後も system-spec import が source body と標準見出しを保つ回帰検査を追加した。製品 runtime 変更はなく、focused gate と full graph schema を draft PR 前に再実行する。
+PR #680 は main へ merge 済みのため、`HarnessHub-8ctp` / `HarnessHub-o4zi` と graph completion を reconciliation 済みへ更新した。

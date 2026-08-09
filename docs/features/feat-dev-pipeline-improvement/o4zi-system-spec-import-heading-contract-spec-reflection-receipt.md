@@ -72,3 +72,8 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 ## 500 行制約
 
 変更した手書きの実装・文書はいずれも 500 行以下で、repository のより厳しい 300 行 gate も 654 文書・違反 0 で PASS した。旧 570 行の着地観測 addendum は docs の索引 + part1..3 へ分割し、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として維持した。500 行を超えるのは `.dev-graph/state/graph.json` と `system-spec/spec-state.json` だけであり、いずれも遷移履歴と参照位置を一体で検証する生成状態の正本（SSOT＝唯一の正しい保存先）のため分割しない。
+
+## 2026-08-10 post-main regression reinforcement
+
+PR #680 の変更が main に含まれることを確認したうえで、C19 system-spec import が source body と標準見出しを同時に保つ回帰検査を追加した。契約の意味は変えず、`HarnessHub-o4zi` の既存仕様反映へ検査を追加するだけである。
+PR #680 の merge commit `0a8a2cf4` を確認し、Beads gate `HarnessHub-8ctp`、Beads `HarnessHub-o4zi`、graph node の completion を完了へ reconciliation した。

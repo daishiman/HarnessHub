@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1449,
+  "graph_revision": 1456,
   "nodes": [
     {
       "acceptance": [
@@ -51691,15 +51691,15 @@
       "classification_confidence": 0.99,
       "classification_reason": "system-spec import と dev-graph C11 readiness の横断的な repository tooling bug。",
       "completion_evidence": {
-        "completed_at": null,
+        "completed_at": "2026-08-09T20:22:09Z",
         "evidence_refs": [
           "docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md",
           "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"
         ],
-        "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": "2026-08-09T20:58:58Z",
+        "source": "github_pr_merge",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "35d086703261948e3761e3a72df5c84b8b105b226657952c4840eb5c2b4dd913",
@@ -51740,14 +51740,14 @@
       "pull_request_linkages": [
         {
           "base_branch": "main",
-          "closing_reference_verified": false,
+          "closing_reference_verified": true,
           "head_branch": "devgraph/issue-system-spec-import-heading-contract-20260808",
           "linked_at": "2026-08-08T14:20:00Z",
-          "merge_commit_sha": null,
-          "merged_at": null,
+          "merge_commit_sha": "0a8a2cf447e33f29e7856350b609d3bb70bfa80e",
+          "merged_at": "2026-08-09T20:22:09Z",
           "pr_number": 680,
           "repo": "daishiman/HarnessHub",
-          "state": "open",
+          "state": "merged",
           "url": "https://github.com/daishiman/HarnessHub/pull/680"
         }
       ],
@@ -51789,7 +51789,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "done",
       "tags": [
         "dev-graph",
         "system-spec",
@@ -51801,7 +51801,7 @@
       "template_version": "1.0.0",
       "title": "system-spec import の見出し契約と architecture readiness を一致させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T14:00:00Z"
+      "updated_at": "2026-08-09T21:00:02.437743Z"
     },
     {
       "acceptance": [
@@ -54676,6 +54676,241 @@
       "title": "監査台帳・状態遷移・C19 最終レビュー handoff",
       "tracker_binding": "beads",
       "updated_at": "2026-08-09T13:11:25.607829Z"
+    },
+    {
+      "acceptance": [
+        "401/403/契約不正では次の poll timer を予約しない",
+        "hidden 中は poll せず visible 復帰時に pollable state だけ再開する",
+        "cleanup 後に listener または timer が残らない",
+        "実装・ADR・回帰検査が同じ停止条件を表明する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-h2pe",
+        "linked_at": "2026-08-09T20:50:43.234907Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/dual-catalog-polling-terminal-visibility-20260810.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存 hook の具体的な失敗再試行と visibility 復帰停止をコードレビューで確認した、実装可能な独立 bug。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "285d88f967f7488fd54c0d9a55f946b14c208a2f0eb957bcc06c3779b7468fb7",
+        "evaluator": "feat-dual-catalog-web independent design review",
+        "evidence_ref": "docs/features/feat-dual-catalog-web/design-review-notes.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/dual-catalog-polling-terminal-visibility-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "失敗分類・publish 状態・visibility を一貫した停止条件として扱い、不要通信と更新停止を同時に解消する。",
+      "graph_node_id": "issue-dual-catalog-polling-terminal-visibility-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-10T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "回復不能な失敗で無駄な再試行を止め、不可視タブから戻った利用者には publish 状態の確認を安全に再開する。",
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "issue-hub-cwv-tbt-over-budget-20260724"
+      ],
+      "resource_scope": [
+        "apps/hub/src/components/catalog",
+        "apps/hub/src/lib/catalog/polling.ts",
+        "apps/hub/src/__tests__/dual-catalog-web"
+      ],
+      "scope_in": [
+        "401/403/fatal の即時停止",
+        "visibilitychange による復帰時再開",
+        "fake timer と visibility event の回帰検査",
+        "ADR と運用文書の同期"
+      ],
+      "scope_out": [
+        "publish API の状態機械変更",
+        "ポーリング間隔上限の変更",
+        "push 通知への移行"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-10T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "dual-catalog",
+        "polling",
+        "bug",
+        "accessibility"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Dual Catalog polling の fatal 即時停止と visibility 復帰再開",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-09T20:57:24.930943Z"
+    },
+    {
+      "acceptance": [
+        "browser Cookie を持たない正式 consumer の認証方式が決まっている",
+        "scope・cache・TTL・失効・監査が fail-closed に定義されている",
+        "H7 source 形式と marketplace body/header が整合する",
+        "ADR・API 契約・security test・rollback が同一変更で反映されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-dctf",
+        "linked_at": "2026-08-09T20:50:46.120771Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/marketplace-unauthenticated-consumer-route-20260810.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "marketplace route は browser session 認可だけを持ち、配布 consumer の契約が H7 待ちで未確定なため独立 design issue。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "285d88f967f7488fd54c0d9a55f946b14c208a2f0eb957bcc06c3779b7468fb7",
+        "evaluator": "feat-dual-catalog-web independent design review",
+        "evidence_ref": "docs/features/feat-dual-catalog-web/design-review-notes.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T00:00:00Z",
+      "depends_on": [
+        "feat-stage0-distribution-gate"
+      ],
+      "domain": "security",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/marketplace-unauthenticated-consumer-route-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "H7 の配布経路と整合する未認証 consumer 契約を、deny-by-default・cache・監査・rollback と共に確定する。",
+      "graph_node_id": "issue-marketplace-unauthenticated-consumer-route-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-10T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "CLI や plugin manager など browser session を持たない consumer が marketplace document を取得する正式な認証・scope 境界を確定する。",
+      "related_nodes": [
+        "feat-dual-catalog-web",
+        "feat-stage0-distribution-gate"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/marketplace.json",
+        "apps/hub/src/lib/authz",
+        "docs/features/feat-dual-catalog-web"
+      ],
+      "scope_in": [
+        "consumer identity と credential",
+        "tenant/workspace scope",
+        "cache と署名",
+        "監査と rate limit",
+        "ADR/API 契約/テスト"
+      ],
+      "scope_out": [
+        "H7 配布経路そのものの先行決定",
+        "認証無しの無制限公開",
+        "plugin artifact の build 実装"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-10T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "dual-catalog",
+        "marketplace",
+        "distribution",
+        "security",
+        "design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "marketplace.json の未認証 consumer 経路を H7 と同時に確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-09T20:58:03.506550Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

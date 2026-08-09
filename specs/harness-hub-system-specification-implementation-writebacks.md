@@ -162,3 +162,10 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 選択範囲内かつ schedulable な Beads node が bd ready payload に無いとき、C16 は node を黙って除外せず `unmapped[]` に `reason=ready_payload_entry_absent` と `source=schedule-graph` を記録する。
 - pre-lease は ready set と unmapped、最終 report は active lease/resource conflict の conflicts を加えた和で候補 node を被覆する。P01 parent / dependency 形状は fail-closed、parity dependency は順序非依存で比較し、依存未充足・parity・manifest 分類とは別 reason とする。復旧は C03/C28 の同期・linkage 修復・fresh parity manifest の後に再実行し、欠落 node を推測で ready set へ加えない。
 - 変更は repository 内の Dev Graph 開発品質契約に限り、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正規反映と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を参照する。
+
+## C04 deep knowledge card writeback (2026-08-10 / `HarnessHub-ldq`)
+
+- `ui-ux` / `testing-qa` / `dev-workflow` / `infrastructure` に、それぞれ Usability & Accessibility / Test Strategy / Continuous Delivery / Site Reliability Engineering の deep card を割り当てる。
+- `resource-map.yaml` を章から card への対応正本、`knowledge-catalog.json` の dependency order を compile 順の正本とし、相互の欠落・順序 drift を検査する。
+- canonical compiler で上記 4 章へ反映する。製品 runtime、外部 API、DB、認証認可、Cloudflare deploy unit は変更しない。
+- 受入結果は [deep knowledge cards 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を正とする。

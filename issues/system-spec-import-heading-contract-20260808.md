@@ -12,8 +12,8 @@ iteration: null
 title: "system-spec import の見出し契約と architecture readiness を一致させる"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:00:00Z"
-updated_at: "2026-08-09T14:00:00Z"
-status: "active"
+updated_at: "2026-08-09T21:00:02.437743Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 resource_scope: ["plugins/dev-graph",".dev-graph/templates/template-contract.json","plugin-plans/dev-graph/templates/template-contract.json","system-spec","specs","architecture","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement","docs/features/feat-dev-pipeline-improvement"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-o4zi","linked_at":"2026-08-08T10:00:00Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-system-spec-import-heading-contract-20260808","linked_at":"2026-08-08T14:20:00Z","merge_commit_sha":null,"merged_at":null,"pr_number":680,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/680"}]
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-system-spec-import-heading-contract-20260808","linked_at":"2026-08-08T14:20:00Z","merge_commit_sha":"0a8a2cf447e33f29e7856350b609d3bb70bfa80e","merged_at":"2026-08-09T20:22:09Z","pr_number":680,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/680"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-09T20:22:09Z","evidence_refs":["docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json"],"policy":"linked_pr_merged_all","reconciled_at":"2026-08-09T20:58:58Z","source":"github_pr_merge","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-08T14:20:00Z","missing_sections":[],"status":"complete"}
 ---
 
