@@ -57,18 +57,18 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 ## 最終レビュー (2026-08-09)
 
 - `git status` / `origin/main...HEAD` を確認し、本変更の残差分は heading contract の文書・issue・旧 artifact 移行・graph 更新に限定した。
-- focused pytest（heading readiness / fixture builders）57 PASS、3 contract copy の byte parity PASS、`validate-graph-schema.py` は `valid=true` / violation 0。
+- focused pytest（heading readiness / system-spec import / fixture builders）82 PASS、3 contract copy の byte parity PASS、`validate-graph-schema.py` は `valid=true` / violation 0。
+- task spec exact-13 gate は P01〜P13 / digest `sha256:af8a73df...` で PASS。文書行数 gate は 654 文書・違反 0。
 - 製品 API / DB / 認証 / UI / deploy unit への影響は無し。repository 内部の Dev Graph 契約影響は既に `system-spec/`・`specs/`・`architecture/`・`features/`・`tasks/`・`docs/` へ反映済みで、本受領書がその証跡。
 - C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に束縛。branch 固有の重複 run `20260808T154500Z-o4zi-c19r3` は削除した。
-- リモート `origin/main` (`2049626d`) は local `main` 経由で本 branch に取り込み済み。Draft PR を再 push して CI を再判定する。
-
-
+- リモート `origin/main` (`2049626d`) は local `main` 経由で本 branch に取り込み済み。Draft PR #680 の required check 6 件はすべて SUCCESS。draft の `wrangler deploy` だけが意図どおり SKIPPED。
 - 旧 570 行の着地観測 addendum は docs の 300 行 gate に合わせ、`docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md` 索引 + part1..3 へ移設した。正規 graph contract は 122 行の specs 側のまま。
+
 ## 残課題
 
-- Draft PR #680 の CI と review / merge。merge 後の default-branch reconciliation まで `HarnessHub-o4zi` は in_progress を維持する。
+- Draft PR #680 の review / merge。merge 後の default-branch reconciliation まで `HarnessHub-o4zi` は in_progress を維持する。
 - Gate beads `HarnessHub-8ctp` (gh:pr 680) は PR merge 後に close する。
 
 ## 500 行制約
 
-変更した手書きの実装・文書はいずれも 500 行以下で、repository のより厳しい 300 行 gate も 649 文書・違反 0 で PASS した。旧 570 行の着地観測 addendum は直接変更せず、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として分離した。500 行を超えるのは `.dev-graph/state/graph.json` と `system-spec/spec-state.json` だけであり、いずれも遷移履歴と参照位置を一体で検証する生成状態の正本（SSOT＝唯一の正しい保存先）のため分割しない。
+変更した手書きの実装・文書はいずれも 500 行以下で、repository のより厳しい 300 行 gate も 654 文書・違反 0 で PASS した。旧 570 行の着地観測 addendum は docs の索引 + part1..3 へ分割し、122 行の `harness-hub-post-signin-landing-observability-contract.md` を正規 graph contract として維持した。500 行を超えるのは `.dev-graph/state/graph.json` と `system-spec/spec-state.json` だけであり、いずれも遷移履歴と参照位置を一体で検証する生成状態の正本（SSOT＝唯一の正しい保存先）のため分割しない。

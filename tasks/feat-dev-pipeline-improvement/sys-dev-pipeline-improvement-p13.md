@@ -233,4 +233,4 @@ branch は `devgraph/issue-system-spec-import-heading-contract-20260808`、base 
 
 ## 2026-08-09 `HarnessHub-o4zi` 最終レビュー引き継ぎ
 
-origin/main (`2049626d` / #686) を local main 経由で branch へ再同期済み。C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に更新し、branch 重複 run を削除した。focused 82 tests・contract parity・graph schema violation 0・system-spec foundation/source citation PASS を再確認。残作業は Draft PR #680 の CI/review/merge と merge 後 reconciliation のみ。
+origin/main (`2049626d` / #686) を local main 経由で branch へ再同期済み。C19 正本は main の `20260809T132550Z-wt27-c19-ci-r1` に更新し、branch 重複 run を削除した。focused 82 tests・contract parity・graph schema violation 0・system-spec foundation/source citation・task spec exact-13 を再確認し、Draft PR #680 の required check 6 件もすべて SUCCESS。残作業は review/merge と merge 後 reconciliation のみ。
