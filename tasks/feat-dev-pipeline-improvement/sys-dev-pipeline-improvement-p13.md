@@ -237,5 +237,9 @@ origin/main (`2049626d` / #686) を local main 経由で branch へ再同期済�
 
 ## 2026-08-10 `HarnessHub-ldq` / `HarnessHub-o4zi` 追補
 
-deep knowledge card 4 件を宣言・検査・compile し、C04 の内部設計影響を全仕様層へ反映した。main 取り込み後も system-spec import が source body と標準見出しを保つ回帰検査を追加した。製品 runtime 変更はなく、focused gate と full graph schema を draft PR 前に再実行する。
+deep knowledge card 4 件を宣言・検査・compile し、C04 の内部設計影響を全仕様層へ反映した。main 取り込み後、PR #680 の system-spec import 契約と既存回帰検査が含まれることを確認した。製品 runtime 変更はなく、focused gate と full graph schema を draft PR 前に再実行する。
 PR #680 は main へ merge 済みのため、`HarnessHub-8ctp` / `HarnessHub-o4zi` と graph completion を reconciliation 済みへ更新した。
+
+## 2026-08-10 C19 resume closure 追補
+
+pre-push の fresh C19 評価で、resume path が evaluator を再実行しない契約と、build path 専用の evaluator completion gate が矛盾する不具合を検出した。経路別 completion contract、runner report/stdout 一致、C02・source digest・evidence ref の exit 0 を実装して focused regression を再実行する。製品 runtime 仕様は不変で、既存 `qa-216` / `qa-217` の証拠契約を具体化する。詳細は [C19 resume closure 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。

@@ -2,20 +2,14 @@
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
-
-PLUGIN = Path(__file__).resolve().parents[1]
-SCRIPT = PLUGIN / "scripts" / "build-system-spec-import.py"
-CONTRACT = PLUGIN / "references" / "system-spec-import-contract.json"
-HARNESS = PLUGIN.parent / "system-spec-harness"
-COMPILE_FIXTURES = HARNESS / "skills" / "run-system-spec-compile" / "fixtures"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "build-system-spec-import.py"
+CONTRACT = Path(__file__).resolve().parents[1] / "references" / "system-spec-import-contract.json"
 
 
 def build_confirmed_system_spec(tmp_path: Path, verdict: str = "PASS") -> Path:
@@ -141,93 +135,3 @@ def test_refuses_contract_with_static_product_body(tmp_path: Path) -> None:
 
     assert proc.returncode != 0
     assert "must not contain bodies" in proc.stderr
-
-
-def _load_validator():
-    # validate-graph-schema.py は lib/ しか sys.path へ足さないため、同居する
-    # _common / graph_artifact_readiness を解決できるよう scripts/ を先に通す。
-    if str(PLUGIN / "scripts") not in sys.path:
-        sys.path.insert(0, str(PLUGIN / "scripts"))
-    name = "validate_graph_schema_for_system_spec_import"
-    spec = importlib.util.spec_from_file_location(
-        name, PLUGIN / "scripts" / "validate-graph-schema.py"
-    )
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-def build_compiled_system_spec(tmp_path: Path) -> Path:
-    """system-spec-harness の compile 経路が実際に出す本文で repo を組む。
-
-    build_confirmed_system_spec() の最小 stub と違い、C19 が現実に登録する本文
-    (index / 要件定義書) をそのまま使う。HarnessHub-o4zi の症状は stub では再現せず、
-    実本文の見出し構成でしか出なかった。
-    """
-    if str(HARNESS / "lib") not in sys.path:
-        sys.path.insert(0, str(HARNESS / "lib"))
-    import spec_docset_foundation
-
-    spec = json.loads((COMPILE_FIXTURES / "spec-state.json").read_text(encoding="utf-8"))
-    refs = json.loads((COMPILE_FIXTURES / "fetched-references.json").read_text(encoding="utf-8"))
-    docset = spec_docset_foundation.compile_docset(spec, refs)
-
-    root = tmp_path / "repo"
-    spec_dir = root / "system-spec"
-    spec_dir.mkdir(parents=True)
-    for name, body in docset.items():
-        (spec_dir / name).write_text(body, encoding="utf-8")
-    (spec_dir / "completeness-report.json").write_text(
-        json.dumps({"verdict": "PASS"}), encoding="utf-8"
-    )
-    return root
-
-
-@pytest.mark.parametrize("name", ["specification", "architecture"])
-def test_compiled_import_registers_without_heading_missing(tmp_path: Path, name: str) -> None:
-    """HarnessHub-o4zi 回帰: compile 済み本文が C11 見出し検査を通ること。
-
-    修正前は template-contract.json が specification へ無条件で 17 見出しを要求し、
-    実際に compile される index.md は 4 見出ししか持たないため upsert-node.py が
-    heading_missing で exit 2 となり、C19 の specification ノードが graph へ
-    一切登録されなかった (live-trial C19-OUT1 が DEGRADED)。
-    """
-    root = build_compiled_system_spec(tmp_path)
-    proc = run(root)
-    assert proc.returncode == 0, proc.stdout + proc.stderr
-
-    out = root / ".dev-graph" / "tmp" / "import"
-    node = json.loads((out / f"{name}.node.json").read_text(encoding="utf-8"))
-    body = (out / f"{name}.body.md").read_text(encoding="utf-8")
-
-    # C02 upsert-node.py が destination frontmatter を付けて file_path へ書く形を再現する。
-    artifact = root / node["file_path"]
-    artifact.parent.mkdir(parents=True, exist_ok=True)
-    frontmatter = "\n".join([
-        "---",
-        *(
-            f"{key}: {node[key]}"
-            for key in ("graph_node_id", "artifact_kind", "file_path", "template_id", "template_version")
-        ),
-        "---",
-        "",
-    ])
-    artifact.write_text(frontmatter + body, encoding="utf-8")
-
-    mod = _load_validator()
-    canonical = json.loads(
-        (PLUGIN / "templates" / "template-contract.json").read_text(encoding="utf-8")
-    )
-    kind = node["artifact_kind"]
-    assert kind in mod.HEADING_MISSING_KINDS
-    artifact_contract = {
-        "placeholder_tokens": canonical["placeholder_tokens"],
-        "common_frontmatter": {"required": []},
-        "artifacts": {kind: canonical["artifacts"][kind]},
-    }
-
-    findings = mod.artifact_findings([node], root, artifact_contract)
-    assert [item for item in findings if item["code"] == "heading_missing"] == []
-    assert mod.readiness_missing_sections(findings) == []

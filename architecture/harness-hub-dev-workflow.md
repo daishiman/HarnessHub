@@ -242,3 +242,7 @@ CI は現時点で算出・記録・artifact 保存までを担い、tier によ
 ## C04 deep knowledge card 境界 (2026-08-10 / `HarnessHub-ldq`)
 
 章と deep card の対応は `resource-map.yaml`、card の依存順は `knowledge-catalog.json` が所有する。compiler はこの宣言から `ui-ux` / `testing-qa` / `dev-workflow` / `infrastructure` の 4 章へ知識を投影し、validator は欠落・未知参照・順序 drift を停止する。製品 runtime には影響しない。詳細は [writeback 仕様](../specs/harness-hub-system-specification-implementation-writebacks.md) と [受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を参照する。
+
+## C19 build / resume 完了境界 (2026-08-10)
+
+build path の authority は独立 evaluator の native completion、resume path の authority は digest-bound receipt と deterministic runner report とする。resume report は C02 dry-run/upsert、graph preview、source digest、evidence ref の全 step を列挙し、post-run gate が transcript 上の runner stdout と byte-equivalent な JSON であることを確認する。resume では upstream Skill・Agent・runner 外 direct upsert を拒否する。これにより「再評価禁止」と「evaluator 完了必須」の循環を解消しつつ、C02 single-writer 境界を保つ。詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。

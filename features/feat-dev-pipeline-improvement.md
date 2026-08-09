@@ -167,3 +167,5 @@ fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C
 ## 2026-08-10 system design knowledge の深掘り (`HarnessHub-ldq`)
 
 ui-ux・testing-qa・dev-workflow・infrastructure に章固有の deep card を追加し、resource map と catalog の順序を検査可能な宣言へ揃えた。canonical compiler が 4 章だけへ投影し、製品 API・DB・認証認可・UI runtime・deploy unit は変えない。C04 の設計影響と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を正とする。
+
+同日の C19 最終 gate では、初回 build と確認済み receipt の resume を別の完了境界として検証する。resume は evaluator を再起動せず、`system-spec-resume-closure/v1` report、runner stdout、C02・lineage・evidence の exit 0 を post-run transcript gate で束縛する。製品要求は変えず、`qa-216` / `qa-217` の実装具体化とする。詳細は [C19 resume closure 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。

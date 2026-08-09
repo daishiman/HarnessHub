@@ -75,5 +75,5 @@ C19 初回証跡は compile の literal Skill call が欠落したため採用�
 
 ## 2026-08-10 post-main regression reinforcement
 
-PR #680 の変更が main に含まれることを確認したうえで、C19 system-spec import が source body と標準見出しを同時に保つ回帰検査を追加した。契約の意味は変えず、`HarnessHub-o4zi` の既存仕様反映へ検査を追加するだけである。
+PR #680 の変更と C19 system-spec import の既存回帰検査が main に含まれることを確認した。契約の意味は変えず、追加の skill behavior 変更も行わない。
 PR #680 の merge commit `0a8a2cf4` を確認し、Beads gate `HarnessHub-8ctp`、Beads `HarnessHub-o4zi`、graph node の completion を完了へ reconciliation した。

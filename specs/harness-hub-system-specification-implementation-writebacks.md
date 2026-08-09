@@ -169,3 +169,10 @@ N/A: 今回の分冊に伴う製品判断はない。
 - `resource-map.yaml` を章から card への対応正本、`knowledge-catalog.json` の dependency order を compile 順の正本とし、相互の欠落・順序 drift を検査する。
 - canonical compiler で上記 4 章へ反映する。製品 runtime、外部 API、DB、認証認可、Cloudflare deploy unit は変更しない。
 - 受入結果は [deep knowledge cards 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を正とする。
+
+## C19 resume completion writeback (2026-08-10)
+
+- 初回 build は evaluator の完全 `agentId` に対応する native completion より後の C02 import を要求する。
+- current receipt の resume は evaluator 再実行を禁止し、deterministic runner 1 回、upstream Skill / Agent / direct upsert 0 回、`system-spec-resume-closure/v1` の全 step exit 0 を要求する。
+- `Write` / `Edit` の代筆判定は target path に限定し、status evidence 本文に `completeness-report.json` が現れるだけでは違反にしない。
+- これは `qa-216` / `qa-217` の検証証拠契約を閉じる実装 writeback であり、新しい製品 API・DB・認証・UI 要件は追加しない。詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。

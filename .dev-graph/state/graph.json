@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1456,
+  "graph_revision": 1459,
   "nodes": [
     {
       "acceptance": [
@@ -54911,6 +54911,125 @@
       "title": "marketplace.json の未認証 consumer 経路を H7 と同時に確定する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-09T20:58:03.506550Z"
+    },
+    {
+      "acceptance": [
+        "resume path が evaluator/upstream Skill/Agent/direct upsert 0 件を検証しながら PASS できる",
+        "runner report/stdout と C02・source digest・evidence ref 全 step が exit 0 で束縛される",
+        "fresh bounded C19 live trial と独立 goal evaluation が PASS する",
+        "draft PR merge 後に Beads と graph completion を reconciliation できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-6fgb",
+        "linked_at": "2026-08-09T21:27:01Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/c19-resume-closure-contract-20260810.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "pre-push の fresh C19 evaluator が再現可能な completion contract 矛盾を検出し、実装修正と merge 後追跡が必要なため issue とする。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d615f06ca65ed9e92ac307b5ad459e8a28d0e93383a2689e487f1a2ccb077c4f",
+        "evaluator": "fresh C19 bounded goal evaluator",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-09T21:21:12Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/c19-resume-closure-contract-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "build と resume がそれぞれの authority で検証され、resume の C02・lineage・evidence 全 step を transcript と runner report で証明できる状態にする。",
+      "graph_node_id": "issue-c19-resume-closure-contract-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-09T21:21:12Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "初回 build 専用の evaluator completion gate と、evaluator 再実行を禁じる resume path の矛盾を解消し、fresh C19 trial を正しく fail-closed に閉じる。",
+      "related_nodes": [
+        "issue-system-spec-import-heading-contract-20260808",
+        "issue-resource-map-deep-cards-20260722",
+        "arch-harness-hub-dev-workflow",
+        "feat-dev-pipeline-improvement"
+      ],
+      "resource_scope": [
+        "plugins/dev-graph/skills/run-dev-graph-system-spec",
+        "plugins/dev-graph/scripts/validate-system-spec-evaluator-completion.py",
+        "plugins/dev-graph/scripts/build-system-spec-resume-import.py",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial"
+      ],
+      "scope_in": [
+        "build/resume 経路別 completion validation",
+        "deterministic resume runner の source/evidence gate",
+        "fresh bounded C19 live trial",
+        "仕様反映受領書と Beads 同期"
+      ],
+      "scope_out": [
+        "system-spec の製品要件追加",
+        "Hub runtime API・DB・認証・UI の変更",
+        "C19 以外の live-trial redesign"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-09T21:21:12Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "c19",
+        "live-trial",
+        "resume",
+        "quality-gate"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "C19 resume live-trial の経路別完了契約を閉じる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-09T21:37:31Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

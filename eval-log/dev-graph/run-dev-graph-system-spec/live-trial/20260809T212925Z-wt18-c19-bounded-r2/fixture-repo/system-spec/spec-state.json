@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.1",
+  "design_application_contract_version": "1.0",
+  "categories": [
+    {
+      "id": "database",
+      "label": "データベース"
+    }
+  ],
+  "platforms": [
+    "web",
+    "mobile",
+    "tablet",
+    "desktop-windows",
+    "desktop-linux",
+    "desktop-macos"
+  ],
+  "matrix": {
+    "database": {
+      "web": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "fixture has no runtime database"
+      }
+    }
+  },
+  "category_aggregate": {
+    "database": "対象外"
+  },
+  "requirements_foundation": {},
+  "qa_log": [],
+  "approval_log": [],
+  "reopen_log": [],
+  "targets": [],
+  "decisions": [],
+  "knowledge_candidates": [],
+  "hearing_progress": {
+    "loop_count": 0,
+    "next_question": null,
+    "complete": true
+  },
+  "excluded_categories": {
+    "auth": "not used by the isolated resume fixture",
+    "ui-ux": "not used by the isolated resume fixture",
+    "security": "not used by the isolated resume fixture",
+    "infrastructure": "not used by the isolated resume fixture",
+    "backend": "not used by the isolated resume fixture",
+    "frontend": "not used by the isolated resume fixture",
+    "maintenance-ops": "not used by the isolated resume fixture"
+  }
+}
