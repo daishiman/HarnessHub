@@ -119,3 +119,18 @@ G7 は migration が存在しない現 scope では対象なしだが、対象�
 | VRT | macOS 14 baseline と一致。CPU architecture 誤分離を修正 |
 
 詳細、system-spec 再確定、Linux baseline の残作業は [UI 基盤仕様反映受領書](ui-foundation-spec-reflection-receipt.md) を正とする。
+
+## 9. 共通シェル・全ページ表面の再検証 (2026-08-08)
+
+| 項目 | 結果 |
+|---|---|
+| 最終レビュー修正 | role-aware navigation、破壊操作確認、overlay focus / scroll、mobile disclosure / title、catalog 分割 |
+| `packages/ui` test | 17 files / 373 tests PASS |
+| `apps/hub` test | 139 files / 1503 pass、10 todo |
+| 実 Chromium / VRT | 3 files / 33 tests PASS、macOS light/dark baseline 一致 |
+| task spec validator | hub foundation / post-signin scope routing の 2 package が PASS、violations 0 |
+| system-spec | main の qa-205 を保持し、UI 契約を qa-206 / qa-207 へ正規再確定。complete / source citation gate PASS |
+| repository gate | `pnpm verify` exit 0 |
+| file granularity | 602 行の catalog を 3 file へ分割。変更した手書き file は 500 行以下 |
+
+判断理由、正規反映先、既存 foundation gate debt、Beads / PR の状態は [共通シェル仕様反映受領書](hub-shell-page-surface-spec-reflection-receipt.md) を正とする。

@@ -1,0 +1,11 @@
+{
+  "target_id": "postgresql",
+  "source_url": "https://www.postgresql.org/docs/",
+  "fetch_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T09:03:06.121Z",
+  "official_host": "www.postgresql.org",
+  "observed_version": "18",
+  "observed_last_updated": null,
+  "note": "WebFetch で docs 索引を再取得し、Current=18 のみをページ上の一次事実として控えた。",
+  "extract": "公式 docs 索引で現行安定版は 18 (Current)。14-17 が併存し、19 は beta 段階として併記される。索引ページは 18 の更新日を示さないため last_updated は記録せず version=18 のみを一次根拠にする (2026-07-16 は 19 Beta 2 告知日であり 18 の更新日ではない)。常駐 server プロセスと運用が前提になるため、単一プロセス制約下では採択しない比較対照として記録する。"
+}

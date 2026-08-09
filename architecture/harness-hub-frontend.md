@@ -59,6 +59,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
 - 取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は frontend の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/frontend.md` と `system-spec/ui-ux.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+専門知識のない利用者でも、Hub Web から安全かつ迷わず AI ワークフローを扱える画面を提供する。
+
+### U2 背景 (background)
+
+画面ごとの独自実装や scope 解決の重複は、到達不能・認可差異・アクセシビリティ低下を招く。
+
+### U3 ゴール (goals)
+
+Next.js App Router 上で、共通ナビゲーション、共有 scope 解決、理解しやすい状態表示を一貫させる。
+
+### U4 目標 (objectives)
+
+WCAG 2.2 AA、Core Web Vitals good、Server Component 優先という確定基準を各画面へ適用する。
+
+### U5 成功基準 (success_criteria)
+
+主要導線が到達可能で、認証済み scope が正しく継承され、品質ゲートと UI 回帰試験が通ることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、Workspace 管理者、frontend 開発者、アクセシビリティと運用品質の担当者を対象とする。
+
+### U7 スコープ (scope)
+
+Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビリティ、性能境界を扱う。
+
+### U8 制約 (constraints)
+
+認可の再実装、client-only への不要な退行、確定 system-spec の複製を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+利用者がサインイン後に目的画面へ到達し、現在の tenant/workspace と操作結果を理解できるようにする。
+
+### 意思決定支援 (decisions)
+
+画面固有の利便性と共通契約が競合するときは、認可の一貫性、到達性、アクセシビリティを優先する。
+
 ## Architecture overview
 
 正本: system-spec/frontend.md (Next.js 16 App Router + TypeScript + pnpm) と system-spec/ui-ux.md (WCAG 2.2 AA・CWV good・HIG 快適性)。doctrine anchor: Apple HIG + Clean Architecture。
@@ -75,11 +119,32 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   session から tenant/workspace を解決し、page は `query ?? session` の順で API へ渡す。
 - 判定ロジックは `middleware/authz.ts` の `resolveSessionScope()` を export して再利用する。
   画面側に別の所属検証を置かない (二重実装禁止)。
-- layout は `PrimaryNav` で主要画面へのリンクを描画し、解決済み scope をクエリへ引き継ぐ。
-  これは qa-018 のサイドバー段階表示の本実装ではなく、到達性を埋める最小シェルである。
+- layout は共通シェル `HubShell` (`apps/hub/src/components/shell/hub-shell.tsx`) で
+  サイドバー / ヘッダー / フッター / ボトムタブを描画し、解決済み scope をリンクのクエリへ
+  引き継ぐ。リンク定義の正本は `components/shell/nav-items.ts` の 1 箇所。
+  (2026-08-08 当初の `PrimaryNav` 最小シェルは本シェルへ置換して削除した。)
+- 画面骨格 (skip link / header / main ランドマーク / nav / footer) は領域ごとに 1 実装だけ持つ。
+  業務画面は `HubShell`、公開画面 (`/`, `/legal`, `/device`, サインイン) は
+  `components/shell/public-shell.tsx` (`packages/ui` の `AppShell`)。root layout は
+  ランドマークを持たない (二重の `main` を作らないため)。
 - client-only page (docs 詳細/編集) は layout が Context 経由で同じ scope を配る
   (`dashboard-scope-context.tsx`)。server page は Context を消費できないため各自
   `resolveDashboardScope()` を呼ぶ (React `cache()` で request 内は 1 回にまとまる)。
+
+**差分追記 (2026-08-08 / `issue-hub-root-500-signin-20260808` / ランディング入口)**:
+
+- `/` は session cookie を読む動的 route である。`cookies()` を env 分岐の内側に置くと
+  ビルド時に静的 prerender され、本番で `DYNAMIC_SERVER_USAGE` の 500 になる。
+  無条件の `cookies()` と `export const dynamic = 'force-dynamic'` を必須とする。
+  CI は `apps/hub/scripts/check-dynamic-routes.mjs` で prerender-manifest を検査する。
+- 未認証の `/` はテナント ID 入力フォームを描画する（JS 無し GET）。
+  `signin-entry.ts` + `GET /signin` が slug 形を検証し `/{slug}/signin` へ 303 する。
+  テナント存在有無は入口で答えない（総当たり防止）。
+- 認証済みで scope が決まらない場合（複数 Workspace 未選択 / 所属 0 件）は
+  `/` 上で選択または案内を出し、業務画面の JSON 403 行き止まりにしない。
+  cookie 束縛は `workspace-entry.ts` + `GET /signin/workspace` が fail-closed で行う。
+- ブラウザ navigation の認可拒否は `deny-navigation.ts` が HTML を返す。
+  API / Bearer / RSC client fetch は JSON 契約のまま。
 
 ## Goals and non-goals
 
@@ -150,3 +215,12 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - responsive の数値正本は `breakpointTokens` (`480 / 768 / 1120`)。表の超過は局所 scroll container で受け、document 全体の overflow は実 Chromium で拒否する。
 - jsdom gate に加え、Vitest Browser Mode + Playwright で 360 / 768 / 1280px、44px / 36px 操作域、catalog light/dark VRT を検査する。baseline は OS 単位とし CPU architecture では分けない。
 - 規範契約は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、仕様反映経路は [受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 共通 HubShell・page surface 境界
+
+- `(dashboard)` / `(workspace)` layout は server component `HubShell` を共有する。current pathname は認可完了後に middleware が内部 request header `x-hh-pathname` へ載せ、`usePathname()` のためだけに全 shell を client component 化しない。
+- signed session の active claim を `SessionRole` (`member` / `workspace-admin` / `provider-admin`) として読み、実在 route だけを navigation model へ投影する。API 認可を最終決定者としたまま、UI も role 未確定時に管理導線を出さない。
+- `packages/ui` は ShellSidebar / ShellHeader / ShellFooter / MobileTabBar、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet を所有する。`apps/hub` は scope、identity、route と業務内容だけを結線する。
+- navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
+- 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
+- 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。

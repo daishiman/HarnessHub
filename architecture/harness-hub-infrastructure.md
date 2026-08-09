@@ -60,6 +60,50 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS**（SLO 運用契約を維持し、delivery closure を qa-123 で分離）
 - 再取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
 
+## 要件定義書 (上位概念)
+
+この wrapper は infrastructure の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/infrastructure.md` と `system-spec/maintenance-ops.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+小さな運用負担と予算で、利用者が継続して Harness Hub を使える実行基盤を提供する。
+
+### U2 背景 (background)
+
+常設環境の増加、手作業 deploy、観測不能な障害は、無料枠と少人数運用を破綻させる。
+
+### U3 ゴール (goals)
+
+Cloudflare Workers を中心に、再現可能な CI/CD、使い捨て preview、測定可能な SLO を維持する。
+
+### U4 目標 (objectives)
+
+production 1 組、PR preview、main 自動 deploy、無料枠監視、復旧手順を機械化する。
+
+### U5 成功基準 (success_criteria)
+
+品質ゲート、deploy 検証、SLO 観測、rollback/restore drill が再現可能に成功することを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、開発者、release 担当者、SRE、Cloudflare/GitHub 管理者を対象とする。
+
+### U7 スコープ (scope)
+
+Workers、ストレージ binding、CI/CD、preview、監視、障害対応、容量管理を扱う。
+
+### U8 制約 (constraints)
+
+本番の手作業変更、常設 staging、secret の平文配置、根拠のない SLO 達成宣言を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+変更を PR から安全に届け、稼働版の素性と反映鮮度を追跡し、障害時に戻せるようにする。
+
+### 意思決定支援 (decisions)
+
+環境数と運用容易性が競合するときは、自動化された preview と単一 production を優先する。
+
 ## Architecture overview
 
 正本: system-spec/infrastructure.md と system-spec/maintenance-ops.md。Workers Free (3MiB 制限)・R2/D1 無料枠・GitHub Actions CI/CD (pnpm 強制)・SLO 99.5% + エラーバジェット (qa-019)。doctrine anchor: Google SRE。
@@ -225,70 +269,8 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - PR #612後のrun `30518334455`はR2専用token未登録で失敗したが自動rollbackは成功した。
   repository側の再発防止と、Cloudflare所有者による最小権限token発行は別の信頼境界として扱う。
 
-## SLO 公開実測の差分追記 (2026-08-02 / `HarnessHub-37h.15` / qa-116)
+## SLO・認証 rollout・deploy 鮮度の運用追補
 
-- **実測境界**: Better Stack の設定申告ではなく、認証不要の status page `/index.json` を読み、resource `external_id` を主鍵に現在状態と日次履歴を突合する。取得不能は fail-closed とする。
-- **観測窓**: UTC の完了日だけを数え、進行中の当日と `not_monitored` を除外する。30 日未満は `collecting`、外形単独の目標判定は `null` を維持する。
-- **最終判定**: 30 日到達後も Workers Analytics 5xx 率が揃うまで `observation_complete_pending_application_error_rate` とし、外形監視だけで 99.5% 達成を主張しない。
-- **再現性と秘密**: 検証 CLI は一致 0 / 不一致 1 / 取得・入力不能 2 を返し、公開 URL だけを読む。API token と heartbeat URL を証跡へ保存しない。
-- 正本は [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-116、実装・検証・残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/slo-observation-spec-reflection-receipt.md) を参照する。
-
-## Delivery closure と SLO verdict の分離 (2026-08-02 / qa-123)
-
-- SLO target、観測窓、複合算定、エラーバジェットは qa-019 / qa-116 を維持する。
-- feature / P13 の delivery lifecycle は exact-13、release、health、bundle、共通層の証跡で閉じ、ユーザーが不要とした運用 follow-up は `not_applicable` として非 blocker にする。
-- waiver を稼働品質 PASS へ変換しない。観測再開時は同一 issue の reopen または新 issue と、既存 runbook / CLI / 生データを必要とする。
-- この変更は acceptance governance の境界だけで、API、DB schema、認証認可、UI、Worker deploy unit の構造を変えない。詳細は [仕様反映受領書](../docs/features/feat-hub-foundation/feature-closeout-spec-reflection-receipt.md) を参照する。
-
-**差分追記 (2026-08-01 / `HarnessHub-fnej` / qa-113・qa-114)**:
-
-- 環境ごとに Google OAuth client を 1 件作り、redirect URI は
-  `AUTH_CANONICAL_ORIGIN + /api/auth/shared/callback/tenant-oidc` の 1 本に固定する。
-  tenant 追加ごとの client/URI 登録は行わない。
-- `SHARED_GOOGLE_OAUTH_CLIENT_ID` と `SHARED_GOOGLE_OAUTH_CLIENT_SECRET` は
-  Cloudflare Worker の環境 secret とし、repository と GitHub Actions Secrets を
-  受渡し元にしない。共有 tenant がない環境では未設定を許す。
-- rollout は backup/dry-run → migration 0003 → secret 投入 → Worker deploy →
-  tenant mode 変更 → 共有/顧客両方式 smoke の順。個人 Google、別 Workspace、
-  tenant state 差し替えの拒否も確認する。
-- rollback は tenant を customer mode へ戻し、旧 callback の成功を確認してから
-  Worker code を戻す。DB migration と証跡は自動で戻さない。
-- secret rotation は新 secret 投入 → Worker 反映 → login 確認 → 旧 secret revoke。
-  手順と証跡は
-  [rollout runbook](../docs/features/feat-auth-tenancy/runbook-shared-google-oidc-rollout.md)
-  を正とする。
-
-## 2026-08-07 稼働ビルドの素性と deploy 反映鮮度の設計反映
-
-サインイン後に業務画面へ到達できない事象の原因究明 (qa-185〜qa-190) を受けて、
-確定章 [system-spec/infrastructure.md](../system-spec/infrastructure.md) の qa-187 が
-次を確定した。本節はその参照索引であり、内容の正本は確定章側にある。
-
-- **isolate 再利用と環境値の stale 化 (qa-187-a/-b)**: binding だけを変更する deploy では
-  Cloudflare が実行中の isolate を再利用し得るため、env 由来の値を module 最上位 (global scope) で
-  保持すると、binding 差し替え後も stale な値が持続し得る。公式が名指しする anti-pattern であり、
-  正しい形は request ごとに解決することである。
-- **断定の強さと根拠の強さを揃える (qa-187-c)**: 上記は『機序として公式記述で確認済み』であって
-  『本番でそれが起きた』ことの確認ではない。本番の isolate 生成時刻と secret 投入時刻の前後関係は
-  取得していないため、未ゲート経路など他の候補も併存させる。
-- **設計への反映 (qa-187-d)**: 認証に関わる構築物を module scope に保持せず request ごとに解決する
-  ことを acceptance に置き、module 最上位での環境値依存構築を検査で検出する。検査の説明文には
-  『何を防ぐ検査か』(isolate 再利用による stale) を書き添え、将来これが過剰と誤解されて
-  緩められることを防ぐ。
-
-本設計を実行へ落とす macro feature は `feat-build-identity-deploy-freshness`
-(稼働ビルドの素性確認 V6 と deploy 反映鮮度検出 V7) および
-`feat-runtime-env-resolution-discipline` (実行時環境変数の解決規律) である。
-
-## 2026-08-08 稼働ビルドの素性と反映鮮度 — 実装確定
-
-上節の macro feature `feat-build-identity-deploy-freshness` を実装した。要点は 5 つ:
-(1) `/health` へ optional `commit` (40 桁 hex) を載せ、deploy 時 `--var HUB_COMMIT_SHA` で注入する
-(2) version_gate 直後に鮮度検査を置き、deploy 経路自体の長期停止を捉える
-(3) 不一致ではなく HEAD 到達からの**乖離継続時間**で判定し、しきい値正本は script 定数 1 箇所
-(4) 鮮度検査失敗は rollback 対象外（smoke 未実行＝新版故障の証拠なし）
-(5) `HarnessHub-u9zq` では、鮮度検査の後・最初の smoke の前に deployment version と `/health.version` の連続一致を再確認する。これは「届いたか」（version gate）と「古いままではないか」（鮮度）の双方では検出できない、colo 間の伝播ムラを防ぐ境界である。不一致・通信失敗・version 欠落は fail-closed とし、smoke 未実行なので rollback は打たない。
-
-契約正本: [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) /
-判断根拠: `docs/features/feat-build-identity-deploy-freshness/architecture-decision.md` /
-本番実測は未取得（deploy 後に `release-record.md` へ追記。未取得を確認済みとしない）。
+運用履歴の責務を分離して300行上限を守るため、SLO 公開実測、shared Google rollout、
+build identity と deploy 鮮度の追補は
+[infrastructure operations addenda](harness-hub-infrastructure-operations-addenda.md) へ分冊する。

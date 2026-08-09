@@ -1,8 +1,22 @@
 'use client';
 
 import type { CreateSheetResponse, HearingSheetFormInput } from '@harness-hub/schemas';
-import { Alert, Select, StatusChip, StepWizard, Textarea, TextInput, type WizardStep } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  Panel,
+  Select,
+  StatusChip,
+  StepWizard,
+  Textarea,
+  TextInput,
+  type WizardStep,
+} from '@harness-hub/ui';
+import dynamic from 'next/dynamic';
 import { type ChangeEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+
+// 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)
+const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
 const STORAGE_KEY = 'harness-hub:hearing-intake:draft:v1';
 
@@ -37,12 +51,17 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<CreateSheetResponse | null>(null);
+  // 入力途中で離脱すると下書きが消えるため、確認を挟んでから一覧へ戻す (§P6 / qa-013)
+  const [exitOpen, setExitOpen] = useState(false);
 
   useEffect(() => {
     const saved = sessionStorage.getItem(draftStorageKey);
     if (saved !== null) {
       try {
-        setForm({ ...INITIAL_FORM, ...(JSON.parse(saved) as Partial<HearingSheetFormInput>) });
+        setForm({
+          ...INITIAL_FORM,
+          ...(JSON.parse(saved) as Partial<HearingSheetFormInput>),
+        });
       } catch {
         sessionStorage.removeItem(draftStorageKey);
       }
@@ -71,7 +90,10 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const setNumber = useCallback(
     (key: 'hours' | 'people' | 'salary') =>
       (event: ChangeEvent<HTMLInputElement>): void => {
-        setForm((current) => ({ ...current, [key]: Number(event.target.value) }));
+        setForm((current) => ({
+          ...current,
+          [key]: Number(event.target.value),
+        }));
       },
     [],
   );
@@ -214,37 +236,65 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
 
   if (created !== null) {
     return (
-      <section aria-live="polite" aria-labelledby="receipt-heading">
-        <h2 id="receipt-heading">受付が完了しました</h2>
-        <Alert
-          tone="success"
-          title={created.code}
-          description="生成処理をキューへ登録しました。完了を待たずに別の作業へ移れます。"
-        />
-        <p>
-          状態: <StatusChip domain="sheet" status={created.status} />
-        </p>
-        <p>
-          <a href={`/sheets/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`}>シートを見る</a>
-          {' / '}
-          <button type="button" onClick={() => setCreated(null)}>
-            続けて作成
-          </button>
-        </p>
-      </section>
+      <Panel>
+        <section aria-live="polite" aria-labelledby="receipt-heading">
+          <h2 id="receipt-heading" style={{ marginBlockStart: 0 }}>
+            受付が完了しました
+          </h2>
+          <Alert
+            tone="success"
+            title={created.code}
+            description="生成処理をキューへ登録しました。完了を待たずに別の作業へ移れます。"
+          />
+          <p>
+            状態: <StatusChip domain="sheet" status={created.status} />
+          </p>
+          <p>
+            <a href={`/sheets/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`}>シートを見る</a>
+            {' / '}
+            <button type="button" onClick={() => setCreated(null)}>
+              続けて作成
+            </button>
+          </p>
+        </section>
+      </Panel>
     );
   }
+
+  const listHref = `/sheets?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
 
   return (
     <>
       {error === null ? null : <Alert tone="danger" title="送信エラー" description={error} />}
-      <StepWizard
-        label="ヒアリングシート作成"
-        steps={steps}
-        activeIndex={activeIndex}
-        onActiveIndexChange={setActiveIndex}
-        canProceed={canProceed && !submitting}
-        onComplete={() => void submit()}
+      <Panel
+        actions={
+          <Button type="button" variant="secondary" onClick={() => setExitOpen(true)}>
+            入力をやめる
+          </Button>
+        }
+      >
+        <StepWizard
+          label="ヒアリングシート作成"
+          steps={steps}
+          activeIndex={activeIndex}
+          onActiveIndexChange={setActiveIndex}
+          canProceed={canProceed && !submitting}
+          onComplete={() => void submit()}
+        />
+      </Panel>
+
+      <ConfirmDialog
+        open={exitOpen}
+        title="入力をやめますか？"
+        description="ここまでの入力内容は削除され、次回は最初から入力し直します。"
+        reversible={false}
+        confirmLabel="やめて一覧へ戻る"
+        cancelLabel="入力を続ける"
+        onConfirm={() => {
+          sessionStorage.removeItem(draftStorageKey);
+          window.location.assign(listHref);
+        }}
+        onCancel={() => setExitOpen(false)}
       />
     </>
   );

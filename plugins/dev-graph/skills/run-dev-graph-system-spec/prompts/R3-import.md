@@ -30,6 +30,12 @@ C02 用の 40-key node envelope と substantive body（空や placeholder でな
 組込み contract は artifact path と node shape のみを持ち、製品固有の本文を持たない。各出力 body は
 対応する `source_artifact` の本文（YAML frontmatter のみ除去）と同一でなければならない。
 
+この source-derived body は dev-graph の汎用 specification / architecture テンプレートを
+埋めた成果物ではない。C11 は `source_lineage.origin_kind=system-spec-harness` を根拠に、
+`template-contract.json#conditional_required_sections.system_spec_harness*` の確定 system-spec
+見出し集合を適用する。manual origin は従来どおり汎用テンプレートの全見出しを要求し、
+architecture も specification と同じく見出し欠落を fail-closed で拒否する。
+
 ```bash
 IMPORT_DIR="$DEV_GRAPH_ROOT/.dev-graph/tmp/system-spec-import"
 python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/build-system-spec-import.py" \

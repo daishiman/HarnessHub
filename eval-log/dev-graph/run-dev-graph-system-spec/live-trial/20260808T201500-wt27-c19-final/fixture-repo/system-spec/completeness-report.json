@@ -1,0 +1,341 @@
+{
+  "evaluator": {
+    "name": "assign-system-spec-completeness-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "spec_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T201500-wt27-c19-final/fixture-repo/system-spec",
+  "verdict": "FAIL",
+  "audit_delegations": [
+    {
+      "aspect": "matrix_coverage",
+      "role": "primary",
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "dispatch": {
+        "tool": "Agent",
+        "subagent_type": "system-spec-matrix-auditor",
+        "session_id": "703c5b32-47c0-47f7-a80e-34b001c8eda1",
+        "response_sha256": "f637fc540bd840534b2c5181ea58010843277b19bd61918bc09af77835d5979f"
+      },
+      "verdict": "FAIL",
+      "evidence": [
+        "本 run で同期 fork (run_in_background=false) した C07 の応答最終行 = AUDIT_VERDICT: FAIL",
+        "C07: validate-coverage-matrix.py は loop / --require-complete とも exit 0 (48 セル = 確定 8 + 対象外 40 + 未収集 0)",
+        "C07 意味層: 確定 8 セルが参照する qa-021..qa-028 の source.sha256 が引用元 requirements-brief.md §3 の該当スパンから再計算できず、loop_pass / final_ready を PASS にできないと判定",
+        "C07: 同一 section 文字列を主張する qa-021 と qa-021-p1..p3 が相異なる 4 通りの sha256 を持つことを検出",
+        "台帳行 (2026-08-08T11:42:50Z, subagent_type=system-spec-matrix-auditor) は audit_verdict=null で記録されており、この receipt は verdict まで機械照合できない (findings 参照)"
+      ]
+    },
+    {
+      "aspect": "matrix_coverage",
+      "role": "sub_input",
+      "auditor": "system-spec-hearing-auditor",
+      "component": "C06",
+      "dispatch": {
+        "tool": "Agent",
+        "subagent_type": "system-spec-hearing-auditor",
+        "session_id": "703c5b32-47c0-47f7-a80e-34b001c8eda1",
+        "response_sha256": "d520591e48c87c16f85c4ff9758df0370590811fdaceeb411ff483bf82649766"
+      },
+      "verdict": "FAIL",
+      "evidence": [
+        "本 run で同期 fork した C06 の応答最終行 = AUDIT_VERDICT: FAIL",
+        "C06: qa-021..028 の質問文は中立形へ是正済み (誘導句 0) だが、回答本文は誘導質問下で得た qa-011..018 の回答の逐語流用であり独立エビデンスではない (8/8 セル)",
+        "C06: source.section が §3 + §1 + §4 の非連続複数節を 1 つの sha256 へ束ねており、verbatim_span (冒頭 1 段落のみ逐語) と整合しない",
+        "C06: qa-02N-p1..p3 は既存回答の事後的機械分割で、独立した往復や独立根拠を伴わない (形式的是正)",
+        "C06: appr-002 は新規のユーザー承認行為ではなく §7/§6 への自己言及的接地であり、新規追記された doctrine 名指しの因果記述までを利用者が確認した記録は無い",
+        "C06: 聞き漏れ 0 / 早期停止 0 / qa_ref dangling 0 は健全",
+        "台帳行 (2026-08-08T11:40:11Z, subagent_type=system-spec-hearing-auditor) は audit_verdict=null で記録されており、この receipt は verdict まで機械照合できない (findings 参照)"
+      ]
+    },
+    {
+      "aspect": "doc_freshness",
+      "role": "primary",
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "dispatch": {
+        "tool": "Agent",
+        "subagent_type": "system-spec-doc-freshness-auditor",
+        "session_id": "703c5b32-47c0-47f7-a80e-34b001c8eda1",
+        "response_sha256": "114a2dea64e1637eda8dfa6959b674c4eb708a3d6ed14e8bf7151e22e00a94b0"
+      },
+      "verdict": "PASS",
+      "evidence": [
+        "本 run で同期 fork した C08 の応答最終行 = AUDIT_VERDICT: PASS",
+        "層1: validate-source-citation.py exit 0 (targets 5 件全件対応・必須フィールド・host 一致・evidence_sha256 一致)",
+        "層2: sqlite 3.53.4 (2026-07-24) / postgresql 18.4 (2026-05-14) / fastapi 0.141.1 (2026-07-29) / flask 3.1.3 (2026-02-18) / RFC 6749 (2012-10) を公式サイト一次ソースで再照合し全件一致",
+        "前サイクルの FAIL 要因 (postgresql/flask の last_updated へ取得日を流用) は retrieval-evidence の再取得記録と公式実リリース日への訂正で解消を確認",
+        "非公式 host 0 / 世代落ち 0 / 到達不能 0",
+        "台帳行 (2026-08-08T11:38:20Z, subagent_type=system-spec-doc-freshness-auditor) は audit_verdict=null で記録されており、この receipt は verdict まで機械照合できない (findings 参照)"
+      ]
+    }
+  ],
+  "aspects": {
+    "foundation_trace": {
+      "verdict": "PASS",
+      "score": 92,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "U1-U9 が全て値を持ち (明示 N/A 0)、00-requirements-definition.md が正本として G1-G4 / O1-O4 / I1-I4 を保持し、各章 frontmatter の serves_goals と index の対応セル表で goal→objective→intent→cell→chapter が dangling なく接続する。決定論ゲート --require-foundation exit 0。",
+      "evidence": [
+        "validate-coverage-matrix.py --require-foundation exit 0",
+        "requirements_foundation.confirmed=true / approval_ref=appr-001 (approval_log に実在)",
+        "qa-foundation-u1..u9 の source.sha256 は当該節の逐語本文と一致し検証可能 (U1-U9 の証跡は健全)",
+        "全 8 章 frontmatter の serves_goals が U3 の G1-G4 内へ収まり未定義ゴール参照 0"
+      ]
+    },
+    "decision_guidance": {
+      "verdict": "PASS",
+      "score": 90,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "D1-D3 の各論点が 2 案 (いずれも cost_model.category=free) を持ち、goal_fit / TCO / security_fit / ops_burden / lock_in / pros / cons / risks / evidence_refs (公式 URL) が揃う。recommendation は比較軸別 comparison_basis と caveats・confidence を持ち、user_decision は requirements-brief.md §4/§7 の利用者一括承認 (2026-07-21T00:00:00Z) に接地しており AI 推奨のみでの confirmed ではない。",
+      "evidence": [
+        "decisions[] = D1 (sqlite/postgresql) / D2 (fastapi/flask) / D3 (local-bearer-token/oauth2-password-jwt)",
+        "全 6 option が cost_model.category='free' + free_tier_limits を保持",
+        "各 recommendation に comparison_basis (goal_fit/tco/security/operations/lock_in) + caveats + latest_checked_at",
+        "user_decision.confirmed_at=2026-07-21T00:00:00Z / note に brief §4・§7 の一括承認を明記",
+        "evidence_refs は fetched-references.json の公式 host と一致 (C08 PASS で裏取り)"
+      ]
+    },
+    "matrix_coverage": {
+      "verdict": "FAIL",
+      "score": 45,
+      "auditor": "system-spec-matrix-auditor",
+      "component": "C07",
+      "summary": "決定論ゲートは loop / --require-complete / required-info profile とも exit 0 (未収集 0・対象外 40 セルの理由は brief §2 に具体接地) だが、C07 は確定 8 セル全件の qa_ref 先 source.sha256 が引用元から再計算できないとして FAIL、sub-input の C06 も回答本文が誘導質問下 qa-011..018 の逐語流用で独立エビデンスでないとして FAIL。確定の裏付け (トレーサビリティ) が形式のみで実質に接地していないため fail-closed で FAIL。",
+      "evidence": [
+        "C07 verdict=FAIL / C06 (sub_input) verdict=FAIL",
+        "validate-coverage-matrix.py exit 0 (loop) / exit 0 (--require-complete)",
+        "validate-knowledge-graph.py --profile required-info exit 0 (C16 機械層は充足)",
+        "C05 独立再計算: qa-021..028 および qa-02N-p1..p3 (計 32 entry) の source.sha256 は、宣言された引用元 (requirements-brief.md §3/§1/§4) ではなく **当該 entry 自身の answer 文字列の sha256** と完全一致した (32/32)",
+        "同じ自己参照は qa-001..008 / qa-foundation-u1..u9 にも当てはまるが、後者は answer が引用元の逐語と同一のため結果的に出典 digest として機能する。qa-021..028 は answer の大半が brief に存在しない導出文であるため、digest が written-requirements 出典を裏付けない",
+        "確定セル 8/8 が qa-021..qa-028 を参照 (dangling 0・category_aggregate 8/8 整合・canonical 6 platform 行 48/48 存在)"
+      ]
+    },
+    "design_knowledge_reflection": {
+      "verdict": "PASS",
+      "score": 82,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "全 8 章が resource-map 由来の設計知識ポインタ節と doctrine anchor 表を持つ (機械層) だけでなく、確定内容ごとに『原則 → 確定内容のどの要素 → なぜその要件になったか』の 3 項連鎖が具体記述されており (意味層)、汎用ポインタ止まりの章は 0。C13/C14/C15 の機械層ゲートも exit 0。ただし当該記述の由来は誘導質問下の回答流用であるという C06 指摘が残るため、内容の妥当性は認めつつ medium finding を残す。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph exit 0 (knowledge / doctrine / required-info / cross の 4 profile 全て exit 0)",
+        "database: DDD の invariant/transaction owner 原則 → todos と api_tokens の 2 テーブル分離 → G2 の認可判定が業務更新へ巻き込まれない",
+        "auth: OWASP ASVS 認証秘密の非平文保存 → token ハッシュ保存 → 保存層侵害下でも G2 を維持",
+        "ui-ux: Apple HIG consistency を UI 不在系では API 応答一貫性へ適用 → error 形状統一 → 異常系の一様判別",
+        "backend: Clean Architecture Dependency Rule → router/service/repository 3 層 → D1 の SQLite 採択を内側へ漏らさない",
+        "maintenance-ops: Google SRE 可観測性 + 『監視は目的に従属する』→ 標準出力ログ + 外部送信なし → G4 を守りつつ G1 を侵さない",
+        "汎用ポインタのみの章 0 / doctrine authority (Apple HIG・Clean Architecture・OWASP ASVS・Google SRE) が全 8 章で確定セル要件へ具体適用"
+      ]
+    },
+    "doc_freshness": {
+      "verdict": "PASS",
+      "score": 95,
+      "auditor": "system-spec-doc-freshness-auditor",
+      "component": "C08",
+      "summary": "C08 が二層監査で PASS。層1 (validate-source-citation.py) exit 0、層2 で 5 target 全件を公式サイト現行版へ再照合し version / last_updated / official_host / latest_checked_at の乖離 0。前サイクル FAIL の要因 (last_updated への取得日流用) が公式実リリース日への訂正で解消済みであることも一次ソースで確認された。",
+      "evidence": [
+        "C08 verdict=PASS (本 run の同期 fork)",
+        "validate-source-citation.py exit 0",
+        "sqlite 3.53.4 / postgresql 18.4 / fastapi 0.141.1 / flask 3.1.3 / RFC 6749 が公式現行版と一致",
+        "latest_checked_at は全件 2026-08-08 (監査当日) で実効性あり"
+      ]
+    },
+    "prompt_quality": {
+      "verdict": "PASS",
+      "score": 88,
+      "auditor": "assign-system-spec-completeness-evaluator",
+      "component": "C05",
+      "summary": "plugin 同梱 prompts/*.md 18 件全件で prompt-creator の verify-completeness.py (7 層網羅 + l5-contract v2.0) と validate-prompt.py がともに exit 0。R1-score / R2-delegate は Layer 5.3 に客観的停止条件を持ち、責務分離 (proposer≠approver・C06 を design_knowledge へ束縛しない) も明文化されている。prompt 設計に起因する high finding は無い。",
+      "evidence": [
+        "verify-completeness.py: 18/18 exit 0",
+        "validate-prompt.py: 18/18 exit 0",
+        "R1-score L5.3 / R2-delegate L5.3 に測定可能な停止条件 (verdict 一致・receipt 3 件・書込 0 件) を保持"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "G-matrix-loop",
+      "name": "validate-coverage-matrix",
+      "conditions": [
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T201500-wt27-c19-final/fixture-repo/system-spec/spec-state.json"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop) を満たす"
+    },
+    {
+      "id": "G-matrix",
+      "name": "validate-coverage-matrix --require-complete",
+      "conditions": [
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T201500-wt27-c19-final/fixture-repo/system-spec/spec-state.json",
+        "--require-complete"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (final(未収集0)) を満たす"
+    },
+    {
+      "id": "G-foundation",
+      "name": "validate-coverage-matrix --require-foundation",
+      "conditions": [
+        "foundation_trace",
+        "decision_guidance"
+      ],
+      "command": [
+        "python3",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "--matrix",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T201500-wt27-c19-final/fixture-repo/system-spec/spec-state.json",
+        "--require-foundation"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 収集マトリクス網羅性 (loop+foundation(上位概念トレース)) を満たす"
+    },
+    {
+      "id": "G-knowledge-graph",
+      "name": "validate-knowledge-graph (knowledge/doctrine/required-info/cross)",
+      "conditions": [
+        "design_knowledge_reflection",
+        "matrix_coverage"
+      ],
+      "command": [
+        "python3",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+        "--knowledge-graph"
+      ],
+      "exit_code": 0,
+      "stdout": "4 profile (C13/C15/C16/cross) すべて exit 0"
+    },
+    {
+      "id": "G-source-citation",
+      "name": "validate-source-citation (C08 実行)",
+      "conditions": [
+        "doc_freshness"
+      ],
+      "command": [
+        "python3",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/plugins/system-spec-harness/scripts/validate-source-citation.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260808T201500-wt27-c19-final/fixture-repo"
+      ],
+      "exit_code": 0,
+      "stdout": "OK: 出典記録が全件対応・必須フィールド・公式 host・時刻・取得証跡の一致を満たす"
+    },
+    {
+      "id": "G-prompt-completeness",
+      "name": "verify-completeness.py (prompt-creator)",
+      "conditions": [
+        "prompt_quality"
+      ],
+      "command": [
+        "python3",
+        "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/verify-completeness.py",
+        "--input",
+        "<prompts/*.md 18 件>"
+      ],
+      "exit_code": 0,
+      "stdout": "18/18 exit 0"
+    },
+    {
+      "id": "G-prompt-validate",
+      "name": "validate-prompt.py (prompt-creator)",
+      "conditions": [
+        "prompt_quality"
+      ],
+      "command": [
+        "python3",
+        "plugins/prompt-creator/skills/run-prompt-creator-7layer/scripts/validate-prompt.py",
+        "--input",
+        "<prompts/*.md 18 件>"
+      ],
+      "exit_code": 0,
+      "stdout": "18/18 exit 0"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "matrix_coverage / provenance",
+      "observation": "確定 8 セルが参照する qa-021..qa-028 (および分離索引 qa-02N-p1..p3、計 32 entry) の source.sha256 は、宣言された引用元 (requirements-brief.md §3 の逐語 / §1 U1-U9 / §4 D1-D3) ではなく、その entry 自身の answer 文字列の sha256 と 32/32 で完全一致する。つまり digest は自己参照であり、記録内容が引用元と一致することを一切検証しない。qa-foundation-u1..u9 では answer が引用元の逐語と同一のため同じ計算式でも結果的に出典 digest として機能するが、qa-021..028 は answer の大半が brief に存在しない導出文 (doctrine 名指しの因果記述) であるため、kind='written-requirements' + path/section/sha256 という契約準拠の外形を満たしながら written-requirements への接地を何も保証していない。C07 が『再計算できない偽装値』と報告した現象の正確な機序はこれであり、値そのものは実ハッシュだが対象が誤っている。",
+      "suggested_fix": "C01 (run-system-spec-elicit) へ差し戻す。(1) source.sha256 を引用元スパン (requirements-brief.md §3 の該当行) の逐語テキストから再計算した値に置換する。(2) answer が引用逐語と導出文の混成である entry は、逐語部と導出部を別フィールド (verbatim / derivation) に分離し、sha256 は逐語部にのみ対応させる。(3) apply-spec-transition 側に『source.sha256 が answer 自身の digest と一致する場合は written-requirements として受理しない』決定論検査を追加し、同型の自己参照 digest を writer 段で塞ぐ。",
+      "evidence": [
+        "C05 独立再計算: sha256(qa-021.answer) == qa-021.source.sha256 (以下 qa-022..028, qa-02N-p1..p3 まで 32/32 一致)",
+        "sha256(requirements-brief.md 全体) = 7ff7e677131c5d6e1e50d5d6cab278e87acf7cbde059616a5be020b367385821 (どの entry とも不一致)",
+        "C07 所見: 同一 section 文字列を主張する qa-021 / qa-021-p1..p3 が 4 通りの異なる sha256 を持つ"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "attribution / fork ledger",
+      "observation": "本 run で同期 fork した監査 3 件は PostToolUse hook (hooks/record-audit-fork.py) が台帳へ記録したものの、3 行とも audit_verdict=null で書かれた (2026-08-08T11:38:20Z doc-freshness / 11:40:11Z hearing / 11:42:50Z matrix)。3 auditor の応答はいずれも最終行が 'AUDIT_VERDICT: <verdict>' ちょうど 1 行であることを subagent transcript で確認済みであり、hook 側の marker 抽出 (audited_response_metadata は tool_response 内の全 text から findall し len==1 のときのみ採用) が 現行ハーネスの Agent tool_response 形状で marker を一意に取れていないと推定される。その結果 audit_fork_attribution.load_fork_ledger はこの 3 行を malformed として除外し、本レポートの 3 receipt は session / subagent_type / tool までは台帳へ接地するが response digest と verdict の突合が成立しない = 帰属が fail-closed で violation になる。同一 session 内には旧 run の verdict 付き行 (11:20 matrix=PASS など) が残っており、それを流用すれば --report は緑で通るが、本 run の C07 は FAIL であり流用は FAIL→PASS の緑化になるため行っていない。",
+      "suggested_fix": "hooks/record-audit-fork.py の marker 抽出を修正する: (1) _response_texts が同一 response 本文を複数回 yield する経路 (Agent tool_response の重複 text フィールド) を dedupe する、または (2) 『最終行に現れる最後の marker を採用』へ規則を変え、複数出現を一意化する。修正まではこの環境の C05 評価を『帰属未接地』として扱い、緑化のために過去 run の receipt を流用しないこと。",
+      "evidence": [
+        "台帳末尾 3 行: {\"audit_verdict\": null, ..., \"subagent_type\": \"system-spec-doc-freshness-auditor\", \"ts\": \"2026-08-08T11:38:20Z\"} 他 2 件",
+        "subagent transcript (agent-ab70b293d98758eb5 / a80a40034fadd2096 / a65d848b408b60e2a) の最終 assistant text で AUDIT_VERDICT marker 出現数 = 各 1",
+        "audit_fork_attribution.load_fork_ledger: audit_verdict not in {PASS,FAIL,INDETERMINATE} の行は malformed として除外"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "hearing quality (C06 sub-input)",
+      "observation": "C06 は、qa-021..028 の質問文が中立形へ是正された一方で、回答本文が誘導質問 qa-011..018 の回答の逐語流用である (8/8) と判定した。C05 が両世代を突合したところ、差分は見出し語の言い換え (『適用した設計原則』→『適用した上流指針・設計原則』)、ゴール註記の省略、末尾への候補比較 1 文の追加のみで、名指しされる原則・順序・因果構造は一致する。質問文には DDD/Clean Architecture/OWASP ASVS 等の名指しが無くなったのに回答が同じ原則集合を同じ順序で再現することは、新規の独立応答ではなく既存回答の再ラベル付けであることを示す。",
+      "suggested_fix": "C01 R3-reask で、中立質問に対して回答を実際に再取得する (非対話 live-trial では brief §3/§6 の授権範囲内で再導出し、流用でないことを導出過程として記録する)。qa-02N-p1..p3 も既存回答の事後分割ではなく論点ごとの独立記録にする。",
+      "evidence": [
+        "C06 verdict=FAIL (誘導質問『汚染』検出 8 件)",
+        "C05 突合: qa-011→qa-021 ほか 8 対で原則名・順序・因果構造が一致"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "design_knowledge_reflection",
+      "observation": "設計知識の具体適用そのものは全 8 章で成立しており (原則 → 確定内容の要素 → 要件化の理由 の 3 項連鎖)、本観点は意味層でも PASS と判定した。ただしその記述の出所が上記 medium の流用問題を抱えるため、『内容は妥当だが証跡の独立性が未確立』という留保付きの PASS である。matrix_coverage の provenance が是正されれば本観点の根拠も強化されるが、逆に流用が是正されないまま章だけ再生成された場合は 次サイクルで本観点を再点検すること。",
+      "suggested_fix": "matrix_coverage の provenance 是正 (high finding 1) 後に、本観点の根拠 qa entry を再確認する。章本文は現時点で書き換え不要。",
+      "evidence": [
+        "aggregate-completeness.py --knowledge-graph exit 0 (4 profile)",
+        "汎用ポインタのみの章 0 / 8 章すべてで doctrine authority が確定セル要件へ具体適用"
+      ]
+    },
+    {
+      "severity": "low",
+      "bucket": "approval provenance",
+      "observation": "appr-002 は『新規のユーザー承認行為ではなく §7 一括承認と §6 授権への接地』と自ら明記しており、承認の捏造ではない点は評価できる。一方 C06 が指摘するとおり、brief §6 が授権するのは『答えの無い問いに対する最小構成の判断と根拠記録』であり、複数の外部 doctrine を名指しした詳細な因果ナラティブの生成までを明示的に授権する文言ではない。現状は授権範囲の解釈が評価者側に依存している。",
+      "suggested_fix": "appr-002 の note に、§6 授権のどの語句がどの記述範囲を覆うのかの対応を 1 行で明示するか、対話可能な run では利用者へ範囲確認を取る。",
+      "evidence": [
+        "approval_log[1].note",
+        "requirements-brief.md §6",
+        "C06 axis-5 補足懸念"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "confirmed observations",
+      "observation": "確認済み: 決定論ゲートは matrix (loop / --require-complete) / foundation / knowledge-graph 4 profile / source-citation / prompt validator 18 件 の全 7 系統で exit 0。未収集セル 0、対象外 40 セルの理由は brief §2 へ具体接地、category_aggregate は 8/8 真理値表整合、canonical 6 platform 行 48/48 存在、qa_ref dangling 0。doc_freshness は公式サイト一次ソース照合で 5 target 全件一致し前サイクル FAIL 要因が解消済み。本評価は read-only で実施し、system-spec/*.md および spec-state.json への書込は 0 件 (出力は completeness-report.json のみ)。",
+      "evidence": [
+        "gate_results[] の 7 件すべて exit_code=0",
+        "書込対象は system-spec/completeness-report.json のみ"
+      ]
+    }
+  ],
+  "gaps": [
+    "[C01 run-system-spec-elicit へ差し戻し] qa-021..028 と qa-02N-p1..p3 (32 entry) の source.sha256 が answer 自身の digest になっており、written-requirements 出典への接地を保証していない。引用元スパンの逐語から再計算した値へ置換すること。",
+    "[C01 run-system-spec-elicit へ差し戻し] answer が『引用逐語 + 導出文』の混成であるため、逐語部と導出部をフィールド分離し、sha256 は逐語部にのみ対応させること (混成全体に written-requirements の digest を付けない)。",
+    "[C01 run-system-spec-elicit へ差し戻し] qa-021..028 の回答本文が誘導質問 qa-011..018 の逐語流用である。中立質問に対する回答を実際に再導出し、流用でないことを導出過程として記録すること。qa-02N-p1..p3 も事後分割でなく論点ごとの独立記録にすること。",
+    "[C01 / spec-state-contract の writer 強化] apply-spec-transition に『source.sha256 == sha256(answer) の entry を written-requirements として受理しない』決定論検査を追加し、自己参照 digest を writer 段で塞ぐこと。",
+    "[harness 側の修正: hooks/record-audit-fork.py] 本 run の監査 fork 3 件が audit_verdict=null で台帳記録され、receipt の response digest / verdict 突合が成立しない。marker 抽出を dedupe または『最終行の marker を採用』へ修正するまで、本評価の帰属は未接地として扱うこと (過去 run の verdict 付き行を流用しないこと)。",
+    "[監査再実行] 上記 provenance 是正後に C07 (matrix) と C06 (hearing) を再 fork し、matrix_coverage を再判定すること。doc_freshness (C08) / foundation_trace / decision_guidance / design_knowledge_reflection / prompt_quality は現時点で PASS であり再取得不要。"
+  ]
+}

@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-07T12:30:00Z"
+updated_at: "2026-08-09T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"8e8d4833fcbbbcab16ec7e9580472ce226b372d9cd0c9e0373fb88ef908e480d","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/testing-qa.md"}
-source_lineage: {"imported_at":"2026-08-07T12:30:00Z","origin_kind":"system-spec-harness","source_digest":"585614aca77999660d4f6f689209dbab0f6a3f13ac1f29824a24a7e070a606ed","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","evaluator":"validate-coverage-matrix.py --require-complete (qa-217)","evidence_ref":"system-spec/testing-qa.md"}
+source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -47,17 +47,60 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections":[],"status":"complete"}
 ---
 
-
 # Harness Hub testing-qa アーキテクチャ (system-spec 取込)
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `585614aca7799966…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `15d8e29b3bb327bc…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
 - 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
+
+## 要件定義書 (上位概念)
+
+この wrapper は testing/QA の設計判断を上位要件へ追跡する索引であり、要件本文の正本は `system-spec/testing-qa.md` に置く。
+
+### U1 本質的目的 (essential_purpose)
+
+変更が利用者の期待を壊していないことを、実行可能で改ざんしにくい証拠として示す。
+
+### U2 背景 (background)
+
+自己申告だけの PASS、恒真条件、古い証跡の再利用は、実際の不具合を隠してしまう。
+
+### U3 ゴール (goals)
+
+単体・結合・境界値・回帰試験と fresh live-trial を一貫した受領契約で運用する。
+
+### U4 目標 (objectives)
+
+80% 以上の適切なカバレッジ、negative control、挙動閉包、独立 evaluator verdict を機械検証する。
+
+### U5 成功基準 (success_criteria)
+
+必要な観測が同じ run 内の実在証跡へ結び付き、変更後 closure に対する独立 PASS が得られることを成功とする。
+
+### U6 ステークホルダー (stakeholders)
+
+利用者、開発者、reviewer、QA/SRE、live-trial を実行する agent を対象とする。
+
+### U7 スコープ (scope)
+
+テスト戦略、品質ゲート、live-trial、証跡鮮度、独立評価、回帰防止を扱う。
+
+### U8 制約 (constraints)
+
+古い verdict の流用、評価結果の上書き、未実行観測の PASS 化、fixture 内だけの自己完結証拠を禁止する。
+
+### U9 具体的にやりたいこと (concrete_intents)
+
+変更した挙動を正の試験と失敗対照の両方で確認し、第三者が同じ結論を再現できるようにする。
+
+### 意思決定支援 (decisions)
+
+実行時間と証拠の信頼性が競合するときは、リスクに比例した fresh run と独立評価を優先する。
 
 ## 確定内容の要点 (参照のみ・正本は上記)
 
@@ -189,6 +232,20 @@ validator は CommonMark の backtick/tilde fence と inline code を解析し�
 
 本設計の検査実装は macro feature `feat-build-identity-deploy-freshness` の V6/V7、
 および `feat-classification-vocabulary-parity` が所有する。
+
+## 検証 tier と証拠語彙 (2026-08-09 / qa-217)
+
+最高 tier の正規名は `critical` とし、旧 `full` は過去資料の読み替えにだけ使う。新規の selector、gate 台帳、decision、受領書は `mvp / standard / critical` の三値を出力する。検査を実行したか、延期したか、恒久的に対象外かは `executed / deferred / skipped` を潰さず記録し、cache hit は `executed` の補助属性として表す。
+
+elegant-review の signal は `contradiction / omission / inconsistency / dependency_break` を C1..C4 へ対応させ、`smell` は合否条件を持たない警告として分離する。新規 run の対応不整合は error、日付境界より前の既存証拠は WARN とし、過去証拠を一括改変せず新規証拠を厳格化する。詳細は [検証 tier 仕様追補](../specs/harness-hub-verification-tiering-addendum.md) を参照する。
+
+### bounded live-trial の責務分離
+
+- scenario が時間・token の不変上限を所有し、poll は実行中の停止、verdict は事後の PASS 禁止を所有する。片側だけの検査にしない。
+- transcript 集計器は main/subagent を横断して assistant message ID を重複排除する。計測不能を 0 token と扱わず fail-closed にする。
+- C19 の current receipt 再利用では `validate-system-spec-resume.py` が digest/version/gate を検証し、`build-system-spec-resume-import.py` が C02 writer と各 gate を一度だけ合成実行する。上流生成 Skill と network は呼ばない。
+- `validate-system-spec-boundary.py` は system-spec-harness 側の runtime signature が実在することを陽性対照として確認してから、dev-graph 側の同等実装 0 を判定する。
+- 正式な現行証拠は同一 scenario の fresh run r5 で PASS（90.186 秒・290,770 token）。上限は 360 秒・2,000,000 token、上流 Skill/network は 0 である。開始時刻を永続化した poll-state と transcript の SHA を verdict に束縛し、再開しても時間上限をリセットできない。
 
 ## 2026-08-08 production coverage smoke (qa-205 / `HarnessHub-p0lr`)
 

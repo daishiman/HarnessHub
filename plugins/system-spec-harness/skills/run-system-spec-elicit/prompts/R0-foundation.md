@@ -20,7 +20,7 @@
 - `requirements_foundation` の書込は writer (`scripts/apply-spec-transition.py set-foundation`) の一経路のみ。直接 JSON 編集禁止。
 - 確定 (`confirmed: true`) の条件は、U1-U9 の全項目が値または明示 N/A+理由 (`{"status":"not_applicable","reason":"..."}`) を持ち、かつ U1 `essential_purpose` / U2 `background` / U3 `goals` は値必須 (N/A 不可)、U1-U9 ごとの一論点 `qa_log` source-index、さらに U1-U9 要約をユーザーへ提示して得た承認の `approval_ref` を伴うこと。writer がこれを機械強制する。
 - 確定はユーザー承認を要する: U1-U9 の要約を提示し、ユーザーの合意 (approval) を得て `approval_log` へ approval_id を記録し、その id を `approval_ref` として付けた場合に限り `confirmed: true` にする。AI の推測だけで確定しない。
-- `requirements-brief.md` など利用者が渡した**書面要件**は、対話回答と同じ一次入力である。ただしファイルを読んで foundation へ直接代入してはならない。U1-U9 ごとに 1論点の `qa_log` source-index を `chunk` の `{"qa_id":"qa-foundation-uN","question":"書面入力 <relative-path> §<section> の U<N> は何か","answer":"<原文>","source":{"kind":"written-requirements","path":"<relative-path>","section":"§<section>","sha256":"<sha256(answer)>"},"ops":[]}` として追記し、質問には入力 path/section、回答には対応する原文とその SHA-256 を残す。対話入力でも `source:{"kind":"user-dialogue"}` を付けた同 id の entry を残す。これは AI の要約を利用者発言に見せかけないための監査証跡である。
+- `requirements-brief.md` など利用者が渡した**書面要件**は、対話回答と同じ一次入力である。ただしファイルを読んで foundation へ直接代入してはならない。U1-U9 ごとに 1論点の `qa_log` source-index を `chunk` の `{"qa_id":"qa-foundation-uN","question":"書面入力 <relative-path> §<section> の U<N> は何か","answer":"<指定 section に実在する逐語原文>","source":{"kind":"written-requirements","path":"<relative-path>","section":"§<section>","sha256":"<sha256(answer UTF-8 bytes)>"},"ops":[]}` として追記する。質問に入力 path/section、回答に指定 section の逐語原文、`source.sha256` にその answer の UTF-8 SHA-256 を残す。AI 要約・判断・entry 自身の digest を一次根拠にしない。対話入力でも `source:{"kind":"user-dialogue"}` を付けた同 id の entry を残す。
 - 未確定の上位概念は再質問して埋める。放置して完了扱いしない (C3 往復ヒアリングと同じ resume 規律)。
 
 ### 1.2 倫理ガード
@@ -52,7 +52,7 @@
 ### 2.3 入力契約
 | field | type | required | 説明 |
 |---|---|---|---|
-| spec_state | path | yes | 現在の spec-state.json (init 済み・requirements_foundation は空) |
+| spec_state | path | yes | 現在の spec-state.json (`bootstrap` 済み・matrix 未初期化・requirements_foundation は空) |
 | answers | 対話または利用者の書面要件 | yes | 深掘りヒアリング応答。書面入力なら U1-U9 の 1論点 source-index を先に残す。 |
 
 ### 2.4 出力契約
@@ -129,4 +129,4 @@
 
 ## 出力指示
 
-技術マトリクス収集 (R1-init) の手前で、5 Whys で U1 本質的目的を最優先に掘り、JTBD で U6 を掴み、U2-U9 を深掘りヒアリングで抽出する。まず U1-U9 ごとの canonical id (`qa-foundation-u1`〜`qa-foundation-u9`) で 1論点 source-index turn を `chunk` で記録する。書面なら `ops: []`・質問に path/section・回答に原文・`source.kind=written-requirements` と原文 SHA-256、対話なら `source.kind=user-dialogue` を使い、AI要約を根拠に確定してはならない。U1-U9 の要約をユーザーへ提示して承認を得、その承認を `chunk` (turn の `approval_id`) で `approval_log` へ記録する。埋めた上位概念を `python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json --foundation <foundation.json>` で確定する (U1/U2/U3 は値必須・U4-U9 は値または明示 N/A+理由・foundation に承認 id を `approval_ref` として付け `confirmed: true`)。`validate-coverage-matrix.py --require-foundation` の exit0 を確認する。承認未取得または U1/U2/U3 未確定なら再質問して埋め、放置して完了扱いしない。余計な前置き・思考過程出力は禁止。
+技術マトリクス収集 (R1-init) の手前で、5 Whys で U1 本質的目的を最優先に掘り、JTBD で U6 を掴み、U2-U9 を深掘りヒアリングで抽出する。まず U1-U9 ごとの canonical id (`qa-foundation-u1`〜`qa-foundation-u9`) で 1論点 source-index turn を `chunk` で記録する。書面なら `ops: []`・質問に path/section・`answer` に指定 section の逐語原文・`source.kind=written-requirements`・`source.sha256` に answer の UTF-8 SHA-256、対話なら `source.kind=user-dialogue` を使い、AI 要約や AI 生成 entry 自身の digest を根拠に確定してはならない。U1-U9 の要約をユーザーへ提示して承認を得るか、書面に同等の承認が明記されていればその逐語証跡を使い、`chunk` (turn の `approval_id`) で `approval_log` へ記録する。新しい利用者入力がなければ AI 自身を承認者とする新規 approval を作らない。埋めた上位概念を `python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json --foundation <foundation.json>` で確定する (U1/U2/U3 は値必須・U4-U9 は値または明示 N/A+理由・foundation に承認 id を `approval_ref` として付け `confirmed: true`)。`validate-coverage-matrix.py --require-foundation` の exit0 を確認する。承認未取得または U1/U2/U3 未確定なら再質問して埋め、放置して完了扱いしない。余計な前置き・思考過程出力は禁止。

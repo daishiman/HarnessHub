@@ -1,0 +1,21 @@
+{
+  "mode": "reuse-confirmed",
+  "status": "complete",
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "resume_receipt_valid": true,
+  "gate_exit_codes": {
+    "resolve-context": 0,
+    "validate-resume": 0,
+    "build-import": 0,
+    "gate-boundary": 0,
+    "gate-source-and-evidence-bindings": 0,
+    "gate-graph-preview": 0,
+    "c02-dry-run-architecture": 0,
+    "c02-dry-run-specification": 0,
+    "c02-upsert-architecture": 0,
+    "c02-upsert-specification": 0
+  }
+}

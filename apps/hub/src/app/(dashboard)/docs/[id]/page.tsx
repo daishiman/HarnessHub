@@ -5,7 +5,7 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, ScopeChip, StatusChip } from '@harness-hub/ui';
+import { Alert, Button, Panel, ScopeChip, ScreenHeader, StatusChip } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
@@ -58,30 +58,35 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
 
   return (
     <article>
+      <ScreenHeader
+        title={doc.title}
+        breadcrumbs={[
+          {
+            href: `/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`,
+            label: 'ドキュメント',
+          },
+          { label: doc.title },
+        ]}
+        breadcrumbsLabel="現在地"
+        actions={
+          <Button
+            type="button"
+            onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
+          >
+            編集する
+          </Button>
+        }
+      />
       <p>
-        <a href={`/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}>
-          ← 一覧に戻る
-        </a>
+        <StatusChip domain="document" status={doc.status} />{' '}
+        <ScopeChip
+          scope={doc.scope === 'common' ? 'common' : 'tenant'}
+          name={doc.scope === 'common' ? '共通' : 'テナント'}
+        />
       </p>
-      <header>
-        <h1>{doc.title}</h1>
-        <p>
-          <StatusChip domain="document" status={doc.status} />{' '}
-          <ScopeChip
-            scope={doc.scope === 'common' ? 'common' : 'tenant'}
-            name={doc.scope === 'common' ? '共通' : 'テナント'}
-          />
-        </p>
-      </header>
-      <MarkdownView content={doc.body_markdown} />
-      <p>
-        <Button
-          type="button"
-          onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
-        >
-          編集する
-        </Button>
-      </p>
+      <Panel style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+        <MarkdownView content={doc.body_markdown} />
+      </Panel>
     </article>
   );
 }

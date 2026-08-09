@@ -1,0 +1,79 @@
+{
+  "skill": "dev-graph:run-dev-graph-requirements",
+  "scenario": "C04-OUT1-positive-ready-handoff",
+  "feature_id": "F-LIVE-001",
+  "loop": 1,
+  "loops_used": 1,
+  "max_loops": 5,
+  "original_goal_hash": "04482e65a513cf4eb345f2c370d45ce5751e7732b0d3ef89c786c5eac4266c96",
+  "overall": "PASS",
+  "checklist": [
+    {
+      "item": "scope 内 node の feature/package/system-spec lineage closure が欠落0である",
+      "status": "PASS",
+      "evidence": "closure 15 件 (F-LIVE-001, LT-ARCH-001, SYS-LIVE-001-P01..P13)。validate-source-digest.py checked=15 / registered_mismatch=[]。"
+    },
+    {
+      "item": "C11 report と C02 保存済み readiness/evaluation が一致する",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py exit 0 → {\"valid\":true,\"violations\":[],\"implementation_readiness\":\"complete\",\"missing_sections\":[]}。C02 側 atomic-promotion-receipt.implementation_readiness=complete、plan-state.published_digest=sha256:30caeeb… と一致。"
+    },
+    {
+      "item": "lineage closure 全件を --registered に渡した validate-source-digest.py が exit 0 である",
+      "status": "PASS",
+      "evidence": "--registered に 15 node ID を昇順・重複除去で全件指定。exit 0 / checked=15。task 13 件だけの検査ではない。"
+    },
+    {
+      "item": "validate-system-plan.py --repo-root <root> --feature-package feature-package/F-LIVE-001 が PASS",
+      "status": "PASS",
+      "evidence": "exit 0 / status=pass / phase_refs=P01..P13 (exact 13) / violations=[] / validated_digest=sha256:30caeeb…。--staging も引数なし実行も使用していない。"
+    },
+    {
+      "item": "incomplete/pending/fail/stale node の missing_sections と remediation owner が全件表示される",
+      "status": "PASS",
+      "evidence": "readiness-matrix.json: blocked_nodes=[] / missing_sections_total=0。該当 node が0件のため surface 対象なし (verdict=ready)。"
+    },
+    {
+      "item": "全 gate PASS の場合だけ requirements と capability-build handoff が同一 snapshot digest で生成される",
+      "status": "PASS",
+      "evidence": "docs/requirements/F-LIVE-001/{requirements.md,readiness-matrix.json,graph-snapshot-digest.json,capability-build-handoff.json} を emit。3 artifact が同一 graph_snapshot_digest=sha256:6ca5bf7b7775… を保持。"
+    },
+    {
+      "item": "本 skill が生成した実装 code file が0件である",
+      "status": "PASS",
+      "evidence": "実行前後の find 差分で追加6件 (json 4 / md 1 / jsonl 1)。実装拡張子 (.py/.ts/.js/.go/…) 0 件。graph store・package・task node は git status 上 変更なし。"
+    }
+  ],
+  "gates": {
+    "C11_validate_graph_schema": {
+      "exit_code": 0,
+      "valid": true,
+      "violations": 0
+    },
+    "C02_saved_readiness_evaluation": {
+      "implementation_readiness": "complete",
+      "published_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46"
+    },
+    "validate_source_digest": {
+      "exit_code": 0,
+      "checked": 15,
+      "registered_mismatch": 0
+    },
+    "validate_system_plan": {
+      "exit_code": 0,
+      "status": "pass",
+      "phase_refs_count": 13,
+      "violations": 0
+    }
+  },
+  "emitted_artifacts": [
+    "docs/requirements/F-LIVE-001/requirements.md",
+    "docs/requirements/F-LIVE-001/readiness-matrix.json",
+    "docs/requirements/F-LIVE-001/graph-snapshot-digest.json",
+    "docs/requirements/F-LIVE-001/capability-build-handoff.json"
+  ],
+  "graph_snapshot_digest": "sha256:6ca5bf7b77755061f4997cb2632ac8e56fe2ffc7fc605681d577aa453cf88313",
+  "package_canonical_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "self_generated_implementation_files": [],
+  "blockers": []
+}

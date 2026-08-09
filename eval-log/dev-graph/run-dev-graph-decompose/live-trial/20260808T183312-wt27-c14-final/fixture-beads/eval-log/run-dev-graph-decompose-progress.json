@@ -1,0 +1,51 @@
+{
+  "blockers": [],
+  "checklist": [
+    {
+      "evidence": "independent-verification.json#observation_1: 両 graph とも artifact_kind は feature 4 / architecture 2、task 0 件、acyclic=true、max_inter_feature_depends_on_per_feature=2 (<=3)",
+      "item": "macro result が feature/architecture/機能間 depends_on だけを持ち循環と phase-task 混入が0件である",
+      "status": "PASS"
+    },
+    {
+      "evidence": "independent-verification.json#observation_2: 両 graph とも評価前 draft feature 3 件の issue 起票 0 件、各 0 に個別の理由を帰属済み",
+      "item": "draft/unconfirmed/evaluation非pass/readiness非complete の tracker publication が0件である",
+      "status": "PASS"
+    },
+    {
+      "evidence": "本 run は macro-only。decompose 実行時点で生成された 4 feature は全て評価前 draft であり機能間依存充足だけでは ready にならないため、R2b へ渡す ready feature package は 0 件。exact-13 package を生成していないので判定対象が存在しない (系の外で feature を昇格させたのは工程 3 であり run 内の出来事ではない)",
+      "item": "各 ready feature package が P01..P13 exact 13、共通 parent/package、13-node DAG を満たす",
+      "status": "NOT_APPLICABLE"
+    },
+    {
+      "evidence": "各 node の upsert-node.py receipt が operation=added / status=applied を返し graph_revision 0->6 へ単調前進。duplicate_id 違反 0 件 (validate-graph-schema.py exit 0)。登録前に preview graph 全体を stdin 検証しており部分適用は発生していない",
+      "item": "C02 local commit が all-or-none で、自動/手動経路の重複 node が0件である",
+      "status": "PASS"
+    },
+    {
+      "evidence": "independent-verification.json#observation_4: fixture-beads の全 6 node が tracker_binding=beads、fixture-none の全 6 node が none。github binding は macro node では schema 規則 (graph-node.schema.json L1434-1459 / L1228-1265) により着地不能で、実測でも validator が拒否した",
+      "item": "beads/github/none の各 task が単一 projection authority と linkage を持つ",
+      "status": "PASS"
+    },
+    {
+      "evidence": "本 scenario は抑止フラグ禁止のため run 自体は --dry-run ではない。ただし preview graph 検証は全て validate-graph-schema.py --graph - の stdin 経路で行い管理対象 repo に一時ファイルを作っていない (observation_5)。昇格 patch の upsert-node.py --dry-run は write_count=0 / status=preview を返した",
+      "item": "--dry-run の local/Beads/GitHub/Projects write count が0である",
+      "status": "PARTIAL"
+    }
+  ],
+  "criteria": {
+    "IN1": {
+      "evidence": "validate-graph-schema.py が両 fixture の永続 graph に対し valid=true / violations=[] を返した",
+      "status": "PASS"
+    },
+    "OUT1": {
+      "evidence": "observation_1/2/3/7: DAG 循環なし・task 粒度混入なし、評価前 draft の起票 0 件、publication candidate は confirmed/pass/complete の 1 件のみ、逆条件は canonical validator が拒否",
+      "status": "PASS"
+    }
+  },
+  "dev_graph_root": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T183312-wt27-c14-final/fixture-beads",
+  "loop": 1,
+  "max_loops": 5,
+  "overall_verdict": "PASS",
+  "scenario": "C14-OUT1-positive-macro-decomposition-r9",
+  "skill": "dev-graph:run-dev-graph-decompose"
+}

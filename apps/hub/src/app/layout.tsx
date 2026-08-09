@@ -1,7 +1,7 @@
 // App Router のルートレイアウト。シェルの骨格 (lang / ランドマーク / design token 供給) のみを定義する
 // design system は @harness-hub/ui が正本。ここで token や部品を再定義しない
 
-import { AppShell, buildBaseCss, buildThemeCss, UiProvider } from '@harness-hub/ui';
+import { buildBaseCss, buildThemeCss, UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -24,11 +24,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <style>{buildBaseCss()}</style>
       </head>
       <body>
-        <UiProvider>
-          {/* header / main のランドマークとスキップリンクは AppShell が唯一の実装を持つ。
-              ブランド名を見出しにしないのは、画面側の h1 と二重になるため (h1 は各画面が 1 つだけ持つ) */}
-          <AppShell brand="Harness Hub">{children}</AppShell>
-        </UiProvider>
+        {/*
+          root layout は骨格 (lang / token 供給 / 設定 Context) だけを持ち、ここでは
+          ランドマークを作らない。header / main / スキップリンクは領域ごとに 1 つだけ置く:
+          - 業務画面 ((dashboard) / (workspace)) … components/shell/hub-shell.tsx
+          - 公開画面 (/ , /legal , /device , サインイン等) … components/shell/public-shell.tsx
+          root でも包むと業務画面で main が入れ子になり、支援技術の本文ジャンプが壊れる。
+        */}
+        <UiProvider>{children}</UiProvider>
       </body>
     </html>
   );

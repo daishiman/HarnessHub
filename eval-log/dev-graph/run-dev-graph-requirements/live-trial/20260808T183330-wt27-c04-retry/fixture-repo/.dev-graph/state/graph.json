@@ -1,0 +1,1432 @@
+{
+  "graph_revision": 3,
+  "nodes": [
+    {
+      "acceptance": [
+        "skill 出力の status/depends_on が本 node の値と一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/lt-arch-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture として決定論生成された task node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "70030983f5af3833a68e659c230fa696f5fc125c9ca2394563b47f6657bae008",
+        "evaluator": "build_live_trial_fixture",
+        "evidence_ref": "architecture/lt-arch-001.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "architecture",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/lt-arch-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "package の全 task が同一の deploy unit 前提で書かれている状態",
+      "graph_node_id": "LT-ARCH-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "exact-13 package が参照する構成方針を固定する",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "fixture 内の読み取り検証"
+      ],
+      "scope_out": [
+        "実 repository の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "live-trial fixture のアーキテクチャ基準",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "13 task 全件が implementation_readiness=complete である"
+      ],
+      "architecture_refs": [
+        "LT-ARCH-001"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/f-live-001.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "live-trial fixture の macro feature node",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/f-live-001.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "readiness 完了時に capability-build へ handoff できる状態",
+      "graph_node_id": "F-LIVE-001",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "確定 system-spec から exact-13 package を導出した macro feature",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "確定 system-spec からの要件導出",
+        "exact-13 package の readiness 判定"
+      ],
+      "scope_out": [
+        "実装コードの生成",
+        "実 repository への書き込み"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "live-trial fixture の確定 feature",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "要件ベースライン確定の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p01.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "要件ベースライン確定が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "要件ベースライン確定を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "要件ベースライン確定の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "要件ベースライン確定 (P01)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "アーキテクチャとワークストリーム設計の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p02.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P01"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "アーキテクチャとワークストリーム設計が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "アーキテクチャとワークストリーム設計を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "アーキテクチャとワークストリーム設計の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "アーキテクチャとワークストリーム設計 (P02)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "独立設計レビューの成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p03.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P02"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "独立設計レビューが完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "独立設計レビューを実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "独立設計レビューの実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "独立設計レビュー (P03)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "テストファースト設計の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p04.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P03"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "テストファースト設計が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "テストファースト設計を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "テストファースト設計の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "テストファースト設計 (P04)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "実装の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p05.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P04"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "実装が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "実装を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "実装の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "実装 (P05)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "テスト実行の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p06.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P05"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "テスト実行が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "テスト実行を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "テスト実行の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "テスト実行 (P06)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "feature 受入判定の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p07.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P06"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "feature 受入判定が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "feature 受入判定を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "feature 受入判定の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "feature 受入判定 (P07)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "リファクタリングと移行の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p08.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P07"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "リファクタリングと移行が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "リファクタリングと移行を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "リファクタリングと移行の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "リファクタリングと移行 (P08)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "品質・セキュリティ・運用保証の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p09.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P08"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "品質・セキュリティ・運用保証が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "品質・セキュリティ・運用保証を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "品質・セキュリティ・運用保証の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "品質・セキュリティ・運用保証 (P09)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "独立最終レビューの成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p10.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P09"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "独立最終レビューが完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "独立最終レビューを実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "独立最終レビューの実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "独立最終レビュー (P10)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "再現可能な証跡整備の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p11.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P10"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "再現可能な証跡整備が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "再現可能な証跡整備を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "再現可能な証跡整備の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "再現可能な証跡整備 (P11)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "ドキュメントと運用手順の成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p12.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P11"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ドキュメントと運用手順が完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "ドキュメントと運用手順を実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "ドキュメントと運用手順の実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "ドキュメントと運用手順 (P12)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "リリースとクローズアウトの成果物が存在する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/F-LIVE-001/sys-live-001-p13.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-dev-planner が生成した exact-13 package の task",
+      "closed_at": null,
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "linked_pr_merged_all",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "evaluator": "system-dev-planner/validate-system-plan",
+        "evidence_ref": "system-plan/F-LIVE-001/staging-manifest.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-07-21T00:00:00Z",
+      "depends_on": [
+        "SYS-LIVE-001-P12"
+      ],
+      "domain": "development",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/F-LIVE-001",
+      "file_path": "tasks/F-LIVE-001/sys-live-001-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "リリースとクローズアウトが完了し後続 phase が着手できる状態",
+      "graph_node_id": "SYS-LIVE-001-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-07-21T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "live-trial"
+      ],
+      "parent_feature": "F-LIVE-001",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "live-trial-fixture",
+      "pull_request_linkages": [],
+      "purpose": "リリースとクローズアウトを実行する exact-13 package の 1 phase",
+      "related_nodes": [],
+      "resource_scope": [],
+      "scope_in": [
+        "リリースとクローズアウトの実行"
+      ],
+      "scope_out": [
+        "他 feature の task への直接介入"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-07-21T00:00:00Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+        "source_path": "system-plan/F-LIVE-001/feature-package.json",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "リリースとクローズアウト (P13)",
+      "tracker_binding": "none",
+      "updated_at": "2026-07-21T00:00:00Z"
+    }
+  ],
+  "repository_id": "local:sha256:7209f443a2a2b0ffc66cbc1b89766220c0920c7e0568ec7275e7fbb565b1794b",
+  "schema_version": "1.0.0"
+}

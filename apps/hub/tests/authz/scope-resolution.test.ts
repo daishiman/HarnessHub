@@ -6,9 +6,12 @@
  *
  * feat-post-signin-scope-routing P06 (docs/features/feat-post-signin-scope-routing/test-design.md)
  */
+import { UiProvider } from '@harness-hub/ui';
+import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SESSION_COOKIE_NAME } from '../../src/lib/auth/config.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME } from '../../src/lib/auth/session.js';
 import { authorize } from '../../src/middleware/authz.js';
 import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware/scope.js';
@@ -53,11 +56,22 @@ vi.mock('../../src/lib/auth/index.js', async () => {
 const HomePage = (await import('../../src/app/page.js')).default;
 
 async function renderHome(): Promise<string> {
-  return renderToStaticMarkup(await HomePage());
+  // 実配信では layout が UiProvider で包む。HomePage 単体で描くこの経路でも同じ前提を再現しないと、
+  // @harness-hub/ui の入力部品 (useUiText を使う) が context 不在で落ちる
+  return renderToStaticMarkup(createElement(UiProvider, null, await HomePage({ searchParams: Promise.resolve({}) })));
 }
 
 describe('TID-INT-01〜03: `/` (HomePage) の session redirect 結線', () => {
   const ORIGINAL_SECRET = process.env.AUTH_SESSION_SECRET;
+
+  /**
+   * session cookie だけを返す mock。名前を見ずに全 cookie へ同じ値を返すと、
+   * ランディングが読む「直近テナント」cookie が session token の文字列を拾ってしまい、
+   * 検査対象 (redirect するか否か) と無関係な差分でテストが揺れる。
+   */
+  function onlySessionCookie(value: string): void {
+    getCookie.mockImplementation((name: string) => (name === SESSION_COOKIE_NAME ? { value } : undefined));
+  }
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -73,15 +87,17 @@ describe('TID-INT-01〜03: `/` (HomePage) の session redirect 結線', () => {
     }
   });
 
-  it('TID-INT-01/TID-INT-03: 未認証 (session cookie 無し) では稼働確認表示のまま redirect しない', async () => {
+  it('TID-INT-01/TID-INT-03: 未認証 (session cookie 無し) では redirect せず、サインイン入口を出す', async () => {
     const html = await renderHome();
 
     expect(redirectMock).not.toHaveBeenCalled();
-    expect(html).toContain('稼働状況');
+    // 「redirect しない」だけでは白紙でも通ってしまうので、入口が実際に描かれていることまで見る
+    expect(html).toContain('テナント ID を入力');
+    expect(html).toContain('action="/signin"');
   });
 
   it('TID-INT-02: 認証済み session で `/` を開くと既定着地 (/sheets) へ redirect される', async () => {
-    getCookie.mockReturnValue({ value: 'valid-token' });
+    onlySessionCookie('valid-token');
     verifySessionToken.mockResolvedValue({
       ok: true,
       claims: { sub: 'user-1', tenant_id: 'tenant-a', role: 'member', status: 'active', workspace_ids: ['ws-1'] },
@@ -92,14 +108,15 @@ describe('TID-INT-01〜03: `/` (HomePage) の session redirect 結線', () => {
     expect(redirectMock).toHaveBeenCalledExactlyOnceWith('/sheets');
   });
 
-  it('session token が不正 (期限切れ等) なら redirect せず稼働確認表示のまま', async () => {
-    getCookie.mockReturnValue({ value: 'expired-token' });
+  it('session token が不正 (期限切れ等) なら redirect せず、再サインインの入口を出す', async () => {
+    onlySessionCookie('expired-token');
     verifySessionToken.mockResolvedValue({ ok: false, reason: 'expired' });
 
     const html = await renderHome();
 
     expect(redirectMock).not.toHaveBeenCalled();
-    expect(html).toContain('稼働状況');
+    expect(html).toContain('テナント ID を入力');
+    expect(html).toContain('action="/signin"');
   });
 });
 

@@ -42,11 +42,22 @@ def _taxonomy() -> dict:
     return json.loads(TAXONOMY.read_text(encoding="utf-8"))
 
 
+def _design_applications() -> list[dict]:
+    return [{
+        "knowledge_ref": "ddd.md#Bounded Context",
+        "principle": "Bounded Context",
+        "applicability": "applied",
+        "rationale": "テスト対象を単一境界として扱う",
+        "tradeoffs": ["境界分割時は再評価する"],
+    }]
+
+
 def _confirmed_state():
     state = mod.init_state(_taxonomy())
     mod.apply_turn(
         state,
         {"qa_id": "qa-001", "question": "q", "answer": "a",
+         "design_applications": _design_applications(),
          "ops": [{"action": "confirm", "category": "database", "platform": "web"}]},
     )
     assert state["matrix"]["database"]["web"]["state"] == "確定"
@@ -467,6 +478,14 @@ def test_cli_set_foundation_confirm_gate_returns_1(tmp_path):
 def test_cli_apply_set_serves(tmp_path):
     state_path = tmp_path / "spec-state.json"
     assert mod.main(["init", "--taxonomy", str(TAXONOMY), "--out", str(state_path)]) == 0
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["qa_log"].append({
+        "id": "qa-001",
+        "question": "q",
+        "answer": "a",
+        "design_applications": _design_applications(),
+    })
+    state_path.write_text(mod.dump_state(state), encoding="utf-8")
     confirm = json.dumps({"action": "confirm", "category": "database", "platform": "web", "qa_ref": "qa-001"})
     assert mod.main(["apply", "--state", str(state_path), "--op", confirm]) == 0
     serves = json.dumps({"action": "set-serves", "category": "database", "platform": "web", "serves_goals": ["G1"]})

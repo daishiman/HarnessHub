@@ -1,0 +1,80 @@
+{
+  "runner": "build-system-spec-resume-import",
+  "mode": "reuse-confirmed",
+  "status": "PASS",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "resume": {
+    "validator": "validate-system-spec-resume",
+    "valid": true,
+    "mode": "reuse-confirmed",
+    "plugin_version": "0.1.0",
+    "required_entry_points": [
+      "assign-system-spec-completeness-evaluator",
+      "run-system-spec-compile",
+      "run-system-spec-doc-fetch",
+      "run-system-spec-elicit"
+    ],
+    "artifacts": [
+      "system-spec/00-requirements-definition.md",
+      "system-spec/completeness-report.json",
+      "system-spec/fetched-references.json",
+      "system-spec/index.md",
+      "system-spec/spec-state.json"
+    ],
+    "failures": []
+  },
+  "build": {
+    "out_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-27-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/fixture-repo/.dev-graph/tmp/system-spec-import",
+    "node_ids": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ]
+  },
+  "steps": [
+    {
+      "label": "resolve-context",
+      "exit_code": 0
+    },
+    {
+      "label": "validate-resume",
+      "exit_code": 0
+    },
+    {
+      "label": "build-import",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-boundary",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-source-and-evidence-bindings",
+      "exit_code": 0
+    },
+    {
+      "label": "gate-graph-preview",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-dry-run-architecture",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-dry-run-specification",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-upsert-architecture",
+      "exit_code": 0
+    },
+    {
+      "label": "c02-upsert-specification",
+      "exit_code": 0
+    }
+  ]
+}

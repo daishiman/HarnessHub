@@ -1,0 +1,10 @@
+{
+  "target_id": "postgresql",
+  "source_url": "https://www.postgresql.org/docs/",
+  "official_host": "www.postgresql.org",
+  "retrieved_at": "2026-08-08T15:11:29Z",
+  "retrieval_tool": "WebFetch",
+  "observed": "current と併記された stable major は 18 (14-19beta を併載)。",
+  "quoted_excerpt": "[18](/docs/18/index.html) / [Current](/docs/current/index.html)",
+  "version": "18"
+}

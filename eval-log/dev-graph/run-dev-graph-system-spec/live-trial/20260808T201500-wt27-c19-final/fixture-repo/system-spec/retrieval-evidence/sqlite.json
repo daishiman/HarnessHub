@@ -1,0 +1,12 @@
+{
+  "target_id": "sqlite",
+  "fetch_tool": "WebFetch",
+  "requested_url": "https://www.sqlite.org/changes.html",
+  "recorded_at": "2026-08-08T11:00:34.281Z",
+  "official_host": "www.sqlite.org",
+  "official_publisher": "SQLite Consortium (sqlite.org)",
+  "extracted_facts": "最新リリース 3.53.4 / リリース日 2026-07-24 (change log 先頭)",
+  "version": "3.53.4",
+  "last_updated": "2026-07-24",
+  "doc_index_url": "https://www.sqlite.org/docs.html"
+}

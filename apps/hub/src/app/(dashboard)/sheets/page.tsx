@@ -1,3 +1,4 @@
+import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
 import { HearingSheetList } from './hearing-sheet-list.js';
@@ -7,19 +8,34 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  readonly searchParams: Promise<{ readonly tenant?: string; readonly workspace?: string }>;
+  /** `q` は共通ヘッダーの検索フォームから届く (§3.0)。 */
+  readonly searchParams: Promise<{
+    readonly tenant?: string;
+    readonly workspace?: string;
+    readonly q?: string;
+  }>;
 }
 
 export default async function HearingSheetsPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  const initialQuery = query.q?.trim() ?? '';
+
   return (
-    <section aria-labelledby="hearing-sheets-heading">
-      <h1 id="hearing-sheets-heading">ヒアリングシート</h1>
-      <p>
-        <a href={`/sheets/new?tenant=${tenantId}&workspace=${workspaceId}`}>新しく作成</a>
-      </p>
-      <HearingSheetList tenantId={tenantId} workspaceId={workspaceId} />
-    </section>
+    <>
+      <ScreenHeader
+        id="hearing-sheets-heading"
+        title="ヒアリングシート"
+        description="業務のヒアリング内容と、そこから生成された仕様の状態を一覧します。"
+        actions={
+          <ActionLink href={`/sheets/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
+            新しく作成
+          </ActionLink>
+        }
+      />
+      <Panel flush>
+        <HearingSheetList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
+      </Panel>
+    </>
   );
 }

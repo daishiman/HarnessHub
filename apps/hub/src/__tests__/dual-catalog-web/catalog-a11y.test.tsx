@@ -26,6 +26,19 @@ import CatalogListPage from '../../app/(workspace)/catalog/page.js';
 import CatalogReleasesPage from '../../app/(workspace)/catalog/releases/page.js';
 import RootLayout from '../../app/layout.js';
 
+// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
+// 骨格の検査が目的なので、CSS 変数名だけを返す薄い偽物へ差し替える。
+vi.mock('next/font/google', () => ({
+  Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+}));
+
+/** catalog は (workspace) 配下。本番と同じく業務シェルが main ランドマークを持つ。 */
+const { HubShell } = await import('../../components/shell/hub-shell.js');
+
+// server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
+// 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
+
 const SCOPE_QUERY = { tenant: 'tenant-a', workspace: 'workspace-a1' };
 
 /** 日時は brand 型。schema を通して作り、契約に載る形だけを fixture に使う。 */
@@ -120,7 +133,26 @@ function mountDocument(html: string, title: string): void {
  * その `<main>` の中身だけを client として mount し直し、取得後の DOM を検査対象にする。
  */
 async function renderScreen(screen: ReactElement, title: string): Promise<Root> {
-  mountDocument(renderToStaticMarkup(createElement(RootLayout, null, screen)), title);
+  // root layout は骨格を持たない (公開画面と業務画面で骨格が違うため)。
+  // 業務画面の main / nav / footer は HubShell が持つので、本番と同じ入れ子で描画する。
+  mountDocument(
+    renderToStaticMarkup(
+      createElement(
+        RootLayout,
+        null,
+        // HubShellProps は children を必須で要求するため、createElement の可変長引数ではなく
+        // JSX の入れ子で渡す (createElement 経路だと props 側に children が無いと型が合わない)
+        <HubShell
+          accountName="user-1"
+          accountRole="member"
+          scope={{ tenantId: SCOPE_QUERY.tenant, workspaceId: SCOPE_QUERY.workspace }}
+        >
+          {screen}
+        </HubShell>,
+      ),
+    ),
+    title,
+  );
 
   const main = document.querySelector('main');
   if (main === null) throw new Error('main ランドマークが描画されていません');

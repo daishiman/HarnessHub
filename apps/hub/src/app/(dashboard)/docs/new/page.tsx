@@ -1,3 +1,4 @@
+import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
@@ -15,9 +16,19 @@ export default async function DocumentCreatePage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   return (
-    <section aria-labelledby="docs-new-heading">
-      <h1 id="docs-new-heading">ドキュメントを作成</h1>
-      <DocumentCreateForm tenantId={tenantId} workspaceId={workspaceId} />
-    </section>
+    <>
+      <ScreenHeader
+        id="docs-new-heading"
+        title="ドキュメントを作成"
+        breadcrumbs={[
+          { href: `/docs?tenant=${tenantId}&workspace=${workspaceId}`, label: 'ドキュメント' },
+          { label: '新規作成' },
+        ]}
+        breadcrumbsLabel="現在地"
+      />
+      <Panel>
+        <DocumentCreateForm tenantId={tenantId} workspaceId={workspaceId} />
+      </Panel>
+    </>
   );
 }

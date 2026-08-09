@@ -1,0 +1,12 @@
+{
+  "evaluator": "fresh-independent-goal-evaluator-c02",
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {"met": true, "evidence": "out/status.json and fixture graph/artifacts show issue, task, specification, architecture, and document routed to their five canonical roots."},
+    "2": {"met": true, "evidence": "The consecutive update of spec-rest-api-v2-migration preserves specification frontmatter/path parity and the writer converges to a no-op."},
+    "3": {"met": true, "evidence": "features/ contains no artifact and the graph has zero feature nodes; C11 exits 0 after registration and update."}
+  },
+  "goal_evidence": "The transcript shows the target skill invoked for add and update, C02 receipts for every mutation, canonical path/frontmatter parity, and a valid final graph."
+}
