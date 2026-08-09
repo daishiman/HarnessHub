@@ -50,7 +50,10 @@ ROOT_BY_KIND = {
 # するため有効化できる (HarnessHub-yzv0)。issue の required_sections には conditional
 # 機構が無く、実測で最多パターン (32/76件) が単に「概要」見出しを省略する慣習と契約の
 # 齟齬でしかないため、誤検出源として issue は対象外のまま残す (別課題で扱う)。
-HEADING_MISSING_KINDS = {"specification", "task"}
+# architecture が抜けた 0/10 見出し complete を、conditional_triggers により他 kind と対称化する (HarnessHub-o4zi)。
+HEADING_MISSING_KINDS = {"architecture", "specification", "task"}
+
+
 def nodes_of(data: Any) -> list[dict[str, Any]]:
     values = data.get("nodes") if isinstance(data, dict) else data
     if not isinstance(values, list) or not all(isinstance(item, dict) for item in values):

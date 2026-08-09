@@ -1,0 +1,48 @@
+      30 -      "evidence": "receipt graph_revision_after 1..5 が graph.json の graph_revision=5 と一致し、5件の graph_node_id が全て graph に存在する"
+      30 +      "evidence": "receipt graph_revision_after 1..6 (add 5件 + 連続更新1件) が graph.json の graph_revision=6 と一致し、5件の graph_node_id が全て graph に存在する"
+      31      },
+      32      {
+      33        "item": "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる",
+
+⏺ Update(eval-log/run-dev-graph-node-progress.json)
+  ⎿  Added 14 lines, removed 1 line
+      42      "task-public-api-rate-limiting",
+      43      "doc-dev-environment-setup"
+      44    ],
+      45 -  "next_directive": "登録済み node 1件を既存本文保持の patch で連続更新し、更新後の frontmatter kind・実保存 path・graph file_path の一致と C11 PASS を再検証する"
+      45 +  "consecutive_update": {
+      46 +    "graph_node_id": "task-public-api-rate-limiting",
+      47 +    "input": ".dev-graph/tmp/c02-update.json",
+      48 +    "body_source": "preserved",
+      49 +    "replaced_body_lines": null,
+      50 +    "body_identical_to_registered": true,
+      51 +    "frontmatter_kind": "task",
+      52 +    "frontmatter_file_path": "tasks/task-public-api-rate-limiting.md",
+      53 +    "graph_file_path": "tasks/task-public-api-rate-limiting.md",
+      54 +    "stored_path_exists": true,
+      55 +    "post_update_c11": "valid=true violations=[]",
+      56 +    "idempotent_rerun": "operation=noop write_count=0"
+      57 +  },
+      58 +  "next_directive": "未達 checklist なし。graph_revision=6 / C11 PASS / features 0件を最終状態として親へ返す"
+      59  }
+
+⏺ Write(/private/tmp/harnesshub-o4zi.Gv5hFK/eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/out/status.json)
+  ⎿  Wrote 1 lines to ../out/status.json
+      1 {"status":"PASS","observations":{"1":"mixed-artifacts.json の5件を issue/task/specification/architecture/document へ自動分類 (confidence 0.90-0.96、第2候補との margin >= 0.15 で自動確定) し、C02 単一 write
+        r (upsert-node.py) 経由で canonical kind path へ登録した: issues/issue-session-timeout-not-enforced.md, tasks/task-public-api-rate-limiting.md, specs/spec-rest-api-v2-migration.md, architecture/arch-order-
+        processing-backend-security.md, docs/doc-dev-environment-setup.md。5件とも file_path 先頭が kind 別 canonical root と一致し、実ファイルが存在する (graph_revision 0->5、各 receipt write_count=2)","2":"連続
+        更新は Skill 経由の update で .dev-graph/tmp/c02-update.json (top-level graph_node_id + patch、body/--body-file 省略) を適用し、receipt は body_source=preserved / replaced_body_lines=null / operation=updat
+        ed / graph_revision 5->6。更新後の frontmatter artifact_kind=task、frontmatter file_path=tasks/task-public-api-rate-limiting.md、graph node file_path=tasks/task-public-api-rate-limiting.md、実保存 path=tas
+        ks/task-public-api-rate-limiting.md が完全一致し、本文は登録時と bytes 一致。validate-graph-schema.py (C11) は valid=true / violations=[] / implementation_readiness=complete、同一入力の再実行は operation=n
+        oop / write_count=0","3":"feature node は0件で、features/ の中身は .gitkeep のみ (C14 macro-feature 契約外のファイル・node ともに生成なし)。通常 artifact routing は issue/task/specification/architecture/do
+        cument の5 kind だけを扱い、upsert-node.py の _assert_c14_macro_contract gate を通る feature 登録は一切行っていない"},"skill_invocations":["dev-graph:run-dev-graph-node","dev-graph:run-dev-graph-node"]}
+
+⏺ DONE: PASS
+
+✻ Sautéed for 13m 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ eval-log の run 成果物を確認して、次の scenario も実走して
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle)                                                                                                                                        Context left until auto-compact: 8%
+                                                                                                                                                                           Update available! Run: brew upgrade claude-code

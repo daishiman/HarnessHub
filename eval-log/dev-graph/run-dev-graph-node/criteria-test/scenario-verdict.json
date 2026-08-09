@@ -13,15 +13,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T120142-c02n1/verdict.json",
-      "observed": "最新 main 統合後の fresh live trial 20260806T010000Z-f84o-postmain-c02 は overall=PASS、nudge=0、gate=0、required observations 全件を fresh independent evaluator が実体証拠から PASS と判定。behavior closure digest=8e203f481a89fe474208286ea42bc23807ecb473c764182dd9dc74df19063f68。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T115052Z-o4zi-c02r2 は overall=PASS、nudge=0、gate=0。5 kind の正規配置、2回目 Skill 呼出しによる連続更新、本文保持、feature 0件、C11 を fresh independent evaluator が再実測して PASS。behavior closure digest=d456cf1e541cad29ddf9cb638e7f850931d00c56da10102f42673c29d772030f。",
       "scenario_id": "C02-OUT1-positive-mixed-artifacts",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T120142-c02n1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260806T010000Z-f84o-postmain-c02/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T115052Z-o4zi-c02r2/independent-verification.json"
       ],
       "verify_by": "live-trial"
     },

@@ -102,4 +102,15 @@ PENDING_RENAME_PATHS = {
     # module のため Python import 上ハイフン不可 (§4.3 恒久例外・node_transaction.py 等の
     # dev-graph 系 support module と同種)。
     "plugins/system-spec-harness/scripts/coverage_foundation.py",
+    # select-verification-tier.py: 名前は確定仕様 (system-spec/dev-workflow.md の qa-214【1】
+    # 「判定は scripts/select-verification-tier.py が変更 path から算出し」) が逐語で固定して
+    # おり、確定セルの本文を動かすには R4-reopen が要る。verb 'select' は ALLOWED_VERBS 外だが
+    # 「候補集合から 1 つを選ぶ」に対応する許可動詞が無い (build は生成、validate は検査で意味が
+    # ずれる)。仕様側の再オープンと script/CI/spec 参照の原子的更新を伴う後続 Change Governance
+    # PR まで PENDING (system-spec-harness 初回投入と同種の「verb pending」扱い)。
+    "scripts/select-verification-tier.py",
+    # validate_phase_order.py: validate-paradigm-coverage.py の 500 行超を解消する import 専用
+    # support module。workflow entry point ではなく shebang / __main__ を持たないため、Python の
+    # module 名として必要な underscore を許す。実行入口は既存の hyphen 名 script 1 本だけ。
+    "plugins/harness-creator/skills/run-elegant-review/scripts/validate_phase_order.py",
 }

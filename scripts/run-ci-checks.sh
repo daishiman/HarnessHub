@@ -55,6 +55,9 @@ run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-know
 run "lint-workflow-step-guard --self-test" python3 scripts/lint-workflow-step-guard.py --self-test
 run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-guard.py
 run "lint-ci-local-check-parity"           python3 scripts/lint-ci-local-check-parity.py
+# tier-decision.json の生成 (writer) は CI 側だけで行い、ここでは既存記録の妥当性だけ見る。
+# 記録が 1 件も無い local では「検査 0 件」と帰属を明示して緑になる (0 件を全通過と読ませない)。
+run "validate-tier-decision"               python3 scripts/validate-tier-decision.py --scan eval-log/verification-tier
 run "lint-skill-description (harness-creator)" python3 scripts/lint-skill-description.py
 run "lint-dependency-direction (harness-creator)" python3 scripts/lint-dependency-direction.py --skills-dir plugins/harness-creator/skills
 run "lint-dependency-direction (all)"      python3 scripts/lint-dependency-direction.py --skills-dir plugins

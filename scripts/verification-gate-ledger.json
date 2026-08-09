@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "_comment": [
+    "検証ゲート台帳。system-spec/dev-workflow.md の確定内容 (qa-214【3】【4】【5】/ qa-209【3】) が正本。",
+    "tier ごとの blocking 集合をこの 1 箇所で宣言し、build-verification-plan.py が tier から機械導出する。",
+    "台帳を持たずに CI の step 側へ分散させると『どの検査がどの tier で必須か』が読み取れなくなり、",
+    "降格が黙って被覆を消す経路になる (dev-workflow.md【5】が禁じる形)。",
+    "",
+    "min_tier   : この検査が blocking になる最小 tier。",
+    "below_tier : min_tier に満たない tier での扱い。min_tier が最低 tier (mvp) の gate は",
+    "             到達不能なので持たせない (書けてしまうと『低 tier では advisory に落ちる』と誤読される)。",
+    "             advisory = 実行はするが run を止めない (dev-workflow.md【4】)。",
+    "             deferred = 起動そのものを省き、受け皿 issue を必須にする (qa-209【3】)。",
+    "always_blocking: tier に依らず常に blocking (dev-workflow.md【3】)。失敗の代償が検証時間を上回る",
+    "                 不可逆事故 (漏洩・作業消失・壊れたものの出荷) に限る。",
+    "rerun_command: gate が守る不変条件を実際に検査する実行可能な shell 1 行。gate の title と",
+    "             別の検査を指すと、台帳は名目上の被覆を主張しつつ実体を持たない状態になる。",
+    "             tests/scripts-root/test_root__build_verification_plan.py が、参照先の script /",
+    "             pnpm script / make target の実在を機械検査する (非空文字列では不十分)。"
+  ],
+  "gates": [
+    {
+      "id": "secret-scan",
+      "title": "secret / credential 漏洩検査",
+      "always_blocking": true,
+      "min_tier": "mvp",
+      "rerun_command": "pnpm --filter @harness-hub/inspection run scan:secrets",
+      "reason": "公開後に取り消せない漏洩は、短縮対象にしない (dev-workflow.md【3】)"
+    },
+    {
+      "id": "data-loss-guard",
+      "title": "データ破壊・worktree clobber ガード",
+      "always_blocking": true,
+      "min_tier": "mvp",
+      "rerun_command": "python3 scripts/guard-worktree-desync.py && python3 scripts/lint-worktree-clobber-mtime.py && python3 scripts/guard-cross-worktree-ref-update.py",
+      "reason": "並列 worktree の巻き戻しは作業そのものの消失であり、短縮対象にしない (qa-209【4】)"
+    },
+    {
+      "id": "build-typecheck",
+      "title": "build / type check",
+      "always_blocking": true,
+      "min_tier": "mvp",
+      "rerun_command": "pnpm -r build && pnpm -r typecheck",
+      "reason": "壊れたものを動くものとして出荷する事故は検証時間を上回る (dev-workflow.md【3】)"
+    },
+    {
+      "id": "focused-test",
+      "title": "変更 module に対する focused test",
+      "always_blocking": false,
+      "min_tier": "mvp",
+      "rerun_command": "python3 -m pytest tests/scripts-root -q",
+      "reason": "mvp でも変更箇所そのものの回帰は blocking に残す (dev-workflow.md【4】)"
+    },
+    {
+      "id": "package-test",
+      "title": "該当 package の単体・結合テスト",
+      "always_blocking": false,
+      "min_tier": "standard",
+      "below_tier": "advisory",
+      "rerun_command": "python3 -m pytest plugins -q",
+      "reason": "製品 runtime へ触れる変更から blocking にする (dev-workflow.md【4】)"
+    },
+    {
+      "id": "contract-verification",
+      "title": "契約検証 (PKG check / manifest 整合)",
+      "always_blocking": false,
+      "min_tier": "standard",
+      "below_tier": "advisory",
+      "rerun_command": "python3 scripts/validate-plugin-completeness.py",
+      "reason": "契約適合は standard 以上で blocking (dev-workflow.md【4】)"
+    },
+    {
+      "id": "completeness-evaluator",
+      "title": "完成度 evaluator 全 aspect",
+      "always_blocking": false,
+      "min_tier": "critical",
+      "below_tier": "deferred",
+      "rerun_command": "python3 plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py",
+      "reason": "1 周の所要時間を支配する重い検査。critical でのみ必須 (qa-209【3】)"
+    },
+    {
+      "id": "independent-audit-fork",
+      "title": "独立監査 fork",
+      "always_blocking": false,
+      "min_tier": "critical",
+      "below_tier": "deferred",
+      "rerun_command": "python3 plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/audit_fork_attribution.py",
+      "reason": "critical でのみ必須。省略した事実は deferred issue へ記録する (qa-209【3】)"
+    },
+    {
+      "id": "live-trial",
+      "title": "live-trial 全 scenario",
+      "always_blocking": false,
+      "min_tier": "critical",
+      "below_tier": "deferred",
+      "rerun_command": "python3 plugins/harness-creator/skills/run-skill-live-trial/scripts/plan-live-trials.py",
+      "reason": "critical でのみ必須。省略した事実は deferred issue へ記録する (qa-209【3】)"
+    }
+  ]
+}

@@ -28,10 +28,11 @@ repository）が最初から持つ入力と、被験セッションへ渡す `ta
 | `lint-live-trial-task-contract.py` | CLI、前提節生成、対象列挙、JSON report |
 | `lib/live_trial_task_contract.py` | 正本読込、task 解析、契約照合 |
 
-fixture の業務入力は `system-spec/requirements-brief.md` だけである。
-`spec-state.json`、`fetched-references.json`、`completeness-report.json`、
-`index.md` は正規 4 entry point を実行して生成する対象であり、事前配置を主張しては
-ならない。
+`TASK_CONTRACT.workflow_mode=reuse-confirmed` は、digest-bound PASS bundle を fixture に
+置く bounded trial を表す。この mode では entry point は manifest 実在確認だけを行い、
+nested Skill 呼出しを要求しない。scenario の `forbidden_invoked_skills`、時間/token 予算、
+resume validator の三重ゲートで上流再生成を禁止する。`build` mode は従来どおり未配置
+成果物を正規 entry point で生成する。
 
 ## 実行方法
 

@@ -14,15 +14,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
-      "observed": "Fresh guard-clean live trial 20260806T030000Z-0ui0-render-guardclean is overall=PASS with nudge=0 and gate=0. A fresh independent evaluator confirmed every C05 observation from artifacts: inline SVG/HTML, 13=applied=expected denominator, independently recomputed 4 numerator, and matching source digest; the C02 receipt-write bypass guard produced no violations.",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T132000Z-o4zi-exh-c05r2 は overall=PASS、nudge=0、gate=0。Skill-first と nested Agent fork を満たし、inline SVG/HTML、13=applied=expected denominator、独立再計算した numerator=4、source digest 一致、write scope を fresh independent evaluator が再実測して PASS。behavior closure digest=7ec3b5614b3dfa84309a06dfb9d20bf9ecef210d0467a5ddfdc6cb3af6a6b3b9。",
       "scenario_id": "C05-OUT1-positive-feature-progress",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T125231-c05render/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260806T030000Z-0ui0-render-guardclean/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-render/live-trial/20260808T132000Z-o4zi-exh-c05r2/independent-verification.json"
       ],
       "verify_by": "live-trial"
     }

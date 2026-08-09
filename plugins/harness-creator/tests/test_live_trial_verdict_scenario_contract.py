@@ -27,7 +27,7 @@ SCRIPT = (
 DEV_GRAPH_SCENARIOS = (
     REPO / "plugins" / "dev-graph" / "tests" / "fixtures" / "live-trial-positive-scenarios.json"
 )
-C14_SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r9"
+C14_SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r15"
 
 
 def _load_verdict_module():
@@ -49,6 +49,10 @@ SCENARIO_FIXTURE = {
             "skill": "run-fixture-skill",
             "criterion_id": "OUT1",
             "mode": "positive",
+            "resource_budget": {
+                "max_wall_clock_s": 60,
+                "max_total_tokens": 1000,
+            },
             "task_args_template": "--repo-root <contained-fixture-repo> --binding beads",
             "task_contract": {
                 "required_fragments": ["upsert-node.py --input", "promotion-patch.json"],
@@ -101,6 +105,42 @@ def _run(
     workdir = tmp_path / "trial"
     workdir.mkdir(parents=True, exist_ok=True)
     (workdir / "task.md").write_text(task_text, encoding="utf-8")
+    transcript = workdir / "source-transcript.jsonl"
+    transcript.write_text(
+        json.dumps({
+            "type": "assistant",
+            "message": {
+                "id": "msg-budget-fixture",
+                "model": "claude-test",
+                "content": [{
+                    "type": "tool_use",
+                    "name": "Skill",
+                    "input": {"skill": "dev-graph:run-fixture-skill"},
+                }],
+                "usage": {
+                    "input_tokens": 10,
+                    "cache_creation_input_tokens": 20,
+                    "cache_read_input_tokens": 30,
+                    "output_tokens": 40,
+                },
+            },
+        }) + "\n",
+        encoding="utf-8",
+    )
+    goal_evaluation = workdir / "goal-evaluation.json"
+    goal_evaluation.write_text(json.dumps({
+        "result": "PASS",
+        "blockers": [],
+        "evaluator": {"mode": "fresh-independent-context", "id": "pytest-evaluator"},
+        "transcript_sha256": VERDICT.sha256_file(transcript),
+        "evidence_refs": ["task.md", "source-transcript.jsonl"],
+    }), encoding="utf-8")
+    poll_state = workdir / "poll-state.json"
+    poll_state.write_text(json.dumps({
+        "elapsed": 10,
+        "started_at_unix": 100.0,
+        "observed_at_unix": 110.0,
+    }), encoding="utf-8")
     if materialize_evidence:
         for flag, value in zip(extra, extra[1:]):
             if flag != "--observation":
@@ -117,6 +157,10 @@ def _run(
         "--launch", "PASS",
         "--completion", "PASS",
         "--goal-result", "PASS",
+        "--goal-evaluation", str(goal_evaluation),
+        "--transcript", str(transcript),
+        "--poll-state", str(poll_state),
+        "--wall-clock-s", "10",
         *extra,
     ]
     code = VERDICT.main(argv)
@@ -268,8 +312,98 @@ def test_full_observation_coverage_keeps_the_verdict_pass(tmp_path: Path) -> Non
     assert contract["unobserved"] == []
     assert contract["args_divergence"]["matches"] is True
     assert contract["task_contract"]["matches"] is True
+    assert contract["resource_budget"] == {
+        "max_wall_clock_s": 60,
+        "max_total_tokens": 1000,
+    }
+    assert contract["resource_usage"]["tokens"]["total_tokens"] == 100
+    assert contract["resource_usage"]["wall_clock_s"] == 10
+    assert contract["resource_usage"]["poll_state_ref"] == "poll-state.json"
+    assert len(contract["resource_usage"]["poll_state_sha256"]) == 64
+    assert contract["resource_usage"]["violations"] == []
     assert doc["goal_verdict"] == {"result": "PASS", "blockers": []}
     assert doc["overall"]["verdict"] == "PASS"
+
+
+def test_resource_budget_excess_prevents_pass(tmp_path: Path) -> None:
+    fixture = json.loads(json.dumps(SCENARIO_FIXTURE))
+    fixture["scenarios"][0]["resource_budget"]["max_total_tokens"] = 99
+    scenario_file = tmp_path / "strict-scenarios.json"
+    scenario_file.write_text(json.dumps(fixture), encoding="utf-8")
+    code, doc = _run(
+        tmp_path,
+        "--scenario-id", "CXX-OUT1-positive-fixture",
+        "--scenario-file", str(scenario_file),
+        "--observation", "1=a.json",
+        "--observation", "2=b.json",
+        "--observation", "3=c.json",
+        args="--repo-root /tmp/fixture-repo --binding beads",
+    )
+    assert code == 0
+    assert doc["scenario_contract"]["resource_usage"]["violations"] == [
+        "token-budget-exceeded:100>99"
+    ]
+    assert doc["overall"]["completion"] == "FAIL"
+    assert doc["overall"]["verdict"] == "FAIL"
+
+
+def test_missing_assistant_usage_is_unmeasured_and_prevents_pass(tmp_path: Path) -> None:
+    code, doc = _run(
+        tmp_path,
+        "--scenario-id", "CXX-OUT1-positive-fixture",
+        "--scenario-file", str(_scenario_file(tmp_path)),
+        "--observation", "1=a.json",
+        "--observation", "2=b.json",
+        "--observation", "3=c.json",
+        args="--repo-root /tmp/fixture-repo --binding beads",
+    )
+    transcript = tmp_path / "trial" / "transcript.jsonl"
+    record = json.loads(transcript.read_text())
+    record["message"].pop("usage")
+    transcript.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    usage = VERDICT.transcript_token_usage(transcript)
+    assert usage["measured"] is False
+    assert "tokens-unmeasured" in VERDICT.budget_violations(
+        {"max_wall_clock_s": 60, "max_total_tokens": 1000},
+        wall_clock_s=10,
+        token_usage=usage,
+    )
+
+
+def test_token_usage_deduplicates_message_id_across_main_and_subagent(tmp_path: Path) -> None:
+    main = tmp_path / "session.jsonl"
+    record = {
+        "type": "assistant",
+        "message": {
+            "id": "msg-shared",
+            "usage": {"input_tokens": 3, "output_tokens": 7},
+        },
+    }
+    main.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    subagents = tmp_path / "session" / "subagents"
+    subagents.mkdir(parents=True)
+    (subagents / "agent-a.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+    usage = VERDICT.transcript_token_usage(main)
+    assert usage["total_tokens"] == 10
+    assert usage["assistant_messages"] == 1
+    assert usage["assistant_message_ids"] == 1
+    assert usage["transcript_files"] == 2
+    assert usage["measured"] is True
+
+
+def test_goal_pass_requires_digest_bound_fresh_evaluator_artifact(tmp_path: Path) -> None:
+    code, doc = _run(
+        tmp_path,
+        "--scenario-id", "CXX-OUT1-positive-fixture",
+        "--scenario-file", str(_scenario_file(tmp_path)),
+        "--observation", "1=a.json",
+        "--observation", "2=b.json",
+        "--observation", "3=c.json",
+        args="--repo-root /tmp/fixture-repo --binding beads",
+    )
+    assert code == 0 and doc["overall"]["verdict"] == "PASS"
+    assert doc["goal_evaluation"]["evaluator"]["mode"] == "fresh-independent-context"
+    assert doc["goal_evaluation"]["transcript_sha256"] == doc["transcript_sha256"]
 
 
 def test_task_contract_rejects_missing_and_forbidden_procedure(
@@ -313,6 +447,24 @@ def test_declared_task_contract_fails_when_task_file_is_absent(tmp_path: Path) -
     contract = VERDICT.validate_task_contract(scenario, tmp_path / "missing-task.md")
     assert contract["task_file_exists"] is False
     assert contract["matches"] is False
+
+
+def test_forbidden_nested_skill_is_a_contract_blocker() -> None:
+    scenario = {"forbidden_invoked_skills": ["expensive:full-regeneration"]}
+    invocation = VERDICT.validate_invocation_contract(
+        scenario,
+        ["dev-graph:run-fixture-skill", "expensive:full-regeneration"],
+    )
+    contract = {
+        "scenario_id": "bounded",
+        "required_observations": ["done"],
+        "observed": [{"index": 1, "observation": "done", "evidence_ref": "a.json"}],
+        "unobserved": [],
+        "args_divergence": VERDICT.args_divergence("", ""),
+        "invocation_contract": invocation,
+    }
+    assert invocation["matches"] is False
+    assert "full-regeneration" in VERDICT.scenario_contract_blockers(contract)[0]
 
 
 # --------------------------------------------------------------------------- #
@@ -397,6 +549,14 @@ def test_scenario_templates_only_name_flags_the_target_skill_declares() -> None:
             f"{scenario['scenario_id']}: task_args_template names flags the skill does not "
             f"declare: {undeclared}"
         )
+
+
+def test_all_real_scenarios_declare_closed_resource_budgets() -> None:
+    suite = json.loads(DEV_GRAPH_SCENARIOS.read_text(encoding="utf-8"))
+    assert suite["scenarios"]
+    for scenario in suite["scenarios"]:
+        budget = VERDICT.resource_budget(scenario)
+        assert set(budget) == {"max_wall_clock_s", "max_total_tokens"}
 
 
 def test_the_undeclared_flag_gate_rejects_the_r2_c14_template() -> None:

@@ -237,15 +237,28 @@ _TASK_REQUIRED_SECTIONS = [
 ]
 _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS = ["正本仕様書", "依存", "実行契約"]
 
+# task 以外で HEADING_MISSING_KINDS に入っている kind (architecture / specification)。
+# 見出し文言を fixture 側へ写経すると contract 改訂で静かにずれるため、正本 (template-contract.json)
+# から読む。task を写経のまま残しているのは、上記の origin_kind 分岐が contract の
+# conditional 側と 1 対 1 でない (baseline variant を fixture が明示選択する) ため (HarnessHub-o4zi)。
+_TEMPLATE_CONTRACT_PATH = FIXTURES_DIR.parents[1] / "templates" / "template-contract.json"
+
+
+def _contract_required_sections(kind: str) -> list[str]:
+    contract = json.loads(_TEMPLATE_CONTRACT_PATH.read_text(encoding="utf-8"))
+    artifacts = contract.get("artifacts", contract)
+    sections = (artifacts.get(kind) or {}).get("required_sections") or []
+    return [str(section) for section in sections]
+
 
 def markdown_for(node: dict[str, Any]) -> str:
     """frontmatter_of (行指向スカラパーサ) が読める 1 行 1 key の frontmatter を組む。
 
     C11 artifact_findings は graph node と frontmatter の parity を
     graph_node_id/artifact_kind/file_path/template_id/template_version で照合するため、
-    node の値をそのまま JSON スカラとして書き出す。artifact_kind が task の場合は
-    required_sections も満たす必要があるため、origin_kind に応じた固定文言の見出しを
-    併せて書く。
+    node の値をそのまま JSON スカラとして書き出す。artifact_kind が HEADING_MISSING_KINDS
+    (task / architecture / specification) の場合は required_sections も満たす必要があるため、
+    見出しを併せて書く。task だけは origin_kind で必要見出しが変わる。
     """
     lines = ["---"]
     for key, value in node.items():
@@ -262,15 +275,20 @@ def markdown_for(node: dict[str, Any]) -> str:
             "",
         ]
     )
-    if node.get("artifact_kind") == "task":
+    kind = node.get("artifact_kind")
+    if kind == "task":
         origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
         sections = (
             _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS
             if origin_kind == "system-dev-planner"
             else _TASK_REQUIRED_SECTIONS
         )
-        for section in sections:
-            lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
+    elif kind in ("architecture", "specification"):
+        sections = _contract_required_sections(kind)
+    else:
+        sections = []
+    for section in sections:
+        lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
     return "\n".join(lines)
 
 

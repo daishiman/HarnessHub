@@ -1,7 +1,7 @@
 ---
 name: run-dev-graph-system-spec
 description: system-spec-harness の正規フローで仕様を作りたいとき、確定した仕様・architecture を source lineage 付きで dev-graph に取り込みたいときに使う。
-version: 0.1.0
+version: 0.2.0
 owner: harness maintainers
 source: plugin-plans/dev-graph/component-inventory.json#C19
 kind: run
@@ -10,7 +10,7 @@ hierarchy: L1
 user-invocable: true
 argument-hint: "[--repo-root PATH] [--resume]"
 allowed-tools: [Read, Bash, Skill, Agent, AskUserQuestion]
-script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py]
+script_refs: [../../scripts/resolve-repo-context.py, ../../scripts/validate-system-spec-resume.py, ../../scripts/validate-system-spec-boundary.py, ../../scripts/build-system-spec-resume-import.py, ../../scripts/build-system-spec-import.py, ../../scripts/validate-graph-schema.py, ../../scripts/validate-evidence-refs.py, ../../scripts/validate-source-digest.py]
 schema_refs: [../../schemas/graph-node.schema.json]
 responsibility_refs:
   - prompts/R0-context.md
@@ -29,7 +29,7 @@ responsibilities:
   - id: R2-delegate
     name: delegate
     prompt_required: true
-    summary: "run-system-spec-elicit→必要時run-system-spec-doc-fetch→run-system-spec-compile→assign-system-spec-completeness-evaluatorを引用実行する"
+    summary: "digest-bound PASS receipt が current なら検証して再利用し、不在/stale 時だけ elicit→必要時doc-fetch→compile→evaluatorを引用実行する"
   - id: R3-import
     name: import
     prompt_required: true
@@ -62,14 +62,15 @@ feedback_contract:
 
 - 入力: C24 で caller repo 内に固定した `system-spec/`、system-spec-harness manifest/entry points、任意の resume state。
 - 出力: confirmed specification/architecture node、C02 import report、version/digest/imported_at を含む source lineage。
-- 完了条件: system-spec-harness の required 4 entry points、coverage/source-citation/evaluator gate が PASS し、dev-graph 内の同等生成ロジック複製が0である。
+- 完了条件: system-spec-harness の required 4 entry points が存在し、coverage/source-citation/evaluator gate の digest-bound PASS が current で、dev-graph 内の同等生成ロジック複製が0である。
 
 本 skill は仕様生成ロジックを持たない。system-spec-harness を起動し、確定成果物の検証と C02 取込だけを担う。
 
 1. C24 で caller repo の `system-spec/` を解決し、plugin source/別 repo の content を拒否する。
 2. `plugins/system-spec-harness/.claude-plugin/plugin.json` の name/version が `>=0.1.0 <1.0.0`、かつ `references/package-contract.json#entry_points.skills` が `run-system-spec-elicit`, `run-system-spec-doc-fetch`, `run-system-spec-compile`, `assign-system-spec-completeness-evaluator` を持つことを確認する。公式manifestへharness専用キーを混在させず、不在/不一致は fallback を実装せず停止する。
-3. Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲する。
-4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。
+3. `system-spec/resume-receipt.json` がある場合は `validate-system-spec-resume.py` で plugin version・required entry points・3 gate・artifact digest を検証する。exit 0 なら upstream 成果物を再生成せず R3 へ進む。不在/stale の場合だけ Skill 呼出しで elicit → 必要時 doc-fetch → compile → completeness evaluator を順に委譲し、新しい receipt を得る。resume 検証失敗を無視した import は禁止する。
+   resume 経路は判断分岐が無いため `build-system-spec-resume-import.py --repo-root <root>` 1 コマンドへ集約し、R0/R2/R3 の validator・C02 upsert・goal-seek evidence を決定論的に完了させる。この経路では `Agent` fork と upstream `Skill` 呼出しを行わない。
+4. confirmed 章と evaluator PASS だけを C02 に渡し、`source_lineage={origin_kind,plugin,path,version,digest,imported_at}`, confirmation evidence, readiness を specification/architecture node に保存する。R3 の adapter は contract の node shape だけを組み立て、本文は caller repository の対応 `source_artifact` からそのまま取得する。製品固有の本文テンプレートを持たない。この source body の verbatim import (素材の取込み) は、elicitation/compile の処理ロジックを dev-graph へ再実装する「複製」には含めない。取込み元本文と node body の一致は、`source_digest` が示す成果物を忠実に参照した証拠として扱う。
 
 出力は import report (`system-spec/index.md`, imported node ids, lineage, confirmation_status, readiness)。feature は `architecture_refs` で参照し、内容を複製しない。1 feature→13 task は system-dev-planner の責務であり本 skill は扱わない。
 
@@ -87,7 +88,7 @@ system-spec-harnessが既に持つヒアリング、カテゴリ×platform matri
 
 - [ ] system_spec content root が caller repo 内で repository_id/common-dir と一致する
 - [ ] system-spec-harness が version `>=0.1.0 <1.0.0` と required 4 entry points を満たす
-- [ ] elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される
+- [ ] resume receipt が current なら upstream 4 Skill の再実行 0 件、不在/stale なら elicit/条件付き doc-fetch/compile/evaluator が system-spec-harness Skill 経由だけで実行される
 - [ ] coverage/source-citation/evaluator gate が全て PASS である
 - [ ] C02 登録 node の source_lineage/confirmation/evaluator evidence/readiness が欠落0である
 - [ ] `validate-source-digest.py --progress <progress.json>` が exit 0 (各登録 node の source_digest が自 source_path の実 sha256 と一致することを script の exit code で担保)
@@ -151,3 +152,4 @@ python3 "${CLAUDE_PLUGIN_ROOT:-plugins/dev-graph}/scripts/validate-source-digest
 - plugin source 側や別 repo の `system-spec/` を読まず、C24 receipt の caller repo だけを content authority にする。
 - evaluator PASS と confirmed の両方が揃わない章を C02 へ登録しない。
 - feature に仕様本文を複製せず、`architecture_refs` と source lineage で参照する。
+- node body の source-derived verbatim import と、elicitation/compile 実行ロジックの複製を混同しない。前者は R3 の必須出力、後者だけが OUT1 の禁止対象である。

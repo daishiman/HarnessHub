@@ -85,7 +85,10 @@ serves_goals: [G1]
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-security (対応セル: web, mobile, tablet) の判断へ適用する
+##### 確定内容 qa-security (対応セル: web, mobile, tablet)
+
+- 確定要件: OWASP Top 10 準拠、Web/モバイル/タブレットのみ
+- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
 - 資するゴール: G1
 
 ## 最新ドキュメント出典

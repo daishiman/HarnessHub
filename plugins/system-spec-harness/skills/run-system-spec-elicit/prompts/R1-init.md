@@ -107,4 +107,4 @@
 
 ## 出力指示
 
-C04 taxonomy を Read し、`python3 scripts/apply-spec-transition.py init --taxonomy <path> --out spec-state.json` を実行して初期マトリクスを生成する。`validate-coverage-matrix.py` (loop) が exit0 になることを確認する。余計な前置き・思考過程出力は禁止。
+C04 taxonomy を Read し、`python3 scripts/apply-spec-transition.py init --taxonomy <path> --out spec-state.json` を実行して初期マトリクスを生成する。旧 schema 1.0 state の再開では `--state <旧spec-state.json>` を付け、foundation/decisions を保持しつつ matrix を未収集へ戻し、schema 1.1 と design application 契約へ明示移行する。`validate-coverage-matrix.py` (loop) が exit0 になることを確認する。余計な前置き・思考過程出力は禁止。

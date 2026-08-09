@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/harness-creator/skills/run-elegant-review/scripts/build-verdict.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 92,
+    "notes": "findings の signal から C1-C4 verdict と fail_counts を一方向に導出し、validator からも同じ derive() を import して SSOT を維持する。smell を blocking 集計に混ぜず、--check で手書き drift を検出する。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

@@ -52,6 +52,7 @@ def write(tmp_path: Path, name: str, obj: dict) -> str:
 def _valid_matrix() -> dict:
     matrix = {c: {p: {"state": "確定", "qa_ref": "qa-001"} for p in PLATFORMS} for c in CATEGORIES}
     return {
+        "schema_version": "1.0",
         "categories": [{"id": c, "label": c} for c in CATEGORIES],
         "platforms": PLATFORMS,
         "matrix": matrix,
@@ -63,6 +64,81 @@ def _valid_matrix() -> dict:
 # ── C12 validate() branch tests ───────────────────────────────────────────
 def test_c12_valid_complete():
     assert c12.validate(_valid_matrix(), require_complete=True) == []
+
+
+def test_c12_design_applications_contract_requires_entries_for_confirmed_qa():
+    d = _valid_matrix()
+    d["design_application_contract_version"] = "1.0"
+    findings = c12.validate(d, require_complete=True)
+    assert any("design_applications は非空配列必須" in finding for finding in findings)
+
+
+def test_c12_current_schema_cannot_omit_design_application_marker():
+    d = _valid_matrix()
+    d["schema_version"] = "1.1"
+    findings = c12.validate(d, require_complete=True)
+    assert any("design_application_contract_version が欠落" in finding for finding in findings)
+
+
+def test_c12_missing_schema_cannot_claim_legacy_design_application_exemption():
+    d = _valid_matrix()
+    del d["schema_version"]
+    findings = c12.validate(d, require_complete=True)
+    assert any("design_application_contract_version が欠落" in finding for finding in findings)
+
+
+def test_c12_design_applications_contract_accepts_valid_entry():
+    d = _valid_matrix()
+    d["design_application_contract_version"] = "1.0"
+    d["qa_log"][0]["design_applications"] = [
+        {
+            "knowledge_ref": "ddd.md#Bounded Context",
+            "principle": "Bounded Context",
+            "applicability": "applied",
+            "rationale": "単一境界として管理する",
+            "tradeoffs": ["境界分割が必要になれば再評価する"],
+        }
+    ]
+    assert c12.validate(d, require_complete=True) == []
+
+
+def test_c12_design_applications_contract_rejects_unknown_version_and_bad_shape():
+    d = _valid_matrix()
+    d["design_application_contract_version"] = "2.0"
+    assert any("contract_version" in finding for finding in c12.validate(d, True))
+
+    d["design_application_contract_version"] = "1.0"
+    d["qa_log"][0]["design_applications"] = [
+        {
+            "knowledge_ref": "ddd.md",
+            "principle": "DDD",
+            "applicability": "maybe",
+            "rationale": "",
+            "tradeoffs": [],
+        }
+    ]
+    findings = c12.validate(d, require_complete=True)
+    assert any("applicability" in finding for finding in findings)
+    assert any("rationale" in finding for finding in findings)
+    assert any("tradeoffs" in finding for finding in findings)
+
+
+def test_c12_current_contract_rejects_confirmed_approval_ref_without_qa_entry():
+    d = _valid_matrix()
+    d["schema_version"] = "1.1"
+    d["design_application_contract_version"] = "1.0"
+    d["matrix"]["database"]["web"]["qa_ref"] = "appr-001"
+    d["qa_log"][0]["design_applications"] = [
+        {
+            "knowledge_ref": "ddd.md#Bounded Context",
+            "principle": "Bounded Context",
+            "applicability": "applied",
+            "rationale": "単一境界として管理する",
+            "tradeoffs": ["境界分割が必要になれば再評価する"],
+        }
+    ]
+    findings = c12.validate(d, require_complete=True)
+    assert any("qa_log entry の参照が必須" in finding for finding in findings)
 
 
 def test_c12_loop_allows_uncollected_but_final_fails():

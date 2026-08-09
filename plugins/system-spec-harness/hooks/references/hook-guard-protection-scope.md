@@ -110,6 +110,8 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
 | `session_id` / `ts` / `cwd` / `prompt`・`tool_response` の sha256 / `AUDIT_VERDICT` enum | ✅ | response 本文を保存せず判定忠実性を突合する最小メタ |
 | `prompt` 本文 / `tool_response` 本文 | ❌ | 機微情報を台帳へ持ち込まない |
 
+`audit_verdict` は tool_response の応答本文 key (`content` / `output` / `result` / `response` / `message`) 配下だけを走査し、**応答本文の最終非空行**が canonical `AUDIT_VERDICT` marker のときだけ記録する。Claude Code の payload が fork prompt や応答後 metadata (`agentId` / `status` / usage) を内包していても、prompt 内の説明用 marker や metadata 文字列を応答本文と混同しない。応答本文の最終非空行が marker でなければ従来どおり null とし、consumer が fail-closed で除外する。
+
 台帳位置: `<CLAUDE_PROJECT_DIR>/eval-log/system-spec-harness/audit-fork-ledger.jsonl`
 (env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。consumer 側 `aggregate-completeness.py` と同一規則)。
 
