@@ -154,7 +154,7 @@ responsibility_id: R6-audit-hearing
 
 > (対話なし: 自動実行 agent) — 本 agent は `isolation: fork` で親から分離起動され、ユーザーとの往復対話を行わず、下記テンプレートに従って `spec-state.json` のヒアリング監査を一度で完遂し、監査 verdict と軸別検出リストを返す。
 
-C01 (`run-system-spec-elicit`) が出力した `spec-state.json` を、監査 SSOT `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` と本ファイルの Layer 1〜7 を参照し、read-only で 5 軸監査する。特に早期停止は `hearing_progress.max_loops` の実値を使い、未収集があるのに `complete=true` なら除外せず writer 非経由編集または state 破損として検出する。監査 verdict は全軸問題なしなら `PASS`、1 軸以上に検出があれば `FAIL`、必須入力の欠落・破損なら `INDETERMINATE` とする。マトリクスの対象外理由は C07、出典鮮度は C08、最終完了ゲートは C05 の担当である。**`Read` と許可された read-only `Bash` 以外の操作は禁止し、`Bash` でも書込・redirect・network・再質問発火・状態更新は一切禁止**。根拠はセル・質問 ID・U 項目 ID 単位で示し、余計な前置きは禁止。
+C01 (`run-system-spec-elicit`) が出力した `spec-state.json` を、監査 SSOT `../skills/run-system-spec-elicit/prompts/R6-audit-hearing.md` と本ファイルの Layer 1〜7 を参照し、read-only で 5 軸監査する。特に早期停止は `hearing_progress.max_loops` の実値を使い、未収集があるのに `complete=true` なら除外せず writer 非経由編集または state 破損として検出する。トレーサビリティ軸の対象は matrix の確定セル、foundation challenger 軸の対象は U1-U9 である。`decisions[]` の比較・推奨・採択根拠は C05 `decision_guidance` の責務であり、caller が追加要求しても担当外として verdict に含めない。監査 verdict は全軸問題なしなら `PASS`、1 軸以上に検出があれば `FAIL`、必須入力の欠落・破損なら `INDETERMINATE` とする。マトリクスの対象外理由は C07、出典鮮度は C08、最終完了ゲートは C05 の担当である。**`Read` と許可された read-only `Bash` 以外の操作は禁止し、`Bash` でも書込・redirect・network・再質問発火・状態更新は一切禁止**。根拠はセル・質問 ID・U 項目 ID 単位で示し、余計な前置きは禁止。
 
 ## Self-Evaluation
 

@@ -45,20 +45,8 @@ def test_hearing_auditor_reads_and_checks_the_referenced_section() -> None:
 def test_noninteractive_shape_never_authorizes_ai_inference_or_approval() -> None:
     shape = SHAPE.read_text(encoding="utf-8")
 
-    assert "未収集のまま fail-closed" in shape
-    assert "AI 自身を承認者とする新規 approval を作らない" in shape
+    assert '"workflow_mode": "reuse-confirmed"' in shape
+    assert "immutable upstream PASS evidence" in shape
+    assert "content(_plugin_version())" in shape
+    assert "requirements-brief" not in shape
     assert "最小構成を採り" not in shape
-    for doctrine in ("DDD", "OWASP ASVS", "Apple HIG", "Google SRE", "Clean Architecture"):
-        assert doctrine in shape
-
-    # 原則名の列挙だけでなく、§3 の具体適用と §7 の既存承認への接続を固定する。
-    for application in (
-        "TODO 状態遷移と認証資格更新を別の集約・更新経路に分ける",
-        "平文 token を永続化しない",
-        "API 応答形式と OpenAPI 表現の一貫性",
-        "起動 1 コマンドと復旧 1 ファイル",
-        "依存方向を router → service → repository interface に固定",
-    ):
-        assert application in shape
-    assert "§3 のカテゴリ別確定内容" in shape
-    assert "一括承認 (approval_log の根拠)" in shape

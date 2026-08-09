@@ -51,9 +51,27 @@ def _complete_state() -> dict:
                     "action": "confirm",
                     "category": category,
                     "platform": platform,
-                    "qa_ref": "qa-001",
                     "serves_goals": ["G1"],
                 }
+                mod.apply_turn(
+                    state,
+                    {
+                        "qa_id": "qa-001",
+                        "question": "保存方式を確認します。",
+                        "answer": "SQLite を使います。",
+                        "design_applications": [
+                            {
+                                "knowledge_ref": "ddd.md#Aggregate",
+                                "principle": "Aggregate",
+                                "applicability": "applied",
+                                "rationale": "保存境界を単一集約として扱う",
+                                "tradeoffs": ["境界分割時は再評価する"],
+                            }
+                        ],
+                        "ops": [action],
+                    },
+                )
+                continue
             mod.apply_turn(state, {"ops": [action]})
     assert state["hearing_progress"]["complete"] is True
     return state

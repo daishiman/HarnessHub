@@ -1,5 +1,6 @@
 /** design tokens (色・余白・タイポ・表示密度) の正本。文字色は 4.5:1 を token 段階で保証する。 */
 import { AA_CONTRAST_NON_TEXT, AA_CONTRAST_TEXT, contrastRatio } from './contrast.js';
+import { focusRingRule } from './focus-ring.js';
 
 export const themeNames = ['light', 'dark'] as const;
 export type ThemeName = (typeof themeNames)[number];
@@ -151,6 +152,31 @@ export const densityTokens: Record<Density, { controlHeight: string; rowPaddingY
 };
 
 /**
+ * 折り返し幅 (breakpoint)。
+ *
+ * 数値 (px) で持つのは、CSS カスタムプロパティが `@media` の条件式では評価されない
+ * (`@media (min-width: var(--x))` は無効) ため。実際の分岐は base-css.ts が生成時に
+ * この値を literal として埋め込む。ここを唯一の正本にすることで、
+ * 「CSS のあちこちに 768px が直書きされ、片方だけ変わる」状態を防ぐ。
+ *
+ * 段階の根拠:
+ *   sm 480 … 縦持ちスマホ (360px) と横持ち/小型タブレットの境目
+ *   md 768 … ナビゲーションを横へ出せるようになる幅 (SidebarLayout の 2 カラム化点)
+ *   lg 1120 … Container standard の最大幅。これ以上広げても行長が伸びるだけ
+ */
+export const breakpointTokens = {
+  sm: 480,
+  md: 768,
+  lg: 1120,
+} as const;
+export type BreakpointName = keyof typeof breakpointTokens;
+
+/** `breakpointTokens` から `@media` の前置きを作る。閾値の直書きを消すための唯一の入口。 */
+export function mediaUp(name: BreakpointName): string {
+  return `@media (min-width: ${breakpointTokens[name]}px)`;
+}
+
+/**
  * チャートの系列色の順序 (固定)。
  * 色だけに依存させないため、部品側で形状・ラベルを必ず併記する。
  */
@@ -264,12 +290,19 @@ export function buildThemeCss(): string {
       declarations(radiusTokens, 'radius'),
       declarations(typographyTokens),
       declarations(densityTokens.comfortable),
+      // 分岐そのものは base-css.ts が literal で持つ。ここに出すのは、部品や app 側が
+      // 「今どの段階を境にしているか」を CSS/JS から参照できるようにするため
+      declarations(
+        Object.fromEntries(Object.entries(breakpointTokens).map(([name, value]) => [name, `${value}px`])),
+        'breakpoint',
+      ),
       '}',
     ].join('\n'),
     `[data-theme='dark'] {\n${colorBlock('dark')}\n}`,
     `@media (prefers-color-scheme: dark) {\n  [data-theme='auto'] {\n${colorBlock('dark', '  ')}\n  }\n}`,
     `[data-density='compact'] {\n${declarations(densityTokens.compact)}\n}`,
     // 操作部品のフォーカス可視化。色のみに頼らず輪郭と余白でも示す (WCAG 2.2 の 2.4.11 対応)。
-    ':where([data-hh-focusable]):focus-visible {\n  outline: 2px solid var(--hh-color-focus-ring);\n  outline-offset: 2px;\n}',
+    // 宣言本体は focus-ring.ts が正本 (ネイティブ要素向けの base 層と見え方を揃えるため)。
+    focusRingRule(':where([data-hh-focusable]):focus-visible'),
   ].join('\n\n');
 }

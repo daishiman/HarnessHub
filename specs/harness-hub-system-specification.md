@@ -465,3 +465,7 @@ Harness Hub の確定要件を Dev Graph から参照するための集約入口
 ## 分冊した実装 writeback
 
 行数上限を守るため、共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の実装反映は [実装 writeback 分冊](harness-hub-system-specification-implementation-writebacks.md) へ移した。正本章と各受領書への参照関係は維持する。
+
+## 開発時の検証 tier
+
+差分から `mvp / standard / critical` を導出する開発品質契約は [検証 tier 仕様追補](harness-hub-verification-tiering-addendum.md) を正とする。

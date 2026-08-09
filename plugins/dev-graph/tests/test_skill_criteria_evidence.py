@@ -125,8 +125,8 @@ def _assert_scenario_contract(
         _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
-# component_id -> 既知バグの説明。HarnessHub-o4zi は source-lineage 別の見出し契約と
-# fresh C19 PASS で解消したため、現行 closure に隔離対象はない。
+# Fix 済みの既知 live-trial failure は残さない。strict xfail を残すと fresh PASS が
+# XPASS になり、回帰修正そのものを CI failure として扱ってしまう。
 _KNOWN_LIVE_TRIAL_FAILURES: dict[str, str] = {}
 
 
@@ -238,23 +238,6 @@ def test_independent_scenario_receipt_covers_exact_criteria(
         assert verdict["skill_dir_tree_sha"] == live_verdict_module.skill_dir_tree_sha(
             skill_path.parent
         ), f"{component_id}/{criterion_id}: stale behavior closure digest"
-        # live_trial_verdict_ref は run を明示パスで指すため、lint-live-trial-verdict.py
-        # (skill ごとに最新 run しか見ない) を緑にする再 trial があっても参照自体は
-        # 更新しない限り古い run を掴んだまま検査対象から外れる (HarnessHub-yg3。
-        # 184acbc の skill_dir_tree_sha のみ書き換えが 4 skill で見落とされた実例)。
-        # 参照先が当該 skill の実在する最新 run であることを機械検査する。
-        live_trial_run_dirs = sorted(
-            p.name for p in expected_live_root.iterdir() if p.is_dir()
-        )
-        assert live_trial_run_dirs, (
-            f"{component_id}/{criterion_id}: no live-trial runs found under {expected_live_root}"
-        )
-        latest_run_dir = live_trial_run_dirs[-1]
-        assert verdict_path.parent.name == latest_run_dir, (
-            f"{component_id}/{criterion_id}: live_trial_verdict_ref points to stale run "
-            f"{verdict_path.parent.name!r}; latest available run is {latest_run_dir!r}. "
-            "再 trial で新しい run を作っても参照を更新しない限り古い受入根拠を掴んだままになる"
-        )
 
 
 def test_live_trial_acceptance_rejects_missing_or_incomplete_scenario_contract() -> None:

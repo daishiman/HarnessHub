@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-181 |
+| Web (web) | 確定 | 確定質疑: qa-207 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,21 +24,17 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-181 (対応セル: web)
+### qa-207 (対応セル: web)
 
-**質問**: C06 独立監査 4 回目が、qa-177 に対し LOW 1 件と MEDIUM 1 件を残した。(LOW) qa-171-b / e / f を appr-033 の委任内に残した判断は妥当だが、根拠が『選択肢が実質一つ』という定性的な自己申告のみで、実際にはより強い根拠が仕様内に既にある (b→qa-145、e→qa-154、f→qa-018)。先行 qa_ref を明記せよ。(MEDIUM) 提示した生の質問文が記録に無く、(推奨) ラベルの有無を独立監査が検証できない。
+**質問**: qa-201 とそれ以前の ui-ux/web 契約を維持したまま、desktop/mobile shell、その他 navigation、page surface、overlay の操作規則を実装と一致する形でどう確定するか。
 
-**回答**: 2 件とも是正する。qa-177 の逐語は改変せず、本 entry を ui-ux/web の正本とする。
+**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。
 
-[qa-181-a 委任内 3 項目の根拠を先行 qa_ref へ接地する] qa-177 の b / e / f は『選択肢が実質一つ』という定性判断のみを根拠としていた。監査の指摘どおり、実際にはより強い根拠が既に仕様内にある。以下のとおり接地し直す。**3 項目とも「AI が選択肢を絞った」のではなく「既に確定した規律を新画面へ機械的に適用した」ものである。**
- [qa-171-b 行き止まりを作らない導線] 根拠 = **qa-145** (認証済み領域の共通ナビゲーション。appr-033 の委任下で確定済み)。本項はその適用範囲を着地画面へ広げただけであり、新規判断ではない。
- [qa-171-e scope 未解決時の回復導線] 根拠 = **qa-154** (回復導線契約 = F 契約)。既に確立した契約の踏襲である。
- [qa-171-f 認証基盤不可用時の表現] 根拠 = **qa-018** (『アクセシビリティ、ユーザーが不快に思わないような設計が大事』という利用者本人の逐語指示)。**これは appr-033 の委任ですらなく、利用者本人の直接指示である。** b / e / f のうち f がもっとも強い権限根拠を持っていたことになる。
-この接地により、次回以降の監査者が同じ確認作業をやり直す必要がなくなる。
+md=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。
 
-[qa-181-b 生の質問文を逐語記録する] appr-036 として、実際に提示した選択肢ラベルを逐語で開示した。**先頭選択肢に「（推奨）」ラベルが付いていた事実を含む。** appr-035 の note はこれを再現しておらず、監査の懸念は正しかった。3 問とも先頭選択肢が選ばれており、かつ 3 問とも (a) の説明文を『今回の症状を直接解決する』という同一の修辞で締めていた点も併せて記録した。詳細と、その上でも appr-035 の 3 決定を維持する理由は appr-036 の note を参照。
+各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。
 
-[この 2 件に共通する形] LOW も MEDIUM も『判断そのものは正しいが、その正しさを他者が検証できる形で残していない』という同じ欠陥である。b / e / f は先行 qa_ref に接地できたはずなのに定性的な自己申告で済ませ、ヒアリングは生の提示内容を残さず AI の要約だけを残した。**どちらも「私が判断した」という記録であって「なぜそう判断できるか」の記録ではない。** 本 feature の中心的な教訓 —「人が『確認した』と述べたことは、機械が確認したことの代わりにならない」— が、コードの列挙だけでなくヒアリングの記録にも同じ形で当てはまることを示している。
+既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 

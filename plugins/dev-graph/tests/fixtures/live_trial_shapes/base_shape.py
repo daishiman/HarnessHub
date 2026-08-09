@@ -31,7 +31,6 @@ from typing import Any
 
 FIXTURES_DIR = Path(__file__).resolve().parents[1]
 BASE_MODULE_NAME = "build_live_trial_fixture"
-TEMPLATE_CONTRACT = Path(__file__).resolve().parents[3] / "templates" / "template-contract.json"
 
 # 固定 timestamp。再生成のたびに fixture の digest が動くと trial の再現性が失われる。
 # base の CREATED_AT (C03 sync の remote fixture 用) とは別系列の値で、
@@ -238,15 +237,18 @@ _TASK_REQUIRED_SECTIONS = [
 ]
 _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS = ["正本仕様書", "依存", "実行契約"]
 
+# task 以外で HEADING_MISSING_KINDS に入っている kind (architecture / specification)。
+# 見出し文言を fixture 側へ写経すると contract 改訂で静かにずれるため、正本 (template-contract.json)
+# から読む。task を写経のまま残しているのは、上記の origin_kind 分岐が contract の
+# conditional 側と 1 対 1 でない (baseline variant を fixture が明示選択する) ため (HarnessHub-o4zi)。
+_TEMPLATE_CONTRACT_PATH = FIXTURES_DIR.parents[1] / "templates" / "template-contract.json"
 
-def _artifact_sections(artifact_kind: str, origin_kind: str | None) -> list[str]:
-    """fixture の見出しを production 契約の正本から読む。"""
-    contract = json.loads(TEMPLATE_CONTRACT.read_text(encoding="utf-8"))
-    artifact = contract["artifacts"].get(artifact_kind, {})
-    if origin_kind == "system-spec-harness":
-        conditional = artifact.get("conditional_required_sections", {})
-        return list(conditional.get("system_spec_harness", []))
-    return list(artifact.get("required_sections", []))
+
+def _contract_required_sections(kind: str) -> list[str]:
+    contract = json.loads(_TEMPLATE_CONTRACT_PATH.read_text(encoding="utf-8"))
+    artifacts = contract.get("artifacts", contract)
+    sections = (artifacts.get(kind) or {}).get("required_sections") or []
+    return [str(section) for section in sections]
 
 
 def markdown_for(node: dict[str, Any]) -> str:
@@ -254,9 +256,9 @@ def markdown_for(node: dict[str, Any]) -> str:
 
     C11 artifact_findings は graph node と frontmatter の parity を
     graph_node_id/artifact_kind/file_path/template_id/template_version で照合するため、
-    node の値をそのまま JSON スカラとして書き出す。artifact_kind が task の場合は
-    required_sections も満たす必要があるため、origin_kind に応じた固定文言の見出しを
-    併せて書く。
+    node の値をそのまま JSON スカラとして書き出す。artifact_kind が HEADING_MISSING_KINDS
+    (task / architecture / specification) の場合は required_sections も満たす必要があるため、
+    見出しを併せて書く。task だけは origin_kind で必要見出しが変わる。
     """
     lines = ["---"]
     for key, value in node.items():
@@ -273,19 +275,20 @@ def markdown_for(node: dict[str, Any]) -> str:
             "",
         ]
     )
-    artifact_kind = node.get("artifact_kind")
-    origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
-    if artifact_kind == "task":
+    kind = node.get("artifact_kind")
+    if kind == "task":
+        origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
         sections = (
             _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS
             if origin_kind == "system-dev-planner"
             else _TASK_REQUIRED_SECTIONS
         )
-        for section in sections:
-            lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
-    elif artifact_kind in {"architecture", "specification"}:
-        for section in _artifact_sections(artifact_kind, origin_kind):
-            lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
+    elif kind in ("architecture", "specification"):
+        sections = _contract_required_sections(kind)
+    else:
+        sections = []
+    for section in sections:
+        lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
     return "\n".join(lines)
 
 

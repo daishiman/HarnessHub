@@ -1,0 +1,73 @@
+{
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume step exit 0 with valid=true, mode=reuse-confirmed, plugin_version=0.1.0, required_entry_points = [assign-system-spec-completeness-evaluator, run-system-spec-compile, run-system-spec-doc-fetch, run-system-spec-elicit], failures=[]; upstream_skill_invocations=0 and network_calls=0 so no elicit/doc-fetch/compile/evaluator re-run occurred."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "build-import + c02-upsert-architecture + c02-upsert-specification all exit 0, and gate-1..gate-4 (source_digest / evidence_ref / schema / positive-control checks over registered_this_run) all exit 0, confirming source_lineage and confirmation/evaluator evidence are present and non-dangling for both nodes; validated artifacts were system-spec/index.md, system-spec/00-requirements-definition.md, system-spec/completeness-report.json."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "the only write steps are c02-upsert-architecture and c02-upsert-specification via upsert-node.py (C02 sole writer); registered_this_run is exactly 2 nodes with duplicate count 0 under the positive-control gates, and upstream_skill_invocations=0 shows dev-graph reused harness output rather than re-implementing elicitation/compile."
+    }
+  ],
+  "runner_report": {
+    "runner": "run-system-spec-resume-import",
+    "mode": "reuse-confirmed",
+    "status": "PASS",
+    "network_calls": 0,
+    "upstream_skill_invocations": 0,
+    "registered_this_run": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ],
+    "resume": {
+      "validator": "validate-system-spec-resume",
+      "valid": true,
+      "mode": "reuse-confirmed",
+      "plugin_version": "0.1.0",
+      "required_entry_points": [
+        "assign-system-spec-completeness-evaluator",
+        "run-system-spec-compile",
+        "run-system-spec-doc-fetch",
+        "run-system-spec-elicit"
+      ],
+      "artifacts": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json",
+        "system-spec/index.md"
+      ],
+      "failures": []
+    },
+    "build": {
+      "out_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-21-2/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T101137Z-wt21-c19-bounded-r3/fixture-repo/.dev-graph/tmp/system-spec-import",
+      "node_ids": [
+        "arch-system-spec-overview",
+        "spec-system-spec-index"
+      ]
+    },
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-1", "exit_code": 0},
+      {"label": "gate-2", "exit_code": 0},
+      {"label": "gate-3", "exit_code": 0},
+      {"label": "gate-4", "exit_code": 0}
+    ]
+  },
+  "blockers": []
+}

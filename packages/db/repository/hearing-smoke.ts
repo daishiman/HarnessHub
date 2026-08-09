@@ -1,5 +1,6 @@
 /**
- * feat-hearing-intake P13 production smoke 専用の DB probe。
+ * production smoke 共用の DB probe (発端は feat-hearing-intake P13、現在は
+ * feedback-loop / docs-cms の本番 smoke も同じ fixture・後始末を使う)。
  *
  * smoke runner が schema table を deep import すると、アプリ層が repository 境界を
  * 迂回する前例になる。この facade に fixture 準備・device 承認の代行・証跡読取・cleanup を閉じ、
@@ -14,9 +15,12 @@
 
 import { and, eq } from 'drizzle-orm';
 
+import { builds } from '../schema/builds/schema';
 import { idpConnections, tenants, users, userWorkspaces, workspaces } from '../schema/core/identity';
 import { deviceAuthorizations, publisherTokens } from '../schema/core/publish';
 import { auditEvents } from '../schema/core/security';
+import { documents } from '../schema/docs-cms/schema';
+import { feedbacks } from '../schema/feedback-loop/schema';
 import { aiJobs, displayCodeCounters, hearingSheets, tenantCoefficients } from '../schema/hearing-intake/schema';
 import { isTransactionalAdapter } from '../src/adapter';
 import { RepositoryError } from '../src/errors';
@@ -35,6 +39,12 @@ export interface HearingSmokeTenantFixture {
   readonly memberUserId: string;
   /** AI worker 役 (role=workspace-admin)。aijob.pull は workspace-admin を要求する。 */
   readonly workerUserId: string;
+  /**
+   * provider-admin 役。`providerAdminIdpSubject` を渡したときだけ作られる (既定は null)。
+   * route 層 (`withAuthz`) は provider-admin の越境を許して監査する契約になっているため、
+   * その契約が edge middleware 込みの本番でも成立するのかを実測するために要る (HarnessHub-p0lr)。
+   */
+  readonly providerAdminUserId: string | null;
 }
 
 export interface HearingSmokeSheetSnapshot {
@@ -68,6 +78,8 @@ export interface HearingSmokeDbProbe {
     readonly slug: string;
     readonly memberIdpSubject: string;
     readonly workerIdpSubject: string;
+    /** 渡したときだけ provider-admin を 1 名作る。既定では作らない (最小権限の fixture を保つ)。 */
+    readonly providerAdminIdpSubject?: string;
   }): Promise<HearingSmokeTenantFixture>;
   /**
    * `pending` の device 認可を `approved` へ進める (承認画面の代行)。
@@ -79,6 +91,13 @@ export interface HearingSmokeDbProbe {
     readonly userId: string;
     readonly workspaceId: string;
   }): Promise<boolean>;
+  /**
+   * 対象 tenant に残った `provider.cross_tenant_access` 監査の件数。
+   *
+   * 越境要求が edge で落ちたのか route 層まで到達したのかは、HTTP status だけでは区別できない
+   * (どちらも越境は拒否されうる)。監査行の有無が到達点の唯一の観測手段になる (HarnessHub-p0lr)。
+   */
+  countCrossTenantAuditEvents(tenantId: string): Promise<number>;
   findSheet(context: RepositoryContext, sheetId: string): Promise<HearingSmokeSheetSnapshot | null>;
   findJob(context: RepositoryContext, jobId: string): Promise<HearingSmokeJobSnapshot | null>;
   /** 本 smoke が本番へ残した行を全て消す。残数を返し、0 でなければ呼び出し側が失敗にする。 */
@@ -104,6 +123,7 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
       const workspaceId = newUlid(now);
       const memberUserId = newUlid(now);
       const workerUserId = newUlid(now);
+      const providerAdminUserId = input.providerAdminIdpSubject === undefined ? null : newUlid(now);
 
       // 途中の INSERT が失敗しても tenantId が呼び出し側へ返る前なので、finally の cleanup には
       // 渡せない。fixture 全体を 1 transaction にし、半端な本番データを原理的に残さない。
@@ -166,14 +186,34 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
               createdAt: now,
             },
           ]);
-          await txDb.insert(userWorkspaces).values([
-            { tenantId, userId: memberUserId, workspaceId, createdAt: now },
-            { tenantId, userId: workerUserId, workspaceId, createdAt: now },
-          ]);
+          if (providerAdminUserId !== null && input.providerAdminIdpSubject !== undefined) {
+            await txDb.insert(users).values({
+              id: providerAdminUserId,
+              tenantId,
+              idpSubject: input.providerAdminIdpSubject,
+              email: `${input.providerAdminIdpSubject}@hearing-smoke.invalid`,
+              name: 'P13 smoke provider admin',
+              department: 'smoke',
+              salary: null,
+              role: 'provider-admin',
+              status: 'active',
+              lastLoginAt: null,
+              createdAt: now,
+            });
+          }
+          await txDb
+            .insert(userWorkspaces)
+            .values([
+              { tenantId, userId: memberUserId, workspaceId, createdAt: now },
+              { tenantId, userId: workerUserId, workspaceId, createdAt: now },
+              ...(providerAdminUserId === null
+                ? []
+                : [{ tenantId, userId: providerAdminUserId, workspaceId, createdAt: now }]),
+            ]);
         }),
       );
 
-      return { tenantId, tenantSlug: input.slug, workspaceId, memberUserId, workerUserId };
+      return { tenantId, tenantSlug: input.slug, workspaceId, memberUserId, workerUserId, providerAdminUserId };
     },
 
     async approveDeviceAuthorization(input) {
@@ -191,6 +231,14 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
           .returning({ id: deviceAuthorizations.id }),
       );
       return updated[0] !== undefined;
+    },
+
+    async countCrossTenantAuditEvents(tenantId) {
+      const rows = await db
+        .select({ id: auditEvents.id })
+        .from(auditEvents)
+        .where(and(eq(auditEvents.tenantId, tenantId), eq(auditEvents.action, 'provider.cross_tenant_access')));
+      return rows.length;
     },
 
     async findSheet(context, sheetId) {
@@ -243,6 +291,13 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
           const txDb = tx.client as CoreDb;
           await txDb.delete(aiJobs).where(eq(aiJobs.tenantId, tenantId));
           await txDb.delete(hearingSheets).where(eq(hearingSheets.tenantId, tenantId));
+          // feedback-loop / docs-cms を smoke が触るようになったので後始末対象へ含める
+          // (HarnessHub-p0lr)。builds は現状 route から書かれないが、`builds_feedback_id_uq` が
+          // feedback 行を参照する設計なので、後から書き込みが繋がったときに取りこぼさないよう
+          // feedbacks より先に消す。documents は workspace を持たない tenant 単位資源。
+          await txDb.delete(builds).where(eq(builds.tenantId, tenantId));
+          await txDb.delete(feedbacks).where(eq(feedbacks.tenantId, tenantId));
+          await txDb.delete(documents).where(eq(documents.tenantId, tenantId));
           await txDb.delete(displayCodeCounters).where(eq(displayCodeCounters.tenantId, tenantId));
           await txDb.delete(tenantCoefficients).where(eq(tenantCoefficients.tenantId, tenantId));
           await txDb.delete(publisherTokens).where(eq(publisherTokens.tenantId, tenantId));
@@ -280,6 +335,9 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
           .select({ id: tenantCoefficients.tenantId })
           .from(tenantCoefficients)
           .where(eq(tenantCoefficients.tenantId, tenantId)),
+        db.select({ id: feedbacks.id }).from(feedbacks).where(eq(feedbacks.tenantId, tenantId)),
+        db.select({ id: documents.id }).from(documents).where(eq(documents.tenantId, tenantId)),
+        db.select({ id: builds.id }).from(builds).where(eq(builds.tenantId, tenantId)),
       ]);
       const remaining = remainders.reduce((total, rows) => total + rows.length, 0);
       return { remainingRows: remaining, clean: remaining === 0 };

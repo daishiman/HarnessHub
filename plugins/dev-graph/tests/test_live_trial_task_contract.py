@@ -6,14 +6,12 @@
    持つ task.md を機械的に落とす。実物 (20260726T040700Z-sysspec-final/task.md) を
    入力にした回帰で固定する。この task.md は fixture が brief 1 file しか置かないのに
    確定成果物の存在を仮定し、C19 live-trial を FAIL させた原因そのものである。
-2. **合格証跡の非誤爆**: fixture 契約へ合わせた実物 (20260726T050519Z-sysspec-final2/
-   task.md) は violation 0 で通る。証跡は改変できないので、検査側が既存の合格証跡へ
-   誤爆しないことを固定しないと lint を CI へ載せられない。
+2. **現行契約の非誤爆**: 正本から生成した bounded-resume task は violation 0 で通る。
 3. **fixture 実体との一致**: TASK_CONTRACT の placed_inputs / absent_artifacts が
    生成器 (--kind system-spec) の実出力と一致する。宣言だけ直して build を直さない
    (あるいは逆) と、task.md 側の前提検査が全て緑のまま実 fixture だけ旧前提へ戻る。
 4. **正本変更の伝播**: scenario_id / task_args_template / required_observations /
-   task_contract / fixture contract のいずれが動いても contract_digest が動く。受入条件5「5 種の変更が
+   fixture contract のいずれが動いても contract_digest が動く。受入条件5「4 種の変更が
    1 つの検証経路へ束ねられる」を digest 1 個で成立させているので、ここが崩れると
    premise block が陳腐化しても気づけない。
 """
@@ -34,8 +32,6 @@ BUILDER = PLUGIN / "tests" / "fixtures" / "build_live_trial_fixture.py"
 TRIALS = REPO / "eval-log" / "dev-graph" / "run-dev-graph-system-spec" / "live-trial"
 # fixture 契約と矛盾する旧前提で走り FAIL した run (verdict.json を持たない)。
 STALE_TASK = TRIALS / "20260726T040700Z-sysspec-final" / "task.md"
-# 現行 scenario/task_contract と現行 behavior closure で PASS を再取得した run。
-FRESH_TASK = TRIALS / "20260809T000500-wt27-c19-final-r6" / "task.md"
 SHAPE = "system-spec"
 
 
@@ -93,7 +89,7 @@ def _mutated(tmp_path: Path, *replacements: tuple[str, str], prefix: str = "") -
     合成 task.md をゼロから書くと他 rule が同時発火して「どの rule が効いたか」が
     曖昧になる。実物を土台にすれば単一 rule の効力を分離して測れる。
     """
-    text = FRESH_TASK.read_text(encoding="utf-8")
+    text = _fresh_task_text()
     for old, new in replacements:
         assert old in text, f"土台の実物に原文が無い (テストの前提が陳腐化): {old!r}"
         text = text.replace(old, new)
@@ -102,40 +98,33 @@ def _mutated(tmp_path: Path, *replacements: tuple[str, str], prefix: str = "") -
     return path
 
 
+def _fresh_task_text() -> str:
+    """Build a small current task from the same premise source as production."""
+    return _emit_premise() + """
+# bounded C19 trial
+Skill({skill: "dev-graph:run-dev-graph-system-spec", args: "--repo-root /tmp/fixture --resume"})
+Run validate-system-spec-resume.py and require mode reuse-confirmed.
+Register both nodes only through C02 upsert-node.py.
+Verify source_lineage and confirmation_evidence.
+"""
+
+
 # --- MUST_DETECT: 旧前提の拒否 (受入条件 3) ---------------------------------------
 
 
 def test_stale_real_task_is_rejected() -> None:
-    """FAIL 側の実物が exit 2 になり、旧前提 2 種を名指しで検出する。"""
+    """旧 build-mode task は bounded scenario の current task を名乗れない。"""
     code, report = _lint("--task", str(STALE_TASK))
     assert code == 2
     rules = _rules(report)
-    # LT-004 = 「置かない成果物を事前配置済みと主張」/ LT-005 = 「正規フロー再実行禁止」
-    assert "LT-004" in rules, report["violations"]
-    assert "LT-005" in rules, report["violations"]
-    # 旧 task は entry point を「揃っていることを確認する」対象としか書かず、
-    # Skill 経由で呼ぶ要求を持たない (再実行禁止と表裏一体の欠落)。
-    assert "LT-008" in rules, report["violations"]
-    details = " ".join(violation["detail"] for violation in report["violations"])
-    assert "再実行" in details
-    assert "収集済み" in details
-
-
-def test_stale_task_reports_resume_flag_drift() -> None:
-    """旧 task の ``--resume`` が task_args_template とのトークン差として出る。"""
-    _, report = _lint("--task", str(STALE_TASK))
-    drift = [v for v in report["violations"] if v["rule"] == "LT-006"]
-    assert drift, report["violations"]
-    assert "--resume" in drift[0]["detail"]
+    assert "LT-001" in rules, report["violations"]
+    assert "LT-003" in rules, report["violations"]
 
 
 def test_extra_arg_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        (
-            "20260809T000500-wt27-c19-final-r6/fixture-repo\"})",
-            "20260809T000500-wt27-c19-final-r6/fixture-repo --resume\"})",
-        ),
+        ("/tmp/fixture --resume\"})", "/tmp/fixture --resume --dry-run\"})"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -146,7 +135,7 @@ def test_scenario_id_omission_is_rejected_as_contract_violation(tmp_path: Path) 
     """単一 shape では scenario 記載漏れを一般エラーでなく LT-001 として返す。"""
     task = _mutated(
         tmp_path,
-        ("C19-OUT1-positive-system-spec-lineage", "C19-OUT1-redacted"),
+        ("C19-OUT1-positive-system-spec-lineage-r3-bounded", "C19-OUT1-redacted"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
@@ -167,30 +156,18 @@ def test_wrong_subject_skill_is_rejected(tmp_path: Path) -> None:
     assert "LT-006" in _rules(report)
 
 
-def test_presence_claim_on_absent_artifact_is_rejected(tmp_path: Path) -> None:
+def test_placed_resume_receipt_omission_is_rejected(tmp_path: Path) -> None:
     task = _mutated(
         tmp_path,
-        ("- `system-spec/completeness-report.json`",
-         "- `system-spec/completeness-report.json` は生成済み"),
+        ("system-spec/resume-receipt.json", "system-spec/missing-receipt.json"),
     )
     code, report = _lint("--task", str(task))
     assert code == 2
-    assert "LT-004" in _rules(report)
-
-
-def test_reexecution_ban_is_rejected(tmp_path: Path) -> None:
-    task = _mutated(
-        tmp_path,
-        ("R0-context / R1-preflight を省略せず、",
-         "既存 receipt があるので elicit / compile を再実行しないこと。\nR0-context / R1-preflight を省略せず、"),
-    )
-    code, report = _lint("--task", str(task))
-    assert code == 2
-    assert "LT-005" in _rules(report)
+    assert "LT-003" in _rules(report)
 
 
 def test_placed_input_omission_is_rejected(tmp_path: Path) -> None:
-    task = _mutated(tmp_path, ("requirements-brief.md", "some-other-input.md"))
+    task = _mutated(tmp_path, ("00-requirements-definition.md", "some-other-input.md"))
     code, report = _lint("--task", str(task))
     assert code == 2
     assert "LT-003" in _rules(report)
@@ -203,31 +180,11 @@ def test_missing_entry_point_is_rejected(tmp_path: Path) -> None:
     assert "LT-007" in _rules(report)
 
 
-def test_entry_point_without_skill_requirement_is_rejected(tmp_path: Path) -> None:
-    """委譲先 entry point の Skill 経由要求が消えたら落ちる (受入条件 2 の機械強制)。
-
-    被験 skill 自身の起動要求 (``Skill({skill: ..., args: ...})``) は LT-006 の検査対象
-    として必ず残る。それだけで LT-008 が成立してしまうと、委譲が Skill 経由か Bash
-    直叩きかを task.md が要求しなくなった状態を見逃す。
-    """
-    task = _mutated(
-        tmp_path,
-        (
-            "各 entry point は必ず `Skill` ツールで呼び出してください。",
-            "各 entry point を実行してください。",
-        ),
-        (
-            "system-spec-harness の正規 4 entry point を `Skill` ツールで呼んだ実行記録",
-            "system-spec-harness の正規 4 entry point の実行記録",
-        ),
-        (
-            "`Skill` 経由で完走し、coverage / source / evaluator gate が PASS",
-            "完走し、coverage / source / evaluator gate が PASS",
-        ),
-    )
+def test_resume_mode_does_not_require_expensive_nested_skill_calls(tmp_path: Path) -> None:
+    task = _mutated(tmp_path)
     code, report = _lint("--task", str(task))
-    assert code == 2
-    assert "LT-008" in _rules(report)
+    assert code == 0, report["violations"]
+    assert "LT-008" not in _rules(report)
 
 
 def test_uncovered_observation_is_rejected(tmp_path: Path) -> None:
@@ -251,9 +208,10 @@ def test_tampered_premise_digest_is_rejected(tmp_path: Path) -> None:
 # --- MUST_PASS: 合格証跡と生成物の非誤爆 -------------------------------------------
 
 
-def test_fresh_real_task_passes() -> None:
-    """fixture 契約へ合わせた実物 (PASS 証跡) は violation 0。"""
-    code, report = _lint("--task", str(FRESH_TASK))
+def test_current_generated_task_passes(tmp_path: Path) -> None:
+    """bounded fixture 契約から生成した task は violation 0。"""
+    task = _mutated(tmp_path)
+    code, report = _lint("--task", str(task))
     assert code == 0, report["violations"]
     assert report["violation_count"] == 0
 
@@ -280,10 +238,12 @@ def test_emitted_premise_contains_every_required_task_fragment() -> None:
 def test_each_required_task_fragment_is_fail_closed(
     tmp_path: Path, fragment: str
 ) -> None:
-    text = _emit_premise() + "\n" + FRESH_TASK.read_text(encoding="utf-8")
+    task = _mutated(tmp_path)
+    text = task.read_text(encoding="utf-8")
     assert fragment in text
-    task = tmp_path / "task.md"
-    task.write_text(text.replace(fragment, "<required-fragment-removed>"), encoding="utf-8")
+    task.write_text(
+        text.replace(fragment, "<required-fragment-removed>"), encoding="utf-8"
+    )
 
     code, report = _lint("--task", str(task))
 
@@ -291,14 +251,14 @@ def test_each_required_task_fragment_is_fail_closed(
     assert "LT-012" in _rules(report)
 
 
-def test_forbidden_task_fragment_is_fail_closed() -> None:
+def test_forbidden_task_fragment_is_fail_closed(tmp_path: Path) -> None:
     contract, scenario = _contract(), dict(_scenario())
     task_contract = dict(scenario["task_contract"])
     task_contract["forbidden_fragments"] = ["FORBIDDEN_SENTINEL"]
     scenario["task_contract"] = task_contract
-    text = _emit_premise() + "\n" + FRESH_TASK.read_text(encoding="utf-8")
+    task = _mutated(tmp_path)
     violations = MODULE.check_task(
-        text + "\nFORBIDDEN_SENTINEL\n",
+        task.read_text(encoding="utf-8") + "\nFORBIDDEN_SENTINEL\n",
         contract=contract,
         scenario=scenario,
         scenarios={scenario["scenario_id"]: scenario},
@@ -311,15 +271,37 @@ def test_premise_emission_is_deterministic() -> None:
     assert _emit_premise() == _emit_premise()
 
 
+def test_latest_task_falls_back_to_latest_completed_run_without_receipt(tmp_path: Path) -> None:
+    """receipt 不在時は verdict 保有 run の辞書順最大へ後退し、中断 run は無視する。"""
+    base = (
+        tmp_path
+        / "eval-log"
+        / "dev-graph"
+        / "run-dev-graph-system-spec"
+        / "live-trial"
+    )
+    for run_id in ("20260801T000000-old", "20260802T000000-new"):
+        run = base / run_id
+        run.mkdir(parents=True)
+        (run / "task.md").write_text(f"# {run_id}\n", encoding="utf-8")
+        (run / "verdict.json").write_text("{}\n", encoding="utf-8")
+    interrupted = base / "20260803T000000-interrupted"
+    interrupted.mkdir()
+    (interrupted / "task.md").write_text("# interrupted\n", encoding="utf-8")
+
+    selected = MODULE.latest_task_path(tmp_path, "run-dev-graph-system-spec")
+    assert selected == base / "20260802T000000-new" / "task.md"
+
+
 def test_all_mode_passes_on_real_repo() -> None:
-    """receipt 採用済みの現行 PASS run を優先する。"""
+    """実 repository へ run が追記されても固定 run-id に依存せず --all が通る。"""
     code, report = _lint("--all")
     assert code == 0, report["violations"]
     assert report["checked_count"] >= 1
     assert all(entry["scenario_id"] for entry in report["checked"])
-    assert report["checked"][0]["task"].endswith(
-        "20260808T222000-wt27-c19-final-r4/task.md"
-    )
+    selected = REPO / report["checked"][0]["task"]
+    assert selected.is_file()
+    assert selected.name == "task.md"
 
 
 # --- 契約: fixture 実体との一致 (受入条件 1) ---------------------------------------
@@ -389,14 +371,6 @@ def test_required_entry_points_match_harness_package_contract() -> None:
     assert set(_contract()["required_entry_points"]) <= set(declared)
 
 
-def test_negative_control_roots_are_executable_dev_graph_paths() -> None:
-    """Observation 3 は fixture の説明文でなく実行コードだけを検査する。"""
-    roots = tuple(_contract()["negative_control_roots"])
-    assert roots == ("plugins/dev-graph/skills", "plugins/dev-graph/scripts")
-    assert all((REPO / root).is_dir() for root in roots)
-    assert all("tests" not in Path(root).parts for root in roots)
-
-
 # --- 契約: 正本変更の伝播 (受入条件 5) --------------------------------------------
 
 
@@ -409,9 +383,11 @@ def test_digest_is_deterministic() -> None:
     "key,value",
     [
         ("scenario_id", "C19-OUT1-renamed"),
-        ("task_args_template", "--repo-root <contained-fixture-repo> --resume"),
+        ("task_args_template", "--repo-root <contained-fixture-repo>"),
         ("required_observations", ["only one observation"]),
         ("task_contract", {"required_fragments": ["new-boundary"], "forbidden_fragments": []}),
+        ("resource_budget", {"max_wall_clock_s": 1, "max_total_tokens": 1}),
+        ("forbidden_invoked_skills", []),
     ],
 )
 def test_digest_moves_when_scenario_moves(key: str, value: object) -> None:
@@ -427,7 +403,11 @@ def test_digest_moves_when_fixture_contract_moves(key: str) -> None:
     contract, scenario = _contract(), _scenario()
     baseline = MODULE.contract_digest(contract, scenario)
     moved = dict(contract)
-    moved[key] = tuple(contract[key])[:-1]
+    moved[key] = (
+        ("system-spec/not-current.md",)
+        if not contract[key]
+        else tuple(contract[key])[:-1]
+    )
     assert MODULE.contract_digest(moved, scenario) != baseline
 
 

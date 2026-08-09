@@ -26,6 +26,7 @@ export {
   createProductionAuthRuntime,
   readAuthRuntimeEnv,
 } from './runtime.js';
+export { sessionActionVisible } from './session-action-visibility.js';
 export {
   type AuthzDenyReason,
   type AuthzOutcome,

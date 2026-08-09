@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-04T05:44:22.440339Z"
+updated_at: "2026-08-09T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
-source_lineage: {"imported_at":"2026-08-04T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"a36840d65a7e675352d6d28bb8c778662252814ad4c05b8958dcf0a769ba5760","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"5d357fc1659da7c469bd51ec4fec58ead4f6b02f7880884e90ed21d525da9626","evaluator":"system-spec-harness compile + coverage validation (qa-216)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"5d357fc1659da7c469bd51ec4fec58ead4f6b02f7880884e90ed21d525da9626","source_path":"system-spec/dev-workflow.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-dev-workflow.md","confidence":0.95}]
@@ -53,7 +53,7 @@ implementation_readiness: {"checked_at":"2026-07-18T08:10:00Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `7863d7fc569d…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/dev-workflow.md](../system-spec/dev-workflow.md) (sha256: `5d357fc1659d…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `system-spec-harness compile + coverage validation (qa-139, qa-140)` → **PASS**
   ([f84o 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) / [exact-13 再登録受領書](../docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md))
@@ -222,3 +222,9 @@ hooks の entry point 台帳は `package-contract.json` の `entry_points.hooks`
 ## C16 Beads ready payload 欠落の観測境界 (2026-08-03)
 
 C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C28 の bd ready payload に同じ external_ref がなければ ready set に推測追加せず、unmapped[] の ready_payload_entry_absent / source=schedule-graph として報告する。pre-lease は ready/unmapped、active lease 後は conflicts を加えた和で候補を被覆する。entry はあるが parity が不一致な経路、依存未充足、C28 manifest 側の分類とは reason を混同せず、dependency 配列は順序でなく集合として比較する。P01 parent や dependency 形状の不正は停止する。復旧は C03/C28 の正規同期・linkage 修復・fresh parity manifest 生成後の再 schedule であり、製品 API、DB、認証認可、UI、Cloudflare deploy unit は変更しない。詳細と検証は [xz0u 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md) を正とする。
+
+## 検証 tier の責務境界 (2026-08-09 / qa-216)
+
+`select-verification-tier.py` は変更 path と規則表だけから `mvp / standard / critical` の最高一致 tier を返し、規則/source digest を証拠へ残す。`verification-gate-ledger.json` は gate 定義の SSOT（正本）で、plan builder が blocking・advisory・deferred を導出する。decision validator は selector absent、非仕様語彙、受け皿の無い延期を拒否する。
+
+CI は現時点で算出・記録・artifact 保存までを担い、tier による下流 step 切替は `HarnessHub-xcl3` に残す。evaluator cache も機構だけがあり、実呼出元への配線は `HarnessHub-6nf1` に残す。この未配線境界を隠さないことを設計契約とする。詳細は [検証 tier 仕様追補](../specs/harness-hub-verification-tiering-addendum.md) と [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。

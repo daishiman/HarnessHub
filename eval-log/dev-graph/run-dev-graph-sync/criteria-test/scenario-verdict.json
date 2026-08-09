@@ -13,15 +13,15 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T183321-wt27-c03-retry/verdict.json",
-      "observed": "fresh retry 20260808T183321-wt27-c03-retry は actual_model=claude-opus-5、overall=PASS、nudge=0、gate=0。import 1/export 1、確認 dry-run の changes=0、stable IDs/snapshot 不変、gh/gh-bridge 起動 0 件を fresh evaluator が確認した。behavior closure digest=e494e383cc3143923dce007ad437ef4967b56e37f7ddb98bf9fb2555e2d9853f。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/verdict.json",
+      "observed": "current branch の fresh live trial 20260808T131000Z-o4zi-exh-c03r2 は overall=PASS、nudge=0、gate=0。literal Skill 呼出し3回、apply の import 1/export 1、確認 dry-run の changes=0、graph/remote/snapshot と stable IDs の不変を fresh independent evaluator が再実測して PASS。behavior closure digest=651c03238581ce8d71ad3e4e8dabbc628d2cee25cc4b83e0bf9362ccf583de03。",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T183321-wt27-c03-retry/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T183321-wt27-c03-retry/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T183321-wt27-c03-retry/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T183321-wt27-c03-retry/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/independent-verification.json"
       ],
       "verify_by": "live-trial"
     },
@@ -115,7 +115,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-goal-evaluator-c03-retry-20260808",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c03",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C03",

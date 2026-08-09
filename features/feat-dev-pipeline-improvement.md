@@ -155,3 +155,9 @@ fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C
 既存文書の見出し移行、検証結果は
 [最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md)
 を正とする。
+
+## 2026-08-09 検証 tier と review 証拠整合
+
+変更 path から `mvp / standard / critical` を決定論的に選び、gate 台帳から blocking・advisory・deferred を導出する。受け皿の無い延期、理由の無い降格、selector 根拠の無い新規記録を fail-closed にする。elegant-review は condition/signal 対応を検査し、smell を合否集計から分離する。製品 runtime は変更せず、完了範囲・未配線境界・検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/verification-tiering-final-review-spec-reflection-receipt.md) を正とする。
+
+同日の C19 追補では、live-trial scenario に時間・token の引上げ不能な上限を追加し、確認済み system-spec bundle を digest 検証して再利用する経路を実装した。従来の 2,820 秒の全生成 trial を、同一受入目的の正式な fresh bounded trial r5（90.186 秒・290,770 token）へ短縮し、上流 Skill と network call が 0 であることを transcript に束縛した。poll-state は開始時に永続化され、再開しても時間上限をリセットできず、usage 不明の token は PASS にしない。仕様上は既存 `qa-216` / `qa-217` の「重い検証を必要時だけ起動し、証拠を厳格に残す」契約の実装具体化であり、新しい製品要件は追加しない。

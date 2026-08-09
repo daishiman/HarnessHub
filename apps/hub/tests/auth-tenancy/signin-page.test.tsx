@@ -99,6 +99,20 @@ describe('サインイン画面の接続解決', () => {
     expect(html).toContain('value="/sheets"');
   });
 
+  it('エラー状態には必ずランディングへの入力し直し導線を出す (行き止まりにしない)', async () => {
+    const missing = await renderSignin('acme');
+    expect(missing).toContain('別のテナント ID を入力する');
+    expect(missing).toContain('href="/"');
+
+    authRuntime.mockImplementation(() => {
+      throw new Error('AUTH_SESSION_SECRET が未設定です');
+    });
+    const unwired = await renderSignin('acme');
+    // 未結線側も同じ文言・同じ遷移先。状態ごとに変えるとテナントの有無が応答差から読めてしまう
+    expect(unwired).toContain('別のテナント ID を入力する');
+    expect(unwired).toContain('href="/"');
+  });
+
   it('他テナントの slug では、そのテナントの接続だけを引く', async () => {
     withConnections([connection()]);
 

@@ -73,6 +73,14 @@ completeness evaluator の完了境界は、Skill 起動結果の完全な `agen
 - MVP 初回 combined pytest: 84件 PASS / 1件 FAIL。FAIL は、r6 の改変不能な旧 observer FAIL を理由に current formal live receipt を未達とする既知の1件だけだった。最終再実行ではその外部 gate だけを明示的に deselect し、変更境界は64件 PASS / 1件 deselected。現行 task contract 単体は41件 PASS / violation 0、observer 回帰は7件 PASS。
 - MVP 最終ゲート: task package validator、変更境界の focused pytest、lint、diff check を実行し、
   plugin-wide/exhaustive live-trial は Draft PR 後の追加評価へ回す。
+- `origin/main` (`99371e39`) をローカル `main` へマージした commit は `b35d0737`。その
+  ローカル `main` を本ブランチへ取り込み、競合は各仕様の新旧契約を統合して解消した。
+- main 取込み後の focused pytest は dev-graph 69件、system-spec 71件が PASS（合計140件）。
+  task package validator、`make lint`、coverage、diff check も再度 PASS した。
+- criteria evidence gate は22件中20件 PASS、2件 FAIL。失敗は C19 Skill の統合後に、main
+  由来の criteria / content-review 受領書へ記録された `skill_md_sha256` が旧値になったためで、
+  実装テストの失敗ではない。受領書を手編集せず、正規 live-trial と review の再取得を
+  `HarnessHub-o4zi` の Draft PR gate として継続する。
 - system-spec coverage `--require-complete`: PASS。
 - source citation（spec-state 対象）: PASS。
 - system-spec compile: 一時ディレクトリへの生成は成功。既存の手動 writeback による checked-in 文書との差は、本変更で上書きしない。
@@ -85,15 +93,18 @@ completeness evaluator の完了境界は、Skill 起動結果の完全な `agen
   すべて0件、violations 0で PASS。receipt は
   `eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T000500-wt27-c19-final-r6/posthoc-transcript-validation.json`。
 - `git diff --check`: PASS。
-- `make lint`: PASS。文書行数 lint の検査対象639文書はすべて300行以下。infrastructure の運用追補を `architecture/harness-hub-infrastructure-operations-addenda.md` へ責務分割した。
+- `make lint`: PASS。文書行数 lint の検査対象650文書はすべて300行以下。infrastructure の運用追補を `architecture/harness-hub-infrastructure-operations-addenda.md` へ責務分割した。
 
 全 graph validator は origin/main でも 160件の既存違反を持つ。本変更後は同じ7ノードに限定された112件へ減少し、新規 failing node と architecture failure は 0 件である。残る既存 debt は今回の機能差分に混ぜず Beads で追跡する。
 
 `--require-foundation` が示す U1-U9 source-index の qa_log 未登録9件、coverage certificate の文言と配列値の不一致、複数監査 dispatch 時の null verdict、compile 出力と手動 writeback の drift は follow-up として追跡し、今回の合格条件を偽って消さない。
 
 MVP のため r6 の改変不能な `out/status.json` は FAIL のまま保全し、posthoc PASS へ書き換えない。
-現行 behavior closure の formal live verdict 再取得は `HarnessHub-o4zi` の Draft PR review gate として残し、
-本 PR では決定論 replay と focused gate を受入根拠にする。
+main から取り込んだ bounded-resume の formal evidence は取込み前の Skill に対しては成立していたが、
+本ブランチで C19 の evaluator 完了境界を統合したため SHA 受領書は stale（内容更新後の古い証跡）に
+なった。現行 behavior closure の formal live verdict と content review の再取得は
+`HarnessHub-o4zi` の Draft PR review gate として残し、本 PR では決定論 replay と focused gate を
+MVP の受入根拠にする。
 
 - `HarnessHub-uypz`: 複数監査 dispatch の `audit_verdict=null` を原子的に記録する。
 - `HarnessHub-duej`: certificate・foundation qa_log・compile writeback の証拠 projection を揃える。

@@ -9,13 +9,17 @@ import { UiProvider } from '@harness-hub/ui';
 import axe from 'axe-core';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import DocumentEditPage from '../../src/app/(dashboard)/docs/[id]/edit/page.js';
 import DocumentDetailPage from '../../src/app/(dashboard)/docs/[id]/page.js';
 import { DocumentList } from '../../src/app/(dashboard)/docs/document-list.js';
 import { DocumentCreateForm } from '../../src/app/(dashboard)/docs/new/document-create-form.js';
 import DocumentCreatePage from '../../src/app/(dashboard)/docs/new/page.js';
 import DocumentsPage from '../../src/app/(dashboard)/docs/page.js';
+
+// server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
+// 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 function mountScreen(node: ReactNode): void {
   const html = renderToStaticMarkup(

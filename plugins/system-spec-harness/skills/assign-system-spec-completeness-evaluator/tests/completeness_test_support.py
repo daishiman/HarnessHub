@@ -126,6 +126,20 @@ def write_matrix(path: Path, complete: bool = True):
     if not complete:
         matrix["database"]["web"] = {"state": "未収集"}
     path.write_text(json.dumps({
+        "schema_version": "1.1",
+        "design_application_contract_version": "1.0",
         "categories": [{"id": category, "label": category} for category in categories],
-        "platforms": platforms, "matrix": matrix, "qa_log": [{"id": "qa-1"}], "approval_log": [],
+        "platforms": platforms,
+        "matrix": matrix,
+        "qa_log": [{
+            "id": "qa-1",
+            "design_applications": [{
+                "knowledge_ref": "design-knowledge:test",
+                "principle": "complete coverage",
+                "applicability": "applied",
+                "rationale": "the fixture confirms every matrix cell",
+                "tradeoffs": ["one shared fixture decision"],
+            }],
+        }],
+        "approval_log": [],
     }, ensure_ascii=False), encoding="utf-8")

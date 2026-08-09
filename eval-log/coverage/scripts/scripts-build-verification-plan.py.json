@@ -1,0 +1,18 @@
+{
+  "artifact": "scripts/build-verification-plan.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 92,
+    "notes": "gate ledger の schema と重複を検査し、always-blocking/min-tier/below-tier から executed/advisory/deferred を一方向に導出する。受け皿の無い延期と既存 plan 上書きを exit 2 で拒否する。25 tests pass。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

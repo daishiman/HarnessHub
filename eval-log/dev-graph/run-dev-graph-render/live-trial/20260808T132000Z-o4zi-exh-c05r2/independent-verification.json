@@ -1,0 +1,35 @@
+{
+  "overall": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": "external script/link/URL は0、SVG=1、inline style=1、inline JavaScript=1。根拠: fixture-repo/.dev-graph/render/index.html, transcript.jsonl",
+    "2": "HTML denominator=13、receipt applied_count=13、expected_count=13。renderer は count 不一致を HTML 構築前に拒否。根拠: HTML、registration receipt、render-graph-html.py",
+    "3": "HTML numerator=4、graph の done/closed 独立集計=4。P05 は依存完了で active、P06 は P05 未完了で blocked。status/dependency mismatch=0。根拠: graph.json, index.html",
+    "4": "receipt source digest sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807 は13 child lineage と一致し、render metadata も verified/graph_digest_match=true。根拠: receipt, graph.json, index.html"
+  },
+  "invocation": {
+    "target_skill_calls": 1,
+    "first_execution_after_task_read_is_target_skill": true,
+    "nested_agent_forks": 1,
+    "nested_agent_reported_tool_uses": 6
+  },
+  "goal_seek": {
+    "status": "PASS",
+    "goal_hash": "1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8",
+    "intermediate_rows": 2,
+    "checklist": "6/6 PASS"
+  },
+  "write_scope": {
+    "status": "PASS",
+    "fixture_tracked_graph_config_content_modified": false,
+    "github_or_beads_access_observed": false
+  },
+  "exits": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_result": "PASS",
+    "status_marker": "PASS",
+    "terminal_marker": "DONE: PASS",
+    "foreground_poll": "INTERRUPTED_AFTER_DONE"
+  }
+}

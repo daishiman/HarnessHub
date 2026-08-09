@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Deterministic offline `bd` preflight shim.
+
+Answers only `version` and `where --json` with fixed values; every other subcommand
+exits 2 so that no real Beads mutation path can be reached from this trial.
+"""
+import json
+import sys
+
+argv = sys.argv[1:]
+if argv[:1] == ["version"]:
+    print("bd version 1.1.0")
+    raise SystemExit(0)
+if argv[:1] == ["where"] and "--json" in argv:
+    print(json.dumps({
+        "database_path": "/private/tmp/harnesshub-o4zi.Gv5hFK/eval-log/dev-graph/"
+                         "run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/"
+                         "support/absent-beads/live-trial.db",
+        "prefix": "lt",
+        "schema_version": "1.1.0",
+    }))
+    raise SystemExit(0)
+print(json.dumps({"error": "offline shim refuses every non-preflight bd subcommand",
+                  "argv": argv}), file=sys.stderr)
+raise SystemExit(2)

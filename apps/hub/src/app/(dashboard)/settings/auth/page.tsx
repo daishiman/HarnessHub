@@ -7,6 +7,7 @@
  * 「見えないが API は通る」に化ける。画面は API の応答 (403) をそのまま扱う。
  */
 
+import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
@@ -26,19 +27,24 @@ export default async function AuthSettingsPage({ searchParams }: AuthSettingsPag
   const tenantId = tenantIdFromQuery(query, scope);
 
   return (
-    <section aria-labelledby="auth-settings-heading">
-      <h1 id="auth-settings-heading">認証設定 — 顧客所有 Google OAuth</h1>
-      <p>
-        自社で作成した Google OAuth client を使ってサインインする方式の設定です。 Google Cloud Console 側の手作業と Hub
-        側の操作を、下の 1 → 2 → 3 の順で行います。
-      </p>
+    <>
+      <ScreenHeader
+        id="auth-settings-heading"
+        title="認証設定 — 顧客所有 Google OAuth"
+        description="自社で作成した Google OAuth client を使ってサインインする方式の設定です。Google Cloud Console 側の手作業と Hub 側の操作を、下の 1 → 2 → 3 の順で行います。"
+        breadcrumbs={[{ href: '/settings/account', label: '設定' }, { label: '認証設定' }]}
+        breadcrumbsLabel="現在地"
+      />
       {tenantId === '' ? (
-        <p>
-          テナントを特定できませんでした。ログインし直すか、URL に <code>?tenant=</code> を付けてアクセスしてください。
-        </p>
+        <Panel>
+          <p style={{ margin: 0 }}>
+            テナントを特定できませんでした。ログインし直すか、URL に <code>?tenant=</code>{' '}
+            を付けてアクセスしてください。
+          </p>
+        </Panel>
       ) : (
         <OidcConnectionAdmin tenantId={tenantId} />
       )}
-    </section>
+    </>
   );
 }

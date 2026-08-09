@@ -14,7 +14,8 @@
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "design_application_contract_version": "1.0",
   "categories": [{"id": "database", "label": "データベース"}],
   "platforms": ["web", "mobile", "tablet", "desktop-windows", "desktop-linux", "desktop-macos"],
   "matrix": {
@@ -25,7 +26,7 @@
       "<platform_id>": {"state": "未収集"}
     }
   },
-  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}}],
+  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}, "design_applications": [{"knowledge_ref": "ddd.md#Bounded Context", "principle": "Bounded Context", "applicability": "applied", "rationale": "...", "tradeoffs": ["..."]}]}],
   "approval_log": [{"id": "appr-001", "note": "..."}],
   "reopen_log": [{"category": "database", "platform": "web", "reason": "...", "from": "確定", "discarded": {"qa_ref": "qa-001", "serves_goals": ["G1"]}}],
   "category_aggregate": {"<category_id>": "確定|収集中|未着手|対象外"},
@@ -99,6 +100,7 @@ python3 scripts/apply-spec-transition.py set-targets --state spec-state.json \
 - **単一 writer**: `requirements_foundation` の書込は `set-foundation` op が唯一の経路。`init` は空 (`empty_foundation`) で初期化するだけ。goals は `id` 必須・重複禁止、`concrete_intents.serves` は実在 goal id を指す (dangling 拒否)。
 - **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。さらに writer と `--require-foundation` は各 U に対応する canonical id `qa-foundation-u1`〜`qa-foundation-u9` の 1論点 `qa_log` entry を機械的に要求する。対話 entry は `source:{"kind":"user-dialogue"}`、書面 entry は `source:{"kind":"written-requirements","path":"<relative-path>","section":"<section>","sha256":"<sha256(answer UTF-8 bytes)>"}` とし、質問にも path/section、`answer` には指定 section に実在する対応原文の逐語 excerpt を残す。承認ログだけ・AI 要約だけ・AI が生成した entry 自身の digest を一次根拠にしてはならない。新しい利用者入力が無い再質問で新規 approval を作ってはならない。未確定なら途中保存として空でも保存できる。
 - **serves_goals (トレース)**: 各 `確定` セルは `serves_goals: ["G1", ...]` でどの上位概念 (ゴール) に資するかを明示する。`confirm` op に `serves_goals` を同時付与するか、確定後に `set-serves` op で additive に付与する。`set-serves` は `state=確定` を変えないため確定巻き戻し防御には抵触しない。
+- **approval_ref (承認記録へのトレース)**: `対象外` セルは `exclude` op で `approval_ref` を持てるが、`確定` セルには対応経路が無く、「回答本文は明示承認を根拠に引用しているのに、セルから承認記録へ機械追跡できない」状態が生じていた (F-0025)。確定セル限定の後付け annotation である **`set-approval` op** で `approval_ref` を additive に付与する。`set-serves` と同型で `state=確定` を変えないため確定巻き戻し防御には抵触しない。writer は `approval_log` に実在する id だけを受理する (dangling 拒否)。`chunk` で同 turn に `approval_id` を持つ場合は省略でき、その turn の承認 id が自動で紐づく。
 
 ```bash
 # 上位概念 U1-U9 を確定 (JSON 文字列 or ファイルパス)
@@ -107,6 +109,9 @@ python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json 
 # 確定セルへ serves_goals を付与 (トレース)
 python3 scripts/apply-spec-transition.py apply --state spec-state.json \
   --op '{"action":"set-serves","category":"database","platform":"web","serves_goals":["G1"]}'
+# 確定セルへ approval_ref を付与 (承認記録へのトレース)
+python3 scripts/apply-spec-transition.py apply --state spec-state.json \
+  --op '{"action":"set-approval","category":"database","platform":"web","approval_ref":"appr-040"}'
 ```
 
 ### 書面要件の source-index
@@ -251,6 +256,18 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - 既登録 entry の `question` / `answer` は **逐語のまま改変しない** (writer は既存 `id` を上書きしない)。束ねが後から判明した場合は、既存 entry を編集せず **分離索引を新規 entry として追記** し、そこから元 entry を参照する (前例: qa-047 の再登録・qa-049 の逐語補記)。
 - **追記の実行経路と副作用**: qa_log 専用の op は存在しない。`apply_turn` は turn に `qa_id` があれば **`ops` の有無にかかわらず** entry を追記する (同 `id` が既存なら追記しない)。したがって通常の `confirm` turn も qa_log を残す。一方 `apply --op` は turn に `qa_id` を載せられないため、**qa_log を追記できるのは `chunk --turns` 経路だけ**である。matrix を動かさずに索引だけ追記したいときは `{"qa_id": "...", "question": "...", "answer": "...", "ops": []}` (セル op 空) の turn を渡す。ただしこの経路も `loop_count` を 0 から数え直し `complete` / `next_question` を再計算する (`run_chunk` の副作用) ため、matrix を動かさない索引追記でも `hearing_progress` が書き換わる点を承知して使うこと。
 
+### design_applications（回答原文と設計解釈の分離）
+
+セルを `confirm` する qa entry は、C04 deep card または doctrine anchor の具体原則が当該回答へどう効いたかを `design_applications[]` に記録する。これは利用者の発言を改変しないため `answer` へ混ぜず、compiler が章固有の適用根拠を描画するための設計解釈として分離する。
+
+- `knowledge_ref`: deep card path + section、または doctrine concern/authority を指す非空文字列。
+- `principle`: 採否を判断した具体原則名。単なる「設計知識」「上記原則」は不可。
+- `applicability`: `applied` / `not_applicable`。非適用も隠さず、理由を残す。
+- `rationale`: 確定回答に即した章固有の採否理由。全章同一の定型文は禁止。
+- `tradeoffs`: 採用費用、非採用時の損失、再評価条件などを最低1件持つ非空文字列配列。
+
+writer は上記形状を検証して qa entry に保存する。新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持ち、`validate-coverage-matrix.py --require-complete` が確定セルから参照される全 qa entry の非空・形状を fail-closed に再検査する。marker の無い旧 `schema_version: "1.0"` state は読み取りだけ可能で、writer の更新操作は fail-closed に拒否する。再開時は R1 の `init --state` を明示実行し、matrix を未収集へ戻して 1.1 へ移行する。この schema 境界が legacy 免除の終了条件であり、1.1 以降で marker 欠落を許さない。C03 は旧 entry を「未記録」と fail-visible に描画し、C05 の `design_knowledge_reflection` を存在確認だけで緑化させない。
+
 ## 単一 transition writer 契約
 
 `scripts/apply-spec-transition.py` のみが matrix / logs / aggregate / hearing_progress / targets / requirements_foundation を書き換える。
@@ -259,7 +276,7 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
 - **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` turn を適用し、その実値を `hearing_progress.max_loops` に保存する。未収集が残れば `complete=false`・`next_question` 非 null、未収集0なら `complete=true` とする。後続の `reopen` / `add-category` / `apply` も同じ不変則へ再同期する。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
-- **set-foundation / set-serves / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。
+- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定の additive annotation で `state` を変えない。
 
 ## 検証 (deterministic gate)
 
