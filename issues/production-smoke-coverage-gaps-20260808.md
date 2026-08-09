@@ -12,7 +12,7 @@ iteration: null
 title: "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)"
 owners: ["daishiman"]
 created_at: "2026-08-08T00:00:00Z"
-updated_at: "2026-08-08T09:52:24.683829Z"
+updated_at: "2026-08-09T00:00:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["spec-post-signin-landing-observability","spec-production-coverage-smoke","issue-authz-provider-admin-edge-route-mismatch-20260808"]
@@ -134,3 +134,19 @@ session-only の action (`feedback.read`・`docs.*`) は Google OIDC なしに H
 `withAuthz` は provider-admin の越境要求を許可して `provider.cross_tenant_access` を監査する契約 (FL-SEC8-102)。しかし edge middleware の `authorize()` は role を見ずに `scope.tenantId !== principal.tenantId` を 404 で落とすため、**本番では route 層の越境監査に到達しない**。route 単体テストは `withAuthz` を直接呼ぶので緑のまま素通りする — `tenant_mismatch` の 403/404 不一致とまったく同じ構図。
 
 本課題の `scope_out` が認可判定ロジックの変更を除いているため、ここでは **S8 で現行挙動 (edge 遮断・監査行 0 件) を実測して固定する**に留める。provider-admin の越境を本当に許すのか、route 層の監査を dead code として畳むのかは設計判断であり、別課題 `HarnessHub-stmx` (`issues/authz-provider-admin-edge-route-mismatch-20260808.md`) で扱う。
+
+## 最終レビュー (2026-08-09)
+
+### 本番実走
+
+PR #681 merge 後の main `35a10b87` / hub-ci run `31253674292` で `coverage_smoke` が SUCCESS。S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 を確認。実装本体は main 済み。
+
+### 本 branch の残差分
+
+production evidence を `docs/` / `features/` / `tasks/` へ記録し、main 取込後に落ちていた `qa-205` 契約本文を `qa-217` 統合 entry へ復元する。draft PR #682 で default-branch へ載せる。
+
+### 品質ゲート (最小)
+
+- task-spec: feat-post-signin-scope-routing / feat-feedback-loop / feat-docs-cms の 3 package PASS
+- Hub focused: coverage 9 + oidc 12 = 21 PASS
+- DB hearing-smoke: 2 PASS

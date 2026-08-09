@@ -71,4 +71,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-feedback-loop` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
-- 2026-08-08 production smoke: `smoke:coverage-production` の F1〜F5 を実装・CI 結線した。local focused test / typecheck は PASS。provider-admin 越境の edge/route 契約は `HarnessHub-stmx`、production run は PR merge 後の外部証拠として残り、本 P13 は未完了。
+- 2026-08-08 production smoke: main `35a10b87` / hub-ci run `31253674292` で F1〜F5 と cleanup 残存行 0 が SUCCESS。provider-admin 越境は edge 404 / 監査 0 のため、`HarnessHub-stmx` で edge/route 契約を統一するまで本 P13 は未完了。
