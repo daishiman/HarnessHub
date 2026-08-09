@@ -68,6 +68,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - evaluator cache は対象内容 digest、evaluator ID/version、設定で key を作り、corrupt を miss 同様に再実行へ倒す。同一 key の異結果上書きは拒否する。
 - elegant-review は `contradiction→C1`、`omission→C2`、`inconsistency→C3`、`dependency_break→C4` を検査し、`smell` は condition 無しとする。2026-08-09 以降の run は自動 strict、古い run は WARN とする。
 - 561 行だった phase-order validator は主 CLI 343 行と support module 215 行へ分離した。
+- 手書きの変更ファイルは 500 行以下とした。500 行を超える `.dev-graph/state/graph.json` と `system-spec/spec-state.json` は、固定 path/schema を読む生成済み集約正本であり、分割すると既存の読取契約を壊すため対象外とした。
 
 ## 層別の正規反映
 
