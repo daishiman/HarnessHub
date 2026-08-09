@@ -1,0 +1,28 @@
+{
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+  "evaluator": "fresh Agent instance, independent of the trial orchestrator",
+  "verdict": "FAIL",
+  "blockers": [
+    "canonical flow が完走していない: fixture-repo/eval-log/system-spec-harness/completeness/completeness-report.json の verdict が \"FAIL\" (2 ラウンド実施、round2 でも design_knowledge_reflection / prompt_quality が FAIL)。SKILL.md の門 (evaluator PASS) が閉じたままなので R3-import に到達していない。",
+    "登録 node 0 件: fixture-repo/.dev-graph/state/graph.json は nodes=[] / graph_revision=0 のまま。specification node も architecture node も 1 件も存在せず、source_lineage 6 フィールド・source_digest 一致・confirmation_evidence は検証対象そのものが不在。task.md 第 2 段の明文 (『登録 node が 0 件の場合は status=FAIL』) に該当。",
+    "fixture-repo/specs/ と fixture-repo/architecture/ は .gitkeep のみで成果物ゼロ。progress.json の registered_this_run は [] であり、validate-source-digest.py / validate-evidence-refs.py は trial 自身が \"VACUOUS\" と記録している (空入力に対する exit 0 は陽性対照になっていない)。",
+    "observation 3 の否定形検査が空振り: 『登録は C02 経由のみ』は本 run で書込み操作が 1 件も起きていない (graph_revision 0->0) ため vacuous。task.md 第 3 段が明示的に禁じた形の『0 件』報告であり、検査が作動した証拠がない。"
+  ],
+  "observations": {
+    "1": {
+      "observation": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "status": "UNMET",
+      "evidence": "transcript.jsonl の tool_use を全走査した結果、Skill 呼出しは 6 件で、dev-graph:run-dev-graph-system-spec に続き system-spec-harness:run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator (2 回) が正規 entry point として起動している。よって plugin の loading と 4 entry point の起動自体は成立。中間成果も実在する: system-spec/spec-state.json の category_aggregate は 8 カテゴリすべて \"確定\" (database/auth/ui-ux/security/infrastructure/backend/frontend/maintenance-ops)、system-spec/fetched-references.json は 6 record で version/retrieved_at は非空 (例: 3.53.4 / 2026-08-09T05:38:06.838015Z、RFC 9700 (BCP 240) / 2026-08-09T06:01:35.646223Z)、audit-fork-ledger.jsonl は 9 行。しかし canonical flow の終端ゲートである eval-log/system-spec-harness/completeness/completeness-report.json の \"verdict\" は \"FAIL\" のままで、progress.json も evaluator.rounds=2 / round2_fail_aspects=[design_knowledge_reflection, prompt_quality] を記録している。したがって『canonical flow completes』は成立していない。なお trial が上流欠陥として挙げた 2 点は独立に一次ソースで確認した: plugins/system-spec-harness/lib/spec_docset_chapters.py:257-275 の _render_chapter_application は『上記原則は確定内容 {ref} (対応セル: ...) の判断へ適用する』という qa_ref/セル/serves_goals のみ差し替える機械描画で、章固有の原則適用文を caller 入力から生成できないのは事実。plugins/system-spec-harness/hooks/record-audit-fork.py:165 も verdict = matches[0] if len(matches) == 1 ... であり、prompt 中に verdict marker が複数現れると None 化するのは事実。ただしこれは blame の所在を変えるだけで、observation の達成には影響しない。"
+    },
+    "2": {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "status": "UNMET",
+      "evidence": "fixture-repo/.dev-graph/state/graph.json を直接 parse した実値は {\"graph_revision\": 0, \"nodes\": [], \"repository_id\": ..., \"schema_version\": ...} で node 数 0 / edge 数 0。fixture-repo/specs/ と fixture-repo/architecture/ は .gitkeep (0 byte) のみ。fixture-repo/eval-log/run-dev-graph-system-spec-progress.json の registered_this_run は [] で、import_decision は『R3-import 未実行』、evidence_ref_audit.scanned_nodes_with_evidence は 0。よって specification / architecture node は 1 件も存在せず、source_lineage の 6 フィールド (origin_kind / source_plugin / source_path / source_version / source_digest / imported_at)、source_digest と実ファイル sha256 の一致、confirmation_status=confirmed、confirmation_evidence が completeness-report.json を指すこと、のいずれも検証対象が不在。参考として goal-seek 配線 3 点は実在し形式的には成立していた: goal-spec.json の original_goal を UTF-8 SHA-256 で自力再計算すると 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454 で original_goal_hash と一致、intermediate.jsonl は 2 行でどちらも必須 6 キー (original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal) を持ち、行内 original_goal からの再計算 hash も一致、recorded_at は 2026-08-09T05:31:32Z -> 06:16:02Z と単調増加で append-only と整合。ただし配線が正しくても node 登録が 0 件である事実は変わらない。"
+    },
+    "3": {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "status": "UNMET",
+      "evidence": "前半 (registration occurs only through C02) は検査が空振りしている。graph store の graph_revision は before/after ともに 0、nodes=[] であり、本 run で graph store を変更した操作の集合が空。つまり『C02 以外の登録 0 件』は登録自体が 0 件であることの言い換えにすぎず、陽性対照 (実際に C02 経由の登録が 1 件以上起きたうえで他経路が 0 件) が成立していない。task.md 第 3 段は『書込み操作が 1 件も起きていない状態で C02 以外の登録 0 件を確認しても、検査が作動した証拠にはならない』と明示しており、これに該当する。後半 (no duplicate elicitation or compile logic) についても、対照実験の帰結として『dev-graph 側が harness 成果物を複製ではなく参照している』ことを登録 node の Markdown 本文で示す必要があるが、node が 0 件で specs/ architecture/ が空のため参照関係 (source_lineage / architecture_refs) を実物で確認できない。progress.json の checklist_status も当該項目を PASS と自己申告する一方、直上で C02 登録を BLOCKED、2 つの validator を VACUOUS と記録しており、自己申告どうしが矛盾している。よって observation 3 は成立とみなせない。"
+    }
+  }
+}

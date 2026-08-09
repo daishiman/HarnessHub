@@ -54,6 +54,16 @@ def _taxonomy() -> dict:
     return json.loads(TAXONOMY.read_text(encoding="utf-8"))
 
 
+def _design_applications() -> list[dict]:
+    return [{
+        "knowledge_ref": "ddd.md#Bounded Context",
+        "principle": "Bounded Context",
+        "applicability": "applied",
+        "rationale": "テスト対象を単一境界として扱う",
+        "tradeoffs": ["境界分割時は再評価する"],
+    }]
+
+
 def _turns() -> list:
     return json.loads(TURNS.read_text(encoding="utf-8"))
 
@@ -123,10 +133,62 @@ def _confirmed_state():
     mod.apply_turn(
         state,
         {"qa_id": "qa-001", "question": "q", "answer": "a",
+         "design_applications": _design_applications(),
          "ops": [{"action": "confirm", "category": "database", "platform": "web"}]},
     )
     assert state["matrix"]["database"]["web"]["state"] == "確定"
     return state
+
+
+def test_apply_turn_preserves_valid_design_application_as_separate_interpretation():
+    state = mod.init_state(_taxonomy())
+    assert state["design_application_contract_version"] == "1.0"
+    mod.apply_turn(
+        state,
+        {
+            "qa_id": "qa-design-001",
+            "question": "永続化方式は?",
+            "answer": "SQLite 単一ファイル",
+            "design_applications": [
+                {
+                    "knowledge_ref": "ddd.md#Bounded Context / Context Map",
+                    "principle": "Bounded Context / Context Map",
+                    "applicability": "not_applicable",
+                    "rationale": "単一利用者の単純 CRUD で文脈間翻訳が無い",
+                    "tradeoffs": ["複数業務語彙が生じたら再評価する"],
+                }
+            ],
+            "ops": [{"action": "confirm", "category": "database", "platform": "web"}],
+        },
+    )
+    qa = state["qa_log"][0]
+    assert qa["answer"] == "SQLite 単一ファイル"
+    assert qa["design_applications"][0]["applicability"] == "not_applicable"
+    assert qa["design_applications"][0]["rationale"] == "単一利用者の単純 CRUD で文脈間翻訳が無い"
+
+
+@pytest.mark.parametrize(
+    "application",
+    [
+        {},
+        {"knowledge_ref": "ddd.md", "principle": "DDD", "applicability": "maybe", "rationale": "x", "tradeoffs": ["x"]},
+        {"knowledge_ref": "ddd.md", "principle": "DDD", "applicability": "applied", "rationale": "x", "tradeoffs": []},
+    ],
+)
+def test_apply_turn_rejects_malformed_design_application(application):
+    state = mod.init_state(_taxonomy())
+    with pytest.raises(mod.TransitionError):
+        mod.apply_turn(
+            state,
+            {
+                "qa_id": "qa-design-bad",
+                "question": "q",
+                "answer": "a",
+                "design_applications": [application],
+                "ops": [{"action": "confirm", "category": "database", "platform": "web"}],
+            },
+        )
+    assert state["qa_log"] == []
 
 
 def test_add_category_appends_row_without_touching_confirmed():
@@ -306,10 +368,39 @@ def test_cli_init_chunk_apply_aggregate(tmp_path):
 def test_cli_apply_rollback_returns_1(tmp_path):
     state_path = tmp_path / "spec-state.json"
     assert mod.main(["init", "--taxonomy", str(TAXONOMY), "--out", str(state_path)]) == 0
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["qa_log"].append({
+        "id": "qa-001",
+        "question": "q",
+        "answer": "a",
+        "design_applications": _design_applications(),
+    })
+    state_path.write_text(mod.dump_state(state), encoding="utf-8")
     confirm = json.dumps({"action": "confirm", "category": "database", "platform": "web", "qa_ref": "qa-001"})
     assert mod.main(["apply", "--state", str(state_path), "--op", confirm]) == 0
     bad = json.dumps({"action": "exclude", "category": "database", "platform": "web", "reason": "x"})
     assert mod.main(["apply", "--state", str(state_path), "--op", bad]) == 1
+
+
+def test_writer_rejects_confirm_without_design_applications():
+    state = mod.init_state(_taxonomy())
+    with pytest.raises(mod.TransitionError, match="design_applications は非空配列必須"):
+        mod.apply_turn(
+            state,
+            {
+                "qa_id": "qa-no-design",
+                "question": "q",
+                "answer": "a",
+                "ops": [
+                    {
+                        "action": "confirm",
+                        "category": "database",
+                        "platform": "web",
+                    }
+                ],
+            },
+        )
+    assert not mod._has_entry(state["qa_log"], "qa-no-design")
 
 
 def test_cli_bad_taxonomy_returns_1(tmp_path):
@@ -317,6 +408,51 @@ def test_cli_bad_taxonomy_returns_1(tmp_path):
     assert mod.main(["init", "--taxonomy", str(missing), "--out", str(tmp_path / "o.json")]) == 1
 
 
+def test_cli_legacy_state_is_read_only_until_explicit_init_migration(tmp_path):
+    legacy_path = tmp_path / "legacy-spec-state.json"
+    legacy = mod.init_state(_taxonomy())
+    legacy["schema_version"] = "1.0"
+    legacy.pop("design_application_contract_version")
+    legacy_path.write_text(json.dumps(legacy, ensure_ascii=False), encoding="utf-8")
+
+    assert mod.main(["aggregate", "--state", str(legacy_path)]) == 1
+
+    migrated_path = tmp_path / "migrated-spec-state.json"
+    assert mod.main([
+        "init",
+        "--taxonomy",
+        str(TAXONOMY),
+        "--state",
+        str(legacy_path),
+        "--out",
+        str(migrated_path),
+    ]) == 0
+    migrated = json.loads(migrated_path.read_text(encoding="utf-8"))
+    assert migrated["schema_version"] == "1.1"
+    assert migrated["design_application_contract_version"] == "1.0"
+    assert all(
+        cell == {"state": "未収集"}
+        for row in migrated["matrix"].values()
+        for cell in row.values()
+    )
+    assert mod.main(["aggregate", "--state", str(migrated_path)]) == 0
+
+
+@pytest.mark.parametrize(
+    "broken",
+    [
+        {},
+        {"schema_version": "1.1"},
+        {"schema_version": "1.1", "design_application_contract_version": "2.0"},
+        {"schema_version": "1.0", "design_application_contract_version": "1.0"},
+        {"schema_version": "2.0"},
+    ],
+)
+def test_init_rejects_noncanonical_existing_state_instead_of_repairing(broken):
+    with pytest.raises(mod.TransitionError):
+        mod.init_state(_taxonomy(), broken)
+
+
 def test_cli_stdout_emit(capsys):
     assert mod.main(["init", "--taxonomy", str(TAXONOMY)]) == 0
-    assert json.loads(capsys.readouterr().out)["schema_version"] == "1.0"
+    assert json.loads(capsys.readouterr().out)["schema_version"] == "1.1"

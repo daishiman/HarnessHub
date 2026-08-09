@@ -251,10 +251,23 @@ def _full_valid_matrix() -> dict:
         for c in CATEGORIES
     }
     return {
+        "schema_version": "1.1",
+        "design_application_contract_version": "1.0",
         "categories": [{"id": c, "label": c} for c in CATEGORIES],
         "platforms": PLATFORMS,
         "matrix": matrix,
-        "qa_log": [{"id": "qa-001", "question": "q", "answer": "a"}] + _foundation_source_indexes(),
+        "qa_log": [{
+            "id": "qa-001",
+            "question": "q",
+            "answer": "a",
+            "design_applications": [{
+                "knowledge_ref": "design-knowledge:test",
+                "principle": "single source of truth",
+                "applicability": "applied",
+                "rationale": "all confirmed cells share one test decision",
+                "tradeoffs": ["fixture is intentionally compact"],
+            }],
+        }] + _foundation_source_indexes(),
         "approval_log": [{"id": "appr-001"}, {"id": "appr-foundation"}],
         "requirements_foundation": _valid_foundation(),
         "decisions": [],
@@ -390,7 +403,8 @@ def test_main_require_foundation_missing_foundation_fails(tmp_path):
 
 # ── 後方互換: foundation 検証は opt-in (既定は C12 挙動不変) ─────────────────
 def test_backward_compat_default_ignores_foundation(tmp_path, capsys):
-    # requirements_foundation 不在でも、--require-foundation 無しなら従来どおり OK。
+    # requirements_foundation 不在でも、--require-foundation 無しなら OK。
+    # schema 1.1 の design-application 契約は foundation opt-in と独立に維持される。
     d = _full_valid_matrix()
     del d["requirements_foundation"]
     for row in d["matrix"].values():
@@ -402,6 +416,7 @@ def test_backward_compat_default_ignores_foundation(tmp_path, capsys):
 
 
 def test_validate_unchanged_ignores_serves_goals():
-    # validate() (C12 本体) は serves_goals / requirements_foundation を無視し従来判定のまま。
+    # validate() は serves_goals / requirements_foundation を無視するが、
+    # schema 1.1 の design-application 契約は常に検証する。
     d = _full_valid_matrix()
     assert c12.validate(d, require_complete=True) == []

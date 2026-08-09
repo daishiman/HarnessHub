@@ -58,7 +58,7 @@ _git_status = STATE.git_status
 _content_inventory = STATE.content_inventory
 _state_comparison = STATE.state_comparison
 
-SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r9"
+SCENARIO_ID = "C14-OUT1-positive-macro-decomposition-r15"
 BINDINGS = PUBLICATION.BINDINGS
 RUN_MODES = ("dry-run", "apply")
 AUDIT_MODULES = (

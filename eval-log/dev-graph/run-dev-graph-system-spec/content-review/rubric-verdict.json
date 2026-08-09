@@ -2,38 +2,34 @@
   "target": {
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
-    "skill_md_sha256": "ec6509312aed25d3663942e74b9825de7f3fdf0aa22e2ecc09e7766e8741083e"
+    "skill_md_sha256": "68955ae745710df24026cfd75ad38525c7743413d0f2db9a1a0bb9561cf5a185"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
+  "reviewer": "independent C19 content reviewer (focused combined rubric context)",
+  "reviewed_at": "2026-08-09T10:45:09Z",
+  "iterations": 1,
+  "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
     "omission": 0,
     "inconsistency": 0,
     "dependency_break": 0,
-    "smell": 1
+    "smell": 0
   },
-  "reviewer": "independent-focused-design-evaluator",
-  "reviewed_at": "2026-08-03T22:31:21Z",
-  "iterations": 1,
-  "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1"],
     "positive_feedback": [
-      "validate-source-digest.py と validate-evidence-refs.py は registered_this_run の和集合だけを検査対象にし、既存 node の証跡とは責務を分離している。",
-      "validate-evidence-refs.py は既存 dangling を progress.json へ機械的に自動転記し、報告の握り潰しを防ぐ。",
-      "SKILL.md、R3-import、adapter、contract、回帰テストの間で、本文=source_artifact 直接取得と architecture→specification の登録順序が一致する。",
-      "R3-import は evidence gate の exit code だけを根拠とし、散文 checklist の自己申告を根拠にしない。",
-      "C02 node envelope は schema 必須項目、source_lineage、confirmation_evidence を一貫して満たす。"
+      "IN1 は coverage、source citation、graph schema の exit code 0 を要求し、stale digest と非 PASS evaluator を負例で拒否する具体的な二値契約である。",
+      "OUT1 は source lineage、evaluator evidence、C02-only 登録、重複 elicitation/compile logic 0 を要求し、現行 positive scenario が観測文と禁止 Skill を逐語固定する。",
+      "現行 criteria receipt は fresh bounded trial r5 の 90.186 秒、290770 accounted tokens、被験 C19 以外の Skill 呼出し 0、陽性対照あり boundary gate PASS に束縛されている。"
     ],
-    "negative_feedback": [
-      "[smell/低] architecture node の命名と要件定義章を本文にする現在の対応には軽微な意味的乖離がある。IN1/OUT1 の PASS 条件には抵触しないが、architecture 専用章の追加時に見直す。"
-    ],
+    "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "Genuine fresh independent rubric review after prior FAIL. Independently reran `python3 -m pytest plugins/dev-graph/tests/test_prepare_system_spec_import.py -v` (6 passed), inspected the C19 source slice, verified bodies cannot appear in the contract and timestamps now derive from datetime.now(UTC), then checked registered-scope source/evidence validators and verdict schema requirements. The evaluator could not write this projection because its shell write was blocked; this file preserves its returned verdict unchanged in schema form."
+  "notes": "Incremental focused combined review。rubric provenance は ref-skill-design-rubric sha256=6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d。内容 adequacy と実挙動証拠を混同していない。"
 }

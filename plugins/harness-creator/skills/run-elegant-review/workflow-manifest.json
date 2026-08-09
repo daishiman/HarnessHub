@@ -85,7 +85,7 @@
       },
       "completion_signal": {
         "type": "paradigm-coverage",
-        "command": "python3 scripts/validate-paradigm-coverage.py <log_dir>/findings.json",
+        "command": "python3 scripts/validate-paradigm-coverage.py --strict-signal <log_dir>/findings.json",
         "rule": "thought_method_coverage.used + skipped_with_reason == 30 and every skipped method has skip_reason (B2, C1 緩和)"
       },
       "failure_action": {

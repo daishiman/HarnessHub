@@ -222,8 +222,11 @@ def contract_digest(contract: dict[str, Any], scenario: dict[str, Any]) -> str:
         "contract": _canonical(contract),
         "scenario": {
             key: _canonical(scenario.get(key))
-            for key in ("scenario_id", "skill", "task_args_template",
-                        "fixture_contract", "required_observations")
+            for key in (
+                "scenario_id", "skill", "task_args_template", "fixture_contract",
+                "required_observations", "task_contract", "resource_budget",
+                "forbidden_invoked_skills",
+            )
         },
     }
     blob = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -351,11 +354,13 @@ def check_task(
                     )
                     break
 
-    for pattern, reason in _STALE_PREMISE_PATTERNS:
-        for line in text.splitlines():
-            if re.search(pattern, line):
-                add("LT-005", f"{reason}: {line.strip()[:120]}")
-                break
+    workflow_mode = str(contract.get("workflow_mode", "build"))
+    if workflow_mode != "reuse-confirmed":
+        for pattern, reason in _STALE_PREMISE_PATTERNS:
+            for line in text.splitlines():
+                if re.search(pattern, line):
+                    add("LT-005", f"{reason}: {line.strip()[:120]}")
+                    break
 
     template = scenario.get("task_args_template")
     invocation = extract_skill_args(text)
@@ -383,7 +388,7 @@ def check_task(
     missing = [name for name in entry_points if name not in text]
     if missing:
         add("LT-007", f"required entry point の記載漏れ: {', '.join(missing)}")
-    if entry_points and not ENTRY_POINT_VIA_SKILL.search(text):
+    if entry_points and workflow_mode != "reuse-confirmed" and not ENTRY_POINT_VIA_SKILL.search(text):
         add(
             "LT-008",
             "委譲先 entry point を `Skill` ツールで呼ぶ要求が task.md に無い "

@@ -125,18 +125,9 @@ def _assert_scenario_contract(
         _contained_run_evidence(verdict_path, observation["evidence_ref"])
 
 
-# component_id -> (Beads issue, 既知バグの説明)。live-trial 実測で確定した本物のバグに
-# よりこの1件だけ受領書が PASS を宣言できない。ここで xfail(strict) 化することで、
-# 他7スキルの厳格な PASS 契約検証を弱めずに CI を緑化しつつ、バグが直って受領書が再び
-# PASS になった瞬間に XPASS として気づけるようにする。
-_KNOWN_LIVE_TRIAL_FAILURES = {
-    "C19": (
-        "HarnessHub-o4zi: system-spec-harness が生成する specification 本文が "
-        "dev-graph specification テンプレートの17見出し要求を満たさず、C11 heading "
-        "検査で registration が拒否される (fixture 品質起因ではなく2回の独立 live-trial "
-        "で再現した本物のバグ)"
-    ),
-}
+# Fix 済みの既知 live-trial failure は残さない。strict xfail を残すと fresh PASS が
+# XPASS になり、回帰修正そのものを CI failure として扱ってしまう。
+_KNOWN_LIVE_TRIAL_FAILURES: dict[str, str] = {}
 
 
 def _targets_with_known_xfail() -> list:

@@ -115,3 +115,96 @@ def test_missing_required_headings_resolves_conditional_variants_by_node_trigger
 
     # node を渡さない呼び出し (specification など既存呼び出し互換) は base のまま。
     assert missing_required_headings(artifact, "task", contract) == ["目的", "背景"]
+
+
+def test_conditional_triggers_match_on_source_path_not_origin_kind_alone(tmp_path):
+    """HarnessHub-o4zi: 同じ origin の章 import まで軽量契約へ巻き込まない。"""
+    contract = {
+        "artifacts": {
+            "specification": {
+                "required_sections": ["目的と成功状態", "スコープ", "未決事項"],
+                "conditional_required_sections": {"system_spec_index": ["章一覧と集約状態"]},
+                "conditional_triggers": [
+                    {
+                        "family": "system_spec_index",
+                        "origin_kind": "system-spec-harness",
+                        "source_path": "system-spec/index.md",
+                    }
+                ],
+            }
+        }
+    }
+    artifact = tmp_path / "index.md"
+    artifact.write_text("# index\n\n## 章一覧と集約状態\n\n| a |\n", encoding="utf-8")
+
+    index_node = {
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/index.md",
+        }
+    }
+    assert missing_required_headings(artifact, "specification", contract, index_node) == []
+
+    chapter_node = {
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/backend.md",
+        }
+    }
+    assert missing_required_headings(artifact, "specification", contract, chapter_node) == [
+        "スコープ",
+        "未決事項",
+        "目的と成功状態",
+    ]
+
+
+def test_conditional_trigger_without_conditions_never_fires(tmp_path):
+    """空条件 rule が全 node に一致しないよう fail-closed にする。"""
+    contract = {
+        "artifacts": {
+            "specification": {
+                "required_sections": ["目的と成功状態"],
+                "conditional_required_sections": {"loose": ["何か"]},
+                "conditional_triggers": [{"family": "loose"}],
+            }
+        }
+    }
+    artifact = tmp_path / "s.md"
+    artifact.write_text("# s\n\n## 何か\n\nx\n", encoding="utf-8")
+
+    assert missing_required_headings(
+        artifact, "specification", contract, {"source_lineage": {}}
+    ) == ["目的と成功状態"]
+
+
+def test_base_variant_remains_acceptable_when_a_conditional_family_fires(tmp_path):
+    """full template 準拠 artifact も conditional trigger 発火時に受理する。"""
+    contract = {
+        "artifacts": {
+            "architecture": {
+                "required_sections": ["Architecture overview", "Risks and verification"],
+                "conditional_required_sections": {
+                    "system_spec_requirements": ["U1 本質的目的 (essential_purpose)"]
+                },
+                "conditional_triggers": [
+                    {
+                        "family": "system_spec_requirements",
+                        "origin_kind": "system-spec-harness",
+                        "source_path": "system-spec/00-requirements-definition.md",
+                    }
+                ],
+            }
+        }
+    }
+    artifact = tmp_path / "a.md"
+    artifact.write_text(
+        "# a\n\n## Architecture overview\n\nx\n\n## Risks and verification\n\ny\n",
+        encoding="utf-8",
+    )
+    node = {
+        "source_lineage": {
+            "origin_kind": "system-spec-harness",
+            "source_path": "system-spec/00-requirements-definition.md",
+        }
+    }
+    assert missing_required_headings(artifact, "architecture", contract, node) == []

@@ -110,6 +110,22 @@ def test_schema_and_rubric_match_the_aggregate_contract():
     assert rubric["aspect_to_auditor"] == {key: value["auditor"] for key, value in MOD.ASPECTS.items()}
 
 
+def test_hearing_auditor_scope_excludes_decision_guidance():
+    """C06 dispatch が C05 の decisions 責務を横取りして false FAIL にしない。"""
+    r2 = (SKILL_DIR / "prompts" / "R2-delegate.md").read_text(encoding="utf-8")
+    r6 = (
+        SKILL_DIR.parent / "run-system-spec-elicit" / "prompts" / "R6-audit-hearing.md"
+    ).read_text(encoding="utf-8")
+    agent = (SKILL_DIR.parents[1] / "agents" / "system-spec-hearing-auditor.md").read_text(
+        encoding="utf-8"
+    )
+    for contract in (r2, r6, agent):
+        assert "decisions[]" in contract
+        assert "decision_guidance" in contract
+        assert "担当外" in contract
+    assert "起動 prompt に decisions の遡及監査を追加してはならない" in r2
+
+
 def test_main_report_and_matrix_paths(tmp_path):
     with pytest.raises(SystemExit):
         MOD.main([])
