@@ -67,7 +67,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 - decision validator は selector absent、非仕様 disposition、受け皿の無い延期、cache hit の不正表現、理由の無い降格を拒否する。
 - evaluator cache は対象内容 digest、evaluator ID/version、設定で key を作り、corrupt を miss 同様に再実行へ倒す。同一 key の異結果上書きは拒否する。
 - elegant-review は `contradiction→C1`、`omission→C2`、`inconsistency→C3`、`dependency_break→C4` を検査し、`smell` は condition 無しとする。2026-08-09 以降の run は自動 strict、古い run は WARN とする。
-- 561 行だった phase-order validator は主 CLI 337 行と support module 215 行へ分離した。
+- 561 行だった phase-order validator は主 CLI 343 行と support module 215 行へ分離した。
 
 ## 層別の正規反映
 
