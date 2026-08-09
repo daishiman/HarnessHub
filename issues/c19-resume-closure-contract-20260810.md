@@ -90,3 +90,4 @@ fresh bounded C19 trial は digest-bound PASS receipt を検証し、上流 Skil
 - focused regression: 26 tests PASS
 - fresh bounded r1: 独立 evaluator FAIL。契約矛盾と report path 偽陽性を検出
 - fresh bounded r2: 75 秒、post-run gate / goal-seek / independent evaluator / formal verdict PASS
+- fresh bounded r3: review 是正後の current behavior closure で 75.056 秒・200,583 tokens、同 4 gate PASS

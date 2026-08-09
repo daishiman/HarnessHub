@@ -50,6 +50,7 @@ fresh evaluator は実際の system-spec import、source lineage、evaluator evi
 - 変更直後結果: 26 tests PASS
 - r1 (`20260809T210800Z-wt18-c19-bounded-r1`): fresh evaluator が契約矛盾と偽陽性を検出して FAIL。失敗を保持して本修正へ接続した。
 - r2 (`20260809T212925Z-wt18-c19-bounded-r2`): 本体 75 秒、network / upstream Skill / Agent / direct upsert 0、post-run completion gate exit 0、goal-seek gate exit 0、fresh independent evaluator PASS、formal verdict PASS。
+- r3 (`20260809T220241Z-wt18-c19-bounded-r3`): focused review 是正後の current behavior closure で 75.056 秒・200,583 tokens。被験 Skill 1 回、deterministic runner 1 回、network / upstream Skill / Agent / direct upsert 0、post-run completion / goal-seek / fresh independent evaluator / formal verdict をすべて PASS として再束縛した。
 
 ## 仕様影響の結論
 

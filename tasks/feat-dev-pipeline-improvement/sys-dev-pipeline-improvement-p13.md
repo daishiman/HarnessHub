@@ -243,3 +243,4 @@ PR #680 は main へ merge 済みのため、`HarnessHub-8ctp` / `HarnessHub-o4z
 ## 2026-08-10 C19 resume closure 追補
 
 pre-push の fresh C19 評価で、resume path が evaluator を再実行しない契約と、build path 専用の evaluator completion gate が矛盾する不具合を検出した。経路別 completion contract、runner report/stdout 一致、C02・source digest・evidence ref の exit 0 を実装して focused regression を再実行する。製品 runtime 仕様は不変で、既存 `qa-216` / `qa-217` の証拠契約を具体化する。詳細は [C19 resume closure 仕様反映受領書](../../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。
+focused review の是正後は `20260809T220241Z-wt18-c19-bounded-r3` を current behavioral evidence とし、75.056 秒・200,583 tokens、post-run completion / goal-seek / fresh independent evaluator / formal verdict の全 PASS を P13 最終 gate とする。
