@@ -120,8 +120,9 @@ branch は `devgraph/issue-verification-evaluator-cache-20260809`、base は rep
 - `HarnessHub-6nf1`: evaluator cache を実 evaluator 起動点へ配線する。
 - `HarnessHub-xcl3`: tier decision を下流 CI step の起動・blocking 集合へ配線する。
 - `HarnessHub-sy31`: deferred gate を定期的に消化する。
-- `HarnessHub-a0zd`: design application contract 1.1 と章別描画で解消し、system-spec-harness 537 tests PASS を確認した。
+- `HarnessHub-a0zd`: design application contract 1.1 と章別描画で解消し、system-spec-harness 542 tests PASS を確認した。
 - `HarnessHub-74mb`: hook の応答本文限定 marker 抽出と回帰 test で解消した。
 - `HarnessHub-xbzu`: C06 から担当外 decisions 監査を除外して解消した。
 - `HarnessHub-p65r`: bounded C19 live-trial r5 が 90.186 秒・290,770 token、goal fit/overall `PASS`。上流 Skill/network 0、C02-only 2 node 登録を現行 behavior digest、transcript SHA、poll-state SHA に束縛した。
 - 未完了は `HarnessHub-6nf1`、`HarnessHub-xcl3`、`HarnessHub-sy31` の既存 3 件であり、本追補はそれらを完了扱いにしない。
+- `origin/main` は local `main` に取り込み済みで、本 branch への merge は `Already up to date`。対象差分だけを `2758f073` / `52e543ce` に commit し、無関係な staged/unstaged 差分を除外した。
