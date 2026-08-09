@@ -164,3 +164,11 @@ N/A: 新しい producer/consumer、queue、event は追加しない。
 ## 未決事項
 
 - CWV 本番実測、2 社同時稼働 U5、低品質報告導線は release follow-up として維持する。
+
+## 2026-08-10 validator load boundary (`HarnessHub-aqi`)
+
+- catalog response validator は HTTP success を確認するまで client chunk へ読み込まない。
+- adapter は薄い `response-schemas.ts` を namespace dynamic import し、response body の JSON decode と chunk load を並行する。
+- success body は従来どおり Zod で fail-closed に検証し、401/403/5xx・API・認可・DB 契約は変更しない。
+- 回帰検査は error response で schema chunk を要求しないこと、success response で検証を省略しないことを固定する。
+- 正規反映と受入結果は [validator load boundary 仕様反映受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を正とする。

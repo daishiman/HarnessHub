@@ -201,12 +201,35 @@ def test_resume_runner_imports_both_nodes_and_writes_goal_evidence(tmp_path: Pat
     assert report["status"] == "PASS"
     assert report["network_calls"] == 0
     assert report["upstream_skill_invocations"] == 0
+    assert report["completion_contract"]["version"] == "system-spec-resume-closure/v1"
+    assert all(item["status"] == "pass" for item in report["checklist"])
     assert report["registered_this_run"] == [
         "arch-system-spec-overview",
         "spec-system-spec-index",
     ]
     for suffix in ("goal-spec.json", "progress.json", "intermediate.jsonl"):
         assert (root / "eval-log" / f"run-dev-graph-system-spec-{suffix}").is_file()
+    progress = json.loads(
+        (root / "eval-log" / "run-dev-graph-system-spec-progress.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert {item["id"] for item in progress["checklist"]} == {
+        "content-root",
+        "harness-contract",
+        "upstream-selection",
+        "upstream-gates",
+        "live-trial-outer-closure",
+        "c02-node-integrity",
+        "source-digest",
+        "evidence-refs",
+        "logic-boundary",
+    }
+    outer = next(
+        item for item in progress["checklist"]
+        if item["id"] == "live-trial-outer-closure"
+    )
+    assert outer["status"] == "pending-external"
 
     first = (root / "eval-log" / "run-dev-graph-system-spec-intermediate.jsonl").read_text(
         encoding="utf-8"

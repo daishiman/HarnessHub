@@ -130,6 +130,20 @@ def test_category_design_refs_derived_from_resource_map():
     assert mod.category_design_refs("no-such-category") == []
 
 
+def test_category_specific_cards_for_previously_pointer_only_chapters():
+    # HarnessHub-ldq: ui-ux / infrastructure / testing-qa / dev-workflow は専用 deep card を
+    # 持たず「resource-map に未定義」の汎用ポインタのみだった (C05 medium finding)。
+    # resource-map への card 追加でカテゴリ固有の card へ接続することを回帰検知する。
+    assert mod.category_design_refs("ui-ux") == ["usability-accessibility.md"]
+    assert mod.category_design_refs("infrastructure") == ["site-reliability-engineering.md"]
+    assert mod.category_design_refs("testing-qa") == ["test-strategy.md"]
+    assert mod.category_design_refs("dev-workflow") == ["continuous-delivery.md"]
+    # 章本文が汎用ポインタ節ではなく card 本文 (深度項目) を描画する。
+    rendered = mod.render_design_refs("ui-ux")
+    assert "resource-map に未定義" not in rendered
+    assert "#### 適用条件" in rendered and "#### トレードオフ・失敗モード" in rendered
+
+
 def test_knowledge_topo_order_matches_validator_script():
     # compile-spec-doc.py がローカル再実装した topo_order アルゴリズムが、正本
     # validate-knowledge-graph.py --profile knowledge --order (subprocess) の出力と

@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
     "component_id": "C19",
-    "skill_md_sha256": "1639d47e24e2d9b607c0a58c573db05f0f6fc5720f7311d98be0beec9837d4a3"
+    "skill_md_sha256": "c20734d924cd41d39d26f1ad9a3658a93befd1e4a78a9e48251bc9116dbedb78"
   },
   "verdict": "PASS",
-  "reviewer": "independent fresh goal evaluator plus poll-state/transcript-bound live-trial verdict, 20260809T132550Z-wt27-c19-ci-r1",
+  "reviewer": "independent fresh goal evaluator plus path-specific completion gate and poll-state/transcript-bound live-trial verdict, 20260809T220241Z-wt18-c19-bounded-r3",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -19,23 +19,23 @@
         "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
         "plugins/dev-graph/tests/test_prepare_system_spec_import.py",
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_heading_readiness.py",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/goal-evaluation.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/goal-evaluation.json"
       ],
-      "observed": "validate-system-spec-resume, validate-system-spec-boundary, validate-graph-schema, validate-source-digest, validate-evidence-refs, and validate-goal-seek-evidence all exited 0. The bounded runner imported architecture/specification through C02 and reported network_calls=0 and upstream_skill_invocations=0."
+      "observed": "validate-system-spec-resume, path-specific evaluator completion, validate-system-spec-boundary, validate-graph-schema, validate-source-digest, validate-evidence-refs, and validate-goal-seek-evidence all exited 0. The bounded runner imported architecture/specification through C02 and reported network_calls=0 and upstream_skill_invocations=0."
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T132550Z-wt27-c19-ci-r1/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/out/status.json"
       ],
-      "observed": "Final fresh bounded live trial completed PASS in 90.067 seconds with 289434 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000. Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds a fresh independent evaluator artifact to the transcript SHA. Transcript shows only dev-graph:run-dev-graph-system-spec was invoked; all eight upstream generation Skill names were absent. Both imported nodes retain source lineage/evaluator evidence, and the positive-control boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
+      "observed": "Final fresh bounded live trial completed PASS in 75.056 seconds with 200583 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000. Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds a fresh independent evaluator artifact to the transcript SHA. Transcript shows only dev-graph:run-dev-graph-system-spec was invoked; all upstream generation Skills and Agent were absent. The resume completion gate verifies one deterministic runner, zero direct upserts, report/stdout parity, and zero outer report writes. Both imported nodes retain source lineage/evaluator evidence, and the positive-control boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
     }
   }
 }

@@ -1,0 +1,40 @@
+{
+  "target": {
+    "plugin": "system-spec-harness",
+    "skill": "ref-system-design-knowledge",
+    "skill_md_sha256": "acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1"
+  },
+  "review_kind": "rubric",
+  "verdict": "PASS",
+  "reviewer": "incremental-focused-combined-reviewer",
+  "reviewed_at": "2026-08-08T08:57:43Z",
+  "iterations": 1,
+  "human_review_required": false,
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 2,
+    "dependency_break": 0,
+    "smell": 1
+  },
+  "feedback_loop": {
+    "loop_scope": "both",
+    "criteria_evaluated": ["knowledge-graph-wellformedness", "card-schema-conformance"],
+    "positive_feedback": [
+      "決定論ゲートに実接地している: validate-knowledge-graph.py --profile knowledge --order が exit 0 で topo_order を返し (clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design → usability-accessibility → test-strategy → continuous-delivery → site-reliability-engineering)、--profile doctrine も exit 0。pytest 53 件 (ref-system-design-knowledge/tests + run-system-spec-compile/tests) pass。",
+      "カード深度の契約が守られている: 新規 4 枚 (usability-accessibility / test-strategy / continuous-delivery / site-reliability-engineering) はいずれも既存カードと同一の 11 節構成 (目的・背景・解決する問題・中核概念・適用条件・非適用条件・トレードオフ/失敗モード・目的達成への寄与・ヒアリング判断観点・一次資料・鮮度) を持ち 73-74 行。knowledge-card.schema.json の required 14 概念に欠落なし。SKILL.md L37 の『浅い pointer-only 要約は正本カードとして受け入れない』に反していない。",
+      "FM/NM/BD 次元は既存合格状態を維持: name=kebab + ref prefix、kind=ref / effect=none / allowed-tools=[Read] の read-only 契約は不変。SKILL.md への追記は参照表 4 行のみで、境界宣言 (C04 は発見・取得・永続化を実行しない) を緩めていない。",
+      "SSOT の二重化を自ら閉じている: resource-map.yaml 冒頭に『card 集合の SSOT は read_when、反映順序の SSOT は knowledge-catalog.json の depends_on』と明記し、entry 並びを topo_order と同順へ揃えた。索引の記述順を反映順と誤読する事故を構造で塞いでいる。"
+    ],
+    "negative_feedback": [
+      "[low/inconsistency] frontmatter last-audited が 2026-07-11 のまま。参照知識領域が 6 → 10 と実質 67% 増えているのに監査日が動いていない。audit-trigger: official-update の運用上は必須更新ではないが、鮮度表示としては実態から乖離している。",
+      "[low/inconsistency] knowledge-catalog.json で test-strategy が depends_on: [\"clean-code\", \"usability-accessibility\"] を持つ。depends_on は SKILL.md L40 の定義では precedence (前提を先に出す) であり形状は妥当だが、『アクセシビリティがテスト戦略の前提』という意味妥当性は自明でない (受入基準化の文脈では成立しうる)。SKILL.md L40 が明記するとおり辺の意味妥当性は validator の保証外で content-review/human の責務のため、ここに記録として残す。",
+      "[low/smell] usability-accessibility が depends_on: [] で clean-code に次ぐ第 2 の root になった。validator の root 到達性検査は通るが、seed グラフに root が増えると『どこから読み始めるか』の指針が topo_order 依存になる。現状 10 entry では実害なし。"
+    ],
+    "iteration": 1,
+    "iteration_limit": 3,
+    "hook_trigger": "Stop",
+    "next_action": "none"
+  },
+  "notes": "incremental focused combined review (not exhaustive rubric scoring): HarnessHub-ldq の未コミット差分 (SKILL.md 参照表 +4 行、prompts/R1 Layer2 seed 列挙更新、references/resource-map.yaml 並べ替え + SSOT 注記、knowledge-catalog.json +4 entry、references/{usability-accessibility,test-strategy,continuous-delivery,site-reliability-engineering}.md 新規、tests/test_validate_knowledge_cards.py +93 行) を起点に、現 SKILL.md (sha256=acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1) を全文読了して ref-skill-design-rubric 規範の主要次元で検査。FM: name/description/kind=ref/effect=none/allowed-tools=[Read]/completeness_exempt 整合。BD: Purpose & Output Contract・境界宣言・知識依存グラフ節・doctrine anchor 節・参照表・使い方・責務プロンプトあり (76 行)。NM: ディレクトリ名一致。参照表 10 領域と resource-map.yaml の card entry 10 件と knowledge-catalog.json の 10 entry が三者一致、全ファイル実在を確認。SKILL.md 本文の記述と R1 Layer2 の seed 列挙も一致。high severity 0、low inconsistency 2 + low smell 1 のみで全次元閾値クリア。"
+}
