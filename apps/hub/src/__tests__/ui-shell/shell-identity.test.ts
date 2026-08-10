@@ -27,7 +27,8 @@ vi.mock('../../lib/auth/session.js', async () => {
 const { resolveShellIdentity } = await import('../../lib/routing/shell-identity.js');
 const { resolveShellProps } = await import('../../components/shell/resolve-shell-props.js');
 
-const ANONYMOUS = { subject: null, role: null };
+// 所属一覧は切替 UI の表示判定に使うため、匿名時は空 = 切替させない (fail-closed)
+const ANONYMOUS = { subject: null, role: null, workspaceIds: [] };
 
 function claims(overrides: Record<string, unknown> = {}) {
   return {
@@ -85,13 +86,20 @@ describe('UIS-ID: resolveShellIdentity の入力分類', () => {
     await expect(resolveShellIdentity()).resolves.toStrictEqual(ANONYMOUS);
   });
 
-  it('UIS-ID-005: 有効な session -> subject と role を返す', async () => {
+  it('UIS-ID-005: 有効な session -> subject と role と所属一覧を返す', async () => {
     verifySessionToken.mockResolvedValue({ ok: true, claims: claims() });
 
     await expect(resolveShellIdentity()).resolves.toStrictEqual({
       subject: 'user-1',
       role: 'workspace-admin',
+      workspaceIds: ['ws-1'],
     });
+  });
+
+  it('UIS-ID-006: 所属 2 件の session はそのまま一覧を渡す (切替 UI の表示条件の入力)', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims({ workspace_ids: ['ws-1', 'ws-2'] }) });
+
+    await expect(resolveShellIdentity()).resolves.toMatchObject({ workspaceIds: ['ws-1', 'ws-2'] });
   });
 });
 

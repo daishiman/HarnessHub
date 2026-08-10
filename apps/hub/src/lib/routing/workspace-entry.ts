@@ -10,7 +10,7 @@
  * 別々に組むと、片方だけ検証を忘れた版が残る)。
  */
 
-import { DEFAULT_POST_SIGNIN_LANDING } from './post-signin-landing.js';
+import { resolvePostSigninLanding } from './post-signin-landing.js';
 
 /**
  * 選択を受ける route の path。`/signin` 配下に置くのは、この経路が
@@ -22,6 +22,9 @@ export const WORKSPACE_ENTRY_PATH = '/signin/workspace';
 
 /** 選択された workspace を載せる query 名。 */
 export const WORKSPACE_QUERY_PARAM = 'workspace';
+
+/** 切替完了後に戻る同一 origin の画面を載せる query 名。 */
+export const WORKSPACE_RETURN_TO_QUERY_PARAM = 'returnTo';
 
 export type WorkspaceEntryResolution =
   | { readonly ok: true; readonly workspaceId: string; readonly location: string }
@@ -41,14 +44,22 @@ export type WorkspaceEntryResolution =
 export function resolveWorkspaceEntry(
   raw: string | null | undefined,
   memberWorkspaceIds: readonly string[],
+  returnTo?: string | null | undefined,
 ): WorkspaceEntryResolution {
   if (typeof raw !== 'string' || !memberWorkspaceIds.includes(raw)) {
     return { ok: false, location: '/' };
   }
-  return { ok: true, workspaceId: raw, location: DEFAULT_POST_SIGNIN_LANDING };
+  return { ok: true, workspaceId: raw, location: resolvePostSigninLanding(returnTo) };
 }
 
-/** 選択リンクの href。workspace ID は任意文字列を取り得るため必ず encode する。 */
-export function workspaceEntryPath(workspaceId: string): string {
-  return `${WORKSPACE_ENTRY_PATH}?${WORKSPACE_QUERY_PARAM}=${encodeURIComponent(workspaceId)}`;
+/**
+ * 選択リンクの href。workspace ID と戻り先は任意文字列を取り得るため URLSearchParams に閉じる。
+ * 戻り先は組み立て時と受理時の双方で `resolvePostSigninLanding` を通し、外部 URL を運ばない。
+ */
+export function workspaceEntryPath(workspaceId: string, returnTo?: string | null | undefined): string {
+  const search = new URLSearchParams({ [WORKSPACE_QUERY_PARAM]: workspaceId });
+  if (returnTo !== undefined && returnTo !== null && returnTo !== '') {
+    search.set(WORKSPACE_RETURN_TO_QUERY_PARAM, resolvePostSigninLanding(returnTo));
+  }
+  return `${WORKSPACE_ENTRY_PATH}?${search.toString()}`;
 }

@@ -90,6 +90,18 @@ describe('ai-pull-queue-provider-admin-device-flow: AiJob(feedback_response) 契
       expect(wrapper).toContain('tenantId: resource.tenantId');
     });
 
+    it('FL-SEC8-102: edge middleware も越境を通す (route 層の監査が到達不能にならない)', () => {
+      // HarnessHub-stmx: 手前の edge が role を見ずに 404 で落としていたため、上の監査契約は
+      // 本番で一度も動いていなかった。route 層だけを検査していると再発を検出できないので、
+      // 越境判定が両層で同じ述語 (`lib/authz/cross-tenant.ts`) を通ることを固定する。
+      const middleware = readFileSync(path.resolve(APP_SRC, 'middleware/authz.ts'), 'utf8');
+      const wrapper = withAuthzSource();
+      expect(middleware).toContain('canCrossTenantBoundary');
+      expect(wrapper).toContain('canCrossTenantBoundary');
+      // 越境を通すのは withAuthz が掛かる API 経路だけ (画面まで通すと監査の残らない越境になる)
+      expect(middleware).toContain('isCrossTenantAuditedPath');
+    });
+
     it('FL-SEC8-103: complete 後 feedbacks.ai_response と ai_job_id が書き戻される (status には触れない)', () => {
       const repo = queueRepoSource();
       const method = repo.slice(

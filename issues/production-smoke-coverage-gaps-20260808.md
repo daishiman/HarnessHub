@@ -131,15 +131,17 @@ session-only の action (`feedback.read`・`docs.*`) は Google OIDC なしに H
 
 ### 実装中に判明した設計上の不整合 (別課題へ送る)
 
-`withAuthz` は provider-admin の越境要求を許可して `provider.cross_tenant_access` を監査する契約 (FL-SEC8-102)。しかし edge middleware の `authorize()` は role を見ずに `scope.tenantId !== principal.tenantId` を 404 で落とすため、**本番では route 層の越境監査に到達しない**。route 単体テストは `withAuthz` を直接呼ぶので緑のまま素通りする — `tenant_mismatch` の 403/404 不一致とまったく同じ構図。
+`withAuthz` は provider-admin の越境要求を許可して `provider.cross_tenant_access` を監査する契約 (FL-SEC8-102)。修正前は edge middleware の `authorize()` が role を見ずに `scope.tenantId !== principal.tenantId` を 404 で落としたため、旧 SHA の本番では route 層の越境監査に到達しなかった。route 単体テストは `withAuthz` を直接呼ぶので、この乖離を検出できなかった。
 
-本課題の `scope_out` が認可判定ロジックの変更を除いているため、ここでは **S8 で現行挙動 (edge 遮断・監査行 0 件) を実測して固定する**に留める。provider-admin の越境を本当に許すのか、route 層の監査を dead code として畳むのかは設計判断であり、別課題 `HarnessHub-stmx` (`issues/authz-provider-admin-edge-route-mismatch-20260808.md`) で扱う。
+本課題の `scope_out` が認可判定ロジックの変更を除いているため、当時は **S8 で修正前挙動 (edge 遮断・監査行 0 件) を実測する**に留め、設計判断を別課題 `HarnessHub-stmx` (`issues/authz-provider-admin-edge-route-mismatch-20260808.md`) へ送った。
+
+**ローカル実装済み・新 SHA の本番未検証 (2026-08-10 / HarnessHub-stmx)**: 選択肢 (a)「edge に provider-admin の API 例外経路を設け、route で監査する」で確定した。越境依存機能 (顧客テナントの OIDC 接続管理・AI ジョブ pull) を維持しつつ、S8 は `expected: [200, 204]`、対象監査の `baseline=0` / `delta=1`、cleanup 残数0を要求する。変更後 SHA の production run はまだ無いため、`HarnessHub-stmx` と `HarnessHub-1vb.13` を解消済みとは扱わない。
 
 ## 最終レビュー (2026-08-09)
 
 ### 本番実走
 
-PR #681 merge 後の main `35a10b87` / hub-ci run `31253674292` で `coverage_smoke` が SUCCESS。S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 を確認。実装本体は main 済み。
+PR #681 merge 後の main `35a10b87` / hub-ci run `31253674292` で `coverage_smoke` が SUCCESS。S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 を確認した。ただし、この S8 は修正前契約の edge 404 / 監査0を診断した run であり、2026-08-10 の stmx 案(a)を検証する証拠ではない。
 
 ### 本 branch の残差分
 
@@ -155,4 +157,4 @@ production evidence を `docs/` / `features/` / `tasks/` へ記録し、main 取
 
 PR #681 (`35a10b87`) と PR #682 (`9808ecd1`) は `main` へマージ済みで、`origin/main` は両 merge commit を包含する。production run `31253674292` の実走証拠と qa-217 の仕様復元も default branch に存在するため、本課題の acceptance と completion boundary は充足した。
 
-製品仕様・設計への新しい影響はない。production smoke の契約は `system-spec/testing-qa.md`、`specs/harness-hub-production-coverage-smoke-addendum.md`、`architecture/harness-hub-testing-qa.md` に既反映であり、今回の変更は durable lifecycle state の同期だけである。`HarnessHub-stmx` と `HarnessHub-pf5o` は独立した残課題として open を維持する。
+本課題自体のproduction coverage契約とdefault-branch証拠は完了した。その後続 `HarnessHub-stmx` はprovider-admin越境を案(a)へ統一し、`system-spec/testing-qa.md`、`specs/harness-hub-production-coverage-smoke-addendum.md`、`architecture/harness-hub-testing-qa.md` のS8期待値をbaseline/delta監査へ更新した。ただし新SHAの本番実走は未完了である。`HarnessHub-stmx` と `HarnessHub-pf5o` は独立した残課題としてopenを維持する。

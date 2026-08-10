@@ -136,6 +136,29 @@ function createProjectAccessPort(repositories: CoreRepositories): ProjectAccessP
         ownerUserId: row.ownerUserId as string,
       };
     },
+
+    async create(scope, input) {
+      if (scope.workspaceId === undefined) {
+        throw new Error('Project の作成には Workspace scope が必要です');
+      }
+      const row = await repositories.projects.insert(contextOf(scope), {
+        workspaceId: scope.workspaceId,
+        // slug は server が発行し、利用者入力を識別子へ流さない。
+        slug: `project-${crypto.randomUUID()}`,
+        name: input.name,
+        description: input.description,
+        ownerUserId: scope.actorId,
+        status: 'active',
+      });
+      return {
+        id: row.id as string,
+        tenantId: row.tenantId as string,
+        workspaceId: row.workspaceId as string,
+        ownerUserId: row.ownerUserId as string,
+        name: row.name as string,
+        description: (row.description as string | null) ?? '',
+      };
+    },
   };
 }
 

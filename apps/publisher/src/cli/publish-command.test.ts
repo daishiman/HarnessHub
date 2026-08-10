@@ -1,7 +1,13 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { PublisherCredentialRecord, PublishRequestView } from '@harness-hub/schemas';
+import {
+  PUBLISH_NEEDS_FIX_HEADING,
+  PUBLISH_RESUBMIT_ACTION_LABEL,
+  type PublisherCredentialRecord,
+  type PublishRequestView,
+  publishNeedsFixSummary,
+} from '@harness-hub/schemas';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { CredentialStoreAdapter, PollTokenEndpoint, RefreshTokenEndpoint } from '../auth/index.js';
@@ -212,7 +218,10 @@ describe('runPublishCommand', () => {
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
-      expect(result.reason).toContain('修正が必要と判定されました');
+      // 文言の正本は @harness-hub/schemas 側 (Web 経路と共有する) なので、そこから引く
+      expect(result.reason).toContain(publishNeedsFixSummary('red'));
+      expect(result.reason).toContain(PUBLISH_NEEDS_FIX_HEADING);
+      expect(result.reason).toContain(PUBLISH_RESUBMIT_ACTION_LABEL);
       expect(result.reason).toContain('PKG-SEMVER');
     }
   });

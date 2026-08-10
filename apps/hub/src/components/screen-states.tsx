@@ -11,6 +11,8 @@
 import { Container, EmptyState, ErrorState, Skeleton, Stack } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
+import { type WorkspaceRecoveryReason, workspaceRecoveryNotice } from '../lib/routing/workspace-recovery.js';
+
 export interface LoadingScreenProps {
   /** 何を読み込んでいるかを支援技術へ伝える文言。 */
   label?: string;
@@ -69,6 +71,33 @@ export function ForbiddenScreen({ description }: ForbiddenScreenProps): ReactNod
         title="この画面を開く権限がありません"
         description={description ?? 'テナントの管理者に権限の付与を依頼してください。'}
         nextAction={<a href="/">トップへ戻る</a>}
+      />
+    </Container>
+  );
+}
+
+export interface ScopeUnresolvedScreenProps {
+  /** 未解決の理由。既定は「まだ選んでいない」。 */
+  reason?: WorkspaceRecoveryReason;
+}
+
+/**
+ * Workspace 未解決 (feat-workspace-switch-ux 受入 5)。
+ *
+ * `ForbiddenScreen` と分けるのは、この状態が**権限不足ではない**から。同じ「403」で括ると
+ * 利用者は管理者へ権限を依頼しに行くが、実際には自分で Workspace を選び直すだけで直る。
+ * 認可層の語彙 (`missing_tenant_scope` / `ambiguous_scope`) は一切画面へ出さない。
+ *
+ * 描くのは ErrorState だけ。qa-118 契約どおり、旧 scope のデータはここでも一切表示しない。
+ */
+export function ScopeUnresolvedScreen({ reason = 'unresolved' }: ScopeUnresolvedScreenProps): ReactNode {
+  const notice = workspaceRecoveryNotice(reason);
+  return (
+    <Container size="narrow">
+      <ErrorState
+        title={notice.title}
+        description={notice.description}
+        nextAction={<a href={notice.actionHref}>{notice.actionLabel}</a>}
       />
     </Container>
   );

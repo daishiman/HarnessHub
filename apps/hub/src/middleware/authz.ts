@@ -3,6 +3,9 @@
 import { tenantSlugSchema } from '@harness-hub/schemas';
 
 import { resolveActiveWorkspaceId } from '../lib/auth/session.js';
+// `lib/authz/index.js` (barrel) 経由にしないこと。barrel は runtime.ts → Drizzle を引き込み、
+// edge runtime で動く本層が壊れる。越境述語だけを持つ純関数モジュールを直接指す。
+import { canCrossTenantBoundary, isCrossTenantAuditedPath } from '../lib/authz/cross-tenant.js';
 import type { Principal } from '../shared/auth/index.js';
 import { type RequestedScope, resolveRequestedScope } from './scope.js';
 
@@ -138,15 +141,30 @@ export function authorize(input: AuthzInput): AuthzDecision {
     return { allowed: false, reason: 'missing_tenant_scope', status: 403 };
   }
 
+  // テナント境界の外側に立つ主体 (provider-admin) だけは越境を通す (security-spec §3.1.3 /
+  // FL-SEC8-102 / HarnessHub-stmx)。route 層 (`resolveEffectiveRole`) は越境を「禁止」ではなく
+  // 「監査必須の許可」として扱うのに、本層が role を見ずに 404 で落としていたため、
+  // `provider.cross_tenant_access` の監査行が本番で一度も出ていなかった。
+  //
+  // 通すのは `withAuthz` が必ず掛かる API 経路に限る。画面 (RSC) まで通すと監査の残らない越境が
+  // 生まれ、遮断されている現状より悪くなる。判定語彙は `lib/authz/cross-tenant.ts` に閉じてあり、
+  // ここは述語を呼ぶだけ (`scripts/check-single-authz-middleware.mjs` が検査する)。
+  //
+  // 「通す」= 最終判定の委譲であって許可ではない。越境しても route 層の `decide()` が
+  // action 規則 (minRole / requiredScope / credential) で改めて落とす。
+  const crossTenant = canCrossTenantBoundary(input.principal.roles) && isCrossTenantAuditedPath(input.pathname);
+
   // 存在秘匿 (T-ISO-06): 他テナントの資源は 404 で返す。403 だと「その ID の資源が他テナントに在る」
   // ことが応答から伝わってしまう。route 層の `denyStatusFor` は同じ理由で既に 404 を返していたが、
   // 本 middleware が先に応答するため route 側の 404 は到達不能で、本番だけ 403 になっていた
   // (route 単体テストは withAuthz を直接呼ぶので緑のまま素通りする)。対応表は両層で一致させる。
-  if (scope.tenantId !== input.principal.tenantId) {
+  if (!crossTenant && scope.tenantId !== input.principal.tenantId) {
     return { allowed: false, reason: 'tenant_mismatch', status: 404 };
   }
 
-  if (scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
+  // 越境主体は Workspace 所属も問わない。route 層の `resolveEffectiveRole` が
+  // tenant 判定より手前で抜けており、ここで所属を要求すると再び両層が食い違う。
+  if (!crossTenant && scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
     return { allowed: false, reason: 'workspace_not_member', status: 403 };
   }
 

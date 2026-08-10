@@ -3,7 +3,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { PUBLISH_AUDIT_ACTIONS } from '@/lib/publish/audit';
-import { createPublishRequest, submitPublishRequest, uploadPublishPackage } from '@/lib/publish/service';
+import {
+  createPublishProject,
+  createPublishRequest,
+  submitPublishRequest,
+  uploadPublishPackage,
+} from '@/lib/publish/service';
 
 import { createPublishHarness } from './support/harness';
 import { buildTestZip, buildValidPackage } from './support/zip';
@@ -23,6 +28,32 @@ function readyToSubmit(
 }
 
 describe('公開要求の作成', () => {
+  it('Project は現在の workspace に作成者 owner で作り project.create を監査する', async () => {
+    const harness = createPublishHarness();
+
+    const outcome = await createPublishProject(harness.deps, harness.scope, {
+      name: '問い合わせ整理',
+      description: '問い合わせを分類する Skill',
+    });
+
+    expect(outcome.ok).toBe(true);
+    expect(outcome.ok && outcome.value).toMatchObject({
+      workspaceId: harness.scope.workspaceId,
+      ownerUserId: harness.scope.actorId,
+      name: '問い合わせ整理',
+    });
+    expect(harness.auditEvents()).toContainEqual(
+      expect.objectContaining({
+        actorSubject: harness.scope.actorId,
+        tenantId: harness.scope.tenantId,
+        workspaceId: harness.scope.workspaceId,
+        action: PUBLISH_AUDIT_ACTIONS.projectCreate,
+        resourceType: 'project',
+        resourceId: outcome.ok ? outcome.value.id : '',
+      }),
+    );
+  });
+
   it('channel は project と target からサーバが決める', async () => {
     const harness = createPublishHarness();
 

@@ -12,6 +12,7 @@ import type { CSSProperties, ReactNode } from 'react';
 
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar, visuallyHidden } from '../internal/style.js';
+import { type ShellWorkspaceOption, WorkspaceSwitcher } from './WorkspaceSwitcher.js';
 
 export interface ShellAccountLink {
   href: string;
@@ -23,6 +24,13 @@ export interface ShellHeaderProps {
   workspaceName: string;
   /** ワークスペース欄の見出し語 (「ワークスペース」など)。 */
   workspaceLabel: string;
+  /**
+   * 切替先の候補。省略または 2 件未満なら現在値の表示のみになり、切替 UI は出ない
+   * (feat-workspace-switch-ux 受入 1)。候補の href 組み立てはアプリ側の責務。
+   */
+  workspaceOptions?: readonly ShellWorkspaceOption[] | undefined;
+  /** 切替コントロールのアクセシブル名。`workspaceOptions` を渡すときは必須に近い。 */
+  workspaceSwitchLabel?: string | undefined;
   /** モバイルで表示する画面タイトル (§6.2)。 */
   screenTitle?: string | undefined;
   /** 検索フォームの送信先。 */
@@ -86,6 +94,8 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
   const {
     workspaceName,
     workspaceLabel,
+    workspaceOptions,
+    workspaceSwitchLabel,
     screenTitle,
     searchAction,
     searchLabel,
@@ -107,19 +117,15 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
 
   return (
     <header style={barStyle}>
-      {/* デスクトップはワークスペース名、モバイルは画面タイトル (§6.2) */}
-      <div className="hh-shell__desktop-only" style={{ minWidth: 0 }}>
-        <span style={{ fontSize: 'var(--hh-font-size-xs)', color: colorVar('textMuted') }}>{workspaceLabel}</span>
-        <div
-          style={{
-            fontWeight: 'var(--hh-font-weight-bold)',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {workspaceName}
-        </div>
+      {/* viewport で隠さず、同じ server-only 部品を全幅で使う。client JS を増やさず、
+          desktop / mobile の双方から Workspace を認識・切替できる。 */}
+      <div style={{ flex: '0 1 12rem', minWidth: 0 }}>
+        <WorkspaceSwitcher
+          label={workspaceLabel}
+          currentName={workspaceName}
+          options={workspaceOptions ?? []}
+          switchLabel={workspaceSwitchLabel ?? workspaceLabel}
+        />
       </div>
 
       {screenTitle === undefined ? null : (

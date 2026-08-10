@@ -158,7 +158,7 @@ Yellow と Red が**同じ遷移先**であることを明示的に確認する 
 
 **対象**: サービス層の全操作
 
-- T6-A: 6 操作 (`publish.request` / `publish.approve` / `publish.reject` / `channel.promote` / `channel.rollback` / `release.suspend`) + `deployment.register` が、成功時にそれぞれ 1 件の監査 event を追加すること。
+- T6-A: Project 作成の `project.create` と 6 操作 (`publish.request` / `publish.approve` / `publish.cancel` / `channel.promote` / `channel.rollback` / `release.suspend`) + `deployment.register` が、成功時にそれぞれ 1 件の監査 event を追加すること。
 - T6-B: 失敗時 (状態不正で 409) には監査 event を**追加しない**こと。
 - T6-C: summary に secret・token・package 本体が含まれないこと (許可キーの allowlist で検証)。
 - T6-D: 監査 append が失敗したとき、操作全体が失敗として扱われること (監査だけ落ちて操作が成功する経路を作らない)。
@@ -175,7 +175,7 @@ Yellow と Red が**同じ遷移先**であることを明示的に確認する 
 - T7-B: 各 route の zod 入力検証 — 必須欠落 / 型不正 / 未知フィールドで 400 (`application/problem+json`) を返すこと。
 - T7-C: 認可拒否の status 写像 — 未認証 401 / 権限不足 403 / 他テナント 404 (`denyStatusFor` の既存規約に従う)。
 - T7-D: 一覧系 (`GET /publish`, `GET /projects/:id/releases`) の cursor ページングが `paginatedSchema` に適合すること。
-- T7-E (P03 R-01 記録): `POST /publish/:id/cancel` が `ACTION_RULES['publish.reject']` (workspace-admin / session) に従うこと。**作成できるが取り消せない非対称**をテスト名に明記し、regression として固定する。
+- T7-E (P03 R-01 解消): `POST /publish/:id/cancel` が `ACTION_RULES['publish.cancel']` (owner / scope `publish:write` / session or Bearer) に従うこと。session owner と Bearer owner は成功し、別 owner・別 tenant/workspace は拒否されることを固定する。session 変更系の Origin/CSRF と、invalid Bearer を session へ fallback しない境界も維持する。
 
 ---
 

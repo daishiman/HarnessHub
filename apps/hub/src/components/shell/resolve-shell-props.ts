@@ -16,6 +16,8 @@ export interface ResolvedShellProps {
   readonly scope: ShellScope;
   readonly accountName: string | null;
   readonly role: SessionRole | null;
+  /** 所属 Workspace 一覧。シェルの切替 UI を出すかの判定に使う。 */
+  readonly workspaceIds: readonly string[];
   readonly currentHref: string | undefined;
 }
 
@@ -32,6 +34,7 @@ export async function resolveShellProps(): Promise<ResolvedShellProps> {
     },
     accountName: identity.subject,
     role: identity.role,
+    workspaceIds: identity.workspaceIds,
     // header が無い経路 (テストや直接描画) では現在地の強調を諦める。
     // 誤った現在地を出すより「どこも現在地でない」ほうが害が小さい。
     currentHref: pathname === null || pathname === '' ? undefined : pathname,

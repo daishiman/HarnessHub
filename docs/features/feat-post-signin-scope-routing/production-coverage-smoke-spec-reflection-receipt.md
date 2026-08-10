@@ -38,7 +38,7 @@ reviewed_at: "2026-08-10"
 - Hub focused Vitest: `production-coverage-smoke-script.test.ts` 9 tests PASS / `production-oidc-smoke.test.ts` 12 tests PASS（合計 21）。
 - DB cleanup integration: `hearing-smoke.test.ts` 2 tests PASS。
 - task specification gate: post-signin / feedback-loop / docs-cms の 3 feature package がすべて PASS（violations 0）。
-- production runtime: main `35a10b87` の hub-ci run `31253674292` で deploy job が SUCCESS。coverage smoke は `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 が成功し、使い捨て 2 tenant は削除済み・残存行 0 を確認した。
+- production runtime: main `35a10b87` の hub-ci run `31253674292` で deploy job が SUCCESS。coverage smoke は `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 が成功し、使い捨て2 tenantは削除済み・残存行0を確認した。ただし当該S8は修正前のedge 404 / 監査0を診断したもので、stmx案(a)の成功証拠ではない。
 - 2026-08-09 最終レビュー: remote `origin/main` を local `main` へ取込済み（local main は origin を包含）のうえで本 branch へ merge。`sys-post-signin-scope-p13.md` の conflict を解消し、main のランディング 500 追補と production smoke 実走証拠を両立した。
 
 ## main 取込時の仕様復元 (2026-08-09)
@@ -47,15 +47,15 @@ main の verification-tier 統合 (`qa-217`) が testing-qa.web の現 qa_ref �
 
 ## マージ後 reconciliation (2026-08-10)
 
-実装 PR #681 (`35a10b87`) と仕様・証拠 PR #682 (`9808ecd1`) が `main` へマージ済みで、production run `31253674292` の S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 も正本へ記録済みであることを再確認した。
+実装 PR #681 (`35a10b87`) と仕様・証拠 PR #682 (`9808ecd1`) が `main` へマージ済みで、production run `31253674292` の S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行0も正本へ記録済みであることを再確認した。このS8証拠の意味は修正前挙動の診断に限り、後続stmx案(a)のproduction acceptanceには再利用しない。
 
 今回の reconciliation は製品仕様や設計を追加変更しない。`system-spec/testing-qa.md` qa-217、`specs/harness-hub-production-coverage-smoke-addendum.md`、`architecture/harness-hub-testing-qa.md` の既反映契約を維持し、default branch への証拠保存を完了条件としていた `HarnessHub-p0lr`、`HarnessHub-3sjj.13`、`HarnessHub-9wb.13` の durable state だけを同期する。機械証跡は `production-coverage-p13-reconciliation-evidence.json` に記録した。
 
 ## 残課題
 
-- `HarnessHub-stmx`: provider-admin 越境の edge 404 / route 監査契約を統一する。
+- `HarnessHub-stmx`: 案(a)への契約統一とローカル回帰テストは完了。新SHAのproduction smokeでS8=200/204、対象監査baseline=0 / delta=1、cleanup残数0を確認する。
 - `HarnessHub-pf5o`: publish smoke を Device Flow 化・secret 台帳登録・廃止のどれにするか決着し、CI 結線と運用記録を一致させる。
-- `HarnessHub-1vb.13` は `HarnessHub-stmx` の越境監査契約が残るため in_progress を維持する。
+- `HarnessHub-1vb.13` は `HarnessHub-stmx` の新SHA本番証拠が無いため in_progress を維持する。
 
 ## 500 行制約
 

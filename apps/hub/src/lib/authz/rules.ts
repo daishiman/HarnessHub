@@ -137,8 +137,9 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // 長命な refresh token から認証設定を変えられる経路を作らない。
   'idp.connection_read': { minRole: 'provider-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'idp.connection_change': { minRole: 'provider-admin', requiredScope: null, credential: SESSION, selfOnly: false },
-  // Publisher CLI 専用。publish.write と異なり session を許可しない。
-  'publish.cancel': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
+  // Needs Fix の再投入は同じ要求を draft へ戻すため、Web session と Publisher token の双方を許可する。
+  // role/scope/owner 判定は publish.write と同一で、session 経路だけが広い資源へ届くことはない。
+  'publish.cancel': { minRole: 'owner', requiredScope: 'publish:write', credential: EITHER, selfOnly: false },
   'deployment.register': { minRole: 'owner', requiredScope: 'publish:write', credential: TOKEN, selfOnly: false },
   // feat-user-org-admin (AD-3): S18 アカウント設定。自分自身の情報のみを対象にするため
   // role の下限は member (`token.list.self` と同型の selfOnly パターン)。
