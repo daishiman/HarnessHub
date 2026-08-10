@@ -1,5 +1,6 @@
 ---
 title: "feat-workspace-switch-ux 実装メモ (MVP)"
+status: "active"
 layer: "feature-evidence"
 feature: "feat-workspace-switch-ux"
 graph_node_id: "feat-workspace-switch-ux"

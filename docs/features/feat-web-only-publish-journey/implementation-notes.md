@@ -1,5 +1,6 @@
 ---
 title: "feat-web-only-publish-journey 実装メモ (MVP)"
+status: "active"
 layer: "feature-evidence"
 feature: "feat-web-only-publish-journey"
 graph_node_id: "feat-web-only-publish-journey"
