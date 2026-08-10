@@ -35,6 +35,18 @@ kind: index
 - **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow, testing-qa
 - **対象外**: —
 
+## 実装 writeback 索引 (確定章への追記ではない)
+
+elicitation（要件ヒアリング）確定後に実装へ落とした契約の索引。`spec-state.json` のセル状態は変更せず、実装契約は `specs/` 追補と architecture へ書く。
+
+| 主題 | 要求の出所 | 実装契約 | feature / Beads |
+|---|---|---|---|
+| 稼働ビルドの素性 (acceptance V6) と反映鮮度・smoke 前伝播安定性 (acceptance V7) | `dev-workflow.md` qa-198-f / qa-198-h | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y`、伝播安定性 follow-up `HarnessHub-u9zq` |
+| rubric 自動生成提案の保全と human review 引継ぎ | `dev-workflow.md` qa-216 の P13 write-back / scope separation / 未完了項目の durable tracking | [rubric 提案保持 writeback](../specs/harness-hub-system-specification-implementation-writebacks.md#rubric-自動生成提案の保持-writeback-2026-08-10--harnesshub-lzfs) / [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-lzfs` (human triage 完了まで open) |
+| smoke fixture lease と cancel 後回収 | `testing-qa.md` qa-217 の disposable cleanup / fail-closed 契約 | [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md) / [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md) | `feat-publish-pipeline` / `HarnessHub-aauo`（本番 force-cancel 証跡まで open） |
+| catalog G13 headroom と token 葉 module | `frontend.md` / `ui-ux` の First Load JS 予算 | [frontend-spec §8](../docs/frontend-spec.md) / [frontend architecture](../architecture/harness-hub-frontend.md) / [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md) | `feat-dual-catalog-web` / `HarnessHub-vwxc` |
+| required-check 台帳と verification tier 未配線明示 | `dev-workflow.md` qa-216 の tier / gate 強制 | [dev-workflow architecture](../architecture/harness-hub-dev-workflow.md) / [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-ic7w`・`HarnessHub-xcl3`・`HarnessHub-sl6o` |
+
 ## 全体ドキュメント出典 (未割当参照)
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |

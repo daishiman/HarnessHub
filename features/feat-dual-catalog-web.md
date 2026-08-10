@@ -115,3 +115,9 @@ HTTP error 経路では response schema chunk を読み込まず、成功時だ�
 - S01 PublishWizard と S03 CatalogPublishStatus は同じ `polling.ts` 契約を使う。
 - 反映と検証は [design-review-notes](../docs/features/feat-dual-catalog-web/design-review-notes.md) の follow-up 解消記録と [統合受領書](../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md) を正とする。
 
+## 2026-08-11 catalog G13 headroom (`HarnessHub-vwxc`)
+
+- token 名葉 module・PublishWizard 遅延読込・ZIP checkpoint 競合修正で catalog 全 page route を 95% 未満へ戻した。
+- lazy 化に合わせ dual-catalog polling lifecycle 検査へ `flushLazyBoundaries` を追加。
+- 受領は [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。navigation VRT は `HarnessHub-preq`。
+

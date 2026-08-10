@@ -41,6 +41,7 @@ import {
   FEEDBACK_SCOPE,
   loadConfig,
 } from './smoke-production-hearing-support.js';
+import { smokeFixtureLifecycle } from './smoke-production-publish-support.js';
 
 const HELP = `Usage:
   pnpm --filter @harness-hub/hub run smoke:coverage-production
@@ -83,6 +84,10 @@ async function main(): Promise<void> {
   const api = apiClient(config);
 
   const tenantIds: string[] = [];
+  // 中断 (cancel-in-progress など) でこの下の finally が完走しなくても、marker を持つ fixture は
+  // `smoke-production-publish.ts --sweep` が期限付きで回収する (HarnessHub-aauo)。marker の生成を
+  // publish 側の support と共有するのは、回収側と同じ run id / TTL の解釈を 1 箇所に保つため。
+  const lifecycle = smokeFixtureLifecycle('coverage');
   let runError: unknown;
   const cleanupErrors: string[] = [];
   const observed: Record<string, unknown> = {};
@@ -95,12 +100,14 @@ async function main(): Promise<void> {
       workerIdpSubject: `cv-worker-a-${config.suffix}`,
       // S8 (provider-admin の越境がrouteへ届き、対象監査を1件残すか) の観測に要る。
       providerAdminIdpSubject: `cv-provider-a-${config.suffix}`,
+      lifecycle,
     });
     tenantIds.push(primary.tenantId);
     const other = await probe.createTenantFixture({
       slug: `cv-smoke-b-${config.suffix}`,
       memberIdpSubject: `cv-member-b-${config.suffix}`,
       workerIdpSubject: `cv-worker-b-${config.suffix}`,
+      lifecycle,
     });
     tenantIds.push(other.tenantId);
 
@@ -468,7 +475,12 @@ async function main(): Promise<void> {
         cleanupErrors.push(`tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
-    observed.cleanup = { tenants: tenantIds.length, remaining_rows: cleanup };
+    observed.cleanup = {
+      tenants: tenantIds.length,
+      remaining_rows: cleanup,
+      run_id: lifecycle.runId,
+      fixture_expires_at: lifecycle.expiresAt,
+    };
     try {
       adapter.close();
     } catch (error) {

@@ -4,7 +4,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { translateUiMessage, type UiLocale, type UiMessageKey } from '../i18n/dictionaries.js';
-import type { Density, ThemeName, ThemePreference } from '../tokens/tokens.js';
+import type { Density, ThemeName, ThemePreference } from '../tokens/token-names.js';
 
 /** 利用者の表示設定。正本はサーバの `user_settings` (PATCH /me) で、ここはその写し。 */
 export interface UiPreferences {

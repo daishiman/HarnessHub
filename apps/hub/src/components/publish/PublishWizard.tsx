@@ -3,36 +3,30 @@
 /**
  * S01 Web 公開。Project 準備から既存 Publish API、状態確認、同一 request 再投入までを 1 画面に束ねる。
  */
-import type { CatalogFailureKind, PublishProject, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
+import type { PublishProject, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
 import { ActionLink, Alert, Button, Select, Textarea, TextInput } from '@harness-hub/ui';
-import dynamic from 'next/dynamic';
-import { type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { type FormEvent, lazy, type ReactNode, Suspense, useEffect, useId, useRef, useState } from 'react';
 
-import type { PollingState } from '../../lib/catalog/index.js';
-import {
-  classifyCatalogFailure,
-  resolveRetryDelayMs,
-  shouldContinuePolling,
-  shouldResumeOnVisible,
-} from '../../lib/catalog/index.js';
-import {
-  createPublishJourneyCheckpoint,
-  httpPublishJourneyPort,
-  type PublishJourneyCheckpoint,
-  type PublishJourneyPort,
-  type PublishJourneyScope,
-} from '../../lib/publish-journey/index.js';
+import type { PublishJourneyPort, PublishJourneyScope } from '../../lib/publish-journey/index.js';
+import { lazyHttpPublishJourneyPort } from './lazy-publish-journey-port.js';
+import { createPublishWizardCheckpoint } from './publish-journey-checkpoint.js';
 import { publishStatusHref } from './publish-status-href.js';
 
 /**
- * 結果表示は**公開要求が生まれてから**しか描画されないので、初期チャンクから外す
- * (HarnessHub-5vlq)。`/catalog/publish` は G13 予算の残余が最も薄い route で、
- * ここに検査結果の書式化と 9 状態分の文言が同居していた。
+ * 状態追跡と結果表示は**公開要求が生まれてから**しか動かないので、初期チャンクから外す
+ * (HarnessHub-5vlq / HarnessHub-vwxc)。`/catalog/publish` は G13 予算の残余が最も薄い route で、
+ * ここに検査結果の書式化・9 状態分の文言・polling の停止判定が同居していた。
  * 遅延読込中も同じ位置に文言を残して高さの跳ね (CLS) を抑える。
+ *
+ * `next/dynamic` ではなく `React.lazy` を使うのは、前者が loadable の追加ランタイム
+ * (async-local-storage の shim を含む) を持ち込むため (error.tsx 群と同じ判断)。
+ * `(workspace)` グループでこの分割を使うのはここだけなので、その追加ランタイムは
+ * 共有 chunk へ寄せられず `/catalog/publish` の route chunk が全額を負担していた
+ * (HarnessHub-vwxc の実測: page chunk 7,915 → 下表の差分)。
  */
-const PublishWizardOutcome = dynamic(async () => (await import('./PublishWizardOutcome.js')).PublishWizardOutcome, {
-  loading: () => <p>公開状況を読み込んでいます。</p>,
-});
+const PublishWizardTracker = lazy(async () => ({
+  default: (await import('./PublishWizardTracker.js')).PublishWizardTracker,
+}));
 
 export interface PublishWizardProps {
   readonly scope: PublishJourneyScope;
@@ -44,6 +38,11 @@ export interface PublishWizardProps {
 type ProjectMode = 'new' | 'existing';
 type SubmissionPhase = 'idle' | 'submitting' | 'failed';
 
+interface SelectedArchive {
+  readonly file: File;
+  readonly checkpoint: ReturnType<typeof createPublishWizardCheckpoint>;
+}
+
 const VISIBILITY_OPTIONS: readonly { value: PublishVisibility; label: string }[] = [
   { value: 'workspace', label: 'この Workspace のメンバー向けに公開する' },
   { value: 'private', label: '自分だけに公開する' },
@@ -54,13 +53,9 @@ const PROJECT_MODE_OPTIONS: readonly { value: ProjectMode; label: string }[] = [
   { value: 'existing', label: '既存の Project を使う' },
 ];
 
-function isDocumentVisible(): boolean {
-  return typeof document === 'undefined' || document.visibilityState === 'visible';
-}
-
 export function PublishWizard({
   scope,
-  port = httpPublishJourneyPort,
+  port = lazyHttpPublishJourneyPort,
   initialProjectId = '',
   initialPublishId = '',
 }: PublishWizardProps): ReactNode {
@@ -75,8 +70,10 @@ export function PublishWizard({
   const [failureMessage, setFailureMessage] = useState<string | null>(null);
   const [request, setRequest] = useState<PublishRequestView | null>(null);
   const [statusFailure, setStatusFailure] = useState<string | null>(null);
-  const [checkpoint, setCheckpoint] = useState<PublishJourneyCheckpoint | null>(null);
   const projectKey = useRef(crypto.randomUUID());
+  const selectedArchiveRef = useRef<SelectedArchive | null>(null);
+  const activeSubmissionRef = useRef<AbortController | null>(null);
+  const submittingRef = useRef(false);
   const fileFieldId = useId();
 
   const submitting = phase === 'submitting';
@@ -84,8 +81,13 @@ export function PublishWizard({
   const projectReady =
     projectMode === 'new' ? projectName.trim() !== '' || preparedProject !== null : projectId.trim() !== '';
   const ready = archive !== null && projectReady && canRetryRequest;
-  const requestId = request?.id ?? null;
-  const requestStatus = request?.status ?? null;
+
+  // port が AbortSignal を無視しても unmount 後に state/history を更新しない。
+  useEffect(() => {
+    return () => {
+      activeSubmissionRef.current?.abort();
+    };
+  }, []);
 
   // 共有された publish ID や再読込後の状態確認。以後の自動更新も同じ port を使う。
   useEffect(() => {
@@ -105,106 +107,19 @@ export function PublishWizard({
     return () => controller.abort();
   }, [initialPublishId, port, request, scope]);
 
-  // 自動で進む状態だけを既存 catalog polling 契約で追う。人待ち状態は叩き続けない。
-  useEffect(() => {
-    if (requestId === null || requestStatus === null) return;
-    const controller = new AbortController();
-    const startedAt = Date.now();
-    let cancelled = false;
-    let timer: number | undefined;
-    let attempt = 0;
-    let failures = 0;
-    let lastStatus = requestStatus;
-    let lastFailureKind: CatalogFailureKind | null = null;
-    let pausedForVisibility = false;
-    let inFlight = false;
-
-    /** 停止判定の入力。S03 と同じ純関数へ渡し、条件をこの画面側に写さない。 */
-    const currentState = (): PollingState => ({
-      status: lastStatus,
-      consecutiveFailures: failures,
-      elapsedMs: Date.now() - startedAt,
-      documentVisible: isDocumentVisible(),
-      inFlight,
-      lastFailureKind,
-    });
-
-    const run = async (): Promise<void> => {
-      if (cancelled) return;
-
-      // 待機中に hidden へ変わった場合も、通信を始める前に共通契約へ問い直す。
-      // 応答後だけ判定すると hidden 中に 1 回余分な request が発生する。
-      const beforeRequest = currentState();
-      if (!beforeRequest.documentVisible) {
-        if (shouldResumeOnVisible(beforeRequest)) pausedForVisibility = true;
-        return;
-      }
-
-      inFlight = true;
-      const result = await port.getRequest(scope, requestId, controller.signal);
-      inFlight = false;
-      if (cancelled) return;
-      if (result.ok) {
-        failures = 0;
-        lastFailureKind = null;
-        lastStatus = result.value.status;
-        setRequest(result.value);
-        setStatusFailure(null);
-      } else {
-        failures += 1;
-        // PublishJourneyFailure は kind を持たないため、catalog と同じ分類器で導出する。
-        // ここで独自の分類を書くと S01 と S03 で終端の定義が割れる
-        lastFailureKind = classifyCatalogFailure(result.failure.status);
-        setStatusFailure(result.failure.message);
-      }
-      const state = currentState();
-      if (shouldContinuePolling(state)) {
-        timer = window.setTimeout(() => void run(), resolveRetryDelayMs(attempt, null));
-        attempt += 1;
-        return;
-      }
-      // 可視性だけが理由なら復帰で再開する。終端失敗・終端状態はここで完全に止まる
-      if (shouldResumeOnVisible(state)) pausedForVisibility = true;
-    };
-
-    const handleVisibilityChange = (): void => {
-      if (cancelled) return;
-      if (!pausedForVisibility) return;
-      if (!isDocumentVisible()) return;
-      if (!shouldResumeOnVisible(currentState())) return;
-      pausedForVisibility = false;
-      void run();
-    };
-
-    if (typeof document !== 'undefined') {
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-    }
-
-    const initialState = currentState();
-    if (shouldContinuePolling(initialState)) {
-      timer = window.setTimeout(() => void run(), resolveRetryDelayMs(0, null));
-    } else if (shouldResumeOnVisible(initialState)) {
-      pausedForVisibility = true;
-    }
-
-    return () => {
-      cancelled = true;
-      controller.abort();
-      if (timer !== undefined) window.clearTimeout(timer);
-      if (typeof document !== 'undefined') {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      }
-    };
-  }, [port, requestId, requestStatus, scope]);
-
-  async function prepareProject(): Promise<string | null> {
+  async function prepareProject(signal: AbortSignal): Promise<string | null> {
     if (projectMode === 'existing') return projectId.trim();
     if (preparedProject !== null) return preparedProject.id;
-    const result = await port.createProject(scope, {
-      name: projectName.trim(),
-      description: projectDescription.trim(),
-      idempotencyKey: projectKey.current,
-    });
+    const result = await port.createProject(
+      scope,
+      {
+        name: projectName.trim(),
+        description: projectDescription.trim(),
+        idempotencyKey: projectKey.current,
+      },
+      signal,
+    );
+    if (signal.aborted) return null;
     if (!result.ok) {
       setFailureMessage(result.failure.message);
       return null;
@@ -216,56 +131,90 @@ export function PublishWizard({
 
   async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    if (submitting || !ready || archive === null) return;
+    const selectedArchive = selectedArchiveRef.current;
+    if (submittingRef.current || submitting || !projectReady || !canRetryRequest || selectedArchive === null) return;
 
+    const controller = new AbortController();
+    activeSubmissionRef.current = controller;
+    submittingRef.current = true;
     setPhase('submitting');
     setFailureMessage(null);
     try {
-      const resolvedProjectId = await prepareProject();
+      const resolvedProjectId = await prepareProject(controller.signal);
+      if (controller.signal.aborted) return;
       if (resolvedProjectId === null) {
         setPhase('failed');
         return;
       }
 
       const resetBeforeUpload = request?.status === 'needs_fix';
+      // initialPublishId の読込と ZIP 選択が前後した場合だけ、最新 request ID へ揃える。
+      // 通信失敗後の同じ ZIP の再試行では、選択時の checkpoint をそのまま再利用する。
       const nextCheckpoint =
-        phase === 'failed' && checkpoint !== null
-          ? checkpoint
-          : createPublishJourneyCheckpoint(request?.status === 'needs_fix' ? request.id : null);
+        phase !== 'failed' && resetBeforeUpload && selectedArchive.checkpoint.requestId !== request.id
+          ? createPublishWizardCheckpoint(request.id)
+          : phase !== 'failed' && request?.status === 'failed' && selectedArchive.checkpoint.requestId !== null
+            ? createPublishWizardCheckpoint()
+            : selectedArchive.checkpoint;
+      if (nextCheckpoint !== selectedArchive.checkpoint && selectedArchiveRef.current === selectedArchive) {
+        selectedArchiveRef.current = { ...selectedArchive, checkpoint: nextCheckpoint };
+      }
+      const archiveBuffer = await selectedArchive.file.arrayBuffer();
+      if (controller.signal.aborted) return;
       const result = await port.submitPackage(
         scope,
-        { projectId: resolvedProjectId, visibility, archive: await archive.arrayBuffer() },
+        { projectId: resolvedProjectId, visibility, archive: archiveBuffer },
         nextCheckpoint,
         { resetBeforeUpload },
+        controller.signal,
       );
+      if (controller.signal.aborted) return;
 
       if (!result.ok) {
-        setCheckpoint(result.failure.checkpoint ?? nextCheckpoint);
+        if (selectedArchiveRef.current?.file === selectedArchive.file) {
+          selectedArchiveRef.current = {
+            file: selectedArchive.file,
+            checkpoint: result.failure.checkpoint ?? nextCheckpoint,
+          };
+        }
         setFailureMessage(result.failure.message);
         setPhase('failed');
         return;
       }
 
       setRequest(result.value.request);
-      setCheckpoint(result.value.checkpoint);
+      if (selectedArchiveRef.current?.file === selectedArchive.file) {
+        selectedArchiveRef.current = { file: selectedArchive.file, checkpoint: result.value.checkpoint };
+      }
       setPhase('idle');
       if (typeof window !== 'undefined') {
         window.history.replaceState(null, '', publishStatusHref(scope, result.value.request.id));
       }
     } catch {
+      if (controller.signal.aborted) return;
       // File 読み出し・adapter・検証器の予期しない例外でも loading 表示に固着させない。
       setFailureMessage('ZIP を読み取るか公開処理を開始できませんでした。ファイルを確認して再試行してください。');
       setPhase('failed');
+    } finally {
+      if (activeSubmissionRef.current === controller) activeSubmissionRef.current = null;
+      submittingRef.current = false;
     }
   }
 
   function onArchiveChange(file: File | null): void {
+    const previousRequestId =
+      request?.status === 'needs_fix'
+        ? request.id
+        : phase === 'failed'
+          ? (selectedArchiveRef.current?.checkpoint.requestId ?? null)
+          : null;
+    // file と鍵を同じ同期 event で ref に保存する。React state の commit や module import を
+    // 待たないため、この change の直後に submit されても旧 ZIP の鍵は観測されない。
+    selectedArchiveRef.current =
+      file === null ? null : { file, checkpoint: createPublishWizardCheckpoint(previousRequestId) };
     setArchive(file);
     // 内容が変われば package の指紋も変わる。同じ鍵を再利用せず、request ID だけを引き継ぐ。
-    if (file !== null && phase === 'failed' && checkpoint !== null) {
-      setCheckpoint(createPublishJourneyCheckpoint(checkpoint.requestId));
-      setFailureMessage(null);
-    }
+    if (file !== null && phase === 'failed') setFailureMessage(null);
   }
 
   const buttonLabel =
@@ -357,6 +306,7 @@ export function PublishWizard({
             type="file"
             accept=".zip,application/zip"
             required
+            disabled={submitting}
             onChange={(event) => onArchiveChange(event.currentTarget.files?.[0] ?? null)}
           />
         </div>
@@ -379,7 +329,17 @@ export function PublishWizard({
         <Alert tone="warning" title="公開状態を更新できませんでした" description={statusFailure} />
       )}
 
-      {request === null ? null : <PublishWizardOutcome scope={scope} request={request} />}
+      {request === null ? null : (
+        <Suspense fallback={<p>公開状況を読み込んでいます。</p>}>
+          <PublishWizardTracker
+            scope={scope}
+            port={port}
+            request={request}
+            onRequest={setRequest}
+            onStatusFailure={setStatusFailure}
+          />
+        </Suspense>
+      )}
     </section>
   );
 }

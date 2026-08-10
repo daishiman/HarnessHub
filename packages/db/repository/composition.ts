@@ -118,6 +118,11 @@ import {
   type PublishSmokeEvidence as PublishSmokeEvidenceShape,
 } from './publish-smoke';
 import { createReleasesRepo, type ReleaseRow as ReleaseRowShape, type ReleasesRepo } from './releases';
+import type {
+  SmokeFixtureKind as SmokeFixtureKindShape,
+  SmokeFixtureLifecycle as SmokeFixtureLifecycleShape,
+  SmokeTenantSweepCandidate as SmokeTenantSweepCandidateShape,
+} from './smoke-lifecycle';
 import {
   createTenantDataRepo,
   type TenantDataListInput as TenantDataListInputShape,
@@ -184,6 +189,19 @@ export type HearingSmokeDbProbe = HearingSmokeDbProbeShape;
 export type HearingSmokeTenantFixture = HearingSmokeTenantFixtureShape;
 export type HearingSmokeSheetSnapshot = HearingSmokeSheetSnapshotShape;
 export type HearingSmokeJobSnapshot = HearingSmokeJobSnapshotShape;
+// 中断後の fixture 回収 (HarnessHub-aauo) は smoke runner 側が主導するので、lease 値の
+// 生成・検証もアプリ層から使える必要がある。schema は渡さず値の形だけを公開する。
+export type SmokeFixtureKind = SmokeFixtureKindShape;
+export type SmokeFixtureLifecycle = SmokeFixtureLifecycleShape;
+export type SmokeTenantSweepCandidate = SmokeTenantSweepCandidateShape;
+export {
+  createSmokeFixtureLifecycle,
+  DEFAULT_SMOKE_FIXTURE_TTL_MINUTES,
+  isSweepableSmokeFixture,
+  normalizeSmokeRunId,
+  parseSmokeFixtureTtlMinutes,
+  SMOKE_FIXTURE_KINDS,
+} from './smoke-lifecycle';
 export type TenantDataObjectRow = TenantDataObjectRowShape;
 export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;

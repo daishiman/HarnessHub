@@ -14,7 +14,7 @@
  * 作らないためで、max-width の規則を残すと閾値の直書きがここへ戻ってしまうから。
  */
 
-import { mediaUp } from '../tokens/tokens.js';
+import { mediaUp } from '../tokens/token-names.js';
 
 /** サイドバー常設幅 (mockup 実測値, frontend-spec §3.0)。 */
 export const shellSidebarWidth = '220px';

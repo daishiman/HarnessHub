@@ -100,7 +100,9 @@ UI を追加しない。Feedback の状態は AI 完了だけでは `open` の�
 
 ## データモデル
 
-schema 変更は無い。cleanup facade は既存 tenant 関連表に加え `feedbacks`、`documents`、`builds` を子から親の順に削除し、型付き select で残数を数える。
+coverage / hearing / publish smoke の通常 cleanup は既存 tenant 関連表に加え `feedbacks`、`documents`、`builds` を子から親の順に削除し、型付き select で残数を数える。
+
+**cancel 後回収 (`HarnessHub-aauo`)**: expand-only migration `0009_smoke-fixture-leases` が `smoke_fixture_leases`（tenant_id PK / run_id / kind / expires_at / created_at）を追加する。物理削除の正本は `tenants.name` の文字列 marker ではなく専用 lease 台帳である。fixture 作成 transaction で tenant と lease を同時登録し、lease が無い既存 tenant は sweep 対象にしない。TTL 不正値は既定へ丸めず fail-closed で停止する。
 
 ## 認証・認可
 
@@ -120,7 +122,7 @@ Feedback は `feedback_response`、Docs は `doc_draft` の `ai_jobs` を共有 
 
 ## 互換性・移行・リリース
 
-schema migration と新しい secret は不要。CI の既存 deploy job へ additive に step を追加する。`smoke:publish-production` は HarnessHub-pf5o で本番 Device Flow の短命 `publish:write` token を取得する方式へ統一し、`id: publish_smoke` として fail-closed に実行する。失敗 outcome は rollback 判断へ含める。
+coverage smoke 本体は新しい GitHub Secret を要求しない。cancel 回収のために `smoke_fixture_leases` を expand-only で追加する（製品 API / 認可契約は非変更）。CI の既存 deploy job へ additive に step を追加する。`smoke:publish-production` は HarnessHub-pf5o で本番 Device Flow の短命 `publish:write` token を取得する方式へ統一し、`id: publish_smoke` として fail-closed に実行する。失敗 outcome は rollback 判断へ含める。独立 sweeper は `.github/workflows/smoke-fixture-sweeper.yml`（schedule 設定 15 分 + workflow_dispatch）で、GitHub Actions schedule の遅延があり得るため回収 SLA は保証しない。
 
 ## テストと受入条件
 
@@ -138,4 +140,4 @@ schema migration と新しい secret は不要。CI の既存 deploy job へ add
 ## 未決事項
 
 - 新 SHA の production deploy で coverage / publish smoke の成功、rollback 入力、cleanup 残数 0 を実測する。
-- GitHub Actions の `cancel-in-progress` で runner が強制終了した場合はプロセス内 `finally` を保証できない。run ID と期限を持つ fixture sweeper、または `if: always()` の独立 cleanup step を後続課題で設計する。
+- GitHub Actions の `cancel-in-progress` で runner が強制終了した場合はプロセス内 `finally` を保証できない。専用 lease 台帳、同一 job の best-effort `if: always()`、runner と独立した fixture sweeper を実装した。sweeper の cron は15分の設定間隔だが、GitHub Actions の schedule は遅延し得るため回収時刻の上限や SLA は保証しない。production force-cancel 後の実走証跡は引き続き未取得である。

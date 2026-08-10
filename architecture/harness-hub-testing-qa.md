@@ -298,3 +298,4 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 
 - system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。
 - 2026-08-10 publish smoke (`HarnessHub-pf5o`) は Device Flow 短命 token で CI 結線。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md) と [統合受領書](../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)。
+- **cancel 後 fixture 回収 (`HarnessHub-aauo`, 2026-08-11)**: `smoke_fixture_leases` を削除 authority とし、deploy job 末尾の best-effort `if: always()` と独立 sweeper workflow で TTL 経過後の回収を再試行する。publish 領域を消し切るまで identity tenant を消さない。production force-cancel 実走証跡は未取得。

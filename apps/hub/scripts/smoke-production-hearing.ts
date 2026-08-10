@@ -27,6 +27,7 @@ import {
   HELP,
   loadConfig,
 } from './smoke-production-hearing-support.js';
+import { smokeFixtureLifecycle } from './smoke-production-publish-support.js';
 
 /** 提出 fixture。salary を含める — 保存されないことがこの smoke の SEC5 検査になる。 */
 const FORM_INPUT = {
@@ -76,6 +77,7 @@ async function main(): Promise<void> {
   const api = apiClient(config);
 
   const tenantIds: string[] = [];
+  const lifecycle = smokeFixtureLifecycle('hearing');
   let runError: unknown;
   const cleanupErrors: string[] = [];
   const observed: Record<string, unknown> = {};
@@ -86,12 +88,14 @@ async function main(): Promise<void> {
       slug: `hs-smoke-a-${config.suffix}`,
       memberIdpSubject: `hs-member-a-${config.suffix}`,
       workerIdpSubject: `hs-worker-a-${config.suffix}`,
+      lifecycle,
     });
     tenantIds.push(primary.tenantId);
     const other = await probe.createTenantFixture({
       slug: `hs-smoke-b-${config.suffix}`,
       memberIdpSubject: `hs-member-b-${config.suffix}`,
       workerIdpSubject: `hs-worker-b-${config.suffix}`,
+      lifecycle,
     });
     tenantIds.push(other.tenantId);
 
@@ -337,7 +341,12 @@ async function main(): Promise<void> {
         cleanupErrors.push(`tenant ${tenantId}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
-    observed.cleanup = { tenants: tenantIds.length, remaining_rows: cleanup };
+    observed.cleanup = {
+      tenants: tenantIds.length,
+      remaining_rows: cleanup,
+      run_id: lifecycle.runId,
+      fixture_expires_at: lifecycle.expiresAt,
+    };
     try {
       adapter.close();
     } catch (error) {
