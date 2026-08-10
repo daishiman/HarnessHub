@@ -5,21 +5,27 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { createPublishSmokeDbProbe, createTursoClient } from '@harness-hub/db';
+import { createHearingSmokeDbProbe, createPublishSmokeDbProbe, createTursoClient } from '@harness-hub/db';
 
+import {
+  acquireDeviceToken,
+  type DeviceApprover,
+  apiClient as deviceApiClient,
+} from './smoke-production-hearing-support.js';
 import {
   type ApiResult,
   apiClient,
   assert,
+  cleanupPublishThenIdentity,
   downloadR2,
   expectString,
   greenZip,
   HELP,
   loadConfig,
+  PUBLISH_SCOPE,
   secretZip,
   sha256,
   smokeId,
-  TERMINAL,
 } from './smoke-production-publish-support.js';
 
 async function main(): Promise<void> {
@@ -31,32 +37,54 @@ async function main(): Promise<void> {
   const config = loadConfig();
   const adapter = createTursoClient({ url: config.databaseUrl, authToken: config.databaseToken });
   const db = createPublishSmokeDbProbe(adapter);
-  const repositoryContext = {
-    tenantId: config.claims.tenant_id,
-    workspaceId: config.claims.workspace_id,
-    actorId: config.claims.sub,
-  };
-  const api = apiClient(config);
+  // tenant / workspace /利用者と device 承認は identity 側の probe が持つ (hearing / coverage smoke と共用)。
+  const identity = createHearingSmokeDbProbe(adapter);
+  const deviceApi = deviceApiClient(config);
   const projectId = smokeId('project');
   const channelId = smokeId('channel');
   const webChannelId = smokeId('web_channel');
   const webReleaseId = smokeId('web_release');
   const temp = await mkdtemp(join(tmpdir(), 'harness-hub-publish-smoke-'));
-  const cleanupRequests = new Set<string>();
-  let fixtureCreated = false;
+  const tenantIds: string[] = [];
   let runError: unknown;
   const cleanupErrors: string[] = [];
   const observed: Record<string, unknown> = {};
 
   try {
+    // ---- 準備: 使い捨て tenant 1 件と、本番 Worker が署名した publish:write の access token 1 本。
+    const fixture = await identity.createTenantFixture({
+      slug: `pb-smoke-${config.suffix}`,
+      memberIdpSubject: `pb-member-${config.suffix}`,
+      workerIdpSubject: `pb-publisher-${config.suffix}`,
+    });
+    tenantIds.push(fixture.tenantId);
+    // publish 系 action は `minRole: 'owner'`。`owner` は DB の列値ではなく資源との関係から
+    // 合成される実効 role で、ROLE_ORDER 上は `workspace-admin` > `owner` > `member`。
+    // つまり workspace-admin の利用者は Project の所有者でなくても publish を通せる。
+    // fixture が作る利用者のうち workspace-admin はこの `workerUserId`。
+    const approve: DeviceApprover = (input) => identity.approveDeviceAuthorization(input);
+    const grant = await acquireDeviceToken(deviceApi, approve, {
+      tenantSlug: fixture.tenantSlug,
+      tenantId: fixture.tenantId,
+      workspaceId: fixture.workspaceId,
+      userId: fixture.workerUserId,
+      label: `pb-publisher-${config.suffix}`,
+      scopes: [PUBLISH_SCOPE],
+    });
+    const repositoryContext = {
+      tenantId: fixture.tenantId,
+      workspaceId: fixture.workspaceId,
+      actorId: fixture.workerUserId,
+    };
+    const api = apiClient(config, grant);
+
     const now = Date.now();
     await db.createProjectChannelFixture(repositoryContext, {
       projectId,
       channelId,
-      ownerUserId: config.claims.sub,
+      ownerUserId: fixture.workerUserId,
       createdAt: now,
     });
-    fixtureCreated = true;
 
     const createRequest = async (): Promise<string> => {
       const result = await api('POST', '/api/v1/publish', {
@@ -64,9 +92,7 @@ async function main(): Promise<void> {
         json: { project_id: projectId, target: 'skill', visibility: 'workspace' },
       });
       assert(result.body.status === 'draft', 'S1: 新規 request が draft ではありません');
-      const id = expectString(result.body.id, 'S1 request id');
-      cleanupRequests.add(id);
-      return id;
+      return expectString(result.body.id, 'S1 request id');
     };
     const upload = async (id: string, bytes: Uint8Array, expected: number): Promise<ApiResult> =>
       api('PUT', `/api/v1/publish/${id}/package`, { expected, bytes });
@@ -82,7 +108,6 @@ async function main(): Promise<void> {
     const v1Submit = await submit(v1Request, 200);
     assert(v1Submit.body.status === 'published', 'S4: v1 が published ではありません');
     const v1Release = expectString(v1Submit.body.release_id, 'S4 v1 release_id');
-    cleanupRequests.delete(v1Request);
 
     // S3: secret ZIP は 422/needs_fix、Release と R2 registry を作らず stable を変えない。
     const rejectedBytes = secretZip();
@@ -121,12 +146,10 @@ async function main(): Promise<void> {
     assert(blocked.body.error === 'channel_busy', '409: channel_busy ではありません');
     const cancelled = await api('POST', `/api/v1/publish/${blockerRequest}/cancel`, { expected: 200 });
     assert(cancelled.body.status === 'draft', 'cleanup: blocker cancel が draft を返しません');
-    cleanupRequests.delete(blockerRequest);
 
     const v2Submit = await submit(v2Request, 200);
     assert(v2Submit.body.status === 'published', 'S4: v2 が published ではありません');
     const v2Release = expectString(v2Submit.body.release_id, 'S4 v2 release_id');
-    cleanupRequests.delete(v2Request);
 
     // 12 route contract のうち Bearer 対応経路は成功、session-only 経路は明示的な 403 を確認する。
     const listed = await api('GET', `/api/v1/publish?project_id=${encodeURIComponent(projectId)}&limit=100`, {
@@ -177,7 +200,7 @@ async function main(): Promise<void> {
       channelId: webChannelId,
       releaseId: webReleaseId,
       packageHash: v2Hash,
-      createdBy: config.claims.sub,
+      createdBy: repositoryContext.actorId,
       createdAt: fixtureNow,
     });
     const deployment = await api('POST', `/api/v1/projects/${projectId}/deployment`, {
@@ -275,23 +298,22 @@ async function main(): Promise<void> {
   } catch (error) {
     runError = error;
   } finally {
-    for (const requestId of cleanupRequests) {
-      try {
-        const row = await db.findRequest(repositoryContext, requestId);
-        if (row && !TERMINAL.has(row.status)) {
-          await api('POST', `/api/v1/publish/${requestId}/cancel`, { expected: 200 });
-        }
-      } catch (error) {
-        cleanupErrors.push(`request ${requestId}: ${error instanceof Error ? error.message : String(error)}`);
-      }
+    // 使い捨て tenant なので Project を archived に戻すのではなく、作った行を全て消す。
+    // publish 領域 (projects / channels / releases / requests / deployments) は publish 側の
+    // probe が、identity 領域 (tenant / users / audit / device 認可) は identity 側の probe が
+    // それぞれ所有する表を消す。**publish を先に**消す — identity 側が tenant 行を消した後だと、
+    // 残った publish 行がどの tenant のものか追えなくなる。
+    const cleanup: Record<string, number> = {};
+    for (const tenantId of tenantIds) {
+      const outcome = await cleanupPublishThenIdentity(
+        tenantId,
+        () => db.cleanupPublishTenant(tenantId),
+        () => identity.cleanupTenant(tenantId),
+      );
+      Object.assign(cleanup, outcome.remainingRows);
+      cleanupErrors.push(...outcome.errors);
     }
-    if (fixtureCreated) {
-      try {
-        await db.archiveProject(repositoryContext, projectId);
-      } catch (error) {
-        cleanupErrors.push(`project archive: ${error instanceof Error ? error.message : String(error)}`);
-      }
-    }
+    observed.cleanup = { tenants: tenantIds.length, remaining_rows: cleanup };
     try {
       adapter.close();
     } catch (error) {
@@ -323,8 +345,10 @@ async function main(): Promise<void> {
         status: 'pass',
         project_id: projectId,
         target_channel_id: channelId,
-        project_cleanup: 'archived',
-        immutable_evidence_retained: ['releases', 'r2_objects', 'audit_events'],
+        project_cleanup: 'tenant_deleted',
+        // R2 実体だけは残る。content-addressed で tenant 非スコープのため、同一 hash を
+        // 参照する他 tenant の Release を壊さないよう消さない (packages 表も同じ理由)。
+        retained: ['r2_objects', 'packages_registry'],
         checks: observed,
       },
       null,

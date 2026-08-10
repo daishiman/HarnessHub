@@ -45,6 +45,20 @@ const STATIC_ROOT = BUILD_ROOT;
  */
 const DEFAULT_BUDGET_BYTES = 120 * 1024;
 
+/**
+ * 警告帯の下限 (予算に対する比率, HarnessHub-5vlq)。
+ *
+ * 超過ゲートだけだと「予算を使い切った route」と「まだ余裕のある route」が同じ緑になる。
+ * その状態で誰かが import を 1 本足すと、赤くなるのはその PR なので**原因が自分の import に見える**が、
+ * 実際の原因は先に積み上がった消費である (誤帰属)。
+ * 実測 (2026-08-10): /catalog/publish は 122,184 / 122,880 = 99.4% で緑だった。
+ *
+ * 警告は exit code を変えない。ここを fail にすると「今日の緑が明日理由なく赤くなる」ゲートになり、
+ * 予算超過そのものを止める本来の判定 (evaluateBudget) の意味が薄れる。
+ * 代わりに残余をバイト数で明示し、次に足す人が事前に気づける形にする。
+ */
+const WARN_RATIO = 0.95;
+
 function parseArgs(argv) {
   const args = { budget: null, report: null, help: false };
   for (let i = 0; i < argv.length; i += 1) {
@@ -294,6 +308,30 @@ function evaluateBudget(routes) {
     }));
 }
 
+/**
+ * 警告帯の判定。予算の WARN_RATIO 以上を消費しているが、まだ超過はしていない page を返す。
+ *
+ * 超過済み route は violations 側で赤くなるのでここには入れない。両方に出すと
+ * 「警告が出ている = まだ余裕がある」という読みが崩れ、警告の意味が失われる。
+ */
+function evaluateWarnings(routes) {
+  return routes
+    .filter(
+      (r) =>
+        r.kind === 'page' &&
+        r.firstLoadGzipBytes <= r.budgetBytes &&
+        r.firstLoadGzipBytes >= r.budgetBytes * WARN_RATIO,
+    )
+    .map((r) => ({
+      route: r.route,
+      firstLoadGzipBytes: r.firstLoadGzipBytes,
+      budgetBytes: r.budgetBytes,
+      // 「あと何バイト足せるか」。比率だけだと、次に足す import が入るかどうかを判断できない
+      remainingBytes: r.budgetBytes - r.firstLoadGzipBytes,
+      usedRatio: r.firstLoadGzipBytes / r.budgetBytes,
+    }));
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -334,26 +372,52 @@ async function main() {
   }
 
   const violations = evaluateBudget(routes);
+  const warnings = evaluateWarnings(routes);
 
   const report = {
     budgetBytes: budget,
+    warnRatio: WARN_RATIO,
     routes,
     polyfillGzipBytes: polyfillBytes,
     violations,
+    warnings,
     withinBudget: violations.length === 0,
     measuredAt: new Date().toISOString(),
   };
   await mkdir(path.dirname(reportPath), { recursive: true });
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
 
-  process.stdout.write(`[client-bundle] 予算: ${formatBytes(budget)} / route\n`);
+  process.stdout.write(
+    `[client-bundle] 予算: ${formatBytes(budget)} / route (警告帯: ${(WARN_RATIO * 100).toFixed(0)}% 以上)\n`,
+  );
   for (const r of routes) {
     const mark =
-      r.kind === 'route-handler' ? 'SKIP (route handler)' : violations.some((v) => v.route === r.route) ? 'NG' : 'OK';
+      r.kind === 'route-handler'
+        ? 'SKIP (route handler)'
+        : violations.some((v) => v.route === r.route)
+          ? 'NG'
+          : warnings.some((w) => w.route === r.route)
+            ? 'WARN'
+            : 'OK';
     process.stdout.write(`[client-bundle] ${mark} ${r.route}: ${formatBytes(r.firstLoadGzipBytes)}\n`);
   }
   process.stdout.write(`[client-bundle] polyfill (modern browser では未実行): ${formatBytes(polyfillBytes)}\n`);
   process.stdout.write(`[client-bundle] 計測結果: ${reportPath}\n`);
+
+  if (warnings.length > 0) {
+    // stderr へ出す。CI ログの折り畳みでも目に入り、かつ exit code は 0 のまま維持される
+    for (const w of warnings) {
+      process.stderr.write(
+        `[client-bundle] 予算残りわずか: ${w.route} ${formatBytes(w.firstLoadGzipBytes)} ` +
+          `(${(w.usedRatio * 100).toFixed(1)}% 消費 / 残り ${w.remainingBytes} bytes)\n`,
+      );
+    }
+    process.stderr.write(
+      '[client-bundle] これらの route は次に import を 1 本足しただけで超過し得ます。' +
+        '超過したときの原因はその import ではなく既に積み上がった消費なので、' +
+        '先に遅延読込 (next/dynamic) や client 境界の見直しで余裕を戻してください\n',
+    );
+  }
 
   if (violations.length > 0) {
     for (const v of violations) {

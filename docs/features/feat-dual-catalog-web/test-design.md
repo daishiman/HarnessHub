@@ -29,6 +29,7 @@ test_root: apps/hub/src/__tests__/dual-catalog-web/
 | ファイル (`apps/hub/src/__tests__/dual-catalog-web/` 配下) | 環境 | 対象 |
 |---|---|---|
 | `polling-contract.test.ts` | node | `lib/catalog/polling.ts` — 間隔数列・停止条件・レート制御 |
+| `polling-lifecycle.test.tsx` | **jsdom** | S03 / S01 の timer・visibility・cleanup の実配線 |
 | `degradation.test.ts` | node | `lib/catalog/degradation.ts` — 失敗分類と §6.1 縮退 |
 | `marketplace-document.test.ts` | node | `lib/catalog/marketplace.ts` — 文書生成・pending-h7 表明 |
 | `tenant-isolation.test.ts` | node | テナント境界を跨ぐ entry 混入の禁止 |
@@ -54,6 +55,21 @@ test_root: apps/hub/src/__tests__/dual-catalog-web/
 | DC-POLL-09 | `429` + `Retry-After: 7` | 次回間隔は backoff 数列ではなく **7000** (サーバ指示を優先) |
 | DC-POLL-10 | `429` + `Retry-After` なし | backoff 数列に従う |
 | DC-POLL-11 | in-flight が存在する状態 | `false` (同一 projectId の多重送信を張らない) |
+| DC-POLL-12 | 401 / 403 / fatal | 回数上限を待たず `false` (即時停止) |
+| DC-POLL-13 | degraded | 終端扱いにせず、回数・時間上限までは継続 |
+| DC-POLL-14 | visible 復帰候補 | 可視性以外の停止事由がない場合だけ `true` |
+
+### 2.1.1 lifecycle 配線 (`polling-lifecycle.test.tsx`)
+
+| ID | ケース | 期待 |
+|---|---|---|
+| DC-POLL-LC-01 | 401 / 403 / fatal 応答後に時間を進める | request 増分 0 |
+| DC-POLL-LC-02 | degraded 応答後に初回 backoff を進める | request が再発生する（陽性対照） |
+| DC-POLL-LC-03 | timer 待機中に hidden 化 | hidden 中の request 増分 0、visible 復帰で +1 |
+| DC-POLL-LC-03B | S01 公開ウィザードで同じ操作 | S03 と同じ 0 / +1 |
+| DC-POLL-LC-04 | visible event を連続送出 | 再開は +1 のみ |
+| DC-POLL-LC-05 | 終端失敗後に hidden → visible | request 増分 0 |
+| DC-POLL-LC-06 | unmount 後に時間を進める | timer / listener が残らず request 増分 0 |
 
 ### 2.2 縮退 (`degradation.test.ts`) — acceptance 3 の直接根拠
 
@@ -147,7 +163,7 @@ acceptance 1 は「axe 違反 0 が**リリース条件として CI に存在す
 Playwright が未導入のため、上記のうち**検証価値の中核**を Vitest + jsdom へ移す。
 
 - axe 検査 → DC-A11Y-01..07 (SSR HTML を実際に走査するため E2E とほぼ同等の被覆)
-- ポーリング挙動 → DC-POLL-01..11 (純関数化されているため DOM なしで全分岐を検証できる)
+- ポーリング判定 → DC-POLL-01..14、実配線 → DC-POLL-LC-01..06 + 03B
 - レスポンシブ → DC-RESP-01 (CSS のみ切替という決定により DOM 同一性で代替可能)
 
 **残余リスク**: 実ブラウザでの CSS 適用結果・フォーカス順序の実挙動は未検証。Playwright 導入は本 feature の Write scope 外のため、P12 の follow-up として記録する。
@@ -170,7 +186,7 @@ Playwright が未導入のため、上記のうち**検証価値の中核**を V
 |---|---|
 | `a11y-wcag22aa-cwv-good-axe-ci-qa018` | DC-A11Y-01..07 / DC-CI-01..05 / DC-CWV-01 / DC-RESP-01 |
 | `hub-outage-degradation-continuity-section6-1-qa011` | DC-DEG-01..08 / DC-MKT-07 |
-| `publish-status-polling-state-machine-qa009-qa062` | DC-POLL-01..11 |
+| `publish-status-polling-state-machine-qa009-qa062` | DC-POLL-01..14 / DC-POLL-LC-01..06 + 03B |
 | `distribution-channel-url-marketplace-bootstrap-installer-qa003-i6-i9` | DC-MKT-01..09 |
 | `workspace-catalog-thin-dual-catalog-stage1-mvp-i4-u7` | DC-SCOPE-01..04 / DC-A11Y-01..04 |
 | `multi-tenant-simultaneous-workspaces-success-criteria-u5` | DC-TEN-01..10 / DC-MKT-07 |

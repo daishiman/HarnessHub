@@ -251,3 +251,11 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
   [frontend-spec](../docs/frontend-spec.md) S01、受領は
   [Web 公開受領書](../docs/features/feat-web-only-publish-journey/spec-reflection-receipt.md) と
   [Workspace 切替受領書](../docs/features/feat-workspace-switch-ux/spec-reflection-receipt.md)。
+
+## 2026-08-10 ポーリング終端停止・テーマ CSS 静的化・G13 警告帯
+
+- **publish status ポーリング** (`HarnessHub-h2pe`): `unauthorized` / `forbidden` / `fatal` は初回応答後に即時停止する。hidden 中は request を送らず、可視性だけを理由に止めた pollable state は `visibilitychange` の visible 復帰で一度だけ再開する。判定正本は `shouldContinuePolling()` / `shouldResumeOnVisible()` で、S01 / S03 は同じ純関数を共有する。
+- **テーマ CSS** (`HarnessHub-2fo1`): root layout の inline `buildThemeCss()` / `buildBaseCss()` を廃止し、`@harness-hub/ui/tokens.css` を 1 回 import する。生成正本は `buildTokenCssArtifact()`、成果物一致は `css-artifact.test.ts` が fail-closed に守る。CPU 12x 再計測と navigation VRT 差分は未完了で `HarnessHub-preq` が阻害する。
+- **G13 警告帯** (`HarnessHub-5vlq`): First Load JS が予算 120 KiB の 95% 以上を使った page route を超過前に警告する。警告は G13 を失敗させず、120 KiB 超過だけを失敗とする。`/catalog/[projectId]` と `/catalog/publish` の構造的余裕回復は `HarnessHub-vwxc` へ分離した。
+- 正本: [frontend-spec](../docs/frontend-spec.md) §8、[UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[dual-catalog ADR](../docs/features/feat-dual-catalog-web/architecture-decision-record.md)。
+

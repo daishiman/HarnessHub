@@ -212,6 +212,20 @@ R5/R6/R7/R8 はいずれも「P02 の architecture decision が誤っている�
 - 同時実行も設計どおり。`run` を直列に繋ぎ (`CatalogPublishStatus.tsx:91-93`)、unmount 時に
   `AbortController` で中断する (`:98-102`)。
 
+#### follow-up 解消記録（2026-08-10 / HarnessHub-h2pe）
+
+- C1 は `PollingState.lastFailureKind` と `isTerminalCatalogFailure()` へ集約し、401 / 403 / fatal を
+  初回応答後に停止する形へ是正した。`polling-contract.test.ts` と lifecycle 検査の双方で固定している。
+- C2 は `visibilitychange` を購読し、可視性だけを理由に停止した場合に限って再開する形へ是正した。
+  timer の予約後に hidden へ変わる競合もあるため、応答後だけでなく**通信開始前**にも共通判定を行う。
+  `polling-lifecycle.test.tsx` は hidden 中の request 増分が 0 であることを明示的に検査する。
+- C3 は実装を正とし、`validating` / `approved` / `publishing` だけを pollable とする。`needs_fix` /
+  `ready` / `approval_pending` は人の操作待ちなので停止し、visible 復帰でも再開しない。
+- S03 (`CatalogPublishStatus`) と S01 (`PublishWizard`) は同じ純関数契約を利用する。停止条件を各画面へ
+  複製せず、画面側は timer / listener の lifecycle 配線だけを担う。
+
+以上により V3 の C1〜C3 は解消した。元のレビュー所見は発見時の証跡として残し、この追記を現行判定とする。
+
 ### 5.4 V4 — marketplace.json 生成方式: **CONCERN (軽微)**
 
 - スキーマは正本と一致している。`marketplace-document.test.ts:69-86` (DC-MKT-01) が
@@ -283,7 +297,7 @@ ADR §7 #5 は「通常 session の `GET /catalog` ハードナビゲーショ�
 | # | 内容 | 引き継ぎ先 | 種別 |
 |---|---|---|---|
 | F1 | ポーリングが 401/403/契約不正でも 5 回リトライする。失敗種別を `shouldContinuePolling` へ渡し即時停止させる (§5.3 C1) | `HarnessHub-h2pe` | 実装 |
-| F2 | 不可視タブ復帰でポーリングが再開しない。現行 ADR は明示 Retry として同期し、自動再開実装は `HarnessHub-h2pe` で追跡 (§5.3 C2) | `HarnessHub-h2pe` | 実装/文書 |
+| F2 | 発見時は不可視タブ復帰でポーリングが再開せず、ADR も明示 Retry としていた。現在は自動再開実装と ADR を `HarnessHub-h2pe` で同期済み (§5.3 C2) | `HarnessHub-h2pe` | 実装/文書 |
 | F3 | **本変更で解消**: ADR §2.2 の終端 status 定義を実装 (`POLLABLE_PUBLISH_STATES`) に合わせて改訂 (§5.3 C3) | ADR | 文書 |
 | F4 | `marketplace.json` の未認証消費者経路を H7 確定と同時に決める (§5.4) | `HarnessHub-dctf` | 設計 |
 | F5 | **文書訂正は本変更で解消、実測は継続**: `__cwv_probe` を現行経路として 3 文書へ反映。`hub-cwv` の fresh 実測は `HarnessHub-aqi` で継続 (§5.5) | 運用 + 各文書 | 文書/運用 |

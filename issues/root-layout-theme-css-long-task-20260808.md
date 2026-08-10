@@ -12,9 +12,9 @@ iteration: null
 title: "root layout の inline buildThemeCss() による Style & Layout ロングタスクを解消する"
 owners: ["daishiman"]
 created_at: "2026-08-08T08:00:00Z"
-updated_at: "2026-08-08T10:00:00Z"
+updated_at: "2026-08-10T11:49:00Z"
 status: "active"
-depends_on: []
+depends_on: ["issue-ui-vrt-navigation-baseline-drift-20260810"]
 related_nodes: ["issue-hub-cwv-tbt-over-budget-20260724"]
 resource_scope: ["apps/hub/src/app/layout.tsx","packages/ui"]
 purpose: "JS 削減が頭打ちになった後の最大ロングタスク要因である、テーマ CSS の inline 出力によるスタイル再計算コストを取り除く。"
@@ -57,15 +57,15 @@ CPU 12x スロットリング下の最大ロングタスクが JS ではなく d
 
 `HarnessHub-aqi` の是正で JS 由来のロングタスクを削った結果、**最大ロングタスクの主が入れ替わった**。これ以上 JS を削っても総 TBT が下がらない位置まで来たことを意味する。
 
-root layout は `buildThemeCss()` の結果を inline style 要素として出力している。テーマ CSS 変数を全量その場で生成するため、次の 3 つが同時に効く。
+root layout は `buildThemeCss()` の結果を inline style 要素として出力している。テーマ CSS 変数を全量その場で生成するため、次の負荷候補がある。
 
 - HTML 本文が膨らむ（転送量と parse 時間の両方に効く）
-- 生成された style が外部 CSS と別枠で入るため、ブラウザの style recalculation が初回に集中する
-- inline なのでキャッシュが効かない。2 回目以降の訪問でも毎回同じコストを払う
+- inline なので文書をまたぐ再訪で stylesheet としてキャッシュできず、同じ CSS を HTML と一緒に再転送する
+- CSS parse / CSSOM / layout は inline と外部 stylesheet のどちらでも初回に必要であり、外部化だけでロングタスクが消えるとは限らない
 
-**所有権の注意**: 正本は `packages/ui` にある。本 worktree (`wt-18-3`) は `packages/ui` を変更対象から外している（`wt-16-2` が同 package を進行中）。着手前に owner 調整が必要で、ここでは実測と選択肢の記録に留める。
+**所有権の注意**: 正本は `packages/ui` にある。2026-08-10 時点では課題 owner と実装 owner が同一で、現存する他 worktree に `packages/ui` の未反映変更がないことを確認した。以後に並行作業が始まった場合は再確認する。
 
-## 現在の挙動
+## 起票時の挙動
 
 | 条件 | 最大ロングタスク |
 |---|---|
@@ -78,7 +78,7 @@ root layout は `buildThemeCss()` の結果を inline style 要素として出�
 
 CPU 12x で document の Style & Layout がロングタスク（50ms 超）に該当しない、または少なくとも最大ロングタスクの主ではなくなっている。テーマの見た目には退行が無い。
 
-## 再現手順またはユースケース
+## 起票時の再現手順
 
 1. Hub 本番トップを Chrome DevTools の Performance で記録する（CPU throttling を 12x に設定）
 2. Main thread の long tasks を確認する
@@ -87,13 +87,13 @@ CPU 12x で document の Style & Layout がロングタスク（50ms 超）に�
 
 ## 影響と優先度
 
-初回訪問だけでなく再訪でも毎回コストを払うため、実ユーザーの体感 TBT に継続的に効く。aqi の CWV 是正を仕上げるうえで残された主要因でもある。優先度は medium から high の境目だが、`packages/ui` の所有権調整が前提になるため即着手はできない。owner 調整が済み次第 high 扱いでよい。
+HTML 転送量と再訪時のキャッシュ可否には直接効く。一方、aqi で観測した初回 Style & Layout への効果は仮説であり、再計測まで確定しない。優先度は medium のままとし、静的成果物化と再計測を分けて進める。
 
 ## スコープ
 
 **(a) テーマ CSS を静的ファイルへ切り出す（推奨）**
 
-ビルド時に `buildThemeCss()` を評価して css ファイルとして出力し、stylesheet として読む。ブラウザキャッシュが効き、inline 分だけ HTML が縮む。前提はテーマがリクエストごとに変わらないこと。tenant ごとに変わるなら (b) と組み合わせる。効果は 2 回目以降の訪問コストがほぼ消えること。
+`buildThemeCss()` を評価して CSS ファイルとして出力し、stylesheet として読む。ブラウザキャッシュの対象になり、inline 分だけ HTML が縮む。前提はテーマがリクエストごとに変わらないこと。tenant ごとに変わるなら (b) と組み合わせる。初回の parse / CSSOM / layout は残るため、効果量は再計測する。
 
 **(b) 可変部分だけを inline に残す**
 
@@ -109,6 +109,7 @@ CPU 12x で document の Style & Layout がロングタスク（50ms 超）に�
 
 - `issues/hub-cwv-tbt-over-budget-20260724.md` — 本件を炙り出した CWV 是正課題
 - `issues/catalog-detail-bundle-headroom-20260808.md` — 同じ aqi 実測から切り出したもう 1 件
+- `HarnessHub-preq` — navigation light/dark の 197px 差を判定する blocking dependency
 
 ## 受入条件
 
@@ -121,3 +122,11 @@ CPU 12x で document の Style & Layout がロングタスク（50ms 超）に�
 - aqi 実測時の CPU 12x Performance トレース（Style & Layout 219〜300ms）
 - `docs/frontend-spec.md` §8 — aqi の実測知見の記述
 - 是正後の再計測トレース（本課題の完了時に取得する）
+
+## 実装状況（2026-08-10）
+
+- `@harness-hub/ui/tokens.css` を公開 subpath とし、root layout の inline style を静的 import へ置換した。
+- `buildTokenCssArtifact()` を生成とブラウザ fixture の共通正本にし、コミット済み CSS との完全一致検査を追加した。
+- focused Vitest 4件で生成物の一致・theme/base の包含と順序・生成物サイズ下限を確認した。
+- **未完了**: CPU 12x Performance 再計測。静的化だけで受入1を満たしたとは判定しない。
+- browser test は 31 PASS / 2 FAIL。navigation light/dark だけが基準 1024x1739 に対して実際 1024x1936（高さ +197px）で、actual には `WorkspaceSwitcher` が含まれる。原因未確定のため baseline は更新せず、`HarnessHub-preq` を阻害課題として登録した。受入3も未達扱いを維持する。

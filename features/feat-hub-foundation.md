@@ -161,3 +161,10 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - UI 基盤を実際の業務画面へ展開し、認証後 route を desktop sidebar / header / footer と mobile 4+その他 tab の `HubShell` で統一した。
 - navigation は実在 route と active `SessionRole` から deny-by-default で生成し、member または role 未確定時に users / auth / coefficients を DOM へ出さない。
 - 画面は `ScreenHeader` / `Panel` / `ActionLink`、重なりは `Modal` / `BottomSheet`、取り消せない確認は `ConfirmDialog` へ統一した。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、検証は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-10 テーマ CSS 静的成果物と bundle 警告帯
+
+- root layout は `@harness-hub/ui/tokens.css` を 1 回 import する（inline theme CSS を廃止）。
+- G13 は 95% 警告帯を持ち、構造的 headroom 不足の残件は `HarnessHub-vwxc` が追跡する。
+- 受入の再計測・navigation VRT は `HarnessHub-2fo1` / `HarnessHub-preq` を参照する。
+

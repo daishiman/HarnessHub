@@ -42,7 +42,7 @@ serves_goals: [G1, G4, G5]
 
 【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
 
-【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため、追跡課題を完了するまで手動 runner のままとする。
+【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は HarnessHub-pf5o で本番 Device Flow の短命 publish:write token を取得する方式へ統一し、新規 PUBLISH_ACCESS_TOKEN と権限台帳更新なしで CI へ fail-closed 結線する。publish cleanup が完了した場合だけ identity tenant を削除する。
 
 【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
 
@@ -188,7 +188,7 @@ serves_goals: [G1, G4, G5]
 
 【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
 
-【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため、追跡課題を完了するまで手動 runner のままとする。
+【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は HarnessHub-pf5o で本番 Device Flow の短命 publish:write token を取得する方式へ統一し、新規 PUBLISH_ACCESS_TOKEN と権限台帳更新なしで CI へ fail-closed 結線する。publish cleanup が完了した場合だけ identity tenant を削除する。
 
 【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
 

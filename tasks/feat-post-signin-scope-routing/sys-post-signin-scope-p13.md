@@ -77,3 +77,9 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 - 2026-08-08 追補 (ランディング 500): `issue-hub-root-500-signin-20260808`。`/` 動的強制・テナント入口・Workspace 入口選択・deny HTML・dynamic-routes/landing smoke。受領書「追補 (2026-08-08): ランディング 500 修復…」と specs A' 節を正本とする。system-spec は qa セル既存のため no-change。
 - 2026-08-08 production smoke: main `35a10b87` / hub-ci run `31253674292` で OIDC O5 と S1〜S8 が SUCCESS。cleanup 残存行 0 も確認済み。本証拠の default-branch reconciliation 後に durable done とする。
 - 2026-08-10 reconciliation: PR #681 / #682 の main merge と default-branch 証拠保存を確認し、`docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json` が本 task を PASS として被覆するため durable done とする。
+
+## 2026-08-10 publish smoke 追記 (HarnessHub-pf5o)
+
+- production coverage smoke の残課題だった publish 結線を Device Flow 化で解消。
+- 仕様追補と受領書を更新。cancel-in-progress 回収は HarnessHub-aauo へ分離。
+

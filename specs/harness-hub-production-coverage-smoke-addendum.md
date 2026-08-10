@@ -12,17 +12,17 @@ iteration: null
 title: "Harness Hub production coverage smoke 仕様追補"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:00:00Z"
-updated_at: "2026-08-08T10:00:00Z"
-status: "draft"
+updated_at: "2026-08-10T11:40:07.300084Z"
+status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["issue-production-smoke-coverage-gaps-20260808","spec-post-signin-workspace-scope"]
-resource_scope: [".github/workflows/ci.yml","apps/hub/scripts","packages/db/repository/hearing-smoke.ts","docs/features","features","tasks"]
-purpose: null
-goal: null
-scope_in: []
-scope_out: []
-acceptance: []
-architecture_refs: []
+related_nodes: ["issue-production-smoke-coverage-gaps-20260808","issue-publish-smoke-unwired-20260808","spec-post-signin-workspace-scope"]
+resource_scope: [".github/workflows/ci.yml","apps/hub/scripts","apps/hub/tests/publish-pipeline","packages/db/repository","packages/db/__tests__","scripts/ci/actions-secrets-registry.json","docs/features","system-spec/testing-qa.md"]
+purpose: "本番 deploy ごとに認証・認可・Feedback・Docs・publish の主要経路を実データで検査し、単体テストだけでは見えない結線退行を検出する。"
+goal: "既存 secret だけで全 production smoke を fail-closed 実行し、失敗を rollback 判断へ渡し、試験データを安全な依存順で後始末できる状態にする。"
+scope_in: ["production coverage smoke と publish smoke の CI 結線","本番 Device Flow による短命 token 取得","使い捨て tenant の依存順 cleanup","smoke outcome の rollback 判断への伝播"]
+scope_out: ["認証認可ルール自体の変更","DB schema migration","新しい GitHub Secret の追加","production deploy の実行そのもの"]
+acceptance: ["coverage smoke と publish smoke が既存 deploy job から fail-closed に実行される","publish は新規長命 token を置かず本番 Device Flow の短命 publish:write token を使う","smoke failure が rollback 判断へ入力され、未実行を failure と誤認しない","publish 領域を消し切った tenant だけ identity 領域を削除し、cleanup failure を成功扱いにしない"]
+architecture_refs: ["arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -30,8 +30,8 @@ file_path: "specs/harness-hub-production-coverage-smoke-addendum.md"
 template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":"user final-review instruction + canonical system-spec qa-205","evidence_ref":"system-spec/testing-qa.md"}
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"98150c83bc5c3b1a386d865562cc0c1f30ae5398f124289502ca98ac6284c772","evaluator":"30思考法の独立レビュー + focused contract tests","evidence_ref":"specs/harness-hub-production-coverage-smoke-addendum.md"}
 source_lineage: {"imported_at":"2026-08-08T10:00:00Z","origin_kind":"manual","source_digest":null,"source_path":"system-spec/spec-state.json","source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "3 feature を横断する本番品質契約であり、500 行目前の総合仕様から独立した specification addendum として分離する。"
@@ -55,8 +55,8 @@ post-signin scope、Feedback Loop、Docs CMS の「単体テストはあるが�
 
 ## スコープ
 
-- 対象: 本番 Worker の認可拒否、Device Flow token、Feedback AI queue、Docs AI draft queue、試験データ cleanup、CI rollback 判断。
-- 対象外: 認可ルール自体の変更、新しい GitHub Secret、production deploy の実行、publish smoke の CI 結線。
+- 対象: 本番 Worker の認可拒否、Device Flow token、Feedback AI queue、Docs AI draft queue、publish pipeline、試験データ cleanup、CI rollback 判断。
+- 対象外: 認可ルール自体の変更、新しい GitHub Secret、production deploy の実行。publish smoke の CI 結線は起票時の対象外だったが、HarnessHub-pf5o の Device Flow 追補で解消済み。
 
 ## 用語と主体
 
@@ -120,7 +120,7 @@ Feedback は `feedback_response`、Docs は `doc_draft` の `ai_jobs` を共有 
 
 ## 互換性・移行・リリース
 
-schema migration と新しい secret は不要。CI の既存 deploy job へ additive に step を追加する。`smoke:publish-production` は `PUBLISH_ACCESS_TOKEN` の台帳・最小権限契約が整うまで手動 runner のままとする。
+schema migration と新しい secret は不要。CI の既存 deploy job へ additive に step を追加する。`smoke:publish-production` は HarnessHub-pf5o で本番 Device Flow の短命 `publish:write` token を取得する方式へ統一し、`id: publish_smoke` として fail-closed に実行する。失敗 outcome は rollback 判断へ含める。
 
 ## テストと受入条件
 
@@ -132,5 +132,10 @@ schema migration と新しい secret は不要。CI の既存 deploy job へ add
 ## 残る本番検証
 
 - provider-admin 越境はrouteへ通して監査する案(a)へ統一済み。ローカル実装・回帰テストは完了しているが、新SHAをdeployしたproduction smoke S8は未実施であり、成功証拠が得られるまで `HarnessHub-stmx` / `HarnessHub-1vb.13` は完了扱いにしない。
-- publish smoke の CI 結線は短命 owner token の発行・台帳・rotation 契約を別課題で確定する。
+- publish smoke の CI 結線は HarnessHub-pf5o で完了した。長命 token・追加 secret・rotation 台帳は不要で、使い捨て tenant の publish 領域を消し切った場合だけ identity tenant を削除する。
 - U1〜U9 source-index 欠落により system-spec foundation gate が既存 `main` でも失敗する問題は別課題で追跡する。
+
+## 未決事項
+
+- 新 SHA の production deploy で coverage / publish smoke の成功、rollback 入力、cleanup 残数 0 を実測する。
+- GitHub Actions の `cancel-in-progress` で runner が強制終了した場合はプロセス内 `finally` を保証できない。run ID と期限を持つ fixture sweeper、または `if: always()` の独立 cleanup step を後続課題で設計する。

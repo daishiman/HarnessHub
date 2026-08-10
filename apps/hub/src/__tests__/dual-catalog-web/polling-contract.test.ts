@@ -1,12 +1,13 @@
 /**
- * DC-POLL-01..11: publish 状況ポーリングの契約 (qa-009 / qa-062 / ADR §2.2・§2.4)。
+ * DC-POLL-01..14: publish 状況ポーリングの契約 (qa-009 / qa-062 / ADR §2.2・§2.4)。
  *
  * 対象は `lib/catalog/polling.ts` の純関数。DOM も timer も使わないのは、
  * 「実際に 2 秒待つ」テストにすると遅くて不安定になり、結局 skip されて誰も守らなくなるため。
  */
-import type { PublishRequestState } from '@harness-hub/schemas';
+import type { CatalogFailureKind, PublishRequestState } from '@harness-hub/schemas';
 import { describe, expect, it } from 'vitest';
 
+import { isTerminalCatalogFailure } from '../../lib/catalog/degradation.js';
 import {
   INITIAL_POLL_INTERVAL_MS,
   isPollablePublishState,
@@ -18,6 +19,7 @@ import {
   parseRetryAfterSeconds,
   resolveRetryDelayMs,
   shouldContinuePolling,
+  shouldResumeOnVisible,
 } from '../../lib/catalog/polling.js';
 
 /** 継続する状態の既定値。各ケースは検証したい 1 項目だけを差し替える。 */
@@ -28,6 +30,7 @@ function pollingState(overrides: Partial<PollingState> = {}): PollingState {
     elapsedMs: 0,
     documentVisible: true,
     inFlight: false,
+    lastFailureKind: null,
     ...overrides,
   };
 }
@@ -100,6 +103,40 @@ describe('DC-POLL / 停止条件', () => {
 
   it('DC-POLL-11: in-flight があれば次を張らない', () => {
     expect(shouldContinuePolling(pollingState({ inFlight: true }))).toBe(false);
+  });
+
+  it('DC-POLL-12: 終端失敗 (401/403/契約不正) は回数上限を待たず 1 回で停止する', () => {
+    const terminalKinds: readonly CatalogFailureKind[] = ['unauthorized', 'forbidden', 'fatal'];
+    for (const kind of terminalKinds) {
+      expect(isTerminalCatalogFailure(kind)).toBe(true);
+      // 失敗 1 回目 (回数上限 5 には遠い) でも継続しない
+      expect(shouldContinuePolling(pollingState({ consecutiveFailures: 1, lastFailureKind: kind }))).toBe(false);
+      // 可視復帰でも再開しない — 401 を叩き直す穴を塞ぐ
+      expect(shouldResumeOnVisible(pollingState({ documentVisible: false, lastFailureKind: kind }))).toBe(false);
+    }
+  });
+
+  it('DC-POLL-13: 一過性失敗 (degraded) は従来どおり回数上限まで継続する', () => {
+    expect(isTerminalCatalogFailure('degraded')).toBe(false);
+    expect(shouldContinuePolling(pollingState({ consecutiveFailures: 4, lastFailureKind: 'degraded' }))).toBe(true);
+    expect(
+      shouldContinuePolling(
+        pollingState({ consecutiveFailures: MAX_CONSECUTIVE_FAILURES, lastFailureKind: 'degraded' }),
+      ),
+    ).toBe(false);
+  });
+
+  it('DC-POLL-14: 可視復帰の判定は「可視性以外の停止事由が無い」ときだけ true', () => {
+    // 可視性だけが理由 → 再開する
+    expect(shouldResumeOnVisible(pollingState({ documentVisible: false }))).toBe(true);
+    // 可視性以外の事由が同時に立っていれば再開しない
+    expect(shouldResumeOnVisible(pollingState({ documentVisible: false, status: 'published' }))).toBe(false);
+    expect(
+      shouldResumeOnVisible(pollingState({ documentVisible: false, consecutiveFailures: MAX_CONSECUTIVE_FAILURES })),
+    ).toBe(false);
+    expect(shouldResumeOnVisible(pollingState({ documentVisible: false, elapsedMs: MAX_POLL_DURATION_MS }))).toBe(
+      false,
+    );
   });
 });
 

@@ -478,6 +478,22 @@ jobs:
           HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+      # feat-publish-pipeline P13 の S1-S6 / 409 直列化 / R2 SHA-256 / audit chain を毎デプロイ再実行する
+      # (HarnessHub-pf5o)。この runner は long-lived な `PUBLISH_ACCESS_TOKEN` を前提にしていたため
+      # 台帳に無い secret を要求し、**CI から一度も呼ばれていなかった**。publish は最も権限の強い操作
+      # なので、その token を CI へ常置するより、hearing / coverage と同じ無人 Device Flow で
+      # 実行のたびに短命 token を取り直すほうが安全かつ **新しい secret が要らない**。
+      # 使い捨て tenant と作った publish 行は検査後に全て削除される (R2 実体だけは content-addressed
+      # のため残す)。R2 の再取得に使う CLOUDFLARE_API_TOKEN は DB/R2 smoke と同じ R2 読取 token。
+      - name: 本番 publish パイプライン スモークテスト (P13 受入条件 S1-S6)
+        id: publish_smoke
+        run: pnpm --filter @harness-hub/hub run smoke:publish-production
+        env:
+          HUB_PUBLIC_URL: ${{ vars.HUB_PUBLIC_URL }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_R2_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       # deploy 以降のいずれかが失敗したときの復旧手順。方針は 3 点:
       #   1. DB は自動で戻さない。migration は expand-only (CREATE TABLE のみ) で、巻き戻すと実データを失う。
       #      旧 Worker は新規テーブルを参照しないため、DB を前進させたままでも本番は整合する。
@@ -502,9 +518,10 @@ jobs:
           SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
           HEARING_SMOKE_OUTCOME: ${{ steps.hearing_smoke.outcome }}
           COVERAGE_SMOKE_OUTCOME: ${{ steps.coverage_smoke.outcome }}
+          PUBLISH_SMOKE_OUTCOME: ${{ steps.publish_smoke.outcome }}
         run: |
           set -euo pipefail
-          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME} smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME} landing_smoke=${LANDING_SMOKE_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME} coverage_smoke=${COVERAGE_SMOKE_OUTCOME}"
+          echo "preflight=${PREFLIGHT_OUTCOME} migrate=${MIGRATE_OUTCOME} deploy=${DEPLOY_OUTCOME} health=${HEALTH_OUTCOME} version_gate=${VERSION_GATE_OUTCOME} deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME} smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME} landing_smoke=${LANDING_SMOKE_OUTCOME} oidc_smoke=${OIDC_SMOKE_OUTCOME} data_smoke=${SMOKE_OUTCOME} hearing_smoke=${HEARING_SMOKE_OUTCOME} coverage_smoke=${COVERAGE_SMOKE_OUTCOME} publish_smoke=${PUBLISH_SMOKE_OUTCOME}"
           echo "DB migration は expand-only のため自動では巻き戻さない (巻き戻しは実データ喪失を伴う手動判断)"
           if [ "${DEPLOY_OUTCOME}" != "success" ]; then
             echo "wrangler deploy が未成功 (${DEPLOY_OUTCOME}) = 本番は旧 Worker のまま。戻す対象なし"
@@ -522,7 +539,7 @@ jobs:
           if [ "${DEPLOY_FRESHNESS_OUTCOME}" != "success" ] && [ "${LANDING_SMOKE_OUTCOME}" != "failure" ] \
             && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
             && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ] \
-            && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
+            && [ "${PUBLISH_SMOKE_OUTCOME}" != "failure" ] && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
             echo "鮮度検査で停止 (deploy_freshness=${DEPLOY_FRESHNESS_OUTCOME}) しており smoke は未実行。戻す対象なし"
             exit 0
           fi
@@ -532,7 +549,7 @@ jobs:
           if [ "${SMOKE_VERSION_RECHECK_OUTCOME}" != "success" ] && [ "${LANDING_SMOKE_OUTCOME}" != "failure" ] \
             && [ "${OIDC_SMOKE_OUTCOME}" != "failure" ] \
             && [ "${SMOKE_OUTCOME}" != "failure" ] && [ "${HEARING_SMOKE_OUTCOME}" != "failure" ] \
-            && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
+            && [ "${PUBLISH_SMOKE_OUTCOME}" != "failure" ] && [ "${COVERAGE_SMOKE_OUTCOME}" != "failure" ]; then
             echo "smoke 直前の配信版再確認で停止 (smoke_version_recheck=${SMOKE_VERSION_RECHECK_OUTCOME}) しており smoke は未実行。戻す対象なし"
             exit 0
           fi

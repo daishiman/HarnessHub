@@ -16,7 +16,7 @@
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
-import { buildBaseCss, buildThemeCss } from '@harness-hub/ui';
+import { buildTokenCssArtifact } from '@harness-hub/ui';
 import type { Browser, BrowserContext, Page } from 'playwright';
 import { chromium } from 'playwright';
 import type { ReactNode } from 'react';
@@ -105,8 +105,9 @@ export function renderDocument(route: BrowserRoute): string {
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
     `<title>${escapeHtml(route.title ?? 'Harness Hub')}</title>`,
-    `<style>${buildThemeCss()}</style>`,
-    `<style>${buildBaseCss()}</style>`,
+    // 本番 (RootLayout) が読む tokens.css と**同一の全文**を差し込む。
+    // theme/base を個別に連結すると、出荷される CSS と視覚回帰が測る CSS が別物になりうる
+    `<style>${buildTokenCssArtifact()}</style>`,
     '</head>',
     '<body>',
     renderToStaticMarkup(route.body),

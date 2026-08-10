@@ -107,3 +107,11 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-08-10 Catalog validator load boundary
 
 HTTP error 経路では response schema chunk を読み込まず、成功時だけ JSON decode と schema load を並行する。Zod の fail-closed 検証、API・認可・DB 契約は維持する。TBT の最終受入は `HarnessHub-aqi` の本番 CWV 再計測待ち。反映範囲と検証は [仕様反映受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-10 polling terminal / visibility follow-up
+
+- 401/403/fatal は固定回数リトライせず即時停止する。
+- 不可視タブでは request を送らず、visible 復帰時は pollable state だけを一度再開する。
+- S01 PublishWizard と S03 CatalogPublishStatus は同じ `polling.ts` 契約を使う。
+- 反映と検証は [design-review-notes](../docs/features/feat-dual-catalog-web/design-review-notes.md) の follow-up 解消記録と [統合受領書](../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md) を正とする。
+

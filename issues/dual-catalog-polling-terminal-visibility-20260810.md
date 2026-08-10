@@ -12,11 +12,11 @@ iteration: null
 title: "Dual Catalog polling の fatal 即時停止と visibility 復帰再開"
 owners: ["daishiman"]
 created_at: "2026-08-10T00:00:00Z"
-updated_at: "2026-08-09T20:57:24.930943Z"
+updated_at: "2026-08-10T11:21:31.986602Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-dual-catalog-web","issue-hub-cwv-tbt-over-budget-20260724"]
-resource_scope: ["apps/hub/src/components/catalog","apps/hub/src/lib/catalog/polling.ts","apps/hub/src/__tests__/dual-catalog-web"]
+resource_scope: ["apps/hub/src/components/catalog","apps/hub/src/components/publish","apps/hub/src/lib/catalog","apps/hub/src/__tests__/dual-catalog-web"]
 purpose: "回復不能な失敗で無駄な再試行を止め、不可視タブから戻った利用者には publish 状態の確認を安全に再開する。"
 goal: "失敗分類・publish 状態・visibility を一貫した停止条件として扱い、不要通信と更新停止を同時に解消する。"
 scope_in: ["401/403/fatal の即時停止","visibilitychange による復帰時再開","fake timer と visibility event の回帰検査","ADR と運用文書の同期"]
@@ -57,7 +57,7 @@ publish 状態ポーリングが回復不能な失敗でも再試行し、不可
 
 設計レビューで、401・403・契約不正が通常の一時失敗と同じ回数だけ再試行されること、hidden で停止した timer が visible 復帰時に再設定されないことを確認した。前者は不要通信、後者は古い状態の表示を生む。
 
-## 現在の挙動
+## 起票時の挙動
 
 - 401 / 403 / fatal でも attempt 上限まで poll する。
 - hidden 時は停止するが、visible 復帰を購読していない。
@@ -93,6 +93,16 @@ hook、polling 純関数、focused test、ADR を対象とする。publish API�
 - hidden 中は poll せず、visible 復帰時は pollable state だけ再開する。
 - unmount 後に timer と event listener が残らない。
 
+## 実装状況（2026-08-10）
+
+- 401 / 403 / fatal は共通の純関数で終端判定し、次の timer を予約しない。
+- timer 待機中に hidden へ変わった場合も、通信開始前に可視性を再判定して request を送らない。
+- visible 復帰時は、可視性以外の停止理由がない pollable state だけを一度再開する。
+- S03 (`CatalogPublishStatus`) と S01 (`PublishWizard`) を同じ契約へ揃えた。
+- lifecycle 検査は hidden 中の request 増分 0、復帰時 +1、終端失敗後 +0、unmount 後 +0 を確認する。
+
 ## 検証証跡
 
-起票根拠は `docs/features/feat-dual-catalog-web/design-review-notes.md` §5.3 / F1 / F2。実装時に focused Vitest と task-spec gate を追記する。
+- 起票根拠: `docs/features/feat-dual-catalog-web/design-review-notes.md` §5.3 / F1 / F2
+- 回帰検査: `polling-contract.test.ts` 14件、`polling-lifecycle.test.tsx` 9件（2026-08-10 PASS）
+- 仕様反映: 同 design review §5.3 の follow-up 解消記録

@@ -297,3 +297,12 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 ## 関連追補
 
 - system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。
+
+## 2026-08-10 publish production smoke (`HarnessHub-pf5o`)
+
+- **結線**: deploy job に `id: publish_smoke` を fail-closed で追加し、失敗 outcome を rollback 判断へ入力する。
+- **credential**: 新規 `PUBLISH_ACCESS_TOKEN` は置かない。実行ごとに使い捨て tenant を作り、本番 Device Flow で短命 `publish:write` token を取得する。
+- **cleanup**: publish 領域 (`cleanupPublishTenant`) を消し切った tenant だけ identity 領域を削除する。publish cleanup が throw または `clean: false` のとき identity 削除へ進まない。
+- **残件**: 新 SHA の production run 証跡は未取得。`cancel-in-progress` 後の独立回収は `HarnessHub-aauo` で追跡する。
+- 正本: [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md)、[受領書](../docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md)。
+

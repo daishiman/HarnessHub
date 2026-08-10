@@ -1,7 +1,12 @@
 /** feat-dual-catalog-web の純粋ロジック層の公開入口。UI 部品はここ経由で参照する。 */
 
 export type { CatalogCapabilities } from './degradation.js';
-export { catalogCapabilities, classifyCatalogFailure, isDegraded } from './degradation.js';
+export {
+  catalogCapabilities,
+  classifyCatalogFailure,
+  isDegraded,
+  isTerminalCatalogFailure,
+} from './degradation.js';
 export { httpCatalogPort } from './http-adapter.js';
 export type { MarketplaceBuildOptions, PluginSourceResolver } from './marketplace.js';
 export { buildMarketplaceDocument, resolveAdoptedSourceResolver } from './marketplace.js';
@@ -16,6 +21,7 @@ export {
   parseRetryAfterSeconds,
   resolveRetryDelayMs,
   shouldContinuePolling,
+  shouldResumeOnVisible,
 } from './polling.js';
 export type { CatalogFailure, CatalogPort, CatalogResult, CatalogScope } from './ports.js';
 export { publishStatusChipValue } from './publish-status.js';

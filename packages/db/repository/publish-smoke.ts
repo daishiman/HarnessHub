@@ -8,13 +8,21 @@
 
 import { and, eq, inArray } from 'drizzle-orm';
 import { verifyAuditChain } from '../backup/verify';
-import { packages, projects, releases, targetChannels } from '../schema/core/catalog';
-import { publishRequests } from '../schema/core/publish';
+import {
+  catalogEntries,
+  deploymentReferences,
+  packages,
+  projects,
+  releases,
+  targetChannels,
+} from '../schema/core/catalog';
+import { idempotencyLedger, publishRequests } from '../schema/core/publish';
 import { auditEvents } from '../schema/core/security';
-import { EntityNotFoundError } from '../src/errors';
+import { isTransactionalAdapter } from '../src/adapter';
+import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
 import { guardedWrite } from './conflict';
-import type { CoreAdapter } from './db';
+import type { CoreAdapter, CoreDb } from './db';
 
 export interface PublishSmokeEvidence {
   readonly stableReleaseId: string | null;
@@ -70,7 +78,28 @@ export interface PublishSmokeDbProbe {
       readonly entityIds: ReadonlySet<string>;
     },
   ): Promise<PublishSmokeEvidence>;
-  archiveProject(context: RepositoryContext, projectId: string): Promise<void>;
+  /**
+   * publish 領域が使い捨て tenant へ残した行を全て消す。残数を返し、0 でなければ呼び出し側が失敗にする。
+   *
+   * identity 側 (`HearingSmokeDbProbe.cleanupTenant`) は publish 領域の表を知らない。
+   * 使い捨て tenant で publish smoke を回すようにした結果 (HarnessHub-pf5o)、
+   * 後始末を identity 側だけに任せると projects / releases / publish_requests が
+   * **孤児として本番に残ったまま `clean: true` になる**。所有する側がここで消す。
+   *
+   * `packages` は content-addressed で tenant 非スコープ (schema のコメント参照) のため対象外。
+   * R2 実体も同じ理由で残す — 消すと同一 hash を参照する他 tenant の Release を壊しうる。
+   */
+  cleanupPublishTenant(tenantId: string): Promise<{ readonly remainingRows: number; readonly clean: boolean }>;
+}
+
+function transactional(adapter: CoreAdapter) {
+  if (!isTransactionalAdapter(adapter)) {
+    throw new RepositoryError(
+      'invalid-context',
+      'production publish smoke の後始末には transaction 対応 adapter が必要です',
+    );
+  }
+  return adapter;
 }
 
 export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {
@@ -204,15 +233,50 @@ export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbP
       };
     },
 
-    async archiveProject(context, projectId) {
-      const rows = await guardedWrite(adapter, () =>
-        adapter.client
-          .update(projects)
-          .set({ status: 'archived' })
-          .where(and(eq(projects.tenantId, context.tenantId), eq(projects.id, projectId)))
-          .returning({ id: projects.id }),
+    async cleanupPublishTenant(tenantId) {
+      // 依存の子から順に消す。projects を先に消すと、残った子行がどの Project のものか
+      // 追えなくなり、次回以降の cleanup が対象を特定できなくなる (hearing 側と同じ理由)。
+      await guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const txDb = tx.client as CoreDb;
+          await txDb.delete(catalogEntries).where(eq(catalogEntries.tenantId, tenantId));
+          await txDb.delete(deploymentReferences).where(eq(deploymentReferences.tenantId, tenantId));
+          await txDb.delete(publishRequests).where(eq(publishRequests.tenantId, tenantId));
+          await txDb.delete(releases).where(eq(releases.tenantId, tenantId));
+          await txDb.delete(targetChannels).where(eq(targetChannels.tenantId, tenantId));
+          await txDb.delete(projects).where(eq(projects.tenantId, tenantId));
+          // 冪等鍵は request 単位に積まれる。残すと同じ鍵の再利用検査が過去 run の行に当たる。
+          await txDb.delete(idempotencyLedger).where(eq(idempotencyLedger.tenantId, tenantId));
+        }),
       );
-      if (rows[0] === undefined) throw new EntityNotFoundError('projects', projectId);
+
+      // 消し漏れを 1 行でも残したまま clean を返さない。列は型付き select で数える。
+      const remainders = await Promise.all([
+        adapter.client.select({ id: projects.id }).from(projects).where(eq(projects.tenantId, tenantId)),
+        adapter.client
+          .select({ id: targetChannels.id })
+          .from(targetChannels)
+          .where(eq(targetChannels.tenantId, tenantId)),
+        adapter.client.select({ id: releases.id }).from(releases).where(eq(releases.tenantId, tenantId)),
+        adapter.client
+          .select({ id: publishRequests.id })
+          .from(publishRequests)
+          .where(eq(publishRequests.tenantId, tenantId)),
+        adapter.client
+          .select({ id: deploymentReferences.id })
+          .from(deploymentReferences)
+          .where(eq(deploymentReferences.tenantId, tenantId)),
+        adapter.client
+          .select({ id: catalogEntries.id })
+          .from(catalogEntries)
+          .where(eq(catalogEntries.tenantId, tenantId)),
+        adapter.client
+          .select({ id: idempotencyLedger.key })
+          .from(idempotencyLedger)
+          .where(eq(idempotencyLedger.tenantId, tenantId)),
+      ]);
+      const remaining = remainders.reduce((total, rows) => total + rows.length, 0);
+      return { remainingRows: remaining, clean: remaining === 0 };
     },
   };
 }
