@@ -12,8 +12,8 @@ iteration: null
 title: "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T00:40:02Z"
-status: "active"
+updated_at: "2026-08-10T02:43:42Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts","apps/hub/src/lib/routing/dashboard-scope.ts","apps/hub/src/lib/routing/signin-entry.ts","apps/hub/src/lib/routing/workspace-entry.ts","apps/hub/src/lib/routing/deny-navigation.ts","apps/hub/src/components/primary-nav.tsx","apps/hub/src/app/(dashboard)/layout.tsx","apps/hub/src/app/(workspace)/layout.tsx","apps/hub/src/app/page.tsx","apps/hub/src/app/signin/route.ts","apps/hub/src/app/signin/workspace/route.ts","apps/hub/scripts/check-dynamic-routes.mjs","docs/features/feat-post-signin-scope-routing/release-record.md","docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md","docs/features/feat-post-signin-scope-routing/test-run-record.md","docs/features/feat-post-signin-scope-routing/release-completion-checklist.md","system-spec/frontend.md","system-spec/security.md","specs/harness-hub-post-signin-workspace-scope-addendum.md","architecture/harness-hub-frontend.md","architecture/harness-hub-security.md","features/feat-post-signin-scope-routing.md","features/feat-workspace-switch-ux.md","issues/hub-root-500-signin-20260808.md","tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-10T02:43:42Z","evidence_refs":["docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"],"policy":"manual","reconciled_at":"2026-08-10T02:43:42Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -76,3 +76,4 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 - 2026-08-08 追補: RSC の `resolveDashboardScope` と PrimaryNav 最小シェルを実装結線。仕様意味変更ではなく画面側の session scope 再利用。受領書の「追補 (2026-08-08)」節と architecture/features/docs の additive 更新を正本とする。
 - 2026-08-08 追補 (ランディング 500): `issue-hub-root-500-signin-20260808`。`/` 動的強制・テナント入口・Workspace 入口選択・deny HTML・dynamic-routes/landing smoke。受領書「追補 (2026-08-08): ランディング 500 修復…」と specs A' 節を正本とする。system-spec は qa セル既存のため no-change。
 - 2026-08-08 production smoke: main `35a10b87` / hub-ci run `31253674292` で OIDC O5 と S1〜S8 が SUCCESS。cleanup 残存行 0 も確認済み。本証拠の default-branch reconciliation 後に durable done とする。
+- 2026-08-10 reconciliation: PR #681 / #682 の main merge と default-branch 証拠保存を確認し、`docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json` が本 task を PASS として被覆するため durable done とする。
