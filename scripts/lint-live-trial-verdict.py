@@ -49,7 +49,7 @@ from provenance_helper import check_digest_provenance, run_provenance  # noqa: E
 # dev-graph の criteria receipt が特定する受領済み evidence を、run-id の辞書順より
 # 優先する。時計ずれで将来日付の歴史的 run が現行 PASS を隠す事故を防ぐ。
 sys.path.insert(0, str(ROOT / "plugins" / "dev-graph" / "lib"))
-from live_trial_evidence_selection import verdict_path_from_criteria_receipt  # noqa: E402
+from live_trial_evidence_selection import verdict_selection_from_criteria_receipt  # noqa: E402
 
 # 既知バグにより live-trial ゲートが構造的に PASS できない (plugin, skill) を、対応する
 # 挙動閉包 digest (skill_dir_tree_sha) に限定して一時的に許容する。skill_dir_tree_sha は
@@ -127,7 +127,7 @@ def _declares_live_trial(plugin, skill):
 
 def latest_verdict_path(plugin, skill):
     """受領済み OUT1 verdict を優先し、無ければ最新 run-id の verdict を返す。"""
-    receipted = verdict_path_from_criteria_receipt(EVAL_LOG.parent, plugin, skill)
+    receipted, _ = verdict_selection_from_criteria_receipt(EVAL_LOG.parent, plugin, skill)
     if receipted is not None:
         return receipted
     base = EVAL_LOG / plugin / skill / "live-trial"
@@ -138,6 +138,16 @@ def latest_verdict_path(plugin, skill):
         key=lambda d: d.name,
     )
     return (candidates[-1] / "verdict.json") if candidates else None
+
+
+def selected_verdict_path(plugin, skill):
+    """受領済み receipt を優先し、不正な receipt は fallback せず fail-closed にする。"""
+    receipted, selection_error = verdict_selection_from_criteria_receipt(
+        EVAL_LOG.parent, plugin, skill
+    )
+    if selection_error is not None or receipted is not None:
+        return receipted, selection_error
+    return latest_verdict_path(plugin, skill), None
 
 
 def check_verdict(path, plugin, skill, verdict_mod, backend_mod, schema):
@@ -253,8 +263,11 @@ def run_lint(plugin_filter=None, enforce=False):
             _declares_live_trial(plugin, skill)
             and not backend_mod.deny_target_skill(skill)
         )
-        latest = latest_verdict_path(plugin, skill)
-        if latest is None:
+        selected, selection_error = selected_verdict_path(plugin, skill)
+        if selection_error is not None:
+            violations.append(f"{plugin}/{skill}: {selection_error}")
+            continue
+        if selected is None:
             if required:
                 missing.append(
                     f"{plugin}/{skill}: feedback_contract が verify_by: live-trial を宣言するが"
@@ -262,8 +275,8 @@ def run_lint(plugin_filter=None, enforce=False):
                 )
             continue
         checked += 1
-        for err in check_verdict(latest, plugin, skill, verdict_mod, backend_mod, schema):
-            violations.append(f"{plugin}/{skill}: {latest.parent.name}/verdict.json {err}")
+        for err in check_verdict(selected, plugin, skill, verdict_mod, backend_mod, schema):
+            violations.append(f"{plugin}/{skill}: {selected.parent.name}/verdict.json {err}")
 
     if missing:
         level = "FAIL" if enforce else "WARN"
