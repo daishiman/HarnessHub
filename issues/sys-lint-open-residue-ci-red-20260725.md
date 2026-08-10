@@ -12,8 +12,8 @@ iteration: null
 title: "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:55:00Z"
-updated_at: "2026-07-26T02:07:30.962498Z"
-status: "draft"
+updated_at: "2026-07-28T04:10:37Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/dev-graph/scripts/lint-open-residue.py",".github/workflows/dev-pipeline-lint.yml","tasks/","issues/"]

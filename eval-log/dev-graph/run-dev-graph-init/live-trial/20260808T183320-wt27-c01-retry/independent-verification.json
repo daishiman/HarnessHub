@@ -1,0 +1,15 @@
+{
+  "evaluator": "fresh-independent-goal-evaluator-c01-retry",
+  "scenario_id": "C01-OUT1-positive-idempotence-r17",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {"met": true, "evidence": "The first skill pass creates the six content roots, repository-relative routing config, graph store, and templates through sanctioned builders."},
+    "2": {"met": true, "evidence": "The transcript contains the second literal init Skill invocation; every second-pass change count is zero and config/graph inode and mtime remain unchanged."},
+    "3": {"met": true, "evidence": "The edited document template has identical pre/post SHA-256 and byte count after the second init pass."},
+    "4": {"met": true, "evidence": "The plugin-managed hook manifest resolves to existing hook scripts without project fallback or settings mutation."},
+    "5": {"met": true, "evidence": "Config scans find no absolute path, secret token, or GitHub node ID."},
+    "6": {"met": true, "evidence": "C11 exits 0 against graph revision 1 containing the C02-created document node."}
+  },
+  "goal_evidence": "transcript.jsonl contains eight Agent tool uses across the two init passes and nested C02 work; the parent independently integrates and verifies their results."
+}

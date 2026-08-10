@@ -1,0 +1,91 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "args": "--repo-root /Users/dm/orca/workspaces/HarnessHub/wt-27-2/eval-log/dev-graph/run-dev-graph-status/live-trial/20260808T130722-c18status/fixture-repo",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-status"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "c54e03179085928f40845846abfdcf58872c87afa982bbb40b5b4f70d994410c",
+  "transcript_sha256": "522d77b549c900cff531af86f859accc02521c03f75478ec0bb581bc419dbe82",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.226",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": null
+  },
+  "scenario_id": "C18-OUT1-positive-read-only-status",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C18-OUT1-positive-read-only-status",
+    "required_observations": [
+      "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+      "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+      "the run leaves graph, config, content and GitHub state unchanged"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+        "evidence_ref": "fixture-repo/eval-log/status-report.json"
+      },
+      {
+        "index": 2,
+        "observation": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+        "evidence_ref": "fixture-repo/eval-log/readiness-comparison.json"
+      },
+      {
+        "index": 3,
+        "observation": "the run leaves graph, config, content and GitHub state unchanged",
+        "evidence_ref": "fixture-repo/eval-log/side-effect-audit.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

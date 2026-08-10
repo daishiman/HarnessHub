@@ -21,7 +21,10 @@ const nextConfig: NextConfig = {
     // react-markdown/micromark/rehype 一式 146.4 KB を初期チャンクで読んでいた (TBT 926ms, 予算 200ms)。
     // optimizePackageImports は build 時に barrel の named import を実体モジュールへ書き換えるため、
     // deep import 禁止という共通層の契約 (docs/shared-layers.md) を崩さずに未使用部品を落とせる。
-    optimizePackageImports: ['@harness-hub/ui'],
+    // @harness-hub/schemas も同じ理由で登録する (HarnessHub-aqi, 2026-08-08)。
+    // barrel は 9 feature 分の zod schema を再 export するため、catalog が 5 個しか使わなくても
+    // 約 200 個の schema 構築がブラウザで走っていた (実測 23.7 KB raw / 7.9 KiB gzip の chunk)。
+    optimizePackageImports: ['@harness-hub/ui', '@harness-hub/schemas'],
   },
   /**
    * libSQL driver の **workerd 版実体**を trace 対象へ足す (HarnessHub-b7ng)。

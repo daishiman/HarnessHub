@@ -225,12 +225,40 @@ def task_node(node_id: str, title: str, slug: str, depends_on: list[str]) -> dic
     }
 
 
+# task の必須見出しは source_lineage.origin_kind で分岐する (HarnessHub-yzv0 で task を
+# HEADING_MISSING_KINDS へ追加)。origin_kind=manual (task_node() の既定) は base
+# required_sections (13 見出し) を、origin_kind=system-dev-planner (shape_requirements の
+# _package_task_node() など) は conditional_required_sections の system_development_baseline
+# variant (軽量3見出し) を満たす必要がある。
+_TASK_REQUIRED_SECTIONS = [
+    "目的", "背景", "入力と前提条件", "出力と成果物", "依存関係", "実装対象",
+    "Write scope と競合制約", "GitHub publication", "実行手順", "受入条件",
+    "検証方法", "リスクとロールバック", "Handoff",
+]
+_SYSTEM_DEV_PLANNER_BASELINE_SECTIONS = ["正本仕様書", "依存", "実行契約"]
+
+# task 以外で HEADING_MISSING_KINDS に入っている kind (architecture / specification)。
+# 見出し文言を fixture 側へ写経すると contract 改訂で静かにずれるため、正本 (template-contract.json)
+# から読む。task を写経のまま残しているのは、上記の origin_kind 分岐が contract の
+# conditional 側と 1 対 1 でない (baseline variant を fixture が明示選択する) ため (HarnessHub-o4zi)。
+_TEMPLATE_CONTRACT_PATH = FIXTURES_DIR.parents[1] / "templates" / "template-contract.json"
+
+
+def _contract_required_sections(kind: str) -> list[str]:
+    contract = json.loads(_TEMPLATE_CONTRACT_PATH.read_text(encoding="utf-8"))
+    artifacts = contract.get("artifacts", contract)
+    sections = (artifacts.get(kind) or {}).get("required_sections") or []
+    return [str(section) for section in sections]
+
+
 def markdown_for(node: dict[str, Any]) -> str:
     """frontmatter_of (行指向スカラパーサ) が読める 1 行 1 key の frontmatter を組む。
 
     C11 artifact_findings は graph node と frontmatter の parity を
     graph_node_id/artifact_kind/file_path/template_id/template_version で照合するため、
-    node の値をそのまま JSON スカラとして書き出す。
+    node の値をそのまま JSON スカラとして書き出す。artifact_kind が HEADING_MISSING_KINDS
+    (task / architecture / specification) の場合は required_sections も満たす必要があるため、
+    見出しを併せて書く。task だけは origin_kind で必要見出しが変わる。
     """
     lines = ["---"]
     for key, value in node.items():
@@ -247,6 +275,20 @@ def markdown_for(node: dict[str, Any]) -> str:
             "",
         ]
     )
+    kind = node.get("artifact_kind")
+    if kind == "task":
+        origin_kind = (node.get("source_lineage") or {}).get("origin_kind")
+        sections = (
+            _SYSTEM_DEV_PLANNER_BASELINE_SECTIONS
+            if origin_kind == "system-dev-planner"
+            else _TASK_REQUIRED_SECTIONS
+        )
+    elif kind in ("architecture", "specification"):
+        sections = _contract_required_sections(kind)
+    else:
+        sections = []
+    for section in sections:
+        lines.extend([f"## {section}", "", "live-trial fixture の固定 artifact の検証用の実文。", ""])
     return "\n".join(lines)
 
 

@@ -17,7 +17,9 @@ import importlib.util
 import json
 
 from completeness_test_support import AGGREGATE, AUDIT as MOD
-from completeness_test_support import PLUGIN_ROOT, golden_delegations, golden_ledger, golden_report, write_ledger
+from completeness_test_support import (
+    PLUGIN_ROOT, golden_delegations, golden_ledger, golden_report, response_digest, write_ledger,
+)
 
 
 def test_aggregate_cli_reexports_the_attribution_contract():
@@ -76,12 +78,32 @@ def test_agent_tool_rows_and_reforks_are_accepted():
     report = golden_report()
     for delegation in report["audit_delegations"]:
         delegation["dispatch"]["tool"] = "Agent"
-    assert AGGREGATE.validate_report(report, golden_ledger()) == []
+    ledger = golden_ledger()
+    for by_session in ledger["receipts"].values():
+        for by_digest in by_session.values():
+            for receipt in by_digest.values():
+                receipt["tool_name"] = "Agent"
+    assert AGGREGATE.validate_report(report, ledger) == []
     delegation = golden_delegations()[0]
     ledger = golden_ledger()
     ledger["dispatched"][delegation["auditor"]] = 3
     ledger["sessions"][delegation["auditor"]] = {"sess-1": 3}
     assert MOD.ledger_corroborates(delegation, ledger)[0]
+
+
+def test_receipt_must_match_hook_observed_response_verdict_and_tool():
+    delegation = golden_delegations()[0]
+    ledger = golden_ledger()
+    delegation["verdict"] = "FAIL"
+    assert any("hook 観測の auditor verdict" in item for item in MOD.validate_attribution(
+        golden_report(delegations=[delegation] + golden_delegations()[1:]), ledger
+    ))
+    delegation = golden_delegations()[0]
+    delegation["dispatch"]["response_sha256"] = "f" * 64
+    assert not MOD.ledger_corroborates(delegation, ledger)[0]
+    delegation = golden_delegations()[0]
+    delegation["dispatch"]["tool"] = "Agent"
+    assert not MOD.ledger_corroborates(delegation, ledger)[0]
 
 
 def test_session_binding_rejects_missing_unknown_unrecorded_mixed_and_stale_sessions():
@@ -110,13 +132,38 @@ def test_ledger_loader_handles_missing_broken_session_and_agent_rows(tmp_path):
     assert ledger["malformed"] == 2 and len(ledger["dispatched"]) == 3
     assert MOD.load_fork_ledger(tmp_path / "missing.jsonl")["exists"] is False
     assert MOD.load_fork_ledger(None) == MOD.empty_ledger()
-    write_ledger(path, auditors=[], extra_lines=[json.dumps({"tool_name": "Agent", "session_id": "sess-1", "subagent_type": "system-spec-hearing-auditor"})])
+    write_ledger(path, auditors=[], extra_lines=[json.dumps({
+        "tool_name": "Agent", "session_id": "sess-1", "subagent_type": "system-spec-hearing-auditor",
+        "prompt_sha256": "1" * 64, "response_sha256": response_digest("system-spec-hearing-auditor"),
+        "audit_verdict": "PASS",
+    })])
     assert MOD.load_fork_ledger(path)["dispatched"]["system-spec-hearing-auditor"] == 1
+
+
+def test_ledger_rejects_handwritten_or_invalid_prompt_digest(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    write_ledger(
+        path,
+        auditors=[],
+        extra_lines=[json.dumps({
+            "schema_version": "1.0", "ts": "2026-08-03T00:00:00Z", "session_id": "sess-1",
+            "tool_name": "Task", "subagent_type": "system-spec-matrix-auditor",
+            "prompt_sha256": "manual", "cwd": "/tmp/project",
+        })],
+    )
+    ledger = MOD.load_fork_ledger(path)
+    assert ledger["malformed"] == 1
+    assert ledger["dispatched"] == {}
+    assert not MOD.ledger_corroborates(golden_delegations()[0], ledger)[0]
 
 
 def test_ledger_loader_keeps_session_counts_and_agent_names_safe(tmp_path):
     path = tmp_path / "audit-fork-ledger.jsonl"
-    write_ledger(path, extra_lines=[json.dumps({"tool_name": "Task", "session_id": "sess-2", "subagent_type": "system-spec-matrix-auditor"})])
+    write_ledger(path, extra_lines=[json.dumps({
+        "tool_name": "Task", "session_id": "sess-2", "subagent_type": "system-spec-matrix-auditor",
+        "prompt_sha256": "2" * 64, "response_sha256": response_digest("system-spec-matrix-auditor"),
+        "audit_verdict": "PASS",
+    })])
     ledger = MOD.load_fork_ledger(path)
     assert ledger["sessions"]["system-spec-matrix-auditor"] == {"sess-1": 1, "sess-2": 1}
     assert MOD.agent_definition_exists("system-spec-matrix-auditor") is True

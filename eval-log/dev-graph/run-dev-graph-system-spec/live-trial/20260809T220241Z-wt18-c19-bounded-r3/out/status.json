@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "mode": "reuse-confirmed",
+  "invoked_skill": "dev-graph:run-dev-graph-system-spec --resume",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import.py",
+    "invocations": 1,
+    "status": "PASS",
+    "completion_contract": {
+      "version": "system-spec-resume-closure/v1",
+      "path": "resume-reuse",
+      "authority": "digest-bound-resume-receipt",
+      "evaluator_execution": "reused-current-pass",
+      "import_writer": "C02"
+    },
+    "checklist": [
+      {"id": "context", "status": "pass", "evidence": "resolve-context exit 0"},
+      {"id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true"},
+      {"id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0"},
+      {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+      {"id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0"},
+      {"id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0"}
+    ],
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "gate-boundary", "exit_code": 0},
+      {"label": "gate-source-and-evidence-bindings", "exit_code": 0},
+      {"label": "gate-graph-preview", "exit_code": 0},
+      {"label": "c02-dry-run-architecture", "exit_code": 0},
+      {"label": "c02-dry-run-specification", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-evidence-refs", "exit_code": 0},
+      {"label": "gate-source-digest", "exit_code": 0}
+    ],
+    "all_step_exit_codes_zero": true
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py (step validate-resume, exit 0) reported valid=true, mode=reuse-confirmed, plugin_version=0.1.0 and the 4 required entry points (run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator) with failures=[]; the --resume path invoked no upstream Skill (upstream_skill_invocations=0, network_calls=0)."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "gate-source-and-evidence-bindings, gate-evidence-refs and gate-source-digest all exit 0, so each registered node's source_digest matches the sha256 of its own source_path (5 receipt-bound artifacts incl. system-spec/index.md and completeness-report.json) with 0 dangling evidence_ref; runner checklist lineage-evidence=pass."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "the only writer was upsert-node.py via the C02 steps (c02-dry-run-architecture/specification then c02-upsert-architecture/specification, all exit 0) registering exactly arch-system-spec-overview and spec-system-spec-index; gate-boundary exit 0 confirmed 0 duplicated elicitation/compile logic in dev-graph (logic-boundary=pass)."
+    }
+  ],
+  "blockers": []
+}

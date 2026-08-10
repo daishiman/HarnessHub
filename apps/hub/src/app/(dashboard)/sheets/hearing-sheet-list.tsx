@@ -7,6 +7,11 @@ import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef
 interface HearingSheetListProps {
   readonly tenantId: string;
   readonly workspaceId: string;
+  /**
+   * 共通ヘッダーの検索フォーム (`?q=`) から渡ってくる初期キーワード。
+   * ここで受けることで「ヘッダーで検索 → 一覧が絞り込まれた状態で開く」が成立する。
+   */
+  readonly initialQuery?: string;
 }
 
 interface SheetFilters {
@@ -17,13 +22,23 @@ interface SheetFilters {
 
 const EMPTY_FILTERS: SheetFilters = { status: '', department: '', query: '' };
 
-export function HearingSheetList({ tenantId, workspaceId }: HearingSheetListProps): ReactNode {
+/** 絞り込みフォームを 1 行に畳む。狭い画面では自動で折り返す。 */
+const filterFormStyle = {
+  display: 'flex',
+  flexWrap: 'wrap' as const,
+  alignItems: 'flex-end',
+  gap: 'var(--hh-space-3)',
+  padding: 'var(--hh-space-4)',
+  borderBlockEnd: '1px solid var(--hh-color-border)',
+};
+
+export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: HearingSheetListProps): ReactNode {
   const [rows, setRows] = useState<readonly SheetListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [completionNotice, setCompletionNotice] = useState<string | null>(null);
-  const [draftFilters, setDraftFilters] = useState<SheetFilters>(EMPTY_FILTERS);
-  const [filters, setFilters] = useState<SheetFilters>(EMPTY_FILTERS);
+  const [draftFilters, setDraftFilters] = useState<SheetFilters>({ ...EMPTY_FILTERS, query: initialQuery });
+  const [filters, setFilters] = useState<SheetFilters>({ ...EMPTY_FILTERS, query: initialQuery });
   const [cursor, setCursor] = useState<string | null>(null);
   const [cursorHistory, setCursorHistory] = useState<readonly (string | null)[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -125,7 +140,7 @@ export function HearingSheetList({ tenantId, workspaceId }: HearingSheetListProp
     <>
       {completionNotice === null ? null : <Alert tone="success" title="生成完了" description={completionNotice} />}
       {error === null ? null : <Alert tone="danger" title="読み込みエラー" description={error} />}
-      <form aria-label="シートの絞り込み" onSubmit={applyFilters}>
+      <form aria-label="シートの絞り込み" onSubmit={applyFilters} style={filterFormStyle}>
         <Select
           label="状態"
           value={draftFilters.status}
@@ -164,7 +179,16 @@ export function HearingSheetList({ tenantId, workspaceId }: HearingSheetListProp
         loading={loading}
         emptyMessage="ヒアリングシートはまだありません。"
       />
-      <nav aria-label="シート一覧のページ送り">
+      <nav
+        aria-label="シート一覧のページ送り"
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 'var(--hh-space-2)',
+          padding: 'var(--hh-space-4)',
+          borderBlockStart: '1px solid var(--hh-color-border)',
+        }}
+      >
         <Button
           type="button"
           variant="secondary"

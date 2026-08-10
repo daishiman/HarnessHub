@@ -1,7 +1,7 @@
 # タスク: {{TARGET_SKILL}} の実走 {{— scenario がある場合は (scenario <SCENARIO_ID>) を付す}}
 
 <!-- task-template.md — 準備局面で cp して {{...}} placeholder を全て Edit で埋める。
-     task.md 契約 7 項目 (SKILL.md の表) をこの構造が満たす。項目の削除は契約違反。 -->
+     task.md 契約 8 項目 (SKILL.md の表) をこの構造が満たす。項目の削除は契約違反。 -->
 
 {{SCENARIO_BLOCK — scenario がある run では次の 2 つをそのまま置く。無い run では節ごと削除する。
   (a) 「この run は scenario <SCENARIO_ID> の充足を確認するものです」の 1 行

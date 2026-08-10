@@ -3,7 +3,7 @@ status: confirmed
 category: maintenance-ops
 aggregate: 確定
 spec_cells: [maintenance-ops.web, maintenance-ops.mobile, maintenance-ops.tablet, maintenance-ops.desktop-windows, maintenance-ops.desktop-linux, maintenance-ops.desktop-macos]
-serves_goals: [G1, G2, G5]
+serves_goals: [G1, G2, G3, G4, G5]
 ---
 
 # 保守運用管理 (maintenance-ops)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-129 |
+| Web (web) | 確定 | 確定質疑: qa-188 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
@@ -24,11 +24,21 @@ serves_goals: [G1, G2, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-129 (対応セル: web)
+### qa-188 (対応セル: web)
 
-**質問**: 顧客持ち込み Google OAuth の登録・rotation・無効化・再開を maintenance-ops.web の現行運用契約へどう統合しますか?
+**質問**: C07 独立監査ラウンド10 (verdict PASS) が MEDIUM 2 件を残した。うち 1 件は 『9 件目の分類語彙の見落とし』の継続指摘である。packages/db/schema/core/identity.ts:14 の tenants.status (text('status', {enum: ['active','suspended']})) が、apps/hub/src/lib/auth/db-ports.ts:306-308 (enabled: tenant.status === 'active'、コメント『停止中テナントは接続を解決させない。認証の入口で閉じる方が安全側』) と resolveTenantOidcConfig を通じて段0 (認証基盤可用性) の判定に直接使われているにもかかわらず、qa_log のいずれにも記録されていない。段0 語彙へ追加せよ。
 
-**回答**: qa-114 の共有 OAuth rollout/rollback、観測、完了収束、既存 runbook 契約を全面維持し、顧客持ち込み方式の運用を追加確定する。【責任境界】Google Cloud Console の client 作成、redirect URI、同意画面、secret 追加/失効は顧客の手作業、Hub の登録・テスト・有効化・無効化は provider-admin の操作とする。【通常手順】callback URL 確認→Google client 準備→Hub 登録→probe 合格→有効化→実ブラウザ login の順を gate 化する。rotation は Google で新 secret 追加、Hub staging、pending テスト、昇格、実 login、Google で旧 secret 失効の順とし、昇格前は取消可能にする。【停止と再開】無効化は共有方式へ fallback せずログインを止める。再開は新 credential を登録して pending→tested→active を再実行し、古い credential の直接復帰を禁止する。【証跡】secret 全値を issue/PR/chat/screenshot に残さず last4 のみ記録し、runbook、検証結果、仕様反映受領書、Beads notes、draft PR に実施結果と Google 実環境/Playwright/production migration の残課題を分離する。
+**回答**: C07 の指摘を受け入れ、**tenants.status を段0 の語彙へ追加する**。qa-178-a と同一の基準で扱う。
+
+[qa-188-a 段0 へ含める根拠] qa-175 で定めた物差しは『操作結果としてのエラー種別か、認証解決前の前提状態記述か』であり、後者を段0 とする。tenants.status は「このテナントで認証解決を試みてよいか」という**前提状態の記述**であって、処理を試みた後に返る業務エラーではない。qa-178-a で段0 へ入れた IdpCredentialStatus (pending/tested/active/disabled) と同じ側にある。コード上の理由づけも酷似しており、db-ports.ts の『認証の入口で閉じる方が安全側』は idp-lifecycle.ts の『認証解決に使ってよい唯一の状態』と同じ設計思想の表明である。同じ思想で書かれた 2 つの語彙のうち片方だけを段0 に入れるのは、基準の一貫性を欠く。
+
+[qa-188-b これは本 feature の症状の候補 (3) に直結する] qa-185 で残した候補 (3)「認証以外の原因 (テナント接続未登録・無効化)」の実体がこれである。tenants.status === 'suspended' のとき resolveTenantOidcConfig は接続を解決せず、signin ページは『このテナントではサインインできません』へ倒れる。**この経路は秘密の投入状態とは完全に独立している**。つまり本番症状は、secret が正しく投入され正しく読めていても、テナントが suspended であるだけで同じように発生し得る。そして現状、利用者にも運用者にも **どちらが起きたのかを区別する手段が無い**。候補 (3) を候補 (1)(2) と同格で残すべき理由がここで具体化した。
+
+[qa-188-c E-3 の記録項目への追加] E-3 が記録すべき『縮退の理由』に、次を区別可能な形で含める: (i) テナントが解決できない (slug 不一致)、(ii) テナントは在るが status が active でない、(iii) OIDC 接続が登録されていない、(iv) 環境値が解決できない (名前を記録)、(v) cookie が無い、(vi) 署名検証に失敗した。**値は記録しない** (qa-151 [147-b] の非記録契約を維持)。記録するのは分類と名前だけである。現状これら 6 つが利用者から見てほぼ同一の出力へ潰れていることが、本 feature の欠陥の中身である。
+
+[qa-188-d 併記する既存文書の状態] docs/backend-spec.md:55 は tenants テーブルの status(active/suspended) を**スキーマとしては既に文書化している**。欠けているのはスキーマの存在ではなく、その値が認証可用性へ連動するという**結線の記述**である。これは qa-182 で扱った E-4 と同じ型の錯誤 (既にあるものを無いと見なす) を避けるための注記であり、本 turn は『新しい列を作れ』ではなく『既存列と認証可用性の連動を文書と語彙に載せろ』を求める。
+
+[qa-188-e 併せて残る DeviceAuthorizationStatus の三重定義] C07 が前回から継続指摘している DeviceAuthorizationStatus の情報源が 3 つある件 (ports.ts:117 / repository/device-flow.ts:23 / drizzle schema publish.ts:106) も未対応のまま残る。V7 (同一のリテラル union が 2 箇所に独立定義されている状態を検出する) の対象に、**drizzle schema を第 3 の情報源として含める**ことを明記する。型宣言と zod だけを突合する実装にすると、この 3 件目が検査をすり抜ける。
 
 ### qa-044 (対応セル: desktop-windows, desktop-macos)
 
@@ -86,6 +96,14 @@ codeを、次の変更者が意図・制約・failureを短時間で理解し、
 - goalに関わるbusiness ruleを名前とtestで明示し、仕様→code→evidenceのtraceを短くする。
 - maintenance objectiveには変更lead time、review指摘、escaped defect、rollback率などのoutcomeを使う。
 - 無料toolの導入自体を成功とせず、teamが継続運用でき、重要riskを減らすかで判断する。
+
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-188 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-044 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G1, G2, G3, G4, G5
 
 ## 最新ドキュメント出典
 

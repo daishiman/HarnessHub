@@ -46,6 +46,20 @@ export const jaMessages = {
   'field.optional': '任意',
   'notification.region': '通知',
   'board.itemCount': '件',
+  'shell.skipToContent': 'メインコンテンツへ移動',
+  'shell.mainNavigation': '主要ナビゲーション',
+  'shell.search': '検索',
+  'shell.searchPlaceholder': 'シート・ドキュメント・ツールを探す',
+  'shell.notifications': '通知',
+  'shell.notificationsEmpty': '新しい通知はありません',
+  'shell.unread': '未読',
+  'shell.account': 'アカウント',
+  'shell.accountMenu': 'アカウントメニュー',
+  'shell.signOut': 'サインアウト',
+  'shell.workspace': 'ワークスペース',
+  'shell.more': 'その他',
+  'shell.footer': 'フッター情報',
+  'shell.legal': '法的情報',
 } as const;
 
 /** ja のキーが正本。en に欠落があれば型エラーになる。 */
@@ -86,6 +100,20 @@ export const enMessages: Record<UiMessageKey, string> = {
   'field.optional': 'Optional',
   'notification.region': 'Notifications',
   'board.itemCount': ' items',
+  'shell.skipToContent': 'Skip to main content',
+  'shell.mainNavigation': 'Main navigation',
+  'shell.search': 'Search',
+  'shell.searchPlaceholder': 'Search sheets, documents and tools',
+  'shell.notifications': 'Notifications',
+  'shell.notificationsEmpty': 'No new notifications',
+  'shell.unread': 'unread',
+  'shell.account': 'Account',
+  'shell.accountMenu': 'Account menu',
+  'shell.signOut': 'Sign out',
+  'shell.workspace': 'Workspace',
+  'shell.more': 'More',
+  'shell.footer': 'Footer',
+  'shell.legal': 'Legal',
 };
 
 export const uiMessages: Record<UiLocale, Record<UiMessageKey, string>> = {

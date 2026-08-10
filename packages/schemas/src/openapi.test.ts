@@ -50,7 +50,9 @@ describe('defaultSchemaConverter', () => {
     const converted = defaultSchemaConverter(healthResponseSchema);
     const properties = converted.properties as Record<string, unknown>;
 
-    expect(Object.keys(properties).sort()).toEqual(['checkedAt', 'dependencies', 'status', 'version']);
+    // commit は optional (埋込が無い環境では欠落する) だが、schema の property としては公開される。
+    // 公開されないと OpenAPI から消え、利用側が「読める field」だと分からない
+    expect(Object.keys(properties).sort()).toEqual(['checkedAt', 'commit', 'dependencies', 'status', 'version']);
   });
 });
 

@@ -8,7 +8,7 @@ import { healthResponseSchema } from '@harness-hub/schemas';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { type DependencyProbe, defaultProbes, runDependencyProbes } from '../../src/app/health/probes.js';
 import { buildHealthHttpResponse, GET } from '../../src/app/health/route.js';
-import type { R2HeadCapable, RuntimeEnv } from '../../src/app/health/runtime-env.js';
+import { type R2HeadCapable, type RuntimeEnv, resolveCommit } from '../../src/app/health/runtime-env.js';
 
 /** R2 binding の代替。Workers 上では head を持つオブジェクトが注入される */
 function stubBucket(head: (key: string) => Promise<unknown> = async () => null): R2HeadCapable {
@@ -74,6 +74,29 @@ describe('GET /health', () => {
       'db',
       'r2',
     ]);
+  });
+
+  // 稼働成果物がどの commit の産物かを、認証なしで確認できるようにする (V6)。
+  // これが無いと「コードは直っている」と「本番が直っている」を区別できず、
+  // 2026-08-07 のように 4 日間の未反映が誰にも見えないまま続く。
+  it('埋込があれば commit を応答に載せる', async () => {
+    const response = await buildHealthHttpResponse({
+      version: 'test-revision',
+      commit: 'c'.repeat(40),
+      probes: defaultProbes(healthyEnv(), { fetchImpl: okPipelineFetch() }),
+    });
+    const body = healthResponseSchema.parse(await response.json());
+
+    expect(body.commit).toBe('c'.repeat(40));
+  });
+
+  it('埋込が無ければ commit の key ごと落とす (偽の素性を作らない)', async () => {
+    const response = await respond(healthyEnv());
+    const body = (await response.json()) as Record<string, unknown>;
+
+    // 'unknown' や '' を入れると schema は通ってしまい、「素性不明」と「素性 = その値」が
+    // 区別できなくなる。欠落は欠落のまま表す
+    expect('commit' in body).toBe(false);
   });
 
   it('キャッシュされない (no-store)', async () => {
@@ -168,6 +191,37 @@ describe('HF-A3-HEALTH-003: 依存不通時の挙動', () => {
   it('HUB_ENV が未設定なら down になる', async () => {
     const body = healthResponseSchema.parse(await (await respond(healthyEnv({ HUB_ENV: '' }))).json());
     expect(body.status).toBe('down');
+  });
+});
+
+describe('resolveCommit', () => {
+  /** commit だけを差し替えた実行環境 (未設定は key ごと無い状態で作る) */
+  function envWith(commit?: string): RuntimeEnv {
+    const base: RuntimeEnv = {
+      HUB_ENV: 'production',
+      HUB_VERSION: 'test-revision',
+      PACKAGES_BUCKET: stubBucket(),
+      BACKUPS_BUCKET: stubBucket(),
+    };
+    return commit === undefined ? base : { ...base, HUB_COMMIT_SHA: commit };
+  }
+
+  it('40 桁 hex をそのまま返す', () => {
+    expect(resolveCommit(envWith('d'.repeat(40)))).toBe('d'.repeat(40));
+  });
+
+  it('大文字と前後の空白を正規化する (CI の受け渡しで混入しうる)', () => {
+    expect(resolveCommit(envWith(`  ${'A'.repeat(40)}\n`))).toBe('a'.repeat(40));
+  });
+
+  it.each([
+    ['未設定', undefined],
+    ['空文字', ''],
+    ['短縮 sha', 'abc1234'],
+    ['branch 名', 'main'],
+    ['41 桁', `${'a'.repeat(40)}a`],
+  ])('%s なら undefined を返す (代替値で素性を偽らない)', (_label, commit) => {
+    expect(resolveCommit(envWith(commit))).toBeUndefined();
   });
 });
 

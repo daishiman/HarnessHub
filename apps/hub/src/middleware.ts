@@ -11,6 +11,9 @@ import {
 // 認可層は公開入口 (src/middleware/index.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
 import { createSessionAuthProvider, systemAuthClock } from './lib/auth/index.js';
 import { readBearerToken, resolveAccessTokenPrincipal } from './lib/authz/index.js';
+// 拒否応答の見た目だけを担う表示層 (認可の判断は持たない)
+import { isNavigationRequest, renderDenyNavigationPage } from './lib/routing/deny-navigation.js';
+import { PATHNAME_HEADER } from './lib/routing/pathname-header.js';
 import { authorize, TENANT_HEADER, WORKSPACE_HEADER } from './middleware/index.js';
 import { createAuthAdapter, type Principal, toAuthRequestContext } from './shared/auth/index.js';
 
@@ -147,10 +150,31 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   });
 
   if (!decision.allowed) {
+    // ブラウザの画面遷移にだけ HTML を返す。API 経路 (fetch / Bearer / `/api/*`) の
+    // `{"error": "..."}` 契約は変えない。判定 (reason/status) は共通のまま、表現だけを分ける。
+    if (
+      isNavigationRequest({
+        method: request.method,
+        pathname: request.nextUrl.pathname,
+        accept: context.headers.get('accept') ?? null,
+        hasBearer: bearer !== null,
+      })
+    ) {
+      return new NextResponse(renderDenyNavigationPage(decision.reason), {
+        status: decision.status,
+        headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },
+      });
+    }
     return NextResponse.json({ error: decision.reason }, { status: decision.status });
   }
 
-  return NextResponse.next();
+  // 共通シェル (サイドバー / ボトムタブ) が「いま自分がどの画面にいるか」を
+  // server component のまま知るための唯一の手段。layout は pathname を受け取れず、
+  // usePathname() を使うと nav 全体が client bundle へ移ってしまう。
+  // 認可判定はすでに終わっているので、ここでの header 追加は判定へ影響しない。
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(PATHNAME_HEADER, request.nextUrl.pathname);
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

@@ -12,6 +12,14 @@ layer: feature-quality
 
 **リリース可 (GO)**
 
+### 追補判定 (2026-08-08)
+
+RSC の session scope フォールバック (`resolveDashboardScope` TID-DSCOPE-01〜07) と
+PrimaryNav 最小シェルを実装結線した。認可規則・既定着地定数・deny-by-default は変更なし。
+追加の GO 条件は同日の focused tests / task-spec gate / typecheck / lint の PASS と
+[spec-reflection-receipt.md](./spec-reflection-receipt.md) 追補節の記録である。
+本番 browser session での 6 path 到達確認は P13 残件のまま。
+
 ## 判定根拠
 
 ### 1. deny-by-default 非退行の証跡 (本 feature は認可に触れるため必須)

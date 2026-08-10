@@ -12,8 +12,8 @@ iteration: null
 title: "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:30:33Z"
-updated_at: "2026-07-30T01:29:25.900884Z"
-status: "draft"
+updated_at: "2026-07-30T03:33:20Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-qa070-implementation-feature-20260722"]
 resource_scope: ["docs/security-spec.md","docs/backend-spec.md","docs/features/feat-hub-foundation/design-review-notes.md","docs/features/feat-dev-pipeline-improvement/design.md","docs/features/feat-stage0-distribution-gate/design-review-notes.md","docs/features/feat-hub-foundation/final-review-notes.md"]

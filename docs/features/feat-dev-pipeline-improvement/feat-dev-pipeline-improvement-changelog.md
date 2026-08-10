@@ -7,12 +7,24 @@ layer: implementation-notes
 
 > [features/feat-dev-pipeline-improvement.md](../../../features/feat-dev-pipeline-improvement.md) から分離した変更履歴分冊。300 行上限 (`lint-doc-line-limit.py`) を超えたための分割remediation (先例: `HarnessHub-3d8` の `docs/security-spec.md` 分冊)。時系列は本体側で追記せず、新規エントリはここへ追記する。
 
+## 2026-08-04: C19 r10 自走受入と C14 参照順序の是正
+
+- `main` 統合後の C19 r4 live-trial は、C14 の knowledge catalog が定める前提順と C03 の設計参照順が一致しない不備を FAIL として検出した。`build-knowledge-order.py` へ依存関係の topological order（前提を先にする順序）を分離し、backend の参照を `ddd → clean-architecture → api-design-patterns` に是正した。
+- compile / source-citation の focused pytest は 131 passed。r5 は最終 status 出力前に中断し、r6 は実行内容が PASS でも nudge=1 のため `DEGRADED` とした。r7 は audit-ledger 保護強化前の旧挙動、r8 は stale progress / intermediate を独立 verifier が検出した FAIL として監査履歴に残した。新しい隔離 fixture の fresh r10 は `overall=PASS`、nudge=0、gate=0、正規4 entry point、C02 登録、source digest・evidence reference、独立検証の 3 観測をすべて満たし、唯一の成功証跡として登録した。
+- task-contract / verdict lint は criteria receipt の OUT1 PASS evidence を優先し、時計ずれで将来日付になった歴史的 run や r7 が r10 を上書きしないようにした。回帰 pytest と両 lint の PASS で選択規則を固定した。
+- 製品 API・DB・認証認可・UI・deploy unit は非変更。層別判断、試験失敗の根因、再開条件は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-03: C19 task contract r2 の fresh live-trial 受領
+
+- `HarnessHub-eiky` の C19 scenario r2 への更新で旧受領書が `scenario-contract-superseded` となったため、`HarnessHub-m0bd` / Dev Graph `issue-c19-live-trial-rerun-task-contract-r2-20260803` で fresh live-trial を実行した。
+- `main` 統合後の `20260806T020000Z-m0bd-c19-r3-postmain` は overall=PASS。r2 task contract の `upsert-node.py`、fixture 内の `SYSTEM_SPEC_AUDIT_FORK_LEDGER`、公式ページを実取得して現行 version を記録する条件を満たした。製品仕様への影響がない層別判断と証跡は [r2 follow-up 受領書](c19-task-contract-r2-followup-spec-reflection-receipt.md) を正とする。
+
 ## 2026-08-04 追記: 全 plugin の hook entry point parity
 
 - `HarnessHub-vf66` で hook の台帳 (`package-contract.json`)・登録 (`hooks/hooks.json` と manifest inline hooks)・実体を HK-001..003 で双方向に照合する repo 全体ゲートへ一般化した。
 - 検査で発見した harness-creator の未宣言 entry point を台帳へ追加し、skill-intake の手動 keychain 操作は `hooks/` から `scripts/` へ移して自動処理との責務を分離した。
 - `validate-plugin-completeness.py` は 500 行を超えたため、hook 判定を `validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書ゲート PASS を確認した。
-- 変更は開発品質契約だけに影響する。`qa-143`、`system-spec/`、`specs/`、architecture、feature、task、[仕様反映受領書](hooks-entry-point-parity-spec-reflection-receipt.md) に反映し、製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。
+- 変更は開発品質契約だけに影響する。2026-08-10 の current-main 再統合では branch-local `qa-146` を正本として再利用せず、hook parity は `qa-143`、receipt 選択の fail-closed 修正は製品仕様への影響なしとして [受領書](live-trial-evidence-selection-spec-reflection-receipt.md) に記録した。製品 API・DB・認証認可・UI・deploy unit は非変更である。
 
 ## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
 
@@ -267,3 +279,22 @@ close した。
 - path 評価と書込み収集、core case と性能・既知限界 test を責務分割し、変更した手書きファイルを 500 行以下へ収束させた。
 - `exec` / `eval`、任意文字列変換、別 script file 本文は性能上の既知限界として明記し、PostToolUse drift audit と C02 writer 規約で補完する。
 - 正本は `system-spec/dev-workflow.md` の `qa-139` / `appr-028`、設計・検証・製品非変更の判断は [仕様反映受領書](f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-07 追記: task kind の conditional_templates 見出し検査解決
+
+- `HarnessHub-yzv0` で、`HarnessHub-85z0` が `specification` のみへ限定していた
+  `HEADING_MISSING_KINDS` (C11 本文見出し欠落検査の対象 kind) へ `task` を追加した。
+- system-dev-planner 由来 task 260 件の実測により、`source_lineage.origin_kind` が
+  唯一の判別可能な条件分岐トリガーであることを確認し、`conditional_required_sections` の
+  複数 variant (フル19見出し / 軽量3見出し) のいずれかに一致すれば heading_missing なしと
+  判定する解決コードを実装した。
+- `issue` kind は実測の結果 task とは異なる構造課題と判断しスコープ外へ切り出した。
+- 判断・検証結果の全量は
+  [仕様反映受領書](yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 追記: system-spec import heading contract
+
+- `HarnessHub-o4zi` で specification / architecture の正当な system-spec import 形を `origin_kind + source_path` の宣言型 trigger へ分離した。
+- architecture を `HEADING_MISSING_KINDS` へ追加し、3 contract copy と fixture を同期して 0/10 見出しでも complete になる非対称を解消した。
+- C19 と foundation U1〜U9 を正規経路で復旧し、旧 artifact 160 違反を 0 件へ収束。570 行の着地観測詳細は 122 行の正規 contract と履歴へ分離した。
+- 2026-08-09: main の C19 正本 `20260809T132550Z-wt27-c19-ci-r1` へ更新し、重複証拠を削除。focused 82 PASS。詳細は [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

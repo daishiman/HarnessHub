@@ -12,7 +12,7 @@ iteration: null
 title: "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する"
 owners: ["daishiman"]
 created_at: "2026-07-28T21:40:43Z"
-updated_at: "2026-07-28T21:40:43Z"
+updated_at: "2026-08-04T04:00:27.875270Z"
 status: "draft"
 depends_on: []
 related_nodes: ["issue-live-trial-verdict-staleness-hook-closure-20260726","issue-bd-external-ref-orphan-nodes-20260725"]
@@ -39,7 +39,7 @@ classification_reason: "2026-07-28 HarnessHub-zep2 の対応中に、共有 scri
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-shared-script-refs-closure-coupling-20260729.md","confidence":1}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-ntip","linked_at":"2026-07-28T21:43:40Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

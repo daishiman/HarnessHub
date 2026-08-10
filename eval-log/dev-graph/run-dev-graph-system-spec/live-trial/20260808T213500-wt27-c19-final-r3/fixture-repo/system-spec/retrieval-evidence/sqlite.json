@@ -1,0 +1,13 @@
+{
+  "target_id": "sqlite",
+  "source_url": "https://www.sqlite.org/changes.html",
+  "retrieved_at": "2026-08-08T12:42:14Z",
+  "retrieval_method": "WebFetch (run-system-spec-doc-fetch R2)",
+  "official_host": "www.sqlite.org",
+  "observed": [
+    "changes.html 冒頭の最新リリース見出し: 2026-07-24 (3.53.4)"
+  ],
+  "also_fetched": [
+    "https://www.sqlite.org/docs.html"
+  ]
+}

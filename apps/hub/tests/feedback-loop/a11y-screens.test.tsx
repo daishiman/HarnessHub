@@ -14,7 +14,7 @@ import { UiProvider } from '@harness-hub/ui';
 import axe from 'axe-core';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { FeedbackDetail } from '../../src/app/(dashboard)/feedback/[id]/feedback-detail.js';
 import FeedbackDetailPage from '../../src/app/(dashboard)/feedback/[id]/page.js';
@@ -22,6 +22,10 @@ import { FeedbackList } from '../../src/app/(dashboard)/feedback/feedback-list.j
 import { FeedbackForm } from '../../src/app/(dashboard)/feedback/new/feedback-form.js';
 import FeedbackNewPage from '../../src/app/(dashboard)/feedback/new/page.js';
 import FeedbackPage from '../../src/app/(dashboard)/feedback/page.js';
+
+// server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
+// 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 const TENANT_ID = 'tenant-a';
 const WORKSPACE_ID = 'ws-a1';

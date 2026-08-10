@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "Cloudflare deploy token と R2 token を分離し外部検証を完了する"
+title: "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達"
 owners: ["daishiman"]
 created_at: "2026-07-25T05:50:00Z"
-updated_at: "2026-07-29T06:16:12.710038Z"
+updated_at: "2026-08-01T06:02:02Z"
 status: "draft"
 depends_on: ["issue-actions-secrets-missing-20260725"]
 related_nodes: ["SYS-HUB-FOUNDATION-P13","SYS-DOMAIN-MODEL-DB-P13"]

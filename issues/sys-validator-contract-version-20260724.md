@@ -9,10 +9,10 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "validate-system-plan の promoted package 遡及契約を契約 version 台帳で互換化する"
+title: "validate-system-plan の promoted package 遡及契約を互換化する"
 owners: ["daishiman"]
 created_at: "2026-07-24T23:20:15Z"
-updated_at: "2026-07-25T04:58:43.709941Z"
+updated_at: "2026-07-28T04:13:11Z"
 status: "closed"
 depends_on: []
 related_nodes: []

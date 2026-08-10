@@ -12,7 +12,7 @@ iteration: null
 title: "証跡固定 — 実測ログと digest の evidence manifest 化"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-07-30T01:53:05Z"
+updated_at: "2026-08-04T03:28:42.109995Z"
 status: "active"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P10"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
@@ -38,7 +38,7 @@ classification_reason: "qa-067 の開発管理パイプライン改善 8 要件�
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p11.md","confidence":0.87}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-y7aj.11","linked_at":"2026-08-04T03:16:15Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -247,3 +247,14 @@ violations 0 を証拠として固定した。検査対象 0 件の exit 0 は�
 再検証の全コマンドと仕様反映は
 `docs/features/feat-dev-pipeline-improvement/foq6-workflow-step-guard-spec-reflection.md`
 を正とする。
+
+## 2026-08-04 C11 見出し存在の最終レビュー証跡
+
+本 P11 の promoted task spec と完了判定は変更しない。`HarnessHub-85z0` の後続検証として、
+specification の required heading が本文に無いケースを `heading_missing`、既存見出しの空本文を
+`placeholder_only_section` として区別する回帰テストを追加した。全必須見出しを実内容で満たす正例、
+task / issue には conditional template 未解決のため誤適用しない負例を固定する。
+
+最終 evidence は focused Dev Graph test 20 passed、`validate-system-plan.py` の P01〜P13 pass、
+canonical graph valid、C01 `qa-143` / C02 citation / C03 compile pass とする。詳細は
+`docs/features/feat-dev-pipeline-improvement/c11-heading-presence-preview-spec-reflection-receipt.md` を正とする。

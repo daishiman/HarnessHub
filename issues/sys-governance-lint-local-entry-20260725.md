@@ -12,8 +12,8 @@ iteration: null
 title: "governance-check.yml のメタ層 lint (成果物配置・doc 行数) に local 入口が無い"
 owners: ["daishiman"]
 created_at: "2026-07-25T14:49:37.241305Z"
-updated_at: "2026-07-25T15:25:44.708199Z"
-status: "draft"
+updated_at: "2026-08-04T03:20:01Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-auth-tenancy-ci-wiring-20260725"]
 resource_scope: [".github/workflows/governance-check.yml","scripts/"]
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":null,"missing_sections":[],"status":"incomplete"}
 ---
-
 
 ## 概要
 

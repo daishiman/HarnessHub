@@ -1,0 +1,79 @@
+{
+  "references": [
+    {
+      "target_id": "sqlite",
+      "retrieved_at": "2026-08-08T12:42:14Z",
+      "source_url": "https://www.sqlite.org/changes.html",
+      "official_publisher": "SQLite Development Team (sqlite.org)",
+      "official_host": "www.sqlite.org",
+      "version": "3.53.4",
+      "last_updated": "2026-07-24",
+      "latest_checked_at": "2026-08-08T12:42:14Z",
+      "evidence_ref": "system-spec/retrieval-evidence/sqlite.json",
+      "evidence_sha256": "6c44547e0b81ce03541f9000bf43f6ea5da2501ca7def51b1ac41c7b4e5e0125",
+      "summary": "SQLite 公式変更履歴。現行リリースは 3.53.4 (2026-07-24)。brief §4 D1 の永続化候補 sqlite の一次資料で、公式ドキュメント索引 https://www.sqlite.org/docs.html も同一 host 上で併せて確認した (索引ページは version 表記を持たないため、version は本 changes.html の実測値を用いる)。"
+    },
+    {
+      "target_id": "postgresql",
+      "retrieved_at": "2026-08-08T12:42:15Z",
+      "source_url": "https://www.postgresql.org/docs/",
+      "official_publisher": "The PostgreSQL Global Development Group",
+      "official_host": "www.postgresql.org",
+      "version": "18",
+      "latest_checked_at": "2026-08-08T12:42:15Z",
+      "evidence_ref": "system-spec/retrieval-evidence/postgresql.json",
+      "evidence_sha256": "e3ea2d29adaf494164415a97acb2c3b59c883965d2b24c37ce32b9bc500c102c",
+      "summary": "PostgreSQL 公式ドキュメント hub。現行 major version は 18 (Current)、19 は beta。brief §4 D1 の対抗候補 postgresql の一次資料。"
+    },
+    {
+      "target_id": "fastapi",
+      "retrieved_at": "2026-08-08T12:42:16Z",
+      "source_url": "https://fastapi.tiangolo.com/release-notes/",
+      "official_publisher": "FastAPI (tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "last_updated": "2026-07-29",
+      "latest_checked_at": "2026-08-08T12:42:16Z",
+      "evidence_ref": "system-spec/retrieval-evidence/fastapi.json",
+      "evidence_sha256": "e2a2d5288263cce91abf779528989ce5d8ad88226cd9d177c5f7732a096c20ed",
+      "summary": "FastAPI 公式リリースノート。現行リリースは 0.141.1 (2026-07-29)。brief §4 D2 の API framework 候補 fastapi の一次資料で、公式トップ https://fastapi.tiangolo.com/ も同一 host 上で確認した (トップは version 表記を持たない)。"
+    },
+    {
+      "target_id": "flask",
+      "retrieved_at": "2026-08-08T12:42:17Z",
+      "source_url": "https://flask.palletsprojects.com/",
+      "official_publisher": "Pallets",
+      "official_host": "flask.palletsprojects.com",
+      "version": "3.1.3",
+      "latest_checked_at": "2026-08-08T12:42:17Z",
+      "evidence_ref": "system-spec/retrieval-evidence/flask.json",
+      "evidence_sha256": "688544311f41a81075f3d1bde5e8eda11ef9a751e08110a70f8d1ee7e7440cd7",
+      "summary": "Flask 公式ドキュメント。docs は 3.1.x 系で、変更履歴の先頭は Version 3.1.3。brief §4 D2 の対抗候補 flask の一次資料。"
+    },
+    {
+      "target_id": "local-bearer-token",
+      "retrieved_at": "2026-08-08T12:42:18Z",
+      "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+      "official_publisher": "FastAPI (tiangolo)",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "latest_checked_at": "2026-08-08T12:42:18Z",
+      "evidence_ref": "system-spec/retrieval-evidence/local-bearer-token.json",
+      "evidence_sha256": "fff31afc8661b9ff7bbe137fef64dd821b393899ce26e6e7bced9aaaa4120d61",
+      "summary": "FastAPI 公式 security tutorial (OAuth2 / OpenID Connect / OpenAPI security scheme と FastAPI の security utility)。brief §4 D3 の採択候補 local-bearer-token の一次資料。ページ自体は version/更新日を持たないため、version は同一公式 host の release-notes 実取得値 0.141.1 を用いる。"
+    },
+    {
+      "target_id": "oauth2-password-jwt",
+      "retrieved_at": "2026-08-08T12:42:19Z",
+      "source_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+      "official_publisher": "IETF (Internet Engineering Task Force)",
+      "official_host": "datatracker.ietf.org",
+      "version": "RFC 6749",
+      "last_updated": "2012-10",
+      "latest_checked_at": "2026-08-08T12:42:19Z",
+      "evidence_ref": "system-spec/retrieval-evidence/oauth2-password-jwt.json",
+      "evidence_sha256": "edb1efaf2f4b863a2ab49c5f8cb38a1b6124abb9978a23dea2db6ff226c58118",
+      "summary": "OAuth 2.0 Authorization Framework (RFC 6749, Proposed Standard, October 2012)。brief §4 D3 の対抗候補 oauth2-password-jwt の一次規格資料。"
+    }
+  ]
+}

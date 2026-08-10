@@ -1,0 +1,74 @@
+{
+  "authority_sha256_after": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+  "authority_sha256_before": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+  "count": 2,
+  "executed_at": "2026-08-08T10:09:48.419310Z",
+  "filters": {
+    "domain": "documentation",
+    "id": null,
+    "keyword": null,
+    "kind": "task",
+    "project": "live-trial-fixture",
+    "status": "active",
+    "tag_match": "all",
+    "tags": [
+      "live-trial",
+      "fixture"
+    ]
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+  "graph_sha256_before": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+  "ok": true,
+  "read_only": true,
+  "results": [
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "LT-TASK-002"
+      ],
+      "depends_on": [],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-001.md",
+      "graph_node_id": "LT-TASK-001",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "live-trial fixture の基点タスク",
+      "tracker_binding": "none"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [],
+      "depends_on": [
+        "LT-TASK-001"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/lt-task-002.md",
+      "graph_node_id": "LT-TASK-002",
+      "issue_linkage": null,
+      "parent_feature": null,
+      "project_id": "live-trial-fixture",
+      "status": "active",
+      "tags": [
+        "live-trial",
+        "fixture"
+      ],
+      "title": "LT-TASK-001 に依存する後続タスク",
+      "tracker_binding": "none"
+    }
+  ]
+}

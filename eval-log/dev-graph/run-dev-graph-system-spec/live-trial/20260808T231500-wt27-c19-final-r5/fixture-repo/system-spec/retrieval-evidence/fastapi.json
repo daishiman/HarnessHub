@@ -1,0 +1,12 @@
+{
+  "target_id": "fastapi",
+  "tool": "WebFetch",
+  "requested_url": "https://fastapi.tiangolo.com/release-notes/",
+  "official_host": "fastapi.tiangolo.com",
+  "extracted": {
+    "latest_release_version": "0.141.1",
+    "latest_release_date": "2026-07-29"
+  },
+  "note": "FastAPI 公式 top page (https://fastapi.tiangolo.com/) は版数を表示しないため、同一公式 host の Release Notes を版数の一次出典として取得した。tutorial/security も同一 target_id へ束ねる (同一技術は 1 record)。",
+  "retrieved_at": "2026-08-08T14:18:31Z"
+}

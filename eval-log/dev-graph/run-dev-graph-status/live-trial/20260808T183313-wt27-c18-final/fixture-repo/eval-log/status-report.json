@@ -1,0 +1,132 @@
+{
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "observation": "the reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field rather than by summary count",
+  "skill": "dev-graph:run-dev-graph-status",
+  "repo_root_relative_report": "eval-log/run-dev-graph-status-execution.json",
+  "graph_store": ".dev-graph/state/graph.json",
+  "graph_revision": 1,
+  "filters_applied_AND": {
+    "domain": "documentation",
+    "id": null,
+    "keyword": null,
+    "kind": "task",
+    "project": "live-trial-fixture",
+    "status": "active",
+    "tag_match": "all",
+    "tags": [
+      "live-trial",
+      "fixture"
+    ]
+  },
+  "report_node_ids": [
+    "LT-TASK-001",
+    "LT-TASK-002"
+  ],
+  "graph_store_node_ids": [
+    "LT-TASK-001",
+    "LT-TASK-002"
+  ],
+  "node_id_set_identical": true,
+  "field_by_field": [
+    {
+      "graph_node_id": "LT-TASK-001",
+      "fields": [
+        {
+          "field": "graph_node_id",
+          "report_value": "LT-TASK-001",
+          "graph_store_value": "LT-TASK-001",
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-001].graph_node_id",
+          "match": true
+        },
+        {
+          "field": "status",
+          "report_value": "active",
+          "graph_store_value": "active",
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-001].status",
+          "match": true
+        },
+        {
+          "field": "closed_at",
+          "report_value": null,
+          "graph_store_value": null,
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-001].completion_evidence.completed_at",
+          "match": true
+        },
+        {
+          "field": "depends_on",
+          "report_value": [],
+          "graph_store_value": [],
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-001].depends_on",
+          "match": true
+        },
+        {
+          "field": "dependents",
+          "report_value": [
+            "LT-TASK-002"
+          ],
+          "graph_store_value": [
+            "LT-TASK-002"
+          ],
+          "graph_store_source": "recomputed from .dev-graph/state/graph.json#nodes[*].depends_on containing LT-TASK-001",
+          "match": true
+        }
+      ],
+      "all_fields_match": true
+    },
+    {
+      "graph_node_id": "LT-TASK-002",
+      "fields": [
+        {
+          "field": "graph_node_id",
+          "report_value": "LT-TASK-002",
+          "graph_store_value": "LT-TASK-002",
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-002].graph_node_id",
+          "match": true
+        },
+        {
+          "field": "status",
+          "report_value": "active",
+          "graph_store_value": "active",
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-002].status",
+          "match": true
+        },
+        {
+          "field": "closed_at",
+          "report_value": null,
+          "graph_store_value": null,
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-002].completion_evidence.completed_at",
+          "match": true
+        },
+        {
+          "field": "depends_on",
+          "report_value": [
+            "LT-TASK-001"
+          ],
+          "graph_store_value": [
+            "LT-TASK-001"
+          ],
+          "graph_store_source": ".dev-graph/state/graph.json#nodes[graph_node_id=LT-TASK-002].depends_on",
+          "match": true
+        },
+        {
+          "field": "dependents",
+          "report_value": [],
+          "graph_store_value": [],
+          "graph_store_source": "recomputed from .dev-graph/state/graph.json#nodes[*].depends_on containing LT-TASK-002",
+          "match": true
+        }
+      ],
+      "all_fields_match": true
+    }
+  ],
+  "compared_fields_per_node": [
+    "graph_node_id",
+    "status",
+    "closed_at",
+    "depends_on",
+    "dependents"
+  ],
+  "total_field_comparisons": 10,
+  "mismatched_field_comparisons": 0,
+  "verdict": "PASS"
+}

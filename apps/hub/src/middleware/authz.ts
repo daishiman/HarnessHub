@@ -1,5 +1,7 @@
 // 認可判定の単一層。deny-by-default で Tenant/Workspace スコープを強制する (shared-layers §2 / qa-006 / D4)
 // この層以外に認可判定を書かないこと。テナント固有 policy は feat-auth-tenancy が本層へ注入する。
+import { tenantSlugSchema } from '@harness-hub/schemas';
+
 import { resolveActiveWorkspaceId } from '../lib/auth/session.js';
 import type { Principal } from '../shared/auth/index.js';
 import { type RequestedScope, resolveRequestedScope } from './scope.js';
@@ -13,18 +15,39 @@ export type DenyReason =
 
 export type AuthzDecision =
   | { readonly allowed: true; readonly scope: RequestedScope }
-  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 };
+  // 404 は `tenant_mismatch` の存在秘匿専用 (T-ISO-06)。route 層の `denyStatusFor` と同じ対応表を
+  // 使う必要があるため、片側だけ status を足すと本層が先に応答する経路で契約が崩れる。
+  | { readonly allowed: false; readonly reason: DenyReason; readonly status: 401 | 403 | 404 };
 
 /**
- * 認証不要で到達できる path の**明示**allowlist。
- * ここに列挙されていない path は全て認証必須 ＝ deny-by-default。
+ * 認証不要で到達できる path のうち、**その path 自身だけ**を公開するもの (完全一致)。
+ * 配下 (`{path}/**`) は公開にならないため、後から子 route が生えても自動的に公開へ倒れない。
+ * 「入口 1 枚だけを開ける」意図の path は前方一致側ではなくこちらへ足すこと。
+ */
+export const PUBLIC_EXACT_PATHS: readonly string[] = [
+  // 未認証ランディング (P0 シェル)。業務データを一切含めない
+  '/',
+  // ランディングのテナント入力を `/{tenant_slug}/signin` へ振り分ける受け口。
+  // 認証前にしか通らない経路であり、業務データを一切読まない (query の slug を検証して 303 を返すだけ)。
+  // 前方一致にすると `/signin/**` が将来まとめて公開になるため、この 1 枚に限定する
+  '/signin',
+  // 所属 workspace が複数の利用者が active workspace を確定させる受け口 (確定前は scope が無く
+  // 認可を通せないため公開が必要)。`/signin` の前方一致に頼らず、`/api/v1/device` と同じく末端まで書く。
+  // route 自身が session cookie の署名・期限・status と所属一覧を再検証する (fail-closed)
+  '/signin/workspace',
+  // Device Flow の入力画面だけを公開する。`/device/*` へ広げない。承認 API は認証必須のまま
+  '/device',
+];
+
+/**
+ * 認証不要で到達できる path の**明示**allowlist (前方一致)。
+ * ここと `PUBLIC_EXACT_PATHS` に列挙されていない path は全て認証必須 ＝ deny-by-default。
  * 前方一致で判定するため、新規追加時は意図しない配下を巻き込まないか確認すること。
+ * 配下まで開ける意図が無いなら `PUBLIC_EXACT_PATHS` を使う。
  */
 export const PUBLIC_PATH_PREFIXES: readonly string[] = [
   // 外形監視 (Better Stack) が認証なしで叩く。ADR §7
   '/health',
-  // 未認証ランディング (P0 シェル)。業務データを一切含めない
-  '/',
   // サインイン経路。provider 実体は feat-auth-tenancy
   '/api/auth',
   // RFC 8628 device flow のうち、認証前に client が叩く 2 経路。
@@ -41,9 +64,17 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
 ];
 
 /** tenant slug を先に確定するサインイン画面。API 配下などへ広がらないよう 1 segment に限定する。 */
-const TENANT_SIGNIN_PATH = /^\/[A-Za-z0-9][A-Za-z0-9_-]*\/signin$/;
-/** Device Flow の入力画面だけを公開する。`/device/*` へ広げない。承認 API は認証必須のまま。 */
-const DEVICE_APPROVAL_PATH = '/device';
+const TENANT_SIGNIN_PATH = /^\/([^/]+)\/signin$/;
+
+/**
+ * `/{tenant_slug}/signin` かどうか。slug の「形」は `tenantSlugSchema` を唯一の正本とする。
+ * ここで独自の文字集合を書くと、middleware は public と判定するのに画面側の `safeParse` は 404 にする、
+ * という入口ごとの挙動差が生まれる (実際 `/ACME/signin` が middleware だけ通っていた)。
+ */
+function isTenantSigninPath(pathname: string): boolean {
+  const slug = TENANT_SIGNIN_PATH.exec(pathname)?.[1];
+  return slug !== undefined && tenantSlugSchema.safeParse(slug).success;
+}
 
 export interface AuthzInput {
   readonly pathname: string;
@@ -63,11 +94,9 @@ export interface AuthzInput {
 export function isPublicPath(pathname: string): boolean {
   const normalized = normalize(pathname);
   return (
-    normalized === DEVICE_APPROVAL_PATH ||
-    TENANT_SIGNIN_PATH.test(normalized) ||
-    PUBLIC_PATH_PREFIXES.some((prefix) =>
-      prefix === '/' ? normalized === '/' : normalized === prefix || normalized.startsWith(`${prefix}/`),
-    )
+    PUBLIC_EXACT_PATHS.includes(normalized) ||
+    isTenantSigninPath(normalized) ||
+    PUBLIC_PATH_PREFIXES.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))
   );
 }
 
@@ -109,8 +138,12 @@ export function authorize(input: AuthzInput): AuthzDecision {
     return { allowed: false, reason: 'missing_tenant_scope', status: 403 };
   }
 
+  // 存在秘匿 (T-ISO-06): 他テナントの資源は 404 で返す。403 だと「その ID の資源が他テナントに在る」
+  // ことが応答から伝わってしまう。route 層の `denyStatusFor` は同じ理由で既に 404 を返していたが、
+  // 本 middleware が先に応答するため route 側の 404 は到達不能で、本番だけ 403 になっていた
+  // (route 単体テストは withAuthz を直接呼ぶので緑のまま素通りする)。対応表は両層で一致させる。
   if (scope.tenantId !== input.principal.tenantId) {
-    return { allowed: false, reason: 'tenant_mismatch', status: 403 };
+    return { allowed: false, reason: 'tenant_mismatch', status: 404 };
   }
 
   if (scope.workspaceId !== null && !input.principal.workspaceIds.includes(scope.workspaceId)) {
@@ -145,8 +178,12 @@ function mergeScopes(explicit: RequestedScope, session: RequestedScope | null): 
  * session (ブラウザ通常遷移) 由来の要求スコープを解決する。
  * 明示ヘッダー系統とは独立した第2の入力系統だが、合流と認可判断はこのモジュールにだけ置く。
  * 所属を外れた active workspace は束縛しない (fail-closed)。
+ *
+ * export しているのは (dashboard) 配下の RSC 側 (`lib/routing/dashboard-scope.ts`) が
+ * URL クエリ無しのログイン直後フォールバック用に同じ解決規則を再利用するため。
+ * ここを直接呼ばずに独自実装すると、tenantId/workspaceId をペアで解決/ペアで諦める契約が崩れる。
  */
-function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
+export function resolveSessionScope(principal: Principal, cookieHeader: string | null): RequestedScope | null {
   const workspaceId = resolveActiveWorkspaceId(cookieHeader, principal.workspaceIds);
   if (workspaceId === null) return null;
 

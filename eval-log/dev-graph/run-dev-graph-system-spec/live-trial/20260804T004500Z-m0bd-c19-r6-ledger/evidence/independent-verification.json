@@ -1,0 +1,95 @@
+{
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r2",
+  "verdict": "PASS",
+  "observations": [
+    {
+      "id": "obs1",
+      "text": "the declared system-spec-harness plugin is loaded and its canonical flow completes",
+      "verdict": "PASS",
+      "evidence": [
+        "plugins/system-spec-harness/.claude-plugin/plugin.json version=0.1.0 (satisfies >=0.1.0 <1.0.0)",
+        "references/package-contract.json entry_points.skills contains all 4 required: run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator (plus ref-system-design-knowledge)",
+        "I ran validate-coverage-matrix.py --matrix <fx>/system-spec/spec-state.json --require-complete --require-foundation -> EXIT=0, 'OK: 収集マトリクス網羅性 (final(未収集0)+foundation(上位概念トレース)) を満たす'",
+        "I ran validate-source-citation.py --targets ... --references ... --repo-root <fx> -> EXIT=0, 'OK: 出典記録が全件対応・必須フィールド・公式 host・時刻・取得証跡の一致を満たす'",
+        "I ran aggregate-completeness.py --report ... --fork-ledger ... --session 1940b6f4-da09-49a8-972e-66f1d4027bb0 --matrix ... --require-complete --knowledge-graph -> EXIT=0, 'OK: レポート形状・総合判定整合・独立 auditor 帰属の fork 証跡接地を満たす (verdict=PASS)'; sub-gates G-matrix exit 0 and G-knowledge-graph 4 profiles (knowledge/doctrine/required-info/cross) all exit 0",
+        "spec-state.json independently counted: 8 categories x 6 platforms = 48 cells, 8 確定 + 40 対象外 + 0 未収集; requirements_foundation.confirmed=true, approval_ref=appr-foundation-001; hearing_progress.complete=true, next_question=null",
+        "Chapter set present: database/auth/ui-ux/security/infrastructure/backend/frontend/maintenance-ops .md + index.md + 00-requirements-definition.md (8 categories match matrix categories exactly)",
+        "completeness-report.json: evaluator.context='fork', verdict=PASS, all 6 aspects PASS, findings high=0 (medium 1 / low 3 / info 3), gaps=[]",
+        "Live doc re-verification via WebFetch (3 of 5 targets): www.sqlite.org/changes.html -> 3.53.4 (2026-07-24) == record; fastapi.tiangolo.com/release-notes/ -> 0.141.1 (2026-07-29) == record; www.postgresql.org/docs/release/ -> 18.4 stable with 19 only at Beta 2 == record (18.4 / 2026-05-14, and the record's own note about 19 Beta 2 matches)",
+        "retrieved_at values are 5 distinct timestamps (02:26:42 / 02:43:39 / 02:26:52 / 02:26:56 / 02:27:01 Z), none in the future, not pinned to one instant; postgresql's later 02:43:39 is consistent with the loop2 re-fetch recorded in intermediate.jsonl",
+        "All 5 retrieval-evidence/*.json exist and their real sha256 matches evidence_sha256 (recomputed by me)"
+      ]
+    },
+    {
+      "id": "obs2",
+      "text": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "verdict": "PASS",
+      "evidence": [
+        "graph.json holds exactly 2 nodes; both carry all 6 source_lineage fields (origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_path, source_version=0.1.0, source_digest, imported_at=2026-08-04T02:59:10Z) and all 3 confirmation_evidence fields (evaluator=assign-system-spec-completeness-evaluator, evidence_ref=system-spec/completeness-report.json, evaluated_digest). Missing fields: 0",
+        "shasum -a 256 by me: system-spec/index.md = cad25dcfbc7a7db0e5b33c004ede3120d5f5383c4bf8370405668d2e308030f3 == arch node source_digest; system-spec/00-requirements-definition.md = 4a5e7b8e617937167a5c260638f3465f0205942b018cae511a6c1aa344ee866d == spec node source_digest (no digest reuse across the two nodes)",
+        "shasum -a 256 system-spec/completeness-report.json = aa9c54644d0580b6c77957d6ef280d1c43a68ffadae2a025eafebe122f5ddadc == evaluated_digest on both nodes",
+        "I ran validate-graph-schema.py --graph <fx>/.dev-graph/state/graph.json --repo-root <fx> -> EXIT=0, valid=true, violations=[], implementation_readiness=complete, missing_sections=[]",
+        "I ran validate-evidence-refs.py --repo-root <fx> --progress <fx>/eval-log/run-dev-graph-system-spec-progress.json -> EXIT=0, scanned_nodes_with_evidence=2 (>0, gate actually fired), registered_dangling=[], existing_dangling=[]",
+        "I ran validate-source-digest.py --repo-root <fx> --progress ... -> EXIT=0, checked=2 (>0, gate actually fired), registered_mismatch=[]",
+        "Both nodes: confirmation_status=confirmed, evaluation_status=pass"
+      ]
+    },
+    {
+      "id": "obs3",
+      "text": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "verdict": "PASS",
+      "evidence": [
+        "git -C <fx> status: only .dev-graph/state/graph.json is modified (diff 200 insertions / 2 deletions); all other artifacts are untracked new files. No hand-edit of tracked graph state beyond the writer's node insertion",
+        "graph.json is byte-identical to json.dumps(sort_keys=True, indent=2)+newline, i.e. the canonical upsert-node.py writer encoding; graph_revision=2 matches 2 registrations; leftover .dev-graph/state/.graph.json.register.lock (11:59) is the C02 writer's lock artifact",
+        "graph.json repository_id local:sha256:4de12d21... matches .dev-graph/config.json",
+        "Frontmatter/graph parity: programmatic field-by-field comparison of specs/spec-local-todo-rest-api.md and architecture/arch-local-todo-rest-api.md frontmatter against their graph nodes -> parity_diffs=[] and graph_only=[] for both (all ~45 fields identical, including nested source_lineage / confirmation_evidence / implementation_readiness)",
+        "Node bodies are byte-identical to the C02 inputs eval-log/node-inputs/{spec,arch}-body.md (body_source=from_file), consistent with writer-generated artifacts rather than hand-authored files",
+        "Positive-control duplication search over plugins/{system-spec-harness,dev-graph}: terms requirements_foundation (harness 28 files), category_aggregate (22), apply-spec-transition (21), compile-spec-doc (13), qa_log (23), hearing_progress (15), spec_cells (14) — control side hits in every case; plugins/dev-graph/{scripts,skills,hooks,agents} hits = 0 for all 7 terms",
+        "Broader terms 収集マトリクス (harness 19) and 往復ヒアリング (harness 14): dev-graph implementation hits = 0",
+        "Residual dev-graph hits inspected and are references, not duplicates: 'completeness-report' appears only as a path string in lint-eval-log-layout.py and as a contract note in run-dev-graph-system-spec/prompts/R3-import.md; 'elicit' hits are dev-graph's own R1-elicit responsibility prompts (its own query/intent elicitation for status/sync/render/etc.), and validate-registration-preflight.py's hit is the unrelated string 'system-dev-plan-elicitor'",
+        "run-dev-graph-system-spec/prompts/R2-delegate.md explicitly states 責務境界 '各ロジックを複製せずevaluatorを書換えずFAIL成果をimportしない' and only delegates to the 4 harness Skills"
+      ]
+    }
+  ],
+  "goal_seek": {
+    "verdict": "PASS",
+    "evidence": [
+      "All three files exist with the exact required names: eval-log/run-dev-graph-system-spec-goal-spec.json, -progress.json, -intermediate.jsonl",
+      "I computed sha256 of goal-spec.original_goal myself = 30a1de05fc91233a51fb054852bc389252948f969d89393207f5ef5c382ce454, identical to the declared original_goal_hash",
+      "All 3 intermediate.jsonl lines carry all 6 required fields (original_goal / original_goal_hash / current_goal_snapshot / delta_from_original / merged_directive_for_next / drift_signal); missing=[] on every line",
+      "Every line's original_goal string is byte-identical to goal-spec's and every original_goal_hash matches my recomputed hash; current_goal_snapshot is identical to original_goal on all 3 lines (no goal text rewrite, no scope narrowing)",
+      "drift_signal is 'none' on all 3 lines; delta_from_original is 'none' / 'none (ゴール本文の変更なし)'",
+      "Line 1 is genuine pre-work: phase='pre-work (R0/R1 complete, R2 delegation not started)', no result key, merged_directive_for_next plans the R2 4-entry-point delegation. Lines 2 and 3 are result rows carrying a result object (loop1 evaluator FAIL -> loop2 remediation -> evaluator PASS -> C02 import)",
+      "File birth 11:22:00 vs mtime 12:03:55 (local) confirms incremental appends rather than a single write",
+      "Loop1 honestly records evaluator FAIL and c02_import '未実施' (import withheld until evaluator PASS), i.e. no retroactive whitewashing of the failed loop",
+      "progress.json records all 8 checklist items C1-C8 with per-item evidence, 9 gates (G-coverage-loop / G-coverage-final / G-required-info / G-source-citation / G-harness-acceptance-tests / G-evaluator-report / G-graph-schema / G-evidence-refs / G-source-digest), registered_this_run=[arch-local-todo-rest-api, spec-local-todo-rest-api], and an evidence block listing spec_state / fetched_references / evaluator_report / 5 retrieval-evidence / 10 compiled chapters / audit_fork_ledger rows / c02_registration receipts",
+      "progress.json also carries harness_side_open_items (3 items left unfixed as out-of-scope for the fixture), which is disclosure rather than scope reduction of the goal"
+    ]
+  },
+  "ledger_forgery_check": {
+    "verdict": "PASS",
+    "evidence": [
+      "Ledger has 7 lines, each valid JSON with exactly the 7 hook-emitted keys {schema_version, ts, session_id, tool_name, subagent_type, prompt_sha256, cwd}; no extra or missing keys on any line",
+      "Every line is byte-identical to json.dumps(record, ensure_ascii=False, sort_keys=True) — the exact encoding of record-audit-fork.py's append_record(); file ends with a trailing newline as the hook writes",
+      "All 7 prompt_sha256 are present, well-formed 64-hex, and all distinct (7/7). No nulls, no duplicates",
+      "All 7 ts are distinct and strictly monotonically increasing (02:32:42 / 02:34:22 / 02:34:28 / 02:34:35 / 02:52:34 / 02:52:42 / 02:52:49 Z). No artificial time collisions",
+      "Strongest anti-forgery signal: the file's birthtime (11:32:42 local = 02:32:42Z) equals the FIRST record's ts and its mtime (11:52:49 local = 02:52:49Z) equals the LAST record's ts — the file was created at the first fork and last touched at the last fork, 20 minutes apart. A Write/Edit/Bash-redirect fabrication would show birth == mtime in a single instant",
+      "session_id on all 7 rows is 1940b6f4-da09-49a8-972e-66f1d4027bb0, which is the real id of the live session I am running in (it matches this session's scratchpad path), and a system-spec-harness completeness-evaluator agent is still registered as active in this session — corroborating that real Agent forks occurred here",
+      "tool_name='Agent' on all rows, which is the current Claude Code value accepted by AUDIT_FORK_TOOL_NAMES / LEDGER_TOOL_NAMES; subagent_type is always a plugin-local stem that resolves to an existing plugins/system-spec-harness/agents/<name>.md",
+      "completeness-report.audit_delegations declares exactly the 3 required receipts and every dispatch.session_id equals 1940b6f4-da09-49a8-972e-66f1d4027bb0: matrix_coverage/primary -> system-spec-matrix-auditor (ledger rows at 02:34:22 and 02:52:34), matrix_coverage/sub_input -> system-spec-hearing-auditor (02:34:28, 02:52:42), doc_freshness/primary -> system-spec-doc-freshness-auditor (02:32:42, 02:34:35, 02:52:49). All three (session_id, subagent_type) pairs are grounded",
+      "I read audit_fork_attribution.py: required_delegations() derives exactly these 3 from ASPECTS + SUB_INPUT_AUDITORS, and ledger_corroborates() fail-closes on missing ledger, missing subagent_type row, missing/'unknown' session_id, or session mismatch. The exit 0 I observed therefore means the binding actually fired",
+      "Ordering is causally coherent: doc-fetch retrieved_at (02:26-02:43Z) precede the audits; the last audit (02:52:49Z) precedes completeness-report.json's creation (02:58:09Z), which precedes graph.json's write (03:00:50Z). No artifact predates the evidence it claims to rest on"
+    ]
+  },
+  "blockers": [],
+  "notes": [
+    "Granularity limit of the ledger gate (mechanism, not a forgery finding): ledger_corroborates() binds only (session_id, subagent_type). The 7 rows include 3 loop1 forks that were superseded by the loop2 re-evaluation, and the gate cannot distinguish which specific fork corroborates the final report, nor whether the returned verdicts were transcribed faithfully. record-audit-fork.py's own docstring states this boundary explicitly.",
+    "The PreToolUse guard (guard-confirmed-chapter-overwrite.py) protects system-spec/spec-state.json and confirmed chapters, but not the ledger path itself. The ledger's integrity therefore rests on the shape/timestamp/birth-vs-mtime evidence above rather than on a write guard.",
+    "The `cwd` field varies across ledger rows (3 rows at .../wt-21, 4 at .../plugins/system-spec-harness). This is consistent with the hook recording the payload cwd observed at fork time and is not by itself an anomaly, but I could not independently confirm the cwd transitions.",
+    "recorded_at in intermediate.jsonl looks narrative rather than machine-stamped: values are round (00:45:00Z / 02:40:00Z / 03:05:00Z), line 1's 00:45:00Z predates the fixture directory's own creation (02:18Z), and line 3's 03:05:00Z is ~65s after the file's actual last write (03:03:55Z). recorded_at is not among the 6 required intermediate fields and none of the required goal-seek bindings depend on it, so I did not treat this as a failure — but the timestamps in that file should not be read as observations.",
+    "validate-graph-schema.py does not emit a checked/scanned counter, so its 'gate actually fired' evidence is indirect; I independently confirmed graph.json contains 2 nodes and that both are fully populated. The other two dev-graph validators do report counts (scanned=2, checked=2).",
+    "I re-verified 3 of 5 doc-fetch targets live (sqlite, fastapi, postgresql); flask 3.1.3 (2026-02-18) and RFC 6749 were not independently re-fetched. RFC 6749 is a fixed-version document so a stale value is not applicable there; flask remains unverified by me.",
+    "One remediation described in intermediate.jsonl line 3 ('postgresql を 18.4 (2026-05-14) で再取得') is corroborated by postgresql's outlier retrieved_at (02:43:39Z vs 02:26-02:27Z for the other four), which falls after the loop1 result timestamp.",
+    "I performed no writes: git status of the fixture is unchanged, and no file under the fixture has an mtime later than 12:01 local (all four recent eval-log writes at 12:03-12:05 predate my run and were made by the parent context before I was launched)."
+  ]
+}

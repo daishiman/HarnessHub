@@ -12,8 +12,8 @@ iteration: null
 title: "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:19:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:56:52Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-tenant-data-retention","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-tenant-data-retention/requirements-baseline.md"]

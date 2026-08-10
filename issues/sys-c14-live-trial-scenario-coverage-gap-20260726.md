@@ -12,8 +12,8 @@ iteration: null
 title: "C14 live-trial の scenario 契約が要求する readiness-incomplete 除外が未検証で、起票 0 件も binding=none と交絡している"
 owners: ["daishiman"]
 created_at: "2026-07-25T23:50:00Z"
-updated_at: "2026-07-26T03:26:08.976543Z"
-status: "draft"
+updated_at: "2026-07-29T01:12:07Z"
+status: "closed"
 depends_on: ["issue-decompose-live-trial-audit-defects-20260726"]
 related_nodes: ["issue-decompose-live-trial-audit-defects-20260726","issue-guard-fix-closure-verdict-refresh-20260726"]
 resource_scope: ["plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json","plugins/harness-creator/skills/run-skill-live-trial/scripts/live-trial-verdict.py","eval-log/dev-graph/run-dev-graph-decompose/criteria-test/scenario-verdict.json"]

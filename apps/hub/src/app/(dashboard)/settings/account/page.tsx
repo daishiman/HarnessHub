@@ -1,4 +1,6 @@
+import { ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
+import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 import { AccountSettings } from './account-settings.js';
 
 export const metadata: Metadata = {
@@ -10,11 +12,15 @@ interface PageProps {
 }
 
 export default async function AccountSettingsPage({ searchParams }: PageProps) {
-  const query = await searchParams;
+  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   return (
-    <section aria-labelledby="account-settings-heading">
-      <h1 id="account-settings-heading">アカウント設定</h1>
-      <AccountSettings tenantId={query.tenant ?? ''} />
-    </section>
+    <>
+      <ScreenHeader
+        id="account-settings-heading"
+        title="アカウント設定"
+        description="プロフィール・通知・セッションなど、自分に関する設定をまとめています。"
+      />
+      <AccountSettings tenantId={tenantIdFromQuery(query, scope)} />
+    </>
   );
 }

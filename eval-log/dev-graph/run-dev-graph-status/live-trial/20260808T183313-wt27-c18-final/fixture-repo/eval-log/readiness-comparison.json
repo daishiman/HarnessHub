@@ -1,0 +1,58 @@
+{
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "observation": "the dependent task is reported as blocked by its predecessor and the predecessor as ready",
+  "predecessor_node_id": "LT-TASK-001",
+  "dependent_node_id": "LT-TASK-002",
+  "edge": {
+    "direction": "LT-TASK-001 -> LT-TASK-002",
+    "stated_as": "LT-TASK-002.depends_on = ['LT-TASK-001']  /  LT-TASK-001.dependents = ['LT-TASK-002']",
+    "edge_count": 1,
+    "reciprocal_consistent": true
+  },
+  "nodes": [
+    {
+      "graph_node_id": "LT-TASK-001",
+      "title": "live-trial fixture の基点タスク",
+      "role": "predecessor",
+      "report_depends_on": [],
+      "report_dependents": [
+        "LT-TASK-002"
+      ],
+      "report_status": "active",
+      "report_closed_at": null,
+      "readiness": "ready",
+      "blocked_by": [],
+      "derivation": "depends_on is empty in the report, so no incoming prerequisite edge exists -> ready"
+    },
+    {
+      "graph_node_id": "LT-TASK-002",
+      "title": "LT-TASK-001 に依存する後続タスク",
+      "role": "dependent",
+      "report_depends_on": [
+        "LT-TASK-001"
+      ],
+      "report_dependents": [],
+      "report_status": "active",
+      "report_closed_at": null,
+      "readiness": "blocked",
+      "blocked_by": [
+        "LT-TASK-001"
+      ],
+      "derivation": "report_depends_on=['LT-TASK-001'] and every listed predecessor has closed_at=null / status=active (not closed) -> blocked"
+    }
+  ],
+  "lifecycle_state_identity": {
+    "report_status_by_node": {
+      "LT-TASK-001": "active",
+      "LT-TASK-002": "active"
+    },
+    "identical": true,
+    "closed_at_by_node": {
+      "LT-TASK-001": null,
+      "LT-TASK-002": null
+    },
+    "note": "両 node の lifecycle state (status=active, closed_at=null) は同一。ready/blocked の差は status 由来ではなく depends_on/dependents の依存辺のみから導かれている"
+  },
+  "conclusion": "LT-TASK-001 (predecessor) = ready, LT-TASK-002 (dependent) = blocked by ['LT-TASK-001']",
+  "verdict": "PASS"
+}

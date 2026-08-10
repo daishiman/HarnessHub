@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": "apply は import 1件・export 1件、changes=2。remote title を graph に取り込み、local status を Projects Status=In Progress として remote fixture に反映。根拠: transcript.jsonl と graph/remote/snapshot",
+    "2": "確認 dry-run は imports=[]、exports=[]、changes=0、converged=true、write_count=0。根拠: transcript.jsonl, fixture-repo/eval-log/run-dev-graph-sync-progress.json",
+    "3": "apply 後と確認 dry-run 前後で graph・remote・snapshot SHA-256 が一致し、issue/item/field/option IDs も保持。graph=4f6c26bc2949c831d77166841cbb88dda2c7aac7de0e76a380f2ce1e9269f9b6, remote=978b1216e808d4aae1d7a3fd2a1b3b59d1d1af3e9d7faaebf2b63334e1dcee07, snapshot=ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f"
+  },
+  "invocation_count": 3,
+  "invocation_sequence": [
+    "--repo-root <fixture-repo> --dry-run",
+    "--repo-root <fixture-repo> --apply",
+    "--repo-root <fixture-repo> --dry-run"
+  ],
+  "dry_run_writes": {"pass_1": 0, "pass_3": 0},
+  "goal_seek": {
+    "status": "PASS",
+    "validator_violations": [],
+    "intermediate_rows": 2,
+    "original_goal_hash": "ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43",
+    "checklist_all_pass": true
+  },
+  "exits": {"launch": "PASS", "completion": "PASS", "goal_result": "PASS", "poll_exit": "DONE", "tool_errors": 0}
+}

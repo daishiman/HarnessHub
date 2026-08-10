@@ -1,0 +1,18 @@
+{
+  "artifact": "scripts/select-verification-tier.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 94,
+    "notes": "変更 path を正規化・重複排除・昇順化し最高一致 tier を選ぶ。規則/source digest、fork-point 二点 diff、空差分拒否、理由+Beads ID のある降格だけを許す fail-closed 設計。selector と checks を一回で導出し TOCTOU drift を避ける。36 tests pass。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

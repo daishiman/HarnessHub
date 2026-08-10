@@ -1,0 +1,52 @@
+# UI の実ブラウザ・画像回帰検証。通常 CI から分離し、手動実行または
+# PR の `ui-visual` label でだけ Chromium を取得して起動する。
+name: hub-ui-visual
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled]
+    paths:
+      - "apps/hub/**"
+      - "packages/ui/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/ui-visual.yml"
+
+concurrency:
+  group: hub-ui-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  browser:
+    name: 実ブラウザ検証 (opt-in / Playwright)
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.pull_request.labels.*.name, 'ui-visual')
+    steps:
+      - uses: actions/checkout@v4
+      - name: enable corepack (pnpm pin)
+        run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      # ブラウザ実体は node_modules に入らないため別途取得する。`--with-deps` は
+      # ubuntu-latest に無い共有ライブラリを入れる。
+      - name: Chromium の取得
+        run: pnpm --filter @harness-hub/hub exec playwright install --with-deps chromium
+      - name: 実ブラウザ検証
+        run: pnpm --filter @harness-hub/hub run test:browser
+      # VRT が落ちたときは actual / diff を保存し、画像を確認してから baseline を更新する。
+      - name: VRT 差分の証跡
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vrt-diff
+          path: apps/hub/artifacts/vrt/
+          if-no-files-found: ignore

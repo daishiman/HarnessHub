@@ -1,0 +1,92 @@
+{
+  "node": {
+    "graph_node_id": "doc-dev-graph-init-receipt",
+    "artifact_kind": "document",
+    "artifact_subtypes": [],
+    "layer": "operations",
+    "title": "dev-graph 初期化受領書",
+    "project_id": "fixture-repo",
+    "domain": "dev-graph",
+    "status": "draft",
+    "owners": ["harness maintainers"],
+    "tags": ["dev-graph", "init", "receipt", "live-trial"],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "depends_on": [],
+    "related_nodes": [],
+    "resource_scope": ["docs/dev-graph-init-receipt.md"],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "docs/dev-graph-init-receipt.md",
+    "template_id": "document",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": null,
+      "source_version": null,
+      "source_digest": null,
+      "imported_at": null
+    },
+    "classification_confidence": 0.93,
+    "classification_reason": "C01 init live-trial の実行結果を記録する運用文書で、仕様・設計判断・実行課題のいずれでもない。summary が初期化記録である旨を明示し、本文構成が document template の目的/対象読者/要約/本文/決定事項/運用・更新方法/関連資料/変更履歴に一致するため document と判定した (kind は呼出し引数でも document を明示指定)。",
+    "classification_candidates": [
+      {
+        "artifact_kind": "document",
+        "confidence": 0.93,
+        "candidate_path": "docs/dev-graph-init-receipt.md"
+      },
+      {
+        "artifact_kind": "specification",
+        "confidence": 0.04,
+        "candidate_path": "specs/dev-graph-init-receipt.md"
+      },
+      {
+        "artifact_kind": "task",
+        "confidence": 0.02,
+        "candidate_path": "tasks/dev-graph-init-receipt.md"
+      }
+    ],
+    "tracker_binding": "none",
+    "beads_linkage": null,
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "not_applicable",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "not_applicable",
+      "missing_sections": [],
+      "checked_at": null
+    }
+  }
+}

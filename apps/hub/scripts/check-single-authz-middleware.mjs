@@ -86,6 +86,9 @@ const EXPECTED_EXEMPTIONS = [
   'apps/hub/src/app/api/v1/device/code/route.ts',
   'apps/hub/src/app/api/v1/device/token/route.ts',
   'apps/hub/src/app/api/v1/token/refresh/route.ts',
+  // scope 未確定を解消する route。withAuthz() は scope 確定済みを前提とするため、
+  // これに wrapper を掛けると自分自身を missing_tenant_scope で弾いてしまう (ADR AD-4 の表を参照)。
+  'apps/hub/src/app/signin/workspace/route.ts',
 ];
 
 /**

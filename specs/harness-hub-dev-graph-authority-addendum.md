@@ -49,6 +49,26 @@ implementation_readiness: {"checked_at":"2026-08-02T12:13:53Z","missing_sections
 
 # Harness Hub Dev Graph / Beads authority 追補
 
+## システム構築仕様書 index
+
+Dev Graph と Beads の authority 境界を確定 system-spec へ結ぶ仕様追補の入口である。
+
+## 要件定義書 (上位概念・憲法)
+
+開発自動化の本質的目的と全体制約は [上位要件](../system-spec/00-requirements-definition.md) を正とする。
+
+## 章一覧と集約状態
+
+対象章は dev-workflow と testing-qa であり、状態は `system-spec/spec-state.json` から集約する。
+
+## 集約状態サマリ
+
+confirmed かつ evaluator PASS の authority 契約だけを実装と監査の根拠として扱う。
+
+## 全体ドキュメント出典 (未割当参照)
+
+未割当の参考資料は system-spec の source ledger を正とし、この追補へ複製しない。
+
 ## 目的と成功状態
 
 Dev Graph と Beads の正本更新を、事前遮断・実行後監査・保存時検証・単一 mutation bridge の四境界で守り、script file や inline command からの迂回を検出できる状態を維持する。
@@ -144,3 +164,23 @@ PostToolUse が tool 完了後に監査する。非同期 queue や製品イベ�
 - 今回の判断と検証: `docs/features/feat-dev-pipeline-improvement/guard-authority-c10-c11-c28-spec-reflection-receipt.md`
 - C28 継承判断: `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
 - bridge 内部分割: `docs/features/feat-dev-pipeline-improvement/w7n7-bd-bridge-split-spec-reflection-receipt.md`
+
+## system-spec import の見出し contract (2026-08-08 / `HarnessHub-o4zi`)
+
+- conditional family は `template-contract.json` の `conditional_triggers` を正本とし、`family` 以外の key を `source_lineage` へ AND 完全一致させる。
+- `system-spec/index.md` の specification は compile 済み index の 4 見出し、`system-spec/00-requirements-definition.md` の architecture は U1〜U9 を許容する。
+- 同じ `origin_kind=system-spec-harness` でも通常章へ conditional 緩和を波及させず、architecture 基本 10 見出しを要求する。
+- task / specification / architecture は同じ `heading_missing` 経路で fail-closed に検査し、空条件 rule と不正 lineage は発火させない。
+- 完全な base template 準拠は conditional family 発火時も正当な variant として残す。
+
+反映と検証は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
+
+## system-spec import の data / logic 分離契約
+
+- `build-system-spec-import.py` は confirmed source artifact の frontmatter を除いた本文を
+  byte-for-byte で C02 body へ渡す。これは source lineage/digest と本文を同じ出典へ
+  結び付ける data import である。
+- elicitation state transition、coverage matrix、chapter compile、source citation 判定は
+  system-spec-harness が所有し、dev-graph 側に同等ロジックを置かない。
+- C19 OUT1 の「複製 0」は後者の処理ロジックだけを指す。前者の verbatim body
+  import を理由に受理を拒否しない。

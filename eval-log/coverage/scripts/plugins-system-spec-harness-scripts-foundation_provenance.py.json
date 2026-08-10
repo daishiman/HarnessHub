@@ -1,0 +1,18 @@
+{
+  "artifact": "plugins/system-spec-harness/scripts/foundation_provenance.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 90,
+    "notes": "ファイルI/Oを一切持たない純粋な検証関数群で、副作用安全性の懸念は無い。U1-U9各項目についてquestionのUマーカー一致・answer原文の非空・written-requirements時のパス安全性(絶対パス/親参照拒否)・SHA256の実値一致検証まで踏み込んでおり、監査ログ偽装(audit-fork-ledger系の懸念)に対する耐性が高い。モジュールdocstringで『state writerとcoverage validatorの両方が使う』という共有目的が明記されており責務は単一(provenance検証)。減点は軽微で、_entry_by_idが重複idのqa_logエントリを暗黙に後勝ちで上書きする点(意図的か仕様上未言及)程度。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

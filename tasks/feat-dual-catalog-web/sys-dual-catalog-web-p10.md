@@ -99,3 +99,7 @@ main との統合時に QA ID の衝突を解消し、`qa-117`、`qa-118`、`qa-
 
 draft PR 作成時点では task spec の completion contract を満たさないため、P01〜P13 と親 epic を
 durable done にしない。PR merge と default branch reconciliation 後に dev-graph / Beads を収束させる。
+
+## 2026-08-10 validator load boundary 最終レビュー
+
+HTTP success 前に schema chunk を要求しない境界、success 時の Zod 検証維持、API・認可・DB 非変更を確認した。ADR の pollable status・catalog 到達性・CWV 計測経路の陳腐化も訂正した。反映と検証は `aqi-validator-load-boundary-spec-reflection-receipt.md` を正とし、本番 TBT は `HarnessHub-aqi` で継続する。

@@ -1,34 +1,25 @@
 {
-  "target": {
-    "plugin": "harness-creator",
-    "skill": "run-skill-live-trial",
-    "skill_md_sha256": "17623ca618144c0b6f09d5aef69f92ba03e4a063a47b404ae57eb232eb5e83ef"
-  },
+  "target": {"plugin": "harness-creator", "skill": "run-skill-live-trial", "skill_md_sha256": "ed1e89d06f9c11e6e4ae69301745369183434e007a8adfd5d6e0becf888890f5"},
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "fresh-agent-eval_c01_live_trial",
-  "reviewed_at": "2026-07-30T11:15:19Z",
-  "iterations": 3,
+  "reviewer": "independent changed-skills content reviewer (fresh read-only context)",
+  "reviewed_at": "2026-08-09T10:45:09Z",
+  "iterations": 2,
   "human_review_required": false,
+  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": [
-      "IN1",
-      "IN2",
-      "OUT1",
-      "OUT2",
-      "OUT3"
-    ],
+    "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2", "OUT3"],
     "positive_feedback": [
-      "session-scoped 環境変数の上書きは、検証済み argv の独立要素として tmux new-session -e へ渡され、shell command へ補間されない。",
-      "実 tmux 回帰テストは stale global 値、current literal、空値、shell metacharacter の非実行を検証し、仕様が要求する durable evidence を備えた。",
-      "テストは継承 TMUX を除去し、短い固有 TMUX_TMPDIR の socket_path を canonical path で確認してから global state を変更する。終了時も隔離 server と一時 directory だけを回収する。"
+      "Scenario は state-file を必須化し、開始時刻を初回観測前に保存する。破損 state、usage 欠落、不正 usage、id-less assistant record は 0 扱いせず BLOCKED/FAIL になる。",
+      "Token は main/subagent 全体を message ID で重複排除し、wall-clock は contained poll state から再計算して state SHA を verdict に束縛するため、呼出側申告で上限を延長できない。",
+      "Fresh evaluator artifact は evaluator identity、evidence refs、transcript SHA に束縛され、finalizer は verdict 失敗時も scoped reap(run-id, owner PID) だけを finally 実行する。"
     ],
     "negative_feedback": [],
-    "iteration": 3,
+    "iteration": 2,
     "iteration_limit": 3,
     "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "focused incremental review。初回の実 tmux 証拠不足と再評価時の TMUX 継承リスクを修正し、最終確認で IN1/IN2/OUT1/OUT2/OUT3、整合性、完全性、規約整合、依存整合がすべて PASS。未解決 LOW/MEDIUM/HIGH finding は 0 件。"
+  "notes": "Incremental focused review。resource/clock/evaluator/reaper blocker 修正後、許可名 validate-live-trial-resource-budget.py / build-live-trial-verdict.py の参照整合と 205 focused tests PASS を確認した。"
 }

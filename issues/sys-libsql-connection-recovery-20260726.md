@@ -9,11 +9,11 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "SQLITE_BUSY で壊れた libSQL ローカル接続を接続層で復旧できずプロセス外競合に耐えられない"
+title: "SQLITE_BUSY で壊れた libSQL ローカル接続を接続層で復旧する"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T00:00:00Z"
-status: "draft"
+updated_at: "2026-08-01T04:50:46Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-domain-model-db","issue-db-write-gate-sweep-20260726","issue-auth-tenancy-production-adapter-20260725"]
 resource_scope: ["packages/db/connection/","packages/db/__tests__/"]

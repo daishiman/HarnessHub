@@ -67,3 +67,11 @@ P12 で以下を additive に更新済み (本記録では再照合のみ行い�
 - 本体実装の変更は行っていない (owner=P05)
 - `authorize()` の判定順・role 判定の変更は行っていない (owner=feat-auth-tenancy、スコープ外)
 - Workspace 選択画面の UI 実装は行っていない (owner=feat-workspace-switch-ux、スコープ外)
+
+## 2026-08-08 production coverage smoke 準備
+
+`HarnessHub-p0lr` で OIDC O5 と S1〜S8 を `ci.yml` の production deploy job へ結線した。local は focused Vitest 21 tests と Hub/DB typecheck が PASS。本番実走は draft PR merge 後であり、現時点の状態は「runner 準備済み・production evidence 待ち」である。詳細は [仕様反映受領書](production-coverage-smoke-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-08 production coverage smoke 実走完了
+
+PR #681 merge 後の main `35a10b87` / hub-ci run `31253674292` で deploy job と OIDC O5、coverage S1〜S8 が SUCCESS。`smoke:coverage-production` 全体は `status: pass`、使い捨て tenant は削除済みで残存行 0 だった。これにより本記録冒頭の「未実施」は履歴として残しつつ、現時点の production acceptance は充足済みとする。

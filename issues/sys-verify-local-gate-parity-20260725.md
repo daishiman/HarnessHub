@@ -12,8 +12,8 @@ iteration: null
 title: "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)"
 owners: ["daishiman"]
 created_at: "2026-07-25T14:49:11.542286Z"
-updated_at: "2026-07-25T15:24:07.483127Z"
-status: "draft"
+updated_at: "2026-08-04T03:11:02Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-auth-tenancy-ci-wiring-20260725"]
 resource_scope: ["package.json","docs/shared-layers.md"]
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":null,"missing_sections":[],"status":"incomplete"}
 ---
-
 
 ## 概要
 

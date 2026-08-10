@@ -9,11 +9,11 @@ priority: "low"
 start_date: null
 target_date: null
 iteration: null
-title: "Beads 自由フィールドの正規更新経路を bd-bridge に統一する"
+title: "dev-graph: 契約が「bd 側自由領域」とする priority/assignee/labels が guard により全経路で更新不能"
 owners: ["daishiman"]
 created_at: "2026-07-21T01:21:36Z"
-updated_at: "2026-08-02T03:24:50Z"
-status: "active"
+updated_at: "2026-08-04T03:43:28Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-bridge-notes-passthrough-20260721","issue-doc-line-limit-followup-mfh7-20260728","arch-harness-hub-dev-workflow","feat-dev-pipeline-improvement"]
 resource_scope: ["plugins/dev-graph/references/execution-tracker-contract.md","plugins/dev-graph/lib/bd_bridge_contracts.py","plugins/dev-graph/scripts/bd-bridge.py","plugins/dev-graph/tests/test_bd_bridge_update_field_passthrough.py","plugins/dev-graph/tests/test_bd_free_field_write_route.py","issues/sys-bd-free-field-write-route-20260721.md","docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md","docs/features/feat-dev-pipeline-improvement/feat-dev-pipeline-improvement-changelog.md","features/feat-dev-pipeline-improvement.md","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-p13.md"]
@@ -93,11 +93,17 @@ Beads CLI 本体、graph parity の対象集合、製品 API・DB・認証認可
 - 契約文書、guard、bridge の三者一致が自動テストで固定される。
 - 統合後 tree で task specification と repository の品質ゲートが成功する。
 
-## 検証証跡
+## 検証方法
 
-最終値は仕様反映受領書へ記録する。最低限、focused pytest、Dev Graph 全 pytest、
-system plan validator、system-spec gate、graph schema、文書 lint、repository CI、
-`git diff --check` を再実行する。
+- 検証済み PR: `https://github.com/daishiman/HarnessHub/pull/632`（merge commit
+  `a8aa91a5837d7d0d82269f67e7a1406f055053e2`）が `main` へ merge 済みで、GitHub
+  checks 4/4 PASS。Beads `HarnessHub-dc7` は同 PR/commit を close reason に
+  記録して closed 済み。
+- 実行済み検証: focused pytest、Dev Graph 全 pytest、system plan validator、
+  system-spec gate、graph schema、文書 lint、repository CI、`git diff --check`。
+  詳細は仕様反映受領書
+  `docs/features/feat-dev-pipeline-improvement/dc7-bd-free-field-write-route-spec-reflection-receipt.md`
+  を参照。
 
 ## 500 行境界
 

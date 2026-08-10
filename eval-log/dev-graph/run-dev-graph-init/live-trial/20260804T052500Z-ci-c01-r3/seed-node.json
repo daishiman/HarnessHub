@@ -1,0 +1,79 @@
+{
+  "node": {
+    "graph_node_id": "issue-idempotence-test",
+    "artifact_kind": "issue",
+    "artifact_subtypes": [],
+    "title": "Idempotence test issue for C01",
+    "project_id": "fixture-repo",
+    "domain": "testing",
+    "status": "draft",
+    "owners": [],
+    "tags": ["test", "idempotence"],
+    "priority": "low",
+    "start_date": "2026-08-03",
+    "target_date": "2026-08-10",
+    "iteration": "2026-Q3",
+    "created_at": "2026-08-03T07:15:00Z",
+    "updated_at": "2026-08-03T07:15:00Z",
+    "depends_on": [],
+    "related_nodes": [],
+    "resource_scope": [],
+    "purpose": "dev-graph init の冪等性をテストする",
+    "goal": "2回目の init が planned changes 0 を報告する状態",
+    "mvp_alignment": null,
+    "scope_in": ["init idempotence verification"],
+    "scope_out": ["other dev-graph verbs"],
+    "acceptance": ["2回目 init で planned changes が 0"],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "issues/issue-idempotence-test.md",
+    "template_id": "issue",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": null,
+      "source_version": null,
+      "source_digest": null,
+      "imported_at": null
+    },
+    "classification_confidence": 1.0,
+    "classification_reason": "explicit test fixture",
+    "classification_candidates": [],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "none",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "incomplete",
+      "missing_sections": [],
+      "checked_at": null
+    }
+  },
+  "body": "# 概要\n\nIdempotence test issue for scenario C01-OUT1-positive-idempotence-r17.\n\n## 背景と問題\n\nThis issue is created to verify that dev-graph init is idempotent.\n\n## 現在の挙動\n\nN/A - test fixture.\n\n## 期待する挙動\n\n2回目の init が planned changes 0 を報告すること。\n\n## 再現手順またはユースケース\n\n1. Run dev-graph init twice\n2. Verify second pass reports zero changes\n\n## 影響と優先度\n\n- 影響範囲: system\n- 深刻度: low\n- 緊急度: テスト用\n\n## スコープ\n\n- In: init idempotence\n- Out: other verbs\n\n## 関連グラフ\n\n- 原因/親ノード: なし\n- 関連仕様: なし\n- 関連アーキテクチャ: なし\n- 解決タスク: なし\n\n## 受入条件\n\n- [ ] 2回目 init で planned changes が 0\n\n## 検証証跡\n\n- コマンド/テスト: dev-graph init --repo-root fixture-repo\n- 証跡 path: eval-log/\n"
+}
