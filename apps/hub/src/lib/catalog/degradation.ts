@@ -60,3 +60,17 @@ export function catalogCapabilities(kind: CatalogFailureKind): CatalogCapabiliti
 export function isDegraded(kind: CatalogFailureKind): boolean {
   return kind === 'degraded';
 }
+
+/**
+ * その失敗が再試行で解決しうるか (= 一過性か)。
+ *
+ * **`isDegraded` から導出する**。`degraded` は「Hub が落ちている / 未実装 / 429 / 5xx」であり
+ * 時間が解決しうる。それ以外の `unauthorized` / `forbidden` / `fatal` は、同じ資格情報と
+ * 同じ要求を投げ続ける限り決定的に同じ答えが返る — 再試行は定義上無意味である。
+ *
+ * 終端の一覧をここで列挙し直さないのは、分類が増えたときに
+ * 「`classifyCatalogFailure` は直したが終端表を直し忘れる」形の二重帳簿を作らないため。
+ */
+export function isTerminalCatalogFailure(kind: CatalogFailureKind): boolean {
+  return !isDegraded(kind);
+}

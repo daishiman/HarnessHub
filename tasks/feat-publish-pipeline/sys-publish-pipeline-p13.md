@@ -71,3 +71,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-publish-pipeline` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-08-10 MVP follow-up (HarnessHub-pf5o)
+
+- smoke:publish-production を Device Flow 短命 token で CI fail-closed 結線。新規 secret 0。
+- publish-first cleanup 契約と focused 6+2 tests PASS。cancel 回収は HarnessHub-aauo、新 SHA 本番証跡は残件。
+- 受領: [mvp-followups-20260810-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)
+

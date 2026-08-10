@@ -117,3 +117,10 @@ publish → 検査 → Ready → Publishing → Published が atomic に完走�
   [仕様反映受領書](../docs/features/feat-publish-pipeline/spec-reflection-receipt.md) を正とする。
 - durable completion（永続的な完了状態）は draft PR の merge と default branch
   reconciliation 後に行う。作業中の task を先に `done` へしない。
+
+## 2026-08-10 production publish smoke 結線
+
+- `smoke:publish-production` を Device Flow の短命 `publish:write` token で CI へ fail-closed 結線した (`HarnessHub-pf5o`)。
+- 新しい長命 secret は追加しない。publish cleanup 完了後だけ identity tenant を削除する。
+- cancel 後の独立回収は `HarnessHub-aauo`。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md)。
+

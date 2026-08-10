@@ -297,3 +297,4 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 ## 関連追補
 
 - system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。
+- 2026-08-10 publish smoke (`HarnessHub-pf5o`) は Device Flow 短命 token で CI 結線。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md) と [統合受領書](../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)。

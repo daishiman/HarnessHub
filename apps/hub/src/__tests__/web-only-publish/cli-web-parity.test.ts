@@ -25,7 +25,19 @@ import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
 
 const hubRoot = process.cwd();
 const CLI_COMMAND_SOURCE = join(hubRoot, '..', 'publisher', 'src', 'cli', 'publish-command.ts');
-const WIZARD_SOURCE = join(hubRoot, 'src', 'components', 'publish', 'PublishWizard.tsx');
+/**
+ * ウィザードは 1 ファイルではない。結果表示は初期チャンクから外すため別ファイルへ切り出してある
+ * (HarnessHub-5vlq)。「画面側が文言を独自に組み立てていない」という検査の意図は
+ * **ウィザード一式**に対するものなので、分割の有無で結論が変わらないよう連結して見る。
+ */
+const WIZARD_SOURCES = [
+  join(hubRoot, 'src', 'components', 'publish', 'PublishWizard.tsx'),
+  join(hubRoot, 'src', 'components', 'publish', 'PublishWizardOutcome.tsx'),
+];
+
+function readWizardSource(): string {
+  return WIZARD_SOURCES.map((path) => readFileSync(path, 'utf8')).join('\n');
+}
 const CATALOG_STATUS_SOURCE = join(hubRoot, 'src', 'components', 'catalog', 'CatalogPublishStatus.tsx');
 
 const SCOPE = { tenantId: 'tenant-acme', workspaceId: 'workspace-a' } as const;
@@ -320,7 +332,7 @@ describe('受入 3: 検査結果の文言と再投入導線は両経路で同一
 
   it('WOP-F-004: CLI と Web の両方が共通整形を使っている (どちらも独自に組み立てない)', () => {
     const cli = readFileSync(CLI_COMMAND_SOURCE, 'utf8');
-    const wizard = readFileSync(WIZARD_SOURCE, 'utf8');
+    const wizard = readWizardSource();
     const catalogStatus = readFileSync(CATALOG_STATUS_SOURCE, 'utf8');
 
     for (const source of [cli, wizard, catalogStatus]) {
@@ -353,7 +365,7 @@ describe('受入 6: Web 公開経路は共通の認可境界だけを通る', ()
 
   it('WOP-A-002: 承認・却下は Web 経路に混ぜていない (公開者が自分で承認できない)', () => {
     // ウィザードは検査つき公開だけを担う。承認系 action を呼んでいないことを源で固定する
-    const wizard = readFileSync(WIZARD_SOURCE, 'utf8');
+    const wizard = readWizardSource();
     expect(wizard).not.toContain('/approve');
     expect(wizard).not.toContain('/reject');
     expect(wizard).not.toContain('publish.approve');

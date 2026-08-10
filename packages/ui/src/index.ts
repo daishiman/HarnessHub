@@ -147,6 +147,9 @@ export {
   parseHexColor,
   relativeLuminance,
 } from './tokens/contrast.js';
+// 本番が読む静的 stylesheet (tokens.css) と同じ全文。視覚回帰ハーネスなど
+// 「出荷される CSS そのもの」を評価したい経路が使う (HarnessHub-2fo1)
+export { buildTokenCssArtifact, TOKEN_CSS_BANNER } from './tokens/css-artifact.js';
 export { focusRingDeclarations, focusRingRule } from './tokens/focus-ring.js';
 export type {
   BreakpointName,

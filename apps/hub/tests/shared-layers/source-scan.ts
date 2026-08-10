@@ -55,9 +55,42 @@ export function publicApiImports(root: string, packageName: string): readonly Im
   return listImports(root).filter((record) => record.specifier === packageName);
 }
 
-/** `@harness-hub/x/src/...` のような deep import。公開入口を迂回しているので違反 */
+/**
+ * その package が `exports` で公開しているサブパスの集合 (`.` を除く)。
+ *
+ * 何が公開入口かの正本は package.json の `exports` である。ここに別途 allowlist を持つと
+ * 二重帳簿になり、package 側で公開を増減したときに片方だけ古くなる。
+ * package.json を読めない場合は空集合を返す = すべてのサブパスを違反扱いにする (fail-closed)。
+ */
+function exportedSubpaths(packageName: string): ReadonlySet<string> {
+  const shortName = packageName.replace(/^@harness-hub\//, '');
+  const manifestPath = path.resolve(APP_ROOT, '../../packages', shortName, 'package.json');
+  try {
+    const exportsField = JSON.parse(readFileSync(manifestPath, 'utf8')).exports;
+    if (typeof exportsField !== 'object' || exportsField === null) return new Set();
+    return new Set(
+      Object.keys(exportsField)
+        // `./src/*` のようなワイルドカード公開は「入口を絞る」という契約自体を無効化するので許可しない
+        .filter((key) => key.startsWith('./') && !key.includes('*'))
+        .map((key) => `${packageName}/${key.slice(2)}`),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+/**
+ * `@harness-hub/x/src/...` のような deep import。公開入口を迂回しているので違反。
+ *
+ * ただし `exports` に明示されたサブパス (例: `@harness-hub/ui/tokens.css`) は迂回ではなく
+ * **公開入口そのもの**なので除く。CSS のように JS の barrel から export できない成果物は、
+ * サブパスとして公開する以外に配る手段がない (HarnessHub-2fo1)。
+ */
 export function deepImports(root: string, packageName: string): readonly ImportRecord[] {
-  return listImports(root).filter((record) => record.specifier.startsWith(`${packageName}/`));
+  const allowed = exportedSubpaths(packageName);
+  return listImports(root).filter(
+    (record) => record.specifier.startsWith(`${packageName}/`) && !allowed.has(record.specifier),
+  );
 }
 
 /**

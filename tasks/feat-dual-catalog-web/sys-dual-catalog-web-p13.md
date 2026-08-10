@@ -89,3 +89,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-08-10 PR 引き継ぎ
 
 `HarnessHub-aqi` の validator load boundary と文書訂正を current branch の draft PR に含める。focused test・typecheck・task-spec gate・仕様反映受領書を確認し、merge 後も fresh CWV で TBT ≤ 200ms が確定するまで Beads は in_progress を維持する。
+
+## 2026-08-10 MVP follow-up (HarnessHub-h2pe)
+
+- polling 終端失敗の即時停止と visibility 復帰再開を実装し、ADR / test-design / QA / evidence を同期した。
+- focused 検査: polling-contract 14 + polling-lifecycle 9 PASS。
+- 受領: [mvp-followups-20260810-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)
+

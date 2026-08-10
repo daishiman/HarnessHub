@@ -13,7 +13,19 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
 import { catalogCapabilities, httpCatalogPort } from '../../lib/catalog/index.js';
-import { CatalogInstallPanel } from './CatalogInstallPanel.js';
+
+/**
+ * 導入パネルも初期チャンクから外す (HarnessHub-5vlq)。
+ *
+ * 概要タブの中にあるので「初期表示に必要」に見えるが、実際に必要になるのは
+ * **詳細取得が成功した後**である。成功するまで dynamic component 自体を描画しないため、
+ * 失敗・縮退画面しか見ない利用者へ導入パネルを転送しない。成功後には追加読込が発生するため、
+ * 体感遅延と First Load JS の削減量は bundle 実測で判定する。
+ */
+const CatalogInstallPanel = dynamic(async () => (await import('./CatalogInstallPanel.js')).CatalogInstallPanel, {
+  // 高さの跳ね (CLS) を抑えるため、読み込み中も同じ位置に文言を残す
+  loading: () => <p>導入手段を読み込んでいます。</p>,
+});
 
 const CatalogPublishStatus = dynamic(
   async () => (await import('./CatalogPublishStatus.js')).CatalogPublishStatus,

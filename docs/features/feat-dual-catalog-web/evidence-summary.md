@@ -144,7 +144,7 @@ pnpm --filter @harness-hub/hub exec vitest run src/__tests__/dual-catalog-web/ma
 pnpm --filter @harness-hub/hub exec vitest run src/__tests__/dual-catalog-web/polling-contract.test.ts
 ```
 
-DC-POLL-01..11 が **11 件すべて pass**。固定内容:
+DC-POLL-01..14 が **14 件すべて pass**。固定内容:
 
 | ケース | 内容 |
 |---|---|
@@ -155,6 +155,11 @@ DC-POLL-01..11 が **11 件すべて pass**。固定内容:
 | DC-POLL-08 | 不可視タブでは継続しない |
 | DC-POLL-09/10 | 429 は `Retry-After` を優先し、無ければ backoff 数列に従う |
 | DC-POLL-11 | in-flight があれば次を張らない (要求の重畳なし) |
+| DC-POLL-12/13 | 終端失敗は即時停止し、degraded は上限まで継続する |
+| DC-POLL-14 | visible 復帰は可視性以外の停止事由がない場合だけ許可する |
+
+さらに `polling-lifecycle.test.tsx` は **9件 pass**。hidden 中の request 増分 0、visible 復帰 +1、
+連続 event の多重起動なし、終端失敗後 / unmount 後の増分 0 を、S03 と S01 の実配線で確認した。
 
 写像の単一性 (`publish-status.ts` が状態遷移規則を持たないこと) は P10 §3 で原典確認済み。
 

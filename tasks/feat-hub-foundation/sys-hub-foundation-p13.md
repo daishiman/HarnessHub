@@ -102,3 +102,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 公開単位は `issue-hub-shell-page-surface-unification-20260808`、branch は `devgraph/issue-hub-shell-page-surface-unification-20260808` とする。閉じた exact-13 に新しい canonical task は追加しない。
 - draft PR merge 前は Beads を `in_progress`、graph node を `active` に維持する。PR gate を登録し、merge 後の default branch reconciliation で閉じる。
 - repository 公開までを対象とし、Cloudflare 本番 deploy と VRT baseline の無条件更新は行わない。
+
+## 2026-08-10 MVP follow-up (HarnessHub-2fo1 / HarnessHub-5vlq)
+
+- root layout の theme CSS を `@harness-hub/ui/tokens.css` 静的成果物へ置換（drift 検査付き）。
+- G13 に 95% 警告帯を追加。構造的 headroom 残件は HarnessHub-vwxc、navigation VRT 差分は HarnessHub-preq。
+- 受領: [mvp-followups-20260810-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)
+

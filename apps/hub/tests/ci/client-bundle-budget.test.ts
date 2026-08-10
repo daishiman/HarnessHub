@@ -4,7 +4,7 @@
 // こちらはブラウザへ配る JS で、TBT/INP を悪化させるのは後者である。
 // 実測 (2026-07-25): / の First Load JS が 155.0 KiB (barrel 経由で markdown パーサ一式を巻き込んだ状態) のとき
 // Worker 予算ゲートは 0.96MiB / 3MiB で緑のままだった。両者が独立に必要な根拠。
-import { execFileSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -191,22 +191,22 @@ function makeFixture(options: { largeLayout?: boolean; largeHandler?: boolean } 
   };
 }
 
+/**
+ * spawnSync を使うのは、**成功時 (exit 0) の stderr** も取るため。
+ * 警告帯 (HarnessHub-5vlq) は exit code を変えずに stderr へ出すので、
+ * 例外経由でしか stderr を拾えない execFileSync だと「警告が出ているか」を検査できない。
+ */
 function runCheck(buildRoot: string, args: readonly string[] = []): { status: number; stdout: string; stderr: string } {
-  try {
-    const stdout = execFileSync(process.execPath, [SCRIPT, ...args], {
-      cwd: APP_ROOT,
-      encoding: 'utf8',
-      env: {
-        ...process.env,
-        HUB_CLIENT_BUILD_DIR: buildRoot,
-        HUB_CLIENT_BUNDLE_BUDGET_BYTES: '',
-      },
-    });
-    return { status: 0, stdout, stderr: '' };
-  } catch (error) {
-    const err = error as { status?: number; stdout?: string; stderr?: string };
-    return { status: err.status ?? 1, stdout: err.stdout ?? '', stderr: err.stderr ?? '' };
-  }
+  const result = spawnSync(process.execPath, [SCRIPT, ...args], {
+    cwd: APP_ROOT,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      HUB_CLIENT_BUILD_DIR: buildRoot,
+      HUB_CLIENT_BUNDLE_BUDGET_BYTES: '',
+    },
+  });
+  return { status: result.status ?? 1, stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
 }
 
 afterAll(() => {
@@ -296,6 +296,76 @@ describe('client JS 予算ゲート', () => {
     // common + layout + signin page の 3 つ。表記違いを取りこぼすと page 分が 2 重になり 4 になる
     expect(signin.chunkCount).toBe(3);
     expect(signin.largestChunks.filter((chunk: { path: string }) => chunk.path.includes('signin'))).toHaveLength(1);
+  });
+
+  /**
+   * 警告帯 (HarnessHub-5vlq)。
+   *
+   * 超過ゲートだけだと「予算を使い切った route」と「余裕のある route」が同じ緑になり、
+   * 次に import を足した PR が誤った原因を追うことになる。
+   * fixture の実測値から予算を逆算して 95〜100% 帯へ入れ、警告が出ること・
+   * exit code が 0 のままであること・余裕のある route を巻き込まないことを固定する。
+   */
+  describe('予算 95% の警告帯', () => {
+    /** その route の First Load JS が予算の `ratio` を占めるような予算値 (bytes) を作る */
+    function budgetForRatio(fixture: Fixture, route: string, ratio: number): number {
+      runCheck(fixture.buildRoot, ['--report', fixture.reportPath]);
+      const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+      const target = report.routes.find((r: { route: string }) => r.route === route);
+      return Math.round(target.firstLoadGzipBytes / ratio);
+    }
+
+    it('予算の 95% 以上を消費した route を、超過前に警告として報告する', () => {
+      const fixture = makeFixture();
+      // 97% 消費 = 警告帯の内側かつ未超過
+      const budget = budgetForRatio(fixture, '/', 0.97);
+      const result = runCheck(fixture.buildRoot, ['--budget', String(budget), '--report', fixture.reportPath]);
+
+      // 警告は exit code を変えない。ここが非ゼロだと「今日の緑が明日理由なく赤くなる」ゲートになる
+      expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+      expect(result.stdout).toContain('WARN /');
+      expect(result.stderr).toContain('予算残りわずか: /');
+
+      const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+      expect(report.withinBudget).toBe(true);
+      expect(report.warnRatio).toBe(0.95);
+      const warning = report.warnings.find((w: { route: string }) => w.route === '/');
+      expect(warning).toBeDefined();
+      // 「あと何バイト足せるか」を出す。比率だけでは次の import が入るか判断できない
+      expect(warning.remainingBytes).toBe(budget - warning.firstLoadGzipBytes);
+      expect(warning.usedRatio).toBeGreaterThanOrEqual(0.95);
+    });
+
+    /** 警告帯が常時点灯していないこと。ここが無いと上のテストは「常に WARN」でも通ってしまう */
+    it('余裕のある route は警告に含めない', () => {
+      const fixture = makeFixture();
+      const budget = budgetForRatio(fixture, '/', 0.5);
+      const result = runCheck(fixture.buildRoot, ['--budget', String(budget), '--report', fixture.reportPath]);
+
+      expect(result.status).toBe(0);
+      const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+      expect(report.warnings).toEqual([]);
+      expect(result.stdout).toContain('OK /');
+    });
+
+    it('予算超過した route は警告ではなく違反としてのみ報告する', () => {
+      const fixture = makeFixture({ largeLayout: true });
+      const result = runCheck(fixture.buildRoot, ['--budget', '128', '--report', fixture.reportPath]);
+
+      expect(result.status).not.toBe(0);
+      const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+      expect(report.violations.map((v: { route: string }) => v.route)).toContain('/');
+      // 両方に出すと「警告が出ている = まだ余裕がある」という読みが崩れる
+      expect(report.warnings.map((w: { route: string }) => w.route)).not.toContain('/');
+    });
+
+    it('route handler は警告帯の判定対象にしない', () => {
+      const fixture = makeFixture({ largeHandler: true });
+      runCheck(fixture.buildRoot, ['--budget', '128', '--report', fixture.reportPath]);
+
+      const report = JSON.parse(readFileSync(fixture.reportPath, 'utf8'));
+      expect(report.warnings.map((w: { route: string }) => w.route)).not.toContain('/health');
+    });
   });
 
   it('計測対象が無いときは pass せず非ゼロ終了する', () => {

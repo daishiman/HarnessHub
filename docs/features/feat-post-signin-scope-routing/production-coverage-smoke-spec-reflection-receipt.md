@@ -54,7 +54,7 @@ main の verification-tier 統合 (`qa-217`) が testing-qa.web の現 qa_ref �
 ## 残課題
 
 - `HarnessHub-stmx`: 案(a)への契約統一とローカル回帰テストは完了。新SHAのproduction smokeでS8=200/204、対象監査baseline=0 / delta=1、cleanup残数0を確認する。
-- `HarnessHub-pf5o`: publish smoke を Device Flow 化・secret 台帳登録・廃止のどれにするか決着し、CI 結線と運用記録を一致させる。
+- `HarnessHub-pf5o`: **決着済み（2026-08-10）。** 3 択のうち Device Flow 化を採用し、`smoke:publish-production` を ci.yml deploy job へ `id: publish_smoke` で fail-closed 結線した。本受領書が当時「新しい secret を足さない」を理由に結線を見送っていた前提は、本課題で解消した — 実行のたびに使い捨て tenant を作り、本番 Worker が署名した短命 `publish:write` token を Device Flow で取得するため、`PUBLISH_ACCESS_TOKEN` は不要になり secret 台帳への新規登録は 0 件のままである。失敗時ロールバック判定にも `PUBLISH_SMOKE_OUTCOME` を追加した。詳細は `issues/publish-smoke-unwired-20260808.md` の「決着」節を参照。
 - `HarnessHub-1vb.13` は `HarnessHub-stmx` の新SHA本番証拠が無いため in_progress を維持する。
 
 ## 500 行制約

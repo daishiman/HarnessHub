@@ -2,9 +2,19 @@
  * feat-publish-pipeline P13 production smoke の設定・ZIP・HTTP/R2 helper。
  *
  * 必要な資格情報は環境変数だけから読み、引数・ログ・成果物へ値を出さない。
- * disposable Project/TargetChannel と Green/secret ZIP を自動生成し、API・Turso・R2・
- * audit hash chain を横断して fail-closed に検査する。Project は finally で archived
- * に戻し、非終端 request は cancel する。immutable Release/R2/audit は証跡として残す。
+ * disposable Tenant/Project/TargetChannel と Green/secret ZIP を自動生成し、API・Turso・R2・
+ * audit hash chain を横断して fail-closed に検査する。作った行は finally で全て消す。
+ *
+ * **CI へ新しい secret を足さないことが設計制約**である (HarnessHub-pf5o)。
+ * 以前は長命の `PUBLISH_ACCESS_TOKEN` を前提にしていたため、台帳に無い secret を要求する
+ * = CI から一度も動かせない runner になっていた。publish は本 Hub で最も権限の強い操作
+ * (`minRole: owner` + `publish:write`) なので、その token を CI へ常置するのが最も危険でもある。
+ * hearing / coverage smoke が確立した無人 Device Flow に揃え、**実行のたびに使い捨て tenant を作り、
+ * 本番 Worker が署名した短命 access token を取り直す**。承認 (`POST /api/v1/device/approve`) だけが
+ * session を要求するので、そこは DB probe の CAS が代行する。
+ *
+ * `withAuthz` は状態変更要求に対して `Origin` を最初に検査する。許可されていない Origin は
+ * 認可判定へ到達せず `untrusted_origin` で落ちるため、変更系には必ず Origin を付ける。
  */
 
 import { spawnSync } from 'node:child_process';
@@ -12,36 +22,32 @@ import { createHash, randomBytes } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import type { DeviceGrant } from './smoke-production-hearing-support.js';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..', '..');
 const DEFAULT_R2_BUCKET = 'harness-hub-packages';
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
-const TERMINAL = new Set(['draft', 'published', 'failed']);
+/** publish 系 action (`publish.write` / `channel.promote` など) が要求する scope。 */
+const PUBLISH_SCOPE = 'publish:write';
 
 const HELP = `Usage:
-  pnpm --filter hub run smoke:publish-production
+  pnpm --filter @harness-hub/hub run smoke:publish-production
 
 Required environment:
-  HUB_BASE_URL             production Hub origin (for example https://hub.example.com)
-  PUBLISH_ACCESS_TOKEN     short-lived owner token with publish:write
+  HUB_PUBLIC_URL           production Hub origin (for example https://harness-hub.example.workers.dev)
   TURSO_DATABASE_URL       production libSQL URL
   TURSO_AUTH_TOKEN         production libSQL auth token
   CLOUDFLARE_API_TOKEN     Wrangler R2 read token (not printed)
 
 Optional environment:
   PUBLISH_R2_BUCKET        default: ${DEFAULT_R2_BUCKET}
+  HUB_SMOKE_ORIGIN         Origin header value. default: origin of HUB_PUBLIC_URL.
 
-The command creates its own disposable Project/TargetChannel and ZIP fixtures.
+The command creates a disposable tenant, obtains a short-lived ${PUBLISH_SCOPE} access token
+through the production Device Flow, and generates its own Project/TargetChannel and ZIP fixtures.
 It verifies S1-S6, 409 serialization, R2 SHA-256, audit chain, and cleanup.
 `;
-
-interface AccessClaims {
-  readonly sub: string;
-  readonly tenant_id: string;
-  readonly workspace_id: string;
-  readonly scope: readonly string[];
-  readonly exp: number;
-}
 
 interface ApiResult {
   readonly status: number;
@@ -50,11 +56,23 @@ interface ApiResult {
 
 interface SmokeConfig {
   readonly baseUrl: string;
-  readonly accessToken: string;
+  readonly origin: string;
   readonly databaseUrl: string;
   readonly databaseToken: string;
   readonly r2Bucket: string;
-  readonly claims: AccessClaims;
+  /** tenant slug / idp subject を 1 回の実行で共有するための接尾辞。 */
+  readonly suffix: string;
+}
+
+interface CleanupResult {
+  readonly remainingRows: number;
+  readonly clean: boolean;
+}
+
+interface TenantCleanupOutcome {
+  readonly remainingRows: Readonly<Record<string, number>>;
+  readonly errors: readonly string[];
+  readonly identityAttempted: boolean;
 }
 
 interface ZipEntry {
@@ -68,47 +86,23 @@ function required(name: string): string {
   return value;
 }
 
-function decodeAccessClaims(token: string): AccessClaims {
-  const segments = token.split('.');
-  if (segments.length !== 3) throw new Error('PUBLISH_ACCESS_TOKEN は JWT 形式ではありません');
-  let value: unknown;
-  try {
-    value = JSON.parse(Buffer.from(segments[1] ?? '', 'base64url').toString('utf8'));
-  } catch {
-    throw new Error('PUBLISH_ACCESS_TOKEN の claims を読めません');
-  }
-  if (typeof value !== 'object' || value === null) throw new Error('access token claims が object ではありません');
-  const row = value as Record<string, unknown>;
-  const scope = Array.isArray(row.scope) ? row.scope.filter((item): item is string => typeof item === 'string') : [];
-  if (
-    typeof row.sub !== 'string' ||
-    typeof row.tenant_id !== 'string' ||
-    typeof row.workspace_id !== 'string' ||
-    typeof row.exp !== 'number' ||
-    !scope.includes('publish:write')
-  ) {
-    throw new Error('access token に sub/tenant_id/workspace_id/exp/publish:write がそろっていません');
-  }
-  if (row.exp <= Math.floor(Date.now() / 1000)) throw new Error('PUBLISH_ACCESS_TOKEN は期限切れです');
-  return {
-    sub: row.sub,
-    tenant_id: row.tenant_id,
-    workspace_id: row.workspace_id,
-    scope,
-    exp: row.exp,
-  };
-}
-
 function loadConfig(): SmokeConfig {
-  const accessToken = required('PUBLISH_ACCESS_TOKEN');
+  const baseUrl = required('HUB_PUBLIC_URL').replace(/\/+$/, '');
+  let derivedOrigin: string;
+  try {
+    derivedOrigin = new URL(baseUrl).origin;
+  } catch {
+    throw new Error(`HUB_PUBLIC_URL が URL として解釈できません (${baseUrl})`);
+  }
   required('CLOUDFLARE_API_TOKEN');
   return {
-    baseUrl: required('HUB_BASE_URL').replace(/\/+$/, ''),
-    accessToken,
+    baseUrl,
+    origin: process.env.HUB_SMOKE_ORIGIN?.trim() || derivedOrigin,
     databaseUrl: required('TURSO_DATABASE_URL'),
     databaseToken: required('TURSO_AUTH_TOKEN'),
     r2Bucket: process.env.PUBLISH_R2_BUCKET?.trim() || DEFAULT_R2_BUCKET,
-    claims: decodeAccessClaims(accessToken),
+    // tenant slug の値域 (`^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$`) に収まる英数字だけで作る。
+    suffix: `${Date.now().toString(36)}${randomBytes(3).toString('hex')}`,
   };
 }
 
@@ -229,7 +223,51 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function apiClient(config: SmokeConfig) {
+/**
+ * publish 領域を消し切った tenant だけ identity 領域を削除する。
+ *
+ * tenant を先に消すと、残った publish 行の所属を辿れず復旧しにくくなる。そのため
+ * publish cleanup の throw と `clean: false` はどちらも identity cleanup を遮断する。
+ */
+async function cleanupPublishThenIdentity(
+  tenantId: string,
+  cleanupPublish: () => Promise<CleanupResult>,
+  cleanupIdentity: () => Promise<CleanupResult>,
+): Promise<TenantCleanupOutcome> {
+  const remainingRows: Record<string, number> = {};
+  const errors: string[] = [];
+
+  let publishClean = false;
+  try {
+    const result = await cleanupPublish();
+    remainingRows[`${tenantId}:publish`] = result.remainingRows;
+    publishClean = result.clean;
+    if (!result.clean) errors.push(`tenant ${tenantId} (publish): ${result.remainingRows} 行が残りました`);
+  } catch (error) {
+    errors.push(`tenant ${tenantId} (publish): ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  if (!publishClean) return { remainingRows, errors, identityAttempted: false };
+
+  try {
+    const result = await cleanupIdentity();
+    remainingRows[`${tenantId}:identity`] = result.remainingRows;
+    if (!result.clean) errors.push(`tenant ${tenantId} (identity): ${result.remainingRows} 行が残りました`);
+  } catch (error) {
+    errors.push(`tenant ${tenantId} (identity): ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  return { remainingRows, errors, identityAttempted: true };
+}
+
+/**
+ * Device Flow で得た grant に束ねた publish API client。
+ *
+ * token は実行のたびに取り直すので、client は grant を受け取ってから作る。tenant/workspace
+ * header も grant の claims から引く — 環境変数由来の値と食い違うと、smoke が「自分が思っている
+ * tenant」ではない先を叩いていることに気付けないため。
+ */
+function apiClient(config: SmokeConfig, grant: DeviceGrant) {
   let sequence = 0;
   return async (
     method: string,
@@ -238,11 +276,15 @@ function apiClient(config: SmokeConfig) {
   ): Promise<ApiResult> => {
     sequence += 1;
     const headers = new Headers({
-      authorization: `Bearer ${config.accessToken}`,
-      'x-harness-tenant-id': config.claims.tenant_id,
-      'x-harness-workspace-id': config.claims.workspace_id,
+      authorization: `Bearer ${grant.accessToken}`,
+      'x-harness-tenant-id': grant.claims.tenant_id,
+      'x-harness-workspace-id': grant.claims.workspace_id,
     });
-    if (MUTATING.has(method)) headers.set('idempotency-key', `smoke-${Date.now()}-${sequence}`);
+    if (MUTATING.has(method)) {
+      // 変更系は Origin 検査が認可判定より前にある。付けないと必ず untrusted_origin になる。
+      headers.set('origin', config.origin);
+      headers.set('idempotency-key', `smoke-${Date.now()}-${sequence}`);
+    }
     let body: BodyInit | undefined;
     if (options.json !== undefined) {
       headers.set('content-type', 'application/json');
@@ -267,7 +309,13 @@ function apiClient(config: SmokeConfig) {
     const expected = Array.isArray(options.expected) ? options.expected : [options.expected];
     if (!expected.includes(response.status)) {
       const safeBody = JSON.stringify(parsed).slice(0, 800);
-      throw new Error(`${method} ${path}: expected=${expected.join('|')} actual=${response.status} body=${safeBody}`);
+      // 設定不備 (Origin 未許可) は本番障害と紛らわしいので、切り分け手順を添える。
+      const hint = safeBody.includes('"untrusted_origin"')
+        ? ` / origin=${config.origin} が Worker の AUTH_ALLOWED_ORIGINS に含まれていない。HUB_SMOKE_ORIGIN で上書きできる`
+        : '';
+      throw new Error(
+        `${method} ${path}: expected=${expected.join('|')} actual=${response.status} body=${safeBody}${hint}`,
+      );
     }
     return { status: response.status, body: expectObject(parsed, `${method} ${path}`) };
   };
@@ -302,14 +350,15 @@ export type { ApiResult, SmokeConfig };
 export {
   apiClient,
   assert,
+  cleanupPublishThenIdentity,
   downloadR2,
   expectObject,
   expectString,
   greenZip,
   HELP,
   loadConfig,
+  PUBLISH_SCOPE,
   secretZip,
   sha256,
   smokeId,
-  TERMINAL,
 };

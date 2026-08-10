@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1483,
+  "graph_revision": 1497,
   "nodes": [
     {
       "acceptance": [
@@ -52406,8 +52406,15 @@
       "updated_at": "2026-08-08T13:32:54Z"
     },
     {
-      "acceptance": [],
-      "architecture_refs": [],
+      "acceptance": [
+        "coverage smoke と publish smoke が既存 deploy job から fail-closed に実行される",
+        "publish は新規長命 token を置かず本番 Device Flow の短命 publish:write token を使う",
+        "smoke failure が rollback 判断へ入力され、未実行を failure と誤認しない",
+        "publish 領域を消し切った tenant だけ identity 領域を削除し、cleanup failure を成功扱いにしない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
       "artifact_kind": "specification",
       "artifact_subtypes": [],
       "beads_linkage": null,
@@ -52429,9 +52436,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": "user final-review instruction + canonical system-spec qa-205",
-        "evidence_ref": "system-spec/testing-qa.md"
+        "evaluated_digest": "98150c83bc5c3b1a386d865562cc0c1f30ae5398f124289502ca98ac6284c772",
+        "evaluator": "30思考法の独立レビュー + focused contract tests",
+        "evidence_ref": "specs/harness-hub-production-coverage-smoke-addendum.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-08T10:00:00Z",
@@ -52439,7 +52446,7 @@
         "spec-harness-hub-requirements"
       ],
       "domain": "quality",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "specs/harness-hub-production-coverage-smoke-addendum.md",
@@ -52450,7 +52457,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": null,
+      "goal": "既存 secret だけで全 production smoke を fail-closed 実行し、失敗を rollback 判断へ渡し、試験データを安全な依存順で後始末できる状態にする。",
       "graph_node_id": "spec-production-coverage-smoke",
       "implementation_readiness": {
         "checked_at": "2026-08-08T10:00:00Z",
@@ -52467,21 +52474,34 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": null,
+      "purpose": "本番 deploy ごとに認証・認可・Feedback・Docs・publish の主要経路を実データで検査し、単体テストだけでは見えない結線退行を検出する。",
       "related_nodes": [
         "issue-production-smoke-coverage-gaps-20260808",
+        "issue-publish-smoke-unwired-20260808",
         "spec-post-signin-workspace-scope"
       ],
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/scripts",
-        "packages/db/repository/hearing-smoke.ts",
+        "apps/hub/tests/publish-pipeline",
+        "packages/db/repository",
+        "packages/db/__tests__",
+        "scripts/ci/actions-secrets-registry.json",
         "docs/features",
-        "features",
-        "tasks"
+        "system-spec/testing-qa.md"
       ],
-      "scope_in": [],
-      "scope_out": [],
+      "scope_in": [
+        "production coverage smoke と publish smoke の CI 結線",
+        "本番 Device Flow による短命 token 取得",
+        "使い捨て tenant の依存順 cleanup",
+        "smoke outcome の rollback 判断への伝播"
+      ],
+      "scope_out": [
+        "認証認可ルール自体の変更",
+        "DB schema migration",
+        "新しい GitHub Secret の追加",
+        "production deploy の実行そのもの"
+      ],
       "source_lineage": {
         "imported_at": "2026-08-08T10:00:00Z",
         "origin_kind": "manual",
@@ -52491,7 +52511,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "draft",
+      "status": "active",
       "tags": [
         "production-smoke",
         "post-signin",
@@ -52503,7 +52523,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub production coverage smoke 仕様追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-08T10:00:00Z"
+      "updated_at": "2026-08-10T11:40:07.300084Z"
     },
     {
       "acceptance": [
@@ -52651,15 +52671,15 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "3d69c1add514cdcba9f93562d8210ab8ff2f73b9a1fd6e38f4f224cb02720cc5",
+        "evaluator": "Device Flow 実装・CI 結線・focused contract review",
+        "evidence_ref": "issues/publish-smoke-unwired-20260808.md"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-08-08T09:53:00Z",
       "depends_on": [],
       "domain": "operations",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/publish-smoke-unwired-20260808.md",
@@ -52694,8 +52714,14 @@
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/scripts/smoke-production-publish.ts",
+        "apps/hub/scripts/smoke-production-publish-support.ts",
+        "apps/hub/tests/publish-pipeline/production-smoke-script.test.ts",
+        "packages/db/repository/publish-smoke.ts",
+        "packages/db/__tests__/publish-smoke.test.ts",
         "scripts/ci/actions-secrets-registry.json",
-        "docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md"
+        "docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md",
+        "specs/harness-hub-production-coverage-smoke-addendum.md",
+        "system-spec/testing-qa.md"
       ],
       "scope_in": [
         "Device Flow 化 / secrets 台帳登録 / 廃止 の 3 択の決着",
@@ -52715,7 +52741,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "draft",
+      "status": "active",
       "tags": [
         "ci",
         "smoke",
@@ -52728,7 +52754,7 @@
       "template_version": "1.0.0",
       "title": "smoke:publish-production を結線するか廃止するか決着させる",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T09:53:00Z"
+      "updated_at": "2026-08-10T11:36:20.181914Z"
     },
     {
       "acceptance": [
@@ -55253,7 +55279,8 @@
       ],
       "resource_scope": [
         "apps/hub/src/components/catalog",
-        "apps/hub/src/lib/catalog/polling.ts",
+        "apps/hub/src/components/publish",
+        "apps/hub/src/lib/catalog",
         "apps/hub/src/__tests__/dual-catalog-web"
       ],
       "scope_in": [
@@ -55288,7 +55315,7 @@
       "template_version": "1.0.0",
       "title": "Dual Catalog polling の fatal 即時停止と visibility 復帰再開",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-09T20:57:24.930943Z"
+      "updated_at": "2026-08-10T11:21:31.986602Z"
     },
     {
       "acceptance": [
@@ -56007,6 +56034,591 @@
       "title": "rubric 自動生成提案の保持と human review 引継ぎの Phase 13 補助記録",
       "tracker_binding": "none",
       "updated_at": "2026-08-10T04:08:08Z"
+    },
+    {
+      "acceptance": [
+        "/catalog/[projectId] の First Load JS 残余が予算の 5% 以上 (6,144 バイト以上) ある、または予算値の変更が本番 CWV 実測を根拠に正当化されている",
+        "予算に近づいたことを、予算超過で赤くなる前に検知できる手段がある",
+        "G13 の他 route の残余も同時に確認され、同種の枯渇が他に無いことが示されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5vlq",
+        "linked_at": "2026-08-08T09:53:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/catalog-detail-bundle-headroom-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-aqi の CWV 是正実測で判明した予算枯渇。aqi の受入条件 (TBT 予算内) は満たすが、bundle 予算の余裕そのものは別課題として残る。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f732df29ccf7fb9532205de1dd5b629afaf9491ebdebbd419c962378dff250cd",
+        "evaluator": "HarnessHub-aqi の G13 実測 (122,282 / 122,880 バイト)",
+        "evidence_ref": "docs/frontend-spec.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T08:00:00Z",
+      "depends_on": [
+        "issue-catalog-route-bundle-headroom-20260810"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/catalog-detail-bundle-headroom-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/catalog/[projectId] の予算残余が十分にあり、かつ予算に近づいた時点で超過前に検知できる状態にする。",
+      "graph_node_id": "issue-catalog-detail-bundle-headroom-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T10:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "First Load JS が G13 予算の 99.51% を消費している route の余裕を取り戻し、次に import を足した PR が誤った原因を追う状況を防ぐ。",
+      "related_nodes": [
+        "issue-hub-cwv-tbt-over-budget-20260724"
+      ],
+      "resource_scope": [
+        "apps/hub/scripts/check-client-bundle.mjs",
+        "apps/hub/src/app/(workspace)/catalog",
+        "apps/hub/src/components/catalog",
+        "apps/hub/src/components/publish",
+        "apps/hub/tests/ci/client-bundle-budget.test.ts"
+      ],
+      "scope_in": [
+        "client component 境界の棚卸し",
+        "初回描画に不要なパネルの遅延読込",
+        "予算 95% での警告帯の導入",
+        "G13 他 route の残余確認"
+      ],
+      "scope_out": [
+        "G13 予算値そのものの引き上げ (本番 CWV 実測という別根拠が要る)",
+        "packages/ui 側の変更 (所有権が別 worktree にある)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T08:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "performance",
+        "bundle-budget",
+        "g13",
+        "catalog",
+        "cwv"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "/catalog/[projectId] の G13 予算残 598 バイトを構造的に広げる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-10T11:49:00Z"
+    },
+    {
+      "acceptance": [
+        "CPU 12x で document の Style & Layout がロングタスク (50ms 超) に該当しない、または最大ロングタスクの主でなくなっている",
+        "変更が packages/ui の owner と調整済みで、他 worktree の進行と衝突していない",
+        "テーマの見た目に退行が無いことが視覚回帰または既存テストで示されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-2fo1",
+        "linked_at": "2026-08-08T09:53:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/root-layout-theme-css-long-task-20260808.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-aqi の JS 削減後、最大ロングタスクが JS から document の Style & Layout へ入れ替わった実測に基づく。正本が packages/ui にあり所有権調整が要るため分離。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "8285ba24359f4af9f8103e236e42c12f57b5b081685ee7ce59eb58ed4849d189",
+        "evaluator": "HarnessHub-aqi の CPU 12x Performance トレース実測 (Style & Layout 219-300ms)",
+        "evidence_ref": "docs/frontend-spec.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-08T08:00:00Z",
+      "depends_on": [
+        "issue-ui-vrt-navigation-baseline-drift-20260810"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/root-layout-theme-css-long-task-20260808.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "CPU 12x スロットリング下で document の Style & Layout がロングタスクの主でなくなり、テーマの見た目に退行が無い状態にする。",
+      "graph_node_id": "issue-root-layout-theme-css-long-task-20260808",
+      "implementation_readiness": {
+        "checked_at": "2026-08-08T10:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "JS 削減が頭打ちになった後の最大ロングタスク要因である、テーマ CSS の inline 出力によるスタイル再計算コストを取り除く。",
+      "related_nodes": [
+        "issue-hub-cwv-tbt-over-budget-20260724"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/layout.tsx",
+        "packages/ui"
+      ],
+      "scope_in": [
+        "テーマ CSS の静的ファイル切り出し",
+        "可変部分だけを inline に残す二段構成の検討",
+        "未使用トークンの棚卸し",
+        "packages/ui owner との調整"
+      ],
+      "scope_out": [
+        "テーマの意匠変更そのもの",
+        "packages/ui の owner 調整を経ない先行実装"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-08T08:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-08",
+      "status": "active",
+      "tags": [
+        "performance",
+        "cwv",
+        "tbt",
+        "theme",
+        "packages-ui",
+        "owner-coordination"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "root layout の inline buildThemeCss() による Style & Layout ロングタスクを解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-10T11:49:00Z"
+    },
+    {
+      "acceptance": [
+        "全 catalog page route の First Load JS 残余が予算の 5%以上ある",
+        "packages/ui の公開契約と deep import 禁止を守ったまま必要語彙だけを読み込む",
+        "分割前後の gzip byte 差を記録し、効果のない dynamic split は戻す",
+        "警告帯と超過の正負テストが継続して通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-vwxc",
+        "linked_at": "2026-08-10T11:48:10Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/catalog-route-bundle-headroom-20260810.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "現 build で catalog 系 route が 95% 警告帯に残り、元課題の受入1・3を満たさないことを実測した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "ac6460ecf9ca5e093d8bc2161da38fa27843ae8401a0f22a25ef33d2959c54c3",
+        "evaluator": "2026-08-10 production build の G13 route 別計測",
+        "evidence_ref": "apps/hub/artifacts/client-bundle-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T11:41:26Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/catalog-route-bundle-headroom-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/catalog、/catalog/[projectId]、/catalog/publish、/catalog/releases がいずれも 120 KiB 予算を 95% 未満しか使わない状態にする。",
+      "graph_node_id": "issue-catalog-route-bundle-headroom-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-10T11:41:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "一つの route だけを軽く見せず、catalog 系 page route 全体の予算枯渇を構造的に解消する。",
+      "related_nodes": [
+        "issue-catalog-detail-bundle-headroom-20260808",
+        "issue-root-layout-theme-css-long-task-20260808",
+        "issue-hub-cwv-tbt-over-budget-20260724"
+      ],
+      "resource_scope": [
+        "packages/ui/src/i18n",
+        "packages/ui/src/components/Chip.tsx",
+        "packages/ui/src/index.ts",
+        "apps/hub/src/components/catalog",
+        "apps/hub/src/components/publish",
+        "apps/hub/scripts/check-client-bundle.mjs"
+      ],
+      "scope_in": [
+        "packages/ui の locale/status 語彙の読込境界",
+        "catalog route の client reference 境界",
+        "dynamic import の前後差実測",
+        "G13 全 catalog route 再計測"
+      ],
+      "scope_out": [
+        "G13 予算値の引き上げ",
+        "実測効果のない分割を残すこと",
+        "非 catalog route の個別最適化"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-10T11:41:26Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "performance",
+        "bundle-budget",
+        "catalog",
+        "packages-ui"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "catalog 全 route の G13 警告帯を解消し 5% 以上の余裕を作る",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-10T11:53:00Z"
+    },
+    {
+      "acceptance": [
+        "runner強制終了後も期限付きfixtureを一意に列挙できる",
+        "publish領域を消し切るまでidentity tenantを消さない",
+        "cleanup失敗を観測可能にし再試行上限を持つ",
+        "通常終了とcancel相当の正負検査が通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-aauo",
+        "linked_at": "2026-08-10T11:48:13Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/production-smoke-cancel-cleanup-20260810.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "cancel-in-progressはプロセス内finallyの完遂を保証せず、使い捨てtenant残存を独立に回収する必要がある。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "6a01ce56dcb6a4ab6512ae6f68504793d698ea39ed0998f4d2eee573bc10a309",
+        "evaluator": "CI cancel-in-progress と process-local finally の失敗経路監査",
+        "evidence_ref": ".github/workflows/ci.yml"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T11:41:26Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/production-smoke-cancel-cleanup-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "プロセス内 finally が実行されない中断経路でも、runを特定して期限内に安全に回収できる状態にする。",
+      "graph_node_id": "issue-production-smoke-cancel-cleanup-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-10T11:41:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "cancel-in-progress による強制終了でも本番DBへ試験tenantを恒久残存させない。",
+      "related_nodes": [
+        "issue-publish-smoke-unwired-20260808",
+        "issue-production-smoke-coverage-gaps-20260808",
+        "spec-production-coverage-smoke"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        "apps/hub/scripts/smoke-production-publish.ts",
+        "apps/hub/scripts/smoke-production-coverage.ts",
+        "packages/db/repository"
+      ],
+      "scope_in": [
+        "run ID/期限付きfixture",
+        "if: always() cleanupまたは定期sweeper",
+        "publish先行cleanup",
+        "中断経路の回帰検査"
+      ],
+      "scope_out": [
+        "production smokeの検査内容変更",
+        "長命cleanup資格情報の追加",
+        "通常finally cleanupの削除"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-10T11:41:26Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "production-smoke",
+        "cleanup",
+        "github-actions",
+        "reliability"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "CI cancel 時に production smoke の使い捨て tenant を回収する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-10T11:48:13Z"
+    },
+    {
+      "acceptance": [
+        "高さ197px差の全要素を説明できる",
+        "意図的変更ならレビュー済みbaselineを更新する",
+        "退行なら実装を修正しbaselineを維持する",
+        "browser test 33件が全PASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-preq",
+        "linked_at": "2026-08-10T11:48:16Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-vrt-navigation-baseline-drift-20260810.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "実ブラウザでnavigation light/darkのみが基準より197px高く失敗し、actualにWorkspaceSwitcher追加を確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "cf8ad833bc1e74192f7636024fc32e15614884c2ebc70c67ad3fd8baaf5fc138",
+        "evaluator": "browser VRT 31 PASS / navigation light・dark 2 FAIL の実測",
+        "evidence_ref": "apps/hub/tests/browser/catalog/entries-shell.tsx"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T11:41:26Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-vrt-navigation-baseline-drift-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "WorkspaceSwitcher追加の意図と表示を確認し、承認済みbaselineまたは実装修正でVRTをfail-closedのまま緑へ戻す。",
+      "graph_node_id": "issue-ui-vrt-navigation-baseline-drift-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-10T11:41:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "navigation light/darkの赤いVRTを、意図的なfixture追加か視覚退行か判定して解消する。",
+      "related_nodes": [
+        "issue-root-layout-theme-css-long-task-20260808",
+        "issue-ui-foundation-final-review-20260808"
+      ],
+      "resource_scope": [
+        "apps/hub/tests/browser/catalog/entries-shell.tsx",
+        "apps/hub/tests/browser/__vrt__",
+        "apps/hub/tests/browser/vrt.ts",
+        "packages/ui/src/shell/WorkspaceSwitcher.tsx"
+      ],
+      "scope_in": [
+        "actual/baseline差分確認",
+        "WorkspaceSwitcher fixture意図確認",
+        "light/dark baseline",
+        "navigation VRT再実行"
+      ],
+      "scope_out": [
+        "原因確認なしのbaseline更新",
+        "VRT閾値の緩和",
+        "navigation以外のデザイン変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-10T11:41:26Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "active",
+      "tags": [
+        "vrt",
+        "navigation",
+        "workspace-switcher",
+        "ui-foundation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "navigation VRT の WorkspaceSwitcher 差分を確定する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-10T11:48:16Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

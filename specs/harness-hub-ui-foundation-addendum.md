@@ -81,7 +81,7 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 ## 機能要件
 
 - `FR-UIF-001`: `packages/ui` は `AppShell`、`Container`、`SidebarLayout`、`Stack`、`Card`、`PageHeader`、`NavList` を単一の公開 contract として所有する。
-- `FR-UIF-002`: `apps/hub` は root layout で `buildBaseCss()` を一度だけ注入し、route ごとに token や shell を再定義しない。
+- `FR-UIF-002`: `apps/hub` は root layout で `@harness-hub/ui/tokens.css` を一度だけ import し、route ごとに token や shell を再定義しない。生成元は `buildTokenCssArtifact()`、コミット済み CSS との一致は自動検査する。
 - `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=768`、`lg=1120` とする。
 - `FR-UIF-004`: `DataTable` は `data-hh-scroll-x` の局所容器で横幅を受け止め、文書全体を横スクロールさせない。
 - `FR-UIF-005`: root / dashboard / workspace は `loading.tsx`、`error.tsx`、`not-found.tsx` を持ち、root は `global-error.tsx` も持つ。

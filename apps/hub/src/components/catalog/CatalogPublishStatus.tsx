@@ -7,6 +7,7 @@
  * ここには数値を書かない — 書くと条件が 2 箇所に散り、片方だけ直した退行が起きる。
  */
 import {
+  type CatalogFailureKind,
   formatPublishFinding,
   PUBLISH_NEEDS_FIX_HEADING,
   type PublishRequestState,
@@ -15,12 +16,13 @@ import {
 } from '@harness-hub/schemas';
 import { Alert, Button, StatusChip } from '@harness-hub/ui';
 import { useCallback, useEffect, useState } from 'react';
-import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
+import type { CatalogFailure, CatalogPort, CatalogScope, PollingState } from '../../lib/catalog/index.js';
 import {
   httpCatalogPort,
   publishStatusChipValue,
   resolveRetryDelayMs,
   shouldContinuePolling,
+  shouldResumeOnVisible,
 } from '../../lib/catalog/index.js';
 
 export interface CatalogPublishStatusProps {
@@ -63,48 +65,104 @@ export function CatalogPublishStatus({
     let attempt = 0;
     let consecutiveFailures = 0;
     let lastStatus: PublishRequestState = initialRequest?.status ?? 'validating';
+    let lastFailureKind: CatalogFailureKind | null = null;
+    /**
+     * 「可視性だけを理由に止まっている」印。
+     * 停止 (`stopped`) と区別するのは、前者は復帰で自動回復し、後者は人の再試行を要するため。
+     */
+    let pausedForVisibility = false;
+    let inFlight = false;
+
+    /** 現時点の停止判定入力。判定は必ず polling.ts の純関数へ渡す (ここで条件を書かない)。 */
+    const currentState = (): PollingState => ({
+      status: lastStatus,
+      consecutiveFailures,
+      elapsedMs: Date.now() - startedAt,
+      documentVisible: isDocumentVisible(),
+      inFlight,
+      lastFailureKind,
+    });
 
     const run = async (): Promise<void> => {
       if (cancelled) return;
+
+      // timer の予約後に tab が hidden へ変わる場合がある。request 後だけ可視性を
+      // 判定すると、hidden 中に 1 回通信してから停止することになるため、送信前にも
+      // 同じ純関数へ問い直す。
+      const beforeRequest = currentState();
+      if (!beforeRequest.documentVisible) {
+        if (shouldResumeOnVisible(beforeRequest)) {
+          pausedForVisibility = true;
+        } else {
+          setStopped(true);
+        }
+        return;
+      }
+
+      inFlight = true;
       const result = await port.getPublishRequest(scope, publishId, controller.signal);
+      inFlight = false;
       if (cancelled) return;
 
       let retryAfterSeconds: number | null = null;
       if (result.ok) {
         consecutiveFailures = 0;
+        lastFailureKind = null;
         lastStatus = result.value.status;
         setRequest(result.value);
         setFailure(null);
       } else {
         consecutiveFailures += 1;
+        lastFailureKind = result.failure.kind;
         retryAfterSeconds = result.failure.retryAfterSeconds;
         setFailure(result.failure);
       }
 
-      const proceed = shouldContinuePolling({
-        status: lastStatus,
-        consecutiveFailures,
-        elapsedMs: Date.now() - startedAt,
-        documentVisible: isDocumentVisible(),
-        // この時点で前回リクエストは完了しているため常に false。多重送信は run を直列に繋ぐことで防いでいる
-        inFlight: false,
-      });
-      if (!proceed) {
-        setStopped(true);
+      const state = currentState();
+      if (shouldContinuePolling(state)) {
+        const delay = resolveRetryDelayMs(attempt, retryAfterSeconds);
+        attempt += 1;
+        timer = window.setTimeout(() => void run(), delay);
         return;
       }
 
-      const delay = resolveRetryDelayMs(attempt, retryAfterSeconds);
-      attempt += 1;
-      timer = window.setTimeout(() => void run(), delay);
+      // 継続不可の理由が可視性**だけ**なら停止ではなく一時停止。復帰時に再開する
+      if (shouldResumeOnVisible(state)) {
+        pausedForVisibility = true;
+        return;
+      }
+
+      setStopped(true);
     };
 
-    void run();
+    const handleVisibilityChange = (): void => {
+      if (cancelled) return;
+      if (!pausedForVisibility) return; // 停止済み・実行中・待機中は復帰の対象外
+      if (!isDocumentVisible()) return;
+      if (!shouldResumeOnVisible(currentState())) return;
+      // 先に降ろすことで、連続した visibilitychange で run が多重起動しない
+      pausedForVisibility = false;
+      void run();
+    };
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    if (isDocumentVisible()) {
+      void run();
+    } else {
+      // 不可視で mount された場合は 1 回目から通信しない
+      pausedForVisibility = true;
+    }
 
     return () => {
       cancelled = true;
       controller.abort();
       if (timer !== undefined) window.clearTimeout(timer);
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
     };
   }, [port, scope, publishId, initialRequest, generation]);
 

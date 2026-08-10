@@ -74,7 +74,7 @@ P02 spec が想定した前提と現行リポジトリ実測との差分。**D1-
 | catalog 一覧 | ポーリングなし | — | — | staleTime 相当 60s (手動再取得のみ) |
 
 - **決定**: 間隔計算は `lib/catalog/polling.ts` の**純関数** `nextPollIntervalMs(attempt)` に切り出す。hook (`useCatalogPolling`) は純関数の返り値で `setTimeout` を張り直すだけにする。
-- **決定**: `document.visibilityState !== 'visible'` の間はポーリングを停止する。現行実装は復帰時に自動再開せず、利用者の明示的な Retry を要する。自動再開は別 Beads で追跡し、それまではこの fail-closed な挙動を正とする。
+- **決定 (2026-08-10 follow-up / HarnessHub-h2pe)**: `document.visibilityState !== 'visible'` の間は request を送らず、可視性だけを理由に一時停止した pollable state は `visibilitychange` の visible 復帰時に一度だけ自動再開する。終端 status、401 / 403 / fatal、失敗回数上限、総時間上限では再開しない。判定は `shouldContinuePolling()` / `shouldResumeOnVisible()` を正本とし、timer 発火後・通信開始前にも問い直す。
 - **決定**: 状態更新の読み上げは `aria-live="polite"` (qa-018)。更新のたびに focus を奪わない。
 
 ### 2.3 縮退 (§6.1) の実装方式 — acceptance 3 の直接根拠
@@ -95,6 +95,7 @@ P02 spec が想定した前提と現行リポジトリ実測との差分。**D1-
 | 失敗時の間隔 | 成功時と**同一の数列** (2s→×2→30s) を共有する | 失敗専用の別数列を持つと停止条件が二重管理になる |
 | 同時実行 | 同一 `projectId` の in-flight は常に **1 本**。前回未完了なら次を張らない。unmount 時は `AbortController` で中断 | 遅延応答の重複適用と、タブ復帰時のバースト送信を防ぐ |
 | `429` 応答 | `Retry-After` ヘッダがあればその値を優先し、無ければ backoff 数列に従う | サーバ側のレート制御を client の数列が上書きしない |
+| 終端失敗 | `unauthorized` / `forbidden` / `fatal` は初回応答後に停止 | 同じ資格情報・同じ契約での反復に回復可能性がない |
 
 - **決定**: 停止判定は `lib/catalog/polling.ts` の純関数 `shouldContinuePolling(state)` に閉じる (`nextPollIntervalMs` と同じ層。React 非依存で検証可能)。
 

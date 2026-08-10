@@ -12,11 +12,11 @@ iteration: null
 title: "/catalog/[projectId] の G13 予算残 598 バイトを構造的に広げる"
 owners: ["daishiman"]
 created_at: "2026-08-08T08:00:00Z"
-updated_at: "2026-08-08T10:00:00Z"
+updated_at: "2026-08-10T11:49:00Z"
 status: "active"
-depends_on: []
+depends_on: ["issue-catalog-route-bundle-headroom-20260810"]
 related_nodes: ["issue-hub-cwv-tbt-over-budget-20260724"]
-resource_scope: ["apps/hub/src/app/catalog","apps/hub/src/lib/catalog","apps/hub/next.config.ts"]
+resource_scope: ["apps/hub/scripts/check-client-bundle.mjs","apps/hub/src/app/(workspace)/catalog","apps/hub/src/components/catalog","apps/hub/src/components/publish","apps/hub/tests/ci/client-bundle-budget.test.ts"]
 purpose: "First Load JS が G13 予算の 99.51% を消費している route の余裕を取り戻し、次に import を足した PR が誤った原因を追う状況を防ぐ。"
 goal: "/catalog/[projectId] の予算残余が十分にあり、かつ予算に近づいた時点で超過前に検知できる状態にする。"
 scope_in: ["client component 境界の棚卸し","初回描画に不要なパネルの遅延読込","予算 95% での警告帯の導入","G13 他 route の残余確認"]
@@ -67,7 +67,7 @@ aqi の是正では `@harness-hub/schemas` の barrel 全量読み込み（9 fea
 
 問題は数値そのものよりも**誤帰属**にある。予算を使い切った route では、次に import を足した PR で CI が赤くなる。赤くなるのはその PR なので原因は自分の import に見えるが、実際の原因は先に積み上がった予算消費である。
 
-## 現在の挙動
+## 起票時の挙動
 
 - G13（bundle budget ゲート）は予算超過で初めて赤くなる。95% 消費でも緑のまま何も出ない
 - `/catalog/[projectId]` は 99.51% を消費済み
@@ -77,7 +77,7 @@ aqi の是正では `@harness-hub/schemas` の barrel 全量読み込み（9 fea
 
 `/catalog/[projectId]` の予算残余が十分あり、かつ予算に近づいた時点で、超過して赤くなる前に検知できる。
 
-## 再現手順またはユースケース
+## 起票時の再現手順
 
 1. `pnpm --filter @harness-hub/hub build` を実行する
 2. G13 の bundle budget レポートで `/catalog/[projectId]` の First Load JS を確認する
@@ -110,8 +110,21 @@ aqi の是正では `@harness-hub/schemas` の barrel 全量読み込み（9 fea
 2. 予算に近づいたことを、予算超過で赤くなる前に検知できる手段がある
 3. G13 の他 route の残余も同時に確認され、同種の枯渇が他に無いことが示されている
 
+## 到達状況（2026-08-10）
+
+受入 2（95% 警告帯）のみ達成した。受入 1 と受入 3 は **未達のまま残る**。
+
+- 2026-08-10 の production build 実測では、`/catalog/[projectId]` は 118,565 / 122,880 バイトで、残余 4,315 バイト（3.5%）。目標の 6,144 バイトへ 1,829 バイト届かない
+- `/catalog/publish` は 122,359 / 122,880 バイトで、残余 521 バイト（0.4%）しかない。したがって受入 3 の「他 route に同種の枯渇がない」は成立しない
+- G13 警告帯には page route が 13 件残る。警告ゲートは早期検知として機能しているが、構造的な余裕の回復とは別である
+- ここから先は `packages/ui` の locale / status 語彙と route 固有 client chunk を同時に測る必要があるため、所有権を明示した `HarnessHub-vwxc` へ分離した
+
+受入 1・3を満たさないまま本課題を閉じない。`HarnessHub-vwxc` を blocking dependency（完了を阻む依存課題）として登録し、全 catalog route が 95% 未満になった実測後に再判定する。
+
 ## 検証証跡
 
 - aqi 是正時の G13 実測値 122,282 / 122,880
+- 2026-08-10 再実測: `/catalog/[projectId]` 118,565 / 122,880、`/catalog/publish` 122,359 / 122,880、警告 13 route
+- `apps/hub/artifacts/client-bundle-report.json` — production build 由来の route 別計測
 - `apps/hub/src/__tests__/dual-catalog-web/validator-load-boundary.test.ts` — 薄い再 export 経由であることを固定するテスト
 - `docs/frontend-spec.md` §8 — 共通層 package 登録と namespace import の落とし穴の記述

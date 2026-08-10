@@ -70,13 +70,6 @@ describe('createPublishSmokeDbProbe', () => {
     expect(evidence.packageRows).toEqual([{ contentHash: 'a'.repeat(64), r2Key: `packages/${'a'.repeat(64)}` }]);
     expect(evidence.auditChain).toBeNull();
 
-    await db.archiveProject(context, 'project-smoke');
-    const projectRows = await adapter.client
-      .select({ status: projects.status })
-      .from(projects)
-      .where(and(eq(projects.tenantId, context.tenantId), eq(projects.id, 'project-smoke')));
-    expect(projectRows).toEqual([{ status: 'archived' }]);
-
     const webChannelRows = await adapter.client
       .select({ stableReleaseId: targetChannels.stableReleaseId })
       .from(targetChannels)
@@ -87,5 +80,37 @@ describe('createPublishSmokeDbProbe', () => {
       .where(eq(releases.id, 'web-release-smoke'));
     expect(webChannelRows).toEqual([{ stableReleaseId: 'web-release-smoke' }]);
     expect(webReleaseRows).toEqual([{ id: 'web-release-smoke' }]);
+
+    // 使い捨て tenant の後始末 (HarnessHub-pf5o)。publish 領域が残す表を 1 行も残さない。
+    expect(await db.cleanupPublishTenant(context.tenantId)).toEqual({ remainingRows: 0, clean: true });
+    const remainingProjects = await adapter.client
+      .select({ id: projects.id })
+      .from(projects)
+      .where(and(eq(projects.tenantId, context.tenantId), eq(projects.id, 'project-smoke')));
+    expect(remainingProjects).toEqual([]);
+    // content-addressed の packages は tenant 非スコープなので消さない (他 tenant の Release が参照しうる)。
+    expect(await adapter.client.select({ contentHash: packages.contentHash }).from(packages)).toEqual([
+      { contentHash: 'a'.repeat(64) },
+    ]);
+  });
+
+  it('他 tenant の publish 行は消さない', async () => {
+    const db = createPublishSmokeDbProbe(asCore(adapter));
+    const target = { tenantId: 'tenant-smoke', workspaceId: 'workspace-smoke', actorId: 'owner-smoke' };
+    const bystander = { tenantId: 'tenant-other', workspaceId: 'workspace-other', actorId: 'owner-other' };
+
+    for (const context of [target, bystander]) {
+      await db.createProjectChannelFixture(context, {
+        projectId: `project-${context.tenantId}`,
+        channelId: `channel-${context.tenantId}`,
+        ownerUserId: context.actorId,
+        createdAt: 1,
+      });
+    }
+
+    await db.cleanupPublishTenant(target.tenantId);
+
+    const rows = await adapter.client.select({ id: projects.id, tenantId: projects.tenantId }).from(projects);
+    expect(rows).toEqual([{ id: 'project-tenant-other', tenantId: 'tenant-other' }]);
   });
 });
