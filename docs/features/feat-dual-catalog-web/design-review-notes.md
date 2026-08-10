@@ -214,17 +214,7 @@ R5/R6/R7/R8 はいずれも「P02 の architecture decision が誤っている�
 
 #### follow-up 解消記録（2026-08-10 / HarnessHub-h2pe）
 
-- C1 は `PollingState.lastFailureKind` と `isTerminalCatalogFailure()` へ集約し、401 / 403 / fatal を
-  初回応答後に停止する形へ是正した。`polling-contract.test.ts` と lifecycle 検査の双方で固定している。
-- C2 は `visibilitychange` を購読し、可視性だけを理由に停止した場合に限って再開する形へ是正した。
-  timer の予約後に hidden へ変わる競合もあるため、応答後だけでなく**通信開始前**にも共通判定を行う。
-  `polling-lifecycle.test.tsx` は hidden 中の request 増分が 0 であることを明示的に検査する。
-- C3 は実装を正とし、`validating` / `approved` / `publishing` だけを pollable とする。`needs_fix` /
-  `ready` / `approval_pending` は人の操作待ちなので停止し、visible 復帰でも再開しない。
-- S03 (`CatalogPublishStatus`) と S01 (`PublishWizard`) は同じ純関数契約を利用する。停止条件を各画面へ
-  複製せず、画面側は timer / listener の lifecycle 配線だけを担う。
-
-以上により V3 の C1〜C3 は解消した。元のレビュー所見は発見時の証跡として残し、この追記を現行判定とする。
+V3 の C1〜C3 は解消済み。詳細は [h2pe 解消記録](./design-review-followup-h2pe-20260810.md) を正とする。
 
 ### 5.4 V4 — marketplace.json 生成方式: **CONCERN (軽微)**
 
