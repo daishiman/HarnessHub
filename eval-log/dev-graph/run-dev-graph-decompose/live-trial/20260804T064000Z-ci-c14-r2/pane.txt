@@ -1,0 +1,390 @@
+ ▐▛███▜▌   Claude Code v2.1.221
+▝▜█████▛▘  Opus 5 (1M context) · Claude Max
+  ▘▘ ▝▝    ~/orca/workspaces/HarnessHub/wt-14-2
+
+
+❯ 次のファイルに書かれたタスクを読み、その指示どおりに実行してください。余計な確認は返さず即着手:
+  /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/task.md
+
+⏺ I'll read the task file first.
+
+  Read 2 files, listed 1 directory (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2 && for f in fixture-beads fixtu…)
+  ⎿  === fixture-beads ===
+     fixture-beads/.dev-graph/config.json
+     fixture-beads/.dev-graph/state/graph.json
+     … +21 lines (ctrl+o to expand)
+
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2 && ls plugins/dev-graph/ && echo "--- scripts ---" && ls plugins/dev-graph/scripts/ && echo "--- skills ---" &&…)
+  ⎿  agents
+     commands
+     EVALS.json
+     … +57 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2 && for f in fixture-beads fixtu…)
+  ⎿  === fixture-beads config ===
+     {
+       "claude_hooks": {
+     … +156 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2 && wc -l plugins/dev-graph/skills/run-dev-graph-decompose/SKILL.md && ls plugins/dev-graph/skills/run-dev-graph-…)
+  ⎿       196 plugins/dev-graph/skills/run-dev-graph-decompose/SKILL.md
+     prompts
+     SKILL.md
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  (No output)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  <class 'dict'> ['schema_version', 'scenarios']
+     put batch.", "required_observations": ["all five artifacts are routed to canonical kind paths", "frontmatter kind and stored path agree after a consecutive update", "no feature is created outside the C14 macro-
+     feature contract"]}, {"scenario_id": "C03-OUT1-positive-second-sync-zero", "component_id": "C03", "skill": "run-dev-graph-sync", "criterion_id": "OUT1", "mode": "positive", "task_args_template": "--repo-root <c
+     … +13 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {
+       "scenario_id": "C14-OUT1-positive-macro-decomposition-r9",
+       "component_id": "C14",
+     … +35 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "graph-node.schema.json", "title": "dev-graph タスクグラフノード (draft)", "description": "run-plugin-dev-plan が manual-apply artifact
+     として出
+     力する
+     41:    "tracker_binding",
+     … +6 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n '1400,1560p' plugins/dev-graph/schemas/graph-node.schema.json)
+  ⎿                "source_digest": {
+                     "type": "string",
+                     "pattern": "^[a-f0-9]{64}$"
+     … +158 lines (ctrl+o to expand)
+
+⏺ Now setting up goal_seek wiring (line 1 must precede the Skill call).
+
+⏺ Bash(python3 - <<'PY'
+      import hashlib, json, os, pathlib, re…)
+  ⎿  '自然文の「やりたいこと(大)」からfeatureノード群+architectureノード+機能間depends_onを生成するマクロ分解を行い、ready fe' ...len= 302
+     hash ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795
+
+⏺ Bash(python3 - <<'PY'
+      import hashlib, json, pathlib, datetime…)
+  ⎿  written ['run-dev-graph-decompose-goal-spec.json', 'run-dev-graph-decompose-intermediate.jsonl', 'run-dev-graph-decompose-progress.json']
+
+⏺ Bash(python3 - <<'PY'
+      import hashlib, json, pathlib…)
+  ⎿  Error: PreToolUse:Bash hook error: [python3 "${CLAUDE_PLUGIN_ROOT}/hooks/guard-graph-schema.py" --repo-root "${CLAUDE_PROJECT_DIR}"]: [guard-graph-schema] BLOCKED: interpreter 経由の graph authority 書込みは C02
+     atomic writer を迂回できない (初期 graph は scripts/build-graph-store.py、node 更新は scripts/upsert-node.py 経由)
+
+  Made 1 scratchpad edit +37 (ctrl+o to expand)
+
+⏺ Bash(python3 /private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad/snap.py pre-state.json && echo "---…)
+  ⎿  fixture-beads files= 12 nodes= 0 rev= 0 beads_dir= False remote= False
+        sha c294526f55804ea1f35b4ca34023b4e0df3d6efee1487c8633e5c17b4dc959f9
+     fixture-none files= 9 nodes= 0 rev= 0 beads_dir= False remote= False
+     … +4 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-beads && (bd list --jso…)
+  ⎿  Error: no beads database found
+     Hint: run 'bd where' to inspect the resolved workspace, or 'bd init' to create a new database
+           or set BEADS_DIR to point to your .beads directory
+     … +2 lines (ctrl+o to expand)
+
+⏺ Baseline captured (both graphs: 0 nodes; no Beads DB; GitHub disabled). Now 工程 1 — run A (beads fixture):
+
+⏺ Skill(dev-graph:run-dev-graph-decompose)
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Bash(cd /Users/dm/orca/workspaces/HarnessHub/wt-14-2 && python3 plugins/dev-graph/scripts/resolve-repo-context.py --mode write --repo-root eval-log/dev-graph/run-dev…)
+  ⎿  {
+       "branch": "main",
+       "content_roots": {
+     … +39 lines (ctrl+o to expand)
+
+⏺ Bash(for f in plugins/dev-graph/skills/run-dev-graph-decompose/prompts/*.md; do echo "########## $f"; cat "$f"; done)
+  ⎿  ########## plugins/dev-graph/skills/run-dev-graph-decompose/prompts/R1-elicit.md
+     # Prompt: R1-elicit
+     … +463 lines (ctrl+o to expand)
+
+⏺ Bash(python3 plugins/dev-graph/scripts/upsert-node.py --help 2>&1 | head -60)
+  ⎿  usage: upsert-node.py [-h] [--repo-root REPO_ROOT] [--graph GRAPH]
+                           [--input INPUT] [--body-file BODY_FILE]
+                           [--regenerate-body] [--dry-run]
+     … +18 lines (ctrl+o to expand)
+
+⏺ Bash(python3 -c "
+      import json…)
+  ⎿  REQUIRED: ['graph_node_id', 'artifact_kind', 'artifact_subtypes', 'title', 'project_id', 'domain', 'status', 'owners', 'tags', 'priority', 'start_date', 'target_date', 'iteration', 'created_at', 'updated_at', '
+     depends_on', 'related_nodes', 'resource_scope', 'parent_feature', 'feature_package_id', 'phase_ref', 'file_path', 'template_id', 'template_version', 'confirmation_status', 'evaluation_status', 'confirmation_evi
+     dence', 'source_lineage', 'classification_confidence', 'classification_reason', 'classification_candidates', 'github_publication', 'issue_linkage', 'tracker_binding', 'beads_linkage', 'github_project_linkages',
+     … +49 lines (ctrl+o to expand)
+
+  Searched for 2 patterns, read 1 file, listed 1 directory (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  === allOf[0] ===
+     {
+       "if": {
+     … +620 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  === confirmation_evidence
+     {
+       "type": "object",
+     … +439 lines (ctrl+o to expand)
+
+  Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 plugins/dev-graph/scripts/validate-graph-schema.py --help 2>&1 | head -30; echo "---"; grep -n "artifact_missing\|def main\|exit_code\|findings" plugins…)
+  ⎿  usage: validate-graph-schema.py [-h] --graph GRAPH [--repo-root REPO_ROOT]
+                                     [--require-canonical-envelope]
+     … +49 lines (ctrl+o to expand)
+
+⏺ Now R2-plan → building the macro decomposition for run A.
+
+  Made 1 scratchpad edit +266 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && FB=$PWD/eval-log/dev-graph/run-dev-gr…)
+  ⎿  staged 5 nodes (binding=beads) brief_digest=ebfeb1546399a40d88690d5849f170217e2899b4ad21709e75c72f39423ef4e7
+     --- preview bytes:    12820
+
+⏺ Preview built. Validating it through the stdin path (no temp file inside the managed repo):
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && FB=$PWD/eval-log/dev-graph/run-dev-gr…)
+  ⎿  {
+       "implementation_readiness": "complete",
+       "missing_sections": [],
+     … +5 lines (ctrl+o to expand)
+
+  Made 1 scratchpad edit +77 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && python3 $SC/audit_dag.py $SC/preview-…)
+  ⎿  {
+       "label": "preview-beads",
+       "node_count": 5,
+     … +25 lines (ctrl+o to expand)
+
+⏺ Preview is a clean acyclic DAG, metric = 1 ≤ 3. Now R3 — atomic registration via the C02 writer:
+
+⏺ Bash(FB=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-beads
+      for nid in arch-portal-platform-001 feat-user-auth-001 fe…)
+  ⎿  ===== upsert arch-portal-platform-001 =====
+     {
+       "error": "generated artifact is invalid: [{\"node\": \"arch-portal-platform-001\", \"code\": \"frontmatter_missing\", \"detail\": \"acceptance\"}, {\"node\": \"arch-portal-platform-001\", \"code\": \"frontmat
+     … +32 lines (ctrl+o to expand)
+
+  Searched for 1 pattern (ctrl+o to expand)
+  ⎿  {"schema_version": "1.0.0", "template_version": "1.0.0", "placeholder_tokens": ["<", "TBD", "TODO", "未定"], "not_applicable_format": "N/A: <reason>", "common_frontmatter": {"template": "common-frontmatter.md",
+      "required": ["graph_node_id", "artifact_kind", "artifact_subtypes", "title", "project_id", "domain", "status", "priority", "start_date", "target_date", "iteration", "owners", "tags", "file_pa
+     KEY: schema_version
+     … +8 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  COMMON required: ['graph_node_id', 'artifact_kind', 'artifact_subtypes', 'title', 'project_id', 'domain', 'status', 'priority', 'start_date', 'target_date', 'iteration', 'owners', 'tags', 'file_path', 'template
+     _id', 'template_version', 'confirmation_status', 'evaluation_status', 'confirmation_evidence', 'source_lineage', 'created_at', 'updated_at', 'depends_on', 'related_nodes', 'resource_scope', 'purpose', 'goal', '
+     scope_in', 'scope_out', 'acceptance', 'architecture_refs', 'parent_feature', 'feature_package_id', 'phase_ref', 'classification_confidence', 'classification_reason', 'classification_candidates', 'tracker_bindin
+     … +13 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'PY'
+      import json…)
+  ⎿  {
+      "template": "architecture.md",
+      "required_sections": [
+     … +69 lines (ctrl+o to expand)
+
+  Made 2 scratchpad edits +74 -28, searched for 2 patterns (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && FB=$PWD/eval-log/dev-graph/run-dev-gr…)
+  ⎿  staged 5 nodes (binding=beads) brief_digest=ebfeb1546399a40d88690d5849f170217e2899b4ad21709e75c72f39423ef4e7
+     {
+       "implementation_readiness": "complete",
+     … +17 lines (ctrl+o to expand)
+
+⏺ Bash(FB=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-beads
+      for nid in arch-portal-platform-001 feat-user-auth-001 fe…)
+  ⎿  ===== arch-portal-platform-001 =====
+     {
+       "artifact_sha256_after": "05124ffd0d9b01f779e73f2defbb334644a3aff00c0bb8f00c62f56c6b6f9cc5",
+     … +87 lines (ctrl+o to expand)
+
+⏺ Bash(FB=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-beads
+      SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-Harn…)
+  ⎿  === persisted graph validation (file path) ===
+     {
+       "implementation_readiness": "complete",
+     … +6 lines (ctrl+o to expand)
+
+⏺ Run A (binding=beads) complete. Macro report: 1 architecture + 4 feature nodes registered atomically via C02 (graph_revision 0→5, each upsert write_count=2, status=applied); preview validated through the stdin path
+  with 0 violations; DAG acyclic, max_inter_feature_depends_on_per_feature = 1 ≤ 3; no phase task generated (delegated to system-dev-planner); all 5 nodes draft ⇒ 0 external publications. Now 工程 2 — run B
+  (binding=none):
+  ⎿  Successfully loaded skill · 6 tools allowed
+
+⏺ Bash(FN=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-none
+      SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-Harne…)
+  ⎿  repo_root = /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-none
+     repository_id = local:sha256:717aeb44beb0adc0ca8b523850fbdc7ee86e3882f5108959c2feb828bbbedcce
+     content_roots.repository = /Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-none
+     … +28 lines (ctrl+o to expand)
+
+⏺ Bash(FN=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-none
+      for nid in arch-portal-platform-001 feat-user-auth-001 fea…)
+  ⎿  arch-portal-platform-001 applied rev 0 -> 1 writes 2
+     feat-user-auth-001 applied rev 1 -> 2 writes 2
+     feat-assignment-dashboard-001 applied rev 2 -> 3 writes 2
+     … +10 lines (ctrl+o to expand)
+
+⏺ Run B (binding=none) complete — identical want and argument shape, 5 nodes registered atomically (rev 0→5), preview validated via stdin, DAG acyclic, metric = 1 ≤ 3, all nodes draft ⇒ local graph only, no external
+  route touched.
+
+  Now 工程 3 — promotion in both fixtures via the canonical C02 writer:
+
+  Made 1 scratchpad edit +94 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad
+      BASE=$PWD/eval-log/dev-graph/run-dev-gra…)
+  ⎿  ########## fixture-beads ##########
+     staged lifecycle patch for feat-user-auth-001
+      pass1: proposed graph is invalid: [{"node": "feat-user-auth-001", "code": "schema_violation", "detail": "$.confirmation_evidence.evaluated_digest: None is not of type 'string'"}] rev None -> None
+     … +7 lines (ctrl+o to expand)
+
+⏺ Pass 1 was correctly rejected (schema requires a real digest when evaluation_status=pass), so only the evidence block landed. Re-doing it as a single patch whose digest is computed over the intended final node:
+
+      BASE=$PWD/eval-log/dev-graph/run-dev-gra…)
+  ⎿  ########## fixture-beads ##########
+     staged promotion patch for feat-user-auth-001: evaluated_digest=a77d3a943daa9debae22b27040ae16a27cd2828b1d1faafb96f52dbdd11ae3ce
+      apply: applied rev 6 -> 7 writes 2
+     … +27 lines (ctrl+o to expand)
+
+⏺ All promotions landed and digests match. Now 工程 4 — verification. Post-run state differencing:
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && python3 $SC/snap.py post-state.json)
+  ⎿  fixture-beads files= 31 nodes= 5 rev= 7 beads_dir= False remote= False
+        sha 3827b935cca047aae2445b579c5c094d72430df47937b26257d3bd88c9eb1447
+     fixture-none files= 28 nodes= 5 rev= 7 beads_dir= False remote= False
+        sha 663266b12c052c802e25b3231fdb97b54edd86054ff9e24ac35db5611c001903
+
+  Made 1 scratchpad edit +130 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad && python3 $SC/verify.py 2>&1 | head -12…)
+  ⎿  {
+       "fixture-beads": {
+         "node_count": 5,
+     … +117 lines (ctrl+o to expand)
+
+⏺ Bash(python3 plugins/dev-graph/scripts/bd-bridge.py --help 2>&1 | head -40; echo "############"; python3 plugins/dev-graph/scripts/gh-bridge.py --help 2>&1 | head -4…)
+  ⎿  usage: bd-bridge.py [-h] --op
+                         {create,update,dep-add,dep-remove,close,ready,show,claim,github-push,gate-add,gate-check,orphan-audit,removal-preflight}
+                         [--repo-root REPO_ROOT] [--graph-node-id GRAPH_NODE_ID]
+     … +66 lines (ctrl+o to expand)
+
+⏺ Bash(FB=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/fixture-beads
+      echo "=== bd-bridge dry-run (route reachability only, no…)
+  ⎿  === bd-bridge dry-run (route reachability only, no real tracker write) ===
+     {
+  Made 1 scratchpad edit +40 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad
+      BASE=$PWD/eval-log/dev-graph/run-dev-gra…)
+  ⎿  ===== fixture-beads / pass_without_complete =====
+     {
+       "implementation_readiness": "incomplete",
+     … +132 lines (ctrl+o to expand)
+
+⏺ Bash(echo "=== graph-node.schema.json: github tracker binding rule (verbatim) ==="; sed -n '1434,1456p' plugins/dev-graph/schemas/graph-node.schema.json
+      echo…)
+  ⎿  === graph-node.schema.json: github tracker binding rule (verbatim) ===
+           "if": {
+             "properties": {
+     … +62 lines (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad
+      BASE=$PWD/eval-log/dev-graph/run-dev-gra…)
+  ⎿  === no preview/temp graph file inside either managed repository ===
+     (none listed above = none exist)
+     … +10 lines (ctrl+o to expand)
+
+⏺ 工程 5 — appending the post-verification goal_seek line 2 (append-only):
+
+  Made 1 scratchpad edit +75 (ctrl+o to expand)
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad
+      python3 $SC/goalseek_line2.py…)
+  ⎿  intermediate.jsonl rows = 2
+     === SKILL.md ゴールシーク検証 ===
+     goal_seek verification OK: rows=2, original_goal_hash=ceef75f32843aae2bcbb0f4e2b638b0a419ff194320149e31390b65d2b98b795
+
+⏺ Final fail-closed gate before writing the completion marker:
+
+⏺ Bash(SC=/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-wt-14-2/45437145-1727-4ef3-9613-85ce59ab00f0/scratchpad
+      python3 - <<'PY'…)
+  ⎿  OK  (a) literal Skill(dev-graph:run-dev-graph-decompose) tool_use: 2 (expected 2)
+     OK  (b) fixture-beads candidate_count: 1 (expected 1)
+     OK  (b) fixture-none candidate_count: 1 (expected 1)
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(mkdir -p eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/out)
+  ⎿  Done
+
+⏺ Write(eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/out/status.json)
+  ⎿  Wrote 1 line to eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2/out/status.json
+      1 {"status":"PASS","scenario":"C14-OUT1-positive-macro-decomposition-r9"}
+
+⏺ Bash(BASE=$PWD/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260804T064000Z-ci-c14-r2
+      ls "$BASE/out/"; cat "$BASE/out/status.json"…)
+  ⎿  status.json
+     {
+       "status": "PASS",
+     … +13 lines (ctrl+o to expand)
+
+⏺ All seven scenario observations executed and the completion marker written. Summary:
+
+  ┌─────┬─────────────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │  #  │               Observation               │                                                                               Result                                                                                │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 1   │ Acyclic DAG within granularity          │ 1 architecture + 4 features per graph, acyclic, max_inter_feature_depends_on_per_feature = 1 ≤ 3, 0 task nodes / 0 phase_ref                                        │
+  │     │ threshold                               │                                                                                                                                                                     │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 2   │ Every zero individually attributed      │ Beads = 0 by draft-gate suppression (beads run) vs route not declared (none run); GitHub Issues/Projects = 0 by schema unreachability; candidate external           │
+  │     │                                         │ publications = 0 by feature kind not externally publishable — no two collapsed into one zero                                                                        │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 3   │ Draft excluded while a promoted feature │ Both graphs: candidate_count=1 (feat-user-auth-001), draft_excluded_count=3, against a run that wrote 19 new files and moved graph_revision 0→7                     │
+  │     │  is sole candidate                      │                                                                                                                                                                     │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 4   │ Routes differ, github unreachable       │ Derived from persisted tracker_binding: ["beads"] vs ["none"]. github blocked by allOf[15] (github ⇒ mode ∈ {issue, issue_and_projects}) plus allOf[10] (those      │
+  │     │                                         │ modes ⇒ artifact_kind ∈ {issue, task}), so a macro-only feature/architecture node carrying local_only is rejected before landing                                    │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 5   │ Write counts by differencing; stdin     │ From before/after snapshots, not the skill's report: local added 19/16, modified 1 (graph.json), Beads/GitHub/Projects 0 (no .beads DB created); previews validated │
+  │     │ preview                                 │  only via --graph -, no preview or temp file inside either repo                                                                                                     │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 6   │ confirmation_evidence recomputed        │ Recomputed from the final persisted node minus confirmation_evidence (sort_keys=True, separators=(',', ':')) — matches in both: a77d3a94…, ceb4384b…                │
+  ├─────┼─────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ 7   │ Negative controls rejected              │ Both controls synthesised in memory from each final graph and rejected by validate-graph-schema.py (exit 1); the beads run additionally raised beads_publication:   │
+  │     │                                         │ beads requires local_only, which only fires because that binding is genuinely persisted                                                                             │
+  └─────┴─────────────────────────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  Two notes on the run: the first promotion attempt was correctly rejected by the writer (evaluation_status=pass demands a real 64-hex digest, write_count=0), so it was redone as a single patch whose digest is computed
+  over the intended final node — the forbidden --operation apply-lifecycle-request was never used. Exact-13 package registration was not performed: this is a macro-only scenario, and registering P01–P13 tasks would have
+  added further confirmed/pass/complete nodes and broken the candidate_count=1 requirement; that step is carried forward in merged_directive_for_next. Writes stayed inside the two fixtures and out/status.json.
+
+  DONE: PASS
+
+✻ Crunched for 13m 23s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ exact-13 package も登録して次周回を回して
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ bypass permissions on (shift+tab to cycle) · PR #664

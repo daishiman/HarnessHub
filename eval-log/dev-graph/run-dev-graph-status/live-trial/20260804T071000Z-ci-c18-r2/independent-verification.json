@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "scenario": "C18-OUT1-positive-read-only-status",
+  "target_skill": "dev-graph:run-dev-graph-status",
+  "target_session": "713d1a55-6f8a-4a6c-b5fb-07037e997eb0",
+  "trial_root": "eval-log/dev-graph/run-dev-graph-status/live-trial/20260804T071000Z-ci-c18-r2",
+  "evaluator": "independent-evaluator (read-only; target skill not rerun, fixture repository not modified)",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "claim": "Reported status, closed_at and dependency edges equal the values stored in the graph store, compared field by field.",
+      "evidence": [
+        "Report source: fixture-repo/eval-log/run-dev-graph-status-execution.json (receipt emitted by the skill's status-graph.py run at 2026-08-04T06:02:31.646359Z); graph source: fixture-repo/.dev-graph/state/graph.json.",
+        "Evaluator re-ran the comparison itself: for each of the 2 reported nodes every reported key was compared against the same key of the matching graph node -> 34 field comparisons, 0 mismatches. Compared keys per node: artifact_kind, beads_linkage, closed_at, dependents, depends_on, domain, execution_contexts, feature_package_id, file_path, graph_node_id, issue_linkage, parent_feature, project_id, status, tags, title, tracker_binding.",
+        "Field values (report == graph): LT-TASK-001 status=\"active\", closed_at=null, depends_on=[], dependents=[\"LT-TASK-002\"]; LT-TASK-002 status=\"active\", closed_at=null, depends_on=[\"LT-TASK-001\"], dependents=[].",
+        "dependents is a derived field and was NOT trusted from the report: the evaluator rebuilt the reverse index independently from the graph's depends_on edges ({LT-TASK-001: [LT-TASK-002], LT-TASK-002: []}) and it matches the reported value.",
+        "Coverage is complete, not a count match: reported ids ['LT-TASK-001','LT-TASK-002'] == graph ids ['LT-TASK-001','LT-TASK-002'], report count=2, no duplicates, no reported id absent from the graph.",
+        "Report self-consistency: ok=true, read_only=true, graph_sha256_before==graph_sha256_after==2922d673a25ec4ec64ed2aebdc7c276a0149a09e7e21bc93305e60f6d4304b43, authority_sha256_before==after==399a275c63a85a421c0a10905969ea7ff3a7bcc6e93c08c5973ba784a25c1876."
+      ]
+    },
+    "2": {
+      "met": true,
+      "claim": "The predecessor LT-TASK-001 is ready and the dependent LT-TASK-002 is blocked by that predecessor.",
+      "evidence": [
+        "Derivation method matches the authoritative task (20260806T010000Z-f84o-postmain-c18/task.md 工程 3.2): readiness/blocked is derived from the reported dependency edges plus each node's status, since status-graph.py emits no ready/blocked field.",
+        "LT-TASK-001: depends_on=[] (no unsatisfied predecessor), status=\"active\", closed_at=null, implementation_readiness.status=\"complete\", missing_sections=[] -> ready.",
+        "LT-TASK-002: depends_on=[\"LT-TASK-001\"] and that predecessor is not closed (status=\"active\", closed_at=null, completion_evidence.status=\"open\") -> blocked, and the stated reason (unsatisfied dependency on LT-TASK-001) is exactly the edge present in the store.",
+        "The single forward edge is consistent in both directions and non-dangling: LT-TASK-001.dependents==[\"LT-TASK-002\"] and LT-TASK-002.depends_on==[\"LT-TASK-001\"]; the dependency target resolves to an existing node.",
+        "No competing edge exists: the fixture holds exactly 2 nodes and 1 dependency edge, so no other predecessor could account for the blocked state."
+      ]
+    },
+    "3": {
+      "met": true,
+      "claim": "Graph, config, content and GitHub state are unchanged; only permitted evaluation artifacts exist.",
+      "evidence": [
+        "Independent baseline via the fixture's own git history (not the run's self-reported digests): `git status --porcelain` in fixture-repo returns only `?? eval-log/`; `git diff --stat HEAD` is empty. All 11 tracked paths -- .dev-graph/config.json, .dev-graph/state/graph.json, tasks/lt-task-001.md, tasks/lt-task-002.md and the 7 content-root .gitkeep files -- are byte-identical to commit ecbfe55 'chore(fixture): initialize dev-graph live-trial fixture'.",
+        "Digests now equal the pre-run baseline recorded in pane.txt: graph 2922d673a25ec4ec64ed2aebdc7c276a0149a09e7e21bc93305e60f6d4304b43, config d481c3b64225fc79618cdd5ed030bf86b323da7d6a81672d7bb3e41160dc66ca.",
+        "mtimes corroborate: .dev-graph/state/graph.json, .dev-graph/config.json, tasks/*.md and .git/dev-graph/{leases.json,fixture-marker.json} all retain the 2026-08-04T15:00:43Z fixture-build timestamp, while the run executed 15:01:58-15:03:56 -- no lease or state file was touched.",
+        "GitHub state: config .dev-graph/config.json has github.enabled=false and every node has tracker_binding=\"none\", issue_linkage=null, beads_linkage=null, pull_request_linkages=[], github_project_linkages=[]. status-graph.py declares `network: false` / `write-scope: optional eval-log receipt only` and contains no subprocess/urllib/requests/socket/gh/github reference. The target session's full transcript (24 tool calls) contains no gh, curl or network invocation.",
+        "Permitted artifacts only. Trial root: task.md, evaluator-task.md, pane.txt, out/status.json (out/ contains exactly the one completion marker, {\"status\":\"PASS\",\"scenario\":\"C18-OUT1-positive-read-only-status\"}), plus this independent-verification.json. Fixture writes are confined to fixture-repo/eval-log/: the skill's execution receipt plus the three goal_seek artifacts required by the authoritative task 工程 4.",
+        "goal_seek wiring is valid: original_goal_hash 24dc23d4cf800a092b7f9970a465ab921b4cdf5d20b95ce2a1fd212884b45b5c recomputed by the evaluator from SKILL.md's ゴール (Goal) line matches goal-spec.json and both jsonl rows; intermediate.jsonl has exactly 2 rows each carrying all 6 required keys, row 1 written at 15:01:58 before the Skill invocation and row 2 appended at 15:03:56 after verification (ordering confirmed against the session transcript, not just mtime).",
+        "The run used the skill itself, not substitute scripts: transcript tool call 11 is Skill(dev-graph:run-dev-graph-status) with --repo-root pointing at this trial's fixture-repo, followed by the skill's own resolve-repo-context.py -> validate-graph-schema.py -> status-graph.py chain."
+      ]
+    }
+  },
+  "notes": [
+    "Evaluation was performed without rerunning the target skill; all skill-side facts come from pane.txt, the fixture eval-log receipts and the target session transcript, and all graph-side facts were recomputed by the evaluator from .dev-graph/state/graph.json and the fixture's git history.",
+    "The target session's own reported verdict (DONE: PASS) is independently reproduced here."
+  ]
+}

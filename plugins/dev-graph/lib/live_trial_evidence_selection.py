@@ -14,8 +14,9 @@
 
 run-id の辞書順だけでは、時計ずれで将来日付を持つ古い証跡を fresh PASS より優先する。
 criteria-test/scenario-verdict.json は人間・機械双方が採用した evidence を示す正本なので、
-OUT1 が参照する schema-valid PASS verdict を優先する。receipt が欠落・破損・不整合なら
-呼出側は従来の辞書順 fallback を使い、検査を fail-open にしない。
+OUT1 が参照する schema-valid PASS verdict を優先する。receipt が欠落した場合だけ従来の
+辞書順 fallback を許容し、存在する receipt の破損・不整合は呼出側が fail-closed にできる
+よう選択エラーを返す。
 """
 from __future__ import annotations
 
@@ -32,31 +33,66 @@ def _load_json(path: Path) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
-def verdict_path_from_criteria_receipt(root: Path, plugin: str, skill: str) -> Path | None:
-    """OUT1 receipt が参照する containment 済み PASS verdict を返す。"""
+def verdict_selection_from_criteria_receipt(
+    root: Path, plugin: str, skill: str
+) -> tuple[Path | None, str | None]:
+    """criteria receipt の verdict を返す。receipt が不正なら error を返す。"""
     base = root / "eval-log" / plugin / skill / "live-trial"
-    receipt = _load_json(
-        root / "eval-log" / plugin / skill / "criteria-test" / "scenario-verdict.json"
-    )
+    receipt_path = root / "eval-log" / plugin / skill / "criteria-test" / "scenario-verdict.json"
+    if not receipt_path.is_file():
+        return None, None
+    receipt = _load_json(receipt_path)
     if receipt is None:
-        return None
+        return None, f"criteria-receipt-invalid-json: {receipt_path}"
     results = receipt.get("criteria_results")
-    out1 = results.get("OUT1") if isinstance(results, dict) else None
-    ref = out1.get("live_trial_verdict_ref") if isinstance(out1, dict) else None
-    if not isinstance(ref, str) or not ref or Path(ref).is_absolute():
-        return None
+    if not isinstance(results, dict):
+        return None, f"criteria-receipt-invalid: {receipt_path} の criteria_results が object ではない"
+
+    refs: list[tuple[str, str]] = []
+    for criterion_id, criterion in results.items():
+        if not isinstance(criterion, dict):
+            continue
+        ref = criterion.get("live_trial_verdict_ref")
+        is_live_trial = criterion.get("verify_by") == "live-trial" or (
+            criterion_id == "OUT1" and ref is not None
+        )
+        if not is_live_trial:
+            continue
+        if not isinstance(ref, str) or not ref:
+            return None, (
+                f"criteria-receipt-invalid: {receipt_path} の "
+                f"{criterion_id}.live_trial_verdict_ref が空または文字列ではない"
+            )
+        refs.append((criterion_id, ref))
+
+    if not refs:
+        return None, None
+    unique_refs = {ref for _, ref in refs}
+    if len(unique_refs) != 1:
+        joined = ", ".join(f"{criterion_id}={ref}" for criterion_id, ref in refs)
+        return None, f"criteria-receipt-ambiguous: {receipt_path} の ref が複数: {joined}"
+
+    ref = next(iter(unique_refs))
+    if Path(ref).is_absolute() or Path(ref).name != "verdict.json":
+        return None, f"criteria-receipt-invalid-ref: {receipt_path} の ref={ref!r}"
 
     verdict_path = (root / ref).resolve()
     try:
         verdict_path.relative_to(base.resolve())
     except ValueError:
-        return None
+        return None, f"criteria-receipt-outside-live-trial: {receipt_path} の ref={ref!r}"
     if verdict_path.name != "verdict.json":
-        return None
+        return None, f"criteria-receipt-invalid-ref: {receipt_path} の ref={ref!r}"
     verdict = _load_json(verdict_path)
     overall = verdict.get("overall") if isinstance(verdict, dict) else None
     if not isinstance(overall, dict) or overall.get("verdict") != "PASS":
-        return None
+        return None, f"criteria-receipt-invalid-verdict: {receipt_path} の ref={ref!r} は PASS ではない"
+    return verdict_path, None
+
+
+def verdict_path_from_criteria_receipt(root: Path, plugin: str, skill: str) -> Path | None:
+    """互換 API: receipt が採用した containment 済み PASS verdict を返す。"""
+    verdict_path, _ = verdict_selection_from_criteria_receipt(root, plugin, skill)
     return verdict_path
 
 
