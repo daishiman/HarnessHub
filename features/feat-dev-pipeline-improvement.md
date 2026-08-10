@@ -12,10 +12,10 @@ iteration: null
 title: "開発管理パイプライン改善 (lifecycle close-loop / eval-log 規約 / handoff disposition)"
 owners: ["daishiman"]
 created_at: "2026-07-21T14:40:00Z"
-updated_at: "2026-08-04T07:14:11.105269Z"
+updated_at: "2026-08-10T01:48:11.173218Z"
 status: "active"
 depends_on: []
-related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
+related_nodes: ["issue-audit-followups-20260717","issue-c02-upsert-lifecycle-regression-20260729","issue-id-uniqueness-gate-generalization-20260728","issue-doc-line-limit-followup-mfh7-20260728","issue-register-package-projection-idempotency-drift-20260728","task-schedule-beads-ready-entry-absent-reporting-20260803","issue-hooks-entry-point-parity-generalization-20260728","task-hooks-entry-point-parity-final-review-handoff-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
 resource_scope: ["features/feat-dev-pipeline-improvement.md"]
 purpose: "開発管理パイプライン (dev-graph 11 verb・beads・plugin-plans・eval-log・成果物管理) の運用実態調査 (qa-067) で検出された整合性・肥大化・消化状態の課題を解消し、G1/G4/G5 を支える開発基盤の健全性を回復する。あわせて qa-071 で確定した開発管理の方法論 (マクロ構造・exact-13・外側/内側ループ・スコープ分離・情報配置・書き戻し・既存保全と更新統制) を本 feature の 13 フェーズ実行契約として明示的に採用し、feature context から task spec まで意味的に伝播する"
 goal: "qa-067 の 8 要件が実装され、解決済み事象の open 残置・eval-log 直下残置・未消化 findings が決定論検査で 0 件に収束し、再実行しても同じ結果になる状態。加えて qa-071 の方法論要件が goal-spec と P01..P13 task spec の実行契約 (外側ループの目的/背景/ゴール固定・内側ループの goal-seek 反復・スコープ分離・情報配置=正本参照と lineage のみ・P13 書き戻し) として trace され、tag/lineage 一致だけでは PASS しない semantic coverage 検査で保証された状態"
@@ -169,3 +169,7 @@ fail-closed にする証拠束縛、五軸監査と状態遷移の invariant、C
 ui-ux・testing-qa・dev-workflow・infrastructure に章固有の deep card を追加し、resource map と catalog の順序を検査可能な宣言へ揃えた。canonical compiler が 4 章だけへ投影し、製品 API・DB・認証認可・UI runtime・deploy unit は変えない。C04 の設計影響と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/ldq-design-knowledge-cards-spec-reflection-receipt.md) を正とする。
 
 同日の C19 最終 gate では、初回 build と確認済み receipt の resume を別の完了境界として検証する。resume は evaluator を再起動せず、`system-spec-resume-closure/v1` report、runner stdout、C02・lineage・evidence の exit 0 を post-run transcript gate で束縛する。製品要求は変えず、`qa-216` / `qa-217` の実装具体化とする。詳細は [C19 resume closure 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-10 rubric 自動生成提案の durable handoff
+
+2026-08-06 の rubric 更新提案を追跡可能な履歴へ保存し、採否未判断の 25 件と旧 worktree 絶対 path の集計キー問題を Beads `HarnessHub-lzfs` / dev-graph `issue-rubric-proposal-20260806-review` / draft PR #688 へ引き継いだ。提案保存や draft PR は human triage の完了を意味しない。製品仕様と rubric 本体は変更せず、`system-spec/index.md` の実装 writeback 索引から `specs/` 追補と受領書へ到達できるようにした。層別判断と検証は [最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。

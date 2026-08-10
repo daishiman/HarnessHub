@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub dev-workflow アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-18T08:10:00Z"
-updated_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-10T01:48:56.084284Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804"]
+related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804","doc-hooks-entry-point-parity-spec-reflection-receipt-20260804","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
 resource_scope: ["architecture/harness-hub-dev-workflow.md"]
 purpose: "Hub 本体の開発フロー、作者ローカル環境規律、MVP ファースト判断軸、C02/C11 の安全境界、live-trial session 環境隔離、検査対象 0 件と CI/local 呼び出し parity、および外部参考層と能動 plugin の所有境界を参照する"
 goal: "qa-038/qa-039/qa-066/qa-067/qa-069/qa-090/qa-092/qa-096/qa-102/qa-122/qa-139/qa-140、C16 qa-141/qa-142、および qa-143 の確定内容に適合し、C11 artifact readiness、C02 document parity、tmux session 環境隔離、CI/local 品質ゲート、inline Python graph authority、worktree 診断、ready-payload 欠落の復旧境界、hook entry point parity、consumer-owned reference の境界を情報欠落なく提供する"
@@ -246,3 +246,9 @@ CI は現時点で算出・記録・artifact 保存までを担い、tier によ
 ## C19 build / resume 完了境界 (2026-08-10)
 
 build path の authority は独立 evaluator の native completion、resume path の authority は digest-bound receipt と deterministic runner report とする。resume report は C02 dry-run/upsert、graph preview、source digest、evidence ref の全 step を列挙し、post-run gate が transcript 上の runner stdout と byte-equivalent な JSON であることを確認する。resume では upstream Skill・Agent・runner 外 direct upsert を拒否する。これにより「再評価禁止」と「evaluator 完了必須」の循環を解消しつつ、C02 single-writer 境界を保つ。詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。
+
+## rubric draft の保存と処遇判断の分離 (2026-08-10)
+
+`run-skill-rubric-governance` が生成する `proposals/*.md` は、評価結果と改善候補を保持する証拠であり、採用・棄却・保留を決める authority（決定権）ではない。未判断 draft を保存するときは、同じ変更で Beads と dev-graph issue を結び、提案 path、未判断項目、close 条件を durable handoff（次の作業者が消えない形で引き継げる記録）として残す。commit や draft PR は保存・レビュー導線に限定し、human triage 完了前に issue を close しない。
+
+これは `system-spec/dev-workflow.md` が継承する P13 write-back、scope separation、未完了項目の課題化を今回の rubric 提案へ適用したもので、新しい製品 component や runtime 契約は追加しない。`system-spec/spec-state.json` と確定章は変更せず、既存の [実装 writeback 索引](../system-spec/index.md#実装-writeback-索引-確定章への追記ではない) から `specs/` 追補と受領書へ接続する。今回の境界と残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
