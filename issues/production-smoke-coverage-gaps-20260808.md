@@ -12,8 +12,8 @@ iteration: null
 title: "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)"
 owners: ["daishiman"]
 created_at: "2026-08-08T00:00:00Z"
-updated_at: "2026-08-09T00:00:00Z"
-status: "active"
+updated_at: "2026-08-10T02:43:42Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-post-signin-landing-observability","spec-production-coverage-smoke","issue-authz-provider-admin-edge-route-mismatch-20260808"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/scripts","apps/hub/package.json","apps/hub/tests","packages/db/repository/hearing-smoke.ts","packages/db/__tests__/hearing-smoke.test.ts","system-spec/spec-state.json","system-spec/testing-qa.md","specs/harness-hub-production-coverage-smoke-addendum.md","architecture/harness-hub-testing-qa.md","features","tasks","docs/features"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-10T02:43:42Z","evidence_refs":["docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md","docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"],"policy":"manual","reconciled_at":"2026-08-10T02:43:42Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-08T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -150,3 +150,9 @@ production evidence を `docs/` / `features/` / `tasks/` へ記録し、main 取
 - task-spec: feat-post-signin-scope-routing / feat-feedback-loop / feat-docs-cms の 3 package PASS
 - Hub focused: coverage 9 + oidc 12 = 21 PASS
 - DB hearing-smoke: 2 PASS
+
+## Default-branch reconciliation (2026-08-10)
+
+PR #681 (`35a10b87`) と PR #682 (`9808ecd1`) は `main` へマージ済みで、`origin/main` は両 merge commit を包含する。production run `31253674292` の実走証拠と qa-217 の仕様復元も default branch に存在するため、本課題の acceptance と completion boundary は充足した。
+
+製品仕様・設計への新しい影響はない。production smoke の契約は `system-spec/testing-qa.md`、`specs/harness-hub-production-coverage-smoke-addendum.md`、`architecture/harness-hub-testing-qa.md` に既反映であり、今回の変更は durable lifecycle state の同期だけである。`HarnessHub-stmx` と `HarnessHub-pf5o` は独立した残課題として open を維持する。

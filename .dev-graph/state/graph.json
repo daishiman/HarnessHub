@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1469,
+  "graph_revision": 1474,
   "nodes": [
     {
       "acceptance": [
@@ -8430,12 +8430,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P12 の runbook を踏まえ feat-hub-foundation の既存パイプラインで Cloudflare Workers 本番反映とスモークテストを行う P13 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-10T02:43:42Z",
+        "evidence_refs": [
+          "docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-10T02:43:42Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "a899e69eb999800a5869499783aad943cea65d394af3e3046fd6631532cf3a85",
@@ -8506,7 +8508,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-docs-cms",
         "studio-extension",
@@ -8518,7 +8520,7 @@
       "template_version": "1.0.0",
       "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T02:43:42Z"
     },
     {
       "acceptance": [
@@ -33480,23 +33482,27 @@
       "classification_confidence": 0.95,
       "classification_reason": "2026-07-25 の stash pop 中断で発生した .beads/interactions.jsonl コンフリクトの解消と、再発防止のための運用 runbook 整備を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-08T08:41:07Z",
+        "evidence_refs": [
+          "docs/beads-operations-runbook.md",
+          ".beads/README.md",
+          "docs/features/feat-dev-pipeline-improvement/su8y-beads-jsonl-reconciliation-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-10T02:43:42Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
-        "evaluated_digest": null,
-        "evaluator": null,
-        "evidence_ref": null
+        "evaluated_digest": "1935c7898ff6b6b3969a3c2aed5e82bc75150c4d6c9acfa85c13e31a4fce493f",
+        "evaluator": "2026-08-08 measured: interactions.jsonl 315 records parse OK, duplicate id 0, conflict marker 0, runbook and bd-bridge guidance present, doc-line gate PASS",
+        "evidence_ref": "docs/beads-operations-runbook.md"
       },
-      "confirmation_status": "draft",
+      "confirmation_status": "confirmed",
       "created_at": "2026-07-25T02:35:37Z",
       "depends_on": [],
       "domain": "dev-workflow",
-      "evaluation_status": "pending",
+      "evaluation_status": "pass",
       "execution_contexts": [],
       "feature_package_id": null,
       "file_path": "issues/sys-beads-jsonl-stash-conflict-20260725.md",
@@ -33554,7 +33560,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "closed",
       "tags": [
         "beads",
         "conflict-resolution",
@@ -33566,7 +33572,7 @@
       "template_version": "1.0.0",
       "title": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:59:23.146697Z"
+      "updated_at": "2026-08-10T02:43:42Z"
     },
     {
       "acceptance": [
@@ -47273,12 +47279,14 @@
       "classification_confidence": 0.92,
       "classification_reason": "goal-spec.json を入力に P13 の単一責務 (infrastructure) を実行する task",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-10T02:43:42Z",
+        "evidence_refs": [
+          "docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-10T02:43:42Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa",
@@ -47325,28 +47333,56 @@
       ],
       "resource_scope": [
         "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
+        "apps/hub/src/lib/routing/dashboard-scope.ts",
+        "apps/hub/src/lib/routing/signin-entry.ts",
+        "apps/hub/src/lib/routing/workspace-entry.ts",
+        "apps/hub/src/lib/routing/deny-navigation.ts",
+        "apps/hub/src/components/primary-nav.tsx",
+        "apps/hub/src/app/(dashboard)/layout.tsx",
+        "apps/hub/src/app/(workspace)/layout.tsx",
+        "apps/hub/src/app/page.tsx",
+        "apps/hub/src/app/signin/route.ts",
+        "apps/hub/src/app/signin/workspace/route.ts",
+        "apps/hub/scripts/check-dynamic-routes.mjs",
         "docs/features/feat-post-signin-scope-routing/release-record.md",
         "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
         "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "docs/features/feat-post-signin-scope-routing/release-completion-checklist.md",
         "system-spec/frontend.md",
         "system-spec/security.md",
         "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "architecture/harness-hub-frontend.md",
         "architecture/harness-hub-security.md",
         "features/feat-post-signin-scope-routing.md",
+        "features/feat-workspace-switch-ux.md",
+        "issues/hub-root-500-signin-20260808.md",
         "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
       ],
       "scope_in": [
         "apps/hub/src/__tests__/dual-catalog-web/catalog-hard-navigation-scope.test.ts",
+        "apps/hub/src/lib/routing/dashboard-scope.ts",
+        "apps/hub/src/lib/routing/signin-entry.ts",
+        "apps/hub/src/lib/routing/workspace-entry.ts",
+        "apps/hub/src/lib/routing/deny-navigation.ts",
+        "apps/hub/src/components/primary-nav.tsx",
+        "apps/hub/src/app/(dashboard)/layout.tsx",
+        "apps/hub/src/app/(workspace)/layout.tsx",
+        "apps/hub/src/app/page.tsx",
+        "apps/hub/src/app/signin/route.ts",
+        "apps/hub/src/app/signin/workspace/route.ts",
+        "apps/hub/scripts/check-dynamic-routes.mjs",
         "docs/features/feat-post-signin-scope-routing/release-record.md",
         "docs/features/feat-post-signin-scope-routing/spec-reflection-receipt.md",
         "docs/features/feat-post-signin-scope-routing/test-run-record.md",
+        "docs/features/feat-post-signin-scope-routing/release-completion-checklist.md",
         "system-spec/frontend.md",
         "system-spec/security.md",
         "specs/harness-hub-post-signin-workspace-scope-addendum.md",
         "architecture/harness-hub-frontend.md",
         "architecture/harness-hub-security.md",
         "features/feat-post-signin-scope-routing.md",
+        "features/feat-workspace-switch-ux.md",
+        "issues/hub-root-500-signin-20260808.md",
         "tasks/feat-post-signin-scope-routing/sys-post-signin-scope-p13.md"
       ],
       "scope_out": [
@@ -47363,7 +47399,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-post-signin-scope-routing",
         "macro-feature",
@@ -47375,7 +47411,7 @@
       "template_version": "1.1.0",
       "title": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T00:40:02Z"
+      "updated_at": "2026-08-10T02:43:42Z"
     },
     {
       "acceptance": [
@@ -51731,12 +51767,15 @@
       "classification_confidence": 0.95,
       "classification_reason": "3 つの P13 task に共通する根本原因 (smoke 未実装) を、各 feature package から分離して追跡する issue。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-10T02:43:42Z",
+        "evidence_refs": [
+          "docs/features/feat-post-signin-scope-routing/production-coverage-smoke-spec-reflection-receipt.md",
+          "docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-10T02:43:42Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "890fca92b19c4bec3739128692d6d1fe4742712767e972969fb6bd331598fa4d",
@@ -51815,7 +51854,7 @@
         "source_version": null
       },
       "start_date": "2026-08-08",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "ci",
         "smoke",
@@ -51828,7 +51867,7 @@
       "template_version": "1.0.0",
       "title": "本番 smoke の未カバー領域を塞ぐ (post-signin scope / Feedback / Docs CMS)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T09:52:24.683829Z"
+      "updated_at": "2026-08-10T02:43:42Z"
     },
     {
       "acceptance": [

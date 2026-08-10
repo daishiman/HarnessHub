@@ -128,3 +128,4 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 - OIDC smoke O5 は敵対的な外部 `returnTo` が遷移属性へ入らず、安全な既定 `/sheets` へ落ちることを本番 SSR 応答で検査する。
 - coverage smoke S1〜S8 は scope の欠落・衝突・越境・credential/scope 不足を HTTP status + error code で検査する。
 - main `35a10b87` / hub-ci run `31253674292` で OIDC O5 と coverage S1〜S8 が SUCCESS。provider-admin 越境の設計差は `HarnessHub-stmx` へ分離し、本 feature の production acceptance とは別に追跡する。
+- PR #681 / #682 の default-branch reconciliation を 2026-08-10 に確認し、`SYS-POST-SIGNIN-SCOPE-P13` の durable completion evidence を記録した。

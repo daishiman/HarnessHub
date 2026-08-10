@@ -72,3 +72,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
 - 2026-08-08 production smoke: main `35a10b87` / hub-ci run `31253674292` で F1〜F5 と cleanup 残存行 0 が SUCCESS。provider-admin 越境は edge 404 / 監査 0 のため、`HarnessHub-stmx` で edge/route 契約を統一するまで本 P13 は未完了。
+- 2026-08-10 reconciliation: PR #681 / #682 の main mergeは確認済みだが、`HarnessHub-stmx` は open のため durable done へ進めず in_progress を維持する。
