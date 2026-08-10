@@ -1,3 +1,12 @@
+---
+status: recorded
+layer: feature-design-review-followup
+feature_id: feat-dual-catalog-web
+beads_id: HarnessHub-h2pe
+graph_node_id: issue-dual-catalog-polling-terminal-visibility-20260810
+reviewed_at: "2026-08-10"
+---
+
 # design-review follow-up 解消記録 — HarnessHub-h2pe
 
 元の所見は [design-review-notes.md](./design-review-notes.md) §5.3 に発見時証跡として残す。本ファイルが現行判定の正本である。
