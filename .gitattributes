@@ -12,3 +12,11 @@
 # live-trial で利用者編集済み byte 列を証明する template copy は、末尾空行も
 # SHA-256 の対象になる。人手整形せず raw evidence を保持する。
 eval-log/**/live-trial/**/evidence/edited-template.md whitespace=-blank-at-eof
+
+# .beads/interactions.jsonl は bd (beads) が操作のたびに追記する append-only ログで、
+# 正本 (source of truth) は別にある Dolt DB。git stash pop や並行ブランチ間で頻繁に
+# コンフリクトしていたが、レコードは行単位で独立し重複行以外は常に「両方残してよい」
+# ため、git 組み込みの union merge driver (行単位の合併、カスタム driver 登録不要) で
+# 自動解決できる。docs/beads-operations-runbook.md #3 の手動解消手順は非対応ケース
+# (union では拾えない壊れた JSONL 等) のフォールバックとして残す。
+.beads/interactions.jsonl merge=union

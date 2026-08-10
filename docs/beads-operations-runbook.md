@@ -52,6 +52,10 @@ python3 plugins/dev-graph/scripts/bd-bridge.py --op close  --repo-root . --bd-is
 
 ## 3. `.beads/*.jsonl` のコンフリクト解消
 
+**2026-08-10 以降: 恒久対策済み。** `.gitattributes` に `.beads/interactions.jsonl merge=union` を追加した。これは git 組み込みの union（合併）マージ driver で、`.dev-graph/state/graph.json` の `merge=devgraph-json` と違いカスタムスクリプトの `--install` が不要（clone するだけで有効）。append-only なこのファイルの性質上、双方の追記行を両方残せばよいケースがほとんどのため、以下の手動手順は不要になり、`git stash pop` / `git merge` はマーカーなしで自動解決されるはず。
+
+以下の §3.1〜3.6 は、union merge では拾えない例外（解決結果の JSONL が壊れている、行の意味的な重複が紛れ込む等）が起きたときのフォールバック手順として残す。
+
 ### 3.1 発生源を特定する
 
 コンフリクトマーカーの文言で発生源が判別できる。**ここを取り違えると復旧手順ごと間違える**ため、最初に確認する。
