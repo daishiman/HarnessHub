@@ -5,6 +5,7 @@
  * 制約は `apps/hub/scripts/check-single-authz-middleware.mjs` が検査する。
  */
 
+export { CROSS_TENANT_ROLE, canCrossTenantBoundary, isCrossTenantAuditedPath } from './cross-tenant.js';
 export { type AuthzDecisionInput, decide, type RoleResolution, resolveEffectiveRole } from './decide.js';
 export {
   type AccessTokenPrincipalResolverDeps,

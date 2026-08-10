@@ -172,6 +172,66 @@ describe('ShellHeader', () => {
 
     expect(screen.getByText('ヒアリングシート')).toBeDefined();
   });
+
+  it('切替候補が無ければ Workspace は表示だけで、操作の存在を主張しない', () => {
+    renderWithUi(<ShellHeader {...headerProps} />);
+
+    expect(screen.queryByLabelText('ワークスペースを切り替える')).toBeNull();
+    expect(screen.getByText(headerProps.workspaceName)).toBeDefined();
+  });
+
+  it('切替候補があればヘッダーに切替 UI が常設される', async () => {
+    const user = userEvent.setup();
+    renderWithUi(
+      <ShellHeader
+        {...headerProps}
+        workspaceSwitchLabel="ワークスペースを切り替える"
+        workspaceOptions={[
+          { href: '/w/ws-1', label: 'ws-1', current: true },
+          { href: '/w/ws-2', label: 'ws-2', current: false },
+        ]}
+      />,
+    );
+
+    const summary = screen.getByLabelText('ワークスペースを切り替える');
+    const details = summary.closest('details');
+    expect(details?.open).toBe(false);
+
+    await user.click(summary);
+    expect(details?.open).toBe(true);
+    // 現在地は候補ではなく状態として示す
+    expect(screen.queryByRole('link', { name: 'ws-1' })).toBeNull();
+    expect(screen.getByText('ws-1').getAttribute('aria-current')).toBe('true');
+    expect(screen.getByRole('link', { name: 'ws-2' }).getAttribute('href')).toBe('/w/ws-2');
+  });
+
+  it('WorkspaceSwitcher は desktop-only に閉じず、モバイルでも同じ server-only UI を使う', () => {
+    const { container } = renderWithUi(
+      <ShellHeader
+        {...headerProps}
+        workspaceSwitchLabel="ワークスペースを切り替える"
+        workspaceOptions={[
+          { href: '/w/ws-1', label: 'ws-1', current: true },
+          { href: '/w/ws-2', label: 'ws-2', current: false },
+        ]}
+      />,
+    );
+
+    expect(container.querySelector('.hh-shell__desktop-only [data-hh-workspace-switcher]')).toBeNull();
+    expect(container.querySelector('[data-hh-workspace-switcher]')).not.toBeNull();
+  });
+
+  it('候補 1 件では切替 UI を出さない (選べない選択肢を見せない)', () => {
+    renderWithUi(
+      <ShellHeader
+        {...headerProps}
+        workspaceSwitchLabel="ワークスペースを切り替える"
+        workspaceOptions={[{ href: '/w/ws-1', label: 'ws-1', current: true }]}
+      />,
+    );
+
+    expect(screen.queryByLabelText('ワークスペースを切り替える')).toBeNull();
+  });
 });
 
 describe('ShellFooter', () => {
@@ -338,6 +398,19 @@ describe('シェルの axe 検査', () => {
   const scenarios: Array<[string, () => ReactNode]> = [
     ['ShellSidebar', () => <ShellSidebar items={navItems} currentHref="/sheets" label="主要ナビゲーション" />],
     ['ShellHeader', () => <ShellHeader {...headerProps} unreadCount={2} accountRoleLabel="管理者" />],
+    [
+      'ShellHeader + WorkspaceSwitcher',
+      () => (
+        <ShellHeader
+          {...headerProps}
+          workspaceSwitchLabel="ワークスペースを切り替える"
+          workspaceOptions={[
+            { href: '/w/ws-1', label: 'ws-1', current: true },
+            { href: '/w/ws-2', label: 'ws-2', current: false },
+          ]}
+        />
+      ),
+    ],
     ['ShellFooter', () => <ShellFooter label="フッター情報" links={[{ href: '/legal', label: '利用規約' }]} />],
     ['MobileTabBar', () => <MobileTabBar items={navItems} moreItems={[]} label="ボトムタブ" />],
     [

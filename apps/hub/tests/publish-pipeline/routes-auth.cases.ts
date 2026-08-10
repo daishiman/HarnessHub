@@ -126,7 +126,7 @@ describe('認可の入口: 業務へ入る前に落ちるもの', () => {
     expect(publish.requestRows().find((row) => row.id === 'req-a')?.status).toBe('ready');
   });
 
-  it('取消は session では行えない — Project owner でも Publisher Bearer が必要', async () => {
+  it('取消は Project owner の Web session で行える — Needs Fix を同じ要求へ再投入できる', async () => {
     publish.putRequest({ id: 'req-a', status: 'ready' });
 
     const request = await buildRequest('POST', '/publish/req-a/cancel', {
@@ -134,8 +134,22 @@ describe('認可の入口: 業務へ入る前に落ちるもの', () => {
     });
     const response = await cancelRoute(request, params({ id: 'req-a' }));
 
+    expect(response.status).toBe(200);
+    expect((await bodyOf(response)).status).toBe('draft');
+  });
+
+  it('Web session でも Project owner でなければ取消できない', async () => {
+    publish.putRequest({ id: 'req-a', status: 'needs_fix' });
+
+    const response = await cancelRoute(
+      await buildRequest('POST', '/publish/req-a/cancel', {
+        cookie: await sessionCookieFor(testUser(STRANGER_ID)),
+      }),
+      params({ id: 'req-a' }),
+    );
+
     expect(response.status).toBe(403);
-    expect(await bodyOf(response)).toEqual({ error: 'credential_not_allowed' });
+    expect(await bodyOf(response)).toEqual({ error: 'insufficient_role' });
   });
 
   it('取消は Project owner の Publisher Bearer で行える', async () => {

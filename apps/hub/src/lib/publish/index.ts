@@ -35,6 +35,7 @@ export type {
   PublishPayload,
   PublishPorts,
   PublishProjectAccess,
+  PublishProjectRecord,
   PublishRequestPort,
   PublishRequestRecord,
   PublishScope,
@@ -77,6 +78,7 @@ export { createPublishRuntime, type PublishRuntime, readPublishRuntimeEnv } from
 export {
   approvePublishRequest,
   cancelPublishRequest,
+  createPublishProject,
   createPublishRequest,
   getPublishRequest,
   listProjectReleases,

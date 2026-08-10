@@ -11,7 +11,15 @@
  * 「前回の access token をそのまま使い回す」経路は設計上存在しない。
  */
 import type { InspectionFile } from '@harness-hub/inspection';
-import type { PublishRequestView, PublishTarget, PublishVisibility } from '@harness-hub/schemas';
+import {
+  formatPublishFindings,
+  PUBLISH_NEEDS_FIX_HEADING,
+  PUBLISH_RESUBMIT_ACTION_LABEL,
+  type PublishRequestView,
+  type PublishTarget,
+  type PublishVisibility,
+  publishNeedsFixSummary,
+} from '@harness-hub/schemas';
 
 import { scopesForCommand } from '../auth/index.js';
 import { buildPackageArchive, collectPackageFiles, completePackageManifest } from '../core/index.js';
@@ -46,8 +54,14 @@ function formatLocalFindings(findings: ReturnType<typeof runLocalPreCheck>['find
   return findings.map((finding) => `- [${finding.ruleId}] ${finding.message}`).join('\n');
 }
 
+/**
+ * Hub 検査の findings。整形は `@harness-hub/schemas` の単一実装へ委ねる (受入 3)。
+ * ここで書式を持つと Web 経路と文面がずれ、同じ指摘が経路によって別物に見える。
+ */
 function formatHubFindings(findings: PublishRequestView['findings']): string {
-  return findings.map((finding) => `- [${finding.rule_id}] ${finding.message}`).join('\n');
+  return formatPublishFindings(findings)
+    .map((line) => `- ${line}`)
+    .join('\n');
 }
 
 export async function runPublishCommand(
@@ -96,7 +110,7 @@ export async function runPublishCommand(
   if (submitted.status === 'needs_fix') {
     return {
       ok: false,
-      reason: `Hub 検査で修正が必要と判定されました (verdict=${submitted.verdict}):\n${formatHubFindings(submitted.findings)}`,
+      reason: `${publishNeedsFixSummary(submitted.verdict)}\n${PUBLISH_NEEDS_FIX_HEADING}:\n${formatHubFindings(submitted.findings)}\n${PUBLISH_RESUBMIT_ACTION_LABEL}`,
     };
   }
   if (submitted.status !== 'published') {

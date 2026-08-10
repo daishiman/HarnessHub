@@ -12,6 +12,7 @@ export default async function WorkspaceLayout({ children }: { readonly children:
       scope={shell.scope}
       accountName={shell.accountName}
       accountRole={shell.role}
+      workspaceIds={shell.workspaceIds}
       currentHref={shell.currentHref}
     >
       {children}

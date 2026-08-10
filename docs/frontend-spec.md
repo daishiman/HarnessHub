@@ -83,7 +83,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | StageBoard (かんばん) / StageSegment (モバイル) | 自作 | 工程チップ+件数バッジ・risk 表示・DnD 不採用 (操作はメニュー。タッチ/キーボード同等性) | S13 |
 | MarkdownView / MarkdownEditor (textarea+プレビュー) | react-markdown + 自作 | XSS sanitize (SEC7)・プレビュータブ | S12/S14/S15 |
 | InlineEditTable | 自作 | 編集はモバイルでシートへ昇格 (§6.3) | S17/S04 |
-| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
+| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-only、client JS 0)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
 | DegradedBanner (縮退) / EmptyState / ErrorState | 自作 | 「導入済みツールはそのまま使えます」(qa-019)・平易な日本語+次の一手 (qa-018) | 全画面 |
 
 ### 2.3 SVG チャート契約
@@ -107,8 +107,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ### 3.0 共通シェル (feat-hub-foundation)
 
-- **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (ワークスペース表示・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
-- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは画面タイトル+検索アイコン+アバター。
+- **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
+- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-only UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
 ### 3.1 画面×API マップ (データ取得の正本)
@@ -145,7 +145,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列、モバイルは同じ情報をカードへ畳む。status filter・department filter・全文検索・cursor ページングを持つ。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。
 - **S12 ヒアリングシート詳細**: ヘッダに `display_code/status/title/applicant/department/created_at/AI 生成表示`、本文に「概要」「現在の課題」「推奨機能タグ」「想定削減効果」を表示し、元入力 snapshot・試算 snapshot・対応 Build/PublishRequest の参照を併記する。`received` の表示ラベルは mock の「下書き」でなく全画面共通の「受付」とする。admin の状態変更・再生成は右側メタ領域、member には非表示かつ API でも拒否。P2 有効後は AI 完了時に自動作成された対応 Build を「構築パイプラインへ」で表示し、P1 単独期間はこのボタンを表示しない。
 - **S12 PDF 出力**: 「PDF でダウンロード」は別データ生成を行わず、認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化して `window.print()` を呼ぶ (ブラウザの「PDF に保存」)。ボタン名は mock を維持する。salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test する。
-- **S01 公開ウィザード**: Step1 は CLI 取込を推奨し、Web 手動取込は ZIP 代替。Step2 は target (`skill/web_app`)、category、visibility (Stage 1 は workspace まで)、説明、Step3 は検査結果と公開確認。新規 Project 作成→PublishRequest 作成→package upload/submit を 1 UI フローに束ねるが、API の各 status は隠さない。Green は自動、Yellow は承認待ち、Needs Fix は S03 の findings へ移動する。単一テナント/単一 Project を定数にしない。
+- **S01 公開ウィザード**: skill ZIP のみ。Project 新規/既存 owner 指定→PublishRequest→upload/submit を 1 UI に束ね、全 status と要求 ID を隠さない。段階別 Idempotency-Key で再開し、Needs Fix は cancel で同一 request を Draft へ戻して再投入。`web_app` は CLI/S08 案内のみ。H7 未成立中は実導入リンクを成功終端にしない。詳細は [Web 公開実装メモ](features/feat-web-only-publish-journey/implementation-notes.md)。単一テナント/単一 Project を定数にしない。
 - **S13 パイプライン**: デスクトップ = 7 工程カラムの横並びボード (工程ヘッダに件数)。カード = title・HS/FR 参照・assignee・eta・risk チップ。admin 操作 = カードメニューから「前の工程へ/次の工程へ」(隣接遷移のみ = §5.3)+確認 Dialog。**DnD は採用しない** (タッチ/キーボード同等性と隣接制約の UI 強制のため。qa-035)。`publish` 工程への遷移は接続済み PublishRequest が `Published` でない場合エラー表示 (B4)。
 - **S14 改善要望・レビュー**: 上部に status 件数、一覧に FR コード/harness/type (`改善要望/レビュー依頼/バグ報告`)/priority/requester/date/status、詳細に本文と sanitize 済み AI 応答を表示する。Web 起票と CLI 起票は source chip だけが異なり、同じ一覧へ入る。AI 完了後に作成された修正版 Build への導線を表示し、S13→publish→更新通知まで追跡できる。
 - **S15 ドキュメント**: common + 自 tenant を 1 一覧へ合成し、category/scope/q で絞込。閲覧は sanitize 済み Markdown、admin 編集は textarea+preview、AI 下書きは受付番号/生成中/完了通知を共通パターンで表示する。member に編集 CTA を出さず、common 編集は provider-admin だけに出す。

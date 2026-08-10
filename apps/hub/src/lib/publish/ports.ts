@@ -47,8 +47,17 @@ export interface PublishProjectAccess {
   readonly ownerUserId: string;
 }
 
+export interface PublishProjectRecord extends PublishProjectAccess {
+  readonly name: string;
+  readonly description: string;
+}
+
 export interface ProjectAccessPort {
   findById(scope: PublishScope, id: string): Promise<PublishProjectAccess | null>;
+  create(
+    scope: PublishScope,
+    input: { readonly name: string; readonly description: string },
+  ): Promise<PublishProjectRecord>;
 }
 
 /**

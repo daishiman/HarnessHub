@@ -23,9 +23,16 @@ export interface ShellIdentity {
   readonly subject: string | null;
   /** session claim の役割。未確定なら null。 */
   readonly role: SessionRole | null;
+  /**
+   * 所属 Workspace の識別子一覧 (feat-workspace-switch-ux 受入 1・3)。
+   * シェルの切替 UI を出すかどうかは「所属が 2 件以上か」で決まるため、
+   * scope (現在値 1 件) だけでは判定できず、一覧そのものが要る。
+   * 未認証・検証失敗時は空配列 = 切替 UI なし (fail-closed)。
+   */
+  readonly workspaceIds: readonly string[];
 }
 
-const ANONYMOUS: ShellIdentity = { subject: null, role: null };
+const ANONYMOUS: ShellIdentity = { subject: null, role: null, workspaceIds: [] };
 
 /** 同一リクエスト内での cookie 読取・署名検証の重複を避けるため cache でラップする。 */
 export const resolveShellIdentity = cache(async (): Promise<ShellIdentity> => {
@@ -41,5 +48,5 @@ export const resolveShellIdentity = cache(async (): Promise<ShellIdentity> => {
   const { claims } = verification;
   if (claims.status !== 'active') return ANONYMOUS;
 
-  return { subject: claims.sub, role: claims.role };
+  return { subject: claims.sub, role: claims.role, workspaceIds: claims.workspace_ids };
 });

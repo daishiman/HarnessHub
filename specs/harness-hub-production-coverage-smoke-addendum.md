@@ -63,7 +63,7 @@ post-signin scope、Feedback Loop、Docs CMS の「単体テストはあるが�
 - coverage smoke: `smoke:coverage-production` で起動する横断スモークテスト。
 - primary tenant / other tenant: 1 run のためだけに作る 2 個のテナント。
 - session-only: ブラウザ session だけを許し、Bearer token を拒否する action。
-- provider-admin: テナント横断管理者。edge と route の契約差は `HarnessHub-stmx` で追跡する。
+- provider-admin: テナント横断管理者。`HarnessHub-stmx` 案(a)により、edgeは監査付きAPI routeへ越境要求を委譲し、routeが最終認可と監査を担う。
 
 ## ユースケースとユーザーフロー
 
@@ -116,7 +116,7 @@ Feedback は `feedback_response`、Docs は `doc_draft` の `ai_jobs` を共有 
 
 ## 可観測性
 
-成功時は status、origin、各 check の観測値、cleanup 残数を JSON で出す。provider-admin 越境は HTTP 404 に加え `provider.cross_tenant_access` 監査行数 0 を記録し、edge で停止した事実を route 到達と区別する。
+成功時は status、origin、各 check の観測値、cleanup 残数を JSON で出す。provider-admin 越境 S8 は HTTP 200/204 に加え、対象actor・tenant・workspace・requested actionに一致する `provider.cross_tenant_access` の実行前件数0、実行後件数1、増分1を記録する。総件数の `>= 1` だけでは過去行による偽陽性を防げないため、baselineとdeltaを必須にする。
 
 ## 互換性・移行・リリース
 
@@ -129,8 +129,8 @@ schema migration と新しい secret は不要。CI の既存 deploy job へ add
 - Hub / DB typecheck、3 feature package の task spec validator、repository 品質ゲートを再実行する。
 - production deploy 実走が無い状態では関連 P13 task を完了扱いにしない。
 
-## 未決事項
+## 残る本番検証
 
-- provider-admin 越境を edge で拒否するか route へ通して監査するかは `HarnessHub-stmx` で統一する。
+- provider-admin 越境はrouteへ通して監査する案(a)へ統一済み。ローカル実装・回帰テストは完了しているが、新SHAをdeployしたproduction smoke S8は未実施であり、成功証拠が得られるまで `HarnessHub-stmx` / `HarnessHub-1vb.13` は完了扱いにしない。
 - publish smoke の CI 結線は短命 owner token の発行・台帳・rotation 契約を別課題で確定する。
 - U1〜U9 source-index 欠落により system-spec foundation gate が既存 `main` でも失敗する問題は別課題で追跡する。

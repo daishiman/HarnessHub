@@ -104,9 +104,11 @@ apps/hub/src/app/api/v1/projects/**
 
 ## 14. Landing 時の論点収束 (2026-07-30)
 
-- §12-1 は `qa-059` と Q9 で収束した。`publish.cancel` と
-  `deployment.register` を Bearer/owner 専用 action とし、approve は
-  session/workspace-admin を維持する。古い `publish.reject` への委譲は採用しない。
+- §12-1 は `qa-059` と Q9、その後の Web Needs Fix 再投入で収束した。
+  `publish.cancel` は session/Bearer の双方で owner・scope `publish:write`・
+  tenant/workspace・resource ownership を同一に保つ。`deployment.register` は
+  Bearer/owner 専用、approve は session/workspace-admin を維持する。古い
+  `publish.reject` への委譲は採用しない。
 - §12-2 は `PUBLISH_AUDIT_ACTIONS.registerDeployment` として監査語彙へ追加し、
   deployment の成功・失敗を同じ記録経路へ載せた。
 - §12-3 は schema を変更せず `packages/db` の repository 公開入口だけを追加する

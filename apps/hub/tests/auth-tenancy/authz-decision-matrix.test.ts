@@ -121,7 +121,6 @@ const TOKEN_ONLY_ACTIONS = new Set([
   'aijob.complete',
   'aijob.fail',
   'metrics.ingest',
-  'publish.cancel',
   'deployment.register',
 ]);
 
@@ -294,7 +293,40 @@ describe('T-AUTHZ-03〜10: 拒否理由 (QC-2)', () => {
     ).toEqual({ allowed: true, effectiveRole: 'provider-admin' });
   });
 
-  it('T-AUTHZ-08 補2: 資格情報種別が違う action は credential_not_allowed', () => {
+  it('T-AUTHZ-08 補2: publish の作成・書込・取消は session/Bearer で同じ owner 境界を使う', () => {
+    const resource = resourceFor('owner');
+    for (const action of ['publish.request', 'publish.write', 'publish.cancel'] as const) {
+      expect(
+        decide({
+          action,
+          principal: principalFor('owner', { credential: 'session', scope: null }),
+          resource,
+          sessionRevoked: false,
+        }).allowed,
+        `${action} × session owner`,
+      ).toBe(true);
+      expect(
+        decide({
+          action,
+          principal: principalFor('owner', { credential: 'access_token', scope: ['publish:write'] }),
+          resource,
+          sessionRevoked: false,
+        }).allowed,
+        `${action} × token owner`,
+      ).toBe(true);
+      expect(
+        decide({
+          action,
+          principal: principalFor('member', { credential: 'access_token', scope: ['publish:write'] }),
+          resource: resourceFor('member'),
+          sessionRevoked: false,
+        }).allowed,
+        `${action} × non-owner`,
+      ).toBe(false);
+    }
+  });
+
+  it('T-AUTHZ-08 補3: 資格情報種別が違う action は credential_not_allowed', () => {
     expect(
       decide({
         action: 'metrics.ingest',

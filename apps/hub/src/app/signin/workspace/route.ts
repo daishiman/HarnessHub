@@ -19,6 +19,7 @@ import { ACTIVE_WORKSPACE_COOKIE_NAME, readCookie } from '../../../lib/auth/sess
 import {
   resolveWorkspaceEntry,
   WORKSPACE_QUERY_PARAM,
+  WORKSPACE_RETURN_TO_QUERY_PARAM,
   type WorkspaceEntryResolution,
 } from '../../../lib/routing/workspace-entry.js';
 
@@ -27,26 +28,44 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
-  const resolution = await resolveRequest(request, url.searchParams.get(WORKSPACE_QUERY_PARAM));
+  const resolution = await resolveRequest(
+    request,
+    url.searchParams.get(WORKSPACE_QUERY_PARAM),
+    url.searchParams.get(WORKSPACE_RETURN_TO_QUERY_PARAM),
+  );
 
-  // 303 にするのは `/signin` と同じ理由 (POST 由来で来ても GET で取り直させる。RFC 9110 §15.4.4)
-  const response = NextResponse.redirect(new URL(resolution.location, url.origin), 303);
-  response.headers.set('cache-control', 'no-store');
-
-  if (resolution.ok) {
-    // 認可上の正当性は毎要求 `resolveActiveWorkspaceId` が所属一覧に対して再検証するため署名は不要。
-    // それでも httpOnly にするのは、この値を script から読み書きさせる理由が無いため。
-    // 有効期間を session と同じにするのは、session が切れた後まで残しても意味が無いから。
-    response.cookies.set({
-      name: ACTIVE_WORKSPACE_COOKIE_NAME,
-      value: resolution.workspaceId,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: AUTH_NUMERIC_CONTRACT.sessionMaxAgeSeconds,
-    });
+  if (!resolution.ok) {
+    const response = NextResponse.redirect(new URL(resolution.location, url.origin), 303);
+    response.headers.set('cache-control', 'no-store');
+    return response;
   }
+
+  // redirect だけを返すと、ブラウザは最終画面が届くまで旧 scope の document を表示し続け得る。
+  // 先に scope 情報を一切持たない同一 origin の文書を commit させ、meta refresh で最終画面へ進める。
+  // これにより client JS 0 のまま「旧 scope を消す」→「新 scope を読む」の順序が HTTP 境界で固定される。
+  const response = new NextResponse(renderWorkspaceSwitchIntermediate(resolution.location), {
+    status: 200,
+    headers: {
+      'cache-control': 'no-store',
+      'content-type': 'text/html; charset=utf-8',
+      'content-security-policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+      'referrer-policy': 'no-referrer',
+      'x-content-type-options': 'nosniff',
+      'x-frame-options': 'DENY',
+    },
+  });
+
+  // 認可上の正当性は毎要求 `resolveActiveWorkspaceId` が所属一覧に対して再検証するため署名は不要。
+  // それでも httpOnly にするのは、この値を script から読み書きさせる理由が無いため。
+  response.cookies.set({
+    name: ACTIVE_WORKSPACE_COOKIE_NAME,
+    value: resolution.workspaceId,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: AUTH_NUMERIC_CONTRACT.sessionMaxAgeSeconds,
+  });
 
   return response;
 }
@@ -56,7 +75,11 @@ export async function GET(request: Request): Promise<NextResponse> {
  * 検証できない session ではランディングへ戻すだけにして cookie を書かない
  * (未認証の要求で cookie を焼けると、後からサインインした別人の session に他人の選択が乗る)。
  */
-async function resolveRequest(request: Request, raw: string | null): Promise<WorkspaceEntryResolution> {
+async function resolveRequest(
+  request: Request,
+  raw: string | null,
+  returnTo: string | null,
+): Promise<WorkspaceEntryResolution> {
   const sessionSecret = process.env.AUTH_SESSION_SECRET;
   if (sessionSecret === undefined || sessionSecret.length === 0) return { ok: false as const, location: '/' };
 
@@ -67,5 +90,34 @@ async function resolveRequest(request: Request, raw: string | null): Promise<Wor
   // 無効化された利用者の session は署名が正しくても主体として扱わない (dashboard-scope.ts と同じ基準)
   if (!verification.ok || verification.claims.status !== 'active') return { ok: false as const, location: '/' };
 
-  return resolveWorkspaceEntry(raw, verification.claims.workspace_ids);
+  return resolveWorkspaceEntry(raw, verification.claims.workspace_ids, returnTo);
+}
+
+function renderWorkspaceSwitchIntermediate(location: string): string {
+  const safeLocation = escapeHtmlAttribute(location);
+  return `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="refresh" content="0;url=${safeLocation}">
+  <title>Workspace を切り替えています | Harness Hub</title>
+</head>
+<body data-hh-workspace-switch-intermediate="">
+  <main>
+    <h1>Workspace を切り替えています</h1>
+    <p>新しい Workspace の画面を安全に読み込んでいます。</p>
+    <p><a href="${safeLocation}">自動で進まない場合は続行してください</a></p>
+  </main>
+</body>
+</html>`;
+}
+
+function escapeHtmlAttribute(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
 }

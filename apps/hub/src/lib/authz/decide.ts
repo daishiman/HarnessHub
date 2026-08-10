@@ -6,6 +6,7 @@
  * 「どの分岐でどのクエリが飛ぶか」が判定表と絡んで読めなくなる。
  */
 
+import { CROSS_TENANT_ROLE, canCrossTenantBoundary } from './cross-tenant.js';
 import { findActionRule } from './rules.js';
 import { type AuthzOutcome, type AuthzPrincipal, type AuthzResourceRef, atLeast, type EffectiveRole } from './types.js';
 
@@ -32,8 +33,11 @@ export function resolveEffectiveRole(principal: AuthzPrincipal, resource: AuthzR
   // 越境を全面禁止すると IdP 設定登録・AiJob pull・顧客サポートが成立しない。
   // 代わりに越境は必ず監査へ落ちる (`withAuthz` が呼び出し側の善意に依存せず記録する)。
   // Workspace 所属も問わない — provider-admin はテナントの外側に立つ主体だから
-  if (principal.role === 'provider-admin') {
-    return { ok: true, role: 'provider-admin' };
+  //
+  // 判定語彙は `cross-tenant.ts` に一本化してある。edge middleware も同じ述語を呼ぶ
+  // ことで、「route は許可・edge は 404」の二枚舌 (HarnessHub-stmx) を構造的に防ぐ。
+  if (canCrossTenantBoundary([principal.role])) {
+    return { ok: true, role: CROSS_TENANT_ROLE };
   }
 
   if (principal.tenantId !== resource.tenantId) {

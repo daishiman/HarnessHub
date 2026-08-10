@@ -100,7 +100,7 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 | `POST /api/v1/publish/:id/submit` | session or Bearer / owner | Draft→Validating。検査 pipeline を Worker 内同期実行 (skills-only 小サイズ前提) し結果を DB 記録。同一 TargetChannel に別の非終端 request があれば 409 `channel_busy` |
 | `GET /api/v1/publish/:id` | Bearer or session | 状態 polling (Publisher/Hub Web 共用, qa-009) |
 | `POST /api/v1/publish/:id/approve` | session / workspace-admin | Yellow 承認 (Stage 2 approval queue)。監査 event |
-| `POST /api/v1/publish/:id/cancel` | Bearer / owner | 非終端のみ→Draft 差戻し |
+| `POST /api/v1/publish/:id/cancel` | session or Bearer / owner | 非終端のみ→Draft 差戻し。session は Origin/CSRF 必須。Web の Needs Fix 再投入と CLI の取消が同じ owner・tenant/workspace 境界を使う |
 | `GET /api/v1/projects/:id/releases` | member | Release 履歴 (immutable 一覧) |
 | `POST /api/v1/channels/:id/promote` | owner | stable pointer 昇格。監査 event |
 | `POST /api/v1/channels/:id/rollback` | owner | 2 版目以降のみ rollback 先検査 (§7.2)。監査 event |

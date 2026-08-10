@@ -6,7 +6,13 @@
  * ポーリングの**間隔と停止条件は `lib/catalog/polling.ts` の純関数が唯一の出所**。
  * ここには数値を書かない — 書くと条件が 2 箇所に散り、片方だけ直した退行が起きる。
  */
-import type { PublishRequestState, PublishRequestView } from '@harness-hub/schemas';
+import {
+  formatPublishFinding,
+  PUBLISH_NEEDS_FIX_HEADING,
+  type PublishRequestState,
+  type PublishRequestView,
+  publishNeedsFixSummary,
+} from '@harness-hub/schemas';
 import { Alert, Button, StatusChip } from '@harness-hub/ui';
 import { useCallback, useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
@@ -134,12 +140,14 @@ export function CatalogPublishStatus({
 
       {request !== null && request.findings.length > 0 ? (
         <section aria-labelledby="catalog-publish-findings-heading">
-          <h4 id="catalog-publish-findings-heading">修正が必要な内容</h4>
+          <h4 id="catalog-publish-findings-heading">{PUBLISH_NEEDS_FIX_HEADING}</h4>
+          {/* 説明と 1 行の書式は CLI 経路と同じ実装から取る (受入 3)。ここで文面を作らない */}
+          <p>{publishNeedsFixSummary(request.verdict)}</p>
           <ul>
             {/* 位置ではなく内容でキーを作る。並び替えや途中挿入があっても同じ指摘が同じ行に留まる */}
             {request.findings.map((finding) => (
               <li key={`${finding.stage}-${finding.rule_id}-${finding.path ?? ''}-${finding.line ?? ''}`}>
-                {finding.message}
+                {formatPublishFinding(finding)}
               </li>
             ))}
           </ul>

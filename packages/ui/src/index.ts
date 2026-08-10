@@ -131,6 +131,8 @@ export { ShellSidebar } from './shell/ShellSidebar.js';
 export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
 export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
+export type { ShellWorkspaceOption, WorkspaceSwitcherProps } from './shell/WorkspaceSwitcher.js';
+export { WorkspaceSwitcher } from './shell/WorkspaceSwitcher.js';
 export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
 // --- テーマ・表示密度・言語 ----------------------------------------------
 export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';

@@ -92,12 +92,18 @@ export interface HearingSmokeDbProbe {
     readonly workspaceId: string;
   }): Promise<boolean>;
   /**
-   * 対象 tenant に残った `provider.cross_tenant_access` 監査の件数。
+   * 対象 tenant / workspace / actor / requested action に一致する、許可済み
+   * `provider.cross_tenant_access` 監査の件数。
    *
-   * 越境要求が edge で落ちたのか route 層まで到達したのかは、HTTP status だけでは区別できない
-   * (どちらも越境は拒否されうる)。監査行の有無が到達点の唯一の観測手段になる (HarnessHub-p0lr)。
+   * 総件数だけでは過去runの行を今回の証拠と誤認できる。S8はこの絞り込みで実行前後を数え、
+   * 1要求につきdelta=1を要求する。HTTP statusだけではedge通過と監査永続化を同時に証明できない。
    */
-  countCrossTenantAuditEvents(tenantId: string): Promise<number>;
+  countCrossTenantAuditEvents(input: {
+    readonly tenantId: string;
+    readonly actorId: string;
+    readonly workspaceId: string;
+    readonly requestedAction: string;
+  }): Promise<number>;
   findSheet(context: RepositoryContext, sheetId: string): Promise<HearingSmokeSheetSnapshot | null>;
   findJob(context: RepositoryContext, jobId: string): Promise<HearingSmokeJobSnapshot | null>;
   /** 本 smoke が本番へ残した行を全て消す。残数を返し、0 でなければ呼び出し側が失敗にする。 */
@@ -233,12 +239,27 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
       return updated[0] !== undefined;
     },
 
-    async countCrossTenantAuditEvents(tenantId) {
+    async countCrossTenantAuditEvents(input) {
       const rows = await db
-        .select({ id: auditEvents.id })
+        .select({ id: auditEvents.id, summaryJson: auditEvents.summaryJson })
         .from(auditEvents)
-        .where(and(eq(auditEvents.tenantId, tenantId), eq(auditEvents.action, 'provider.cross_tenant_access')));
-      return rows.length;
+        .where(
+          and(
+            eq(auditEvents.tenantId, input.tenantId),
+            eq(auditEvents.workspaceId, input.workspaceId),
+            eq(auditEvents.actorId, input.actorId),
+            eq(auditEvents.action, 'provider.cross_tenant_access'),
+          ),
+        );
+      return rows.filter((row) => {
+        try {
+          const summary = JSON.parse(row.summaryJson) as Record<string, unknown>;
+          return summary.requested_action === input.requestedAction && summary.allowed === true;
+        } catch {
+          // 壊れた summary を「条件に合う監査」として数えない。smoke 側の delta=1 が失敗して可視化する。
+          return false;
+        }
+      }).length;
     },
 
     async findSheet(context, sheetId) {

@@ -9,6 +9,7 @@
  */
 
 import type { DenyReason } from '../../middleware/index.js';
+import { workspaceRecoveryNotice } from './workspace-recovery.js';
 
 /**
  * ブラウザの画面遷移とみなせる要求か。
@@ -34,7 +35,14 @@ interface DenyNotice {
   readonly description: string;
   /** 復帰先へのリンクを出すか。存在秘匿のため出さない方がよい場合は false。 */
   readonly backToTop: boolean;
+  /** 復帰リンクの文言。省略時は汎用の「トップページへ戻る」。 */
+  readonly actionLabel?: string;
 }
+
+// scope 未解決の文言は RSC 側の ScopeUnresolvedScreen と同一の正本を使う (受入 5)。
+// 同じ状態が層ごとに別の説明になると、利用者は画面が変わるたびに読み直すことになる。
+const unresolved = workspaceRecoveryNotice('unresolved');
+const conflicting = workspaceRecoveryNotice('conflicting');
 
 /**
  * 拒否理由ごとの案内文。
@@ -49,16 +57,16 @@ const NOTICES: Readonly<Record<DenyReason, DenyNotice>> = {
     backToTop: true,
   },
   missing_tenant_scope: {
-    title: '作業する Workspace が決まっていません',
-    description:
-      '複数の Workspace に所属している場合、どの Workspace で作業するかを先に選ぶ必要があります。トップページで選び直してください。',
+    title: unresolved.title,
+    description: unresolved.description,
     backToTop: true,
+    actionLabel: unresolved.actionLabel,
   },
   ambiguous_scope: {
-    title: '対象の指定が食い違っています',
-    description:
-      'URL で指定された対象と、この端末に記憶されている Workspace が一致しません。トップページからやり直してください。',
+    title: conflicting.title,
+    description: conflicting.description,
     backToTop: true,
+    actionLabel: conflicting.actionLabel,
   },
   workspace_not_member: {
     title: 'この Workspace を開く権限がありません',
@@ -82,7 +90,7 @@ const NOTICES: Readonly<Record<DenyReason, DenyNotice>> = {
  */
 export function renderDenyNavigationPage(reason: DenyReason): string {
   const notice = NOTICES[reason];
-  const back = notice.backToTop ? '<p><a href="/">トップページへ戻る</a></p>' : '';
+  const back = notice.backToTop ? `<p><a href="/">${notice.actionLabel ?? 'トップページへ戻る'}</a></p>` : '';
   return [
     '<!DOCTYPE html>',
     '<html lang="ja">',

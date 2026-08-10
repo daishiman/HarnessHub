@@ -15,6 +15,7 @@ import type {
   DeploymentRecord,
   PublishPorts,
   PublishProjectAccess,
+  PublishProjectRecord,
   PublishRequestRecord,
   PublishScope,
   ReleaseRecord,
@@ -125,6 +126,18 @@ export function createPublishHarness(options: HarnessOptions = {}): PublishHarne
     projects: {
       async findById(portScope, id) {
         return projects.find((row) => row.tenantId === portScope.tenantId && row.id === id) ?? null;
+      },
+      async create(portScope, input) {
+        const record: PublishProjectRecord = {
+          id: nextId('proj'),
+          tenantId: portScope.tenantId,
+          workspaceId: portScope.workspaceId ?? 'ws-1',
+          ownerUserId: portScope.actorId,
+          name: input.name,
+          description: input.description,
+        };
+        projects.push(record);
+        return record;
       },
     },
 

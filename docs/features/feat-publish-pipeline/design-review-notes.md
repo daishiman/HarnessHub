@@ -61,6 +61,8 @@ P02 は「規則表を正本とする」と判断したうえで差分を P03 �
 
 **引き継ぎ**: `publish.reject` を「他者の request を却下する管理者操作」、cancel を「自分の request を取り下げる操作」として別 action に分けるのが筋である。本 feature は規則表の owner ではないため、feat-auth-tenancy への cross-feature 変更要求として起票する。P05 では**規則表の現状 (`publish.reject`) に従って実装**し、非対称が残る事実を quality-assurance-report (P09) に記録する。
 
+> **後続解消 (2026-08-10 / feat-web-only-publish-journey)**: 提案どおり cancel を独立 action `publish.cancel` とし、session/Bearer の双方を owner・scope `publish:write`・tenant/workspace・resource ownership の同一境界で許可した。これにより Web の Needs Fix 再投入と CLI の取消を同じ状態機械 (`needs_fix → cancel → draft`) へ収束させた。上記はレビュー時点の履歴として保持する。
+
 ### 1.3 AD-3 (検査 pipeline owner 分割) の 3 系統証跡の妥当性 — pass
 
 | 系統 | P02 の主張 | レビュー時の実測 | 判定 |

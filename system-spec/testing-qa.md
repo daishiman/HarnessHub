@@ -36,17 +36,17 @@ serves_goals: [G1, G4, G5]
 
 【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
 
 【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 
 【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
 
-【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。
+【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため、追跡課題を完了するまで手動 runner のままとする。
 
-【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。
+【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
 
-【実装後の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。これにより【5】の「実走証拠」条件は充足済み。P13 close は default-branch reconciliation と `HarnessHub-stmx` の契約状態に従う。
+【旧契約の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。ただし当該 S8 は edge 404・監査0という修正前挙動の診断であり、stmx 案(a)の本番成功証拠ではない。案(a)はローカル実装済み・新SHAの本番未検証である。
 
 ===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====
 【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?
@@ -182,17 +182,17 @@ serves_goals: [G1, G4, G5]
 
 【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の edge 実挙動を検査する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
 
 【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 
 【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。
 
-【5. 未確定境界】provider-admin 越境は edge 404・監査行 0 と route 層契約が不一致なため、本 smoke は現行挙動を診断として固定し、設計統一を別 Beads 課題 HarnessHub-stmx で追跡する。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため本変更では CI 結線せず、追跡課題を完了するまで手動 runner のままとする。実 production deploy の実走証拠が無い限り、関連 P13 task を完了扱いにしない。
+【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は新規 PUBLISH_ACCESS_TOKEN と権限台帳更新が必要なため、追跡課題を完了するまで手動 runner のままとする。
 
-【6. 製品境界】外部 API、DB schema、認証認可の製品判断、UI、Cloudflare deploy unit は変更しない。変更は既存契約を本番で観測する品質ゲート、使い捨て試験データの cleanup、CI rollback 判断への証拠追加に限定する。
+【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。
 
-【実装後の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。これにより【5】の「実走証拠」条件は充足済み。P13 close は default-branch reconciliation と `HarnessHub-stmx` の契約状態に従う。
+【旧契約の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。ただし当該 S8 は edge 404・監査0という修正前挙動の診断であり、stmx 案(a)の本番成功証拠ではない。案(a)はローカル実装済み・新SHAの本番未検証である。
 
 ===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====
 【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?

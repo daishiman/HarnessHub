@@ -14,6 +14,7 @@ import {
   ShellFooter,
   ShellHeader,
   ShellSidebar,
+  WorkspaceSwitcher,
 } from '@harness-hub/ui';
 
 import type { CatalogEntry } from './entries.js';
@@ -40,6 +41,23 @@ export const shellCatalogEntries: readonly CatalogEntry[] = [
           items={shellNavItems}
         />
       </div>
+    ),
+  },
+  {
+    name: 'WorkspaceSwitcher',
+    group: 'navigation',
+    // 切替 UI は「候補が 2 件以上あるとき」しか現れないため、見本もその状態を写す。
+    // 1 件以下の見え方 (現在値の表示だけ) は ShellHeader 側の見本が兼ねている。
+    render: () => (
+      <WorkspaceSwitcher
+        label="ワークスペース"
+        currentName="営業ワークスペース"
+        switchLabel="ワークスペースを切り替える"
+        options={[
+          { href: '/w/sales', label: '営業ワークスペース', current: true },
+          { href: '/w/cs', label: 'カスタマーサクセス', current: false },
+        ]}
+      />
     ),
   },
   {
