@@ -13,6 +13,7 @@ import type { AuditLogger } from '../../shared/audit/index.js';
 import { isTrustedOrigin } from '../auth/config.js';
 import { type CwvProbeConfig, isCwvProbeRequestAllowed } from '../auth/cwv-probe.js';
 import type { AuthPorts } from '../auth/ports.js';
+import { canCrossTenantBoundary } from './cross-tenant.js';
 import { decide } from './decide.js';
 import { resolveRequestPrincipal } from './principal.js';
 import type { RevocationChecker } from './revocation.js';
@@ -151,7 +152,8 @@ export function withAuthz<TParams = Record<string, never>>(
 
     const outcome = decide({ action: options.action, principal, resource, sessionRevoked });
 
-    if (principal.role === 'provider-admin' && principal.tenantId !== resource.tenantId) {
+    // 越境判定は `cross-tenant.ts` の述語が唯一の正本。edge middleware も同じものを見る
+    if (canCrossTenantBoundary([principal.role]) && principal.tenantId !== resource.tenantId) {
       await deps.audit.record({
         actorSubject: principal.userId,
         // 顧客側の workspace-admin が「自テナントへの越境」を監査できるよう、

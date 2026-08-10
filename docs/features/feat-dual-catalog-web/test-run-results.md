@@ -147,3 +147,15 @@ node scripts/ci/check-shared-layer-duplicates.mjs
 pnpm --filter @harness-hub/hub run build
 pnpm --filter @harness-hub/hub run check:client-bundle
 ```
+
+## 7. 2026-08-10 follow-up（HarnessHub-h2pe）
+
+発見時の P06 結果（DC-POLL-01..11）は当時の証跡として保持する。その後、終端失敗と visibility
+lifecycle の不足を是正し、現行契約は次のとおり再検証した。
+
+| ファイル | ケース | 件数 | 結果 |
+|---|---|---:|---|
+| `polling-contract.test.ts` | DC-POLL-01..14 | 14 | pass |
+| `polling-lifecycle.test.tsx` | DC-POLL-LC-01..06 + 03B | 9 | pass |
+
+後者は hidden 中に request が増えないことを明示的に検査し、degraded では再試行する陽性対照も含む。

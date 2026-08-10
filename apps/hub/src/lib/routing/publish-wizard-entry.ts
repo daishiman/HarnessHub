@@ -1,0 +1,16 @@
+/**
+ * S01 公開ウィザードの入口 (feat-web-only-publish-journey 受入 1・4)。
+ *
+ * 飛び先を定数にするのは、S01 へ送る画面が複数あるため —— 業務ツール一覧 (`/catalog`) と、
+ * CLI を持たない利用者が迷い込む `/device` の両方から同じ場所へ送る必要がある。
+ * path を各画面に書くと片方だけ直したときに一方が 404 になり、行き止まりを塞ぐはずの
+ * 導線そのものが行き止まりになる。
+ *
+ * scope の query を付けないのは、`/device` が Workspace 未確定でも案内する画面だから。
+ * 到着後の scope 解決は `resolveDashboardScope` が cookie から行う (規則の出所は 1 つ)。
+ */
+
+export const PUBLISH_WIZARD_HREF = '/catalog/publish';
+
+/** 導線のリンク文言。「ウィザード」という内部語ではなく、利用者の目的で書く。 */
+export const PUBLISH_WIZARD_LINK_LABEL = 'Web だけでツールを公開する';

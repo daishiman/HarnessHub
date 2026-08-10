@@ -159,7 +159,7 @@ CWV の計測経路は `.github/workflows/cwv.yml` (週次 Lighthouse) に存在
 | 区分 | 項目 | P09 での担保 |
 |---|---|---|
 | scope_in | dual catalog 閲覧 UI (レスポンシブ) | §1.2 (Port 迂回なし) / §4 (axe 0・DC-RESP-01)。**I4 の低品質報告導線は未実装** — P10 §4.3 で指摘・follow-up 化 |
-| scope_in | publish 状況表示 (ポーリング) | §2.1 (縮退分類) / DC-POLL-01..11 (P06) |
+| scope_in | publish 状況表示 (ポーリング) | §2.1 (縮退分類) / DC-POLL-01..14 / DC-POLL-LC-01..06 + 03B |
 | scope_in | marketplace.json 出力 + 採用配布経路連携 | §1.1 (テナント跨ぎ補完なし) / §2.2 (SWR による配信継続) |
 | scope_in | axe 自動チェック CI | §4 (違反 0 + ゲート存在 + 検査の実効性) |
 | scope_in | CWV 計測 (LCP/INP/CLS) | §3 (SLO 未反映を確認) / §4 (未計測を good としない) |

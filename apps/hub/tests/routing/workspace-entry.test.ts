@@ -18,6 +18,7 @@ import { DEFAULT_POST_SIGNIN_LANDING } from '../../src/lib/routing/post-signin-l
 import {
   resolveWorkspaceEntry,
   WORKSPACE_ENTRY_PATH,
+  WORKSPACE_RETURN_TO_QUERY_PARAM,
   workspaceEntryPath,
 } from '../../src/lib/routing/workspace-entry.js';
 import { isPublicPath } from '../../src/middleware/authz.js';
@@ -61,6 +62,19 @@ describe('選択値の受理', () => {
     expect(resolution).toEqual({ ok: true, workspaceId: 'ws-2', location: DEFAULT_POST_SIGNIN_LANDING });
   });
 
+  it('安全な returnTo は切替後の着地先として維持し、外部 URL は既定着地へ落とす', () => {
+    expect(resolveWorkspaceEntry('ws-2', ['ws-1', 'ws-2'], '/catalog/releases')).toEqual({
+      ok: true,
+      workspaceId: 'ws-2',
+      location: '/catalog/releases',
+    });
+    expect(resolveWorkspaceEntry('ws-2', ['ws-1', 'ws-2'], 'https://evil.example/phish')).toEqual({
+      ok: true,
+      workspaceId: 'ws-2',
+      location: DEFAULT_POST_SIGNIN_LANDING,
+    });
+  });
+
   it.each([
     ['所属外', 'ws-9'],
     ['未指定', null],
@@ -76,21 +90,53 @@ describe('選択値の受理', () => {
   it('リンクの workspace ID は encode する', () => {
     expect(workspaceEntryPath('ws/1?a=b')).toBe(`${WORKSPACE_ENTRY_PATH}?workspace=ws%2F1%3Fa%3Db`);
   });
+
+  it('リンクの returnTo も encode し、危険な戻り先を組み立て時点で既定着地へ畳む', () => {
+    expect(workspaceEntryPath('ws-2', '/catalog/releases')).toBe(
+      `${WORKSPACE_ENTRY_PATH}?workspace=ws-2&${WORKSPACE_RETURN_TO_QUERY_PARAM}=%2Fcatalog%2Freleases`,
+    );
+    expect(workspaceEntryPath('ws-2', '//evil.example')).toBe(
+      `${WORKSPACE_ENTRY_PATH}?workspace=ws-2&${WORKSPACE_RETURN_TO_QUERY_PARAM}=%2Fsheets`,
+    );
+  });
 });
 
 describe(`GET ${WORKSPACE_ENTRY_PATH}`, () => {
-  it('所属する workspace を選ぶと cookie を書いて既定着地へ 303 する', async () => {
-    const response = await GET(request('?workspace=ws-2', await sessionCookie()));
+  it('所属する workspace を選ぶと、cookie を書いて旧 scope を含まない中間文書を先に返す', async () => {
+    const cookie = `${await sessionCookie()}; ${ACTIVE_WORKSPACE_COOKIE_NAME}=old-workspace-secret`;
+    const response = await GET(request('?workspace=ws-2&returnTo=%2Fcatalog%2Freleases', cookie));
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get('location')).toBe(`https://hub.example.com${DEFAULT_POST_SIGNIN_LANDING}`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
     expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(response.headers.get('content-security-policy')).toContain("default-src 'none'");
+
+    const html = await response.text();
+    expect(html).toContain('data-hh-workspace-switch-intermediate');
+    expect(html).toContain('http-equiv="refresh"');
+    expect(html).toContain('content="0;url=/catalog/releases"');
+    expect(html).toContain('href="/catalog/releases"');
+    // 最終の新 scope 画面より先に commit される文書へ、旧 scope の識別子や業務本文を持ち込まない。
+    expect(html).not.toContain('old-workspace-secret');
+    expect(html).not.toContain('ws-2');
 
     const setCookie = response.headers.get('set-cookie') ?? '';
     expect(setCookie).toContain(`${ACTIVE_WORKSPACE_COOKIE_NAME}=ws-2`);
     expect(setCookie).toContain('HttpOnly');
     expect(setCookie).toContain('Secure');
     expect(setCookie).toContain('Path=/');
+  });
+
+  it('returnTo が外部 URL でも中間文書の遷移先は既定着地で、HTML 属性へ注入されない', async () => {
+    const response = await GET(
+      request('?workspace=ws-2&returnTo=https%3A%2F%2Fevil.example%2F%22%3E%3Cscript%3E', await sessionCookie()),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain('content="0;url=/sheets"');
+    expect(html).not.toContain('evil.example');
+    expect(html).not.toContain('<script>');
   });
 
   it('所属外の workspace は cookie を書かずランディングへ戻す', async () => {

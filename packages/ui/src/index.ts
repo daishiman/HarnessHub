@@ -131,6 +131,8 @@ export { ShellSidebar } from './shell/ShellSidebar.js';
 export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
 export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
+export type { ShellWorkspaceOption, WorkspaceSwitcherProps } from './shell/WorkspaceSwitcher.js';
+export { WorkspaceSwitcher } from './shell/WorkspaceSwitcher.js';
 export type { UiContextValue, UiPreferences, UiProviderProps } from './theme/UiProvider.js';
 // --- テーマ・表示密度・言語 ----------------------------------------------
 export { defaultUiPreferences, UiProvider, useUi, useUiText } from './theme/UiProvider.js';
@@ -145,6 +147,9 @@ export {
   parseHexColor,
   relativeLuminance,
 } from './tokens/contrast.js';
+// 本番が読む静的 stylesheet (tokens.css) と同じ全文。視覚回帰ハーネスなど
+// 「出荷される CSS そのもの」を評価したい経路が使う (HarnessHub-2fo1)
+export { buildTokenCssArtifact, TOKEN_CSS_BANNER } from './tokens/css-artifact.js';
 export { focusRingDeclarations, focusRingRule } from './tokens/focus-ring.js';
 export type {
   BreakpointName,

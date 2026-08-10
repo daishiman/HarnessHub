@@ -29,6 +29,7 @@ export { POST as promoteRoute } from '../../../src/app/api/v1/channels/[id]/prom
 export { POST as rollbackRoute } from '../../../src/app/api/v1/channels/[id]/rollback/route.js';
 export { POST as deploymentRoute } from '../../../src/app/api/v1/projects/[id]/deployment/route.js';
 export { GET as projectReleasesRoute } from '../../../src/app/api/v1/projects/[id]/releases/route.js';
+export { POST as projectCreateRoute } from '../../../src/app/api/v1/projects/route.js';
 export { POST as approveRoute } from '../../../src/app/api/v1/publish/[id]/approve/route.js';
 export { POST as cancelRoute } from '../../../src/app/api/v1/publish/[id]/cancel/route.js';
 export { PUT as packageRoute } from '../../../src/app/api/v1/publish/[id]/package/route.js';

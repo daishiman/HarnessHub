@@ -15,7 +15,7 @@ import type { PublishRequestState, PublishTarget, PublishVisibility } from '@har
 
 import { PUBLISH_AUDIT_ACTIONS, PUBLISH_AUDIT_ENTITIES } from './audit.js';
 import { inspectPackageArchive } from './package-inspection.js';
-import type { PublishRequestRecord, PublishScope, ReleaseRecord } from './ports.js';
+import type { PublishProjectRecord, PublishRequestRecord, PublishScope, ReleaseRecord } from './ports.js';
 import {
   publishFail as fail,
   publishOk as ok,
@@ -51,6 +51,21 @@ export interface CreatePublishRequestInput {
   readonly projectId: string;
   readonly target: PublishTarget;
   readonly visibility: PublishVisibility;
+}
+
+/** Web S01 が現在の scope 内へ Project を作る唯一の業務入口。 */
+export async function createPublishProject(
+  deps: PublishServiceDeps,
+  scope: PublishScope,
+  input: { readonly name: string; readonly description: string },
+): Promise<PublishOutcome<PublishProjectRecord>> {
+  if (scope.workspaceId === undefined) return fail('workspace_required');
+  const project = await deps.ports.projects.create(scope, input);
+  await recordAudit(deps, scope, PUBLISH_AUDIT_ACTIONS.projectCreate, PUBLISH_AUDIT_ENTITIES.project, project.id, {
+    project_id: project.id,
+    workspace_id: project.workspaceId,
+  });
+  return ok(project);
 }
 
 /**

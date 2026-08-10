@@ -159,8 +159,9 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 - Draft PublishRequest は編集待ちとして複数作成でき、channel の占有は
   `POST /publish/:id/submit` の `Draft→Validating` で開始する。同一 TargetChannel の別 request が
   非終端なら submit を 409 `channel_busy` で拒否し、後続 Draft と旧 stable を維持する。
-- 本番 smoke でこの二段境界を実測し、owner Bearer の cancel/deployment、cross-tenant 拒否、
-  session/Bearer parity をリリース証跡へ固定する。
+- 本番 smoke でこの二段境界を実測し、cancel は session/Bearer の双方で同じ owner・
+  tenant/workspace・resource ownership、deployment は owner Bearer、cross-tenant は拒否、
+  invalid Bearer は session へ fallback しないことをリリース証跡へ固定する。
 
 ## Delivery, migration and rollback
 

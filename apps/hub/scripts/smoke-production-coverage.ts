@@ -56,7 +56,7 @@ Optional environment:
 The command creates two disposable tenants and checks, against production:
   S1-S8  post-signin scope denials (unauthenticated / missing_tenant_scope / ambiguous_scope /
          tenant_mismatch / workspace_not_member / credential_not_allowed / missing_scope)
-         and where a provider-admin cross-tenant request is actually stopped (edge vs route)
+         plus provider-admin cross-tenant route reachability and one matching audit event
   F1-F5  feedback loop (create -> queue -> AI writeback -> status transition)
   D1-D6  docs CMS (create -> draft queue -> body writeback -> cross-tenant invisibility)
 Both tenants and every row they created are deleted before the process exits.
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
       slug: `cv-smoke-a-${config.suffix}`,
       memberIdpSubject: `cv-member-a-${config.suffix}`,
       workerIdpSubject: `cv-worker-a-${config.suffix}`,
-      // S8 (provider-admin の越境がどの層で止まるか) の観測に要る。
+      // S8 (provider-admin の越境がrouteへ届き、対象監査を1件残すか) の観測に要る。
       providerAdminIdpSubject: `cv-provider-a-${config.suffix}`,
     });
     tenantIds.push(primary.tenantId);
@@ -238,34 +238,51 @@ async function main(): Promise<void> {
     );
 
     /*
-     * ---- S8: provider-admin の越境が**どの層で**止まるかの実測。
+     * ---- S8: provider-admin の越境がrouteへ到達し、監査を1件残すことの実測 (FL-SEC8-102 / HarnessHub-stmx)。
      *
      * route 層 (`withAuthz`) は provider-admin の越境を許可し `provider.cross_tenant_access` を
-     * 監査する契約になっている (FL-SEC8-102)。しかし edge middleware の `authorize()` は role を
-     * 見ずに `scope.tenantId !== principal.tenantId` を 404 で落とすため、本番では route 層へ
-     * 到達しない。status だけでは「越境を拒否した」としか読めないので、監査行の件数で到達点を測る。
+     * 監査する契約である。以前は edge middleware の `authorize()` が role を見ずに 404 で落として
+     * いたため、この監査は本番で一度も動いていなかった (契約と実挙動の二枚舌)。
+     * `middleware/authz.ts` に越境の例外経路を入れて契約側へ倒したローカル実装を、
+     * deployment後の同一SHAでも確認するのがこのS8の役割である。
      *
-     * ここでは現行挙動を固定するだけで、認可判定そのものは変更しない (本課題の scope_out)。
-     * 「route 層の越境監査が本番で到達不能」という設計判断は別課題へ送る。
+     * status だけでは「越境を許可した」としか読めない。**この要求に対応する監査行がちょうど
+     * 1 件増えたか**が本質なので、actor / target workspace / requested action を限定した baseline と
+     * after の差分で測る。総件数の `>= 1` だけでは、過去 run の行が残っていた場合に今回の監査欠落を
+     * 見逃す。fixture は使い捨てだが、baseline=0 も明示検査して隔離・cleanup の破れを同時に捕まえる。
+     *
+     * 期待 status は 204 (キューが空) / 200 (job あり) のいずれか。越境そのものが目的の観測なので
+     * job の有無には依存させない。逆に 404 が返ったら回帰なので expected から外してある。
      */
+    const crossTenantAuditQuery = {
+      tenantId: other.tenantId,
+      actorId: primary.providerAdminUserId,
+      workspaceId: other.workspaceId,
+      requestedAction: 'aijob.pull',
+    } as const;
+    const crossTenantAuditBaseline = await probe.countCrossTenantAuditEvents(crossTenantAuditQuery);
+    assert(
+      crossTenantAuditBaseline === 0,
+      `S8: 実行前から対象 provider-admin の越境監査が ${crossTenantAuditBaseline} 件あります。` +
+        '使い捨て tenant の隔離または前回 cleanup が壊れています。',
+    );
+
     const providerCross = await api({
       method: 'POST',
       path: '/api/v1/ai-jobs/pull',
-      expected: 404,
+      expected: [200, 204],
       json: { kind: 'feedback_response' },
       token: providerAdminGrant.accessToken,
       tenantId: other.tenantId,
       workspaceId: other.workspaceId,
     });
+    const crossTenantAuditAfter = await probe.countCrossTenantAuditEvents(crossTenantAuditQuery);
+    const crossTenantAuditDelta = crossTenantAuditAfter - crossTenantAuditBaseline;
     assert(
-      errorCode(providerCross.body) === 'tenant_mismatch',
-      `S8: provider-admin の越境が tenant_mismatch で拒否されません (${JSON.stringify(providerCross.body)})`,
-    );
-    const crossTenantAudits = await probe.countCrossTenantAuditEvents(other.tenantId);
-    assert(
-      crossTenantAudits === 0,
-      `S8: edge で止まったはずの越境要求が provider.cross_tenant_access を ${crossTenantAudits} 件残しました。` +
-        'route 層まで到達したなら、この smoke の前提 (edge 遮断) が変わっているので設計判断をやり直すこと。',
+      crossTenantAuditDelta === 1,
+      `S8: provider-admin 越境 1 要求に対する監査増分が ${crossTenantAuditDelta} 件です` +
+        ` (baseline=${crossTenantAuditBaseline}, after=${crossTenantAuditAfter})。` +
+        'edge が手前で落としている、withAuthz の監査分岐が壊れている、または二重記録が起きている。',
     );
 
     observed.scope_denials = {
@@ -278,7 +295,9 @@ async function main(): Promise<void> {
       S6_credential_not_allowed: bearerRead.status,
       S7_missing_scope: wrongScope.status,
       S8_provider_admin_cross_tenant: providerCross.status,
-      S8_cross_tenant_audit_rows: crossTenantAudits,
+      S8_cross_tenant_audit_baseline: crossTenantAuditBaseline,
+      S8_cross_tenant_audit_after: crossTenantAuditAfter,
+      S8_cross_tenant_audit_delta: crossTenantAuditDelta,
     };
 
     const primaryContext = createRepositoryContext({

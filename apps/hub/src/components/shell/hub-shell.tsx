@@ -23,6 +23,7 @@ import {
   secondaryNavItems,
   sidebarNavItems,
 } from './nav-items.js';
+import { workspaceSwitcherOptions } from './workspace-switcher-items.js';
 
 /**
  * 本文ランドマークの id。スキップリンクの飛び先と同じ値を使う。
@@ -44,6 +45,11 @@ export interface HubShellProps {
   readonly accountName: string | null;
   /** 役割 token。ARIA の `role` 属性と紛れないよう accountRole と呼ぶ。 */
   readonly accountRole: SessionRole | null;
+  /**
+   * 所属 Workspace の識別子一覧。2 件以上のときだけヘッダーに切替 UI が出る (受入 1・3)。
+   * 省略時は切替 UI 無し = 現在値の表示のみ (fail-closed)。
+   */
+  readonly workspaceIds?: readonly string[] | undefined;
   /** 現在の URL パス。サイドバー・タブの現在地表示に使う。 */
   readonly currentHref?: string | undefined;
   /** モバイルのヘッダーに出す画面名 (§6.2)。 */
@@ -55,11 +61,17 @@ export function HubShell({
   scope,
   accountName,
   accountRole,
+  workspaceIds,
   currentHref,
   screenTitle,
   children,
 }: HubShellProps): ReactNode {
   const primary = primaryNavItems(scope);
+  const switcherOptions = workspaceSwitcherOptions(
+    workspaceIds ?? [],
+    scope.workspaceId === '' ? null : scope.workspaceId,
+    currentHref,
+  );
   const secondary = secondaryNavItems(scope, accountRole);
   // layout は route ごとの画面名を持たないため、未指定時は現在地に一致する
   // top-level 導線の名前を使う。詳細画面でも「どの領域にいるか」がモバイルで失われない。
@@ -92,6 +104,8 @@ export function HubShell({
           <ShellHeader
             workspaceName={scope.workspaceId === '' ? '未選択' : scope.workspaceId}
             workspaceLabel="ワークスペース"
+            workspaceOptions={switcherOptions}
+            workspaceSwitchLabel="ワークスペースを切り替える"
             screenTitle={resolvedScreenTitle}
             searchAction={searchAction(scope)}
             searchLabel="ヒアリングシートを検索"
@@ -113,7 +127,9 @@ export function HubShell({
             root layout 側は @harness-hub/ui の HubShell を外してあり (公開画面だけが
             そちらを使う)、同一ページに main が 2 つ現れない構成にしてある。
           */}
-          <main className="hh-shell__main" id={MAIN_ANCHOR_ID}>
+          {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
+              `/signin/workspace` の server intermediate response が担い、key は再利用防止の第二防壁。 */}
+          <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId}\u0000${scope.workspaceId}`}>
             {children}
           </main>
 

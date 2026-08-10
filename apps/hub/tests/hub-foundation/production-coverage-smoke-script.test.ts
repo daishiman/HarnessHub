@@ -61,14 +61,21 @@ describe('production coverage smoke script', () => {
     expect(source).toContain('/t/${primary.tenantId}/w/${primary.workspaceId}/probe');
   });
 
-  it('provider-admin 越境がどの層で止まるかを監査行で測る', () => {
+  it('provider-admin 越境が route 層へ到達し監査行を残すことを実測する', () => {
     const source = readFileSync(SCRIPT, 'utf8');
 
-    // status だけでは edge 遮断と route 層拒否を区別できない。監査件数が唯一の観測手段。
+    // status だけでは edge 遮断と route 層許可を区別できない。対象 actor/action の監査増分が証拠になる。
     expect(source).toContain('countCrossTenantAuditEvents');
     expect(source).toContain('providerAdminGrant');
     expect(source).toContain("path: '/api/v1/ai-jobs/pull'");
-    expect(source).toContain('crossTenantAudits === 0');
+    expect(source).toContain('actorId: primary.providerAdminUserId');
+    expect(source).toContain("requestedAction: 'aijob.pull'");
+    // stale な過去行で緑にならないよう baseline=0 と 1 要求あたり delta=1 の双方を固定する。
+    expect(source).toContain('crossTenantAuditBaseline === 0');
+    expect(source).toContain('crossTenantAuditDelta === 1');
+    expect(source).toContain('S8_cross_tenant_audit_delta');
+    // 404 期待に戻すと edge 遮断の再発を smoke が緑のまま見逃す。
+    expect(source).not.toContain('S8: provider-admin の越境が tenant_mismatch で拒否されません');
   });
 
   it('Feedback Loop を投稿から状態遷移まで通す', () => {
@@ -129,7 +136,7 @@ describe('production coverage smoke script', () => {
   it('使い捨て tenant の後始末が新しく触る表まで含む', () => {
     const probe = readFileSync(PROBE, 'utf8');
 
-    for (const table of ['feedbacks', 'documents', 'builds']) {
+    for (const table of ['feedbacks', 'documents', 'builds', 'auditEvents']) {
       expect(probe).toContain(`delete(${table})`);
       // 残数カウント側にも入っていないと「消し漏れたまま clean」を返してしまう。
       expect(probe).toContain(`.from(${table})`);

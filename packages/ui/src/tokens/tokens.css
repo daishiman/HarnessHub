@@ -1,0 +1,342 @@
+/*
+ * 自動生成ファイル。直接編集しないこと。
+ * 正本: packages/ui/src/tokens/{tokens,base-css}.ts
+ * 再生成: pnpm --filter @harness-hub/ui run gen:tokens-css
+ */
+
+:root {
+  --hh-color-bg: #f5f7fa;
+  --hh-color-surface: #ffffff;
+  --hh-color-surface-muted: #f0f0f0;
+  --hh-color-border: #d9d9d9;
+  --hh-color-border-strong: #808080;
+  --hh-color-text: #1f2329;
+  --hh-color-text-muted: #5c6470;
+  --hh-color-primary: #0958d9;
+  --hh-color-primary-hover: #003eb3;
+  --hh-color-primary-soft: #e6f4ff;
+  --hh-color-on-primary: #ffffff;
+  --hh-color-accent-ai: #531dab;
+  --hh-color-accent-ai-soft: #f9f0ff;
+  --hh-color-on-accent-ai: #ffffff;
+  --hh-color-success: #237804;
+  --hh-color-success-soft: #f6ffed;
+  --hh-color-warning: #ad4e00;
+  --hh-color-warning-soft: #fff7e6;
+  --hh-color-danger: #cf1322;
+  --hh-color-danger-hover: #a8071a;
+  --hh-color-danger-soft: #fff1f0;
+  --hh-color-on-danger: #ffffff;
+  --hh-color-info-cyan: #006d75;
+  --hh-color-info-soft: #e6fffb;
+  --hh-color-magenta: #c41d7f;
+  --hh-color-magenta-soft: #fff0f6;
+  --hh-color-neutral-soft: #f0f0f0;
+  --hh-color-focus-ring: #0958d9;
+  --hh-space-0: 0;
+  --hh-space-1: 4px;
+  --hh-space-2: 8px;
+  --hh-space-3: 12px;
+  --hh-space-4: 16px;
+  --hh-space-5: 24px;
+  --hh-space-6: 32px;
+  --hh-space-7: 48px;
+  --hh-radius-sm: 4px;
+  --hh-radius-md: 8px;
+  --hh-radius-lg: 12px;
+  --hh-radius-full: 9999px;
+  --hh-font-family: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hh-font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --hh-font-size-xs: 12px;
+  --hh-font-size-sm: 14px;
+  --hh-font-size-md: 16px;
+  --hh-font-size-lg: 20px;
+  --hh-font-size-xl: 24px;
+  --hh-line-height-tight: 1.4;
+  --hh-line-height-normal: 1.7;
+  --hh-font-weight-normal: 400;
+  --hh-font-weight-bold: 700;
+  --hh-control-height: 44px;
+  --hh-row-padding-y: 12px;
+  --hh-gap: 12px;
+  --hh-breakpoint-sm: 480px;
+  --hh-breakpoint-md: 768px;
+  --hh-breakpoint-lg: 1120px;
+}
+
+[data-theme='dark'] {
+  --hh-color-bg: #14161a;
+  --hh-color-surface: #1c1f26;
+  --hh-color-surface-muted: #22262f;
+  --hh-color-border: #333842;
+  --hh-color-border-strong: #737d8f;
+  --hh-color-text: #e8eaed;
+  --hh-color-text-muted: #a6adba;
+  --hh-color-primary: #4096ff;
+  --hh-color-primary-hover: #69b1ff;
+  --hh-color-primary-soft: #111a2c;
+  --hh-color-on-primary: #14161a;
+  --hh-color-accent-ai: #b37feb;
+  --hh-color-accent-ai-soft: #1a1325;
+  --hh-color-on-accent-ai: #14161a;
+  --hh-color-success: #95de64;
+  --hh-color-success-soft: #162312;
+  --hh-color-warning: #ffc069;
+  --hh-color-warning-soft: #2b1d11;
+  --hh-color-danger: #ff7875;
+  --hh-color-danger-hover: #ff9c99;
+  --hh-color-danger-soft: #2a1215;
+  --hh-color-on-danger: #14161a;
+  --hh-color-info-cyan: #5cdbd3;
+  --hh-color-info-soft: #112123;
+  --hh-color-magenta: #ff85c0;
+  --hh-color-magenta-soft: #291321;
+  --hh-color-neutral-soft: #22262f;
+  --hh-color-focus-ring: #69b1ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --hh-color-bg: #14161a;
+    --hh-color-surface: #1c1f26;
+    --hh-color-surface-muted: #22262f;
+    --hh-color-border: #333842;
+    --hh-color-border-strong: #737d8f;
+    --hh-color-text: #e8eaed;
+    --hh-color-text-muted: #a6adba;
+    --hh-color-primary: #4096ff;
+    --hh-color-primary-hover: #69b1ff;
+    --hh-color-primary-soft: #111a2c;
+    --hh-color-on-primary: #14161a;
+    --hh-color-accent-ai: #b37feb;
+    --hh-color-accent-ai-soft: #1a1325;
+    --hh-color-on-accent-ai: #14161a;
+    --hh-color-success: #95de64;
+    --hh-color-success-soft: #162312;
+    --hh-color-warning: #ffc069;
+    --hh-color-warning-soft: #2b1d11;
+    --hh-color-danger: #ff7875;
+    --hh-color-danger-hover: #ff9c99;
+    --hh-color-danger-soft: #2a1215;
+    --hh-color-on-danger: #14161a;
+    --hh-color-info-cyan: #5cdbd3;
+    --hh-color-info-soft: #112123;
+    --hh-color-magenta: #ff85c0;
+    --hh-color-magenta-soft: #291321;
+    --hh-color-neutral-soft: #22262f;
+    --hh-color-focus-ring: #69b1ff;
+  }
+}
+
+[data-density='compact'] {
+  --hh-control-height: 36px;
+  --hh-row-padding-y: 6px;
+  --hh-gap: 8px;
+}
+
+:where([data-hh-focusable]):focus-visible {
+  outline: 2px solid var(--hh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--hh-color-bg);
+  color: var(--hh-color-text);
+  font-family: var(--hh-font-family);
+  font-size: var(--hh-font-size-md);
+  line-height: var(--hh-line-height-normal);
+}
+
+h1, h2, h3, h4, p, figure, blockquote {
+  margin: 0;
+}
+
+h1, h2, h3, h4 {
+  line-height: var(--hh-line-height-tight);
+  font-weight: var(--hh-font-weight-bold);
+}
+
+h1 {
+  font-size: var(--hh-font-size-xl);
+}
+
+h2 {
+  font-size: var(--hh-font-size-lg);
+}
+
+h3 {
+  font-size: var(--hh-font-size-md);
+}
+
+h4 {
+  font-size: var(--hh-font-size-md);
+}
+
+small {
+  font-size: var(--hh-font-size-sm);
+  color: var(--hh-color-text-muted);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--hh-font-family-mono);
+  font-size: var(--hh-font-size-sm);
+}
+
+a {
+  color: var(--hh-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--hh-color-primary-hover);
+}
+
+ul, ol {
+  margin: 0;
+  padding-inline-start: var(--hh-space-5);
+}
+
+:where(ul, ol)[data-hh-unstyled-list] {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--hh-font-size-sm);
+}
+
+th, td {
+  padding: var(--hh-row-padding-y) var(--hh-space-3);
+  border-bottom: 1px solid var(--hh-color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+thead th {
+  background: var(--hh-color-surface-muted);
+  font-weight: var(--hh-font-weight-bold);
+  white-space: nowrap;
+}
+
+caption {
+  text-align: start;
+  color: var(--hh-color-text-muted);
+  padding-block-end: var(--hh-space-2);
+}
+
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  border: 0;
+  border-block-start: 1px solid var(--hh-color-border);
+  margin: var(--hh-space-5) 0;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0;
+  font-weight: var(--hh-font-weight-bold);
+}
+
+[data-hh-visually-hidden] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:root {
+  --hh-container-padding-inline: var(--hh-space-3);
+  --hh-table-column-min: 9rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --hh-container-padding-inline: var(--hh-space-5);
+  }
+}
+
+:where([data-hh-sidebar-layout], [data-hh-stack]) > * {
+  min-width: 0;
+}
+
+[data-hh-sidebar-layout] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 768px) {
+  [data-hh-sidebar-layout] {
+    grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  }
+}
+
+[data-hh-scroll-x] {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+body {
+  overflow-wrap: anywhere;
+}
+
+[data-hh-skip-link] {
+  position: absolute;
+  inset-block-start: var(--hh-space-2);
+  inset-inline-start: var(--hh-space-2);
+  z-index: 100;
+  padding: var(--hh-space-2) var(--hh-space-4);
+  background: var(--hh-color-surface);
+  color: var(--hh-color-primary);
+  border: 1px solid var(--hh-color-border-strong);
+  border-radius: var(--hh-radius-sm);
+  transform: translateY(-200%);
+}
+
+[data-hh-skip-link]:focus-visible {
+  transform: translateY(0);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--hh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

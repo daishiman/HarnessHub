@@ -26,6 +26,13 @@ export {
   rollbackRequestSchema,
   targetChannelSchema,
 } from './catalog.js';
+export {
+  formatPublishFinding,
+  formatPublishFindings,
+  PUBLISH_NEEDS_FIX_HEADING,
+  PUBLISH_RESUBMIT_ACTION_LABEL,
+  publishNeedsFixSummary,
+} from './finding-presentation.js';
 export type {
   DeploymentProvider,
   PublishFindingSeverity,
@@ -47,6 +54,8 @@ export {
   publishVisibilitySchema,
   releaseStatusSchema,
 } from './primitives.js';
+export type { CreatePublishProject, PublishProject } from './project.js';
+export { createPublishProjectSchema, publishProjectSchema } from './project.js';
 export type {
   CreatePublishRequest,
   PackageUploadResponse,

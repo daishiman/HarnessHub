@@ -229,6 +229,36 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 
 catalog adapter は HTTP error を分類してから response schema を遅延読込する。成功時は JSON decode と薄い schema 再輸出 module の取得を並行し、Zod 検証を省略しない。これにより失敗経路へ不要な client JS を載せず、API・認可・cache の意味は維持する。詳細は [追補仕様](../specs/harness-hub-dual-catalog-cache-addendum.md) と [受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を参照する。
 
+## 2026-08-10 Workspace 切替と Web 完結公開 (MVP)
+
+- **WorkspaceSwitcher** は `packages/ui` の server component として desktop / mobile の
+  共通シェルに常設する。所属 1 件では現在値の表示のみ、2 件以上では `<details>` と素の
+  `<a>` で切替候補を出し、client JS を増やさない。現在 Workspace はリンクにしない。
+- 切替先 URL は `/signin/workspace` 経由の安全な同一 origin `returnTo` とする。受け口は
+  cookie 設定後に scope 固有の業務データを含まない server intermediate 文書を先に返し、
+  文書 commit 後に新 scope の画面へ進める（旧 scope の残像を避ける）。
+- scope 未解決時の navigation / RSC ErrorState は 403 の生値を出さず、Workspace 選択への
+  回復導線だけを示す。正本は [post-signin addendum](../specs/harness-hub-post-signin-workspace-scope-addendum.md)
+  C/F 節と [feat-workspace-switch-ux](../features/feat-workspace-switch-ux.md)。
+- **S01 Web 公開ウィザード** (`/catalog/publish`) は skill ZIP のみを扱う。Project 新規作成
+  または自分が owner の既存 Project 指定 → PublishRequest 作成 → package upload/submit を
+  1 UI に束ね、段階別 Idempotency-Key で checkpoint 再開する。Needs Fix は session でも
+  `publish.cancel` により同一 request を Draft へ戻して再投入する。`web_app` は選択肢に出さず
+  Publisher CLI / Device 承認へ案内する。
+- H7 未成立 (`H7_NOT_ESTABLISHED`) の間、Published は Hub 上の公開記録完了として表示し、
+  実導入可能とは表現しない。catalog/install の成功リンクや推測コマンドを成功終端にしない。
+- 正本は [feat-web-only-publish-journey](../features/feat-web-only-publish-journey.md)、
+  [frontend-spec](../docs/frontend-spec.md) S01、受領は
+  [Web 公開受領書](../docs/features/feat-web-only-publish-journey/spec-reflection-receipt.md) と
+  [Workspace 切替受領書](../docs/features/feat-workspace-switch-ux/spec-reflection-receipt.md)。
+
+## 2026-08-10 ポーリング終端停止・テーマ CSS 静的化・G13 警告帯
+
+- **publish status ポーリング** (`HarnessHub-h2pe`): `unauthorized` / `forbidden` / `fatal` は初回応答後に即時停止する。hidden 中は request を送らず、可視性だけを理由に止めた pollable state は `visibilitychange` の visible 復帰で一度だけ再開する。判定正本は `shouldContinuePolling()` / `shouldResumeOnVisible()` で、S01 / S03 は同じ純関数を共有する。
+- **テーマ CSS** (`HarnessHub-2fo1`): root layout の inline `buildThemeCss()` / `buildBaseCss()` を廃止し、`@harness-hub/ui/tokens.css` を 1 回 import する。生成正本は `buildTokenCssArtifact()`、成果物一致は `css-artifact.test.ts` が fail-closed に守る。CPU 12x 再計測と navigation VRT 差分は未完了で `HarnessHub-preq` が阻害する。
+- **G13 警告帯** (`HarnessHub-5vlq`): First Load JS が予算 120 KiB の 95% 以上を使った page route を超過前に警告する。警告は G13 を失敗させず、120 KiB 超過だけを失敗とする。`/catalog/[projectId]` と `/catalog/publish` の構造的余裕回復は `HarnessHub-vwxc` へ分離した。
+- 正本: [frontend-spec](../docs/frontend-spec.md) §8、[UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[dual-catalog ADR](../docs/features/feat-dual-catalog-web/architecture-decision-record.md)。
+
 ## 2026-08-10 Metrics / Build Pipeline MVP 差分
 
 - HubShell の insight navigation に S09 ダッシュボード・S13 パイプライン・S16 使用状況を追加する。

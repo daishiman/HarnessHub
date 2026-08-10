@@ -47,7 +47,7 @@ P01〜P12 は全て CLOSED、mandatory evidence 6 項目は全て PASS 済み([e
 |---|---|---|
 | 1 | priority 値域/round-trip | PASS |
 | 2 | workspace-admin 自 tenant pull | PASS |
-| 3 | provider-admin cross-tenant pull+audit | PASS |
+| 3 | provider-admin cross-tenant pull+audit | LOCAL PASS / PRODUCTION PENDING |
 | 4 | 他 tenant 拒否 | PASS |
 | 5 | migration (`0007_feedback-loop-builds.sql`) | PASS |
 | 6 | P10/P11 証跡対応表 | PASS(evidence/index.md がその対応表) |
@@ -87,8 +87,10 @@ quality_constraints 8 件は 8 件とも PASS([final-review-notes.md](final-revi
 
 ## 2026-08-08 production coverage smoke 準備
 
-`HarnessHub-p0lr` の F1〜F5 で投稿、AI queue pull/complete、応答書戻し、状態遷移を同じ使い捨て tenant で検査できるようにした。local focused test / typecheck は PASS。provider-admin 越境の edge/route 不一致 (`HarnessHub-stmx`) と production run は残課題であり、P13 は未完了のままとする。
+`HarnessHub-p0lr` の F1〜F5 で投稿、AI queue pull/complete、応答書戻し、状態遷移を同じ使い捨て tenant で検査できるようにした。local focused test / typecheck は PASS。provider-admin 越境のedge/route不一致は2026-08-10にローカル修正済みだが、変更後SHAのproduction runは残課題であり、P13は未完了のままとする。
 
 ## 2026-08-08 production coverage smoke 実走結果
 
-main `35a10b87` の hub-ci run `31253674292` で F1〜F5 が SUCCESS。feedback 作成、`feedback_response` pull/complete、AI 応答書戻し、`open → in_progress → resolved` を本番 DB で確認し、cleanup 後の残存行は 0 だった。ただし S8 は provider-admin 越境を edge が 404 で止め、`provider.cross_tenant_access` 監査行は 0 の現行挙動を確認した。これは `HarnessHub-stmx` の未解決契約そのものなので、Feedback P13 は in_progress を維持する。
+main `35a10b87` の hub-ci run `31253674292` で F1〜F5 が SUCCESS。feedback 作成、`feedback_response` pull/complete、AI 応答書戻し、`open → in_progress → resolved` を本番 DB で確認し、cleanup 後の残存行は 0 だった。ただし当該S8は provider-admin 越境を edge が404で止め、監査行0となる修正前挙動の診断である。
+
+2026-08-10 に `HarnessHub-stmx` 案(a)をローカル実装し、edge → `withAuthz` → audit の動的テストと、対象actor/workspace/actionの監査 `baseline=0` / `delta=1` を要求するS8へ更新した。変更後SHAのproduction runは未実施なので、旧runを越境監査成功の証拠へ読み替えず、Feedback P13はin_progressを維持する。

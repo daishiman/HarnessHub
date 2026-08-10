@@ -34,6 +34,7 @@ import {
   PUBLISH_ARCHIVE_LIMITS,
   packageRoute,
   params,
+  projectCreateRoute,
   publish,
   setPublishRateLimiterForTest,
   submitRoute,
@@ -42,6 +43,28 @@ import {
 
 beforeEach(() => {
   runtimeHolder.current = auth.runtime;
+});
+
+describe('POST /projects: Web 公開用 Project の準備', () => {
+  it('session scope から owner を固定し、冪等再送で Project と監査を重複させない', async () => {
+    const send = async () =>
+      projectCreateRoute(
+        await buildRequest('POST', '/projects', {
+          idempotencyKey: 'key-project-create-1',
+          json: { name: '問い合わせ整理', description: '問い合わせを分類する Skill' },
+        }),
+      );
+
+    const first = await send();
+    const second = await send();
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(201);
+    expect(second.headers.get(IDEMPOTENCY_REPLAY_HEADER)).toBe('true');
+    expect(await second.json()).toEqual(await first.json());
+    expect(publish.projectRows()).toHaveLength(2); // setup の proj-1 + 今回作成した 1 件
+    expect(publish.auditEvents().filter((event) => event.action === 'project.create')).toHaveLength(1);
+  });
 });
 
 afterEach(() => {

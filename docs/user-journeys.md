@@ -15,11 +15,11 @@ sources: [system-spec/00-requirements-definition.md]
 | 1 | Claude Code / Codex で解決物 (Skill 等) を作る | 作者の AI セッション | — (Hub 関与なし) | U1 |
 | 2 | 初回のみ: publish 時に表示された URL をブラウザで開いて承認 | S08 Device 承認 | OAuth Device Flow。token は OS 資格情報域へ | qa-008 |
 | 3a | `/harness-hub:publish` (または自然言語) の 1 操作 | Publisher plugin | package 収集・manifest 補完・ローカル pre-check (検査共有 package) | I1, qa-010 |
-| 3b | **Web 代替**: S01「プラグインを公開」から CLI 取込または ZIP を選び、target/説明/公開範囲を確認 | S01 公開ウィザード | 現在の tenant/workspace に Project を作り、作成者を owner に固定。3a と同じ Hub 側検査へ収束 | mock upload-modal, I1 |
-| 4 | 待つ (進捗表示を見る) | S03 公開状態 | PublishRequest 状態機械 + Hub 側検査 (static validation / secret scan / policy) | I2, qa-018 |
-| 5a | **Green**: 完了通知を確認 | S03 → S02 詳細 | 自動公開: immutable Release 採番 + stable pointer 更新 + 監査 event | I2, I3 |
+| 3b | **Web 代替 (Skill のみ)**: S01「Skill を公開する」で Project を作成または既存 Project を指定し、ZIP と公開範囲を確認 | S01 公開ウィザード | 現在の tenant/workspace に Project を作り作成者を owner に固定、または自分が owner の Project を使用。3a と同じ Hub 側検査へ収束し、途中失敗は checkpoint から再開 | mock upload-modal, I1, feat-web-only-publish-journey |
+| 4 | 待つ (全状態と公開要求 ID を確認する) | S01/S03 公開状態 | PublishRequest 状態機械 + Hub 側検査 (static validation / secret scan / policy)。Needs Fix は同じ request を Draft へ戻して修正版 ZIP を再投入 | I2, qa-018 |
+| 5a | **Green**: Hub の公開記録完了と導入案内を確認 | S01/S03 | 自動公開: immutable Release 採番 + stable pointer 更新 + 監査 event。H7 未成立中は実導入不可を明示し、catalog/install の成功リンクを出さない | I2, I3, feat-stage0-distribution-gate |
 | 5b | **Yellow / Red**: 平易な日本語の指摘 + 次の一手を読んで修正 → 3a または 3b へ | S03 (Needs Fix) | 差し戻し。Yellow は Stage 2 で管理者 review 経路 | I2, I8 |
-| 6 | (WebApp の場合) Publisher の指示どおりスクリプト実行を承認 | Publisher plugin → wrangler | 作者 local session で wrangler CLI 実行 → Hub へ URL・release 登録 → Hub が公開範囲検査 + health 確認 | I5 |
+| 6 | (WebApp の場合) Web ウィザードを使わず Publisher の指示どおりスクリプト実行を承認 | Publisher plugin → S08 Device 承認 → wrangler | 作者 local session で wrangler CLI 実行 → Hub へ URL・release 登録 → Hub が公開範囲検査 + health 確認 | I5 |
 | 7 | 更新も同じ 1 操作。失敗したら rollback | Publisher / S04 Release 履歴 | stable pointer 差替 (常に可逆) | I3, qa-018 |
 
 ## J2: 利用者 — 同僚の業務ツールを見つけて使う (G2, G3)

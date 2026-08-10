@@ -83,7 +83,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | StageBoard (かんばん) / StageSegment (モバイル) | 自作 | 工程チップ+件数バッジ・risk 表示・DnD 不採用 (操作はメニュー。タッチ/キーボード同等性) | S13 |
 | MarkdownView / MarkdownEditor (textarea+プレビュー) | react-markdown + 自作 | XSS sanitize (SEC7)・プレビュータブ | S12/S14/S15 |
 | InlineEditTable | 自作 | 編集はモバイルでシートへ昇格 (§6.3) | S17/S04 |
-| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
+| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-only、client JS 0)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
 | DegradedBanner (縮退) / EmptyState / ErrorState | 自作 | 「導入済みツールはそのまま使えます」(qa-019)・平易な日本語+次の一手 (qa-018) | 全画面 |
 
 ### 2.3 SVG チャート契約
@@ -107,8 +107,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ### 3.0 共通シェル (feat-hub-foundation)
 
-- **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (ワークスペース表示・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
-- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは画面タイトル+検索アイコン+アバター。
+- **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
+- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-only UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
 ### 3.1 画面×API マップ (データ取得の正本)
@@ -145,7 +145,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 - **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列、モバイルは同じ情報をカードへ畳む。status filter・department filter・全文検索・cursor ページングを持つ。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。
 - **S12 ヒアリングシート詳細**: ヘッダに `display_code/status/title/applicant/department/created_at/AI 生成表示`、本文に「概要」「現在の課題」「推奨機能タグ」「想定削減効果」を表示し、元入力 snapshot・試算 snapshot・対応 Build/PublishRequest の参照を併記する。`received` の表示ラベルは mock の「下書き」でなく全画面共通の「受付」とする。admin の状態変更・再生成は右側メタ領域、member には非表示かつ API でも拒否。P2 有効後は AI 完了時に自動作成された対応 Build を「構築パイプラインへ」で表示し、P1 単独期間はこのボタンを表示しない。
 - **S12 PDF 出力**: 「PDF でダウンロード」は別データ生成を行わず、認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化して `window.print()` を呼ぶ (ブラウザの「PDF に保存」)。ボタン名は mock を維持する。salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test する。
-- **S01 公開ウィザード**: Step1 は CLI 取込を推奨し、Web 手動取込は ZIP 代替。Step2 は target (`skill/web_app`)、category、visibility (Stage 1 は workspace まで)、説明、Step3 は検査結果と公開確認。新規 Project 作成→PublishRequest 作成→package upload/submit を 1 UI フローに束ねるが、API の各 status は隠さない。Green は自動、Yellow は承認待ち、Needs Fix は S03 の findings へ移動する。単一テナント/単一 Project を定数にしない。
+- **S01 公開ウィザード**: skill ZIP のみ。Project 新規/既存 owner 指定→PublishRequest→upload/submit を 1 UI に束ね、全 status と要求 ID を隠さない。段階別 Idempotency-Key で再開し、Needs Fix は cancel で同一 request を Draft へ戻して再投入。`web_app` は CLI/S08 案内のみ。H7 未成立中は実導入リンクを成功終端にしない。詳細は [Web 公開実装メモ](features/feat-web-only-publish-journey/implementation-notes.md)。単一テナント/単一 Project を定数にしない。
 - **S13 パイプライン**: デスクトップ = 7 工程カラムの横並びボード (工程ヘッダに件数)。カード = title・HS/FR 参照・assignee・eta・risk チップ。admin 操作 = カードメニューから「前の工程へ/次の工程へ」(隣接遷移のみ = §5.3)+確認 Dialog。**DnD は採用しない** (タッチ/キーボード同等性と隣接制約の UI 強制のため。qa-035)。`publish` 工程への遷移は接続済み PublishRequest が `Published` でない場合エラー表示 (B4)。
 - **S14 改善要望・レビュー**: 上部に status 件数、一覧に FR コード/harness/type (`改善要望/レビュー依頼/バグ報告`)/priority/requester/date/status、詳細に本文と sanitize 済み AI 応答を表示する。Web 起票と CLI 起票は source chip だけが異なり、同じ一覧へ入る。AI 完了後に作成された修正版 Build への導線を表示し、S13→publish→更新通知まで追跡できる。
 - **S15 ドキュメント**: common + 自 tenant を 1 一覧へ合成し、category/scope/q で絞込。閲覧は sanitize 済み Markdown、admin 編集は textarea+preview、AI 下書きは受付番号/生成中/完了通知を共通パターンで表示する。member に編集 CTA を出さず、common 編集は provider-admin だけに出す。
@@ -270,6 +270,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ## 8. 非機能 (性能・a11y・テスト)
 
 - **CWV good (qa-018)**: p75 で LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1。**First Load JS ≤ 250KB (gzip) / route** を `next build` 出力で CI 計測 (Worker bundle 3MiB ゲートとは別軸)。チャート・Markdown・ウィザードは dynamic import で route 分割。**実装 (2026-07-25, G13)**: 上記を CI ゲート G13 (`apps/hub/scripts/check-client-bundle.mjs`) が機械強制する。**運用値は 120 KiB / route** とし、上限 250KB の内側に早期検知線を引く (現状の下限は Next.js 15 の framework baseline 103.0 KiB で、それ以上は削れない。120 KiB は下限に約 17 KiB の余裕を残しつつ、barrel 巻き込み級の退行 +56 KiB は必ず超過させる位置)。上限 250KB は将来 Markdown エディタ等で正当に重くなる route を許容するための天井であり、両者は矛盾しない。登録簿は [shared-layers.md](shared-layers.md) の CI 品質ゲート登録簿。
+  - **95% 警告帯 / テーマ CSS (2026-08-10)**: G13 は 95% で警告・100% で fail（route handler 対象外）。theme は `@harness-hub/ui/tokens.css` 静的 import（`HarnessHub-5vlq` / `HarnessHub-2fo1`）。詳細は [統合受領書](features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)。
   - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する** (2026-08-08 時点の登録は `@harness-hub/ui` と `@harness-hub/schemas` の 2 つ)。**追記 (2026-08-08 実測 / HarnessHub-aqi)**: `optimizePackageImports` は **named import しか書き換えない**ため、`const m = await import('@harness-hub/schemas')` のような namespace import は登録しても最適化されず barrel 全量 (9 feature 分・約 200 schema・23.7 KB raw / 7.9 KiB gzip) を読む。動的読込が要る箇所は「必要な named export だけを再 export する薄いモジュール」を経由させる (例: `apps/hub/src/lib/catalog/response-schemas.ts`)。package 単一入口のままなので deep import 禁止も守れる。この種の退行は route の First Load JS を変えないため **G13 では検知できず** CWV 実測 (TBT) でしか出ない。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
@@ -292,7 +293,6 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ## 10. 構築優先順位による実装順 (2026-07-18 追記。additive — 正本: [system-design-overview.md](system-design-overview.md) §3「構築優先順位」)
 
 ユーザー確定の構築優先順位 (P0 認証基盤 → P1 ヒアリング → P2 プラグイン Hub + パイプライン → P3 改善ループ・ドキュメント → P4 ユーザー・効果測定 → P5 ダッシュボード・統制) を画面実装へ展開する。**本書の既確定内容 (§1〜§9) を変更するものではなく、着手順だけを定める**。本節の P0〜P5 は構築 phase 番号であり、§6.3 のレスポンシブ変換パターン P1〜P10 とは無関係。
-
 - **画面の実装順**: P0 = 共通シェル (§3.0) + S07/S08 → P1 = S10/S11/S12 → P2 = S01 (公開ウィザード・一覧・install/download) → S02/S03 (管理・公開状態) → S13 (ヒアリング/公開との接続) → P3 = S14/S15 → P4 = S16/S17/S18 → P5 = S09 + S05/S06。
 - **`/` redirect の段階運用 (2026-08-07 改訂 = appr-034 / appr-035)**: 既定着地は **`/dashboard`** とする。2026-07-18 時点の本項は「S09 完成までは `/` → `/sheets`」だったが、サインイン後に業務画面へ到達できない不具合の原因究明 (docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) を受け、利用者が 3 択 (`/sheets` 維持 / `/catalog` / `/dashboard` を先に作る) から **`/dashboard` を先に作る**を直接選択した (appr-034)。**前倒しするのは S09 の全体ではない** — S09 (KPI・推移・完了率・ランキング・部門別削減) は P5 のまま据え置き、着地に必要な部分だけを先に作る。着地画面に何を載せるか (appr-035 で確定した 4 項目・KPI を含まない・行き止まりにしない) の正本は [addendum §3.2](../docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md) の表であり、本書へは複製しない (二重管理でずれると片方だけが古くなる)。戻り先の検証・scope 伝搬・一次切り分けは [post-signin scope 運用 Runbook](features/feat-post-signin-scope-routing/operations-runbook.md) を正とし、相対 path のみ許可・open redirect 防止・scope 解決の契約 (qa-135/136/137) は変更しない。既定着地の**値だけ**が変わる。実装上の唯一の正本は `apps/hub/src/lib/routing/post-signin-landing.ts` の `DEFAULT_POST_SIGNIN_LANDING` で、テストは値を書き写さずこの定数を import する。
 - **ナビゲーションの段階表示**: サイドバー 9 項目 (§3.0)・ボトムタブ (§6.2) は未実装 phase の項目を**表示しない** (グレーアウトでなく非表示 — 「押せるのに動かない」を作らない qa-018 整合)。`/dashboard` が実在するまでは `/sheets` を先頭 slot とし、route 着地後に appr-034 の `/dashboard` へ置き換える。S09 の KPI 部分の確定は従来どおり feat-metrics-tracking の P02 で行う。

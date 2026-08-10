@@ -212,6 +212,10 @@ R5/R6/R7/R8 はいずれも「P02 の architecture decision が誤っている�
 - 同時実行も設計どおり。`run` を直列に繋ぎ (`CatalogPublishStatus.tsx:91-93`)、unmount 時に
   `AbortController` で中断する (`:98-102`)。
 
+#### follow-up 解消記録（2026-08-10 / HarnessHub-h2pe）
+
+V3 の C1〜C3 は解消済み。詳細は [h2pe 解消記録](./design-review-followup-h2pe-20260810.md) を正とする。
+
 ### 5.4 V4 — marketplace.json 生成方式: **CONCERN (軽微)**
 
 - スキーマは正本と一致している。`marketplace-document.test.ts:69-86` (DC-MKT-01) が
@@ -283,7 +287,7 @@ ADR §7 #5 は「通常 session の `GET /catalog` ハードナビゲーショ�
 | # | 内容 | 引き継ぎ先 | 種別 |
 |---|---|---|---|
 | F1 | ポーリングが 401/403/契約不正でも 5 回リトライする。失敗種別を `shouldContinuePolling` へ渡し即時停止させる (§5.3 C1) | `HarnessHub-h2pe` | 実装 |
-| F2 | 不可視タブ復帰でポーリングが再開しない。現行 ADR は明示 Retry として同期し、自動再開実装は `HarnessHub-h2pe` で追跡 (§5.3 C2) | `HarnessHub-h2pe` | 実装/文書 |
+| F2 | 発見時は不可視タブ復帰でポーリングが再開せず、ADR も明示 Retry としていた。現在は自動再開実装と ADR を `HarnessHub-h2pe` で同期済み (§5.3 C2) | `HarnessHub-h2pe` | 実装/文書 |
 | F3 | **本変更で解消**: ADR §2.2 の終端 status 定義を実装 (`POLLABLE_PUBLISH_STATES`) に合わせて改訂 (§5.3 C3) | ADR | 文書 |
 | F4 | `marketplace.json` の未認証消費者経路を H7 確定と同時に決める (§5.4) | `HarnessHub-dctf` | 設計 |
 | F5 | **文書訂正は本変更で解消、実測は継続**: `__cwv_probe` を現行経路として 3 文書へ反映。`hub-cwv` の fresh 実測は `HarnessHub-aqi` で継続 (§5.5) | 運用 + 各文書 | 文書/運用 |

@@ -12,7 +12,7 @@ iteration: null
 title: "Workspace 選択・切替とスコープ不足の回復導線"
 owners: ["daishiman"]
 created_at: "2026-08-02T05:05:00Z"
-updated_at: "2026-08-02T12:39:56.592845Z"
+updated_at: "2026-08-10T18:00:00+09:00"
 status: "active"
 depends_on: ["feat-post-signin-scope-routing"]
 related_nodes: ["spec-post-signin-workspace-scope","feat-dual-catalog-web","feat-workspace-governance","arch-harness-hub-frontend"]
@@ -66,7 +66,9 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
 2. **共通シェルの切替 UI**
    - 現在の Workspace 表示と切替を共通シェルに常設する
    - 所属が 1 件のときは切替 UI を出さず現在値の表示のみとし、選択操作を強いない
-   - 切替時は新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)
+   - 切替先は安全な同一 origin の `returnTo` とし、現在の Workspace はリンクにしない
+   - 切替時は scope 情報を持たない server intermediate 文書を先に表示し、新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)
+   - WorkspaceSwitcher は server component + `<details>` + 素の `<a>` だけで構成し、モバイルを含む共通シェルで client JS を増やさない
 
 3. **スコープ不足の利用者向け表現**
    - 403 `missing_tenant_scope` をエンドユーザーへ露出させない
@@ -93,14 +95,14 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
 
 `specs/harness-hub-post-signin-workspace-scope-addendum.md` C 節・F 節 / `system-spec/spec-state.json` qa-135 【4】・qa-136 【4】【5】
 
-## 実装進捗メモ (2026-08-08 / issue-hub-root-500-signin-20260808)
+## 実装進捗メモ
 
-入口側の最小結線を `feat-post-signin-scope-routing` 側で先行した。本 feature の完了にはならない。
+2026-08-08 に入口側の最小結線を `feat-post-signin-scope-routing` 側で先行し、2026-08-10 に共通シェル切替と回復表現を結線した。Beads の lifecycle 更新と本番反映はこの実装記録とは別に扱う。
 
 | 受入 | 状態 | 備考 |
 | --- | --- | --- |
 | 所属 1 件は選択画面なし | 実装済み | `resolveSessionScope` の singleton 自動確定 |
-| 所属 2 件以上は選択後に進む | 入口のみ実装 | `/` の Workspace 選択 + `/signin/workspace` cookie。シェル常設切替は未 |
-| 共通シェルから常時切替 | 未実装 | 本 feature の本体 |
-| 切替時の旧 scope 非表示 | 未実装 | 本 feature の本体 |
-| 403 生値を出さず回復導線 | 部分実装 | middleware の navigation HTML + `/` へのリンク。ErrorState 画面側の文言整備は残 |
+| 所属 2 件以上は選択後に進む | 実装済み | `/` の Workspace 選択 + `/signin/workspace` cookie + 安全な `returnTo` |
+| 共通シェルから常時切替 | 実装済み | desktop / mobile 共通の server-only `WorkspaceSwitcher` |
+| 切替時の旧 scope 非表示 | 実装済み | cookie 設定後、旧 scope を含まない中間文書を commit してから新 scope へ遷移 |
+| 403 生値を出さず回復導線 | 実装済み | edge navigation HTML と RSC ErrorState が同じ回復文言・導線を使用 |

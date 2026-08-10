@@ -74,14 +74,14 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-data, arch-harnes
 | `POST /api/v1/publish/:id/submit` | `publish.write` | 同上 |
 | `GET /api/v1/publish/:id` | `publish.write` | 同上 (状態 polling。Publisher/Hub Web 共用) |
 | `POST /api/v1/publish/:id/approve` | `publish.approve` | workspace-admin 以上 / session のみ |
-| `POST /api/v1/publish/:id/cancel` | `publish.reject` | workspace-admin 以上 / session のみ |
+| `POST /api/v1/publish/:id/cancel` | `publish.cancel` | owner 以上 / scope `publish:write` / session or Bearer |
 | `GET /api/v1/projects/:id/releases` | `harnesses.read` | member 以上 / session |
 | `POST /api/v1/channels/:id/promote` | `channel.promote` | owner 以上 / scope `publish:write` |
 | `POST /api/v1/channels/:id/rollback` | `channel.rollback` | owner 以上 / scope `publish:write` |
 | `POST /api/v1/releases/:id/suspend` | `release.suspend` | owner 以上 / scope `publish:write` |
 | `POST /api/v1/projects/:id/deployment` | `publish.write` | owner 以上 / scope `publish:write` / Bearer 前提 |
 
-> `POST /api/v1/publish/:id/cancel` は backend-spec §4.6 が「Bearer / owner」と書くが、規則表の `publish.reject` は workspace-admin / session である。**規則表を正本とする** (AD-2 の委譲決定により本 feature は規則表を書き換えられない)。差分は P03 の独立レビュー論点として起票し、必要なら feat-auth-tenancy 側の変更として扱う。
+> Landing 後の Web Needs Fix 再投入で「作成できるが同じ request を Draft へ戻せない」非対称が顕在化したため、cancel は reject と分離した `publish.cancel` を使う。session と Bearer の両方を受けるが、owner・scope `publish:write`・tenant/workspace・resource ownership は同じであり、Web に CLI より広い権限を与えない。session 変更系は既存どおり Origin/CSRF を必須とする。
 
 ---
 

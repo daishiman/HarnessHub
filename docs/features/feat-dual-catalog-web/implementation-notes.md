@@ -103,7 +103,8 @@ request 1 回へ修正した。回帰は `authorization-cache-boundary.test.tsx`
 
 | ケース ID | 実装対象 | 状態 |
 |---|---|---|
-| DC-POLL-01..11 | `lib/catalog/polling.ts` | 11 件 pass |
+| DC-POLL-01..14 | `lib/catalog/polling.ts` | 14 件 pass |
+| DC-POLL-LC-01..06 + 03B | `CatalogPublishStatus.tsx`, `PublishWizard.tsx` | 9 件 pass |
 | DC-DEG-01..08 | `lib/catalog/degradation.ts` | 8 件 pass |
 | DC-MKT-01..09 | `lib/catalog/marketplace.ts`, `packages/schemas/dual-catalog-web/marketplace.ts`, `app/marketplace.json/route.ts` | 11 件 pass (ケース分割込み) |
 | DC-TEN-01..04 | `lib/catalog/http-adapter.ts`, `lib/catalog/marketplace.ts` | 4 件 pass |

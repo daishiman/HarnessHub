@@ -5,7 +5,9 @@
  * こうしておくと、将来 TanStack Query を導入したときも同じ関数を `refetchInterval` に渡すだけで移行でき、
  * かつ全分岐を DOM なしの単体テストで検証できる (test-design DC-POLL-01..11)。
  */
-import type { PublishRequestState } from '@harness-hub/schemas';
+import type { CatalogFailureKind, PublishRequestState } from '@harness-hub/schemas';
+
+import { isTerminalCatalogFailure } from './degradation.js';
 
 /** 初回間隔。qa-062 が定める 2 秒。 */
 export const INITIAL_POLL_INTERVAL_MS = 2_000;
@@ -59,6 +61,13 @@ export interface PollingState {
   documentVisible: boolean;
   /** 前回のリクエストが未完了か。 */
   inFlight: boolean;
+  /**
+   * 直近の失敗種別。成功していれば null。
+   *
+   * 連続失敗回数と分けて持つのは、両者が測っている対象が違うため。
+   * 回数は「一過性の失敗がどれだけ続いたか」、種別は「そもそも再試行に意味があるか」を表す。
+   */
+  lastFailureKind: CatalogFailureKind | null;
 }
 
 /**
@@ -69,11 +78,28 @@ export interface PollingState {
  */
 export function shouldContinuePolling(state: PollingState): boolean {
   if (!isPollablePublishState(state.status)) return false;
+  // 終端失敗は回数上限を待たずに即時停止する。401/403/契約不正は、
+  // 同じ資格情報で同じ要求を繰り返す限り決定的に同じ答えが返るため、
+  // 残り 4 回を消費すること自体が無駄な通信でしかない
+  if (state.lastFailureKind !== null && isTerminalCatalogFailure(state.lastFailureKind)) return false;
   if (state.inFlight) return false;
   if (!state.documentVisible) return false;
   if (state.consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) return false;
   if (state.elapsedMs >= MAX_POLL_DURATION_MS) return false;
   return true;
+}
+
+/**
+ * 不可視で止まったポーリングを、可視復帰時に再開してよいか。
+ *
+ * **`shouldContinuePolling` に `documentVisible: true` を与えて問い直すだけ**にしてある。
+ * 「再開してよい条件」を独立に書くと、停止条件との間に必ず乖離が生まれる —
+ * 例えば終端失敗の判定を停止側にだけ足すと、可視復帰のたびに 401 を叩き直す穴が開く。
+ *
+ * 可視性以外の停止事由 (終端状態・終端失敗・回数上限・時間上限) が立っていれば false を返す。
+ */
+export function shouldResumeOnVisible(state: PollingState): boolean {
+  return shouldContinuePolling({ ...state, documentVisible: true });
 }
 
 /**

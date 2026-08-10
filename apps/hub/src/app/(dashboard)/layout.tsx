@@ -23,6 +23,7 @@ export default async function DashboardLayout({ children }: { readonly children:
         scope={shell.scope}
         accountName={shell.accountName}
         accountRole={shell.role}
+        workspaceIds={shell.workspaceIds}
         currentHref={shell.currentHref}
       >
         {children}
