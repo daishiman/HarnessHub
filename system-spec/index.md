@@ -17,13 +17,13 @@ kind: index
 
 | カテゴリ | 章 | 集約状態 | 確定マーカー | 資するゴール | 対応セル |
 |---|---|---|---|---|---|
-| データベース (database) | [database.md](./database.md) | 確定 | `confirmed` | G1 G2 G4 G5 | database.web database.mobile database.tablet database.desktop-windows database.desktop-linux database.desktop-macos |
+| データベース (database) | [database.md](./database.md) | 確定 | `confirmed` | G4 G5 | database.web database.mobile database.tablet database.desktop-windows database.desktop-linux database.desktop-macos |
 | 認証(ログイン) (auth) | [auth.md](./auth.md) | 確定 | `confirmed` | G2 G4 G1 | auth.web auth.mobile auth.tablet auth.desktop-windows auth.desktop-linux auth.desktop-macos |
 | UI-UX (ui-ux) | [ui-ux.md](./ui-ux.md) | 確定 | `confirmed` | G1 G2 G3 G5 | ui-ux.web ui-ux.mobile ui-ux.tablet ui-ux.desktop-windows ui-ux.desktop-linux ui-ux.desktop-macos |
 | セキュリティ (security) | [security.md](./security.md) | 確定 | `confirmed` | G4 G5 G1 | security.web security.mobile security.tablet security.desktop-windows security.desktop-linux security.desktop-macos |
 | インフラ (infrastructure) | [infrastructure.md](./infrastructure.md) | 確定 | `confirmed` | G1 G4 G5 G2 | infrastructure.web infrastructure.mobile infrastructure.tablet infrastructure.desktop-windows infrastructure.desktop-linux infrastructure.desktop-macos |
-| バックエンド (backend) | [backend.md](./backend.md) | 確定 | `confirmed` | G1 G2 G4 G5 G3 | backend.web backend.mobile backend.tablet backend.desktop-windows backend.desktop-linux backend.desktop-macos |
-| フロントエンド (frontend) | [frontend.md](./frontend.md) | 確定 | `confirmed` | G1 G2 G3 | frontend.web frontend.mobile frontend.tablet frontend.desktop-windows frontend.desktop-linux frontend.desktop-macos |
+| バックエンド (backend) | [backend.md](./backend.md) | 確定 | `confirmed` | G4 G5 G1 G3 | backend.web backend.mobile backend.tablet backend.desktop-windows backend.desktop-linux backend.desktop-macos |
+| フロントエンド (frontend) | [frontend.md](./frontend.md) | 確定 | `confirmed` | G1 G2 G3 G5 | frontend.web frontend.mobile frontend.tablet frontend.desktop-windows frontend.desktop-linux frontend.desktop-macos |
 | 保守運用管理 (maintenance-ops) | [maintenance-ops.md](./maintenance-ops.md) | 確定 | `confirmed` | G1 G2 G3 G4 G5 | maintenance-ops.web maintenance-ops.mobile maintenance-ops.tablet maintenance-ops.desktop-windows maintenance-ops.desktop-linux maintenance-ops.desktop-macos |
 | 開発フロー (dev-workflow) | [dev-workflow.md](./dev-workflow.md) | 確定 | `confirmed` | G1 G4 G5 | dev-workflow.web dev-workflow.mobile dev-workflow.tablet dev-workflow.desktop-windows dev-workflow.desktop-linux dev-workflow.desktop-macos |
 | テスト戦略・品質保証 (testing-qa) | [testing-qa.md](./testing-qa.md) | 確定 | `confirmed` | G1 G4 G5 | testing-qa.web testing-qa.mobile testing-qa.tablet testing-qa.desktop-windows testing-qa.desktop-linux testing-qa.desktop-macos |
@@ -34,15 +34,6 @@ kind: index
 - **収集中**: —
 - **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow, testing-qa
 - **対象外**: —
-
-## 実装 writeback 索引 (確定章への追記ではない)
-
-elicitation（要件ヒアリング）確定後に実装へ落とした契約の索引。`spec-state.json` のセル状態は変更せず、実装契約は `specs/` 追補と architecture へ書く。
-
-| 主題 | 要求の出所 | 実装契約 | feature / Beads |
-|---|---|---|---|
-| 稼働ビルドの素性 (acceptance V6) と反映鮮度・smoke 前伝播安定性 (acceptance V7) | `dev-workflow.md` qa-198-f / qa-198-h | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y`、伝播安定性 follow-up `HarnessHub-u9zq` |
-| rubric 自動生成提案の保全と human review 引継ぎ | `dev-workflow.md` qa-216 の P13 write-back / scope separation / 未完了項目の durable tracking | [rubric 提案保持 writeback](../specs/harness-hub-system-specification-implementation-writebacks.md#rubric-自動生成提案の保持-writeback-2026-08-10--harnesshub-lzfs) / [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-lzfs` (human triage 完了まで open) |
 
 ## 全体ドキュメント出典 (未割当参照)
 
@@ -66,3 +57,7 @@ elicitation（要件ヒアリング）確定後に実装へ落とした契約の
 | nextjs-proxy | 16 (改名は 16.0 で導入。middleware.ts は deprecated) | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs/app/guides/upgrading/version-16 | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |
 | cloudflare-workers-secrets | 2026-08-07 (取得日。WebSearch 経路のためページ本文の更新日表示は未確認) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/configuration/secrets/ | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |
 | opennext-cloudflare-env-vars | 1.20.2 (@opennextjs/cloudflare の現行版) | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare/howtos/env-vars | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |
+| tailwindcss-v4 | 4.3 | Tailwind Labs (tailwindcss.com) | https://tailwindcss.com/docs/upgrade-guide | 2026-08-10T11:54:59Z | 2026-08-10T11:54:59Z |
+| shadcn-ui | 2026-08-10 | shadcn (ui.shadcn.com) | https://ui.shadcn.com/docs/tailwind-v4 | 2026-08-10T11:54:59Z | 2026-08-10T11:54:59Z |
+| radix-primitives | 2026-08-10 | WorkOS (www.radix-ui.com) | https://www.radix-ui.com/primitives/docs/overview/introduction | 2026-08-10T11:54:59Z | 2026-08-10T11:54:59Z |
+| wcag-2-2 | 2.2 | W3C (www.w3.org) | https://www.w3.org/TR/WCAG22/ | 2026-08-10T11:54:59Z | 2026-08-10T11:54:59Z |

@@ -3,7 +3,7 @@ status: confirmed
 category: frontend
 aggregate: 確定
 spec_cells: [frontend.web, frontend.mobile, frontend.tablet, frontend.desktop-windows, frontend.desktop-linux, frontend.desktop-macos]
-serves_goals: [G1, G2, G3]
+serves_goals: [G1, G2, G3, G5]
 ---
 
 # フロントエンド (frontend)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-206 |
+| Web (web) | 確定 | 確定質疑: qa-227 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,17 +24,29 @@ serves_goals: [G1, G2, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-206 (対応セル: web)
+### qa-227 (対応セル: web)
 
-**質問**: qa-203 とそれ以前の frontend/web 契約を維持したまま、認証後の全 route を包む HubShell、session role による navigation 投影、packages/ui と apps/hub の所有境界をどう確定するか。
+**質問**: frontend/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
 
-**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 が委任するコードから検証できる技術的事実の範囲で確定する。qa-203 とそれ以前の frontend/web 契約は全面維持する。
+**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-219〜qa-223のうち矛盾しない契約を統合した現行正本である。
 
-認証後の (dashboard) / (workspace) route は apps/hub の server component HubShell が共通に包み、main landmark を一つだけ持つ。sidebar / header / footer / mobile tab、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet の視覚・操作 contract は packages/ui が所有し、apps/hub は route、tenant/workspace scope、session identity を結線する consumer とする。公開 route は PublicShell を使い、root layout 自体は main landmark を追加しない。
+【1 shellとroute】
+/dashboard、/pipeline、/trackingを既存(dashboard) route groupのHubShell配下へ置き、routeごとにshellを再定義しない。/pipeline/[buildId]をBuild個票とする。現行/metricsと/metrics/usageは移行時の互換redirectに限り、新規link・navigation・canonical URLは正規routeだけを生成する。main landmarkは単一、SessionRole投影はdeny-by-default、x-hh-pathnameは内部利用に限定する。
 
-現在地は middleware が認証認可を通過した内部 request に x-hh-pathname を付与し、server layout が読む。外部 API contract や client bundle を増やす用途には使わない。navigation は実在する route だけを表示し、signed session の active claim から得た SessionRole を使って deny-by-default で投影する。member と role 未確定は account settings のみ、workspace-admin は users / coefficients、provider-admin はそれらに加えて認証設定を表示する。API 認可を最終決定者とする契約は変えず、UI は権限外の導線を DOM に出さない。role token は provider-admin / workspace-admin / member の正規値だけを受け、表示名へ変換する。
+【2 所有境界】
+StatTile、LineChart、BarChart、DonutChart、StageBoard、StageColumn、StageCard、StepWizardの視覚・操作contractはpackages/uiが所有する。apps/hubはroute、tenant/workspace scope、session identity、認可済みserver data取得を結線する。packages/uiはHub domain型をimportせず、表示用response modelだけを受ける。principalへproject_idを追加せず、backendのtrusted resolver結果だけを使用する。
 
-公開 API、DB schema、session claim schema、ACTION_RULES、Cloudflare deploy unit は変更しない。PrimaryNav の独自実装は HubShell の route projection へ置き換え、route ごとの shell 再定義を禁止する。
+【3 server-first取得】
+S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、生eventの画面内集計を禁止する。期間filterはURL search paramsを正本とし、client stateや表示側再計算を正本にしない。
+
+【4 KPI DTO】
+完了率と利用率は別DTOとし、numerator、denominator、period、snapshotAt、nullable rate、reasonを持つ。完了率は期間末HearingSheet snapshot、利用率は期間末公開済みHarness snapshotと期間内rollupの共通部分を使う。ranking件数を利用率の分母にするactiveHarnessRatio型の実装は禁止する。denominator=0はrate=null、reason=denominator_emptyとし、UIで「—」へ写像する。
+
+【5 anomaly DTO】
+過去4完了週が揃い中央値が0でない場合だけ評価値を返す。insufficient_historyとzero_medianを別reasonとし、正常値0へ変換しない。
+
+【6 chart contract】
+各inline SVG componentは同一response modelからSVGと直後の同値HTML tableを描画する。表は初期HTMLに常在し、JavaScriptや利用者操作なしで読める。server側とclient側で同じ数値を二重計算しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -96,9 +108,38 @@ serves_goals: [G1, G2, G3]
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-206 (対応セル: web) の判断へ適用する
-- 上記原則は確定内容 qa-007 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
-- 資するゴール: G1, G2, G3
+##### 確定内容 qa-227 (対応セル: web)
+
+- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-219〜qa-223のうち矛盾しない契約を統合した現行正本である。
+
+【1 shellとroute】
+/dashboard、/pipeline、/trackingを既存(dashboard) route groupのHubShell配下へ置き、routeごとにshellを再定義しない。/pipeline/[buildId]をBuild個票とする。現行/metricsと/metrics/usageは移行時の互換redirectに限り、新規link・navigation・canonical URLは正規routeだけを生成する。main landmarkは単一、SessionRole投影はdeny-by-default、x-hh-pathnameは内部利用に限定する。
+
+【2 所有境界】
+StatTile、LineChart、BarChart、DonutChart、StageBoard、StageColumn、StageCard、StepWizardの視覚・操作contractはpackages/uiが所有する。apps/hubはroute、tenant/workspace scope、session identity、認可済みserver data取得を結線する。packages/uiはHub domain型をimportせず、表示用response modelだけを受ける。principalへproject_idを追加せず、backendのtrusted resolver結果だけを使用する。
+
+【3 server-first取得】
+S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、生eventの画面内集計を禁止する。期間filterはURL search paramsを正本とし、client stateや表示側再計算を正本にしない。
+
+【4 KPI DTO】
+完了率と利用率は別DTOとし、numerator、denominator、period、snapshotAt、nullable rate、reasonを持つ。完了率は期間末HearingSheet snapshot、利用率は期間末公開済みHarness snapshotと期間内rollupの共通部分を使う。ranking件数を利用率の分母にするactiveHarnessRatio型の実装は禁止する。denominator=0はrate=null、reason=denominator_emptyとし、UIで「—」へ写像する。
+
+【5 anomaly DTO】
+過去4完了週が揃い中央値が0でない場合だけ評価値を返す。insufficient_historyとzero_medianを別reasonとし、正常値0へ変換しない。
+
+【6 chart contract】
+各inline SVG componentは同一response modelからSVGと直後の同値HTML tableを描画する。表は初期HTMLに常在し、JavaScriptや利用者操作なしで読める。server側とclient側で同じ数値を二重計算しない。
+- 原則: Dependency Rule (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: snapshotとrollupの結合をserver-side ownerに置き、packages/uiへ同一表示modelだけを渡してKPI policyをclient実装から内側へ保った。
+  - トレードオフ:
+    - server response modelが増える
+    - 互換redirectを一時保守する必要がある
+##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
+
+- 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
+- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 資するゴール: G1, G2, G3, G5
 
 ## 最新ドキュメント出典
 

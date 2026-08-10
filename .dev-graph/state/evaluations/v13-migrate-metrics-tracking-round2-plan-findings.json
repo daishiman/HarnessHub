@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/v13-migrate-metrics-tracking",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:b0d26d27beada1c784e420bf37c6fcf825f9d4ba2c3ce9363a26105c9f8e8969",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "source hash、exact schema/API、KPI、route、0008 immutable/future Metrics delta の主契約は現行正本へ同期されたが、P08/P13 の旧 rollback 文が適用済み migration の取り下げ・可逆時の取り消しを許し、同じ task 内の immutable lineage/forward-fix 契約と直接矛盾する。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-08-refactoring-migration.md#Rollout-and-rollback",
+        "task-specs/phase-08-refactoring-migration.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-13-release-deploy.md#Rollout-and-rollback",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/rollback",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P13/rollback"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "P01..P13 exact-set と qa-226..229/appr-043 の主要契約は揃ったが、confirmed anomaly 契約が要求する insufficient_history と zero_median の別 reason を全 task が明示せず、履歴不足と中央値0を区別する API・test・acceptance evidence が欠ける。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-01-requirements.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-02-architecture.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-04-test-design.md#Verification-and-evidence",
+        "task-specs/phase-05-implementation.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-07-acceptance.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-13-release-deploy.md#Verification-and-evidence"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "FAIL",
+      "summary": "parent/package/id/phase/route/schema 語彙は整合する一方、P13 は migration の consumed artifact を packages/db/schema/metrics-tracking/ 配下の migration file と記述し、P08 が生成する packages/db/migrations/ 配下の Metrics delta と path 語彙が一致しない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-08-refactoring-migration.md#成果物",
+        "task-specs/phase-13-release-deploy.md#成果物",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/write_scope"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01→P13 の intra-feature DAG は前方・非循環で、node/task parity と handoff source lineage が整合する。外部 owner 6件も related_nodes の provenance と typed port・contract test・provider evidence・fail-closed unavailable behavior に接地し、cross-feature task edge を混入していない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-graph.json#nodes",
+        "task-graph.json#edges",
+        "system-build-handoff.json#execution_tasks",
+        "task-specs/phase-02-architecture.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-04-test-design.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "workstream-inventory.json#tasks"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-2-2",
+        "--staging",
+        ".dev-graph/staging/v13-migrate-metrics-tracking"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:b0d26d27beada1c784e420bf37c6fcf825f9d4ba2c3ce9363a26105c9f8e8969\",\n  \"feature_package_id\": \"feature-package/feat-metrics-tracking\",\n  \"parent_feature\": \"feat-metrics-tracking\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "8a1d2295244fd47e7891199aa019ccd1e8a545012939626fd9b6b12406d4650c"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "502715dd53fe139bae03f8a62028987fea4a0e4abb0c6fb65724bc89830c9f40"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "170a507a438eef811ba95c84fba48269e4749bcf95414135de0bcb088bac0b21"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "db63f9a47da801650413d1ba3537499110024e62620c95fc87c34c46e89d749c"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "90b8ab5df85883ff4dc14d4e3163dcabeae08e27c75f546415d6ada5554af5af"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "57c4d6a5e43d4006aefd6d596a774ea5b12f7d5db3d7e7c70293ead79c418da1"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "a98900ed79519497a36b1b6f49130662a0b807b0d3be1594ae9707890fb842c3"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "6b8da0591d698659ed6a93c9e2dc556d469bbfc4f4749fbbe99ec0ca5eeae56c"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "06b93b1f40704dacd92d2636b2e7471da0b537780a434e576bb143105a6e2186"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "9c2a2c8baef8973ee2a84271a8b4a67020b0e16f136ba3bca7e328a860734d26"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "920735fee7277b6c7239024c770e7f6f75132a1f85b6b6124c8e7e011c0a27ab"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "2dff58b2d07f7d72bdbdfeb14443dd7137122c0a017bb09366ac454e7a37b326"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "e3421614bcdf35a0114aab028914bb4be9c19bb3f3464bbdb09ca379b0f9fe76"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "112feade4335d7df251e20780ad025b5ebb3e1167189c26a185d6b84e309b38c"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "b7f99ed535094e94df76a4c9de3bc9829b6aa219561645c4a55edde1f63c4a79"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "056cb621427fd9f83e296a05eb2014df35514eaf9f6b7235811cc20f6004afa6"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "f0f7c2ffcfd0958a228ccb44f0823935bd96adec2a621feb962c8517a80d8b35"
+    }
+  ],
+  "staleness_rule": "C11はpromotion直前にstaging-manifest.jsonのfiles exact-setとstaging-manifest.json自体のSHA-256をcurrent staging bytesから再計算し、追加・欠落・1 byteでも不一致があれば本評価を無効化する。別canonical_digestへ本verdictを再利用しない。",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "migration-rollback-lineage-contradiction",
+      "observation": "P08 は combined 0008 と将来deltaを immutable lineage/forward-fix で扱うと確定した一方、同 task の rollback は『マイグレーション適用後』に生成fileを取り下げる。P13 と inventory も可逆なら migration を取り消すため、適用済み履歴を後退させ得る。新しい supersedes 節だけでは実行者が読む既存 rollback 指示を無害化できず、qa-229 の release単位forward-fix契約を満たさない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-08-refactoring-migration.md:23",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-08-refactoring-migration.md:105",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-13-release-deploy.md:104",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/rollback",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P13/rollback",
+        "system-spec/spec-state.json#qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "anomaly-reason-contract-omission",
+      "observation": "全13 taskの追加closureは『4完了週かつ中央値非0の場合だけ評価』までは反映したが、qa-226/qa-227が要求する履歴不足=insufficient_history と中央値0=zero_median の別 reason を一度も固定していない。P04 は qa-226..229全契約のtest ID化を包括的に要求するだけで、この2状態を別API reason・別UI状態・別acceptance evidenceとして検証する指示がないため、評価不能を異常なしへ潰す実装を防げない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-01-requirements.md:166",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-02-architecture.md:169",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-04-test-design.md:53",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-04-test-design.md:91",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-13-release-deploy.md:90",
+        "system-spec/spec-state.json#qa-226",
+        "system-spec/spec-state.json#qa-227"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "release-migration-artifact-path-drift",
+      "observation": "P08 の成果物は packages/db/migrations/ 配下の将来Metrics deltaと対応metaだが、P13 の consumed artifacts は packages/db/schema/metrics-tracking/ 配下の『マイグレーションファイル』と記述する。schema source と migration artifact の所在を混同しており、P13がP08の確定deltaを明示的に消費する契約になっていない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-08-refactoring-migration.md:53",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-08-refactoring-migration.md:54",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-13-release-deploy.md:54",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/write_scope"
+      ]
+    }
+  ]
+}

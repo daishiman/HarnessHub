@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "status": "pass",
+  "validated_digest": "sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "parent_feature": "feat-build-pipeline-board",
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "contract_version": "1.3.0",
+  "contract_baseline_exemption": false,
+  "test_strategy_contract": {
+    "mode": "enforced",
+    "contract_version": "1.3.0",
+    "enforced_from": "1.2.0"
+  },
+  "rerun_command_contract": {
+    "mode": "enforced",
+    "contract_version": "1.3.0",
+    "enforced_from": "1.3.0"
+  },
+  "violations": []
+}

@@ -1,6 +1,7 @@
 // Workers scheduled handler の dispatch 骨格。infrastructure-spec §5 の cron 2 系統をジョブ単位で冪等実行する。
 // ジョブ本体 (rollup・使用量監視など) は各ドメイン feature の責務なので、ここには業務ロジックを書かない。
 
+import { createMetricsRollupCronJobs } from '../features/metrics-tracking/cron.js';
 import { createUsageMonitorJob } from '../lib/scheduled/usage-monitor.js';
 
 /** 日次バッチ (JST 0:00)。infrastructure-spec §5 */
@@ -86,12 +87,12 @@ function pendingJob(id: string): CronJob {
 /** infrastructure-spec §5 の割当。日次 4 ジョブ・週次 2 ジョブ */
 export const DEFAULT_CRON_REGISTRY: CronRegistry = {
   [DAILY_CRON]: [
-    pendingJob('metrics-rollup-daily'),
+    createMetricsRollupCronJobs().daily,
     createUsageMonitorJob(),
     pendingJob('orphan-candidate-notify'),
     pendingJob('token-cleanup'),
   ],
-  [WEEKLY_CRON]: [pendingJob('metrics-rollup-weekly'), pendingJob('weekly-summary-mail')],
+  [WEEKLY_CRON]: [createMetricsRollupCronJobs().weekly, pendingJob('weekly-summary-mail')],
 };
 
 /** 同じ cron の同じ論理時刻に対して安定する冪等キー */

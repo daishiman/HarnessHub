@@ -13,7 +13,7 @@ title: "構築パイプラインボード要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:56Z"
 updated_at: "2026-07-28T10:16:42Z"
-status: "closed"
+status: "active"
 depends_on: []
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-build-pipeline-board/requirements-baseline.md"]
@@ -28,7 +28,7 @@ feature_package_id: "feature-package/feat-build-pipeline-board"
 phase_ref: "P01"
 file_path: "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p01.md"
 template_id: "task"
-template_version: "1.0.0"
+template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}

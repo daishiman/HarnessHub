@@ -22,8 +22,10 @@ def test_live_exact_legacy_state_remains_readable() -> None:
 
 
 def test_current_state_requires_design_application_contract_marker() -> None:
+    # LIVE_STATE がすでに 1.1 + marker を持つ場合でも、marker 欠落を fail にする契約を検査する。
     state = json.loads(LIVE_STATE.read_text(encoding="utf-8"))
     state["schema_version"] = "1.1"
+    state.pop("design_application_contract_version", None)
     with __import__("pytest").raises(jsonschema.ValidationError):
         validator().validate(state)
     state["design_application_contract_version"] = "1.0"

@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-207 |
+| Web (web) | 確定 | 確定質疑: qa-226 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,17 +24,29 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-207 (対応セル: web)
+### qa-226 (対応セル: web)
 
-**質問**: qa-201 とそれ以前の ui-ux/web 契約を維持したまま、desktop/mobile shell、その他 navigation、page surface、overlay の操作規則を実装と一致する形でどう確定するか。
+**質問**: ui-ux/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
 
-**回答**: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。
+**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
 
-md=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。
+【1 共通UI基盤】
+Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
 
-各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。
+【2 画面とnavigation】
+正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
 
-既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。
+【3 閲覧権限】
+S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
+
+【4 KPI】
+完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
+
+【5 anomaly】
+同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
+
+【6 図表と操作】
+chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -98,20 +110,37 @@ md=768px 以上は sidebar + header + content + footer、md 未満は header + �
 
 #### 本章での適用
 
-##### 確定内容 qa-207 (対応セル: web)
+##### 確定内容 qa-226 (対応セル: web)
 
-- 確定要件: [出所] 本 entry は、2026-08-08 の利用者による今回変更分の最終レビュー・正規仕様反映指示と、appr-037 の技術的事実委任の範囲で、実装・a11y test・bundle 制約から確定する。qa-201 とそれ以前の ui-ux/web 契約は全面維持する。
+- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
 
-md=768px 以上は sidebar + header + content + footer、md 未満は header + 主要 4 slot + 5 番目の『その他』で構成する。未実装 route は表示せず、現在存在する sheets / catalog / docs / feedback を主要 4 slot とする。『その他』の navigation overflow は背景を遮る modal dialog ではなく details/summary の disclosure とする。したがって focus trap と scroll lock は適用せず、標準 Tab 順、aria-current、44px 以上の tap target を維持する。client JS を全 route へ追加しない server-first contract を優先する。操作用 BottomSheet は別 contract とし、dialog semantics、focus trap、Esc、明示 close、backdrop close、focus restore、scroll lock を必須とする。swipe は唯一の操作にせず任意の追加機能とする。
+【1 共通UI基盤】
+Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
 
-各画面は ScreenHeader で title / description / breadcrumbs / primary action を表し、Panel で情報のまとまりを分ける。破壊的または取り消せない確認には ConfirmDialog を使い、reversible を必須入力にして可逆性を表示する。汎用 Modal は閲覧・編集などの器であり、実行確認には使わない。Modal / BottomSheet / ConfirmDialog は共通 focus trap、Esc、focus restore、scroll lock を共有し、overlay の z-index は sticky header より上に置く。
+【2 画面とnavigation】
+正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
 
-既存の light/dark、comfortable/compact、breakpoint、contrast、responsive overflow 契約は変更しない。
-- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
+【3 閲覧権限】
+S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
+
+【4 KPI】
+完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
+
+【5 anomaly】
+同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
+
+【6 図表と操作】
+chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
+- 原則: 知覚可能・操作可能・理解可能・堅牢 (POUR) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 同値表を初期DOMへ常在させ、分母0と評価不能理由を明示して、色・JavaScript・推測に依存せず同じ判断へ到達可能にした。
+  - トレードオフ:
+    - 縦方向の情報量が増える
+    - SVGと表の同値性をcontract testで維持する必要がある
 ##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
-- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
+- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
 - 資するゴール: G1, G2, G3, G5
 
 ## 最新ドキュメント出典

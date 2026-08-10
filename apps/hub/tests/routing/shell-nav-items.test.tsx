@@ -30,6 +30,8 @@ function linksOf(tenantId: string, workspaceId: string): ReadonlyMap<string, str
 
 /** scope を引き継ぐ導線 (workspace 単位の画面)。並びは利用頻度順。 */
 const WORKSPACE_SCOPED = ['ヒアリングシート', '業務ツール', 'ドキュメント', '改善要望'] as const;
+/** 分析系 (S09/S13/S16)。集計対象が workspace 単位なので workspace も引き継ぐ。 */
+const INSIGHT_SCOPED = ['ダッシュボード', 'パイプライン', '使用状況・削減効果'] as const;
 /** tenant 単位の画面。workspace を付けると「その workspace 限定の設定」と誤読される。 */
 const TENANT_SCOPED = ['ユーザー管理', 'アカウント設定', '認証設定', '見積係数設定'] as const;
 
@@ -37,7 +39,15 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
   it('TID-PNAV-01: 主要導線を過不足なく 1 本ずつ出す', () => {
     const links = linksOf('tenant-a', 'ws-1');
 
-    expect([...links.keys()]).toEqual([...WORKSPACE_SCOPED, ...TENANT_SCOPED]);
+    expect([...links.keys()]).toEqual([...WORKSPACE_SCOPED, ...INSIGHT_SCOPED, ...TENANT_SCOPED]);
+  });
+
+  it('TID-PNAV-01b: 分析系の導線も workspace まで引き継ぐ (集計範囲が workspace 単位のため)', () => {
+    const links = linksOf('tenant-a', 'ws-1');
+
+    expect(links.get('ダッシュボード')).toBe('/metrics?tenant=tenant-a&workspace=ws-1');
+    expect(links.get('パイプライン')).toBe('/builds?tenant=tenant-a&workspace=ws-1');
+    expect(links.get('使用状況・削減効果')).toBe('/metrics/usage?tenant=tenant-a&workspace=ws-1');
   });
 
   it('TID-PNAV-02: workspace 単位の画面へは tenant と workspace の両方を引き継ぐ', () => {

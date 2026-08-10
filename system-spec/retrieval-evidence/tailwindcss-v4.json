@@ -1,0 +1,18 @@
+{
+  "allowed_domains": [
+    "tailwindcss.com"
+  ],
+  "findings": [
+    "公式アップグレードガイドは Tailwind CSS v4 系への移行手順を正本として提供している",
+    "現行ガイドのページ表示は v4.3 である",
+    "v4 は Safari 16.4、Chrome 111、Firefox 128 以降のブラウザ機能を前提とする",
+    "移行では設定・依存・CSS 構文の互換性を個別に確認する必要がある"
+  ],
+  "retrieval_channel": "WebSearch/WebFetch",
+  "retrieval_method_disclosure": "公式 host に限定して検索し、公式アップグレードガイド本文を取得・確認した。",
+  "retrieved_at": "2026-08-10T11:54:59Z",
+  "returned_official_urls": [
+    "https://tailwindcss.com/docs/upgrade-guide"
+  ],
+  "target_id": "tailwindcss-v4"
+}

@@ -4,6 +4,7 @@
 // 新テーブル追加時にこの fixture が未追随なら tenant-isolation.test.ts が fail する (スキーマ駆動)。
 
 import { createAuditRepo } from '../../repository/audit';
+import { createBuildStageRepository } from '../../repository/build-stage';
 import { createBuildsRepository } from '../../repository/builds';
 import { sha256Hex } from '../../repository/bytes';
 import { createTargetChannelsRepo } from '../../repository/channels';
@@ -14,6 +15,7 @@ import { createDocsCmsRepository } from '../../repository/docs-cms';
 import { createFeedbackRepository } from '../../repository/feedback-loop';
 import { createHearingIntakeRepository } from '../../repository/hearing-intake';
 import { createIdpConnectionsRepo } from '../../repository/idp';
+import { createMetricsTrackingRepository } from '../../repository/metrics-tracking';
 import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../../repository/misc';
 import { createPackagesRepo } from '../../repository/packages';
 import { createReleasesRepo } from '../../repository/releases';
@@ -285,11 +287,47 @@ async function seedTenant(
   // builds (ADR §7/§12 P10 差し戻し再設計): AiJob(feedback_response) 完了時の冪等作成と同じ
   // repository API を fixture でも使い、feedback_id 一意の builds 行を両テナントへ用意する。
   const builds = createBuildsRepository(adapter);
-  await builds.findOrCreateBuildForFeedback(
+  const buildRow = await builds.findOrCreateBuildForFeedback(
     context,
     { id: feedbackRow.id, workspaceId, type: 'improvement' },
     'design',
   );
+
+  // build_stage_events: 工程遷移も repository API で seed し、隣接遷移 (design → build) が
+  // 接続層越しに成立することを fixture 構築自体で確かめる。
+  const buildStage = createBuildStageRepository(adapter);
+  await buildStage.transitionStage(context, {
+    buildId: buildRow.id,
+    expectedStage: 'design',
+    toStage: 'build',
+    actorUserId: user.id,
+    reason: `Fixture stage transition ${slug}`,
+  });
+
+  // metrics_events / metrics_rollups: ingest は回数だけを受け取り (SEC5)、
+  // 金額換算済みの rollup は cron と同じ upsert 経路で 1 行だけ置く。
+  const metrics = createMetricsTrackingRepository(adapter);
+  const metricsContext = createRepositoryContext({ tenantId: tenant.id, workspaceId, actorId: user.id });
+  await metrics.ingestEvent(metricsContext, {
+    workspaceId,
+    harnessId: `harness-${slug}`,
+    runCount: 3,
+    idempotencyKey: `fixture-metrics-${slug}`,
+  });
+  const rollupStart = Date.UTC(2026, 0, 5);
+  await metrics.upsertRollups(context, [
+    {
+      workspaceId,
+      period: 'weekly',
+      dimension: 'harness',
+      dimensionKey: `harness-${slug}`,
+      periodStart: rollupStart,
+      periodEnd: rollupStart + 7 * 24 * 60 * 60 * 1000,
+      runCount: 3,
+      savedMinutes: 45,
+      savedAmount: 3_750,
+    },
+  ]);
 
   const tenantDataKeyVersion = await cipher.ensureActiveDek('tenant_data', tenant.id);
   const tenantDataId = newUlid();
