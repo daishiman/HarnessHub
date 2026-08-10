@@ -1,0 +1,197 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/v13-migrate-build-pipeline-board",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "旧6 highのschema/API・writer・migration矛盾は、P02本文の直接訂正と全13 taskの明示的なConfirmed contract overlayで同一の優先契約へ収束した。legacy 3/6表記はoverlayが明示的にsupersedeするため有効契約同士の矛盾ではない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-02-architecture.md#背景",
+        "task-specs/phase-02-architecture.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-07-acceptance.md#Confirmed contract overlay (2026-08-10)"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13 exact-setに加え、qa-226..229/appr-043のBuild関連要件（Project trusted resolver、Turso単一transaction/D1 zero-write、/pipeline明示action、PublishRequest単一正本、immutable 0008後のBuild専用delta）が要件・設計・test・実装・受入・品質・evidence・runbook・release責務へ意味配置されている。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-01-requirements.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-04-test-design.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-05-implementation.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-13-release-deploy.md#Confirmed contract overlay (2026-08-10)",
+        "workstream-inventory.json"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "parent/package/phase/task path、manifest/handoff exact-set、現行source SHA、正規migration path、実在package script・focused test path、v1.3の--feature-package再実行形式が整合する。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "feature-package.json",
+        "workstream-inventory.json",
+        "task-specs/phase-08-refactoring-migration.md#Verification and evidence",
+        "task-specs/phase-13-release-deploy.md#Verification and evidence",
+        "system-build-handoff.json"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "intra-feature DAGはP01→P13の前方・非循環exact-setで、P01 macro gateはparent_feature.depends_onを動的参照する。Project/Publish/UI/auth/DB ownerはtyped handoff（contract_ref・required_evidence・unavailable_behavior）としてP05/P08/P13の実行・release gateへ接続され、cross-feature task edgeは持たない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-graph.json",
+        "system-build-handoff.json#p01_entry_gate",
+        "task-specs/phase-05-implementation.md#前提条件",
+        "task-specs/phase-05-implementation.md#Typed owner handoff gates",
+        "task-specs/phase-08-refactoring-migration.md#Typed owner handoff gates",
+        "task-specs/phase-13-release-deploy.md#Typed owner handoff gates"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6\",\n  \"feature_package_id\": \"feature-package/feat-build-pipeline-board\",\n  \"parent_feature\": \"feat-build-pipeline-board\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "a52e1bf7ee65402aca4296000226349b6e6bccf7f3c31b45a8ec09a8a2a134ce"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "3adc66ca0ee804dd98054cd828327d2cb8e2f6dd1c62922f7b9c09961f9e74ba"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "e187f0994c5ad5b35f01ec31f1c813805d6aa0047b8605f339c50e860dd787a3"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "33ce053eb3153913b8ef0cc5d168f7a454102f87a82a7e3f33bd4e7a93b21235"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "a7a3766ed8db10fb359bbca0e176a0eda6313b1d0ba6005c82871bf056630453"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "9410ba085b47b677bb062fd55668ace5d25e8e23efdf8586a923915e2f4fdbad"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "0106dad4f796d20ca1ae2d3b9e7c6e1d5755ea1135c78b6a097ce9c94d277fa9"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "c122c741a573055ed2784dc99c16f13a30ca7c78e94a68fd3aa6e0841a0da055"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "f3895d0cdc620b8563c06d1df959af70a6af1c7050925bd42160b46d3d015006"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "bf6ece2c5c433beaf917c14afc4e7d16358c1cf427e760f12993db2e88789b78"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "c96c1acfee6e20a68e1cb1b05160e921bf8d51936fb3aecc0eafc9a3d6e41720"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "032b7104907246ea0db5ff19263c8c2859c85a644be3241e3e907d7e77b37752"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "bf0b6886942ce8688485cf4bd243ad4279b4fca3edf92e43936c1983bc218575"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "d33b5b8e3e19d2b7504b24b2d15426e1ed645fcde3ca16d33a1374b741a42256"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "d33d1bcdaaca2a11e05ea431de239fc10e5e72fda3794922fda0fee90e622507"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "d7d4719df5325df9003e7794657e183d2b617cff2d86e842f5e293dd29d14953"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "749fb8495e73fb55279a8b79be14f49d13ce8fa9ff35c875f8d97c75d89f70bb"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "e732578a77c089f0a721834516aefa983862be9aea3b6638e7e872ad4a36f9db"
+    }
+  ],
+  "staleness_rule": "C11はpromotion直前にstaging-manifest.jsonのfiles exact-set、各current byte SHA-256、およびstaging-manifest.json自体のSHA-256を再照合する。追加・欠落・1 byteの不一致、またはcanonical_digestがsha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6と異なる場合は本評価を無効化し、別digestへverdictを再利用しない。",
+  "findings": [
+    {
+      "severity": "medium",
+      "bucket": "legacy-prose-shadowing",
+      "observation": "全13 taskのConfirmed contract overlayは旧count/schema/path文言を明示的にsupersedeしており有効契約は一意だが、P07のtitle/目的/required evidenceとP10の本文などに旧「acceptance 3件 / quality_constraints 6件」が残る。実行者が末尾overlayを見落とす認知リスクがあるため、次の再計画ではprimary section自体を7件/10件へ正規化するのが望ましい。",
+      "evidence": [
+        "task-specs/phase-07-acceptance.md#目的",
+        "task-specs/phase-07-acceptance.md#Verification and evidence",
+        "task-specs/phase-07-acceptance.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-10-final-review.md#目的"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "production-smoke-command-specificity",
+      "observation": "P13は本番S13・5 endpoint・atomicityのsmokeを必須証跡とし欠落をFAILにするため受入漏れではないが、Automated commandsはdeploy後のローカルfocused Vitestまでで、deployed targetへ到達する具体的なHTTP smoke commandは固定されていない。P12 runbook/P13実行時に認証済み対象URLと再実行コマンドを証跡化する必要がある。",
+      "evidence": [
+        "task-specs/phase-13-release-deploy.md#Verification and evidence",
+        "task-specs/phase-13-release-deploy.md#Confirmed contract overlay (2026-08-10)",
+        "task-specs/phase-11-evidence.md#Confirmed contract overlay (2026-08-10)"
+      ]
+    },
+    {
+      "severity": "medium",
+      "bucket": "macro-dependency-declaration-drift",
+      "observation": "caller feature本文の機能間依存にはfeat-publish-pipelineがある一方、frontmatter depends_on配列にはないため、P01のdynamic macro gate単体ではpublish ownerを待たない。staging側はP05の全typed handoff evidence gateとpublish unavailable_behaviorでfail-closedを補完しているためC4はPASSだが、macro正本の次回更新でfrontmatter/bodyを統一すべきである。",
+      "evidence": [
+        "features/feat-build-pipeline-board.md#frontmatter depends_on",
+        "features/feat-build-pipeline-board.md#機能間依存",
+        "task-specs/phase-05-implementation.md#前提条件",
+        "task-specs/phase-05-implementation.md#Typed owner handoff gates",
+        "system-build-handoff.json#p01_entry_gate"
+      ]
+    }
+  ]
+}

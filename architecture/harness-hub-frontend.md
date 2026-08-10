@@ -259,3 +259,15 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 - **G13 警告帯** (`HarnessHub-5vlq`): First Load JS が予算 120 KiB の 95% 以上を使った page route を超過前に警告する。警告は G13 を失敗させず、120 KiB 超過だけを失敗とする。`/catalog/[projectId]` と `/catalog/publish` の構造的余裕回復は `HarnessHub-vwxc` へ分離した。
 - 正本: [frontend-spec](../docs/frontend-spec.md) §8、[UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[dual-catalog ADR](../docs/features/feat-dual-catalog-web/architecture-decision-record.md)。
 
+## 2026-08-10 Metrics / Build Pipeline MVP 差分
+
+- HubShell の insight navigation に S09 ダッシュボード・S13 パイプライン・S16 使用状況を追加する。
+  モバイルの primary 4 枠には混ぜず、サイドバー専用層 (`insightNavItems`) に分離する。
+- **MVP path**: 実装 route は `/metrics`・`/builds`・`/metrics/usage`。仕様上の正規 path は
+  `/dashboard`・`/pipeline`・`/tracking`。canonical alias は後続で接続する。
+- S09/S16 は server component が rollup API を読み、生 event の画面内集計を禁止する。
+  期間 filter は URL search params を正本とする。
+- S13 は共有 `StageBoard` を消費し、admin のみ工程操作 UI を出す。axe 0 を focused test で固定する。
+- 正本は [frontend](../system-spec/frontend.md) / [ui-ux](../system-spec/ui-ux.md)。
+  受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
+  [build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。

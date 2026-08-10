@@ -13,7 +13,7 @@ title: "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボ�
 owners: ["daishiman"]
 created_at: "2026-07-19T14:16:35Z"
 updated_at: "2026-07-28T10:16:38Z"
-status: "closed"
+status: "active"
 depends_on: []
 related_nodes: ["feat-metrics-tracking","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-metrics-tracking/requirements-baseline.md"]
@@ -28,7 +28,7 @@ feature_package_id: "feature-package/feat-metrics-tracking"
 phase_ref: "P01"
 file_path: "tasks/feat-metrics-tracking/sys-metrics-tracking-p01.md"
 template_id: "task"
-template_version: "1.0.0"
+template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"}

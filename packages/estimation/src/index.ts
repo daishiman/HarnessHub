@@ -7,6 +7,19 @@ export {
   estimateSavings,
   resolveHourlyRate,
 } from './estimate';
+// feat-metrics-tracking へ提供する formula/rollup domain module。
+// package 境界の owner は feat-hub-foundation のままで、metrics は primitives の consumer にすぎない。
+// 集計入出力の行型は `@harness-hub/db` の永続行型と同名にしない (module 側で改名済み)。
+// barrel で別名を付ける方式だと、重複検出は module の export 名を見るため素通りしてしまう。
+export {
+  aggregateMetricsRollup,
+  type MetricsAggregationEvent,
+  type MetricsAggregationResult,
+  type MetricsCoefficients,
+  type MetricsEstimateInput,
+  type MetricsEstimateResult,
+  metricsEstimate,
+} from './metrics';
 export { estimateRoi, estimateSeatPlan } from './seats';
 export {
   type EstimationErrorCode,

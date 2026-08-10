@@ -105,3 +105,12 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 上流未解決 (P02 設計時に解消)
 
 - 試算エンジンの実装 owner 記述に食い違いあり: docs/shared-layers.md §2 は feat-hub-foundation へ一元化と記載する一方、本 feature の scope_in は試算エンジン純関数を含む。P02 で owner を確定し、shared-layers.md か本 feature のどちらかを訂正する (出典: feat-user-org-admin plan-findings.json 2026-07-17 evaluator finding)
+
+## MVP 実装着地 (2026-08-10)
+
+- Beads: `HarnessHub-lm7`（P01 closed、P02 in_progress、P03〜P13 は merge 後に順次）
+- package digest: `sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef`
+- 実装: ingest/summary/rollups API、cron rollup、estimation metrics module、S09/S16 UI（path `/metrics`・`/metrics/usage`）
+- 仕様反映: [mvp-implementation-spec-reflection-receipt.md](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)
+- 最終レビュー: [mvp-final-review.md](../docs/features/feat-metrics-tracking/mvp-final-review.md)
+- P02 で owner を確定: `packages/estimation` 境界は foundation、metrics domain module は本 feature

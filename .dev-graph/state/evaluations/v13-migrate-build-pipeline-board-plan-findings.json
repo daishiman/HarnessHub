@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/v13-migrate-build-pipeline-board",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:750baf38f556f4a5f30f83495511891f9f352409a1049e62f86c97c03a9cb56f",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "機械上のexact-13形状は成立するが、P02はBuildをsheet_id起点・build_stage_eventsをscope列なしで設計する一方、P04/P05のnormative closureはsheet_id xor feedback_idを要求し、P05本文は両tableへtenant/workspace scopeを要求する。P03は古いP02だけをレビュー対象にするため、設計承認と実装契約が相互矛盾する。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-02-architecture.md#背景",
+        "task-specs/phase-03-design-review.md#目的",
+        "task-specs/phase-04-test-design.md#Normative implementation closure (2026-07-19)",
+        "task-specs/phase-05-implementation.md#背景"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "P01..P13は各1件揃う一方、現行confirmed web契約qa-226..229のHearingSheet確定時Project関連付け、trusted resolver、Turso-onlyのstate/event/audit単一transaction、D1 zero-write fail-closed、/pipelineと明示action+ConfirmDialog、immutable 0008からのBuild専用deltaが要件・設計・test・acceptance・releaseへ意味反映されていない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-01-requirements.md#背景",
+        "task-specs/phase-02-architecture.md#成果物",
+        "task-specs/phase-04-test-design.md#Verification and evidence",
+        "task-specs/phase-05-implementation.md#成果物",
+        "task-specs/phase-07-acceptance.md#Verification and evidence",
+        "task-specs/phase-13-release-deploy.md#Verification and evidence"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "FAIL",
+      "summary": "parent/package/phase IDは整合するが、goal-specがcurrent verifiedとする3 source hashは現行bytesと不一致である。またP08/P13はmigration artifactをpackages/db/schema/build-pipeline/として扱うが、repositoryの正規migration lineageはpackages/db/migrations/とmetaであり、語彙・配置・再実行契約が統一されていない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "goal-spec.json#lineage",
+        "task-specs/phase-08-refactoring-migration.md#成果物",
+        "task-specs/phase-08-refactoring-migration.md#Verification and evidence",
+        "task-specs/phase-13-release-deploy.md#成果物"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "FAIL",
+      "summary": "intra-feature DAGとC14 handoff exact-setは前方・非循環だが、Hearing Intake ownerのProject関係/trusted resolverとTurso transaction-capable repositoryへのtyped handoffがphase依存へ接地していない。加えてP08が生成すると宣言するmigrationはwrite scope外の正規pathへ出るため、P13が消費・適用できるartifact依存が成立しない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "system-build-handoff.json#p01_entry_gate",
+        "task-graph.json#nodes",
+        "task-specs/phase-05-implementation.md#成果物",
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "task-specs/phase-08-refactoring-migration.md#成果物",
+        "task-specs/phase-13-release-deploy.md#成果物"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-2-2",
+        "--staging",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:750baf38f556f4a5f30f83495511891f9f352409a1049e62f86c97c03a9cb56f\",\n  \"feature_package_id\": \"feature-package/feat-build-pipeline-board\",\n  \"parent_feature\": \"feat-build-pipeline-board\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "a52e1bf7ee65402aca4296000226349b6e6bccf7f3c31b45a8ec09a8a2a134ce"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "b73545cddbb02dd3ce2a9cd527facdc07fa9c8ccfa86b4bf0e9344c44a504144"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "e187f0994c5ad5b35f01ec31f1c813805d6aa0047b8605f339c50e860dd787a3"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "d2250d78de7fabb3558c74c2b60ddfaa14edc23a4e1766004229c5ed57d7b27b"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "08e456b8ccc2e80efd66cd2dd5d6da15f657c1dd74a05ee52529c4188f0dd5ec"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "38a3e5062662b7d0ac4698d638ec911e1d461adfa1a3f3011223238014b7b453"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "c6021fef91fa6303b77a1541d007c1adf9eb1b24d967fec52caaff8fd85526a8"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "85ca6558ed090812bf656f6d8ca210533ab7290fbebcba60f6b408910318834e"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "08d4b373da16d3cf4bed68d10212468142b14e919767b788d0f8509711cc29c0"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "aa88b17b813d4db060f4f14a9ba4077019b6ac14dbae8343981b623010489135"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "b008acc11037c47947c77f89fa22a9585893b08858e47a6519849ea31940c8fe"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "7673f18444c283714b17e0e937d6ce785f5766557ce82aff90b374c4ef39cd69"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "4321b0b0e65201b5d97077162b8dad7ad1c115d73b3f6c5123a988fc5c2f9c60"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "80dd4e5dd06c4cbb8a97edce1ef32f8f65b82f583a9dc8943e8f8f2e0448a56a"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "1e3a9de209a4c7ccc106843e649bcb8e6e97998200c503efea8e35fc0c6f9d5e"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "fceee51206d8dbf5411c88481437102f02f04463f041aeaa53ef670afa44482b"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "bfa800151dcdfc5d85a13b2a447c3325c7aae5bf19973cdcb29bf45de0ea151e"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "44bd55918ea19e41502067642c3fb91cf669826b4ce75d60408aa8c61e1e05f9"
+    }
+  ],
+  "staleness_rule": "C11はpromotion直前にstaging-manifest.jsonのfiles exact-setとstaging-manifest.json自体のSHA-256をcurrent staging bytesから再計算し、追加・欠落・1 byteでも不一致があれば本評価を無効化する。別canonical_digestへ本verdictを再利用しない。",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "stale-source-lineage",
+      "observation": "goal-specはfrontend architecture、backend architecture、compiled system specificationをverified currentとして旧hashへpinしているが、現行bytesのSHA-256は順に59196ff1...、dbebd5e9...、3a33f3a0...で全件不一致である。validatorはstaging canonical set外のsource bytesを再照合しないためpassしたが、現行qa-226..229/appr-043を含むsource stateには束縛されていない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/goal-spec.json#lineage",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md",
+        "specs/harness-hub-system-specification.md",
+        "system-spec/spec-state.json#qa-226..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "cross-phase-schema-api-contradiction",
+      "observation": "P02のBuild列はsheet_idだけでfeedback_idを持たず、build_stage_events列にもtenant_id/workspace_idがない。一方P04/P05 closureはPOST manual recoveryのsheet_id xor feedback_idを必須化し、P05本文はBuild/build_stage_events双方のtenant/workspace scopeを要求する。P03がreviewするP02と、後続が実装するeffective contractが同じschema/APIを表していない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-02-architecture.md#背景",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-03-design-review.md#目的",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-04-test-design.md#Normative implementation closure (2026-07-19)",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-05-implementation.md#背景",
+        "system-spec/spec-state.json#qa-228..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "confirmed-contract-semantic-omission",
+      "observation": "現行confirmed qa-226..229はS13=/pipeline、card明示action+ConfirmDialog、HearingSheet確定時のserver-side Project作成/関連付け、Build trusted resolver、Turso-only CAS+state+event+audit単一transaction、D1 503 zero-writeを定める。しかし13 taskはこれらを設計、write scope、negative test、acceptance、release smokeへ割り当てておらず、形式exact-13だけを満たしている。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-01-requirements.md",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-02-architecture.md",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-04-test-design.md",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-05-implementation.md",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-07-acceptance.md",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-13-release-deploy.md",
+        "system-spec/spec-state.json#qa-226..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "migration-lineage-contradiction",
+      "observation": "P08/P13はBuild/build_stage_eventsを未作成の新規entity、backfill不要としてschema directory内へmigrationを生成・適用する。現行database正本はcombined 0008をimmutable baselineとして保持し、既存Build列へBuild専用additive delta/backfillを適用し、Metrics delta/releaseと分離する契約である。このplanを実行すると既存lineageまたは既存dataを誤処理する。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-08-refactoring-migration.md#背景",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-08-refactoring-migration.md#Compatibility/migration/backfill",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-13-release-deploy.md#Compatibility/migration/backfill",
+        "packages/db/migrations/0008_metrics-tracking-and-build-stage-events.sql",
+        "system-spec/spec-state.json#qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "verification-and-release-fail-open",
+      "observation": "P08のpnpm --filter db migrate:generate/migrate:checkとP13のpnpm --filter hub smoke-testはpackage scriptsに存在せず、実行してもpnpmは『None of the selected packages has ... script』を表示しexit 0となる。P13はDBの正規migrate:deployも呼ばないため、migration未生成・未適用・smoke未実施をgreenへ潰せ、P11のreproducible evidence契約を満たせない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-08-refactoring-migration.md#Verification and evidence",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-11-evidence.md#目的",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-13-release-deploy.md#Verification and evidence",
+        "packages/db/package.json#scripts",
+        "apps/hub/package.json#scripts",
+        "command:pnpm --filter db migrate:generate => no script, exit 0",
+        "command:pnpm --filter hub smoke-test => no script, exit 0"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "external-owner-and-transaction-dependency-gap",
+      "observation": "task DAGはP01からP13まで直列だが、Build作成が必須消費するHearing Intake ownerのProject関係/trusted resolver成果物と、state/event/auditを同一Turso transactionへ束ねるDB repository/adapterがP05 consumed artifacts・write scope・test handoffに存在しない。P05はhearing intake実装をscope外とし、packages/dbはschema pathだけを所有するため、owner不在または部分書込みのままphaseがreadyになり得る。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/system-build-handoff.json#p01_entry_gate",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-graph.json#nodes",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-05-implementation.md#成果物",
+        ".dev-graph/staging/v13-migrate-build-pipeline-board/task-specs/phase-05-implementation.md#スコープ外",
+        "features/feat-build-pipeline-board.md#機能間依存",
+        "system-spec/spec-state.json#qa-228..qa-229"
+      ]
+    }
+  ]
+}

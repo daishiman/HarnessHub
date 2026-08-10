@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1497,
+  "graph_revision": 1498,
   "nodes": [
     {
       "acceptance": [
@@ -3426,9 +3426,9 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T10:44:09Z",
@@ -3504,7 +3504,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T20:54:14.294507Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -3655,9 +3655,9 @@
         "status": "open"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T10:44:09Z",
@@ -3731,7 +3731,7 @@
       "template_version": "1.0.0",
       "title": "Studio: 構築パイプライン可視化 (7 工程ボード)",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T04:18:24Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -8533,11 +8533,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.1",
-        "linked_at": "2026-07-18T01:42:26Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8556,12 +8552,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
@@ -8596,7 +8592,12 @@
       "related_nodes": [
         "feat-build-pipeline-board",
         "arch-harness-hub-frontend",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-hub-foundation",
+        "feat-auth-tenancy",
+        "feat-domain-model-db"
       ],
       "resource_scope": [
         "docs/features/feat-build-pipeline-board/requirements-baseline.md"
@@ -8608,15 +8609,15 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-01-requirements.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-01-requirements.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "active",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -8625,10 +8626,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "構築パイプラインボード要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T10:16:42Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -8641,11 +8642,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.2",
-        "linked_at": "2026-07-18T01:42:27Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8664,12 +8661,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P01"
       ],
@@ -8706,7 +8703,12 @@
       "related_nodes": [
         "feat-build-pipeline-board",
         "arch-harness-hub-frontend",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-hub-foundation",
+        "feat-auth-tenancy",
+        "feat-domain-model-db"
       ],
       "resource_scope": [
         "docs/features/feat-build-pipeline-board/architecture-decision-record.md"
@@ -8718,10 +8720,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-02-architecture.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-02-architecture.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -8735,10 +8737,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -8751,11 +8753,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.3",
-        "linked_at": "2026-07-18T01:42:28Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8774,12 +8772,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P02"
       ],
@@ -8828,10 +8826,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-03-design-review.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-03-design-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -8845,10 +8843,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -8862,11 +8860,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.4",
-        "linked_at": "2026-07-18T01:42:29Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8885,12 +8879,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P03"
       ],
@@ -8932,7 +8926,10 @@
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/src/app/api/v1/builds/",
-        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "apps/hub/src/__tests__/build-pipeline-board/",
+        "packages/schemas/build-pipeline-board/contracts.test.ts",
+        "packages/db/__tests__/build-stage-transition.test.ts",
+        "packages/db/__tests__/migration-lineage.test.ts",
         "docs/features/feat-build-pipeline-board/test-design.md"
       ],
       "scope_in": [
@@ -8945,10 +8942,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-04-test-design.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-04-test-design.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -8962,10 +8959,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -8979,11 +8976,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.5",
-        "linked_at": "2026-07-18T01:42:30Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9002,12 +8995,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P04"
       ],
@@ -9044,15 +9037,24 @@
       "related_nodes": [
         "feat-build-pipeline-board",
         "arch-harness-hub-frontend",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-hub-foundation",
+        "feat-auth-tenancy",
+        "feat-domain-model-db"
       ],
       "resource_scope": [
         ".github/workflows/ci.yml",
-        "apps/hub/src/app/(dashboard)/builds/",
+        "apps/hub/src/app/(dashboard)/pipeline/",
+        "apps/hub/src/app/(dashboard)/builds/page.tsx",
         "apps/hub/src/app/api/v1/builds/",
         "apps/hub/src/features/build-pipeline-board/",
-        "apps/hub/src/features/build-pipeline-board/__tests__/",
-        "packages/db/schema/build-pipeline/",
+        "apps/hub/src/__tests__/build-pipeline-board/",
+        "apps/hub/src/lib/authz/",
+        "packages/db/schema/build-pipeline/schema.ts",
+        "packages/db/repository/",
+        "packages/db/__tests__/build-stage-transition.test.ts",
         "packages/schemas/build-pipeline-board/"
       ],
       "scope_in": [
@@ -9068,10 +9070,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-05-implementation.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-05-implementation.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9085,10 +9087,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9102,11 +9104,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.6",
-        "linked_at": "2026-07-18T01:42:31Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9125,12 +9123,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P05"
       ],
@@ -9172,7 +9170,7 @@
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/src/app/api/v1/builds/",
-        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "apps/hub/src/__tests__/build-pipeline-board/",
         "docs/features/feat-build-pipeline-board/test-run-report.md"
       ],
       "scope_in": [
@@ -9185,10 +9183,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-06-test-run.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-06-test-run.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9202,10 +9200,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9219,11 +9217,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.7",
-        "linked_at": "2026-07-18T01:42:32Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9242,12 +9236,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P06"
       ],
@@ -9296,10 +9290,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-07-acceptance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9313,10 +9307,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9329,11 +9323,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.8",
-        "linked_at": "2026-07-18T01:42:33Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9352,12 +9342,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P07"
       ],
@@ -9394,11 +9384,15 @@
       "related_nodes": [
         "feat-build-pipeline-board",
         "arch-harness-hub-frontend",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-domain-model-db"
       ],
       "resource_scope": [
         "docs/features/feat-build-pipeline-board/refactoring-migration-note.md",
-        "packages/db/schema/build-pipeline/"
+        "packages/db/migrations/",
+        "packages/db/migrations/meta/",
+        "packages/db/__tests__/migration-lineage.test.ts"
       ],
       "scope_in": [
         "docs/features/feat-build-pipeline-board/refactoring-migration-note.md",
@@ -9408,10 +9402,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-08-refactoring-migration.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-08-refactoring-migration.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9425,10 +9419,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9442,11 +9436,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.9",
-        "linked_at": "2026-07-18T01:42:35Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9465,12 +9455,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P08"
       ],
@@ -9512,7 +9502,7 @@
       "resource_scope": [
         ".github/workflows/ci.yml",
         "apps/hub/src/app/api/v1/builds/",
-        "apps/hub/src/features/build-pipeline-board/__tests__/",
+        "apps/hub/src/__tests__/build-pipeline-board/",
         "docs/features/feat-build-pipeline-board/quality-assurance-report.md"
       ],
       "scope_in": [
@@ -9525,10 +9515,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-09-quality-assurance.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-09-quality-assurance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9542,10 +9532,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9559,11 +9549,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.10",
-        "linked_at": "2026-07-18T01:42:36Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9582,12 +9568,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P09"
       ],
@@ -9636,10 +9622,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-10-final-review.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-10-final-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9653,10 +9639,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9670,11 +9656,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.11",
-        "linked_at": "2026-07-18T01:42:37Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9693,12 +9675,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P10"
       ],
@@ -9747,10 +9729,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-11-evidence.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-11-evidence.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9764,10 +9746,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "エビデンス収集 — 再現可能な検証証跡の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9780,11 +9762,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.12",
-        "linked_at": "2026-07-18T01:42:38Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9803,12 +9781,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P11"
       ],
@@ -9857,10 +9835,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-12-documentation-operations.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-12-documentation-operations.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9875,10 +9853,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -9892,11 +9870,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-9am.13",
-        "linked_at": "2026-07-18T01:42:39Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9915,12 +9889,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+        "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:10:56Z",
+      "created_at": "2026-08-10T13:41:31Z",
       "depends_on": [
         "SYS-BUILD-PIPELINE-BOARD-P12"
       ],
@@ -9957,13 +9931,25 @@
       "related_nodes": [
         "feat-build-pipeline-board",
         "arch-harness-hub-frontend",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-hub-foundation",
+        "feat-auth-tenancy",
+        "feat-domain-model-db"
       ],
       "resource_scope": [
         ".github/workflows/ci.yml",
+        "apps/hub/src/app/(dashboard)/pipeline/",
         "apps/hub/src/app/api/v1/builds/",
-        "apps/hub/src/features/build-pipeline-board/__tests__/",
-        "docs/features/feat-build-pipeline-board/release-notes.md"
+        "apps/hub/src/__tests__/build-pipeline-board/",
+        "docs/features/feat-build-pipeline-board/release-notes.md",
+        "system-spec/frontend.md",
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/security.md",
+        "architecture/harness-hub-frontend.md",
+        "architecture/harness-hub-backend.md"
       ],
       "scope_in": [
         ".github/workflows/ci.yml",
@@ -9975,10 +9961,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:10:56Z",
+        "imported_at": "2026-08-10T13:41:31Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-13-release-deploy.md",
+        "source_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-13-release-deploy.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -9992,10 +9978,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:41:31Z"
     },
     {
       "acceptance": [
@@ -11504,11 +11490,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.1",
-        "linked_at": "2026-07-18T01:46:14Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -11527,12 +11509,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [],
       "domain": "documentation",
       "evaluation_status": "pass",
@@ -11568,7 +11550,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/requirements-baseline.md"
@@ -11580,15 +11568,15 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-01-requirements.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-01-requirements.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "closed",
+      "status": "active",
       "tags": [
         "feat-metrics-tracking",
         "studio-extension",
@@ -11597,10 +11585,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T10:16:38Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -11615,11 +11603,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.2",
-        "linked_at": "2026-07-18T01:46:15Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -11638,12 +11622,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P01"
       ],
@@ -11681,7 +11665,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/architecture-decision-record.md"
@@ -11693,10 +11683,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-02-architecture.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-02-architecture.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -11710,10 +11700,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -11728,11 +11718,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.3",
-        "linked_at": "2026-07-18T01:46:16Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -11751,12 +11737,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P02"
       ],
@@ -11794,7 +11780,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/design-review-notes.md"
@@ -11806,10 +11798,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-03-design-review.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-03-design-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -11823,10 +11815,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -11841,11 +11833,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.4",
-        "linked_at": "2026-07-18T01:46:18Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -11864,12 +11852,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P03"
       ],
@@ -11907,14 +11895,24 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
+        "apps/hub/src/__tests__/metrics-tracking/",
         "apps/hub/src/features/metrics-tracking/",
-        "apps/hub/src/features/metrics-tracking/__tests__/",
         "docs/features/feat-metrics-tracking/test-design.md",
+        "packages/db/__tests__/metrics-tracking.test.ts",
+        "packages/db/__tests__/migration-lineage.test.ts",
+        "packages/estimation/src/estimate.ts",
+        "packages/estimation/src/metrics.test.ts",
         "packages/estimation/src/metrics.ts",
-        "packages/estimation/src/sheet.ts"
+        "packages/schemas/metrics-tracking/contracts.test.ts"
       ],
       "scope_in": [
         "apps/hub/src/features/metrics-tracking/",
@@ -11927,10 +11925,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-04-test-design.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-04-test-design.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -11944,10 +11942,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -11962,11 +11960,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.5",
-        "linked_at": "2026-07-18T01:46:19Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -11985,12 +11979,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P04"
       ],
@@ -12028,15 +12022,22 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
-        "apps/hub/src/app/(dashboard)/metrics/",
+        "apps/hub/src/app/(dashboard)/dashboard/",
+        "apps/hub/src/app/(dashboard)/tracking/",
         "apps/hub/src/features/metrics-tracking/",
         "packages/db/schema/metrics-tracking/",
         "packages/estimation/",
+        "packages/estimation/src/estimate.ts",
         "packages/estimation/src/metrics.ts",
-        "packages/estimation/src/sheet.ts",
         "packages/schemas/metrics-tracking/"
       ],
       "scope_in": [
@@ -12052,10 +12053,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-05-implementation.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-05-implementation.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12069,10 +12070,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12087,11 +12088,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.6",
-        "linked_at": "2026-07-18T01:46:20Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12110,12 +12107,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P05"
       ],
@@ -12153,13 +12150,19 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "apps/hub/src/features/metrics-tracking/",
         "docs/features/feat-metrics-tracking/test-run-results.md",
-        "packages/estimation/src/metrics.ts",
-        "packages/estimation/src/sheet.ts"
+        "packages/estimation/src/estimate.ts",
+        "packages/estimation/src/metrics.ts"
       ],
       "scope_in": [
         "apps/hub/src/features/metrics-tracking/",
@@ -12171,10 +12174,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-06-test-run.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-06-test-run.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12188,10 +12191,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12205,11 +12208,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.7",
-        "linked_at": "2026-07-18T01:46:21Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12228,12 +12227,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P06"
       ],
@@ -12271,7 +12270,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/acceptance-record.md"
@@ -12283,10 +12288,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-07-acceptance.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-07-acceptance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12300,10 +12305,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12315,11 +12320,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.8",
-        "linked_at": "2026-07-18T01:46:23Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12338,12 +12339,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P07"
       ],
@@ -12379,10 +12380,17 @@
       "purpose": "feat-metrics-tracking の P08 を実行する: リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
       "related_nodes": [
         "feat-metrics-tracking",
-        "arch-harness-hub-data"
+        "arch-harness-hub-data",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/refactoring-migration-note.md",
+        "packages/db/migrations/",
         "packages/db/schema/metrics-tracking/"
       ],
       "scope_in": [
@@ -12393,10 +12401,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-08-refactoring-migration.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-08-refactoring-migration.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12410,10 +12418,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12428,11 +12436,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.9",
-        "linked_at": "2026-07-18T01:46:24Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12451,12 +12455,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P08"
       ],
@@ -12494,13 +12498,19 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "apps/hub/src/features/metrics-tracking/",
         "docs/features/feat-metrics-tracking/quality-assurance-report.md",
-        "packages/estimation/src/metrics.ts",
-        "packages/estimation/src/sheet.ts"
+        "packages/estimation/src/estimate.ts",
+        "packages/estimation/src/metrics.ts"
       ],
       "scope_in": [
         "apps/hub/src/features/metrics-tracking/",
@@ -12512,10 +12522,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-09-quality-assurance.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-09-quality-assurance.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12529,10 +12539,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12547,11 +12557,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.10",
-        "linked_at": "2026-07-18T01:46:25Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12570,12 +12576,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P09"
       ],
@@ -12613,7 +12619,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/final-review-record.md"
@@ -12625,10 +12637,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-10-final-review.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-10-final-review.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12642,10 +12654,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12660,11 +12672,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.11",
-        "linked_at": "2026-07-18T01:46:26Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12683,12 +12691,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P10"
       ],
@@ -12726,7 +12734,13 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/evidence-summary.md"
@@ -12738,10 +12752,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-11-evidence.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-11-evidence.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12755,10 +12769,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12771,11 +12785,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.12",
-        "linked_at": "2026-07-18T01:46:27Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12794,12 +12804,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P11"
       ],
@@ -12835,7 +12845,13 @@
       "purpose": "feat-metrics-tracking の P12 を実行する: ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
       "related_nodes": [
         "feat-metrics-tracking",
-        "arch-harness-hub-backend"
+        "arch-harness-hub-backend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "docs/features/feat-metrics-tracking/runbook.md"
@@ -12847,10 +12863,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-12-documentation-operations.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-12-documentation-operations.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12865,10 +12881,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [
@@ -12883,11 +12899,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-lm7.13",
-        "linked_at": "2026-07-18T01:46:28Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -12906,12 +12918,12 @@
         "status": "in_progress"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+        "evaluated_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
         "evaluator": "system-dev-plan-evaluator",
-        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/plan-findings.json"
       },
       "confirmation_status": "confirmed",
-      "created_at": "2026-07-19T14:16:35Z",
+      "created_at": "2026-08-10T13:52:06Z",
       "depends_on": [
         "SYS-METRICS-TRACKING-P12"
       ],
@@ -12949,13 +12961,25 @@
         "feat-metrics-tracking",
         "arch-harness-hub-backend",
         "arch-harness-hub-data",
-        "arch-harness-hub-frontend"
+        "arch-harness-hub-frontend",
+        "feat-hearing-intake",
+        "feat-publish-pipeline",
+        "feat-domain-model-db",
+        "feat-auth-tenancy",
+        "feat-hub-foundation",
+        "feat-user-org-admin"
       ],
       "resource_scope": [
         "apps/hub/src/features/metrics-tracking/",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-frontend.md",
         "docs/features/feat-metrics-tracking/release-record.md",
+        "packages/estimation/src/estimate.ts",
         "packages/estimation/src/metrics.ts",
-        "packages/estimation/src/sheet.ts"
+        "system-spec/backend.md",
+        "system-spec/database.md",
+        "system-spec/frontend.md"
       ],
       "scope_in": [
         "apps/hub/src/features/metrics-tracking/",
@@ -12967,10 +12991,10 @@
         "published task spec の『スコープ外』節を正本とする"
       ],
       "source_lineage": {
-        "imported_at": "2026-07-19T14:16:35Z",
+        "imported_at": "2026-08-10T13:52:06Z",
         "origin_kind": "system-dev-planner",
-        "source_digest": "03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
-        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/task-specs/phase-13-release-deploy.md",
+        "source_digest": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/task-specs/phase-13-release-deploy.md",
         "source_plugin": "system-dev-planner",
         "source_version": "0.1.0"
       },
@@ -12984,10 +13008,10 @@
       ],
       "target_date": null,
       "template_id": "task",
-      "template_version": "1.0.0",
+      "template_version": "1.1.0",
       "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-26T01:39:34.074446Z"
+      "updated_at": "2026-08-10T13:52:06Z"
     },
     {
       "acceptance": [

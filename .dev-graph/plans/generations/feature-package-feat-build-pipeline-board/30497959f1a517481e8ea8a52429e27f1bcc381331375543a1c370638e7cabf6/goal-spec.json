@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-build-pipeline-board",
+  "feature_context_digest": "sha256:eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441",
+  "purpose": "ヒアリング→要件定義→設計→構築→テスト→レビュー→公開の 7 工程を S13 のボードで進行管理し (工程操作は admin)、公開工程を既存 PublishRequest 状態機械 (B4/I2/I3) へ接続する",
+  "goal": "各ハーネスの構築進捗が 7 工程ボードで可視化され、工程操作が admin 限定 + 監査記録付きで行え、公開工程が publish パイプラインと二重実装なしに連動する状態",
+  "scope_in": [
+    "Build エンティティ (7 stage・リスク表示)",
+    "S13 パイプラインボード (ステージボード共通部品の消費)",
+    "工程操作の admin 権限 + 監査 event (SEC6)",
+    "公開工程の PublishRequest 接続 (B4)",
+    "HearingSheet 確定時の server-side Project 作成・関連付けと Build trusted resolver",
+    "Turso-only の Build state・stage event・audit 単一 transaction と D1 zero-write 503",
+    "S13=/pipeline と各 card の明示 action + ConfirmDialog",
+    "immutable combined 0008 を基点とする Build 専用 additive delta migration・backfill・release"
+  ],
+  "scope_out": [
+    "publish 状態機械の再実装 (既存 I2/I3 を使う)",
+    "工程の自動遷移 (手動運用から開始)"
+  ],
+  "acceptance": [
+    "7 工程の遷移が admin のみ操作でき監査 event に記録される",
+    "公開工程が PublishRequest の状態と整合する (二重状態を持たない)",
+    "ボードが axe 違反 0・CWV good で動作する",
+    "Build 作成は同一 tenant/workspace の確定済み HearingSheet→Project 関係を trusted resolver で解決できる場合だけ成功する",
+    "工程遷移は Turso で state・stage event・audit を単一 transaction に記録し、D1 は 503 typed unavailable かつ zero-write で拒否する",
+    "正規 route /pipeline で drag-and-drop に依存せず明示 action と ConfirmDialog から全7工程を操作できる",
+    "既存 combined 0008 を変更せず、Build 専用 future delta と backfill を Metrics release から分離して検証・rollback できる"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-build-pipeline-board.context.json",
+      "exists": true,
+      "sha256": "eeed295d50359e11ac8aee84800def3ad3399cee866ab5b4dc2712116c9a4441",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation.",
+      "feature_id": "feat-build-pipeline-board"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "59196ff1cb4aa3e7e6eacf2353efbdb93346beacf63420d95bd9a8bf240903f6",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "architecture/harness-hub-backend.md",
+      "exists": true,
+      "sha256": "dbebd5e96a1ddccd5ce274f5958f685706fa5daa1a206a0dd77b885d9b2b2170",
+      "digest_status": "verified",
+      "digest_note": "2026-07-19 immutable replan: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "specs/harness-hub-system-specification.md",
+      "exists": true,
+      "sha256": "3a33f3a09804b8d9c9176d8dbfdbcb547ae8847c851c20c2e2798c0ad86efa11",
+      "digest_status": "verified",
+      "digest_note": "2026-08-10 improvement cycle: current repository bytes were independently hash-pinned before evaluation."
+    },
+    {
+      "path": "system-spec/spec-state.json",
+      "exists": true,
+      "sha256": "897347b7836d1fc1d20a4f3066a8c871038bdfd0f95eabd6962721ea8c1cadff",
+      "digest_status": "verified",
+      "digest_note": "Confirmed qa-226..qa-229 and approval appr-043 are the current semantic overlay."
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "stage-transition-admin-audit-sec2-sec6-qa021",
+      "summary": "7 工程 (ヒアリング→要件定義→設計→構築→テスト→レビュー→公開) の遷移操作は S13 パイプラインボードで admin 限定とし (SEC2)、SEC6 で Studio 反映時に新規確定した監査対象 (工程操作・係数変更・doc 編集・フィードバック status 変更・ユーザー管理操作) の一つとして監査 event に記録する",
+      "source": "system-spec/ui-ux.md qa-021 (S13: 構築パイプライン 7 工程ボード。工程操作は admin); system-spec/security.md qa-025 (SEC2 認可単一 MW の role×操作許可表・工程操作は admin 限定, SEC6 監査対象追加)"
+    },
+    {
+      "id": "publish-stage-publishrequest-connect-no-dup-b4-i2-i3",
+      "summary": "S13 パイプラインの公開工程は新規状態機械を作らず、既存 PublishRequest 状態機械 (I2 static validation/secret scan/policy 判定、I3 immutable Release + TargetChannel 別 stable pointer による atomic な公開/更新/rollback) へ接続する。Build の状態機械は hearing→…→publish の隣接遷移のみとし、publish 工程は PublishRequest 接続 (B4) として扱い二重実装しない",
+      "source": "system-spec/00-requirements-definition.md I2, I3; system-spec/spec-state.json qa-023 (B4 publish 連携: S13 パイプラインの公開工程は既存 PublishRequest 状態機械 (I2/I3) へ接続し二重実装しない); system-spec/backend.md qa-033 (endpoint 一覧の builds、状態機械 §5 の Build 定義)"
+    },
+    {
+      "id": "build-entity-tenant-scope-d4-qa024",
+      "summary": "Build エンティティ (7 stage・リスク表示) は既存 0007/0008 lineage を互換baselineとし、D4 (row-level tenant scope: 単一 DB + tenant_id/workspace_id スコープ列 + アプリ層強制) に従う。今後の欠落列・制約・索引は Build 専用 additive delta/backfill で補う",
+      "source": "system-spec/00-requirements-definition.md D4; historical qa-024/qa-032 row-level scope; current qa-229 §7 and immutable 0007/0008 lineage supersede the historical create-only assumption"
+    },
+    {
+      "id": "stage-board-shared-component-qa021-qa022",
+      "summary": "S13 の 7 工程ボードは design system の共通部品 (ステージボード) を消費するのみとし、独自実装を行わない",
+      "source": "system-spec/ui-ux.md qa-021 (共通部品の拡張: ステージボードを design system に組込む); system-spec/frontend.md qa-022 (共通 design system で再実装しチャート等と同様に共通部品化する方針)"
+    },
+    {
+      "id": "rest-zod-single-source-authz-mw-b1-qa023",
+      "summary": "builds を含む新規 REST 資源群 (B1) は zod スキーマ単一ソースへ追加し、全て認可単一ミドルウェア (deny-by-default) 配下の role×操作許可表に従う",
+      "source": "system-spec/spec-state.json qa-023 (B1 新規 REST 資源群をヒアリング/シート/パイプライン/フィードバック/ドキュメント/ユーザー管理を含めて zod スキーマ単一ソースへ追加し全て認可 MW 配下); system-spec/backend.md qa-033 (endpoint 一覧 §4.1-§4.12、認可単一ミドルウェア deny-by-default の role×リソースマトリクス §3.3); system-spec/security.md qa-025 (SEC2)"
+    },
+    {
+      "id": "approval-queue-authz-table-shared-b9-qa023",
+      "summary": "工程操作の admin 権限判定は Yellow review (I8) の承認 queue と共通の認可表で扱う (B9 承認 queue 統合)。工程操作専用の別認可ロジックを新設しない",
+      "source": "system-spec/spec-state.json qa-023 (B9 承認 queue 統合: Yellow review (I8) と工程操作の admin 権限判定を共通の認可表で扱う)"
+    },
+    {
+      "id": "project-trusted-resolver-qa228-qa229-appr043",
+      "summary": "HearingSheet 確定時に server-side で Project を冪等作成・関連付けし、Build は同一 tenant/workspace の確定関係を trusted resolver で解決できる場合だけ作成する。client body・token claim・表示名由来の project_id を採用しない",
+      "source": "system-spec/spec-state.json qa-228 §1, qa-229 §1; appr-043 item 1"
+    },
+    {
+      "id": "turso-atomic-d1-fail-closed-qa228-qa229-appr043",
+      "summary": "Build mutation の正規 writer は Turso とし、CAS・state・stage event・audit を単一 transaction で all-or-nothing に記録する。D1 は同等原子性の証明まで 503 typed unavailable かつ zero-write で拒否し fallback しない",
+      "source": "system-spec/spec-state.json qa-228 §6, qa-229 §4; appr-043 item 2"
+    },
+    {
+      "id": "pipeline-explicit-action-confirm-dialog-qa226-qa227",
+      "summary": "S13 の正規 route は /pipeline、個票は /pipeline/[buildId] とする。drag-and-drop を唯一の操作にせず各 card の明示 action と ConfirmDialog で工程遷移を実行する",
+      "source": "system-spec/spec-state.json qa-226 §2/§6, qa-227 §1; appr-043"
+    },
+    {
+      "id": "immutable-0008-build-delta-qa229",
+      "summary": "既存 combined 0008 migration は immutable に保持して再採番・物理分割せず、今後の delta migration・release・rollback evidence は Build と Metrics で分離する。Build delta は既存行の trusted backfill を含む additive migration とする",
+      "source": "system-spec/spec-state.json qa-229 §7; docs/features/feat-build-pipeline-board/architecture-decision-record.md §8"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "confirmed + completeness evaluator PASS",
+    "notes_ja": "現行 feature context、architecture/spec lineage、qa-226..qa-229/appr-043 を repository bytes から SHA-256 再計算し、P01..P13 の current canonical baseline に固定した。",
+    "digest_recomputed_by": "improvement-cycle-1 semantic-sync 2026-08-10",
+    "status": "complete"
+  },
+  "extracted_at": "2026-08-10T00:00:00Z"
+}

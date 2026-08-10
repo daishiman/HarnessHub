@@ -7,6 +7,7 @@
 
 import { getTableName } from 'drizzle-orm';
 import type { SQLiteTable } from 'drizzle-orm/sqlite-core';
+import * as buildPipeline from './build-pipeline/schema';
 import * as builds from './builds/schema';
 import * as catalog from './core/catalog';
 import * as identity from './core/identity';
@@ -15,10 +16,12 @@ import * as security from './core/security';
 import * as docsCms from './docs-cms/schema';
 import * as feedbackLoop from './feedback-loop/schema';
 import * as hearingIntake from './hearing-intake/schema';
+import * as metricsTracking from './metrics-tracking/schema';
 import * as tenantData from './tenant-data/schema';
 import * as tenantDataTombstones from './tenant-data/tombstones';
 
 // --- studio extensions (re-export のみ。各 feature が自身の write_scope から追加する) ---
+export * from './build-pipeline/schema';
 export * from './builds/schema';
 export * from './core/catalog';
 export * from './core/identity';
@@ -28,6 +31,7 @@ export * from './core/security';
 export * from './docs-cms/schema';
 export * from './feedback-loop/schema';
 export * from './hearing-intake/schema';
+export * from './metrics-tracking/schema';
 export * from './tenant-data/schema';
 export * from './tenant-data/tombstones';
 
@@ -71,6 +75,9 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       docsCms.documents,
       feedbackLoop.feedbacks,
       builds.builds,
+      buildPipeline.buildStageEvents,
+      metricsTracking.metricsEvents,
+      metricsTracking.metricsRollups,
     ].map((table) => [getTableName(table), table]),
   ),
 );

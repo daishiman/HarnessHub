@@ -301,15 +301,16 @@ describe('P13 production migration / smoke CLI', () => {
     // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
     // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms) /
     // 0006 tenant-data-retention (封筒暗号化拡張と tombstone 台帳) /
-    // 0007 feedback/builds (feedback-loop)
+    // 0007 feedback/builds (feedback-loop) /
+    // 0008 metrics-tracking (metrics_events/metrics_rollups) と build-pipeline-board (build_stage_events)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 8, applied: 0, pending: 8 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 9, applied: 0, pending: 9 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 8 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 9 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 8, appliedAfter: 8 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 9, appliedAfter: 9 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

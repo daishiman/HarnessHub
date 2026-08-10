@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-metrics-tracking",
+  "parent_feature": "feat-metrics-tracking",
+  "nodes": [
+    {
+      "id": "SYS-METRICS-TRACKING-P01",
+      "graph_node_id": "sys-metrics-tracking-p01",
+      "title": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P02",
+      "graph_node_id": "sys-metrics-tracking-p02",
+      "title": "アーキテクチャ設計 — MetricsEvent/MetricsRollup スキーマ・ingest/rollup/summary API 契約・試算エンジン owner 確定・S09/S16 画面構成設計",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P01"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P03",
+      "graph_node_id": "sys-metrics-tracking-p03",
+      "title": "独立設計レビュー — MetricsEvent/MetricsRollup スキーマ・認可設計・試算エンジン owner 決定・S09/S16 rollup 読取専用設計の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P02"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P04",
+      "graph_node_id": "sys-metrics-tracking-p04",
+      "title": "テストファースト設計 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算・異常検知 cron のテスト設計",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P03"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P05",
+      "graph_node_id": "sys-metrics-tracking-p05",
+      "title": "実装 — MetricsEvent/MetricsRollup スキーマ・ingest/summary/rollups API・Workers cron 週次 rollup・試算エンジン純関数・S09/S16 画面の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P04"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P06",
+      "graph_node_id": "sys-metrics-tracking-p06",
+      "title": "テスト実行 — ingest 冪等性・rollup 事前集計・試算エンジン単体・tenant 分離・dim=user 認可・bundle 予算テストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P05"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P07",
+      "graph_node_id": "sys-metrics-tracking-p07",
+      "title": "受入 — goal-spec acceptance 3 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P06"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P08",
+      "graph_node_id": "sys-metrics-tracking-p08",
+      "title": "リファクタリング/マイグレーション — metrics_events/metrics_rollups テーブルマイグレーション生成と後方互換性確認",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P07"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P09",
+      "graph_node_id": "sys-metrics-tracking-p09",
+      "title": "品質保証 — CI 品質ゲート (tenant 分離・認可・bundle 予算・監査・cron) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P08"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P10",
+      "graph_node_id": "sys-metrics-tracking-p10",
+      "title": "最終独立レビュー — quality_constraints 8 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P09"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P11",
+      "graph_node_id": "sys-metrics-tracking-p11",
+      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P10"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P12",
+      "graph_node_id": "sys-metrics-tracking-p12",
+      "title": "ドキュメント/運用 — ingest/rollup cron 運用・Turso 使用量監視・異常検知通知・S09/S16 運用手順の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P11"
+      ]
+    },
+    {
+      "id": "SYS-METRICS-TRACKING-P13",
+      "graph_node_id": "sys-metrics-tracking-p13",
+      "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-metrics-tracking",
+      "parent_feature": "feat-metrics-tracking",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P12"
+      ]
+    }
+  ]
+}

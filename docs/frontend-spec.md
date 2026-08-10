@@ -33,13 +33,13 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | route | 画面 | 備考 |
 |---|---|---|
 | `/signin` / `/device` | S07 サインイン / S08 Device 承認 | 未認証 layout。S07 はテナント解決 → IdP redirect (D3。mockup の password login は不採用) |
-| `/dashboard` | S09 ダッシュボード | `/` は `/dashboard` へ redirect |
+| `/dashboard` | S09 ダッシュボード | `/` は `/dashboard` へ redirect。**MVP 実装 path は `/metrics`**（canonical alias は後続） |
 | `/harnesses` / `/harnesses/[projectId]` | S01 一覧 / S02 詳細 | mock 実測どおり公開ウィザードは **S01 の「プラグインを公開」モーダル**。install/download は S01/S02 から開く。S03 (公開状態) は S02 の「公開」タブにも統合 |
 | `/sheets` / `/sheets/new` / `/sheets/[id]` | S11 一覧 / S10 ウィザード / S12 詳細 | |
-| `/pipeline` | S13 構築パイプライン | |
+| `/pipeline` | S13 構築パイプライン | **MVP 実装 path は `/builds`**（canonical alias は後続） |
 | `/feedback` / `/feedback/[id]` | S14 改善要望 | 起票フォームは一覧内シート/モーダル |
 | `/docs` / `/docs/[id]` / `/docs/[id]/edit` | S15 ドキュメント | |
-| `/tracking` | S16 利用・削減効果 | |
+| `/tracking` | S16 利用・削減効果 | **MVP 実装 path は `/metrics/usage`**（canonical alias は後続） |
 | `/users` / `/users/[id]` | S17 ユーザー管理 | admin のみ (route guard + API 側 deny) |
 | `/account` / `/legal` | S18 アカウント設定 / 規約 | |
 | `/workspace-settings` | S04 Workspace 設定・Release 履歴 | admin 中心 (履歴は owner も) |

@@ -3,7 +3,7 @@ status: confirmed
 category: backend
 aggregate: 確定
 spec_cells: [backend.web, backend.mobile, backend.tablet, backend.desktop-windows, backend.desktop-linux, backend.desktop-macos]
-serves_goals: [G1, G2, G4, G5, G3]
+serves_goals: [G4, G5, G1, G3]
 ---
 
 # バックエンド (backend)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-186 |
+| Web (web) | 確定 | 確定質疑: qa-228 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,23 +24,32 @@ serves_goals: [G1, G2, G4, G5, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-186 (対応セル: web)
+### qa-228 (対応セル: web)
 
-**質問**: 原因の再調査中に、認証に関わる環境値の読出点が 2 箇所ではなく 3 箇所であることが判明した。また各読出点の失敗が利用者からどう見えるかを実測で確認した。記録せよ。
+**質問**: backend/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
 
-**回答**: 3 経路と、それぞれの失敗時の見え方を記録する。**3 つとも安全側に倒れ、3 つとも理由を残さない。**
+**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-220〜qa-224のうち矛盾しない契約を統合した現行正本である。認証方式D3、認可単一middleware、strict schema、deny-by-default、共通error model、additive evolutionを維持する。
 
-[qa-186-a 経路 1: middleware (edge)] apps/hub/src/middleware.ts:26-35。module 最上位で process.env.AUTH_SESSION_SECRET を読み、未解決なら provider を差さない createAuthAdapter() を構築する = deny-all。実装のコメントは「秘密が未設定なら provider を差さない = deny-all のまま。『秘密が無いときは検証を飛ばす』実装にすると、環境変数の設定漏れがそのまま認証バイパスになる」と明記しており、**設計判断としては正しい**。問題は倒れ方ではなく、倒れたことが記録されないことである。
+【1 Projectの正規生成と解決】
+HearingSheet確定遷移を起点に、サーバが同一tenant/workspace内でProjectを冪等に作成または既存Projectへ関連付け、その関係を保存する。Build作成はこの確定関係をtrusted resolverで解決できた場合だけ許す。MetricsはbodyのharnessIdをサーバ側Harness/Release/Project registryでtenant/workspace/projectへ一意に解決する。project_idをclient body・表示名・token claimから採用せず、未解決・不一致・越境は情報を漏らさずfail-closedとする。
 
-[qa-186-b 経路 2: root page (server component)] apps/hub/src/app/page.tsx。同じく process.env.AUTH_SESSION_SECRET を読む。**契約 A は実装済みである** — session が検証できれば DEFAULT_POST_SIGNIN_LANDING へ redirect する。着地先は apps/hub/src/lib/routing/post-signin-landing.ts の `DEFAULT_POST_SIGNIN_LANDING = '/sheets'` であり、src/app/(dashboard)/sheets/page.tsx として**実在する**。すなわち「着地先が未実装だから飛べない」ではない。secret が未解決、または cookie が無い、または検証に失敗した場合に redirect が起きず、稼働状況の表示へ落ちる。**この 3 つの原因はいずれも同じ画面になる。** 報告された症状はこの画面である。
+【2 Metrics ingest】
+POST /api/v1/metrics/eventsはDevice Flowの短命Bearer token、x-harness-workspace-id、Idempotency-Keyを必須とする。tokenから信頼する主体はtenant/workspace/userまで。strict bodyはharnessIdと整数runCountだけで、client時刻・actor・department・project・時間・金額・給与・係数を拒否する。actorはprincipal由来、departmentはtrusted lookup未整備中null、occurred_atはサーバ採番。business factsはappend-onlyで更新・削除APIを持たない。
 
-[qa-186-c 経路 3: authRuntime (composition root) — 今回新たに判明] apps/hub/src/lib/authz/runtime.ts:220 の `authRuntime(source: Record<string, string | undefined> = process.env)`。これが例外を投げると、apps/hub/src/app/[tenant_slug]/signin/page.tsx の resolveConnection() が catch して `{ available: false }` を返し、サインイン画面は「認証基盤が未結線です / OIDC の本番 adapter と Auth.js が未結線のため、サインインを開始できません」という警告を表示する。
-この経路は他の 2 つと違い**画面に理由を出している**点で優れている。ADR §10「認証基盤が未結線であることを画面上でも隠さない」の実装であり、同 file は in-memory 実装を本番へ差さない理由も「未結線が 200 応答で隠れる」と明記している。**この設計思想は既に repository にある。** 本 feature が E-3 として求めているのは新しい思想ではなく、既にある思想を残り 2 経路へ及ぼすことである。
-ただしこの画面も、どの環境値が解決できなかったかは示さない。運用者が原因へ到達するには足りない。
+【3 冪等】
+論理scopeはtenant+endpoint、TTLは24時間、digestはcanonical payloadに束縛する。同key・同digestの有効期間内再送は200で同じeventを再生し、同key・異digestは422で計上しない。期限切れkeyは旧event factsを変えずclaimだけ解放する。unique constraintを同時実行の最終防壁とする。
 
-[qa-186-d 3 経路の共通性 = 本 feature の欠陥そのもの] 3 つとも process.env を直接読み、3 つとも安全側に倒れ、3 つとも**どの名前が解決できなかったかを残さない**。結果として、テナント未登録・接続無効・secret 未投入・secret 解決失敗・cookie 無し・署名検証失敗のいずれであっても、利用者が見る画面と外形的な応答はほぼ同じになる。本セッションで原因を確定できなかったこと自体が、この欠陥の実証である。
+【4 rollup】
+Workers cronは日次事前集計と週次確定を行い、tenant/harness/department/project/user次元のrun_count、saved_minutes、saved_amount_jpyをサーバ側packages/estimationで算出する。workspace+period単位の全次元upsertをTurso単一transactionでcommitし、失敗時は全件rollbackする。D1 write adapterは同等all-or-nothing証明まで無効。画面APIはcommit済みrollupとowner snapshotだけを読み、生eventのonline aggregateを禁止する。
 
-[qa-186-e V6 への影響] V6 の「吸収層の外での環境値の直接読み出しを検出し 0 件でなければ落とす」の**検査対象は 2 箇所ではなく 3 箇所**である。fixture test は middleware.ts / app/page.tsx / lib/authz/runtime.ts の3 つすべてで発火することを固定する。2 箇所と書いていた従来の記述は、実装より狭い列挙であった — **分類語彙で 8 回繰り返した失敗と同じ型が、検査対象の列挙でも起きていた。**
+【5 KPIとanomaly】
+completionRateは期間末HearingSheet snapshotのcompleted件数÷対象総数、utilizationRateは期間末公開済みHarness snapshotのうち期間内利用1回以上の件数÷対象総数。分母0はrate=null+denominator_empty。anomalyは過去4完了週が揃い中央値が0でない場合だけ10倍超を評価する。通知は観測日・scope・user・rule versionで冪等化し、ingestをブロックしない。
+
+【6 Build mutation】
+正規endpointはPOST /api/v1/builds/{id}/stage。expected source stageまたはexpected_updated_atによるCASを課し、競合は409。正規writerはTursoだけで、state・stage event・auditを同一transactionでall-or-nothingに記録する。D1は同等原子性が証明されるまで503 typed unavailableかつzero-writeで拒否し、部分書込みやTurso失敗時fallbackを行わない。
+
+【7 UI供給】
+S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapshotAt/nullable rate/reasonと、chart/table共通data modelを返す。集計金額はmember以上、user次元の金額はusers.read_salary保持者だけに返す。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 
@@ -188,9 +197,41 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-186 (対応セル: web) の判断へ適用する
-- 上記原則は確定内容 qa-010 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
-- 資するゴール: G1, G2, G4, G5, G3
+##### 確定内容 qa-228 (対応セル: web)
+
+- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-220〜qa-224のうち矛盾しない契約を統合した現行正本である。認証方式D3、認可単一middleware、strict schema、deny-by-default、共通error model、additive evolutionを維持する。
+
+【1 Projectの正規生成と解決】
+HearingSheet確定遷移を起点に、サーバが同一tenant/workspace内でProjectを冪等に作成または既存Projectへ関連付け、その関係を保存する。Build作成はこの確定関係をtrusted resolverで解決できた場合だけ許す。MetricsはbodyのharnessIdをサーバ側Harness/Release/Project registryでtenant/workspace/projectへ一意に解決する。project_idをclient body・表示名・token claimから採用せず、未解決・不一致・越境は情報を漏らさずfail-closedとする。
+
+【2 Metrics ingest】
+POST /api/v1/metrics/eventsはDevice Flowの短命Bearer token、x-harness-workspace-id、Idempotency-Keyを必須とする。tokenから信頼する主体はtenant/workspace/userまで。strict bodyはharnessIdと整数runCountだけで、client時刻・actor・department・project・時間・金額・給与・係数を拒否する。actorはprincipal由来、departmentはtrusted lookup未整備中null、occurred_atはサーバ採番。business factsはappend-onlyで更新・削除APIを持たない。
+
+【3 冪等】
+論理scopeはtenant+endpoint、TTLは24時間、digestはcanonical payloadに束縛する。同key・同digestの有効期間内再送は200で同じeventを再生し、同key・異digestは422で計上しない。期限切れkeyは旧event factsを変えずclaimだけ解放する。unique constraintを同時実行の最終防壁とする。
+
+【4 rollup】
+Workers cronは日次事前集計と週次確定を行い、tenant/harness/department/project/user次元のrun_count、saved_minutes、saved_amount_jpyをサーバ側packages/estimationで算出する。workspace+period単位の全次元upsertをTurso単一transactionでcommitし、失敗時は全件rollbackする。D1 write adapterは同等all-or-nothing証明まで無効。画面APIはcommit済みrollupとowner snapshotだけを読み、生eventのonline aggregateを禁止する。
+
+【5 KPIとanomaly】
+completionRateは期間末HearingSheet snapshotのcompleted件数÷対象総数、utilizationRateは期間末公開済みHarness snapshotのうち期間内利用1回以上の件数÷対象総数。分母0はrate=null+denominator_empty。anomalyは過去4完了週が揃い中央値が0でない場合だけ10倍超を評価する。通知は観測日・scope・user・rule versionで冪等化し、ingestをブロックしない。
+
+【6 Build mutation】
+正規endpointはPOST /api/v1/builds/{id}/stage。expected source stageまたはexpected_updated_atによるCASを課し、競合は409。正規writerはTursoだけで、state・stage event・auditを同一transactionでall-or-nothingに記録する。D1は同等原子性が証明されるまで503 typed unavailableかつzero-writeで拒否し、部分書込みやTurso失敗時fallbackを行わない。
+
+【7 UI供給】
+S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapshotAt/nullable rate/reasonと、chart/table共通data modelを返す。集計金額はmember以上、user次元の金額はusers.read_salary保持者だけに返す。
+- 原則: Threat modeling (abuse case を設計前提にする) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: project_idをclient/tokenから受けずserver registryで解決し、原子性能力のないD1 writerをzero-writeで閉じて越境参照と部分監査を防いだ。
+  - トレードオフ:
+    - D1ではBuild書込み可用性を提供できない
+    - trusted resolverとProject作成が先行依存になる
+##### 確定内容 qa-010 (対応セル: desktop-windows, desktop-macos)
+
+- 確定要件: TypeScript 統一を採用。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務: package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。検査ロジックは Hub 側 (Workers=JS) と共有し二重実装を回避する。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) は仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。
+- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 資するゴール: G4, G5, G1, G3
 
 ## 最新ドキュメント出典
 

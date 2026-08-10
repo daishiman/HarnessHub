@@ -229,7 +229,7 @@ cache hit を採用した場合も `checks[].disposition` は `executed` とし�
 selector の欠落・破損・base ref 解決不能・変更 path 空集合は、通常運用では standard への黙示 fallback にせず run を fail-closed で停止する。過去または bootstrap 環境で `tier_selector: "absent"` を記録済みの run は有効な tier 判定とみなさず、critical tier 相当の再検証対象とする。これにより、判断主体が不在のまま mvp の検査削減だけが既定化する経路を閉じる。
 
 現行 CI 配線は tier・blocking/advisory/deferred 集合の算出、妥当性検査、artifact 保存までを実装済みである。一方、下流 gate の実行自体を tier に応じて切り替える処理は未実装であり、`HarnessHub-xcl3` で追跡する。evaluator cache の writer/lookup/store 機構は `scripts/build-evaluator-cache.py` に実装済みだが、実 evaluator 呼出元への接続は未完了であり `HarnessHub-6nf1` で追跡する。実装済み機構と実運用で効いている機能を混同しない。
-- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
+- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
 - 資するゴール: G1, G4, G5
 
 ## 最新ドキュメント出典

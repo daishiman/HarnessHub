@@ -1,0 +1,18 @@
+{
+  "allowed_domains": [
+    "www.radix-ui.com"
+  ],
+  "findings": [
+    "Radix Primitives はアクセシビリティ、カスタマイズ性、開発者体験を重視した低レベル UI ライブラリである",
+    "コンポーネントはスタイルを持たず、既存のスタイル方式と組み合わせられる",
+    "WAI-ARIA の設計パターンに沿い、キーボード操作やフォーカス管理などの難しい挙動を扱う",
+    "個別 primitive 単位で段階的に導入できる"
+  ],
+  "retrieval_channel": "WebSearch/WebFetch",
+  "retrieval_method_disclosure": "公式 host に限定して検索し、公式 Introduction 本文を取得・確認した。",
+  "retrieved_at": "2026-08-10T11:54:59Z",
+  "returned_official_urls": [
+    "https://www.radix-ui.com/primitives/docs/overview/introduction"
+  ],
+  "target_id": "radix-primitives"
+}

@@ -98,3 +98,11 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## MVP 実装着地 (2026-08-10)
+
+- Beads: `HarnessHub-9am`（P01 closed、P02 in_progress、P03〜P13 は merge 後に順次）
+- package digest: `sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6`
+- 実装: builds/stage API、7 工程ボード UI（path `/builds`）、admin 限定遷移 + 監査、PublishRequest 接続
+- 仕様反映: [mvp-implementation-spec-reflection-receipt.md](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)
+- 最終レビュー: [mvp-final-review.md](../docs/features/feat-build-pipeline-board/mvp-final-review.md)
