@@ -11,7 +11,7 @@
   ただし plugin package 実体 (.claude-plugin/plugin.json を持つツリー) 配下は除外する。
   SKILL.md 等の frontmatter schema は Claude Code 側の仕様で決まっており、
   status:/layer: を足すと仕様違反かつ検証対象の破壊になるため (HarnessHub-5ph)。
-- system-spec/ 直下はコンパイラ出力 (*.md) と正本 JSON 3 種のみ (混入遮断)
+- system-spec/ 直下はコンパイラ出力 (*.md)、正本 JSON、C13 の取得証跡 JSON のみ (混入遮断)
 - リポジトリ直下のファイルは allowlist 制 (置き場迷子の遮断)
 
 dev-graph 未初期化 (.dev-graph/config.json 不在) の repo は検査対象なしとして exit 0。
@@ -66,6 +66,11 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
 # retrieval-evidence/ は run-system-spec-doc-fetch の契約が置き場所を
 # `system-spec/retrieval-evidence/<target_id>.json` と固定しており、fetched-references.json の
 # evidence_ref がここを指す。禁止すると出典の取得証跡そのものが置けなくなる。
+#
+# ただし allowlist は「そのディレクトリの存在を許す」だけで、中身を無検査で通す意味ではない。
+# 名前で通して中身を見逃すと、証跡ディレクトリが任意ファイルの避難所になり、
+# ここを唯一の正規配置と宣言している C13 の evidence_ref 契約が実質無効化される。
+# そのため直下に平坦な *.json だけを許し、ネストしたディレクトリと非 JSON は拒否する。
 SYSTEM_SPEC_DIR_ALLOWLIST = {
     "retrieval-evidence",
 }
@@ -260,26 +265,38 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
                     "graph-node.schema.json#/$defs/documentLayer に適合しない"
                 )
 
-    # 3. system-spec/ 直下の混入遮断
+    # 3. system-spec/ 直下の混入遮断。C13 の証跡だけは一意の専用 directory に
+    # JSON として置く。任意のサブディレクトリや形式を許すと正本の配置規約が崩れる。
     ss_root = repo_root / roots.get("system_spec", "system-spec")
     if ss_root.is_dir():
         for p in sorted(ss_root.iterdir()):
             rp = p.relative_to(repo_root).as_posix()
             if p.is_dir():
                 if p.name in SYSTEM_SPEC_DIR_ALLOWLIST:
+                    # allowlist は名前を許すだけ。中身は平坦な *.json のみに限定する。
+                    for entry in sorted(p.iterdir()):
+                        entry_rp = entry.relative_to(repo_root).as_posix()
+                        if not entry.is_file() or entry.suffix != ".json":
+                            violations.append(
+                                f"VIOLATION: system-spec-stray: {entry_rp} は置かない。"
+                                f"許可: system-spec/{p.name}/*.json (平坦な JSON のみ)"
+                            )
                     continue
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp}/ (サブディレクトリ) は置かない。"
                     "system-spec/ 直下はコンパイラ出力と正本 JSON、および "
-                    + " / ".join(sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
-                    + "/ のみ"
+                    + " / ".join(f"{d}/*.json" for d in sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
+                    + " のみ"
                 )
             elif p.suffix == ".md" or p.name in SYSTEM_SPEC_JSON_ALLOWLIST:
                 continue
             else:
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp} は置かない。"
-                    "許可: *.md / " + " / ".join(sorted(SYSTEM_SPEC_JSON_ALLOWLIST))
+                    "許可: *.md / "
+                    + " / ".join(sorted(SYSTEM_SPEC_JSON_ALLOWLIST))
+                    + " / "
+                    + " / ".join(f"{d}/*.json" for d in sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
                 )
 
     # 4. リポジトリ直下の allowlist
@@ -410,6 +427,26 @@ def self_test() -> int:
             "unknown-dir" in line and "system-spec-stray" in line for line in v
         ), "未知の system-spec サブディレクトリを見逃している"
         (root / "system-spec" / "unknown-dir").rmdir()
+
+        # allowlist は名前を許すだけで、中身まで無検査にはしない。
+        # ここを素通りさせると証跡置き場が任意ファイルの避難所になり、
+        # `system-spec/retrieval-evidence/<target_id>.json` を唯一の正規配置と
+        # 宣言している C13 の evidence_ref 契約が実質無効化される。
+        evidence_dir = root / "system-spec" / "retrieval-evidence"
+        (evidence_dir / "stray.txt").write_text("x", encoding="utf-8")
+        v, _ = lint(root)
+        assert any(
+            "stray.txt" in line and "system-spec-stray" in line for line in v
+        ), "allowlist 済みディレクトリ内の非 JSON を見逃している"
+        (evidence_dir / "stray.txt").unlink()
+        (evidence_dir / "nested").mkdir()
+        v, _ = lint(root)
+        assert any(
+            "nested" in line and "system-spec-stray" in line for line in v
+        ), "allowlist 済みディレクトリ内のネストを見逃している"
+        (evidence_dir / "nested").rmdir()
+        v, _ = lint(root)
+        assert v == [], f"是正後にも違反が残った: {v}"
 
         # 4 種の違反を 1 つずつ検出できるか
         (root / "specs" / "orphan.md").write_text("x", encoding="utf-8")
