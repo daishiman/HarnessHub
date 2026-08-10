@@ -42,6 +42,7 @@ elicitation（要件ヒアリング）確定後に実装へ落とした契約の
 | 主題 | 要求の出所 | 実装契約 | feature / Beads |
 |---|---|---|---|
 | 稼働ビルドの素性 (acceptance V6) と反映鮮度・smoke 前伝播安定性 (acceptance V7) | `dev-workflow.md` qa-198-f / qa-198-h | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y`、伝播安定性 follow-up `HarnessHub-u9zq` |
+| rubric 自動生成提案の保全と human review 引継ぎ | `dev-workflow.md` qa-216 の P13 write-back / scope separation / 未完了項目の durable tracking | [rubric 提案保持 writeback](../specs/harness-hub-system-specification-implementation-writebacks.md#rubric-自動生成提案の保持-writeback-2026-08-10--harnesshub-lzfs) / [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-lzfs` (human triage 完了まで open) |
 
 ## 全体ドキュメント出典 (未割当参照)
 

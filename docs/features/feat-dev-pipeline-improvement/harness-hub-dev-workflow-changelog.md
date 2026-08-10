@@ -257,3 +257,5 @@ required_sections で検査する。`issue` kind は構造が異なる別課題�
 ### 差分追記 (2026-08-10): rubric draft の durable handoff
 
 2026-08-06 に自動生成された rubric 更新提案を履歴へ保存し、未判断の 25 findings と旧 worktree 絶対 path の集計キー問題を Beads `HarnessHub-lzfs` / dev-graph issue へ引き継いだ。提案ファイルは改善候補の証拠であり、採否判断ではないため、commit や draft PR だけで issue を close しない。製品 runtime と rubric 本体は非変更で、判断と検証は [仕様反映受領書](rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
+
+PR #688 の conflict 解消では `origin/main` をローカル `main`、続いて `devgraph/issue-rubric-proposal-20260806-review` へ取り込み、未解決 0 件を確認した。`system-spec/index.md` の実装 writeback 索引と dev-graph issue の PR linkage を追加し、system-spec / specs / architecture / feature / task / docs / Beads / PR の追跡先を一致させた。

@@ -12,11 +12,11 @@ iteration: null
 title: "rubric governance: 2026-08-06 自動生成提案の human review と処遇決定"
 owners: ["daishiman"]
 created_at: "2026-08-07T03:35:55Z"
-updated_at: "2026-08-07T03:35:55Z"
+updated_at: "2026-08-10T04:08:08Z"
 status: "draft"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-system-specification-implementation-writebacks"]
-resource_scope: ["plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md","issues/harness-rubric-proposal-20260806-review.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification-implementation-writebacks.md","architecture/harness-hub-dev-workflow.md"]
+resource_scope: ["plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md","issues/harness-rubric-proposal-20260806-review.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md","features/feat-dev-pipeline-improvement.md","system-spec/index.md","specs/harness-hub-system-specification-implementation-writebacks.md","architecture/harness-hub-dev-workflow.md"]
 purpose: "機械生成された rubric 更新提案が triage されずに滞留し、評価基準の自己改善ループが閉じない状態を解消する"
 goal: "2026-08-06 分 draft の friction_density 25 件を正規フローで triage し、採否と根拠を記録した状態にする"
 scope_in: ["2026-08-06 分 draft の triage と処遇決定","集計キーに旧 worktree 絶対 path が混入する不具合の要否判定"]
@@ -41,7 +41,7 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-lzfs","linked_at":"2026-08-07T03:39:30Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-rubric-proposal-20260806-review","linked_at":"2026-08-10T04:08:08Z","merge_commit_sha":null,"merged_at":null,"pr_number":688,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/688"}]
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-08-07T03:35:55Z","missing_sections":[],"status":"complete"}
@@ -107,4 +107,6 @@ implementation_readiness: {"checked_at":"2026-08-07T03:35:55Z","missing_sections
 - 今回完了するのは、未追跡だった自動生成 draft を履歴へ保存し、Beads `HarnessHub-lzfs` と本 node へ human review を引き継ぐことまでである。
 - draft PR の作成や提案ファイルの commit は、25 件の採否判断を代替しない。本 issue と Beads は triage 完了まで open のまま維持する。
 - 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、rubric 本体の閾値・重み・template は変更しない。既存 `system-spec/dev-workflow.md` が定める write-back と未完了項目の durable tracking を適用した実装記録であり、新しい製品要求は追加しない。
+- `system-spec/spec-state.json` と確定章は変更せず、要件確定後の実装反映専用である `system-spec/index.md` の writeback 索引から、今回の `specs/` 追補と受領書へ到達できるようにする。
+- draft PR #688 は本 node の `pull_request_linkages` と Beads notes の両方へ記録し、同じ head/base/残課題を指すようにする。
 - 層別判断、品質ゲート、公開前条件は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) と [Phase 13 補助引継ぎ](../tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md) を参照する。

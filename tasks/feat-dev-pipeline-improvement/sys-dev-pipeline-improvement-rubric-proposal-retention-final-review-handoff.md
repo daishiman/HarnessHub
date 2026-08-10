@@ -12,11 +12,11 @@ iteration: null
 title: "rubric 自動生成提案の保持と human review 引継ぎの Phase 13 補助記録"
 owners: ["daishiman"]
 created_at: "2026-08-10T00:00:00Z"
-updated_at: "2026-08-10T00:00:00Z"
+updated_at: "2026-08-10T04:08:08Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-rubric-proposal-20260806-review","feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-system-specification-implementation-writebacks","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
-resource_scope: ["tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md","plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md","issues/harness-rubric-proposal-20260806-review.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification-implementation-writebacks.md","architecture/harness-hub-dev-workflow.md"]
+resource_scope: ["tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md","plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md","issues/harness-rubric-proposal-20260806-review.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","features/feat-dev-pipeline-improvement.md","system-spec/index.md","specs/harness-hub-system-specification-implementation-writebacks.md","architecture/harness-hub-dev-workflow.md"]
 purpose: "凍結済み P01..P13 を変更せず、rubric draft の保存、仕様影響判断、品質ゲート、Beads と draft PR の引継ぎを追跡する。"
 goal: "提案の保存完了と human triage 未完了が混同されず、全追跡 ID と受領書が同じ境界を指す。"
 scope_in: ["最終 review","仕様影響判断","品質ゲート","Beads と draft PR の追跡"]
@@ -63,7 +63,7 @@ implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections
 
 ## 実装対象
 
-提案ファイルの履歴保存、issue・Beads の linkage、層別文書、仕様反映受領書、品質ゲート、draft PR を対象とする。25 findings の triage と rubric 本体の変更は対象外とする。
+提案ファイルの履歴保存、issue・Beads・PR の linkage、`system-spec/index.md` の実装 writeback 索引、層別文書、仕様反映受領書、品質ゲート、draft PR を対象とする。25 findings の triage と rubric 本体の変更は対象外とする。
 
 ## 実行手順
 
@@ -76,7 +76,7 @@ implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections
 
 ## 出力と成果物
 
-追跡済み proposal、issue / graph / Beads linkage、層別文書、品質ゲート結果、HEAD 束縛の仕様反映受領書、draft PR を成果物とする。
+追跡済み proposal、issue / graph / Beads / PR linkage、`system-spec/` の実装索引、層別文書、品質ゲート結果、HEAD 束縛の仕様反映受領書、draft PR を成果物とする。
 
 ## 依存関係
 
@@ -84,7 +84,7 @@ implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections
 
 ## Write scope と競合制約
 
-frontmatter の `resource_scope` と本 review の対象差分だけを書き、無関係な既存差分を stage / commit しない。`system-spec/spec-state.json` は legacy schema 1.0 の read-only 境界を維持し、全 matrix の再ヒアリングを伴う migration は本作業へ混ぜない。
+frontmatter の `resource_scope` と本 review の対象差分だけを書き、無関係な既存差分を stage / commit しない。`system-spec/spec-state.json` と確定章は legacy schema 1.0 の read-only 境界を維持し、全 matrix の再ヒアリングを伴う migration は本作業へ混ぜない。要件非変更の反映は `system-spec/index.md` の既存「実装 writeback 索引」だけに限定する。
 
 ## 受入条件
 
@@ -102,7 +102,7 @@ repository の risk-tier selector、task package validator、graph schema、cont
 
 ## GitHub publication
 
-PR 本文へ目的、変更、検証、仕様反映、Beads ID、dev-graph node ID、残課題を記載し、draft として公開する。
+PR #688 の本文へ目的、変更、検証、仕様反映、Beads ID、dev-graph node ID、残課題を記載し、draft のまま更新する。重複 PR は作らない。
 
 ## Handoff
 

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1477,
+  "graph_revision": 1483,
   "nodes": [
     {
       "acceptance": [
@@ -54897,12 +54897,13 @@
       "resource_scope": [
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "specs/harness-hub-system-specification.md",
+        "system-spec/index.md",
         "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md",
         "docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md",
         "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"
       ],
       "scope_in": [
-        "共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の既存実装 writeback"
+        "確定済み system-spec 契約に対する既存実装 writeback と仕様反映受領書への索引"
       ],
       "scope_out": [
         "新しい製品要求",
@@ -54929,7 +54930,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 — 実装 writeback 分冊",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T01:49:38.768685Z"
+      "updated_at": "2026-08-10T04:20:00Z"
     },
     {
       "acceptance": [
@@ -55710,7 +55711,20 @@
       "phase_ref": null,
       "priority": "low",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-rubric-proposal-20260806-review",
+          "linked_at": "2026-08-10T04:08:08Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 688,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/688"
+        }
+      ],
       "purpose": "機械生成された rubric 更新提案が triage されずに滞留し、評価基準の自己改善ループが閉じない状態を解消する",
       "related_nodes": [
         "feat-dev-pipeline-improvement",
@@ -55723,6 +55737,7 @@
         "docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md",
         "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md",
         "features/feat-dev-pipeline-improvement.md",
+        "system-spec/index.md",
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "architecture/harness-hub-dev-workflow.md"
       ],
@@ -55754,7 +55769,7 @@
       "template_version": "1.0.0",
       "title": "rubric governance: 2026-08-06 自動生成提案の human review と処遇決定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-07T03:35:55Z"
+      "updated_at": "2026-08-10T04:08:08Z"
     },
     {
       "acceptance": [
@@ -55837,6 +55852,7 @@
         "issues/harness-rubric-proposal-20260806-review.md",
         "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md",
         "features/feat-dev-pipeline-improvement.md",
+        "system-spec/index.md",
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "architecture/harness-hub-dev-workflow.md"
       ],
@@ -55872,7 +55888,7 @@
       "template_version": "1.0.0",
       "title": "rubric 自動生成提案の保持と human review 引継ぎ — 最終レビュー兼仕様反映受領書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T01:57:36.152769Z"
+      "updated_at": "2026-08-10T04:56:27Z"
     },
     {
       "acceptance": [
@@ -55954,6 +55970,7 @@
         "issues/harness-rubric-proposal-20260806-review.md",
         "docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md",
         "features/feat-dev-pipeline-improvement.md",
+        "system-spec/index.md",
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "architecture/harness-hub-dev-workflow.md"
       ],
@@ -55989,7 +56006,7 @@
       "template_version": "1.0.0",
       "title": "rubric 自動生成提案の保持と human review 引継ぎの Phase 13 補助記録",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T00:00:00Z"
+      "updated_at": "2026-08-10T04:08:08Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

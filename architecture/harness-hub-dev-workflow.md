@@ -251,4 +251,4 @@ build path の authority は独立 evaluator の native completion、resume path
 
 `run-skill-rubric-governance` が生成する `proposals/*.md` は、評価結果と改善候補を保持する証拠であり、採用・棄却・保留を決める authority（決定権）ではない。未判断 draft を保存するときは、同じ変更で Beads と dev-graph issue を結び、提案 path、未判断項目、close 条件を durable handoff（次の作業者が消えない形で引き継げる記録）として残す。commit や draft PR は保存・レビュー導線に限定し、human triage 完了前に issue を close しない。
 
-これは `system-spec/dev-workflow.md` が継承する P13 write-back、scope separation、未完了項目の課題化を今回の rubric 提案へ適用したもので、新しい製品 component や runtime 契約は追加しない。今回の境界と残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
+これは `system-spec/dev-workflow.md` が継承する P13 write-back、scope separation、未完了項目の課題化を今回の rubric 提案へ適用したもので、新しい製品 component や runtime 契約は追加しない。`system-spec/spec-state.json` と確定章は変更せず、既存の [実装 writeback 索引](../system-spec/index.md#実装-writeback-索引-確定章への追記ではない) から `specs/` 追補と受領書へ接続する。今回の境界と残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。

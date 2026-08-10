@@ -12,14 +12,14 @@ iteration: null
 title: "Harness Hub システム要件仕様 — 実装 writeback 分冊"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-10T01:49:38.768685Z"
+updated_at: "2026-08-10T04:20:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
-resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"]
+resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","system-spec/index.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"]
 purpose: "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する"
 goal: "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる"
-scope_in: ["共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の既存実装 writeback"]
+scope_in: ["確定済み system-spec 契約に対する既存実装 writeback と仕様反映受領書への索引"]
 scope_out: ["新しい製品要求","公開 API・DB schema・認証認可・UI・配備単位の変更"]
 acceptance: ["通常文書が500行を超えない","移動前の意味と参照を保持する","artifact placement と graph schema を通過する"]
 architecture_refs: ["arch-harness-hub-dev-workflow"]
@@ -57,7 +57,7 @@ implementation_readiness: {"checked_at":"2026-08-09T00:00:00Z","missing_sections
 
 ## スコープ
 
-- In: 共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の実装 writeback 索引。
+- In: 確定済み system-spec 契約に対する既存実装 writeback と、各仕様反映受領書への索引。
 - Out: 新しい製品要求、公開 API、DB schema、認証認可判断、UI、配備単位の追加・変更。
 
 ## 用語と主体
@@ -182,4 +182,5 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 2026-08-06 の draft 提案は、採否判断そのものではなく human review へ渡す入力として履歴へ保存する。
 - 未判断の `friction_density` 25 件と旧 worktree 絶対 path の集計キー問題は、Beads `HarnessHub-lzfs` と dev-graph `issue-rubric-proposal-20260806-review` で追跡する。commit / draft PR だけでは close しない。
 - 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、rubric 本体の閾値・重み・template は変更しない。`system-spec/spec-state.json` は legacy schema 1.0 の read-only 境界を維持し、既存確定契約の実装 writeback として本分冊・architecture・feature・task・受領書へ記録する。
+- `system-spec/index.md` の「実装 writeback 索引」から本節と受領書へ接続し、確定 QA を増やさずに `system-spec/` と実装記録の追跡可能性を保つ。
 - 判断理由、検証、残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
