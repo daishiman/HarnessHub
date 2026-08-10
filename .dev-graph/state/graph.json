@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1475,
+  "graph_revision": 1476,
   "nodes": [
     {
       "acceptance": [
@@ -55745,9 +55745,9 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "b65a94127421eb8c62d24677d5efdf60f6cafe01073c0c3aaf39b75988d3a45e",
+        "evaluated_digest": "05f021732b3ea4fa6ae0db06710866bd1a66a6a98d00a7883860f7b9ef47a4ca",
         "evaluator": "final-review",
-        "evidence_ref": "issues/harness-rubric-proposal-20260806-review.md"
+        "evidence_ref": "plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-10T00:00:00Z",
@@ -55830,7 +55830,7 @@
       "template_version": "1.0.0",
       "title": "rubric 自動生成提案の保持と human review 引継ぎ — 最終レビュー兼仕様反映受領書",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T00:00:00Z"
+      "updated_at": "2026-08-10T01:57:36.152769Z"
     },
     {
       "acceptance": [

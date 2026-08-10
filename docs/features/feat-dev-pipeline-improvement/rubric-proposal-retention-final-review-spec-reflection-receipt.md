@@ -13,7 +13,7 @@ iteration: null
 title: "rubric 自動生成提案の保持と human review 引継ぎ — 最終レビュー兼仕様反映受領書"
 owners: ["daishiman"]
 created_at: "2026-08-10T00:00:00Z"
-updated_at: "2026-08-10T00:00:00Z"
+updated_at: "2026-08-10T01:57:36.152769Z"
 status: "active"
 depends_on: []
 related_nodes: ["issue-rubric-proposal-20260806-review","feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-system-specification-implementation-writebacks"]
@@ -32,7 +32,7 @@ template_id: "document"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"b65a94127421eb8c62d24677d5efdf60f6cafe01073c0c3aaf39b75988d3a45e","evaluator":"final-review","evidence_ref":"issues/harness-rubric-proposal-20260806-review.md"}
+confirmation_evidence: {"evaluated_digest":"05f021732b3ea4fa6ae0db06710866bd1a66a6a98d00a7883860f7b9ef47a4ca","evaluator":"final-review","evidence_ref":"plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md"}
 source_lineage: {"imported_at":"2026-08-10T00:00:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "仕様影響の判断理由と公開前検証を、提案本文や issue とは別責務の受領 document として固定する。"
@@ -93,7 +93,18 @@ implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections
 
 ## 検証記録
 
-最終 HEAD で task 仕様書品質ゲート、graph schema、content review、文書行数、`git diff --check`、仕様反映 guard を再実行し、結果を draft PR 本文と Beads notes に記録する。
+- verification tier: `mvp`（`MV-01`）。変更は repository 内の文書・graph・未公開 proposal に限定され、製品 runtime path は非変更。
+- task 仕様書: `validate-system-plan.py --feature-package feature-package/feat-dev-pipeline-improvement` が exact P01〜P13、digest `af8a73df…`、violations 0 で PASS。
+- dev-graph: canonical envelope / artifact readiness / schema が violations 0 で PASS。
+- 配置・文書粒度: artifact placement PASS。doc line limit は 664 文書、上限 300 行、違反 0。
+- content review: changed-only は proposal を behavior change と扱わず `no target skill` で PASS。
+- focused test: rubric proposal 生成・集計の 2 suite が 80 passed。
+- system-spec 入力健全性: coverage matrix `--require-complete --require-foundation` と source citation が PASS。legacy state への書込は writer が意図どおり拒否し、生成章への一時差分は破棄して現行正本を維持。
+- `git diff --check`: whitespace error 0。
+
+手書きの変更文書はすべて 300 行以下である。`.dev-graph/state/graph.json` は固定 path / schema を読む canonical 集約正本であり、正規 C02 upsert が管理する生成 JSON なので分割対象外とする。分割すると graph reader と atomic writer の既存契約を壊す。
+
+repository 全 pytest や live-trial は、実装コード・rubric 本体・skill behavior の変更がない MVP 差分のため追加実行しない。既存 proposal 生成の focused 80 tests、task package、graph、文書 gate を blocking 集合とした。
 
 ## 残作業
 
