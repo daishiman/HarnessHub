@@ -1,0 +1,33 @@
+/** feat-metrics-tracking 契約の公開入口。consumer は @harness-hub/schemas root から参照する。 */
+export type {
+  MetricsDate,
+  MetricsEventIngestRequest,
+  MetricsEventIngestResponse,
+  MetricsRollupDimension,
+  MetricsRollupItem,
+  MetricsRollupPeriod,
+  MetricsRollupsQuery,
+  MetricsRollupsResponse,
+  MetricsSummaryDepartmentItem,
+  MetricsSummaryKpi,
+  MetricsSummaryQuery,
+  MetricsSummaryRankingItem,
+  MetricsSummaryResponse,
+  MetricsSummaryTrendPoint,
+} from './contracts.js';
+export {
+  metricsDateSchema,
+  metricsEventIngestRequestSchema,
+  metricsEventIngestResponseSchema,
+  metricsRollupDimensionSchema,
+  metricsRollupItemSchema,
+  metricsRollupPeriodSchema,
+  metricsRollupsQuerySchema,
+  metricsRollupsResponseSchema,
+  metricsSummaryDepartmentItemSchema,
+  metricsSummaryKpiSchema,
+  metricsSummaryQuerySchema,
+  metricsSummaryRankingItemSchema,
+  metricsSummaryResponseSchema,
+  metricsSummaryTrendPointSchema,
+} from './contracts.js';

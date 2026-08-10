@@ -1,10 +1,11 @@
 /**
  * 共通シェルに並べる画面の一覧 (frontend-spec §3.0)。
  *
- * spec のサイドバーは 9 項目だが、ダッシュボード (S09) / パイプライン (S13) /
- * トラッキング (S16) はまだ route が存在しない。無い画面へのリンクを出すと
- * 「押したら 404」という一番たちの悪い体験になるので、**実在する route だけ**を並べる。
- * 各画面の epic が着地した時点でここへ 1 行足せば、シェル側の変更は要らない。
+ * 無い画面へのリンクを出すと「押したら 404」という一番たちの悪い体験になるので、
+ * **実在する route だけ**を並べる。各画面の epic が着地した時点でここへ 1 行足せば、
+ * シェル側の変更は要らない。
+ * ダッシュボード (S09) / パイプライン (S13) / トラッキング (S16) は
+ * feat-metrics-tracking と feat-build-pipeline-board の着地で route が実在したため追加した。
  *
  * リンクは resolveDashboardScope() 由来の tenant/workspace をクエリへ引き継ぐ。
  * 遷移先の page.tsx が URL クエリを最優先する解決順序と噛み合わせるため。
@@ -58,6 +59,32 @@ export function primaryNavItems(scope: ShellScope): readonly ShellNavItem[] {
 }
 
 /**
+ * 分析系の導線 (S09 ダッシュボード / S13 パイプライン / S16 使用状況・削減効果)。
+ *
+ * `primaryNavItems` へ混ぜないのは、あちらがモバイルのボトムタブ 4 枠と同一集合だから (§6.2)。
+ * 5 枠目を足すとタブが溢れるので、サイドバーにだけ出す層をここに分ける。
+ */
+export function insightNavItems(scope: ShellScope): readonly ShellNavItem[] {
+  return [
+    {
+      href: scopedHref('/metrics', scope, true),
+      label: 'ダッシュボード',
+      icon: 'dashboard',
+    },
+    {
+      href: scopedHref('/builds', scope, true),
+      label: 'パイプライン',
+      icon: 'pipeline',
+    },
+    {
+      href: scopedHref('/metrics/usage', scope, true),
+      label: '使用状況・削減効果',
+      icon: 'tracking',
+    },
+  ];
+}
+
+/**
  * 管理系の導線。API 側の認可を正本にしつつ、利用できない導線は deny-by-default
  * (権限を確認できないときは隠す) で DOM にも出さない。
  */
@@ -102,9 +129,9 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
   ];
 }
 
-/** サイドバーは主要 + 管理をひと続きに出す。 */
+/** サイドバーは主要 + 分析 + 管理をひと続きに出す。 */
 export function sidebarNavItems(scope: ShellScope, role: SessionRole | null): readonly ShellNavItem[] {
-  return [...primaryNavItems(scope), ...secondaryNavItems(scope, role)];
+  return [...primaryNavItems(scope), ...insightNavItems(scope), ...secondaryNavItems(scope, role)];
 }
 
 /** アバターメニューに並べるリンク (§3.0: アカウント設定 → 規約 → サインアウト)。 */

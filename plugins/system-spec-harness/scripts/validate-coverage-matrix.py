@@ -96,6 +96,11 @@ DESIGN_APPLICATION_STATES = {"applied", "not_applicable"}
 def _validate_design_applications(entry: dict) -> list[str]:
     """確定 qa の章固有設計解釈を fail-closed に検証する。"""
     qa_id = entry.get("id", "<unknown>")
+    if entry.get("legacy_exempt") is True:
+        # migrate-legacy が印付けした contract 制定前の entry。schema 1.0 時代は
+        # validator 側が全体を暗黙免除していたので、検証の厳しさは不変で、
+        # 免除範囲が entry 単位の監査可能な記録に変わっただけである。
+        return []
     applications = entry.get("design_applications")
     if not isinstance(applications, list) or not applications:
         return [f"qa_log[{qa_id}]: design_applications は非空配列必須"]

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/v13-migrate-metrics-tracking",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+  "digest": "sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+  "feature_package_id": "feature-package/feat-metrics-tracking",
+  "package_slug": "feature-package-feat-metrics-tracking",
+  "generation_id": "85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+  "supersedes": {
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+    "published_digest": "sha256:03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/atomic-promotion-receipt.json"
+  },
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-metrics-tracking/85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef/atomic-promotion-receipt.json",
+  "completed_at": "2026-08-10T13:52:06Z"
+}

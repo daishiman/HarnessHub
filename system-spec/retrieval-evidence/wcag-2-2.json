@@ -1,0 +1,18 @@
+{
+  "allowed_domains": [
+    "www.w3.org"
+  ],
+  "findings": [
+    "Web Content Accessibility Guidelines 2.2 は W3C Recommendation である",
+    "公開日は 2024-12-12 である",
+    "WCAG 2.2 は知覚可能、操作可能、理解可能、堅牢の4原則で検証可能な達成基準を定める",
+    "WCAG 2.2 への適合方針は WCAG 2.1 までの要件を含めて評価できる"
+  ],
+  "retrieval_channel": "WebSearch/WebFetch",
+  "retrieval_method_disclosure": "W3C 公式 host に限定して検索し、WCAG 2.2 Recommendation 本文を取得・確認した。",
+  "retrieved_at": "2026-08-10T11:54:59Z",
+  "returned_official_urls": [
+    "https://www.w3.org/TR/WCAG22/"
+  ],
+  "target_id": "wcag-2-2"
+}

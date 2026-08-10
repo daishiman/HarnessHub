@@ -193,3 +193,24 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
   同時差し替え時は 409 `state_conflict` で読み直しを要求する。
 - token probe は client credential の疎通確認に限定し、redirect URI は実 login で確認する。
   応答・監査には列挙値と last4 だけを渡す。
+
+## 2026-08-10 Metrics / Build Pipeline MVP 差分
+
+**Metrics (`HarnessHub-lm7` / feat-metrics-tracking)**:
+
+- `POST /api/v1/metrics/events` は Device Flow 短命 Bearer・workspace header・
+  `Idempotency-Key` を必須とし、body は `harnessId` と整数 `runCount` のみ。
+- `GET /api/v1/metrics/summary` と `GET /api/v1/metrics/rollups` は確定済み rollup の
+  読取専用。dim=user の金額は `users.read_salary` 保持者に限定する。
+- Workers cron が日次・週次で rollup を確定し、金額換算は `packages/estimation` と
+  `tenant_coefficients` だけで行う。
+
+**Build Pipeline (`HarnessHub-9am` / feat-build-pipeline-board)**:
+
+- `GET /api/v1/builds` / `GET /api/v1/builds/:id` / `POST /api/v1/builds/:id/stage`。
+- 工程は 7 値の隣接遷移のみ。stage 変更は workspace-admin 以上 + audit +
+  `build_stage_events` を同一 transaction で確定する。
+- `publish` への遷移は同一 scope の PublishRequest が `published` のときだけ許す。
+
+正本は [backend](../system-spec/backend.md)。詳細 ADR は各 feature の
+`docs/features/*/architecture-decision-record.md`。

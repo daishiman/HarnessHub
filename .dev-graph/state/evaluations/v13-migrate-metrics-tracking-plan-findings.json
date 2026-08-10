@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/v13-migrate-metrics-tracking",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:67ab7cbd8612ac16cde94d07b588484414d8fd14ec1b555ee90a0f8417aab693",
+  "verdict": "FAIL",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "FAIL",
+      "summary": "staging内部のexact-13形状は機械検証を通るが、P02/P08がmetrics tableを未作成・backfill不要と断定しており、現行正本の既存combined 0008 immutable・future delta migration契約および現行MetricsEvent列契約と矛盾する。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-02-architecture.md#データ・API設計",
+        "task-specs/phase-08-refactoring-migration.md#背景"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "FAIL",
+      "summary": "P01..P13は各1件揃う一方、現行confirmed web契約qa-226..229のProject trusted resolver、Turso-only/D1 fail-closed transaction、期間末KPI snapshot、anomaly評価不能条件、正規route、常在同値表、immutable 0008が13 taskへ意味反映されていない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-01-requirements.md#背景",
+        "task-specs/phase-04-test-design.md#背景",
+        "task-specs/phase-05-implementation.md#背景",
+        "task-specs/phase-07-acceptance.md#背景",
+        "task-specs/phase-12-documentation-operations.md#背景",
+        "task-specs/phase-13-release-deploy.md#背景"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "FAIL",
+      "summary": "phase名・task path・parent/package IDは整合するが、実装語彙が現行正本と不整合である。P02はuser_id/server_received_atを使い、P05 inventoryは旧metrics route配下をwrite scopeとし、正規のactor_user_id/occurred_at、/dashboard、/trackingへ統一されていない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P05/write_scope",
+        "task-specs/phase-02-architecture.md#データ・API設計",
+        "task-specs/phase-05-implementation.md#成果物"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "FAIL",
+      "summary": "intra-feature DAGは前方・非循環だが、Project作成/関連付け、Harness/Release resolver、HearingSheet・Catalog/Release期間末snapshotという必須owner依存と、Turso transaction writer能力がP01 ready gate・phase handoffへ接地していない。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-graph.json#nodes",
+        "system-build-handoff.json#p01_entry_gate",
+        "task-specs/phase-01-requirements.md#前提条件",
+        "task-specs/phase-02-architecture.md#前提条件"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-2-2",
+        "--staging",
+        ".dev-graph/staging/v13-migrate-metrics-tracking"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:67ab7cbd8612ac16cde94d07b588484414d8fd14ec1b555ee90a0f8417aab693\",\n  \"feature_package_id\": \"feature-package/feat-metrics-tracking\",\n  \"parent_feature\": \"feat-metrics-tracking\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "72d300f9fbc0e03bb3c6d98db5c59f91f03e0495b575ed446aec47a8cad51f76"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "502715dd53fe139bae03f8a62028987fea4a0e4abb0c6fb65724bc89830c9f40"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "9aea981f550f5d6483fe107628c1c5b7f04fa7745ab1aced39b4ea34705b5a04"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "505c7dfb4a44d1b007531bcf10111fe4db3871ebf3c54db5b4c9ffbd4b8be051"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "21f17ba81b8062767c296b6011241a297078d95518c79b53cfcbe7fe52c8e006"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "cf2b7111991d21ddf22c20f7c73930cf9367f96f63d40ec808dd03c13a2e519d"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "da6f4decd9774018a55122eccb1219a2d0961ec9c2420e3f6e902df08ed5df07"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "94a3962c66a4c45b596c44588b06e0576359349fe9bef78ff6e6ec6cc26a4782"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "25466a6c940e1bb0f2f822ac8e4892bef2c4a8b818f31818bc4106302a2123b6"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "f9f342e96d17e864ca0ef065d482b6b356d28fb30b6f40170e4d3db6f705fe94"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "0713af775aeb57f2fc1c95bc4aa9b72e9dfaac44a9a8830bfb2e7309ef0d2dbc"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "192f5eb129c85b1a88de347b2b6d3c9ba5996a9c93ecd987379e0650858da64d"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "ab8ba7a67187bc8b4696a01178028faaee18981ad5272886c143df63c679980b"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "76a2596a53a7b6696be3a351c81283cb2af805098877804805b48b997a7829f6"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "684a8e6b832a5dad6fdc20a41e52768e2f0886cb4c03b241433f7115e5079241"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "c613786cca60ebf0e3ab91c41e90b2a2cba7623b90e1cbb3fc30106b72b14f6b"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "9f40b61a68fcac95ac67bdcd33bc60ba17a64f204c32d80a8dc40c4cc55ea2f2"
+    }
+  ],
+  "staleness_rule": "C11はpromotion直前にstaging-manifest.jsonのfiles exact-setとstaging-manifest.json自体のSHA-256をcurrent staging bytesから再計算し、追加・欠落・1 byteでも不一致があれば本評価を無効化する。別canonical_digestへ本verdictを再利用しない。",
+  "findings": [
+    {
+      "severity": "high",
+      "bucket": "stale-source-lineage",
+      "observation": "goal-specはarchitecture 3件とcompiled system specificationをverified currentとして旧hashへpinしているが、現行bytesのSHA-256は全4件で不一致である。validatorはstaging canonical set外のsource bytesを再照合しないためpassしたが、現行qa-226..229を含むsource stateには束縛されていない。feature context自体も2026-07-17の旧内容・旧digestのままでspec-stateとの再同期が必要である。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/goal-spec.json#lineage",
+        "architecture/harness-hub-backend.md",
+        "architecture/harness-hub-data.md",
+        "architecture/harness-hub-frontend.md",
+        "specs/harness-hub-system-specification.md",
+        "features/feat-metrics-tracking.context.json",
+        "system-spec/spec-state.json#qa-226..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "confirmed-contract-semantic-omission",
+      "observation": "13 taskのいずれにもqa-226..229/appr-043、期間末HearingSheet・公開Harness snapshot、denominator_empty、insufficient_history/zero_median、/dashboard、/tracking、SVG直後の常在同値HTML tableが現れない。形式exact-13だけを満たし、確認済み現行要件をP01..P13へ意味展開できていない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-01-requirements.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-04-test-design.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-05-implementation.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-07-acceptance.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-12-documentation-operations.md",
+        "system-spec/spec-state.json#qa-226..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "migration-lineage-contradiction",
+      "observation": "P02/P05/P08/P13はmetrics_events/metrics_rollupsを新規table、backfillなし、CREATE TABLEだけで完結すると規定する。現行database正本は既存combined 0008をimmutableに保ち、必要な変更をfuture Metrics deltaとして実施し、project_id等の既存行はtrusted-source preflight/backfillを設計するため、実行すると履歴または既存dataを誤処理する。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-02-architecture.md#Compatibility/migration/backfill",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-08-refactoring-migration.md#背景",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-13-release-deploy.md#Compatibility/migration/backfill",
+        "system-spec/spec-state.json#qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "trust-and-transaction-boundary-missing",
+      "observation": "planはproject_id列を置くだけで、HearingSheet確定時のserver-side Project作成/関連付け、Metrics harnessIdのtenant/workspace/project trusted resolver、rollupのTurso単一transaction、D1 zero-write fail-closedを設計・実装・test・acceptanceへ割り当てていない。scope越境とpartial rollupを防ぐ必須境界が欠落する。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-02-architecture.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-04-test-design.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-05-implementation.md",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-06-test-run.md",
+        "system-spec/spec-state.json#qa-228..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "data-api-vocabulary-drift",
+      "observation": "P02のmetrics_eventsはuser_id/server_received_atを正本化し、request_digest、idempotency_expires_at、created_at、nullable department_id等を欠く。現行正本のactor_user_id/occurred_atと24h digest/claim-release契約に一致せず、P05の旧metrics route write scopeもcanonical /dashboard・/trackingと整合しない。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-02-architecture.md#データ・API設計",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P05/write_scope",
+        "system-spec/spec-state.json#qa-227..qa-229"
+      ]
+    },
+    {
+      "severity": "high",
+      "bucket": "external-owner-dependency-gap",
+      "observation": "task DAG自体はP01→P13の正しい直列だが、現行契約が要求するHearingSheet ownerのProject関係/KPI snapshot、Catalog/Release ownerの公開Harness snapshot、Harness/Release/Project resolverへの依存がparent_feature ready gateまたはtyped contract handoffに存在しない。実装phaseがowner不在のままreadyになり得る。",
+      "evidence": [
+        ".dev-graph/staging/v13-migrate-metrics-tracking/system-build-handoff.json#p01_entry_gate",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-graph.json#nodes",
+        ".dev-graph/staging/v13-migrate-metrics-tracking/task-specs/phase-01-requirements.md#前提条件",
+        "features/feat-metrics-tracking.md#機能間依存",
+        "system-spec/spec-state.json#qa-228..qa-229"
+      ]
+    }
+  ]
+}

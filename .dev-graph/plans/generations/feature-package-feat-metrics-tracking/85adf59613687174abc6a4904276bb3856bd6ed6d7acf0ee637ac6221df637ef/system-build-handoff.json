@@ -1,0 +1,232 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-METRICS-TRACKING-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-METRICS-TRACKING-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-METRICS-TRACKING-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-METRICS-TRACKING-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-METRICS-TRACKING-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-METRICS-TRACKING-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-METRICS-TRACKING-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-METRICS-TRACKING-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-METRICS-TRACKING-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-METRICS-TRACKING-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-METRICS-TRACKING-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-METRICS-TRACKING-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-METRICS-TRACKING-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-METRICS-TRACKING-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-metrics-tracking",
+    "feature_package_id": "feature-package/feat-metrics-tracking",
+    "parent_feature": "feat-metrics-tracking",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:64106cc96859b3755741efeb26321fd3746af1a823d0d7837d5b2147b41ee759"
+  },
+  "kind": "system-build-handoff",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "e8589738d713655253e333c337f3870a6fed2a2319c04d9ac5f2ec216f7c28fe"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "502715dd53fe139bae03f8a62028987fea4a0e4abb0c6fb65724bc89830c9f40"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "bbb96865586ac80fbdc9cece439b063ff3ae73252e695a73bffcc9c7b4682228"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0256680fe529659671cd5af547965a294b2f6ec570ea18fa1da44fe42843e171"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "b8eedc7b7351fc6bd4e5875427efa454b3e0465422c6545f1a32f5014621a1fb"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "2c94338d628fb2c346a8181a8d7dd4143bae78668353259bb3712ef48a336469"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "b3d7064f61cba82d413e4292fadeb8434ace59e8e50bc8e040187d22918ef53d"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "c3166c6ceff184f428b7f0bad8ef828b09fd438f4417b75f36e8650a8544305f"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e91a085b212301973a0838ade681b7e566054bc748c913bc3f86794fdce950dc"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "9dce727990573e55ede057f45bcf6fb639d12daa6a881300edc8fecd1f6b8f51"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "99e18dccea6234b89fbdd4aca14c47c64d921c9a70f87c08cacf4baf9e5fa1b8"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "f9427883ac7ed2b2b9bc1bf3b0fc374b83171cc737ce2aa228ca6f15ff466cb0"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "4d6ae921c06c2d401c579b0b54187a137241f76235c20fd104aab2f5b119517c"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "f103ce2a4b2c25decceff54eac07dd72d96636f5be826c8843fc9bfb32ae57f7"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "6707d6695e8da049b2e0778e8a022710fdfc854a4b05ad5d79467ee0fe0f5d2c"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:783e1beb73e4c1c52c618472aff8c5c6252278ebcc0e8a889efb689bf581ed6e",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "3ecb3b3d89e6fa52b65338d9323ea24ca9530988b515b74e88509a6c27d2a5b7"
+  }
+}

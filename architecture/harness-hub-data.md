@@ -200,3 +200,17 @@ control-plane DB、schema migration、保存形式、export、restore、デー�
 ## Risks and verification
 
 正本章 (system-spec/database.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
+
+## 2026-08-10 Metrics / Build Pipeline MVP 差分
+
+- migration `0008_metrics-tracking-and-build-stage-events.sql` で `metrics_events` /
+  `metrics_rollups` と `builds` / `build_stage_events` を導入する。本 migration は
+  journal・snapshot・fixture に組込み済みの **immutable lineage** とし、rename・削除・
+  物理分割をしない。以降の delta は feature 単位で分離する。
+- Metrics 生 event は Turso 無期限保持。金額・係数・actor は client 申告を信用せず、
+  repository は tenant/workspace を WHERE 強制する。
+- Build 工程履歴は append-only。公開可否の正本は PublishRequest 側に残し、Build へ
+  公開状態機械を複製しない。
+- 正本は [database](../system-spec/database.md)、実装受領は
+  [metrics 受領書](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
+  [build-pipeline 受領書](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。

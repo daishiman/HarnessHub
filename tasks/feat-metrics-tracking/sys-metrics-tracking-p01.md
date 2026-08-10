@@ -28,7 +28,7 @@ feature_package_id: "feature-package/feat-metrics-tracking"
 phase_ref: "P01"
 file_path: "tasks/feat-metrics-tracking/sys-metrics-tracking-p01.md"
 template_id: "task"
-template_version: "1.0.0"
+template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-metrics-tracking/03748912dcca192a93a170dc232cb8b619fefef16da2fbe0a4f11d7e0d093256/plan-findings.json"}

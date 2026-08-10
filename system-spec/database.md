@@ -3,7 +3,7 @@ status: confirmed
 category: database
 aggregate: 確定
 spec_cells: [database.web, database.mobile, database.tablet, database.desktop-windows, database.desktop-linux, database.desktop-macos]
-serves_goals: [G1, G2, G4, G5]
+serves_goals: [G4, G5]
 ---
 
 # データベース (database)
@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-126 |
+| Web (web) | 確定 | 確定質疑: qa-229 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,11 +24,34 @@ serves_goals: [G1, G2, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-126 (対応セル: web)
+### qa-229 (対応セル: web)
 
-**質問**: 顧客持ち込み credential の lifecycle と無停止 rotation を database.web の永続化契約へどう反映しますか?
+**質問**: database/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
 
-**回答**: qa-112 の tenant scope、方式別保存、共有 credential 非複製、primary connection、migration/rollback 契約を維持する。ただし qa-112【1】の allowed_workspace_domains TEXT NOT NULL DEFAULT [] は migration 0003 の実契約と不一致だったため、TEXT NULL 許容、NULL=顧客方式では hd 未検査・共有方式では fail-closed へ訂正する。【0004 expand】idp_connections に credential_status TEXT NOT NULL DEFAULT active と、client_secret_last4、pending_client_secret_enc / last4 / client_id / credential_mode / allowed_workspace_domains / tested_at、last_tested_at、updated_at の NULL 許容列を追加する。既存行は実際に稼働中だったため active 既定で後方互換を保ち、管理 API の新規行は明示的に pending とする。【無停止】現行暗号文を上書きせず pending に封筒暗号化して保存し、テスト済み時刻と同じ CAS 更新で client ID・secret・方式・許可ドメインを昇格する。取消は pending 列だけを消す。【再開と競合】disabled への新 credential staging は期待状態を CAS 条件にして pending へ戻す。現行テストも現行暗号文と期待状態を CAS 条件にし、競合時は0行として再読込を要求する。暗号文の AAD は同一行の論理 secret slot を用い、pending から現行へ暗号文を再暗号化せず移せる。
+**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）、既存P01 baseline、qa-221〜qa-225のうち矛盾しない契約を統合した現行正本である。tenant分離、PII非複製、expand-then-contractを維持する。
+
+【1 Project関係】
+HearingSheet確定時に、サーバがtenant_id/workspace_idでscopeされたProjectを冪等に作成または関連付け、HearingSheet→Project関係を保存する。BuildとMetricsはこの関係または派生したHarness/Release/Project registryだけをtrusted resolverとして使い、client/token申告project_idを保存しない。
+
+【2 metrics_events】
+append-only事実表はid、tenant_id、workspace_id、project_id、harness_id、principal由来actor_user_id、nullable department_id、run_count、server occurred_at、nullable idempotency_key、request_digest、idempotency_expires_at、created_atを持つ。client_reported_at、時間、金額、給与、係数を持たない。全queryはtenant/workspace scopeを必須とし、Project/Harness/actorの関係をrepositoryでfail-closed検証する。
+
+endpoint専用tableでの冪等uniqueはtenant_id+idempotency_keyで、論理scope tenant+endpointを表現する。TTLは24時間。同key・異digestは422。期限後は旧eventのbusiness facts、digest、expiryを不変にしたままkey claimだけnull化して再利用できる。
+
+【3 metrics_rollups】
+id、tenant_id、workspace_id、period=daily|weekly、dimension=tenant|harness|department|project|user、dimension_key、period_start、period_end、run_count、saved_minutes、saved_amount_jpy、computed_at、created_at、updated_atを持つ。saved値はserver側packages/estimationの算出結果であり、client申告値やsalaryは保存しない。uniqueはtenant+workspace+period+dimension+dimension_key+period_startとする。
+
+【4 transactionとwriter能力】
+rollupのatomic boundaryはtenant+workspace+period+period_startで、全dimension rowをTurso単一transactionでupsertする。Buildのstate・stage event・auditもTurso単一transactionを正規writerとする。D1 write adapterとD1 Build mutationは同等all-or-nothing証明までzero-writeで無効にする。
+
+【5 保持】
+metrics_eventsはTursoへ無期限保持し、R2 archiveや自動削除を行わない。一般DB backupのR2利用とは区別する。Turso storage/read/write使用量を日次監視し、無料枠圧迫時だけR4-reopenと利用者承認を経て保持期間を再検討する。
+
+【6 KPI snapshot】
+HearingSheet ownerは期間末の対象集合とcompleted状態、Catalog/Release ownerは期間末の対象公開済みHarness集合をsnapshotAt付きで永続化するかversioned read modelから決定論的に再現できなければならない。完了率は前者、利用率の分母は後者、分子は後者と期間内Harness rollupの共通部分。分母0はnullで表示「—」。anomalyは過去4完了週が揃い中央値が0でない場合だけ評価する。
+
+【7 migration】
+既存combined 0008は履歴としてimmutableに保ち、再採番・物理分割しない。今後のdelta migration、release、rollback evidenceはBuildとMetricsで分離する。rollbackはmigration lineageと前方修正を含むrelease単位で設計し、既存表DROPだけに限定しない。
 
 ## 上流指針 (doctrine anchor)
 
@@ -86,8 +109,45 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 
 #### 本章での適用
 
-- 上記原則は確定内容 qa-126 (対応セル: web) の判断へ適用する
-- 資するゴール: G1, G2, G4, G5
+##### 確定内容 qa-229 (対応セル: web)
+
+- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）、既存P01 baseline、qa-221〜qa-225のうち矛盾しない契約を統合した現行正本である。tenant分離、PII非複製、expand-then-contractを維持する。
+
+【1 Project関係】
+HearingSheet確定時に、サーバがtenant_id/workspace_idでscopeされたProjectを冪等に作成または関連付け、HearingSheet→Project関係を保存する。BuildとMetricsはこの関係または派生したHarness/Release/Project registryだけをtrusted resolverとして使い、client/token申告project_idを保存しない。
+
+【2 metrics_events】
+append-only事実表はid、tenant_id、workspace_id、project_id、harness_id、principal由来actor_user_id、nullable department_id、run_count、server occurred_at、nullable idempotency_key、request_digest、idempotency_expires_at、created_atを持つ。client_reported_at、時間、金額、給与、係数を持たない。全queryはtenant/workspace scopeを必須とし、Project/Harness/actorの関係をrepositoryでfail-closed検証する。
+
+endpoint専用tableでの冪等uniqueはtenant_id+idempotency_keyで、論理scope tenant+endpointを表現する。TTLは24時間。同key・異digestは422。期限後は旧eventのbusiness facts、digest、expiryを不変にしたままkey claimだけnull化して再利用できる。
+
+【3 metrics_rollups】
+id、tenant_id、workspace_id、period=daily|weekly、dimension=tenant|harness|department|project|user、dimension_key、period_start、period_end、run_count、saved_minutes、saved_amount_jpy、computed_at、created_at、updated_atを持つ。saved値はserver側packages/estimationの算出結果であり、client申告値やsalaryは保存しない。uniqueはtenant+workspace+period+dimension+dimension_key+period_startとする。
+
+【4 transactionとwriter能力】
+rollupのatomic boundaryはtenant+workspace+period+period_startで、全dimension rowをTurso単一transactionでupsertする。Buildのstate・stage event・auditもTurso単一transactionを正規writerとする。D1 write adapterとD1 Build mutationは同等all-or-nothing証明までzero-writeで無効にする。
+
+【5 保持】
+metrics_eventsはTursoへ無期限保持し、R2 archiveや自動削除を行わない。一般DB backupのR2利用とは区別する。Turso storage/read/write使用量を日次監視し、無料枠圧迫時だけR4-reopenと利用者承認を経て保持期間を再検討する。
+
+【6 KPI snapshot】
+HearingSheet ownerは期間末の対象集合とcompleted状態、Catalog/Release ownerは期間末の対象公開済みHarness集合をsnapshotAt付きで永続化するかversioned read modelから決定論的に再現できなければならない。完了率は前者、利用率の分母は後者、分子は後者と期間内Harness rollupの共通部分。分母0はnullで表示「—」。anomalyは過去4完了週が揃い中央値が0でない場合だけ評価する。
+
+【7 migration】
+既存combined 0008は履歴としてimmutableに保ち、再採番・物理分割しない。今後のdelta migration、release、rollback evidenceはBuildとMetricsで分離する。rollbackはmigration lineageと前方修正を含むrelease単位で設計し、既存表DROPだけに限定しない。
+- 原則: Domain Event (過去の事実を明示する) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/ddd.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: event factsと期限付きidempotency claimを分離し、旧eventを残したままclaimだけを解放して監査可能性とkey再利用を両立した。
+  - トレードオフ:
+    - idempotency metadataだけはappend-only例外になる
+    - 無期限保持費用を日次監視で引き受ける
+- 原則: Dependency Rule (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: owner間関係をtrusted resolverへ閉じ、client inputをproject identityから排除した。
+  - トレードオフ:
+    - resolver未実装中はfail-closedになる
+    - D1 parity証明までTurso依存が残る
+- 資するゴール: G4, G5
 
 ## 最新ドキュメント出典
 

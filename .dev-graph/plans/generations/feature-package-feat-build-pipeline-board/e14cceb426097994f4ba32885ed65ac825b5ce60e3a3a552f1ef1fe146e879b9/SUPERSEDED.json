@@ -1,0 +1,24 @@
+{
+  "current_pointer": ".dev-graph/state/current/feature-package-feat-build-pipeline-board.json",
+  "feature_package_id": "feature-package/feat-build-pipeline-board",
+  "notice": "この directory は supersede 済みの旧世代であり、正本ではない。実装要件の正本は superseded_by.published_path 配下の content-addressed generation を読むこと。旧世代は byte-for-byte 不変で保持されるため、この directory の中身を編集して現行世代へ追随させてはならない。さらに世代が進んだ場合は current_pointer から再解決すること。",
+  "published_digest": "sha256:e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9",
+  "schema_version": "1.0.0",
+  "status": "superseded",
+  "superseded_by": {
+    "generation_id": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+    "published_digest": "sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+    "published_path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
+    "receipt": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/atomic-promotion-receipt.json"
+  },
+  "superseded_receipts": {
+    "promotion": {
+      "path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/atomic-promotion-receipt.json",
+      "sha256": "sha256:22e94d621766026e85f73c18bdd330623565d02ffd1e7704e63087f2932d494e"
+    },
+    "registration": {
+      "path": ".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/dev-graph-registration-receipt.json",
+      "sha256": "sha256:5830641f174a6df7143c0712c3614352b03305f20242d621d5a5f3c45baafe56"
+    }
+  }
+}

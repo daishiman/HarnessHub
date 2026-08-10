@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/v13-migrate-metrics-tracking",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "task specs・inventory・graph・handoffは相互矛盾なく現行qa-226..229/appr-043へ整合する。P08/P13は適用前draft破棄と適用後immutable lineage/forward-fixを明確に分離し、旧rollback矛盾は直接除去されている。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-08-refactoring-migration.md#Rollout-and-rollback",
+        "task-specs/phase-13-release-deploy.md#Rollout-and-rollback",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/rollback",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P13/rollback"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13 exact-set、必須section、goal/confirmed QAのschema・API・transaction・KPI・anomaly・route/table・migration・typed owner handoffが全phaseへ意味反映される。insufficient_history、zero_median、anomaly=falseは別状態として全13 taskに固定され、P04/P13に実行可能な検証証跡がある。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-specs/phase-01-requirements.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-02-architecture.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-04-test-design.md#Verification-and-evidence",
+        "task-specs/phase-05-implementation.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-07-acceptance.md#Confirmed-Metrics-contract-closure-2026-08-10",
+        "task-specs/phase-13-release-deploy.md#Verification-and-evidence"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "parent_feature・feature_package_id・task ID・phase_ref・task path・repo identity・workstream語彙が一致する。P13 consumed artifactはP08が生成するpackages/db/migrations/配下のMetrics delta SQLと対応meta/journalへ直接統一された。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "feature-package.json#tasks",
+        "task-specs/phase-08-refactoring-migration.md#成果物",
+        "task-specs/phase-13-release-deploy.md#成果物",
+        "workstream-inventory.json#tasks/SYS-METRICS-TRACKING-P08/write_scope"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "P01→P13のintra-feature DAGは前方・非循環でnode/task parityを満たす。P01 entry gate、handoff source exact-set、manifest digest包含、promotion/registration receipt owner境界、および外部ownerのnon-DAG typed handoffが整合する。",
+      "evidence": [
+        "gate:deterministic-validation",
+        "task-graph.json#nodes",
+        "task-graph.json#edges",
+        "system-build-handoff.json#source_inputs",
+        "system-build-handoff.json#registration_request",
+        "workstream-inventory.json#p01_entry_gate",
+        "task-specs/phase-02-architecture.md#Confirmed-Metrics-contract-closure-2026-08-10"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/wt-2-2",
+        "--staging",
+        ".dev-graph/staging/v13-migrate-metrics-tracking"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:85adf59613687174abc6a4904276bb3856bd6ed6d7acf0ee637ac6221df637ef\",\n  \"feature_package_id\": \"feature-package/feat-metrics-tracking\",\n  \"parent_feature\": \"feat-metrics-tracking\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}\n",
+      "stderr": ""
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "8362712f2c4f5a4ebe0de262a52cdcb1085f9008125acc401b765f4c4f564cde"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "2ae3236ff6773bc668c04c6bb7840e831ce122c455c543ea082ab6c0ac5e4856"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "502715dd53fe139bae03f8a62028987fea4a0e4abb0c6fb65724bc89830c9f40"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "bbb96865586ac80fbdc9cece439b063ff3ae73252e695a73bffcc9c7b4682228"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "0256680fe529659671cd5af547965a294b2f6ec570ea18fa1da44fe42843e171"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "b8eedc7b7351fc6bd4e5875427efa454b3e0465422c6545f1a32f5014621a1fb"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "2c94338d628fb2c346a8181a8d7dd4143bae78668353259bb3712ef48a336469"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "b3d7064f61cba82d413e4292fadeb8434ace59e8e50bc8e040187d22918ef53d"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "c3166c6ceff184f428b7f0bad8ef828b09fd438f4417b75f36e8650a8544305f"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e91a085b212301973a0838ade681b7e566054bc748c913bc3f86794fdce950dc"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "9dce727990573e55ede057f45bcf6fb639d12daa6a881300edc8fecd1f6b8f51"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "99e18dccea6234b89fbdd4aca14c47c64d921c9a70f87c08cacf4baf9e5fa1b8"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "f9427883ac7ed2b2b9bc1bf3b0fc374b83171cc737ce2aa228ca6f15ff466cb0"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "4d6ae921c06c2d401c579b0b54187a137241f76235c20fd104aab2f5b119517c"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "f103ce2a4b2c25decceff54eac07dd72d96636f5be826c8843fc9bfb32ae57f7"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "6707d6695e8da049b2e0778e8a022710fdfc854a4b05ad5d79467ee0fe0f5d2c"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "e8589738d713655253e333c337f3870a6fed2a2319c04d9ac5f2ec216f7c28fe"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "11e0418d35cf151f5a1508cdede496769d9668bbc589ff5de92388b128bcf95a"
+    }
+  ],
+  "staleness_rule": "C11はpromotion直前にstaging-manifest.jsonのfiles exact-setとstaging-manifest.json自体のSHA-256をcurrent staging bytesから再計算し、追加・欠落・1 byteでも不一致があれば本評価を無効化する。別canonical_digestへ本verdictを再利用しない。",
+  "findings": []
+}

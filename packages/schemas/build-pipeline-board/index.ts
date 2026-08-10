@@ -1,0 +1,33 @@
+/** feat-build-pipeline-board 契約の公開入口。consumer は @harness-hub/schemas root から参照する。 */
+export type {
+  BuildBoardCard,
+  BuildBoardColumn,
+  BuildBoardResponse,
+  BuildDetailResponse,
+  BuildListItem,
+  BuildListQuery,
+  BuildListResponse,
+  BuildRisk,
+  BuildStage,
+  BuildStageEvent,
+  BuildStageTransitionRequest,
+  BuildStageTransitionResponse,
+  BuildType,
+} from './contracts.js';
+export {
+  BUILD_STAGE_ORDER,
+  buildBoardCardSchema,
+  buildBoardColumnSchema,
+  buildBoardResponseSchema,
+  buildDetailResponseSchema,
+  buildListItemSchema,
+  buildListQuerySchema,
+  buildListResponseSchema,
+  buildRiskSchema,
+  buildStageEventSchema,
+  buildStageSchema,
+  buildStageTransitionRequestSchema,
+  buildStageTransitionResponseSchema,
+  buildTypeSchema,
+  isAdjacentBuildStage,
+} from './contracts.js';

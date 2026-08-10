@@ -1,0 +1,18 @@
+{
+  "allowed_domains": [
+    "ui.shadcn.com"
+  ],
+  "findings": [
+    "shadcn/ui は Tailwind v4 と React 19 を公式にサポートしている",
+    "Tailwind v4 向け更新では CSS variables を HSL から OKLCH へ移行している",
+    "コンポーネントには data-slot 属性が付与され、スタイル指定の安定した入口として使える",
+    "既存プロジェクトは強制的に一括移行されず、段階的な更新が想定されている"
+  ],
+  "retrieval_channel": "WebSearch/WebFetch",
+  "retrieval_method_disclosure": "公式 host に限定して検索し、Tailwind v4 対応の公式説明本文を取得・確認した。",
+  "retrieved_at": "2026-08-10T11:54:59Z",
+  "returned_official_urls": [
+    "https://ui.shadcn.com/docs/tailwind-v4"
+  ],
+  "target_id": "shadcn-ui"
+}

@@ -57,6 +57,13 @@
       "when": 1785757672226,
       "tag": "0007_feedback-loop-builds",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1786349965682,
+      "tag": "0008_metrics-tracking-and-build-stage-events",
+      "breakpoints": true
     }
   ]
 }

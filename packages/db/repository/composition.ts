@@ -23,6 +23,17 @@ import { createTenantDataRegistry, type TenantDataBucketLike } from '../registry
 import { deploymentReferences, projects } from '../schema/core/catalog';
 import { type AuditRepo, createAuditRepo } from './audit';
 import {
+  type BuildBoardColumnRows as BuildBoardColumnRowsShape,
+  type BuildStageEventRow as BuildStageEventRowShape,
+  type BuildStageRepository as BuildStageRepositoryShape,
+  createBuildStageRepository as createBuildStageRepositoryLeaf,
+  InvalidStageTransitionError as InvalidStageTransitionErrorLeaf,
+  PublishRequestNotPublishedError as PublishRequestNotPublishedErrorLeaf,
+  StageCasConflictError as StageCasConflictErrorLeaf,
+  type StageTransitionResult as StageTransitionResultShape,
+  type TransitionStageInput as TransitionStageInputShape,
+} from './build-stage';
+import {
   type BuildRow as BuildRowShape,
   type BuildsRepository as BuildsRepositoryShape,
   createBuildsRepository as createBuildsRepositoryLeaf,
@@ -72,6 +83,23 @@ import {
   type IdpConnectionRow as IdpConnectionRowShape,
   type IdpConnectionsRepo,
 } from './idp';
+import {
+  createMetricsTrackingRepository as createMetricsTrackingRepositoryLeaf,
+  type IngestMetricsEventInput as IngestMetricsEventInputShape,
+  type IngestMetricsEventResult as IngestMetricsEventResultShape,
+  type ListEventsForPeriodInput as ListEventsForPeriodInputShape,
+  type ListRollupsInput as ListRollupsInputShape,
+  type MetricsBreakdownEntry as MetricsBreakdownEntryShape,
+  type MetricsEventRow as MetricsEventRowShape,
+  MetricsIdempotencyKeyReuseError as MetricsIdempotencyKeyReuseErrorLeaf,
+  type MetricsRollupRow as MetricsRollupRowShape,
+  type MetricsSummary as MetricsSummaryShape,
+  type MetricsTotals as MetricsTotalsShape,
+  type MetricsTrackingRepository as MetricsTrackingRepositoryShape,
+  type MetricsTrendPoint as MetricsTrendPointShape,
+  type SummarizeInput as SummarizeInputShape,
+  type UpsertRollupInput as UpsertRollupInputShape,
+} from './metrics-tracking';
 import {
   createIdempotencyLedgerRepo,
   createSessionRevocationsRepo,
@@ -125,6 +153,27 @@ export type FeedbackRow = FeedbackRowShape;
 export type FeedbackRepository = FeedbackRepositoryShape;
 export type BuildRow = BuildRowShape;
 export type BuildsRepository = BuildsRepositoryShape;
+// feat-build-pipeline-board。工程遷移は行の型と入出力の型だけを公開し、
+// 工程の値域 (BUILD_STAGES) は zod (@harness-hub/schemas) 側の単一ソースに残す。
+export type BuildStageEventRow = BuildStageEventRowShape;
+export type BuildStageRepository = BuildStageRepositoryShape;
+export type TransitionStageInput = TransitionStageInputShape;
+export type StageTransitionResult = StageTransitionResultShape;
+export type BuildBoardColumnRows = BuildBoardColumnRowsShape;
+// feat-metrics-tracking。period/dimension の値域も同じ理由で公開しない。
+export type MetricsEventRow = MetricsEventRowShape;
+export type MetricsRollupRow = MetricsRollupRowShape;
+export type MetricsTrackingRepository = MetricsTrackingRepositoryShape;
+export type IngestMetricsEventInput = IngestMetricsEventInputShape;
+export type IngestMetricsEventResult = IngestMetricsEventResultShape;
+export type ListEventsForPeriodInput = ListEventsForPeriodInputShape;
+export type UpsertRollupInput = UpsertRollupInputShape;
+export type ListRollupsInput = ListRollupsInputShape;
+export type SummarizeInput = SummarizeInputShape;
+export type MetricsTotals = MetricsTotalsShape;
+export type MetricsTrendPoint = MetricsTrendPointShape;
+export type MetricsBreakdownEntry = MetricsBreakdownEntryShape;
+export type MetricsSummary = MetricsSummaryShape;
 export type PublishRequestRow = PublishRequestRowShape;
 export type ReleaseRow = ReleaseRowShape;
 export type TargetChannelRow = TargetChannelRowShape;
@@ -160,6 +209,23 @@ export function createFeedbackRepository(adapter: CoreAdapter): FeedbackReposito
 export function createBuildsRepository(adapter: CoreAdapter): BuildsRepository {
   return createBuildsRepositoryLeaf(adapter);
 }
+
+/** 工程遷移 (build_stage_events) も同じ理由でこの facade からだけ組み立てる。 */
+export function createBuildStageRepository(adapter: CoreAdapter): BuildStageRepository {
+  return createBuildStageRepositoryLeaf(adapter);
+}
+
+/** feat-metrics-tracking も同じ理由でこの facade からだけ組み立てる。 */
+export function createMetricsTrackingRepository(adapter: CoreAdapter): MetricsTrackingRepository {
+  return createMetricsTrackingRepositoryLeaf(adapter);
+}
+
+// 工程遷移の失敗理由はアプリ層が HTTP status へ写す必要があるため、error class だけは公開する
+// (値域 enum とは違い、これは「境界での分岐に必要な型」であって二重定義にならない)。
+export const InvalidStageTransitionError = InvalidStageTransitionErrorLeaf;
+export const StageCasConflictError = StageCasConflictErrorLeaf;
+export const PublishRequestNotPublishedError = PublishRequestNotPublishedErrorLeaf;
+export const MetricsIdempotencyKeyReuseError = MetricsIdempotencyKeyReuseErrorLeaf;
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */
 export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {

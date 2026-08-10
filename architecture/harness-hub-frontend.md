@@ -228,3 +228,16 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 ## Catalog validator の遅延読込境界 (2026-08-10)
 
 catalog adapter は HTTP error を分類してから response schema を遅延読込する。成功時は JSON decode と薄い schema 再輸出 module の取得を並行し、Zod 検証を省略しない。これにより失敗経路へ不要な client JS を載せず、API・認可・cache の意味は維持する。詳細は [追補仕様](../specs/harness-hub-dual-catalog-cache-addendum.md) と [受領書](../docs/features/feat-dual-catalog-web/aqi-validator-load-boundary-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-10 Metrics / Build Pipeline MVP 差分
+
+- HubShell の insight navigation に S09 ダッシュボード・S13 パイプライン・S16 使用状況を追加する。
+  モバイルの primary 4 枠には混ぜず、サイドバー専用層 (`insightNavItems`) に分離する。
+- **MVP path**: 実装 route は `/metrics`・`/builds`・`/metrics/usage`。仕様上の正規 path は
+  `/dashboard`・`/pipeline`・`/tracking`。canonical alias は後続で接続する。
+- S09/S16 は server component が rollup API を読み、生 event の画面内集計を禁止する。
+  期間 filter は URL search params を正本とする。
+- S13 は共有 `StageBoard` を消費し、admin のみ工程操作 UI を出す。axe 0 を focused test で固定する。
+- 正本は [frontend](../system-spec/frontend.md) / [ui-ux](../system-spec/ui-ux.md)。
+  受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
+  [build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。

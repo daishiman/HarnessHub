@@ -81,10 +81,11 @@ describe('UIS-NAV: 導線の定義', () => {
     expect(navItems.primaryNavItems(SCOPE)).toHaveLength(4);
   });
 
-  it('UIS-NAV-003: サイドバーは主要 + 管理をこの順で並べる', () => {
+  it('UIS-NAV-003: サイドバーは主要 + 分析 + 管理をこの順で並べる', () => {
     const sidebar = navItems.sidebarNavItems(SCOPE, 'provider-admin').map((item) => item.label);
     expect(sidebar).toStrictEqual([
       ...navItems.primaryNavItems(SCOPE).map((item) => item.label),
+      ...navItems.insightNavItems(SCOPE).map((item) => item.label),
       ...navItems.secondaryNavItems(SCOPE, 'provider-admin').map((item) => item.label),
     ]);
   });
