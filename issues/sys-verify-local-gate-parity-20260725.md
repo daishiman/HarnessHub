@@ -12,7 +12,7 @@ iteration: null
 title: "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)"
 owners: ["daishiman"]
 created_at: "2026-07-25T14:49:11.542286Z"
-updated_at: "2026-08-04T03:11:02Z"
+updated_at: "2026-08-10T01:04:30Z"
 status: "closed"
 depends_on: []
 related_nodes: ["issue-auth-tenancy-ci-wiring-20260725"]
@@ -41,10 +41,10 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-yhc3","linked_at":"2026-07-25T14:50:44Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-shared-layers-registry-baseline-drift-20260724","linked_at":"2026-08-10T01:04:30Z","merge_commit_sha":null,"merged_at":null,"pr_number":668,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/668"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
-implementation_readiness: {"checked_at":null,"missing_sections":[],"status":"incomplete"}
+completion_evidence: {"completed_at":"2026-08-04T03:11:02Z","evidence_refs":["docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-08-10T00:00:00Z","source":"reconciliation","status":"done"}
+implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
 ## 概要
@@ -100,3 +100,10 @@ production の不具合には直結しない。ただし不変条件 (R-18) の�
 ## 関連グラフ
 
 - `issue-auth-tenancy-ci-wiring-20260725` — 本 issue の発見元。G12 追加と G4 名指しで同型の欠落を 1 件解消済み
+
+## 解決結果 (2026-08-10)
+
+- root `package.json` に G7 / G7b / G9 の wrapper を追加し、`pnpm verify` へ結線した。
+- 併せて G14 の認証 release contract も同じ共有方式で名指し実行する。
+- `docs/shared-layers.md` の登録簿と local 入口を同期し、未結線を 0 件にした。
+- 最終判断と検証結果は [仕様反映受領書](../docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md) を正とする。

@@ -76,7 +76,9 @@ function runGate(env: Record<string, string>): { code: number; stdout: string } 
         HEALTH_URL: 'http://version-gate.invalid/health',
         DEPLOYED_VERSION,
         VERSION_GATE_INTERVAL_SECONDS: '0',
-        VERSION_GATE_TIMEOUT_SECONDS: '3',
+        // Full suite の並列負荷でも fake curl 6 回 (旧版 3 回 + 新版 3 連続) を完走できる余白。
+        // production の既定 90 秒や成功条件は変えず、テスト機の速度だけで期限切れにしない。
+        VERSION_GATE_TIMEOUT_SECONDS: '10',
         ...env,
       },
     });

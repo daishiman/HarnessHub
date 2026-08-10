@@ -4,7 +4,7 @@ artifact_kind: "architecture"
 artifact_subtypes: ["infrastructure"]
 project_id: "harness-hub"
 domain: "infrastructure"
-tags: ["infrastructure","operations","document-split","traceability"]
+tags: ["infrastructure","operations","document-split","traceability","ci-quality-gate"]
 priority: "high"
 start_date: "2026-08-09"
 target_date: null
@@ -12,17 +12,17 @@ iteration: null
 title: "Harness Hub infrastructure 運用追補"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T13:10:51.293550Z"
+updated_at: "2026-08-10T00:00:00Z"
 status: "active"
 depends_on: ["arch-harness-hub-infrastructure"]
-related_nodes: ["spec-harness-hub-requirements","issue-audit-fork-ledger-forgery-20260728"]
-resource_scope: ["architecture/harness-hub-infrastructure-operations-addenda.md","architecture/harness-hub-infrastructure.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"]
-purpose: "infrastructure 本体を300行以下に保ちながら確定済み運用履歴の追跡性を維持する"
-goal: "SLO、OAuth rollout、deploy 鮮度の各判断から親 architecture、system-spec、受領書へ到達できる"
-scope_in: ["確定済み SLO 運用","OAuth rollout","build identity と deploy 鮮度の運用履歴"]
+related_nodes: ["spec-harness-hub-requirements","spec-harness-hub-verification-tiering-20260809","issue-audit-fork-ledger-forgery-20260728","issue-shared-layers-registry-baseline-drift-20260724"]
+resource_scope: ["architecture/harness-hub-infrastructure-operations-addenda.md","architecture/harness-hub-infrastructure.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","package.json","docs/shared-layers.md"]
+purpose: "infrastructure 本体を300行以下に保ちながら確定済み運用・CI 品質判断の追跡性を維持する"
+goal: "SLO、OAuth rollout、deploy 鮮度、CI/local gate 同値の各判断から親 architecture、system-spec、受領書へ到達できる"
+scope_in: ["確定済み SLO 運用","OAuth rollout","build identity と deploy 鮮度の運用履歴","CI と local verify の実装同値"]
 scope_out: ["Cloudflare 構成変更","認証方式変更","SLO 値変更","新しい配備単位"]
 acceptance: ["親文書との相互リンクがある","通常文書が500行を超えない","artifact placement と graph schema を通過する"]
-architecture_refs: ["arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
+architecture_refs: ["arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -92,6 +92,7 @@ Harness Hub の infrastructure 本体から、確定済みの運用判断と rol
 | ADR | Decision | Alternatives | Trade-on rationale | Consequences |
 |---|---|---|---|---|
 | OPS-SPLIT-001 | 運用履歴を登録済み追補へ分冊する | 親文書を上限超過のまま維持 | 読みやすさと追跡性 | 参照リンクと graph 登録が必須になる |
+| OPS-CI-002 | CI gate と local `verify` は同じ package script を再利用する | CI 専用実装を別管理 | PR 前に同じ失敗を検知できる | root wrapper と gate 登録簿の同期が必要になる |
 
 ## Delivery, migration and rollback
 
@@ -172,3 +173,15 @@ SLO、rollback、鮮度判断は以下の確定済み各節を正とする。
 5. `HarnessHub-u9zq` では、鮮度検査の後・最初の smoke の前に deployment version と `/health.version` の連続一致を再確認する。colo 間の伝播ムラ、不一致、通信失敗、version 欠落は fail-closed とし、smoke 未実行なので rollback は打たない。
 
 契約正本: [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) / 判断根拠: [architecture decision](../docs/features/feat-build-identity-deploy-freshness/architecture-decision.md)。本番実測は未取得であり、deploy 後に `release-record.md` へ追記する。
+
+## 2026-08-10 CI 品質ゲートと local `verify` の同値化
+
+`system-spec/dev-workflow.md` の `qa-216` が継承する CI/local 同値契約を、既存の
+package script を再利用する構成として具体化した。root `package.json` の wrapper は
+G7、G7b、G9、G14 の各実装へ委譲し、package script が存在しない場合は
+fail-closed にする。検査ロジック自体を root や workflow へ複製しない。
+
+G11 は main 反映後の定期 Core Web Vitals 計測なので、PR 前の `pnpm verify` には
+含めない。正確な対応表は [検証 tier 仕様追補](../specs/harness-hub-verification-tiering-addendum.md)、
+実装・検証・影響判断は [仕様反映受領書](../docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md)
+を参照する。製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。

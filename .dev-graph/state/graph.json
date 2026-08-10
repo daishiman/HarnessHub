@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1461,
+  "graph_revision": 1469,
   "nodes": [
     {
       "acceptance": [
@@ -789,10 +789,11 @@
         "evidence_refs": [
           "docs/features/feat-hub-foundation/acceptance-report.md",
           "docs/features/feat-hub-foundation/release-notes.md",
-          "docs/features/feat-hub-foundation/runbook.md"
+          "docs/features/feat-hub-foundation/runbook.md",
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-08-02T03:44:06Z",
+        "reconciled_at": "2026-08-10T00:00:00Z",
         "source": "manual",
         "status": "done"
       },
@@ -874,7 +875,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-08T10:45:00Z"
+      "updated_at": "2026-08-10T00:42:42.873251Z"
     },
     {
       "acceptance": [
@@ -3054,10 +3055,11 @@
       "completion_evidence": {
         "completed_at": "2026-07-25T16:06:31Z",
         "evidence_refs": [
-          "issues/sys-lint-open-residue-ci-red-20260725.md"
+          "issues/sys-lint-open-residue-ci-red-20260725.md",
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
         ],
         "policy": "manual",
-        "reconciled_at": "2026-07-26T01:19:20.811908Z",
+        "reconciled_at": "2026-08-10T00:00:00Z",
         "source": "reconciliation",
         "status": "done"
       },
@@ -3161,7 +3163,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤 本番リリース・デプロイ",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T05:46:07.491153Z"
+      "updated_at": "2026-08-10T00:39:51.388550Z"
     },
     {
       "acceptance": [
@@ -37357,12 +37359,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "issue-auth-tenancy-ci-wiring-20260725 の実装中に判明した同型の未結線を追跡する issue",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-04T03:11:02Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-10T00:00:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -37387,9 +37391,9 @@
       "goal": "CI 品質ゲート登録簿の全ゲートが、CI と local の双方から同一実装で起動できる状態",
       "graph_node_id": "issue-verify-local-gate-parity-20260725",
       "implementation_readiness": {
-        "checked_at": null,
+        "checked_at": "2026-08-10T00:00:00Z",
         "missing_sections": [],
-        "status": "incomplete"
+        "status": "complete"
       },
       "issue_linkage": null,
       "iteration": null,
@@ -37400,7 +37404,20 @@
       "phase_ref": null,
       "priority": "medium",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-shared-layers-registry-baseline-drift-20260724",
+          "linked_at": "2026-08-10T01:04:30Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 668,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/668"
+        }
+      ],
       "purpose": "ADR §6 R-18 と system-spec/dev-workflow.md【2. CI と local の乖離防止】は、required status checks と同一コマンドを root の pnpm verify から実行できることを求める。2026-07-25 時点で G7 (破壊的 DDL 検査) / G7b (tenant 分離網羅・接続層隔離) / G9 (axe a11y) は .github/workflows/ci.yml にしか結線されておらず local verify に載っていない。CI にしか無いゲートは着手前に気づけず、PR を出して初めて落ちる (issue-auth-tenancy-ci-wiring-20260725 と同型の欠落)",
       "related_nodes": [
         "issue-auth-tenancy-ci-wiring-20260725"
@@ -37439,7 +37456,7 @@
       "template_version": "1.0.0",
       "title": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T03:11:02Z"
+      "updated_at": "2026-08-10T01:04:30Z"
     },
     {
       "acceptance": [
@@ -42005,12 +42022,14 @@
       "classification_confidence": 1,
       "classification_reason": "2026-07-28 orphan 再棚卸しで HarnessHub-42g の本文と notes を確認し、未解決で実作業を持つため参照剥がし・close ではなく node 復元と判断",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-04T07:56:17Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-10T00:00:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -42049,7 +42068,20 @@
       "phase_ref": null,
       "priority": "low",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-shared-layers-registry-baseline-drift-20260724",
+          "linked_at": "2026-08-10T01:04:30Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 668,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/668"
+        }
+      ],
       "purpose": "未解決の Beads issue HarnessHub-42g を canonical graph から到達可能に戻し、課題内容を失わず ready/parity の信号を回復する",
       "related_nodes": [
         "issue-bd-external-ref-orphan-nodes-20260725",
@@ -42083,7 +42115,7 @@
       "template_version": "1.0.0",
       "title": "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-04T07:56:17Z"
+      "updated_at": "2026-08-10T01:04:30Z"
     },
     {
       "acceptance": [
@@ -54021,7 +54053,8 @@
         "deferred は Beads の受け皿を必須にする",
         "selector absent の新規記録を拒否する",
         "full を新規 tier 名として出力しない",
-        "cache miss/corrupt は評価器を再実行する"
+        "cache miss/corrupt は評価器を再実行する",
+        "PR gate の既存実装を root verify から再利用できる"
       ],
       "architecture_refs": [
         "arch-harness-hub-dev-workflow",
@@ -54091,7 +54124,8 @@
         "arch-harness-hub-dev-workflow",
         "arch-harness-hub-testing-qa",
         "issue-verification-evaluator-cache-20260809",
-        "issue-verification-tier-unwired-20260809"
+        "issue-verification-tier-unwired-20260809",
+        "issue-shared-layers-registry-baseline-drift-20260724"
       ],
       "resource_scope": [
         "scripts/select-verification-tier.py",
@@ -54099,13 +54133,16 @@
         "scripts/validate-tier-decision.py",
         "scripts/build-evaluator-cache.py",
         "scripts/verification-gate-ledger.json",
-        ".github/workflows/governance-check.yml"
+        ".github/workflows/governance-check.yml",
+        "package.json",
+        "docs/shared-layers.md"
       ],
       "scope_in": [
         "mvp/standard/critical の決定規則",
         "verification plan の disposition",
         "tier-decision 記録検証",
-        "evaluator cache の fail-closed 契約"
+        "evaluator cache の fail-closed 契約",
+        "CI gate と root verify の実装同値"
       ],
       "scope_out": [
         "製品 API",
@@ -54137,7 +54174,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub 検証 tier と証拠台帳の仕様追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-09T00:00:00Z"
+      "updated_at": "2026-08-10T00:00:00Z"
     },
     {
       "acceptance": [
@@ -54849,6 +54886,7 @@
       ],
       "architecture_refs": [
         "arch-harness-hub-infrastructure",
+        "arch-harness-hub-dev-workflow",
         "arch-harness-hub-testing-qa"
       ],
       "artifact_kind": "architecture",
@@ -54895,7 +54933,7 @@
         "mode": "local_only",
         "project_aliases": []
       },
-      "goal": "SLO、OAuth rollout、deploy 鮮度の各判断から親 architecture、system-spec、受領書へ到達できる",
+      "goal": "SLO、OAuth rollout、deploy 鮮度、CI/local gate 同値の各判断から親 architecture、system-spec、受領書へ到達できる",
       "graph_node_id": "arch-harness-hub-infrastructure-operations-addenda",
       "implementation_readiness": {
         "checked_at": "2026-08-09T00:00:00Z",
@@ -54912,20 +54950,25 @@
       "priority": "high",
       "project_id": "harness-hub",
       "pull_request_linkages": [],
-      "purpose": "infrastructure 本体を300行以下に保ちながら確定済み運用履歴の追跡性を維持する",
+      "purpose": "infrastructure 本体を300行以下に保ちながら確定済み運用・CI 品質判断の追跡性を維持する",
       "related_nodes": [
         "spec-harness-hub-requirements",
-        "issue-audit-fork-ledger-forgery-20260728"
+        "spec-harness-hub-verification-tiering-20260809",
+        "issue-audit-fork-ledger-forgery-20260728",
+        "issue-shared-layers-registry-baseline-drift-20260724"
       ],
       "resource_scope": [
         "architecture/harness-hub-infrastructure-operations-addenda.md",
         "architecture/harness-hub-infrastructure.md",
-        "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"
+        "docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md",
+        "package.json",
+        "docs/shared-layers.md"
       ],
       "scope_in": [
         "確定済み SLO 運用",
         "OAuth rollout",
-        "build identity と deploy 鮮度の運用履歴"
+        "build identity と deploy 鮮度の運用履歴",
+        "CI と local verify の実装同値"
       ],
       "scope_out": [
         "Cloudflare 構成変更",
@@ -54947,14 +54990,15 @@
         "infrastructure",
         "operations",
         "document-split",
-        "traceability"
+        "traceability",
+        "ci-quality-gate"
       ],
       "target_date": null,
       "template_id": "architecture",
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure 運用追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-09T13:10:51.293550Z"
+      "updated_at": "2026-08-10T00:00:00Z"
     },
     {
       "acceptance": [

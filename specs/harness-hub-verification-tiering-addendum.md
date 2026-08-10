@@ -12,16 +12,16 @@ iteration: null
 title: "Harness Hub 検証 tier と証拠台帳の仕様追補"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-10T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa","issue-verification-evaluator-cache-20260809","issue-verification-tier-unwired-20260809"]
-resource_scope: ["scripts/select-verification-tier.py","scripts/build-verification-plan.py","scripts/validate-tier-decision.py","scripts/build-evaluator-cache.py","scripts/verification-gate-ledger.json",".github/workflows/governance-check.yml"]
+related_nodes: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa","issue-verification-evaluator-cache-20260809","issue-verification-tier-unwired-20260809","issue-shared-layers-registry-baseline-drift-20260724"]
+resource_scope: ["scripts/select-verification-tier.py","scripts/build-verification-plan.py","scripts/validate-tier-decision.py","scripts/build-evaluator-cache.py","scripts/verification-gate-ledger.json",".github/workflows/governance-check.yml","package.json","docs/shared-layers.md"]
 purpose: "変更差分から検証深度を決定論的に選び、延期・再利用・検証結果を後から追跡できる開発品質契約を定める。"
 goal: "tier 判定が実行者に依存せず、検査の省略や降格が受け皿の無いまま成立せず、記録から実際の検証状態を復元できる。"
-scope_in: ["mvp/standard/critical の決定規則","verification plan の disposition","tier-decision 記録検証","evaluator cache の fail-closed 契約"]
+scope_in: ["mvp/standard/critical の決定規則","verification plan の disposition","tier-decision 記録検証","evaluator cache の fail-closed 契約","CI gate と root verify の実装同値"]
 scope_out: ["製品 API","DB schema","認証認可","UI","Cloudflare deploy unit","tier による下流 CI step の切替","evaluator 呼出元への cache 配線"]
-acceptance: ["同じ変更 path 集合から同じ tier を得る","deferred は Beads の受け皿を必須にする","selector absent の新規記録を拒否する","full を新規 tier 名として出力しない","cache miss/corrupt は評価器を再実行する"]
+acceptance: ["同じ変更 path 集合から同じ tier を得る","deferred は Beads の受け皿を必須にする","selector absent の新規記録を拒否する","full を新規 tier 名として出力しない","cache miss/corrupt は評価器を再実行する","PR gate の既存実装を root verify から再利用できる"]
 architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
@@ -141,6 +141,25 @@ run ID、target、変更 path、matched rules、rules/source digest、checks、d
 ## テストと受入条件
 
 selector、plan、decision、cache、signal consistency の focused pytest、system-spec coverage、task plan、repository CI、PR-ready gate を main 取り込み後の最終 HEAD で通す。
+
+### CI gate と root `verify` の実装同値
+
+`system-spec/dev-workflow.md` の現行 `qa-216` が継承する `qa-038` / `qa-039` /
+`qa-140` の契約に従い、PR gate と local gate は別実装を持たない。root
+`package.json` は次の既存 package script を wrapper から呼び、`pnpm verify` へ結線する。
+
+| 登録簿 | root 入口 | 再利用する実装 |
+|---|---|---|
+| G7 | `check:ddl` | `@harness-hub/db#check:ddl` |
+| G7b | `check:tenant-isolation-coverage` | `@harness-hub/db#check:tenant-isolation-coverage` |
+| G7b | `check:connection-isolation` | `@harness-hub/db#check:connection-isolation` |
+| G9 | `check:a11y` | UI / Hub の `test:a11y` |
+| G14 | `check:auth-release-contract` | Hub の `test:auth-release-contract` |
+
+package script の欠落や rename は wrapper の事前検査で非 0 とし、未実行を成功へ
+読み替えない。G11 は main 反映後の定期 Core Web Vitals 計測であり、PR 時点と
+実行時点が異なるため root `verify` の対象外とする。これは gate の省略ではなく、
+登録簿に記録した実行境界の違いである。
 
 ### live-trial の資源予算と再利用契約
 
