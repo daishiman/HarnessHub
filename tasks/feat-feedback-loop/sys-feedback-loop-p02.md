@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T07:16:13Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P01"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-feedback-loop/architecture-decision-record.md"]

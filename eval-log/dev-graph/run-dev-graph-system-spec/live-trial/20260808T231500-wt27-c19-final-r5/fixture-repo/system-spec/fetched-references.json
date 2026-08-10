@@ -1,0 +1,30 @@
+{
+  "references": [
+    {
+      "target_id": "sqlite",
+      "retrieved_at": "2026-08-08T14:18:30Z",
+      "source_url": "https://www.sqlite.org/changes.html",
+      "official_publisher": "SQLite Consortium / SQLite Development Team",
+      "official_host": "www.sqlite.org",
+      "version": "3.53.4",
+      "last_updated": "2026-07-24",
+      "latest_checked_at": "2026-08-08T14:18:30Z",
+      "evidence_ref": "system-spec/retrieval-evidence/sqlite.json",
+      "evidence_sha256": "942751b25bee4e8dbb86c303086575a66197ed345dc2bb7d553e979608a8e810",
+      "summary": "SQLite 公式 Release History。現行リリース 3.53.4 (2026-07-24) を確認。単一ファイル・組込みで常駐サーバーを持たない永続化として D1 の採択根拠になる。"
+    },
+    {
+      "target_id": "fastapi",
+      "retrieved_at": "2026-08-08T14:18:31Z",
+      "source_url": "https://fastapi.tiangolo.com/release-notes/",
+      "official_publisher": "Sebastián Ramírez (tiangolo) / FastAPI",
+      "official_host": "fastapi.tiangolo.com",
+      "version": "0.141.1",
+      "last_updated": "2026-07-29",
+      "latest_checked_at": "2026-08-08T14:18:31Z",
+      "evidence_ref": "system-spec/retrieval-evidence/fastapi.json",
+      "evidence_sha256": "39af80139cc1ad34f4955e16b6531f8d73bb8a9bf81503da8c945bfedd28cbc9",
+      "summary": "FastAPI 公式 Release Notes。最新リリース 0.141.1 (2026-07-29) を確認。OpenAPI 自動生成と型ベース入力検証を持つ ASGI framework として D2/D3 の採択根拠になる。"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-init",
+  "args": "--repo-root eval-log/dev-graph/run-dev-graph-init/live-trial/20260808T113540Z-o4zi-c01r3/fixture-repo --hook-source plugin",
+  "requested_model": "claude-opus-5",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-init",
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "d4121343d81125a4407cf2594338dfab31146f3f4817a06e84538703c4f518fd",
+  "transcript_sha256": "07f028b44bf361676043dce2a291d01efc46c6edea5fdacd0389a9ac500d15b4",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.62",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 795.0
+  },
+  "scenario_id": "C01-OUT1-positive-idempotence-r17",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C01-OUT1-positive-idempotence-r17",
+    "required_observations": [
+      "the first pass creates the six content roots, the routing policy and the graph store",
+      "the second pass re-invokes the skill and reports zero planned changes",
+      "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+      "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+      "config stores no absolute path and no token or node id",
+      "C11 passes against a graph that contains at least one node"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the first pass creates the six content roots, the routing policy and the graph store",
+        "evidence_ref": "fixture-repo/eval-log/run-dev-graph-init-receipt-pass1.json"
+      },
+      {
+        "index": 2,
+        "observation": "the second pass re-invokes the skill and reports zero planned changes",
+        "evidence_ref": "fixture-repo/eval-log/run-dev-graph-init-receipt-pass2.json"
+      },
+      {
+        "index": 3,
+        "observation": "the template edited between the passes still holds its edited bytes after the second pass, proving non-overwrite by running init rather than by inspecting the file alone",
+        "evidence_ref": "fixture-repo/.dev-graph/templates/document.md"
+      },
+      {
+        "index": 4,
+        "observation": "the plugin hook source is resolved and its receipt or rejection diagnosis is recorded",
+        "evidence_ref": "fixture-repo/eval-log/run-dev-graph-init-receipt-pass2.json"
+      },
+      {
+        "index": 5,
+        "observation": "config stores no absolute path and no token or node id",
+        "evidence_ref": "fixture-repo/.dev-graph/config.json"
+      },
+      {
+        "index": 6,
+        "observation": "C11 passes against a graph that contains at least one node",
+        "evidence_ref": "fixture-repo/.dev-graph/state/graph.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> --hook-source plugin",
+      "template_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--hook-source",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

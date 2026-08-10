@@ -24,7 +24,7 @@ layer: implementation-notes
 - `HarnessHub-vf66` で hook の台帳 (`package-contract.json`)・登録 (`hooks/hooks.json` と manifest inline hooks)・実体を HK-001..003 で双方向に照合する repo 全体ゲートへ一般化した。
 - 検査で発見した harness-creator の未宣言 entry point を台帳へ追加し、skill-intake の手動 keychain 操作は `hooks/` から `scripts/` へ移して自動処理との責務を分離した。
 - `validate-plugin-completeness.py` は 500 行を超えたため、hook 判定を `validate-plugin-hooks.py` へ分離した。focused pytest 68 PASS、全 plugin 完全性 23/23 PASS、task 仕様書ゲート PASS を確認した。
-- 変更は開発品質契約だけに影響する。`qa-143`、`system-spec/`、`specs/`、architecture、feature、task、[仕様反映受領書](hooks-entry-point-parity-spec-reflection-receipt.md) に反映し、製品 API・DB・認証認可・UI・deploy unit は非変更と記録した。
+- 変更は開発品質契約だけに影響する。2026-08-10 の current-main 再統合では branch-local `qa-146` を正本として再利用せず、hook parity は `qa-143`、receipt 選択の fail-closed 修正は製品仕様への影響なしとして [受領書](live-trial-evidence-selection-spec-reflection-receipt.md) に記録した。製品 API・DB・認証認可・UI・deploy unit は非変更である。
 
 ## 2026-08-03 追記: 更新時刻クラスタを診断材料へ訂正
 
@@ -279,3 +279,22 @@ close した。
 - path 評価と書込み収集、core case と性能・既知限界 test を責務分割し、変更した手書きファイルを 500 行以下へ収束させた。
 - `exec` / `eval`、任意文字列変換、別 script file 本文は性能上の既知限界として明記し、PostToolUse drift audit と C02 writer 規約で補完する。
 - 正本は `system-spec/dev-workflow.md` の `qa-139` / `appr-028`、設計・検証・製品非変更の判断は [仕様反映受領書](f84o-inline-python-guard-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-07 追記: task kind の conditional_templates 見出し検査解決
+
+- `HarnessHub-yzv0` で、`HarnessHub-85z0` が `specification` のみへ限定していた
+  `HEADING_MISSING_KINDS` (C11 本文見出し欠落検査の対象 kind) へ `task` を追加した。
+- system-dev-planner 由来 task 260 件の実測により、`source_lineage.origin_kind` が
+  唯一の判別可能な条件分岐トリガーであることを確認し、`conditional_required_sections` の
+  複数 variant (フル19見出し / 軽量3見出し) のいずれかに一致すれば heading_missing なしと
+  判定する解決コードを実装した。
+- `issue` kind は実測の結果 task とは異なる構造課題と判断しスコープ外へ切り出した。
+- 判断・検証結果の全量は
+  [仕様反映受領書](yzv0-task-conditional-heading-check-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-08 追記: system-spec import heading contract
+
+- `HarnessHub-o4zi` で specification / architecture の正当な system-spec import 形を `origin_kind + source_path` の宣言型 trigger へ分離した。
+- architecture を `HEADING_MISSING_KINDS` へ追加し、3 contract copy と fixture を同期して 0/10 見出しでも complete になる非対称を解消した。
+- C19 と foundation U1〜U9 を正規経路で復旧し、旧 artifact 160 違反を 0 件へ収束。570 行の着地観測詳細は 122 行の正規 contract と履歴へ分離した。
+- 2026-08-09: main の C19 正本 `20260809T132550Z-wt27-c19-ci-r1` へ更新し、重複証拠を削除。focused 82 PASS。詳細は [o4zi 仕様反映受領書](o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。

@@ -1,0 +1,33 @@
+{
+  "canonical_digest": "sha256:9a7908d1a6d1c1c92220f062e79a58c943a6dd02705ecb3302703a2b9e07a2a9",
+  "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+  "files": {
+    "feature-package.json": "d0b6c447cb0b005d9c9ede579e1e6af99dc005c222e15b1f2c1406d15939c46b",
+    "system-build-handoff.json": "5c5f7697613b204c585fdc222f6bcc1e38b13e1477891d27d0c2005527fac46e",
+    "task-graph.json": "1ea337646daa724b57b9998c3c2fbd64b2dd6b48ee012af332727264b2d73358",
+    "task-specs/phase-01-requirements.md": "f226c597bdbcf9a33c2c51cd54dfd65a5cc5f1076fa85e3e2b967969ff7d3f68",
+    "task-specs/phase-02-architecture.md": "e87efa27654416ae4d4a1155442c566c178086c8e2fd6824ba473d198743130d",
+    "task-specs/phase-03-design-review.md": "5831b0e9ebc3653d0820a7e43422b72779d22ea775f4302303875ee1f71a164c",
+    "task-specs/phase-04-test-design.md": "3d93b569b12f63626a3e305ca067d8f1ba5fc38761588ea3f7e66ebbbc83f02e",
+    "task-specs/phase-05-implementation.md": "50c5c3ced19120f0f393fd4309049ff52ea4e3c3a3684bbcd14b1b683e5ad52e",
+    "task-specs/phase-06-test-run.md": "a6d24b430e04e9f6cf6d630150977a01e14505d52506215cecc449ba476e871f",
+    "task-specs/phase-07-acceptance.md": "95bbc1a2b643bd7558d85b2e9f05c4008d5ab1f2656052ad07507b328416f004",
+    "task-specs/phase-08-refactoring-migration.md": "f93c3568194fc1aa9751b6167bd2678e72deff9c2148919ffd07e31efe568294",
+    "task-specs/phase-09-quality-assurance.md": "252cd9bb013edee67ca7b9cf73c24832920b3b3c7b16065e4cb2feca152f6df9",
+    "task-specs/phase-10-final-review.md": "f1f6fbb8674a4463c5c5c28cd3189c9acddb6ef5e649a82683fadf38cae07420",
+    "task-specs/phase-11-evidence.md": "e15be94322e1bce4acada5562c6e75e7c316713853552c247a2d76166c2f6c2e",
+    "task-specs/phase-12-documentation-operations.md": "9baaf94d691f134493101616f7d85bb0db3307cb528367a832fbc784da9fb481",
+    "task-specs/phase-13-release-deploy.md": "5deb042aa2e2c4ba06efcfd9f355acf3256f62e873f6070262fc67a4eec56df6",
+    "workstream-inventory.json": "ada6f4b20fe6d7fa59ddcd6560b43cc72520fc6fc829bee5de3a10c3847829d8"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "5c5f7697613b204c585fdc222f6bcc1e38b13e1477891d27d0c2005527fac46e",
+    "source_canonical_digest": "sha256:ff95eb9d3e840cce4f4956956de5418ae7e253e55d9d000f7dd65d05b22f48da"
+  },
+  "parent_feature": "feat-build-identity-deploy-freshness",
+  "schema_version": "1.0.0"
+}

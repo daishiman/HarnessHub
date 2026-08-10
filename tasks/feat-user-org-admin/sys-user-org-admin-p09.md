@@ -12,8 +12,8 @@ iteration: null
 title: "品質保証 — CI品質ゲート(axe/bundle/Tenant分離/検査pipeline)適合確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-07T03:37:32Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P08"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/legal/","apps/hub/src/app/legal/__tests__/","docs/features/feat-user-org-admin/quality-assurance-report.md"]

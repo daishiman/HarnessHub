@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T06:43:02Z"
+status: "closed"
 depends_on: ["SYS-DOCS-CMS-P06"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-docs-cms/acceptance-report.md"]

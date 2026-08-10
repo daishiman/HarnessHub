@@ -31,7 +31,7 @@
 
 ### 2.2 ドメインルール
 - **観点↔評価主体**: マトリクス網羅性→C07 (`system-spec-matrix-auditor`) + sub-input C06 (`system-spec-hearing-auditor`) / 設計知識反映→C05 R1-score が自前評価 (**独立 auditor なし**) / 最新ドキュメント出典→C08 (`system-spec-doc-freshness-auditor`)。matrix/doc の一次根拠は対応監査結果 (R2-delegate が集約) + 決定論ゲート、設計知識は R1 の自前照合。
-- **マトリクス網羅性**: `validate-coverage-matrix.py --require-complete` の exit0 を一次根拠にし、matrix-auditor の意味層 (対象外理由の具体性 / qa_ref が確定を裏付けるか) を重ねる。C06 のヒアリング品質 4 軸 (聞き漏れ / 誘導質問 / 早期停止 / トレーサビリティ) を網羅性・トレースの sub-input として併せる。
+- **マトリクス網羅性**: `validate-coverage-matrix.py --require-complete` の exit0 を一次根拠にし、matrix-auditor の意味層 (対象外理由の具体性 / qa_ref が確定を裏付けるか) を重ねる。C06 のヒアリング品質 5 軸 (聞き漏れ / 誘導質問 / 早期停止 / トレーサビリティ / foundation 利用者根拠) を網羅性・トレースの sub-input として併せる。
 - **設計知識反映 (C05 自前評価)**: `system-spec/*.md` 各章が `ref-system-design-knowledge`/`resource-map.yaml` 由来の設計知識ポインタを持つか (機械層=存在) に加え、その原則が当該カテゴリの確定セル要件へ具体適用されているか (意味層) を自前照合する。ポインタは compile が機械注入するため**存在確認だけで PASS にしない** (機械注入→存在確認の自己循環を禁じる = Goodhart 防止)。具体適用が無く汎用ポインタだけの章は medium 以上で拾う。C06 は設計知識を読まないため本観点へ束縛しない。
 - **最新ドキュメント出典**: doc-freshness-auditor の二層 (形式=`validate-source-citation.py` / 内容鮮度=公式サイト再照合) を一次根拠にする。C13 形式 PASS でも非公式 host・世代落ちは FAIL。
 - 総合判定は `scripts/aggregate-completeness.py` の `aggregate_verdict` で再導出でき、レポートの `verdict` と一致すること (整合検査)。high severity finding が 1 件でもあれば FAIL。
@@ -48,7 +48,7 @@
 ### 2.4 出力契約
 - schema: `schemas/completeness-findings.schema.json`
 - 必須: evaluator, verdict(PASS/FAIL), aspects(rubric全観点), audit_delegations[], findings[], gaps[]
-- **帰属の接地**: `aspects[].auditor` は自己申告の文字列にすぎないため、独立 auditor を名乗る観点は R2 が実 fork した receipt を `audit_delegations[]` に持つ (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08)。`role=primary` の receipt `verdict` は `aspects[aspect].verdict` と一致させる (監査判定の忠実転記)。C05 自前評価の 4 観点に `primary` receipt を付けない。各 receipt の `dispatch.session_id` は fork を起動した現在の評価 session の id をそのまま保持する (R2 から受け取った値を書き換えない。全 receipt が単一 session へ収束していないと機械層が violation を返す; issue: HarnessHub-x4o)。
+- **帰属と判定の接地**: `aspects[].auditor` は自己申告の文字列にすぎないため、独立 auditor を名乗る観点は R2 が実 fork した receipt を `audit_delegations[]` に持つ (`matrix_coverage/primary`=C07 / `matrix_coverage/sub_input`=C06 / `doc_freshness/primary`=C08)。`role=primary` の receipt `verdict` は `aspects[aspect].verdict` と一致させ、`dispatch{session_id,tool,subagent_type,response_sha256}` と receipt `verdict` は PostToolUse hook が観測した同一 response の値と完全一致させる (監査判定の忠実転記)。C05 自前評価の 4 観点に `primary` receipt を付けない。必須 receipt の session は単一 run へ収束させる (issue: HarnessHub-x4o)。
 
 ## Layer 3: インフラ層
 
@@ -108,7 +108,7 @@
 - 呼び出し元: system-spec-harness の完成度ゲート (compile 後)。後続: FAIL は elicit/doc-fetch/compile へ差し戻し。
 
 ### 6.2 並列性
-- 単発 (1 spec-set = 1評価)。sub-agent担当監査はR2-delegateが独立contextで並走させ得る。
+- 単発 (1 spec-set = 1評価)。sub-agent 担当監査の context は独立だが、R2-delegate は PostToolUse 台帳に完全 response を束縛するため **1 message = 1 foreground fork** で直列 dispatch する。
 
 ## Layer 7: 提示
 

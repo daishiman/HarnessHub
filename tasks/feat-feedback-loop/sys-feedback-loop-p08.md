@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-03T12:01:42Z"
+status: "closed"
 depends_on: ["SYS-FEEDBACK-LOOP-P07"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/feedback/","docs/features/feat-feedback-loop/refactoring-migration-note.md","packages/db/schema/feedback-loop/","packages/schemas/feedback-loop/"]

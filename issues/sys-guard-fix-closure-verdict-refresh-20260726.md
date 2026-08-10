@@ -9,11 +9,11 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "guard-graph-schema 修正で stale 化した dev-graph 9 skill の live-trial verdict と run-dev-graph-init の content-review verdict の再取得"
+title: "dev-graph: guard-graph-schema 修正で stale 化した 9 skill の live-trial verdict と run-dev-graph-init の content-review verdict を再取得する"
 owners: ["daishiman"]
 created_at: "2026-07-25T17:12:02Z"
-updated_at: "2026-07-28T08:41:00Z"
-status: "draft"
+updated_at: "2026-07-28T04:09:44Z"
+status: "closed"
 depends_on: ["issue-guard-graph-schema-timeout-fail-open-20260725"]
 related_nodes: ["issue-live-trial-closure-stale-mvp-first-20260723","issue-init-live-trial-scenario-refresh-20260725"]
 resource_scope: ["eval-log/dev-graph","plugins/dev-graph/tests/test_skill_criteria_evidence.py"]

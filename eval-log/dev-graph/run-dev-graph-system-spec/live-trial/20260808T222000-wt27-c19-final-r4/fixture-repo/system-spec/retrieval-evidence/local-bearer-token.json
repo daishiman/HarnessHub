@@ -1,0 +1,21 @@
+{
+  "target_id": "local-bearer-token",
+  "source_url": "https://fastapi.tiangolo.com/tutorial/security/",
+  "official_host": "fastapi.tiangolo.com",
+  "retrieval_tool": "WebFetch",
+  "retrieved_at": "2026-08-08T13:27:30Z",
+  "fetch_log": [
+    {
+      "url": "https://fastapi.tiangolo.com/tutorial/security/",
+      "fetched_at": "2026-08-08T13:27:30Z",
+      "tool": "WebFetch",
+      "observed": "`bearer`: a header `Authorization` with a value of `Bearer` plus a token. This is inherited from OAuth2. — 当ページに version 番号・最終更新日の表示は無し。"
+    },
+    {
+      "url": "https://fastapi.tiangolo.com/release-notes/",
+      "fetched_at": "2026-08-08T13:27:14Z",
+      "tool": "WebFetch",
+      "observed": "version 導出元: 現行 FastAPI release は 0.141.1 (2026-07-29)。tutorial ページは当 release の docs として公開されている。"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "skill": "run-dev-graph-node",
+  "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ",
+  "original_goal_hash": "eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2",
+  "request": "kind=document / title=dev-graph 初期化受領書 (通常 artifact 1 件の登録。package registration は対象外)",
+  "checklist": [
+    "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+    "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+    "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+    "package は P01..P13 exact 13 ... (本 run は package 登録なしのため N/A)",
+    "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+    "WAL 収束と共有 lock による fail-closed"
+  ]
+}

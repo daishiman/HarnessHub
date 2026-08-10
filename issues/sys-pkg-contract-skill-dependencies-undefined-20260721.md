@@ -12,8 +12,8 @@ iteration: null
 title: "package-contract の skill_dependencies が正本 schema に未定義のまま実データで使われている"
 owners: ["daishiman"]
 created_at: "2026-07-21T12:28:11Z"
-updated_at: "2026-07-21T12:28:11Z"
-status: "draft"
+updated_at: "2026-08-04T02:15:51Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

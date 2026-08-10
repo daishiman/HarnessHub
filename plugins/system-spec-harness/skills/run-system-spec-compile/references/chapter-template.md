@@ -28,7 +28,7 @@ spec_cells: [<category>.web, <category>.mobile, <category>.tablet, <category>.de
    | Web (web) | 確定 | 確定質疑: qa-database |
    | ... | 対象外 | 理由: <除外理由> |
 
-3. **設計知識参照**: カテゴリに割り当てた `ref-system-design-knowledge/references/*.md` ポインタ。
+3. **設計知識参照**: カテゴリに割り当てた `ref-system-design-knowledge/references/*.md` の deep card 本文 (目的/解決する問題/適用条件/非適用条件/トレードオフ・失敗モード/goalへの寄与) + 末尾「本章での適用」節。card 本文は汎用原則の逐語転記のため、末尾節では `qa_log[].design_applications` の具体原則、`applied|not_applicable`、章固有理由、trade-off を確定 qa_ref・対応セル・serves_goals へ束縛する。記録が無い旧 state は未記録を明示し、compiler が定型の適用済み文で補完しない。複数 card が該当する章では、resource-map.yaml の記述順ではなく `knowledge-catalog.json` の depends_on が定める位相順 (topo_order・C14) で並べる (依存先の知識を依存元より先に反映する)。
 4. **最新ドキュメント出典** 表: 割り当てた fetched-references (対象 / version / 公式発行元 (host) / source_url / 取得 / 最新確認)。未割当は index.md の全体出典へ。
 
 ## canonical platform 順序 (厳守)

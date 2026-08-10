@@ -21,12 +21,12 @@ kind: index
 | 認証(ログイン) (auth) | [auth.md](./auth.md) | 確定 | `confirmed` | G2 G4 G1 | auth.web auth.mobile auth.tablet auth.desktop-windows auth.desktop-linux auth.desktop-macos |
 | UI-UX (ui-ux) | [ui-ux.md](./ui-ux.md) | 確定 | `confirmed` | G1 G2 G3 G5 | ui-ux.web ui-ux.mobile ui-ux.tablet ui-ux.desktop-windows ui-ux.desktop-linux ui-ux.desktop-macos |
 | セキュリティ (security) | [security.md](./security.md) | 確定 | `confirmed` | G4 G5 G1 | security.web security.mobile security.tablet security.desktop-windows security.desktop-linux security.desktop-macos |
-| インフラ (infrastructure) | [infrastructure.md](./infrastructure.md) | 確定 | `confirmed` | G1 G2 G4 G5 | infrastructure.web infrastructure.mobile infrastructure.tablet infrastructure.desktop-windows infrastructure.desktop-linux infrastructure.desktop-macos |
-| バックエンド (backend) | [backend.md](./backend.md) | 確定 | `confirmed` | G1 G2 G3 G4 G5 | backend.web backend.mobile backend.tablet backend.desktop-windows backend.desktop-linux backend.desktop-macos |
-| フロントエンド (frontend) | [frontend.md](./frontend.md) | 確定 | `confirmed` | G1 G2 G3 G5 | frontend.web frontend.mobile frontend.tablet frontend.desktop-windows frontend.desktop-linux frontend.desktop-macos |
-| 保守運用管理 (maintenance-ops) | [maintenance-ops.md](./maintenance-ops.md) | 確定 | `confirmed` | G1 G2 G5 | maintenance-ops.web maintenance-ops.mobile maintenance-ops.tablet maintenance-ops.desktop-windows maintenance-ops.desktop-linux maintenance-ops.desktop-macos |
+| インフラ (infrastructure) | [infrastructure.md](./infrastructure.md) | 確定 | `confirmed` | G1 G4 G5 G2 | infrastructure.web infrastructure.mobile infrastructure.tablet infrastructure.desktop-windows infrastructure.desktop-linux infrastructure.desktop-macos |
+| バックエンド (backend) | [backend.md](./backend.md) | 確定 | `confirmed` | G1 G2 G4 G5 G3 | backend.web backend.mobile backend.tablet backend.desktop-windows backend.desktop-linux backend.desktop-macos |
+| フロントエンド (frontend) | [frontend.md](./frontend.md) | 確定 | `confirmed` | G1 G2 G3 | frontend.web frontend.mobile frontend.tablet frontend.desktop-windows frontend.desktop-linux frontend.desktop-macos |
+| 保守運用管理 (maintenance-ops) | [maintenance-ops.md](./maintenance-ops.md) | 確定 | `confirmed` | G1 G2 G3 G4 G5 | maintenance-ops.web maintenance-ops.mobile maintenance-ops.tablet maintenance-ops.desktop-windows maintenance-ops.desktop-linux maintenance-ops.desktop-macos |
 | 開発フロー (dev-workflow) | [dev-workflow.md](./dev-workflow.md) | 確定 | `confirmed` | G1 G4 G5 | dev-workflow.web dev-workflow.mobile dev-workflow.tablet dev-workflow.desktop-windows dev-workflow.desktop-linux dev-workflow.desktop-macos |
-| テスト戦略・品質保証 (testing-qa) | [testing-qa.md](./testing-qa.md) | 確定 | `confirmed` | G1 G2 G5 | testing-qa.web testing-qa.mobile testing-qa.tablet testing-qa.desktop-windows testing-qa.desktop-linux testing-qa.desktop-macos |
+| テスト戦略・品質保証 (testing-qa) | [testing-qa.md](./testing-qa.md) | 確定 | `confirmed` | G1 G4 G5 | testing-qa.web testing-qa.mobile testing-qa.tablet testing-qa.desktop-windows testing-qa.desktop-linux testing-qa.desktop-macos |
 
 ## 集約状態サマリ
 
@@ -35,10 +35,33 @@ kind: index
 - **確定**: database, auth, ui-ux, security, infrastructure, backend, frontend, maintenance-ops, dev-workflow, testing-qa
 - **対象外**: —
 
+## 実装 writeback 索引 (確定章への追記ではない)
+
+elicitation（要件ヒアリング）確定後に実装へ落とした契約の索引。`spec-state.json` のセル状態は変更せず、実装契約は `specs/` 追補と architecture へ書く。
+
+| 主題 | 要求の出所 | 実装契約 | feature / Beads |
+|---|---|---|---|
+| 稼働ビルドの素性 (acceptance V6) と反映鮮度・smoke 前伝播安定性 (acceptance V7) | `dev-workflow.md` qa-198-f / qa-198-h | [build-identity 実装追補](../specs/harness-hub-build-identity-deploy-freshness-addendum.md) | `feat-build-identity-deploy-freshness` / `HarnessHub-hf9y`、伝播安定性 follow-up `HarnessHub-u9zq` |
+
 ## 全体ドキュメント出典 (未割当参照)
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |
 |---|---|---|---|---|---|
-| postgres | 16.1 | PostgreSQL Global Development Group (www.postgresql.org) | https://www.postgresql.org/docs/16/ | 2026-07-11T00:00:00Z | 2026-07-11T00:00:00Z |
-| react | 19.0 | Meta (react.dev) | https://react.dev/reference/react | 2026-07-11T00:05:00Z | 2026-07-11T00:05:00Z |
-| nodejs | 22.0 | OpenJS Foundation (nodejs.org) | https://nodejs.org/docs/latest/api/ | 2026-07-11T00:10:00Z | 2026-07-11T00:10:00Z |
+| nextjs | 16.3.0 | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs | 2026-08-07T03:25:17Z | 2026-08-07T03:25:17Z |
+| typescript | 7.0.2 | Microsoft (www.typescriptlang.org) | https://www.typescriptlang.org/docs/ | 2026-08-07T03:25:36Z | 2026-08-07T03:25:36Z |
+| pnpm | 11.20.0 | pnpm maintainers (github.com) | https://github.com/pnpm/pnpm/releases | 2026-08-07T03:25:42Z | 2026-08-07T03:25:42Z |
+| zod | 4.4.3 | Zod maintainers (Colin McDonnell) (zod.dev) | https://zod.dev/ | 2026-08-07T03:25:45Z | 2026-08-07T03:25:45Z |
+| github-actions | 2026-08-07 (取得日。ページ本文に最終更新日の明示なし) | GitHub, Inc. (docs.github.com) | https://docs.github.com/en/actions | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| turso | 2026-08-07 (取得日。ページ内に明示の更新日なし) | Turso (turso.tech) | https://turso.tech/pricing | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| drizzle-orm | 0.45.2 (安定版) / 1.0.0-rc.4 (v1 プレリリース現行) | Drizzle Team (github.com) | https://github.com/drizzle-team/drizzle-orm/releases | 2026-08-07T03:25:48Z | 2026-08-07T03:25:48Z |
+| authjs | next-auth 5.0.0-beta.32 (@auth/* namespace の v5 系。latest tag 4.24.15 は旧 v4 系) | Auth.js (OSS) (authjs.dev) | https://authjs.dev/getting-started | 2026-08-07T03:26:21Z | 2026-08-07T03:26:21Z |
+| claude-code-plugins | 2026-08-07 (取得日。ページ本文に最終更新日の明示なし。2026-07-30 の直接取得時のローカル CLI 実測は 2.1.220) | Anthropic (code.claude.com) | https://code.claude.com/docs/en/plugin-marketplaces | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| cloudflare-workers | Jul 7, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得)) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| wrangler | 4.119.0 | Cloudflare, Inc. (github.com) | https://github.com/cloudflare/workers-sdk/releases | 2026-08-07T03:26:24Z | 2026-08-07T03:26:24Z |
+| cloudflare-r2 | May 28, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得)) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/r2/pricing/ | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| cloudflare-d1 | Apr 21, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得)) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/d1/platform/pricing/ | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| opennext-cloudflare | 1.20.2 | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare | 2026-08-07T03:26:30Z | 2026-08-07T03:26:30Z |
+| resend | 2026-08-07 (取得日。ページ内に明示の更新日なし) | Resend, Inc. (resend.com) | https://resend.com/pricing | 2026-08-07T03:30:09Z | 2026-08-07T03:30:09Z |
+| nextjs-proxy | 16 (改名は 16.0 で導入。middleware.ts は deprecated) | Vercel, Inc. (nextjs.org) | https://nextjs.org/docs/app/guides/upgrading/version-16 | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |
+| cloudflare-workers-secrets | 2026-08-07 (取得日。WebSearch 経路のためページ本文の更新日表示は未確認) | Cloudflare, Inc. (developers.cloudflare.com) | https://developers.cloudflare.com/workers/configuration/secrets/ | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |
+| opennext-cloudflare-env-vars | 1.20.2 (@opennextjs/cloudflare の現行版) | OpenNext (OSS) (opennext.js.org) | https://opennext.js.org/cloudflare/howtos/env-vars | 2026-08-07T07:17:12Z | 2026-08-07T07:17:12Z |

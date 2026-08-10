@@ -148,6 +148,20 @@ def _logical_lines(shell: str) -> list[str]:
     return joined.splitlines()
 
 
+def _strip_substitution(line: str) -> str:
+    """``VAR=$(python3 scripts/x.py ...)`` の command substitution を裸のコマンド列へ均す。
+
+    剥がさないと shlex は ``VAR=$(python3`` を 1 トークンにするため、python3 の一致検査を
+    すり抜けて CI 呼び出しが無言で抽出漏れになる (parity 検査の fail-open)。
+
+    閉じ括弧も同時に均す。``$(`` だけ剥がすと最後の引数が ``origin/main)`` として残り、
+    allowlist 側に閉じ括弧付きの引数形を書かせることになる (CI の書き方を allowlist の
+    表記へ漏らす)。本関数は対象 command を含む行にしか適用しないため、剥がす影響は
+    その行の引数トークンに閉じる。
+    """
+    return line.replace("$(", " ").replace(")", " ").replace("`", " ")
+
+
 def _tokens(line: str, source: str) -> list[str]:
     try:
         lexer = shlex.shlex(line, posix=True, punctuation_chars=";&|")
@@ -178,10 +192,19 @@ def extract_python_invocations(
             continue
         if require_local_wrapper and not LOCAL_RUN_RE.match(line):
             continue
-        tokens = _tokens(line, f"{source}:{line_number}")
+        tokens = _tokens(_strip_substitution(line), f"{source}:{line_number}")
         wrapper = tokens[0] if tokens else ""
         if require_local_wrapper and wrapper not in {"run", "run_soft"}:
             continue
+
+        # 正規表現が python3 scripts/*.py を見つけたのにトークン抽出が 0 件なら、
+        # 解析器が知らない書き方に当たっている。黙って 0 件を返すと未知の構文が
+        # そのまま parity 検査の抜け道になるため、解析不能として loud に落とす。
+        if not any(token in PYTHON for token in tokens[:-1]):
+            raise ValueError(
+                f"{source}:{line_number}: python3 scripts/*.py を含む行を解析できない "
+                f"(command substitution 等の未対応構文の可能性): {line.strip()}"
+            )
 
         for index, token in enumerate(tokens[:-1]):
             if token not in PYTHON or not SCRIPT_RE.fullmatch(tokens[index + 1]):

@@ -1,0 +1,18 @@
+{
+  "artifact": "scripts/build-evaluator-cache.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 93,
+    "notes": "target 内容 digest、evaluator ID/version、実効設定だけで key を作る決定論的 cache。miss/corrupt は再実行へ倒し、同一 key の異結果上書きを拒否する。lookup が仕様準拠 check_entry を返すため caller drift を防ぐ。22 tests pass。実 evaluator caller 未配線は HarnessHub-6nf1 に明記。"
+  },
+  "reviewed_by": "codex-final-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety",
+    "frontmatter"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "skill": "run-dev-graph-node",
+  "workdir": "/Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-node/live-trial/20260804T052500Z-ci-c02-r2",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "fixture-repo の実ファイルは *.md がちょうど 5 件で、いずれも .dev-graph/config.json の content_roots (issues/tasks/specs/architecture/docs) 直下にある: issues/issue-session-timeout-not-enforced.md (kind=issue, 本文が 概要/背景と問題/現在の挙動/期待する挙動/再現手順/影響と優先度 の不具合報告骨格, conf 0.94)、tasks/task-public-api-rate-limit.md (kind=task, 目的/入力と前提条件/出力と成果物/実行手順/受入条件 の実行単位骨格, conf 0.93)、specs/spec-rest-api-v2-migration.md (kind=specification, 目的と成功状態/スコープ/機能要件/API契約 の契約骨格, conf 0.95)、architecture/architecture-order-backend-security.md (kind=architecture, Architecture overview/Context and drivers/System context and boundaries/Container and component view, conf 0.97)、docs/document-dev-environment-setup.md (kind=document, 目的/対象読者/要約/本文/関連資料 の読み物骨格, conf 0.95)。素材 mixed-artifacts.json は artifact_kind を持たない 5 件で、fixture_contract の issue/task/specification/architecture/document が 1 件ずつに解決している。graph の file_path 先頭 root を kind2root と突き合わせて 5/5 一致 (routed=True)。transcript の receipt でも add 5 回が graph_revision 0→5、operation=added、write_count=2 で applied。"
+    },
+    "2": {
+      "met": true,
+      "evidence": "連続更新は同じ C02 正規 writer (plugins/dev-graph/scripts/upsert-node.py) で dry-run→apply の 5 件、graph_revision 5→10、operation=updated、body_source=preserved、replaced_body_lines=null、write_count=2 (transcript の receipt 実測)。更新後の実測: 5 件すべてで frontmatter.artifact_kind == graph.artifact_kind、frontmatter.file_path == graph.file_path == 実ファイルの実在位置、frontmatter.graph_node_id/template_id も一致 (fm_agree=True 5/5)。title は 5 件とも ' (updated)' が frontmatter と graph の双方に反映され (updated_at 2026-08-04T05:30:01–05:30:02 > created_at 05:25:00)、更新が実際に適用されたことを示す。body は 50/81/476/143/53 行が保持され破壊なし。transcript 上、artifact の *.md と .dev-graph/state/graph.json に対する Write/Edit/shell redirect は 1 件も無く (Write 対象は inputs/*.json の staging、fixture eval-log/、out/status.json、scratchpad のみ)、interpreter 経由の graph 直書きは guard-graph-schema hook に BLOCK されて writer 経路へ戻っている。"
+    },
+    "3": {
+      "met": true,
+      "evidence": "graph.json の node 5 件に artifact_kind=feature は 0 件。parent_feature / feature_package_id / phase_ref を持つ node も 0 件。features/ の中身は .gitkeep のみで、これは fixture 初期 commit cb498be の tracked file (git ls-files/status で本 run の生成物でないことを確認)。features/ 配下に *.md は存在しない。upsert-node.py は ROOT_BY_KIND と _assert_c14_macro_contract で feature を C14 macro contract 由来の source_lineage がある場合のみ受理する実装で、本 run は register-package 経路を一切行使していない。status-graph.py 実行証跡 (eval-log/run-dev-graph-status-execution.json) でも count=5 で feature 無し、authority/graph の sha256 が前後不変。"
+    }
+  },
+  "cross_checks": {
+    "graph_revision": 10,
+    "node_count": 5,
+    "md_files_on_disk": 5,
+    "feature_nodes": 0,
+    "wal_journal_residue": 0,
+    "leftover_writer_lock": ".dev-graph/state/.graph.json.register.lock (upsert-node.py:279 が作る fcntl lock の空ファイル。graph authority ではなく writer 由来の副産物で observation には影響しない)",
+    "goal_seek_evidence": "goal-spec / progress / intermediate.jsonl の 3 点が fixture-repo/eval-log/ に存在。original_goal_hash eb23c32406fe579b89ef3f507313229c47d7d454f1ad5e63119d039f468a8ab2 は original_goal 本文の UTF-8 SHA-256 実値と再計算一致。intermediate.jsonl は 2 行 (pre-execution / post-verification) で 6 必須キーを全て保持し、1 行目は repo 変更前に書かれ 2 行目のみ append されている (transcript 順序で確認)。",
+    "skill_invocation": "transcript 先頭の実行アクションが literal Skill({skill: 'dev-graph:run-dev-graph-node', args: 'add --repo-root <FIXTURE> --input <FIXTURE>/mixed-artifacts.json'})。以降の書込みは全て skill 手順が指定する C02 writer (upsert-node.py) 経由で、Task/Agent への委譲は無い。",
+    "fixture_and_host_integrity": "fixture-repo の git status は本 run の生成物 (5 artifacts / inputs staging / eval-log / graph.json 更新 / writer lock) のみ。過去 fixture と HarnessHub 本体への変更は無し (repo root の残差 M eval-log/dev-graph/run-dev-graph-init/criteria-test/scenario-verdict.json は本 session 開始時点で既に存在した別件)。評価者は本ファイル以外を書いていない。"
+  },
+  "subject_status_marker": {
+    "path": "out/status.json",
+    "content": {"status": "PASS", "scenario": "C02-OUT1-positive-mixed-artifacts"},
+    "agrees_with_independent_verdict": true
+  }
+}

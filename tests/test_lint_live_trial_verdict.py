@@ -272,6 +272,25 @@ def test_criteria_receipt_pass_wins_over_future_dated_historical_run(lint):
     assert lint.run_lint() == 0
 
 
+def test_invalid_criteria_receipt_ref_hard_fails_without_legacy_fallback(lint, capsys):
+    """存在する receipt の外部参照を新しい run-id で隠してはならない。"""
+    skill_dir = _make_skill(lint)
+    _write_verdict(lint, _valid_doc(lint, skill_dir), run_id="20260806T020000Z-history")
+    receipt = lint.EVAL_LOG / "demo-plugin" / "run-demo" / "criteria-test" / "scenario-verdict.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps({
+        "criteria_results": {
+            "OUT1": {
+                "verify_by": "live-trial",
+                "live_trial_verdict_ref": "eval-log/other-plugin/other-skill/live-trial/x/verdict.json",
+            }
+        }
+    }), encoding="utf-8")
+
+    assert lint.run_lint() == 1
+    assert "criteria-receipt-outside-live-trial" in capsys.readouterr().out
+
+
 # --- self-test 経路 -----------------------------------------------------------
 
 def test_self_test_passes():

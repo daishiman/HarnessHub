@@ -12,9 +12,9 @@ iteration: "Stage 1"
 title: "PublishRequest パイプライン (状態機械・検査・promote/rollback)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:55:27.042241Z"
+updated_at: "2026-08-04T03:13:41Z"
 status: "active"
-depends_on: ["feat-domain-model-db","feat-auth-tenancy"]
+depends_on: []
 related_nodes: []
 resource_scope: ["features/feat-publish-pipeline.md"]
 purpose: "作者の自己完結 publish (G1) の中核として、PublishRequest 状態機械 (§7.2)・検査 pipeline (static validation/secret scan/policy)・stable pointer promote/rollback を実装する"
@@ -38,7 +38,7 @@ classification_reason: "C14 マクロ分解 (確定 system-spec の Stage 0-2 �
 classification_candidates: [{"artifact_kind":"feature","candidate_path":"features/feat-publish-pipeline.md","confidence":0.9}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-dfm","linked_at":"2026-07-18T16:04:15Z","sync_state":"linked"}
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7","linked_at":"2026-08-04T03:13:41Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

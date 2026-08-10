@@ -132,6 +132,16 @@ def task_node(node_id: str, mvp=...) -> dict:
     return data
 
 
+# task_node() の source_lineage.origin_kind は "manual" 固定のため、C11 は
+# conditional_required_sections ではなく base required_sections (13 見出し) を
+# そのまま要求する (HarnessHub-yzv0 で task を HEADING_MISSING_KINDS へ追加)。
+_TASK_REQUIRED_SECTIONS = [
+    "目的", "背景", "入力と前提条件", "出力と成果物", "依存関係", "実装対象",
+    "Write scope と競合制約", "GitHub publication", "実行手順", "受入条件",
+    "検証方法", "リスクとロールバック", "Handoff",
+]
+
+
 def write_artifact(root: Path, node: dict) -> None:
     """artifact 実在 + frontmatter 46 required key + 5 key parity を満たす md を書く。"""
     lines = ["---"]
@@ -139,6 +149,8 @@ def write_artifact(root: Path, node: dict) -> None:
         f"{key}: {json.dumps(value, ensure_ascii=False)}" for key, value in node.items()
     )
     lines.extend(["---", "", "# task", "", "MVP schema registration fixture."])
+    for section in _TASK_REQUIRED_SECTIONS:
+        lines.extend(["", f"## {section}", "", "MVP schema registration fixture の検証用の実文。"])
     target = root / node["file_path"]
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text("\n".join(lines) + "\n", encoding="utf-8")

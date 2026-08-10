@@ -1,0 +1,35 @@
+{
+  "loop": 2,
+  "checklist": [
+    {
+      "item": "C24 receipt identity",
+      "status": "pass",
+      "evidence": "pass2 resolve-repo-context exit0; repo_root==content_roots.repository; repository_id unchanged (local:sha256:d47b8566...0302a)"
+    },
+    {
+      "item": "6 content roots + repo-local state",
+      "status": "pass",
+      "evidence": "issues/tasks/specs/architecture/features/docs + .dev-graph/{config.json,state/graph.json,cache,locks,templates} all EXISTS on the pass-2 preview"
+    },
+    {
+      "item": "template scaffold digest invariance",
+      "status": "pass",
+      "evidence": "created=0 preserved_identical=20 migration_preview=1 (document.md user_edited_not_overwritten, installed sha256 48986cdc...4ed99 = pre-pass2 digest)"
+    },
+    {
+      "item": "single hook path, 0 settings changes",
+      "status": "pass",
+      "evidence": "hook_source=plugin accepted, effective_hook_path_count=1, caller dev-graph registrations=0, no .claude/settings.json created"
+    },
+    {
+      "item": "validate-repo-config.py",
+      "status": "pass",
+      "evidence": "exit0 valid=true violations=[]; independent scan: 0 absolute paths, 0 token prefixes, 0 GitHub node ids"
+    },
+    {
+      "item": "validate-graph-schema.py + zero planned changes",
+      "status": "pass",
+      "evidence": "C11 exit0 valid=true on a 1-node store (negative control exit1 proves the gate fires); pass-2 planned_change_count=0; 36-file tree digest identical"
+    }
+  ]
+}

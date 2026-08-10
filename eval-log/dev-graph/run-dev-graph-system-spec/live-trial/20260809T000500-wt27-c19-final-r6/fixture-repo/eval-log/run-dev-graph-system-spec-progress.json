@@ -1,0 +1,65 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r5",
+  "updated_at": "2026-08-08T15:31:18Z",
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "checklist": [
+    {
+      "id": "system_spec_root",
+      "status": "PASS",
+      "evidence": "C24 resolve-repo-context.py --mode write receipt: repo_root == FIXTURE realpath, repository_id=local:sha256:16df19ad…"
+    },
+    {
+      "id": "harness_version_entry_points",
+      "status": "PASS",
+      "evidence": "plugin.json name=system-spec-harness version=0.1.0 (>=0.1.0 <1.0.0); package-contract entry_points.skills に required 4 件すべて実在"
+    },
+    {
+      "id": "canonical_flow_via_skill",
+      "status": "PASS",
+      "evidence": "Skill: run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator"
+    },
+    {
+      "id": "coverage_source_evaluator_gates",
+      "status": "PASS",
+      "evidence": "validate-coverage-matrix --require-complete --require-foundation exit 0 / validate-source-citation exit 0 / completeness-report verdict=PASS / aggregate-completeness exit 0"
+    },
+    {
+      "id": "evaluator_completion_before_import",
+      "status": "FAIL",
+      "evidence": "validate-system-spec-evaluator-completion.py exit 2 / EV-009: first_import_line=383 (`upsert-node.py --help`, 書込なし) < completion_line=623。TaskStop=0 / outer_report_writes=0 / foreground_blocking_waits=0 / task_output_attempts=0。実 graph mutation は line 638/641 で通知後だが、gate authority は FAIL。"
+    },
+    {
+      "id": "lineage_confirmation_evidence",
+      "status": "PASS",
+      "evidence": "両 node の source_lineage 6 field 非 null・confirmation_status=confirmed・evidence_ref=system-spec/completeness-report.json"
+    },
+    {
+      "id": "source_digest_gate",
+      "status": "PASS",
+      "evidence": "validate-source-digest.py exit 0 (checked=2, registered_mismatch=[])"
+    },
+    {
+      "id": "evidence_refs_gate",
+      "status": "PASS",
+      "evidence": "validate-evidence-refs.py exit 0 (scanned=2, registered_dangling=[], existing_dangling=[])"
+    },
+    {
+      "id": "no_duplicate_logic",
+      "status": "PASS",
+      "evidence": "対照実験: apply_cell_op/category_aggregate/hearing_progress/compile_docset/write_docset/spec_cells は harness で N>0、dev-graph skills+scripts で 0"
+    }
+  ],
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  },
+  "run_status": "FAIL",
+  "blockers": [
+    "EV-009: 待機中の `upsert-node.py --help` が UPSERT_EXECUTION に一致し、完了境界の時系列を破った。 transcript は追記専用のため本 run では回復不能。"
+  ]
+}

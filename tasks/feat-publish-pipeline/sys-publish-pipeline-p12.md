@@ -12,7 +12,7 @@ iteration: null
 title: "文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T12:25:36Z"
+updated_at: "2026-08-04T03:43:14.099294Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P11"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "運用時の rollback 手順・ポーリング監視・o
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p12.md","confidence":0.84}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.12","linked_at":"2026-08-04T03:14:49Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 文書化・runbook・引き継ぎ — orphan_candidate 処理・rollback 手順・ポーリング監視の運用手順確立
 

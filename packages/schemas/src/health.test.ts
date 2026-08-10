@@ -63,6 +63,35 @@ describe('healthResponseSchema', () => {
   ])('%s の応答を拒否する', (_label, response) => {
     expect(healthResponseSchema.safeParse(response).success).toBe(false);
   });
+
+  // V6: 稼働成果物がどの commit に対応するかを認証なしで確認できるようにするための field。
+  // 「コードは直っている」と「本番が直っている」の区別が付かなかったことが 2026-08-07 の障害の本体。
+  it('40 桁 hex の commit を載せた応答を通す', () => {
+    const response = {
+      status: 'ok',
+      version: 'abc1234',
+      commit: '150a0f14ab3c9d7e5f2b8a1c4d6e0f9a3b5c7d1e',
+      checkedAt: '2026-07-21T09:30:00.000Z',
+      dependencies: [],
+    };
+    expect(healthResponseSchema.parse(response)).toEqual(response);
+  });
+
+  it('commit が無い応答も通す (埋込前の稼働版を schema 違反で 500 にしない)', () => {
+    const response = { status: 'ok', version: 'v', checkedAt: '2026-07-21T09:30:00.000Z', dependencies: [] };
+    expect(healthResponseSchema.safeParse(response).success).toBe(true);
+  });
+
+  it.each([
+    ['短縮 sha', '150a0f14'],
+    ['大文字混じり', '150A0F14AB3C9D7E5F2B8A1C4D6E0F9A3B5C7D1E'],
+    ['branch 名', 'main'],
+    ['空文字', ''],
+    ['41 桁', '150a0f14ab3c9d7e5f2b8a1c4d6e0f9a3b5c7d1ea'],
+  ])('commit が %s なら拒否する (誤った素性を正しい素性として受け入れない)', (_label, commit) => {
+    const response = { status: 'ok', version: 'v', commit, checkedAt: '2026-07-21T09:30:00.000Z', dependencies: [] };
+    expect(healthResponseSchema.safeParse(response).success).toBe(false);
+  });
 });
 
 describe('deriveHealthStatus', () => {

@@ -4,10 +4,10 @@
     "plugin": "dev-graph",
     "skill": "run-dev-graph-system-spec",
     "component_id": "C19",
-    "skill_md_sha256": "e6ae51960a31e51c06b3538aad4515e7403a1df1b4458894519c0377c5b4591a"
+    "skill_md_sha256": "c20734d924cd41d39d26f1ad9a3658a93befd1e4a78a9e48251bc9116dbedb78"
   },
   "verdict": "PASS",
-  "reviewer": "fresh-claude-live-goal-evaluator-m0bd-c19-r10-clean-fixture-20260804; independent verifier executed within live trial 20260804T083000Z-m0bd-c19-r10-clean-fixture",
+  "reviewer": "independent fresh goal evaluator plus path-specific completion gate and poll-state/transcript-bound live-trial verdict, 20260809T220241Z-wt18-c19-bounded-r3",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -16,26 +16,26 @@
       "verify_by": "script",
       "evidence_kind": "hybrid",
       "test_refs": [
-        "plugins/dev-graph/tests/test_validate_graph_schema_c11_coverage.py::test_validate_rejects_invalid_authority_documents",
-        "plugins/dev-graph/tests/test_runtime_coverage.py::test_validate_graph_schema_and_main",
-        "plugins/dev-graph/tests/test_validate_evidence_refs.py",
-        "plugins/dev-graph/tests/test_validate_source_digest.py"
+        "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
+        "plugins/dev-graph/tests/test_prepare_system_spec_import.py",
+        "plugins/dev-graph/tests/test_validate_graph_schema_c11_heading_readiness.py",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/goal-evaluation.json"
       ],
-      "observed": "test_validate_rejects_invalid_authority_documents and test_validate_graph_schema_and_main PASSED (the dev-graph schema/C11 gate accepts confirmed spec/architecture with lineage and rejects invalid authority docs). The R3 import evidence gates are pinned by two deterministic scripts wired into the SKILL goal-seek verification block: validate-evidence-refs.py (evidence_ref existence, exit 2 on registered dangling) and validate-source-digest.py (per-path source_digest equality, exit 2 on reuse) — both cover 5 unit cases each in tests/test_validate_evidence_refs.py / tests/test_validate_source_digest.py. The 20260729T005727Z live trial executed the harness coverage/source-citation gates and both R3 evidence gates with exit 0 before the fresh evaluator returned PASS."
+      "observed": "validate-system-spec-resume, path-specific evaluator completion, validate-system-spec-boundary, validate-graph-schema, validate-source-digest, validate-evidence-refs, and validate-goal-seek-evidence all exited 0. The bounded runner imported architecture/specification through C02 and reported network_calls=0 and upstream_skill_invocations=0."
     },
     "OUT1": {
       "status": "PASS",
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
-      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
+      "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260804T083000Z-m0bd-c19-r10-clean-fixture/evidence/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T220241Z-wt18-c19-bounded-r3/out/status.json"
       ],
-      "observed": "main 統合後の fresh live trial (20260804T083000Z-m0bd-c19-r10-clean-fixture) は overall=PASS、nudge=0、gate=0。r2 task 契約に従い doc-fetch が公式一次情報を実 Fetch し、実取得時刻・公式発行元・現在 version を記録した。system-spec-harness の正規4 entry point、48セルの確定・除外、公式参照の鮮度・引用・仕様コンパイル・完全性評価を実行し、C02 upsert-node.py 経由で specification / architecture node を登録した。source digest と evidence reference の検証は exit 0、fresh evaluator と独立 verifier による3観測は PASS、current behavior closure digest=90affd8245f8099d5595cc4c26898eb6cc217f1073577952426352cd2ef313e0。"
+      "observed": "Final fresh bounded live trial completed PASS in 75.056 seconds with 200583 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000. Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds a fresh independent evaluator artifact to the transcript SHA. Transcript shows only dev-graph:run-dev-graph-system-spec was invoked; all upstream generation Skills and Agent were absent. The resume completion gate verifies one deterministic runner, zero direct upserts, report/stdout parity, and zero outer report writes. Both imported nodes retain source lineage/evaluator evidence, and the positive-control boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
     }
   }
 }

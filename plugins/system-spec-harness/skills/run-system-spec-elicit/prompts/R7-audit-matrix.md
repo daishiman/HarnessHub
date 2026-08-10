@@ -161,4 +161,4 @@ C01 (`run-system-spec-elicit`) が出力/更新した `spec-state.json` のカ�
 
 判定は必ず script 出力 または `spec-state.json` の該当セル値に紐づけ、憶測で緑化しない。`spec-state.json` は書き換えず、修正提案のみ返す (反映は C01 transition writer の責務)。状態語彙・真理値表は `validate-coverage-matrix.py` から逐語引用し別表記を作らない。`spec-state.json` 欠落/JSON 破損 (exit 2) は監査不能として理由明示で差し戻す。
 
-Layer 5.3 の完了チェックリストを唯一の停止条件とし、状況に応じて必要な監査内容を都度設計する。返答は verdict と findings/summary のみ、余計な前置きは禁止。
+Layer 5.3 の完了チェックリストを唯一の停止条件とし、状況に応じて必要な監査内容を都度設計する。返答は verdict と findings/summary のみ、余計な前置きは禁止。**応答の最終行は `final_ready` と同じ値で `AUDIT_VERDICT: PASS`、`AUDIT_VERDICT: FAIL`、または `AUDIT_VERDICT: INDETERMINATE` のいずれか 1 行だけにする**。この marker は PostToolUse hook が実際の監査判定を C05 の receipt に束縛するための機械可読な証跡であり、本文中・コードブロック中へ重複して書かない。

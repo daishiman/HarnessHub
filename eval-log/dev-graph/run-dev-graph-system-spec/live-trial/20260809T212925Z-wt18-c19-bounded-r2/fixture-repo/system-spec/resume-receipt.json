@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.1",
+  "producer": {
+    "plugin": "system-spec-harness",
+    "version": "0.1.0",
+    "entry_point": "assign-system-spec-completeness-evaluator"
+  },
+  "verdict": "PASS",
+  "gates": {
+    "coverage": "PASS",
+    "source_citation": "PASS",
+    "evaluator": "PASS"
+  },
+  "artifacts": {
+    "system-spec/00-requirements-definition.md": "f2f24d652c2a92c9ee11396bcc40d3ed35ea383626ce05c8672b3fc5ce42405d",
+    "system-spec/completeness-report.json": "6d26ebde136373d5956a3ddd866d3ff41d7ff51465d8d8b6f4db815fdc53c4a0",
+    "system-spec/fetched-references.json": "6c5f3da9c1c7c9c873c09a36384deb1abb8a92fe2c83653a173f1abe4a063e6c",
+    "system-spec/index.md": "042c43f66df32052cb9c17cda86b16f1600601f27e8317a44283654ca77133c0",
+    "system-spec/spec-state.json": "93462c532f09972a1f68b4d7685e94a039c1835b0e56a8e09343e6e08d4bf40c"
+  },
+  "evaluator": {
+    "report_path": "system-spec/completeness-report.json",
+    "report_sha256": "6d26ebde136373d5956a3ddd866d3ff41d7ff51465d8d8b6f4db815fdc53c4a0",
+    "fork_ledger_path": "eval-log/system-spec-harness/audit-fork-ledger.jsonl",
+    "session_id": "fixture-c19-resume-session"
+  },
+  "created_at": "2026-07-21T00:00:00Z"
+}

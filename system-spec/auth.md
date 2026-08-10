@@ -15,7 +15,7 @@ serves_goals: [G2, G4, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-137 |
+| Web (web) | 確定 | 確定質疑: qa-162 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザからの認証は web 行 (Hub Web の IdP/SSO) でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザからの認証は web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-073 |
@@ -24,11 +24,16 @@ serves_goals: [G2, G4, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-137 (対応セル: web)
+### qa-162 (対応セル: web)
 
-**質問**: ブラウザ通常遷移における scope 解決の入力系統と、Device Flow / Web 公開経路の権限境界を、既存 auth.web 契約へどう統合しますか?
+**質問**: qa-159 [B] は『認証済み利用者を signin へ戻すと既存 session で即座に元の path へ返され再び拒否される往復になる』としたが、apps/hub/src/app/[tenant_slug]/signin/page.tsx に既ログイン検出も自動 redirect も存在しない。この棄却理由は実装事実と一致しているか。
 
-**回答**: authorize() の public → 認証 → scope 一意性 → tenant 一致 → workspace 所属と deny-by-default は不変とする。正規の scope 入力は API/機械クライアントの明示ヘッダーとブラウザ session の active tenant/workspace の二系統だけであり、両方が不一致なら ambiguous_scope として拒否し、両方が無ければ missing_tenant_scope とする。session へ workspace を束縛する前と切替時には principal の所属を再検証し、session 値を所属検証の代替にしない。Device Flow の確認コード制約と権限上限は維持する。S01 Web 公開は通常の session 認可で行い、CLI より広い権限を持たない。サインイン後の戻り先は同一 origin の相対 path だけを許可し、解決後も通常の authorize() を通す。
+**回答**: C07 matrix-auditor の MEDIUM finding への訂正。qa-159 の逐語は改変せず、本 entry を正本とする。指摘は正しく、私の記述は未実装の挙動を既存の挙動として述べていた。
+[訂正前] 「サインイン済みの利用者を signin へ送ると、既存 session で即座に元の path へ返され再び拒否される往復 (リダイレクトループ) になり…」
+[訂正後] 「signin ページ (app/[tenant_slug]/signin/page.tsx) には既ログイン検出も自動 redirect も実装されていないため、現状のコードで認証済み利用者を signin へ 303 しても実際にはループしない。起きるのは『サインイン済みなのにサインインフォームが再表示される』という状態であり、利用者からは何が起きたのか分からない。」
+[結論は変えない] navigation の認可拒否を認証状態で 2 分する qa-159 [A][B][C][D] の決定は維持する。根拠を次の 2 点に置き直す。(1) 権限不足という事実が利用者にも監査ログにも残らず、『サインインし直せば解決する』という誤った期待を与える。(2) 将来 signin に既ログイン検出を入れた時点で実際にループが成立するため、その時に仕様を作り直さずに済むよう今の時点で分けておく。棄却した代替案 (『[B] も signin へ戻し signin 側で既ログインを検出して既定着地へ飛ばす』) の棄却理由も同じく (1) — 本来 403 である事象を redirect で隠す — に置き直す。
+[同種の再発を止める] qa-157 でも『実測されていない挙動を実測として述べる』誤りを訂正しており、今回で 2 回目である。以後、確定の根拠に挙動を書くときは 『実装を読んで確認した事実』『テストで観測した事実』『未実装ゆえの推測』のどれかを明示する。本 entry における signin ページの既ログイン検出不在は、page.tsx (91 行) を読んで確認した事実である。
+本 entry は appr-033 (ユーザーによる代理回答の明示委任) の範囲で AI が確定したものであり、利用者の逐語発話ではない。
 
 ### qa-073 (対応セル: desktop-windows, desktop-macos)
 
@@ -87,6 +92,14 @@ serves_goals: [G2, G4, G1]
 - stakeholderの安全・信頼・継続性をsuccess criteriaへ変換し、threat/control/evidenceをgoalへトレースする。
 - security controlは「導入済み」ではなく、阻止/検知/復旧時間、権限範囲、data exposureで効果を測る。
 - 予算0制約でも、secure default、最小data、短命credential、標準機能、open-source検査を優先し、残余riskを隠さない。
+
+---
+
+#### 本章での適用
+
+- 上記原則は確定内容 qa-162 (対応セル: web) の判断へ適用する
+- 上記原則は確定内容 qa-073 (対応セル: desktop-windows, desktop-macos) の判断へ適用する
+- 資するゴール: G2, G4, G1
 
 ## 最新ドキュメント出典
 

@@ -1,0 +1,141 @@
+{
+  "schema": "run-dev-graph-requirements/readiness-matrix/1.0.0",
+  "generated_at": "2026-08-07T12:45:00Z",
+  "feature_id": "feat-build-identity-deploy-freshness",
+  "snapshot_digest": "sha256:43e0f4ac2ea27edfa47d9d9332aea09e7d85e4c429404c9d1485a733f3926403",
+  "nodes": [
+    {
+      "graph_node_id": "arch-harness-hub-infrastructure",
+      "artifact_kind": "architecture",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "arch-harness-hub-testing-qa",
+      "artifact_kind": "architecture",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "feat-build-identity-deploy-freshness",
+      "artifact_kind": "feature",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P01",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P02",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P03",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P04",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P05",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P06",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P07",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P08",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P09",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P10",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P11",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P12",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-BUILD-IDENTITY-P13",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    }
+  ],
+  "notes": [
+    "本 matrix の値は graph node の保存値であり、C11 report (validate-graph-schema.py) の implementation_readiness=complete / missing_sections=[] / valid=true と一致することを確認済み。",
+    "feature node は promote/register が graph だけを更新したため artifact frontmatter が draft/pending/incomplete のまま残っていた。値を creation せず graph node から転記する形で C02 upsert-node.py 経由で突合した (graph_revision 1237→1238)。",
+    "上流の system-spec 完成度 evaluator は本セッション時点で総合 FAIL であり、本 matrix の evaluation_status=pass はその総合判定ではなく各 node 登録時に evidence 付きで確定した node 単位の値である (利用者判断 appr-039 で総合 PASS を以降の verb の前提から外している)。"
+  ]
+}

@@ -107,108 +107,124 @@ export function DataTable<TRow>({
     direction === 'ascending' ? t('table.sortedAscending') : t('table.sortedDescending');
 
   return (
-    <table
-      // 読み込み中は表全体を busy として告知する。骨組み行を aria-hidden で隠すと
-      // 表の行数と読み上げ内容が食い違うため、隠さずに状態のほうを伝える
-      aria-busy={loading || undefined}
-      style={{
-        width: '100%',
-        borderCollapse: 'collapse',
-        tableLayout: 'fixed',
-        color: colorVar('text'),
-        background: colorVar('surface'),
-      }}
-    >
-      <caption style={hideCaption ? visuallyHidden : { textAlign: 'start', padding: spaceVar(2) }}>{caption}</caption>
-      <colgroup>
-        {columns.map((column) => (
-          <col key={column.key} style={column.width ? { width: column.width } : undefined} />
-        ))}
-      </colgroup>
-      <thead style={{ background: colorVar('surfaceMuted') }}>
-        <tr>
-          {columns.map((column) => {
-            const isSorted = activeSort?.columnKey === column.key;
-            const canSort = column.sortable === true && column.value !== undefined;
-
-            return (
-              <th
-                key={column.key}
-                scope="col"
-                aria-sort={isSorted && activeSort ? activeSort.direction : undefined}
-                style={{ ...cellStyle, textAlign: column.align ?? 'start' }}
-              >
-                {canSort ? (
-                  <button
-                    type="button"
-                    data-hh-focusable=""
-                    onClick={() => handleSort(column.key)}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: spaceVar(1),
-                      minHeight: 'var(--hh-control-height)',
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      font: 'inherit',
-                      color: 'inherit',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {column.header}
-                    {/* 記号は装飾。状態は aria-sort と下の読み上げ文で伝える */}
-                    <span aria-hidden="true">
-                      {isSorted && activeSort ? (activeSort.direction === 'ascending' ? '▲' : '▼') : '↕'}
-                    </span>
-                    <span style={visuallyHidden}>
-                      {isSorted && activeSort ? directionLabel(activeSort.direction) : t('action.sort')}
-                    </span>
-                  </button>
-                ) : (
-                  column.header
-                )}
-              </th>
-            );
-          })}
-        </tr>
-      </thead>
-      <tbody>
-        {loading
-          ? Array.from({ length: skeletonRowCount }, (_, index) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: 骨組み行は件数固定の装飾で識別子を持たず、並べ替えも差し込みも起きないため index が唯一の安定 key
-              <tr key={`skeleton-${index}`}>
-                {columns.map((column) => (
-                  <td key={column.key} style={cellStyle}>
-                    <span
-                      style={{
-                        display: 'block',
-                        height: '1em',
-                        borderRadius: 'var(--hh-radius-sm)',
-                        background: colorVar('surfaceMuted'),
-                      }}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))
-          : sortedRows.map((row) => (
-              <tr key={rowKey(row)}>
-                {columns.map((column) => (
-                  <td key={column.key} style={{ ...cellStyle, textAlign: column.align ?? 'start' }}>
-                    {column.render ? column.render(row) : column.value?.(row)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-        {!loading && sortedRows.length === 0 ? (
+    // 列が増えるほど表の最小幅は伸びるので、狭い画面では必ず親を超える。
+    // 箱の側で横スクロールを受け止めないと、画面全体が横へずれて他の内容まで読めなくなる。
+    // tabIndex を付けるのは、スクロールできる領域がキーボードだけでは操作できなくなるため
+    // (axe の scrollable-region-focusable が要求する)。ただし tabIndex だけを持つ div は
+    // 支援技術から見ると「役割不明の止まり木」になるので、caption 由来の名前を与えて
+    // 「何をスクロールしているのか」を読み上げられる形にする。overflow の指定は base 層が持つ。
+    // role は group にする。region (= landmark) にすると表の数だけ landmark が増え、
+    // 同名の表が 2 つ並んだ画面で axe の landmark-unique に触れる (実際に触れた)。
+    // biome-ignore lint/a11y/useSemanticElements: <fieldset> はフォームの入力群をまとめる要素で、表の外枠に使うと意味が食い違う。ここで欲しいのは名前を持つ「ひとかたまり」だけなので role=group が最小
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: スクロール可能領域はキーボード単独では動かせず WCAG 2.1.1 / axe scrollable-region-focusable が tabindex を要求するため。規則が想定する「操作できないのに焦点が当たる」型ではなく、名前付きの塊への意図的な付与
+    <div data-hh-scroll-x="" role="group" aria-label={caption} tabIndex={0}>
+      <table
+        // 読み込み中は表全体を busy として告知する。骨組み行を aria-hidden で隠すと
+        // 表の行数と読み上げ内容が食い違うため、隠さずに状態のほうを伝える
+        aria-busy={loading || undefined}
+        style={{
+          width: '100%',
+          // 列数ぶんの下限を持たせる。これが無いと table-layout: fixed が幅 100% に従うため、
+          // 狭い画面では列が均等に潰れて 2〜3 文字で折り返し、箱の横スクロールも一切起きない
+          // (= スクロールできる箱を用意した意味が無くなる)。下限値は base 層の変数が持つ。
+          minWidth: `calc(${columns.length} * var(--hh-table-column-min))`,
+          borderCollapse: 'collapse',
+          tableLayout: 'fixed',
+          color: colorVar('text'),
+          background: colorVar('surface'),
+        }}
+      >
+        <caption style={hideCaption ? visuallyHidden : { textAlign: 'start', padding: spaceVar(2) }}>{caption}</caption>
+        <colgroup>
+          {columns.map((column) => (
+            <col key={column.key} style={column.width ? { width: column.width } : undefined} />
+          ))}
+        </colgroup>
+        <thead style={{ background: colorVar('surfaceMuted') }}>
           <tr>
-            <td colSpan={columns.length} style={{ ...cellStyle, color: colorVar('textMuted') }}>
-              {emptyMessage ?? t('table.empty')}
-            </td>
+            {columns.map((column) => {
+              const isSorted = activeSort?.columnKey === column.key;
+              const canSort = column.sortable === true && column.value !== undefined;
+
+              return (
+                <th
+                  key={column.key}
+                  scope="col"
+                  aria-sort={isSorted && activeSort ? activeSort.direction : undefined}
+                  style={{ ...cellStyle, textAlign: column.align ?? 'start' }}
+                >
+                  {canSort ? (
+                    <button
+                      type="button"
+                      data-hh-focusable=""
+                      onClick={() => handleSort(column.key)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: spaceVar(1),
+                        minHeight: 'var(--hh-control-height)',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        font: 'inherit',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {column.header}
+                      {/* 記号は装飾。状態は aria-sort と下の読み上げ文で伝える */}
+                      <span aria-hidden="true">
+                        {isSorted && activeSort ? (activeSort.direction === 'ascending' ? '▲' : '▼') : '↕'}
+                      </span>
+                      <span style={visuallyHidden}>
+                        {isSorted && activeSort ? directionLabel(activeSort.direction) : t('action.sort')}
+                      </span>
+                    </button>
+                  ) : (
+                    column.header
+                  )}
+                </th>
+              );
+            })}
           </tr>
-        ) : null}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {loading
+            ? Array.from({ length: skeletonRowCount }, (_, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: 骨組み行は件数固定の装飾で識別子を持たず、並べ替えも差し込みも起きないため index が唯一の安定 key
+                <tr key={`skeleton-${index}`}>
+                  {columns.map((column) => (
+                    <td key={column.key} style={cellStyle}>
+                      <span
+                        style={{
+                          display: 'block',
+                          height: '1em',
+                          borderRadius: 'var(--hh-radius-sm)',
+                          background: colorVar('surfaceMuted'),
+                        }}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            : sortedRows.map((row) => (
+                <tr key={rowKey(row)}>
+                  {columns.map((column) => (
+                    <td key={column.key} style={{ ...cellStyle, textAlign: column.align ?? 'start' }}>
+                      {column.render ? column.render(row) : column.value?.(row)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+          {!loading && sortedRows.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} style={{ ...cellStyle, color: colorVar('textMuted') }}>
+                {emptyMessage ?? t('table.empty')}
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </div>
   );
 }

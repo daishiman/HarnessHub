@@ -32,7 +32,9 @@ describe('認可 middleware の deny-by-default', () => {
 
   it('他テナントのスコープ要求を拒否する', () => {
     const decision = authorize({ pathname: '/t/tenant-b/docs', headers: noHeaders, principal });
-    expect(decision).toMatchObject({ reason: 'tenant_mismatch', status: 403 });
+    // 存在秘匿 (T-ISO-06): 403 だと「その ID の資源が他テナントに在る」ことが伝わるため 404。
+    // route 層の denyStatusFor と同じ対応表であることは deny-status-layer-parity.test.ts が固定する。
+    expect(decision).toMatchObject({ reason: 'tenant_mismatch', status: 404 });
   });
 
   it('自テナントでも所属していない Workspace を拒否する', () => {
@@ -80,10 +82,22 @@ describe('認可 middleware の deny-by-default', () => {
 
   it('テナント別サインイン画面だけを公開し、似た path は公開しない', () => {
     expect(isPublicPath('/tenant-a/signin')).toBe(true);
-    expect(isPublicPath('/tenant_a/signin/')).toBe(true);
+    expect(isPublicPath('/tenant-a/signin/')).toBe(true);
     expect(isPublicPath('/tenant-a/signin/callback')).toBe(false);
     expect(isPublicPath('/api/tenant-a/signin')).toBe(false);
     expect(isPublicPath('//signin')).toBe(false);
+    // slug の形は tenantSlugSchema が正本。画面側 (safeParse) が 404 にする形を middleware だけ通さない
+    expect(isPublicPath('/TENANT-A/signin')).toBe(false);
+    expect(isPublicPath('/tenant_a/signin')).toBe(false);
+  });
+
+  it('サインイン入口 `/signin` は列挙した path だけを公開し、配下を巻き込まない', () => {
+    expect(isPublicPath('/signin')).toBe(true);
+    // active workspace の確定受け口は明示列挙 (route 自身が session を再検証する)
+    expect(isPublicPath('/signin/workspace')).toBe(true);
+    // 前方一致だと将来 `/signin/**` に生えた route が申告なしに公開へ倒れる
+    expect(isPublicPath('/signin/callback')).toBe(false);
+    expect(isPublicPath('/signin/workspace/confirm')).toBe(false);
   });
 
   it('Device Flow承認画面だけを公開し、承認APIや似たpathは公開しない', () => {

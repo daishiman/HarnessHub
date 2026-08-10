@@ -1,0 +1,20 @@
+{
+  "evaluator": "independent-verifier-fresh",
+  "scenario_id": "C19-OUT1-positive-system-spec-lineage-r2",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "plugins/system-spec-harness/references/package-contract.json entry_points.skills lists run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator. transcript.jsonl Skill tool_use blocks show all 4 invoked (elicit x1, doc-fetch x2, compile x2, evaluator x4, matching retry-until-pass). fixture-repo/system-spec/completeness-report.json verdict='PASS', all 6 gate results exit_code=0, gaps=[]. index.md, all 8 chapter .md files, fetched-references.json, spec-state.json all present. audit-fork-ledger.jsonl contains the 3 final PASS entries whose response_sha256 match the values cited in completeness-report.json audit_delegations for C06/C07/C08."
+    },
+    "2": {
+      "met": true,
+      "evidence": "fixture-repo/.dev-graph/state/graph.json graph_revision=2, 2 nodes (arch-system-spec-overview, spec-system-spec-index) each carry non-null source_lineage (origin_kind=system-spec-harness, source_plugin=system-spec-harness, source_version=0.1.0, imported_at=2026-08-07T07:47:38Z) and confirmation_evidence referencing system-spec/completeness-report.json. Independently recomputed via shasum -a 256: 00-requirements-definition.md / index.md / completeness-report.json digests all exact-match the recorded source_digest / evaluated_digest. validate-source-digest.py と validate-evidence-refs.py を再実行し、いずれも exit 0 (mismatch=[]/dangling=[]) を確認。"
+    },
+    "3": {
+      "met": true,
+      "evidence": "transcript.jsonl: graph.json への直接 Write/Edit は0件。登録は upsert-node.py (C02) 経由のみで、stdout receipt に owner=\"C02/run-dev-graph-node\" が5回出現。graph_revision が 0→2 へ正規遷移し現状の graph.json と一致。system-spec-harness 固有語彙 (apply_cell_op / hearing_progress / requirements_foundation 等) を dev-graph 実装配下で grep しても実装側ヒット0件 (fixture prose以外)で、重複ロジックなし。"
+    }
+  }
+}

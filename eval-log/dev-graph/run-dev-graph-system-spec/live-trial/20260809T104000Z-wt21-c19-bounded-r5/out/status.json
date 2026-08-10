@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "mode": "reuse-confirmed",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py (step validate-resume, exit 0) returned valid=true / mode=reuse-confirmed with plugin_version=0.1.0, required_entry_points = [assign-system-spec-completeness-evaluator, run-system-spec-compile, run-system-spec-doc-fetch, run-system-spec-elicit], failures=[]; upstream_skill_invocations=0 and network_calls=0 confirm no elicit/doc-fetch/compile/evaluator re-run."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "build-import produced architecture/specification node+body from the fixture artifacts (system-spec/index.md, system-spec/00-requirements-definition.md, system-spec/completeness-report.json); gate-3 validate-source-digest.py (exit 0) proves each registered node's source_digest equals the real sha256 of its own source_path, and gate-4 validate-evidence-refs.py (exit 0) proves 0 dangling evidence_ref for registered_this_run."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "The only writers were steps c02-upsert-architecture and c02-upsert-specification, both via C02 upsert-node.py (exit 0), yielding exactly 2 nodes; gate-1 validate-system-spec-boundary.py (exit 0) is the positive-control duplication check (0 duplicated elicitation/compile logic in dev-graph) and gate-2 validate-graph-schema.py --require-canonical-envelope (exit 0) confirms schema conformance."
+    }
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import",
+    "invocations": 1,
+    "process_exit_code": 0,
+    "mode": "reuse-confirmed",
+    "status": "PASS",
+    "network_calls": 0,
+    "upstream_skill_invocations": 0,
+    "registered_this_run": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ],
+    "resume": {
+      "validator": "validate-system-spec-resume",
+      "valid": true,
+      "mode": "reuse-confirmed",
+      "plugin_version": "0.1.0",
+      "required_entry_points": [
+        "assign-system-spec-completeness-evaluator",
+        "run-system-spec-compile",
+        "run-system-spec-doc-fetch",
+        "run-system-spec-elicit"
+      ],
+      "artifacts": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json",
+        "system-spec/index.md"
+      ],
+      "failures": []
+    },
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-1", "script": "validate-system-spec-boundary.py", "exit_code": 0},
+      {"label": "gate-2", "script": "validate-graph-schema.py --require-canonical-envelope", "exit_code": 0},
+      {"label": "gate-3", "script": "validate-source-digest.py", "exit_code": 0},
+      {"label": "gate-4", "script": "validate-evidence-refs.py", "exit_code": 0}
+    ],
+    "all_steps_exit_zero": true
+  },
+  "blockers": []
+}

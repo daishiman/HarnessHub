@@ -64,3 +64,71 @@ implementation_readiness: {"checked_at":"2026-08-04T00:00:00Z","missing_sections
 ## 影響境界
 
 これは repository の plugin 配布・CI・開発品質ゲートの変更であり、Harness Hub の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正本は `system-spec/dev-workflow.md` の `qa-143`、設計参照は `architecture/harness-hub-dev-workflow.md`、確認結果は `docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md` とする。
+
+## 目的と成功状態
+
+宣言台帳・hook 登録・実ファイルの三者が一致し、未宣言実行や登録漏れを CI が拒否する状態を成功とする。
+
+## 用語と主体
+
+台帳は `package-contract.json`、登録は `hooks/hooks.json` と manifest inline hooks、実体は repository 内の hook file。plugin 作者と CI が変更・検査主体となる。
+
+## スコープ
+
+plugin の hook entry point と手動 script の配置境界を対象とし、Hub 製品 runtime は対象外とする。
+
+## ユースケースとユーザーフロー
+
+作者が hook を追加・削除すると、CI が台帳・登録・実体を照合し、一致時だけ配布工程を継続する。
+
+## 機能要件
+
+HK-001〜HK-003 を全 plugin へ適用し、相対 path の同値表現を正規化してから集合を比較する。
+
+## ビジネスルールと検証
+
+実行可能 hook は宣言と登録を必須とし、手動操作は `scripts/` に置く。`hooks/` の非実行 support module は許容する。
+
+## データモデル
+
+比較対象は declared / registered / physical の三集合と、plugin ID、正規化済み相対 path である。
+
+## API契約
+
+検査 CLI は一致時 exit 0、不一致時は HK 番号と対象 path を示して非 0 で終了する。
+
+## イベント・非同期処理
+
+plugin 完全性検査は CI の配布前に同期実行し、非同期 queue や product event は追加しない。
+
+## UI・状態遷移
+
+製品 UI は変更しない。開発者が見る状態は CI の pass / fail と診断一覧である。
+
+## 認証・認可
+
+認証認可 contract は変更しない。検査は repository の追跡ファイルだけを読み、secret を扱わない。
+
+## 非機能要件
+
+同一 tree では同じ結果を返す決定論性、全 plugin 走査、500 行以下の責務分離を維持する。
+
+## エラー・例外・回復
+
+未宣言、未登録、実体欠落、実行可能な残余を個別に報告し、宣言・登録・配置の正しい層を直して再実行する。
+
+## 可観測性
+
+HK-001〜HK-003、plugin ID、path、差分種別を CI log に残す。
+
+## 互換性・移行・リリース
+
+既存の `hooks/foo.py` と `./hooks/foo.py` は同一視する。新規 hook は三者を同じ PR で更新する。
+
+## テストと受入条件
+
+未宣言・未登録・残余・相対 path 表記の fixture test と全 plugin 完全性検査が PASS することを受入条件とする。
+
+## 未決事項
+
+現時点で blocking な未決事項はない。新しい hook 登録形式を導入する場合は登録集合の抽出規則を先に更新する。

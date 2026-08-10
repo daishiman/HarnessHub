@@ -1,0 +1,41 @@
+{
+  "loop": 1,
+  "checklist": [
+    {
+      "id": "CL1",
+      "text": "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+      "status": "PASS",
+      "evidence": "resolve-repo-context.py --mode write exit 0、repository_id 一致 (graph/config/receipt)"
+    },
+    {
+      "id": "CL2",
+      "text": "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+      "status": "PASS",
+      "evidence": "confidence=0.93 margin=0.89 で自動確定 (>=0.80/>=0.15)"
+    },
+    {
+      "id": "CL3",
+      "text": "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+      "status": "PASS",
+      "evidence": "validate-graph-schema.py exit 0、missing_sections=[]、template_id=document/1.0.0"
+    },
+    {
+      "id": "CL4",
+      "text": "package は P01..P13 exact 13 ... (本 run は package 登録なしのため N/A)",
+      "status": "N/A",
+      "evidence": "N/A (package 登録なし)"
+    },
+    {
+      "id": "CL5",
+      "text": "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+      "status": "PASS",
+      "evidence": "receipt graph_revision=1 / node=doc-dev-graph-init-receipt が commit 後 graph と一致"
+    },
+    {
+      "id": "CL6",
+      "text": "WAL 収束と共有 lock による fail-closed",
+      "status": "PASS",
+      "evidence": "再実行 operation=noop write_count=0、WAL 残存なし"
+    }
+  ]
+}

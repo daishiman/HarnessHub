@@ -1,0 +1,45 @@
+{
+  "beads": {
+    "git_status": [],
+    "graph_revision": 0,
+    "graph_sha256": "4b5086c0ab793be0f8f3daecf3b91aec3c8d24cd5c4314df94b1d3d4b8ff27e9",
+    "managed_files": [
+      ".dev-graph/config.json",
+      ".dev-graph/state/graph.json",
+      "architecture/.gitkeep",
+      "docs/.gitkeep",
+      "features/.gitkeep",
+      "issues/.gitkeep",
+      "specs/.gitkeep",
+      "system-spec/.gitkeep",
+      "tasks/.gitkeep"
+    ],
+    "node_count": 0
+  },
+  "external": {
+    "basis": "isolated fixture plus mutation-suppressed adapter previews",
+    "beads_database_exists": false,
+    "beads_database_path": "/private/tmp/harnesshub-o4zi.Gv5hFK/eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/support/absent-beads/live-trial.db",
+    "beads_issue_count": 0,
+    "beads_local_artifacts": [],
+    "github_issue_count": 0,
+    "projects_item_count": 0
+  },
+  "none": {
+    "git_status": [],
+    "graph_revision": 0,
+    "graph_sha256": "bbac8410c9a5626dfdfafbfc2ef41a4277d9390e860cae23d74ced1f73fbcc88",
+    "managed_files": [
+      ".dev-graph/config.json",
+      ".dev-graph/state/graph.json",
+      "architecture/.gitkeep",
+      "docs/.gitkeep",
+      "features/.gitkeep",
+      "issues/.gitkeep",
+      "specs/.gitkeep",
+      "system-spec/.gitkeep",
+      "tasks/.gitkeep"
+    ],
+    "node_count": 0
+  }
+}

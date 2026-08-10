@@ -12,8 +12,8 @@ iteration: null
 title: "harness-creator の entry_points が実体30 skill に対し1件のみで live-trial 被覆が欠落している"
 owners: ["daishiman"]
 created_at: "2026-07-21T09:26:18Z"
-updated_at: "2026-07-21T09:26:18Z"
-status: "draft"
+updated_at: "2026-08-04T02:20:11Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

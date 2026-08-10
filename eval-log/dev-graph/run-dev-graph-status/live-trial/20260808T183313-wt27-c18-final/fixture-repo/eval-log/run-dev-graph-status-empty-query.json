@@ -1,0 +1,24 @@
+{
+  "authority_sha256_after": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+  "authority_sha256_before": "f0bdbe0df65a4f8eeff6e6758dcabc7e8f8c9e03b15662bab2b3110b8376319a",
+  "count": 0,
+  "executed_at": "2026-08-08T10:09:57.437868Z",
+  "filters": {
+    "domain": "security",
+    "id": null,
+    "keyword": null,
+    "kind": "task",
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": [
+      "live-trial"
+    ]
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+  "graph_sha256_before": "2a866174a4b0b82273ebd64c0f8cbdbbf34c56baf11def46da3da8dddfea48a6",
+  "ok": true,
+  "read_only": true,
+  "results": []
+}

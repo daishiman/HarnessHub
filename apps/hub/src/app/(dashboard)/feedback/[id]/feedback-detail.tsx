@@ -1,7 +1,7 @@
 'use client';
 
 import type { FeedbackDetail as FeedbackDetailDto, FeedbackStatus } from '@harness-hub/schemas';
-import { Alert, Select, StatusChip } from '@harness-hub/ui';
+import { Alert, Panel, ScreenHeader, Select, StatusChip } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -79,46 +79,58 @@ export function FeedbackDetail({ id, tenantId, workspaceId }: FeedbackDetailProp
 
   return (
     <article>
+      <ScreenHeader
+        title={feedback.code}
+        breadcrumbs={[
+          {
+            href: `/feedback?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`,
+            label: '改善要望',
+          },
+          { label: feedback.code },
+        ]}
+        breadcrumbsLabel="現在地"
+      />
       {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
-      <header>
-        <h1>{feedback.code}</h1>
-        <p aria-live="polite">
-          <StatusChip domain="feedback" status={feedback.status} />
-        </p>
-        <p>
-          種別: {feedback.type} / 優先度: {feedback.priority} / プロジェクト: {feedback.project_id} / 経路:{' '}
-          {feedback.source}
-        </p>
-      </header>
+      <p aria-live="polite">
+        <StatusChip domain="feedback" status={feedback.status} />
+      </p>
+      <p>
+        種別: {feedback.type} / 優先度: {feedback.priority} / プロジェクト: {feedback.project_id} / 経路:{' '}
+        {feedback.source}
+      </p>
 
-      <section aria-label="報告内容">
-        <h2>報告内容</h2>
-        <MarkdownView content={feedback.body} />
-      </section>
+      <Panel title="報告内容" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+        <section aria-label="報告内容">
+          <MarkdownView content={feedback.body} />
+        </section>
+      </Panel>
 
-      <section aria-label="AI 応答">
-        <h2>AI からの応答</h2>
-        {feedback.ai_response === null ? (
-          <p>まだ応答はありません。</p>
-        ) : (
-          <MarkdownView content={feedback.ai_response} />
-        )}
-      </section>
+      <Panel title="AI からの応答" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+        <section aria-label="AI 応答">
+          {feedback.ai_response === null ? (
+            <p style={{ margin: 0 }}>まだ応答はありません。</p>
+          ) : (
+            <MarkdownView content={feedback.ai_response} />
+          )}
+        </section>
+      </Panel>
 
       {feedback.can_manage && options.length > 0 ? (
-        <aside aria-label="管理者操作">
-          <h2>管理者操作</h2>
-          <Select
-            label="状態を進める"
-            value=""
-            onChange={(event) => {
-              if (event.target.value === '') return;
-              void patchStatus(event.target.value as FeedbackStatus);
-            }}
-            options={[{ value: '', label: '選択してください' }, ...options]}
-            disabled={saving}
-          />
-        </aside>
+        <Panel title="管理者操作" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+          {/* landmark として拾えるよう aside は残す。見出しは Panel 側が出す */}
+          <aside aria-label="管理者操作">
+            <Select
+              label="状態を進める"
+              value=""
+              onChange={(event) => {
+                if (event.target.value === '') return;
+                void patchStatus(event.target.value as FeedbackStatus);
+              }}
+              options={[{ value: '', label: '選択してください' }, ...options]}
+              disabled={saving}
+            />
+          </aside>
+        </Panel>
       ) : null}
     </article>
   );

@@ -1,0 +1,187 @@
+{
+  "verdict": "PASS",
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "skill_under_test": "dev-graph:run-dev-graph-sync",
+  "evaluator": "fresh independent evaluator (separate context from orchestrator)",
+  "verified_at": "2026-08-08",
+  "method": "transcript.jsonl の一次情報を再読し、fixture-repo の実状態を read-only で突合。さらに scratchpad へ (a) fixture-repo の複製 (b) build_live_trial_fixture.py --kind sync の pristine 再生成 を作り、評価者自身が sync-graph.py を再実行して report 値を独立再現した。fixture-repo 自体は一切変更していない。",
+
+  "skill_invocation": {
+    "skill_tool_calls": 3,
+    "calls": [
+      {"pass": 1, "transcript_index": 42, "args": "--repo-root <FIXTURE> --dry-run"},
+      {"pass": 2, "transcript_index": 80, "args": "--repo-root <FIXTURE> --apply"},
+      {"pass": 3, "transcript_index": 97, "args": "--repo-root <FIXTURE> --dry-run"}
+    ],
+    "substituted_by_script_only": false,
+    "note": "3 パスとも Skill ツールで dev-graph:run-dev-graph-sync を起動し、その内側で SKILL.md 記載の sync-graph.py を実行している。Task/Agent への委譲や skill を経ない script 直叩きでの代替はない。",
+    "same_input_across_passes": true,
+    "input_identity_evidence": "3 パスとも --repo-root=<FIXTURE>, --remote-state=.dev-graph/remote.json。pass1 の graph_sha256_before=dbbfdd13… は fixture baseline と一致、pass3 の graph_sha256_before=5cc845bd… は pass2 の graph_sha256_after と一致 (連続同一入力チェーン)。"
+  },
+
+  "required_observations": [
+    {
+      "id": 1,
+      "text": "the first sync applies the expected import and export",
+      "status": "PASS",
+      "measured": {
+        "pass2_mode": "apply",
+        "pass2_ok": true,
+        "pass2_imports_count": 1,
+        "pass2_exports_count": 1,
+        "pass2_write_count": 4,
+        "import_detail": {
+          "node": "LT-TASK-001",
+          "field": "title",
+          "from": "Validate isolated live trial",
+          "to": "Validate isolated live trial (updated remotely r7)",
+          "direction": "remote GitHub Issue (example/dev-graph-live-trial#1) -> local graph node"
+        },
+        "export_detail": {
+          "node": "LT-TASK-001",
+          "kind": "project-field-update",
+          "binding": "github",
+          "alias": "planning",
+          "project_id": "PVT_kwDOFixture001",
+          "item_id": "PVTI_lADOFixture001",
+          "field_id": "PVTF_Status001",
+          "option_id": "OPT_InProgress001",
+          "value": "In Progress",
+          "value_type": "single_select",
+          "direction": "local graph status -> Projects planning/Status (fixture remote adapter)"
+        },
+        "state_change_proof": {
+          "graph_sha256": "dbbfdd1342adf8fa4643ef840a8bb175c91d867552f1ec6d94b1f21ed76fe68e -> 5cc845bdbe9dbbd985a90809eeff36c33a27fe9574d1201e57e857a5dda1a862",
+          "snapshot_sha256": "37e836e6813a911ac4f3cb1d86beb9b9d21cc96e9aca35a6e67c2eba98025387 -> ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f",
+          "remote_sha256": "755865fa0c55144591c533250e2c66af5437bef9de2b715b0c31a2e9eea2a493 -> c03d97d64537d8680120eea07095b86db80de162423db78fc89ad80ef87659bc",
+          "graph_revision": "1 -> 3 (local patch 1->2, project linkage 2->3)",
+          "task_md_sha256_after": "1967b41d53c3baa0ed8461214c35ff3f8cb9fba6ce7de575d6181975482cb987"
+        },
+        "evaluator_independent_diff_vs_pristine_fixture": {
+          "remote.json Status": "OPT_Backlog001 / \"Backlog\" -> OPT_InProgress001 / \"In Progress\" (export が実際に remote を変えている; 無変更の空打ちではない)",
+          "sync-snapshot.json title": "\"Validate isolated live trial\" (local=remote) -> \"Validate isolated live trial (updated remotely r7)\" (local=remote)",
+          "sync-snapshot.json planning/status": "Backlog(local=remote) -> In Progress(local=remote)"
+        },
+        "evaluator_replay_from_pristine": {
+          "command": "sync-graph.py --repo-root <pristine copy> --remote-state .dev-graph/remote.json --dry-run",
+          "changes": 2,
+          "imports_count": 1,
+          "exports_count": 1,
+          "identical_to_trial_pass1_plan": true
+        }
+      }
+    },
+    {
+      "id": 2,
+      "text": "the second sync reports imports changes=0 and exports changes=0",
+      "status": "PASS",
+      "measured": {
+        "pass3_mode": "dry-run",
+        "pass3_changes": 0,
+        "pass3_imports": [],
+        "pass3_exports": [],
+        "pass3_imports_count": 0,
+        "pass3_exports_count": 0,
+        "pass3_pending_retry_count": 0,
+        "pass3_conflicts_count": 0,
+        "pass3_applied_count": 0,
+        "pass3_converged": true,
+        "pass3_ok": true,
+        "pass3_write_count": 0,
+        "evaluator_independent_rerun": {
+          "target": "fixture-repo の複製 (scratchpad) に対する再実行 (fixture-repo 本体は不変)",
+          "changes": 0,
+          "imports_count": 0,
+          "exports_count": 0,
+          "converged": true,
+          "write_count": 0,
+          "graph_sha256_before_eq_after": "5cc845bdbe9dbbd985a90809eeff36c33a27fe9574d1201e57e857a5dda1a862"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "text": "stable IDs and snapshots are unchanged on the second run",
+      "status": "PASS",
+      "measured": {
+        "comparison": "pass2 (apply) 直後の実値 vs pass3 (2回目 sync) 直後の実値",
+        "stable_ids": {
+          "issue_id": {"after_apply": "I_kwDOFixture001", "after_pass3": "I_kwDOFixture001"},
+          "issue_number": {"after_apply": 1, "after_pass3": 1},
+          "project_id": {"after_apply": "PVT_kwDOFixture001", "after_pass3": "PVT_kwDOFixture001"},
+          "project_item_id": {"after_apply": "PVTI_lADOFixture001", "after_pass3": "PVTI_lADOFixture001"},
+          "status_field_id": {"after_apply": "PVTF_Status001", "after_pass3": "PVTF_Status001"},
+          "status_option_id": {"after_apply": "OPT_InProgress001", "after_pass3": "OPT_InProgress001"},
+          "graph_node_id": {"after_apply": "LT-TASK-001", "after_pass3": "LT-TASK-001"},
+          "graph_revision": {"after_apply": 3, "after_pass3": 3},
+          "github_project_linkages_count": {"after_apply": 1, "after_pass3": 1, "item_add_on_second_run": 0}
+        },
+        "digests": {
+          "graph.json": {"after_apply": "5cc845bdbe9dbbd985a90809eeff36c33a27fe9574d1201e57e857a5dda1a862", "after_pass3": "5cc845bdbe9dbbd985a90809eeff36c33a27fe9574d1201e57e857a5dda1a862", "identical": true},
+          "sync-snapshot.json": {"after_apply": "ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f", "after_pass3": "ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f", "identical": true},
+          "remote.json": {"after_apply": "c03d97d64537d8680120eea07095b86db80de162423db78fc89ad80ef87659bc", "after_pass3": "c03d97d64537d8680120eea07095b86db80de162423db78fc89ad80ef87659bc", "identical": true},
+          "tasks/LT-TASK-001.md": {"after_apply": "1967b41d53c3baa0ed8461214c35ff3f8cb9fba6ce7de575d6181975482cb987", "after_pass3": "1967b41d53c3baa0ed8461214c35ff3f8cb9fba6ce7de575d6181975482cb987", "identical": true}
+        },
+        "evaluator_recheck_of_current_fixture_state": {
+          "graph.json": "5cc845bdbe9dbbd985a90809eeff36c33a27fe9574d1201e57e857a5dda1a862",
+          "sync-snapshot.json": "ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f",
+          "remote.json": "c03d97d64537d8680120eea07095b86db80de162423db78fc89ad80ef87659bc",
+          "tasks/LT-TASK-001.md": "1967b41d53c3baa0ed8461214c35ff3f8cb9fba6ce7de575d6181975482cb987",
+          "matches_after_apply_values": true
+        }
+      }
+    }
+  ],
+
+  "dry_run_zero_write": {
+    "status": "PASS",
+    "pass1": {"mode": "dry-run", "write_count": 0, "applied_count": 0, "graph_before_eq_after": true, "snapshot_before_eq_after": true, "remote_before_eq_after": true},
+    "pass3": {"mode": "dry-run", "write_count": 0, "applied_count": 0, "graph_before_eq_after": true, "snapshot_before_eq_after": true, "remote_before_eq_after": true},
+    "evaluator_control_experiment": "pristine fixture を再生成し --dry-run を評価者自身が実行した結果、生成ファイル 0 件・3 ファイルの SHA-256 完全不変 (graph a2f4bfa9…, snapshot 37e836e6…, remote 755865fa…) を確認。dry-run が local/GitHub/Projects へ書かないことを一次実測で裏づけた。"
+  },
+
+  "external_access_isolation": {
+    "status": "PASS",
+    "real_gh_cli_invocations": 0,
+    "real_beads_bd_invocations": 0,
+    "real_github_api_calls": 0,
+    "code_path_evidence": "sync-graph.py:766-773 — --remote-state 指定時は remote_path が非 None となり _collect_remote() (gh-bridge.py / bd-bridge.py への subprocess 呼び出し) が呼ばれない。sync-graph.py:793-797 — apply 時も remote_path が非 None なら _fixture_apply() に分岐し _live_apply() (gh-bridge 経由の実 GitHub 書込) を通らない。",
+    "transcript_scan": "transcript.jsonl の全 Bash tool_use を走査し、gh / bd を起動するコマンドは 0 件。",
+    "fixture_remote_beads_section": "{} (Beads 経路の入力自体が存在しない)"
+  },
+
+  "goal_seek_wiring": {
+    "status": "PASS",
+    "goal_spec": {
+      "path": "<FIXTURE>/eval-log/run-dev-graph-sync-goal-spec.json",
+      "exists": true,
+      "original_goal_hash": "ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43",
+      "hash_recomputed_by_evaluator": "ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43",
+      "hash_match": true,
+      "original_goal_matches_SKILL_md_line_154": true
+    },
+    "progress": {"path": "<FIXTURE>/eval-log/run-dev-graph-sync-progress.json", "exists": true, "checklist_entries": 7, "criteria": ["IN1", "OUT1", "OUT4"], "verdict": "PASS"},
+    "intermediate": {
+      "path": "<FIXTURE>/eval-log/run-dev-graph-sync-intermediate.jsonl",
+      "exists": true,
+      "rows": 2,
+      "row1": {"phase": "pre-skill", "missing_required_keys": [], "hash_matches_utf8_sha256_of_original_goal": true},
+      "row2": {"phase": "post-verification", "missing_required_keys": [], "hash_matches_utf8_sha256_of_original_goal": true},
+      "required_keys_checked": ["original_goal", "original_goal_hash", "current_goal_snapshot", "delta_from_original", "merged_directive_for_next", "drift_signal"],
+      "append_only_ordering_evidence": "row1 は Skill 呼び出し (transcript index 42) より前の index 34 で書かれ、row2 は検証完了後 index 117 で append。まとめ書き・既存行の上書きの形跡なし。",
+      "drift_signal": ["none", "none"]
+    }
+  },
+
+  "scope_and_hygiene": {
+    "out_dir_contents": ["status.json"],
+    "out_dir_extra_files": 0,
+    "harness_hub_tracked_files_modified_by_trial": 0,
+    "fixture_manual_edit_of_graph_or_snapshot": "検出なし。baseline snapshot 37e836e6… / remote 755865fa… は pristine 再生成物と完全一致し、apply 後の値のみ skill 経由の差分。",
+    "evaluator_wrote_only": "<TRIAL>/independent-verification.json"
+  },
+
+  "blockers": [],
+
+  "conclusion": "skill の description が約束する『GitHub Issues/Projects lifecycle の冪等収束した同期』が実成果として出ている。1 回目は remote 由来 title の import 1 件と local 由来 Projects Status export 1 件を実際に適用して remote/snapshot を Backlog→In Progress・旧 title→r7 title へ収束させ、2 回目は同一入力で imports=0 / exports=0 / changes=0 / converged=true となり、stable ID 群 (I_kwDOFixture001, PVTI_lADOFixture001, PVTF_Status001, OPT_InProgress001) と graph/snapshot/remote/task.md の 4 ファイルが byte 単位で不変。評価者による pristine 再生成からの再実行および複製に対する再実行でも同一結果を再現した。"
+}

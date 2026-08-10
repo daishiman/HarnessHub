@@ -1,0 +1,10 @@
+{
+  "graph_node_id": "spec-rest-api-v2-migration",
+  "patch": {
+    "graph_node_id": "spec-rest-api-v2-migration",
+    "related_nodes": [
+      "arch-order-processing-backend",
+      "task-public-api-rate-limit"
+    ]
+  }
+}

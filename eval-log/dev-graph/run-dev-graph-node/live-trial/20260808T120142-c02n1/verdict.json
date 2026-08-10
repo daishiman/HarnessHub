@@ -1,0 +1,93 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-node",
+  "args": "add --repo-root eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T120142-c02n1/fixture-repo --input eval-log/dev-graph/run-dev-graph-node/live-trial/20260808T120142-c02n1/fixture-repo/mixed-artifacts.json",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-node"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "2c697f4af678fa7bb14cddfaba1477a5ea1fe1b49a81dd4673d0dfa23a017b56",
+  "transcript_sha256": "2caa7cfdeceb068611b725513a1d2d3e906e078409afacae866c8b05f0f1a431",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.226",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": null
+  },
+  "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C02-OUT1-positive-mixed-artifacts",
+    "required_observations": [
+      "all five artifacts are routed to canonical kind paths",
+      "frontmatter kind and stored path agree after a consecutive update",
+      "no feature is created outside the C14 macro-feature contract"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "all five artifacts are routed to canonical kind paths",
+        "evidence_ref": "fixture-repo/.dev-graph/state/graph.json"
+      },
+      {
+        "index": 2,
+        "observation": "frontmatter kind and stored path agree after a consecutive update",
+        "evidence_ref": "fixture-repo/issues/iss-c02-mixed-routing.md"
+      },
+      {
+        "index": 3,
+        "observation": "no feature is created outside the C14 macro-feature contract",
+        "evidence_ref": "out/status.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "add --repo-root <contained-fixture-repo> --input <contained-fixture-repo>/mixed-artifacts.json",
+      "template_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--input",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    }
+  }
+}

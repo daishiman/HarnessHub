@@ -1,0 +1,99 @@
+{
+  "node": {
+    "graph_node_id": "iss-session-timeout-not-enforced",
+    "artifact_kind": "issue",
+    "artifact_subtypes": [],
+    "title": "ログインセッションのタイムアウトが強制されない",
+    "project_id": "c02final",
+    "domain": "product-platform",
+    "status": "draft",
+    "owners": [
+      "dev-graph-harness"
+    ],
+    "tags": [
+      "bug",
+      "security",
+      "session-management"
+    ],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-08T09:37:12Z",
+    "updated_at": "2026-08-08T09:37:12Z",
+    "depends_on": [],
+    "related_nodes": [
+      "arch-order-processing-backend",
+      "spec-rest-api-v2-migration"
+    ],
+    "resource_scope": [
+      "issues/iss-session-timeout-not-enforced.md"
+    ],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "issues/iss-session-timeout-not-enforced.md",
+    "template_id": "issue",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": "mixed-artifacts.json",
+      "source_version": null,
+      "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+      "imported_at": "2026-08-08T09:37:12Z"
+    },
+    "classification_confidence": 0.97,
+    "classification_reason": "既存挙動の不具合報告 (現在の挙動・期待する挙動・再現手順) の構造を持つため issue へ写像した",
+    "classification_candidates": [
+      {
+        "artifact_kind": "issue",
+        "confidence": 0.97,
+        "candidate_path": "issues/iss-session-timeout-not-enforced.md"
+      },
+      {
+        "artifact_kind": "task",
+        "confidence": 0.21,
+        "candidate_path": "tasks/iss-session-timeout-not-enforced.md"
+      }
+    ],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "complete",
+      "missing_sections": [],
+      "checked_at": "2026-08-08T09:37:12Z"
+    }
+  }
+}

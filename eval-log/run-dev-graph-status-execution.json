@@ -1,12 +1,12 @@
 {
-  "authority_sha256_after": "dc04eb7bed8373b01fdef4172ed6bf12ffd8e2aa635cb1721938d4a68dceb77b",
-  "authority_sha256_before": "dc04eb7bed8373b01fdef4172ed6bf12ffd8e2aa635cb1721938d4a68dceb77b",
+  "authority_sha256_after": "cda224fbaa4389cfc8c9b85f488dbce68088ae5f9ba91d0d97b1ac15094f491d",
+  "authority_sha256_before": "cda224fbaa4389cfc8c9b85f488dbce68088ae5f9ba91d0d97b1ac15094f491d",
   "count": 14,
-  "executed_at": "2026-08-01T07:00:39.476196Z",
+  "executed_at": "2026-08-07T13:15:45.046041Z",
   "filters": {
     "domain": null,
     "id": null,
-    "keyword": "domain-model-db",
+    "keyword": "build-identity",
     "kind": null,
     "project": null,
     "status": null,
@@ -14,461 +14,394 @@
     "tags": []
   },
   "graph": ".dev-graph/state/graph.json",
-  "graph_sha256_after": "1cd82231f4a6775211dfce1193abbb3510cfa68c227ddd652c16bd88d6d16472",
-  "graph_sha256_before": "1cd82231f4a6775211dfce1193abbb3510cfa68c227ddd652c16bd88d6d16472",
+  "graph_sha256_after": "9867e16a4ccb61f3db28ad4d2bb55ab9afb5d96ab6c50d707ee8fb670b62387e",
+  "graph_sha256_before": "9867e16a4ccb61f3db28ad4d2bb55ab9afb5d96ab6c50d707ee8fb670b62387e",
   "ok": true,
   "read_only": true,
   "results": [
     {
       "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.1",
-        "linked_at": "2026-07-18T01:43:37Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:31:33Z",
+      "beads_linkage": null,
+      "closed_at": null,
       "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P02"
+        "SYS-BUILD-IDENTITY-P02"
       ],
       "depends_on": [],
       "domain": "documentation",
       "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p01.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P01",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p01.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P01",
       "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
       "tags": [
-        "feat-domain-model-db",
+        "feat-build-identity-deploy-freshness",
         "macro-feature",
-        "data",
-        "requirements-baseline"
+        "documentation",
+        "phase-p01"
       ],
-      "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
+      "title": "要件ベースライン確定 — 稼働ビルドの素性確認 (V6) と deploy 反映鮮度検出 (V7) の要件確定",
       "tracker_binding": "beads"
     },
     {
       "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.2",
-        "linked_at": "2026-07-18T01:43:39Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:31:37Z",
+      "beads_linkage": null,
+      "closed_at": null,
       "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P03"
+        "SYS-BUILD-IDENTITY-P03"
       ],
       "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P01"
-      ],
-      "domain": "data",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p02.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P02",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "architecture-decision"
-      ],
-      "title": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.3",
-        "linked_at": "2026-07-18T01:43:40Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:31:39Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P04"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P02"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p03.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P03",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "design-review"
-      ],
-      "title": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.4",
-        "linked_at": "2026-07-18T01:43:41Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:31:52Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P05"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P03"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p04.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P04",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "test-design"
-      ],
-      "title": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.5",
-        "linked_at": "2026-07-18T01:43:42Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:31:57Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P06"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P04"
-      ],
-      "domain": "backend",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p05.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P05",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "implementation"
-      ],
-      "title": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.6",
-        "linked_at": "2026-07-18T01:43:43Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:02Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P07"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P05"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p06.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P06",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "test-run"
-      ],
-      "title": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.7",
-        "linked_at": "2026-07-18T01:43:44Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:10Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P08"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P06"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p07.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P07",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "acceptance"
-      ],
-      "title": "受入 — goal-spec acceptance 3 項目の確認",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.8",
-        "linked_at": "2026-07-18T01:43:46Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:42Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P09"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P07"
-      ],
-      "domain": "data",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p08.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P08",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "refactoring-migration"
-      ],
-      "title": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.9",
-        "linked_at": "2026-07-18T01:43:47Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:52Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P10"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P08"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p09.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P09",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "quality-assurance"
-      ],
-      "title": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.10",
-        "linked_at": "2026-07-18T01:43:49Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:57Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P11"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P09"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p10.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P10",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "final-review"
-      ],
-      "title": "最終独立レビュー — quality_constraints 10 件の充足判定",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.11",
-        "linked_at": "2026-07-18T01:43:50Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:32:59Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P12"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P10"
-      ],
-      "domain": "quality",
-      "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p11.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P11",
-      "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
-      "tags": [
-        "feat-domain-model-db",
-        "macro-feature",
-        "data",
-        "evidence"
-      ],
-      "title": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
-      "tracker_binding": "beads"
-    },
-    {
-      "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.12",
-        "linked_at": "2026-07-18T01:43:51Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-24T22:33:19Z",
-      "dependents": [
-        "SYS-DOMAIN-MODEL-DB-P13"
-      ],
-      "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P11"
+        "SYS-BUILD-IDENTITY-P01"
       ],
       "domain": "documentation",
       "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p12.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P12",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p02.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P02",
       "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
       "tags": [
-        "feat-domain-model-db",
+        "feat-build-identity-deploy-freshness",
         "macro-feature",
-        "data",
         "documentation",
-        "operations"
+        "phase-p02"
       ],
-      "title": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
+      "title": "アーキテクチャ決定 — commit 識別子の埋込経路・公開読出経路・鮮度判定の所在",
       "tracker_binding": "beads"
     },
     {
       "artifact_kind": "task",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q.13",
-        "linked_at": "2026-07-18T01:43:52Z",
-        "sync_state": "linked"
-      },
-      "closed_at": "2026-07-25T16:06:25Z",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P04"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P02"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p03.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P03",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p03"
+      ],
+      "title": "設計レビュー — 情報露出・deploy 直後の誤検出・CI 依存の 3 リスク検証",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P05"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P03"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p04.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P04",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "title": "テスト設計 — 埋込・公開読出・鮮度検出の実行可能テスト定義",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P06"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P04"
+      ],
+      "domain": "infrastructure",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p05.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P05",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "infrastructure",
+        "phase-p05"
+      ],
+      "title": "実装 — build 時の commit 識別子埋込・認証なし読出経路・鮮度検査 script",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P07"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P05"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p06.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P06",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "title": "テスト実行 — P04 のテスト ID 実行と結果証跡の収集",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P08"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P06"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p07.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P07",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p07"
+      ],
+      "title": "受入判定 — goal-spec acceptance 5 件の実測証跡による判定",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P09"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P07"
+      ],
+      "domain": "backend",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p08.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P08",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "backend",
+        "phase-p08"
+      ],
+      "title": "リファクタリングと移行 — しきい値の単一定数化と既存 check 系列への整列",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P10"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P08"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p09.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P09",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "title": "品質保証 — 露出範囲の非退行と検査の発火性の固定",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P11"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P09"
+      ],
+      "domain": "quality",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p10.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P10",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "quality",
+        "phase-p10"
+      ],
+      "title": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P12"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P10"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p11.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P11",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "title": "証跡固定 — source digest と再実行コマンドの保存",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
+      "dependents": [
+        "SYS-BUILD-IDENTITY-P13"
+      ],
+      "depends_on": [
+        "SYS-BUILD-IDENTITY-P11"
+      ],
+      "domain": "documentation",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p12.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P12",
+      "issue_linkage": null,
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
+      "tags": [
+        "feat-build-identity-deploy-freshness",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "title": "ドキュメントと運用 — 稼働ビルドの確認手順と鮮度警告時の対応手順",
+      "tracker_binding": "beads"
+    },
+    {
+      "artifact_kind": "task",
+      "beads_linkage": null,
+      "closed_at": null,
       "dependents": [],
       "depends_on": [
-        "SYS-DOMAIN-MODEL-DB-P12"
+        "SYS-BUILD-IDENTITY-P12"
       ],
-      "domain": "operations",
+      "domain": "documentation",
       "execution_contexts": [],
-      "feature_package_id": "feature-package/feat-domain-model-db",
-      "file_path": "tasks/feat-domain-model-db/sys-domain-model-db-p13.md",
-      "graph_node_id": "SYS-DOMAIN-MODEL-DB-P13",
+      "feature_package_id": "feature-package/feat-build-identity-deploy-freshness",
+      "file_path": "tasks/feat-build-identity-deploy-freshness/sys-build-identity-p13.md",
+      "graph_node_id": "SYS-BUILD-IDENTITY-P13",
       "issue_linkage": null,
-      "parent_feature": "feat-domain-model-db",
-      "project_id": "feature-package-feat-domain-model-db",
-      "status": "closed",
+      "parent_feature": "feat-build-identity-deploy-freshness",
+      "project_id": "feature-package-feat-build-identity-deploy-freshness",
+      "status": "active",
       "tags": [
-        "feat-domain-model-db",
+        "feat-build-identity-deploy-freshness",
         "macro-feature",
-        "data",
-        "release"
+        "documentation",
+        "phase-p13"
       ],
-      "title": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
       "tracker_binding": "beads"
     },
     {
       "artifact_kind": "feature",
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-u6q",
-        "linked_at": "2026-07-18T01:43:36Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "closed_at": null,
-      "dependents": [
-        "feat-auth-tenancy",
-        "feat-build-pipeline-board",
-        "feat-docs-cms",
-        "feat-feedback-loop",
-        "feat-hearing-intake",
-        "feat-metrics-tracking",
-        "feat-publish-pipeline",
-        "feat-tenant-data-retention",
-        "feat-user-org-admin"
-      ],
-      "depends_on": [
-        "feat-hub-foundation"
-      ],
-      "domain": "data",
+      "dependents": [],
+      "depends_on": [],
+      "domain": "platform",
       "execution_contexts": [],
       "feature_package_id": null,
-      "file_path": "features/feat-domain-model-db.md",
-      "graph_node_id": "feat-domain-model-db",
+      "file_path": "features/feat-build-identity-deploy-freshness.md",
+      "graph_node_id": "feat-build-identity-deploy-freshness",
       "issue_linkage": null,
       "parent_feature": null,
       "project_id": "harness-hub",
       "status": "active",
       "tags": [
-        "macro-feature",
-        "stage-1",
-        "data"
+        "build-identity",
+        "deploy",
+        "observability",
+        "ci",
+        "web-only"
       ],
-      "title": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
+      "title": "稼働ビルドの同一性確認と deploy 反映鮮度の検出",
       "tracker_binding": "beads"
     }
   ]

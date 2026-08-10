@@ -22,9 +22,15 @@
     "check:drift": "node scripts/ci/check-required-package-script.mjs packages/schemas/package.json check:drift && pnpm --filter @harness-hub/schemas run check:drift",
     "check:auth": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:auth-gates && pnpm --filter @harness-hub/hub run check:auth-gates",
     "check:tenant-isolation": "node scripts/ci/check-tenant-isolation-gate.mjs && node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:tenant-isolation && pnpm --filter @harness-hub/hub run test:tenant-isolation",
+    "check:ddl": "node scripts/ci/check-required-package-script.mjs packages/db/package.json check:ddl && pnpm --filter @harness-hub/db run check:ddl",
+    "check:tenant-isolation-coverage": "node scripts/ci/check-required-package-script.mjs packages/db/package.json check:tenant-isolation-coverage && pnpm --filter @harness-hub/db run check:tenant-isolation-coverage",
+    "check:connection-isolation": "node scripts/ci/check-required-package-script.mjs packages/db/package.json check:connection-isolation && pnpm --filter @harness-hub/db run check:connection-isolation",
+    "check:a11y": "pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y",
+    "check:auth-release-contract": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json test:auth-release-contract && pnpm --filter @harness-hub/hub run test:auth-release-contract",
     "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
     "check:client-bundle": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:client-bundle && pnpm --filter @harness-hub/hub run check:client-bundle",
-    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm check:worker-secrets && pnpm check:auth && pnpm lint && pnpm typecheck && pnpm build && pnpm --filter @harness-hub/hub run build:worker && pnpm test && pnpm check:tenant-isolation && pnpm check:secrets && pnpm check:drift && pnpm check:bundle && pnpm check:client-bundle",
+    "check:dynamic-routes": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:dynamic-routes && pnpm --filter @harness-hub/hub run check:dynamic-routes",
+    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm check:worker-secrets && pnpm check:auth && pnpm lint && pnpm typecheck && pnpm build && pnpm --filter @harness-hub/hub run build:worker && pnpm test && pnpm check:tenant-isolation && pnpm check:auth-release-contract && pnpm check:secrets && pnpm check:ddl && pnpm check:tenant-isolation-coverage && pnpm check:connection-isolation && pnpm check:drift && pnpm check:a11y && pnpm check:bundle && pnpm check:client-bundle && pnpm check:dynamic-routes",
     "preinstall": "npx --yes only-allow pnpm"
   },
   "devDependencies": {

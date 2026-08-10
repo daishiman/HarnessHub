@@ -12,8 +12,8 @@ iteration: null
 title: "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない"
 owners: ["daishiman"]
 created_at: "2026-07-21T23:58:50Z"
-updated_at: "2026-07-22T09:30:00Z"
-status: "draft"
+updated_at: "2026-08-03T22:35:57Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-hearing-trace-followups-20260722"]
 resource_scope: ["system-spec/spec-state.json"]

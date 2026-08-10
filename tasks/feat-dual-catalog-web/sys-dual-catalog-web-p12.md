@@ -71,3 +71,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-dual-catalog-web` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## 2026-08-10 文書追補
+
+validator load boundary を `system-spec/`・`specs/`・`architecture/`・`features/`・`tasks/`・`docs/` へ反映し、受領書を追加した。既存の「CWV は計測不能」「catalog nav が無い」という記述は現行 main に合わせて訂正した。

@@ -1,34 +1,40 @@
 {
   "verdict": "PASS",
-  "scope": "feat-task-spec-test-strategy",
-  "graph_revision": 622,
-  "source_graph_digest": "sha256:0c493eef8534ec42644d42de0e49e421793efab3de327febf2e3827d1d952ea5",
+  "scope": "feat-build-identity-deploy-freshness",
+  "graph_revision": 1238,
+  "source_graph_digest": "sha256:efacfc8fa3f5b4900711963f60746a68f24474ae33c3b367ff8e60f3b44d41dc",
   "recomputed_ready_set": {
-    "features": [
-      "feat-task-spec-test-strategy"
-    ],
-    "tasks": [
-      "SYS-TASK-SPEC-TEST-STRATEGY-P01"
-    ]
+    "features": [],
+    "tasks": []
   },
   "active_lease_count": 0,
   "unsafe_pairs": [],
   "checks": {
-    "canonical_parity_digest": true,
-    "scope_exact": true,
-    "ready_feature_exact": true,
-    "ready_task_exact": true,
-    "status_depends_on_parity": true,
-    "dependency_satisfaction": true,
-    "active_lease_exclusion": true,
-    "batch_resource_safe": true,
-    "feature_task_separation": true,
-    "branch_claim_format": true,
-    "digest_stability": true,
-    "read_only": true,
-    "lease_authority": true
+    "beads_linkage_null_for_14_nodes": true,
+    "parity_manifest_excludes_14_nodes_from_nodes_array": true,
+    "parity_manifest_includes_14_nodes_in_graph_node_ids_array": true,
+    "unmapped_reason_distribution_matches_claim": true,
+    "source_graph_digest_matches_canonical_recompute": true,
+    "active_lease_count_zero": true,
+    "no_lease_overlaps_scope_nodes": true,
+    "graph_lease_tracker_before_after_digest_equal": true,
+    "read_only_flag_true": true,
+    "conflict_pairs_empty_and_trivially_correct": true,
+    "no_ready_zero_misreading_in_receipts": true,
+    "dependency_chain_matches_dependency_unsatisfied_cascade": true
+  },
+  "attribution": "ready 0 件は「対象 feature + SYS-BUILD-IDENTITY-P01..P13 の計 14 node が tracker_binding=beads かつ beads_linkage=null (未起票) のため parity manifest の bd 紐付き投影 nodes[] から漏れ、C28/bd-bridge が読める候補が scope 内に存在しない」ことに起因し、「着手可能な作業が存在しない」という意味ではない。起票は sync verb (C03) の責務である。",
+  "discrepancies": [],
+  "evidence": {
+    "graph_beads_linkage": "graph.json を graph_node_id をキーに読み直し、14 node すべて beads_linkage=null / tracker_binding=beads",
+    "parity_manifest_projection": "graph_node_ids[] 437 件には 14 node が含まれ、bd_issue_id 付き投影 nodes[] 357 件には 0 件",
+    "dependency_chain": "P02→[P01] … P13→[P12] の線形依存を graph から実測し unmapped の dependency_unsatisfied 連鎖と一致",
+    "digest_recompute": "build-parity-manifest.py の _canonical_digest と同一式で再計算し sha256:efacfc8fa3f5b4900711963f60746a68f24474ae33c3b367ff8e60f3b44d41dc が一致 (値の転記照合ではない)",
+    "lease": "git common-dir の dev-graph/leases.json (52 lease: released 45 / expired 7 / active 0)、scope 14 node に紐付く lease 0 件",
+    "read_only": "execution.json の graph/lease/tracker の before==after が全て真、read_only=true"
   },
   "claim_executed": false,
-  "verified_at": "2026-07-25T04:29:31Z",
-  "verifier": "C17/dev-graph-parallel-safety-verifier"
+  "verified_at": "2026-08-07T13:20:00Z",
+  "verifier": "C17/dev-graph-parallel-safety-verifier",
+  "verification_mode": "subagent-fork"
 }

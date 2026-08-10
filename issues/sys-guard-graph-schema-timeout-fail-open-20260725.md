@@ -9,11 +9,11 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "guard-graph-schema の Bash 破壊操作枝が決定に無関係な graph 全検証を挟み hook timeout で fail-open する"
+title: "dev-graph: guard-graph-schema の Bash 破壊操作枝が判定無関係な graph 全検証を挟み hook timeout で fail-open する"
 owners: ["daishiman"]
 created_at: "2026-07-25T03:05:00Z"
-updated_at: "2026-07-26T05:56:00Z"
-status: "draft"
+updated_at: "2026-07-28T04:10:34Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/dev-graph/hooks/guard-graph-schema.py","plugins/dev-graph/scripts/build-repo-config.py","plugins/dev-graph/scripts/build-graph-store.py","plugins/dev-graph/skills/run-dev-graph-init/SKILL.md"]
