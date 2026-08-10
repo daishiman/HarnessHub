@@ -99,6 +99,9 @@ implementation_readiness: {"checked_at":"2026-08-10T00:00:00Z","missing_sections
 - 配置・文書粒度: artifact placement PASS。doc line limit は 664 文書、上限 300 行、違反 0。
 - content review: changed-only は proposal を behavior change と扱わず `no target skill` で PASS。
 - focused test: rubric proposal 生成・集計の 2 suite が 80 passed。
+- secret scan: `@harness-hub/inspection` の対象 817 files、findings 0、1 test passed。
+- repository build / typecheck: `pnpm -r build` と `pnpm -r typecheck` が終了コード 0 で PASS。build には `jose` の Edge Runtime 圧縮 API に関する既存 warning が出たが、生成・型検査は完了。
+- worktree safety: clobber mtime、cross-worktree ref update、desync の 3 guard が PASS。並列実行時に一度だけ `index.lock` 競合が発生したため、desync guard を単独再実行して repository 不整合でないことを確認。
 - system-spec 入力健全性: coverage matrix `--require-complete --require-foundation` と source citation が PASS。legacy state への書込は writer が意図どおり拒否し、生成章への一時差分は破棄して現行正本を維持。
 - `git diff --check`: whitespace error 0。
 
