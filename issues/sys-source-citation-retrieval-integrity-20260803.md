@@ -12,16 +12,16 @@ iteration: null
 title: "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す"
 owners: ["daishiman"]
 created_at: "2026-08-03T08:28:16Z"
-updated_at: "2026-08-04T02:12:33Z"
+updated_at: "2026-08-10T00:00:00Z"
 status: "active"
 depends_on: []
 related_nodes: []
-resource_scope: ["plugins/system-spec-harness/scripts/validate-source-citation.py","plugins/system-spec-harness/skills/run-system-spec-doc-fetch/","plugins/system-spec-harness/skills/run-system-spec-compile/","plugins/system-spec-harness/schemas/fetched-references.schema.json","plugins/system-spec-harness/tests/","docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md","issues/sys-source-citation-retrieval-integrity-20260803.md"]
+resource_scope: ["plugins/system-spec-harness/scripts/validate-source-citation.py","plugins/system-spec-harness/skills/run-system-spec-doc-fetch/","plugins/system-spec-harness/skills/run-system-spec-compile/","plugins/system-spec-harness/schemas/fetched-references.schema.json","plugins/system-spec-harness/tests/","scripts/lint-artifact-placement.py","docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md","issues/sys-source-citation-retrieval-integrity-20260803.md"]
 purpose: "モデル記憶で作られた citation と将来日時を形式だけで通す C13 の穴を塞ぎ、仕様書の出典を再検証可能にする"
-goal: "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる"
-scope_in: ["validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証","R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期","fixture と回帰テストによる C19 r2 捏造パターンの固定"]
+goal: "各 citation が有効な時刻と repo 内の取得証跡 SHA-256 に束縛され、捏造・改変・取り違えを決定論的に exit 非0で検出できる。かつ証跡の置き場所そのものが配置 lint によって守られている"
+scope_in: ["validate-source-citation.py の future/不正時刻・同一固定時刻・証跡 path/digest 検証","R2/R3/C08/C03 の fetched-references 契約・スキーマ・runbook 同期","fixture と回帰テストによる C19 r2 捏造パターンの固定","lint-artifact-placement.py の system-spec allowlist を名前一致の素通りから中身検査へ厳格化"]
 scope_out: ["WebFetch 実行自体を強制する live-trial fixture の改修 (HarnessHub-eiky が所有)","公式 host の意味的な鮮度判定 (既存 C08 の責務)","HarnessHub 製品の API、DB schema、認証認可、UI、Cloudflare 配置の変更"]
-acceptance: ["retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する","複数 record の retrieved_at 完全一致を exit 非0で検出する","各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する","20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する"]
+acceptance: ["retrieved_at/latest_checked_at の未来・不正形式を exit 非0で拒否する","複数 record の retrieved_at 完全一致を exit 非0で検出する","各 record の repo 内 evidence_ref と evidence_sha256 を実ファイルに突合する","20260804T003000Z-f84o-c19-r2 の未来日時・固定時刻捏造を回帰テストで失敗に固定する","system-spec/retrieval-evidence/ 直下の非 JSON とネストしたディレクトリを exit 非0 で検出し self-test で固定する"]
 architecture_refs: []
 parent_feature: null
 feature_package_id: null
