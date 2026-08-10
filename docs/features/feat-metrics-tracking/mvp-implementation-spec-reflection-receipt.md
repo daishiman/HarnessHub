@@ -34,7 +34,7 @@ database / frontend / ui-ux セル、`completeness-report.json`）。主な契�
 ## 3. 反映先
 
 - `system-spec/`: backend / database / frontend / ui-ux / security / maintenance-ops / `spec-state.json`
-- `specs/`: MVP addendum（本 feature と build-pipeline の実装索引）
+- `docs/features/metrics-build-pipeline-mvp-addendum.md`: MVP 実装索引
 - `architecture/`: data / backend / frontend への差分追記
 - `features/`: macro feature の MVP 着地注記
 - `tasks/`: P01〜P13 projection を package digest `85adf596…` へ同期

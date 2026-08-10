@@ -72,7 +72,7 @@ Harness Hub の確定要件を Dev Graph から参照するための集約入口
 ## Studio 拡張 MVP 追補 (2026-08-10)
 
 Metrics Tracking と Build Pipeline Board の MVP 実装索引は
-[metrics-build-pipeline MVP addendum](./harness-hub-metrics-build-pipeline-mvp-addendum.md) を参照する。
+[metrics-build-pipeline MVP addendum](../docs/features/metrics-build-pipeline-mvp-addendum.md) を参照する。
 詳細契約は system-spec 各章と各 feature ADR が正本。
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。

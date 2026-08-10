@@ -31,7 +31,7 @@ security / ui-ux の正本を更新する必要がある。
 ## 3. 反映先
 
 - `system-spec/`: backend / database / frontend / ui-ux / security と `spec-state.json`
-- `specs/`: MVP addendum（metrics と共通の実装索引）
+- `docs/features/metrics-build-pipeline-mvp-addendum.md`: MVP 実装索引
 - `architecture/`: data / backend / frontend への差分追記
 - `features/` / `tasks/` / `docs/features/feat-build-pipeline-board/`
 

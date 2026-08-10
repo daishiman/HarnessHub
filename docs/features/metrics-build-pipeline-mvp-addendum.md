@@ -44,8 +44,8 @@ canonical alias は後続 task。shell は実装済み path だけを露出す�
 
 ## 4. 受領書
 
-- [metrics 仕様反映受領書](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)
-- [build-pipeline 仕様反映受領書](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)
+- [metrics 仕様反映受領書](./feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)
+- [build-pipeline 仕様反映受領書](./feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)
 
 ## 5. 上位正本への trace
 
