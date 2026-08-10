@@ -12,7 +12,7 @@ iteration: null
 title: "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:36:11Z"
-updated_at: "2026-08-04T07:56:17Z"
+updated_at: "2026-08-10T01:04:30Z"
 status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
@@ -42,9 +42,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-42g","linked_at":"2026-07-28T00:24:44.696Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-shared-layers-registry-baseline-drift-20260724","linked_at":"2026-08-10T01:04:30Z","merge_commit_sha":null,"merged_at":null,"pr_number":668,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/668"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-04T07:56:17Z","evidence_refs":["docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-08-10T00:00:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-28T00:24:44.697Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -110,3 +110,9 @@ issue 文書も存在しないため、canonical graph から課題へ到達で�
 
 - コマンド/テスト: `upsert-node.py --dry-run`、`upsert-node.py`、`bd-bridge.py --op orphan-audit --scan-refs`
 - 証跡 path: `issues/sys-orphan-external-ref-backlog-disposition-20260726.md`
+
+## 解決結果 (2026-08-10)
+
+- `requirements-baseline.md` の旧 5 gate 列挙を、G1〜G14 登録簿への参照へ置き換えた。
+- canonical node の復元後も Beads linkage を保持し、実装結果を本 issue から追跡可能にした。
+- gate 対応表、仕様・設計影響、検証結果は [仕様反映受領書](../docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md) を正とする。
