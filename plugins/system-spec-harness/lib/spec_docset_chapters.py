@@ -281,19 +281,9 @@ def _render_chapter_application(spec: dict, cat_id: str) -> list[str]:
         )
         applications = qa.get("design_applications")
         if not isinstance(applications, list) or not applications:
-            if qa.get("legacy_exempt") is True:
-                # design-app contract 制定前の entry。遡及適用は不能なので
-                # 「補完せよ」という実行不能な指示ではなく、免除の事実と
-                # その根拠 (migrate-legacy の記録) を明示する。
-                lines.append(
-                    "- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の "
-                    "確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration"
-                    f"。理由: {qa.get('legacy_exempt_reason', '(理由欠落)')})"
-                )
-            else:
-                lines.append(
-                    "- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)"
-                )
+            lines.append(
+                "- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)"
+            )
             continue
         for application in applications:
             if not isinstance(application, dict):

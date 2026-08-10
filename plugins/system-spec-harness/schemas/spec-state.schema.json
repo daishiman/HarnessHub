@@ -37,24 +37,7 @@
     "decisions": {"type": "array"},
     "knowledge_candidates": {"type": "array"},
     "hearing_progress": {"type": "object"},
-    "excluded_categories": {"type": "object"},
-    "legacy_migration": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "from_schema_version", "to_schema_version", "reason"],
-        "properties": {
-          "id": {"type": "string", "minLength": 1},
-          "from_schema_version": {"const": "1.0"},
-          "to_schema_version": {"const": "1.1"},
-          "reason": {"type": "string", "minLength": 1},
-          "exempted_qa_ids": {"type": "array", "items": {"type": "string"}},
-          "exempted_qa_count": {"type": "integer", "minimum": 0},
-          "preserved_confirmed_cells": {"type": "integer", "minimum": 0}
-        },
-        "additionalProperties": false
-      }
-    }
+    "excluded_categories": {"type": "object"}
   },
   "oneOf": [
     {
@@ -79,8 +62,6 @@
         "answer": {"type": "string"},
         "source": {"type": ["object", "string"]},
         "approval_id": {"type": "string", "minLength": 1},
-        "legacy_exempt": {"const": true},
-        "legacy_exempt_reason": {"type": "string", "minLength": 1},
         "design_applications": {
           "type": "array",
           "minItems": 1,

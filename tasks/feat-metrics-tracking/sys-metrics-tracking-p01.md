@@ -13,7 +13,7 @@ title: "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボ�
 owners: ["daishiman"]
 created_at: "2026-07-19T14:16:35Z"
 updated_at: "2026-07-28T10:16:38Z"
-status: "closed"
+status: "active"
 depends_on: []
 related_nodes: ["feat-metrics-tracking","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-frontend"]
 resource_scope: ["docs/features/feat-metrics-tracking/requirements-baseline.md"]

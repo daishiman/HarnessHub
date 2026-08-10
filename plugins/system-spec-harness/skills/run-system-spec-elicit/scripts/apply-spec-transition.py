@@ -53,7 +53,6 @@ from state_transition_matrix import (
     count_unresolved,
     derive_aggregate,
     init_state,
-    migrate_legacy_state,
     next_unresolved_question,
     recompute_aggregates,
     run_chunk,
@@ -106,13 +105,6 @@ def main(argv: list[str]) -> int:
     init.add_argument("--taxonomy", required=True)
     init.add_argument("--state", help="bootstrap済みstate (foundation/decisionsを保持)")
     init.add_argument("--out")
-    migrate = sub.add_parser(
-        "migrate-legacy", help="legacy schema 1.0 を確定セル保全のまま 1.1 へ移行"
-    )
-    migrate.add_argument("--state", required=True)
-    migrate.add_argument("--reason", required=True, help="移行理由 (監査記録に残る)")
-    migrate.add_argument("--migration-id", required=True, help="移行記録 ID (例: mig-001)")
-    migrate.add_argument("--out")
     add_category_parser = sub.add_parser("add-category", help="カテゴリ軸を 1 件拡張")
     add_category_parser.add_argument("--state", required=True)
     add_category_parser.add_argument("--category", required=True, help="category JSON文字列またはファイル")
@@ -151,12 +143,6 @@ def main(argv: list[str]) -> int:
             _emit(bootstrap_state(), args.out)
         elif args.cmd == "init":
             _emit(init_state(load_json(args.taxonomy), load_json(args.state) if args.state else None), args.out)
-        elif args.cmd == "migrate-legacy":
-            # legacy 1.0 の唯一の脱出口。_require_writable_state を通らない
-            # のは、まさにその gate を満たすための op だからである。
-            state = load_json(args.state)
-            migrate_legacy_state(state, args.reason, args.migration_id)
-            _emit(state, args.out or args.state)
         else:
             state = load_json(args.state)
             _require_writable_state(state)

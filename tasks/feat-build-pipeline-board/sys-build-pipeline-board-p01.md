@@ -13,7 +13,7 @@ title: "構築パイプラインボード要件ベースライン確定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:10:56Z"
 updated_at: "2026-07-28T10:16:42Z"
-status: "closed"
+status: "active"
 depends_on: []
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-build-pipeline-board/requirements-baseline.md"]

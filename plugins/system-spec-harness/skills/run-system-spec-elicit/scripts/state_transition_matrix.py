@@ -16,13 +16,6 @@ CATEGORY_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 APPLICATION_STATES = {"applied", "not_applicable"}
 DESIGN_APPLICATION_CONTRACT_VERSION = "1.0"
 CURRENT_STATE_SCHEMA_VERSION = "1.1"
-LEGACY_STATE_SCHEMA_VERSION = "1.0"
-LEGACY_EXEMPT_KEY = "legacy_exempt"
-
-
-def is_legacy_exempt(entry: object) -> bool:
-    """design-app contract 制定前に記録された qa entry かを判定する。"""
-    return isinstance(entry, dict) and entry.get(LEGACY_EXEMPT_KEY) is True
 
 
 def normalize_design_applications(raw: object) -> list[dict]:
@@ -135,8 +128,7 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
     ):
         raise TransitionError(
             "init --state は matrix 未着手の bootstrap state 専用。"
-            "確定セルを含む state の再初期化は R4-reopen を迂回するため拒否 "
-            "(legacy 1.0 の schema 移行だけが必要なら migrate-legacy を使う)"
+            "確定セルを含む state の再初期化は R4-reopen を迂回するため拒否"
         )
     if existing_state is None:
         state = bootstrap_state()
@@ -180,74 +172,6 @@ def init_state(taxonomy: dict, existing_state: dict | None = None) -> dict:
     state.setdefault("decisions", [])
     state.setdefault("knowledge_candidates", [])
     state["hearing_progress"] = {"loop_count": 0, "next_question": None, "complete": False}
-    recompute_aggregates(state)
-    _refresh_hearing_progress(state)
-    return state
-
-
-def migrate_legacy_state(state: dict, reason: str, migration_id: str) -> dict:
-    """legacy schema 1.0 を確定セルを保全したまま 1.1 へ移行する。
-
-    `init --state` の確定セル拒否は schema 1.1 の R4-reopen 迂回防止が目的だが、
-    legacy 1.0 にも一律で効くため「移行の入口が移行対象を拒否する」到達不能状態を
-    生んでいた。matrix を巻き戻す migration は 60 セル分の確定根拠を破棄するので、
-    ここでは matrix に触れず、contract 制定前の qa entry を `legacy_exempt` として
-    明示的に印付けする。validator は既に schema 1.0 全体を暗黙免除していたので、
-    検証の厳しさは不変で、暗黙の免除が監査可能な記録に変わるだけである。移行後の
-    新規 entry には 1.1 の design_applications 契約が完全に効く。
-    """
-    if not isinstance(state, dict):
-        raise TransitionError("migrate-legacy: state は object 必須")
-    schema_version = state.get("schema_version")
-    if schema_version == CURRENT_STATE_SCHEMA_VERSION:
-        raise TransitionError(
-            "migrate-legacy: state は既に schema 1.1。移行は 1 度だけ実行できる"
-        )
-    if schema_version != LEGACY_STATE_SCHEMA_VERSION:
-        raise TransitionError(
-            f"migrate-legacy: schema_version={schema_version!r} は exact 1.0 legacy 必須"
-        )
-    if state.get("design_application_contract_version") is not None:
-        raise TransitionError(
-            "migrate-legacy: legacy 1.0 に design_application_contract_version があるのは"
-            "契約違反の混成 state。手当てせずに移行しない"
-        )
-    if not isinstance(reason, str) or not reason.strip():
-        raise TransitionError("migrate-legacy: reason は非空文字列必須")
-    if not isinstance(migration_id, str) or not migration_id.strip():
-        raise TransitionError("migrate-legacy: migration_id は非空文字列必須")
-    reason, migration_id = reason.strip(), migration_id.strip()
-
-    exempted: list[str] = []
-    for entry in state.get("qa_log", []):
-        if not isinstance(entry, dict):
-            raise TransitionError("migrate-legacy: qa_log entry は object 必須")
-        if entry.get("design_applications"):
-            # 既に契約適合な entry は免除しない (免除の過剰適用を防ぐ)。
-            normalize_design_applications(entry["design_applications"])
-            continue
-        entry[LEGACY_EXEMPT_KEY] = True
-        entry["legacy_exempt_reason"] = reason
-        exempted.append(entry.get("id", "<unknown>"))
-
-    state["schema_version"] = CURRENT_STATE_SCHEMA_VERSION
-    state["design_application_contract_version"] = DESIGN_APPLICATION_CONTRACT_VERSION
-    state.setdefault("legacy_migration", []).append(
-        {
-            "id": migration_id,
-            "from_schema_version": LEGACY_STATE_SCHEMA_VERSION,
-            "to_schema_version": CURRENT_STATE_SCHEMA_VERSION,
-            "reason": reason,
-            "exempted_qa_ids": exempted,
-            "exempted_qa_count": len(exempted),
-            "preserved_confirmed_cells": sum(
-                isinstance(cell, dict) and cell.get("state") == "確定"
-                for row in state.get("matrix", {}).values()
-                if isinstance(row, dict)
-                for cell in row.values()
-            ),
-        }
-    )
     recompute_aggregates(state)
     _refresh_hearing_progress(state)
     return state
@@ -404,14 +328,6 @@ def apply_turn(state: dict, turn: dict) -> None:
             if existing is None:
                 raise TransitionError(
                     f"schema 1.1 の confirm は qa_log entry を参照する必要がある: {qa_ref}"
-                )
-            if is_legacy_exempt(existing):
-                # legacy_exempt は移行時点で既に確定済みだった履歴の検証専用。
-                # reopen 後や別セルの新規 confirm で再利用を許すと、現行の
-                # design_applications 契約を永久に迂回できるため fail-closed で拒否する。
-                raise TransitionError(
-                    "schema 1.1 の confirm で legacy_exempt QA は再利用できない"
-                    f" (履歴保全専用): {qa_ref}"
                 )
             normalize_design_applications(existing.get("design_applications"))
     if qa_id and not has_entry(state["qa_log"], qa_id):
