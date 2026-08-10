@@ -140,7 +140,6 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 **`ci.yml` の品質ゲート（qa-038【2】の required status checks に対応）**
 
 > **正本は [docs/shared-layers.md](shared-layers.md) の「CI 品質ゲート登録簿 (G1〜G14)」** (2026-08-04 追記, `HarnessHub-yhc3`)。下表はデプロイ経路の文脈で参照するための要約であり、fail 条件・実行段・根拠 QA・local 入口を含む完全な定義は登録簿側にある。**ゲートを増減するときは登録簿を先に改訂し、本表はその写しとして追随させる** (以前は本表が G12 を、登録簿が G14 を落とすという双方向のドリフトが起きていた)。
-
 | # | ゲート | 内容 |
 |---|---|---|
 | G1 | pnpm 強制 | corepack で pin + `packageManager` 検証 + `package-lock.json` / `npm-shrinkwrap.json` / `yarn.lock` / `bun.lockb` の混入検出 |
