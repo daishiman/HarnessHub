@@ -5,7 +5,7 @@ graph_node_id: issue-production-smoke-coverage-gaps-20260808
 beads_ids: [HarnessHub-p0lr, HarnessHub-3sjj.13, HarnessHub-1vb.13, HarnessHub-9wb.13, HarnessHub-pf5o, HarnessHub-stmx]
 dev_graph_node_id: issue-production-smoke-coverage-gaps-20260808
 spec_impact: reflected
-reviewed_at: "2026-08-09"
+reviewed_at: "2026-08-10"
 ---
 
 # production coverage smoke 仕様反映受領書
@@ -45,12 +45,17 @@ reviewed_at: "2026-08-09"
 
 main の verification-tier 統合 (`qa-217`) が testing-qa.web の現 qa_ref を差し替えた結果、章本文から `qa-205` (production coverage smoke) が落ちていた。統合 entry の設計ルール（基礎契約を丸ごと引き継ぐ）に従い、`qa-217` へ production coverage smoke 節を復元し、`system-spec/testing-qa.md` と `system-spec/spec-state.json` の双方へ反映した。`specs/` 追補と `architecture/harness-hub-testing-qa.md` は維持済み。
 
+## マージ後 reconciliation (2026-08-10)
+
+実装 PR #681 (`35a10b87`) と仕様・証拠 PR #682 (`9808ecd1`) が `main` へマージ済みで、production run `31253674292` の S1〜S8 / F1〜F5 / D1〜D6 と cleanup 残存行 0 も正本へ記録済みであることを再確認した。
+
+今回の reconciliation は製品仕様や設計を追加変更しない。`system-spec/testing-qa.md` qa-217、`specs/harness-hub-production-coverage-smoke-addendum.md`、`architecture/harness-hub-testing-qa.md` の既反映契約を維持し、default branch への証拠保存を完了条件としていた `HarnessHub-p0lr`、`HarnessHub-3sjj.13`、`HarnessHub-9wb.13` の durable state だけを同期する。機械証跡は `production-coverage-p13-reconciliation-evidence.json` に記録した。
+
 ## 残課題
 
 - `HarnessHub-stmx`: provider-admin 越境の edge 404 / route 監査契約を統一する。
 - `HarnessHub-pf5o`: publish smoke を Device Flow 化・secret 台帳登録・廃止のどれにするか決着し、CI 結線と運用記録を一致させる。
-- `HarnessHub-iys4`: system-spec foundation の U1〜U9 source-index を、原発言の真正な根拠から復旧する。
-- `HarnessHub-3sjj.13` / `HarnessHub-9wb.13` は production evidence の default-branch reconciliation 後に close する。`HarnessHub-1vb.13` は `HarnessHub-stmx` の越境監査契約が残るため in_progress を維持する。
+- `HarnessHub-1vb.13` は `HarnessHub-stmx` の越境監査契約が残るため in_progress を維持する。
 
 ## 500 行制約
 

@@ -12,8 +12,8 @@ iteration: null
 title: "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:11:41Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-10T02:43:42Z"
+status: "done"
 depends_on: ["SYS-DOCS-CMS-P12"]
 related_nodes: ["feat-docs-cms","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/api/v1/docs/","apps/hub/src/features/docs-cms/ai-job-adapter/","docs/features/feat-docs-cms/release-notes.md","packages/schemas/docs-cms/"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-10T02:43:42Z","evidence_refs":["docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json"],"policy":"manual","reconciled_at":"2026-08-10T02:43:42Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -72,3 +72,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
 - 2026-08-08 production smoke: main `35a10b87` / hub-ci run `31253674292` で D1〜D6 と cleanup 残存行 0 が SUCCESS。release notes と default branch への証拠保存後に durable done とする。
+- 2026-08-10 reconciliation: PR #681 / #682 の main merge と default-branch 証拠保存を確認し、`docs/features/feat-post-signin-scope-routing/production-coverage-p13-reconciliation-evidence.json` が本 task を PASS として被覆するため durable done とする。

@@ -105,3 +105,4 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 本番 Device Flow token で feedback を作成し、`feedback_response` pull / complete、AI 応答書戻し、`open → in_progress → resolved` を 1 run で確認する。
 - session-only read は route と同じ service/repository で検査し、Bearer token が `credential_not_allowed` になることは HTTP で実測する。
 - main `35a10b87` / hub-ci run `31253674292` で F1〜F5 と cleanup 残存行 0 を確認した。provider-admin cross-tenant pull + audit は edge 404 / 監査 0 のため、正規契約を `HarnessHub-stmx` で統一するまで P13 は未完了とする。
+- PR #681 / #682 の default-branch reconciliation は 2026-08-10 に確認済み。`HarnessHub-stmx` が open のため `SYS-FEEDBACK-LOOP-P13` は in_progress を維持する。
