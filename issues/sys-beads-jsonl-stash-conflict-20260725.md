@@ -12,8 +12,8 @@ iteration: null
 title: ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:35:37Z"
-updated_at: "2026-07-25T02:35:37Z"
-status: "draft"
+updated_at: "2026-08-10T02:43:42Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
 resource_scope: ["issues/sys-beads-jsonl-stash-conflict-20260725.md","docs/beads-operations-runbook.md",".beads/README.md",".beads/interactions.jsonl"]
@@ -29,21 +29,21 @@ phase_ref: null
 file_path: "issues/sys-beads-jsonl-stash-conflict-20260725.md"
 template_id: "issue"
 template_version: "1.0.0"
-confirmation_status: "draft"
-evaluation_status: "pending"
-confirmation_evidence: {"evaluated_digest":null,"evaluator":null,"evidence_ref":null}
+confirmation_status: "confirmed"
+evaluation_status: "pass"
+confirmation_evidence: {"evaluated_digest":"1935c7898ff6b6b3969a3c2aed5e82bc75150c4d6c9acfa85c13e31a4fce493f","evaluator":"2026-08-08 measured: interactions.jsonl 315 records parse OK, duplicate id 0, conflict marker 0, runbook and bd-bridge guidance present, doc-line gate PASS","evidence_ref":"docs/beads-operations-runbook.md"}
 source_lineage: {"imported_at":"2026-07-25T02:35:37Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.95
 classification_reason: "2026-07-25 の stash pop 中断で発生した .beads/interactions.jsonl コンフリクトの解消と、再発防止のための運用 runbook 整備を追跡する issue"
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-beads-jsonl-stash-conflict-20260725.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-su8y","linked_at":"2026-08-04T03:57:52.184479Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-08T08:41:07Z","evidence_refs":["docs/beads-operations-runbook.md",".beads/README.md","docs/features/feat-dev-pipeline-improvement/su8y-beads-jsonl-reconciliation-spec-reflection-receipt.md"],"policy":"manual","reconciled_at":"2026-08-10T02:43:42Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T02:35:37Z","missing_sections":[],"status":"complete"}
 ---
 

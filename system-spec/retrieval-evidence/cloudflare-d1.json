@@ -1,9 +1,25 @@
 {
-  "target_id": "cloudflare-d1",
-  "source_url": "https://developers.cloudflare.com/d1/platform/pricing/",
-  "retrieved_at": "2026-08-04T00:40:06Z",
-  "http_status": 200,
-  "content_bytes": 121173,
-  "content_sha256": "b34c4cad2aa322228d0e70ddd86234995ced4fb55b773b8e605461302418cefa",
-  "body_summary": "Pricing · Cloudflare D1 docs"
+  "allowed_domains": [
+    "developers.cloudflare.com"
+  ],
+  "findings": [
+    "Workers Free: rows read 5M/日 / rows written 100K/日 / storage 5GB",
+    "Workers Paid: rows read 月 25B まで込 (超過 $0.001/M) / rows written 月 50M まで込 (超過 $1.00/M) / storage 5GB まで込 (超過 $0.75/GB-month)",
+    "database 1 個あたり storage 上限 10GB で、これ以上は引上げ不可。水平分割 (per-tenant DB) 前提の設計",
+    "rows read は走査行数。SELECT * は行サイズによらず全行を計上する",
+    "index は書込時に追加の written row を生むが、読取削減がほぼ常に上回る",
+    "Worker 1 invocation あたり同時接続は 6 まで。SQL statement 長は 100KB まで",
+    "各 query の meta に rows_read / rows_written が返る。metrics 保持は直近 31 日"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "Cloudflare D1 pricing rows read written storage limits",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://developers.cloudflare.com/d1/platform/pricing/",
+    "https://developers.cloudflare.com/d1/platform/limits/",
+    "https://developers.cloudflare.com/d1/observability/billing/",
+    "https://developers.cloudflare.com/d1/reference/faq/"
+  ],
+  "target_id": "cloudflare-d1"
 }

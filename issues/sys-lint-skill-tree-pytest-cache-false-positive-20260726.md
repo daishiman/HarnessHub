@@ -9,10 +9,10 @@ priority: "medium"
 start_date: null
 target_date: null
 iteration: null
-title: "lint-skill-tree.py の第13条が .pytest_cache を除外せず、per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる"
+title: "lint-skill-tree.py の第13条が .pytest_cache を除外せず per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-26T01:20:00Z"
-updated_at: "2026-07-29T12:15:39.081186Z"
+updated_at: "2026-07-30T01:41:44Z"
 status: "closed"
 depends_on: []
 related_nodes: []

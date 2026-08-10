@@ -1,0 +1,60 @@
+{
+  "skill": "run-dev-graph-system-spec",
+  "updated_at": "2026-08-08T11:51:21Z",
+  "loop": 1,
+  "max_loops": 5,
+  "registered_this_run": [],
+  "status": "blocked",
+  "checklist": [
+    {
+      "id": "system_spec_root",
+      "status": "PASS",
+      "evidence": "C24 resolve-repo-context.py --mode write の receipt: repo_root が content_roots.repository と一致 (repository_id local:sha256:ffea7622…, worktree wt_e0238a67ced6df05)"
+    },
+    {
+      "id": "harness_preflight",
+      "status": "PASS",
+      "evidence": "plugin.json name=system-spec-harness version=0.1.0 (>=0.1.0 <1.0.0 を満たす)。package-contract.json#entry_points.skills に required 4 entry point が全て存在"
+    },
+    {
+      "id": "delegate_skills_only",
+      "status": "PASS",
+      "evidence": "run-system-spec-elicit / run-system-spec-doc-fetch / run-system-spec-compile / assign-system-spec-completeness-evaluator を Skill ツールで起動 (evaluator は差し戻し対応で計 3 回)"
+    },
+    {
+      "id": "gates_pass",
+      "status": "FAIL",
+      "evidence": "coverage (--require-complete --require-foundation) exit 0 / source-citation exit 0 / knowledge-graph 4 profile exit 0 / compile 受入テスト 46 passed。しかし evaluator verdict=FAIL (matrix_coverage FAIL: qa source.sha256 の自己参照 provenance) かつ aggregate-completeness.py --report --fork-ledger --session が exit 1 (3 receipt の response_sha256 が台帳に不在=hook が AUDIT_VERDICT marker を観測できず audit_verdict=null で記録)"
+    },
+    {
+      "id": "c02_lineage",
+      "status": "BLOCKED",
+      "evidence": "evaluator PASS と canonical report gate exit 0 が揃うまで C02 import へ進まない契約 (SKILL.md『evaluator PASS と confirmed の両方が揃わない章を C02 へ登録しない』/ task.md 第 2 段前提) により未実施。登録 node 0 件"
+    },
+    {
+      "id": "validate_source_digest",
+      "status": "VACUOUS",
+      "evidence": "registered_this_run が空のため exit 0 でも本 run の登録 node を検査していない (検査対象 0 件)"
+    },
+    {
+      "id": "validate_evidence_refs",
+      "status": "VACUOUS",
+      "evidence": "registered_this_run が空のため exit 0 でも本 run の登録 node を検査していない (検査対象 0 件)"
+    },
+    {
+      "id": "no_duplicate_logic",
+      "status": "PASS",
+      "evidence": "陽性対照つき対照実験: harness 側で N>0 件ヒットする 10 検索語 (apply_cell_op=4 / hearing_progress=45 / set-foundation=17 / qa-foundation-u=26 / compile_docset=3 / spec_cells=27 / 00-requirements-definition=20 / validate-coverage-matrix=87 / evidence_sha256=32 / official_host=51) を plugins/dev-graph/skills/ と plugins/dev-graph/scripts/ へ適用し全て 0 件"
+    }
+  ],
+  "blockers": [
+    "evaluator (C05) verdict=FAIL。high finding: 確定セル参照 qa entry の source.sha256 が引用元原文ではなく entry 自身の answer の digest (自己参照 provenance)",
+    "aggregate-completeness.py --report --fork-ledger --session が exit 1。第 3 ラウンドの同期 fork 3 件が台帳へ audit_verdict=null で記録され、receipt の response_sha256 が台帳に接地しない (hook 側の AUDIT_VERDICT marker 抽出が不安定)",
+    "上記 2 点が揃わないため C02 import (第 2 段) を実行できず、登録 node 0 件で status=FAIL"
+  ],
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 0,
+    "registered_dangling": [],
+    "existing_dangling": []
+  }
+}

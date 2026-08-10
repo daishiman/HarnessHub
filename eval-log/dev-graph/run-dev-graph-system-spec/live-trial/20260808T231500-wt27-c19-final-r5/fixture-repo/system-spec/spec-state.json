@@ -1,0 +1,894 @@
+{
+  "schema_version": "1.0",
+  "categories": [
+    {
+      "id": "database",
+      "label": "データベース"
+    },
+    {
+      "id": "auth",
+      "label": "認証(ログイン)"
+    },
+    {
+      "id": "ui-ux",
+      "label": "UI-UX"
+    },
+    {
+      "id": "security",
+      "label": "セキュリティ"
+    },
+    {
+      "id": "infrastructure",
+      "label": "インフラ"
+    },
+    {
+      "id": "backend",
+      "label": "バックエンド"
+    },
+    {
+      "id": "frontend",
+      "label": "フロントエンド"
+    },
+    {
+      "id": "maintenance-ops",
+      "label": "保守運用管理"
+    }
+  ],
+  "platforms": [
+    "web",
+    "mobile",
+    "tablet",
+    "desktop-windows",
+    "desktop-linux",
+    "desktop-macos"
+  ],
+  "matrix": {
+    "database": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-database-web",
+        "serves_goals": [
+          "G1",
+          "G3",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "auth": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-auth-web",
+        "serves_goals": [
+          "G2"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "ui-ux": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-ui-ux-web",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "security": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-security-web",
+        "serves_goals": [
+          "G1",
+          "G2"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "infrastructure": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-infrastructure-web",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "backend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-backend-web",
+        "serves_goals": [
+          "G2",
+          "G3"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "frontend": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-frontend-web",
+        "serves_goals": [
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    },
+    "maintenance-ops": {
+      "web": {
+        "state": "確定",
+        "qa_ref": "qa-maintenance-ops-web",
+        "serves_goals": [
+          "G3",
+          "G4"
+        ]
+      },
+      "mobile": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、モバイル向け成果物を作らないため"
+      },
+      "tablet": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、タブレット向け成果物を作らないため"
+      },
+      "desktop-windows": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-linux": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      },
+      "desktop-macos": {
+        "state": "対象外",
+        "reason": "本システムはクライアント実装を含まず、デスクトップアプリ成果物を作らないため"
+      }
+    }
+  },
+  "qa_log": [
+    {
+      "id": "qa-foundation-u1",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U1 本質的目的 (essential_purpose)」 に記載された本質的目的は何か",
+      "answer": "自分の TODO を、いかなる外部サービスにもデータを渡さずに、手元の 1 プロセスだけで\n管理・自動化できる状態にする。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U1 本質的目的 (essential_purpose)",
+        "sha256": "834e466ed3908b3e0e9347f6f1777cf2d52122d6e14f3a9ab8185f94a2626391"
+      }
+    },
+    {
+      "id": "qa-foundation-u2",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U2 背景 (background)」 に記載された背景は何か",
+      "answer": "既存の SaaS 型 TODO 管理はデータが外部に保管され、オフラインでは使えず、\nスクリプトからの自動操作にも制約がある。API として手元に持てれば、\n自作クライアントや shell script から自由に組み合わせられる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U2 背景 (background)",
+        "sha256": "f2f3e48e24ce864b9fbf81384169e790b23a87e05c6de602220f77e7c6e09f86"
+      }
+    },
+    {
+      "id": "qa-foundation-u3",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U3 ゴール (goals)」 に記載されたゴールは何か",
+      "answer": "| goal_id | text |\n| --- | --- |\n| G1 | TODO データが端末外へ出ない (外部 network 送信 0 件) |\n| G2 | 認証された利用者だけが自分の TODO を作成・参照・更新・削除できる |\n| G3 | プロセス再起動後も TODO が失われない |\n| G4 | 追加の常駐ミドルウェアなしに 1 コマンドで起動・停止・バックアップできる |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U3 ゴール (goals)",
+        "sha256": "355fdd7ea4018583fdfb60b089aa2c1856f949bf0cbeb69d1587a43235ab206e"
+      }
+    },
+    {
+      "id": "qa-foundation-u4",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U4 目標 (objectives)」 に記載された目標は何か",
+      "answer": "- G1: 実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。\n- G2: すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。\n- G3: 永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。\n- G4: 起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U4 目標 (objectives)",
+        "sha256": "3b45154f27d6052ab9f40abc79e115dacbeea227bf18b5116d0c008f622cead5"
+      }
+    },
+    {
+      "id": "qa-foundation-u5",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U5 成功基準 (success_criteria)」 に記載された成功基準は何か",
+      "answer": "- 受入テストで、未認証要求が全 TODO エンドポイントで 401 になる。\n- 受入テストで、作成 → プロセス再起動 → 一覧取得を行い、作成した TODO が戻る。\n- 依存関係と実装に外部 host への送信処理が 0 件であることをレビューで確認する。\n- 起動手順が 1 コマンド、バックアップ手順が 1 ファイルコピーで記述できる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U5 成功基準 (success_criteria)",
+        "sha256": "8e792e47210fe953068565c330f097aff07d32afccad8a6dd0fe791e6f44ca96"
+      }
+    },
+    {
+      "id": "qa-foundation-u6",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U6 ステークホルダー (stakeholders)」 に記載されたステークホルダーは何か",
+      "answer": "- 利用者兼開発者 (本人): 唯一の利用者であり、要求の確定権限を持つ。\n- 運用者 (本人): 起動・停止・バックアップを行う。第三者運用は想定しない。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U6 ステークホルダー (stakeholders)",
+        "sha256": "b6553a39f207ef3e8f88dbab13fb1f446f620cbeea3b7145775dcc45e35d87d4"
+      }
+    },
+    {
+      "id": "qa-foundation-u7",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U7 スコープ (scope)」 に記載されたスコープは何か",
+      "answer": "- in: 認証、TODO の CRUD、SQLite 永続化、localhost での HTTP 提供、起動/バックアップ手順。\n- out: GUI クライアント実装、複数ユーザー間の共有、外部同期、クラウド配備、通知機能。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U7 スコープ (scope)",
+        "sha256": "b29c0214592d98a8c416f615a172c9cafabc6e57144b0457663d475775923fcf"
+      }
+    },
+    {
+      "id": "qa-foundation-u8",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U8 制約 (constraints)」 に記載された制約は何か",
+      "answer": "- 外部 network への送信を実装に含めない (実行時の外向き通信 0)。\n- 常駐ミドルウェア (別プロセスの DB サーバー等) を増やさない。\n- 費用は 0 円 (無料・OSS のみ)。\n- 単一プロセス・単一データファイルで完結させる。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U8 制約 (constraints)",
+        "sha256": "c33df0c4f6b19f2387d98d624a6e539f15abe0e62b596c782b59ef1adf8137b7"
+      }
+    },
+    {
+      "id": "qa-foundation-u9",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「### U9 具体的にやりたいこと (concrete_intents)」 に記載された具体的にやりたいことは何か",
+      "answer": "- TODO の作成・一覧・単体取得・更新・完了・削除。\n- 単一利用者向けの token 認証。\n- SQLite ファイルへの永続化とスキーマ初期化。\n- localhost バインドでの HTTP 提供と OpenAPI 定義の提供。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "### U9 具体的にやりたいこと (concrete_intents)",
+        "sha256": "74218d5bcfa930561998b9cf4eaee11b9624f498d5964a63c87de4b77759fc8d"
+      }
+    },
+    {
+      "id": "qa-database-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=database 行が示す web platform の確定内容は何か",
+      "answer": "| database | SQLite ファイル 1 個 (`todo.db`)。テーブルは `todos` と `api_tokens`。起動時にスキーマを冪等作成し、マイグレーションは単調増加の SQL 版数で管理する。DDD の transaction owner 原則を適用し、TODO 状態遷移と認証資格更新を別の集約・更新経路に分ける。 | G1, G3, G4 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "e09581b3cee189248fb58f29a0fa596cf079cef9119a78614cd61c58c89549db"
+      }
+    },
+    {
+      "id": "qa-auth-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=auth 行が示す web platform の確定内容は何か",
+      "answer": "| auth | 単一利用者向けの bearer token 認証。token は初回起動時にローカル生成し、ハッシュ化して保存する。全 TODO エンドポイントで必須、未認証は 401。OWASP ASVS の認証秘密保護原則を適用し、平文 token を永続化しない。 | G2 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "0641490d49fb6a7ffebebe09670a602cd6b23ee09d835c62263970c0d337af9c"
+      }
+    },
+    {
+      "id": "qa-ui-ux-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=ui-ux 行が示す web platform の確定内容は何か",
+      "answer": "| ui-ux | UI は持たない。API の使い勝手として、エラー応答を `{\"error\": {\"code\", \"message\"}}` に統一し、OpenAPI 定義を `/openapi.json` でローカル提供する。Apple HIG の consistency 原則は、GUI ではなく API 応答形式と OpenAPI 表現の一貫性として適用する。 | G2, G4 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "a9c6432acde260f1a6a27e904e17a91108ab915e212d2144e92fed4634927871"
+      }
+    },
+    {
+      "id": "qa-security-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=security 行が示す web platform の確定内容は何か",
+      "answer": "| security | localhost (127.0.0.1) バインド固定、外向き通信なし、token はハッシュ保存、入力は schema 検証、SQL は必ずパラメータバインド。OWASP ASVS の入力検証と least privilege 原則を、ローカル公開面の最小化と永続化境界の検証に具体化する。 | G1, G2 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "53cba67fc801aa0a26d55295326f967c9d5cde68ffcb3649a7dba1409fe4f40a"
+      }
+    },
+    {
+      "id": "qa-infrastructure-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=infrastructure 行が示す web platform の確定内容は何か",
+      "answer": "| infrastructure | 常駐ミドルウェアなし。1 コマンド起動、データはファイル 1 個。バックアップはそのファイルのコピー。Google SRE の toil 削減と反復可能な復旧原則を、起動 1 コマンドと復旧 1 ファイルに具体化する。 | G1, G4 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "e3340bfdc8d404fd9e169fcd38e17ef0ec98a117a75288453d68c2ac39a33e96"
+      }
+    },
+    {
+      "id": "qa-backend-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=backend 行が示す web platform の確定内容は何か",
+      "answer": "| backend | Python の ASGI/WSGI ベース REST API。`/todos` の CRUD と完了操作、`/health`。層は router / service / repository の 3 層。Clean Architecture の Dependency Rule を適用し、依存方向を router → service → repository interface に固定し、SQLite 実装を外側の詳細に留める。 | G2, G3 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "3bd36efd76fab6029dd204ff586865f30d43af3543c0eed04f1f0eabd6b3eb60"
+      }
+    },
+    {
+      "id": "qa-frontend-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=frontend 行が示す web platform の確定内容は何か",
+      "answer": "| frontend | 専用フロントエンドを実装しない。動作確認は OpenAPI 定義と HTTP クライアント (curl 等) で行う。Clean Architecture の境界原則に従い、OpenAPI を外部クライアントと内部 API の単一契約境界にする。 | G4 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "85799becca8ea466dbe3cca2225e5f423c55eb2bb0b80454015ac5b400560f05"
+      }
+    },
+    {
+      "id": "qa-maintenance-ops-web",
+      "question": "書面入力 system-spec/requirements-brief.md の section 「## 3. カテゴリ別の確定回答 (web 列)」 の category=maintenance-ops 行が示す web platform の確定内容は何か",
+      "answer": "| maintenance-ops | 構造化ログを標準出力へ、`/health` で稼働確認、バックアップ/復旧手順を README 化。監視の外部送信は行わない。Google SRE の可観測性原則と Clean Code の意図明示原則を、外部監視を追加せず再現可能なログ・health・運用手順として適用する。 | G3, G4 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "system-spec/requirements-brief.md",
+        "section": "## 3. カテゴリ別の確定回答 (web 列)",
+        "sha256": "273a20ebda9550db5bff6f80c7ee5551c227737fca590d50822289e91c6850db"
+      }
+    }
+  ],
+  "approval_log": [
+    {
+      "id": "appr-brief-20260721",
+      "note": "system-spec/requirements-brief.md 「## 7. 一括承認 (approval_log の根拠)」 で利用者が 2026-07-21T00:00:00Z 時点に §1 上位概念 U1-U9 要約・§2 platform 方針と 40 セルの対象外判断・§3 カテゴリ別確定内容・§4 採択 (D1 sqlite / D2 fastapi / D3 local-bearer-token) をまとめて承認済み"
+    }
+  ],
+  "reopen_log": [],
+  "category_aggregate": {
+    "database": "確定",
+    "auth": "確定",
+    "ui-ux": "確定",
+    "security": "確定",
+    "infrastructure": "確定",
+    "backend": "確定",
+    "frontend": "確定",
+    "maintenance-ops": "確定"
+  },
+  "targets": [
+    {
+      "target_id": "sqlite",
+      "category": "database"
+    },
+    {
+      "target_id": "fastapi",
+      "category": "backend"
+    }
+  ],
+  "requirements_foundation": {
+    "essential_purpose": "自分の TODO を、いかなる外部サービスにもデータを渡さずに、手元の 1 プロセスだけで\n管理・自動化できる状態にする。",
+    "background": "既存の SaaS 型 TODO 管理はデータが外部に保管され、オフラインでは使えず、\nスクリプトからの自動操作にも制約がある。API として手元に持てれば、\n自作クライアントや shell script から自由に組み合わせられる。",
+    "goals": [
+      {
+        "id": "G1",
+        "text": "TODO データが端末外へ出ない (外部 network 送信 0 件)"
+      },
+      {
+        "id": "G2",
+        "text": "認証された利用者だけが自分の TODO を作成・参照・更新・削除できる"
+      },
+      {
+        "id": "G3",
+        "text": "プロセス再起動後も TODO が失われない"
+      },
+      {
+        "id": "G4",
+        "text": "追加の常駐ミドルウェアなしに 1 コマンドで起動・停止・バックアップできる"
+      }
+    ],
+    "objectives": [
+      {
+        "id": "O1",
+        "text": "G1: 実装依存の外向き通信を 0 にし、依存パッケージも起動時に network を張らないものだけにする。",
+        "measure": "N/A (未収集): requirements-brief.md の U5 成功基準は goal 単位の記述のみで、objective 単位の測定基準は書面に無いため推論で埋めず fail-closed に残す"
+      },
+      {
+        "id": "O2",
+        "text": "G2: すべての TODO エンドポイントを認証必須にし、未認証要求は 401 を返す。",
+        "measure": "N/A (未収集): requirements-brief.md の U5 成功基準は goal 単位の記述のみで、objective 単位の測定基準は書面に無いため推論で埋めず fail-closed に残す"
+      },
+      {
+        "id": "O3",
+        "text": "G3: 永続化先を単一ファイルにし、再起動後の一覧取得で登録済み TODO が全件戻る。",
+        "measure": "N/A (未収集): requirements-brief.md の U5 成功基準は goal 単位の記述のみで、objective 単位の測定基準は書面に無いため推論で埋めず fail-closed に残す"
+      },
+      {
+        "id": "O4",
+        "text": "G4: 起動は 1 コマンド、バックアップはデータファイル 1 個のコピーで完了する。",
+        "measure": "N/A (未収集): requirements-brief.md の U5 成功基準は goal 単位の記述のみで、objective 単位の測定基準は書面に無いため推論で埋めず fail-closed に残す"
+      }
+    ],
+    "success_criteria": [
+      "受入テストで、未認証要求が全 TODO エンドポイントで 401 になる。",
+      "受入テストで、作成 → プロセス再起動 → 一覧取得を行い、作成した TODO が戻る。",
+      "依存関係と実装に外部 host への送信処理が 0 件であることをレビューで確認する。",
+      "起動手順が 1 コマンド、バックアップ手順が 1 ファイルコピーで記述できる。"
+    ],
+    "stakeholders": [
+      "利用者兼開発者 (本人): 唯一の利用者であり、要求の確定権限を持つ。",
+      "運用者 (本人): 起動・停止・バックアップを行う。第三者運用は想定しない。"
+    ],
+    "scope": {
+      "in": [
+        "認証",
+        "TODO の CRUD",
+        "SQLite 永続化",
+        "localhost での HTTP 提供",
+        "起動/バックアップ手順"
+      ],
+      "out": [
+        "GUI クライアント実装",
+        "複数ユーザー間の共有",
+        "外部同期",
+        "クラウド配備",
+        "通知機能"
+      ]
+    },
+    "constraints": [
+      "外部 network への送信を実装に含めない (実行時の外向き通信 0)。",
+      "常駐ミドルウェア (別プロセスの DB サーバー等) を増やさない。",
+      "費用は 0 円 (無料・OSS のみ)。",
+      "単一プロセス・単一データファイルで完結させる。"
+    ],
+    "concrete_intents": [
+      {
+        "id": "I1",
+        "text": "TODO の作成・一覧・単体取得・更新・完了・削除。",
+        "serves": [
+          "G2",
+          "G3"
+        ]
+      },
+      {
+        "id": "I2",
+        "text": "単一利用者向けの token 認証。",
+        "serves": [
+          "G2"
+        ]
+      },
+      {
+        "id": "I3",
+        "text": "SQLite ファイルへの永続化とスキーマ初期化。",
+        "serves": [
+          "G1",
+          "G3"
+        ]
+      },
+      {
+        "id": "I4",
+        "text": "localhost バインドでの HTTP 提供と OpenAPI 定義の提供。",
+        "serves": [
+          "G1",
+          "G4"
+        ]
+      }
+    ],
+    "confirmed": true,
+    "approval_ref": "appr-brief-20260721"
+  },
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "永続化先を sqlite と postgresql のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G3",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "sqlite",
+          "label": "SQLite 単一ファイル永続化",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "ライセンス0円。常駐プロセス無しのため運用・撤退費もファイル1個の複製コストに収まる"
+          },
+          "free_tier_limits": "制限なし (組込みライブラリ)",
+          "goal_fit": "単一ファイル・単一プロセスで G1/G3/G4 に適合",
+          "security_fit": "ローカルファイル境界のみでネットワーク公開面を持たない",
+          "pros": [
+            "常駐ミドルウェア不要",
+            "バックアップがファイル1個の複製"
+          ],
+          "cons": [
+            "高並行書込に弱い"
+          ],
+          "risks": [
+            "単一ファイル破損時の復旧が必要"
+          ],
+          "lock_in": "低 (SQL 標準寄り)",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://www.sqlite.org/docs.html"
+          ]
+        },
+        {
+          "id": "postgresql",
+          "label": "PostgreSQL サーバー永続化",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS ライセンスは0円だが常駐サーバーの構築・更新・バックアップ運用工数が加算される"
+          },
+          "free_tier_limits": "OSS のため機能制限なし",
+          "goal_fit": "多利用者・高並行には適合するが単一利用者要求には過剰",
+          "security_fit": "接続認証と権限管理を備えるがローカル公開面が増える",
+          "pros": [
+            "高並行・拡張機能が豊富"
+          ],
+          "cons": [
+            "常駐プロセスが増える",
+            "起動が1コマンドで完結しない"
+          ],
+          "risks": [
+            "U8 の常駐ミドルウェア禁止制約に抵触"
+          ],
+          "lock_in": "中",
+          "ops_burden": "高",
+          "evidence_refs": [
+            "https://www.postgresql.org/docs/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "sqlite",
+        "rationale": "常駐プロセスを増やさず単一ファイルで完結し G1/G4 の制約に適合する",
+        "comparison_basis": {
+          "goal_fit": "sqlite は単一プロセス要求に適合、postgresql は過剰",
+          "tco": "双方ライセンス0円だが postgresql は運用工数が加算",
+          "security": "sqlite はネットワーク公開面を増やさない",
+          "operations": "sqlite はバックアップがファイル1個の複製",
+          "lock_in": "sqlite が低く SQL 標準へ寄せられる"
+        },
+        "caveats": [
+          "高並行書込が必要になった場合は再評価が要る"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-08-08T14:18:30Z"
+      },
+      "user_decision": {
+        "option_id": "sqlite",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "system-spec/requirements-brief.md §4 採択欄と §7 一括承認"
+      }
+    },
+    {
+      "id": "D2",
+      "question": "API framework を fastapi と flask のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2",
+        "G4"
+      ],
+      "options": [
+        {
+          "id": "fastapi",
+          "label": "FastAPI",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS で0円。OpenAPI 自動生成により契約文書の維持工数も下がる"
+          },
+          "free_tier_limits": "制限なし (OSS)",
+          "goal_fit": "OpenAPI 自動生成と schema 検証が G2/U9 に直結",
+          "security_fit": "pydantic による入力 schema 検証を標準で持つ",
+          "pros": [
+            "OpenAPI 自動生成",
+            "型による入力検証"
+          ],
+          "cons": [
+            "依存パッケージが相対的に多い"
+          ],
+          "risks": [
+            "メジャー更新時の pydantic 互換差分"
+          ],
+          "lock_in": "低 (ASGI 標準)",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://fastapi.tiangolo.com/"
+          ]
+        },
+        {
+          "id": "flask",
+          "label": "Flask",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS で0円だが OpenAPI と schema 検証を拡張で自作する工数が加算"
+          },
+          "free_tier_limits": "制限なし (OSS)",
+          "goal_fit": "最小構成だが OpenAPI 提供を自前実装する必要がある",
+          "security_fit": "入力検証を拡張で追加する前提",
+          "pros": [
+            "依存が少ない",
+            "学習コストが低い"
+          ],
+          "cons": [
+            "OpenAPI 定義を自作",
+            "schema 検証が標準でない"
+          ],
+          "risks": [
+            "契約文書と実装の乖離"
+          ],
+          "lock_in": "低",
+          "ops_burden": "中",
+          "evidence_refs": [
+            "https://flask.palletsprojects.com/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "fastapi",
+        "rationale": "OpenAPI 自動生成と schema 検証が U9 の OpenAPI 提供要求と G2 に直結する",
+        "comparison_basis": {
+          "goal_fit": "fastapi は OpenAPI 提供要求を標準で満たす",
+          "tco": "双方0円だが flask は OpenAPI 自作工数が加算",
+          "security": "fastapi は入力 schema 検証を標準装備",
+          "operations": "fastapi は契約文書が実装から生成され乖離しにくい",
+          "lock_in": "双方 ASGI/WSGI 標準寄りで低い"
+        },
+        "caveats": [
+          "依存パッケージが起動時に外向き通信をしないことを確認する"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-08-08T14:18:31Z"
+      },
+      "user_decision": {
+        "option_id": "fastapi",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "system-spec/requirements-brief.md §4 採択欄と §7 一括承認"
+      }
+    },
+    {
+      "id": "D3",
+      "question": "認証方式を local-bearer-token と oauth2-password-jwt のどちらにするか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G2"
+      ],
+      "options": [
+        {
+          "id": "local-bearer-token",
+          "label": "ローカル生成 bearer token",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "外部 IdP 契約なしで0円。token 再生成手順のみが運用費"
+          },
+          "free_tier_limits": "外部サービス非依存のため上限なし",
+          "goal_fit": "単一利用者で G2 を満たす最小構成",
+          "security_fit": "token をハッシュ保存し平文を永続化しない",
+          "pros": [
+            "外部 IdP 不要",
+            "外向き通信を増やさない"
+          ],
+          "cons": [
+            "利用者増加時に権限管理が不足"
+          ],
+          "risks": [
+            "token 漏洩時の失効手順が必要"
+          ],
+          "lock_in": "低",
+          "ops_burden": "低",
+          "evidence_refs": [
+            "https://fastapi.tiangolo.com/tutorial/security/"
+          ]
+        },
+        {
+          "id": "oauth2-password-jwt",
+          "label": "OAuth 2.0 password grant + JWT",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "仕様準拠の実装・鍵管理・失効管理の工数が加算"
+          },
+          "free_tier_limits": "仕様自体は無料",
+          "goal_fit": "多利用者・外部 IdP 連携が要る場合に適合",
+          "security_fit": "標準準拠だが鍵管理と失効設計が必須",
+          "pros": [
+            "標準仕様",
+            "将来の外部 IdP 連携が容易"
+          ],
+          "cons": [
+            "単一利用者には過剰",
+            "鍵・失効管理が増える"
+          ],
+          "risks": [
+            "password grant は仕様上非推奨化の流れ"
+          ],
+          "lock_in": "中",
+          "ops_burden": "高",
+          "evidence_refs": [
+            "https://datatracker.ietf.org/doc/html/rfc6749"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "local-bearer-token",
+        "rationale": "単一利用者・外部 IdP なしで G2 を満たす最小構成であり U8 の外向き通信0制約に適合する",
+        "comparison_basis": {
+          "goal_fit": "local-bearer-token が単一利用者要求に適合",
+          "tco": "双方0円だが oauth2 は鍵・失効管理工数が加算",
+          "security": "token ハッシュ保存で平文永続化を避けられる",
+          "operations": "失効は token 再生成のみで完結",
+          "lock_in": "local-bearer-token が低い"
+        },
+        "caveats": [
+          "利用者が増える場合は認可モデルごと再評価する"
+        ],
+        "confidence": "high",
+        "latest_checked_at": "2026-08-08T14:18:31Z"
+      },
+      "user_decision": {
+        "option_id": "local-bearer-token",
+        "confirmed_at": "2026-07-21T00:00:00Z",
+        "note": "system-spec/requirements-brief.md §4 採択欄と §7 一括承認"
+      }
+    }
+  ],
+  "knowledge_candidates": [],
+  "hearing_progress": {
+    "loop_count": 3,
+    "next_question": null,
+    "complete": true,
+    "max_loops": 5
+  }
+}

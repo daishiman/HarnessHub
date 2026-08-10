@@ -12,8 +12,8 @@ iteration: null
 title: "真の orphan 21 件を node 化または参照剥がしで処分し非クローズ orphan を 0 にする"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-28T02:18:00Z"
-status: "draft"
+updated_at: "2026-07-28T04:11:51Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725"]
 resource_scope: [".dev-graph/state/graph.json","plugins/dev-graph/scripts/bd-bridge.py","issues/"]

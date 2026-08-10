@@ -12,13 +12,13 @@ iteration: null
 title: "Harness Hub システム要件仕様 (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-03T09:45:00Z"
+updated_at: "2026-08-04T07:36:43.627046Z"
 status: "active"
 depends_on: []
-related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa"]
+related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-dev-workflow","arch-harness-hub-frontend","arch-harness-hub-infrastructure","arch-harness-hub-security","arch-harness-hub-testing-qa","issue-hooks-entry-point-parity-generalization-20260728","spec-harness-hub-plugin-hook-governance-20260804"]
 resource_scope: ["specs/harness-hub-system-specification.md"]
 purpose: "非エンジニアの AI 自己解決の実現 (U1) に向けた Harness Hub の要件正本への参照点を dev-graph に固定する"
-goal: "全 feature/task が U1-U9 と G1-G4 へトレースできる状態を維持する"
+goal: "全 feature/task が U1-U9 と G1-G5 へトレースでき、qa-139/qa-140、C16 qa-141/qa-142、qa-143 の dev-workflow 契約を正本から追跡できる状態を維持する"
 scope_in: ["system-spec/00-requirements-definition.md","system-spec/index.md"]
 scope_out: ["正本章の内容複製","未確定章の取込"]
 acceptance: ["正本章が confirmed かつ evaluator PASS","source_digest が正本と一致"]
@@ -31,8 +31,8 @@ template_id: "specification"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed","evaluator":"validate-coverage-matrix.py --require-complete --require-foundation","evidence_ref":"system-spec/spec-state.json"}
-source_lineage: {"imported_at":"2026-08-03T09:45:00Z","origin_kind":"system-spec-harness","source_digest":"f2e034e9c2d00c46a2d28f95795bc4e50d9d891bd4d1f713a586eb9e7422d1ed","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"c7aec3993d229f84b0f78089240adf4d0c976543b8b09fc4ba829ef717c04c68","evaluator":"system-spec-harness compile + coverage validation (qa-143)","evidence_ref":"docs/features/feat-dev-pipeline-improvement/hooks-entry-point-parity-spec-reflection-receipt.md"}
+source_lineage: {"imported_at":"2026-08-04T07:33:27Z","origin_kind":"system-spec-harness","source_digest":"feacaac3af562da9784251fff48938ab2de5f1073803f1181e92d75973df847f","source_path":"system-spec/spec-state.json","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"specification","candidate_path":"specs/harness-hub-system-specification.md","confidence":0.95}]
@@ -48,6 +48,26 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 ---
 
 # Harness Hub システム要件仕様 (system-spec 取込)
+
+## システム構築仕様書 index
+
+Harness Hub の確定要件を Dev Graph から参照するための集約入口。正本は `system-spec/` 配下に置き、この文書は参照と実装反映の索引だけを持つ。
+
+## 要件定義書 (上位概念・憲法)
+
+本質的目的、背景、ゴール、成功基準、ステークホルダー、スコープ、制約、具体的意図、意思決定は [上位要件](../system-spec/00-requirements-definition.md) を正とする。
+
+## 章一覧と集約状態
+
+章の一覧、各章の確認状態、評価結果は [system-spec index](../system-spec/index.md) と `system-spec/spec-state.json` から集約する。
+
+## 集約状態サマリ
+
+この wrapper が参照する章は confirmed かつ evaluator PASS であり、未確定章を実装根拠へ昇格させない。
+
+## 全体ドキュメント出典 (未割当参照)
+
+章へ未割当の参考資料は system-spec の source ledger を正とし、この wrapper へ複製しない。
 
 > 本 artifact は system-spec 確定章への **参照型 wrapper** (R3-import)。内容は複製せず、正本の変更は source_digest 不一致として検出される。
 
@@ -343,18 +363,19 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
   [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/qa33ho-spec-reflection-receipt.md)
   を正とする。
 
-**開発品質反映 (2026-07-30 / `HarnessHub-35ai`)**:
+**開発品質反映 (2026-07-30 / `HarnessHub-35ai`、2026-08-04 / `HarnessHub-0ui0`)**:
 
-- feature scope の renderer は registration receipt を検証できた場合だけ
-  `verified` を表示し、receipt 未指定の探索表示は `not_performed` とする。
+- feature scope の renderer は registration receipt の node IDs、件数、source digest、
+  source lineage、graph digest を検証する。すべて一致時だけ `verified`、後続 sync により
+  graph digest だけが古い場合は `partial` / `graph_digest_stale`、receipt 未指定の探索表示は
+  `not_performed` とする。他の証拠不一致は引き続き fail-closed とする。
 - 同じ 13 child graph を receipt 有り／無しで描画する正負の回帰テストにより、
   見かけの task 件数だけで登録成功を推測する偽陽性を禁止する。
 - CLI receipt、可視 HTML banner、埋込み metadata は同じ判定を返す。
   影響は repository 内の検証契約に限定され、製品 API、DB schema、認証認可、
   UI、Cloudflare deploy unit、確定済み QA 回答は変更しない。
-- 反映先と検証は
-  [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md)
-  を正とする。
+- 反映先と検証は [初回受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-verification-spec-reflection-receipt.md) と
+  [stale digest 受領書](../docs/features/feat-dev-pipeline-improvement/render-registration-stale-digest-spec-reflection-receipt.md) を正とする。
 
 ## Publish pipeline 実装反映 (2026-07-30 / `HarnessHub-dfm`)
 
@@ -441,49 +462,10 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 - 既存の content-addressed package は immutable のため 1.2.0 以前の契約で再検証し、本文 digest と再現可能性を維持する。
 - 影響は repository 内の task spec 生成・検証契約に限定され、製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。正本は [testing-qa](../system-spec/testing-qa.md)、設計と証跡は [仕様反映受領書](../docs/features/feat-task-spec-test-strategy/rerun-command-spec-reflection-receipt.md) を参照する。
 
-## 共有 Google OAuth client 方式 (2026-08-01 / `HarnessHub-fnej` / qa-110〜qa-115)
+## 分冊した実装 writeback
 
-- `idp_connections.credential_mode` は `customer_google` と `shared_google` を明示し、
-  未知値・設定不備を別方式へフォールバックさせない。既存行は
-  `customer_google` を既定にして従来の tenant 別 callback と暗号化 secret を維持する。
-- 共有方式は環境単位の Google client 1 組と固定 callback
-  `/api/auth/shared/callback/tenant-oidc` を使う。tenant は 10 分 TTL の署名付き
-  `state` と HttpOnly binding cookie で復元し、PKCE S256 と nonce は Auth.js に残す。
-- Auth.js が検証した Google ID token の `hd` を tenant の
-  `allowed_workspace_domains` と完全一致させる。欠落、別 Workspace、
-  サブドメイン、tenant 差し替えでは JIT 利用者・session を作らない。
-- 共有 client ID/secret は tenant DB 行、ログ、response、Git、GitHub Secretsへ
-  複製しない。Cloudflare Worker の環境 secret とし、共有方式を使わない環境の未設定は許す。
-- migration `0003_auth-tenancy-shared-google-oidc.sql` は列追加のみ。rollback は
-  shared tenant を customer mode へ戻して旧 callback を確認してから Worker code を戻す。
-- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、
-  [security](../system-spec/security.md)、[database](../system-spec/database.md)、
-  [infrastructure](../system-spec/infrastructure.md)、
-  [maintenance-ops](../system-spec/maintenance-ops.md)。判断と検証は
-  [仕様反映受領書](../docs/features/feat-auth-tenancy/shared-google-oidc-spec-reflection-receipt.md)
-  を参照する。
+行数上限を守るため、共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の実装反映は [実装 writeback 分冊](harness-hub-system-specification-implementation-writebacks.md) へ移した。正本章と各受領書への参照関係は維持する。
 
-## 外部参考 Skill の所有境界 (2026-08-02 / `HarnessHub-ym9h` / qa-122)
+## 開発時の検証 tier
 
-- `doc/参考Skill/` は外部由来の比較・移管記録であり、能動 plugin の契約正本にしない。
-- `aiworkflow-requirements` を前提にする参考コピーは directory 単位で削除し、利用中の
-  外部 CLI 契約だけを consumer plugin 配下へ履歴付きで移す。
-- 変更は repository の開発文書・plugin reference 所有に限定され、製品 UI、外部 API、
-  DB schema、認証認可、Cloudflare deploy unit は変更しない。
-- 正本は [dev-workflow](../system-spec/dev-workflow.md) の `qa-122`、判断・検証・復元経路は
-  [仕様反映受領書](../docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md)
-  を参照する。
-
-## 顧客持ち込み Google OAuth client 管理 (2026-08-02 / `HarnessHub-uk2i` / qa-124〜qa-130)
-
-- `provider-admin` は `/settings/auth` と管理 API から顧客 client の登録、接続テスト、有効化、無停止 rotation、取消、無効化、安全な再開を行う。
-- lifecycle は `pending → tested → active → disabled`。認証は `active` のみを使い、再開には新 credential の staging と再テストを必須にする。
-- client ID・secret・方式・許可ドメインは tenant ごとの staging へ一式保存し、暗号文 CAS で同時昇格する。secret は暗号化保存と last4 表示だけに限定する。
-- 管理 API は tenant scope・同一 origin・Google issuer・provider-admin を fail-closed で強制し、有効化後の実ブラウザ login を別ゲートとする。
-- 正本は [auth](../system-spec/auth.md)、[backend](../system-spec/backend.md)、[database](../system-spec/database.md)、[frontend](../system-spec/frontend.md)、[security](../system-spec/security.md)、[maintenance-ops](../system-spec/maintenance-ops.md)、[testing-qa](../system-spec/testing-qa.md)。詳細は [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md) を参照する。
-
-## C10 inline Python graph authority guard (2026-08-03 / `HarnessHub-f84o` / qa-139)
-
-- `python -c` / heredoc の変数、Path 式、join、format、import 別名を AST 定数伝播で復元し、graph authority への書込みを C02 writer 迂回として遮断する。rename / move は元と宛先の双方を変更対象とする。
-- 遮断経路は subprocess / network / graph 全件検証を起動せず、未解決でも authority prefix または graph store 末尾が確定すれば fail-closed にする。読取と tmp/cache/templates は巻き込まない。
-- `exec` / `eval` 内の再帰 source、任意文字列変換、別 script 本文は性能境界から対象外とし、PostToolUse 監査と C02 規約で補完する。製品 runtime 契約は非変更。判断と検証は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/f84o-inline-python-guard-spec-reflection-receipt.md) を参照する。
+差分から `mvp / standard / critical` を導出する開発品質契約は [検証 tier 仕様追補](harness-hub-verification-tiering-addendum.md) を正とする。

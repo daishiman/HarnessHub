@@ -12,8 +12,8 @@ iteration: null
 title: "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す"
 owners: ["daishiman"]
 created_at: "2026-07-25T20:43:11Z"
-updated_at: "2026-08-03T10:26:18.055450Z"
-status: "draft"
+updated_at: "2026-08-03T11:52:04Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","issue-guard-graph-schema-interpreter-write-coverage-20260726"]
 resource_scope: ["plugins/dev-graph/hooks/","plugins/dev-graph/tests/","plugins/dev-graph/references/claude-code-hooks-contract.md","docs/features/feat-dev-pipeline-improvement/","system-spec/dev-workflow.md","system-spec/spec-state.json","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/feat-dev-pipeline-improvement/"]

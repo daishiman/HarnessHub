@@ -9,12 +9,12 @@ priority: "high"
 start_date: null
 target_date: null
 iteration: null
-title: "guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する"
+title: "dev-graph: guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する"
 owners: ["daishiman"]
 created_at: "2026-07-25T22:22:01Z"
-updated_at: "2026-07-29T04:14:11Z"
+updated_at: "2026-07-29T06:59:02Z"
 status: "closed"
-depends_on: ["issue-guard-fix-closure-verdict-refresh-20260726"]
+depends_on: []
 related_nodes: ["issue-guard-graph-schema-timeout-fail-open-20260725"]
 resource_scope: ["plugins/dev-graph/hooks/guard-graph-schema.py","plugins/dev-graph/tests/test_guard_graph_schema_fail_open_window.py","plugins/dev-graph/references/claude-code-hooks-contract.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","docs/features/feat-dev-pipeline-improvement/final-review-20260726.md"]
 purpose: "6in4 は shell redirect と tee の fail-open を閉じたが interpreter 枝は被覆外だった。pathlib.write_text 形が live-trial で実際に素通りしており、C02 atomic writer の迂回が成立している。取りこぼしと過剰遮断を同時に閉じる"

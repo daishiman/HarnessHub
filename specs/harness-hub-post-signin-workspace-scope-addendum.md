@@ -77,6 +77,20 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 
 ## 確定契約
 
+### A'. 未認証ランディングと拒否表現 (2026-08-08 追補 / issue-hub-root-500-signin-20260808)
+
+- 未認証の `/` はテナント ID 入力の入口とする（稼働確認表示は残す）。入力は JS 無し GET で
+  `/signin` へ渡り、slug 形のみ検証したうえで `/{tenant_slug}/signin` へ 303 する。
+  テナント存在有無は入口で答えない。
+- `/` は session cookie を読むため **動的 route でなければならない**。静的 prerender すると
+  本番で `DYNAMIC_SERVER_USAGE` により 500 になる。ビルド成果物検査で再発を防ぐ。
+- 認証済みで active workspace が未確定（所属 2 件以上で未選択、または所属 0 件）のとき、
+  `/` 上で Workspace 選択または案内を出し、業務画面の JSON 403 行き止まりにしない。
+  選択の受理と cookie 書き込みは専用 route が fail-closed で行う。
+- ブラウザの画面遷移に対する認可拒否は、生の JSON ではなく人間可読な HTML で回復導線を示す。
+  API・Bearer・機械クライアントの JSON 契約は変えない。
+- public path の「入口 1 枚だけ」は完全一致 allowlist に置き、前方一致で子 route を巻き込まない。
+
 ### A. サインイン後の着地先 (qa-135 【1】【2】)
 
 - `callbackUrl` の固定値 `"/"` を廃止し、(a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/sheets` の順で解決する。
@@ -177,3 +191,71 @@ FAIL 2 観点はいずれも本追補の内容品質ではなく既存資産に�
 - `doc_freshness` — 指摘 3 件のうち内容起因の 2 件は評価レポート生成後に一次 GET で解消済み (report 側 evidence が成果物より古い)。残り 1 件は監査 fork の WebFetch 不在という方法論問題で、既存課題 HarnessHub-nq2 と同一。
 
 ユーザー判断によりこの 2 観点を waive して本追補を confirmed として登録した。waiver の全文と残存リスクは `eval-log/run-dev-graph-system-spec-progress.json` の `evaluator_gate_waiver` を正本とする。
+
+## 目的と成功状態
+
+利用者がサインイン後に有効な Workspace を選択・保持でき、権限外または未選択の状態を安全に解消できることを成功状態とする。
+
+## 用語と主体
+
+active workspace は現在の操作対象、provider-admin / workspace-admin / member は session role、利用者と管理者が主要主体である。
+
+## スコープ
+
+未認証入口、サインイン後着地、Workspace 選択・切替、権限不足の表現を対象とする。
+
+## ユースケースとユーザーフロー
+
+未認証者はサインインへ進み、認証済み利用者は active workspace を解決または選択して業務画面へ遷移する。
+
+## 機能要件
+
+既定着地、通常ブラウザ遷移、Workspace 選択、CLI 非依存導線、device 承認、権限不足表示を既存 A'〜G の契約どおり提供する。
+
+## ビジネスルールと検証
+
+tenant / workspace scope と role を server 側で検証し、UI の非表示だけを認可根拠にしない。
+
+## データモデル
+
+既存 tenant、workspace membership、active workspace、session role を利用し、新しい DB schema は追加しない。
+
+## API契約
+
+既存 route と server action の契約を維持し、新しい公開 API は追加しない。
+
+## イベント・非同期処理
+
+Workspace 選択と redirect は request 内で確定する。新しい queue や background job は追加しない。
+
+## UI・状態遷移
+
+signin、workspace 選択、dashboard、権限不足の状態を区別し、循環 redirect を作らない。
+
+## 認証・認可
+
+署名済み session と server-side authorization を正本とし、scope 不足は deny-by-default で扱う。
+
+## 非機能要件
+
+server-first、tenant 分離、直接 URL でも同じ認可、利用者が復旧行動を理解できる表示を維持する。
+
+## エラー・例外・回復
+
+未認証は signin、Workspace 未選択は選択画面、権限不足は再サインイン loop を起こさない拒否画面へ分ける。
+
+## 可観測性
+
+拒否理由と scope 解決段階を secret を含めず記録し、同一 HTTP status に原因を潰さない。
+
+## 互換性・移行・リリース
+
+既存 route、session claim、DB schema を維持し、段階的に導線を置換する。
+
+## テストと受入条件
+
+受入基準に加え、未認証・scope 未選択・role 別・直接 URL・redirect loop の回帰 test を必須とする。
+
+## 未決事項
+
+本追補の確定範囲に blocking な未決事項はない。将来の role 追加は別契約で扱う。

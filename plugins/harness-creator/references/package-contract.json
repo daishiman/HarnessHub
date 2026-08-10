@@ -11,7 +11,7 @@
     "commands": [
       "capability-build"
     ],
-    "hooks": []
+    "hooks": ["auto-sync-on-session-start.py"]
   },
   "distribution": {
     "distributable": false,

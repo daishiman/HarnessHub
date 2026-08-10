@@ -1,9 +1,39 @@
 {
-  "target_id": "pnpm",
-  "source_url": "https://github.com/pnpm/pnpm/releases",
-  "retrieved_at": "2026-08-04T00:40:00Z",
-  "http_status": 200,
-  "content_bytes": 591629,
-  "content_sha256": "6c443146ba664b867a7f66c2936b3d95edff1bf3adad3514df7a03a3efb56c6c",
-  "body_summary": "Releases · pnpm/pnpm · GitHub"
+  "npm_package": "pnpm",
+  "payload": {
+    "dist-tags": {
+      "dev": "6.23.7-202112041634",
+      "latest": "11.20.0",
+      "latest-1": "1.43.1",
+      "latest-10": "10.34.5",
+      "latest-11": "11.20.0",
+      "latest-2": "2.25.7",
+      "latest-3": "3.8.1",
+      "latest-4": "4.14.4",
+      "latest-5": "5.18.10",
+      "latest-6": "6.35.1",
+      "latest-7": "7.33.5",
+      "latest-8": "8.15.9",
+      "latest-9": "9.15.9",
+      "next-10": "10.34.5",
+      "next-11": "11.20.0",
+      "next-12": "12.0.0-rc.0",
+      "next-6": "6.35.1",
+      "next-7": "7.33.7",
+      "next-8": "8.15.9",
+      "next-9": "9.15.9",
+      "pr4475": "0.0.0-pr4475.1"
+    },
+    "homepage": "https://pnpm.io",
+    "license": "MIT",
+    "repository.url": "git+https://github.com/pnpm/pnpm.git",
+    "time.modified": "2026-08-05T20:19:08.464Z",
+    "version": "11.20.0"
+  },
+  "registry": "https://registry.npmjs.org",
+  "retrieval_channel": "npm-registry",
+  "retrieval_command": "pnpm view pnpm <field> --json",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+  "retrieved_at": "2026-08-07T03:25:42Z",
+  "target_id": "pnpm"
 }

@@ -12,8 +12,8 @@ iteration: null
 title: "main 側 qa-070 が spec-state.json の qa_log に不在 (実体は存在する記録欠落)"
 owners: ["daishiman"]
 created_at: "2026-07-26T00:00:00Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "draft"
+updated_at: "2026-08-03T22:33:43Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-harness-hub-requirements"]
 resource_scope: ["system-spec/spec-state.json","issues/sys-qa070-implementation-feature-20260722.md","features/feat-doc-governance-portability.md"]

@@ -192,6 +192,10 @@
       {
         "path": "apps/hub/src/app/api/v1/token/refresh/route.ts",
         "reason": "RFC 6749 §6 refresh。refresh token 自体が資格情報 (feat-auth-tenancy ADR AD-6)"
+      },
+      {
+        "path": "apps/hub/src/app/signin/workspace/route.ts",
+        "reason": "active workspace を確定させる受け口。withAuthz は scope 確定済みを前提とするため、scope 未確定そのものを解消するこの経路には適用できない (適用すると missing_tenant_scope で自分自身を弾き、複数 workspace 所属者が復帰不能になる)。代わりに route 自身が session cookie の署名・期限・status=active を検証し、claims の workspace_ids に無い ID は cookie にしない fail-closed 実装 (feat-post-signin-scope-routing)"
       }
     ]
   }

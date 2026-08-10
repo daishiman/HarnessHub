@@ -1,9 +1,34 @@
 {
-  "target_id": "nextjs",
-  "source_url": "https://nextjs.org/docs",
-  "retrieved_at": "2026-08-04T00:39:59Z",
-  "http_status": 200,
-  "content_bytes": 416530,
-  "content_sha256": "7c73420990fcefe38881a3e6d40c79336efedcc12558683ff2e97c6a6b650a33",
-  "body_summary": "Next.js Docs | Next.js"
+  "npm_package": "next",
+  "payload": {
+    "dist-tags": {
+      "backport": "15.5.23",
+      "beta": "16.0.0-beta.0",
+      "canary": "16.3.1-canary.5",
+      "latest": "16.3.0",
+      "next-11": "11.1.4",
+      "next-12-2-6": "12.2.6",
+      "next-12-3-2": "12.3.7",
+      "next-13": "13.5.11",
+      "next-14": "14.2.35",
+      "next-14-1": "14.1.1",
+      "next-15-0": "15.1.12",
+      "next-15-0-0": "15.0.8",
+      "next-15-2": "15.2.9",
+      "next-15-3": "15.3.9",
+      "preview": "16.3.0-preview.10",
+      "rc": "15.0.0-rc.1"
+    },
+    "homepage": "https://nextjs.org",
+    "license": "MIT",
+    "repository.url": "git+https://github.com/vercel/next.js.git",
+    "time.modified": "2026-08-07T01:28:00.444Z",
+    "version": "16.3.0"
+  },
+  "registry": "https://registry.npmjs.org",
+  "retrieval_channel": "npm-registry",
+  "retrieval_command": "pnpm view next <field> --json",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+  "retrieved_at": "2026-08-07T03:25:17Z",
+  "target_id": "nextjs"
 }

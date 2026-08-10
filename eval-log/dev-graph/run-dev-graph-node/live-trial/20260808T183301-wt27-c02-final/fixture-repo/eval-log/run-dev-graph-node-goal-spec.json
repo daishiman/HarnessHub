@@ -1,0 +1,36 @@
+{
+  "skill": "run-dev-graph-node",
+  "original_goal": "通常5 artifactを自動分類し、C14由来featureとsystem-dev-planner由来exact 13 phase tasksをそれぞれの専用契約で正規pathへatomic追加・更新し、graph/frontmatter/body/path/package整合を保つ",
+  "invocation": {
+    "verb": "add",
+    "repo_root": "fixture-repo (caller repository)",
+    "input": "mixed-artifacts.json",
+    "input_sha256": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39"
+  },
+  "scope": {
+    "in": [
+      "issue/task/specification/architecture/document の 5 件を canonical content root へ atomic 登録する",
+      "登録済みノードの連続更新で frontmatter kind と保存 path の一致を保つ",
+      "features/ に C14 macro contract 外のノードを作らない"
+    ],
+    "out": [
+      "exact-13 package 登録 (本バッチに package 入力なし)",
+      "Beads/GitHub への投影",
+      "render/schedule/status の表示契約"
+    ]
+  },
+  "checklist": [
+    "全 read/write realpath が resolved repo root 内で repository_id が一致する",
+    "classification decision が閾値による自動確定または明示 user confirmation の証跡を持つ",
+    "通常 artifact の frontmatter/body/path/template metadata が schema と一致する",
+    "package は P01..P13 exact 13、共通 parent/package、内部 DAG を満たし、違反時 applied_count が0である",
+    "成功 receipt の graph_revision と registered_node_ids が commit 後 graph と一致する",
+    "artifact/graph間の各中断位置でWALからbefore-imageへ収束し、pending中のstatus/next/renderは共有lock取得後にfail-closedとなる"
+  ],
+  "feedback_contract_criteria": [
+    "IN1: validate-graph-schema.py の書込み前検証で必須キー欠落が0件",
+    "OUT1: 通常5 artifact routing、feature は C14 macro contract のみ、連続更新後も frontmatter/path 整合",
+    "OUT2: architecture subtype と specification api-contract を含む kind 別必須セクション欠落0件",
+    "OUT3: package gate (本 run は package 入力なしのため非該当)"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "scenario": "C01-OUT1-positive-idempotence-r17",
+  "skill": "dev-graph:run-dev-graph-init",
+  "workdir": "/Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-init/live-trial/20260804T052500Z-ci-c01-r3",
+  "evaluator": "independent fresh evaluator (read-only re-measurement)",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "Fixture pre-state was NOT dev-graph initialized: fixture-repo git history is a single commit 9924511 touching only .gitkeep, and the transcript's own pre-check (session d9368621, tool_use idx 102) lists the tree before init as '. .. .git .gitkeep eval-log' with no content roots and no .dev-graph. After pass 1 all six roots exist and I re-confirmed on disk now: issues/ tasks/ specs/ architecture/ features/ docs/ all present, plus .dev-graph/{config.json,state/graph.json,cache,locks,templates}. Routing policy is stored in .dev-graph/config.json: content_roots maps issues->issues, tasks->tasks, specifications->specs, architecture->architecture, features->features, documents->docs (+ system_spec->system-spec, which init is contractually not required to create per references/validation-contract.md), and path_policy = {authority: caller-repository, stored_paths: repository-relative, allow_outside_repository: false}. Graph store was created by the canonical writer in pass 1: build-graph-store.py returned action=created, changed=true, graph_revision=0, digest sha256:5a23e9d9... (transcript idx 108/109); config was created by build-repo-config.py action=created, digest sha256:ed7be90a... The six directories were created by the skill's prescribed mkdir step (SKILL.md:87 output contract), not pre-seeded by the fixture."
+    },
+    "2": {
+      "met": true,
+      "evidence": "The second pass is a genuine literal Skill tool call, not a hand-written existence check: transcript idx 65 and idx 159 both contain tool_use Skill{skill: 'dev-graph:run-dev-graph-init', args: '--repo-root .../20260804T052500Z-ci-c01-r3/fixture-repo --hook-source plugin'}, with the between-pass mutations at idx 151/154 strictly between them (harness replied at idx 160/161 'Launching skill ... instructions unchanged'). Inside pass 2 the same canonical writers were re-run and reported no change: build-repo-config.py --if-absent -> action=skipped_existing, changed=false, digest unchanged sha256:ed7be90a...; build-graph-store.py -> action=preserved_existing, changed=false, graph_revision=1 (idx 168/169). Template scaffold in pass 2 produced 0 copies with 20 same-digest + 1 user-edited preserved, and the directory/scaffold diff produced planned_changes=[] / planned_changes_count=0 (idx 170/171), recorded in eval-log/run-dev-graph-init-receipt-pass2.json as planned_changes_count 0."
+    },
+    "3": {
+      "met": true,
+      "evidence": "Between the passes, .dev-graph/templates/issue.md was edited via the Edit tool (idx 151) inserting '<!-- USER-EDIT-MARKER C01-OUT1-positive-idempotence-r17 20260804T052500Z-ci-c01-r3 -->', and its digest immediately after the edit was sha256 31294a677da1c82a882d51bb743878b2f7533353ae0388fea270e3b5992b4925 (idx 155, i.e. before the second Skill call at idx 159). Non-overwrite is proven by running init, not by inspection alone: pass 2 re-executed the template scaffold step of the skill, which classified issue.md as user-edited and applied no plugin copy (template_copies_pass2=[], template_user_edited_preserved=['issue.md'], idx 171). My own re-measurement now (after the run) gives shasum -a 256 .dev-graph/templates/issue.md = 31294a677da1c82a882d51bb743878b2f7533353ae0388fea270e3b5992b4925 with exactly 1 USER-EDIT-MARKER occurrence at line 3 — byte-identical to the pre-pass-2 digest."
+    },
+    "4": {
+      "met": true,
+      "evidence": "hook_source=plugin was resolved from the plugin manifest, and the receipt is recorded in both eval-log/run-dev-graph-init-receipt-pass1.json and -pass2.json: resolution='resolved', plugin_manifest='.claude-plugin/plugin.json', plugin_hooks_ref='./hooks/hooks.json', plugin_hooks_digest='sha256:59c573b2f424a8b05ec78c9f00931e2a66a4997959654a1a0c2567c107005227', wired_events=[PostToolUse, PreToolUse, SessionStart, TaskCompleted], c10_pretooluse_guard_present=true, effective_paths=1, duplicate_registrations=0, existing_settings_keys_changed=0. The rejection diagnosis for the alternative path is recorded verbatim: project_fallback_applied=false with project_fallback_rejection_reason='hook_source=plugin: project fallback is only permitted for plain-symlink installs with no effective plugin hook'. I independently verified the digest against the live plugin: shasum -a 256 plugins/dev-graph/hooks/hooks.json = 59c573b2f424a8b05ec78c9f00931e2a66a4997959654a1a0c2567c107005227, and its hooks keys are exactly the four wired events. No .claude/settings.json or settings.local.json exists in the fixture, consistent with 'no project fallback applied'."
+    },
+    "5": {
+      "met": true,
+      "evidence": "I re-scanned .dev-graph/config.json myself with an independent walker over every string leaf: absolute paths (leading '/' or drive letter) = 0; strings containing '/Users/' or 'HarnessHub' = 0; GitHub node-id-shaped values (PVT_/PVTI_/PVTF_/I_/MDU6/MDExO/PR_/R_/U_kg prefixes) = 0; token-shaped values (ghp_/gho_/ghu_/ghs_/ghr_/github_pat_) = 0; fields keyed token/secret/password/api_key = 0. The only long opaque string is repository_id='local:sha256:de83a3386b919d23a23dd5ff12072da9b90561247077efab86c152590be79129', a content-derived repository hash, not a credential or node id. All stored paths are repository-relative (local_state.graph='.dev-graph/state/graph.json', claude_hooks.project_plugin_link='.claude/dev-graph-plugin', content_roots values are bare names), github.enabled=false with issue_repository='local/fixture-repo'. My independent run of validate-repo-config.py --require-content-roots issues tasks specifications architecture features documents exits 0 with valid=true, violations=[], missing_sections=[]."
+    },
+    "6": {
+      "met": true,
+      "evidence": "C11 was not evaluated vacuously against an empty graph. The node was registered by the canonical C02 writer, not by hand: seed-node.json was copied to .dev-graph/tmp/node-input.json and upsert-node.py --input was run (idx 154/155), returning status=applied, operation=added, graph_node_id=issue-idempotence-test, graph_revision 0 -> 1, write_count=2, exit 0; the C10 guard (which blocks interpreter-level graph writes, as seen firing at idx 135) confirms no hand-edited graph path was available. I re-ran the validator myself just now: python3 plugins/dev-graph/scripts/validate-graph-schema.py --repo-root <fixture> --graph .dev-graph/state/graph.json exits 0 with valid=true, violations=[], missing_sections=[], implementation_readiness=complete. The graph it validated contains node_count=1, node_ids=['issue-idempotence-test'], graph_revision=1, canonical 4-key envelope [graph_revision, nodes, repository_id, schema_version], and the node's file_path 'issues/issue-idempotence-test.md' exists on disk."
+    }
+  },
+  "additional_checks": {
+    "single_turn_execution": "The whole run is one assistant turn: after the second Skill tool_result the session continued directly into measurement (idx 168-174), goal-seek updates (idx 179-186), validator (idx 187), marker write (idx 190) and only then emitted the single final line 'DONE: PASS' (idx 194). No intermediate final answer was returned between the second Skill summary and the verification steps.",
+    "out_dir_contract": "out/ contains only status.json = {\"status\":\"PASS\",\"scenario\":\"C01-OUT1-positive-idempotence-r17\"}.",
+    "goal_seek_evidence": "fixture eval-log holds goal-spec/progress/intermediate; validate-goal-seek-evidence.py returned valid=true, violations=[], intermediate_rows=2, and both rows carry the identical original_goal and original_goal_hash e3e5558ca45a2922c9e635ef5d789a765f7c12d9ed51d3cd031f67041778dde4 required by the reference task.",
+    "no_host_repo_mutation": "git status in wt-14-2 shows no tracked-file modifications; only untracked eval-log/ trial directories. Fixture git status shows only untracked .dev-graph/, eval-log/, issues/ produced by the run itself.",
+    "evaluator_side_effects": "Read-only re-measurement: only validate-graph-schema.py / validate-repo-config.py (both non-mutating) plus digest and JSON reads were run against the fixture; no fixture file was modified. The only file written by this evaluator is independent-verification.json."
+  },
+  "notes": [
+    "Residual .dev-graph/state/.graph.json.register.lock and .dev-graph/tmp/{node-input.json,config-draft.json} remain in the fixture after the run. These are working artifacts of the canonical writers / the prescribed --from-json staging path and are outside the six required observations, so they do not affect the verdict."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "algorithm": "sha256",
+  "bound_feature_source_digest": "13510cc39db4dfd200920fb418aa959781074b683c82f316e8de97fdde25f1de",
+  "bound_package_digest": "sha256:30caeebd524eac9ee07cbf195dda000fb94c46de59a3ef0d281477e077b54e46",
+  "canonicalization": "json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',',':'))",
+  "graph_revision": 3,
+  "graph_snapshot_digest": "sha256:6ca5bf7b77755061f4997cb2632ac8e56fe2ffc7fc605681d577aa453cf88313",
+  "graph_source": ".dev-graph/state/graph.json",
+  "kind": "requirements-graph-snapshot-digest",
+  "payload_scope": "repository_id + graph_revision + schema_version + scope_node_ids + full node objects (昇順)",
+  "repository_id": "local:sha256:7209f443a2a2b0ffc66cbc1b89766220c0920c7e0568ec7275e7fbb565b1794b",
+  "schema_version": "1.0.0",
+  "scope_node_ids": [
+    "F-LIVE-001",
+    "LT-ARCH-001",
+    "SYS-LIVE-001-P01",
+    "SYS-LIVE-001-P02",
+    "SYS-LIVE-001-P03",
+    "SYS-LIVE-001-P04",
+    "SYS-LIVE-001-P05",
+    "SYS-LIVE-001-P06",
+    "SYS-LIVE-001-P07",
+    "SYS-LIVE-001-P08",
+    "SYS-LIVE-001-P09",
+    "SYS-LIVE-001-P10",
+    "SYS-LIVE-001-P11",
+    "SYS-LIVE-001-P12",
+    "SYS-LIVE-001-P13"
+  ]
+}

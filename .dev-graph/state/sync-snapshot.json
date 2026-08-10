@@ -8,8 +8,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テナント別 OIDC (Auth.js)・role 4 種・OAuth Device Flow 要件ベースライン確定",
@@ -30,8 +30,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — Auth.js adapter 境界・単一認可ミドルウェア・Device Flow・session 管理設計",
@@ -52,8 +52,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — スキーマ owner 境界・role 分割線・単一ミドルウェア設計の妥当性確認",
@@ -74,8 +74,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効のテスト設計",
@@ -96,8 +96,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — Auth.js adapter・単一認可ミドルウェア・Device Flow API・session 管理の実装",
@@ -118,8 +118,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — tenant 分離・role 4 種認可・Device Flow・OIDC 検証契約・session 失効テストの実行と結果記録",
@@ -140,8 +140,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — goal-spec acceptance 3 項目の確認",
@@ -162,8 +162,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — adapter 境界の最終整理・dev 専用 provider 非存在 CI 検査確立",
@@ -184,8 +184,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — CI 品質ゲート (tenant 分離・adapter 境界隔離・dev provider 非存在・認可判定単一集約) の確認",
@@ -206,8 +206,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終独立レビュー — quality_constraints 7 件の充足判定",
@@ -228,8 +228,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
@@ -250,8 +250,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント/運用 — 緊急失効・Device Flow token 監視・OIDC provider 追加の runbook 作成",
@@ -272,8 +272,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リリース/デプロイ — 本番 OIDC provider 反映と Device Flow スモークテスト",
@@ -290,8 +290,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "構築パイプラインボード要件ベースライン確定",
@@ -572,8 +572,8 @@
           "remote": []
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "要件ベースライン確定 — 開発管理パイプライン改善 8 要件の baseline 文書化",
@@ -594,8 +594,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "検査・規約・schema 設計 — open 残置検出 / eval-log 配置 lint / handoff disposition / close-gate 配線 / 棚卸し GC の決定論設計",
@@ -616,8 +616,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "設計レビュー — 単一 writer・choke-point・sync authority との整合検証",
@@ -638,8 +638,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "テスト設計 — lint script 群と冪等 migration の回帰テスト設計",
@@ -660,8 +660,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線",
@@ -682,8 +682,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "テスト実行 — 回帰テスト全件と lint 実測の記録",
@@ -704,8 +704,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "受入判定 — 8 acceptance の突合と未達の差し戻し",
@@ -726,8 +726,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)",
@@ -748,8 +748,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "品質保証 — fail-closed 実効性の悪性ケース実測",
@@ -770,8 +770,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "最終レビュー — 全 phase 成果の横断整合確認",
@@ -792,8 +792,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
@@ -814,8 +814,8 @@
           ]
         },
         "status": {
-          "local": "closed",
-          "remote": "closed"
+          "local": "open",
+          "remote": "open"
         },
         "title": {
           "local": "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順",
@@ -854,8 +854,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — qa-070 ドキュメント規約 2 件・3 検査スコープの baseline 文書化",
@@ -876,8 +876,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "検査設計 — 300 行 lint・仕組み-ナレッジ境界検査・移植 opt-in 検査の入出力契約確定",
@@ -898,8 +898,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "設計レビュー — fail-closed・冪等・digest 不変・境界非複製との整合検証",
@@ -920,8 +920,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト設計 — 3 検査の MUST_DETECT/MUST_PASS fixture とテスト ID 確定",
@@ -942,8 +942,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — lint script 3 本・allowlist schema・回帰テスト・governance-check.yml 配線",
@@ -964,8 +964,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 回帰テスト全件と 3 検査の実測記録",
@@ -986,8 +986,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入判定 — 4 acceptance の突合と未達の差し戻し",
@@ -1008,8 +1008,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "移行 — 既存超過 6 文書の allowlist baseline 遡及付与 (冪等・縮小のみ許す ratchet 初期化)",
@@ -1030,8 +1030,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — fail-closed 実効性と境界突破 (迂回経路) の悪性ケース実測",
@@ -1052,8 +1052,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終レビュー — 全 phase 成果の横断整合確認",
@@ -1074,8 +1074,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "証跡固定 — 実測ログと成果物 digest の evidence manifest 化",
@@ -1096,8 +1096,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "運用文書化 — allowlist ratchet 運用手順と誤検出トリアージ手順",
@@ -1118,8 +1118,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リリース — main 反映と 3 検査の CI fail-closed 実効性の実証",
@@ -1136,8 +1136,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント CMS 要件ベースライン確定",
@@ -1158,8 +1158,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — Doc スキーマ・S15 画面構成・B7 API 契約・AI 下書きキュー契約の設計",
@@ -1180,8 +1180,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — Doc スキーマ・S15 認可・AI キュー契約・Markdown sanitize の妥当性確認",
@@ -1202,8 +1202,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — tenant 分離/admin 限定編集/Markdown sanitize/AI キュー認可/監査記録のテストスタブ作成",
@@ -1224,8 +1224,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — S15 一覧/閲覧/編集・Doc スキーマ・B7 API・AI 下書きキュー・監査 event の実装",
@@ -1246,8 +1246,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 単体/結合/tenant 分離/認可/sanitize テストの実行と結果記録",
@@ -1268,8 +1268,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — goal-spec acceptance 3 項目の確認",
@@ -1290,8 +1290,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — Doc テーブルマイグレーション生成と後方互換性確認",
@@ -1312,8 +1312,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — CI 品質ゲート (axe/tenant 分離/AI キュー認可/XSS sanitize) の確認",
@@ -1334,8 +1334,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終独立レビュー — quality_constraints 8 件の充足判定",
@@ -1356,8 +1356,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "エビデンス収集 — 再現可能な検証証跡の集約",
@@ -1378,8 +1378,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント/運用 — S15 運用手順・AI キュー滞留監視・監査運用の runbook 作成",
@@ -1418,8 +1418,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry) 要件ベースライン確定",
@@ -1440,8 +1440,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — コアドメイン 18 テーブル Drizzle スキーマ・接続層隔離・User 基底テーブル owner 確定・R2 registry 設計",
@@ -1462,8 +1462,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — スキーマ・接続層隔離・User 基底テーブル owner 判断の妥当性確認",
@@ -1484,8 +1484,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — D1 互換性・release immutable・tenant 分離・ULID/epoch・R2 content-addressing・backup/restore のテスト設計",
@@ -1506,8 +1506,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — コアドメイン Drizzle スキーマ・接続層 (libSQL/D1)・リポジトリ層・R2 content-addressed registry の実装",
@@ -1528,8 +1528,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — D1 互換性・release immutable・tenant 分離・R2 registry・backup/restore テストの実行と結果記録",
@@ -1550,8 +1550,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — goal-spec acceptance 3 項目の確認",
@@ -1572,8 +1572,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — 初回ベースライン migration 生成と単一系統確立",
@@ -1594,8 +1594,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — CI 品質ゲート (tenant 分離・接続層隔離・secret scan・schema-driven 分離テスト網羅) の確認",
@@ -1616,8 +1616,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終独立レビュー — quality_constraints 10 件の充足判定",
@@ -1638,8 +1638,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "エビデンス収集 — テスト結果・受入記録・最終レビュー記録の証跡集約",
@@ -1660,8 +1660,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント/運用 — 日次 export・四半期 restore drill・migration 適用・KEK/DEK ローテーション運用手順の runbook 作成",
@@ -1682,8 +1682,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リリース/デプロイ — 本番 Turso/D1・R2 registry 反映とスモークテスト",
@@ -1700,8 +1700,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — dual catalog UI(Workspace Catalog)・publish状況表示ポーリング・marketplace.json出力・axe/CWV品質ゲートの要件確定",
@@ -1825,10 +1825,12 @@
       "issue": {
         "depends_on": {
           "local": [
-            "SYS-DUAL-CATALOG-WEB-P06"
+            "SYS-DUAL-CATALOG-WEB-P06",
+            "issue-hub-catalog-page-missing-tenant-scope-20260803"
           ],
           "remote": [
-            "SYS-DUAL-CATALOG-WEB-P06"
+            "SYS-DUAL-CATALOG-WEB-P06",
+            "issue-hub-catalog-page-missing-tenant-scope-20260803"
           ]
         },
         "status": {
@@ -1957,10 +1959,12 @@
       "issue": {
         "depends_on": {
           "local": [
-            "SYS-DUAL-CATALOG-WEB-P12"
+            "SYS-DUAL-CATALOG-WEB-P12",
+            "issue-hub-catalog-page-missing-tenant-scope-20260803"
           ],
           "remote": [
-            "SYS-DUAL-CATALOG-WEB-P12"
+            "SYS-DUAL-CATALOG-WEB-P12",
+            "issue-hub-catalog-page-missing-tenant-scope-20260803"
           ]
         },
         "status": {
@@ -1982,8 +1986,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "改善要望フィードバックループ要件ベースライン確定",
@@ -2004,8 +2008,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — Feedback スキーマ・S14 画面構成・feedback/AI キュー API 契約・通知/publish 接続設計",
@@ -2026,8 +2030,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — Feedback スキーマ・認可・AI キュー接続・通知/publish 接続の妥当性確認",
@@ -2048,8 +2052,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — 2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離のテストスタブ作成",
@@ -2070,8 +2074,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — S14 一覧+フォーム・feedbacks スキーマ・feedback API・AI キュー連携・通知/publish 接続の実装",
@@ -2092,8 +2096,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 単体/結合/2 経路正規化/status 遷移監査/AI pull キュー/通知/tenant 分離テストの実行と結果記録",
@@ -2114,8 +2118,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — goal-spec acceptance 3 項目の確認",
@@ -2136,8 +2140,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — feedbacks テーブルマイグレーション生成と後方互換性確認",
@@ -2158,8 +2162,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — CI 品質ゲート (axe/tenant 分離/認可/AI キュー lease/監査) の確認",
@@ -2180,8 +2184,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終独立レビュー — quality_constraints 8 件の充足判定",
@@ -2202,8 +2206,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "エビデンス収集 — 再現可能な検証証跡の集約",
@@ -2224,8 +2228,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント/運用 — S14 運用手順・AI キュー運用・監査/通知運用の runbook 作成",
@@ -2264,8 +2268,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ヒアリング intake 要件ベースライン確定",
@@ -2286,8 +2290,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計",
@@ -2308,8 +2312,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer 設計・AI キュー認可・Markdown sanitize の妥当性確認",
@@ -2330,8 +2334,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — 受付番号発番/AI キュー認可/Markdown sanitize/試算表示サーバ計算限定/axe a11y のテストスタブ作成",
@@ -2352,8 +2356,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — S10 ウィザード/S11-S12 シート管理/受付番号採番/AI キュー API/Markdown sanitize の実装",
@@ -2374,8 +2378,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 単体/結合/認可/a11y テストの実行と結果記録",
@@ -2396,8 +2400,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — goal-spec acceptance 3 項目の確認",
@@ -2418,8 +2422,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — HearingSheet/FormData新規テーブルのmigration（共通ai_jobsは既存schemaを消費） 生成と後方互換性確認",
@@ -2440,8 +2444,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — CI 品質ゲート (axe/Tenant 分離/AI キュー認可) 適合確認",
@@ -2462,8 +2466,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終独立レビュー — feature 全体の confirmation 前最終点検",
@@ -2484,8 +2488,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "エビデンス収集 — acceptance 根拠・テスト結果・品質保証の証跡集約",
@@ -2506,8 +2510,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント/運用 — S10-S12 運用手順・AI キュー滞留監視・受付番号運用のドキュメント化",
@@ -2546,8 +2550,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 要件ベースライン確定",
@@ -2568,8 +2572,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 アーキテクチャ・workstream 設計 (pnpm monorepo 構成確定)",
@@ -2590,8 +2594,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 独立設計レビュー",
@@ -2612,8 +2616,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 テスト設計 (test-first 受入契約)",
@@ -2634,8 +2638,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 実装 (scaffold・CI/CD・監視・SLO)",
@@ -2656,8 +2660,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 テスト実行",
@@ -2678,8 +2682,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 feature 受入判定",
@@ -2700,8 +2704,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 リファクタリング・データ移行 (N/A 判定)",
@@ -2722,8 +2726,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 品質・セキュリティ・運用保証",
@@ -2744,8 +2748,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 最終独立レビュー",
@@ -2766,8 +2770,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 証跡収集",
@@ -2788,8 +2792,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 運用ドキュメント整備",
@@ -2810,8 +2814,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤 本番リリース・デプロイ",
@@ -2828,8 +2832,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "効果測定 (実行ログ ingest・週次 rollup・KPI ダッシュボード) 要件ベースライン確定",
@@ -3110,8 +3114,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — MVP ファースト化 3 軸判断基準 (目的・背景・MVP) の baseline 文書化",
@@ -3132,8 +3136,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "設計 — MVP 適合軸メタデータ・schedule/next ソートキー・bd-bridge ready 整合・繰り延べ規則・選定 receipt の決定論設計",
@@ -3154,8 +3158,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "設計レビュー — 単一 writer (schedule-graph.py)・後方互換・qa-066 非退行との整合検証",
@@ -3176,8 +3180,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト設計 — MVP-first ソート・冪等性・後方互換・receipt 出力の回帰テスト設計",
@@ -3198,8 +3202,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — MVP 適合軸メタデータ・schedule-graph.py ソートキー・bd-bridge ready 整合・選定 receipt 出力",
@@ -3220,8 +3224,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — 回帰テスト全件と ready/next 実測の記録",
@@ -3242,8 +3246,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入判定 — goal-spec acceptance 5 件の突合と未達の差し戻し",
@@ -3264,8 +3268,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "移行 — 既存 task 資産一括書き換えを行わないことの互換性確認 (fallback 動作の実測記録)",
@@ -3286,8 +3290,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質保証 — fail-closed 実効性の悪性ケース実測 (qa-066 非退行含む)",
@@ -3308,8 +3312,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "最終レビュー — 全 phase 成果の横断整合確認",
@@ -3330,8 +3334,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
@@ -3352,8 +3356,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "運用文書化 — MVP 適合軸設定手順と選定 receipt の運用手順",
@@ -3374,12 +3378,294 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback",
           "remote": "リリース — main 反映と MVP-first 選定の実証・spec/architecture writeback"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定",
+          "remote": "要件ベースライン確定 — scope 解決 2 系統・サインイン後着地先解決・open redirect 防止・deny-by-default 非退行の要件確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P01"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P01"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定",
+          "remote": "アーキテクチャ決定 — scope 解決の単一合流点・session への active workspace 束縛・着地先解決関数の配置と契約確定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P02"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P02"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査",
+          "remote": "設計レビュー — 認可迂回路・open redirect・deny-by-default 退行の 3 リスクに対する設計妥当性審査"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P03"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P03"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義",
+          "remote": "テスト設計 — scope 解決の真理値表・着地先解決の入力分類・deny-by-default 非退行の実行可能テスト ID 定義"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P04"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P04"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線",
+          "remote": "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P05"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P05"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集",
+          "remote": "テスト実行 — P04 が定義したテスト ID の実行と結果証跡の収集"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P06"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P06"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定",
+          "remote": "受入判定 — goal-spec acceptance 8 件の実測証跡による判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P07"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P07"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約",
+          "remote": "リファクタリングと移行 — scope 解決の二重実装排除と既定着地定数の集約"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P08"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P08"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査",
+          "remote": "品質保証 — deny-by-default 非退行・open redirect 防止・所属検証の fail-closed 検査"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P09"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P09"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "最終レビュー — 実行済み証跡のみによるリリース可否判定",
+          "remote": "最終レビュー — 実行済み証跡のみによるリリース可否判定"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P10"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P10"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "証跡固定 — source digest と再実行コマンドの保存",
+          "remote": "証跡固定 — source digest と再実行コマンドの保存"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P11"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P11"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備",
+          "remote": "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-POST-SIGNIN-SCOPE-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-POST-SIGNIN-SCOPE-P12"
+          ],
+          "remote": [
+            "SYS-POST-SIGNIN-SCOPE-P12"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し",
+          "remote": "リリースとデプロイ — 本番反映と確定仕様・アーキテクチャへの書き戻し"
         }
       },
       "projects": {}
@@ -3594,8 +3880,8 @@
           "remote": "open"
         },
         "title": {
-          "local": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認",
-          "remote": "独立最終レビュー — quality_constraints 8 件・acceptance 3 件・cross-feature 境界判断の独立確認"
+          "local": "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認",
+          "remote": "独立最終レビュー — quality_constraints 9 件・acceptance 3 件・cross-feature 境界判断の独立確認"
         }
       },
       "projects": {}
@@ -3674,8 +3960,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — TypeScript統一Publisher・Device Flow認証・検査ロジック共有・wranglerスクリプト実行・初回publish15分以内",
@@ -3696,8 +3982,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — apps/publisher (TS/Node/pnpm) 構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の決定",
@@ -3718,8 +4004,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — apps/publisher構成・packages/inspection消費境界・Device Flow token保存方式・wrangler実行方式の妥当性確認",
@@ -3740,8 +4026,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — quality_constraints 8件・acceptance 3件に対応する挙動同値性テスト・実機E2Eタイムボックス計測ケースの設計",
@@ -3762,8 +4048,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — apps/publisher (CLI + Claude Code/Codex plugin)・Device Flow認証クライアント・wrangler実行ラッパーの実装",
@@ -3828,8 +4114,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — Python資産参照コメントの整理とpackages/inspection消費コードのクリーンアップ",
@@ -3850,8 +4136,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質・セキュリティ・運用保証 — Device Flow数値契約遵守・OS資格情報域保存・scope最小権限・secret非保存の確認",
@@ -3916,8 +4202,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "文書化・runbook・引き継ぎ — 作者向けpublish手順・token失効導線・障害時対応手順の確立",
@@ -4230,6 +4516,288 @@
       },
       "projects": {}
     },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P01": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化",
+          "remote": "要件ベースライン確定 — テスト戦略 4 項目 (テストレベル選定・カバレッジ目標・層別方針・保守性制約) の要件ベースライン文書化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P02": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P01"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計",
+          "remote": "設計 — テスト戦略 section スキーマ・変更種別からの導出規則・テンプレート組込位置・fail-closed 検査点の決定論設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P03": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P02"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証",
+          "remote": "設計レビュー — 単一 writer (validate-system-plan.py) 境界・exact-13 契約非退行・既存 promoted 世代への非破壊性の整合検証"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P04": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P03"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計",
+          "remote": "テスト設計 — section 欠落拒否・完備 PASS・再生成冪等・exact-13 非退行の回帰テスト設計"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P05": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P04"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則",
+          "remote": "実装 — テスト戦略 section スキーマ・task spec テンプレート必須 section 組込・fail-closed validator・層別導出規則"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P06": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P05"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録",
+          "remote": "テスト実行 — 回帰テスト全件実行と欠落拒否・冪等性の実測記録"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P07": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P06"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し",
+          "remote": "受入判定 — goal-spec acceptance 7 件の突合と未達の差し戻し"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P08": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P07"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)",
+          "remote": "移行 — 既存 promoted 世代を一括再生成しない互換性確認 (旧世代 digest 不変の実測記録)"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P09": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P08"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測",
+          "remote": "品質保証 — section 部分欠落・順序入替・空本文の悪性ケースに対する fail-closed 実効性の実測"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P10": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P09"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "最終レビュー — 全 phase 成果の横断整合確認",
+          "remote": "最終レビュー — 全 phase 成果の横断整合確認"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P11": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P10"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "証跡固定 — 実測ログと digest の evidence manifest 化",
+          "remote": "証跡固定 — 実測ログと digest の evidence manifest 化"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P12": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P11"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド",
+          "remote": "運用文書化 — テスト戦略 section の記述手順と保守性制約 (pixel 位置・DOM 構造依存禁止) の運用ガイド"
+        }
+      },
+      "projects": {}
+    },
+    "SYS-TASK-SPEC-TEST-STRATEGY-P13": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+          ],
+          "remote": [
+            "SYS-TASK-SPEC-TEST-STRATEGY-P12"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "リリース — main 反映と確定 system spec/architecture への writeback",
+          "remote": "リリース — main 反映と確定 system spec/architecture への writeback"
+        }
+      },
+      "projects": {}
+    },
     "SYS-TENANT-DATA-RETENTION-P01": {
       "binding": "beads",
       "issue": {
@@ -4238,8 +4806,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "要件ベースライン確定 — tenant_data_objects CRUD API・R2封筒暗号化保管・即時完全削除・R2使用量監視の要件確定",
@@ -4260,8 +4828,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — encryption_keys.purpose拡張・R2 tenant prefix分離・API詳細設計・R2使用量監視cron拡張・削除完全性テスト採番の決定",
@@ -4282,8 +4850,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — encryption_keys拡張・R2 prefix分離・API契約・削除完全性テスト採番の妥当性確認",
@@ -4304,8 +4872,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テストファースト設計 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートのテスト設計",
@@ -4326,8 +4894,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "実装 — tenant_data_objects API・R2封筒暗号化保管/取得/即時完全削除・R2使用量監視cron拡張の実装",
@@ -4348,8 +4916,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト実行 — テナント分離・削除完全性・暗号化検証・R2使用量監視アラートテストの実行",
@@ -4370,8 +4938,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "受入 — テナント分離・削除完全性・暗号化検証の3件受入判定",
@@ -4392,8 +4960,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — encryption_keys.tenant_id/key uniqueness migration・per-tenant DEK provisioning・R2バケット/prefix新設の既存基盤互換移行",
@@ -4414,8 +4982,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "品質・セキュリティ・運用保証 — テナント越境読取防止(T14)・削除不完全対策(T15)・R2使用量監視運用確認",
@@ -4436,8 +5004,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立最終レビュー — quality_constraints 6件・acceptance 3件の最終確認",
@@ -4458,8 +5026,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "再現可能な証跡 — P06/P07/P09/P10の証跡集約と再現手順確立",
@@ -4480,8 +5048,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "文書化・runbook・引き継ぎ — 業務データ保管/取得/削除手順・R2使用量監視runbook・鍵ローテーションrunbook拡張の文書化",
@@ -4520,8 +5088,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ユーザー管理・アカウント設定 要件ベースライン確定",
@@ -4542,8 +5110,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "アーキテクチャ設計 — User拡張/TenantCoefficient スキーマ・PII ガード/通知ディスパッチ接続点の設計",
@@ -4564,8 +5132,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "独立設計レビュー — role統合・PIIガード・監査拡張の設計妥当性確認",
@@ -4586,8 +5154,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "テスト設計 — salary非露出分離テスト・監査記録テスト・axe a11yテストの設計",
@@ -4674,8 +5242,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "リファクタリング/マイグレーション — 新規列・新規テーブルのmigration適用と後方互換性確認",
@@ -5090,8 +5658,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
@@ -5108,15 +5676,13 @@
             "feat-auth-tenancy",
             "feat-domain-model-db",
             "feat-hearing-intake",
-            "feat-hub-foundation",
-            "feat-publish-pipeline"
+            "feat-hub-foundation"
           ],
           "remote": [
             "feat-auth-tenancy",
             "feat-domain-model-db",
             "feat-hearing-intake",
-            "feat-hub-foundation",
-            "feat-publish-pipeline"
+            "feat-hub-foundation"
           ]
         },
         "status": {
@@ -5156,8 +5722,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドキュメント規約とポータビリティ検査 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植 opt-in 検査)",
@@ -5204,8 +5770,8 @@
           ]
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "ドメインモデル & control-plane DB (Turso + Drizzle + R2 registry)",
@@ -5219,11 +5785,9 @@
       "issue": {
         "depends_on": {
           "local": [
-            "feat-publish-pipeline",
             "feat-stage0-distribution-gate"
           ],
           "remote": [
-            "feat-publish-pipeline",
             "feat-stage0-distribution-gate"
           ]
         },
@@ -5245,14 +5809,12 @@
           "local": [
             "feat-auth-tenancy",
             "feat-domain-model-db",
-            "feat-hub-foundation",
-            "feat-publish-pipeline"
+            "feat-hub-foundation"
           ],
           "remote": [
             "feat-auth-tenancy",
             "feat-domain-model-db",
-            "feat-hub-foundation",
-            "feat-publish-pipeline"
+            "feat-hub-foundation"
           ]
         },
         "status": {
@@ -5300,8 +5862,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
@@ -5346,8 +5908,8 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "タスク優先度選定の MVP ファースト化 (目的・背景・MVP 3軸)",
@@ -5356,18 +5918,30 @@
       },
       "projects": {}
     },
+    "feat-post-signin-scope-routing": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "サインイン後のスコープ解決とルーティング結線",
+          "remote": "サインイン後のスコープ解決とルーティング結線"
+        }
+      },
+      "projects": {}
+    },
     "feat-publish-pipeline": {
       "binding": "beads",
       "issue": {
         "depends_on": {
-          "local": [
-            "feat-auth-tenancy",
-            "feat-domain-model-db"
-          ],
-          "remote": [
-            "feat-auth-tenancy",
-            "feat-domain-model-db"
-          ]
+          "local": [],
+          "remote": []
         },
         "status": {
           "local": "open",
@@ -5385,11 +5959,9 @@
       "issue": {
         "depends_on": {
           "local": [
-            "feat-publish-pipeline",
             "feat-stage0-distribution-gate"
           ],
           "remote": [
-            "feat-publish-pipeline",
             "feat-stage0-distribution-gate"
           ]
         },
@@ -5418,6 +5990,24 @@
         "title": {
           "local": "Stage 0: 配布経路 technical gate (H7) 検証",
           "remote": "Stage 0: 配布経路 technical gate (H7) 検証"
+        }
+      },
+      "projects": {}
+    },
+    "feat-task-spec-test-strategy": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)",
+          "remote": "タスク仕様書のテスト戦略必須化 (4レベル網羅・カバレッジ80%目標・層別方針の fail-closed 組込)"
         }
       },
       "projects": {}
@@ -5474,6 +6064,28 @@
       },
       "projects": {}
     },
+    "feat-web-only-publish-journey": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-post-signin-scope-routing"
+          ],
+          "remote": [
+            "feat-post-signin-scope-routing"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "CLI 非依存の Web 完結公開導線",
+          "remote": "CLI 非依存の Web 完結公開導線"
+        }
+      },
+      "projects": {}
+    },
     "feat-workspace-governance": {
       "binding": "beads",
       "issue": {
@@ -5498,7 +6110,65 @@
       },
       "projects": {}
     },
-    "issue-audit-followups-20260717": {
+    "feat-workspace-switch-ux": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "feat-post-signin-scope-routing"
+          ],
+          "remote": [
+            "feat-post-signin-scope-routing"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Workspace 選択・切替とスコープ不足の回復導線",
+          "remote": "Workspace 選択・切替とスコープ不足の回復導線"
+        }
+      },
+      "projects": {}
+    },
+    "issue-500-line-split-dilutes-harness-coverage-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "500 行分割が harness coverage の分母を希釈し ratchet を回帰させる",
+          "remote": "500 行分割が harness coverage の分母を希釈し ratchet を回帰させる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-actions-secrets-missing-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)",
+          "remote": "GitHub Actions の Turso secrets が未登録で deploy migration と日次 backup が失敗する (secret 名の系統も二重)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-actions-secrets-provisioning-evidence-20260725": {
       "binding": "beads",
       "issue": {
         "depends_on": {
@@ -5510,8 +6180,218 @@
           "remote": "open"
         },
         "title": {
+          "local": "GitHub Actions secret / variable を実投入し、backup 初回成功と A1 完走の証跡を取る",
+          "remote": "GitHub Actions secret / variable を実投入し、backup 初回成功と A1 完走の証跡を取る"
+        }
+      },
+      "projects": {}
+    },
+    "issue-aggregate-completeness-file-split-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する",
+          "remote": "assign-system-spec-completeness-evaluator の aggregate-completeness.py (572 行) / test_aggregate_completeness.py (592 行) の 500 行超過を分割する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-audit-followups-20260717": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
           "local": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正",
           "remote": "Studio 反映監査 (C06/C07/C08) の残 findings 4 件の是正"
+        }
+      },
+      "projects": {}
+    },
+    "issue-audit-fork-ledger-forgery-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる",
+          "remote": "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-501-doc-refresh-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-auth-tenancy-production-adapter-20260725"
+          ],
+          "remote": [
+            "issue-auth-tenancy-production-adapter-20260725"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "feat-auth-tenancy 成果物の /api/auth 501 記述を実装へ追従させる",
+          "remote": "feat-auth-tenancy 成果物の /api/auth 501 記述を実装へ追従させる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-ci-wiring-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "feat-auth-tenancy の認証・認可 CI 検査 3 件が CI 未結線 (手動実行でしか走らない)",
+          "remote": "feat-auth-tenancy の認証・認可 CI 検査 3 件が CI 未結線 (手動実行でしか走らない)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-customer-managed-google-oidc-20260729": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-auth-tenancy-shared-google-oidc-20260729"
+          ],
+          "remote": [
+            "issue-auth-tenancy-shared-google-oidc-20260729"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する",
+          "remote": "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-plan-goalseek-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)",
+          "remote": "feature-package/feat-auth-tenancy の 13 task-spec が validate-system-plan.py で fail (inner goal-seek 節の欠落 27 件)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-production-adapter-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する",
+          "remote": "feat-auth-tenancy の Auth.js・本番 AuthPorts adapter・DB 永続化契約を実結線する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-shared-google-oidc-20260729": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "SYS-AUTH-TENANCY-P13"
+          ],
+          "remote": [
+            "SYS-AUTH-TENANCY-P13"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "HarnessHub共通Google OAuthクライアント方式を実装する",
+          "remote": "HarnessHub共通Google OAuthクライアント方式を実装する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-auth-tenancy-spec-delta-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る",
+          "remote": "feat-auth-tenancy の実装が security-spec の確定値を 2 点だけ超えており R4-reopen が要る"
+        }
+      },
+      "projects": {}
+    },
+    "issue-backup-failure-undetected-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)",
+          "remote": "日次 backup の連続失敗が 3 夜気づかれなかった (BACKUP_HEARTBEAT_URL 未投入で不発・失敗が無音になる)"
         }
       },
       "projects": {}
@@ -5534,6 +6414,132 @@
       },
       "projects": {}
     },
+    "issue-bd-external-ref-orphan-nodes-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
+          "remote": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-bd-free-field-write-route-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: 契約が「bd 側自由領域」とする priority/assignee/labels が guard により全経路で更新不能",
+          "remote": "dev-graph: 契約が「bd 側自由領域」とする priority/assignee/labels が guard により全経路で更新不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-beads-jsonl-stash-conflict-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備",
+          "remote": ".beads/interactions.jsonl の stash pop コンフリクト解消と JSONL 運用 runbook 整備"
+        }
+      },
+      "projects": {}
+    },
+    "issue-build-trace-doc-coverage-schema-drift-20260723": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される",
+          "remote": "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c02-doc-layer-frontmatter-loss-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C02 writer が graph 管理 docs の layer frontmatter を削除する",
+          "remote": "C02 writer が graph 管理 docs の layer frontmatter を削除する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c02-upsert-lifecycle-regression-20260729": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す",
+          "remote": "C02 の同一 feature 再 upsert が昇格済み lifecycle を draft へ巻き戻す"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c03-live-trial-closure-stale-after-merge-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "main マージで C03 の behavior closure digest が両親のどちらとも異なり live-trial 受領書が stale になる",
+          "remote": "main マージで C03 の behavior closure digest が両親のどちらとも異なり live-trial 受領書が stale になる"
+        }
+      },
+      "projects": {}
+    },
     "issue-c08-audit-primary-get-capability-20260722": {
       "binding": "beads",
       "issue": {
@@ -5548,6 +6554,140 @@
         "title": {
           "local": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する",
           "remote": "C08 監査 sub-agent が公式 API へ一次 GET できず WebSearch 二次索引依存で doc_freshness FAIL が反復する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c14-live-trial-scenario-coverage-gap-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-decompose-live-trial-audit-defects-20260726"
+          ],
+          "remote": [
+            "issue-decompose-live-trial-audit-defects-20260726"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C14 live-trial の scenario 契約が要求する readiness-incomplete 除外が未検証で、起票 0 件も binding=none と交絡している",
+          "remote": "C14 live-trial の scenario 契約が要求する readiness-incomplete 除外が未検証で、起票 0 件も binding=none と交絡している"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c14-publication-probe-tautology-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C14 scenario が canonical schema 上ありえない検体を要求しており OUT1 後半が原理的に検証不能",
+          "remote": "C14 scenario が canonical schema 上ありえない検体を要求しており OUT1 後半が原理的に検証不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-c19-live-trial-task-fixture-contract-drift-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ",
+          "remote": "C19 live-trial の task 指示を fixture 契約から決定論生成し、前提ずれを防ぐ"
+        }
+      },
+      "projects": {}
+    },
+    "issue-ci-token-least-privilege-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-actions-secrets-missing-20260725"
+          ],
+          "remote": [
+            "issue-actions-secrets-missing-20260725"
+          ]
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達",
+          "remote": "CLOUDFLARE_API_TOKEN 1 本を deploy と R2 write で共用しており最小権限分離が未達"
+        }
+      },
+      "projects": {}
+    },
+    "issue-claude-hooks-project-link-unverified-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない",
+          "remote": "claude_hooks.source=project でも project_plugin_link の実在と plain-symlink 性が機械検査されない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-completeness-report-session-id-migration-20260723": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)",
+          "remote": "completeness-report.json を session_id 付き実 fork 監査で再生成する (x4o migration)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-contract-s10-unmappable-status-overstated-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "execution-tracker-contract §10 の unmappable_status の説明が実測より過大で、回復手順の > 上書きが既存 receipt を壊しうる",
+          "remote": "execution-tracker-contract §10 の unmappable_status の説明が実測より過大で、回復手順の > 上書きが既存 receipt を壊しうる"
         }
       },
       "projects": {}
@@ -5570,7 +6710,79 @@
       },
       "projects": {}
     },
-    "issue-doc-granularity-remediation-20260722": {
+    "issue-db-write-gate-sweep-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "packages/db の全 write を guardedWrite へ掃き出し CI で機械検査する",
+          "remote": "packages/db の全 write を guardedWrite へ掃き出し CI で機械検査する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-decompose-live-trial-audit-defects-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "audit_decompose_live_trial.py の 4 欠陥により decompose OUT1 の live-trial 判定が検査として成立していない",
+          "remote": "audit_decompose_live_trial.py の 4 欠陥により decompose OUT1 の live-trial 判定が検査として成立していない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-desync-guard-bundle-untracked-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "HarnessHub-7xi9 の成果物 985 行がリポジトリに存在せず .git/ 内の 1 コピーのみで生存している",
+          "remote": "HarnessHub-7xi9 の成果物 985 行がリポジトリに存在せず .git/ 内の 1 コピーのみで生存している"
+        }
+      },
+      "projects": {}
+    },
+    "issue-devgraph-completion-event-ledger-gap-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "C26 completion_event 台帳 emission の設計ギャップ (writer-consumer 不在で reconcile 完全経路が未実装)",
+          "remote": "C26 completion_event 台帳 emission の設計ギャップ (writer-consumer 不在で reconcile 完全経路が未実装)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-devgraph-decompose-inline-dag-check-20260721": {
       "binding": "beads",
       "issue": {
         "depends_on": {
@@ -5582,8 +6794,62 @@
           "remote": "open"
         },
         "title": {
+          "local": "run-dev-graph-decompose が同梱 validator を使わず inline python で DAG 検査を自作している",
+          "remote": "run-dev-graph-decompose が同梱 validator を使わず inline python で DAG 検査を自作している"
+        }
+      },
+      "projects": {}
+    },
+    "issue-devgraph-graph-gc-bd-close-propagation-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "graph node の GC 削除が bd issue へ伝播せず orphan external_ref を生み続ける",
+          "remote": "graph node の GC 削除が bd issue へ伝播せず orphan external_ref を生み続ける"
+        }
+      },
+      "projects": {}
+    },
+    "issue-doc-granularity-remediation-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
           "local": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)",
           "remote": "qa-070 粒度規約: 300 行超過 6 文書の remediation (縮小のみ許す初期一覧)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-doc-line-limit-followup-mfh7-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "bd-bridge.py と mfh7 issue 本文の 500 行超過の分割方針を確定する",
+          "remote": "bd-bridge.py と mfh7 issue 本文の 500 行超過の分割方針を確定する"
         }
       },
       "projects": {}
@@ -5614,12 +6880,232 @@
           "remote": []
         },
         "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "features 18 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
+          "remote": "features 18 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
+        }
+      },
+      "projects": {}
+    },
+    "issue-flaky-guard-latency-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
           "local": "open",
           "remote": "open"
         },
         "title": {
-          "local": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随",
-          "remote": "features 14 件の source_digest が現行 source 実体と不一致 (既存 drift) の追随"
+          "local": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる",
+          "remote": "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-g4-parallel-rpc-timeout-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる",
+          "remote": "pnpm -r test の並列実行で vitest worker RPC が timeout し G4 が偽陽性で落ちる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-governance-lint-local-entry-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "governance-check.yml のメタ層 lint (成果物配置・doc 行数) に local 入口が無い",
+          "remote": "governance-check.yml のメタ層 lint (成果物配置・doc 行数) に local 入口が無い"
+        }
+      },
+      "projects": {}
+    },
+    "issue-governance-notion-steps-always-skipped-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "governance-check.yml の Notion 検査 2 step が常に skip される (fail-open)",
+          "remote": "governance-check.yml の Notion 検査 2 step が常に skip される (fail-open)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-fix-closure-verdict-refresh-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-guard-graph-schema-timeout-fail-open-20260725"
+          ],
+          "remote": [
+            "issue-guard-graph-schema-timeout-fail-open-20260725"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema 修正で stale 化した 9 skill の live-trial verdict と run-dev-graph-init の content-review verdict を再取得する",
+          "remote": "dev-graph: guard-graph-schema 修正で stale 化した 9 skill の live-trial verdict と run-dev-graph-init の content-review verdict を再取得する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-graph-schema-inline-python-variable-path-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す",
+          "remote": "dev-graph: guard-graph-schema が inline Python の変数経由 graph path 書換を見逃す"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-graph-schema-interpreter-write-coverage-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する",
+          "remote": "dev-graph: guard-graph-schema の interpreter 枝が pathlib/shutil 系書込みを取りこぼし、読取モード r を誤遮断する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-graph-schema-newline-segment-split-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema の Bash git 分岐が改行区切りコマンドを誤って1コマンドとして解釈し無関係パスを誤遮断する",
+          "remote": "dev-graph: guard-graph-schema の Bash git 分岐が改行区切りコマンドを誤って1コマンドとして解釈し無関係パスを誤遮断する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-graph-schema-timeout-fail-open-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema の Bash 破壊操作枝が判定無関係な graph 全検証を挟み hook timeout で fail-open する",
+          "remote": "dev-graph: guard-graph-schema の Bash 破壊操作枝が判定無関係な graph 全検証を挟み hook timeout で fail-open する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-guard-script-file-indirection-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: guard-graph-schema の共起判定はコマンド文字列しか見ないため script file へ隠した graph authority 書込みを遮断できない",
+          "remote": "dev-graph: guard-graph-schema の共起判定はコマンド文字列しか見ないため script file へ隠した graph authority 書込みを遮断できない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-h7-git-subdir-revalidation-20260730": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "H7 を現行 git-subdir source で macOS / Windows 再検証する",
+          "remote": "H7 を現行 git-subdir source で macOS / Windows 再検証する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-harness-creator-entry-points-under-declared-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "harness-creator の entry_points が実体30 skill に対し1件のみで live-trial 被覆が欠落している",
+          "remote": "harness-creator の entry_points が実体30 skill に対し1件のみで live-trial 被覆が欠落している"
         }
       },
       "projects": {}
@@ -5632,12 +7118,246 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ",
           "remote": "spec-state: qa-067 のユーザー確認記録欠落 (C06 MEDIUM) と質問様式の中立化 (C06 LOW) のフォローアップ"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hooks-entry-point-parity-generalization-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない",
+          "remote": "hooks entry point の宣言・登録 parity 検査が dev-graph 専用テストにしか存在しない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hub-catalog-page-missing-tenant-scope-20260803": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "[bug] catalog一覧(/catalog)が一般ユーザーの通常ナビゲーションで missing_tenant_scope (403) を返し到達不能",
+          "remote": "[bug] catalog一覧(/catalog)が一般ユーザーの通常ナビゲーションで missing_tenant_scope (403) を返し到達不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hub-catalog-scope-unreachable-20260802": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "GET /catalog はログイン済みでも tenant scope 未解決で 403 missing_tenant_scope になり得る",
+          "remote": "GET /catalog はログイン済みでも tenant scope 未解決で 403 missing_tenant_scope になり得る"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hub-cwv-tbt-over-budget-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 JS 削減の是正",
+          "remote": "Hub 本番の初回 CWV 実測で TBT 926ms (予算 200ms) 超過 — 不要 JS 削減の是正"
+        }
+      },
+      "projects": {}
+    },
+    "issue-hub-slo-external-monitoring-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "Hub 外形監視を Better Stack へ適用し SLO 計測を開始",
+          "remote": "Hub 外形監視を Better Stack へ適用し SLO 計測を開始"
+        }
+      },
+      "projects": {}
+    },
+    "issue-id-uniqueness-gate-generalization-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)",
+          "remote": "同種の集合化による ID 重複無検出が他の validate-*.py にも無いかの点検 (HarnessHub-33ho scope_in 未消化分)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-implementation-readiness-body-validation-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "implementation_readiness=complete が本文全面プレースホルダで成立し、missing_sections が本文の節を一度も見ていない",
+          "remote": "implementation_readiness=complete が本文全面プレースホルダで成立し、missing_sections が本文の節を一度も見ていない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-init-closure-doc-debts-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: run-dev-graph-init の closure 内文書に裏付けなき system_spec 断定と未文書化の初期 graph shape が残る",
+          "remote": "dev-graph: run-dev-graph-init の closure 内文書に裏付けなき system_spec 断定と未文書化の初期 graph shape が残る"
+        }
+      },
+      "projects": {}
+    },
+    "issue-init-live-trial-scenario-refresh-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: run-dev-graph-init の live-trial verdict と criteria scenario receipt を sgt の SKILL.md 変更へ追随させる",
+          "remote": "dev-graph: run-dev-graph-init の live-trial verdict と criteria scenario receipt を sgt の SKILL.md 変更へ追随させる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-init-skill-body-headroom-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: run-dev-graph-init に skill-local references/ を新設し Execution contract 5 の過積載と PD-001 の残 1 行を解消する",
+          "remote": "dev-graph: run-dev-graph-init に skill-local references/ を新設し Execution contract 5 の過積載と PD-001 の残 1 行を解消する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-libsql-connection-recovery-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "SQLITE_BUSY で壊れた libSQL ローカル接続を接続層で復旧する",
+          "remote": "SQLITE_BUSY で壊れた libSQL ローカル接続を接続層で復旧する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-lint-open-residue-ci-red-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする",
+          "remote": "OR-003 残置 51 件がローカル品質ゲートで恒常 exit 2 / CI では beads 軸未評価のため素通りする"
+        }
+      },
+      "projects": {}
+    },
+    "issue-lint-skill-tree-pytest-cache-false-positive-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "lint-skill-tree.py の第13条が .pytest_cache を除外せず per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる",
+          "remote": "lint-skill-tree.py の第13条が .pytest_cache を除外せず per-plugin pytest 実行後に criteria テストが 7 件偽陽性で落ちる"
         }
       },
       "projects": {}
@@ -5660,7 +7380,43 @@
       },
       "projects": {}
     },
+    "issue-live-trial-closure-stale-mvp-first-20260723": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得",
+          "remote": "MVP-first 実装 (P05) で stale 化した 9 skill の live-trial 証跡再取得"
+        }
+      },
+      "projects": {}
+    },
     "issue-live-trial-fixture-receipt-forgery-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
+          "remote": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-observation-tautology-inventory-20260728": {
       "binding": "beads",
       "issue": {
         "depends_on": {
@@ -5672,8 +7428,44 @@
           "remote": "open"
         },
         "title": {
-          "local": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない",
-          "remote": "live-trial の fixture 内 receipt が偽造可能で既存 provenance 検査では検出できない"
+          "local": "live-trial scenario の required_observations に残る恒真観測を棚卸しし解消する",
+          "remote": "live-trial scenario の required_observations に残る恒真観測を棚卸しし解消する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-reap-unscoped-kill-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する",
+          "remote": "live-trial-backend.py reap() が並行 trial の tmux session を無条件全 kill する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-scenario-contract-required-20260730": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する",
+          "remote": "criteria-test が scenario_contract 欠落の live-trial 受領書を許容する"
         }
       },
       "projects": {}
@@ -5686,12 +7478,192 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる",
           "remote": "live-trial が skill をロードしながら実行契約を飛ばして下位 script を直叩きできる"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-verdict-baseline-six-skills-20260803": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "live-trial: repository-wide 6 skill の verdict 不在を解消する",
+          "remote": "live-trial: repository-wide 6 skill の verdict 不在を解消する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-live-trial-verdict-staleness-hook-closure-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する",
+          "remote": "plugin hooks が全 skill の挙動閉包に入るため hook 1 件の修正で dev-graph 8 skill の live-trial verdict が一斉に stale 化する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-local-ci-gate-drift-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている",
+          "remote": "run-ci-checks.sh が CI 同等を名乗りながら 19 件の検査を欠いている"
+        }
+      },
+      "projects": {}
+    },
+    "issue-make-lint-ci-skill-description-parity-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "make lint が CI の repo-wide skill description lint を再現しない",
+          "remote": "make lint が CI の repo-wide skill description lint を再現しない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-mvp-first-scheduling-completion-projection-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)",
+          "remote": "MVP-first feature 13 node の completion projection 未実施 (lint-open-residue OR-003 13件)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-orphan-external-ref-backlog-disposition-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "真の orphan 21 件を node 化または参照剥がしで処分し非クローズ orphan を 0 にする",
+          "remote": "真の orphan 21 件を node 化または参照剥がしで処分し非クローズ orphan を 0 にする"
+        }
+      },
+      "projects": {}
+    },
+    "issue-pkg-contract-skill-dependencies-undefined-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "package-contract の skill_dependencies が正本 schema に未定義のまま実データで使われている",
+          "remote": "package-contract の skill_dependencies が正本 schema に未定義のまま実データで使われている"
+        }
+      },
+      "projects": {}
+    },
+    "issue-planner-script-line-limit-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "system-dev-planner: 500 行超の script 2 本 (promote-system-plan.py 677 / build-system-handoff.py 580) を責務単位へ分割する",
+          "remote": "system-dev-planner: 500 行超の script 2 本 (promote-system-plan.py 677 / build-system-handoff.py 580) を責務単位へ分割する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-prompt-only-line-budget-20260802": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "500行制限をプロンプト系成果物へ限定し一般コードから撤廃する",
+          "remote": "500行制限をプロンプト系成果物へ限定し一般コードから撤廃する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-qa-log-id-uniqueness-gate-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "validate-coverage-matrix が qa_log の ID 重複を検出できない (集合化で静かに潰れる)",
+          "remote": "validate-coverage-matrix が qa_log の ID 重複を検出できない (集合化で静かに潰れる)"
         }
       },
       "projects": {}
@@ -5704,12 +7676,88 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)",
           "remote": "qa-070 実装の feature 化 (300 行 fail-closed lint / 仕組み-ナレッジ境界検査 / 移植導線 opt-in 検査)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-qa070-qa-log-entry-missing-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "main 側 qa-070 が spec-state.json の qa_log に不在 (実体は存在する記録欠落)",
+          "remote": "main 側 qa-070 が spec-state.json の qa_log に不在 (実体は存在する記録欠落)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-qa071-tooling-landing-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "qa-071 enforcement tooling を landing (validator+evaluator+回帰テスト) + dev-graph 3 skill 再 live-trial",
+          "remote": "qa-071 enforcement tooling を landing (validator+evaluator+回帰テスト) + dev-graph 3 skill 再 live-trial"
+        }
+      },
+      "projects": {}
+    },
+    "issue-refresh-race-observability-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-auth-tenancy-production-adapter-20260725"
+          ],
+          "remote": [
+            "issue-auth-tenancy-production-adapter-20260725"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない",
+          "remote": "refresh rotation の CAS 敗北が監査に残らず Workers 本番経路の並行窓で窃取が観測できない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-register-package-projection-idempotency-drift-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "register-package 再実行が projection 6 項目差で同一 digest を拒否する",
+          "remote": "register-package 再実行が projection 6 項目差で同一 digest を拒否する"
         }
       },
       "projects": {}
@@ -5722,12 +7770,106 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能",
           "remote": "run-dev-graph-render の OUT1 criterion が現行実装で論理的に充足不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-render-registration-receipt-contract-mismatch-20260726": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "dev-graph: run-dev-graph-render の --registration-receipt が optional 表記なのに OUT1 受入条件は receipt 照合を必須要求している",
+          "remote": "dev-graph: run-dev-graph-render の --registration-receipt が optional 表記なのに OUT1 受入条件は receipt 照合を必須要求している"
+        }
+      },
+      "projects": {}
+    },
+    "issue-required-heading-presence-validation-20260729": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-implementation-readiness-body-validation-20260728"
+          ],
+          "remote": [
+            "issue-implementation-readiness-body-validation-20260728"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "required heading 欠落を C11 readiness で専用拒否する",
+          "remote": "required heading 欠落を C11 readiness で専用拒否する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-resource-map-deep-cards-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列",
+          "remote": "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列"
+        }
+      },
+      "projects": {}
+    },
+    "issue-run-skill-feedback-ref-format-unify-20260722": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する",
+          "remote": "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-runbook-cli-invocation-broken-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない",
+          "remote": "runbook の export/restore 手動コマンドが pnpm 10.9.0 と cwd 差でそのままでは実行できない"
         }
       },
       "projects": {}
@@ -5740,12 +7882,30 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている",
           "remote": "criteria-test の scenario-verdict が digest 書き換え済みの旧 r3 verdict を受入根拠に参照し続けている"
+        }
+      },
+      "projects": {}
+    },
+    "issue-schedule-blocked-exclusion-unreported-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "schedule-graph が依存未充足 task の除外理由を report しない",
+          "remote": "schedule-graph が依存未充足 task の除外理由を report しない"
         }
       },
       "projects": {}
@@ -5758,12 +7918,66 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない",
           "remote": "security.web の qa_ref 系譜引用の断絶 (C07 medium): qa-042/qa-046 本文に qa-020 維持句がない"
+        }
+      },
+      "projects": {}
+    },
+    "issue-shared-layers-registry-baseline-drift-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)",
+          "remote": "requirements-baseline.md L130 github-actions-ci が旧 5 ゲートを inline 列挙 (登録簿 G1〜G11 へ未追随)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-shared-script-refs-closure-coupling-20260729": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する",
+          "remote": "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-source-citation-retrieval-integrity-20260803": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す",
+          "remote": "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す"
         }
       },
       "projects": {}
@@ -5776,12 +7990,30 @@
           "remote": []
         },
         "status": {
-          "local": "open",
-          "remote": "open"
+          "local": "closed",
+          "remote": "closed"
         },
         "title": {
           "local": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)",
           "remote": "C08 出典追随運用 (claude-code-plugins H7 再照合 / drizzle rc 再確認 / wrangler pinned version 検討)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-spec-state-writer-implicit-contracts-20260721": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "spec-state writer の暗黙挙動 4 件を契約化し、C06 早期停止の除外ルールを再設計する",
+          "remote": "spec-state writer の暗黙挙動 4 件を契約化し、C06 早期停止の除外ルールを再設計する"
         }
       },
       "projects": {}
@@ -5800,6 +8032,190 @@
         "title": {
           "local": "sync pending_retry 20件 (external_linkage_missing) の legacy 収束",
           "remote": "sync pending_retry 20件 (external_linkage_missing) の legacy 収束"
+        }
+      },
+      "projects": {}
+    },
+    "issue-task-spec-validate-command-unrunnable-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能",
+          "remote": "R3-emit が生成する task spec の C12 検証コマンド --staging . が実行不能"
+        }
+      },
+      "projects": {}
+    },
+    "issue-test-coverage-enforcement-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築",
+          "remote": "タスク仕様書がテスト網羅(単体+結合+境界+回帰・カバレッジ80%+)を再現的に機械強制する仕組みの構築"
+        }
+      },
+      "projects": {}
+    },
+    "issue-validator-contract-version-20260724": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "validate-system-plan の promoted package 遡及契約を互換化する",
+          "remote": "validate-system-plan の promoted package 遡及契約を互換化する"
+        }
+      },
+      "projects": {}
+    },
+    "issue-verify-local-gate-parity-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)",
+          "remote": "required status checks の G7 / G7b / G9 が local pnpm verify に未結線 (CI にしか無い)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-worker-secret-ledger-conflict-20260725": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計と矛盾",
+          "remote": "infrastructure-spec §2 の Worker secret 台帳が security-spec の確定設計と矛盾"
+        }
+      },
+      "projects": {}
+    },
+    "issue-workflow-step-guard-empty-scan-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)",
+          "remote": "lint-workflow-step-guard.py が workflows 不在・走査 0 件でも exit 0 (残存 fail-open)"
+        }
+      },
+      "projects": {}
+    },
+    "issue-worktree-main-ref-desync-20260728": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [
+            "issue-desync-guard-bundle-untracked-20260728"
+          ],
+          "remote": [
+            "issue-desync-guard-bundle-untracked-20260728"
+          ]
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む",
+          "remote": "並列 worktree の refs/heads/main 直接更新で主ワークツリーが desync し、main 巻き戻しコミットを生む"
+        }
+      },
+      "projects": {}
+    },
+    "task-remove-aiworkflow-reference-skill-20260802": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する",
+          "remote": "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する"
+        }
+      },
+      "projects": {}
+    },
+    "task-schedule-beads-ready-entry-absent-reporting-20260803": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "open",
+          "remote": "open"
+        },
+        "title": {
+          "local": "dev-graph: schedule-graph.py が bd ready に entry の無い beads node を沈黙除外する",
+          "remote": "dev-graph: schedule-graph.py が bd ready に entry の無い beads node を沈黙除外する"
+        }
+      },
+      "projects": {}
+    },
+    "task-slide-report-generator-browser-ci-20260730": {
+      "binding": "beads",
+      "issue": {
+        "depends_on": {
+          "local": [],
+          "remote": []
+        },
+        "status": {
+          "local": "closed",
+          "remote": "closed"
+        },
+        "title": {
+          "local": "孤児救出: slide-report-generator の Playwright 対応 85 件が未コミット・未起票で主WTに滞留していた",
+          "remote": "孤児救出: slide-report-generator の Playwright 対応 85 件が未コミット・未起票で主WTに滞留していた"
         }
       },
       "projects": {}

@@ -46,6 +46,8 @@ tenants/*/**/*.secret.*
 output/
 dist/
 .claude/handoff/
+# handoff は repo root 以外 (apps/hub/.claude/handoff/ など) にも生成されるため任意階層で無視する
+**/.claude/handoff/
 .worktrees/
 # run-* スキルの transient 作業ディレクトリ (skill-tree 第13条 nested dir 禁止)
 .run/

@@ -12,7 +12,7 @@ iteration: null
 title: "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-07-30T13:53:04.708092Z"
+updated_at: "2026-08-04T03:40:06.286747Z"
 status: "active"
 depends_on: ["SYS-PUBLISH-PIPELINE-P05"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
@@ -38,7 +38,7 @@ classification_reason: "P05 の実装に対して P04 のテストを実行し q
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-publish-pipeline/sys-publish-pipeline-p06.md","confidence":0.86}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-krc7.6","linked_at":"2026-08-04T03:13:57Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

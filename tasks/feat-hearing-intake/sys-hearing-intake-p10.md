@@ -12,8 +12,8 @@ iteration: null
 title: "最終独立レビュー — feature 全体の confirmation 前最終点検"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-07-29T08:49:25Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P09"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["docs/features/feat-hearing-intake/final-review-notes.md"]

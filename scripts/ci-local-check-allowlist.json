@@ -34,6 +34,23 @@
         "2026-01-01"
       ],
       "reason": "この gate 形は eval-log/llm-coverage.json を無条件に書き換えるため read-only pre-push では走らせず、同じ生成結果を確認する --all --check 形を local で実行する"
+    },
+    {
+      "script": "scripts/select-verification-tier.py",
+      "args": [
+        "--from-git",
+        "$BASE",
+        "--derive-checks",
+        "--deferred-issue",
+        "HarnessHub-sy31",
+        "--run-id",
+        "gh-${{ github.run_id }}-${{ github.run_attempt }}",
+        "--target",
+        "${{ github.repository }}@${{ github.sha }}",
+        "--out",
+        "$RUN_DIR/tier-decision.json"
+      ],
+      "reason": "GitHub Actions の run_id / run_attempt を run-id に束ねて tier-decision.json を新規生成する writer であり、その識別子は local に存在しない。read-only の pre-push で走らせると push のたびに偽の run 記録が eval-log/verification-tier/ へ残る。判定ロジックと台帳からの checks 導出は tests/scripts-root/test_root__select_verification_tier.py と test_root__build_verification_plan.py が local で検証し、生成物の妥当性は local hard gate の validate-tier-decision.py --scan が受け持つ"
     }
   ]
 }

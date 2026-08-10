@@ -1,0 +1,22 @@
+{
+  "authority_sha256_after": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+  "authority_sha256_before": "5ab280c0b04cc8b6d91c0bd93319acafee02c409a02697c044962a342fbd1446",
+  "count": 0,
+  "executed_at": "2026-08-08T04:10:54.463864Z",
+  "filters": {
+    "domain": null,
+    "id": "LT-TASK-001",
+    "keyword": null,
+    "kind": "issue",
+    "project": null,
+    "status": null,
+    "tag_match": "all",
+    "tags": []
+  },
+  "graph": ".dev-graph/state/graph.json",
+  "graph_sha256_after": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+  "graph_sha256_before": "16c0d3e14b022a88a92877340588456fa09edb63155baad831f84420356361d6",
+  "ok": true,
+  "read_only": true,
+  "results": []
+}

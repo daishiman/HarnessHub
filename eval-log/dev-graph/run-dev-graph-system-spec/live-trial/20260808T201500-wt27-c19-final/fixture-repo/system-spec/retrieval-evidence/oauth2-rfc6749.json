@@ -1,0 +1,11 @@
+{
+  "target_id": "oauth2-rfc6749",
+  "fetch_tool": "WebFetch",
+  "requested_url": "https://datatracker.ietf.org/doc/html/rfc6749",
+  "recorded_at": "2026-08-08T11:00:34.286Z",
+  "official_host": "datatracker.ietf.org",
+  "official_publisher": "IETF (Internet Engineering Task Force)",
+  "extracted_facts": "RFC 6749 The OAuth 2.0 Authorization Framework / 2012-10 / Proposed Standard / Updated by RFC 8252, 8996, 9700",
+  "version": "RFC 6749 (Proposed Standard)",
+  "last_updated": "2012-10"
+}

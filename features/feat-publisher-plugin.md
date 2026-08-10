@@ -12,9 +12,9 @@ iteration: "Stage 1"
 title: "Publisher (TypeScript CLI/plugin: 収集・pre-check・publish)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T20:56:00.450300Z"
+updated_at: "2026-08-02T09:35:37Z"
 status: "active"
-depends_on: ["feat-publish-pipeline","feat-stage0-distribution-gate"]
+depends_on: ["feat-stage0-distribution-gate"]
 related_nodes: []
 resource_scope: ["features/feat-publisher-plugin.md"]
 purpose: "作者が Claude Code / Codex から自己完結で publish できる操作面 (slash command + skill + スクリプト) を TypeScript で提供し、既存 Python 資産を挙動同値で移植する"

@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — HearingSheet/FormData と共通ai_jobs(kind=sheet_generation) consumer契約・受付番号採番・AI キュー API 契約の設計"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:59Z"
-updated_at: "2026-07-29T00:10:32.588547Z"
-status: "active"
+updated_at: "2026-07-29T08:49:01Z"
+status: "closed"
 depends_on: ["SYS-HEARING-INTAKE-P01"]
 related_nodes: ["feat-hearing-intake","arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 resource_scope: ["docs/features/feat-hearing-intake/architecture-decision-record.md","docs/features/feat-hearing-intake/architecture-decisions-application.md","docs/features/feat-hearing-intake/architecture-review-and-validation.md"]

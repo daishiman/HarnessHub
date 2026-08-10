@@ -1,0 +1,11 @@
+{
+  "target_id": "flask",
+  "source_url": "https://flask.palletsprojects.com/",
+  "retrieved_at": "2026-08-08T12:42:17Z",
+  "retrieval_method": "WebFetch (run-system-spec-doc-fetch R2)",
+  "official_host": "flask.palletsprojects.com",
+  "observed": [
+    "ナビゲーション見出し: Flask Documentation (3.1.x)",
+    "Changes 目次の先頭が Version 3.1.3"
+  ]
+}

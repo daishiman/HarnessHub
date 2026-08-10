@@ -1,0 +1,19 @@
+{
+  "patch": {
+    "confirmation_evidence": {
+      "evaluated_digest": "3e1ae972c6361f393dbba86e23a6f37413704340f24be14813f38b605b1ff195",
+      "evaluator": "run-dev-graph-decompose/live-trial C14-OUT1-positive-macro-decomposition-r9",
+      "evidence_ref": "eval-log/c14-promotion-evaluation.json"
+    },
+    "confirmation_status": "confirmed",
+    "evaluation_status": "pass",
+    "graph_node_id": "feat-account-login-001",
+    "implementation_readiness": {
+      "checked_at": "2026-08-08T18:40:00Z",
+      "missing_sections": [],
+      "status": "complete"
+    },
+    "status": "active",
+    "updated_at": "2026-08-08T18:40:00Z"
+  }
+}

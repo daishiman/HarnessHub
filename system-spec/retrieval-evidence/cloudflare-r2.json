@@ -1,9 +1,23 @@
 {
-  "target_id": "cloudflare-r2",
-  "source_url": "https://developers.cloudflare.com/r2/pricing/",
-  "retrieved_at": "2026-08-04T00:40:06Z",
-  "http_status": 200,
-  "content_bytes": 142065,
-  "content_sha256": "07dedbd04d3d608f54ac378a2eedf9db9e4206e8e65364601ef9a9f02738e6f9",
-  "body_summary": "Pricing · Cloudflare R2 docs"
+  "allowed_domains": [
+    "developers.cloudflare.com"
+  ],
+  "findings": [
+    "課金は 保存量 + Class A (状態変更系・高価) + Class B (読取系) の 3 軸",
+    "DeleteObject / DeleteBucket / AbortMultipartUpload は無料操作",
+    "egress は R2 直・Workers API・S3 API・r2.dev いずれも無料",
+    "storage class は Standard (既定) と Infrequent Access (取出料 + 最低 30 日課金)",
+    "無料枠の例示値: 10 GB-month storage / 1M Class A / 10M Class B per month",
+    "権限不足 (HTTP 401) の要求は課金されない"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "Cloudflare R2 pricing storage Class A Class B operations",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://developers.cloudflare.com/r2/pricing/",
+    "https://developers.cloudflare.com/r2/buckets/storage-classes/",
+    "https://developers.cloudflare.com/changelog/post/2026-05-11-r2-data-catalog-pricing-announced/"
+  ],
+  "target_id": "cloudflare-r2"
 }

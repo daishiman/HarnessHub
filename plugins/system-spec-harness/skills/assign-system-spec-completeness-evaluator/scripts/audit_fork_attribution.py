@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 EVALUATOR_NAME = "assign-system-spec-completeness-evaluator"
@@ -67,6 +68,8 @@ DELEGATION_ROLES = {"primary", "sub_input"}
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
 LEDGER_TOOL_NAMES = ("Task", "Agent")
+PROMPT_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+RESPONSE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _plugin_root() -> Path:
@@ -98,7 +101,7 @@ def default_ledger_path() -> Path:
 
 def empty_ledger() -> dict:
     """台帳不在時の fail-closed な空集計を返す。"""
-    return {"path": None, "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
+    return {"path": None, "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0}
 
 
 def load_fork_ledger(path) -> dict:
@@ -110,14 +113,19 @@ def load_fork_ledger(path) -> dict:
         return empty_ledger()
     ledger_path = Path(path)
     if not ledger_path.is_file():
-        return {"path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
+        return {
+            "path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0
+        }
     dispatched: dict[str, int] = {}
     sessions: dict[str, dict[str, int]] = {}
+    receipts: dict[str, dict[str, dict[str, dict[str, str]]]] = {}
     malformed = 0
     try:
         lines = ledger_path.read_text(encoding="utf-8").splitlines()
     except (OSError, UnicodeDecodeError):
-        return {"path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "malformed": 0}
+        return {
+            "path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0
+        }
     for line in lines:
         if not line.strip():
             continue
@@ -131,17 +139,35 @@ def load_fork_ledger(path) -> dict:
             continue
         subagent_type = record.get("subagent_type")
         session_id = record.get("session_id")
-        if not isinstance(subagent_type, str) or not subagent_type or not isinstance(session_id, str) or not session_id:
+        prompt_sha256 = record.get("prompt_sha256")
+        response_sha256 = record.get("response_sha256")
+        audit_verdict = record.get("audit_verdict")
+        if (
+            not isinstance(subagent_type, str)
+            or not subagent_type
+            or not isinstance(session_id, str)
+            or not session_id
+            or not isinstance(prompt_sha256, str)
+            or not PROMPT_SHA256_RE.fullmatch(prompt_sha256)
+            or not isinstance(response_sha256, str)
+            or not RESPONSE_SHA256_RE.fullmatch(response_sha256)
+            or audit_verdict not in ASPECT_VERDICTS
+        ):
             malformed += 1
             continue
         dispatched[subagent_type] = dispatched.get(subagent_type, 0) + 1
         by_session = sessions.setdefault(subagent_type, {})
         by_session[session_id] = by_session.get(session_id, 0) + 1
+        receipts.setdefault(subagent_type, {}).setdefault(session_id, {})[response_sha256] = {
+            "tool_name": record["tool_name"],
+            "verdict": audit_verdict,
+        }
     return {
         "path": str(ledger_path),
         "exists": True,
         "dispatched": dispatched,
         "sessions": sessions,
+        "receipts": receipts,
         "malformed": malformed,
     }
 
@@ -154,7 +180,7 @@ def agent_definition_exists(auditor: str) -> bool:
 
 
 def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
-    """receipt が (session_id, subagent_type) の実 fork 台帳行を持つかを検証する。"""
+    """receipt が実 fork の session・tool・response verdict へ束縛されるか検証する。"""
     dispatch = delegation.get("dispatch")
     subagent_type = dispatch.get("subagent_type") if isinstance(dispatch, dict) else None
     if not ledger.get("exists"):
@@ -189,6 +215,27 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
             f"fork 台帳に (session_id={declared_session!r}, subagent_type={subagent_type!r}) の完了記録が無い "
             f"(宣言 session が台帳へ接地しない = 過去 run の名指し違い / fork 省略 / 偽装の疑い。"
             f"当該 subagent_type の観測済み session {len(recorded_sessions)} 種)"
+        )
+    response_sha256 = dispatch.get("response_sha256")
+    if not isinstance(response_sha256, str) or not RESPONSE_SHA256_RE.fullmatch(response_sha256):
+        return False, (
+            "dispatch.response_sha256 が無いか不正で、実監査 response の verdict と突合できない "
+            "(PostToolUse hook が記録した response digest を receipt へ転記する)"
+        )
+    recorded = ledger.get("receipts", {}).get(subagent_type, {}).get(declared_session, {}).get(response_sha256)
+    if not isinstance(recorded, dict):
+        return False, (
+            f"fork 台帳に response_sha256={response_sha256!r} の監査完了記録が無い "
+            "(別 fork の verdict を流用したか、hook が最終 AUDIT_VERDICT marker を観測できていない)"
+        )
+    if dispatch.get("tool") != recorded.get("tool_name"):
+        return False, (
+            f"dispatch.tool={dispatch.get('tool')!r} が hook 観測値 {recorded.get('tool_name')!r} と不一致"
+        )
+    if delegation.get("verdict") != recorded.get("verdict"):
+        return False, (
+            f"receipt verdict={delegation.get('verdict')!r} が hook 観測の auditor verdict={recorded.get('verdict')!r} と不一致 "
+            "(監査結果を緑化のために書き換えている)"
         )
     return True, ""
 

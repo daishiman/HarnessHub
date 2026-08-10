@@ -14,7 +14,8 @@
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "design_application_contract_version": "1.0",
   "categories": [{"id": "database", "label": "データベース"}],
   "platforms": ["web", "mobile", "tablet", "desktop-windows", "desktop-linux", "desktop-macos"],
   "matrix": {
@@ -25,9 +26,9 @@
       "<platform_id>": {"state": "未収集"}
     }
   },
-  "qa_log": [{"id": "qa-001", "question": "...", "answer": "..."}],
+  "qa_log": [{"id": "qa-001", "question": "...", "answer": "...", "source": {"kind": "user-dialogue"}, "design_applications": [{"knowledge_ref": "ddd.md#Bounded Context", "principle": "Bounded Context", "applicability": "applied", "rationale": "...", "tradeoffs": ["..."]}]}],
   "approval_log": [{"id": "appr-001", "note": "..."}],
-  "reopen_log": [{"category": "database", "platform": "web", "reason": "...", "from": "確定"}],
+  "reopen_log": [{"category": "database", "platform": "web", "reason": "...", "from": "確定", "discarded": {"qa_ref": "qa-001", "serves_goals": ["G1"]}}],
   "category_aggregate": {"<category_id>": "確定|収集中|未着手|対象外"},
   "targets": [{"target_id": "react"}],
   "requirements_foundation": {
@@ -41,9 +42,11 @@
   },
   "decisions": [],
   "knowledge_candidates": [],
-  "hearing_progress": {"loop_count": 0, "next_question": null, "complete": false}
+  "hearing_progress": {"loop_count": 0, "next_question": null, "complete": false, "max_loops": 5}
 }
 ```
+
+`max_loops` は `chunk` 実行後だけ存在する任意 field で、直近 invocation に実際に指定された上限を保持する。`bootstrap` / `init` 直後には存在しない。
 
 ## canonical platform id (6・必須行)
 
@@ -53,9 +56,11 @@
 
 | state | 付帯 | 意味 |
 |---|---|---|
-| `未収集` | なし | 未ヒアリング。最終時は0にする。 |
+| `未収集` | なし、または `reopened_from` / `reopen_reason` | 未ヒアリング。最終時は0にする。付帯 field は `reopen` で確定から戻したセルだけに付く。 |
 | `対象外` | `reason` か `approval_ref` | 当該カテゴリ×platform は対象外 (理由必須)。 |
 | `確定` | `qa_ref` (qa_log 参照) | 要件が確定。質疑ログ entry を参照。 |
+
+`reopen` は確定セルを未収集へ置換する前に、存在する `qa_ref` / `serves_goals` / `serves_intents` を `reopen_log[].discarded` へ退避する。これにより、再確認中も以前の根拠と上位概念トレースを追跡できる。
 
 ## category_aggregate 真理値表 (4値・導出のみ)
 
@@ -93,8 +98,9 @@ python3 scripts/apply-spec-transition.py set-targets --state spec-state.json \
 
 - **要素 (U1-U9)**: `essential_purpose`(U1 本質的目的) / `background`(U2 背景) / `goals`(U3 ゴール `{id,text}`) / `objectives`(U4 目標 `{id,text,measure}`) / `success_criteria`(U5) / `stakeholders`(U6) / `scope`(U7 `{in,out}`) / `constraints`(U8) / `concrete_intents`(U9 `{id,text,serves:[goal_id]}`) / `confirmed`。
 - **単一 writer**: `requirements_foundation` の書込は `set-foundation` op が唯一の経路。`init` は空 (`empty_foundation`) で初期化するだけ。goals は `id` 必須・重複禁止、`concrete_intents.serves` は実在 goal id を指す (dangling 拒否)。
-- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。未確定なら途中保存として空でも保存できる。
+- **確定条件**: `confirmed: true` を要求するときは U1-U9 の全項目が値を持つか、該当しない項目が `{"status":"not_applicable","reason":"..."}` で理由付き明示されていること。空のまま確認済みにできない。さらに writer と `--require-foundation` は各 U に対応する canonical id `qa-foundation-u1`〜`qa-foundation-u9` の 1論点 `qa_log` entry を機械的に要求する。対話 entry は `source:{"kind":"user-dialogue"}`、書面 entry は `source:{"kind":"written-requirements","path":"<relative-path>","section":"<section>","sha256":"<sha256(answer UTF-8 bytes)>"}` とし、質問にも path/section、`answer` には指定 section に実在する対応原文の逐語 excerpt を残す。承認ログだけ・AI 要約だけ・AI が生成した entry 自身の digest を一次根拠にしてはならない。新しい利用者入力が無い再質問で新規 approval を作ってはならない。未確定なら途中保存として空でも保存できる。
 - **serves_goals (トレース)**: 各 `確定` セルは `serves_goals: ["G1", ...]` でどの上位概念 (ゴール) に資するかを明示する。`confirm` op に `serves_goals` を同時付与するか、確定後に `set-serves` op で additive に付与する。`set-serves` は `state=確定` を変えないため確定巻き戻し防御には抵触しない。
+- **approval_ref (承認記録へのトレース)**: `対象外` セルは `exclude` op で `approval_ref` を持てるが、`確定` セルには対応経路が無く、「回答本文は明示承認を根拠に引用しているのに、セルから承認記録へ機械追跡できない」状態が生じていた (F-0025)。確定セル限定の後付け annotation である **`set-approval` op** で `approval_ref` を additive に付与する。`set-serves` と同型で `state=確定` を変えないため確定巻き戻し防御には抵触しない。writer は `approval_log` に実在する id だけを受理する (dangling 拒否)。`chunk` で同 turn に `approval_id` を持つ場合は省略でき、その turn の承認 id が自動で紐づく。
 
 ```bash
 # 上位概念 U1-U9 を確定 (JSON 文字列 or ファイルパス)
@@ -103,11 +109,39 @@ python3 scripts/apply-spec-transition.py set-foundation --state spec-state.json 
 # 確定セルへ serves_goals を付与 (トレース)
 python3 scripts/apply-spec-transition.py apply --state spec-state.json \
   --op '{"action":"set-serves","category":"database","platform":"web","serves_goals":["G1"]}'
+# 確定セルへ approval_ref を付与 (承認記録へのトレース)
+python3 scripts/apply-spec-transition.py apply --state spec-state.json \
+  --op '{"action":"set-approval","category":"database","platform":"web","approval_ref":"appr-040"}'
 ```
+
+### 書面要件の source-index
+
+利用者が `requirements-brief.md` のような書面を渡したとき、内容を AI の回答として再表現して foundation を確定してはならない。`chunk` は `ops: []` の turn でも `qa_log` を append-only で追記できるため、U1-U9 を canonical id ごとに 1論点ずつ索引化してから `set-foundation` を実行する。writer は `source.kind`、書面なら安全な相対 path・非空 section・`answer` 原文と一致する SHA-256・質問中の path/section まで fail-closed で検証する。ここでいう `answer` 原文は指定した source path/section に実在する逐語 excerpt であり、writer が検査する digest 一致だけで「AI が書いた answer が利用者原文に実在する」ことまで証明した扱いにはしない。R6 監査は参照元書面と照合する。
+
+```json
+[
+  {
+    "qa_id": "qa-foundation-u1",
+    "question": "書面入力 requirements-brief.md §1 の U1 (本質的目的) は何か",
+    "answer": "利用者が渡した当該 section の原文",
+    "source": {
+      "kind": "written-requirements",
+      "path": "requirements-brief.md",
+      "section": "§1",
+      "sha256": "<sha256(answer)>"
+    },
+    "ops": []
+  }
+]
+```
+
+この index は既存 `qa_log` の逐語を上書きせず、原文・入力位置・原文ハッシュを監査へ渡す。対話で得た U も同じ id を使い、`source:{"kind":"user-dialogue"}` を付ける。1つの entry に U1-U9 や複数の技術判断を束ねることは writer と `R6-audit-hearing` の誘導・遡及性監査で FAIL とする。
 
 ## R0→R1 bootstrap 契約
 
 上位概念をマトリクスより先に確定できるよう、最初に state envelope を生成する。`init --state` は bootstrap 済みの `requirements_foundation` / `decisions` / `targets` / logs を保持して taxonomy の matrix だけを初期化する。
+
+`init --state` は matrix 未着手の bootstrap state 専用である。確定セルを含む state を渡すと、reopen 記録なしで全セルを未収集へ戻してしまうため writer は fail-closed（不明・不整合なら安全側に停止）で拒否する。既存 taxonomy の拡張は `add-category`、確定セルの再確認は `reopen` を使う。
 
 ```bash
 python3 scripts/apply-spec-transition.py bootstrap --out spec-state.json
@@ -197,20 +231,20 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 
 ## hearing_progress の意味論 (SSOT)
 
-`hearing_progress` は goal-seek chunk の **中断/再開状態** だけを表す 3 field の record。writer (`scripts/apply-spec-transition.py`) 以外は書かない。
+`hearing_progress` は goal-seek chunk の **中断/再開状態** を表す record。writer (`scripts/apply-spec-transition.py`) 以外は書かない。
 
-> **前提 (最重要)**: 下表の「意味」は **chunk が書き込んだ時点で成立する不変則** であり、**state の不変則ではない**。`chunk` 以外の op (`apply` / `add-category`) は matrix を動かしても `complete` を更新しないため、書込後に matrix が変わると `hearing_progress` は stale になる。判定は必ず matrix 実測 (`--require-complete`) で行う。
+> **不変則 (HarnessHub-d15)**: `complete` / `next_question` は state 全体の不変則である。matrix を書き換える全経路 (`init` / `add-category` / `apply` / `chunk`) は、終了時に未収集セル数から両 field を再同期する。writer 経由の state で「未収集セルが残るのに `complete=true`」は正常状態として発生しない。最終判定の正本は引き続き `validate-coverage-matrix.py --require-complete` とする。
 
-| field | 型 | 意味 (chunk 書込時点の不変則) | 更新する経路 |
+| field | 型 | 意味 | 更新する経路 |
 |---|---|---|---|
-| `loop_count` | int | **直近 1 invocation (chunk) で適用した turn 数**。chunk 開始時に 0 へリセットし turn 適用ごとに +1 する。累計ではない。上限は `max_loops` (既定 5)。 | `chunk` (更新) / `bootstrap`・`init` (0 へ初期化) |
-| `next_question` | string \| null | 未収集セルが残るときの次質問文 (カテゴリ順 → canonical platform 正順で最初の未収集セル由来)。書込時点で未収集0なら `null`。 | `chunk` / `init` / `add-category` / `bootstrap` |
-| `complete` | bool | 書込時点で未収集0なら `true`。 | `chunk` (更新) / `bootstrap`・`init` (`false` へ初期化) |
+| `loop_count` | int | **直近 1 invocation (chunk) で適用した turn 数**。累計ではない。 | `chunk` / `bootstrap`・`init` |
+| `max_loops` | int (任意) | 直近 `chunk` invocation に実際に指定された上限。監査は 5 をハードコードせず、この実値を使う。 | `chunk` |
+| `next_question` | string \| null | 未収集が残ればカテゴリ順・platform 正順の次質問、未収集0なら `null`。 | matrix を書き換える全経路 |
+| `complete` | bool | 未収集0なら `true`、1件以上なら `false`。 | matrix を書き換える全経路 |
 
 - **累計ではない (loop_count)**: `run_chunk` はループ開始前に `loop_count = 0` を明示代入する。よって「通算で何 loop 回したか」は spec-state に保持しない。履歴の正本は `qa_log` / `reopen_log` の追記であり、`loop_count` を進捗率の分子に使わない (分母となる総 loop 数は事前に決まらない)。進捗は matrix の未収集セル数で測る。
-- **`complete` を `true` へ進める経路は chunk だけ**: `apply` (単一セル op) は `hearing_progress` を一切書かないため、`apply` で最後の未収集セルを埋めても `complete` は `false` のまま据え置かれる (`init` / `bootstrap` は `false` へ戻す初期化のみ)。したがって `complete` 単独を「ヒアリング完了」の判定に使わず、完了判定の正本は `validate-coverage-matrix.py --require-complete` (未収集0) とする。
-- **stale になる 2 経路 (誤読の温床)**: `complete=true` の後に (a) **`apply` 単体で** `reopen` を実行して確定セルを未収集へ戻す、(b) `add-category` で新カテゴリ行 (全セル未収集) を足す、のいずれかを行うと、未収集が残っているのに `complete=true` が残留する (`reopen` op 自体は `hearing_progress` を触らず、`add_category` は `next_question` のみ更新する)。**(a) が `apply` 限定である理由**: `reopen` op を `chunk --turns` の turn 内で実行した場合は `run_chunk` が末尾で `complete` / `next_question` を再計算するため stale にならない。R4-reopen は `apply` 経路を使う (`prompts/R4-reopen.md`) ので、実運用の reopen は stale を生む。**この状態は writer の欠陥ではなく仕様**であり、「未収集セルが残るのに `complete=true`」を早期停止の兆候として扱う監査 (C06 の `R6-audit-hearing` / `system-spec-hearing-auditor`) は false positive を避ける必要がある。ただし **除外は state 全体ではなくセル単位で行う**: 除外してよいのは (a) `reopened_from` / `reopen_reason` を持つ未収集セル (reopen が付す目印)、(b) `category_aggregate` が `未着手` (= そのカテゴリの全セルが未収集) のカテゴリに属する未収集セル、の 2 種のみ。`reopen_log` は追記専用で消えないため、**「`reopen_log` に記録があれば除外」としてはならない** (一度 reopen した state が以後永久に早期停止検出から外れ、真の取りこぼしを恒久的に隠す)。上記 2 種を除いてなお未収集セルが残るなら、`complete=true` は早期停止として検出する。
-- **上記除外の既知の限界 (この 2 マーカーは万能ではない)**: 監査者は次の 3 点を承知して使う。(i) 除外 (a) が自己解消するのは **再 `confirm`/`exclude` された場合だけ**で、reopen したまま再収集されず放置されたセルは `reopened_from` を持ち続け早期停止検出から外れ続ける。(ii) 除外 (b) の `未着手` は「add-category 直後」と同義ではない。既存カテゴリの全セルを reopen した場合も `未着手` になり (`derive_aggregate`)、逆に add-category 後に `apply` で 1 セルでも埋めると `収集中` へ移り、残る未収集セルは (a) の目印も持たないため false positive が復活する (`chunk` 経由で埋めた場合は `complete` が再計算されるためこの穴は生じない)。(iii) したがって **本除外は「収集漏れの検出」を保証しない**。未収集0の最終保証は `validate-coverage-matrix.py --require-complete` (C05 完了ゲート) と C07 マトリクス監査が担う。
+- **全 matrix writer が再同期する**: `apply` で最後の未収集セルを埋めた場合も、`reopen` や `add-category` で未収集を増やした場合も、`complete` / `next_question` は同じ invocation の終了前に更新される。旧仕様の 2 マーカー除外 (`reopened_from` / `category_aggregate=未着手`) は不要であり、監査で適用しない。
+- **早期停止監査**: 未収集が残るのに `complete=true` なら、writer 非経由の直接編集か state 破損として `FAIL` にする。loop 上限は `max_loops` があればその実値を使い、固定値 5 で判定しない。
 - **`complete=true` かつ `loop_count=0` になる経路**: 未収集0の state に対して **適用 turn 数が 0 になる `chunk`** を実行した場合に限る。具体的には (a) `turns` が空配列、(b) `max_loops <= 0` (`--max-loops 0` および負値。argparse に下限検証がないため CLI から到達可能で、`processed >= max_loops` が初回反復で真になる) のいずれかで、`processed=0` のまま `unresolved==0` により `complete=true` が書かれる。`apply` だけではこの組合せに到達しない。
 - **resume 契約**: `complete=false` かつ `next_question` 非 null が resumable な中断状態。この 2 field から再開する `--resume` は **skill/command の引数** (`commands/spec-hearing-start.md`) であって writer の CLI flag ではない (writer 側は state を読み直して `chunk` を継続するだけ)。`loop_count` は再開後の chunk で 0 から数え直す。
 
@@ -222,15 +256,27 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - 既登録 entry の `question` / `answer` は **逐語のまま改変しない** (writer は既存 `id` を上書きしない)。束ねが後から判明した場合は、既存 entry を編集せず **分離索引を新規 entry として追記** し、そこから元 entry を参照する (前例: qa-047 の再登録・qa-049 の逐語補記)。
 - **追記の実行経路と副作用**: qa_log 専用の op は存在しない。`apply_turn` は turn に `qa_id` があれば **`ops` の有無にかかわらず** entry を追記する (同 `id` が既存なら追記しない)。したがって通常の `confirm` turn も qa_log を残す。一方 `apply --op` は turn に `qa_id` を載せられないため、**qa_log を追記できるのは `chunk --turns` 経路だけ**である。matrix を動かさずに索引だけ追記したいときは `{"qa_id": "...", "question": "...", "answer": "...", "ops": []}` (セル op 空) の turn を渡す。ただしこの経路も `loop_count` を 0 から数え直し `complete` / `next_question` を再計算する (`run_chunk` の副作用) ため、matrix を動かさない索引追記でも `hearing_progress` が書き換わる点を承知して使うこと。
 
+### design_applications（回答原文と設計解釈の分離）
+
+セルを `confirm` する qa entry は、C04 deep card または doctrine anchor の具体原則が当該回答へどう効いたかを `design_applications[]` に記録する。これは利用者の発言を改変しないため `answer` へ混ぜず、compiler が章固有の適用根拠を描画するための設計解釈として分離する。
+
+- `knowledge_ref`: deep card path + section、または doctrine concern/authority を指す非空文字列。
+- `principle`: 採否を判断した具体原則名。単なる「設計知識」「上記原則」は不可。
+- `applicability`: `applied` / `not_applicable`。非適用も隠さず、理由を残す。
+- `rationale`: 確定回答に即した章固有の採否理由。全章同一の定型文は禁止。
+- `tradeoffs`: 採用費用、非採用時の損失、再評価条件などを最低1件持つ非空文字列配列。
+
+writer は上記形状を検証して qa entry に保存する。新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持ち、`validate-coverage-matrix.py --require-complete` が確定セルから参照される全 qa entry の非空・形状を fail-closed に再検査する。marker の無い旧 `schema_version: "1.0"` state は読み取りだけ可能で、writer の更新操作は fail-closed に拒否する。再開時は R1 の `init --state` を明示実行し、matrix を未収集へ戻して 1.1 へ移行する。この schema 境界が legacy 免除の終了条件であり、1.1 以降で marker 欠落を許さない。C03 は旧 entry を「未記録」と fail-visible に描画し、C05 の `design_knowledge_reflection` を存在確認だけで緑化させない。
+
 ## 単一 transition writer 契約
 
 `scripts/apply-spec-transition.py` のみが matrix / logs / aggregate / hearing_progress / targets / requirements_foundation を書き換える。
 
 - **確定巻き戻し拒否**: `確定` セルへの `confirm` / `exclude` は `TransitionError`。Bash/script 経由でも拒否。
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
-- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` (5) turn を適用。未収集が残れば `hearing_progress.complete=false`・`next_question` 非 null を保存 (resumable)。書込時点で未収集0のときだけ `complete=true` (書込後の `reopen` / `add-category` で stale 化する。上記「hearing_progress の意味論 (SSOT)」参照)。
+- **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` turn を適用し、その実値を `hearing_progress.max_loops` に保存する。未収集が残れば `complete=false`・`next_question` 非 null、未収集0なら `complete=true` とする。後続の `reopen` / `add-category` / `apply` も同じ不変則へ再同期する。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
-- **set-foundation / set-serves / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。
+- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定の additive annotation で `state` を変えない。
 
 ## 検証 (deterministic gate)
 

@@ -12,9 +12,9 @@ iteration: "Studio 拡張"
 title: "Studio: 改善要望フィードバックループ (2 経路受付・AI 対応・再公開)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T20:53:25.998215Z"
+updated_at: "2026-08-03T12:06:33Z"
 status: "active"
-depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy","feat-publish-pipeline"]
+depends_on: ["feat-auth-tenancy","feat-domain-model-db","feat-hub-foundation"]
 related_nodes: []
 resource_scope: ["features/feat-feedback-loop.md"]
 purpose: "利用者の改善要望/レビュー依頼/バグ報告を CLI + Web (S14) の 2 経路で受け付け (B6)、D5 pull 型 AI キューで解析・修正案生成し、修正版の publish → update 通知まで閉じる改善ループ (G5/I12, J5) を確立する"
@@ -99,3 +99,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 次工程: `/dev-graph plan --feature-id <本 feature id> --feature-context features/<id>.context.json` (exact-13 task 仕様化)
 - 昇格条件: confirmation_status=confirmed + evaluation_status=pass + implementation_readiness=complete で起票対象になる
+
+## Production acceptance (2026-08-08 / `HarnessHub-p0lr`)
+
+- 本番 Device Flow token で feedback を作成し、`feedback_response` pull / complete、AI 応答書戻し、`open → in_progress → resolved` を 1 run で確認する。
+- session-only read は route と同じ service/repository で検査し、Bearer token が `credential_not_allowed` になることは HTTP で実測する。
+- main `35a10b87` / hub-ci run `31253674292` で F1〜F5 と cleanup 残存行 0 を確認した。provider-admin cross-tenant pull + audit は edge 404 / 監査 0 のため、正規契約を `HarnessHub-stmx` で統一するまで P13 は未完了とする。
+- PR #681 / #682 の default-branch reconciliation は 2026-08-10 に確認済み。`HarnessHub-stmx` が open のため `SYS-FEEDBACK-LOOP-P13` は in_progress を維持する。

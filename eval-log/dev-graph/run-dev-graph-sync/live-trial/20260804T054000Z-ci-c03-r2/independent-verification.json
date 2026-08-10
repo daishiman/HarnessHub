@@ -1,0 +1,34 @@
+{
+  "scenario": "C03-OUT1-positive-second-sync-zero",
+  "skill": "dev-graph:run-dev-graph-sync",
+  "workdir": "/Users/dm/orca/workspaces/HarnessHub/wt-14-2/eval-log/dev-graph/run-dev-graph-sync/live-trial/20260804T054000Z-ci-c03-r2",
+  "verdict": "PASS",
+  "blockers": [],
+  "observations": {
+    "1": {
+      "met": true,
+      "evidence": "期待 import/export を fixture の pre 状態から独立に再導出し、実際に適用された差分と突合した。pre 状態 (git HEAD blob, fixture 初期 commit 3dbf2d9) は remote.json title='Validate isolated live trial (updated remotely r7)' / Status option_id=OPT_Backlog001(value Backlog)、sync-snapshot は title local=remote='Validate isolated live trial'・planning.status local=remote='Backlog'、graph.json は title='Validate isolated live trial'・status='active'。3-way 上 title は remote 片側変更 → import 1 件、status は local 片側変更 (config option_map active→'In Progress', direction local_to_project) → export 1 件が正解であり、pass1 dry-run report (transcript idx 86) も imports=[{node:LT-TASK-001, field:title, from:'Validate isolated live trial', to:'...(updated remotely r7)'}], exports=[{kind:project-field-update, alias:planning, project_field:Status, value:'In Progress', option_id:OPT_InProgress001}], changes=2, write_count=0 と一致する。pass2 apply report (idx 108) は mode=apply / ok=true / write_count=3 / conflicts=[] / tombstones=[] / pending_retry=[] で、applied に local upsert (C02/run-dev-graph-node, graph_revision 1→2)、external fixture receipt (project-field-update)、local_project_linkage upsert (revision 2→3) の 3 receipt を持つ。実ファイル側でも git diff で (a) import: graph.json title と tasks/LT-TASK-001.md frontmatter title が '(updated remotely r7)' へ、(b) export: .dev-graph/remote.json の planning.fields.Status が OPT_Backlog001/Backlog → OPT_InProgress001/'In Progress' へ変化。digest も一致: pre_run 実測 (git HEAD) graph 6ddba58a…/snapshot 37e836e6…/remote 755865fa…/task.md 7e0563f3… → 現行実測 graph 95d22b04…/snapshot ae94bd6d…/remote 64189f24…/task.md 499aeb29… で、report の *_sha256_before/after と完全一致。priority は Medium で三者一致のため無変更 (過剰 write なし)。"
+    },
+    "2": {
+      "met": true,
+      "evidence": "pass3 report (transcript idx 130/131, 同一 skill 呼出しの下で scripts/sync-graph.py --repo-root <fixture> --dry-run) の実値は changes=0, imports=[], exports=[], applied=[], conflicts=[], tombstones=[], pending_retry=[], converged=true, write_count=0, EXIT=0。評価者自身も read-only 再計測として同一入力で 3 度目の --dry-run を実行 (executed_at 2026-08-04T05:42:10.503887Z) し、changes=0 / imports=[] / exports=[] / converged=true / write_count=0 を再現。実行前後で fixture-repo (.git 除く 16 ファイル) の sha256 manifest を突合し差分ゼロ (fixture 無改変) を確認済み。pass1/pass3 とも write_count=0 で、sync-graph.py は dry-run 時 graph/remote/snapshot が変化したら ContractError で fail-closed する自己検査 (scripts/sync-graph.py:887-892) を持つ。"
+    },
+    "3": {
+      "met": true,
+      "evidence": "stable ID: issue id=I_kwDOFixture001, number=1, item_id=PVTI_lADOFixture001, project_id=PVT_kwDOFixture001, field_id=PVTF_Status001、Priority/Status の option 定義 (OPT_High001/OPT_Medium001/OPT_Low001/OPT_InProgress001/OPT_Done001/OPT_Blocked001/OPT_Backlog001) は git HEAD → apply 後 → 現在まで全て同値 (remote.json の diff は fields.Status の option_id/updated_at と issue updated_at のみで definitions ブロックは無変更)。graph の github_project_linkages は 1 件のまま (item_id=PVTI_lADOFixture001, project_id=PVT_kwDOFixture001) で二重 add なし。snapshot: pass2 直後 sha256=ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f (idx 116)、pass3 直後も同値 (idx 134)、pass3 report の snapshot_sha256_before/after も同値、評価者の現行実測 shasum も同値。graph.json も pass2 直後 / pass3 直後 / 現行いずれも 95d22b042153f4c027a6d57dc32ec5f7e6c631c1c080d13adbb09ad2c684eb3f、remote.json は 64189f2456618024d86e5f9ddb5a8a146f7e61961ecf50a260bb58a80deb19f9、tasks/LT-TASK-001.md は 499aeb29edc51533d0fb8695f8ec7a73c8f0361c5d473e700f3b2230a2ce30d6 で一致。加えて .dev-graph/state/graph.json・sync-snapshot.json・remote.json・tasks/LT-TASK-001.md の mtime は全て 2026-08-04 14:35:03 (=apply 時刻 05:35:03Z) のままで、pass3 以降に書き直された形跡がないことを独立に裏づける。"
+    }
+  },
+  "procedure_checks": {
+    "literal_skill_invocations": "transcript idx 62 / 102 / 121 に Skill({skill:'dev-graph:run-dev-graph-sync', args:'--repo-root <今回の fixture> --dry-run|--apply|--dry-run'}) の 3 呼出しが指定順で存在し、いずれも最初の実行アクションが Skill 呼出し (script 直実行は skill 本文ロード後)。Task/Agent への委譲なし。",
+    "external_access": "gh / 実 GitHub API / 実 Beads の呼出しは transcript 全 158 行に存在せず、remote は fixture 内 .dev-graph/remote.json の決定論 adapter のみ (apply receipt に fixture:true)。",
+    "goal_seek_evidence": "goal-spec.json / progress.json / intermediate.jsonl が fixture の eval-log に存在。intermediate.jsonl は 1 行目 (phase=pre-execution) を Skill 実行前 (idx 58 < idx 62) に Write、2 行目 (phase=post-verification) を pass3 後に append (idx 139, cat >> で追記、既存行の上書きなし)。必須 6 キーを両行が保持。original_goal_hash=ab2f296e0c39c58a4ea7f3a58096f702728aa38be198eaff465ce9d5970b8c43 は SKILL.md:154 の正本ゴール文の UTF-8 SHA-256 実値と一致することを評価者が再計算して確認。",
+    "out_dir": "out/ には status.json ({\"status\":\"PASS\",\"scenario\":\"C03-OUT1-positive-second-sync-zero\"}) 1 ファイルのみ。",
+    "fixture_integrity": "評価者は fixture を変更していない (再実行は write_count=0 の --dry-run のみ、前後の全ファイル sha256 manifest 一致)。"
+  },
+  "non_blocking_notes": [
+    "apply 経路が .dev-graph/state/.graph.json.register.lock (0 byte) を残置している。3 つの required_observations には影響しないが、lock ファイルの後始末漏れとして別途確認の余地がある。",
+    "fixture の eval-log/dev-graph-sync-requests/ が空ディレクトリのまま生成されている (証跡出力なし)。同じく本 scenario の判定には影響しない。"
+  ],
+  "verified_at": "2026-08-04T05:42Z",
+  "verifier": "independent fresh evaluator (read-only)"
+}

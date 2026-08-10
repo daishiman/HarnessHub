@@ -61,7 +61,19 @@ SYSTEM_SPEC_JSON_ALLOWLIST = {
     "completeness-report.json",
     "completeness-findings.json",  # system-dev-planner C08 が読む正準名 (report と同内容)
 }
-SYSTEM_SPEC_EVIDENCE_DIR = "retrieval-evidence"
+# system-spec/ 直下に置いてよい既知サブディレクトリ。混入遮断の目的は「雑多なファイルの流入防止」
+# であって、正本 JSON が参照する名前付きの資料までは禁じない。
+# retrieval-evidence/ は run-system-spec-doc-fetch の契約が置き場所を
+# `system-spec/retrieval-evidence/<target_id>.json` と固定しており、fetched-references.json の
+# evidence_ref がここを指す。禁止すると出典の取得証跡そのものが置けなくなる。
+#
+# ただし allowlist は「そのディレクトリの存在を許す」だけで、中身を無検査で通す意味ではない。
+# 名前で通して中身を見逃すと、証跡ディレクトリが任意ファイルの避難所になり、
+# ここを唯一の正規配置と宣言している C13 の evidence_ref 契約が実質無効化される。
+# そのため直下に平坦な *.json だけを許し、ネストしたディレクトリと非 JSON は拒否する。
+SYSTEM_SPEC_DIR_ALLOWLIST = {
+    "retrieval-evidence",
+}
 GRAPH_GOVERNED_ROOT_KEYS = ("specifications", "architecture", "features", "tasks")
 DOCS_REQUIRED_FRONTMATTER_KEYS = ("status", "layer")
 GRAPH_NODE_SCHEMA_PATH = (
@@ -260,20 +272,21 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
         for p in sorted(ss_root.iterdir()):
             rp = p.relative_to(repo_root).as_posix()
             if p.is_dir():
-                if p.name == SYSTEM_SPEC_EVIDENCE_DIR:
-                    for evidence in sorted(p.iterdir()):
-                        evidence_rp = evidence.relative_to(repo_root).as_posix()
-                        if not evidence.is_file() or evidence.suffix != ".json":
+                if p.name in SYSTEM_SPEC_DIR_ALLOWLIST:
+                    # allowlist は名前を許すだけ。中身は平坦な *.json のみに限定する。
+                    for entry in sorted(p.iterdir()):
+                        entry_rp = entry.relative_to(repo_root).as_posix()
+                        if not entry.is_file() or entry.suffix != ".json":
                             violations.append(
-                                "VIOLATION: system-spec-stray: "
-                                f"{evidence_rp} は置かない。許可: "
-                                f"system-spec/{SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
+                                f"VIOLATION: system-spec-stray: {entry_rp} は置かない。"
+                                f"許可: system-spec/{p.name}/*.json (平坦な JSON のみ)"
                             )
                     continue
                 violations.append(
                     f"VIOLATION: system-spec-stray: {rp}/ (サブディレクトリ) は置かない。"
-                    "許可: コンパイラ出力・正本 JSON・"
-                    f"{SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
+                    "system-spec/ 直下はコンパイラ出力と正本 JSON、および "
+                    + " / ".join(f"{d}/*.json" for d in sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
+                    + " のみ"
                 )
             elif p.suffix == ".md" or p.name in SYSTEM_SPEC_JSON_ALLOWLIST:
                 continue
@@ -282,7 +295,8 @@ def lint(repo_root: Path) -> tuple[list[str], str]:
                     f"VIOLATION: system-spec-stray: {rp} は置かない。"
                     "許可: *.md / "
                     + " / ".join(sorted(SYSTEM_SPEC_JSON_ALLOWLIST))
-                    + f" / {SYSTEM_SPEC_EVIDENCE_DIR}/*.json"
+                    + " / "
+                    + " / ".join(f"{d}/*.json" for d in sorted(SYSTEM_SPEC_DIR_ALLOWLIST))
                 )
 
     # 4. リポジトリ直下の allowlist
@@ -336,17 +350,6 @@ def self_test() -> int:
         (root / "system-spec" / "spec-state.json").write_text("{}", encoding="utf-8")
         v, _ = lint(root)
         assert v == [], f"クリーン状態で違反を誤検出: {v}"
-
-        # C13 の取得証跡は唯一の専用 directory に JSON としてのみ許可する。
-        evidence_dir = root / "system-spec" / SYSTEM_SPEC_EVIDENCE_DIR
-        evidence_dir.mkdir()
-        (evidence_dir / "react.json").write_text("{}", encoding="utf-8")
-        v, _ = lint(root)
-        assert v == [], f"C13 証跡 JSON を誤って配置違反にした: {v}"
-        (evidence_dir / "stray.txt").write_text("x", encoding="utf-8")
-        v, _ = lint(root)
-        assert any("stray.txt" in line for line in v), "C13 証跡 directory の非 JSON を検出しない"
-        (evidence_dir / "stray.txt").unlink()
 
         # layer の許容形式は graph-node.schema.json の documentLayer が唯一の正本。
         # `xlayer:` のような部分一致や大文字・空白入りの値は layer 宣言として扱わない。
@@ -410,6 +413,40 @@ def self_test() -> int:
         v, _ = lint(root)
         assert any("unlabeled.md" in line for line in v), "docs_root の marker で規則全体が無効化された"
         (root / "docs" / "unlabeled.md").unlink()
+
+        # allowlist 済みサブディレクトリ (doc-fetch の取得証跡) は通し、
+        # 未知のサブディレクトリは従来どおり弾く。「サブディレクトリ全部素通り」まで穴を広げない。
+        (root / "system-spec" / "retrieval-evidence").mkdir()
+        (root / "system-spec" / "retrieval-evidence" / "react.json").write_text(
+            "{}", encoding="utf-8")
+        v, _ = lint(root)
+        assert v == [], f"allowlist 済みの system-spec サブディレクトリを違反にした: {v}"
+        (root / "system-spec" / "unknown-dir").mkdir()
+        v, _ = lint(root)
+        assert any(
+            "unknown-dir" in line and "system-spec-stray" in line for line in v
+        ), "未知の system-spec サブディレクトリを見逃している"
+        (root / "system-spec" / "unknown-dir").rmdir()
+
+        # allowlist は名前を許すだけで、中身まで無検査にはしない。
+        # ここを素通りさせると証跡置き場が任意ファイルの避難所になり、
+        # `system-spec/retrieval-evidence/<target_id>.json` を唯一の正規配置と
+        # 宣言している C13 の evidence_ref 契約が実質無効化される。
+        evidence_dir = root / "system-spec" / "retrieval-evidence"
+        (evidence_dir / "stray.txt").write_text("x", encoding="utf-8")
+        v, _ = lint(root)
+        assert any(
+            "stray.txt" in line and "system-spec-stray" in line for line in v
+        ), "allowlist 済みディレクトリ内の非 JSON を見逃している"
+        (evidence_dir / "stray.txt").unlink()
+        (evidence_dir / "nested").mkdir()
+        v, _ = lint(root)
+        assert any(
+            "nested" in line and "system-spec-stray" in line for line in v
+        ), "allowlist 済みディレクトリ内のネストを見逃している"
+        (evidence_dir / "nested").rmdir()
+        v, _ = lint(root)
+        assert v == [], f"是正後にも違反が残った: {v}"
 
         # 4 種の違反を 1 つずつ検出できるか
         (root / "specs" / "orphan.md").write_text("x", encoding="utf-8")

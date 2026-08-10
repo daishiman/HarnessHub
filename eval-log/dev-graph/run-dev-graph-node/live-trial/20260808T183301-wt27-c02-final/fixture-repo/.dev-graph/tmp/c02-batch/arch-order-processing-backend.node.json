@@ -1,0 +1,100 @@
+{
+  "node": {
+    "graph_node_id": "arch-order-processing-backend",
+    "artifact_kind": "architecture",
+    "artifact_subtypes": [
+      "backend",
+      "security"
+    ],
+    "title": "注文処理バックエンドのアーキテクチャとセキュリティ層",
+    "project_id": "c02final",
+    "domain": "product-platform",
+    "status": "draft",
+    "owners": [
+      "dev-graph-harness"
+    ],
+    "tags": [
+      "architecture",
+      "backend",
+      "security",
+      "infrastructure"
+    ],
+    "priority": null,
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-08T09:37:12Z",
+    "updated_at": "2026-08-08T09:37:12Z",
+    "depends_on": [],
+    "related_nodes": [],
+    "resource_scope": [
+      "architecture/arch-order-processing-backend.md"
+    ],
+    "purpose": null,
+    "goal": null,
+    "scope_in": [],
+    "scope_out": [],
+    "acceptance": [],
+    "architecture_refs": [],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "architecture/arch-order-processing-backend.md",
+    "template_id": "architecture",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "manual",
+      "source_plugin": null,
+      "source_path": "mixed-artifacts.json",
+      "source_version": null,
+      "source_digest": "73cf6d5c9cdfb6d7552719d91f259345c301d85914b658b35287c0eeea4cfc39",
+      "imported_at": "2026-08-08T09:37:12Z"
+    },
+    "classification_confidence": 0.98,
+    "classification_reason": "系全体の構成・境界・subtype (backend/security) を定義するため architecture へ写像した",
+    "classification_candidates": [
+      {
+        "artifact_kind": "architecture",
+        "confidence": 0.98,
+        "candidate_path": "architecture/arch-order-processing-backend.md"
+      },
+      {
+        "artifact_kind": "specification",
+        "confidence": 0.17,
+        "candidate_path": "specs/arch-order-processing-backend.md"
+      }
+    ],
+    "github_publication": {
+      "mode": "local_only",
+      "project_aliases": [],
+      "labels": [],
+      "milestone": null
+    },
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "beads_linkage": null,
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "policy": "manual",
+      "status": "open",
+      "source": null,
+      "completed_at": null,
+      "reconciled_at": null,
+      "evidence_refs": []
+    },
+    "implementation_readiness": {
+      "status": "complete",
+      "missing_sections": [],
+      "checked_at": "2026-08-08T09:37:12Z"
+    }
+  }
+}

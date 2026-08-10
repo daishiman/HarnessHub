@@ -70,11 +70,11 @@ P02 spec が想定した前提と現行リポジトリ実測との差分。**D1-
 
 | 対象 | 初回間隔 | backoff | 上限 | 停止条件 |
 |---|---|---|---|---|
-| PublishRequest (非終端) | **2s** | ×2 | **30s** | 終端 status (`Published` / `Failed` / `Draft`) |
+| PublishRequest (非終端) | **2s** | ×2 | **30s** | `validating` / `approved` / `publishing` 以外 (`POLLABLE_PUBLISH_STATES` を正本とする) |
 | catalog 一覧 | ポーリングなし | — | — | staleTime 相当 60s (手動再取得のみ) |
 
 - **決定**: 間隔計算は `lib/catalog/polling.ts` の**純関数** `nextPollIntervalMs(attempt)` に切り出す。hook (`useCatalogPolling`) は純関数の返り値で `setTimeout` を張り直すだけにする。
-- **決定**: `document.visibilityState !== 'visible'` の間はポーリングを停止する (frontend-spec §4 `refetchIntervalInBackground: false` と同義。Workers 無料枠と端末電池の温存)。
+- **決定**: `document.visibilityState !== 'visible'` の間はポーリングを停止する。現行実装は復帰時に自動再開せず、利用者の明示的な Retry を要する。自動再開は別 Beads で追跡し、それまではこの fail-closed な挙動を正とする。
 - **決定**: 状態更新の読み上げは `aria-live="polite"` (qa-018)。更新のたびに focus を奪わない。
 
 ### 2.3 縮退 (§6.1) の実装方式 — acceptance 3 の直接根拠
@@ -163,6 +163,17 @@ CatalogEntry[] --(純関数: buildMarketplaceDocument)--> marketplace document
 | 2 | `GET/POST /api/v1/harnesses*` 未実装 | port 境界 + 縮退で吸収 (§0 A2 / §2.3)。実装到着時は `http-adapter.ts` のみ差し替え |
 | 3 | route path の spec drift (`/harnesses` vs `/catalog`) | 実装は `/catalog`。frontend-spec §1 route 表への追補を P12 で行う |
 | 4 | TanStack Query 未導入 | `polling.ts` の純関数分離により移行コストを局所化 (§0 A3) |
-| 5 | **通常 session の `GET /catalog` ハードナビゲーションは到達不能** (`HarnessHub-6o0r`) | §1.1 の「RSC が tenant/workspace を解決する」は `page.tsx` が `searchParams` を読んで `CatalogList` へ渡す**表示用スコープの受け渡し**を指すのみで、**認可判定ではない**。認可判定 (`src/middleware.ts` → `authorize()`) は単一認可層 (§5 境界 3) に閉じており、`resolveRequestedScope()` は URL パス (`/t/{tenantId}/w/{workspaceId}/...`) と `x-harness-tenant-id`/`x-harness-workspace-id` ヘッダのみを読む。実際の middleware を通す回帰テストで、ログイン済み通常 session のクエリあり/なし双方が `403 missing_tenant_scope` になることを確定した。**ただし CWV 計測専用の `__cwv_probe` は例外**である。これは署名・origin・固定 scope・5 分 TTL を検証後に cookie へ移す、GET/HEAD の catalog read に限った閉域 credential であり、通常利用者の navigation や query scope の許可ではない（`apps/hub/tests/security/middleware-entry.test.ts`、`system-spec/auth.md` qa-133）。`/catalog` への通常 nav link は依然として無く、一般利用者向けの公開経路は現状未提供とする。query 対応や redirect 補完を採る場合は、単一認可層のコア変更として system-spec reopen・ADR 改訂・spec-reflection-receipt を伴う正式 governance を別途行う。 |
+| 5 | **通常 session の `/catalog` scope 解決** (`HarnessHub-4lxg` / `HarnessHub-6o0r` は解消済み) | primary navigation に `/catalog` があり、単一 workspace 所属の signed session は active scope を再検証してハードナビゲーション 200 へ到達する。複数 workspace 所属で active scope を確定できない session は `403 missing_tenant_scope` とする。query parameter は表示用であり、認可入力には使わない。CWV 専用 `__cwv_probe` は署名・origin・固定 scope・5 分 TTL を検証する GET/HEAD 限定 credential で、通常利用者の認可を緩和しない。 |
 
 **rollback trigger**: feat-publish-pipeline の API 契約 (§2.1) または採用配布経路 (§3.1) が本 ADR の前提と異なることが判明した場合、当該決定を re-open し P02 を再実行する。再実行までは影響を受ける P03 以降の項目の着手を保留する。
+
+## 8. 追記 (2026-08-04): `HarnessHub-dhy.2` 完了確認
+
+`HarnessHub-dhy.2` (アーキテクチャ設計 — S01/S02/S03/S04 画面構成・install descriptor
+取得・ポーリング契約・marketplace.json 生成方式・CWV バンドル予算の決定) が求める決定は
+本 ADR の D1 (§1)・D2 (§2)・D3 (§3)・D4 (§4) として既に確定済みであり、本タスク固有の
+未決定事項は残っていない。新規の設計決定は不要と判断し、本節をその確認記録として残す。
+
+未完了のまま残る P13 (リリース/デプロイ) は、CWV 本番実測・U5 実測・draft PR merge・
+default-branch reconciliation という**運用上の実施**であり、本 ADR (P02 設計) の対象外
+である。

@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — S17/S18 画面, User拡張/TenantCoefficient API, PIIガード適用, 通知ディスパッチ接続"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:20:53Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-07T03:37:29Z"
+status: "closed"
 depends_on: ["SYS-USER-ORG-ADMIN-P04"]
 related_nodes: ["feat-user-org-admin","arch-harness-hub-security","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/(dashboard)/account/","apps/hub/src/app/(dashboard)/users/","apps/hub/src/app/legal/","apps/hub/src/app/legal/__tests__/","apps/hub/src/features/user-org-admin/","packages/db/schema/user-org-admin/","packages/schemas/user-org-admin/"]

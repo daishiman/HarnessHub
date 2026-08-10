@@ -1,0 +1,52 @@
+{
+  "evaluator": "fresh Agent (general-purpose), orchestrator と別個体",
+  "scenario_id": "C05-OUT1-positive-feature-progress",
+  "target_skill": "dev-graph:run-dev-graph-render",
+  "verdict": "PASS",
+  "blockers": [],
+  "evidence": {
+    "external_refs": {
+      "link": 0,
+      "script_src": 0,
+      "http_literal": 0,
+      "cdn_npm": 0
+    },
+    "svg": {
+      "count": 1,
+      "viewBox": "0 0 1000 1160",
+      "rect": 30,
+      "path": 12,
+      "text": 45
+    },
+    "skill_invocation": "transcript tool_use index 1 = Skill(dev-graph:run-dev-graph-render, --repo-root <fixture>)",
+    "progress": {
+      "numerator": 4,
+      "denominator": 13,
+      "graph_status_counts": {
+        "done": 4,
+        "active": 1,
+        "blocked": 1,
+        "draft": 7
+      }
+    },
+    "receipt": {
+      "applied_count": 13,
+      "expected_count": 13,
+      "source_digest": "sha256:d23642a89399279a057d59184d5f2ca59042a60f18f5ba32b502999e7dec2807"
+    },
+    "registration_verification": {
+      "status": "verified",
+      "reason": null,
+      "graph_digest_match": true
+    },
+    "refusal_gate": "render-graph-html.py:106-107 expected_count!=applied_count -> ContractError; probe run gave exit 1 + NO_HTML_WRITTEN",
+    "numerator_source": "render-graph-html.py:177-178 recomputed from graph store children, not receipt",
+    "read_only": "git status --porcelain = ?? .dev-graph/render/, ?? eval-log/ のみ。graph.json 無改変",
+    "goal_seek": {
+      "files": 3,
+      "intermediate_rows": 2,
+      "original_goal_hash": "1c3829684b15a6a20d0a51a3f84fbed3867e6c3b30d2b730ef2fe1b103e846c8"
+    }
+  },
+  "note": "intermediate 1 行目は Skill tool 呼出後・render 実行前に作成 (blocker ではない)"
+}

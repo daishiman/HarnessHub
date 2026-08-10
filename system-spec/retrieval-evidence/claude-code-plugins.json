@@ -1,9 +1,25 @@
 {
-  "target_id": "claude-code-plugins",
-  "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
-  "retrieved_at": "2026-08-04T00:40:04Z",
-  "http_status": 200,
-  "content_bytes": 1185485,
-  "content_sha256": "373a285de690cf20d4eaafa6642f1e3fe4acc59e1e61c96eb52b814056e6dbed",
-  "body_summary": "Create and distribute a plugin marketplace - Claude Code Docs"
+  "allowed_domains": [
+    "code.claude.com"
+  ],
+  "findings": [
+    "marketplace は .claude-plugin/marketplace.json を持つ repository",
+    "plugin entry の source は ref (branch/tag) と sha (commit) を独立に指定でき、両方あれば sha が有効な pin",
+    "git 系 source type は github / url / git-subdir",
+    "marketplace source と plugin source は別 repository を指せる",
+    "公式を騙る名称 (official-claude-plugins 等) は登録が阻止される",
+    "plugin dependency の version 制約を扱う plugin-dependencies ページが存在する"
+  ],
+  "retrieval_channel": "web-search-official-host-restricted",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+  "retrieval_query": "Claude Code plugin marketplaces documentation",
+  "retrieved_at": "2026-08-07T03:30:09Z",
+  "returned_official_urls": [
+    "https://code.claude.com/docs/en/plugin-marketplaces",
+    "https://code.claude.com/docs/en/discover-plugins",
+    "https://code.claude.com/docs/en/plugins",
+    "https://code.claude.com/docs/en/plugins-reference",
+    "https://code.claude.com/docs/en/plugin-dependencies"
+  ],
+  "target_id": "claude-code-plugins"
 }

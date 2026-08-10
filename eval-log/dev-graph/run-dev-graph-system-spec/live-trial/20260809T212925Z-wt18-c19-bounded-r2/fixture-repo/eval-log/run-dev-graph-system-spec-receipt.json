@@ -1,0 +1,42 @@
+{
+  "branch": "main",
+  "content_roots": {
+    "architecture": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/architecture",
+    "documents": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/docs",
+    "features": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/features",
+    "issues": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/issues",
+    "repository": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo",
+    "specifications": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/specs",
+    "system_spec": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/system-spec",
+    "tasks": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/tasks"
+  },
+  "coordination_paths": {
+    "events": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.git/dev-graph/events.json",
+    "leases": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.git/dev-graph/leases.json",
+    "root": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.git/dev-graph"
+  },
+  "default_branch": "main",
+  "diagnostics": [
+    "default_branch_fallback_main"
+  ],
+  "git_common_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.git",
+  "git_dir": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.git",
+  "head_sha": "3ceb9b120154b76b39a241bb32699a1418d2667b",
+  "local_state_paths": {
+    "cache": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.dev-graph/cache",
+    "config": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.dev-graph/config.json",
+    "graph": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.dev-graph/state/graph.json",
+    "locks": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo/.dev-graph/locks"
+  },
+  "mode": "write",
+  "plugin_source": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/plugins/dev-graph",
+  "repo_root": "/Users/dm/orca/workspaces/HarnessHub/wt-18-3/eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260809T212925Z-wt18-c19-bounded-r2/fixture-repo",
+  "repository_id": "local:sha256:19064e3b97b0fbe1eee8ae8d23d004b8a09e4b40ffbe556137decd1149d138e1",
+  "root_trust_evidence": {
+    "claude_project_dir_verified": true,
+    "git_common_dir_ownership_verified": true,
+    "git_toplevel_verified": true,
+    "selected_by": "explicit --repo-root"
+  },
+  "worktree_id": "wt_095d9e80ea131001"
+}

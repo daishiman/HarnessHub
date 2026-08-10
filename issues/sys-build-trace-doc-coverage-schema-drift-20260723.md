@@ -12,7 +12,7 @@ iteration: null
 title: "validate-build-trace.py の doc_coverage schema drift で全 skill-design 評価に REG-001 (high) が誤計上される"
 owners: ["daishiman"]
 created_at: "2026-07-24T08:23:21Z"
-updated_at: "2026-07-24T08:23:21Z"
+updated_at: "2026-08-04T03:58:30.768368Z"
 status: "draft"
 depends_on: []
 related_nodes: []
@@ -38,7 +38,7 @@ classification_reason: "検証 script の schema 乖離により評価ゲート�
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/sys-build-trace-doc-coverage-schema-drift-20260723.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-9i1b","linked_at":"2026-08-04T03:57:49.404582Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

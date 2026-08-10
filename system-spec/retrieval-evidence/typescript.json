@@ -1,9 +1,25 @@
 {
-  "target_id": "typescript",
-  "source_url": "https://www.typescriptlang.org/docs/",
-  "retrieved_at": "2026-08-04T00:40:00Z",
-  "http_status": 200,
-  "content_bytes": 170589,
-  "content_sha256": "7d3aaef77fec1da246a38a93b00839af732caff71d28b04da9797423dfe4b0f7",
-  "body_summary": "TypeScript: The starting point for learning TypeScript"
+  "npm_package": "typescript",
+  "payload": {
+    "dist-tags": {
+      "beta": "6.0.0-beta",
+      "dev": "3.9.4",
+      "insiders": "4.6.2-insiders.20220225",
+      "latest": "7.0.2",
+      "next": "7.1.0-dev.20260806.1",
+      "rc": "7.0.1-rc",
+      "tag-for-publishing-older-releases": "4.1.6"
+    },
+    "homepage": "https://www.typescriptlang.org/",
+    "license": "Apache-2.0",
+    "repository.url": "git+https://github.com/microsoft/TypeScript.git",
+    "time.modified": "2026-08-06T08:24:38.413Z",
+    "version": "7.0.2"
+  },
+  "registry": "https://registry.npmjs.org",
+  "retrieval_channel": "npm-registry",
+  "retrieval_command": "pnpm view typescript <field> --json",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+  "retrieved_at": "2026-08-07T03:25:36Z",
+  "target_id": "typescript"
 }

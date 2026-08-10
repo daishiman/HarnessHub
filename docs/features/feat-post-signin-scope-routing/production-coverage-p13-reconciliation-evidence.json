@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "result": "PASS",
+  "verdict": "PASS",
+  "phase_ref": "P13",
+  "covered_task_ids": [
+    "SYS-POST-SIGNIN-SCOPE-P13",
+    "SYS-DOCS-CMS-P13"
+  ],
+  "reviewed_at": "2026-08-10T02:43:42Z",
+  "base_branch": "main",
+  "origin_main_sha": "e1a3df5a34b0cba0fa0692351b82528c00d4e257",
+  "merged_pull_requests": [
+    {
+      "number": 681,
+      "merge_commit": "35a10b87267899756065f6ae139ee417829f6202",
+      "purpose": "production coverage smoke implementation"
+    },
+    {
+      "number": 682,
+      "merge_commit": "9808ecd10ac8b35f1872381d3d8c9f39da2bbee7",
+      "purpose": "runtime evidence and specification reconciliation"
+    }
+  ],
+  "runtime_evidence": {
+    "github_actions_run": 31253674292,
+    "coverage_smoke": "PASS",
+    "post_signin_cases": "S1-S8 PASS",
+    "docs_cms_cases": "D1-D6 PASS",
+    "cleanup_remaining_rows": 0
+  },
+  "specification_impact": {
+    "new_semantic_change": false,
+    "reason": "This reconciliation only records durable completion after PR #681 and PR #682 reached main. The production smoke contract is already canonical in system-spec/testing-qa.md qa-217, specs/harness-hub-production-coverage-smoke-addendum.md, and architecture/harness-hub-testing-qa.md."
+  }
+}

@@ -10,6 +10,8 @@ import re
 from datetime import datetime
 from urllib.parse import urlsplit
 
+from foundation_provenance import validate_foundation_source_indexes
+
 DECISION_COST_CATEGORIES = {"free", "low-cost", "paid", "unknown"}
 DECISION_COMPARISON_AXES = ("goal_fit", "tco", "security", "operations", "lock_in")
 RFC3339_RE = re.compile(
@@ -233,7 +235,8 @@ def validate_foundation(data: dict) -> list[str]:
 
     検証内容 (opt-in; --require-foundation 時のみ):
       (a) requirements_foundation の U1-U9 が値あり (U1-U3 は N/A 不可)、または明示 N/A+理由で
-          確定され、confirmed=true はユーザー合意の approval_ref (approval_log 実在) を伴う。
+          確定され、U1-U9 ごとの一次根拠 source-index とユーザー合意の approval_ref
+          (approval_log 実在) を伴う。
       (b) 各『確定』セルが serves_goals で 1 つ以上の実在する goal id へトレースされる。
       (c) どのゴールにも資さない確定セル (serves_goals 無し = drift 候補) を surface。
     上位概念がブレると仕様が整ってもブレるため、収集を上位概念へ機械的に結び付ける。
@@ -270,6 +273,7 @@ def validate_foundation(data: dict) -> list[str]:
             findings.append(
                 f"requirements_foundation: approval_ref={approval_ref!r} が approval_log に不在"
             )
+        findings.extend(validate_foundation_source_indexes(data))
     goals = rf.get("goals") or []
     if _is_explicit_na(goals):
         goals = []

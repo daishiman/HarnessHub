@@ -1,0 +1,27 @@
+{
+  "evaluator": "fresh-independent-live-trial-evaluator-evaluate_c15_r5",
+  "verdict": "PASS",
+  "observations": {
+    "1": "The only overlapping resource_scope pair is LT-SCHED-001/LT-SCHED-002 on src/alpha.py; the scheduler places them in batch 0 and batch 1 respectively.",
+    "2": "LT-SCHED-005 is absent from ready and appears in unmapped with reason dependency_unsatisfied and blocking_depends_on=[LT-SCHED-001].",
+    "3": "LT-SCHED-004 has the active 2099 lease and appears in conflicts, while LT-SCHED-006 has the stale 2020 lease and is reclaimed into ready.",
+    "4": "Batches are [LT-SCHED-001, LT-SCHED-003] and [LT-SCHED-002, LT-SCHED-006], each respects max-parallel=2, and all four suggested branches and claim commands are unique."
+  },
+  "goal_seek": {
+    "rows": 2,
+    "required_keys": [
+      "original_goal",
+      "original_goal_hash",
+      "current_goal_snapshot",
+      "delta_from_original",
+      "merged_directive_for_next",
+      "drift_signal"
+    ],
+    "original_goal_sha256": "d0041ddebcc8144ed4c7a8f0f69d0ab279eed66f40807119d91a716b54e32ca6"
+  },
+  "integrity": {
+    "graph_and_lease_unchanged": true,
+    "scheduler_rerun_matches_receipt_except": ["executed_at", "eval_log"],
+    "status_marker": "PASS"
+  }
+}
