@@ -12,17 +12,17 @@ iteration: null
 title: "rubric governance: 2026-08-06 自動生成提案の human review と処遇決定"
 owners: ["daishiman"]
 created_at: "2026-08-07T03:35:55Z"
-updated_at: "2026-08-07T03:44:21.154506Z"
+updated_at: "2026-08-07T03:35:55Z"
 status: "draft"
 depends_on: []
-related_nodes: []
-resource_scope: ["plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md"]
+related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-system-specification-implementation-writebacks"]
+resource_scope: ["plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md","issues/harness-rubric-proposal-20260806-review.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md","features/feat-dev-pipeline-improvement.md","specs/harness-hub-system-specification-implementation-writebacks.md","architecture/harness-hub-dev-workflow.md"]
 purpose: "機械生成された rubric 更新提案が triage されずに滞留し、評価基準の自己改善ループが閉じない状態を解消する"
 goal: "2026-08-06 分 draft の friction_density 25 件を正規フローで triage し、採否と根拠を記録した状態にする"
 scope_in: ["2026-08-06 分 draft の triage と処遇決定","集計キーに旧 worktree 絶対 path が混入する不具合の要否判定"]
 scope_out: ["rubric 本体 (schemas/ templates/) の実改訂 (run-rubric-sync の管轄)","friction_density 閾値ロジックの実装変更"]
 acceptance: ["friction_density 25 件を閾値見直し / 評価項目新設 / templates 更新 / 棄却のいずれかへ全件分岐させる","集計キーの絶対 path 混入について要否を判定し、必要なら別 issue を起票する","draft の status を採否結果に応じて更新するか、対応不要と判断した理由を残す"]
-architecture_refs: []
+architecture_refs: ["arch-harness-hub-dev-workflow"]
 parent_feature: null
 feature_package_id: null
 phase_ref: null
@@ -101,3 +101,10 @@ implementation_readiness: {"checked_at":"2026-08-07T03:35:55Z","missing_sections
 
 - コマンド/テスト: `python3 plugins/harness-creator/skills/run-skill-rubric-governance/scripts/aggregate-evals.py --help` で再集計手順を確認
 - 証跡 path: `plugins/harness-creator/skills/run-skill-rubric-governance/proposals/2026-08-06-rubric-update.md`
+
+## 2026-08-10 最終レビューの引継ぎ境界
+
+- 今回完了するのは、未追跡だった自動生成 draft を履歴へ保存し、Beads `HarnessHub-lzfs` と本 node へ human review を引き継ぐことまでである。
+- draft PR の作成や提案ファイルの commit は、25 件の採否判断を代替しない。本 issue と Beads は triage 完了まで open のまま維持する。
+- 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、rubric 本体の閾値・重み・template は変更しない。既存 `system-spec/dev-workflow.md` が定める write-back と未完了項目の durable tracking を適用した実装記録であり、新しい製品要求は追加しない。
+- 層別判断、品質ゲート、公開前条件は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) と [Phase 13 補助引継ぎ](../tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md) を参照する。

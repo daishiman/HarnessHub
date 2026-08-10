@@ -12,11 +12,11 @@ iteration: null
 title: "Harness Hub システム要件仕様 — 実装 writeback 分冊"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T13:10:16.743319Z"
+updated_at: "2026-08-10T01:49:38.768685Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728"]
-resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md"]
+related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
+resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"]
 purpose: "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する"
 goal: "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる"
 scope_in: ["共有 OAuth、外部参考 Skill、顧客 OAuth、C10、C16 の既存実装 writeback"]
@@ -176,3 +176,10 @@ N/A: 今回の分冊に伴う製品判断はない。
 - current receipt の resume は evaluator 再実行を禁止し、deterministic runner 1 回、upstream Skill / Agent / direct upsert 0 回、`system-spec-resume-closure/v1` の全 step exit 0 を要求する。
 - `Write` / `Edit` の代筆判定は target path に限定し、status evidence 本文に `completeness-report.json` が現れるだけでは違反にしない。
 - これは `qa-216` / `qa-217` の検証証拠契約を閉じる実装 writeback であり、新しい製品 API・DB・認証・UI 要件は追加しない。詳細は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/c19-resume-closure-spec-reflection-receipt.md) を正とする。
+
+## rubric 自動生成提案の保持 writeback (2026-08-10 / `HarnessHub-lzfs`)
+
+- 2026-08-06 の draft 提案は、採否判断そのものではなく human review へ渡す入力として履歴へ保存する。
+- 未判断の `friction_density` 25 件と旧 worktree 絶対 path の集計キー問題は、Beads `HarnessHub-lzfs` と dev-graph `issue-rubric-proposal-20260806-review` で追跡する。commit / draft PR だけでは close しない。
+- 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、rubric 本体の閾値・重み・template は変更しない。`system-spec/spec-state.json` は legacy schema 1.0 の read-only 境界を維持し、既存確定契約の実装 writeback として本分冊・architecture・feature・task・受領書へ記録する。
+- 判断理由、検証、残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
