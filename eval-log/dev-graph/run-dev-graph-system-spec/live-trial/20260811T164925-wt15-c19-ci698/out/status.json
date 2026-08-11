@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "skill": "dev-graph:run-dev-graph-system-spec",
+  "skill_args": "--repo-root <fixture-repo> --resume",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import.py",
+    "invocations": 1,
+    "status": "PASS",
+    "completion_contract": {
+      "version": "system-spec-resume-closure/v1",
+      "path": "resume-reuse",
+      "authority": "digest-bound-resume-receipt",
+      "evaluator_execution": "reused-current-pass",
+      "import_writer": "C02"
+    },
+    "report_path": "eval-log/run-dev-graph-system-spec-resume-report.json",
+    "steps_all_exit_zero": true,
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "gate-boundary", "exit_code": 0},
+      {"label": "gate-source-and-evidence-bindings", "exit_code": 0},
+      {"label": "gate-graph-preview", "exit_code": 0},
+      {"label": "c02-dry-run-architecture", "exit_code": 0},
+      {"label": "c02-dry-run-specification", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-evidence-refs", "exit_code": 0},
+      {"label": "gate-source-digest", "exit_code": 0}
+    ],
+    "checklist": [
+      {"id": "context", "status": "pass", "evidence": "resolve-context exit 0"},
+      {"id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true"},
+      {"id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0"},
+      {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+      {"id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0"},
+      {"id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0"}
+    ]
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py (step validate-resume, exit 0) returned valid=true, mode=reuse-confirmed, plugin_version=0.1.0 within >=0.1.0 <1.0.0, required entry points {run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator} all present, 5 digest-bound artifacts current, failures=[]. Skill was invoked with --resume; network_calls=0 and upstream_skill_invocations=0 confirm no elicit/doc-fetch/compile/evaluator regeneration."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "gate-source-and-evidence-bindings, gate-evidence-refs (validate-evidence-refs.py) and gate-source-digest (validate-source-digest.py) all exit 0 for registered_this_run=[arch-system-spec-overview, spec-system-spec-index], so each node's source_digest matches the sha256 of its own source_path and evidence_ref dangling count is 0; confirmation/evaluator evidence comes from the current digest-bound PASS receipt (completeness-report.json, spec-state.json, fetched-references.json)."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "Both nodes were written solely by C02's single writer upsert-node.py (c02-dry-run-architecture/specification then c02-upsert-architecture/specification, all exit 0; no direct graph edits). gate-boundary exit 0 confirms 0 duplicated elicitation/compile logic inside dev-graph; node bodies are verbatim source imports from the caller repo's system-spec/ artifacts, which is lineage reference, not logic duplication."
+    }
+  ],
+  "blockers": []
+}
