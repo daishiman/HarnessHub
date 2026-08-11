@@ -184,3 +184,11 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 製品 API、DB schema、認証認可、UI、Cloudflare deploy unit、rubric 本体の閾値・重み・template は変更しない。`system-spec/spec-state.json` は legacy schema 1.0 の read-only 境界を維持し、既存確定契約の実装 writeback として本分冊・architecture・feature・task・受領書へ記録する。
 - `system-spec/index.md` の「実装 writeback 索引」から本節と受領書へ接続し、確定 QA を増やさずに `system-spec/` と実装記録の追跡可能性を保つ。
 - 判断理由、検証、残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
+
+## ローカル開発ランタイム信頼性 writeback (2026-08-11 / `HarnessHub-bmhq` / qa-230)
+
+- ローカル state は repository 配下の git-ignore 済み `.local-state/hub/` に絶対パスで固定し、DB・秘密設定・PID・ログを一つの lifecycle owner が管理する。
+- macOS は launchd が supervisor を、supervisor が sqld と Next.js を監視する。loopback 以外へ公開せず、異常終了後の再起動と同一 DB の継続利用を検査する。
+- Hub health は HTTP loopback sqld だけを token なしで許可し、remote URL の credential 不足は引き続き fail-closed にする。認証付き API smoke と read-only Cookie 発行は seed から分離する。
+- middleware 公開契約は `apps/hub/src/middleware-contract.ts` に一意化し、Next.js の予約 page 名との衝突を避ける。
+- 製品の公開 API、DB schema、本番 Cloudflare deploy unit は変更しない。正本は [maintenance / operations](../system-spec/maintenance-ops.md) の `qa-230`、検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を参照する。

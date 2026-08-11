@@ -21,7 +21,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { AUTH_NUMERIC_CONTRACT } from '../../lib/auth/config.js';
 import { createPublishJourneyCheckpoint, httpPublishJourneyPort } from '../../lib/publish-journey/index.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 
 const hubRoot = process.cwd();
 const CLI_COMMAND_SOURCE = join(hubRoot, '..', 'publisher', 'src', 'cli', 'publish-command.ts');

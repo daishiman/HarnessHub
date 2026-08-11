@@ -54,7 +54,7 @@ import { GET as getRollups } from '../../app/api/v1/metrics/rollups/route.js';
 import { GET as getSummary } from '../../app/api/v1/metrics/summary/route.js';
 import { epochMsToJstDate, jstDateToEpochMs } from '../../features/metrics-tracking/date-jst.js';
 import { DAY_MS } from '../../features/metrics-tracking/dto.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { createMetricsDbHarness, type MetricsDbHarness } from './support/real-db.js';
 import { createTestMetricsRuntime } from './support/test-runtime.js';
 

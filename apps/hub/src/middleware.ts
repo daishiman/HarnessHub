@@ -8,13 +8,13 @@ import {
   resolveCwvProbePrincipal,
   resolveCwvProbeTicket,
 } from './lib/auth/cwv-probe.js';
-// 認可層は公開入口 (src/middleware/index.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
+// 認可層は公開入口 (src/middleware-contract.ts) 経由でのみ参照する。内部ファイルへ直接入ると境界の迂回になる
 import { createSessionAuthProvider, systemAuthClock } from './lib/auth/index.js';
 import { readBearerToken, resolveAccessTokenPrincipal } from './lib/authz/index.js';
 // 拒否応答の見た目だけを担う表示層 (認可の判断は持たない)
 import { isNavigationRequest, renderDenyNavigationPage } from './lib/routing/deny-navigation.js';
 import { PATHNAME_HEADER } from './lib/routing/pathname-header.js';
-import { authorize, TENANT_HEADER, WORKSPACE_HEADER } from './middleware/index.js';
+import { authorize, TENANT_HEADER, WORKSPACE_HEADER } from './middleware-contract.js';
 import { createAuthAdapter, type Principal, toAuthRequestContext } from './shared/auth/index.js';
 
 /**

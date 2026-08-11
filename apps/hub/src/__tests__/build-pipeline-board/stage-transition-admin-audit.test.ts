@@ -54,7 +54,7 @@ import { POST as postStage } from '../../app/api/v1/builds/[id]/stage/route.js';
 import { GET as listBuilds } from '../../app/api/v1/builds/route.js';
 import { createBuildPipelineBoardRuntime } from '../../features/build-pipeline-board/runtime.js';
 import { noSourceTitles } from '../../features/build-pipeline-board/service.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { type BuildBoardDbHarness, createBuildBoardDbHarness } from './support/real-db.js';
 
 const MEMBER = testUser('user-member');

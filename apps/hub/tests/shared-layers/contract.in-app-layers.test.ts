@@ -1,5 +1,6 @@
 // apps/hub 内で owner される共通層 7 種 (authz-middleware / auth / audit / aijob / notification / pii / telemetry) の
-// consumer 系統検証。package 化されていないため public API 入口は各層の index.ts になる。
+// consumer 系統検証。package 化されていないため public API 入口は各層の index.ts、
+// authz-middleware だけは Next.js の予約名衝突を避けた middleware-contract.ts になる。
 //
 // requirements-baseline §4.2 A4-1 は「§8 登録簿の**全**共通層について consumer 2 系統以上」を要求する。
 // 従来 contract test は package 化された 4 層しか見ておらず、判定範囲が要件の 1/3 だった (P10 指摘 F-06)。
@@ -8,7 +9,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { authorize, isPublicPath, PUBLIC_PATH_PREFIXES, resolveRequestedScope } from '../../src/middleware/index.js';
+import { authorize, isPublicPath, PUBLIC_PATH_PREFIXES, resolveRequestedScope } from '../../src/middleware-contract.js';
 import { createAiJobQueue } from '../../src/shared/aijob/index.js';
 import { auditEventFromContext, createAuditLogger, createInMemoryAuditSink } from '../../src/shared/audit/index.js';
 import { createAuthAdapter, denyAllAuthProvider } from '../../src/shared/auth/index.js';
@@ -34,6 +35,10 @@ const LAYERS = {
   'pii-guard': 'src/shared/pii',
   'telemetry-ingest-rollup': 'src/shared/telemetry',
 } as const;
+
+const PUBLIC_API_ENTRIES: Partial<Record<keyof typeof LAYERS, string>> = {
+  'authz-middleware': 'src/middleware-contract',
+};
 
 /**
  * apps/hub 本体 (src/**) に実利用がある層。
@@ -69,7 +74,9 @@ function pendingLayersInRegistry(): string[] {
 
 describe('contract: apps/hub 内 owner の共通層', () => {
   it('全 7 層が consumer-a fixture (第 2 系統) から公開入口経由で参照されている', () => {
-    const missing = Object.entries(LAYERS).filter(([, dir]) => inAppEntryImports(CONSUMER_A, dir).length === 0);
+    const missing = Object.entries(LAYERS).filter(
+      ([id, dir]) => inAppEntryImports(CONSUMER_A, dir, PUBLIC_API_ENTRIES[id as keyof typeof LAYERS]).length === 0,
+    );
     expect(missing.map(([id]) => id)).toEqual([]);
   });
 
@@ -82,14 +89,15 @@ describe('contract: apps/hub 内 owner の共通層', () => {
 
   it('公開入口 index を迂回した内部ファイル参照が無い', () => {
     for (const [id, dir] of Object.entries(LAYERS)) {
-      expect(inAppDeepImports(APP_SRC, dir).map((record) => `${id}:${record.file}`)).toEqual([]);
-      expect(inAppDeepImports(CONSUMER_A, dir).map((record) => `${id}:${record.file}`)).toEqual([]);
+      const entry = PUBLIC_API_ENTRIES[id as keyof typeof LAYERS];
+      expect(inAppDeepImports(APP_SRC, dir, entry).map((record) => `${id}:${record.file}`)).toEqual([]);
+      expect(inAppDeepImports(CONSUMER_A, dir, entry).map((record) => `${id}:${record.file}`)).toEqual([]);
     }
   });
 
   it('本体側に呼び出し元がある層の一覧が既知の状態と一致する (未結線を緑で隠さない)', () => {
     const wired = Object.entries(LAYERS)
-      .filter(([, dir]) => inAppEntryImports(APP_SRC, dir).length > 0)
+      .filter(([id, dir]) => inAppEntryImports(APP_SRC, dir, PUBLIC_API_ENTRIES[id as keyof typeof LAYERS]).length > 0)
       .map(([id]) => id);
 
     // 一致しなくなったら「結線が進んだ」か「結線が消えた」のどちらか。どちらも申告なしに通してはいけない

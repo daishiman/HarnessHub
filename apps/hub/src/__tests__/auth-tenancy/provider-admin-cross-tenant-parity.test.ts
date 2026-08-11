@@ -18,7 +18,7 @@ import { signJwt } from '../../lib/auth/index.js';
 import type { AuthzPrincipal, AuthzResourceRef } from '../../lib/authz/index.js';
 import { CROSS_TENANT_ROLE, resolveEffectiveRole } from '../../lib/authz/index.js';
 import { type AuthzRuntimeDeps, withAuthz } from '../../lib/authz/with-authz.js';
-import { authorize } from '../../middleware/index.js';
+import { authorize } from '../../middleware-contract.js';
 import { createAuditLogger, createInMemoryAuditSink } from '../../shared/audit/index.js';
 import type { Principal } from '../../shared/auth/index.js';
 

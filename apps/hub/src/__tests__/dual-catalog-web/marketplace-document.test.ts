@@ -38,7 +38,7 @@ import {
 } from '../../../tests/auth-tenancy/support/token-route-runtime.js';
 import { GET as marketplaceRoute } from '../../app/marketplace.json/route.js';
 import { buildMarketplaceDocument, resolveAdoptedSourceResolver } from '../../lib/catalog/marketplace.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '../../../../..');
 

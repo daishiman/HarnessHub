@@ -8,7 +8,7 @@ export {
   isPublicPath,
   PUBLIC_PATH_PREFIXES,
   resolveSessionScope,
-} from './authz.js';
+} from './middleware/authz.js';
 
 export {
   type RequestedScope,
@@ -18,4 +18,4 @@ export {
   scopeFromPath,
   TENANT_HEADER,
   WORKSPACE_HEADER,
-} from './scope.js';
+} from './middleware/scope.js';

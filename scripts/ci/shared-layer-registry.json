@@ -60,6 +60,7 @@
       "id": "authz-middleware",
       "shared_layers_ref": "§2",
       "owner_package": "apps/hub/src/middleware",
+      "public_api_entry": "apps/hub/src/middleware-contract.ts",
       "consumers": [
         "apps/hub",
         "apps/hub/tests/fixtures/consumer-a"

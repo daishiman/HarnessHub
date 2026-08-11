@@ -89,8 +89,8 @@ function runtimeConfigProbe(env: RuntimeEnv): DependencyProbe {
 }
 
 /**
- * Turso 疎通。secret (TURSO_DATABASE_URL / TURSO_AUTH_TOKEN) の設定有無を見て、
- * 設定済みなら `SELECT 1` まで実際に往復する。
+ * Turso / local sqld 疎通。remote は URL と token、local http loopback は URL の設定を要求し、
+ * `SELECT 1` まで実際に往復する。
  * Turso 停止は全 API 不可 (infrastructure-spec §10 縮退マトリクス) なので critical。
  */
 export function createDbProbe(env: RuntimeEnv, deps: ProbeDeps = {}): DependencyProbe {
@@ -100,9 +100,11 @@ export function createDbProbe(env: RuntimeEnv, deps: ProbeDeps = {}): Dependency
     check: async () => {
       const url = nonEmpty(env.TURSO_DATABASE_URL);
       const token = nonEmpty(env.TURSO_AUTH_TOKEN);
-      // 未プロビジョニング (secret 未投入) は「疎通できない」と同義に扱う。
-      // 200 を返すと外形監視が可用性ありと誤計測するため、ここは degraded にしない
-      if (url === null || token === null) throw new Error('turso_credentials_missing');
+      // ローカル sqld は token 無しで動かせる。一方、remote URL まで無認証で許すと
+      // 本番の secret 未投入を見逃すため、例外は http loopback の完全一致だけに限定する。
+      if (url === null || (token === null && !isUnauthenticatedLocalSqldUrl(url))) {
+        throw new Error('turso_credentials_missing');
+      }
       await selectOne(url, token, deps.fetchImpl ?? globalThis.fetch);
     },
   };
@@ -147,13 +149,13 @@ function nonEmpty(value: string | undefined): string | null {
  * `@libsql/client` を apps/hub の依存に足さずに済ませるための最小実装で、
  * packages/db が接続クライアントを持った時点でそちらへ寄せる (現状は境界と型のみ / ADR §11.3-7)。
  */
-async function selectOne(databaseUrl: string, authToken: string, fetchImpl: typeof fetch): Promise<void> {
+async function selectOne(databaseUrl: string, authToken: string | null, fetchImpl: typeof fetch): Promise<void> {
+  const headers: Record<string, string> = { 'content-type': 'application/json' };
+  if (authToken !== null) headers.authorization = `Bearer ${authToken}`;
+
   const response = await fetchImpl(`${toHttpEndpoint(databaseUrl)}/v2/pipeline`, {
     method: 'POST',
-    headers: {
-      authorization: `Bearer ${authToken}`,
-      'content-type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       requests: [{ type: 'execute', stmt: { sql: 'SELECT 1' } }, { type: 'close' }],
     }),
@@ -164,6 +166,17 @@ async function selectOne(databaseUrl: string, authToken: string, fetchImpl: type
 
   const payload: unknown = await response.json();
   if (!isPipelineOk(payload)) throw new Error('turso_query_failed');
+}
+
+/** token 無しを許すローカル sqld URL。remote host や HTTPS には本番と同じ認証を要求する。 */
+function isUnauthenticatedLocalSqldUrl(databaseUrl: string): boolean {
+  try {
+    const url = new URL(databaseUrl);
+    if (url.protocol !== 'http:') return false;
+    return url.hostname === '127.0.0.1' || url.hostname === 'localhost' || url.hostname === '[::1]';
+  } catch {
+    return false;
+  }
 }
 
 /** `libsql://` は HTTP 上のプロトコルなので https へ読み替える */

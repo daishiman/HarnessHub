@@ -18,9 +18,9 @@ serves_goals: [G1, G2, G3, G4, G5]
 | Web (web) | 確定 | 確定質疑: qa-188 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。運用対象は Hub (web) と作者環境 (macOS/Windows) のみ |
-| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-044 |
+| デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-230 |
 | デスクトップ (Linux) (desktop-linux) | 対象外 | 理由: Linux desktop は対象外 (作者環境は macOS + Windows) |
-| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-044 |
+| デスクトップ (macOS) (desktop-macos) | 確定 | 確定質疑: qa-230 |
 
 ## 確定内容 (質疑録)
 
@@ -40,11 +40,23 @@ serves_goals: [G1, G2, G3, G4, G5]
 
 [qa-188-e 併せて残る DeviceAuthorizationStatus の三重定義] C07 が前回から継続指摘している DeviceAuthorizationStatus の情報源が 3 つある件 (ports.ts:117 / repository/device-flow.ts:23 / drizzle schema publish.ts:106) も未対応のまま残る。V7 (同一のリテラル union が 2 箇所に独立定義されている状態を検出する) の対象に、**drizzle schema を第 3 の情報源として含める**ことを明記する。型宣言と zod だけを突合する実装にすると、この 3 件目が検査をすり抜ける。
 
-### qa-044 (対応セル: desktop-windows, desktop-macos)
+### qa-230 (対応セル: desktop-windows, desktop-macos)
 
-**質問**: 作者デスクトップ環境 (macOS / Windows) の保守運用 (更新導線・サポート・資格情報とローカル環境の維持) は何を正本とするか? (C07 監査指摘への対応: maintenance-ops.desktop-windows/desktop-macos の qa_ref=qa-011 は Hub web 側運用中心の回答で desktop 固有の裏付けが薄い。既確定内容の集約による専用質疑化であり新規決定は含まない)
+**質問**: 作者デスクトップ環境の既存保守契約を維持しつつ、macOS 上の Hub ローカル開発ランタイムを再現可能かつ障害から自動復旧できる状態へどう固定するか。
 
-**回答**: 既確定の qa-011 / qa-027 / qa-039 / qa-041 の desktop 該当部分を maintenance-ops.desktop の専用正本として集約確定する。(1) plugin 更新導線 (qa-011): 作者環境の Publisher / Skill 更新は marketplace / Bootstrap Installer の更新導線 (「更新あり」表示 + 手動 update) で提供し、自動強制更新はしない。(2) 作者サポート (qa-011): 相談は予約制 office hour (供給上限あり §11.3)。(3) 退職・棚卸し (qa-027): 四半期のユーザー棚卸し (退職者アカウント無効化・owner 再割当確認) は作者デスクトップの token 失効 (Hub Web からの即時失効 = qa-041) と対にして実施する。(4) ローカル環境の維持 (qa-039): CI と同一実装の pnpm verify (lint/typecheck/test/bundle size) を local から実行可能に保ち「local では通るが CI で落ちる」を構造的に減らす。pre-commit hook (lint/format/secret scan) は早期検知の補助で、正本の遮断は CI 側。(5) 資格情報のインシデント初動 (qa-041): token 窃取疑い時は Hub Web から失効 → family 全失効 → 監査確認 (docs/security-spec.md §8.6)。refresh token 再利用検知は provider-admin + 該当 workspace-admin へ即時通知。(6) 障害縮退 (qa-011 維持): Hub 障害時も作者環境の導入済み Skill・公開済み Web App は動作継続し、新規公開・追加・更新のみ停止する。本 qa は maintenance-ops.desktop 行への接地点を提供し、詳細 runbook は maintenance-ops (qa-011/qa-027) の web 行確定に従属する。
+**回答**: 【既存契約の維持】qa-044 の作者デスクトップ保守契約を全面維持する。plugin 更新は marketplace / Bootstrap Installer の手動 update、相談は予約制 office hour、四半期の利用者棚卸しと token 失効を対にし、CI と同一実装の pnpm verify を local から実行可能に保つ。pre-commit は早期検知の補助、正本の遮断は CI とする。token 窃取疑いは Hub Web から失効し、Hub 障害時も導入済み Skill と公開済み Web App は継続し、新規公開・追加・更新だけを停止する。
+
+【1. 保存境界】macOS の Hub ローカル開発データは repository 内の git-ignore 済み `.local-state/hub` を安定した state root とする。DB、秘密環境ファイル、runtime/PID、lock、launchd plist、sqld/Next/supervisor log を同 root に置き、DB は sqld へ絶対 path で渡す。移行はコピー元を削除せず、既存の移行先を上書きしない。state root は 0700、秘密環境ファイルは 0600 とする。
+
+【2. lifecycle と監督】`pnpm --filter @harness-hub/hub local:{start,status,stop,restart,smoke,cookie,paths}` を単一入口とする。start は worktree 固有 label の launchd job を登録し、supervisor が sqld と Next.js を子プロセスとして監督する。子の異常終了は 1 秒後に再起動し、stop は process group へ SIGTERM、10 秒後も残る場合だけ SIGKILL とする。start は 8081/3100 の既存 listener を拒否し、sqld ready 後に Next を起動する。両 listener は 127.0.0.1 に限定する。
+
+【3. health 契約】remote Turso は URL と非空 token を必須のまま維持する。例外は `http://127.0.0.1`、`http://localhost`、`http://[::1]` の loopback sqld だけで、token 無しでも実 `SELECT 1` を行う。HTTPS、libsql、localhost の suffix host は例外に含めない。R2 binding 不在は既存どおり degraded / HTTP 200、DB 不通は down / HTTP 503 とする。
+
+【4. 認証付き smoke】seed 投入と session 発行を分離する。cookie 再発行は local sqld を read-only query し、本番と同じ HS256、8 時間 TTL、tenant/workspace scope で発行する。smoke は `/health`、root、認証と scope header 付き `/api/v1/sheets` を検査し、HTTP 200 と 3 件を要求する。cookie や secret の値は status/smoke の出力へ載せない。
+
+【5. 公開入口と観測性】Next.js の予約された `src/middleware.ts` と同一 route に解決される `src/middleware/index.ts` は併存させない。認可 middleware の公開 contract は `src/middleware-contract.ts` とし、shared-layer registry、静的 detector、consumer import を同じ入口へ揃える。ログは 5 MiB 到達時に最大 5 世代へ rotation する。
+
+【6. 完了境界】unit/contract test、typecheck、lint、task spec gate、`local:status`、認証付き `local:smoke`、sqld/Next の異常終了後 PID 変化、DB 3 件保持、Duplicate page warning 0 を local implementation の完了証拠とする。in-app Browser が利用不能な場合、実画面確認だけは Beads と Draft PR の残課題に残し、未実施を PASS と表現しない。Windows の作者環境は qa-044 の契約を維持し、launchd 固有部分は macOS にだけ適用する。
 
 ## 上流指針 (doctrine anchor)
 
@@ -115,10 +127,33 @@ codeを、次の変更者が意図・制約・failureを短時間で理解し、
 
 [qa-188-e 併せて残る DeviceAuthorizationStatus の三重定義] C07 が前回から継続指摘している DeviceAuthorizationStatus の情報源が 3 つある件 (ports.ts:117 / repository/device-flow.ts:23 / drizzle schema publish.ts:106) も未対応のまま残る。V7 (同一のリテラル union が 2 箇所に独立定義されている状態を検出する) の対象に、**drizzle schema を第 3 の情報源として含める**ことを明記する。型宣言と zod だけを突合する実装にすると、この 3 件目が検査をすり抜ける。
 - 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
-##### 確定内容 qa-044 (対応セル: desktop-windows, desktop-macos)
+##### 確定内容 qa-230 (対応セル: desktop-windows, desktop-macos)
 
-- 確定要件: 既確定の qa-011 / qa-027 / qa-039 / qa-041 の desktop 該当部分を maintenance-ops.desktop の専用正本として集約確定する。(1) plugin 更新導線 (qa-011): 作者環境の Publisher / Skill 更新は marketplace / Bootstrap Installer の更新導線 (「更新あり」表示 + 手動 update) で提供し、自動強制更新はしない。(2) 作者サポート (qa-011): 相談は予約制 office hour (供給上限あり §11.3)。(3) 退職・棚卸し (qa-027): 四半期のユーザー棚卸し (退職者アカウント無効化・owner 再割当確認) は作者デスクトップの token 失効 (Hub Web からの即時失効 = qa-041) と対にして実施する。(4) ローカル環境の維持 (qa-039): CI と同一実装の pnpm verify (lint/typecheck/test/bundle size) を local から実行可能に保ち「local では通るが CI で落ちる」を構造的に減らす。pre-commit hook (lint/format/secret scan) は早期検知の補助で、正本の遮断は CI 側。(5) 資格情報のインシデント初動 (qa-041): token 窃取疑い時は Hub Web から失効 → family 全失効 → 監査確認 (docs/security-spec.md §8.6)。refresh token 再利用検知は provider-admin + 該当 workspace-admin へ即時通知。(6) 障害縮退 (qa-011 維持): Hub 障害時も作者環境の導入済み Skill・公開済み Web App は動作継続し、新規公開・追加・更新のみ停止する。本 qa は maintenance-ops.desktop 行への接地点を提供し、詳細 runbook は maintenance-ops (qa-011/qa-027) の web 行確定に従属する。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 確定要件: 【既存契約の維持】qa-044 の作者デスクトップ保守契約を全面維持する。plugin 更新は marketplace / Bootstrap Installer の手動 update、相談は予約制 office hour、四半期の利用者棚卸しと token 失効を対にし、CI と同一実装の pnpm verify を local から実行可能に保つ。pre-commit は早期検知の補助、正本の遮断は CI とする。token 窃取疑いは Hub Web から失効し、Hub 障害時も導入済み Skill と公開済み Web App は継続し、新規公開・追加・更新だけを停止する。
+
+【1. 保存境界】macOS の Hub ローカル開発データは repository 内の git-ignore 済み `.local-state/hub` を安定した state root とする。DB、秘密環境ファイル、runtime/PID、lock、launchd plist、sqld/Next/supervisor log を同 root に置き、DB は sqld へ絶対 path で渡す。移行はコピー元を削除せず、既存の移行先を上書きしない。state root は 0700、秘密環境ファイルは 0600 とする。
+
+【2. lifecycle と監督】`pnpm --filter @harness-hub/hub local:{start,status,stop,restart,smoke,cookie,paths}` を単一入口とする。start は worktree 固有 label の launchd job を登録し、supervisor が sqld と Next.js を子プロセスとして監督する。子の異常終了は 1 秒後に再起動し、stop は process group へ SIGTERM、10 秒後も残る場合だけ SIGKILL とする。start は 8081/3100 の既存 listener を拒否し、sqld ready 後に Next を起動する。両 listener は 127.0.0.1 に限定する。
+
+【3. health 契約】remote Turso は URL と非空 token を必須のまま維持する。例外は `http://127.0.0.1`、`http://localhost`、`http://[::1]` の loopback sqld だけで、token 無しでも実 `SELECT 1` を行う。HTTPS、libsql、localhost の suffix host は例外に含めない。R2 binding 不在は既存どおり degraded / HTTP 200、DB 不通は down / HTTP 503 とする。
+
+【4. 認証付き smoke】seed 投入と session 発行を分離する。cookie 再発行は local sqld を read-only query し、本番と同じ HS256、8 時間 TTL、tenant/workspace scope で発行する。smoke は `/health`、root、認証と scope header 付き `/api/v1/sheets` を検査し、HTTP 200 と 3 件を要求する。cookie や secret の値は status/smoke の出力へ載せない。
+
+【5. 公開入口と観測性】Next.js の予約された `src/middleware.ts` と同一 route に解決される `src/middleware/index.ts` は併存させない。認可 middleware の公開 contract は `src/middleware-contract.ts` とし、shared-layer registry、静的 detector、consumer import を同じ入口へ揃える。ログは 5 MiB 到達時に最大 5 世代へ rotation する。
+
+【6. 完了境界】unit/contract test、typecheck、lint、task spec gate、`local:status`、認証付き `local:smoke`、sqld/Next の異常終了後 PID 変化、DB 3 件保持、Duplicate page warning 0 を local implementation の完了証拠とする。in-app Browser が利用不能な場合、実画面確認だけは Beads と Draft PR の残課題に残し、未実施を PASS と表現しない。Windows の作者環境は qa-044 の契約を維持し、launchd 固有部分は macOS にだけ適用する。
+- 原則: Automation and toil reduction (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: ad-hoc な nohup 再起動を、絶対 state path・単一 lifecycle・readiness・監督・認証付き smoke に置換し、同じ障害の手動再調査を減らした。
+  - トレードオフ:
+    - macOS では launchd への依存が増える
+    - 短時間の手動起動より初回設定の構成要素が増える
+- 原則: Least Privilege (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: listener を loopback に限定し、remote DB の token 必須を維持し、秘密ファイルの権限と非表示出力を固定した。
+  - トレードオフ:
+    - 別端末からローカル Hub へ直接接続できない
+    - remote Turso の簡易な token 無し検証は許可しない
 - 資するゴール: G1, G2, G3, G4, G5
 
 ## 最新ドキュメント出典

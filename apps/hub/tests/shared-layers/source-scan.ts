@@ -94,25 +94,25 @@ export function deepImports(root: string, packageName: string): readonly ImportR
 }
 
 /**
- * apps/hub 内で owner される共通層 (src/shared/* / src/middleware) の公開入口 index への参照。
- * これらは package 化されていないため package 名では参照できず、公開入口が index.ts になる。
+ * apps/hub 内で owner される共通層 (src/shared/* / src/middleware) の公開入口への参照。
+ * 通常は owner 配下の index.ts。Next.js の予約名と衝突する層は entryFile で別入口を明示する。
  */
-export function inAppEntryImports(root: string, layerDir: string): readonly ImportRecord[] {
+export function inAppEntryImports(root: string, layerDir: string, entryFile?: string): readonly ImportRecord[] {
   const dir = path.join(APP_ROOT, layerDir);
-  const entry = path.join(dir, 'index');
+  const entry = stripExtension(entryFile === undefined ? path.join(dir, 'index') : path.join(APP_ROOT, entryFile));
   return listImports(root)
     .filter((record) => !isOwnedBy(record, dir))
     .filter((record) => stripExtension(resolveRelativeSpecifier(record)) === entry);
 }
 
-/** 公開入口 index を迂回して owner 内部のファイルを直接参照している import。境界の迂回なので違反 */
-export function inAppDeepImports(root: string, layerDir: string): readonly ImportRecord[] {
+/** 公開入口を迂回して owner 内部のファイルを直接参照している import。境界の迂回なので違反 */
+export function inAppDeepImports(root: string, layerDir: string, entryFile?: string): readonly ImportRecord[] {
   const dir = path.join(APP_ROOT, layerDir);
-  const entry = path.join(dir, 'index');
+  const entry = stripExtension(entryFile === undefined ? path.join(dir, 'index') : path.join(APP_ROOT, entryFile));
   return (
     listImports(root)
       // owner 自身の内部 import は境界の迂回ではない
-      .filter((record) => !isOwnedBy(record, dir))
+      .filter((record) => !isOwnedBy(record, dir) && stripExtension(path.resolve(APP_ROOT, record.file)) !== entry)
       .filter((record) => {
         const resolved = resolveRelativeSpecifier(record);
         if (resolved === null) return false;

@@ -18,7 +18,7 @@ import {
   tenantSigninPath,
 } from '../lib/routing/signin-entry.js';
 import { workspaceEntryPath } from '../lib/routing/workspace-entry.js';
-import { resolveSessionScope } from '../middleware/index.js';
+import { resolveSessionScope } from '../middleware-contract.js';
 
 /**
  * 要求ごとにレンダリングする。この宣言は**意図の明示**であり、単独では分類を変えない。

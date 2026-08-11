@@ -28,7 +28,16 @@
     "smoke:hearing-production": "tsx scripts/smoke-production-hearing.ts",
     "smoke:publish-production": "tsx scripts/smoke-production-publish.ts",
     "apply:monitoring": "node scripts/apply-better-stack-monitoring.mjs",
-    "verify:slo-observation": "node scripts/verify-slo-observation.mjs"
+    "verify:slo-observation": "node scripts/verify-slo-observation.mjs",
+    "local:migrate": "node scripts/local-dev.mjs migrate",
+    "local:start": "node scripts/local-dev.mjs start",
+    "local:status": "node scripts/local-dev.mjs status",
+    "local:stop": "node scripts/local-dev.mjs stop",
+    "local:restart": "node scripts/local-dev.mjs restart",
+    "local:smoke": "node scripts/local-dev.mjs smoke",
+    "local:cookie": "node scripts/local-dev.mjs cookie",
+    "local:paths": "node scripts/local-dev.mjs paths",
+    "test:local-dev": "node --test scripts/local-dev.test.mjs"
   },
   "dependencies": {
     "@auth/core": "0.41.3",

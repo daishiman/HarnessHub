@@ -111,6 +111,35 @@ describe('GET /health', () => {
     // libsql:// は HTTP 上のプロトコルなので https へ読み替えて叩く
     expect(record.url).toBe('https://harness-hub-prod.turso.io/v2/pipeline');
     expect(String(record.init?.body)).toContain('SELECT 1');
+    expect(record.init?.headers).toMatchObject({ authorization: 'Bearer turso-token-for-test' });
+  });
+
+  it.each(['http://127.0.0.1:8081', 'http://localhost:8081', 'http://[::1]:8081'])(
+    'ローカル sqld (%s) は token 無しでも SELECT 1 を検査する',
+    async (databaseUrl) => {
+      const record: { url?: string; init?: RequestInit } = {};
+      const response = await respond(
+        healthyEnv({ TURSO_DATABASE_URL: databaseUrl, TURSO_AUTH_TOKEN: '' }),
+        okPipelineFetch(record),
+      );
+      const body = healthResponseSchema.parse(await response.json());
+
+      expect(response.status).toBe(200);
+      expect(body.dependencies.find((dependency) => dependency.name === 'db')?.status).toBe('ok');
+      expect(record.url).toBe(`${databaseUrl}/v2/pipeline`);
+      expect(String(record.init?.body)).toContain('SELECT 1');
+      expect(record.init?.headers).toEqual({ 'content-type': 'application/json' });
+    },
+  );
+
+  it('ローカル sqld でも token があれば Authorization header を送る', async () => {
+    const record: { init?: RequestInit } = {};
+    await respond(
+      healthyEnv({ TURSO_DATABASE_URL: 'http://127.0.0.1:8081', TURSO_AUTH_TOKEN: 'local-token' }),
+      okPipelineFetch(record),
+    );
+
+    expect(record.init?.headers).toMatchObject({ authorization: 'Bearer local-token' });
   });
 });
 
@@ -130,6 +159,25 @@ describe('HF-A3-HEALTH-003: 依存不通時の挙動', () => {
     expect(body.status).toBe('down');
     expect(response.status).toBe(503);
     expect(body.dependencies.find((dependency) => dependency.name === 'db')?.detail).toBe('turso_credentials_missing');
+  });
+
+  it.each([
+    'libsql://harness-hub-prod.turso.io',
+    'https://harness-hub-prod.turso.io',
+    'https://localhost:8081',
+    'http://localhost.example.com:8081',
+  ])('remote URL (%s) は従来どおり非空 token が必須', async (databaseUrl) => {
+    let fetchCalled = false;
+    const fetchImpl = (async () => {
+      fetchCalled = true;
+      return new Response('{}', { status: 200 });
+    }) as typeof fetch;
+    const response = await respond(healthyEnv({ TURSO_DATABASE_URL: databaseUrl, TURSO_AUTH_TOKEN: '   ' }), fetchImpl);
+    const body = healthResponseSchema.parse(await response.json());
+
+    expect(response.status).toBe(503);
+    expect(body.dependencies.find((dependency) => dependency.name === 'db')?.detail).toBe('turso_credentials_missing');
+    expect(fetchCalled).toBe(false);
   });
 
   it('Turso が HTTP エラーを返すと down になり 503 を返す', async () => {

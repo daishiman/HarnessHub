@@ -17,7 +17,7 @@
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 
-import { resolveSessionScope } from '../../middleware/index.js';
+import { resolveSessionScope } from '../../middleware-contract.js';
 import { SESSION_COOKIE_NAME } from '../auth/config.js';
 import { systemAuthClock } from '../auth/ports.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME, verifySessionToken } from '../auth/session.js';

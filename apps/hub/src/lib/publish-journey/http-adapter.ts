@@ -1,7 +1,7 @@
 /** S01 の唯一の fetch 境界。既存 Publish API を順番どおり再利用し、途中再開だけを担う。 */
 import type { PublishProject, PublishRequestView } from '@harness-hub/schemas';
 
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import type {
   PublishJourneyCheckpoint,
   PublishJourneyFailure,
