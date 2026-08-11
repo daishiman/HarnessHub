@@ -12,10 +12,10 @@ iteration: "Stage 1"
 title: "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-10T00:42:42.873251Z"
+updated_at: "2026-08-11T08:00:00Z"
 status: "closed"
 depends_on: []
-related_nodes: ["spec-harness-hub-ui-foundation-addendum","issue-ui-foundation-final-review-20260808","issue-hub-shell-page-surface-unification-20260808"]
+related_nodes: ["spec-harness-hub-ui-foundation-addendum","issue-ui-foundation-final-review-20260808","issue-hub-shell-page-surface-unification-20260808","spec-harness-hub-information-design-addendum","issue-system-spec-required-info-answer-gate-20260811"]
 resource_scope: ["features/feat-hub-foundation.md"]
 purpose: "費用ゼロ制約 (C2) 下で Hub の実行基盤 (Cloudflare Workers 一体型 + OpenNext) と CI/CD・監視・SLO 運用の土台を確立する"
 goal: "pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 99.5% 計測が稼働し、Worker 3MiB 予算内で Next.js と共通層の単一実装が動作する状態"
@@ -173,3 +173,10 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - macOS ローカル画面試験の sqld / Next.js を、固定 absolute state と launchd + supervisor の二段監視で再現可能にした。
 - loopback 限定、正確な Hub health、非破壊 Cookie 発行、認証・scope 付き sheets smoke、middleware 公開入口の一意性を同じ lifecycle 契約で検査する。
 - 製品の公開 API、DB schema、本番 Cloudflare deploy unit は変更しない。仕様判断、検証、実ブラウザ確認の残件は [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を正とする。
+
+## Post-closeout 画面情報設計追補 (2026-08-11 / `HarnessHub-f6ix`)
+
+- UI 基盤が *どの部品を使うか* を固定するのに対し、本追補は *何を載せ・何を省き・何を強調するか* の 10 工程と `lead / context / metadata`、open-world pattern、要素別意味契約を製品規範へ固定した。
+- profile 割当の SSOT は [screen-inventory](../docs/screen-inventory.md)。実装手順は [画面情報設計ガイド](../docs/frontend-information-design-guide.md)、規範正本は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)。
+- system-spec-harness へ `information-design` knowledge と blocking required-info `screen-information-priority` を追加し、`frontend-arch` より先に確定する収集順を固定した。
+- 公開 API、DB schema、認可判定、Cloudflare deploy unit は非変更。writer による required-info 回答の決定論接地は follow-up `HarnessHub-9wdm`。検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/information-design-spec-reflection-receipt.md) を参照する。

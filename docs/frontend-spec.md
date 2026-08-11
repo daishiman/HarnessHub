@@ -9,7 +9,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 > **位置づけ**: system-spec 確定章 (frontend / ui-ux) と mockup 分析 (harness-studio-v2) を実装可能な粒度へ展開した詳細正本。[docs/backend-spec.md](backend-spec.md) (データ構造・API の正本) と対をなす。確定 QA (qa-007/018/021/022/031〜033) と decision (D1-D6) に反する記述はできない。矛盾を発見した場合は R4-reopen の根拠として扱う。
 > **確定状態**: §9 の 8 論点は 2026-07-17 のユーザー確認 (qa-040/qa-035。旧 qa-034 は並行ヒアリングとの採番衝突により qa-040 へ再登録) で確定済み。本書に【要確認】は残っていない。
-> **mockup の扱い**: harness-studio-v2.html は**見た目と情報設計の正本**であり実装方式の正本ではない (qa-022)。mockup には media query が存在しない (デスクトップ専用設計)。したがって**スマホサイズ (モバイル) の画面仕様は本書 §6 が新規に確定する正本**である。
+> **mockup の扱い**: harness-studio-v2.html は確定済み画面の初期 visual/reference であり、実装方式や画面横断の情報設計規範の正本ではない (qa-022)。画面へ何を載せ、何を強調し、どの pattern を選ぶかの規範は [情報設計追補](../specs/harness-hub-information-design-addendum.md)、profile 割当は [screen-inventory](screen-inventory.md) が正本である。mockup には media query が存在しない (デスクトップ専用設計) ため、**スマホサイズ (モバイル) の具体的画面仕様は本書 §6 が正本**である。既確定の表示項目を変更するときも、mockup を直接上書きせず情報設計の 10 工程で根拠を残す。
 
 ## 1. ランタイム・技術構成 (qa-007 / qa-022 / qa-034)
 
@@ -142,7 +142,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 - **S09 ダッシュボード**: KPI 6 カード (総実行回数・削減時間・削減額・完了シート・稼働ハーネス・参加ユーザー) → `metrics/summary`。折れ線 (週次推移)・ドーナツ (完了率)・ランキング (ハーネス別/ユーザー別)・バー (部門別削減) → `metrics/rollups`。金額はすべてサーバ集計値の表示 (member へは集計値のみ = §3.3 認可マトリクス準拠)。
 - **S10 ヒアリングウィザード (FormData 12 項目 = backend-spec §4.3)**: Step1 基本 (`taskName, company, applicant, domain`) → Step2 現状 (`issue, tools, hours, people, salary`) → Step3 要望 (`features, output, priority`) → Step4 確認+試算。**試算表示規則 (SEC5 整合)**: ウィザード中は時間削減の概算のみ (「月 {hours}h × {people}人 × 35% (既定係数)」の参考表示。金額は出さない)。提出後はサーバ snapshot (`estimate_json`) だけを正として S12 に表示する。途中状態は sessionStorage 保持 (誤離脱ダイアログ付き)。提出成功 → mock と同じ完了パネルで HS コード・`生成中`・「シートを見る」「パイプラインを見る」「続けて作成」を表示する。生成完了までは受付番号+状態チップ+完了通知 (qa-021 パターン)。
-- **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列、モバイルは同じ情報をカードへ畳む。status filter・department filter・全文検索・cursor ページングを持つ。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。
+- **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列 table、モバイルは同じ情報を card-collection へ畳む。status filter・department filter・全文検索・cursor ページングを両 breakpoint で持つ。`updated_at` は timezone 付き絶対日時を可視表示し、相対時間は補助併記に限定する。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。profile 割当は `screen-inventory.md` の S11 行だけを正本とする。
 - **S12 ヒアリングシート詳細**: ヘッダに `display_code/status/title/applicant/department/created_at/AI 生成表示`、本文に「概要」「現在の課題」「推奨機能タグ」「想定削減効果」を表示し、元入力 snapshot・試算 snapshot・対応 Build/PublishRequest の参照を併記する。`received` の表示ラベルは mock の「下書き」でなく全画面共通の「受付」とする。admin の状態変更・再生成は右側メタ領域、member には非表示かつ API でも拒否。P2 有効後は AI 完了時に自動作成された対応 Build を「構築パイプラインへ」で表示し、P1 単独期間はこのボタンを表示しない。
 - **S12 PDF 出力**: 「PDF でダウンロード」は別データ生成を行わず、認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化して `window.print()` を呼ぶ (ブラウザの「PDF に保存」)。ボタン名は mock を維持する。salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test する。
 - **S01 公開ウィザード**: skill ZIP のみ。Project 新規/既存 owner 指定→PublishRequest→upload/submit を 1 UI に束ね、全 status と要求 ID を隠さない。段階別 Idempotency-Key で再開し、Needs Fix は cancel で同一 request を Draft へ戻して再投入。`web_app` は CLI/S08 案内のみ。H7 未成立中は実導入リンクを成功終端にしない。詳細は [Web 公開実装メモ](features/feat-web-only-publish-journey/implementation-notes.md)。単一テナント/単一 Project を定数にしない。
@@ -175,6 +175,15 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 業務データ保管 API (upload / 取得 / 即時完全削除 = qa-048) | UI 導線は未設計。候補: S15 (docs) への添付・アップロード拡張、S12 (シート詳細) からの実行入出力データ閲覧。**削除 UI は既存の破壊的操作パターン (§3.3) に従うが、即時完全削除のため「不可逆」を明示する** (可逆性明示の例外として扱う) | エンドポイント詳細と同時に feature P02 |
 | AiJob pull の workspace-admin 開放 (qa-048) | 影響なし (pull は CLI / AI worker 面で Web 画面を持たない)。キュー監視画面 (`GET /api/v1/ai-jobs`) は従来から未定義の gap のまま (mockup にも存在しない。必要になれば S04 配下に追加) | 必要時に screen-inventory へ追記から |
 | tenant_data_objects の R2 使用量監視 (qa-045) | 影響なし (admin 向け通知はアプリ内通知の既存パターン) | — |
+
+### 3.6 画面情報設計との境界 (2026-08-11)
+
+- 本書は画面/API/部品/レスポンシブ変換の具体契約を所有する。情報設計の 10 工程、`lead / context / metadata`、要素別意味契約、open-world pattern registry は [情報設計追補](../specs/harness-hub-information-design-addendum.md) を正本とする。
+- `lead / context / metadata` は情報顕著度であり、本書 §6.3 の `P1〜P10` (レスポンシブ変換パターン) と §10 の `P0〜P5` (構築 phase) とは無関係である。
+- role / task-mode / breakpoint ごとの profile 割当は [screen-inventory](screen-inventory.md) だけを正本とする。本書へ profile 値を複製せず、ここでは選ばれた pattern の具体的挙動だけを記述する。
+- ラベルの全外しを禁止する。form control、初見/破壊操作、状態・金額・日時・PII・略語は可視 label/heading を既定とする。線/余白、icon、image、alignment/repetition も意味と a11y 代替を説明できるときは積極採用し、必要な境界を「装飾だから」と削らない。
+- 絶対日時・完全識別子を `title` 属性だけへ隠さない。可視表示、details/disclosure、copy control 等の keyboard/touch で到達可能な方法を使い、相対時間と短縮表示は補助にする。
+- S11 は既確定の wide table / narrow card-collection を維持する。pattern 変換は項目・filter・検索・paging・詳細導線を落とさない。S05/S17 の狭幅も selection mode 等で一括操作を維持し、モバイルを理由に削らない。
 
 ## 4. データ取得・状態管理 (TanStack Query v5)
 
@@ -223,7 +232,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 |---|---|---|---|
 | P1 | サイドバー 220px + コンテンツ | ボトムタブ + その他シート (§6.2) | 全画面 |
 | P2 | KPI grid `repeat(3-4, 1fr)` | **2 列 grid** (数値優先・ラベル省略形) | S09/S16 |
-| P3 | データテーブル (6-8 列) | **主要 2-3 フィールドのカードリスト** + タップで詳細へ。状態はチップ表示 | S01/S11/S14/S15/一覧全般 |
+| P3 | データテーブル (6-8 列) | **主要フィールドを先頭にしたカードリスト** + タップで詳細へ。残りの critical fields/actions はカード内 metadata、disclosure、selection mode、action sheet 等で到達可能にし、削除しない。状態はチップ + label 表示 | S01/S11/S14/S15/一覧全般 |
 | P4 | 7 工程ボード (横並びカラム) | **工程セグメント (横スクロールチップ+件数バッジ) + 選択工程の縦カードリスト** | S13 |
 | P5 | 2 カラム詳細 (`1fr 300px`) | 縦積み (メインコンテンツ → メタ情報) | S02/S12/S17 個別 |
 | P6 | センターモーダル | **ボトムシート** (install/download・公開ウィザード・フィルタ・起票フォーム)。確認 Dialog のみセンター維持 | S01/S02/S14 ほか |
@@ -232,6 +241,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | P9 | インライン編集テーブル | 行タップ → 編集シート | S17/S04 |
 | P10 | ウィザード (横長 step 表示) | 1 step = 1 画面・上部に進捗バー・ヘッダ back で前 step | S10・公開ウィザード |
 
+> この表の `P1〜P10` は responsive pattern ID であり、情報顕著度ではない。情報顕著度は `lead / context / metadata` を使う。
+
 ### 6.4 画面別モバイル挙動一覧 (区分: ◎重点最適化 / △簡易対応 = 動作保証 + デスクトップ推奨バナー)
 
 | ID | 区分 | モバイル挙動の要点 |
@@ -239,16 +250,16 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | S01/S02 | ◎ | P3 カード一覧 (名前・target・状態チップ・DL 数)。S01 の公開ウィザードと install/download は P6 ボトムシート、詳細は P5 縦積み (コマンドはコピー導線中心) |
 | S03 | ◎ | 公開タブ: 進捗ステッパーを縦型表示。Needs Fix findings はアコーディオン |
 | S04 | △ | 設定フォームは縦積みで動作。IdP 設定・係数編集は横幅依存が強くバナー表示 |
-| S05/S06 | △ | 承認カード/監査行は P3 カード化で閲覧可。承認操作は可能だが一括操作なし。監査 filter は P8 |
+| S05/S06 | △ | 承認カード/監査行は P3 カード化で閲覧可。S05 は selection mode と一括 action sheet で一括承認能力を維持する。S06 の監査 filter は P8、export と完全日時への到達も維持する |
 | S07/S08 | ◎ | 単票中央寄せ。Device user_code 入力は数字最適化 (`inputmode`)・大きな確認ボタン |
 | S09 | ◎ | P2 (KPI 2 列)+P7 (チャート縦積み)。ランキングは上位 5 件+「すべて見る」 |
 | S10 | ◎ | P10。試算参考表示は step4 (§3.2 の SEC5 規則) |
-| S11/S12 | ◎ | P3 カード (HS コード・タイトル・状態チップ・申請者)。詳細は P5。admin の status 変更はアクションシート |
+| S11/S12 | ◎ | P3 カード先頭は HS コード・タイトル・状態チップ・申請者。domain/department/people/hours/絶対 updated_at は metadata/disclosure で同じカードから到達でき、filter・検索・paging を維持する。詳細は P5。admin の status 変更はアクションシート |
 | S13 | 閲覧◎/操作△ | P4。stage 操作はカードメニュー (隣接遷移+確認)。DnD なし |
 | S14 | ◎ | P3 + 起票は P6 ボトムシート (type 選択+本文)。AI 回答は MarkdownView |
 | S15 | 閲覧◎/編集△ | 閲覧は読みやすさ優先 (max-width・行間)。編集はプレビュー切替タブで動作、バナー表示 |
 | S16 | ◎ | P2+P7。期間切替はセグメント。user 次元金額は admin のみ (SEC4 — API 側制御に従う) |
-| S17 | △ | 一覧は P3 だが列が多く横スクロール併用。salary 表示・role 変更は可能だがバナー表示 |
+| S17 | △ | 一覧は P3 card-collection + detail、列比較が必要な task-mode は局所横スクロール table または比較 mode を併用。filter/sort/selection mode/一括操作、salary 表示・role 変更を維持しつつバナー表示 |
 | S18 | ◎ | 設定グループを縦 Accordion。テーマ/密度/言語は即時反映 |
 | 通知 | ◎ | 専用画面 (ボトムタブ)。P3 リスト+スワイプなし・タップで既読+遷移 |
 
@@ -275,7 +286,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
   - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する** (2026-08-08 時点の登録は `@harness-hub/ui` と `@harness-hub/schemas` の 2 つ)。**追記 (2026-08-08 実測 / HarnessHub-aqi)**: `optimizePackageImports` は **named import しか書き換えない**ため、`const m = await import('@harness-hub/schemas')` のような namespace import は登録しても最適化されず barrel 全量 (9 feature 分・約 200 schema・23.7 KB raw / 7.9 KiB gzip) を読む。動的読込が要る箇所は「必要な named export だけを再 export する薄いモジュール」を経由させる (例: `apps/hub/src/lib/catalog/response-schemas.ts`)。package 単一入口のままなので deep import 禁止も守れる。この種の退行は route の First Load JS を変えないため **G13 では検知できず** CWV 実測 (TBT) でしか出ない。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
-- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md) を正とする。分離テスト等サーバ側は backend-spec 準拠。
+- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md)、画面へ載せる情報の取捨・顕著度・pattern 選定・成功指標と manual/machine gate 境界は [情報設計ガイド](frontend-information-design-guide.md) を正とする。profile 割当は [screen-inventory](screen-inventory.md) だけを正本とする。サーバ側は backend-spec 準拠。
 - **セキュリティ (フロント境界)**: sanitize 済み Markdown のみ描画 (SEC7)・外部リンク `rel="noopener noreferrer"`・CSP は security 章準拠・PII (salary) は admin API レスポンス以外に出現させない (SEC4。ログ・エラー通知にも含めない)。
 
 ## 9. 確定記録 (2026-07-17 ユーザー確認 = qa-040 / qa-035)

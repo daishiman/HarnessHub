@@ -137,6 +137,21 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
   - トレードオフ:
     - 縦方向の情報量が増える
     - SVGと表の同値性をcontract testで維持する必要がある
+
+##### 追補 (2026-08-11 / 画面情報設計 / `HarnessHub-f6ix`)
+
+- qa-226 と UI 基盤契約 (shell / surface / 状態 / responsive) は全面維持する。本追補は *どの部品を使うか* の後段に、*何を載せ・何を省き・何を強調するか* の情報設計層を積む。
+- mockup (`harness-studio-v2`) は確定済み画面の初期 visual/reference であり、画面横断の情報設計規範の正本ではない。規範正本は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、実装手順は [画面情報設計ガイド](../docs/frontend-information-design-guide.md)、`role × task-mode × breakpoint` profile 割当の SSOT は [screen-inventory](../docs/screen-inventory.md)。
+- 情報顕著度は `lead / context / metadata`。構築 phase の P0〜P5 および frontend-spec のレスポンシブ pattern P1〜P10 と語彙を混ぜない。
+- ラベルの一律全外しを禁止し、form control・初見/破壊操作・状態・金額・日時・PII・略語は可視ラベルを既定とする。狭幅への pattern 変換でも比較・filter・選択・一括操作・完全値への到達を落とさない。
+- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
+- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
+  - 採否: `applied`
+  - 章固有の根拠: 利用文脈先行の 10 工程と要素別意味契約を製品規範へ固定し、保存項目の直写や装飾の後付けを防ぐ。
+  - トレードオフ:
+    - 新画面・情報設計変更 PR に情報設計シートと profile 更新が必須になる
+    - profile/pattern の将来 machine gate は未実装で、現行は manual gate + 既存 UI 基盤 gate を使う
+
 ##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
