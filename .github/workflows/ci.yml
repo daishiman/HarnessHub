@@ -593,7 +593,7 @@ jobs:
             exit 0
           fi
           pnpm --filter @harness-hub/hub exec tsx scripts/smoke-production-publish.ts \
-            --sweep --report artifacts/smoke-fixture-sweep.json
+            --sweep --report "$GITHUB_WORKSPACE/artifacts/smoke-fixture-sweep.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

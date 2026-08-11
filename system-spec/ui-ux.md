@@ -131,6 +131,7 @@ S09/S16のtenant・harness・department・project集計はmember以上が閲覧�
 
 【6 図表と操作】
 chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
+- 設計解釈の記録経路: `dialogue`
 - 原則: 知覚可能・操作可能・理解可能・堅牢 (POUR) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: 同値表を初期DOMへ常在させ、分母0と評価不能理由を明示して、色・JavaScript・推測に依存せず同じ判断へ到達可能にした。
@@ -155,7 +156,13 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 ##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 原則: 一貫性と標準準拠 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。
+  - トレードオフ:
+    - 作者は terminal と plugin 操作を学ぶ必要がある
+    - OS native GUI 固有の操作性は提供しない
 - 資するゴール: G1, G2, G3, G5
 
 ## 最新ドキュメント出典
