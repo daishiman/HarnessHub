@@ -3,7 +3,7 @@
 import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useState } from 'react';
 
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { isValidUserCodeInput, normalizeUserCodeInput } from './device-approval-code.js';
 
 export type DeviceApprovalError =

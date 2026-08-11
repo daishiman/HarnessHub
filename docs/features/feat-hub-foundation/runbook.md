@@ -9,6 +9,8 @@ feature_context_digest: sha256:938ecf38d145496bba7a439b829d3934718b8f43b4f4628d8
 
 # Harness Hub 運用 runbook (P12)
 
+ローカルの sqld / Next.js を起動・復旧・確認する手順は [local-development.md](local-development.md) を正本とします。
+
 > **前提**: 提供者 1 名 + AI 運用（C1）・固定費ゼロ（C2）。手順は「迷わず実行できる」ことを優先し、判断が要る箇所は判断基準を併記する。
 > **注意**: 本 runbook は**手順**であり、未実装の仕組みを手順で代替しない（requirements-baseline §9.5）。未実装項目は §7 に明示する。
 

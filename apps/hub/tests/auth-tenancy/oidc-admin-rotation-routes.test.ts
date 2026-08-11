@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createDbClientSecretResolver } from '../../src/lib/auth/db-ports.js';
 import type { AuthRuntime } from '../../src/lib/authz/runtime.js';
-import { TENANT_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER } from '../../src/middleware-contract.js';
 import {
   ALLOWED_ORIGIN,
   createOidcAdminHarness,

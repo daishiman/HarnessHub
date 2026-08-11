@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { requestScopedResource } from '../../src/lib/authz/resource.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware-contract.js';
 
 function requestWith(headers: Record<string, string>): Request {
   return new Request('https://hub.example.com/api/v1/tokens', { headers });

@@ -5,7 +5,7 @@
  * ここで文字列リテラルを再定義すると、header 名を変えたときに片方だけ直る事故になる。
  */
 
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import type { AuthzResourceRef } from './types.js';
 
 export interface RequestScopedResourceInput {

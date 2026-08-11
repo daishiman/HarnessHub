@@ -109,3 +109,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - G13 に 95% 警告帯を追加。構造的 headroom 残件は HarnessHub-vwxc、navigation VRT 差分は HarnessHub-preq。
 - 受領: [mvp-followups-20260810-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)
 
+## 2026-08-11 post-closeout ローカル開発信頼性 (`HarnessHub-bmhq`)
+
+- 閉じた exact-13 に14個目の task は追加せず、P13 後のローカル運用 writeback として記録する。
+- absolute local state、launchd + supervisor、loopback bind、health、認証付き sheets smoke、middleware 公開入口一意化を同一 issue で追跡する。
+- 公開 API、DB schema、本番 deploy は非変更。task package の再検証と仕様反映は [受領書](../../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を正とする。

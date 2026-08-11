@@ -55,7 +55,7 @@ import {
 import { GET as getItem, PATCH as patchItem } from '../../app/api/v1/feedback/[id]/route.js';
 import { POST as createRoute, GET as listRoute } from '../../app/api/v1/feedback/route.js';
 import { createFeedbackLoopRuntime } from '../../features/feedback-loop/runtime.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { createFeedbackDbHarness, type FeedbackDbHarness } from './support/real-db.js';
 
 const MEMBER = testUser('user-member');

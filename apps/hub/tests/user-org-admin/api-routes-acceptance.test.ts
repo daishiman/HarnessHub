@@ -30,7 +30,7 @@ import { GET as getUser, PATCH as patchUser } from '../../src/app/api/v1/users/[
 import { GET as exportUsers } from '../../src/app/api/v1/users/export/route.js';
 import { POST as createUser, GET as listUsers } from '../../src/app/api/v1/users/route.js';
 import type { AuthRuntime } from '../../src/lib/authz/runtime.js';
-import { TENANT_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER } from '../../src/middleware-contract.js';
 import {
   createNotificationDispatcher,
   type NotificationMessage,

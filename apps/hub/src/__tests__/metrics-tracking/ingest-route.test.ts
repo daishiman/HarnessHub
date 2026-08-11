@@ -51,7 +51,7 @@ import {
   OWNER_ID,
 } from '../../../tests/auth-tenancy/support/token-route-runtime.js';
 import { POST } from '../../app/api/v1/metrics/events/route.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { createMetricsDbHarness, type MetricsDbHarness } from './support/real-db.js';
 import { createTestMetricsRuntime } from './support/test-runtime.js';
 

@@ -3,7 +3,7 @@ import { normalizeUserCodeInput } from '../../src/app/device/device-approval-cod
 import { submitDeviceApproval } from '../../src/app/device/device-approval-form.js';
 import { resolveDeviceApprovalSession } from '../../src/app/device/device-approval-session.js';
 import { SESSION_COOKIE_NAME, signSessionToken } from '../../src/lib/auth/index.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware-contract.js';
 
 const SESSION_SECRET = 'device-approval-session-secret-32-bytes';
 const NOW_SECONDS = 1_800_000_000;

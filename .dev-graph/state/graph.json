@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1498,
+  "graph_revision": 1503,
   "nodes": [
     {
       "acceptance": [
@@ -56643,6 +56643,154 @@
       "title": "navigation VRT の WorkspaceSwitcher 差分を確定する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-10T11:48:16Z"
+    },
+    {
+      "acceptance": [
+        "Hub /healthがローカルsqldを正しく判定しcritical dependencyがPASSする",
+        "DBは安定した絶対パスに保存され再起動後もhearing_sheets 3件を保持する",
+        "単一コマンド群でstart/status/stop/restart/smokeが再現できる",
+        "sqldとNextはloopback限定で異常終了後に自動復旧する",
+        "Duplicate page detected警告が消える",
+        "seedを変更せず新しいローカルsession cookieを発行できる",
+        "認証付きAPIが3件を返しブラウザで対象画面を確認できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure-operations-addenda"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-bmhq",
+        "linked_at": "2026-08-10T23:32:06Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-local-dev-runtime-reliability-20260811.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "実測でlocal health 503、一時相対DB、supervisor不在、middleware重複警告、browser未確認を同一ローカル開発ライフサイクル欠陥として確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "73ab279d80272f5003888b65c0698ff385751386271d677b030b70590358a226",
+        "evaluator": "read-only runtime audit 2026-08-11",
+        "evidence_ref": "apps/hub/src/app/health/probes.ts"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-local-dev-runtime-reliability-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "安定した絶対パスのローカルDBを監視付きで起動でき、Hub health・認証付きAPI・ブラウザ画面の一連の検証がPASSする。",
+      "graph_node_id": "issue-hub-local-dev-runtime-reliability-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ツールセッション終了耐性だけでなく、同一DBの再選択、healthの正確性、異常終了時の復旧、認証付き画面確認までを再現可能にする。",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "spec-harness-hub-system-specification-implementation-writebacks",
+        "arch-harness-hub-infrastructure-operations-addenda",
+        "SYS-HUB-FOUNDATION-P13"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/health/probes.ts",
+        "apps/hub/src/middleware-contract.ts",
+        "apps/hub/src/middleware.ts",
+        "apps/hub/src/middleware/index.ts",
+        "apps/hub/src/__tests__",
+        "apps/hub/src/app",
+        "apps/hub/src/lib",
+        "apps/hub/tests",
+        "apps/hub/scripts",
+        "packages/db/__tests__/local-session.test.ts",
+        "packages/db/scripts/seed-local.ts",
+        "packages/db/scripts/issue-local-session.ts",
+        "packages/db/scripts/local-session.ts",
+        "apps/hub/package.json",
+        "packages/db/package.json",
+        "scripts/ci/check-shared-layer-duplicates.mjs",
+        "scripts/ci/shared-layer-registry.json",
+        "docs/features/feat-hub-foundation/local-development.md",
+        "docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md",
+        "docs/features/feat-hub-foundation/runbook.md",
+        "features/feat-hub-foundation.md",
+        "specs/harness-hub-system-specification-implementation-writebacks.md",
+        "system-spec/spec-state.json",
+        "system-spec/maintenance-ops.md",
+        "architecture/harness-hub-infrastructure-operations-addenda.md",
+        "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
+        ".gitignore"
+      ],
+      "scope_in": [
+        "ローカルDB health契約の通常runtimeとの整合",
+        "絶対DBパスとログ・PID管理",
+        "start/status/stop/restartと異常終了時再起動",
+        "loopback bind",
+        "middleware重複警告の解消",
+        "cookie再発行とseedの分離",
+        "認証付きAPI・ブラウザsmoke"
+      ],
+      "scope_out": [
+        "本番Cloudflare環境の変更",
+        "既存seedデータの削除",
+        "ユーザー既存の未関連差分の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "local-dev",
+        "sqld",
+        "health",
+        "supervision",
+        "browser-smoke"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T01:27:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

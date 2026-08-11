@@ -84,7 +84,7 @@ import { POST as completeRoute } from '../../app/api/v1/ai-jobs/[id]/complete/ro
 import { POST as pullRoute } from '../../app/api/v1/ai-jobs/pull/route.js';
 import { POST as createFeedbackRoute } from '../../app/api/v1/feedback/route.js';
 import { createFeedbackLoopRuntime } from '../../features/feedback-loop/runtime.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import { createFeedbackDbHarness, type FeedbackDbHarness } from './support/real-db.js';
 
 const MEMBER = testUser('user-member');

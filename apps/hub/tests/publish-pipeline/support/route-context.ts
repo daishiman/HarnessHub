@@ -8,7 +8,7 @@
 import { ARCHIVE_LIMITS } from '@harness-hub/inspection';
 import { afterEach, beforeEach } from 'vitest';
 
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../../src/middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../../src/middleware-contract.js';
 import { TENANT_A, TENANT_B, WORKSPACE_A1 } from '../../auth-tenancy/support/in-memory-ports.js';
 import {
   ADMIN_ID,

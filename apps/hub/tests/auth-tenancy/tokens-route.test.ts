@@ -12,7 +12,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '../../src/app/api/v1/tokens/route.js';
 import type { DirectoryUser } from '../../src/lib/auth/index.js';
 import type { AuthRuntime } from '../../src/lib/authz/runtime.js';
-import { TENANT_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER } from '../../src/middleware-contract.js';
 import { TENANT_A, TENANT_B, WORKSPACE_A1 } from './support/in-memory-ports.js';
 import {
   adminUser,

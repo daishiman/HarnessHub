@@ -185,3 +185,14 @@ G11 は main 反映後の定期 Core Web Vitals 計測なので、PR 前の `pnp
 含めない。正確な対応表は [検証 tier 仕様追補](../specs/harness-hub-verification-tiering-addendum.md)、
 実装・検証・影響判断は [仕様反映受領書](../docs/features/feat-hub-foundation/ci-local-gate-registry-spec-reflection-receipt.md)
 を参照する。製品 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
+
+## 2026-08-11 ローカル開発ランタイムの監視境界
+
+macOS のローカル検証は `launchd → local-dev-supervisor → sqld / Next.js` の二段監視とする。
+`.local-state/hub/` を DB・秘密設定・PID・ローテーション済みログの単一 owner とし、起動時は
+sqld readiness 後に Next.js を開始する。両 server は loopback だけで待ち受ける。
+
+障害判定は process の存在だけでなく、sqld `/health`、Hub `/health`、Hub `/`、認証・tenant・
+workspace scope 付き `/api/v1/sheets` の3件応答までを分けて行う。Cookie 発行は read-only とし、
+seed 再投入を復旧手順にしない。詳細は [運用手順](../docs/features/feat-hub-foundation/local-development.md) と
+[仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を参照する。

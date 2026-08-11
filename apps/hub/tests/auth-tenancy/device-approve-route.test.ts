@@ -13,7 +13,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { authRuntime } from '../../src/lib/authz/runtime.js';
-import { TENANT_HEADER } from '../../src/middleware/index.js';
+import { TENANT_HEADER } from '../../src/middleware-contract.js';
 import {
   ALLOWED_ORIGIN,
   createDeviceRouteHarness,

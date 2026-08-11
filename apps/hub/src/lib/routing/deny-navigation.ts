@@ -8,7 +8,7 @@
  * ここに置くのは**表示だけ**で、認可の判断は一切しない (判断は src/middleware/authz.ts の単一層のまま)。
  */
 
-import type { DenyReason } from '../../middleware/index.js';
+import type { DenyReason } from '../../middleware-contract.js';
 import { workspaceRecoveryNotice } from './workspace-recovery.js';
 
 /**

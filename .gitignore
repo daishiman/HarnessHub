@@ -136,6 +136,8 @@ node_modules/
 artifacts/
 *.tsbuildinfo
 apps/hub/.dev.vars
+# Hub local runtime: DB、secret env、PID、launchd plist、ログ（全て再生成可能）
+.local-state/
 
 # vitest --coverage の生成物 (各 package/apps 配下)
 coverage/

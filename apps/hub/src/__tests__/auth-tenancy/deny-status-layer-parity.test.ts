@@ -15,7 +15,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { denyStatusFor } from '../../lib/authz/index.js';
-import { authorize } from '../../middleware/index.js';
+import { authorize } from '../../middleware-contract.js';
 import type { Principal } from '../../shared/auth/index.js';
 
 const TENANT_A = 'tenant-a';

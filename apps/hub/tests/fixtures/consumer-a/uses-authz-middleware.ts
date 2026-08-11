@@ -8,7 +8,7 @@ import {
   resolveRequestedScope,
   TENANT_HEADER,
   WORKSPACE_HEADER,
-} from '../../../src/middleware/index.js';
+} from '../../../src/middleware-contract.js';
 import type { Principal } from '../../../src/shared/auth/index.js';
 
 export const boundAuthorize = authorize;

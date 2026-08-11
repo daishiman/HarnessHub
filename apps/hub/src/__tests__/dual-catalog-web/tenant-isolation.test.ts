@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { httpCatalogPort } from '../../lib/catalog/http-adapter.js';
 import { buildMarketplaceDocument } from '../../lib/catalog/marketplace.js';
-import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware/index.js';
+import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 
 const CATALOG_LIB_DIR = path.resolve(import.meta.dirname, '../../lib/catalog');
 const CATALOG_UI_DIRS = [

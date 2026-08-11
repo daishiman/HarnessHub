@@ -342,7 +342,7 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-044",
+        "qa_ref": "qa-230",
         "serves_goals": [
           "G1"
         ]
@@ -353,7 +353,7 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-044",
+        "qa_ref": "qa-230",
         "serves_goals": [
           "G1"
         ]
@@ -2465,6 +2465,36 @@
           ]
         }
       ]
+    },
+    {
+      "id": "qa-230",
+      "question": "作者デスクトップ環境の既存保守契約を維持しつつ、macOS 上の Hub ローカル開発ランタイムを再現可能かつ障害から自動復旧できる状態へどう固定するか。",
+      "answer": "【既存契約の維持】qa-044 の作者デスクトップ保守契約を全面維持する。plugin 更新は marketplace / Bootstrap Installer の手動 update、相談は予約制 office hour、四半期の利用者棚卸しと token 失効を対にし、CI と同一実装の pnpm verify を local から実行可能に保つ。pre-commit は早期検知の補助、正本の遮断は CI とする。token 窃取疑いは Hub Web から失効し、Hub 障害時も導入済み Skill と公開済み Web App は継続し、新規公開・追加・更新だけを停止する。\n\n【1. 保存境界】macOS の Hub ローカル開発データは repository 内の git-ignore 済み `.local-state/hub` を安定した state root とする。DB、秘密環境ファイル、runtime/PID、lock、launchd plist、sqld/Next/supervisor log を同 root に置き、DB は sqld へ絶対 path で渡す。移行はコピー元を削除せず、既存の移行先を上書きしない。state root は 0700、秘密環境ファイルは 0600 とする。\n\n【2. lifecycle と監督】`pnpm --filter @harness-hub/hub local:{start,status,stop,restart,smoke,cookie,paths}` を単一入口とする。start は worktree 固有 label の launchd job を登録し、supervisor が sqld と Next.js を子プロセスとして監督する。子の異常終了は 1 秒後に再起動し、stop は process group へ SIGTERM、10 秒後も残る場合だけ SIGKILL とする。start は 8081/3100 の既存 listener を拒否し、sqld ready 後に Next を起動する。両 listener は 127.0.0.1 に限定する。\n\n【3. health 契約】remote Turso は URL と非空 token を必須のまま維持する。例外は `http://127.0.0.1`、`http://localhost`、`http://[::1]` の loopback sqld だけで、token 無しでも実 `SELECT 1` を行う。HTTPS、libsql、localhost の suffix host は例外に含めない。R2 binding 不在は既存どおり degraded / HTTP 200、DB 不通は down / HTTP 503 とする。\n\n【4. 認証付き smoke】seed 投入と session 発行を分離する。cookie 再発行は local sqld を read-only query し、本番と同じ HS256、8 時間 TTL、tenant/workspace scope で発行する。smoke は `/health`、root、認証と scope header 付き `/api/v1/sheets` を検査し、HTTP 200 と 3 件を要求する。cookie や secret の値は status/smoke の出力へ載せない。\n\n【5. 公開入口と観測性】Next.js の予約された `src/middleware.ts` と同一 route に解決される `src/middleware/index.ts` は併存させない。認可 middleware の公開 contract は `src/middleware-contract.ts` とし、shared-layer registry、静的 detector、consumer import を同じ入口へ揃える。ログは 5 MiB 到達時に最大 5 世代へ rotation する。\n\n【6. 完了境界】unit/contract test、typecheck、lint、task spec gate、`local:status`、認証付き `local:smoke`、sqld/Next の異常終了後 PID 変化、DB 3 件保持、Duplicate page warning 0 を local implementation の完了証拠とする。in-app Browser が利用不能な場合、実画面確認だけは Beads と Draft PR の残課題に残し、未実施を PASS と表現しない。Windows の作者環境は qa-044 の契約を維持し、launchd 固有部分は macOS にだけ適用する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "Automation and toil reduction",
+          "applicability": "applied",
+          "rationale": "ad-hoc な nohup 再起動を、絶対 state path・単一 lifecycle・readiness・監督・認証付き smoke に置換し、同じ障害の手動再調査を減らした。",
+          "tradeoffs": [
+            "macOS では launchd への依存が増える",
+            "短時間の手動起動より初回設定の構成要素が増える"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least Privilege",
+          "applicability": "applied",
+          "rationale": "listener を loopback に限定し、remote DB の token 必須を維持し、秘密ファイルの権限と非表示出力を固定した。",
+          "tradeoffs": [
+            "別端末からローカル Hub へ直接接続できない",
+            "remote Turso の簡易な token 無し検証は許可しない"
+          ]
+        }
+      ]
     }
   ],
   "approval_log": [
@@ -4260,6 +4290,30 @@
           "G5"
         ]
       }
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "desktop-windows",
+      "reason": "qa-044 の作者デスクトップ保守契約を維持した自己完結 entry に、macOS ローカル開発ランタイムの確定契約を統合するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-044",
+        "serves_goals": [
+          "G1"
+        ]
+      }
+    },
+    {
+      "category": "maintenance-ops",
+      "platform": "desktop-macos",
+      "reason": "qa-044 の作者デスクトップ保守契約を維持し、macOS の固定 state・launchd supervisor・health・認証付き smoke を追加確定するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-044",
+        "serves_goals": [
+          "G1"
+        ]
+      }
     }
   ],
   "category_aggregate": {
@@ -5521,10 +5575,10 @@
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 4,
+    "loop_count": 1,
     "next_question": null,
     "complete": true,
-    "max_loops": 4
+    "max_loops": 5
   },
   "design_application_contract_version": "1.0"
 }

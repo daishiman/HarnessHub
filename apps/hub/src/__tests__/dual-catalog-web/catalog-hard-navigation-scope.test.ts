@@ -15,7 +15,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SESSION_COOKIE_NAME } from '../../lib/auth/config.js';
 import { buildSessionClaims, type DirectoryUser, signSessionToken } from '../../lib/auth/index.js';
-import { authorize } from '../../middleware/index.js';
+import { authorize } from '../../middleware-contract.js';
 import type { Principal } from '../../shared/auth/index.js';
 
 const SESSION_SECRET = 'catalog-hard-navigation-test-secret';

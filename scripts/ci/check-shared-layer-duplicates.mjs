@@ -80,12 +80,15 @@ function resolveModulePath(fromFile, spec) {
   return candidates.find((c) => existsSync(c)) ?? null;
 }
 
-/** owner package の公開 API 表面 (index.ts を起点に再エクスポートを辿る) を収集する。 */
-function collectPublicApi(ownerDir, seen = new Set()) {
+/** owner package の公開 API 表面 (明示入口または index.ts を起点に再エクスポートを辿る) を収集する。 */
+function collectPublicApi(ownerDir, explicitEntry = null, seen = new Set()) {
   const names = new Set();
-  const indexFile =
-    SOURCE_EXT.map((ext) => join(ownerDir, 'src', `index${ext}`)).find((p) => existsSync(p)) ??
-    SOURCE_EXT.map((ext) => join(ownerDir, `index${ext}`)).find((p) => existsSync(p));
+  const indexFile = explicitEntry
+    ? existsSync(explicitEntry)
+      ? explicitEntry
+      : null
+    : (SOURCE_EXT.map((ext) => join(ownerDir, 'src', `index${ext}`)).find((p) => existsSync(p)) ??
+      SOURCE_EXT.map((ext) => join(ownerDir, `index${ext}`)).find((p) => existsSync(p)));
   if (!indexFile) return { names, indexFile: null };
 
   const visit = (file) => {
@@ -157,7 +160,8 @@ function main() {
 
   for (const layer of registry.layers) {
     const ownerDir = join(args.root, layer.owner_package);
-    const { names: publicApi, indexFile } = collectPublicApi(ownerDir);
+    const explicitEntry = layer.public_api_entry ? join(args.root, layer.public_api_entry) : null;
+    const { names: publicApi, indexFile } = collectPublicApi(ownerDir, explicitEntry);
     report.layers.push({
       id: layer.id,
       shared_layers_ref: layer.shared_layers_ref,
@@ -185,7 +189,7 @@ function main() {
     // 検出 1: owner 外に同名 export
     if (publicApi.size > 0) {
       for (const file of files) {
-        if (isInside(file, ownerDir)) continue;
+        if (isInside(file, ownerDir) || file === indexFile) continue;
         const content = readFileSync(file, 'utf8');
         const exported = extractExportNames(content);
         for (const name of exported) {

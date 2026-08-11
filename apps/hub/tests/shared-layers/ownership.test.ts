@@ -17,6 +17,7 @@ interface LayerReport {
   package_name: string | null;
   owner_exists: boolean;
   public_api: string[];
+  public_api_entry: string | null;
   consumers: string[];
   boundary_only: boolean;
 }
@@ -89,9 +90,10 @@ describe('HF-A4-OWNER-001: 登録共通層の owner 一覧', () => {
       if (layer.package_name !== null) {
         return publicApiImports(CONSUMER_A, layer.package_name).length === 0;
       }
-      // package 化されていない層 (apps/hub 内 owner) は index.ts が公開入口
+      // package 化されていない層は通常 index.ts、予約名と衝突する層は登録簿の明示入口が公開 API
       const relativeToApp = layer.owner_package.replace(/^apps\/hub\//, '');
-      return inAppEntryImports(CONSUMER_A, relativeToApp).length === 0;
+      const entryRelativeToApp = layer.public_api_entry?.replace(/^apps\/hub\//, '');
+      return inAppEntryImports(CONSUMER_A, relativeToApp, entryRelativeToApp ?? undefined).length === 0;
     });
 
     expect(unreferenced.map((layer) => layer.id)).toEqual([]);
