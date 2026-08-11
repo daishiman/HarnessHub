@@ -1,24 +1,31 @@
 {
-  "target": {"plugin": "system-spec-harness", "skill": "run-system-spec-elicit", "skill_md_sha256": "377d2e88a06326d48f607d2180ef838d1ce4b174dc6f58899ce5fb024e80f5e6"},
+  "target": {"plugin": "system-spec-harness", "skill": "run-system-spec-elicit", "skill_md_sha256": "aa5233213dbe23b9c433c9c63fe8962b06c68c6cab5ac86c41cf5b142f5b07d4"},
   "review_kind": "elegance",
   "verdict": "PASS",
-  "reviewer": "independent final-review fresh context",
-  "reviewed_at": "2026-08-09T13:05:22Z",
-  "iterations": 2,
+  "reviewer": "assign-skill-design-evaluator (incremental focused combined review, final verification pass #5)",
+  "reviewed_at": "2026-08-11T03:30:00Z",
+  "iterations": 5,
   "human_review_required": false,
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
+  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 2},
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "OUT1", "OUT2"],
     "positive_feedback": [
-      "bootstrap、foundation、matrix init の順序と exact legacy migration 例外が一貫する。",
-      "JSON Schema は legacy read-only と current design-application 契約を明示する。"
+      "前回 low #1 (3 ラベルの doc-impl drift) を閉じた。SKILL.md L129 が『C03 は `unrecorded|dialogue|legacy_backfill` を章へ描画し、C05 は `unrecorded` を未記録 finding とし、backfill の回答適合を再照合する』を明記し、references/spec-state-contract.md L269 が 3 経路それぞれに定義 (解釈欠落 / 対話時解釈 / 事後補完) を与える。消費側の assign-system-spec-completeness-evaluator/prompts/R1-score.md も『`unrecorded` は未記録 finding として章の具体適用を PASS にせず、`legacy_backfill` は対話時解釈と区別して qa 回答との適合を再照合する』へ更新済みで、記録 (writer) → 描画 (C03) → 評価 (C05) の 3 点が同じ 3 値語彙で接続した。",
+      "前回 low #4 (検査層の非対称) を閉じた。validate-coverage-matrix.py に LEGACY_BACKFILL_PROVENANCE 定数と `_validate_design_applications` 内の完全一致検査が入り、確定セル参照 qa の provenance が legacy_backfill/set-qa-design-applications 以外なら fail-closed に finding を出す。tests/test_validate_scripts.py::test_c12_design_application_provenance_is_fail_closed が非 dict provenance の拒否と正規 provenance の受理を両方向で固定する。schema・単一 writer・validator の 3 層担保になった。",
+      "前回 low #2 (防御分岐の test 皆無) を閉じた。test_backfill_rejects_invalid_provenance_from_hand_authored_state が {mode:dialogue, writer:chunk} という schema-invalid な手編集 state に対する writer 側拒否を固定し、コード側にも『共有 schema はこの provenance のみ許すが、schema/coverage gate 実行前に手書き JSON が CLI 経由で到達しうるため明示 guard を残す』旨の英語コメントが入った。冗長性の根拠がコード上で読める。",
+      "前回 low #3 (診断メッセージの不一致) を閉じた。不完全 state は『完了済み provenance に対する design_applications 欠落を検出』、衝突 replay は『完了済み backfill と異なる design_applications の再適用は拒否』、provenance 上書きは『既存 provenance の上書きは拒否』と 3 事象で文言が分離し、test も個別文言へ match する (欠落を検出 / 異なる design_applications の再適用は拒否 / 既存 provenance の上書きは拒否)。",
+      "前回 low #5 の一部 (MED-4) を閉じた。SKILL.md frontmatter の responsibility_refs に prompts/R6-audit-hearing.md・R7-audit-matrix.md が追加され、lint-skill-tree.py の MED-4 warn が消滅した (残る warn は LS-203 の 2 件のみ)。あわせて apply-spec-transition.py の inputs コメントが実装のサブコマンド集合 (bootstrap/add-category/set-qa-design-applications を含む) へ追従した。",
+      "guard 順序と冪等性の構造は維持されている。normalize_design_applications による形状検証 → provenance 一致検査 → 不完全/衝突検査 → provenance 無し既存解釈の保護 → legacy_exempt scope 検査を全て mutation 前に置くため、途中失敗で legacy_exempt だけ消える中間状態が構造的に発生しない。"
     ],
-    "negative_feedback": [],
-    "iteration": 2,
-    "iteration_limit": 3,
-    "hook_trigger": "manual-final-review",
+    "negative_feedback": [
+      "低 (smell / 検査 scope の残余): validator の provenance 検査は `--require-complete` かつ確定セルから参照される qa entry に限る (呼出は confirmed_qa_refs ループ内)。未参照 qa entry を手編集で壊しても gate は素通りし、C03 の else 枝は非 dict provenance を `dialogue` へ潰す。単一 writer 契約下では発生経路が無く、確定セル経路は fail-closed なので low。",
+      "低 (規約整合・既存 / 本差分外): lint-skill-tree.py が LS-203 (top-level dir tests/・fixtures/) を warn する。全 skill を個別に走査すると同 warn は 11 skill・15 件あり (tests/ 9・fixtures/ 2・assets/ 2・proposals/ 1)、run-system-spec-elicit 固有ではなくリポジトリ横断の未移行事象。exit 0 の nonblocking warn で、tests/ dir は本変更 slice より前から存在する。"
+    ],
+    "iteration": 5,
+    "iteration_limit": 5,
+    "hook_trigger": "manual",
     "next_action": "none"
   },
-  "notes": "Focused independent static review; findings zero."
+  "notes": "incremental focused combined review の最終確認周 (改善 cycle は起こさず、iteration 4 で残した low 5 件の修正のみを検証する read-only pass)。iteration_limit は本最終確認を記録するため 4→5 へ 1 だけ拡張した。30 思考法の exhaustive elegance review は未実行で、本 verdict はその互換 projection。検査範囲: skills/run-system-spec-elicit/{SKILL.md, references/spec-state-contract.md, scripts/{apply-spec-transition.py,state_transition_matrix.py}, tests/test_spec_transition_design_backfill.py} と依存先 (scripts/validate-coverage-matrix.py, lib/spec_docset_chapters.py, schemas/spec-state.schema.json, skills/run-system-spec-compile/{fixtures,tests}, skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md, tests/test_validate_scripts.py) および system-spec/*.md 生成物。source file は一切改変していない。実測証拠: pytest plugins/system-spec-harness 571 passed (対象 3 経路の部分集合 227 passed) / validate-coverage-matrix.py --matrix system-spec/spec-state.json --require-complete --require-foundation exit 0 / jsonschema で spec-state.json valid (schema_version 1.1・qa_log 238 件・provenance 付き 11 件) / system-spec 10 章に記録経路行 18 件 (legacy_backfill 13・dialogue 5・unrecorded 0) / validate-frontmatter.py ok / lint-skill-name.py ok / lint-skill-description.py VIOLATION 0 (OK=203) / lint-skill-tree.py exit 0 (warn は LS-203 2 件のみ・MED-4 は解消) / SKILL.md 188 行 <= 300。前回 low 5 件のうち 4 件を実体で閉鎖、1 件 (LS-203) は本差分外のリポジトリ横断事象として残存、加えて検査 scope の残余 low 1 件。high/medium 相当は 0。OUT2 の live 実走証拠は Gate D (run-skill-live-trial) 所管として本静的 verdict から分離する。"
 }

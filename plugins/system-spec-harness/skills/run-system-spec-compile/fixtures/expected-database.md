@@ -89,6 +89,7 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 ##### 確定内容 qa-database (対応セル: web, mobile, tablet, desktop-windows, desktop-linux, desktop-macos)
 
 - 確定要件: PostgreSQL 16 を全プラットフォーム共通で採用
+- 設計解釈の記録経路: `unrecorded`
 - 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)
 - 資するゴール: G1
 

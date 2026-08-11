@@ -211,6 +211,8 @@ async function main(): Promise<void> {
     // 本番と同じ状態遷移を通して直列化 slot を明示的に解放する。
     const rejectedCancelled = await api('POST', `/api/v1/publish/${rejectedRequest}/cancel`, { expected: 200 });
     assert(rejectedCancelled.body.status === 'draft', 'S3 cleanup: rejected request cancel が draft を返しません');
+    const rejectedAfterCancel = await db.findRequest(repositoryContext, rejectedRequest);
+    assert(rejectedAfterCancel?.status === 'draft', 'S3: cancel 後も needs_fix が channel slot を保持しています');
 
     // 409 直列化: 先行 request を ready fixture にして、後続 submit を拒否させる。
     const blockerRequest = await createRequest();
@@ -363,6 +365,8 @@ async function main(): Promise<void> {
       registry_rows: 0,
       release_id: null,
       stable_unchanged: v1Release,
+      // 差戻しが channel を掴んだままにならないこと (cancel で draft へ戻し slot を返す)
+      channel_slot_released: 'draft',
     };
     observed.S4 = { v1_release: v1Release, v2_release: v2Release };
     observed.S5 = { rollback_to: v1Release, promote_to: v2Release };

@@ -114,3 +114,5 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 閉じた exact-13 に14個目の task は追加せず、P13 後のローカル運用 writeback として記録する。
 - absolute local state、launchd + supervisor、loopback bind、health、認証付き sheets smoke、middleware 公開入口一意化を同一 issue で追跡する。
 - 公開 API、DB schema、本番 deploy は非変更。task package の再検証と仕様反映は [受領書](../../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を正とする。
+- 仕様ゲートの legacy 不足11件は `set-qa-design-applications` による原文非改変 backfill で0件化し、`--require-complete --require-foundation` を完走した。exact-13 の構造や本 P13 の完了状態は変更しない。
+- P13 後 writeback（2026-08-11）: production smoke の cwd 非依存 path と `needs_fix` channel slot 解放検証を追加。状態機械・partial UNIQUE 契約は不変で、task package の 14 個目は作らない。

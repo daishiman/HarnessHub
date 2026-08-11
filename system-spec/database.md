@@ -135,6 +135,7 @@ HearingSheet ownerは期間末の対象集合とcompleted状態、Catalog/Releas
 
 【7 migration】
 既存combined 0008は履歴としてimmutableに保ち、再採番・物理分割しない。今後のdelta migration、release、rollback evidenceはBuildとMetricsで分離する。rollbackはmigration lineageと前方修正を含むrelease単位で設計し、既存表DROPだけに限定しない。
+- 設計解釈の記録経路: `dialogue`
 - 原則: Domain Event (過去の事実を明示する) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/ddd.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: event factsと期限付きidempotency claimを分離し、旧eventを残したままclaimだけを解放して監査可能性とkey再利用を両立した。

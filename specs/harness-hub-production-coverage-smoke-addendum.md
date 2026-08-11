@@ -94,6 +94,7 @@ UI を追加しない。Feedback の状態は AI 完了だけでは `open` の�
 - session-only action は十分な scope の Bearer token でも `credential_not_allowed`。
 - 要求していない scope が token に付与された場合は scope 不足検査が無効になるため失敗する。
 - publish smoke の S3 `needs_fix` は channel の非終端 UNIQUE slot を占有するため、S4 の競合 fixture を `ready` にする前に cancel API で `draft` へ戻す。この順序を source 契約テストで固定する。
+- cancel 後は API 応答だけでなく DB 上の status も `draft` であることを再確認し、観測 `channel_slot_released` に記録する。`needs_fix` が slot を保持し続けること自体も service 層 T4-A で回帰固定する。
 
 ## API契約
 

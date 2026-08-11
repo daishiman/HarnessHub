@@ -93,11 +93,12 @@ export function renderLaunchdPlist({ label, nodePath, stateRoot }) {
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ExitTimeOut</key><integer>15</integer>
-  <key>ProcessType</key><string>Background</string>
   <key>LimitLoadToSessionType</key><string>Aqua</string>
-  <key>SessionCreate</key><true/>
   <key>EnvironmentVariables</key>
-  <dict><key>PATH</key><string>${xmlEscape(pathValue)}</string></dict>
+  <dict>
+    <key>PATH</key><string>${xmlEscape(pathValue)}</string>
+    <key>SSL_CERT_FILE</key><string>/etc/ssl/cert.pem</string>
+  </dict>
   <key>StandardOutPath</key><string>${xmlEscape(join(stateRoot, 'supervisor.log'))}</string>
   <key>StandardErrorPath</key><string>${xmlEscape(join(stateRoot, 'supervisor.log'))}</string>
 </dict>

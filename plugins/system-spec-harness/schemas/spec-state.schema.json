@@ -62,6 +62,17 @@
         "answer": {"type": "string"},
         "source": {"type": ["object", "string"]},
         "approval_id": {"type": "string", "minLength": 1},
+        "legacy_exempt": {"type": "boolean"},
+        "legacy_exempt_reason": {"type": "string", "minLength": 1},
+        "design_application_provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "writer"],
+          "properties": {
+            "mode": {"const": "legacy_backfill"},
+            "writer": {"const": "set-qa-design-applications"}
+          }
+        },
         "design_applications": {
           "type": "array",
           "minItems": 1,

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1503,
+  "graph_revision": 1515,
   "nodes": [
     {
       "acceptance": [
@@ -56674,12 +56674,15 @@
       "classification_confidence": 0.99,
       "classification_reason": "実測でlocal health 503、一時相対DB、supervisor不在、middleware重複警告、browser未確認を同一ローカル開発ライフサイクル欠陥として確認した。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-11T05:43:38Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md",
+          "beads:HarnessHub-bmhq"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-11T05:45:02Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "73ab279d80272f5003888b65c0698ff385751386271d677b030b70590358a226",
@@ -56717,7 +56720,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": true,
+          "head_branch": "devgraph/issue-hub-local-dev-runtime-reliability-20260811",
+          "linked_at": "2026-08-11T01:34:15Z",
+          "merge_commit_sha": "753405fa6944a4527c9726e8c631503506a13d05",
+          "merged_at": "2026-08-11T02:39:28Z",
+          "pr_number": 696,
+          "repo": "daishiman/HarnessHub",
+          "state": "merged",
+          "url": "https://github.com/daishiman/HarnessHub/pull/696"
+        }
+      ],
       "purpose": "ツールセッション終了耐性だけでなく、同一DBの再選択、healthの正確性、異常終了時の復旧、認証付き画面確認までを再現可能にする。",
       "related_nodes": [
         "feat-hub-foundation",
@@ -56743,13 +56759,39 @@
         "packages/db/package.json",
         "scripts/ci/check-shared-layer-duplicates.mjs",
         "scripts/ci/shared-layer-registry.json",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md",
+        "plugins/system-spec-harness/schemas/spec-state.schema.json",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition_design_backfill.py",
+        "plugins/system-spec-harness/lib/spec_docset_chapters.py",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/fixtures/expected-database.md",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/fixtures/expected-security.md",
+        "plugins/system-spec-harness/skills/run-system-spec-compile/tests/test_compile_spec_doc_knowledge.py",
+        "plugins/system-spec-harness/tests/test_validate_scripts.py",
+        "plugins/system-spec-harness/tests/test_validate_design_application_provenance.py",
+        "eval-log/system-spec-harness/run-system-spec-elicit/content-review",
+        "eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v",
         "docs/features/feat-hub-foundation/local-development.md",
         "docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md",
         "docs/features/feat-hub-foundation/runbook.md",
         "features/feat-hub-foundation.md",
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "system-spec/spec-state.json",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/dev-workflow.md",
+        "system-spec/frontend.md",
+        "system-spec/infrastructure.md",
         "system-spec/maintenance-ops.md",
+        "system-spec/security.md",
+        "system-spec/testing-qa.md",
+        "system-spec/ui-ux.md",
         "architecture/harness-hub-infrastructure-operations-addenda.md",
         "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
         ".gitignore"
@@ -56777,7 +56819,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "done",
       "tags": [
         "local-dev",
         "sqld",
@@ -56790,7 +56832,128 @@
       "template_version": "1.0.0",
       "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T01:27:00Z"
+      "updated_at": "2026-08-11T05:45:02Z"
+    },
+    {
+      "acceptance": [
+        "R2 get が apps/hub/apps/hub/wrangler.jsonc を参照しない",
+        "CI と定期 sweeper が repository artifacts 配下へレポートを保存する",
+        "focused test と Hub typecheck がPASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure-operations-addenda"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-f04p",
+        "linked_at": "2026-08-11T04:10:45Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/production-publish-smoke-cwd-paths-20260811.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "CIログでpnpm filter後のcwdとrepository相対パスの二重解決を直接確認した。",
+      "closed_at": "2026-08-11T04:26:24Z",
+      "completion_evidence": {
+        "completed_at": "2026-08-11T04:26:24Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/actions/runs/31457967635",
+          "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md",
+          "apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-11T04:26:24Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f47eec9f6fe8c96595a825845da60826f3fcbd94ece61daf1d4a05650651bc4a",
+        "evaluator": "GitHub Actions run 31453028279 log inspection",
+        "evidence_ref": "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T04:05:00Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/production-publish-smoke-cwd-paths-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "GitHub Actions と定期 sweeper が cwd に依存せず R2 取得と回収レポート保存を完走する。",
+      "graph_node_id": "issue-production-publish-smoke-cwd-paths-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T04:05:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "pnpm filter が子プロセスの cwd を Hub package へ変える場合でも、本番 publish smoke が正しい Wrangler 設定と成果物出力先を選べるようにする。",
+      "related_nodes": [
+        "SYS-HUB-FOUNDATION-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/smoke-fixture-sweeper.yml",
+        "apps/hub/scripts/smoke-production-publish-support.ts",
+        "apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts",
+        "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md",
+        "issues/production-publish-smoke-cwd-paths-20260811.md",
+        ".dev-graph/state/graph.json"
+      ],
+      "scope_in": [
+        "Wrangler config の絶対パス化",
+        "sweep report の GitHub workspace 絶対パス化",
+        "回帰テスト"
+      ],
+      "scope_out": [
+        "本番データモデル変更",
+        "publish状態遷移変更",
+        "既存の無関係な未コミット差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T04:05:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "closed",
+      "tags": [
+        "github-actions",
+        "production-smoke",
+        "wrangler",
+        "path-resolution"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "本番 publish smoke の作業ディレクトリ依存パスを修正する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T04:29:30Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

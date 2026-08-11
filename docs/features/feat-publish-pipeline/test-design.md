@@ -133,6 +133,7 @@ Yellow と Red が**同じ遷移先**であることを明示的に確認する 
 **対象**: `apps/hub/src/lib/publish/service.ts` の `submitPublishRequest`
 
 - **T4-A 通常経路**: 同一 channel に別の非終端 request が既に存在する状態で Draft を submit → 409 `channel_busy`。DB へ状態遷移を書かないこと (事前読取で弾く) を port のモック呼出回数で確認する。
+- **T4-A `needs_fix` 占有**: 先行が `needs_fix`（差戻し）でも非終端として channel を占有し、後続 Draft の submit は 409 `channel_busy` になること。`needs_fix` を「空き」と誤ると production smoke の S4 ready fixture が partial UNIQUE で落ちる。
 - **T4-B 競合経路**: 事前読取では「非終端なし」に見えるが `Draft→Validating` の CAS UPDATE が partial UNIQUE 違反する状況を port モックで再現 → 同じ 409 になること。
 - **T4-C 終端後の submit**: 先行 request が `published` / `failed` / `draft` のいずれかなら後続 Draft の submit が通ること (3 状態それぞれ)。
 - **T4-D 別 channel は独立**: channel が違えば同時に非終端 request を持てること。

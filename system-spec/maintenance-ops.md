@@ -126,7 +126,19 @@ codeを、次の変更者が意図・制約・failureを短時間で理解し、
 [qa-188-d 併記する既存文書の状態] docs/backend-spec.md:55 は tenants テーブルの status(active/suspended) を**スキーマとしては既に文書化している**。欠けているのはスキーマの存在ではなく、その値が認証可用性へ連動するという**結線の記述**である。これは qa-182 で扱った E-4 と同じ型の錯誤 (既にあるものを無いと見なす) を避けるための注記であり、本 turn は『新しい列を作れ』ではなく『既存列と認証可用性の連動を文書と語彙に載せろ』を求める。
 
 [qa-188-e 併せて残る DeviceAuthorizationStatus の三重定義] C07 が前回から継続指摘している DeviceAuthorizationStatus の情報源が 3 つある件 (ports.ts:117 / repository/device-flow.ts:23 / drizzle schema publish.ts:106) も未対応のまま残る。V7 (同一のリテラル union が 2 箇所に独立定義されている状態を検出する) の対象に、**drizzle schema を第 3 の情報源として含める**ことを明記する。型宣言と zod だけを突合する実装にすると、この 3 件目が検査をすり抜ける。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 原則: Ubiquitous Language (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/ddd.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: tenants.status と IdpCredentialStatus を『認証解決前の前提状態』という同じ分類語彙へ揃え、schema・実装・仕様の意味を一致させる判断に適用した。
+  - トレードオフ:
+    - 段0 語彙の維持対象が増える
+    - 状態追加時は認証可用性への結線も同時に更新する必要がある
+- 原則: 観測可能性 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: tenant 無効化、OIDC 未登録、環境値欠落、cookie 欠落、署名失敗を秘密値なしで区別できる縮退理由へ分解する契約に適用した。
+  - トレードオフ:
+    - 分類とログ schema の保守費が増える
+    - 外部利用者向け応答には内部分類をそのまま露出できない
 ##### 確定内容 qa-230 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: 【既存契約の維持】qa-044 の作者デスクトップ保守契約を全面維持する。plugin 更新は marketplace / Bootstrap Installer の手動 update、相談は予約制 office hour、四半期の利用者棚卸しと token 失効を対にし、CI と同一実装の pnpm verify を local から実行可能に保つ。pre-commit は早期検知の補助、正本の遮断は CI とする。token 窃取疑いは Hub Web から失効し、Hub 障害時も導入済み Skill と公開済み Web App は継続し、新規公開・追加・更新だけを停止する。
@@ -142,6 +154,7 @@ codeを、次の変更者が意図・制約・failureを短時間で理解し、
 【5. 公開入口と観測性】Next.js の予約された `src/middleware.ts` と同一 route に解決される `src/middleware/index.ts` は併存させない。認可 middleware の公開 contract は `src/middleware-contract.ts` とし、shared-layer registry、静的 detector、consumer import を同じ入口へ揃える。ログは 5 MiB 到達時に最大 5 世代へ rotation する。
 
 【6. 完了境界】unit/contract test、typecheck、lint、task spec gate、`local:status`、認証付き `local:smoke`、sqld/Next の異常終了後 PID 変化、DB 3 件保持、Duplicate page warning 0 を local implementation の完了証拠とする。in-app Browser が利用不能な場合、実画面確認だけは Beads と Draft PR の残課題に残し、未実施を PASS と表現しない。Windows の作者環境は qa-044 の契約を維持し、launchd 固有部分は macOS にだけ適用する。
+- 設計解釈の記録経路: `dialogue`
 - 原則: Automation and toil reduction (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: ad-hoc な nohup 再起動を、絶対 state path・単一 lifecycle・readiness・監督・認証付き smoke に置換し、同じ障害の手動再調査を減らした。
