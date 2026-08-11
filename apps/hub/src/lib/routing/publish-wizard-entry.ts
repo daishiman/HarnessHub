@@ -12,5 +12,12 @@
 
 export const PUBLISH_WIZARD_HREF = '/catalog/publish';
 
-/** 導線のリンク文言。「ウィザード」という内部語ではなく、利用者の目的で書く。 */
-export const PUBLISH_WIZARD_LINK_LABEL = 'Web だけでツールを公開する';
+/**
+ * 導線のリンク文言。「ウィザード」という内部語ではなく、利用者の目的で書く。
+ *
+ * 「ツール」ではなく「Skill」と書くのは、飛び先でいま公開できるのが Skill だけだから。
+ * 押すかどうかを決めるのはこのリンクを読む時点なので、**着いた先の見出しだけを実態へ
+ * 合わせても遅い** (期待外れが 1 画面あとにずれるだけになる)。
+ * Web アプリの公開が実装されたら、飛び先の見出しと一緒に「ツール」へ戻す。
+ */
+export const PUBLISH_WIZARD_LINK_LABEL = 'Web だけで Skill を公開する';

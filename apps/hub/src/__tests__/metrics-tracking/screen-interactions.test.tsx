@@ -41,6 +41,23 @@ const SUMMARY: MetricsSummaryResponse = {
   ],
 };
 
+/** 現行 DB のように名称解決が無く、互換フィールドに ID が入る応答。 */
+const UNRESOLVED_SUMMARY: MetricsSummaryResponse = {
+  ...SUMMARY,
+  ranking: SUMMARY.ranking.map((entry) => ({ ...entry, harnessName: entry.harnessId })),
+  departments: SUMMARY.departments.map((entry) => ({
+    ...entry,
+    departmentName: entry.departmentId ?? '部門未設定',
+  })),
+};
+
+const PROJECTS = {
+  items: [
+    { id: 'harness-alpha', name: 'Alpha 見積', description: '', can_publish: false },
+    { id: 'harness-beta', name: 'Beta 与信', description: '', can_publish: false },
+  ],
+};
+
 /** `computedAt` は brand 型なので、素の文字列ではなく契約の parse を通して組み立てる。 */
 const ROLLUPS: MetricsRollupsResponse = metricsRollupsResponseSchema.parse({
   items: [
@@ -94,7 +111,9 @@ afterEach(async () => {
 
 describe('MT-UI: S09 効果測定ダッシュボード', () => {
   it('MT-UI-001: KPI・ランキング・部門内訳が API の値どおりに描画される', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(SUMMARY));
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) =>
+      url === '/api/v1/projects' ? jsonResponse(PROJECTS) : jsonResponse(SUMMARY),
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     await render(<MetricsDashboard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} initialRange={RANGE} />);
@@ -110,23 +129,30 @@ describe('MT-UI: S09 効果測定ダッシュボード', () => {
   });
 
   it('MT-UI-002: scope ヘッダと期間クエリを付けて summary を取得する', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(SUMMARY));
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) =>
+      url === '/api/v1/projects' ? jsonResponse(PROJECTS) : jsonResponse(SUMMARY),
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     await render(<MetricsDashboard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} initialRange={RANGE} />);
 
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const summaryCall = fetchMock.mock.calls.find(([url]) => String(url).includes('/metrics/summary'));
+    if (summaryCall === undefined) throw new Error('summary を取得していません');
+    const [url, init] = summaryCall;
+    if (init === undefined) throw new Error('summary の request init がありません');
     expect(url).toBe('/api/v1/metrics/summary?from=2026-07-01&to=2026-07-10');
     expect((init.headers as Record<string, string>)['x-harness-tenant-id']).toBe(TENANT_ID);
     expect((init.headers as Record<string, string>)['x-harness-workspace-id']).toBe(WORKSPACE_ID);
   });
 
   it('MT-UI-003: 期間を変えて適用すると新しい期間で再取得する', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(SUMMARY));
+    const fetchMock = vi.fn(async (url: string) =>
+      url === '/api/v1/projects' ? jsonResponse(PROJECTS) : jsonResponse(SUMMARY),
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     await render(<MetricsDashboard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} initialRange={RANGE} />);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls.filter(([url]) => String(url).includes('/metrics/summary'))).toHaveLength(1);
 
     const inputs = container.querySelectorAll<HTMLInputElement>('form[aria-label="集計期間の指定"] input');
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
@@ -141,8 +167,9 @@ describe('MT-UI: S09 効果測定ダッシュボード', () => {
     });
     await flush();
 
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(fetchMock.mock.calls[1]?.[0]).toContain('from=2026-07-05');
+    const summaryCalls = fetchMock.mock.calls.filter(([url]) => String(url).includes('/metrics/summary'));
+    expect(summaryCalls).toHaveLength(2);
+    expect(summaryCalls[1]?.[0]).toContain('from=2026-07-05');
   });
 
   it('MT-UI-004: 取得失敗はエラーとして表示し、数値を空欄で見せない', async () => {
@@ -152,30 +179,62 @@ describe('MT-UI: S09 効果測定ダッシュボード', () => {
 
     expect(container.textContent).toContain('集計を取得できませんでした');
   });
+
+  it('MT-UI-005: 名称未解決の project / department key を業務名と偽らず ID と明示する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        url === '/api/v1/projects' ? jsonResponse({}, { ok: false }) : jsonResponse(UNRESOLVED_SUMMARY),
+      ),
+    );
+
+    await render(<MetricsDashboard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} initialRange={RANGE} />);
+
+    expect(container.textContent).toContain('業務ツール ID: harness-alpha');
+    expect(container.textContent).toContain('部門 ID: dept-sales');
+    expect(container.textContent).toContain('集計値は取得済みです');
+  });
+
+  it('MT-UI-006: project 一覧で名称解決できればランキングとチャートに名称を出す', async () => {
+    const fetchMock = vi.fn(async (url: string, _init?: RequestInit) =>
+      url === '/api/v1/projects' ? jsonResponse(PROJECTS) : jsonResponse(UNRESOLVED_SUMMARY),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await render(<MetricsDashboard tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} initialRange={RANGE} />);
+
+    expect(container.textContent).toContain('Alpha 見積');
+    expect(container.querySelector('[data-hh-id-badge] summary[aria-label="業務ツール ID: harness-alpha"]')).toBeNull();
+    const projectCall = fetchMock.mock.calls.find(([url]) => url === '/api/v1/projects');
+    if (projectCall?.[1] === undefined) throw new Error('project 名称取得の request init がありません');
+    expect((projectCall[1].headers as Record<string, string>)['x-harness-tenant-id']).toBe(TENANT_ID);
+    expect((projectCall[1].headers as Record<string, string>)['x-harness-workspace-id']).toBe(WORKSPACE_ID);
+  });
 });
 
 describe('MT-UI: S16 使用状況・削減効果', () => {
   function stubBoth(): ReturnType<typeof vi.fn> {
-    const fetchMock = vi.fn(async (url: string) =>
-      url.includes('/rollups') ? jsonResponse(ROLLUPS) : jsonResponse(SUMMARY),
-    );
+    const fetchMock = vi.fn(async (url: string) => {
+      if (url === '/api/v1/projects') return jsonResponse(PROJECTS);
+      return url.includes('/rollups') ? jsonResponse(ROLLUPS) : jsonResponse(SUMMARY);
+    });
     vi.stubGlobal('fetch', fetchMock);
     return fetchMock;
   }
 
-  it('MT-UI-005: 週次 rollup の行が確定値どおりに描画される', async () => {
+  it('MT-UI-007: 週次 rollup の行が確定値どおりに描画される', async () => {
     stubBoth();
 
     await render(<UsageSavingsReport tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} range={RANGE} />);
 
     expect(container.textContent).toContain('2026-07-06');
-    expect(container.textContent).toContain('harness-alpha');
+    expect(container.textContent).toContain('Alpha 見積');
     // rollup は分で持つ。300 分 → 5.0 時間として表示する
     expect(container.textContent).toContain('5.0');
     expect(container.textContent).toContain('30,000');
   });
 
-  it('MT-UI-006: rollups は period=weekly / dim=harness の読取だけを要求する', async () => {
+  it('MT-UI-008: rollups は period=weekly / dim=harness の読取だけを要求する', async () => {
     const fetchMock = stubBoth();
 
     await render(<UsageSavingsReport tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} range={RANGE} />);
@@ -188,7 +247,9 @@ describe('MT-UI: S16 使用状況・削減効果', () => {
     expect((rollupCall[1] as RequestInit | undefined)?.method).toBeUndefined();
   });
 
-  it('MT-UI-007: ハーネスを選ぶと harnessId 付きで再取得する', async () => {
+  // 絞り込みの確定は全画面で「絞り込む」ボタンに統一した (docs/frontend-ui-foundation-spec.md §5-5)。
+  // 選んだ瞬間の再取得はしないため、選択 → 確定の 2 手で検査する。
+  it('MT-UI-009: ハーネスを選んで絞り込むと harnessId 付きで再取得する', async () => {
     const fetchMock = stubBoth();
 
     await render(<UsageSavingsReport tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} range={RANGE} />);
@@ -203,20 +264,46 @@ describe('MT-UI: S16 使用状況・削減効果', () => {
     });
     await flush();
 
+    const submit = container.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submit === null) throw new Error('「絞り込む」ボタンがありません');
+    await act(async () => {
+      submit.click();
+    });
+    await flush();
+
     expect(fetchMock.mock.calls.length).toBeGreaterThan(callsBefore);
     expect(fetchMock.mock.calls.some(([url]) => String(url).includes('harnessId=harness-alpha'))).toBe(true);
   });
 
-  it('MT-UI-008: 片方でも取得に失敗したらエラーを表示する', async () => {
+  it('MT-UI-010: 片方でも取得に失敗したらエラーを表示する', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (url: string) =>
-        url.includes('/rollups') ? jsonResponse({}, { ok: false }) : jsonResponse(SUMMARY),
-      ),
+      vi.fn(async (url: string) => {
+        if (url === '/api/v1/projects') return jsonResponse(PROJECTS);
+        return url.includes('/rollups') ? jsonResponse({}, { ok: false }) : jsonResponse(SUMMARY);
+      }),
     );
 
     await render(<UsageSavingsReport tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} range={RANGE} />);
 
     expect(container.textContent).toContain('使用状況を取得できませんでした');
+  });
+
+  it('MT-UI-011: rollup の dim_key も名称未解決なら ID として表示する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url === '/api/v1/projects') return jsonResponse({}, { ok: false });
+        return url.includes('/rollups') ? jsonResponse(ROLLUPS) : jsonResponse(UNRESOLVED_SUMMARY);
+      }),
+    );
+
+    await render(<UsageSavingsReport tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} range={RANGE} />);
+
+    expect(
+      container.querySelector('[data-hh-id-badge] summary[aria-label="業務ツール ID: harness-alpha"]'),
+    ).not.toBeNull();
+    expect(container.querySelector('option[value="harness-alpha"]')?.textContent).toBe('業務ツール ID: harness-alpha');
+    expect(container.textContent).toContain('使用状況と削減効果は取得済みです');
   });
 });

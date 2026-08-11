@@ -28,9 +28,9 @@ import {
   ErrorState,
   FormField,
   Icon,
+  ListState,
   MarkdownEditor,
   NavList,
-  PageHeader,
   Panel,
   ProgressBar,
   ScreenHeader,
@@ -48,6 +48,7 @@ import {
 import type { ReactNode } from 'react';
 
 import { dataCatalogEntries } from './entries-data.js';
+import { informationCatalogEntries } from './entries-information.js';
 import { shellCatalogEntries } from './entries-shell.js';
 
 /** 見本を束ねる単位。VRT の 1 スクリーンショット = 1 group になる。 */
@@ -98,13 +99,8 @@ export const catalogEntries: readonly CatalogEntry[] = [
       </Card>
     ),
   },
-  {
-    name: 'PageHeader',
-    group: 'layout',
-    render: () => (
-      <PageHeader title="画面の名前" description="この画面で何ができるかの説明。" actions={<Button>新規作成</Button>} />
-    ),
-  },
+  // 見出し帯の正は ScreenHeader 1 つ (FR-UIF-001)。以前はここに PageHeader も並べていたが、
+  // カタログに 2 つ載っていること自体が「どちらを使えばいいか」の迷いを生んでいた
   {
     name: 'AppShell',
     group: 'layout',
@@ -290,6 +286,26 @@ export const catalogEntries: readonly CatalogEntry[] = [
     render: () => <EmptyState description="まだ 1 件もありません。" action={<Button>作成する</Button>} />,
   },
   {
+    name: 'ListState',
+    group: 'feedback',
+    // 「読み込めなかった」と「0 件」を並べて見比べる見本。
+    // この 2 つが同じ見た目になっていないことが、この entry で確かめたいこと
+    render: () => (
+      <Stack gap={3}>
+        <ListState error="一覧を取得できませんでした。" onRetry={() => undefined} isEmpty={false}>
+          <p>この一覧は失敗表示に置き換わるので描かれない。</p>
+        </ListState>
+        <ListState
+          isEmpty
+          emptyTitle="ヒアリングシートはまだありません"
+          emptyDescription="「新しく作成」から最初の 1 件を登録できます。"
+        >
+          <p>この一覧は空状態に置き換わるので描かれない。</p>
+        </ListState>
+      </Stack>
+    ),
+  },
+  {
     name: 'DegradedBanner',
     group: 'feedback',
     render: () => <DegradedBanner description="一部の情報が古い可能性があります。" />,
@@ -302,6 +318,7 @@ export const catalogEntries: readonly CatalogEntry[] = [
   { name: 'Skeleton', group: 'feedback', render: () => <Skeleton lines={3} /> },
 
   ...dataCatalogEntries,
+  ...informationCatalogEntries,
   ...shellCatalogEntries,
 ];
 
@@ -319,7 +336,7 @@ export function renderCatalogGroup(group: CatalogGroup): ReactNode {
         {group === 'navigation' ? <style>{catalogShellPreviewCss}</style> : null}
         <Container size="standard">
           <Stack gap={6}>
-            <PageHeader title={`コンポーネントカタログ: ${group}`} />
+            <ScreenHeader title={`コンポーネントカタログ: ${group}`} />
             {catalogEntries
               .filter((entry) => entry.group === group)
               .map((entry) => (

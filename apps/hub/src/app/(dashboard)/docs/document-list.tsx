@@ -1,8 +1,22 @@
 'use client';
 
 import type { DocumentListItem, DocumentListResponse, DocumentScope, DocumentStatus } from '@harness-hub/schemas';
-import { Alert, Button, DataTable, ScopeChip, Select, StatusChip } from '@harness-hub/ui';
+import {
+  Button,
+  CursorPager,
+  DataTable,
+  type DataTableColumn,
+  FilterBar,
+  ListState,
+  LiveStatus,
+  ScopeChip,
+  Select,
+  StatusChip,
+} from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
+import { formatDateTime } from '../../../lib/format/datetime.js';
+import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 interface DocumentListProps {
   readonly tenantId: string;
@@ -20,8 +34,14 @@ export function DocumentList({ tenantId, workspaceId }: DocumentListProps): Reac
   const [rows, setRows] = useState<readonly DocumentListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [draftFilters, setDraftFilters] = useState<DocumentFilters>(EMPTY_FILTERS);
-  const [filters, setFilters] = useState<DocumentFilters>(EMPTY_FILTERS);
+  // 絞り込み条件は詳細画面へ行って戻るまで覚えておく (毎回入れ直させない)
+  const {
+    filters,
+    draft: draftFilters,
+    setDraft: setDraftFilters,
+    apply,
+    restored,
+  } = useRememberedFilters<DocumentFilters>(FILTER_STORAGE_KEYS.docs, EMPTY_FILTERS);
   const [cursor, setCursor] = useState<string | null>(null);
   const [cursorHistory, setCursorHistory] = useState<readonly (string | null)[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -52,55 +72,96 @@ export function DocumentList({ tenantId, workspaceId }: DocumentListProps): Reac
     }
   }, [cursor, filters, tenantId, workspaceId]);
 
+  // 覚えていた条件の復元が済むまで待つ。先に問い合わせると、空の条件で取った一覧が
+  // 一瞬出てから条件付きの一覧に差し替わり、件数が目の前で変わって見える
   useEffect(() => {
+    if (!restored) return;
     void load();
-  }, [load]);
+  }, [load, restored]);
 
-  const columns = useMemo(
-    () => [
-      {
-        key: 'status',
-        header: '状態',
-        render: (row: DocumentListItem) => <StatusChip domain="document" status={row.status} />,
-      },
-      {
-        key: 'scope',
-        header: 'スコープ',
-        render: (row: DocumentListItem) => (
-          <ScopeChip
-            scope={row.scope === 'common' ? 'common' : 'tenant'}
-            name={row.scope === 'common' ? '共通' : 'テナント'}
-          />
-        ),
-      },
-      {
-        key: 'title',
-        header: 'タイトル',
-        render: (row: DocumentListItem) => (
-          <a href={`/docs/${row.id}?tenant=${tenantId}&workspace=${workspaceId}`}>{row.title}</a>
-        ),
-        value: (row: DocumentListItem) => row.title,
-      },
-      {
-        key: 'updated',
-        header: '更新日',
-        value: (row: DocumentListItem) => new Date(row.updated_at).toLocaleDateString('ja-JP'),
-      },
-    ],
-    [tenantId, workspaceId],
-  );
+  // 0 件のときの言い方を分ける。絞り込んだ結果の 0 件に「まだありません」と出すと、
+  // 条件を外せば見つかるものまで「存在しない」と読めてしまう
+  const hasFilters = filters.scope !== '' || filters.status !== '';
+  const appliedFilters: readonly AppliedFilter[] = [
+    ...(filters.scope === '' ? [] : [{ label: 'スコープ', value: filters.scope === 'common' ? '共通' : 'テナント' }]),
+    ...(filters.status === ''
+      ? []
+      : [{ label: '状態', value: filters.status === 'published' ? '公開済み' : '下書き' }]),
+  ];
 
   const applyFilters = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     setCursor(null);
     setCursorHistory([]);
-    setFilters({ scope: draftFilters.scope, status: draftFilters.status });
+    apply({ scope: draftFilters.scope, status: draftFilters.status });
   };
+
+  /**
+   * 列の並びは「何の文書か → 誰向けか → 読める状態か → いつの版か」。
+   *
+   * 広い画面を表にするのは、手順書を探すときに「公開済みのものだけを更新順に見比べる」という
+   * 読み方をするため。カードだと 1 件ずつしか読めず、見比べに向かない。
+   * 狭い画面ではその見比べ自体が成立しないので、カードへ切り替えて 1 件を読み切れる形にする。
+   *
+   * **タイトル列だけ `width` を指定しない。** 他 3 列を必要な幅で固定して余りをタイトルに
+   * 吸わせると、長い題名でも折り返さずに済む (タイトルに幅を与えると、そこだけ 2 行になる)。
+   */
+  const columns = useMemo<readonly DataTableColumn<DocumentListItem>[]>(
+    () => [
+      {
+        key: 'title',
+        header: 'タイトル',
+        sortable: true,
+        // 行を名指しする列。横スクロールしても「どの文書の行か」を画面に残す
+        sticky: true,
+        value: (row) => row.title,
+        render: (row) => <a href={`/docs/${row.id}?tenant=${tenantId}&workspace=${workspaceId}`}>{row.title}</a>,
+      },
+      {
+        key: 'scope',
+        header: '適用範囲',
+        width: '9rem',
+        value: (row) => (row.scope === 'common' ? '共通' : 'テナント'),
+        render: (row) => (
+          <ScopeChip
+            scope={row.scope === 'common' ? 'common' : 'tenant'}
+            name={row.scope === 'common' ? '共通' : 'テナント'}
+          />
+        ),
+        salience: 'context',
+      },
+      {
+        key: 'status',
+        header: '状態',
+        sortable: true,
+        width: '9rem',
+        value: (row) => (row.status === 'published' ? '公開済み' : '下書き'),
+        render: (row) => <StatusChip domain="document" status={row.status} />,
+        salience: 'context',
+      },
+      {
+        key: 'updated',
+        header: '更新日時',
+        sortable: true,
+        width: '13rem',
+        // 並べ替えは元の値で行う。整形した文字列で比較すると年をまたいだ順序が崩れる
+        value: (row) => row.updated_at,
+        render: (row) => formatDateTime(row.updated_at),
+        salience: 'metadata',
+      },
+    ],
+    [tenantId, workspaceId],
+  );
 
   return (
     <>
-      {error === null ? null : <Alert tone="danger" title="読み込みエラー" description={error} />}
-      <form aria-label="ドキュメントの絞り込み" onSubmit={applyFilters}>
+      <FilterBar
+        label="ドキュメントの絞り込み"
+        sticky
+        appliedChips={appliedFilters.length === 0 ? undefined : <AppliedFilterChips items={appliedFilters} />}
+        onSubmit={applyFilters}
+        actions={<Button type="submit">絞り込む</Button>}
+      >
         <Select
           label="スコープ"
           value={draftFilters.scope}
@@ -125,41 +186,64 @@ export function DocumentList({ tenantId, workspaceId }: DocumentListProps): Reac
             { value: 'published', label: '公開済み' },
           ]}
         />
-        <Button type="submit">絞り込む</Button>
-      </form>
-      <DataTable
-        caption="ドキュメント一覧"
-        columns={columns}
-        rows={rows}
-        rowKey={(row) => row.id}
-        loading={loading}
-        emptyMessage="ドキュメントはまだありません。"
+      </FilterBar>
+
+      {/* 読み込み中・取得失敗・0 件・一覧の 4 状態を同じ場所で出し分ける。
+          「一覧が空」と「まだ読み込んでいない」と「読み込めなかった」が同じ見た目になると、
+          待てば出るのか・そもそも無いのか・やり直すべきなのかが分からない
+          (frontend-ui-foundation-spec §3)。出し分けは共通の ListState に任せる */}
+      <div style={{ padding: 'var(--hh-space-4)' }}>
+        {/* 読み込めなかったときに件数を読み上げない (0 件と失敗の取り違えを声でも起こさない) */}
+        <LiveStatus>
+          {error !== null
+            ? 'ドキュメントを読み込めませんでした。'
+            : loading
+              ? 'ドキュメントを読み込んでいます。'
+              : `${rows.length} 件のドキュメントを表示中`}
+        </LiveStatus>
+
+        <ListState
+          error={error}
+          onRetry={() => void load()}
+          loading={loading}
+          isEmpty={rows.length === 0}
+          emptyTitle={hasFilters ? '条件に合うドキュメントがありません' : 'ドキュメントはまだありません'}
+          emptyDescription={
+            hasFilters
+              ? '絞り込みの条件をゆるめるか、条件を外してもう一度お試しください。'
+              : '業務ツールの使い方や運用手順を、最初の 1 本から書き始められます。'
+          }
+        >
+          <DataTable
+            caption="ドキュメント一覧"
+            columns={columns}
+            rows={rows}
+            rowKey={(row) => row.id}
+            loading={loading}
+            stickyHeader
+            narrowAs="card-collection"
+            // 並べ替えは取得済みの 25 件の中だけで効く。全件が並ぶと誤解されると
+            // 「上位が抜けている」と読まれてしまうため、範囲を先に断っておく
+            note="並べ替えはこのページに表示中の分が対象です (広い画面では列の見出しから、狭い画面では並び替えの選択欄から操作できます)。"
+          />
+        </ListState>
+      </div>
+
+      <CursorPager
+        label="ドキュメント一覧"
+        disabled={loading}
+        canGoBack={cursorHistory.length > 0}
+        canGoForward={nextCursor !== null}
+        onBack={() => {
+          const previous = cursorHistory.at(-1);
+          setCursor(previous ?? null);
+          setCursorHistory((current) => current.slice(0, -1));
+        }}
+        onForward={() => {
+          setCursorHistory((current) => [...current, cursor]);
+          setCursor(nextCursor);
+        }}
       />
-      <nav aria-label="ドキュメント一覧のページ送り">
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={loading || cursorHistory.length === 0}
-          onClick={() => {
-            const previous = cursorHistory.at(-1);
-            setCursor(previous ?? null);
-            setCursorHistory((current) => current.slice(0, -1));
-          }}
-        >
-          前へ
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={loading || nextCursor === null}
-          onClick={() => {
-            setCursorHistory((current) => [...current, cursor]);
-            setCursor(nextCursor);
-          }}
-        >
-          次へ
-        </Button>
-      </nav>
     </>
   );
 }

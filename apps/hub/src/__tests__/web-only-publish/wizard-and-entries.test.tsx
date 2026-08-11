@@ -57,6 +57,10 @@ function publishRequest(overrides: Partial<PublishRequestView> = {}): PublishReq
 /** 実 API を持たない環境で、投入の結果だけを差し替える。 */
 function fakePort(result: PublishJourneyResult<PublishRequestView>): PublishJourneyPort {
   return {
+    listProjects: async () => ({
+      ok: true,
+      value: [{ id: 'project-1', name: '問い合わせ整理', description: '', can_publish: true }],
+    }),
     createProject: async (_scope, input) => ({
       ok: true,
       value: { id: 'project-created', name: input.name, description: input.description },
@@ -202,6 +206,7 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
       value: { request: publishRequest({ project_id: 'project-created' }), checkpoint },
     }));
     const port: PublishJourneyPort = {
+      listProjects: async () => ({ ok: true, value: [] }),
       createProject,
       submitPackage,
       getRequest: async () => ({ ok: true, value: publishRequest({ project_id: 'project-created' }) }),
@@ -237,6 +242,10 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
       },
     }));
     const port: PublishJourneyPort = {
+      listProjects: async () => ({
+        ok: true,
+        value: [{ id: 'project-1', name: '問い合わせ整理', description: '', can_publish: true }],
+      }),
       createProject: async () => {
         throw new Error('既存 Project では呼ばれません');
       },
@@ -285,6 +294,10 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
         }),
     );
     const port: PublishJourneyPort = {
+      listProjects: async () => ({
+        ok: true,
+        value: [{ id: 'project-1', name: '問い合わせ整理', description: '', can_publish: true }],
+      }),
       createProject: async () => {
         throw new Error('既存 Project では呼ばれません');
       },

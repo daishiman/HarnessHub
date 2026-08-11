@@ -175,3 +175,9 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - 製品の公開 API、DB schema、本番 Cloudflare deploy unit は変更しない。仕様判断、検証、実ブラウザ確認の残件は [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を正とする。
 - 最終残件だった system-spec の legacy 設計適用11件は、Q&A原文を保った単一 writer backfill で解消し、strict completeness / foundation gate を PASS した。
 - 2026-08-11 追補: production publish smoke の cwd 非依存 path、launchd 起動安定化、ブラウザ受入記録、`needs_fix` channel slot 解放の DB/観測検証を同ブランチで束ねた。slot 検証は既存直列化契約の強化であり新要件ではない（[受領書](../docs/features/feat-hub-foundation/production-smoke-channel-slot-verification-spec-reflection-receipt.md)）。
+
+## Post-closeout UI MVP wave (2026-08-12)
+
+- 表示名 (氏名/Workspace)、IdBadge、ListState、FilterBar、route surface 台帳、information-design sheet、color-scheme を一括で揃えた。
+- session の `name` / `workspace_names` は optional の表示専用。認可・edge 判定は変更しない。
+- system-spec の R4-reopen は不要（判断理由は受領書 §2）。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と [受領書](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。

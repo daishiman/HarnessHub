@@ -1,5 +1,5 @@
 /** S01 の唯一の fetch 境界。既存 Publish API を順番どおり再利用し、途中再開だけを担う。 */
-import type { PublishProject, PublishRequestView } from '@harness-hub/schemas';
+import type { PublishProject, PublishProjectChoice, PublishRequestView } from '@harness-hub/schemas';
 
 import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 import type {
@@ -41,6 +41,10 @@ function failure(
 
 function messageForStatus(stage: PublishJourneyStage, status: number): string {
   if (status === 401) return 'サインインの有効期限が切れています。もう一度サインインしてください。';
+  // 2026-08-12: 導線と見出しは「ツール」から「Skill」へ寄せたが、ここは据え置く。
+  // これは権限が無いことを伝える文で、何を公開しようとしたかは論点ではない
+  // (Skill へ狭めると「Skill 以外なら公開できるのか」と読ませる余地が出る)。
+  // Web アプリの公開が入って権限が種類ごとに分かれたら、そのときに揃える。
   if (status === 403) return 'この Workspace でツールを公開する権限がありません。管理者に確認してください。';
   if (status === 404) {
     return stage === 'status'
@@ -75,6 +79,12 @@ async function parseProject(payload: unknown): Promise<PublishProject | null> {
   const { publishProjectSchema } = await import('@harness-hub/schemas');
   const parsed = publishProjectSchema.safeParse(payload);
   return parsed.success ? parsed.data : null;
+}
+
+async function parseProjectList(payload: unknown): Promise<readonly PublishProjectChoice[] | null> {
+  const { publishProjectListSchema } = await import('@harness-hub/schemas');
+  const parsed = publishProjectListSchema.safeParse(payload);
+  return parsed.success ? parsed.data.items : null;
 }
 
 interface JourneyRequestInit {
@@ -117,6 +127,16 @@ const OFFLINE_MESSAGE = 'Hub に接続できませんでした。通信状況を
 const MALFORMED_MESSAGE = 'Hub の応答を解釈できませんでした。時間をおいて再試行してください。';
 
 export const httpPublishJourneyPort: PublishJourneyPort = {
+  async listProjects(scope, signal) {
+    const headers = scopeHeaders(scope);
+    if (headers === null) return failure('project', null, 'Workspace を選び直してください。');
+    const response = await send('/projects', { method: 'GET', headers, signal });
+    if (response === null) return failure('project', null, OFFLINE_MESSAGE);
+    if (!response.ok) return failure('project', response.status, messageForStatus('project', response.status));
+    const projects = await parseProjectList(await readJson(response));
+    return projects === null ? failure('project', response.status, MALFORMED_MESSAGE) : { ok: true, value: projects };
+  },
+
   async createProject(scope, input, signal) {
     const headers = scopeHeaders(scope);
     if (headers === null) return failure('project', null, 'Workspace を選び直してください。');

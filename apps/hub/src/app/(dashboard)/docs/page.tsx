@@ -21,6 +21,7 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
         id="docs-heading"
         title="ドキュメント"
         description="業務ツールの使い方や運用手順をまとめて共有します。"
+        sticky
         actions={
           <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
             新しく作成

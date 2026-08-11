@@ -179,6 +179,7 @@ describe('DC-POLL-LC / 可視性の停止と再開', () => {
   it('DC-POLL-LC-03B: S01 の公開ウィザードも hidden 中は通信せず、visible 復帰で一度だけ再開する', async () => {
     let calls = 0;
     const port: PublishJourneyPort = {
+      listProjects: async () => ({ ok: true, value: [] }),
       createProject: async () => ({ ok: false, failure: { stage: 'project', status: 500, message: 'not used' } }),
       submitPackage: async () => ({ ok: false, failure: { stage: 'request', status: 500, message: 'not used' } }),
       getRequest: async () => {

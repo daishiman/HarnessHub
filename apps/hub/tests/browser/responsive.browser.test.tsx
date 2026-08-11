@@ -20,7 +20,7 @@ import {
   Card,
   DataTable,
   NavList,
-  PageHeader,
+  ScreenHeader,
   SidebarLayout,
   Stack,
   UiProvider,
@@ -55,7 +55,7 @@ const denseBody = (density: 'comfortable' | 'compact') => (
           />
         }
       >
-        <PageHeader
+        <ScreenHeader
           title="業務ツール一覧"
           description="テナントに配布済みのツールと、公開待ちの要求をまとめて確認できます。"
           actions={<Button>新規作成</Button>}

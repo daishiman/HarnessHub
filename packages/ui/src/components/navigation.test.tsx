@@ -139,6 +139,32 @@ const boardColumns = [
 ];
 
 describe('StageBoard', () => {
+  it('狭幅用の工程選択を native radio group として出し、先頭工程を既定にする', async () => {
+    const user = userEvent.setup();
+    renderWithUi(<StageBoard label="構築パイプライン" columns={boardColumns} />);
+
+    const hearing = screen.getByRole('radio', { name: withoutSpaces('ヒアリング (1件)') }) as HTMLInputElement;
+    const design = screen.getByRole('radio', { name: withoutSpaces('設計 (0件)') }) as HTMLInputElement;
+    expect(hearing.checked).toBe(true);
+    expect(design.checked).toBe(false);
+
+    // 同じ name の native radio group なので、ブラウザ標準の矢印キー移動を上書きしない。
+    // jsdom は radio の keyboard default action を実装しないため、選択変更は click で確認する。
+    expect(hearing.name).toBe(design.name);
+    await user.click(design);
+    expect(hearing.checked).toBe(false);
+    expect(design.checked).toBe(true);
+    expect(document.getElementById(design.getAttribute('aria-controls') ?? '')).not.toBeNull();
+  });
+
+  it('narrow / wide 用にカード DOM を複製しない', () => {
+    const { container } = renderWithUi(<StageBoard label="パイプライン" columns={boardColumns} />);
+
+    expect(screen.getAllByText('経費精算の自動化')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-hh-stage-columns]')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-hh-stage-column]')).toHaveLength(boardColumns.length);
+  });
+
   it('工程名と件数を見出しに出す', () => {
     renderWithUi(<StageBoard label="構築パイプライン" columns={boardColumns} />);
 

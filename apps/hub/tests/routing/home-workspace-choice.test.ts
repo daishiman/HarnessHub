@@ -40,8 +40,19 @@ const HomePage = (await import('../../src/app/page.js')).default;
 
 const ORIGINAL_SECRET = process.env.AUTH_SESSION_SECRET;
 
-function claimsFor(workspaceIds: readonly string[], status: 'active' | 'inactive' = 'active') {
-  return { sub: 'user-1', tenant_id: 'tenant-a', role: 'member', status, workspace_ids: workspaceIds };
+function claimsFor(
+  workspaceIds: readonly string[],
+  status: 'active' | 'inactive' = 'active',
+  workspaceNames?: Readonly<Record<string, string>>,
+) {
+  return {
+    sub: 'user-1',
+    tenant_id: 'tenant-a',
+    role: 'member',
+    status,
+    workspace_ids: workspaceIds,
+    ...(workspaceNames === undefined ? {} : { workspace_names: workspaceNames }),
+  };
 }
 
 /** session cookie と active workspace cookie だけを返す (名前を見ずに返すと別 cookie を汚染する) */
@@ -96,6 +107,21 @@ describe('workspace が確定しないときは選ばせる', () => {
     expect(redirectMock).not.toHaveBeenCalled();
     expect(html).toContain('Workspace を選択');
     expect(html).toContain(`href="${workspaceEntryPath('ws-1')}"`);
+    expect(html).toContain(`href="${workspaceEntryPath('ws-2')}"`);
+  });
+
+  it('session に表示名がある Workspace は名前を主表示し、未解決 ID は識別子として示す', async () => {
+    cookies('valid-token');
+    verifySessionToken.mockResolvedValue({
+      ok: true,
+      claims: claimsFor(['ws-1', 'ws-2'], 'active', { 'ws-1': '営業部' }),
+    });
+
+    const html = await renderHome();
+
+    expect(html).toContain('営業部 で作業する');
+    expect(html).toContain('data-hh-id-badge');
+    expect(html).toContain('aria-label="Workspace ID: ws-2"');
     expect(html).toContain(`href="${workspaceEntryPath('ws-2')}"`);
   });
 

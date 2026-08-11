@@ -16,6 +16,25 @@ Web 画面を「毎回ちがう材料で作る」のではなく、同じレゴ�
 
 ## 実装者向けの要点
 
+### 0. 部品を選ぶ前に情報設計を済ませる
+
+本書は *どの部品を使うか* の指針である。*その部品へ何を載せ、何を削り、何を強調するか* は、本書の共通手順、[route surface profile SSOT](screen-inventory.md)、および `docs/features/*/information-design/*.md` の各画面 sheet で閉じる。存在しない別の情報設計正本を前提にしない。
+
+- 工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」の 10 工程。`DataTable` や `Panel` を置くところから始めない。
+- 画面内の情報顕著度は `lead / context / metadata`。構築 phase P0〜P5、screen-inventory の wide / middle / narrow pattern、Button variant と別語彙であり、`typographyTokens` / `colorTokens` / spacing token の段だけで表す。
+- 視覚ラベルを一律に外さない。form control、初見/破壊操作、状態・金額・日時・PII・略語は可視ラベル/見出しを既定とし、読み取り専用で意味が一意な場合だけ根拠付きで省略する。placeholder、`title`、アイコンだけを label の代用にしない。
+- 表現形式は open-world registry から選ぶ。初期値は table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail で、必要なら hybrid/new pattern を登録する。
+- 余白・線/surface・アイコン・画像・整列/反復は、グループ境界・認識・証拠・操作の予測可能性を高めるなら積極採用する。意味を説明できない縞模様・影等は足さず、必要な境界を「装飾だから」と消さない。
+- role / task-mode / breakpoint ごとの profile 割当は [screen-inventory](screen-inventory.md) だけを正本とし、狭幅への変換でも critical fields/actions と業務能力を維持する。
+
+#### Route surface を閉じる手順
+
+1. 実 route 1 つに `current` surface ID を 1 つ割り当てる。同一 journey の一覧・新規・詳細・編集は別 surface variant とする。
+2. role / task-mode / density / wide / middle / narrow / sticky policy は `docs/screen-inventory.md` にだけ書く。sheet に値を複製しない。
+3. 各 sheet は `Surface: <ID> / route: <path>` で逆参照し、表示項目、ラベル、pattern 選定理由、削除情報、machine/manual gate を記録する。
+4. current 行の information-design sheet と test evidence は実在させる。future route、modal化、role 変更は `planned` 行と Decision ref に分ける。
+5. `tests/specs/test_screen_inventory_closure.py` で、実 route ↔ current 行 ↔ sheet ↔ evidence の全単射と参照実在性を検査する。
+
 ### 1. 画面骨格
 
 新しい業務画面は、原則として次の順に組み立てる。
@@ -63,7 +82,110 @@ CSS の media query に 768px などを直接増やさず、`mediaUp()` また�
 
 ### 5. 表と狭い画面
 
-表は列を無理に潰さず、`DataTable` の局所スクロール容器で受け止める。`document.documentElement.scrollWidth` が viewport を超える状態は不合格である。折り返せない URL や長い識別子も実ブラウザ fixture に含める。
+`screen-inventory` の narrow profile が `table` を維持する場合は列を無理に潰さず、`DataTable` の局所スクロール容器で受け止める。profile が `card-collection` / `list` へ変換する場合も、critical fields、filter、sort、selection、一括操作、完全値への到達を別表現で維持する。`document.documentElement.scrollWidth` が viewport を超える状態は不合格である。折り返せない URL や長い識別子も実ブラウザ fixture に含める。
+
+### 5-1. 選んだ型を部品へ写す
+
+**どの型を選ぶかはここでは決めない。** 表現形式は §0 の open-world registry (table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail、必要なら追加登録) から能力で比較して選び、画面ごとの割当は [screen-inventory](screen-inventory.md) の profile だけを正本とする。
+
+以前ここには「読み手のふるまい 4 種 → 部品 1 つ」の決定表を置き、上から当てて最初に当たったものを採る形にしていた。これは 2 つの点で誤りだったので撤回する。
+
+- **候補を 4 つに閉じていた。** registry は 11 件あり、`master-detail` や `board` のように 4 択のどれにも当たらない型を選ぶと「表でも カードでもないから仕様違反」に見えてしまう。型は閉じた選択肢ではなく、能力 (比較・絞り込み・選択・一括操作・完全値への到達) を満たすかで比べるもの。
+- **最初に当たったものを採る、という順序規則を持っていた。** 同じ画面が複数の条件に当たるのは普通で、そのとき「上に書いてある条件が勝つ」ことに根拠がない。実際には role・task-mode・幅ごとに違う型が要る (screen-inventory が profile を 3 つに分けて持っているのはこのため)。
+
+型が決まったあと、それを部品へ写すときの決めごとだけをここに置く。
+
+| registry の型 | 使う部品 | 写すときの注意 |
+|---|---|---|
+| table | `DataTable` | 列見出しを sticky にする (`stickyHeader`)。行数が画面高を超えるとどの列か分からなくなる |
+| card-collection | `DataTable narrowAs="card-collection"`、または `DataCard` を `CardGrid` へ | 同じ一覧を幅で切り替えるなら前者。表とカードを別々に書き起こさない |
+| chart+table | `KpiCard` / 各 chart + `DataTable` | 図と表で同じ数字を出す。片方だけ更新される書き方をしない |
+| 単一対象の属性列挙 (registry の型を選ぶ前段) | `DefinitionList` | 生の `<dl>` を画面側に書かない。余白・区切り・折り返しが画面ごとにずれる |
+
+- **詳細画面 (`[id]`) に `DataTable` を置いてよい。** 「対象が 1 件だから表は不要」は、その画面に *1 件しか無いもの* しか無い場合にだけ成り立つ。詳細画面が持つ履歴・明細・関連一覧は、それ自体が複数行を見比べる対象なので表が正しい (例: リリース履歴)。対象そのものの属性を並べる箇所に表を使わない、というのが本来の意図だった。
+- カードで出す一覧でも、並べ替えや比較の要求が出たら型を選び直してよい。その場合は screen-inventory の profile を先に直す (実装だけ変えると台帳と食い違う)。
+
+### 5-2. 常時見えているべきもの
+
+スクロールで画面外へ流れてよいのは**本文だけ**である。次の 3 つは常に見える。
+
+1. **アプリのヘッダー** (`ShellHeader`) — 検索・通知・アカウント。既に `position: sticky`。
+2. **画面のヘッダー** (`ScreenHeader sticky`) — 画面名・パンくず・主要アクション・**状態チップとスコープチップ**。状態とスコープは「いまどのテナントの、どの状態のものを見ているか」を示すため、本文をどれだけスクロールしても消えてはならない。チップは `ScreenHeader` の `tags` に渡す (裸の `<p>` に置かない)。
+3. **フッター** (`ShellFooter`) — 規約リンク。`.hh-shell__body` を画面高に固定し、本文ペイン (`.hh-shell__main`) だけを縦スクロールさせることで実現する。
+
+sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見出し 10 とし、`z-index` を画面側で直書きしない。
+
+### 5-3. サイドバーの構造
+
+`ShellSidebar` はフラットな一覧にせず、**グループ (見出し + 区切り線)** で分ける。グループは業務の言葉で命名し、実際の画面構成に対応させる。
+
+| グループ | 含む画面 |
+|---|---|
+| 業務 | ヒアリングシート / 業務ツール / ドキュメント / 改善要望 |
+| 分析 | ダッシュボード / パイプライン / 使用状況・削減効果 |
+| 管理 | ユーザー管理 / アカウント設定 / 認証設定 / 見積係数設定 |
+
+グループ見出しは、サイドバーが畳まれている幅 (md) では読み上げ専用にし、区切り線だけを残す。
+
+### 5-4. 画面の組み立ての型
+
+全画面で同じ順に組む。逸脱するときは理由をコードコメントに残す。
+
+```tsx
+<ScreenHeader title="画面名" breadcrumbs={[...]} tags={<TagRow>...</TagRow>} actions={<ActionLink .../>} sticky />
+<Panel title="情報のまとまり">…</Panel>
+```
+
+- 見出しは `ScreenHeader` が `<h1>` を持つ。画面側で生の `<h1>` を書かない。
+- 操作は `Button` / `ActionLink` を使う。生の `<button>` を置かない。
+- 絞り込みフォームは `FilterBar` に入れる。画面ごとに `display: flex` を書き起こさない。
+  「絞り込む」ボタンで確定する画面は `onSubmit` を渡し、帯そのものを `<form>` にする
+  (外に `<form>`・中に `role="group"` と二重にすると、同じ名前のまとまりが 2 回読み上げられる)。
+- 0 件・権限なし・未選択は必ず `EmptyState` で、**理由と次の操作**を 1 行ずつ出す。無言の空表を出さない。
+
+### 5-5. 絞り込み・検索バーの共通仕様
+
+絞り込みは画面ごとに形を変えない。以下を全画面で 1 つに固定し、実装は `FilterBar` 1 か所に持たせる。
+
+| 決めごと | 唯一の作法 | 理由 |
+| --- | --- | --- |
+| ラベルの位置 | 入力欄の**上**（`FormField` が描く。`hideLabel` は使わない） | 横並びラベルは狭い画面で折り返し位置が画面ごとにずれる |
+| 補足文言 (`description`) | 入力欄の**下**。表示しても他の要素の位置を動かさない | 補足を 1 行足すと隣のボタンだけ下がる、を構造で潰す |
+| 整列 | grid。各欄の**上端**を揃える (`align-items: start`) | 下端合わせだと背の高い欄に引きずられる |
+| 部品の高さ | 入力・セレクト・ボタンとも `--hh-control-height` | 3 種の高さが揃わないと帯が波打って見える |
+| 確定の仕方 | **「絞り込む」ボタンで確定**。入力の変化での即時反映はしない | 打鍵ごとに結果が入れ替わると、打ち終わる前に画面が動く |
+| ボタンの語彙 | 全画面「絞り込む」 | 同じ形の帯で操作名だけ違うと毎回読み直しになる |
+| ボタンの置き場所 | `actions` prop（`children` に混ぜない） | ラベル 1 行ぶん下げて入力欄と頭を揃えるスロット |
+| 適用中の条件 | `appliedChips` prop に渡し、帯の下段へチップで出す | 「いま何で絞っているか」を一覧側まで探しに行かせない |
+| 位置 | ページ見出し (`ScreenHeader sticky`) の直下に置き、一緒に留める | スクロール後に条件を変えるため画面上端へ戻らせない |
+
+寸法の実体は base 層 (`packages/ui/src/tokens/base-css.ts`) の `[data-hh-filter-bar]` / `[data-hh-field]` /
+`[data-hh-filter-actions]` が持つ。ボタンの下げ幅 `--hh-field-label-offset` は
+「ラベルの font-size × line-height + ラベル下余白」の式で、`FormField` のラベル指定と対で動く。片方だけ変えない。
+
+### 5-6. 画面間の不揃い点検 (12 観点)
+
+画面を足すとき・直すときは、次の 12 観点を機械的に確認する。ここで「画面ごとに書き起こす」判断をした
+時点で不揃いが生まれるため、各観点の唯一の受け皿を決めてある。
+
+| # | 観点 | 唯一の受け皿 |
+| --- | --- | --- |
+| 1 | ページ見出しの書式 | `ScreenHeader`（画面で生の `<h1>` を書かない。同じ役割の 2 つ目の部品は公開しない） |
+| 2 | 説明文 | `ScreenHeader description` に 1 行。省略しない |
+| 3 | 主要操作の位置と語彙 | `ScreenHeader actions`（見出しと同じ行。「新しく作成」等の語彙も揃える） |
+| 4 | 絞り込み UI | `FilterBar`（§5-5） |
+| 5 | 一覧の表現 | 型は §0 の registry から選び、割当は `docs/screen-inventory.md` の profile が正本。部品への写し方は §5-1 |
+| 6 | 空状態 | `ListState` の `emptyTitle` / `emptyDescription` |
+| 7 | 読み込み中 | `DataTable loading` と `LiveStatus`（件数は読み込み完了後だけ読み上げる） |
+| 8 | エラー表示 | `ListState error`（取得失敗）／操作の失敗は操作の隣に `Alert` |
+| 9 | 日時の書式 | `apps/hub/src/lib/format/datetime.ts` の `formatDate` / `formatDateTime` |
+| 10 | ID の見せ方 | `IdBadge`（生の `<code>` や素の文字列で出さない） |
+| 11 | ステータスバッジ | `StatusChip`（domain ごとの語彙と色は部品側が持つ） |
+| 12 | ボタンの語彙 | 「絞り込む」「再試行する」「新しく作成」など、同じ意味に同じ語 |
+
+観点 6・7・8 は 1 つの部品 `ListState` に集約してある。取得失敗・読み込み中・0 件・中身の 4 状態は
+**排他**であり、画面側で「上にエラーバナー、下に空メッセージ」と並べない
+（取得に失敗しただけなのに「0 件です」と読める状態を構造で潰す）。
 
 ### 6. catalog と VRT
 
@@ -79,6 +201,7 @@ pnpm --filter @harness-hub/ui test
 pnpm --filter @harness-hub/hub typecheck
 pnpm --filter @harness-hub/hub run check:screen-states
 pnpm --filter @harness-hub/hub run test:browser
+python3 -m pytest -q tests/specs/test_screen_inventory_closure.py
 ```
 
 Chromium が未導入なら `pnpm --filter @harness-hub/hub exec playwright install chromium` を先に実行する。
@@ -86,6 +209,8 @@ Chromium が未導入なら `pnpm --filter @harness-hub/hub exec playwright inst
 ## 関連文書
 
 - 規範追補: `specs/harness-hub-ui-foundation-addendum.md`
+- route surface profile 割当 SSOT: `docs/screen-inventory.md`
+- 画面ごとの情報設計と選定根拠: `docs/features/*/information-design/*.md`
 - frontend 全体仕様: `docs/frontend-spec.md`
 - 仕様反映受領書: `docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md`
 - 共通シェル追補の受領書: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`

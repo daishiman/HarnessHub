@@ -87,6 +87,18 @@ export function mediaUp(name: BreakpointName): string {
 }
 
 /**
+ * `breakpointTokens` から上限側の `@media` を作る。`mediaUp` の対。
+ *
+ * 閾値から 0.02px 引くのは、同じ名前の `mediaUp` と境界が重ならないようにするため。
+ * 引かないと 480px ちょうどの幅で上下どちらの規則も当たり、後に書いたほうが勝つという
+ * 読みでしか説明できない状態になる。0.02 という端数は sub-pixel の画面幅を
+ * 取りこぼさないための慣行値 (1px 引くと 479.5px の端末で穴が空く)。
+ */
+export function mediaDown(name: BreakpointName): string {
+  return `@media (max-width: ${breakpointTokens[name] - 0.02}px)`;
+}
+
+/**
  * チャートの系列色の順序 (固定)。
  * 色だけに依存させないため、部品側で形状・ラベルを必ず併記する。
  */

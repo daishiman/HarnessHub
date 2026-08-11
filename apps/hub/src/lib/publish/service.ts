@@ -68,6 +68,15 @@ export async function createPublishProject(
   return ok(project);
 }
 
+/** 現在の Workspace の active Project を、人が読める表示名つきで返す。 */
+export async function listPublishProjects(
+  deps: PublishServiceDeps,
+  scope: PublishScope,
+): Promise<readonly PublishProjectRecord[]> {
+  if (scope.workspaceId === undefined) return [];
+  return deps.ports.projects.list(scope);
+}
+
 /**
  * 公開要求を起こす。channel は project と target から**サーバが決める** (§4.6)。
  * client に channel_id を選ばせると、他 project の channel を指す要求を作れてしまう。

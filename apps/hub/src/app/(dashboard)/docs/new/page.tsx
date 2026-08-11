@@ -20,6 +20,7 @@ export default async function DocumentCreatePage({ searchParams }: PageProps) {
       <ScreenHeader
         id="docs-new-heading"
         title="ドキュメントを作成"
+        description="作成した内容は、選んだスコープの範囲で共有されます。"
         breadcrumbs={[
           { href: `/docs?tenant=${tenantId}&workspace=${workspaceId}`, label: 'ドキュメント' },
           { label: '新規作成' },

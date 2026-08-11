@@ -57,7 +57,8 @@ describe('DOCS-A11Y: docs-cms 実画面の初期状態に axe 違反が無い', 
   it('DOCS-A11Y-001: ドキュメント一覧 (DocumentList) に axe 違反が 0 件', async () => {
     mountScreen(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
     expect(await violationsOf()).toEqual([]);
-    expect(document.querySelector('table')).not.toBeNull();
+    // カードで並べる一覧なので、読み込み状態が読み上げに伝わることを確かめる (型の割当は docs/screen-inventory.md)
+    expect(document.querySelector('[aria-live="polite"]')?.textContent).toContain('読み込');
     expect(document.querySelector('form[aria-label="ドキュメントの絞り込み"]')).not.toBeNull();
   });
 

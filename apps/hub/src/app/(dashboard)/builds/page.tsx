@@ -28,6 +28,7 @@ export default async function BuildsPage({ searchParams }: PageProps) {
         id="builds-heading"
         title="構築パイプライン"
         description="ヒアリングから公開までの 7 工程で、各ハーネスの構築進捗を追跡します。工程の移動は管理者のみ行えます。"
+        sticky
       />
       {/* Panel の見出し (h2) を省くと、ページ見出し h1 の次が StageBoard の列見出し h3 になり
           見出し階層が飛ぶ (axe: heading-order)。面の見出しを置いて h1 → h2 → h3 を保つ。 */}

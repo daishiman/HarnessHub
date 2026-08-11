@@ -118,6 +118,9 @@ export function createInMemoryUsers(seed: readonly DirectoryUser[] = [], newId =
         id: newId(),
         tenantId: input.tenantId,
         idpSubject: input.idpSubject,
+        // 本番の JIT provisioning (db-ports.ts) と同じく未取得を空文字で表す
+        name: '',
+        email: input.email ?? '',
         role: 'member',
         status: 'active',
         workspaceIds: [],
@@ -321,6 +324,10 @@ export function directoryUser(
 ): DirectoryUser {
   return {
     idpSubject: `idp-${overrides.id}`,
+    // 既定は「氏名もメールも未取得」= JIT provisioning 直後の状態。
+    // 表示名を当てにするテストは overrides で明示的に与えること。
+    name: '',
+    email: '',
     role: 'member',
     status: 'active',
     workspaceIds: [],

@@ -272,3 +272,22 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 - 正本は [frontend](../system-spec/frontend.md) / [ui-ux](../system-spec/ui-ux.md)。
   受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
   [build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。
+
+## 2026-08-12 表示名 / 情報設計 / UI 一貫性 (MVP wave)
+
+- **表示名**: session claims に optional の `name` / `workspace_names` を載せる。解決は
+  `apps/hub/src/lib/auth/display-name.ts` (氏名 → メール → 無し)。人が読めない値は
+  `IdBadge` へ落とす。認可判定は `workspace_ids` / role / status のみで、表示 claim は
+  到達可否に使わない。cookie 4096B を越えそうなときは表示名だけを捨てる。
+- **情報設計の閉じ方**: route surface profile の正本は `docs/screen-inventory.md`。
+  画面ごとの取捨と pattern 選定根拠は `docs/features/*/information-design/*.md`。
+  全単射検査は `tests/specs/test_screen_inventory_closure.py`。
+- **一覧・状態**: `DataTable` sticky 先頭列、`FilterBar` + 条件記憶、`ListState` で
+  取得失敗 / 読込中 / 0 件 / 中身を排他表示。日時は `formatDate` / `formatDateTime` (JST 固定)。
+- **見た目の基盤**: dark/light/auto すべてに `color-scheme` を宣言。sticky の重なり順は
+  shell > screen header > table header。公開画面は sticky 要否を `StickyHeaderOffset` と
+  共通 shell 契約で扱う。
+- 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、
+  [UI foundation guide](../docs/frontend-ui-foundation-spec.md)、
+  [認証](../docs/security-spec-authentication.md)、
+  受領 [2026-08-12 wave](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。

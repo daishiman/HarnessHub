@@ -8,7 +8,7 @@
  * 「画面には出るが実際には取得できない」導線になる。サーバが返した値だけを出す。
  */
 import type { InstallDescriptor } from '@harness-hub/schemas';
-import { Alert, Button } from '@harness-hub/ui';
+import { Alert, Button, DefinitionList, Panel, Stack } from '@harness-hub/ui';
 import { useRef, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
 import { catalogCapabilities, httpCatalogPort } from '../../lib/catalog/index.js';
@@ -57,58 +57,72 @@ export function CatalogInstallPanel({
 
   const canCopy = failure === null || catalogCapabilities(failure.kind).canCopyInstallDescriptor;
 
+  // 「取得できた導入手段」を並べる。生の <dl> をここで書くと余白と折り返しが
+  // 他画面とずれるため、詳細画面と同じ DefinitionList に寄せる (§5-1 の写し方)
+  const descriptorItems =
+    descriptor === null
+      ? []
+      : [
+          { term: '版', description: descriptor.version },
+          ...(descriptor.command === null
+            ? []
+            : [{ term: '導入コマンド', description: <code>{descriptor.command}</code> }]),
+          ...(descriptor.download_url === null
+            ? []
+            : [{ term: 'ダウンロード', description: <a href={descriptor.download_url}>パッケージを取得する</a> }]),
+          ...(descriptor.launch_url === null
+            ? []
+            : [{ term: 'Web アプリ', description: <a href={descriptor.launch_url}>Web アプリを開く</a> }]),
+        ];
+
   return (
-    <section aria-labelledby="catalog-install-heading">
-      <h2 id="catalog-install-heading">導入する</h2>
+    <Panel
+      title="このツールを使い始める"
+      description="お使いの環境へ追加するための情報を取り出します。"
+      headingLevel={2}
+    >
+      {/* 見出しは Panel が出すので、ここは読み上げ用の名前だけ持たせる (見出しの階層飛びを作らない) */}
+      <section aria-label="このツールを使い始める">
+        <Stack gap={3}>
+          {releaseId === null ? (
+            <p style={{ margin: 0 }}>
+              公開されている版がまだないため、追加できません。公開されるとここに導線が出ます。
+            </p>
+          ) : (
+            <div>
+              <Button type="button" onClick={() => void handleInstall()} disabled={pending || degraded}>
+                {pending ? '取得しています…' : '自分の環境に追加する'}
+              </Button>
+            </div>
+          )}
 
-      {releaseId === null ? (
-        <p>公開されている版がまだありません。</p>
-      ) : (
-        <Button type="button" onClick={() => void handleInstall()} disabled={pending || degraded}>
-          {pending ? '取得しています' : '追加する'}
-        </Button>
-      )}
+          {degraded ? <p style={{ margin: 0 }}>Hub が応答していないため、新しい導入情報は取得できません。</p> : null}
 
-      {degraded ? <p>Hub が応答していないため、新しい導入情報は取得できません。</p> : null}
+          {failure === null ? null : (
+            <Alert tone="warning" title="導入情報を取得できませんでした" description={failure.message} />
+          )}
 
-      {failure === null ? null : (
-        <Alert tone="warning" title="導入情報を取得できませんでした" description={failure.message} />
-      )}
-
-      {descriptor !== null && canCopy ? (
-        <div aria-live="polite">
-          <h4>{descriptor.label}</h4>
-          <dl>
-            <dt>版</dt>
-            <dd>{descriptor.version}</dd>
-            {descriptor.command === null ? null : (
-              <>
-                <dt>導入コマンド</dt>
-                <dd>
-                  <code>{descriptor.command}</code>
-                </dd>
-              </>
-            )}
-            {descriptor.download_url === null ? null : (
-              <>
-                <dt>ダウンロード</dt>
-                <dd>
-                  <a href={descriptor.download_url}>パッケージを取得する</a>
-                </dd>
-              </>
-            )}
-            {descriptor.launch_url === null ? null : (
-              <>
-                <dt>Web アプリ</dt>
-                <dd>
-                  <a href={descriptor.launch_url}>Web アプリを開く</a>
-                </dd>
-              </>
-            )}
-          </dl>
-          {descriptor.expires_at === null ? null : <p>この導入情報は {descriptor.expires_at} まで有効です。</p>}
-        </div>
-      ) : null}
-    </section>
+          {descriptor !== null && canCopy ? (
+            <div aria-live="polite">
+              <DefinitionList
+                label={`${descriptor.label} の導入情報`}
+                items={[
+                  ...descriptorItems,
+                  ...(descriptor.expires_at === null
+                    ? []
+                    : [
+                        {
+                          term: '有効期限',
+                          description: descriptor.expires_at,
+                          hint: '期限を過ぎたら、もう一度「自分の環境に追加する」を押してください。',
+                        },
+                      ]),
+                ]}
+              />
+            </div>
+          ) : null}
+        </Stack>
+      </section>
+    </Panel>
   );
 }

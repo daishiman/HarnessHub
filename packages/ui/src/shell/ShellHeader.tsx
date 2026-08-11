@@ -10,8 +10,10 @@
  */
 import type { CSSProperties, ReactNode } from 'react';
 
+import { IdBadge } from '../components/IdBadge.js';
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar, visuallyHidden } from '../internal/style.js';
+import { shellHeaderMinHeight } from './sticky-stack.js';
 import { type ShellWorkspaceOption, WorkspaceSwitcher } from './WorkspaceSwitcher.js';
 
 export interface ShellAccountLink {
@@ -31,12 +33,20 @@ export interface ShellHeaderProps {
   workspaceOptions?: readonly ShellWorkspaceOption[] | undefined;
   /** 切替コントロールのアクセシブル名。`workspaceOptions` を渡すときは必須に近い。 */
   workspaceSwitchLabel?: string | undefined;
+  /** `workspaceName` が表示名ではなく識別子のとき true (`WorkspaceSwitcher` と同じ扱い)。 */
+  workspaceNameIsIdentifier?: boolean | undefined;
   /** モバイルで表示する画面タイトル (§6.2)。 */
   screenTitle?: string | undefined;
-  /** 検索フォームの送信先。 */
-  searchAction: string;
-  searchLabel: string;
-  searchPlaceholder: string;
+  /**
+   * 検索フォームの送信先。
+   *
+   * 3 つとも省略すると検索欄そのものを出さない。検索できる対象が無い画面
+   * (ダッシュボード・設定など) で空振りする欄を置かないための逃げ道で、
+   * どの画面で出すかの判断はアプリ側が 1 箇所で持つ。
+   */
+  searchAction?: string | undefined;
+  searchLabel?: string | undefined;
+  searchPlaceholder?: string | undefined;
   /** 検索欄に引き継ぐ追加のクエリ (テナント・ワークスペース識別子など)。 */
   searchHiddenFields?: Readonly<Record<string, string>> | undefined;
   notificationsHref: string;
@@ -46,6 +56,12 @@ export interface ShellHeaderProps {
   unreadLabel: string;
   /** サインイン中の利用者名。 */
   accountName: string;
+  /**
+   * `accountName` が表示名ではなく識別子 (利用者 ID) のとき true。
+   * この場合はヘッダーの帯に識別子を出さず (読めない文字列が常時居座るため)、
+   * アカウントメニューを開いたときだけ「利用者 ID」として `IdBadge` で見せる。
+   */
+  accountNameIsIdentifier?: boolean | undefined;
   /** 役割の表示 (qa-005)。権限の思い込みを防ぐためメニュー先頭に出す。 */
   accountRoleLabel?: string | undefined;
   accountMenuLabel: string;
@@ -61,7 +77,7 @@ const barStyle: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: spaceVar(3),
-  minHeight: '56px',
+  minHeight: shellHeaderMinHeight,
   padding: `0 ${spaceVar(4)}`,
   background: colorVar('surface'),
   borderBlockEnd: `1px solid ${colorVar('border')}`,
@@ -96,6 +112,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
     workspaceLabel,
     workspaceOptions,
     workspaceSwitchLabel,
+    workspaceNameIsIdentifier = false,
     screenTitle,
     searchAction,
     searchLabel,
@@ -106,6 +123,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
     unreadCount,
     unreadLabel,
     accountName,
+    accountNameIsIdentifier = false,
     accountRoleLabel,
     accountMenuLabel,
     accountLinks,
@@ -116,13 +134,14 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
   const hasUnread = unreadCount !== undefined && unreadCount > 0;
 
   return (
-    <header style={barStyle}>
+    <header data-hh-shell-header="" style={barStyle}>
       {/* viewport で隠さず、同じ server-only 部品を全幅で使う。client JS を増やさず、
           desktop / mobile の双方から Workspace を認識・切替できる。 */}
       <div style={{ flex: '0 1 12rem', minWidth: 0 }}>
         <WorkspaceSwitcher
           label={workspaceLabel}
           currentName={workspaceName}
+          currentIsIdentifier={workspaceNameIsIdentifier}
           options={workspaceOptions ?? []}
           switchLabel={workspaceSwitchLabel ?? workspaceLabel}
         />
@@ -144,56 +163,79 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
         </div>
       )}
 
-      <form
-        action={searchAction}
-        method="get"
-        // 名前付きの form landmark にする。role="search" ではなく aria-label を使うのは
-        // <search> 要素へ置き換えるまでの繋ぎで、支援技術からの到達性は同じ。
-        aria-label={searchLabel}
-        className="hh-shell__desktop-only"
-        style={{ flex: 1, maxWidth: '480px', marginInlineStart: 'auto' }}
-      >
-        {Object.entries(searchHiddenFields ?? {}).map(([name, value]) => (
-          <input key={name} type="hidden" name={name} value={value} />
-        ))}
-        <label htmlFor="hh-shell-search" style={visuallyHidden}>
-          {searchLabel}
-        </label>
-        <div style={{ display: 'flex', alignItems: 'center', gap: spaceVar(2) }}>
-          <input
-            id="hh-shell-search"
-            type="search"
-            name="q"
-            placeholder={searchPlaceholder}
-            data-hh-focusable=""
-            style={{
-              flex: 1,
-              minHeight: 'var(--hh-control-height)',
-              padding: `0 ${spaceVar(3)}`,
-              fontSize: 'var(--hh-font-size-md)',
-              fontFamily: 'inherit',
-              color: colorVar('text'),
-              background: colorVar('surfaceMuted'),
-              border: `1px solid ${colorVar('borderStrong')}`,
-              borderRadius: radiusVar('full'),
-            }}
-          />
-          <button type="submit" aria-label={searchLabel} data-hh-focusable="" style={iconButtonStyle}>
-            <Icon name="search" />
-          </button>
-        </div>
-      </form>
+      {/* 検索対象が無い画面では欄ごと出さない。押しても何も絞り込めない欄は
+          「壊れている」と読まれるため、置かない方が正確に伝わる。
+          欄が無いときは残りの部品の右寄せだけを余白で引き継ぐ */}
+      {searchAction === undefined ? (
+        <div aria-hidden style={{ flex: 1 }} />
+      ) : (
+        <>
+          <form
+            action={searchAction}
+            method="get"
+            // 名前付きの form landmark にする。role="search" ではなく aria-label を使うのは
+            // <search> 要素へ置き換えるまでの繋ぎで、支援技術からの到達性は同じ。
+            aria-label={searchLabel}
+            className="hh-shell__desktop-only"
+            style={{ flex: 1, maxWidth: '480px', marginInlineStart: 'auto' }}
+          >
+            {Object.entries(searchHiddenFields ?? {}).map(([name, value]) => (
+              <input key={name} type="hidden" name={name} value={value} />
+            ))}
+            <label htmlFor="hh-shell-search" style={visuallyHidden}>
+              {searchLabel}
+            </label>
+            {/* 検索の入口は 1 画面に 1 つだけにする。
+            以前は「入力欄」と「その右の虫眼鏡ボタン」で入口が 2 つに見えていた。
+            虫眼鏡は欄の中の目印 (装飾) に変え、確定は Enter に一本化する。 */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: spaceVar(2),
+                paddingInline: spaceVar(3),
+                minHeight: 'var(--hh-control-height)',
+                background: colorVar('surfaceMuted'),
+                border: `1px solid ${colorVar('borderStrong')}`,
+                borderRadius: radiusVar('full'),
+              }}
+            >
+              {/* label を渡さない = 既定で aria-hidden の装飾になる */}
+              <Icon name="search" size={16} />
+              <input
+                id="hh-shell-search"
+                type="search"
+                name="q"
+                placeholder={searchPlaceholder}
+                data-hh-focusable=""
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  minHeight: 'calc(var(--hh-control-height) - 2px)',
+                  padding: 0,
+                  fontSize: 'var(--hh-font-size-md)',
+                  fontFamily: 'inherit',
+                  color: colorVar('text'),
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </form>
 
-      {/* モバイルは検索アイコンのみ。押すと検索画面へ移る (§6.2) */}
-      <a
-        className="hh-shell__mobile-only"
-        href={searchAction}
-        aria-label={searchLabel}
-        data-hh-focusable=""
-        style={{ ...iconButtonStyle, marginInlineStart: 'auto', textDecoration: 'none' }}
-      >
-        <Icon name="search" />
-      </a>
+          {/* モバイルは検索アイコンのみ。押すと検索画面へ移る (§6.2) */}
+          <a
+            className="hh-shell__mobile-only"
+            href={searchAction}
+            aria-label={searchLabel}
+            data-hh-focusable=""
+            style={{ ...iconButtonStyle, marginInlineStart: 'auto', textDecoration: 'none' }}
+          >
+            <Icon name="search" />
+          </a>
+        </>
+      )}
 
       <a
         href={notificationsHref}
@@ -239,7 +281,9 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
           }}
         >
           <Icon name="user" />
-          <span className="hh-shell__desktop-only">{accountName}</span>
+          {/* 識別子しか無いときは帯に出さない。読めない文字列を常時置いても場所を取るだけで、
+              「誰としてサインインしているか」はメニューを開けば分かる */}
+          {accountNameIsIdentifier ? null : <span className="hh-shell__desktop-only">{accountName}</span>}
           <Icon name="chevronDown" size={16} />
         </summary>
 
@@ -257,7 +301,14 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
           }}
         >
           <div style={{ padding: `0 ${spaceVar(3)} ${spaceVar(2)}` }}>
-            <div style={{ fontWeight: 'var(--hh-font-weight-bold)' }}>{accountName}</div>
+            {accountNameIsIdentifier ? (
+              <div>
+                <div style={{ fontSize: 'var(--hh-font-size-sm)', color: colorVar('textMuted') }}>利用者 ID</div>
+                <IdBadge value={accountName} label="利用者 ID" />
+              </div>
+            ) : (
+              <div style={{ fontWeight: 'var(--hh-font-weight-bold)' }}>{accountName}</div>
+            )}
             {accountRoleLabel === undefined ? null : (
               <div style={{ fontSize: 'var(--hh-font-size-sm)', color: colorVar('textMuted') }}>{accountRoleLabel}</div>
             )}

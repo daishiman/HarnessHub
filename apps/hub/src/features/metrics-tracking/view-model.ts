@@ -35,6 +35,20 @@ export const DEFAULT_USAGE_RANGE_DAYS = 84;
 export const RANKING_DISPLAY_LIMIT = 10;
 
 /**
+ * 集計 API の `*Name` は後方互換のため必須だが、名称マスタが無い環境では ID が入る。
+ * ID と同じ値を「名称」として扱わず、UI が識別子であることを明示できるように判定する。
+ */
+export function resolvedMetricsName(id: string, candidate: string | null | undefined): string | null {
+  const trimmed = candidate?.trim() ?? '';
+  return trimmed !== '' && trimmed !== id ? trimmed : null;
+}
+
+/** チャートや native option のように React node を置けない場所で使う、正直な表示ラベル。 */
+export function metricsDisplayLabel(id: string, candidate: string | null | undefined, idKind: string): string {
+  return resolvedMetricsName(id, candidate) ?? `${idKind} ID: ${id}`;
+}
+
+/**
  * 当日 (JST) を末尾とする直近 `days` 日の期間を返す。
  * 当日を含めるため下限は `days - 1` 日前になる。`now` を引数で受けるのはテストで時刻を固定するため。
  */
@@ -102,26 +116,45 @@ export function topRanking(
 
 /** ハーネス別の棒グラフ入力 (削減額)。 */
 export function toRankingChartData(ranking: readonly MetricsSummaryRankingItem[]): readonly ChartDatum[] {
-  return topRanking(ranking).map((entry) => ({ label: entry.harnessName, value: entry.savedAmountJpy }));
+  return topRanking(ranking).map((entry) => ({
+    label: metricsDisplayLabel(entry.harnessId, entry.harnessName, '業務ツール'),
+    value: entry.savedAmountJpy,
+  }));
 }
 
 /** 部門別のドーナツ入力 (削減額)。 */
 export function toDepartmentChartData(departments: readonly MetricsSummaryDepartmentItem[]): readonly ChartDatum[] {
-  return departments.map((entry) => ({ label: entry.departmentName, value: entry.savedAmountJpy }));
+  return departments.map((entry) => ({
+    label:
+      entry.departmentId === null
+        ? entry.departmentName
+        : metricsDisplayLabel(entry.departmentId, entry.departmentName, '部門'),
+    value: entry.savedAmountJpy,
+  }));
 }
 
 /**
  * 「使われているか」を 1 つの割合で表す指標。
  * 集計対象ハーネスのうち、期間内に 1 回以上実行されたものの比率。
- * ハーネスが 0 件のときは 0 を返す (母数 0 を 100% と読ませない)。
+ *
+ * 母数が 0 のときは `null` を返す。以前は 0 を返していたが、これは画面に
+ * 「使われている割合 0%」と出る。母数 0 は「1 つも使われていない」ではなく
+ * **そもそも数える対象が無い**状態であり、両者は打ち手がまるで違う
+ * (前者は使ってもらう働きかけ、後者は登録がまだ)。同じ表示に潰してはいけない。
  */
-export function activeHarnessRatio(summary: MetricsSummaryResponse): number {
+export function activeHarnessRatio(summary: MetricsSummaryResponse): number | null {
   const total = summary.ranking.length;
-  if (total === 0) return 0;
+  if (total === 0) return null;
   return summary.ranking.filter((entry) => entry.runCount > 0).length / total;
 }
 
-/** 割合を整数 % 表記へ。 */
-export function formatPercent(ratio: number): string {
-  return `${Math.round(ratio * 100)}`;
+/** 算出できなかった値の表示。空欄にすると「0 なのか、まだ出ていないのか」が読めない。 */
+export const NOT_APPLICABLE = '\u2014';
+
+/**
+ * 割合を整数 % 表記へ。算出できない (母数 0) ときは `—`。
+ * 単位記号は呼び出し側が付けるので、ここは数字だけを返す。
+ */
+export function formatPercent(ratio: number | null): string {
+  return ratio === null ? NOT_APPLICABLE : `${Math.round(ratio * 100)}`;
 }

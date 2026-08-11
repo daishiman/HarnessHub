@@ -21,6 +21,7 @@ export default async function UserDashboardPage({ params, searchParams }: PagePr
         title="ユーザー詳細"
         breadcrumbs={[{ href: '/users', label: 'ユーザー管理' }, { label: 'ユーザー詳細' }]}
         breadcrumbsLabel="現在地"
+        sticky
       />
       <UserDashboard userId={id} tenantId={tenantIdFromQuery(query, scope)} />
     </>

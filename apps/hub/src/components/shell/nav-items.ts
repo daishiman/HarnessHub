@@ -11,7 +11,7 @@
  * 遷移先の page.tsx が URL クエリを最優先する解決順序と噛み合わせるため。
  */
 import type { SessionRole } from '@harness-hub/schemas';
-import type { ShellNavItem } from '@harness-hub/ui';
+import type { ShellNavGroup, ShellNavItem } from '@harness-hub/ui';
 
 import { sessionActionVisible } from '../../lib/authz/index.js';
 
@@ -129,9 +129,28 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
   ];
 }
 
-/** サイドバーは主要 + 分析 + 管理をひと続きに出す。 */
+/** サイドバーは主要 + 分析 + 管理をひと続きに出す。ボトムタブや検査で「全項目」が要るときに使う。 */
 export function sidebarNavItems(scope: ShellScope, role: SessionRole | null): readonly ShellNavItem[] {
-  return [...primaryNavItems(scope), ...insightNavItems(scope), ...secondaryNavItems(scope, role)];
+  return sidebarNavGroups(scope, role).flatMap((group) => group.items);
+}
+
+/**
+ * サイドバーの分類。
+ *
+ * 11 項目を区切りなく縦に並べると、探している画面が「日々使うもの」なのか
+ * 「たまに開く設定」なのかが読み取れず、上から順に全部読むことになる。
+ * 分類名は機能名ではなく利用者のふるまいで付けている
+ * (業務 = 日々の仕事を進める / 分析 = 結果を振り返る / 管理 = 環境を整える)。
+ *
+ * 権限で項目が 0 件になる分類 (管理) は、見出しと区切り線ごと落とす。
+ * 空の分類名だけが残ると「ここに何かあるはずなのに見えない」と読めてしまう。
+ */
+export function sidebarNavGroups(scope: ShellScope, role: SessionRole | null): readonly ShellNavGroup[] {
+  return [
+    { title: '業務', items: primaryNavItems(scope) },
+    { title: '分析', items: insightNavItems(scope) },
+    { title: '管理', items: secondaryNavItems(scope, role) },
+  ].filter((group) => group.items.length > 0);
 }
 
 /** アバターメニューに並べるリンク (§3.0: アカウント設定 → 規約 → サインアウト)。 */
@@ -174,13 +193,62 @@ export function notificationsHref(scope: ShellScope): string {
   return `${scopedHref('/settings/account', scope, false)}#notification-settings-heading`;
 }
 
+/** ヘッダー検索の設定。検索できる対象が無い画面では `null` を返す。 */
+export interface HeaderSearch {
+  readonly action: string;
+  readonly label: string;
+  readonly placeholder: string;
+}
+
 /**
- * ヘッダー検索の送信先。
- * 横断検索基盤はまだ無いため、いま検索して意味がある唯一の対象 (ヒアリングシート) へ
- * `q` を渡す。シート一覧側がその `q` で絞り込む。
+ * 画面ごとの検索対象。
+ *
+ * 横断検索の基盤は無いので、ヘッダーの検索欄は「いま見ている領域を絞り込む」ものとして扱う。
+ * ヒアリングシートを見ているならシートを、業務ツールを見ているならツールを探す。
+ *
+ * 載せる条件は 1 つだけ = **一覧側が `q` での絞り込みに実際に対応していること**。
+ * 押しても何も起きない欄は、無い欄より悪い (壊れていると読まれる)。
+ * 現時点で `q` を受けられるのは次の 2 領域だけで、ドキュメント・改善要望・利用者は
+ * 一覧 API に `q` が無いため、対応が入るまでヘッダーからは検索させない。
+ *
+ * 行き先・見出し語・入力欄の例示は必ずこの 1 つの表から採る。3 つを別々に決めると、
+ * 「シートを検索」と言いながらツール一覧へ飛ぶ、といったズレが後から必ず生まれる。
  */
-export function searchAction(scope: ShellScope): string {
-  return scopedHref('/sheets', scope, true).split('?')[0] as string;
+const searchTargets = [
+  {
+    pathPrefix: '/sheets',
+    action: '/sheets',
+    label: 'ヒアリングシートを検索',
+    placeholder: 'HS コード・業務名で探す',
+    withWorkspace: true,
+  },
+  {
+    pathPrefix: '/catalog',
+    action: '/catalog',
+    label: '業務ツールを検索',
+    placeholder: 'ツール名で探す',
+    withWorkspace: true,
+  },
+] as const;
+
+/**
+ * いま見ている画面に合った検索欄の設定を返す。対象が無ければ `null`。
+ *
+ * ダッシュボード・パイプライン・使用状況・各種設定は「探す」対象を持たない画面なので、
+ * ここで `null` になり検索欄自体が消える。
+ */
+export function headerSearch(scope: ShellScope, currentHref: string | undefined): HeaderSearch | null {
+  if (currentHref === undefined) return null;
+  const path = currentHref.split('?')[0] ?? '';
+  const target = searchTargets.find(
+    (candidate) => path === candidate.pathPrefix || path.startsWith(`${candidate.pathPrefix}/`),
+  );
+  if (target === undefined) return null;
+  return {
+    action: scopedHref(target.action, scope, target.withWorkspace).split('?')[0] as string,
+    label: target.label,
+    placeholder: target.placeholder,
+  };
 }
 
 /** 検索フォームが引き継ぐ scope クエリ。 */

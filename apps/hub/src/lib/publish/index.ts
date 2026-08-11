@@ -82,6 +82,7 @@ export {
   createPublishRequest,
   getPublishRequest,
   listProjectReleases,
+  listPublishProjects,
   listPublishRequests,
   PUBLISH_ERROR_STATUS,
   type PublishErrorCode,

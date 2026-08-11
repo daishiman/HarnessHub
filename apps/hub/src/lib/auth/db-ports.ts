@@ -273,14 +273,24 @@ export function createDbAuthPorts(deps: DbAuthPortsDeps): AuthPorts {
 
   /** `users` 1 行 + 所属一覧から `DirectoryUser` を組む。所属は必ず引く (既定を「所属なし」にしない)。 */
   const toDirectoryUser = async (row: UserRow): Promise<DirectoryUser> => {
-    const workspaceIds = await userWorkspacesRepo.listWorkspaceIdsForUser(scopeOf(row.tenantId), row.id);
+    // 名前つきで 1 回引く。ID だけの問い合わせと 2 本に分けると、その 2 本の間に所属が変わったとき
+    // 「到達できる一覧」と「名前の一覧」が食い違う。
+    const memberships = await userWorkspacesRepo.listWorkspacesForUser(scopeOf(row.tenantId), row.id);
+    const workspaceIds = memberships.map((membership) => membership.workspaceId);
+    // 名前が空の所属はキーごと落とす。空文字を載せると受け手が「名前がある」と読む。
+    const workspaceNames = Object.fromEntries(
+      memberships.filter((membership) => membership.name.trim() !== '').map((m) => [m.workspaceId, m.name]),
+    );
     return {
       id: row.id,
       tenantId: row.tenantId,
       idpSubject: row.idpSubject,
+      name: row.name,
+      email: row.email,
       role: row.role,
       status: row.status,
       workspaceIds,
+      workspaceNames,
     };
   };
 

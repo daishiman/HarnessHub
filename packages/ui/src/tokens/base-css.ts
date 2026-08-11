@@ -11,7 +11,7 @@
  */
 
 import { focusRingRule } from './focus-ring.js';
-import { mediaUp } from './token-names.js';
+import { mediaDown, mediaUp } from './token-names.js';
 
 /**
  * 見出しの段階。`h1` から `h4` まで token の font-size を割り当てる。
@@ -190,6 +190,15 @@ const responsiveRules = [
     '}',
   ].join('\n'),
   [
+    // 定義リストの 2 列指定は「広い画面のときだけ」効かせる。
+    // 狭い画面で 2 列にすると 1 列あたり 150px 前後になり、項目名も値も折り返して読めなくなる。
+    // DefinitionList は inline style からこの変数を読むだけにして、閾値の判断をここへ集約する。
+    ':root {',
+    '  --hh-dl-columns: minmax(0, 1fr);',
+    '}',
+  ].join('\n'),
+  [`${mediaUp('md')} {`, '  :root {', '    --hh-dl-columns: repeat(2, minmax(0, 1fr));', '  }', '}'].join('\n'),
+  [
     // (4) 折り返し位置を持たない長い語への対処。`word-break: break-all` ではなく
     // `overflow-wrap: anywhere` を使うのは、前者が日本語の文中でも無差別に切ってしまうのに対し、
     // 後者は「そのままでは溢れる」ときにだけ切るため。
@@ -197,6 +206,181 @@ const responsiveRules = [
     // document の scrollWidth にだけ現れる。原因が見えにくい分、base 層で塞いでおく価値が大きい。
     'body {',
     '  overflow-wrap: anywhere;',
+    '}',
+  ].join('\n'),
+].join('\n\n');
+
+/**
+ * 識別子バッジ (`IdBadge`) の見た目。
+ * 省略は CSS で行い、DOM には全文を残す (短縮した文字列をコピーさせないため)。
+ */
+const idBadgeRules = [
+  // 可読幅 (measure) は余白スケールとは別軸の寸法。「何文字読めれば識別できるか」で決まるので
+  // ch で持つしかなく、space token には載らない。載らない値ほど規則の中に埋もれると
+  // 次に読む人が根拠を追えないため、名前を付けて :root に出す。
+  // 14ch は接頭辞 + 短縮 ID (例: HarnessHub-5yen) が収まる最小幅。
+  ':root {\n  --hh-id-badge-measure: 14ch;\n}\n',
+  // 閉じているときは 1 行に収める。開くと全文が折り返して下へ伸びる
+  '[data-hh-id-badge] {',
+  '  display: inline-block;',
+  '  max-inline-size: var(--hh-id-badge-measure);',
+  '  vertical-align: bottom;',
+  '  font-family: var(--hh-font-family-mono);',
+  '  font-size: var(--hh-font-size-xs);',
+  '  color: var(--hh-color-text-muted);',
+  '}',
+  '',
+  // 開く印 (▸) は消さない。消すと「押せる」ことが見た目に何も出ず、
+  // 省略された値の続きがどこにあるのか分からなくなる
+  '[data-hh-id-badge] > summary {',
+  '  cursor: pointer;',
+  '  overflow: hidden;',
+  '  white-space: nowrap;',
+  '  text-overflow: ellipsis;',
+  '}',
+  '',
+  // 開いたあとの全文。ここで初めて折り返しを許し、クリック 1 回で全体が選択される
+  '[data-hh-id-badge-full] {',
+  '  display: block;',
+  '  padding-block-start: var(--hh-space-1);',
+  '  color: var(--hh-color-text);',
+  '  overflow-wrap: anywhere;',
+  '  user-select: all;',
+  '}',
+].join('\n');
+
+/**
+ * 絞り込み帯 (FilterBar) の整列。
+ *
+ * flex + `align-items: flex-end` で並べていたときは、補足文言 (`description`) を持つ欄だけ
+ * 背が高くなり、その隣のボタンだけが下へ押し出されていた。「補足を 1 行足したら他の要素が動く」は
+ * 画面ごとの不揃いを生む最大の原因なので、次の 3 点を base 層で固定する。
+ *
+ * 1. 帯は grid にして各欄の**上端**を揃える (下端合わせをやめる)。下に伸びる補足文言は
+ *    他の欄の位置に影響しない。
+ * 2. 帯の中の入力欄は下 margin を持たない (帯の gap だけが余白を決める)。
+ * 3. ボタンは専用スロットへ置き、ラベル 1 行ぶんの高さだけ下げて入力欄と同じ高さから始める。
+ *
+ * inline style では `@media` も子孫セレクタも書けないため、置き場所はここしかない。
+ */
+const filterBarRules = [
+  [
+    ':root {',
+    // ラベル 1 行 (font-size-sm × line-height-tight) + ラベル下の余白。
+    // 「ラベルの高さ」を数値でベタ書きすると token 変更に追従しないので式で持つ。
+    '  --hh-field-label-offset: calc(var(--hh-font-size-sm) * var(--hh-line-height-tight) + var(--hh-space-1));',
+    // 欄 1 つの下限幅。これを下回るとセレクトの選択肢名が読めなくなるため、詰めずに折り返す。
+    // `--hh-id-badge-measure` と同じ「可読幅」の軸で、余白スケール (space token) とは別物。
+    '  --hh-filter-column-min: 12rem;',
+    '}',
+  ].join('\n'),
+  // 入力欄 1 つ分の下余白。FormField の inline style ではなくここが持つ (帯の中で 0 に落とせるように)。
+  '[data-hh-field] {\n  margin-bottom: var(--hh-space-3);\n}',
+  [
+    '[data-hh-filter-bar] {',
+    '  display: grid;',
+    '  grid-template-columns: repeat(auto-fit, minmax(var(--hh-filter-column-min), 1fr));',
+    '  align-items: start;',
+    '  gap: var(--hh-space-3);',
+    '}',
+  ].join('\n'),
+  '[data-hh-filter-bar] [data-hh-field] {\n  margin-bottom: 0;\n}',
+  [
+    '[data-hh-filter-actions] {',
+    '  display: flex;',
+    '  flex-wrap: wrap;',
+    '  align-items: center;',
+    '  gap: var(--hh-space-2);',
+    '  padding-block-start: var(--hh-field-label-offset);',
+    '}',
+  ].join('\n'),
+  [
+    // 狭い画面では欄が 1 列に積まれる。そこでラベル 1 行ぶんの下げ幅を残すと
+    // ボタンの上だけ不自然な空きになるため、1 列のときは offset を消す。
+    // 閾値は sm (480px = 30rem)。以前はここに 30rem を直書きしていたが、
+    // breakpoint を動かしたときに追従しない箇所になるため helper 経由へ寄せた。
+    `${mediaDown('sm')} {`,
+    '  [data-hh-filter-actions] {',
+    '    padding-block-start: 0;',
+    '  }',
+    '}',
+  ].join('\n'),
+].join('\n\n');
+
+/**
+ * カードを敷き詰める器。`<ul>` で組んだ一覧では 1 件が `<li>` に入るため、
+ * `<li>` 自身が伸びないとカードの高さが行内で揃わない (中身の少ないカードだけ背が低くなる)。
+ * 画面ごとに `style={{ display: 'flex' }}` を書き写していたのをここへ 1 つだけ置く。
+ */
+const cardGridRules = ['[data-hh-card-grid] > li {\n  display: flex;\n}'].join('\n\n');
+
+/**
+ * StageBoard の狭幅変形。
+ *
+ * カード DOM は 1 組だけ描き、native radio の選択を `:has()` で同じ番号の column へ結ぶ。
+ * JavaScript で viewport を読む方式は SSR と hydration の初期形がずれるため採らない。
+ * 7 は buildStage の固定工程数で、部分集合を渡した場合も先頭から同じ規則で動く。
+ */
+const selectedStageColumnRules = Array.from(
+  { length: 7 },
+  (_, index) =>
+    `[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(${index + 1}) input:checked) [data-hh-stage-column]:nth-child(${index + 1}) {\n  display: block;\n}`,
+).join('\n');
+
+const stageBoardRules = [
+  '[data-hh-stage-board] {\n  min-width: 0;\n}',
+  [
+    '[data-hh-stage-picker] {',
+    '  min-width: 0;',
+    '  margin: 0 0 var(--hh-space-3);',
+    '  padding: 0;',
+    '  border: 0;',
+    '}',
+  ].join('\n'),
+  '[data-hh-stage-picker] > legend {\n  margin-block-end: var(--hh-space-2);\n  font-weight: var(--hh-font-weight-bold);\n}',
+  [
+    '[data-hh-stage-picker-options] {',
+    '  display: flex;',
+    '  gap: var(--hh-space-2);',
+    '  max-width: 100%;',
+    '  padding-block-end: var(--hh-space-1);',
+    '  overflow-x: auto;',
+    '}',
+  ].join('\n'),
+  [
+    '[data-hh-stage-option] {',
+    '  display: inline-flex;',
+    '  flex: 0 0 auto;',
+    '  align-items: center;',
+    '  gap: var(--hh-space-1);',
+    '  min-height: var(--hh-control-height);',
+    '  padding-inline: var(--hh-space-3);',
+    '  border: 1px solid var(--hh-color-border);',
+    '  border-radius: var(--hh-radius-full);',
+    '  background: var(--hh-color-surface);',
+    '  cursor: pointer;',
+    '}',
+  ].join('\n'),
+  '[data-hh-stage-option]:has(input:checked) {\n  border-color: var(--hh-color-primary);\n  background: var(--hh-color-primary-soft);\n  color: var(--hh-color-primary);\n}',
+  '[data-hh-stage-option] input {\n  margin: 0;\n}',
+  '[data-hh-stage-columns] {\n  display: grid;\n  min-width: 0;\n}',
+  // narrow は未選択 column を隠す。同じカードを別 DOM に複製していないため二重読み上げにならない。
+  '[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}',
+  selectedStageColumnRules,
+  [
+    `${mediaUp('md')} {`,
+    '  [data-hh-stage-picker] {',
+    '    display: none;',
+    '  }',
+    '  [data-hh-stage-columns] {',
+    '    display: flex;',
+    '    gap: var(--hh-space-3);',
+    '    overflow-x: auto;',
+    '  }',
+    '  [data-hh-stage-column] {',
+    '    display: block;',
+    '    min-width: 240px;',
+    '  }',
     '}',
   ].join('\n'),
 ].join('\n\n');
@@ -222,6 +406,32 @@ const skipLinkRules = [
     '}',
   ].join('\n'),
   '[data-hh-skip-link]:focus-visible {\n  transform: translateY(0);\n}',
+].join('\n\n');
+
+/**
+ * 画面幅で表現を差し替える器 (`[data-hh-viewport]`)。
+ *
+ * SSR では画面幅が分からないので `matchMedia` では出し分けられない
+ * (server で描いた形と client で描いた形が食い違う)。そこで**両方の表現を描いておき、
+ * 表示するほうを CSS だけで選ぶ**。`display: none` にした側は支援技術からも消えるため、
+ * 同じ内容が二重に読み上げられることはない。
+ *
+ * 既定を narrow にしてあるのは、CSS が届く前 (読み込み中) に出るのが狭い側になるようにするため。
+ * 広い画面に狭い表現が一瞬出るのは読めるが、逆は横へはみ出す。
+ */
+const viewportRules = [
+  '[data-hh-viewport="narrow"] {\n  display: block;\n}',
+  '[data-hh-viewport="wide"] {\n  display: none;\n}',
+  [
+    `${mediaUp('md')} {`,
+    '  [data-hh-viewport="narrow"] {',
+    '    display: none;',
+    '  }',
+    '  [data-hh-viewport="wide"] {',
+    '    display: block;',
+    '  }',
+    '}',
+  ].join('\n'),
 ].join('\n\n');
 
 /**
@@ -254,6 +464,11 @@ export function buildBaseCss(): string {
     formRules,
     visuallyHiddenRules,
     responsiveRules,
+    idBadgeRules,
+    filterBarRules,
+    cardGridRules,
+    stageBoardRules,
+    viewportRules,
     skipLinkRules,
     // ネイティブの操作要素にもフォーカスリングを与える。data-hh-focusable 版と宣言は共通。
     focusRingRule(':where(a, button, input, select, textarea, summary, [tabindex]):focus-visible'),

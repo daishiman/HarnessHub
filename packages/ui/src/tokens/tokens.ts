@@ -19,6 +19,7 @@ export {
   chartSeriesTokens,
   colorVariableName,
   densityNames,
+  mediaDown,
   mediaUp,
   themeNames,
 } from './token-names.js';
@@ -264,8 +265,14 @@ export function buildThemeCss(): string {
       ),
       '}',
     ].join('\n'),
-    `[data-theme='dark'] {\n${colorBlock('dark')}\n}`,
-    `@media (prefers-color-scheme: dark) {\n  [data-theme='auto'] {\n${colorBlock('dark', '  ')}\n  }\n}`,
+    // ネイティブ部品 (スクロールバー・select の展開部・日付ピッカー・フォーム部品の枠) は
+    // token を読まないので、`color-scheme` で明示しないと dark 配色の上に明色の部品が乗る。
+    // light / dark / auto の 3 系統すべてで宣言する (どれか 1 つでも欠けるとそこだけ破綻する)。
+    `[data-theme='light'] {\n  color-scheme: light;\n}`,
+    `[data-theme='dark'] {\n${colorBlock('dark')}\n  color-scheme: dark;\n}`,
+    // auto の既定側は light。OS が dark のときだけ下の media が上書きする。
+    `[data-theme='auto'] {\n  color-scheme: light;\n}`,
+    `@media (prefers-color-scheme: dark) {\n  [data-theme='auto'] {\n${colorBlock('dark', '  ')}\n    color-scheme: dark;\n  }\n}`,
     `[data-density='compact'] {\n${declarations(densityTokens.compact)}\n}`,
     // 操作部品のフォーカス可視化。色のみに頼らず輪郭と余白でも示す (WCAG 2.2 の 2.4.11 対応)。
     // 宣言本体は focus-ring.ts が正本 (ネイティブ要素向けの base 層と見え方を揃えるため)。

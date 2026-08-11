@@ -20,6 +20,8 @@ const USER: DirectoryUser = {
   id: 'user-1',
   tenantId: 'tenant-a',
   idpSubject: 'idp-user-1',
+  name: '',
+  email: '',
   role: 'member',
   status: 'active',
   // 2 件所属 = cookie 無しでは active workspace が決まらず missing_tenant_scope になる利用者

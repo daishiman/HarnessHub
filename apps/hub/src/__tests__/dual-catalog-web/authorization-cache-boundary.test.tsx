@@ -145,6 +145,7 @@ describe('DC-TEN / 認可失敗後の取得済み表示', () => {
     );
 
     expect(container.textContent).toContain(FORBIDDEN.failure.message);
+    expect(container.querySelector('h1')?.textContent).toContain('業務ツール詳細');
     expect(container.textContent).not.toContain(DETAIL.name);
     expect(container.textContent).not.toContain(DETAIL.summary);
   });

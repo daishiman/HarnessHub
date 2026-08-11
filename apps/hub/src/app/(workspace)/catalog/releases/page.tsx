@@ -38,6 +38,7 @@ export default async function CatalogReleasesPage({ searchParams }: PageProps) {
           { label: 'リリース履歴' },
         ]}
         breadcrumbsLabel="現在地"
+        sticky
       />
       <Panel flush={projectId !== ''}>
         {projectId === '' ? (

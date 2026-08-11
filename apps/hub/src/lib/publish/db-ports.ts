@@ -25,6 +25,7 @@ import type {
   PackagePort,
   ProjectAccessPort,
   PublishPorts,
+  PublishProjectRecord,
   PublishRequestPort,
   PublishRequestRecord,
   PublishScope,
@@ -125,6 +126,15 @@ function createRequestPort(repositories: CoreRepositories): PublishRequestPort {
 }
 
 function createProjectAccessPort(repositories: CoreRepositories): ProjectAccessPort {
+  const toProjectRecord = (row: Record<string, unknown>): PublishProjectRecord => ({
+    id: row.id as string,
+    tenantId: row.tenantId as string,
+    workspaceId: row.workspaceId as string,
+    ownerUserId: row.ownerUserId as string,
+    name: row.name as string,
+    description: (row.description as string | null) ?? '',
+  });
+
   return {
     async findById(scope, id) {
       const row = await repositories.projects.findById(contextOf(scope), id);
@@ -135,6 +145,14 @@ function createProjectAccessPort(repositories: CoreRepositories): ProjectAccessP
         workspaceId: row.workspaceId as string,
         ownerUserId: row.ownerUserId as string,
       };
+    },
+
+    async list(scope) {
+      if (scope.workspaceId === undefined) {
+        throw new Error('Project の一覧には Workspace scope が必要です');
+      }
+      const rows = await repositories.projects.list(contextOf(scope));
+      return rows.filter((row) => row.status === 'active').map(toProjectRecord);
     },
 
     async create(scope, input) {
@@ -150,14 +168,7 @@ function createProjectAccessPort(repositories: CoreRepositories): ProjectAccessP
         ownerUserId: scope.actorId,
         status: 'active',
       });
-      return {
-        id: row.id as string,
-        tenantId: row.tenantId as string,
-        workspaceId: row.workspaceId as string,
-        ownerUserId: row.ownerUserId as string,
-        name: row.name as string,
-        description: (row.description as string | null) ?? '',
-      };
+      return toProjectRecord(row);
     },
   };
 }

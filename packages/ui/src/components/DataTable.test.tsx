@@ -159,6 +159,43 @@ describe('DataTable', () => {
 
     expect(document.querySelector('col')?.getAttribute('style')).toContain('200px');
   });
+
+  it('先頭列に sticky を指定すると、見出しと本文の両方が左端へ貼り付く', () => {
+    renderWithUi(
+      <DataTable
+        caption="一覧"
+        columns={[{ ...nth(columns, 0), sticky: true, width: '12rem' }, nth(columns, 1), nth(columns, 2)]}
+        rows={rows}
+        rowKey={(row) => row.id}
+        stickyHeader
+      />,
+    );
+
+    // 見出しは縦横どちらにも貼り付く。片方だけだと左上の角のセルで内容が流れる
+    const firstHeader = nth(screen.getAllByRole('columnheader'), 0).getAttribute('style') ?? '';
+    expect(firstHeader).toContain('position: sticky');
+    expect(firstHeader).toContain('inset-block-start: 0');
+    expect(firstHeader).toContain('inset-inline-start: 0');
+
+    // 本文セルは背景を必ず持つ。無いと後ろを流れる列が透けて読めなくなる
+    const firstCell = nth([...document.querySelectorAll('tbody tr td')], 0).getAttribute('style') ?? '';
+    expect(firstCell).toContain('position: sticky');
+    expect(firstCell).toContain('inset-inline-start: 0');
+    expect(firstCell).toContain('background:');
+
+    // 2 列目は貼り付けない (固定できるのは先頭 1 列だけ)
+    expect(nth([...document.querySelectorAll('tbody tr td')], 1).getAttribute('style') ?? '').not.toContain(
+      'position: sticky',
+    );
+  });
+
+  it('sticky を指定しなければどのセルも貼り付かない', () => {
+    renderWithUi(<DataTable caption="一覧" columns={columns} rows={rows} rowKey={(row) => row.id} />);
+
+    for (const cell of document.querySelectorAll('td, th')) {
+      expect(cell.getAttribute('style') ?? '').not.toContain('position: sticky');
+    }
+  });
 });
 
 describe('InlineEditTable', () => {
@@ -214,5 +251,122 @@ describe('InlineEditTable', () => {
 
     expect(onCommit).not.toHaveBeenCalled();
     expect(screen.queryByLabelText('いろは の 名前')).toBeNull();
+  });
+});
+
+/**
+ * 狭い画面でのカード表示 (`narrowAs="card-collection"`)。
+ *
+ * SSR では画面幅が分からないので、表とカードを両方描いて CSS が片方を隠す。
+ * jsdom には base 層の CSS が届かないため、ここでは「どちらが表示されるか」ではなく
+ * 「切り替えの目印が正しく付いているか」と「両者が同じ状態を見ているか」を固定する。
+ */
+describe('DataTable の狭い画面表現', () => {
+  const cardColumns: DataTableColumn<Row>[] = [
+    { key: 'name', header: '名前', value: (row) => row.name, sortable: true },
+    { key: 'count', header: '件数', value: (row) => row.count, sortable: true, salience: 'lead' },
+    { key: 'note', header: 'メモ', render: () => '—' },
+  ];
+
+  const renderCards = (): void => {
+    renderWithUi(
+      <DataTable
+        caption="利用者一覧"
+        columns={cardColumns}
+        rows={rows}
+        rowKey={(row) => row.id}
+        narrowAs="card-collection"
+      />,
+    );
+  };
+
+  it('表とカードの両方を描き、出し分けの目印を持たせる', () => {
+    renderCards();
+
+    const wide = document.querySelector('[data-hh-viewport="wide"]');
+    const narrow = document.querySelector('[data-hh-viewport="narrow"]');
+    expect(wide?.querySelector('table')).not.toBeNull();
+    // カード側に表を作らない (両方が表だと、狭い画面での横スクロールが解消しない)
+    expect(narrow?.querySelector('table')).toBeNull();
+    expect(narrow?.querySelectorAll('li')).toHaveLength(rows.length);
+  });
+
+  it('先頭列をカードの見出しにし、残りは宣言した段へ振り分ける', () => {
+    renderCards();
+
+    const card = nth([...(document.querySelector('[data-hh-viewport="narrow"]')?.querySelectorAll('li') ?? [])], 0);
+    // 先頭列 (名前) がカードの名前になる。段の指定があってもこの座は動かさない。
+    // ただし文書の見出し (h1..h6) にはしない。表とカードは常に両方 DOM にあるので、
+    // 見出しにすると表を見ている広い画面でも隠れたカードぶんの見出しが目次に並ぶ
+    expect(within(card).queryByRole('heading')).toBeNull();
+    expect(nth([...card.querySelectorAll('p')], 0).textContent).toBe('いろは');
+    // salience を宣言した列だけが lead、宣言しなかった列は metadata に落ちる
+    const salience = [...card.querySelectorAll('dl')].map((list) => list.getAttribute('data-hh-salience'));
+    expect(salience).toEqual(['lead', 'metadata']);
+    expect(within(nth([...card.querySelectorAll('dl')], 0)).getByRole('term').textContent).toBe('件数');
+  });
+
+  it('カード側の並べ替えは選択欄になり、表と同じ状態を動かす', async () => {
+    const user = userEvent.setup();
+    renderCards();
+
+    // 初期状態は既定の並び (rows の順)
+    expect(bodyTexts(0)).toEqual(['いろは', 'あさひ', 'うたげ']);
+
+    await user.selectOptions(screen.getByLabelText('並び替え'), 'descending:count');
+
+    // 選択欄はカード側にしかないが、状態は表と共有しているので表の並びも変わる。
+    // 広い画面へ戻したときに並びが巻き戻らないことがここで担保される
+    expect(bodyTexts(0)).toEqual(['あさひ', 'いろは', 'うたげ']);
+    const cardTitles = [
+      ...(document.querySelector('[data-hh-viewport="narrow"]')?.querySelectorAll('article > p:first-of-type') ?? []),
+    ].map((title) => title.textContent);
+    expect(cardTitles).toEqual(['あさひ', 'いろは', 'うたげ']);
+  });
+
+  it('並べ替えの候補に列と向きの組を全部並べる', () => {
+    renderCards();
+
+    const options = [...screen.getByLabelText('並び替え').querySelectorAll('option')].map((option) => option.value);
+    // 並べ替え可能な 2 列 × 昇順/降順。value を持たない「メモ」列は候補に出さない
+    expect(options).toEqual(['', 'ascending:name', 'descending:name', 'ascending:count', 'descending:count']);
+    // SSR で書き出した HTML を読み直しても値が変わらない文字だけを使う
+    expect(options.some((option) => option.includes('\u0000'))).toBe(false);
+  });
+
+  it('注記は表とカードの両方に効く 1 つとして出す', () => {
+    renderWithUi(
+      <DataTable
+        caption="利用者一覧"
+        columns={cardColumns}
+        rows={rows}
+        rowKey={(row) => row.id}
+        narrowAs="card-collection"
+        note="並べ替えはこのページに表示中の分が対象です。"
+      />,
+    );
+
+    // 画面側が表の上に書くと、カード表示のときだけ注記が消える。
+    // 部品が持てば 1 つ書くだけで両方に効く
+    const notes = screen.getAllByText('並べ替えはこのページに表示中の分が対象です。');
+    expect(notes).toHaveLength(1);
+    expect(nth(notes, 0).compareDocumentPosition(nth([...document.querySelectorAll('table')], 0))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  it('0 件のときはカード側にも理由を出す', () => {
+    renderWithUi(
+      <DataTable
+        caption="利用者一覧"
+        columns={cardColumns}
+        rows={[]}
+        rowKey={(row) => row.id}
+        narrowAs="card-collection"
+      />,
+    );
+
+    // 表側の空セルとカード側の文言で 2 か所。空欄のまま黙らせない
+    expect(screen.getAllByText('該当するデータがありません')).toHaveLength(2);
   });
 });

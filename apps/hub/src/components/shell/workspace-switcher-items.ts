@@ -15,6 +15,8 @@ import { workspaceEntryPath } from '../../lib/routing/workspace-entry.js';
 export interface WorkspaceSwitcherOption {
   readonly href: string;
   readonly label: string;
+  /** `label` が表示名ではなく Workspace ID へフォールバックした値なら true。 */
+  readonly isIdentifier: boolean;
   readonly current: boolean;
 }
 
@@ -25,19 +27,21 @@ export interface WorkspaceSwitcherOption {
  * `WorkspaceSwitcher` 側の `options.length < 2` 判定と噛み合わせるための契約で、
  * 「1 件だけの選択肢を出して選ばせる」無意味な操作を構造的に消している。
  *
- * 表示名は現状 workspace ID をそのまま使う。session claims (`workspace_ids`) が識別子しか
- * 持たず、名前を引くには DB 参照が要るため。名前を出すのは表示の改善であって切替の成立条件では
- * ないので、ここでは識別子のまま常時切替を成立させる方を採る。
+ * 表示名は名前が分かるものだけ名前にし、分からないものは識別子のまま出す。名前が引けないことを
+ * 理由に候補ごと落とさない —— 名前の有無が到達可否になってしまい、名称未設定の Workspace へ
+ * 切り替えられなくなる。切替の成立条件はあくまで所属であって、表示名は表示の質の問題。
  */
 export function workspaceSwitcherOptions(
   workspaceIds: readonly string[],
   currentWorkspaceId: string | null,
   returnTo?: string | undefined,
+  workspaceNames: Readonly<Record<string, string>> = {},
 ): readonly WorkspaceSwitcherOption[] {
   if (workspaceIds.length < 2) return [];
   return workspaceIds.map((workspaceId) => ({
     href: workspaceEntryPath(workspaceId, returnTo),
-    label: workspaceId,
+    label: workspaceNames[workspaceId] ?? workspaceId,
+    isIdentifier: workspaceNames[workspaceId] === undefined,
     current: workspaceId === currentWorkspaceId,
   }));
 }

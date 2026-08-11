@@ -11,12 +11,18 @@ import { Container, type ContainerSize } from './primitives.js';
 
 export interface AppShellProps {
   children: ReactNode;
-  /** ブランド名。見出しにはしない (画面の `<h1>` は PageHeader が持つ)。 */
+  /** ブランド名。見出しにはしない (画面の `<h1>` は ScreenHeader が持つ)。 */
   brand: ReactNode;
   /** ブランドの遷移先。既定は `/`。 */
   brandHref?: string | undefined;
   /** ヘッダ右側 (アカウントメニュー等)。 */
   headerActions?: ReactNode | undefined;
+  /**
+   * 本文の下に置く領域 (`ShellFooter` など)。
+   * `<main>` の外へ出すことで landmark が入れ子にならず、本文が短い画面でも
+   * `minHeight: 100vh` の下端に貼り付く。
+   */
+  footer?: ReactNode | undefined;
   /** 本文の最大幅。 */
   size?: ContainerSize | undefined;
 }
@@ -41,6 +47,7 @@ export function AppShell({
   brand,
   brandHref = '/',
   headerActions,
+  footer,
   size = 'standard',
 }: AppShellProps): ReactNode {
   return (
@@ -82,6 +89,7 @@ export function AppShell({
       <main id={MAIN_ANCHOR_ID} style={{ flex: 1, paddingBlock: spaceVar(6) }}>
         <Container size={size}>{children}</Container>
       </main>
+      {footer === undefined ? null : <Container size={size}>{footer}</Container>}
     </div>
   );
 }

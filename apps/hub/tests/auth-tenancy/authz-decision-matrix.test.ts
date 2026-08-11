@@ -63,6 +63,7 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   'sheets.regenerate': ADMIN_UP,
   'builds.read': MEMBER_UP,
   'builds.stage_change': ADMIN_UP,
+  'projects.read': MEMBER_UP,
   'projects.create': MEMBER_UP,
   'projects.update': OWNER_UP,
   'harnesses.read': MEMBER_UP,

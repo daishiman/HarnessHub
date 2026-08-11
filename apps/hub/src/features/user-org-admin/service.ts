@@ -61,6 +61,22 @@ function toDisplaySettingsResponse(row: {
   return parsed.success ? parsed.data : { theme: 'system', density: 'comfortable', language: 'ja' };
 }
 
+async function toCoefficientsResponse(
+  users: UsersRepo,
+  context: RepositoryContext,
+  row: Awaited<ReturnType<HearingIntakeRepository['getCoefficients']>>,
+): Promise<TenantCoefficientsResponse> {
+  const updater = row.updatedBy === 'system' ? null : await users.findById(context, row.updatedBy);
+  const displayName = updater?.name.trim() || updater?.email.trim() || null;
+  return {
+    annual_hours: row.annualHours,
+    minutes_per_run: row.minutesPerRun,
+    sheet_reduction_rate: row.sheetReductionRate,
+    updated_by: row.updatedBy,
+    ...(displayName === null ? {} : { updated_by_name: displayName }),
+  };
+}
+
 const SALARY_POLICY: PiiFieldPolicy = { field: 'salary', sensitivity: 'admin_only' };
 
 /** pii-salary-contract.test.ts が固定する変換。role が workspace-admin 以上なら admin viewer 扱い。 */
@@ -318,12 +334,7 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
 
     async getCoefficients(context) {
       const row = await deps.coefficients.getCoefficients(context);
-      return {
-        annual_hours: row.annualHours,
-        minutes_per_run: row.minutesPerRun,
-        sheet_reduction_rate: row.sheetReductionRate,
-        updated_by: row.updatedBy,
-      };
+      return toCoefficientsResponse(deps.users, context, row);
     },
 
     async updateCoefficients(context, request, actorId) {
@@ -355,12 +366,7 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
         emailEnabled: settings.emailEnabled,
         auditEventId: auditEvent.id,
       });
-      return {
-        annual_hours: row.annualHours,
-        minutes_per_run: row.minutesPerRun,
-        sheet_reduction_rate: row.sheetReductionRate,
-        updated_by: row.updatedBy,
-      };
+      return toCoefficientsResponse(deps.users, context, row);
     },
   };
 }

@@ -170,6 +170,8 @@ export const tenantCoefficientsResponseSchema = z
     minutes_per_run: z.number().int().positive(),
     sheet_reduction_rate: z.number().min(0).max(1),
     updated_by: shortText,
+    /** 解決できた場合だけ返す人が読める表示名。既存応答との互換のため optional。 */
+    updated_by_name: shortText.optional(),
   })
   .strict();
 export type TenantCoefficientsResponse = z.output<typeof tenantCoefficientsResponseSchema>;

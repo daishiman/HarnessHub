@@ -10,6 +10,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 
 import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
+import { screenHeaderStickyInset } from './sticky-stack.js';
 
 export interface PanelProps {
   /** 面の見出し。省略すると見出しなしの素の面になる。 */
@@ -135,6 +136,18 @@ export interface ScreenHeaderProps {
   breadcrumbsLabel?: string | undefined;
   /** 主要操作。右端にまとめる。 */
   actions?: ReactNode | undefined;
+  /**
+   * 状態チップ・スコープチップ。`TagRow` で包んで渡す。
+   * 見出しの直下に置くのは、「何の画面か」の次に知りたいのが
+   * 「いまどのテナントの、どの状態のものを見ているか」だから。
+   */
+  tags?: ReactNode | undefined;
+  /**
+   * 本文をスクロールしても見出し帯を上端に残すか。
+   * 一覧・詳細のように縦に長い画面では true にする (状態とスコープを見失わせないため)。
+   * フォームだけの短い画面では、上端が固定されるぶん入力欄の見える範囲が減るので false のまま。
+   */
+  sticky?: boolean | undefined;
   /** 見出しに紐づける id。`aria-labelledby` で本文領域から参照するために使う。 */
   id?: string | undefined;
 }
@@ -146,19 +159,41 @@ export function ScreenHeader({
   breadcrumbs,
   breadcrumbsLabel,
   actions,
+  tags,
+  sticky,
   id,
 }: ScreenHeaderProps): ReactNode {
   return (
     <div
+      data-hh-screen-header={sticky ? 'sticky' : 'static'}
       style={{
+        // 見出しと操作を「1 つのかたまり」に見せるため、外枠は縦積みにして
+        // 見出し行の中だけで左右に分ける。外枠を横並びにすると、説明文が長い画面では
+        // 操作ボタンだけが説明文の下端まで落ちて、見出しから切り離されて見える。
         display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'flex-end',
-        gap: spaceVar(3),
+        flexDirection: 'column',
+        gap: spaceVar(2),
         marginBlockEnd: spaceVar(5),
+        ...(sticky === true
+          ? {
+              position: 'sticky',
+              // mobile は viewport 上端の ShellHeader の直下、md 以上は独立スクロールする
+              // 本文ペインの上端へ貼り付く。切替規則は shell-css の stack contract が持つ。
+              insetBlockStart: screenHeaderStickyInset,
+              // 重なり順はシェルのヘッダー (20) より下、表の見出し (10) より上に置く
+              zIndex: 15,
+              background: colorVar('bg'),
+              // 本文ペインの左右余白ぶん外へ広げ、帯の背景を画面端まで届かせる。
+              // これをしないと、下から流れてきた本文が帯の左右をすり抜けて見える。
+              marginInline: 'calc(-1 * var(--hh-main-padding-inline, 0px))',
+              paddingInline: 'var(--hh-main-padding-inline, 0px)',
+              paddingBlock: spaceVar(3),
+              borderBlockEnd: `1px solid ${colorVar('border')}`,
+            }
+          : {}),
       }}
     >
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ minWidth: 0 }}>
         {breadcrumbs === undefined || breadcrumbs.length === 0 ? null : (
           <nav aria-label={breadcrumbsLabel ?? title} style={{ marginBlockEnd: spaceVar(1) }}>
             <ol
@@ -190,9 +225,26 @@ export function ScreenHeader({
           </nav>
         )}
 
-        <h1 {...(id === undefined ? {} : { id })} style={{ margin: 0, fontSize: 'var(--hh-font-size-xl)' }}>
-          {title}
-        </h1>
+        {/* 見出しと主要操作は同じ行に置く。行の中で左右に離しても、
+            同じ高さに並んでいれば「この画面の操作」として 1 つに見える */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: spaceVar(3),
+          }}
+        >
+          <h1 {...(id === undefined ? {} : { id })} style={{ margin: 0, fontSize: 'var(--hh-font-size-xl)' }}>
+            {title}
+          </h1>
+          {actions === undefined ? null : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: spaceVar(2) }}>{actions}</div>
+          )}
+        </div>
+
+        {tags === undefined ? null : <div style={{ marginBlockStart: spaceVar(2) }}>{tags}</div>}
 
         {description === undefined ? null : (
           <p
@@ -206,10 +258,6 @@ export function ScreenHeader({
           </p>
         )}
       </div>
-
-      {actions === undefined ? null : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: spaceVar(2) }}>{actions}</div>
-      )}
     </div>
   );
 }

@@ -316,6 +316,7 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     mountScreen(<HearingSheetDetail id="sheet-1" tenantId="tenant-a" workspaceId="ws-1" />);
     expect(await violationsOf()).toEqual([]);
     expect(document.body.textContent).toContain('読み込み中');
+    expect(document.querySelector('h1')?.textContent).toContain('ヒアリングシート詳細');
   });
 
   it('HI-A11Y-104: 提出成功応答を generating の完了パネルと HS コードへ反映する', () => {
@@ -323,7 +324,8 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(source).toContain('setCreated(body)');
     expect(source).toContain('{created.code}');
     expect(source).toContain('<StatusChip domain="sheet" status={created.status}');
-    expect(source).toContain('生成処理をキューへ登録しました');
+    // 文言は業務の言葉へ言い換えた (「キューへ登録」= 内部の言い方)。伝える事実は同じ
+    expect(source).toContain('シート本文の作成を開始しました');
   });
 
   it('HI-A11Y-105: generating がある間だけ 30 秒ポーリングする', () => {
@@ -380,7 +382,9 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(source).toContain("query.set('q'");
     expect(source).toContain("query.set('cursor'");
     expect(source).toContain('body.next_cursor');
-    expect(source).toContain('aria-label="シート一覧のページ送り"');
+    // ページ送りは共通部品へ寄せた。CursorPager が aria-label="ヒアリングシート一覧のページ送り" を出す
+    expect(source).toContain('<CursorPager');
+    expect(source).toContain('label="ヒアリングシート一覧"');
   });
 
   it('HI-A11Y-112: S10-S12 のリンクは正本の /sheets route に閉じる', () => {
@@ -394,5 +398,18 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(source).toMatch(/draftStorageKey\s*=\s*`\$\{STORAGE_KEY\}:\$\{tenantId\}:\$\{workspaceId\}`/);
     expect(source).toContain('sessionStorage.setItem(draftStorageKey');
     expect(source).toContain('sessionStorage.removeItem(draftStorageKey');
+  });
+
+  it('HI-A11Y-114: S12 は申請者・部門・申請日時・生成状態・関連 Build を同じ属性面に表示する', () => {
+    const source = detailSource();
+    expect(source).toContain("term: '申請者'");
+    expect(source).toContain('sheet.applicant.name');
+    expect(source).toContain("term: '部門'");
+    expect(source).toContain('sheet.department');
+    expect(source).toContain('formatDateTime(sheet.created_at)');
+    expect(source).toContain('AI_JOB_STATUS_LABELS[sheet.ai_job_status]');
+    expect(source).toContain('sheet.build_ref');
+    expect(source).toContain('label="Build ID"');
+    expect(source).toContain('href={`/builds?tenant=');
   });
 });

@@ -12,11 +12,11 @@ iteration: null
 title: "Harness Hub UI 基盤・実ブラウザ品質ゲート追補"
 owners: ["daishiman"]
 created_at: "2026-08-08T07:16:25Z"
-updated_at: "2026-08-08T11:17:00Z"
+updated_at: "2026-08-11T22:25:22Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["feat-hub-foundation","feat-post-signin-scope-routing","issue-ui-foundation-final-review-20260808","issue-hub-shell-page-surface-unification-20260808","arch-harness-hub-frontend","arch-harness-hub-testing-qa"]
-resource_scope: ["apps/hub/","packages/ui/","specs/harness-hub-ui-foundation-addendum.md","system-spec/frontend.md","system-spec/ui-ux.md","system-spec/testing-qa.md","architecture/harness-hub-frontend.md","features/feat-hub-foundation.md","features/feat-post-signin-scope-routing.md","tasks/feat-hub-foundation/sys-hub-foundation-p12.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md","docs/frontend-spec.md","docs/frontend-ui-foundation-spec.md","docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"]
+resource_scope: ["apps/hub/","packages/ui/","specs/harness-hub-ui-foundation-addendum.md","system-spec/frontend.md","system-spec/ui-ux.md","system-spec/testing-qa.md","architecture/harness-hub-frontend.md","features/feat-hub-foundation.md","features/feat-post-signin-scope-routing.md","tasks/feat-hub-foundation/sys-hub-foundation-p12.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md","docs/frontend-spec.md","docs/frontend-ui-foundation-spec.md","docs/screen-inventory.md","docs/features/*/information-design/*.md","tests/specs/test_screen_inventory_closure.py","docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md"]
 purpose: "UI 基盤の所有境界、画面状態、breakpoint、実ブラウザ/VRT gate を製品仕様として固定する"
 goal: "qa-204 / qa-206 / qa-207 と実装・CI・文書が同じ UI shell / surface / quality contract を参照する"
 scope_in: ["AppShell / HubShell / layout / design token の公開契約","loading / empty / not found / forbidden / unexpected error の表示契約","role-aware navigation と desktop/mobile shell","Panel / ScreenHeader / ActionLink と modal layer の操作契約","responsive breakpoint と局所横スクロール契約","実 Chromium、catalog VRT、CI failure evidence"]
@@ -68,6 +68,7 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 | route state | loading / not found / forbidden / unexpected error を表す App Router 境界 |
 | VRT | baseline と現在画像を比較する visual regression testing（見た目の回帰検査） |
 | local scroll | 表など幅が必要な部品の内部だけを横スクロールさせる境界 |
+| route surface | 1 つの `page.tsx` route を role / task-mode / density / responsive pattern / sticky policy と結びつける検証単位 |
 | `packages/ui` | layout / token / base CSS の owner |
 | `apps/hub` | UI contract を route と画面へ結線する consumer |
 
@@ -80,7 +81,7 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 
 ## 機能要件
 
-- `FR-UIF-001`: `packages/ui` は `AppShell`、`Container`、`SidebarLayout`、`Stack`、`Card`、`PageHeader`、`NavList` を単一の公開 contract として所有する。
+- `FR-UIF-001`: `packages/ui` は `AppShell`、`Container`、`SidebarLayout`、`Stack`、`Card`、`ScreenHeader`、`NavList` を単一の公開 contract として所有する。画面上部の見出し帯は `FR-UIF-009` と同じ `ScreenHeader` を唯一の正とし、同じ役割の部品を 2 つ公開しない (`ScreenHeader` 導入前の `PageHeader` は廃止済み)。
 - `FR-UIF-002`: `apps/hub` は root layout で `@harness-hub/ui/tokens.css` を一度だけ import し、route ごとに token や shell を再定義しない。生成元は `buildTokenCssArtifact()`、コミット済み CSS との一致は自動検査する。
 - `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=768`、`lg=1120` とする。
 - `FR-UIF-004`: `DataTable` は `data-hh-scroll-x` の局所容器で横幅を受け止め、文書全体を横スクロールさせない。
@@ -90,6 +91,7 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 - `FR-UIF-008`: navigation は実在 route と active `SessionRole` から deny-by-default で生成する。role 未確定と member は account settings のみ、workspace-admin は users / coefficients、provider-admin はそれらに加えて auth settings を表示する。
 - `FR-UIF-009`: 各画面は `ScreenHeader` / `Panel` / `ActionLink` を基本 surface とし、破壊操作の確認は `reversible` 必須の `ConfirmDialog` を使う。汎用 `Modal` を実行確認へ流用しない。
 - `FR-UIF-010`: current pathname は認可完了後に middleware が内部 request header `x-hh-pathname` へ載せ、server layout が現在地表示にだけ使う。
+- `FR-UIF-011`: `docs/screen-inventory.md` を route surface profile の SSOT とし、実在する `page.tsx` route はそれぞれ一意な `current` surface ID、role/capability、task-mode、density、wide/middle/narrow pattern、sticky policy、情報設計 sheet、test evidence を持つ。未実装の route/modal/role 変更は Decision ref 付き `planned` に分離する。
 
 ## 非機能要件
 
@@ -121,6 +123,7 @@ desktop (`md` 以上) は sidebar + header + content + footer、mobile (`md` 未
 - `BR-UIF-004`: catalog fixture に時刻・乱数・外部 API 応答など毎回変わる値を入れない。
 - `BR-UIF-005`: API 認可を最終決定者としたまま、UI も権限外導線を DOM に出さない。session role token は `provider-admin` / `workspace-admin` / `member` 以外へ拡張しない。
 - `BR-UIF-006`: 手書きファイルは 500 行を超える前に責務別へ分離する。component catalog は core / data-chart / shell-overlay の定義へ分けても公開部品名の一意性を保つ。
+- `BR-UIF-007`: 各情報設計 sheet は対応する surface ID と route だけを逆参照し、profile 値を複製しない。実 route ↔ current surface ↔ sheet ↔ evidence の閉包は `tests/specs/test_screen_inventory_closure.py` で fail-closed に検査する。
 
 ## API契約
 
@@ -153,6 +156,7 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - `ui-visual.yml` は `workflow_dispatch` または PR の `ui-visual` label で実 Chromium を起動する。
 - VRT failure は actual / diff 画像を GitHub Actions artifact として保存する。
 - catalog coverage test は必須 7 分類が各 1 件以上あることを検査する。
+- screen inventory closure test は、current route の未登録・重複登録、sheet/evidence の欠落、sheet からの surface ID 逆参照不整合、Decision ref の無い planned 行を拒否する。
 
 ## 互換性・移行・リリース
 
@@ -173,16 +177,20 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - [x] `AC-UIF-008`: member / role 未確定 / workspace-admin / provider-admin の navigation 投影が API 権限階層と一致する。
 - [x] `AC-UIF-009`: Modal layer の focus trap / Esc / focus 復帰 / scroll lock と、破壊操作の可逆性表示が unit / axe test で通る。
 - [x] `AC-UIF-010`: catalog 定義を責務別に分け、変更対象の手書きファイルが 500 行以下である。
+- [x] `AC-UIF-011`: 26 の current route surface が inventory に一意登録され、対応 sheet と test evidence へ機械的に到達できる。
 
 ## 未決事項
 
-本仕様内の未決事項は無い。navigation disclosure の swipe gesture は可視ボタンと標準 keyboard 操作を代替に持つ任意拡張であり、受入を阻害しない。system-spec U1〜U9 source-index の既存欠落は本追補の範囲外として独立 issue で扱う。
+route surface の current 閉包は完了した。一方、`/dashboard` 新設と既定着地の変更、公開ウィザードの modal 化、Device 承認の owner 限定、Release rollback / master-detail は、いずれも現行実装に存在しない製品判断である。`docs/screen-inventory.md` の Current / planned 境界表と Decision ref を正本とし、承認なしに current 受入条件へ混ぜない。navigation disclosure の swipe gesture は可視ボタンと標準 keyboard 操作を代替に持つ任意拡張であり、受入を阻害しない。system-spec U1〜U9 source-index の既存欠落は本追補の範囲外として独立 issue で扱う。
 
 ## 正本と証跡
 
 - elicitation: `system-spec/spec-state.json` qa-204 / qa-206 / qa-207（qa-206 は qa-203、qa-207 は qa-201 を継承）
 - compiled chapters: `system-spec/ui-ux.md`、`system-spec/testing-qa.md`、`system-spec/frontend.md`
 - frontend guide: `docs/frontend-ui-foundation-spec.md`
+- route surface profile SSOT: `docs/screen-inventory.md`
+- information-design rationale: `docs/features/*/information-design/*.md`
+- route closure test: `tests/specs/test_screen_inventory_closure.py`
 - architecture: `architecture/harness-hub-frontend.md`
 - receipt: `docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md`
 - shell/page surface receipt: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`

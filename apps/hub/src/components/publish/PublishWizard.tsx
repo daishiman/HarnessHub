@@ -3,8 +3,8 @@
 /**
  * S01 Web 公開。Project 準備から既存 Publish API、状態確認、同一 request 再投入までを 1 画面に束ねる。
  */
-import type { PublishProject, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
-import { ActionLink, Alert, Button, Select, Textarea, TextInput } from '@harness-hub/ui';
+import type { PublishProject, PublishProjectChoice, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
+import { ActionLink, Alert, Button, IdBadge, Select, Textarea, TextInput } from '@harness-hub/ui';
 import { type FormEvent, lazy, type ReactNode, Suspense, useEffect, useId, useRef, useState } from 'react';
 
 import type { PublishJourneyPort, PublishJourneyScope } from '../../lib/publish-journey/index.js';
@@ -64,6 +64,9 @@ export function PublishWizard({
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [preparedProject, setPreparedProject] = useState<PublishProject | null>(null);
+  const [projectChoices, setProjectChoices] = useState<readonly PublishProjectChoice[]>([]);
+  const [projectListLoading, setProjectListLoading] = useState(true);
+  const [projectListFailure, setProjectListFailure] = useState<string | null>(null);
   const [visibility, setVisibility] = useState<PublishVisibility>('workspace');
   const [archive, setArchive] = useState<File | null>(null);
   const [phase, setPhase] = useState<SubmissionPhase>('idle');
@@ -88,6 +91,23 @@ export function PublishWizard({
       activeSubmissionRef.current?.abort();
     };
   }, []);
+
+  // Project 名は補助読取。失敗しても共有URLの状態確認や、既知IDでの再投入を壊さない。
+  useEffect(() => {
+    const controller = new AbortController();
+    setProjectListLoading(true);
+    void port.listProjects(scope, controller.signal).then((result) => {
+      if (controller.signal.aborted) return;
+      if (result.ok) {
+        setProjectChoices(result.value);
+        setProjectListFailure(null);
+      } else {
+        setProjectListFailure(result.failure.message);
+      }
+      setProjectListLoading(false);
+    });
+    return () => controller.abort();
+  }, [port, scope]);
 
   // 共有された publish ID や再読込後の状態確認。以後の自動更新も同じ port を使う。
   useEffect(() => {
@@ -277,15 +297,46 @@ export function PublishWizard({
               description={`${preparedProject.name} を現在の Workspace に作成し、あなたを owner に設定しました。`}
             />
           )
-        ) : (
-          <TextInput
-            label="Project ID"
-            description="現在の Workspace で自分が owner の Project を指定します。"
-            value={projectId}
-            onChange={(event) => setProjectId(event.currentTarget.value)}
-            spellCheck={false}
-            required
+        ) : projectListLoading ? (
+          <p role="status">Project の候補を読み込んでいます。</p>
+        ) : projectChoices.some((project) => project.can_publish) ? (
+          <>
+            <Select
+              label="既存の Project"
+              description="現在の Workspace で公開できる Project を名前で選びます。"
+              options={[
+                { value: '', label: 'Project を選択してください' },
+                ...projectChoices
+                  .filter((project) => project.can_publish)
+                  .map((project) => ({ value: project.id, label: project.name })),
+                ...(projectId !== '' && !projectChoices.some((project) => project.id === projectId)
+                  ? [{ value: projectId, label: '現在の Project（名前未解決）' }]
+                  : []),
+              ]}
+              value={projectId}
+              onChange={(event) => setProjectId(event.currentTarget.value)}
+              required
+            />
+            {projectId === '' ? null : <IdBadge value={projectId} label="Project ID" />}
+          </>
+        ) : projectListFailure === null ? (
+          <Alert
+            tone="info"
+            title="公開できる Project がありません"
+            description="新しい Project を作るか、Project の owner に権限を確認してください。"
           />
+        ) : (
+          <>
+            <Alert tone="warning" title="Project 名を取得できませんでした" description={projectListFailure} />
+            <TextInput
+              label="Project ID"
+              description="名前一覧を取得できない場合だけ、現在の Workspace の識別子を指定します。"
+              value={projectId}
+              onChange={(event) => setProjectId(event.currentTarget.value)}
+              spellCheck={false}
+              required
+            />
+          </>
         )}
 
         <Select

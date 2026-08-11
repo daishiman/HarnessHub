@@ -19,6 +19,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
         id="users-heading"
         title="ユーザー管理"
         description="テナントに所属する利用者と、その役割を確認します。"
+        sticky
       />
       <Panel flush>
         <UserList tenantId={tenantIdFromQuery(query, scope)} />

@@ -29,7 +29,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | session `maxAge` | **8 時間** | 業務日 1 日の連続利用を許し、翌日は再認証 |
 | session `updateAge` | **15 分** | JWT 再発行の間隔 |
 | **失効許容時間** | **最大 15 分** | JWT は stateless のため role/status 変更は次の再発行まで反映されない |
-| JWT claims | `sub`(user_id) / `tenant_id` / `role` / `status` / `workspace_ids` / `iat` / `exp` | 認可 MW が DB 往復なしで判定できる最小集合 (Turso 読取を節約)。`workspace_ids` は edge が Workspace 越境を DB 往復なしで弾くため (qa-072)。代償は cookie が所属数に比例して膨らむことと membership 変更の 15 分遅延 |
+| JWT claims | 認可: `sub` / `tenant_id` / `role` / `status` / `workspace_ids` / `iat` / `exp`。表示専用 (optional): `name` / `workspace_names` | 認可 MW が DB 往復なしで判定できる最小集合 (Turso 読取を節約)。`workspace_ids` は edge が Workspace 越境を DB 往復なしで弾くため (qa-072)。`name` / `workspace_names` はヘッダー表示専用で **認可に使わない**。人が読める名前が無い利用者・旧 session を締めないため optional。cookie 4096B 上限に入り切らないときは **表示名だけを全捨て**て到達範囲 (`workspace_ids`) は維持する |
 | 署名鍵 | `AUTH_SESSION_SECRET` (Workers Secret binding) | §4.5。Publisher access token は別鍵 `AUTH_ACCESS_TOKEN_SECRET` で用途分離 |
 
 **失効の意味論 (重要)**: `updateAge=15分` ごとの JWT 再発行時に、Auth.js の `jwt` callback で `users.role` / `users.status` を DB から再読込して claims を更新する。したがって **role 剥奪・ユーザー無効化の反映は最大 15 分遅延する**。これを受容する代わりに、以下は**即時失効**とする。

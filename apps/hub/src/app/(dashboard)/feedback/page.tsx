@@ -20,6 +20,7 @@ export default async function FeedbackPage({ searchParams }: PageProps) {
         id="feedback-heading"
         title="改善要望フィードバック"
         description="使ってみて困ったこと・こうしたいことを受け付け、対応状況を追跡します。"
+        sticky
         actions={
           <ActionLink href={`/feedback/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
             新しく報告

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1515,
+  "graph_revision": 1553,
   "nodes": [
     {
       "acceptance": [
@@ -56954,6 +56954,1919 @@
       "title": "本番 publish smoke の作業ディレクトリ依存パスを修正する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-11T04:29:30Z"
+    },
+    {
+      "acceptance": [
+        "法務確認済みの本文が反映される",
+        "改定日が画面に出る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-5yen",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/legal-copy-replacement-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "6e98288d9bfae3171f4d64caa4596896e17f500b25549ce0aeed0d48fef9a305",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/legal-copy-replacement-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "/legal の本文が正式な内容になる。",
+      "graph_node_id": "issue-legal-copy-replacement-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "雛形の文面を、法務確認済みの正式な本文へ置き換える。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/legal/page.tsx"
+      ],
+      "scope_in": [
+        "利用規約の本文",
+        "プライバシーポリシーの本文"
+      ],
+      "scope_out": [
+        "/legal の画面構成の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "legal",
+        "content"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "利用規約・プライバシーポリシーの本文を法務確認済みのものに差し替える",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "4 画面とも保存失敗時に一覧・入力内容が消えない",
+        "読み込み失敗は ListState の error で出る",
+        "操作失敗は操作ボタンの近傍に出る",
+        "0 件と取得失敗が同じ文言にならない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-oanz",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-error-state-split-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "2a7f5e121b8b6a9d9c1e2b843ee5e4c7ddb235479ed94c4a358a47cfb6beba52",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-error-state-split-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "読み込みの失敗と操作の失敗を別の受け皿で扱い、操作失敗時に一覧が消えないようにする。",
+      "graph_node_id": "issue-ui-error-state-split-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "操作の失敗で画面の中身まで消える書き方を、残り 4 画面から取り除く。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/settings/coefficients",
+        "apps/hub/src/app/(dashboard)/settings/auth",
+        "apps/hub/src/app/(dashboard)/settings/account",
+        "apps/hub/src/app/(dashboard)/users",
+        "packages/ui/src/components/ListState.tsx"
+      ],
+      "scope_in": [
+        "見積係数設定",
+        "認証の接続設定",
+        "アカウント設定",
+        "利用者詳細"
+      ],
+      "scope_out": [
+        "API の挙動変更",
+        "エラーメッセージ文言の全面刷新"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "error-state",
+        "list-state"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "取得の失敗と操作の失敗を分けて出す (残り 4 画面)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "主要画面の計測値が記録される",
+        "First Load JS 予算 120 KiB との差分が出る",
+        "予算超過の画面が課題として残る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mulk",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-first-load-perf-measure-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "abcc38716831cd3a4468e24190148402f7553fad15188452d52f904d2682b223",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-first-load-perf-measure-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "本番 URL で Core Web Vitals を計測し、予算超過の画面を洗い出す。",
+      "graph_node_id": "issue-ui-first-load-perf-measure-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "公開後の実測に基づいて、重い画面を特定する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app"
+      ],
+      "scope_in": [
+        "本番 URL での計測",
+        "First Load JS 予算 (G13) との突合",
+        "重い画面の一覧化"
+      ],
+      "scope_out": [
+        "計測前の推測による最適化"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "performance",
+        "web-vitals",
+        "launch"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "本番 URL で画面ごとの初回表示速度を計測する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "どちらを正とするか仕様に記載される",
+        "hub アプリ内の利用が 1 種類に揃う",
+        "browser test / VRT が緑のまま"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-z45h",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-header-component-dedup-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f1c13bc7b424f35ed3f247caed89849a2fad4f1724887ad31a32d5e37c4452ce",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-header-component-dedup-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "画面上部の見出しを作る部品を 1 つに収束させる。",
+      "graph_node_id": "issue-ui-header-component-dedup-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ScreenHeader と PageHeader の二重化を、仕様側の整理も含めて片付ける。",
+      "related_nodes": [],
+      "resource_scope": [
+        "packages/ui/src/layout/primitives.tsx",
+        "packages/ui/src/layout/ScreenHeader.tsx",
+        "specs/harness-hub-ui-foundation-addendum.md"
+      ],
+      "scope_in": [
+        "PageHeader の扱いの決定",
+        "仕様 (FR-UIF-001) の更新要否の判断",
+        "残る利用箇所の移行"
+      ],
+      "scope_out": [
+        "ScreenHeader の見た目の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "design-system"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "見出し帯の部品が 2 種類ある状態を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "Workspace 切替 UI に表示名が出る",
+        "アカウントメニューに利用者名が出る",
+        "表示名が解決できないときだけ IdBadge へ落ちる",
+        "識別子の全文コピーは維持される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-62ah",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-identifier-display-name-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c3bb5f146d7f20c2fddcdad3601877d959ff4a751d3eb34843d0cd61583589d7",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-identifier-display-name-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "対象プロジェクト・Workspace・利用者の表示を、識別子ではなく名前で読める状態にする。",
+      "graph_node_id": "issue-ui-identifier-display-name-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ULID などの識別子しか出せていない箇所を、人が判断できる表示名に置き換える。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/components/shell/hub-shell.tsx",
+        "packages/ui/src/shell/ShellHeader.tsx",
+        "packages/ui/src/shell/WorkspaceSwitcher.tsx",
+        "packages/ui/src/components/IdBadge.tsx"
+      ],
+      "scope_in": [
+        "表示名の解決経路の追加",
+        "ヘッダーの Workspace 表示",
+        "アカウントメニューの利用者表示",
+        "一覧の対象プロジェクト列"
+      ],
+      "scope_out": [
+        "識別子そのものの廃止",
+        "認可ルールの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "identifier",
+        "display-name"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "識別子ではなく人が読める表示名を出す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "利用者一覧の列が実際の使われ方に沿って並ぶ",
+        "主要一覧で列見出しから並べ替えできる",
+        "画面を離れて戻っても絞り込み条件が残る",
+        "横に広い表で左端の名前列が固定される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-2mu6",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-list-ergonomics-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "df717c4203bade90cb642568695d6ca4b2575eff6f8d5992569b7f6b16ef073e",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-list-ergonomics-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "利用者一覧の列構成を見直し、並べ替え・絞り込み条件の記憶・名前列の横固定を入れる。",
+      "graph_node_id": "issue-ui-list-ergonomics-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "件数が増えたときに目的の行へたどり着けるよう、一覧の操作性をまとめて上げる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/users",
+        "packages/ui/src/components/DataTable.tsx",
+        "packages/ui/src/components/FilterBar.tsx"
+      ],
+      "scope_in": [
+        "利用者一覧の列の並びと幅",
+        "列見出しクリックでの並べ替え",
+        "絞り込み条件の保持",
+        "横スクロール時の左端列固定"
+      ],
+      "scope_out": [
+        "一覧以外の画面構成の変更",
+        "API のページング仕様変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "data-table",
+        "filter"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "一覧の使い勝手 (列構成・並べ替え・条件記憶・名前列固定)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "3 画面の縦の長さを実測し、固定の要否を判断できる",
+        "固定する場合は共通レイアウト部品 1 箇所で行う"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-vaov",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-public-screen-sticky-header-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "803e693360ee2bcdf401b2fb26b261490e95fa89753a364c028343008dd3ad4a",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-public-screen-sticky-header-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "内容量が増えた時点で、業務画面と同じ固定表示へ揃える。",
+      "graph_node_id": "issue-ui-public-screen-sticky-header-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "サインイン・端末承認・規約の 3 画面で、ヘッダー固定の要否を将来再判断する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/legal/page.tsx",
+        "apps/hub/src/app/device/page.tsx",
+        "packages/ui/src/shell"
+      ],
+      "scope_in": [
+        "/signin",
+        "/device",
+        "/legal"
+      ],
+      "scope_out": [
+        "業務画面の固定表示の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "layout"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "公開画面のヘッダー固定を見直す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "Linux baseline が darwin と同じ意図の画面で更新される",
+        "Linux 上で browser test が全 PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-7mc6",
+        "linked_at": "2026-08-11T10:45:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/ui-vrt-linux-baseline-20260811.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "UI 統一作業で残した未着手項目であり、実装単位の不具合・改善課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "0e62ce0731ba94dd34512edd90fba0b014e6db2804012adddb4b56cccb60cec5",
+        "evaluator": "2026-08-11 の全28画面 UI 統一作業で実測した残課題",
+        "evidence_ref": "docs/product/backlog.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/ui-vrt-linux-baseline-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Linux 上で VRT を実行し、承認済み baseline を差し替える。",
+      "graph_node_id": "issue-ui-vrt-linux-baseline-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "darwin 側だけ更新した baseline を、Linux 側でも揃える。",
+      "related_nodes": [
+        "issue-ui-vrt-navigation-baseline-drift-20260810"
+      ],
+      "resource_scope": [
+        "apps/hub/tests/browser/__vrt__",
+        "apps/hub/tests/browser/vrt.ts",
+        ".github/workflows/ui-visual.yml"
+      ],
+      "scope_in": [
+        "catalog-{data,feedback,form,layout,navigation}-{light,dark} の 10 枚",
+        "Linux 上での VRT 実行"
+      ],
+      "scope_out": [
+        "VRT 閾値の緩和",
+        "原因確認なしの baseline 更新"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "vrt",
+        "ui-consistency",
+        "testing"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "VRT の Linux 版 baseline を更新する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T10:45:30Z"
+    },
+    {
+      "acceptance": [
+        "apps/hub の全体実行を 5 回連続で緑にする",
+        "タイムアウト値の引き上げでは閉じない (待ち方の変更で閉じる)"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-u9hq",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/flaky-parallel-test-wop-w-003-20260812.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "既存テストが実行条件によって結果を変える不具合であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7ea2969a65ee77a4717ccd4f137262607ee90ed3f981f9eb27ab29f0c39b82d6",
+        "evaluator": "2026-08-12 の UI 統一作業中に実測した flaky 事象",
+        "evidence_ref": "issues/flaky-parallel-test-wop-w-003-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/flaky-parallel-test-wop-w-003-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "WOP-W-003 を並列実行でも安定して緑にする。",
+      "graph_node_id": "issue-flaky-parallel-test-wop-w-003-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "実行のたびに結果が変わるテストを 1 件なくし、テスト全体の結果を信用できる状態に戻す。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/__tests__/web-only-publish/wizard-and-entries.test.tsx"
+      ],
+      "scope_in": [
+        "待ち方 (findBy / waitFor) の見直し"
+      ],
+      "scope_out": [
+        "テスト対象の実装の変更",
+        "タイムアウト値の引き上げによる回避"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "testing",
+        "flaky"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "並列実行のときだけ落ちるテスト WOP-W-003 の待ち方を直す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T15:49:49.190691Z"
+    },
+    {
+      "acceptance": [
+        "係数が lib/domain 配下の 1 か所だけで定義される",
+        "係数を変えたときに期待どおり結果が変わることを単体テストで固定する",
+        "画面の表示は現状と変わらない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-hpag",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hearing-intake-reduction-coefficient-20260812.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "業務計算の値が描画コードに埋まっている保守性の課題であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "21ff48209b7e625a8f51feea8788ee4aa0e21e13008748a878f551b0b4933e13",
+        "evaluator": "2026-08-12 の UI 統一作業で全画面を読んだ際に検出",
+        "evidence_ref": "issues/hearing-intake-reduction-coefficient-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hearing-intake-reduction-coefficient-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "削減時間の係数を 1 か所で定義し、その根拠と変更手順を残す。",
+      "graph_node_id": "issue-hearing-intake-reduction-coefficient-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "業務上の意味を持つ数値を、画面の描画コードから業務ロジック側へ移す。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx"
+      ],
+      "scope_in": [
+        "係数の定義位置の移動",
+        "係数の根拠の記載",
+        "単体テストの追加"
+      ],
+      "scope_out": [
+        "係数の値そのものの見直し",
+        "見積りの計算式の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "domain-logic",
+        "maintainability"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "削減時間の見積り係数 0.35 が画面に直書きされている",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T15:50:36.312253Z"
+    },
+    {
+      "acceptance": [
+        "続けて何本も読む使い方の有無を実測した記録が残る",
+        "S15 シートの pattern 選定表と future gate が実測結果で更新される",
+        "master-detail を実装する場合も、しない場合も、判断根拠がシートに残る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ydf8",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/docs-master-detail-layout-20260812.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "台帳の宣言と実装の食い違いを埋める画面構成の課題であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c5471892488883a3be4d3629fea1a6c14dd3630514550856c4a7fa65c92eb5f3",
+        "evaluator": "2026-08-12 の /docs 幅出し分け実装にあわせた前提更新",
+        "evidence_ref": "issues/docs-master-detail-layout-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/docs-master-detail-layout-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "master-detail の要否を実測で決着させ、S15 シートの記述を実測結果で置き換える。",
+      "graph_node_id": "issue-docs-master-detail-layout-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "情報設計シートが「残課題」として送った未決の判断を、実測に基づいて閉じる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "docs/features/feat-docs-cms/information-design/S15.md",
+        "apps/hub/src/app/(dashboard)/docs/document-list.tsx"
+      ],
+      "scope_in": [
+        "続けて何本も読む使い方の実測",
+        "実測結果に基づく S15 シートの更新"
+      ],
+      "scope_out": [
+        "実測を経ない master-detail の先行実装",
+        "wide での table 採否 (2026-08-12 に採用で決着済み)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "information-design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ドキュメント一覧に master-detail が要るかを実測で決める",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "相対表記の出し方が共通部品 1 か所に集約される",
+        "サーバ側とブラウザ側で表示が食い違わないことをテストで固定する",
+        "絶対日時は消さず、併記の形にする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-p26n",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/relative-time-display-20260812.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "表示形式の統一に関する情報設計の課題であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7a28aa088eab8c23e4877e02adcb921509e59e47d44fe4fafc32349daa02e408",
+        "evaluator": "2026-08-12 の UI 統一作業で 3 画面の日時表示を実読",
+        "evidence_ref": "issues/relative-time-display-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/relative-time-display-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "絶対日時に相対表記を併記する見せ方を、部品として 1 か所に決める。",
+      "graph_node_id": "issue-relative-time-display-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "日時が「最近のことなのか」を、日付を読み解かなくても分かるようにする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "packages/ui/src/index.ts"
+      ],
+      "scope_in": [
+        "併記の方式の決定",
+        "共通部品の追加",
+        "適用画面の決定"
+      ],
+      "scope_out": [
+        "日時そのものの保持形式の変更",
+        "タイムゾーンの扱いの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "information-design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "日時に「3 日前」のような相対表記を併記する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T15:51:59.068553Z"
+    },
+    {
+      "acceptance": [
+        "暗い配色のとき素の入力欄が暗い背景で出る",
+        "tokens.css が再生成された状態で commit される",
+        "宣言の有無をテストで固定する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ck3d",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/dark-color-scheme-declaration-20260812.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "design token 層の欠落に起因する表示不具合であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1b8a07aace78f9b359fa66ae10a264e712566f55534c9629e19e0b70425da0ec",
+        "evaluator": "2026-08-12 の VRT 目視で catalog-form-dark を確認",
+        "evidence_ref": "issues/dark-color-scheme-declaration-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/dark-color-scheme-declaration-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "暗い配色のとき CSS の color-scheme を dark として宣言する。",
+      "graph_node_id": "issue-dark-color-scheme-declaration-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "暗い配色のときに、こちらで作っていない部品まで含めて配色を揃える。",
+      "related_nodes": [],
+      "resource_scope": [
+        "packages/ui/src/tokens/tokens.ts",
+        "packages/ui/src/tokens/base-css.ts"
+      ],
+      "scope_in": [
+        "color-scheme の宣言",
+        "tokens.css の再生成",
+        "VRT baseline の更新"
+      ],
+      "scope_out": [
+        "個々の部品の配色の作り直し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "accessibility",
+        "dark-mode"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "暗い配色のとき、ブラウザ標準の部品が明るいまま出る",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T15:52:39.243560Z"
+    },
+    {
+      "acceptance": [
+        "profile の正本が 1 か所に定まる",
+        "各シートの記述が正本と食い違わない",
+        "仕様側の宣言が実態と一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-nqo5",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/screen-profile-source-of-truth-20260812.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "仕様文書と台帳の参照の食い違いであり、文書側の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "49d08f1d3914ba63a7b86c68d68969397afce1dea5d50697ed1eea406819afd3",
+        "evaluator": "2026-08-12 の情報設計シート棚卸しで検出",
+        "evidence_ref": "issues/screen-profile-source-of-truth-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/screen-profile-source-of-truth-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "画面ごとの表示形式をどこに書くかを 1 か所に決め、そちらへ統一する。",
+      "graph_node_id": "issue-screen-profile-source-of-truth-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "仕様が宣言している正本の場所と、実際に値が書かれている場所を一致させる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "docs/frontend-ui-foundation-spec.md",
+        "docs/screen-inventory.md"
+      ],
+      "scope_in": [
+        "正本をどちらにするかの決定",
+        "決めた側への統一"
+      ],
+      "scope_out": [
+        "profile の値そのものの見直し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "documentation",
+        "information-design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "画面ごとの表示形式 (profile) の正本が、参照先に存在しない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T15:59:05.259558Z"
+    },
+    {
+      "acceptance": [
+        "workspaceId を指定した context では別 Workspace の行が返らない",
+        "workspaceId 未指定の呼び出しは現行どおりテナントだけで絞る",
+        "workspace_id 列を持たないテーブルへ渡したときの挙動が決まり、テストで固定される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pwph",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/crud-workspace-scope-gap-20260812.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "リポジトリ層の scope 実装と型契約の不一致であり、認可の設計課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b248b1704595cb2b12ccd6371a25c02b7fbc8bc29427350380e2bb226ae9be62",
+        "evaluator": "2026-08-12 の 62ah 第1段 実装時に scope 欠落として検出",
+        "evidence_ref": "issues/crud-workspace-scope-gap-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/crud-workspace-scope-gap-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "createScopedCrud が context.workspaceId を他のリポジトリと同じ規約で述語へ反映する。",
+      "graph_node_id": "issue-crud-workspace-scope-gap-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "型が示す契約と実際のふるまいを一致させ、Workspace の絞り込みを渡した側の期待どおりに効かせる。",
+      "related_nodes": [],
+      "resource_scope": [
+        "packages/db/repository/crud.ts",
+        "packages/db/src/types.ts"
+      ],
+      "scope_in": [
+        "scopeWhere への workspace_id 述語の追加",
+        "workspace_id 列を持たないテーブルへ workspaceId を渡したときの扱いの決定"
+      ],
+      "scope_out": [
+        "呼び出し側が workspaceId を渡すべきかの棚卸し",
+        "認可層 (decide.ts) の所属判定そのものの見直し"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "packages/db/repository/crud.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "authorization",
+        "database",
+        "multi-tenancy"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "汎用 CRUD が Workspace の絞り込みを無視する (渡しても効かない)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T16:31:20.492611Z"
+    },
+    {
+      "acceptance": [
+        "API が上位 N 件だけを返す",
+        "画面側に並べ替えと件数の打ち切りが残らない",
+        "上位件数が画面と API の二重定義にならない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uu28",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/metrics-server-side-ranking-20260812.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "API の応答仕様と画面の責務分担の課題であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "4b549a937a5093f088b523d3502ca13d56c2d81b3a250e7852f75800eddc2880",
+        "evaluator": "2026-08-12 の画面まわり統一作業での実読",
+        "evidence_ref": "issues/metrics-server-side-ranking-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/metrics-server-side-ranking-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "上位ランキングの並べ替えと件数の打ち切りをサーバ側へ移す。",
+      "graph_node_id": "issue-metrics-server-side-ranking-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "表示に使わないデータを転送し続ける構造を、件数が育つ前に直す。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/features/metrics-tracking/view-model.ts",
+        "apps/hub/src/app/(dashboard)/metrics/metrics-dashboard.tsx"
+      ],
+      "scope_in": [
+        "/api/v1/metrics/summary の応答仕様の変更",
+        "topRanking の役割の縮小",
+        "上位件数の正本の決定"
+      ],
+      "scope_out": [
+        "部門別・推移など他の集計項目の実装変更 (規約の適用可否の判断までとする)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "performance",
+        "api-design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "効果測定の上位ランキングを画面側で切っている (件数が増えると破綻する)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T16:51:06.717350Z"
+    },
+    {
+      "acceptance": [
+        "3 画面の一覧 API が q を受け取る",
+        "ヘッダーの検索欄が 3 画面で出る",
+        "ヘッダーから来た検索語が、覚えていた絞り込み条件より優先される",
+        "検索対象が画面ごとに決められ、根拠が残る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-ry6v",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/list-header-search-q-support-20260812.md",
+          "confidence": 0.96
+        }
+      ],
+      "classification_confidence": 0.96,
+      "classification_reason": "画面の情報設計と一覧 API の両方にまたがる改善であり、実装単位の課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "d4c89150679b147ac172531a9097294cefa278daeb5acef57d2ca38d240d2feb",
+        "evaluator": "2026-08-12 の画面まわり統一作業での実読",
+        "evidence_ref": "issues/list-header-search-q-support-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/list-header-search-q-support-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "3 画面の一覧が q での絞り込みに対応し、ヘッダーの検索欄が出る状態にする。",
+      "graph_node_id": "issue-list-header-search-q-support-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "探したい対象がある画面から、探す手段が消えている状態を解消する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/components/shell/nav-items.ts",
+        "apps/hub/src/app/(dashboard)/docs/document-list.tsx",
+        "apps/hub/src/app/(dashboard)/feedback/feedback-list.tsx",
+        "apps/hub/src/app/(dashboard)/users/user-list.tsx"
+      ],
+      "scope_in": [
+        "/docs・/feedback・/users の一覧 API への q 追加",
+        "画面ごとの検索対象の決定",
+        "searchTargets への登録",
+        "initialQuery の作法の適用"
+      ],
+      "scope_out": [
+        "横断検索 (1 つの欄で全領域を探す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/product/backlog.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "ui-consistency",
+        "api-design"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ドキュメント・改善要望・利用者の一覧が検索語を受け取れない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T16:51:53.476323Z"
+    },
+    {
+      "acceptance": [
+        "所属 100 件以上の利用者がサインインでき、cookie が保存される",
+        "所属どおりの Workspace に到達でき、権限が黙って減らない",
+        "workspace_ids を削らずに達成されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-alyy",
+        "linked_at": "2026-08-12T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/session-cookie-workspace-ids-ceiling-20260812.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "認証基盤の構造的な制約であり、実装単位で追跡すべき課題に該当する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c869a9df06a610b9a18fb3a548dc1b1e55b8bdcca7dfd61629f8d02caef5a7d0",
+        "evaluator": "2026-08-12 の cookie サイズガード実装時の実測",
+        "evidence_ref": "issues/session-cookie-workspace-ids-ceiling-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/session-cookie-workspace-ids-ceiling-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "所属数がいくつでもサインインでき、所属どおりの場所に入れる状態にする。",
+      "graph_node_id": "issue-session-cookie-workspace-ids-ceiling-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "claims 焼き込み方式の cookie サイズ上限を記録し、workspace_ids を安易に削る誤りを防ぐ。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/auth/jwt.ts",
+        "apps/hub/src/lib/auth/config.ts"
+      ],
+      "scope_in": [
+        "上限の記録と実測値の保存",
+        "方式変更の選択肢の整理 (都度引く / session を stateful にする)",
+        "想定利用規模が判明した時点での優先度見直し"
+      ],
+      "scope_out": [
+        "workspace_names のサイズガード (2026-08-12 に実装済み)",
+        "workspace_ids をサイズを理由に削る実装 (到達可否が黙って減るため不正解)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "apps/hub/src/lib/auth/session.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "authentication",
+        "scalability"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "所属が 90 件を超えると、名前を落としてもサインインできない",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T17:24:17.377271Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

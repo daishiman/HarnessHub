@@ -8,16 +8,27 @@ import type { SessionRole, UserDetail, UserStatus } from '@harness-hub/schemas';
  *   まだ存在しない (P03 指摘4 / ADR §実装追補・未解決事項)。ここで架空の数値を出すと SEC5
  *   (クライアント側で金額を再計算・捏造しない) に反するため、KpiCard は「まだ算出できません」の
  *   プレースホルダーで描画し、実データが揃うまでの空白を明示する。
- * - role/department の編集は共通部品 `InlineEditTable` (プレーンな text input ベース、`<select>` 相当の
- *   編集 UI は持たない) をそのまま使う。そのため role 列の draft 値は表示ラベルではなく生の role
- *   スラッグ (`workspace-admin` 等) を使う — ラベル文字列を編集させると PATCH に渡せない値になる。
+ * - department は共通部品 `InlineEditTable`、role は日本語ラベル付きの `Select` で編集する。
+ *   role の内部値を自由入力欄へ露出させず、API が受け付ける選択肢だけを提示する。
  * - salary の編集行は viewer が workspace-admin/provider-admin のときだけ配列に含める
  *   (AD-5: 「表示を消す」ではなく「そもそも行を作らない」)。
  * - 退職処理 (status: active → inactive) は不可逆側の遷移として ConfirmDialog を要求する。
  *   復職 (inactive → active) は元に戻せる操作なので確認なしで直接反映する。
  */
 import type { InlineEditColumn, InlineEditCommit } from '@harness-hub/ui';
-import { Alert, ConfirmDialog, InlineEditTable, KpiCard } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  CardGrid,
+  ConfirmDialog,
+  DefinitionList,
+  InlineEditTable,
+  KpiCard,
+  LiveStatus,
+  Panel,
+  Select,
+  Stack,
+} from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 // lib/authz/index.js (barrel) は next-auth 依存の runtime.ts も re-export しており、
 // client component からそれを import すると Buffer polyfill ごと client bundle に混入する
@@ -35,8 +46,16 @@ const STATUS_LABELS: Readonly<Record<UserStatus, string>> = {
   inactive: '退職済み',
 };
 
+const ROLE_LABELS: Readonly<Record<SessionRole, string>> = {
+  'provider-admin': 'プロバイダー管理者',
+  'workspace-admin': 'ワークスペース管理者',
+  member: 'メンバー',
+};
+
+const ROLE_OPTIONS = BASE_ROLES.map((role) => ({ value: role, label: ROLE_LABELS[role] }));
+
 interface EditableRow {
-  readonly id: 'department' | 'role' | 'salary';
+  readonly id: 'department' | 'salary';
   readonly field: string;
   readonly value: string;
 }
@@ -47,22 +66,51 @@ interface EditableRow {
  */
 export function computeEditableRows(user: UserDetail, viewerRole: SessionRole | null): readonly EditableRow[] {
   const isAdminViewer = viewerRole !== null && atLeast(viewerRole, 'workspace-admin');
-  const base: EditableRow[] = [
-    { id: 'department', field: '部門', value: user.department ?? '' },
-    { id: 'role', field: 'ロール', value: user.role },
-  ];
+  const base: EditableRow[] = [{ id: 'department', field: '部門', value: user.department ?? '' }];
   if (isAdminViewer && typeof user.salary === 'number') {
     base.push({ id: 'salary', field: '年収 (円)', value: String(user.salary) });
   }
   return base;
 }
 
+/** 操作の起点。結果表示をこの単位で出し分ける。 */
+type ActionScope = 'edit' | 'status';
+
+interface ActionResult {
+  readonly scope: ActionScope;
+  readonly tone: 'success' | 'danger';
+  readonly message: string;
+}
+
+/** 面の中に置く操作結果。見出しは成否で言い分けて、色だけに頼らせない。 */
+function ActionResultAlert({
+  result,
+  scope,
+}: {
+  readonly result: ActionResult | null;
+  readonly scope: ActionScope;
+}): ReactNode {
+  if (result === null || result.scope !== scope) return null;
+  return (
+    <Alert
+      tone={result.tone}
+      title={result.tone === 'success' ? '更新しました' : '更新できませんでした'}
+      description={result.message}
+    />
+  );
+}
+
 export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNode {
   const [user, setUser] = useState<UserDetail | null>(null);
   const [viewerRole, setViewerRole] = useState<SessionRole | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  // 「利用者の情報を読み込めなかった」と「変更を保存できなかった」を 1 つの state で持たない。
+  // 混ぜると、ロールの入力を 1 回間違えただけで利用者の情報まで消えたように見える。
+  const [loadError, setLoadError] = useState<string | null>(null);
+  // 変更の結果は、その変更を起こした面の中に返す。この画面は「登録内容の変更」と
+  // 「在籍の切り替え」の 2 か所から操作でき、画面上端にまとめると
+  // どちらの結果なのかが読み手側にしか分からなくなる。
+  const [actionResult, setActionResult] = useState<ActionResult | null>(null);
   const [offboardOpen, setOffboardOpen] = useState(false);
 
   const scopeHeaders = useMemo((): HeadersInit => ({ 'x-harness-tenant-id': tenantId }), [tenantId]);
@@ -78,9 +126,9 @@ export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNo
       if (!meResponse.ok) throw new Error('自分のロールを確認できませんでした。');
       setUser((await userResponse.json()) as UserDetail);
       setViewerRole(((await meResponse.json()) as { role: SessionRole }).role);
-      setError(null);
+      setLoadError(null);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'データを取得できませんでした。');
+      setLoadError(cause instanceof Error ? cause.message : 'データを取得できませんでした。');
     } finally {
       setLoading(false);
     }
@@ -100,7 +148,7 @@ export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNo
   ];
 
   const patchUser = useCallback(
-    async (body: Record<string, unknown>, onSuccess: string): Promise<void> => {
+    async (scope: ActionScope, body: Record<string, unknown>, onSuccess: string): Promise<void> => {
       try {
         const response = await fetch(`/api/v1/users/${userId}`, {
           method: 'PATCH',
@@ -109,18 +157,20 @@ export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNo
           body: JSON.stringify(body),
         });
         if (!response.ok) {
-          setError(
-            response.status === 403
-              ? 'この変更には権限が不足しています。'
-              : '更新に失敗しました。入力内容を確認してください。',
-          );
+          setActionResult({
+            scope,
+            tone: 'danger',
+            message:
+              response.status === 403
+                ? 'この変更には権限が不足しています。'
+                : '更新に失敗しました。入力内容を確認してください。',
+          });
           return;
         }
-        setError(null);
-        setNotice(onSuccess);
+        setActionResult({ scope, tone: 'success', message: onSuccess });
         await load();
       } catch {
-        setError('更新に失敗しました。');
+        setActionResult({ scope, tone: 'danger', message: '更新に失敗しました。' });
       }
     },
     [load, scopeHeaders, userId],
@@ -130,81 +180,125 @@ export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNo
     (commit: InlineEditCommit): void => {
       if (commit.rowId === 'department') {
         const trimmed = commit.value.trim();
-        void patchUser({ department: trimmed === '' ? null : trimmed }, '部門を更新しました。');
-        return;
-      }
-      if (commit.rowId === 'role') {
-        const value = commit.value as SessionRole;
-        if (!BASE_ROLES.includes(value)) {
-          setError(`ロールは ${BASE_ROLES.join(' / ')} のいずれかで入力してください。`);
-          return;
-        }
-        void patchUser({ role: value }, 'ロールを更新しました。');
+        void patchUser('edit', { department: trimmed === '' ? null : trimmed }, '部門を更新しました。');
         return;
       }
       if (commit.rowId === 'salary') {
         const parsed = Number(commit.value);
         if (!Number.isInteger(parsed) || parsed < 0) {
-          setError('年収は 0 以上の整数で入力してください。');
+          setActionResult({ scope: 'edit', tone: 'danger', message: '年収は 0 以上の整数で入力してください。' });
           return;
         }
-        void patchUser({ salary: parsed }, '年収を更新しました。');
+        void patchUser('edit', { salary: parsed }, '年収を更新しました。');
       }
     },
     [patchUser],
   );
 
-  if (loading) return <p aria-live="polite">読み込み中です。</p>;
-  if (user === null) return <p role="alert">ユーザーが見つかりませんでした。</p>;
+  if (loading) return <LiveStatus>利用者の情報を読み込み中です。</LiveStatus>;
+  // 読み込めていない = 画面に出せる中身が無い。ここだけが画面全体を置き換える条件で、
+  // 変更の失敗ではこの分岐に入らない (表示中の情報を消さない)
+  if (user === null)
+    return (
+      <Panel>
+        <Stack gap={3}>
+          <p role="alert" style={{ margin: 0 }}>
+            {loadError ?? 'ユーザーが見つかりませんでした。'}
+          </p>
+          <div>
+            <Button type="button" variant="secondary" onClick={() => void load()}>
+              読み込み直す
+            </Button>
+          </div>
+        </Stack>
+      </Panel>
+    );
 
   return (
-    <>
-      {error === null ? null : <Alert tone="danger" title="エラー" description={error} />}
-      {notice === null ? null : <Alert tone="success" title="更新しました" description={notice} />}
+    <Stack gap={4}>
+      {/* 生の <dl> をやめて共通の定義リストへ。1 人分の属性を並べる箇所なので表にはしない (§5-1 の写し方) */}
+      <Panel title="この利用者について">
+        <DefinitionList
+          label="利用者の基本情報"
+          columns={2}
+          items={[
+            { term: '氏名', description: user.name },
+            { term: '在籍の状態', description: STATUS_LABELS[user.status] },
+          ]}
+        />
+      </Panel>
 
-      <dl>
-        <dt>氏名</dt>
-        <dd>{user.name}</dd>
-        <dt>状態</dt>
-        <dd>{STATUS_LABELS[user.status]}</dd>
-      </dl>
+      <Panel title="削減効果" description="この利用者の業務がどれだけ楽になったかを表示する予定の欄です。">
+        <CardGrid columns="kpi">
+          <KpiCard label="年間削減時間" value="—" unit="時間" />
+        </CardGrid>
+        <p style={{ marginBlockEnd: 0 }}>
+          集計の仕組みがまだ用意できていないため、いまは数値を出せません。用意ができ次第ここに表示します。
+        </p>
+      </Panel>
 
-      <KpiCard label="年間削減時間" value="—" unit="時間" />
-      <p>
-        この指標は集計機能 (metrics_rollups) が別機能側で未実装のため、現在は算出できません。実装完了後に反映されます。
-      </p>
-
-      <InlineEditTable
-        caption="ユーザー編集"
-        columns={columns}
-        rows={rows}
-        rowKey={(row) => row.id}
-        rowLabel={(row) => row.field}
-        onCommit={handleCommit}
-      />
-
-      {user.status === 'active' ? (
-        <>
-          <button type="button" onClick={() => setOffboardOpen(true)}>
-            退職処理
-          </button>
-          <ConfirmDialog
-            open={offboardOpen}
-            title="退職処理の確認"
-            description={`${user.name} を退職済みに変更します。`}
-            reversible={false}
-            onConfirm={() => {
-              setOffboardOpen(false);
-              void patchUser({ status: 'inactive' }, '退職処理を行いました。');
-            }}
-            onCancel={() => setOffboardOpen(false)}
+      <Panel
+        title="登録内容の変更"
+        description="ロールは選択欄から変更し、部門と年収は値をクリックして書き換えます。"
+        flush
+      >
+        <div style={{ padding: 'var(--hh-space-4)' }}>
+          <Select
+            label="ロール"
+            value={user.role}
+            options={ROLE_OPTIONS}
+            onChange={(event) =>
+              void patchUser('edit', { role: event.currentTarget.value as SessionRole }, 'ロールを更新しました。')
+            }
           />
-        </>
-      ) : (
-        <button type="button" onClick={() => void patchUser({ status: 'active' }, '復職処理を行いました。')}>
-          復職処理
-        </button>
-      )}
-    </>
+        </div>
+        <InlineEditTable
+          caption="ユーザー編集"
+          columns={columns}
+          rows={rows}
+          rowKey={(row) => row.id}
+          rowLabel={(row) => row.field}
+          onCommit={handleCommit}
+        />
+        {/* 書き換えの結果は書き換えた表のすぐ下に出す。画面上端の帯に出すと、
+            表を見ている利用者の視野の外で結果が告知されることになる */}
+        <ActionResultAlert result={actionResult} scope="edit" />
+      </Panel>
+
+      {/* 生の <button> は見た目も押せる幅も画面ごとにばらつくため共通の Button へ寄せる */}
+      <Panel title="在籍の切り替え">
+        <Stack gap={3}>
+          {user.status === 'active' ? (
+            <div>
+              <Button type="button" variant="secondary" onClick={() => setOffboardOpen(true)}>
+                退職済みにする
+              </Button>
+              <ConfirmDialog
+                open={offboardOpen}
+                title="退職処理の確認"
+                description={`${user.name} を退職済みに変更します。`}
+                reversible={false}
+                onConfirm={() => {
+                  setOffboardOpen(false);
+                  void patchUser('status', { status: 'inactive' }, '退職処理を行いました。');
+                }}
+                onCancel={() => setOffboardOpen(false)}
+              />
+            </div>
+          ) : (
+            <div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => void patchUser('status', { status: 'active' }, '復職処理を行いました。')}
+              >
+                在籍中に戻す
+              </Button>
+            </div>
+          )}
+          <ActionResultAlert result={actionResult} scope="status" />
+        </Stack>
+      </Panel>
+    </Stack>
   );
 }

@@ -19,8 +19,10 @@ import {
   formatJpy,
   formatPercent,
   formatRunCount,
+  metricsDisplayLabel,
   RANKING_DISPLAY_LIMIT,
   recentRange,
+  resolvedMetricsName,
   toDepartmentChartData,
   topRanking,
   toRankingChartData,
@@ -127,10 +129,38 @@ describe('MT-VM: チャート入力の組み立て', () => {
       ]),
     ).toEqual([{ label: '部門未設定', value: 900 }]);
   });
+
+  it('MT-VM-010: name が ID と同値なら名称と偽らず、チャートでも ID と明示する', () => {
+    expect(resolvedMetricsName('project-01', 'project-01')).toBeNull();
+    expect(resolvedMetricsName('project-01', ' 見積もり支援 ')).toBe('見積もり支援');
+    expect(metricsDisplayLabel('project-01', 'project-01', '業務ツール')).toBe('業務ツール ID: project-01');
+    expect(
+      toRankingChartData([
+        {
+          harnessId: 'project-01',
+          harnessName: 'project-01',
+          runCount: 1,
+          savedHours: 1,
+          savedAmountJpy: 100,
+        },
+      ])[0]?.label,
+    ).toBe('業務ツール ID: project-01');
+    expect(
+      toDepartmentChartData([
+        {
+          departmentId: 'dept-01',
+          departmentName: 'dept-01',
+          runCount: 1,
+          savedHours: 1,
+          savedAmountJpy: 100,
+        },
+      ])[0]?.label,
+    ).toBe('部門 ID: dept-01');
+  });
 });
 
 describe('MT-VM: 活用率', () => {
-  it('MT-VM-010: 実行実績のあるハーネスの比率を返す', () => {
+  it('MT-VM-011: 実行実績のあるハーネスの比率を返す', () => {
     const ratio = activeHarnessRatio(
       summary({
         ranking: [
@@ -144,8 +174,23 @@ describe('MT-VM: 活用率', () => {
     expect(formatPercent(ratio)).toBe('50');
   });
 
-  it('MT-VM-011: ハーネスが 0 件のときは 0 を返す (母数 0 を 100% と読ませない)', () => {
-    expect(activeHarnessRatio(summary())).toBe(0);
-    expect(formatPercent(0)).toBe('0');
+  /**
+   * 母数 0 を 0% と表示すると「1 つも使われていない」に読める。
+   * 実際は数える対象が無いだけで、打ち手 (使ってもらう働きかけ / 登録を進める) が別物になる。
+   */
+  it('MT-VM-012: ハーネスが 0 件のときは算出できない扱いにする (0% と読ませない)', () => {
+    expect(activeHarnessRatio(summary())).toBeNull();
+    expect(formatPercent(null)).toBe('—');
+  });
+
+  it('MT-VM-013: 実績 0 件 (母数はある) は 0% として出す', () => {
+    const ratio = activeHarnessRatio(
+      summary({
+        ranking: [{ harnessId: 'a', harnessName: 'A', runCount: 0, savedHours: 0, savedAmountJpy: 0 }],
+      }),
+    );
+
+    expect(ratio).toBe(0);
+    expect(formatPercent(ratio)).toBe('0');
   });
 });

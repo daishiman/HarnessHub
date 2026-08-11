@@ -54,8 +54,18 @@ export {
   publishVisibilitySchema,
   releaseStatusSchema,
 } from './primitives.js';
-export type { CreatePublishProject, PublishProject } from './project.js';
-export { createPublishProjectSchema, publishProjectSchema } from './project.js';
+export type {
+  CreatePublishProject,
+  PublishProject,
+  PublishProjectChoice,
+  PublishProjectList,
+} from './project.js';
+export {
+  createPublishProjectSchema,
+  publishProjectChoiceSchema,
+  publishProjectListSchema,
+  publishProjectSchema,
+} from './project.js';
 export type {
   CreatePublishRequest,
   PackageUploadResponse,

@@ -53,10 +53,12 @@ function minutesToHours(minutes: number): number {
 /**
  * repository の集計結果を S09/S16 の応答へ写す。
  *
- * `harnessName` / `departmentName` に ID をそのまま入れているのは、ハーネス名・部門名の
- * マスタ表が現時点のスキーマに存在しないため (`metrics_events` は ID しか持たない)。
- * 契約は表示名を要求するので、解決できない間は ID を表示名として扱う。
- * 名称解決は catalog / user-org-admin 側にマスタが入った時点で差し替える。
+ * `harnessName` / `departmentName` に ID と同じ値を入れるのは、現行契約がこれらを
+ * 必須とする一方、メトリクスが安全に使える workspace-scoped の名称解決経路がまだ無いため。
+ * これは「名称が解決済み」を意味しない。UI は `id === name` を未解決と判定し、
+ * `IdBadge` や「… ID」として識別子であることを明示する。
+ * UI は認可済みの `/api/v1/projects` から workspace 内の名称を別途解決する。この DTO 変換で
+ * project repository を独自に読み、同じ scope 条件を複製しない。名称取得が失敗しても集計本体は表示する。
  */
 export function toSummaryResponse(
   summary: MetricsSummary,

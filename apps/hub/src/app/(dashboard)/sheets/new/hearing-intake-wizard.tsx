@@ -6,8 +6,10 @@ import {
   Button,
   Panel,
   Select,
+  Stack,
   StatusChip,
   StepWizard,
+  TagRow,
   Textarea,
   TextInput,
   type WizardStep,
@@ -238,24 +240,26 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
     return (
       <Panel>
         <section aria-live="polite" aria-labelledby="receipt-heading">
-          <h2 id="receipt-heading" style={{ marginBlockStart: 0 }}>
-            受付が完了しました
-          </h2>
-          <Alert
-            tone="success"
-            title={created.code}
-            description="生成処理をキューへ登録しました。完了を待たずに別の作業へ移れます。"
-          />
-          <p>
-            状態: <StatusChip domain="sheet" status={created.status} />
-          </p>
-          <p>
-            <a href={`/sheets/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`}>シートを見る</a>
-            {' / '}
-            <button type="button" onClick={() => setCreated(null)}>
-              続けて作成
-            </button>
-          </p>
+          <Stack gap={3}>
+            <h2 id="receipt-heading" style={{ margin: 0 }}>
+              受付が完了しました
+            </h2>
+            <Alert
+              tone="success"
+              title={`シート番号 ${created.code}`}
+              description="シート本文の作成を開始しました。完了を待たずに別の作業へ移れます。"
+            />
+            <TagRow label="受付したシートの状態">
+              <StatusChip domain="sheet" status={created.status} />
+            </TagRow>
+            {/* 生の <button> は見た目も押せる幅も画面ごとにばらつくため共通の Button に寄せる */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--hh-space-3)', alignItems: 'center' }}>
+              <a href={`/sheets/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`}>このシートを見る</a>
+              <Button type="button" variant="secondary" onClick={() => setCreated(null)}>
+                続けてもう 1 件作成する
+              </Button>
+            </div>
+          </Stack>
         </section>
       </Panel>
     );

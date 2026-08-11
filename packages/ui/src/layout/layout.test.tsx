@@ -2,7 +2,7 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { AppShell, Card, Container, containerSizes, NavList, PageHeader, SidebarLayout, Stack } from '../index.js';
+import { AppShell, Card, Container, containerSizes, NavList, ScreenHeader, SidebarLayout, Stack } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 describe('AppShell', () => {
@@ -35,39 +35,11 @@ describe('AppShell', () => {
   it('シェルと画面を組み合わせても h1 は 1 つだけ', () => {
     renderWithUi(
       <AppShell brand="Harness Hub">
-        <PageHeader title="ユーザー管理" />
+        <ScreenHeader title="ユーザー管理" />
       </AppShell>,
     );
 
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-  });
-});
-
-describe('PageHeader', () => {
-  it('title を h1、description と操作を併せて描く', () => {
-    renderWithUi(
-      <PageHeader
-        title="ドキュメント"
-        description="共通とテナントの文書"
-        actions={<button type="button">新規</button>}
-      />,
-    );
-
-    expect(screen.getByRole('heading', { level: 1, name: 'ドキュメント' })).toBeDefined();
-    expect(screen.getByText('共通とテナントの文書')).toBeDefined();
-    expect(screen.getByRole('button', { name: '新規' })).toBeDefined();
-  });
-
-  it('パンくずを現在位置の nav として描く', () => {
-    renderWithUi(<PageHeader title="詳細" breadcrumbs={<a href="/docs">ドキュメント</a>} />);
-
-    expect(screen.getByRole('navigation', { name: '現在位置' })).toBeDefined();
-  });
-
-  it('description を渡さなければ余分な段落を作らない', () => {
-    const { container } = renderWithUi(<PageHeader title="一覧" />);
-
-    expect(container.querySelectorAll('p')).toHaveLength(0);
   });
 });
 

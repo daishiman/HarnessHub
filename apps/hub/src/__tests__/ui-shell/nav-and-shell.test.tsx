@@ -96,7 +96,11 @@ describe('UIS-NAV: 導線の定義', () => {
       ...navItems.accountMenuLinks(SCOPE, 'provider-admin').map((link) => link.href),
       ...navItems.footerLinks.map((link) => link.href),
       navItems.notificationsHref(SCOPE),
-      navItems.searchAction(SCOPE),
+      // 検索欄の行き先も導線の一種。画面ごとに変わるので、全導線から引ける行き先を集める
+      ...navItems
+        .sidebarNavItems(SCOPE, 'provider-admin')
+        .map((item) => navItems.headerSearch(SCOPE, item.href)?.action)
+        .filter((href): href is string => href !== undefined),
     ];
 
     expect(hrefs.filter((href) => !pageExists(href))).toStrictEqual([]);
@@ -113,12 +117,34 @@ describe('UIS-NAV: 導線の定義', () => {
   });
 
   it('UIS-NAV-006: ヘッダー検索は scope を hidden field で引き継ぐ', () => {
-    expect(navItems.searchAction(SCOPE)).toBe('/sheets');
     expect(navItems.searchHiddenFields(SCOPE)).toStrictEqual({
       tenant: 'tenant-a',
       workspace: 'ws-1',
     });
     expect(navItems.searchHiddenFields({ tenantId: '', workspaceId: '' })).toStrictEqual({});
+  });
+
+  it('UIS-NAV-006b: ヘッダー検索はいま見ている領域を探す (行き先・見出し語・例示がずれない)', () => {
+    const sheets = navItems.headerSearch(SCOPE, '/sheets?tenant=tenant-a');
+    expect(sheets?.action).toBe('/sheets');
+    expect(sheets?.label).toContain('ヒアリングシート');
+    expect(sheets?.placeholder).toContain('HS コード');
+
+    // 詳細画面でも同じ領域を探せる
+    expect(navItems.headerSearch(SCOPE, '/sheets/hs-001')?.action).toBe('/sheets');
+
+    const catalog = navItems.headerSearch(SCOPE, '/catalog');
+    expect(catalog?.action).toBe('/catalog');
+    expect(catalog?.label).toContain('業務ツール');
+  });
+
+  it('UIS-NAV-006c: 一覧側が絞り込めない画面ではヘッダー検索を出さない', () => {
+    // 一覧 API が `q` を受けない (ドキュメント・改善要望・利用者) と
+    // そもそも探す対象が無い画面 (ダッシュボード・設定) は null になる
+    for (const href of ['/docs', '/feedback', '/users', '/metrics', '/builds', '/settings/account']) {
+      expect(navItems.headerSearch(SCOPE, href)).toBeNull();
+    }
+    expect(navItems.headerSearch(SCOPE, undefined)).toBeNull();
   });
 
   it('UIS-NAV-007: member と role 未確定時は管理者専用の導線を DOM へ渡さない', () => {

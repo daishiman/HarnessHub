@@ -78,7 +78,15 @@ export const buildListQuerySchema = paginationQuerySchema.extend({
 });
 export type BuildListQuery = z.output<typeof buildListQuerySchema>;
 
-export const buildListResponseSchema = paginatedSchema(buildListItemSchema);
+/**
+ * 一覧全体に対する工程操作 capability。
+ *
+ * 認可規則を client へ複製せず、route が `authz.can('builds.stage_change')` から算出して返す。
+ * optional なのは、段階的な wire 互換を保ちながら consumer が fail-closed (`=== true`) で扱えるようにするため。
+ */
+export const buildListResponseSchema = paginatedSchema(buildListItemSchema)
+  .extend({ can_manage: z.boolean().optional() })
+  .strict();
 export type BuildListResponse = z.output<typeof buildListResponseSchema>;
 
 /**

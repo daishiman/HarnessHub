@@ -24,6 +24,27 @@ export const sessionClaimsSchema = z.object({
    * 代償: cookie が所属数に比例して膨らむ / membership 変更が最大 `updateAge` (15 分) 反映されない。
    */
   workspace_ids: z.array(z.string().min(1)),
+  /**
+   * 表示名 (氏名、無ければメールアドレス)。ヘッダーに「誰としてサインインしているか」を
+   * 人が読める語で出すためだけに載せる。認可の判定には**使わない**。
+   *
+   * **optional にするのは必須**。`users.name` / `users.email` はどちらも空文字を取り得るため
+   * (JIT provisioning が `name: ''` で作る)、人が読める名前が 1 つも無い利用者が実在する。
+   * 必須にすると、その利用者の session が claims の検証で落ちてサインインできなくなる。
+   * 既に発行済みの session (この claim を持たない) も同じ理由で受理し続ける必要がある。
+   */
+  name: z.string().min(1).optional(),
+  /**
+   * 所属 Workspace の表示名 (識別子 → 名前)。**表示専用**。
+   *
+   * 到達可否は `workspace_ids` だけが決める。ここに載っているかどうかで到達を判定しないこと
+   * (名前が未設定の Workspace はキーごと欠けるため、判定に使うと名前の有無が権限になる)。
+   *
+   * `workspace_ids` と同じ理由で optional。この claim を足す前に発行された session、および
+   * 名前が 1 つも引けない利用者では欠ける。欠けたら識別子を識別子として出す。
+   * 名前の変更は `workspace_ids` の変更と同じく再発行まで反映されない (陳腐化の等級は同じ)。
+   */
+  workspace_names: z.record(z.string().min(1), z.string().min(1)).optional(),
   /** 発行時刻 (epoch 秒)。緊急失効の判定基準になるので必須。 */
   iat: epochSecondsSchema,
   /** 失効時刻 (epoch 秒)。 */

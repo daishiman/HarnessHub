@@ -7,7 +7,7 @@
  * 未保存の下書きとの差分を確認できるようにする。
  */
 import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
-import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
+import { Alert, Button, LiveStatus, Panel, ScreenHeader, Select, Stack, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
@@ -89,35 +89,59 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   };
 
   if (error !== null && saved === null) return <Alert tone="danger" title="読み込みエラー" description={error} />;
-  if (saved === null) return <p aria-live="polite">読み込み中です…</p>;
+  if (saved === null) return <LiveStatus>ドキュメントを読み込み中です。</LiveStatus>;
 
   return (
     <article>
-      <h1>ドキュメントを編集</h1>
-      {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
-
-      <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
-      <Select
-        label="状態"
-        value={status}
-        onChange={(event) => setStatus(event.target.value as DocumentStatus)}
-        options={[
-          { value: 'draft', label: '下書き' },
-          { value: 'published', label: '公開済み' },
+      {/* 見出し・パンくず・主要操作の並びは他画面と同じ ScreenHeader に揃える。
+          ここだけ生の h1 とページ下部のボタンだったため、
+          「編集をやめて戻る」導線と保存ボタンの位置が他画面と食い違っていた */}
+      <ScreenHeader
+        title="ドキュメントを編集"
+        description="保存すると、この内容が閲覧画面に反映されます。"
+        breadcrumbs={[
+          {
+            href: `/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`,
+            label: 'ドキュメント',
+          },
+          {
+            href: `/docs/${id}?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`,
+            label: saved.title,
+          },
+          { label: '編集' },
         ]}
+        breadcrumbsLabel="現在地"
+        sticky
+        actions={
+          <Button type="button" onClick={() => void save()} disabled={saving}>
+            {saving ? '保存しています…' : '保存する'}
+          </Button>
+        }
       />
-      <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
 
-      <section aria-label="保存済みの内容">
-        <h2>保存済みの内容 (プレビュー)</h2>
-        <MarkdownView content={saved.body_markdown} />
-      </section>
+      <Stack gap={4}>
+        {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
 
-      <p>
-        <Button type="button" onClick={() => void save()} disabled={saving}>
-          保存する
-        </Button>
-      </p>
+        <Panel title="編集">
+          <Stack gap={4}>
+            <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
+            <Select
+              label="状態"
+              value={status}
+              onChange={(event) => setStatus(event.target.value as DocumentStatus)}
+              options={[
+                { value: 'draft', label: '下書き' },
+                { value: 'published', label: '公開済み' },
+              ]}
+            />
+            <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
+          </Stack>
+        </Panel>
+
+        <Panel title="いま保存されている内容" description="上の編集欄と見比べて、変更点を確認できます。">
+          <MarkdownView content={saved.body_markdown} />
+        </Panel>
+      </Stack>
     </article>
   );
 }

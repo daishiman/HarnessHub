@@ -14,7 +14,7 @@ import {
   type PublishRequestView,
   publishNeedsFixSummary,
 } from '@harness-hub/schemas';
-import { Alert, Button, StatusChip } from '@harness-hub/ui';
+import { Alert, Button, Panel, Stack, StatusChip, TagRow } from '@harness-hub/ui';
 import { useCallback, useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope, PollingState } from '../../lib/catalog/index.js';
 import {
@@ -167,50 +167,58 @@ export function CatalogPublishStatus({
   }, [port, scope, publishId, initialRequest, generation]);
 
   return (
-    <section aria-labelledby="catalog-publish-status-heading">
-      <h2 id="catalog-publish-status-heading">公開状態</h2>
+    <Panel
+      title="公開状態"
+      description="公開の申請がいまどこまで進んでいるかを自動で追いかけています。"
+      headingLevel={2}
+    >
+      {/* 見出しは Panel が出す。ここは読み上げ用の名前だけ持たせて見出しの階層飛びを作らない */}
+      <section aria-label="公開状態">
+        <Stack gap={3}>
+          {/* 更新のたびに focus を奪わず、読み上げも中断しない (qa-018) */}
+          <div aria-live="polite">
+            {request === null ? (
+              <p style={{ margin: 0 }}>公開状態を取得しています。</p>
+            ) : (
+              <TagRow label="公開の状態">
+                <StatusChip domain="publish" status={publishStatusChipValue(request.status)} />
+              </TagRow>
+            )}
+          </div>
 
-      {/* 更新のたびに focus を奪わず、読み上げも中断しない (qa-018) */}
-      <p aria-live="polite">
-        {request === null ? (
-          '公開状態を取得しています。'
-        ) : (
-          <StatusChip domain="publish" status={publishStatusChipValue(request.status)} />
-        )}
-      </p>
+          {failure === null ? null : (
+            <Alert tone="warning" title="公開状態を更新できませんでした" description={failure.message} />
+          )}
 
-      {failure === null ? null : (
-        <Alert tone="warning" title="公開状態を更新できませんでした" description={failure.message} />
-      )}
+          {stopped ? (
+            <Alert
+              tone="info"
+              title="自動更新を停止しました"
+              description="最新の状態は再試行で取得できます。"
+              action={
+                <Button type="button" onClick={retry}>
+                  再試行
+                </Button>
+              }
+            />
+          ) : null}
 
-      {stopped ? (
-        <Alert
-          tone="info"
-          title="自動更新を停止しました"
-          description="最新の状態は再試行で取得できます。"
-          action={
-            <Button type="button" onClick={retry}>
-              再試行
-            </Button>
-          }
-        />
-      ) : null}
-
-      {request !== null && request.findings.length > 0 ? (
-        <section aria-labelledby="catalog-publish-findings-heading">
-          <h4 id="catalog-publish-findings-heading">{PUBLISH_NEEDS_FIX_HEADING}</h4>
-          {/* 説明と 1 行の書式は CLI 経路と同じ実装から取る (受入 3)。ここで文面を作らない */}
-          <p>{publishNeedsFixSummary(request.verdict)}</p>
-          <ul>
-            {/* 位置ではなく内容でキーを作る。並び替えや途中挿入があっても同じ指摘が同じ行に留まる */}
-            {request.findings.map((finding) => (
-              <li key={`${finding.stage}-${finding.rule_id}-${finding.path ?? ''}-${finding.line ?? ''}`}>
-                {formatPublishFinding(finding)}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-    </section>
+          {request !== null && request.findings.length > 0 ? (
+            <Panel title={PUBLISH_NEEDS_FIX_HEADING} headingLevel={3}>
+              {/* 説明と 1 行の書式は CLI 経路と同じ実装から取る (受入 3)。ここで文面を作らない */}
+              <p style={{ marginBlockStart: 0 }}>{publishNeedsFixSummary(request.verdict)}</p>
+              <ul>
+                {/* 位置ではなく内容でキーを作る。並び替えや途中挿入があっても同じ指摘が同じ行に留まる */}
+                {request.findings.map((finding) => (
+                  <li key={`${finding.stage}-${finding.rule_id}-${finding.path ?? ''}-${finding.line ?? ''}`}>
+                    {formatPublishFinding(finding)}
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+          ) : null}
+        </Stack>
+      </section>
+    </Panel>
   );
 }

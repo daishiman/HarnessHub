@@ -118,6 +118,42 @@ describe('createUserWorkspacesRepo listWorkspaceIdsForUser', () => {
   });
 });
 
+describe('createUserWorkspacesRepo listWorkspacesForUser', () => {
+  it('名前つきで、listWorkspaceIdsForUser と同じ順序で返る', async () => {
+    const userId = await newUserId();
+    const first = await newWorkspaceId(context, 'ws-aaa');
+    const second = await newWorkspaceId(context, 'ws-bbb');
+
+    for (const workspaceId of [second, first]) {
+      await repo.add(context, { userId, workspaceId });
+    }
+
+    const memberships = await repo.listWorkspacesForUser(context, userId);
+    expect(memberships.map((membership) => membership.workspaceId)).toStrictEqual(
+      await repo.listWorkspaceIdsForUser(context, userId),
+    );
+    expect(memberships.map((membership) => membership.name).sort()).toStrictEqual(['ws-aaa', 'ws-bbb']);
+  });
+
+  /**
+   * 名前が引けない所属を落とすと、この一覧から導いた到達可否が
+   * listWorkspaceIdsForUser より狭くなる。**名前の有無を権限にしない**ことを固定する。
+   */
+  it('workspaces 行が無い所属も落とさず、名前だけ空文字で返す', async () => {
+    const userId = await newUserId();
+    await repo.add(context, { userId, workspaceId: 'ws-dangling' });
+
+    expect(await repo.listWorkspacesForUser(context, userId)).toStrictEqual([{ workspaceId: 'ws-dangling', name: '' }]);
+  });
+
+  it('別テナントの context からは所属が見えない', async () => {
+    const userId = await newUserId();
+    await repo.add(context, { userId, workspaceId: await newWorkspaceId() });
+
+    expect(await repo.listWorkspacesForUser(await otherTenantContext(), userId)).toStrictEqual([]);
+  });
+});
+
 describe('createUserWorkspacesRepo listUserIdsForWorkspace', () => {
   it('逆順に add しても userId の昇順で返る', async () => {
     const workspaceId = await newWorkspaceId();

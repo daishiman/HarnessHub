@@ -22,6 +22,7 @@ describe('/device session 表示境界', () => {
         role: 'member',
         status: 'active',
         workspace_ids: ['workspace-a', 'workspace-b'],
+        workspace_names: { 'workspace-a': '営業部' },
         iat: NOW_SECONDS,
         exp: NOW_SECONDS + 3600,
       },
@@ -32,8 +33,31 @@ describe('/device session 表示境界', () => {
       status: 'authenticated',
       tenantId: 'tenant-acme',
       workspaceIds: ['workspace-a', 'workspace-b'],
+      workspaceNames: { 'workspace-a': '営業部' },
     });
     expect(activeSessionDeps.isRevoked).toHaveBeenCalledWith('tenant-acme', 'user-acme', NOW_SECONDS);
+  });
+
+  it('workspace_names が無い既存 session は空の表示名対応表へ落とす', async () => {
+    const token = await signSessionToken(
+      {
+        sub: 'user-acme',
+        tenant_id: 'tenant-acme',
+        role: 'member',
+        status: 'active',
+        workspace_ids: ['workspace-a'],
+        iat: NOW_SECONDS,
+        exp: NOW_SECONDS + 3600,
+      },
+      SESSION_SECRET,
+    );
+
+    await expect(resolveDeviceApprovalSession(`${SESSION_COOKIE_NAME}=${token}`, activeSessionDeps)).resolves.toEqual({
+      status: 'authenticated',
+      tenantId: 'tenant-acme',
+      workspaceIds: ['workspace-a'],
+      workspaceNames: {},
+    });
   });
 
   it('cookieなし・inactive sessionを承認フォームへ通さない', async () => {

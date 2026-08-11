@@ -31,13 +31,17 @@ import {
   IDEMPOTENCY_KEY,
   IDEMPOTENCY_REPLAY_HEADER,
   listRoute,
+  OWNER_ID,
   PUBLISH_ARCHIVE_LIMITS,
   packageRoute,
   params,
   projectCreateRoute,
+  projectListRoute,
   publish,
+  sessionCookieFor,
   setPublishRateLimiterForTest,
   submitRoute,
+  testUser,
   VALID_MANIFEST,
 } from './support/route-context.js';
 
@@ -64,6 +68,27 @@ describe('POST /projects: Web 公開用 Project の準備', () => {
     expect(await second.json()).toEqual(await first.json());
     expect(publish.projectRows()).toHaveLength(2); // setup の proj-1 + 今回作成した 1 件
     expect(publish.auditEvents().filter((event) => event.action === 'project.create')).toHaveLength(1);
+  });
+});
+
+describe('GET /projects: Project名の選択肢', () => {
+  it('現在の Workspace だけを返し、owner の公開 capability を認可表から投影する', async () => {
+    publish.putProject({ id: 'proj-other-workspace', workspaceId: 'workspace-other', name: '別Workspace' });
+    const response = await projectListRoute(
+      await buildRequest('GET', '/projects', { cookie: await sessionCookieFor(testUser(OWNER_ID)) }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      items: [
+        {
+          id: 'proj-1',
+          name: 'Project proj-1',
+          description: '',
+          can_publish: true,
+        },
+      ],
+    });
   });
 });
 

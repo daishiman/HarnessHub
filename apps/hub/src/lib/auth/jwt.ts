@@ -9,6 +9,18 @@
 /** header は固定。token 側が申告する `alg` は一切見ない (`alg: none` を受け入れないため)。 */
 const JWT_HEADER = { alg: 'HS256', typ: 'JWT' } as const;
 
+/**
+ * payload 以外に必ず付く文字数 = header + 区切りの `.` 2 個 + 署名。
+ *
+ * cookie に載るサイズの上限を計算する側が使う。定数を書き写すのではなく実際の
+ * 直列化から数えるのは、header や署名方式を変えたときに上限の計算だけが古くなるのを防ぐため。
+ */
+export const JWT_ENVELOPE_CHARS =
+  base64UrlEncode(new TextEncoder().encode(JSON.stringify(JWT_HEADER))).length +
+  2 +
+  // HS256 の署名は 32 バイト固定。base64url では 43 文字 (padding は落とす)
+  base64UrlEncode(new Uint8Array(32)).length;
+
 export type JwtRejectionReason = 'malformed' | 'bad_signature';
 
 export type JwtVerification =

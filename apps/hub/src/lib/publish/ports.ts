@@ -54,6 +54,8 @@ export interface PublishProjectRecord extends PublishProjectAccess {
 
 export interface ProjectAccessPort {
   findById(scope: PublishScope, id: string): Promise<PublishProjectAccess | null>;
+  /** 現在の Workspace で参照できる active Project。一覧UIの表示名解決にも使う。 */
+  list(scope: PublishScope): Promise<readonly PublishProjectRecord[]>;
   create(
     scope: PublishScope,
     input: { readonly name: string; readonly description: string },

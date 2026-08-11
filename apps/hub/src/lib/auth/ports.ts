@@ -83,9 +83,22 @@ export interface DirectoryUser {
   readonly tenantId: string;
   /** IdP 側の sub。`(tenantId, idpSubject)` で一意 (別テナントの同値 sub と混線しない)。 */
   readonly idpSubject: string;
+  /**
+   * 表示用の氏名とメールアドレス。**どちらも空文字を取り得る** (NOT NULL だが未取得を空文字で表す)。
+   * 認可には使わない。表示名の決め方は `display-name.ts` が単独で持つ。
+   */
+  readonly name: string;
+  readonly email: string;
   readonly role: SessionRole;
   readonly status: UserStatus;
   readonly workspaceIds: readonly string[];
+  /**
+   * 所属 Workspace の表示名 (識別子 → 名前)。**表示専用**で、到達可否は `workspaceIds` だけが決める。
+   *
+   * 名前が引けない所属はキーごと載せない (空文字を入れない)。省略可能にしてあるのは、
+   * 認可を扱う既存の port 実装が「名前を持たない」まま正しく動けるようにするため。
+   */
+  readonly workspaceNames?: Readonly<Record<string, string>> | undefined;
 }
 
 export interface UserDirectoryPort {

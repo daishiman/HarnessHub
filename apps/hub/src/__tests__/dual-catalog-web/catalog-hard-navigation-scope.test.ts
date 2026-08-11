@@ -23,6 +23,8 @@ const user: DirectoryUser = {
   id: 'user-1',
   tenantId: 'tenant-a',
   idpSubject: 'idp-user-1',
+  name: '',
+  email: '',
   workspaceIds: ['workspace-a1'],
   role: 'member',
   status: 'active',

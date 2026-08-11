@@ -7,21 +7,29 @@
  * server component のままにしてあるので、シェル自体は client JS を増やさない。
  */
 import type { SessionRole } from '@harness-hub/schemas';
-import { buildShellCss, isCurrentNav, MobileTabBar, ShellFooter, ShellHeader, ShellSidebar } from '@harness-hub/ui';
+import {
+  buildShellCss,
+  isCurrentNav,
+  MobileTabBar,
+  ShellFooter,
+  ShellHeader,
+  ShellSidebar,
+  StickyHeaderOffset,
+} from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
 import { notoSansJp } from '../../app/fonts.js';
 import {
   accountMenuLinks,
   footerLinks,
+  headerSearch,
   notificationsHref,
   primaryNavItems,
   type ShellScope,
   SIGN_OUT_HREF,
-  searchAction,
   searchHiddenFields,
   secondaryNavItems,
-  sidebarNavItems,
+  sidebarNavGroups,
 } from './nav-items.js';
 import { workspaceSwitcherOptions } from './workspace-switcher-items.js';
 
@@ -43,6 +51,11 @@ export interface HubShellProps {
   readonly scope: ShellScope;
   /** サインイン中の利用者の表示名。未確定ならヘッダーは「ゲスト」を出す。 */
   readonly accountName: string | null;
+  /**
+   * `accountName` が識別子かどうか。省略時は識別子として扱う (fail-closed)。
+   * 人が読める氏名・メールアドレスが取れたときだけ false を渡す。
+   */
+  readonly accountNameIsIdentifier?: boolean | undefined;
   /** 役割 token。ARIA の `role` 属性と紛れないよう accountRole と呼ぶ。 */
   readonly accountRole: SessionRole | null;
   /**
@@ -50,6 +63,11 @@ export interface HubShellProps {
    * 省略時は切替 UI 無し = 現在値の表示のみ (fail-closed)。
    */
   readonly workspaceIds?: readonly string[] | undefined;
+  /**
+   * 所属 Workspace の表示名 (識別子 → 名前)。**表示専用**。
+   * 省略時・キーが無いときは識別子を識別子として出す (fail-closed)。
+   */
+  readonly workspaceNames?: Readonly<Record<string, string>> | undefined;
   /** 現在の URL パス。サイドバー・タブの現在地表示に使う。 */
   readonly currentHref?: string | undefined;
   /** モバイルのヘッダーに出す画面名 (§6.2)。 */
@@ -60,23 +78,32 @@ export interface HubShellProps {
 export function HubShell({
   scope,
   accountName,
+  accountNameIsIdentifier,
   accountRole,
   workspaceIds,
+  workspaceNames,
   currentHref,
   screenTitle,
   children,
 }: HubShellProps): ReactNode {
   const primary = primaryNavItems(scope);
+  const names = workspaceNames ?? {};
   const switcherOptions = workspaceSwitcherOptions(
     workspaceIds ?? [],
     scope.workspaceId === '' ? null : scope.workspaceId,
     currentHref,
+    names,
   );
+  // 現在の Workspace 名。名前が引けなければ識別子をそのまま出し、識別子の見せ方へ落とす。
+  const currentWorkspaceName = scope.workspaceId === '' ? undefined : names[scope.workspaceId];
   const secondary = secondaryNavItems(scope, accountRole);
   // layout は route ごとの画面名を持たないため、未指定時は現在地に一致する
   // top-level 導線の名前を使う。詳細画面でも「どの領域にいるか」がモバイルで失われない。
   const resolvedScreenTitle =
     screenTitle ?? [...primary, ...secondary].find((item) => isCurrentNav(item, currentHref))?.label;
+  // 検索欄の有無・行き先・文言は 1 回の判定でまとめて決まる (nav-items の headerSearch)。
+  // 対象を持たない画面では null になり、ヘッダーから検索欄ごと消える。
+  const search = headerSearch(scope, currentHref);
 
   return (
     <>
@@ -94,7 +121,7 @@ export function HubShell({
         </a>
 
         <ShellSidebar
-          items={sidebarNavItems(scope, accountRole)}
+          groups={sidebarNavGroups(scope, accountRole)}
           currentHref={currentHref}
           label="主要ナビゲーション"
           brand={<strong style={{ fontSize: 'var(--hh-font-size-md)' }}>Harness Hub</strong>}
@@ -102,19 +129,27 @@ export function HubShell({
 
         <div className="hh-shell__body">
           <ShellHeader
-            workspaceName={scope.workspaceId === '' ? '未選択' : scope.workspaceId}
+            workspaceName={scope.workspaceId === '' ? '未選択' : (currentWorkspaceName ?? scope.workspaceId)}
             workspaceLabel="ワークスペース"
+            // 名前が引けたときだけ名前の体裁で出す。引けないまま ULID を名前の位置へ置くと
+            // 「読めない名前」に見えるため、識別子として扱い IdBadge へ落とす。
+            // 「未選択」は識別子ではないので false。
+            workspaceNameIsIdentifier={scope.workspaceId !== '' && currentWorkspaceName === undefined}
             workspaceOptions={switcherOptions}
             workspaceSwitchLabel="ワークスペースを切り替える"
             screenTitle={resolvedScreenTitle}
-            searchAction={searchAction(scope)}
-            searchLabel="ヒアリングシートを検索"
-            searchPlaceholder="シートのタイトル・コードで探す"
+            searchAction={search?.action}
+            searchLabel={search?.label}
+            searchPlaceholder={search?.placeholder}
             searchHiddenFields={searchHiddenFields(scope)}
             notificationsHref={notificationsHref(scope)}
             notificationsLabel="通知設定"
             unreadLabel="未読"
             accountName={accountName ?? 'ゲスト'}
+            // 表示名 (氏名・メールアドレス) が取れたときだけ名前の体裁で出す。
+            // 取れず session の sub (ULID) を出しているときは識別子の見せ方へ落とす。
+            // 「ゲスト」は識別子ではないので、未サインイン時も false。
+            accountNameIsIdentifier={accountName !== null && (accountNameIsIdentifier ?? true)}
             accountRoleLabel={accountRole === null ? undefined : roleLabels[accountRole]}
             accountMenuLabel="アカウントメニュー"
             accountLinks={accountMenuLinks(scope, accountRole)}
@@ -130,6 +165,9 @@ export function HubShell({
           {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
               `/signin/workspace` の server intermediate response が担い、key は再利用防止の第二防壁。 */}
           <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId}\u0000${scope.workspaceId}`}>
+            {/* 見出し帯の実高さを CSS 変数へ出す。絞り込み帯がその真下に貼り付くために要る。
+                描画物を持たない client 部品なので、シェル自体は server component のまま */}
+            <StickyHeaderOffset />
             {children}
           </main>
 

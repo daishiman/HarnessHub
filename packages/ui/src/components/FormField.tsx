@@ -37,6 +37,10 @@ const labelStyle: CSSProperties = {
   marginBottom: spaceVar(1),
   color: colorVar('text'),
   fontSize: 'var(--hh-font-size-sm)',
+  // 行の高さを明示しないと、ラベル 1 行の実高さがフォント依存で揺れる。
+  // 絞り込み帯のボタンはこの高さ (--hh-field-label-offset) だけ下げて入力欄と頭を揃えるため、
+  // ここと base 層の式が食い違うと 1〜2px のずれとして必ず表に出る。
+  lineHeight: 'var(--hh-line-height-tight)',
   fontWeight: 'var(--hh-font-weight-bold)',
 };
 
@@ -62,7 +66,9 @@ export function FormField({
     .join(' ');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: spaceVar(3) }}>
+    // data-hh-field は「入力欄 1 つ分の枠」の目印。下 margin は inline ではなく base 層が持つ。
+    // inline style は後から上書きできないため、ここに書くと絞り込み帯の中でだけ余白を消す、が成立しない。
+    <div data-hh-field="" style={{ display: 'flex', flexDirection: 'column' }}>
       <label htmlFor={id} style={hideLabel ? visuallyHidden : labelStyle}>
         {label}
         {required ? (

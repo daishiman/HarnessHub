@@ -29,7 +29,7 @@ import type {
   OidcConnectionTestFailure,
   OidcConnectionTestResponse,
 } from '@harness-hub/schemas';
-import { Alert, Button, TextInput } from '@harness-hub/ui';
+import { Alert, Button, CardGrid, EmptyState, LiveStatus, Panel, Stack, TextInput } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { ConnectionCard, SetupPanel } from './oidc-connection-panels.js';
@@ -73,13 +73,49 @@ const isAdminError = (body: unknown): body is OidcAdminError => {
   return Object.hasOwn(ERROR_MESSAGES, body.error);
 };
 
+/**
+ * 操作の起点。結果表示をこの単位で出し分ける。
+ * `register` は登録フォーム、接続カードは 1 枚の中でもボタン群が 2 か所に分かれるため
+ * `<接続 id>:actions` (テスト・有効化・無効化) と `<接続 id>:rotation` (secret 入れ替え) に分ける。
+ */
+type ActionScope = string;
+
+interface ActionResult {
+  readonly scope: ActionScope;
+  readonly tone: 'success' | 'danger';
+  readonly message: string;
+}
+
+/** 面の中に置く操作結果。見出しは成否で言い分けて、色だけに頼らせない。 */
+function ActionResultAlert({
+  result,
+  scope,
+}: {
+  readonly result: ActionResult | null;
+  readonly scope: ActionScope;
+}): ReactNode {
+  if (result === null || result.scope !== scope) return null;
+  return (
+    <Alert
+      tone={result.tone}
+      title={result.tone === 'success' ? '実行しました' : '操作できませんでした'}
+      description={result.message}
+    />
+  );
+}
+
 export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): ReactNode {
   const [setup, setSetup] = useState<OidcConnectionSetup | null>(null);
   const [items, setItems] = useState<readonly OidcConnectionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  // 「一覧を読み込めなかった」と「操作に失敗した」を 1 つの state で持たない。
+  // 混ぜると、有効化を 1 回失敗しただけで接続一覧まで読めなくなったように見える。
+  const [loadError, setLoadError] = useState<string | null>(null);
+  // 操作の結果は、その操作を起こした面の中に返す。この画面は「登録フォーム」と
+  // 「接続カード」の 2 か所から操作でき、画面上端にまとめると
+  // どちらの結果なのかが読み手側にしか分からなくなる。
+  const [actionResult, setActionResult] = useState<ActionResult | null>(null);
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [workspaceDomains, setWorkspaceDomains] = useState('');
@@ -94,16 +130,16 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
       const response = await fetch(ENDPOINT, { credentials: 'same-origin', headers: scopeHeaders() });
       const body: unknown = await response.json();
       if (!response.ok) {
-        setError(isAdminError(body) ? ERROR_MESSAGES[body.error] : '接続一覧を取得できませんでした。');
+        setLoadError(isAdminError(body) ? ERROR_MESSAGES[body.error] : '接続一覧を取得できませんでした。');
         return;
       }
       const list = body as OidcConnectionListResponse;
       setSetup(list.setup);
       setItems(list.items);
-      setError(null);
+      setLoadError(null);
     } catch {
       // 例外オブジェクトを表示へ流さない。fetch の失敗理由に入力値が混ざる経路を残さない
-      setError('接続一覧を取得できませんでした。');
+      setLoadError('接続一覧を取得できませんでした。');
     } finally {
       setLoading(false);
     }
@@ -121,12 +157,13 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
    */
   const mutate = useCallback(
     async (
+      scope: ActionScope,
       path: string,
       init: { readonly method: 'POST' | 'DELETE'; readonly body?: unknown },
       onSuccess: (body: unknown) => string,
     ): Promise<boolean> => {
       setBusy(true);
-      setNotice(null);
+      setActionResult(null);
       try {
         const response = await fetch(`${ENDPOINT}${path}`, {
           method: init.method,
@@ -139,15 +176,18 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
         });
         const body: unknown = await response.json();
         if (!response.ok) {
-          setError(isAdminError(body) ? ERROR_MESSAGES[body.error] : '操作に失敗しました。');
+          setActionResult({
+            scope,
+            tone: 'danger',
+            message: isAdminError(body) ? ERROR_MESSAGES[body.error] : '操作に失敗しました。',
+          });
           return false;
         }
-        setError(null);
-        setNotice(onSuccess(body));
+        setActionResult({ scope, tone: 'success', message: onSuccess(body) });
         await load();
         return true;
       } catch {
-        setError('操作に失敗しました。');
+        setActionResult({ scope, tone: 'danger', message: '操作に失敗しました。' });
         return false;
       } finally {
         setBusy(false);
@@ -159,6 +199,7 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
   const register = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     const succeeded = await mutate(
+      'register',
       '',
       {
         method: 'POST',
@@ -190,7 +231,9 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
   };
 
   const runTest = async (id: string, target: 'current' | 'pending'): Promise<void> => {
-    await mutate(`/${id}/test`, { method: 'POST', body: { target } }, (body) => {
+    // 「新しい secret のテスト」は入れ替えの面から押すので、結果もそちらへ返す
+    const scope = `${id}:${target === 'pending' ? 'rotation' : 'actions'}`;
+    await mutate(scope, `/${id}/test`, { method: 'POST', body: { target } }, (body) => {
       const result = body as OidcConnectionTestResponse;
       if (result.passed) {
         return target === 'pending'
@@ -204,6 +247,7 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
   const stageRotation = async (id: string): Promise<void> => {
     const secret = rotationSecrets[id] ?? '';
     await mutate(
+      `${id}:rotation`,
       `/${id}/rotation`,
       { method: 'POST', body: { client_secret: secret } },
       () => '新しい secret を登録しました。現在のログインは今までの secret で継続しています。',
@@ -212,103 +256,138 @@ export function OidcConnectionAdmin({ tenantId }: OidcConnectionAdminProps): Rea
   };
 
   return (
-    <>
-      {error === null ? null : <Alert tone="danger" title="エラー" description={error} />}
-      {notice === null ? null : <Alert tone="success" title="実行しました" description={notice} />}
-
+    <Stack gap={4}>
       <SetupPanel setup={setup} />
 
-      <section aria-labelledby="oidc-register-heading">
-        <h2 id="oidc-register-heading">2. Google Cloud で作成した値を登録する</h2>
-        <p>
-          Console で発行した client ID と client secret を入力します。
-          <strong>secret は保存後に再表示できません</strong>
-          (Hub が保持するのは暗号化した値と末尾 4 文字だけです)。
-        </p>
-        <p>
-          すでに接続がある場合、この登録は<strong>すぐには切り替わりません</strong>。 下の「3.
-          接続の状態」で接続テストに合格させ、有効化した時点で切り替わります。
-          それまでは今までの設定でログインできます。
-        </p>
-        <form aria-label="Google OAuth client の登録" onSubmit={register}>
-          <TextInput
-            label="client ID"
-            required
-            autoComplete="off"
-            value={clientId}
-            onChange={(event) => setClientId(event.target.value)}
-          />
-          <TextInput
-            label="client secret"
-            required
-            // マスク入力。ブラウザの保存候補にも載せない
-            type="password"
-            autoComplete="new-password"
-            description="入力値は暗号化して保存され、この画面へ再表示されることはありません。"
-            value={clientSecret}
-            onChange={(event) => setClientSecret(event.target.value)}
-          />
-          <TextInput
-            label="許可する Google Workspace ドメイン (任意)"
-            autoComplete="off"
-            description="複数ある場合はカンマ区切りで入力します。空欄ならドメイン制限を行いません。"
-            placeholder="example.com, subsidiary.example.com"
-            value={workspaceDomains}
-            onChange={(event) => setWorkspaceDomains(event.target.value)}
-          />
-          <Button type="submit" variant="primary" loading={busy} disabled={busy}>
-            登録する
-          </Button>
-        </form>
+      {/* 見出しは Panel が出す。id はページ内リンクの飛び先として section に残す */}
+      <section id="oidc-register-heading" aria-label="2. Google Cloud で作成した値を登録する">
+        <Panel title="2. Google Cloud で作成した値を登録する">
+          <Stack gap={3}>
+            <p style={{ margin: 0 }}>
+              Console で発行した client ID と client secret を入力します。
+              <strong>secret は保存後に再表示できません</strong>
+              (Hub が保持するのは暗号化した値と末尾 4 文字だけです)。
+            </p>
+            <p style={{ margin: 0 }}>
+              すでに接続がある場合、この登録は<strong>すぐには切り替わりません</strong>。 下の「3.
+              接続の状態」で接続テストに合格させ、有効化した時点で切り替わります。
+              それまでは今までの設定でログインできます。
+            </p>
+            <form aria-label="Google OAuth client の登録" onSubmit={register}>
+              <Stack gap={3}>
+                <TextInput
+                  label="client ID"
+                  required
+                  autoComplete="off"
+                  value={clientId}
+                  onChange={(event) => setClientId(event.target.value)}
+                />
+                <TextInput
+                  label="client secret"
+                  required
+                  // マスク入力。ブラウザの保存候補にも載せない
+                  type="password"
+                  autoComplete="new-password"
+                  description="入力値は暗号化して保存され、この画面へ再表示されることはありません。"
+                  value={clientSecret}
+                  onChange={(event) => setClientSecret(event.target.value)}
+                />
+                <TextInput
+                  label="許可する Google Workspace ドメイン (任意)"
+                  autoComplete="off"
+                  description="複数ある場合はカンマ区切りで入力します。空欄ならドメイン制限を行いません。"
+                  placeholder="example.com, subsidiary.example.com"
+                  value={workspaceDomains}
+                  onChange={(event) => setWorkspaceDomains(event.target.value)}
+                />
+                {/* 登録の結果は押したボタンの隣に出す。画面上端の帯に出すと、
+                    入力欄を見ている利用者の視野の外で結果が告知されることになる */}
+                <ActionResultAlert result={actionResult} scope="register" />
+                <div>
+                  <Button type="submit" variant="primary" loading={busy} disabled={busy}>
+                    登録する
+                  </Button>
+                </div>
+              </Stack>
+            </form>
+          </Stack>
+        </Panel>
       </section>
 
-      <section aria-labelledby="oidc-connections-heading">
-        <h2 id="oidc-connections-heading">3. 接続の状態</h2>
-        {loading ? (
-          <p aria-live="polite">読み込み中です。</p>
-        ) : items.length === 0 ? (
-          <p>登録済みの接続はまだありません。</p>
-        ) : (
-          <ul aria-label="OIDC 接続一覧">
-            {items.map((connection) => (
-              <li key={connection.id}>
-                <ConnectionCard
-                  connection={connection}
-                  busy={busy}
-                  rotationSecret={rotationSecrets[connection.id] ?? ''}
-                  onRotationSecretChange={(value) =>
-                    setRotationSecrets((current) => ({ ...current, [connection.id]: value }))
-                  }
-                  onTest={(target) => void runTest(connection.id, target)}
-                  onStageRotation={() => void stageRotation(connection.id)}
-                  onDiscardRotation={() =>
-                    void mutate(
-                      `/${connection.id}/rotation`,
-                      { method: 'DELETE' },
-                      () => 'rotation を取り消しました。現行の secret のままです。',
-                    )
-                  }
-                  onActivate={() =>
-                    void mutate(
-                      `/${connection.id}/activate`,
-                      { method: 'POST' },
-                      () => '有効化しました。以降のログインはこの接続で解決されます。',
-                    )
-                  }
-                  onDisable={() =>
-                    void mutate(
-                      `/${connection.id}/disable`,
-                      { method: 'POST' },
-                      () => '無効化しました。Google Cloud Console 側でも client を失効させてください。',
-                    )
-                  }
-                />
-              </li>
-            ))}
-          </ul>
-        )}
+      <section id="oidc-connections-heading" aria-label="3. 接続の状態">
+        <Panel title="3. 接続の状態" description="登録済みの接続ごとに、テスト・有効化・無効化ができます。">
+          <LiveStatus>{loading ? '接続の状態を読み込んでいます。' : `${items.length} 件の接続を表示中`}</LiveStatus>
+          {loading ? (
+            <p style={{ margin: 0 }}>読み込み中です。</p>
+          ) : loadError !== null ? (
+            // 取得できていないことを「0 件」と出さない。無いのか読めていないのかで次の行動が変わる
+            <Stack gap={3}>
+              <p role="alert" style={{ margin: 0 }}>
+                {loadError}
+              </p>
+              <div>
+                <Button type="button" variant="secondary" onClick={() => void load()}>
+                  読み込み直す
+                </Button>
+              </div>
+            </Stack>
+          ) : items.length === 0 ? (
+            <EmptyState
+              title="登録済みの接続はまだありません"
+              description="上の「2. Google Cloud で作成した値を登録する」から、最初の接続を登録してください。"
+            />
+          ) : (
+            <CardGrid
+              as="ul"
+              columns="wide"
+              aria-label="OIDC 接続一覧"
+              style={{ listStyle: 'none', margin: 0, padding: 0 }}
+            >
+              {items.map((connection) => (
+                <li key={connection.id}>
+                  <ConnectionCard
+                    connection={connection}
+                    busy={busy}
+                    rotationSecret={rotationSecrets[connection.id] ?? ''}
+                    onRotationSecretChange={(value) =>
+                      setRotationSecrets((current) => ({ ...current, [connection.id]: value }))
+                    }
+                    onTest={(target) => void runTest(connection.id, target)}
+                    onStageRotation={() => void stageRotation(connection.id)}
+                    onDiscardRotation={() =>
+                      void mutate(
+                        `${connection.id}:rotation`,
+                        `/${connection.id}/rotation`,
+                        { method: 'DELETE' },
+                        () => 'rotation を取り消しました。現行の secret のままです。',
+                      )
+                    }
+                    onActivate={() =>
+                      void mutate(
+                        `${connection.id}:actions`,
+                        `/${connection.id}/activate`,
+                        { method: 'POST' },
+                        () => '有効化しました。以降のログインはこの接続で解決されます。',
+                      )
+                    }
+                    onDisable={() =>
+                      void mutate(
+                        `${connection.id}:actions`,
+                        `/${connection.id}/disable`,
+                        { method: 'POST' },
+                        () => '無効化しました。Google Cloud Console 側でも client を失効させてください。',
+                      )
+                    }
+                    actionResult={<ActionResultAlert result={actionResult} scope={`${connection.id}:actions`} />}
+                    rotationResult={<ActionResultAlert result={actionResult} scope={`${connection.id}:rotation`} />}
+                  />
+                </li>
+              ))}
+            </CardGrid>
+          )}
+        </Panel>
       </section>
-    </>
+    </Stack>
   );
 }
 

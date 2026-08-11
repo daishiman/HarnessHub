@@ -54,9 +54,10 @@ export function computeBuildRisk(stage: BuildStage, updatedAt: number, nowMillis
  *
  * 空文字を返さないのが要点で、`buildListItemSchema` の `title` は `min(1)` のため
  * 「題名が取れない Build が 1 件あるだけで一覧全体が 500 になる」事故を避ける。
+ * Build ID はカード名へ埋め込まない。識別子を人名・案件名の体裁で見せないためである。
  */
 export function fallbackBuildTitle(row: BuildRow): string {
-  return `${BUILD_TYPE_LABELS[row.type]} (${row.id})`;
+  return `${BUILD_TYPE_LABELS[row.type]}起点の構築案件（題名未取得）`;
 }
 
 /** 題名を wire の上限へ丸める。改行はカード表示で潰れるため 1 行へ寄せる。 */

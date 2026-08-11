@@ -6,7 +6,7 @@
  *
  * 既定期間が S09 より長いのは、週次の並びを読むのに 30 日では点が 4〜5 個しか立たないため。
  */
-import { Panel, ScreenHeader } from '@harness-hub/ui';
+import { ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { DEFAULT_USAGE_RANGE_DAYS, recentRange } from '../../../../features/metrics-tracking/view-model.js';
@@ -37,14 +37,14 @@ export default async function MetricsUsagePage({ searchParams }: PageProps) {
         id="metrics-usage-heading"
         title="使用状況・削減効果"
         description="ハーネスごとの週次の実行回数と、確定済みの削減時間・削減額を表示します。"
+        sticky
       />
-      <Panel>
-        <UsageSavingsReport
-          tenantId={tenantId}
-          workspaceId={workspaceId}
-          range={{ from: query.from ?? fallback.from, to: query.to ?? fallback.to }}
-        />
-      </Panel>
+      {/* 中身が自前の面 (Panel) を持つので、ここで二重に囲まない */}
+      <UsageSavingsReport
+        tenantId={tenantId}
+        workspaceId={workspaceId}
+        range={{ from: query.from ?? fallback.from, to: query.to ?? fallback.to }}
+      />
     </>
   );
 }

@@ -27,6 +27,7 @@ export default async function HearingSheetsPage({ searchParams }: PageProps) {
         id="hearing-sheets-heading"
         title="ヒアリングシート"
         description="業務のヒアリング内容と、そこから生成された仕様の状態を一覧します。"
+        sticky
         actions={
           <ActionLink href={`/sheets/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
             新しく作成
