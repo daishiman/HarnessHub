@@ -39,7 +39,7 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 | `HarnessHub-pf5o` | publish smoke の channel 解放順序 | **ローカル実装達成**（本番再実走は残件） | あり（smoke 手順契約） |
 | `HarnessHub-ic7w` | required-check 台帳と parity | **部分達成**（protection 未適用） | あり（dev-workflow 設計の強制境界） |
 | `HarnessHub-xcl3` | tier 下流切替 | **未配線を明示**（部分切替撤回） | あり（未配線境界の設計契約） |
-| `HarnessHub-sl6o` | pre-push jsonschema 誤判定 | **実装達成**（実 push 経路証跡は残件） | なし（開発ツール境界のみ） |
+| `HarnessHub-sl6o` | pre-push jsonschema 誤判定 | **達成・Beads close**（通常 push 実走済み） | なし（開発ツール境界のみ） |
 
 ## 3. 中学生向けの説明
 
@@ -94,7 +94,6 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 - `HarnessHub-pf5o`: 修正 SHA の production publish smoke 再実走証跡
 - `HarnessHub-ic7w`: branch protection 適用と required 3 件登録（30 回安定 green 後）
 - `HarnessHub-xcl3`: 9 gate の cross-workflow 配線と blocking 切替
-- `HarnessHub-sl6o`: 修正 commit 後の通常 `git push` 経路での受入
 - `HarnessHub-preq`: navigation VRT baseline +197px
 - `HarnessHub-x30r`: 非 catalog route の G13 警告帯
 
