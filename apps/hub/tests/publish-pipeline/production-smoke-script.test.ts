@@ -101,8 +101,10 @@ describe('P13 production publish smoke script', () => {
     expect(rejectedCancel).toBeGreaterThan(-1);
     expect(blockerReady).toBeGreaterThan(rejectedCancel);
     expect(source).toContain('S3 cleanup: rejected request cancel が draft を返しません');
+    // cancel したつもりで status を見ていない、を防ぐ (API 応答と DB の双方で draft を確かめる)
+    expect(source).toContain('rejectedAfterCancel');
+    expect(source).toContain('channel_slot_released');
   });
-
   it('新しい secret を足さず Device Flow の短命 token で認可される', () => {
     const source = readFileSync(SCRIPT, 'utf8');
     const support = readFileSync(SUPPORT, 'utf8');

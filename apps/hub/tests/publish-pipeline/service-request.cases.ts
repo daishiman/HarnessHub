@@ -282,6 +282,20 @@ describe('submit と直列化 (T4)', () => {
     expect(harness.transitionLog()).toEqual([]);
   });
 
+  it('needs_fix の差戻しも channel を占有し続ける (T4-A)', async () => {
+    // partial UNIQUE index の除外は published / failed / draft だけ。needs_fix は終端ではないので
+    // cancel で draft へ戻すまで slot を握り続ける。ここを「差戻し = 空き」と誤解すると、
+    // 後続の submit や ready fixture が UNIQUE 違反で落ちる (production smoke の実失敗)。
+    const harness = createPublishHarness();
+    readyToSubmit(harness, { id: 'req-rejected', status: 'needs_fix', verdict: 'red' });
+    const next = readyToSubmit(harness, { id: 'req-b' });
+
+    const outcome = await submitPublishRequest(harness.deps, harness.scope, next.id);
+
+    expect(outcome).toEqual({ ok: false, code: 'channel_busy' });
+    expect(harness.transitionLog()).toEqual([]);
+  });
+
   it('先読みの直後に割り込まれても UNIQUE 制約で落ちる (T4-B: 正本)', async () => {
     // 先読みは最適化にすぎない。保証しているのは partial UNIQUE index のほう
     const harness = createPublishHarness();
