@@ -114,11 +114,35 @@ E-2 (環境値の読み出しを吸収層へ一本化し、request context 内�
 [qa-187-c それでも原因を断定しない理由] 公式記述が保証するのは『この機序が成立し得る』ところまでである。報告症状が実際にこの経路で起きたと言うには、当該 isolate の生成時刻と secret 投入時刻の前後関係という**本番の実測データ**が要る。本セッションでは本番への観測が許諾されておらず、この前後関係は取得できていない。よって候補 (2) は『機序として確認済み・実際の発生は未確認』の強さで記録し、候補 (1) 未ゲート経路・候補 (3) 認証以外の原因も引き続き残す。
 
 [qa-187-d 仕様に加えるもの] E-2 の acceptance に「認証に関わる構築物が module scope に保持されず、request ごとに解決される」を明示する。V6 の検査点に「module 最上位での環境値依存構築の検出」を含める (これは既に E-1 の検査だが、isolate 再利用という**失敗の帰結**を検査の説明文へ書き添える。検査が何を防いでいるか読めないと、将来この検査は『厳しすぎる』として緩められる)。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 原則: Explicit effects and errors (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 認証に使う環境 binding の解決を module scope の暗黙キャッシュから request boundary へ移し、値の由来と失敗を明示する契約に適用した。
+  - トレードオフ:
+    - request ごとの解決処理が増える
+    - module scope cache による僅かな高速化を採らない
+- 原則: 観測可能性 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 公式に成立する isolate 再利用機序と、本番で実際に発生したという未確認仮説を分離し、稼働構成の由来を観測できることを acceptance に加える判断に適用した。
+  - トレードオフ:
+    - 原因断定には本番時系列の追加観測が必要になる
+    - 観測を増やしても secret 値自体は記録できない
 ##### 確定内容 qa-043 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: 既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 原則: 環境の再現性 (Infrastructure as Code) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: macOS / Windows の作者環境で同じ pnpm script、明示 binding、同じ配布経路を使い、shell や production DB への暗黙依存を避ける基盤契約に適用した。
+  - トレードオフ:
+    - OS ごとの差異を吸収する検証と保守が必要になる
+    - 緊急時のローカル操作にも事後記録の負担が生じる
+- 原則: Secure defaults and usable security (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: Device Flow token を OS 資格情報域だけへ保存し、非エンジニアへ長命 secret の手動管理を要求しない既定に適用した。
+  - トレードオフ:
+    - OS 資格情報 API ごとの adapter が必要になる
+    - ヘッドレス環境では別の安全な資格情報経路が必要になる
 - 資するゴール: G1, G4, G5, G2
 
 ## 最新ドキュメント出典

@@ -34,6 +34,8 @@ import { greenZip, secretZip, sha256, smokeId } from './smoke-production-publish
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..', '..');
+/** pnpm --filter ... exec は子processのcwdをpackage rootへ変えるため、configは絶対pathで固定する。 */
+const WRANGLER_CONFIG = resolve(REPO_ROOT, 'apps', 'hub', 'wrangler.jsonc');
 const DEFAULT_R2_BUCKET = 'harness-hub-packages';
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 /** publish 系 action (`publish.write` / `channel.promote` など) が要求する scope。 */
@@ -382,7 +384,7 @@ function downloadR2(bucket: string, key: string, destination: string): void {
       '--file',
       destination,
       '--config',
-      'apps/hub/wrangler.jsonc',
+      WRANGLER_CONFIG,
     ],
     { cwd: REPO_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
   );
@@ -411,4 +413,5 @@ export {
   smokeId,
   smokeRunId,
   sweepSmokeTenants,
+  WRANGLER_CONFIG,
 };

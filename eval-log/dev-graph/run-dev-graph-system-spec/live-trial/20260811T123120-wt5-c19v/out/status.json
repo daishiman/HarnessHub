@@ -1,0 +1,64 @@
+{
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "skill": "dev-graph:run-dev-graph-system-spec",
+  "skill_args": "--repo-root <fixture-repo> --resume",
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import",
+    "command": "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root <fixture-repo>",
+    "invocations": 1,
+    "status": "PASS",
+    "completion_contract": {
+      "version": "system-spec-resume-closure/v1",
+      "path": "resume-reuse",
+      "authority": "digest-bound-resume-receipt",
+      "evaluator_execution": "reused-current-pass",
+      "import_writer": "C02"
+    },
+    "checklist": [
+      {"id": "context", "status": "pass", "evidence": "resolve-context exit 0"},
+      {"id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true"},
+      {"id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0"},
+      {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+      {"id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0"},
+      {"id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0"}
+    ],
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "gate-boundary", "exit_code": 0},
+      {"label": "gate-source-and-evidence-bindings", "exit_code": 0},
+      {"label": "gate-graph-preview", "exit_code": 0},
+      {"label": "c02-dry-run-architecture", "exit_code": 0},
+      {"label": "c02-dry-run-specification", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-evidence-refs", "exit_code": 0},
+      {"label": "gate-source-digest", "exit_code": 0}
+    ],
+    "all_steps_exit_zero": true
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "Skill was invoked with --resume; validate-system-spec-resume.py reported valid=true, mode=reuse-confirmed, plugin_version=0.1.0 within >=0.1.0 <1.0.0, required_entry_points = [assign-system-spec-completeness-evaluator, run-system-spec-compile, run-system-spec-doc-fetch, run-system-spec-elicit], failures=[]; digest-bound artifacts (index.md, 00-requirements-definition.md, completeness-report.json, spec-state.json, fetched-references.json) all current, so none of the 4 upstream entry points was called (upstream_skill_invocations=0, network_calls=0)."
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "gate-source-and-evidence-bindings, gate-evidence-refs (validate-evidence-refs.py) and gate-source-digest (validate-source-digest.py) all exit 0 for registered_this_run, confirming each node's source_digest matches the sha256 of its own source_path and that source_lineage / confirmation_evidence / evaluator evidence_ref have zero dangling or missing entries."
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "Registration ran exclusively through the C02 writer upsert-node.py (c02-dry-run-architecture / c02-dry-run-specification then c02-upsert-architecture / c02-upsert-specification, all exit 0; no direct graph.json edits), producing exactly the 2 nodes arch-system-spec-overview and spec-system-spec-index; gate-boundary exit 0 confirms 0 duplicated elicitation/compile logic in dev-graph (source body verbatim import only)."
+    }
+  ],
+  "blockers": []
+}

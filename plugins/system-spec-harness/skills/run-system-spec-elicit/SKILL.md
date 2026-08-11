@@ -34,6 +34,8 @@ responsibility_refs:
   - prompts/R3-reask.md
   - prompts/R4-reopen.md
   - prompts/R5-decision-guide.md
+  - prompts/R6-audit-hearing.md
+  - prompts/R7-audit-matrix.md
 reference_refs:
   - references/resource-map.yaml
   - references/elicit-question-bank.md
@@ -124,7 +126,7 @@ feedback_contract:
 1. **確定巻き戻しの拒否**: `確定` セルを `confirm` / `exclude` で直接変更しようとすると `TransitionError` で拒否する。Bash や別 script から CLI を叩いても同じく拒否される (single-writer 防御)。
 2. **R4-reopen 経由のみ確定変更**: `確定` セルの状態を動かせるのは `action=reopen` (要 reason) だけ。reopen は当該セルを `未収集` へ戻し `reopen_log` に根拠を残す。その後 `confirm` / `exclude` で再遷移できる。
 3. **確定/対象外の付帯必須**: `confirm` は `qa_ref` (qa_log entry 参照) 必須、`exclude` は `reason` か `approval_ref` (approval_log 参照) 必須。
-4. **設計解釈の必須性と形状検証**: 新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持つ。writer は turn の `design_applications` の具体原則・採否・章固有理由・非空 trade-off を検証して回答原文とは別 field に保存し、`validate-coverage-matrix.py --require-complete` は確定セルが参照する全 qa entry で存在と形状を再検査する。marker の無い旧 schema 1.0 state は読み取り専用で、更新時は R1 `init --state` により matrix を未収集へ再初期化して 1.1 へ移行する。1.1 以降は marker 欠落を fail-closed に拒否する。
+4. **設計解釈の必須性と形状検証**: 新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持つ。writer は turn の `design_applications` の具体原則・採否・章固有理由・非空 trade-off を検証して回答原文とは別 field に保存し、`validate-coverage-matrix.py --require-complete` は確定セルが参照する全 qa entry で解釈と provenance の存在・形状を再検査する。marker の無い旧 schema 1.0 state は読み取り専用で、更新時は R1 `init --state` により matrix を未収集へ再初期化して 1.1 へ移行する。1.1 へ移行済みで `legacy_exempt: true` と非空理由が残る既存 qa に限り、`set-qa-design-applications` が質問・回答を改変せず設計解釈だけを追記し、`design_application_provenance.mode=legacy_backfill` を残す。provenance の無い既存解釈は対話経路として保護し、既存の異なる解釈や provenance の上書きも拒否する。C03 は `unrecorded|dialogue|legacy_backfill` を章へ描画し、C05 は `unrecorded` を未記録 finding とし、backfill の回答適合を再照合する。1.1 以降は marker 欠落を fail-closed に拒否する。
 5. **集約は導出のみ**: `category_aggregate` は真理値表から再計算する。手書き代入を認めない。
 
 > 本文・prompt・CLI いずれの経路でも、マトリクスの状態遷移は上記 writer を経由すること。直接 JSON 編集で `確定`→`未収集` を書くのは契約違反。
@@ -163,7 +165,7 @@ feedback_contract:
 3. **R1-init**: taxonomy を Readしてmatrixをpopulateする。既存foundation/decisionsを保持する。
 4. **R2/R3/R5**: 未収集セルをヒアリングし、不明・未決定ならR5で根拠付き候補と推奨を提示する。確定セル/decisionはgoalへトレースし、5 loop超でresume保存。
 5. **R4-reopen**: 確定セルの見直しが要るときのみ reopen。
-6. **検証**: 各周回でvalidator、最終で`--require-complete --require-foundation`。
+6. **検証**: 各周回でvalidator、最終で`--require-complete --require-foundation`。schema 1.1 移行後に `legacy_exempt: true` と理由が残る旧 qa に設計解釈だけが欠ける場合は `set-qa-design-applications --qa-id <id> --applications <json-or-file>` を使い、質問・回答を維持したまま補完する。
 
 ## Gotchas
 

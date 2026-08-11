@@ -52,7 +52,7 @@ jobs:
           mkdir -p artifacts
           # ci.yml の best-effort cleanup と同じ冪等 entrypoint。schedule 固有の削除実装を持たない。
           pnpm --filter @harness-hub/hub exec tsx scripts/smoke-production-publish.ts \
-            --sweep --report artifacts/smoke-fixture-sweep.json
+            --sweep --report "$GITHUB_WORKSPACE/artifacts/smoke-fixture-sweep.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -12,11 +12,11 @@ iteration: null
 title: "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T01:27:00Z"
-status: "active"
+updated_at: "2026-08-11T05:45:02Z"
+status: "done"
 depends_on: []
 related_nodes: ["feat-hub-foundation","spec-harness-hub-system-specification-implementation-writebacks","arch-harness-hub-infrastructure-operations-addenda","SYS-HUB-FOUNDATION-P13"]
-resource_scope: ["apps/hub/src/app/health/probes.ts","apps/hub/src/middleware-contract.ts","apps/hub/src/middleware.ts","apps/hub/src/middleware/index.ts","apps/hub/src/__tests__","apps/hub/src/app","apps/hub/src/lib","apps/hub/tests","apps/hub/scripts","packages/db/__tests__/local-session.test.ts","packages/db/scripts/seed-local.ts","packages/db/scripts/issue-local-session.ts","packages/db/scripts/local-session.ts","apps/hub/package.json","packages/db/package.json","scripts/ci/check-shared-layer-duplicates.mjs","scripts/ci/shared-layer-registry.json","docs/features/feat-hub-foundation/local-development.md","docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md","docs/features/feat-hub-foundation/runbook.md","features/feat-hub-foundation.md","specs/harness-hub-system-specification-implementation-writebacks.md","system-spec/spec-state.json","system-spec/maintenance-ops.md","architecture/harness-hub-infrastructure-operations-addenda.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md",".gitignore"]
+resource_scope: ["apps/hub/src/app/health/probes.ts","apps/hub/src/middleware-contract.ts","apps/hub/src/middleware.ts","apps/hub/src/middleware/index.ts","apps/hub/src/__tests__","apps/hub/src/app","apps/hub/src/lib","apps/hub/tests","apps/hub/scripts","packages/db/__tests__/local-session.test.ts","packages/db/scripts/seed-local.ts","packages/db/scripts/issue-local-session.ts","packages/db/scripts/local-session.ts","apps/hub/package.json","packages/db/package.json","scripts/ci/check-shared-layer-duplicates.mjs","scripts/ci/shared-layer-registry.json","plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md","plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md","plugins/system-spec-harness/schemas/spec-state.schema.json","plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py","plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py","plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition.py","plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition_design_backfill.py","plugins/system-spec-harness/lib/spec_docset_chapters.py","plugins/system-spec-harness/scripts/validate-coverage-matrix.py","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R1-score.md","plugins/system-spec-harness/skills/run-system-spec-compile/fixtures/expected-database.md","plugins/system-spec-harness/skills/run-system-spec-compile/fixtures/expected-security.md","plugins/system-spec-harness/skills/run-system-spec-compile/tests/test_compile_spec_doc_knowledge.py","plugins/system-spec-harness/tests/test_validate_scripts.py","plugins/system-spec-harness/tests/test_validate_design_application_provenance.py","eval-log/system-spec-harness/run-system-spec-elicit/content-review","eval-log/dev-graph/run-dev-graph-system-spec/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v","docs/features/feat-hub-foundation/local-development.md","docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md","docs/features/feat-hub-foundation/runbook.md","features/feat-hub-foundation.md","specs/harness-hub-system-specification-implementation-writebacks.md","system-spec/spec-state.json","system-spec/auth.md","system-spec/backend.md","system-spec/dev-workflow.md","system-spec/frontend.md","system-spec/infrastructure.md","system-spec/maintenance-ops.md","system-spec/security.md","system-spec/testing-qa.md","system-spec/ui-ux.md","architecture/harness-hub-infrastructure-operations-addenda.md","tasks/feat-hub-foundation/sys-hub-foundation-p13.md",".gitignore"]
 purpose: "ツールセッション終了耐性だけでなく、同一DBの再選択、healthの正確性、異常終了時の復旧、認証付き画面確認までを再現可能にする。"
 goal: "安定した絶対パスのローカルDBを監視付きで起動でき、Hub health・認証付きAPI・ブラウザ画面の一連の検証がPASSする。"
 scope_in: ["ローカルDB health契約の通常runtimeとの整合","絶対DBパスとログ・PID管理","start/status/stop/restartと異常終了時再起動","loopback bind","middleware重複警告の解消","cookie再発行とseedの分離","認証付きAPI・ブラウザsmoke"]
@@ -41,9 +41,9 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-bmhq","linked_at":"2026-08-10T23:32:06Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: []
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-hub-local-dev-runtime-reliability-20260811","linked_at":"2026-08-11T01:34:15Z","merge_commit_sha":"753405fa6944a4527c9726e8c631503506a13d05","merged_at":"2026-08-11T02:39:28Z","pr_number":696,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/696"}]
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-11T05:43:38Z","evidence_refs":["docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md","beads:HarnessHub-bmhq"],"policy":"manual","reconciled_at":"2026-08-11T05:45:02Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-11T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -57,7 +57,7 @@ Hub のローカル開発環境を、セッション切断だけでなく同一 
 
 ## 現在の挙動
 
-`.local-state/hub/` の absolute DB と設定を launchd + supervisor が管理し、sqld / Next.js の異常終了後も同じ DB で自動復旧する。Hub `GET /health` は HTTP 200、認証・スコープ指定済み API は `hearing_sheets` 3 件を返し、middleware 重複警告は発生しない。実ブラウザ確認だけは利用可能な browser session がなく未完である。
+`.local-state/hub/` の absolute DB と設定を launchd + supervisor が管理し、sqld / Next.js の異常終了後も同じ DB で自動復旧する。Hub `GET /health` は HTTP 200、認証・スコープ指定済み API は `hearing_sheets` 3 件を返し、middleware 重複警告は発生しない。一回限り・loopback 限定のログイン URL で HttpOnly Cookie を設定した通常ブラウザでも `/sheets` の3件表示を確認済みである。
 
 ## 期待する挙動
 
@@ -99,10 +99,11 @@ Hub のローカル開発環境を、セッション切断だけでなく同一 
 - [x] `Duplicate page detected` 警告が消える。
 - [x] seed を変更せずローカル session Cookie を再発行できる。
 - [x] 認証付き API が 3 件を返す。
-- [ ] 利用可能な in-app browser session で `/sheets` の3件表示を確認する。
+- [x] 通常ブラウザで `/sheets` の3件表示を確認する。
 
 ## 検証証跡
 
 - コマンド/テスト: focused Vitest、typecheck、lifecycle `restart` / `status` / `smoke`、プロセス異常終了テスト
 - 証跡 path: `docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md`
-- 未完了: in-app browser の実画面確認と draft PR merge 後の default branch reconciliation
+- ブラウザ受入: 一回限り・loopback 限定のログイン URL で HttpOnly Cookie を設定し、サーバーログで `GET /sheets` 200 と `GET /api/v1/sheets?limit=25` 200、ユーザー目視でシート3件を確認した。
+- 完了: PR #696 の `main` マージ、本ブランチへの default branch reconciliation、Beads close、実ブラウザ受入をすべて完了した。

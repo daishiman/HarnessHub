@@ -192,3 +192,10 @@ N/A: 今回の分冊に伴う製品判断はない。
 - Hub health は HTTP loopback sqld だけを token なしで許可し、remote URL の credential 不足は引き続き fail-closed にする。認証付き API smoke と read-only Cookie 発行は seed から分離する。
 - middleware 公開契約は `apps/hub/src/middleware-contract.ts` に一意化し、Next.js の予約 page 名との衝突を避ける。
 - 製品の公開 API、DB schema、本番 Cloudflare deploy unit は変更しない。正本は [maintenance / operations](../system-spec/maintenance-ops.md) の `qa-230`、検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を参照する。
+
+### system-spec 設計適用 backfill の完了
+
+- schema 1.1 移行時に一時免除されていた確定 QA 11件へ、question / answer / source を変えず `design_applications` を補完した。
+- 補完は単一 transition writer の `set-qa-design-applications` だけを使い、`legacy_exempt: true` と理由を持つ旧 QA だけを対象に `design_application_provenance.mode=legacy_backfill` を残す。完了済み補完の同じ入力は冪等（べきとう＝再実行しても同じ結果）、対話時解釈への由来後付けと異なる解釈・由来の上書きは fail-closed とする。
+- compiler / evaluator は `unrecorded|dialogue|legacy_backfill` を同じ語彙で扱い、未記録の緑化を拒否する。validator は未参照 QA を含む全 provenance を機械検査する。
+- `validate-coverage-matrix.py --require-complete --require-foundation` は不足0件で PASS し、各 canonical 章へ章固有の原則・理由・トレードオフを再コンパイルした。

@@ -91,6 +91,24 @@ DESIGN_APPLICATION_CONTRACT_VERSION = "1.0"
 CURRENT_STATE_SCHEMA_VERSION = "1.1"
 LEGACY_STATE_SCHEMA_VERSION = "1.0"
 DESIGN_APPLICATION_STATES = {"applied", "not_applicable"}
+LEGACY_BACKFILL_PROVENANCE = {
+    "mode": "legacy_backfill",
+    "writer": "set-qa-design-applications",
+}
+
+
+def _validate_design_application_provenance(entry: dict) -> list[str]:
+    """qa の参照有無に関わらず事後補完の由来を検証する。"""
+    qa_id = entry.get("id", "<unknown>")
+    if "design_application_provenance" not in entry:
+        return []
+    provenance = entry["design_application_provenance"]
+    if provenance == LEGACY_BACKFILL_PROVENANCE:
+        return []
+    return [
+        f"qa_log[{qa_id}].design_application_provenance: "
+        "legacy_backfill/set-qa-design-applications の完全一致が必須"
+    ]
 
 
 def _validate_design_applications(entry: dict) -> list[str]:
@@ -231,6 +249,7 @@ def validate(data: dict, require_complete: bool = False) -> list[str]:
             qa_entry_text[entry["id"]] = " ".join(
                 str(entry.get(key, "")) for key in ("question", "answer")
             )
+            findings.extend(_validate_design_application_provenance(entry))
 
     unresolved = 0
     confirmed_qa_refs: set[str] = set()

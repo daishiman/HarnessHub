@@ -96,6 +96,27 @@ def test_render_design_refs_ties_principle_to_chapter_confirmed_decision():
     assert "資するゴール: G1" in rendered
 
 
+def test_render_design_refs_distinguishes_dialogue_and_legacy_backfill():
+    spec = _spec()
+    qa = next(item for item in spec["qa_log"] if item["id"] == "qa-database")
+    qa["design_applications"] = [{
+        "knowledge_ref": "ddd.md#Bounded Context",
+        "principle": "Bounded Context",
+        "applicability": "applied",
+        "rationale": "DB 境界を明確にする",
+        "tradeoffs": ["境界の維持コスト"],
+    }]
+    assert "設計解釈の記録経路: `dialogue`" in mod.render_design_refs("database", spec)
+
+    qa["design_application_provenance"] = {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications",
+    }
+    rendered = mod.render_design_refs("database", spec)
+    assert "設計解釈の記録経路: `legacy_backfill`" in rendered
+    assert "`set-qa-design-applications`" in rendered
+
+
 def test_render_design_refs_missing_application_is_fail_visible_not_generic_pass():
     rendered = mod.render_design_refs("database", _spec())
     assert "qa_log[].design_applications を writer 経由で補完" in rendered
