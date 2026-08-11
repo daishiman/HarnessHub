@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-user-org-admin
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # 利用規約・プライバシーポリシー (`/legal`) 情報設計シート
 
 ## 利用文脈

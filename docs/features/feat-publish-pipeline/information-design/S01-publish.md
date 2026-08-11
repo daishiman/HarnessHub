@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-publish-pipeline
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # S01 公開ウィザード (`/catalog/publish`) 情報設計シート
 
 ## 利用文脈

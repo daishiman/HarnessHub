@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-docs-cms
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # ドキュメントの新規作成 (`/docs/new`) 情報設計シート
 
 ## 利用文脈

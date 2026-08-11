@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-hearing-intake
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # 見積係数の設定 (`/settings/coefficients`) 情報設計シート
 
 ## 利用文脈

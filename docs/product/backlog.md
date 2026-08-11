@@ -1,3 +1,9 @@
+---
+status: accepted
+layer: product-backlog
+reviewed_at: 2026-08-12
+---
+
 # 残課題リスト (backlog)
 
 残課題は課題管理ツール **beads** で管理します。このファイルは一覧の入口です。

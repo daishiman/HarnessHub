@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-dual-catalog-web
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # S04 Release 履歴 情報設計シート
 
 ## 利用文脈

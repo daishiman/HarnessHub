@@ -1,3 +1,11 @@
+---
+status: accepted
+layer: feature-information-design
+feature: feat-user-org-admin
+surface_sheet: true
+reviewed_at: 2026-08-12
+---
+
 # S17 利用者の個別ダッシュボード 情報設計シート
 
 ## 利用文脈
