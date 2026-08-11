@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1516,
+  "graph_revision": 1517,
   "nodes": [
     {
       "acceptance": [
@@ -57199,6 +57199,127 @@
       "title": "本番 publish smoke の作業ディレクトリ依存パスを修正する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-11T04:29:30Z"
+    },
+    {
+      "acceptance": [
+        "仕様反映受領書に検証と影響判断を記録する",
+        "対象 branch を main 同期後に Draft PR として公開する",
+        "fresh live-trial 未達を残課題として明示し close しない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uypz",
+        "linked_at": "2026-08-11T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "follow-up issue の最終公開条件だけを追跡する単一責務 handoff",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "280337a621f4589f80cdd045daaee34016a7443b606c9e3f752b5944ccbccdd6",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [
+        "issue-audit-multi-dispatch-null-verdict-20260808"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "commit・Draft PR・Beads・Dev Graph・検証証拠が同じ変更境界を参照する",
+      "graph_node_id": "task-uypz-audit-multi-dispatch-handoff-20260811",
+      "id": "task-uypz-audit-multi-dispatch-handoff-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "凍結済み exact-13 を変更せず、HarnessHub-uypz の最終レビュー・仕様反映・Draft PR 境界を追跡する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "issue-audit-fork-ledger-forgery-20260728",
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md",
+        "issues/sys-audit-multi-dispatch-null-verdict-20260808.md"
+      ],
+      "scope_in": [
+        "最終差分レビュー",
+        "品質ゲート再実行",
+        "仕様影響判断と受領書",
+        "main 同期",
+        "Draft PR と Beads 更新"
+      ],
+      "scope_out": [
+        "製品 runtime の追加機能",
+        "fresh live-trial の完遂そのもの",
+        "無関係な VRT / pipeline-board 差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "280337a621f4589f80cdd045daaee34016a7443b606c9e3f752b5944ccbccdd6",
+        "source_path": "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "system-spec-harness",
+        "audit-ledger",
+        "schema-1.2",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "uypz 複数監査 dispatch schema 1.2 最終レビュー handoff",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T07:39:51Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

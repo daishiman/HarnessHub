@@ -68,6 +68,8 @@ DELEGATION_ROLES = {"primary", "sub_input"}
 LEDGER_ENV = "SYSTEM_SPEC_AUDIT_FORK_LEDGER"
 LEDGER_RELPATH = Path("eval-log") / "system-spec-harness" / "audit-fork-ledger.jsonl"
 LEDGER_TOOL_NAMES = ("Task", "Agent")
+LEDGER_SCHEMA_LEGACY = "1.1"
+LEDGER_SCHEMA_TOOL_USE = "1.2"
 PROMPT_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 RESPONSE_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
@@ -101,7 +103,15 @@ def default_ledger_path() -> Path:
 
 def empty_ledger() -> dict:
     """台帳不在時の fail-closed な空集計を返す。"""
-    return {"path": None, "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0}
+    return {
+        "path": None,
+        "exists": False,
+        "dispatched": {},
+        "sessions": {},
+        "receipts": {},
+        "receipts_v12": {},
+        "malformed": 0,
+    }
 
 
 def load_fork_ledger(path) -> dict:
@@ -114,17 +124,30 @@ def load_fork_ledger(path) -> dict:
     ledger_path = Path(path)
     if not ledger_path.is_file():
         return {
-            "path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0
+            "path": str(ledger_path),
+            "exists": False,
+            "dispatched": {},
+            "sessions": {},
+            "receipts": {},
+            "receipts_v12": {},
+            "malformed": 0,
         }
     dispatched: dict[str, int] = {}
     sessions: dict[str, dict[str, int]] = {}
     receipts: dict[str, dict[str, dict[str, dict[str, str]]]] = {}
+    receipts_v12: dict[str, dict[str, list[dict[str, str]]]] = {}
     malformed = 0
     try:
         lines = ledger_path.read_text(encoding="utf-8").splitlines()
     except (OSError, UnicodeDecodeError):
         return {
-            "path": str(ledger_path), "exists": False, "dispatched": {}, "sessions": {}, "receipts": {}, "malformed": 0
+            "path": str(ledger_path),
+            "exists": False,
+            "dispatched": {},
+            "sessions": {},
+            "receipts": {},
+            "receipts_v12": {},
+            "malformed": 0,
         }
     for line in lines:
         if not line.strip():
@@ -135,6 +158,10 @@ def load_fork_ledger(path) -> dict:
             malformed += 1
             continue
         if not isinstance(record, dict) or record.get("tool_name") not in LEDGER_TOOL_NAMES:
+            malformed += 1
+            continue
+        schema_version = record.get("schema_version")
+        if schema_version not in {LEDGER_SCHEMA_LEGACY, LEDGER_SCHEMA_TOOL_USE}:
             malformed += 1
             continue
         subagent_type = record.get("subagent_type")
@@ -151,23 +178,54 @@ def load_fork_ledger(path) -> dict:
             or not PROMPT_SHA256_RE.fullmatch(prompt_sha256)
             or not isinstance(response_sha256, str)
             or not RESPONSE_SHA256_RE.fullmatch(response_sha256)
-            or audit_verdict not in ASPECT_VERDICTS
         ):
+            malformed += 1
+            continue
+        receipt = {
+            "subagent_type": subagent_type,
+            "tool_name": record["tool_name"],
+            "response_sha256": response_sha256,
+            "verdict": audit_verdict,
+        }
+        if schema_version == LEDGER_SCHEMA_TOOL_USE:
+            tool_use_id = record.get("tool_use_id")
+            if not isinstance(tool_use_id, str) or not tool_use_id:
+                malformed += 1
+                continue
+            receipt["verdict_state"] = record.get("verdict_state")
+            receipts_v12.setdefault(session_id, {}).setdefault(tool_use_id, []).append(receipt)
+            if record.get("verdict_state") != "resolved" or audit_verdict not in ASPECT_VERDICTS:
+                malformed += 1
+            continue
+        if audit_verdict not in ASPECT_VERDICTS:
             malformed += 1
             continue
         dispatched[subagent_type] = dispatched.get(subagent_type, 0) + 1
         by_session = sessions.setdefault(subagent_type, {})
         by_session[session_id] = by_session.get(session_id, 0) + 1
-        receipts.setdefault(subagent_type, {}).setdefault(session_id, {})[response_sha256] = {
-            "tool_name": record["tool_name"],
-            "verdict": audit_verdict,
-        }
+        receipts.setdefault(subagent_type, {}).setdefault(session_id, {})[response_sha256] = receipt
+
+    # schema 1.2 の識別子は session 内で一意でなければならない。候補を list のまま保持し、
+    # 重複・競合を last-write-wins に潰さず照合時にも fail-closed で拒否する。
+    for session_id, by_tool_use in receipts_v12.items():
+        for candidates in by_tool_use.values():
+            if len(candidates) != 1:
+                malformed += len(candidates)
+                continue
+            receipt = candidates[0]
+            if receipt.get("verdict_state") != "resolved" or receipt.get("verdict") not in ASPECT_VERDICTS:
+                continue
+            subagent_type = receipt["subagent_type"]
+            dispatched[subagent_type] = dispatched.get(subagent_type, 0) + 1
+            by_session = sessions.setdefault(subagent_type, {})
+            by_session[session_id] = by_session.get(session_id, 0) + 1
     return {
         "path": str(ledger_path),
         "exists": True,
         "dispatched": dispatched,
         "sessions": sessions,
         "receipts": receipts,
+        "receipts_v12": receipts_v12,
         "malformed": malformed,
     }
 
@@ -190,15 +248,7 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
         )
     if not isinstance(subagent_type, str) or not subagent_type:
         return False, "dispatch.subagent_type が無く fork 台帳と突合できない"
-    if ledger.get("dispatched", {}).get(subagent_type, 0) < 1:
-        malformed = ledger.get("malformed", 0)
-        suffix = f" / 台帳の破損行 {malformed} 件" if malformed else ""
-        return False, (
-            f"fork 台帳に subagent_type={subagent_type!r} の完了記録が無い "
-            f"(独立監査を起動せずに帰属だけ宣言している疑い。台帳={ledger.get('path')}{suffix})"
-        )
     declared_session = dispatch.get("session_id")
-    recorded_sessions = ledger.get("sessions", {}).get(subagent_type, {})
     if not isinstance(declared_session, str) or not declared_session:
         return False, (
             "dispatch.session_id が無く fork 台帳の run/session と突合できない "
@@ -210,17 +260,90 @@ def ledger_corroborates(delegation: dict, ledger: dict) -> tuple[bool, str]:
             "(session 不明の fork は過去 run の 'unknown' 行と区別できない。"
             "session_id を観測できるハーネスで再評価する)"
         )
-    if declared_session not in recorded_sessions:
-        return False, (
-            f"fork 台帳に (session_id={declared_session!r}, subagent_type={subagent_type!r}) の完了記録が無い "
-            f"(宣言 session が台帳へ接地しない = 過去 run の名指し違い / fork 省略 / 偽装の疑い。"
-            f"当該 subagent_type の観測済み session {len(recorded_sessions)} 種)"
-        )
     response_sha256 = dispatch.get("response_sha256")
     if not isinstance(response_sha256, str) or not RESPONSE_SHA256_RE.fullmatch(response_sha256):
         return False, (
             "dispatch.response_sha256 が無いか不正で、実監査 response の verdict と突合できない "
             "(PostToolUse hook が記録した response digest を receipt へ転記する)"
+        )
+
+    tool_use_id = dispatch.get("tool_use_id")
+    if tool_use_id is not None:
+        if not isinstance(tool_use_id, str) or not tool_use_id:
+            return False, "dispatch.tool_use_id が空または不正で schema 1.2 台帳と突合できない"
+        candidates = ledger.get("receipts_v12", {}).get(declared_session, {}).get(tool_use_id, [])
+        if len(candidates) > 1:
+            signatures = {
+                (
+                    item.get("subagent_type"),
+                    item.get("tool_name"),
+                    item.get("response_sha256"),
+                    item.get("verdict"),
+                )
+                for item in candidates
+                if isinstance(item, dict)
+            }
+            kind = "重複" if len(signatures) == 1 else "競合"
+            return False, (
+                f"schema 1.2 台帳の (session_id={declared_session!r}, tool_use_id={tool_use_id!r}) が{kind}している "
+                "(append-only 台帳を last-write-wins で解釈できない)"
+            )
+        if not candidates:
+            return False, (
+                f"schema 1.2 台帳に (session_id={declared_session!r}, tool_use_id={tool_use_id!r}) の"
+                "監査完了記録が無い (別 dispatch の ID を転記した疑い)"
+            )
+        recorded = candidates[0]
+        if recorded.get("verdict_state") != "resolved" or recorded.get("verdict") not in ASPECT_VERDICTS:
+            return False, (
+                f"schema 1.2 台帳の tool_use_id={tool_use_id!r} は verdict_state=resolved かつ"
+                "有効な audit_verdict でない (未確定・曖昧な PASS を監査完了として扱えない)"
+            )
+        expected = {
+            "subagent_type": subagent_type,
+            "tool_name": dispatch.get("tool"),
+            "response_sha256": response_sha256,
+            "verdict": delegation.get("verdict"),
+        }
+        mismatches = [
+            name for name, value in expected.items() if recorded.get(name) != value
+        ]
+        if mismatches:
+            return False, (
+                f"schema 1.2 receipt が hook 観測値と一致しない ({', '.join(mismatches)}) "
+                "(session/subagent/tool/response/verdict を同一 dispatch へ束縛する)"
+            )
+        return True, ""
+
+    # schema 1.2 行へ digest だけで接地すると、同一 message 内の別 dispatch を取り違えられる。
+    # 一致候補がある receipt は tool_use_id 欠落として拒否し、1.1 へ downgrade しない。
+    v12_matches = [
+        item
+        for candidates in ledger.get("receipts_v12", {}).get(declared_session, {}).values()
+        for item in candidates
+        if isinstance(item, dict)
+        and item.get("subagent_type") == subagent_type
+        and item.get("response_sha256") == response_sha256
+    ]
+    if v12_matches:
+        return False, (
+            "dispatch.tool_use_id が無く schema 1.2 台帳の dispatch と突合できない "
+            "(response digest のみで 1.1 互換経路へ downgrade しない)"
+        )
+
+    if ledger.get("dispatched", {}).get(subagent_type, 0) < 1:
+        malformed = ledger.get("malformed", 0)
+        suffix = f" / 台帳の破損行 {malformed} 件" if malformed else ""
+        return False, (
+            f"fork 台帳に subagent_type={subagent_type!r} の完了記録が無い "
+            f"(独立監査を起動せずに帰属だけ宣言している疑い。台帳={ledger.get('path')}{suffix})"
+        )
+    recorded_sessions = ledger.get("sessions", {}).get(subagent_type, {})
+    if declared_session not in recorded_sessions:
+        return False, (
+            f"fork 台帳に (session_id={declared_session!r}, subagent_type={subagent_type!r}) の完了記録が無い "
+            f"(宣言 session が台帳へ接地しない = 過去 run の名指し違い / fork 省略 / 偽装の疑い。"
+            f"当該 subagent_type の観測済み session {len(recorded_sessions)} 種)"
         )
     recorded = ledger.get("receipts", {}).get(subagent_type, {}).get(declared_session, {}).get(response_sha256)
     if not isinstance(recorded, dict):

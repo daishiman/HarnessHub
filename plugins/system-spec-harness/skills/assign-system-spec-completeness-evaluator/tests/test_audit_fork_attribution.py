@@ -22,6 +22,33 @@ from completeness_test_support import (
 )
 
 
+def _schema12_fixture():
+    report = golden_report()
+    records = []
+    for index, delegation in enumerate(report["audit_delegations"], start=1):
+        tool_use_id = f"toolu_schema12_{index}"
+        delegation["dispatch"]["tool_use_id"] = tool_use_id
+        records.append({
+            "schema_version": "1.2",
+            "ts": "2026-08-11T00:00:00Z",
+            "session_id": delegation["dispatch"]["session_id"],
+            "tool_name": delegation["dispatch"]["tool"],
+            "tool_use_id": tool_use_id,
+            "subagent_type": delegation["dispatch"]["subagent_type"],
+            "prompt_sha256": "3" * 64,
+            "response_sha256": delegation["dispatch"]["response_sha256"],
+            "audit_verdict": delegation["verdict"],
+            "verdict_state": "resolved",
+            "cwd": "/tmp/project",
+        })
+    return report, records
+
+
+def _load_schema12_ledger(path, records):
+    write_ledger(path, auditors=[], extra_lines=[json.dumps(record) for record in records])
+    return MOD.load_fork_ledger(path)
+
+
 def test_aggregate_cli_reexports_the_attribution_contract():
     assert AGGREGATE.validate_attribution is MOD.validate_attribution
     assert AGGREGATE.load_fork_ledger is MOD.load_fork_ledger
@@ -133,7 +160,8 @@ def test_ledger_loader_handles_missing_broken_session_and_agent_rows(tmp_path):
     assert MOD.load_fork_ledger(tmp_path / "missing.jsonl")["exists"] is False
     assert MOD.load_fork_ledger(None) == MOD.empty_ledger()
     write_ledger(path, auditors=[], extra_lines=[json.dumps({
-        "tool_name": "Agent", "session_id": "sess-1", "subagent_type": "system-spec-hearing-auditor",
+        "schema_version": "1.1", "tool_name": "Agent", "session_id": "sess-1",
+        "subagent_type": "system-spec-hearing-auditor",
         "prompt_sha256": "1" * 64, "response_sha256": response_digest("system-spec-hearing-auditor"),
         "audit_verdict": "PASS",
     })])
@@ -160,7 +188,8 @@ def test_ledger_rejects_handwritten_or_invalid_prompt_digest(tmp_path):
 def test_ledger_loader_keeps_session_counts_and_agent_names_safe(tmp_path):
     path = tmp_path / "audit-fork-ledger.jsonl"
     write_ledger(path, extra_lines=[json.dumps({
-        "tool_name": "Task", "session_id": "sess-2", "subagent_type": "system-spec-matrix-auditor",
+        "schema_version": "1.1", "tool_name": "Task", "session_id": "sess-2",
+        "subagent_type": "system-spec-matrix-auditor",
         "prompt_sha256": "2" * 64, "response_sha256": response_digest("system-spec-matrix-auditor"),
         "audit_verdict": "PASS",
     })])
@@ -168,6 +197,70 @@ def test_ledger_loader_keeps_session_counts_and_agent_names_safe(tmp_path):
     assert ledger["sessions"]["system-spec-matrix-auditor"] == {"sess-1": 1, "sess-2": 1}
     assert MOD.agent_definition_exists("system-spec-matrix-auditor") is True
     assert MOD.agent_definition_exists("../agents/system-spec-matrix-auditor") is False
+
+
+def test_schema12_receipts_match_the_same_tool_use_dispatch(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    report, records = _schema12_fixture()
+    ledger = _load_schema12_ledger(path, records)
+    assert ledger["malformed"] == 0
+    assert MOD.validate_attribution(report, ledger) == []
+
+
+def test_schema12_swapped_tool_use_ids_are_rejected(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    report, records = _schema12_fixture()
+    first = report["audit_delegations"][0]["dispatch"]
+    second = report["audit_delegations"][1]["dispatch"]
+    first["tool_use_id"], second["tool_use_id"] = second["tool_use_id"], first["tool_use_id"]
+    violations = MOD.validate_attribution(report, _load_schema12_ledger(path, records))
+    assert any("schema 1.2 receipt" in item and "一致しない" in item for item in violations)
+
+
+def test_schema12_receipt_missing_tool_use_id_is_fail_closed(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    report, records = _schema12_fixture()
+    del report["audit_delegations"][0]["dispatch"]["tool_use_id"]
+    violations = MOD.validate_attribution(report, _load_schema12_ledger(path, records))
+    assert any("tool_use_id が無く schema 1.2" in item for item in violations)
+
+
+def test_schema12_ambiguous_row_cannot_corroborate_pass(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    report, records = _schema12_fixture()
+    records[0]["verdict_state"] = "ambiguous"
+    ledger = _load_schema12_ledger(path, records)
+    assert ledger["malformed"] == 1
+    assert MOD.validate_attribution(report, ledger)
+
+
+def test_schema12_duplicate_and_conflicting_tool_use_ids_never_last_write_win(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    report, records = _schema12_fixture()
+    duplicate = dict(records[0])
+    ledger = _load_schema12_ledger(path, records + [duplicate])
+    violations = MOD.validate_attribution(report, ledger)
+    assert len(ledger["receipts_v12"]["sess-1"][duplicate["tool_use_id"]]) == 2
+    assert any("が重複している" in item for item in violations)
+
+    conflict = dict(records[0])
+    conflict["response_sha256"] = "f" * 64
+    ledger = _load_schema12_ledger(path, records + [conflict])
+    violations = MOD.validate_attribution(report, ledger)
+    assert any("が競合している" in item for item in violations)
+
+
+def test_unknown_or_missing_ledger_schema_is_malformed(tmp_path):
+    path = tmp_path / "audit-fork-ledger.jsonl"
+    base = {
+        "tool_name": "Task", "session_id": "sess-1", "subagent_type": "system-spec-matrix-auditor",
+        "prompt_sha256": "2" * 64, "response_sha256": response_digest("system-spec-matrix-auditor"),
+        "audit_verdict": "PASS",
+    }
+    write_ledger(path, auditors=[], extra_lines=[
+        json.dumps(base), json.dumps({**base, "schema_version": "9.9"}),
+    ])
+    assert MOD.load_fork_ledger(path)["malformed"] == 2
 
 
 def _load_hook():
