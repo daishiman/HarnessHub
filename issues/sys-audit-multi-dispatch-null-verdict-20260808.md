@@ -12,16 +12,16 @@ iteration: null
 title: "複数監査 dispatch の台帳 verdict=null を原子的に記録する"
 owners: ["daishiman"]
 created_at: "2026-08-08T11:00:00Z"
-updated_at: "2026-08-08T11:05:42.334830Z"
+updated_at: "2026-08-11T06:56:56Z"
 status: "draft"
 depends_on: []
-related_nodes: ["issue-audit-fork-ledger-forgery-20260728"]
-resource_scope: ["plugins/system-spec-harness/hooks/record-audit-fork.py","eval-log/system-spec-harness/audit-fork-ledger.jsonl"]
-purpose: "1つの assistant message に複数の監査 Agent dispatch がある場合も、各 response の生 verdict を対応する台帳 event へ結び付ける"
-goal: "複数 dispatch の全 event が audit_verdict 非 null と正しい response_sha256 を持ち、fresh live-trial の不要な再 fork を発生させない"
-scope_in: ["複数 tool_use と複数 tool_result の対応付け","event ごとの AUDIT_VERDICT 抽出","回帰テスト"]
-scope_out: ["監査 evaluator の採点基準変更","製品 API・DB・UI の変更"]
-acceptance: ["同一 message の複数監査 dispatch がすべて非 null verdict で記録される","tool_use_id・response_sha256・verdict の対応違いを fail-closed 拒否する","単一 dispatch の既存挙動を維持する"]
+related_nodes: ["issue-audit-fork-ledger-forgery-20260728","feat-dev-pipeline-improvement","task-uypz-audit-multi-dispatch-handoff-20260811","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
+resource_scope: ["plugins/system-spec-harness/hooks/record-audit-fork.py","plugins/system-spec-harness/hooks/tests/test_record_audit_fork.py","plugins/system-spec-harness/hooks/references/hook-guard-protection-scope.md","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/SKILL.md","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/prompts/R2-delegate.md","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/audit_fork_attribution.py","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/schemas/completeness-findings.schema.json","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/tests/completeness_test_support.py","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/tests/test_audit_fork_attribution.py","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/tests/test_aggregate_completeness.py","eval-log/system-spec-harness/audit-fork-ledger.jsonl","docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md","architecture/harness-hub-dev-workflow.md","architecture/harness-hub-testing-qa.md"]
+purpose: "per-tool-call PostToolUse が観測した top-level tool_use_id・call 全体 response digest・生 verdict を、writer→receipt schema→consumer の全経路で同一 dispatch へ結び付ける"
+goal: "schema 1.2 の複数 dispatch 対応を fail-closed に実装し、schema 1.1 legacy 互換を維持したうえで fresh live-trial により不要な再 fork が発生しないことを実証する"
+scope_in: ["per-tool-call PostToolUse 入力契約と PostToolBatch との境界","writer schema 1.2 の tool_use_id・verdict_state・whole per-call response digest","receipt schema と consumer の schema 1.2 ID 照合・schema 1.1 legacy 互換","単一/複数 dispatch の回帰テスト","fresh live-trial canary と正式 evaluator 直列化 gate"]
+scope_out: ["監査 evaluator の採点基準変更","fresh live-trial 前の正式 evaluator parallel 運用許可","製品 API・DB・UI の変更"]
+acceptance: ["writer schema 1.2 が top-level tool_use_id・verdict_state・call 全体 tool_response の response_sha256・生 verdict を同一 per-call event に記録する","receipt と consumer が schema 1.2 の tool_use_id・response_sha256・resolved verdict を全一致で照合し取り違えを fail-closed 拒否する","schema 1.1 は ID 無し legacy 経路で互換を維持しschema 1.2 の ID 欠落・不一致を downgrade しない","単一 dispatch と複数 dispatch canary の回帰テストが PASS する","fresh live-trial で複数 dispatch の全 per-call event と最終 receipt の対応を実証し不要な再 fork が発生しない","fresh live-trial 完了までは1 message=1 foreground forkを維持しbackground launchを最終verdictとして扱わない"]
 architecture_refs: ["arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
 parent_feature: null
 feature_package_id: null
@@ -49,20 +49,30 @@ implementation_readiness: {"checked_at":"2026-08-08T11:00:00Z","missing_sections
 
 # 概要
 
-最終 live-trial 監査で、1つの assistant message に複数の監査 Agent dispatch が含まれると、一部の台帳 event が `audit_verdict=null` になり、集約器が安全側に同期再 fork を要求する事象を確認した。
+最終 live-trial 監査で、1つの assistant message から複数の監査 Agent を dispatch した際、一部の台帳 event が `audit_verdict=null` になり、集約器が安全側に同期再 fork を要求する事象を確認した。
+
+現行 hook の正式契約では、PostToolUse は batch 全体に 1 回ではなく **matching tool call ごとに 1 回**発火する。payload top-level の `tool_use_id` がその call を識別し、parallel dispatch では各 PostToolUse が並行発火する。batch 単位の lifecycle は PostToolBatch である。したがって「1つの `tool_response` に同一 message の全 tool result が入る」という先行仮説を正本にせず、per-call payload を writer・receipt・consumer の共通境界にする。
 
 ## 目的と背景
 
-監査偽装を防ぐ fail-closed 契約は正しいが、正当な複数 dispatch まで不完全な台帳として扱うと試験時間と利用量が増える。各 tool use と対応する response を原子的に結び付ける。
+監査偽装を防ぐ fail-closed 契約は正しいが、正当な複数 dispatch まで不完全な台帳として扱うと試験時間と利用量が増える。writer schema 1.2 は top-level `tool_use_id`、`verdict_state`、当該 call の **`tool_response` 全体**の canonical `response_sha256`、生 `audit_verdict` を同じ台帳行へ記録する。receipt と consumer も schema 1.2 では ID まで照合し、schema 1.1 は ID を持たない legacy 互換として分離する。
+
+parallel 対応は defensive hardening / canary であり、その実装や fixture PASS だけでは正式 evaluator 運用を parallel へ変更しない。current runtime の fresh live-trial で 3 監査全ての per-call 台帳行と最終 receipt を実証するまでは、`1 message = 1 foreground fork` の直列運用を維持する。background / 非同期 launch の起動受理 response は最終 verdict ではない。
 
 ## スコープ
 
-- 同一 message 内の複数 tool use / tool result 対応付け
-- 各 response からの生 `AUDIT_VERDICT` 抽出
-- 単一 dispatch と複数 dispatch の回帰テスト
+- PostToolUse の per-tool-call payload (`tool_use_id` / `tool_input` / `tool_response`) と PostToolBatch の責務境界
+- writer schema 1.2 の `tool_use_id` / `verdict_state` / whole per-call response digest / 生 `AUDIT_VERDICT`
+- completeness report receipt schema と `audit_fork_attribution.py` の schema 1.2 ID 照合
+- schema 1.1 台帳の ID 無し legacy 互換と、1.2 → 1.1 downgrade 禁止
+- 単一 dispatch / 複数 dispatch canary / 取り違え拒否 / background 未完了 response の回帰テスト
+- fresh live-trial 完了までの正式 evaluator 直列化 gate
 
 ## 受入条件
 
-- [ ] 複数監査 dispatch の全 event が非 null verdict を持つ
-- [ ] tool_use_id、response digest、verdict の取り違えを拒否する
-- [ ] 単一 dispatch の既存契約を維持する
+- [x] writer schema 1.2 が top-level `tool_use_id`、`verdict_state`、call 全体 `tool_response` の digest、生 verdict を同一 per-call event に記録する
+- [x] receipt / consumer が schema 1.2 の `tool_use_id`、response digest、`verdict_state=resolved`、verdict の取り違えを fail-closed で拒否する
+- [x] schema 1.1 は ID 無し legacy 経路で既存契約を維持し、schema 1.2 の ID 欠落・不一致を legacy 扱いへ downgrade しない
+- [x] 単一 dispatch と複数 dispatch canary の回帰テストが PASS する
+- [ ] current runtime の fresh live-trial で複数 dispatch の全 per-call event が非 null verdict を持ち、最終 receipt と一致し、不要な再 fork が発生しない
+- [x] fresh live-trial 完了までは正式 evaluator を `1 message = 1 foreground fork` で運用し、background launch を最終 verdict として扱わない

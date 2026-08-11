@@ -259,3 +259,11 @@ required_sections で検査する。`issue` kind は構造が異なる別課題�
 2026-08-06 に自動生成された rubric 更新提案を履歴へ保存し、未判断の 25 findings と旧 worktree 絶対 path の集計キー問題を Beads `HarnessHub-lzfs` / dev-graph issue へ引き継いだ。提案ファイルは改善候補の証拠であり、採否判断ではないため、commit や draft PR だけで issue を close しない。製品 runtime と rubric 本体は非変更で、判断と検証は [仕様反映受領書](rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
 
 PR #688 の conflict 解消では `origin/main` をローカル `main`、続いて `devgraph/issue-rubric-proposal-20260806-review` へ取り込み、未解決 0 件を確認した。`system-spec/index.md` の実装 writeback 索引と dev-graph issue の PR linkage を追加し、system-spec / specs / architecture / feature / task / docs / Beads / PR の追跡先を一致させた。
+
+### 差分追記 (2026-08-11): 監査 fork 台帳 schema 1.2 (`HarnessHub-uypz`)
+
+`record-audit-fork.py` と `audit_fork_attribution.py` が per-call PostToolUse の
+`tool_use_id` / whole-response digest / `verdict_state` を schema 1.2 で束縛する。
+schema 1.1 は旧 Task の ID 無し legacy のみ。正式 evaluator の parallel 運用は
+fresh live-trial 完了まで許可しない。製品 runtime は非変更。判断と検証は
+[uypz 仕様反映受領書](uypz-audit-fork-schema12-spec-reflection-receipt.md) を正とする。

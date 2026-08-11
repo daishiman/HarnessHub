@@ -3,7 +3,7 @@
 > `guard-confirmed-chapter-overwrite.py` (PreToolUse: Write|Edit|Bash) が **何を守り・何を守らないか** の正本。
 > hook 本体のコメント (「境界定義: references/hook-guard-protection-scope.md」) と回帰テストが本書を参照する。
 
-> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task|Agent`) は保護 hook ではなく **証跡 writer**。
+> **同 plugin の姉妹 hook**: `record-audit-fork.py` (PostToolUse: `Task|Agent`、matching tool call ごとに 1 回) は保護 hook ではなく **証跡 writer**。
 > 監査 sub-agent への fork を append-only 台帳へ記録し、completeness-report の auditor 帰属を自己申告から
 > 切り離す。責務・限界は § 6 を参照。
 
@@ -82,13 +82,19 @@
 - 実行: `python3 -m unittest discover -s plugins/system-spec-harness/hooks/tests -p "test_*.py"`
 - e2e: 実 compile/validator コマンド → exit0、`echo x > spec-state.json` / `sed -i … security.md` → exit2 を確認済み。
 
-## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task|Agent) — 証跡 writer
+## 6. 姉妹 hook `record-audit-fork.py` (PostToolUse: Task|Agent) — per-call 証跡 writer
 
 ### 6.1 位置づけ (保護ではなく証跡)
 
 `guard-*` が「書かせない」層なのに対し、本 hook は「**書き残す**」層。何もブロックせず (exit 0 always)、
 監査 sub-agent への fork (起動ツール名はハーネス世代で `Task` または `Agent`) が完了した事実だけを
 append-only の JSONL 台帳へ追記する。台帳へは観測名をそのまま書く (正規化しない)。
+
+現行 hook 契約では PostToolUse は **matching tool call ごとに 1 回**発火し、payload top-level の
+`tool_use_id` と、その call の `tool_input` / `tool_response` を渡す。同じ assistant message から複数の
+tool call を parallel dispatch した場合も batch 全体を 1 回で渡すのではなく、call ごとの PostToolUse が
+それぞれ並行発火する。batch 全体を扱う別ライフサイクルは PostToolBatch であり、本 writer の入力契約と
+混同しない。
 
 解決する欠陥: `assign-system-spec-completeness-evaluator` の評価レポートは観点ごとに `auditor`
 (例 `matrix_coverage` → `system-spec-matrix-auditor`) を宣言するが、これは **評価者自身が書く文字列** で
@@ -107,10 +113,29 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
 |---|---|---|
 | `subagent_type` が本 plugin 同梱 agent (`agents/*.md` の stem)、または `system-spec-harness:<stem>` の `Task` | ✅ | pinned plugin の実 payload は qualified 名。本 plugin qualifier のみ受理して stem へ正規化し、レジストリ追加に自動追従する |
 | それ以外の `Task` (他 plugin の agent・汎用 agent) | ❌ | 台帳の肥大化を避ける。帰属検証に使わない |
-| `session_id` / `ts` / `cwd` / `prompt`・`tool_response` の sha256 / `AUDIT_VERDICT` enum | ✅ | response 本文を保存せず判定忠実性を突合する最小メタ |
+| `session_id` / `ts` / `cwd` / `prompt`・call 全体の `tool_response` の sha256 / `AUDIT_VERDICT` enum | ✅ | response 本文を保存せず判定忠実性を突合する最小メタ |
+| schema 1.2 の top-level `tool_use_id` / `verdict_state` | ✅ | parallel call を含む dispatch の同一性と、verdict の `resolved` / `absent` / `pending` / `ambiguous` を下流で fail-closed 照合する |
 | `prompt` 本文 / `tool_response` 本文 | ❌ | 機微情報を台帳へ持ち込まない |
 
-`audit_verdict` は tool_response の応答本文 key (`content` / `output` / `result` / `response` / `message`) 配下だけを走査し、**応答本文の最終非空行**が canonical `AUDIT_VERDICT` marker のときだけ記録する。Claude Code の payload が fork prompt や応答後 metadata (`agentId` / `status` / usage) を内包していても、prompt 内の説明用 marker や metadata 文字列を応答本文と混同しない。応答本文の最終非空行が marker でなければ従来どおり null とし、consumer が fail-closed で除外する。
+schema 1.2 の `response_sha256` は **当該 PostToolUse に渡された call 全体の `tool_response`** を
+canonical JSON 化した digest である。nested `tool_use_id` block を探索して response の一部だけへ scope
+した digest ではない。`audit_verdict` は同じ per-call `tool_response` の応答本文 key (`content` /
+`output` / `result` / `response` / `message`) 配下だけを走査する。各 text block の最終非空行を候補とし、
+canonical `AUDIT_VERDICT` marker の候補が **ちょうど 1 件**のときだけ記録する。0 件は未確定、複数件は
+曖昧として fail-closed に扱う。fork prompt や応答後 metadata (`agentId` / `status` / usage) を内包しても、
+prompt 内の説明用 marker や metadata 文字列を応答本文と混同しない。
+
+現行 `Agent` は top-level `tool_use_id` が非空かつ `tool_response.status=completed` の場合だけ
+schema 1.2 の verdict を確定する。ID 欠落は schema 1.1 へ downgrade せず記録対象外とし、
+`async_launched`・失敗・status 欠落は本文に marker があっても `verdict_state=pending` / verdict=null とする。
+旧 `Task` は status 欠落を互換受理するが、status が明示された場合は `completed` 以外を未完了として扱う。
+schema 1.1 の ID 無し互換は旧 `Task` payload にだけ適用する。
+
+consumer / `audit_delegations[]` receipt は schema 1.2 の行に対し、従来の
+`session_id` / `tool_name` / `subagent_type` / `response_sha256` / `audit_verdict` に加えて
+`tool_use_id` を全一致で照合し、`verdict_state=resolved` だけを完成した監査として受理する。
+schema 1.1 の既存行は `tool_use_id` を持たない legacy 互換として従来キーで照合できるが、1.2 の
+ID 欠落・不一致を 1.1 扱いへ downgrade してはならない。
 
 台帳位置: `<CLAUDE_PROJECT_DIR>/eval-log/system-spec-harness/audit-fork-ledger.jsonl`
 (env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。consumer 側 `aggregate-completeness.py` と同一規則)。
@@ -122,6 +147,11 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
   意味層 (content-review / human) の責務である。
 - hook が無効化された環境では台帳が空になる。その場合 consumer は fail-closed で「帰属未接地」の
   violation を出す (緑にはならない = 安全側)。
+- background / 非同期 launch の「起動受理」response は監査の最終応答ではない。`AUDIT_VERDICT` が
+  未確定の `pending` / `absent` 行を completion receipt に使わず、最終応答を得られる foreground 実行へ戻す。
+- parallel call の schema 1.2 対応は defensive hardening と canary 検証の対象であり、正式 evaluator
+  運用の parallel 許可を意味しない。fresh live-trial で 3 fork 全ての per-call 台帳行、ID / digest /
+  verdict 照合、最終 receipt 生成を実証するまでは **1 message = 1 foreground fork** の直列運用を維持する。
 - guard hook と同じく **表層的な adversarial evasion は設計上許容**する。狙いは「fork を省略した実行が
   独立監査を名乗って機械層を通過する」という現実に観測された失敗の遮断。
 
@@ -132,3 +162,5 @@ graph node の `confirmation_evidence.evaluated_digest` として confirmed の�
   `skills/assign-system-spec-completeness-evaluator/tests/test_audit_fork_attribution.py`、
   集約・CLI 側は `tests/test_aggregate_completeness.py`。共通 fixture は
   `tests/completeness_test_support.py` に置き、責務別テストを 500 行以下に保つ。
+- unit / fixture の parallel 対応 PASS は defensive hardening の証跡であり、正式運用の直列 gate を
+  解除しない。解除には current hook runtime による fresh live-trial 証跡を別途要求する。

@@ -106,6 +106,7 @@ def test_schema_and_rubric_match_the_aggregate_contract():
     assert set(delegation["properties"]["dispatch"]["required"]) == {
         "tool", "subagent_type", "session_id", "response_sha256",
     }
+    assert "tool_use_id" in delegation["properties"]["dispatch"]["properties"]
     rubric = json.loads((SKILL_DIR / "references" / "scoring-rubric.json").read_text(encoding="utf-8"))
     assert rubric["aspect_to_auditor"] == {key: value["auditor"] for key, value in MOD.ASPECTS.items()}
 
