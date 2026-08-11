@@ -12,8 +12,9 @@ iteration: null
 title: "本番 publish smoke の作業ディレクトリ依存パスを修正する"
 owners: ["daishiman"]
 created_at: "2026-08-11T04:05:00Z"
-updated_at: "2026-08-11T04:14:00Z"
-status: "active"
+updated_at: "2026-08-11T04:29:30Z"
+status: "closed"
+closed_at: "2026-08-11T04:26:24Z"
 depends_on: []
 related_nodes: ["SYS-HUB-FOUNDATION-P13"]
 resource_scope: [".github/workflows/ci.yml",".github/workflows/smoke-fixture-sweeper.yml","apps/hub/scripts/smoke-production-publish-support.ts","apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts","docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md","issues/production-publish-smoke-cwd-paths-20260811.md",".dev-graph/state/graph.json"]
@@ -31,7 +32,7 @@ template_id: "issue"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"f47eec9f6fe8c96595a825845da60826f3fcbd94ece61daf1d4a05650651bc4a","evaluator":"GitHub Actions run 31453028279 log inspection","evidence_ref":"https://github.com/daishiman/HarnessHub/actions/runs/31453028279/job/93661957826"}
+confirmation_evidence: {"evaluated_digest":"f47eec9f6fe8c96595a825845da60826f3fcbd94ece61daf1d4a05650651bc4a","evaluator":"GitHub Actions run 31453028279 log inspection","evidence_ref":"docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md"}
 source_lineage: {"imported_at":"2026-08-11T04:05:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "CIログでpnpm filter後のcwdとrepository相対パスの二重解決を直接確認した。"
@@ -43,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-11T04:26:24Z","evidence_refs":["https://github.com/daishiman/HarnessHub/actions/runs/31457967635","docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md","apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts"],"policy":"manual","reconciled_at":"2026-08-11T04:26:24Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-11T04:05:00Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -97,4 +98,6 @@ R2取得は `apps/hub/wrangler.jsonc` をHub package cwdから再解決して `a
 - Hub typecheck / Biome: PASS
 - workflow step guard: 14 workflows / violation 0
 - Dev Graph schema: PASS
+- branch `hub-ci` run #421: PASS（static gate、build & test）
+- production deploy: branchでは設計どおりSKIP。`main`統合後にのみ実R2 smokeを再実行可能
 - 仕様非影響受領書: `docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md`

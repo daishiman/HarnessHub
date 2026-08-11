@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1511,
+  "graph_revision": 1514,
   "nodes": [
     {
       "acceptance": [
@@ -56856,18 +56856,23 @@
       ],
       "classification_confidence": 0.99,
       "classification_reason": "CIログでpnpm filter後のcwdとrepository相対パスの二重解決を直接確認した。",
+      "closed_at": "2026-08-11T04:26:24Z",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-11T04:26:24Z",
+        "evidence_refs": [
+          "https://github.com/daishiman/HarnessHub/actions/runs/31457967635",
+          "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md",
+          "apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-11T04:26:24Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "f47eec9f6fe8c96595a825845da60826f3fcbd94ece61daf1d4a05650651bc4a",
         "evaluator": "GitHub Actions run 31453028279 log inspection",
-        "evidence_ref": "https://github.com/daishiman/HarnessHub/actions/runs/31453028279/job/93661957826"
+        "evidence_ref": "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-11T04:05:00Z",
@@ -56933,7 +56938,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "closed",
       "tags": [
         "github-actions",
         "production-smoke",
@@ -56945,7 +56950,7 @@
       "template_version": "1.0.0",
       "title": "本番 publish smoke の作業ディレクトリ依存パスを修正する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T04:14:00Z"
+      "updated_at": "2026-08-11T04:29:30Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
