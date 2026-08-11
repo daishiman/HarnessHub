@@ -155,7 +155,12 @@ def test_category_specific_cards_for_previously_pointer_only_chapters():
     # HarnessHub-ldq: ui-ux / infrastructure / testing-qa / dev-workflow は専用 deep card を
     # 持たず「resource-map に未定義」の汎用ポインタのみだった (C05 medium finding)。
     # resource-map への card 追加でカテゴリ固有の card へ接続することを回帰検知する。
-    assert mod.category_design_refs("ui-ux") == ["usability-accessibility.md"]
+    # ui-ux は 2 枚 (適合水準/回復導線 = usability-accessibility、取捨/優先度 = information-design)
+    # を topo_order (後者が前者に depends_on) で導出する。
+    assert mod.category_design_refs("ui-ux") == [
+        "usability-accessibility.md",
+        "information-design.md",
+    ]
     assert mod.category_design_refs("infrastructure") == ["site-reliability-engineering.md"]
     assert mod.category_design_refs("testing-qa") == ["test-strategy.md"]
     assert mod.category_design_refs("dev-workflow") == ["continuous-delivery.md"]

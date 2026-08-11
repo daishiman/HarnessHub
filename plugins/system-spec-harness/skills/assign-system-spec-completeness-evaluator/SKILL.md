@@ -62,7 +62,7 @@ feedback_contract:
 
 **入力**: `system-spec/*.md` + index (C03 出力) / `spec-state.json` (C01) / `fetched-references.json` (C02)
 **出力**: 評価レポート (`schemas/completeness-findings.schema.json` 準拠) — 観点別スコア + 総合判定 + 不足事項一覧。PASS 時は正規 validator と fork 台帳へ束縛した `system-spec/resume-receipt.json` も生成する。
-**完了条件**: 全観点 verdict 付与 + findings[] (info 以上を最低 1 件) + 総合判定が観点スコアからの fail-closed 再導出値と一致 + 総合 FAIL 時は不足事項一覧が非空。PASS の再利用は `build-resume-receipt.py` が作った schema 1.1 receipt に限る。
+**完了条件**: 全観点 verdict 付与 + findings[] (info 以上を最低 1 件) + 総合判定が観点スコアからの fail-closed 再導出値と一致 + 総合 FAIL 時は不足事項一覧が非空。PASS の再利用は `build-resume-receipt.py` が作った resume-receipt schema 1.1 に限る (fork 台帳 schema 1.1 / 1.2 とは別の version 軸)。
 
 各 skill 単独では見えない全体網羅性の欠落を、生成物から独立した context で評価し客観的合否を返す。
 
@@ -99,7 +99,8 @@ feedback_contract:
   "verdict": "PASS" | "FAIL",
   "audit_delegations": [
     {"aspect": "matrix_coverage", "role": "primary",   "auditor": "system-spec-matrix-auditor",
-     "component": "C07", "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor"},
+     "component": "C07", "dispatch": {"tool": "Task", "subagent_type": "system-spec-matrix-auditor",
+     "session_id": "...", "tool_use_id": "...", "response_sha256": "..."},
      "verdict": "PASS", "evidence": ["..."]},
     {"aspect": "matrix_coverage", "role": "sub_input", "auditor": "system-spec-hearing-auditor",  "component": "C06", ...},
     {"aspect": "doc_freshness",   "role": "primary",   "auditor": "system-spec-doc-freshness-auditor", "component": "C08", ...}
@@ -131,8 +132,10 @@ feedback_contract:
 - 証跡台帳: `eval-log/system-spec-harness/audit-fork-ledger.jsonl` (writer = `hooks/record-audit-fork.py` / PostToolUse: `Task|Agent`)。`--fork-ledger` または env `SYSTEM_SPEC_AUDIT_FORK_LEDGER` で上書き可。
 - C05 自前評価の 4 観点に `primary` receipt を付けるのは **虚偽の独立性主張** として violation。
 - 台帳が無い/空 = 裏取り 0 件 → fail-closed で violation (緑にしない)。
-- **run/session・response 束縛 (issue: HarnessHub-x4o)**: receipt の `dispatch.{session_id,tool,subagent_type,response_sha256}` と receipt `verdict` を、台帳が hook 観測した同一 response の値へ全一致で束縛する。必須 receipt の session は単一 run に収束させ、`--session <id>` で現在 session との一致まで検査する。これにより、実 fork はしたが FAIL を PASS と書く緑化を拒否する。
-- **dispatch の直列化**: 3 監査は独立 context だが、1 回の assistant message で複数の Task/Agent tool call を同時起動しない。1 件ずつ foreground で実行し、完全 response の最終行 `AUDIT_VERDICT` と PostToolUse 台帳行を確定してから次の 1 件を起動する。background/非同期起動で得る「起動済み」応答は最終 verdict ではなく、`response_sha256` / `audit_verdict` が null の台帳行は receipt に使えない。
+- **PostToolUse の per-call 契約**: 現行 PostToolUse は matching tool call ごとに 1 回、top-level `tool_use_id` と当該 call の `tool_response` を渡す。parallel dispatch 時も call ごとの hook が並行発火し、batch 全体の lifecycle は PostToolBatch が担う。writer は schema 1.2 で top-level `tool_use_id` / `verdict_state` と、**当該 per-call `tool_response` 全体**の canonical digest を記録する。nested ID block を探索して response の一部だけを digest 化しない。
+- **run/session・response・ID 束縛 (issues: HarnessHub-x4o / HarnessHub-uypz)**: schema 1.2 の receipt `dispatch.{session_id,tool,subagent_type,tool_use_id,response_sha256}` と receipt `verdict` を、台帳が hook 観測した同一 call の値へ全一致で束縛し、`verdict_state=resolved` だけを受理する。schema 1.1 台帳は `tool_use_id` を持たない legacy 互換として従来の `session_id` / tool / subagent / digest / verdict で照合する。schema 1.2 の ID 欠落・不一致を 1.1 へ downgrade して通してはならない。必須 receipt の session は単一 run に収束させ、`--session <id>` で現在 session との一致まで検査する。
+- **正式 evaluator 運用の直列化 gate**: per-call hook 仕様と parallel 対応コードの存在だけでは正式運用を parallel へ昇格しない。current runtime の fresh live-trial で 3 fork 全ての schema 1.2 行、ID / digest / verdict 照合、最終 receipt 生成が成立するまで、1 回の assistant message では 1 件だけを foreground 起動する。完全 response の最終行 `AUDIT_VERDICT` と PostToolUse 台帳行を確定してから次へ進む。parallel support は defensive hardening / canary であり正式許可ではない。
+- **background は最終 verdict ではない**: background/非同期 launch の「起動済み」応答は監査の最終 response ではない。writer は現行 `Agent` の `tool_response.status=completed` だけを verdict 確定対象とし、それ以外を marker の有無にかかわらず `verdict_state=pending` / `audit_verdict=null` にする。旧 `Task` は status 欠落を互換受理するが、status が明示された場合は `completed` 以外を未完了として扱う。現行 `Agent` の top-level `tool_use_id` 欠落も schema 1.1 へ downgrade しない。`verdict_state=pending|absent|ambiguous`、または `audit_verdict=null` の台帳行は receipt に使えない。
 - **台帳の書込み権限**: `audit-fork-ledger.jsonl` は PostToolUse hook の append-only 出力であり、評価者が手書き・補正してはならない。`prompt_sha256` / `response_sha256` が空・`manual`・64桁16進数以外、または response 最終行の `AUDIT_VERDICT` marker が無効な行は集約対象から除外される。
 - **機械層の限界 (正直な境界)**: 台帳は実際の response が返した verdict の書換えを拒否するが、監査 prompt の意味的十分性や証拠の妥当性そのものは content-review / human が検証する。台帳ファイルを意図的に改ざん可能な実行環境では hook 証跡だけで完全な敵対者耐性は得られないため、書込み権限の分離も必要である。
 
@@ -156,7 +159,7 @@ feedback_contract:
 正本責務は `prompts/R1-score.md` (スコアリング) と `prompts/R2-delegate.md` (監査 fork 集約)。要約:
 
 ### Step 1: 観点別監査を独立 context で集約 (R2-delegate)
-Task tool で監査 sub-agent (`system-spec-matrix-auditor` (C07) / `system-spec-hearing-auditor` (C06) / `system-spec-doc-freshness-auditor` (C08)) をそれぞれ fork する。帰属台帳に完全 response を残すため、1 message = 1 foreground fork で直列実行する。C07 は matrix_coverage、C08 は doc_freshness の一次根拠。C06 はヒアリング品質を監査し matrix_coverage の sub-input として併せる。design_knowledge_reflection は独立 auditor を立てず Step 3 で C05 自身が評価する。
+Task tool で監査 sub-agent (`system-spec-matrix-auditor` (C07) / `system-spec-hearing-auditor` (C06) / `system-spec-doc-freshness-auditor` (C08)) をそれぞれ fork する。PostToolUse 自体は per-call だが、正式 evaluator 運用は fresh live-trial で schema 1.2 の end-to-end 帰属を実証するまで **1 message = 1 foreground fork** で直列実行する。C07 は matrix_coverage、C08 は doc_freshness の一次根拠。C06 はヒアリング品質を監査し matrix_coverage の sub-input として併せる。design_knowledge_reflection は独立 auditor を立てず Step 3 で C05 自身が評価する。
 
 ### Step 2: マトリクス網羅性の決定論ゲート
 ```bash
@@ -171,7 +174,7 @@ exit0 をマトリクス網羅性観点の一次根拠にする (`scripts/aggreg
 C05 R1-score が `system-spec/*.md` 各章を直接読み、`ref-system-design-knowledge/references/resource-map.yaml` 由来の設計知識ポインタの (1) 存在 (機械層) と (2) その原則が確定セル要件へ具体適用されているか (意味層) を評価する。**存在確認だけで PASS にしない** (compile が機械注入するポインタを自己循環で肯定しない = Goodhart 防止)。汎用ポインタ (resource-map 索引) のみで具体適用が無い章は medium 以上で拾う。C06 のヒアリング品質監査は本観点でなく matrix_coverage の sub-input として使う。
 
 ### Step 4: レポート出力と整合検査
-`schemas/completeness-findings.schema.json` 準拠で評価レポートを出力し、Step 1 で実際に fork した監査を `audit_delegations[]` へ receipt として記録する。`scripts/aggregate-completeness.py --report <report.json>` で形状 + 総合判定整合 (fail-closed 再導出との一致) + 帰属の fork 証跡接地を検証する。
+`schemas/completeness-findings.schema.json` 準拠で評価レポートを出力し、Step 1 で実際に fork した監査を `audit_delegations[]` へ receipt として記録する。schema 1.2 台帳を使う receipt は hook 観測の `tool_use_id` も `dispatch` へ転記する。`scripts/aggregate-completeness.py --report <report.json>` で形状 + 総合判定整合 (fail-closed 再導出との一致) + 帰属の fork 証跡接地を検証する。
 
 総合 PASS の場合だけ、同じ report・fork ledger・具体的 session を production writer へ渡す。writer は `G-matrix` / `G-source-citation` の exit 0、report digest、ledger の response/session 帰属を再検査してから atomic に receipt を生成する。手書き receipt や test fixture の producer を実行時に使わない。
 
@@ -191,6 +194,7 @@ python3 scripts/build-resume-receipt.py --repo-root "$CLAUDE_PROJECT_DIR" \
 4. high severity が 1 件でもあれば総合 FAIL。
 5. INDETERMINATE は fail-closed で FAIL に寄せ、仕様書修正でなく監査再実行/入力補完へ差し戻す。
 6. 本 skill は kind=assign のため feedback_contract.criteria は N/A (評価器自身は評価基準を携帯せず、checklist 観点 + evaluator ゲートで担保。frontmatter の skip_reason 参照)。
+7. parallel fixture / unit test が PASS しても正式 evaluator の直列化を解除しない。解除条件は current runtime の fresh live-trial で 3 件全ての schema 1.2 `tool_use_id` / whole-response digest / `verdict_state=resolved` と receipt 照合を確認すること。
 
 ## Additional Resources
 
@@ -198,8 +202,8 @@ python3 scripts/build-resume-receipt.py --repo-root "$CLAUDE_PROJECT_DIR" \
 - `references/aspect-criteria.md` — 観点別意味判定の詳細基準 + 観点↔監査 agent 対応
 - `schemas/completeness-findings.schema.json` — 評価レポート出力スキーマ
 - `scripts/aggregate-completeness.py` — レポート形状検証 + 総合 fail-closed 集約 + 帰属の fork 証跡接地検証 (決定論)
-- `scripts/audit_fork_attribution.py` — fork 台帳集計・receipt 照合・run/session 束縛を担う import 専用モジュール。公開 CLI と総合判定は `aggregate-completeness.py` が継続して所有する
+- `scripts/audit_fork_attribution.py` — fork 台帳集計・schema 1.2 の tool-use ID を含む receipt 照合・run/session 束縛、および schema 1.1 legacy 互換を担う import 専用モジュール。公開 CLI と総合判定は `aggregate-completeness.py` が継続して所有する
 - `scripts/build-resume-receipt.py` / `schemas/resume-receipt.schema.json` — canonical PASS report、gate 結果、fork ledger session、artifact digest に束縛した再利用 receipt の production writer / schema
-- `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (PostToolUse: `Task|Agent`)。帰属検証の証跡正本
+- `../../hooks/record-audit-fork.py` — 監査 fork 台帳 writer (per-tool-call PostToolUse: `Task|Agent`)。schema 1.2 の top-level `tool_use_id` / `verdict_state` / whole per-call response digest を記録する帰属検証の証跡正本
 - `prompts/R1-score.md` / `prompts/R2-delegate.md` — R1 (スコアリング) / R2 (監査 fork 集約) 責務正本
 - fork 先 agent: `../../agents/system-spec-{matrix,hearing,doc-freshness}-auditor.md`

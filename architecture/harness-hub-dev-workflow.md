@@ -233,6 +233,27 @@ C16 は選択範囲内かつ schedulable な tracker_binding=beads node を、C2
 
 C19 の source-derived body は source artifact と byte 同一に保つ。adapter は node shape と source 読取り、C02 writer は node と graph store の書込みを所有し、elicitation / compile 実行ロジックを Dev Graph 側へ複製しない。製品 runtime は非変更。詳細は [o4zi 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/o4zi-system-spec-import-heading-contract-spec-reflection-receipt.md) を正とする。
 
+## 監査 fork 台帳 schema 1.2 境界 (2026-08-11 / `HarnessHub-uypz`)
+
+`record-audit-fork.py` は PostToolUse の **matching tool call ごと**に発火する証跡 writer である。
+payload top-level の `tool_use_id` と当該 call の `tool_response` 全体 digest、生
+`AUDIT_VERDICT`、`verdict_state` を schema 1.2 行として append-only 台帳へ書く。
+旧 Task の ID 無し payload だけが schema 1.1 legacy 互換を使う。Agent の ID 欠落を
+1.1 へ downgrade してはならない。
+
+`audit_fork_attribution.py` は completeness receipt と台帳を照合する consumer である。
+schema 1.2 では `session_id` + `tool_use_id` を第一級キーに、tool / subagent /
+`response_sha256` / resolved verdict の全一致を要求し、重複・競合・ID 取り違えを
+fail-closed で拒否する。background / async launch の起動受理は `pending` であり、
+completion receipt に使わない。
+
+unit / fixture の parallel canary PASS は defensive hardening であり、正式 evaluator の
+parallel 運用許可ではない。current runtime の fresh live-trial で 3 fork 全ての
+per-call 行と最終 receipt を実証するまでは **1 message = 1 foreground fork** を維持する。
+製品 API・DB・認証認可・UI・Cloudflare deploy unit は非変更。判断と検証の正本は
+[uypz 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md)
+とする。
+
 ## 検証 tier の責務境界 (2026-08-09 / qa-216)
 
 `select-verification-tier.py` は変更 path と規則表だけから `mvp / standard / critical` の最高一致 tier を返し、規則/source digest を証拠へ残す。`verification-gate-ledger.json` は gate 定義の SSOT（正本）で、plan builder が blocking・advisory・deferred を導出する。decision validator は selector absent、非仕様語彙、受け皿の無い延期を拒否する。

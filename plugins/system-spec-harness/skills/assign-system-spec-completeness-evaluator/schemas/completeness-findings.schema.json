@@ -81,6 +81,7 @@
           "required": ["tool", "subagent_type", "session_id", "response_sha256"],
           "properties": {
             "tool": {"enum": ["Task", "Agent"], "description": "subagent 起動ツール名の観測値 (旧ハーネス/Codex 系='Task', 現行 Claude Code='Agent')。aggregate-completeness.py の LEDGER_TOOL_NAMES と整合"},
+            "tool_use_id": {"type": "string", "minLength": 1, "description": "schema 1.2 fork 台帳の dispatch 識別子。同一 session 内の PostToolUse 観測値と一致必須。schema 1.1 receipt の互換読取を維持するため schema 上は optional だが、1.2 行へ接地する receipt で欠落した場合は集約器が fail-closed で拒否する"},
             "subagent_type": {"type": "string", "minLength": 1, "description": "auditor と一致すること。fork 台帳の subagent_type と突合される"},
             "session_id": {"type": "string", "minLength": 1, "description": "fork を起動した評価 session の id。宣言単独では自己申告のため、fork 台帳 (hook が harness 観測値を記録) に同一 (session_id, subagent_type) の行が実在するときだけ裏取り成立 (issue: HarnessHub-x4o)。必須 receipt 全件で同一 session を名指しすること (単一 run 収束)"},
             "response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "PostToolUse hook が観測した監査 response の canonical sha256。台帳に同一 session・subagent・tool・digest の行があり、そこに記録された audit_verdict が receipt.verdict と一致するときだけ帰属と判定の裏取りが成立する"}

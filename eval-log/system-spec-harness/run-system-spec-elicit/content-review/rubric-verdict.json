@@ -1,15 +1,29 @@
 {
-  "target": {"plugin": "system-spec-harness", "skill": "run-system-spec-elicit", "skill_md_sha256": "aa5233213dbe23b9c433c9c63fe8962b06c68c6cab5ac86c41cf5b142f5b07d4"},
+  "target": {
+    "plugin": "system-spec-harness",
+    "skill": "run-system-spec-elicit",
+    "skill_md_sha256": "42d567bb899f2cac03e19169651ff2d42ec30a2656336a821fb489cd3dae8e9d"
+  },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "assign-skill-design-evaluator (incremental focused combined review, final verification pass #5)",
-  "reviewed_at": "2026-08-11T03:30:00Z",
+  "reviewer": "assign-skill-design-evaluator (incremental focused combined review, final verification pass #5) + incremental sha refresh after information-design collection-order edit (2026-08-11)",
+  "reviewed_at": "2026-08-11T07:39:54Z",
   "iterations": 5,
   "human_review_required": false,
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 2},
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 2
+  },
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["IN1", "OUT1", "OUT2"],
+    "criteria_evaluated": [
+      "IN1",
+      "OUT1",
+      "OUT2"
+    ],
     "positive_feedback": [
       "rubric high severity 項目を機械実測で全充足: FM-001 frontmatter (validate-frontmatter.py ok) / NM-001 命名と dir 名 (lint-skill-name.py ok) / BD-003 本文 188 行 <= 300 / BD-001 Purpose & Output Contract が入力・出力・完了条件を明示。lint-skill-description.py VIOLATION 0 (OK=203)。high severity finding は 0 件。",
       "NM-003 系の参照宣言が緑化した。responsibility_refs に prompts/R6-audit-hearing.md・R7-audit-matrix.md が追加され、lint-skill-tree.py の MED-4 warn (R6/R7 未列挙) が消滅し、残る warn は LS-203 の 2 件のみになった。apply-spec-transition.py の inputs コメントも実装サブコマンド集合へ追従。",

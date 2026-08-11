@@ -88,6 +88,7 @@ def golden_ledger(auditors=None, session_id="sess-1", verdicts=None):
             }
             for name in auditors
         },
+        "receipts_v12": {},
         "malformed": 0,
     }
 

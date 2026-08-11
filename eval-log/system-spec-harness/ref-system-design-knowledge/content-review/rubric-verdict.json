@@ -2,17 +2,17 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "ref-system-design-knowledge",
-    "skill_md_sha256": "acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1"
+    "skill_md_sha256": "600eb32d88af21d0d1828ec4260030fa53f8ee3ddebf0f5de9190b3b0743be9e"
   },
   "review_kind": "rubric",
   "verdict": "PASS",
   "reviewer": "incremental-focused-combined-reviewer",
-  "reviewed_at": "2026-08-08T08:57:43Z",
+  "reviewed_at": "2026-08-11T06:13:43Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
-    "omission": 0,
+    "omission": 1,
     "inconsistency": 2,
     "dependency_break": 0,
     "smell": 1
@@ -21,20 +21,23 @@
     "loop_scope": "both",
     "criteria_evaluated": ["knowledge-graph-wellformedness", "card-schema-conformance"],
     "positive_feedback": [
-      "決定論ゲートに実接地している: validate-knowledge-graph.py --profile knowledge --order が exit 0 で topo_order を返し (clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design → usability-accessibility → test-strategy → continuous-delivery → site-reliability-engineering)、--profile doctrine も exit 0。pytest 53 件 (ref-system-design-knowledge/tests + run-system-spec-compile/tests) pass。",
-      "カード深度の契約が守られている: 新規 4 枚 (usability-accessibility / test-strategy / continuous-delivery / site-reliability-engineering) はいずれも既存カードと同一の 11 節構成 (目的・背景・解決する問題・中核概念・適用条件・非適用条件・トレードオフ/失敗モード・目的達成への寄与・ヒアリング判断観点・一次資料・鮮度) を持ち 73-74 行。knowledge-card.schema.json の required 14 概念に欠落なし。SKILL.md L37 の『浅い pointer-only 要約は正本カードとして受け入れない』に反していない。",
-      "FM/NM/BD 次元は既存合格状態を維持: name=kebab + ref prefix、kind=ref / effect=none / allowed-tools=[Read] の read-only 契約は不変。SKILL.md への追記は参照表 4 行のみで、境界宣言 (C04 は発見・取得・永続化を実行しない) を緩めていない。",
-      "SSOT の二重化を自ら閉じている: resource-map.yaml 冒頭に『card 集合の SSOT は read_when、反映順序の SSOT は knowledge-catalog.json の depends_on』と明記し、entry 並びを topo_order と同順へ揃えた。索引の記述順を反映順と誤読する事故を構造で塞いでいる。"
+      "決定論ゲートに実接地している: validate-knowledge-graph.py は knowledge (--order で 11 件の topo_order: clean-code → ddd → design-patterns → clean-architecture → api-design-patterns → secure-by-design → usability-accessibility → information-design → test-strategy → continuous-delivery → site-reliability-engineering) / doctrine / required-info / cross の 4 profile すべて exit 0。pytest plugins/system-spec-harness 248 passed、lint-doc-line-limit.py exit 0 (683 文書・上限 300 行)。",
+      "カード深度の契約が守られている: information-design.md は既存カードと同一の 11 節 84 行で、knowledge-card.schema.json の required 14 フィールド相当 (knowledge_id / title / status / purpose / background / problems / core_concepts / applies_when / does_not_apply_when / tradeoffs / failure_modes / goal_contribution / primary_sources / freshness) に欠落なし。core_concepts 8・problems 6・tradeoffs+failure_modes 7・goal_contribution 4・primary_sources 5 で minItems を全て超え、freshness も class/last_checked/review_by/trigger の 4 token 完備。SKILL.md L37 の『浅い pointer-only 要約は正本カードとして受け入れない』に反していない。",
+      "FM/NM/BD 次元は既存合格状態を維持: name=kebab + ref prefix、kind=ref / effect=none / allowed-tools=[Read] / disable-model-invocation の read-only 契約は不変。SKILL.md への追記は参照表 1 行のみで、境界宣言 (C04 は発見・取得・永続化を実行しない) も知識依存グラフ節・doctrine anchor 節も無変更。ディレクトリ名一致・行数 77 行。",
+      "辺の型付けが規約定義に対して正しい: graph_semantics の depends_on (precedence DAG・位相参加) と refines (有向精緻化・位相不参加) は直交した別軸であり、同一 node へ両方張ることは validator の型則 (自己参照禁止 / dangling / refines 非循環 / conflicts_with 対称) をいずれも侵さない。api-design-patterns が refines=design-patterns と depends_on=clean-architecture を別 node へ張る既存例は『refines だけでは順序が決まらない』ことの裏返しで、今回のように順序も精緻化関係も同じ node に対して主張したい場合は両辺併置が正確な符号化になる。",
+      "elicit 側 (C01) との語彙整合が取れている: required-info-catalog の新 item screen-information-priority は REQUIRED_INFO_FIELDS 11 項目を完備し、domain=ui-ux / concern=presentation が doctrine の category_concern_map と一致、missing_effect=degrade が閉列挙内、depends_on が実在 item を指し collection_order (11 件) 末尾へ決定論的に配置された。question-bank の追加行も既存の『カテゴリ (id)』表記規約に従っている。"
     ],
     "negative_feedback": [
-      "[low/inconsistency] frontmatter last-audited が 2026-07-11 のまま。参照知識領域が 6 → 10 と実質 67% 増えているのに監査日が動いていない。audit-trigger: official-update の運用上は必須更新ではないが、鮮度表示としては実態から乖離している。",
-      "[low/inconsistency] knowledge-catalog.json で test-strategy が depends_on: [\"clean-code\", \"usability-accessibility\"] を持つ。depends_on は SKILL.md L40 の定義では precedence (前提を先に出す) であり形状は妥当だが、『アクセシビリティがテスト戦略の前提』という意味妥当性は自明でない (受入基準化の文脈では成立しうる)。SKILL.md L40 が明記するとおり辺の意味妥当性は validator の保証外で content-review/human の責務のため、ここに記録として残す。",
-      "[low/smell] usability-accessibility が depends_on: [] で clean-code に次ぐ第 2 の root になった。validator の root 到達性検査は通るが、seed グラフに root が増えると『どこから読み始めるか』の指針が topo_order 依存になる。現状 10 entry では実害なし。"
+      "[medium/inconsistency] prompts/R1-system-design-knowledge.md:22 の Layer 2 `seed knowledge` 列挙が 10 領域のままで Information Design を欠く。SKILL.md 参照表 / resource-map.yaml / knowledge-catalog.json は 11 領域で三者一致しているのに、responsibility_refs で SKILL.md が正式に参照している責務プロンプトだけ集合が古い。当該行は『知識領域の固定上限ではない』と自己宣言しているため機械ゲート・実行の破綻は無く high ではないが、前回 verdict が検証済みとした四者一致が崩れた退行であり修正が要る。",
+      "[low/omission] tests/test_validate_knowledge_cards.py::test_new_category_cards_are_not_generic_pointers の hardcoded expected 4 枚へ information-design.md が未追加。深度ゲートは validate_root 経由で catalog 全 entry を走査するため被覆済みだが、『read_when が単一カテゴリにのみ一致する (汎用ポインタ化していない)』の回帰検知だけが新カードへ効いていない。実文言 (ui-ux のみ一致) から見て 1 行追加で緑のまま通る。",
+      "[low/inconsistency] SKILL.md frontmatter の last-audited が 2026-07-11 のままで、参照知識領域 11 という現状と乖離している。audit-trigger: official-update の運用上は必須更新ではないが、前回 (2026-08-08) と同一指摘の繰り越し。",
+      "[low/smell] 一次資料節に個人の技術ブログ (Qiita, mskmiki 2024) が標準・原著書籍と同列で並ぶ。lifecycle の Qualify 規範は『二次ブログ *だけ*』を unqualified とするので違反ではない (Tufte / NN/g Progressive Disclosure / NN/g 10 heuristics / W3C SC 1.4.1 の 4 本が主張を支える) が、既存 11 枚に個人ブログを一次資料節へ置いた前例が無く、由来表示は節内で二次資料として区別する方が規律と揃う。",
+      "[low/smell] freshness_class=foundational-stable (review_by 2028-08-11) に対し trigger へ WCAG 追随項目 (色・コントラストの達成基準改訂) が含まれ、親の usability-accessibility は standard-tracked (review_by 2027-02-08)。出典構成からは foundational-stable が妥当だが、追随 trigger を抱えたまま親より監査間隔が長い点は stale 検出遅れの芽。"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "Stop",
-    "next_action": "none"
+    "next_action": "improve"
   },
-  "notes": "incremental focused combined review (not exhaustive rubric scoring): HarnessHub-ldq の未コミット差分 (SKILL.md 参照表 +4 行、prompts/R1 Layer2 seed 列挙更新、references/resource-map.yaml 並べ替え + SSOT 注記、knowledge-catalog.json +4 entry、references/{usability-accessibility,test-strategy,continuous-delivery,site-reliability-engineering}.md 新規、tests/test_validate_knowledge_cards.py +93 行) を起点に、現 SKILL.md (sha256=acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1) を全文読了して ref-skill-design-rubric 規範の主要次元で検査。FM: name/description/kind=ref/effect=none/allowed-tools=[Read]/completeness_exempt 整合。BD: Purpose & Output Contract・境界宣言・知識依存グラフ節・doctrine anchor 節・参照表・使い方・責務プロンプトあり (76 行)。NM: ディレクトリ名一致。参照表 10 領域と resource-map.yaml の card entry 10 件と knowledge-catalog.json の 10 entry が三者一致、全ファイル実在を確認。SKILL.md 本文の記述と R1 Layer2 の seed 列挙も一致。high severity 0、low inconsistency 2 + low smell 1 のみで全次元閾値クリア。"
+  "notes": "incremental focused combined review (not exhaustive rubric scoring): 今回の変更 slice のみを入力とし、現 SKILL.md (sha256=600eb32d88af21d0d1828ec4260030fa53f8ee3ddebf0f5de9190b3b0743be9e) を全文読了して ref-skill-design-rubric 規範の主要次元 (FM=frontmatter / BD=body / NM=naming / 決定論ゲート接地 / SSOT) で検査。実行した検証: validate-knowledge-graph.py --profile knowledge --order exit 0 (topo_order 11 件)、--profile doctrine exit 0、--profile required-info exit 0 (collection_order 11 件・coverage certificate 9 domain 全被覆・blocking 5 件)、--profile cross exit 0 (shared_categories 8 / extra_domains=[api])、pytest plugins/system-spec-harness 248 passed、lint-doc-line-limit.py exit 0。個別確認: 新カード 11 節が schema required 14 概念を全充足し既存カードと同一節構成、resource-map の card 物理並びが topo_order と一致、参照表 / resource-map / catalog の三者が同一 11 領域を指し全ファイル実在、usability-accessibility (適合水準と回復導線) と information-design (取捨と優先度) の責務が非重複で SSOT 衝突なし、削減原則と一覧性・一括操作の反対論が非適用条件およびトレードオフへ両側収録済み。high severity 0 のため全次元閾値クリアで PASS。medium 1 (R1 責務プロンプトの seed 列挙 stale) と low 4 は actionable として next_action=improve を付す。"
 }

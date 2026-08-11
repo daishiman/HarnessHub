@@ -1,24 +1,40 @@
 {
-  "target": {"plugin": "system-spec-harness", "skill": "assign-system-spec-completeness-evaluator", "skill_md_sha256": "f5fab4d223873d69f685a5714a4474ec54891a7a53cb5e174043c673f109cc48"},
+  "target": {
+    "plugin": "system-spec-harness",
+    "skill": "assign-system-spec-completeness-evaluator",
+    "skill_md_sha256": "0e09fcdeab92ecf367cf01d8891dd686e63e5e490d1399e74243bb79e9b5b815"
+  },
   "review_kind": "rubric",
   "verdict": "PASS",
-  "reviewer": "independent final-review fresh context",
-  "reviewed_at": "2026-08-09T13:05:22Z",
-  "iterations": 2,
+  "reviewer": "independent focused combined content-review",
+  "reviewed_at": "2026-08-11T07:50:51Z",
+  "iterations": 1,
   "human_review_required": false,
-  "findings_summary": {"contradiction": 0, "omission": 0, "inconsistency": 0, "dependency_break": 0, "smell": 0},
+  "findings_summary": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
   "feedback_loop": {
     "loop_scope": "both",
-    "criteria_evaluated": ["C1-contract", "C2-compatibility", "C3-documentation", "C4-test-boundary", "C5-session-evidence"],
+    "criteria_evaluated": [
+      "C1-no-contradiction",
+      "C2-no-omission",
+      "C3-convention-alignment",
+      "C4-dependency-alignment",
+      "C5-rubric-high-severity-zero"
+    ],
     "positive_feedback": [
-      "production writer は canonical report/output、実 gate、fork ledger session、5 artifact digest に schema 1.1 receipt を束縛する。",
-      "consumer と schema の exact-field/path 契約が一致し、custom report と malformed receipt を拒否する。"
+      "high severity rules FM-001、BD-001、BD-003、NM-001 はすべて充足し、rubric high finding は 0 件である。",
+      "description の 2 trigger は本文の 6 観点評価と独立 context 手順へ対応し、Purpose & Output Contract、Gotchas、300 行以内、reference 分割、依存 path の実在が確認できる。"
     ],
     "negative_feedback": [],
-    "iteration": 2,
-    "iteration_limit": 3,
-    "hook_trigger": "manual-final-review",
+    "iteration": 1,
+    "iteration_limit": 2,
+    "hook_trigger": "manual-pr-ci-repair",
     "next_action": "none"
   },
-  "notes": "assign-kind は feedback_contract skip_reason により criteria N/A。static dependency review PASS。"
+  "notes": "Rubric v1.3.0 focused evaluation PASS. High-severity findings are zero and no contradiction or dependency break remains. kind=assign makes feedback_contract.criteria N/A via the explicit skip_reason; the five criteria_evaluated entries are the combined content-review protocol checks. This is an incremental review and does not claim the exhaustive 30-method review."
 }

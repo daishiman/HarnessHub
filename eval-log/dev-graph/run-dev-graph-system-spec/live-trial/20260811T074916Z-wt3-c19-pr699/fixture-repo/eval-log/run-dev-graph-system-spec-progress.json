@@ -1,0 +1,75 @@
+{
+  "mode": "reuse-confirmed",
+  "status": "complete",
+  "registered_this_run": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "resume_receipt_valid": true,
+  "evidence_ref_audit": {
+    "scanned_nodes_with_evidence": 2,
+    "registered_dangling": [],
+    "existing_dangling": []
+  },
+  "gate_exit_codes": {
+    "resolve-context": 0,
+    "validate-resume": 0,
+    "build-import": 0,
+    "gate-boundary": 0,
+    "gate-source-and-evidence-bindings": 0,
+    "gate-graph-preview": 0,
+    "c02-dry-run-architecture": 0,
+    "c02-dry-run-specification": 0,
+    "c02-upsert-architecture": 0,
+    "c02-upsert-specification": 0,
+    "gate-evidence-refs": 0,
+    "gate-source-digest": 0
+  },
+  "checklist": [
+    {
+      "id": "content-root",
+      "status": "pass",
+      "evidence": "resolve-context exit 0"
+    },
+    {
+      "id": "harness-contract",
+      "status": "pass",
+      "evidence": "validate-resume exit 0"
+    },
+    {
+      "id": "upstream-selection",
+      "status": "pass",
+      "evidence": "current receipt reused; upstream Skill count 0"
+    },
+    {
+      "id": "upstream-gates",
+      "status": "pass",
+      "evidence": "digest-bound evaluator/coverage/source gates current"
+    },
+    {
+      "id": "live-trial-outer-closure",
+      "status": "pending-external",
+      "evidence": "post-run transcript gate validates this runner report"
+    },
+    {
+      "id": "c02-node-integrity",
+      "status": "pass",
+      "evidence": "C02 dry-run and upsert steps exit 0"
+    },
+    {
+      "id": "source-digest",
+      "status": "pass",
+      "evidence": "gate-source-digest exit 0"
+    },
+    {
+      "id": "evidence-refs",
+      "status": "pass",
+      "evidence": "gate-evidence-refs exit 0"
+    },
+    {
+      "id": "logic-boundary",
+      "status": "pass",
+      "evidence": "gate-boundary exit 0"
+    }
+  ]
+}

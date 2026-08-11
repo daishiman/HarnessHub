@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1553,
+  "graph_revision": 1554,
   "nodes": [
     {
       "acceptance": [
@@ -137,14 +137,15 @@
         "status": "not_applicable"
       },
       "confirmation_evidence": {
-        "evaluated_digest": "bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36",
-        "evaluator": "validate-coverage-matrix.py --require-complete",
-        "evidence_ref": "system-spec/completeness-report.json"
+        "evaluated_digest": "b53b524b60b5e6105d061df1f21573ed20097eef691f03013adda05e77b279a4",
+        "evaluator": "validate-coverage-matrix.py --require-complete + 30思考法の情報設計依存レビュー",
+        "evidence_ref": "eval-log/elegant-review/harness-hub-information-design-20260811/review.md"
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-07-17T00:35:59Z",
       "depends_on": [
-        "spec-harness-hub-requirements"
+        "spec-harness-hub-requirements",
+        "spec-harness-hub-information-design-addendum"
       ],
       "domain": "frontend",
       "evaluation_status": "pass",
@@ -214,7 +215,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-02T12:48:16.841716Z"
+      "updated_at": "2026-08-11T06:57:48.545354Z"
     },
     {
       "acceptance": [
@@ -838,7 +839,9 @@
       "related_nodes": [
         "spec-harness-hub-ui-foundation-addendum",
         "issue-ui-foundation-final-review-20260808",
-        "issue-hub-shell-page-surface-unification-20260808"
+        "issue-hub-shell-page-surface-unification-20260808",
+        "spec-harness-hub-information-design-addendum",
+        "issue-system-spec-required-info-answer-gate-20260811"
       ],
       "resource_scope": [
         "features/feat-hub-foundation.md"
@@ -875,7 +878,7 @@
       "template_version": "1.0.0",
       "title": "Hub 基盤: Workers + Next.js scaffold / CI/CD / 運用 baseline",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T00:42:42.873251Z"
+      "updated_at": "2026-08-11T07:30:51.757Z"
     },
     {
       "acceptance": [
@@ -58867,6 +58870,369 @@
       "title": "所属が 90 件を超えると、名前を落としてもサインインできない",
       "tracker_binding": "beads",
       "updated_at": "2026-08-11T17:24:17.377271Z"
+    },
+    {
+      "acceptance": [
+        "新画面または情報設計変更に情報設計シートと確定した画面プロファイルがある",
+        "可視ラベル・意味構造・accessible name が要素種別に応じて維持される",
+        "顕著度が semantic token の段だけで構成される",
+        "breakpoint 変換後も比較・ソート・選択・一括操作・完全値への到達を失わない",
+        "表示加工がサーバ集計値の再計算を含まず正確値へ到達できる",
+        "代表タスクの実測と manual/current-machine gate の証跡が分離される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/harness-hub-information-design-addendum.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "UI 基盤追補が扱わない情報設計層を、画面横断の規範契約として定義する製品仕様追補",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "7d8607f94a958c44e0ecf045260c15ad665c6ee32b0ead021e13a5cb7621aae6",
+        "evaluator": "30思考法の独立SubAgentレビュー (9+9+12) + deterministic validators",
+        "evidence_ref": "eval-log/elegant-review/harness-hub-information-design-20260811/verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T05:56:54Z",
+      "depends_on": [
+        "spec-harness-hub-ui-foundation-addendum"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/harness-hub-information-design-addendum.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "利用者が主要状態と次の操作を過度な探索なしに判別でき、実装者が画面ごとの設計根拠と検証結果を再現できる状態にする",
+      "graph_node_id": "spec-harness-hub-information-design-addendum",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T07:06:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "利用文脈から情報の取捨・グループ化・顕著度・表示加工・パターン・視覚要素・検証を一体で決める適応型情報設計契約を固定する",
+      "related_nodes": [
+        "arch-harness-hub-frontend",
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "specs/harness-hub-information-design-addendum.md",
+        "docs/frontend-information-design-guide.md",
+        "docs/screen-inventory.md",
+        "docs/frontend-ui-foundation-spec.md",
+        "docs/frontend-spec.md",
+        "architecture/harness-hub-frontend.md",
+        "docs/frontend-responsive-mobile-spec.md"
+      ],
+      "scope_in": [
+        "S01-S18 と共通シェルの10工程の情報設計",
+        "lead/context/metadata の情報顕著度と semantic token への写像",
+        "role/task-mode/breakpoint ごとの適応型画面プロファイル",
+        "open-world 表示パターン台帳と responsive 変換時の業務能力維持",
+        "ラベル・線/余白・アイコン・画像・整列/反復の要素別意味契約",
+        "表示加工、実利用指標、manual/current-machine/future-machine gate の境界"
+      ],
+      "scope_out": [
+        "部品の実装契約と design token の値",
+        "公開 API・DB schema・認可判定",
+        "未実装の profile/pattern validator と画面別 critical parity E2E"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T05:56:54Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "information-design",
+        "frontend",
+        "ui-ux",
+        "accessibility",
+        "screen-design"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "Harness Hub 画面情報設計追補",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-11T07:40:43.137Z"
+    },
+    {
+      "acceptance": [
+        "spec-stateがrequired_info_answers[item_id,status,qa_ref|reason]を保持する",
+        "依存未完了またはUIあり未回答でfrontend/UI-UX confirmedを拒否する",
+        "UIなしの理由付きN/Aは後続をblockしない",
+        "apply-spec-transitionとvalidate-coverage-matrixが同じ契約を検証する",
+        "positive/negative/resumeの回帰テストが通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9wdm",
+        "linked_at": "2026-08-11T07:10:08.580772Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/system-spec-required-info-answer-gate-20260811.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "情報設計要件の反映は完了したが、spec-stateのitem別回答接地を機械強制する実装は独立したfollow-upである",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "03b365f827aa941205ee22be5c229453a2d9482018ae101647b206327aee69b8",
+        "evaluator": "30思考法レビューの残界分析",
+        "evidence_ref": "eval-log/elegant-review/harness-hub-information-design-20260811/review.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T07:05:25Z",
+      "depends_on": [
+        "spec-harness-hub-information-design-addendum"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/system-spec-required-info-answer-gate-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "UIありでscreen-information-priorityが未接地ならfrontend確定を拒否し、UIなしの理由付きN/Aだけを安全に非block化する",
+      "graph_node_id": "issue-system-spec-required-info-answer-gate-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T07:05:25Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "required-infoの質問順とprose gateだけでなく、回答・理由・依存完了をspec-state writerがfail-closedで検査する",
+      "related_nodes": [
+        "spec-harness-hub-information-design-addendum"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md",
+        "plugins/system-spec-harness/scripts/apply-spec-transition.py",
+        "plugins/system-spec-harness/scripts/validate-coverage-matrix.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/tests"
+      ],
+      "scope_in": [
+        "required_info_answers の item別状態契約",
+        "qa_ref または N/A reason の接地",
+        "depends_on 完了順と条件分岐のwriter検査",
+        "frontend/UI-UX confirmed のfail-closed gate",
+        "positive/negative/resume回帰テスト"
+      ],
+      "scope_out": [
+        "画面情報設計の内容変更",
+        "UI実装とvisual regression test",
+        "required-infoカタログの新規項目追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T07:05:25Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "system-spec-harness",
+        "elicitation",
+        "information-design",
+        "fail-closed",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "required-info回答をwriterで決定論的に接地検査する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T07:10:30.998059Z"
+    },
+    {
+      "acceptance": [
+        "仕様反映受領書に検証と影響判断を記録する",
+        "対象 branch を main 同期後に Draft PR として公開する",
+        "fresh live-trial 未達を残課題として明示し close しない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-uypz",
+        "linked_at": "2026-08-11T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "follow-up issue の最終公開条件だけを追跡する単一責務 handoff",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "280337a621f4589f80cdd045daaee34016a7443b606c9e3f752b5944ccbccdd6",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [
+        "issue-audit-multi-dispatch-null-verdict-20260808"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "commit・Draft PR・Beads・Dev Graph・検証証拠が同じ変更境界を参照する",
+      "graph_node_id": "task-uypz-audit-multi-dispatch-handoff-20260811",
+      "id": "task-uypz-audit-multi-dispatch-handoff-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "凍結済み exact-13 を変更せず、HarnessHub-uypz の最終レビュー・仕様反映・Draft PR 境界を追跡する",
+      "related_nodes": [
+        "feat-dev-pipeline-improvement",
+        "issue-audit-fork-ledger-forgery-20260728",
+        "arch-harness-hub-dev-workflow",
+        "arch-harness-hub-testing-qa"
+      ],
+      "resource_scope": [
+        "tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md",
+        "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md",
+        "issues/sys-audit-multi-dispatch-null-verdict-20260808.md"
+      ],
+      "scope_in": [
+        "最終差分レビュー",
+        "品質ゲート再実行",
+        "仕様影響判断と受領書",
+        "main 同期",
+        "Draft PR と Beads 更新"
+      ],
+      "scope_out": [
+        "製品 runtime の追加機能",
+        "fresh live-trial の完遂そのもの",
+        "無関係な VRT / pipeline-board 差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": "280337a621f4589f80cdd045daaee34016a7443b606c9e3f752b5944ccbccdd6",
+        "source_path": "docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md",
+        "source_plugin": "final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "system-spec-harness",
+        "audit-ledger",
+        "schema-1.2",
+        "final-review"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "uypz 複数監査 dispatch schema 1.2 最終レビュー handoff",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T07:39:51Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

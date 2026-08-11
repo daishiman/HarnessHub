@@ -7,7 +7,7 @@
     "skill_md_sha256": "c20734d924cd41d39d26f1ad9a3658a93befd1e4a78a9e48251bc9116dbedb78"
   },
   "verdict": "PASS",
-  "reviewer": "independent fresh goal evaluator plus path-specific completion gate and poll-state/transcript-bound live-trial verdict, 20260811T123120-wt5-c19v",
+  "reviewer": "independent fresh goal evaluator plus path-specific completion gate and poll-state/transcript-bound live-trial verdict, 20260811T082609Z-wt3-c19-pr699-merge",
   "loop_scope": "both",
   "iteration_limit": 3,
   "criteria_results": {
@@ -19,7 +19,7 @@
         "plugins/dev-graph/tests/test_validate_system_spec_resume.py",
         "plugins/dev-graph/tests/test_prepare_system_spec_import.py",
         "plugins/dev-graph/tests/test_validate_graph_schema_c11_heading_readiness.py",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/goal-evaluation.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/goal-evaluation.json"
       ],
       "observed": "validate-system-spec-resume, path-specific evaluator completion, validate-system-spec-boundary, validate-graph-schema, validate-source-digest, validate-evidence-refs, and validate-goal-seek-evidence all exited 0 in the post-validator-change run. The three referenced pytest modules pass (30 tests). The bounded runner imported architecture/specification through C02 and reported network_calls=0 and upstream_skill_invocations=0."
     },
@@ -28,14 +28,14 @@
       "verify_by": "live-trial",
       "evidence_kind": "live-trial",
       "scenario_id": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/verdict.json",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/verdict.json",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/poll-state.json",
-        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T123120-wt5-c19v/out/status.json"
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/poll-state.json",
+        "eval-log/dev-graph/run-dev-graph-system-spec/live-trial/20260811T082609Z-wt3-c19-pr699-merge/out/status.json"
       ],
-      "observed": "Fresh bounded live trial completed PASS in 90.108 seconds with 209337 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000, re-run after the final validator change so the verdict binds behaviour closure SHA f0a81ebb0b23bc20399b66011b3409c68bd45c572f6e5c23ae17fc16ad4fbe8e (incremental planner action=run, reason=behavior-changed). Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds fresh independent evaluator c19_wt5_20260811T123120_goal_evaluator to transcript SHA 48f2475b36b81bcc0b73d083dd83a1e98a622934f444176e4903f2e159ee18b2. Transcript invokes only dev-graph:run-dev-graph-system-spec; forbidden upstream system-spec generation skills are absent, and scenario args/task/invocation contracts all match with zero unobserved required observations. The resume completion gate verifies one deterministic runner, network_calls=0, upstream_skill_invocations=0, all 12 step exits 0, and C02-only registration. Both imported nodes retain source lineage/evaluator evidence, and the boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
+      "observed": "Fresh bounded live trial completed PASS in 105.461 seconds with 206629 accounted tokens against max_wall_clock_s=360 and max_total_tokens=2000000, re-run after merging main into PR #699 so the verdict binds the combined behaviour closure SHA 1e9fa5b062d6ac216aee2da6b275356e604c1b9110a6b5ba55a301e7e3b953f2 (incremental planner action=run, reason=behavior-changed). Verdict derives wall time from digest-bound poll state, records measured=true with zero missing/id-less usage records, and binds fresh independent evaluator c19_pr699_merge_goal_evaluator to transcript SHA f9430bb26d3b83928dfefea1c4d7657dfdca52de2298f80ce2205d105b23c2ce. Transcript invokes only dev-graph:run-dev-graph-system-spec; forbidden upstream system-spec generation skills are absent, and scenario args/task/invocation contracts all match with zero unobserved required observations. The resume completion gate verifies one deterministic runner, network_calls=0, upstream_skill_invocations=0, all 12 step exits 0, and C02-only registration. Both imported nodes retain source lineage/evaluator evidence, and the boundary gate proves equivalent elicitation/compile runtime logic is absent from dev-graph."
     }
   }
 }

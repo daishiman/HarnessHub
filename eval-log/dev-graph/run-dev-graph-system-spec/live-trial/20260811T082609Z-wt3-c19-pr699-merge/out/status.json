@@ -1,0 +1,98 @@
+{
+  "scenario": "C19-OUT1-positive-system-spec-lineage-r3-bounded",
+  "skill": "dev-graph:run-dev-graph-system-spec",
+  "invocation_args": "--repo-root <fixture-repo> --resume",
+  "status": "PASS",
+  "mode": "reuse-confirmed",
+  "network_calls": 0,
+  "upstream_skill_invocations": 0,
+  "registered_nodes": [
+    "arch-system-spec-overview",
+    "spec-system-spec-index"
+  ],
+  "runner_report": {
+    "runner": "build-system-spec-resume-import",
+    "command": "python3 plugins/dev-graph/scripts/build-system-spec-resume-import.py --repo-root <fixture-repo>",
+    "invocations": 1,
+    "status": "PASS",
+    "mode": "reuse-confirmed",
+    "completion_contract": {
+      "version": "system-spec-resume-closure/v1",
+      "path": "resume-reuse",
+      "authority": "digest-bound-resume-receipt",
+      "evaluator_execution": "reused-current-pass",
+      "import_writer": "C02"
+    },
+    "network_calls": 0,
+    "upstream_skill_invocations": 0,
+    "registered_this_run": [
+      "arch-system-spec-overview",
+      "spec-system-spec-index"
+    ],
+    "resume": {
+      "validator": "validate-system-spec-resume",
+      "valid": true,
+      "mode": "reuse-confirmed",
+      "plugin_version": "0.1.0",
+      "required_entry_points": [
+        "assign-system-spec-completeness-evaluator",
+        "run-system-spec-compile",
+        "run-system-spec-doc-fetch",
+        "run-system-spec-elicit"
+      ],
+      "artifacts": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json",
+        "system-spec/fetched-references.json",
+        "system-spec/index.md",
+        "system-spec/spec-state.json"
+      ],
+      "failures": []
+    },
+    "checklist": [
+      {"id": "context", "status": "pass", "evidence": "resolve-context exit 0"},
+      {"id": "resume-authority", "status": "pass", "evidence": "validate-resume valid=true"},
+      {"id": "no-upstream-regeneration", "status": "pass", "evidence": "network and upstream Skill counts are 0"},
+      {"id": "logic-boundary", "status": "pass", "evidence": "gate-boundary exit 0"},
+      {"id": "c02-import", "status": "pass", "evidence": "two dry-runs and two upserts exit 0"},
+      {"id": "lineage-evidence", "status": "pass", "evidence": "source digest and evidence refs gates exit 0"}
+    ],
+    "steps": [
+      {"label": "resolve-context", "exit_code": 0},
+      {"label": "validate-resume", "exit_code": 0},
+      {"label": "build-import", "exit_code": 0},
+      {"label": "gate-boundary", "exit_code": 0},
+      {"label": "gate-source-and-evidence-bindings", "exit_code": 0},
+      {"label": "gate-graph-preview", "exit_code": 0},
+      {"label": "c02-dry-run-architecture", "exit_code": 0},
+      {"label": "c02-dry-run-specification", "exit_code": 0},
+      {"label": "c02-upsert-architecture", "exit_code": 0},
+      {"label": "c02-upsert-specification", "exit_code": 0},
+      {"label": "gate-evidence-refs", "exit_code": 0},
+      {"label": "gate-source-digest", "exit_code": 0}
+    ],
+    "all_steps_exit_zero": true
+  },
+  "required_observations": [
+    {
+      "observation": "the declared system-spec-harness contract and digest-bound PASS receipt validate in reuse-confirmed mode without upstream regeneration",
+      "evidence": "validate-system-spec-resume.py が --resume 経路で valid=true / mode=reuse-confirmed を返し、plugin_version=0.1.0 (>=0.1.0 <1.0.0) と required 4 entry points (run-system-spec-elicit, run-system-spec-doc-fetch, run-system-spec-compile, assign-system-spec-completeness-evaluator) の実在、5 artifact の digest 束縛を failures=[] で確認。upstream_skill_invocations=0 / network_calls=0 で再生成なし。"
+    },
+    {
+      "observation": "the imported specification and architecture retain source lineage and evaluator evidence",
+      "evidence": "c02-upsert-architecture / c02-upsert-specification が exit 0 で arch-system-spec-overview と spec-system-spec-index を登録し、gate-source-digest (validate-source-digest.py) と gate-evidence-refs (validate-evidence-refs.py) が exit 0。source_lineage の source_digest が自 source_path の実 sha256 と一致し、completeness evaluator PASS を指す evidence_ref の dangling は 0 件。"
+    },
+    {
+      "observation": "registration occurs only through C02 and no duplicate elicitation or compile logic appears in dev-graph",
+      "evidence": "登録の唯一の writer は upsert-node.py (C02) で、dry-run 2 件 + upsert 2 件のみ、direct upsert や Agent fork・upstream Skill 呼出しは 0 件。gate-boundary が exit 0 で dev-graph 側の elicitation/compile ロジック複製 0 件を確認 (node body は source_artifact からの verbatim import のみ)。"
+    }
+  ],
+  "task_contract_terms": [
+    "upsert-node.py",
+    "validate-system-spec-resume.py",
+    "reuse-confirmed",
+    "--resume"
+  ],
+  "notes": "transcript gate (validate-system-spec-evaluator-completion.py --resume-report <fixture-repo>/eval-log/run-dev-graph-system-spec-resume-report.json) は session 終了後にしか実行できないため pending-external。post-run validator の exit 0 が最終 authority。",
+  "blockers": []
+}

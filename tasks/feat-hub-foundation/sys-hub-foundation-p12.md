@@ -110,3 +110,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - `frontend.web` / `ui-ux.web` を正規 transition writer で qa-206 / qa-207 へ再確定し、HubShell、role-aware navigation、page surface、overlay contract を system-spec / specs / architecture / features / docs へ反映した。
 - 旧 PrimaryNav の到達性契約は HubShell と `nav-items.ts` へ移管した。運用時の一次切り分けは post-signin runbook、実装者向けの使い分けは `docs/frontend-ui-foundation-spec.md` を正とする。
 - 仕様影響・品質ゲート・Beads / PR の受領証跡は [共通シェル仕様反映受領書](../../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) に集約する。
+
+## 画面情報設計の文書追補 (2026-08-11 / `HarnessHub-f6ix`)
+
+- 閉じた exact-13 に 14 個目の task は追加せず、post-closeout の文書/仕様 writeback として記録する。
+- 規範は [画面情報設計追補](../../specs/harness-hub-information-design-addendum.md)、手順は [画面情報設計ガイド](../../docs/frontend-information-design-guide.md)、profile 割当 SSOT は [screen-inventory](../../docs/screen-inventory.md)。
+- system-spec の frontend / ui-ux 章へ追補節を append-only で追加し、architecture / docs / features と同期した。required-info writer 接地は `HarnessHub-9wdm` を残課題とする。
+- 受領証跡は [画面情報設計 仕様反映受領書](../../docs/features/feat-hub-foundation/information-design-spec-reflection-receipt.md) に集約する。

@@ -17,6 +17,8 @@
 """
 from __future__ import annotations
 
+import concurrent.futures
+import hashlib
 import importlib.util
 import json
 import os
@@ -47,6 +49,23 @@ def _payload(subagent_type: str, tool_name: str = "Task", prompt: str = "監査�
     }
 
 
+_MATRIX_ID = "toolu_matrix"
+_HEARING_ID = "toolu_hearing"
+_DOC_ID = "toolu_doc"
+
+
+def _official_payload(subagent_type: str, tool_use_id: str, verdict: str) -> dict:
+    """現行 Claude Code の call ごとの PostToolUse payload を組み立てる。"""
+    payload = _payload(subagent_type, tool_name="Agent")
+    payload["tool_use_id"] = tool_use_id
+    payload["tool_response"] = {
+        "status": "completed",
+        "content": [{"type": "text", "text": f"{subagent_type} の監査所見\nAUDIT_VERDICT: {verdict}"}],
+        "agentId": f"agent-{tool_use_id}",
+    }
+    return payload
+
+
 class AuditAgentRegistryTest(unittest.TestCase):
     """記録対象は plugin 同梱 agent のレジストリに自動追従する。"""
 
@@ -69,11 +88,124 @@ class BuildRecordTest(unittest.TestCase):
         self.assertEqual(rec["tool_name"], "Task")
         self.assertEqual(rec["subagent_type"], _MATRIX_AUDITOR)
         self.assertEqual(rec["session_id"], "sess-1")
-        self.assertEqual(rec["schema_version"], hook.SCHEMA_VERSION)
+        self.assertEqual(rec["schema_version"], hook.LEGACY_SCHEMA_VERSION)
         self.assertTrue(rec["ts"].endswith("Z"))
         self.assertEqual(len(rec["prompt_sha256"]), 64)
         self.assertEqual(len(rec["response_sha256"]), 64)
         self.assertEqual(rec["audit_verdict"], "PASS")
+
+    def test_official_per_call_payloads_bind_distinct_id_digest_and_verdict(self):
+        """3 dispatch は top-level ID と call 固有 response でそれぞれ 1.2 行になる。"""
+        dispatches = (
+            (_MATRIX_ID, _MATRIX_AUDITOR, "PASS"),
+            (_HEARING_ID, _HEARING_AUDITOR, "FAIL"),
+            (_DOC_ID, _DOC_AUDITOR, "INDETERMINATE"),
+        )
+        records = []
+        expected_digests = []
+        for tool_use_id, agent, verdict in dispatches:
+            payload = _official_payload(agent, tool_use_id, verdict)
+            records.append(hook.build_record(payload, self.KNOWN))
+            canonical = json.dumps(
+                payload["tool_response"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            )
+            expected_digests.append(hashlib.sha256(canonical.encode("utf-8")).hexdigest())
+
+        self.assertEqual([r["schema_version"] for r in records], [hook.SCHEMA_VERSION] * 3)
+        self.assertEqual([r["tool_use_id"] for r in records], [_MATRIX_ID, _HEARING_ID, _DOC_ID])
+        self.assertEqual([r["response_sha256"] for r in records], expected_digests)
+        self.assertEqual(len(set(expected_digests)), 3)
+        self.assertEqual([r["audit_verdict"] for r in records], ["PASS", "FAIL", "INDETERMINATE"])
+        self.assertTrue(all(r["verdict_state"] == hook.VERDICT_STATE_RESOLVED for r in records))
+
+    def test_multiple_marker_blocks_are_ambiguous(self):
+        payload = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+        payload["tool_response"]["content"] = [
+            {"type": "text", "text": "観点A\nAUDIT_VERDICT: PASS"},
+            {"type": "text", "text": "観点B\nAUDIT_VERDICT: PASS"},
+        ]
+
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertIsNone(rec["audit_verdict"])
+        self.assertEqual(rec["verdict_state"], hook.VERDICT_STATE_AMBIGUOUS)
+
+    def test_legacy_single_payload_preserves_schema_1_1_shape(self):
+        """top-level tool_use_id を持たない従来 payload は 1.1 の既存フィールドを維持する。"""
+        rec = hook.build_record(_payload(_MATRIX_AUDITOR), self.KNOWN)
+        self.assertEqual(rec["schema_version"], hook.LEGACY_SCHEMA_VERSION)
+        self.assertEqual(rec["audit_verdict"], "PASS")
+        self.assertEqual(
+            set(rec),
+            {
+                "schema_version",
+                "ts",
+                "session_id",
+                "tool_name",
+                "subagent_type",
+                "prompt_sha256",
+                "response_sha256",
+                "audit_verdict",
+                "cwd",
+            },
+        )
+        self.assertNotIn("verdict_state", rec)
+        self.assertNotIn("tool_use_id", rec)
+
+    def test_absent_and_pending_are_distinct_zero_attributions(self):
+        """null を 1 種類に潰さない。応答が無い/marker が無いを区別する。"""
+        pending = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+        pending["tool_response"] = {}
+        self.assertEqual(hook.build_record(pending, self.KNOWN)["verdict_state"], hook.VERDICT_STATE_PENDING)
+
+        absent = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+        absent["tool_response"] = {"content": [{"type": "text", "text": "監査は途中で打ち切りました"}]}
+        absent["tool_response"]["status"] = "completed"
+        self.assertEqual(hook.build_record(absent, self.KNOWN)["verdict_state"], hook.VERDICT_STATE_ABSENT)
+
+    def test_async_launched_marker_never_becomes_completion_receipt(self):
+        """起動受理 response の adversarial marker を完成済み verdict と誤認しない。"""
+        payload = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+        payload["tool_response"]["status"] = hook.RESPONSE_STATUS_ASYNC_LAUNCHED
+
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["schema_version"], hook.SCHEMA_VERSION)
+        self.assertEqual(rec["tool_use_id"], _MATRIX_ID)
+        self.assertIsNone(rec["audit_verdict"])
+        self.assertEqual(rec["verdict_state"], hook.VERDICT_STATE_PENDING)
+
+    def test_agent_unknown_or_missing_status_never_resolves_marker(self):
+        for status in ("failed", None):
+            with self.subTest(status=status):
+                payload = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+                if status is None:
+                    del payload["tool_response"]["status"]
+                else:
+                    payload["tool_response"]["status"] = status
+                rec = hook.build_record(payload, self.KNOWN)
+                self.assertIsNone(rec["audit_verdict"])
+                self.assertEqual(rec["verdict_state"], hook.VERDICT_STATE_PENDING)
+
+    def test_task_with_id_and_explicit_async_status_never_resolves_marker(self):
+        """ID付きTaskも明示的な未完了statusをschema 1.2 PASSへ昇格させない。"""
+        payload = _payload(_MATRIX_AUDITOR, tool_name="Task")
+        payload["tool_use_id"] = _MATRIX_ID
+        payload["tool_response"]["status"] = hook.RESPONSE_STATUS_ASYNC_LAUNCHED
+
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["schema_version"], hook.SCHEMA_VERSION)
+        self.assertEqual(rec["tool_use_id"], _MATRIX_ID)
+        self.assertIsNone(rec["audit_verdict"])
+        self.assertEqual(rec["verdict_state"], hook.VERDICT_STATE_PENDING)
+
+    def test_legacy_task_with_explicit_failed_status_keeps_shape_but_not_verdict(self):
+        """IDなしTaskは1.1形を保つが、明示的な未完了statusのmarkerは受理しない。"""
+        payload = _payload(_MATRIX_AUDITOR, tool_name="Task")
+        payload["tool_response"]["status"] = "failed"
+
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["schema_version"], hook.LEGACY_SCHEMA_VERSION)
+        self.assertIsNone(rec["audit_verdict"])
+        self.assertNotIn("verdict_state", rec)
 
     def test_requires_canonical_audit_verdict_marker_on_final_nonempty_line(self):
         payload = _payload(_MATRIX_AUDITOR)
@@ -110,19 +242,36 @@ class BuildRecordTest(unittest.TestCase):
         rec = hook.build_record(payload, self.KNOWN)
         self.assertEqual(rec["audit_verdict"], "FAIL")
 
+    def test_ignores_non_text_content_blocks_and_prompt_markers(self):
+        payload = _official_payload(_MATRIX_AUDITOR, _MATRIX_ID, "PASS")
+        payload["tool_response"] = {
+            "prompt": {"text": "AUDIT_VERDICT: FAIL"},
+            "content": [
+                {"type": "metadata", "text": "AUDIT_VERDICT: FAIL"},
+                {"type": "text", "text": "監査完了\nAUDIT_VERDICT: PASS"},
+            ],
+            "status": "completed",
+            "status_detail": "AUDIT_VERDICT: FAIL",
+        }
+        rec = hook.build_record(payload, self.KNOWN)
+        self.assertEqual(rec["audit_verdict"], "PASS")
+        self.assertEqual(rec["verdict_state"], hook.VERDICT_STATE_RESOLVED)
+
     def test_rejects_marker_when_final_nonempty_line_is_not_marker(self):
         payload = _payload(_MATRIX_AUDITOR)
         payload["tool_response"] = {"text": "AUDIT_VERDICT: PASS\n追加説明"}
         rec = hook.build_record(payload, self.KNOWN)
         self.assertIsNone(rec["audit_verdict"])
 
-    def test_records_agent_tool_fork_with_observed_name(self):
-        """現行ハーネスの起動ツール名 'Agent' も記録対象。台帳へは観測名をそのまま書く
-        (正規化しない = 証跡は harness の観測事実。issue: HarnessHub-scl)。"""
-        rec = hook.build_record(_payload(_MATRIX_AUDITOR, tool_name="Agent"), self.KNOWN)
-        self.assertIsNotNone(rec)
-        self.assertEqual(rec["tool_name"], "Agent")
-        self.assertEqual(rec["subagent_type"], _MATRIX_AUDITOR)
+    def test_agent_without_top_level_tool_use_id_is_rejected_not_downgraded(self):
+        """現行 Agent の ID 欠落/空文字を schema 1.1 の旧 Task として受理しない。"""
+        for missing_id in (None, "", "   "):
+            with self.subTest(tool_use_id=missing_id):
+                payload = _payload(_MATRIX_AUDITOR, tool_name="Agent")
+                payload["tool_response"]["status"] = "completed"
+                if missing_id is not None:
+                    payload["tool_use_id"] = missing_id
+                self.assertIsNone(hook.build_record(payload, self.KNOWN))
 
     def test_records_plugin_qualified_auditor_fork_as_local_stem(self):
         """live-trial の実 payload は ``plugin:agent``。ledger は consumer 契約の stem へ揃える。"""
@@ -213,12 +362,41 @@ class EndToEndTest(unittest.TestCase):
         """現行ハーネス ('Agent') 経由の実 fork が end-to-end で台帳に残ること (issue: HarnessHub-scl の再発防止)。"""
         with tempfile.TemporaryDirectory() as tmp:
             ledger = Path(tmp) / "audit-fork-ledger.jsonl"
-            proc = self._run(_payload(f"{hook.PLUGIN_NAME}:{_HEARING_AUDITOR}", tool_name="Agent"), ledger)
+            payload = _official_payload(
+                f"{hook.PLUGIN_NAME}:{_HEARING_AUDITOR}", _HEARING_ID, "PASS"
+            )
+            proc = self._run(payload, ledger)
             self.assertEqual(proc.returncode, 0, proc.stderr)
             lines = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines() if x.strip()]
             self.assertEqual(len(lines), 1)
             self.assertEqual(lines[0]["tool_name"], "Agent")
             self.assertEqual(lines[0]["subagent_type"], _HEARING_AUDITOR)
+            self.assertEqual(lines[0]["tool_use_id"], _HEARING_ID)
+
+    def test_agent_without_tool_use_id_leaves_no_legacy_ledger_row(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "audit-fork-ledger.jsonl"
+            payload = _payload(f"{hook.PLUGIN_NAME}:{_HEARING_AUDITOR}", tool_name="Agent")
+            payload["tool_response"]["status"] = "completed"
+            proc = self._run(payload, ledger)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertFalse(ledger.exists(), "ID 欠落 Agent が schema 1.1 台帳行へ downgrade された")
+
+    def test_task_with_id_async_marker_lands_as_pending_not_completion(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "audit-fork-ledger.jsonl"
+            payload = _payload(f"{hook.PLUGIN_NAME}:{_HEARING_AUDITOR}", tool_name="Task")
+            payload["tool_use_id"] = _HEARING_ID
+            payload["tool_response"]["status"] = hook.RESPONSE_STATUS_ASYNC_LAUNCHED
+            proc = self._run(payload, ledger)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+
+            records = [json.loads(line) for line in ledger.read_text(encoding="utf-8").splitlines() if line]
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["schema_version"], hook.SCHEMA_VERSION)
+            self.assertEqual(records[0]["tool_use_id"], _HEARING_ID)
+            self.assertIsNone(records[0]["audit_verdict"])
+            self.assertEqual(records[0]["verdict_state"], hook.VERDICT_STATE_PENDING)
 
     def test_unrelated_task_leaves_no_ledger(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -226,6 +404,49 @@ class EndToEndTest(unittest.TestCase):
             proc = self._run(_payload("general-purpose"), ledger)
             self.assertEqual(proc.returncode, 0)
             self.assertFalse(ledger.exists(), "記録対象外の Task で台帳が生成された")
+
+    def test_three_official_per_call_dispatches_record_every_verdict(self):
+        """公式どおり 1 call = 1 payload の3 dispatchが、別々の1.2行として残る。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "audit-fork-ledger.jsonl"
+            dispatches = (
+                (_MATRIX_ID, _MATRIX_AUDITOR, "PASS"),
+                (_HEARING_ID, _HEARING_AUDITOR, "FAIL"),
+                (_DOC_ID, _DOC_AUDITOR, "INDETERMINATE"),
+            )
+            for tool_use_id, agent, verdict in dispatches:
+                payload = _official_payload(f"{hook.PLUGIN_NAME}:{agent}", tool_use_id, verdict)
+                proc = self._run(payload, ledger)
+                self.assertEqual(proc.returncode, 0, proc.stderr)
+
+            lines = [json.loads(x) for x in ledger.read_text(encoding="utf-8").splitlines() if x.strip()]
+            self.assertEqual(len(lines), 3)
+            self.assertEqual([r["schema_version"] for r in lines], [hook.SCHEMA_VERSION] * 3)
+            self.assertEqual([r["audit_verdict"] for r in lines], ["PASS", "FAIL", "INDETERMINATE"])
+            self.assertTrue(all(r["verdict_state"] == hook.VERDICT_STATE_RESOLVED for r in lines))
+            self.assertEqual([r["tool_use_id"] for r in lines], [_MATRIX_ID, _HEARING_ID, _DOC_ID])
+            self.assertEqual(len({r["response_sha256"] for r in lines}), 3)
+
+    def test_parallel_subprocess_appends_keep_every_jsonl_line_intact(self):
+        """並列 PostToolUse process が同じ台帳へ追記しても JSON 行が混線しない。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            ledger = Path(tmp) / "nested" / "audit-fork-ledger.jsonl"
+            count = 32
+
+            def run_one(index: int) -> subprocess.CompletedProcess:
+                payload = _official_payload(
+                    f"{hook.PLUGIN_NAME}:{_MATRIX_AUDITOR}", f"toolu_parallel_{index}", "PASS"
+                )
+                return self._run(payload, ledger)
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+                processes = list(executor.map(run_one, range(count)))
+            self.assertTrue(all(proc.returncode == 0 for proc in processes))
+
+            raw_lines = [line for line in ledger.read_text(encoding="utf-8").splitlines() if line]
+            records = [json.loads(line) for line in raw_lines]
+            self.assertEqual(len(records), count)
+            self.assertEqual({r["tool_use_id"] for r in records}, {f"toolu_parallel_{i}" for i in range(count)})
 
     def test_broken_payload_is_non_blocking(self):
         with tempfile.TemporaryDirectory() as tmp:

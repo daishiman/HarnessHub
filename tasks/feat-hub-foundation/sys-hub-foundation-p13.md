@@ -117,6 +117,12 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 仕様ゲートの legacy 不足11件は `set-qa-design-applications` による原文非改変 backfill で0件化し、`--require-complete --require-foundation` を完走した。exact-13 の構造や本 P13 の完了状態は変更しない。
 - P13 後 writeback（2026-08-11）: production smoke の cwd 非依存 path と `needs_fix` channel slot 解放検証を追加。状態機械・partial UNIQUE 契約は不変で、task package の 14 個目は作らない。
 
+## 2026-08-11 post-closeout 画面情報設計 (`HarnessHub-f6ix`)
+
+- 公開単位は `spec-harness-hub-information-design-addendum`、branch は `devgraph/spec-harness-hub-information-design-addendum` とする。閉じた exact-13 に新しい canonical task は追加しない。
+- 製品仕様・frontend 文書・system-spec knowledge/elicitation への反映と 30 思考法 4 条件 PASS までを本 unit で公開する。
+- writer による required-info 回答接地 (`HarnessHub-9wdm`) と profile/pattern の将来 machine gate は残課題。受領は [画面情報設計 仕様反映受領書](../../docs/features/feat-hub-foundation/information-design-spec-reflection-receipt.md) を正とする。
+
 ## 2026-08-12 UI MVP wave (表示名・情報設計・一覧一貫性)
 
 - 公開単位 primary: `issue-ui-identifier-display-name-20260811`（Beads `HarnessHub-62ah`）。関連: `2mu6` / `oanz` / `z45h` / `vaov` / `ck3d` / `5yen`。
