@@ -23,7 +23,8 @@ updated: 2026-08-11
 判定、本番 Cloudflare 構成は変えないが、ローカル運用の owner、保存場所、監視構造、health、
 復旧、認証 smoke の契約が変わるため、正規 system-spec transition `qa-230` と各追補へ反映した。
 
-自動検証対象と、既存 PR #696 の前回 head に対する required checks は PASS している。さらに、system-spec の
+自動検証対象と、既存 PR #696 の required checks は PASS し、同 PR は 2026-08-11 02:39:28 UTC に
+`main` へマージされた。本ブランチにも更新済みローカル `main` を統合した。さらに、system-spec の
 legacy QA 11件に残っていた設計適用不足も、Q&A 原文を変えない正規 writer で解消した。
 HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、in-app Browser の接続一覧が空のため
 未受領であり、未実施を PASS とは表現しない。
@@ -97,4 +98,4 @@ validator は確定セル参照先だけでなく、未参照を含む全 QA の
 ## 残課題
 
 - in-app Browser が接続されたセッションで Cookie を登録し、`/sheets` の3件表示を確認する。今回の再試行は `agent.browsers.list() = []` で実行不能だった。
-- 新しい PR は作成しない。既存 PR #696 の required checks は全件成功済みで、merge 後に default branch reconciliation と Beads / dev-graph close を行う。
+- 新しい PR は作成しない。既存 PR #696 の merge commit `753405fa6944a4527c9726e8c631503506a13d05` とローカル `main` の一致、本ブランチへの統合を受領済み。Beads / dev-graph は実ブラウザ確認だけを未完了として維持する。

@@ -12,7 +12,7 @@ iteration: null
 title: "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T03:45:00Z"
+updated_at: "2026-08-11T03:58:00Z"
 status: "active"
 depends_on: []
 related_nodes: ["feat-hub-foundation","spec-harness-hub-system-specification-implementation-writebacks","arch-harness-hub-infrastructure-operations-addenda","SYS-HUB-FOUNDATION-P13"]
@@ -41,7 +41,7 @@ tracker_binding: "beads"
 beads_linkage: {"bd_issue_id":"HarnessHub-bmhq","linked_at":"2026-08-10T23:32:06Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
-pull_request_linkages: [{"base_branch":"main","closing_reference_verified":false,"head_branch":"devgraph/issue-hub-local-dev-runtime-reliability-20260811","linked_at":"2026-08-11T01:34:15Z","merge_commit_sha":null,"merged_at":null,"pr_number":696,"repo":"daishiman/HarnessHub","state":"open","url":"https://github.com/daishiman/HarnessHub/pull/696"}]
+pull_request_linkages: [{"base_branch":"main","closing_reference_verified":true,"head_branch":"devgraph/issue-hub-local-dev-runtime-reliability-20260811","linked_at":"2026-08-11T01:34:15Z","merge_commit_sha":"753405fa6944a4527c9726e8c631503506a13d05","merged_at":"2026-08-11T02:39:28Z","pr_number":696,"repo":"daishiman/HarnessHub","state":"merged","url":"https://github.com/daishiman/HarnessHub/pull/696"}]
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-08-11T00:00:00Z","missing_sections":[],"status":"complete"}
@@ -105,4 +105,4 @@ Hub のローカル開発環境を、セッション切断だけでなく同一 
 
 - コマンド/テスト: focused Vitest、typecheck、lifecycle `restart` / `status` / `smoke`、プロセス異常終了テスト
 - 証跡 path: `docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md`
-- 未完了: in-app browser の実画面確認と draft PR merge 後の default branch reconciliation
+- 未完了: 利用可能な in-app browser session での実画面確認のみ。PR #696 の `main` マージと本ブランチへの default branch reconciliation は完了済み。

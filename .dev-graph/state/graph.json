@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1507,
+  "graph_revision": 1508,
   "nodes": [
     {
       "acceptance": [
@@ -56720,14 +56720,14 @@
       "pull_request_linkages": [
         {
           "base_branch": "main",
-          "closing_reference_verified": false,
+          "closing_reference_verified": true,
           "head_branch": "devgraph/issue-hub-local-dev-runtime-reliability-20260811",
           "linked_at": "2026-08-11T01:34:15Z",
-          "merge_commit_sha": null,
-          "merged_at": null,
+          "merge_commit_sha": "753405fa6944a4527c9726e8c631503506a13d05",
+          "merged_at": "2026-08-11T02:39:28Z",
           "pr_number": 696,
           "repo": "daishiman/HarnessHub",
-          "state": "open",
+          "state": "merged",
           "url": "https://github.com/daishiman/HarnessHub/pull/696"
         }
       ],
@@ -56829,7 +56829,7 @@
       "template_version": "1.0.0",
       "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T03:45:00Z"
+      "updated_at": "2026-08-11T03:58:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
