@@ -1,0 +1,60 @@
+{
+  "plugin": "harness-hub",
+  "skill": "information-design-architecture",
+  "scope_mode": "repo",
+  "run_id": "harness-hub-information-design-20260811",
+  "aggregated_at": "2026-08-11T07:05:00Z",
+  "verdict": {
+    "矛盾なし": "PASS",
+    "漏れなし": "PASS",
+    "整合性あり": "PASS",
+    "依存関係整合": "PASS"
+  },
+  "fail_counts": {
+    "contradiction": 0,
+    "omission": 0,
+    "inconsistency": 0,
+    "dependency_break": 0,
+    "smell": 0
+  },
+  "thought_method_coverage": {
+    "used": [
+      "批判的思考",
+      "演繹思考",
+      "帰納的思考",
+      "アブダクション",
+      "垂直思考",
+      "要素分解",
+      "MECE",
+      "2軸思考",
+      "プロセス思考",
+      "メタ思考",
+      "抽象化思考",
+      "ダブル・ループ思考",
+      "ブレインストーミング",
+      "水平思考",
+      "逆説思考",
+      "類推思考",
+      "if思考",
+      "素人思考",
+      "システム思考",
+      "因果関係分析",
+      "因果ループ",
+      "トレードオン思考",
+      "プラスサム思考",
+      "価値提案思考",
+      "戦略的思考",
+      "why思考",
+      "改善思考",
+      "仮説思考",
+      "論点思考",
+      "KJ法"
+    ],
+    "skipped_with_reason": [],
+    "total": 30
+  },
+  "iteration_count": 3,
+  "status": "complete",
+  "safety_valve_fired": false,
+  "observable_emitted": false
+}

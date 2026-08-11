@@ -12,9 +12,9 @@ iteration: null
 title: "Harness Hub frontend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-02T12:48:16.841716Z"
+updated_at: "2026-08-11T06:57:48.545354Z"
 status: "active"
-depends_on: ["spec-harness-hub-requirements"]
+depends_on: ["spec-harness-hub-requirements","spec-harness-hub-information-design-addendum"]
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","spec-post-signin-workspace-scope"]
 resource_scope: ["architecture/harness-hub-frontend.md"]
 purpose: "Hub Web の frontend 構成 (Next.js App Router) と UI/UX 品質要件 (WCAG 2.2 AA / Core Web Vitals good / HIG 快適性原則) の正本参照"
@@ -31,7 +31,7 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36","evaluator":"validate-coverage-matrix.py --require-complete","evidence_ref":"system-spec/completeness-report.json"}
+confirmation_evidence: {"evaluated_digest":"b53b524b60b5e6105d061df1f21573ed20097eef691f03013adda05e77b279a4","evaluator":"validate-coverage-matrix.py --require-complete + 30思考法の情報設計依存レビュー","evidence_ref":"eval-log/elegant-review/harness-hub-information-design-20260811/review.md"}
 source_lineage: {"imported_at":"2026-08-02T12:15:00Z","origin_kind":"system-spec-harness","source_digest":"48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
@@ -224,6 +224,11 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 - navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
 - 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
 - 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-11 画面情報設計の境界
+
+- この参照型 wrapper は情報設計の規範本文を複製しない。UI 基盤が *どの部品を使うか* を所有し、その部品へ *何を載せ、何を省き、何を強調するか* は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md) を依存先として参照する。
+- 画面別の `role × task-mode × breakpoint` profile は [screen-inventory](../docs/screen-inventory.md) だけを割当正本とし、適用手順・成功指標・manual / machine gate の境界は [画面情報設計ガイド](../docs/frontend-information-design-guide.md) を参照する。
 
 ## Catalog validator の遅延読込境界 (2026-08-10)
 

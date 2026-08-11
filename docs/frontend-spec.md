@@ -9,7 +9,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 > **位置づけ**: system-spec 確定章 (frontend / ui-ux) と mockup 分析 (harness-studio-v2) を実装可能な粒度へ展開した詳細正本。[docs/backend-spec.md](backend-spec.md) (データ構造・API の正本) と対をなす。確定 QA (qa-007/018/021/022/031〜033) と decision (D1-D6) に反する記述はできない。矛盾を発見した場合は R4-reopen の根拠として扱う。
 > **確定状態**: §9 の 8 論点は 2026-07-17 のユーザー確認 (qa-040/qa-035。旧 qa-034 は並行ヒアリングとの採番衝突により qa-040 へ再登録) で確定済み。本書に【要確認】は残っていない。
-> **mockup の扱い**: harness-studio-v2.html は**見た目と情報設計の正本**であり実装方式の正本ではない (qa-022)。mockup には media query が存在しない (デスクトップ専用設計)。したがって**スマホサイズ (モバイル) の画面仕様は本書 §6 が新規に確定する正本**である。
+> **mockup の扱い**: harness-studio-v2.html は初期 visual/reference であり、実装方式や画面横断の情報設計規範の正本ではない (qa-022)。情報設計規範は [情報設計追補](../specs/harness-hub-information-design-addendum.md)、profile は [screen-inventory](screen-inventory.md)。mockup に media query は無いため **モバイル具体仕様は本書 §6 が正本**。
 
 ## 1. ランタイム・技術構成 (qa-007 / qa-022 / qa-034)
 
@@ -142,7 +142,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 - **S09 ダッシュボード**: KPI 6 カード (総実行回数・削減時間・削減額・完了シート・稼働ハーネス・参加ユーザー) → `metrics/summary`。折れ線 (週次推移)・ドーナツ (完了率)・ランキング (ハーネス別/ユーザー別)・バー (部門別削減) → `metrics/rollups`。金額はすべてサーバ集計値の表示 (member へは集計値のみ = §3.3 認可マトリクス準拠)。
 - **S10 ヒアリングウィザード (FormData 12 項目 = backend-spec §4.3)**: Step1 基本 (`taskName, company, applicant, domain`) → Step2 現状 (`issue, tools, hours, people, salary`) → Step3 要望 (`features, output, priority`) → Step4 確認+試算。**試算表示規則 (SEC5 整合)**: ウィザード中は時間削減の概算のみ (「月 {hours}h × {people}人 × 35% (既定係数)」の参考表示。金額は出さない)。提出後はサーバ snapshot (`estimate_json`) だけを正として S12 に表示する。途中状態は sessionStorage 保持 (誤離脱ダイアログ付き)。提出成功 → mock と同じ完了パネルで HS コード・`生成中`・「シートを見る」「パイプラインを見る」「続けて作成」を表示する。生成完了までは受付番号+状態チップ+完了通知 (qa-021 パターン)。
-- **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列、モバイルは同じ情報をカードへ畳む。status filter・department filter・全文検索・cursor ページングを持つ。member の API は自分の作成分だけ、workspace-admin はテナント全件を返すため、クライアントで権限外行を除外する実装は禁止する。
+- **S11 ヒアリングシート一覧**: デスクトップは `status / HS コード・title / domain・department / people・hours / applicant / updated_at` の 6 列 table、モバイルは card-collection。filter・検索・paging は両 breakpoint。`updated_at` は絶対日時を可視、相対時間は補助。member は自分の作成分のみ (クライアント側の権限外除外は禁止)。profile は `screen-inventory.md` 正本。
 - **S12 ヒアリングシート詳細**: ヘッダに `display_code/status/title/applicant/department/created_at/AI 生成表示`、本文に「概要」「現在の課題」「推奨機能タグ」「想定削減効果」を表示し、元入力 snapshot・試算 snapshot・対応 Build/PublishRequest の参照を併記する。`received` の表示ラベルは mock の「下書き」でなく全画面共通の「受付」とする。admin の状態変更・再生成は右側メタ領域、member には非表示かつ API でも拒否。P2 有効後は AI 完了時に自動作成された対応 Build を「構築パイプラインへ」で表示し、P1 単独期間はこのボタンを表示しない。
 - **S12 PDF 出力**: 「PDF でダウンロード」は別データ生成を行わず、認可済み詳細 DTO と同じ表示モデルを print stylesheet で A4 化して `window.print()` を呼ぶ (ブラウザの「PDF に保存」)。ボタン名は mock を維持する。salary 原値・非表示フィールド・操作ボタンを印刷 DOM に含めず、画面と PDF の内容差分を snapshot test する。
 - **S01 公開ウィザード**: skill ZIP のみ。Project 新規/既存 owner 指定→PublishRequest→upload/submit を 1 UI に束ね、全 status と要求 ID を隠さない。段階別 Idempotency-Key で再開し、Needs Fix は cancel で同一 request を Draft へ戻して再投入。`web_app` は CLI/S08 案内のみ。H7 未成立中は実導入リンクを成功終端にしない。詳細は [Web 公開実装メモ](features/feat-web-only-publish-journey/implementation-notes.md)。単一テナント/単一 Project を定数にしない。
@@ -176,6 +176,11 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | AiJob pull の workspace-admin 開放 (qa-048) | 影響なし (pull は CLI / AI worker 面で Web 画面を持たない)。キュー監視画面 (`GET /api/v1/ai-jobs`) は従来から未定義の gap のまま (mockup にも存在しない。必要になれば S04 配下に追加) | 必要時に screen-inventory へ追記から |
 | tenant_data_objects の R2 使用量監視 (qa-045) | 影響なし (admin 向け通知はアプリ内通知の既存パターン) | — |
 
+### 3.6 画面情報設計との境界 (2026-08-11)
+
+- 情報設計の工程・顕著度・pattern・要素別意味契約は [情報設計追補](../specs/harness-hub-information-design-addendum.md) と [画面情報設計ガイド](frontend-information-design-guide.md)、profile 割当は [screen-inventory](screen-inventory.md) を正本とする。本書は画面/API/部品/レスポンシブの具体契約のみを所有し、`lead/context/metadata` と §6.3 `P1〜P10` / §10 `P0〜P5` は別語彙である。
+
+
 ## 4. データ取得・状態管理 (TanStack Query v5)
 
 - **queryKey 規約**: `[resource, params?]` / 詳細は `[resource, id]`。例: `['sheets', {status}]`・`['builds']`・`['publish', id]`・`['notifications']`。key 文字列は API リソース名と一致させる。
@@ -203,61 +208,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ## 6. スマホサイズ (モバイル) 画面仕様 (qa-035 — 本書が新規確定する正本)
 
-### 6.1 原則
-
-- 適用条件: viewport **< 768px (md 未満)**。native アプリは作らない (frontend 章の対象外理由を維持) — 本節は web のレスポンシブ仕様である。
-- タップターゲット **44×44pt 以上** (HIG doctrine anchor)。主要操作は画面下半分 (親指到達域) に配置。
-- `100dvh` 基準・`env(safe-area-inset-*)` 対応 (ノッチ/ホームバー)。入力フォント 16px 以上 (iOS 自動ズーム防止)。
-- 横スクロールは §6.3 で明示した箇所のみ許可 (それ以外の水平オーバーフローは欠陥として扱う)。
-
-### 6.2 ナビゲーション (ボトムタブ + その他 disclosure = qa-207)
-
-- **ボトムタブ 5 slot (固定)**: ダッシュボード (S09) / ハーネス (S01) / 申請 (S11。新規作成ボタン→S10) / 通知 (未読バッジ) / **その他**。
-- **その他タブ** → `details/summary` disclosure: 実在 route の追加導線だけを表示する。session role は `member` / `workspace-admin` / `provider-admin` の 3 種で出し分け、role 未確定時も管理導線を隠す (deny-by-default)。背景を遮る modal ではないため focus trap / scroll lock は適用しない。
-- ヘッダ: 画面タイトル + 検索アイコン (全画面検索シート) + アバター。サイドバーはモバイルで描画しない。
-- タブは currentPage を `aria-current` で明示。操作用 BottomSheet は disclosure と別部品で、focus trap + Esc + 閉じるボタン + focus 復帰 + scroll lock を持つ。スワイプは任意で、唯一の閉じ方にしない。
-
-### 6.3 レスポンシブ変換パターン辞書 (デスクトップ → モバイル)
-
-| # | デスクトップ表現 (mockup 実測) | モバイル表現 | 適用画面 |
-|---|---|---|---|
-| P1 | サイドバー 220px + コンテンツ | ボトムタブ + その他シート (§6.2) | 全画面 |
-| P2 | KPI grid `repeat(3-4, 1fr)` | **2 列 grid** (数値優先・ラベル省略形) | S09/S16 |
-| P3 | データテーブル (6-8 列) | **主要 2-3 フィールドのカードリスト** + タップで詳細へ。状態はチップ表示 | S01/S11/S14/S15/一覧全般 |
-| P4 | 7 工程ボード (横並びカラム) | **工程セグメント (横スクロールチップ+件数バッジ) + 選択工程の縦カードリスト** | S13 |
-| P5 | 2 カラム詳細 (`1fr 300px`) | 縦積み (メインコンテンツ → メタ情報) | S02/S12/S17 個別 |
-| P6 | センターモーダル | **ボトムシート** (install/download・公開ウィザード・フィルタ・起票フォーム)。確認 Dialog のみセンター維持 | S01/S02/S14 ほか |
-| P7 | チャート横並び | 縦積み 1 列・高さ 200px 固定 (スクロール量優先) | S09/S16 |
-| P8 | フィルタバー (インライン) | フィルタボタン → ボトムシート (適用件数表示) | 一覧全般 |
-| P9 | インライン編集テーブル | 行タップ → 編集シート | S17/S04 |
-| P10 | ウィザード (横長 step 表示) | 1 step = 1 画面・上部に進捗バー・ヘッダ back で前 step | S10・公開ウィザード |
-
-### 6.4 画面別モバイル挙動一覧 (区分: ◎重点最適化 / △簡易対応 = 動作保証 + デスクトップ推奨バナー)
-
-| ID | 区分 | モバイル挙動の要点 |
-|---|---|---|
-| S01/S02 | ◎ | P3 カード一覧 (名前・target・状態チップ・DL 数)。S01 の公開ウィザードと install/download は P6 ボトムシート、詳細は P5 縦積み (コマンドはコピー導線中心) |
-| S03 | ◎ | 公開タブ: 進捗ステッパーを縦型表示。Needs Fix findings はアコーディオン |
-| S04 | △ | 設定フォームは縦積みで動作。IdP 設定・係数編集は横幅依存が強くバナー表示 |
-| S05/S06 | △ | 承認カード/監査行は P3 カード化で閲覧可。承認操作は可能だが一括操作なし。監査 filter は P8 |
-| S07/S08 | ◎ | 単票中央寄せ。Device user_code 入力は数字最適化 (`inputmode`)・大きな確認ボタン |
-| S09 | ◎ | P2 (KPI 2 列)+P7 (チャート縦積み)。ランキングは上位 5 件+「すべて見る」 |
-| S10 | ◎ | P10。試算参考表示は step4 (§3.2 の SEC5 規則) |
-| S11/S12 | ◎ | P3 カード (HS コード・タイトル・状態チップ・申請者)。詳細は P5。admin の status 変更はアクションシート |
-| S13 | 閲覧◎/操作△ | P4。stage 操作はカードメニュー (隣接遷移+確認)。DnD なし |
-| S14 | ◎ | P3 + 起票は P6 ボトムシート (type 選択+本文)。AI 回答は MarkdownView |
-| S15 | 閲覧◎/編集△ | 閲覧は読みやすさ優先 (max-width・行間)。編集はプレビュー切替タブで動作、バナー表示 |
-| S16 | ◎ | P2+P7。期間切替はセグメント。user 次元金額は admin のみ (SEC4 — API 側制御に従う) |
-| S17 | △ | 一覧は P3 だが列が多く横スクロール併用。salary 表示・role 変更は可能だがバナー表示 |
-| S18 | ◎ | 設定グループを縦 Accordion。テーマ/密度/言語は即時反映 |
-| 通知 | ◎ | 専用画面 (ボトムタブ)。P3 リスト+スワイプなし・タップで既読+遷移 |
-
-- △ 画面の DesktopRecommendBanner は dismissible (localStorage 記憶)。機能は削らない (「動作保証」= 全操作が完遂可能であること)。
-
-### 6.5 タッチ操作の制約 (a11y 同等性)
-
-- スワイプ・ロングプレス・DnD を**必須操作にしない** (すべて可視ボタン/メニューで代替)。pull-to-refresh は実装しない (ポーリングで足りる)。
-- ボトムシートはドラッグハンドル+閉じるボタン併設。トーストは操作を遮らない位置 (ボトムタブの上)。
+詳細本文 (原則 / ナビ / 変換パターン / 画面別挙動 / タッチ) は行数制約のため [frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) を正本とする。viewport **< 768px**、タップ 44×44pt、`P1〜P10` は responsive pattern ID であり情報顕著度 `lead / context / metadata` とは別語彙。profile 割当は [screen-inventory](screen-inventory.md)。
 
 ## 7. i18n・表示辞書 (自作 typed 辞書 = qa-034)
 
@@ -275,7 +226,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
   - **共通層 barrel の巻き込みに注意 (2026-07-24 実測 / HarnessHub-aqi)**: `@harness-hub/ui` は公開 contract を `src/index.ts` 単一入口に集約する規約 (ADR R-15) だが、App Router は barrel から到達可能な `'use client'` 部品を丸ごと client reference manifest へ載せる。そのため Alert 1 個しか使わない `/` が MarkdownView 依存の react-markdown/micromark/rehype 一式 (146.4 KB) を初期チャンクで読み、TBT 926ms を出した。対策は `next.config.ts` の `experimental.optimizePackageImports` に共通層 package を登録すること (build 時に barrel の named import を実体モジュールへ書き換えるため、deep import 禁止の契約を崩さずに未使用部品を落とせる)。**共通層 package を新設したら同リストへ追加する** (2026-08-08 時点の登録は `@harness-hub/ui` と `@harness-hub/schemas` の 2 つ)。**追記 (2026-08-08 実測 / HarnessHub-aqi)**: `optimizePackageImports` は **named import しか書き換えない**ため、`const m = await import('@harness-hub/schemas')` のような namespace import は登録しても最適化されず barrel 全量 (9 feature 分・約 200 schema・23.7 KB raw / 7.9 KiB gzip) を読む。動的読込が要る箇所は「必要な named export だけを再 export する薄いモジュール」を経由させる (例: `apps/hub/src/lib/catalog/response-schemas.ts`)。package 単一入口のままなので deep import 禁止も守れる。この種の退行は route の First Load JS を変えないため **G13 では検知できず** CWV 実測 (TBT) でしか出ない。
 - 画像は静的アセット + 明示 width/height (CLS 防止。Workers 制約により next/image の画像最適化サービスは使わない)。フォントは self-host subset + `display: swap`。
 - **a11y**: WCAG 2.2 AA を部品側担保 (qa-018) + axe 自動検査を部品単体・画面結合の両方で CI 必須。キーボードで全操作完遂可能 (DnD 不採用の根拠)。ポーリング更新・トーストは `aria-live=polite`。
-- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md) を正とする。分離テスト等サーバ側は backend-spec 準拠。
+- **テスト**: Vitest = 部品・辞書 (キー欠落)・状態写像・チャート描画。Playwright = 主要ジャーニー (J1-J6) + axe。UI 基盤の実装値・3 viewport・VRT は [UI 基盤仕様](frontend-ui-foundation-spec.md)、画面へ載せる情報の取捨・顕著度・pattern 選定・成功指標と manual/machine gate 境界は [情報設計ガイド](frontend-information-design-guide.md) を正とする。profile 割当は [screen-inventory](screen-inventory.md) だけを正本とする。サーバ側は backend-spec 準拠。
 - **セキュリティ (フロント境界)**: sanitize 済み Markdown のみ描画 (SEC7)・外部リンク `rel="noopener noreferrer"`・CSP は security 章準拠・PII (salary) は admin API レスポンス以外に出現させない (SEC4。ログ・エラー通知にも含めない)。
 
 ## 9. 確定記録 (2026-07-17 ユーザー確認 = qa-040 / qa-035)

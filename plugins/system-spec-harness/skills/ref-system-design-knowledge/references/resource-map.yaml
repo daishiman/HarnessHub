@@ -40,6 +40,9 @@ resources:
   - file: usability-accessibility.md
     topic: ユーザビリティ原則とアクセシビリティ適合の目的・POUR・受入基準化・失敗モード・一次資料・鮮度
     read_when: ui-ux の画面設計・状態表示・回復導線・適合水準を章へ反映するとき
+  - file: information-design.md
+    topic: 画面情報設計の工程順序・取捨基準・表示優先度・一覧形式選定・表示加工と値導出の責務境界・意味装飾・一次資料・鮮度
+    read_when: ui-ux の表示項目の取捨/優先度/一覧形式/密度方針を章へ反映するとき
   - file: test-strategy.md
     topic: テスト層配分・テストサイズ・契約テスト・カバレッジのGoodhart化・一次資料・鮮度
     read_when: testing-qa のテスト戦略と品質ゲートを章へ反映するとき

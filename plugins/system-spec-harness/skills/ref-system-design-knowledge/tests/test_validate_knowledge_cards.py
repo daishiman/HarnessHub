@@ -123,6 +123,7 @@ def test_new_category_cards_are_not_generic_pointers():
     # 深度ゲート (validate_card) を満たし、当該領域の一次資料 URL を持つ。
     expected = {
         "usability-accessibility.md": "ui-ux",
+        "information-design.md": "ui-ux",
         "site-reliability-engineering.md": "infrastructure",
         "test-strategy.md": "testing-qa",
         "continuous-delivery.md": "dev-workflow",

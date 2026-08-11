@@ -1,7 +1,9 @@
 ---
-status: draft
+status: accepted
 layer: system-wide-design
 sources: [system-spec/ui-ux.md, system-spec/frontend.md, system-spec/00-requirements-definition.md]
+reviewed_at: 2026-08-11
+review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811/review.md
 ---
 
 # 画面一覧と遷移 (段階 0 / 横串)
@@ -46,7 +48,7 @@ sources: [system-spec/ui-ux.md, system-spec/frontend.md, system-spec/00-requirem
 
 - 画面は S01-S18 で全ジャーニー ([user-journeys.md](user-journeys.md)) が閉じる。**新画面の追加はまず本表への追記から** (追加時は担当 feature と根拠 qa を必ず付ける)。
 - 会話型 Web Creator 画面は作らない (U7 対象外・§5.1)。作者の操作面は Publisher plugin (CLI 対話) であり Web 画面を持たない。
-- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする (専用 native 画面なし。重点/簡易の区分は frontend-spec §6.4)。
+- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする (専用 native 画面なし。重点/簡易の区分は [frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.4)。
 
 ## 最優先画面の完了境界 (mockup と実装仕様の照合結果)
 
@@ -92,3 +94,49 @@ graph TD
 | 進捗表示 | 待ち時間のあるすべての操作 (publish 検査等) に進捗を出す | qa-018 |
 | 確認ダイアログ | 破壊的操作 (公開停止・rollback・token 失効) は確認 + 可逆性の明示 | qa-018 |
 | エラー表示 | 平易な日本語 + 次の一手。空状態にも導線を置く | qa-018 |
+| 情報設計 | 10 工程・情報顕著度・要素別意味契約・open-world pattern 選定を全画面共通の規範で行う | [情報設計追補](../specs/harness-hub-information-design-addendum.md) |
+
+## 適応型画面プロファイル正本
+
+この節だけが画面プロファイル割当の SSOT (単一の正本) である。他文書は profile の schema や選び方を説明してよいが、画面 ID ごとの値を複製しない。従来の画面単位 `理解優先 / 密度優先` 二値は廃止し、同じ画面でも `role × task-mode × breakpoint` に応じて変える。
+
+- `intent`: `scan` (対象/状態を見つける) / `compare` (複数対象を突合する) / `compose` (入力・変更を完了する) / `monitor` (時間変化・進捗を見る)
+- `density`: `comfortable` / `balanced` / `compact`。機能を削ってよい度合いではない。
+- `pattern`: [情報設計追補](../specs/harness-hub-information-design-addendum.md) の open-world registry にある id または hybrid。`table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail` は初期値であり閉じた集合ではない。
+- breakpoint は `narrow < 768px`、`middle = 768〜1119px`、`wide >= 1120px` の profile 名を用いる。UI 基盤 `breakpointTokens` の `480px` は narrow 内の layout step として使い、profile を4区分には増やさない。境界値の正本は UI 基盤 `breakpointTokens` (`480 / 768 / 1120`) とする。
+
+| ID / surface | role | task-mode | wide / middle profile (`intent · density · pattern`) | narrow profile (`intent · density · pattern`) | breakpoint をまたいで保持する能力 |
+|---|---|---|---|---|---|
+| S01 一覧 | member 以上 | browse/install | `scan · balanced · table` | `scan · comfortable · card-collection` | 検索、filter、状態、stable version、download count、詳細/導入導線 |
+| S01 公開 | owner 以上 | publish | `compose · balanced · wizard+form` | `compose · comfortable · wizard+form` | checkpoint 再開、error summary、戻る/取消、PublishRequest 追跡 |
+| S02 | member 以上 | inspect/install | `scan · comfortable · master-detail` | `scan · comfortable · master-detail (stacked)` | stable/全 release、target 別導入、完全な識別子、copy/open |
+| S02 | owner 以上 | manage | `compare · balanced · master-detail+table` | `compose · balanced · master-detail+list` | promote/rollback/suspend、状態、対象 release、確認/回復 |
+| S03 | owner 以上 | monitor/fix | `monitor · balanced · timeline-stepper+list` | `monitor · comfortable · timeline-stepper+list` | 現在状態、完了/失敗、Needs Fix、再投入/取消、絶対日時 |
+| S04 設定 | workspace-admin | configure | `compose · balanced · form` | `compose · comfortable · form` | 可視 label、validation、保存結果、token/IdP の安全な回復 |
+| S04 Release 履歴 | owner / workspace-admin | compare/rollback | `compare · compact · table+master-detail` | `compare · balanced · list+master-detail` | filter、順序、release 完全値、対象比較、rollback |
+| S05 | workspace-admin | review/bulk-review | `compare · compact · table+master-detail` | `compare · balanced · card-collection+master-detail` | filter、選択 mode、一括/個別承認、理由、件数、error recovery |
+| S06 | workspace-admin | audit/export | `compare · compact · table` | `scan · balanced · list+filter-form` | filter、時系列、actor/action/target、完全日時、export |
+| S07 | public | sign-in | `compose · comfortable · form` | `compose · comfortable · form` | tenant/IdP の可視 label、error summary、再試行、privacy 導線 |
+| S07-L | public / member | choose-entry/scope | `scan · comfortable · form+list` | `scan · comfortable · form+list` | Workspace 候補、前回値、稼働異常、sign-in/redirect の次の一手 |
+| S08 | owner | approve-device | `compose · comfortable · form` | `compose · comfortable · form` | user code、対象/権限、承認/拒否、期限、結果 focus |
+| S09 | member 以上 | monitor-metrics | `monitor · balanced · chart+table` | `monitor · comfortable · chart+table (stacked)` | KPI 定義、期間、正確な値の表、系列 label、全件導線 |
+| S09-L | member 以上 | resume-work | `scan · comfortable · card-collection+list` | `scan · comfortable · list` | 現在 Workspace、最近の作業、既存画面への導線、異常時 status |
+| S10 | member 以上 | create-hearing | `compose · balanced · wizard+form` | `compose · comfortable · wizard+form` | step/全体進捗、可視 label、戻る/再開、試算根拠、error summary |
+| S11 | member / workspace-admin | browse-sheets | `scan · balanced · table` | `scan · comfortable · card-collection` | status/HS code/title/domain/department/people/hours/applicant/完全日時、filter、検索、paging、詳細 |
+| S12 | member 以上 | inspect-sheet | `scan · comfortable · master-detail` | `scan · comfortable · master-detail (stacked)` | status、生成本文、snapshot、試算、Build 参照、完全日時 |
+| S12 | workspace-admin | change-status/regenerate | `compose · balanced · master-detail+form` | `compose · comfortable · master-detail+form` | 認可済み操作、理由、確認、結果、member 表示との分離 |
+| S13 | member 以上 | monitor-build | `monitor · balanced · board` | `monitor · comfortable · timeline-stepper+card-collection` | 全工程と件数、現在工程、HS/FR、assignee/ETA/risk、詳細 |
+| S13 | workspace-admin | move-stage | `compare · compact · board` | `compare · balanced · timeline-stepper+card-collection` | 隣接遷移、対象選択、確認、DnD 以外の操作、全工程の位置 |
+| S14 一覧 | member 以上 | browse-feedback | `scan · balanced · table` | `scan · comfortable · card-collection` | type/status/対象/更新日時、filter、検索、詳細 |
+| S14 起票 | member 以上 | create-feedback | `compose · comfortable · form` | `compose · comfortable · form` | 可視 label、validation、下書き/送信、AI 回答への到達 |
+| S15 一覧/閲覧 | member 以上 | browse/read | `scan · comfortable · list+master-detail` | `scan · comfortable · list+master-detail (stacked)` | 階層/タイトル/更新日時、検索、本文、現在位置 |
+| S15 編集 | workspace-admin | edit | `compose · balanced · form+master-detail` | `compose · comfortable · form` | Markdown 入力、preview、保存状態、AI 下書き、error recovery |
+| S16 | member 以上 | monitor-impact | `monitor · balanced · chart+table` | `monitor · comfortable · chart+table (stacked)` | 期間/dimension、サーバ集計値、正確な値の表、系列 label、権限境界 |
+| S17 一覧 | workspace-admin | compare-users/bulk-manage | `compare · compact · table+master-detail` | `compare · balanced · card-collection+master-detail` | filter、sort、選択 mode、一括/個別操作、salary mask、完全値、個別詳細 |
+| S17 個別 | workspace-admin | inspect/edit-user | `compose · balanced · master-detail+form` | `compose · comfortable · master-detail+form` | role、組織、利用状況、salary toggle、監査可能な変更結果 |
+| S18 | member 以上 | configure-account | `compose · comfortable · form` | `compose · comfortable · form` | visible label、theme/density/language、通知、保存結果、legal |
+| 通知 | member 以上 | monitor-notifications | `monitor · balanced · list` | `monitor · comfortable · list` | 未読/既読、順序、完全日時、遷移、既読操作、スワイプ不要 |
+
+- `table → card-collection/list` は見た目の変換であり、比較・filter・sort・選択・一括操作・完全値を削る許可ではない。狭幅では selection mode、filter sheet、detail disclosure、局所横スクロール等で同じ能力を維持する。
+- 新画面または task-mode を追加するときは、担当 feature と根拠 qa を画面一覧へ、全 role / breakpoint profile を本表へ同一変更で追記する。未記入を暗黙の既定へ落とさない。
+- 情報設計シート (`docs/features/<feature>/information-design/<screen-id>.md`) は本表を参照し、profile 値を複製しない。手順とチェックリストは [画面情報設計ガイド](frontend-information-design-guide.md)。

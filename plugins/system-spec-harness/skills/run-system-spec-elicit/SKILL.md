@@ -76,6 +76,7 @@ completeness_exempt:
   - "manifest: inline goal-seek selects the next unmet interview/checklist responsibility dynamically; the SKILL body is the runtime SSOT."
 deterministic_checks:
   - ../../scripts/validate-coverage-matrix.py
+  - ../../scripts/validate-knowledge-graph.py --profile required-info
 feedback_contract:
   max_iterations: 5
   criteria:
@@ -112,7 +113,7 @@ feedback_contract:
 
 **入力**: ヒアリング応答 (対話) / 既存 `spec-state.json` (resume 時) / C04 taxonomy。
 **出力**: `spec-state.json` (`references/spec-state-contract.md` の形状。現行 schema 1.1 の plugin 共有データ契約。上位概念 `requirements_foundation` を含む)。
-**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、各 U が 1論点の `qa_log` entry へ遡及できる。対話 entry は `source.kind=user-dialogue`、書面要件 entry は質問の入力 path/section、指定 section 内に実在する逐語 `answer`、その UTF-8 bytes の `source.sha256` を持つ。AI 生成文の digest は利用者一次根拠に代用できず、新しい利用者入力が無い場合に新規 approval を作らない。全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。確定 qa は回答原文と分離した `design_applications[]` に C04 deep card / doctrine anchor の具体原則、`applied|not_applicable`、章固有の理由、trade-off を持つ。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` (空であるべき未解決一覧ではなく、`missing_effect=block` の収集必須 item ID 一覧) の各 item が確定 foundation/matrix/decision の根拠へ接地していることを completeness evaluator の意味層で確認する。
+**完了条件**: `requirements_foundation` が確定 (U1-U9 が値または明示 N/A+理由・ただし U1/U2/U3 は値必須で N/A 不可・U1-U9 要約のユーザー承認 `approval_ref` 付き・`confirmed: true`) し、各 U が 1論点の `qa_log` entry へ遡及できる。対話 entry は `source.kind=user-dialogue`、書面要件 entry は質問の入力 path/section、指定 section 内に実在する逐語 `answer`、その UTF-8 bytes の `source.sha256` を持つ。AI 生成文の digest は利用者一次根拠に代用できず、新しい利用者入力が無い場合に新規 approval を作らない。全セルが `確定`(qa_ref 付き) か `対象外`(reason か approval_ref 付き) で、未収集0。確定 qa は回答原文と分離した `design_applications[]` に C04 deep card / doctrine anchor の具体原則、`applied|not_applicable`、章固有の理由、trade-off を持つ。人向け UI がある場合は `screen-information-priority` の9項目が確定し、ない場合は理由付き N/A が確定してから `frontend-arch` を確定する。`validate-coverage-matrix.py --require-complete --require-foundation` が exit0。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` (空であるべき未解決一覧ではなく、`missing_effect=block` の収集必須 item ID 一覧) の各 item が確定 foundation/matrix/decision の根拠へ接地していることを completeness evaluator の意味層で確認する。
 
 - **platforms (6)**: `web` / `mobile` / `tablet` / `desktop-windows` / `desktop-linux` / `desktop-macos`。
 - **cell states (3値, loop 中)**: `未収集` / `対象外` / `確定`。最終時は `未収集` を0にする。
@@ -137,7 +138,7 @@ feedback_contract:
 |---|---|---|
 | R0-foundation | `prompts/R0-foundation.md` | マトリクス収集の**手前**で上位概念 (U1-U9) を深掘りヒアリング (5 Whys で U1・JTBD で U6) し `set-foundation` で `requirements_foundation` を確定。書面要件があるときは U ごとの 1論点 source-index を `qa_log` に残す。未確定は再質問し放置しない。 |
 | R1-init | `prompts/R1-init.md` | C04 taxonomy を Read し、カテゴリ×6必須platform の全存在(対象外は理由付き)を検証して初期化。カテゴリ軸の拡張発見もここ。 |
-| R2-interview | `prompts/R2-interview.md` | 未収集セルを対象に 質問→回答→仕様反映 の往復で各セルを `確定` か `対象外+理由` へ遷移し、確定回答ごとの具体的な設計原則採否を `design_applications[]` に分離記録。 |
+| R2-interview | `prompts/R2-interview.md` | required-info の `collection_order` に従って未収集セルを質問→回答→仕様反映し、各セルを `確定` か `対象外+理由` へ遷移する。人向け UI の有無を分岐し、UI ありなら question bank の情報設計9項目、なしなら理由付き N/A を `frontend-arch` より先に確定する。確定回答ごとの具体的な設計原則採否は `design_applications[]` に分離記録。 |
 | R3-reask | `prompts/R3-reask.md` | 未確定セルを再質問。再確定時も `design_applications[]` を記録し、1 invocation の 5 loop 到達時は未完了状態と next_question を保存して resumable な結果を返す。未収集を完了扱いしない。 |
 | R4-reopen | `prompts/R4-reopen.md` | 確定済みセルを根拠付きで再オープンし追加質問サイクルへ戻す。reopen 非経由の確定直接変更は writer が遮断する。 |
 | R5-decision-guide | `prompts/R5-decision-guide.md` | `needs_guidance` を最新公式情報とC04 deep knowledgeから2〜3案へ展開し、無料/低コスト案を含めgoal fit/TCO/security/operations/lock-inで比較。AI推奨は`recommended_pending_confirmation`、ユーザー選択だけを`confirmed`にする。加えて `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` の exit0 を要求し、`coverage_certificate.blocking_items` (`missing_effect=block` の収集必須 item ID 一覧) を確定 foundation/matrix/decision の根拠へ接地できるまで当該 domain の `confirmed` を禁じる収集ゲートを課す。`--profile knowledge --order` の topo_order (上位概念→下位概念) 順で知識を消費する。 |
@@ -154,7 +155,7 @@ feedback_contract:
 
 - **IN1 (inner / script)**: `python3 ../../scripts/validate-coverage-matrix.py --matrix spec-state.json` が exit0 (loop 中の網羅性)。R0-foundation 完了後は `--require-foundation` を付けて `python3 ../../scripts/validate-coverage-matrix.py --matrix spec-state.json --require-foundation` も exit0 とし、上位概念 U1-U9・decisions 契約・serves_goals トレースを段階的に課す (foundation 未確定の R0 完了前には課さない)。
 - **OUT1 (outer / test)**: 最終 `spec-state.json` を `--require-complete` が exit0 で受理し、受入テスト (`tests/`) が resume 保存を含めて再現する。
-- **収集ゲート (C16 / IN1 補完)**: `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` に列挙された収集必須 item (product-goal / target-platforms / domain-model / auth-model / security-posture) が確定 foundation/matrix/decision の根拠へ接地していることを意味層で確認する。未接地なら当該 domain の `confirmed` を許さない (R5 が prose ゲートとして施行し、決定論 writer=apply-spec-transition への接地検査組込は follow-up)。
+- **収集ゲート (C16 / IN1 補完)**: `../../scripts/validate-knowledge-graph.py --profile required-info --input references/required-info-catalog.json` が exit0 で、`coverage_certificate.blocking_items` に列挙された収集必須 item (product-goal / target-platforms / screen-information-priority / domain-model / auth-model / security-posture) が確定 foundation/matrix/decision の根拠へ接地していることを意味層で確認する。`screen-information-priority` は、人向け UI があれば question bank の9項目、なければ理由付き N/A を根拠とする。UI ありで未接地なら UI-UX と `frontend-arch` の `confirmed` を許さず、UI なしの理由付き N/A は後続を block しない。`frontend-arch depends_on screen-information-priority` は validator の `collection_order` で前後関係を決定論的に固定する (R5 が回答接地の prose ゲートを施行し、決定論 writer=apply-spec-transition への接地検査組込は follow-up)。
 
 ## 使い方 (ゴールへ向けた反復)
 
@@ -163,7 +164,7 @@ feedback_contract:
 1. **bootstrap**: `apply-spec-transition.py bootstrap --out $CLAUDE_PROJECT_DIR/system-spec/spec-state.json` で空foundation/decisions/targets/logsを持つstate envelopeを用意する (`init` は taxonomy から matrix を初期化する別subコマンドで、envelope 生成は `bootstrap`)。
 2. **R0-foundation**: 技術ヒアリングの手前で上位概念 U1-U9 を深掘りし、U1/U2/U3 は値必須・U4-U9 は値または明示N/A理由で埋め、U1-U9 要約をユーザーへ提示して承認 `approval_ref` を得て確定する。対話なら各 U を `user-dialogue` entry、書面要件なら各 U を入力 path/section・原文 SHA-256 付き 1論点 `qa_log` source-index として先に記録する。
 3. **R1-init**: taxonomy を Readしてmatrixをpopulateする。既存foundation/decisionsを保持する。
-4. **R2/R3/R5**: 未収集セルをヒアリングし、不明・未決定ならR5で根拠付き候補と推奨を提示する。確定セル/decisionはgoalへトレースし、5 loop超でresume保存。
+4. **R2/R3/R5**: required-info の `collection_order` で未収集セルをヒアリングする。人向け UI があれば `screen-information-priority` の9項目を、なければ理由付き N/A を `frontend-arch` より先に確定する。不明・未決定ならR5で根拠付き候補と推奨を提示する。確定セル/decisionはgoalへトレースし、5 loop超でresume保存。
 5. **R4-reopen**: 確定セルの見直しが要るときのみ reopen。
 6. **検証**: 各周回でvalidator、最終で`--require-complete --require-foundation`。schema 1.1 移行後に `legacy_exempt: true` と理由が残る旧 qa に設計解釈だけが欠ける場合は `set-qa-design-applications --qa-id <id> --applications <json-or-file>` を使い、質問・回答を維持したまま補完する。
 
@@ -175,6 +176,7 @@ feedback_contract:
 4. `category_aggregate` は writer が真理値表から再計算する (手書きしない)。
 5. platform id は canonical 6 種のみ (別名を作らない)。
 6. `qa_log` は 1 entry = 1 論点。複数論点を束ねると C06 が論点別に中立性を検証できない。書面要件も利用者の一次入力なので、U1-U9 ごとに path/section・原文 SHA-256 を持つ source-index を記録する。既登録 entry の逐語は改変せず、束ねが判明したら分離索引を新規 entry として追記する (契約は `references/spec-state-contract.md` の「qa_log の論点分離`)。
+7. `screen-information-priority` を「カード UI にする」等の見た目の結論だけで確定しない。利用者ロール・主タスク・熟練度・端末・頻度・データ量・比較/一括操作・誤操作コスト・visual device 方針を揃え、ラベル/線/アイコン/画像は意味上の役割から採否を決める。
 
 ## Additional Resources
 

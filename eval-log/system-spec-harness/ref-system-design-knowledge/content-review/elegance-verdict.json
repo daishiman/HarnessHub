@@ -2,18 +2,18 @@
   "target": {
     "plugin": "system-spec-harness",
     "skill": "ref-system-design-knowledge",
-    "skill_md_sha256": "acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1"
+    "skill_md_sha256": "600eb32d88af21d0d1828ec4260030fa53f8ee3ddebf0f5de9190b3b0743be9e"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
   "reviewer": "incremental-focused-combined-reviewer",
-  "reviewed_at": "2026-08-08T08:57:43Z",
+  "reviewed_at": "2026-08-11T06:13:43Z",
   "iterations": 1,
   "human_review_required": false,
   "findings_summary": {
     "contradiction": 0,
-    "omission": 0,
-    "inconsistency": 1,
+    "omission": 1,
+    "inconsistency": 2,
     "dependency_break": 0,
     "smell": 1
   },
@@ -21,19 +21,23 @@
     "loop_scope": "both",
     "criteria_evaluated": ["knowledge-graph-wellformedness", "card-schema-conformance"],
     "positive_feedback": [
-      "既存の良設計判断が破壊されていない: (a) C04 は ref/effect:none で発見・取得・永続化をしないという境界、(b) system-category-taxonomy.json を C01 初期集合の SSOT とする一本化、(c) 『seed examples であって網羅リストではない』という open-world 前提、(d) 辺の well-formedness は validator / 意味妥当性は content-review という責務分割。いずれも今回の追記で緩んでいない。",
-      "追加の仕方が既存構造への同型追加になっている。4 領域とも『参照表 1 行 + resource-map の read_when 1 entry + catalog の typed 辺 1 entry + 11 節カード 1 枚』という同じ 4 点セットで入っており、既存 6 領域と非対称な特別扱いが無い。新領域を足すコストが一定に保たれている。",
-      "read_when が カテゴリ id (ui-ux / testing-qa / dev-workflow / infrastructure) に接地しており、C03 が『どの章でどのカードを引くか』を推測でなく索引で決められる。従来の 6 枚が backend/frontend/security/database/maintenance-ops を覆っていた空白 4 カテゴリを、ちょうど埋める形になっている。",
-      "SSOT 衝突の芽を先回りで潰している。resource-map.yaml の並びと knowledge-catalog.json の topo_order という『2 つの順序』が生まれる構造だったところへ、冒頭注記で役割を分け (集合 = read_when / 順序 = depends_on)、かつ物理的な並びも topo_order へ揃えて食い違いが起きない状態にしている。"
+      "責務分割が明確で SSOT 衝突が無い。usability-accessibility = 適合水準と回復導線 (POUR・状態可視性・受入基準化)、information-design = 取捨と優先度 (工程順序・削減基準・一覧形式選定・意味装飾) で、両カードの中核概念に重複記述が無い。さらに前者の失敗モード行『情報を出し切ることを可視性と誤解し…』へ新カードへのポインタを 1 箇所だけ足すことで、既存カードから新カードへの導線を張りつつ内容の二重化を避けている (参照 1 本・定義 1 箇所)。",
+      "追加が既存構造への同型追加になっている。参照表 1 行 + resource-map の read_when 1 entry + catalog の typed 辺 1 entry + 11 節カード 1 枚という、既存 10 領域と同じ 4 点セットのみで入っており、新領域に固有の特別扱いが無い。節構成も既存カード (usability-accessibility / test-strategy / clean-code) と見出し文字列まで完全一致 (目的・背景・解決する問題・中核概念・適用条件・非適用条件・トレードオフ・失敗モード・目的達成への寄与・ヒアリング・判断観点・一次資料・鮮度)。",
+      "記事由来の片側規範化を構造で回避している。削減原則 (工程順序・『無くても伝わるか』基準) を中核概念に置きつつ、非適用条件へ『一覧性・一括操作・列比較が主タスクの管理/監視画面では削減原則をそのまま適用すると効率性を損なう』『法令・監査要件で全項目同時表示が要求される画面では強弱と区画分けだけで対処』を、トレードオフ先頭へ『熟練利用者の反復作業では余白の広い理解優先画面が操作回数を増やす』を収録した。ヒアリング観点にも『この画面は理解優先か密度優先か。競合したときにどちらを削るか』があり、規範ではなく画面単位の宣言事項へ落ちている。",
+      "上位概念への接地が二重に取れている。depends_on/refines で usability-accessibility へ (知識グラフ側)、read_when の ui-ux で presentation concern → Apple HIG authority へ (doctrine 側) 接地し、doctrine registry を変更せずに済んでいる。C04 の ref/effect:none 境界 (発見・取得・永続化をしない) も無変更で、追加は参照材料のみに留まっている。",
+      "elicit 側との対応が閉じている。C04 のカード追加が required-info-catalog の screen-information-priority (domain=ui-ux / concern=presentation / depends_on=[product-goal, target-platforms] / missing_effect=degrade) と question-bank 1 行に対応し、『知識は増えたが聞く手段が無い』という片肺追加になっていない。missing_effect=degrade も、画面の無いシステムでは block しない選択として非適用条件と整合する。"
     ],
     "negative_feedback": [
-      "[low/inconsistency] SKILL.md frontmatter の last-audited が 2026-07-11 のままで、参照知識領域 6 → 10 の拡張が鮮度表示へ反映されていない。audit-trigger: official-update の定義上は違反ではないが、カード枚数が実質倍近くになった変更としては監査日を進めるのが素直。",
-      "[low/smell] knowledge-catalog の depends_on 鎖が test-strategy → continuous-delivery → site-reliability-engineering と一直線に伸び、usability-accessibility が第 2 root として並置された。形状は DAG として正当 (validator exit 0) だが、『運用系 3 枚が直列』という順序付けは意味的に必然とまでは言えず、後から並列化したくなる可能性がある。現時点で実害は無く、辺の意味妥当性は SKILL.md L40 が明記するとおり human/content-review の未閉塞責務なのでここに記録のみ残す。"
+      "[medium/inconsistency] prompts/R1-system-design-knowledge.md:22 の Layer 2 `seed knowledge` 列挙が 10 領域のまま (Clean Architecture / Design Patterns / API Design Patterns / Secure by Design / DDD / Clean Code / Usability & Accessibility / Test Strategy / Continuous Delivery / Site Reliability Engineering / taxonomy) で Information Design が入っていない。SKILL.md 参照表 / resource-map.yaml / knowledge-catalog.json の三者は 11 領域で一致しているが、責務プロンプトだけ 10 のまま取り残された。前回 (2026-08-08) の verdict は『SKILL.md 本文の記述と R1 Layer2 の seed 列挙も一致』を検証済み invariant として記録しており、今回それが崩れている。当該行自身が『知識領域の固定上限ではない』と宣言しているため機械ゲートも実行も壊れず high ではないが、カード集合の実体を最も直接に読む prompt が古い集合を提示する状態であり修正すべき。",
+      "[low/omission] tests/test_validate_knowledge_cards.py の test_new_category_cards_are_not_generic_pointers が持つ hardcoded `expected` (usability-accessibility / site-reliability-engineering / test-strategy / continuous-delivery の 4 枚) に information-design.md が追加されていない。深度ゲート自体は test_curated_cards_and_open_world_lifecycle_pass → validate_root が catalog 全 entry を走査するため新カードも被覆済み (pytest 248 passed で確認) だが、『read_when が 1 カテゴリだけに一致する = 汎用ポインタへ退化していない』の回帰検知は新カードへ効いていない。read_when 実文言は in-scope カテゴリのうち ui-ux にのみ一致するため、1 行追加すれば現状のまま緑になる取りこぼし。",
+      "[low/inconsistency] SKILL.md frontmatter の last-audited が 2026-07-11 のまま。参照知識領域が 6 → 10 → 11 と増えているのに鮮度表示が動いていない。audit-trigger: official-update の運用上は必須更新ではなく前回 verdict でも同じ指摘を残しているため、繰り越しの既知事項として再記録する。",
+      "[low/smell] 一次資料節に個人の技術ブログ記事 (mskmiki, Qiita, 2024) が Tufte / Nielsen Norman Group / W3C と同列で列挙されている。open-world-knowledge-lifecycle.md の Qualify 段階は『公式標準・仕様・原著者・標準化団体・公式 vendor docs を優先』『検索結果要約や二次ブログ *だけ* の候補は unqualified』と定めるので、4 本の一次資料を伴う本カードは unqualified ではなく規約違反ではない。ただし既存 11 枚のカードで個人ブログを一次資料節に置いた前例は無く (書籍・標準・原著者サイトのみ)、由来の透明性を残すなら『参考 (二次)』として節内で区別する方が既存規律と揃う。",
+      "[low/smell] knowledge-catalog で information-design が freshness_class: foundational-stable (review_by 2028-08-11 = 2 年) である一方、カードの trigger には『色・コントラストに関する達成基準の改訂』という WCAG 追随項目が含まれ、親にあたる usability-accessibility は standard-tracked (review_by 2027-02-08) である。Tufte / Progressive Disclosure という基盤側の出典構成を見れば foundational-stable は妥当だが、追随 trigger を 1 本抱えたまま親より長い監査間隔になっている点は将来の stale 検出遅れになりうる。現時点で実害なし。"
     ],
     "iteration": 1,
     "iteration_limit": 3,
     "hook_trigger": "Stop",
-    "next_action": "none"
+    "next_action": "improve"
   },
-  "notes": "incremental focused combined review (not exhaustive 30-thought): HarnessHub-ldq の未コミット差分を起点に、現 SKILL.md (sha256=acf3a125dff6e038bcfdd7e47cd7bb380734761e584736a9715a0c0d27c416c1) を全文読了し 4 条件 (単一責務 / 境界 / SSOT / 上位概念への接地) と elegance 観点で評価。検証は宣言の読み合わせに留めず実行して確認: validate-knowledge-graph.py --profile knowledge --order exit 0 (topo_order 10 件、新 4 件を含む)、--profile doctrine exit 0、pytest plugins/system-spec-harness 配下 53 件 pass。新規 4 カードの節構成 (11 節) が既存カードと一致し、schema required 14 概念を満たすことを確認。参照表 / resource-map / catalog の三者が同一 10 領域を指し、全参照ファイルが実在。doctrine-anchor-registry は無変更だが presentation / reliability / operations concern が既存で、新カードの対象カテゴリはいずれも写像済みのため未帰属 pending は発生していない。high severity 0、low inconsistency 1 + low smell 1 のみ。"
+  "notes": "incremental focused combined review (not exhaustive 30-thought): 今回の変更 slice (information-design.md 新規 84 行、SKILL.md 参照表 +1 行、knowledge-catalog.json +1 entry、resource-map.yaml +1 entry、usability-accessibility.md 失敗モード行へポインタ追記、参考として run-system-spec-elicit の required-info-catalog.json +1 item / elicit-question-bank.md +1 行) だけを入力とし、現 SKILL.md (sha256=600eb32d88af21d0d1828ec4260030fa53f8ee3ddebf0f5de9190b3b0743be9e) を全文読了して 4 条件 (単一責務 / 境界 / SSOT / 上位概念への接地) で評価。検証は宣言の読み合わせに留めず実行: validate-knowledge-graph.py --profile knowledge --order exit 0 (topo_order 11 件、information-design は usability-accessibility の直後)、--profile doctrine exit 0 (pending 例外は dev-workflow/testing-qa の既存 2 件のみ)、--profile required-info exit 0 (collection_order 11 件、screen-information-priority は末尾、coverage certificate 9 domain 全被覆)、--profile cross exit 0、pytest plugins/system-spec-harness 248 passed、lint-doc-line-limit.py exit 0 (683 文書)。個別確認: (1) 新カードの節構成 11 節が既存カードと見出し文字列まで一致し validate-knowledge-cards の深度ゲートを通過 (catalog 全 entry 走査で被覆)、(2) depends_on と refines を同一 node (usability-accessibility) へ同時に張る形は validator の型則 (自己参照・dangling・refines 非循環・conflicts_with 対称) をいずれも侵さず、graph_semantics の定義 (depends_on=precedence DAG / refines=位相不参加の精緻化) 上も両立する。位相順は depends_on だけで決まるため refines の併置は順序へ影響せず、意味的にも『usability-accessibility の下位詳細であり、かつ後に読む』の二つを別々に表現できている、(3) resource-map.yaml の card 物理並びが topo_order と完全一致 (冒頭注記どおり、test_resource_map_card_order_matches_topo_order でも機械検証)、(4) SKILL.md 参照表 / resource-map / knowledge-catalog の三者が同一 11 領域を指し全参照ファイルが実在、(5) usability-accessibility と information-design の責務は非重複、(6) 削減原則と一覧性・一括操作の反対論が両方とも非適用条件/トレードオフへ収録済み。high severity 0 のため PASS。medium 1 (R1 責務プロンプトの seed 列挙 stale) は次の編集で解消すべき actionable finding として next_action=improve を付す。"
 }
