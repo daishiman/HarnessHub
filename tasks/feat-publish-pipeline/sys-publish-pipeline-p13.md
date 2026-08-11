@@ -81,6 +81,6 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 ## 2026-08-11 MVP follow-up (HarnessHub-aauo)
 
 - `smoke_fixture_leases` + 共通 lifecycle + 独立 sweeper を実装。ZIP helper を `smoke-production-publish-zip.ts` へ分離（500 行制約）。
+- main CI の実走失敗を受け、S3 `needs_fix` を cancel して非終端 UNIQUE slot を解放してから S4 の blocker を `ready` にする順序へ修正し、静的契約テストを追加 (`HarnessHub-pf5o`)。
 - ローカル focused tests PASS。本番 migration 適用と force-cancel 実走証跡は残件。
 - 受領: [mvp-ops-reliability-20260811-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)
-

@@ -19,11 +19,8 @@
 
 import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-
-import { greenZip, secretZip, sha256, smokeId } from './smoke-production-publish-zip.js';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 import {
   createSmokeFixtureLifecycle,
   normalizeSmokeRunId,
@@ -32,8 +29,8 @@ import {
   type SmokeFixtureLifecycle,
   type SmokeTenantSweepCandidate,
 } from '@harness-hub/db';
-
 import type { DeviceGrant } from './smoke-production-hearing-support.js';
+import { greenZip, secretZip, sha256, smokeId } from './smoke-production-publish-zip.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..', '..');
@@ -130,7 +127,6 @@ interface SweepOutcome {
   readonly maxAttempts: number;
   readonly results: readonly SweepTenantResult[];
 }
-
 
 function required(name: string): string {
   const value = process.env[name]?.trim();

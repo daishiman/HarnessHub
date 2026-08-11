@@ -107,7 +107,7 @@ describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', 
       const fromMigrations = introspect(migrationStatements);
       const fromHarness = introspect(await schemaDdl());
       expect(fromMigrations).toStrictEqual(fromHarness);
-// テーブル総数は「barrel へ足したのに migration を生成し忘れた」を検知する tripwire。
+      // テーブル総数は「barrel へ足したのに migration を生成し忘れた」を検知する tripwire。
       // 31 → 32: production smoke fixture lease 台帳 (migration 0009 / HarnessHub-aauo)。
       expect(Object.keys(fromMigrations)).toHaveLength(32);
     },

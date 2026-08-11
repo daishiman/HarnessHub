@@ -11,11 +11,13 @@ feature_ids:
 dev_graph_node_ids:
   - issue-catalog-route-bundle-headroom-20260810
   - issue-production-smoke-cancel-cleanup-20260810
+  - issue-publish-smoke-unwired-20260808
   - issue-governance-gate-not-required-check-20260809
   - issue-verification-tier-unwired-20260809
 beads_ids:
   - HarnessHub-vwxc
   - HarnessHub-aauo
+  - HarnessHub-pf5o
   - HarnessHub-ic7w
   - HarnessHub-xcl3
   - HarnessHub-sl6o
@@ -34,6 +36,7 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 |---|---|---|---|
 | `HarnessHub-vwxc` | catalog 全 route の G13 95% 未満 | **達成**（production build 実測） | あり（frontend / docs / features / architecture） |
 | `HarnessHub-aauo` | cancel 後 smoke fixture 独立回収 | **ローカル実装達成**（本番証跡は残件） | あり（DB expand migration / testing-qa 追補） |
+| `HarnessHub-pf5o` | publish smoke の channel 解放順序 | **ローカル実装達成**（本番再実走は残件） | あり（smoke 手順契約） |
 | `HarnessHub-ic7w` | required-check 台帳と parity | **部分達成**（protection 未適用） | あり（dev-workflow 設計の強制境界） |
 | `HarnessHub-xcl3` | tier 下流切替 | **未配線を明示**（部分切替撤回） | あり（未配線境界の設計契約） |
 | `HarnessHub-sl6o` | pre-push jsonschema 誤判定 | **実装達成**（実 push 経路証跡は残件） | なし（開発ツール境界のみ） |
@@ -50,6 +53,7 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 
 - **G13 headroom**: `packages/ui` の token **名前**を `token-names.ts` へ降ろし、`contrast` 計算と色値表を client First Load から外した。PublishWizard は `React.lazy` + Tracker/HTTP adapter 遅延読込。同期 checkpoint で ZIP 変更直後の idempotency 競合を防ぐ。
 - **fixture lease**: `smoke_fixture_leases` が削除 authority。全 smoke 入口が同一 lifecycle で tenant+lease を atomic 登録。TTL 不正は fail-closed。sweeper は schedule 設定 15 分だが GitHub Actions 遅延があり得るため SLA ではない。
+- **publish smoke sequencing**: S3 `needs_fix` は partial UNIQUE index 上の active channel slot を保持するため、cancel API で `draft` へ戻してから S4 の blocker を `ready` にする。CI build の DB package 公開入口には lifecycle factory の値 export も追加した。
 - **required-check**: check run 単位は job。paths filter 付き required 化は hard violation。`no-branch-protection` モードを台帳に明示。
 - **tier wiring**: 9 gate 全件 `wiring_state=unwired`。governance 内 1 件だけの advisory 切替は撤回。時間短縮の本丸は hub-ci / plugin pytest 側。
 - **python resolver**: `scripts/lib/resolve-python.sh` を SSOT。`validate-plugin-packages.py` が jsonschema 不足時に再 exec。
@@ -75,16 +79,19 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 
 ## 7. 検証（MVP 最小）
 
-最終レビュー時に focused ゲートを再実行する（結果は PR 本文へ転記）。対象候補:
-
-- `production-smoke-script` / hearing-smoke / publish-smoke / migration-lineage
-- wizard-and-entries / dual-catalog polling-lifecycle
-- `validate-required-gates` / `validate-gate-execution` / `build-tier-gate-env` / resolve-python / validate-plugin-packages
-- `git diff --check`、手書きファイル 500 行制約
+- task 仕様書: `feat-publish-pipeline` / `feat-dual-catalog-web` / `feat-dev-pipeline-improvement` の P01〜P13 がすべて存在し、契約違反 0 件。
+- focused Hub: production publish / coverage smoke と PublishWizard / CLI parity の **62/62 PASS**。
+- focused DB: backup / migration lineage / hearing / publish smoke の **29/29 PASS**。
+- Hub 全スイート: **162 files / 1,800 tests PASS（8 todo）**。初回は並列負荷下の `--help` 子プロセスが 30 秒で timeout したため、実行契約は変えず該当 integration test の上限のみ 90 秒へ補正した。
+- DB / Hub typecheck、Hub production build、Next / OpenNext build、Biome / lint は PASS。catalog の First Load JS は一覧 113 kB / 詳細 113 kB / publish 112 kB。
+- Python / governance: required-gate 関連の **78 tests PASS**。required check 未登録 3 件は `INCOMPLETE` と明示し、静的契約自体は PASS。
+- repository CI 合成ゲート: **PASS 141 / WARN 5 / FAIL 0**（WARN は段階導入中の既存 advisory）。
+- `git diff --check`、doc 行数ラチェット（681 文書 / 上限 300 行）、手書きファイル 500 行制約は PASS。
 
 ## 8. 残課題
 
 - `HarnessHub-aauo`: 本番 migration 適用後の force-cancel / sweeper 実走証跡
+- `HarnessHub-pf5o`: 修正 SHA の production publish smoke 再実走証跡
 - `HarnessHub-ic7w`: branch protection 適用と required 3 件登録（30 回安定 green 後）
 - `HarnessHub-xcl3`: 9 gate の cross-workflow 配線と blocking 切替
 - `HarnessHub-sl6o`: 修正 commit 後の通常 `git push` 経路での受入
@@ -94,5 +101,6 @@ commit / draft PR する。MVP のため評価は最小限とし、本番実走�
 ## 9. 500 行制約
 
 - `smoke-production-publish-support.ts` を 521 → 418 行へ削減し、ZIP 生成を `smoke-production-publish-zip.ts`（116 行）へ分離。
+- `smoke-production-coverage.ts` を 509 → 491 行へ縮小し、help / 固定 fixture を `smoke-production-coverage-contract.ts` へ分離。
 - `validate-required-gates.py` は 499 行で境界内。
-- 生成物（migration snapshot / graph.json 等）は分割対象外。
+- 生成物（migration snapshot / graph.json 等）は分割対象外。`.github/workflows/ci.yml` は main 時点で 562 行の既存単一 workflow であり、required-check context・permissions・secret scope を変える分割は今回の局所修正より高リスクなため別責務と判断した。

@@ -32,6 +32,8 @@ const WORKFLOW = resolve(HUB_ROOT, '..', '..', '.github/workflows/ci.yml');
 const SWEEPER_WORKFLOW = resolve(HUB_ROOT, '..', '..', '.github/workflows/smoke-fixture-sweeper.yml');
 
 describe('P13 production publish smoke script', () => {
+  // Hub 全スイートは複数の Next/tsx 子プロセスを並列起動する。負荷下でも契約を
+  // 検査できるよう、実際の package script を呼ぶこの integration test だけ余裕を持たせる。
   it('資格情報なしでも --help を実行できる', () => {
     const output = execFileSync('pnpm', ['run', 'smoke:publish-production', '--', '--help'], {
       cwd: HUB_ROOT,
@@ -46,7 +48,7 @@ describe('P13 production publish smoke script', () => {
     // 長命 token の env 名が help に現れたら、その退行が起きている。
     expect(output).not.toContain('PUBLISH_ACCESS_TOKEN');
     expect(output).not.toContain('HUB_BASE_URL');
-  });
+  }, 90_000);
 
   it('S1-S6・409・R2・audit・cleanup を同じ fail-closed entrypoint に閉じる', () => {
     const source = readFileSync(SCRIPT, 'utf8');

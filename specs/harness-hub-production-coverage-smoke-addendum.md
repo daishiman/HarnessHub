@@ -93,6 +93,7 @@ UI を追加しない。Feedback の状態は AI 完了だけでは `open` の�
 - path と header の scope 不一致は `ambiguous_scope`。
 - session-only action は十分な scope の Bearer token でも `credential_not_allowed`。
 - 要求していない scope が token に付与された場合は scope 不足検査が無効になるため失敗する。
+- publish smoke の S3 `needs_fix` は channel の非終端 UNIQUE slot を占有するため、S4 の競合 fixture を `ready` にする前に cancel API で `draft` へ戻す。この順序を source 契約テストで固定する。
 
 ## API契約
 

@@ -31,6 +31,14 @@ import {
 import { buildDocDraftPayload } from '../src/features/docs-cms/ai-job-adapter/index.js';
 import { createFeedbackLoopService } from '../src/features/feedback-loop/service.js';
 import {
+  AI_RESPONSE,
+  COVERAGE_SMOKE_HELP,
+  DOC_BODY_FROM_AI,
+  DOC_BODY_INITIAL,
+  DOC_TITLE,
+  FEEDBACK_BODY,
+} from './smoke-production-coverage-contract.js';
+import {
   acquireDeviceToken,
   apiClient,
   assert,
@@ -43,35 +51,9 @@ import {
 } from './smoke-production-hearing-support.js';
 import { smokeFixtureLifecycle } from './smoke-production-publish-support.js';
 
-const HELP = `Usage:
-  pnpm --filter @harness-hub/hub run smoke:coverage-production
-
-Required environment:
-  HUB_PUBLIC_URL           production Hub origin (for example https://harness-hub.example.workers.dev)
-  TURSO_DATABASE_URL       production libSQL URL
-  TURSO_AUTH_TOKEN         production libSQL auth token
-
-Optional environment:
-  HUB_SMOKE_ORIGIN         Origin header value. default: origin of HUB_PUBLIC_URL.
-
-The command creates two disposable tenants and checks, against production:
-  S1-S8  post-signin scope denials (unauthenticated / missing_tenant_scope / ambiguous_scope /
-         tenant_mismatch / workspace_not_member / credential_not_allowed / missing_scope)
-         plus provider-admin cross-tenant route reachability and one matching audit event
-  F1-F5  feedback loop (create -> queue -> AI writeback -> status transition)
-  D1-D6  docs CMS (create -> draft queue -> body writeback -> cross-tenant invisibility)
-Both tenants and every row they created are deleted before the process exits.
-`;
-
-const FEEDBACK_BODY = 'P13 本番 smoke: 週次レポートの整形を自動化したい。手作業の転記が毎週発生している。';
-const AI_RESPONSE = 'P13 本番 smoke が書き戻した AI 応答。転記の自動化案を 3 つ提示する。';
-const DOC_TITLE = 'P13 本番 smoke の運用メモ';
-const DOC_BODY_INITIAL = '初期本文。AI 下書きで置き換わることを確認する。';
-const DOC_BODY_FROM_AI = '# AI 下書き\n\nP13 本番 smoke が書き戻した本文。';
-
 async function main(): Promise<void> {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
-    process.stdout.write(HELP);
+    process.stdout.write(COVERAGE_SMOKE_HELP);
     return;
   }
 

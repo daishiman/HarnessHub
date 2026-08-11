@@ -309,7 +309,7 @@ describe('P13 production migration / smoke CLI', () => {
     // 0000 baseline / 0001 device flow / 0002 hearing intake / 0003 共通 Google OAuth client /
     // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms) /
     // 0006 tenant-data-retention (封筒暗号化拡張と tombstone 台帳) /
-// 0007 feedback/builds (feedback-loop) /
+    // 0007 feedback/builds (feedback-loop) /
     // 0008 metrics-tracking + build-pipeline-board /
     // 0009 production smoke fixture lease 台帳
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
