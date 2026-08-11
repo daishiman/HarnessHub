@@ -266,7 +266,7 @@ python3 scripts/apply-spec-transition.py set-knowledge-candidate \
 - `rationale`: 確定回答に即した章固有の採否理由。全章同一の定型文は禁止。
 - `tradeoffs`: 採用費用、非採用時の損失、再評価条件などを最低1件持つ非空文字列配列。
 
-writer は上記形状を検証して qa entry に保存する。新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持ち、`validate-coverage-matrix.py --require-complete` が確定セルから参照される全 qa entry の非空・形状を fail-closed に再検査する。marker の無い旧 `schema_version: "1.0"` state は読み取りだけ可能で、writer の更新操作は fail-closed に拒否する。再開時は R1 の `init --state` を明示実行し、matrix を未収集へ戻して 1.1 へ移行する。この schema 境界が legacy 免除の終了条件であり、1.1 以降で marker 欠落を許さない。C03 は旧 entry を「未記録」と fail-visible に描画し、C05 の `design_knowledge_reflection` を存在確認だけで緑化させない。
+writer は上記形状を検証して qa entry に保存する。新規 state は `schema_version: "1.1"` と `design_application_contract_version: "1.0"` を持ち、`validate-coverage-matrix.py --require-complete` が確定セルから参照される全 qa entry の非空・形状を fail-closed に再検査する。marker の無い旧 `schema_version: "1.0"` state は読み取りだけ可能で、writer の更新操作は fail-closed に拒否する。再開時は R1 の `init --state` を明示実行し、matrix を未収集へ戻して 1.1 へ移行する。この schema 境界が legacy 免除の終了条件であり、1.1 以降で marker 欠落を許さない。移行済み state に一時的な `legacy_exempt` が残った場合は、`set-qa-design-applications` が既存の question / answer / source を維持したまま検証済み `design_applications` を追記し、旧免除 metadata を除去する。同一 payload の再適用は冪等、異なる既存解釈の上書きは拒否する。C03 は旧 entry を「未記録」と fail-visible に描画し、C05 の `design_knowledge_reflection` を存在確認だけで緑化させない。
 
 ## 単一 transition writer 契約
 
@@ -276,7 +276,7 @@ writer は上記形状を検証して qa entry に保存する。新規 state �
 - **R4-reopen 経由のみ確定変更**: `確定` を動かせるのは `reopen` (要 reason) だけ。`未収集` へ戻し `reopen_log` に根拠を残す。
 - **goal-seek chunk**: `chunk` は 1 invocation で最大 `max_loops` turn を適用し、その実値を `hearing_progress.max_loops` に保存する。未収集が残れば `complete=false`・`next_question` 非 null、未収集0なら `complete=true` とする。後続の `reopen` / `add-category` / `apply` も同じ不変則へ再同期する。
 - **set-targets**: `targets[]` の唯一の書込経路 (上記「targets と set-targets op」)。
-- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]` の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定の additive annotation で `state` を変えない。
+- **set-foundation / set-serves / set-approval / set-decision / set-knowledge-candidate / set-qa-design-applications**: `requirements_foundation`、確定セルの `serves_goals`、確定セルの `approval_ref`、`decisions[]`、`knowledge_candidates[]`、既存 qa の設計解釈の唯一の書込経路。`set-serves` / `set-approval` は確定セル限定、`set-qa-design-applications` は既存 qa 限定の additive annotation で、いずれも確定セルの `state` や Q&A 原文を変えない。
 
 ## 検証 (deterministic gate)
 

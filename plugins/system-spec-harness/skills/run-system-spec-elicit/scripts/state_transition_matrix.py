@@ -55,6 +55,33 @@ def normalize_design_applications(raw: object) -> list[dict]:
     return normalized
 
 
+def set_qa_design_applications(state: dict, qa_id: str, raw: object) -> None:
+    """Backfill design interpretation without rewriting the original Q&A text."""
+    if not isinstance(qa_id, str) or not qa_id.strip():
+        raise TransitionError("set-qa-design-applications: qa_id は非空文字列必須")
+    qa_id = qa_id.strip()
+    entry = next(
+        (candidate for candidate in state.get("qa_log", []) if candidate.get("id") == qa_id),
+        None,
+    )
+    if entry is None:
+        raise TransitionError(
+            f"set-qa-design-applications: qa_log に存在しない qa_id: {qa_id}"
+        )
+
+    normalized = normalize_design_applications(raw)
+    existing = entry.get("design_applications")
+    if existing is not None and normalize_design_applications(existing) != normalized:
+        raise TransitionError(
+            f"set-qa-design-applications: 既存 design_applications の上書きは拒否: {qa_id}"
+        )
+
+    entry["design_applications"] = normalized
+    # A successful validated backfill supersedes the temporary legacy escape.
+    entry.pop("legacy_exempt", None)
+    entry.pop("legacy_exempt_reason", None)
+
+
 def derive_aggregate(cells: list[str]) -> str:
     if not cells or all(state == "未収集" for state in cells):
         return "未着手"

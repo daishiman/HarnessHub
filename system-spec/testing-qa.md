@@ -240,7 +240,18 @@ serves_goals: [G1, G4, G5]
 
 【4. tier 語彙の正本 (2026-08-09 補正)】
 検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。
+  - トレードオフ:
+    - 複数の検査層と証跡を横断して整合させる必要がある
+    - 境界の分類を誤ると必要な回帰が deferred 側へ漏れる
+- 原則: テストサイズ (実行環境の制約) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: blocking 軸と execution 軸を分離し、mvp の重い検査を async、standard / critical を sync として wall-clock と risk を別々に制御する判断に適用した。
+  - トレードオフ:
+    - async 検査は merge 後に失敗を発見する可能性がある
+    - 回収先のない deferred を拒否する fail-closed 実装が必要になる
 ##### 確定内容 qa-211 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維持したまま、tier 別のテスト選択契約を追加確定する。
@@ -256,7 +267,18 @@ serves_goals: [G1, G4, G5]
 【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
-- 設計原則の採否根拠: (legacy_exempt — design-app contract 制定前の 確定であり遡及記録は不能。免除の根拠は spec-state.legacy_migration。理由: モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。)
+- 原則: テストサイズ (実行環境の制約) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: mvp は変更 path から決定論的に到達する focused test を同期実行し、選択不能時は standard へ昇格、広域回帰は追跡付き非同期へ分ける契約に適用した。
+  - トレードオフ:
+    - mvp merge 時点では広域回帰の結果が未確定になり得る
+    - 非同期 finding を回収する issue 運用が必須になる
+- 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: frontend、backend、infrastructure、repository tooling の検査対象を観測可能な責務へ分け、tier が変えるのは量と同期性だけとする方針に適用した。
+  - トレードオフ:
+    - 変更 path と package の対応台帳を正確に保つ必要がある
+    - 複数層へまたがる変更は focused test だけに収まらない
 - 資するゴール: G1, G4, G5
 
 ## 最新ドキュメント出典

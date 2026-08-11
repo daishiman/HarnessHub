@@ -579,8 +579,18 @@
       "id": "qa-007",
       "question": "フロントエンド構成 (クライアント構成・状態管理・レンダリング・ビルド) は?",
       "answer": "ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "一貫性と標準準拠",
+          "applicability": "applied",
+          "rationale": "利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。",
+          "tradeoffs": [
+            "作者は terminal と plugin 操作を学ぶ必要がある",
+            "OS native GUI 固有の操作性は提供しない"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-008",
@@ -600,8 +610,28 @@
       "id": "qa-010",
       "question": "作者側 Publisher の実装形態は?",
       "answer": "TypeScript 統一を採用。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務: package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。検査ロジックは Hub 側 (Workers=JS) と共有し二重実装を回避する。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) は仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Ports and Adapters / DIP",
+          "applicability": "applied",
+          "rationale": "Publisher core を TypeScript の中心ロジックとし、Claude Code / Codex plugin、Hub API、wrangler CLI を外部 adapter として扱う責務分離に適用した。",
+          "tradeoffs": [
+            "core と adapter の境界型・mapping が増える",
+            "既存 Python 資産の TypeScript 移植と挙動同値テストが必要になる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念",
+          "principle": "Appropriate abstraction / DRY",
+          "applicability": "applied",
+          "rationale": "Hub と Publisher の検査規則を共有し、同じ package 契約を別実装へ重複させない方針に適用した。",
+          "tradeoffs": [
+            "共有境界の変更が双方へ波及する",
+            "偶然似た処理まで統合しない継続的な見極めが要る"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-011",
@@ -831,8 +861,28 @@
       "id": "qa-043",
       "question": "作者デスクトップ環境 (macOS / Windows) の infrastructure (配布・実行基盤・ツールチェーン) は何を正本とするか? (C07 監査指摘への対応: infrastructure.desktop-windows/desktop-macos の qa_ref=qa-003 は Hub web hosting 中心の回答で desktop 固有の裏付けが薄い。既確定内容の集約による専用質疑化であり新規決定は含まない)",
       "answer": "既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "環境の再現性 (Infrastructure as Code)",
+          "applicability": "applied",
+          "rationale": "macOS / Windows の作者環境で同じ pnpm script、明示 binding、同じ配布経路を使い、shell や production DB への暗黙依存を避ける基盤契約に適用した。",
+          "tradeoffs": [
+            "OS ごとの差異を吸収する検証と保守が必要になる",
+            "緊急時のローカル操作にも事後記録の負担が生じる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Secure defaults and usable security",
+          "applicability": "applied",
+          "rationale": "Device Flow token を OS 資格情報域だけへ保存し、非エンジニアへ長命 secret の手動管理を要求しない既定に適用した。",
+          "tradeoffs": [
+            "OS 資格情報 API ごとの adapter が必要になる",
+            "ヘッドレス環境では別の安全な資格情報経路が必要になる"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-044",
@@ -1034,8 +1084,28 @@
       "id": "qa-073",
       "question": "qa-041 (auth / security の desktop-windows・desktop-macos) の R4-reopen: Device Flow の polling interval に server 強制の上限値と、interval を守った client への減衰規則を確定するか? (follow-up HarnessHub-l2g9 / issue-auth-tenancy-spec-delta-20260725。qa-041 は interval 5 秒・slow_down 受信時 +5 秒までしか確定しておらず、RFC 8628 §3.5 自体も加算幅までしか規定していない。feat-auth-tenancy 実装は上限 60 秒と -5 秒の減衰を導入済みで、Publisher CLI から観測できる契約である)",
       "answer": "ユーザー確認 (2026-07-25、AskUserQuestion で「上限 60 秒・減衰 -5 秒を確定」を選択。承認記録 appr-010) により、qa-041 の確定内容を全面維持したうえで polling interval の上限と減衰を追加確定し、auth / security の desktop-windows・desktop-macos の専用正本として再確定する。【本 R4-reopen の唯一の差分】polling interval は 5 秒を初期値とし、interval 未満の polling には slow_down を返して +5 秒を加算、interval を守った polling には -5 秒を減衰させる。server が強制する interval の上限は 60 秒、下限は発行応答で client へ告げた 5 秒とする。根拠: RFC 8628 §3.5 は加算幅しか定めておらず、上限が無いと interval は単調増加して device_code TTL 600 秒を追い越し、client が次に叩いてよい時刻に達する前に code が失効して server 側から flow を詰ませる。上限 60 秒は TTL 600 秒に対し最悪でも 10 回は叩けることを値の選択そのもので担保する。加算幅と減衰幅を同じ 5 秒にするのは、幅が違うと「速く叩いて罰を受け、次の 1 回だけ守って帳消しにする」交互 polling が実質的に罰を免れるためであり、初期値への一括 reset も同じ理由で採らない。下限を告知値 5 秒より下げないのは、告知どおりに叩いている client を後から slow_down にできてしまわないため。限界を明示する: 上限が縛るのは server が強制する間隔だけであり、client が自分側で持つ間隔は RFC どおり slow_down のたびに +5 秒され上限を持たない (client 実装の責務であり server からは是正できない)。実装正本は apps/hub/src/lib/auth/config.ts の AUTH_NUMERIC_CONTRACT (devicePollIntervalSeconds=5 / devicePollBackoffSeconds=5 / devicePollMaxIntervalSeconds=60) と apps/hub/src/lib/auth/device-flow/service.ts の nextPollIntervalSeconds() / relaxedPollIntervalSeconds()、仕様正本は docs/security-spec.md §2.2。【qa-041 から維持する確定内容】docs/security-spec.md §2.2 (Device Flow 数値契約)・§2.2.1 (scope)・§4.4・§8.6 と dev-workflow の qa-039 (ローカル運用規律) を desktop 実仕様として確定する。(1) Publisher / CLI / AI worker の認証 = OAuth Device Authorization Flow (RFC 8628、qa-008 維持): device_code TTL 10 分・SHA-256 ハッシュのみ DB 保存、user_code 8 文字 Crockford Base32 (I/L/O/U 除外)・5 回失敗で denied・照合後即失効。(2) token: access token 15 分 (短命 JWT・サーバ非保存)、refresh token 90 日・rotation 必須・SHA-256 ハッシュのみ保存・再利用検知で同一 family 全失効 + 監査 event token.reuse_detected + admin/本人通知。(3) 保存先 = OS 資格情報域のみ: macOS Keychain / Windows Credential Manager。平文ファイル・環境変数・リポジトリへの保存を禁止し、長命 secret のコピペを非エンジニアに求めない (G1 整合)。(4) scope 最小権限 = publish:write / metrics:write / feedback:write / aijob:process の 4 種。ハーネス実行環境へ渡る token は metrics:write + feedback:write のみで publish 権限を含めない。(5) 失効導線 = Hub Web (S04/S18) から本人・admin が即時失効 (publisher_tokens.revoked_at を毎リクエスト参照)。窃取疑い時は family 全失効 → 監査確認 (§8.6 インシデント最小手順)。(6) ローカル開発の秘密・本番境界 (qa-039 接続): production への wrangler deploy / migration をローカルから日常的に行わない (正本経路は CI。緊急時のみ + 事後記録)、ローカルは preview 用 Turso または local SQLite を binding し本番 DB を指さない、secret scan を local hook でも実行可能にする (正本の遮断は CI)。作者環境は macOS 主・Windows 従で同一 pnpm script が動作すること。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念",
+          "principle": "Contract first",
+          "applicability": "applied",
+          "rationale": "Device Flow の polling 初期値・加算・減衰・上下限を明示的な数値契約として固定し、client と server の再試行挙動を一致させる判断に適用した。",
+          "tradeoffs": [
+            "TTL や利用状況が変われば 5 秒 / 60 秒の再評価が必要になる",
+            "client 独自 backoff までは server から強制できない"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "短命 access token、rotation 付き refresh token、最小 scope、即時失効、OS 資格情報域限定という認証境界に適用した。",
+          "tradeoffs": [
+            "再認証と token rotation の運用負荷が増える",
+            "失効確認のため毎 request の参照費用が生じる"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-076",
@@ -1650,15 +1720,55 @@
       "id": "qa-161",
       "question": "qa-152 / qa-158 は認可拒否を apps/hub/src/middleware/authz.ts の DenyReason 5 値だけで論じ、『外部応答は 401/403 の 2 値まで』という境界を置いた。しかし実装には第 2 の認可層 apps/hub/src/lib/authz/with-authz.ts (route handler の決定点) があり、WrapperDenyReason は 12 値、denyStatusFor は 400/401/403/404 を返し、tenant_mismatch は意図的に 404 へ畳まれている。境界前提が実装と矛盾している。2 層を通した tenant enumeration 境界を確定せよ。",
       "answer": "C07 matrix-auditor の HIGH finding への確定対応。qa-152 / qa-158 の逐語は改変せず、本 entry を正本とする。私の以前の境界記述は『認可層は 1 つ』という誤った前提に立っており、実装は 2 段構えである。訂正する。\n\n[前提の訂正] 認可は 2 層ある。(i) edge middleware (src/middleware/authz.ts) = スコープ門。DenyReason 5 値 (unauthenticated / ambiguous_scope / missing_tenant_scope / tenant_mismatch / workspace_not_member)、status は 401|403。DB へ届かないため資源の実在を一切参照しない。(ii) route handler の withAuthz (src/lib/authz/with-authz.ts) = 決定点。WrapperDenyReason は AuthzDenyReason 9 値 (no_rule / inactive_user / revoked_session / credential_not_allowed / missing_scope / tenant_mismatch / workspace_not_member / not_owner / insufficient_role) に unauthenticated / untrusted_origin / unresolved_resource を加えた 12 値、status は denyStatusFor により 400|401|403|404。DB を参照でき、緊急失効も見る (ADR AD-7 の 2 段構え)。\n\n[境界の再定義] 『外部応答は 401/403 の 2 値まで』は層をまたぐ規則としては誤り。層に依らない不変則はただ 1 つ、**『応答から、要求者が権限を持たないテナント/workspace/資源の実在を推測できないこと』**とする。各層の具体形は資源実在を参照するかどうかで変わる。\n[i-1] edge 層: 実在照会を行わないので、実在/非実在で応答が変わりようがない。5 値を 401 (未認証) と 403 (それ以外) の 2 値へ畳む qa-152 [1] / qa-158 の結論はそのまま有効。\n[ii-1] route 層: 実在照会を行うため、応答形が実在の oracle になりうる。既存実装は tenant_mismatch を 404 へ畳んでおり (with-authz.ts denyStatusFor、受入テスト T-ISO-06 が固定)、これは『403 だと他テナントにその ID の資源が存在すると読み取れる』という、私が置いた 2 値境界より**強い**防御である。この既存挙動を維持し、変更しない。私の以前の記述は誤って弱い側へ倒していた。\n[ii-2] revoked_session / unauthenticated を 401、unresolved_resource を 400 とする既存マッピングも実在情報を漏らさないため維持する (401 は『名乗り直せば通る可能性』、400 は資源参照の形式不正)。\n\n[残存リスクの明示 — 隠さず記録する] route 層で workspace_not_member / not_owner が 403 を返す経路は、同一テナント内において『その資源は存在するが自分の workspace/所有ではない』ことを推測させうる。テナント境界は越えないため今回は受容し、404 へ畳むことはしない。理由は、同一テナント内では所属変更や共有依頼という正当な業務導線が存在し、404 に畳むと利用者が『権限が無い』のか『本当に無い』のか分からず問い合わせ不能になるため。テナント内での資源存在の秘匿が要件化された時点で再オープンする候補として明記する。\n\n[内部ログへの反映] qa-151 [147-a] / qa-156 の構造化ログは、理由コードに加えて**どちらの層で落ちたか (layer=edge|route)** を必ず持たせる。2 層が同名の理由 (tenant_mismatch / workspace_not_member / unauthenticated) を持つため、層を記録しないと切り分けができない。特に route 層の tenant_mismatch は外部へは 404 として出るので、ログ側でしか『権限不足の 404』と『本当に存在しない 404』を区別できない (with-authz.ts のコメントが明記している代償)。\n\n[この見落としが起きた理由と再発防止] 私は DenyReason という 1 つの型名だけを頼りに列挙を閉じ、同じ責務を担う別ファイルを探さなかった。同種の見落としを防ぐため、qa-160 の CI 必須ゲートに [V5] を加える: 『認可拒否の理由コード集合が、仕様書に列挙された集合と一致することを検査する (実装に増えた理由が仕様に無ければ CI を赤にする)』。列挙の網羅性を人の注意力ではなく機械に担保させる。\n本 entry は appr-033 (ユーザーによる代理回答の明示委任) の範囲で AI が確定したものであり、利用者の逐語発話ではない。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Defense in depth",
+          "applicability": "applied",
+          "rationale": "edge の scope 門と route handler の最終認可を独立層として維持し、tenant の実在秘匿と緊急失効確認を層ごとに担わせる設計に適用した。",
+          "tradeoffs": [
+            "同名 deny reason が二層に存在するため layer 付きログが必要になる",
+            "同一 tenant 内の 403 は操作性と存在秘匿の間で受容リスクを残す"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念",
+          "principle": "Error model",
+          "applicability": "applied",
+          "rationale": "400 / 401 / 403 / 404 を認証状態・入力形式・tenant 境界の意味へ対応させ、外部応答と内部理由コードを分離する契約に適用した。",
+          "tradeoffs": [
+            "外部 404 だけでは本当の不存在と認可拒否を区別できない",
+            "診断可能性を保つため秘密値を出さない構造化ログが必須になる"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-162",
       "question": "qa-159 [B] は『認証済み利用者を signin へ戻すと既存 session で即座に元の path へ返され再び拒否される往復になる』としたが、apps/hub/src/app/[tenant_slug]/signin/page.tsx に既ログイン検出も自動 redirect も存在しない。この棄却理由は実装事実と一致しているか。",
       "answer": "C07 matrix-auditor の MEDIUM finding への訂正。qa-159 の逐語は改変せず、本 entry を正本とする。指摘は正しく、私の記述は未実装の挙動を既存の挙動として述べていた。\n[訂正前] 「サインイン済みの利用者を signin へ送ると、既存 session で即座に元の path へ返され再び拒否される往復 (リダイレクトループ) になり…」\n[訂正後] 「signin ページ (app/[tenant_slug]/signin/page.tsx) には既ログイン検出も自動 redirect も実装されていないため、現状のコードで認証済み利用者を signin へ 303 しても実際にはループしない。起きるのは『サインイン済みなのにサインインフォームが再表示される』という状態であり、利用者からは何が起きたのか分からない。」\n[結論は変えない] navigation の認可拒否を認証状態で 2 分する qa-159 [A][B][C][D] の決定は維持する。根拠を次の 2 点に置き直す。(1) 権限不足という事実が利用者にも監査ログにも残らず、『サインインし直せば解決する』という誤った期待を与える。(2) 将来 signin に既ログイン検出を入れた時点で実際にループが成立するため、その時に仕様を作り直さずに済むよう今の時点で分けておく。棄却した代替案 (『[B] も signin へ戻し signin 側で既ログインを検出して既定着地へ飛ばす』) の棄却理由も同じく (1) — 本来 403 である事象を redirect で隠す — に置き直す。\n[同種の再発を止める] qa-157 でも『実測されていない挙動を実測として述べる』誤りを訂正しており、今回で 2 回目である。以後、確定の根拠に挙動を書くときは 『実装を読んで確認した事実』『テストで観測した事実』『未実装ゆえの推測』のどれかを明示する。本 entry における signin ページの既ログイン検出不在は、page.tsx (91 行) を読んで確認した事実である。\n本 entry は appr-033 (ユーザーによる代理回答の明示委任) の範囲で AI が確定したものであり、利用者の逐語発話ではない。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "エラー予防とエラーメッセージ",
+          "applicability": "applied",
+          "rationale": "認証済みの権限不足を signin へ戻して再認証で直るように見せず、認証状態と認可拒否を分けて次の操作を説明する判断に適用した。",
+          "tradeoffs": [
+            "signin と権限不足で別の表示・遷移契約が必要になる",
+            "将来の自動 redirect 実装時も状態分岐の回帰確認が要る"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念",
+          "principle": "Executable examples",
+          "applicability": "applied",
+          "rationale": "実装読解・テスト観測・未実装の推測を区別し、未観測挙動を事実として仕様化しない再発防止へ適用した。",
+          "tradeoffs": [
+            "挙動根拠の分類と証跡維持に記録コストがかかる",
+            "実装変更時に仕様根拠も更新する必要がある"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-163",
@@ -1832,15 +1942,55 @@
       "id": "qa-187",
       "question": "qa-185 で原因の候補を 3 つ残した。そのうち候補 (2)「isolate 寿命 × process.env の lazy populate のタイミング」について C08 独立監査 6 回目が公式一次記述で裏取りを行った。Cloudflare Workers Best Practices が、binding のみを変更する deploy では isolate が 再利用され得ること、および env 由来の値を global scope に保持すると基盤の binding が 変わっても stale な値が持続し得ることを、名指しの anti-pattern として警告している。process の lazy populate は isolate 生存期間内の最初のアクセス時点で行われ、投入有無を毎回再チェックする仕組みではない。この裏取り結果を仕様へ反映せよ。",
       "answer": "候補 (2) を『公式記述で機序として成立することが確認された候補』へ格上げする。ただし本番でそれが起きたとは断定しない。qa-183-b の方針 (断定の強さと根拠の強さを揃える) を維持する。\n\n[qa-187-a 公式記述で確認できたこと] C08 が Cloudflare 公式 Workers Best Practices (developers.cloudflare.com/workers/best-practices/workers-best-practices/) から次を確認した: binding だけを変更しコードを変更しない deploy では、Cloudflare は実行中の isolate を**再利用することがある** (コードを再ロードせずに環境変数や binding を差し替えられるため)。その結果、env から取得した値を global scope のインスタンスへ保持していると、基盤の binding が変わっても **stale な値のまま持続し得る**。公式が示す正しい形は『リクエストごとに新しいインスタンスを作る』ことである。あわせて process ドキュメント (developers.cloudflare.com/workers/runtime-apis/nodejs/process/) 側から、lazy populate が **process への最初のアクセス時点**で行われること、すなわち isolate 生存期間内で一度きりであり投入有無を再評価しないことを確認した。\n\n[qa-187-b これは E-2 の直接根拠である] middleware.ts:26-35 は module 最上位で `process.env.AUTH_SESSION_SECRET` を一度だけ読み、その値で `authAdapter` を構築して module scope に保持する。module 最上位は isolate 起動ごとに 1 回しか評価されない (isolate は per-request ではない)。したがってこの形は、**公式が名指しで警告している anti-pattern と構造的に一致する**。ある isolate が secret 未投入の時点で最初に process へ触れて undefined を populate すると、その後 secret を投入しても、その deploy が binding のみの変更であれば同じ isolate が再利用され、deny-all 版の authAdapter が使われ続ける。isolate が evict されるまで解消しない。\nE-2 (環境値の読み出しを吸収層へ一本化し、request context 内で解決する) は、これまで『Workers が request context 外の I/O を許可しない』という一般則に接地していたが、本 turn 以降は **binding 変更 deploy と isolate 再利用という具体的な機序**にも接地する。根拠が 1 本増えたのであって、置き換わったのではない。\n\n[qa-187-c それでも原因を断定しない理由] 公式記述が保証するのは『この機序が成立し得る』ところまでである。報告症状が実際にこの経路で起きたと言うには、当該 isolate の生成時刻と secret 投入時刻の前後関係という**本番の実測データ**が要る。本セッションでは本番への観測が許諾されておらず、この前後関係は取得できていない。よって候補 (2) は『機序として確認済み・実際の発生は未確認』の強さで記録し、候補 (1) 未ゲート経路・候補 (3) 認証以外の原因も引き続き残す。\n\n[qa-187-d 仕様に加えるもの] E-2 の acceptance に「認証に関わる構築物が module scope に保持されず、request ごとに解決される」を明示する。V6 の検査点に「module 最上位での環境値依存構築の検出」を含める (これは既に E-1 の検査だが、isolate 再利用という**失敗の帰結**を検査の説明文へ書き添える。検査が何を防いでいるか読めないと、将来この検査は『厳しすぎる』として緩められる)。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念",
+          "principle": "Explicit effects and errors",
+          "applicability": "applied",
+          "rationale": "認証に使う環境 binding の解決を module scope の暗黙キャッシュから request boundary へ移し、値の由来と失敗を明示する契約に適用した。",
+          "tradeoffs": [
+            "request ごとの解決処理が増える",
+            "module scope cache による僅かな高速化を採らない"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "公式に成立する isolate 再利用機序と、本番で実際に発生したという未確認仮説を分離し、稼働構成の由来を観測できることを acceptance に加える判断に適用した。",
+          "tradeoffs": [
+            "原因断定には本番時系列の追加観測が必要になる",
+            "観測を増やしても secret 値自体は記録できない"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-188",
       "question": "C07 独立監査ラウンド10 (verdict PASS) が MEDIUM 2 件を残した。うち 1 件は 『9 件目の分類語彙の見落とし』の継続指摘である。packages/db/schema/core/identity.ts:14 の tenants.status (text('status', {enum: ['active','suspended']})) が、apps/hub/src/lib/auth/db-ports.ts:306-308 (enabled: tenant.status === 'active'、コメント『停止中テナントは接続を解決させない。認証の入口で閉じる方が安全側』) と resolveTenantOidcConfig を通じて段0 (認証基盤可用性) の判定に直接使われているにもかかわらず、qa_log のいずれにも記録されていない。段0 語彙へ追加せよ。",
       "answer": "C07 の指摘を受け入れ、**tenants.status を段0 の語彙へ追加する**。qa-178-a と同一の基準で扱う。\n\n[qa-188-a 段0 へ含める根拠] qa-175 で定めた物差しは『操作結果としてのエラー種別か、認証解決前の前提状態記述か』であり、後者を段0 とする。tenants.status は「このテナントで認証解決を試みてよいか」という**前提状態の記述**であって、処理を試みた後に返る業務エラーではない。qa-178-a で段0 へ入れた IdpCredentialStatus (pending/tested/active/disabled) と同じ側にある。コード上の理由づけも酷似しており、db-ports.ts の『認証の入口で閉じる方が安全側』は idp-lifecycle.ts の『認証解決に使ってよい唯一の状態』と同じ設計思想の表明である。同じ思想で書かれた 2 つの語彙のうち片方だけを段0 に入れるのは、基準の一貫性を欠く。\n\n[qa-188-b これは本 feature の症状の候補 (3) に直結する] qa-185 で残した候補 (3)「認証以外の原因 (テナント接続未登録・無効化)」の実体がこれである。tenants.status === 'suspended' のとき resolveTenantOidcConfig は接続を解決せず、signin ページは『このテナントではサインインできません』へ倒れる。**この経路は秘密の投入状態とは完全に独立している**。つまり本番症状は、secret が正しく投入され正しく読めていても、テナントが suspended であるだけで同じように発生し得る。そして現状、利用者にも運用者にも **どちらが起きたのかを区別する手段が無い**。候補 (3) を候補 (1)(2) と同格で残すべき理由がここで具体化した。\n\n[qa-188-c E-3 の記録項目への追加] E-3 が記録すべき『縮退の理由』に、次を区別可能な形で含める: (i) テナントが解決できない (slug 不一致)、(ii) テナントは在るが status が active でない、(iii) OIDC 接続が登録されていない、(iv) 環境値が解決できない (名前を記録)、(v) cookie が無い、(vi) 署名検証に失敗した。**値は記録しない** (qa-151 [147-b] の非記録契約を維持)。記録するのは分類と名前だけである。現状これら 6 つが利用者から見てほぼ同一の出力へ潰れていることが、本 feature の欠陥の中身である。\n\n[qa-188-d 併記する既存文書の状態] docs/backend-spec.md:55 は tenants テーブルの status(active/suspended) を**スキーマとしては既に文書化している**。欠けているのはスキーマの存在ではなく、その値が認証可用性へ連動するという**結線の記述**である。これは qa-182 で扱った E-4 と同じ型の錯誤 (既にあるものを無いと見なす) を避けるための注記であり、本 turn は『新しい列を作れ』ではなく『既存列と認証可用性の連動を文書と語彙に載せろ』を求める。\n\n[qa-188-e 併せて残る DeviceAuthorizationStatus の三重定義] C07 が前回から継続指摘している DeviceAuthorizationStatus の情報源が 3 つある件 (ports.ts:117 / repository/device-flow.ts:23 / drizzle schema publish.ts:106) も未対応のまま残る。V7 (同一のリテラル union が 2 箇所に独立定義されている状態を検出する) の対象に、**drizzle schema を第 3 の情報源として含める**ことを明記する。型宣言と zod だけを突合する実装にすると、この 3 件目が検査をすり抜ける。",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/ddd.md#中核概念",
+          "principle": "Ubiquitous Language",
+          "applicability": "applied",
+          "rationale": "tenants.status と IdpCredentialStatus を『認証解決前の前提状態』という同じ分類語彙へ揃え、schema・実装・仕様の意味を一致させる判断に適用した。",
+          "tradeoffs": [
+            "段0 語彙の維持対象が増える",
+            "状態追加時は認証可用性への結線も同時に更新する必要がある"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "tenant 無効化、OIDC 未登録、環境値欠落、cookie 欠落、署名失敗を秘密値なしで区別できる縮退理由へ分解する契約に適用した。",
+          "tradeoffs": [
+            "分類とログ schema の保守費が増える",
+            "外部利用者向け応答には内部分類をそのまま露出できない"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-189",
@@ -2028,8 +2178,28 @@
       "question": "ローカル desktop でテストを実行するとき、mvp tier の focused test をどう選び、広域回帰をどう扱いますか?",
       "answer": "ユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-095 の skill 構造 lint の生成物境界契約と層別テスト方針を全面維持したまま、tier 別のテスト選択契約を追加確定する。\n\n【1. focused test の決定論的選択】mvp tier の blocking テストは、変更 path から到達する package の focused test に限定する。選択は scripts/select-verification-tier.py が出力する影響 package 集合を入力とし、実行者の勘で選ばない。該当 package が特定できない変更 (共有 utility や設定) は standard へ自動昇格させ、選択不能を暗黙の省略にしない。\n\n【2. 広域回帰の非同期化】実際の実行順序を再現する広域回帰は mvp tier の blocking から外し、CI の非同期 job として実行する。失敗は当該変更の merge を止めず deferred-verification issue として起票し、次の standard 以上の実行または Stage 1 公開判定ゲートで回収する。critical tier では従来どおり広域回帰を同期 blocking として維持する。\n\n【3. 層別方針の維持】frontend は behavior ベース、backend は API 契約 / ロジック単体 / DB 結合、infrastructure と repository tooling は静的契約 / 実行順序 / fail-closed 境界という層別方針は tier に依らず維持する。pixel・DOM 内部構造・一時生成物の物理配置へ品質判定を密結合させない方針も維持する。tier が変えるのは検証の量と同期性であって、検証の当たり所ではない。\n\n【4. 生成物境界の維持】skill 構造 lint が dot cache および __pycache__ / .pyc を構造判定から除外する qa-095 の契約は tier に依らず維持する。\n\n【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。",
       "source": "renumbered_from=qa-147 (main 取込時の qa id 衝突解消 2026-08-09)",
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "テストサイズ (実行環境の制約)",
+          "applicability": "applied",
+          "rationale": "mvp は変更 path から決定論的に到達する focused test を同期実行し、選択不能時は standard へ昇格、広域回帰は追跡付き非同期へ分ける契約に適用した。",
+          "tradeoffs": [
+            "mvp merge 時点では広域回帰の結果が未確定になり得る",
+            "非同期 finding を回収する issue 運用が必須になる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "層別の責務配分",
+          "applicability": "applied",
+          "rationale": "frontend、backend、infrastructure、repository tooling の検査対象を観測可能な責務へ分け、tier が変えるのは量と同期性だけとする方針に適用した。",
+          "tradeoffs": [
+            "変更 path と package の対応台帳を正確に保つ必要がある",
+            "複数層へまたがる変更は focused test だけに収まらない"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-212",
@@ -2070,8 +2240,28 @@
       "source": {
         "kind": "user-dialogue"
       },
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念",
+          "principle": "デプロイパイプライン",
+          "applicability": "applied",
+          "rationale": "変更 risk から mvp / standard / critical を一意に選び、blocking / advisory / deferred の実行と証跡を同じ selector から導出する開発フローに適用した。",
+          "tradeoffs": [
+            "selector 規則と gate 台帳の継続保守が必要になる",
+            "低 tier の延期分を公開前に回収する運用負担が残る"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "ゲートと改善ループ",
+          "applicability": "applied",
+          "rationale": "検査結果を tier-decision、deferred issue、cache provenance として残し、失敗後の回収と同一条件での再検証までを契約化する判断に適用した。",
+          "tradeoffs": [
+            "証跡 artifact と cache の保存費が増える",
+            "selector や cache が利用不能な場合は fail-closed で速度を失う"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-217",
@@ -2080,8 +2270,28 @@
       "source": {
         "kind": "user-dialogue"
       },
-      "legacy_exempt": true,
-      "legacy_exempt_reason": "モック harness-studio-v2 の UI/UX 反映に伴い ui-ux/frontend/backend/database の web セルを再確定する必要があるが、legacy 1.0 + 確定セルで全 writer 経路が到達不能だったため。既存 225 qa entry は design-app contract 制定前の記録であり遡及適用不能なので legacy_exempt として明示記録する (schema 1.0 時代に validator が暗黙免除していた範囲と同一)。"
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "層別の責務配分",
+          "applicability": "applied",
+          "rationale": "production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。",
+          "tradeoffs": [
+            "複数の検査層と証跡を横断して整合させる必要がある",
+            "境界の分類を誤ると必要な回帰が deferred 側へ漏れる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "テストサイズ (実行環境の制約)",
+          "applicability": "applied",
+          "rationale": "blocking 軸と execution 軸を分離し、mvp の重い検査を async、standard / critical を sync として wall-clock と risk を別々に制御する判断に適用した。",
+          "tradeoffs": [
+            "async 検査は merge 後に失敗を発見する可能性がある",
+            "回収先のない deferred を拒否する fail-closed 実装が必要になる"
+          ]
+        }
+      ]
     },
     {
       "id": "qa-218",

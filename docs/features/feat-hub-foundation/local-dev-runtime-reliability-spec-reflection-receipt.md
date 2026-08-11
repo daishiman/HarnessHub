@@ -23,9 +23,10 @@ updated: 2026-08-11
 判定、本番 Cloudflare 構成は変えないが、ローカル運用の owner、保存場所、監視構造、health、
 復旧、認証 smoke の契約が変わるため、正規 system-spec transition `qa-230` と各追補へ反映した。
 
-自動検証対象は PASS している。HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、
-利用可能な browser session がないため未受領であり、Beads は PR merge 前かつ画面確認前の
-`in_progress` を維持する。
+自動検証対象と既存 PR #696 の required checks は PASS している。さらに、system-spec の
+legacy QA 11件に残っていた設計適用不足も、Q&A 原文を変えない正規 writer で解消した。
+HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、in-app Browser の接続一覧が空のため
+未受領であり、未実施を PASS とは表現しない。
 
 ## 中学生向けの説明
 
@@ -75,10 +76,10 @@ stdout / stderr 受信時にも rotation するよう修正し、focused test �
 | child process crash recovery | PASS: sqld / Next.js とも supervisor が再起動 |
 | actual in-app browser `/sheets` | PENDING: browser session 不在。CLI/API PASS から推測しない |
 
-`system-spec` の current transition と loop coverage は PASS。repository 全体の
-`--require-complete --require-foundation` は、本変更前から残る11件の legacy QA に
-`design_applications` がないため FAIL する。本変更の `qa-230` は必要項目を持ち、既存11件を
-本 issue で改変しない。
+`system-spec` の current transition と loop coverage は PASS。既存11件については、単一 writer に
+`set-qa-design-applications` を追加し、question / answer / source を維持したまま章固有の原則・理由・
+トレードオフだけを追記した。同じ payload の再適用は冪等、異なる既存解釈の上書きは拒否する。
+その結果、repository 全体の `--require-complete --require-foundation` も不足0件で PASS した。
 
 ## ファイル分割
 
@@ -88,6 +89,5 @@ stdout / stderr 受信時にも rotation するよう修正し、focused test �
 
 ## 残課題
 
-- draft PR の CI と review を受領する。
-- 利用可能な in-app browser session で Cookie を登録し、`/sheets` の3件表示を確認する。
-- PR merge 後に default branch reconciliation を行い、Beads と dev-graph を close する。
+- in-app Browser が接続されたセッションで Cookie を登録し、`/sheets` の3件表示を確認する。今回の再試行は `agent.browsers.list() = []` で実行不能だった。
+- 新しい PR は作成しない。既存 PR #696 の required checks は全件成功済みで、merge 後に default branch reconciliation と Beads / dev-graph close を行う。

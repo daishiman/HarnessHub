@@ -173,3 +173,4 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - macOS ローカル画面試験の sqld / Next.js を、固定 absolute state と launchd + supervisor の二段監視で再現可能にした。
 - loopback 限定、正確な Hub health、非破壊 Cookie 発行、認証・scope 付き sheets smoke、middleware 公開入口の一意性を同じ lifecycle 契約で検査する。
 - 製品の公開 API、DB schema、本番 Cloudflare deploy unit は変更しない。仕様判断、検証、実ブラウザ確認の残件は [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を正とする。
+- 最終残件だった system-spec の legacy 設計適用11件は、Q&A原文を保った単一 writer backfill で解消し、strict completeness / foundation gate を PASS した。

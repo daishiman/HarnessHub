@@ -56,6 +56,7 @@ from state_transition_matrix import (
     next_unresolved_question,
     recompute_aggregates,
     run_chunk,
+    set_qa_design_applications,
     set_targets,
 )
 
@@ -137,6 +138,18 @@ def main(argv: list[str]) -> int:
     candidate.add_argument("--state", required=True)
     candidate.add_argument("--candidate", required=True, help="candidate JSON文字列またはファイル")
     candidate.add_argument("--out")
+    qa_design = sub.add_parser(
+        "set-qa-design-applications",
+        help="既存 qa の質問・回答を保ったまま設計適用を追記",
+    )
+    qa_design.add_argument("--state", required=True)
+    qa_design.add_argument("--qa-id", required=True)
+    qa_design.add_argument(
+        "--applications",
+        required=True,
+        help="design_applications JSON配列または JSON ファイル",
+    )
+    qa_design.add_argument("--out")
     args = parser.parse_args(argv)
     try:
         if args.cmd == "bootstrap":
@@ -163,6 +176,15 @@ def main(argv: list[str]) -> int:
                 set_decision(state, load_json_arg(args.decision))
             elif args.cmd == "set-knowledge-candidate":
                 set_knowledge_candidate(state, load_json_arg(args.candidate))
+            elif args.cmd == "set-qa-design-applications":
+                value = load_json_arg(args.applications)
+                set_qa_design_applications(
+                    state,
+                    args.qa_id,
+                    value["design_applications"]
+                    if isinstance(value, dict) and "design_applications" in value
+                    else value,
+                )
             _emit(state, args.out or args.state)
     except TransitionError as exc:
         print(f"TransitionError: {exc}", file=sys.stderr)

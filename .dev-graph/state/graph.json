@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1503,
+  "graph_revision": 1504,
   "nodes": [
     {
       "acceptance": [
@@ -56717,7 +56717,20 @@
       "phase_ref": null,
       "priority": "high",
       "project_id": "harness-hub",
-      "pull_request_linkages": [],
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "devgraph/issue-hub-local-dev-runtime-reliability-20260811",
+          "linked_at": "2026-08-11T01:34:15Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 696,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/696"
+        }
+      ],
       "purpose": "ツールセッション終了耐性だけでなく、同一DBの再選択、healthの正確性、異常終了時の復旧、認証付き画面確認までを再現可能にする。",
       "related_nodes": [
         "feat-hub-foundation",
@@ -56743,13 +56756,27 @@
         "packages/db/package.json",
         "scripts/ci/check-shared-layer-duplicates.mjs",
         "scripts/ci/shared-layer-registry.json",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/SKILL.md",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/apply-spec-transition.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/scripts/state_transition_matrix.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition.py",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/tests/test_spec_transition_design_backfill.py",
         "docs/features/feat-hub-foundation/local-development.md",
         "docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md",
         "docs/features/feat-hub-foundation/runbook.md",
         "features/feat-hub-foundation.md",
         "specs/harness-hub-system-specification-implementation-writebacks.md",
         "system-spec/spec-state.json",
+        "system-spec/auth.md",
+        "system-spec/backend.md",
+        "system-spec/dev-workflow.md",
+        "system-spec/frontend.md",
+        "system-spec/infrastructure.md",
         "system-spec/maintenance-ops.md",
+        "system-spec/security.md",
+        "system-spec/testing-qa.md",
+        "system-spec/ui-ux.md",
         "architecture/harness-hub-infrastructure-operations-addenda.md",
         "tasks/feat-hub-foundation/sys-hub-foundation-p13.md",
         ".gitignore"
@@ -56790,7 +56817,7 @@
       "template_version": "1.0.0",
       "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T01:27:00Z"
+      "updated_at": "2026-08-11T02:02:15Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

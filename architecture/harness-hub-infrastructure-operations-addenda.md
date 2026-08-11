@@ -196,3 +196,10 @@ sqld readiness 後に Next.js を開始する。両 server は loopback だけ�
 workspace scope 付き `/api/v1/sheets` の3件応答までを分けて行う。Cookie 発行は read-only とし、
 seed 再投入を復旧手順にしない。詳細は [運用手順](../docs/features/feat-hub-foundation/local-development.md) と
 [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-11 system-spec 移行後 backfill 境界
+
+schema 1.1 の確定 QA へ設計知識を遡及反映するとき、matrix の reopen や Q&A 原文の複製は行わない。
+単一 writer の `set-qa-design-applications` が既存 QA を ID で解決し、検証済みの設計適用だけを
+追記する。同一 payload は再実行可能、異なる既存 payload は上書き拒否とし、成功時だけ一時的な
+`legacy_exempt` metadata を除去する。これにより、履歴の不変性と strict completeness を両立する。
