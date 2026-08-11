@@ -16,8 +16,10 @@ import {
   releases,
   targetChannels,
 } from '../schema/core/catalog';
+import { tenants } from '../schema/core/identity';
 import { idempotencyLedger, publishRequests } from '../schema/core/publish';
 import { auditEvents } from '../schema/core/security';
+import { smokeFixtureLeases } from '../schema/core/smoke';
 import { isTransactionalAdapter } from '../src/adapter';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
@@ -239,6 +241,27 @@ export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbP
       await guardedWrite(adapter, () =>
         transactional(adapter).transaction(async (tx) => {
           const txDb = tx.client as CoreDb;
+          const [lease] = await txDb
+            .select({ tenantId: smokeFixtureLeases.tenantId })
+            .from(smokeFixtureLeases)
+            .where(eq(smokeFixtureLeases.tenantId, tenantId))
+            .limit(1);
+          // tenant 名や slug は削除 authority ではない。専用台帳に登録されていない tenant の
+          // publish 行は、smoke らしい名前に見えても 1 行も消さない。
+          if (lease === undefined) {
+            const [tenant] = await txDb
+              .select({ id: tenants.id })
+              .from(tenants)
+              .where(eq(tenants.id, tenantId))
+              .limit(1);
+            // 別 sweeper が同じ command を先に完走した競合だけは冪等 success にする。
+            // tenant が無いのに publish 孤児だけがある場合も、ここでは削除せず下の残数検査を赤にする。
+            if (tenant === undefined) return;
+            throw new RepositoryError(
+              'invalid-context',
+              `tenant ${tenantId} は smoke fixture lease を持たないため publish 行を物理削除できません`,
+            );
+          }
           await txDb.delete(catalogEntries).where(eq(catalogEntries.tenantId, tenantId));
           await txDb.delete(deploymentReferences).where(eq(deploymentReferences.tenantId, tenantId));
           await txDb.delete(publishRequests).where(eq(publishRequests.tenantId, tenantId));

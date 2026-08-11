@@ -1,0 +1,250 @@
+{
+  "schema_version": "1.0",
+  "_comment": [
+    "必須ゲート台帳 (HarnessHub-ic7w / issues/governance-gate-not-required-check-20260809.md)。",
+    "「どの CI job を merge の必須条件とみなすか」をこの 1 箇所で宣言し、",
+    "scripts/validate-required-gates.py が実 workflow・実 branch protection と機械突合する。",
+    "",
+    "checks[] の単位は job である。GitHub の required status check は step ではなく",
+    "check run (= job) を単位とするため、step 単位で台帳を作ると『台帳の粒度では必須だが",
+    "protection には登録できない』宣言が生まれる。context / PR trigger / paths filter と",
+    "workflow 一覧は実 YAML から validator が導出し、変化時に古くなる複製を台帳へ持たない。",
+    "",
+    "enforcement:",
+    "  required    : merge をブロックする条件とみなす job。pr_trigger=true かつ path_filtered=false",
+    "                でなければならない (path filter がある job は対象外 PR で check run 自体が",
+    "                生成されず、required 化すると当該 PR が永久 pending になる)。",
+    "  advisory    : PR で走るが merge の必須条件にはしない。理由を unregistered_reason に書く。",
+    "  out-of-scope: pull_request で起動しない保守 workflow。required 化の対象外。",
+    "",
+    "registered_in_branch_protection は「実際に required status check として登録されているか」の",
+    "宣言であり、--check-protection で GitHub の実状と突合する。宣言と実状の乖離は違反。",
+    "",
+    "verification_gate_sites は scripts/verification-gate-ledger.json の 9 gate の tier 切替状態を",
+    "明示する。wiring_state=unwired は単なる site=null ではなく『横断検算を含む切替が未完成』",
+    "という閉じた状態であり、scripts/validate-gate-execution.py は成功扱いにしない。",
+    "tier 別 blocking 集合の正本は verification-gate-ledger.json 側のまま (二重定義しない)。"
+  ],
+  "protection_policy": {
+    "mode": "no-branch-protection",
+    "decided_at": "2026-08-10",
+    "decided_by": "HarnessHub-ic7w",
+    "observation": {
+      "command": "gh api repos/:owner/:repo/branches/main/protection",
+      "result": "404 Branch not protected",
+      "observed_at": "2026-08-11",
+      "meaning": "main に branch protection が無く、required status check は 1 件も登録されていない"
+    },
+    "decision": "現時点では main に branch protection を敷かない。必須ゲートの集合は本台帳で宣言し、実状との乖離を機械検出する状態を先に作る。",
+    "reason": [
+      "protection を先に敷くと、既に赤いゲート (validate-graph-schema は repo 全体で exit 1 が既定) を",
+      "巻き込んで全 PR が止まる。どのゲートを必須にするかを台帳側で明示的に選ぶ設計を先に置く。",
+      "path filter を持つ workflow (ci.yml / hub-web-quality-gate.yml など) を required 化すると、",
+      "対象 path を含まない PR では check run が生成されず、当該 PR が永久 pending になる。",
+      "単独作業の repository であり、merge 前の強制点は現状ローカル pre-push が担っている。"
+    ],
+    "alternative_enforcement": [
+      {
+        "mechanism": ".githooks/pre-push",
+        "command": "bash scripts/run-ci-checks.sh",
+        "covers": "repo-root の機械検査 (CI との被覆差は scripts/lint-ci-local-check-parity.py が引数形まで突合)",
+        "bypass": "PUSH_SKIP_CI=1 git push",
+        "wiring_check": "python3 scripts/validate-git-hooks-wiring.py",
+        "install": "bash scripts/install-git-hooks.sh"
+      },
+      {
+        "mechanism": "scripts/lint-ci-local-check-parity.py",
+        "command": "python3 scripts/lint-ci-local-check-parity.py",
+        "covers": "CI 側の blocking 検査がローカル強制点から欠落することの遮断",
+        "bypass": "GitHub merge では回避可能 (branch protection 未適用)。CI の赤は merge をブロックしない",
+        "wiring_check": null,
+        "install": null
+      },
+      {
+        "mechanism": "scripts/validate-required-gates.py",
+        "command": "python3 scripts/validate-required-gates.py",
+        "covers": "本台帳と実 workflow / 実 protection の乖離検出 (required 宣言かつ未登録の列挙)",
+        "bypass": "GitHub merge では回避可能 (branch protection 未適用)。台帳の整合検査であって merge 強制点ではない",
+        "wiring_check": null,
+        "install": null
+      }
+    ],
+    "residual_risk": [
+      "pre-push は PUSH_SKIP_CI=1 と --no-verify で回避でき、hook 未 install の clone では最初から効かない。",
+      "GitHub 上の merge 操作そのものは何も止めない。CI が赤でも merge できる状態は解消されていない。"
+    ],
+    "exit_criteria": [
+      "required 宣言した 3 job が直近 30 run で安定して緑であること",
+      "path filter 付き workflow について、対象外 PR でも check run が報告される形 (no-op job か merge queue) を用意すること",
+      "上記が揃った時点で mode を branch-protection へ変更し、required 宣言の registered_in_branch_protection を true にして --check-protection で実状と突合する"
+    ]
+  },
+  "checks": [
+    {
+      "workflow": ".github/workflows/governance-check.yml",
+      "job": "change-category-guard",
+      "enforcement": "required",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "protection_policy.mode=no-branch-protection のため未登録。governance 系 lint の本体であり、protection を敷く際に最初に登録する 3 job のひとつ"
+    },
+    {
+      "workflow": ".github/workflows/dev-pipeline-lint.yml",
+      "job": "dev-pipeline-lint",
+      "enforcement": "required",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "protection_policy.mode=no-branch-protection のため未登録。全 PR で走り path filter を持たないため required 化可能"
+    },
+    {
+      "workflow": ".github/workflows/harness-creator-kit-ci.yml",
+      "job": "verify",
+      "enforcement": "required",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "protection_policy.mode=no-branch-protection のため未登録。plugin の pytest 一元化先であり、protection を敷く際に登録する 3 job のひとつ"
+    },
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "job": "static-gates",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "ci.yml は paths filter を持ち、apps/packages を触らない PR では check run が生成されない。required 化すると当該 PR が永久 pending になる"
+    },
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "job": "test",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "job 名は required status check を自称するが実際には未登録。paths filter があるため、そのままでは required 化できない (対象外 PR が永久 pending)"
+    },
+    {
+      "workflow": ".github/workflows/ci.yml",
+      "job": "deploy",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "deploy は検査ではなく副作用であり、merge の前提条件にしない。paths filter もある"
+    },
+    {
+      "workflow": ".github/workflows/hub-web-quality-gate.yml",
+      "job": "catalog-gate",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "catalog 関連 path に限定した workflow であり、対象外 PR では check run が生成されない"
+    },
+    {
+      "workflow": ".github/workflows/marketplace-integrity.yml",
+      "job": "check",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "plugins/ と .claude-plugin/ に限定した paths filter があるため required 化できない"
+    },
+    {
+      "workflow": ".github/workflows/contract-generator.yml",
+      "job": "lint",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "contract-generator plugin に限定した paths filter があるため required 化できない"
+    },
+    {
+      "workflow": ".github/workflows/contract-generator.yml",
+      "job": "test",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "contract-generator plugin に限定した paths filter があるため required 化できない"
+    },
+    {
+      "workflow": ".github/workflows/slide-report-generator-ci.yml",
+      "job": "playwright-runtime",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "slide-report-generator plugin に限定した paths filter があるため required 化できない"
+    },
+    {
+      "workflow": ".github/workflows/ui-visual.yml",
+      "job": "browser",
+      "enforcement": "advisory",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "label による opt-in 起動であり、常時報告されないため required 化できない"
+    },
+    {
+      "workflow": ".github/workflows/backup.yml",
+      "job": "backup",
+      "enforcement": "out-of-scope",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "schedule / workflow_dispatch のみで pull_request では起動しない保守 workflow"
+    },
+    {
+      "workflow": ".github/workflows/cwv.yml",
+      "job": "lighthouse",
+      "enforcement": "out-of-scope",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "schedule / workflow_dispatch のみで pull_request では起動しない計測 workflow"
+    },
+    {
+      "workflow": ".github/workflows/poll-llms-txt.yml",
+      "job": "poll",
+      "enforcement": "out-of-scope",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "schedule 起動の record-only workflow で pull_request では起動しない"
+    },
+    {
+      "workflow": ".github/workflows/smoke-fixture-sweeper.yml",
+      "job": "sweep",
+      "enforcement": "out-of-scope",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "schedule / workflow_dispatch のみで起動する期限切れ fixture 回収 workflow で、pull_request では起動しない"
+    },
+    {
+      "workflow": ".github/workflows/update-yaml-spec.yml",
+      "job": "fetch-spec",
+      "enforcement": "out-of-scope",
+      "registered_in_branch_protection": false,
+      "unregistered_reason": "schedule 起動の仕様キャッシュ更新 writer で pull_request では起動しない"
+    }
+  ],
+  "verification_gate_sites": [
+    {
+      "gate_id": "secret-scan",
+      "wiring_state": "unwired",
+      "note": "rerun_command は ci.yml の test job に実体があるが、tier decision と実行結果を gate id で横断検算する共通配線は未完成"
+    },
+    {
+      "gate_id": "data-loss-guard",
+      "wiring_state": "unwired",
+      "note": "guard-worktree-desync / lint-worktree-clobber-mtime / guard-cross-worktree-ref-update は local pre-push に実体があるが、tier decision と実行結果の横断検算は未完成"
+    },
+    {
+      "gate_id": "build-typecheck",
+      "wiring_state": "unwired",
+      "note": "pnpm build / typecheck は ci.yml の test job に実体があるが、gate id 単位の実行結果を横断検算する共通配線は未完成。always_blocking のため降格対象ではない"
+    },
+    {
+      "gate_id": "focused-test",
+      "wiring_state": "unwired",
+      "note": "pytest は harness-creator-kit-ci.yml の verify job に実体があるが、tier decision と実行結果を gate id で横断検算する共通配線は未完成"
+    },
+    {
+      "gate_id": "package-test",
+      "wiring_state": "unwired",
+      "note": "plugins 配下の pytest は harness-creator-kit-ci.yml の verify job に実体があるが、同 workflow への tier 切替と横断検算は未完成"
+    },
+    {
+      "gate_id": "contract-verification",
+      "wiring_state": "unwired",
+      "note": "validate plugin completeness は governance-check に blocking で実在するが、軽い 1 step だけ advisory 化しても周回短縮にならないため tier 切替を適用していない"
+    },
+    {
+      "gate_id": "completeness-evaluator",
+      "wiring_state": "unwired",
+      "note": "重い evaluator は CI 未配線。critical 未満の disposition は advisory ではなく deferred で、受け皿 HarnessHub-sy31 への記録契約を持つが実行回収の共通配線は未完成"
+    },
+    {
+      "gate_id": "independent-audit-fork",
+      "wiring_state": "unwired",
+      "note": "CI 未配線。critical 未満の disposition は advisory ではなく deferred で、受け皿 HarnessHub-sy31 への記録契約を持つが実行回収の共通配線は未完成"
+    },
+    {
+      "gate_id": "live-trial",
+      "wiring_state": "unwired",
+      "note": "CI 未配線。critical 未満の disposition は advisory ではなく deferred で、受け皿 HarnessHub-sy31 への記録契約を持つが実行回収の共通配線は未完成"
+    }
+  ]
+}

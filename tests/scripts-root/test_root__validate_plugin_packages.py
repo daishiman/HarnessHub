@@ -19,6 +19,7 @@ advisory ラッパー。テストは外部 I/O を排して全分岐を実入力
 """
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import textwrap
@@ -361,6 +362,81 @@ def test_check_contract_schema_missing_schema_file_is_violation(tmp_path, monkey
     violations = MOD.check_contract_schema()
     assert len(violations) == 1
     assert "構文正本 schema が見つかりません" in violations[0]
+
+
+def test_check_contract_schema_import_error_records_chosen_python(tmp_path, monkeypatch):
+    """jsonschema 不在時は「どの python が選ばれたか」を診断証跡として必ず出す。
+
+    HarnessHub-sl6o: hook 文脈だけ落ちる本症状は PATH 差で別 interpreter が選ばれるのが
+    根本原因だった。ImportError のたびに sys.executable / version を記録しておかないと、
+    再調査のたびに PATH の当てものを繰り返すことになる。
+    sys.modules に None を差すと `import jsonschema` は本物の ImportError を送出する。
+    """
+    _write_contract(tmp_path, "anyp", _valid_contract())
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    monkeypatch.setitem(sys.modules, "jsonschema", None)
+    monkeypatch.setenv("HH_PYTHON", "/fake/hh/python3")
+
+    violations = MOD.check_contract_schema()
+
+    assert len(violations) == 1, "診断行で違反件数を水増ししない"
+    msg = violations[0]
+    assert "jsonschema 未インストール" in msg
+    assert sys.executable in msg, "選ばれた python (sys.executable) が診断に無い"
+    assert sys.version.split()[0] in msg, "version が診断に無い"
+    assert "/fake/hh/python3" in msg, "HH_PYTHON が診断に無い"
+    assert os.environ["PATH"] in msg, "PATH が診断に無い"
+
+
+def test_main_import_error_is_blocking_with_diagnostics(tmp_path, monkeypatch, capsys):
+    """jsonschema 不在は skip されず blocking のまま (fail-closed の維持)。"""
+    _write_contract(tmp_path, "anyp", _valid_contract())
+    fake = _write_fake_validator(tmp_path, {"anyp": _checks(**{"PKG-003": "pass"})})
+    _wire(monkeypatch, tmp_path, fake, ["anyp"])
+    monkeypatch.setattr(MOD, "REPO_ROOT", tmp_path)
+    monkeypatch.setitem(sys.modules, "jsonschema", None)
+
+    rc = MOD.main()
+    err = capsys.readouterr().err
+
+    assert rc == 1
+    assert "package-contract schema 違反 1 件 (blocking)" in err
+    assert sys.executable in err
+    assert "resolve-python.sh" in err, "同じ python を解決する仕組みへの導線が無い"
+
+
+# ---- 再 exec: 直接起動された経路でも run-ci-checks と同じ python に揃える ----
+
+def test_reexec_is_noop_when_jsonschema_importable(monkeypatch):
+    """依存が揃っていれば resolver を呼ばない (無用な subprocess / exec を発生させない)。"""
+    def _boom(*a, **k):  # pragma: no cover - 呼ばれたら失敗
+        raise AssertionError("jsonschema がある状態で resolver を起動した")
+    monkeypatch.setattr(MOD.subprocess, "run", _boom)
+    monkeypatch.delenv(MOD.REEXEC_ENV, raising=False)
+    MOD.reexec_with_resolved_python()  # 例外なく戻ること
+
+
+def test_reexec_does_not_loop(monkeypatch):
+    """再 exec 後の子プロセスでは再解決しない (無限 exec ループを作らない)。"""
+    def _boom(*a, **k):  # pragma: no cover
+        raise AssertionError("再 exec 済みフラグを無視して再解決した")
+    monkeypatch.setattr(MOD.subprocess, "run", _boom)
+    monkeypatch.setenv(MOD.REEXEC_ENV, "1")
+    MOD.reexec_with_resolved_python()
+
+
+def test_reexec_uses_same_resolver_flags_as_run_ci_checks():
+    """hook 経路 (run-ci-checks) と直接起動経路で同じ interpreter が選ばれること。
+
+    flags がずれると required/preferred の差で別 python が選ばれ、sl6o と同型の
+    「経路によって結果が違う」が再発する。
+    """
+    script = SCRIPT.read_text(encoding="utf-8")
+    ci = (ROOT / "scripts" / "run-ci-checks.sh").read_text(encoding="utf-8")
+    flags = 'hh_resolve_python3 --required "jsonschema yaml"'
+    assert flags in script, "validate-plugin-packages の resolver 呼び出し flags がずれている"
+    assert flags in ci, "run-ci-checks の resolver 呼び出し flags がずれている"
+    assert MOD.RESOLVER.is_file(), f"resolver が無い: {MOD.RESOLVER}"
 
 
 def test_main_schema_violation_is_blocking(tmp_path, monkeypatch, capsys):

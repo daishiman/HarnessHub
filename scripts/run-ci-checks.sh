@@ -15,6 +15,23 @@ FAILED=()
 PASSED=()
 WARNED=()
 
+# ── python3 の解決 (HarnessHub-sl6o) ──
+# git hook はログインシェルの rc を読まないため PATH が手動実行と異なり、jsonschema を
+# 持たない python3 が選ばれて validate-plugin-packages だけが hook 文脈で FAIL していた。
+# PATH 順ではなく「必要な依存を実際に import できるか」で選び、決定した interpreter を
+# `python3` として PATH 前置する。以降の literal `python3` 行も、make / 子 bash スクリプトも
+# 同じ interpreter に解決される。
+# 解決できない場合は無言 fallback せず FAILED に積む (fail-closed。棄却理由は lib 側が列挙)。
+# shellcheck source=scripts/lib/resolve-python.sh
+. "$ROOT/scripts/lib/resolve-python.sh"
+if RESOLVED_PYTHON="$(hh_resolve_python3 --required "jsonschema yaml")"; then
+  hh_shim_python3 "$RESOLVED_PYTHON"
+  trap 'rm -rf "${HH_PYTHON_SHIM_DIR:-}"' EXIT
+  echo "[run-ci-checks] python3 = $HH_PYTHON ($("$HH_PYTHON" -c 'import sys; print(sys.version.split()[0])'))"
+else
+  FAILED+=("resolve-python (依存を満たす python3 が見つからない)")
+fi
+
 # SS-201 段階導入: 新規拡張 plugin の既存違反は warning 止まり。
 # STRICT_ALL_PLUGINS=1 で error 化 (将来の既定化を見据えた opt-in)。
 STRICT_ALL_PLUGINS="${STRICT_ALL_PLUGINS:-0}"
@@ -55,6 +72,9 @@ run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-know
 run "lint-workflow-step-guard --self-test" python3 scripts/lint-workflow-step-guard.py --self-test
 run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-guard.py
 run "lint-ci-local-check-parity"           python3 scripts/lint-ci-local-check-parity.py
+# 必須ゲート台帳↔実 workflow の parity (HarnessHub-ic7w)。read-only・外部依存なしの静的検査で、
+# gh 認証を要する --check-protection は付けない (認証不在が緑になる経路を作らない)。
+run "validate-required-gates"              python3 scripts/validate-required-gates.py
 # tier-decision.json の生成 (writer) は CI 側だけで行い、ここでは既存記録の妥当性だけ見る。
 # 記録が 1 件も無い local では「検査 0 件」と帰属を明示して緑になる (0 件を全通過と読ませない)。
 run "validate-tier-decision"               python3 scripts/validate-tier-decision.py --scan eval-log/verification-tier

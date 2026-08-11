@@ -178,8 +178,8 @@ Workers、ストレージ binding、CI/CD、preview、監視、障害対応、�
 
 **差分追記 (2026-07-28 / `HarnessHub-vns9`)** — 詳細正本は [docs/infrastructure-spec.md](../docs/infrastructure-spec.md) §7 / §10。
 
-- **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・`coreTables` 19 テーブルとの集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。
-- **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全 19 テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
+- **backup 成果物の採否判定境界**: 採用するか否かの判定は `packages/db/scripts/verify-export-artifact.ts` (実体は `parseExportArtifact`) の**一箇所へ集約**する。workflow の shell 側に header の `grep` や行数の `awk` を置かない。判定が 2 箇所に分かれると**弱い方が先に判定する**ため、ライブラリ側の fail-closed 検査 (header 形式・`format_version`・現行 `allTables` との集合一致・header 宣言行数と実際の行数の一致) が届かなくなる。固定件数ではなく schema barrel を正本とする（2026-08-11 時点で allTables 32 / coreTables 20。`smoke_fixture_leases` は core 側 expand。metrics/build-stage は studio 側）。
+- **qa-019「復元できないバックアップを成功と数えない」の適用範囲**: この確定要件が禁じるのは*復元できない断面*の採用であって、*データ行 0 の断面*の採用ではない。migration 済みで全テーブル 0 行の断面は restore すれば同じ空 DB を再現するため採用し、`::warning::` だけ残す。旧実装はこの取り違えにより、稼働直後の本番 DB を 3 夜連続で不採用にしていた。
 
 **差分追記 (2026-07-29 / `HarnessHub-dbx6` / qa-094)**:
 

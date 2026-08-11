@@ -11,7 +11,7 @@
  */
 
 import { focusRingRule } from './focus-ring.js';
-import { mediaUp } from './tokens.js';
+import { mediaUp } from './token-names.js';
 
 /**
  * 見出しの段階。`h1` から `h4` まで token の font-size を割り当てる。

@@ -12,11 +12,16 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PUBLISH_RESUBMIT_ACTION_LABEL, type PublishRequestView } from '@harness-hub/schemas';
 import { UiProvider } from '@harness-hub/ui';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DeviceApprovalPurposeNotice } from '../../app/device/device-approval-purpose-notice.js';
+// 結果表示は `React.lazy` の内側 (HarnessHub-vwxc の bundle 分割) にある。
+// 静的に 1 度読んで module registry を温めておかないと、`lazy()` の解決が
+// 実 I/O 待ちになり、負荷の高い全体実行では findBy* の既定待ち時間を超えうる。
+// 本番の遅延読込は変えず、テスト側の待ち条件だけを決定的にするための import。
+import '../../components/publish/PublishWizardTracker.js';
 import { PublishWizard } from '../../components/publish/PublishWizard.js';
 import type { PublishJourneyPort, PublishJourneyResult } from '../../lib/publish-journey/index.js';
 import { PUBLISH_WIZARD_HREF, PUBLISH_WIZARD_LINK_LABEL } from '../../lib/routing/publish-wizard-entry.js';
@@ -68,15 +73,11 @@ function renderInUi(node: ReactNode) {
   return render(<UiProvider>{node}</UiProvider>);
 }
 
-/** ZIP を選んで送信するところまでを 1 手で行う。 */
-async function submitArchive(): Promise<void> {
-  const projectId = screen.queryByLabelText(/Project ID/);
-  if (projectId !== null) fireEvent.change(projectId, { target: { value: 'project-1' } });
-
+function selectArchive(name = 'tool.zip', byte = 4): HTMLInputElement {
   // jsdom の input.files は readonly、かつ File.arrayBuffer が無い。
   // どちらもブラウザには存在する API なので、実装側ではなくテスト側で環境差を埋める。
-  const bytes = new Uint8Array([80, 75, 3, 4]);
-  const file = new File([bytes], 'tool.zip', { type: 'application/zip' });
+  const bytes = new Uint8Array([80, 75, 3, byte]);
+  const file = new File([bytes], name, { type: 'application/zip' });
   Object.defineProperty(file, 'arrayBuffer', {
     value: async () => bytes.buffer,
     configurable: true,
@@ -84,12 +85,26 @@ async function submitArchive(): Promise<void> {
   const fileInput = screen.getByLabelText(/パッケージ \(ZIP\)/);
   Object.defineProperty(fileInput, 'files', { value: [file], configurable: true });
   fireEvent.change(fileInput);
+  return fileInput as HTMLInputElement;
+}
 
-  // jsdom は submit ボタンの click から form の submit を起こさないので、form へ直接投げる
-  const button = screen.getByRole('button', { name: '検査して公開する' });
+function submitSelectedArchive(): void {
+  const button = screen.getByRole('button', {
+    name: /検査して公開する|同じ処理を再試行する|修正した ZIP を再投入する|新しい公開要求でやり直す/,
+  });
   expect(button.getAttribute('type')).toBe('submit');
   expect((button as HTMLButtonElement).disabled).toBe(false);
+  // jsdom は submit ボタンの click から form の submit を起こさないので、form へ直接投げる
   fireEvent.submit(button.closest('form') as HTMLFormElement);
+}
+
+/** ZIP を選んで送信するところまでを 1 手で行う。 */
+async function submitArchive(): Promise<void> {
+  const projectId = screen.queryByLabelText(/Project ID/);
+  if (projectId !== null) fireEvent.change(projectId, { target: { value: 'project-1' } });
+
+  selectArchive();
+  submitSelectedArchive();
 }
 
 describe('受入 1: Web だけで投入から導入案内まで到達できる', () => {
@@ -201,6 +216,7 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
       expect.objectContaining({ projectId: 'project-created' }),
       expect.any(Object),
       { resetBeforeUpload: false },
+      expect.any(AbortSignal),
     );
   });
 
@@ -208,6 +224,89 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
     const catalog = readFileSync(join(hubRoot, 'src', 'app', '(workspace)', 'catalog', 'page.tsx'), 'utf8');
     expect(catalog).toContain('PUBLISH_WIZARD_HREF');
     expect(catalog).toContain('PUBLISH_WIZARD_LINK_LABEL');
+  });
+
+  it('WOP-W-008: ZIP 変更直後の submit は request ID だけ引き継ぎ、旧 idempotency key を使わない', async () => {
+    const submitPackage = vi.fn<PublishJourneyPort['submitPackage']>(async (_scope, _input, checkpoint) => ({
+      ok: false,
+      failure: {
+        stage: 'package',
+        status: null,
+        message: '一時的に接続できませんでした。',
+        checkpoint: { ...checkpoint, requestId: 'pubreq-partial' },
+      },
+    }));
+    const port: PublishJourneyPort = {
+      createProject: async () => {
+        throw new Error('既存 Project では呼ばれません');
+      },
+      submitPackage,
+      getRequest: async () => ({ ok: true, value: publishRequest() }),
+    };
+    renderInUi(<PublishWizard scope={SCOPE} initialProjectId="project-1" port={port} />);
+
+    await submitArchive();
+    await waitFor(() => expect(submitPackage).toHaveBeenCalledTimes(1));
+    await screen.findByText(/一時的に接続できませんでした/);
+
+    // ZIP を変えない通信再試行は、途中まで進んだ同じ checkpoint を使う。
+    submitSelectedArchive();
+    await waitFor(() => expect(submitPackage).toHaveBeenCalledTimes(2));
+    const firstCheckpoint = submitPackage.mock.calls[0]?.[2];
+    const retriedCheckpoint = submitPackage.mock.calls[1]?.[2];
+    expect(retriedCheckpoint).toMatchObject({
+      requestId: 'pubreq-partial',
+      requestKey: firstCheckpoint?.requestKey,
+      resetKey: firstCheckpoint?.resetKey,
+      packageKey: firstCheckpoint?.packageKey,
+      submitKey: firstCheckpoint?.submitKey,
+    });
+
+    await screen.findByText(/一時的に接続できませんでした/);
+    // change と submit の間で非同期処理を待たない。ref が同期更新されていなければ旧鍵が渡る。
+    selectArchive('fixed.zip', 5);
+    submitSelectedArchive();
+    await waitFor(() => expect(submitPackage).toHaveBeenCalledTimes(3));
+    const changedCheckpoint = submitPackage.mock.calls[2]?.[2];
+    expect(changedCheckpoint?.requestId).toBe('pubreq-partial');
+    expect(changedCheckpoint?.requestKey).not.toBe(retriedCheckpoint?.requestKey);
+    expect(changedCheckpoint?.resetKey).not.toBe(retriedCheckpoint?.resetKey);
+    expect(changedCheckpoint?.packageKey).not.toBe(retriedCheckpoint?.packageKey);
+    expect(changedCheckpoint?.submitKey).not.toBe(retriedCheckpoint?.submitKey);
+  });
+
+  it('WOP-W-009: submit 中の unmount は signal を中止し、遅れて返る結果を反映しない', async () => {
+    type SubmitResult = Awaited<ReturnType<PublishJourneyPort['submitPackage']>>;
+    let finishSubmit: ((result: SubmitResult) => void) | undefined;
+    const submitPackage = vi.fn<PublishJourneyPort['submitPackage']>(
+      (_scope, _input, _checkpoint, _options, _signal) =>
+        new Promise<SubmitResult>((resolve) => {
+          finishSubmit = resolve;
+        }),
+    );
+    const port: PublishJourneyPort = {
+      createProject: async () => {
+        throw new Error('既存 Project では呼ばれません');
+      },
+      submitPackage,
+      getRequest: async () => ({ ok: true, value: publishRequest() }),
+    };
+    const replaceState = vi.spyOn(window.history, 'replaceState');
+    const view = renderInUi(<PublishWizard scope={SCOPE} initialProjectId="project-1" port={port} />);
+
+    await submitArchive();
+    await waitFor(() => expect(submitPackage).toHaveBeenCalledTimes(1));
+    const signal = submitPackage.mock.calls[0]?.[4];
+    expect(signal?.aborted).toBe(false);
+
+    view.unmount();
+    expect(signal?.aborted).toBe(true);
+    const checkpoint = submitPackage.mock.calls[0]?.[2];
+    if (checkpoint === undefined || finishSubmit === undefined) throw new Error('submit が開始されていません');
+    await act(async () => {
+      finishSubmit?.({ ok: true, value: { request: publishRequest(), checkpoint } });
+    });
+    expect(replaceState).not.toHaveBeenCalled();
   });
 });
 

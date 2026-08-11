@@ -47,8 +47,8 @@ describe('DMDB-T09 users schema match (backend-spec §2.2)', () => {
     ]);
   });
 
-  it('コアドメインは exact 19 テーブルで構成される', () => {
-    expect(Object.keys(coreTables)).toHaveLength(19);
+  it('コアドメインは exact 20 テーブルで構成される', () => {
+    expect(Object.keys(coreTables)).toHaveLength(20);
     expect(Object.keys(coreTables).sort()).toStrictEqual([
       'audit_events',
       'catalog_entries',
@@ -63,6 +63,7 @@ describe('DMDB-T09 users schema match (backend-spec §2.2)', () => {
       'publisher_tokens',
       'releases',
       'session_revocations',
+      'smoke_fixture_leases',
       'target_channels',
       'tenants',
       'user_settings',

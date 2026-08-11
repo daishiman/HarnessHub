@@ -1,5 +1,5 @@
 /** ドメイン enum → 表示ラベル・配色の唯一の写像点 (frontend-spec §2.4)。画面へのラベル直書きを禁止する。 */
-import type { ColorTokenName } from '../tokens/tokens.js';
+import type { ColorTokenName } from '../tokens/token-names.js';
 import type { UiLocale } from './dictionaries.js';
 
 /** 状態チップの意味づけ。色そのものではなく「意味」を指す。 */

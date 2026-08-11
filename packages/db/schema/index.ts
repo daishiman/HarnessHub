@@ -13,6 +13,7 @@ import * as catalog from './core/catalog';
 import * as identity from './core/identity';
 import * as publish from './core/publish';
 import * as security from './core/security';
+import * as smoke from './core/smoke';
 import * as docsCms from './docs-cms/schema';
 import * as feedbackLoop from './feedback-loop/schema';
 import * as hearingIntake from './hearing-intake/schema';
@@ -28,6 +29,7 @@ export * from './core/identity';
 export * from './core/publish';
 export * from './core/scope';
 export * from './core/security';
+export * from './core/smoke';
 export * from './docs-cms/schema';
 export * from './feedback-loop/schema';
 export * from './hearing-intake/schema';
@@ -35,7 +37,7 @@ export * from './metrics-tracking/schema';
 export * from './tenant-data/schema';
 export * from './tenant-data/tombstones';
 
-/** コアドメイン 19 テーブルの一覧 (分離テスト・網羅チェックが共用する単一ソース)。 */
+/** コアドメイン 20 テーブルの一覧 (分離テスト・網羅チェックが共用する単一ソース)。 */
 export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
   Object.fromEntries(
     [
@@ -58,11 +60,12 @@ export const coreTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
       security.auditEvents,
       security.encryptionKeys,
       security.sessionRevocations,
+      smoke.smokeFixtureLeases,
     ].map((table) => [getTableName(table), table]),
   ),
 );
 
-/** Studio extension の一覧。core の 19 件とは分け、全体検査では allTables を使う。 */
+/** Studio extension の一覧。core の 20 件とは分け、全体検査では allTables を使う。 */
 export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze(
   Object.fromEntries(
     [

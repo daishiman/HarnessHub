@@ -1,0 +1,17 @@
+{
+  "artifact": "scripts/validate-required-gates.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 86,
+    "notes": "台帳↔workflow の job 単位 parity を fail-closed に検査。paths filter 付き required 化を hard violation にし、protection 未適用を INCOMPLETE として成功と混同しない。gh 認証を要する --check-protection は CI 既定から外し fail-open を避ける。減点: branch protection 適用自体は未実装で台帳宣言に留まる。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety"
+  ]
+}

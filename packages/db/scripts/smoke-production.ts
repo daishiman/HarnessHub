@@ -6,16 +6,16 @@
 //
 // 本番へ書く行は専用テナント (slug: smoke-<ulid>) に閉じ、既定では検証後に削除する。
 // releases と audit_events は immutable 契約のため汎用 CRUD を持たない (repository/crud.ts の
-// GENERIC_CRUD_FORBIDDEN)。後片付けだけはリポジトリ層を迂回して drizzle の delete を直接使い、
-// 迂回範囲をスモークテナントの tenant_id 等値条件に限定する。--keep は DB 検証行だけを保持し、
-// R2 の使い捨て検証 object は蓄積を避けるため常に削除する。
+// GENERIC_CRUD_FORBIDDEN)。後片付けは専用 lease を確認する smoke probe に閉じ、publish → identity の
+// 順序と tenant_id 等値条件を強制する。--keep は DB 検証行だけを保持し、R2 の使い捨て検証 object は
+// 蓄積を避けるため常に削除する。
 
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { applyDdlStatements, splitMigrationSql } from '../backup/ddl';
 import { parseExportArtifact } from '../backup/export';
 import { restoreControlPlane, verifyAuditChain } from '../backup/index';
@@ -25,13 +25,18 @@ import { createPackageRegistry, type R2BucketLike } from '../registry/index';
 import { createAuditRepo } from '../repository/audit';
 import { sha256Hex } from '../repository/bytes';
 import { createTargetChannelsRepo } from '../repository/channels';
+import {
+  createHearingSmokeDbProbe,
+  createPublishSmokeDbProbe,
+  createSmokeFixtureLifecycle,
+  normalizeSmokeRunId,
+  parseSmokeFixtureTtlMinutes,
+  type SmokeFixtureLifecycle,
+} from '../repository/composition';
 import { createScopedCrud } from '../repository/crud';
 import { createReleasesRepo } from '../repository/releases';
-import { createTenantsRepo } from '../repository/tenants';
 import { isUlid, newUlid } from '../repository/ulid';
-import { releases, targetChannels } from '../schema/core/catalog';
-import { tenants } from '../schema/core/identity';
-import { auditEvents } from '../schema/core/security';
+import { releases } from '../schema/core/catalog';
 import { createRepositoryContext } from '../src/context';
 import type { RepositoryContext } from '../src/types';
 
@@ -150,16 +155,24 @@ async function checkConnection(adapter: TursoAdapter): Promise<CheckResult> {
 async function checkUlid(
   adapter: TursoAdapter,
   slug: string,
+  lifecycle: SmokeFixtureLifecycle,
 ): Promise<{ readonly result: CheckResult; readonly context: RepositoryContext }> {
-  const tenant = await createTenantsRepo(adapter).create({ slug, name: 'P13 smoke', plan: 'free' });
+  // DB smoke も hearing / coverage / publish と同じ lease 登録 transaction を使う。
+  // tenant を作ってから別 transaction で lease を足す隙間を作ると、間の runner 消失で回収不能になる。
+  const tenant = await createHearingSmokeDbProbe(adapter).createTenantFixture({
+    slug,
+    memberIdpSubject: `db-smoke-member-${slug}`,
+    workerIdpSubject: `db-smoke-worker-${slug}`,
+    lifecycle,
+  });
   return {
     result: {
       id: 'S2',
       name: 'ULID PK 発行',
-      ok: isUlid(tenant.id) && tenant.id.length === 26,
-      detail: { tenantId: tenant.id, ulid: isUlid(tenant.id) },
+      ok: isUlid(tenant.tenantId) && tenant.tenantId.length === 26,
+      detail: { tenantId: tenant.tenantId, ulid: isUlid(tenant.tenantId) },
     },
-    context: createRepositoryContext({ tenantId: tenant.id }),
+    context: createRepositoryContext({ tenantId: tenant.tenantId }),
   };
 }
 
@@ -329,21 +342,28 @@ async function checkExportDryRun(adapter: TursoAdapter, workDir: string): Promis
   };
 }
 
-/** スモークテナントの残留行を削除する (--keep 指定時は呼ばない)。 */
+/** スモークテナントを共通の publish → identity 順で削除する (--keep 指定時は呼ばない)。 */
 async function cleanup(adapter: TursoAdapter, tenantId: string): Promise<Record<string, unknown>> {
-  const db = adapter.client;
-  await db.delete(auditEvents).where(eq(auditEvents.tenantId, tenantId));
-  await db.delete(releases).where(eq(releases.tenantId, tenantId));
-  await db.delete(targetChannels).where(eq(targetChannels.tenantId, tenantId));
-  await createTenantsRepo(adapter).deleteById(tenantId);
-  const left = await db.all<{ c: number }>(
-    sql`select (select count(*) from ${tenants} where ${tenants.id} = ${tenantId})
-             + (select count(*) from ${releases} where ${releases.tenantId} = ${tenantId})
-             + (select count(*) from ${targetChannels} where ${targetChannels.tenantId} = ${tenantId})
-             + (select count(*) from ${auditEvents} where ${auditEvents.tenantId} = ${tenantId}) as c`,
-  );
-  const remaining = Number(left[0]?.c ?? -1);
-  return { tenantId, remainingRows: remaining, clean: remaining === 0 };
+  const publish = await createPublishSmokeDbProbe(adapter).cleanupPublishTenant(tenantId);
+  if (!publish.clean) {
+    return { tenantId, remainingRows: publish.remainingRows, clean: false, identityAttempted: false };
+  }
+  const identity = await createHearingSmokeDbProbe(adapter).cleanupTenant(tenantId);
+  return {
+    tenantId,
+    remainingRows: publish.remainingRows + identity.remainingRows,
+    clean: publish.clean && identity.clean,
+    identityAttempted: true,
+  };
+}
+
+function smokeRunId(): string {
+  const runId = process.env.GITHUB_RUN_ID?.trim();
+  if (runId) {
+    const attempt = process.env.GITHUB_RUN_ATTEMPT?.trim() || '1';
+    return normalizeSmokeRunId(`gha-${runId}-${attempt}`);
+  }
+  return normalizeSmokeRunId(`local-${Date.now().toString(36)}-${newUlid().toLowerCase()}`);
 }
 
 async function main(): Promise<number> {
@@ -365,11 +385,16 @@ async function main(): Promise<number> {
 
   const workDir = mkdtempSync(join(tmpdir(), 'p13-smoke-'));
   const adapter = createTursoClient({ url, authToken: process.env.TURSO_AUTH_TOKEN });
+  const lifecycle = createSmokeFixtureLifecycle({
+    runId: smokeRunId(),
+    kind: 'database',
+    ttlMinutes: parseSmokeFixtureTtlMinutes(process.env.HUB_SMOKE_FIXTURE_TTL_MINUTES),
+  });
   const checks: CheckResult[] = [];
   let cleanupReport: Record<string, unknown> = { skipped: true };
   try {
     checks.push(await checkConnection(adapter));
-    const { result, context } = await checkUlid(adapter, `smoke-${newUlid().toLowerCase()}`);
+    const { result, context } = await checkUlid(adapter, `smoke-${newUlid().toLowerCase()}`, lifecycle);
     checks.push(result);
     try {
       checks.push(await checkReleaseImmutable(adapter, context));

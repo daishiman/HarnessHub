@@ -1,0 +1,61 @@
+# production smoke の runner が force-cancel / 消失した場合に残る fixture の独立回収を試行する。
+# ci.yml の同一 job `if: always()` は best-effort であり、runner 自体が無くなれば実行されない。
+name: production-smoke-fixture-sweeper
+
+on:
+  schedule:
+    # 既定 TTL 30 分に対し cron の設定間隔は 15 分。GitHub Actions の schedule は遅延し得るため、
+    # 15 分は回収時間の上限や SLA ではない。期限後、次の deploy に依存せず実行機会ごとに再試行する。
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+# repository 内容の checkout 以外に GitHub API 権限は要らない。DB への権限は既存 TURSO_* だけ。
+permissions:
+  contents: read
+
+concurrency:
+  group: production-smoke-fixture-sweeper
+  # 実行中 sweeper を新しい schedule で殺すと回収不能経路を自分で再現するため、直列に待たせる。
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  sweep:
+    name: 期限切れ production smoke fixture 回収
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      - name: production DB 資格情報 preflight
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          [ -n "$TURSO_DATABASE_URL" ] || { echo "::error::TURSO_DATABASE_URL が未設定"; exit 1; }
+          [ -n "$TURSO_AUTH_TOKEN" ] || { echo "::error::TURSO_AUTH_TOKEN が未設定"; exit 1; }
+      - name: 期限切れ fixture を publish → identity 順で回収
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          # ci.yml の best-effort cleanup と同じ冪等 entrypoint。schedule 固有の削除実装を持たない。
+          pnpm --filter @harness-hub/hub exec tsx scripts/smoke-production-publish.ts \
+            --sweep --report artifacts/smoke-fixture-sweep.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-fixture-sweep-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/smoke-fixture-sweep.json
+          if-no-files-found: warn

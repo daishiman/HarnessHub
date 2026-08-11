@@ -173,3 +173,10 @@ ui-ux・testing-qa・dev-workflow・infrastructure に章固有の deep card を
 ## 2026-08-10 rubric 自動生成提案の durable handoff
 
 2026-08-06 の rubric 更新提案を追跡可能な履歴へ保存し、採否未判断の 25 件と旧 worktree 絶対 path の集計キー問題を Beads `HarnessHub-lzfs` / dev-graph `issue-rubric-proposal-20260806-review` / draft PR #688 へ引き継いだ。提案保存や draft PR は human triage の完了を意味しない。製品仕様と rubric 本体は変更せず、`system-spec/index.md` の実装 writeback 索引から `specs/` 追補と受領書へ到達できるようにした。層別判断と検証は [最終レビュー兼仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-11 required-check 台帳と tier 未配線の明示
+
+- `required-check-ledger.json` + `validate-required-gates.py` で必須ゲート候補と実 workflow の parity を機械検査する (`HarnessHub-ic7w`)。branch protection は未適用のまま `INCOMPLETE` を区別する。
+- verification tier の 9 gate は `wiring_state=unwired` を明示し、部分切替による偽の完成を拒否する (`HarnessHub-xcl3`)。
+- pre-push の jsonschema 誤判定は `resolve-python.sh` 再 exec で塞ぐ (`HarnessHub-sl6o`)。
+- 受領は [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。

@@ -2,7 +2,7 @@
 //   pnpm --filter @harness-hub/db exec tsx scripts/verify-export-artifact.ts --file <artifact.jsonl>
 //
 // 検証の実体は parseExportArtifact に委ねる。あちらは header の形式・format_version・
-// coreTables 19 テーブルとの集合一致・header の行数と実際の行数の一致まで fail-closed で見るため、
+// allTables 29 テーブルとの集合一致・header の行数と実際の行数の一致まで fail-closed で見るため、
 // 「接続先の schema が異なる」「migration 未適用でテーブルが無い」は必ず落ちる。
 // workflow 側で header を grep したり行数を awk で数えたりすると、この検査より弱いものを
 // 二重に持つことになり、しかも弱い方が先に判定してしまうので、判定はここに一本化する。

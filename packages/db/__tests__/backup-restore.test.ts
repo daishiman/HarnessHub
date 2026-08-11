@@ -285,13 +285,21 @@ describe('vns9 export 成果物の採否 (verify-export-artifact CLI)', () => {
 });
 
 describe('P13 production migration / smoke CLI', () => {
-  const runCli = (script: string, args: string[], env: NodeJS.ProcessEnv = process.env) =>
-    execFileSync(process.execPath, ['--import', 'tsx', script, ...args], {
+  const runCli = (script: string, args: string[], env: NodeJS.ProcessEnv = process.env) => {
+    const result = spawnSync(process.execPath, ['--import', 'tsx', script, ...args], {
       cwd: join(import.meta.dirname, '..'),
       encoding: 'utf8',
       env,
       stdio: ['ignore', 'pipe', 'pipe'],
     });
+    if (result.error !== undefined) throw result.error;
+    if (result.status !== 0) {
+      throw new Error(
+        `${script} exited ${result.status ?? 'without status'}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
+      );
+    }
+    return result.stdout;
+  };
 
   it('migration は dry-run → 初回適用 → 再適用を台帳どおり冪等に処理する', () => {
     const dbPath = join(workDir, 'p13-migration.db');
@@ -302,15 +310,16 @@ describe('P13 production migration / smoke CLI', () => {
     // 0004 顧客持ち込み OAuth client の lifecycle / 0005 documents (docs-cms) /
     // 0006 tenant-data-retention (封筒暗号化拡張と tombstone 台帳) /
     // 0007 feedback/builds (feedback-loop) /
-    // 0008 metrics-tracking (metrics_events/metrics_rollups) と build-pipeline-board (build_stage_events)
+    // 0008 metrics-tracking + build-pipeline-board /
+    // 0009 production smoke fixture lease 台帳
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 9, applied: 0, pending: 9 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 10, applied: 0, pending: 10 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 9 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 10 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 9, appliedAfter: 9 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 10, appliedAfter: 10 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

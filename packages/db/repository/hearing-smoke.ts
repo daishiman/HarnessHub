@@ -13,12 +13,13 @@
  * 本番 Worker の HTTP endpoint をそのまま通すので、token の真正性は本番実装が保証する。
  */
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, lte, or } from 'drizzle-orm';
 
 import { builds } from '../schema/builds/schema';
 import { idpConnections, tenants, users, userWorkspaces, workspaces } from '../schema/core/identity';
 import { deviceAuthorizations, publisherTokens } from '../schema/core/publish';
 import { auditEvents } from '../schema/core/security';
+import { smokeFixtureLeases } from '../schema/core/smoke';
 import { documents } from '../schema/docs-cms/schema';
 import { feedbacks } from '../schema/feedback-loop/schema';
 import { aiJobs, displayCodeCounters, hearingSheets, tenantCoefficients } from '../schema/hearing-intake/schema';
@@ -27,6 +28,7 @@ import { RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
+import { normalizeSmokeRunId, type SmokeFixtureLifecycle, type SmokeTenantSweepCandidate } from './smoke-lifecycle';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -80,7 +82,20 @@ export interface HearingSmokeDbProbe {
     readonly workerIdpSubject: string;
     /** 渡したときだけ provider-admin を 1 名作る。既定では作らない (最小権限の fixture を保つ)。 */
     readonly providerAdminIdpSubject?: string;
+    /** tenant と同じ transaction で専用 lease 台帳へ登録する。production fixture は省略不可。 */
+    readonly lifecycle: SmokeFixtureLifecycle;
   }): Promise<HearingSmokeTenantFixture>;
+  /**
+   * 専用 lease 台帳を持つ使い捨て tenant のうち、いま回収してよいものを列挙する。
+   *
+   * `finally` が完走しない中断 (cancel-in-progress / runner 強制終了) の後でも、これだけが
+   * 残骸を一意に特定する経路になる。lease が無い tenant は候補にしない。期限内でも
+   * `runId` 一致なら候補にするので、自分の run の後始末は待たずに行える。
+   */
+  listSweepableTenants(input: {
+    readonly now: number;
+    readonly runId?: string;
+  }): Promise<readonly SmokeTenantSweepCandidate[]>;
   /**
    * `pending` の device 認可を `approved` へ進める (承認画面の代行)。
    * status が pending のままのときだけ遷移する CAS で、二重承認を作らない。
@@ -111,6 +126,9 @@ export interface HearingSmokeDbProbe {
 }
 
 const SMOKE_ISSUER_PREFIX = 'https://hearing-smoke.invalid/';
+// OIDC には使わない fixture だが、日次 export/restore の暗号断面検査を壊さないよう
+// 保存形式だけは本物と同じ `{version}:{iv}:{ciphertext}:{tag}` にする。固定値なので資格情報ではない。
+const SMOKE_NON_CREDENTIAL_CIPHERTEXT = '1:AAAAAAAAAAAAAAAA:AA==:AAAAAAAAAAAAAAAAAAAAAA==';
 
 function transactional(adapter: CoreAdapter) {
   if (!isTransactionalAdapter(adapter)) {
@@ -139,9 +157,17 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
           await txDb.insert(tenants).values({
             id: tenantId,
             slug: input.slug,
+            // 表示名は人間向けのまま保つ。物理削除 authority は下の専用 lease 行だけ。
             name: 'P13 hearing smoke',
             plan: 'free',
             status: 'active',
+            createdAt: now,
+          });
+          await txDb.insert(smokeFixtureLeases).values({
+            tenantId,
+            runId: normalizeSmokeRunId(input.lifecycle.runId),
+            kind: input.lifecycle.kind,
+            expiresAt: input.lifecycle.expiresAt,
             createdAt: now,
           });
           await txDb.insert(idpConnections).values({
@@ -151,7 +177,7 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
             // OIDC 認可要求はこの値では成立しないため、cleanup 前に外部から悪用できない。
             issuerUrl: `${SMOKE_ISSUER_PREFIX}${input.slug}`,
             clientId: `hearing-smoke-${input.slug}`,
-            clientSecretEnc: 'hearing-smoke:not-a-credential',
+            clientSecretEnc: SMOKE_NON_CREDENTIAL_CIPHERTEXT,
             scopes: 'openid email profile',
             credentialMode: 'customer_google',
             allowedWorkspaceDomains: null,
@@ -220,6 +246,33 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
       );
 
       return { tenantId, tenantSlug: input.slug, workspaceId, memberUserId, workerUserId, providerAdminUserId };
+    },
+
+    async listSweepableTenants(input) {
+      if (!Number.isSafeInteger(input.now) || input.now < 0) {
+        throw new RepositoryError('invalid-context', `smoke fixture sweep の now が不正です (${input.now})`);
+      }
+      const runId = input.runId === undefined ? undefined : normalizeSmokeRunId(input.runId);
+      // inner join が重要。tenant の名前・slug が smoke らしく見えても、専用 lease が無ければ
+      // 物理削除候補にはならない。期限切れか同一 run だけを DB 述語で絞る。
+      const rows = await db
+        .select({
+          tenantId: smokeFixtureLeases.tenantId,
+          slug: tenants.slug,
+          runId: smokeFixtureLeases.runId,
+          kind: smokeFixtureLeases.kind,
+          expiresAt: smokeFixtureLeases.expiresAt,
+        })
+        .from(smokeFixtureLeases)
+        .innerJoin(tenants, eq(tenants.id, smokeFixtureLeases.tenantId))
+        .where(
+          runId === undefined
+            ? lte(smokeFixtureLeases.expiresAt, input.now)
+            : or(lte(smokeFixtureLeases.expiresAt, input.now), eq(smokeFixtureLeases.runId, runId)),
+        );
+      const candidates = rows as SmokeTenantSweepCandidate[];
+      // 古い残骸から消す。途中で打ち切られても、より長く残っている行が先に片付く。
+      return candidates.sort((left, right) => left.expiresAt - right.expiresAt);
     },
 
     async approveDeviceAuthorization(input) {
@@ -310,6 +363,25 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
       await guardedWrite(adapter, () =>
         transactional(adapter).transaction(async (tx) => {
           const txDb = tx.client as CoreDb;
+          const [lease] = await txDb
+            .select({ tenantId: smokeFixtureLeases.tenantId })
+            .from(smokeFixtureLeases)
+            .where(eq(smokeFixtureLeases.tenantId, tenantId))
+            .limit(1);
+          if (lease === undefined) {
+            const [tenant] = await txDb
+              .select({ id: tenants.id })
+              .from(tenants)
+              .where(eq(tenants.id, tenantId))
+              .limit(1);
+            // 既に前回の同一 transaction が完了していた場合だけ冪等 success。実在 tenant に
+            // lease が無ければ通常データなので、1 行も消す前に fail-closed で拒否する。
+            if (tenant === undefined) return;
+            throw new RepositoryError(
+              'invalid-context',
+              `tenant ${tenantId} は smoke fixture lease を持たないため物理削除できません`,
+            );
+          }
           await txDb.delete(aiJobs).where(eq(aiJobs.tenantId, tenantId));
           await txDb.delete(hearingSheets).where(eq(hearingSheets.tenantId, tenantId));
           // feedback-loop / docs-cms を smoke が触るようになったので後始末対象へ含める
@@ -329,6 +401,9 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
           await txDb.delete(workspaces).where(eq(workspaces.tenantId, tenantId));
           await txDb.delete(idpConnections).where(eq(idpConnections.tenantId, tenantId));
           await txDb.delete(tenants).where(eq(tenants.id, tenantId));
+          // tenant を含む全 identity 行が消えたあと、最後に authority を消す。transaction 途中で
+          // 失敗すれば lease も tenant も残るため、次の sweeper が同じ tenant を再試行できる。
+          await txDb.delete(smokeFixtureLeases).where(eq(smokeFixtureLeases.tenantId, tenantId));
         }),
       );
 
@@ -359,6 +434,10 @@ export function createHearingSmokeDbProbe(adapter: CoreAdapter): HearingSmokeDbP
         db.select({ id: feedbacks.id }).from(feedbacks).where(eq(feedbacks.tenantId, tenantId)),
         db.select({ id: documents.id }).from(documents).where(eq(documents.tenantId, tenantId)),
         db.select({ id: builds.id }).from(builds).where(eq(builds.tenantId, tenantId)),
+        db
+          .select({ id: smokeFixtureLeases.tenantId })
+          .from(smokeFixtureLeases)
+          .where(eq(smokeFixtureLeases.tenantId, tenantId)),
       ]);
       const remaining = remainders.reduce((total, rows) => total + rows.length, 0);
       return { remainingRows: remaining, clean: remaining === 0 };

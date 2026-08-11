@@ -560,3 +560,43 @@ jobs:
             exit 1
           fi
           echo "Worker を直前 version へ戻した。DB は前進したまま (expand-only のため旧 Worker と互換)"
+      # 中断された run が本番へ残した使い捨て fixture の回収 (HarnessHub-aauo)。
+      #
+      # smoke 本体は自分で作った行を `finally` で消すが、`cancel-in-progress` や runner の強制終了では
+      # **プロセスが finally へ到達しない**。その経路で残った tenant は、専用 lease 台帳の
+      # (tenant_id / run_id / kind / expires_at) から特定し、この step で可能な範囲を即時回収する。
+      # `if: always()` は同じ runner が後続 step を評価できる場合だけ動く best-effort。force-cancel や
+      # runner 消失では評価自体が無いので、runner と独立した再試行経路を定期
+      # `smoke-fixture-sweeper.yml` が担う（schedule の時刻・遅延上限は保証されない）。
+      #
+      # 対象は lease 付きの使い捨て tenant のうち **期限切れか自分の run のもの**だけ。実行中の別 run の
+      # fixture は期限内なので触らない。削除順は smoke 本体と同じ publish → identity で、publish 行を
+      # 消し切れない tenant の identity は消さない (所属を辿れない孤児を作らないため)。
+      # 再試行は上限付きで、残った tenant は ::error:: annotation と非 0 終了で表に出す。
+      #
+      # **ロールバック判定より後ろに置く**のが要点。ここを前に置くと、fixture が消えなかっただけで
+      # `if: failure()` が成立し、健全な新 version を巻き戻してしまう。回収の失敗は本番データの
+      # 後始末の問題であって、配信中の Worker が壊れている証拠ではない。
+      - name: 中断 run が残した本番 smoke fixture の best-effort 回収
+        id: smoke_sweep
+        if: always()
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: |
+          set -uo pipefail
+          mkdir -p artifacts
+          # DB 資格情報が無い run は本番へ fixture を作れてもいない。回収対象が存在し得ないので、
+          # ここを赤くしても回収の失敗ではなく設定不足を二重に報告するだけになる。
+          if [ -z "${TURSO_DATABASE_URL}" ] || [ -z "${TURSO_AUTH_TOKEN}" ]; then
+            echo "::warning::TURSO_* が未設定のため fixture 回収を実行しない (この run は本番へ fixture を作っていない)"
+            exit 0
+          fi
+          pnpm --filter @harness-hub/hub exec tsx scripts/smoke-production-publish.ts \
+            --sweep --report artifacts/smoke-fixture-sweep.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-fixture-sweep
+          path: artifacts/smoke-fixture-sweep.json
+          if-no-files-found: warn

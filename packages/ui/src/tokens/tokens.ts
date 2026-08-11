@@ -1,14 +1,27 @@
 /** design tokens (色・余白・タイポ・表示密度) の正本。文字色は 4.5:1 を token 段階で保証する。 */
 import { AA_CONTRAST_NON_TEXT, AA_CONTRAST_TEXT, contrastRatio } from './contrast.js';
 import { focusRingRule } from './focus-ring.js';
+import {
+  breakpointTokens,
+  type ColorTokenName,
+  colorVariableName,
+  type Density,
+  kebab,
+  type ThemeName,
+  themeNames,
+} from './token-names.js';
 
-export const themeNames = ['light', 'dark'] as const;
-export type ThemeName = (typeof themeNames)[number];
-/** 利用者の選択値。`auto` は OS 設定 (`prefers-color-scheme`) に追従する。 */
-export type ThemePreference = ThemeName | 'auto';
-
-export const densityNames = ['comfortable', 'compact'] as const;
-export type Density = (typeof densityNames)[number];
+// 名前だけの葉モジュール (token-names.ts) を正本として再輸出する。公開 API の形は従来どおり
+// `@harness-hub/ui` から同じ識別子で参照できる (HarnessHub-vwxc の client bundle 削減)。
+export type { BreakpointName, ColorTokenName, Density, ThemeName, ThemePreference } from './token-names.js';
+export {
+  breakpointTokens,
+  chartSeriesTokens,
+  colorVariableName,
+  densityNames,
+  mediaUp,
+  themeNames,
+} from './token-names.js';
 
 /**
  * light の色 token。
@@ -63,9 +76,7 @@ const lightColors = {
   neutralSoft: '#f0f0f0',
   /** フォーカスリング。色のみに依存しないよう輪郭形状も併用する */
   focusRing: '#0958d9',
-} as const;
-
-export type ColorTokenName = keyof typeof lightColors;
+} as const satisfies Record<ColorTokenName, string>;
 
 const darkColors: Record<ColorTokenName, string> = {
   bg: '#14161a',
@@ -151,44 +162,6 @@ export const densityTokens: Record<Density, { controlHeight: string; rowPaddingY
   compact: { controlHeight: '36px', rowPaddingY: '6px', gap: '8px' },
 };
 
-/**
- * 折り返し幅 (breakpoint)。
- *
- * 数値 (px) で持つのは、CSS カスタムプロパティが `@media` の条件式では評価されない
- * (`@media (min-width: var(--x))` は無効) ため。実際の分岐は base-css.ts が生成時に
- * この値を literal として埋め込む。ここを唯一の正本にすることで、
- * 「CSS のあちこちに 768px が直書きされ、片方だけ変わる」状態を防ぐ。
- *
- * 段階の根拠:
- *   sm 480 … 縦持ちスマホ (360px) と横持ち/小型タブレットの境目
- *   md 768 … ナビゲーションを横へ出せるようになる幅 (SidebarLayout の 2 カラム化点)
- *   lg 1120 … Container standard の最大幅。これ以上広げても行長が伸びるだけ
- */
-export const breakpointTokens = {
-  sm: 480,
-  md: 768,
-  lg: 1120,
-} as const;
-export type BreakpointName = keyof typeof breakpointTokens;
-
-/** `breakpointTokens` から `@media` の前置きを作る。閾値の直書きを消すための唯一の入口。 */
-export function mediaUp(name: BreakpointName): string {
-  return `@media (min-width: ${breakpointTokens[name]}px)`;
-}
-
-/**
- * チャートの系列色の順序 (固定)。
- * 色だけに依存させないため、部品側で形状・ラベルを必ず併記する。
- */
-export const chartSeriesTokens = [
-  'primary',
-  'accentAi',
-  'infoCyan',
-  'warning',
-  'magenta',
-  'success',
-] as const satisfies readonly ColorTokenName[];
-
 /** コントラスト検証の 1 項目。 */
 export interface ContrastRequirement {
   foreground: ColorTokenName;
@@ -256,13 +229,6 @@ export function checkContrastRequirements(theme?: ThemeName): ContrastCheckResul
     }),
   );
 }
-
-/** 色 token に対応する CSS カスタムプロパティ名。 */
-export function colorVariableName(token: ColorTokenName): string {
-  return `--hh-color-${token.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)}`;
-}
-
-const kebab = (key: string): string => key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`);
 
 /** `{ fontSizeMd: '16px' }` を `  --hh-font-size-md: 16px;` の並びにする。 */
 function declarations(entries: Record<string, string>, namespace?: string): string {
