@@ -5,7 +5,7 @@ beads_ids: [HarnessHub-bmhq]
 dev_graph_node_id: issue-hub-local-dev-runtime-reliability-20260811
 task_node_id: SYS-HUB-FOUNDATION-P13
 spec_impact: reflected
-status: verified_with_external_browser_followup
+status: verified
 updated: 2026-08-11
 ---
 
@@ -26,8 +26,8 @@ updated: 2026-08-11
 自動検証対象と、既存 PR #696 の required checks は PASS し、同 PR は 2026-08-11 02:39:28 UTC に
 `main` へマージされた。本ブランチにも更新済みローカル `main` を統合した。さらに、system-spec の
 legacy QA 11件に残っていた設計適用不足も、Q&A 原文を変えない正規 writer で解消した。
-HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、in-app Browser の接続一覧が空のため
-未受領であり、未実施を PASS とは表現しない。
+最後に、一回限り・loopback 限定のログイン URL で HttpOnly Cookie を通常ブラウザへ設定し、
+`/sheets` の3件表示をユーザー目視とサーバーログの両方で受領した。
 
 ## 中学生向けの説明
 
@@ -35,8 +35,8 @@ HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、in-app B
 途中で壊れたときに自分で立ち直れず、別の保存箱を開く危険もありました。
 
 今回は、保存箱の場所を一つに決め、見張り役を置き、壊れたら自動で起こし、正しいデータが
-3件見えるところまで一つのコマンドで確認できるようにしました。最後に人のブラウザで同じ
-3件が見える確認だけを、未完了として正直に残しています。
+3件見えるところまで一つのコマンドで確認できるようにしました。最後に人のブラウザでも同じ
+3件が見えることを確認し、すべての確認を終えました。
 
 ## 技術的な変更
 
@@ -61,7 +61,7 @@ stdout / stderr 受信時にも rotation するよう修正し、focused test �
 | `architecture/` | launchd → supervisor → sqld / Next.js と検査境界を記録 |
 | `features/` | closed feature に post-closeout 追補として登録 |
 | `tasks/` | exact-13 を増やさず P13 後の writeback として登録 |
-| `docs/` | 操作、復旧、Cookie、残る browser gate を runbook に記録 |
+| `docs/` | 操作、復旧、Cookie、browser gate と受入結果を runbook・受領書に記録 |
 
 ## 検証結果
 
@@ -79,7 +79,7 @@ stdout / stderr 受信時にも rotation するよう修正し、focused test �
 | Dev Graph system-spec live trial | PASS: `20260811T123120-wt5-c19v`、介入0回 |
 | lifecycle restart / status / authenticated smoke | PASS: health 200、sheets 3件、同一 DB 維持 |
 | child process crash recovery | PASS: sqld / Next.js とも supervisor が再起動 |
-| actual in-app browser `/sheets` | PENDING: browser session 不在。CLI/API PASS から推測しない |
+| actual browser `/sheets` | PASS: `/sheets` 200、API 200、ユーザー目視で3件表示を確認 |
 
 `system-spec` の current transition と loop coverage は PASS。既存11件については、単一 writer に
 `set-qa-design-applications` を追加し、question / answer / source を維持したまま章固有の原則・理由・
@@ -110,5 +110,5 @@ sqld・Hub health 200、認証付き sheets 3件が PASS した。
 
 ## 残課題
 
-- in-app Browser が接続されたセッションで Cookie を登録し、`/sheets` の3件表示を確認する。今回の再試行は `agent.browsers.list() = []` で実行不能だった。
-- 新しい PR は作成しない。既存 PR #696 の merge commit `753405fa6944a4527c9726e8c631503506a13d05` とローカル `main` の一致、本ブランチへの統合を受領済み。Beads / dev-graph は実ブラウザ確認だけを未完了として維持する。
+- 本タスクの残課題なし。通常ブラウザの `/sheets` で3件表示を受領し、Beads と Dev Graph を完了状態へ同期した。
+- 新しい PR は作成しない。既存 PR #696 の merge commit `753405fa6944a4527c9726e8c631503506a13d05` とローカル `main` の一致、本ブランチへの統合を受領済み。

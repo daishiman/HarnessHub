@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1514,
+  "graph_revision": 1515,
   "nodes": [
     {
       "acceptance": [
@@ -56674,12 +56674,15 @@
       "classification_confidence": 0.99,
       "classification_reason": "実測でlocal health 503、一時相対DB、supervisor不在、middleware重複警告、browser未確認を同一ローカル開発ライフサイクル欠陥として確認した。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-11T05:43:38Z",
+        "evidence_refs": [
+          "docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md",
+          "beads:HarnessHub-bmhq"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-11T05:45:02Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "73ab279d80272f5003888b65c0698ff385751386271d677b030b70590358a226",
@@ -56816,7 +56819,7 @@
         "source_version": null
       },
       "start_date": "2026-08-11",
-      "status": "active",
+      "status": "done",
       "tags": [
         "local-dev",
         "sqld",
@@ -56829,7 +56832,7 @@
       "template_version": "1.0.0",
       "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T03:58:00Z"
+      "updated_at": "2026-08-11T05:45:02Z"
     },
     {
       "acceptance": [
