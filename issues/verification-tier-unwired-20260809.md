@@ -104,3 +104,33 @@ blocking 集合の切替を入れると、判定が壊れた瞬間に検査が�
    切替を入れると、削っても縮まない step を削って検査だけ減る
 3. 切替後に「blocking 集合に居る検査が実際に走った」ことを機械検査する経路を同時に用意する
    (切替と検算はセットで入れる。片方だけ入れると被覆の主張だけが残る)
+
+## 部分対応 (2026-08-11, HarnessHub-xcl3 (3))
+
+tier の判定・記録は実装済みだが、9 gate の共通実行配線と横断検算は**未完了**である。
+一時実装では governance-check 内の軽い `contract-verification` 1 件だけを advisory に
+切り替えていたが、周回時間を支配する gate ではなく短縮効果がほぼ無い。1/9 配線を完了と
+読める状態の方が危険なため、この切替は撤回し、既存検査は blocking のまま維持した。
+
+- `scripts/required-check-ledger.json` は 9 件すべてを `wiring_state=unwired` として明示する。
+  `site: null` の有無から推測させず、「未配線」を閉じた状態として扱う。
+- `scripts/validate-required-gates.py` は `wired/unwired` 以外、または unwired と配線済み用キーの
+  混在を拒否する。
+- `scripts/validate-gate-execution.py` は未配線・別 workflow の gate を「検算対象外だから成功」
+  とせず exit 1 にする。全 gate の実行証跡を集約できるまでは完成を主張できない。
+- critical 専用 3 gate の critical 未満での語彙は `deferred` に統一する。`advisory` は
+  「今走らせるが失敗を許容」、`deferred` は「今は走らせず受け皿へ記録」であり混同しない。
+
+**前提条件 1 の確認結果**: 本番 run `31388541127` (2026-08-10 main push) で tier=`critical` の
+`tier-decision.json` が生成され、`validate-tier-decision.py` が `OK: tier-decision 適合 (検査 1 件)`
+で通過、artifact `verification-tier-gh-31388541127-1` (2,957 bytes) も保存されていた。
+記録経路が読めることは確認できたが、これは実行配線の完成を意味しない。
+
+**前提条件 2 の実測結果 (結論は反直感)**: governance-check は 98 step で全体 45〜56 秒、
+最大 step は checkout の 10 秒。時間を食っているのは hub-ci 514 秒 /
+Plugin Governance CI 293 秒 (plugin 別 pytest 155 秒 + behavior tests 93 秒) の側だった。
+**したがって governance-check 内の tier 切替に所要時間の短縮効果はほぼ無い。**
+時間短縮の投資先は harness-creator-kit-ci / plugin 別 pytest だが、本課題の編集可能範囲外である。
+次の実装では各既存実行点を共通 gate id で包み、複数 workflow の結果を 1 つの検算入力へ
+集約してから切替と検算を同時に有効化する。次回 run が無くても deferred を回収する保証も
+同時に必要であり、それまでは `wiring_state=unwired` を維持する。

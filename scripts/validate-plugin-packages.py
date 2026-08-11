@@ -29,6 +29,7 @@ package-contract schema 検証だけは fail-closed である理由 (HarnessHub-
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -54,6 +55,50 @@ CONTRACT_SCHEMA = (
 )
 
 
+RESOLVER = REPO_ROOT / "scripts/lib/resolve-python.sh"
+# 再 exec のループ防止フラグ (解決後の子プロセスでは再解決しない)。
+REEXEC_ENV = "HH_PYTHON_REEXEC"
+
+
+def reexec_with_resolved_python() -> None:
+    """jsonschema を import できないなら、依存を満たす python3 へ自分自身を渡し直す。
+
+    HarnessHub-sl6o: git hook は rc を読まないため PATH が手動実行と異なり、jsonschema を
+    持たない python3 で起動されることがある。run-ci-checks.sh 経由なら resolver が先に効くが、
+    本 script を直接叩く経路 (Makefile / 手動 / 他 hook) でも同じ解決になるよう自衛する。
+    候補選定ポリシーは scripts/lib/resolve-python.sh を SSOT として共有し、二重実装しない。
+    解決できない場合は黙って続行し、check_contract_schema が診断付きで blocking にする。
+    """
+    if os.environ.get(REEXEC_ENV) == "1" or not RESOLVER.is_file():
+        return
+    try:
+        import jsonschema  # type: ignore # noqa: F401
+        return
+    except ImportError:
+        pass
+    try:
+        proc = subprocess.run(
+            # flags は run-ci-checks.sh と一致させる (経路差で別 interpreter を選ばない)
+            [
+                "bash", "-c",
+                f'. "{RESOLVER}"; hh_resolve_python3 --required "jsonschema yaml"',
+            ],
+            capture_output=True, text=True, timeout=60,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return
+    resolved = proc.stdout.strip()
+    if proc.returncode != 0 or not resolved or resolved == sys.executable:
+        return
+    print(
+        f"[plugin-package-check] jsonschema を持たない python ({sys.executable}) で起動されたため "
+        f"{resolved} で再実行します (scripts/lib/resolve-python.sh)",
+        file=sys.stderr,
+    )
+    os.environ[REEXEC_ENV] = "1"
+    os.execv(resolved, [resolved, str(Path(__file__).resolve()), *sys.argv[1:]])
+
+
 def discover_plugins() -> list[str]:
     return sorted(
         p.parent.parent.name
@@ -75,9 +120,21 @@ def check_contract_schema() -> list[str]:
     try:
         import jsonschema  # type: ignore
     except ImportError:
+        # HarnessHub-sl6o: 「hook からだけ落ちる」を再調査なしで切り分けられるよう、どの
+        # interpreter が選ばれたかを診断証跡として必ず出す。同じ PATH の別 python3 なら
+        # import できる、というのが実際の根本原因だった。
+        # 違反は 1 件のまま (診断は続き行)。件数を診断行数で水増ししない。
         return [
-            "jsonschema 未インストールのため package-contract schema 検証を実行できません "
-            "(`python3 -m pip install -r requirements-dev.txt`)"
+            "\n    ".join([
+                "jsonschema 未インストールのため package-contract schema 検証を実行できません "
+                "(`python3 -m pip install -r requirements-dev.txt`)",
+                f"選ばれた python: sys.executable={sys.executable}",
+                f"version: {sys.version.split()[0]}",
+                f"HH_PYTHON={os.environ.get('HH_PYTHON') or '(未設定)'}",
+                f"PATH={os.environ.get('PATH', '')}",
+                "hook と手動実行で結果が違う場合は PATH 差が原因。scripts/run-ci-checks.sh は "
+                "scripts/lib/resolve-python.sh で依存を満たす python3 を選び直す",
+            ])
         ]
 
     validator = jsonschema.Draft202012Validator(
@@ -98,6 +155,7 @@ def check_contract_schema() -> list[str]:
 
 
 def main() -> int:
+    reexec_with_resolved_python()  # 成功時は戻らない (os.execv)
     if not VALIDATOR.is_file():
         print(f"ERROR: validator が見つかりません: {VALIDATOR}", file=sys.stderr)
         return 1

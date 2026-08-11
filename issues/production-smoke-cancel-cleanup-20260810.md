@@ -17,8 +17,8 @@ status: "active"
 depends_on: []
 related_nodes: ["issue-publish-smoke-unwired-20260808","issue-production-smoke-coverage-gaps-20260808","spec-production-coverage-smoke"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/scripts/smoke-production-publish.ts","apps/hub/scripts/smoke-production-coverage.ts","packages/db/repository"]
-purpose: "cancel-in-progress による強制終了でも本番DBへ試験tenantを恒久残存させない。"
-goal: "プロセス内 finally が実行されない中断経路でも、runを特定して期限内に安全に回収できる状態にする。"
+purpose: "cancel-in-progress による強制終了後も独立回収を再試行し、本番DBへ試験tenantが恒久残存するリスクを下げる。"
+goal: "プロセス内 finally が実行されない中断経路でも、runを特定してTTL経過後の独立実行機会に安全な回収を再試行できる状態にする。"
 scope_in: ["run ID/期限付きfixture","if: always() cleanupまたは定期sweeper","publish先行cleanup","中断経路の回帰検査"]
 scope_out: ["production smokeの検査内容変更","長命cleanup資格情報の追加","通常finally cleanupの削除"]
 acceptance: ["runner強制終了後も期限付きfixtureを一意に列挙できる","publish領域を消し切るまでidentity tenantを消さない","cleanup失敗を観測可能にし再試行上限を持つ","通常終了とcancel相当の正負検査が通る"]
@@ -51,7 +51,8 @@ implementation_readiness: {"checked_at":"2026-08-10T11:41:26Z","missing_sections
 
 ## 概要
 
-GitHub Actionsのcancel-in-progressでrunnerが強制終了しても、production smokeのfixtureを期限内に回収する。
+GitHub Actionsのcancel-in-progressでrunnerが強制終了しても、production smokeのfixtureを
+TTL経過後の独立した実行機会で安全に回収できるようにする。回収時刻の上限は保証しない。
 
 ## 背景と問題
 
@@ -59,11 +60,19 @@ GitHub Actionsのcancel-in-progressでrunnerが強制終了しても、productio
 
 ## 現在の挙動
 
-cleanupはrunner内のfinallyだけにあり、cancel後の独立回収経路がない。
+ローカル実装では次の2経路を追加した。
+
+- 同一deploy job末尾の`if: always()`は、runnerが後続stepを評価できる場合だけ動くbest-effort回収と明記する。
+- `.github/workflows/smoke-fixture-sweeper.yml`をcron設定15分間隔と手動起動で独立実行し、次のdeployが無くても期限切れfixtureの回収を再試行する。GitHub Actionsのscheduleは遅延し得るため、15分は回収SLAや遅延上限ではない。
+
+物理削除の正本は`tenants.name`やslugの文字列markerではなく、expand-only migrationで追加する
+`smoke_fixture_leases`（tenant ID / run ID / kind / expiry）である。fixture作成transactionでtenantと
+leaseを同時に登録し、leaseがない既存tenantはcleanup対象にしない。
 
 ## 期待する挙動
 
-run IDと期限で残存fixtureを特定し、依存順を守って回収できる。
+run IDと期限で残存fixtureを特定し、publish領域を先に消し切ってからidentityとleaseを消す。
+TTLは1以上の整数だけを受け付け、不正値は既定値へ丸めずfail-closedで停止する。
 
 ## 再現手順またはユースケース
 
@@ -75,7 +84,8 @@ smokeがtenantを作成した後にjobをcancelし、後続cleanupまたはsweep
 
 ## スコープ
 
-run ID、TTL、always cleanupまたはsweeper、監視を対象とする。検査シナリオ自体は変えない。
+run ID、fixture kind、TTL、best-effort always cleanup、独立sweeper、監視を対象とする。
+database・hearing・coverage・publishの検査シナリオ自体は変えず、全fixtureを同じlifecycle契約へ入れる。
 
 ## 関連グラフ
 
@@ -85,11 +95,14 @@ Beads 課題は `HarnessHub-aauo`。通常終了時の cleanup 修正とは分�
 
 ## 受入条件
 
-- cancel後のfixture列挙と期限内回収
+- cancel後のfixture列挙と、TTL経過後の独立実行機会での回収再試行（専用lease台帳だけを削除authorityにする。時刻上限は保証しない）
 - publish成功後だけidentity削除
 - bounded retryと失敗観測
+- database・hearing・coverage・publish全入口のpresence/behavior検査PASS
 - 通常/cancel正負検査PASS
 
 ## 検証証跡
 
-Actions runとcleanup残数をartifactへ残す。
+ローカルではmigration lineage、leaseの正負検査、全入口のpresence検査、publish-first cleanup、
+独立workflowの最小secret検査を実行する。production Actions runとTTL経過後のcleanup残数artifactは、
+migration適用後の外部実走で確定する。

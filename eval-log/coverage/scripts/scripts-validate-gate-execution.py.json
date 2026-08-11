@@ -1,0 +1,17 @@
+{
+  "artifact": "scripts/validate-gate-execution.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 84,
+    "notes": "未配線 gate を検算対象外の成功にしない fail-closed 設計。wiring_state と実行証跡の対応を検査し、部分配線の偽完成を拒否。減点: cross-workflow 集約入力が未完のため本番切替前に exit 1 を維持する運用依存。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety"
+  ]
+}

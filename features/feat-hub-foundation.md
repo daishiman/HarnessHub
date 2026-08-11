@@ -165,6 +165,6 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 ## 2026-08-10 テーマ CSS 静的成果物と bundle 警告帯
 
 - root layout は `@harness-hub/ui/tokens.css` を 1 回 import する（inline theme CSS を廃止）。
-- G13 は 95% 警告帯を持ち、構造的 headroom 不足の残件は `HarnessHub-vwxc` が追跡する。
+- G13 は 95% 警告帯を持ち、構造的 headroom は `HarnessHub-vwxc`（2026-08-11 で catalog 全 route 95% 未満を達成）。
 - 受入の再計測・navigation VRT は `HarnessHub-2fo1` / `HarnessHub-preq` を参照する。
 

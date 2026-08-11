@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /** feat-publish-pipeline P13 production smoke の実行手順。 */
 
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -22,19 +22,93 @@ import {
   greenZip,
   HELP,
   loadConfig,
+  loadSweepConfig,
   PUBLISH_SCOPE,
   secretZip,
   sha256,
+  smokeFixtureLifecycle,
   smokeId,
+  smokeRunId,
+  sweepSmokeTenants,
 } from './smoke-production-publish-support.js';
+
+/**
+ * 中断された run が残した使い捨て fixture の回収。
+ *
+ * `cancel-in-progress` や runner の強制終了では main() の `finally` が完走しない。この経路は
+ * 通常 cleanup の代わりではなく**独立した回収**で、CI からは `if: always()` の step が呼ぶ。
+ * 対象は専用 lease 台帳へ登録された tenant だけ (期限切れ、または自分の run が作ったもの)。
+ */
+async function sweep(reportPath: string | null): Promise<void> {
+  const config = loadSweepConfig();
+  const adapter = createTursoClient({ url: config.databaseUrl, authToken: config.databaseToken });
+  const publish = createPublishSmokeDbProbe(adapter);
+  const identity = createHearingSmokeDbProbe(adapter);
+  const runId = smokeRunId();
+  try {
+    const candidates = await identity.listSweepableTenants({ now: Date.now(), runId });
+    const outcome = await sweepSmokeTenants({
+      candidates,
+      cleanupPublish: (tenantId) => publish.cleanupPublishTenant(tenantId),
+      cleanupIdentity: (tenantId) => identity.cleanupTenant(tenantId),
+      // 試行のたびに annotation を出す。「消えたが 2 回かかった」も観測できないと、
+      // 回収経路が徐々に壊れていく過程が最後の失敗まで見えない。
+      onAttempt: (event) => {
+        process.stdout.write(
+          `::warning::smoke fixture 回収の試行 ${event.attempt}/${event.maxAttempts} が未完了 ` +
+            `(tenant=${event.tenantId} slug=${event.slug}): ${event.errors.join(' / ')}\n`,
+        );
+      },
+    });
+    const report = {
+      status: outcome.failed === 0 ? 'pass' : 'fail',
+      mode: 'sweep',
+      run_id: runId,
+      candidates: outcome.candidates,
+      swept: outcome.swept,
+      failed: outcome.failed,
+      max_attempts: outcome.maxAttempts,
+      results: outcome.results,
+    };
+    const serialized = `${JSON.stringify(report, null, 2)}\n`;
+    if (reportPath !== null) await writeFile(reportPath, serialized, 'utf8');
+    process.stdout.write(serialized);
+    if (outcome.failed > 0) {
+      const failed = outcome.results.filter((result) => !result.swept);
+      process.stdout.write(
+        `::error::使い捨て smoke fixture を回収できませんでした (${outcome.failed} tenant): ` +
+          `${failed.map((result) => `${result.tenantId}(${result.errors.join(' / ')})`).join(' , ')}\n`,
+      );
+      throw new Error(`production smoke fixture sweep failed: ${outcome.failed} tenant(s) remain`);
+    }
+  } finally {
+    adapter.close();
+  }
+}
+
+/** `--report <path>` の値。指定が無ければ null (stdout だけに出す)。 */
+function reportPathArg(argv: readonly string[]): string | null {
+  const index = argv.indexOf('--report');
+  if (index === -1) return null;
+  const value = argv[index + 1];
+  if (value === undefined || value.startsWith('--')) throw new Error('--report にはファイルパスが必要です');
+  return value;
+}
 
 async function main(): Promise<void> {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
     process.stdout.write(HELP);
     return;
   }
+  if (process.argv.includes('--sweep')) {
+    await sweep(reportPathArg(process.argv));
+    return;
+  }
 
   const config = loadConfig();
+  // tenant と同じ transaction で専用 lease を登録する。中断で finally が動かなくても、
+  // 利用者向けの名前や slug を削除権限にせず残骸を一意に列挙できる。
+  const lifecycle = smokeFixtureLifecycle('publish');
   const adapter = createTursoClient({ url: config.databaseUrl, authToken: config.databaseToken });
   const db = createPublishSmokeDbProbe(adapter);
   // tenant / workspace /利用者と device 承認は identity 側の probe が持つ (hearing / coverage smoke と共用)。
@@ -56,6 +130,7 @@ async function main(): Promise<void> {
       slug: `pb-smoke-${config.suffix}`,
       memberIdpSubject: `pb-member-${config.suffix}`,
       workerIdpSubject: `pb-publisher-${config.suffix}`,
+      lifecycle,
     });
     tenantIds.push(fixture.tenantId);
     // publish 系 action は `minRole: 'owner'`。`owner` は DB の列値ではなく資源との関係から
@@ -131,6 +206,11 @@ async function main(): Promise<void> {
     assert(stableAfterRejection === v1Release, 'S3: secret ZIP 後に旧 stable v1 が変化しました');
     const rejectedRow = await db.findRequest(repositoryContext, rejectedRequest);
     assert(rejectedRow?.releaseId === null, 'S3: secret ZIP の PublishRequest に Release が結び付きました');
+    // needs_fix は partial UNIQUE index 上では非終端で、この channel を占有し続ける。
+    // 409 検証用の別 request を ready にする前に API 経由で draft へ戻し、
+    // 本番と同じ状態遷移を通して直列化 slot を明示的に解放する。
+    const rejectedCancelled = await api('POST', `/api/v1/publish/${rejectedRequest}/cancel`, { expected: 200 });
+    assert(rejectedCancelled.body.status === 'draft', 'S3 cleanup: rejected request cancel が draft を返しません');
 
     // 409 直列化: 先行 request を ready fixture にして、後続 submit を拒否させる。
     const blockerRequest = await createRequest();
@@ -313,7 +393,13 @@ async function main(): Promise<void> {
       Object.assign(cleanup, outcome.remainingRows);
       cleanupErrors.push(...outcome.errors);
     }
-    observed.cleanup = { tenants: tenantIds.length, remaining_rows: cleanup };
+    observed.cleanup = {
+      tenants: tenantIds.length,
+      remaining_rows: cleanup,
+      // 通常終了ではここで消え切る。中断された run の分は `--sweep` が同じ順序で回収する。
+      run_id: lifecycle.runId,
+      fixture_expires_at: lifecycle.expiresAt,
+    };
     try {
       adapter.close();
     } catch (error) {

@@ -64,6 +64,13 @@
       "when": 1786349965682,
       "tag": "0008_metrics-tracking-and-build-stage-events",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1786375120959,
+      "tag": "0009_smoke-fixture-leases",
+      "breakpoints": true
     }
   ]
 }

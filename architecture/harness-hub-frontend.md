@@ -256,8 +256,9 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 
 - **publish status ポーリング** (`HarnessHub-h2pe`): `unauthorized` / `forbidden` / `fatal` は初回応答後に即時停止する。hidden 中は request を送らず、可視性だけを理由に止めた pollable state は `visibilitychange` の visible 復帰で一度だけ再開する。判定正本は `shouldContinuePolling()` / `shouldResumeOnVisible()` で、S01 / S03 は同じ純関数を共有する。
 - **テーマ CSS** (`HarnessHub-2fo1`): root layout の inline `buildThemeCss()` / `buildBaseCss()` を廃止し、`@harness-hub/ui/tokens.css` を 1 回 import する。生成正本は `buildTokenCssArtifact()`、成果物一致は `css-artifact.test.ts` が fail-closed に守る。CPU 12x 再計測と navigation VRT 差分は未完了で `HarnessHub-preq` が阻害する。
-- **G13 警告帯** (`HarnessHub-5vlq`): First Load JS が予算 120 KiB の 95% 以上を使った page route を超過前に警告する。警告は G13 を失敗させず、120 KiB 超過だけを失敗とする。`/catalog/[projectId]` と `/catalog/publish` の構造的余裕回復は `HarnessHub-vwxc` へ分離した。
-- 正本: [frontend-spec](../docs/frontend-spec.md) §8、[UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[dual-catalog ADR](../docs/features/feat-dual-catalog-web/architecture-decision-record.md)。
+- **G13 警告帯** (`HarnessHub-5vlq`): First Load JS が予算 120 KiB の 95% 以上を使った page route を超過前に警告する。警告は G13 を失敗させず、120 KiB 超過だけを失敗とする。
+- **catalog headroom** (`HarnessHub-vwxc`, 2026-08-11): (1) `token-names.ts` を依存ゼロの葉 module へ切り出し contrast 計算を client chunk から外す、(2) PublishWizard の `next/dynamic` を `React.lazy` へ、(3) 状態追跡 (`PublishWizardTracker`) と既定 HTTP adapter を公開要求後まで遅延読込する。production build 実測で `/catalog` 116,458 / `/catalog/[projectId]` 116,437 / `/catalog/publish` 115,874 / `/catalog/releases` 115,138 bytes（予算 122,880、いずれも 95% 未満）。ZIP 変更直後の checkpoint 競合は同期 helper で解消。navigation VRT 基準ずれは `HarnessHub-preq`。
+- 正本: [frontend-spec](../docs/frontend-spec.md) §8、[UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[dual-catalog ADR](../docs/features/feat-dual-catalog-web/architecture-decision-record.md)、[2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。
 
 ## 2026-08-10 Metrics / Build Pipeline MVP 差分
 

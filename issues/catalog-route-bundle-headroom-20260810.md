@@ -93,3 +93,66 @@ Beads 課題は `HarnessHub-vwxc`。`HarnessHub-5vlq` から blocking dependency
 ## 検証証跡
 
 起票時の production build は `/catalog/[projectId]` 118,565 / 122,880 バイト（残余4,315）、`/catalog/publish` 122,359 / 122,880 バイト（残余521）、警告13 route。`apps/hub/artifacts/client-bundle-report.json` と G13 CIログへ残す。
+
+## 分割前後の実測 (2026-08-10, HarnessHub-vwxc 対応)
+
+同一 commit ベースの production build を 3 回行い、`node apps/hub/scripts/check-client-bundle.mjs --report ...`
+で First Load JS の gzip byte を計測した。予算は 122,880 バイト、警告帯は 95%（116,736 バイト）。
+
+| route | 対応前 | 手当1後 | 手当2後 | 最終 (手当3後) | 差分 | 最終消費率 |
+| --- | --- | --- | --- | --- | --- | --- |
+| /catalog/publish | 122,196 | 120,161 | 119,234 | 115,625 | -6,571 | 94.1% |
+| /catalog | 118,458 | 116,422 | 116,422 | 116,458 | -2,000 | 94.8% |
+| /catalog/[projectId] | 118,436 | 116,401 | 116,401 | 116,437 | -1,999 | 94.8% |
+| /catalog/releases | 117,137 | 115,102 | 115,102 | 115,138 | -1,999 | 93.7% |
+
+手当と、その効果の帰属:
+
+1. **`packages/ui/src/tokens/token-names.ts` の切り出し（全 route 一律 -2,033〜-2,036）**
+   部品は `internal/style.ts` 経由で `colorVariableName` と `chartSeriesTokens` しか使わないが、
+   これらが `tokens.ts` に同居していたため、同 module が top-level import する
+   `tokens/contrast.js`（WCAG 比率計算）と light/dark の色 **値** 表・`buildThemeCss` まで
+   client chunk へ到達可能になっていた。実測でも共有 chunk 内に `parseHexColor` の
+   エラーメッセージ「色は #rgb または #rrggbb 形式で指定してください」が載っていた。
+   名前だけを依存ゼロの葉 module へ降ろした結果、共有 chunk `6463` が 6,197 → 4,161 gzip。
+   全 route が同額下がるのはこの chunk が全 route の First Load に入るため。
+
+2. **`PublishWizard` の遅延読込を `next/dynamic` → `React.lazy` へ（/catalog/publish のみ -927）**
+   `(workspace)` グループで `next/dynamic` を使うのはこの 1 箇所だけで、loadable の追加ランタイム
+   （async-local-storage の shim を含む）が共有 chunk へ寄らず route chunk が全額負担していた。
+   `app/error.tsx` 群が既に記録している判断と同じ。page chunk 7,915 → 6,991 gzip。
+
+3. **状態追跡と HTTP adapter の遅延化（/catalog/publish のみ -3,609）**
+   `PublishWizardTracker.tsx` に polling の停止判定と結果表示をまとめ、公開要求が生まれてから
+   読み込む。既定 port は `lazy-publish-journey-port.ts` の委譲経由にし、fetch 境界を初回呼び出しまで
+   遅らせた。port の差し替え口（`PublishWizardProps.port`）は変えていない。
+
+戻した分割: なし（3 手当すべてが実測で効いた）。
+**採用しなかった案**: `i18n` の en 辞書を動的読込にする案（見積 -750 前後）は、上記 3 手当で
+全 catalog route が 95% 未満に入ったため入れていない。効果のない/不要な分割を残さない方針に従う。
+
+G13 正負テスト `apps/hub/tests/ci/client-bundle-budget.test.ts` は 12 件 PASS。
+`packages/ui` 382 件、`apps/hub` 1,669 件 PASS。
+
+### ZIP 変更競合の修正後実測 (2026-08-11)
+
+ZIP 変更直後の submit が旧 checkpoint を読む競合を、実行時依存ゼロの同期 helper と
+archive/checkpoint の同時差し替えで修正した後に production build を再実行した。
+`/catalog/publish` は 115,874 / 122,880 バイト（94.3%、残余 7,006 バイト）で、
+競合修正前の最終値 115,625 バイトから +249 バイト。95% 警告帯（116,736 バイト）未満を維持した。
+`PublishWizardTracker` と既定 HTTP adapter の遅延読込境界は変更していない。
+
+### 付随して見つかった別件 (本課題の変更が原因ではない)
+
+VRT (`vitest --config vitest.browser.config.ts`) の `catalog-navigation` light/dark 2 件が
+「基準 1024x1739 / 実際 1024x1936」で失敗する。原因は本課題の変更ではなく、基準画像の更新漏れ:
+
+- 基準画像 `apps/hub/tests/browser/__vrt__/{darwin,linux}/catalog-navigation-*.png` の最終更新は `2209f8ad` (#683)。
+- その後 `c2705286` (#692) が `tests/browser/catalog/entries-shell.tsx` へ `WorkspaceSwitcher` の
+  見本 (navigation group) を 18 行追加し、`packages/ui/src/shell/ShellHeader.tsx` も変更しているが、
+  基準画像は再生成されていない。navigation ページが 1 見本分 (197px) 縦に伸びたのはこのため。
+- 本課題の変更は token の **名前** を葉 module へ移しただけで、色・寸法の値も `mediaUp` も
+  マークアップも 1 バイトも変えていないため、描画高さには影響しない。
+
+基準画像の再生成は本課題の受入条件外かつ scope_out (非 catalog route の個別最適化に相当) なので、
+ここでは行わず別課題として扱う。

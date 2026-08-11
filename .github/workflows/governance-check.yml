@@ -31,9 +31,9 @@ jobs:
       - name: guard change category (P0/P1 proposal gate)
         run: python3 scripts/guard-change-category.py --base origin/main --bypass-cooldown
       # ── 検証 tier の算出と記録 (dev-workflow.md【1】【4】【5】/ HarnessHub-xcl3) ──
-      # 本 step は tier を「記録する」ところまでを担い、下流 step の実行/非実行はまだ
-      # 切り替えない。切替を先に入れると、判定が壊れた瞬間に検査が黙って消える。
-      # 記録が安定して読めるようになってから blocking 集合の切替へ進む。
+      # 本 step は tier を「記録する」ところまでを担う。9 gate の実体は複数 workflow と
+      # local hook に分散しており、この job 内の軽い 1 gate だけを advisory にしても周回は
+      # 短くならない。全 gate の共通配線と横断検算が揃うまでは強制力を切り替えない。
       #
       # --deferred-issue は常設の受け皿 HarnessHub-sy31
       # (issues/deferred-verification-backlog-20260809.md)。critical 未満の tier で
@@ -151,6 +151,12 @@ jobs:
       # 意図的に走らせないものは、正確な呼び出し形と理由を allowlist へ宣言する。
       - name: "lint CI-local check parity (repo-root Python 検査の引数形被覆)"
         run: python3 scripts/lint-ci-local-check-parity.py
+        continue-on-error: false
+      # 「CI に job はあるが required check に登録されていない」空洞を台帳で可視化し、
+      # 台帳が実 workflow から乖離した瞬間に落とす (HarnessHub-ic7w)。--check-protection は
+      # gh の認証を要するため CI 既定では付けず、台帳↔workflow の突合と方針の一貫性のみ検査する。
+      - name: "validate required gates (必須ゲート台帳↔実 workflow の parity・未登録ゲートの列挙)"
+        run: python3 scripts/validate-required-gates.py
         continue-on-error: false
       # per-repo の .notion-config.json は gitignore 対象で CI には存在しない。
       # notion_config.require_or_skip() は config 不在を fail-closed (exit 2) で落とすため、

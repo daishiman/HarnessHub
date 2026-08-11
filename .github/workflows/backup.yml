@@ -63,7 +63,7 @@ jobs:
           pnpm --filter @harness-hub/db exec tsx scripts/export-control-plane.ts \
             --url "$TURSO_DATABASE_URL" --out "$artifact"
           # 成果物の採否は verify-export-artifact へ一本化する (実体は parseExportArtifact)。
-          # header の形式・coreTables 19 テーブルとの集合一致・header の行数と実際の行数の一致まで
+          # header の形式・現行 allTables 29 テーブルとの集合一致・header の行数と実際の行数の一致まで
           # fail-closed で見るため、schema が異なる接続先や migration 未適用は必ず落ちる。
           # ここで header を grep したり行数を awk で数えたりすると、ライブラリより弱い検査が
           # 先に判定してしまう。旧実装の「データ行 0 なら失敗」がまさにそれで、migration 済みだが

@@ -19,6 +19,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CatalogPublishStatus } from '../../components/catalog/CatalogPublishStatus.js';
 import { PublishWizard } from '../../components/publish/PublishWizard.js';
+// S01 の状態追跡は `React.lazy` で別 chunk に居る (HarnessHub-vwxc)。ここで静的にも読んでおくと
+// module registry に載るため、`lazy()` の解決が microtask だけで済み fake timer 下でも act() で待てる。
+// 追跡側の配線を測る検査なので、読み込み待ちを「再開しない」と誤読させないためのお膳立て。
+import '../../components/publish/PublishWizardTracker.js';
 import type { CatalogFailure, CatalogPort, CatalogResult, CatalogScope } from '../../lib/catalog/index.js';
 import type { PublishJourneyPort } from '../../lib/publish-journey/index.js';
 
@@ -95,6 +99,22 @@ async function mount(port: CatalogPort): Promise<void> {
       createElement(UiProvider, null, createElement(CatalogPublishStatus, { scope: SCOPE, publishId: 'pub_1', port })),
     );
   });
+}
+
+/**
+ * `React.lazy` の import を解決し切る。
+ *
+ * S01 の状態追跡は公開要求が生まれてから読み込む別 chunk に居る (HarnessHub-vwxc)。
+ * その解決は timer ではなく microtask 上で進むので、fake timer を進めても待てない。
+ * 解決前に可視性を動かすと「listener がまだ付いていないだけ」を「再開しない」と
+ * 誤読するため、追跡側を評価する検査は必ずここを通してから測る。
+ */
+async function flushLazyBoundaries(): Promise<void> {
+  for (let i = 0; i < 5; i += 1) {
+    await act(async () => {
+      await Promise.resolve();
+    });
+  }
 }
 
 /** 予約済み timer をすべて発火させ、その結果生じた fetch も解決させる。 */
@@ -176,6 +196,8 @@ describe('DC-POLL-LC / 可視性の停止と再開', () => {
         ),
       );
     });
+    // 追跡 chunk が載るまでは listener が存在しない。ここを待たずに測ると常に 1 のまま通る
+    await flushLazyBoundaries();
     expect(calls).toBe(1);
 
     setVisibility('hidden');

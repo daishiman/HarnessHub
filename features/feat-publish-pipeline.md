@@ -124,3 +124,9 @@ publish → 検査 → Ready → Publishing → Published が atomic に完走�
 - 新しい長命 secret は追加しない。publish cleanup 完了後だけ identity tenant を削除する。
 - cancel 後の独立回収は `HarnessHub-aauo`。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md)。
 
+## 2026-08-11 smoke fixture lease と独立 sweeper
+
+- `smoke_fixture_leases` を expand-only migration で追加し、全 smoke 入口を共通 lifecycle へ接続した (`HarnessHub-aauo`)。
+- deploy job の best-effort `if: always()` と schedule/manual sweeper で中断後回収を再試行する。回収 SLA は保証しない。
+- publish smoke は rejected `needs_fix` を cancel して channel slot を解放してから 409 競合検査へ進む (`HarnessHub-pf5o`)。
+- 本番 migration 適用・force-cancel 実走証跡は残件。受領は [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。

@@ -75,3 +75,37 @@ branch protection という 1 箇所に一元化されるが、本 repo では�
 
 protection を先に敷くと既存の赤いゲート (例: validate-graph-schema の全体 exit 1) で全 PR が
 止まる。台帳側で「必須にするゲート」を明示的に選ぶ設計にすること。
+
+## 部分対応 (2026-08-11, HarnessHub-ic7w)
+
+台帳と静的 parity 検査までは実装したが、branch protection は未適用である。したがって
+「required 宣言済み」は将来の登録候補を表すだけで、現時点の merge を強制しない。
+本課題は完了ではなく、外部設定を適用して初めて強制力が成立する。
+
+- `scripts/required-check-ledger.json` — 必須ゲート候補と登録実態の台帳。
+  `protection_policy.mode = "no-branch-protection"` を明示し、required 宣言済みだが
+  未登録の job には**理由文字列を必須**にした。workflow 一覧、check context、PR trigger、
+  paths filter は実 YAML から導出し、静的情報の二重正本を持たない。
+- `scripts/validate-required-gates.py` — 台帳↔実 workflow の parity 検査。
+  台帳に無い job・workflow から消えた job・理由の無い未登録を fail-closed で落とす。
+  `--check-protection` は gh 認証を要するため CI 既定では付けない
+  (認証不在で実 protection を検証したことにしない)。静的検査の成功時も
+  `INCOMPLETE: branch protection 未適用` を出し、merge 強制の未完了を区別する。
+- `.github/workflows/governance-check.yml` と `scripts/run-ci-checks.sh` (local hard gate) の
+  両方へ validator を配線。read-only・外部依存なしなので local 側も blocking で置ける。
+
+required status check の単位は step ではなく **check run = job** である点を検査器に反映した。
+paths filter 付き job を required 化すると対象外 PR が永久 pending になるため、これを
+hard violation にしてある (実際 `ci.yml` の `build & test (G2-G9 required status checks)` は
+名前で required を自称しているが paths filter 付きで required 化できず、台帳では
+`advisory` + 理由付きにしている)。
+
+実測 (2026-08-11): `gh api repos/:owner/:repo/branches/main/protection` は
+`404 Branch not protected`。workflow 13 / job 16 / required 宣言 3、うち required check 未登録 3
+(`change-category-guard` / `dev-pipeline-lint` / `verify`)。この 3 件が
+「protection を敷く際に最初に登録する集合」として台帳に固定されている。
+テストは `tests/scripts-root/test_root__validate_required_gates.py`。
+
+**未了**: 実際の branch protection 適用そのもの。
+外部設定への破壊的変更のため本セッションでは実行していない。適用時は
+`python3 scripts/validate-required-gates.py --check-protection` で台帳との一致を確認する。

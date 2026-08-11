@@ -1,0 +1,17 @@
+{
+  "artifact": "scripts/build-tier-gate-env.py",
+  "type": "scripts",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 85,
+    "notes": "tier-decision から env を一方向に生成し、selector 二重起動を避ける。unwired gate を静かに実行しない。減点: 下流 job への配線は HarnessHub-xcl3 未完で、生成物は将来の共通実行点向け。"
+  },
+  "reviewed_by": "workflow-code-review",
+  "checked": [
+    "soundness",
+    "responsibility",
+    "error-handling",
+    "side-effect-safety"
+  ]
+}

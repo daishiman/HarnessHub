@@ -18,11 +18,19 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
+import {
+  createSmokeFixtureLifecycle,
+  normalizeSmokeRunId,
+  parseSmokeFixtureTtlMinutes,
+  type SmokeFixtureKind,
+  type SmokeFixtureLifecycle,
+  type SmokeTenantSweepCandidate,
+} from '@harness-hub/db';
 import type { DeviceGrant } from './smoke-production-hearing-support.js';
+import { greenZip, secretZip, sha256, smokeId } from './smoke-production-publish-zip.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..', '..');
@@ -31,8 +39,19 @@ const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 /** publish 系 action (`publish.write` / `channel.promote` など) が要求する scope。 */
 const PUBLISH_SCOPE = 'publish:write';
 
+/** 1 tenant あたりの回収試行上限。無限に粘ると job の cancel 猶予を食い潰す。 */
+const DEFAULT_SWEEP_MAX_ATTEMPTS = 3;
+const SWEEP_ATTEMPT_LIMIT = 5;
+const SWEEP_RETRY_BASE_MS = 500;
+
 const HELP = `Usage:
   pnpm --filter @harness-hub/hub run smoke:publish-production
+  pnpm --filter @harness-hub/hub run smoke:publish-production -- --sweep [--report <path>]
+
+--sweep runs only the interrupted-run recovery path: it lists disposable fixtures registered in
+the dedicated lease ledger that are expired (or belong to this run) and deletes publish rows before
+the identity tenant. It needs no HUB_PUBLIC_URL / CLOUDFLARE_API_TOKEN because it performs no HTTP
+or R2 access.
 
 Required environment:
   HUB_PUBLIC_URL           production Hub origin (for example https://harness-hub.example.workers.dev)
@@ -75,9 +94,38 @@ interface TenantCleanupOutcome {
   readonly identityAttempted: boolean;
 }
 
-interface ZipEntry {
-  readonly path: string;
-  readonly content: string;
+/** sweep だけを回すときの最小設定。HTTP も R2 も使わないので DB 資格情報しか要求しない。 */
+interface SweepConfig {
+  readonly databaseUrl: string;
+  readonly databaseToken: string;
+}
+
+/** 1 tenant の回収結果。`swept=false` の行が残留 = 観測すべき失敗。 */
+interface SweepTenantResult {
+  readonly tenantId: string;
+  readonly slug: string;
+  readonly runId: string;
+  readonly kind: SmokeFixtureKind;
+  readonly expiresAt: number;
+  readonly attempts: number;
+  readonly swept: boolean;
+  readonly errors: readonly string[];
+}
+
+interface SweepAttemptEvent {
+  readonly tenantId: string;
+  readonly slug: string;
+  readonly attempt: number;
+  readonly maxAttempts: number;
+  readonly errors: readonly string[];
+}
+
+interface SweepOutcome {
+  readonly candidates: number;
+  readonly swept: number;
+  readonly failed: number;
+  readonly maxAttempts: number;
+  readonly results: readonly SweepTenantResult[];
 }
 
 function required(name: string): string {
@@ -106,105 +154,102 @@ function loadConfig(): SmokeConfig {
   };
 }
 
-function smokeId(kind: string): string {
-  return `smoke_${kind}_${Date.now().toString(36)}_${randomBytes(4).toString('hex')}`;
+/** sweep 専用の設定。通常実行の `loadConfig` と分けるのは、掃除に R2 / HTTP の資格情報が要らないため。 */
+function loadSweepConfig(): SweepConfig {
+  return { databaseUrl: required('TURSO_DATABASE_URL'), databaseToken: required('TURSO_AUTH_TOKEN') };
 }
 
-function sha256(bytes: Uint8Array): string {
-  return createHash('sha256').update(bytes).digest('hex');
-}
-
-function concat(parts: readonly Uint8Array[]): Uint8Array {
-  const out = new Uint8Array(parts.reduce((sum, part) => sum + part.byteLength, 0));
-  let offset = 0;
-  for (const part of parts) {
-    out.set(part, offset);
-    offset += part.byteLength;
+/**
+ * この実行を一意に指す run id。
+ *
+ * GitHub Actions では `run_id` + `run_attempt` を使う。再実行 (attempt) は別プロセスなので、
+ * attempt を混ぜないと再実行が前 attempt の生存中の fixture を自分のものとみなして消しうる。
+ * CI 外では実行ごとの乱数にする — 手元実行の残骸を他の実行が掴まないため。
+ */
+function smokeRunId(): string {
+  const runId = process.env.GITHUB_RUN_ID?.trim();
+  if (runId) {
+    const attempt = process.env.GITHUB_RUN_ATTEMPT?.trim() || '1';
+    return normalizeSmokeRunId(`gha-${runId}-${attempt}`);
   }
-  return out;
+  return normalizeSmokeRunId(`local-${Date.now().toString(36)}-${randomBytes(4).toString('hex')}`);
 }
 
-/** packages/inspection の展開経路が受理する stored ZIP を fixture file 無しで作る。 */
-function buildZip(entries: readonly ZipEntry[]): Uint8Array {
-  const encoder = new TextEncoder();
-  const locals: Uint8Array[] = [];
-  const centrals: Uint8Array[] = [];
-  let offset = 0;
+/** 専用 lease 台帳へ保存する共通 lifecycle。TTL の無効値は既定値へ隠さず fail-closed。 */
+function smokeFixtureLifecycle(kind: SmokeFixtureKind, now: number = Date.now()): SmokeFixtureLifecycle {
+  return createSmokeFixtureLifecycle({
+    runId: smokeRunId(),
+    kind,
+    now,
+    ttlMinutes: parseSmokeFixtureTtlMinutes(process.env.HUB_SMOKE_FIXTURE_TTL_MINUTES),
+  });
+}
 
-  for (const entry of entries) {
-    const name = encoder.encode(entry.path);
-    const data = encoder.encode(entry.content);
-    const local = new Uint8Array(30 + name.byteLength + data.byteLength);
-    const localView = new DataView(local.buffer);
-    localView.setUint32(0, 0x04034b50, true);
-    localView.setUint16(4, 20, true);
-    localView.setUint32(18, data.byteLength, true);
-    localView.setUint32(22, data.byteLength, true);
-    localView.setUint16(26, name.byteLength, true);
-    local.set(name, 30);
-    local.set(data, 30 + name.byteLength);
-    locals.push(local);
+/**
+ * 中断後に残った使い捨て tenant を、publish 先行の順序を守ったまま上限付きで回収する。
+ *
+ * 再試行は「一時的な接続断」を吸収するためだけに置く。上限を持たせるのは、cancel された job に
+ * 与えられる猶予が有限で、粘り続けると回収そのものが打ち切られて何も残せないため。
+ * 上限に達しても消えなかった tenant は結果に残し、呼び出し側が観測可能な形 (annotation / 非 0 終了)
+ * で表に出す — 静かに諦めると本番へ試験データが残ったことに誰も気付けない。
+ */
+async function sweepSmokeTenants(input: {
+  readonly candidates: readonly SmokeTenantSweepCandidate[];
+  readonly cleanupPublish: (tenantId: string) => Promise<CleanupResult>;
+  readonly cleanupIdentity: (tenantId: string) => Promise<CleanupResult>;
+  readonly maxAttempts?: number;
+  readonly onAttempt?: (event: SweepAttemptEvent) => void;
+  readonly sleep?: (ms: number) => Promise<void>;
+}): Promise<SweepOutcome> {
+  const requested = input.maxAttempts ?? DEFAULT_SWEEP_MAX_ATTEMPTS;
+  const maxAttempts = Math.min(SWEEP_ATTEMPT_LIMIT, Math.max(1, Math.floor(requested)));
+  const sleep = input.sleep ?? ((ms: number) => new Promise<void>((done) => setTimeout(done, ms)));
+  const results: SweepTenantResult[] = [];
 
-    const central = new Uint8Array(46 + name.byteLength);
-    const centralView = new DataView(central.buffer);
-    centralView.setUint32(0, 0x02014b50, true);
-    centralView.setUint16(4, 0x0314, true);
-    centralView.setUint16(6, 20, true);
-    centralView.setUint32(20, data.byteLength, true);
-    centralView.setUint32(24, data.byteLength, true);
-    centralView.setUint16(28, name.byteLength, true);
-    centralView.setUint32(38, 0o100644 << 16, true);
-    centralView.setUint32(42, offset, true);
-    central.set(name, 46);
-    centrals.push(central);
-    offset += local.byteLength;
+  for (const candidate of input.candidates) {
+    let attempts = 0;
+    let errors: readonly string[] = [];
+    let swept = false;
+    while (attempts < maxAttempts) {
+      attempts += 1;
+      const outcome = await cleanupPublishThenIdentity(
+        candidate.tenantId,
+        () => input.cleanupPublish(candidate.tenantId),
+        () => input.cleanupIdentity(candidate.tenantId),
+      );
+      errors = outcome.errors;
+      // identity まで到達し、かつ両方が残数 0 を返したときだけ回収済みとみなす。
+      swept = outcome.identityAttempted && outcome.errors.length === 0;
+      if (swept) break;
+      input.onAttempt?.({
+        tenantId: candidate.tenantId,
+        slug: candidate.slug,
+        attempt: attempts,
+        maxAttempts,
+        errors,
+      });
+      if (attempts < maxAttempts) await sleep(SWEEP_RETRY_BASE_MS * attempts);
+    }
+    results.push({
+      tenantId: candidate.tenantId,
+      slug: candidate.slug,
+      runId: candidate.runId,
+      kind: candidate.kind,
+      expiresAt: candidate.expiresAt,
+      attempts,
+      swept,
+      errors,
+    });
   }
 
-  const directory = concat(centrals);
-  const end = new Uint8Array(22);
-  const endView = new DataView(end.buffer);
-  endView.setUint32(0, 0x06054b50, true);
-  endView.setUint16(8, entries.length, true);
-  endView.setUint16(10, entries.length, true);
-  endView.setUint32(12, directory.byteLength, true);
-  endView.setUint32(16, offset, true);
-  return concat([...locals, directory, end]);
-}
-
-function greenZip(version: string): Uint8Array {
-  return buildZip([
-    {
-      path: 'plugin.json',
-      content: JSON.stringify({
-        name: `production-smoke-${version}`,
-        version,
-        description: 'P13 production smoke fixture',
-        owner: 'harness-hub-smoke',
-        visibility: 'workspace',
-        summary: 'Disposable production smoke package',
-      }),
-    },
-    { path: 'skills/smoke/SKILL.md', content: `# smoke ${version}\n\nproduction smoke fixture\n` },
-  ]);
-}
-
-function secretZip(): Uint8Array {
-  // リポジトリ自体の secret scan は通し、生成した ZIP の中だけで検知対象を作る。
-  const syntheticAwsAccessKeyId = ['AKIA', '0123456789ABCDEF'].join('');
-  return buildZip([
-    {
-      path: 'plugin.json',
-      content: JSON.stringify({
-        name: 'production-smoke-secret',
-        version: '1.0.0',
-        description: 'P13 rejection fixture',
-        owner: 'harness-hub-smoke',
-        visibility: 'workspace',
-        summary: 'Must be rejected by secret scan',
-      }),
-    },
-    { path: 'skills/smoke/SKILL.md', content: `# reject\n\nAWS_ACCESS_KEY_ID=${syntheticAwsAccessKeyId}\n` },
-  ]);
+  const sweptCount = results.filter((result) => result.swept).length;
+  return {
+    candidates: input.candidates.length,
+    swept: sweptCount,
+    failed: results.length - sweptCount,
+    maxAttempts,
+    results,
+  };
 }
 
 function expectObject(value: unknown, label: string): Record<string, unknown> {
@@ -346,19 +391,24 @@ function downloadR2(bucket: string, key: string, destination: string): void {
   }
 }
 
-export type { ApiResult, SmokeConfig };
+export type { ApiResult, SmokeConfig, SweepAttemptEvent, SweepConfig, SweepOutcome, SweepTenantResult };
 export {
   apiClient,
   assert,
   cleanupPublishThenIdentity,
+  DEFAULT_SWEEP_MAX_ATTEMPTS,
   downloadR2,
   expectObject,
   expectString,
   greenZip,
   HELP,
   loadConfig,
+  loadSweepConfig,
   PUBLISH_SCOPE,
   secretZip,
   sha256,
+  smokeFixtureLifecycle,
   smokeId,
+  smokeRunId,
+  sweepSmokeTenants,
 };

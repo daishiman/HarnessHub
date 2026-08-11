@@ -96,3 +96,8 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - focused 検査: polling-contract 14 + polling-lifecycle 9 PASS。
 - 受領: [mvp-followups-20260810-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-followups-20260810-spec-reflection-receipt.md)
 
+## 2026-08-11 MVP follow-up (HarnessHub-vwxc)
+
+- catalog 全 page route の G13 を 95% 未満へ。token 葉 module + PublishWizard 遅延読込 + checkpoint 競合修正。
+- 受領: [mvp-ops-reliability-20260811-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)
+

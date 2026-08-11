@@ -115,10 +115,17 @@ tier の下流切替を先行すると検査が黙って消えるため本変更
 
 branch は `devgraph/issue-verification-evaluator-cache-20260809`、base は repository default の `main`、PR は cache 配線と下流切替が残るため draft とする。
 
+## 2026-08-11 追記 (HarnessHub-ic7w / xcl3 / sl6o)
+
+- required-check 台帳と静的 parity 検査を実装。branch protection は未適用で `INCOMPLETE` を明示。
+- tier 9 gate は `wiring_state=unwired`。部分切替は撤回。resolve-python 再 exec で hook 文脈の jsonschema 誤判定を緩和。
+- 受領: [mvp-ops-reliability-20260811-spec-reflection-receipt.md](../../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)
+
 ## Handoff
 
 - `HarnessHub-6nf1`: evaluator cache を実 evaluator 起動点へ配線する。
-- `HarnessHub-xcl3`: tier decision を下流 CI step の起動・blocking 集合へ配線する。
+- `HarnessHub-xcl3`: tier decision を下流 CI step の起動・blocking 集合へ配線する（9 gate 一括、ic7w 安定化後）。
+- `HarnessHub-ic7w`: branch protection 適用と required 3 件の登録（30 回安定 green 後）。
 - `HarnessHub-sy31`: deferred gate を定期的に消化する。
 - `HarnessHub-a0zd`: design application contract 1.1 と章別描画で解消し、system-spec-harness 542 tests PASS を確認した。
 - `HarnessHub-74mb`: hook の応答本文限定 marker 抽出と回帰 test で解消した。

@@ -26,6 +26,7 @@ import { createUserWorkspacesRepo } from '../../repository/workspaces';
 import { catalogEntries, deploymentReferences, projects } from '../../schema/core/catalog';
 import { userSettings, workspaces } from '../../schema/core/identity';
 import { deviceAuthorizations, publisherTokens, publishRequests } from '../../schema/core/publish';
+import { smokeFixtureLeases } from '../../schema/core/smoke';
 import { tenantCoefficients } from '../../schema/hearing-intake/schema';
 import { tenantDataObjects } from '../../schema/tenant-data/schema';
 import { tenantDataTombstones } from '../../schema/tenant-data/tombstones';
@@ -57,6 +58,14 @@ async function seedTenant(
   const tenants = createTenantsRepo(adapter);
   const tenant = await tenants.create({ slug, name: `Tenant ${slug}`, plan: 'free' });
   const context = createRepositoryContext({ tenantId: tenant.id });
+
+  await adapter.client.insert(smokeFixtureLeases).values({
+    tenantId: tenant.id,
+    runId: `tenant-isolation-${slug}`,
+    kind: 'database',
+    expiresAt: Date.now() + 60_000,
+    createdAt: Date.now(),
+  });
 
   const idp = createIdpConnectionsRepo(adapter, cipher);
   await idp.insert(context, {
