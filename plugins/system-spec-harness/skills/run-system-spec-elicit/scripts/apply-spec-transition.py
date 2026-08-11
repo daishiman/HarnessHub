@@ -3,7 +3,7 @@
 # name: apply-spec-transition
 # version: 0.2.0
 # purpose: spec-state の単一 writer CLI。各責務は state_transition_{matrix,foundation,knowledge}.py へ分離する。
-# inputs: [init|apply|chunk|aggregate|set-targets|set-foundation|set-decision|set-knowledge-candidate]
+# inputs: [bootstrap|init|add-category|apply|chunk|aggregate|set-targets|set-foundation|set-decision|set-knowledge-candidate|set-qa-design-applications]
 # outputs: [spec-state.json or stdout]
 # network: false
 # write-scope: spec-state.json

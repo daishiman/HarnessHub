@@ -590,7 +590,11 @@
             "OS native GUI 固有の操作性は提供しない"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-008",
@@ -631,7 +635,11 @@
             "偶然似た処理まで統合しない継続的な見極めが要る"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-011",
@@ -882,7 +890,11 @@
             "ヘッドレス環境では別の安全な資格情報経路が必要になる"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-044",
@@ -1105,7 +1117,11 @@
             "失効確認のため毎 request の参照費用が生じる"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-076",
@@ -1741,7 +1757,11 @@
             "診断可能性を保つため秘密値を出さない構造化ログが必須になる"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-162",
@@ -1768,7 +1788,11 @@
             "実装変更時に仕様根拠も更新する必要がある"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-163",
@@ -1963,7 +1987,11 @@
             "観測を増やしても secret 値自体は記録できない"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-188",
@@ -1990,7 +2018,11 @@
             "外部利用者向け応答には内部分類をそのまま露出できない"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-189",
@@ -2199,7 +2231,11 @@
             "複数層へまたがる変更は focused test だけに収まらない"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-212",
@@ -2261,7 +2297,11 @@
             "selector や cache が利用不能な場合は fail-closed で速度を失う"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-217",
@@ -2291,7 +2331,11 @@
             "回収先のない deferred を拒否する fail-closed 実装が必要になる"
           ]
         }
-      ]
+      ],
+      "design_application_provenance": {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications"
+      }
     },
     {
       "id": "qa-218",

@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {"mode": "fresh-independent-context", "id": "c19_wt5_20260811T123120_goal_evaluator"},
+  "transcript_sha256": "48f2475b36b81bcc0b73d083dd83a1e98a622934f444176e4903f2e159ee18b2",
+  "evidence_refs": [
+    "transcript.jsonl",
+    "task.md",
+    "pane.txt",
+    "poll-state.json",
+    "out/status.json",
+    "fixture-repo/.dev-graph/state/graph.json",
+    "fixture-repo/architecture/system-spec-overview.md",
+    "fixture-repo/specs/system-spec-index.md",
+    "fixture-repo/system-spec/resume-receipt.json",
+    "fixture-repo/system-spec/index.md",
+    "fixture-repo/system-spec/00-requirements-definition.md",
+    "fixture-repo/system-spec/completeness-report.json",
+    "fixture-repo/system-spec/spec-state.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-receipt.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-resume-report.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-progress.json",
+    "fixture-repo/eval-log/run-dev-graph-system-spec-intermediate.jsonl",
+    "fixture-repo/eval-log/system-spec-harness/audit-fork-ledger.jsonl"
+  ]
+}

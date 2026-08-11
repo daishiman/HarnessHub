@@ -240,6 +240,7 @@ serves_goals: [G1, G4, G5]
 
 【4. tier 語彙の正本 (2026-08-09 補正)】
 検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。
@@ -267,6 +268,7 @@ serves_goals: [G1, G4, G5]
 【5. platform と製品境界】同じ Python / pnpm 実装と同じコマンドを desktop-windows / desktop-macos で利用する。変更は repository 内の開発品質ゲートに限定し、Harness Hub 製品の外部 API、DB schema、認証認可、UI、Cloudflare deploy unit は変更しない。
 
 【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-147 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-211 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: テストサイズ (実行環境の制約) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: mvp は変更 path から決定論的に到達する focused test を同期実行し、選択不能時は standard へ昇格、広域回帰は追跡付き非同期へ分ける契約に適用した。

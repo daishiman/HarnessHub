@@ -229,6 +229,7 @@ cache hit を採用した場合も `checks[].disposition` は `executed` とし�
 selector の欠落・破損・base ref 解決不能・変更 path 空集合は、通常運用では standard への黙示 fallback にせず run を fail-closed で停止する。過去または bootstrap 環境で `tier_selector: "absent"` を記録済みの run は有効な tier 判定とみなさず、critical tier 相当の再検証対象とする。これにより、判断主体が不在のまま mvp の検査削減だけが既定化する経路を閉じる。
 
 現行 CI 配線は tier・blocking/advisory/deferred 集合の算出、妥当性検査、artifact 保存までを実装済みである。一方、下流 gate の実行自体を tier に応じて切り替える処理は未実装であり、`HarnessHub-xcl3` で追跡する。evaluator cache の writer/lookup/store 機構は `scripts/build-evaluator-cache.py` に実装済みだが、実 evaluator 呼出元への接続は未完了であり `HarnessHub-6nf1` で追跡する。実装済み機構と実運用で効いている機能を混同しない。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: デプロイパイプライン (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: 変更 risk から mvp / standard / critical を一意に選び、blocking / advisory / deferred の実行と証跡を同じ selector から導出する開発フローに適用した。

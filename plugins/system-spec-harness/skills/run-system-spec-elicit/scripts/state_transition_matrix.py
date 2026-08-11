@@ -70,13 +70,49 @@ def set_qa_design_applications(state: dict, qa_id: str, raw: object) -> None:
         )
 
     normalized = normalize_design_applications(raw)
+    provenance = {
+        "mode": "legacy_backfill",
+        "writer": "set-qa-design-applications",
+    }
     existing = entry.get("design_applications")
-    if existing is not None and normalize_design_applications(existing) != normalized:
+    existing_provenance = entry.get("design_application_provenance")
+    if existing_provenance is not None:
+        # The shared schema permits only this exact provenance. Keep the explicit
+        # guard because this function and CLI also receive hand-authored JSON
+        # before the standalone schema/coverage gates run.
+        if existing_provenance != provenance:
+            raise TransitionError(
+                f"set-qa-design-applications: 既存 provenance の上書きは拒否: {qa_id}"
+            )
+        if existing is None:
+            raise TransitionError(
+                "set-qa-design-applications: 完了済み provenance に対する "
+                f"design_applications 欠落を検出: {qa_id}"
+            )
+        if normalize_design_applications(existing) != normalized:
+            raise TransitionError(
+                "set-qa-design-applications: 完了済み backfill と異なる "
+                f"design_applications の再適用は拒否: {qa_id}"
+            )
+        # A previously completed backfill is the only idempotent replay allowed.
+        entry.pop("legacy_exempt", None)
+        entry.pop("legacy_exempt_reason", None)
+        return
+
+    if existing is not None:
         raise TransitionError(
-            f"set-qa-design-applications: 既存 design_applications の上書きは拒否: {qa_id}"
+            "set-qa-design-applications: provenance の無い既存 design_applications は"
+            f"対話経路として保護し、legacy_backfill への変更を拒否: {qa_id}"
+        )
+    reason = entry.get("legacy_exempt_reason")
+    if entry.get("legacy_exempt") is not True or not isinstance(reason, str) or not reason.strip():
+        raise TransitionError(
+            "set-qa-design-applications: legacy_exempt=true と非空の "
+            f"legacy_exempt_reason を持つ旧 qa のみ補完可能: {qa_id}"
         )
 
     entry["design_applications"] = normalized
+    entry["design_application_provenance"] = provenance
     # A successful validated backfill supersedes the temporary legacy escape.
     entry.pop("legacy_exempt", None)
     entry.pop("legacy_exempt_reason", None)

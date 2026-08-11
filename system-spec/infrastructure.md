@@ -114,6 +114,7 @@ E-2 (環境値の読み出しを吸収層へ一本化し、request context 内�
 [qa-187-c それでも原因を断定しない理由] 公式記述が保証するのは『この機序が成立し得る』ところまでである。報告症状が実際にこの経路で起きたと言うには、当該 isolate の生成時刻と secret 投入時刻の前後関係という**本番の実測データ**が要る。本セッションでは本番への観測が許諾されておらず、この前後関係は取得できていない。よって候補 (2) は『機序として確認済み・実際の発生は未確認』の強さで記録し、候補 (1) 未ゲート経路・候補 (3) 認証以外の原因も引き続き残す。
 
 [qa-187-d 仕様に加えるもの] E-2 の acceptance に「認証に関わる構築物が module scope に保持されず、request ごとに解決される」を明示する。V6 の検査点に「module 最上位での環境値依存構築の検出」を含める (これは既に E-1 の検査だが、isolate 再利用という**失敗の帰結**を検査の説明文へ書き添える。検査が何を防いでいるか読めないと、将来この検査は『厳しすぎる』として緩められる)。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: Explicit effects and errors (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-code.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: 認証に使う環境 binding の解決を module scope の暗黙キャッシュから request boundary へ移し、値の由来と失敗を明示する契約に適用した。
@@ -129,6 +130,7 @@ E-2 (環境値の読み出しを吸収層へ一本化し、request context 内�
 ##### 確定内容 qa-043 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: 既確定の qa-003 / qa-010 / qa-034 / qa-039 / qa-041 の desktop 該当部分を infrastructure.desktop の専用正本として集約確定する。(1) 配布経路 (qa-003): Publisher / Skill の作者環境への配布は URL 型 marketplace (native source) または Bootstrap Installer の 2 経路を Stage 0 technical gate (H7) で検証し、成立した経路を採用する (一般利用者に GitHub アカウントを要求しない = I6)。(2) 実行形態 (qa-010): 専用 desktop GUI は作らず、Publisher core は TypeScript (Node + pnpm) で実装し Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。target=web_app の出口は作者 local session での wrangler CLI スクリプト実行 (I5。Hub は URL 登録・公開範囲検査・health 確認のみ)。(3) ツールチェーン (qa-039): 作者/提供者環境は macOS 主・Windows 従で、Claude Code + pnpm (corepack 経由・他パッケージマネージャ禁止) + git + wrangler CLI。両 OS で同一の pnpm script が動作すること (パス区切り・改行コード・シェル依存をコマンドへ埋め込まない)。ローカルは preview 用 Turso または local SQLite を binding し production DB を指さない。production への deploy/migration の正本経路は CI (緊急時のみローカル + 事後記録)。(4) 資格情報基盤 (qa-041): Device Flow token は OS 資格情報域 (macOS Keychain / Windows Credential Manager) のみに保存。(5) 環境・binding の詳細正本は docs/infrastructure-spec.md (qa-034)、desktop 側の運用規律は dev-workflow (qa-039) と security (qa-041) の各確定に従属し、本 qa は infrastructure.desktop 行への接地点を提供する。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: 環境の再現性 (Infrastructure as Code) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: macOS / Windows の作者環境で同じ pnpm script、明示 binding、同じ配布経路を使い、shell や production DB への暗黙依存を避ける基盤契約に適用した。

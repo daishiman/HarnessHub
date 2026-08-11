@@ -202,4 +202,8 @@ seed 再投入を復旧手順にしない。詳細は [運用手順](../docs/fea
 schema 1.1 の確定 QA へ設計知識を遡及反映するとき、matrix の reopen や Q&A 原文の複製は行わない。
 単一 writer の `set-qa-design-applications` が既存 QA を ID で解決し、検証済みの設計適用だけを
 追記する。同一 payload は再実行可能、異なる既存 payload は上書き拒否とし、成功時だけ一時的な
-`legacy_exempt` metadata を除去する。これにより、履歴の不変性と strict completeness を両立する。
+`legacy_exempt` metadata を除去する。この writer は免除フラグと理由を持つ旧 QA に限定し、
+対話時に作成済みの解釈を事後補完扱いに変えない。事後補完であることは `design_application_provenance` に残し、
+対話時取得と区別する。compiler は `unrecorded|dialogue|legacy_backfill` の3値を描画し、
+completeness evaluator は未記録を PASS にせず、事後補完は回答との適合を再照合する。
+validator は未参照 QA も含む全 provenance の完全一致を検査する。これにより、履歴の不変性・由来追跡・strict completeness を両立する。

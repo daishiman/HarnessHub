@@ -281,10 +281,20 @@ def _render_chapter_application(spec: dict, cat_id: str) -> list[str]:
         )
         applications = qa.get("design_applications")
         if not isinstance(applications, list) or not applications:
+            lines.append("- 設計解釈の記録経路: `unrecorded`")
             lines.append(
                 "- 設計原則の採否根拠: (未記録 — qa_log[].design_applications を writer 経由で補完すること)"
             )
             continue
+        provenance = qa.get("design_application_provenance")
+        if isinstance(provenance, dict):
+            lines.append(
+                "- 設計解釈の記録経路: "
+                f"`{provenance.get('mode', '-')}` "
+                f"(`{provenance.get('writer', '-')}`)"
+            )
+        else:
+            lines.append("- 設計解釈の記録経路: `dialogue`")
         for application in applications:
             if not isinstance(application, dict):
                 continue

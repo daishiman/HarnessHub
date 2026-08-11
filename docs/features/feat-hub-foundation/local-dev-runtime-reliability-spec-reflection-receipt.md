@@ -23,7 +23,7 @@ updated: 2026-08-11
 判定、本番 Cloudflare 構成は変えないが、ローカル運用の owner、保存場所、監視構造、health、
 復旧、認証 smoke の契約が変わるため、正規 system-spec transition `qa-230` と各追補へ反映した。
 
-自動検証対象と既存 PR #696 の required checks は PASS している。さらに、system-spec の
+自動検証対象と、既存 PR #696 の前回 head に対する required checks は PASS している。さらに、system-spec の
 legacy QA 11件に残っていた設計適用不足も、Q&A 原文を変えない正規 writer で解消した。
 HttpOnly Cookie を使う実ブラウザの `/sheets` 表示だけは、in-app Browser の接続一覧が空のため
 未受領であり、未実施を PASS とは表現しない。
@@ -72,13 +72,20 @@ stdout / stderr 受信時にも rotation するよう修正し、focused test �
 | Hub health focused test | PASS: 32/32 |
 | middleware/shared-layer focused test | PASS |
 | Hub / DB typecheck、duplicate detector、format | PASS |
+| system-spec elicit / compile / shared validator | PASS: 264 tests |
+| strict system-spec coverage + foundation | PASS: 未収集0、provenance不整0 |
+| focused content review | PASS: current SKILL SHA `aa523321…` |
+| Dev Graph system-spec live trial | PASS: `20260811T123120-wt5-c19v`、介入0回 |
 | lifecycle restart / status / authenticated smoke | PASS: health 200、sheets 3件、同一 DB 維持 |
 | child process crash recovery | PASS: sqld / Next.js とも supervisor が再起動 |
 | actual in-app browser `/sheets` | PENDING: browser session 不在。CLI/API PASS から推測しない |
 
 `system-spec` の current transition と loop coverage は PASS。既存11件については、単一 writer に
 `set-qa-design-applications` を追加し、question / answer / source を維持したまま章固有の原則・理由・
-トレードオフだけを追記した。同じ payload の再適用は冪等、異なる既存解釈の上書きは拒否する。
+トレードオフだけを追記した。事後補完の由来は `design_application_provenance` に残し、
+C03/C05 は `unrecorded|dialogue|legacy_backfill` を区別する。同じ payload の再適用は冪等、
+対話時解釈への由来後付けと異なる既存解釈・由来の上書きは拒否する。
+validator は確定セル参照先だけでなく、未参照を含む全 QA の provenance も fail-closed に検査する。
 その結果、repository 全体の `--require-complete --require-foundation` も不足0件で PASS した。
 
 ## ファイル分割

@@ -221,6 +221,7 @@ completionRateは期間末HearingSheet snapshotのcompleted件数÷対象総数�
 
 【7 UI供給】
 S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapshotAt/nullable rate/reasonと、chart/table共通data modelを返す。集計金額はmember以上、user次元の金額はusers.read_salary保持者だけに返す。
+- 設計解釈の記録経路: `dialogue`
 - 原則: Threat modeling (abuse case を設計前提にする) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: project_idをclient/tokenから受けずserver registryで解決し、原子性能力のないD1 writerをzero-writeで閉じて越境参照と部分監査を防いだ。
@@ -230,6 +231,7 @@ S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapsh
 ##### 確定内容 qa-010 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: TypeScript 統一を採用。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務: package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。検査ロジックは Hub 側 (Workers=JS) と共有し二重実装を回避する。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) は仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
 - 原則: Ports and Adapters / DIP (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: Publisher core を TypeScript の中心ロジックとし、Claude Code / Codex plugin、Hub API、wrangler CLI を外部 adapter として扱う責務分離に適用した。
