@@ -89,6 +89,19 @@ C03/C05 は `unrecorded|dialogue|legacy_backfill` を区別する。同じ paylo
 validator は確定セル参照先だけでなく、未参照を含む全 QA の provenance も fail-closed に検査する。
 その結果、repository 全体の `--require-complete --require-foundation` も不足0件で PASS した。
 
+## 2026-08-11 launchd 起動追補の受領
+
+実運用の再確認で、`ProcessType=Background` の資源制限により supervisor の開始が readiness
+期限を超えることと、sqld 0.24.31 が launchd 配下で macOS 証明書ストアを読み込めず終了することを
+確認した。LaunchAgent を標準優先度へ戻し、独立 security audit session を作らず、
+`SSL_CERT_FILE=/etc/ssl/cert.pem` を明示した。再起動後は `local:start / status / smoke`、
+sqld・Hub health 200、認証付き sheets 3件が PASS した。
+
+この追補による **新たな仕様・設計影響はなし** と判断した。理由は、qa-230 で確定済みの
+「ログインセッション内の launchd が supervisor を監督し、readiness と認証付き smoke を通す」
+契約、コンポーネント境界、公開 API、DB schema、認証認可を変更せず、その契約を macOS 上で
+成立させる plist 実装だけを是正したためである。操作上必要な差分は runbook へ反映した。
+
 ## ファイル分割
 
 手書き runtime 本体が500行を超えないよう、process supervision を

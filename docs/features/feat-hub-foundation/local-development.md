@@ -15,6 +15,7 @@ updated: 2026-08-11
 - DB・秘密設定・ログ・PID は git-ignore 済みの `.local-state/hub/` に固定する。
 - sqld と Next.js は `127.0.0.1` のみで待ち受ける。
 - 子プロセスの異常終了時は supervisor が再起動し、supervisor 自体の異常終了時は launchd が再起動する。
+- LaunchAgent はログイン中の Aqua セッションを標準優先度で使う。別の security audit session は作成せず、`SSL_CERT_FILE=/etc/ssl/cert.pem` を明示して、sqld が launchd 配下でも信頼済み証明書を読み取れる状態を保つ。
 - `start / status / stop / restart / smoke / cookie` を単一の CLI で扱う。
 - `stop` と `restart` は DB を削除しない。
 - Cookie 更新は DB を変更しない。seed の流し直しとは明確に分離する。

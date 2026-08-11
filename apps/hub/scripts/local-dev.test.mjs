@@ -22,7 +22,11 @@ test('launchd plist contains absolute program arguments and automatic restart', 
   assert.match(plist, /<key>KeepAlive<\/key><true\/>/);
   assert.match(plist, /<key>ExitTimeOut<\/key><integer>15<\/integer>/);
   assert.match(plist, /<key>LimitLoadToSessionType<\/key><string>Aqua<\/string>/);
-  assert.match(plist, /<key>SessionCreate<\/key><true\/>/);
+  assert.doesNotMatch(plist, /<key>ProcessType<\/key>/);
+  // sqld/rustls がログインセッションの macOS 証明書ストアを参照できるよう、
+  // launchd に別の security audit session を作らせない。
+  assert.doesNotMatch(plist, /<key>SessionCreate<\/key>/);
+  assert.match(plist, /<key>SSL_CERT_FILE<\/key><string>\/etc\/ssl\/cert\.pem<\/string>/);
   assert.match(plist, /<string>\/usr\/bin\/node<\/string>/);
   assert.match(plist, /<string>supervise<\/string>/);
   assert.match(plist, /<string>\/tmp\/hub<\/string>/);
