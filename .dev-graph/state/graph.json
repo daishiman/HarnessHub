@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1508,
+  "graph_revision": 1511,
   "nodes": [
     {
       "acceptance": [
@@ -56830,6 +56830,122 @@
       "title": "Hub ローカル開発基盤の永続性・health・自動復旧を一体で是正する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-11T03:58:00Z"
+    },
+    {
+      "acceptance": [
+        "R2 get が apps/hub/apps/hub/wrangler.jsonc を参照しない",
+        "CI と定期 sweeper が repository artifacts 配下へレポートを保存する",
+        "focused test と Hub typecheck がPASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure-operations-addenda"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-f04p",
+        "linked_at": "2026-08-11T04:10:45Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/production-publish-smoke-cwd-paths-20260811.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "CIログでpnpm filter後のcwdとrepository相対パスの二重解決を直接確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f47eec9f6fe8c96595a825845da60826f3fcbd94ece61daf1d4a05650651bc4a",
+        "evaluator": "GitHub Actions run 31453028279 log inspection",
+        "evidence_ref": "https://github.com/daishiman/HarnessHub/actions/runs/31453028279/job/93661957826"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T04:05:00Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/production-publish-smoke-cwd-paths-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "GitHub Actions と定期 sweeper が cwd に依存せず R2 取得と回収レポート保存を完走する。",
+      "graph_node_id": "issue-production-publish-smoke-cwd-paths-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T04:05:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "pnpm filter が子プロセスの cwd を Hub package へ変える場合でも、本番 publish smoke が正しい Wrangler 設定と成果物出力先を選べるようにする。",
+      "related_nodes": [
+        "SYS-HUB-FOUNDATION-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/smoke-fixture-sweeper.yml",
+        "apps/hub/scripts/smoke-production-publish-support.ts",
+        "apps/hub/tests/publish-pipeline/production-smoke-paths.test.ts",
+        "docs/features/feat-hub-foundation/production-publish-smoke-cwd-paths-spec-reflection-receipt.md",
+        "issues/production-publish-smoke-cwd-paths-20260811.md",
+        ".dev-graph/state/graph.json"
+      ],
+      "scope_in": [
+        "Wrangler config の絶対パス化",
+        "sweep report の GitHub workspace 絶対パス化",
+        "回帰テスト"
+      ],
+      "scope_out": [
+        "本番データモデル変更",
+        "publish状態遷移変更",
+        "既存の無関係な未コミット差分"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T04:05:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "active",
+      "tags": [
+        "github-actions",
+        "production-smoke",
+        "wrangler",
+        "path-resolution"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "本番 publish smoke の作業ディレクトリ依存パスを修正する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-11T04:14:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
