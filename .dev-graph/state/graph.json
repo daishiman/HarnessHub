@@ -56919,7 +56919,8 @@
         "docs/screen-inventory.md",
         "docs/frontend-ui-foundation-spec.md",
         "docs/frontend-spec.md",
-        "architecture/harness-hub-frontend.md"
+        "architecture/harness-hub-frontend.md",
+        "docs/frontend-responsive-mobile-spec.md"
       ],
       "scope_in": [
         "S01-S18 と共通シェルの10工程の情報設計",
@@ -56956,7 +56957,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub 画面情報設計追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-11T07:04:22.525743Z"
+      "updated_at": "2026-08-11T07:40:43.137Z"
     },
     {
       "acceptance": [

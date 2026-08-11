@@ -23,7 +23,7 @@ beads_ids:
 - 公開 API、DB schema、認証認可判定、Cloudflare deploy unit は変更しない。
 - 30 思考法の独立レビューで 4 条件 (矛盾なし / 漏れなし / 整合性あり / 依存関係整合) が全 PASS。
 - required-info の item 別回答を writer が決定論的に接地検査する実装は **未完了** であり、独立 follow-up `HarnessHub-9wdm` / `issue-system-spec-required-info-answer-gate-20260811` として残す。
-- 手書き変更ファイルは 500 行以下。生成正本の `.dev-graph/state/graph.json` のみ行数上限の対象外。
+- 手書き変更ファイルは repository の Markdown 300 行上限以下。`docs/frontend-spec.md` は §6 を `docs/frontend-responsive-mobile-spec.md` へ分離して適合。生成正本の `.dev-graph/state/graph.json` は行数上限の対象外。
 
 ## 3. 仕様影響の判断理由
 
@@ -71,7 +71,7 @@ beads_ids:
 | required-info catalog DAG | PASS (`screen-information-priority` が blocking、`frontend-arch` が depends_on) |
 | knowledge catalog topo order | PASS (`information-design` は usability-accessibility の後) |
 | elegant-review 4 条件 | 全 PASS (`eval-log/elegant-review/harness-hub-information-design-20260811/`) |
-| 手書きファイル 500 行 | PASS (最大 311 行 `docs/frontend-spec.md`、追補 220 行) |
+| 手書き Markdown 300 行 | PASS (`frontend-spec.md` を responsive 本文分離後 251 行、追補 220 行) |
 | whitespace | 変更ファイルに対して `git diff --check` を実施 |
 
 補足: 先行セッション記録では system-spec-harness full suite 566 passed。本最終レビューでは MVP として focused + 決定論 validator を再実行した。UI 実装の browser/VRT は本変更が runtime コードを触らないため対象外。

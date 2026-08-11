@@ -48,7 +48,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 
 - 画面は S01-S18 で全ジャーニー ([user-journeys.md](user-journeys.md)) が閉じる。**新画面の追加はまず本表への追記から** (追加時は担当 feature と根拠 qa を必ず付ける)。
 - 会話型 Web Creator 画面は作らない (U7 対象外・§5.1)。作者の操作面は Publisher plugin (CLI 対話) であり Web 画面を持たない。
-- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする (専用 native 画面なし。重点/簡易の区分は frontend-spec §6.4)。
+- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする (専用 native 画面なし。重点/簡易の区分は [frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.4)。
 
 ## 最優先画面の完了境界 (mockup と実装仕様の照合結果)
 

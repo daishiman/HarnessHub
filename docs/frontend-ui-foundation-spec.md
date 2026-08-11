@@ -21,7 +21,7 @@ Web 画面を「毎回ちがう材料で作る」のではなく、同じレゴ�
 本書は *どの部品を使うか* の指針である。*その部品へ何を載せ、何を削り、何を強調するか* は [画面情報設計ガイド](frontend-information-design-guide.md) と [情報設計追補](../specs/harness-hub-information-design-addendum.md) が正本で、こちらを先に済ませる。
 
 - 工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」の 10 工程。`DataTable` や `Panel` を置くところから始めない。
-- 画面内の情報顕著度は `lead / context / metadata`。構築 phase P0〜P5、frontend-spec §6.3 のレスポンシブパターン P1〜P10、Button variant と別語彙であり、`typographyTokens` / `colorTokens` / spacing token の段だけで表す。
+- 画面内の情報顕著度は `lead / context / metadata`。構築 phase P0〜P5、[frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.3 のレスポンシブパターン P1〜P10、Button variant と別語彙であり、`typographyTokens` / `colorTokens` / spacing token の段だけで表す。
 - 視覚ラベルを一律に外さない。form control、初見/破壊操作、状態・金額・日時・PII・略語は可視ラベル/見出しを既定とし、読み取り専用で意味が一意な場合だけ根拠付きで省略する。placeholder、`title`、アイコンだけを label の代用にしない。
 - 表現形式は open-world registry から選ぶ。初期値は table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail で、必要なら hybrid/new pattern を登録する。
 - 余白・線/surface・アイコン・画像・整列/反復は、グループ境界・認識・証拠・操作の予測可能性を高めるなら積極採用する。意味を説明できない縞模様・影等は足さず、必要な境界を「装飾だから」と消さない。

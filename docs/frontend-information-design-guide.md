@@ -56,7 +56,7 @@ reviewed_at: 2026-08-11
 | `context` | semantic body の標準段 | `fontWeightNormal` | `text` | 判断に必要な本文・通常属性 |
 | `metadata` | semantic caption の補助段 | `fontWeightNormal` | `textMuted` | 補助属性、単位、メタ情報 |
 
-`lead / context / metadata` は画面内情報の強弱であり、構築 phase P0〜P5、frontend-spec §6.3 のレスポンシブパターン P1〜P10、Button の `primary` / `danger`、見出し level とは別軸である。`typographyTokens` の太さは 400 と 700 の 2 段しかないため、中間が欲しくなっても任意の 600 を足さず semantic size / color / spacing で作る。
+`lead / context / metadata` は画面内情報の強弱であり、構築 phase P0〜P5、[frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.3 のレスポンシブパターン P1〜P10、Button の `primary` / `danger`、見出し level とは別軸である。`typographyTokens` の太さは 400 と 700 の 2 段しかないため、中間が欲しくなっても任意の 600 を足さず semantic size / color / spacing で作る。
 
 状態の色は `docs/frontend-spec.md` §2.4 の状態語彙辞書だけを写像点とする。色だけで区別せず、必ずラベルか形を併記する (`FR-IDS-010`)。
 
@@ -170,12 +170,12 @@ screen-inventory の profile 行を参照。重複記載せず、この変更で
 
 **工程を守った場合**: 利用文脈は「member が自分の申請の進み具合を、他の作業の合間に確認する」。`title` と `status` は `lead`、`HS コード` と `対象人数・月工数` は `context`、`domain / department / applicant / updated_at` は `metadata` にする。`updated_at` は「2026-08-08 14:30 JST (3 日前)」と絶対値 + 補助相対値で表示する。wide profile は既存仕様どおり table、narrow profile は card-collection を選び、どちらも filter・検索・完全値・詳細導線を保つ。状態 Badge、カード/行の押せる手掛かり、項目の所属を示す整列と余白を使い、密な table で所属が曖昧なら罫線も使う。縞模様は行追跡の実測改善がない限り入れない。
 
-現行の `docs/frontend-spec.md` §3.2 は S11 のデスクトップを 6 列 table、モバイルを同書 §6.3 のレスポンシブ変換パターン `P3` による card-collection と定めている。この `P3` は情報顕著度ではない。本追補は確定済みの表現を変えず、**role / task-mode / breakpoint と選定根拠を伴って同じ結論へ到達すること**を求める。profile の値は `screen-inventory` だけへ記録する。
+現行の `docs/frontend-spec.md` §3.2 は S11 のデスクトップを 6 列 table、モバイルを [frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.3 のレスポンシブ変換パターン `P3` による card-collection と定めている。この `P3` は情報顕著度ではない。本追補は確定済みの表現を変えず、**role / task-mode / breakpoint と選定根拠を伴って同じ結論へ到達すること**を求める。profile の値は `screen-inventory` だけへ記録する。
 
 ## 関連文書
 
 - 規範追補: [specs/harness-hub-information-design-addendum.md](../specs/harness-hub-information-design-addendum.md)
 - 部品契約: [docs/frontend-ui-foundation-spec.md](frontend-ui-foundation-spec.md) / [specs/harness-hub-ui-foundation-addendum.md](../specs/harness-hub-ui-foundation-addendum.md)
-- 詳細正本: [docs/frontend-spec.md](frontend-spec.md) §2.4 状態語彙辞書 / §3.3 状態表示 / §6.3 レスポンシブ変換パターン
+- 詳細正本: [docs/frontend-spec.md](frontend-spec.md) §2.4 状態語彙辞書 / §3.3 状態表示、[frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) §6.3 レスポンシブ変換パターン
 - 画面台帳: [docs/screen-inventory.md](screen-inventory.md)
 - architecture: [architecture/harness-hub-frontend.md](../architecture/harness-hub-frontend.md)

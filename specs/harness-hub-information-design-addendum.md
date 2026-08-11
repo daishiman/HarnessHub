@@ -16,7 +16,7 @@ updated_at: "2026-08-11T07:04:22.525743Z"
 status: "active"
 depends_on: ["spec-harness-hub-ui-foundation-addendum"]
 related_nodes: ["arch-harness-hub-frontend","feat-hub-foundation"]
-resource_scope: ["specs/harness-hub-information-design-addendum.md","docs/frontend-information-design-guide.md","docs/screen-inventory.md","docs/frontend-ui-foundation-spec.md","docs/frontend-spec.md","architecture/harness-hub-frontend.md"]
+resource_scope: ["specs/harness-hub-information-design-addendum.md","docs/frontend-information-design-guide.md","docs/screen-inventory.md","docs/frontend-ui-foundation-spec.md","docs/frontend-spec.md","docs/frontend-responsive-mobile-spec.md","architecture/harness-hub-frontend.md"]
 purpose: "利用文脈から情報の取捨・グループ化・顕著度・表示加工・パターン・視覚要素・検証を一体で決める適応型情報設計契約を固定する"
 goal: "利用者が主要状態と次の操作を過度な探索なしに判別でき、実装者が画面ごとの設計根拠と検証結果を再現できる状態にする"
 scope_in: ["S01-S18 と共通シェルの10工程の情報設計","lead/context/metadata の情報顕著度と semantic token への写像","role/task-mode/breakpoint ごとの適応型画面プロファイル","open-world 表示パターン台帳と responsive 変換時の業務能力維持","ラベル・線/余白・アイコン・画像・整列/反復の要素別意味契約","表示加工、実利用指標、manual/current-machine/future-machine gate の境界"]
@@ -216,5 +216,5 @@ N/A: queue、event producer / consumer、delivery、ordering、DLQ を追加し�
 - 上位規範: [UI 基盤追補](harness-hub-ui-foundation-addendum.md)、[system-spec/ui-ux.md](../system-spec/ui-ux.md) qa-226、[system-spec/frontend.md](../system-spec/frontend.md) qa-007
 - 実装ガイド: [docs/frontend-information-design-guide.md](../docs/frontend-information-design-guide.md)
 - 画面台帳: [docs/screen-inventory.md](../docs/screen-inventory.md)
-- 詳細正本: [docs/frontend-spec.md](../docs/frontend-spec.md) §2.4 / §3.3 / §6.3
+- 詳細正本: [docs/frontend-spec.md](../docs/frontend-spec.md) §2.4 / §3.3、[docs/frontend-responsive-mobile-spec.md](../docs/frontend-responsive-mobile-spec.md) §6.3
 - doctrine anchor: Apple Human Interface Guidelines (system-spec/ui-ux.md の presentation authority)
