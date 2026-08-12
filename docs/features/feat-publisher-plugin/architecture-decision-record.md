@@ -126,9 +126,13 @@ acceptance「pre-check と Hub 検査の判定が同値」は、`inspection-clie
 - docs/security-spec-authentication.md が device_code TTL 10 分・SHA-256 ハッシュ保存・user_code 8 文字 Crockford Base32・polling interval 5 秒 (上限 60 秒、qa-073) の数値契約と「クライアント保存先: macOS Keychain / Windows Credential Manager (qa-008 既存確定)」を定める。
 - quality_constraint `device-flow-auth-os-credential-storage-qa008-qa041` は同数値契約と保存先制約を要求し、scope は「publish:write / metrics:write / feedback:write / aijob:process の 4 種の最小権限」と明記する。
 
+> **2026-08-12 外部Docs同期による後続拡張:** 上記4種は初回リリース時点の記録である。現行値域には
+> `docs:write` を加えた5種を使い、`docs` サブコマンドは `docs:write` だけを要求する。Device Flowの
+> TTL・rotation・保存先制約は変更しない。
+
 ### 帰結
 
-`auth/` は OS ごとに credential adapter を実装する (macOS: Keychain Services、Windows: Credential Manager)。adapter 差異は `auth/` 内に閉じ込め、`cli/`・`core/`・`deploy/` は adapter の抽象インターフェース (`getToken()`/`clearToken()`) のみに依存する。scope はコマンドが要求する操作に応じて最小のものだけを要求し (AD-6 の feedback サブコマンドは `feedback:write` を追加要求する)、一括で全 scope を要求しない。
+`auth/` は OS ごとに credential adapter を実装する (macOS: Keychain Services、Windows: Credential Manager)。adapter 差異は `auth/` 内に閉じ込め、`cli/`・`core/`・`deploy/` は adapter の抽象インターフェース (`getToken()`/`clearToken()`) のみに依存する。credentialの保存keyとrecordは正規化済みHTTPS Hub origin + tenantに束縛し、異なるoriginが指定された場合はrefresh tokenを送信せず再認可で停止する。scope はコマンドが要求する操作に応じて最小のものだけを要求し (feedback は `feedback:write`、docs は `docs:write`)、一括で全 scope を要求しない。
 
 ---
 

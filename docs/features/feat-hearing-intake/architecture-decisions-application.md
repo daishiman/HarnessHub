@@ -98,7 +98,7 @@ savedAmountPerYear  = savedHoursPerYear × hourlyRate
 | 条件 | 検査対象 | 根拠 |
 |---|---|---|
 | ① Bearer token であること | Device Flow 由来の短命 access token (TTL 15 分)。Web セッション cookie では通さない | SEC8 / requirements-baseline `ai-queue-authz-payload-secret-ban` |
-| ② scope に `aijob:process` を含むこと | `publisher_tokens.scopes_json` の 4 値のうち該当スコープ | backend-spec §2.2 |
+| ② scope に `aijob:process` を含むこと | `publisher_tokens.scopes_json` の現行5値のうち該当スコープ | backend-spec §2.2 |
 | ③ 実効 role が workspace-admin 以上であること | workspace-admin は**自テナントのジョブのみ**、provider-admin のみ cross-tenant | backend-spec §4.11 (qa-048 改訂) |
 
 `complete` / `fail` は上記に加えて **claim 者本人であること** (`ai_jobs.claimed_by_token_id` の一致) を要求する。

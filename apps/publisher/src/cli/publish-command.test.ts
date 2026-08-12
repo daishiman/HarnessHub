@@ -95,6 +95,7 @@ function createFakeDeps(overrides: Partial<PublishCommandDeps> = {}) {
   const createHubApiClient = vi.fn(() => client);
   const runProcess: RunProcess = vi.fn(async (): Promise<ProcessResult> => ({ exitCode: 0, stdout: '', stderr: '' }));
   const storedRecord: PublisherCredentialRecord = {
+    hub_origin: 'https://hub.example.com',
     tenant_slug: 'acme',
     workspace_id: 'workspace_456',
     refresh_token: 'r'.repeat(32),
@@ -118,6 +119,7 @@ function createFakeDeps(overrides: Partial<PublishCommandDeps> = {}) {
     },
   }));
   const deps: PublishCommandDeps = {
+    hubOrigin: 'https://hub.example.com',
     credentialStore,
     requestDeviceCode: neverCall('requestDeviceCode') as PublishCommandDeps['requestDeviceCode'],
     pollTokenEndpoint: neverCall('pollTokenEndpoint') as PollTokenEndpoint,

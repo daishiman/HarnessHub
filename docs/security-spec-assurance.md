@@ -126,7 +126,7 @@ C1 (1 名 + AI) 下で実行可能な最小手順のみを定める。
 | 2 | §2.2 `audit_events` | `seq` / `prev_hash` / `event_hash` を追加 (§5.4) |
 | 3 | §2.2 (新規) | `encryption_keys` テーブルを追加 (§4.1.1) |
 | 4 | §2.2 (新規) | `session_revocations` テーブルを追加 (§2.1) |
-| 5 | §2.2 `publisher_tokens` | `scopes_json` の値域を §2.2.1 の 4 scope に確定 |
+| 5 | §2.2 `publisher_tokens` | `scopes_json` の値域を §2.2.1 の現行5 scopeに確定 (`docs:write` は2026-08-12追加) |
 | 6 | §3.2 | session/token の TTL 数値を §2.1/§2.2 で確定 |
 | 7 | §3.7 | 「数値は feature P02 で確定」→ §7.2 の確定値へ置換 |
 | 8 | §3.8 | `user.salary_read` / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` を追加 (§5.2) |

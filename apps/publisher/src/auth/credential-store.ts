@@ -14,8 +14,8 @@ import type { CredentialStoreAdapter } from './types.js';
 
 const SERVICE_NAME = 'harness-hub-publisher';
 
-function accountFor(tenantSlug: string): string {
-  return `${SERVICE_NAME}:${tenantSlug}`;
+function accountFor(hubOrigin: string, tenantSlug: string): string {
+  return `${SERVICE_NAME}:${Buffer.from(hubOrigin).toString('base64url')}:${tenantSlug}`;
 }
 
 export function createMacKeychainAdapter(runProcess: RunProcess): CredentialStoreAdapter {
@@ -27,7 +27,7 @@ export function createMacKeychainAdapter(runProcess: RunProcess): CredentialStor
       const result = await runProcess('security', [
         'add-generic-password',
         '-a',
-        accountFor(record.tenant_slug),
+        accountFor(record.hub_origin, record.tenant_slug),
         '-s',
         SERVICE_NAME,
         '-w',
@@ -38,11 +38,11 @@ export function createMacKeychainAdapter(runProcess: RunProcess): CredentialStor
         throw new Error(`Keychain への保存に失敗しました: ${result.stderr}`);
       }
     },
-    async getToken(tenantSlug) {
+    async getToken(hubOrigin, tenantSlug) {
       const result = await runProcess('security', [
         'find-generic-password',
         '-a',
-        accountFor(tenantSlug),
+        accountFor(hubOrigin, tenantSlug),
         '-s',
         SERVICE_NAME,
         '-w',
@@ -50,9 +50,15 @@ export function createMacKeychainAdapter(runProcess: RunProcess): CredentialStor
       if (result.exitCode !== 0) return null;
       return publisherCredentialRecordSchema.parse(JSON.parse(result.stdout.trim()));
     },
-    async clearToken(tenantSlug) {
+    async clearToken(hubOrigin, tenantSlug) {
       // 既に存在しない場合の非 0 終了は「クリア済み」と等価なので無視する (冪等)。
-      await runProcess('security', ['delete-generic-password', '-a', accountFor(tenantSlug), '-s', SERVICE_NAME]);
+      await runProcess('security', [
+        'delete-generic-password',
+        '-a',
+        accountFor(hubOrigin, tenantSlug),
+        '-s',
+        SERVICE_NAME,
+      ]);
     },
   };
 }
@@ -72,7 +78,7 @@ export function createWindowsCredentialManagerAdapter(runProcess: RunProcess): C
     platform: 'win32',
     async saveToken(record) {
       const serialized = escapeForPowerShellSingleQuoted(JSON.stringify(publisherCredentialRecordSchema.parse(record)));
-      const resource = escapeForPowerShellSingleQuoted(accountFor(record.tenant_slug));
+      const resource = escapeForPowerShellSingleQuoted(accountFor(record.hub_origin, record.tenant_slug));
       const script =
         `${VAULT_BOOTSTRAP} ` +
         `try { $vault.Remove($vault.Retrieve('${SERVICE_NAME}', '${resource}')) } catch {}; ` +
@@ -82,8 +88,8 @@ export function createWindowsCredentialManagerAdapter(runProcess: RunProcess): C
         throw new Error(`Credential Manager への保存に失敗しました: ${result.stderr}`);
       }
     },
-    async getToken(tenantSlug) {
-      const resource = escapeForPowerShellSingleQuoted(accountFor(tenantSlug));
+    async getToken(hubOrigin, tenantSlug) {
+      const resource = escapeForPowerShellSingleQuoted(accountFor(hubOrigin, tenantSlug));
       const script =
         `${VAULT_BOOTSTRAP} ` +
         `try { $cred = $vault.Retrieve('${SERVICE_NAME}', '${resource}'); $cred.RetrievePassword(); Write-Output $cred.Password } catch { exit 1 }`;
@@ -91,8 +97,8 @@ export function createWindowsCredentialManagerAdapter(runProcess: RunProcess): C
       if (result.exitCode !== 0) return null;
       return publisherCredentialRecordSchema.parse(JSON.parse(result.stdout.trim()));
     },
-    async clearToken(tenantSlug) {
-      const resource = escapeForPowerShellSingleQuoted(accountFor(tenantSlug));
+    async clearToken(hubOrigin, tenantSlug) {
+      const resource = escapeForPowerShellSingleQuoted(accountFor(hubOrigin, tenantSlug));
       const script =
         `${VAULT_BOOTSTRAP} ` + `try { $vault.Remove($vault.Retrieve('${SERVICE_NAME}', '${resource}')) } catch {}`;
       await runProcess('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script]);
@@ -106,5 +112,16 @@ export function createCredentialStoreAdapter(
 ): CredentialStoreAdapter {
   if (platform === 'darwin') return createMacKeychainAdapter(runProcess);
   if (platform === 'win32') return createWindowsCredentialManagerAdapter(runProcess);
-  throw new Error(`サポート対象外の OS です (platform=${platform})。macOS / Windows のみサポートします`);
+  if (platform === 'linux') {
+    // Claude Codeのheadless Linuxでも固定tokenを平文保存しない。実行ごとにDevice Flowで認可する。
+    return {
+      platform: 'linux',
+      async saveToken() {},
+      async getToken() {
+        return null;
+      },
+      async clearToken() {},
+    };
+  }
+  throw new Error(`サポート対象外の OS です (platform=${platform})`);
 }

@@ -6,6 +6,8 @@
  * および asset_summary の常時算出に使う。
  */
 
+import { documentImageUrlSchema } from '@harness-hub/schemas';
+
 const HEADING_RE = /^(#{1,2})\s+(.+?)\s*$/;
 const IMAGE_RE = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
 const IMAGE_RE_G = /!\[[^\]]*\]\([^)\s]+(?:\s+"[^"]*")?\)/g;
@@ -22,10 +24,13 @@ export function extractTitleCandidate(markdown: string): string | null {
   return null;
 }
 
-/** 本文中で最初に登場する画像の URL。無ければ null。 */
+/** 本文中で最初に登場し、Docs wire契約で安全に表示できる画像URL。無ければnull。 */
 export function extractFirstImageUrl(markdown: string): string | null {
   const match = IMAGE_RE.exec(markdown);
-  return match?.[1] ?? null;
+  const candidate = match?.[1];
+  if (candidate === undefined) return null;
+  const parsed = documentImageUrlSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : null;
 }
 
 export interface DerivedDocumentField {

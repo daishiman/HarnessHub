@@ -57,6 +57,8 @@ export {
   type DeviceAuthorizationRow,
   type DocsCmsRepository,
   type DocumentRow,
+  ExternalDocumentPreconditionError,
+  type ExternalDocumentRow,
   type FeedbackRepository,
   type FeedbackRow,
   type HearingIntakeRepository,

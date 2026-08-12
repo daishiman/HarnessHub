@@ -55,6 +55,23 @@ export const assetSummarySchema = z
   .strict();
 export type AssetSummary = z.output<typeof assetSummarySchema>;
 
+/** 外部同期元を識別する公開 namespace。秘密情報や端末の絶対 path は受け付けない。 */
+export const externalDocumentSourceSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/);
+
+/** CLI が repository identity + 相対 path から作る SHA-256 hex。 */
+export const externalDocumentIdSchema = z.string().regex(/^[a-f0-9]{64}$/);
+
+export const externalDocumentSyncRequestSchema = z
+  .object({
+    title: titleSchema,
+    body_markdown: bodyMarkdownSchema,
+  })
+  .strict();
+export type ExternalDocumentSyncRequest = z.output<typeof externalDocumentSyncRequestSchema>;
 export const documentDetailSchema = z
   .object({
     id: identifierSchema,
@@ -76,6 +93,18 @@ export const documentDetailSchema = z
   })
   .strict();
 export type DocumentDetail = z.output<typeof documentDetailSchema>;
+
+export const externalDocumentSyncResponseSchema = z
+  .object({
+    document: documentDetailSchema,
+    source: externalDocumentSourceSchema,
+    external_document_id: externalDocumentIdSchema,
+    revision: z.number().int().positive(),
+    sync_state: z.enum(['synced', 'modified']),
+    outcome: z.enum(['created', 'updated', 'unchanged', 'fetched']),
+  })
+  .strict();
+export type ExternalDocumentSyncResponse = z.output<typeof externalDocumentSyncResponseSchema>;
 
 /**
  * カード表示に要る要約フィールド (thumbnail_url/excerpt/category/tags/asset_summary/status) は含めつつ、

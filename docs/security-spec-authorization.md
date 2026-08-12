@@ -93,6 +93,7 @@ member  <  owner  <  workspace-admin  <  provider-admin
 | `docs.read` | ドキュメント閲覧 | member |
 | `docs.write_tenant` | scope=tenant の編集 | workspace-admin |
 | `docs.write_common` | scope=common の編集 | **provider-admin** |
+| `docs.external_sync` | 外部作成 Markdown の tenant 下書き同期 | **access token の workspace-admin + scope `docs:write` + token と同一 tenant**。provider-admin の越境も禁止 |
 | `users.read` | ユーザー一覧 | workspace-admin |
 | `users.write` / `users.role_change` | ユーザー管理 | workspace-admin |
 | `users.read_salary` / `users.write_salary` | **PII (§4.2)** | workspace-admin |
@@ -112,7 +113,7 @@ member  <  owner  <  workspace-admin  <  provider-admin
 // packages/authz/src/types.ts
 export type BaseRole = 'provider-admin' | 'workspace-admin' | 'member'
 export type EffectiveRole = BaseRole | 'owner'
-export type Scope = 'publish:write' | 'metrics:write' | 'feedback:write' | 'aijob:process'
+export type Scope = 'publish:write' | 'metrics:write' | 'feedback:write' | 'aijob:process' | 'docs:write'
 
 export type Principal =
   | { kind: 'session'; userId: string; tenantId: string; role: BaseRole; status: 'active' | 'inactive'; issuedAt: number }
@@ -129,7 +130,13 @@ export type ResourceRef = {
 }
 
 /** §3.4 の表を機械可読にしたもの。selfOnly は「本人なら下位 role でも可」を表す (token.revoke_own 等) */
-export type ActionRule = { minRole: EffectiveRole; scope?: Scope; selfOnly?: boolean }
+export type ActionRule = {
+  minRole: EffectiveRole
+  scope?: Scope
+  selfOnly?: boolean
+  /** false の action は provider-admin であっても tenant 境界を越えられない */
+  allowProviderCrossTenant?: boolean
+}
 
 export type Decision =
   | { allow: true; effectiveRole: EffectiveRole; crossTenant: boolean }   // crossTenant=true は監査必須 (§5.3)
@@ -151,6 +158,11 @@ export function decide(p: Principal, action: Action, r: ResourceRef): Decision {
   if (p.kind === 'session' && p.status !== 'active') return { allow: false, reason: 'inactive_user' }
   if (p.kind === 'session' && isRevoked(p.tenantId, p.issuedAt)) return { allow: false, reason: 'revoked_session' }
   if (p.kind === 'token' && rule.scope && !p.scopes.includes(rule.scope)) return { allow: false, reason: 'missing_scope' }
+
+  // 外部Docs同期のような機械経路では、provider-adminの通常越境をaction単位で閉じる。
+  if (rule.allowProviderCrossTenant === false && p.tenantId !== r.tenantId) {
+    return { allow: false, reason: 'tenant_mismatch' }
+  }
 
   const effective = resolveEffectiveRole(p, r)                        // ← テナント境界と owner 合成
   if (!effective) return { allow: false, reason: 'tenant_mismatch' }
@@ -208,6 +220,9 @@ export function resolveEffectiveRole(p: Principal, r: ResourceRef): EffectiveRol
 |---|---|---|
 | **定常・自動**の越境 | `aijob.pull` / `aijob.complete` のみ (qa-031 の「唯一例外」を維持) | `ai_job.complete` + `provider.cross_tenant_access` |
 | **例外的・人手**の越境 | IdP 設定登録 (§4.3)・顧客サポート・障害調査 | `provider.cross_tenant_access` (同一の記録を通す) |
+
+`docs.external_sync` は上表の越境経路に含めない。外部 CLI token は発行元 tenant の tenant/draft 文書だけを
+同期でき、`allowProviderCrossTenant=false` により provider-admin token でも別 tenant への同期を拒否する。
 
 > 定常経路を 1 本に保つ (qa-031 の意図) ことと、例外的越境を**禁止したことにして記録しない**ことは別問題である。後者は監査を迂回させるだけなので、本節は「越境は起きる。ただし必ず記録される」を選ぶ。
 

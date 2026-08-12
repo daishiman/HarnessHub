@@ -5,11 +5,10 @@
 // src/cli/index.ts の main() は argv 配列を受け取り exit code を返すだけの純関数にしてある
 // (process.argv/process.exit に自ら触れない) — そうすることでテストが実行環境を経由せずに
 // main() を直接呼べる。process への配線はこの薄い wrapper だけが持つ。
-import { register } from 'node:module';
-import { pathToFileURL } from 'node:url';
+import { tsImport } from 'tsx/esm/api';
 
-register('tsx/esm', pathToFileURL('./'));
-const { main } = await import('../src/cli/index.ts');
+// tsImportのparentをbin自身へ固定し、任意の外部repositoryから起動しても依存を見失わないようにする。
+const { main } = await tsImport('../src/cli/index.ts', import.meta.url);
 
 try {
   process.exitCode = await main(process.argv.slice(2));

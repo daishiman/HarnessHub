@@ -4,6 +4,29 @@
 # 全て apps/publisher/src/cli/ (bin/harness-publisher.mjs) 側の実装を呼ぶだけ。
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "$0")/../../../../.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../../../.." && pwd)"
+LOCAL_BIN="$REPO_ROOT/apps/publisher/bin/harness-publisher.mjs"
 
-exec node "$REPO_ROOT/apps/publisher/bin/harness-publisher.mjs" publish "$@"
+if [[ -n "${HARNESS_HUB_PUBLISHER_BIN:-}" ]]; then
+  if [[ ! -f "$HARNESS_HUB_PUBLISHER_BIN" ]]; then
+    echo "HARNESS_HUB_PUBLISHER_BIN が指すPublisher CLIが見つかりません: $HARNESS_HUB_PUBLISHER_BIN" >&2
+    exit 1
+  fi
+  exec node "$HARNESS_HUB_PUBLISHER_BIN" publish "$@"
+fi
+
+if command -v harness-publisher >/dev/null 2>&1; then
+  exec harness-publisher publish "$@"
+fi
+
+if [[ -f "$LOCAL_BIN" ]]; then
+  exec node "$LOCAL_BIN" publish "$@"
+fi
+
+cat >&2 <<'EOF'
+Harness Hub Publisher CLIが見つかりません。
+harness-publisherをPATHへ追加するか、次のようにHarnessHub checkout内のbinを指定してください。
+  export HARNESS_HUB_PUBLISHER_BIN=/absolute/path/to/HarnessHub/apps/publisher/bin/harness-publisher.mjs
+EOF
+exit 1

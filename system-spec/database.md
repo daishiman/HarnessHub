@@ -15,7 +15,7 @@ serves_goals: [G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-229 |
+| Web (web) | 確定 | 確定質疑: qa-231 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアントを作らないためモバイル固有の永続化なし |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアントを作らないためタブレット固有の永続化なし |
 | デスクトップ (Windows) (desktop-windows) | 対象外 | 理由: 作者環境にローカル DB を持たない。公開状態の正本は Hub 側 control plane (作者側は作業ディレクトリの package のみ) |
@@ -24,34 +24,19 @@ serves_goals: [G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-229 (対応セル: web)
+### qa-231 (対応セル: web)
 
-**質問**: database/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
+**質問**: Claude CodeやCodexで作成したドキュメントをHarness HubへAPI反映する追加要件について、既存の認証・セキュリティ・backend・database契約をどう更新するか。
 
-**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）、既存P01 baseline、qa-221〜qa-225のうち矛盾しない契約を統合した現行正本である。tenant分離、PII非複製、expand-then-contractを維持する。
+**回答**: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
 
-【1 Project関係】
-HearingSheet確定時に、サーバがtenant_id/workspace_idでscopeされたProjectを冪等に作成または関連付け、HearingSheet→Project関係を保存する。BuildとMetricsはこの関係または派生したHarness/Release/Project registryだけをtrusted resolverとして使い、client/token申告project_idを保存しない。
+【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。
 
-【2 metrics_events】
-append-only事実表はid、tenant_id、workspace_id、project_id、harness_id、principal由来actor_user_id、nullable department_id、run_count、server occurred_at、nullable idempotency_key、request_digest、idempotency_expires_at、created_atを持つ。client_reported_at、時間、金額、給与、係数を持たない。全queryはtenant/workspace scopeを必須とし、Project/Harness/actorの関係をrepositoryでfail-closed検証する。
+【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。
 
-endpoint専用tableでの冪等uniqueはtenant_id+idempotency_keyで、論理scope tenant+endpointを表現する。TTLは24時間。同key・異digestは422。期限後は旧eventのbusiness facts、digest、expiryを不変にしたままkey claimだけnull化して再利用できる。
+【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。
 
-【3 metrics_rollups】
-id、tenant_id、workspace_id、period=daily|weekly、dimension=tenant|harness|department|project|user、dimension_key、period_start、period_end、run_count、saved_minutes、saved_amount_jpy、computed_at、created_at、updated_atを持つ。saved値はserver側packages/estimationの算出結果であり、client申告値やsalaryは保存しない。uniqueはtenant+workspace+period+dimension+dimension_key+period_startとする。
-
-【4 transactionとwriter能力】
-rollupのatomic boundaryはtenant+workspace+period+period_startで、全dimension rowをTurso単一transactionでupsertする。Buildのstate・stage event・auditもTurso単一transactionを正規writerとする。D1 write adapterとD1 Build mutationは同等all-or-nothing証明までzero-writeで無効にする。
-
-【5 保持】
-metrics_eventsはTursoへ無期限保持し、R2 archiveや自動削除を行わない。一般DB backupのR2利用とは区別する。Turso storage/read/write使用量を日次監視し、無料枠圧迫時だけR4-reopenと利用者承認を経て保持期間を再検討する。
-
-【6 KPI snapshot】
-HearingSheet ownerは期間末の対象集合とcompleted状態、Catalog/Release ownerは期間末の対象公開済みHarness集合をsnapshotAt付きで永続化するかversioned read modelから決定論的に再現できなければならない。完了率は前者、利用率の分母は後者、分子は後者と期間内Harness rollupの共通部分。分母0はnullで表示「—」。anomalyは過去4完了週が揃い中央値が0でない場合だけ評価する。
-
-【7 migration】
-既存combined 0008は履歴としてimmutableに保ち、再採番・物理分割しない。今後のdelta migration、release、rollback evidenceはBuildとMetricsで分離する。rollbackはmigration lineageと前方修正を含むrelease単位で設計し、既存表DROPだけに限定しない。
+【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。
 
 ## 上流指針 (doctrine anchor)
 
@@ -109,45 +94,30 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 
 #### 本章での適用
 
-##### 確定内容 qa-229 (対応セル: web)
+##### 確定内容 qa-231 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）、既存P01 baseline、qa-221〜qa-225のうち矛盾しない契約を統合した現行正本である。tenant分離、PII非複製、expand-then-contractを維持する。
+- 確定要件: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
 
-【1 Project関係】
-HearingSheet確定時に、サーバがtenant_id/workspace_idでscopeされたProjectを冪等に作成または関連付け、HearingSheet→Project関係を保存する。BuildとMetricsはこの関係または派生したHarness/Release/Project registryだけをtrusted resolverとして使い、client/token申告project_idを保存しない。
+【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。
 
-【2 metrics_events】
-append-only事実表はid、tenant_id、workspace_id、project_id、harness_id、principal由来actor_user_id、nullable department_id、run_count、server occurred_at、nullable idempotency_key、request_digest、idempotency_expires_at、created_atを持つ。client_reported_at、時間、金額、給与、係数を持たない。全queryはtenant/workspace scopeを必須とし、Project/Harness/actorの関係をrepositoryでfail-closed検証する。
+【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。
 
-endpoint専用tableでの冪等uniqueはtenant_id+idempotency_keyで、論理scope tenant+endpointを表現する。TTLは24時間。同key・異digestは422。期限後は旧eventのbusiness facts、digest、expiryを不変にしたままkey claimだけnull化して再利用できる。
+【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。
 
-【3 metrics_rollups】
-id、tenant_id、workspace_id、period=daily|weekly、dimension=tenant|harness|department|project|user、dimension_key、period_start、period_end、run_count、saved_minutes、saved_amount_jpy、computed_at、created_at、updated_atを持つ。saved値はserver側packages/estimationの算出結果であり、client申告値やsalaryは保存しない。uniqueはtenant+workspace+period+dimension+dimension_key+period_startとする。
-
-【4 transactionとwriter能力】
-rollupのatomic boundaryはtenant+workspace+period+period_startで、全dimension rowをTurso単一transactionでupsertする。Buildのstate・stage event・auditもTurso単一transactionを正規writerとする。D1 write adapterとD1 Build mutationは同等all-or-nothing証明までzero-writeで無効にする。
-
-【5 保持】
-metrics_eventsはTursoへ無期限保持し、R2 archiveや自動削除を行わない。一般DB backupのR2利用とは区別する。Turso storage/read/write使用量を日次監視し、無料枠圧迫時だけR4-reopenと利用者承認を経て保持期間を再検討する。
-
-【6 KPI snapshot】
-HearingSheet ownerは期間末の対象集合とcompleted状態、Catalog/Release ownerは期間末の対象公開済みHarness集合をsnapshotAt付きで永続化するかversioned read modelから決定論的に再現できなければならない。完了率は前者、利用率の分母は後者、分子は後者と期間内Harness rollupの共通部分。分母0はnullで表示「—」。anomalyは過去4完了週が揃い中央値が0でない場合だけ評価する。
-
-【7 migration】
-既存combined 0008は履歴としてimmutableに保ち、再採番・物理分割しない。今後のdelta migration、release、rollback evidenceはBuildとMetricsで分離する。rollbackはmigration lineageと前方修正を含むrelease単位で設計し、既存表DROPだけに限定しない。
+【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。
 - 設計解釈の記録経路: `dialogue`
-- 原則: Domain Event (過去の事実を明示する) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/ddd.md#中核概念`)
+- 原則: Least privilege / deny by default (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: event factsと期限付きidempotency claimを分離し、旧eventを残したままclaimだけを解放して監査可能性とkey再利用を両立した。
+  - 章固有の根拠: 外部文書同期を既存の広い権限へ混ぜずdocs:writeへ分離し、token同一tenantのdraftだけを許可してprovider-admin越境も閉じた。
   - トレードオフ:
-    - idempotency metadataだけはappend-only例外になる
-    - 無期限保持費用を日次監視で引き受ける
-- 原則: Dependency Rule (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
+    - scope値域と認可マトリクスの更新が必要になる
+    - 別コマンド用refresh tokenでは再認可が必要になる
+- 原則: Concurrency and consistency (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: owner間関係をtrusted resolverへ閉じ、client inputをproject identityから排除した。
+  - 章固有の根拠: 自然キーによる冪等upsertとETag/If-Matchの楽観的競合制御を公開契約に含め、再送重複と無言の上書きを防いだ。
   - トレードオフ:
-    - resolver未実装中はfail-closedになる
-    - D1 parity証明までTurso依存が残る
+    - clientは更新前にGETする必要がある
+    - 競合時の428/412処理とrevision管理が増える
 - 資するゴール: G4, G5
 
 ## 最新ドキュメント出典

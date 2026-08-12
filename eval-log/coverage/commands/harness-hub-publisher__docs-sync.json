@@ -1,0 +1,22 @@
+{
+  "artifact": "plugins/harness-hub-publisher/commands/docs-sync.md",
+  "artifact_sha256": "6bd03a4ca6f4df07811dde49739be87a82e90e54d9c3959056cf32a776135dee",
+  "source_commit": "73fcb49dae4c87e606fae9e4516a4451f1c4fb5b",
+  "type": "commands",
+  "mechanical": true,
+  "llm_eval": {
+    "verdict": "PASS",
+    "score": 96,
+    "notes": "独立content reviewで確認。reference: sourceの自己参照先、owner Skill run-docs-sync、launcher、Publisher CLI、Docs API schemaがすべて実在する。schema: argument-hintの必須/任意optionはSkillとCLIのdocs dispatchに一致し、forceはtrue/falseへ限定される。owner-flow: commandはallowed-tools=[Skill]の薄い入口で、Skill→配置非依存launcher→Publisher CLI→Device Flow/Docs APIの一方向委譲を守り、認証・保存・競合処理を複製しない。placement: commands/docs-sync.mdは同pluginのmanifest/skill/scriptと同じ配布境界にあり、Marketplace正式名も明記する。pt5-plugin-surface-structure.test.tsが外部cwd+CLAUDE_PLUGIN_ROOT経路を実行し、欠損入力を非0で停止するためmechanical=true。30思考法レビューで検出された配置依存、CLI no-op、migration案内の不整合は現在差分で解消済み。"
+  },
+  "reviewed_by": "independent-content-review-subagent",
+  "reviewed_at": "2026-08-12T17:15:21+09:00",
+  "checked": [
+    "reference-existence",
+    "schema-conformance",
+    "argument-contract",
+    "owner-flow",
+    "placement-invariant",
+    "side-effect-safety"
+  ]
+}

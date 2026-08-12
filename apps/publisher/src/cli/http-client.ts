@@ -23,6 +23,17 @@ export interface HubApiClient {
   putBytes<T>(path: string, body: Uint8Array): Promise<T>;
 }
 
+export interface DocsHubApiClient extends HubApiClient {
+  getJsonResponse<T>(path: string): Promise<HubApiResponse<T>>;
+  putJsonResponse<T>(path: string, body: unknown, options?: { readonly ifMatch?: string }): Promise<HubApiResponse<T>>;
+}
+
+export interface HubApiResponse<T> {
+  readonly status: number;
+  readonly body: T;
+  readonly etag: string | null;
+}
+
 function createIdempotencyKey(): string {
   return `publisher-${crypto.randomUUID()}`;
 }
@@ -32,7 +43,7 @@ async function readErrorDetail(response: Response): Promise<string> {
   return text.length > 0 ? text : response.statusText;
 }
 
-export function createHubApiClient(config: HubApiClientConfig): HubApiClient {
+export function createHubApiClient(config: HubApiClientConfig): DocsHubApiClient {
   const baseHeaders: Record<string, string> = {
     authorization: `Bearer ${config.accessToken}`,
     'x-harness-tenant-id': config.tenantId,
@@ -52,9 +63,30 @@ export function createHubApiClient(config: HubApiClientConfig): HubApiClient {
     return (await response.json()) as T;
   }
 
+  async function requestResponse<T>(method: string, path: string, init: RequestInit): Promise<HubApiResponse<T>> {
+    const response = await fetch(new URL(path, config.baseUrl), {
+      ...init,
+      method,
+      headers: { ...baseHeaders, ...init.headers },
+    });
+    const text = await response.text();
+    let body: unknown = null;
+    if (text.length > 0) {
+      try {
+        body = JSON.parse(text);
+      } catch {
+        body = text;
+      }
+    }
+    return { status: response.status, body: body as T, etag: response.headers.get('etag') };
+  }
+
   return {
     getJson<T>(path: string): Promise<T> {
       return request<T>('GET', path, {});
+    },
+    getJsonResponse<T>(path: string): Promise<HubApiResponse<T>> {
+      return requestResponse<T>('GET', path, {});
     },
     postJson<T>(path: string, body: unknown): Promise<T> {
       return request<T>('POST', path, {
@@ -62,6 +94,21 @@ export function createHubApiClient(config: HubApiClientConfig): HubApiClient {
           'content-type': 'application/json',
           origin: config.origin,
           'idempotency-key': createIdempotencyKey(),
+        },
+        body: JSON.stringify(body),
+      });
+    },
+    putJsonResponse<T>(
+      path: string,
+      body: unknown,
+      options: { readonly ifMatch?: string } = {},
+    ): Promise<HubApiResponse<T>> {
+      return requestResponse<T>('PUT', path, {
+        headers: {
+          'content-type': 'application/json',
+          origin: config.origin,
+          'idempotency-key': createIdempotencyKey(),
+          ...(options.ifMatch === undefined ? {} : { 'if-match': options.ifMatch }),
         },
         body: JSON.stringify(body),
       });
