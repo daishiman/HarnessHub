@@ -113,8 +113,14 @@ describe('DETAILSTATE: 詳細画面の文脈と属性を状態遷移で失わな
     });
     await flush();
 
+    // エラーメッセージ抽出は動的 import (client JS 予算対策) を挟むため、
+    // モジュール読み込みの完了タイミングが flush() の固定回数を超えることがある。
+    // waitFor で状態確定まで待ってから判定する。
+    await vi.waitFor(() => {
+      expect(container.textContent).toContain('シートを取得できませんでした');
+    });
+
     expect(container.querySelector('h1')?.textContent).toContain('ヒアリングシート詳細');
     expect(container.querySelector('a[href="/sheets?tenant=t&workspace=w"]')).not.toBeNull();
-    expect(container.textContent).toContain('シートを取得できませんでした');
   });
 });
