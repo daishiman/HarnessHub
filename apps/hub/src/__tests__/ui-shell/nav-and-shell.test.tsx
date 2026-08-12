@@ -187,8 +187,12 @@ describe('UIS-NAV: 導線の定義', () => {
   });
 
   it('UIS-NAV-007: member と role 未確定時は管理者専用の導線を DOM へ渡さない', () => {
+    expect(navItems.secondaryNavItems(SCOPE, null).map((item) => item.label)).toStrictEqual(['アカウント設定']);
+    expect(navItems.secondaryNavItems(SCOPE, 'member').map((item) => item.label)).toStrictEqual([
+      'アカウント設定',
+      'Notion連携',
+    ]);
     for (const role of [null, 'member'] as const) {
-      expect(navItems.secondaryNavItems(SCOPE, role).map((item) => item.label)).toStrictEqual(['アカウント設定']);
       expect(navItems.accountMenuLinks(SCOPE, role).map((item) => item.label)).toStrictEqual([
         'アカウント設定',
         '利用規約・プライバシーポリシー',
@@ -201,12 +205,14 @@ describe('UIS-NAV: 導線の定義', () => {
       'ユーザー管理',
       'アカウント設定',
       '見積係数設定',
+      'Notion連携',
     ]);
     expect(navItems.secondaryNavItems(SCOPE, 'provider-admin').map((item) => item.label)).toStrictEqual([
       'ユーザー管理',
       'アカウント設定',
       '認証設定',
       '見積係数設定',
+      'Notion連携',
     ]);
   });
 });

@@ -92,6 +92,7 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
   const usersVisible = sessionActionVisible(role, 'users.read');
   const authSettingsVisible = sessionActionVisible(role, 'idp.connection_read');
   const coefficientsVisible = sessionActionVisible(role, 'coefficients.read');
+  const notionIntegrationVisible = sessionActionVisible(role, 'notion-integration.read');
 
   return [
     ...(usersVisible
@@ -122,6 +123,16 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
           {
             href: scopedHref('/settings/coefficients', scope, false),
             label: '見積係数設定',
+            icon: 'settings' as const,
+          },
+        ]
+      : []),
+    ...(notionIntegrationVisible
+      ? [
+          {
+            // Notion 連携は tenant 全体ではなく workspace ごとの設定。
+            href: scopedHref('/settings/notion', scope, true),
+            label: 'Notion連携',
             icon: 'settings' as const,
           },
         ]
