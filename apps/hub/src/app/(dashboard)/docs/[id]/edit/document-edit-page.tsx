@@ -11,8 +11,9 @@ import { Alert, Button, LiveStatus, Panel, Select, Stack, TextInput } from '@har
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
+import { canWriteDocument, extractErrorMessage } from '../../../../../features/docs-cms/client-errors.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
-import { useDashboardScope } from '../../../dashboard-scope-context.js';
+import { useDashboardScope, useSessionRole } from '../../../dashboard-scope-context.js';
 
 const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
   loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
@@ -42,6 +43,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const { id } = use(params);
   const query = use(searchParams);
   const scope = useDashboardScope();
+  const role = useSessionRole();
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
 
   const [saved, setSaved] = useState<DocumentDetail | null>(null);
@@ -57,7 +59,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('ドキュメントを取得できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, 'ドキュメントを取得できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setTitle(doc.title);
@@ -82,7 +84,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         headers: headers(tenantId, workspaceId),
         body: JSON.stringify({ title, body_markdown: bodyMarkdown, status }),
       });
-      if (!response.ok) throw new Error('保存できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, '保存できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setError(null);
@@ -96,6 +98,15 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
   if (error !== null && saved === null) return <Alert tone="danger" title="読み込みエラー" description={error} />;
   if (saved === null) return <LiveStatus>ドキュメントを読み込み中です。</LiveStatus>;
+  if (!canWriteDocument(role, saved.scope)) {
+    return (
+      <Alert
+        tone="danger"
+        title="編集できません"
+        description="このドキュメントを編集する権限がありません (workspace-admin 以上、共通スコープは provider-admin が必要です)。"
+      />
+    );
+  }
 
   return (
     <article>

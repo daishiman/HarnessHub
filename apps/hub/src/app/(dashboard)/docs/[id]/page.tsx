@@ -8,8 +8,9 @@ import type { DocumentDetail } from '@harness-hub/schemas';
 import { Alert, Button, LiveStatus, Panel, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { canWriteDocument, extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
-import { useDashboardScope } from '../../dashboard-scope-context.js';
+import { useDashboardScope, useSessionRole } from '../../dashboard-scope-context.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -30,6 +31,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
   const { id } = use(params);
   const query = use(searchParams);
   const scope = useDashboardScope();
+  const role = useSessionRole();
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
 
   const [doc, setDoc] = useState<DocumentDetail | null>(null);
@@ -41,7 +43,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('ドキュメントを取得できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, 'ドキュメントを取得できませんでした。'));
       setDoc((await response.json()) as DocumentDetail);
       setError(null);
     } catch (cause) {
@@ -96,12 +98,14 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
           </TagRow>
         }
         actions={
-          <Button
-            type="button"
-            onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
-          >
-            編集する
-          </Button>
+          canWriteDocument(role, doc.scope) ? (
+            <Button
+              type="button"
+              onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
+            >
+              編集する
+            </Button>
+          ) : undefined
         }
       />
       {/* 状態とスコープは見出し帯 (sticky) の中に置いた。本文が長い運用手順書でも

@@ -12,6 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // route wrapper はbundle分割だけを担うため、保存契約は遅延読込先の実装本体で検証する。
 import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/document-edit-page.js';
 import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
+import { SessionRoleProvider } from '../../app/(dashboard)/dashboard-scope-context.js';
 import { DocumentList } from '../../app/(dashboard)/docs/document-list.js';
 import { DocumentCreateForm } from '../../app/(dashboard)/docs/new/document-create-form.js';
 
@@ -61,8 +62,16 @@ let root: Root;
 let assign: ReturnType<typeof vi.fn>;
 
 async function render(element: ReactElement): Promise<void> {
+  await renderWithRole(element, 'workspace-admin');
+}
+
+async function renderWithRole(element: ReactElement, role: 'member' | 'workspace-admin' | 'provider-admin'): Promise<void> {
   await act(async () => {
-    root.render(createElement(UiProvider, null, element));
+    // 詳細/編集画面は SessionRoleProvider (layout.tsx が resolveShellIdentity() で解決する) から
+    // role を読み、docs.write_tenant を満たさない role では編集導線を隠す。
+    root.render(
+      createElement(UiProvider, null, createElement(SessionRoleProvider, { role, children: element })),
+    );
   });
   await flush();
 }
@@ -161,7 +170,7 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
 describe('DOCS-UI: DocumentCreateForm の作成', () => {
   it('DOCS-UI-004: 作成成功で作成先ドキュメントへ遷移する', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 })));
-    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
 
     const form = container.querySelector('form');
     if (form === null) throw new Error('作成 form がありません');
@@ -173,7 +182,7 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
 
   it('DOCS-UI-005: 作成失敗はエラーバナーを表示する', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({}, { ok: false, status: 500 })));
-    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
 
     const form = container.querySelector('form');
     if (form === null) throw new Error('作成 form がありません');
@@ -270,5 +279,48 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
 
     expect(container.textContent).toContain('読み込みエラー');
     expect(container.textContent).toContain('network error');
+  });
+
+  it('DOCS-UI-012: docs.write_tenant を満たさない role では編集画面を出さない (元不具合の権限不足経路)', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(DOC)));
+    await renderWithRole(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+      'member',
+    );
+
+    expect(container.textContent).toContain('編集できません');
+    expect(container.querySelector('button')).toBeNull();
+  });
+
+  it('DOCS-UI-013: 403 (problem+json) は権限不足の文言をそのまま出す', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
+      if (url === `/api/v1/docs/${DOC.id}` && init?.method === 'PATCH') {
+        return jsonResponse(
+          { title: '権限がありません', detail: 'workspace-admin 以上が必要です。', status: 403 },
+          { ok: false, status: 403 },
+        );
+      }
+      return jsonResponse(DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+
+    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
+    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    // 修正前は「保存できませんでした。」という固定文言しか出せず、権限不足かどうか区別できなかった。
+    expect(container.textContent).toContain('権限が不足しているため、この操作はできません。');
   });
 });

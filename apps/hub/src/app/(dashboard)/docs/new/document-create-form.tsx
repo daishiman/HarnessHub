@@ -4,6 +4,7 @@ import type { DocumentDetail, DocumentScope } from '@harness-hub/schemas';
 import { Alert, Button, Select, Stack, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useState } from 'react';
+import { extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
 
 const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
   loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
@@ -12,9 +13,11 @@ const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => 
 interface DocumentCreateFormProps {
   readonly tenantId: string;
   readonly workspaceId: string;
+  /** `docs.write_common` を持つ role のときだけ「共通」スコープを選べる。 */
+  readonly canWriteCommon: boolean;
 }
 
-export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateFormProps): ReactNode {
+export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: DocumentCreateFormProps): ReactNode {
   const [scope, setScope] = useState<DocumentScope>('tenant');
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
@@ -35,7 +38,7 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
         },
         body: JSON.stringify({ scope, title, body_markdown: bodyMarkdown }),
       });
-      if (!response.ok) throw new Error('作成できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, '作成できませんでした。'));
       const created = (await response.json()) as DocumentDetail;
       window.location.assign(`/docs/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`);
     } catch (cause) {
@@ -53,10 +56,14 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
           label="スコープ"
           value={scope}
           onChange={(event) => setScope(event.target.value as DocumentScope)}
-          options={[
-            { value: 'tenant', label: 'テナント' },
-            { value: 'common', label: '共通 (要 provider-admin 権限)' },
-          ]}
+          options={
+            canWriteCommon
+              ? [
+                  { value: 'tenant', label: 'テナント' },
+                  { value: 'common', label: '共通 (要 provider-admin 権限)' },
+                ]
+              : [{ value: 'tenant', label: 'テナント' }]
+          }
         />
         <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
         <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
