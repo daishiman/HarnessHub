@@ -89,6 +89,17 @@ async function flush(): Promise<void> {
   }
 }
 
+async function findButtonByText(text: string): Promise<HTMLButtonElement> {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const button = [...container.querySelectorAll('button')].find((candidate) => candidate.textContent === text);
+    if (button !== undefined) return button;
+    // next/dynamic の module 解決は microtask だけでは完了しない場合があるため、
+    // 実装の遅延境界を保ったままテスト側で描画完了を待つ。
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+  }
+  throw new Error(`${text} ボタンがありません`);
+}
+
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   container = document.createElement('div');
@@ -240,8 +251,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     );
     expect(container.textContent).toContain(DOC.title);
 
-    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
-    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    const saveButton = await findButtonByText('保存する');
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
 
@@ -265,8 +275,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
       />,
     );
 
-    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
-    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    const saveButton = await findButtonByText('保存する');
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
 
