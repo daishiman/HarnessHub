@@ -270,5 +270,42 @@ ${mediaUp('lg')} {
     padding: 0 var(--hh-space-3);
   }
 }
+
+/* --- サイドバー開閉トグル (HarnessHub 配色統一・サイドバートグル対応) ---
+   開閉 state は SidebarToggleButton が document root に立てる
+   data-hh-sidebar-collapsed で受け取る。属性セレクタなので、後段に置くだけで
+   md/lg の幅ごとの grid-template-columns を上書きできる (JS 未実行時は
+   常に "展開" のまま、既存のレスポンシブ規則だけが効く)。 */
+${mediaUp('md')} {
+  [data-hh-sidebar-collapsed='true'] .hh-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+[data-hh-sidebar-collapsed='true'] .hh-shell__sidebar {
+  display: none;
+}
+
+/* トグル自体はモバイルのタブバーと役割が重なるため、サイドバーが実在する
+   md 以上でだけ出す (hh-shell__desktop-only と同じ閾値)。 */
+[data-hh-sidebar-toggle] {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--hh-control-height);
+  min-height: var(--hh-control-height);
+  padding: 0;
+  color: var(--hh-color-text);
+  background: transparent;
+  border: none;
+  border-radius: var(--hh-radius-full);
+  cursor: pointer;
+}
+
+${mediaUp('md')} {
+  [data-hh-sidebar-toggle] {
+    display: inline-flex;
+  }
+}
 `.trim();
 }

@@ -64,7 +64,8 @@ export interface CatalogEntry {
 
 /**
  * 文脈を与える側に回るため単独の見本を持たない部品。
- * カタログ全体をこの 2 つで包んでいるので、描画自体は全 group で行われている。
+ * `UiProvider` / `ToastProvider` はカタログ全体をこの 2 つで包んでいるので、描画自体は
+ * 全 group で行われている。
  */
 export const catalogWrappers = ['UiProvider', 'ToastProvider'] as const;
 

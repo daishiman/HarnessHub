@@ -34,20 +34,24 @@ export {
  * 装飾用の `*Soft` 背景側に残す。この対応関係は `contrastRequirements` が機械検証する。
  */
 const lightColors = {
-  /** 画面全体の背景 */
-  bg: '#f5f7fa',
+  /**
+   * 画面全体の背景。無彩色グレーではなく `primary` と同系の青みをわずかに帯びた
+   * グレー (blue-tinted neutral) にして、ブランドカラーとの一貫性を保つ
+   * (HarnessHub 配色統一: グレー多用による暗く沈んだ印象の解消)。
+   */
+  bg: '#f2f5fb',
   /** カード・パネルの面 */
   surface: '#ffffff',
   /** 面の中の弱い区画 (テーブル header 等) */
-  surfaceMuted: '#f0f0f0',
+  surfaceMuted: '#eaf0f9',
   /** 装飾的な罫線 (3:1 を要求しない) */
-  border: '#d9d9d9',
+  border: '#c7d3e6',
   /** 入力欄の輪郭など、操作部品の境界 (弱い面 `surfaceMuted` の上でも 3:1 を満たす濃さにする) */
-  borderStrong: '#808080',
+  borderStrong: '#66768f',
   /** 本文 */
-  text: '#1f2329',
+  text: '#1a2233',
   /** 補足文 */
-  textMuted: '#5c6470',
+  textMuted: '#57647d',
   /** 主操作の塗り・リンク文字 */
   primary: '#0958d9',
   primaryHover: '#003eb3',
@@ -73,20 +77,20 @@ const lightColors = {
   infoSoft: '#e6fffb',
   magenta: '#c41d7f',
   magentaSoft: '#fff0f6',
-  /** 中立チップの背景 */
-  neutralSoft: '#f0f0f0',
+  /** 中立チップの背景 (面の中の弱い区画 `surfaceMuted` と同じ青みグレーで揃える) */
+  neutralSoft: '#eaf0f9',
   /** フォーカスリング。色のみに依存しないよう輪郭形状も併用する */
   focusRing: '#0958d9',
 } as const satisfies Record<ColorTokenName, string>;
 
 const darkColors: Record<ColorTokenName, string> = {
-  bg: '#14161a',
-  surface: '#1c1f26',
-  surfaceMuted: '#22262f',
-  border: '#333842',
-  borderStrong: '#737d8f',
-  text: '#e8eaed',
-  textMuted: '#a6adba',
+  bg: '#11141c',
+  surface: '#1a1f2b',
+  surfaceMuted: '#212736',
+  border: '#2c3446',
+  borderStrong: '#7a8bab',
+  text: '#e7ebf5',
+  textMuted: '#9aa8c2',
   primary: '#4096ff',
   primaryHover: '#69b1ff',
   primarySoft: '#111a2c',
@@ -106,7 +110,7 @@ const darkColors: Record<ColorTokenName, string> = {
   infoSoft: '#112123',
   magenta: '#ff85c0',
   magentaSoft: '#291321',
-  neutralSoft: '#22262f',
+  neutralSoft: '#212736',
   focusRing: '#69b1ff',
 };
 
