@@ -12,7 +12,7 @@ iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T16:53:01Z"
+updated_at: "2026-08-12T22:34:34.494659Z"
 status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P06"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/acceptance-report.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"final-review-wt-7","status":"done"}
+completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/acceptance-report.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

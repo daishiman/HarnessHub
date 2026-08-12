@@ -12,7 +12,7 @@ iteration: null
 title: "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T16:53:01Z"
+updated_at: "2026-08-12T22:38:32.397238Z"
 status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P11"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/runbook.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"final-review-wt-7","status":"done"}
+completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/runbook.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
