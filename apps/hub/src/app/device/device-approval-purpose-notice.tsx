@@ -27,7 +27,7 @@ export function DeviceApprovalPurposeNotice(): ReactNode {
       <Alert
         tone="info"
         title="この画面はPublisher・CLIから始めた場合だけ使います"
-        description="CLIを使わずにHubのWebだけでSkillを公開したい場合は、この画面ではなく公開ウィザードへ進んでください。"
+        description="CLIを使わずにHubのWebだけでハーネスを公開したい場合は、この画面ではなく公開ウィザードへ進んでください。"
         action={<ActionLink href={PUBLISH_WIZARD_HREF}>{PUBLISH_WIZARD_LINK_LABEL}</ActionLink>}
       />
     </Stack>

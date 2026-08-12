@@ -248,14 +248,18 @@ export function PublishWizard({
 
   return (
     <section aria-labelledby="publish-wizard-heading">
-      <h2 id="publish-wizard-heading">Skill を公開する</h2>
+      <h2 id="publish-wizard-heading">ハーネスを公開する</h2>
       <p>Project を準備し、ZIP を投入します。Hub 側の検査と権限は Publisher CLI と共通です。</p>
 
       <Alert
         tone="info"
-        title="Web アプリの公開には Publisher CLI が必要です"
-        description="Web アプリは wrangler によるデプロイと疎通確認が必要なため、この画面では選べません。Publisher CLI を開始した場合だけ Device 承認へ進んでください。"
-        action={<ActionLink href="/device">Device 承認を開く</ActionLink>}
+        title="Web アプリとしての公開には Publisher CLI が必要です"
+        description="Web アプリは wrangler によるデプロイと疎通確認が必要なため、この画面では選べません。Publisher CLI をすでに起動している場合だけ、次のボタンから別タブで Device 承認を開いてください(この画面はそのまま残ります)。"
+        action={
+          <ActionLink href="/device" openInNewTab>
+            別タブで Device 承認を開く
+          </ActionLink>
+        }
       />
 
       <form onSubmit={onSubmit}>
@@ -284,7 +288,7 @@ export function PublishWizard({
               />
               <Textarea
                 label="説明"
-                description="何ができる Skill かを簡潔に記載します。"
+                description="何ができるハーネスかを簡潔に記載します。"
                 value={projectDescription}
                 onChange={(event) => setProjectDescription(event.currentTarget.value)}
                 maxLength={2_000}

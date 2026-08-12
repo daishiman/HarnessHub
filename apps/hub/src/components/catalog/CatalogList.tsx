@@ -33,7 +33,7 @@ export interface CatalogListProps {
 
 const TARGET_OPTIONS = [
   { value: '', label: 'すべての種別' },
-  { value: 'skill', label: 'Skill' },
+  { value: 'skill', label: 'ハーネス' },
   { value: 'web_app', label: 'Web アプリ' },
 ] as const;
 
@@ -190,7 +190,7 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
               header: '種別',
               sortable: true,
               value: (row) => row.target,
-              render: (row) => (row.target === 'skill' ? 'Skill' : 'Web アプリ'),
+              render: (row) => (row.target === 'skill' ? 'ハーネス' : 'Web アプリ'),
               salience: 'metadata',
             },
             {
