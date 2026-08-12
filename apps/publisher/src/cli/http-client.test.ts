@@ -11,15 +11,23 @@ const CONFIG: HubApiClientConfig = {
 };
 
 function fakeResponse(
-  overrides: Partial<{ ok: boolean; status: number; statusText: string; json: unknown; text: string }>,
+  overrides: Partial<{
+    ok: boolean;
+    status: number;
+    statusText: string;
+    json: unknown;
+    text: string;
+    headers: Headers;
+  }>,
 ) {
-  const { ok = true, status = 200, statusText = 'OK', json = {}, text = '' } = overrides;
+  const { ok = true, status = 200, statusText = 'OK', json = {}, text = '', headers = new Headers() } = overrides;
   return {
     ok,
     status,
     statusText,
     json: async () => json,
     text: async () => text,
+    headers,
   } as Response;
 }
 
@@ -89,6 +97,33 @@ describe('createHubApiClient', () => {
     expect(init.body).toBe(bytes);
     const headers = init.headers as Record<string, string>;
     expect(headers['content-type']).toBe('application/octet-stream');
+  });
+
+  it('putJsonResponse はIf-MatchとETagを往復し、非2xxもstatus付きで返す', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      fakeResponse({
+        ok: false,
+        status: 412,
+        text: JSON.stringify({ title: 'stale' }),
+        headers: new Headers({ etag: '"docs-import-3"' }),
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const client = createHubApiClient(CONFIG);
+    const result = await client.putJsonResponse(
+      '/api/v1/docs/imports/claude-code/abc',
+      { title: 'x' },
+      {
+        ifMatch: '"docs-import-2"',
+      },
+    );
+
+    expect(result).toEqual({ status: 412, body: { title: 'stale' }, etag: '"docs-import-3"' });
+    const [, init] = fetchMock.mock.calls[0] as [URL, RequestInit];
+    const headers = init.headers as Record<string, string>;
+    expect(headers['if-match']).toBe('"docs-import-2"');
+    expect(headers.origin).toBe(CONFIG.origin);
   });
 
   it('応答が ok でない場合、method/path/status/本文を含むエラーを投げる', async () => {

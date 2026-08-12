@@ -9,6 +9,7 @@ import {
 } from './credential-store.js';
 
 const RECORD: PublisherCredentialRecord = {
+  hub_origin: 'https://hub.example.com',
   tenant_slug: 'acme',
   workspace_id: 'ws-1',
   refresh_token: 'a'.repeat(32),
@@ -25,14 +26,14 @@ describe('createMacKeychainAdapter', () => {
     const runProcess = fakeRunProcess({ exitCode: 0, stdout: `${JSON.stringify(RECORD)}\n`, stderr: '' });
     const adapter = createMacKeychainAdapter(runProcess);
 
-    await expect(adapter.getToken('acme')).resolves.toEqual(RECORD);
+    await expect(adapter.getToken(RECORD.hub_origin, 'acme')).resolves.toEqual(RECORD);
   });
 
   it('getToken は security コマンドが非 0 終了したら null を返す (未保存扱い)', async () => {
     const runProcess = fakeRunProcess({ exitCode: 44, stdout: '', stderr: 'not found' });
     const adapter = createMacKeychainAdapter(runProcess);
 
-    await expect(adapter.getToken('acme')).resolves.toBeNull();
+    await expect(adapter.getToken(RECORD.hub_origin, 'acme')).resolves.toBeNull();
   });
 
   it('saveToken は security コマンドが非 0 終了したらエラーを投げる', async () => {
@@ -46,7 +47,7 @@ describe('createMacKeychainAdapter', () => {
     const runProcess = fakeRunProcess({ exitCode: 44, stdout: '', stderr: 'not found' });
     const adapter = createMacKeychainAdapter(runProcess);
 
-    await expect(adapter.clearToken('acme')).resolves.toBeUndefined();
+    await expect(adapter.clearToken(RECORD.hub_origin, 'acme')).resolves.toBeUndefined();
     expect(runProcess).toHaveBeenCalledWith('security', expect.arrayContaining(['delete-generic-password']));
   });
 });
@@ -56,14 +57,14 @@ describe('createWindowsCredentialManagerAdapter', () => {
     const runProcess = fakeRunProcess({ exitCode: 0, stdout: `${JSON.stringify(RECORD)}\n`, stderr: '' });
     const adapter = createWindowsCredentialManagerAdapter(runProcess);
 
-    await expect(adapter.getToken('acme')).resolves.toEqual(RECORD);
+    await expect(adapter.getToken(RECORD.hub_origin, 'acme')).resolves.toEqual(RECORD);
   });
 
   it('getToken は PowerShell が非 0 終了したら null を返す (未保存扱い)', async () => {
     const runProcess = fakeRunProcess({ exitCode: 1, stdout: '', stderr: '' });
     const adapter = createWindowsCredentialManagerAdapter(runProcess);
 
-    await expect(adapter.getToken('acme')).resolves.toBeNull();
+    await expect(adapter.getToken(RECORD.hub_origin, 'acme')).resolves.toBeNull();
   });
 
   it('saveToken は PowerShell が非 0 終了したらエラーを投げる', async () => {
@@ -77,7 +78,7 @@ describe('createWindowsCredentialManagerAdapter', () => {
     const runProcess = fakeRunProcess({ exitCode: 1, stdout: '', stderr: '' });
     const adapter = createWindowsCredentialManagerAdapter(runProcess);
 
-    await expect(adapter.clearToken('acme')).resolves.toBeUndefined();
+    await expect(adapter.clearToken(RECORD.hub_origin, 'acme')).resolves.toBeUndefined();
     expect(runProcess).toHaveBeenCalledWith('powershell.exe', expect.arrayContaining(['-NoProfile']));
   });
 
@@ -107,9 +108,12 @@ describe('createCredentialStoreAdapter', () => {
     expect(adapter.platform).toBe('win32');
   });
 
-  it('darwin/win32 以外の platform は非対応としてエラーを投げる', () => {
-    expect(() =>
-      createCredentialStoreAdapter(fakeRunProcess({ exitCode: 0, stdout: '', stderr: '' }), 'linux'),
-    ).toThrow(/サポート対象外/);
+  it('linux では平文保存せず毎回Device Flowへ戻るephemeral adapterを返す', async () => {
+    const runProcess = fakeRunProcess({ exitCode: 0, stdout: '', stderr: '' });
+    const adapter = createCredentialStoreAdapter(runProcess, 'linux');
+    expect(adapter.platform).toBe('linux');
+    await expect(adapter.getToken(RECORD.hub_origin, 'acme')).resolves.toBeNull();
+    await expect(adapter.saveToken(RECORD)).resolves.toBeUndefined();
+    expect(runProcess).not.toHaveBeenCalled();
   });
 });

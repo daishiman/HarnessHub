@@ -56,4 +56,28 @@ describe('DOCS-HTTP: parseJsonRequest', () => {
     const result = await parseJsonRequest(request, SCOPED_SCHEMA);
     expect(result).toEqual({ ok: true, data: { scope: 'tenant', title: '導入ガイド' } });
   });
+
+  it('DOCS-HTTP-005: Content-Lengthが上限超過なら本文をparseせず413を返す', async () => {
+    const request = new Request('https://example.test/api/v1/docs', {
+      method: 'POST',
+      body: '{}',
+      headers: { 'content-type': 'application/json', 'content-length': '1001' },
+    });
+    const result = await parseJsonRequest(request, SCOPED_SCHEMA, { maxBytes: 1000 });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error('unreachable');
+    expect(result.response.status).toBe(413);
+  });
+
+  it('DOCS-HTTP-006: Content-Length無しでもstream実測が上限を超えたら413を返す', async () => {
+    const request = new Request('https://example.test/api/v1/docs', {
+      method: 'POST',
+      body: JSON.stringify({ scope: 'tenant', title: '長い本文' }),
+      headers: { 'content-type': 'application/json' },
+    });
+    const result = await parseJsonRequest(request, SCOPED_SCHEMA, { maxBytes: 8 });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error('unreachable');
+    expect(result.response.status).toBe(413);
+  });
 });

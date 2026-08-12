@@ -25,6 +25,8 @@ export interface ActionRule {
    * `workspace-admin` 以上は管理操作として他人の資源にも及ぶ (`decide` 側で判定)。
    */
   readonly selfOnly: boolean;
+  /** provider-adminの通常越境も禁止する機械操作だけfalseを指定する。省略時は既存挙動を維持する。 */
+  readonly allowProviderCrossTenant?: boolean;
 }
 
 const SESSION = 'session';
@@ -71,6 +73,14 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'docs.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'docs.write_tenant': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'docs.write_common': { minRole: 'provider-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+  // 外部作成文書の同期はWeb編集とは分離し、短命Device Flow token + 専用scopeだけを許可する。
+  'docs.external_sync': {
+    minRole: 'workspace-admin',
+    requiredScope: 'docs:write',
+    credential: TOKEN,
+    selfOnly: false,
+    allowProviderCrossTenant: false,
+  },
   'users.read': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'users.write': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'users.role_change': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },

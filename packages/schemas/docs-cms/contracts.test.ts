@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { createDocumentRequestSchema, documentDetailSchema, updateDocumentRequestSchema } from './contracts.js';
+import {
+  createDocumentRequestSchema,
+  documentDetailSchema,
+  externalDocumentIdSchema,
+  externalDocumentSourceSchema,
+  externalDocumentSyncRequestSchema,
+  updateDocumentRequestSchema,
+} from './contracts.js';
 
 const INTERNAL_IMAGE_URL = '/api/v1/docs/doc-1/images/550e8400-e29b-41d4-a716-446655440000.png';
 
@@ -47,5 +54,21 @@ describe('DOCS-CONTRACT: image URL', () => {
     expect(updateDocumentRequestSchema.safeParse({ thumbnail_url: 'https://example.test/thumb.webp' }).success).toBe(
       true,
     );
+  });
+});
+
+describe('external document sync contracts', () => {
+  it('accepts a safe source, sha256 id and bounded Markdown payload', () => {
+    expect(externalDocumentSourceSchema.parse('claude-code')).toBe('claude-code');
+    expect(externalDocumentIdSchema.parse('a'.repeat(64))).toHaveLength(64);
+    expect(externalDocumentSyncRequestSchema.parse({ title: '設計書', body_markdown: '# 本文' })).toEqual({
+      title: '設計書',
+      body_markdown: '# 本文',
+    });
+  });
+
+  it('rejects path-like source and non-hash external ids', () => {
+    expect(externalDocumentSourceSchema.safeParse('../claude').success).toBe(false);
+    expect(externalDocumentIdSchema.safeParse('/Users/alice/doc.md').success).toBe(false);
   });
 });

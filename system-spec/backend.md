@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1, G3]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-228 |
+| Web (web) | 確定 | 確定質疑: qa-231 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | タブレット (tablet) | 対象外 | 理由: native タブレットクライアント向け API 差分なし (ブラウザ経由は web 行でカバー) |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-010 |
@@ -24,32 +24,19 @@ serves_goals: [G4, G5, G1, G3]
 
 ## 確定内容 (質疑録)
 
-### qa-228 (対応セル: web)
+### qa-231 (対応セル: web)
 
-**質問**: backend/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
+**質問**: Claude CodeやCodexで作成したドキュメントをHarness HubへAPI反映する追加要件について、既存の認証・セキュリティ・backend・database契約をどう更新するか。
 
-**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-220〜qa-224のうち矛盾しない契約を統合した現行正本である。認証方式D3、認可単一middleware、strict schema、deny-by-default、共通error model、additive evolutionを維持する。
+**回答**: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
 
-【1 Projectの正規生成と解決】
-HearingSheet確定遷移を起点に、サーバが同一tenant/workspace内でProjectを冪等に作成または既存Projectへ関連付け、その関係を保存する。Build作成はこの確定関係をtrusted resolverで解決できた場合だけ許す。MetricsはbodyのharnessIdをサーバ側Harness/Release/Project registryでtenant/workspace/projectへ一意に解決する。project_idをclient body・表示名・token claimから採用せず、未解決・不一致・越境は情報を漏らさずfail-closedとする。
+【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。
 
-【2 Metrics ingest】
-POST /api/v1/metrics/eventsはDevice Flowの短命Bearer token、x-harness-workspace-id、Idempotency-Keyを必須とする。tokenから信頼する主体はtenant/workspace/userまで。strict bodyはharnessIdと整数runCountだけで、client時刻・actor・department・project・時間・金額・給与・係数を拒否する。actorはprincipal由来、departmentはtrusted lookup未整備中null、occurred_atはサーバ採番。business factsはappend-onlyで更新・削除APIを持たない。
+【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。
 
-【3 冪等】
-論理scopeはtenant+endpoint、TTLは24時間、digestはcanonical payloadに束縛する。同key・同digestの有効期間内再送は200で同じeventを再生し、同key・異digestは422で計上しない。期限切れkeyは旧event factsを変えずclaimだけ解放する。unique constraintを同時実行の最終防壁とする。
+【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。
 
-【4 rollup】
-Workers cronは日次事前集計と週次確定を行い、tenant/harness/department/project/user次元のrun_count、saved_minutes、saved_amount_jpyをサーバ側packages/estimationで算出する。workspace+period単位の全次元upsertをTurso単一transactionでcommitし、失敗時は全件rollbackする。D1 write adapterは同等all-or-nothing証明まで無効。画面APIはcommit済みrollupとowner snapshotだけを読み、生eventのonline aggregateを禁止する。
-
-【5 KPIとanomaly】
-completionRateは期間末HearingSheet snapshotのcompleted件数÷対象総数、utilizationRateは期間末公開済みHarness snapshotのうち期間内利用1回以上の件数÷対象総数。分母0はrate=null+denominator_empty。anomalyは過去4完了週が揃い中央値が0でない場合だけ10倍超を評価する。通知は観測日・scope・user・rule versionで冪等化し、ingestをブロックしない。
-
-【6 Build mutation】
-正規endpointはPOST /api/v1/builds/{id}/stage。expected source stageまたはexpected_updated_atによるCASを課し、競合は409。正規writerはTursoだけで、state・stage event・auditを同一transactionでall-or-nothingに記録する。D1は同等原子性が証明されるまで503 typed unavailableかつzero-writeで拒否し、部分書込みやTurso失敗時fallbackを行わない。
-
-【7 UI供給】
-S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapshotAt/nullable rate/reasonと、chart/table共通data modelを返す。集計金額はmember以上、user次元の金額はusers.read_salary保持者だけに返す。
+【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。
 
 ### qa-010 (対応セル: desktop-windows, desktop-macos)
 
@@ -197,37 +184,30 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 
 #### 本章での適用
 
-##### 確定内容 qa-228 (対応セル: web)
+##### 確定内容 qa-231 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-220〜qa-224のうち矛盾しない契約を統合した現行正本である。認証方式D3、認可単一middleware、strict schema、deny-by-default、共通error model、additive evolutionを維持する。
+- 確定要件: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
 
-【1 Projectの正規生成と解決】
-HearingSheet確定遷移を起点に、サーバが同一tenant/workspace内でProjectを冪等に作成または既存Projectへ関連付け、その関係を保存する。Build作成はこの確定関係をtrusted resolverで解決できた場合だけ許す。MetricsはbodyのharnessIdをサーバ側Harness/Release/Project registryでtenant/workspace/projectへ一意に解決する。project_idをclient body・表示名・token claimから採用せず、未解決・不一致・越境は情報を漏らさずfail-closedとする。
+【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。
 
-【2 Metrics ingest】
-POST /api/v1/metrics/eventsはDevice Flowの短命Bearer token、x-harness-workspace-id、Idempotency-Keyを必須とする。tokenから信頼する主体はtenant/workspace/userまで。strict bodyはharnessIdと整数runCountだけで、client時刻・actor・department・project・時間・金額・給与・係数を拒否する。actorはprincipal由来、departmentはtrusted lookup未整備中null、occurred_atはサーバ採番。business factsはappend-onlyで更新・削除APIを持たない。
+【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。
 
-【3 冪等】
-論理scopeはtenant+endpoint、TTLは24時間、digestはcanonical payloadに束縛する。同key・同digestの有効期間内再送は200で同じeventを再生し、同key・異digestは422で計上しない。期限切れkeyは旧event factsを変えずclaimだけ解放する。unique constraintを同時実行の最終防壁とする。
+【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。
 
-【4 rollup】
-Workers cronは日次事前集計と週次確定を行い、tenant/harness/department/project/user次元のrun_count、saved_minutes、saved_amount_jpyをサーバ側packages/estimationで算出する。workspace+period単位の全次元upsertをTurso単一transactionでcommitし、失敗時は全件rollbackする。D1 write adapterは同等all-or-nothing証明まで無効。画面APIはcommit済みrollupとowner snapshotだけを読み、生eventのonline aggregateを禁止する。
-
-【5 KPIとanomaly】
-completionRateは期間末HearingSheet snapshotのcompleted件数÷対象総数、utilizationRateは期間末公開済みHarness snapshotのうち期間内利用1回以上の件数÷対象総数。分母0はrate=null+denominator_empty。anomalyは過去4完了週が揃い中央値が0でない場合だけ10倍超を評価する。通知は観測日・scope・user・rule versionで冪等化し、ingestをブロックしない。
-
-【6 Build mutation】
-正規endpointはPOST /api/v1/builds/{id}/stage。expected source stageまたはexpected_updated_atによるCASを課し、競合は409。正規writerはTursoだけで、state・stage event・auditを同一transactionでall-or-nothingに記録する。D1は同等原子性が証明されるまで503 typed unavailableかつzero-writeで拒否し、部分書込みやTurso失敗時fallbackを行わない。
-
-【7 UI供給】
-S09=/dashboard、S16=/tracking。APIはKPIのnumerator/denominator/period/snapshotAt/nullable rate/reasonと、chart/table共通data modelを返す。集計金額はmember以上、user次元の金額はusers.read_salary保持者だけに返す。
+【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。
 - 設計解釈の記録経路: `dialogue`
-- 原則: Threat modeling (abuse case を設計前提にする) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+- 原則: Least privilege / deny by default (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: project_idをclient/tokenから受けずserver registryで解決し、原子性能力のないD1 writerをzero-writeで閉じて越境参照と部分監査を防いだ。
+  - 章固有の根拠: 外部文書同期を既存の広い権限へ混ぜずdocs:writeへ分離し、token同一tenantのdraftだけを許可してprovider-admin越境も閉じた。
   - トレードオフ:
-    - D1ではBuild書込み可用性を提供できない
-    - trusted resolverとProject作成が先行依存になる
+    - scope値域と認可マトリクスの更新が必要になる
+    - 別コマンド用refresh tokenでは再認可が必要になる
+- 原則: Concurrency and consistency (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 自然キーによる冪等upsertとETag/If-Matchの楽観的競合制御を公開契約に含め、再送重複と無言の上書きを防いだ。
+  - トレードオフ:
+    - clientは更新前にGETする必要がある
+    - 競合時の428/412処理とrevision管理が増える
 ##### 確定内容 qa-010 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: TypeScript 統一を採用。Publisher core は TypeScript (Node + pnpm) で新規実装し、Claude Code / Codex plugin (slash command /harness-hub:publish + skill + スクリプト) として配布する。責務: package 収集・manifest 補完・ローカル pre-check・Hub API 呼出 (Device Flow 認証)・target=web_app の wrangler CLI スクリプト実行と結果報告・URL 登録。検査ロジックは Hub 側 (Workers=JS) と共有し二重実装を回避する。既存 Python 資産 (harness-creator の package check / package contract / marketplace catalog) は仕様の正本 (移植元) として参照し、挙動同値性をテストで担保して TypeScript へ移植する (C3 整合)。

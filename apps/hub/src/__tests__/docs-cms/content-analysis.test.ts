@@ -46,6 +46,11 @@ describe('DOCS-CA: extractFirstImageUrl', () => {
   it('DOCS-CA-006: 画像が無ければ null', () => {
     expect(extractFirstImageUrl('画像のない本文。')).toBeNull();
   });
+
+  it('DOCS-CA-006A: 外部repository相対画像や危険なschemeをauto thumbnailへ採用しない', () => {
+    expect(extractFirstImageUrl('![相対画像](./assets/cover.png)')).toBeNull();
+    expect(extractFirstImageUrl('![危険](javascript:alert)')).toBeNull();
+  });
 });
 
 describe('DOCS-CA: extractExcerpt', () => {

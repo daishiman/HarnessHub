@@ -19,6 +19,8 @@ import {
 } from '../auth/index.js';
 
 export interface SessionDeps {
+  /** refresh tokenの送信先を固定する、path無しのHTTPS origin。 */
+  readonly hubOrigin: string;
   readonly credentialStore: CredentialStoreAdapter;
   readonly requestDeviceCode: (
     tenantSlug: string,
@@ -55,14 +57,31 @@ export async function obtainAccessToken(
   tenantSlug: string,
   scope: readonly PublisherTokenScope[],
 ): Promise<AccessTokenSession> {
-  const stored = await deps.credentialStore.getToken(tenantSlug);
-  const token =
+  const stored = await deps.credentialStore.getToken(deps.hubOrigin, tenantSlug);
+  if (stored !== null && stored.hub_origin !== deps.hubOrigin) {
+    await deps.credentialStore.clearToken(deps.hubOrigin, tenantSlug);
+    throw new Error('保存済みrefresh tokenのHub originが一致しません。再認可してください');
+  }
+  let token =
     stored === null
       ? await loginWithDeviceFlow(deps, tenantSlug, scope)
-      : await refreshOrClear(deps.credentialStore, tenantSlug, stored.refresh_token, deps.refreshTokenEndpoint);
+      : await refreshOrClear(
+          deps.credentialStore,
+          deps.hubOrigin,
+          tenantSlug,
+          stored.refresh_token,
+          deps.refreshTokenEndpoint,
+        );
+
+  // refresh tokenのscopeは発行時から拡張されない。別command用の保存tokenを流用せず再認可する。
+  if (!scope.every((required) => token.scope.includes(required))) {
+    await deps.credentialStore.clearToken(deps.hubOrigin, tenantSlug);
+    token = await loginWithDeviceFlow(deps, tenantSlug, scope);
+  }
 
   const claims = decodeAccessTokenClaims(token.access_token);
   await deps.credentialStore.saveToken({
+    hub_origin: deps.hubOrigin,
     tenant_slug: tenantSlug,
     workspace_id: claims.workspace_id,
     refresh_token: token.refresh_token,
