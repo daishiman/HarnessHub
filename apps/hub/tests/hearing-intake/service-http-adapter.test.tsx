@@ -87,6 +87,7 @@ const SHEET_ROW: HearingSheetRow = {
   title: FORM.taskName,
   applicantUserId: 'user-a',
   applicantName: '山田',
+  applicantEmail: 'yamada@example.com',
   department: '経理部',
   status: 'generating',
   formJson: JSON.stringify(FORM_SNAPSHOT),
