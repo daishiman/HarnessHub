@@ -297,5 +297,4 @@ S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表
 作成時添付ステージングと profile enum 加算を含む。正本は frontend-spec。
 
 ## 2026-08-12 S15 Docs CMS rich surface
-
 - 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。0件は権限別作成CTA/絞込解除。画像/Markdown は S15 正本。
