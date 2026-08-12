@@ -11,6 +11,10 @@ import { breakpointTokens, buildThemeCss, mediaUp } from './tokens.js';
 const css = buildBaseCss();
 /** 実際に配られる成果物。生成関数の出力と別に読む (再生成し忘れをここでも踏む)。 */
 const tokensCssArtifact = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'tokens.css'), 'utf8');
+const stageBoardCssSources = [
+  ['buildBaseCss() の出力', css],
+  ['コミット済みの tokens.css', tokensCssArtifact],
+] as const;
 
 interface BreakpointUse {
   readonly value: number;
@@ -124,23 +128,36 @@ describe('buildBaseCss', () => {
   });
 
   /**
-   * 中幅では 7 列を詰め込まず、選択中の工程だけを読みやすく表示する。
-   * desktop では正本の 7 工程を一覧できる 1 行 7 列とし、固定幅による横スクロールを出さない。
+   * 生成元と配布成果物の双方へ同じ viewport 契約を当てる。
+   * 片方だけを見ると、実装を直して tokens.css の再生成を忘れた場合に回帰を検出できない。
    */
-  it('StageBoard は lg 未満で picker + 1 列、lg 以上で横スクロールなしの 7 列にする', () => {
-    expect(css).toContain('[data-hh-stage-picker-options] {');
-    expect(css).toContain(
-      '[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(1) input:checked) [data-hh-stage-column]:nth-child(1)',
-    );
-    expect(css).toContain('[data-hh-stage-column] {\n  display: none;');
-    expect(css).toContain(`${mediaUp('lg')} {\n  [data-hh-stage-picker] {\n    display: none;`);
-    expect(css).toContain('[data-hh-stage-columns] {\n    grid-template-columns: repeat(7, minmax(0, 1fr));');
-    expect(css).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 0;');
-    expect(css).not.toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
-    expect(css).not.toMatch(/grid-template-columns: repeat\([34], minmax\(0, 1fr\)\)/);
-    expect(css).not.toMatch(
-      /\[data-hh-stage-columns\] \{\s*display: flex;\s*gap: var\(--hh-space-3\);\s*overflow-x: auto;/,
-    );
+  describe.each(stageBoardCssSources)('StageBoard のレスポンシブ契約: %s', (_label, source) => {
+    it('lg 未満は工程ピッカーを残し、選択した 1 工程だけを表示する', () => {
+      expect(source).toContain('[data-hh-stage-picker-options] {');
+      expect(source).toContain('[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}');
+
+      for (let stage = 1; stage <= 7; stage += 1) {
+        expect(source).toContain(
+          `[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(${stage}) input:checked) [data-hh-stage-column]:nth-child(${stage}) {\n  display: block;\n}`,
+        );
+      }
+      expect(source).not.toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
+    });
+
+    it('lg はピッカーを隠し、全工程を1行7列で表示する', () => {
+      expect(source).toContain(
+        `${mediaUp('lg')} {\n  [data-hh-stage-picker] {\n    display: none;\n  }\n  [data-hh-stage-columns] {\n    grid-template-columns: repeat(7, minmax(0, 1fr));`,
+      );
+      expect(source).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 0;\n  }');
+      expect(source).not.toMatch(/grid-template-columns: repeat\([34], minmax\(0, 1fr\)\)/);
+    });
+
+    it('工程カラムの器へ横スクロールを戻さない', () => {
+      expect(source).not.toMatch(/\[data-hh-stage-columns\] \{[^}]*overflow-x:/);
+      expect(source).not.toMatch(
+        /\[data-hh-stage-columns\] \{\s*display: flex;\s*gap: var\(--hh-space-3\);\s*overflow-x: auto;/,
+      );
+    });
   });
 
   /**
