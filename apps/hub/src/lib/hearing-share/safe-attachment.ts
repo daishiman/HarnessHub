@@ -1,20 +1,31 @@
 /**
- * hearing screenshot の upload / public download が共有する画像境界。
+ * hearing sheet 添付ファイルの upload / public download が共有する境界。
  *
- * ブラウザ申告の MIME だけは信用せず、MIME allowlist・実バイトの signature・
- * container の終端を同時に検査する。画像の完全な decode は行わないが、HTML/SVG の
- * MIME 偽装や、画像の前後に別形式を連結した polyglot は保守的に拒否する。
+ * ブラウザ申告の MIME だけは信用せず、MIME allowlist・実バイトの signature を必ず突き合わせる。
+ * 画像 (png/jpeg/webp) は container の終端まで検査し polyglot を拒否する。動画 (mp4/mov) は
+ * ISO BMFF の先頭 box、Excel (xlsx) は ZIP container の signature + 内部エントリ名の痕跡、
+ * 旧 Excel (xls) は OLE2 signature を検査する。CSV はバイナリ埋め込みや別形式偽装を弾く
+ * テキスト健全性チェックに留める (署名を持たない形式のため)。
  */
 
-export const SAFE_IMAGE_CONTENT_TYPES = ['image/png', 'image/jpeg', 'image/webp'] as const;
+export const SAFE_ATTACHMENT_CONTENT_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'video/mp4',
+  'video/quicktime',
+  'text/csv',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel',
+] as const;
 
-export type SafeImageContentType = (typeof SAFE_IMAGE_CONTENT_TYPES)[number];
+export type SafeAttachmentContentType = (typeof SAFE_ATTACHMENT_CONTENT_TYPES)[number];
 
-export type SafeImageValidationResult =
-  | { readonly ok: true; readonly contentType: SafeImageContentType }
+export type SafeAttachmentValidationResult =
+  | { readonly ok: true; readonly contentType: SafeAttachmentContentType }
   | {
       readonly ok: false;
-      readonly reason: 'unsupported_content_type' | 'invalid_image_bytes';
+      readonly reason: 'unsupported_content_type' | 'invalid_attachment_bytes';
     };
 
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] as const;
@@ -191,32 +202,124 @@ function isWebp(bytes: Uint8Array): boolean {
   return sawImageChunk && offset === bytes.byteLength;
 }
 
-export function normalizeSafeImageContentType(contentType: string): SafeImageContentType | null {
+const ISO_BMFF_BRANDS_MP4 = new Set(['isom', 'iso2', 'mp41', 'mp42', 'avc1', 'MSNV', 'M4V ', 'M4A ']);
+const ISO_BMFF_BRAND_MOV = 'qt  ';
+
+/** ISO Base Media File Format (mp4/mov 共通のコンテナ) の先頭 `ftyp` box を検査する。 */
+function readIsoBmffMajorBrand(bytes: Uint8Array): string | null {
+  if (bytes.byteLength < 12) return null;
+  const boxSize = readUint32Be(bytes, 0);
+  if (boxSize < 8 || boxSize > bytes.byteLength) return null;
+  if (asciiAt(bytes, 4, 4) !== 'ftyp') return null;
+  return asciiAt(bytes, 8, 4);
+}
+
+function isMp4(bytes: Uint8Array): boolean {
+  const brand = readIsoBmffMajorBrand(bytes);
+  if (brand === null) return false;
+  // major brand が mp4 系そのものでなくても、compatible brands に mp4 系が並ぶ実装が多いため
+  // 先頭が 'qt  ' (QuickTime 専用) でない ISO BMFF は mp4 として扱う (保守的すぎる拒否をしない)。
+  return brand !== ISO_BMFF_BRAND_MOV || ISO_BMFF_BRANDS_MP4.has(brand);
+}
+
+function isQuickTimeMov(bytes: Uint8Array): boolean {
+  const brand = readIsoBmffMajorBrand(bytes);
+  return brand !== null;
+}
+
+const ZIP_LOCAL_FILE_SIGNATURE = [0x50, 0x4b, 0x03, 0x04] as const;
+const ZIP_EMPTY_ARCHIVE_SIGNATURE = [0x50, 0x4b, 0x05, 0x06] as const;
+
+/**
+ * xlsx は OOXML (ZIP container)。フル ZIP パースはせず、ZIP signature に加えて
+ * 先頭数十KB以内に xlsx 固有のエントリ名 (`[Content_Types].xml` / `xl/`) が
+ * 見つかることを要求し、任意の zip ファイルを xlsx として通さない。
+ */
+function isXlsx(bytes: Uint8Array): boolean {
+  const hasZipSignature =
+    hasBytesAt(bytes, 0, ZIP_LOCAL_FILE_SIGNATURE) || hasBytesAt(bytes, 0, ZIP_EMPTY_ARCHIVE_SIGNATURE);
+  if (!hasZipSignature) return false;
+
+  const scanLength = Math.min(bytes.byteLength, 65_536);
+  const prefix = asciiAt(bytes, 0, scanLength);
+  return (
+    prefix.includes('[Content_Types].xml') || prefix.includes('xl/workbook.xml') || prefix.includes('xl/worksheets/')
+  );
+}
+
+const OLE2_SIGNATURE = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1] as const;
+
+/** 旧形式 xls (OLE2 Compound File Binary)。内部 stream 名までは検査せず signature のみ。 */
+function isXls(bytes: Uint8Array): boolean {
+  return hasBytesAt(bytes, 0, OLE2_SIGNATURE);
+}
+
+const CSV_BINARY_SCAN_LENGTH = 8192;
+
+/**
+ * CSV はファイル形式としての signature を持たないため、他形式との混同・バイナリ埋め込みを
+ * 拒否する健全性チェックに留める: 先頭 8KB に NUL byte が無く、UTF-8 として decode できること。
+ */
+function isPlausibleCsv(bytes: Uint8Array): boolean {
+  const scanLength = Math.min(bytes.byteLength, CSV_BINARY_SCAN_LENGTH);
+  for (let index = 0; index < scanLength; index += 1) {
+    if (byteAt(bytes, index) === 0x00) return false;
+  }
+  try {
+    new TextDecoder('utf-8', { fatal: true }).decode(bytes.subarray(0, scanLength));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function normalizeSafeAttachmentContentType(contentType: string): SafeAttachmentContentType | null {
   const normalized = contentType.trim().toLowerCase();
-  return SAFE_IMAGE_CONTENT_TYPES.includes(normalized as SafeImageContentType)
-    ? (normalized as SafeImageContentType)
+  return SAFE_ATTACHMENT_CONTENT_TYPES.includes(normalized as SafeAttachmentContentType)
+    ? (normalized as SafeAttachmentContentType)
     : null;
 }
 
 /** 申告 MIME と実体 format の両方が一致した場合だけ保存・配信を許可する。 */
-export function validateSafeImage(contentType: string, bytes: Uint8Array): SafeImageValidationResult {
-  const normalizedContentType = normalizeSafeImageContentType(contentType);
+export function validateSafeAttachment(contentType: string, bytes: Uint8Array): SafeAttachmentValidationResult {
+  const normalizedContentType = normalizeSafeAttachmentContentType(contentType);
   if (normalizedContentType === null) return { ok: false, reason: 'unsupported_content_type' };
 
-  const validBytes =
-    normalizedContentType === 'image/png'
-      ? isPng(bytes)
-      : normalizedContentType === 'image/jpeg'
-        ? isJpeg(bytes)
-        : isWebp(bytes);
+  const validBytes: boolean = (() => {
+    switch (normalizedContentType) {
+      case 'image/png':
+        return isPng(bytes);
+      case 'image/jpeg':
+        return isJpeg(bytes);
+      case 'image/webp':
+        return isWebp(bytes);
+      case 'video/mp4':
+        return isMp4(bytes);
+      case 'video/quicktime':
+        return isQuickTimeMov(bytes);
+      case 'text/csv':
+        return isPlausibleCsv(bytes);
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        return isXlsx(bytes);
+      case 'application/vnd.ms-excel':
+        return isXls(bytes);
+    }
+  })();
 
-  return validBytes ? { ok: true, contentType: normalizedContentType } : { ok: false, reason: 'invalid_image_bytes' };
+  return validBytes
+    ? { ok: true, contentType: normalizedContentType }
+    : { ok: false, reason: 'invalid_attachment_bytes' };
 }
 
-const EXTENSION_BY_CONTENT_TYPE: Record<SafeImageContentType, string> = {
+const EXTENSION_BY_CONTENT_TYPE: Record<SafeAttachmentContentType, string> = {
   'image/png': 'png',
   'image/jpeg': 'jpg',
   'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/quicktime': 'mov',
+  'text/csv': 'csv',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+  'application/vnd.ms-excel': 'xls',
 };
 
 function encodeRfc5987(value: string): string {
@@ -246,23 +349,25 @@ function sanitizeDownloadTitle(title: string): string {
   return cleaned.trim();
 }
 
+const EXTENSION_STRIP_PATTERN = /\.(?:png|jpe?g|webp|mp4|mov|csv|xlsx|xls)$/i;
+
 /** CR/LF・path separator・双方向制御文字を filename から除き、header injection を防ぐ。 */
-export function attachmentContentDisposition(title: string, contentType: SafeImageContentType): string {
+export function attachmentContentDisposition(title: string, contentType: SafeAttachmentContentType): string {
   const extension = EXTENSION_BY_CONTENT_TYPE[contentType];
   const cleaned = sanitizeDownloadTitle(title);
-  const stem = cleaned.replace(/\.(?:png|jpe?g|webp)$/i, '').trim() || 'hearing-screenshot';
+  const stem = cleaned.replace(EXTENSION_STRIP_PATTERN, '').trim() || 'hearing-attachment';
   const downloadName = `${stem}.${extension}`;
   // ASCII fallback は固定値にし、利用者入力は RFC 5987 の percent-encoded 値だけへ載せる。
-  return `attachment; filename="hearing-screenshot.${extension}"; filename*=UTF-8''${encodeRfc5987(downloadName)}`;
+  return `attachment; filename="hearing-attachment.${extension}"; filename*=UTF-8''${encodeRfc5987(downloadName)}`;
 }
 
-/** 公開・認証済みの両経路で共有する、安全な画像ダウンロード応答。 */
-export function createSafeImageDownloadResponse(
+/** 公開・認証済みの両経路で共有する、安全な添付ファイルダウンロード応答。 */
+export function createSafeAttachmentDownloadResponse(
   title: string,
   declaredContentType: string,
   content: Uint8Array,
 ): Response | null {
-  const validated = validateSafeImage(declaredContentType, content);
+  const validated = validateSafeAttachment(declaredContentType, content);
   if (!validated.ok) return null;
 
   return new Response(content as unknown as BodyInit, {

@@ -10,11 +10,24 @@
  * サインイン前にこそ読む文書なのに、以前は公開画面のどこにも導線が無かった。
  */
 import { Alert, Panel, ScreenHeader, Stack } from '@harness-hub/ui';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import LegalPage from '../../src/app/legal/page.js';
 import { PublicShell } from '../../src/components/shell/public-shell.js';
 import { viewportPresets, withBrowserSession } from './browser-harness.js';
+
+// LegalPage は session の有無を見て表示シェルを切り替える async server component
+// (`../../src/app/legal/page.tsx` 参照)。この骨格測定は未サインイン状態の公開画面を
+// 対象にしているため、常に未ログイン (PublicShell) を通す最小限の偽物を差す。
+vi.mock('next/headers', () => ({
+  cookies: async () => ({ get: () => undefined }),
+  headers: async () => ({ get: () => null }),
+}));
+vi.mock('next/font/google', () => ({
+  Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+}));
+
+const { default: LegalPage } = await import('../../src/app/legal/page.js');
+const legalPageBody = await LegalPage();
 
 /**
  * 端末承認 (/device) の代表的な中身。実ページは `headers()` を読む server component で
@@ -49,7 +62,7 @@ const signinBody = (
 );
 
 const routes = [
-  { path: '/legal', body: <LegalPage />, title: '利用規約・プライバシーポリシー' },
+  { path: '/legal', body: legalPageBody, title: '利用規約・プライバシーポリシー' },
   { path: '/device', body: deviceBody, title: '端末の承認' },
   { path: '/signin', body: signinBody, title: 'サインイン' },
 ];

@@ -315,8 +315,8 @@ export function buildHearingIntakeSteps(state: HearingWizardFormState): readonly
           </fieldset>
           <Alert
             tone="info"
-            title="スクリーンショットについて"
-            description="スクリーンショットの添付は、この提出フォームの送信後にシート詳細画面から追加できます。"
+            title="添付ファイルについて"
+            description="画像・動画・CSV・Excel などの添付ファイルは、この提出フォームの送信後にシート詳細画面から追加できます。"
           />
         </>
       ),

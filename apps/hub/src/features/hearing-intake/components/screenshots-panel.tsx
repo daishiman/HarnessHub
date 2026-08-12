@@ -20,7 +20,11 @@ const tenantHeaders = (tenantId: string, workspaceId: string) => ({
   'x-harness-workspace-id': workspaceId,
 });
 
-/** 認証済み利用者が、シートに安全なラスター画像を添付・削除するパネル。 */
+/** 対応形式一覧。`safe-attachment.ts` の SAFE_ATTACHMENT_CONTENT_TYPES と対応させて表示・input accept へ使う。 */
+const ACCEPTED_FILE_EXTENSIONS =
+  '.png,.jpg,.jpeg,.webp,.mp4,.mov,.csv,.xlsx,.xls,image/png,image/jpeg,image/webp,video/mp4,video/quicktime,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel';
+
+/** 認証済み利用者が、シートに安全な添付ファイル (画像・動画・CSV・Excel) を添付・削除するパネル。 */
 export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: HearingSharePanelProps): ReactNode {
   const [items, setItems] = useState<readonly HearingScreenshot[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -39,12 +43,12 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         credentials: 'same-origin',
         headers: tenantHeaders(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('スクリーンショット一覧を取得できませんでした。');
+      if (!response.ok) throw new Error('添付ファイル一覧を取得できませんでした。');
       const body = (await response.json()) as { items: readonly HearingScreenshot[] };
       setItems(body.items);
       setLoadError(null);
     } catch (cause) {
-      setLoadError(cause instanceof Error ? cause.message : 'スクリーンショット一覧を取得できませんでした。');
+      setLoadError(cause instanceof Error ? cause.message : '添付ファイル一覧を取得できませんでした。');
     }
   }, [sheetId, tenantId, workspaceId]);
 
@@ -68,14 +72,14 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         headers: tenantHeaders(tenantId, workspaceId),
         body: form,
       });
-      if (!response.ok) throw new Error('スクリーンショットをアップロードできませんでした。');
+      if (!response.ok) throw new Error('添付ファイルをアップロードできませんでした。');
       setFile(null);
       setLinkedItem('');
       setNote('');
       if (fileInputRef.current !== null) fileInputRef.current.value = '';
       await load();
     } catch (cause) {
-      setOperationError(cause instanceof Error ? cause.message : 'スクリーンショットをアップロードできませんでした。');
+      setOperationError(cause instanceof Error ? cause.message : '添付ファイルをアップロードできませんでした。');
     } finally {
       setUploading(false);
     }
@@ -90,10 +94,10 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         credentials: 'same-origin',
         headers: tenantHeaders(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('スクリーンショットを削除できませんでした。');
+      if (!response.ok) throw new Error('添付ファイルを削除できませんでした。');
       await load();
     } catch (cause) {
-      setOperationError(cause instanceof Error ? cause.message : 'スクリーンショットを削除できませんでした。');
+      setOperationError(cause instanceof Error ? cause.message : '添付ファイルを削除できませんでした。');
     }
   };
 
@@ -105,7 +109,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         credentials: 'same-origin',
         headers: tenantHeaders(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('スクリーンショットをダウンロードできませんでした。');
+      if (!response.ok) throw new Error('添付ファイルをダウンロードできませんでした。');
       const objectUrl = URL.createObjectURL(await response.blob());
       const anchor = document.createElement('a');
       anchor.href = objectUrl;
@@ -116,7 +120,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
       anchor.remove();
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
     } catch (cause) {
-      setOperationError(cause instanceof Error ? cause.message : 'スクリーンショットをダウンロードできませんでした。');
+      setOperationError(cause instanceof Error ? cause.message : '添付ファイルをダウンロードできませんでした。');
     } finally {
       setDownloadingId(null);
     }
@@ -124,8 +128,8 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
 
   return (
     <Panel
-      title="スクリーンショット"
-      description="PNG・JPEG・WebP画像を添付できます。紐づけ項目を添えると、あとで見返しやすくなります。"
+      title="添付ファイル"
+      description="画像 (PNG/JPEG/WebP)・動画 (MP4/MOV)・CSV・Excel (XLSX/XLS) を添付できます (1ファイル25MBまで)。紐づけ項目を添えると、あとで見返しやすくなります。"
     >
       <Stack gap={3}>
         {loadError === null ? null : <Alert tone="danger" title="読み込みエラー" description={loadError} />}
@@ -136,7 +140,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
             ref={fileInputRef}
             label="ファイル"
             type="file"
-            accept="image/png,image/jpeg,image/webp"
+            accept={ACCEPTED_FILE_EXTENSIONS}
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
           />
           <TextInput
@@ -152,7 +156,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         </div>
 
         {items.length === 0 ? (
-          <p>まだスクリーンショットは添付されていません。</p>
+          <p>まだ添付ファイルはありません。</p>
         ) : (
           <ul style={{ display: 'grid', gap: 'var(--hh-space-2)', listStyle: 'none', margin: 0, padding: 0 }}>
             {items.map((item) => (
@@ -195,8 +199,8 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
 
         <ConfirmDialog
           open={deleteTarget !== null}
-          title="スクリーンショットを削除しますか？"
-          description="添付画像は完全に削除され、元には戻せません。"
+          title="添付ファイルを削除しますか？"
+          description="添付ファイルは完全に削除され、元には戻せません。"
           reversible={false}
           confirmLabel="削除する"
           cancelLabel="やめる"

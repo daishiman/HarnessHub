@@ -13,7 +13,7 @@ import {
 import { problemResponse } from '../../../../../../../features/hearing-intake/http.js';
 import { authRuntime, withAuthz } from '../../../../../../../lib/authz/index.js';
 import { hearingShareRuntime } from '../../../../../../../lib/hearing-share/index.js';
-import { createSafeImageDownloadResponse } from '../../../../../../../lib/hearing-share/safe-image.js';
+import { createSafeAttachmentDownloadResponse } from '../../../../../../../lib/hearing-share/safe-attachment.js';
 import { checkTenantDataRateLimit } from '../../../../../../../lib/tenant-data/index.js';
 
 interface ScreenshotParams extends SheetParams {
@@ -39,16 +39,16 @@ export const GET = withAuthz<ScreenshotParams>(
     const context = createRepositoryContext({ tenantId: authz.resource.tenantId });
     const screenshot = await runtime.screenshots.findById(context, params.screenshotId);
     if (screenshot === null || screenshot.sheetId !== params.id) {
-      return problemResponse(problemDetails({ title: 'スクリーンショットが見つかりません', status: 404 }));
+      return problemResponse(problemDetails({ title: '添付ファイルが見つかりません', status: 404 }));
     }
 
     try {
       const content = await runtime.screenshots.getContent(context, params.screenshotId);
-      const response = createSafeImageDownloadResponse(screenshot.title, screenshot.contentType, content);
-      return response ?? problemResponse(problemDetails({ title: 'スクリーンショットが見つかりません', status: 404 }));
+      const response = createSafeAttachmentDownloadResponse(screenshot.title, screenshot.contentType, content);
+      return response ?? problemResponse(problemDetails({ title: '添付ファイルが見つかりません', status: 404 }));
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
-        return problemResponse(problemDetails({ title: 'スクリーンショットが見つかりません', status: 404 }));
+        return problemResponse(problemDetails({ title: '添付ファイルが見つかりません', status: 404 }));
       }
       throw error;
     }
@@ -75,7 +75,7 @@ export const DELETE = withAuthz<ScreenshotParams>(
     const context = createRepositoryContext({ tenantId: authz.resource.tenantId });
     const screenshot = await runtime.screenshots.findById(context, params.screenshotId);
     if (screenshot === null || screenshot.sheetId !== params.id) {
-      return problemResponse(problemDetails({ title: 'スクリーンショットが見つかりません', status: 404 }));
+      return problemResponse(problemDetails({ title: '添付ファイルが見つかりません', status: 404 }));
     }
 
     await runtime.screenshots.deleteScreenshot(context, params.screenshotId);

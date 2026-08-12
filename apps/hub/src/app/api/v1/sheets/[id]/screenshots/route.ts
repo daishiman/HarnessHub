@@ -17,11 +17,17 @@ import {
 import { problemResponse } from '../../../../../../features/hearing-intake/http.js';
 import { authRuntime, withAuthz } from '../../../../../../lib/authz/index.js';
 import { hearingShareRuntime } from '../../../../../../lib/hearing-share/index.js';
-import { normalizeSafeImageContentType, validateSafeImage } from '../../../../../../lib/hearing-share/safe-image.js';
+import {
+  normalizeSafeAttachmentContentType,
+  validateSafeAttachment,
+} from '../../../../../../lib/hearing-share/safe-attachment.js';
 import { checkTenantDataRateLimit } from '../../../../../../lib/tenant-data/index.js';
 
-/** `tenant-data/objects/route.ts` と同じ実用上限 (R2 単一 PUT)。 */
-const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
+/**
+ * 動画/Excel は画像より大きくなりやすいため、`tenant-data/objects/route.ts` の 50MB より
+ * 絞った実用上限を設ける (R2 単一 PUT の制約とは独立に、添付ファイルとしての妥当な上限)。
+ */
+const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
 const uploadMetadataSchema = z
   .object({
@@ -73,13 +79,13 @@ export const POST = withAuthz<SheetParams>(
       return problemResponse(problemDetails({ title: 'ファイルサイズが上限を超えています', status: 413 }));
     }
     // allowlist は arrayBuffer 化より前に見る。unsupported な巨大 payload を追加で複製しない。
-    const declaredContentType = normalizeSafeImageContentType(file.type);
+    const declaredContentType = normalizeSafeAttachmentContentType(file.type);
     if (declaredContentType === null) {
       return problemResponse(
         problemDetails({
-          title: '対応していない画像形式です',
+          title: '対応していないファイル形式です',
           status: 400,
-          detail: 'PNG、JPEG、WebP を指定してください。',
+          detail: '画像 (PNG/JPEG/WebP)、動画 (MP4/MOV)、CSV、Excel (XLSX/XLS) のいずれかを指定してください。',
         }),
       );
     }
@@ -99,13 +105,13 @@ export const POST = withAuthz<SheetParams>(
     // size/MIME/metadata が安価な検査を通った後に 1 度だけ buffer 化する。
     // File.type は利用者が申告できるため、実バイトの signature/container と必ず突き合わせる。
     const plaintext = new Uint8Array(await file.arrayBuffer());
-    const validatedImage = validateSafeImage(declaredContentType, plaintext);
-    if (!validatedImage.ok) {
+    const validatedAttachment = validateSafeAttachment(declaredContentType, plaintext);
+    if (!validatedAttachment.ok) {
       return problemResponse(
         problemDetails({
-          title: '画像ファイルの内容が不正です',
+          title: '添付ファイルの内容が不正です',
           status: 400,
-          detail: '拡張子や MIME ではなく、PNG、JPEG、WebP の実データを送信してください。',
+          detail: '拡張子や MIME ではなく、対応形式の実データを送信してください。',
         }),
       );
     }
@@ -118,7 +124,7 @@ export const POST = withAuthz<SheetParams>(
       title: parsedMetadata.data.title,
       linkedItem: parsedMetadata.data.linkedItem ?? null,
       note: parsedMetadata.data.note ?? null,
-      contentType: validatedImage.contentType,
+      contentType: validatedAttachment.contentType,
       plaintext,
       uploadedBy: authz.principal.userId,
     });

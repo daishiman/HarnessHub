@@ -11,7 +11,7 @@ import { createRepositoryContext, EntityNotFoundError } from '@harness-hub/db';
 import { recordShareTokenAccess, resolveShareToken } from '../../../../../../features/hearing-intake/public-share.js';
 import { hearingShareRuntime } from '../../../../../../lib/hearing-share/index.js';
 import { checkHearingShareRateLimit } from '../../../../../../lib/hearing-share/rate-limit.js';
-import { createSafeImageDownloadResponse } from '../../../../../../lib/hearing-share/safe-image.js';
+import { createSafeAttachmentDownloadResponse } from '../../../../../../lib/hearing-share/safe-attachment.js';
 
 interface ScreenshotTokenParams {
   readonly token: string;
@@ -44,7 +44,7 @@ export async function GET(
   try {
     const content = await runtime.screenshots.getContent(dbContext, params.screenshotId);
     // upload 境界を通らずに残った旧データや手動投入も、公開応答で再検査して fail-closed にする。
-    const response = createSafeImageDownloadResponse(screenshot.title, screenshot.contentType, content);
+    const response = createSafeAttachmentDownloadResponse(screenshot.title, screenshot.contentType, content);
     if (response === null) return notFound();
 
     await recordShareTokenAccess(tokenRow.id);
