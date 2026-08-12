@@ -183,10 +183,27 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
   });
 });
 
+/**
+ * タイトルは wire 契約上も必須 (createDocumentRequestSchema の title min 1)。
+ * フォーム側も空タイトルの直接送信をここで弾くようになった (原因不明な「作成できませんでした」の対策) ため、
+ * 送信系のテストは実際の利用者操作に合わせてタイトル入力を経由させる。
+ */
+async function fillTitle(container: HTMLDivElement, value: string): Promise<void> {
+  const input = container.querySelector<HTMLInputElement>('input');
+  if (input === null) throw new Error('タイトル input がありません');
+  const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  if (valueSetter === undefined) throw new Error('input value setter がありません');
+  await act(async () => {
+    valueSetter.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
 describe('DOCS-UI: DocumentCreateForm の作成', () => {
   it('DOCS-UI-004: 作成成功で作成先ドキュメントへ遷移する', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 })));
     await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await fillTitle(container, '導入ガイド');
 
     const form = container.querySelector('form');
     if (form === null) throw new Error('作成 form がありません');
@@ -196,8 +213,9 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
     expect(assign).toHaveBeenCalledWith(expect.stringContaining(`/docs/${DOC.id}`));
   });
 
-  it('DOCS-UI-005: 作成失敗はエラーバナーを表示する', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({}, { ok: false, status: 500 })));
+  it('DOCS-UI-004b: 空タイトルのまま送信すると API を呼ばずに入力を促す', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 }));
+    vi.stubGlobal('fetch', fetchMock);
     await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
 
     const form = container.querySelector('form');
@@ -205,7 +223,33 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
     await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
     await flush();
 
-    expect(container.textContent).toContain('作成できませんでした');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(container.textContent).toContain('タイトルを入力してください。');
+  });
+
+  it('DOCS-UI-005: 作成失敗はエラーバナーに API の理由を表示する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse(
+          {
+            title: '入力内容を確認してください',
+            status: 422,
+            errors: [{ field: 'title', code: 'too_small', message: 'タイトルは1文字以上で入力してください。' }],
+          },
+          { ok: false, status: 422 },
+        ),
+      ),
+    );
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await fillTitle(container, '導入ガイド');
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    expect(container.textContent).toContain('タイトルは1文字以上で入力してください。');
   });
 });
 

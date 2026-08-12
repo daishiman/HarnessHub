@@ -3,6 +3,7 @@
 import type { DocumentListItem } from '@harness-hub/schemas';
 import { Button, LiveStatus, Textarea, TextInput } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { parseTagsInput, tagsToInputValue } from '../../../features/docs-cms/tags.js';
 
 interface EditDraft {
   readonly category: string;
@@ -16,7 +17,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 function toDraft(doc: DocumentListItem): EditDraft {
   return {
     category: doc.category ?? '',
-    tags: (doc.tags ?? []).join(', '),
+    tags: tagsToInputValue(doc.tags),
     thumbnailUrl: doc.thumbnail_url ?? '',
     excerpt: doc.excerpt ?? '',
   };
@@ -50,11 +51,7 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
       if (next.category !== committed.category)
         body.category = next.category.trim() === '' ? null : next.category.trim();
       if (next.tags !== committed.tags) {
-        const tags = next.tags
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0);
-        body.tags = tags.length === 0 ? null : tags;
+        body.tags = parseTagsInput(next.tags);
       }
       if (next.thumbnailUrl !== committed.thumbnailUrl) {
         body.thumbnail_url = next.thumbnailUrl.trim() === '' ? null : next.thumbnailUrl.trim();
