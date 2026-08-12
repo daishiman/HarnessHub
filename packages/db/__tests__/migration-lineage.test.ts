@@ -124,7 +124,8 @@ describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', 
       expect(fromMigrations).toStrictEqual(fromHarness);
       // テーブル総数は「barrel へ足したのに migration を生成し忘れた」を検知する tripwire。
       // 31 → 32: production smoke fixture lease 台帳 (migration 0009 / HarnessHub-aauo)。
-      expect(Object.keys(fromMigrations)).toHaveLength(32);
+      // 32 → 33: workspace 単位の Notion 連携 (migration 0010 / HarnessHub-hrux)。
+      expect(Object.keys(fromMigrations)).toHaveLength(33);
     },
   );
 });

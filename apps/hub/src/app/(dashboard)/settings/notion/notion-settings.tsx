@@ -17,6 +17,8 @@ import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useSta
 interface NotionSettingsProps {
   readonly tenantId: string;
   readonly workspaceId: string;
+  /** `notion-integration.write` を満たす場合だけ保存・解除 UI を出す。 */
+  readonly canManage: boolean;
 }
 
 interface SectionFeedback {
@@ -41,7 +43,7 @@ const MODE_OPTIONS: ReadonlyArray<{ readonly value: NotionIntegrationMode; reado
   { value: 'api_key', label: 'APIキー方式 (Notion Integrationのキーを登録)' },
 ];
 
-export function NotionSettings({ tenantId, workspaceId }: NotionSettingsProps): ReactNode {
+export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSettingsProps): ReactNode {
   const [integration, setIntegration] = useState<NotionIntegrationResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -187,52 +189,56 @@ export function NotionSettings({ tenantId, workspaceId }: NotionSettingsProps): 
               <p style={{ margin: 0 }}>まだNotion連携が登録されていません。</p>
             )}
 
-            <form aria-label="Notion連携の登録・変更" onSubmit={(event) => void save(event)}>
-              <Stack gap={3}>
-                <Select
-                  label="連携方式"
-                  name="mode"
-                  options={MODE_OPTIONS}
-                  value={mode}
-                  onChange={(event) => setMode(event.target.value as NotionIntegrationMode)}
-                />
-                <TextInput
-                  label="NotionページのURL"
-                  name="pageUrl"
-                  description={
-                    mode === 'url'
-                      ? 'URL方式では必須です。'
-                      : '任意です。登録しておくとドキュメント画面から「Notionで開く」導線が使えます。'
-                  }
-                  required={mode === 'url'}
-                  value={pageUrl}
-                  onChange={(event) => setPageUrl(event.target.value)}
-                  placeholder="https://www.notion.so/..."
-                />
-                {mode === 'api_key' ? (
-                  <TextInput
-                    label="Notion Integration APIキー"
-                    name="apiKey"
-                    type="password"
-                    description="登録済みのキーを変更しない場合は空欄のままにしてください。"
-                    value={apiKey}
-                    onChange={(event) => setApiKey(event.target.value)}
-                    placeholder={integration?.api_key_masked ?? undefined}
+            {canManage ? (
+              <form aria-label="Notion連携の登録・変更" onSubmit={(event) => void save(event)}>
+                <Stack gap={3}>
+                  <Select
+                    label="連携方式"
+                    name="mode"
+                    options={MODE_OPTIONS}
+                    value={mode}
+                    onChange={(event) => setMode(event.target.value as NotionIntegrationMode)}
                   />
-                ) : null}
-                <SectionResult result={feedback} />
-                <div style={{ display: 'flex', gap: 'var(--hh-space-3)' }}>
-                  <Button type="submit" disabled={saving}>
-                    {saving ? '保存中…' : '保存する'}
-                  </Button>
-                  {integration !== null ? (
-                    <Button type="button" variant="secondary" disabled={deleting} onClick={() => void remove()}>
-                      {deleting ? '解除中…' : '連携を解除する'}
-                    </Button>
+                  <TextInput
+                    label="NotionページのURL"
+                    name="pageUrl"
+                    description={
+                      mode === 'url'
+                        ? 'URL方式では必須です。'
+                        : '任意です。登録しておくとドキュメント画面から「Notionで開く」導線が使えます。'
+                    }
+                    required={mode === 'url'}
+                    value={pageUrl}
+                    onChange={(event) => setPageUrl(event.target.value)}
+                    placeholder="https://www.notion.so/..."
+                  />
+                  {mode === 'api_key' ? (
+                    <TextInput
+                      label="Notion Integration APIキー"
+                      name="apiKey"
+                      type="password"
+                      description="登録済みのキーを変更しない場合は空欄のままにしてください。"
+                      value={apiKey}
+                      onChange={(event) => setApiKey(event.target.value)}
+                      placeholder={integration?.api_key_masked ?? undefined}
+                    />
                   ) : null}
-                </div>
-              </Stack>
-            </form>
+                  <SectionResult result={feedback} />
+                  <div style={{ display: 'flex', gap: 'var(--hh-space-3)' }}>
+                    <Button type="submit" disabled={saving}>
+                      {saving ? '保存中…' : '保存する'}
+                    </Button>
+                    {integration !== null ? (
+                      <Button type="button" variant="secondary" disabled={deleting} onClick={() => void remove()}>
+                        {deleting ? '解除中…' : '連携を解除する'}
+                      </Button>
+                    ) : null}
+                  </div>
+                </Stack>
+              </form>
+            ) : (
+              <p style={{ margin: 0 }}>閲覧のみ可能です。変更や解除はワークスペース管理者に依頼してください。</p>
+            )}
           </Stack>
         </Panel>
       </section>

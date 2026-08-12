@@ -130,7 +130,8 @@ export function secondaryNavItems(scope: ShellScope, role: SessionRole | null): 
     ...(notionIntegrationVisible
       ? [
           {
-            href: scopedHref('/settings/notion', scope, false),
+            // Notion 連携は tenant 全体ではなく workspace ごとの設定。
+            href: scopedHref('/settings/notion', scope, true),
             label: 'Notion連携',
             icon: 'settings' as const,
           },

@@ -11,7 +11,27 @@ import { identifierSchema } from '../src/primitives.js';
 export const notionIntegrationModeSchema = z.enum(['url', 'api_key']);
 export type NotionIntegrationMode = z.output<typeof notionIntegrationModeSchema>;
 
-const pageUrlSchema = z.url('Notion ページの URL の形式ではありません').max(2000);
+const NOTION_PAGE_HOSTS = ['notion.so', 'notion.site'] as const;
+
+/**
+ * 外部リンクとしてそのまま開くため、URL の「形」だけでなく行き先も制限する。
+ * `notion.so.evil.example` のような suffix 偽装を通さないよう、完全一致かドット付き subdomain だけを許可する。
+ */
+function isTrustedNotionPageUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || (url.port !== '' && url.port !== '443')) return false;
+    const hostname = url.hostname.toLowerCase();
+    return NOTION_PAGE_HOSTS.some((host) => hostname === host || hostname.endsWith(`.${host}`));
+  } catch {
+    return false;
+  }
+}
+
+const pageUrlSchema = z
+  .url('Notion ページの URL の形式ではありません')
+  .max(2000)
+  .refine(isTrustedNotionPageUrl, 'HTTPS の Notion ページ URL (notion.so / notion.site) を指定してください');
 
 /** Notion Integration の API キー。最小文字数だけ縛り、具体的な発行形式 (secret_... 等) には依存しない。 */
 const apiKeyInputSchema = z.string().trim().min(20, 'APIキーの形式ではありません').max(500);
