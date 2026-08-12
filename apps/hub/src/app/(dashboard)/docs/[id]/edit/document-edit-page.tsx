@@ -21,13 +21,10 @@ import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
-import { canWriteDocument, extractErrorMessage } from '../../../../../features/docs-cms/client-errors.js';
-import {
-  parsePublishAtInput,
-  parseTagsInput,
-  publishAtToInput,
-  tagsToInput,
-} from '../../../../../features/docs-cms/form-fields.js';
+import { extractApiErrorMessage } from '../../../../../features/docs-cms/api-error.js';
+import { canWriteDocument } from '../../../../../features/docs-cms/client-errors.js';
+import { parsePublishAtInput, publishAtToInput } from '../../../../../features/docs-cms/form-fields.js';
+import { parseTagsInput, tagsToInputValue } from '../../../../../features/docs-cms/tags.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope, useSessionRole } from '../../../dashboard-scope-context.js';
 
@@ -93,14 +90,14 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error(await extractErrorMessage(response, 'ドキュメントを取得できませんでした。'));
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, 'ドキュメントを取得できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setTitle(doc.title);
       setBodyMarkdown(doc.body_markdown);
       setStatus(doc.status);
       setCategory(doc.category ?? '');
-      setTagsInput(tagsToInput(doc.tags));
+      setTagsInput(tagsToInputValue(doc.tags));
       setThumbnailUrl(doc.thumbnail_url ?? '');
       setExcerpt(doc.excerpt ?? '');
       setPublishAtInput(publishAtToInput(doc.publish_at));
@@ -128,7 +125,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         },
         body: file,
       });
-      if (!response.ok) throw new Error(await extractErrorMessage(response, '画像をアップロードできませんでした。'));
+      if (!response.ok)
+        throw new Error(
+          await extractApiErrorMessage(response, '画像のアップロードに失敗しました。もう一度お試しください。'),
+        );
       const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
       registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
@@ -137,11 +137,17 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   );
 
   const save = async (): Promise<void> => {
+    const trimmedTitle = title.trim();
+    if (trimmedTitle === '') {
+      setError('タイトルを入力してください。');
+      return;
+    }
+
     setSaving(true);
     try {
       if (saved === null) throw new Error('ドキュメントを取得できませんでした。');
       const body: Record<string, unknown> = {};
-      if (title !== saved.title) body.title = title;
+      if (trimmedTitle !== saved.title) body.title = trimmedTitle;
       if (bodyMarkdown !== saved.body_markdown) body.body_markdown = bodyMarkdown;
       if (status !== saved.status) body.status = status;
 
@@ -150,8 +156,9 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
       const tags = parseTagsInput(tagsInput);
       const savedTags = saved.tags ?? [];
-      if (tags.length !== savedTags.length || tags.some((tag, index) => tag !== savedTags[index])) {
-        body.tags = tags.length === 0 ? null : tags;
+      const nextTags = tags ?? [];
+      if (nextTags.length !== savedTags.length || nextTags.some((tag, index) => tag !== savedTags[index])) {
+        body.tags = tags;
       }
 
       const normalizedThumbnailUrl = thumbnailUrl.trim() === '' ? null : thumbnailUrl.trim();
@@ -178,7 +185,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         headers: headers(tenantId, workspaceId),
         body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error(await extractErrorMessage(response, '保存できませんでした。'));
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '保存できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setError(null);
@@ -239,7 +246,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
         <Panel title="編集">
           <Stack gap={4}>
-            <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
+            <TextInput label="タイトル" required value={title} onChange={(event) => setTitle(event.target.value)} />
             <Select
               label="状態"
               description="公開済みにすると予約日時は解除されます。予約日時を設定すると下書きになります。"

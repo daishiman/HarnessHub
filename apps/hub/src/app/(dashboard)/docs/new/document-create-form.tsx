@@ -5,8 +5,9 @@ import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, TextInput
 import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useCallback, useRef, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../components/docs/use-pending-document-images.js';
-import { extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
-import { parsePublishAtInput, parseTagsInput } from '../../../../features/docs-cms/form-fields.js';
+import { extractApiErrorMessage } from '../../../../features/docs-cms/api-error.js';
+import { parsePublishAtInput } from '../../../../features/docs-cms/form-fields.js';
+import { parseTagsInput } from '../../../../features/docs-cms/tags.js';
 
 const MarkdownEditor = dynamic(
   () => import('../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
@@ -55,7 +56,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
         },
         body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error(await extractErrorMessage(response, '作成できませんでした。'));
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '作成できませんでした。'));
       return (await response.json()) as DocumentDetail;
     },
     [tenantId, workspaceId],
@@ -99,7 +100,10 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
         },
         body: file,
       });
-      if (!response.ok) throw new Error(await extractErrorMessage(response, '画像をアップロードできませんでした。'));
+      if (!response.ok)
+        throw new Error(
+          await extractApiErrorMessage(response, '画像のアップロードに失敗しました。もう一度お試しください。'),
+        );
       const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
       registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
@@ -109,6 +113,15 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
 
   const submit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
+    // タイトルは API 側も必須 (min 1 文字) だが、trim していない生の値をそのまま送ると
+    // 「空白だけのタイトル」で 400 になり、原因の分からない「作成できませんでした」が出るだけだった。
+    // ここで先に弾いて、画像を貼らずに直接送信した場合でも次の一手が分かるようにする。
+    const trimmedTitle = title.trim();
+    if (trimmedTitle === '') {
+      setError('タイトルを入力してください。');
+      return;
+    }
+
     setSaving(true);
     try {
       const publishAt = parsePublishAtInput(publishAtInput);
@@ -124,7 +137,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
       // (ここで新規作成すると、画像だけが古い下書きに残ったまま孤立する)
       const created =
         draftIdRef.current === null
-          ? await createDocument({ scope, title, body_markdown: bodyMarkdown, ...metadata })
+          ? await createDocument({ scope, title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata })
           : await (async () => {
               const response = await fetch(`/api/v1/docs/${draftIdRef.current}`, {
                 method: 'PATCH',
@@ -134,9 +147,9 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
                   'x-harness-tenant-id': tenantId,
                   'x-harness-workspace-id': workspaceId,
                 },
-                body: JSON.stringify({ title, body_markdown: bodyMarkdown, ...metadata }),
+                body: JSON.stringify({ title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata }),
               });
-              if (!response.ok) throw new Error(await extractErrorMessage(response, '作成できませんでした。'));
+              if (!response.ok) throw new Error(await extractApiErrorMessage(response, '作成できませんでした。'));
               return (await response.json()) as DocumentDetail;
             })();
       await settlePendingImages(created.body_markdown);
@@ -165,7 +178,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
               : [{ value: 'tenant', label: 'テナント' }]
           }
         />
-        <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <TextInput label="タイトル" required value={title} onChange={(event) => setTitle(event.target.value)} />
         <TextInput
           label="カテゴリ"
           description="1つの分類名を入力します。空欄なら未分類です。"

@@ -169,7 +169,12 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         )}
       </Panel>
       {/* 本文は遅延境界内でも共通 MarkdownView のみで描画する (DOCS-SEC7-101)。 */}
-      <DocumentDetailContent bodyMarkdown={doc.body_markdown} />
+      <DocumentDetailContent
+        bodyMarkdown={doc.body_markdown}
+        category={doc.category}
+        tags={doc.tags}
+        excerpt={doc.excerpt}
+      />
     </article>
   );
 }
