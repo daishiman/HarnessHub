@@ -259,10 +259,14 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
   });
 
   it('DOCS-UI-009: 保存失敗はエラーバナーを表示する', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(jsonResponse(DOC))
-      .mockResolvedValueOnce(jsonResponse({}, { ok: false, status: 500 }));
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
+      if (url === `/api/v1/docs/${DOC.id}` && init?.method === 'PATCH') {
+        return jsonResponse({}, { ok: false, status: 500 });
+      }
+      return jsonResponse(DOC);
+    });
     vi.stubGlobal('fetch', fetchMock);
     await render(
       <DocumentEditPage

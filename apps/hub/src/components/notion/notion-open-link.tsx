@@ -1,5 +1,6 @@
 'use client';
 
+import type { NotionIntegrationResponse } from '@harness-hub/schemas';
 /**
  * docs 画面から「Notionで開く」導線を出す共有部品。
  *
@@ -7,11 +8,9 @@
  * `document-edit-page.tsx`) が読み込みロジックを持たずに済み、既存ファイルへの
  * 変更を import 1 行 + 呼び出し 1 行に留められる。
  *
- * `@harness-hub/ui` の `ActionLink` は `target="_blank"` を受け付けないため
- * (新しいタブで開く必要があるこの導線には使えない)、見た目だけ合わせた
- * 専用の `<a>` をここで組み立てる。共有 UI パッケージ側は変更しない。
+ * 外部導線の見た目と安全な別タブ契約は共有 `ActionLink` に一元化する。
  */
-import type { NotionIntegrationResponse } from '@harness-hub/schemas';
+import { ActionLink } from '@harness-hub/ui';
 import { type ReactNode, useEffect, useState } from 'react';
 import { canOpenNotionPage } from '../../features/notion-integration/logic.js';
 
@@ -19,22 +18,6 @@ export interface NotionOpenLinkProps {
   readonly tenantId: string;
   readonly workspaceId: string;
 }
-
-const LINK_STYLE = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 'var(--hh-space-2)',
-  minHeight: 'var(--hh-control-height)',
-  padding: '0 var(--hh-space-4)',
-  borderRadius: 'var(--hh-radius-sm)',
-  fontSize: 'var(--hh-font-size-md)',
-  fontWeight: 'var(--hh-font-weight-bold)',
-  textDecoration: 'none',
-  color: 'var(--hh-color-text)',
-  background: 'var(--hh-color-surface)',
-  border: '1px solid var(--hh-color-border-strong)',
-} as const;
 
 const GUIDANCE_STYLE = {
   fontSize: 'var(--hh-font-size-sm)',
@@ -79,9 +62,9 @@ export function NotionOpenLink({ tenantId, workspaceId }: NotionOpenLinkProps): 
 
   if (canOpenNotionPage(integration.page_url)) {
     return (
-      <a href={integration.page_url} target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+      <ActionLink href={integration.page_url} openInNewTab>
         Notionで開く
-      </a>
+      </ActionLink>
     );
   }
 
