@@ -12,6 +12,23 @@ export type DocumentStatus = z.output<typeof documentStatusSchema>;
 const titleSchema = z.string().trim().min(1).max(200);
 const bodyMarkdownSchema = z.string().max(200_000);
 
+export const documentFieldSourceSchema = z.enum(['auto', 'manual']);
+export type DocumentFieldSource = z.output<typeof documentFieldSourceSchema>;
+
+const categorySchema = z.string().trim().min(1).max(80);
+/** JSON 配列文字列 (例 `["設計","API"]`) を wire 上では素直な文字列配列として扱う。 */
+const tagsSchema = z.array(z.string().trim().min(1).max(40)).max(20);
+const thumbnailUrlSchema = z.string().trim().url().max(2000);
+const excerptSchema = z.string().trim().max(400);
+export const assetSummarySchema = z
+  .object({
+    image_count: z.number().int().min(0),
+    has_table: z.boolean(),
+    has_code: z.boolean(),
+  })
+  .strict();
+export type AssetSummary = z.output<typeof assetSummarySchema>;
+
 export const documentDetailSchema = z
   .object({
     id: identifierSchema,
@@ -23,10 +40,21 @@ export const documentDetailSchema = z
     updated_by: identifierSchema,
     created_at: z.number().int().positive(),
     updated_at: z.number().int().positive(),
+    category: categorySchema.nullable(),
+    tags: tagsSchema.nullable(),
+    thumbnail_url: thumbnailUrlSchema.nullable(),
+    thumbnail_source: documentFieldSourceSchema,
+    excerpt: excerptSchema.nullable(),
+    excerpt_source: documentFieldSourceSchema,
+    asset_summary: assetSummarySchema.nullable(),
   })
   .strict();
 export type DocumentDetail = z.output<typeof documentDetailSchema>;
 
+/**
+ * カード表示に要る要約フィールド (thumbnail_url/excerpt/category/tags/asset_summary/status) は含めつつ、
+ * 一覧応答を重くする body_markdown だけ外す。
+ */
 export const documentListItemSchema = documentDetailSchema.omit({ body_markdown: true });
 export type DocumentListItem = z.output<typeof documentListItemSchema>;
 
@@ -41,6 +69,8 @@ export const documentListQuerySchema = paginationQuerySchema.extend({
    * 本文を検索対象にするなら全文検索の基盤 (FTS) が要り、それは別の判断になる。
    */
   q: listSearchTermSchema.optional(),
+  category: categorySchema.optional(),
+  tag: z.string().trim().min(1).max(40).optional(),
 });
 export type DocumentListQuery = z.output<typeof documentListQuerySchema>;
 
@@ -52,6 +82,10 @@ export const createDocumentRequestSchema = z
     scope: documentScopeSchema,
     title: titleSchema,
     body_markdown: bodyMarkdownSchema.default(''),
+    category: categorySchema.nullable().optional(),
+    tags: tagsSchema.nullable().optional(),
+    thumbnail_url: thumbnailUrlSchema.nullable().optional(),
+    excerpt: excerptSchema.nullable().optional(),
   })
   .strict();
 export type CreateDocumentRequest = z.output<typeof createDocumentRequestSchema>;
@@ -61,6 +95,10 @@ export const updateDocumentRequestSchema = z
     title: titleSchema.optional(),
     body_markdown: bodyMarkdownSchema.optional(),
     status: documentStatusSchema.optional(),
+    category: categorySchema.nullable().optional(),
+    tags: tagsSchema.nullable().optional(),
+    thumbnail_url: thumbnailUrlSchema.nullable().optional(),
+    excerpt: excerptSchema.nullable().optional(),
   })
   .strict();
 export type UpdateDocumentRequest = z.output<typeof updateDocumentRequestSchema>;

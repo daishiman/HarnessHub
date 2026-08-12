@@ -26,6 +26,7 @@ import { newUlid } from './ulid';
 
 export type DocumentScope = 'common' | 'tenant';
 export type DocumentStatus = 'draft' | 'published';
+export type DocumentFieldSource = 'auto' | 'manual';
 
 export interface DocumentRow {
   readonly id: string;
@@ -38,6 +39,13 @@ export interface DocumentRow {
   readonly updatedBy: string;
   readonly createdAt: number;
   readonly updatedAt: number;
+  readonly category: string | null;
+  readonly tags: string | null;
+  readonly thumbnailUrl: string | null;
+  readonly thumbnailSource: DocumentFieldSource;
+  readonly excerpt: string | null;
+  readonly excerptSource: DocumentFieldSource;
+  readonly assetSummary: string | null;
 }
 
 export interface CreateDocumentInput {
@@ -45,6 +53,13 @@ export interface CreateDocumentInput {
   readonly title: string;
   readonly bodyMarkdown: string;
   readonly actorId: string;
+  readonly category?: string | null;
+  readonly tags?: string | null;
+  readonly thumbnailUrl?: string | null;
+  readonly thumbnailSource?: DocumentFieldSource;
+  readonly excerpt?: string | null;
+  readonly excerptSource?: DocumentFieldSource;
+  readonly assetSummary?: string | null;
 }
 
 export interface UpdateDocumentInput {
@@ -52,6 +67,13 @@ export interface UpdateDocumentInput {
   readonly bodyMarkdown?: string;
   readonly status?: DocumentStatus;
   readonly actorId: string;
+  readonly category?: string | null;
+  readonly tags?: string | null;
+  readonly thumbnailUrl?: string | null;
+  readonly thumbnailSource?: DocumentFieldSource;
+  readonly excerpt?: string | null;
+  readonly excerptSource?: DocumentFieldSource;
+  readonly assetSummary?: string | null;
 }
 
 export interface ListDocumentsInput {
@@ -59,6 +81,9 @@ export interface ListDocumentsInput {
   readonly status?: DocumentStatus;
   /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
   readonly query?: string;
+  readonly category?: string;
+  /** tags は JSON 配列文字列に対する部分一致 (LIKE) で絞り込む簡易フィルタ。 */
+  readonly tag?: string;
   readonly cursor?: string;
   readonly limit: number;
 }
@@ -128,6 +153,11 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
         const search = containsTermInAny(input.query, [documents.title]);
         if (search !== undefined) predicates.push(search);
       }
+      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
+      if (input.tag !== undefined) {
+        const search = containsTermInAny(input.tag, [documents.tags]);
+        if (search !== undefined) predicates.push(search);
+      }
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would
       // make the ID cursor repeat or skip rows after an edit.
@@ -163,30 +193,27 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           const db = tx.client as CoreDb;
           const now = serverNow();
           const id = newUlid(now);
-          await db.insert(documents).values({
+          const base = {
             id,
             tenantId: context.tenantId,
             scope: input.scope,
             title: input.title,
             bodyMarkdown: input.bodyMarkdown,
-            status: 'draft',
+            status: 'draft' as const,
             createdBy: input.actorId,
             updatedBy: input.actorId,
             createdAt: now,
             updatedAt: now,
-          });
-          return {
-            id,
-            tenantId: context.tenantId,
-            scope: input.scope,
-            title: input.title,
-            bodyMarkdown: input.bodyMarkdown,
-            status: 'draft',
-            createdBy: input.actorId,
-            updatedBy: input.actorId,
-            createdAt: now,
-            updatedAt: now,
+            category: input.category ?? null,
+            tags: input.tags ?? null,
+            thumbnailUrl: input.thumbnailUrl ?? null,
+            thumbnailSource: input.thumbnailSource ?? 'auto',
+            excerpt: input.excerpt ?? null,
+            excerptSource: input.excerptSource ?? 'auto',
+            assetSummary: input.assetSummary ?? null,
           } satisfies DocumentRow;
+          await db.insert(documents).values(base);
+          return base;
         }),
       );
     },
@@ -200,6 +227,13 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           if (input.title !== undefined) patch.title = input.title;
           if (input.bodyMarkdown !== undefined) patch.bodyMarkdown = input.bodyMarkdown;
           if (input.status !== undefined) patch.status = input.status;
+          if (input.category !== undefined) patch.category = input.category;
+          if (input.tags !== undefined) patch.tags = input.tags;
+          if (input.thumbnailUrl !== undefined) patch.thumbnailUrl = input.thumbnailUrl;
+          if (input.thumbnailSource !== undefined) patch.thumbnailSource = input.thumbnailSource;
+          if (input.excerpt !== undefined) patch.excerpt = input.excerpt;
+          if (input.excerptSource !== undefined) patch.excerptSource = input.excerptSource;
+          if (input.assetSummary !== undefined) patch.assetSummary = input.assetSummary;
 
           const updated = await db
             .update(documents)
