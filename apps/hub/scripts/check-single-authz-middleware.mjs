@@ -66,6 +66,11 @@ const ALLOWLIST = [
     reason:
       '/legal 用の action が ACTION_RULES に存在しないこと (=role 制限を課さない設計) を正本から確認する契約テスト',
   },
+  {
+    path: 'apps/hub/src/__tests__/build-pipeline-board/authz-shared-table-consistency.test.ts',
+    reason:
+      'BPB-B9: builds.read/builds.stage_change/publish.approve が同一の ACTION_RULES テーブルに同居し意味論が食い違っていないことを、正本から import して確認するだけの契約テスト。実装 (decide) は経由しない',
+  },
 ];
 
 /**
