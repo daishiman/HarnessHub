@@ -25,6 +25,7 @@ import {
   SidebarLayout,
   SidebarToggleButton,
   Stack,
+  StageBoard,
   UiProvider,
 } from '@harness-hub/ui';
 import { describe, expect, it } from 'vitest';
@@ -105,6 +106,27 @@ const routes = [
     density: 'compact' as const,
   },
   {
+    path: '/stage-board',
+    title: '構築パイプライン',
+    body: (
+      <UiProvider>
+        <StageBoard
+          label="構築パイプライン"
+          onMoveCard={() => undefined}
+          columns={[
+            { stage: 'hearing', cards: [{ id: '1', title: 'ヒアリング中のツール' }] },
+            { stage: 'requirements', cards: [] },
+            { stage: 'design', cards: [] },
+            { stage: 'build', cards: [] },
+            { stage: 'test', cards: [] },
+            { stage: 'review', cards: [] },
+            { stage: 'publish', cards: [] },
+          ]}
+        />
+      </UiProvider>
+    ),
+  },
+  {
     path: '/sidebar-toggle',
     title: 'サイドバー開閉トグル',
     body: (
@@ -181,6 +203,29 @@ describe('レスポンシブ崩れ検査', () => {
       const columnCount = (value: string | undefined): number => (value ?? '').split(/\s+/).filter(Boolean).length;
       expect(columnCount(narrow?.styles['grid-template-columns'])).toBe(1);
       expect(columnCount(wide?.styles['grid-template-columns'])).toBe(2);
+    });
+  });
+
+  it('StageBoard は 768px で picker + 1 工程、1280px で 1 行 7 工程を横 overflow なしに表示する', async () => {
+    await withBrowserSession({ routes }, async (session) => {
+      await session.goto('/stage-board', viewportPresets.tablet);
+
+      const [tabletPicker] = await session.measure('[data-hh-stage-picker]', ['display']);
+      const tabletColumns = await session.measure('[data-hh-stage-column]', ['display']);
+      expect(tabletPicker?.styles.display).not.toBe('none');
+      expect(tabletColumns.filter((column) => column.styles.display !== 'none')).toHaveLength(1);
+      expect((await session.documentMetrics()).overflowsHorizontally).toBe(false);
+
+      await session.setViewport(viewportPresets.desktop);
+
+      const [desktopPicker] = await session.measure('[data-hh-stage-picker]', ['display']);
+      const [desktopGrid] = await session.measure('[data-hh-stage-columns]', ['grid-template-columns']);
+      const desktopColumns = await session.measure('[data-hh-stage-column]', ['display']);
+      const trackCount = (desktopGrid?.styles['grid-template-columns'] ?? '').split(/\s+/).filter(Boolean).length;
+      expect(desktopPicker?.styles.display).toBe('none');
+      expect(desktopColumns.filter((column) => column.styles.display !== 'none')).toHaveLength(7);
+      expect(trackCount).toBe(7);
+      expect((await session.documentMetrics()).overflowsHorizontally).toBe(false);
     });
   });
 
