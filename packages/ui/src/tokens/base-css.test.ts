@@ -124,25 +124,20 @@ describe('buildBaseCss', () => {
   });
 
   /**
-   * md 以上/lg 以上を固定 flex 列 + overflow-x: auto にすると、7 工程ぶんの幅が
-   * 画面に入らない限り常に横スクロールが出る (HarnessHub 構築パイプラインボードの
-   * 横スクロール問題)。列数を画面幅ごとに grid で固定して折り返すことで、
-   * どの画面幅でも横スクロールなしに全工程を見渡せるようにする。
+   * 中幅では 7 列を詰め込まず、選択中の工程だけを読みやすく表示する。
+   * desktop では正本の 7 工程を一覧できる 1 行 7 列とし、固定幅による横スクロールを出さない。
    */
-  it('StageBoard は md 未満で選択工程だけ、md 以上は grid で折り返して全工程を横スクロールなしに表示する', () => {
+  it('StageBoard は lg 未満で picker + 1 列、lg 以上で横スクロールなしの 7 列にする', () => {
     expect(css).toContain('[data-hh-stage-picker-options] {');
     expect(css).toContain(
       '[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(1) input:checked) [data-hh-stage-column]:nth-child(1)',
     );
     expect(css).toContain('[data-hh-stage-column] {\n  display: none;');
-    expect(css).toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
-    expect(css).toContain(
-      '[data-hh-stage-columns] {\n    display: grid;\n    grid-template-columns: repeat(3, minmax(0, 1fr));',
-    );
+    expect(css).toContain(`${mediaUp('lg')} {\n  [data-hh-stage-picker] {\n    display: none;`);
+    expect(css).toContain('[data-hh-stage-columns] {\n    grid-template-columns: repeat(7, minmax(0, 1fr));');
     expect(css).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 0;');
-    expect(css).toContain(
-      `${mediaUp('lg')} {\n  [data-hh-stage-columns] {\n    grid-template-columns: repeat(4, minmax(0, 1fr));`,
-    );
+    expect(css).not.toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
+    expect(css).not.toMatch(/grid-template-columns: repeat\([34], minmax\(0, 1fr\)\)/);
     expect(css).not.toMatch(
       /\[data-hh-stage-columns\] \{\s*display: flex;\s*gap: var\(--hh-space-3\);\s*overflow-x: auto;/,
     );
