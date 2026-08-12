@@ -17,7 +17,6 @@ import {
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { DateTimeText } from '../../../../components/format/date-time-text.js';
-import { extractApiErrorMessage } from '../../../../features/hearing-intake/client-error.js';
 import { HandoffTokensPanel } from '../../../../features/hearing-intake/components/handoff-tokens-panel.js';
 import { ScreenshotsPanel } from '../../../../features/hearing-intake/components/screenshots-panel.js';
 import {
@@ -44,6 +43,15 @@ const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => mo
 // 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)。
 // 同ファイルの MarkdownView と同じ遅延読み込みの型に揃えている。
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
+
+/**
+ * problem details 抽出は失敗パスでしか使わないため動的 import にする(client JS 予算/qa-018 対策)。
+ * 常時 import すると成功パスでも初期チャンクへ載ってしまう。
+ */
+async function extractApiErrorMessage(response: Response, fallback: string): Promise<string> {
+  const mod = await import('../../../../features/hearing-intake/client-error.js');
+  return mod.extractApiErrorMessage(response, fallback);
+}
 
 interface HearingSheetDetailProps {
   readonly id: string;

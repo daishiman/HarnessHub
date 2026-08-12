@@ -17,8 +17,16 @@ import {
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
-import { extractApiErrorMessage } from '../../../features/hearing-intake/client-error.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
+
+/**
+ * problem details 抽出は失敗パスでしか使わないため動的 import にする(client JS 予算/qa-018 対策)。
+ * 常時 import すると成功パスでも初期チャンクへ載ってしまう。
+ */
+async function extractApiErrorMessage(response: Response, fallback: string): Promise<string> {
+  const mod = await import('../../../features/hearing-intake/client-error.js');
+  return mod.extractApiErrorMessage(response, fallback);
+}
 
 interface HearingSheetListProps {
   readonly tenantId: string;
