@@ -161,8 +161,18 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
       salary: 6_000_000,
       features: 'OCR',
       output: 'CSV',
-      priority: 'high',
+      priority: 'high' as const,
+      usagePurpose: 'app_development' as const,
+      expertise: 'novice' as const,
+      role: 'employee' as const,
+      context: 'business' as const,
+      motivation: 'efficiency' as const,
+      sharingIntent: 'small_group' as const,
+      constraintTags: [],
+      shareTarget: 'チーム内',
+      knowledgeAssets: ['経理マニュアル'],
     };
+    expect(createSheetRequestSchema.safeParse(form).success).toBe(true);
     expect(createSheetRequestSchema.safeParse({ ...form, savedAmountPerYear: 1 }).success).toBe(false);
     expect(createSheetRequestSchema.safeParse({ ...form, savedHoursPerYear: 1 }).success).toBe(false);
   });
@@ -177,7 +187,12 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
   it('HI-EST-104: salary は snapshot から除外され、AI payload は snapshot だけを受け取る', () => {
     const service = readFileSync(resolve(process.cwd(), 'src/features/hearing-intake/service.ts'), 'utf8');
     const adapter = readFileSync(resolve(process.cwd(), 'src/features/hearing-intake/ai-job-adapter/index.ts'), 'utf8');
-    expect(service).toContain('const { salary: _discardedSalary, ...snapshotCandidate }');
+    const contracts = readFileSync(
+      resolve(process.cwd(), '../../packages/schemas/hearing-intake/contracts.ts'),
+      'utf8',
+    );
+    expect(service).toContain('createHearingSheetFormSnapshot(input.request)');
+    expect(contracts).toContain('const { salary: _discardedSalary, ...snapshot }');
     expect(adapter).toContain('form: input.form');
     expect(adapter).not.toContain('input.form.salary');
   });

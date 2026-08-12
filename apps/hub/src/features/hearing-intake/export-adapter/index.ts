@@ -6,60 +6,23 @@
  */
 import type { HearingSheetFormSnapshot, SheetDetail } from '@harness-hub/schemas';
 
+import {
+  CONSTRAINT_TAG_LABELS,
+  CONTEXT_LABELS,
+  EXPERTISE_LABELS,
+  LEGACY_UNANSWERED_LABEL,
+  MOTIVATION_LABELS,
+  ROLE_LABELS,
+  SHARING_INTENT_LABELS,
+  USAGE_PURPOSE_LABELS,
+} from '../profile-options.js';
+
 export type GeneratedSections = NonNullable<SheetDetail['generated_sections']>;
 
 export interface BuildHandoffInput {
   readonly formSnapshot: HearingSheetFormSnapshot;
   readonly generatedSections: GeneratedSections | null;
 }
-
-const USAGE_PURPOSE_LABELS: Readonly<Record<HearingSheetFormSnapshot['usagePurpose'], string>> = {
-  app_development: 'アプリ開発',
-  harness_development: 'ハーネス開発',
-  system_development: 'システム開発',
-  other: 'その他',
-};
-
-const EXPERTISE_LABELS: Readonly<Record<HearingSheetFormSnapshot['expertise'], string>> = {
-  novice: '非技術',
-  intermediate: '中級',
-  expert: '上級',
-};
-
-const ROLE_LABELS: Readonly<Record<HearingSheetFormSnapshot['role'], string>> = {
-  individual: '個人事業主',
-  employee: '会社員',
-  executive: '経営者',
-  creator: 'クリエイター',
-};
-
-const CONTEXT_LABELS: Readonly<Record<HearingSheetFormSnapshot['context'], string>> = {
-  business: '業務',
-  personal: '個人',
-  study: '学習',
-  hobby: '趣味',
-};
-
-const MOTIVATION_LABELS: Readonly<Record<HearingSheetFormSnapshot['motivation'], string>> = {
-  efficiency: '効率化',
-  quality: '品質',
-  learning: '学習',
-  branding: 'ブランディング',
-};
-
-const SHARING_INTENT_LABELS: Readonly<Record<HearingSheetFormSnapshot['sharingIntent'], string>> = {
-  self: '自分のみ',
-  small_group: '少人数',
-  public: '不特定多数',
-  customer: '顧客',
-};
-
-const CONSTRAINT_TAG_LABELS: Readonly<Record<HearingSheetFormSnapshot['constraintTags'][number], string>> = {
-  time: '時間',
-  budget: '予算',
-  authority: '権限',
-  knowledge: '知識',
-};
 
 const PRIORITY_LABELS: Readonly<Record<HearingSheetFormSnapshot['priority'], string>> = {
   high: '高',
@@ -68,12 +31,22 @@ const PRIORITY_LABELS: Readonly<Record<HearingSheetFormSnapshot['priority'], str
 };
 
 function formatConstraintTags(tags: HearingSheetFormSnapshot['constraintTags']): string {
+  if (tags === null) return LEGACY_UNANSWERED_LABEL;
   if (tags.length === 0) return 'なし';
   return tags.map((tag) => CONSTRAINT_TAG_LABELS[tag]).join('、');
 }
 
-function formatKnowledgeAssets(assets: readonly string[]): string {
+function formatKnowledgeAssets(assets: HearingSheetFormSnapshot['knowledgeAssets']): string {
+  if (assets === null) return LEGACY_UNANSWERED_LABEL;
   return assets.map((asset) => `- ${asset}`).join('\n');
+}
+
+function formatProfileAnswer<T extends string>(value: T | null, labels: Readonly<Record<T, string>>): string {
+  return value === null ? LEGACY_UNANSWERED_LABEL : labels[value];
+}
+
+function formatProfileText(value: string | null): string {
+  return value ?? LEGACY_UNANSWERED_LABEL;
 }
 
 function formatGeneratedSections(sections: GeneratedSections | null): string {
@@ -95,17 +68,17 @@ export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: 
   return [
     '# HarnessCreator 引き渡し',
     '',
-    `## 用途\n${USAGE_PURPOSE_LABELS[form.usagePurpose]}`,
+    `## 用途\n${formatProfileAnswer(form.usagePurpose, USAGE_PURPOSE_LABELS)}`,
     '',
     `## 真の課題\n${form.issue}`,
     '',
     `## 出力先\n${form.output}`,
     '',
-    `## 共有相手\n${form.shareTarget}`,
+    `## 共有相手\n${formatProfileText(form.shareTarget)}`,
     '',
     `## ナレッジ資産\n${formatKnowledgeAssets(form.knowledgeAssets)}`,
     '',
-    `## 依頼者の熟練度\n${EXPERTISE_LABELS[form.expertise]}`,
+    `## 依頼者の熟練度\n${formatProfileAnswer(form.expertise, EXPERTISE_LABELS)}`,
     '',
     `## 制約\n${formatConstraintTags(form.constraintTags)}`,
     '',
@@ -140,14 +113,14 @@ export function buildSystemOrchestratorHandoff({ formSnapshot, generatedSections
     `## 優先度\n${PRIORITY_LABELS[form.priority]}`,
     '',
     '## 用途プロファイル',
-    `- 用途: ${USAGE_PURPOSE_LABELS[form.usagePurpose]}`,
-    `- 熟練度: ${EXPERTISE_LABELS[form.expertise]}`,
-    `- 役割: ${ROLE_LABELS[form.role]}`,
-    `- 文脈（業務フロー上の位置づけ）: ${CONTEXT_LABELS[form.context]}`,
-    `- 動機: ${MOTIVATION_LABELS[form.motivation]}`,
-    `- 共有意図: ${SHARING_INTENT_LABELS[form.sharingIntent]}`,
+    `- 用途: ${formatProfileAnswer(form.usagePurpose, USAGE_PURPOSE_LABELS)}`,
+    `- 熟練度: ${formatProfileAnswer(form.expertise, EXPERTISE_LABELS)}`,
+    `- 役割: ${formatProfileAnswer(form.role, ROLE_LABELS)}`,
+    `- 文脈（業務フロー上の位置づけ）: ${formatProfileAnswer(form.context, CONTEXT_LABELS)}`,
+    `- 動機: ${formatProfileAnswer(form.motivation, MOTIVATION_LABELS)}`,
+    `- 共有意図: ${formatProfileAnswer(form.sharingIntent, SHARING_INTENT_LABELS)}`,
     `- 制約: ${formatConstraintTags(form.constraintTags)}`,
-    `- 共有相手: ${form.shareTarget}`,
+    `- 共有相手: ${formatProfileText(form.shareTarget)}`,
     '',
     '## 生成済みセクション',
     formatGeneratedSections(generatedSections),

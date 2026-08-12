@@ -17,6 +17,7 @@ const DETAIL: SheetDetail = {
   applicant: { id: 'user-1', name: '山田 太郎' },
   department: '経理部',
   form_snapshot: {
+    schemaVersion: 2,
     taskName: '請求処理',
     company: 'サンプル社',
     applicant: '山田 太郎',

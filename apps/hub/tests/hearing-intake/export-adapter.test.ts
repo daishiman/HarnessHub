@@ -5,7 +5,7 @@
  * 必要な情報 (用途・真の課題・共有相手・ナレッジ資産・優先度など) を漏らさず含み、
  * かつ salary のような送ってはいけない値を含まないことを固定する。
  */
-import type { HearingSheetFormSnapshot } from '@harness-hub/schemas';
+import { type HearingSheetFormSnapshot, normalizeHearingSheetFormSnapshot } from '@harness-hub/schemas';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -15,6 +15,7 @@ import {
 } from '../../src/features/hearing-intake/export-adapter/index.js';
 
 const BASE_FORM_SNAPSHOT: HearingSheetFormSnapshot = {
+  schemaVersion: 2,
   taskName: '請求書処理',
   company: '株式会社サンプル',
   applicant: '山田',
@@ -92,6 +93,27 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
     const text = buildHarnessCreatorHandoff({ formSnapshot: BASE_FORM_SNAPSHOT, generatedSections: null });
 
     expect(text).not.toMatch(/salary|年収/i);
+  });
+
+  it('HI-EXPORT-005b: 旧 11 項目は推測値や undefined ではなく未回答と明示する', () => {
+    const legacy = normalizeHearingSheetFormSnapshot({
+      taskName: BASE_FORM_SNAPSHOT.taskName,
+      company: BASE_FORM_SNAPSHOT.company,
+      applicant: BASE_FORM_SNAPSHOT.applicant,
+      domain: BASE_FORM_SNAPSHOT.domain,
+      issue: BASE_FORM_SNAPSHOT.issue,
+      tools: BASE_FORM_SNAPSHOT.tools,
+      hours: BASE_FORM_SNAPSHOT.hours,
+      people: BASE_FORM_SNAPSHOT.people,
+      features: BASE_FORM_SNAPSHOT.features,
+      output: BASE_FORM_SNAPSHOT.output,
+      priority: BASE_FORM_SNAPSHOT.priority,
+    });
+    const text = buildHarnessCreatorHandoff({ formSnapshot: legacy, generatedSections: null });
+
+    expect(text).toContain('未回答（旧形式のシート）');
+    expect(text).not.toMatch(/undefined|null/);
+    expect(text).not.toContain('アプリ開発');
   });
 });
 

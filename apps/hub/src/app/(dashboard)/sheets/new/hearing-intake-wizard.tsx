@@ -1,6 +1,11 @@
 'use client';
 
-import type { CreateSheetResponse, HearingConstraintTag, HearingSheetFormInput } from '@harness-hub/schemas';
+import {
+  type CreateSheetResponse,
+  HEARING_SHEET_FORM_LIMITS,
+  type HearingConstraintTag,
+  type HearingSheetFormInput,
+} from '@harness-hub/schemas';
 import {
   Alert,
   Button,
@@ -16,7 +21,20 @@ import {
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ChangeEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-
+import {
+  CONSTRAINT_TAG_OPTIONS,
+  CONTEXT_OPTIONS,
+  EXPERTISE_OPTIONS,
+  MOTIVATION_OPTIONS,
+  ROLE_OPTIONS,
+  SHARING_INTENT_OPTIONS,
+  USAGE_PURPOSE_LABELS,
+  USAGE_PURPOSE_OPTIONS,
+} from '../../../../features/hearing-intake/profile-options.js';
+import {
+  hearingIntakeStepIsValid,
+  knowledgeAssetsValidationError,
+} from '../../../../features/hearing-intake/wizard-validation.js';
 import {
   DEFAULT_SHEET_REDUCTION_RATE,
   previewMonthlySavedHours,
@@ -51,28 +69,9 @@ const INITIAL_FORM: HearingSheetFormInput = {
   knowledgeAssets: [],
 };
 
-const CONSTRAINT_TAG_OPTIONS: readonly { value: HearingConstraintTag; label: string }[] = [
-  { value: 'time', label: '時間' },
-  { value: 'budget', label: '予算' },
-  { value: 'authority', label: '権限' },
-  { value: 'knowledge', label: '知識' },
-];
-
-/** Step4 確認プレビュー用のラベル。ウィザードの Select 選択肢と表記を合わせる。 */
-const USAGE_PURPOSE_PREVIEW_LABELS: Readonly<Record<HearingSheetFormInput['usagePurpose'], string>> = {
-  app_development: 'アプリ開発',
-  harness_development: 'ハーネス開発',
-  system_development: 'システム開発',
-  other: 'その他',
-};
-
 interface HearingIntakeWizardProps {
   readonly tenantId: string;
   readonly workspaceId: string;
-}
-
-function requiredText(value: string): boolean {
-  return value.trim().length > 0;
 }
 
 /**
@@ -194,6 +193,8 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
     }));
   }, []);
 
+  const knowledgeAssetsError = knowledgeAssetsValidationError(form.knowledgeAssets);
+
   const steps = useMemo<readonly WizardStep[]>(
     () => [
       {
@@ -201,10 +202,34 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
         title: '基本情報',
         content: (
           <>
-            <TextInput label="業務名" value={form.taskName} onChange={setText('taskName')} required />
-            <TextInput label="会社名" value={form.company} onChange={setText('company')} required />
-            <TextInput label="申請者" value={form.applicant} onChange={setText('applicant')} required />
-            <TextInput label="業務領域" value={form.domain} onChange={setText('domain')} required />
+            <TextInput
+              label="業務名"
+              value={form.taskName}
+              onChange={setText('taskName')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
+              required
+            />
+            <TextInput
+              label="会社名"
+              value={form.company}
+              onChange={setText('company')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
+              required
+            />
+            <TextInput
+              label="申請者"
+              value={form.applicant}
+              onChange={setText('applicant')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
+              required
+            />
+            <TextInput
+              label="業務領域"
+              value={form.domain}
+              onChange={setText('domain')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
+              required
+            />
           </>
         ),
       },
@@ -213,8 +238,20 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
         title: '現状',
         content: (
           <>
-            <Textarea label="現在の課題" value={form.issue} onChange={setText('issue')} required />
-            <Textarea label="利用中のツール" value={form.tools} onChange={setText('tools')} required />
+            <Textarea
+              label="現在の課題"
+              value={form.issue}
+              onChange={setText('issue')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.requiredTextLength}
+              required
+            />
+            <Textarea
+              label="利用中のツール"
+              value={form.tools}
+              onChange={setText('tools')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.requiredTextLength}
+              required
+            />
             <TextInput
               label="月間工数（時間）"
               type="number"
@@ -255,71 +292,36 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
               label="用途"
               value={form.usagePurpose}
               onChange={setSelect('usagePurpose')}
-              options={[
-                { value: 'app_development', label: 'アプリ開発' },
-                { value: 'harness_development', label: 'ハーネス開発' },
-                { value: 'system_development', label: 'システム開発' },
-                { value: 'other', label: 'その他' },
-              ]}
+              options={USAGE_PURPOSE_OPTIONS}
               required
             />
             <Select
               label="熟練度"
               value={form.expertise}
               onChange={setSelect('expertise')}
-              options={[
-                { value: 'novice', label: '非技術' },
-                { value: 'intermediate', label: '中級' },
-                { value: 'expert', label: '上級' },
-              ]}
+              options={EXPERTISE_OPTIONS}
               required
             />
-            <Select
-              label="役割"
-              value={form.role}
-              onChange={setSelect('role')}
-              options={[
-                { value: 'individual', label: '個人事業主' },
-                { value: 'employee', label: '会社員' },
-                { value: 'executive', label: '経営者' },
-                { value: 'creator', label: 'クリエイター' },
-              ]}
-              required
-            />
+            <Select label="役割" value={form.role} onChange={setSelect('role')} options={ROLE_OPTIONS} required />
             <Select
               label="文脈"
               value={form.context}
               onChange={setSelect('context')}
-              options={[
-                { value: 'business', label: '業務' },
-                { value: 'personal', label: '個人' },
-                { value: 'study', label: '学習' },
-                { value: 'hobby', label: '趣味' },
-              ]}
+              options={CONTEXT_OPTIONS}
               required
             />
             <Select
               label="動機"
               value={form.motivation}
               onChange={setSelect('motivation')}
-              options={[
-                { value: 'efficiency', label: '効率化' },
-                { value: 'quality', label: '品質' },
-                { value: 'learning', label: '学習' },
-                { value: 'branding', label: 'ブランディング' },
-              ]}
+              options={MOTIVATION_OPTIONS}
               required
             />
             <Select
               label="共有意図"
               value={form.sharingIntent}
               onChange={setSelect('sharingIntent')}
-              options={[
-                { value: 'self', label: '自分のみ' },
-                { value: 'small_group', label: '少人数' },
-                { value: 'public', label: '不特定多数' },
-                { value: 'customer', label: '顧客' },
-              ]}
+              options={SHARING_INTENT_OPTIONS}
               required
             />
             <ConstraintTagPicker value={form.constraintTags} onToggle={toggleConstraintTag} />
@@ -329,13 +331,15 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
               placeholder="自分のみ / チーム内 / 顧客への納品物"
               value={form.shareTarget}
               onChange={setText('shareTarget')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
               required
             />
             <Textarea
               label="ナレッジ資産"
-              description="関連する社内資料・過去の対応記録・テンプレートなどを 1 行に 1 件で入力してください（1 件以上必須）。"
+              description={`関連する社内資料・過去の対応記録・テンプレートなどを 1 行に 1 件で入力してください（1〜${HEARING_SHEET_FORM_LIMITS.knowledgeAssets} 件、1 件 ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内）。`}
               value={knowledgeAssetsText}
               onChange={setKnowledgeAssets}
+              error={knowledgeAssetsError}
               required
             />
           </>
@@ -346,8 +350,20 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
         title: '要望',
         content: (
           <>
-            <Textarea label="ほしい機能" value={form.features} onChange={setText('features')} required />
-            <Textarea label="希望する出力" value={form.output} onChange={setText('output')} required />
+            <Textarea
+              label="ほしい機能"
+              value={form.features}
+              onChange={setText('features')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.requiredTextLength}
+              required
+            />
+            <Textarea
+              label="希望する出力"
+              value={form.output}
+              onChange={setText('output')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.requiredTextLength}
+              required
+            />
             <Select
               label="優先度"
               value={form.priority}
@@ -374,7 +390,7 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
           <section aria-label="入力内容の確認">
             <p>業務名: {form.taskName}</p>
             <p>課題: {form.issue}</p>
-            <p>用途: {USAGE_PURPOSE_PREVIEW_LABELS[form.usagePurpose]}</p>
+            <p>用途: {USAGE_PURPOSE_LABELS[form.usagePurpose]}</p>
             <p>
               削減時間の目安: 月あたり約 {previewMonthlySavedHours(form, DEFAULT_SHEET_REDUCTION_RATE).toFixed(1)} 時間
             </p>
@@ -386,32 +402,25 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
         ),
       },
     ],
-    [form, knowledgeAssetsText, setKnowledgeAssets, setNumber, setSelect, setText, toggleConstraintTag],
+    [
+      form,
+      knowledgeAssetsError,
+      knowledgeAssetsText,
+      setKnowledgeAssets,
+      setNumber,
+      setSelect,
+      setText,
+      toggleConstraintTag,
+    ],
   );
 
-  const canProceed =
-    [
-      [form.taskName, form.company, form.applicant, form.domain].every(requiredText),
-      requiredText(form.issue) &&
-        requiredText(form.tools) &&
-        Number.isInteger(form.hours) &&
-        form.hours >= 1 &&
-        form.hours <= 160 &&
-        Number.isInteger(form.people) &&
-        form.people >= 1 &&
-        form.people <= 500 &&
-        Number.isInteger(form.salary) &&
-        form.salary >= 0,
-      [form.usagePurpose, form.expertise, form.role, form.context, form.motivation, form.sharingIntent].every(
-        requiredText,
-      ) &&
-        requiredText(form.shareTarget) &&
-        form.knowledgeAssets.length >= 1,
-      requiredText(form.features) && requiredText(form.output),
-      true,
-    ][activeIndex] ?? false;
+  const canProceed = hearingIntakeStepIsValid(form, activeIndex);
 
   const submit = async (): Promise<void> => {
+    if (!hearingIntakeStepIsValid(form, 4)) {
+      setError('入力内容に上限超過または未入力があります。各ステップを確認してください。');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
