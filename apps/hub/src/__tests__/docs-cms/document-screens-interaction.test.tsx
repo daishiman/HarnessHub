@@ -502,8 +502,9 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
 
-    // 修正前は「保存できませんでした。」という固定文言しか出せず、権限不足かどうか区別できなかった。
-    expect(container.textContent).toContain('権限が不足しているため、この操作はできません。');
+    // problem+json の title/detail をそのまま表示する (固定文言へ潰さない)。
+    expect(container.textContent).toContain('権限がありません');
+    expect(container.textContent).toContain('workspace-admin 以上が必要です。');
   });
 
   it('DOCS-UI-019: 未変更の予約日時/statusを再送せず実title変更の解除契約を保つ', async () => {
