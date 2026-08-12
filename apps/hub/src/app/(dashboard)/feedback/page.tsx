@@ -1,7 +1,7 @@
 import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { FeedbackList } from './feedback-list.js';
+import { FeedbackListLazy } from './feedback-list-lazy.js';
 
 export const metadata: Metadata = {
   title: '改善要望フィードバック | Harness Hub',
@@ -34,7 +34,7 @@ export default async function FeedbackPage({ searchParams }: PageProps) {
         }
       />
       <Panel flush>
-        <FeedbackList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
+        <FeedbackListLazy tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
       </Panel>
     </>
   );

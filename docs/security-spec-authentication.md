@@ -70,7 +70,7 @@ serves_goals: [G1, G2, G3, G4, G5]
 | refresh token 保存 | **SHA-256 ハッシュのみ** (`refresh_token_hash`) | DB 流出時に token を復元させない |
 | refresh rotation | **使い捨て (rotation 必須)** | OAuth 2.1 / BCP |
 | **再利用検知** | 失効済み refresh token の提示で **同一 family を全失効** + 監査 event `token.reuse_detected` | 窃取検知の唯一の手段 |
-| クライアント保存先 | macOS Keychain / Windows Credential Manager | qa-008 (既存確定) |
+| クライアント保存先 | macOS Keychain / Windows Credential Manager。保存key・recordは正規化済みHTTPS Hub origin + tenantに束縛し、別originへrefresh tokenを送らない | qa-008 (既存確定) + 外部Docs同期の脅威分析 |
 
 #### 2.2.1 scope (S-D7 確定)
 
@@ -82,8 +82,9 @@ serves_goals: [G1, G2, G3, G4, G5]
 | `metrics:write` | `POST /api/v1/metrics/events` のみ | ハーネス実行環境 (ingest) |
 | `feedback:write` | `POST /api/v1/feedback` (source=harness) | ハーネス実行環境 |
 | `aijob:process` | AI job の pull / complete | AI worker (qa-048 改訂: workspace-admin = 自テナントのみ / provider-admin = 全テナント・監査付き) |
+| `docs:write` | 外部作成Markdownのtenant下書き同期 (`GET/PUT /api/v1/docs/imports/:source/:externalId`) | Claude Code / Codex / Publisher CLI (workspace-admin、自テナントのみ) |
 
-- **scope は加算的に付与しない**: ingest 用 token に `publish:write` を含めない。ハーネス配布時に埋め込まれる token は `metrics:write` + `feedback:write` のみ。
+- **scope は加算的に付与しない**: ingest 用 token に `publish:write`/`docs:write` を含めない。ハーネス配布時に埋め込まれる token は `metrics:write` + `feedback:write` のみ。Docs CLI は `docs:write` だけを要求する。
 - 認可 MW は `principal.kind === 'token'` のとき **role 判定に加えて scope 判定を行う** (両方の合格が必要 — §3.5)。
 
 ### 2.3 OIDC の検証契約 (T1 対策)

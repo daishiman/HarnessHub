@@ -78,6 +78,34 @@
       "when": 1786508075298,
       "tag": "0010_notion-integration",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1786523070574,
+      "tag": "0011_docs-cms-cards-and-classification",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1786523070575,
+      "tag": "0012_external-docs-sync",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1786524202493,
+      "tag": "0013_hearing-intake-screenshots-and-share-tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1786535866108,
+      "tag": "0014_docs-cms-scheduled-publishing",
+      "breakpoints": true
     }
   ]
 }

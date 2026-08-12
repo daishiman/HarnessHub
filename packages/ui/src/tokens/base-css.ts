@@ -66,6 +66,44 @@ const typographyRules = [
   ].join('\n'),
 ].join('\n\n');
 
+/**
+ * Markdown 描画 (`MarkdownView` / `MarkdownEditor` のプレビュータブ) だけに効く装飾。
+ *
+ * 上の `typographyRules` は `code, pre, kbd, samp` にフォント指定しか与えないため、
+ * コードブロック・引用は見出しや箇条書きと違って「地の文と同じ見た目」になり、
+ * 装飾が反映されていないように見える (HarnessHub docs-cms 不具合報告)。
+ * `data-hh-markdown` は `MarkdownView` の wrapper div が常に持つ属性なので、それを
+ * scope にして他の素の `pre`/`blockquote` (コードサンプルの表示など) に影響を広げない。
+ */
+const markdownRules = [
+  [
+    '[data-hh-markdown] pre {',
+    '  margin: 0;',
+    '  padding: var(--hh-space-3);',
+    '  overflow-x: auto;',
+    '  background: var(--hh-color-surface-muted);',
+    '  border: 1px solid var(--hh-color-border);',
+    '  border-radius: var(--hh-radius-sm);',
+    '}',
+  ].join('\n'),
+  ['[data-hh-markdown] pre code {', '  background: none;', '  padding: 0;', '  border: none;', '}'].join('\n'),
+  [
+    '[data-hh-markdown] :not(pre) > code {',
+    '  padding: 0.125em 0.375em;',
+    '  background: var(--hh-color-surface-muted);',
+    '  border: 1px solid var(--hh-color-border);',
+    '  border-radius: var(--hh-radius-sm);',
+    '}',
+  ].join('\n'),
+  [
+    '[data-hh-markdown] blockquote {',
+    '  padding-inline-start: var(--hh-space-3);',
+    '  border-inline-start: 3px solid var(--hh-color-border-strong);',
+    '  color: var(--hh-color-text-muted);',
+    '}',
+  ].join('\n'),
+].join('\n\n');
+
 const linkRules = [
   [
     // 下線を残すのは、色だけでリンクを示すと 1.4.1 (色の使用) に反するため。
@@ -459,6 +497,7 @@ export function buildBaseCss(): string {
   return [
     resetRules,
     typographyRules,
+    markdownRules,
     linkRules,
     listRules,
     tableRules,

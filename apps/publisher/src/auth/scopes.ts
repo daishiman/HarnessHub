@@ -6,7 +6,10 @@ import type { PublisherTokenScope } from '@harness-hub/schemas';
 
 const PUBLISH_COMMAND_SCOPES: readonly PublisherTokenScope[] = ['publish:write'];
 const FEEDBACK_COMMAND_SCOPES: readonly PublisherTokenScope[] = ['feedback:write'];
+const DOCS_COMMAND_SCOPES: readonly PublisherTokenScope[] = ['docs:write'];
 
-export function scopesForCommand(command: 'publish' | 'feedback'): readonly PublisherTokenScope[] {
-  return command === 'publish' ? PUBLISH_COMMAND_SCOPES : FEEDBACK_COMMAND_SCOPES;
+export function scopesForCommand(command: 'publish' | 'feedback' | 'docs'): readonly PublisherTokenScope[] {
+  if (command === 'publish') return PUBLISH_COMMAND_SCOPES;
+  if (command === 'feedback') return FEEDBACK_COMMAND_SCOPES;
+  return DOCS_COMMAND_SCOPES;
 }

@@ -17,13 +17,14 @@ export type RefreshTokenEndpoint = (
 
 export async function refreshOrClear(
   store: CredentialStoreAdapter,
+  hubOrigin: string,
   tenantSlug: string,
   refreshToken: string,
   endpoint: RefreshTokenEndpoint,
 ): Promise<TokenResponse> {
   const response = await endpoint(refreshToken);
   if (response.status !== 200) {
-    await store.clearToken(tenantSlug);
+    await store.clearToken(hubOrigin, tenantSlug);
     throw new Error('refresh token が無効です。publish を再実行して再ログインしてください');
   }
   return tokenResponseSchema.parse(response.body);

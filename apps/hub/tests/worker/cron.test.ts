@@ -59,12 +59,13 @@ describe('cron dispatch', () => {
     expect(readWranglerConfig().main).toBe('src/worker.ts');
   });
 
-  it('HF-CRON-001: infrastructure-spec §5 の割当どおりに日次 4 / 週次 2 ジョブを持つ', () => {
+  it('HF-CRON-001: infrastructure-spec §5 の割当どおりに日次 5 / 週次 2 ジョブを持つ', () => {
     expect(DEFAULT_CRON_REGISTRY[DAILY_CRON]?.map((entry) => entry.id)).toStrictEqual([
       'metrics-rollup-daily',
       'turso-usage-monitor',
       'orphan-candidate-notify',
       'token-cleanup',
+      'docs-scheduled-publish',
     ]);
     expect(DEFAULT_CRON_REGISTRY[WEEKLY_CRON]?.map((entry) => entry.id)).toStrictEqual([
       'metrics-rollup-weekly',

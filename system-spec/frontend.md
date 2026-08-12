@@ -173,3 +173,28 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - 表示名 / 一覧一貫性 / 相対日時 / list `q` は presentation・既存 list の加算契約。認可 claim と deny 規則は不変のため **R4-reopen 不要**。
 - PR #700 の route-local 遅延読込と sticky 計測の配置限定は client 境界の最適化であり、API・認可・DB・route 意味を変えない。新規 qa 番号なし、R4-reopen 不要。
 - 判断と証跡の正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+
+## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
+
+- S10 ヒアリングウィザードは、確定済みの4大工程 (基本情報/業務詳細/要件/確認) を維持したまま、
+  入力負荷低減のため画面分割する (FormData 30 項目)。
+- S12 は生成結果の閲覧に加え、スクリーンショット添付と Claude Code 引き渡しトークン発行 UI を持つ。
+- 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
+- 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。
+
+## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul / issue-hearing-sheet-overhaul-20260812)
+
+- S10 を **7 画面** に統合 (整理・まとめ + 確認 → 整理・確認)。
+- 用途プロファイル系 enum と priority を既存値破壊なしで加算する。
+- 作成時添付ステージング (25MB・画像/動画/CSV/Excel) と S12 form_snapshot 全項目表示を追加する。
+- S17 個別ダッシュボードに email / 最終ログインを読み取り表示する。
+- 正本: `docs/frontend-spec.md`、`docs/features/feat-hearing-intake/mvp-sheet-overhaul-*`。
+
+## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
+
+- `documents.publish_at` を nullable epoch ms として純増する。`scheduled` enum は追加しない。
+- 表示状態: `published` / `draft+future publish_at`=予約中 / それ以外の draft=非公開。
+- 予約公開 cron は default/max 100・`publish_at ASC,id ASC`・行 CAS。監査 action=`docs.scheduled_publish`。
+- 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
+  `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
+- 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。

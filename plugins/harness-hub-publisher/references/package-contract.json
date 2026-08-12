@@ -4,11 +4,13 @@
   "plugin_name": "harness-hub-publisher",
   "entry_points": {
     "skills": [
+      "run-docs-sync",
       "run-publisher-publish",
       "run-skill-feedback"
     ],
     "agents": [],
     "commands": [
+      "docs-sync",
       "publish"
     ],
     "hooks": []
@@ -23,6 +25,8 @@
       "publisher",
       "harness-hub",
       "device-flow",
+      "docs-sync",
+      "markdown",
       "wrangler",
       "cli"
     ]

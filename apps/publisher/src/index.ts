@@ -5,6 +5,12 @@
  * 各サブディレクトリの公開面をここへ集約する。
  */
 export { type CredentialStoreAdapter, scopesForCommand } from './auth/index.js';
+export {
+  type DocsCommandOptions,
+  type DocsCommandResult,
+  deriveExternalDocumentId,
+  runDocsCommand,
+} from './cli/docs-command.js';
 export { type FeedbackCommandOptions, runFeedbackCommand } from './cli/feedback-command.js';
 export { type PublishCommandOptions, type PublishCommandResult, runPublishCommand } from './cli/publish-command.js';
 export { buildPackageArchive, collectPackageFiles, completePackageManifest } from './core/index.js';

@@ -14,6 +14,15 @@ owner: harness maintainers
 since: 2026-08-02
 version: 0.1.0
 source: docs/features/feat-publisher-plugin/design-review-notes.md
+combinators:
+  - with-feedback-contract
+responsibility_refs:
+  - scripts/run-publisher-publish.sh
+  - ../../../../apps/publisher/src/cli/publish-command.ts
+schema_refs:
+  - ../../../../packages/schemas/publisher-plugin/index.ts
+completeness_exempt:
+  - "manifest: 単一scriptがPublisher CLIへ引数と終了codeをそのまま委譲する1段階runで、分岐phaseを持たない。"
 script_refs:
   - scripts/run-publisher-publish.sh
 feedback_contract:
@@ -39,6 +48,14 @@ feedback_contract:
 
 # run-publisher-publish
 
+## Purpose & Output Contract
+
+- **目的**: skills-packageまたはweb appを、共通Publisher CLIの検査・認証・公開経路でHarness Hubへpublishする。
+- **入力**: package directory、Hub/tenant/project、target、visibility、originとweb app時のWrangler設定。
+- **出力**: Publisher CLIの公開結果と終了code。Skill側で成功扱いや応答変換を追加しない。
+- **完了条件**: CLIのpublish subcommandへ全引数を一度だけ渡し、成功または具体的な非0エラーを返す。
+- **境界**: package収集、Device Flow、Hub API、pre-check、Wrangler処理はPublisher CLIだけをownerとする。
+
 `apps/publisher` (`@harness-hub/publisher`) の CLI を実行し、skills-package を Harness Hub へ
 publish します。本 skill は `scripts/run-publisher-publish.sh` を呼ぶだけの薄いラッパーで、
 package 収集・manifest 補完・pre-check・Device Flow 認証・wrangler 実行のいずれの業務ロジックも
@@ -46,8 +63,9 @@ package 収集・manifest 補完・pre-check・Device Flow 認証・wrangler 実
 
 ## 実行
 
-```
-bash scripts/run-publisher-publish.sh --package-dir <dir> --hub-url <url> --tenant-slug <slug> \
+```bash
+bash "$CLAUDE_PLUGIN_ROOT/skills/run-publisher-publish/scripts/run-publisher-publish.sh" \
+  --package-dir <dir> --hub-url <url> --tenant-slug <slug> \
   --project-id <id> --target <skill|web_app> --visibility <private|workspace> --origin <origin> \
   [--wrangler-config <path>]
 ```
@@ -55,8 +73,18 @@ bash scripts/run-publisher-publish.sh --package-dir <dir> --hub-url <url> --tena
 引数は全てそのまま `apps/publisher` の CLI (`publish` サブコマンド) へ渡されます。
 終了コードも CLI の戻り値をそのまま返します (0: 成功、非 0: 失敗)。
 
+Claude Codeでは`CLAUDE_PLUGIN_ROOT`、Codexでは選択したSkillの実体directoryを基準にscriptを絶対pathへ
+解決します。scriptは`HARNESS_HUB_PUBLISHER_BIN`で指定したcheckoutのbin、PATH上の`harness-publisher`、
+monorepo内のlocal binをこの順で解決し、見つからなければ非0で停止します。
+
 ## 前提
 
-- リポジトリ直下で `pnpm install` 済みであること (`apps/publisher` は `node_modules` の
+- HarnessHub checkout内のbinを使う場合はリポジトリ直下で `pnpm install` 済みであること (`apps/publisher` は `node_modules` の
   workspace link 経由で `@harness-hub/schemas` / `@harness-hub/inspection` を解決する)
 - `--target web_app` を指定する場合は `--wrangler-config` が必須 (未指定だと CLI がエラーで停止する)
+
+## Gotchas
+
+- publishは外部変更を伴います。対象project・visibility・package directoryを実行前に確認します。
+- `--target web_app`ではWranglerによるCloudflare配備も実行され、Device Flowのブラウザ承認が必要です。
+- CLI解決失敗を別実装へfallbackしません。`HARNESS_HUB_PUBLISHER_BIN`には信頼するcheckoutの絶対pathだけを設定します。

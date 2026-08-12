@@ -46,6 +46,7 @@ export async function restoreControlPlane(
   const restoredCounts: Record<string, number> = {};
   let tombstonesApplied = 0;
   let chainOk = false;
+  const restoreStartedAtMs = Date.now();
 
   try {
     const parsed = parseExportArtifact(artifact);
@@ -54,8 +55,17 @@ export async function restoreControlPlane(
     // 全行 insert (テーブル名順。FK 制約は貼らない設計のため順序依存はない)
     for (const [tableName, rows] of [...parsed.rowsByTable.entries()].sort(([a], [b]) => (a < b ? -1 : 1))) {
       const table = resolveTable(tableName);
-      for (let i = 0; i < rows.length; i += INSERT_CHUNK) {
-        const chunk = rows.slice(i, i + INSERT_CHUNK);
+      // bearer credential は古い snapshot から有効なまま復活させない。行自体は監査・運用情報として
+      // 復元するが、active token は DB へ入れる瞬間に失効させるため、後続検証が失敗しても露出しない。
+      const safeRows =
+        tableName === 'hearing_share_tokens'
+          ? rows.map((row) => ({
+              ...row,
+              revokedAt: row.revokedAt === null || row.revokedAt === undefined ? restoreStartedAtMs : row.revokedAt,
+            }))
+          : rows;
+      for (let i = 0; i < safeRows.length; i += INSERT_CHUNK) {
+        const chunk = safeRows.slice(i, i + INSERT_CHUNK);
         await target.client.insert(table).values(chunk);
       }
       restoredCounts[tableName] = rows.length;

@@ -64,7 +64,7 @@ refresh token の再利用が検知された場合に、同一 family の token 
 macOS Keychain / Windows Credential Manager の adapter が token を保存すること、および平文ファイル・環境変数・リポジトリへの書き込み経路が一切存在しないことを、ファイルシステム/環境変数の副作用が無いことを検証する形でテストする。
 
 ### PT2-E scope 最小権限
-コマンドごとに要求する scope が `publish:write`/`metrics:write`/`feedback:write`/`aijob:process` のうち必要最小限であることをテストする (`feedback` サブコマンド追加時は `feedback:write` のみが増えることを含む、AD-6)。
+コマンドごとに要求する scope が現行5種 (`publish:write`/`metrics:write`/`feedback:write`/`aijob:process`/`docs:write`) のうち必要最小限であることをテストする。`feedback` は `feedback:write` のみ、`docs` は `docs:write` のみを要求する。
 
 ---
 

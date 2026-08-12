@@ -58,6 +58,7 @@ function baseDeps(overrides: Partial<SessionDeps> = {}): SessionDeps {
     clearToken: vi.fn(async () => {}),
   };
   return {
+    hubOrigin: 'https://hub.example.com',
     credentialStore,
     requestDeviceCode: neverCall('requestDeviceCode') as SessionDeps['requestDeviceCode'],
     pollTokenEndpoint: neverCall('pollTokenEndpoint') as PollTokenEndpoint,
@@ -91,6 +92,7 @@ describe('obtainAccessToken', () => {
     expect(log).toHaveBeenCalledWith(expect.stringContaining(DEVICE_CODE_RESPONSE.verification_uri_complete));
     expect(result).toEqual({ accessToken: expect.any(String), tenantId: 'tenant_123', workspaceId: 'workspace_456' });
     expect(credentialStore.saveToken).toHaveBeenCalledWith({
+      hub_origin: 'https://hub.example.com',
       tenant_slug: 'acme',
       workspace_id: 'workspace_456',
       refresh_token: 'r'.repeat(32),
@@ -101,6 +103,7 @@ describe('obtainAccessToken', () => {
 
   it('保存済み token があれば refresh 経路のみ通り、device flow 系 deps は一切呼ばない', async () => {
     const storedRecord: PublisherCredentialRecord = {
+      hub_origin: 'https://hub.example.com',
       tenant_slug: 'acme',
       workspace_id: 'workspace_456',
       refresh_token: 'r'.repeat(32),
@@ -123,8 +126,32 @@ describe('obtainAccessToken', () => {
     expect(result.workspaceId).toBe('workspace_456');
   });
 
+  it('保存recordのHub originが異なる場合はrefresh tokenを送信せず停止する', async () => {
+    const storedRecord: PublisherCredentialRecord = {
+      hub_origin: 'https://other.example.com',
+      tenant_slug: 'acme',
+      workspace_id: 'workspace_456',
+      refresh_token: 'r'.repeat(32),
+      scope: ['publish:write'],
+      issued_at: 500,
+    };
+    const credentialStore: CredentialStoreAdapter = {
+      platform: 'darwin',
+      getToken: vi.fn(async () => storedRecord),
+      saveToken: vi.fn(async () => {}),
+      clearToken: vi.fn(async () => {}),
+    };
+    const refreshTokenEndpoint: RefreshTokenEndpoint = vi.fn();
+    const deps = baseDeps({ credentialStore, refreshTokenEndpoint });
+
+    await expect(obtainAccessToken(deps, 'acme', ['publish:write'])).rejects.toThrow('Hub origin');
+    expect(refreshTokenEndpoint).not.toHaveBeenCalled();
+    expect(credentialStore.clearToken).toHaveBeenCalledWith('https://hub.example.com', 'acme');
+  });
+
   it('refresh が失敗したら credentialStore をクリアしてエラーで終了する (再ログイン要求)', async () => {
     const storedRecord: PublisherCredentialRecord = {
+      hub_origin: 'https://hub.example.com',
       tenant_slug: 'acme',
       workspace_id: 'workspace_456',
       refresh_token: 'r'.repeat(32),
@@ -141,6 +168,37 @@ describe('obtainAccessToken', () => {
     const deps = baseDeps({ credentialStore, refreshTokenEndpoint });
 
     await expect(obtainAccessToken(deps, 'acme', ['publish:write'])).rejects.toThrow('再ログイン');
-    expect(credentialStore.clearToken).toHaveBeenCalledWith('acme');
+    expect(credentialStore.clearToken).toHaveBeenCalledWith('https://hub.example.com', 'acme');
+  });
+
+  it('保存tokenのscopeが不足する場合はクリアして要求scopeでDevice Flowをやり直す', async () => {
+    const storedRecord: PublisherCredentialRecord = {
+      hub_origin: 'https://hub.example.com',
+      tenant_slug: 'acme',
+      workspace_id: 'workspace_456',
+      refresh_token: 'r'.repeat(32),
+      scope: ['publish:write'],
+      issued_at: 500,
+    };
+    const credentialStore: CredentialStoreAdapter = {
+      platform: 'darwin',
+      getToken: vi.fn(async () => storedRecord),
+      saveToken: vi.fn(async () => {}),
+      clearToken: vi.fn(async () => {}),
+    };
+    const refreshTokenEndpoint: RefreshTokenEndpoint = vi.fn(async () => ({ status: 200, body: tokenResponse() }));
+    const requestDeviceCode = vi.fn(async () => DEVICE_CODE_RESPONSE);
+    const docsToken = tokenResponse({
+      access_token: fakeAccessToken({ scope: ['docs:write'] }),
+      scope: ['docs:write'],
+    });
+    const pollTokenEndpoint: PollTokenEndpoint = vi.fn(async () => ({ status: 200, body: docsToken }));
+    const deps = baseDeps({ credentialStore, refreshTokenEndpoint, requestDeviceCode, pollTokenEndpoint });
+
+    await obtainAccessToken(deps, 'acme', ['docs:write']);
+
+    expect(credentialStore.clearToken).toHaveBeenCalledWith('https://hub.example.com', 'acme');
+    expect(requestDeviceCode).toHaveBeenCalledWith('acme', ['docs:write']);
+    expect(credentialStore.saveToken).toHaveBeenCalledWith(expect.objectContaining({ scope: ['docs:write'] }));
   });
 });

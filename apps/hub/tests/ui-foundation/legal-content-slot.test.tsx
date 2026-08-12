@@ -10,18 +10,32 @@
 import { UiProvider } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { LegalArticle } from '../../src/app/legal/legal-article.js';
 import { LEGAL_DOCUMENTS, type LegalDocument } from '../../src/app/legal/legal-content.js';
-import LegalPage from '../../src/app/legal/page.js';
+
+// LegalPage は session の有無を見て表示シェルを切り替える async server component
+// (`../../src/app/legal/page.tsx` 参照)。ここでは本文差し込みだけを見たいので、
+// 常に未ログイン (PublicShell) を通す最小限の next/headers 偽物を差す。
+vi.mock('next/headers', () => ({
+  cookies: async () => ({ get: () => undefined }),
+  headers: async () => ({ get: () => null }),
+}));
+// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない
+// (HubShell 分岐が使われなくても import は評価されるため、常に偽物へ差し替える)。
+vi.mock('next/font/google', () => ({
+  Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+}));
+
+const { default: LegalPage } = await import('../../src/app/legal/page.js');
 
 function render(node: ReactNode): string {
   return renderToStaticMarkup(<UiProvider>{node}</UiProvider>);
 }
 
-function renderLegalDocument(): Document {
-  return new DOMParser().parseFromString(`<!DOCTYPE html>${render(<LegalPage />)}`, 'text/html');
+async function renderLegalDocument(): Promise<Document> {
+  return new DOMParser().parseFromString(`<!DOCTYPE html>${render(await LegalPage())}`, 'text/html');
 }
 
 const draft: LegalDocument = {
@@ -76,8 +90,8 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
     expect(html).toContain('あとから足した条。');
   });
 
-  it('LEGALSLOT-06: 画面は本文を持たず、確認前の文書は見出しと準備中の断りだけを出す', () => {
-    const document = renderLegalDocument();
+  it('LEGALSLOT-06: 画面は本文を持たず、確認前の文書は見出しと準備中の断りだけを出す', async () => {
+    const document = await renderLegalDocument();
     for (const entry of LEGAL_DOCUMENTS) {
       // 文書があること自体は分かる (どこへ掲載されるのかが読める) が、中身は出さない。
       expect(document.getElementById(entry.slug)).not.toBeNull();
@@ -90,8 +104,8 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
     expect(document.querySelectorAll('#terms, #privacy')).toHaveLength(2);
   });
 
-  it('LEGALSLOT-07: 上部 nav は通常のフラグメントリンクで両文書へ直接到達できる', () => {
-    const document = renderLegalDocument();
+  it('LEGALSLOT-07: 上部 nav は通常のフラグメントリンクで両文書へ直接到達できる', async () => {
+    const document = await renderLegalDocument();
     const nav = document.querySelector('nav[aria-label="このページの文書"]');
     expect(nav).not.toBeNull();
     expect([...(nav?.querySelectorAll('a') ?? [])].map((link) => link.getAttribute('href'))).toStrictEqual([
@@ -100,8 +114,8 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
     ]);
   });
 
-  it('LEGALSLOT-08: 各リンク先は共有可能な id とキーボード用フォーカス対象を持つ', () => {
-    const document = renderLegalDocument();
+  it('LEGALSLOT-08: 各リンク先は共有可能な id とキーボード用フォーカス対象を持つ', async () => {
+    const document = await renderLegalDocument();
     for (const entry of LEGAL_DOCUMENTS) {
       const target = document.getElementById(entry.slug);
       expect(target?.getAttribute('tabindex')).toBe('-1');
@@ -109,8 +123,8 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
     }
   });
 
-  it('LEGALSLOT-09: 文書内 nav は印刷対象から外れ、本文は印刷対象のまま残る', () => {
-    const document = renderLegalDocument();
+  it('LEGALSLOT-09: 文書内 nav は印刷対象から外れ、本文は印刷対象のまま残る', async () => {
+    const document = await renderLegalDocument();
     expect(document.querySelector('nav[aria-label="このページの文書"]')?.hasAttribute('data-print-exclude')).toBe(true);
     expect([...document.querySelectorAll('style')].map((style) => style.textContent).join('\n')).toContain(
       '@media print { [data-print-exclude] { display: none !important; } }',

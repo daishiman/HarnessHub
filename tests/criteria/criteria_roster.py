@@ -44,6 +44,7 @@ ROSTER: list[tuple[str, str, tuple[str, ...]]] = [
     ("harness-creator", "run-skill-rubric-governance", ("IN1", "IN2", "OUT1", "OUT2")),
     ("harness-creator", "run-skill-update-notifier", ("IN1", "IN2", "IN3", "OUT1")),
     ("harness-creator", "wrap-git-commit-safe", ("IN1", "IN2", "OUT1")),
+    ("harness-hub-publisher", "run-docs-sync", ("IN1", "IN2", "OUT1", "OUT2")),
     ("harness-hub-publisher", "run-publisher-publish", ("IN1", "IN2", "OUT1", "OUT2")),
     ("harness-hub-publisher", "run-skill-feedback", ("IN1", "IN2", "IN3", "OUT1", "OUT2")),
     ("mf-kessai-invoice-check", "run-mf-initial-month-enrich", ("IN1", "IN2", "OUT1")),

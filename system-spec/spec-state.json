@@ -54,12 +54,11 @@
     "database": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-229",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G4",
           "G5"
-        ],
-        "approval_ref": "appr-043"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -85,12 +84,11 @@
     "auth": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-162",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G2",
           "G4"
-        ],
-        "approval_ref": "appr-033"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -102,12 +100,11 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-073",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G1",
           "G4"
-        ],
-        "approval_ref": "appr-010"
+        ]
       },
       "desktop-linux": {
         "state": "対象外",
@@ -115,12 +112,11 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-073",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G1",
           "G4"
-        ],
-        "approval_ref": "appr-010"
+        ]
       }
     },
     "ui-ux": {
@@ -165,12 +161,11 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-161",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G4",
           "G5"
-        ],
-        "approval_ref": "appr-033"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -182,12 +177,11 @@
       },
       "desktop-windows": {
         "state": "確定",
-        "qa_ref": "qa-073",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G1",
           "G4"
-        ],
-        "approval_ref": "appr-010"
+        ]
       },
       "desktop-linux": {
         "state": "対象外",
@@ -195,12 +189,11 @@
       },
       "desktop-macos": {
         "state": "確定",
-        "qa_ref": "qa-073",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G1",
           "G4"
-        ],
-        "approval_ref": "appr-010"
+        ]
       }
     },
     "infrastructure": {
@@ -245,12 +238,11 @@
     "backend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-228",
+        "qa_ref": "qa-231",
         "serves_goals": [
           "G4",
           "G5"
-        ],
-        "approval_ref": "appr-043"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -2749,6 +2741,36 @@
           ]
         }
       ]
+    },
+    {
+      "id": "qa-231",
+      "question": "Claude CodeやCodexで作成したドキュメントをHarness HubへAPI反映する追加要件について、既存の認証・セキュリティ・backend・database契約をどう更新するか。",
+      "answer": "[出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。\n\n【外部Docs同期】Claude Code、Codex、Publisher CLI等の外部作成環境は、固定API keyやブラウザCookieを使わず、既存Device Flowの15分短命access tokenと新しい専用scope docs:writeでMarkdownを同期する。発行主体はworkspace-admin以上、同期先はtokenと同一tenantのdraft文書だけとし、provider-adminにもこの機械経路でのtenant越境を許さない。common文書・自動公開・画像同期はv1対象外とする。既存4 scopeへdocs:writeを加え現行値域を5 scopeとするが、TTL、refresh rotation、OS資格情報域保存、即時失効、再利用検知の契約は変えない。Linuxは永続token保存を行わず実行ごとにDevice Flowを使う。\n\n【API契約】GET/PUT /api/v1/docs/imports/:source/:externalIdを追加する。自然キーはtenant+source+externalId、externalIdはrepository identityとrepository相対pathから導出したSHA-256とし、絶対pathや利用者名を送らない。同じ内容の再送は文書を増やさずunchangedを返す。既存変更にはGETのETagをIf-Matchで要求し、欠落428、古い値412とする。Hub側で手動編集・公開された文書はmodifiedとし、CLIは明示的forceが無い限り停止する。監査には本文を入れず、source、hash ID、revision、結果だけを記録する。\n\n【DB契約】documentsへnullableなexternal_source、external_document_id、external_content_hash、external_revisionをadditive migrationで追加し、tenant_id+external_source+external_document_idを一意にする。外部同期はCASでrevisionを更新し、通常文書と既存行の意味を変えない。documentsは既存ADRどおりworkspace_idを持たずtenant帰属を維持する。\n\n【クライアント境界】同期対象はrepository root配下のMarkdown通常ファイルに限定し、../、絶対path、repository外を指すsymlinkを拒否する。同期コマンドはdocs:writeだけを要求し、既存publish/feedback/aijob/metrics権限を同梱しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "外部文書同期を既存の広い権限へ混ぜずdocs:writeへ分離し、token同一tenantのdraftだけを許可してprovider-admin越境も閉じた。",
+          "tradeoffs": [
+            "scope値域と認可マトリクスの更新が必要になる",
+            "別コマンド用refresh tokenでは再認可が必要になる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念",
+          "principle": "Concurrency and consistency",
+          "applicability": "applied",
+          "rationale": "自然キーによる冪等upsertとETag/If-Matchの楽観的競合制御を公開契約に含め、再送重複と無言の上書きを防いだ。",
+          "tradeoffs": [
+            "clientは更新前にGETする必要がある",
+            "競合時の428/412処理とrevision管理が増える"
+          ]
+        }
+      ]
     }
   ],
   "approval_log": [
@@ -4568,6 +4590,110 @@
           "G1"
         ]
       }
+    },
+    {
+      "category": "auth",
+      "platform": "web",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-162",
+        "serves_goals": [
+          "G2",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-windows",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-073",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "auth",
+      "platform": "desktop-macos",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-073",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-161",
+        "serves_goals": [
+          "G4",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "desktop-windows",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-073",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "desktop-macos",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-073",
+        "serves_goals": [
+          "G1",
+          "G4"
+        ]
+      }
+    },
+    {
+      "category": "backend",
+      "platform": "web",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-228",
+        "serves_goals": [
+          "G4",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "database",
+      "platform": "web",
+      "reason": "2026-08-12の利用者要望により、外部作成MarkdownのDocs API同期と専用docs:write scopeを追加するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-229",
+        "serves_goals": [
+          "G4",
+          "G5"
+        ]
+      }
     }
   ],
   "category_aggregate": {
@@ -5832,7 +5958,7 @@
     "loop_count": 1,
     "next_question": null,
     "complete": true,
-    "max_loops": 5
+    "max_loops": 1
   },
   "design_application_contract_version": "1.0"
 }

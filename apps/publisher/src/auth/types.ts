@@ -5,8 +5,8 @@
 import type { PublisherCredentialRecord } from '@harness-hub/schemas';
 
 export interface CredentialStoreAdapter {
-  readonly platform: 'darwin' | 'win32';
+  readonly platform: 'darwin' | 'win32' | 'linux';
   saveToken(record: PublisherCredentialRecord): Promise<void>;
-  getToken(tenantSlug: string): Promise<PublisherCredentialRecord | null>;
-  clearToken(tenantSlug: string): Promise<void>;
+  getToken(hubOrigin: string, tenantSlug: string): Promise<PublisherCredentialRecord | null>;
+  clearToken(hubOrigin: string, tenantSlug: string): Promise<void>;
 }

@@ -57,6 +57,9 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-security]
 
 ## 6. 系譜 (lineage — goal-spec 4 件の確定転記)
 
+> 2026-08-12の外部Docs同期要件は、上表の初回baselineを履歴として保持したまま `docs:write` を第5の
+> 専用scopeとして追加する後続拡張である。数値契約・保存先・失効契約は変更しない。
+
 | path | 正本 sha256 | wrapper sha256 | digest_status |
 |---|---|---|---|
 | features/feat-publisher-plugin.context.json | d75423be3a7865ec787158d70131636955ade571d9eeb1e338cdf2f0de257a41 | — | verified |

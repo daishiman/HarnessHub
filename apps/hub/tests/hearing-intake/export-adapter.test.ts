@@ -10,12 +10,14 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildHarnessCreatorHandoff,
+  buildHarnessCreatorHandoffInstruction,
   buildSystemOrchestratorHandoff,
+  buildSystemOrchestratorHandoffInstruction,
   type GeneratedSections,
 } from '../../src/features/hearing-intake/export-adapter/index.js';
 
 const BASE_FORM_SNAPSHOT: HearingSheetFormSnapshot = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   taskName: '請求書処理',
   company: '株式会社サンプル',
   applicant: '山田',
@@ -38,6 +40,10 @@ const BASE_FORM_SNAPSHOT: HearingSheetFormSnapshot = {
   informationSources: ['会計システム', '取引先から届く請求書'],
   trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
   knowledgeAssets: ['経理マニュアル v3', '過去の仕訳ルール一覧'],
+  requestPatterns: [],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 const GENERATED_SECTIONS: GeneratedSections = {
@@ -99,7 +105,7 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
     expect(text).not.toMatch(/salary|年収/i);
   });
 
-  it('HI-EXPORT-005b: 旧 11 項目は推測値や undefined ではなく未回答と明示する', () => {
+  it('HI-EXPORT-005b: 旧 11 項目は推測値や undefined ではなく明示的な未回答として扱う', () => {
     const legacy = normalizeHearingSheetFormSnapshot({
       taskName: BASE_FORM_SNAPSHOT.taskName,
       company: BASE_FORM_SNAPSHOT.company,
@@ -115,25 +121,25 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
     });
     const text = buildHarnessCreatorHandoff({ formSnapshot: legacy, generatedSections: null });
 
+    // 旧 11 項目は decode 時に用途プロファイル軸を unknown へ、情報源/真の課題を null へ補完する。
+    expect(text).toContain('不明・わからない');
     expect(text).toContain('未回答');
     expect(text).not.toMatch(/undefined|null/);
     expect(text).not.toContain('アプリ開発');
   });
 
-  it('HI-EXPORT-005c: null は未回答、空配列は回答済み 0 件として別表示する', () => {
+  it('HI-EXPORT-005c: 情報源は null (未回答) と空配列 (回答済み 0 件) を区別する', () => {
     const unanswered = buildHarnessCreatorHandoff({
-      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: null, knowledgeAssets: null },
+      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: null },
       generatedSections: null,
     });
     const answeredNone = buildHarnessCreatorHandoff({
-      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: [], knowledgeAssets: [] },
+      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: [] },
       generatedSections: null,
     });
 
     expect(unanswered).toContain('## 情報源\n未回答');
-    expect(unanswered).toContain('## ナレッジ資産\n未回答');
     expect(answeredNone).toContain('## 情報源\nなし');
-    expect(answeredNone).toContain('## ナレッジ資産\nなし');
   });
 });
 
@@ -188,5 +194,30 @@ describe('HI-EXPORT: システム開発向け引き渡しテキスト', () => {
     const text = buildSystemOrchestratorHandoff({ formSnapshot: BASE_FORM_SNAPSHOT, generatedSections: null });
 
     expect(text).not.toMatch(/salary|年収/i);
+  });
+});
+
+describe('HI-EXPORT: トークン付き共有URL方式の誘導文 (instruction_text)', () => {
+  const SHARE_URL = 'https://hub.example.com/api/hearing/tok_abc123';
+
+  it('HI-EXPORT-010: HarnessCreator 向け誘導文はトークンURLを含む', () => {
+    const text = buildHarnessCreatorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(text).toContain(SHARE_URL);
+  });
+
+  it('HI-EXPORT-011: システム開発向け誘導文はトークンURLを含む', () => {
+    const text = buildSystemOrchestratorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(text).toContain(SHARE_URL);
+  });
+
+  it('HI-EXPORT-012: audience ごとに誘導文の文面が異なる', () => {
+    const harnessText = buildHarnessCreatorHandoffInstruction({ shareUrl: SHARE_URL });
+    const systemText = buildSystemOrchestratorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(harnessText).not.toBe(systemText);
+    expect(harnessText).toContain('HarnessCreator');
+    expect(systemText).toContain('開発計画');
   });
 });

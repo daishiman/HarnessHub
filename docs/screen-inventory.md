@@ -87,7 +87,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 |---|---|---|---|---|---|---|
 | S09 | ダッシュボード (KPI・推移・完了率・ランキング・部門別削減) | member 以上 | 拡張 | P5 (低) | feat-metrics-tracking | dashboard |
 | S09-L | **planned 着地ダッシュボード** (`/dashboard` 案。current の既定着地は `/sheets`) | member 以上 | 拡張 | **planned (製品承認待ち)** | feat-post-signin-scope-routing 系 | HarnessHub-3sjj |
-| S10 | ハーネス ヒアリング (4 ステップウィザード・削減試算) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |
+| S10 | ハーネス ヒアリング (4 大工程を7画面に分割したウィザード・削減試算・作成時添付) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |
 | S11 | ヒアリングシート一覧 | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheets |
 | S12 | ヒアリングシート詳細 (status 変更は admin) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheet-detail |
 | S13 | 構築パイプライン (7 工程ボード) | member 以上 (操作 admin) | 拡張 | **P2 (最優先)** | feat-build-pipeline-board | pipeline |
@@ -108,7 +108,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 
 | slice | 必須画面・操作 | 一覧/詳細に必ず表示する内容 | 完了条件 |
 |---|---|---|---|
-| **P1 ヒアリング** | S10 4 step 入力 → 受付番号表示 → S11 一覧 → S12 詳細 | S11: HS コード、status、title、domain/department、対象人数・月工数、申請者、更新日。S12: 生成本文 (概要/課題/機能タグ/試算)、元入力 snapshot、試算 snapshot、申請者/部門/作成日、生成状態、対応 Build | member は自分のシートを作成・一覧・詳細確認でき、admin はテナント内全件の確認と状態変更ができる。生成中は完了まで通知/ポーリングされる |
+| **P1 ヒアリング** | S10 4 大工程 / 7画面入力 → 受付番号表示 → S11 一覧 → S12 詳細 | S11: HS コード、status、title、domain/department、対象人数・月工数、申請者、更新日。S12: 生成本文 (概要/課題/機能タグ/試算)、元入力 snapshot 全項目、試算 snapshot、申請者/部門/作成日、生成状態、対応 Build | member は自分のシートを作成・一覧・詳細確認でき、admin はテナント内全件の確認と状態変更ができる。生成中は完了まで通知/ポーリングされる |
 | **P2 プラグイン Hub** | S01.PUBLISH page (CLI 取込推奨、ZIP 代替) → 検査/公開 → S01.LIST → S02.DETAIL → install/download または Web app 起動 → S03 状態確認 | S01: name/summary/target/status/version/download count。S02: stable release、全 release、target 別の導入情報、公開状態、利用統計、低品質報告 | 同一 Workspace で複数 Project/target を扱え、owner が upload・管理し、member が認可済みの安定版を導入/ダウンロードできる。`public` visibility は Stage 5 まで表示しない |
 | **P2 構築パイプライン** | S12「構築へ」→ S13 7 工程 → publish 工程で PublishRequest 接続 → S01/S02 | **current MVP**: カードは title、起点種別、滞留から算出した risk。担当者・ETA は current の永続化/API 契約に無いため、根拠のない空欄を作らない。**target design**: source 参照・assignee・ETA・project metadata は Build ADR §2 の後続差分として current UI から分離する。公開工程は二重状態を持たず PublishRequest を正本にする | current は member 閲覧、workspace-admin 以上の隣接工程操作、認証・tenant scope、PublishRequest 前提、監査を満たす。target design の metadata 完了を current surface の完了表示に混ぜない |
 

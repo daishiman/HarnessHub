@@ -55,6 +55,10 @@ const FORM_INPUT: CreateSheetRequest = {
   informationSources: ['Google Meet', 'Google Docs'],
   trueProblem: '議事録作成が遅れ、会議後の判断と実行をすぐ始められないこと',
   knowledgeAssets: ['過去の議事録テンプレート'],
+  requestPatterns: [],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 /** worker が返す生成結果。S12 詳細まで往復することを確認するため固定値にする。 */

@@ -70,6 +70,17 @@ export const PUBLIC_PATH_PREFIXES: readonly string[] = [
 const TENANT_SIGNIN_PATH = /^\/([^/]+)\/signin$/;
 
 /**
+ * hearing share の公開面。token と screenshotId は、実際の発行値
+ * (43文字 base64url / 26文字 ULID) の形だけを 1 segment として受け付ける。
+ *
+ * `/api/hearing` を prefix allowlist へ入れると、将来追加された管理用の子 route まで
+ * 未認証公開になる。正規表現は次の 2 形状だけを表し、未知の子 route は deny-by-default に残す。
+ *   - `/api/hearing/{token}`
+ *   - `/api/hearing/{token}/screenshots/{screenshotId}`
+ */
+const PUBLIC_HEARING_SHARE_PATH = /^\/api\/hearing\/[A-Za-z0-9_-]{43}(?:\/screenshots\/[0-7][0-9A-HJKMNP-TV-Z]{25})?$/;
+
+/**
  * `/{tenant_slug}/signin` かどうか。slug の「形」は `tenantSlugSchema` を唯一の正本とする。
  * ここで独自の文字集合を書くと、middleware は public と判定するのに画面側の `safeParse` は 404 にする、
  * という入口ごとの挙動差が生まれる (実際 `/ACME/signin` が middleware だけ通っていた)。
@@ -77,6 +88,10 @@ const TENANT_SIGNIN_PATH = /^\/([^/]+)\/signin$/;
 function isTenantSigninPath(pathname: string): boolean {
   const slug = TENANT_SIGNIN_PATH.exec(pathname)?.[1];
   return slug !== undefined && tenantSlugSchema.safeParse(slug).success;
+}
+
+function isPublicHearingSharePath(pathname: string): boolean {
+  return PUBLIC_HEARING_SHARE_PATH.test(pathname);
 }
 
 export interface AuthzInput {
@@ -99,6 +114,7 @@ export function isPublicPath(pathname: string): boolean {
   return (
     PUBLIC_EXACT_PATHS.includes(normalized) ||
     isTenantSigninPath(normalized) ||
+    isPublicHearingSharePath(normalized) ||
     PUBLIC_PATH_PREFIXES.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))
   );
 }

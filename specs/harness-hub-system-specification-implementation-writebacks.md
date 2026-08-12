@@ -205,3 +205,9 @@ N/A: 今回の分冊に伴う製品判断はない。
 - consumer は schema 1.2 を session+ID で fail-closed 照合し、schema 1.1 は旧 Task の ID 無し legacy のみ受理する。1.2 の ID 欠落を 1.1 へ downgrade しない。
 - unit / fixture の parallel canary PASS は defensive hardening であり、正式 evaluator の parallel 許可ではない。fresh live-trial 完了まで `1 message = 1 foreground fork` を維持する。
 - 新しい利用者要求・`spec-state.json` セル変更・製品 API / DB / 認証 / UI / deploy unit は無い。`system-spec/` 確定章は reopen せず、architecture と [uypz 受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md) に内部契約を記録する。
+
+## hearing-sheet-overhaul writeback (2026-08-12 / `HarnessHub-a70b`)
+
+- S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。
+- 製品 API path・tenant 認可・AI キュー kind・DB テーブル集合は不変。フィールド数 FormData 30 / snapshot 29 を維持。
+- 詳細正本は `docs/frontend-spec.md` と [仕様反映受領書](../docs/features/feat-hearing-intake/mvp-sheet-overhaul-spec-reflection-receipt.md)。
