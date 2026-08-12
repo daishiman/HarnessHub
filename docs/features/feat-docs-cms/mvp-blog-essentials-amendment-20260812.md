@@ -9,7 +9,7 @@ recorded_at: 2026-08-12
 
 # tasks 投影: Docs CMS ブログ運用 4 項目 (promoted package 非改変)
 
-promoted 済み `tasks/feat-docs-cms/sys-docs-cms-p01..p13.md` は content-addressed のため改変しない。
+promoted 済み `tasks/feat-docs-cms/` 配下の sys-docs-cms-p01 〜 p13 は content-addressed のため改変しない。
 本ファイルは MVP 追補の tasks 層投影である。
 
 ## 対応する既存 phase への意味付け

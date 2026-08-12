@@ -105,12 +105,11 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | cron 式 (UTC) | 実行主体 | ジョブ (順次実行・ジョブ単位 try/catch) |
 |---|---|---|
-| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso/R2 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 → ⑤ ドキュメント予約公開 (`docs-scheduled-publish`)。新しい trigger は増やさない。期限到来 draft を `publish_at ASC, id ASC` の安定順・default/max 100件で公開し、`publishedCount/hasMore` を構造化ログへ残す |
+| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup → ② 使用量監視 → ③ orphan 通知 → ④ token 掃除 → ⑤ ドキュメント予約公開 (既存 trigger 相乗り・max 100・安定順 CAS) |
 | `0 0 * * 1` (JST 月 9:00) | Workers scheduled handler | 週次 rollup 確定 + 週次サマリメール (opt-in、100 通/日制限のバッチ分割 = D6/qa-027) |
 | `0 17 * * *` (JST 2:00) | GitHub Actions (`backup.yml`) | DB export → gzip → R2 `harness-hub-backups` へ upload (§10) |
 
-- scheduled handler は `event.cron` で dispatch する単一実装。各ジョブは冪等 (再実行安全) とし、失敗はジョブ単位で記録して後続を止めない。予約公開は処理済み行を `published + publish_at=NULL` にするため再実行対象から外れる。repository transactionは外部同期revisionまで揃え、Hubは返却文書ごとに監査eventを順次追記する。監査追記失敗は構造化ログへ残して予約公開ジョブを失敗扱いにするが、既に公開したDB行との原子性は主張しない。
-- 日次相乗りの通常時は、予約時刻を過ぎてから次の成功 run までの追加遅延が 24 時間未満 (説明上は最大 24 時間程度) になる。これは cron が成功し batch に積み残しが無い場合の設計粒度であり、Cloudflare 側の schedule 遅延、失敗、`hasMore=true` の backlog に対する SLA ではない。`hasMore` は後続 run が必要な観測信号として alert/runbook へ渡す。
+- scheduled handler は `event.cron` で dispatch する単一実装。各ジョブは冪等で、失敗はジョブ単位記録。予約公開は published+publish_at=NULL で再実行対象外。監査は文書ごと順次追記 (DB 原子性は非主張)。`hasMore` は backlog 観測信号で SLA ではない。
 - **cron heartbeat**: 日次バッチ完了時に外形監視の heartbeat URL へ ping し、「cron が動かなかった」ことを検知する (qa-027 の cron 失敗監視。Better Stack の heartbeat monitor を利用 = qa-034)。
 - rollup は `metrics_events` の未処理分のみを chunk 読取 (cursor) して集計し、1 呼出の CPU 10ms 予算に収める。生イベントのオンライン集計禁止 (B3) はここでも維持。
 

@@ -294,14 +294,8 @@ PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過
 
 ## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
 
-S10 を8画面(28項目)へ分割し、S12 に引き渡し/screenshot/token UI を追加。
-詳細は `docs/frontend-spec.md` と feature information-design / 受領書を正本とする。
+S10 を8画面へ分割し S12 に引き渡し UI を追加。正本は frontend-spec。
 
 ## 2026-08-12 S15 Docs CMS rich surface
 
-- S15一覧はscope/status/category/tag/titleを絞り、thumbnail/category/tags/excerpt/asset badgesを
-  4列table（narrowはcard collection）のtitle列へ集約する。「予約中」はdraft+future publish_atの派生badge。
-- Markdown editorは認証付き画像upload/drag&drop/pasteとpending cleanupを持つ。Markdown code/blockquote装飾は
-  `[data-hh-markdown]` scopeの生成token CSSだけに置く。
-- 詳細はlg以上でsticky目次、狭幅で折りたたみ目次を使い、renderer heading IDと同じslug採番を共有する。
-- 詳細正本: `docs/features/feat-docs-cms/information-design/S15*.md` と `docs-new.md`。
+- 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。画像/Markdown 装飾は S15 情報設計を正本とする。
