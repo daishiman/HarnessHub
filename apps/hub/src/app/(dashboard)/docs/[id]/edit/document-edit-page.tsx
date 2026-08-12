@@ -7,7 +7,16 @@
  * 未保存の下書きとの差分を確認できるようにする。
  */
 import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
-import { Alert, Button, LiveStatus, Panel, Select, Stack, TextInput } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  LiveStatus,
+  type MarkdownImageUploadResult,
+  Panel,
+  Select,
+  Stack,
+  TextInput,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
@@ -71,6 +80,27 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   useEffect(() => {
     void load();
   }, [load]);
+
+  // 編集画面では対象ドキュメントの id が既にあるため、画像アップロード用の
+  // 「暗黙の下書き作成」(新規作成画面側) は不要で、そのまま images エンドポイントへ投げられる
+  const uploadImage = useCallback(
+    async (file: File): Promise<MarkdownImageUploadResult> => {
+      const response = await fetch(`/api/v1/docs/${id}/images`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'content-type': file.type === '' ? 'application/octet-stream' : file.type,
+          'x-harness-tenant-id': tenantId,
+          'x-harness-workspace-id': workspaceId,
+        },
+        body: file,
+      });
+      if (!response.ok) throw new Error('画像をアップロードできませんでした。');
+      const uploaded = (await response.json()) as { readonly url: string };
+      return { url: uploaded.url };
+    },
+    [id, tenantId, workspaceId],
+  );
 
   const save = async (): Promise<void> => {
     setSaving(true);
@@ -139,7 +169,13 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
                 { value: 'published', label: '公開済み' },
               ]}
             />
-            <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
+            <MarkdownEditor
+              label="本文"
+              value={bodyMarkdown}
+              onValueChange={setBodyMarkdown}
+              rows={16}
+              onImageUpload={uploadImage}
+            />
           </Stack>
         </Panel>
 

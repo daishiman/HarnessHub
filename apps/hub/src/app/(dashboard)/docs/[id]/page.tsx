@@ -5,11 +5,23 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, LiveStatus, Panel, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  LiveStatus,
+  mediaUp,
+  Panel,
+  ScopeChip,
+  ScreenHeader,
+  StatusChip,
+  TagRow,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
-import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, use, useCallback, useEffect, useMemo, useState } from 'react';
+import { extractHeadingOutline } from '../../../../features/docs-cms/content-analysis.js';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../dashboard-scope-context.js';
+import { TableOfContents } from './table-of-contents.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -54,6 +66,8 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
   }, [load]);
 
   const listHref = `/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
+  // 早期 return (doc === null) より前に置き、hooks の呼び出し順を保つ
+  const headingOutline = useMemo(() => extractHeadingOutline(doc?.body_markdown ?? ''), [doc?.body_markdown]);
 
   if (doc === null) {
     return (
@@ -106,9 +120,24 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
       />
       {/* 状態とスコープは見出し帯 (sticky) の中に置いた。本文が長い運用手順書でも
           「どのテナントの、公開済みか下書きか」を見失わないようにするため */}
-      <Panel>
-        <MarkdownView content={doc.body_markdown} />
-      </Panel>
+      {/* 目次は広い画面 (lg 以上) では本文の右にサイドバーとして常時表示し、
+          狭い画面では折りたたみ式に切り替える (レイアウトの出し分けは TableOfContents 内の @media)。
+          本文と目次の 2 カラムは、本文が短く目次が空の文書 (TableOfContents が null を返す) でも
+          レイアウトが崩れないよう flex に任せる */}
+      {/* lg 未満はモバイル目次パネルが本文の上に積まれるよう縦並びにする (横並びのままだと、
+          折りたたみ式の目次ボタンが本文の隣に窮屈に並んでしまう) */}
+      <style>{`
+        [data-hh-doc-layout] { display: flex; flex-direction: column; gap: var(--hh-space-4); }
+        ${mediaUp('lg')} { [data-hh-doc-layout] { flex-direction: row; align-items: flex-start; } }
+      `}</style>
+      <div data-hh-doc-layout="">
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <Panel>
+            <MarkdownView content={doc.body_markdown} />
+          </Panel>
+        </div>
+        <TableOfContents entries={headingOutline} />
+      </div>
     </article>
   );
 }

@@ -33,6 +33,13 @@ const LIST_RESPONSE: DocumentListResponse = {
       updated_by: 'user-1',
       created_at: 1_700_000_000,
       updated_at: 1_700_000_000,
+      category: '運用',
+      tags: ['セットアップ'],
+      thumbnail_url: null,
+      thumbnail_source: 'auto',
+      excerpt: '導入手順の要約です。',
+      excerpt_source: 'auto',
+      asset_summary: { image_count: 1, has_table: false, has_code: true },
     },
   ],
   next_cursor: 'cursor-2',
@@ -48,6 +55,13 @@ const DOC: DocumentDetail = {
   updated_by: 'user-1',
   created_at: 1_700_000_000,
   updated_at: 1_700_000_000,
+  category: null,
+  tags: null,
+  thumbnail_url: null,
+  thumbnail_source: 'auto',
+  excerpt: null,
+  excerpt_source: 'auto',
+  asset_summary: null,
 };
 
 function jsonResponse(body: unknown, init: { readonly ok?: boolean; readonly status?: number } = {}): Response {
