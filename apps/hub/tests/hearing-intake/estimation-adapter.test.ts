@@ -200,11 +200,12 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
   });
 
   it('HI-EST-105: S10 の確認表示は時間だけを概算し、削減額を計算しない', () => {
-    const source = readFileSync(
-      resolve(process.cwd(), 'src/app/(dashboard)/sheets/new/hearing-intake-wizard-steps.tsx'),
+    // 「整理・まとめ」「確認」ステップを1画面へ統合した際、確認表示の実装を
+    // hearing-intake-wizard-review-step.tsx へ抽出したため、そちらを検査対象にする。
+    const confirm = readFileSync(
+      resolve(process.cwd(), 'src/app/(dashboard)/sheets/new/hearing-intake-wizard-review-step.tsx'),
       'utf8',
     );
-    const confirm = source.slice(source.indexOf("id: 'confirm'"));
     expect(confirm).toContain('削減時間の目安');
     expect(confirm).not.toContain('savedAmountPerYear');
     expect(confirm).not.toMatch(/salary\s*[*+/]/);
