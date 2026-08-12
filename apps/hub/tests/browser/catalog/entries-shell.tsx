@@ -9,11 +9,13 @@ import {
   BottomSheet,
   Button,
   ConfirmDialog,
+  Icon,
   MobileTabBar,
   Modal,
   ShellFooter,
   ShellHeader,
   ShellSidebar,
+  SidebarToggleButton,
   WorkspaceSwitcher,
 } from '@harness-hub/ui';
 
@@ -89,6 +91,17 @@ export const shellCatalogEntries: readonly CatalogEntry[] = [
     group: 'navigation',
     render: () => (
       <ShellFooter label="フッター情報" links={[{ href: '/legal', label: '利用規約・プライバシーポリシー' }]} />
+    ),
+  },
+  {
+    name: 'SidebarToggleButton',
+    group: 'navigation',
+    render: () => (
+      <SidebarToggleButton
+        expandedLabel="サイドバーを閉じる"
+        collapsedLabel="サイドバーを開く"
+        icon={<Icon name="menu" />}
+      />
     ),
   },
   {
