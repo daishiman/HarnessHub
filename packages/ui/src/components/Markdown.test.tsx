@@ -1,5 +1,5 @@
 /** Markdown レンダラの単体テスト。中心は XSS sanitize (SEC7) — 危険な入力が描画に漏れないことを固定する。 */
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -133,6 +133,29 @@ describe('MarkdownView のブロック UI 拡張', () => {
     expect(note.getAttribute('data-hh-callout')).toBe('attention');
   });
 
+  it('> [!WARNING] を警告のコールアウトとして描画する (新しい種類)', () => {
+    renderWithUi(<MarkdownView content={'> [!WARNING]\n> 警告です'} />);
+
+    const note = screen.getByRole('note');
+    expect(note.getAttribute('data-hh-callout')).toBe('warning');
+    expect(note.textContent).toContain('警告です');
+  });
+
+  it('> [!NOTE] を補足のコールアウトとして描画する (新しい種類)', () => {
+    renderWithUi(<MarkdownView content={'> [!NOTE]\n> 補足です'} />);
+
+    const note = screen.getByRole('note');
+    expect(note.getAttribute('data-hh-callout')).toBe('note');
+    expect(note.textContent).toContain('補足です');
+  });
+
+  it('未知の [!〜] 記法は変換せず、ただの引用として壊れずに描画する', () => {
+    renderWithUi(<MarkdownView content={'> [!MYSTERY]\n> 何かの記法です'} />);
+
+    expect(screen.queryByRole('note')).toBeNull();
+    expect(screen.getByText(/何かの記法です/)).toBeDefined();
+  });
+
   it('コードブロックにコピー ボタンを表示する', () => {
     renderWithUi(<MarkdownView content={'```\nconsole.log(1)\n```'} />);
 
@@ -147,6 +170,26 @@ describe('MarkdownView のブロック UI 拡張', () => {
     await user.click(trigger);
 
     expect(screen.getByRole('dialog')).toBeDefined();
+  });
+
+  it('空行を挟まず連続する複数の画像を横並びグループとして描画する', () => {
+    const content = '![1枚目](https://example.com/a.png)\n![2枚目](https://example.com/b.png)';
+    const { container } = renderWithUi(<MarkdownView content={content} />);
+
+    const group = container.querySelector('[data-hh-image-group]');
+    expect(group).not.toBeNull();
+    expect(group?.getAttribute('style')).toContain('flex');
+    expect(screen.getByRole('button', { name: /1枚目/ })).toBeDefined();
+    expect(screen.getByRole('button', { name: /2枚目/ })).toBeDefined();
+  });
+
+  it('空行で区切られた画像はこれまでどおり縦に並ぶ (横並びグループにしない)', () => {
+    const content = '![1枚目](https://example.com/a.png)\n\n![2枚目](https://example.com/b.png)';
+    const { container } = renderWithUi(<MarkdownView content={content} />);
+
+    expect(container.querySelector('[data-hh-image-group]')).toBeNull();
+    expect(screen.getByRole('button', { name: /1枚目/ })).toBeDefined();
+    expect(screen.getByRole('button', { name: /2枚目/ })).toBeDefined();
   });
 
   it('表を横スクロール可能なラッパーで包む', () => {
@@ -190,5 +233,51 @@ describe('MarkdownEditor', () => {
 
     expect(screen.getByRole('heading', { name: '安全な見出し' })).toBeDefined();
     expect(container.querySelector('script')).toBeNull();
+  });
+
+  it('コールアウトボタンを開くと 4 種類 (ポイント/注意/警告/補足) を選べる', async () => {
+    const user = userEvent.setup();
+    renderWithUi(<MarkdownEditor label="本文" value="" onValueChange={() => undefined} />);
+
+    await user.click(screen.getByRole('button', { name: 'コールアウト' }));
+
+    const menu = screen.getByRole('menu');
+    expect(within(menu).getByRole('menuitem', { name: /ポイント/ })).toBeDefined();
+    expect(within(menu).getByRole('menuitem', { name: /注意/ })).toBeDefined();
+    expect(within(menu).getByRole('menuitem', { name: /警告/ })).toBeDefined();
+    expect(within(menu).getByRole('menuitem', { name: /補足/ })).toBeDefined();
+  });
+
+  it('コールアウトメニューから種類を選ぶと対応する記法を挿入する', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    renderWithUi(<MarkdownEditor label="本文" value="" onValueChange={onValueChange} />);
+
+    await user.click(screen.getByRole('button', { name: 'コールアウト' }));
+    await user.click(screen.getByRole('menuitem', { name: /警告/ }));
+
+    expect(onValueChange).toHaveBeenCalledWith(expect.stringContaining('[!WARNING]'));
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('画像アップロードを渡すと画像グループボタンが有効になる', () => {
+    renderWithUi(
+      <MarkdownEditor
+        label="本文"
+        value=""
+        onValueChange={() => undefined}
+        onImageUpload={() => Promise.resolve({ url: 'https://example.com/a.png' })}
+      />,
+    );
+
+    const button = screen.getByRole('button', { name: '画像グループ' });
+    expect(button.hasAttribute('disabled')).toBe(false);
+  });
+
+  it('画像アップロードを渡さないと画像グループボタンは無効なまま', () => {
+    renderWithUi(<MarkdownEditor label="本文" value="" onValueChange={() => undefined} />);
+
+    const button = screen.getByRole('button', { name: '画像グループ' });
+    expect(button.hasAttribute('disabled')).toBe(true);
   });
 });

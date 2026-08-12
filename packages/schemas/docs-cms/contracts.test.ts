@@ -40,6 +40,7 @@ describe('DOCS-CONTRACT: image URL', () => {
         excerpt: null,
         excerpt_source: 'auto',
         asset_summary: null,
+        publish_at: null,
       }).success,
     ).toBe(true);
   });
@@ -54,6 +55,28 @@ describe('DOCS-CONTRACT: image URL', () => {
     expect(updateDocumentRequestSchema.safeParse({ thumbnail_url: 'https://example.test/thumb.webp' }).success).toBe(
       true,
     );
+  });
+});
+
+describe('DOCS-CONTRACT: scheduled publishing', () => {
+  it('未来の publish_at と null による予約解除だけを受理する', () => {
+    const future = Date.now() + 60_000;
+    expect(createDocumentRequestSchema.safeParse({ scope: 'tenant', title: '予約', publish_at: future }).success).toBe(
+      true,
+    );
+    expect(updateDocumentRequestSchema.safeParse({ publish_at: future }).success).toBe(true);
+    expect(updateDocumentRequestSchema.safeParse({ publish_at: null }).success).toBe(true);
+  });
+
+  it('現在以前の予約と scheduled status を拒否する', () => {
+    expect(
+      createDocumentRequestSchema.safeParse({ scope: 'tenant', title: '過去', publish_at: Date.now() - 1 }).success,
+    ).toBe(false);
+    expect(updateDocumentRequestSchema.safeParse({ publish_at: Date.now() }).success).toBe(false);
+    expect(updateDocumentRequestSchema.safeParse({ status: 'scheduled' }).success).toBe(false);
+    expect(
+      updateDocumentRequestSchema.safeParse({ status: 'published', publish_at: Date.now() + 60_000 }).success,
+    ).toBe(false);
   });
 });
 

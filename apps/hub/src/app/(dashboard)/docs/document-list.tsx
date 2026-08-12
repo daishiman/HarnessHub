@@ -6,6 +6,7 @@ import type {
   DocumentListResponse,
   DocumentScope,
   DocumentStatus,
+  SessionRole,
 } from '@harness-hub/schemas';
 import {
   Button,
@@ -25,6 +26,7 @@ import { type CSSProperties, type FormEvent, type ReactNode, useCallback, useEff
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { NotionOpenLink } from '../../../components/notion/notion-open-link.js';
+import { canWriteDocument, extractErrorMessage } from '../../../features/docs-cms/client-errors.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 const DocumentEditPanel = dynamic(() => import('./document-edit-panel.js').then((module) => module.DocumentEditPanel), {
@@ -39,6 +41,7 @@ interface DocumentListProps {
    * ここで受けることで「ヘッダーで検索 → 一覧が絞り込まれた状態で開く」が成立する。
    */
   readonly initialQuery?: string;
+  readonly sessionRole?: SessionRole | null;
 }
 
 interface DocumentFilters {
@@ -116,6 +119,7 @@ interface DocumentTitleCellProps {
   readonly tenantId: string;
   readonly workspaceId: string;
   readonly editing: boolean;
+  readonly canEdit: boolean;
   readonly onToggleEdit: () => void;
 }
 
@@ -126,9 +130,17 @@ interface DocumentTitleCellProps {
  * 分類・要約の編集フォーム (div でラップされた TextInput/Textarea) はこの中に置けないため、
  * 一覧の外の別領域 (DocumentEditPanel) に切り出し、ここでは編集領域を開くボタンだけを持つ。
  */
-function DocumentTitleCell({ doc, tenantId, workspaceId, editing, onToggleEdit }: DocumentTitleCellProps): ReactNode {
+function DocumentTitleCell({
+  doc,
+  tenantId,
+  workspaceId,
+  editing,
+  canEdit,
+  onToggleEdit,
+}: DocumentTitleCellProps): ReactNode {
   const href = `/docs/${doc.id}?tenant=${tenantId}&workspace=${workspaceId}`;
   const manuallyEdited = doc.thumbnail_source === 'manual' || doc.excerpt_source === 'manual';
+  const scheduled = doc.status === 'draft' && doc.publish_at !== null && doc.publish_at > Date.now();
 
   return (
     <span style={{ display: 'inline-flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--hh-space-2)' }}>
@@ -162,6 +174,11 @@ function DocumentTitleCell({ doc, tenantId, workspaceId, editing, onToggleEdit }
               編集済み
             </DocumentBadge>
           ) : null}
+          {scheduled ? (
+            <DocumentBadge key="scheduled" tone="warning">
+              予約公開: <DateTimeText value={doc.publish_at} />
+            </DocumentBadge>
+          ) : null}
           {(doc.tags ?? []).map((tag) => (
             <DocumentBadge key={tag} tone="neutral">
               {tag}
@@ -183,29 +200,36 @@ function DocumentTitleCell({ doc, tenantId, workspaceId, editing, onToggleEdit }
             {doc.excerpt}
           </span>
         )}
-        <button
-          type="button"
-          data-hh-focusable=""
-          aria-expanded={editing}
-          onClick={onToggleEdit}
-          style={{
-            alignSelf: 'flex-start',
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            color: 'var(--hh-color-primary)',
-            fontSize: 'var(--hh-font-size-sm)',
-            cursor: 'pointer',
-          }}
-        >
-          {editing ? '編集を閉じる' : '分類・要約を編集'}
-        </button>
+        {canEdit ? (
+          <button
+            type="button"
+            data-hh-focusable=""
+            aria-expanded={editing}
+            onClick={onToggleEdit}
+            style={{
+              alignSelf: 'flex-start',
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              color: 'var(--hh-color-primary)',
+              fontSize: 'var(--hh-font-size-sm)',
+              cursor: 'pointer',
+            }}
+          >
+            {editing ? '編集を閉じる' : '分類・要約を編集'}
+          </button>
+        ) : null}
       </span>
     </span>
   );
 }
 
-export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: DocumentListProps): ReactNode {
+export function DocumentList({
+  tenantId,
+  workspaceId,
+  initialQuery = '',
+  sessionRole = null,
+}: DocumentListProps): ReactNode {
   const [rows, setRows] = useState<readonly DocumentListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -244,7 +268,7 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
           'x-harness-workspace-id': workspaceId,
         },
       });
-      if (!response.ok) throw new Error('一覧を取得できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, '一覧を取得できませんでした。'));
       const body = (await response.json()) as DocumentListResponse;
       setRows(body.items);
       setNextCursor(body.next_cursor);
@@ -310,6 +334,7 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
             tenantId={tenantId}
             workspaceId={workspaceId}
             editing={expandedId === row.id}
+            canEdit={canWriteDocument(sessionRole, row.scope)}
             onToggleEdit={() => setExpandedId((current) => (current === row.id ? null : row.id))}
           />
         ),
@@ -333,10 +358,23 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
         header: '状態',
         width: '8rem',
         salience: 'lead',
-        value: (row: DocumentListItem) => publicStatusLabel(row.status),
+        value: (row: DocumentListItem) =>
+          row.status === 'draft' && row.publish_at !== null && row.publish_at > Date.now()
+            ? '予約公開'
+            : publicStatusLabel(row.status),
         render: (row: DocumentListItem) => (
-          <DocumentBadge tone={row.status === 'published' ? 'primary' : 'neutral'}>
-            {publicStatusLabel(row.status)}
+          <DocumentBadge
+            tone={
+              row.status === 'draft' && row.publish_at !== null && row.publish_at > Date.now()
+                ? 'warning'
+                : row.status === 'published'
+                  ? 'primary'
+                  : 'neutral'
+            }
+          >
+            {row.status === 'draft' && row.publish_at !== null && row.publish_at > Date.now()
+              ? '予約公開'
+              : publicStatusLabel(row.status)}
           </DocumentBadge>
         ),
       },
@@ -348,7 +386,7 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
         render: (row: DocumentListItem) => <DateTimeText value={row.updated_at} />,
       },
     ],
-    [tenantId, workspaceId, expandedId],
+    [tenantId, workspaceId, expandedId, sessionRole],
   );
 
   const expandedDoc = rows.find((row) => row.id === expandedId) ?? null;

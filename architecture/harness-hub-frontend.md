@@ -287,12 +287,13 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と
 [UI foundation guide](../docs/frontend-ui-foundation-spec.md)。
 
-PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過した metrics・詳細・編集など9画面と、
-上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
-`StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
-画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。
+PR #700 の G13 回復では超過画面の client 本体を route-local `next/dynamic` へ分離し、
+`StickyHeaderOffset` も sticky 画面だけへ移した。API/認可/DB 意味は不変。
 
 ## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
 
-S10 を8画面(28項目)へ分割し、S12 に引き渡し/screenshot/token UI を追加。
-詳細は `docs/frontend-spec.md` と feature information-design / 受領書を正本とする。
+S10 を8画面へ分割し S12 に引き渡し UI を追加。正本は frontend-spec。
+
+## 2026-08-12 S15 Docs CMS rich surface
+
+- 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。画像/Markdown 装飾は S15 情報設計を正本とする。

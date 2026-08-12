@@ -81,12 +81,19 @@ export const PATCH = withAuthz<DocParams>(
       {
         ...(parsed.data.title === undefined ? {} : { title: parsed.data.title }),
         ...(parsed.data.body_markdown === undefined ? {} : { bodyMarkdown: parsed.data.body_markdown }),
-        ...(parsed.data.status === undefined ? {} : { status: parsed.data.status }),
+        // 未来の予約指定は repository が draft へ導出する。ここで status も渡すと、
+        // 「明示status変更は予約解除」という repository 契約が優先され予約が消えるため渡さない。
+        ...(parsed.data.publish_at != null || parsed.data.status === undefined ? {} : { status: parsed.data.status }),
         ...(parsed.data.category === undefined ? {} : { category: parsed.data.category }),
         ...(parsed.data.tags === undefined ? {} : { tags: tagsToStorage(parsed.data.tags) ?? null }),
         ...(thumbnail === null ? {} : { thumbnailUrl: thumbnail.value, thumbnailSource: thumbnail.source }),
         ...(excerpt === null ? {} : { excerpt: excerpt.value, excerptSource: excerpt.source }),
         ...(bodyChanged ? { assetSummary: assetSummaryToStorage(summarizeAssets(effectiveBody)) } : {}),
+        ...(parsed.data.publish_at === undefined
+          ? parsed.data.status === undefined
+            ? {}
+            : { publishAt: null }
+          : { publishAt: parsed.data.publish_at }),
         actorId: authz.principal.userId,
       },
     );

@@ -6,9 +6,10 @@
 
 import type { DocumentDetail, DocumentListResponse } from '@harness-hub/schemas';
 import { UiProvider } from '@harness-hub/ui';
-import { act, createElement, type ReactElement } from 'react';
+import { act, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { SessionRoleProvider } from '../../app/(dashboard)/dashboard-scope-context.js';
 // route wrapper はbundle分割だけを担うため、保存契約は遅延読込先の実装本体で検証する。
 import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/document-edit-page.js';
 import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
@@ -40,6 +41,7 @@ const LIST_RESPONSE: DocumentListResponse = {
       excerpt: '導入手順の要約です。',
       excerpt_source: 'auto',
       asset_summary: { image_count: 1, has_table: false, has_code: true },
+      publish_at: null,
     },
   ],
   next_cursor: 'cursor-2',
@@ -62,6 +64,14 @@ const DOC: DocumentDetail = {
   excerpt: null,
   excerpt_source: 'auto',
   asset_summary: null,
+  publish_at: null,
+};
+
+const SCHEDULED_PUBLISH_AT = Date.parse('2099-04-05T12:34');
+const SCHEDULED_DOC: DocumentDetail = {
+  ...DOC,
+  title: '予約公開するガイド',
+  publish_at: SCHEDULED_PUBLISH_AT,
 };
 
 function jsonResponse(body: unknown, init: { readonly ok?: boolean; readonly status?: number } = {}): Response {
@@ -75,8 +85,21 @@ let root: Root;
 let assign: ReturnType<typeof vi.fn>;
 
 async function render(element: ReactElement): Promise<void> {
+  await renderWithRole(element, 'workspace-admin');
+}
+
+async function renderWithRole(
+  element: ReactElement,
+  role: 'member' | 'workspace-admin' | 'provider-admin',
+): Promise<void> {
   await act(async () => {
-    root.render(createElement(UiProvider, null, element));
+    // 詳細/編集画面は SessionRoleProvider (layout.tsx が resolveShellIdentity() で解決する) から
+    // role を読み、docs.write_tenant を満たさない role では編集導線を隠す。
+    root.render(
+      <UiProvider>
+        <SessionRoleProvider role={role}>{element}</SessionRoleProvider>
+      </UiProvider>,
+    );
   });
   await flush();
 }
@@ -98,6 +121,23 @@ async function findButtonByText(text: string): Promise<HTMLButtonElement> {
     await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
   }
   throw new Error(`${text} ボタンがありません`);
+}
+
+function inputByLabel(text: string): HTMLInputElement {
+  const label = [...container.querySelectorAll('label')].find((candidate) => candidate.textContent?.includes(text));
+  const input = label?.htmlFor === '' ? label.querySelector('input') : document.getElementById(label?.htmlFor ?? '');
+  if (!(input instanceof HTMLInputElement)) throw new Error(`${text} 入力欄がありません`);
+  return input;
+}
+
+async function setInput(input: HTMLInputElement, value: string): Promise<void> {
+  const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  if (valueSetter === undefined) throw new Error('input value setter がありません');
+  await act(async () => {
+    valueSetter.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 }
 
 beforeEach(() => {
@@ -181,12 +221,56 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
 
     expect(container.textContent).toContain('読み込みエラー');
   });
+
+  it('DOCS-UI-014: draftかつ未来のpublish_atだけを予約公開として表示する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockImplementation(async () =>
+          jsonResponse({ ...LIST_RESPONSE, items: [{ ...LIST_RESPONSE.items[0], publish_at: SCHEDULED_PUBLISH_AT }] }),
+        ),
+    );
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
+
+    expect(container.textContent).toContain('予約公開');
+    expect(container.textContent).toContain('予約公開:');
+  });
+
+  it('DOCS-UI-015: roleに応じて一覧内の編集導線を出し分ける', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(async () => jsonResponse(LIST_RESPONSE)),
+    );
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="member" />);
+    expect(container.textContent).not.toContain('分類・要約を編集');
+
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" />);
+    expect(container.textContent).toContain('分類・要約を編集');
+  });
 });
+
+/**
+ * タイトルは wire 契約上も必須 (createDocumentRequestSchema の title min 1)。
+ * フォーム側も空タイトルの直接送信をここで弾くようになった (原因不明な「作成できませんでした」の対策) ため、
+ * 送信系のテストは実際の利用者操作に合わせてタイトル入力を経由させる。
+ */
+async function fillTitle(container: HTMLDivElement, value: string): Promise<void> {
+  const input = container.querySelector<HTMLInputElement>('input');
+  if (input === null) throw new Error('タイトル input がありません');
+  const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  if (valueSetter === undefined) throw new Error('input value setter がありません');
+  await act(async () => {
+    valueSetter.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
 
 describe('DOCS-UI: DocumentCreateForm の作成', () => {
   it('DOCS-UI-004: 作成成功で作成先ドキュメントへ遷移する', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 })));
-    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
+    await fillTitle(container, '導入ガイド');
 
     const form = container.querySelector('form');
     if (form === null) throw new Error('作成 form がありません');
@@ -196,16 +280,85 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
     expect(assign).toHaveBeenCalledWith(expect.stringContaining(`/docs/${DOC.id}`));
   });
 
-  it('DOCS-UI-005: 作成失敗はエラーバナーを表示する', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse({}, { ok: false, status: 500 })));
-    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+  it('DOCS-UI-004b: 空タイトルのまま送信すると API を呼ばずに入力を促す', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
 
     const form = container.querySelector('form');
     if (form === null) throw new Error('作成 form がありません');
     await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
     await flush();
 
-    expect(container.textContent).toContain('作成できませんでした');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(container.textContent).toContain('タイトルを入力してください。');
+  });
+
+  it('DOCS-UI-005: 作成失敗はエラーバナーに API の理由を表示する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse(
+          {
+            title: '入力内容を確認してください',
+            detail: 'タイトルは1文字以上で入力してください',
+          },
+          { ok: false, status: 400 },
+        ),
+      ),
+    );
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
+    await fillTitle(container, '導入ガイド');
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    expect(container.textContent).toContain('入力内容を確認してください');
+    expect(container.textContent).toContain('タイトルは1文字以上で入力してください');
+  });
+
+  it('DOCS-UI-016: ブログ項目と予約日時を統一契約で送る', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(SCHEDULED_DOC, { status: 201 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
+    await fillTitle(container, '予約記事');
+
+    await setInput(inputByLabel('カテゴリ'), '運用');
+    await setInput(inputByLabel('タグ'), '設計, API');
+    await setInput(inputByLabel('サムネイル画像 URL'), 'https://example.test/thumbnail.png');
+    await setInput(inputByLabel('要約'), '予約記事の要約');
+    await setInput(inputByLabel('予約公開日時'), '2099-04-05T12:34');
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    const request = fetchMock.mock.calls.find(([, init]) => init?.method === 'POST');
+    expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({
+      category: '運用',
+      tags: ['設計', 'API'],
+      thumbnail_url: 'https://example.test/thumbnail.png',
+      excerpt: '予約記事の要約',
+      publish_at: SCHEDULED_PUBLISH_AT,
+    });
+  });
+
+  it('DOCS-UI-017: 過去の予約日時は送信せずフォーム内で理由を示す', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
+    await fillTitle(container, '予約記事');
+
+    await setInput(inputByLabel('予約公開日時'), '2020-01-01T00:00');
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(container.textContent).toContain('現在より後の日時を指定してください');
   });
 });
 
@@ -236,6 +389,19 @@ describe('DOCS-UI: DocumentDetailPage の表示', () => {
     );
 
     expect(container.textContent).toContain('ドキュメントを取得できませんでした');
+  });
+
+  it('DOCS-UI-018: 詳細で予約badgeと日時を表示する', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(SCHEDULED_DOC)));
+    await render(
+      <DocumentDetailPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+
+    expect(container.textContent).toContain('予約公開');
+    expect(container.textContent).toContain('日次の予約公開処理で公開されます');
   });
 });
 
@@ -275,6 +441,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
       />,
     );
 
+    await setInput(inputByLabel('タイトル'), '保存に失敗する変更');
     const saveButton = await findButtonByText('保存する');
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
@@ -293,5 +460,74 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
 
     expect(container.textContent).toContain('読み込みエラー');
     expect(container.textContent).toContain('network error');
+  });
+
+  it('DOCS-UI-012: docs.write_tenant を満たさない role では編集画面を出さない (元不具合の権限不足経路)', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(DOC)));
+    await renderWithRole(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+      'member',
+    );
+
+    expect(container.textContent).toContain('編集できません');
+    expect(container.querySelector('button')).toBeNull();
+  });
+
+  it('DOCS-UI-013: 403 (problem+json) は権限不足の文言をそのまま出す', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
+      if (url === `/api/v1/docs/${DOC.id}` && init?.method === 'PATCH') {
+        return jsonResponse(
+          { title: '権限がありません', detail: 'workspace-admin 以上が必要です。', status: 403 },
+          { ok: false, status: 403 },
+        );
+      }
+      return jsonResponse(DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+
+    await setInput(inputByLabel('タイトル'), '権限が必要な変更');
+    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
+    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    // problem+json の title/detail をそのまま表示する (固定文言へ潰さない)。
+    expect(container.textContent).toContain('権限がありません');
+    expect(container.textContent).toContain('workspace-admin 以上が必要です。');
+  });
+
+  it('DOCS-UI-019: 未変更の予約日時/statusを再送せず実title変更の解除契約を保つ', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === `/api/v1/docs/${DOC.id}` && init?.method === 'PATCH') {
+        return jsonResponse({ ...SCHEDULED_DOC, title: '変更後', publish_at: null });
+      }
+      return jsonResponse(SCHEDULED_DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+
+    await setInput(inputByLabel('タイトル'), '変更後');
+    const saveButton = await findButtonByText('保存する');
+    await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    const request = fetchMock.mock.calls.find(([, init]) => init?.method === 'PATCH');
+    expect(JSON.parse(String(request?.[1]?.body))).toEqual({ title: '変更後' });
   });
 });

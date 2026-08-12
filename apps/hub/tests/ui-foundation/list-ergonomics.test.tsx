@@ -167,6 +167,7 @@ describe('LISTERG: 一覧の使い勝手', () => {
     }));
     const container = await mount(createElement(DocumentList, { tenantId: 't', workspaceId: 'w' }));
 
+    // 分類はタイトルセル内の badge に集約する。独立列に戻すとカード表示との情報配置が二重になる。
     expect(headerTexts(container)).toEqual(['タイトル', '適用範囲', '状態', '更新日時']);
 
     const widths = [...container.querySelectorAll('colgroup col')].map((col) => col.getAttribute('style') ?? '');
