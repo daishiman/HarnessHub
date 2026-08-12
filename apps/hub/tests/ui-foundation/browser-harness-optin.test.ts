@@ -7,6 +7,7 @@
  * 書いたはずのブラウザテストが誰にも実行されないまま緑になる。
  * どちらへ倒れても気付けるよう、分離と起動経路の両方をここで固定する。
  */
+// biome-ignore-all lint/suspicious/noTemplateCurlyInString: 検査対象が GitHub Actions の `${{ always() && inputs.X }}` 記法そのもの。JS のテンプレート展開ではなく本番 workflow と同じ文字列で突合することが検査の前提
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -87,9 +88,7 @@ describe('実ブラウザ検証ハーネスの opt-in 契約', () => {
       expect(uiVisual.slice(stepStart, stepStart + 220)).toContain(alwaysUpdateCondition);
     }
 
-    expect(uiVisual).toContain(
-      'git diff --name-only --diff-filter=ACMRTUXB -- apps/hub/tests/browser/__vrt__/linux/',
-    );
+    expect(uiVisual).toContain('git diff --name-only --diff-filter=ACMRTUXB -- apps/hub/tests/browser/__vrt__/linux/');
     expect(uiVisual.match(/apps\/hub\/artifacts\/vrt\/baseline-update-manifest\.txt/g)).toHaveLength(2);
     expect(uiVisual).toContain('name: vrt-baseline-linux');
     expect(uiVisual).toContain('exit 1');
