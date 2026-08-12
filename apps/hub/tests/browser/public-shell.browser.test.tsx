@@ -110,4 +110,32 @@ describe('公開画面の骨格', () => {
       expect(hrefs[route.path], `${route.path} のフッターに利用規約への導線が無い`).toContain('/legal');
     }
   });
+
+  it('PUB-004: /legal の文書内リンクは通常のフラグメント移動として機能し、nav は印刷時に隠れる', async () => {
+    const result = await withBrowserSession({ routes, viewport: viewportPresets.mobile }, async (session) => {
+      await session.goto('/legal', viewportPresets.mobile);
+      await session.page.locator('nav[aria-label="このページの文書"] a[href="#privacy"]').click();
+      const screenState = await session.page.evaluate(() => {
+        const target = document.querySelector<HTMLElement>('#privacy');
+        return {
+          hash: window.location.hash,
+          targetExists: target !== null,
+          targetTop: target?.getBoundingClientRect().top ?? -1,
+          scrollMarginBlockStart: target === null ? '' : getComputedStyle(target).scrollMarginBlockStart,
+        };
+      });
+
+      await session.page.emulateMedia({ media: 'print' });
+      const printNavDisplay = await session.page
+        .locator('nav[aria-label="このページの文書"]')
+        .evaluate((element) => getComputedStyle(element).display);
+      return { ...screenState, printNavDisplay };
+    });
+
+    expect(result.hash).toBe('#privacy');
+    expect(result.targetExists).toBe(true);
+    expect(result.targetTop).toBeGreaterThanOrEqual(0);
+    expect(result.scrollMarginBlockStart).not.toBe('0px');
+    expect(result.printNavDisplay).toBe('none');
+  });
 });
