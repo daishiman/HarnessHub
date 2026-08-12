@@ -660,7 +660,8 @@ describe('DOCS-UI: DocumentEditPanel (一覧からの分類編集)', () => {
       return jsonResponse(LIST_RESPONSE);
     });
     vi.stubGlobal('fetch', fetchMock);
-    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
+    // 一覧の編集導線は sessionRole (docs.write_tenant 相当) が無いと表示されない (DOCS-UI-015 と同じ契約)。
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" />);
 
     const openButton = await findButtonByText('分類・要約を編集');
     await act(async () => openButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
