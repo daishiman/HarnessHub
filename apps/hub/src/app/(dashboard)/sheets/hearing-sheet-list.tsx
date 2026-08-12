@@ -11,6 +11,7 @@ import {
   ListState,
   Select,
   StatusChip,
+  StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -213,6 +214,7 @@ export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: H
 
   return (
     <>
+      <StickyHeaderOffset />
       {completionNotice === null ? null : <Alert tone="success" title="生成完了" description={completionNotice} />}
       {/* 絞り込み欄の並びと余白は共通の FilterBar に任せる (画面ごとの書き起こしをやめる) */}
       <FilterBar

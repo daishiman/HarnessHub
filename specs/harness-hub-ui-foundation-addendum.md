@@ -188,6 +188,9 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - 一覧: sticky 先頭列、FilterBar + 条件記憶、ListState 排他、header `?q=` 結線。
 - 日時: `DateTimeText` + `RELATIVE_TIME_MAX_AGE_DAYS=30`。絶対表記は消さない。
 - metrics: ranking はサーバで上位 N 件、母集団は `rankingTotals`。
+- client JS: 120 KiB を超えた重い画面本体は route-local `next/dynamic` へ分離し、
+  `StickyHeaderOffset` は sticky stack を使う画面だけに配置する。遅延分割後も
+  screen-pattern gate は `import()` の参照先まで辿り、検査対象を減らさない。
 - 受領: `docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md`。
 
 ## 未決事項

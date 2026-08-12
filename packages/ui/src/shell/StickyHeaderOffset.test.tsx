@@ -63,6 +63,16 @@ afterEach(() => {
 });
 
 describe('StickyHeaderOffset', () => {
+  it('observer API が無い環境では例外を出さず既定高へ縮退する', () => {
+    vi.stubGlobal('ResizeObserver', undefined);
+    vi.stubGlobal('MutationObserver', undefined);
+
+    const result = render(<StickyHeaderOffset />);
+    expect(document.documentElement.style.getPropertyValue(shellHeaderHeightVariable)).toBe('');
+    expect(document.documentElement.style.getPropertyValue(screenHeaderHeightVariable)).toBe('');
+    expect(() => result.unmount()).not.toThrow();
+  });
+
   it('shell と後から現れる screen header を測り、DOM 交換後の node へ監視を移す', async () => {
     const view = (screen: { key: string; height: number } | null) => (
       <>

@@ -12,6 +12,7 @@ import {
   ScopeChip,
   Select,
   StatusChip,
+  StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
@@ -169,6 +170,7 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
 
   return (
     <>
+      <StickyHeaderOffset />
       <FilterBar
         label="ドキュメントの絞り込み"
         sticky

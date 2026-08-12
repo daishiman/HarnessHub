@@ -286,3 +286,8 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 （[ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)）。
 製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と
 [UI foundation guide](../docs/frontend-ui-foundation-spec.md)。
+
+PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過した metrics・詳細・編集など9画面と、
+上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
+`StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
+画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。

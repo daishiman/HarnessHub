@@ -1,7 +1,7 @@
 import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
-import { PublishWizard } from '../../../../components/publish/PublishWizard.js';
+import { LazyPublishWizard } from '../../../../components/publish/publish-wizard-lazy.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
@@ -39,7 +39,11 @@ export default async function PublishWizardPage({ searchParams }: PageProps) {
         description="ZIP を投入すると、CLI から公開した場合と同じ検査を通って公開されます。"
       />
       <Panel>
-        <PublishWizard scope={resolved} initialProjectId={query.project ?? ''} initialPublishId={query.publish ?? ''} />
+        <LazyPublishWizard
+          scope={resolved}
+          initialProjectId={query.project ?? ''}
+          initialPublishId={query.publish ?? ''}
+        />
       </Panel>
     </>
   );

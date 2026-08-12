@@ -9,7 +9,8 @@ import { UiProvider } from '@harness-hub/ui';
 import { act, createElement, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/page.js';
+// route wrapper はbundle分割だけを担うため、保存契約は遅延読込先の実装本体で検証する。
+import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/document-edit-page.js';
 import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
 import { DocumentList } from '../../app/(dashboard)/docs/document-list.js';
 import { DocumentCreateForm } from '../../app/(dashboard)/docs/new/document-create-form.js';

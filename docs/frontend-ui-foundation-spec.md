@@ -223,6 +223,14 @@ python3 -m pytest -q tests/specs/test_screen_inventory_closure.py
 
 Chromium が未導入なら `pnpm --filter @harness-hub/hub exec playwright install chromium` を先に実行する。
 
+## 初期 client JS の分割境界（2026-08-12）
+
+- G13 の上限は route ごとに gzip 後 120 KiB。予算を上げず、重い client 画面本体を
+  route-local `next/dynamic` へ分離する。
+- `StickyHeaderOffset` は sticky filter/table を持つ画面だけが配置し、共通 shell から全 route へ配らない。
+- 遅延分割は検査逃れに使わない。screen-pattern gate は通常 import と `import()` の両方を辿る。
+- loading fallback は `aria-live="polite"` を持ち、データ取得・保存・認可の契約は分割前から変えない。
+
 ## 関連文書
 
 - 規範追補: `specs/harness-hub-ui-foundation-addendum.md`

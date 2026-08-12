@@ -1,7 +1,7 @@
 import { ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, tenantIdFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { UserDashboard } from './user-dashboard.js';
+import { LazyUserDashboard } from './user-dashboard-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ユーザー詳細 | Harness Hub',
@@ -23,7 +23,7 @@ export default async function UserDashboardPage({ params, searchParams }: PagePr
         breadcrumbsLabel="現在地"
         sticky
       />
-      <UserDashboard userId={id} tenantId={tenantIdFromQuery(query, scope)} />
+      <LazyUserDashboard userId={id} tenantId={tenantIdFromQuery(query, scope)} />
     </>
   );
 }

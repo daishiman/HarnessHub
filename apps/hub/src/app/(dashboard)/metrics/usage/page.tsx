@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 
 import { DEFAULT_USAGE_RANGE_DAYS, recentRange } from '../../../../features/metrics-tracking/view-model.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { UsageSavingsReport } from './usage-savings-report.js';
+import { LazyUsageSavingsReport } from './usage-savings-report-lazy.js';
 
 export const metadata: Metadata = {
   title: '使用状況・削減効果 | Harness Hub',
@@ -40,7 +40,7 @@ export default async function MetricsUsagePage({ searchParams }: PageProps) {
         sticky
       />
       {/* 中身が自前の面 (Panel) を持つので、ここで二重に囲まない */}
-      <UsageSavingsReport
+      <LazyUsageSavingsReport
         tenantId={tenantId}
         workspaceId={workspaceId}
         range={{ from: query.from ?? fallback.from, to: query.to ?? fallback.to }}

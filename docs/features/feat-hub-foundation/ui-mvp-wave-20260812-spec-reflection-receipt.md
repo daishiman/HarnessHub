@@ -13,6 +13,10 @@ beads_ids:
   - HarnessHub-vaov
   - HarnessHub-ck3d
   - HarnessHub-5yen
+  - HarnessHub-7mc6
+  - HarnessHub-alyy
+  - HarnessHub-ydf8
+  - HarnessHub-9wdm
   - HarnessHub-p26n
   - HarnessHub-pwph
   - HarnessHub-nqo5
@@ -34,6 +38,7 @@ beads_ids:
   2. 一覧 `q` は既存 list/export の **任意クエリ**で、対象列は各 domain の schema JSDoc が正本。空白のみ拒否と LIKE メタ文字エスケープは安全側の実装契約であり、新 qa を要する業務規則ではない。
   3. `rankingTotals` は ranking 上位 N 件では数えられない母集団を返す加算フィールドで、KPI の意味定義を変えない。
   4. 相対日時は presentation のみ（絶対表記を消さない、JST カレンダー日差、30 日上限）。
+  5. route-local 遅延読込と `StickyHeaderOffset` の配置限定は client 境界だけを変え、API・認可・DB・route の業務意味を変えない。旧超過9画面に加え、上限まで364 bytesだった公開画面も同じ境界へ揃えた。screen-pattern gate は動的 import 先も検査する。
 - 生成物 `tokens.css` が 500 行を超えるが、正本は `tokens.ts` / `base-css.ts`（いずれも 500 行以下）で、成果物は `gen:tokens-css` の出力として exempt。手書きの変更対象は 500 行以下（`packages/ui/src/shell/information.tsx` 447 行、`DataTable.tsx` 494 行）。
 - Project 名解決（HarnessHub-62ah 第2段）は `HarnessHub-pwph` 完了後に実装済み。残る follow-up は法務本文・Linux VRT・session cookie 上限など。
 
@@ -62,7 +67,7 @@ beads_ids:
 
 ### 受け入れできたもの
 
-1. ヘッダーの利用者・Workspace は表示名が取れたときだけ名前体裁、否则 IdBadge。Project 名も名称主表示・ID は送信値。
+1. ヘッダーの利用者・Workspace は表示名が取れたときだけ名前体裁、それ以外は IdBadge。Project 名も名称主表示・ID は送信値。
 2. session に名前が無い場合・cookie 上限超過時に表示 claim を落としてもサインインと到達範囲を維持。
 3. 主要一覧の列 sticky / 並べ替え / 条件記憶 / ListState 排他。
 4. route surface 表と information-design sheet・test evidence の対応（closure + screen-pattern gate）。
@@ -71,6 +76,7 @@ beads_ids:
 7. docs / feedback / users / sheets のヘッダー検索と `q` 契約。LIKE `%`/`_` は repository 共通でエスケープ。
 8. metrics ranking はサーバ側で上位 N 件に切り、`rankingTotals` で稼働率の母集団を返す。
 9. 係数既定値と wizard 試算プレビューの単一出所化（client bundle に drizzle を入れない）。
+10. PR #700 の client JS 超過9画面と予算警告1画面は route-local 遅延読込へ分割。production build で全routeが120 KiB以下へ戻り、動的 import 先を含む画面検査も維持した。
 
 ### 残すもの
 
@@ -91,6 +97,9 @@ beads_ids:
 | schemas typecheck + metrics contracts | PASS。30 tests |
 | db typecheck + search/metrics | PASS。18 tests |
 | hub focused (nav/metrics/relative-time/screen-pattern/users/hearing/coefficients) | PASS。9 files / 107 tests（1 todo） |
+| PR #700 CI回復 focused | PASS。Hub 67 unique tests、UI 3 tests、Hub typecheck |
+| production build / client JS G13 | PASS。旧超過9画面は 110.2〜118.2 KiB、警告1画面は115.4 KiB、全route 120 KiB以下 |
+| repository pre-push SSOT | PASS 141 / WARN 5 / FAIL 0。5 warnings は段階導入中の既存 plugin lint |
 | 無関係差分の混入 | `eval-log/review-queue.jsonl` と rubric 提案は commit 対象外 |
 
 ## 7. 説明
@@ -99,6 +108,10 @@ beads_ids:
 
 画面に並んでいた長い英数字の ID を、できるだけ「山田さん」「営業部」のような名前で出すようにした。表も探しやすくし、読み込み失敗と保存失敗を別々に出す。日付は「2026/08/12 10:00」に加えて、近いものだけ「3 日前」も一緒に出す。どの画面も同じ部品で組み立てる。
 
+さらに、最初から全部の画面部品を読み込まず、必要になった画面だけ後から読むようにした。これにより、最初に受け取るプログラムの量を上限内へ戻した。
+
 ### 専門向け
 
 optional session claims で presentation と authorization を分離し、cookie 上限時は表示 claim のみを drop する fail-open for reachability を採った。情報設計は screen-inventory を SSOT、sheet を根拠、closure test と screen-pattern gate で片側更新を検出する。list search は `listSearchTermSchema` + `containsTerm`/`ESCAPE` の単一 writer。相対日時は hydration-safe に描画後付与し、絶対表記を消さない。`packages/ui` が IdBadge / ListState / FilterBar / sticky stack の owner、`apps/hub` が session・route・業務データを結線する。
+
+G13回復では旧超過9 routeと警告1 routeのclient実装本体を `next/dynamic({ ssr: false })` の局所境界へ分離し、共通shellから `StickyHeaderOffset` を外した。screen-pattern gateのimport graph探索をdynamic importへ拡張し、bundle分割による検査対象の欠落を防いだ。

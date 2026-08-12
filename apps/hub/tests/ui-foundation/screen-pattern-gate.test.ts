@@ -60,7 +60,9 @@ function screenSource(pageFile: string): string {
     seen.add(file);
     const source = readFileSync(file, 'utf8');
     parts.push(source);
-    for (const match of source.matchAll(/from '(\.[^']+)'/g)) {
+    // 通常の import と next/dynamic の import() の両方を辿る。遅延読込を導入しても、
+    // 実装本体を検査対象外へ逃がさず同じ証拠として評価する。
+    for (const match of source.matchAll(/(?:from\s+|import\()\s*['"](\.[^'"]+)['"]/g)) {
       const specifier = match[1] as string;
       // TypeScript の import は `.js` で書くが、実体は `.tsx` / `.ts`
       const base = path.resolve(path.dirname(file), specifier).replace(/\.js$/, '');

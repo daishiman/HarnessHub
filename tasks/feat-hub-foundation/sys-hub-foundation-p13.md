@@ -129,5 +129,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - exact-13 に 14 個目の task は追加しない。P13 後の UI 一貫性 writeback として扱う。
 - 表示 claim は optional で認可非使用。Project 名解決は `HarnessHub-pwph` 完了後に結線済み。
 - 追補: 相対日時 (`DateTimeText` / HarnessHub-p26n)、list `q` 検索の安全共通化、screen-pattern gate、metrics `rankingTotals`。
+- PR #700 CI 回復: client JS 120 KiB 超過9画面と予算警告1画面を route-local 遅延読込へ分割し、
+  `StickyHeaderOffset` を必要画面だけへ配置。task spec / production build / G13 / focused test を再実行する。
 - 受領: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
 - 残: HarnessHub-5yen（法務本文）、HarnessHub-7mc6（Linux VRT）、HarnessHub-alyy（session cookie 上限）。

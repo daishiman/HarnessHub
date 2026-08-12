@@ -36,6 +36,15 @@ export function StickyHeaderOffset(): null {
       root.style.setProperty(screenHeaderHeightVariable, measuredHeight(screenHeader));
     };
 
+    // ResizeObserver が無い環境でも描画自体は壊さない。SSR のテスト環境や古い
+    // WebView では既定高へ安全に縮退し、対応ブラウザだけが実高さへ追従する。
+    if (typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') {
+      return () => {
+        root.style.removeProperty(shellHeaderHeightVariable);
+        root.style.removeProperty(screenHeaderHeightVariable);
+      };
+    }
+
     // 折り返しや viewport 変更で高さが変わっても stack 全体を追従させる。
     const resizeObserver = new ResizeObserver(syncHeights);
 

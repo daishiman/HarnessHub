@@ -15,6 +15,7 @@ import {
   ListState,
   Select,
   StatusChip,
+  StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -114,6 +115,7 @@ export function CatalogList({ scope, port = httpCatalogPort, initialTarget, init
 
   return (
     <div>
+      <StickyHeaderOffset />
       {showBanner ? <DegradedBanner description={failure.message} /> : null}
 
       <FilterBar

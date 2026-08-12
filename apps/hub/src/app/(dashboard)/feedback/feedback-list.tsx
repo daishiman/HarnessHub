@@ -18,6 +18,7 @@ import {
   LiveStatus,
   Select,
   StatusChip,
+  StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
@@ -208,6 +209,7 @@ export function FeedbackList({ tenantId, workspaceId, initialQuery = '' }: Feedb
 
   return (
     <>
+      <StickyHeaderOffset />
       <FilterBar
         label="フィードバックの絞り込み"
         sticky

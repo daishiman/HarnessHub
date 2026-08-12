@@ -1,7 +1,7 @@
 import { ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { HearingIntakeWizard } from './hearing-intake-wizard.js';
+import { LazyHearingIntakeWizard } from './hearing-intake-wizard-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ヒアリングシート作成 | Harness Hub',
@@ -26,7 +26,7 @@ export default async function HearingIntakePage({ searchParams }: PageProps) {
         ]}
         breadcrumbsLabel="現在地"
       />
-      <HearingIntakeWizard tenantId={tenantId} workspaceId={workspaceId} />
+      <LazyHearingIntakeWizard tenantId={tenantId} workspaceId={workspaceId} />
     </>
   );
 }

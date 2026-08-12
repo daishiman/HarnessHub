@@ -7,15 +7,7 @@
  * server component のままにしてあるので、シェル自体は client JS を増やさない。
  */
 import type { SessionRole } from '@harness-hub/schemas';
-import {
-  buildShellCss,
-  isCurrentNav,
-  MobileTabBar,
-  ShellFooter,
-  ShellHeader,
-  ShellSidebar,
-  StickyHeaderOffset,
-} from '@harness-hub/ui';
+import { buildShellCss, isCurrentNav, MobileTabBar, ShellFooter, ShellHeader, ShellSidebar } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
 import { notoSansJp } from '../../app/fonts.js';
@@ -165,9 +157,6 @@ export function HubShell({
           {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
               `/signin/workspace` の server intermediate response が担い、key は再利用防止の第二防壁。 */}
           <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId}\u0000${scope.workspaceId}`}>
-            {/* 見出し帯の実高さを CSS 変数へ出す。絞り込み帯がその真下に貼り付くために要る。
-                描画物を持たない client 部品なので、シェル自体は server component のまま */}
-            <StickyHeaderOffset />
             {children}
           </main>
 

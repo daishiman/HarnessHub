@@ -8,7 +8,16 @@
  * (role/status は StatusChip 化した状態語彙ではなく、その契約テストと同じ plain value() で表示する)。
  */
 import type { SessionRole, UserListItem, UserListResponse, UserStatus } from '@harness-hub/schemas';
-import { Alert, Button, DataTable, type DataTableColumn, FilterBar, ListState, TextInput } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  DataTable,
+  type DataTableColumn,
+  FilterBar,
+  ListState,
+  StickyHeaderOffset,
+  TextInput,
+} from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
@@ -180,6 +189,7 @@ export function UserList({ tenantId, initialQuery = '' }: UserListProps): ReactN
 
   return (
     <>
+      <StickyHeaderOffset />
       {/* 絞り込み欄の並びと余白は共通の FilterBar に任せる (画面ごとの書き起こしをやめる)。
           この画面は打ち込む条件が 1 つだけだが、他一覧と同じ器・同じ位置に置く */}
       <FilterBar

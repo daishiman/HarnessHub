@@ -27,6 +27,7 @@ import {
   Panel,
   Select,
   Stack,
+  StickyHeaderOffset,
 } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -132,6 +133,7 @@ export function UsageSavingsReport({ tenantId, workspaceId, range }: UsageSaving
 
   return (
     <Stack gap={4}>
+      <StickyHeaderOffset />
       {/* 絞り込みの並びと余白は共通の FilterBar に任せる */}
       <FilterBar
         label="業務ツールの絞り込み"

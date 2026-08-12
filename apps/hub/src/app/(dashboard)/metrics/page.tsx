@@ -12,7 +12,7 @@ import type { Metadata } from 'next';
 
 import { DEFAULT_SUMMARY_RANGE_DAYS, recentRange } from '../../../features/metrics-tracking/view-model.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { MetricsDashboard } from './metrics-dashboard.js';
+import { LazyMetricsDashboard } from './metrics-dashboard-lazy.js';
 
 export const metadata: Metadata = {
   title: '効果測定ダッシュボード | Harness Hub',
@@ -42,7 +42,7 @@ export default async function MetricsPage({ searchParams }: PageProps) {
       />
       {/* 中身が KPI・グラフ・表を自前の面 (Panel) に載せるようになったため、
           ここで二重に面で囲まない */}
-      <MetricsDashboard
+      <LazyMetricsDashboard
         tenantId={tenantId}
         workspaceId={workspaceId}
         initialRange={{ from: query.from ?? fallback.from, to: query.to ?? fallback.to }}

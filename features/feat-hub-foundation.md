@@ -189,4 +189,6 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - session の `name` / `workspace_names` は optional の表示専用。認可・edge 判定は変更しない。
 - 追加の同一 wave 追補: `DateTimeText` による相対日時併記、docs/feedback/users の `q` 検索と
   LIKE エスケープ共通化、screen-pattern gate、metrics `rankingTotals`、係数既定値の単一出所。
+- PR #700 の G13 回復として旧超過9画面と警告1画面を route-local 遅延読込へ分割し、sticky 高さ計測を必要画面へ限定した。
+  production build で全 route が 120 KiB 以下、screen-pattern gate は動的 import 先も検査する。
 - system-spec の R4-reopen は不要（判断理由は受領書 §2）。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と [受領書](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。

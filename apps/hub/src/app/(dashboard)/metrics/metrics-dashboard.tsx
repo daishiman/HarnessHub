@@ -25,6 +25,7 @@ import {
   ListState,
   Panel,
   Stack,
+  StickyHeaderOffset,
   TextInput,
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
@@ -117,6 +118,7 @@ export function MetricsDashboard({ tenantId, workspaceId, initialRange }: Metric
 
   return (
     <Stack gap={4}>
+      <StickyHeaderOffset />
       {/* 並びと余白は共通の FilterBar に任せる (画面ごとの書き起こしをやめる) */}
       <FilterBar
         label="集計期間の指定"
