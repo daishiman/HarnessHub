@@ -140,3 +140,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 - 外部公開サイト生成・全文検索エンジン・バージョン履歴 UI
 - `scheduled` を永続 status として追加すること
+
+## MVP 追補: S15 一覧 empty 導線 (2026-08-13)
+
+**graph node**: `issue-ui-disclosure-empty-state-20260813`
+
+- 未絞込 0 件かつ `docs.write_tenant` あり: 「最初のドキュメントを作成」→ `/docs/new`
+- 未絞込 0 件かつ権限なし: 作成導線を出さず `workspace-admin` 以上が必要と説明
+- 絞込 0 件: 作成より「絞り込みを解除」を優先（filters + cursor 履歴を初期化）
+- 権限判定は server page で一度だけ行い、ヘッダー CTA と empty を一致させる
+- 正本: [S15 情報設計](../docs/features/feat-docs-cms/information-design/S15.md)、[受領書](../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)

@@ -15,7 +15,7 @@ recorded_at: "2026-08-10"
 
 | 層 | 所有 |
 | --- | --- |
-| `packages/ui` WorkspaceSwitcher | 見た目と server-only 操作（details + a） |
+| `packages/ui` WorkspaceSwitcher | 見た目と server-first 操作（details + 素の a）。共通 client island は一時メニューの外側/Escape/排他開閉だけを担当 |
 | `apps/hub` workspace-switcher-items / resolve-shell-props | 所属一覧・現在値・returnTo の組み立て |
 | `/signin/workspace` | cookie 書込 + 中間文書 + 安全 returnTo |
 | deny-navigation / screen-states | scope 不足の回復文言（403 非露出） |

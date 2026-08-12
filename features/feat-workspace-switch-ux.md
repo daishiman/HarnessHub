@@ -68,7 +68,7 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
    - 所属が 1 件のときは切替 UI を出さず現在値の表示のみとし、選択操作を強いない
    - 切替先は安全な同一 origin の `returnTo` とし、現在の Workspace はリンクにしない
    - 切替時は scope 情報を持たない server intermediate 文書を先に表示し、新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)
-   - WorkspaceSwitcher は server component + `<details>` + 素の `<a>` だけで構成し、モバイルを含む共通シェルで client JS を増やさない
+   - WorkspaceSwitcher 本体は server component + `<details>` + 素の `<a>` で構成し、開閉専用の共通 client island だけで外側クリック・Escape・別メニューとの排他制御を行う。切替は client router を使わない
 
 3. **スコープ不足の利用者向け表現**
    - 403 `missing_tenant_scope` をエンドユーザーへ露出させない
@@ -103,6 +103,6 @@ feat-post-signin-scope-routing が解決した scope を、利用者に見せ・
 | --- | --- | --- |
 | 所属 1 件は選択画面なし | 実装済み | `resolveSessionScope` の singleton 自動確定 |
 | 所属 2 件以上は選択後に進む | 実装済み | `/` の Workspace 選択 + `/signin/workspace` cookie + 安全な `returnTo` |
-| 共通シェルから常時切替 | 実装済み | desktop / mobile 共通の server-only `WorkspaceSwitcher` |
+| 共通シェルから常時切替 | 実装済み | desktop / mobile 共通の server-first `WorkspaceSwitcher` + 開閉専用 client island |
 | 切替時の旧 scope 非表示 | 実装済み | cookie 設定後、旧 scope を含まない中間文書を commit してから新 scope へ遷移 |
 | 403 生値を出さず回復導線 | 実装済み | edge navigation HTML と RSC ErrorState が同じ回復文言・導線を使用 |

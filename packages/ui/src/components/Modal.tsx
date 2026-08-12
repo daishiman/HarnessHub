@@ -46,13 +46,13 @@ export interface ModalProps {
   /** 補足説明。渡すと `aria-describedby` で読み上げに含まれる。 */
   description?: string | undefined;
   size?: ModalSize | undefined;
-  /** 右下に置く操作列。省略すると閉じるボタンだけが残る。 */
+  /** 右下に置く操作列。省略時も、dismissible なら右上の閉じるボタンは残る。 */
   footer?: ReactNode | undefined;
   /**
-   * 背景クリックで閉じるか。既定は閉じる。
-   * 入力途中の内容を失わせたくないモーダルでは false にする。
+   * 背景クリック・Escape・右上の閉じる操作で閉じられるか。既定は true。
+   * 未保存の入力を持つ場合は false にし、footer 内の保存・破棄確認から明示的に閉じる。
    */
-  closeOnBackdrop?: boolean | undefined;
+  dismissible?: boolean | undefined;
   onClose: () => void;
   children: ReactNode;
 }
@@ -64,7 +64,7 @@ export function Modal({
   description,
   size = 'md',
   footer,
-  closeOnBackdrop = true,
+  dismissible = true,
   onClose,
   children,
 }: ModalProps): ReactNode {
@@ -74,7 +74,7 @@ export function Modal({
   const descriptionId = `${id}-description`;
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  const { onKeyDown } = useFocusTrap(open, dialogRef, onClose);
+  const { onKeyDown } = useFocusTrap(open, dialogRef, dismissible ? onClose : undefined);
   useScrollLock(open);
 
   // 背景そのものを押したときだけ閉じる。中身のクリックが親へ伝播しても無視する。
@@ -94,7 +94,7 @@ export function Modal({
       {/* 背景は「押せる要素」として置く。div に onClick を付けるとキーボードから
           到達できない操作になるため、閉じる意味を持った button にしている。
           tab 順からは外し (tabIndex -1)、閉じ方はヘッダーの閉じるボタンと Esc が正規の導線。 */}
-      {closeOnBackdrop ? (
+      {dismissible ? (
         <button
           type="button"
           tabIndex={-1}
@@ -149,27 +149,29 @@ export function Modal({
             )}
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t('action.close')}
-            data-hh-focusable=""
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minWidth: 'var(--hh-control-height)',
-              minHeight: 'var(--hh-control-height)',
-              padding: 0,
-              color: colorVar('textMuted'),
-              background: 'transparent',
-              border: 'none',
-              borderRadius: radiusVar('sm'),
-              cursor: 'pointer',
-            }}
-          >
-            <Icon name="close" />
-          </button>
+          {dismissible ? (
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={t('action.close')}
+              data-hh-focusable=""
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: 'var(--hh-control-height)',
+                minHeight: 'var(--hh-control-height)',
+                padding: 0,
+                color: colorVar('textMuted'),
+                background: 'transparent',
+                border: 'none',
+                borderRadius: radiusVar('sm'),
+                cursor: 'pointer',
+              }}
+            >
+              <Icon name="close" />
+            </button>
+          ) : null}
         </div>
 
         {/* 本文だけを伸縮させ、見出しと操作列は常に見える位置に留める */}

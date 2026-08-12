@@ -24,7 +24,7 @@ function focusablesIn(container: HTMLElement | null): HTMLElement[] {
  * open の間だけ、コンテナ内へフォーカスを閉じ込める。
  *
  * - 開いた時点のフォーカス位置を覚えて、閉じたら必ずそこへ戻す
- * - Escape で `onClose`
+ * - `onEscape` が指定されていれば Escape で呼ぶ（未保存保護中は指定しない）
  * - Tab / Shift+Tab が端に来たら反対の端へ巻き戻す
  *
  * 返り値の `onKeyDown` はダイアログ要素に付ける。`keydown` を document 側で
@@ -33,7 +33,7 @@ function focusablesIn(container: HTMLElement | null): HTMLElement[] {
 export function useFocusTrap(
   open: boolean,
   containerRef: RefObject<HTMLElement | null>,
-  onClose: () => void,
+  onEscape?: (() => void) | undefined,
 ): { onKeyDown: (event: ReactKeyboardEvent<HTMLElement>) => void } {
   useEffect(() => {
     if (!open) return;
@@ -51,7 +51,7 @@ export function useFocusTrap(
     (event: ReactKeyboardEvent<HTMLElement>) => {
       if (event.key === 'Escape') {
         event.stopPropagation();
-        onClose();
+        onEscape?.();
         return;
       }
       if (event.key !== 'Tab') return;
@@ -73,7 +73,7 @@ export function useFocusTrap(
         first.focus();
       }
     },
-    [containerRef, onClose],
+    [containerRef, onEscape],
   );
 
   return { onKeyDown };

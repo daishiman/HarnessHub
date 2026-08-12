@@ -92,6 +92,8 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 - `FR-UIF-009`: 各画面は `ScreenHeader` / `Panel` / `ActionLink` を基本 surface とし、破壊操作の確認は `reversible` 必須の `ConfirmDialog` を使う。汎用 `Modal` を実行確認へ流用しない。
 - `FR-UIF-010`: current pathname は認可完了後に middleware が内部 request header `x-hh-pathname` へ載せ、server layout が現在地表示にだけ使う。
 - `FR-UIF-011`: `docs/screen-inventory.md` を route surface profile の SSOT とし、実在する `page.tsx` route はそれぞれ一意な `current` surface ID、role/capability、task-mode、density、wide/middle/narrow pattern、sticky policy、情報設計 sheet、test evidence を持つ。未実装の route/modal/role 変更は Decision ref 付き `planned` に分離する。
+- `FR-UIF-012`: navigation の一時 disclosure（Workspace 切替、アカウントメニュー、モバイルの「その他」）は同時に 1 つだけ開く。外側クリック・Escape・別 disclosure の開始で閉じ、Escape は開閉元へフォーカスを戻し、外側クリックはクリック先からフォーカスを奪わない。本文の開閉に使う `details` は対象外とする。
+- `FR-UIF-013`: `Modal` / `BottomSheet` は既定で背景クリック・Escape・閉じる操作により閉じる。未保存の入力を持つ面は `dismissible=false` とし、保存または破棄確認を伴う明示操作以外では閉じない。
 
 ## 非機能要件
 
@@ -113,7 +115,7 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 
 403 を認証切れへ変換しない。`md` 未満は 1 列、`md` 以上は 2 列へ遷移し、表のように幅が必要な要素だけ local scroll を許可する。
 
-desktop (`md` 以上) は sidebar + header + content + footer、mobile (`md` 未満) は header + 主要 4 slot + 5 番目の「その他」とする。未実装 route は表示しない。「その他」の navigation overflow は背景を遮る dialog ではなく `details/summary` disclosure とし、標準 Tab 順・`aria-current`・44px tap target を守る。操作用 `BottomSheet` は別部品で、dialog semantics と明示 close を持つ。swipe は唯一の操作にしない。
+desktop (`md` 以上) は sidebar + header + content + footer、mobile (`md` 未満) は header + 主要 4 slot + 5 番目の「その他」とする。未実装 route は表示しない。「その他」の navigation overflow は背景を遮る dialog ではなく `details/summary` disclosure とし、標準 Tab 順・`aria-current`・44px tap target を守る。Workspace 切替・アカウントメニューを含む navigation disclosure は共通の小さな client island で light dismiss（外側クリックで閉じること）・Escape・排他開閉を担保するが、route/scope 切替は server-first の document 遷移を維持する。操作用 `BottomSheet` は別部品で、dialog semantics と明示 close を持つ。swipe は唯一の操作にしない。
 
 ## ビジネスルールと検証
 
@@ -181,6 +183,8 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - [x] `AC-UIF-012`: 日時は絶対表記 (JST) を常に残し、直近は `DateTimeText` で相対併記する。相対は描画後付与で hydration 不一致を作らない。
 - [x] `AC-UIF-013`: 一覧 `q` は `listSearchTermSchema` と repository `containsTerm`（LIKE ESCAPE）に一本化し、ヘッダー検索は API が `q` を処理する route にだけ結線する。
 - [x] `AC-UIF-014`: route surface の pattern と実装印は screen-pattern gate で突き合わせ、判定件数 0 と違反 0 を区別する。
+- [x] `AC-UIF-015`: navigation disclosure が外側クリック・Escape・別メニュー開始で閉じ、Escape のフォーカス復帰と外側クリック先のフォーカス維持が unit test で通る。
+- [x] `AC-UIF-016`: `dismissible=false` の Modal / BottomSheet は背景・Escape・閉じるボタンから閉じられず、未保存内容を暗黙破棄しないことが unit test で通る。
 
 ## 2026-08-12 UI MVP wave 追補
 

@@ -19,6 +19,15 @@ import { type AppliedFilter, AppliedFilterChips } from '../../../components/filt
 import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
+/**
+ * problem details 抽出は失敗パスでしか使わないため動的 import にする(client JS 予算/qa-018 対策)。
+ * 常時 import すると成功パスでも初期チャンクへ載ってしまう。
+ */
+async function extractApiErrorMessage(response: Response, fallback: string): Promise<string> {
+  const mod = await import('../../../features/hearing-intake/client-error.js');
+  return mod.extractApiErrorMessage(response, fallback);
+}
+
 interface HearingSheetListProps {
   readonly tenantId: string;
   readonly workspaceId: string;
@@ -90,7 +99,7 @@ export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: H
           'x-harness-workspace-id': workspaceId,
         },
       });
-      if (!response.ok) throw new Error('一覧を取得できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '一覧を取得できませんでした。'));
       const body = (await response.json()) as SheetListResponse;
       const completed = body.items.find(
         (row) =>

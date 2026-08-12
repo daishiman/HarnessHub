@@ -23,6 +23,9 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
   const [query, scope, identity] = await Promise.all([searchParams, resolveDashboardScope(), resolveShellIdentity()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   const initialQuery = query.q?.trim() ?? '';
+  // ヘッダーと 0 件表示で別々に role を解釈すると、片方だけ作成導線が出る事故になる。
+  // docs.write_tenant の判定は server page で一度だけ行い、同じ結果を一覧へ渡す。
+  const canCreateDocument = sessionActionVisible(identity.role, 'docs.write_tenant');
   return (
     <>
       <ScreenHeader
@@ -31,7 +34,7 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
         description="業務ツールの使い方や運用手順をまとめて共有します。"
         sticky
         actions={
-          sessionActionVisible(identity.role, 'docs.write_tenant') ? (
+          canCreateDocument ? (
             <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
               新しく作成
             </ActionLink>
@@ -44,6 +47,7 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
           workspaceId={workspaceId}
           initialQuery={initialQuery}
           sessionRole={identity.role}
+          canCreateDocument={canCreateDocument}
         />
       </Panel>
     </>

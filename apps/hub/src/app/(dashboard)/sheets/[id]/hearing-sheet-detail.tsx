@@ -44,6 +44,15 @@ const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => mo
 // 同ファイルの MarkdownView と同じ遅延読み込みの型に揃えている。
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
+/**
+ * problem details 抽出は失敗パスでしか使わないため動的 import にする(client JS 予算/qa-018 対策)。
+ * 常時 import すると成功パスでも初期チャンクへ載ってしまう。
+ */
+async function extractApiErrorMessage(response: Response, fallback: string): Promise<string> {
+  const mod = await import('../../../../features/hearing-intake/client-error.js');
+  return mod.extractApiErrorMessage(response, fallback);
+}
+
 interface HearingSheetDetailProps {
   readonly id: string;
   readonly tenantId: string;
@@ -140,7 +149,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('シートを取得できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, 'シートを取得できませんでした。'));
       const next = (await response.json()) as SheetDetail;
       if (previousStatus.current === 'generating' && (next.status === 'review' || next.status === 'completed')) {
         setCompletionNotice(true);
@@ -173,7 +182,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
         headers: headers(tenantId, workspaceId),
         body: JSON.stringify({ status }),
       });
-      if (!response.ok) throw new Error('状態を変更できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '状態を変更できませんでした。'));
       setSheet((await response.json()) as SheetDetail);
     } catch (cause) {
       setActionError(cause instanceof Error ? cause.message : '状態を変更できませんでした。');
@@ -193,7 +202,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
         headers: headers(tenantId, workspaceId),
         body: '{}',
       });
-      if (!response.ok) throw new Error('再生成を開始できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '再生成を開始できませんでした。'));
       setSheet((await response.json()) as SheetDetail);
     } catch (cause) {
       setActionError(cause instanceof Error ? cause.message : '再生成を開始できませんでした。');

@@ -338,6 +338,63 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
     expect(container.textContent).not.toContain('読み込みエラー');
     expect(container.textContent).toContain('導入ガイド');
   });
+
+  it('DOCS-UI-030: 作成可能者の真の 0 件には最初のドキュメントを作る導線を出す', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(async () => jsonResponse({ items: [], next_cursor: null })),
+    );
+    await render(
+      <DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" canCreateDocument />,
+    );
+
+    const createLink = [...container.querySelectorAll<HTMLAnchorElement>('a')].find(
+      (link) => link.textContent === '最初のドキュメントを作成',
+    );
+    expect(createLink?.getAttribute('href')).toBe('/docs/new?tenant=tenant-a&workspace=ws-1');
+    expect(container.textContent).not.toContain('workspace-admin');
+  });
+
+  it('DOCS-UI-031: 作成不可者の真の 0 件には必要な workspace-admin 権限を説明する', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(async () => jsonResponse({ items: [], next_cursor: null })),
+    );
+    await render(
+      <DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="member" canCreateDocument={false} />,
+    );
+
+    expect(container.querySelector('a[href^="/docs/new"]')).toBeNull();
+    expect(container.textContent).toContain('workspace-admin（ワークスペース管理者）以上の権限が必要です');
+  });
+
+  it('DOCS-UI-032: 絞込結果 0 件では作成導線より絞り込み解除を優先する', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => jsonResponse({ items: [], next_cursor: null }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentList
+        tenantId="tenant-a"
+        workspaceId="ws-1"
+        initialQuery="見つからない語"
+        sessionRole="workspace-admin"
+        canCreateDocument
+      />,
+    );
+
+    expect(container.querySelector('a[href^="/docs/new"]')).toBeNull();
+    const clearButton = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === '絞り込みを解除',
+    );
+    if (clearButton === undefined) throw new Error('絞り込みを解除 ボタンがありません');
+    await act(async () => clearButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    const docsRequests = fetchMock.mock.calls
+      .map((call) => call[0] as string)
+      .filter((url) => url.startsWith('/api/v1/docs?'));
+    expect(docsRequests.at(-1)).not.toContain('q=');
+    expect(container.querySelector('a[href^="/docs/new"]')?.textContent).toBe('最初のドキュメントを作成');
+  });
 });
 
 /**
