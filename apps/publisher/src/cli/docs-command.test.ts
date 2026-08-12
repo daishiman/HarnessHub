@@ -41,6 +41,7 @@ const RESPONSE: ExternalDocumentSyncResponse = {
     excerpt: null,
     excerpt_source: 'auto',
     asset_summary: null,
+    publish_at: null,
   },
   source: 'claude-code',
   external_document_id: 'a'.repeat(64),

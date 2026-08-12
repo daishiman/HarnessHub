@@ -81,7 +81,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | `builds` | id, tenant_id, workspace_id, sheet_id NULL, feedback_id NULL, project_id, title, stage(§5.3 の 7 値), risk(`ok/warn`), eta_date, assignee_user_id, publish_request_id, note | 起点は Sheet/Feedback のどちらか一方 (`CHECK` + 非 NULL 値の partial UNIQUE。各起点 = 1 Build)。公開工程は PublishRequest へ接続し二重実装しない (B4) |
 | `build_stage_events` | id, build_id, from_stage, to_stage, actor_user_id, created_at | append-only (ボード履歴表示用。監査は audit_events にも記録) |
 | `feedbacks` | id, tenant_id, workspace_id, code(`FR-xxx`), project_id, type(`improvement/review/bug`), priority(`high/medium/low`), source(`harness/manual`), body, status(§5.4), ai_response, ai_job_id, created_by | CLI 発 (`harness feedback`) と Web フォームは同一テーブル・同一キュー (B6)。mock の「改善要望/レビュー依頼/バグ報告」と優先度に対応 |
-| `documents` | id, code(`DOC-xx`), scope(`common/tenant`), tenant_id (common は NULL), category, title, body_md, status(`draft/published`), updated_by | common は provider-admin のみ書込・全テナント読取専用 (SEC3 例外)。category は自由文字列 + 推奨プリセット (使い方/FAQ/構想・戦略/セキュリティ/経理/CS 等 — mockup 実測) |
+| `documents` | id, tenant_id, scope(`common/tenant`), title, body_markdown, status(`draft/published`), publish_at, category, tags, thumbnail_url/source, excerpt/source, asset_summary, external_source/document_id/content_hash/revision, created/updated_by, created/updated_at | `tenant_id` は common でも保持し、可視性は repository の `scope='common' OR tenant_id=:context` で強制する。`publish_at` は nullable epoch ms の純増列で、`scheduled` は保存せず `status='draft' AND publish_at > now` から導出する。分類・カード情報、内部画像、外部同期 revision/ETag の詳細は §4.8 |
 | `notifications` | id, tenant_id, user_id, kind, title, body, link_path, read_at, created_at | アプリ内通知が正本、メールは補助 (D6) |
 | `metrics_events` | id, tenant_id, workspace_id, project_id, user_id, run_count, client_context_json, idempotency_key, server_received_at | **append-only**。UNIQUE(tenant_id, idempotency_key)。時間・金額の自己申告は受けない (SEC5)。**生データは無期限 DB 保持** (ユーザー決定 qa-031)。Turso 無料枠使用量を保守運用の監視対象とし、圧迫時は保持期間導入を R4-reopen で再検討 |
 | `metrics_rollups` | id, tenant_id, period(`week/month`), period_start, dim(`tenant/department/user/project`), dim_key, run_count, saved_minutes, saved_amount_jpy, computed_at | UNIQUE(tenant_id, period, period_start, dim, dim_key)。金額換算はサーバのみ (B3) |
@@ -156,7 +156,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 ### 3.8 監査対象 action (SEC6 = 既存 I8 + Studio 追加)
 
-`project.create / project.update / publish.request / publish.package_upload / publish.submit / publish.approve / publish.reject / publish.cancel / channel.promote / channel.rollback / release.suspend / deployment.register / sheet.status_change / build.stage_change / doc.create / doc.update / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
+`project.create / project.update / publish.request / publish.package_upload / publish.submit / publish.approve / publish.reject / publish.cancel / channel.promote / channel.rollback / release.suspend / deployment.register / sheet.status_change / build.stage_change / docs.create / docs.update / docs.external_sync / docs.image.upload / docs.image.delete / docs.scheduled_publish / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
 
 **security-spec で追加**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3) / `token.refresh_race` (refresh rotation の CAS 敗北。並行提示されたことの観測性 — security-spec §5.2)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。action 数は固定値として別管理せず、この列挙を正本にする。
 
@@ -236,6 +236,7 @@ sheetEstimate   = 月間工数(hours) × 対象人数(people) × sheet_reduction
 | orphan_candidate 通知 | 日次 | 一定期間滞留で admin へ通知 (§7.2) |
 | DB backup | 日次 | export → R2 (qa-019 既定)。四半期 restore drill。**salary は常にマスク** (security-spec §4.2) |
 | token/認可コード掃除 | 日次 | 期限切れ device_authorizations・revoked token の物理削除 |
+| ドキュメント予約公開 | 日次 | `status='draft' AND publish_at <= scheduledAt` を `publish_at ASC, id ASC` の安定順で default/max 100 件だけ公開し、処理済み行の `publish_at` を NULL に戻す。repository は `{publishedCount, hasMore, publishedDocuments:[{id,tenantId}]}` を返し、各行 CAS で競合を除外する。呼出側は返却文書ごとに actor=`system` / action=`docs.scheduled_publish` を既存監査へ記録する |
 | **監査 chain 検証** | 日次 | テナントごとに `audit_events` の hash chain 全体を再計算し、不一致・seq 欠番を検出したら provider-admin へ通知 (security-spec §5.4.4) |
 | **metrics 異常検知** | 日次 | ユーザー別実行回数が過去 4 週中央値の 10 倍超で `metrics.anomaly` 通知 (ブロックはしない。security-spec §6.4) |
 

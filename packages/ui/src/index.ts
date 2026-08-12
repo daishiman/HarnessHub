@@ -26,6 +26,8 @@ export type {
 } from './components/Alert.js';
 // --- 通知・エラー表示 ----------------------------------------------------
 export { Alert, DegradedBanner, EmptyState, ErrorState } from './components/Alert.js';
+export type { BadgeProps, BadgeTone } from './components/Badge.js';
+export { Badge } from './components/Badge.js';
 export type { ButtonProps, ButtonVariant } from './components/Button.js';
 // --- フォーム部品 --------------------------------------------------------
 export { Button } from './components/Button.js';
@@ -57,14 +59,12 @@ export { InlineEditTable } from './components/InlineEditTable.js';
 export type { ListStateProps } from './components/ListState.js';
 export { ListState } from './components/ListState.js';
 export type {
-  BadgeProps,
-  BadgeTone,
   MarkdownEditorProps,
   MarkdownImageUploadResult,
   MarkdownViewProps,
 } from './components/Markdown.js';
 // --- Markdown ------------------------------------------------------------
-export { Badge, MarkdownEditor, MarkdownView, markdownSanitizeSchema, slugify } from './components/Markdown.js';
+export { MarkdownEditor, MarkdownView, markdownSanitizeSchema, slugify } from './components/Markdown.js';
 // --- 汎用モーダル / ボトムシート ------------------------------------------
 export type { ModalProps, ModalSize } from './components/Modal.js';
 export { Modal } from './components/Modal.js';

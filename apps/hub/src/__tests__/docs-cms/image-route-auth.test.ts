@@ -74,6 +74,7 @@ const COMMON_DOC: DocumentRow = {
   excerpt: null,
   excerptSource: 'auto',
   assetSummary: null,
+  publishAt: null,
 };
 
 function repositoryFor(row: DocumentRow | null, contexts: RepositoryContext[]): DocsCmsRepository {
@@ -88,6 +89,7 @@ function repositoryFor(row: DocumentRow | null, contexts: RepositoryContext[]): 
     },
     createDocument: unsupported,
     updateDocument: unsupported,
+    publishDueDocuments: unsupported,
     getExternalDocument: unsupported,
     syncExternalDocument: unsupported,
     claimNextDocDraftJob: unsupported,

@@ -3,6 +3,8 @@
 import type { DocumentListItem } from '@harness-hub/schemas';
 import { Button, LiveStatus, Textarea, TextInput } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { extractApiErrorMessage } from '../../../features/docs-cms/api-error.js';
+import { parseTagsInput, tagsToInputValue } from '../../../features/docs-cms/tags.js';
 
 interface EditDraft {
   readonly category: string;
@@ -16,7 +18,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 function toDraft(doc: DocumentListItem): EditDraft {
   return {
     category: doc.category ?? '',
-    tags: (doc.tags ?? []).join(', '),
+    tags: tagsToInputValue(doc.tags),
     thumbnailUrl: doc.thumbnail_url ?? '',
     excerpt: doc.excerpt ?? '',
   };
@@ -34,6 +36,7 @@ export interface DocumentEditPanelProps {
 export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose }: DocumentEditPanelProps): ReactNode {
   const [draft, setDraft] = useState<EditDraft>(() => toDraft(doc));
   const [saveState, setSaveState] = useState<SaveState>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const committedRef = useRef<EditDraft>(toDraft(doc));
 
   useEffect(() => {
@@ -50,11 +53,7 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
       if (next.category !== committed.category)
         body.category = next.category.trim() === '' ? null : next.category.trim();
       if (next.tags !== committed.tags) {
-        const tags = next.tags
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0);
-        body.tags = tags.length === 0 ? null : tags;
+        body.tags = parseTagsInput(next.tags);
       }
       if (next.thumbnailUrl !== committed.thumbnailUrl) {
         body.thumbnail_url = next.thumbnailUrl.trim() === '' ? null : next.thumbnailUrl.trim();
@@ -74,13 +73,15 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
           },
           body: JSON.stringify(body),
         });
-        if (!response.ok) throw new Error('保存できませんでした。');
+        if (!response.ok) throw new Error(await extractApiErrorMessage(response, '保存できませんでした。'));
         const updated = (await response.json()) as DocumentListItem;
         committedRef.current = toDraft(updated);
         onSaved(updated);
+        setErrorMessage('');
         setSaveState('saved');
         setTimeout(() => setSaveState((current) => (current === 'saved' ? 'idle' : current)), 2000);
-      } catch {
+      } catch (cause) {
+        setErrorMessage(cause instanceof Error ? cause.message : '保存できませんでした。');
         setSaveState('error');
       }
     },
@@ -139,7 +140,7 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
           : saveState === 'saved'
             ? '保存しました'
             : saveState === 'error'
-              ? '保存できませんでした。もう一度お試しください。'
+              ? errorMessage
               : ''}
       </LiveStatus>
     </div>

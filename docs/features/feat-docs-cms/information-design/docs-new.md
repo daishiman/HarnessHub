@@ -24,7 +24,7 @@ Surface: `S15.NEW` / route: `/docs/new`。role、task-mode、density、wide/midd
 |---|---|---|---|
 | スコープ | 選択欄。「テナント」「共通 (要 provider-admin 権限)」。既定はテナント | 「スコープ」 | ラベル |
 | タイトル | 自由入力 | 「タイトル」 | ラベル |
-| 本文 | Markdown 編集欄 (16 行)。書式のプレビューを持つ | 「本文」 | ラベル |
+| 本文 | Markdown 編集欄 (16 行)。書式preview、画像button/drag&drop/pasteを持つ | 「本文」 | ラベル + upload live status |
 | 実行 | 「作成する」/ 実行中は「作成しています…」 | ボタンの語 | — |
 | 失敗 | 「作成エラー」+ 理由 | 見出しの語 | — |
 
@@ -32,12 +32,16 @@ Surface: `S15.NEW` / route: `/docs/new`。role、task-mode、density、wide/midd
 
 作成できたら閲覧画面へ移る。作成した本人が最初にすることは「書いたものを読み返す」ことなので、一覧へ戻さない。
 
+画像を最初に追加した時点で文書IDが無ければ、「無題のドキュメント」のtenant draftを一度だけ暗黙作成する。
+連続pasteでも同じ作成Promiseを共有し、画像ごとに文書を増やさない。最終保存はそのdraftを更新し、本文に残らなかった
+pending画像はdocument-scoped DELETEで回収する。画像URLは認証必須の同一origin API pathで、raw R2 URLを露出しない。
+
 ## pattern 選定
 
 | 候補 / hybrid | 必要 task capability への適合 | 弱点 | a11y/fallback | 判定 |
 |---|---|---|---|---|
-| 1 画面のフォーム + Markdown 編集欄 | 3 項目しかなく、時間がかかるのは本文だけ。本文に画面を大きく使える | — | 編集欄は遅れて読み込む。読み込み中も告知する | **採用** |
-| 段階フォーム | 3 項目で段に分ける意味が無い | — | — | 不採用 |
+| 1 画面のフォーム + Markdown 編集欄 | 基本入力はscope/title/bodyに絞り、画像も本文操作の中で完結する | — | 編集欄は遅れて読み込む。upload中/失敗も告知する | **採用** |
+| 段階フォーム | 基本入力を段に分ける意味が無く、本文と画像の往復を増やす | — | — | 不採用 |
 | リッチテキスト編集 | 見た目は分かりやすいが、保存形式が Markdown なので変換で情報が落ちる | — | — | 不採用 |
 
 編集部品は開いてすぐには読み込まない。初回の読み込み量を抑えるためで、読み込み中は「Markdown エディタを読み込んでいます…」を読み上げ領域に出す。無言で空欄が出ると、壊れているように見える。
@@ -62,6 +66,6 @@ Surface: `S15.NEW` / route: `/docs/new`。role、task-mode、density、wide/midd
 ## 成功指標と証跡境界
 
 - 代表タスク: 「手順書を 1 本書いて作成し、閲覧画面で読み返す」。
-- machine gate (現行): a11y テスト、編集部品の読み込み中に告知が出ること。
-- manual gate: 数十分書いた後に保存できること (時間切れで失われないこと)。
+- machine gate (現行): a11y テスト、編集部品の読み込み中に告知が出ること、暗黙draftの単一化、画像MIME/magic bytes/sizeとpending cleanup。
+- manual gate: 数十分書いた後に保存できること (時間切れで失われないこと)、貼付画像がpreview/閲覧で同じ認証URLから表示されること。
 - future gate (予定): 下書きの自動保存。

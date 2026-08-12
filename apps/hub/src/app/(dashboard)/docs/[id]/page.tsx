@@ -5,11 +5,24 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, LiveStatus, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
+import {
+  Alert,
+  Badge,
+  Button,
+  DefinitionList,
+  LiveStatus,
+  Panel,
+  ScopeChip,
+  ScreenHeader,
+  StatusChip,
+  TagRow,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { DateTimeText } from '../../../../components/format/date-time-text.js';
+import { canWriteDocument, extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
-import { useDashboardScope } from '../../dashboard-scope-context.js';
+import { useDashboardScope, useSessionRole } from '../../dashboard-scope-context.js';
 
 const DocumentDetailContent = dynamic(
   () => import('./document-detail-content.js').then((module) => module.DocumentDetailContent),
@@ -31,10 +44,17 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
   const { id } = use(params);
   const query = use(searchParams);
   const scope = useDashboardScope();
+  const role = useSessionRole();
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
 
   const [doc, setDoc] = useState<DocumentDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // 現在時刻に依存する badge は hydration 後にだけ導出し、SSR/初回client描画の差を作らない。
+  const [clientNow, setClientNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setClientNow(Date.now());
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -42,7 +62,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('ドキュメントを取得できませんでした。');
+      if (!response.ok) throw new Error(await extractErrorMessage(response, 'ドキュメントを取得できませんでした。'));
       setDoc((await response.json()) as DocumentDetail);
       setError(null);
     } catch (cause) {
@@ -73,6 +93,9 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
     );
   }
 
+  const scheduled =
+    clientNow !== null && doc.status === 'draft' && doc.publish_at !== null && doc.publish_at > clientNow;
+
   return (
     <article>
       <ScreenHeader
@@ -89,6 +112,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         tags={
           <TagRow>
             <StatusChip domain="document" status={doc.status} />
+            {scheduled ? <Badge tone="warning">予約公開</Badge> : null}
             <ScopeChip
               scope={doc.scope === 'common' ? 'common' : 'tenant'}
               name={doc.scope === 'common' ? '共通' : 'テナント'}
@@ -96,16 +120,61 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
           </TagRow>
         }
         actions={
-          <Button
-            type="button"
-            onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
-          >
-            編集する
-          </Button>
+          canWriteDocument(role, doc.scope) ? (
+            <Button
+              type="button"
+              onClick={() => window.location.assign(`/docs/${id}/edit?tenant=${tenantId}&workspace=${workspaceId}`)}
+            >
+              編集する
+            </Button>
+          ) : undefined
         }
       />
+      <Panel title="分類と公開設定">
+        <DefinitionList
+          label="分類と公開設定"
+          columns={2}
+          items={[
+            { term: 'カテゴリ', description: doc.category ?? '未分類' },
+            { term: 'タグ', description: (doc.tags ?? []).length > 0 ? (doc.tags ?? []).join('、') : 'タグなし' },
+            {
+              term: '予約公開',
+              description: doc.publish_at === null ? '設定なし' : <DateTimeText value={doc.publish_at} />,
+              hint: scheduled ? '日次の予約公開処理で公開されます (最大24時間程度かかる場合があります)。' : undefined,
+            },
+            { term: '要約', description: doc.excerpt ?? '要約なし' },
+            {
+              term: '要約の設定',
+              description: doc.excerpt_source === 'manual' ? '手動' : '本文から自動生成',
+            },
+            {
+              term: 'サムネイルの設定',
+              description: doc.thumbnail_source === 'manual' ? '手動' : '本文の最初の画像から自動設定',
+            },
+          ]}
+        />
+        {doc.thumbnail_url === null ? null : (
+          // biome-ignore lint/performance/noImgElement: 認証必須の同一origin画像と任意の外部画像の両方を扱う
+          <img
+            src={doc.thumbnail_url}
+            alt=""
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              height: 'auto',
+              marginBlockStart: 'var(--hh-space-3)',
+              borderRadius: 'var(--hh-radius-md)',
+            }}
+          />
+        )}
+      </Panel>
       {/* 本文は遅延境界内でも共通 MarkdownView のみで描画する (DOCS-SEC7-101)。 */}
-      <DocumentDetailContent bodyMarkdown={doc.body_markdown} />
+      <DocumentDetailContent
+        bodyMarkdown={doc.body_markdown}
+        category={doc.category}
+        tags={doc.tags}
+        excerpt={doc.excerpt}
+      />
     </article>
   );
 }

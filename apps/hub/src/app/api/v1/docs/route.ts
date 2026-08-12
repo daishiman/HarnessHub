@@ -85,6 +85,7 @@ export const POST = withAuthz(
         excerpt: excerpt.value,
         excerptSource: excerpt.source,
         assetSummary: assetSummaryToStorage(summarizeAssets(body)),
+        publishAt: parsed.data.publish_at ?? null,
       },
     );
 

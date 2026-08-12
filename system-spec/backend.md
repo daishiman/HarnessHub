@@ -236,3 +236,12 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 - 公開共有は `GET /api/hearing/:token` (session なし)。token は SHA-256 ハッシュのみ保存し、
   無効・期限切れ・失効は同一 404 に畳む。
 - 詳細は `docs/backend-spec-api-state.md` §4.3.1。本追記は REST+zod 単一ソースと deny-by-default 認可の枠内。
+
+## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
+
+- `documents.publish_at` を nullable epoch ms として純増する。`scheduled` enum は追加しない。
+- 表示状態: `published` / `draft+future publish_at`=予約中 / それ以外の draft=非公開。
+- 予約公開 cron は default/max 100・`publish_at ASC,id ASC`・行 CAS。監査 action=`docs.scheduled_publish`。
+- 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
+  `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
+- 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。
