@@ -47,6 +47,8 @@ const FORM = createSheetRequestSchema.parse({
   sharingIntent: 'small_group',
   constraintTags: [],
   shareTarget: 'チーム内',
+  informationSources: ['会計システム'],
+  trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
   knowledgeAssets: ['経理マニュアル'],
 });
 
@@ -224,34 +226,35 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
     expect(listSheets).toHaveBeenLastCalledWith(CONTEXT, { limit: 10 });
   });
 
-  it('旧 11 項目 form_json を一覧・詳細で version 1 と未回答へ安全に読み上げる', async () => {
-    const legacyRow = { ...SHEET_ROW, formJson: JSON.stringify(LEGACY_FORM_SNAPSHOT) };
-    const service = createHearingIntakeService(
-      repository({
-        listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null })),
-        findSheet: vi.fn(async () => legacyRow),
-      }),
-    );
+  it('旧 11/12 項目 form_json を一覧・詳細で version 1 と未回答へ安全に読み上げる', async () => {
+    for (const legacy of [LEGACY_FORM_SNAPSHOT, { ...LEGACY_FORM_SNAPSHOT, salary: FORM.salary }]) {
+      const legacyRow = { ...SHEET_ROW, formJson: JSON.stringify(legacy) };
+      const service = createHearingIntakeService(
+        repository({
+          listSheets: vi.fn(async () => ({ items: [legacyRow], nextCursor: null })),
+          findSheet: vi.fn(async () => legacyRow),
+        }),
+      );
 
-    await expect(
-      service.listSheets({
-        context: CONTEXT,
-        workspaceId: 'workspace-a',
-        applicantUserId: 'user-a',
-        readAll: false,
-        query: { limit: 20 },
-      }),
-    ).resolves.toMatchObject({ items: [{ domain: '経理', people: 5, hours: 40 }] });
-    await expect(service.getSheet({ context: CONTEXT, id: 'sheet-1' })).resolves.toMatchObject({
-      form_snapshot: {
-        schemaVersion: 1,
-        usagePurpose: null,
-        expertise: null,
-        constraintTags: null,
-        shareTarget: null,
-        knowledgeAssets: null,
-      },
-    });
+      await expect(
+        service.listSheets({
+          context: CONTEXT,
+          workspaceId: 'workspace-a',
+          applicantUserId: 'user-a',
+          readAll: false,
+          query: { limit: 20 },
+        }),
+      ).resolves.toMatchObject({ items: [{ domain: '経理', people: 5, hours: 40 }] });
+      await expect(service.getSheet({ context: CONTEXT, id: 'sheet-1' })).resolves.toMatchObject({
+        form_snapshot: {
+          schemaVersion: 1,
+          usagePurpose: null,
+          informationSources: null,
+          trueProblem: null,
+          knowledgeAssets: null,
+        },
+      });
+    }
   });
 
   it('詳細の未検出・生成結果・状態変更・再生成を repository 境界へ写像する', async () => {
@@ -326,29 +329,30 @@ describe('HI-ADAPTER: 共通キューとの wire 変換', () => {
     expect(parseGenerationResult('{"unexpected":true}')).toBeNull();
   });
 
-  it('処理待ちの旧 11 項目 AI payload も version 1 と未回答へ正規化する', () => {
-    const legacyJob = {
-      ...JOB_ROW,
-      payloadJson: JSON.stringify({
-        sheet_id: 'sheet-1',
-        sheet_code: 'HS-0001',
-        form: LEGACY_FORM_SNAPSHOT,
-        estimate: { savedHoursPerYear: 840, savedAmountPerYear: 2_520_000 },
-      }),
-    };
+  it('処理待ちの旧 11/12 項目 AI payload も version 1 と未回答へ正規化する', () => {
+    for (const legacy of [LEGACY_FORM_SNAPSHOT, { ...LEGACY_FORM_SNAPSHOT, salary: FORM.salary }]) {
+      const legacyJob = {
+        ...JOB_ROW,
+        payloadJson: JSON.stringify({
+          sheet_id: 'sheet-1',
+          sheet_code: 'HS-0001',
+          form: legacy,
+          estimate: { savedHoursPerYear: 840, savedAmountPerYear: 2_520_000 },
+        }),
+      };
 
-    expect(toPulledJob(legacyJob)).toMatchObject({
-      payload: {
-        form: {
-          schemaVersion: 1,
-          usagePurpose: null,
-          expertise: null,
-          constraintTags: null,
-          shareTarget: null,
-          knowledgeAssets: null,
+      expect(toPulledJob(legacyJob)).toMatchObject({
+        payload: {
+          form: {
+            schemaVersion: 1,
+            usagePurpose: null,
+            informationSources: null,
+            trueProblem: null,
+            knowledgeAssets: null,
+          },
         },
-      },
-    });
+      });
+    }
   });
 });
 

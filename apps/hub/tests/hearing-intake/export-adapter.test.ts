@@ -35,6 +35,8 @@ const BASE_FORM_SNAPSHOT: HearingSheetFormSnapshot = {
   sharingIntent: 'small_group',
   constraintTags: ['time', 'budget'],
   shareTarget: 'チーム内の経理担当',
+  informationSources: ['会計システム', '取引先から届く請求書'],
+  trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
   knowledgeAssets: ['経理マニュアル v3', '過去の仕訳ルール一覧'],
 };
 
@@ -51,6 +53,8 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
 
     expect(text).toContain('システム開発');
     expect(text).toContain(BASE_FORM_SNAPSHOT.issue);
+    expect(text).toContain(BASE_FORM_SNAPSHOT.trueProblem ?? '');
+    expect(text).toContain('会計システム');
     expect(text).toContain(BASE_FORM_SNAPSHOT.output);
     expect(text).toContain(BASE_FORM_SNAPSHOT.shareTarget);
     expect(text).toContain('経理マニュアル v3');
@@ -111,9 +115,25 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
     });
     const text = buildHarnessCreatorHandoff({ formSnapshot: legacy, generatedSections: null });
 
-    expect(text).toContain('未回答（旧形式のシート）');
+    expect(text).toContain('未回答');
     expect(text).not.toMatch(/undefined|null/);
     expect(text).not.toContain('アプリ開発');
+  });
+
+  it('HI-EXPORT-005c: null は未回答、空配列は回答済み 0 件として別表示する', () => {
+    const unanswered = buildHarnessCreatorHandoff({
+      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: null, knowledgeAssets: null },
+      generatedSections: null,
+    });
+    const answeredNone = buildHarnessCreatorHandoff({
+      formSnapshot: { ...BASE_FORM_SNAPSHOT, informationSources: [], knowledgeAssets: [] },
+      generatedSections: null,
+    });
+
+    expect(unanswered).toContain('## 情報源\n未回答');
+    expect(unanswered).toContain('## ナレッジ資産\n未回答');
+    expect(answeredNone).toContain('## 情報源\nなし');
+    expect(answeredNone).toContain('## ナレッジ資産\nなし');
   });
 });
 
@@ -141,6 +161,8 @@ describe('HI-EXPORT: システム開発向け引き渡しテキスト', () => {
     expect(text).toContain('少人数');
     expect(text).toContain('時間、予算');
     expect(text).toContain(BASE_FORM_SNAPSHOT.shareTarget);
+    expect(text).toContain('会計システム');
+    expect(text).toContain(BASE_FORM_SNAPSHOT.trueProblem ?? '');
   });
 
   it('HI-EXPORT-008: usagePurpose の値ごとにラベルが分岐する', () => {

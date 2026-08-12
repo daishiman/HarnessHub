@@ -33,6 +33,7 @@ import {
 } from '../../../../features/hearing-intake/profile-options.js';
 import {
   hearingIntakeStepIsValid,
+  informationSourcesValidationError,
   knowledgeAssetsValidationError,
 } from '../../../../features/hearing-intake/wizard-validation.js';
 import {
@@ -43,7 +44,7 @@ import {
 // 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
-const STORAGE_KEY = 'harness-hub:hearing-intake:draft:v1';
+const STORAGE_KEY = 'harness-hub:hearing-intake:draft:v2';
 
 const INITIAL_FORM: HearingSheetFormInput = {
   taskName: '',
@@ -58,15 +59,17 @@ const INITIAL_FORM: HearingSheetFormInput = {
   features: '',
   output: '',
   priority: 'medium',
-  usagePurpose: 'app_development',
-  expertise: 'novice',
-  role: 'individual',
-  context: 'business',
-  motivation: 'efficiency',
-  sharingIntent: 'self',
-  constraintTags: [],
-  shareTarget: '',
-  knowledgeAssets: [],
+  usagePurpose: null,
+  expertise: null,
+  role: null,
+  context: null,
+  motivation: null,
+  sharingIntent: null,
+  constraintTags: null,
+  shareTarget: null,
+  informationSources: null,
+  trueProblem: null,
+  knowledgeAssets: null,
 };
 
 interface HearingIntakeWizardProps {
@@ -81,9 +84,11 @@ interface HearingIntakeWizardProps {
 function ConstraintTagPicker({
   value,
   onToggle,
+  onSetNone,
 }: {
-  readonly value: readonly HearingConstraintTag[];
+  readonly value: readonly HearingConstraintTag[] | null;
   readonly onToggle: (tag: HearingConstraintTag) => void;
+  readonly onSetNone: () => void;
 }): ReactNode {
   return (
     <fieldset style={{ border: 'none', margin: 0, padding: 0 }}>
@@ -92,7 +97,7 @@ function ConstraintTagPicker({
       </legend>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--hh-space-2)' }}>
         {CONSTRAINT_TAG_OPTIONS.map((option) => {
-          const pressed = value.includes(option.value);
+          const pressed = value?.includes(option.value) ?? false;
           return (
             <Button
               key={option.value}
@@ -105,6 +110,14 @@ function ConstraintTagPicker({
             </Button>
           );
         })}
+        <Button
+          type="button"
+          variant={value?.length === 0 ? 'primary' : 'secondary'}
+          aria-pressed={value?.length === 0}
+          onClick={onSetNone}
+        >
+          特になし
+        </Button>
       </div>
     </fieldset>
   );
@@ -113,10 +126,12 @@ function ConstraintTagPicker({
 export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWizardProps): ReactNode {
   const draftStorageKey = `${STORAGE_KEY}:${tenantId}:${workspaceId}`;
   const [form, setForm] = useState<HearingSheetFormInput>(INITIAL_FORM);
-  // ナレッジ資産は「改行区切りテキスト」で入力させ、送信用配列は導出する。
-  // form.knowledgeAssets から毎回逆生成すると、末尾の空行が消えて次の項目を書き足せなくなるため、
-  // 生テキストはここで別管理し、変化のたびに配列側だけ同期する。
-  const [knowledgeAssetsText, setKnowledgeAssetsText] = useState(INITIAL_FORM.knowledgeAssets.join('\n'));
+  // 複数入力は「改行区切りテキスト」で入力させ、送信用配列を導出する。
+  // form の配列から毎回逆生成すると末尾の空行が消えるため、生テキストは別管理する。
+  const [informationSourcesText, setInformationSourcesText] = useState(
+    INITIAL_FORM.informationSources?.join('\n') ?? '',
+  );
+  const [knowledgeAssetsText, setKnowledgeAssetsText] = useState(INITIAL_FORM.knowledgeAssets?.join('\n') ?? '');
   const [activeIndex, setActiveIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,6 +145,9 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
       try {
         const parsed = JSON.parse(saved) as Partial<HearingSheetFormInput>;
         setForm({ ...INITIAL_FORM, ...parsed });
+        if (Array.isArray(parsed.informationSources)) {
+          setInformationSourcesText(parsed.informationSources.join('\n'));
+        }
         if (Array.isArray(parsed.knowledgeAssets)) setKnowledgeAssetsText(parsed.knowledgeAssets.join('\n'));
       } catch {
         sessionStorage.removeItem(draftStorageKey);
@@ -156,6 +174,13 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
       },
     [],
   );
+  const setOptionalText = useCallback(
+    (key: 'shareTarget' | 'trueProblem') =>
+      (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+        setForm((current) => ({ ...current, [key]: event.target.value === '' ? null : event.target.value }));
+      },
+    [],
+  );
   const setNumber = useCallback(
     (key: 'hours' | 'people' | 'salary') =>
       (event: ChangeEvent<HTMLInputElement>): void => {
@@ -169,16 +194,33 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const setSelect = useCallback(
     (key: 'usagePurpose' | 'expertise' | 'role' | 'context' | 'motivation' | 'sharingIntent') =>
       (event: ChangeEvent<HTMLSelectElement>): void => {
-        setForm((current) => ({ ...current, [key]: event.target.value }) as HearingSheetFormInput);
+        setForm(
+          (current) =>
+            ({ ...current, [key]: event.target.value === '' ? null : event.target.value }) as HearingSheetFormInput,
+        );
       },
     [],
   );
   const toggleConstraintTag = useCallback((tag: HearingConstraintTag): void => {
     setForm((current) => ({
       ...current,
-      constraintTags: current.constraintTags.includes(tag)
-        ? current.constraintTags.filter((existing) => existing !== tag)
-        : [...current.constraintTags, tag],
+      constraintTags: (current.constraintTags ?? []).includes(tag)
+        ? (current.constraintTags ?? []).filter((existing) => existing !== tag)
+        : [...(current.constraintTags ?? []), tag],
+    }));
+  }, []);
+  const setNoConstraintTags = useCallback((): void => {
+    setForm((current) => ({ ...current, constraintTags: [] }));
+  }, []);
+  const setInformationSources = useCallback((event: ChangeEvent<HTMLTextAreaElement>): void => {
+    const text = event.target.value;
+    setInformationSourcesText(text);
+    setForm((current) => ({
+      ...current,
+      informationSources: text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0),
     }));
   }, []);
   const setKnowledgeAssets = useCallback((event: ChangeEvent<HTMLTextAreaElement>): void => {
@@ -193,6 +235,7 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
     }));
   }, []);
 
+  const informationSourcesError = informationSourcesValidationError(form.informationSources);
   const knowledgeAssetsError = knowledgeAssetsValidationError(form.knowledgeAssets);
 
   const steps = useMemo<readonly WizardStep[]>(
@@ -290,57 +333,79 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
           <>
             <Select
               label="用途"
-              value={form.usagePurpose}
+              value={form.usagePurpose ?? ''}
               onChange={setSelect('usagePurpose')}
               options={USAGE_PURPOSE_OPTIONS}
-              required
+              placeholder="未回答"
             />
             <Select
               label="熟練度"
-              value={form.expertise}
+              value={form.expertise ?? ''}
               onChange={setSelect('expertise')}
               options={EXPERTISE_OPTIONS}
-              required
+              placeholder="未回答"
             />
-            <Select label="役割" value={form.role} onChange={setSelect('role')} options={ROLE_OPTIONS} required />
+            <Select
+              label="役割"
+              value={form.role ?? ''}
+              onChange={setSelect('role')}
+              options={ROLE_OPTIONS}
+              placeholder="未回答"
+            />
             <Select
               label="文脈"
-              value={form.context}
+              value={form.context ?? ''}
               onChange={setSelect('context')}
               options={CONTEXT_OPTIONS}
-              required
+              placeholder="未回答"
             />
             <Select
               label="動機"
-              value={form.motivation}
+              value={form.motivation ?? ''}
               onChange={setSelect('motivation')}
               options={MOTIVATION_OPTIONS}
-              required
+              placeholder="未回答"
             />
             <Select
               label="共有意図"
-              value={form.sharingIntent}
+              value={form.sharingIntent ?? ''}
               onChange={setSelect('sharingIntent')}
               options={SHARING_INTENT_OPTIONS}
-              required
+              placeholder="未回答"
             />
-            <ConstraintTagPicker value={form.constraintTags} onToggle={toggleConstraintTag} />
+            <ConstraintTagPicker
+              value={form.constraintTags}
+              onToggle={toggleConstraintTag}
+              onSetNone={setNoConstraintTags}
+            />
             <TextInput
               label="共有相手"
-              description="例: 自分のみ / チーム内 / 顧客への納品物"
+              description="任意。例: 自分のみ / チーム内 / 顧客への納品物"
               placeholder="自分のみ / チーム内 / 顧客への納品物"
-              value={form.shareTarget}
-              onChange={setText('shareTarget')}
+              value={form.shareTarget ?? ''}
+              onChange={setOptionalText('shareTarget')}
               maxLength={HEARING_SHEET_FORM_LIMITS.shortTextLength}
-              required
+            />
+            <Textarea
+              label="情報源"
+              description={`任意。現在参照しているシステム・資料・Web サイトなどを 1 行に 1 件で入力してください（0〜${HEARING_SHEET_FORM_LIMITS.informationSources} 件、1 件 ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内）。`}
+              value={informationSourcesText}
+              onChange={setInformationSources}
+              error={informationSourcesError}
+            />
+            <Textarea
+              label="真の課題"
+              description="任意。表面的な困りごとの奥で、今もっとも困っている根本的な問題を入力してください。"
+              value={form.trueProblem ?? ''}
+              onChange={setOptionalText('trueProblem')}
+              maxLength={HEARING_SHEET_FORM_LIMITS.requiredTextLength}
             />
             <Textarea
               label="ナレッジ資産"
-              description={`関連する社内資料・過去の対応記録・テンプレートなどを 1 行に 1 件で入力してください（1〜${HEARING_SHEET_FORM_LIMITS.knowledgeAssets} 件、1 件 ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内）。`}
+              description={`任意。利用できる社内資料・過去の対応記録・テンプレートなどを 1 行に 1 件で入力してください（0〜${HEARING_SHEET_FORM_LIMITS.knowledgeAssets} 件、1 件 ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内）。`}
               value={knowledgeAssetsText}
               onChange={setKnowledgeAssets}
               error={knowledgeAssetsError}
-              required
             />
           </>
         ),
@@ -390,7 +455,7 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
           <section aria-label="入力内容の確認">
             <p>業務名: {form.taskName}</p>
             <p>課題: {form.issue}</p>
-            <p>用途: {USAGE_PURPOSE_LABELS[form.usagePurpose]}</p>
+            <p>用途: {form.usagePurpose === null ? '未回答' : USAGE_PURPOSE_LABELS[form.usagePurpose]}</p>
             <p>
               削減時間の目安: 月あたり約 {previewMonthlySavedHours(form, DEFAULT_SHEET_REDUCTION_RATE).toFixed(1)} 時間
             </p>
@@ -404,10 +469,15 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
     ],
     [
       form,
+      informationSourcesError,
+      informationSourcesText,
       knowledgeAssetsError,
       knowledgeAssetsText,
+      setInformationSources,
       setKnowledgeAssets,
       setNumber,
+      setNoConstraintTags,
+      setOptionalText,
       setSelect,
       setText,
       toggleConstraintTag,

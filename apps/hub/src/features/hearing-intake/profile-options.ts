@@ -13,7 +13,7 @@ interface ProfileOption<T extends string> {
   readonly label: string;
 }
 
-export const LEGACY_UNANSWERED_LABEL = '未回答（旧形式のシート）';
+export const PROFILE_UNANSWERED_LABEL = '未回答';
 
 export const USAGE_PURPOSE_OPTIONS = [
   { value: 'app_development', label: 'アプリ開発' },

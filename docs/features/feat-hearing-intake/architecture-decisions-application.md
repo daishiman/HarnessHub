@@ -13,7 +13,7 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 
 本書は [architecture-decision-record.md](./architecture-decision-record.md) から、
 試算・AI キュー認可・UI・API 境界の詳細を責務単位で分離した P02 成果物である。
-判断内容は分割前から変更していない。
+判断内容は分割前を基礎とし、2026-08-12 の用途プロファイル追加契約を §8–9 に反映している。
 
 ## 6. AD-6: 試算は `packages/estimation` の公開 `estimateSavings` を単一呼び出しする
 
@@ -140,18 +140,19 @@ claim token・tenant・`ref_type/ref_id` の一致は repository の CAS
 
 | 画面 | route | 最小 role | 消費 API | 共通部品 | 主要素 |
 |---|---|---|---|---|---|
-| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 4 ステップ + 完了パネル |
+| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 5 ステップ + 完了パネル |
 | **S11** シート一覧 | `/sheets` | member | `GET /api/v1/sheets` | `DataTable` | 6 列 / モバイルはカード |
 | **S12** シート詳細 | `/sheets/[id]` | member | `GET /api/v1/sheets/:id`、admin: `PATCH`・`POST :id/regenerate` | `MarkdownView` | 生成本文 + snapshot + メタ |
 
-### S10: 4 ステップの割り当て (FormData 12 項目)
+### S10: 5 ステップの割り当て (必須 12 項目 + 任意 11 項目)
 
 | step | 項目 | 検証 |
 |---|---|---|
 | Step1 基本 | `taskName, company, applicant, domain` | step 単位 validation (必須) |
 | Step2 現状 | `issue, tools, hours, people, salary` | `hours`/`people`/`salary` は数値範囲検査 |
-| Step3 要望 | `features, output, priority` | 必須 + enum |
-| Step4 確認 + 試算 | 全項目の確認表示 | **時間削減の参考表示のみ・金額なし** (AD-6) |
+| Step3 用途プロファイル | `usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, trueProblem, knowledgeAssets` | 任意。未回答=`null`、複数入力の回答済み 0 件=`[]` |
+| Step4 要望 | `features, output, priority` | 必須 + enum |
+| Step5 確認 + 試算 | 全項目の確認表示 | **時間削減の参考表示のみ・金額なし** (AD-6) |
 
 - 進捗表示・戻る/次へ・キーボード操作・step 単位 validation は `packages/ui` の `StepWizard` (`StepWizardProps` / `WizardStep`) が担保する。**独自ウィザードを実装しない** (qa-022)。
 - 途中状態は `sessionStorage` に保持し、誤離脱ダイアログを出す。
@@ -199,8 +200,8 @@ sheets 系 5 エンドポイントの request/response 契約を `packages/schem
 
 | 契約名 | 対応 |
 |---|---|
-| `HearingSheetFormInput` | ウィザードが送る **12 項目** (`salary` を含む)。リクエスト境界でのみ存在する (AD-2) |
-| `HearingSheetFormSnapshot` | `form_json` に保存する **11 項目** (`salary` を含まない)。`HearingSheetFormInput.omit({ salary: true })` として導出し、二重定義しない (AD-2 / OPEN-2) |
+| `HearingSheetFormInput` | ウィザードが送る必須 12 項目 + 任意 11 項目 (`salary` を含む)。旧 12 項目 client も受け付ける (AD-2) |
+| `HearingSheetFormSnapshot` | `form_json` に保存する versioned 値オブジェクト (`salary` を含まない)。write は version 2、read は V1/無版を dual-read する (AD-2 / OPEN-2) |
 | `HearingSheetEstimate` | estimate snapshot (AD-6) |
 | `CreateSheetRequest` / `CreateSheetResponse` | `POST /sheets` |
 | `SheetListItem` | `GET /sheets` の item DTO (AD-8 の S11) |

@@ -14,6 +14,7 @@ export type {
   HearingSheetEstimate,
   HearingSheetFormInput,
   HearingSheetFormSnapshot,
+  HearingSheetFormSnapshotV1,
   HearingSheetStatus,
   HearingUsagePurpose,
   PulledAiJob,

@@ -37,6 +37,8 @@ const DETAIL: SheetDetail = {
     sharingIntent: 'small_group',
     constraintTags: [],
     shareTarget: 'チーム内',
+    informationSources: ['会計システム'],
+    trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
     knowledgeAssets: ['経理マニュアル'],
   },
   estimate_snapshot: { savedMinutesPerYear: 3_600, savedHoursPerYear: 60, savedAmountPerYear: 180_000 },

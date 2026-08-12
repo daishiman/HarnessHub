@@ -52,6 +52,8 @@ const FORM_INPUT: CreateSheetRequest = {
   sharingIntent: 'small_group',
   constraintTags: [],
   shareTarget: 'チーム内',
+  informationSources: ['Google Meet', 'Google Docs'],
+  trueProblem: '議事録作成が遅れ、会議後の判断と実行をすぐ始められないこと',
   knowledgeAssets: ['過去の議事録テンプレート'],
 };
 

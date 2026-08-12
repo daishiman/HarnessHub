@@ -170,6 +170,8 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
       sharingIntent: 'small_group' as const,
       constraintTags: [],
       shareTarget: 'チーム内',
+      informationSources: ['会計システム'],
+      trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
       knowledgeAssets: ['経理マニュアル'],
     };
     expect(createSheetRequestSchema.safeParse(form).success).toBe(true);

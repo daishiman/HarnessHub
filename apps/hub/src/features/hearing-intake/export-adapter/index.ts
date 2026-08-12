@@ -10,8 +10,8 @@ import {
   CONSTRAINT_TAG_LABELS,
   CONTEXT_LABELS,
   EXPERTISE_LABELS,
-  LEGACY_UNANSWERED_LABEL,
   MOTIVATION_LABELS,
+  PROFILE_UNANSWERED_LABEL,
   ROLE_LABELS,
   SHARING_INTENT_LABELS,
   USAGE_PURPOSE_LABELS,
@@ -31,22 +31,23 @@ const PRIORITY_LABELS: Readonly<Record<HearingSheetFormSnapshot['priority'], str
 };
 
 function formatConstraintTags(tags: HearingSheetFormSnapshot['constraintTags']): string {
-  if (tags === null) return LEGACY_UNANSWERED_LABEL;
+  if (tags === null) return PROFILE_UNANSWERED_LABEL;
   if (tags.length === 0) return 'なし';
   return tags.map((tag) => CONSTRAINT_TAG_LABELS[tag]).join('、');
 }
 
-function formatKnowledgeAssets(assets: HearingSheetFormSnapshot['knowledgeAssets']): string {
-  if (assets === null) return LEGACY_UNANSWERED_LABEL;
-  return assets.map((asset) => `- ${asset}`).join('\n');
+function formatProfileList(entries: readonly string[] | null): string {
+  if (entries === null) return PROFILE_UNANSWERED_LABEL;
+  if (entries.length === 0) return 'なし';
+  return entries.map((entry) => `- ${entry}`).join('\n');
 }
 
 function formatProfileAnswer<T extends string>(value: T | null, labels: Readonly<Record<T, string>>): string {
-  return value === null ? LEGACY_UNANSWERED_LABEL : labels[value];
+  return value === null ? PROFILE_UNANSWERED_LABEL : labels[value];
 }
 
 function formatProfileText(value: string | null): string {
-  return value ?? LEGACY_UNANSWERED_LABEL;
+  return value ?? PROFILE_UNANSWERED_LABEL;
 }
 
 function formatGeneratedSections(sections: GeneratedSections | null): string {
@@ -61,7 +62,7 @@ function formatGeneratedSections(sections: GeneratedSections | null): string {
 
 /**
  * HarnessCreator へそのまま貼り付けてハーネス構築に着手できるテキストを組み立てる。
- * 用途・真の課題・出力先・共有相手・ナレッジ資産・熟練度・制約・優先度・生成済みセクションを含める。
+ * 5 軸（出力先・情報源・共有相手・真の課題・ナレッジ資産）と用途プロファイルを、別の見出しで混ぜずに含める。
  */
 export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: BuildHandoffInput): string {
   const form = formSnapshot;
@@ -70,13 +71,17 @@ export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: 
     '',
     `## 用途\n${formatProfileAnswer(form.usagePurpose, USAGE_PURPOSE_LABELS)}`,
     '',
-    `## 真の課題\n${form.issue}`,
+    `## 現在の困りごと\n${form.issue}`,
+    '',
+    `## 真の課題\n${formatProfileText(form.trueProblem)}`,
+    '',
+    `## 情報源\n${formatProfileList(form.informationSources)}`,
     '',
     `## 出力先\n${form.output}`,
     '',
     `## 共有相手\n${formatProfileText(form.shareTarget)}`,
     '',
-    `## ナレッジ資産\n${formatKnowledgeAssets(form.knowledgeAssets)}`,
+    `## ナレッジ資産\n${formatProfileList(form.knowledgeAssets)}`,
     '',
     `## 依頼者の熟練度\n${formatProfileAnswer(form.expertise, EXPERTISE_LABELS)}`,
     '',
@@ -106,9 +111,17 @@ export function buildSystemOrchestratorHandoff({ formSnapshot, generatedSections
     '',
     `## 課題\n${form.issue}`,
     '',
+    `## 真の課題\n${formatProfileText(form.trueProblem)}`,
+    '',
+    `## 情報源\n${formatProfileList(form.informationSources)}`,
+    '',
     `## ほしい機能（画面・機能）\n${form.features}`,
     '',
     `## 希望する出力\n${form.output}`,
+    '',
+    `## 共有相手\n${formatProfileText(form.shareTarget)}`,
+    '',
+    `## ナレッジ資産\n${formatProfileList(form.knowledgeAssets)}`,
     '',
     `## 優先度\n${PRIORITY_LABELS[form.priority]}`,
     '',
@@ -120,7 +133,6 @@ export function buildSystemOrchestratorHandoff({ formSnapshot, generatedSections
     `- 動機: ${formatProfileAnswer(form.motivation, MOTIVATION_LABELS)}`,
     `- 共有意図: ${formatProfileAnswer(form.sharingIntent, SHARING_INTENT_LABELS)}`,
     `- 制約: ${formatConstraintTags(form.constraintTags)}`,
-    `- 共有相手: ${formatProfileText(form.shareTarget)}`,
     '',
     '## 生成済みセクション',
     formatGeneratedSections(generatedSections),
