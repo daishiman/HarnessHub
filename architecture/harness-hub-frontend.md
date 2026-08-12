@@ -280,7 +280,9 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 
 ## 2026-08-12 表示名 / 情報設計 / UI 一貫性 (MVP wave)
 
-詳細は行数上限のため [frontend-ui-mvp-wave](./harness-hub-frontend-ui-mvp-wave.md) へ分離した。
 要約: 表示名 (optional claims + IdBadge)、ListState / FilterBar / `q` 検索、
 `DateTimeText` 相対併記、screen-pattern gate、metrics `rankingTotals`。
-受領 [2026-08-12 wave](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+詳細・判断理由・検証結果は受領書を正本とする
+（[ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)）。
+製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と
+[UI foundation guide](../docs/frontend-ui-foundation-spec.md)。

@@ -52,7 +52,7 @@ beads_ids:
 |---|---|
 | `system-spec/` | R4-reopen なし（判断理由は §2）。auth/frontend 章の qa 番号追加なし |
 | `specs/` | UI 基盤追補の surface / 一覧検索 / 日時契約追記 |
-| `architecture/` | `harness-hub-frontend.md` 要約 + 詳細 `harness-hub-frontend-ui-mvp-wave.md`（300 行上限で分離） |
+| `architecture/` | `harness-hub-frontend.md` 要約。詳細は本受領書と UI 基盤追補 / foundation guide |
 | `features/` | `feat-hub-foundation.md` 追記、information-design sheets、本受領書 |
 | `tasks/` | feat-hub-foundation P13 追補実行記録（exact-13 に 14 個目は追加しない） |
 | `docs/` | UI foundation guide、screen-inventory |
