@@ -48,6 +48,7 @@ completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","
 implementation_readiness: {"checked_at":"2026-08-02T06:43:52Z","missing_sections":[],"status":"complete"}
 ---
 
+
 # 概要
 
 `.github/workflows/cwv.yml` は Core Web Vitals（表示速度など、利用者の体感品質を表す指標）を

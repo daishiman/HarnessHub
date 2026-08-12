@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1556,
+  "graph_revision": 1557,
   "nodes": [
     {
       "acceptance": [
@@ -59455,6 +59455,119 @@
       "title": "system-spec: R2-interview に誘導質問と論点束ねの機械検査が無く同型の質問が再発しうる",
       "tracker_binding": "beads",
       "updated_at": "2026-08-12T04:19:06.115941Z"
+    },
+    {
+      "acceptance": [
+        "認証必須 route に対する Lighthouse 実行が 401 で失敗せず、LCP / TBT (INP lab 代理) / CLS の実測値を取得できる",
+        "計測不能を pass にも good にも落とさず、未計測として fail-closed に扱い続けることがテストまたはゲートで担保される",
+        "feat-dual-catalog-web の acceptance-record.md acceptance 2 が実測値付きで判定済みになる"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9cgb",
+        "linked_at": "2026-08-02T06:48:10Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "本番反映後の実測で判明した CI 計測経路の欠落であり、製品機能ではなく品質計測基盤 (feat-hub-foundation 所管の cwv.yml) の独立した修正単位である",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T06:43:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "認証必須 route に対しても Lighthouse による CWV 実測が成立する計測経路を用意し、401 による計測不能と閾値超過による未達を区別できる状態にする",
+      "graph_node_id": "issue-hub-cwv-auth-required-route-unmeasurable-20260802",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T06:43:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "feat-dual-catalog-web の acceptance 2 (CWV 全指標 good を実測) は cwv.yml の Lighthouse 実測だけを根拠にするが、対象の /catalog は deny-by-default により未認証で 401 を返し、cwv.yml は認証済みセッションを持たない。計測経路が存在しないため、この受入条件は本番反映後も原理的に達成できず、HarnessHub-dhy ファミリーと対応する dev-graph node を完了にできない状態が続く",
+      "related_nodes": [
+        "issue-hub-cwv-tbt-over-budget-20260724",
+        "SYS-DUAL-CATALOG-WEB-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/cwv.yml",
+        "docs/features/feat-dual-catalog-web/acceptance-record.md",
+        "docs/features/feat-dual-catalog-web/release-record.md"
+      ],
+      "scope_in": [
+        "cwv.yml が認証必須 route を計測できる経路 (計測用セッション付与、計測可能な到達経路の用意、認証済み実行環境への切替のいずれか) を決定し実装する",
+        "計測不能 (401) と閾値超過を受領側で区別し、どちらも good と誤記録しない fail-closed を維持する",
+        "feat-dual-catalog-web の acceptance 2 を実測値付きで判定できる状態にする"
+      ],
+      "scope_out": [
+        "/catalog の認可設計そのものの緩和 (deny-by-default は仕様であり変更しない)",
+        "公開ルート / の First Load JS 削減と G13 予算ゲート (issue-hub-cwv-tbt-over-budget-20260724 が所管)",
+        "feat-dual-catalog-web 側の画面実装変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T06:43:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": ".github/workflows/cwv.yml",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "quality",
+        "cwv",
+        "hub",
+        "ci",
+        "measurement-path"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "cwv.yml が認証必須 route の CWV を計測できない (/catalog が未認証で 401)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-02T06:43:52Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
