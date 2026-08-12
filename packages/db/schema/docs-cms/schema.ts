@@ -9,6 +9,7 @@ import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const DOCUMENT_SCOPES = ['common', 'tenant'] as const;
 export const DOCUMENT_STATUSES = ['draft', 'published'] as const;
+export const DOCUMENT_FIELD_SOURCES = ['auto', 'manual'] as const;
 
 export const documents = sqliteTable(
   'documents',
@@ -23,6 +24,17 @@ export const documents = sqliteTable(
     updatedBy: text('updated_by').notNull(),
     createdAt: integer('created_at').notNull(),
     updatedAt: integer('updated_at').notNull(),
+    // 分類・カード表示用のメタデータ (feat: docs-cms-rich-editing)。
+    // 全カラム nullable/安全な default にして既存行に影響を与えない。
+    category: text('category'),
+    /** JSON 配列文字列。例 `["設計","API"]`。 */
+    tags: text('tags'),
+    thumbnailUrl: text('thumbnail_url'),
+    thumbnailSource: text('thumbnail_source', { enum: DOCUMENT_FIELD_SOURCES }).notNull().default('auto'),
+    excerpt: text('excerpt'),
+    excerptSource: text('excerpt_source', { enum: DOCUMENT_FIELD_SOURCES }).notNull().default('auto'),
+    /** JSON。例 `{"imageCount":2,"hasTable":true,"hasCode":false}`。常にサーバ側で自動算出する。 */
+    assetSummary: text('asset_summary'),
   },
   (t) => [
     index('documents_tenant_scope_updated_idx').on(t.tenantId, t.scope, t.updatedAt),

@@ -78,6 +78,13 @@
       "when": 1786508075298,
       "tag": "0010_notion-integration",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1786523070574,
+      "tag": "0011_docs-cms-cards-and-classification",
+      "breakpoints": true
     }
   ]
 }

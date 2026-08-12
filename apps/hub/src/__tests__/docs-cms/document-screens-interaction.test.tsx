@@ -33,6 +33,13 @@ const LIST_RESPONSE: DocumentListResponse = {
       updated_by: 'user-1',
       created_at: 1_700_000_000,
       updated_at: 1_700_000_000,
+      category: '運用',
+      tags: ['セットアップ'],
+      thumbnail_url: null,
+      thumbnail_source: 'auto',
+      excerpt: '導入手順の要約です。',
+      excerpt_source: 'auto',
+      asset_summary: { image_count: 1, has_table: false, has_code: true },
     },
   ],
   next_cursor: 'cursor-2',
@@ -48,6 +55,13 @@ const DOC: DocumentDetail = {
   updated_by: 'user-1',
   created_at: 1_700_000_000,
   updated_at: 1_700_000_000,
+  category: null,
+  tags: null,
+  thumbnail_url: null,
+  thumbnail_source: 'auto',
+  excerpt: null,
+  excerpt_source: 'auto',
+  asset_summary: null,
 };
 
 function jsonResponse(body: unknown, init: { readonly ok?: boolean; readonly status?: number } = {}): Response {
@@ -73,6 +87,17 @@ async function flush(): Promise<void> {
       await Promise.resolve();
     });
   }
+}
+
+async function findButtonByText(text: string): Promise<HTMLButtonElement> {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const button = [...container.querySelectorAll('button')].find((candidate) => candidate.textContent === text);
+    if (button !== undefined) return button;
+    // next/dynamic の module 解決は microtask だけでは完了しない場合があるため、
+    // 実装の遅延境界を保ったままテスト側で描画完了を待つ。
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+  }
+  throw new Error(`${text} ボタンがありません`);
 }
 
 beforeEach(() => {
@@ -226,8 +251,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     );
     expect(container.textContent).toContain(DOC.title);
 
-    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
-    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    const saveButton = await findButtonByText('保存する');
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
 
@@ -251,8 +275,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
       />,
     );
 
-    const saveButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '保存する');
-    if (saveButton === undefined) throw new Error('保存ボタンがありません');
+    const saveButton = await findButtonByText('保存する');
     await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
     await flush();
 

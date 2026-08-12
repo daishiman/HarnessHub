@@ -56,9 +56,15 @@ export type {
 export { InlineEditTable } from './components/InlineEditTable.js';
 export type { ListStateProps } from './components/ListState.js';
 export { ListState } from './components/ListState.js';
-export type { MarkdownEditorProps, MarkdownViewProps } from './components/Markdown.js';
+export type {
+  BadgeProps,
+  BadgeTone,
+  MarkdownEditorProps,
+  MarkdownImageUploadResult,
+  MarkdownViewProps,
+} from './components/Markdown.js';
 // --- Markdown ------------------------------------------------------------
-export { MarkdownEditor, MarkdownView, markdownSanitizeSchema } from './components/Markdown.js';
+export { Badge, MarkdownEditor, MarkdownView, markdownSanitizeSchema, slugify } from './components/Markdown.js';
 // --- 汎用モーダル / ボトムシート ------------------------------------------
 export type { ModalProps, ModalSize } from './components/Modal.js';
 export { Modal } from './components/Modal.js';

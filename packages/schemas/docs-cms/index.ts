@@ -1,10 +1,12 @@
 /** Document CMS 契約の公開入口。consumer は @harness-hub/schemas root から参照する。 */
 export type {
+  AssetSummary,
   CompleteDocDraftJobRequest,
   CreateDocumentRequest,
   DocDraftPayload,
   DocDraftResult,
   DocumentDetail,
+  DocumentFieldSource,
   DocumentListItem,
   DocumentListQuery,
   DocumentListResponse,
@@ -16,11 +18,13 @@ export type {
   UpdateDocumentRequest,
 } from './contracts.js';
 export {
+  assetSummarySchema,
   completeDocDraftJobRequestSchema,
   createDocumentRequestSchema,
   docDraftPayloadSchema,
   docDraftResultSchema,
   documentDetailSchema,
+  documentFieldSourceSchema,
   documentListItemSchema,
   documentListQuerySchema,
   documentListResponseSchema,

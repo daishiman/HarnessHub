@@ -7,25 +7,44 @@
  * 未保存の下書きとの差分を確認できるようにする。
  */
 import type { DocumentDetail, DocumentStatus } from '@harness-hub/schemas';
-import { Alert, Button, LiveStatus, Panel, Select, Stack, TextInput } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  LiveStatus,
+  type MarkdownImageUploadResult,
+  Panel,
+  Select,
+  Stack,
+  TextInput,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
+import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
-const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
-  loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
-});
+const MarkdownEditor = dynamic(
+  () => import('../../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
+  {
+    loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
+  },
+);
 
-const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
-  loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
-});
+const MarkdownView = dynamic(
+  () => import('../../../../../components/docs/markdown-view.js').then((module) => module.DocsMarkdownView),
+  {
+    loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
+  },
+);
 
-const ScreenHeader = dynamic(() => import('@harness-hub/ui').then((module) => module.ScreenHeader), {
-  ssr: false,
-  loading: () => <p aria-live="polite">編集画面を読み込んでいます…</p>,
-});
+const ScreenHeader = dynamic(
+  () => import('../../../../../components/docs/screen-header.js').then((module) => module.DocsScreenHeader),
+  {
+    ssr: false,
+    loading: () => <p aria-live="polite">編集画面を読み込んでいます…</p>,
+  },
+);
 
 interface PageProps {
   readonly params: Promise<{ readonly id: string }>;
@@ -43,6 +62,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const query = use(searchParams);
   const scope = useDashboardScope();
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  const { register: registerPendingImage, settleAfterSave: settlePendingImages } = usePendingDocumentImages(
+    tenantId,
+    workspaceId,
+  );
 
   const [saved, setSaved] = useState<DocumentDetail | null>(null);
   const [title, setTitle] = useState('');
@@ -73,6 +96,28 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
     void load();
   }, [load]);
 
+  // 編集画面では対象ドキュメントの id が既にあるため、画像アップロード用の
+  // 「暗黙の下書き作成」(新規作成画面側) は不要で、そのまま images エンドポイントへ投げられる
+  const uploadImage = useCallback(
+    async (file: File): Promise<MarkdownImageUploadResult> => {
+      const response = await fetch(`/api/v1/docs/${id}/images`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'content-type': file.type === '' ? 'application/octet-stream' : file.type,
+          'x-harness-tenant-id': tenantId,
+          'x-harness-workspace-id': workspaceId,
+        },
+        body: file,
+      });
+      if (!response.ok) throw new Error('画像をアップロードできませんでした。');
+      const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
+      registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
+      return { url: uploaded.url };
+    },
+    [id, tenantId, workspaceId, registerPendingImage],
+  );
+
   const save = async (): Promise<void> => {
     setSaving(true);
     try {
@@ -86,6 +131,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setError(null);
+      await settlePendingImages(doc.body_markdown);
       window.location.assign(`/docs/${id}?tenant=${tenantId}&workspace=${workspaceId}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '保存できませんでした。');
@@ -143,7 +189,13 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
                 { value: 'published', label: '公開済み' },
               ]}
             />
-            <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
+            <MarkdownEditor
+              label="本文"
+              value={bodyMarkdown}
+              onValueChange={setBodyMarkdown}
+              rows={16}
+              onImageUpload={uploadImage}
+            />
           </Stack>
         </Panel>
 

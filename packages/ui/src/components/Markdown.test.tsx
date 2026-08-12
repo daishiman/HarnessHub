@@ -93,6 +93,70 @@ describe('MarkdownView の XSS sanitize (SEC7)', () => {
     expect(markdownSanitizeSchema.tagNames).not.toContain('script');
     expect(markdownSanitizeSchema.tagNames).not.toContain('iframe');
   });
+
+  it('details/summary (トグル) だけを許可拡張し、on* 属性は依然として除去する', () => {
+    const { container } = renderWithUi(
+      <MarkdownView
+        content={'<details onclick="window.__pwned = true">\n<summary>見出し</summary>\n\n本文\n\n</details>'}
+      />,
+    );
+
+    expect(container.querySelector('details')).not.toBeNull();
+    expect(container.querySelector('summary')?.textContent).toBe('見出し');
+    expect(container.innerHTML).not.toContain('onclick');
+    expect(container.innerHTML).not.toContain('__pwned');
+  });
+
+  it('details 以外の未許可タグ拡張は起きない (script はやはり通さない)', () => {
+    const { container } = renderWithUi(
+      <MarkdownView content={'<details><summary>x</summary><script>window.__pwned = true;</script></details>'} />,
+    );
+
+    expect(container.querySelector('script')).toBeNull();
+    expect(container.innerHTML).not.toContain('__pwned');
+  });
+});
+
+describe('MarkdownView のブロック UI 拡張', () => {
+  it('> [!POINT] をコールアウトとして描画する', () => {
+    renderWithUi(<MarkdownView content={'> [!POINT]\n> 重要なポイントです'} />);
+
+    const note = screen.getByRole('note');
+    expect(note.getAttribute('data-hh-callout')).toBe('point');
+    expect(note.textContent).toContain('重要なポイントです');
+  });
+
+  it('> [!ATTENTION] をコールアウトとして描画する', () => {
+    renderWithUi(<MarkdownView content={'> [!ATTENTION]\n> 注意してください'} />);
+
+    const note = screen.getByRole('note');
+    expect(note.getAttribute('data-hh-callout')).toBe('attention');
+  });
+
+  it('コードブロックにコピー ボタンを表示する', () => {
+    renderWithUi(<MarkdownView content={'```\nconsole.log(1)\n```'} />);
+
+    expect(screen.getByText('コピー')).toBeDefined();
+  });
+
+  it('画像はボタンとして描画され、クリックで拡大表示できる', async () => {
+    const user = userEvent.setup();
+    renderWithUi(<MarkdownView content={'![説明](https://example.com/a.png)'} />);
+
+    const trigger = screen.getByRole('button', { name: /説明/ });
+    await user.click(trigger);
+
+    expect(screen.getByRole('dialog')).toBeDefined();
+  });
+
+  it('表を横スクロール可能なラッパーで包む', () => {
+    const content = ['| 列A | 列B |', '| --- | --- |', '| 1 | 2 |'].join('\n');
+    const { container } = renderWithUi(<MarkdownView content={content} />);
+
+    const table = screen.getByRole('table');
+    expect(table.parentElement?.getAttribute('style')).toContain('overflow-x');
+    expect(container.querySelector('table')).not.toBeNull();
+  });
 });
 
 describe('MarkdownEditor', () => {
