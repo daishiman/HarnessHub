@@ -106,6 +106,12 @@ import {
   type IdempotencyLedgerRepo,
   type SessionRevocationsRepo,
 } from './misc';
+import {
+  createNotionIntegrationRepo,
+  type NotionIntegrationRepo,
+  type NotionIntegrationRow as NotionIntegrationRowShape,
+  type UpsertNotionIntegrationInput as UpsertNotionIntegrationInputShape,
+} from './notion-integration';
 import { createPackagesRepo, type PackageRefRow as PackageRefRowShape, type PackagesRepo } from './packages';
 import {
   createPublishRequestsRepo,
@@ -207,6 +213,11 @@ export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;
 export type TenantDataObjectPage = TenantDataObjectPageShape;
 export type { TenantDataRepo };
+// feat-notion-integration。mode の値域は zod 側 (@harness-hub/schemas) が単一ソースを持つため、
+// ここでは行の型と入出力の型だけを公開する (他 studio extension と同じ理由)。
+export type NotionIntegrationRow = NotionIntegrationRowShape;
+export type UpsertNotionIntegrationInput = UpsertNotionIntegrationInputShape;
+export type { NotionIntegrationRepo };
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
@@ -346,4 +357,15 @@ export function createTenantDataRepository(input: TenantDataRepositoryInput): Te
     createTenantDataRegistry(input.bucket),
     createAuditRepo(input.adapter),
   );
+}
+
+/**
+ * notion_integrations の repository を組む facade。`createTenantDataRepository` と同じ理由
+ * (R2 の有無は関係ないが、`createCoreRepositories` の合成単位を素通りさせず独立した専用鍵経路にする)
+ * で `CoreRepositoriesInput` を受けて cipher を自前で組む。api_key の暗号化 purpose は
+ * `'tenant_data'` を再利用する (security-spec §4.1: purpose を無闇に増やさない)。
+ */
+export function createNotionIntegrationRepository(input: CoreRepositoriesInput): NotionIntegrationRepo {
+  const cipher = new ColumnCipher(input.adapter, input.kekBase64);
+  return createNotionIntegrationRepo(input.adapter, cipher);
 }
