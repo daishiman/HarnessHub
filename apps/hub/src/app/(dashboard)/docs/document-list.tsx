@@ -1,7 +1,14 @@
 'use client';
 
-import type { DocumentListItem, DocumentListResponse, DocumentScope, DocumentStatus } from '@harness-hub/schemas';
+import type {
+  AssetSummary,
+  DocumentListItem,
+  DocumentListResponse,
+  DocumentScope,
+  DocumentStatus,
+} from '@harness-hub/schemas';
 import {
+  Badge,
   Button,
   CursorPager,
   DataTable,
@@ -11,11 +18,11 @@ import {
   LiveStatus,
   ScopeChip,
   Select,
-  StatusChip,
   StickyHeaderOffset,
+  Textarea,
   TextInput,
 } from '@harness-hub/ui';
-import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { NotionOpenLink } from '../../../components/notion/notion-open-link.js';
@@ -35,14 +42,290 @@ interface DocumentFilters {
   readonly scope: DocumentScope | '';
   readonly status: DocumentStatus | '';
   readonly query: string;
+  readonly category: string;
+  /**
+   * タグの絞り込み。API 契約 (documentListQuerySchema) が `tag` 単数のみを受け付けるため、
+   * 「複数タグの AND/OR 検索」までは今回のスコープに含めず、単一タグでの完全一致に留める。
+   */
+  readonly tag: string;
 }
 
-const EMPTY_FILTERS: DocumentFilters = { scope: '', status: '', query: '' };
+const EMPTY_FILTERS: DocumentFilters = { scope: '', status: '', query: '', category: '', tag: '' };
+
+/** 公開/非公開の表示ラベル。既存 status の言い換えであり、外部への公開 URL の有無とは無関係 (全 API は認証必須のまま)。 */
+function publicStatusLabel(status: DocumentStatus): string {
+  return status === 'published' ? '公開' : '非公開';
+}
+
+interface EditDraft {
+  readonly category: string;
+  readonly tags: string;
+  readonly thumbnailUrl: string;
+  readonly excerpt: string;
+}
+
+type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+
+function toDraft(doc: DocumentListItem): EditDraft {
+  return {
+    category: doc.category ?? '',
+    tags: (doc.tags ?? []).join(', '),
+    thumbnailUrl: doc.thumbnail_url ?? '',
+    excerpt: doc.excerpt ?? '',
+  };
+}
+
+/**
+ * asset_summary は「無い」ことがあり得る (画像・表・コードのどれも含まない本文)。
+ * API 契約上は null だが、一覧のフィクスチャや将来のクエリ簡略化で undefined も
+ * 来かねないため、どちらも「バッジ無し」として同じに扱う (== null で両方拾う)。
+ */
+function assetBadges(summary: AssetSummary | null | undefined): ReactNode {
+  if (summary == null) return null;
+  const items: string[] = [];
+  if (summary.image_count > 0) items.push(`画像 ${summary.image_count}`);
+  if (summary.has_table) items.push('表あり');
+  if (summary.has_code) items.push('コードあり');
+  if (items.length === 0) return null;
+  return (
+    <>
+      {items.map((label) => (
+        <Badge key={label} tone="neutral">
+          {label}
+        </Badge>
+      ))}
+    </>
+  );
+}
+
+interface DocumentTitleCellProps {
+  readonly doc: DocumentListItem;
+  readonly tenantId: string;
+  readonly workspaceId: string;
+  readonly editing: boolean;
+  readonly onToggleEdit: () => void;
+}
+
+/**
+ * タイトル列の中身。DataTable は狭い画面でこの列の描画結果を `<p>` (見出しレベル "none") で
+ * 包むため、ここで使えるのは span/a/img/button のような phrasing content だけに限る
+ * (div を混ぜると HTML の構文規則で `<p>` が実描画時に途中で閉じられ、hydration がずれる)。
+ * 分類・要約の編集フォーム (div でラップされた TextInput/Textarea) はこの中に置けないため、
+ * 一覧の外の別領域 (DocumentEditPanel) に切り出し、ここでは編集領域を開くボタンだけを持つ。
+ */
+function DocumentTitleCell({ doc, tenantId, workspaceId, editing, onToggleEdit }: DocumentTitleCellProps): ReactNode {
+  const href = `/docs/${doc.id}?tenant=${tenantId}&workspace=${workspaceId}`;
+  const manuallyEdited = doc.thumbnail_source === 'manual' || doc.excerpt_source === 'manual';
+
+  return (
+    <span style={{ display: 'inline-flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--hh-space-2)' }}>
+      {doc.thumbnail_url == null ? null : (
+        // サムネイルは R2 由来の認証必須 URL で next/image の外部ローダー許可リスト対象ではないため素の img を使う
+        // biome-ignore lint/performance/noImgElement: 認可付き取得を最適化より優先する (上記コメント参照)
+        <img
+          src={doc.thumbnail_url}
+          alt=""
+          style={{
+            width: '2.5rem',
+            height: '2.5rem',
+            objectFit: 'cover',
+            borderRadius: 'var(--hh-radius-sm)',
+            flexShrink: 0,
+          }}
+        />
+      )}
+      <span style={{ display: 'inline-flex', flexDirection: 'column', gap: 'var(--hh-space-1)', minWidth: 0 }}>
+        <a href={href} data-hh-focusable="" style={{ color: 'var(--hh-color-primary)' }}>
+          {doc.title}
+        </a>
+        <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 'var(--hh-space-1)' }}>
+          {doc.category == null ? null : (
+            <Badge key="category" tone="info">
+              {doc.category}
+            </Badge>
+          )}
+          {manuallyEdited ? (
+            <Badge key="manual" tone="warning">
+              編集済み
+            </Badge>
+          ) : null}
+          {(doc.tags ?? []).map((tag) => (
+            <Badge key={tag} tone="neutral">
+              {tag}
+            </Badge>
+          ))}
+          {assetBadges(doc.asset_summary)}
+        </span>
+        {doc.excerpt == null ? null : (
+          <span
+            style={{
+              color: 'var(--hh-color-text-muted)',
+              fontSize: 'var(--hh-font-size-sm)',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {doc.excerpt}
+          </span>
+        )}
+        <button
+          type="button"
+          data-hh-focusable=""
+          aria-expanded={editing}
+          onClick={onToggleEdit}
+          style={{
+            alignSelf: 'flex-start',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            color: 'var(--hh-color-primary)',
+            fontSize: 'var(--hh-font-size-sm)',
+            cursor: 'pointer',
+          }}
+        >
+          {editing ? '編集を閉じる' : '分類・要約を編集'}
+        </button>
+      </span>
+    </span>
+  );
+}
+
+interface DocumentEditPanelProps {
+  readonly doc: DocumentListItem;
+  readonly tenantId: string;
+  readonly workspaceId: string;
+  readonly onSaved: (updated: DocumentListItem) => void;
+  readonly onClose: () => void;
+}
+
+/**
+ * 分類・要約の低摩擦 inline 編集欄。DataTable の行 (表セルでもカードでも `<p>` 相当) の
+ * 外に、選択中の 1 件だけを表示する独立領域として置く (div ベースの FormField を
+ * `<p>` の中に入れられないため — DocumentTitleCell のコメント参照)。
+ * 編集は各欄の onBlur で差分があれば即座に PATCH する (既存 [id]/route.ts の Partial 更新をそのまま使う)。
+ */
+function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose }: DocumentEditPanelProps): ReactNode {
+  const [draft, setDraft] = useState<EditDraft>(() => toDraft(doc));
+  const [saveState, setSaveState] = useState<SaveState>('idle');
+  const committedRef = useRef<EditDraft>(toDraft(doc));
+
+  // 親から新しい doc が来たら (再取得後など) 表示中の下書きも合わせる
+  useEffect(() => {
+    const next = toDraft(doc);
+    committedRef.current = next;
+    setDraft(next);
+  }, [doc]);
+
+  const commitIfChanged = useCallback(
+    async (patch: Partial<EditDraft>) => {
+      const next = { ...draft, ...patch };
+      const committed = committedRef.current;
+      const body: Record<string, unknown> = {};
+      if (next.category !== committed.category)
+        body.category = next.category.trim() === '' ? null : next.category.trim();
+      if (next.tags !== committed.tags) {
+        const tags = next.tags
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
+        body.tags = tags.length === 0 ? null : tags;
+      }
+      if (next.thumbnailUrl !== committed.thumbnailUrl) {
+        body.thumbnail_url = next.thumbnailUrl.trim() === '' ? null : next.thumbnailUrl.trim();
+      }
+      if (next.excerpt !== committed.excerpt) body.excerpt = next.excerpt.trim() === '' ? null : next.excerpt.trim();
+
+      if (Object.keys(body).length === 0) return;
+
+      setSaveState('saving');
+      try {
+        const response = await fetch(`/api/v1/docs/${doc.id}`, {
+          method: 'PATCH',
+          credentials: 'same-origin',
+          headers: {
+            'content-type': 'application/json',
+            'x-harness-tenant-id': tenantId,
+            'x-harness-workspace-id': workspaceId,
+          },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) throw new Error('保存できませんでした。');
+        const updated = (await response.json()) as DocumentListItem;
+        committedRef.current = toDraft(updated);
+        onSaved(updated);
+        setSaveState('saved');
+        setTimeout(() => setSaveState((current) => (current === 'saved' ? 'idle' : current)), 2000);
+      } catch {
+        setSaveState('error');
+      }
+    },
+    [draft, doc.id, tenantId, workspaceId, onSaved],
+  );
+
+  return (
+    <div
+      data-hh-doc-edit-panel=""
+      style={{
+        background: 'var(--hh-color-surface)',
+        border: '1px solid var(--hh-color-border)',
+        borderRadius: 'var(--hh-radius-lg)',
+        padding: 'var(--hh-space-4)',
+        display: 'grid',
+        gap: 'var(--hh-space-3)',
+        marginTop: 'var(--hh-space-3)',
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <strong>『{doc.title}』を編集</strong>
+        <Button type="button" variant="ghost" onClick={onClose}>
+          閉じる
+        </Button>
+      </div>
+      <TextInput
+        label="カテゴリ"
+        value={draft.category}
+        onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}
+        onBlur={() => void commitIfChanged({})}
+      />
+      <TextInput
+        label="タグ (カンマ区切り)"
+        value={draft.tags}
+        onChange={(event) => setDraft((current) => ({ ...current, tags: event.target.value }))}
+        onBlur={() => void commitIfChanged({})}
+      />
+      <TextInput
+        label="サムネイル画像 URL"
+        value={draft.thumbnailUrl}
+        onChange={(event) => setDraft((current) => ({ ...current, thumbnailUrl: event.target.value }))}
+        onBlur={() => void commitIfChanged({})}
+      />
+      <Textarea
+        label="要約"
+        rows={3}
+        value={draft.excerpt}
+        onChange={(event) => setDraft((current) => ({ ...current, excerpt: event.target.value }))}
+        onBlur={() => void commitIfChanged({})}
+      />
+      <LiveStatus visible>
+        {saveState === 'saving'
+          ? '保存しています…'
+          : saveState === 'saved'
+            ? '保存しました'
+            : saveState === 'error'
+              ? '保存できませんでした。もう一度お試しください。'
+              : ''}
+      </LiveStatus>
+    </div>
+  );
+}
 
 export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: DocumentListProps): ReactNode {
   const [rows, setRows] = useState<readonly DocumentListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   // 絞り込み条件は詳細画面へ行って戻るまで覚えておく (毎回入れ直させない)
   const {
     filters,
@@ -67,6 +350,8 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
       if (filters.status !== '') query.set('status', filters.status);
       // 空文字の `q` は送らない。契約側 (listSearchTermSchema) が空語を弾くため 400 になる
       if (filters.query !== '') query.set('q', filters.query);
+      if (filters.category !== '') query.set('category', filters.category);
+      if (filters.tag !== '') query.set('tag', filters.tag);
       if (cursor !== null) query.set('cursor', cursor);
       const response = await fetch(`/api/v1/docs?${query.toString()}`, {
         credentials: 'same-origin',
@@ -94,14 +379,23 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
     void load();
   }, [load, restored]);
 
+  const handleSaved = useCallback((updated: DocumentListItem) => {
+    setRows((current) => current.map((row) => (row.id === updated.id ? updated : row)));
+  }, []);
+
   // 0 件のときの言い方を分ける。絞り込んだ結果の 0 件に「まだありません」と出すと、
   // 条件を外せば見つかるものまで「存在しない」と読めてしまう
-  const hasFilters = filters.scope !== '' || filters.status !== '' || filters.query !== '';
+  const hasFilters =
+    filters.scope !== '' ||
+    filters.status !== '' ||
+    filters.query !== '' ||
+    filters.category !== '' ||
+    filters.tag !== '';
   const appliedFilters: readonly AppliedFilter[] = [
     ...(filters.scope === '' ? [] : [{ label: 'スコープ', value: filters.scope === 'common' ? '共通' : 'テナント' }]),
-    ...(filters.status === ''
-      ? []
-      : [{ label: '状態', value: filters.status === 'published' ? '公開済み' : '下書き' }]),
+    ...(filters.status === '' ? [] : [{ label: '状態', value: publicStatusLabel(filters.status) }]),
+    ...(filters.category.trim() === '' ? [] : [{ label: 'カテゴリ', value: filters.category.trim() }]),
+    ...(filters.tag.trim() === '' ? [] : [{ label: 'タグ', value: filters.tag.trim() }]),
     ...(filters.query.trim() === '' ? [] : [{ label: '検索', value: filters.query.trim() }]),
   ];
 
@@ -109,65 +403,69 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
     event.preventDefault();
     setCursor(null);
     setCursorHistory([]);
-    apply({ scope: draftFilters.scope, status: draftFilters.status, query: draftFilters.query.trim() });
+    apply({
+      scope: draftFilters.scope,
+      status: draftFilters.status,
+      query: draftFilters.query.trim(),
+      category: draftFilters.category.trim(),
+      tag: draftFilters.tag.trim(),
+    });
   };
 
-  /**
-   * 列の並びは「何の文書か → 誰向けか → 読める状態か → いつの版か」。
-   *
-   * 広い画面を表にするのは、手順書を探すときに「公開済みのものだけを更新順に見比べる」という
-   * 読み方をするため。カードだと 1 件ずつしか読めず、見比べに向かない。
-   * 狭い画面ではその見比べ自体が成立しないので、カードへ切り替えて 1 件を読み切れる形にする。
-   *
-   * **タイトル列だけ `width` を指定しない。** 他 3 列を必要な幅で固定して余りをタイトルに
-   * 吸わせると、長い題名でも折り返さずに済む (タイトルに幅を与えると、そこだけ 2 行になる)。
-   */
+  // 列構成は 4 列固定 (docs/screen-inventory.md の S15.LIST profile: wide/middle=table,
+  // narrow=card-collection)。タイトル列だけ幅を持たせない (LISTERG-06) — 幅を入れると
+  // 長い題名がその列の中だけで折り返し、行の高さが 1 行分ずれて見比べが崩れる。
   const columns = useMemo<readonly DataTableColumn<DocumentListItem>[]>(
     () => [
       {
         key: 'title',
         header: 'タイトル',
-        sortable: true,
-        // 行を名指しする列。横スクロールしても「どの文書の行か」を画面に残す
-        sticky: true,
-        value: (row) => row.title,
-        render: (row) => <a href={`/docs/${row.id}?tenant=${tenantId}&workspace=${workspaceId}`}>{row.title}</a>,
+        render: (row: DocumentListItem) => (
+          <DocumentTitleCell
+            doc={row}
+            tenantId={tenantId}
+            workspaceId={workspaceId}
+            editing={expandedId === row.id}
+            onToggleEdit={() => setExpandedId((current) => (current === row.id ? null : row.id))}
+          />
+        ),
+        value: (row: DocumentListItem) => row.title,
       },
       {
         key: 'scope',
         header: '適用範囲',
         width: '9rem',
-        value: (row) => (row.scope === 'common' ? '共通' : 'テナント'),
-        render: (row) => (
+        salience: 'lead',
+        value: (row: DocumentListItem) => (row.scope === 'common' ? '共通' : 'テナント'),
+        render: (row: DocumentListItem) => (
           <ScopeChip
             scope={row.scope === 'common' ? 'common' : 'tenant'}
             name={row.scope === 'common' ? '共通' : 'テナント'}
           />
         ),
-        salience: 'context',
       },
       {
         key: 'status',
         header: '状態',
-        sortable: true,
-        width: '9rem',
-        value: (row) => (row.status === 'published' ? '公開済み' : '下書き'),
-        render: (row) => <StatusChip domain="document" status={row.status} />,
-        salience: 'context',
+        width: '8rem',
+        salience: 'lead',
+        value: (row: DocumentListItem) => publicStatusLabel(row.status),
+        render: (row: DocumentListItem) => (
+          <Badge tone={row.status === 'published' ? 'primary' : 'neutral'}>{publicStatusLabel(row.status)}</Badge>
+        ),
       },
       {
         key: 'updated',
         header: '更新日時',
-        sortable: true,
         width: '13rem',
-        // 並べ替えは元の値で行う。整形した文字列で比較すると年をまたいだ順序が崩れる
-        value: (row) => row.updated_at,
-        render: (row) => <DateTimeText value={row.updated_at} />,
-        salience: 'metadata',
+        value: (row: DocumentListItem) => row.updated_at,
+        render: (row: DocumentListItem) => <DateTimeText value={row.updated_at} />,
       },
     ],
-    [tenantId, workspaceId],
+    [tenantId, workspaceId, expandedId],
   );
+
+  const expandedDoc = rows.find((row) => row.id === expandedId) ?? null;
 
   return (
     <>
@@ -199,9 +497,21 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
           }
           options={[
             { value: '', label: 'すべて' },
-            { value: 'draft', label: '下書き' },
-            { value: 'published', label: '公開済み' },
+            { value: 'draft', label: '非公開' },
+            { value: 'published', label: '公開' },
           ]}
+        />
+        <TextInput
+          label="カテゴリ"
+          description="完全一致で絞り込みます。"
+          value={draftFilters.category}
+          onChange={(event) => setDraftFilters((current) => ({ ...current, category: event.target.value }))}
+        />
+        <TextInput
+          label="タグ"
+          description="1 件だけ指定できます。"
+          value={draftFilters.tag}
+          onChange={(event) => setDraftFilters((current) => ({ ...current, tag: event.target.value }))}
         />
         {/* 検索欄は絞り込み欄の最後に置く。並びは全画面で「選ぶ条件 → 打ち込む条件」で統一する */}
         <TextInput
@@ -236,23 +546,31 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
           emptyTitle={hasFilters ? '条件に合うドキュメントがありません' : 'ドキュメントはまだありません'}
           emptyDescription={
             hasFilters
-              ? 'スコープ・状態・キーワードをゆるめてお試しください。'
+              ? 'スコープ・状態・カテゴリ・タグ・キーワードをゆるめてお試しください。'
               : '業務ツールの使い方や運用手順を、最初の 1 本から書き始められます。'
           }
         >
+          {/* 広い/中間の画面では表 (更新順に見比べて読む一覧のため)、狭い画面ではカードに
+              切り替える (docs/screen-inventory.md S15.LIST profile)。 */}
           <DataTable
             caption="ドキュメント一覧"
             columns={columns}
             rows={rows}
             rowKey={(row) => row.id}
             loading={loading}
-            stickyHeader
             narrowAs="card-collection"
-            // 並べ替えは取得済みの 25 件の中だけで効く。全件が並ぶと誤解されると
-            // 「上位が抜けている」と読まれてしまうため、範囲を先に断っておく
-            note="並べ替えはこのページに表示中の分が対象です (広い画面では列の見出しから、狭い画面では並び替えの選択欄から操作できます)。"
           />
         </ListState>
+
+        {expandedDoc === null ? null : (
+          <DocumentEditPanel
+            doc={expandedDoc}
+            tenantId={tenantId}
+            workspaceId={workspaceId}
+            onSaved={handleSaved}
+            onClose={() => setExpandedId(null)}
+          />
+        )}
       </div>
 
       <CursorPager
