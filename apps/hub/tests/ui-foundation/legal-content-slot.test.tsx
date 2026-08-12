@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 /**
- * LEGALSLOT-01〜06: /legal の本文の差し込み口 (HarnessHub-5yen)。
+ * LEGALSLOT-01〜09: /legal の本文の差し込み口と文書内ナビゲーション。
  *
  * 本文そのものは法務確認を経たものにしか置き換えられないため、ここで固定するのは
  * 「確認前の文面を画面に出さないこと」と「差し替えが 1 か所で済むこと」。
@@ -20,7 +20,12 @@ function render(node: ReactNode): string {
   return renderToStaticMarkup(<UiProvider>{node}</UiProvider>);
 }
 
+function renderLegalDocument(): Document {
+  return new DOMParser().parseFromString(`<!DOCTYPE html>${render(<LegalPage />)}`, 'text/html');
+}
+
 const draft: LegalDocument = {
+  slug: 'terms',
   title: '利用規約',
   approved: false,
   revisedOn: null,
@@ -72,13 +77,46 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
   });
 
   it('LEGALSLOT-06: 画面は本文を持たず、確認前の文書は見出しと準備中の断りだけを出す', () => {
-    const html = render(<LegalPage />);
+    const document = renderLegalDocument();
     for (const entry of LEGAL_DOCUMENTS) {
       // 文書があること自体は分かる (どこへ掲載されるのかが読める) が、中身は出さない。
-      expect(html).toContain(entry.title);
+      expect(document.getElementById(entry.slug)).not.toBeNull();
+      expect(document.body.textContent).toContain(entry.title);
       if (entry.approved) continue;
-      expect(html).not.toContain(entry.lead);
-      for (const section of entry.sections) expect(html).not.toContain(section.heading);
+      expect(document.body.textContent).not.toContain(entry.lead);
+      for (const section of entry.sections) expect(document.body.textContent).not.toContain(section.heading);
+    }
+    expect(document.querySelectorAll('[role="tab"]')).toHaveLength(0);
+    expect(document.querySelectorAll('#terms, #privacy')).toHaveLength(2);
+  });
+
+  it('LEGALSLOT-07: 上部 nav は通常のフラグメントリンクで両文書へ直接到達できる', () => {
+    const document = renderLegalDocument();
+    const nav = document.querySelector('nav[aria-label="このページの文書"]');
+    expect(nav).not.toBeNull();
+    expect([...(nav?.querySelectorAll('a') ?? [])].map((link) => link.getAttribute('href'))).toStrictEqual([
+      '#terms',
+      '#privacy',
+    ]);
+  });
+
+  it('LEGALSLOT-08: 各リンク先は共有可能な id とキーボード用フォーカス対象を持つ', () => {
+    const document = renderLegalDocument();
+    for (const entry of LEGAL_DOCUMENTS) {
+      const target = document.getElementById(entry.slug);
+      expect(target?.getAttribute('tabindex')).toBe('-1');
+      expect((target as HTMLElement | null)?.style.scrollMarginBlockStart).toContain('--hh-shell-header-offset');
+    }
+  });
+
+  it('LEGALSLOT-09: 文書内 nav は印刷対象から外れ、本文は印刷対象のまま残る', () => {
+    const document = renderLegalDocument();
+    expect(document.querySelector('nav[aria-label="このページの文書"]')?.hasAttribute('data-print-exclude')).toBe(true);
+    expect([...document.querySelectorAll('style')].map((style) => style.textContent).join('\n')).toContain(
+      '@media print { [data-print-exclude] { display: none !important; } }',
+    );
+    for (const entry of LEGAL_DOCUMENTS) {
+      expect(document.getElementById(entry.slug)?.hasAttribute('data-print-exclude')).toBe(false);
     }
   });
 });
