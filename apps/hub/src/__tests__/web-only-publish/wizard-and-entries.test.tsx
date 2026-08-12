@@ -124,6 +124,11 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
     expect(screen.getByLabelText(/公開範囲/)).toBeDefined();
     expect(screen.getByLabelText(/パッケージ \(ZIP\)/)).toBeDefined();
     expect(screen.getByText(/Web アプリの公開には Publisher CLI が必要/)).toBeDefined();
+
+    const deviceApprovalLink = screen.getByRole('link', { name: '別タブで Device 承認を開く' });
+    expect(deviceApprovalLink.getAttribute('href')).toBe('/device');
+    expect(deviceApprovalLink.getAttribute('target')).toBe('_blank');
+    expect(deviceApprovalLink.getAttribute('rel')).toBe('noopener noreferrer');
   });
 
   it('WOP-W-003: 公開 ID を状態確認へ伝播し、H7 未成立の導入リンクを成功扱いで出さない', async () => {
