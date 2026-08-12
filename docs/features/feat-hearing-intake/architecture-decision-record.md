@@ -81,7 +81,9 @@ requirements-baseline §3.1 は scope_in に「HearingSheet/**FormData** エン�
 
 FormData は独立テーブルを持たない。`hearing_sheets.form_json` (TEXT) に格納される**値オブジェクト**として設計し、型の正本は `packages/schemas/hearing-intake/` の zod スキーマに置く。
 
-**2026-08-12 追補 (HarnessHub-370h / PR #705):** 入力は FormData 28 項目、保存 snapshot は `salary` を除く 27 項目。旧 11 項目 snapshot は読取時だけ `storedHearingSheetFormSnapshotSchema` で `unknown` / 空配列へ補完する。用途プロファイル・依頼パターン・参考 URL を含む。スクリーンショット実体は `tenant_data_objects`、メタは `hearing_screenshots`、公開共有は `hearing_share_tokens` (token ハッシュのみ) が担う。
+**2026-08-12 追補 (HarnessHub-370h / PR #705):** 入力は FormData 30 項目、保存 snapshot は `salary` を除く 29 項目。旧 11 項目 snapshot は読取時だけ `storedHearingSheetFormSnapshotSchema` で `unknown` / 空配列へ補完する。用途プロファイル・依頼パターン・参考 URL を含む。スクリーンショット実体は `tenant_data_objects`、メタは `hearing_screenshots`、公開共有は `hearing_share_tokens` (token ハッシュのみ) が担う。
+
+**2026-08-12 追補 (issue-hearing-sheet-overhaul):** profile/priority enum を既存値破壊なしで加算。フィールド数は 30/29 のまま。S10 は 7 画面。作成時添付ステージングを追加。
 
 ### 根拠
 

@@ -9,12 +9,12 @@ feature_package_id: feature-package/feat-hearing-intake
 
 ## S10〜S12の日常運用
 
-1. memberは `/sheets/new` の8画面ウィザード (FormData 28項目) を入力する。上位の4大工程 (基本情報/業務詳細/要件/確認) は維持し、用途プロファイル・依頼パターン・参考URLを含む。
-2. 送信成功時に `HS-xxxx` と「生成中」を確認する。年収は試算だけに使われ保存されない。
+1. memberは `/sheets/new` の7画面ウィザード (FormData 30項目) を入力する。上位の4大工程 (基本情報/業務詳細/要件/確認) は維持し、用途プロファイル・依頼パターン・参考URL・作成時添付を含む。
+2. 送信成功時に `HS-xxxx` と「生成中」を確認する。年収は試算だけに使われ保存されない。作成時にステージングした添付は送信後に順次アップロードされ、一部失敗しても成功分だけ残る。
 3. workerはDevice Flow token (`aijob:process`) で `/api/v1/ai-jobs/pull` を呼ぶ。
 4. 生成成功時は `/complete`、失敗時は `/fail` へ同じclaim tokenで書き戻す。
-5. S11 `/sheets` で状態を確認し、S12 `/sheets/[id]` でsanitize済みMarkdownを読む。
-6. S12 でスクリーンショットを添付できる (PNG/JPEG/WebP)。Claude Code への引き渡しはトークン発行後に表示される指示文を1回だけコピーする。失効は S12 の無効化操作。
+5. S11 `/sheets` で状態を確認し、S12 `/sheets/[id]` でsanitize済みMarkdownと申請時入力の全項目を読む。
+6. S12 でも追加の添付ができる (画像/動画/CSV/Excel、25MB)。Claude Code への引き渡しはトークン発行後に表示される指示文を1回だけコピーする。失効は S12 の無効化操作。
 7. status変更と再生成はworkspace-admin以上だけが行う。memberへ管理操作を代行させない。
 
 S11/S12は`generating`の間だけ30秒ごとに再取得する。Markdownの安全確認は共通

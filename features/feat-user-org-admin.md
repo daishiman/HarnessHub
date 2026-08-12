@@ -96,6 +96,12 @@ workspace-admin がユーザーの role・部門・年収係数を管理でき�
 - feat-domain-model-db
 - feat-auth-tenancy
 
+## MVP 追補 (2026-08-12 / issue-hearing-sheet-overhaul)
+
+- S17 個別ダッシュボード (`/users/[id]`) に、API で取得済みだった **email** と **最終ログイン日時** を読み取り表示する。
+- 編集対象ではなく定義リストの読み取り項目。一覧 (S17) では出さず詳細のみ。
+- 情報設計: `docs/features/feat-user-org-admin/information-design/S17-detail.md`。
+
 ## Handoff
 
 ### Post-merge 状態（2026-08-07）

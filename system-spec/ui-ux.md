@@ -174,3 +174,9 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 - DateTimeText（相対併記）、ListState / FilterBar、screen-pattern gate は UI 契約の追補。新規 qa 番号なし。R4-reopen 不要。
 - route-local 遅延読込は既存画面の初期JSだけを減らし、loading文言と操作契約を維持する。screen-pattern gate は動的 import 先も検査するため、新規 qa 番号なし。R4-reopen 不要。
 - 正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+
+## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul)
+
+- S10 は 7 画面ウィザード + 作成時添付ステージング。S12 は申請時入力の全項目表示。
+- S17 個別詳細は email / 最終ログインを読み取り表示。
+- 情報設計の正本: `docs/features/feat-hearing-intake/information-design/` と `docs/features/feat-user-org-admin/information-design/S17-detail.md`。
