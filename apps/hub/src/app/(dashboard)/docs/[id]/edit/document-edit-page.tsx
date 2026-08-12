@@ -20,6 +20,7 @@ import {
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
+import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
@@ -172,6 +173,9 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
       <Stack gap={4}>
         {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
+
+        {/* 連携済みなら編集画面からも Notion を開けるようにする (S18 Notion連携) */}
+        <NotionOpenLink tenantId={tenantId} workspaceId={workspaceId} />
 
         <Panel title="編集">
           <Stack gap={4}>

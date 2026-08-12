@@ -24,6 +24,7 @@ import dynamic from 'next/dynamic';
 import { type CSSProperties, type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
+import { NotionOpenLink } from '../../../components/notion/notion-open-link.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 const DocumentEditPanel = dynamic(() => import('./document-edit-panel.js').then((module) => module.DocumentEditPanel), {
@@ -412,6 +413,8 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
           待てば出るのか・そもそも無いのか・やり直すべきなのかが分からない
           (frontend-ui-foundation-spec §3)。出し分けは共通の ListState に任せる */}
       <div style={{ padding: 'var(--hh-space-4)' }}>
+        {/* 連携済みなら一覧の上に「Notionで開く」導線を出す (S18 Notion連携) */}
+        <NotionOpenLink tenantId={tenantId} workspaceId={workspaceId} />
         {/* 読み込めなかったときに件数を読み上げない (0 件と失敗の取り違えを声でも起こさない) */}
         <LiveStatus>
           {error !== null
