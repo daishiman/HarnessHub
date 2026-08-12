@@ -116,7 +116,7 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 - 所属 workspace が **1 件**のときは自動選択し、選択画面を挟まない。切替 UI も出さず現在値の表示のみとする。
 - 所属 workspace が **2 件以上**のときは Workspace 選択画面を挟み、選択後に本来の遷移先へ進む。
 - 切替は共通シェルから常時可能とする。切替時は新 scope の応答が返る前に旧 scope の内容を表示対象外にする (qa-118 【1】の scope 変更時契約を継承)。
-- 共通シェルの切替は desktop / mobile で同じ server-only UI を使い、現在の Workspace は状態表示としてリンクにしない。切替 UI のために client JS を追加しない。
+- 共通シェルの切替は desktop / mobile で同じ server-first UI を使い、現在の Workspace は状態表示としてリンクにしない。`details` の外側クリック・Escape・別メニューとの排他開閉だけを共通の小さな client island が担い、切替リンク自体は素の `<a>` による document 遷移を維持する。
 - 切替後は、既存の安全な相対着地先解決を通した `returnTo` へ戻る。絶対 URL・スキーム付き・protocol-relative は既定着地へ落とす。
 - cookie を設定する受け口は即時 redirect で最終画面へ直行せず、scope 固有情報を含まない server intermediate 文書を先に返す。中間文書を commit した後に新 scope の画面へ進めることで、最終応答待ちの間に旧 scope の業務内容を残さない。
 

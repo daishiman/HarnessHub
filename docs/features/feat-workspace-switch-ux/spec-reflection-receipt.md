@@ -53,3 +53,12 @@ status: "accepted_with_release_pending"
 ## 500 行制約
 
 `WorkspaceSwitcher.tsx` 135 行、関連テスト 174 行。分割不要。
+
+## 2026-08-13 追補 (開閉専用 client island)
+
+- **仕様影響あり (reflected)**: server-only 文言を server-first に更新。切替は document 遷移のまま、
+  外側クリック・Escape・排他開閉だけを `TransientDisclosure` が担う。
+- 反映先: `features/feat-workspace-switch-ux.md`、`specs/harness-hub-post-signin-workspace-scope-addendum.md`、
+  `architecture/harness-hub-frontend.md`、`docs/frontend-spec.md`、本メモ、
+  [統合受領書](../feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。
+- graph node: `issue-ui-disclosure-empty-state-20260813` / Beads: `HarnessHub-0wj9`（関連 epic `HarnessHub-f91a`）

@@ -14,6 +14,8 @@ export function DocumentListLazy(props: {
   readonly workspaceId: string;
   readonly initialQuery?: string;
   readonly sessionRole?: SessionRole | null;
+  /** server page で docs.write_tenant を一度だけ判定した結果。 */
+  readonly canCreateDocument?: boolean;
 }): ReactNode {
   return <DocumentList {...props} />;
 }

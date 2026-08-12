@@ -2,11 +2,11 @@
  * 共通ヘッダー (frontend-spec §3.0)。
  *
  * ワークスペース表示・全文検索・通知ベル・アバターメニューを 1 本の bar にまとめる。
- * 4 つとも client JS 無しで成立させている:
+ * 基本動作は HTML の標準機能で成立させている:
  *  - 検索は素の GET フォーム (JS が落ちても検索できる)
  *  - 通知はリンク + 件数バッジ
- *  - アカウントメニューは `<details>` の開閉 (キーボード操作はブラウザ実装に乗る)
- * これにより全画面に載るヘッダーが First Load JS 予算を食わない。
+ *  - アカウントメニューは `<details>` の標準開閉を土台にする
+ * 外側クリック・Escape・別メニューとの排他的な開閉だけを、小さな client island に閉じ込める。
  */
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -14,6 +14,7 @@ import { IdBadge } from '../components/IdBadge.js';
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar, visuallyHidden } from '../internal/style.js';
 import { shellHeaderMinHeight } from './sticky-stack.js';
+import { TransientDisclosure } from './TransientDisclosure.js';
 import { type ShellWorkspaceOption, WorkspaceSwitcher } from './WorkspaceSwitcher.js';
 
 export interface ShellAccountLink {
@@ -147,8 +148,8 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
           サイドバーが実在する md 以上でだけ出す (トグル自体のクラスは buildShellCss 側で持つ)。 */}
       {sidebarToggle}
 
-      {/* viewport で隠さず、同じ server-only 部品を全幅で使う。client JS を増やさず、
-          desktop / mobile の双方から Workspace を認識・切替できる。 */}
+      {/* viewport で隠さず、同じ server-first UI を全幅で使う。開閉専用の小さな
+          client island だけを共有し、desktop / mobile の双方から Workspace を認識・切替できる。 */}
       <div style={{ flex: '0 1 12rem', minWidth: 0 }}>
         <WorkspaceSwitcher
           label={workspaceLabel}
@@ -278,8 +279,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
         ) : null}
       </a>
 
-      {/* details/summary の開閉に任せると、Enter/Space・Esc・外側クリックの面倒を負わずに済む */}
-      <details style={{ position: 'relative' }}>
+      <TransientDisclosure style={{ position: 'relative' }}>
         <summary
           data-hh-focusable=""
           aria-label={accountMenuLabel}
@@ -341,7 +341,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
             </li>
           </ul>
         </div>
-      </details>
+      </TransientDisclosure>
     </header>
   );
 }

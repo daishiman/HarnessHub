@@ -117,11 +117,12 @@ describe('受入 1・3: 切替 UI を出す条件', () => {
 });
 
 describe('受入 4: 切替直後に旧 scope の内容を表示しない', () => {
-  it('切替 UI は client JS を持たず、server intermediate 経路へ document 遷移する', () => {
+  it('切替先は client router を使わず、server intermediate 経路へ document 遷移する', () => {
     const source = readFileSync(path.resolve(SRC_DIR, '../../../packages/ui/src/shell/WorkspaceSwitcher.tsx'), 'utf8');
     const routeSource = readFileSync(path.resolve(SRC_DIR, 'app/signin/workspace/route.ts'), 'utf8');
 
-    // next/link / use client を掴んだ瞬間に router cache と client bundle の境界へ戻る。
+    // WorkspaceSwitcher 自体は Server Component のままにし、切替リンクへ next/link を使わない。
+    // 開閉だけを担う子 client island は、document 遷移の契約には影響しない。
     expect(source).not.toContain('next/link');
     expect(source.split('\n').map((line) => line.trim())).not.toContain("'use client';");
     // redirect 一発では旧 document が最終応答まで残るため、200 の中間文書を先に返す実装を固定する。

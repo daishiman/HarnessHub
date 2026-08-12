@@ -221,7 +221,9 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 - `(dashboard)` / `(workspace)` layout は server component `HubShell` を共有する。current pathname は認可完了後に middleware が内部 request header `x-hh-pathname` へ載せ、`usePathname()` のためだけに全 shell を client component 化しない。
 - signed session の active claim を `SessionRole` (`member` / `workspace-admin` / `provider-admin`) として読み、実在 route だけを navigation model へ投影する。API 認可を最終決定者としたまま、UI も role 未確定時に管理導線を出さない。
 - `packages/ui` は ShellSidebar / ShellHeader / ShellFooter / MobileTabBar、Panel / ScreenHeader / ActionLink、Icon、Modal / BottomSheet を所有する。`apps/hub` は scope、identity、route と業務内容だけを結線する。
-- navigation の「その他」は server-first な `details/summary` disclosure とし、modal contract を適用しない。操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
+- navigation の「その他」・Workspace 切替・アカウントメニューは server-first な `details/summary` disclosure とし、modal contract を適用しない。共通 client island は同時に 1 つへ制限し、外側クリック・Escape・別 disclosure の開始で閉じる。Escape は開閉元へ戻し、外側クリック先のフォーカスは奪わない。
+- 操作用 Modal / BottomSheet / ConfirmDialog は focus trap、Esc、focus 復帰、scroll lock を共通 hook で担保する。
+- Modal / BottomSheet は既定で light dismiss を許可するが、未保存入力を持つ面は `dismissible=false` とし、保存または破棄確認なしには閉じない。
 - 破壊操作は `ConfirmDialog` の `reversible` を必須とする。汎用 Modal を実行確認へ流用せず、sticky header より上の overlay layer で背面操作を防ぐ。
 - 正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) qa-206 / qa-207、受領は [共通シェル仕様反映受領書](../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) を参照する。
 
@@ -236,9 +238,8 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 
 ## 2026-08-10 Workspace 切替と Web 完結公開 (MVP)
 
-- **WorkspaceSwitcher** は `packages/ui` の server component として desktop / mobile の
-  共通シェルに常設する。所属 1 件では現在値の表示のみ、2 件以上では `<details>` と素の
-  `<a>` で切替候補を出し、client JS を増やさない。現在 Workspace はリンクにしない。
+- **WorkspaceSwitcher** は `packages/ui` の server component として desktop / mobile の共通シェルに常設する。
+  所属 1 件では現在値のみ、2 件以上では `<details>` と素の `<a>` で候補を出す。開閉だけを小さな client island に閉じ込め、切替は client router を使わず、現在 Workspace はリンクにしない。
 - 切替先 URL は `/signin/workspace` 経由の安全な同一 origin `returnTo` とする。受け口は
   cookie 設定後に scope 固有の業務データを含まない server intermediate 文書を先に返し、
   文書 commit 後に新 scope の画面へ進める（旧 scope の残像を避ける）。
@@ -296,5 +297,4 @@ S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表
 作成時添付ステージングと profile enum 加算を含む。正本は frontend-spec。
 
 ## 2026-08-12 S15 Docs CMS rich surface
-
-- 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。画像/Markdown 装飾は S15 情報設計を正本とする。
+- 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。0件は権限別作成CTA/絞込解除。画像/Markdown は S15 正本。

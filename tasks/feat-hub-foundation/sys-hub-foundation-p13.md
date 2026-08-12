@@ -133,3 +133,12 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   `StickyHeaderOffset` を必要画面だけへ配置。task spec / production build / G13 / focused test を再実行する。
 - 受領: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
 - 残: HarnessHub-5yen（法務本文）、HarnessHub-7mc6（Linux VRT）、HarnessHub-alyy（session cookie 上限）。
+
+## 2026-08-13 disclosure / dismissible / Docs empty
+
+- 公開単位: `issue-ui-disclosure-empty-state-20260813`（Beads `HarnessHub-0wj9`、関連 epic `HarnessHub-f91a`）。
+- exact-13 に 14 個目は追加しない。P13 後 writeback。
+- `TransientDisclosure` で navigation 一時メニューの light dismiss / Escape / 排他開閉。
+- Modal / BottomSheet は `dismissible` で未保存破棄を防ぐ。
+- Docs S15 empty は権限別 CTA と絞込解除。受領は
+  [ui-disclosure-empty-state-20260813-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。

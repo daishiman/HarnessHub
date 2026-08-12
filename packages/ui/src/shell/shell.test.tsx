@@ -179,6 +179,53 @@ describe('ShellHeader', () => {
     expect(screen.getByRole('link', { name: 'サインアウト' }).getAttribute('href')).toBe('/signout');
   });
 
+  it('別メニューを開くと前を閉じ、Escape は開閉元へフォーカスを戻す', async () => {
+    const user = userEvent.setup();
+    renderWithUi(
+      <ShellHeader
+        {...headerProps}
+        workspaceSwitchLabel="ワークスペースを切り替える"
+        workspaceOptions={[
+          { href: '/w/ws-1', label: 'ws-1', isIdentifier: false, current: true },
+          { href: '/w/ws-2', label: 'ws-2', isIdentifier: false, current: false },
+        ]}
+      />,
+    );
+
+    const workspaceSummary = screen.getByLabelText('ワークスペースを切り替える');
+    const workspaceDetails = workspaceSummary.closest('details');
+    const accountSummary = screen.getByLabelText('アカウントメニュー');
+    const accountDetails = accountSummary.closest('details');
+
+    await user.click(workspaceSummary);
+    expect(workspaceDetails?.open).toBe(true);
+
+    await user.click(accountSummary);
+    expect(workspaceDetails?.open).toBe(false);
+    expect(accountDetails?.open).toBe(true);
+    expect(document.activeElement).toBe(accountSummary);
+
+    await user.keyboard('{Escape}');
+    expect(accountDetails?.open).toBe(false);
+    expect(document.activeElement).toBe(accountSummary);
+  });
+
+  it('外側をクリックすると閉じ、クリック先からフォーカスを奪わない', async () => {
+    const user = userEvent.setup();
+    renderWithUi(<ShellHeader {...headerProps} />);
+
+    const summary = screen.getByLabelText('アカウントメニュー');
+    const details = summary.closest('details');
+    const search = screen.getByRole('searchbox');
+
+    await user.click(summary);
+    expect(details?.open).toBe(true);
+
+    await user.click(search);
+    expect(details?.open).toBe(false);
+    expect(document.activeElement).toBe(search);
+  });
+
   it('モバイル向けの画面タイトルを出せる', () => {
     renderWithUi(<ShellHeader {...headerProps} screenTitle="ヒアリングシート" />);
 
@@ -238,7 +285,7 @@ describe('ShellHeader', () => {
     expect(container.querySelector('[data-hh-workspace-switcher] [data-hh-id-badge]')).toBeNull();
   });
 
-  it('WorkspaceSwitcher は desktop-only に閉じず、モバイルでも同じ server-only UI を使う', () => {
+  it('WorkspaceSwitcher は desktop-only に閉じず、モバイルでも同じ UI を使う', () => {
     const { container } = renderWithUi(
       <ShellHeader
         {...headerProps}
@@ -299,7 +346,7 @@ describe('MobileTabBar', () => {
     expect(overflow.closest('details')).not.toBeNull();
   });
 
-  it('その他シートは details の標準開閉で開く (開閉のための JS を全画面へ配らない)', async () => {
+  it('その他シートは details の標準操作で開閉する', async () => {
     const user = userEvent.setup();
     renderWithUi(
       <MobileTabBar items={navItems.slice(0, 4)} moreItems={[navItems[4] as ShellNavItem]} label="ボトムタブ" />,
@@ -314,6 +361,30 @@ describe('MobileTabBar', () => {
 
     await user.click(summary);
     expect(details?.open).toBe(false);
+  });
+
+  it('その他シートも外側クリックと Escape の共通規則に従う', async () => {
+    const user = userEvent.setup();
+    renderWithUi(
+      <div>
+        <button type="button">別の設定</button>
+        <MobileTabBar items={navItems.slice(0, 4)} moreItems={[navItems[4] as ShellNavItem]} label="ボトムタブ" />
+      </div>,
+    );
+
+    const summary = screen.getByRole('navigation', { name: 'ボトムタブ' }).querySelector('summary') as HTMLElement;
+    const details = summary.closest('details');
+
+    await user.click(summary);
+    await user.keyboard('{Escape}');
+    expect(details?.open).toBe(false);
+    expect(document.activeElement).toBe(summary);
+
+    await user.click(summary);
+    const outsideButton = screen.getByRole('button', { name: '別の設定' });
+    await user.click(outsideButton);
+    expect(details?.open).toBe(false);
+    expect(document.activeElement).toBe(outsideButton);
   });
 
   it('シート内の項目が現在地なら「その他」自身も現在地として示す', () => {

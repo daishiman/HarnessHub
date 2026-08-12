@@ -7,18 +7,16 @@
  * 表示・非表示は CSS 側 (`.hh-shell__tabbar`) が担当し、
  * この部品は < md でしか見えない前提で書いている。
  *
- * **サーバ部品のまま (`'use client'` を付けない) にしてある。**
- * ここは全画面に載る唯一の対話部品なので、client 化すると開閉のためだけの JS が
- * 全 route の First Load JS に乗る (実測 +7.8 KiB / 予算 120 KiB は残り数 KiB しか無い)。
- * 「その他」の開閉は `<details>/<summary>` の標準機能に寄せ、見た目だけ CSS で整える。
- * disclosure (開閉) は dialog と違って focus trap を必要としないため、
- * ナビの overflow としては標準要素で十分に成立する。
+ * 部品全体は Server Component のまま保ち、「その他」の `<details>/<summary>` だけを
+ * 共通の小さな client island にする。dialog と違って focus trap は持たせず、外側クリック・
+ * Escape・別メニューとの排他的な開閉とフォーカス復帰だけを追加する。
  */
 import type { ReactNode } from 'react';
 
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import { isCurrentNav, type ShellNavItem } from './nav-model.js';
+import { TransientDisclosure } from './TransientDisclosure.js';
 
 /** ボトムタブに置ける主要 slot の数 (「その他」を除く)。 */
 export const mobileTabPrimarySlots = 4;
@@ -70,7 +68,7 @@ export function MobileTabBar({
         );
       })}
 
-      <details className="hh-shell__more">
+      <TransientDisclosure className="hh-shell__more">
         <summary
           className="hh-shell__more-summary"
           data-hh-focusable=""
@@ -113,7 +111,7 @@ export function MobileTabBar({
             })}
           </ul>
         </div>
-      </details>
+      </TransientDisclosure>
     </nav>
   );
 }

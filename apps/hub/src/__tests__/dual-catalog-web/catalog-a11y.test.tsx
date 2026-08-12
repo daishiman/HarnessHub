@@ -163,6 +163,9 @@ async function renderScreen(screen: ReactElement, title: string): Promise<Root> 
   await act(async () => {
     root.render(createElement(UiProvider, null, screen));
   });
+  // /catalog・/sheets は next/dynamic (ssr:false) で本体を遅延読み込みする。
+  // ここで解決を待ち切らないと、後続の検査がすべて loading fallback を見てしまう。
+  await flushAsync();
   return root;
 }
 
@@ -171,7 +174,7 @@ async function renderScreen(screen: ReactElement, title: string): Promise<Root> 
  * マイクロタスク 1 回では動的読み込みの loading fallback が残り、中身が空のまま検査してしまう。
  */
 async function flushAsync(): Promise<void> {
-  for (let i = 0; i < 6; i += 1) {
+  for (let i = 0; i < 20; i += 1) {
     await act(async () => {
       await new Promise((resolve) => {
         setTimeout(resolve, 0);

@@ -9,6 +9,7 @@ import type {
   SessionRole,
 } from '@harness-hub/schemas';
 import {
+  ActionLink,
   Button,
   CursorPager,
   DataTable,
@@ -42,6 +43,8 @@ interface DocumentListProps {
    */
   readonly initialQuery?: string;
   readonly sessionRole?: SessionRole | null;
+  /** server page で docs.write_tenant を一度だけ判定した結果。安全側の既定値は false。 */
+  readonly canCreateDocument?: boolean;
 }
 
 interface DocumentFilters {
@@ -229,6 +232,7 @@ export function DocumentList({
   workspaceId,
   initialQuery = '',
   sessionRole = null,
+  canCreateDocument = false,
 }: DocumentListProps): ReactNode {
   const [rows, setRows] = useState<readonly DocumentListItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -318,6 +322,12 @@ export function DocumentList({
       category: draftFilters.category.trim(),
       tag: draftFilters.tag.trim(),
     });
+  };
+
+  const clearFilters = (): void => {
+    setCursor(null);
+    setCursorHistory([]);
+    apply(EMPTY_FILTERS);
   };
 
   // 列構成は 4 列固定 (docs/screen-inventory.md の S15.LIST profile: wide/middle=table,
@@ -471,7 +481,18 @@ export function DocumentList({
           emptyDescription={
             hasFilters
               ? 'スコープ・状態・カテゴリ・タグ・キーワードをゆるめてお試しください。'
-              : '業務ツールの使い方や運用手順を、最初の 1 本から書き始められます。'
+              : canCreateDocument
+                ? '業務ツールの使い方や運用手順を、最初の 1 本から書き始められます。'
+                : 'ドキュメントを作成するには、workspace-admin（ワークスペース管理者）以上の権限が必要です。'
+          }
+          emptyAction={
+            hasFilters ? (
+              <Button onClick={clearFilters}>絞り込みを解除</Button>
+            ) : canCreateDocument ? (
+              <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
+                最初のドキュメントを作成
+              </ActionLink>
+            ) : undefined
           }
         >
           {/* 広い/中間の画面では表 (更新順に見比べて読む一覧のため)、狭い画面ではカードに

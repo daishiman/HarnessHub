@@ -131,15 +131,19 @@ describe('Modal', () => {
     expect(document.body.style.overflow).toBe('');
   });
 
-  it('closeOnBackdrop=false のときは背景の閉じる導線を出さない', () => {
+  it('dismissible=false のときは背景・Escape・閉じるボタンで未保存内容を破棄しない', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
     const { container } = renderWithUi(
-      <Modal open title="公開ウィザード" closeOnBackdrop={false} onClose={vi.fn()}>
+      <Modal open title="公開ウィザード" dismissible={false} onClose={onClose}>
         <p>本文</p>
       </Modal>,
     );
 
-    // 背景を押して入力途中の内容を失う事故を避ける
     expect(container.querySelectorAll('button[aria-hidden="true"]')).toHaveLength(0);
+    expect(screen.queryByRole('button', { name: '閉じる' })).toBeNull();
+    await user.keyboard('{Escape}');
+    expect(onClose).not.toHaveBeenCalled();
   });
 });
 
@@ -167,6 +171,21 @@ describe('BottomSheet', () => {
     );
 
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('dismissible=false のときは背景・Escape・閉じるボタンで未保存内容を破棄しない', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    const { container } = renderWithUi(
+      <BottomSheet open title="入力中の設定" dismissible={false} onClose={onClose}>
+        <button type="button">保存して閉じる</button>
+      </BottomSheet>,
+    );
+
+    expect(container.querySelectorAll('button[aria-hidden="true"]')).toHaveLength(0);
+    expect(screen.queryByRole('button', { name: '閉じる' })).toBeNull();
+    await user.keyboard('{Escape}');
+    expect(onClose).not.toHaveBeenCalled();
   });
 });
 
