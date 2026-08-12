@@ -12,8 +12,8 @@ iteration: null
 title: "md 本文の repo 内 path 参照 dangling を機械検査するゲートを新設する"
 owners: ["daishiman"]
 created_at: "2026-08-12T04:16:20.271143Z"
-updated_at: "2026-08-12T04:16:20.271143Z"
-status: "active"
+updated_at: "2026-08-12T06:41:20.761015Z"
+status: "done"
 depends_on: []
 related_nodes: []
 resource_scope: ["scripts/lint-doc-internal-link-integrity.py","tests/scripts-root/test_root__lint_doc_internal_link_integrity.py",".github/workflows/governance-check.yml","scripts/run-ci-checks.sh"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-12T05:21:38Z","evidence_refs":["scripts/lint-doc-internal-link-integrity.py","tests/scripts-root/test_root__lint_doc_internal_link_integrity.py"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-11T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

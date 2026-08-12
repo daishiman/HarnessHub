@@ -93,9 +93,11 @@ F-2 (必須) および F-1/F-3/F-4 (推奨) は、本レビュー確定と同一
 |---|---|---|
 | AD-1 (スキーマ) | §3.1 `builds` / §3.2 `build_stage_events` | **F-1 解決 (より強い形で)**。本レビューは「build_stage_events に tenant_id が無い」ことを前提に D4 例外の明文化と JOIN 分離テストを求めたが、landed ADR は `tenant_id` / `workspace_id` を NOT NULL 列として持たせ、索引も `(tenant_id,workspace_id,build_id,occurred_at,id)` とした。例外を文書化するのではなく例外自体を消しているため、指摘は不成立となる |
 | AD-2 (S13 構成) | §8 S13画面構成 | **F-4 解決**。§8 で axe 違反 0 を受入条件、LCP/INP/CLS の good 維持を明記し、§12 検証計画・§13 受入対応表にも証跡 (axe 0 report / CWV good evidence) として載っている |
-| AD-3 (5 endpoint) | §4 5 endpoint契約 | **F-2 解決 (write owner が異なる)**。landed ADR は `PATCH /api/v1/builds/{id}` の strict partial 許可列に `publish_request_id` を含めることで設定経路を与える。本レビューの是正案 (`POST /builds/:id/stage` の body で受理し同一トランザクションで設定) とは write owner が違うので、**publish ゲートと設定を同一トランザクションで完結させる要件が PATCH 経路でも満たされるかは P04/P05 で確認すること** (本レビューでは未検証) |
+| AD-3 (5 endpoint) | §4 5 endpoint契約 | **F-2 解決**。F-2 の原指摘は `publish_request_id` の設定経路が無いことであり、landed ADR は `PATCH /api/v1/builds/{id}` の strict partial 許可列にこの列を含めて解決した。本レビューの是正案には `POST /builds/:id/stage` で設定と遷移を同一トランザクションにする提案も含まれたが、これは「設定経路不在」とは別の原子性確認である。landed ADR の PATCH と publish 遷移の間で原子性が必要か、また必要な場合に中間状態をどう扱うかは **F-2 を再オープンせず、別の P04 テスト設計 / P05 実装確認事項**とする |
 | AD-4 (状態機械) | §5 7工程の状態機械と単一transaction | 指摘なし |
 | AD-5 (PublishRequest 接続) | §6 PublishRequestを正本とする公開連携 | 上記 F-2 と同じ |
 | AD-6 (監査 + B9) | §7 B9共有認可表 | **F-3 解決**。§7 の表に `builds.create` / `builds.update` / `builds.stage_change` の 3 operation id が role 別の allow/deny 付きで列挙されている |
 
 本記録を残す理由は、P03 の独立レビューが実行された事実と、そこで検出された 4 件の論点が landed ADR で解消されている対応関係を追跡可能にするためである。**P05 実装の入力として参照すべきは landed ADR であり、本記録の AD-x 番号ではない。**
+
+したがって現在の状態は、**F-1/F-3/F-4 は解決、F-2 の原指摘 (設定経路不在) も解決**である。PATCH による関連付けと publish 遷移を跨ぐ transaction atomicity (原子性＝途中状態を見せず、まとめて成功または失敗する性質) は、原指摘の未解決ではなく、P04/P05 が landed ADR に対して別途確認する事項である。

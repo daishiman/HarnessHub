@@ -62,22 +62,34 @@ jobs:
           name: vrt-diff
           path: apps/hub/artifacts/vrt/
           if-no-files-found: ignore
+      # 更新モードが途中で落ちても、それまでに書き出した画像を見失わない。
+      # manifest は「どの画像を目視確認すべきか」の正本として artifact に同梱する。
+      - name: 更新した Linux 版基準画像の manifest
+        if: ${{ always() && inputs.update_baseline }}
+        run: |
+          mkdir -p apps/hub/artifacts/vrt
+          git diff --name-only --diff-filter=ACMRTUXB -- apps/hub/tests/browser/__vrt__/linux/ \
+            | sed -n '/\.png$/p' \
+            | sort \
+            > apps/hub/artifacts/vrt/baseline-update-manifest.txt
       # 更新モードで撮り直した Linux 版基準画像を持ち帰る。手元 (macOS) では
       # Linux のラスタライズ結果を再現できないため、ここでしか生成できない。
       - name: 更新した Linux 版基準画像
-        if: inputs.update_baseline
+        if: ${{ always() && inputs.update_baseline }}
         uses: actions/upload-artifact@v4
         with:
           name: vrt-baseline-linux
-          path: apps/hub/tests/browser/__vrt__/linux/
+          path: |
+            apps/hub/tests/browser/__vrt__/linux/
+            apps/hub/artifacts/vrt/baseline-update-manifest.txt
           if-no-files-found: error
       # 更新モードの run は 1 枚も比較していない。成功で終えると、branch protection や
       # 人の目に「Linux の VRT が緑」と映り、未検査が差分なしと同じ結果に潰れる。
       # 意図した操作であっても最後に必ず落とし、緑として再利用できないようにする。
       - name: 更新モードは検証ではないことを明示して落とす
-        if: inputs.update_baseline
+        if: ${{ always() && inputs.update_baseline }}
         run: |
           echo '::error::update_baseline=true の run は基準画像を撮り直しただけで、比較を 1 件も行っていない。'
-          echo '::error::artifact vrt-baseline-linux を取得し、画像を目視で確認してから commit すること。'
+          echo '::error::artifact vrt-baseline-linux を取得し、manifest に列挙された全画像を目視確認してから commit すること。'
           echo '::error::検証結果としては無効なので、この run の緑/赤をゲートに使ってはならない。'
           exit 1

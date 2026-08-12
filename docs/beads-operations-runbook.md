@@ -177,7 +177,9 @@ Dolt の push は「リモートに既にある chunk（データの塊）」を
 +refs/heads/*:refs/remotes/origin/*
 ```
 
-そのため clone や worktree 追加の直後は **ローカルに `refs/dolt/data` が 1 本も存在しない**。この状態の push は「リモートには何も無い」と見なして全 table file を送ろうとするため、manifest 更新が肥大して 400 になる。
+そのため、Dolt ref をまだ取得していない **新しい clone** ではローカルに `refs/dolt/data` が 1 本も存在しないことがある。この状態の push は「リモートには何も無い」と見なして全 table file を送ろうとするため、manifest 更新が肥大して 400 になる。
+
+`git worktree` で追加した worktree は、元の clone と git common dir（全 worktree が共有する Git 管理領域）を使う。`refs/dolt/data` と `remote.origin.fetch` も共有されるため、**worktree の追加だけで ref や refspec が消えることはない**。ただし hook bundle や merge driver など、このリポジトリ固有の配線を確認する文脈では installer の再実行に意味がある。
 
 ### 5.2 診断
 
@@ -192,7 +194,16 @@ git for-each-ref 'refs/dolt/*'
 git config --get-all remote.origin.fetch
 ```
 
-### 5.3 復旧と恒久化
+### 5.3 新しい clone の初期化・復旧・恒久化
+
+新しい clone で Beads を初期化するときの正規経路は、公式が推奨する `bd bootstrap` である。これは `origin` の `refs/dolt/data` を自動検出し、Dolt DB と将来の push / pull 用 remote を安全に構成する。
+
+```bash
+bd bootstrap --dry-run
+bd bootstrap --yes
+```
+
+既存の Beads DB があり、ローカルの baseline ref だけが欠けている場合は、次の 1 回の fetch で復旧できる。
 
 基準を 1 本引けば、通常の（force なしの）push がそのまま通る。
 
@@ -201,7 +212,9 @@ git fetch origin '+refs/dolt/data:refs/dolt/data'
 bd dolt push
 ```
 
-恒久対策は `scripts/install-git-hooks.sh` に組み込んである。clone や worktree を作ったら hook 設置と同じタイミングでこれを 1 回実行すれば、`remote.origin.fetch` へ `+refs/dolt/*:refs/dolt/*` が追加され、以降は通常の `git fetch origin` が基準を維持する。既に設定済みなら追記しない（冪等＝何回実行しても結果が同じ）。
+`scripts/install-git-hooks.sh` は正規の `bd bootstrap` を置き換えるものではなく、既存 remote の baseline を補完する安全網である。`origin` がありローカル ref が無いときだけ remote を照会し、remote ref が存在すれば exact ref を 1 回取得して存在を再確認する。さらに `remote.origin.fetch` へ `+refs/dolt/*:refs/dolt/*` を追加し、以降の通常の `git fetch origin` で baseline を維持する。remote に ref 自体がまだ無い新規 repository は正常にスキップし、照会・取得に失敗した場合は中途半端な成功として扱わず停止する。
+
+この設定は clone 内の全 worktree で共有されるため、worktree ごとの再追加は不要である。既に設定済みなら追記しない（冪等＝何回実行しても結果が同じ）。hook・ガード・merge driver 等の配線確認として installer を再実行することはできる。
 
 ```bash
 bash scripts/install-git-hooks.sh
@@ -225,6 +238,7 @@ bash scripts/install-git-hooks.sh
 - `.beads/README.md` — Beads 一般の使い方
 - `bd prime` — ワークフロー全体のコンテキスト
 - [SYNC_CONCEPTS.md](https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md) — 同期アーキテクチャとアンチパターン
+- [DOLT.md](https://github.com/gastownhall/beads/blob/main/docs/DOLT.md) — `bd bootstrap` を含む公式の Dolt 初期化・同期手順
 - `plugins/dev-graph/scripts/bd-bridge.py` — beads 変更の単一経路
 - `plugins/dev-graph/hooks/guard-graph-schema.py` — 経路強制の実装
 - `scripts/install-git-hooks.sh` — clone ごとの hook 設置と `refs/dolt/*` refspec の恒久化（§5.3）

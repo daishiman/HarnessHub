@@ -12,8 +12,8 @@ iteration: null
 title: "cwv.yml が認証必須 route の CWV を計測できない (/catalog が未認証で 401)"
 owners: ["daishiman"]
 created_at: "2026-08-02T06:43:52Z"
-updated_at: "2026-08-02T06:43:52Z"
-status: "draft"
+updated_at: "2026-08-12T06:45:14.172605Z"
+status: "done"
 depends_on: []
 related_nodes: ["issue-hub-cwv-tbt-over-budget-20260724","SYS-DUAL-CATALOG-WEB-P13"]
 resource_scope: [".github/workflows/cwv.yml","docs/features/feat-dual-catalog-web/acceptance-record.md","docs/features/feat-dual-catalog-web/release-record.md"]
@@ -44,10 +44,9 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-08T05:23:06Z","evidence_refs":["issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-02T06:43:52Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 

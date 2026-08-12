@@ -12,7 +12,7 @@ iteration: null
 title: "監査台帳・状態遷移・C19 最終レビュー handoff"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T13:11:25.607829Z"
+updated_at: "2026-08-12T07:04:13.927499Z"
 status: "active"
 depends_on: ["issue-audit-fork-ledger-forgery-20260728"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
@@ -37,8 +37,8 @@ classification_confidence: 0.99
 classification_reason: "exact-13 の凍結本文を変更せず最終公開条件だけを追跡する単一責務の P13 handoff"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-audit-ledger-c19-final-review-handoff.md","confidence":0.99}]
 issue_linkage: null
-tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-3vmz","linked_at":"2026-08-09T00:00:00Z","sync_state":"linked"}
+tracker_binding: "none"
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

@@ -11,12 +11,12 @@ target_date: null
 iteration: null
 title: "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:10:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+created_at: "2026-08-10T13:41:31Z"
+updated_at: "2026-08-12T07:16:05.456847Z"
 status: "active"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P12"]
-related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
-resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/features/build-pipeline-board/__tests__/","docs/features/feat-build-pipeline-board/release-notes.md"]
+related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend","feat-hearing-intake","feat-publish-pipeline","feat-hub-foundation","feat-auth-tenancy","feat-domain-model-db"]
+resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/(dashboard)/pipeline/","apps/hub/src/app/api/v1/builds/","apps/hub/src/__tests__/build-pipeline-board/","docs/features/feat-build-pipeline-board/release-notes.md","system-spec/frontend.md","system-spec/backend.md","system-spec/database.md","system-spec/security.md","architecture/harness-hub-frontend.md","architecture/harness-hub-backend.md"]
 purpose: "feat-build-pipeline-board の P13 を実行する: リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
 scope_in: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/features/build-pipeline-board/__tests__/","docs/features/feat-build-pipeline-board/release-notes.md"]
@@ -31,8 +31,8 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-10T13:41:31Z","origin_kind":"system-dev-planner","source_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-13-release-deploy.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.85
 classification_reason: "P12 の runbook を踏まえ feat-hub-foundation の既存パイプラインで Cloudflare Workers 本番反映とスモークテストを行う P13 タスク"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p13.md","confidence":0.85}]

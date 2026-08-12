@@ -13,7 +13,7 @@ iteration: null
 title: "uypz 複数監査 dispatch schema 1.2 最終レビュー handoff"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T07:39:51Z"
+updated_at: "2026-08-12T07:06:31.780649Z"
 status: "active"
 depends_on: ["issue-audit-multi-dispatch-null-verdict-20260808"]
 related_nodes: ["feat-dev-pipeline-improvement","issue-audit-fork-ledger-forgery-20260728","arch-harness-hub-dev-workflow","arch-harness-hub-testing-qa"]
@@ -38,8 +38,8 @@ classification_confidence: 0.99
 classification_reason: "follow-up issue の最終公開条件だけを追跡する単一責務 handoff"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-uypz-audit-multi-dispatch-handoff.md","confidence":0.99}]
 issue_linkage: null
-tracker_binding: "beads"
-beads_linkage: {"bd_issue_id":"HarnessHub-uypz","linked_at":"2026-08-11T00:00:00Z","sync_state":"linked"}
+tracker_binding: "none"
+beads_linkage: null
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []

@@ -1,16 +1,19 @@
 """scripts/lint-doc-internal-link-integrity.py の genuine で網羅的な機能テスト (network 不要)。
 
 HarnessHub-j7a4 の md 本文 dangling path 検査。純関数 (normalize_token /
-extract_candidates / strip_fenced_blocks / scan) を in-process で網羅し、
+extract_references / resolve_reference / strip_fenced_blocks) を in-process で網羅し、
 subprocess で実 CLI の exit code と zero attribution 出力も確認する。
-tmp git repo を作って git 追跡限定の走査も踏む。
+tmp git repo を作って未追跡 Markdown を含む走査も踏む。
 
 カバー:
 - gate liveness: 意図的に dangling を仕込んだ fixture で exit が 0 → 1 へ反転する
 - MUST_PASS: 実在 path のみなら exit 0 / fenced block 内の dangling は無視
 - zero attribution: 「検査対象 0」と「違反 0」が別の NOTE として区別される
 - 誤検出の除外: URL / anchor / 絶対 path / glob / 省略記法 (...) / 行番号サフィックス
-- ratchet: --max-violations で許容し、下回れば締めるよう NOTE が出る
+- source-aware: code span は repo-root、Markdown link は文書親基準
+- worktree-complete: 未追跡 Markdown も参照元として検査する
+- tracked-target-only: 未追跡 target は worktree にあっても違反
+- ratchet: 総数に加え base fingerprint 差分で違反の入替を遮断
 - 設定エラー (exit 2): 存在しない repo-root / 負の --max-violations
 - 実リポジトリ CLI 実行が現行 baseline 上限で exit 0 (契約テスト)
 
@@ -34,9 +37,10 @@ SPEC.loader.exec_module(MOD)
 # 実 repo の現行 baseline。allowlist を置かず件数だけで ratchet する方針のため、
 # この上限は「減る方向にしか動かさない」。CI (governance-check.yml) と local gate
 # (run-ci-checks.sh) に書く --max-violations と同じ値に保つこと。
-# 308 (2026-08-11 初回) -> 302 (2026-08-12, HarnessHub-9am.3 の merge で
-# design-review-notes.md が実在化し、それを指していた 6 件が解消)。
-REAL_REPO_MAX_VIOLATIONS = 302
+# 308 (2026-08-11 初回) -> 302 (2026-08-12, HarnessHub-9am.3) -> 354
+# (2026-08-12, source-aware Markdown link + tracked-only target へ定義を強化。
+# 同じ定義で origin/main と比較した new fingerprint は 0)。
+REAL_REPO_MAX_VIOLATIONS = 354
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -72,12 +76,10 @@ def _run(repo: Path, *extra: str) -> subprocess.CompletedProcess:
     "#anchor",                          # ページ内アンカー
     "mailto:a@example.com/x",           # mailto
     "/abs/path/file.md",                # 絶対 path (環境依存)
-    "../sibling/file.md",               # 親方向の相対 path (基準位置が解けない)
     "docs/**/*.md",                     # glob
     "docs/${NAME}/x.md",                # 変数展開
     "docs/<placeholder>/x.md",          # プレースホルダ
     "docs/.../x.md",                    # 省略記法
-    "single-token-no-slash",            # / を含まない
     "",                                 # 空
 ])
 def test_normalize_token_rejects_non_path(token):
@@ -86,7 +88,9 @@ def test_normalize_token_rejects_non_path(token):
 
 @pytest.mark.parametrize("token,expected", [
     ("docs/a/b.md", "docs/a/b.md"),
-    ("./docs/a/b.md", "docs/a/b.md"),               # 先頭 ./ を剥がす
+    ("./docs/a/b.md", "./docs/a/b.md"),              # 基準位置の手掛かりを保持
+    ("../sibling/file.md", "../sibling/file.md"),
+    ("README.md", "README.md"),                      # Markdown link は / 無しも対象
     ("docs/a/b.md#sec", "docs/a/b.md"),             # anchor を落とす
     ("docs/a/b.md?x=1", "docs/a/b.md"),             # query を落とす
     ("apps/hub/x.ts:120", "apps/hub/x.ts"),         # 行番号
@@ -136,6 +140,12 @@ def test_strip_fenced_blocks_tilde_fence_and_mismatched_marker():
     assert kept == ["a", "b"]
 
 
+def test_four_character_fence_is_not_closed_by_three_characters():
+    text = "a\n````md\ninside/a.md\n```\nstill/inside.md\n````\nb\n"
+    kept = [line for _, line in MOD.strip_fenced_blocks(text)]
+    assert kept == ["a", "b"]
+
+
 # ── gate liveness: 仕込んだ dangling で検査が反転する ───────────────────────
 def test_gate_liveness_dangling_flips_exit_code(tmp_path):
     repo = _make_repo(tmp_path)
@@ -150,7 +160,7 @@ def test_gate_liveness_dangling_flips_exit_code(tmp_path):
     # 2) dangling を 1 件仕込む → FAIL へ反転
     doc.write_text(
         "実装は `scripts/real.py` にある\n"
-        "設計は [design](docs/nonexistent/design.md) を参照\n",
+        "設計は [design](nonexistent/design.md) を参照\n",
         encoding="utf-8",
     )
     _commit_all(repo)
@@ -170,14 +180,81 @@ def test_fenced_block_dangling_is_not_a_violation(tmp_path):
     assert res.returncode == 0, res.stdout + res.stderr
 
 
-def test_untracked_document_is_not_scanned(tmp_path):
+def test_untracked_document_is_scanned(tmp_path):
     repo = _make_repo(tmp_path)
     (repo / "docs" / "tracked.md").write_text("`scripts/real.py`\n", encoding="utf-8")
     _commit_all(repo)
-    # 未追跡の草稿に dangling があっても検査対象外 (並行編集を新規違反にしない)。
+    # 作業ツリー全体を検査するため、新規作成直後の未追跡 Markdown も参照元になる。
     (repo / "docs" / "draft.md").write_text("`scripts/ghost.py`\n", encoding="utf-8")
     res = _run(repo)
+    assert res.returncode == 1, res.stdout + res.stderr
+    assert "docs/draft.md:1" in res.stderr
+    assert "scripts/ghost.py" in res.stderr
+
+
+def test_untracked_target_does_not_satisfy_reference(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "guide.md").write_text("`scripts/generated.py`\n", encoding="utf-8")
+    _commit_all(repo)
+    # file は存在するが git 未追跡なので target としては不存在。
+    (repo / "scripts" / "generated.py").write_text("# generated\n", encoding="utf-8")
+    res = _run(repo)
+    assert res.returncode == 1, res.stdout + res.stderr
+    assert "scripts/generated.py" in res.stderr
+
+
+def test_tracked_directory_is_a_valid_target(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "guide.md").write_text("[scripts](../scripts/)\n", encoding="utf-8")
+    _commit_all(repo)
+    res = _run(repo)
     assert res.returncode == 0, res.stdout + res.stderr
+
+
+def test_markdown_links_are_source_aware_but_known_top_level_is_repo_root(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "section").mkdir()
+    (repo / "docs" / "shared.md").write_text("shared\n", encoding="utf-8")
+    (repo / "docs" / "section" / "local.md").write_text("local\n", encoding="utf-8")
+    (repo / "docs" / "section" / "guide.md").write_text(
+        "[local](local.md) [parent](../shared.md) [root](scripts/real.py)\n",
+        encoding="utf-8",
+    )
+    _commit_all(repo)
+    res = _run(repo)
+    assert res.returncode == 0, res.stdout + res.stderr
+
+
+def test_code_span_is_always_repo_root_based(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "section").mkdir()
+    (repo / "docs" / "section" / "guide.md").write_text(
+        "`scripts/real.py`\n", encoding="utf-8"
+    )
+    _commit_all(repo)
+    assert _run(repo).returncode == 0
+
+
+def test_unknown_top_level_markdown_typo_is_not_silently_ignored(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "guide.md").write_text(
+        "[typo](scritps/missing.py)\n", encoding="utf-8"
+    )
+    _commit_all(repo)
+    res = _run(repo)
+    assert res.returncode == 1
+    assert "docs/scritps/missing.py" in res.stderr
+
+
+def test_markdown_link_cannot_escape_repository(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "guide.md").write_text(
+        "[outside](../../outside.md)\n", encoding="utf-8"
+    )
+    _commit_all(repo)
+    res = _run(repo)
+    assert res.returncode == 1
+    assert "doc-internal-link-repo-outside" in res.stderr
 
 
 # ── zero attribution: 未検査と違反 0 を区別する ─────────────────────────────
@@ -233,6 +310,58 @@ def test_max_violations_allows_baseline_and_notes_tightening(tmp_path):
     assert any("引き下げて" in n for n in payload["notes"])
 
 
+def test_ratchet_base_blocks_equal_count_violation_swap(tmp_path):
+    repo = _make_repo(tmp_path)
+    doc = repo / "docs" / "guide.md"
+    doc.write_text("`scripts/ghost-old.py`\n", encoding="utf-8")
+    _commit_all(repo)
+
+    # 古い 1 件を直して新しい 1 件を追加。総数 ratchet だけなら素通りする。
+    doc.write_text("`scripts/ghost-new.py`\n", encoding="utf-8")
+    _commit_all(repo)
+    res = _run(
+        repo, "--max-violations", "1", "--ratchet-base", "HEAD~1", "--json"
+    )
+    payload = json.loads(res.stdout)
+    assert res.returncode == 1
+    assert payload["violation_count"] == 1
+    assert payload["new_violation_count"] == 1
+    assert payload["new_violations"][0]["target"] == "scripts/ghost-new.py"
+
+
+def test_ratchet_base_ignores_line_move_of_same_fingerprint(tmp_path):
+    repo = _make_repo(tmp_path)
+    doc = repo / "docs" / "guide.md"
+    doc.write_text("`scripts/ghost.py`\n", encoding="utf-8")
+    _commit_all(repo)
+    doc.write_text("intro\n\n`scripts/ghost.py`\n", encoding="utf-8")
+    _commit_all(repo)
+
+    res = _run(
+        repo, "--max-violations", "1", "--ratchet-base", "HEAD~1", "--json"
+    )
+    payload = json.loads(res.stdout)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert payload["new_violation_count"] == 0
+
+
+def test_ratchet_base_allows_only_repairs(tmp_path):
+    repo = _make_repo(tmp_path)
+    doc = repo / "docs" / "guide.md"
+    doc.write_text("`scripts/ghost.py`\n", encoding="utf-8")
+    _commit_all(repo)
+    doc.write_text("`scripts/real.py`\n", encoding="utf-8")
+    _commit_all(repo)
+
+    res = _run(
+        repo, "--max-violations", "1", "--ratchet-base", "HEAD~1", "--json"
+    )
+    payload = json.loads(res.stdout)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert payload["violation_count"] == 0
+    assert payload["new_violation_count"] == 0
+
+
 # ── 設定エラー (exit 2) ─────────────────────────────────────────────────────
 def test_missing_repo_root_is_config_error(tmp_path):
     res = subprocess.run(
@@ -251,12 +380,22 @@ def test_negative_max_violations_is_config_error(tmp_path):
     assert "設定エラー" in res.stderr
 
 
+def test_missing_ratchet_base_is_config_error(tmp_path):
+    repo = _make_repo(tmp_path)
+    (repo / "docs" / "guide.md").write_text("ok\n", encoding="utf-8")
+    _commit_all(repo)
+    res = _run(repo, "--ratchet-base", "no-such-ref")
+    assert res.returncode == 2
+    assert "ratchet-base rev を解決できない" in res.stderr
+
+
 # ── 実リポジトリ契約テスト ──────────────────────────────────────────────────
 def test_real_repository_stays_within_recorded_baseline():
     """実 repo が記録済み baseline 上限内であること (肥大の逆戻り防止)。"""
     res = subprocess.run(
         [sys.executable, str(SCRIPT), "--repo-root", str(ROOT),
-         "--max-violations", str(REAL_REPO_MAX_VIOLATIONS), "--json"],
+         "--max-violations", str(REAL_REPO_MAX_VIOLATIONS),
+         "--ratchet-base", "origin/main", "--json"],
         capture_output=True, text=True,
     )
     assert res.returncode == 0, res.stdout + res.stderr
@@ -264,3 +403,4 @@ def test_real_repository_stays_within_recorded_baseline():
     assert payload["checked_documents"] > 0, "検査対象 0 は合格ではない (zero attribution)"
     assert payload["checked_references"] > 0
     assert payload["violation_count"] <= REAL_REPO_MAX_VIOLATIONS
+    assert payload["new_violation_count"] == 0

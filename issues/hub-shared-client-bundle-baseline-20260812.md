@@ -12,9 +12,9 @@ iteration: null
 title: "全 page route 共通の client bundle 土台 104796 バイトを分解する"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-12T00:00:00Z"
+updated_at: "2026-08-12T06:56:16.160002Z"
 status: "active"
-depends_on: []
+depends_on: ["issue-users-sheets-client-bundle-headroom-20260810"]
 related_nodes: []
 resource_scope: ["apps/hub/src/app/layout.tsx","apps/hub/src/components","apps/hub/next.config.ts"]
 purpose: "route 局所の遅延読み込みでは動かない共通土台を対象に据え、指標だけ緑にして最悪 route を放置する是正を防ぐ。"
@@ -38,7 +38,7 @@ classification_reason: "HarnessHub-x30r の実測で、警告帯の原因が rou
 classification_candidates: [{"artifact_kind":"issue","candidate_path":"issues/hub-shared-client-bundle-baseline-20260812.md","confidence":0.95}]
 issue_linkage: null
 tracker_binding: "beads"
-beads_linkage: null
+beads_linkage: {"bd_issue_id":"HarnessHub-a7tk","linked_at":"2026-08-12T05:40:31Z","sync_state":"linked"}
 github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_aliases":[]}
 github_project_linkages: []
 pull_request_linkages: []
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
 implementation_readiness: {"checked_at":"2026-08-12T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 全 page route 共通の client bundle 土台 104796 バイトを分解する
 
@@ -77,6 +76,12 @@ client bundle 予算は 1 route あたり 122880 バイト (gzip) で、95% を�
 | `/legal` (最軽量) | 110699 | 90.1% |
 
 **最悪は x30r が対象としていなかった `/docs/[id]` で、残り 647 バイトしかない。** 最も軽い `/legal` ですら 90.1% であり、これは route 固有のコードがほぼゼロでも警告帯の手前まで来ていることを意味する。
+
+### 関連 PR で顕在化した予算超過 (2026-08-12)
+
+PR #707 (docs の rich editing) の GitHub Actions run `31566113938` では、この余白不足が実際の merge blocker として顕在化した。G13 の実測は `/docs/[id]` 229527 bytes、`/docs` 227968 bytes、`/docs/[id]/edit` 226684 bytes、`/docs/new` 226325 bytes で、4 route とも 122880 bytes の上限を超えている。
+
+PR #707 の route 固有機能は同 PR 側で初期 chunk から分離する必要がある。一方、それだけでは全 page route 共通の 104796 bytes は減らないため、本課題の共通土台削減も独立して継続する。予算を引き上げて両方をまとめて通すことは、原因を隠すため受入れない。
 
 ## 現在の挙動
 

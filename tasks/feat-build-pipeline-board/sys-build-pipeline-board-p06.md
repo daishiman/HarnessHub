@@ -11,12 +11,12 @@ target_date: null
 iteration: null
 title: "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:10:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+created_at: "2026-08-10T13:41:31Z"
+updated_at: "2026-08-12T07:12:44.354101Z"
 status: "active"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P05"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
-resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/features/build-pipeline-board/__tests__/","docs/features/feat-build-pipeline-board/test-run-report.md"]
+resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/__tests__/build-pipeline-board/","docs/features/feat-build-pipeline-board/test-run-report.md"]
 purpose: "feat-build-pipeline-board の P06 を実行する: テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
 scope_in: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/features/build-pipeline-board/__tests__/","docs/features/feat-build-pipeline-board/test-run-report.md"]
@@ -31,8 +31,8 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-06-test-run.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-10T13:41:31Z","origin_kind":"system-dev-planner","source_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-06-test-run.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.87
 classification_reason: "P04 のテストスタブ (工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離/B9 共有認可表) を P05 実装に対して実行し結果を記録する P06 タスク"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p06.md","confidence":0.87}]

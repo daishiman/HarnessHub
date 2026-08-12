@@ -72,4 +72,26 @@ describe('実ブラウザ検証ハーネスの opt-in 契約', () => {
     expect(ci).not.toContain('test:browser');
     expect(jobBody(uiVisual, 'browser')).toContain('test:browser');
   });
+
+  it('更新モードは失敗時も manifest と Linux baseline を回収し、検証成功と扱わない', () => {
+    const uiVisual = readFileSync(`${repoRoot}.github/workflows/ui-visual.yml`, 'utf8');
+    const alwaysUpdateCondition = 'if: ${{ always() && inputs.update_baseline }}';
+
+    for (const stepName of [
+      '更新した Linux 版基準画像の manifest',
+      '更新した Linux 版基準画像',
+      '更新モードは検証ではないことを明示して落とす',
+    ]) {
+      const stepStart = uiVisual.indexOf(`- name: ${stepName}`);
+      expect(stepStart).toBeGreaterThanOrEqual(0);
+      expect(uiVisual.slice(stepStart, stepStart + 220)).toContain(alwaysUpdateCondition);
+    }
+
+    expect(uiVisual).toContain(
+      'git diff --name-only --diff-filter=ACMRTUXB -- apps/hub/tests/browser/__vrt__/linux/',
+    );
+    expect(uiVisual.match(/apps\/hub\/artifacts\/vrt\/baseline-update-manifest\.txt/g)).toHaveLength(2);
+    expect(uiVisual).toContain('name: vrt-baseline-linux');
+    expect(uiVisual).toContain('exit 1');
+  });
 });

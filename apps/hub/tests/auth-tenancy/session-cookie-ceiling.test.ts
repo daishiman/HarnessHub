@@ -1,11 +1,12 @@
 /**
- * HarnessHub-alyy: session cookie に載る `workspace_ids` の所属数上限を実測で固定する。
+ * HarnessHub-alyy: session cookie に載る `workspace_ids` の 4096-byte 送出境界を
+ * unit test (ブラウザを起動しない単体テスト) で固定する。
  *
  * 背景: claims 焼き込み方式では `workspace_ids` が所属数に比例して伸び、cookie の
- * 4096 バイト上限を越えるとブラウザはエラーを返さず黙って cookie を捨てる。利用者から
- * 見ると「サインインしてもログイン画面に戻り続ける」で、画面にもログにも理由が出ない。
+ * 4096 バイトの保守的な可搬境界を越える。ブラウザごとの保存・破棄の実挙動は
+ * この test では測っておらず、統合テスト側で別途確認する。
  *
- * この test は方式を変えない。**上限が今いくつなのかを実測し、静かに縮まないよう固定する**
+ * この test は方式を変えない。**境界が今いくつなのかを測定し、静かに縮まないよう固定する**
  * ことだけを担う。claim を 1 つ足すと上限は下がるので、その変化をここで可視化する。
  * 方式選定 (A: 都度 DB / B: server 側 store / C: cookie 分割 / D: 所属数の製品上限) は
  * HarnessHub-alyy 本体で扱う。
@@ -17,7 +18,7 @@ import { signJwt } from '../../src/lib/auth/jwt';
 import type { DirectoryUser } from '../../src/lib/auth/ports';
 import { buildSessionClaims } from '../../src/lib/auth/session';
 
-/** RFC 6265 が求める cookie 1 個の最小上限。主要ブラウザの実装値でもある。 */
+/** ブラウザ間の可搬性のために採る、Set-Cookie 1 個の保守的な送出境界。 */
 const COOKIE_BYTE_LIMIT = 4096;
 const SECRET = 'a'.repeat(64);
 const NOW_SECONDS = 1_780_000_000;
@@ -67,8 +68,8 @@ async function measureCeiling(withNames: boolean): Promise<number> {
   return lo;
 }
 
-describe('session cookie の所属数上限 (HarnessHub-alyy)', () => {
-  it('T-ALYY-01: 上限は実測でき、記録した水準を下回らない', async () => {
+describe('session cookie の 4096-byte 保守的送出境界 (HarnessHub-alyy)', () => {
+  it('T-ALYY-01: 送出境界は測定でき、記録した水準を下回らない', async () => {
     const ceiling = await measureCeiling(false);
     // 2026-08-12 実測: 所属 95 件 (そのときの Set-Cookie は 4085 バイト) が上限。
     // claim を増やすと下がるため、下がったらこの test が落ちて気づける。
@@ -90,9 +91,10 @@ describe('session cookie の所属数上限 (HarnessHub-alyy)', () => {
     expect(await setCookieBytes(ceiling + 1, true)).toBeGreaterThan(COOKIE_BYTE_LIMIT);
   });
 
-  it('T-ALYY-03: 超過は例外にならず、そのまま送出される (黙って捨てられる経路の固定)', async () => {
+  it('T-ALYY-03: serializer は境界超過の Set-Cookie を throw せず返す', async () => {
     const ceiling = await measureCeiling(false);
-    // 現状の挙動をそのまま記録する。ここが throw に変わるなら方式変更を伴う設計判断であり、
+    // ここで固定するのは server 側 serializer の送出挙動だけで、browser が
+    // cookie を保存/破棄するかは実測していない。ここが throw に変わるなら方式変更を伴う設計判断であり、
     // HarnessHub-alyy の決着としてこの test を書き換えること。
     const claims = buildSessionClaims(userWithMemberships(ceiling + 50, { withNames: false }), NOW_SECONDS);
     expect(claims.workspace_ids).toHaveLength(ceiling + 50);
