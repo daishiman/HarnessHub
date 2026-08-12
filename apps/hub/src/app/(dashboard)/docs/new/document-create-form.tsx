@@ -1,10 +1,12 @@
 'use client';
 
 import type { DocumentDetail, DocumentScope } from '@harness-hub/schemas';
-import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, TextInput } from '@harness-hub/ui';
+import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, Textarea, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useCallback, useRef, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../components/docs/use-pending-document-images.js';
+import { extractApiErrorMessage } from '../../../../features/docs-cms/api-error.js';
+import { parseTagsInput } from '../../../../features/docs-cms/tags.js';
 
 const MarkdownEditor = dynamic(
   () => import('../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
@@ -26,6 +28,10 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
   const [scope, setScope] = useState<DocumentScope>('tenant');
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [excerpt, setExcerpt] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   // 画像を先に足された場合の暗黙下書き作成 (ensureDraftId) が払い出した id。
@@ -46,7 +52,7 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
         },
         body: JSON.stringify(body),
       });
-      if (!response.ok) throw new Error('作成できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '作成できませんでした。'));
       return (await response.json()) as DocumentDetail;
     },
     [tenantId, workspaceId],
@@ -90,7 +96,10 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
         },
         body: file,
       });
-      if (!response.ok) throw new Error('画像をアップロードできませんでした。');
+      if (!response.ok)
+        throw new Error(
+          await extractApiErrorMessage(response, '画像のアップロードに失敗しました。もう一度お試しください。'),
+        );
       const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
       registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
@@ -100,13 +109,28 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
 
   const submit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
+    // タイトルは API 側も必須 (min 1 文字) だが、trim していない生の値をそのまま送ると
+    // 「空白だけのタイトル」で 400 になり、原因の分からない「作成できませんでした」が出るだけだった。
+    // ここで先に弾いて、画像を貼らずに直接送信した場合でも次の一手が分かるようにする。
+    const trimmedTitle = title.trim();
+    if (trimmedTitle === '') {
+      setError('タイトルを入力してください。');
+      return;
+    }
+
     setSaving(true);
     try {
+      const metadata = {
+        category: category.trim() === '' ? null : category.trim(),
+        tags: parseTagsInput(tags),
+        thumbnail_url: thumbnailUrl.trim() === '' ? null : thumbnailUrl.trim(),
+        excerpt: excerpt.trim() === '' ? null : excerpt.trim(),
+      };
       // 画像追加のタイミングで下書きが既にできているなら、それを更新する
       // (ここで新規作成すると、画像だけが古い下書きに残ったまま孤立する)
       const created =
         draftIdRef.current === null
-          ? await createDocument({ scope, title, body_markdown: bodyMarkdown })
+          ? await createDocument({ scope, title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata })
           : await (async () => {
               const response = await fetch(`/api/v1/docs/${draftIdRef.current}`, {
                 method: 'PATCH',
@@ -116,9 +140,9 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
                   'x-harness-tenant-id': tenantId,
                   'x-harness-workspace-id': workspaceId,
                 },
-                body: JSON.stringify({ title, body_markdown: bodyMarkdown }),
+                body: JSON.stringify({ title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata }),
               });
-              if (!response.ok) throw new Error('作成できませんでした。');
+              if (!response.ok) throw new Error(await extractApiErrorMessage(response, '作成できませんでした。'));
               return (await response.json()) as DocumentDetail;
             })();
       await settlePendingImages(created.body_markdown);
@@ -143,13 +167,28 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
             { value: 'common', label: '共通 (要 provider-admin 権限)' },
           ]}
         />
-        <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
+        <TextInput label="タイトル" required value={title} onChange={(event) => setTitle(event.target.value)} />
         <MarkdownEditor
           label="本文"
           value={bodyMarkdown}
           onValueChange={setBodyMarkdown}
           rows={16}
           onImageUpload={uploadImage}
+        />
+        <TextInput label="カテゴリ" value={category} onChange={(event) => setCategory(event.target.value)} />
+        <TextInput label="タグ (カンマ区切り)" value={tags} onChange={(event) => setTags(event.target.value)} />
+        <TextInput
+          label="サムネイル画像 URL"
+          description="空欄のときは本文の最初の画像から自動生成します。"
+          value={thumbnailUrl}
+          onChange={(event) => setThumbnailUrl(event.target.value)}
+        />
+        <Textarea
+          label="要約"
+          description="空欄のときは本文から自動要約します。"
+          rows={3}
+          value={excerpt}
+          onChange={(event) => setExcerpt(event.target.value)}
         />
         <div>
           <Button type="submit" disabled={saving}>

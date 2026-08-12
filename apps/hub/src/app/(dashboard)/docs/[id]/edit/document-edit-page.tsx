@@ -15,12 +15,15 @@ import {
   Panel,
   Select,
   Stack,
+  Textarea,
   TextInput,
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
+import { extractApiErrorMessage } from '../../../../../features/docs-cms/api-error.js';
+import { parseTagsInput, tagsToInputValue } from '../../../../../features/docs-cms/tags.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
@@ -71,6 +74,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
   const [status, setStatus] = useState<DocumentStatus>('draft');
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [excerpt, setExcerpt] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -80,12 +87,16 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
       });
-      if (!response.ok) throw new Error('ドキュメントを取得できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, 'ドキュメントを取得できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setTitle(doc.title);
       setBodyMarkdown(doc.body_markdown);
       setStatus(doc.status);
+      setCategory(doc.category ?? '');
+      setTags(tagsToInputValue(doc.tags));
+      setThumbnailUrl(doc.thumbnail_url ?? '');
+      setExcerpt(doc.excerpt ?? '');
       setError(null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'ドキュメントを取得できませんでした。');
@@ -110,7 +121,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         },
         body: file,
       });
-      if (!response.ok) throw new Error('画像をアップロードできませんでした。');
+      if (!response.ok)
+        throw new Error(
+          await extractApiErrorMessage(response, '画像のアップロードに失敗しました。もう一度お試しください。'),
+        );
       const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
       registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
@@ -119,15 +133,29 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   );
 
   const save = async (): Promise<void> => {
+    const trimmedTitle = title.trim();
+    if (trimmedTitle === '') {
+      setError('タイトルを入力してください。');
+      return;
+    }
+
     setSaving(true);
     try {
       const response = await fetch(`/api/v1/docs/${id}`, {
         method: 'PATCH',
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
-        body: JSON.stringify({ title, body_markdown: bodyMarkdown, status }),
+        body: JSON.stringify({
+          title: trimmedTitle,
+          body_markdown: bodyMarkdown,
+          status,
+          category: category.trim() === '' ? null : category.trim(),
+          tags: parseTagsInput(tags),
+          thumbnail_url: thumbnailUrl.trim() === '' ? null : thumbnailUrl.trim(),
+          excerpt: excerpt.trim() === '' ? null : excerpt.trim(),
+        }),
       });
-      if (!response.ok) throw new Error('保存できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '保存できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setError(null);
@@ -179,7 +207,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
         <Panel title="編集">
           <Stack gap={4}>
-            <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
+            <TextInput label="タイトル" required value={title} onChange={(event) => setTitle(event.target.value)} />
             <Select
               label="状態"
               value={status}
@@ -195,6 +223,21 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
               onValueChange={setBodyMarkdown}
               rows={16}
               onImageUpload={uploadImage}
+            />
+            <TextInput label="カテゴリ" value={category} onChange={(event) => setCategory(event.target.value)} />
+            <TextInput label="タグ (カンマ区切り)" value={tags} onChange={(event) => setTags(event.target.value)} />
+            <TextInput
+              label="サムネイル画像 URL"
+              description="空欄で保存すると、本文の最初の画像から自動生成へ戻します。"
+              value={thumbnailUrl}
+              onChange={(event) => setThumbnailUrl(event.target.value)}
+            />
+            <Textarea
+              label="要約"
+              description="空欄で保存すると、本文からの自動要約へ戻します。"
+              rows={3}
+              value={excerpt}
+              onChange={(event) => setExcerpt(event.target.value)}
             />
           </Stack>
         </Panel>
