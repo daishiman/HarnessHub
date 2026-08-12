@@ -115,15 +115,19 @@ afterEach(() => {
   delete process.env.ENCRYPTION_KEK;
 });
 
-async function seedActor(slug: string, role: 'member' | 'workspace-admin') {
+async function seedActor(
+  slug: string,
+  role: 'member' | 'workspace-admin',
+  profile: { readonly name?: string; readonly email?: string } = {},
+) {
   const core = createCoreRepositories({ adapter, kekBase64: TEST_KEK_B64 });
   const tenant = await core.tenants.create({ slug, name: `Tenant ${slug}`, plan: 'free' });
   const context = createRepositoryContext({ tenantId: tenant.id });
   const workspaceId = `ws-${slug}`;
   const user = await core.users.insert(context, {
     idpSubject: `sub-${slug}`,
-    email: `${slug}@example.com`,
-    name: `User ${slug}`,
+    email: profile.email ?? `${slug}@example.com`,
+    name: profile.name ?? `User ${slug}`,
     department: '業務改善',
     role,
     status: 'active',
@@ -233,5 +237,71 @@ describe.each([
     expect(detailResponse.status).toBe(200);
     const detailBody = (await detailResponse.json()) as { readonly id: string };
     expect(detailBody.id).toBe(created.id);
+  });
+});
+
+// JIT provisioning (lib/auth/db-ports.ts の createFromOidc) は users.name を空文字で作るため、
+// 初回サインインした利用者のシートは必ずこの経路を通る。応答 schema の applicant.name は
+// min(1) なので、空文字をそのまま返すと一覧・詳細が揃って 500 に落ちていた。
+describe('初回サインイン直後の利用者 (users.name が空文字)', () => {
+  it('一覧・詳細が 200 で取得でき、申請者名にメールアドレスが出る', async () => {
+    const actor = await seedActor('jit-blank', 'member', { name: '', email: 'yamada@example.com' });
+    const cookie = await sessionCookie(actor);
+    const headers = {
+      cookie,
+      'x-harness-tenant-id': actor.tenantId,
+      'x-harness-workspace-id': actor.workspaceId,
+    };
+
+    const createResponse = await createRoute(
+      new Request('https://hub.example.com/api/v1/sheets', {
+        method: 'POST',
+        headers: { ...headers, origin: 'https://hub.example.com', 'content-type': 'application/json' },
+        body: JSON.stringify(createSheetBody('employee')),
+      }),
+    );
+    expect(createResponse.status).toBe(201);
+    const created = (await createResponse.json()) as { readonly id: string };
+
+    const listResponse = await listRoute(new Request('https://hub.example.com/api/v1/sheets?limit=25', { headers }));
+    expect(listResponse.status).toBe(200);
+    const listBody = (await listResponse.json()) as {
+      readonly items: readonly { readonly id: string; readonly applicant: { readonly name: string } }[];
+    };
+    expect(listBody.items.find((item) => item.id === created.id)?.applicant.name).toBe('yamada@example.com');
+
+    const detailResponse = await detailRoute(
+      new Request(`https://hub.example.com/api/v1/sheets/${created.id}`, { headers }),
+      { params: Promise.resolve({ id: created.id }) },
+    );
+    expect(detailResponse.status).toBe(200);
+    const detailBody = (await detailResponse.json()) as { readonly applicant: { readonly name: string } };
+    expect(detailBody.applicant.name).toBe('yamada@example.com');
+  });
+
+  it('氏名もメールも空なら識別子を申請者名に出す', async () => {
+    const actor = await seedActor('jit-empty', 'member', { name: '', email: '' });
+    const cookie = await sessionCookie(actor);
+    const headers = {
+      cookie,
+      'x-harness-tenant-id': actor.tenantId,
+      'x-harness-workspace-id': actor.workspaceId,
+    };
+
+    const createResponse = await createRoute(
+      new Request('https://hub.example.com/api/v1/sheets', {
+        method: 'POST',
+        headers: { ...headers, origin: 'https://hub.example.com', 'content-type': 'application/json' },
+        body: JSON.stringify(createSheetBody('employee')),
+      }),
+    );
+    expect(createResponse.status).toBe(201);
+
+    const listResponse = await listRoute(new Request('https://hub.example.com/api/v1/sheets?limit=25', { headers }));
+    expect(listResponse.status).toBe(200);
+    const listBody = (await listResponse.json()) as {
+      readonly items: readonly { readonly applicant: { readonly name: string } }[];
+    };
+    expect(listBody.items[0]?.applicant.name).toBe(actor.userId);
   });
 });

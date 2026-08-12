@@ -13,8 +13,22 @@ import {
   sheetListResponseSchema,
 } from '@harness-hub/schemas';
 
+import { resolveAccountDisplayName } from '../../lib/auth/display-name.js';
 import { buildSheetGenerationPayload, parseGenerationResult } from './ai-job-adapter/index.js';
 import { estimateHearingSheet } from './estimation-adapter/index.js';
+
+/**
+ * 申請者の表示名。`users.name` は NOT NULL だが JIT provisioning が空文字で作るため
+ * (`lib/auth/db-ports.ts` の `createFromOidc`)、そのまま返すと応答 schema の
+ * `shortText` (min(1)) に落ちて一覧・詳細が 500 になる。画面ヘッダーと同じ
+ * 氏名 → メールの順で解決し、どちらも空なら識別子を出して応答自体は必ず成立させる。
+ */
+function applicantOf(row: HearingSheetRow) {
+  return {
+    id: row.applicantUserId,
+    name: resolveAccountDisplayName({ name: row.applicantName, email: row.applicantEmail }) ?? row.applicantUserId,
+  };
+}
 
 export interface ReceiptNotificationPort {
   notifyReceipt(input: {
@@ -67,7 +81,7 @@ function toListItem(row: HearingSheetRow) {
     department: row.department,
     people: form.people,
     hours: form.hours,
-    applicant: { id: row.applicantUserId, name: row.applicantName },
+    applicant: applicantOf(row),
     updated_at: row.updatedAt,
   };
 }
@@ -80,7 +94,7 @@ function toDetail(row: HearingSheetRow): SheetDetail {
     code: row.code,
     status: row.status,
     title: row.title,
-    applicant: { id: row.applicantUserId, name: row.applicantName },
+    applicant: applicantOf(row),
     department: row.department,
     form_snapshot: form,
     estimate_snapshot: parseJson(row.estimateJson),
@@ -135,8 +149,20 @@ export function createHearingIntakeService(
         ...(input.query.cursor === undefined ? {} : { cursor: input.query.cursor }),
         limit: input.query.limit,
       });
+      // 実測 (2026-08-13): 一覧の 1 行でも decode/検証に失敗すると `.map(toListItem)` の例外が
+      // ページ全体を巻き込み、GET /api/v1/sheets が丸ごと 500 になっていた (旧データの form_json が
+      // 現行スキーマの union のどれとも一致しないケースなど)。1 行の不整合で他の正常な行まで
+      // 見えなくなるのは利用者にとって過大な副作用なので、不整合行はログへ残して一覧からは除く。
+      const items: ReturnType<typeof toListItem>[] = [];
+      for (const row of page.items) {
+        try {
+          items.push(toListItem(row));
+        } catch (error) {
+          console.error('[hearing-intake] listSheets: skip malformed row', { sheetId: row.id, error });
+        }
+      }
       return sheetListResponseSchema.parse({
-        items: page.items.map(toListItem),
+        items,
         next_cursor: page.nextCursor,
       });
     },

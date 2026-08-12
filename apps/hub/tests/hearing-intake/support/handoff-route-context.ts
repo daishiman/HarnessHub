@@ -79,6 +79,7 @@ export function buildSheetRow(overrides: Partial<HearingSheetRow> = {}): Hearing
     title: '請求書処理の自動化',
     applicantUserId: OWNER_ID,
     applicantName: '山田',
+    applicantEmail: 'yamada@example.com',
     department: null,
     status: 'review',
     formJson: BASE_FORM_SNAPSHOT_JSON,

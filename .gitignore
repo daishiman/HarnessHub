@@ -1,3 +1,6 @@
+# 調査用の使い捨てテストファイル (コミット対象にしない命名規約)
+**/zz-debug-*.test.ts
+
 # Python
 __pycache__/
 *.pyc

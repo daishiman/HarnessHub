@@ -9,6 +9,7 @@
  * 2 段構えなのは、edge が DB へ届かず緊急失効を見られないため。
  */
 
+import { PROBLEM_JSON_MEDIA_TYPE, problemDetails } from '@harness-hub/schemas';
 import type { AuditLogger } from '../../shared/audit/index.js';
 import { isTrustedOrigin } from '../auth/config.js';
 import { type CwvProbeConfig, isCwvProbeRequestAllowed } from '../auth/cwv-probe.js';
@@ -192,7 +193,27 @@ export function withAuthz<TParams = Record<string, never>>(
       if (error instanceof AuthzError) {
         return Response.json({ error: error.reason }, { status: error.status });
       }
-      throw error;
+      // 実測 (2026-08-13): GET /api/v1/sheets?limit=25 が「読み込みエラー」としか表示されない事象。
+      // 従来はここで想定外エラーを rethrow していたため、Next.js の既定 500 (problem+json ではない
+      // 本文) がそのまま返り、フロント (`extractApiErrorMessage`) は JSON を読めず固定の汎用文言に
+      // 落ちていた — 「サーバーからの本当のエラー理由を画面に表示する」(#717) が実際には機能しない
+      // 唯一の抜け穴がここ。全 route がこの wrapper を通る (ファイル先頭の注記) ため、ここで
+      // problem+json に統一すれば個々の route を直さずに済む。実際の原因は Workers ログ
+      // (`wrangler tail`) に残す。
+      console.error('[with-authz] unhandled error', {
+        method: request.method,
+        path: new URL(request.url).pathname,
+        error,
+      });
+      return Response.json(
+        problemDetails({
+          title: 'サーバーで予期しないエラーが発生しました',
+          status: 500,
+          detail: error instanceof Error ? error.message : String(error),
+          instance: new URL(request.url).pathname,
+        }),
+        { status: 500, headers: { 'content-type': PROBLEM_JSON_MEDIA_TYPE } },
+      );
     }
   };
 }

@@ -4,7 +4,7 @@
  * ここで見るのは 3 つ:
  *   - 判定より手前で落ちる Origin 検査 (state-changing 要求の CSRF 対策)
  *   - handler 内で追加判定した `AuthzError` を同じ形の応答へ寄せること
- *   - それ以外の例外は握り潰さないこと (500 を 403 に化けさせない)
+ *   - それ以外の例外は 403 に化けさせず、real reason 付きの problem+json 500 として返すこと
  */
 
 import { describe, expect, it, vi } from 'vitest';
@@ -122,13 +122,23 @@ describe('withAuthz: handler が投げた例外の扱い', () => {
     expect(await response.json()).toEqual({ error: 'unresolved_resource' });
   });
 
-  it('AuthzError 以外は握り潰さず再送出する (故障を 4xx に化けさせない)', async () => {
+  it('AuthzError 以外は 403/4xx に化けさせず、real reason 付きの problem+json 500 として返す', async () => {
+    // 実測 (2026-08-13, HarnessHub GET /api/v1/sheets?limit=25 500): これを rethrow していた頃は
+    // Next.js の既定 500 (非 JSON 本文) がそのまま返り、フロント (extractApiErrorMessage) が
+    // 理由を読めず固定の汎用文言に落ちていた。#717 の「本当のエラー理由を画面に表示する」を
+    // AuthzError 以外の例外にも効かせるため、ここで problem+json へ変換して返す。
     const { deps } = harness();
     const route = withAuthz({ action: 'token.list.self', deps, resolveResource: async () => resource }, async () => {
       throw new TypeError('repository が落ちた');
     });
 
-    await expect(route(await sessionRequest())).rejects.toThrow('repository が落ちた');
+    const response = await route(await sessionRequest());
+
+    expect(response.status).toBe(500);
+    expect(response.headers.get('content-type')).toBe('application/problem+json');
+    const body = (await response.json()) as { readonly status: number; readonly detail?: string };
+    expect(body.status).toBe(500);
+    expect(body.detail).toBe('repository が落ちた');
   });
 });
 
