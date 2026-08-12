@@ -14,20 +14,12 @@ export type HearingSheetStatus = z.output<typeof hearingSheetStatusSchema>;
 export const hearingPrioritySchema = z.enum(['high', 'medium', 'low']);
 export type HearingPriority = z.output<typeof hearingPrioritySchema>;
 
-/** FormData の文字数・件数上限。zod schema と wizard 前段判定の共有正本。 */
-export const HEARING_SHEET_FORM_LIMITS = {
-  requiredTextLength: 2_000,
-  shortTextLength: 200,
-  knowledgeAssets: 10,
-} as const;
-
 /**
  * skill-intake プラグイン（深掘りヒアリング用サブエージェント群）が集める軸のうち、
  * クリックで完結できるものをヒアリングシートの選択式項目として取り込んだもの。
  * 由来: .claude/agents/skill-intake-user-profiler.md（6 軸プロファイル）、
  * plugins/skill-intake/skills/run-intake-next-action/references/mode-catalog.md（用途分岐）。
- */
-/**
+ *
  * `unknown` はどの軸にも例外なく足す (依頼者追加要件: 「不明・わからない」を選べない項目を残さない)。
  * 未回答を空欄で握りつぶさず、値として記録して後段 (要ヒアリング項目抽出) が拾えるようにするため。
  */
@@ -87,6 +79,14 @@ export const hearingExistingDataSourceSchema = z.enum([
   'other',
 ]);
 export type HearingExistingDataSource = z.output<typeof hearingExistingDataSourceSchema>;
+
+/** FormData の文字数・件数上限。zod schema と wizard 前段判定の共有正本。 */
+export const HEARING_SHEET_FORM_LIMITS = {
+  requiredTextLength: 2_000,
+  shortTextLength: 200,
+  informationSources: 10,
+  knowledgeAssets: 10,
+} as const;
 
 const requiredText = z.string().trim().min(1).max(HEARING_SHEET_FORM_LIMITS.requiredTextLength);
 const shortText = z.string().trim().min(1).max(HEARING_SHEET_FORM_LIMITS.shortTextLength);
@@ -230,12 +230,8 @@ function validateFormRelationships(form: FormRelationshipFields, context: FormRe
   }
 }
 
-/**
- * S10 の 12 項目 + skill-intake 由来の用途プロファイル 9 項目。salary はこの request 境界だけに存在する。
- * 用途プロファイル項目はすべて選択式（constraintTags/knowledgeAssets は複数選択・タグ追加）で、
- * shareTarget のみ既存項目でカバーできない自由記述（skill-intake 5 軸シートの「共有相手」）。
- */
-const hearingSheetFormInputObjectSchema = z
+/** PR #705 より前の request。salary は入力時だけ存在し、保存時に除外されていた。 */
+const hearingSheetFormV1InputSchema = z
   .object({
     taskName: shortText,
     company: shortText,
@@ -249,94 +245,259 @@ const hearingSheetFormInputObjectSchema = z
     features: requiredText,
     output: requiredText,
     priority: hearingPrioritySchema,
-    usagePurpose: hearingUsagePurposeSchema,
-    expertise: hearingExpertiseSchema,
-    role: hearingRoleSchema,
-    context: hearingContextSchema,
-    motivation: hearingMotivationSchema,
-    sharingIntent: hearingSharingIntentSchema,
-    constraintTags: z.array(hearingConstraintTagSchema).max(5).default([]),
-    shareTarget: shortText,
-    knowledgeAssets: z.array(shortText).min(1).max(HEARING_SHEET_FORM_LIMITS.knowledgeAssets),
-    requestPatterns: z.array(hearingRequestPatternSchema).max(4).default([]),
-    integrationTools: z.array(hearingIntegrationToolSchema).max(10).default([]),
-    integrationToolsOther: optionalShortText,
-    automationDescription: optionalLongText,
-    existingDataSources: z.array(hearingExistingDataSourceSchema).max(10).default([]),
-    existingDataSourcesOther: optionalShortText,
-    referenceUrls: z.array(hearingReferenceUrlSchema).max(10).default([]),
   })
+  .strict();
+
+/**
+ * skill-intake 由来の用途プロファイル 9 項目 (PR #705)。すべて必須選択式で、
+ * `unknown` を選べば「不明・わからない」を明示的に回答として記録できる
+ * (依頼者追加要件: 未回答を空欄で握りつぶさない)。
+ */
+const coreProfileFields = {
+  usagePurpose: hearingUsagePurposeSchema,
+  expertise: hearingExpertiseSchema,
+  role: hearingRoleSchema,
+  context: hearingContextSchema,
+  motivation: hearingMotivationSchema,
+  sharingIntent: hearingSharingIntentSchema,
+  constraintTags: z.array(hearingConstraintTagSchema).max(5).default([]),
+  shareTarget: shortText,
+  knowledgeAssets: z.array(shortText).min(1).max(HEARING_SHEET_FORM_LIMITS.knowledgeAssets),
+} as const;
+
+/** PR #705 で追加された、まだ UI 未実装の任意プロファイル 2 項目。旧クライアントは省略可能。 */
+const optionalProfileFields = {
+  informationSources: z.array(shortText).max(HEARING_SHEET_FORM_LIMITS.informationSources).nullish().default(null),
+  trueProblem: requiredText.nullish().default(null),
+} as const;
+
+/** 要望パターン・連携先・参考 URL 等 (依頼者追加要件 1通目 #3, #4)。 */
+const requestPatternFields = {
+  requestPatterns: z.array(hearingRequestPatternSchema).max(4).default([]),
+  integrationTools: z.array(hearingIntegrationToolSchema).max(10).default([]),
+  integrationToolsOther: optionalShortText,
+  automationDescription: optionalLongText,
+  existingDataSources: z.array(hearingExistingDataSourceSchema).max(10).default([]),
+  existingDataSourcesOther: optionalShortText,
+  referenceUrls: z.array(hearingReferenceUrlSchema).max(10).default([]),
+} as const;
+
+/**
+ * S10 の必須 12 項目 + skill-intake 由来の用途プロファイル 9 項目 + 要望パターン系 7 項目。
+ * salary はこの request 境界だけに存在する。
+ */
+const hearingSheetFormInputObjectSchema = hearingSheetFormV1InputSchema
+  .extend(coreProfileFields)
+  .extend(optionalProfileFields)
+  .extend(requestPatternFields)
   .strict();
 export const hearingSheetFormInputSchema = hearingSheetFormInputObjectSchema.superRefine(validateFormRelationships);
 export type HearingSheetFormInput = z.output<typeof hearingSheetFormInputSchema>;
 
-/** DB form_json と AI payload の正本。入力から導出し salary を構造的に除外する。 */
-const hearingSheetFormSnapshotObjectSchema = hearingSheetFormInputObjectSchema.omit({ salary: true });
-export const hearingSheetFormSnapshotSchema =
-  hearingSheetFormSnapshotObjectSchema.superRefine(validateFormRelationships);
-export type HearingSheetFormSnapshot = z.output<typeof hearingSheetFormSnapshotSchema>;
+/** PR #705 より前に DB form_json / AI payload へ保存された無版 11 項目。 */
+const hearingSheetFormSnapshotV1UnversionedSchema = hearingSheetFormV1InputSchema.omit({ salary: true });
 
-/** 新規 request を salary を含まない snapshot へ変換する唯一の write 境界。 */
-export function createHearingSheetFormSnapshot(input: HearingSheetFormInput): HearingSheetFormSnapshot {
-  const { salary: _discardedSalary, ...snapshot } = input;
-  return hearingSheetFormSnapshotSchema.parse(snapshot);
-}
+/** 旧形式の出自を保持する version 1 契約。 */
+export const hearingSheetFormSnapshotV1Schema = hearingSheetFormSnapshotV1UnversionedSchema
+  .extend({ schemaVersion: z.literal(1) })
+  .strict();
+export type HearingSheetFormSnapshotV1 = z.output<typeof hearingSheetFormSnapshotV1Schema>;
 
-/** 保存済み form_json / queued AI payload を現行 snapshot へ正規化する (読取境界)。 */
-export function normalizeHearingSheetFormSnapshot(input: unknown): HearingSheetFormSnapshot {
-  return decodeStoredHearingSheetFormSnapshot(input);
-}
+/** PR #705 初期実装の、追加 2 軸 (informationSources/trueProblem) を持たない 20 項目 snapshot 本体。 */
+const hearingSheetFormSnapshotInitialV2UnversionedSchema = hearingSheetFormSnapshotV1UnversionedSchema
+  .extend(coreProfileFields)
+  .strict();
+const hearingSheetFormSnapshotInitialV2Schema = hearingSheetFormSnapshotInitialV2UnversionedSchema
+  .extend({ schemaVersion: z.literal(2) })
+  .strict();
 
-/**
- * 保存 snapshot の暗黙バージョン:
- * - v1: S10 由来の旧 11 項目
- * - v2: 現行フォームから salary を除いた項目
- *
- * 新規 request は常に v2 の厳格 schema で検証し、この decoder は保存済みデータの読取時だけ使う。
- */
-export const HEARING_FORM_SNAPSHOT_CURRENT_VERSION = 2 as const;
-const legacyHearingSheetFormSnapshotV1Schema = z
-  .object({
-    taskName: shortText,
-    company: shortText,
-    applicant: shortText,
-    domain: shortText,
-    issue: requiredText,
-    tools: requiredText,
-    hours: z.number().int().min(1).max(160),
-    people: z.number().int().min(1).max(500),
-    features: requiredText,
-    output: requiredText,
-    priority: hearingPrioritySchema,
-  })
+/** PR #705 マージ後、informationSources/trueProblem を追加した nullable 22 項目 (プロファイル軸のみ nullable)。 */
+const currentProfileSnapshotFieldsNullable = {
+  usagePurpose: hearingUsagePurposeSchema.nullable(),
+  expertise: hearingExpertiseSchema.nullable(),
+  role: hearingRoleSchema.nullable(),
+  context: hearingContextSchema.nullable(),
+  motivation: hearingMotivationSchema.nullable(),
+  sharingIntent: hearingSharingIntentSchema.nullable(),
+  constraintTags: z.array(hearingConstraintTagSchema).max(4).nullable(),
+  shareTarget: shortText.nullable(),
+  informationSources: z.array(shortText).max(HEARING_SHEET_FORM_LIMITS.informationSources).nullable(),
+  trueProblem: requiredText.nullable(),
+  knowledgeAssets: z.array(shortText).max(HEARING_SHEET_FORM_LIMITS.knowledgeAssets).nullable(),
+} as const;
+const hearingSheetFormSnapshotV2BodySchema = hearingSheetFormSnapshotV1UnversionedSchema
+  .extend(currentProfileSnapshotFieldsNullable)
+  .strict();
+const hearingSheetFormSnapshotV2Schema = hearingSheetFormSnapshotV2BodySchema
+  .extend({ schemaVersion: z.literal(2) })
+  .strict();
+
+export const CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION = 3 as const;
+
+/** 現行の保存本体 (version 3)。要望パターン系 7 項目を追加し、プロファイル軸は再び必須 (`unknown` で明示回答)。 */
+const hearingSheetFormSnapshotV3BodySchema = hearingSheetFormSnapshotV1UnversionedSchema
+  .extend(coreProfileFields)
+  .extend(optionalProfileFields)
+  .extend(requestPatternFields)
+  .strict();
+const hearingSheetFormSnapshotV3Schema = hearingSheetFormSnapshotV3BodySchema
+  .extend({ schemaVersion: z.literal(CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION) })
   .strict();
 
 const legacyUnknownText = '不明・わからない';
 
-export const storedHearingSheetFormSnapshotSchema = z.preprocess((input) => {
-  if (hearingSheetFormSnapshotSchema.safeParse(input).success) return input;
-  const legacy = legacyHearingSheetFormSnapshotV1Schema.safeParse(input);
-  if (!legacy.success) return input;
+/** 要望パターン系 7 項目の未回答値。version 2 以前のデータには存在しない。 */
+const UNANSWERED_REQUEST_PATTERN_FIELDS: {
+  readonly requestPatterns: readonly HearingRequestPattern[];
+  readonly integrationTools: readonly HearingIntegrationTool[];
+  readonly integrationToolsOther: string | undefined;
+  readonly automationDescription: string | undefined;
+  readonly existingDataSources: readonly HearingExistingDataSource[];
+  readonly existingDataSourcesOther: string | undefined;
+  readonly referenceUrls: readonly HearingReferenceUrl[];
+} = {
+  requestPatterns: [],
+  integrationTools: [],
+  integrationToolsOther: undefined,
+  automationDescription: undefined,
+  existingDataSources: [],
+  existingDataSourcesOther: undefined,
+  referenceUrls: [],
+};
+
+/** version 2 (nullable) のプロファイル軸を version 3 (必須 + unknown) へ正規化する。 */
+function normalizeNullableProfileToV3(profile: {
+  readonly usagePurpose: HearingUsagePurpose | null;
+  readonly expertise: HearingExpertise | null;
+  readonly role: HearingRole | null;
+  readonly context: HearingContext | null;
+  readonly motivation: HearingMotivation | null;
+  readonly sharingIntent: HearingSharingIntent | null;
+  readonly constraintTags: readonly HearingConstraintTag[] | null;
+  readonly shareTarget: string | null;
+  readonly knowledgeAssets: readonly string[] | null;
+}) {
   return {
-    ...legacy.data,
-    usagePurpose: 'unknown',
-    expertise: 'unknown',
-    role: 'unknown',
-    context: 'unknown',
-    motivation: 'unknown',
-    sharingIntent: 'unknown',
-    constraintTags: [],
-    shareTarget: legacyUnknownText,
-    knowledgeAssets: [legacyUnknownText],
-    requestPatterns: [],
-    integrationTools: [],
-    existingDataSources: [],
-    referenceUrls: [],
-  } satisfies HearingSheetFormSnapshot;
-}, hearingSheetFormSnapshotSchema);
+    usagePurpose: profile.usagePurpose ?? 'unknown',
+    expertise: profile.expertise ?? 'unknown',
+    role: profile.role ?? 'unknown',
+    context: profile.context ?? 'unknown',
+    motivation: profile.motivation ?? 'unknown',
+    sharingIntent: profile.sharingIntent ?? 'unknown',
+    constraintTags: profile.constraintTags ?? [],
+    shareTarget: profile.shareTarget ?? legacyUnknownText,
+    knowledgeAssets:
+      profile.knowledgeAssets && profile.knowledgeAssets.length > 0 ? profile.knowledgeAssets : [legacyUnknownText],
+  } as const;
+}
+
+const LEGACY_UNANSWERED_PROFILE_V3: {
+  readonly usagePurpose: HearingUsagePurpose;
+  readonly expertise: HearingExpertise;
+  readonly role: HearingRole;
+  readonly context: HearingContext;
+  readonly motivation: HearingMotivation;
+  readonly sharingIntent: HearingSharingIntent;
+  readonly constraintTags: readonly HearingConstraintTag[];
+  readonly shareTarget: string;
+  readonly informationSources: null;
+  readonly trueProblem: null;
+  readonly knowledgeAssets: readonly string[];
+} & typeof UNANSWERED_REQUEST_PATTERN_FIELDS = {
+  usagePurpose: 'unknown',
+  expertise: 'unknown',
+  role: 'unknown',
+  context: 'unknown',
+  motivation: 'unknown',
+  sharingIntent: 'unknown',
+  constraintTags: [],
+  shareTarget: legacyUnknownText,
+  informationSources: null,
+  trueProblem: null,
+  knowledgeAssets: [legacyUnknownText],
+  ...UNANSWERED_REQUEST_PATTERN_FIELDS,
+};
+
+/**
+ * DB form_json と AI payload の read 境界。
+ *
+ * - version 3 (現行): 必須プロファイル 9 項目 (`unknown` 明示回答) + 要望パターン系 7 項目。
+ * - version 2: PR #705 の nullable プロファイル 9 項目 + informationSources/trueProblem。
+ *   null は version 3 へ正規化する際 `unknown` (プロファイル軸) / [] (要望パターン系) として読む。
+ * - 初期 version 2: informationSources/trueProblem の無い 20 項目 (プロファイル軸は必須)。
+ * - version 1: 旧 11 項目。追加質問は推測せず `unknown`/null として読み、要望パターン系は空とする。
+ * - 万一 salary を含む旧 12 項目が残っていても、読取時に salary を破棄する。
+ *
+ * 出力は必ず schemaVersion を持ち、常に現行 (version 3) の形へ正規化される。
+ */
+export const hearingSheetFormSnapshotSchema = z
+  .union([
+    hearingSheetFormSnapshotV3Schema,
+    hearingSheetFormSnapshotV3BodySchema.transform((snapshot) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+    })),
+    hearingSheetFormSnapshotV2Schema.transform(({ schemaVersion: _discarded, ...snapshot }) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      ...normalizeNullableProfileToV3(snapshot),
+      ...UNANSWERED_REQUEST_PATTERN_FIELDS,
+    })),
+    hearingSheetFormSnapshotV2BodySchema.transform((snapshot) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      ...normalizeNullableProfileToV3(snapshot),
+      ...UNANSWERED_REQUEST_PATTERN_FIELDS,
+    })),
+    hearingSheetFormSnapshotInitialV2Schema.transform(({ schemaVersion: _discarded, ...snapshot }) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      informationSources: null,
+      trueProblem: null,
+      ...UNANSWERED_REQUEST_PATTERN_FIELDS,
+    })),
+    hearingSheetFormSnapshotInitialV2UnversionedSchema.transform((snapshot) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      informationSources: null,
+      trueProblem: null,
+      ...UNANSWERED_REQUEST_PATTERN_FIELDS,
+    })),
+    hearingSheetFormSnapshotV1Schema.transform(({ schemaVersion: _discarded, ...snapshot }) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      ...LEGACY_UNANSWERED_PROFILE_V3,
+    })),
+    hearingSheetFormSnapshotV1UnversionedSchema.transform((snapshot) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      ...LEGACY_UNANSWERED_PROFILE_V3,
+    })),
+    hearingSheetFormV1InputSchema.transform(({ salary: _discardedSalary, ...snapshot }) => ({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...snapshot,
+      ...LEGACY_UNANSWERED_PROFILE_V3,
+    })),
+  ])
+  .superRefine((snapshot, context) => validateFormRelationships(snapshot, context));
+export type HearingSheetFormSnapshot = z.output<typeof hearingSheetFormSnapshotSchema>;
+
+/** 新規 request を salary を含まない version 3 snapshot へ変換する唯一の write 境界。 */
+export function createHearingSheetFormSnapshot(input: HearingSheetFormInput): HearingSheetFormSnapshot {
+  const { salary: _discardedSalary, ...snapshot } = input;
+  return hearingSheetFormSnapshotSchema.parse({
+    schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+    ...snapshot,
+  });
+}
+
+/** 保存済み form_json / queued AI payload を現行 (version 3) snapshot へ正規化する (読取境界)。 */
+export function normalizeHearingSheetFormSnapshot(input: unknown): HearingSheetFormSnapshot {
+  return decodeStoredHearingSheetFormSnapshot(input);
+}
 
 export function decodeStoredHearingSheetFormSnapshot(input: unknown): HearingSheetFormSnapshot {
-  return storedHearingSheetFormSnapshotSchema.parse(input);
+  return hearingSheetFormSnapshotSchema.parse(input);
 }
 
 /**
@@ -420,9 +581,9 @@ export const sheetGenerationPayloadSchema = z
   .strict();
 export type SheetGenerationPayload = z.output<typeof sheetGenerationPayloadSchema>;
 
-/** ai_jobs.payload_json の読取専用 decoder。form の v1/v2 差だけを吸収し、envelope は厳格に保つ。 */
+/** ai_jobs.payload_json の読取専用 decoder。form の legacy 差だけを吸収し、envelope は厳格に保つ。 */
 export const storedSheetGenerationPayloadSchema = sheetGenerationPayloadSchema.extend({
-  form: storedHearingSheetFormSnapshotSchema,
+  form: hearingSheetFormSnapshotSchema,
 });
 
 export function decodeStoredSheetGenerationPayload(input: unknown): SheetGenerationPayload {

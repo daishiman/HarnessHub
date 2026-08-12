@@ -39,16 +39,18 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 | Method Path | 最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/sheets` | member | ウィザード 28 項目提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
+| `POST /api/v1/sheets` | member | ウィザード 30 項目提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
 | `GET /api/v1/sheets` | member | 一覧 (filter: status/department/q, cursor)。member/owner は `applicant_user_id = principal.user_id` の自分のシートだけ、workspace-admin は自テナント全件。item は `id, code, status, title, domain, department, people, hours, applicant{name}, updated_at` を返す |
 | `GET /api/v1/sheets/:id` | member | 詳細。自分のシートまたは admin のみ。`form_snapshot, estimate_snapshot, generated_sections{overview, issue, feature_tags, estimated_effect}, applicant, department, created_at, ai_job_status, build_ref, publish_request_ref` を返す。salary 原値は返さない |
 | `PATCH /api/v1/sheets/:id` | workspace-admin | status 遷移 (§5.2)。監査 event |
 | `POST /api/v1/sheets/:id/regenerate` | workspace-admin | AiJob 再投入 (status→`generating`) |
 
-**FormData 28 項目 (mockup 実測の 12 項目 + skill-intake プラグイン由来の用途プロファイル 9 項目 + 依頼者追加要件由来の 7 項目。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority, usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, knowledgeAssets, requestPatterns, integrationTools, integrationToolsOther, automationDescription, existingDataSources, existingDataSourcesOther, referenceUrls`
+**FormData 30 項目 (mockup 実測の必須 12 項目 + skill-intake プラグイン由来の用途プロファイル 9 項目 + 任意の情報源/真の課題 2 項目 + 依頼者追加要件由来の要望パターン系 7 項目。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority, usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, trueProblem, knowledgeAssets, requestPatterns, integrationTools, integrationToolsOther, automationDescription, existingDataSources, existingDataSourcesOther, referenceUrls`
 
-- 用途プロファイル 9 項目は skill-intake プラグイン(`.claude/agents/skill-intake-user-profiler.md` 等)が集める 6 軸プロファイル(熟練度/役割/文脈/制約/動機/共有意図)と 5 軸シート(出力先/情報源/共有相手/真の課題/ナレッジ資産)のうちクリックで完結できる軸を選択式・複数選択で取り込んだもの。自由記述は `shareTarget`(共有相手)と `knowledgeAssets`(ナレッジ資産、改行区切り)のみ。
-- `form_snapshot` はこの 28 項目から `salary` を除いた 27 項目。2026-08-12 より前の 11 項目 snapshot は読み取り時だけ明示的な `unknown` / 空配列へ補完し、新規作成時の厳格な入力検証は緩めない。
+- 用途プロファイル 9 項目 (`usagePurpose`〜`knowledgeAssets`) は skill-intake プラグイン(`.claude/agents/skill-intake-user-profiler.md` 等)が集める 6 軸プロファイル(熟練度/役割/文脈/制約/動機/共有意図)と 5 軸シート(出力先/情報源/共有相手/真の課題/ナレッジ資産)のうちクリックで完結できる軸を選択式・複数選択で取り込んだもの。未回答を選べない項目を残さないため、`informationSources`/`trueProblem` を除く全軸に `unknown`(不明・わからない)を選択肢として持つ。自由記述は `shareTarget`(共有相手)と `knowledgeAssets`(ナレッジ資産、改行区切り)のみ。
+- `informationSources`(情報源、複数)・`trueProblem`(真の課題、自由記述)の 2 項目のみ任意で、未回答は `null`、複数入力の回答済み 0 件は空配列として保存し両者を区別する。
+- 要望パターン系 7 項目 (`requestPatterns`〜`referenceUrls`) は「よくある要望パターン」選択・連携先ツール・参考 URL 一覧を保持する。
+- `form_snapshot` は request schema から直接派生させず、現行 `schemaVersion=3` の永続化契約へ変換して保存する。読取時は version 3 に加え、version 2 (nullable プロファイル + informationSources/trueProblem)・初期 version 2 (informationSources/trueProblem 未実装)・`schemaVersion=1` の V1・履歴上の無版 11 項目 form_json・salary を含む無版 12 項目 form_json のすべてを dual-read で正規化する。プロファイル軸は `unknown`、`informationSources`/`trueProblem` は `null`、要望パターン系は空配列へ補完し、salary は破棄する。処理待ちの旧 `sheet_generation` payload にも同じ dual-read を適用する。既存の JSON 列を使うため DB migration は不要。
 
 - `applicant` は表示用の自由入力を保存するが、認可の所有者判定は改ざん可能な form 値でなく session の `principal.user_id` を `applicant_user_id` へ固定して行う。
 - status の保存値は §5.2 の `received/generating/review/completed`。mock の「下書き」は `received` の旧表示とみなし、統一 UI ラベルは「受付」。

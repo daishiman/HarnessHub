@@ -14,8 +14,8 @@ import {
 } from '../../src/app/(dashboard)/sheets/new/hearing-intake-wizard-model.js';
 
 describe('HI-WIZARD: 分割後の構造と初期値', () => {
-  it('28項目schemaを正本にし、選択式8軸は明示的なunknownから始める', () => {
-    expect(Object.keys(createSheetRequestSchema.shape)).toHaveLength(28);
+  it('30項目schemaを正本にし、選択式8軸は明示的なunknownから始める', () => {
+    expect(Object.keys(createSheetRequestSchema.shape)).toHaveLength(30);
     expect([
       INITIAL_HEARING_FORM.usagePurpose,
       INITIAL_HEARING_FORM.expertise,

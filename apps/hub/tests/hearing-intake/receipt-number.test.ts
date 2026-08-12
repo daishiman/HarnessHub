@@ -206,6 +206,8 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
           sharingIntent: 'small_group',
           constraintTags: [],
           shareTarget: 'チーム内',
+          informationSources: ['会計システム'],
+          trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
           knowledgeAssets: ['経理マニュアル'],
           requestPatterns: [],
           integrationTools: [],

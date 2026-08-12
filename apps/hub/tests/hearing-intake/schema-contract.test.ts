@@ -10,11 +10,15 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
+  CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
   contractSchemaNames,
+  createHearingSheetFormSnapshot,
   createSheetRequestSchema,
+  HEARING_SHEET_FORM_LIMITS,
   hearingSheetFormInputSchema,
   hearingSheetFormSnapshotSchema,
   identifierSchema,
+  normalizeHearingSheetFormSnapshot,
   problemDetails,
   sheetDetailSchema,
   sheetListQuerySchema,
@@ -28,8 +32,8 @@ import { describe, expect, it } from 'vitest';
 // ---------------------------------------------------------------------------
 
 /**
- * ウィザードが送る `HearingSheetFormInput` の 28 項目 (backend-spec §4.3 の 12 項目 +
- * skill-intake 由来の用途プロファイル 9 項目 + 要望・参考情報 7 項目)。
+ * ウィザードが送る `HearingSheetFormInput` の 30 項目 (backend-spec §4.3 の 12 項目 +
+ * skill-intake 由来の用途プロファイル 9 項目 + 情報源/真の課題 2 項目 + 要望・参考情報 7 項目)。
  */
 const FORM_INPUT_FIELDS = [
   'taskName',
@@ -52,6 +56,8 @@ const FORM_INPUT_FIELDS = [
   'sharingIntent',
   'constraintTags',
   'shareTarget',
+  'informationSources',
+  'trueProblem',
   'knowledgeAssets',
   'requestPatterns',
   'integrationTools',
@@ -66,8 +72,8 @@ const FORM_INPUT_FIELDS = [
 const OMITTED_FROM_SNAPSHOT = ['salary'] as const;
 
 /**
- * `HearingSheetFormSnapshot` は **導出**する。手で 11 項目を書き直すと
- * 「12 項目側に項目が増えたのに 11 項目側が追従しない」二重定義の事故が起きる (AD-9)。
+ * `HearingSheetFormSnapshot` は **導出**する。手で項目を書き直すと
+ * 「入力側に項目が増えたのに snapshot 側が追従しない」二重定義の事故が起きる (AD-9)。
  */
 const FORM_SNAPSHOT_FIELDS = FORM_INPUT_FIELDS.filter(
   (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
@@ -90,9 +96,9 @@ function validateNumeric(field: NumericField, value: number): boolean {
 }
 
 describe('HI-SCHEMA: FormData の契約 (AD-2 / AD-9)', () => {
-  it('HI-SCHEMA-001: 入力は 28 項目、snapshot は salary を除いた 27 項目になる', () => {
-    expect(FORM_INPUT_FIELDS).toHaveLength(28);
-    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(27);
+  it('HI-SCHEMA-001: 入力は 30 項目、snapshot は salary を除いた 29 項目になる', () => {
+    expect(FORM_INPUT_FIELDS).toHaveLength(30);
+    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(29);
     expect(FORM_SNAPSHOT_FIELDS).not.toContain('salary');
   });
 
@@ -102,7 +108,7 @@ describe('HI-SCHEMA: FormData の契約 (AD-2 / AD-9)', () => {
       (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
     );
 
-    expect(extended).toHaveLength(28);
+    expect(extended).toHaveLength(30);
     expect(extended).toContain('newField');
   });
 
@@ -239,6 +245,8 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     sharingIntent: 'small_group' as const,
     constraintTags: ['time', 'budget'] as const,
     shareTarget: 'チーム内',
+    informationSources: ['会計システム'],
+    trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
     knowledgeAssets: ['過去の経理マニュアル'],
     requestPatterns: [],
     integrationTools: [],
@@ -250,16 +258,119 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     expect(hearingSheetFormInputSchema.parse(validForm)).toEqual(validForm);
   });
 
-  it('HI-SCHEMA-102: snapshot が入力の omit で導出され salary を拒否する', () => {
-    const source = readFileSync(resolve(process.cwd(), '../../packages/schemas/hearing-intake/contracts.ts'), 'utf8');
-    expect(source).toContain('hearingSheetFormInputObjectSchema.omit({ salary: true })');
-    const { salary: _salary, ...snapshot } = validForm;
-    expect(hearingSheetFormSnapshotSchema.parse(snapshot)).not.toHaveProperty('salary');
+  it('HI-SCHEMA-102: request と versioned snapshot を分離し salary を拒否する', () => {
+    const snapshot = createHearingSheetFormSnapshot(hearingSheetFormInputSchema.parse(validForm));
+    expect(snapshot.schemaVersion).toBe(CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION);
+    expect(snapshot).not.toHaveProperty('salary');
     expect(hearingSheetFormSnapshotSchema.safeParse(validForm).success).toBe(false);
+  });
+
+  it('HI-SCHEMA-102b: 旧 11 項目 fixture は version 1 として「不明・わからない」/未回答へ正規化する', () => {
+    const legacySnapshot = {
+      taskName: validForm.taskName,
+      company: validForm.company,
+      applicant: validForm.applicant,
+      domain: validForm.domain,
+      issue: validForm.issue,
+      tools: validForm.tools,
+      hours: validForm.hours,
+      people: validForm.people,
+      features: validForm.features,
+      output: validForm.output,
+      priority: validForm.priority,
+    };
+
+    expect(normalizeHearingSheetFormSnapshot(legacySnapshot)).toEqual({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...legacySnapshot,
+      usagePurpose: 'unknown',
+      expertise: 'unknown',
+      role: 'unknown',
+      context: 'unknown',
+      motivation: 'unknown',
+      sharingIntent: 'unknown',
+      constraintTags: [],
+      shareTarget: '不明・わからない',
+      informationSources: null,
+      trueProblem: null,
+      knowledgeAssets: ['不明・わからない'],
+      requestPatterns: [],
+      integrationTools: [],
+      existingDataSources: [],
+      referenceUrls: [],
+    });
+  });
+
+  it('HI-SCHEMA-102c: version 無しの現行 29 項目も version 3 へ読み上げる', () => {
+    const { salary: _salary, ...unversionedSnapshot } = validForm;
+    expect(normalizeHearingSheetFormSnapshot(unversionedSnapshot)).toEqual({
+      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+      ...unversionedSnapshot,
+    });
+  });
+
+  it('HI-SCHEMA-102d: 初期実装の 20 項目は version 有無を問わず追加軸を未回答として読む', () => {
+    const {
+      salary: _salary,
+      informationSources: _sources,
+      trueProblem: _problem,
+      requestPatterns: _requestPatterns,
+      integrationTools: _integrationTools,
+      existingDataSources: _existingDataSources,
+      referenceUrls: _referenceUrls,
+      ...initialV2
+    } = validForm;
+    const unansweredAdditions = {
+      informationSources: null,
+      trueProblem: null,
+      requestPatterns: [],
+      integrationTools: [],
+      existingDataSources: [],
+      referenceUrls: [],
+    };
+
+    for (const snapshot of [initialV2, { schemaVersion: 2, ...initialV2 }]) {
+      expect(normalizeHearingSheetFormSnapshot(snapshot)).toEqual({
+        schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
+        ...initialV2,
+        ...unansweredAdditions,
+      });
+    }
   });
 
   it('HI-SCHEMA-103: CreateSheetRequest は未知キーとクライアント計算額を拒否する', () => {
     expect(createSheetRequestSchema.safeParse({ ...validForm, savedAmountPerYear: 123 }).success).toBe(false);
+  });
+
+  it('HI-SCHEMA-103b: 情報源/真の課題/ナレッジ資産/共有相手は UI と共有する上限・null 許容で検証する', () => {
+    const shortMax = HEARING_SHEET_FORM_LIMITS.shortTextLength;
+    const assetsMax = HEARING_SHEET_FORM_LIMITS.knowledgeAssets;
+    const sourcesMax = HEARING_SHEET_FORM_LIMITS.informationSources;
+
+    expect(createSheetRequestSchema.safeParse({ ...validForm, shareTarget: 'a'.repeat(shortMax) }).success).toBe(true);
+    expect(createSheetRequestSchema.safeParse({ ...validForm, shareTarget: 'a'.repeat(shortMax + 1) }).success).toBe(
+      false,
+    );
+    const uniqueAssets = Array.from({ length: assetsMax }, (_, i) => `資料${i}`);
+    const uniqueSources = Array.from({ length: sourcesMax }, (_, i) => `情報源${i}`);
+    expect(createSheetRequestSchema.safeParse({ ...validForm, knowledgeAssets: uniqueAssets }).success).toBe(true);
+    expect(
+      createSheetRequestSchema.safeParse({
+        ...validForm,
+        knowledgeAssets: [...uniqueAssets, `資料${assetsMax}`],
+      }).success,
+    ).toBe(false);
+    expect(createSheetRequestSchema.safeParse({ ...validForm, informationSources: uniqueSources }).success).toBe(true);
+    expect(
+      createSheetRequestSchema.safeParse({
+        ...validForm,
+        informationSources: [...uniqueSources, `情報源${sourcesMax}`],
+      }).success,
+    ).toBe(false);
+    // informationSources/trueProblem は未回答 (null) を許容するが、knowledgeAssets は必須 1 件以上
+    expect(createSheetRequestSchema.safeParse({ ...validForm, informationSources: null }).success).toBe(true);
+    expect(createSheetRequestSchema.safeParse({ ...validForm, trueProblem: null }).success).toBe(true);
+    expect(createSheetRequestSchema.safeParse({ ...validForm, knowledgeAssets: [] }).success).toBe(false);
   });
 
   it('HI-SCHEMA-104: SheetDetail の form_snapshot と応答ルートに salary が現れない', () => {
@@ -271,7 +382,7 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
       title: validForm.taskName,
       applicant: { id: 'user-1', name: '山田' },
       department: '経理',
-      form_snapshot: snapshot,
+      form_snapshot: { schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION, ...snapshot },
       estimate_snapshot: { savedMinutesPerYear: 60, savedHoursPerYear: 1, savedAmountPerYear: 3_000 },
       generated_sections: null,
       created_at: 1,
@@ -285,7 +396,7 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     expect(
       sheetDetailSchema.safeParse({
         ...candidate,
-        form_snapshot: { ...snapshot, salary: validForm.salary },
+        form_snapshot: { ...candidate.form_snapshot, salary: validForm.salary },
       }).success,
     ).toBe(false);
   });

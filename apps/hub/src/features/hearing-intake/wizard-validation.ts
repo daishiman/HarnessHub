@@ -15,6 +15,18 @@ function textWithinLimit(value: string, maxLength: number): boolean {
   return length > 0 && length <= maxLength;
 }
 
+function optionalTextWithinLimit(value: string | null, maxLength: number): boolean {
+  return value === null || textWithinLimit(value, maxLength);
+}
+
+function optionalListIsValid(entries: readonly string[] | null, maxItems: number): boolean {
+  if (entries === null) return true;
+  return (
+    entries.length <= maxItems &&
+    entries.every((entry) => textWithinLimit(entry, HEARING_SHEET_FORM_LIMITS.shortTextLength))
+  );
+}
+
 function knowledgeAssetsAreValid(assets: readonly string[]): boolean {
   return (
     assets.length >= 1 &&
@@ -25,6 +37,26 @@ function knowledgeAssetsAreValid(assets: readonly string[]): boolean {
 
 function hasOption<T extends string>(options: readonly { readonly value: T }[], value: unknown): value is T {
   return typeof value === 'string' && options.some((option) => option.value === value);
+}
+
+function optionalListValidationError(
+  label: string,
+  entries: readonly string[] | null,
+  maxItems: number,
+): string | undefined {
+  if (entries === null) return undefined;
+  if (entries.length > maxItems) {
+    return `${label}は ${maxItems} 件以内で入力してください。`;
+  }
+  if (entries.some((entry) => entry.trim().length > HEARING_SHEET_FORM_LIMITS.shortTextLength)) {
+    return `${label}は 1 件あたり ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内で入力してください。`;
+  }
+  return undefined;
+}
+
+/** informationSources はまだウィザード UI が未実装のため任意 (null 許容) のまま。 */
+export function informationSourcesValidationError(sources: readonly string[] | null): string | undefined {
+  return optionalListValidationError('情報源', sources, HEARING_SHEET_FORM_LIMITS.informationSources);
 }
 
 export function knowledgeAssetsValidationError(assets: readonly string[]): string | undefined {
@@ -72,6 +104,8 @@ export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex:
         form.constraintTags.length <= CONSTRAINT_TAG_OPTIONS.length &&
         form.constraintTags.every((tag) => hasOption(CONSTRAINT_TAG_OPTIONS, tag)) &&
         textWithinLimit(form.shareTarget, HEARING_SHEET_FORM_LIMITS.shortTextLength) &&
+        optionalListIsValid(form.informationSources, HEARING_SHEET_FORM_LIMITS.informationSources) &&
+        optionalTextWithinLimit(form.trueProblem, HEARING_SHEET_FORM_LIMITS.requiredTextLength) &&
         knowledgeAssetsAreValid(form.knowledgeAssets)
       );
     case 3:

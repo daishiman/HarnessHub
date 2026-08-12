@@ -5,6 +5,7 @@ import { Alert, Button, Panel, Stack, StatusChip, StepWizard, TagRow } from '@ha
 import dynamic from 'next/dynamic';
 import { type ReactNode, useEffect, useState } from 'react';
 
+import { hearingIntakeStepIsValid } from '../../../../features/hearing-intake/wizard-validation.js';
 import { canProceedAtStep, INITIAL_HEARING_FORM } from './hearing-intake-wizard-model.js';
 import { useHearingWizardFormState } from './hearing-intake-wizard-state.js';
 import { buildHearingIntakeSteps } from './hearing-intake-wizard-steps.js';
@@ -12,7 +13,7 @@ import { buildHearingIntakeSteps } from './hearing-intake-wizard-steps.js';
 // 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
-const STORAGE_KEY = 'harness-hub:hearing-intake:draft:v1';
+const STORAGE_KEY = 'harness-hub:hearing-intake:draft:v2';
 
 interface HearingIntakeWizardProps {
   readonly tenantId: string;
@@ -57,6 +58,10 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const canProceed = canProceedAtStep(form, activeIndex);
 
   const submit = async (): Promise<void> => {
+    if (!hearingIntakeStepIsValid(form, 7)) {
+      setError('入力内容に上限超過または未入力があります。各ステップを確認してください。');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {

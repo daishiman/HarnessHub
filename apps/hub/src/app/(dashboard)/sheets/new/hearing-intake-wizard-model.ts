@@ -28,6 +28,8 @@ export const INITIAL_HEARING_FORM: HearingSheetFormInput = {
   sharingIntent: 'unknown',
   constraintTags: ['unknown'],
   shareTarget: '',
+  informationSources: null,
+  trueProblem: null,
   knowledgeAssets: [],
   requestPatterns: ['unknown'],
   integrationTools: [],

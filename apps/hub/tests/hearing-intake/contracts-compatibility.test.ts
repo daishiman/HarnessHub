@@ -160,10 +160,12 @@ describe('HI-SCHEMA: 保存 snapshot の後方互換 decoder', () => {
     expect(decoded).not.toHaveProperty('salary');
   });
 
-  it('新規 request は旧 11 項目を受理せず、部分移行・salary 付き保存値も decoder が拒否する', () => {
+  it('新規 request は旧 11 項目を受理せず、部分移行の保存値は decoder が拒否する。salary 付きの旧 request 形は正規化して salary を捨てる', () => {
     expect(createSheetRequestSchema.safeParse(LEGACY_V1_SNAPSHOT).success).toBe(false);
     expect(() => decodeStoredHearingSheetFormSnapshot({ ...LEGACY_V1_SNAPSHOT, usagePurpose: 'unknown' })).toThrow();
-    expect(() => decodeStoredHearingSheetFormSnapshot({ ...LEGACY_V1_SNAPSHOT, salary: 6_000_000 })).toThrow();
+    const decoded = decodeStoredHearingSheetFormSnapshot({ ...LEGACY_V1_SNAPSHOT, salary: 6_000_000 });
+    expect(decoded).not.toHaveProperty('salary');
+    expect(decoded.usagePurpose).toBe('unknown');
   });
 
   it('旧 form を含む ai_jobs payload だけを正規化し、envelope の未知キーは拒否する', () => {

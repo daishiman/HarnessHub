@@ -17,7 +17,7 @@ const DETAIL: SheetDetail = {
   applicant: { id: 'user-1', name: '山田 太郎' },
   department: '経理部',
   form_snapshot: {
-    schemaVersion: 2,
+    schemaVersion: 3,
     taskName: '請求処理',
     company: 'サンプル社',
     applicant: '山田 太郎',
@@ -37,6 +37,8 @@ const DETAIL: SheetDetail = {
     sharingIntent: 'small_group',
     constraintTags: [],
     shareTarget: 'チーム内',
+    informationSources: ['会計システム'],
+    trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
     knowledgeAssets: ['経理マニュアル'],
     requestPatterns: [],
     integrationTools: [],

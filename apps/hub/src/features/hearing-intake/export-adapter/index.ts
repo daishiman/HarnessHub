@@ -19,6 +19,8 @@ export interface BuildHandoffInput {
 }
 
 const UNKNOWN_LABEL = '不明・わからない';
+/** informationSources/trueProblem はまだウィザード UI が無く、null (未回答) のままのことが多い。 */
+const UNANSWERED_LABEL = '未回答';
 
 const USAGE_PURPOSE_LABELS: Readonly<Record<HearingSheetFormSnapshot['usagePurpose'], string>> = {
   app_development: 'アプリ開発',
@@ -117,6 +119,18 @@ function formatKnowledgeAssets(assets: readonly string[]): string {
   return assets.map((asset) => `- ${asset}`).join('\n');
 }
 
+/** informationSources はまだウィザード UI が無いため、null (未回答) を明示的に表示する。 */
+function formatOptionalList(entries: readonly string[] | null): string {
+  if (entries === null) return UNANSWERED_LABEL;
+  if (entries.length === 0) return 'なし';
+  return entries.map((entry) => `- ${entry}`).join('\n');
+}
+
+/** trueProblem はまだウィザード UI が無いため、null (未回答) を明示的に表示する。 */
+function formatOptionalText(value: string | null): string {
+  return value === null ? UNANSWERED_LABEL : value;
+}
+
 function formatMultiSelect<T extends string>(
   values: readonly T[],
   labels: Readonly<Record<T, string>>,
@@ -191,7 +205,7 @@ function formatUnknownSection(form: HearingSheetFormSnapshot): string {
 
 /**
  * HarnessCreator へそのまま貼り付けてハーネス構築に着手できるテキストを組み立てる。
- * 用途・真の課題・出力先・共有相手・ナレッジ資産・熟練度・制約・優先度・要望パターン・
+ * 用途・真の課題・情報源・出力先・共有相手・ナレッジ資産・熟練度・制約・優先度・要望パターン・
  * 連携ツール・自動化内容・既存データ・参考URL・生成済みセクションを含める。
  */
 export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: BuildHandoffInput): string {
@@ -202,7 +216,11 @@ export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: 
       '',
       `## 用途\n${USAGE_PURPOSE_LABELS[form.usagePurpose]}`,
       '',
-      `## 真の課題\n${form.issue}`,
+      `## 現在の困りごと\n${form.issue}`,
+      '',
+      `## 真の課題\n${formatOptionalText(form.trueProblem)}`,
+      '',
+      `## 情報源\n${formatOptionalList(form.informationSources)}`,
       '',
       `## 出力先\n${form.output}`,
       '',
@@ -230,7 +248,7 @@ export function buildHarnessCreatorHandoff({ formSnapshot, generatedSections }: 
 
 /**
  * app-orchestrator / システムプランナー (システム開発エージェント) へそのまま渡せるテキストを組み立てる。
- * 業務名・会社名・業務領域・課題・ほしい機能・希望する出力・優先度・用途プロファイル一式・
+ * 業務名・会社名・業務領域・課題・真の課題・情報源・ほしい機能・希望する出力・優先度・用途プロファイル一式・
  * 要望パターン・連携ツール・自動化内容・既存データ・参考URLを含める。
  */
 export function buildSystemOrchestratorHandoff({ formSnapshot, generatedSections }: BuildHandoffInput): string {
@@ -246,6 +264,10 @@ export function buildSystemOrchestratorHandoff({ formSnapshot, generatedSections
       `## 業務領域\n${form.domain}`,
       '',
       `## 課題\n${form.issue}`,
+      '',
+      `## 真の課題\n${formatOptionalText(form.trueProblem)}`,
+      '',
+      `## 情報源\n${formatOptionalList(form.informationSources)}`,
       '',
       `## ほしい機能（画面・機能）\n${form.features}`,
       '',

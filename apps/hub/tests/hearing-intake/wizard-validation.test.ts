@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   hearingIntakeStepIsValid,
+  informationSourcesValidationError,
   knowledgeAssetsValidationError,
 } from '../../src/features/hearing-intake/wizard-validation.js';
 
@@ -27,6 +28,8 @@ const VALID_FORM: HearingSheetFormInput = {
   sharingIntent: 'small_group',
   constraintTags: [],
   shareTarget: 'チーム内',
+  informationSources: ['会計システム'],
+  trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
   knowledgeAssets: ['経理マニュアル'],
   requestPatterns: ['unknown'],
   integrationTools: [],
@@ -41,10 +44,38 @@ describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
     }
   });
 
+  it('informationSources/trueProblem は null を許容し、null と回答済み 0 件を区別する', () => {
+    expect(
+      hearingIntakeStepIsValid(
+        {
+          ...VALID_FORM,
+          informationSources: null,
+          trueProblem: null,
+        },
+        2,
+      ),
+    ).toBe(true);
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: [] }, 2)).toBe(true);
+  });
+
   it('共有相手は 200 文字を通し 201 文字を用途プロファイル step で止める', () => {
     const max = HEARING_SHEET_FORM_LIMITS.shortTextLength;
     expect(hearingIntakeStepIsValid({ ...VALID_FORM, shareTarget: 'a'.repeat(max) }, 2)).toBe(true);
     expect(hearingIntakeStepIsValid({ ...VALID_FORM, shareTarget: 'a'.repeat(max + 1) }, 2)).toBe(false);
+  });
+
+  it('情報源は 10 件・各 200 文字までとし、理由を入力欄へ返す', () => {
+    const maxItems = HEARING_SHEET_FORM_LIMITS.informationSources;
+    const maxLength = HEARING_SHEET_FORM_LIMITS.shortTextLength;
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: Array(maxItems).fill('資料') }, 2)).toBe(true);
+
+    const tooMany = Array(maxItems + 1).fill('資料');
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: tooMany }, 2)).toBe(false);
+    expect(informationSourcesValidationError(tooMany)).toContain(`${maxItems} 件以内`);
+
+    const tooLong = ['a'.repeat(maxLength + 1)];
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: tooLong }, 2)).toBe(false);
+    expect(informationSourcesValidationError(tooLong)).toContain(`${maxLength} 文字以内`);
   });
 
   it('ナレッジ資産は 10 件・各 200 文字までとし、理由を入力欄へ返す', () => {
