@@ -14,10 +14,46 @@ export type HearingSheetStatus = z.output<typeof hearingSheetStatusSchema>;
 export const hearingPrioritySchema = z.enum(['high', 'medium', 'low']);
 export type HearingPriority = z.output<typeof hearingPrioritySchema>;
 
+/**
+ * skill-intake プラグイン（深掘りヒアリング用サブエージェント群）が集める軸のうち、
+ * クリックで完結できるものをヒアリングシートの選択式項目として取り込んだもの。
+ * 由来: .claude/agents/skill-intake-user-profiler.md（6 軸プロファイル）、
+ * plugins/skill-intake/skills/run-intake-next-action/references/mode-catalog.md（用途分岐）。
+ */
+export const hearingUsagePurposeSchema = z.enum([
+  'app_development',
+  'harness_development',
+  'system_development',
+  'other',
+]);
+export type HearingUsagePurpose = z.output<typeof hearingUsagePurposeSchema>;
+
+export const hearingExpertiseSchema = z.enum(['novice', 'intermediate', 'expert']);
+export type HearingExpertise = z.output<typeof hearingExpertiseSchema>;
+
+export const hearingRoleSchema = z.enum(['individual', 'employee', 'executive', 'creator']);
+export type HearingRole = z.output<typeof hearingRoleSchema>;
+
+export const hearingContextSchema = z.enum(['business', 'personal', 'study', 'hobby']);
+export type HearingContext = z.output<typeof hearingContextSchema>;
+
+export const hearingMotivationSchema = z.enum(['efficiency', 'quality', 'learning', 'branding']);
+export type HearingMotivation = z.output<typeof hearingMotivationSchema>;
+
+export const hearingSharingIntentSchema = z.enum(['self', 'small_group', 'public', 'customer']);
+export type HearingSharingIntent = z.output<typeof hearingSharingIntentSchema>;
+
+export const hearingConstraintTagSchema = z.enum(['time', 'budget', 'authority', 'knowledge']);
+export type HearingConstraintTag = z.output<typeof hearingConstraintTagSchema>;
+
 const requiredText = z.string().trim().min(1).max(2_000);
 const shortText = z.string().trim().min(1).max(200);
 
-/** S10 の 12 項目。salary はこの request 境界だけに存在する。 */
+/**
+ * S10 の 12 項目 + skill-intake 由来の用途プロファイル 9 項目。salary はこの request 境界だけに存在する。
+ * 用途プロファイル項目はすべて選択式（constraintTags/knowledgeAssets は複数選択・タグ追加）で、
+ * shareTarget のみ既存項目でカバーできない自由記述（skill-intake 5 軸シートの「共有相手」）。
+ */
 export const hearingSheetFormInputSchema = z
   .object({
     taskName: shortText,
@@ -32,6 +68,15 @@ export const hearingSheetFormInputSchema = z
     features: requiredText,
     output: requiredText,
     priority: hearingPrioritySchema,
+    usagePurpose: hearingUsagePurposeSchema,
+    expertise: hearingExpertiseSchema,
+    role: hearingRoleSchema,
+    context: hearingContextSchema,
+    motivation: hearingMotivationSchema,
+    sharingIntent: hearingSharingIntentSchema,
+    constraintTags: z.array(hearingConstraintTagSchema).max(4).default([]),
+    shareTarget: shortText,
+    knowledgeAssets: z.array(shortText).min(1).max(10),
   })
   .strict();
 export type HearingSheetFormInput = z.output<typeof hearingSheetFormInputSchema>;

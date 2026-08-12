@@ -27,7 +27,10 @@ import { describe, expect, it } from 'vitest';
 // (A) FormData 12 項目 → form_json 11 項目の導出 (AD-2 / AD-9 / OPEN-2)
 // ---------------------------------------------------------------------------
 
-/** ウィザードが送る `HearingSheetFormInput` の 12 項目 (backend-spec §4.3)。 */
+/**
+ * ウィザードが送る `HearingSheetFormInput` の 21 項目 (backend-spec §4.3 の 12 項目 +
+ * skill-intake 由来の用途プロファイル 9 項目)。
+ */
 const FORM_INPUT_FIELDS = [
   'taskName',
   'company',
@@ -41,6 +44,15 @@ const FORM_INPUT_FIELDS = [
   'features',
   'output',
   'priority',
+  'usagePurpose',
+  'expertise',
+  'role',
+  'context',
+  'motivation',
+  'sharingIntent',
+  'constraintTags',
+  'shareTarget',
+  'knowledgeAssets',
 ] as const;
 
 /** 保存しない項目。年収は PII (SEC4) で、試算後は保持する必要が無い (P03 判定・OPEN-2)。 */
@@ -71,9 +83,9 @@ function validateNumeric(field: NumericField, value: number): boolean {
 }
 
 describe('HI-SCHEMA: FormData の契約 (AD-2 / AD-9)', () => {
-  it('HI-SCHEMA-001: 入力は 12 項目、snapshot は salary を除いた 11 項目になる', () => {
-    expect(FORM_INPUT_FIELDS).toHaveLength(12);
-    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(11);
+  it('HI-SCHEMA-001: 入力は 21 項目、snapshot は salary を除いた 20 項目になる', () => {
+    expect(FORM_INPUT_FIELDS).toHaveLength(21);
+    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(20);
     expect(FORM_SNAPSHOT_FIELDS).not.toContain('salary');
   });
 
@@ -83,7 +95,7 @@ describe('HI-SCHEMA: FormData の契約 (AD-2 / AD-9)', () => {
       (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
     );
 
-    expect(extended).toHaveLength(12);
+    expect(extended).toHaveLength(21);
     expect(extended).toContain('newField');
   });
 
@@ -212,6 +224,15 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     features: 'OCR',
     output: 'CSV',
     priority: 'high' as const,
+    usagePurpose: 'app_development' as const,
+    expertise: 'intermediate' as const,
+    role: 'employee' as const,
+    context: 'business' as const,
+    motivation: 'efficiency' as const,
+    sharingIntent: 'small_group' as const,
+    constraintTags: ['time', 'budget'] as const,
+    shareTarget: 'チーム内',
+    knowledgeAssets: ['過去の経理マニュアル'],
   };
 
   it('HI-SCHEMA-101: hearing schema が @harness-hub/schemas の単一入口から利用できる', () => {

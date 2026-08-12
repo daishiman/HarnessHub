@@ -15,6 +15,7 @@ import {
   createRepositoryContext,
   createTursoClient,
 } from '@harness-hub/db';
+import type { CreateSheetRequest } from '@harness-hub/schemas';
 
 import { createHearingIntakeService } from '../src/features/hearing-intake/service.js';
 import {
@@ -30,7 +31,7 @@ import {
 import { smokeFixtureLifecycle } from './smoke-production-publish-support.js';
 
 /** 提出 fixture。salary を含める — 保存されないことがこの smoke の SEC5 検査になる。 */
-const FORM_INPUT = {
+const FORM_INPUT: CreateSheetRequest = {
   taskName: 'P13 本番 smoke の議事録要約',
   company: 'HarnessHub production smoke',
   applicant: 'production-smoke',
@@ -43,7 +44,16 @@ const FORM_INPUT = {
   features: '文字起こしの要約と決定事項の抽出、担当者への割り当て。',
   output: 'Markdown の議事録と ToDo 一覧',
   priority: 'high',
-} as const;
+  usagePurpose: 'app_development',
+  expertise: 'novice',
+  role: 'employee',
+  context: 'business',
+  motivation: 'efficiency',
+  sharingIntent: 'small_group',
+  constraintTags: [],
+  shareTarget: 'チーム内',
+  knowledgeAssets: ['過去の議事録テンプレート'],
+};
 
 /** worker が返す生成結果。S12 詳細まで往復することを確認するため固定値にする。 */
 const GENERATION_RESULT = {

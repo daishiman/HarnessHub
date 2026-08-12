@@ -35,6 +35,15 @@ const FORM = createSheetRequestSchema.parse({
   features: 'OCR と確認画面',
   output: 'CSV',
   priority: 'high',
+  usagePurpose: 'app_development',
+  expertise: 'novice',
+  role: 'employee',
+  context: 'business',
+  motivation: 'efficiency',
+  sharingIntent: 'small_group',
+  constraintTags: [],
+  shareTarget: 'チーム内',
+  knowledgeAssets: ['経理マニュアル'],
 });
 
 const { salary: _salary, ...FORM_SNAPSHOT } = FORM;
