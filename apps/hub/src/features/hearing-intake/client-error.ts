@@ -1,54 +1,29 @@
 /**
- * API のエラー応答 (RFC 9457 problem+json, `packages/schemas/src/envelope.ts` の problemDetailsSchema) から
- * 利用者向けの一行メッセージを組み立てる。
- *
- * 従来は `!response.ok` を検知した時点で固定文言 (「一覧を取得できませんでした。」等) に潰しており、
- * 実際の失敗理由 (401/403/404/500 のどれか、zod のフィールド単位エラーは何か) が画面からも
- * ログからも分からなかった。ここで problem details の title/detail/errors[].message を拾い、
- * 無ければ fallback へ落とす。`apps/hub/src/features/docs-cms/api-error.ts` と同じ実装方針。
+ * API のエラー応答 (RFC 9457 problem+json) から利用者向けの一行メッセージを組み立てる。
+ * 固定文言に潰さず title/detail/errors[].message を拾う。`docs-cms/api-error.ts` と同方針(client JS 予算のため軽量実装)。
  */
+type ProblemLike = { title?: unknown; detail?: unknown; errors?: unknown };
 
-/** problem+json の最小限の形。zod スキーマそのものは import せず、構造だけを緩く見る (壊れた応答でも例外にしない)。 */
-interface ProblemDetailsLike {
-  readonly title?: unknown;
-  readonly detail?: unknown;
-  readonly errors?: unknown;
-}
+const str = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null);
 
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0;
-}
-
-/** problem details 相当の値からメッセージを組み立てる。JSON パース後の値を渡す (fetch 非依存で単体テストしやすくするため分離)。 */
 export function problemDetailsToMessage(body: unknown, fallback: string): string {
   if (typeof body !== 'object' || body === null) return fallback;
-  const problem = body as ProblemDetailsLike;
-  const parts: string[] = [];
-
-  if (isNonEmptyString(problem.title)) parts.push(problem.title);
-  if (isNonEmptyString(problem.detail)) parts.push(problem.detail);
-
-  if (Array.isArray(problem.errors)) {
-    const fieldMessages = problem.errors
-      .map((entry) => {
-        if (typeof entry !== 'object' || entry === null) return null;
-        const message = (entry as { message?: unknown }).message;
-        return isNonEmptyString(message) ? message : null;
-      })
-      .filter((message): message is string => message !== null);
-    if (fieldMessages.length > 0) parts.push(fieldMessages.join(' / '));
+  const p = body as ProblemLike;
+  const parts = [str(p.title), str(p.detail)].filter((v): v is string => v !== null);
+  if (Array.isArray(p.errors)) {
+    const msgs = p.errors
+      .map((e) => (e && typeof e === 'object' ? str((e as { message?: unknown }).message) : null))
+      .filter((v): v is string => v !== null);
+    if (msgs.length > 0) parts.push(msgs.join(' / '));
   }
-
   return parts.length > 0 ? parts.join(': ') : fallback;
 }
 
 /** Response から problem details を読み取り、失敗理由を一行メッセージにする。本文が JSON でなければ fallback を返す。 */
 export async function extractApiErrorMessage(response: Response, fallback: string): Promise<string> {
-  let body: unknown;
   try {
-    body = await response.json();
+    return problemDetailsToMessage(await response.json(), fallback);
   } catch {
     return fallback;
   }
-  return problemDetailsToMessage(body, fallback);
 }
