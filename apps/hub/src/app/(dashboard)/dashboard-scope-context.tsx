@@ -7,8 +7,8 @@
  * layout 側で解決した値を Context 経由で受け取る。
  */
 
-import { createContext, type ReactNode, useContext } from 'react';
 import type { SessionRole } from '@harness-hub/schemas';
+import { createContext, type ReactNode, useContext } from 'react';
 import type { DashboardScope } from '../../lib/routing/dashboard-scope-helpers.js';
 
 const DashboardScopeContext = createContext<DashboardScope>({ tenantId: null, workspaceId: null });

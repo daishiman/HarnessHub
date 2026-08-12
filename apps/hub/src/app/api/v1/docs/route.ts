@@ -19,7 +19,7 @@ export const GET = withAuthz(
       const { problemDetailsFromZodError } = await import('@harness-hub/schemas');
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
-    const { limit, cursor, scope, status, q } = parsed.data;
+    const { limit, cursor, scope, status, category, q } = parsed.data;
     const page = await docsCmsRuntime().repository.listDocuments(
       createRepositoryContext({ tenantId: authz.resource.tenantId }),
       {
@@ -27,6 +27,7 @@ export const GET = withAuthz(
         ...(cursor !== undefined ? { cursor } : {}),
         ...(scope !== undefined ? { scope } : {}),
         ...(status !== undefined ? { status } : {}),
+        ...(category !== undefined ? { category } : {}),
         ...(q !== undefined ? { query: q } : {}),
       },
     );
@@ -59,6 +60,10 @@ export const POST = withAuthz(
         title: parsed.data.title,
         bodyMarkdown: parsed.data.body_markdown,
         actorId: authz.principal.userId,
+        ...(parsed.data.category === undefined ? {} : { category: parsed.data.category }),
+        ...(parsed.data.tags === undefined ? {} : { tagsJson: JSON.stringify(parsed.data.tags) }),
+        ...(parsed.data.eyecatch_image_url === undefined ? {} : { eyecatchImageUrl: parsed.data.eyecatch_image_url }),
+        ...(parsed.data.publish_at === undefined ? {} : { publishAt: parsed.data.publish_at }),
       },
     );
 

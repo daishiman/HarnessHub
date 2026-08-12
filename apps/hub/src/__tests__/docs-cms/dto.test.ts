@@ -18,6 +18,18 @@ const ROW: DocumentRow = {
   updatedBy: 'user-2',
   createdAt: 1_700_000_000,
   updatedAt: 1_700_000_100,
+  category: null,
+  tagsJson: null,
+  eyecatchImageUrl: null,
+  publishAt: null,
+};
+
+const ROW_WITH_BLOG_FIELDS: DocumentRow = {
+  ...ROW,
+  category: 'release-note',
+  tagsJson: '["a","b"]',
+  eyecatchImageUrl: 'https://example.com/image.png',
+  publishAt: 1_700_000_200,
 };
 
 describe('DOCS-DTO: toDocumentDetail', () => {
@@ -28,6 +40,28 @@ describe('DOCS-DTO: toDocumentDetail', () => {
       title: '導入ガイド',
       body_markdown: '# 導入ガイド\n\n手順。',
       status: 'draft',
+      category: null,
+      tags: [],
+      eyecatch_image_url: null,
+      publish_at: null,
+      created_by: 'user-1',
+      updated_by: 'user-2',
+      created_at: 1_700_000_000,
+      updated_at: 1_700_000_100,
+    });
+  });
+
+  it('DOCS-DTO-003: ブログ項目 (category/tags/eyecatch/publish_at) を変換する', () => {
+    expect(toDocumentDetail(ROW_WITH_BLOG_FIELDS)).toEqual({
+      id: 'doc-1',
+      scope: 'tenant',
+      title: '導入ガイド',
+      body_markdown: '# 導入ガイド\n\n手順。',
+      status: 'draft',
+      category: 'release-note',
+      tags: ['a', 'b'],
+      eyecatch_image_url: 'https://example.com/image.png',
+      publish_at: 1_700_000_200,
       created_by: 'user-1',
       updated_by: 'user-2',
       created_at: 1_700_000_000,
@@ -45,6 +79,10 @@ describe('DOCS-DTO: toDocumentListItem', () => {
       scope: 'tenant',
       title: '導入ガイド',
       status: 'draft',
+      category: null,
+      tags: [],
+      eyecatch_image_url: null,
+      publish_at: null,
       created_by: 'user-1',
       updated_by: 'user-2',
       created_at: 1_700_000_000,

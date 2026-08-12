@@ -66,4 +66,75 @@ describe('DOCS-DB: documents repository', () => {
       new Set([...firstPage.items, ...secondPage.items, ...thirdPage.items].map((document) => document.id)),
     ).toEqual(new Set(created.map((document) => document.id)));
   });
+
+  it('DOCS-BLOG-001: category/tags/eyecatch/publish_at を作成・更新で保存・変換できる', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+
+    const created = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: 'ブログ項目つきドキュメント',
+      bodyMarkdown: '本文',
+      actorId: context.actorId ?? 'missing-actor',
+      category: 'release-note',
+      tagsJson: JSON.stringify(['a', 'b']),
+      eyecatchImageUrl: 'https://example.com/eye.png',
+      publishAt: 1_700_000_000_000,
+    });
+    expect(created.category).toBe('release-note');
+    expect(created.tagsJson).toBe(JSON.stringify(['a', 'b']));
+    expect(created.eyecatchImageUrl).toBe('https://example.com/eye.png');
+    expect(created.publishAt).toBe(1_700_000_000_000);
+
+    const filtered = await repository.listDocuments(context, { limit: 10, category: 'release-note' });
+    expect(filtered.items.map((doc) => doc.id)).toContain(created.id);
+
+    const updated = await repository.updateDocument(context, created.id, {
+      actorId: context.actorId ?? 'missing-actor',
+      category: null,
+      tagsJson: null,
+    });
+    expect(updated.category).toBeNull();
+    expect(updated.tagsJson).toBeNull();
+    // 更新で触れていないフィールドは温存される
+    expect(updated.eyecatchImageUrl).toBe('https://example.com/eye.png');
+    expect(updated.publishAt).toBe(1_700_000_000_000);
+  });
+
+  it('DOCS-BLOG-002: publishScheduledDocuments は publish_at <= now の draft だけを published へ昇格する', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const now = 1_700_000_000_000;
+
+    const due = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '予約公開対象',
+      bodyMarkdown: '本文',
+      actorId: context.actorId ?? 'missing-actor',
+      publishAt: now - 1_000,
+    });
+    const notYetDue = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '未来の予約',
+      bodyMarkdown: '本文',
+      actorId: context.actorId ?? 'missing-actor',
+      publishAt: now + 1_000_000,
+    });
+    const noSchedule = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '予約なし',
+      bodyMarkdown: '本文',
+      actorId: context.actorId ?? 'missing-actor',
+    });
+
+    const count = await repository.publishScheduledDocuments(now);
+    expect(count).toBe(1);
+
+    const dueAfter = await repository.getDocument(context, due.id);
+    const notYetDueAfter = await repository.getDocument(context, notYetDue.id);
+    const noScheduleAfter = await repository.getDocument(context, noSchedule.id);
+    expect(dueAfter?.status).toBe('published');
+    expect(notYetDueAfter?.status).toBe('draft');
+    expect(noScheduleAfter?.status).toBe('draft');
+  });
 });

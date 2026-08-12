@@ -11,6 +11,13 @@ export type DocumentStatus = z.output<typeof documentStatusSchema>;
 
 const titleSchema = z.string().trim().min(1).max(200);
 const bodyMarkdownSchema = z.string().max(200_000);
+/** ブログ的分類の 1 語 (例: 'release-note')。未分類は null。 */
+const categorySchema = z.string().trim().min(1).max(80).nullable();
+/** タグは配列で受け渡す (保存表現の JSON 文字列化は repository 層の関心)。 */
+const tagsSchema = z.array(z.string().trim().min(1).max(40)).max(20);
+const eyecatchImageUrlSchema = z.string().trim().url().max(2_000).nullable();
+/** 予約公開の実行予定時刻 (epoch ms)。未来日時のみ許可 — 過去日時は「今すぐ公開」と区別が付かず事故のもと。 */
+const publishAtSchema = z.number().int().positive().nullable();
 
 export const documentDetailSchema = z
   .object({
@@ -19,6 +26,12 @@ export const documentDetailSchema = z
     title: titleSchema,
     body_markdown: bodyMarkdownSchema,
     status: documentStatusSchema,
+    // 既存文書はいずれも未設定 (null) のまま読める。旧クライアントが知らないフィールドとして
+    // 無視しても壊れないよう、追加はここまで全て optional 相当 (null 許容) にする。
+    category: categorySchema,
+    tags: tagsSchema,
+    eyecatch_image_url: eyecatchImageUrlSchema,
+    publish_at: publishAtSchema,
     created_by: identifierSchema,
     updated_by: identifierSchema,
     created_at: z.number().int().positive(),
@@ -33,6 +46,7 @@ export type DocumentListItem = z.output<typeof documentListItemSchema>;
 export const documentListQuerySchema = paginationQuerySchema.extend({
   scope: documentScopeSchema.optional(),
   status: documentStatusSchema.optional(),
+  category: z.string().trim().min(1).max(80).optional(),
   /**
    * 検索対象は**タイトルのみ**。本文 (body_markdown) は含めない。
    *
@@ -52,6 +66,10 @@ export const createDocumentRequestSchema = z
     scope: documentScopeSchema,
     title: titleSchema,
     body_markdown: bodyMarkdownSchema.default(''),
+    category: categorySchema.optional(),
+    tags: tagsSchema.optional(),
+    eyecatch_image_url: eyecatchImageUrlSchema.optional(),
+    publish_at: publishAtSchema.optional(),
   })
   .strict();
 export type CreateDocumentRequest = z.output<typeof createDocumentRequestSchema>;
@@ -61,6 +79,10 @@ export const updateDocumentRequestSchema = z
     title: titleSchema.optional(),
     body_markdown: bodyMarkdownSchema.optional(),
     status: documentStatusSchema.optional(),
+    category: categorySchema.optional(),
+    tags: tagsSchema.optional(),
+    eyecatch_image_url: eyecatchImageUrlSchema.optional(),
+    publish_at: publishAtSchema.optional(),
   })
   .strict();
 export type UpdateDocumentRequest = z.output<typeof updateDocumentRequestSchema>;

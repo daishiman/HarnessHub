@@ -9,7 +9,7 @@
  * AI 下書きキュー (kind=doc_draft) は hearing-intake-queue.ts の汎用 claim/complete/fail を
  * 再利用し、CAS/lease の実装を複製しない (AD-4)。
  */
-import { and, desc, eq, lt, or, type SQL } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, lt, lte, or, type SQL } from 'drizzle-orm';
 
 import { documents } from '../schema/docs-cms/schema';
 import { aiJobs } from '../schema/hearing-intake/schema';
@@ -38,6 +38,11 @@ export interface DocumentRow {
   readonly updatedBy: string;
   readonly createdAt: number;
   readonly updatedAt: number;
+  readonly category: string | null;
+  /** JSON 文字列表現 (`["a","b"]`)。配列への変換は features/docs-cms/dto.ts が行う。 */
+  readonly tagsJson: string | null;
+  readonly eyecatchImageUrl: string | null;
+  readonly publishAt: number | null;
 }
 
 export interface CreateDocumentInput {
@@ -45,6 +50,10 @@ export interface CreateDocumentInput {
   readonly title: string;
   readonly bodyMarkdown: string;
   readonly actorId: string;
+  readonly category?: string | null;
+  readonly tagsJson?: string | null;
+  readonly eyecatchImageUrl?: string | null;
+  readonly publishAt?: number | null;
 }
 
 export interface UpdateDocumentInput {
@@ -52,11 +61,16 @@ export interface UpdateDocumentInput {
   readonly bodyMarkdown?: string;
   readonly status?: DocumentStatus;
   readonly actorId: string;
+  readonly category?: string | null;
+  readonly tagsJson?: string | null;
+  readonly eyecatchImageUrl?: string | null;
+  readonly publishAt?: number | null;
 }
 
 export interface ListDocumentsInput {
   readonly scope?: DocumentScope;
   readonly status?: DocumentStatus;
+  readonly category?: string;
   /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
   readonly query?: string;
   readonly cursor?: string;
@@ -73,6 +87,13 @@ export interface DocsCmsRepository {
   getDocument(context: RepositoryContext, id: string): Promise<DocumentRow | null>;
   createDocument(context: RepositoryContext, input: CreateDocumentInput): Promise<DocumentRow>;
   updateDocument(context: RepositoryContext, id: string, input: UpdateDocumentInput): Promise<DocumentRow>;
+  /**
+   * 予約公開 (publish_at <= now の draft) を published へ一括昇格する。cron (worker/cron.ts) 専用。
+   * tenant 境界の外までまとめて処理する必要があるため、`RepositoryContext` を取らない
+   * (通常の read/write と違い、これは単一テナントの操作ではなくシステムジョブ)。
+   * 昇格した件数を返す (cron の実行ログに残すため)。
+   */
+  publishScheduledDocuments(now: number): Promise<number>;
   claimNextDocDraftJob(
     context: RepositoryContext,
     tokenId: string,
@@ -124,6 +145,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       const predicates = [visibilityCondition(context)];
       if (input.scope !== undefined) predicates.push(eq(documents.scope, input.scope));
       if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
+      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
       if (input.query !== undefined) {
         const search = containsTermInAny(input.query, [documents.title]);
         if (search !== undefined) predicates.push(search);
@@ -163,6 +185,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           const db = tx.client as CoreDb;
           const now = serverNow();
           const id = newUlid(now);
+          const category = input.category ?? null;
+          const tagsJson = input.tagsJson ?? null;
+          const eyecatchImageUrl = input.eyecatchImageUrl ?? null;
+          const publishAt = input.publishAt ?? null;
           await db.insert(documents).values({
             id,
             tenantId: context.tenantId,
@@ -174,6 +200,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
             updatedBy: input.actorId,
             createdAt: now,
             updatedAt: now,
+            category,
+            tagsJson,
+            eyecatchImageUrl,
+            publishAt,
           });
           return {
             id,
@@ -186,6 +216,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
             updatedBy: input.actorId,
             createdAt: now,
             updatedAt: now,
+            category,
+            tagsJson,
+            eyecatchImageUrl,
+            publishAt,
           } satisfies DocumentRow;
         }),
       );
@@ -200,6 +234,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           if (input.title !== undefined) patch.title = input.title;
           if (input.bodyMarkdown !== undefined) patch.bodyMarkdown = input.bodyMarkdown;
           if (input.status !== undefined) patch.status = input.status;
+          if (input.category !== undefined) patch.category = input.category;
+          if (input.tagsJson !== undefined) patch.tagsJson = input.tagsJson;
+          if (input.eyecatchImageUrl !== undefined) patch.eyecatchImageUrl = input.eyecatchImageUrl;
+          if (input.publishAt !== undefined) patch.publishAt = input.publishAt;
 
           const updated = await db
             .update(documents)
@@ -211,6 +249,18 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           return row;
         }),
       );
+    },
+
+    async publishScheduledDocuments(now) {
+      return guardedWrite(adapter, async () => {
+        const db = adapter.client;
+        const updated = await db
+          .update(documents)
+          .set({ status: 'published', updatedAt: now, updatedBy: 'scheduled-publish-cron' })
+          .where(and(eq(documents.status, 'draft'), isNotNull(documents.publishAt), lte(documents.publishAt, now)))
+          .returning({ id: documents.id });
+        return updated.length;
+      });
     },
 
     claimNextDocDraftJob(context, tokenId, leaseMilliseconds) {

@@ -167,10 +167,10 @@ describe('LISTERG: 一覧の使い勝手', () => {
     }));
     const container = await mount(createElement(DocumentList, { tenantId: 't', workspaceId: 'w' }));
 
-    expect(headerTexts(container)).toEqual(['タイトル', '適用範囲', '状態', '更新日時']);
+    expect(headerTexts(container)).toEqual(['タイトル', '適用範囲', '状態', '分類', '更新日時']);
 
     const widths = [...container.querySelectorAll('colgroup col')].map((col) => col.getAttribute('style') ?? '');
-    expect(widths).toHaveLength(4);
+    expect(widths).toHaveLength(5);
     expect(widths[0]).not.toContain('width');
     for (const width of widths.slice(1)) expect(width).toContain('width');
   });

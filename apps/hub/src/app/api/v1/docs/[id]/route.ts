@@ -58,6 +58,10 @@ export const PATCH = withAuthz<DocParams>(
         ...(parsed.data.title === undefined ? {} : { title: parsed.data.title }),
         ...(parsed.data.body_markdown === undefined ? {} : { bodyMarkdown: parsed.data.body_markdown }),
         ...(parsed.data.status === undefined ? {} : { status: parsed.data.status }),
+        ...(parsed.data.category === undefined ? {} : { category: parsed.data.category }),
+        ...(parsed.data.tags === undefined ? {} : { tagsJson: JSON.stringify(parsed.data.tags) }),
+        ...(parsed.data.eyecatch_image_url === undefined ? {} : { eyecatchImageUrl: parsed.data.eyecatch_image_url }),
+        ...(parsed.data.publish_at === undefined ? {} : { publishAt: parsed.data.publish_at }),
         actorId: authz.principal.userId,
       },
     );

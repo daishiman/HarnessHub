@@ -34,10 +34,11 @@ interface DocumentListProps {
 interface DocumentFilters {
   readonly scope: DocumentScope | '';
   readonly status: DocumentStatus | '';
+  readonly category: string;
   readonly query: string;
 }
 
-const EMPTY_FILTERS: DocumentFilters = { scope: '', status: '', query: '' };
+const EMPTY_FILTERS: DocumentFilters = { scope: '', status: '', category: '', query: '' };
 
 export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: DocumentListProps): ReactNode {
   const [rows, setRows] = useState<readonly DocumentListItem[]>([]);
@@ -65,6 +66,7 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
       const query = new URLSearchParams({ limit: '25' });
       if (filters.scope !== '') query.set('scope', filters.scope);
       if (filters.status !== '') query.set('status', filters.status);
+      if (filters.category !== '') query.set('category', filters.category);
       // 空文字の `q` は送らない。契約側 (listSearchTermSchema) が空語を弾くため 400 になる
       if (filters.query !== '') query.set('q', filters.query);
       if (cursor !== null) query.set('cursor', cursor);
@@ -96,12 +98,13 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
 
   // 0 件のときの言い方を分ける。絞り込んだ結果の 0 件に「まだありません」と出すと、
   // 条件を外せば見つかるものまで「存在しない」と読めてしまう
-  const hasFilters = filters.scope !== '' || filters.status !== '' || filters.query !== '';
+  const hasFilters = filters.scope !== '' || filters.status !== '' || filters.category !== '' || filters.query !== '';
   const appliedFilters: readonly AppliedFilter[] = [
     ...(filters.scope === '' ? [] : [{ label: 'スコープ', value: filters.scope === 'common' ? '共通' : 'テナント' }]),
     ...(filters.status === ''
       ? []
       : [{ label: '状態', value: filters.status === 'published' ? '公開済み' : '下書き' }]),
+    ...(filters.category === '' ? [] : [{ label: '分類', value: filters.category }]),
     ...(filters.query.trim() === '' ? [] : [{ label: '検索', value: filters.query.trim() }]),
   ];
 
@@ -109,7 +112,12 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
     event.preventDefault();
     setCursor(null);
     setCursorHistory([]);
-    apply({ scope: draftFilters.scope, status: draftFilters.status, query: draftFilters.query.trim() });
+    apply({
+      scope: draftFilters.scope,
+      status: draftFilters.status,
+      category: draftFilters.category.trim(),
+      query: draftFilters.query.trim(),
+    });
   };
 
   /**
@@ -153,6 +161,13 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
         width: '9rem',
         value: (row) => (row.status === 'published' ? '公開済み' : '下書き'),
         render: (row) => <StatusChip domain="document" status={row.status} />,
+        salience: 'context',
+      },
+      {
+        key: 'category',
+        header: '分類',
+        width: '9rem',
+        value: (row) => row.category ?? '未分類',
         salience: 'context',
       },
       {
@@ -202,6 +217,12 @@ export function DocumentList({ tenantId, workspaceId, initialQuery = '' }: Docum
             { value: 'draft', label: '下書き' },
             { value: 'published', label: '公開済み' },
           ]}
+        />
+        <TextInput
+          label="分類"
+          description="分類名を完全一致で絞り込みます (例: release-note)。"
+          value={draftFilters.category}
+          onChange={(event) => setDraftFilters((current) => ({ ...current, category: event.target.value }))}
         />
         {/* 検索欄は絞り込み欄の最後に置く。並びは全画面で「選ぶ条件 → 打ち込む条件」で統一する */}
         <TextInput

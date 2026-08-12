@@ -105,7 +105,7 @@ backend-spec §7 の 6 ジョブを、cron trigger 数上限と CLI 依存 (turs
 
 | cron 式 (UTC) | 実行主体 | ジョブ (順次実行・ジョブ単位 try/catch) |
 |---|---|---|
-| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso/R2 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 |
+| `0 15 * * *` (JST 0:00) | Workers scheduled handler | ① metrics rollup (日次) → ② Turso/R2 使用量監視 → ③ orphan_candidate 通知 → ④ token/認可コード掃除 → ⑤ ドキュメント予約公開 (`docs-scheduled-publish`。新しい cron trigger は増やさず既存ステップへ追加 = AD-5 と同型。予約時刻から反映までに最大 24h 程度のずれを許容する MVP の割り切り) |
 | `0 0 * * 1` (JST 月 9:00) | Workers scheduled handler | 週次 rollup 確定 + 週次サマリメール (opt-in、100 通/日制限のバッチ分割 = D6/qa-027) |
 | `0 17 * * *` (JST 2:00) | GitHub Actions (`backup.yml`) | DB export → gzip → R2 `harness-hub-backups` へ upload (§10) |
 

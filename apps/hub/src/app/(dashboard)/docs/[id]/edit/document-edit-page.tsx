@@ -12,6 +12,12 @@ import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
 import { canWriteDocument, extractErrorMessage } from '../../../../../features/docs-cms/client-errors.js';
+import {
+  parseTagsInput,
+  publishAtInputToEpochMs,
+  publishAtToInput,
+  tagsToInput,
+} from '../../../../../features/docs-cms/form-fields.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope, useSessionRole } from '../../../dashboard-scope-context.js';
 
@@ -50,6 +56,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
   const [status, setStatus] = useState<DocumentStatus>('draft');
+  const [category, setCategory] = useState('');
+  const [tagsInput, setTagsInput] = useState('');
+  const [eyecatchImageUrl, setEyecatchImageUrl] = useState('');
+  const [publishAtInput, setPublishAtInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -65,6 +75,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
       setTitle(doc.title);
       setBodyMarkdown(doc.body_markdown);
       setStatus(doc.status);
+      setCategory(doc.category ?? '');
+      setTagsInput(tagsToInput(doc.tags));
+      setEyecatchImageUrl(doc.eyecatch_image_url ?? '');
+      setPublishAtInput(publishAtToInput(doc.publish_at));
       setError(null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'ドキュメントを取得できませんでした。');
@@ -82,7 +96,15 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         method: 'PATCH',
         credentials: 'same-origin',
         headers: headers(tenantId, workspaceId),
-        body: JSON.stringify({ title, body_markdown: bodyMarkdown, status }),
+        body: JSON.stringify({
+          title,
+          body_markdown: bodyMarkdown,
+          status,
+          category: category.trim().length > 0 ? category.trim() : null,
+          tags: parseTagsInput(tagsInput),
+          eyecatch_image_url: eyecatchImageUrl.trim().length > 0 ? eyecatchImageUrl.trim() : null,
+          publish_at: publishAtInputToEpochMs(publishAtInput),
+        }),
       });
       if (!response.ok) throw new Error(await extractErrorMessage(response, '保存できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
@@ -147,12 +169,39 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
             <TextInput label="タイトル" value={title} onChange={(event) => setTitle(event.target.value)} />
             <Select
               label="状態"
+              description="予約公開日時を設定していても、状態は保存時点のまま変わりません。予約日時が来ると自動で「公開済み」に切り替わります。"
               value={status}
               onChange={(event) => setStatus(event.target.value as DocumentStatus)}
               options={[
                 { value: 'draft', label: '下書き' },
                 { value: 'published', label: '公開済み' },
               ]}
+            />
+            <TextInput
+              label="分類"
+              description="1つだけ選べます (例: release-note)。空欄なら未分類として保存されます。"
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+            />
+            <TextInput
+              label="タグ"
+              description="カンマ区切りで複数入力できます (例: 手順書, 社内向け)。"
+              value={tagsInput}
+              onChange={(event) => setTagsInput(event.target.value)}
+            />
+            <TextInput
+              label="アイキャッチ画像 URL"
+              description="一覧・詳細に表示するサムネイル画像の URL です (画像アップロードには対応していません)。"
+              type="url"
+              value={eyecatchImageUrl}
+              onChange={(event) => setEyecatchImageUrl(event.target.value)}
+            />
+            <TextInput
+              label="予約公開日時"
+              description="指定すると、下書きのままこの日時以降に自動で公開されます (最大24時間程度の遅れが生じることがあります)。空欄なら予約しません。"
+              type="datetime-local"
+              value={publishAtInput}
+              onChange={(event) => setPublishAtInput(event.target.value)}
             />
             <MarkdownEditor label="本文" value={bodyMarkdown} onValueChange={setBodyMarkdown} rows={16} />
           </Stack>

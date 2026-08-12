@@ -6,13 +6,13 @@
 
 import type { DocumentDetail, DocumentListResponse } from '@harness-hub/schemas';
 import { UiProvider } from '@harness-hub/ui';
-import { act, createElement, type ReactElement } from 'react';
+import { act, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { SessionRoleProvider } from '../../app/(dashboard)/dashboard-scope-context.js';
 // route wrapper はbundle分割だけを担うため、保存契約は遅延読込先の実装本体で検証する。
 import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/document-edit-page.js';
 import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
-import { SessionRoleProvider } from '../../app/(dashboard)/dashboard-scope-context.js';
 import { DocumentList } from '../../app/(dashboard)/docs/document-list.js';
 import { DocumentCreateForm } from '../../app/(dashboard)/docs/new/document-create-form.js';
 
@@ -30,6 +30,10 @@ const LIST_RESPONSE: DocumentListResponse = {
       scope: 'tenant',
       title: '導入ガイド',
       status: 'draft',
+      category: null,
+      tags: [],
+      eyecatch_image_url: null,
+      publish_at: null,
       created_by: 'user-1',
       updated_by: 'user-1',
       created_at: 1_700_000_000,
@@ -45,6 +49,10 @@ const DOC: DocumentDetail = {
   title: '導入ガイド',
   body_markdown: '# 導入ガイド\n\n手順。',
   status: 'draft',
+  category: null,
+  tags: [],
+  eyecatch_image_url: null,
+  publish_at: null,
   created_by: 'user-1',
   updated_by: 'user-1',
   created_at: 1_700_000_000,
@@ -65,12 +73,17 @@ async function render(element: ReactElement): Promise<void> {
   await renderWithRole(element, 'workspace-admin');
 }
 
-async function renderWithRole(element: ReactElement, role: 'member' | 'workspace-admin' | 'provider-admin'): Promise<void> {
+async function renderWithRole(
+  element: ReactElement,
+  role: 'member' | 'workspace-admin' | 'provider-admin',
+): Promise<void> {
   await act(async () => {
     // 詳細/編集画面は SessionRoleProvider (layout.tsx が resolveShellIdentity() で解決する) から
     // role を読み、docs.write_tenant を満たさない role では編集導線を隠す。
     root.render(
-      createElement(UiProvider, null, createElement(SessionRoleProvider, { role, children: element })),
+      <UiProvider>
+        <SessionRoleProvider role={role}>{element}</SessionRoleProvider>
+      </UiProvider>,
     );
   });
   await flush();

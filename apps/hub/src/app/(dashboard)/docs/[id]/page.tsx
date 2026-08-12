@@ -5,7 +5,17 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, LiveStatus, Panel, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  DefinitionList,
+  LiveStatus,
+  Panel,
+  ScopeChip,
+  ScreenHeader,
+  StatusChip,
+  TagRow,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { canWriteDocument, extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
@@ -110,6 +120,37 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
       />
       {/* 状態とスコープは見出し帯 (sticky) の中に置いた。本文が長い運用手順書でも
           「どのテナントの、公開済みか下書きか」を見失わないようにするため */}
+      <Panel title="分類と公開設定">
+        <DefinitionList
+          label="分類と公開設定"
+          columns={2}
+          items={[
+            { term: '分類', description: doc.category ?? '未分類' },
+            { term: 'タグ', description: doc.tags.length > 0 ? doc.tags.join('、') : 'タグなし' },
+            {
+              term: '予約公開',
+              description: doc.publish_at === null ? '設定なし' : new Date(doc.publish_at).toLocaleString('ja-JP'),
+              hint:
+                doc.publish_at === null || doc.status === 'published'
+                  ? undefined
+                  : '毎日の予約公開処理で反映されます (最大24時間程度かかることがあります)。',
+            },
+          ]}
+        />
+        {doc.eyecatch_image_url === null ? null : (
+          // biome-ignore lint/performance/noImgElement: 任意の外部 URL を許すアイキャッチ画像で、next/image の最適化ドメイン許可リストに載せる対象ではない
+          <img
+            src={doc.eyecatch_image_url}
+            alt=""
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              borderRadius: 'var(--hh-radius-sm)',
+              marginTop: 'var(--hh-space-3)',
+            }}
+          />
+        )}
+      </Panel>
       <Panel>
         <MarkdownView content={doc.body_markdown} />
       </Panel>
