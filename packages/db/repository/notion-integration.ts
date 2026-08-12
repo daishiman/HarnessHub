@@ -117,6 +117,10 @@ export function createNotionIntegrationRepo(adapter: CoreAdapter, cipher: Column
           .onConflictDoUpdate({
             target: [notionIntegrations.tenantId, notionIntegrations.workspaceId],
             set: {
+              // concurrent first upsert では両方の caller が別々の id を生成し得る。
+              // apiKeyEnc の AAD に使った id と DB に残る id を同じ文で更新し、
+              // 「暗号文だけが敗者の id で書き換わる」状態を作らない。
+              id: row.id,
               mode: row.mode,
               pageUrl: row.pageUrl,
               apiKeyEnc: row.apiKeyEnc,

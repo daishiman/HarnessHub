@@ -34,12 +34,19 @@ const WORKSPACE_SCOPED = ['ヒアリングシート', '業務ツール', 'ドキ
 const INSIGHT_SCOPED = ['ダッシュボード', 'パイプライン', '使用状況・削減効果'] as const;
 /** tenant 単位の画面。workspace を付けると「その workspace 限定の設定」と誤読される。 */
 const TENANT_SCOPED = ['ユーザー管理', 'アカウント設定', '認証設定', '見積係数設定'] as const;
+/** 管理カテゴリに置くが、設定の所有範囲は workspace。 */
+const WORKSPACE_SETTINGS = ['Notion連携'] as const;
 
 describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => {
   it('TID-PNAV-01: 主要導線を過不足なく 1 本ずつ出す', () => {
     const links = linksOf('tenant-a', 'ws-1');
 
-    expect([...links.keys()]).toEqual([...WORKSPACE_SCOPED, ...INSIGHT_SCOPED, ...TENANT_SCOPED]);
+    expect([...links.keys()]).toEqual([
+      ...WORKSPACE_SCOPED,
+      ...INSIGHT_SCOPED,
+      ...TENANT_SCOPED,
+      ...WORKSPACE_SETTINGS,
+    ]);
   });
 
   it('TID-PNAV-01b: 分析系の導線も workspace まで引き継ぐ (集計範囲が workspace 単位のため)', () => {
@@ -66,6 +73,12 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
     expect(links.get('アカウント設定')).toBe('/settings/account?tenant=tenant-a');
     expect(links.get('認証設定')).toBe('/settings/auth?tenant=tenant-a');
     expect(links.get('見積係数設定')).toBe('/settings/coefficients?tenant=tenant-a');
+  });
+
+  it('TID-PNAV-03b: Notion 連携は workspace 共有設定なので両方の scope を引き継ぐ', () => {
+    const links = linksOf('tenant-a', 'ws-1');
+
+    expect(links.get('Notion連携')).toBe('/settings/notion?tenant=tenant-a&workspace=ws-1');
   });
 
   it('TID-PNAV-04: scope 未解決 (両方とも空) -> クエリを付けず素のパスにする', () => {
