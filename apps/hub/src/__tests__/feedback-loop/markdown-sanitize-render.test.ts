@@ -10,7 +10,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { MarkdownView, markdownSanitizeSchema } from '@harness-hub/ui';
+import { MarkdownView, markdownSanitizeSchema, UiProvider } from '@harness-hub/ui';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -19,8 +19,10 @@ const APP_SRC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..',
 const detailView = () =>
   readFileSync(path.resolve(APP_SRC, 'app/(dashboard)/feedback/[id]/feedback-detail.tsx'), 'utf8');
 
+// MarkdownView は画像 (LightboxImage) の「拡大」ラベル等を UiProvider の辞書から引くため、
+// 実アプリと同じく UiProvider の内側で描画する (layout.tsx が全画面をこれで包んでいるのに合わせる)。
 function renderFeedbackContent(content: string): string {
-  return renderToStaticMarkup(createElement(MarkdownView, { content }));
+  return renderToStaticMarkup(createElement(UiProvider, null, createElement(MarkdownView, { content })));
 }
 
 describe('markdown-sanitize-render: feedback body / ai_response の sanitize', () => {
