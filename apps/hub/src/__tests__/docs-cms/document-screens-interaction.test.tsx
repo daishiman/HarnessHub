@@ -398,7 +398,7 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
   it('DOCS-UI-012: カテゴリ・タグ・サムネイル・要約を入力すると作成リクエストへ含まれる', async () => {
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 }));
     vi.stubGlobal('fetch', fetchMock);
-    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
     await fillTitle(container, '導入ガイド');
 
     await fillField(fieldByLabel(container, 'カテゴリ'), '運用');
