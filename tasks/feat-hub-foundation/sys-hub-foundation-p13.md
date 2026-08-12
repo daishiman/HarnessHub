@@ -125,7 +125,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 ## 2026-08-12 UI MVP wave (表示名・情報設計・一覧一貫性)
 
-- 公開単位 primary: `issue-ui-identifier-display-name-20260811`（Beads `HarnessHub-62ah`）。関連: `2mu6` / `oanz` / `z45h` / `vaov` / `ck3d` / `5yen`。
+- 公開単位 primary: `issue-ui-identifier-display-name-20260811`（Beads `HarnessHub-62ah`）。関連: `2mu6` / `oanz` / `z45h` / `vaov` / `ck3d` / `5yen` / `p26n` / `pwph` / `nqo5` / `preq`。
 - exact-13 に 14 個目の task は追加しない。P13 後の UI 一貫性 writeback として扱う。
-- 表示 claim は optional で認可非使用。Project 名解決は `HarnessHub-pwph` 待ち。
+- 表示 claim は optional で認可非使用。Project 名解決は `HarnessHub-pwph` 完了後に結線済み。
+- 追補: 相対日時 (`DateTimeText` / HarnessHub-p26n)、list `q` 検索の安全共通化、screen-pattern gate、metrics `rankingTotals`。
 - 受領: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+- 残: HarnessHub-5yen（法務本文）、HarnessHub-7mc6（Linux VRT）、HarnessHub-alyy（session cookie 上限）。

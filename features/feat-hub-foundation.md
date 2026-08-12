@@ -185,6 +185,8 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 
 ## Post-closeout UI MVP wave (2026-08-12)
 
-- 表示名 (氏名/Workspace)、IdBadge、ListState、FilterBar、route surface 台帳、information-design sheet、color-scheme を一括で揃えた。
+- 表示名 (氏名/Workspace/Project)、IdBadge、ListState、FilterBar、route surface 台帳、information-design sheet、color-scheme を一括で揃えた。
 - session の `name` / `workspace_names` は optional の表示専用。認可・edge 判定は変更しない。
+- 追加の同一 wave 追補: `DateTimeText` による相対日時併記、docs/feedback/users の `q` 検索と
+  LIKE エスケープ共通化、screen-pattern gate、metrics `rankingTotals`、係数既定値の単一出所。
 - system-spec の R4-reopen は不要（判断理由は受領書 §2）。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と [受領書](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。

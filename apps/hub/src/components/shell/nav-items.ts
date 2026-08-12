@@ -208,8 +208,11 @@ export interface HeaderSearch {
  *
  * 載せる条件は 1 つだけ = **一覧側が `q` での絞り込みに実際に対応していること**。
  * 押しても何も起きない欄は、無い欄より悪い (壊れていると読まれる)。
- * 現時点で `q` を受けられるのは次の 2 領域だけで、ドキュメント・改善要望・利用者は
- * 一覧 API に `q` が無いため、対応が入るまでヘッダーからは検索させない。
+ *
+ * 入力欄の例示 (placeholder) は、その一覧が実際に見ている列と一致させる。
+ * 「ツール名で探す」と書いてあるのに説明文まで当たる、あるいはその逆になると、
+ * 出てきた結果の理由が画面から読み取れなくなる。各領域の検索対象は契約 schema
+ * (`documentListQuerySchema` などの `q` の JSDoc) が正本。
  *
  * 行き先・見出し語・入力欄の例示は必ずこの 1 つの表から採る。3 つを別々に決めると、
  * 「シートを検索」と言いながらツール一覧へ飛ぶ、といったズレが後から必ず生まれる。
@@ -228,6 +231,29 @@ const searchTargets = [
     label: '業務ツールを検索',
     placeholder: 'ツール名で探す',
     withWorkspace: true,
+  },
+  {
+    pathPrefix: '/docs',
+    action: '/docs',
+    label: 'ドキュメントを検索',
+    placeholder: 'タイトルで探す',
+    withWorkspace: true,
+  },
+  {
+    pathPrefix: '/feedback',
+    action: '/feedback',
+    label: '改善要望を検索',
+    placeholder: '受付番号・本文で探す',
+    withWorkspace: true,
+  },
+  {
+    // 利用者はテナント単位の一覧で、workspace には属さない (`userListQuerySchema` に workspace が無い)。
+    // ここだけ withWorkspace を false にするのは、付けても意味が無い絞り込みを URL に残さないため。
+    pathPrefix: '/users',
+    action: '/users',
+    label: '利用者を検索',
+    placeholder: '氏名・部門で探す',
+    withWorkspace: false,
   },
 ] as const;
 

@@ -118,6 +118,7 @@ describe('P05 受入層: zod スキーマ契約 (AD-3)', () => {
       'minutes_per_run',
       'sheet_reduction_rate',
       'updated_by',
+      'updated_by_name',
     ]);
   });
 
@@ -276,6 +277,7 @@ describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', ()
       minutes_per_run: 20,
       sheet_reduction_rate: 0.35,
       updated_by: harness.workspaceAdmin.id,
+      updated_by_name: 'Workspace Admin',
     });
     const events = await harness.db.repositories.audit.read(contextFor(harness.tenantId));
     const coefficientChange = events.find((event) => event.action === 'coefficient.change');
@@ -358,6 +360,33 @@ describe('P05 受入層: HTTP route の認可・PII・監査の一体結合', ()
     expect(csv).toContain('name,department,role,status,salary');
     expect(csv).toContain('Member,,member,active,***');
     expect(csv).not.toContain('4800000');
+  });
+
+  it('UOA-ROUTE-009: 一覧と CSV は同じ `q` で同じ範囲に絞られる (ボタンのラベル通りに書き出す)', async () => {
+    // 画面のボタンは「一覧を CSV で書き出す」と書いてある。絞り込み中に全件が出ると
+    // ラベルが嘘になるので、一覧と書き出しが同じ条件で同じ範囲になることを固定する。
+    const list = await listUsers(await buildRequest('/users?q=Member', 'GET'));
+    expect(list.status).toBe(200);
+    const names = (await list.json()).items.map((item: { readonly name: string }) => item.name);
+    expect(names).toStrictEqual(['Member']);
+
+    const csv = await (await exportUsers(await buildRequest('/users/export?q=Member', 'GET'))).text();
+    const rows = csv.trim().split('\n').slice(1); // 見出し行を除く
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toContain('Member');
+    expect(csv).not.toContain('Workspace Admin');
+
+    // 絞り込まなければ両方とも全件。上の 1 件は「元から 1 件」ではないことの裏取り
+    const all = await listUsers(await buildRequest('/users', 'GET'));
+    expect((await all.json()).items.length).toBeGreaterThan(1);
+  });
+
+  it('UOA-ROUTE-010: 空の `q` は入力エラー。全件と黙って同じ結果にしない', async () => {
+    // 空文字を通すと `%%` になり「絞り込んだつもりで全件」が返る。
+    // 絞り込みを外したいときは `q` を送らない、が契約 (listSearchTermSchema)。
+    // 422 はこのアプリの zod 検証失敗の共通コード (problemDetailsFromZodError)
+    expect((await listUsers(await buildRequest('/users?q=', 'GET'))).status).toBe(422);
+    expect((await exportUsers(await buildRequest('/users/export?q=', 'GET'))).status).toBe(422);
   });
 
   it('UOA-ROUTE-008: GET/PATCH /api/v1/me は session 本人限定 (selfOnly) で、自分の行だけを読み書きする', async () => {

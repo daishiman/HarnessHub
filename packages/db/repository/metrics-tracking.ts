@@ -107,6 +107,13 @@ export interface SummarizeInput {
   readonly harnessId?: string;
   /** 既定は確定済みの週次 rollup。日次の速報を見たい場合のみ 'daily'。 */
   readonly period?: MetricsRollupPeriod;
+  /**
+   * ハーネス別ランキングとして返す件数の上限。省略すると全件。
+   *
+   * 画面が使うのは上位数件だけなので、切るのは受け取り側ではなくここが正しい。
+   * 切ったあとの配列からは母集団を数えられなくなるため、`harnessRankingTotals` を併せて返す。
+   */
+  readonly rankingLimit?: number;
 }
 
 /** 集計値の共通形。3 指標は常に同じ組で動く (回数 → 分 → 金額の換算連鎖のため)。 */
@@ -126,6 +133,14 @@ export interface MetricsBreakdownEntry extends MetricsTotals {
   readonly key: string;
 }
 
+/** ランキングの母集団の数え上げ。切り出しの前に数える。 */
+export interface MetricsRankingTotals {
+  /** 期間内に集計対象となったハーネスの総数 */
+  readonly total: number;
+  /** うち期間内に 1 回以上実行されたもの */
+  readonly active: number;
+}
+
 export interface MetricsSummary {
   /** 実際に読んだ rollup の粒度 (入力の `period` をそのまま返す)。 */
   readonly period: MetricsRollupPeriod;
@@ -133,8 +148,19 @@ export interface MetricsSummary {
   readonly kpi: MetricsTotals;
   /** 推移グラフ。period_start の昇順。 */
   readonly trend: readonly MetricsTrendPoint[];
-  /** ハーネス別ランキング。run_count の降順 (同数なら削減分 → キーで安定化)。 */
+  /**
+   * ハーネス別ランキング。**削減額の降順** (同額なら回数 → キーで安定化)。
+   * `rankingLimit` を指定した場合は上位そこまで。
+   *
+   * 部門別と並び順が違うのは、この配列が「削減額の大きいツール」として表示されるため。
+   * 表示の見出しと並び順が食い違うと、読み手は「なぜこの順なのか」を読み取れない。
+   */
   readonly harnessRanking: readonly MetricsBreakdownEntry[];
+  /**
+   * ランキングの母集団。`harnessRanking` は切り出し後なので、そこからは数えられない。
+   * 稼働率 (使われている割合) と KPI のハーネス数がこの値に依存する。
+   */
+  readonly harnessRankingTotals: MetricsRankingTotals;
   /** 部門別集計 (S09)。同上の順序。 */
   readonly departmentBreakdown: readonly MetricsBreakdownEntry[];
 }
@@ -413,12 +439,27 @@ export function createMetricsTrackingRepository(adapter: CoreAdapter): MetricsTr
       const harnessRows = await selectRollups(context, { ...range, dimension: 'harness' });
       const departmentRows = await selectRollups(context, { ...range, dimension: 'department' });
 
+      // 母集団は切り出しの前に数える。切ったあとの配列を数えると
+      // 「上位 5 件中 5 件が稼働 = 100%」のように、常に良く見える値になってしまう。
+      const allHarnesses = foldByKey(harnessRows);
+      const harnessRankingTotals = {
+        total: allHarnesses.length,
+        active: allHarnesses.filter((entry) => entry.runCount > 0).length,
+      };
+      // ランキングは harnessId 指定時も全ハーネスを対象にする (S16 で「自分の順位」を出すため)。
+      const ranked = [...allHarnesses].sort(
+        (left, right) =>
+          right.savedAmount - left.savedAmount ||
+          right.runCount - left.runCount ||
+          left.key.localeCompare(right.key, 'en'),
+      );
+
       return {
         period,
         kpi: foldTotals(headline),
         trend: foldTrend(headline),
-        // ランキングは harnessId 指定時も全ハーネスを返す (S16 で「自分の順位」を出すため)。
-        harnessRanking: foldByKey(harnessRows),
+        harnessRanking: input.rankingLimit === undefined ? ranked : ranked.slice(0, input.rankingLimit),
+        harnessRankingTotals,
         departmentBreakdown: foldByKey(departmentRows),
       };
     },

@@ -18,10 +18,11 @@ import {
   LiveStatus,
   Select,
   StatusChip,
+  TextInput,
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
-import { formatDateTime } from '../../../lib/format/datetime.js';
+import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 import { feedbackPriorityLabels, feedbackSourceLabels, feedbackTypeLabels } from './feedback-labels.js';
 import { ProjectReference, useProjectDirectory } from './project-directory.js';
@@ -29,14 +30,20 @@ import { ProjectReference, useProjectDirectory } from './project-directory.js';
 interface FeedbackListProps {
   readonly tenantId: string;
   readonly workspaceId: string;
+  /**
+   * 共通ヘッダーの検索フォーム (`?q=`) から渡ってくる初期キーワード。
+   * ここで受けることで「ヘッダーで検索 → 一覧が絞り込まれた状態で開く」が成立する。
+   */
+  readonly initialQuery?: string;
 }
 
 interface FeedbackFilters {
   readonly status: FeedbackStatus | '';
   readonly type: FeedbackType | '';
+  readonly query: string;
 }
 
-const EMPTY_FILTERS: FeedbackFilters = { status: '', type: '' };
+const EMPTY_FILTERS: FeedbackFilters = { status: '', type: '', query: '' };
 
 /**
  * 並べ替えの基準となる順序。
@@ -52,7 +59,7 @@ const STATUS_LABELS: Readonly<Record<FeedbackStatus, string>> = {
   resolved: '対応済み',
 };
 
-export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): ReactNode {
+export function FeedbackList({ tenantId, workspaceId, initialQuery = '' }: FeedbackListProps): ReactNode {
   const [rows, setRows] = useState<readonly FeedbackListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +70,11 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
     setDraft: setDraftFilters,
     apply,
     restored,
-  } = useRememberedFilters<FeedbackFilters>(FILTER_STORAGE_KEYS.feedback, EMPTY_FILTERS);
+  } = useRememberedFilters<FeedbackFilters>(
+    FILTER_STORAGE_KEYS.feedback,
+    { ...EMPTY_FILTERS, query: initialQuery },
+    initialQuery !== '',
+  );
   const [cursor, setCursor] = useState<string | null>(null);
   const [cursorHistory, setCursorHistory] = useState<readonly (string | null)[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -74,6 +85,8 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
       const query = new URLSearchParams({ limit: '25' });
       if (filters.status !== '') query.set('status', filters.status);
       if (filters.type !== '') query.set('type', filters.type);
+      // 空文字の `q` は送らない。契約側 (listSearchTermSchema) が空語を弾くため 400 になる
+      if (filters.query !== '') query.set('q', filters.query);
       if (cursor !== null) query.set('cursor', cursor);
       const response = await fetch(`/api/v1/feedback?${query.toString()}`, {
         credentials: 'same-origin',
@@ -104,17 +117,18 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
   const { projectById, error: projectError, reload: reloadProjects } = useProjectDirectory(tenantId, workspaceId);
 
   // 0 件のときの言い方を分ける。絞り込み結果の 0 件に「まだありません」は誤解を生む
-  const hasFilters = filters.status !== '' || filters.type !== '';
+  const hasFilters = filters.status !== '' || filters.type !== '' || filters.query !== '';
   const appliedFilters: readonly AppliedFilter[] = [
     ...(filters.status === '' ? [] : [{ label: '状態', value: STATUS_LABELS[filters.status] }]),
     ...(filters.type === '' ? [] : [{ label: '種別', value: feedbackTypeLabels[filters.type] }]),
+    ...(filters.query.trim() === '' ? [] : [{ label: '検索', value: filters.query.trim() }]),
   ];
 
   const applyFilters = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     setCursor(null);
     setCursorHistory([]);
-    apply(draftFilters);
+    apply({ ...draftFilters, query: draftFilters.query.trim() });
   };
 
   /**
@@ -185,7 +199,7 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
         // 並べ替えは元の値で行う。整形した文字列で比較すると年をまたいだ順序が崩れる
         value: (row) => row.updated_at,
         // 同じ日に状態が何度も動く要望があるため、日付だけでは前後が読めない
-        render: (row) => formatDateTime(row.updated_at),
+        render: (row) => <DateTimeText value={row.updated_at} />,
         salience: 'context',
       },
     ],
@@ -233,6 +247,13 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
             { value: 'bug', label: '不具合報告' },
           ]}
         />
+        {/* 検索欄は絞り込み欄の最後に置く。並びは全画面で「選ぶ条件 → 打ち込む条件」で統一する */}
+        <TextInput
+          label="検索"
+          description="受付番号と本文を検索します。"
+          value={draftFilters.query}
+          onChange={(event) => setDraftFilters((current) => ({ ...current, query: event.target.value }))}
+        />
       </FilterBar>
       <div style={{ padding: 'var(--hh-space-4)' }}>
         {projectError === null ? null : (
@@ -265,7 +286,7 @@ export function FeedbackList({ tenantId, workspaceId }: FeedbackListProps): Reac
           emptyTitle={hasFilters ? '条件に合うフィードバックがありません' : 'フィードバックはまだ届いていません'}
           emptyDescription={
             hasFilters
-              ? '絞り込みの条件をゆるめるか、条件を外してもう一度お試しください。'
+              ? '状態・種別・キーワードをゆるめてお試しください。'
               : '業務ツールから送られた声と、この画面から報告された声がここに集まります。'
           }
         >

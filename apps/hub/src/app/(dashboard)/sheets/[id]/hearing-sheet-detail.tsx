@@ -16,7 +16,7 @@ import {
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { formatDateTime } from '../../../../lib/format/datetime.js';
+import { DateTimeText } from '../../../../components/format/date-time-text.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -187,7 +187,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
             items={[
               { term: '申請者', description: sheet.applicant.name },
               { term: '部門', description: sheet.department ?? '部門未登録' },
-              { term: '申請日時', description: formatDateTime(sheet.created_at) },
+              { term: '申請日時', description: <DateTimeText value={sheet.created_at} /> },
               {
                 term: '生成状態',
                 description:

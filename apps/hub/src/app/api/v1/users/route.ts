@@ -1,5 +1,5 @@
 import { createRepositoryContext } from '@harness-hub/db';
-import { problemDetails } from '@harness-hub/schemas';
+import { problemDetails, problemDetailsFromZodError, userListQuerySchema } from '@harness-hub/schemas';
 import { problemResponse } from '../../../../features/user-org-admin/http.js';
 import { userOrgAdminRuntime } from '../../../../features/user-org-admin/runtime.js';
 import { authRuntime, requestScopedResource, withAuthz } from '../../../../lib/authz/index.js';
@@ -15,11 +15,17 @@ export const GET = withAuthz(
     deps: () => authRuntime().authz,
     resolveResource: async (request) => requestScopedResource(request, { type: 'user_collection', workspaceId: null }),
   },
-  async (_request, authz) => {
+  async (request, authz) => {
+    const url = new URL(request.url);
+    const parsed = userListQuerySchema.safeParse(Object.fromEntries(url.searchParams.entries()));
+    if (!parsed.success) {
+      return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
+    }
     const result = await userOrgAdminRuntime().service.listUsers(
       contextFor(authz.resource.tenantId, authz.principal.userId),
       authz.effectiveRole,
       authz.principal.userId,
+      { ...(parsed.data.q === undefined ? {} : { query: parsed.data.q }) },
     );
     return Response.json(result);
   },

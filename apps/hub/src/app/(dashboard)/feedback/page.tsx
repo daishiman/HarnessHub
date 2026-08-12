@@ -8,12 +8,18 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  readonly searchParams: Promise<{ readonly tenant?: string; readonly workspace?: string }>;
+  /** `q` は共通ヘッダーの検索フォームから届く (§3.0)。 */
+  readonly searchParams: Promise<{
+    readonly tenant?: string;
+    readonly workspace?: string;
+    readonly q?: string;
+  }>;
 }
 
 export default async function FeedbackPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  const initialQuery = query.q?.trim() ?? '';
   return (
     <>
       <ScreenHeader
@@ -28,7 +34,7 @@ export default async function FeedbackPage({ searchParams }: PageProps) {
         }
       />
       <Panel flush>
-        <FeedbackList tenantId={tenantId} workspaceId={workspaceId} />
+        <FeedbackList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
       </Panel>
     </>
   );

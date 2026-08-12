@@ -89,3 +89,17 @@ export const paginationQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 export type PaginationQuery = z.output<typeof paginationQuerySchema>;
+
+/**
+ * 一覧の絞り込みに使う検索語 (`?q=`)。**何を検索対象にするかは領域ごとに決める**が、
+ * 語そのものの受け取り方はここに一本化する。
+ *
+ * `trim().min(1)` にしているのは、空白だけの語を「条件なし」ではなく **入力の誤り**
+ * として弾くため。空文字を通すと、repository 側で `%%` (= 全件一致) になる条件を
+ * 組み立ててしまい、絞り込んだつもりで絞り込めていない状態が静かに成立する。
+ * 条件を外したいときは `q` を送らない。空文字で送らない。
+ *
+ * 上限 200 文字は、検索語として現実的な長さの上限であると同時に、LIKE パターンが
+ * 際限なく長くなるのを防ぐ。
+ */
+export const listSearchTermSchema = z.string().trim().min(1).max(200);

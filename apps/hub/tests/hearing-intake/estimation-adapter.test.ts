@@ -188,8 +188,11 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
       'utf8',
     );
     const confirm = source.slice(source.indexOf("id: 'confirm'"), source.indexOf('const canProceed'));
-    expect(confirm).toContain('削減時間の参考値');
+    expect(confirm).toContain('削減時間の目安');
     expect(confirm).not.toContain('savedAmountPerYear');
     expect(confirm).not.toMatch(/salary\s*[*+/]/);
+    // 係数は名前付き定数から読む。数値の直書きに戻ると、設定画面と食い違っても気付けない
+    expect(confirm).toContain('DEFAULT_SHEET_REDUCTION_RATE');
+    expect(confirm).not.toMatch(/0\.\d+/);
   });
 });

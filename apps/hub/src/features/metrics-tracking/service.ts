@@ -18,6 +18,7 @@ import {
 // period/dimension の値域は `@harness-hub/db` が意図的に公開していない (zod 単一ソースとの二重定義を避けるため)。
 // 語彙は契約側 (`@harness-hub/schemas`) から取る。
 import {
+  METRICS_RANKING_LIMIT,
   type MetricsEventIngestRequest,
   type MetricsEventIngestResponse,
   type MetricsRollupDimension,
@@ -152,6 +153,8 @@ export function createMetricsTrackingService(repository: MetricsTrackingReposito
       const summary = await repository.summarize(input.context, {
         from: start,
         to: end,
+        // 件数の正本は契約側 (METRICS_RANKING_LIMIT)。画面は返ってきた順にそのまま描く
+        rankingLimit: METRICS_RANKING_LIMIT,
         ...(input.query.harnessId === undefined ? {} : { harnessId: input.query.harnessId }),
         ...(input.period === undefined ? {} : { period: input.period }),
       });

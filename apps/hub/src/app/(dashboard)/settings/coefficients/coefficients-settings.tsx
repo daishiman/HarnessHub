@@ -151,7 +151,7 @@ export function CoefficientsSettings({ tenantId }: CoefficientsSettingsProps): R
             {
               term: '最後に変更した人',
               description:
-                current.updated_by === 'system' ? (
+                current.updated_by === 'system' || current.updated_by === 'system-default' ? (
                   'システム'
                 ) : current.updated_by_name === undefined ? (
                   <IdBadge value={current.updated_by} label="利用者 ID" />

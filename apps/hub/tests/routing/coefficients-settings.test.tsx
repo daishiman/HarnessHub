@@ -105,6 +105,21 @@ describe('TID-COEF: 見積係数フォーム', () => {
     });
   });
 
+  it('TID-COEF-01b: 既定値の更新者は内部 ID ではなくシステムと表示する', async () => {
+    stubApi({
+      get: () =>
+        Response.json({
+          ...CURRENT,
+          updated_by: 'system-default',
+          updated_by_name: undefined,
+        }),
+    });
+    const container = await mount();
+
+    expect(container.textContent).toContain('システム');
+    expect(container.textContent).not.toContain('system-default');
+  });
+
   it('TID-COEF-02: 取得が 4xx/5xx -> フォームを出さずエラーを知らせる (空フォームで保存させない)', async () => {
     stubApi({ get: () => new Response(null, { status: 500 }) });
     const container = await mount();

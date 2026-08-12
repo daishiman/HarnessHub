@@ -4,9 +4,10 @@
  * 全メソッドが RepositoryContext を要求し、hearing_sheets / ai_jobs の検索条件へ
  * tenant_id を必ず注入する。claim/complete/fail は transaction 内の CAS で状態を進める。
  */
-import { and, desc, eq, like, lt, or, type SQL } from 'drizzle-orm';
+import { and, desc, eq, lt, type SQL } from 'drizzle-orm';
 
 import { users } from '../schema/core/identity';
+import { DEFAULT_TENANT_COEFFICIENT_VALUES } from '../schema/hearing-intake/coefficient-defaults';
 import {
   aiJobs,
   displayCodeCounters,
@@ -24,6 +25,7 @@ import {
   type HearingQueueRepository,
   type HearingQueueStatus,
 } from './hearing-intake-queue';
+import { containsTermInAny } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -105,11 +107,11 @@ export interface HearingIntakeRepository extends HearingQueueRepository {
   regenerate(context: RepositoryContext, id: string): Promise<HearingSheetRow>;
 }
 
+// 未登録テナントの試算に使う行。数値はテーブル定義の default と同じ出所から取る
+// (別々に書くと、片方だけ直したときに「保存前と保存後で試算が変わる」壊れ方をする)
 const DEFAULT_COEFFICIENTS: TenantCoefficientRow = {
   tenantId: '',
-  annualHours: 2_000,
-  minutesPerRun: 15,
-  sheetReductionRate: 0.35,
+  ...DEFAULT_TENANT_COEFFICIENT_VALUES,
   updatedBy: 'system-default',
 };
 
@@ -334,12 +336,14 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
       if (input.department !== undefined) predicates.push(eq(hearingSheets.department, input.department));
       if (input.cursor !== undefined) predicates.push(lt(hearingSheets.id, input.cursor));
       if (input.query !== undefined) {
-        const pattern = `%${input.query}%`;
-        const search = or(
-          like(hearingSheets.code, pattern),
-          like(hearingSheets.title, pattern),
-          like(hearingSheets.formJson, pattern),
-        );
+        // 検索対象は HS コード・業務名・回答内容 (formJson)。パターン組立ては
+        // repository/search.ts に一本化してある — 直に `%...%` を書くと利用者の
+        // 入力に含まれる `%` `_` がワイルドカードとして働いてしまう。
+        const search = containsTermInAny(input.query, [
+          hearingSheets.code,
+          hearingSheets.title,
+          hearingSheets.formJson,
+        ]);
         if (search !== undefined) predicates.push(search);
       }
 

@@ -178,6 +178,17 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - [x] `AC-UIF-009`: Modal layer の focus trap / Esc / focus 復帰 / scroll lock と、破壊操作の可逆性表示が unit / axe test で通る。
 - [x] `AC-UIF-010`: catalog 定義を責務別に分け、変更対象の手書きファイルが 500 行以下である。
 - [x] `AC-UIF-011`: 26 の current route surface が inventory に一意登録され、対応 sheet と test evidence へ機械的に到達できる。
+- [x] `AC-UIF-012`: 日時は絶対表記 (JST) を常に残し、直近は `DateTimeText` で相対併記する。相対は描画後付与で hydration 不一致を作らない。
+- [x] `AC-UIF-013`: 一覧 `q` は `listSearchTermSchema` と repository `containsTerm`（LIKE ESCAPE）に一本化し、ヘッダー検索は API が `q` を処理する route にだけ結線する。
+- [x] `AC-UIF-014`: route surface の pattern と実装印は screen-pattern gate で突き合わせ、判定件数 0 と違反 0 を区別する。
+
+## 2026-08-12 UI MVP wave 追補
+
+- 表示名: optional session claims (`name` / `workspace_names`) と Project 名解決。認可入力には使わない。
+- 一覧: sticky 先頭列、FilterBar + 条件記憶、ListState 排他、header `?q=` 結線。
+- 日時: `DateTimeText` + `RELATIVE_TIME_MAX_AGE_DAYS=30`。絶対表記は消さない。
+- metrics: ranking はサーバで上位 N 件、母集団は `rankingTotals`。
+- 受領: `docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md`。
 
 ## 未決事項
 
@@ -194,3 +205,4 @@ route surface の current 閉包は完了した。一方、`/dashboard` 新設�
 - architecture: `architecture/harness-hub-frontend.md`
 - receipt: `docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md`
 - shell/page surface receipt: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`
+- UI MVP wave receipt: `docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md`

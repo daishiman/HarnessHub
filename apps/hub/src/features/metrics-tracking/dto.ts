@@ -70,7 +70,8 @@ export function toSummaryResponse(
       totalRunCount: summary.kpi.runCount,
       savedHours: minutesToHours(summary.kpi.savedMinutes),
       savedAmountJpy: summary.kpi.savedAmount,
-      harnessCount: summary.harnessRanking.length,
+      // ranking は上位だけなので、対象数はそちらから数えず母集団の総数を使う
+      harnessCount: summary.harnessRankingTotals.total,
     },
     trend: summary.trend.map((point) => ({
       periodStart: epochMsToJstDate(point.periodStart),
@@ -85,6 +86,10 @@ export function toSummaryResponse(
       savedHours: minutesToHours(entry.savedMinutes),
       savedAmountJpy: entry.savedAmount,
     })),
+    rankingTotals: {
+      total: summary.harnessRankingTotals.total,
+      active: summary.harnessRankingTotals.active,
+    },
     departments: summary.departmentBreakdown.map((entry) => {
       const unassigned = entry.key === DEPARTMENT_UNASSIGNED_KEY;
       return {

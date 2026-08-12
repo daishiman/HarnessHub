@@ -5,6 +5,7 @@
  * kind は backend-spec §2.3 の共通 3 値を保つ。
  */
 import { index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { DEFAULT_TENANT_COEFFICIENT_VALUES } from './coefficient-defaults';
 
 export const HEARING_SHEET_STATUSES = ['received', 'generating', 'review', 'completed'] as const;
 export const AI_JOB_KINDS = ['sheet_generation', 'feedback_response', 'doc_draft'] as const;
@@ -85,8 +86,10 @@ export const displayCodeCounters = sqliteTable(
 /** サーバ試算へ注入する tenant 別係数。未登録 tenant は adapter の既定値を使う。 */
 export const tenantCoefficients = sqliteTable('tenant_coefficients', {
   tenantId: text('tenant_id').primaryKey(),
-  annualHours: integer('annual_hours').notNull().default(2_000),
-  minutesPerRun: integer('minutes_per_run').notNull().default(15),
-  sheetReductionRate: real('sheet_reduction_rate').notNull().default(0.35),
+  annualHours: integer('annual_hours').notNull().default(DEFAULT_TENANT_COEFFICIENT_VALUES.annualHours),
+  minutesPerRun: integer('minutes_per_run').notNull().default(DEFAULT_TENANT_COEFFICIENT_VALUES.minutesPerRun),
+  sheetReductionRate: real('sheet_reduction_rate')
+    .notNull()
+    .default(DEFAULT_TENANT_COEFFICIENT_VALUES.sheetReductionRate),
   updatedBy: text('updated_by').notNull(),
 });

@@ -101,7 +101,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 
 - journey family は S01-S18 で管理し、実 route は surface variant 表で閉じる。**新 route の追加は実装より先に surface 行と担当 sheet / evidence を追記する**。
 - 会話型 Web Creator 画面は作らない (U7 対象外・§5.1)。作者の操作面は Publisher plugin (CLI 対話) であり Web 画面を持たない。
-- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする (専用 native 画面なし。重点/簡易の区分は [frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.4)。
+- モバイル/タブレットは **S01-S18 のレスポンシブ表示**でカバーする（専用 native 画面なし。route ごとの wide / middle / narrow profile は本書の current surface 表を正本とする）。
 
 ## 最優先画面の完了境界 (mockup と実装仕様の照合結果)
 
@@ -147,7 +147,7 @@ graph TD
 | 進捗表示 | 待ち時間のあるすべての操作 (publish 検査等) に進捗を出す | qa-018 |
 | 確認ダイアログ | 破壊的操作 (公開停止・rollback・token 失効) は確認 + 可逆性の明示 | qa-018 |
 | エラー表示 | 平易な日本語 + 次の一手。空状態にも導線を置く | qa-018 |
-| 情報設計 | 10 工程・情報顕著度・要素別意味契約・open-world pattern 選定を全画面共通の規範で行う | [情報設計追補](../specs/harness-hub-information-design-addendum.md) |
+| 情報設計 | 10 工程・情報顕著度・要素別意味契約・open-world pattern 選定を全画面共通の規範で行う | [UI 基盤の使い方と検証](frontend-ui-foundation-spec.md#0-部品を選ぶ前に情報設計を済ませる) |
 
 ## 適応型画面プロファイル正本
 
@@ -155,7 +155,7 @@ graph TD
 
 - `intent`: `scan` (対象/状態を見つける) / `compare` (複数対象を突合する) / `compose` (入力・変更を完了する) / `monitor` (時間変化・進捗を見る)
 - `density`: `comfortable` / `balanced` / `compact`。機能を削ってよい度合いではない。
-- `pattern`: [情報設計追補](../specs/harness-hub-information-design-addendum.md) の open-world registry にある id または hybrid。`table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail` は初期値であり閉じた集合ではない。
+- `pattern`: [UI 基盤の使い方と検証](frontend-ui-foundation-spec.md#0-部品を選ぶ前に情報設計を済ませる) の open-world registry にある id または hybrid。`table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail` は初期値であり閉じた集合ではない。
 - breakpoint は `narrow < 768px`、`middle = 768〜1119px`、`wide >= 1120px` の profile 名を用いる。UI 基盤 `breakpointTokens` の `480px` は narrow 内の layout step として使い、profile を4区分には増やさない。境界値の正本は UI 基盤 `breakpointTokens` (`480 / 768 / 1120`) とする。
 
 | ID / surface | role | task-mode | wide / middle profile (`intent · density · pattern`) | narrow profile (`intent · density · pattern`) | breakpoint をまたいで保持する能力 |
@@ -192,4 +192,4 @@ graph TD
 
 - `table → card-collection/list` は見た目の変換であり、比較・filter・sort・選択・一括操作・完全値を削る許可ではない。狭幅では selection mode、filter sheet、detail disclosure、局所横スクロール等で同じ能力を維持する。
 - 新画面または task-mode を追加するときは、担当 feature と根拠 qa を画面一覧へ、全 role / breakpoint profile を本表へ同一変更で追記する。未記入を暗黙の既定へ落とさない。
-- 情報設計シート (`docs/features/<feature>/information-design/<screen-id>.md`) は本表を参照し、profile 値を複製しない。手順とチェックリストは [画面情報設計ガイド](frontend-information-design-guide.md)。
+- 情報設計シート (`docs/features/<feature>/information-design/<screen-id>.md`) は本表を参照し、profile 値を複製しない。手順とチェックリストは [UI 基盤の使い方と検証](frontend-ui-foundation-spec.md#route-surface-を閉じる手順) に従う。

@@ -17,6 +17,11 @@ import {
 import dynamic from 'next/dynamic';
 import { type ChangeEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
+import {
+  DEFAULT_SHEET_REDUCTION_RATE,
+  previewMonthlySavedHours,
+} from '../../../../shared/estimation/wizard-preview.js';
+
 // 確認ダイアログは操作後にしか描画しないため、初期読み込みから外す (First Load JS 予算 120 KiB)
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
@@ -185,8 +190,13 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
           <section aria-label="入力内容の確認">
             <p>業務名: {form.taskName}</p>
             <p>課題: {form.issue}</p>
-            <p>削減時間の参考値: 月あたり約 {(form.hours * form.people * 0.35).toFixed(1)} 時間</p>
-            <p>金額は送信後にサーバで安全に計算します。</p>
+            <p>
+              削減時間の目安: 月あたり約 {previewMonthlySavedHours(form, DEFAULT_SHEET_REDUCTION_RATE).toFixed(1)} 時間
+            </p>
+            <p>
+              この目安は既定の前提 (工数の {Math.round(DEFAULT_SHEET_REDUCTION_RATE * 100)}% を削減)
+              で計算しています。正式な削減時間と金額は、送信後にテナントの設定にもとづいてサーバで計算します。
+            </p>
           </section>
         ),
       },

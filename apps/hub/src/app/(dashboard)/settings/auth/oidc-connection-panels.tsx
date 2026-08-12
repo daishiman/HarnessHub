@@ -4,6 +4,7 @@ import type { OidcConnectionSetup, OidcConnectionSummary } from '@harness-hub/sc
 import { Button, DefinitionList, Panel, Stack, StatusChip, TagRow, TextInput } from '@harness-hub/ui';
 import { type ReactNode, useState } from 'react';
 
+import { DateTimeText } from '../../../../components/format/date-time-text.js';
 import { formatDateTime } from '../../../../lib/format/datetime.js';
 
 /** Google Cloud Console へ手で登録する値を表示する。 */
@@ -97,8 +98,11 @@ export function ConnectionCard(props: ConnectionCardProps): ReactNode {
           items={[
             { term: 'client ID', description: <code>{connection.client_id}</code> },
             { term: 'client secret の末尾', description: connection.client_secret_last4 ?? '未登録' },
-            { term: '最後に接続テストした日時', description: formatTimestamp(connection.last_tested_at) },
-            { term: '最後に更新した日時', description: formatTimestamp(connection.updated_at) },
+            {
+              term: '最後に接続テストした日時',
+              description: <DateTimeText value={connection.last_tested_at} fallback="未実施" />,
+            },
+            { term: '最後に更新した日時', description: <DateTimeText value={connection.updated_at} /> },
           ]}
         />
 

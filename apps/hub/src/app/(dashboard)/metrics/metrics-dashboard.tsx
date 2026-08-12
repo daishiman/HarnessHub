@@ -41,9 +41,10 @@ import {
   formatRunCount,
   type MetricsDateRange,
   metricsDisplayLabel,
+  RANKING_DISPLAY_LIMIT,
+  rankingRows,
   resolvedMetricsName,
   toDepartmentChartData,
-  topRanking,
   toRankingChartData,
   toTrendSeries,
 } from '../../../features/metrics-tracking/view-model.js';
@@ -194,7 +195,7 @@ export function MetricsDashboard({ tenantId, workspaceId, initialRange }: Metric
             <CardGrid columns="wide">
               <LineChart title="実行回数と削減時間の推移" series={toTrendSeries(summary.trend)} />
               <BarChart
-                title="ツール別の削減額"
+                title={`ツール別の削減額 (上位 ${RANKING_DISPLAY_LIMIT} 件)`}
                 data={toRankingChartData(
                   summary.ranking.map((entry) => ({
                     ...entry,
@@ -207,7 +208,7 @@ export function MetricsDashboard({ tenantId, workspaceId, initialRange }: Metric
 
             <Panel
               title="ツール別の削減効果"
-              description="金額の大きい順に並べています。列の見出しを押すと並べ替えられます。"
+              description={`金額の大きい順に上位 ${RANKING_DISPLAY_LIMIT} 件を出しています。列の見出しを押すと並べ替えられます。`}
               flush
             >
               {/* 数値列は value に生の数値を返し、表示は render に任せる。
@@ -267,7 +268,7 @@ export function MetricsDashboard({ tenantId, workspaceId, initialRange }: Metric
                     salience: 'lead',
                   },
                 ]}
-                rows={topRanking(summary.ranking)}
+                rows={rankingRows(summary.ranking)}
                 rowKey={(row) => row.harnessId}
                 loading={loading}
                 stickyHeader

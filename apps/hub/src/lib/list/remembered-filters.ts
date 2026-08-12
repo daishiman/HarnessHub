@@ -21,6 +21,7 @@ export const FILTER_STORAGE_KEYS = {
   sheets: 'harness-hub:filters:sheets',
   docs: 'harness-hub:filters:docs',
   feedback: 'harness-hub:filters:feedback',
+  users: 'harness-hub:filters:users',
 } as const;
 
 export interface RememberedFilters<TFilters> {

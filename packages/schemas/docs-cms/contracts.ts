@@ -1,7 +1,7 @@
 /** Studio S15/B7: Document CMS の wire 契約。 */
 import { z } from 'zod';
 import { paginatedSchema } from '../src/envelope.js';
-import { identifierSchema, paginationQuerySchema } from '../src/primitives.js';
+import { identifierSchema, listSearchTermSchema, paginationQuerySchema } from '../src/primitives.js';
 
 export const documentScopeSchema = z.enum(['common', 'tenant']);
 export type DocumentScope = z.output<typeof documentScopeSchema>;
@@ -33,6 +33,14 @@ export type DocumentListItem = z.output<typeof documentListItemSchema>;
 export const documentListQuerySchema = paginationQuerySchema.extend({
   scope: documentScopeSchema.optional(),
   status: documentStatusSchema.optional(),
+  /**
+   * 検索対象は**タイトルのみ**。本文 (body_markdown) は含めない。
+   *
+   * 本文まで LIKE で舐めると、文書が増えたときに全行走査になるうえ、一覧に出て
+   * いない文字列で当たった行が「なぜ出てきたか分からない結果」として並ぶ。
+   * 本文を検索対象にするなら全文検索の基盤 (FTS) が要り、それは別の判断になる。
+   */
+  q: listSearchTermSchema.optional(),
 });
 export type DocumentListQuery = z.output<typeof documentListQuerySchema>;
 

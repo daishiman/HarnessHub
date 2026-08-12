@@ -239,6 +239,42 @@ describe('MET-DB: metrics-tracking repository', () => {
     expect(summary.departmentBreakdown.map((entry) => entry.key)).toStrictEqual(['dept-sales']);
   });
 
+  it('MET-READ-001b: ランキングは削減額の降順で上位だけを返し、母集団は切る前に数える', async () => {
+    const tenant = await seedTenant('met-a');
+    const repository = createMetricsTrackingRepository(asCore(adapter));
+
+    // 削減額の順位と実行回数の順位をわざと逆にする。
+    // 「回数で並べても額で並べても同じ」データだと、どちらの軸で並んでいるか判別できない。
+    await repository.upsertRollups(tenant.context, [
+      rollupInput(tenant, {
+        dimension: 'harness',
+        dimensionKey: 'few-runs-big-saving',
+        runCount: 1,
+        savedAmount: 90_000,
+      }),
+      rollupInput(tenant, {
+        dimension: 'harness',
+        dimensionKey: 'many-runs-small-saving',
+        runCount: 50,
+        savedAmount: 1_000,
+      }),
+      rollupInput(tenant, { dimension: 'harness', dimensionKey: 'middle', runCount: 10, savedAmount: 50_000 }),
+      // 期間内に一度も動いていないハーネス。稼働数に数えてはいけない
+      rollupInput(tenant, { dimension: 'harness', dimensionKey: 'idle', runCount: 0, savedAmount: 0 }),
+    ]);
+
+    const limited = await repository.summarize(tenant.context, { from: 0, to: WEEK, rankingLimit: 2 });
+
+    expect(limited.harnessRanking.map((entry) => entry.key)).toStrictEqual(['few-runs-big-saving', 'middle']);
+    // 母集団は切り出しの前。上位 2 件から数えると total=2 / active=2 = 100% になってしまう
+    expect(limited.harnessRankingTotals).toStrictEqual({ total: 4, active: 3 });
+
+    // 上限を省いたら全件。上の 2 件が「元から 2 件しか無かった」のではないことの裏取り
+    const all = await repository.summarize(tenant.context, { from: 0, to: WEEK });
+    expect(all.harnessRanking).toHaveLength(4);
+    expect(all.harnessRankingTotals).toStrictEqual({ total: 4, active: 3 });
+  });
+
   it('MET-READ-002: summarize は rollup 由来で、ingest しただけの event は反映されない', async () => {
     const tenant = await seedTenant('met-a');
     const repository = createMetricsTrackingRepository(asCore(adapter));

@@ -11,7 +11,7 @@ import { DataTable, DegradedBanner, IdBadge, ListState, StatusChip } from '@harn
 import { useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
 import { catalogCapabilities, httpCatalogPort } from '../../lib/catalog/index.js';
-import { formatDateTime } from '../../lib/format/datetime.js';
+import { DateTimeText } from '../format/date-time-text.js';
 
 export interface CatalogReleaseHistoryProps {
   scope: CatalogScope;
@@ -95,7 +95,7 @@ export function CatalogReleaseHistory({
               sortable: true,
               // 並べ替えは ISO のまま比較し、表示だけ全画面共通の書式にそろえる
               value: (row) => row.created_at,
-              render: (row) => formatDateTime(row.created_at),
+              render: (row) => <DateTimeText value={row.created_at} />,
               salience: 'context',
             },
             // package_hash は照合と貼り付けに使う値なので、名前と同じ見え方にしない。

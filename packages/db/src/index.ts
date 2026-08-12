@@ -105,6 +105,9 @@ export {
   type UserRow,
   type UserSettingsRow,
 } from '../repository/composition';
+// tenant_coefficients の既定値。画面側が同じ数値を書き写していないかをテストで突き合わせるため、
+// 型だけでなく値として公開する (実体は schema/hearing-intake/coefficient-defaults.ts)
+export { DEFAULT_TENANT_COEFFICIENT_VALUES } from '../schema/hearing-intake/coefficient-defaults';
 export {
   assertSupportedDriver,
   DATABASE_DRIVERS,

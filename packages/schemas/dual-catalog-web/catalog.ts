@@ -7,7 +7,7 @@
 import { z } from 'zod';
 
 import { publishTargetSchema, publishVisibilitySchema, releaseStatusSchema } from '../publish-pipeline/primitives.js';
-import { identifierSchema, isoDateTimeSchema } from '../src/primitives.js';
+import { identifierSchema, isoDateTimeSchema, listSearchTermSchema } from '../src/primitives.js';
 
 /**
  * S01 一覧の 1 行。表示項目は docs/screen-inventory.md の
@@ -84,7 +84,14 @@ export type InstallDescriptor = z.output<typeof installDescriptorSchema>;
 /** S01 の絞り込み条件。URL 状態 (searchParams) と 1:1 で対応させる。 */
 export const catalogListQuerySchema = z.object({
   target: publishTargetSchema.optional(),
-  q: z.string().max(200).optional(),
+  /**
+   * 検索対象はツール名。語の受け取り方は他一覧と同じ `listSearchTermSchema` に揃える。
+   *
+   * 以前はここだけ `z.string().max(200)` で空文字を受理していた。空文字を通すと
+   * repository 側で `%%` (= 全件一致) の条件が組まれ、「絞り込んだのに絞り込めていない」
+   * が静かに成立する。条件を外したいときは `q` を送らない。
+   */
+  q: listSearchTermSchema.optional(),
   cursor: z.string().min(1).optional(),
   limit: z.number().int().min(1).max(100).optional(),
 });

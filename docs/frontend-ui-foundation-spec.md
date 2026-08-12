@@ -18,10 +18,10 @@ Web 画面を「毎回ちがう材料で作る」のではなく、同じレゴ�
 
 ### 0. 部品を選ぶ前に情報設計を済ませる
 
-本書は *どの部品を使うか* の指針である。*その部品へ何を載せ、何を削り、何を強調するか* は [画面情報設計ガイド](frontend-information-design-guide.md) と [情報設計追補](../specs/harness-hub-information-design-addendum.md) が規範正本で、画面ごとの根拠は `docs/features/*/information-design/*.md`、profile 割当は [screen-inventory](screen-inventory.md) が SSOT。
+本書は *どの部品を使うか* と *その部品へ何を載せ、何を削り、何を強調するか* の共通指針である。画面ごとの根拠は `docs/features/*/information-design/*.md`、profile 割当は [screen-inventory](screen-inventory.md) が SSOT。
 
 - 工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」の 10 工程。`DataTable` や `Panel` を置くところから始めない。
-- 画面内の情報顕著度は `lead / context / metadata`。構築 phase P0〜P5、[frontend-responsive-mobile-spec](frontend-responsive-mobile-spec.md) §6.3 のレスポンシブパターン P1〜P10、Button variant と別語彙であり、`typographyTokens` / `colorTokens` / spacing token の段だけで表す。
+- 画面内の情報顕著度は `lead / context / metadata`。構築 phase P0〜P5、screen inventory の wide / middle / narrow pattern、Button variant と別語彙であり、`typographyTokens` / `colorTokens` / spacing token の段だけで表す。
 - 視覚ラベルを一律に外さない。form control、初見/破壊操作、状態・金額・日時・PII・略語は可視ラベル/見出しを既定とし、読み取り専用で意味が一意な場合だけ根拠付きで省略する。placeholder、`title`、アイコンだけを label の代用にしない。
 - 表現形式は open-world registry から選ぶ。初期値は table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail で、必要なら hybrid/new pattern を登録する。
 - 余白・線/surface・アイコン・画像・整列/反復は、グループ境界・認識・証拠・操作の予測可能性を高めるなら積極採用する。意味を説明できない縞模様・影等は足さず、必要な境界を「装飾だから」と消さない。
@@ -178,7 +178,7 @@ sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見
 | 6 | 空状態 | `ListState` の `emptyTitle` / `emptyDescription` |
 | 7 | 読み込み中 | `DataTable loading` と `LiveStatus`（件数は読み込み完了後だけ読み上げる） |
 | 8 | エラー表示 | `ListState error`（取得失敗）／操作の失敗は操作の隣に `Alert` |
-| 9 | 日時の書式 | `apps/hub/src/lib/format/datetime.ts` の `formatDate` / `formatDateTime` |
+| 9 | 日時の書式 | 絶対表記は `formatDate` / `formatDateTime` (JST)。相対併記が要る箇所は `DateTimeText` だけを使う（画面ごとに相対計算を書かない） |
 | 10 | ID の見せ方 | `IdBadge`（生の `<code>` や素の文字列で出さない） |
 | 11 | ステータスバッジ | `StatusChip`（domain ごとの語彙と色は部品側が持つ） |
 | 12 | ボタンの語彙 | 「絞り込む」「再試行する」「新しく作成」など、同じ意味に同じ語 |
@@ -186,6 +186,22 @@ sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見
 観点 6・7・8 は 1 つの部品 `ListState` に集約してある。取得失敗・読み込み中・0 件・中身の 4 状態は
 **排他**であり、画面側で「上にエラーバナー、下に空メッセージ」と並べない
 （取得に失敗しただけなのに「0 件です」と読める状態を構造で潰す）。
+
+### 5-7. 日時の相対併記 (`DateTimeText`)
+
+- 相対表記は **絶対表記の置き換えではなく併記**。記録として日付を控える用途を壊さない。
+- 上限は `RELATIVE_TIME_MAX_AGE_DAYS = 30` の 1 定数。画面ごとに変えない。
+- 「昨日」の境目は経過 24 時間ではなく **JST のカレンダー日差**。
+- 相対表記は描画後に足す（初回描画は絶対表記のみ）。サーバとブラウザの hydration 不一致を避ける。
+- 自動更新（1 分ごとの書き換え）は一覧で行わない。開いた時点の相対表記で足りる。
+
+### 5-8. 一覧検索 (`q`)
+
+- ヘッダー検索は、一覧 API が `q` を **実際に処理する** route にだけ結線する。押しても効かない欄を置かない。
+- 検索語の受け取りは `listSearchTermSchema`（空白のみ拒否・上限 200）。SQL の部分一致は
+  `packages/db/repository/search.ts` の `containsTerm` / `containsTermInAny` に一本化し、
+  LIKE の `%` / `_` を利用者入力として扱わない（ESCAPE）。
+- 検索対象列は各 domain の query schema JSDoc が正本。placeholder 文言と一致させる。
 
 ### 6. catalog と VRT
 
@@ -200,6 +216,7 @@ pnpm --filter @harness-hub/ui typecheck
 pnpm --filter @harness-hub/ui test
 pnpm --filter @harness-hub/hub typecheck
 pnpm --filter @harness-hub/hub run check:screen-states
+pnpm --filter @harness-hub/hub exec vitest run tests/ui-foundation/relative-time.test.tsx tests/ui-foundation/screen-pattern-gate.test.ts
 pnpm --filter @harness-hub/hub run test:browser
 python3 -m pytest -q tests/specs/test_screen_inventory_closure.py
 ```
@@ -211,8 +228,8 @@ Chromium が未導入なら `pnpm --filter @harness-hub/hub exec playwright inst
 - 規範追補: `specs/harness-hub-ui-foundation-addendum.md`
 - route surface profile 割当 SSOT: `docs/screen-inventory.md`
 - 画面ごとの情報設計と選定根拠: `docs/features/*/information-design/*.md`
-- 情報設計規範/手順: `specs/harness-hub-information-design-addendum.md` / `docs/frontend-information-design-guide.md`
 - 画面 profile 割当 SSOT: `docs/screen-inventory.md`
 - frontend 全体仕様: `docs/frontend-spec.md`
 - 仕様反映受領書: `docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md`
 - 共通シェル追補の受領書: `docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md`
+- 2026-08-12 UI MVP wave 受領書: `docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md`

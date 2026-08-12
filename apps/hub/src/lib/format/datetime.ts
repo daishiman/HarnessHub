@@ -70,3 +70,69 @@ export function formatDateTime(value: string | number | Date | null | undefined,
   const date = toDate(value);
   return date === null ? fallback : DATE_TIME_FORMAT.format(date);
 }
+
+/**
+ * 相対表記を添える上限 (日)。これより古いものは絶対表記だけにする。
+ *
+ * 上限を設ける理由は、古い日付ほど相対表記の情報量が絶対表記を下回るため。
+ * 「412 日前」は読み手が結局 2025 年のいつかを数え直すことになり、
+ * 併記した分だけ行が長くなるだけで判断は速くならない。
+ * 逆に直近であるほど「いつか」より「どれくらい前か」が効くので、そこだけに絞る。
+ *
+ * この 1 つの定数が全画面の境目。画面ごとに「ここは 7 日で」と変えないこと
+ * (同じ日付が画面によって相対表記が出たり出なかったりすると、出ていないことを
+ * 「まだ新しくない」の意味だと読まれる)。
+ */
+export const RELATIVE_TIME_MAX_AGE_DAYS = 30;
+
+const MINUTE_MS = 60_000;
+const HOUR_MS = 60 * MINUTE_MS;
+const DAY_MS = 24 * HOUR_MS;
+
+/**
+ * JST における通算日番号。日付の「差」を数えるために使う。
+ *
+ * 経過ミリ秒を 86,400,000 で割る方法を採らないのは、それが「24 時間ぶん経ったか」の
+ * 計算であって、人が読む「昨日」ではないため。昨日の 23:00 は 2 時間前でも昨日であり、
+ * 今日の 0:30 は 25 時間前の出来事より新しい。境目はカレンダーの日付にある。
+ *
+ * どの時計で日付を切るかは `DATE_FORMAT` (= `DISPLAY_TIME_ZONE`) に委ねる。
+ * ここで JST のオフセット (+9h) を書き直すと、時計の定義がこのファイル内で 2 つになる。
+ */
+function jstDayNumber(date: Date): number {
+  const [year, month, day] = DATE_FORMAT.format(date).split('/').map(Number);
+  return Date.UTC(year as number, (month as number) - 1, day as number) / DAY_MS;
+}
+
+/**
+ * 「3 日前」のような相対表記。**絶対表記の置き換えではなく併記用**。
+ *
+ * 添えるものが無いときは `null` を返す (呼び出し側は絶対表記だけを出す)。`null` になるのは
+ * 未来の日時・読めない値・`RELATIVE_TIME_MAX_AGE_DAYS` より古いもの。
+ * 未来を除くのは、時計のずれで数秒先になった値に「1 分後」と出すと、
+ * 記録の不整合ではなく利用者の誤操作に見えるため (数秒程度は「たった今」に寄せる)。
+ *
+ * `now` を引数で受けるのは、この関数自身が現在時刻を読むとテストが書けなくなるのと、
+ * 呼び出し側 (描画後に一度だけ時刻を確定する) が基準時刻を握る必要があるため。
+ */
+export function formatRelativeTime(
+  value: string | number | Date | null | undefined,
+  now: Date | number,
+): string | null {
+  const date = toDate(value);
+  if (date === null) return null;
+
+  const nowDate = now instanceof Date ? now : new Date(now);
+  const elapsedMs = nowDate.getTime() - date.getTime();
+
+  // 時計のずれで数秒先を指す値は「たった今」に寄せる。それ以上先なら相対表記は付けない
+  if (elapsedMs < -MINUTE_MS) return null;
+  if (elapsedMs < MINUTE_MS) return 'たった今';
+  if (elapsedMs < HOUR_MS) return `${Math.floor(elapsedMs / MINUTE_MS)} 分前`;
+
+  const dayDiff = jstDayNumber(nowDate) - jstDayNumber(date);
+  if (dayDiff <= 0) return `${Math.floor(elapsedMs / HOUR_MS)} 時間前`;
+  if (dayDiff === 1) return '昨日';
+  if (dayDiff <= RELATIVE_TIME_MAX_AGE_DAYS) return `${dayDiff} 日前`;
+  return null;
+}

@@ -8,6 +8,7 @@
  * クライアント側に換算式を持たせないことなので、入力に無い数字が出力に現れてはいけない。
  */
 import type { MetricsSummaryResponse } from '@harness-hub/schemas';
+import { METRICS_RANKING_LIMIT } from '@harness-hub/schemas';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -21,10 +22,10 @@ import {
   formatRunCount,
   metricsDisplayLabel,
   RANKING_DISPLAY_LIMIT,
+  rankingRows,
   recentRange,
   resolvedMetricsName,
   toDepartmentChartData,
-  topRanking,
   toRankingChartData,
   toTrendSeries,
 } from '../../features/metrics-tracking/view-model.js';
@@ -38,6 +39,7 @@ function summary(overrides: Partial<MetricsSummaryResponse> = {}): MetricsSummar
     kpi: { totalRunCount: 0, savedHours: 0, savedAmountJpy: 0, harnessCount: 0 },
     trend: [],
     ranking: [],
+    rankingTotals: { total: 0, active: 0 },
     departments: [],
     ...overrides,
   };
@@ -92,25 +94,23 @@ describe('MT-VM: チャート入力の組み立て', () => {
     { harnessId: 'c', harnessName: 'Gamma', runCount: 0, savedHours: 0, savedAmountJpy: 0 },
   ];
 
-  it('MT-VM-006: ランキングは削減額の降順で、上限件数までに切り詰める', () => {
-    expect(topRanking(RANKING).map((entry) => entry.harnessId)).toEqual(['b', 'a', 'c']);
-    expect(topRanking(RANKING, 2).map((entry) => entry.harnessId)).toEqual(['b', 'a']);
-
-    const many = Array.from({ length: RANKING_DISPLAY_LIMIT + 5 }, (_unused, index) => ({
-      harnessId: `h${index}`,
-      harnessName: `H${index}`,
-      runCount: index,
-      savedHours: index,
-      savedAmountJpy: index,
-    }));
-    expect(topRanking(many)).toHaveLength(RANKING_DISPLAY_LIMIT);
+  it('MT-VM-006: 表示行はサーバが返した順序をそのまま使う (画面で並べ替え直さない)', () => {
+    // 並べ替えと件数の打ち切りはサーバの責務へ移した (契約: ranking は削減額の降順・上限つき)。
+    // ここで並べ替え直すと、サーバが順序を変えたときに画面だけ別の順で出る。
+    expect(rankingRows(RANKING).map((entry) => entry.harnessId)).toEqual(['a', 'b', 'c']);
   });
 
-  it('MT-VM-007: 並べ替えは元配列を破壊しない', () => {
+  it('MT-VM-007: 受け取った配列を書き換えない', () => {
     const original = [...RANKING];
-    topRanking(RANKING);
+    rankingRows(RANKING);
 
     expect(RANKING).toEqual(original);
+  });
+
+  it('MT-VM-007b: 表示件数の定数は契約側の 1 箇所から来ている', () => {
+    // 画面と API に同じ数を別々に書くと、片方だけ変えたとき「上位 10 件」と書いてあるのに
+    // 5 件しか出ない、という食い違いが起きる。
+    expect(RANKING_DISPLAY_LIMIT).toBe(METRICS_RANKING_LIMIT);
   });
 
   it('MT-VM-008: 推移は実行回数と削減時間の 2 系列。金額は桁が違うので別系列にしない', () => {
@@ -122,7 +122,8 @@ describe('MT-VM: チャート入力の組み立て', () => {
   });
 
   it('MT-VM-009: 棒・ドーナツは受け取った金額をそのまま値にする (再計算しない)', () => {
-    expect(toRankingChartData(RANKING)[0]).toEqual({ label: 'Beta', value: 4_000 });
+    // 並び順はサーバが決めるので、先頭は受け取った配列の先頭 (ここでは Alpha) のまま
+    expect(toRankingChartData(RANKING)[0]).toEqual({ label: 'Alpha', value: 1_000 });
     expect(
       toDepartmentChartData([
         { departmentId: null, departmentName: '部門未設定', runCount: 3, savedHours: 1, savedAmountJpy: 900 },
@@ -161,17 +162,23 @@ describe('MT-VM: チャート入力の組み立て', () => {
 
 describe('MT-VM: 活用率', () => {
   it('MT-VM-011: 実行実績のあるハーネスの比率を返す', () => {
-    const ratio = activeHarnessRatio(
-      summary({
-        ranking: [
-          { harnessId: 'a', harnessName: 'A', runCount: 1, savedHours: 0, savedAmountJpy: 0 },
-          { harnessId: 'b', harnessName: 'B', runCount: 0, savedHours: 0, savedAmountJpy: 0 },
-        ],
-      }),
-    );
+    const ratio = activeHarnessRatio(summary({ rankingTotals: { total: 2, active: 1 } }));
 
     expect(ratio).toBe(0.5);
     expect(formatPercent(ratio)).toBe('50');
+  });
+
+  it('MT-VM-011b: 母数は表示行の件数ではなく、切り出す前の総数を使う', () => {
+    // ranking は上位だけが入る。そこから数えると「上位ほど稼働している」性質で
+    // 常に高い割合が出る (下の例なら 100%)。実際は 20 件中 4 件なので 20%。
+    const ratio = activeHarnessRatio(
+      summary({
+        ranking: [{ harnessId: 'a', harnessName: 'A', runCount: 9, savedHours: 1, savedAmountJpy: 100 }],
+        rankingTotals: { total: 20, active: 4 },
+      }),
+    );
+
+    expect(ratio).toBe(0.2);
   });
 
   /**
@@ -184,11 +191,7 @@ describe('MT-VM: 活用率', () => {
   });
 
   it('MT-VM-013: 実績 0 件 (母数はある) は 0% として出す', () => {
-    const ratio = activeHarnessRatio(
-      summary({
-        ranking: [{ harnessId: 'a', harnessName: 'A', runCount: 0, savedHours: 0, savedAmountJpy: 0 }],
-      }),
-    );
+    const ratio = activeHarnessRatio(summary({ rankingTotals: { total: 1, active: 0 } }));
 
     expect(ratio).toBe(0);
     expect(formatPercent(ratio)).toBe('0');

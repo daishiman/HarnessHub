@@ -36,6 +36,7 @@ const SUMMARY: MetricsSummaryResponse = {
     { harnessId: 'harness-alpha', harnessName: 'Alpha 見積', runCount: 20, savedHours: 5, savedAmountJpy: 30_000 },
     { harnessId: 'harness-beta', harnessName: 'Beta 与信', runCount: 10, savedHours: 2.5, savedAmountJpy: 15_000 },
   ],
+  rankingTotals: { total: 2, active: 2 },
   departments: [
     { departmentId: 'dept-sales', departmentName: '営業部', runCount: 30, savedHours: 7.5, savedAmountJpy: 45_000 },
   ],

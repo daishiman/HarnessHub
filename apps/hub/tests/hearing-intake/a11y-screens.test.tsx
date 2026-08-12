@@ -406,7 +406,9 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(source).toContain('sheet.applicant.name');
     expect(source).toContain("term: '部門'");
     expect(source).toContain('sheet.department');
-    expect(source).toContain('formatDateTime(sheet.created_at)');
+    // 日時は全画面共通の部品で出す (絶対表記 + 直近なら「3 日前」の併記)。
+    // ここで整形関数を直に呼ぶ形に戻すと、この画面だけ相対表記が出なくなる
+    expect(source).toContain('<DateTimeText value={sheet.created_at} />');
     expect(source).toContain('AI_JOB_STATUS_LABELS[sheet.ai_job_status]');
     expect(source).toContain('sheet.build_ref');
     expect(source).toContain('label="Build ID"');

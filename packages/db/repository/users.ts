@@ -3,13 +3,14 @@
 // 復号は decryptUserSalary の明示呼出しに限定し、既定の読取経路に平文を流さない (security-spec §4.2)。
 // PII ガード (member 向け DTO からの除外・k-匿名性) の適用は feat-user-org-admin の責務。
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, type SQL } from 'drizzle-orm';
 import { users } from '../schema/core/identity';
 import { EntityNotFoundError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
 import { guardedWrite } from './conflict';
 import type { ColumnCipher } from './crypto';
 import type { CoreAdapter } from './db';
+import { containsTermInAny } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -61,7 +62,11 @@ export interface UsersRepo {
    * email 一致で人を同定すると別人の乗っ取り経路になる (security-spec §2.1)。
    */
   findByIdpSubject(context: RepositoryContext, idpSubject: string): Promise<UserRow | null>;
-  list(context: RepositoryContext, options?: { readonly limit?: number }): Promise<UserRow[]>;
+  /**
+   * `query` は氏名・部署に含まれる語での絞り込み (対象の根拠は `userListQuerySchema` に記載)。
+   * 絞り込みは SQL 側で行うので、limit は絞り込んだ後の件数に効く。
+   */
+  list(context: RepositoryContext, options?: { readonly limit?: number; readonly query?: string }): Promise<UserRow[]>;
   /** salary 以外の可変列のみ更新できる。salary は updateSalary の明示経路に限定。 */
   update(context: RepositoryContext, id: string, input: UpdateUserInput): Promise<UserRow>;
   /** 認証成功時刻をサーバー時刻で記録する。クライアント申告時刻は受け取らない (qa-032)。 */
@@ -118,10 +123,17 @@ export function createUsersRepo(adapter: CoreAdapter, cipher: ColumnCipher): Use
     },
 
     async list(context, options) {
+      const predicates: SQL[] = [eq(users.tenantId, context.tenantId)];
+      if (options?.query !== undefined) {
+        // salary は maskPii の対象なので検索対象に含めない。マスクされた値で行を
+        // 引き当てられると、マスクが表示だけの化粧になってしまう。
+        const search = containsTermInAny(options.query, [users.name, users.department]);
+        if (search !== undefined) predicates.push(search);
+      }
       const rows = await adapter.client
         .select()
         .from(users)
-        .where(eq(users.tenantId, context.tenantId))
+        .where(and(...predicates))
         .limit(options?.limit ?? 100);
       return rows as UserRow[];
     },

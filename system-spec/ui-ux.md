@@ -168,3 +168,8 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+
+## Post-compile writeback: UI MVP wave 2026-08-12
+
+- DateTimeText（相対併記）、ListState / FilterBar、screen-pattern gate は UI 契約の追補。新規 qa 番号なし。R4-reopen 不要。
+- 正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。

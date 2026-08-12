@@ -119,6 +119,7 @@ export function createFeedbackLoopService(
         ...(input.query.status === undefined ? {} : { status: input.query.status }),
         ...(input.query.type === undefined ? {} : { type: input.query.type }),
         ...(input.query.project_id === undefined ? {} : { projectId: input.query.project_id }),
+        ...(input.query.q === undefined ? {} : { query: input.query.q }),
         ...(input.query.cursor === undefined ? {} : { cursor: input.query.cursor }),
         limit: input.query.limit,
       });

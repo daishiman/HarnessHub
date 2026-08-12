@@ -15,7 +15,7 @@ import {
 } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
-import { formatDateTime } from '../../../lib/format/datetime.js';
+import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 interface HearingSheetListProps {
@@ -186,7 +186,7 @@ export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: H
         value: (row: SheetListItem) => row.updated_at,
         // 日付だけだと、同じ日に何度も直したシートが全部同じ表示になり、
         // 新しい順に並べ替えても順序の根拠が画面から消える
-        render: (row: SheetListItem) => formatDateTime(row.updated_at),
+        render: (row: SheetListItem) => <DateTimeText value={row.updated_at} />,
       },
     ],
     [tenantId, workspaceId],

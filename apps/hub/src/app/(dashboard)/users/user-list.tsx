@@ -8,12 +8,25 @@
  * (role/status は StatusChip 化した状態語彙ではなく、その契約テストと同じ plain value() で表示する)。
  */
 import type { SessionRole, UserListItem, UserListResponse, UserStatus } from '@harness-hub/schemas';
-import { Alert, Button, DataTable, type DataTableColumn, ListState } from '@harness-hub/ui';
-import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { Alert, Button, DataTable, type DataTableColumn, FilterBar, ListState, TextInput } from '@harness-hub/ui';
+import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
+import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 interface UserListProps {
   readonly tenantId: string;
+  /**
+   * 共通ヘッダーの検索フォーム (`?q=`) から渡ってくる初期キーワード。
+   * ここで受けることで「ヘッダーで検索 → 一覧が絞り込まれた状態で開く」が成立する。
+   */
+  readonly initialQuery?: string;
 }
+
+interface UserFilters {
+  readonly query: string;
+}
+
+const EMPTY_FILTERS: UserFilters = { query: '' };
 
 const ROLE_LABELS: Readonly<Record<SessionRole, string>> = {
   'provider-admin': 'プロバイダー管理者',
@@ -73,7 +86,7 @@ function buildColumns(tenantId: string): readonly DataTableColumn<UserListItem>[
   ];
 }
 
-export function UserList({ tenantId }: UserListProps): ReactNode {
+export function UserList({ tenantId, initialQuery = '' }: UserListProps): ReactNode {
   const [rows, setRows] = useState<readonly UserListItem[]>([]);
   const [loading, setLoading] = useState(true);
   // 一覧の取得失敗と書き出しの失敗を 1 つの state で持たない。
@@ -81,11 +94,33 @@ export function UserList({ tenantId }: UserListProps): ReactNode {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  // 絞り込み条件は個別ダッシュボードへ行って戻るまで覚えておく (毎回入れ直させない)。
+  // ただしヘッダーの検索から開いたとき (`?q=`) は、指定された語を必ず優先する
+  const {
+    filters,
+    draft: draftFilters,
+    setDraft: setDraftFilters,
+    apply,
+    restored,
+  } = useRememberedFilters<UserFilters>(
+    FILTER_STORAGE_KEYS.users,
+    { ...EMPTY_FILTERS, query: initialQuery },
+    initialQuery !== '',
+  );
+
+  /** 一覧と CSV 書き出しで同じ条件を使う。片方だけ絞り込むと、画面と書き出しが食い違う。 */
+  const searchParams = useCallback((): string => {
+    const query = new URLSearchParams();
+    // 空文字の `q` は送らない。契約側 (listSearchTermSchema) が空語を弾くため 400 になる
+    if (filters.query !== '') query.set('q', filters.query);
+    const serialized = query.toString();
+    return serialized === '' ? '' : `?${serialized}`;
+  }, [filters.query]);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/v1/users', {
+      const response = await fetch(`/api/v1/users${searchParams()}`, {
         credentials: 'same-origin',
         headers: { 'x-harness-tenant-id': tenantId },
       });
@@ -98,18 +133,21 @@ export function UserList({ tenantId }: UserListProps): ReactNode {
     } finally {
       setLoading(false);
     }
-  }, [tenantId]);
+  }, [searchParams, tenantId]);
 
+  // 覚えていた条件の復元が済むまで待つ。先に問い合わせると、空の条件で取った一覧が
+  // 一瞬出てから条件付きの一覧に差し替わり、件数が目の前で変わって見える
   useEffect(() => {
+    if (!restored) return;
     void load();
-  }, [load]);
+  }, [load, restored]);
 
   // カスタムヘッダー (x-harness-tenant-id) が要るため <a href> 直リンクではなく
   // fetch → blob → 一時リンクのクリックで CSV ダウンロードを起こす。
   const exportCsv = useCallback(async (): Promise<void> => {
     setExporting(true);
     try {
-      const response = await fetch('/api/v1/users/export', {
+      const response = await fetch(`/api/v1/users/export${searchParams()}`, {
         credentials: 'same-origin',
         headers: { 'x-harness-tenant-id': tenantId },
       });
@@ -127,14 +165,48 @@ export function UserList({ tenantId }: UserListProps): ReactNode {
     } finally {
       setExporting(false);
     }
-  }, [tenantId]);
+  }, [searchParams, tenantId]);
+
+  // 0 件の言い方を分ける。絞り込み結果の 0 件に「まだ登録されていません」は誤解を生む
+  const hasFilters = filters.query !== '';
+  const appliedFilters: readonly AppliedFilter[] = [
+    ...(filters.query.trim() === '' ? [] : [{ label: '検索', value: filters.query.trim() }]),
+  ];
+
+  const applyFilters = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    apply({ query: draftFilters.query.trim() });
+  };
 
   return (
     <>
+      {/* 絞り込み欄の並びと余白は共通の FilterBar に任せる (画面ごとの書き起こしをやめる)。
+          この画面は打ち込む条件が 1 つだけだが、他一覧と同じ器・同じ位置に置く */}
+      <FilterBar
+        label="利用者の絞り込み"
+        sticky
+        appliedChips={appliedFilters.length === 0 ? undefined : <AppliedFilterChips items={appliedFilters} />}
+        onSubmit={applyFilters}
+        actions={<Button type="submit">絞り込む</Button>}
+      >
+        <TextInput
+          label="検索"
+          description="氏名と部門を検索します。"
+          value={draftFilters.query}
+          onChange={(event) => setDraftFilters((current) => ({ ...current, query: event.target.value }))}
+        />
+      </FilterBar>
       <div style={{ padding: 'var(--hh-space-4)', borderBlockEnd: '1px solid var(--hh-color-border)' }}>
         <Button type="button" onClick={() => void exportCsv()} disabled={exporting}>
           {exporting ? '書き出しています…' : '一覧を CSV で書き出す'}
         </Button>
+        {/* 絞り込み中は書き出しの範囲も同じであることを言う。ボタンの文言だけでは
+            「全員が出る」と読まれうるため、条件が付いているときだけ添える */}
+        {hasFilters ? (
+          <p style={{ margin: 'var(--hh-space-2) 0 0', color: 'var(--hh-color-text-muted)' }}>
+            いま絞り込んでいる条件のまま書き出します。
+          </p>
+        ) : null}
         {/* 書き出しの失敗は操作の隣に出す。一覧の表示とは別の話なので一覧を消さない */}
         {exportError === null ? null : <Alert tone="danger" title="操作エラー" description={exportError} />}
       </div>
@@ -147,8 +219,12 @@ export function UserList({ tenantId }: UserListProps): ReactNode {
         onRetry={() => void load()}
         loading={loading}
         isEmpty={rows.length === 0}
-        emptyTitle="利用者がまだ登録されていません"
-        emptyDescription="このテナントに参加した利用者が、ここに一覧で表示されます。"
+        emptyTitle={hasFilters ? '条件に合う利用者がいません' : '利用者がまだ登録されていません'}
+        emptyDescription={
+          hasFilters
+            ? 'キーワードをゆるめるか、条件を外してもう一度お試しください。'
+            : 'このテナントに参加した利用者が、ここに一覧で表示されます。'
+        }
       >
         <DataTable
           caption="ユーザー一覧"
