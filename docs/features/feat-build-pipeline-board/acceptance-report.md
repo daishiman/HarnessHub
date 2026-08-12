@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-acceptance
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # acceptance-report: feat-build-pipeline-board (P07)
 
 > SYS-BUILD-PIPELINE-BOARD-P07 の正本成果物。goal-spec acceptance 3 項目を判定する。

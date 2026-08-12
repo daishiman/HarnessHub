@@ -1,10 +1,19 @@
+---
+status: confirmed
+layer: feature-evidence-index
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # evidence/index: feat-build-pipeline-board (P11)
 
 > SYS-BUILD-PIPELINE-BOARD-P11 の正本成果物。P06/P07/P09/P10 各成果物への再現可能な証跡索引。
 
 ## P06: テスト実行結果
 
-- 成果物: [`../test-run-report.md`](../test-run-report.md)
+- 成果物: [test-run-report.md](../test-run-report.md)
 - 再実行コマンド:
   ```bash
   cd apps/hub && pnpm vitest run src/__tests__/build-pipeline-board/
@@ -16,13 +25,13 @@
 
 ## P07: 受入判定
 
-- 成果物: [`../acceptance-report.md`](../acceptance-report.md)
+- 成果物: [acceptance-report.md](../acceptance-report.md)
 - 再実行コマンド: P06 のコマンドを再実行し、結果を `acceptance-report.md` の判定基準表と突合する。
 - 結果概要: goal-spec acceptance 3項目中2項目PASS、CWVはP13へ引継ぎの条件付きPASS。
 
 ## P09: CI 品質ゲート確認
 
-- 成果物: [`../quality-assurance-report.md`](../quality-assurance-report.md)
+- 成果物: [quality-assurance-report.md](../quality-assurance-report.md)
 - 再実行コマンド:
   ```bash
   pnpm --filter @harness-hub/hub run test:a11y
@@ -35,7 +44,7 @@
 
 ## P10: 最終独立レビュー
 
-- 成果物: [`../final-review-notes.md`](../final-review-notes.md)
+- 成果物: [final-review-notes.md](../final-review-notes.md)
 - 再実行コマンド: P06/P07/P09 のコマンドを再実行し、結果を `final-review-notes.md` の quality_constraints 6件判定表と突合する。
 - 結果概要: quality_constraints 5件PASS、REST 5 endpoint要件は現行3 endpointのみ実装のため1件PARTIAL。
 

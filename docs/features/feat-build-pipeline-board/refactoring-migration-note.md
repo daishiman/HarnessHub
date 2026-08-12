@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-refactoring-migration
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # refactoring-migration-note: feat-build-pipeline-board (P08)
 
 > SYS-BUILD-PIPELINE-BOARD-P08 の確認記録。既存 migration の事実と、ADR の目標設計に対する未実装差分を分けて記録する。

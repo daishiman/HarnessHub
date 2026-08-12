@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-test-design
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # test-design: feat-build-pipeline-board (P04)
 
 > SYS-BUILD-PIPELINE-BOARD-P04 の正本成果物。5 テストカテゴリの合否基準と、既存/新規テストへの割当を確定する。

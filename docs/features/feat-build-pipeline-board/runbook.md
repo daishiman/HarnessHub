@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-runbook
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # runbook: feat-build-pipeline-board (P12)
 
 > SYS-BUILD-PIPELINE-BOARD-P12 の正本成果物。S13 運用手順・工程操作監査確認手順・PublishRequest 接続監視手順を記載する。

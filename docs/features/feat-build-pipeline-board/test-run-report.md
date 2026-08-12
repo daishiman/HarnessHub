@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-test-run
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # test-run-report: feat-build-pipeline-board (P06)
 
 > SYS-BUILD-PIPELINE-BOARD-P06 の正本成果物。P04 で定義した 5 テストカテゴリ + axe/CWV を実行し、結果を記録する。

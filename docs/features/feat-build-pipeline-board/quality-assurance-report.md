@@ -1,3 +1,12 @@
+---
+status: confirmed
+layer: feature-quality-assurance
+parent_feature: feat-build-pipeline-board
+feature_package_id: feature-package/feat-build-pipeline-board
+beads_id: HarnessHub-9am
+recorded_at: 2026-08-13
+---
+
 # quality-assurance-report: feat-build-pipeline-board (P09)
 
 > SYS-BUILD-PIPELINE-BOARD-P09 の正本成果物。CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の充足を確認する。
