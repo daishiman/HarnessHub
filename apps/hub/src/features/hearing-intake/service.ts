@@ -2,9 +2,10 @@ import type { HearingIntakeRepository, HearingSheetRow, RepositoryContext } from
 import {
   type CreateSheetRequest,
   type CreateSheetResponse,
+  createHearingSheetFormSnapshot,
   createSheetResponseSchema,
   type HearingSheetStatus,
-  hearingSheetFormSnapshotSchema,
+  normalizeHearingSheetFormSnapshot,
   type SheetDetail,
   type SheetListQuery,
   type SheetListResponse,
@@ -56,7 +57,7 @@ function parseJson<T>(value: string): T {
 }
 
 function toListItem(row: HearingSheetRow) {
-  const form = hearingSheetFormSnapshotSchema.parse(parseJson(row.formJson));
+  const form = normalizeHearingSheetFormSnapshot(parseJson(row.formJson));
   return {
     id: row.id,
     code: row.code,
@@ -73,6 +74,7 @@ function toListItem(row: HearingSheetRow) {
 
 function toDetail(row: HearingSheetRow): SheetDetail {
   const result = parseGenerationResult(row.aiJobResultJson);
+  const form = normalizeHearingSheetFormSnapshot(parseJson(row.formJson));
   return sheetDetailSchema.parse({
     id: row.id,
     code: row.code,
@@ -80,7 +82,7 @@ function toDetail(row: HearingSheetRow): SheetDetail {
     title: row.title,
     applicant: { id: row.applicantUserId, name: row.applicantName },
     department: row.department,
-    form_snapshot: parseJson(row.formJson),
+    form_snapshot: form,
     estimate_snapshot: parseJson(row.estimateJson),
     generated_sections: result?.generated_sections ?? null,
     created_at: row.createdAt,
@@ -100,8 +102,7 @@ export function createHearingIntakeService(
     async createSheet(input) {
       const coefficients = await repository.getCoefficients(input.context);
       const estimate = estimateHearingSheet(input.request, coefficients);
-      const { salary: _discardedSalary, ...snapshotCandidate } = input.request;
-      const form = hearingSheetFormSnapshotSchema.parse(snapshotCandidate);
+      const form = createHearingSheetFormSnapshot(input.request);
       const row = await repository.createSheetAndEnqueue(input.context, {
         workspaceId: input.workspaceId,
         title: form.taskName,

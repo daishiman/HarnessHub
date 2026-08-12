@@ -13,6 +13,8 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 
 > **位置づけ**: P02 の成果物。[requirements-baseline.md](./requirements-baseline.md) の quality_constraints 10 件・acceptance 3 件を実装可能な構造へ具体化する。本書で確定した決定は P05 実装の拘束条件であり、実装が本書と矛盾した場合は実装側を是正する (P05 rollback 規約)。未解決事項 (§10) は P03 独立設計レビューの判定対象である。
 
+> **2026-08-12 追加契約**: 本文に残る FormData 12 項目・snapshot 11 項目・4 ステップは初期 V1 の履歴記録である。現行 S10 は既存 12 項目を必須のまま維持し、任意 profile 11 項目を加えた 5 ステップ、保存は `schemaVersion=2` とする。V1/無版 JSON は読取境界で互換変換し、既存 TEXT 列を使うため DB migration は行わない。現行の詳細契約は [backend-spec-api-state.md](../../backend-spec-api-state.md) §4.3、[architecture-decisions-application.md](./architecture-decisions-application.md) §8–9 を正とする。
+
 ## 0. 決定一覧 (索引)
 
 | id | 決定 | 対応する quality_constraint / acceptance |
