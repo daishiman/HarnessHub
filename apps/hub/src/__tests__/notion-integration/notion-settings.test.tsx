@@ -11,6 +11,7 @@ const INTEGRATION = {
   mode: 'api_key' as const,
   page_url: 'https://www.notion.so/page-a',
   api_key_masked: '****1234',
+  api_key_status: 'stored_unverified' as const,
   updated_at: 1,
 };
 
@@ -45,10 +46,12 @@ describe('NotionSettings role boundary', () => {
     renderSettings(false);
 
     expect(await screen.findByText('****1234')).toBeTruthy();
+    expect(screen.getByText('保存済み（接続未確認）')).toBeTruthy();
+    expect(screen.getByText(/APIへの接続確認・ページ取得・同期は行いません/)).toBeTruthy();
     expect(screen.getByText(/ワークスペース管理者に依頼/)).toBeTruthy();
     expect(screen.queryByRole('form', { name: 'Notion連携の登録・変更' })).toBeNull();
     expect(screen.queryByRole('button', { name: '保存する' })).toBeNull();
-    expect(screen.queryByRole('button', { name: '連携を解除する' })).toBeNull();
+    expect(screen.queryByRole('button', { name: '登録を削除する' })).toBeNull();
   });
 
   it('workspace-admin は保存・解除操作に到達できる', async () => {
@@ -57,7 +60,8 @@ describe('NotionSettings role boundary', () => {
 
     expect(await screen.findByRole('form', { name: 'Notion連携の登録・変更' })).toBeTruthy();
     expect(screen.getByRole('button', { name: '保存する' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: '連携を解除する' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: '登録を削除する' })).toBeTruthy();
+    expect(screen.getByText(/APIへの接続確認・ページ取得・同期は行いません/)).toBeTruthy();
   });
 
   it('内容のある管理者画面で axe 違反が 0 件', async () => {

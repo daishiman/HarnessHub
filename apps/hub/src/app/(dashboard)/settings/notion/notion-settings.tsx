@@ -113,7 +113,13 @@ export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSetti
         setIntegration(result);
         // 保存済みのAPIキーを画面の入力欄に残さない (マスク済み表示は DefinitionList 側で行う)。
         setApiKey('');
-        setFeedback({ tone: 'success', message: 'Notion連携を保存しました。' });
+        setFeedback({
+          tone: 'success',
+          message:
+            result.mode === 'api_key'
+              ? 'Notion APIの認証情報を保存しました。接続確認・同期はまだ行っていません。'
+              : 'NotionページのURLを保存しました。',
+        });
       } catch (cause) {
         setFeedback({ tone: 'danger', message: cause instanceof Error ? cause.message : '保存できませんでした。' });
       } finally {
@@ -131,14 +137,14 @@ export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSetti
         credentials: 'same-origin',
         headers: scopeHeaders,
       });
-      if (!response.ok && response.status !== 204) throw new Error('連携を解除できませんでした。');
+      if (!response.ok && response.status !== 204) throw new Error('登録を削除できませんでした。');
       setIntegration(null);
       setPageUrl('');
       setApiKey('');
       setMode('url');
-      setFeedback({ tone: 'success', message: 'Notion連携を解除しました。' });
+      setFeedback({ tone: 'success', message: 'Notionの登録を削除しました。' });
     } catch (cause) {
-      setFeedback({ tone: 'danger', message: cause instanceof Error ? cause.message : '連携を解除できませんでした。' });
+      setFeedback({ tone: 'danger', message: cause instanceof Error ? cause.message : '登録を削除できませんでした。' });
     } finally {
       setDeleting(false);
     }
@@ -166,10 +172,7 @@ export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSetti
   return (
     <Stack gap={4}>
       <section id="notion-integration-heading" aria-label="Notion連携">
-        <Panel
-          title="Notion連携"
-          description="URL方式またはAPIキー方式のいずれかで、Notionのページ・ワークスペースを登録します。"
-        >
+        <Panel title="Notion連携" description="NotionページのURL、または将来のAPI連携に備えた認証情報を保存します。">
           <Stack gap={3}>
             {integration !== null ? (
               <DefinitionList
@@ -183,11 +186,23 @@ export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSetti
                     description: integration.api_key_masked ?? '未登録',
                     hint: '末尾4文字のみ表示しています。',
                   },
+                  {
+                    term: 'APIキー状態',
+                    description:
+                      integration.api_key_status === 'stored_unverified' ? '保存済み（接続未確認）' : '未登録',
+                  },
                 ]}
               />
             ) : (
-              <p style={{ margin: 0 }}>まだNotion連携が登録されていません。</p>
+              <p style={{ margin: 0 }}>NotionのページURLまたは認証情報はまだ登録されていません。</p>
             )}
+
+            {mode === 'api_key' ? (
+              <p style={{ margin: 0 }}>
+                APIキー方式は現在、認証情報を暗号化して保存するだけです。Notion
+                APIへの接続確認・ページ取得・同期は行いません。
+              </p>
+            ) : null}
 
             {canManage ? (
               <form aria-label="Notion連携の登録・変更" onSubmit={(event) => void save(event)}>
@@ -230,14 +245,14 @@ export function NotionSettings({ tenantId, workspaceId, canManage }: NotionSetti
                     </Button>
                     {integration !== null ? (
                       <Button type="button" variant="secondary" disabled={deleting} onClick={() => void remove()}>
-                        {deleting ? '解除中…' : '連携を解除する'}
+                        {deleting ? '削除中…' : '登録を削除する'}
                       </Button>
                     ) : null}
                   </div>
                 </Stack>
               </form>
             ) : (
-              <p style={{ margin: 0 }}>閲覧のみ可能です。変更や解除はワークスペース管理者に依頼してください。</p>
+              <p style={{ margin: 0 }}>閲覧のみ可能です。変更や削除はワークスペース管理者に依頼してください。</p>
             )}
           </Stack>
         </Panel>

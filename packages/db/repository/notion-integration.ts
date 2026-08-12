@@ -37,7 +37,7 @@ export interface UpsertNotionIntegrationInput {
 
 export interface NotionIntegrationRepo {
   get(context: RepositoryContext, workspaceId: string): Promise<NotionIntegrationRow | null>;
-  /** 平文 API キーを復号して返す。「開く」導線や表示マスクの生成専用で、呼び出し側はログへ出さないこと。 */
+  /** 平文 API キーを復号して返す。現在は表示マスクの生成専用で、呼び出し側はログへ出さないこと。 */
   decryptApiKey(context: RepositoryContext, row: NotionIntegrationRow): Promise<string>;
   upsert(context: RepositoryContext, input: UpsertNotionIntegrationInput): Promise<NotionIntegrationRow>;
   deleteIntegration(context: RepositoryContext, workspaceId: string): Promise<void>;

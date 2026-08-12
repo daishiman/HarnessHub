@@ -2,7 +2,7 @@
  * feat-notion-integration の計算・判定ロジック。副作用 (DB/HTTP) を持たない純関数のみを置き、
  * `logic.test.ts` で単体検証する。API キーの平文をログや例外メッセージへ含めないこと。
  */
-import type { NotionIntegrationMode } from '@harness-hub/schemas';
+import { type NotionIntegrationMode, notionPageUrlSchema } from '@harness-hub/schemas';
 
 /** マスク後に見せる末尾の文字数 (「末尾4文字だけ見せる」の値)。 */
 const MASK_VISIBLE_TAIL = 4;
@@ -59,5 +59,5 @@ export function checkNotionIntegrationRequirements(
 
 /** 「Notion で開く」導線を出せるかどうか。api_key 方式でも page_url が登録されていれば出せる。 */
 export function canOpenNotionPage(pageUrl: string | null): pageUrl is string {
-  return typeof pageUrl === 'string' && pageUrl.trim().length > 0;
+  return notionPageUrlSchema.safeParse(pageUrl).success;
 }

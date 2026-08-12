@@ -97,7 +97,7 @@ def test_current_inventory_is_a_bijection_with_implemented_routes() -> None:
     assert len(surface_ids) == len(set(surface_ids)), "duplicate current surface ID"
     assert len(implemented_routes) == len(set(implemented_routes)), "duplicate page route"
     assert set(inventory_routes) == set(implemented_routes)
-    assert len(current) == 26
+    assert len(current) == 27
 
 
 def test_surface_profiles_have_complete_controlled_fields() -> None:

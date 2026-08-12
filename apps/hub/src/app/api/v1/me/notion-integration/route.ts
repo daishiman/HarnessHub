@@ -84,7 +84,7 @@ export const PUT = withAuthz(
   },
 );
 
-/** DELETE /api/v1/me/notion-integration — 連携解除。 */
+/** DELETE /api/v1/me/notion-integration — 保存した URL・認証情報の削除。 */
 export const DELETE = withAuthz(
   {
     action: 'notion-integration.write',

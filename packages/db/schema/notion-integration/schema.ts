@@ -15,7 +15,7 @@ export const notionIntegrations = sqliteTable(
     workspaceId: text('workspace_id').notNull(),
     mode: text('mode', { enum: NOTION_INTEGRATION_MODES }).notNull(),
     // url 方式では必須、api_key 方式では任意 (登録しておくと「Notion で開く」導線に使える)。
-    // 必須/任意の判定はアプリ層 (contracts.ts の superRefine) が持ち、列レベルでは NULL 許容にする。
+    // 必須/任意の判定はアプリ service 層の checkNotionIntegrationRequirements が持ち、列レベルでは NULL 許容にする。
     pageUrl: text('page_url'),
     // api_key 方式のときだけ非 null。保存形式は `{key_version}:{iv}:{ct}:{tag}` (ColumnCipher.encryptColumn の戻り値そのまま)。
     apiKeyEnc: text('api_key_enc'),

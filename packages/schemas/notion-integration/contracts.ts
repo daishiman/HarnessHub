@@ -17,7 +17,7 @@ const NOTION_PAGE_HOSTS = ['notion.so', 'notion.site'] as const;
  * 外部リンクとしてそのまま開くため、URL の「形」だけでなく行き先も制限する。
  * `notion.so.evil.example` のような suffix 偽装を通さないよう、完全一致かドット付き subdomain だけを許可する。
  */
-function isTrustedNotionPageUrl(value: string): boolean {
+export function isTrustedNotionPageUrl(value: string): boolean {
   try {
     const url = new URL(value);
     if (url.protocol !== 'https:' || (url.port !== '' && url.port !== '443')) return false;
@@ -28,7 +28,7 @@ function isTrustedNotionPageUrl(value: string): boolean {
   }
 }
 
-const pageUrlSchema = z
+export const notionPageUrlSchema = z
   .url('Notion ページの URL の形式ではありません')
   .max(2000)
   .refine(isTrustedNotionPageUrl, 'HTTPS の Notion ページ URL (notion.so / notion.site) を指定してください');
@@ -50,21 +50,36 @@ const apiKeyInputSchema = z.string().trim().min(20, 'APIキーの形式ではあ
 export const upsertNotionIntegrationRequestSchema = z
   .object({
     mode: notionIntegrationModeSchema,
-    page_url: pageUrlSchema.nullable().optional(),
+    page_url: notionPageUrlSchema.nullable().optional(),
     api_key: apiKeyInputSchema.optional(),
   })
   .strict();
 export type UpsertNotionIntegrationRequest = z.output<typeof upsertNotionIntegrationRequestSchema>;
 
-/** api_key はマスク済み文字列のみ。生の値は絶対に含めない。 */
+/** API キー方式は現状、暗号化保存まで。Notion API への接続確認や同期はまだ行わない。 */
+export const notionApiKeyStatusSchema = z.enum(['not_configured', 'stored_unverified']);
+export type NotionApiKeyStatus = z.output<typeof notionApiKeyStatusSchema>;
+
+/** api_key はマスク済み文字列と保存状態のみ。生の値や「接続済み」という誤解を招く状態は含めない。 */
 export const notionIntegrationResponseSchema = z
   .object({
     workspace_id: identifierSchema,
     mode: notionIntegrationModeSchema,
-    page_url: z.string().nullable(),
+    page_url: notionPageUrlSchema.nullable(),
     // 未登録なら null。登録済みなら "****" + 末尾4文字の形。
     api_key_masked: z.string().nullable(),
+    api_key_status: notionApiKeyStatusSchema,
     updated_at: z.number().int().nonnegative(),
   })
-  .strict();
+  .strict()
+  .superRefine((value, context) => {
+    const expectedStatus = value.api_key_masked === null ? 'not_configured' : 'stored_unverified';
+    if (value.api_key_status !== expectedStatus) {
+      context.addIssue({
+        code: 'custom',
+        path: ['api_key_status'],
+        message: 'APIキーのマスク値と保存状態が一致していません',
+      });
+    }
+  });
 export type NotionIntegrationResponse = z.output<typeof notionIntegrationResponseSchema>;

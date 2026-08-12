@@ -47,6 +47,7 @@ export function createNotionIntegrationService(deps: NotionIntegrationServiceDep
       mode: row.mode,
       page_url: row.pageUrl,
       api_key_masked: apiKeyMasked,
+      api_key_status: row.apiKeyEnc === null ? 'not_configured' : 'stored_unverified',
       updated_at: row.updatedAt,
     };
   }

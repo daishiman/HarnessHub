@@ -148,6 +148,7 @@ describe('Notion integration route boundary', () => {
     expect(response.status).toBe(200);
     const body = (await response.json()) as Record<string, unknown>;
     expect(body.api_key_masked).toBe('****1234');
+    expect(body.api_key_status).toBe('stored_unverified');
     expect(JSON.stringify(body)).not.toContain(API_KEY);
     expect(body).not.toHaveProperty('api_key');
   });
