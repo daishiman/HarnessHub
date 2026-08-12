@@ -413,13 +413,15 @@ describe('buildShellCss', () => {
 
   it('開閉トグルは mobile で隠し、サイドバーが現れる md 以上でだけ表示する', () => {
     const css = buildShellCss();
-    const mobileRule = '[data-hh-sidebar-toggle] {\n  display: none;\n}';
+    const mobileSelector = '[data-hh-sidebar-toggle] {';
     const desktopRule = `${mediaUp('md')} {\n  [data-hh-sidebar-toggle] {\n    display: inline-flex;\n  }\n}`;
+    const mobileRuleIndex = css.indexOf(mobileSelector);
 
-    expect(css).toContain(mobileRule);
+    expect(mobileRuleIndex).toBeGreaterThanOrEqual(0);
+    expect(css.slice(mobileRuleIndex, css.indexOf('}', mobileRuleIndex))).toContain('display: none;');
     expect(css).toContain(desktopRule);
     // mobile-first: 既定の非表示を定義した後で md 以上だけ上書きする。
-    expect(css.indexOf(mobileRule)).toBeLessThan(css.indexOf(desktopRule));
+    expect(mobileRuleIndex).toBeLessThan(css.indexOf(desktopRule));
   });
 
   it('閾値は breakpointTokens だけを使い、px を直書きしない (spec §2)', () => {

@@ -22,7 +22,6 @@ import {
   DataTable,
   NavList,
   ScreenHeader,
-  SidebarCollapseProvider,
   SidebarLayout,
   SidebarToggleButton,
   Stack,
@@ -109,18 +108,22 @@ const routes = [
     path: '/sidebar-toggle',
     title: 'サイドバー開閉トグル',
     body: (
-      <SidebarCollapseProvider>
+      <>
         <style>{buildShellCss()}</style>
         <div className="hh-shell">
           <aside className="hh-shell__sidebar">主要ナビゲーション</aside>
           <div className="hh-shell__body">
             <header>
-              <SidebarToggleButton expandedLabel="サイドバーを閉じる" collapsedLabel="サイドバーを開く" />
+              <SidebarToggleButton
+                expandedLabel="サイドバーを閉じる"
+                collapsedLabel="サイドバーを開く"
+                icon={<span aria-hidden="true">menu</span>}
+              />
             </header>
             <main className="hh-shell__main">本文</main>
           </div>
         </div>
-      </SidebarCollapseProvider>
+      </>
     ),
   },
 ];

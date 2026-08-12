@@ -24,7 +24,7 @@ export interface ShellAccountLink {
 export interface ShellHeaderProps {
   /**
    * サイドバー開閉トグル (`SidebarToggleButton`) を差し込む場合に渡す。
-   * ShellHeader 自身は開閉の仕組み (`SidebarCollapseProvider`) を知らず、
+   * ShellHeader 自身は開閉状態を知らず、
    * 描画済みの部品を受け取って先頭に置くだけにしてある。開閉が要らない画面
    * (サイドバー自体を持たない場面) では省略すればよい。
    */

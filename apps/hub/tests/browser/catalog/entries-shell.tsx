@@ -9,12 +9,12 @@ import {
   BottomSheet,
   Button,
   ConfirmDialog,
+  Icon,
   MobileTabBar,
   Modal,
   ShellFooter,
   ShellHeader,
   ShellSidebar,
-  SidebarCollapseProvider,
   SidebarToggleButton,
   WorkspaceSwitcher,
 } from '@harness-hub/ui';
@@ -96,12 +96,12 @@ export const shellCatalogEntries: readonly CatalogEntry[] = [
   {
     name: 'SidebarToggleButton',
     group: 'navigation',
-    // 開閉トグルは `SidebarCollapseProvider` の状態を読むボタンなので、
-    // 見本もその context の中でしか意味を持たない (単体の catalogWrappers 側には出さない)。
     render: () => (
-      <SidebarCollapseProvider>
-        <SidebarToggleButton expandedLabel="サイドバーを閉じる" collapsedLabel="サイドバーを開く" />
-      </SidebarCollapseProvider>
+      <SidebarToggleButton
+        expandedLabel="サイドバーを閉じる"
+        collapsedLabel="サイドバーを開く"
+        icon={<Icon name="menu" />}
+      />
     ),
   },
   {

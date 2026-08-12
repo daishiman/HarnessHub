@@ -65,10 +65,9 @@ export interface CatalogEntry {
 /**
  * 文脈を与える側に回るため単独の見本を持たない部品。
  * `UiProvider` / `ToastProvider` はカタログ全体をこの 2 つで包んでいるので、描画自体は
- * 全 group で行われている。`SidebarCollapseProvider` は `SidebarToggleButton` の見本
- * (entries-shell.tsx) がその中で描画されており、単独の見本を持たない。
+ * 全 group で行われている。
  */
-export const catalogWrappers = ['UiProvider', 'ToastProvider', 'SidebarCollapseProvider'] as const;
+export const catalogWrappers = ['UiProvider', 'ToastProvider'] as const;
 
 /**
  * 見本のデータは全て固定値にする。日付・乱数・件数の揺れが入ると、

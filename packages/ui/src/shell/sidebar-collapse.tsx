@@ -4,8 +4,8 @@
  * サイドバーの開閉状態 (HarnessHub 配色統一・サイドバートグル対応)。
  *
  * `ShellSidebar` 自体はサーバ部品のまま保つため (frontend-spec §3.0 のとおり全画面に載る)、
- * 開閉の state だけをこの薄い client provider に閉じ込める。`data-hh-sidebar-collapsed` を
- * 外側の div に立て、実際の表示・非表示は `buildShellCss()` 側の CSS 属性セレクタが行う
+ * 開閉の state だけをこの薄い client button に閉じ込める。`data-hh-sidebar-collapsed` を
+ * document root に立て、実際の表示・非表示は `buildShellCss()` 側の CSS 属性セレクタが行う
  * (JS の有無に関わらずレイアウトの正本は 1 枚の CSS、という既存方針を崩さない)。
  *
  * 開閉状態は `localStorage` に保存する。`useRememberedFilters` が絞り込み条件を
@@ -14,19 +14,9 @@
  * 初期 state は常に「展開」= サーバ描画と同じにして hydration mismatch を避ける
  * (`useRememberedFilters` と同じ形)。
  */
-import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
-
-import { Icon } from '../icons/index.js';
-import { colorVar, radiusVar, visuallyHidden } from '../internal/style.js';
+import { type ReactNode, useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'harness-hub:sidebar-collapsed';
-
-interface SidebarCollapseContextValue {
-  collapsed: boolean;
-  toggle: () => void;
-}
-
-const SidebarCollapseContext = createContext<SidebarCollapseContextValue | null>(null);
 
 function readStoredCollapsed(): boolean | null {
   try {
@@ -48,50 +38,13 @@ function writeStoredCollapsed(value: boolean): void {
   }
 }
 
-export interface SidebarCollapseProviderProps {
-  children: ReactNode;
-}
-
-/**
- * 共通シェルの最上位 (`.hh-shell` を含む要素) を包む provider。
- * `SidebarToggleButton` はこの内側でだけ使える。
- */
-export function SidebarCollapseProvider({ children }: SidebarCollapseProviderProps): ReactNode {
-  const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    const stored = readStoredCollapsed();
-    if (stored !== null) setCollapsed(stored);
-  }, []);
-
-  const toggle = useCallback((): void => {
-    setCollapsed((current) => {
-      const next = !current;
-      writeStoredCollapsed(next);
-      return next;
-    });
-  }, []);
-
-  return (
-    <SidebarCollapseContext.Provider value={{ collapsed, toggle }}>
-      <div data-hh-sidebar-collapsed={collapsed ? 'true' : 'false'}>{children}</div>
-    </SidebarCollapseContext.Provider>
-  );
-}
-
-function useSidebarCollapse(): SidebarCollapseContextValue {
-  const value = useContext(SidebarCollapseContext);
-  if (!value) {
-    throw new Error('useSidebarCollapse (SidebarToggleButton) は SidebarCollapseProvider の内側で使ってください');
-  }
-  return value;
-}
-
 export interface SidebarToggleButtonProps {
   /** 展開中に読み上げる操作名 (「サイドバーを閉じる」など)。 */
   expandedLabel: string;
   /** 折りたたみ中に読み上げる操作名 (「サイドバーを開く」など)。 */
   collapsedLabel: string;
+  /** アイコンは server component から渡し、全アイコン集合を client bundle へ巻き込まない。 */
+  icon: ReactNode;
   /** consumer が追加の装飾を与える場合のクラス名。表示幅の契約は `buildShellCss()` が持つ。 */
   className?: string | undefined;
 }
@@ -101,8 +54,29 @@ export interface SidebarToggleButtonProps {
  * 常に押し戻せる場所に留まる (サイドバー自身の中に置くと、閉じた瞬間に
  * ボタンごと消えて再度開けなくなるため)。
  */
-export function SidebarToggleButton({ expandedLabel, collapsedLabel, className }: SidebarToggleButtonProps): ReactNode {
-  const { collapsed, toggle } = useSidebarCollapse();
+export function SidebarToggleButton({
+  expandedLabel,
+  collapsedLabel,
+  icon,
+  className,
+}: SidebarToggleButtonProps): ReactNode {
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const stored = readStoredCollapsed() ?? false;
+    setCollapsed(stored);
+    document.documentElement.setAttribute('data-hh-sidebar-collapsed', stored ? 'true' : 'false');
+  }, []);
+
+  const toggle = (): void => {
+    setCollapsed((current) => {
+      const next = !current;
+      writeStoredCollapsed(next);
+      document.documentElement.setAttribute('data-hh-sidebar-collapsed', next ? 'true' : 'false');
+      return next;
+    });
+  };
+
   const label = collapsed ? collapsedLabel : expandedLabel;
 
   return (
@@ -112,23 +86,11 @@ export function SidebarToggleButton({ expandedLabel, collapsedLabel, className }
       data-hh-focusable=""
       data-hh-sidebar-toggle=""
       aria-pressed={collapsed}
+      aria-label={label}
       onClick={toggle}
       title={label}
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        minWidth: 'var(--hh-control-height)',
-        minHeight: 'var(--hh-control-height)',
-        padding: 0,
-        color: colorVar('text'),
-        background: 'transparent',
-        border: 'none',
-        borderRadius: radiusVar('full'),
-        cursor: 'pointer',
-      }}
     >
-      <Icon name="menu" />
-      <span style={visuallyHidden}>{label}</span>
+      {icon}
     </button>
   );
 }

@@ -10,24 +10,22 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { SidebarCollapseProvider, SidebarToggleButton } from './sidebar-collapse.js';
+import { SidebarToggleButton } from './sidebar-collapse.js';
 
 const STORAGE_KEY = 'harness-hub:sidebar-collapsed';
 
 function renderToggle(): void {
   render(
-    <SidebarCollapseProvider>
-      <div data-testid="host">
-        <SidebarToggleButton expandedLabel="サイドバーを閉じる" collapsedLabel="サイドバーを開く" />
-      </div>
-    </SidebarCollapseProvider>,
+    <SidebarToggleButton
+      expandedLabel="サイドバーを閉じる"
+      collapsedLabel="サイドバーを開く"
+      icon={<span aria-hidden="true">menu</span>}
+    />,
   );
 }
 
 function hostCollapsedAttr(): string | null {
-  return (
-    screen.getByTestId('host').closest('[data-hh-sidebar-collapsed]')?.getAttribute('data-hh-sidebar-collapsed') ?? null
-  );
+  return document.documentElement.getAttribute('data-hh-sidebar-collapsed');
 }
 
 beforeEach(() => {
@@ -36,16 +34,19 @@ beforeEach(() => {
 
 afterEach(() => {
   window.localStorage.clear();
+  document.documentElement.removeAttribute('data-hh-sidebar-collapsed');
 });
 
-describe('SidebarCollapseProvider / SidebarToggleButton', () => {
+describe('SidebarToggleButton', () => {
   it('既定は展開状態 (data-hh-sidebar-collapsed="false") で描画する', () => {
     renderToggle();
 
     expect(hostCollapsedAttr()).toBe('false');
     const button = screen.getByRole('button', { name: 'サイドバーを閉じる' });
     expect(button.getAttribute('aria-pressed')).toBe('false');
-    // 表示プロパティを inline style に戻すと、mobile の CSS `display: none` より強くなる。
+    // 見た目を inline style に戻すと、mobile の CSS `display: none` より強くなる。
+    // トグルの見た目とレスポンシブ表示はすべて buildShellCss の責務に保つ。
+    expect(button.getAttribute('style')).toBeNull();
     expect(button.style.display).toBe('');
   });
 

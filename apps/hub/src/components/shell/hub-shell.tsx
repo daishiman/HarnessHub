@@ -5,18 +5,18 @@
  * このファイルが持つのは「hub にとっての具体」= どの route を並べるか・誰がサインインしているか。
  *
  * server component のままにしてあるので、シェル自体は client JS を増やさない。
- * サイドバーの開閉状態だけは `SidebarCollapseProvider` (client) に委ねている
+ * サイドバーの開閉状態だけは `SidebarToggleButton` (client) に委ねている
  * (HarnessHub 配色統一・サイドバートグル対応)。
  */
 import type { SessionRole } from '@harness-hub/schemas';
 import {
   buildShellCss,
+  Icon,
   isCurrentNav,
   MobileTabBar,
   ShellFooter,
   ShellHeader,
   ShellSidebar,
-  SidebarCollapseProvider,
   SidebarToggleButton,
 } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
@@ -116,77 +116,79 @@ export function HubShell({
           「Noto Sans JP を使う」とだけ言っており、どこから読むかはアプリの責務 */}
       <style>{`.hh-shell { --hh-font-family: var(--font-noto-sans-jp), system-ui, -apple-system, 'Segoe UI', sans-serif; font-family: var(--hh-font-family); }`}</style>
 
-      <SidebarCollapseProvider>
-        <div className={`hh-shell ${notoSansJp.variable}`}>
-          {/* ブロックスキップ (WCAG 2.4.1)。見た目は base 層が focus 時だけ出す。
+      <div className={`hh-shell ${notoSansJp.variable}`}>
+        {/* ブロックスキップ (WCAG 2.4.1)。見た目は base 層が focus 時だけ出す。
               position:absolute なのでグリッドの列を消費しない */}
-          <a data-hh-skip-link="" href={`#${MAIN_ANCHOR_ID}`}>
-            本文へスキップ
-          </a>
+        <a data-hh-skip-link="" href={`#${MAIN_ANCHOR_ID}`}>
+          本文へスキップ
+        </a>
 
-          <ShellSidebar
-            groups={sidebarNavGroups(scope, accountRole)}
-            currentHref={currentHref}
-            label="主要ナビゲーション"
-            brand={<strong style={{ fontSize: 'var(--hh-font-size-md)' }}>Harness Hub</strong>}
+        <ShellSidebar
+          groups={sidebarNavGroups(scope, accountRole)}
+          currentHref={currentHref}
+          label="主要ナビゲーション"
+          brand={<strong style={{ fontSize: 'var(--hh-font-size-md)' }}>Harness Hub</strong>}
+        />
+
+        <div className="hh-shell__body">
+          <ShellHeader
+            sidebarToggle={
+              <SidebarToggleButton
+                expandedLabel="サイドバーを閉じる"
+                collapsedLabel="サイドバーを開く"
+                icon={<Icon name="menu" />}
+              />
+            }
+            workspaceName={scope.workspaceId === '' ? '未選択' : (currentWorkspaceName ?? scope.workspaceId)}
+            workspaceLabel="ワークスペース"
+            // 名前が引けたときだけ名前の体裁で出す。引けないまま ULID を名前の位置へ置くと
+            // 「読めない名前」に見えるため、識別子として扱い IdBadge へ落とす。
+            // 「未選択」は識別子ではないので false。
+            workspaceNameIsIdentifier={scope.workspaceId !== '' && currentWorkspaceName === undefined}
+            workspaceOptions={switcherOptions}
+            workspaceSwitchLabel="ワークスペースを切り替える"
+            screenTitle={resolvedScreenTitle}
+            searchAction={search?.action}
+            searchLabel={search?.label}
+            searchPlaceholder={search?.placeholder}
+            searchHiddenFields={searchHiddenFields(scope)}
+            notificationsHref={notificationsHref(scope)}
+            notificationsLabel="通知設定"
+            unreadLabel="未読"
+            accountName={accountName ?? 'ゲスト'}
+            // 表示名 (氏名・メールアドレス) が取れたときだけ名前の体裁で出す。
+            // 取れず session の sub (ULID) を出しているときは識別子の見せ方へ落とす。
+            // 「ゲスト」は識別子ではないので、未サインイン時も false。
+            accountNameIsIdentifier={accountName !== null && (accountNameIsIdentifier ?? true)}
+            accountRoleLabel={accountRole === null ? undefined : roleLabels[accountRole]}
+            accountMenuLabel="アカウントメニュー"
+            accountLinks={accountMenuLinks(scope, accountRole)}
+            signOutHref={SIGN_OUT_HREF}
+            signOutLabel="サインアウト"
           />
 
-          <div className="hh-shell__body">
-            <ShellHeader
-              sidebarToggle={
-                <SidebarToggleButton expandedLabel="サイドバーを閉じる" collapsedLabel="サイドバーを開く" />
-              }
-              workspaceName={scope.workspaceId === '' ? '未選択' : (currentWorkspaceName ?? scope.workspaceId)}
-              workspaceLabel="ワークスペース"
-              // 名前が引けたときだけ名前の体裁で出す。引けないまま ULID を名前の位置へ置くと
-              // 「読めない名前」に見えるため、識別子として扱い IdBadge へ落とす。
-              // 「未選択」は識別子ではないので false。
-              workspaceNameIsIdentifier={scope.workspaceId !== '' && currentWorkspaceName === undefined}
-              workspaceOptions={switcherOptions}
-              workspaceSwitchLabel="ワークスペースを切り替える"
-              screenTitle={resolvedScreenTitle}
-              searchAction={search?.action}
-              searchLabel={search?.label}
-              searchPlaceholder={search?.placeholder}
-              searchHiddenFields={searchHiddenFields(scope)}
-              notificationsHref={notificationsHref(scope)}
-              notificationsLabel="通知設定"
-              unreadLabel="未読"
-              accountName={accountName ?? 'ゲスト'}
-              // 表示名 (氏名・メールアドレス) が取れたときだけ名前の体裁で出す。
-              // 取れず session の sub (ULID) を出しているときは識別子の見せ方へ落とす。
-              // 「ゲスト」は識別子ではないので、未サインイン時も false。
-              accountNameIsIdentifier={accountName !== null && (accountNameIsIdentifier ?? true)}
-              accountRoleLabel={accountRole === null ? undefined : roleLabels[accountRole]}
-              accountMenuLabel="アカウントメニュー"
-              accountLinks={accountMenuLinks(scope, accountRole)}
-              signOutHref={SIGN_OUT_HREF}
-              signOutLabel="サインアウト"
-            />
-
-            {/*
+          {/*
               本文ランドマーク。業務画面ではこのシェルが `<main>` の唯一の実装を持つ。
               root layout 側は @harness-hub/ui の HubShell を外してあり (公開画面だけが
               そちらを使う)、同一ページに main が 2 つ現れない構成にしてある。
             */}
-            {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
+          {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
                 `/signin/workspace` の server intermediate response が担い、key は再利用防止の第二防壁。 */}
-            <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId} ${scope.workspaceId}`}>
-              {children}
-            </main>
+          <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId} ${scope.workspaceId}`}>
+            {children}
+          </main>
 
-            <ShellFooter label="フッター情報" links={footerLinks} />
-          </div>
-
-          <MobileTabBar
-            items={primary}
-            moreItems={secondary}
-            currentHref={currentHref}
-            label="画面切替"
-            moreLabel="その他"
-          />
+          <ShellFooter label="フッター情報" links={footerLinks} />
         </div>
-      </SidebarCollapseProvider>
+
+        <MobileTabBar
+          items={primary}
+          moreItems={secondary}
+          currentHref={currentHref}
+          label="画面切替"
+          moreLabel="その他"
+        />
+      </div>
     </>
   );
 }
