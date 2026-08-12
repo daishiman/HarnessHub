@@ -9,7 +9,7 @@ recorded_at: 2026-08-12
 
 # feat-hearing-intake MVP 追補 (シート作成 UX 刷新 / 2026-08-12)
 
-promoted exact-13 package (`tasks/feat-hearing-intake/sys-hearing-intake-p0x.md`) は改変しない。
+promoted exact-13 package (`tasks/feat-hearing-intake/sys-hearing-intake-p01.md` 〜 `sys-hearing-intake-p13.md`) は改変しない。
 本ファイルは実装後の additive 投影であり、P01〜P13 の正本を置き換えない。
 
 ## 変更要約
