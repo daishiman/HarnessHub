@@ -140,24 +140,23 @@ claim token・tenant・`ref_type/ref_id` の一致は repository の CAS
 
 | 画面 | route | 最小 role | 消費 API | 共通部品 | 主要素 |
 |---|---|---|---|---|---|
-| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 上位4大工程を8画面に分割 + 完了パネル |
+| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 上位4大工程を7画面に分割 + 完了パネル |
 | **S11** シート一覧 | `/sheets` | member | `GET /api/v1/sheets` | `DataTable` | 6 列 / モバイルはカード |
-| **S12** シート詳細 | `/sheets/[id]` | member | `GET /api/v1/sheets/:id`、admin: `PATCH`・`POST :id/regenerate`、screenshots / handoff-tokens | `MarkdownView` | 生成本文 + snapshot + 引き渡し + 添付 |
+| **S12** シート詳細 | `/sheets/[id]` | member | `GET /api/v1/sheets/:id`、admin: `PATCH`・`POST :id/regenerate`、screenshots / handoff-tokens | `MarkdownView` | 生成本文 + snapshot 全項目 + 引き渡し + 添付 |
 
-### S10: 8 画面の割り当て (FormData 30 項目 / 2026-08-12 追補)
+### S10: 7 画面の割り当て (FormData 30 項目 / 2026-08-12 シート作成 UX 刷新)
 
-上位仕様の4大工程 (基本情報 → 業務詳細 → 要件 → 確認) は維持する。入力負荷を下げるため実画面を次の8画面へ分割する。
+上位仕様の4大工程 (基本情報 → 業務詳細 → 要件 → 確認) は維持する。入力負荷を下げるため実画面を次の7画面へ分割する (旧 8 画面の「整理・まとめ」「確認」を「整理・確認」へ統合)。
 
 | 画面 | 項目 | 検証 |
 |---|---|---|
 | 1 基本情報 | `taskName, company, applicant, domain` | step 単位 validation (必須) |
-| 2 現状 | `issue, tools, hours, people, salary` | `hours`/`people`/`salary` は数値範囲検査 |
-| 3 用途プロファイル | `usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, trueProblem, knowledgeAssets` | 単一選択は `unknown` 初期値。`shareTarget`/`knowledgeAssets` 必須。`informationSources`/`trueProblem` のみ任意 (未回答=`null`、複数入力の回答済み 0 件=`[]`) |
+| 2 現状 | `issue, trueProblem, tools, hours, people, salary` | `hours`/`people`/`salary` は数値範囲検査。`trueProblem` は任意 |
+| 3 用途プロファイル | `usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, knowledgeAssets` | 単一選択は `unknown` 初期値。`shareTarget`/`knowledgeAssets` 必須。`informationSources` のみ任意 (未回答=`null`、複数入力の回答済み 0 件=`[]`)。enum は既存値を壊さず加算可 |
 | 4 よくある要望パターン | `requestPatterns` と条件付き `integrationTools*` / `automationDescription` / `existingDataSources*` | 親パターン未選択時は条件付き項目を送らない |
-| 5 参考URL・添付 | `referenceUrls` (最大10)。screenshot 自体は S12 で扱う | URL 形式・件数上限 |
-| 6 要望 | `features, output, priority` | 必須 + enum |
-| 7 整理・まとめ | 全入力の再掲 + 時間削減の参考値 | **金額なし** (AD-6) |
-| 8 確認 | 送信意思の最終確認 | 送信前の意思確認 |
+| 5 参考URL・添付 | `referenceUrls` (最大10) + 作成時添付ステージング (25MB・画像/動画/CSV/Excel) | URL 形式・件数上限。添付は送信後に順次 upload (一部失敗許容) |
+| 6 要望 | `features, output, priority` | 必須 + enum (`priority` は urgent/high/medium/low/someday) |
+| 7 整理・確認 | 全入力の再掲 + 時間削減の参考値 + 送信意思の最終確認 | **金額なし** (AD-6) |
 
 - 進捗表示・戻る/次へ・キーボード操作・step 単位 validation は `packages/ui` の `StepWizard` (`StepWizardProps` / `WizardStep`) が担保する。**独自ウィザードを実装しない** (qa-022)。
 - 途中状態は `sessionStorage` に保持し、誤離脱ダイアログを出す。

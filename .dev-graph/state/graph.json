@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1593,
+  "graph_revision": 1594,
   "nodes": [
     {
       "acceptance": [
@@ -60680,6 +60680,127 @@
       "title": "一時メニュー開閉契約と Docs 0件導線の最終レビュー",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T00:15:00Z"
+    },
+    {
+      "acceptance": [
+        "profile enum が既存値を壊さず加算され UI/export が追従する",
+        "ウィザードが 7 画面で完走し添付ステージングを扱える",
+        "S12 が form_snapshot 主要グループをすべて表示する",
+        "S17 詳細に email と最終ログインが出る",
+        "hearing-intake focused tests が PASS する",
+        "仕様反映受領書を記録する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hearing-sheet-overhaul-20260812.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存 feat-hearing-intake / feat-user-org-admin の実装後 UX 欠落を埋める単一の MVP 改善課題。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f246463106d6e750af658ebafb56b460ffa49d0e325b4efa444b1024db1056aa",
+        "evaluator": "final-review-mvp",
+        "evidence_ref": "docs/features/feat-hearing-intake/mvp-sheet-overhaul-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hearing-sheet-overhaul-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "7画面ウィザードで用途プロファイル enum を拡張し、作成時添付ステージングと詳細の form_snapshot 全項目表示、ユーザー詳細の email/最終ログイン表示まで一連で動作する。",
+      "graph_node_id": "issue-hearing-sheet-overhaul-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T14:03:05Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "依頼者要件に沿い、ヒアリングシート新規作成ウィザードの選択肢不足・添付不可・確認画面の重複・詳細画面の入力欠落を解消し、実運用で使える MVP 入力体験にする。",
+      "related_nodes": [
+        "feat-hearing-intake",
+        "feat-user-org-admin"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/sheets/",
+        "apps/hub/src/features/hearing-intake/",
+        "apps/hub/src/app/(dashboard)/users/",
+        "packages/schemas/hearing-intake/",
+        "apps/hub/tests/hearing-intake/"
+      ],
+      "scope_in": [
+        "profile enum の加算拡張",
+        "S10 ウィザード 8→7 画面統合",
+        "作成時添付ステージング",
+        "情報源・本当の課題入力欄",
+        "S12 form_snapshot 全項目表示",
+        "S17 email/最終ログイン表示",
+        "関連テストと仕様反映"
+      ],
+      "scope_out": [
+        "DB migration 新設",
+        "AI キュー契約変更",
+        "本番デプロイ",
+        "auth/role 体系変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T14:03:05Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "hearing-intake",
+        "user-org-admin",
+        "mvp",
+        "wizard",
+        "ui"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "ヒアリングシート作成 UX 刷新 (7画面・enum 拡張・添付ステージング・詳細全項目表示)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T14:04:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

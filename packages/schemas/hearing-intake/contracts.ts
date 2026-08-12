@@ -11,7 +11,12 @@ import { identifierSchema, paginationQuerySchema } from '../src/primitives.js';
 export const hearingSheetStatusSchema = z.enum(['received', 'generating', 'review', 'completed']);
 export type HearingSheetStatus = z.output<typeof hearingSheetStatusSchema>;
 
-export const hearingPrioritySchema = z.enum(['high', 'medium', 'low']);
+/**
+ * 優先度は実務では高/中/低の3段階では粒度が粗く、依頼者要件により5段階へ拡張した。
+ * 既存の high/medium/low は変更せず、urgent (緊急) / someday (いつか対応) を追加のみ行う
+ * (旧データとの後方互換性を壊さないため)。
+ */
+export const hearingPrioritySchema = z.enum(['urgent', 'high', 'medium', 'low', 'someday']);
 export type HearingPriority = z.output<typeof hearingPrioritySchema>;
 
 /**
@@ -23,10 +28,15 @@ export type HearingPriority = z.output<typeof hearingPrioritySchema>;
  * `unknown` はどの軸にも例外なく足す (依頼者追加要件: 「不明・わからない」を選べない項目を残さない)。
  * 未回答を空欄で握りつぶさず、値として記録して後段 (要ヒアリング項目抽出) が拾えるようにするため。
  */
+// 各 enum とも既存値は変更・削除せず末尾へ追加のみ行う (旧データとの後方互換性を壊さないため)。
+// 1画面でスクロールなしに見渡せる分量として、各項目 7〜9個程度 (「不明・わからない」を含む) を目安にする。
 export const hearingUsagePurposeSchema = z.enum([
   'app_development',
   'harness_development',
   'system_development',
+  'data_analysis',
+  'document_creation',
+  'customer_support',
   'other',
   'unknown',
 ]);
@@ -35,16 +45,48 @@ export type HearingUsagePurpose = z.output<typeof hearingUsagePurposeSchema>;
 export const hearingExpertiseSchema = z.enum(['novice', 'intermediate', 'expert', 'unknown']);
 export type HearingExpertise = z.output<typeof hearingExpertiseSchema>;
 
-export const hearingRoleSchema = z.enum(['individual', 'employee', 'executive', 'creator', 'unknown']);
+export const hearingRoleSchema = z.enum([
+  'individual',
+  'employee',
+  'executive',
+  'creator',
+  'team_lead',
+  'freelancer',
+  'unknown',
+]);
 export type HearingRole = z.output<typeof hearingRoleSchema>;
 
-export const hearingContextSchema = z.enum(['business', 'personal', 'study', 'hobby', 'unknown']);
+export const hearingContextSchema = z.enum([
+  'business',
+  'personal',
+  'study',
+  'hobby',
+  'side_business',
+  'nonprofit',
+  'unknown',
+]);
 export type HearingContext = z.output<typeof hearingContextSchema>;
 
-export const hearingMotivationSchema = z.enum(['efficiency', 'quality', 'learning', 'branding', 'unknown']);
+export const hearingMotivationSchema = z.enum([
+  'efficiency',
+  'quality',
+  'learning',
+  'branding',
+  'cost_reduction',
+  'risk_reduction',
+  'unknown',
+]);
 export type HearingMotivation = z.output<typeof hearingMotivationSchema>;
 
-export const hearingSharingIntentSchema = z.enum(['self', 'small_group', 'public', 'customer', 'unknown']);
+export const hearingSharingIntentSchema = z.enum([
+  'self',
+  'small_group',
+  'public',
+  'customer',
+  'department',
+  'partner_company',
+  'unknown',
+]);
 export type HearingSharingIntent = z.output<typeof hearingSharingIntentSchema>;
 
 /** 複数選択タグ。`unknown` を選ぶと他タグと排他 (UI 側で強制) — 「制約はあるが種類が分からない」を表す。 */

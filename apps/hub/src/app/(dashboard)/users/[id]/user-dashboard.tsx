@@ -30,6 +30,7 @@ import {
   Stack,
 } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { DateTimeText } from '../../../../components/format/date-time-text.js';
 // lib/authz/index.js (barrel) は next-auth 依存の runtime.ts も re-export しており、
 // client component からそれを import すると Buffer polyfill ごと client bundle に混入する
 // (実測: client-bundle 予算超過、chunk 内容が @auth/core の AuthError だった)。
@@ -223,7 +224,13 @@ export function UserDashboard({ userId, tenantId }: UserDashboardProps): ReactNo
           columns={2}
           items={[
             { term: '氏名', description: user.name },
+            { term: 'メールアドレス', description: user.email },
             { term: '在籍の状態', description: STATUS_LABELS[user.status] },
+            {
+              term: '最終ログイン',
+              description:
+                user.last_login_at === null ? 'ログイン記録がありません' : <DateTimeText value={user.last_login_at} />,
+            },
           ]}
         />
       </Panel>

@@ -23,6 +23,19 @@ import {
   buildHarnessCreatorHandoff,
   buildSystemOrchestratorHandoff,
 } from '../../../../features/hearing-intake/export-adapter/index.js';
+import {
+  CONSTRAINT_TAG_LABELS,
+  CONTEXT_LABELS,
+  EXISTING_DATA_SOURCE_LABELS,
+  EXPERTISE_LABELS,
+  INTEGRATION_TOOL_LABELS,
+  MOTIVATION_LABELS,
+  PRIORITY_LABELS,
+  REQUEST_PATTERN_LABELS,
+  ROLE_LABELS,
+  SHARING_INTENT_LABELS,
+  USAGE_PURPOSE_LABELS,
+} from '../new/hearing-intake-wizard-model.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -210,6 +223,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   }
 
   const sections = sheet.generated_sections;
+  const form = sheet.form_snapshot;
 
   return (
     <article>
@@ -306,30 +320,152 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
         </Panel>
 
         {/* 対象が 1 件なので比べる相手がおらず、表の列見出しは意味を持たない。
-          定義リストにして狭い画面での横スクロールも無くす (§5-1 の写し方) */}
+          定義リストにして狭い画面での横スクロールも無くす (§5-1 の写し方)。
+          form_snapshot の29項目すべてを、新規作成ウィザードと同じ論理グループ (整理・確認ステップと同じ並び)
+          で表示する。ラベルは wizard-model.ts の label map をそのまま再利用し、二重定義しない。 */}
         <Panel
           title="申請時の入力と試算"
           description="申請を受け付けた時点の内容です。あとから申請内容が変わっても、ここは当時のまま残ります。"
         >
-          <DefinitionList
-            label="申請時の入力と試算"
-            columns={2}
-            items={[
-              { term: '業務領域', description: sheet.form_snapshot.domain },
-              { term: '月間工数', description: `${sheet.form_snapshot.hours} 時間` },
-              { term: '対象人数', description: `${sheet.form_snapshot.people} 人` },
-              {
-                term: '年間で減らせる時間',
-                description: `${sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間`,
-                hint: '申請内容をもとにした試算です。',
-              },
-              {
-                term: '年間で減らせる金額',
-                description: `${sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円`,
-                hint: '見積係数設定の単価を掛けて算出しています。',
-              },
-            ]}
-          />
+          <Stack gap={4}>
+            <DefinitionList
+              label="基本情報"
+              columns={2}
+              items={[
+                { term: '業務名', description: form.taskName },
+                { term: '会社名', description: form.company },
+                { term: '申請者', description: form.applicant },
+                { term: '業務領域', description: form.domain },
+              ]}
+            />
+
+            <DefinitionList
+              label="現状"
+              columns={2}
+              items={[
+                { term: '課題', description: form.issue },
+                ...(form.trueProblem === null || form.trueProblem === undefined
+                  ? []
+                  : [{ term: '本当の課題（深掘り）', description: form.trueProblem }]),
+                { term: '利用中のツール', description: form.tools },
+                { term: '月間工数', description: `${form.hours} 時間` },
+                { term: '対象人数', description: `${form.people} 人` },
+              ]}
+            />
+
+            <DefinitionList
+              label="用途プロファイル"
+              columns={2}
+              items={[
+                { term: '用途', description: USAGE_PURPOSE_LABELS[form.usagePurpose] },
+                { term: '熟練度', description: EXPERTISE_LABELS[form.expertise] },
+                { term: '役割', description: ROLE_LABELS[form.role] },
+                { term: '文脈', description: CONTEXT_LABELS[form.context] },
+                { term: '動機', description: MOTIVATION_LABELS[form.motivation] },
+                { term: '共有意図', description: SHARING_INTENT_LABELS[form.sharingIntent] },
+                {
+                  term: '制約',
+                  description:
+                    form.constraintTags.length === 0
+                      ? 'なし'
+                      : form.constraintTags.map((tag) => CONSTRAINT_TAG_LABELS[tag]).join('、'),
+                },
+                { term: '共有相手', description: form.shareTarget },
+                { term: 'ナレッジ資産', description: form.knowledgeAssets.join('、') },
+                {
+                  term: '情報源',
+                  description:
+                    form.informationSources === null ||
+                    form.informationSources === undefined ||
+                    form.informationSources.length === 0
+                      ? 'なし'
+                      : form.informationSources.join('、'),
+                },
+              ]}
+            />
+
+            <DefinitionList
+              label="よくある要望パターン"
+              columns={2}
+              items={[
+                {
+                  term: 'パターン',
+                  description:
+                    form.requestPatterns.length === 0
+                      ? 'なし'
+                      : form.requestPatterns.map((pattern) => REQUEST_PATTERN_LABELS[pattern]).join('、'),
+                },
+                {
+                  term: '連携したいツール',
+                  description:
+                    form.integrationTools.length === 0
+                      ? 'なし'
+                      : form.integrationTools.map((tool) => INTEGRATION_TOOL_LABELS[tool]).join('、'),
+                },
+                ...(form.integrationToolsOther === null || form.integrationToolsOther === undefined
+                  ? []
+                  : [{ term: '連携ツール（その他）', description: form.integrationToolsOther }]),
+                ...(form.automationDescription === null || form.automationDescription === undefined
+                  ? []
+                  : [{ term: '自動化したい内容', description: form.automationDescription }]),
+                {
+                  term: '既存データの所在',
+                  description:
+                    form.existingDataSources.length === 0
+                      ? 'なし'
+                      : form.existingDataSources.map((source) => EXISTING_DATA_SOURCE_LABELS[source]).join('、'),
+                },
+                ...(form.existingDataSourcesOther === null || form.existingDataSourcesOther === undefined
+                  ? []
+                  : [{ term: '既存データ（その他）', description: form.existingDataSourcesOther }]),
+              ]}
+            />
+
+            <DefinitionList
+              label="参考URL"
+              columns={2}
+              items={
+                form.referenceUrls.length === 0
+                  ? [{ term: '参考URL', description: 'なし' }]
+                  : form.referenceUrls.map((entry, index) => ({
+                      term: `参考URL ${index + 1}`,
+                      description: (
+                        <a href={entry.url} target="_blank" rel="noreferrer">
+                          {entry.url}
+                        </a>
+                      ),
+                      hint: entry.note ?? undefined,
+                    }))
+              }
+            />
+
+            <DefinitionList
+              label="要望"
+              columns={2}
+              items={[
+                { term: 'ほしい機能', description: form.features },
+                { term: '希望する出力', description: form.output },
+                { term: '優先度', description: PRIORITY_LABELS[form.priority] },
+              ]}
+            />
+
+            <DefinitionList
+              label="試算"
+              columns={2}
+              items={[
+                {
+                  term: '年間で減らせる時間',
+                  description: `${sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間`,
+                  hint: '申請内容をもとにした試算です。',
+                },
+                {
+                  term: '年間で減らせる金額',
+                  description: `${sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円`,
+                  hint: '見積係数設定の単価を掛けて算出しています。',
+                },
+              ]}
+            />
+          </Stack>
         </Panel>
 
         <div data-print-exclude="">

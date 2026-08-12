@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { DateTimeText } from '../../../components/format/date-time-text.js';
+import { ATTACHMENT_ACCEPTED_FILE_EXTENSIONS, validateAttachmentFile } from '../attachment-validation.js';
 
 const ConfirmDialog = dynamic(() => import('@harness-hub/ui').then((module) => module.ConfirmDialog));
 
@@ -19,10 +20,6 @@ const tenantHeaders = (tenantId: string, workspaceId: string) => ({
   'x-harness-tenant-id': tenantId,
   'x-harness-workspace-id': workspaceId,
 });
-
-/** 対応形式一覧。`safe-attachment.ts` の SAFE_ATTACHMENT_CONTENT_TYPES と対応させて表示・input accept へ使う。 */
-const ACCEPTED_FILE_EXTENSIONS =
-  '.png,.jpg,.jpeg,.webp,.mp4,.mov,.csv,.xlsx,.xls,image/png,image/jpeg,image/webp,video/mp4,video/quicktime,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel';
 
 /** 認証済み利用者が、シートに安全な添付ファイル (画像・動画・CSV・Excel) を添付・削除するパネル。 */
 export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: HearingSharePanelProps): ReactNode {
@@ -58,6 +55,11 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
 
   const upload = async (): Promise<void> => {
     if (file === null) return;
+    const rejection = validateAttachmentFile(file);
+    if (rejection !== null) {
+      setOperationError(rejection);
+      return;
+    }
     setUploading(true);
     setOperationError(null);
     try {
@@ -140,7 +142,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
             ref={fileInputRef}
             label="ファイル"
             type="file"
-            accept={ACCEPTED_FILE_EXTENSIONS}
+            accept={ATTACHMENT_ACCEPTED_FILE_EXTENSIONS}
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
           />
           <TextInput

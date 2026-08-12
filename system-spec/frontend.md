@@ -177,10 +177,18 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 ## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
 
 - S10 ヒアリングウィザードは、確定済みの4大工程 (基本情報/業務詳細/要件/確認) を維持したまま、
-  入力負荷低減のため **8 画面** へ分割する (28 項目)。
+  入力負荷低減のため画面分割する (FormData 30 項目)。
 - S12 は生成結果の閲覧に加え、スクリーンショット添付と Claude Code 引き渡しトークン発行 UI を持つ。
 - 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
 - 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。
+
+## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul / issue-hearing-sheet-overhaul-20260812)
+
+- S10 を **7 画面** に統合 (整理・まとめ + 確認 → 整理・確認)。
+- 用途プロファイル系 enum と priority を既存値破壊なしで加算する。
+- 作成時添付ステージング (25MB・画像/動画/CSV/Excel) と S12 form_snapshot 全項目表示を追加する。
+- S17 個別ダッシュボードに email / 最終ログインを読み取り表示する。
+- 正本: `docs/frontend-spec.md`、`docs/features/feat-hearing-intake/mvp-sheet-overhaul-*`。
 
 ## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
 

@@ -303,8 +303,9 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
   it('HI-A11Y-101: hearing-intake の実コンポーネントに axe 違反が 0 件', async () => {
     mountScreen(<HearingIntakeWizard tenantId="tenant-a" workspaceId="ws-1" />);
     expect(await violationsOf()).toEqual([]);
-    // 4大工程を8画面へ展開する現行フローを実DOMで固定する。
-    expect(document.querySelectorAll('ol li')).toHaveLength(8);
+    // 4大工程を7画面へ展開する現行フローを実DOMで固定する
+    // (「整理・まとめ」「確認」の重複ステップを1画面へ統合したため、旧8画面から7画面になった)。
+    expect(document.querySelectorAll('ol li')).toHaveLength(7);
     expect(document.querySelectorAll('input')).toHaveLength(4);
   });
 
