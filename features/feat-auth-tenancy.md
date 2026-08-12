@@ -195,3 +195,11 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   [仕様反映受領書](../docs/features/feat-auth-tenancy/customer-managed-google-oidc-spec-reflection-receipt.md)
   を参照する。
 - PR #634 は `main` へマージ済みで、default branch（標準の取り込み先ブランチ）との再照合も完了した。Google 実環境 login、Playwright、production migration は外部環境が必要な未完了項目のため、`HarnessHub-uk2i` は `in_progress` を維持する。
+
+## session cookie 所属数上限の実測固定 (2026-08-12 / `HarnessHub-alyy`)
+
+- `workspace_ids` 焼き込み方式のまま、Set-Cookie 4096-byte 保守的送出境界を unit test で固定した。
+- 実測: 所属 95 件 (4085 バイト) が境界。96 件超は serializer が throw せず返す（browser 破棄は本 test 外）。
+- 方式変更（都度 DB / server store / cookie 分割 等）は後続 `HarnessHub-oewu`。本変更は契約変更ではなく測定の固定。
+- 証跡: `apps/hub/tests/auth-tenancy/session-cookie-ceiling.test.ts`、issue `issue-session-cookie-workspace-ids-ceiling-20260812`。
+

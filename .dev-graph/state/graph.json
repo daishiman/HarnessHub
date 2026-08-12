@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1558,
+  "graph_revision": 1590,
   "nodes": [
     {
       "acceptance": [
@@ -8536,7 +8536,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.1",
+        "linked_at": "2026-07-18T01:42:26Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8547,12 +8551,14 @@
       "classification_confidence": 0.92,
       "classification_reason": "goal-spec (goal-spec.json) と features/feat-build-pipeline-board.md の purpose/goal/scope/acceptance/quality_constraints を要件ベースラインへ確定転記する P01 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-07-28T10:16:42Z",
+        "evidence_refs": [
+          "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p01.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T07:12:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -8620,7 +8626,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -8632,7 +8638,7 @@
       "template_version": "1.1.0",
       "title": "構築パイプラインボード要件ベースライン確定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:10:43.003132Z"
     },
     {
       "acceptance": [
@@ -8645,7 +8651,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.2",
+        "linked_at": "2026-07-18T01:42:27Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8656,12 +8666,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "docs/backend-spec.md の Build/build_stage_events テーブル定義・工程操作 API・Build 状態機械に基づき Build エンティティのスキーマと S13 画面構成・工程操作 API 契約・PublishRequest 接続設計を確定する P02 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-11T05:13:40Z",
+        "evidence_refs": [
+          "tasks/feat-build-pipeline-board/sys-build-pipeline-board-p02.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T07:12:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -8731,7 +8743,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -8743,7 +8755,7 @@
       "template_version": "1.1.0",
       "title": "アーキテクチャ設計 — Build スキーマ・S13 ボード構成・工程操作 API 契約・PublishRequest 接続設計",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:11:30.332343Z"
     },
     {
       "acceptance": [
@@ -8756,7 +8768,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.3",
+        "linked_at": "2026-07-18T01:42:28Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8767,12 +8783,14 @@
       "classification_confidence": 0.88,
       "classification_reason": "P02 で確定した Build スキーマ・S13 画面構成・工程操作 API 契約・PublishRequest 接続設計を、設計担当から独立した視点でレビューする P03 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T05:21:55Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/design-review-notes.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -8837,7 +8855,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -8849,7 +8867,7 @@
       "template_version": "1.1.0",
       "title": "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T06:48:48.929745Z"
     },
     {
       "acceptance": [
@@ -8863,7 +8881,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.4",
+        "linked_at": "2026-07-18T01:42:29Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -8965,7 +8987,7 @@
       "template_version": "1.1.0",
       "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:11:53.899749Z"
     },
     {
       "acceptance": [
@@ -8979,7 +9001,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.5",
+        "linked_at": "2026-07-18T01:42:30Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9093,7 +9119,7 @@
       "template_version": "1.1.0",
       "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:12:20.951696Z"
     },
     {
       "acceptance": [
@@ -9107,7 +9133,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.6",
+        "linked_at": "2026-07-18T01:42:31Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9206,7 +9236,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:12:44.354101Z"
     },
     {
       "acceptance": [
@@ -9220,7 +9250,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.7",
+        "linked_at": "2026-07-18T01:42:32Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9313,7 +9347,7 @@
       "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:13:07.200133Z"
     },
     {
       "acceptance": [
@@ -9326,7 +9360,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.8",
+        "linked_at": "2026-07-18T01:42:33Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9425,7 +9463,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:13:35.992146Z"
     },
     {
       "acceptance": [
@@ -9439,7 +9477,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.9",
+        "linked_at": "2026-07-18T01:42:35Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9538,7 +9580,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:14:06.376324Z"
     },
     {
       "acceptance": [
@@ -9552,7 +9594,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.10",
+        "linked_at": "2026-07-18T01:42:36Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9645,7 +9691,7 @@
       "template_version": "1.1.0",
       "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:14:28.003350Z"
     },
     {
       "acceptance": [
@@ -9659,7 +9705,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.11",
+        "linked_at": "2026-07-18T01:42:37Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9752,7 +9802,7 @@
       "template_version": "1.1.0",
       "title": "エビデンス収集 — 再現可能な検証証跡の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:14:50.779377Z"
     },
     {
       "acceptance": [
@@ -9765,7 +9815,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.12",
+        "linked_at": "2026-07-18T01:42:38Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9859,7 +9913,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:15:27.764003Z"
     },
     {
       "acceptance": [
@@ -9873,7 +9927,11 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": null,
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9am.13",
+        "linked_at": "2026-07-18T01:42:39Z",
+        "sync_state": "linked"
+      },
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -9984,7 +10042,7 @@
       "template_version": "1.1.0",
       "title": "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-10T13:41:31Z"
+      "updated_at": "2026-08-12T07:16:05.456847Z"
     },
     {
       "acceptance": [
@@ -36229,12 +36287,14 @@
       "classification_confidence": 0.9,
       "classification_reason": "HarnessHub-57v (C28 draft status) の検証で C28 ready を実行した際、conflicts=0 になった一方で unmapped が 31 件残り、その内訳調査で判明した独立の既存ドリフト",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T05:22:04Z",
+        "evidence_refs": [
+          "issues/sys-bd-external-ref-orphan-nodes-20260725.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": null,
@@ -36301,7 +36361,7 @@
         "source_version": null
       },
       "start_date": null,
-      "status": "draft",
+      "status": "done",
       "tags": [
         "quality",
         "dev-graph",
@@ -36314,7 +36374,7 @@
       "template_version": "1.0.0",
       "title": "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる",
       "tracker_binding": "beads",
-      "updated_at": "2026-07-28T02:18:00Z"
+      "updated_at": "2026-08-12T06:39:08.767831Z"
     },
     {
       "acceptance": [
@@ -55119,11 +55179,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-3vmz",
-        "linked_at": "2026-08-09T00:00:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -55225,8 +55281,8 @@
       "template_id": "task",
       "template_version": "1.0.0",
       "title": "監査台帳・状態遷移・C19 最終レビュー handoff",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-09T13:11:25.607829Z"
+      "tracker_binding": "none",
+      "updated_at": "2026-08-12T07:04:13.927499Z"
     },
     {
       "acceptance": [
@@ -58050,12 +58106,14 @@
       "classification_confidence": 0.97,
       "classification_reason": "台帳の宣言と実装の食い違いを埋める画面構成の課題であり、実装単位の課題に該当する。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T05:21:46Z",
+        "evidence_refs": [
+          "docs/features/feat-docs-cms/information-design/S15.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "c5471892488883a3be4d3629fea1a6c14dd3630514550856c4a7fa65c92eb5f3",
@@ -58117,7 +58175,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "done",
       "tags": [
         "ui-consistency",
         "information-design"
@@ -58127,7 +58185,7 @@
       "template_version": "1.0.0",
       "title": "ドキュメント一覧に master-detail が要るかを実測で決める",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T00:00:00Z"
+      "updated_at": "2026-08-12T06:42:39.387427Z"
     },
     {
       "acceptance": [
@@ -58790,12 +58848,15 @@
       "classification_confidence": 0.95,
       "classification_reason": "認証基盤の構造的な制約であり、実装単位で追跡すべき課題に該当する。",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T05:41:08Z",
+        "evidence_refs": [
+          "issues/session-cookie-workspace-ids-ceiling-20260812.md",
+          "apps/hub/tests/auth-tenancy/session-cookie-ceiling.test.ts"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "open"
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "c869a9df06a610b9a18fb3a548dc1b1e55b8bdcca7dfd61629f8d02caef5a7d0",
@@ -58859,7 +58920,7 @@
         "source_version": null
       },
       "start_date": "2026-08-12",
-      "status": "active",
+      "status": "done",
       "tags": [
         "authentication",
         "scalability"
@@ -58869,7 +58930,7 @@
       "template_version": "1.0.0",
       "title": "所属が 90 件を超えると、名前を落としてもサインインできない",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T17:24:17.377271Z"
+      "updated_at": "2026-08-12T06:47:29.517989Z"
     },
     {
       "acceptance": [
@@ -59035,9 +59096,7 @@
       },
       "confirmation_status": "confirmed",
       "created_at": "2026-08-11T07:05:25Z",
-      "depends_on": [
-        "spec-harness-hub-information-design-addendum"
-      ],
+      "depends_on": [],
       "domain": "frontend",
       "evaluation_status": "pass",
       "execution_contexts": [],
@@ -59111,7 +59170,7 @@
       "template_version": "1.0.0",
       "title": "required-info回答をwriterで決定論的に接地検査する",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-11T07:10:30.998059Z"
+      "updated_at": "2026-08-12T07:21:17.762484Z"
     },
     {
       "acceptance": [
@@ -59125,11 +59184,7 @@
       ],
       "artifact_kind": "task",
       "artifact_subtypes": [],
-      "beads_linkage": {
-        "bd_issue_id": "HarnessHub-uypz",
-        "linked_at": "2026-08-11T00:00:00Z",
-        "sync_state": "linked"
-      },
+      "beads_linkage": null,
       "classification_candidates": [
         {
           "artifact_kind": "task",
@@ -59231,8 +59286,8 @@
       "template_id": "task",
       "template_version": "1.0.0",
       "title": "uypz 複数監査 dispatch schema 1.2 最終レビュー handoff",
-      "tracker_binding": "beads",
-      "updated_at": "2026-08-11T07:39:51Z"
+      "tracker_binding": "none",
+      "updated_at": "2026-08-12T07:06:31.780649Z"
     },
     {
       "acceptance": [
@@ -59375,6 +59430,1003 @@
       "title": "PR #705 と未コミット拡張を30思考法で再検証し整合させる",
       "tracker_binding": "beads",
       "updated_at": "2026-08-12T06:58:00Z"
+    },
+    {
+      "acceptance": [
+        "docs/ と issues/ の md 本文中の repo 相対 path 参照 (code span / markdown link) を走査し、実在しない path を violation として報告する",
+        "検査対象 0 件と違反 0 件を区別して出力する (checked 件数を必ず出す)",
+        "意図的に dangling を仕込んだ fixture で検査が反転することを test で固定する",
+        "既存 baseline の dangling 件数を棚卸しし、allowlist ではなく件数を記録して段階解消の方針を決める"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-j7a4",
+        "linked_at": "2026-08-11T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/doc-internal-link-integrity-gate-20260811.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存 lint 35 本の走査で doc 本文リンク検査が不在であることを確認し、実装後に実 repo で 308 件の dangling を実測した。",
+      "completion_evidence": {
+        "completed_at": "2026-08-12T05:21:38Z",
+        "evidence_refs": [
+          "scripts/lint-doc-internal-link-integrity.py",
+          "tests/scripts-root/test_root__lint_doc_internal_link_integrity.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "c080cad42309d3188a164816a35e6642544a89a19fb3d1cb6700398d49e1b78f",
+        "evaluator": "2026-08-11 実 repo 走査 (565 文書 / 5307 参照) と pytest 37 件",
+        "evidence_ref": "tests/scripts-root/test_root__lint_doc_internal_link_integrity.py"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T04:16:20.271143Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/doc-internal-link-integrity-gate-20260811.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "docs/ と issues/ の md 本文にある repo 内 path 参照を走査し、実在しないものを検査母数つきで違反報告する fail-closed lint が CI と local gate の双方で常時走る状態にする。",
+      "graph_node_id": "issue-doc-internal-link-integrity-gate-20260811",
+      "implementation_readiness": {
+        "checked_at": "2026-08-11T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "受入条件に掲げた lint が実在しないまま緑と称する状態を無くし、md 本文の dangling path 参照を人手 grep ではなく機械で継続検出する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "scripts/lint-doc-internal-link-integrity.py",
+        "tests/scripts-root/test_root__lint_doc_internal_link_integrity.py",
+        ".github/workflows/governance-check.yml",
+        "scripts/run-ci-checks.sh"
+      ],
+      "scope_in": [
+        "inline code span と markdown inline link からの repo 内 path 参照抽出",
+        "検査文書数・検査参照数の zero attribution 出力",
+        "意図的 dangling fixture による gate liveness test",
+        "baseline dangling 件数の棚卸しと件数 ratchet による段階解消"
+      ],
+      "scope_out": [
+        "path 単位 allowlist の導入",
+        "外部 URL の到達性検査",
+        "fenced code block 内の例示 path の検査",
+        "検出済み 308 件の一括是正"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-11T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "done",
+      "tags": [
+        "governance",
+        "lint",
+        "fail-closed",
+        "documentation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "md 本文の repo 内 path 参照 dangling を機械検査するゲートを新設する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:41:20.761015Z"
+    },
+    {
+      "acceptance": [
+        "誘導質問と論点束ねの 2 欠陥型を、機械判定可能な形で定義する",
+        "R6-audit-hearing / system-spec-hearing-auditor による LLM 監査との責務境界を文書化する",
+        "決定論検査が偽陽性過多になるか否かを実サンプルで評価し、採否を根拠つきで決める"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-rylh",
+        "linked_at": "2026-08-02T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/spec-elicit-leading-question-lint-20260802.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "誘導質問の検出は R6-audit-hearing と system-spec-hearing-auditor による LLM 監査のみに依存し、決定論的な検査器が repo に存在しないことを確認した。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "aa2ff657ab6648317f9b3a29ea04440526a42c48f02453fe0df7843748961907",
+        "evaluator": "2026-08-12 repo 走査による決定論検査器の不在確認",
+        "evidence_ref": "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R6-audit-hearing.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T04:19:06.115941Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/spec-elicit-leading-question-lint-20260802.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "R2-interview が生成する質問に対し、誘導語と複数論点の同時提示を機械検査で検出し、同型の質問が再発しない状態にする。",
+      "graph_node_id": "issue-spec-elicit-leading-question-lint-20260802",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ヒアリング品質の担保を LLM 監査の裁量だけに委ねず、誘導質問と論点束ねという再現性のある欠陥型を決定論的に遮断する。",
+      "related_nodes": [
+        "issue-doc-internal-link-integrity-gate-20260811"
+      ],
+      "resource_scope": [
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R2-interview.md",
+        "plugins/system-spec-harness/skills/run-system-spec-elicit/prompts/R6-audit-hearing.md",
+        "plugins/system-spec-harness/agents/system-spec-hearing-auditor.md"
+      ],
+      "scope_in": [
+        "誘導質問と論点束ねの欠陥型の定義",
+        "決定論検査の実現可能性評価",
+        "R6-audit-hearing との責務境界の確定"
+      ],
+      "scope_out": [
+        "ヒアリング内容そのものの良否判定",
+        "LLM 監査 (system-spec-hearing-auditor) の置換",
+        "質問文の自動書き換え"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-02",
+      "status": "active",
+      "tags": [
+        "governance",
+        "lint",
+        "system-spec",
+        "hearing-quality"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "system-spec: R2-interview に誘導質問と論点束ねの機械検査が無く同型の質問が再発しうる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T04:19:06.115941Z"
+    },
+    {
+      "acceptance": [
+        "認証必須 route に対する Lighthouse 実行が 401 で失敗せず、LCP / TBT (INP lab 代理) / CLS の実測値を取得できる",
+        "計測不能を pass にも good にも落とさず、未計測として fail-closed に扱い続けることがテストまたはゲートで担保される",
+        "feat-dual-catalog-web の acceptance-record.md acceptance 2 が実測値付きで判定済みになる"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-9cgb",
+        "linked_at": "2026-08-02T06:48:10Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "本番反映後の実測で判明した CI 計測経路の欠落であり、製品機能ではなく品質計測基盤 (feat-hub-foundation 所管の cwv.yml) の独立した修正単位である",
+      "completion_evidence": {
+        "completed_at": "2026-08-08T05:23:06Z",
+        "evidence_refs": [
+          "issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-12T06:33:00Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-02T06:43:52Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-cwv-auth-required-route-unmeasurable-20260802.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "認証必須 route に対しても Lighthouse による CWV 実測が成立する計測経路を用意し、401 による計測不能と閾値超過による未達を区別できる状態にする",
+      "graph_node_id": "issue-hub-cwv-auth-required-route-unmeasurable-20260802",
+      "implementation_readiness": {
+        "checked_at": "2026-08-02T06:43:52Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "mvp_alignment": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "feat-dual-catalog-web の acceptance 2 (CWV 全指標 good を実測) は cwv.yml の Lighthouse 実測だけを根拠にするが、対象の /catalog は deny-by-default により未認証で 401 を返し、cwv.yml は認証済みセッションを持たない。計測経路が存在しないため、この受入条件は本番反映後も原理的に達成できず、HarnessHub-dhy ファミリーと対応する dev-graph node を完了にできない状態が続く",
+      "related_nodes": [
+        "issue-hub-cwv-tbt-over-budget-20260724",
+        "SYS-DUAL-CATALOG-WEB-P13"
+      ],
+      "resource_scope": [
+        ".github/workflows/cwv.yml",
+        "docs/features/feat-dual-catalog-web/acceptance-record.md",
+        "docs/features/feat-dual-catalog-web/release-record.md"
+      ],
+      "scope_in": [
+        "cwv.yml が認証必須 route を計測できる経路 (計測用セッション付与、計測可能な到達経路の用意、認証済み実行環境への切替のいずれか) を決定し実装する",
+        "計測不能 (401) と閾値超過を受領側で区別し、どちらも good と誤記録しない fail-closed を維持する",
+        "feat-dual-catalog-web の acceptance 2 を実測値付きで判定できる状態にする"
+      ],
+      "scope_out": [
+        "/catalog の認可設計そのものの緩和 (deny-by-default は仕様であり変更しない)",
+        "公開ルート / の First Load JS 削減と G13 予算ゲート (issue-hub-cwv-tbt-over-budget-20260724 が所管)",
+        "feat-dual-catalog-web 側の画面実装変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-02T06:43:52Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": ".github/workflows/cwv.yml",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "done",
+      "tags": [
+        "quality",
+        "cwv",
+        "hub",
+        "ci",
+        "measurement-path"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "cwv.yml が認証必須 route の CWV を計測できない (/catalog が未認証で 401)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:45:14.172605Z"
+    },
+    {
+      "acceptance": [
+        "27 page route すべてが 95% 警告帯 116736 バイトを下回る",
+        "最悪 route である /docs/[id] が警告帯を下回る",
+        "削減が共通 chunk 側で起きていることを chunk 単位の実測で示す"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-a7tk",
+        "linked_at": "2026-08-12T05:40:31Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hub-shared-client-bundle-baseline-20260812.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-x30r の実測で、警告帯の原因が route 局所ではなく全 route 共通の土台にあると判明したため、対象を共通土台へ据え直した後続課題である。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f175059503e96c33c6eb52133cf2486a8cbe974febc65aaa5a9f4a5d6bdaf5ff",
+        "evaluator": "2026-08-12 の x30r 実測 (27 route の gzip 実サイズと共通 chunk 内訳)",
+        "evidence_ref": "issues/hub-shared-client-bundle-baseline-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [
+        "issue-users-sheets-client-bundle-headroom-20260810"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hub-shared-client-bundle-baseline-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "全 page route が client bundle 予算 122880 バイトの 95% 警告帯 (116736) を下回る状態にする。",
+      "graph_node_id": "issue-hub-shared-client-bundle-baseline-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "route 局所の遅延読み込みでは動かない共通土台を対象に据え、指標だけ緑にして最悪 route を放置する是正を防ぐ。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/layout.tsx",
+        "apps/hub/src/components",
+        "apps/hub/next.config.ts"
+      ],
+      "scope_in": [
+        "共通 chunk 87c73c54 / 18 / 6463 の内訳分解",
+        "全 route 共通で読み込まれる依存の棚卸し",
+        "route 局所ではなく共通土台側の削減"
+      ],
+      "scope_out": [
+        "個別 route への dynamic import 追加 (共通土台が減らず他 route を悪化させる)",
+        "予算値 122880 の引き上げ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "performance",
+        "bundle",
+        "hub"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "全 page route 共通の client bundle 土台 104796 バイトを分解する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:56:16.160002Z"
+    },
+    {
+      "acceptance": [
+        "所属 100 件以上の利用者がサインインでき、cookie が保存される",
+        "所属どおりの Workspace に到達でき、権限が黙って減らない",
+        "workspace_ids を削らずに達成されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-oewu",
+        "linked_at": "2026-08-12T05:40:51Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/session-claims-stateless-ceiling-removal-20260812.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "HarnessHub-alyy は上限の記録が目的だが acceptance に方式変更後の到達目標を抱えており、記録と実装が 1 課題に同居していた。実装側を分離した後続課題である。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "0692f915228a40bcc6508cd3a05a2ea16217b9526392c2868bbccfa495c72026",
+        "evaluator": "2026-08-12 の alyy 実測 (二分探索で上限 95 件、Set-Cookie 4085 バイト)",
+        "evidence_ref": "apps/hub/tests/auth-tenancy/session-cookie-ceiling.test.ts"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [
+        "issue-session-cookie-workspace-ids-ceiling-20260812"
+      ],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/session-claims-stateless-ceiling-removal-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "所属数がいくつでもサインインでき、workspace_ids を削らずに所属どおりの場所へ到達できる状態にする。",
+      "graph_node_id": "issue-session-claims-stateless-ceiling-removal-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "low",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "HarnessHub-alyy が記録に留めた上限 95 件を、方式変更によって実際に撤廃する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/lib/auth/session.ts",
+        "apps/hub/src/lib/auth/jwt.ts",
+        "apps/hub/src/lib/auth/config.ts"
+      ],
+      "scope_in": [
+        "方式 A/B/C/D の選定",
+        "選定した方式の実装と移行",
+        "所属 100 件以上での回帰テスト"
+      ],
+      "scope_out": [
+        "workspace_ids をサイズを理由に削る実装 (到達可否が黙って減るため不正解)",
+        "上限の記録そのもの (HarnessHub-alyy で完了済み)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "apps/hub/src/lib/auth/session.ts",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "authentication",
+        "scalability"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "所属数によらずサインインできるよう session claims の方式を変更する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:37:35.923420Z"
+    },
+    {
+      "acceptance": [
+        "route 別と共通 chunk の実測から後続の改善対象が確定する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-x30r",
+        "linked_at": "2026-08-12T06:51:20Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/users-sheets-client-bundle-headroom-20260810.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "HarnessHub-x30r の調査結果を、後続 a7tk の機械可読な前提として復元する。",
+      "completion_evidence": {
+        "completed_at": "2026-08-12T05:41:21Z",
+        "evidence_refs": [
+          "issues/hub-shared-client-bundle-baseline-20260812.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-12T06:51:20Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "0bf9fca053cc40f7987e5e5519031d7200f0776b5c1d23dbfbb0425d95a4c1bf",
+        "evaluator": "2026-08-12 の production build による route / shared chunk 実測",
+        "evidence_ref": "issues/hub-shared-client-bundle-baseline-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-10T15:55:36Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/users-sheets-client-bundle-headroom-20260810.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "警告帯の原因を route 固有部分と共通 client bundle 土台へ分離する。",
+      "graph_node_id": "issue-users-sheets-client-bundle-headroom-20260810",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T06:51:20Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "route 局所の bundle 警告を計測し、正しい改善対象を特定する。",
+      "related_nodes": [
+        "issue-hub-shared-client-bundle-baseline-20260812"
+      ],
+      "resource_scope": [
+        "apps/hub/artifacts/client-bundle-report.json"
+      ],
+      "scope_in": [
+        "users と sheets の route 別 bundle 計測",
+        "共通 chunk の内訳計測"
+      ],
+      "scope_out": [
+        "原因確認前の予算引き上げ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T06:51:20Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "issues/hub-shared-client-bundle-baseline-20260812.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-10",
+      "status": "done",
+      "tags": [
+        "performance",
+        "bundle",
+        "hub"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "users と sheets の client bundle 警告帯を調査する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T05:41:21Z"
+    },
+    {
+      "acceptance": [
+        "通常の bd dolt push が成功する",
+        "fresh clone の初期化・補完経路が決定論的に検証される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-jab2",
+        "linked_at": "2026-08-12T06:56:46Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/dolt-remote-push-http-400-20260812.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "HarnessHub-jab2 の解決内容を graph と issue artifact へ復元する。",
+      "completion_evidence": {
+        "completed_at": "2026-08-12T05:52:10Z",
+        "evidence_refs": [
+          "scripts/install-git-hooks.sh",
+          "docs/beads-operations-runbook.md",
+          "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-12T06:56:46Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "33e2e5bd6e3f1376d89c6571860a4fec9d927b16df0b726273d5b1c8f84d7892",
+        "evaluator": "通常 push 回復の実測と local bare remote 回帰テスト",
+        "evidence_ref": "docs/beads-operations-runbook.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-11T00:00:00Z",
+      "depends_on": [],
+      "domain": "dev-workflow",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/dolt-remote-push-http-400-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "新しい clone が正規初期化され、既存 remote baseline 欠落時も installer が安全に補完する。",
+      "graph_node_id": "issue-dolt-remote-push-http-400-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T06:56:46Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Dolt push が差分計算用 baseline を持てず HTTP 400 になる再現条件を除去する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "scripts/install-git-hooks.sh",
+        "docs/beads-operations-runbook.md",
+        "tests/scripts-root/test_root__validate_git_hooks_wiring.py"
+      ],
+      "scope_in": [
+        "refs/dolt/data の初回取得",
+        "refspec の冪等設定",
+        "runbook と回帰テスト"
+      ],
+      "scope_out": [
+        "force push",
+        "JSONL を同期正本として扱うこと"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T06:56:46Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "docs/beads-operations-runbook.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-11",
+      "status": "done",
+      "tags": [
+        "beads",
+        "dolt",
+        "sync"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Dolt remote への Beads push HTTP 400 を解消する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:56:46Z"
+    },
+    {
+      "acceptance": [
+        "scannedを減らさずOR-003が0件になる",
+        "各node本文を保持してC02単一writerで更新する",
+        "BeadsとDev Graphのstatus・completion・依存が一致する",
+        "再発防止の回帰検査または運用契約を追加する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-76im",
+        "linked_at": "2026-08-12T07:28:45.091754Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/open-residue-bulk-reconciliation-20260812.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "live Dolt DBでscanned=450、OR-003=195を再現し、今回の変更境界では0件と分離確認した大規模な既存整合作業",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "585de6a8c9e30fd825b8ffe230d3912d9f2858b985a992570f3ed31ba7731a83",
+        "evaluator": "elegant-review 30-thinking-method review",
+        "evidence_ref": "issues/sys-lint-open-residue-ci-red-20260725.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T07:25:30Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/open-residue-bulk-reconciliation-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "lint-open-residueのbeads軸をscanned=450以上のままviolations=0へ戻し、再発原因と防止策を記録する",
+      "graph_node_id": "issue-open-residue-bulk-reconciliation-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T07:25:30Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "live Dolt DBで再発したOR-003残置を、走査数やbaselineを減らさず正規C02 writerで収束させる",
+      "related_nodes": [
+        "issue-lint-open-residue-ci-red-20260725"
+      ],
+      "resource_scope": [
+        ".dev-graph/state/graph.json",
+        "issues/",
+        "tasks/",
+        "plugins/dev-graph/scripts/lint-open-residue.py"
+      ],
+      "scope_in": [
+        "OR-003 195件のBeads close reasonと証拠の確認",
+        "C02 lifecycle reconciliation",
+        "全体lintとgraph schemaの再検証",
+        "再発経路の特定"
+      ],
+      "scope_out": [
+        "scanned対象の除外",
+        "baselineへの追加",
+        "未確認課題の自動close",
+        "今回のelegant-review差分への一括混在"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T07:25:30Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "dev-graph",
+        "beads",
+        "lifecycle",
+        "reconciliation"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "OR-003残置195件を正規writerで一括整合する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T07:28:55.256144Z"
+    },
+    {
+      "acceptance": [
+        "violation_countとmax-violationsが0になる",
+        "new_violation_countが0のまま維持される",
+        "未追跡Markdownも参照元として走査される",
+        "CIとlocalの引数形が一致する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-wenp",
+        "linked_at": "2026-08-12T07:35:45.253621Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/doc-internal-link-baseline-cleanup-20260812.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "強化後のlintで573文書5949参照を走査し、既存354件・新規fingerprint 0件を実測した独立cleanup",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "115aede6ac1607cc1e27f8057ddd56b659967f5805035013140c0280baddbd95",
+        "evaluator": "elegant-review 30-thinking-method review",
+        "evidence_ref": "issues/doc-internal-link-integrity-gate-20260811.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T07:34:00Z",
+      "depends_on": [],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/doc-internal-link-baseline-cleanup-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "未追跡Markdownを含む同一定義でviolation_count=0かつnew_violation_count=0にし、max-violationsを0へ下げる",
+      "graph_node_id": "issue-doc-internal-link-baseline-cleanup-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T07:34:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "強化済みlintが検出する既存dangling参照を、例外化せず段階的に修正する",
+      "related_nodes": [
+        "issue-doc-internal-link-integrity-gate-20260811"
+      ],
+      "resource_scope": [
+        "docs/",
+        "issues/",
+        "scripts/lint-doc-internal-link-integrity.py"
+      ],
+      "scope_in": [
+        "既存354 fingerprintの分類",
+        "正しい移動先への参照更新",
+        "削除済み証跡の明示的な歴史表現への変更",
+        "ratchet上限の縮小"
+      ],
+      "scope_out": [
+        "path allowlistの追加",
+        "走査rootの縮小",
+        "実在しないtargetの生成による偽装",
+        "今回のelegant-reviewへの354件一括混在"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T07:34:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "documentation",
+        "link-integrity",
+        "ratchet",
+        "cleanup"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "文書内リンク既存baseline 354件を0件へ縮退する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T07:36:00.266515Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

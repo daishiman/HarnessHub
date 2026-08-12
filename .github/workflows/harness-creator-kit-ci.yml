@@ -15,6 +15,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # tests/scripts-root/test_root__lint_doc_internal_link_integrity.py の実 repo 契約
+      # テストは ratchet の比較元として origin/main を解決する。checkout の既定は PR head
+      # だけの shallow fetch で origin/main の remote-tracking ref が生えず、
+      # 「ratchet-base rev を解決できない」で落ちる。これは「基準が無いのに検査したことに
+      # しない」fail-closed 設計どおりの挙動なので、緩めるのではなく比較元を用意する。
+      #
+      # governance-check.yml は fetch-depth: 0 で同じ問題を回避しているが、この job は
+      # macos runner (課金係数が大きい) なので全履歴は引かない。ratchet 実装が base に
+      # 求めるのは rev-parse / cat-file --batch / ls-tree のみで merge-base を使わないため、
+      # main の tree が 1 commit ぶんあれば足りる。
+      - name: ratchet 比較元 (origin/main) を取得
+        run: git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+
       # macos-latest の system python3 は PEP 668 で externally-managed のため
       # 素の `pip install` が exit 1 で落ちる (CI が pytest install 段階で腐る)。
       # setup-python で分離された解釈系を用意し pip install を健全化する。

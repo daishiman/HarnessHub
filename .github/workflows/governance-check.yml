@@ -93,6 +93,18 @@ jobs:
       - name: "lint doc line limit (qa-070 300行上限 fail-closed。既存超過は allowlist ratchet、allowlist 改ざんは origin/main 基準で遮断)"
         run: python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main
         continue-on-error: false
+      # md 本文の repo 内 path 参照 dangling 検査 (HarnessHub-j7a4)。path 単位
+      # allowlist は置かず、総件数の上限と base の (document, resolved target)
+      # fingerprint 差分を併用する。push で origin/main が当該 commit 自身を指しても、
+      # event.before と比べるため、既存違反を新規違反へ入れ替えるすり抜けを残さない。
+      - name: "lint doc internal link integrity (tracked target + base fingerprint ratchet)"
+        run: |
+          DOC_LINK_RATCHET_BASE="origin/main"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            DOC_LINK_RATCHET_BASE="${{ github.event.before }}"
+          fi
+          python3 scripts/lint-doc-internal-link-integrity.py --repo-root . --max-violations 354 --ratchet-base "$DOC_LINK_RATCHET_BASE"
+        continue-on-error: false
       - name: "lint mechanism-knowledge boundary (qa-070 仕組みへの repo 固有ナレッジ hard-code 遮断)"
         run: python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
         continue-on-error: false

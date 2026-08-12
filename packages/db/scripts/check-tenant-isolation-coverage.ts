@@ -82,6 +82,7 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   build_stage_events: 'createBuildStageRepository',
   metrics_events: 'createMetricsTrackingRepository',
   metrics_rollups: 'createMetricsTrackingRepository',
+  notion_integrations: 'createNotionIntegrationRepo',
   encryption_keys: 'cipher.ensureActiveDek',
   tenant_data_objects: 'tenantDataObjects',
   tenant_data_tombstones: 'tenantDataTombstones',

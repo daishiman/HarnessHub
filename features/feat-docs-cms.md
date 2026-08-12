@@ -105,3 +105,10 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 別 tenant context では detail/list の双方から tenant document が見えず、Bearer read は `credential_not_allowed` になることを確認する。
 - main `35a10b87` / hub-ci run `31253674292` で D1〜D6 と cleanup 残存行 0 を確認し、production acceptance を充足した。
 - PR #681 / #682 の default-branch reconciliation を 2026-08-10 に確認し、`SYS-DOCS-CMS-P13` の durable completion evidence を記録した。
+
+## S15 master-detail 不採用の決着 (2026-08-12 / `HarnessHub-ydf8`)
+
+- wide/middle の table 採用理由（行どうしの比較）と master-detail 左ペイン縮小は構造的に両立しないため、master-detail は **不採用**。
+- 連続閲覧の前後送りは代表タスクの必須依存ではなく future 案。再考条件は [S15 情報設計シート](../docs/features/feat-docs-cms/information-design/S15.md) に置く。
+- 公開 API / DB schema / 認可 / deploy unit は変更なし。system-spec の S15 記述（一覧/閲覧/編集）とも矛盾しない。
+

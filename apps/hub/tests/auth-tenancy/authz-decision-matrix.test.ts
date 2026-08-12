@@ -120,6 +120,10 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   'tenant-data.read': MEMBER_UP,
   'tenant-data.read_content': MEMBER_UP,
   'tenant-data.delete': ADMIN_UP,
+  // feat-notion-integration: 登録状況とページ導線は member も読めるが、
+  // API キーを含む workspace 共有設定の変更は workspace-admin 以上に限る。
+  'notion-integration.read': MEMBER_UP,
+  'notion-integration.write': ADMIN_UP,
 };
 
 const COLUMNS: readonly MatrixColumn[] = ['member', 'owner', 'workspace-admin', 'provider-admin'];

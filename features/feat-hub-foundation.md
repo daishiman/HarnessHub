@@ -192,3 +192,10 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - PR #700 の G13 回復として旧超過9画面と警告1画面を route-local 遅延読込へ分割し、sticky 高さ計測を必要画面へ限定した。
   production build で全 route が 120 KiB 以下、screen-pattern gate は動的 import 先も検査する。
 - system-spec の R4-reopen は不要（判断理由は受領書 §2）。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と [受領書](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+
+## 品質ゲート / VRT 運用追補 (2026-08-12)
+
+- **文書内リンク integrity**: `scripts/lint-doc-internal-link-integrity.py` を source-aware + tracked-target-only + base fingerprint ratchet に強化 (`HarnessHub-j7a4`)。既存 354 件は follow-up `HarnessHub-wenp`。
+- **VRT Linux baseline 更新経路**: `ui-visual.yml` の `update_baseline` が失敗時も manifest + 画像 artifact を回収し、更新 run 自体は必ず失敗させる (`HarnessHub-7mc6` 残手順の安全化)。
+- 製品 API / DB / 認可 / deploy unit は非変更。
+

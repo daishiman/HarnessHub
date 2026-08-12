@@ -85,6 +85,28 @@ issue-ui-vrt-navigation-baseline-drift-20260810 と同じ baseline 契約に従�
 
 上記 acceptance のとおり。
 
+## 更新経路の整備 (2026-08-12)
+
+**この課題が止まっていた原因は「Linux 機が無い」ではなく「Linux 上で baseline を作り直す経路が無かった」ことだった。** `ui-visual.yml` は `ubuntu-latest` で走るが `pnpm test:browser` を検証モードで叩くだけで、`VRT_UPDATE=1` へ入る手段も、撮り直した画像を持ち帰る手段も無かった。
+
+`.github/workflows/ui-visual.yml` へ次を追加した。
+
+- `workflow_dispatch` の入力 `update_baseline` (既定 false)。true のとき `VRT_UPDATE=1` を渡す。
+- ブラウザ工程が途中で失敗しても `always()` で、`git diff` から作る変更画像 manifest と `apps/hub/tests/browser/__vrt__/linux/` を artifact `vrt-baseline-linux` として回収する (`if-no-files-found: error`。無言で空を返さない)。
+- **更新モードの run は最後に必ず失敗させる。** 更新モードは比較を 1 件も行っていないため、成功で終えると「未検査」が「差分なし」と同じ見た目になる。`apps/hub/tests/browser/vrt.ts` が基準画像の欠落に対して定めているのと同じ原則を CI 側にも通した。
+
+`inputs.update_baseline` は `workflow_dispatch` でのみ定義されるため、`pull_request` 由来の run では null となり、`ui-visual` label 経由で更新モードへ入る経路は存在しない。
+
+### 残手順
+
+1. `ui-visual` を `update_baseline=true` で dispatch する (要 push 権限)。
+2. artifact `vrt-baseline-linux` を取得し、同梱の `baseline-update-manifest.txt` に列挙された変更画像を**全枚**目視確認する。期待値は scope_in の `catalog-{data,feedback,form,layout,navigation}-{light,dark}` 10 枚である。
+3. manifest が 10 枚でない場合は、「必要画像の更新漏れ」か「スコープ外画像の変更」として原因を調査する。枚数を合わせるために画像を便宜的に追加・除外しない。
+4. manifest に列挙された承認済み Linux 画像を `apps/hub/tests/browser/__vrt__/linux/` へ取り込む (`darwin/` は触らない)。
+5. `update_baseline` なしで再 dispatch し、比較モードが**全件 PASS**することを確認する。
+
 ## 検証証跡
 
 docs/product/backlog.md (2026-08-11 時点) の優先度低/記録 #12。
+
+2026-08-12: `ui-visual.yml` を PyYAML で構文検証し、`workflow_dispatch.inputs` が `update_baseline` の 1 件、manifest 作成・artifact 回収・最終 invalid marker の 3 step がいずれも `always() && inputs.update_baseline` で条件づけられていることを確認した。同じ契約は `browser-harness-optin.test.ts` で回帰検査する。`scripts/lint-ci-local-check-parity.py` は ok (CI blocking=42 / local hard=39 / allowlist=6) で、本変更は parity 対象の repo-root Python 検査を増やしていない。

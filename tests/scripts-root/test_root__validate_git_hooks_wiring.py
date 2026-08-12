@@ -169,6 +169,154 @@ def _git(cwd, *args):
     )
 
 
+def _prepare_installer_repo(path: Path) -> Path:
+    """installer の Dolt 初期化契約だけを試せるローカル repository を作る。"""
+    repo = _build_wiring(path)
+    _git(repo, "init", "-b", "main")
+    shutil.copy2(ROOT / "scripts" / "install-git-hooks.sh", repo / "scripts")
+
+    # fetch は reference-transaction hook を発火する。ここでは ref 初期化だけを試すため、
+    # validator が要求する marker を残した副作用のない hook に差し替える。
+    (repo / ".githooks" / "reference-transaction").write_text(
+        "#!/usr/bin/env sh\n# run-repo-guards.sh\nexit 0\n",
+        encoding="utf-8",
+    )
+    (repo / ".githooks" / "reference-transaction").chmod(0o755)
+    return repo
+
+
+def _seed_commit(repo: Path) -> str:
+    _git(repo, "config", "user.email", "t@example.com")
+    _git(repo, "config", "user.name", "tester")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", "seed")
+    return _git(repo, "rev-parse", "HEAD").stdout.strip()
+
+
+def _add_bare_origin(repo: Path, remote: Path) -> None:
+    _git(remote.parent, "init", "--bare", str(remote))
+    _git(repo, "remote", "add", "origin", str(remote))
+
+
+def _run_installer(repo: Path) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["bash", str(repo / "scripts" / "install-git-hooks.sh")],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def _config_values(repo: Path, key: str) -> list[str]:
+    proc = subprocess.run(
+        ["git", "config", "--get-all", key],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode == 1:
+        return []
+    assert proc.returncode == 0, proc.stderr
+    return proc.stdout.splitlines()
+
+
+def _has_ref(repo: Path, ref: str) -> bool:
+    proc = subprocess.run(
+        ["git", "show-ref", "--verify", "--quiet", ref],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+def test_installer_skips_dolt_setup_without_origin(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+
+    installed = _run_installer(repo)
+
+    assert installed.returncode == 0, installed.stdout + installed.stderr
+    assert "remote origin が無いため" in installed.stdout
+    assert _config_values(repo, "remote.origin.fetch") == []
+
+
+def test_installer_skips_initial_fetch_when_remote_has_no_dolt_ref(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+    remote = tmp_path / "origin.git"
+    _add_bare_origin(repo, remote)
+
+    installed = _run_installer(repo)
+
+    assert installed.returncode == 0, installed.stdout + installed.stderr
+    assert "origin に refs/dolt/data が無いため初回取得は省略" in installed.stdout
+    assert not _has_ref(repo, "refs/dolt/data")
+    assert _config_values(repo, "remote.origin.fetch").count(
+        "+refs/dolt/*:refs/dolt/*"
+    ) == 1
+
+
+def test_installer_fetches_existing_remote_dolt_ref_on_first_run(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+    commit = _seed_commit(repo)
+    remote = tmp_path / "origin.git"
+    _add_bare_origin(repo, remote)
+    _git(repo, "push", "origin", "main")
+    _git(remote, "update-ref", "refs/dolt/data", commit)
+
+    installed = _run_installer(repo)
+
+    assert installed.returncode == 0, installed.stdout + installed.stderr
+    assert "refs/dolt/data の初回取得を確認" in installed.stdout
+    assert _git(repo, "rev-parse", "refs/dolt/data").stdout.strip() == commit
+
+
+def test_installer_does_not_contact_origin_when_local_dolt_ref_exists(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+    commit = _seed_commit(repo)
+    _git(repo, "update-ref", "refs/dolt/data", commit)
+    _git(repo, "remote", "add", "origin", str(tmp_path / "missing-origin.git"))
+
+    installed = _run_installer(repo)
+
+    assert installed.returncode == 0, installed.stdout + installed.stderr
+    assert "remote 照会不要" in installed.stdout
+    assert _config_values(repo, "remote.origin.fetch").count(
+        "+refs/dolt/*:refs/dolt/*"
+    ) == 1
+
+
+def test_installer_adds_dolt_refspec_idempotently(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+    remote = tmp_path / "origin.git"
+    _add_bare_origin(repo, remote)
+
+    first = _run_installer(repo)
+    second = _run_installer(repo)
+
+    assert first.returncode == 0, first.stdout + first.stderr
+    assert second.returncode == 0, second.stdout + second.stderr
+    assert "refs/dolt/* を既に引いています" in second.stdout
+    assert _config_values(repo, "remote.origin.fetch").count(
+        "+refs/dolt/*:refs/dolt/*"
+    ) == 1
+
+
+def test_installer_fails_closed_when_origin_cannot_be_queried(tmp_path):
+    repo = _prepare_installer_repo(tmp_path / "repo")
+    _git(repo, "remote", "add", "origin", str(tmp_path / "missing-origin.git"))
+
+    installed = _run_installer(repo)
+
+    assert installed.returncode != 0
+    assert "ERROR: origin の refs/dolt/data を照会できませんでした" in installed.stderr
+    assert "+refs/dolt/*:refs/dolt/*" not in _config_values(
+        repo, "remote.origin.fetch"
+    )
+
+
 def _install_shared_bundle(repo: Path) -> Path:
     """tracked template を git common dir の共有 bundle へ模擬設置する。"""
     installed = MOD.shared_hooks_root(repo)

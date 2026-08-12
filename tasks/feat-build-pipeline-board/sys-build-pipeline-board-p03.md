@@ -11,9 +11,9 @@ target_date: null
 iteration: null
 title: "独立設計レビュー — Build スキーマ・工程操作認可・PublishRequest 接続・共有認可表の妥当性確認"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:10:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+created_at: "2026-08-10T13:41:31Z"
+updated_at: "2026-08-12T06:48:48.929745Z"
+status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P02"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-build-pipeline-board/design-review-notes.md"]
@@ -31,8 +31,8 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-03-design-review.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-10T13:41:31Z","origin_kind":"system-dev-planner","source_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-03-design-review.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.88
 classification_reason: "P02 で確定した Build スキーマ・S13 画面構成・工程操作 API 契約・PublishRequest 接続設計を、設計担当から独立した視点でレビューする P03 タスク"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p03.md","confidence":0.88}]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-12T05:21:55Z","evidence_refs":["docs/features/feat-build-pipeline-board/design-review-notes.md"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

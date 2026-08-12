@@ -171,6 +171,15 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'sheets.handoff_tokens.issue': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
   'sheets.handoff_tokens.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
   'sheets.handoff_tokens.revoke': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+
+  // feat-notion-integration (設定画面の Notion 連携)。workspace 単位の共有設定であり
+  // 個人の資源ではないため selfOnly は使わない (`tenant-data.*` と同様)。
+  // 読取り (「開く」導線を出すための存在確認を含む) は member — 通常業務で参照するだけなので
+  // `docs.read` と同強度。書込み/削除は workspace-admin — APIキーという秘密情報を扱うため
+  // `tenant-data.delete` と同強度に揃える (`idp.connection_change` の provider-admin まで上げないのは、
+  // これはテナントのログイン経路そのものではなく、あくまで 1 ワークスペースの外部連携設定のため)。
+  'notion-integration.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
+  'notion-integration.write': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
 };
 
 export function findActionRule(action: string): ActionRule | null {
