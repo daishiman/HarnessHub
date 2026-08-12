@@ -112,3 +112,31 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 連続閲覧の前後送りは代表タスクの必須依存ではなく future 案。再考条件は [S15 情報設計シート](../docs/features/feat-docs-cms/information-design/S15.md) に置く。
 - 公開 API / DB schema / 認可 / deploy unit は変更なし。system-spec の S15 記述（一覧/閲覧/編集）とも矛盾しない。
 
+
+## MVP 追補: ブログ運用 4 項目 + 予約公開 (2026-08-12 / HarnessHub-zkcl)
+
+**Beads**: `HarnessHub-zkcl` / graph node: `issue-docs-cms-blog-essentials-integrate-20260812`
+
+本 feature の scope_in を壊さず、運用に必要な最小の分類・公開予約を additive に追加する。
+
+### 追加する能力
+
+| 項目 | 契約 |
+|---|---|
+| カテゴリ | `category` text nullable。一覧は完全一致フィルタ |
+| タグ | `tags` JSON 配列 (最大 20)。一覧は要素完全一致 |
+| アイキャッチ | `thumbnail_url` + `thumbnail_source(auto/manual)`。手動値は本文更新で上書きしない |
+| 要約 | `excerpt` + `excerpt_source(auto/manual)`。手動値は本文更新で上書きしない |
+| 予約公開 | nullable `publish_at` (epoch ms)。`scheduled` は DB enum にせず `draft + future publish_at` から導出 |
+
+### 受入 (MVP 最小)
+
+- 未来の `publish_at` を持つ draft は一覧/詳細で「予約中」と見える
+- 日次 cron は bounded batch (default/max 100, 安定順 CAS) で期限到来分だけ公開し `publish_at` を clear する
+- main の画像 upload / external ETag+revision CAS / エラー詳細表示を退行させない
+- migration は main lineage 上の `0014_docs-cms-scheduled-publishing` のみを予約公開 DDL とする
+
+### 対象外
+
+- 外部公開サイト生成・全文検索エンジン・バージョン履歴 UI
+- `scheduled` を永続 status として追加すること

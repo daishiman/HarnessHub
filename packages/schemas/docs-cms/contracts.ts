@@ -12,6 +12,15 @@ export type DocumentStatus = z.output<typeof documentStatusSchema>;
 const titleSchema = z.string().trim().min(1).max(200);
 const bodyMarkdownSchema = z.string().max(200_000);
 
+/** 応答では cron 実行待ちで過去になった予約も読める。 */
+const publishAtSchema = z.number().int().safe().positive().nullable();
+
+/** 作成・更新で新しく設定する予約日時は、受理時点より未来だけを許可する。 */
+const futurePublishAtSchema = publishAtSchema.refine(
+  (value) => value === null || value > Date.now(),
+  'publish_at は現在より未来の日時を指定してください',
+);
+
 export const documentFieldSourceSchema = z.enum(['auto', 'manual']);
 export type DocumentFieldSource = z.output<typeof documentFieldSourceSchema>;
 
@@ -90,6 +99,7 @@ export const documentDetailSchema = z
     excerpt: excerptSchema.nullable(),
     excerpt_source: documentFieldSourceSchema,
     asset_summary: assetSummarySchema.nullable(),
+    publish_at: publishAtSchema,
   })
   .strict();
 export type DocumentDetail = z.output<typeof documentDetailSchema>;
@@ -141,6 +151,7 @@ export const createDocumentRequestSchema = z
     tags: tagsSchema.nullable().optional(),
     thumbnail_url: thumbnailUrlSchema.nullable().optional(),
     excerpt: excerptSchema.nullable().optional(),
+    publish_at: futurePublishAtSchema.optional(),
   })
   .strict();
 export type CreateDocumentRequest = z.output<typeof createDocumentRequestSchema>;
@@ -154,8 +165,18 @@ export const updateDocumentRequestSchema = z
     tags: tagsSchema.nullable().optional(),
     thumbnail_url: thumbnailUrlSchema.nullable().optional(),
     excerpt: excerptSchema.nullable().optional(),
+    publish_at: futurePublishAtSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((value, context) => {
+    if (value.status === 'published' && value.publish_at != null) {
+      context.addIssue({
+        code: 'custom',
+        path: ['publish_at'],
+        message: 'status=published と未来の publish_at は同時に指定できません',
+      });
+    }
+  });
 export type UpdateDocumentRequest = z.output<typeof updateDocumentRequestSchema>;
 
 /** ADR §4 の doc_draft AI payload/result。sheet_generation と同じ writeback パターンを踏襲する。 */

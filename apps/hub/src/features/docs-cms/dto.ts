@@ -52,6 +52,7 @@ function shared(row: DocumentRow) {
     excerpt: row.excerpt,
     excerpt_source: row.excerptSource,
     asset_summary: parseAssetSummary(row.assetSummary),
+    publish_at: row.publishAt,
   } as const;
 }
 

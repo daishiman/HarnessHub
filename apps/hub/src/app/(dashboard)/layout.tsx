@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { HubShell } from '../../components/shell/hub-shell.js';
 import { resolveShellProps } from '../../components/shell/resolve-shell-props.js';
 import { resolveDashboardScope } from '../../lib/routing/dashboard-scope.js';
-import { DashboardScopeProvider } from './dashboard-scope-context.js';
+import { DashboardScopeProvider, SessionRoleProvider } from './dashboard-scope-context.js';
 
 /**
  * ここで解決した scope を Context 経由で読むのは client component 2 ファイル
@@ -19,17 +19,19 @@ export default async function DashboardLayout({ children }: { readonly children:
   const [scope, shell] = await Promise.all([resolveDashboardScope(), resolveShellProps()]);
   return (
     <DashboardScopeProvider scope={scope}>
-      <HubShell
-        scope={shell.scope}
-        accountName={shell.accountName}
-        accountNameIsIdentifier={shell.accountNameIsIdentifier}
-        accountRole={shell.role}
-        workspaceIds={shell.workspaceIds}
-        workspaceNames={shell.workspaceNames}
-        currentHref={shell.currentHref}
-      >
-        {children}
-      </HubShell>
+      <SessionRoleProvider role={shell.role}>
+        <HubShell
+          scope={shell.scope}
+          accountName={shell.accountName}
+          accountNameIsIdentifier={shell.accountNameIsIdentifier}
+          accountRole={shell.role}
+          workspaceIds={shell.workspaceIds}
+          workspaceNames={shell.workspaceNames}
+          currentHref={shell.currentHref}
+        >
+          {children}
+        </HubShell>
+      </SessionRoleProvider>
     </DashboardScopeProvider>
   );
 }

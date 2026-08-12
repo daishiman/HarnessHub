@@ -1,7 +1,9 @@
 import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
+import { sessionActionVisible } from '../../../lib/authz/index.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
+import { resolveShellIdentity } from '../../../lib/routing/shell-identity.js';
 import { DocumentListLazy } from './document-list-lazy.js';
 
 export const metadata: Metadata = {
@@ -18,7 +20,7 @@ interface PageProps {
 }
 
 export default async function DocumentsPage({ searchParams }: PageProps) {
-  const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const [query, scope, identity] = await Promise.all([searchParams, resolveDashboardScope(), resolveShellIdentity()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
   const initialQuery = query.q?.trim() ?? '';
   return (
@@ -29,13 +31,20 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
         description="業務ツールの使い方や運用手順をまとめて共有します。"
         sticky
         actions={
-          <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
-            新しく作成
-          </ActionLink>
+          sessionActionVisible(identity.role, 'docs.write_tenant') ? (
+            <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
+              新しく作成
+            </ActionLink>
+          ) : undefined
         }
       />
       <Panel flush>
-        <DocumentListLazy tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
+        <DocumentListLazy
+          tenantId={tenantId}
+          workspaceId={workspaceId}
+          initialQuery={initialQuery}
+          sessionRole={identity.role}
+        />
       </Panel>
     </>
   );

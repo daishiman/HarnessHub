@@ -102,6 +102,117 @@ describe('DOCS-DB: documents repository', () => {
     expect(page.items.map((row) => row.title)).toStrictEqual(['API ガイド']);
   });
 
+  it('DOCS-SCHEDULE-001: 未来だけを予約でき、明示公開と実際の本文変更は予約を解除する', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const firstSchedule = Date.now() + 60_000;
+    const created = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '予約文書',
+      bodyMarkdown: '初版',
+      actorId: context.actorId ?? 'missing-actor',
+      publishAt: firstSchedule,
+    });
+    expect(created).toMatchObject({ status: 'draft', publishAt: firstSchedule });
+
+    const edited = await repository.updateDocument(context, created.id, {
+      bodyMarkdown: '改訂版',
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(edited.publishAt).toBeNull();
+
+    const secondSchedule = Date.now() + 120_000;
+    const rescheduled = await repository.updateDocument(context, created.id, {
+      publishAt: secondSchedule,
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(rescheduled).toMatchObject({ status: 'draft', publishAt: secondSchedule });
+
+    const manuallyPublished = await repository.updateDocument(context, created.id, {
+      status: 'published',
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(manuallyPublished).toMatchObject({ status: 'published', publishAt: null });
+
+    await expect(
+      repository.updateDocument(context, created.id, {
+        publishAt: Date.now() - 1,
+        actorId: context.actorId ?? 'missing-actor',
+      }),
+    ).rejects.toMatchObject({ code: 'invalid-context' });
+    await expect(
+      repository.updateDocument(context, created.id, {
+        status: 'published',
+        publishAt: Date.now() + 60_000,
+        actorId: context.actorId ?? 'missing-actor',
+      }),
+    ).rejects.toMatchObject({ code: 'invalid-context' });
+    await expect(
+      repository.createDocument(context, {
+        scope: 'tenant',
+        title: '過去予約',
+        bodyMarkdown: '',
+        actorId: context.actorId ?? 'missing-actor',
+        publishAt: Date.now(),
+      }),
+    ).rejects.toMatchObject({ code: 'invalid-context' });
+  });
+
+  it('DOCS-SCHEDULE-002: tenantをまたぐdue行を安定順・上限付きでCAS公開し、再実行しても安全', async () => {
+    const firstContext = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const core = createCoreRepositories({ adapter: asCore(adapter), kekBase64: TEST_KEK_B64 });
+    const secondTenant = await core.tenants.create({
+      slug: 'docs-scheduled-other',
+      name: 'Scheduled Other',
+      plan: 'free',
+    });
+    const secondContext = createRepositoryContext({ tenantId: secondTenant.id, actorId: 'scheduled-other-admin' });
+    const base = Date.now() + 60_000;
+
+    const later = await repository.createDocument(firstContext, {
+      scope: 'tenant',
+      title: '後の予約',
+      bodyMarkdown: '',
+      actorId: firstContext.actorId ?? 'missing-actor',
+      publishAt: base + 2_000,
+    });
+    const earlier = await repository.createDocument(secondContext, {
+      scope: 'tenant',
+      title: '先の予約',
+      bodyMarkdown: '',
+      actorId: 'scheduled-other-admin',
+      publishAt: base + 1_000,
+    });
+
+    const firstBatch = await repository.publishDueDocuments(base + 3_000, 1);
+    expect(firstBatch).toEqual({
+      publishedCount: 1,
+      hasMore: true,
+      publishedDocuments: [{ id: earlier.id, tenantId: secondTenant.id }],
+    });
+    expect(await repository.getDocument(secondContext, earlier.id)).toMatchObject({
+      status: 'published',
+      publishAt: null,
+    });
+    expect(await repository.getDocument(firstContext, later.id)).toMatchObject({
+      status: 'draft',
+      publishAt: base + 2_000,
+    });
+
+    const secondBatch = await repository.publishDueDocuments(base + 3_000, 1);
+    expect(secondBatch).toEqual({
+      publishedCount: 1,
+      hasMore: false,
+      publishedDocuments: [{ id: later.id, tenantId: firstContext.tenantId }],
+    });
+    await expect(repository.publishDueDocuments(base + 3_000, 1)).resolves.toEqual({
+      publishedCount: 0,
+      hasMore: false,
+      publishedDocuments: [],
+    });
+  });
+
   it('DOCS-EXT-001: 同じ外部keyの再送は重複せず、変更時だけIf-Matchを要求する', async () => {
     const context = await seedActor();
     const repository = createDocsCmsRepository(asCore(adapter));
@@ -203,6 +314,17 @@ describe('DOCS-DB: documents repository', () => {
       actorId: context.actorId ?? 'missing-actor',
     });
     expect(published).toMatchObject({ status: 'published', externalContentHash: null, externalRevision: 3 });
+    const publishAt = Date.now() + 60_000;
+    const scheduled = await repository.updateDocument(context, created.document.id, {
+      publishAt,
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(scheduled).toMatchObject({
+      status: 'draft',
+      publishAt,
+      externalContentHash: null,
+      externalRevision: 4,
+    });
     const resynced = await repository.syncExternalDocument(context, {
       source: 'codex',
       externalDocumentId: 'b'.repeat(64),
@@ -212,15 +334,41 @@ describe('DOCS-DB: documents repository', () => {
       autoExcerpt: '自動要約',
       assetSummary: '{"imageCount":1,"hasTable":false,"hasCode":false}',
       actorId: context.actorId ?? 'missing-actor',
-      expectedRevision: 3,
+      expectedRevision: 4,
     });
     expect(resynced.document).toMatchObject({
       status: 'draft',
+      publishAt: null,
+      externalRevision: 5,
       thumbnailUrl: 'https://example.com/manual.png',
       thumbnailSource: 'manual',
       excerpt: '手動要約',
       excerptSource: 'manual',
       assetSummary: '{"imageCount":1,"hasTable":false,"hasCode":false}',
+    });
+
+    const noOp = await repository.updateDocument(context, created.document.id, {
+      title: resynced.document.title,
+      bodyMarkdown: resynced.document.bodyMarkdown,
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(noOp).toMatchObject({ externalRevision: 5, externalContentHash: resynced.document.externalContentHash });
+
+    const cronPublishAt = Date.now() + 120_000;
+    const scheduledAgain = await repository.updateDocument(context, created.document.id, {
+      publishAt: cronPublishAt,
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(scheduledAgain).toMatchObject({ externalRevision: 6, externalContentHash: null });
+    await expect(repository.publishDueDocuments(cronPublishAt + 1, 1)).resolves.toMatchObject({
+      publishedCount: 1,
+      hasMore: false,
+    });
+    expect(await repository.getExternalDocument(context, 'codex', 'b'.repeat(64))).toMatchObject({
+      status: 'published',
+      publishAt: null,
+      externalContentHash: null,
+      externalRevision: 7,
     });
   });
 

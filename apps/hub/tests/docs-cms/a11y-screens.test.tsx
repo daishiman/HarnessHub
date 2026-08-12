@@ -5,6 +5,7 @@
 // apps/hub/tests/hearing-intake/a11y-screens.test.tsx (HI-A11Y-101〜103) と同型のパターン:
 // mountScreen() で SSR し jsdom へ載せ、useEffect が発火する前の初期状態を axe で検査する。
 
+import type { SessionRole } from '@harness-hub/schemas';
 import { UiProvider } from '@harness-hub/ui';
 import axe from 'axe-core';
 import type { ReactNode } from 'react';
@@ -20,6 +21,28 @@ import DocumentsPage from '../../src/app/(dashboard)/docs/page.js';
 // server page は `resolveDashboardScope` 経由で `cookies()` を無条件に呼ぶ (呼び出し元 page の静的化を防ぐため。
 // 理由は src/lib/routing/dashboard-scope.ts のコメント参照)。ここは request scope の外で SSR するので空 cookie を差す。
 vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
+
+// docs/page.tsx・docs/new/page.tsx は resolveShellIdentity() の role で「新しく作成」導線を出し分ける
+// (docs.write_tenant = workspace-admin 以上)。実 cookie は張らないので、ここでは
+// role を差し替え可能な identity を差す (既定は workspace-admin = 陽性経路)。
+const resolveShellIdentityMock = vi.fn(
+  async (): Promise<{
+    readonly subject: string;
+    readonly displayName: string;
+    readonly role: SessionRole;
+    readonly workspaceIds: readonly string[];
+    readonly workspaceNames: Readonly<Record<string, string>>;
+  }> => ({
+    subject: 'user-1',
+    displayName: 'テスト管理者',
+    role: 'workspace-admin',
+    workspaceIds: ['ws-1'],
+    workspaceNames: {},
+  }),
+);
+vi.mock('../../src/lib/routing/shell-identity.js', () => ({
+  resolveShellIdentity: () => resolveShellIdentityMock(),
+}));
 
 function mountScreen(node: ReactNode): void {
   const html = renderToStaticMarkup(
@@ -85,7 +108,7 @@ describe('DOCS-A11Y: docs-cms 実画面の初期状態に axe 違反が無い', 
   });
 
   it('DOCS-A11Y-004: ドキュメント新規作成フォームに axe 違反が 0 件', async () => {
-    mountScreen(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    mountScreen(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={false} />);
     expect(await violationsOf()).toEqual([]);
     expect(document.querySelector('form[aria-label="ドキュメントの新規作成"]')).not.toBeNull();
     expect(document.querySelectorAll('input, textarea')).not.toHaveLength(0);
@@ -101,5 +124,32 @@ describe('DOCS-A11Y: docs-cms 実画面の初期状態に axe 違反が無い', 
     mountScreen(await DocumentCreatePage({ searchParams: resolved({ tenant: 'tenant-a', workspace: 'ws-1' }) }));
     expect(await violationsOf()).toEqual([]);
     expect(document.querySelector('form[aria-label="ドキュメントの新規作成"]')).not.toBeNull();
+  });
+
+  it('DOCS-A11Y-007: docs.write_tenant を満たさない role (member) では一覧に作成リンクを出さない (元不具合の権限不足経路)', async () => {
+    resolveShellIdentityMock.mockResolvedValueOnce({
+      subject: 'user-2',
+      displayName: '一般ユーザー',
+      role: 'member',
+      workspaceIds: ['ws-1'],
+      workspaceNames: {},
+    });
+    mountScreen(await DocumentsPage({ searchParams: resolved({ tenant: 'tenant-a', workspace: 'ws-1' }) }));
+    expect(await violationsOf()).toEqual([]);
+    expect(document.querySelector('a[href^="/docs/new"]')).toBeNull();
+  });
+
+  it('DOCS-A11Y-008: docs.write_tenant を満たさない role (member) では新規作成ページに form を出さず理由を示す', async () => {
+    resolveShellIdentityMock.mockResolvedValueOnce({
+      subject: 'user-2',
+      displayName: '一般ユーザー',
+      role: 'member',
+      workspaceIds: ['ws-1'],
+      workspaceNames: {},
+    });
+    mountScreen(await DocumentCreatePage({ searchParams: resolved({ tenant: 'tenant-a', workspace: 'ws-1' }) }));
+    expect(await violationsOf()).toEqual([]);
+    expect(document.querySelector('form[aria-label="ドキュメントの新規作成"]')).toBeNull();
+    expect(document.body.textContent).toContain('作成できません');
   });
 });

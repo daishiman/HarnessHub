@@ -142,18 +142,48 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 | Method Path | 最小 role | 概要 |
 |---|---|---|
-| `GET /api/v1/docs` | member | scope 合成一覧 (common + 自テナント)。filter: category/scope/q |
-| `GET /api/v1/docs/:id` | member | body_md は raw 保存・レンダリング時 sanitize (SEC7) |
-| `POST /api/v1/docs` | workspace-admin (tenant) / provider-admin (common) | 作成。監査 event |
-| `PATCH /api/v1/docs/:id` | 同上 | 更新。監査 event |
+| `GET /api/v1/docs` | member | scope 合成一覧 (common + 自テナント)。filter: `scope/status/category/tag/q`。`tag` は JSON 配列要素の完全一致、`q` はタイトルだけを検索。ULID `id DESC` の cursor 順を固定し、一覧中の編集で `updated_at` が変わっても重複・欠落させない |
+| `GET /api/v1/docs/:id` | member | `body_markdown` は raw 保存・レンダリング時 sanitize (SEC7)。分類・カード情報と `publish_at` を含む |
+| `POST /api/v1/docs` | workspace-admin (tenant) / provider-admin (common) | 必ず `draft` で作成。`category/tags/thumbnail_url/excerpt/publish_at` は任意。未来でない非 NULL `publish_at` は 422。監査 event `docs.create` |
+| `PATCH /api/v1/docs/:id` | 同上 | タイトル/本文/状態/分類/カード情報/予約時刻を部分更新。未来でない非 NULL `publish_at` は 422。監査 event `docs.update` |
 | `POST /api/v1/docs/:id/draft` | workspace-admin | AI 下書き AiJob(`doc_draft`) 投入 |
+| `POST /api/v1/docs/:id/images` | 同上 | Markdown editor 用画像 upload。PNG/JPEG/WebP/GIF の許可形式・申告 MIME・先頭バイト・サイズ上限を検証し、R2 の `docs/{tenantId}/{documentId}/{imageId}` へ保存。`docs.image.upload` を監査 |
+| `GET /api/v1/docs/:id/images/:imageId` | member | 同一 document/tenant の認可済み画像だけを中継。`private, no-store` / `nosniff`。common 文書でも session 必須で、raw R2 URL は公開しない |
+| `DELETE /api/v1/docs/:id/images/:imageId` | 同上 | 未参照・orphan 画像の明示回収口。別 document/tenant の key は組み立てない。`docs.image.delete` を監査 |
 | `GET /api/v1/docs/imports/:source/:externalId` | Bearer: workspace-admin + `docs:write` (自テナントのみ) | 外部作成文書の同期状態と ETag を取得。`externalId` は repository 識別子と相対 path から導出した SHA-256 |
 | `PUT /api/v1/docs/imports/:source/:externalId` | Bearer: workspace-admin + `docs:write` (自テナントのみ) | tenant/draft 文書を自然キー `(tenant, source, externalId)` で冪等 upsert。既存内容の変更には直前 GET の `If-Match` が必須 (428/412)。監査 event |
 
 外部同期 v1 は Claude Code / Codex 等で作成した Markdown の tenant 下書き反映に限定する。
 固定 API key、common 文書、自動公開、画像転送は扱わない。文書は workspace ではなく tenant に帰属し、
-同じ自然キーの再送は文書を増やさない。Hub 側の手動編集後は同期状態を `modified` とし、CLI は明示的な
-`--force true` が無い限り停止する。
+同じ自然キーかつ同じ内容の再送は文書を増やさず `unchanged` を返す。Hub 側でタイトル・本文・公開状態を
+実際に変更したとき、AI 下書きを書き戻したとき、または予約公開したときは revision を単調増加させる。
+画面でタイトル・本文・公開状態を実変更した外部文書は `external_content_hash=NULL` (`sync_state=modified`) とし、
+CLI は明示的な `--force true` が無い限り停止する。分類・タグ・手動サムネイル・手動要約は Hub 側の管理値で、
+外部同期は上書きしない。`thumbnail_source/excerpt_source='auto'` の項目と `asset_summary` だけを同期本文から再算出する。
+
+### 4.8.1 公開予約・派生フィールド・外部同期の整合規則
+
+- 保存状態は `draft/published` の 2 値だけで、`scheduled` は API/UI の派生表示である。
+  `status='draft' AND publish_at > now` を予約中、`draft` かつそれ以外を非公開、`published` を公開と読む。
+- `publish_at` は既存分類・外部同期列を置き換えない additive（純増）列である。予約作成・変更は future epoch ms
+  のみ受理し、現在以前・不正形式・`status='published'`との同時指定は 422 problem+json とする。取消は
+  `publish_at:null` で表す。future指定時の保存statusは`draft`へ導出する。
+- 手動で`status`を指定したとき（同値再送を含む）、タイトルまたは本文が**保存値から実際に変わった**とき、
+  外部版を `--force true` で反映したとき、AI 下書きを書き戻したとき、予約公開 cron が公開したときは
+  `publish_at` を NULL にする。ただしタイトル/本文変更と同じ request で新しい未来 `publish_at` を明示した場合は、
+  その日時を採用して `draft` にする。同じタイトル/本文を再送しただけの場合と分類・タグ・サムネイル・要約だけの変更では予約を保持する。
+- サムネイルと要約は `auto/manual` の source を持つ。未指定または空欄へ戻した項目は本文から再算出し、
+  手動値は本文変更・外部同期でも保持する。自動サムネイル候補は `http(s)` または認可済みの
+  `/api/v1/docs/:id/images/:imageId` だけで、相対 repository path、`javascript:`、`data:` 等を採用しない。
+- 外部同期の ETag は `"docs-import-{revision}"`。初回作成以外の変更は `If-Match` が必須で、欠落は 428、
+  stale は 412 とし、最終書込みも revision CAS（比較して一致した時だけ更新）で競合を拒否する。
+- 予約公開 repository は `publishDueDocuments(now, limit?)` とし、`limit` のdefault/maxは100。
+  `publish_at ASC, id ASC` の安定順で `limit+1` 件を読み、各行CASで公開する。返却値は
+  `{publishedCount, hasMore, publishedDocuments:[{id,tenantId}]}`。`hasMore` は同じ時刻snapshotに期限到来候補が残ることを示す。通常時の予約時刻からの追加遅延は
+  24 時間未満（運用上は最大 24 時間程度）だが、cron 失敗・積み残し時の SLA ではない。
+- 人間操作は `docs.update`、外部同期は `docs.external_sync`、予約公開は返却された文書ごとに
+  actor=`system` / action=`docs.scheduled_publish`、AI 書戻しは既存 `ai_job.complete` で追跡する。監査 metadata に本文・画像本体・token を残さず、
+  revision、変更フィールド、結果、run key のような識別情報だけを記録する。
 
 ### 4.9 メトリクス (B2/B3)
 

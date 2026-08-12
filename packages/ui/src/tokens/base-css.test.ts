@@ -177,6 +177,21 @@ describe('buildBaseCss', () => {
   });
 
   /**
+   * Markdown の装飾は生成元だけでなく、配布する tokens.css にも存在する必要がある。
+   * selector を wrapper 配下に限定し、素の code/pre/blockquote を使う他画面へ背景や罫線を漏らさない。
+   */
+  describe.each(stageBoardCssSources)('Markdown 装飾の scope 契約: %s', (_label, source) => {
+    it('code block・inline code・引用を data-hh-markdown の内側だけで装飾する', () => {
+      expect(source).toContain('[data-hh-markdown] pre {');
+      expect(source).toContain('[data-hh-markdown] pre code {');
+      expect(source).toContain('[data-hh-markdown] :not(pre) > code {');
+      expect(source).toContain('[data-hh-markdown] blockquote {');
+      expect(source).not.toMatch(/(?:^|\n)pre \{\n\s+(?:margin|padding|background|border):/);
+      expect(source).not.toMatch(/(?:^|\n)blockquote \{\n\s+(?:padding|background|border|color):/);
+    });
+  });
+
+  /**
    * 閾値を直書きすると token 側を変えても CSS が追従しない。
    *
    * 検査対象を生成関数の出力だけにすると「実際に配られるファイル」を見ていないことになるので、
