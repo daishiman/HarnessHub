@@ -14,7 +14,7 @@
 export interface DocsAssetsBucketLike {
   put(
     key: string,
-    value: ArrayBuffer | Uint8Array,
+    value: ArrayBuffer | Uint8Array | ReadableStream<Uint8Array>,
     options?: { readonly httpMetadata?: { readonly contentType?: string } },
   ): Promise<unknown>;
   get(key: string): Promise<{
@@ -22,6 +22,7 @@ export interface DocsAssetsBucketLike {
     readonly httpMetadata?: { readonly contentType?: string };
     readonly size?: number;
   } | null>;
+  delete(key: string): Promise<void>;
 }
 
 export interface DocsImagesRuntime {
@@ -54,7 +55,13 @@ export async function readDocsImagesRuntimeEnv(): Promise<DocsImagesRuntimeEnv> 
 
 function requireBucket(env: DocsImagesRuntimeEnv): DocsAssetsBucketLike {
   const bucket = env.DOCS_ASSETS_BUCKET;
-  if (bucket === null || typeof bucket !== 'object' || typeof (bucket as { put?: unknown }).put !== 'function') {
+  if (
+    bucket === null ||
+    typeof bucket !== 'object' ||
+    typeof (bucket as { put?: unknown }).put !== 'function' ||
+    typeof (bucket as { get?: unknown }).get !== 'function' ||
+    typeof (bucket as { delete?: unknown }).delete !== 'function'
+  ) {
     throw new Error('R2 binding DOCS_ASSETS_BUCKET が未設定です (wrangler.jsonc の r2_buckets を確認してください)');
   }
   return bucket as DocsAssetsBucketLike;

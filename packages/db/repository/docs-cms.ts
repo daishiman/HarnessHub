@@ -9,7 +9,7 @@
  * AI 下書きキュー (kind=doc_draft) は hearing-intake-queue.ts の汎用 claim/complete/fail を
  * 再利用し、CAS/lease の実装を複製しない (AD-4)。
  */
-import { and, desc, eq, lt, or, type SQL } from 'drizzle-orm';
+import { and, desc, eq, lt, or, type SQL, sql } from 'drizzle-orm';
 
 import { documents } from '../schema/docs-cms/schema';
 import { aiJobs } from '../schema/hearing-intake/schema';
@@ -82,7 +82,7 @@ export interface ListDocumentsInput {
   /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
   readonly query?: string;
   readonly category?: string;
-  /** tags は JSON 配列文字列に対する部分一致 (LIKE) で絞り込む簡易フィルタ。 */
+  /** tags JSON 配列の要素に対する完全一致。 */
   readonly tag?: string;
   readonly cursor?: string;
   readonly limit: number;
@@ -155,8 +155,16 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       }
       if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
       if (input.tag !== undefined) {
-        const search = containsTermInAny(input.tag, [documents.tags]);
-        if (search !== undefined) predicates.push(search);
+        // LIKE では `API` が `GraphAPI` にも当たる。json_valid を先に置いて既存の壊れた値は
+        // fail-closed で非一致とし、json_each の配列要素単位で完全一致させる。
+        predicates.push(
+          sql`EXISTS (
+            SELECT 1 FROM json_each(
+              CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
+            ) AS tag_item
+            WHERE tag_item.value = ${input.tag}
+          )`,
+        );
       }
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would

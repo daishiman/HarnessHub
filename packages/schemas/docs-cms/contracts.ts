@@ -18,7 +18,33 @@ export type DocumentFieldSource = z.output<typeof documentFieldSourceSchema>;
 const categorySchema = z.string().trim().min(1).max(80);
 /** JSON 配列文字列 (例 `["設計","API"]`) を wire 上では素直な文字列配列として扱う。 */
 const tagsSchema = z.array(z.string().trim().min(1).max(40)).max(20);
-const thumbnailUrlSchema = z.string().trim().url().max(2000);
+const absoluteHttpImageUrlSchema = z
+  .string()
+  .trim()
+  .max(2000)
+  .url()
+  .refine((value) => {
+    try {
+      const protocol = new URL(value).protocol;
+      return protocol === 'https:' || protocol === 'http:';
+    } catch {
+      return false;
+    }
+  }, 'http または https の URL を指定してください');
+
+/**
+ * R2 上の認証必須画像は、ブラウザが session cookie を送れる同一 origin の API path で表す。
+ * 任意の相対 URL は許可せず、document/image 境界を持つこの route だけを wire 契約にする。
+ */
+export const documentImageUrlSchema = z.union([
+  absoluteHttpImageUrlSchema,
+  z
+    .string()
+    .trim()
+    .max(2000)
+    .regex(/^\/api\/v1\/docs\/[A-Za-z0-9_-]+\/images\/[A-Za-z0-9-]+\.(?:png|jpg|webp|gif)$/),
+]);
+const thumbnailUrlSchema = documentImageUrlSchema;
 const excerptSchema = z.string().trim().max(400);
 export const assetSummarySchema = z
   .object({

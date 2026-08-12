@@ -34,8 +34,12 @@ export const POST = withAuthz<DocParams>(
     }
 
     const contentType = request.headers.get('content-type');
-    const contentLength = Number(request.headers.get('content-length') ?? 'NaN');
-    if (Number.isFinite(contentLength) && contentLength > MAX_IMAGE_BYTES) {
+    const contentLengthHeader = request.headers.get('content-length');
+    const contentLength = contentLengthHeader === null ? undefined : Number(contentLengthHeader);
+    if (contentLength !== undefined && (!Number.isSafeInteger(contentLength) || contentLength < 0)) {
+      return problemResponse(problemDetails({ title: 'Content-Length が不正です', status: 400 }));
+    }
+    if (contentLength !== undefined && contentLength > MAX_IMAGE_BYTES) {
       return problemResponse(
         problemDetails({
           title: '画像サイズが大きすぎます',
@@ -44,30 +48,49 @@ export const POST = withAuthz<DocParams>(
         }),
       );
     }
+    if (request.body === null) {
+      return problemResponse(problemDetails({ title: '画像データがありません', status: 415 }));
+    }
 
-    const buffer = new Uint8Array(await request.arrayBuffer());
     const { bucket } = await docsImagesRuntime();
     const service = createDocsImageService(bucket);
-    const result = await service.upload(authz.resource.tenantId, existing.id, contentType ?? '', buffer);
+    const result = await service.upload(existing.tenantId, existing.id, contentType ?? '', request.body, contentLength);
     if (!result.ok) {
       const status = result.error.code === 'payload_too_large' ? 413 : 415;
       return problemResponse(problemDetails({ title: result.error.message, status }));
     }
 
-    await authRuntime().authz.audit.record({
-      actorSubject: authz.principal.userId,
-      tenantId: authz.resource.tenantId,
-      workspaceId: authz.resource.workspaceId,
-      action: 'docs.image.upload',
-      resourceType: 'document',
-      resourceId: existing.id,
-      metadata: { imageId: result.imageId, credential: authz.principal.credential },
-    });
+    try {
+      await authRuntime().authz.audit.record({
+        actorSubject: authz.principal.userId,
+        tenantId: existing.tenantId,
+        workspaceId: authz.resource.workspaceId,
+        action: 'docs.image.upload',
+        resourceType: 'document',
+        resourceId: existing.id,
+        metadata: { imageId: result.imageId, credential: authz.principal.credential },
+      });
+    } catch (error) {
+      // R2 書込み後に監査が失敗した場合、この要求が 500 のまま object だけ残るのを防ぐ。
+      try {
+        await service.delete(existing.tenantId, existing.id, result.imageId);
+      } catch (cleanupError) {
+        console.error(
+          JSON.stringify({
+            message: 'docs image upload rollback failed',
+            documentId: existing.id,
+            imageId: result.imageId,
+            error: cleanupError instanceof Error ? cleanupError.message : String(cleanupError),
+          }),
+        );
+      }
+      throw error;
+    }
 
     return Response.json(
       {
         image_id: result.imageId,
-        url: `/api/v1/docs/${existing.id}/images/${result.imageId}`,
+        url: `/api/v1/docs/${encodeURIComponent(existing.id)}/images/${encodeURIComponent(result.imageId)}`,
       },
       { status: 201 },
     );
