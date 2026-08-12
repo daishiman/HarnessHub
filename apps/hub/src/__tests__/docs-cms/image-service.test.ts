@@ -173,6 +173,28 @@ describe('DOCS-IMG: createDocsImageService', () => {
     expect(bucket.store.size).toBe(0);
   });
 
+  it('DOCS-IMG-014: 署名読み取り後の後続チャンクで上限を超えると転送を打ち切り R2 に確定しない', async () => {
+    const bucket = fakeBucket();
+    const service = createDocsImageService(bucket);
+    // 最初のチャンクだけで署名判定に必要な 12 byte を満たしておくと、後続チャンクは
+    // ストリームを実際に読み進める側 (bucket.put の消費) で初めて読まれる。
+    // そこで上限を超えさせることで、遅延読み取り経路 (ReadableStream の pull) の
+    // 上限超過処理を検証する (先頭チャンクだけで超過する経路は DOCS-IMG-012 が担当)。
+    const firstChunk = new Uint8Array(12);
+    firstChunk.set(PNG_SIGNATURE);
+    const oversizedRemainder = new Uint8Array(MAX_IMAGE_BYTES);
+
+    const result = await service.upload(
+      'tenant-a',
+      'doc-1',
+      'image/png',
+      streamFromChunks(firstChunk, oversizedRemainder),
+    );
+
+    expect(result).toMatchObject({ ok: false, error: { code: 'payload_too_large' } });
+    expect(bucket.store.size).toBe(0);
+  });
+
   it('DOCS-IMG-013: delete は document owner tenant の key だけを削除する', async () => {
     const bucket = fakeBucket();
     const service = createDocsImageService(bucket);

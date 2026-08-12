@@ -173,6 +173,10 @@ async function setInput(input: HTMLInputElement, value: string): Promise<void> {
 
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  // 絞り込み条件は useRememberedFilters が sessionStorage へ覚える (詳細画面へ行って戻っても
+  // 入れ直させないため)。テスト間で jsdom の sessionStorage が共有され前のテストの絞り込みが
+  // 漏れてしまうため、各テストの前に必ず消す。
+  window.sessionStorage.clear();
   container = document.createElement('div');
   document.body.replaceChildren(container);
   root = createRoot(container);
@@ -279,6 +283,61 @@ describe('DOCS-UI: DocumentList の一覧取得と操作', () => {
     await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" />);
     expect(container.textContent).toContain('分類・要約を編集');
   });
+
+  it('DOCS-UI-025: 状態・カテゴリ・タグ・検索の絞り込み欄が submit 時に query へ渡る', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => jsonResponse(LIST_RESPONSE));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
+
+    const statusSelect = container.querySelectorAll('select')[1] as HTMLSelectElement;
+    const selectValueSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+    if (selectValueSetter === undefined) throw new Error('select value setter がありません');
+    await act(async () => {
+      selectValueSetter.call(statusSelect, 'published');
+      statusSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    const categoryInput = fieldByLabel(container, 'カテゴリ');
+    await fillField(categoryInput, '運用');
+    const tagInput = fieldByLabel(container, 'タグ');
+    await fillField(tagInput, 'セットアップ');
+    const queryInput = fieldByLabel(container, '検索');
+    await fillField(queryInput, '導入');
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('絞り込み form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    const lastCallUrl = fetchMock.mock.calls.at(-1)?.[0] as string;
+    expect(lastCallUrl).toContain('status=published');
+    expect(lastCallUrl).toContain('category=');
+    expect(lastCallUrl).toContain('tag=');
+    expect(lastCallUrl).toContain('q=');
+  });
+
+  it('DOCS-UI-026: 取得失敗後に「再試行する」を押すと再取得する', async () => {
+    // 初回描画では restore 済みフラグの反映で load() が複数回走ることがあるため、
+    // 呼び出し回数ではなく「再試行を押すまでは失敗・押した後は成功」というフェーズで切り替える。
+    let succeeded = false;
+    const fetchMock = vi
+      .fn()
+      .mockImplementation(async () =>
+        succeeded ? jsonResponse(LIST_RESPONSE) : jsonResponse({}, { ok: false, status: 500 }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
+
+    expect(container.textContent).toContain('読み込みエラー');
+    const retryButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '再試行する');
+    if (retryButton === undefined) throw new Error('再試行する ボタンがありません');
+    succeeded = true;
+    await act(async () => retryButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    expect(container.textContent).not.toContain('読み込みエラー');
+    expect(container.textContent).toContain('導入ガイド');
+  });
 });
 
 /**
@@ -323,6 +382,30 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(container.textContent).toContain('タイトルを入力してください。');
+  });
+
+  it('DOCS-UI-029: docs.write_common を持つ role では「共通」スコープを選べ、選択すると作成リクエストへ含まれる', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" canWriteCommon={true} />);
+    await fillTitle(container, '共通ガイド');
+
+    const scopeSelect = container.querySelector('select') as HTMLSelectElement | null;
+    if (scopeSelect === null) throw new Error('スコープの select がありません');
+    const selectValueSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+    if (selectValueSetter === undefined) throw new Error('select value setter がありません');
+    await act(async () => {
+      selectValueSetter.call(scopeSelect, 'common');
+      scopeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    const body = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body ?? '{}')) as Record<string, unknown>;
+    expect(body.scope).toBe('common');
   });
 
   it('DOCS-UI-005: 作成失敗はエラーバナーに API の理由を表示する', async () => {
@@ -457,6 +540,43 @@ describe('DOCS-UI: DocumentDetailPage の表示', () => {
     expect(container.textContent).toContain('予約公開');
     expect(container.textContent).toContain('日次の予約公開処理で公開されます');
   });
+
+  it('DOCS-UI-027: 見出しがあると目次が出て、開閉と見出しクリックでスクロール先へ移動する', async () => {
+    const scrollIntoView = vi.fn();
+    // jsdom は scrollIntoView を実装しないため、目次クリック側の呼び出しだけを検証できるように stub する。
+    Element.prototype.scrollIntoView = scrollIntoView;
+    const docWithHeadings = { ...DOC, body_markdown: '# 導入ガイド\n\n## 手順\n\n本文。\n\n## まとめ\n\nおわり。' };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(docWithHeadings)));
+    await render(
+      <DocumentDetailPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+    await waitUntil(() => container.querySelector('nav[aria-label="目次"]') !== null);
+
+    // Markdown 本文側の見出し id 生成 (packages/ui) はこのテストの対象外なので、
+    // 目次が当てにするスクロール先だけを最小構成で用意する (slugify の規則は content-analysis.ts に準拠)。
+    const anchor = document.createElement('div');
+    anchor.id = '手順';
+    container.appendChild(anchor);
+
+    // 狭い画面用の折りたたみ (data-hh-toc-mobile) を開閉する。開いた形跡は「目次を閉じる」表記で見える。
+    const toggleButton = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === '目次を開く',
+    );
+    if (toggleButton === undefined) throw new Error('目次を開く ボタンがありません');
+    await act(async () => toggleButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    expect(container.textContent).toContain('目次を閉じる');
+
+    const headingLink = [...container.querySelectorAll('nav[aria-label="目次"] a')].find(
+      (link) => link.textContent === '手順',
+    );
+    if (headingLink === undefined) throw new Error('見出しリンクがありません');
+    await act(async () => headingLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })));
+
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+  });
 });
 
 describe('DOCS-UI: DocumentEditPage の保存', () => {
@@ -550,6 +670,48 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     expect(body.tags).toEqual(['セットアップ', '手順書']);
     expect(body.thumbnail_url).toBe('https://example.com/thumb.png');
     expect(body.excerpt).toBe('導入手順の要約です。');
+  });
+
+  it('DOCS-UI-028: 状態と予約日時の相互解除 (公開にすると予約日時をクリア/予約日時を入れると下書きに戻す)', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
+      return jsonResponse(DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+    expect(container.textContent).toContain(DOC.title);
+
+    // 予約日時を先に入れておき、状態を「公開済み」に切り替えると予約日時欄が空に戻る
+    // (公開済みと予約が同時に成立しない契約)。
+    const publishAtInput = fieldByLabel<HTMLInputElement>(container, '予約公開日時');
+    await setInput(publishAtInput, '2099-01-01T00:00');
+    expect(publishAtInput.value).toBe('2099-01-01T00:00');
+
+    const statusLabel = [...container.querySelectorAll('label')].find((candidate) =>
+      candidate.textContent?.startsWith('状態'),
+    );
+    if (statusLabel === undefined) throw new Error('状態 のラベルがありません');
+    const statusForId = statusLabel.getAttribute('for');
+    if (statusForId === null) throw new Error('状態 のラベルに for がありません');
+    const statusSelect = document.getElementById(statusForId) as HTMLSelectElement | null;
+    if (statusSelect === null) throw new Error('状態 の入力欄がありません');
+    const selectValueSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+    if (selectValueSetter === undefined) throw new Error('select value setter がありません');
+    await act(async () => {
+      selectValueSetter.call(statusSelect, 'published');
+      statusSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    expect(publishAtInput.value).toBe('');
+
+    // 逆に予約日時を入れ直すと状態が「下書き」へ戻る (公開したまま予約が残らないようにする)。
+    await setInput(publishAtInput, '2099-02-02T00:00');
+    expect((statusSelect as unknown as { value: string }).value).toBe('draft');
   });
 
   it('DOCS-UI-012: docs.write_tenant を満たさない role では編集画面を出さない (元不具合の権限不足経路)', async () => {
@@ -688,5 +850,51 @@ describe('DOCS-UI: DocumentEditPanel (一覧からの分類編集)', () => {
     const closeButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '閉じる');
     if (closeButton === undefined) throw new Error('閉じるボタンがありません');
     await act(async () => closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  });
+
+  it('DOCS-UI-024: タグ・サムネイル・要約の変更もそれぞれ blur で PATCH される', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === `/api/v1/docs/${LIST_RESPONSE.items[0]?.id}` && init?.method === 'PATCH') {
+        return jsonResponse(LIST_RESPONSE.items[0]);
+      }
+      return jsonResponse(LIST_RESPONSE);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" />);
+
+    const openButton = await findButtonByText('分類・要約を編集');
+    await act(async () => openButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await waitUntil(() => container.querySelector('[data-hh-doc-edit-panel]') !== null);
+    const panel = container.querySelector('[data-hh-doc-edit-panel]');
+    if (panel === null) throw new Error('編集パネルが見つかりません');
+
+    const tagsInput = fieldByLabel(panel as HTMLElement, 'タグ');
+    await fillField(tagsInput, 'セットアップ, 応用');
+    await act(async () => tagsInput.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
+    await flush();
+
+    const thumbnailInput = fieldByLabel(panel as HTMLElement, 'サムネイル画像 URL');
+    await fillField(thumbnailInput, 'https://example.com/new-thumb.png');
+    await act(async () => thumbnailInput.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
+    await flush();
+
+    const excerptInput = fieldByLabel(panel as HTMLElement, '要約');
+    await fillField(excerptInput, '更新した要約です。');
+    await act(async () => excerptInput.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
+    await flush();
+
+    const patchCalls = fetchMock.mock.calls.filter(
+      (call) =>
+        String(call[0]) === `/api/v1/docs/${LIST_RESPONSE.items[0]?.id}` &&
+        (call[1] as RequestInit | undefined)?.method === 'PATCH',
+    );
+    expect(patchCalls.length).toBe(3);
+    const bodies = patchCalls.map(
+      (call) => JSON.parse(String((call[1] as RequestInit).body)) as Record<string, unknown>,
+    );
+    expect(bodies[0]?.tags).toEqual(['セットアップ', '応用']);
+    expect(bodies[1]?.thumbnail_url).toBe('https://example.com/new-thumb.png');
+    expect(bodies[2]?.excerpt).toBe('更新した要約です。');
   });
 });
