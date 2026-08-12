@@ -19,8 +19,8 @@ import {
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
-import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
 import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
+import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
