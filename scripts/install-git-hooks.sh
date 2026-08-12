@@ -64,6 +64,23 @@ chmod +x \
 
 git config core.hooksPath "$HOOKS_DIR"
 
+# beads の Dolt 同期は git remote の refs/dolt/* を使うが、既定の fetch refspec は
+# +refs/heads/*:refs/remotes/origin/* だけで refs/dolt/* を一切引かない。ローカルに
+# refs/dolt/data が 1 本も無い状態の push は「リモートに既にある chunk」を知らず全
+# table file を送ろうとするため、addTableFiles / updateManifestAddFiles が肥大して
+# HTTP 400 になる (HarnessHub-jab2)。clone や worktree を作るたび再発するので、
+# hook 設置と同じ「clone ごとに 1 回」の経路でここも揃える。
+DOLT_REFSPEC='+refs/dolt/*:refs/dolt/*'
+if git config --get-all remote.origin.fetch 2>/dev/null | grep -qxF "$DOLT_REFSPEC"; then
+  echo "[install-git-hooks] remote.origin.fetch は refs/dolt/* を既に引いています"
+elif git config --get remote.origin.url >/dev/null 2>&1; then
+  git config --add remote.origin.fetch "$DOLT_REFSPEC"
+  echo "[install-git-hooks] remote.origin.fetch へ $DOLT_REFSPEC を追加しました"
+  echo "[install-git-hooks]   (beads の Dolt push が差分計算の基準を持てるようにするため)"
+else
+  echo "[install-git-hooks] remote origin が無いため refs/dolt/* の refspec 追加は省略しました"
+fi
+
 echo "[install-git-hooks] core.hooksPath=$HOOKS_DIR 設定完了"
 echo "[install-git-hooks] 全 worktree 共通の有効 hooks:"
 ls -1 "$HOOKS_DIR" | grep -v -E '^(lib|scripts)$' | sed 's/^/  - /'

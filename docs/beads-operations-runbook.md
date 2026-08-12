@@ -165,7 +165,51 @@ push 時は beads の `pre-push` hook が Dolt 同期を試みる。conservative
 git push --no-verify -u origin <branch>
 ```
 
-## 5. よくある誤り
+## 5. `bd dolt push` が HTTP 400 で失敗する
+
+`bd dolt pull` は成功するのに `bd dolt push` だけが `addTableFiles` / `updateManifestAddFiles` の `unknown push error` (HTTP 400) で落ちる場合、**認証ではなく差分計算の基準（baseline＝「どこまで送ってあるか」の目印）が無いことを疑う**（HarnessHub-jab2）。
+
+### 5.1 何が起きているか
+
+Dolt の push は「リモートに既にある chunk（データの塊）」を差し引いて、足りないぶんだけを送る。その判断材料がローカルの `refs/dolt/data` である。ところが git の既定 fetch refspec（refspec＝どの ref をどこへ引くかの指定）は次の 1 本しかなく、`refs/dolt/*` を一切引かない。
+
+```
++refs/heads/*:refs/remotes/origin/*
+```
+
+そのため clone や worktree 追加の直後は **ローカルに `refs/dolt/data` が 1 本も存在しない**。この状態の push は「リモートには何も無い」と見なして全 table file を送ろうとするため、manifest 更新が肥大して 400 になる。
+
+### 5.2 診断
+
+```bash
+# リモート側には ref がある
+git ls-remote origin 'refs/dolt/*'
+
+# ローカル側は 0 本 → 本節の症状
+git for-each-ref 'refs/dolt/*'
+
+# 既定 refspec しか無いことを確認する
+git config --get-all remote.origin.fetch
+```
+
+### 5.3 復旧と恒久化
+
+基準を 1 本引けば、通常の（force なしの）push がそのまま通る。
+
+```bash
+git fetch origin '+refs/dolt/data:refs/dolt/data'
+bd dolt push
+```
+
+恒久対策は `scripts/install-git-hooks.sh` に組み込んである。clone や worktree を作ったら hook 設置と同じタイミングでこれを 1 回実行すれば、`remote.origin.fetch` へ `+refs/dolt/*:refs/dolt/*` が追加され、以降は通常の `git fetch origin` が基準を維持する。既に設定済みなら追記しない（冪等＝何回実行しても結果が同じ）。
+
+```bash
+bash scripts/install-git-hooks.sh
+```
+
+**`.beads/config.yaml` の `sync.remote` が HTTPS で `remote.origin.url` が SSH でも、本症状の原因ではない。** 実測では SSH のまま push が成功しているため、この食い違いを理由に config を書き換えないこと。
+
+## 6. よくある誤り
 
 | 誤り | 何が起きるか | 正しい対処 |
 | --- | --- | --- |
@@ -174,6 +218,7 @@ git push --no-verify -u origin <branch>
 | jsonl を編集して DB が直ると思う | DB は変わらない。次の export で上書きされる | DB の変更は `bd-bridge.py` 経由で行う |
 | 検証せず commit | 壊れた JSONL や id 重複が混入する | 3.4 の検証を必ず通す |
 | stash を放置 | 同種のコンフリクトが反復する | 3.6 で確認のうえ drop する |
+| push 400 を認証エラーと決めつける | config を書き換えても直らず、force push に逃げる | 5.2 でローカル `refs/dolt/data` の有無を先に見る |
 
 ## 関連
 
@@ -182,3 +227,4 @@ git push --no-verify -u origin <branch>
 - [SYNC_CONCEPTS.md](https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md) — 同期アーキテクチャとアンチパターン
 - `plugins/dev-graph/scripts/bd-bridge.py` — beads 変更の単一経路
 - `plugins/dev-graph/hooks/guard-graph-schema.py` — 経路強制の実装
+- `scripts/install-git-hooks.sh` — clone ごとの hook 設置と `refs/dolt/*` refspec の恒久化（§5.3）
