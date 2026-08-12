@@ -35,6 +35,7 @@ const FAKE_ACCESS_TOKEN = `${base64url({ alg: 'none' })}.${base64url({
 })}.sig`;
 
 const STORED_RECORD: PublisherCredentialRecord = {
+  hub_origin: 'https://hub.example.com',
   tenant_slug: 'acme',
   workspace_id: 'workspace_456',
   refresh_token: 'r'.repeat(32),
@@ -73,6 +74,7 @@ function createDeps(postJson: ReturnType<typeof vi.fn>): {
   );
   return {
     deps: {
+      hubOrigin: 'https://hub.example.com',
       credentialStore,
       requestDeviceCode: () => neverCall('requestDeviceCode'),
       pollTokenEndpoint: () => neverCall('pollTokenEndpoint'),

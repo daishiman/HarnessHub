@@ -2,7 +2,7 @@
   "target": {
     "plugin": "harness-hub-publisher",
     "skill": "run-publisher-publish",
-    "skill_md_sha256": "b1b4b7726a88f08fe1418487639e4743d746259fc8c1cf82f1cccac5353d9821"
+    "skill_md_sha256": "adb2caf7dff4f99fe2cba991378322ddaaec5a6174513b11691977b3fb121d69"
   },
   "review_kind": "elegance",
   "verdict": "PASS",
@@ -13,25 +13,24 @@
     "dependency_break": 0,
     "smell": 0
   },
-  "reviewer": "codex-final-review",
-  "reviewed_at": "2026-08-02T17:20:00+09:00",
+  "reviewer": "independent-content-review-subagent",
+  "reviewed_at": "2026-08-12T17:18:56+09:00",
   "iterations": 1,
   "human_review_required": false,
   "feedback_loop": {
     "loop_scope": "both",
     "criteria_evaluated": ["IN1", "IN2", "OUT1", "OUT2"],
     "positive_feedback": [
-      "run-publisher-publish.sh は repository root を自力で解決し、apps/publisher/bin/harness-publisher.mjs の publish サブコマンドへ exec するだけの薄い接続である。package収集、Device Flow、Hub API、Wrangler の実装は CLI 側へ一意に置かれ、二重実装がない。",
-      "command、Skill、CLI の argument-hint は package-dir、Hub 接続情報、tenant/project/target/visibility/origin と web_app 時だけ必要な wrangler-config を同じ意味で伝えている。CLI は必須引数・未知サブコマンドを非0で停止し、近似実行しない。",
-      "OS資格情報域への refresh token 保存、access token 非保存、packages/inspection の共有pre-check、実サービスの両OS E2E未達を、Skillと関連記録が区別しており、ローカルfake I/Oを受入証拠へ読み替えていない。"
+      "IN1: shell wrapperはHARNESS_HUB_PUBLISHER_BIN→PATH→monorepo local binの順に1つのPublisher CLIを選び、publish subcommandへ引数と終了codeをtail-callする。package収集、認証、Hub API、Wranglerの業務ロジックを再実装しない。",
+      "IN2: command・Skill・CLIのpackage-dir、Hub/tenant/project、target、visibility、origin、web_app時wrangler-config契約が一致する。外部cwd実行testでCLIまで到達し、不足optionを非0で拒否することを確認した。",
+      "OUT1: Purpose/Output ContractとGotchasがpublishの外部変更、Device Flowの人手承認、資格情報保存境界、Wrangler配備、CLI解決失敗を明示し、静的検証を実サービスE2E成功へ読み替えない。",
+      "OUT2: pluginは薄い操作面に限定され、pre-checkはpackages/inspection、認証・公開処理はapps/publisher、公式Hub検査はHub側ownerへ一方向に委譲する。秘密情報の平文保存や判定ロジックの複製はない。"
     ],
-    "negative_feedback": [
-      "初回レビューで、WranglerがURL出力後に非0終了した場合のdeployment登録漏れを検出した。CLI実装とテストを修正済みで、URLとexit codeをorphan_candidateとしてHubへ登録する経路を確認した。"
-    ],
+    "negative_feedback": [],
     "iteration": 1,
     "iteration_limit": 3,
-    "hook_trigger": "manual-final-review",
+    "hook_trigger": "manual-independent-content-review",
     "next_action": "none"
   },
-  "notes": "静的な設計・責務レビューのPASSであり、Hub、ブラウザ認可、Wranglerを含むmacOS/Windows実機E2Eや15分実測のPASSを主張しない。A1/A3はP06/P07/P10/P11/P13で実機証跡を得るまで未達のまま。"
+  "notes": "30思考法レビューで用いた批判・逆説・システム・因果・依存・価値・改善の観点を現在内容へ再適用し、4条件をすべてPASSと判定した。明示bin、PATH、local binの優先順はSkill本文とscript実装で一致し、Marketplace単独配置でもCLI未導入を成功偽装せず案内する。実サービスmacOS/Windows E2Eは本静的design verdictの主張範囲外。"
 }

@@ -20,7 +20,7 @@
     "test": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "pnpm --workspace-root exec biome check apps/publisher",
-    "cli": "tsx src/cli/index.ts",
+    "cli": "node bin/harness-publisher.mjs",
     "check:plaintext-secret-storage": "node scripts/check-plaintext-secret-storage.mjs"
   },
   "dependencies": {

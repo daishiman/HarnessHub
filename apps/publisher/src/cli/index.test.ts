@@ -1,6 +1,17 @@
+import { mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { main, parseArgs, requireOption } from './index.js';
+import { main, normalizeHubOrigin, parseArgs, requireOption, resolveDocsFile } from './index.js';
+
+describe('normalizeHubOrigin', () => {
+  it('HTTPS URLをoriginへ固定し、HTTPやcredential入りURLを拒否する', () => {
+    expect(normalizeHubOrigin('https://hub.example.com/some/path')).toBe('https://hub.example.com');
+    expect(() => normalizeHubOrigin('http://hub.example.com')).toThrow('HTTPS');
+    expect(() => normalizeHubOrigin('https://user:pass@hub.example.com')).toThrow('credential');
+  });
+});
 
 describe('parseArgs', () => {
   it('subcommand と `--key value` 形式の option を読み取る', () => {
@@ -39,6 +50,23 @@ describe('requireOption', () => {
 
   it('値が無ければエラーを投げる', () => {
     expect(() => requireOption(new Map(), 'project-id')).toThrow('--project-id は必須です');
+  });
+});
+
+describe('resolveDocsFile', () => {
+  it('repository外を指すsymlink経由のMarkdown読取りを拒否する', async () => {
+    const temporary = await mkdtemp(path.join(os.tmpdir(), 'harness-publisher-docs-'));
+    try {
+      const repository = path.join(temporary, 'repository');
+      const outside = path.join(temporary, 'outside.md');
+      await mkdir(repository);
+      await writeFile(outside, '# outside', 'utf8');
+      await symlink(outside, path.join(repository, 'linked.md'));
+
+      await expect(resolveDocsFile(repository, 'linked.md')).rejects.toThrow('--root 配下');
+    } finally {
+      await rm(temporary, { recursive: true, force: true });
+    }
   });
 });
 

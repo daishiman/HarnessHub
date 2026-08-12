@@ -147,6 +147,13 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 | `POST /api/v1/docs` | workspace-admin (tenant) / provider-admin (common) | 作成。監査 event |
 | `PATCH /api/v1/docs/:id` | 同上 | 更新。監査 event |
 | `POST /api/v1/docs/:id/draft` | workspace-admin | AI 下書き AiJob(`doc_draft`) 投入 |
+| `GET /api/v1/docs/imports/:source/:externalId` | Bearer: workspace-admin + `docs:write` (自テナントのみ) | 外部作成文書の同期状態と ETag を取得。`externalId` は repository 識別子と相対 path から導出した SHA-256 |
+| `PUT /api/v1/docs/imports/:source/:externalId` | Bearer: workspace-admin + `docs:write` (自テナントのみ) | tenant/draft 文書を自然キー `(tenant, source, externalId)` で冪等 upsert。既存内容の変更には直前 GET の `If-Match` が必須 (428/412)。監査 event |
+
+外部同期 v1 は Claude Code / Codex 等で作成した Markdown の tenant 下書き反映に限定する。
+固定 API key、common 文書、自動公開、画像転送は扱わない。文書は workspace ではなく tenant に帰属し、
+同じ自然キーの再送は文書を増やさない。Hub 側の手動編集後は同期状態を `modified` とし、CLI は明示的な
+`--force true` が無い限り停止する。
 
 ### 4.9 メトリクス (B2/B3)
 

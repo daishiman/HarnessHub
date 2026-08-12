@@ -94,6 +94,21 @@ describe('DMDB-T07 single migration lineage', () => {
     // idx が 0 から連続する単一系統
     expect(journal.entries.map((e) => e.idx)).toStrictEqual(journal.entries.map((_, i) => i));
   });
+
+  it('各 journal entry に snapshot があり、prevId が直前 snapshot を指す', () => {
+    const journal = JSON.parse(readFileSync(join(MIGRATIONS_DIR, 'meta', '_journal.json'), 'utf8')) as {
+      entries: { idx: number }[];
+    };
+    const snapshots = journal.entries.map((entry) =>
+      JSON.parse(
+        readFileSync(join(MIGRATIONS_DIR, 'meta', `${String(entry.idx).padStart(4, '0')}_snapshot.json`), 'utf8'),
+      ),
+    ) as { id: string; prevId: string }[];
+
+    for (let index = 1; index < snapshots.length; index += 1) {
+      expect(snapshots[index]?.prevId).toBe(snapshots[index - 1]?.id);
+    }
+  });
 });
 
 describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', () => {

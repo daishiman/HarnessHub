@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1590,
+  "graph_revision": 1591,
   "nodes": [
     {
       "acceptance": [
@@ -60427,6 +60427,130 @@
       "title": "文書内リンク既存baseline 354件を0件へ縮退する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-12T07:36:00.266515Z"
+    },
+    {
+      "acceptance": [
+        "同じ外部キーと本文を何度送っても文書が重複せずunchangedになる",
+        "同じ外部キーの更新は正しいIf-Matchがある場合だけ成功し古いrevisionは412になる",
+        "docs:writeを持たないtoken・別tenant・member roleからの同期を拒否する",
+        "同期APIはtenant scopeかつdraftで作成し自動公開しない。Hub側の手動編集・公開後はmodifiedになりCLIが既定で停止する",
+        "CLIがリポジトリ相対パス由来の安定IDを使い絶対パスや利用者名を送信しない",
+        "作成・更新・変更なしの監査イベントと、拒否の回帰テストが揃う",
+        "外部作成したMarkdownがDocs一覧・詳細で確認できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-2h14",
+        "linked_at": "2026-08-12T06:05:41.888487Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/external-docs-api-sync-20260812.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "ユーザーが外部作成ドキュメントをAPIでHarness Hub Docsへ反映する仕組みを明示的に依頼した",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "ab9258aff29a06c12ef23961ae7a12121ff31d214c14173218e4bfede8bdbd25",
+        "evaluator": "elegant-review 30思考法レビュー",
+        "evidence_ref": "issues/external-docs-api-sync-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T06:02:20Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/external-docs-api-sync-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Device Flowで得た最小権限トークンを使い、外部文書をtenant内の下書きへ冪等同期できるAPIとCLIを提供する",
+      "graph_node_id": "issue-external-docs-api-sync-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T06:02:20Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Claude CodeやCodexで作成したMarkdownを、ブラウザのCookieや長命APIキーを配らずHarness HubのDocsへ安全かつ再実行可能に反映する",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/docs",
+        "apps/hub/src/lib/authz",
+        "packages/db/schema",
+        "packages/schemas",
+        "apps/publisher",
+        "plugins/harness-hub-publisher"
+      ],
+      "scope_in": [
+        "Device Flowへdocs:write scopeを追加する",
+        "tenant下書き限定の外部文書upsert APIを追加する",
+        "external sourceとexternal document idの一意制約で再送重複を防ぐ",
+        "revisionとETag/If-Matchで同時編集の上書きを防ぐ",
+        "Publisher CLIへMarkdown同期コマンドを追加する",
+        "Claude Code/Codexから同CLIを呼べる薄いadapterと利用手順を追加する",
+        "認可・tenant分離・監査・冪等性・競合の回帰テストを追加する"
+      ],
+      "scope_out": [
+        "common文書への書き込みと自動公開",
+        "v1での画像アップロード同期",
+        "ブラウザsession Cookieの外部利用",
+        "長命な固定APIキーの新設",
+        "documentsへのworkspace_id追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T06:02:20Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "active",
+      "tags": [
+        "docs",
+        "api",
+        "device-flow",
+        "external-sync",
+        "publisher"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Claude Code等の外部環境からDocs CMSへ安全に同期する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:51:18Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

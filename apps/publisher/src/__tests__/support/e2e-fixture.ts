@@ -139,6 +139,7 @@ export async function runInitialPublishTimebox(): Promise<InitialPublishTimeboxR
     const refreshTokenEndpoint: RefreshTokenEndpoint = vi.fn();
 
     const deps: PublishCommandDeps = {
+      hubOrigin: 'https://hub.example.com',
       credentialStore,
       requestDeviceCode,
       pollTokenEndpoint,

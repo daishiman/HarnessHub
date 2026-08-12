@@ -41,7 +41,13 @@ export const refreshTokenSchema = z.string().min(32, 'refresh_token が短すぎ
  * Publisher token に付与できる scope (security-spec §3.5)。
  * role とは直交する。role が足りていても scope が無ければ拒否する。
  */
-export const publisherTokenScopeSchema = z.enum(['publish:write', 'metrics:write', 'feedback:write', 'aijob:process']);
+export const publisherTokenScopeSchema = z.enum([
+  'publish:write',
+  'metrics:write',
+  'feedback:write',
+  'aijob:process',
+  'docs:write',
+]);
 export type PublisherTokenScope = z.output<typeof publisherTokenScopeSchema>;
 
 /**

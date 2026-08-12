@@ -16,6 +16,7 @@ const ALL_SCOPES: readonly PublisherTokenScope[] = [
   'metrics:write',
   'feedback:write',
   'aijob:process',
+  'docs:write',
 ];
 
 /** 判定表の 4 列。`owner` だけは role 列の値ではなく「資源との関係」で作る (ADR AD-3)。 */
@@ -86,6 +87,7 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   'docs.read': MEMBER_UP,
   'docs.write_tenant': ADMIN_UP,
   'docs.write_common': PROVIDER_ONLY,
+  'docs.external_sync': ADMIN_UP,
   'users.read': ADMIN_UP,
   'users.write': ADMIN_UP,
   'users.role_change': ADMIN_UP,
@@ -133,6 +135,7 @@ const TOKEN_ONLY_ACTIONS = new Set([
   'aijob.fail',
   'metrics.ingest',
   'deployment.register',
+  'docs.external_sync',
 ]);
 
 function matrixPrincipal(action: string, column: MatrixColumn): AuthzPrincipal {
@@ -186,15 +189,20 @@ describe('T-AUTHZ-01/02: 認可マトリクス (QC-2)', () => {
           `${action} × ${role} × cross-tenant`,
         ).toEqual({ allowed: false, reason: 'tenant_mismatch' });
       }
-      expect(
-        decide({
-          action,
-          principal: matrixPrincipal(action, 'provider-admin'),
-          resource: resourceFor('provider-admin', { tenantId: TENANT_B, workspaceId: null }),
-          sessionRevoked: false,
-        }).allowed,
-        `${action} × provider-admin × cross-tenant`,
-      ).toBe(true);
+      const providerCrossTenant = decide({
+        action,
+        principal: matrixPrincipal(action, 'provider-admin'),
+        resource: resourceFor('provider-admin', { tenantId: TENANT_B, workspaceId: null }),
+        sessionRevoked: false,
+      });
+      if (action === 'docs.external_sync') {
+        expect(providerCrossTenant, `${action} × provider-admin × cross-tenant`).toEqual({
+          allowed: false,
+          reason: 'tenant_mismatch',
+        });
+      } else {
+        expect(providerCrossTenant.allowed, `${action} × provider-admin × cross-tenant`).toBe(true);
+      }
     }
   });
 

@@ -323,15 +323,17 @@ describe('P13 production migration / smoke CLI', () => {
     // 0007 feedback/builds (feedback-loop) /
     // 0008 metrics-tracking + build-pipeline-board /
     // 0009 production smoke fixture lease 台帳 / 0010 Notion 連携 /
-    // 0011 hearing_screenshots / hearing_share_tokens (ヒアリングシート添付・受け渡しトークン)
+    // 0011 docs-cms のカード表示・自動分類列追加 (category/tags/thumbnail/excerpt/asset_summary) /
+    // 0012 外部 Markdown 同期 /
+    // 0013 hearing_screenshots / hearing_share_tokens (ヒアリングシート添付・受け渡しトークン)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 12, applied: 0, pending: 12 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 14, applied: 0, pending: 14 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 12 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 14 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 12, appliedAfter: 12 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 14, appliedAfter: 14 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

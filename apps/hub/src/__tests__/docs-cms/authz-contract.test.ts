@@ -111,6 +111,58 @@ describe('DOCS-AUTHZ: docs.write_common (provider-admin 限定)', () => {
   });
 });
 
+describe('DOCS-AUTHZ: docs.external_sync (Device Flow + docs:write)', () => {
+  it('DOCS-AUTHZ-008: workspace-adminのDevice Flow tokenは専用scopeがある場合だけ同期できる', () => {
+    const allowed = decide({
+      action: 'docs.external_sync',
+      principal: principal({ role: 'workspace-admin', credential: 'access_token', scope: ['docs:write'] }),
+      resource: OWN_TENANT_DOC,
+      sessionRevoked: false,
+    });
+    const missingScope = decide({
+      action: 'docs.external_sync',
+      principal: principal({ role: 'workspace-admin', credential: 'access_token', scope: ['publish:write'] }),
+      resource: OWN_TENANT_DOC,
+      sessionRevoked: false,
+    });
+    expect(allowed.allowed).toBe(true);
+    expect(missingScope).toEqual({ allowed: false, reason: 'missing_scope' });
+  });
+
+  it('DOCS-AUTHZ-009: sessionとmember tokenは同期できない', () => {
+    const session = decide({
+      action: 'docs.external_sync',
+      principal: principal({ role: 'workspace-admin' }),
+      resource: OWN_TENANT_DOC,
+      sessionRevoked: false,
+    });
+    const member = decide({
+      action: 'docs.external_sync',
+      principal: principal({ credential: 'access_token', scope: ['docs:write'] }),
+      resource: OWN_TENANT_DOC,
+      sessionRevoked: false,
+    });
+    expect(session).toEqual({ allowed: false, reason: 'credential_not_allowed' });
+    expect(member).toEqual({ allowed: false, reason: 'insufficient_role' });
+  });
+
+  it('DOCS-AUTHZ-010: provider-admin tokenでも別tenantへの機械同期は404相当で拒否する', () => {
+    expect(
+      decide({
+        action: 'docs.external_sync',
+        principal: principal({
+          tenantId: 'tenant-b',
+          role: 'provider-admin',
+          credential: 'access_token',
+          scope: ['docs:write'],
+        }),
+        resource: OWN_TENANT_DOC,
+        sessionRevoked: false,
+      }),
+    ).toEqual({ allowed: false, reason: 'tenant_mismatch' });
+  });
+});
+
 describe('DOCS-AUTHZ: 認可判定の複製禁止', () => {
   it('DOCS-AUTHZ-007: docs-cms feature コードは role 判定 (atLeast や順序表・アクション規則の語彙) を複製しない', () => {
     // 検査対象語を直書きすると「複製が無いこと」を調べる自分自身が誤検出源になるため分割して組み立てる

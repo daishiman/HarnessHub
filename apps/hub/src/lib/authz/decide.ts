@@ -87,6 +87,10 @@ export function decide(input: AuthzDecisionInput): AuthzOutcome {
     }
   }
 
+  if (rule.allowProviderCrossTenant === false && input.principal.tenantId !== input.resource.tenantId) {
+    return { allowed: false, reason: 'tenant_mismatch' };
+  }
+
   const resolved = resolveEffectiveRole(input.principal, input.resource);
   if (!resolved.ok) return { allowed: false, reason: resolved.reason };
 

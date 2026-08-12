@@ -58,6 +58,8 @@ import {
   createDocsCmsRepository as createDocsCmsRepositoryLeaf,
   type DocsCmsRepository as DocsCmsRepositoryShape,
   type DocumentRow as DocumentRowShape,
+  ExternalDocumentPreconditionError as ExternalDocumentPreconditionErrorLeaf,
+  type ExternalDocumentRow as ExternalDocumentRowShape,
 } from './docs-cms';
 import {
   createFeedbackRepository as createFeedbackRepositoryLeaf,
@@ -170,6 +172,7 @@ export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
 export type DocsCmsRepository = DocsCmsRepositoryShape;
 export type DocumentRow = DocumentRowShape;
+export type ExternalDocumentRow = ExternalDocumentRowShape;
 export type FeedbackRow = FeedbackRowShape;
 export type FeedbackRepository = FeedbackRepositoryShape;
 export type BuildRow = BuildRowShape;
@@ -269,6 +272,7 @@ export const InvalidStageTransitionError = InvalidStageTransitionErrorLeaf;
 export const StageCasConflictError = StageCasConflictErrorLeaf;
 export const PublishRequestNotPublishedError = PublishRequestNotPublishedErrorLeaf;
 export const MetricsIdempotencyKeyReuseError = MetricsIdempotencyKeyReuseErrorLeaf;
+export const ExternalDocumentPreconditionError = ExternalDocumentPreconditionErrorLeaf;
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */
 export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {
