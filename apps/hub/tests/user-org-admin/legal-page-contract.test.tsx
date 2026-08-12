@@ -53,6 +53,7 @@ vi.mock('../../src/lib/auth/session.js', async () => {
 });
 
 const { default: LegalPage } = await import('../../src/app/legal/page.js');
+const { default: LegalLayout } = await import('../../src/app/legal/layout.js');
 const { findActionRule } = await import('../../src/lib/authz/rules.js');
 const { authorize, isPublicPath } = await import('../../src/middleware/authz.js');
 
@@ -71,12 +72,14 @@ function claims(overrides: Record<string, unknown> = {}) {
 }
 
 async function renderLegalPage(): Promise<void> {
+  // シェル選択は layout.tsx が持つ (page.tsx から分離済み。G13 client JS 予算ゲート対策で
+  // /legal/page の manifest entry から HubShell/PublicShell の CSS を外すため)。
   // `<main>` をテスト側で敷かないのは、/legal が PublicShell/HubShell 経由で自前の main ランドマークを
   // 持つため。ここで包むと main が入れ子になり axe の landmark-main-is-top-level に触れる。
   const html = renderToStaticMarkup(
     <html lang="ja">
       <body>
-        <UiProvider>{await LegalPage()}</UiProvider>
+        <UiProvider>{await LegalLayout({ children: <LegalPage /> })}</UiProvider>
       </body>
     </html>,
   );

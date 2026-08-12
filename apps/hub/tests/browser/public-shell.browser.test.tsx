@@ -27,7 +27,15 @@ vi.mock('next/font/google', () => ({
 }));
 
 const { default: LegalPage } = await import('../../src/app/legal/page.js');
-const legalPageBody = await LegalPage();
+
+// シェル選択は layout.tsx (`src/app/legal/layout.tsx`) が持つ (page.tsx は本文のみ、G13
+// client JS 予算ゲート対策で分離済み)。この測定は常に未ログインを通すため、layout.tsx が
+// 未ログイン時に選ぶ PublicShell をここで直接使う。
+const legalPageBody = (
+  <PublicShell>
+    <LegalPage />
+  </PublicShell>
+);
 
 /**
  * 端末承認 (/device) の代表的な中身。実ページは `headers()` を読む server component で
