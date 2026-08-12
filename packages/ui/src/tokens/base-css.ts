@@ -368,18 +368,20 @@ const stageBoardRules = [
   '[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}',
   selectedStageColumnRules,
   [
-    `${mediaUp('md')} {`,
+    // 1120px 未満は工程 picker + 選択中の 1 列を維持する。タブレット幅へ 7 列を
+    // 無理に詰めると可読性が落ち、複数行に折り返すと工程の一方向性が崩れるためである。
+    // desktop でのみ、正本の 7 工程を 1 行のままコンテナ幅へ収める。
+    `${mediaUp('lg')} {`,
     '  [data-hh-stage-picker] {',
     '    display: none;',
     '  }',
     '  [data-hh-stage-columns] {',
-    '    display: flex;',
+    '    grid-template-columns: repeat(7, minmax(0, 1fr));',
     '    gap: var(--hh-space-3);',
-    '    overflow-x: auto;',
     '  }',
     '  [data-hh-stage-column] {',
     '    display: block;',
-    '    min-width: 240px;',
+    '    min-width: 0;',
     '  }',
     '}',
   ].join('\n'),

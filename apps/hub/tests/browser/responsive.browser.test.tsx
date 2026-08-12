@@ -17,12 +17,15 @@
 import {
   AppShell,
   Button,
+  buildShellCss,
   Card,
   DataTable,
   NavList,
   ScreenHeader,
   SidebarLayout,
+  SidebarToggleButton,
   Stack,
+  StageBoard,
   UiProvider,
 } from '@harness-hub/ui';
 import { describe, expect, it } from 'vitest';
@@ -102,12 +105,73 @@ const routes = [
     title: '密度の高い画面 (compact)',
     density: 'compact' as const,
   },
+  {
+    path: '/stage-board',
+    title: '構築パイプライン',
+    body: (
+      <UiProvider>
+        <StageBoard
+          label="構築パイプライン"
+          onMoveCard={() => undefined}
+          columns={[
+            { stage: 'hearing', cards: [{ id: '1', title: 'ヒアリング中のツール' }] },
+            { stage: 'requirements', cards: [] },
+            { stage: 'design', cards: [] },
+            { stage: 'build', cards: [] },
+            { stage: 'test', cards: [] },
+            { stage: 'review', cards: [] },
+            { stage: 'publish', cards: [] },
+          ]}
+        />
+      </UiProvider>
+    ),
+  },
+  {
+    path: '/sidebar-toggle',
+    title: 'サイドバー開閉トグル',
+    body: (
+      <>
+        <style>{buildShellCss()}</style>
+        <div className="hh-shell">
+          <aside className="hh-shell__sidebar">主要ナビゲーション</aside>
+          <div className="hh-shell__body">
+            <header>
+              <SidebarToggleButton
+                expandedLabel="サイドバーを閉じる"
+                collapsedLabel="サイドバーを開く"
+                icon={<span aria-hidden="true">menu</span>}
+              />
+            </header>
+            <main className="hh-shell__main">本文</main>
+          </div>
+        </div>
+      </>
+    ),
+  },
 ];
 
 /** WCAG 2.2 の 2.5.8。comfortable 密度の操作部品はこれを下回らない。 */
 const MIN_TAP_TARGET_PX = 44;
 
 describe('レスポンシブ崩れ検査', () => {
+  it('サイドバー開閉トグルは mobile で隠れ、md 以上でだけ表示される', async () => {
+    await withBrowserSession({ routes }, async (session) => {
+      await session.goto('/sidebar-toggle', viewportPresets.mobile);
+      const [mobileToggle] = await session.measure('[data-hh-sidebar-toggle]', ['display']);
+      const [mobileSidebar] = await session.measure('.hh-shell__sidebar', ['display']);
+
+      expect(mobileToggle?.styles.display).toBe('none');
+      expect(mobileSidebar?.styles.display).toBe('none');
+
+      await session.setViewport(viewportPresets.tablet);
+      const [desktopToggle] = await session.measure('[data-hh-sidebar-toggle]', ['display']);
+      const [desktopSidebar] = await session.measure('.hh-shell__sidebar', ['display']);
+
+      expect(desktopToggle?.styles.display).toBe('inline-flex');
+      expect(desktopSidebar?.styles.display).not.toBe('none');
+    });
+  });
+
   it.each(Object.entries(viewportPresets))('%s 幅で横方向オーバーフローが出ない', async (_name, viewport) => {
     await withBrowserSession({ routes }, async (session) => {
       await session.goto('/dense', viewport);
@@ -139,6 +203,29 @@ describe('レスポンシブ崩れ検査', () => {
       const columnCount = (value: string | undefined): number => (value ?? '').split(/\s+/).filter(Boolean).length;
       expect(columnCount(narrow?.styles['grid-template-columns'])).toBe(1);
       expect(columnCount(wide?.styles['grid-template-columns'])).toBe(2);
+    });
+  });
+
+  it('StageBoard は 768px で picker + 1 工程、1280px で 1 行 7 工程を横 overflow なしに表示する', async () => {
+    await withBrowserSession({ routes }, async (session) => {
+      await session.goto('/stage-board', viewportPresets.tablet);
+
+      const [tabletPicker] = await session.measure('[data-hh-stage-picker]', ['display']);
+      const tabletColumns = await session.measure('[data-hh-stage-column]', ['display']);
+      expect(tabletPicker?.styles.display).not.toBe('none');
+      expect(tabletColumns.filter((column) => column.styles.display !== 'none')).toHaveLength(1);
+      expect((await session.documentMetrics()).overflowsHorizontally).toBe(false);
+
+      await session.setViewport(viewportPresets.desktop);
+
+      const [desktopPicker] = await session.measure('[data-hh-stage-picker]', ['display']);
+      const [desktopGrid] = await session.measure('[data-hh-stage-columns]', ['grid-template-columns']);
+      const desktopColumns = await session.measure('[data-hh-stage-column]', ['display']);
+      const trackCount = (desktopGrid?.styles['grid-template-columns'] ?? '').split(/\s+/).filter(Boolean).length;
+      expect(desktopPicker?.styles.display).toBe('none');
+      expect(desktopColumns.filter((column) => column.styles.display !== 'none')).toHaveLength(7);
+      expect(trackCount).toBe(7);
+      expect((await session.documentMetrics()).overflowsHorizontally).toBe(false);
     });
   });
 
