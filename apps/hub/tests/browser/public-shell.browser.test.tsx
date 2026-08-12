@@ -110,4 +110,49 @@ describe('公開画面の骨格', () => {
       expect(hrefs[route.path], `${route.path} のフッターに利用規約への導線が無い`).toContain('/legal');
     }
   });
+
+  it('PUB-004: /legal の文書内リンクは通常のフラグメント移動として機能し、nav は印刷時に隠れる', async () => {
+    const result = await withBrowserSession({ routes, viewport: viewportPresets.mobile }, async (session) => {
+      await session.goto('/legal', viewportPresets.mobile);
+      await session.page.locator('nav[aria-label="このページの文書"] a[href="#privacy"]').click();
+      const screenState = await session.page.evaluate(() => {
+        const target = document.querySelector<HTMLElement>('#privacy');
+        return {
+          hash: window.location.hash,
+          activeElementId: document.activeElement?.id ?? '',
+          targetExists: target !== null,
+          targetTop: target?.getBoundingClientRect().top ?? -1,
+          scrollMarginBlockStart: target === null ? '' : getComputedStyle(target).scrollMarginBlockStart,
+        };
+      });
+
+      // 共有された fragment URL を開き直しても、JavaScript 無しで同じ文書へ戻れることを実測する。
+      await session.page.reload({ waitUntil: 'load' });
+      const directLinkState = await session.page.evaluate(() => ({
+        hash: window.location.hash,
+        targetTop: document.querySelector<HTMLElement>('#privacy')?.getBoundingClientRect().top ?? -1,
+        documentIds: [...document.querySelectorAll<HTMLElement>('#terms, #privacy')].map((element) => element.id),
+      }));
+
+      await session.page.emulateMedia({ media: 'print' });
+      const printNavDisplay = await session.page
+        .locator('nav[aria-label="このページの文書"]')
+        .evaluate((element) => getComputedStyle(element).display);
+      const printDocumentDisplays = await session.page
+        .locator('#terms, #privacy')
+        .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).display));
+      return { ...screenState, directLinkState, printDocumentDisplays, printNavDisplay };
+    });
+
+    expect(result.hash).toBe('#privacy');
+    expect(result.activeElementId).toBe('privacy');
+    expect(result.targetExists).toBe(true);
+    expect(result.targetTop).toBeGreaterThanOrEqual(0);
+    expect(result.scrollMarginBlockStart).not.toBe('0px');
+    expect(result.directLinkState.hash).toBe('#privacy');
+    expect(result.directLinkState.targetTop).toBeGreaterThanOrEqual(0);
+    expect(result.directLinkState.documentIds).toStrictEqual(['terms', 'privacy']);
+    expect(result.printNavDisplay).toBe('none');
+    expect(result.printDocumentDisplays).toStrictEqual(['block', 'block']);
+  });
 });
