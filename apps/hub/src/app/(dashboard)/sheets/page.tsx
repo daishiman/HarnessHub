@@ -1,7 +1,7 @@
 import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { HearingSheetList } from './hearing-sheet-list.js';
+import { HearingSheetListLazy } from './hearing-sheet-list-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ヒアリングシート一覧 | Harness Hub',
@@ -35,7 +35,7 @@ export default async function HearingSheetsPage({ searchParams }: PageProps) {
         }
       />
       <Panel flush>
-        <HearingSheetList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
+        <HearingSheetListLazy tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
       </Panel>
     </>
   );

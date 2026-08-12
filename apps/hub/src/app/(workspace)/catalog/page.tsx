@@ -2,7 +2,7 @@ import type { PublishTarget } from '@harness-hub/schemas';
 import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
-import { CatalogList } from '../../../components/catalog/CatalogList.js';
+import { CatalogListLazy } from '../../../components/catalog/CatalogList-lazy.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
 import { PUBLISH_WIZARD_HREF, PUBLISH_WIZARD_LINK_LABEL } from '../../../lib/routing/publish-wizard-entry.js';
 
@@ -47,7 +47,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         sticky
       />
       <Panel flush>
-        <CatalogList scope={resolved} initialTarget={toTarget(query.target)} initialQuery={query.q ?? ''} />
+        <CatalogListLazy scope={resolved} initialTarget={toTarget(query.target)} initialQuery={query.q ?? ''} />
       </Panel>
     </>
   );
