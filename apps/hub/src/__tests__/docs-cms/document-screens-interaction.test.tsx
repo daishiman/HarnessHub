@@ -125,10 +125,7 @@ async function findButtonByText(text: string): Promise<HTMLButtonElement> {
 }
 
 /** ラベル文言から FormField が結線した input/textarea を見つける (FormField の htmlFor/id 配線に依存)。 */
-function fieldByLabel<T extends HTMLInputElement | HTMLTextAreaElement>(
-  scope: HTMLElement,
-  labelText: string,
-): T {
+function fieldByLabel<T extends HTMLInputElement | HTMLTextAreaElement>(scope: HTMLElement, labelText: string): T {
   const label = [...scope.querySelectorAll('label')].find((candidate) => candidate.textContent?.startsWith(labelText));
   if (label === undefined) throw new Error(`${labelText} のラベルがありません`);
   const forId = label.getAttribute('for');
@@ -520,7 +517,7 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
   });
 
   it('DOCS-UI-020: カテゴリ・タグ・サムネイル・要約を編集すると保存リクエストへ含まれる', async () => {
-    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, _init?: RequestInit) => {
       const url = String(input);
       if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
       return jsonResponse(DOC);
@@ -544,7 +541,8 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
     await flush();
 
     const patchCall = fetchMock.mock.calls.find(
-      (call) => String(call[0]) === `/api/v1/docs/${DOC.id}` && (call[1] as RequestInit | undefined)?.method === 'PATCH',
+      (call) =>
+        String(call[0]) === `/api/v1/docs/${DOC.id}` && (call[1] as RequestInit | undefined)?.method === 'PATCH',
     );
     if (patchCall === undefined) throw new Error('PATCH リクエストが送信されていません');
     const body = JSON.parse(String((patchCall[1] as RequestInit).body)) as Record<string, unknown>;
