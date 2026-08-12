@@ -294,9 +294,5 @@ PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過
 
 ## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
 
-**Beads**: `HarnessHub-370h`
-
-- S10 は system-spec の4大工程を維持したまま **8 画面** に分割 (FormData 28 項目)。
-- S12 に引き渡し用テキスト・スクリーンショット・Claude Code 向けトークン発行パネルを追加。
-- wizard 実装は `hearing-intake-wizard-{model,state,steps}.tsx` へ責務分割し、共通 `StepWizard` を消費する。
-- 詳細正本: `docs/frontend-spec.md` §3.2、`docs/features/feat-hearing-intake/information-design/S10.md` / `S12.md`。
+S10 を8画面(28項目)へ分割し、S12 に引き渡し/screenshot/token UI を追加。
+詳細は `docs/frontend-spec.md` と feature information-design / 受領書を正本とする。
