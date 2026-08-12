@@ -22,6 +22,7 @@ type SelectField = 'usagePurpose' | 'expertise' | 'role' | 'context' | 'motivati
 export interface HearingWizardFormState {
   readonly form: HearingSheetFormInput;
   readonly knowledgeAssetsText: string;
+  readonly informationSourcesText: string;
   readonly referenceUrlDraft: string;
   readonly referenceNoteDraft: string;
   readonly referenceUrlError: string | null;
@@ -34,6 +35,8 @@ export interface HearingWizardFormState {
   readonly setSelect: (key: SelectField) => (event: ChangeEvent<HTMLSelectElement>) => void;
   readonly setPriority: (event: ChangeEvent<HTMLSelectElement>) => void;
   readonly setKnowledgeAssets: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  readonly setInformationSources: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  readonly setTrueProblem: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   readonly setReferenceUrlDraft: (value: string) => void;
   readonly setReferenceNoteDraft: (value: string) => void;
   readonly toggleConstraintTag: (tag: HearingConstraintTag) => void;
@@ -48,6 +51,11 @@ export function useHearingWizardFormState(): HearingWizardFormState {
   const [form, setForm] = useState<HearingSheetFormInput>(INITIAL_HEARING_FORM);
   // 末尾の空行を維持するため、ナレッジ資産の入力テキストと送信用配列を分ける。
   const [knowledgeAssetsText, setKnowledgeAssetsText] = useState(INITIAL_HEARING_FORM.knowledgeAssets.join('\n'));
+  // informationSources は nullable。未入力 (null) と「回答済みだが0件」を区別するため、
+  // 空文字テキストは null へ、1行以上あれば配列へ変換する (knowledgeAssets とは null 許容の点が異なる)。
+  const [informationSourcesText, setInformationSourcesText] = useState(
+    INITIAL_HEARING_FORM.informationSources?.join('\n') ?? '',
+  );
   const [referenceUrlDraft, setReferenceUrlDraft] = useState('');
   const [referenceNoteDraft, setReferenceNoteDraft] = useState('');
   const [referenceUrlError, setReferenceUrlError] = useState<string | null>(null);
@@ -55,6 +63,7 @@ export function useHearingWizardFormState(): HearingWizardFormState {
   const restoreDraft = useCallback((draft: Partial<HearingSheetFormInput>): void => {
     setForm({ ...INITIAL_HEARING_FORM, ...draft });
     if (Array.isArray(draft.knowledgeAssets)) setKnowledgeAssetsText(draft.knowledgeAssets.join('\n'));
+    if (Array.isArray(draft.informationSources)) setInformationSourcesText(draft.informationSources.join('\n'));
   }, []);
 
   const setText = useCallback(
@@ -119,6 +128,23 @@ export function useHearingWizardFormState(): HearingWizardFormState {
     }));
   }, []);
 
+  const setInformationSources = useCallback((event: ChangeEvent<HTMLTextAreaElement>): void => {
+    const text = event.target.value;
+    setInformationSourcesText(text);
+    const entries = text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+    setForm((current) => ({ ...current, informationSources: entries.length > 0 ? entries : null }));
+  }, []);
+
+  // trueProblem は optional/nullable。空文字のまま保存すると「1文字以上必須」の
+  // textWithinLimit 判定に引っかかり未回答なのに次へ進めなくなるため、空欄は null にする。
+  const setTrueProblem = useCallback((event: ChangeEvent<HTMLTextAreaElement>): void => {
+    const trimmed = event.target.value;
+    setForm((current) => ({ ...current, trueProblem: trimmed.length > 0 ? trimmed : null }));
+  }, []);
+
   const addReferenceUrl = useCallback((): void => {
     const parsed = hearingReferenceUrlSchema.safeParse({
       url: referenceUrlDraft.trim(),
@@ -149,6 +175,7 @@ export function useHearingWizardFormState(): HearingWizardFormState {
   return {
     form,
     knowledgeAssetsText,
+    informationSourcesText,
     referenceUrlDraft,
     referenceNoteDraft,
     referenceUrlError,
@@ -159,6 +186,8 @@ export function useHearingWizardFormState(): HearingWizardFormState {
     setSelect,
     setPriority,
     setKnowledgeAssets,
+    setInformationSources,
+    setTrueProblem,
     setReferenceUrlDraft,
     setReferenceNoteDraft,
     toggleConstraintTag,
