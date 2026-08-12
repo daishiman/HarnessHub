@@ -368,18 +368,31 @@ const stageBoardRules = [
   '[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}',
   selectedStageColumnRules,
   [
+    // タブレット: 3 列で折り返す (7 列 → 3+3+1 行)。以前は flex + overflow-x: auto の
+    // 固定 240px 列だったため、7 列ぶんの幅が入らない画面では常に横スクロールが発生していた
+    // (HarnessHub 構築パイプラインボードの横スクロール問題)。列数を画面幅ごとに固定し、
+    // 列幅は 1fr でコンテナ幅へ追従させることで横スクロールを恒久的になくす。
     `${mediaUp('md')} {`,
     '  [data-hh-stage-picker] {',
     '    display: none;',
     '  }',
     '  [data-hh-stage-columns] {',
-    '    display: flex;',
+    '    display: grid;',
+    '    grid-template-columns: repeat(3, minmax(0, 1fr));',
     '    gap: var(--hh-space-3);',
-    '    overflow-x: auto;',
     '  }',
     '  [data-hh-stage-column] {',
     '    display: block;',
-    '    min-width: 240px;',
+    '    min-width: 0;',
+    '  }',
+    '}',
+  ].join('\n'),
+  [
+    // PC/ワイド: 4 列で折り返す (7 列 → 4+3 行)。画面がさらに広くなっても列数は増やさず、
+    // カードが間延びしすぎないようにする (jp-web-design のワイド上限方針に合わせる)。
+    `${mediaUp('lg')} {`,
+    '  [data-hh-stage-columns] {',
+    '    grid-template-columns: repeat(4, minmax(0, 1fr));',
     '  }',
     '}',
   ].join('\n'),

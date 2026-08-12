@@ -480,13 +480,19 @@ body {
     display: none;
   }
   [data-hh-stage-columns] {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--hh-space-3);
-    overflow-x: auto;
   }
   [data-hh-stage-column] {
     display: block;
-    min-width: 240px;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1120px) {
+  [data-hh-stage-columns] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
