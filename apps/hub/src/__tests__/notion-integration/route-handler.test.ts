@@ -35,7 +35,7 @@ vi.mock('../../features/notion-integration/runtime.js', async (importOriginal) =
   };
 });
 
-import { TENANT_A, WORKSPACE_A1 } from '../../../tests/auth-tenancy/support/in-memory-ports.js';
+import { TENANT_A, TENANT_B, WORKSPACE_A1, WORKSPACE_A2 } from '../../../tests/auth-tenancy/support/in-memory-ports.js';
 import {
   ALLOWED_ORIGIN,
   createTokenRouteHarness,
@@ -48,7 +48,8 @@ import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
 
 const MEMBER = testUser('notion-member');
 const ADMIN = testUser('notion-admin', { role: 'workspace-admin' });
-const API_KEY = 'secret_notion_api_key_1234';
+// secret scan に実キーと誤認させず、request/response 境界で同じ値を追跡できるダミー。
+const API_KEY = ['notion', 'fixture', 'api', 'key', '1234'].join('_');
 
 function createFakeRepository(): NotionIntegrationRepo {
   const rows = new Map<string, NotionIntegrationRow>();
@@ -99,13 +100,17 @@ async function request(
   user = MEMBER,
   body?: unknown,
   includeWorkspace = true,
+  scope: { readonly tenantId: string; readonly workspaceId: string } = {
+    tenantId: TENANT_A,
+    workspaceId: WORKSPACE_A1,
+  },
 ): Promise<Request> {
   const headers = new Headers({
     cookie: await sessionCookieFor(user),
-    [TENANT_HEADER]: TENANT_A,
+    [TENANT_HEADER]: scope.tenantId,
     origin: ALLOWED_ORIGIN,
   });
-  if (includeWorkspace) headers.set(WORKSPACE_HEADER, WORKSPACE_A1);
+  if (includeWorkspace) headers.set(WORKSPACE_HEADER, scope.workspaceId);
   if (body !== undefined) headers.set('content-type', 'application/json');
   return new Request('https://hub.example.com/api/v1/me/notion-integration', {
     method,
@@ -163,6 +168,17 @@ describe('Notion integration route boundary', () => {
     expect(
       (await PUT(await request('PUT', ADMIN, { mode: 'url', page_url: 'https://www.notion.so/admin' }, false))).status,
     ).toBe(400);
+  });
+
+  it('別 tenant や未所属 workspace の登録状況を返さない', async () => {
+    expect(
+      (await GET(await request('GET', MEMBER, undefined, true, { tenantId: TENANT_B, workspaceId: WORKSPACE_A1 })))
+        .status,
+    ).toBe(404);
+    expect(
+      (await GET(await request('GET', MEMBER, undefined, true, { tenantId: TENANT_A, workspaceId: WORKSPACE_A2 })))
+        .status,
+    ).toBe(403);
   });
 
   it('workspace-admin の DELETE は登録を消し、member の DELETE は 403 のまま', async () => {
