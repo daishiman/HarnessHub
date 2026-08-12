@@ -64,6 +64,7 @@ run "lint-script-naming"                   python3 scripts/lint-script-naming.py
 run "lint-artifact-placement --self-test"  python3 scripts/lint-artifact-placement.py --self-test
 run "lint-artifact-placement"              python3 scripts/lint-artifact-placement.py
 run "lint-doc-line-limit"                  python3 scripts/lint-doc-line-limit.py --repo-root . --ratchet-base origin/main
+run "lint-doc-internal-link-integrity"     python3 scripts/lint-doc-internal-link-integrity.py --repo-root . --max-violations 308
 run "lint-mechanism-knowledge-boundary"    python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .
 run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-knowledge-optin.py --repo-root .
 # workflow の step gate 自体が壊れていないかを pre-push 段で検査する。step-level `if` から同一 step の
