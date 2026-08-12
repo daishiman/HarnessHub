@@ -39,6 +39,12 @@
       // 削除ポリシー・key 設計が異なるため、バケットを分離する。
       "binding": "TENANT_DATA_BUCKET",
       "bucket_name": "harness-hub-tenant-data"
+    },
+    {
+      // feat-docs-cms-rich-editing: docs-cms の Markdown 本文に埋め込む画像アセット専用バケット。
+      // 画像も認証必須の docs.read 可視性条件下でのみ配信する (外部公開 URL ではない)。
+      "binding": "DOCS_ASSETS_BUCKET",
+      "bucket_name": "harness-hub-docs-assets"
     }
   ],
   // デプロイのたびに Cloudflare が採番する version id を Worker から読めるようにする。
