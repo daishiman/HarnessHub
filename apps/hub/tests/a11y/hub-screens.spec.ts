@@ -130,6 +130,7 @@ describe('apps/hub 画面結合の a11y', () => {
     const screen = createElement(DeviceApprovalForm, {
       tenantId: 'tenant-acme',
       workspaceIds: ['workspace-a', 'workspace-b'],
+      workspaceNames: { 'workspace-a': '営業部' },
       initialUserCode: 'ABCD1234',
     });
     const html = renderToStaticMarkup(createElement(RootLayout, null, screen));
@@ -140,6 +141,8 @@ describe('apps/hub 画面結合の a11y', () => {
     expect(results.violations).toHaveLength(0);
     expect(document.querySelector('input[value="ABCD1234"]')).not.toBeNull();
     expect(document.querySelectorAll('select option')).toHaveLength(2);
+    expect(document.querySelector('option[value="workspace-a"]')?.textContent).toBe('営業部');
+    expect(document.querySelector('option[value="workspace-b"]')?.textContent).toBe('Workspace ID: workspace-b');
     expect(document.querySelector('button[type="submit"]')?.textContent).toContain('承認');
   });
 });

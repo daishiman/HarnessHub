@@ -145,6 +145,18 @@ describe('BPB-HTTP: GET /api/v1/builds の一覧', () => {
     expect(body.items).toHaveLength(1);
     expect(body.items[0]).toMatchObject({ id: BUILD_ID, stage: 'design', type: 'improvement' });
     expect(body.items[0]).not.toHaveProperty('tenant_id');
+    expect(body.can_manage).toBe(false);
+  });
+
+  it('BPB-HTTP-001A: workspace-admin の一覧応答には工程操作 capability を返す', async () => {
+    await seedDefaultBuild();
+    const response = await listBuilds(
+      new Request('https://hub.example.com/api/v1/builds?limit=25', { headers: await headersFor(ADMIN) }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as BuildListResponse;
+    expect(body.can_manage).toBe(true);
   });
 
   it('BPB-HTTP-002: stage クエリで工程を絞り込める', async () => {

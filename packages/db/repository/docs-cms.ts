@@ -20,6 +20,7 @@ import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import type { AiJobRow, QueueWriteback } from './hearing-intake-queue';
 import { claimNextJob, completeJob, failJob } from './hearing-intake-queue';
+import { containsTermInAny } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -56,6 +57,8 @@ export interface UpdateDocumentInput {
 export interface ListDocumentsInput {
   readonly scope?: DocumentScope;
   readonly status?: DocumentStatus;
+  /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
+  readonly query?: string;
   readonly cursor?: string;
   readonly limit: number;
 }
@@ -121,6 +124,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       const predicates = [visibilityCondition(context)];
       if (input.scope !== undefined) predicates.push(eq(documents.scope, input.scope));
       if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
+      if (input.query !== undefined) {
+        const search = containsTermInAny(input.query, [documents.title]);
+        if (search !== undefined) predicates.push(search);
+      }
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would
       // make the ID cursor repeat or skip rows after an edit.

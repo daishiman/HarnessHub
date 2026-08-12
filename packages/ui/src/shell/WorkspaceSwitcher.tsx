@@ -14,6 +14,7 @@
  */
 import type { CSSProperties, ReactNode } from 'react';
 
+import { IdBadge } from '../components/IdBadge.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 
 export interface ShellWorkspaceOption {
@@ -21,6 +22,8 @@ export interface ShellWorkspaceOption {
   href: string;
   /** 画面に出す名前。表示名が引けない場合は識別子をそのまま渡してよい。 */
   label: string;
+  /** `label` が表示名ではなく識別子のとき true。候補ごとの由来を失わないために必須。 */
+  isIdentifier: boolean;
   /** 現在選択中か。現在地は選択肢としてではなく状態として示す。 */
   current: boolean;
 }
@@ -30,6 +33,12 @@ export interface WorkspaceSwitcherProps {
   label: string;
   /** 現在の Workspace 表示名。 */
   currentName: string;
+  /**
+   * `currentName` が表示名ではなく識別子 (ULID など) のときに true。
+   * 識別子を名前と同じ体裁で出すと「読める名前」に見えてしまうため、`IdBadge` へ落とす。
+   * 判定は呼び出し側が行う (この層は値の素性を推測しない)。
+   */
+  currentIsIdentifier?: boolean | undefined;
   /**
    * 切替先の候補。**2 件未満なら現在値の表示だけ**になり、開閉 UI を出さない。
    * 「所属 1 件の利用者に切替 UI を見せない」判定はこの長さに一本化してある。
@@ -91,15 +100,35 @@ const currentItemStyle: CSSProperties = {
   cursor: 'default',
 };
 
+const identifierLabelStyle: CSSProperties = {
+  display: 'inline-block',
+  maxWidth: 'var(--hh-id-badge-measure)',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  fontFamily: 'var(--hh-font-family-mono)',
+  fontSize: 'var(--hh-font-size-xs)',
+  color: colorVar('textMuted'),
+};
+
+/**
+ * summary / link の内側で使う、非対話型の識別子表示。
+ * `IdBadge` は全文を開く `<details>` なので、別の `<summary>` や `<a>` の内側には入れない。
+ */
+function IdentifierLabel({ value, label }: { readonly value: string; readonly label: string }): ReactNode {
+  return <code style={identifierLabelStyle}>{`${label} ID: ${value}`}</code>;
+}
+
 export function WorkspaceSwitcher(props: WorkspaceSwitcherProps): ReactNode {
-  const { label, currentName, options, switchLabel } = props;
+  const { label, currentName, currentIsIdentifier = false, options, switchLabel } = props;
+  const current = currentIsIdentifier ? <IdBadge value={currentName} label={label} /> : currentName;
 
   // 所属 1 件 (または候補を出せない) の利用者には選択操作を強いない。表示だけに落とす。
   if (options.length < 2) {
     return (
       <div style={wrapperStyle}>
         <span style={captionStyle}>{label}</span>
-        <div style={currentNameStyle}>{currentName}</div>
+        <div style={currentNameStyle}>{current}</div>
       </div>
     );
   }
@@ -109,7 +138,9 @@ export function WorkspaceSwitcher(props: WorkspaceSwitcherProps): ReactNode {
       <span style={captionStyle}>{label}</span>
       <details data-hh-workspace-switcher="">
         <summary aria-label={switchLabel} style={summaryStyle}>
-          <span style={currentNameStyle}>{currentName}</span>
+          <span style={currentNameStyle}>
+            {currentIsIdentifier ? <IdentifierLabel value={currentName} label={label} /> : currentName}
+          </span>
           {/* 開閉の手掛かり。装飾なので支援技術には読ませない */}
           <span aria-hidden="true">▾</span>
         </summary>
@@ -119,11 +150,11 @@ export function WorkspaceSwitcher(props: WorkspaceSwitcherProps): ReactNode {
               {option.current ? (
                 // 現在地は状態であって遷移先ではない。同じ cookie を書く不要な round trip を作らない。
                 <span aria-current="true" style={currentItemStyle}>
-                  {option.label}
+                  {option.isIdentifier ? <IdentifierLabel value={option.label} label={label} /> : option.label}
                 </span>
               ) : (
                 <a href={option.href} style={menuLinkStyle}>
-                  {option.label}
+                  {option.isIdentifier ? <IdentifierLabel value={option.label} label={label} /> : option.label}
                 </a>
               )}
             </li>

@@ -8,12 +8,13 @@
  * ここは **算出をしない**。削減時間・削減額はいずれもサーバが rollup から確定させた値であり、
  * この層は受け取った数値を並べ替え・書式化するだけに留める (SEC5: 金額換算をクライアントに置かない)。
  */
-import type {
-  MetricsDate,
-  MetricsSummaryDepartmentItem,
-  MetricsSummaryRankingItem,
-  MetricsSummaryResponse,
-  MetricsSummaryTrendPoint,
+import {
+  METRICS_RANKING_LIMIT,
+  type MetricsDate,
+  type MetricsSummaryDepartmentItem,
+  type MetricsSummaryRankingItem,
+  type MetricsSummaryResponse,
+  type MetricsSummaryTrendPoint,
 } from '@harness-hub/schemas';
 import type { ChartDatum, ChartSeries } from '@harness-hub/ui';
 
@@ -31,8 +32,25 @@ export const DEFAULT_SUMMARY_RANGE_DAYS = 30;
 /** S16 の既定表示期間 (当日を含む直近 12 週)。週次の傾向を読むには 30 日では点が足りない。 */
 export const DEFAULT_USAGE_RANGE_DAYS = 84;
 
-/** ランキング表とドーナツに出す上限件数。全件出すと読み取れなくなるため上位のみ。 */
-export const RANKING_DISPLAY_LIMIT = 10;
+/**
+ * ランキング表とドーナツに出す上限件数。全件出すと読み取れなくなるため上位のみ。
+ * 実際に件数を切るのはサーバなので、ここは表示文言 (「上位 N 件」) 用の再公開に留める。
+ */
+export const RANKING_DISPLAY_LIMIT = METRICS_RANKING_LIMIT;
+
+/**
+ * 集計 API の `*Name` は後方互換のため必須だが、名称マスタが無い環境では ID が入る。
+ * ID と同じ値を「名称」として扱わず、UI が識別子であることを明示できるように判定する。
+ */
+export function resolvedMetricsName(id: string, candidate: string | null | undefined): string | null {
+  const trimmed = candidate?.trim() ?? '';
+  return trimmed !== '' && trimmed !== id ? trimmed : null;
+}
+
+/** チャートや native option のように React node を置けない場所で使う、正直な表示ラベル。 */
+export function metricsDisplayLabel(id: string, candidate: string | null | undefined, idKind: string): string {
+  return resolvedMetricsName(id, candidate) ?? `${idKind} ID: ${id}`;
+}
 
 /**
  * 当日 (JST) を末尾とする直近 `days` 日の期間を返す。
@@ -92,36 +110,61 @@ export function toTrendSeries(trend: readonly MetricsSummaryTrendPoint[]): reado
   ];
 }
 
-/** 削減額の多い順に上位を返す。サーバの並び順に依存させず、画面が見せたい軸で並べ替える。 */
-export function topRanking(
-  ranking: readonly MetricsSummaryRankingItem[],
-  limit: number = RANKING_DISPLAY_LIMIT,
-): readonly MetricsSummaryRankingItem[] {
-  return [...ranking].sort((a, b) => b.savedAmountJpy - a.savedAmountJpy).slice(0, limit);
+/**
+ * ランキングの表示行。並べ替えも件数の打ち切りもサーバ側で済んでいるので、ここでは何もしない。
+ *
+ * 以前はここで全件を受け取って並べ替え、先頭 5 件に切っていた。
+ * その形だと (1) 表示に使わないデータの転送が対象数に比例して増え、
+ * (2) 母集団を画面側で数えることになり、切り出しと数え上げの順序を間違えやすい。
+ * 並び順の根拠はサーバ 1 箇所に置く (契約: metricsSummaryResponseSchema.ranking)。
+ */
+export function rankingRows(ranking: readonly MetricsSummaryRankingItem[]): readonly MetricsSummaryRankingItem[] {
+  return ranking;
 }
 
 /** ハーネス別の棒グラフ入力 (削減額)。 */
 export function toRankingChartData(ranking: readonly MetricsSummaryRankingItem[]): readonly ChartDatum[] {
-  return topRanking(ranking).map((entry) => ({ label: entry.harnessName, value: entry.savedAmountJpy }));
+  return rankingRows(ranking).map((entry) => ({
+    label: metricsDisplayLabel(entry.harnessId, entry.harnessName, '業務ツール'),
+    value: entry.savedAmountJpy,
+  }));
 }
 
 /** 部門別のドーナツ入力 (削減額)。 */
 export function toDepartmentChartData(departments: readonly MetricsSummaryDepartmentItem[]): readonly ChartDatum[] {
-  return departments.map((entry) => ({ label: entry.departmentName, value: entry.savedAmountJpy }));
+  return departments.map((entry) => ({
+    label:
+      entry.departmentId === null
+        ? entry.departmentName
+        : metricsDisplayLabel(entry.departmentId, entry.departmentName, '部門'),
+    value: entry.savedAmountJpy,
+  }));
 }
 
 /**
  * 「使われているか」を 1 つの割合で表す指標。
  * 集計対象ハーネスのうち、期間内に 1 回以上実行されたものの比率。
- * ハーネスが 0 件のときは 0 を返す (母数 0 を 100% と読ませない)。
+ *
+ * 母数が 0 のときは `null` を返す。以前は 0 を返していたが、これは画面に
+ * 「使われている割合 0%」と出る。母数 0 は「1 つも使われていない」ではなく
+ * **そもそも数える対象が無い**状態であり、両者は打ち手がまるで違う
+ * (前者は使ってもらう働きかけ、後者は登録がまだ)。同じ表示に潰してはいけない。
  */
-export function activeHarnessRatio(summary: MetricsSummaryResponse): number {
-  const total = summary.ranking.length;
-  if (total === 0) return 0;
-  return summary.ranking.filter((entry) => entry.runCount > 0).length / total;
+export function activeHarnessRatio(summary: MetricsSummaryResponse): number | null {
+  // 母数はサーバが切り出す前に数えた値を使う。`summary.ranking` は上位数件しか入っておらず、
+  // そこから数えると「上位ほど稼働している」性質のせいで常に高い割合が出る。
+  const { total, active } = summary.rankingTotals;
+  if (total === 0) return null;
+  return active / total;
 }
 
-/** 割合を整数 % 表記へ。 */
-export function formatPercent(ratio: number): string {
-  return `${Math.round(ratio * 100)}`;
+/** 算出できなかった値の表示。空欄にすると「0 なのか、まだ出ていないのか」が読めない。 */
+export const NOT_APPLICABLE = '\u2014';
+
+/**
+ * 割合を整数 % 表記へ。算出できない (母数 0) ときは `—`。
+ * 単位記号は呼び出し側が付けるので、ここは数字だけを返す。
+ */
+export function formatPercent(ratio: number | null): string {
+  return ratio === null ? NOT_APPLICABLE : `${Math.round(ratio * 100)}`;
 }

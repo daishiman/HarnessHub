@@ -28,7 +28,7 @@ const { resolveShellIdentity } = await import('../../lib/routing/shell-identity.
 const { resolveShellProps } = await import('../../components/shell/resolve-shell-props.js');
 
 // 所属一覧は切替 UI の表示判定に使うため、匿名時は空 = 切替させない (fail-closed)
-const ANONYMOUS = { subject: null, role: null, workspaceIds: [] };
+const ANONYMOUS = { subject: null, displayName: null, role: null, workspaceIds: [], workspaceNames: {} };
 
 function claims(overrides: Record<string, unknown> = {}) {
   return {
@@ -91,9 +91,42 @@ describe('UIS-ID: resolveShellIdentity の入力分類', () => {
 
     await expect(resolveShellIdentity()).resolves.toStrictEqual({
       subject: 'user-1',
+      displayName: null,
       role: 'workspace-admin',
       workspaceIds: ['ws-1'],
+      workspaceNames: {},
     });
+  });
+
+  /**
+   * `name` claim を足す前に発行された session は今も有効期限内にある。
+   * ここが落ちると、更新の瞬間にサインイン中の全員がヘッダーから消える。
+   */
+  it('UIS-ID-007: name claim が無い session も受理し、表示名だけ null になる', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims() });
+
+    await expect(resolveShellIdentity()).resolves.toMatchObject({ subject: 'user-1', displayName: null });
+  });
+
+  it('UIS-ID-008: name claim があれば表示名として返す', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims({ name: '山田 太郎' }) });
+
+    await expect(resolveShellIdentity()).resolves.toMatchObject({ displayName: '山田 太郎' });
+  });
+
+  it('UIS-ID-009: workspace_names が無い session は空の対応表として扱う (識別子表示へ落とす)', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims() });
+
+    await expect(resolveShellIdentity()).resolves.toMatchObject({ workspaceNames: {} });
+  });
+
+  it('UIS-ID-010: workspace_names があればそのまま渡す', async () => {
+    verifySessionToken.mockResolvedValue({
+      ok: true,
+      claims: claims({ workspace_names: { 'ws-1': '営業部' } }),
+    });
+
+    await expect(resolveShellIdentity()).resolves.toMatchObject({ workspaceNames: { 'ws-1': '営業部' } });
   });
 
   it('UIS-ID-006: 所属 2 件の session はそのまま一覧を渡す (切替 UI の表示条件の入力)', async () => {
@@ -132,6 +165,28 @@ describe('UIS-PATH: resolveShellProps の現在地解決', () => {
 
     await expect(resolveShellProps()).resolves.toMatchObject({
       currentHref: undefined,
+    });
+  });
+
+  /**
+   * 表示名の有無で「名前として出す / 識別子として出す」が切り替わる。
+   * ここが固定されていないと、ULID が氏名の体裁で出る状態へ静かに戻る。
+   */
+  it('UIS-NAME-001: 表示名があれば accountName は名前で、識別子扱いしない', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims({ name: '山田 太郎' }) });
+
+    await expect(resolveShellProps()).resolves.toMatchObject({
+      accountName: '山田 太郎',
+      accountNameIsIdentifier: false,
+    });
+  });
+
+  it('UIS-NAME-002: 表示名が無ければ subject を識別子として出す', async () => {
+    verifySessionToken.mockResolvedValue({ ok: true, claims: claims() });
+
+    await expect(resolveShellProps()).resolves.toMatchObject({
+      accountName: 'user-1',
+      accountNameIsIdentifier: true,
     });
   });
 

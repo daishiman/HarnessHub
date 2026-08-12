@@ -15,6 +15,13 @@
  */
 
 import { mediaUp } from '../tokens/token-names.js';
+import {
+  screenHeaderHeightVariable,
+  screenHeaderOffsetVariable,
+  shellHeaderHeightVariable,
+  shellHeaderMinHeight,
+  shellHeaderOffsetVariable,
+} from './sticky-stack.js';
 
 /** サイドバー常設幅 (mockup 実測値, frontend-spec §3.0)。 */
 export const shellSidebarWidth = '220px';
@@ -32,6 +39,10 @@ export function buildShellCss(): string {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   min-height: 100vh;
+  /* mobile は viewport がスクロールする。ScreenHeader は ShellHeader の実測高を、
+     その次の FilterBar は両 header の実測高を空ける。JS 前は 56px を使う。 */
+  ${shellHeaderOffsetVariable}: var(${shellHeaderHeightVariable}, ${shellHeaderMinHeight});
+  ${screenHeaderOffsetVariable}: calc(var(${shellHeaderOffsetVariable}) + var(${screenHeaderHeightVariable}, 0px));
   background: var(--hh-color-bg);
   color: var(--hh-color-text);
 }
@@ -53,12 +64,30 @@ export function buildShellCss(): string {
   min-width: 0;
 }
 
+/* スマホではページ全体を普通にスクロールさせる。
+   本文だけを独立スクロールにすると、アドレスバーの伸縮で可視領域が変わる端末で
+   下端が切れる (100vh 問題)。常時見える導線は sticky なヘッダーと固定タブバーが担う。 */
 .hh-shell__main {
   flex: 1;
   min-width: 0;
-  padding: var(--hh-space-4);
-  /* ボトムタブに隠れる分を確保する */
-  padding-bottom: calc(var(--hh-control-height) + var(--hh-space-6));
+  /* 見出し帯を画面端まで広げる (sticky 時の背景) ために、左右の余白を変数として公開する */
+  --hh-main-padding-inline: var(--hh-space-4);
+  padding: var(--hh-space-4) var(--hh-main-padding-inline);
+  padding-bottom: var(--hh-space-5);
+}
+
+/* ヘッダーとフッターは本文の量に関わらず縮ませない。
+   flex の既定 (shrink: 1) のままだと、本文が長い画面で下端の余白から先に潰れる。 */
+.hh-shell__body > header,
+.hh-shell__body > footer {
+  flex-shrink: 0;
+  background: var(--hh-color-surface);
+}
+
+/* mobile の footer は通常フローに置く。固定タブの裏へ最終行が潜らないよう、
+   footer の後ろにだけ safe-area 込みのスクロール余白を確保する。 */
+.hh-shell__body > footer {
+  margin-block-end: calc(var(--hh-control-height) + env(safe-area-inset-bottom, 0px));
 }
 
 .hh-shell__nav-label,
@@ -141,19 +170,66 @@ export function buildShellCss(): string {
   box-shadow: inset 3px 0 0 0 var(--hh-color-primary);
 }
 
+/* サイドバーの分類。区切り線は「グループの上」に置く。
+   下に置くと最後のグループの下にも線が残り、何も無い場所を区切ってしまう。 */
+.hh-shell__nav-group + .hh-shell__nav-group {
+  margin-block-start: var(--hh-space-3);
+  padding-block-start: var(--hh-space-3);
+  border-block-start: 1px solid var(--hh-color-border);
+}
+
+/* 折りたたみ幅 (md〜lg) では分類名を読み上げ専用にする。
+   アイコンだけの 64px にラベルを出すと 2 文字で折り返して読めないため。
+   区切り線は残るので、目で見ても分類の切れ目は分かる。 */
+.hh-shell__nav-group-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* --- md 以上: サイドバー常設。ボトムタブは畳む --- */
 ${mediaUp('md')} {
   .hh-shell {
     grid-template-columns: ${shellSidebarCollapsedWidth} minmax(0, 1fr);
+    /* md 以上は main 自体がスクロールコンテナ。ShellHeader はその外側なので、
+       ScreenHeader の貼り付き位置へ ShellHeader の高さを足さない。 */
+    ${shellHeaderOffsetVariable}: 0px;
   }
 
   .hh-shell__sidebar {
     display: revert;
   }
 
+  /* md 以上ではシェルの高さを画面に固定し、縦スクロールを本文ペインだけに閉じる。
+     こうするとヘッダー (上) とフッター (下) は flex の両端に留まり続け、
+     どれだけ本文を送っても画面から消えない。sticky を足すのではなく
+     「そもそもスクロールしない場所へ置く」ほうが、重なり順の調整が要らず壊れにくい。 */
+  .hh-shell {
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .hh-shell__body {
+    height: 100vh;
+    overflow: hidden;
+  }
+
   .hh-shell__main {
-    padding: var(--hh-space-5);
+    overflow-y: auto;
+    --hh-main-padding-inline: var(--hh-space-5);
+    padding: var(--hh-space-5) var(--hh-main-padding-inline);
     padding-bottom: var(--hh-space-5);
+  }
+
+  /* desktop は footer が本文ペインの外側に常時残り、固定タブも無い。 */
+  .hh-shell__body > footer {
+    margin-block-end: 0;
   }
 
   .hh-shell__desktop-only {
@@ -174,6 +250,19 @@ ${mediaUp('lg')} {
 
   .hh-shell__nav-label {
     display: inline;
+  }
+
+  .hh-shell__nav-group-title {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 var(--hh-space-1);
+    padding: 0 var(--hh-space-3);
+    overflow: visible;
+    clip-path: none;
+    font-size: var(--hh-font-size-sm);
+    font-weight: var(--hh-font-weight-bold);
+    color: var(--hh-color-text-muted);
   }
 
   .hh-shell__nav-link {

@@ -1,9 +1,22 @@
 'use client';
 
 import type { HearingSheetStatus, SheetDetail } from '@harness-hub/schemas';
-import { Alert, Button, Panel, ScreenHeader, Select, StatusChip } from '@harness-hub/ui';
+import {
+  Alert,
+  Button,
+  DefinitionList,
+  IdBadge,
+  LiveStatus,
+  Panel,
+  ScreenHeader,
+  Select,
+  Stack,
+  StatusChip,
+  TagRow,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { DateTimeText } from '../../../../components/format/date-time-text.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -24,9 +37,18 @@ const headers = (tenantId: string, workspaceId: string) => ({
   'x-harness-workspace-id': workspaceId,
 });
 
+const AI_JOB_STATUS_LABELS: Readonly<Record<NonNullable<SheetDetail['ai_job_status']>, string>> = {
+  queued: '生成待ち',
+  processing: '生成中',
+  completed: '生成完了',
+  failed: '生成に失敗（再試行待ち）',
+  dead: '生成を完了できませんでした',
+};
+
 export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDetailProps): ReactNode {
   const [sheet, setSheet] = useState<SheetDetail | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [completionNotice, setCompletionNotice] = useState(false);
   // 再生成は既存の本文を作り直す取り消しにくい操作なので、実行前に必ず確認を挟む (§P6)
@@ -46,9 +68,9 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
       }
       previousStatus.current = next.status;
       setSheet(next);
-      setError(null);
+      setLoadError(null);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'シートを取得できませんでした。');
+      setLoadError(cause instanceof Error ? cause.message : 'シートを取得できませんでした。');
     }
   }, [id, tenantId, workspaceId]);
 
@@ -64,6 +86,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
 
   const patchStatus = async (status: HearingSheetStatus): Promise<void> => {
     setSaving(true);
+    setActionError(null);
     try {
       const response = await fetch(`/api/v1/sheets/${id}`, {
         method: 'PATCH',
@@ -74,7 +97,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
       if (!response.ok) throw new Error('状態を変更できませんでした。');
       setSheet((await response.json()) as SheetDetail);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '状態を変更できませんでした。');
+      setActionError(cause instanceof Error ? cause.message : '状態を変更できませんでした。');
     } finally {
       setSaving(false);
     }
@@ -83,6 +106,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   const regenerate = async (): Promise<void> => {
     setRegenerateOpen(false);
     setSaving(true);
+    setActionError(null);
     try {
       const response = await fetch(`/api/v1/sheets/${id}/regenerate`, {
         method: 'POST',
@@ -93,17 +117,33 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
       if (!response.ok) throw new Error('再生成を開始できませんでした。');
       setSheet((await response.json()) as SheetDetail);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '再生成を開始できませんでした。');
+      setActionError(cause instanceof Error ? cause.message : '再生成を開始できませんでした。');
     } finally {
       setSaving(false);
     }
   };
 
-  if (error !== null && sheet === null) return <Alert tone="danger" title="読み込みエラー" description={error} />;
-  if (sheet === null) return <p aria-live="polite">読み込み中です…</p>;
+  const listHref = `/sheets?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
+
+  if (sheet === null) {
+    return (
+      <article>
+        <ScreenHeader
+          title="ヒアリングシート詳細"
+          breadcrumbs={[{ href: listHref, label: 'ヒアリングシート' }, { label: '詳細' }]}
+          breadcrumbsLabel="現在地"
+          sticky
+        />
+        {loadError === null ? (
+          <LiveStatus>シートを読み込み中です。</LiveStatus>
+        ) : (
+          <Alert tone="danger" title="読み込みエラー" description={loadError} />
+        )}
+      </article>
+    );
+  }
 
   const sections = sheet.generated_sections;
-  const listHref = `/sheets?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
 
   return (
     <article>
@@ -112,6 +152,12 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
           title={`${sheet.code} ${sheet.title}`}
           breadcrumbs={[{ href: listHref, label: 'ヒアリングシート' }, { label: sheet.code }]}
           breadcrumbsLabel="現在地"
+          sticky
+          tags={
+            <TagRow label="このシートの状態">
+              <StatusChip domain="sheet" status={sheet.status} />
+            </TagRow>
+          }
           actions={
             <Button type="button" variant="secondary" onClick={() => window.print()}>
               印刷
@@ -119,103 +165,149 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
           }
         />
       </div>
-      {completionNotice ? (
-        <Alert tone="success" title="生成完了" description={`${sheet.code} のシート本文が完成しました。`} />
-      ) : null}
-      {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
-      <p aria-live="polite">
-        <StatusChip domain="sheet" status={sheet.status} />
-      </p>
-      {sheet.ai_job_status === 'dead' ? (
-        <Alert tone="warning" title="生成を完了できませんでした" description="管理者が再生成できます。" />
-      ) : null}
 
-      <Panel title="シート本文" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
-        <section aria-label="生成されたシート本文">
-          {sections === null ? (
-            <p>生成処理中です。完了すると内容がここに表示されます。</p>
-          ) : (
-            <>
-              <MarkdownView content={sections.overview} />
-              <MarkdownView content={sections.issue} />
-              <MarkdownView
-                content={['## 推奨機能タグ', ...sections.feature_tags.map((tag) => `- ${tag}`)].join('\n')}
-              />
-              <MarkdownView content={sections.estimated_effect} />
-            </>
-          )}
-        </section>
-      </Panel>
-
-      <Panel title="元入力とサーバ試算" flush style={{ marginBlockStart: 'var(--hh-space-4)' }}>
-        <table>
-          <caption>元入力とサーバ試算の snapshot</caption>
-          <tbody>
-            <tr>
-              <th scope="row">業務領域</th>
-              <td>{sheet.form_snapshot.domain}</td>
-            </tr>
-            <tr>
-              <th scope="row">月間工数</th>
-              <td>{sheet.form_snapshot.hours} 時間</td>
-            </tr>
-            <tr>
-              <th scope="row">対象人数</th>
-              <td>{sheet.form_snapshot.people} 人</td>
-            </tr>
-            <tr>
-              <th scope="row">年間削減時間</th>
-              <td>{sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間</td>
-            </tr>
-            <tr>
-              <th scope="row">年間削減額</th>
-              <td>{sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円</td>
-            </tr>
-          </tbody>
-        </table>
-      </Panel>
-
-      {sheet.can_manage ? (
-        <div data-print-exclude="">
-          <Panel title="管理者操作" style={{ marginBlockStart: 'var(--hh-space-4)' }}>
-            {/* landmark として拾えるよう aside は残す。見出しは Panel 側が出す */}
-            <aside
-              aria-label="管理者操作"
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'flex-end',
-                gap: 'var(--hh-space-3)',
-              }}
-            >
-              <Select
-                label="状態"
-                value={sheet.status === 'completed' ? 'completed' : 'review'}
-                onChange={(event) => void patchStatus(event.target.value as HearingSheetStatus)}
-                options={[
-                  { value: 'review', label: 'レビュー待ち' },
-                  { value: 'completed', label: '完了' },
-                ]}
-                disabled={saving}
-              />
-              <Button type="button" variant="secondary" onClick={() => setRegenerateOpen(true)} disabled={saving}>
-                再生成
-              </Button>
-            </aside>
-          </Panel>
-
-          <ConfirmDialog
-            open={regenerateOpen}
-            title="シート本文を再生成しますか？"
-            description="いまの本文は破棄され、AI が最初から作り直します。元の本文には戻せません。"
-            reversible={false}
-            confirmLabel="再生成する"
-            cancelLabel="やめる"
-            onConfirm={() => void regenerate()}
-            onCancel={() => setRegenerateOpen(false)}
+      <Stack gap={4}>
+        {completionNotice ? (
+          <Alert tone="success" title="生成完了" description={`${sheet.code} のシート本文が完成しました。`} />
+        ) : null}
+        {loadError === null ? null : <Alert tone="danger" title="更新エラー" description={loadError} />}
+        {actionError === null ? null : <Alert tone="danger" title="操作エラー" description={actionError} />}
+        {sheet.ai_job_status === 'dead' ? (
+          <Alert
+            tone="warning"
+            title="生成を完了できませんでした"
+            description="下の「管理者操作」から再生成できます。権限がない場合は管理者へご依頼ください。"
           />
-        </div>
-      ) : null}
+        ) : null}
+
+        <Panel title="申請と進行状況">
+          <DefinitionList
+            label="申請と進行状況"
+            columns={2}
+            items={[
+              { term: '申請者', description: sheet.applicant.name },
+              { term: '部門', description: sheet.department ?? '部門未登録' },
+              { term: '申請日時', description: <DateTimeText value={sheet.created_at} /> },
+              {
+                term: '生成状態',
+                description:
+                  sheet.ai_job_status === null
+                    ? '生成処理はまだ始まっていません'
+                    : AI_JOB_STATUS_LABELS[sheet.ai_job_status],
+              },
+              {
+                term: '対応 Build',
+                description:
+                  sheet.build_ref === null ? (
+                    'まだ作成されていません'
+                  ) : (
+                    <span
+                      style={{
+                        alignItems: 'center',
+                        display: 'inline-flex',
+                        flexWrap: 'wrap',
+                        gap: 'var(--hh-space-2)',
+                      }}
+                    >
+                      <a
+                        href={`/builds?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`}
+                      >
+                        工程ボードで確認
+                      </a>
+                      <IdBadge value={sheet.build_ref} label="Build ID" />
+                    </span>
+                  ),
+              },
+            ]}
+          />
+        </Panel>
+
+        <Panel title="シート本文">
+          <section aria-label="生成されたシート本文">
+            {sections === null ? (
+              <p>生成処理中です。完了すると内容がここに表示されます。</p>
+            ) : (
+              <>
+                <MarkdownView content={sections.overview} />
+                <MarkdownView content={sections.issue} />
+                <MarkdownView
+                  content={['## 推奨機能タグ', ...sections.feature_tags.map((tag) => `- ${tag}`)].join('\n')}
+                />
+                <MarkdownView content={sections.estimated_effect} />
+              </>
+            )}
+          </section>
+        </Panel>
+
+        {/* 対象が 1 件なので比べる相手がおらず、表の列見出しは意味を持たない。
+          定義リストにして狭い画面での横スクロールも無くす (§5-1 の写し方) */}
+        <Panel
+          title="申請時の入力と試算"
+          description="申請を受け付けた時点の内容です。あとから申請内容が変わっても、ここは当時のまま残ります。"
+        >
+          <DefinitionList
+            label="申請時の入力と試算"
+            columns={2}
+            items={[
+              { term: '業務領域', description: sheet.form_snapshot.domain },
+              { term: '月間工数', description: `${sheet.form_snapshot.hours} 時間` },
+              { term: '対象人数', description: `${sheet.form_snapshot.people} 人` },
+              {
+                term: '年間で減らせる時間',
+                description: `${sheet.estimate_snapshot.savedHoursPerYear.toLocaleString('ja-JP')} 時間`,
+                hint: '申請内容をもとにした試算です。',
+              },
+              {
+                term: '年間で減らせる金額',
+                description: `${sheet.estimate_snapshot.savedAmountPerYear.toLocaleString('ja-JP')} 円`,
+                hint: '見積係数設定の単価を掛けて算出しています。',
+              },
+            ]}
+          />
+        </Panel>
+
+        {sheet.can_manage ? (
+          <div data-print-exclude="">
+            <Panel title="管理者操作" description="レビューの進み具合を変えたり、本文を作り直したりできます。">
+              {/* landmark として拾えるよう aside は残す。見出しは Panel 側が出す */}
+              <aside
+                aria-label="管理者操作"
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-end',
+                  gap: 'var(--hh-space-3)',
+                }}
+              >
+                <Select
+                  label="状態"
+                  value={sheet.status === 'completed' ? 'completed' : 'review'}
+                  onChange={(event) => void patchStatus(event.target.value as HearingSheetStatus)}
+                  options={[
+                    { value: 'review', label: 'レビュー待ち' },
+                    { value: 'completed', label: '完了' },
+                  ]}
+                  disabled={saving}
+                />
+                <Button type="button" variant="secondary" onClick={() => setRegenerateOpen(true)} disabled={saving}>
+                  再生成
+                </Button>
+              </aside>
+            </Panel>
+
+            <ConfirmDialog
+              open={regenerateOpen}
+              title="シート本文を再生成しますか？"
+              description="いまの本文は破棄され、AI が最初から作り直します。元の本文には戻せません。"
+              reversible={false}
+              confirmLabel="再生成する"
+              cancelLabel="やめる"
+              onConfirm={() => void regenerate()}
+              onCancel={() => setRegenerateOpen(false)}
+            />
+          </div>
+        ) : null}
+      </Stack>
     </article>
   );
 }

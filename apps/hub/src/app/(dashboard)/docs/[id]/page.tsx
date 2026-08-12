@@ -5,7 +5,7 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import { Alert, Button, Panel, ScopeChip, ScreenHeader, StatusChip } from '@harness-hub/ui';
+import { Alert, Button, LiveStatus, Panel, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
@@ -53,8 +53,25 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
     void load();
   }, [load]);
 
-  if (error !== null && doc === null) return <Alert tone="danger" title="読み込みエラー" description={error} />;
-  if (doc === null) return <p aria-live="polite">読み込み中です…</p>;
+  const listHref = `/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`;
+
+  if (doc === null) {
+    return (
+      <article>
+        <ScreenHeader
+          title="ドキュメント詳細"
+          breadcrumbs={[{ href: listHref, label: 'ドキュメント' }, { label: '詳細' }]}
+          breadcrumbsLabel="現在地"
+          sticky
+        />
+        {error === null ? (
+          <LiveStatus>ドキュメントを読み込み中です。</LiveStatus>
+        ) : (
+          <Alert tone="danger" title="読み込みエラー" description={error} />
+        )}
+      </article>
+    );
+  }
 
   return (
     <article>
@@ -62,12 +79,22 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
         title={doc.title}
         breadcrumbs={[
           {
-            href: `/docs?tenant=${encodeURIComponent(tenantId)}&workspace=${encodeURIComponent(workspaceId)}`,
+            href: listHref,
             label: 'ドキュメント',
           },
           { label: doc.title },
         ]}
         breadcrumbsLabel="現在地"
+        sticky
+        tags={
+          <TagRow>
+            <StatusChip domain="document" status={doc.status} />
+            <ScopeChip
+              scope={doc.scope === 'common' ? 'common' : 'tenant'}
+              name={doc.scope === 'common' ? '共通' : 'テナント'}
+            />
+          </TagRow>
+        }
         actions={
           <Button
             type="button"
@@ -77,14 +104,9 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
           </Button>
         }
       />
-      <p>
-        <StatusChip domain="document" status={doc.status} />{' '}
-        <ScopeChip
-          scope={doc.scope === 'common' ? 'common' : 'tenant'}
-          name={doc.scope === 'common' ? '共通' : 'テナント'}
-        />
-      </p>
-      <Panel style={{ marginBlockStart: 'var(--hh-space-4)' }}>
+      {/* 状態とスコープは見出し帯 (sticky) の中に置いた。本文が長い運用手順書でも
+          「どのテナントの、公開済みか下書きか」を見失わないようにするため */}
+      <Panel>
         <MarkdownView content={doc.body_markdown} />
       </Panel>
     </article>

@@ -72,4 +72,9 @@ export {
   type UserStatus,
   type UsersRepo,
 } from './users';
-export { createUserWorkspacesRepo, type UserWorkspaceRow, type UserWorkspacesRepo } from './workspaces';
+export {
+  createUserWorkspacesRepo,
+  type UserWorkspaceMembership,
+  type UserWorkspaceRow,
+  type UserWorkspacesRepo,
+} from './workspaces';

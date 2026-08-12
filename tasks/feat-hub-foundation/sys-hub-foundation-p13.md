@@ -122,3 +122,14 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 公開単位は `spec-harness-hub-information-design-addendum`、branch は `devgraph/spec-harness-hub-information-design-addendum` とする。閉じた exact-13 に新しい canonical task は追加しない。
 - 製品仕様・frontend 文書・system-spec knowledge/elicitation への反映と 30 思考法 4 条件 PASS までを本 unit で公開する。
 - writer による required-info 回答接地 (`HarnessHub-9wdm`) と profile/pattern の将来 machine gate は残課題。受領は [画面情報設計 仕様反映受領書](../../docs/features/feat-hub-foundation/information-design-spec-reflection-receipt.md) を正とする。
+
+## 2026-08-12 UI MVP wave (表示名・情報設計・一覧一貫性)
+
+- 公開単位 primary: `issue-ui-identifier-display-name-20260811`（Beads `HarnessHub-62ah`）。関連: `2mu6` / `oanz` / `z45h` / `vaov` / `ck3d` / `5yen` / `p26n` / `pwph` / `nqo5` / `preq`。
+- exact-13 に 14 個目の task は追加しない。P13 後の UI 一貫性 writeback として扱う。
+- 表示 claim は optional で認可非使用。Project 名解決は `HarnessHub-pwph` 完了後に結線済み。
+- 追補: 相対日時 (`DateTimeText` / HarnessHub-p26n)、list `q` 検索の安全共通化、screen-pattern gate、metrics `rankingTotals`。
+- PR #700 CI 回復: client JS 120 KiB 超過9画面と予算警告1画面を route-local 遅延読込へ分割し、
+  `StickyHeaderOffset` を必要画面だけへ配置。task spec / production build / G13 / focused test を再実行する。
+- 受領: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+- 残: HarnessHub-5yen（法務本文）、HarnessHub-7mc6（Linux VRT）、HarnessHub-alyy（session cookie 上限）。

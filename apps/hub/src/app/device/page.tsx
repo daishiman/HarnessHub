@@ -1,4 +1,4 @@
-import { Alert, Stack } from '@harness-hub/ui';
+import { Alert, ScreenHeader, Stack } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
@@ -36,7 +36,7 @@ async function renderDeviceApprovalBody({ searchParams }: DeviceApprovalPageProp
 
   if (session.status === 'unavailable') {
     return (
-      <Alert
+      <BlockedBody
         tone="danger"
         title="認証設定を利用できません"
         description="管理者が認証設定を確認するまで、端末を承認できません。"
@@ -46,7 +46,7 @@ async function renderDeviceApprovalBody({ searchParams }: DeviceApprovalPageProp
 
   if (session.status === 'unauthenticated') {
     return (
-      <Alert
+      <BlockedBody
         tone="warning"
         title="サインインが必要です"
         description="テナントのサインイン画面からログインしてから、このページをもう一度開いてください。"
@@ -56,7 +56,7 @@ async function renderDeviceApprovalBody({ searchParams }: DeviceApprovalPageProp
 
   if (session.workspaceIds.length === 0) {
     return (
-      <Alert
+      <BlockedBody
         tone="warning"
         title="承認できるWorkspaceがありません"
         description="Workspaceへの所属を管理者に確認してください。"
@@ -71,8 +71,36 @@ async function renderDeviceApprovalBody({ searchParams }: DeviceApprovalPageProp
     <DeviceApprovalForm
       tenantId={session.tenantId}
       workspaceIds={session.workspaceIds}
+      workspaceNames={session.workspaceNames}
       initialUserCode={normalizeUserCodeInput(rawUserCode)}
     />
+  );
+}
+
+/**
+ * 承認へ進めないときの本文。
+ *
+ * 見出しを添えるのは、承認フォームを出せない 3 つの状態 (認証設定が無い / 未サインイン /
+ * Workspace 未所属) で `<h1>` ごと消えていたため。他の画面はどの状態でも画面名が上に残るのに、
+ * この画面だけ「いま何の画面を見ているのか」が失われていた。
+ */
+function BlockedBody({
+  tone,
+  title,
+  description,
+}: {
+  readonly tone: 'danger' | 'warning';
+  readonly title: string;
+  readonly description: string;
+}) {
+  return (
+    <Stack gap={4}>
+      <ScreenHeader
+        title="端末を承認する"
+        description="Publisher または CLI に表示された確認コードを承認する画面です。"
+      />
+      <Alert tone={tone} title={title} description={description} />
+    </Stack>
   );
 }
 

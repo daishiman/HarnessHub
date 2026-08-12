@@ -96,7 +96,11 @@ describe('UIS-NAV: 導線の定義', () => {
       ...navItems.accountMenuLinks(SCOPE, 'provider-admin').map((link) => link.href),
       ...navItems.footerLinks.map((link) => link.href),
       navItems.notificationsHref(SCOPE),
-      navItems.searchAction(SCOPE),
+      // 検索欄の行き先も導線の一種。画面ごとに変わるので、全導線から引ける行き先を集める
+      ...navItems
+        .sidebarNavItems(SCOPE, 'provider-admin')
+        .map((item) => navItems.headerSearch(SCOPE, item.href)?.action)
+        .filter((href): href is string => href !== undefined),
     ];
 
     expect(hrefs.filter((href) => !pageExists(href))).toStrictEqual([]);
@@ -113,12 +117,73 @@ describe('UIS-NAV: 導線の定義', () => {
   });
 
   it('UIS-NAV-006: ヘッダー検索は scope を hidden field で引き継ぐ', () => {
-    expect(navItems.searchAction(SCOPE)).toBe('/sheets');
     expect(navItems.searchHiddenFields(SCOPE)).toStrictEqual({
       tenant: 'tenant-a',
       workspace: 'ws-1',
     });
     expect(navItems.searchHiddenFields({ tenantId: '', workspaceId: '' })).toStrictEqual({});
+  });
+
+  it('UIS-NAV-006b: ヘッダー検索はいま見ている領域を探す (行き先・見出し語・例示がずれない)', () => {
+    const sheets = navItems.headerSearch(SCOPE, '/sheets?tenant=tenant-a');
+    expect(sheets?.action).toBe('/sheets');
+    expect(sheets?.label).toContain('ヒアリングシート');
+    expect(sheets?.placeholder).toContain('HS コード');
+
+    // 詳細画面でも同じ領域を探せる
+    expect(navItems.headerSearch(SCOPE, '/sheets/hs-001')?.action).toBe('/sheets');
+
+    const catalog = navItems.headerSearch(SCOPE, '/catalog');
+    expect(catalog?.action).toBe('/catalog');
+    expect(catalog?.label).toContain('業務ツール');
+
+    const docs = navItems.headerSearch(SCOPE, '/docs');
+    expect(docs?.action).toBe('/docs');
+    expect(docs?.label).toContain('ドキュメント');
+    // 例示は実際の検索対象と揃える。本文まで当たると読めるとズレる (対象はタイトルのみ)
+    expect(docs?.placeholder).toContain('タイトル');
+
+    const feedback = navItems.headerSearch(SCOPE, '/feedback');
+    expect(feedback?.action).toBe('/feedback');
+    expect(feedback?.label).toContain('改善要望');
+    expect(feedback?.placeholder).toContain('受付番号');
+
+    const users = navItems.headerSearch(SCOPE, '/users');
+    expect(users?.action).toBe('/users');
+    expect(users?.label).toContain('利用者');
+    expect(users?.placeholder).toContain('氏名');
+  });
+
+  it('UIS-NAV-006c: 探す対象を持たない画面ではヘッダー検索を出さない', () => {
+    // 一覧そのものが無い画面 (指標・パイプライン・設定) は null になる。
+    // 押しても何も起きない欄は、無い欄より悪い (壊れていると読まれる)
+    for (const href of ['/metrics', '/builds', '/settings/account']) {
+      expect(navItems.headerSearch(SCOPE, href)).toBeNull();
+    }
+    expect(navItems.headerSearch(SCOPE, undefined)).toBeNull();
+  });
+
+  it('UIS-NAV-006d: 検索欄を出す画面は、その一覧が実際に `q` を受け取れる', () => {
+    // 「押しても何も起きない欄を作らない」を、宣言ではなく実装との対応で確かめる。
+    // これは繋がりの検査であって振る舞いの検査ではない (各一覧の挙動は各画面のテストが見る)。
+    // ここが守るのは片側だけの改修 — 一覧から絞り込みを外してもヘッダーは検索欄を出し続ける、を防ぐ。
+    // APP_DIR (= apps/hub/src/app) からの相対
+    const listSources: Readonly<Record<string, string>> = {
+      '/sheets': '(dashboard)/sheets/hearing-sheet-list.tsx',
+      '/catalog': '../components/catalog/CatalogList.tsx',
+      '/docs': '(dashboard)/docs/document-list.tsx',
+      '/feedback': '(dashboard)/feedback/feedback-list.tsx',
+      '/users': '(dashboard)/users/user-list.tsx',
+    };
+    for (const [href, relative] of Object.entries(listSources)) {
+      const search = navItems.headerSearch(SCOPE, href);
+      expect(search, `${href} にヘッダー検索が無い`).not.toBeNull();
+      const file = path.join(APP_DIR, relative);
+      expect(existsSync(file), `${relative} が見つからない (移動したらこの表も直す)`).toBe(true);
+      const source = readFileSync(file, 'utf8');
+      // 組立て方は画面ごとに違う (URLSearchParams.set か、オブジェクトリテラルのキー)
+      expect(source, `${relative} が q を送っていない`).toMatch(/set\('q'|\bq: /);
+    }
   });
 
   it('UIS-NAV-007: member と role 未確定時は管理者専用の導線を DOM へ渡さない', () => {

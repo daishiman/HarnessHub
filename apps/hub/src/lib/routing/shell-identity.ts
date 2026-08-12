@@ -19,8 +19,14 @@ import { systemAuthClock } from '../auth/ports.js';
 import { verifySessionToken } from '../auth/session.js';
 
 export interface ShellIdentity {
-  /** 表示名。現状の session claim には氏名が無いため subject をそのまま使う。 */
+  /** 利用者の識別子 (session の sub)。表示名が無いときの最後の拠り所。 */
   readonly subject: string | null;
+  /**
+   * 人が読める表示名 (氏名、無ければメールアドレス)。
+   * claim が無い session (この claim を足す前に発行されたもの、または名前もメールも
+   * 空の利用者) では null。呼び出し側は null のとき subject を**識別子として**出す。
+   */
+  readonly displayName: string | null;
   /** session claim の役割。未確定なら null。 */
   readonly role: SessionRole | null;
   /**
@@ -30,9 +36,20 @@ export interface ShellIdentity {
    * 未認証・検証失敗時は空配列 = 切替 UI なし (fail-closed)。
    */
   readonly workspaceIds: readonly string[];
+  /**
+   * 所属 Workspace の表示名 (識別子 → 名前)。**表示専用**で、切替 UI を出すかの判定には使わない
+   * (判定は `workspaceIds` の件数だけで決まる)。名前が無い Workspace はキーごと欠ける。
+   */
+  readonly workspaceNames: Readonly<Record<string, string>>;
 }
 
-const ANONYMOUS: ShellIdentity = { subject: null, role: null, workspaceIds: [] };
+const ANONYMOUS: ShellIdentity = {
+  subject: null,
+  displayName: null,
+  role: null,
+  workspaceIds: [],
+  workspaceNames: {},
+};
 
 /** 同一リクエスト内での cookie 読取・署名検証の重複を避けるため cache でラップする。 */
 export const resolveShellIdentity = cache(async (): Promise<ShellIdentity> => {
@@ -48,5 +65,11 @@ export const resolveShellIdentity = cache(async (): Promise<ShellIdentity> => {
   const { claims } = verification;
   if (claims.status !== 'active') return ANONYMOUS;
 
-  return { subject: claims.sub, role: claims.role, workspaceIds: claims.workspace_ids };
+  return {
+    subject: claims.sub,
+    displayName: claims.name ?? null,
+    role: claims.role,
+    workspaceIds: claims.workspace_ids,
+    workspaceNames: claims.workspace_names ?? {},
+  };
 });

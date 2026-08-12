@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { HearingSheetDetail } from './hearing-sheet-detail.js';
+import { LazyHearingSheetDetail } from './hearing-sheet-detail-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ヒアリングシート詳細 | Harness Hub',
@@ -17,7 +17,7 @@ export default async function HearingSheetDetailPage({ params, searchParams }: P
   return (
     <>
       <style>{'@media print { [data-print-exclude] { display: none !important; } }'}</style>
-      <HearingSheetDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />
+      <LazyHearingSheetDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />
     </>
   );
 }

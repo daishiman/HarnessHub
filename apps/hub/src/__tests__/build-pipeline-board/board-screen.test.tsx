@@ -59,7 +59,7 @@ const LIST_ITEM: BuildListResponse['items'][number] = {
   updated_at: 1_700_000_000_000,
 };
 
-const LIST: BuildListResponse = { items: [LIST_ITEM], next_cursor: null };
+const LIST: BuildListResponse = { items: [LIST_ITEM], next_cursor: null, can_manage: true };
 
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
@@ -114,8 +114,8 @@ describe('BPB-UI: S13 パイプラインボード', () => {
 
   it('BPB-UI-003: next_cursor がある間は追加取得し、100 件超も黙って欠落させない', async () => {
     const secondItem = { ...LIST_ITEM, id: 'build-00', title: '契約書チェックハーネス', stage: 'test' as const };
-    const firstPage: BuildListResponse = { items: [LIST_ITEM], next_cursor: 'build-01' };
-    const secondPage: BuildListResponse = { items: [secondItem], next_cursor: null };
+    const firstPage: BuildListResponse = { items: [LIST_ITEM], next_cursor: 'build-01', can_manage: true };
+    const secondPage: BuildListResponse = { items: [secondItem], next_cursor: null, can_manage: true };
     const fetchMock = vi.fn(async (input: string) =>
       input.includes('cursor=build-01') ? jsonResponse(secondPage) : jsonResponse(firstPage),
     );
@@ -221,24 +221,19 @@ describe('BPB-UI: S13 パイプラインボード', () => {
     expect(container.textContent).not.toContain('次の工程へ移しました');
   });
 
-  it('BPB-UI-006: 403 応答では「管理者だけ」の案内を出す (画面側で role を先読みしない)', async () => {
-    const fetchMock = vi.fn(async (input: string) =>
-      input.includes('/stage') ? jsonResponse({}, { ok: false, status: 403 }) : jsonResponse(LIST),
-    );
+  it('BPB-UI-006: can_manage=false の member には工程操作を DOM へ出さない', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse({ ...LIST, can_manage: false }));
     vi.stubGlobal('fetch', fetchMock);
 
     await render(
       createElement(BuildBoard, { tenantId: TENANT_ID, workspaceId: WORKSPACE_ID, stageOrder: BUILD_STAGE_ORDER }),
     );
-    const nextButton = Array.from(container.querySelectorAll('button')).find((button) =>
-      button.getAttribute('aria-label')?.startsWith('次へ'),
-    );
-    await act(async () => {
-      nextButton?.click();
-    });
-    await flush();
-
-    expect(container.textContent).toContain('工程を操作できるのは管理者だけです。');
+    expect(
+      Array.from(container.querySelectorAll('button')).some((button) =>
+        button.getAttribute('aria-label')?.startsWith('次へ'),
+      ),
+    ).toBe(false);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('BPB-UI-007: 409 (競合・公開前提未達) は problem+json の detail をそのまま案内する', async () => {

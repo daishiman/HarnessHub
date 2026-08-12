@@ -1,9 +1,11 @@
 'use client';
 
 /** 一覧表。ソートの aria-sort・見出しの scope・列幅固定によるレイアウトシフト抑制を一括で担保する。 */
-import { type CSSProperties, type ReactNode, useMemo, useState } from 'react';
+import { type CSSProperties, type ReactNode, useId, useMemo, useState } from 'react';
 
 import { colorVar, spaceVar, visuallyHidden } from '../internal/style.js';
+import { CardGrid, DataCard, type DefinitionListItem } from '../shell/information.js';
+import type { Salience } from '../shell/salience.js';
 import { useUiText } from '../theme/UiProvider.js';
 
 /**
@@ -26,9 +28,36 @@ export interface DataTableColumn<TRow> {
   value?: (row: TRow) => string | number;
   /** 独自描画。省略時は `value` の結果を表示する。 */
   render?: (row: TRow) => ReactNode;
-  /** 列幅。指定するとレイアウトシフトを抑えられる。 */
+  /**
+   * 列幅。指定するとレイアウトシフトを抑えられる。
+   * **`narrowAs="card-collection"` のカード表示では効かない** (カードに列が無いため)。
+   */
   width?: string;
   align?: 'start' | 'end';
+  /**
+   * 横スクロールしても左端に貼り付けたままにする。
+   *
+   * 列が多い表は狭い画面で必ず横へはみ出し、右の列を見にいくと「どの行の話か」が
+   * 画面から消える。行を名指しする列 (氏名・コード) だけをここで固定する。
+   * 指定できるのは先頭 1 列だけ (2 列目以降の固定は左に積み上がる幅の計算が要り、
+   * 列幅の指定漏れで列同士が重なる)。`width` を併せて指定すること。
+   *
+   * **`narrowAs="card-collection"` のカード表示では効かない**。カードには列が無く、
+   * 貼り付ける相手も横スクロールも存在しない。狭い画面で「どの行か」を見失う問題は、
+   * カード側では 1 件が 1 枚に分かれること自体が解になっている。
+   */
+  sticky?: boolean;
+  /**
+   * カード表示 (`narrowAs="card-collection"`) にしたときの顕著度 (FR-IDS-005)。
+   *
+   * **表の列順とは別の判断**であることに注意する。表では左が重要だが、カードでは
+   * 見出しの次に来るものが重要になる。表で 2 列目にある「状態」が、カードでは `lead` に
+   * 並ぶことは珍しくない。
+   *
+   * 既定は先頭列が見出し (カードのタイトル)、残りが `metadata`。
+   * 表としてしか使わない列 (`narrowAs` を指定しない表) では意味を持たない。
+   */
+  salience?: Salience;
 }
 
 export interface DataTableProps<TRow> {
@@ -47,6 +76,32 @@ export interface DataTableProps<TRow> {
   loading?: boolean;
   skeletonRowCount?: number;
   emptyMessage?: string;
+  /**
+   * 列見出しを表の上端に貼り付ける。行数が画面高を超える一覧で使う。
+   *
+   * 同時に箱の高さへ上限を与える。sticky は「スクロールする箱」の中でしか効かず、
+   * 高さが内容なりに伸びる箱では貼り付く相手がいないため何も起きない。
+   */
+  stickyHeader?: boolean;
+  /**
+   * 狭い画面での表現。既定 `table` (これまでどおり横スクロールする表)。
+   *
+   * `card-collection` にすると、狭い画面では 1 行が 1 枚のカードになる。
+   * 列が 4 つを超える一覧は、狭い画面では横スクロールしても全体を把握できない
+   * (右を見ると左が消える) ため、行を分解して縦に積むほうが読める。
+   *
+   * 出し分けは CSS だけで行い、両方の表現を描いておく (SSR では画面幅が分からないため)。
+   * 隠れているほうは `display: none` で支援技術からも消える。
+   */
+  narrowAs?: 'table' | 'card-collection';
+  /**
+   * 表・カードの上に出す注記。
+   *
+   * 「並べ替えはこのページに表示中の分が対象」のような、**結果の読み方に関わる断り**を置く。
+   * 表とカードの両方に同じものが要るので、画面側で表の上に `<p>` を書くのではなく
+   * ここへ渡す (書き分けると、カード表示のときだけ注記が消える)。
+   */
+  note?: ReactNode;
 }
 
 const cellStyle: CSSProperties = {
@@ -54,6 +109,44 @@ const cellStyle: CSSProperties = {
   borderBottom: `1px solid ${colorVar('border')}`,
   textAlign: 'start',
 };
+
+/**
+ * 列見出しの中身に共通で当てる寸法。
+ * 並べ替えできる列 (button) とできない列 (span) の**両方**がこれを使うことで、
+ * 記号の有無で見出しの高さが変わらなくなる。
+ */
+const headerInnerStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: spaceVar(1),
+  minHeight: 'var(--hh-control-height)',
+};
+
+/**
+ * 貼り付けた列の重なり順。数字を 1 か所に集めておかないと、
+ * 「見出しの下に本文が潜る」「固定列が見出しの上に出る」が画面ごとに食い違う。
+ * 画面の見出し帯 (15) と絞り込み帯 (14) より下に収める。
+ */
+const stickyLayer = { bodyColumn: 5, header: 10, headerColumn: 11 } as const;
+
+/** 先頭列を貼り付けるかどうか。指定できるのは 1 列目だけなので、ここで 1 回だけ判定する。 */
+function isStickyColumn<TRow>(columns: readonly DataTableColumn<TRow>[], index: number): boolean {
+  return index === 0 && columns[0]?.sticky === true;
+}
+
+/**
+ * 本文セルを左端へ貼り付ける指定。
+ * 背景を必ず持たせるのは、指定が無いと後ろを流れていく列が透けて重なって読めなくなるため。
+ */
+function stickyBodyCellStyle<TRow>(columns: readonly DataTableColumn<TRow>[], index: number): CSSProperties {
+  if (!isStickyColumn(columns, index)) return {};
+  return {
+    position: 'sticky',
+    insetInlineStart: 0,
+    zIndex: stickyLayer.bodyColumn,
+    background: colorVar('surface'),
+  };
+}
 
 /** 次に押したときのソート方向。同じ列なら反転、別の列なら昇順から。 */
 function nextSort(current: DataTableSort | undefined, columnKey: string): DataTableSort {
@@ -75,8 +168,13 @@ export function DataTable<TRow>({
   loading = false,
   skeletonRowCount = 3,
   emptyMessage,
+  stickyHeader = false,
+  narrowAs = 'table',
+  note,
 }: DataTableProps<TRow>): ReactNode {
   const t = useUiText();
+  // 同じ画面に一覧が 2 つ並んでも、狭い画面の並べ替え欄とそのラベルが取り違わないようにする
+  const sortSelectId = useId();
   const [internalSort, setInternalSort] = useState<DataTableSort | undefined>(defaultSort);
   const activeSort = sort ?? internalSort;
 
@@ -106,7 +204,12 @@ export function DataTable<TRow>({
   const directionLabel = (direction: TableSortDirection): string =>
     direction === 'ascending' ? t('table.sortedAscending') : t('table.sortedDescending');
 
-  return (
+  const noteLine =
+    note === undefined ? null : (
+      <p style={{ margin: 0, paddingBlockEnd: spaceVar(2), fontSize: 'var(--hh-font-size-sm)' }}>{note}</p>
+    );
+
+  const table = (
     // 列が増えるほど表の最小幅は伸びるので、狭い画面では必ず親を超える。
     // 箱の側で横スクロールを受け止めないと、画面全体が横へずれて他の内容まで読めなくなる。
     // tabIndex を付けるのは、スクロールできる領域がキーボードだけでは操作できなくなるため
@@ -116,8 +219,16 @@ export function DataTable<TRow>({
     // role は group にする。region (= landmark) にすると表の数だけ landmark が増え、
     // 同名の表が 2 つ並んだ画面で axe の landmark-unique に触れる (実際に触れた)。
     // biome-ignore lint/a11y/useSemanticElements: <fieldset> はフォームの入力群をまとめる要素で、表の外枠に使うと意味が食い違う。ここで欲しいのは名前を持つ「ひとかたまり」だけなので role=group が最小
-    // biome-ignore lint/a11y/noNoninteractiveTabindex: スクロール可能領域はキーボード単独では動かせず WCAG 2.1.1 / axe scrollable-region-focusable が tabindex を要求するため。規則が想定する「操作できないのに焦点が当たる」型ではなく、名前付きの塊への意図的な付与
-    <div data-hh-scroll-x="" role="group" aria-label={caption} tabIndex={0}>
+    <div
+      data-hh-scroll-x=""
+      role="group"
+      aria-label={caption}
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: スクロール可能領域はキーボード単独では動かせず WCAG 2.1.1 / axe scrollable-region-focusable が tabindex を要求するため
+      tabIndex={0}
+      // 高さの上限は「画面の 7 割」と「40rem」の小さいほう。
+      // vh だけだと大画面で表 1 枚が画面を占有し、40rem だけだと小画面で下端が切れる。
+      style={stickyHeader ? { maxHeight: 'min(70vh, 40rem)', overflowY: 'auto' } : undefined}
+    >
       <table
         // 読み込み中は表全体を busy として告知する。骨組み行を aria-hidden で隠すと
         // 表の行数と読み上げ内容が食い違うため、隠さずに状態のほうを伝える
@@ -142,16 +253,32 @@ export function DataTable<TRow>({
         </colgroup>
         <thead style={{ background: colorVar('surfaceMuted') }}>
           <tr>
-            {columns.map((column) => {
+            {columns.map((column, index) => {
               const isSorted = activeSort?.columnKey === column.key;
               const canSort = column.sortable === true && column.value !== undefined;
+              const stuckColumn = isStickyColumn(columns, index);
 
               return (
                 <th
                   key={column.key}
                   scope="col"
                   aria-sort={isSorted && activeSort ? activeSort.direction : undefined}
-                  style={{ ...cellStyle, textAlign: column.align ?? 'start' }}
+                  style={{
+                    ...cellStyle,
+                    textAlign: column.align ?? 'start',
+                    // 縦と横は同じ position: sticky の中で両方指定する。別々の要素へ分けると
+                    // 左上の角のセルがどちらか一方でしか貼り付かず、隅だけ内容が流れる
+                    ...(stickyHeader || stuckColumn
+                      ? {
+                          position: 'sticky',
+                          // 行が透けて重なって見えないよう背景も持たせる
+                          background: colorVar('surfaceMuted'),
+                          ...(stickyHeader ? { insetBlockStart: 0 } : {}),
+                          ...(stuckColumn ? { insetInlineStart: 0 } : {}),
+                          zIndex: stuckColumn ? stickyLayer.headerColumn : stickyLayer.header,
+                        }
+                      : {}),
+                  }}
                 >
                   {canSort ? (
                     <button
@@ -159,10 +286,7 @@ export function DataTable<TRow>({
                       data-hh-focusable=""
                       onClick={() => handleSort(column.key)}
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: spaceVar(1),
-                        minHeight: 'var(--hh-control-height)',
+                        ...headerInnerStyle,
                         background: 'none',
                         border: 'none',
                         padding: 0,
@@ -181,7 +305,15 @@ export function DataTable<TRow>({
                       </span>
                     </button>
                   ) : (
-                    column.header
+                    // ソートできない列も同じ高さ・同じ幅の記号スロットを持たせる。
+                    // 素のテキストのままだと、並べ替え記号を持つ列だけ見出しが高くなり、
+                    // 列見出しの文字が上下にずれて並ぶ (画面ごとの不揃いに見える原因)。
+                    <span style={headerInnerStyle}>
+                      {column.header}
+                      <span aria-hidden="true" style={{ visibility: 'hidden' }}>
+                        ↕
+                      </span>
+                    </span>
                   )}
                 </th>
               );
@@ -193,8 +325,8 @@ export function DataTable<TRow>({
             ? Array.from({ length: skeletonRowCount }, (_, index) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: 骨組み行は件数固定の装飾で識別子を持たず、並べ替えも差し込みも起きないため index が唯一の安定 key
                 <tr key={`skeleton-${index}`}>
-                  {columns.map((column) => (
-                    <td key={column.key} style={cellStyle}>
+                  {columns.map((column, columnIndex) => (
+                    <td key={column.key} style={{ ...cellStyle, ...stickyBodyCellStyle(columns, columnIndex) }}>
                       <span
                         style={{
                           display: 'block',
@@ -209,8 +341,15 @@ export function DataTable<TRow>({
               ))
             : sortedRows.map((row) => (
                 <tr key={rowKey(row)}>
-                  {columns.map((column) => (
-                    <td key={column.key} style={{ ...cellStyle, textAlign: column.align ?? 'start' }}>
+                  {columns.map((column, columnIndex) => (
+                    <td
+                      key={column.key}
+                      style={{
+                        ...cellStyle,
+                        textAlign: column.align ?? 'start',
+                        ...stickyBodyCellStyle(columns, columnIndex),
+                      }}
+                    >
                       {column.render ? column.render(row) : column.value?.(row)}
                     </td>
                   ))}
@@ -226,5 +365,130 @@ export function DataTable<TRow>({
         </tbody>
       </table>
     </div>
+  );
+
+  if (narrowAs === 'table') {
+    // これまでどおり。注記が無ければ包む要素も足さない (既存画面の DOM を変えない)
+    return noteLine === null ? (
+      table
+    ) : (
+      <>
+        {noteLine}
+        {table}
+      </>
+    );
+  }
+
+  const [titleColumn, ...restColumns] = columns;
+  const cellOf = (column: DataTableColumn<TRow>, row: TRow): ReactNode =>
+    column.render ? column.render(row) : column.value?.(row);
+  const itemsOf = (row: TRow, level: Salience): readonly DefinitionListItem[] =>
+    restColumns
+      // 段の宣言が無い列は metadata。カードで真っ先に読ませたい列だけを明示させる
+      // (既定を lead にすると、宣言し忘れた列が全部大きく出て段差が消える)
+      .filter((column) => (column.salience ?? 'metadata') === level)
+      .map((column) => ({ term: column.header, description: cellOf(column, row) }));
+
+  const sortableColumns = columns.filter((column) => column.sortable === true && column.value !== undefined);
+  // 選択欄の値は「向き:列キー」。区切りを前に置くのは、列キー側に区切り文字が含まれていても
+  // 最初の 1 個で切れば必ず正しく分かれるため (向き側は ascending/descending の 2 語しか無い)。
+  // NUL 区切りは使えない。SSR で書き出した HTML をブラウザが読み直すとき、属性値の U+0000 は
+  // HTML の解析規則で U+FFFD へ置き換えられ、読み戻した値が書いた値と一致しなくなる
+  // (jsdom のクライアント描画だけを見ていると気づけない壊れ方をする)。
+  const sortValue = activeSort === undefined ? '' : `${activeSort.direction}:${activeSort.columnKey}`;
+
+  const cards = (
+    // biome-ignore lint/a11y/useSemanticElements: 表と同じく、名前を持つ「ひとかたまり」だけが欲しい
+    <div role="group" aria-label={caption}>
+      {/*
+        カードには列見出しが無いので、見出しを押して並べ替えるという手段がそのまま消える。
+        並べ替えの操作子を 1 つの選択欄へ畳み、「列 × 昇順/降順」を候補として全部並べる。
+        ボタン 2 つ (列を選ぶ / 向きを反転する) に分けないのは、いまどの順で並んでいるかを
+        2 か所読まないと分からなくなるため。選択欄なら現在の並びが表示値そのものになる。
+        並べ替えの状態は表と共有しているので、広い画面へ戻しても並びは変わらない。
+      */}
+      {sortableColumns.length === 0 ? null : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: spaceVar(2), paddingBlockEnd: spaceVar(3) }}>
+          <label htmlFor={`${sortSelectId}-select`} style={{ fontSize: 'var(--hh-font-size-sm)' }}>
+            {t('action.sort')}
+          </label>
+          <select
+            id={`${sortSelectId}-select`}
+            data-hh-focusable=""
+            value={sortValue}
+            onChange={(event) => {
+              const separator = event.target.value.indexOf(':');
+              if (separator < 0) return;
+              const updated: DataTableSort = {
+                columnKey: event.target.value.slice(separator + 1),
+                direction: event.target.value.slice(0, separator) as TableSortDirection,
+              };
+              if (!sort) setInternalSort(updated);
+              onSortChange?.(updated);
+            }}
+            style={{ minHeight: 'var(--hh-control-height)', font: 'inherit' }}
+          >
+            {activeSort === undefined ? <option value="">—</option> : null}
+            {sortableColumns.flatMap((column) =>
+              (['ascending', 'descending'] as const).map((direction) => (
+                <option key={`${column.key}-${direction}`} value={`${direction}:${column.key}`}>
+                  {`${column.header} · ${directionLabel(direction)}`}
+                </option>
+              )),
+            )}
+          </select>
+        </div>
+      )}
+
+      {!loading && sortedRows.length === 0 ? (
+        <p style={{ margin: 0, color: colorVar('textMuted') }}>{emptyMessage ?? t('table.empty')}</p>
+      ) : (
+        <CardGrid as="ul" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {loading
+            ? Array.from({ length: skeletonRowCount }, (_, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: 骨組みは件数固定の装飾で識別子を持たない
+                <li key={`skeleton-${index}`}>
+                  <DataCard
+                    headingLevel="none"
+                    title={
+                      <span
+                        style={{
+                          display: 'block',
+                          height: '1em',
+                          width: '60%',
+                          borderRadius: 'var(--hh-radius-sm)',
+                          background: colorVar('surfaceMuted'),
+                        }}
+                      />
+                    }
+                  />
+                </li>
+              ))
+            : sortedRows.map((row) => (
+                <li key={rowKey(row)}>
+                  <DataCard
+                    // 見出しにしない。表とカードは常に両方 DOM にあるので、ここを見出しにすると
+                    // 表を見ている広い画面でも、隠れているカードぶんの見出しが目次に並ぶ
+                    headingLevel="none"
+                    title={titleColumn === undefined ? null : cellOf(titleColumn, row)}
+                    lead={itemsOf(row, 'lead')}
+                    context={itemsOf(row, 'context')}
+                    meta={itemsOf(row, 'metadata')}
+                  />
+                </li>
+              ))}
+        </CardGrid>
+      )}
+    </div>
+  );
+
+  return (
+    <>
+      {noteLine}
+      {/* 両方描いて、表示するほうを CSS が選ぶ (SSR では画面幅が分からないため)。
+          隠れているほうは display: none なので支援技術からも二重に読まれない */}
+      <div data-hh-viewport="wide">{table}</div>
+      <div data-hh-viewport="narrow">{cards}</div>
+    </>
   );
 }

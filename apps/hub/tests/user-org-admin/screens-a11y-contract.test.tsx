@@ -77,7 +77,7 @@ const SAMPLE_USERS: readonly UserListRow[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// S17: 個別ダッシュボード (KPI カード + role/department 編集のインライン編集テーブル)
+// S17: 個別ダッシュボード (KPI カード + role 選択 + department インライン編集)
 // ---------------------------------------------------------------------------
 
 interface EditableUserRow {
@@ -86,10 +86,7 @@ interface EditableUserRow {
   value: string;
 }
 
-const DASHBOARD_ROWS: readonly EditableUserRow[] = [
-  { id: 'role', field: 'ロール', value: 'workspace-admin' },
-  { id: 'department', field: '部門', value: '営業' },
-];
+const DASHBOARD_ROWS: readonly EditableUserRow[] = [{ id: 'department', field: '部門', value: '営業' }];
 
 // ---------------------------------------------------------------------------
 // S18: アカウント設定 (プロフィール + 表示設定)
@@ -123,16 +120,28 @@ describe('契約: S17 個別ダッシュボードの axe 違反 0 件 (KpiCard +
     expect(await violationsOf()).toStrictEqual([]);
   });
 
-  it('UOA-A11Y-004: InlineEditTable (role/department 編集) が axe 違反 0 件で描画される', async () => {
+  it('UOA-A11Y-004: 日本語ラベルの role 選択と department 編集が axe 違反 0 件で描画される', async () => {
     mountScreen(
-      <InlineEditTable
-        caption="ユーザー編集"
-        columns={[{ key: 'value', header: '値', value: (row: EditableUserRow) => row.value, editable: true }]}
-        rows={DASHBOARD_ROWS}
-        rowKey={(row) => row.id}
-        rowLabel={(row) => row.field}
-        onCommit={() => {}}
-      />,
+      <>
+        <Select
+          label="ロール"
+          value="workspace-admin"
+          options={[
+            { value: 'member', label: 'メンバー' },
+            { value: 'workspace-admin', label: 'ワークスペース管理者' },
+            { value: 'provider-admin', label: 'プロバイダー管理者' },
+          ]}
+          onChange={() => {}}
+        />
+        <InlineEditTable
+          caption="ユーザー編集"
+          columns={[{ key: 'value', header: '値', value: (row: EditableUserRow) => row.value, editable: true }]}
+          rows={DASHBOARD_ROWS}
+          rowKey={(row) => row.id}
+          rowLabel={(row) => row.field}
+          onCommit={() => {}}
+        />
+      </>,
       '個別ダッシュボード',
     );
     expect(await violationsOf()).toStrictEqual([]);
@@ -224,21 +233,31 @@ describe('P05 実装後の受入契約: S17 個別ダッシュボードの実コ
     expect(document.body.textContent).toContain('読み込み中');
   });
 
-  it('UOA-A11Y-102b: computeEditableRows は admin viewer のときだけ salary 行を含む (AD-5 の行自体を作らない設計)', () => {
+  it('UOA-A11Y-102b: computeEditableRows は role を自由入力にせず、admin viewer のときだけ salary 行を含む', () => {
     const adminRows = computeEditableRows(SAMPLE_USER_DETAIL, 'workspace-admin');
-    expect(adminRows.map((row) => row.id)).toEqual(['department', 'role', 'salary']);
+    expect(adminRows.map((row) => row.id)).toEqual(['department', 'salary']);
 
     const memberRows = computeEditableRows(SAMPLE_USER_DETAIL, 'member');
-    expect(memberRows.map((row) => row.id)).toEqual(['department', 'role']);
+    expect(memberRows.map((row) => row.id)).toEqual(['department']);
 
     const noViewerRows = computeEditableRows(SAMPLE_USER_DETAIL, null);
-    expect(noViewerRows.map((row) => row.id)).toEqual(['department', 'role']);
+    expect(noViewerRows.map((row) => row.id)).toEqual(['department']);
   });
 
-  it('UOA-A11Y-102c: role/InlineEditTable + KpiCard + ConfirmDialog の組み合わせに axe 違反が無い (静的検証)', async () => {
+  it('UOA-A11Y-102c: role 選択 + InlineEditTable + KpiCard + ConfirmDialog の組み合わせに axe 違反が無い', async () => {
     mountScreen(
       <>
         <KpiCard label="年間削減時間" value="—" unit="時間" />
+        <Select
+          label="ロール"
+          value="workspace-admin"
+          options={[
+            { value: 'member', label: 'メンバー' },
+            { value: 'workspace-admin', label: 'ワークスペース管理者' },
+            { value: 'provider-admin', label: 'プロバイダー管理者' },
+          ]}
+          onChange={() => {}}
+        />
         <InlineEditTable
           caption="ユーザー編集"
           columns={[

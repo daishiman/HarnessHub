@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { FeedbackDetail } from './feedback-detail.js';
+import { LazyFeedbackDetail } from './feedback-detail-lazy.js';
 
 export const metadata: Metadata = {
   title: 'フィードバック詳細 | Harness Hub',
@@ -14,5 +14,5 @@ interface PageProps {
 export default async function FeedbackDetailPage({ params, searchParams }: PageProps) {
   const [{ id }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
-  return <FeedbackDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />;
+  return <LazyFeedbackDetail id={id} tenantId={tenantId} workspaceId={workspaceId} />;
 }

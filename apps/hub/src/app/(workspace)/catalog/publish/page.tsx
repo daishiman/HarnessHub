@@ -1,12 +1,12 @@
 import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
-import { PublishWizard } from '../../../../components/publish/PublishWizard.js';
+import { LazyPublishWizard } from '../../../../components/publish/publish-wizard-lazy.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
-  title: 'ツールを公開する | Harness Hub',
-  description: 'CLI を使わずに、Hub の Web 画面だけでツールを公開します。',
+  title: 'Skill を公開する | Harness Hub',
+  description: 'CLI を使わずに、Hub の Web 画面だけで Skill を公開します。',
 };
 
 interface PageProps {
@@ -30,13 +30,20 @@ export default async function PublishWizardPage({ searchParams }: PageProps) {
 
   return (
     <>
+      {/* 見出しは実際に公開できるものに合わせる。いま公開できるのは Skill だけで、
+          「ツール」で始めると中の面で「Skill だけです」と断る読み順になる。
+          Web アプリの公開が実装されたら、見出しを「ツールを公開する」へ戻す */}
       <ScreenHeader
         id="publish-wizard-screen-heading"
-        title="ツールを公開する"
+        title="Skill を公開する"
         description="ZIP を投入すると、CLI から公開した場合と同じ検査を通って公開されます。"
       />
       <Panel>
-        <PublishWizard scope={resolved} initialProjectId={query.project ?? ''} initialPublishId={query.publish ?? ''} />
+        <LazyPublishWizard
+          scope={resolved}
+          initialProjectId={query.project ?? ''}
+          initialPublishId={query.publish ?? ''}
+        />
       </Panel>
     </>
   );

@@ -6,9 +6,40 @@
 import type { SessionClaims } from '@harness-hub/schemas';
 import { sessionClaimsSchema } from '@harness-hub/schemas';
 
-import { AUTH_NUMERIC_CONTRACT } from './config.js';
-import { signJwt, verifyJwt } from './jwt.js';
+import { AUTH_NUMERIC_CONTRACT, serializeSessionCookie } from './config.js';
+import { resolveAccountDisplayName } from './display-name.js';
+import { JWT_ENVELOPE_CHARS, signJwt, verifyJwt } from './jwt.js';
 import type { DirectoryUser } from './ports.js';
+
+/**
+ * cookie 1 個の上限 (RFC 6265 が求める最小値で、主要ブラウザの実装値でもある)。
+ *
+ * **超えたときブラウザはエラーを返さず、黙って cookie を捨てる。** サインインは成功して
+ * `Set-Cookie` も返るのに保存されないため、次の要求で未ログインとしてサインイン画面へ戻る。
+ * 利用者から見ると「サインインしても何も起きずログイン画面に戻り続ける」で、
+ * 画面にもログにも理由が出ない。
+ */
+const COOKIE_BYTE_LIMIT = 4096;
+
+/**
+ * 上限に対して空けておく余白。
+ * 上限ぴったりまで使うと、経路上の proxy が付ける差分や将来の claim 追加で越える。
+ */
+const COOKIE_SAFETY_MARGIN_BYTES = 256;
+
+/**
+ * claims の JSON に許すバイト数。**定数を書かず、実際の cookie とトークンの形から逆算する。**
+ * cookie 名や属性、署名方式が変わったときに、この上限だけが古いまま残るのを防ぐ。
+ *
+ * base64url は 3 バイトを 4 文字にするので、文字数から戻すときは 3/4 を掛ける。
+ */
+const CLAIMS_JSON_BUDGET_BYTES = Math.floor(
+  ((COOKIE_BYTE_LIMIT - COOKIE_SAFETY_MARGIN_BYTES - serializeSessionCookie('').length - JWT_ENVELOPE_CHARS) * 3) / 4,
+);
+
+function jsonByteLength(value: unknown): number {
+  return new TextEncoder().encode(JSON.stringify(value)).length;
+}
 
 /** session token を受理しなかった理由。 */
 export type SessionRejectionReason = 'malformed' | 'bad_signature' | 'bad_claims' | 'expired';
@@ -23,15 +54,41 @@ export type SessionVerification =
  * 代償として最大 `updateAge` (15 分) 古くなる点は受容済み (緊急失効は別経路で担保する)。
  */
 export function buildSessionClaims(user: DirectoryUser, nowSeconds: number): SessionClaims {
-  return {
+  // 人が読める名前が 1 つも無い利用者は実在する (JIT provisioning 直後)。
+  // その場合は claim ごと載せない。空文字を載せると「名前がある」と読めてしまい、
+  // 受け手が「空の名前」を氏名の位置へそのまま描いてしまう。
+  const displayName = resolveAccountDisplayName(user);
+  // 名前が 1 件も引けないときは claim ごと載せない (空の対応表を載せても読み手の分岐が増えるだけ)。
+  const workspaceNames = user.workspaceNames ?? {};
+  const hasWorkspaceNames = Object.keys(workspaceNames).length > 0;
+
+  // 所属数に比例して伸びるのは `workspace_names` だけ。ここだけが cookie を上限へ押し上げる
+  // (`workspace_ids` は 1 件 30 バイト弱、`name` は 1 件だけ)
+  const base: SessionClaims = {
     sub: user.id,
     tenant_id: user.tenantId,
     role: user.role,
     status: user.status,
     workspace_ids: [...user.workspaceIds],
+    ...(displayName === undefined ? {} : { name: displayName }),
     iat: nowSeconds,
     exp: nowSeconds + AUTH_NUMERIC_CONTRACT.sessionMaxAgeSeconds,
   };
+  if (!hasWorkspaceNames) return base;
+
+  const withNames: SessionClaims = { ...base, workspace_names: { ...workspaceNames } };
+
+  /*
+   * 入り切らないときは **名前だけを捨てる**。
+   *
+   * 名前は表示のためだけの情報なので、落としても到達できる範囲は 1 つも変わらない
+   * (画面は識別子の表示へ戻るだけ)。逆に `workspace_ids` を削ると「入れる場所が消える」ので、
+   * サイズを理由に削ってよい claim ではない。**この非対称性がここの要点。**
+   *
+   * 一部だけ載せる案は採らない。同じ画面で名前が出る Workspace と出ない Workspace が混ざり、
+   * しかもどれが出るかが所属の増減で変わるため、利用者からは不具合にしか見えない。
+   */
+  return jsonByteLength(withNames) <= CLAIMS_JSON_BUDGET_BYTES ? withNames : base;
 }
 
 /**

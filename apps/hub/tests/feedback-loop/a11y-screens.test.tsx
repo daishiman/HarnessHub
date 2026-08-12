@@ -56,13 +56,16 @@ async function violationsOf(): Promise<readonly string[]> {
 }
 
 describe('FL-A11Y: S14 実コンポーネントの axe 違反 0 件', () => {
-  it('FL-A11Y-001: 一覧画面 (FeedbackList) の初期表示に axe 違反が無く、絞り込みフォーム・テーブル・ページ送りが描画される', async () => {
+  it('FL-A11Y-001: 一覧画面 (FeedbackList) の初期表示に axe 違反が無く、絞り込みと読み込み状態が描画される', async () => {
     mountScreen(<FeedbackList tenantId={TENANT_ID} workspaceId={WORKSPACE_ID} />);
 
     expect(await violationsOf()).toEqual([]);
     expect(document.querySelector('form[aria-label="フィードバックの絞り込み"]')).not.toBeNull();
-    expect(document.querySelector('table')).not.toBeNull();
-    expect(document.querySelector('nav[aria-label="フィードバック一覧のページ送り"]')).not.toBeNull();
+    // 狭い画面では card-collection へ畳む一覧 (型の割当は docs/screen-inventory.md の narrow profile)。
+    // 初期状態では読み込み中であることが読み上げにも伝わることを確かめる
+    expect(document.querySelector('[aria-live="polite"]')?.textContent).toContain('読み込');
+    // ページ送りは前後どちらかへ進めるときだけ出す。押せないボタンだけが残る状態を作らない
+    expect(document.querySelector('nav[aria-label="フィードバック一覧のページ送り"]')).toBeNull();
   });
 
   it('FL-A11Y-002: 詳細画面 (FeedbackDetail) の初期表示 (読み込み中) に axe 違反が無い', async () => {
@@ -70,6 +73,7 @@ describe('FL-A11Y: S14 実コンポーネントの axe 違反 0 件', () => {
 
     expect(await violationsOf()).toEqual([]);
     expect(document.body.textContent).toContain('読み込み中です');
+    expect(document.querySelector('h1')?.textContent).toContain('フィードバック詳細');
   });
 
   it('FL-A11Y-003: 新規フォーム画面 (FeedbackForm) の初期表示に axe 違反が無く、必須 3 入力欄が描画される', async () => {

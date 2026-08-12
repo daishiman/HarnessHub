@@ -61,7 +61,7 @@ export interface PublishHarness {
   readonly deploymentRows: () => readonly DeploymentRecord[];
   readonly storedPackages: () => readonly StoredPackage[];
   /** 経路を通さず状態を置く。中間状態から始めるテストのため。 */
-  readonly putProject: (patch: Partial<PublishProjectAccess> & { readonly id: string }) => PublishProjectAccess;
+  readonly putProject: (patch: Partial<PublishProjectRecord> & { readonly id: string }) => PublishProjectRecord;
   readonly putRequest: (patch: Partial<PublishRequestRecord> & { readonly id: string }) => PublishRequestRecord;
   readonly putChannel: (patch: Partial<ChannelRecord> & { readonly id: string }) => ChannelRecord;
   readonly putRelease: (patch: Partial<ReleaseRecord> & { readonly id: string }) => ReleaseRecord;
@@ -98,7 +98,7 @@ export function createPublishHarness(options: HarnessOptions = {}): PublishHarne
     return `${prefix}-${String(sequence).padStart(4, '0')}`;
   };
 
-  const projects: PublishProjectAccess[] = [];
+  const projects: PublishProjectRecord[] = [];
   const requests: PublishRequestRecord[] = [];
   const channels: ChannelRecord[] = [];
   const releases: ReleaseRecord[] = [];
@@ -126,6 +126,13 @@ export function createPublishHarness(options: HarnessOptions = {}): PublishHarne
     projects: {
       async findById(portScope, id) {
         return projects.find((row) => row.tenantId === portScope.tenantId && row.id === id) ?? null;
+      },
+      async list(portScope) {
+        return projects.filter(
+          (row) =>
+            row.tenantId === portScope.tenantId &&
+            (portScope.workspaceId === undefined || row.workspaceId === portScope.workspaceId),
+        ) as PublishProjectRecord[];
       },
       async create(portScope, input) {
         const record: PublishProjectRecord = {
@@ -361,14 +368,16 @@ export function createPublishHarness(options: HarnessOptions = {}): PublishHarne
     },
   };
 
-  function putProject(patch: Partial<PublishProjectAccess> & { readonly id: string }): PublishProjectAccess {
-    const base: PublishProjectAccess = {
+  function putProject(patch: Partial<PublishProjectRecord> & { readonly id: string }): PublishProjectRecord {
+    const base: PublishProjectRecord = {
       id: patch.id,
       tenantId,
       workspaceId: scope.workspaceId ?? 'ws-1',
       ownerUserId: scope.actorId,
+      name: `Project ${patch.id}`,
+      description: '',
     };
-    const record: PublishProjectAccess = { ...base, ...patch };
+    const record: PublishProjectRecord = { ...base, ...patch };
     const index = projects.findIndex((row) => row.id === record.id);
     if (index < 0) projects.push(record);
     else projects[index] = record;

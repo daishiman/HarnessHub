@@ -5,6 +5,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  METRICS_RANKING_LIMIT,
   metricsDateSchema,
   metricsEventIngestRequestSchema,
   metricsEventIngestResponseSchema,
@@ -139,6 +140,7 @@ describe('metricsSummaryResponseSchema', () => {
     ranking: [
       { harnessId: 'harness-1', harnessName: '請求書チェック', runCount: 80, savedHours: 20, savedAmountJpy: 60_000 },
     ],
+    rankingTotals: { total: 2, active: 1 },
     departments: [
       { departmentId: null, departmentName: '未設定', runCount: 40, savedHours: 10, savedAmountJpy: 30_000 },
     ],
@@ -146,6 +148,23 @@ describe('metricsSummaryResponseSchema', () => {
 
   it('KPI・推移・ランキング・部門別内訳を返す', () => {
     expect(metricsSummaryResponseSchema.parse(response)).toStrictEqual(response);
+  });
+
+  it('ranking は表示件数の上限を超えられない (サーバが切っていない応答を通さない)', () => {
+    const tooMany = Array.from({ length: METRICS_RANKING_LIMIT + 1 }, (_unused, index) => ({
+      harnessId: `harness-${index}`,
+      harnessName: `ツール ${index}`,
+      runCount: index,
+      savedHours: index,
+      savedAmountJpy: index,
+    }));
+    expect(metricsSummaryResponseSchema.safeParse({ ...response, ranking: tooMany }).success).toBe(false);
+  });
+
+  it('稼働数が母数を超える応答は受け付けない (割合が 100% を超える表示を作らない)', () => {
+    expect(
+      metricsSummaryResponseSchema.safeParse({ ...response, rankingTotals: { total: 1, active: 2 } }).success,
+    ).toBe(false);
   });
 
   it('金額が負の値になることはない (サーバ算出結果の異常を検知する)', () => {

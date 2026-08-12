@@ -7,8 +7,9 @@
  * ここは **消費側** に徹する (qa-021/qa-022) — 独自のボード UI を作ると、a11y の担保が
  * design system と画面の 2 箇所に分かれ、片方だけ直った状態が生まれる。
  *
- * 工程操作は API 側が admin 限定 (SEC2)。画面側で role を先読みして出し分けはせず、
- * 拒否は応答 (403) を受けて案内する。UI に role 判定を写すと認可表 (B9) と二重化するため。
+ * 工程操作は API 側が admin 限定 (SEC2)。画面は role 名を先読みせず、一覧 API が同じ認可表から
+ * 投影した `can_manage` capability だけを使う。これにより認可表を二重化せず、押しても必ず 403 に
+ * なる操作を member の DOM へ出さない。POST 側の認可は最終防衛として常に残す。
  *
  * @harness-hub/schemas から**値**を import しないのが本 file の制約。あの package は zod を
  * 実行時に伴い、client の初期 chunk へ載ると `/builds` の First Load JS 予算 (120 KiB) を破る。
@@ -16,7 +17,7 @@
  * `board-columns.ts` を使う。
  */
 import type { BuildListItem, BuildListResponse, BuildStage, BuildStageTransitionResponse } from '@harness-hub/schemas';
-import { Alert, StageBoard, type StageColumn } from '@harness-hub/ui';
+import { Alert, LiveStatus, StageBoard, type StageColumn } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { toBoardColumnsView } from '../../../features/build-pipeline-board/board-columns.js';
@@ -36,6 +37,7 @@ export function BuildBoard({ tenantId, workspaceId, stageOrder }: BuildBoardProp
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [canManage, setCanManage] = useState(false);
 
   const scopeHeaders = useMemo(
     () => ({ 'x-harness-tenant-id': tenantId, 'x-harness-workspace-id': workspaceId }),
@@ -48,6 +50,7 @@ export function BuildBoard({ tenantId, workspaceId, stageOrder }: BuildBoardProp
       const loaded: BuildListItem[] = [];
       const seenCursors = new Set<string>();
       let cursor: string | null = null;
+      let loadedCanManage: boolean | null = null;
       do {
         const query = new URLSearchParams({ limit: String(BOARD_PAGE_LIMIT) });
         if (cursor !== null) query.set('cursor', cursor);
@@ -57,6 +60,11 @@ export function BuildBoard({ tenantId, workspaceId, stageOrder }: BuildBoardProp
         });
         if (!response.ok) throw new Error('工程ボードを取得できませんでした。');
         const body = (await response.json()) as BuildListResponse;
+        const responseCanManage = body.can_manage === true;
+        if (loadedCanManage !== null && loadedCanManage !== responseCanManage) {
+          throw new Error('工程操作の権限情報がページ間で一致しません。');
+        }
+        loadedCanManage = responseCanManage;
         loaded.push(...body.items);
         cursor = body.next_cursor;
         if (cursor !== null) {
@@ -65,6 +73,7 @@ export function BuildBoard({ tenantId, workspaceId, stageOrder }: BuildBoardProp
         }
       } while (cursor !== null);
       setItems(loaded);
+      setCanManage(loadedCanManage === true);
       setError(null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '工程ボードを取得できませんでした。');
@@ -133,13 +142,18 @@ export function BuildBoard({ tenantId, workspaceId, stageOrder }: BuildBoardProp
     <>
       {error === null ? null : <Alert tone="danger" title="工程ボードのエラー" description={error} />}
       {notice === null ? null : <Alert tone="success" title="工程を更新しました" description={notice} />}
-      <p aria-live="polite">{loading ? '工程ボードを読み込んでいます。' : `${items.length} 件の構築案件を表示中`}</p>
+      {/* 読み込み状況の告知は共通部品へ。画面ごとに <p aria-live> を書き起こさない */}
+      <LiveStatus>{loading ? '工程ボードを読み込んでいます。' : `${items.length} 件の構築案件を表示中`}</LiveStatus>
       <StageBoard
         label="ハーネス構築の工程ボード"
         columns={columns}
-        onMoveCard={(cardId, direction) => {
-          void moveCard(cardId, direction);
-        }}
+        {...(canManage
+          ? {
+              onMoveCard: (cardId: string, direction: 'previous' | 'next') => {
+                void moveCard(cardId, direction);
+              },
+            }
+          : {})}
       />
     </>
   );

@@ -57,10 +57,11 @@ describe('BPB-DTO: リスク算出', () => {
 });
 
 describe('BPB-DTO: 見出しの正規化', () => {
-  it('BPB-DTO-003: 接続元の題名が空なら種別 + id の既定値へ落ちる (一覧全体を 500 にしない)', () => {
+  it('BPB-DTO-003: 接続元の題名が空なら識別子を名前に見せない既定値へ落ちる', () => {
     const row = buildRow();
     expect(normalizeBuildTitle('   ', row)).toBe(fallbackBuildTitle(row));
     expect(fallbackBuildTitle(row)).toContain('改善要望');
+    expect(fallbackBuildTitle(row)).not.toContain(row.id);
   });
 
   it('BPB-DTO-004: 200 文字を超える題名は丸められ、改行は 1 行へ寄せられる', () => {

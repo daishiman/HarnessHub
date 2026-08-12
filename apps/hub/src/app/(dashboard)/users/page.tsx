@@ -8,20 +8,23 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  readonly searchParams: Promise<{ readonly tenant?: string }>;
+  /** `q` は共通ヘッダーの検索フォームから届く (§3.0)。 */
+  readonly searchParams: Promise<{ readonly tenant?: string; readonly q?: string }>;
 }
 
 export default async function UsersPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
+  const initialQuery = query.q?.trim() ?? '';
   return (
     <>
       <ScreenHeader
         id="users-heading"
         title="ユーザー管理"
         description="テナントに所属する利用者と、その役割を確認します。"
+        sticky
       />
       <Panel flush>
-        <UserList tenantId={tenantIdFromQuery(query, scope)} />
+        <UserList tenantId={tenantIdFromQuery(query, scope)} initialQuery={initialQuery} />
       </Panel>
     </>
   );

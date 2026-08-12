@@ -149,33 +149,5 @@ export function Card({ children, title, description, actions, as: Tag = 'section
   );
 }
 
-export interface PageHeaderProps {
-  /** 画面の名前。ページ内で唯一の `<h1>` になる。 */
-  title: ReactNode;
-  description?: ReactNode | undefined;
-  /** 主要操作 (新規作成など)。 */
-  actions?: ReactNode | undefined;
-  /** パンくず。`<nav aria-label="現在位置">` として描く。 */
-  breadcrumbs?: ReactNode | undefined;
-}
-
-/**
- * 画面上部の見出し帯。`<h1>` をここに 1 つだけ置くことで、
- * 「シェル側の h1 と画面側の h1 が両方出る」という重複を構造的に防ぐ。
- */
-export function PageHeader({ title, description, actions, breadcrumbs }: PageHeaderProps): ReactNode {
-  return (
-    <Stack gap={3} as="header" style={{ marginBlockEnd: spaceVar(5) }}>
-      {breadcrumbs === undefined ? null : (
-        <nav aria-label="現在位置" style={{ fontSize: 'var(--hh-font-size-sm)' }}>
-          {breadcrumbs}
-        </nav>
-      )}
-      <Stack direction="horizontal" gap={4} align="baseline" justify="space-between">
-        <h1>{title}</h1>
-        {actions}
-      </Stack>
-      {description === undefined ? null : <p style={{ color: colorVar('textMuted') }}>{description}</p>}
-    </Stack>
-  );
-}
+// 見出し帯の部品はここには無い。画面上部の見出しは `ScreenHeader` (shell/surfaces.tsx) が唯一の正で、
+// 以前ここにあった `PageHeader` は同じ役割の 2 つ目の部品になっていたため廃止した (FR-UIF-001)。

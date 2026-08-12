@@ -9,18 +9,25 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  readonly searchParams: Promise<{ readonly tenant?: string; readonly workspace?: string }>;
+  /** `q` は共通ヘッダーの検索フォームから届く (§3.0)。 */
+  readonly searchParams: Promise<{
+    readonly tenant?: string;
+    readonly workspace?: string;
+    readonly q?: string;
+  }>;
 }
 
 export default async function DocumentsPage({ searchParams }: PageProps) {
   const [query, scope] = await Promise.all([searchParams, resolveDashboardScope()]);
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  const initialQuery = query.q?.trim() ?? '';
   return (
     <>
       <ScreenHeader
         id="docs-heading"
         title="ドキュメント"
         description="業務ツールの使い方や運用手順をまとめて共有します。"
+        sticky
         actions={
           <ActionLink href={`/docs/new?tenant=${tenantId}&workspace=${workspaceId}`} variant="primary">
             新しく作成
@@ -28,7 +35,7 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
         }
       />
       <Panel flush>
-        <DocumentList tenantId={tenantId} workspaceId={workspaceId} />
+        <DocumentList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
       </Panel>
     </>
   );

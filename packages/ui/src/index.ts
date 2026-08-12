@@ -34,6 +34,8 @@ export { ScopeChip, StatusChip } from './components/Chip.js';
 export type { ConfirmDialogProps } from './components/ConfirmDialog.js';
 // --- 確認ダイアログ ------------------------------------------------------
 export { ConfirmDialog } from './components/ConfirmDialog.js';
+export type { CursorPagerProps } from './components/CursorPager.js';
+export { CursorPager } from './components/CursorPager.js';
 export type {
   DataTableColumn,
   DataTableProps,
@@ -44,12 +46,16 @@ export type {
 export { DataTable } from './components/DataTable.js';
 export type { FieldControlProps, FormFieldProps } from './components/FormField.js';
 export { FormField } from './components/FormField.js';
+export type { IdBadgeProps } from './components/IdBadge.js';
+export { IdBadge } from './components/IdBadge.js';
 export type {
   InlineEditColumn,
   InlineEditCommit,
   InlineEditTableProps,
 } from './components/InlineEditTable.js';
 export { InlineEditTable } from './components/InlineEditTable.js';
+export type { ListStateProps } from './components/ListState.js';
+export { ListState } from './components/ListState.js';
 export type { MarkdownEditorProps, MarkdownViewProps } from './components/Markdown.js';
 // --- Markdown ------------------------------------------------------------
 export { MarkdownEditor, MarkdownView, markdownSanitizeSchema } from './components/Markdown.js';
@@ -110,13 +116,25 @@ export type {
   CardProps,
   ContainerProps,
   ContainerSize,
-  PageHeaderProps,
   StackGap,
   StackProps,
 } from './layout/primitives.js';
-export { Card, Container, containerSizes, PageHeader, Stack } from './layout/primitives.js';
+export { Card, Container, containerSizes, Stack } from './layout/primitives.js';
 export type { BottomSheetProps } from './shell/BottomSheet.js';
 export { BottomSheet } from './shell/BottomSheet.js';
+// --- 情報の並べ方 (型の選定は specs/harness-hub-information-design-addendum.md の registry、
+//     画面ごとの割当は docs/screen-inventory.md、部品への写し方は frontend-ui-foundation-spec §5-1) ---
+export type {
+  CardGridColumns,
+  CardGridProps,
+  DataCardProps,
+  DefinitionListItem,
+  DefinitionListProps,
+  FilterBarProps,
+  LiveStatusProps,
+  TagRowProps,
+} from './shell/information.js';
+export { CardGrid, DataCard, DefinitionList, FilterBar, LiveStatus, TagRow } from './shell/information.js';
 export type { MobileTabBarProps } from './shell/MobileTabBar.js';
 export { MobileTabBar, mobileTabPrimarySlots } from './shell/MobileTabBar.js';
 // --- 共通シェル ----------------------------------------------------------
@@ -126,8 +144,12 @@ export type { ShellFooterLink, ShellFooterProps } from './shell/ShellFooter.js';
 export { ShellFooter } from './shell/ShellFooter.js';
 export type { ShellAccountLink, ShellHeaderProps } from './shell/ShellHeader.js';
 export { ShellHeader } from './shell/ShellHeader.js';
-export type { ShellSidebarProps } from './shell/ShellSidebar.js';
+export type { ShellNavGroup, ShellSidebarProps } from './shell/ShellSidebar.js';
 export { ShellSidebar } from './shell/ShellSidebar.js';
+export { StickyHeaderOffset } from './shell/StickyHeaderOffset.js';
+// 顕著度 (lead / context / metadata) の 3 段。画面側で独自の並べ方を書くときもここから読む
+export type { Salience } from './shell/salience.js';
+export { salienceLevels, salienceStyle } from './shell/salience.js';
 export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
 export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
@@ -173,6 +195,7 @@ export {
   contrastRequirements,
   densityNames,
   densityTokens,
+  mediaDown,
   mediaUp,
   radiusTokens,
   spacingTokens,

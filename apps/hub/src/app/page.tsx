@@ -1,7 +1,7 @@
 // 未認証の入口 (ランディング)。ここから「どのテナントでサインインするか」を確定させ、
 // `/{tenant_slug}/signin` へ橋渡しする。表示部品は必ず @harness-hub/ui から import する
 // (apps/hub 内で design system を再実装しない)
-import { Alert, Button, Card, PageHeader, Stack, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Card, IdBadge, ScreenHeader, Stack, TextInput } from '@harness-hub/ui';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -78,7 +78,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         // 画面上に無いため利用者は自力で復帰できない。ここで選ばせて動線を閉じる。
         return (
           <PublicShell>
-            <WorkspaceChoice workspaceIds={claims.workspace_ids} />
+            <WorkspaceChoice workspaceIds={claims.workspace_ids} workspaceNames={claims.workspace_names ?? {}} />
           </PublicShell>
         );
       }
@@ -94,7 +94,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <PublicShell>
       <Stack gap={5}>
-        <PageHeader
+        <ScreenHeader
           title="サインイン"
           description="ご契約のテナント ID を入力すると、そのテナントのサインイン画面へ移動します。"
         />
@@ -159,18 +159,27 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 /**
  * 所属 workspace が複数あり、まだどれで作業するか決まっていないときの `/`。
  *
- * 表示は session claims が持つ workspace ID をそのまま出す。表示名を引くには DB へ行く必要があるが、
+ * 表示は session claims が持つ workspace ID と表示名だけを使う。表示名を引くための DB 読取は行わないが、
  * `/` は未認証でも到達できる公開経路であり「業務データを一切含めない」(middleware/authz.ts の
  * PUBLIC_PATH_PREFIXES) という前提を崩したくない。ここで出しているのは利用者自身の session に
  * 焼かれた値だけで、新たな読取は発生しない。
  */
-function WorkspaceChoice({ workspaceIds }: { readonly workspaceIds: readonly string[] }) {
+function WorkspaceChoice({
+  workspaceIds,
+  workspaceNames,
+}: {
+  readonly workspaceIds: readonly string[];
+  readonly workspaceNames: Readonly<Record<string, string>>;
+}) {
   // 所属 0 件でも scope は決まらない。選択肢が空のカードだけを出すと、なぜ進めないのか
   // 分からないまま行き止まりになるため、状態を名指しして次の行動を示す。
   if (workspaceIds.length === 0) {
     return (
       <Stack gap={5}>
-        <PageHeader title="作業できる Workspace がありません" />
+        <ScreenHeader
+          title="作業できる Workspace がありません"
+          description="サインインは完了していますが、割り当てられた Workspace がないため業務画面へ進めません。"
+        />
         <Alert
           tone="warning"
           title="Workspace に追加されていません"
@@ -182,7 +191,7 @@ function WorkspaceChoice({ workspaceIds }: { readonly workspaceIds: readonly str
 
   return (
     <Stack gap={5}>
-      <PageHeader
+      <ScreenHeader
         title="Workspace を選択"
         description="複数の Workspace に所属しています。作業する Workspace を選ぶと業務画面へ移動します。"
       />
@@ -197,11 +206,21 @@ function WorkspaceChoice({ workspaceIds }: { readonly workspaceIds: readonly str
           `/signin/workspace` が担い、所属外の ID は route 側で必ず弾く。
         */}
         <Stack gap={3} as="ul" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-          {workspaceIds.map((workspaceId) => (
-            <li key={workspaceId}>
-              <a href={workspaceEntryPath(workspaceId)}>{workspaceId} で作業する</a>
-            </li>
-          ))}
+          {workspaceIds.map((workspaceId) => {
+            const workspaceName = workspaceNames[workspaceId];
+            return (
+              <li key={workspaceId}>
+                {workspaceName === undefined ? (
+                  <Stack gap={2}>
+                    <IdBadge value={workspaceId} label="Workspace ID" />
+                    <a href={workspaceEntryPath(workspaceId)}>この Workspace で作業する</a>
+                  </Stack>
+                ) : (
+                  <a href={workspaceEntryPath(workspaceId)}>{workspaceName} で作業する</a>
+                )}
+              </li>
+            );
+          })}
         </Stack>
       </Card>
 

@@ -9,7 +9,7 @@
  */
 
 import { signinRouteParamsSchema } from '@harness-hub/schemas';
-import { Alert } from '@harness-hub/ui';
+import { Alert, ScreenHeader, Stack } from '@harness-hub/ui';
 import { notFound } from 'next/navigation';
 
 import { PublicShell } from '../../../components/shell/public-shell.js';
@@ -44,7 +44,7 @@ async function renderSigninBody({ params }: SigninPageProps) {
   if (connection === null) {
     return (
       <section aria-labelledby="signin-heading">
-        <h1 id="signin-heading">サインイン</h1>
+        <ScreenHeader id="signin-heading" title="サインイン" />
         <Alert
           tone="danger"
           title="このテナントではサインインできません"
@@ -59,7 +59,7 @@ async function renderSigninBody({ params }: SigninPageProps) {
     // 認証基盤が未結線であることを画面上でも隠さない (ADR §10)
     return (
       <section aria-labelledby="signin-heading">
-        <h1 id="signin-heading">サインイン</h1>
+        <ScreenHeader id="signin-heading" title="サインイン" />
         <Alert
           tone="warning"
           title="認証基盤が未結線です"
@@ -72,13 +72,18 @@ async function renderSigninBody({ params }: SigninPageProps) {
 
   return (
     <section aria-labelledby="signin-heading">
-      <h1 id="signin-heading">サインイン</h1>
-      <p>{connection.displayName} のアカウントでサインインします。</p>
-      <TenantOidcSigninForm
-        action={tenantOidcSigninAction(parsed.data.tenant_slug)}
-        csrfEndpoint={tenantOidcCsrfAction(parsed.data.tenant_slug)}
-        displayName={connection.displayName}
-      />
+      <Stack gap={4}>
+        <ScreenHeader
+          id="signin-heading"
+          title="サインイン"
+          description={`${connection.displayName} のアカウントでサインインします。`}
+        />
+        <TenantOidcSigninForm
+          action={tenantOidcSigninAction(parsed.data.tenant_slug)}
+          csrfEndpoint={tenantOidcCsrfAction(parsed.data.tenant_slug)}
+          displayName={connection.displayName}
+        />
+      </Stack>
     </section>
   );
 }

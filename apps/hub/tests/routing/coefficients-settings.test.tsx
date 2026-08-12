@@ -23,7 +23,8 @@ const CURRENT = {
   annual_hours: 1800,
   minutes_per_run: 30,
   sheet_reduction_rate: 0.5,
-  updated_by: 'admin@example.com',
+  updated_by: 'user-admin-1',
+  updated_by_name: 'admin@example.com',
 } as const;
 
 /** GET は現在値、PATCH は差分反映後の値を返す既定の API スタブ。 */
@@ -32,7 +33,7 @@ function stubApi(overrides: { readonly get?: () => Response; readonly patch?: ()
     if (init?.method === 'PATCH') {
       if (overrides.patch !== undefined) return overrides.patch();
       const patch = JSON.parse(String(init.body)) as Record<string, number>;
-      return Response.json({ ...CURRENT, ...patch, updated_by: 'admin@example.com' });
+      return Response.json({ ...CURRENT, ...patch });
     }
     return overrides.get === undefined ? Response.json(CURRENT) : overrides.get();
   });
@@ -96,10 +97,27 @@ describe('TID-COEF: 見積係数フォーム', () => {
     expect(container.querySelector<HTMLInputElement>('input[name="minutesPerRun"]')?.value).toBe('30');
     expect(container.querySelector<HTMLInputElement>('input[name="sheetReductionRate"]')?.value).toBe('0.5');
     expect(container.textContent).toContain('admin@example.com');
+    expect(container.querySelector('[aria-label="利用者 ID: user-admin-1"]')).not.toBeNull();
+    expect(container.textContent).toContain('user-admin-1');
     expect(fetcher).toHaveBeenCalledWith('/api/v1/tenant/coefficients', {
       credentials: 'same-origin',
       headers: { 'x-harness-tenant-id': 'tenant-a' },
     });
+  });
+
+  it('TID-COEF-01b: 既定値の更新者は内部 ID ではなくシステムと表示する', async () => {
+    stubApi({
+      get: () =>
+        Response.json({
+          ...CURRENT,
+          updated_by: 'system-default',
+          updated_by_name: undefined,
+        }),
+    });
+    const container = await mount();
+
+    expect(container.textContent).toContain('システム');
+    expect(container.textContent).not.toContain('system-default');
   });
 
   it('TID-COEF-02: 取得が 4xx/5xx -> フォームを出さずエラーを知らせる (空フォームで保存させない)', async () => {

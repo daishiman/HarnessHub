@@ -11,8 +11,10 @@ export default async function WorkspaceLayout({ children }: { readonly children:
     <HubShell
       scope={shell.scope}
       accountName={shell.accountName}
+      accountNameIsIdentifier={shell.accountNameIsIdentifier}
       accountRole={shell.role}
       workspaceIds={shell.workspaceIds}
+      workspaceNames={shell.workspaceNames}
       currentHref={shell.currentHref}
     >
       {children}

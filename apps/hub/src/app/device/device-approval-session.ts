@@ -9,7 +9,12 @@
 import { readCookie, SESSION_COOKIE_NAME, verifySessionToken } from '../../lib/auth/index.js';
 
 export type DeviceApprovalSession =
-  | { readonly status: 'authenticated'; readonly tenantId: string; readonly workspaceIds: readonly string[] }
+  | {
+      readonly status: 'authenticated';
+      readonly tenantId: string;
+      readonly workspaceIds: readonly string[];
+      readonly workspaceNames: Readonly<Record<string, string>>;
+    }
   | { readonly status: 'unauthenticated' }
   | { readonly status: 'unavailable' };
 
@@ -36,5 +41,6 @@ export async function resolveDeviceApprovalSession(
     status: 'authenticated',
     tenantId: verified.claims.tenant_id,
     workspaceIds: [...verified.claims.workspace_ids],
+    workspaceNames: { ...(verified.claims.workspace_names ?? {}) },
   };
 }

@@ -44,6 +44,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
             </ActionLink>
           </>
         }
+        sticky
       />
       <Panel flush>
         <CatalogList scope={resolved} initialTarget={toTarget(query.target)} initialQuery={query.q ?? ''} />

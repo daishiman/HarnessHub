@@ -19,7 +19,7 @@ export const GET = withAuthz(
       const { problemDetailsFromZodError } = await import('@harness-hub/schemas');
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
-    const { limit, cursor, scope, status } = parsed.data;
+    const { limit, cursor, scope, status, q } = parsed.data;
     const page = await docsCmsRuntime().repository.listDocuments(
       createRepositoryContext({ tenantId: authz.resource.tenantId }),
       {
@@ -27,6 +27,7 @@ export const GET = withAuthz(
         ...(cursor !== undefined ? { cursor } : {}),
         ...(scope !== undefined ? { scope } : {}),
         ...(status !== undefined ? { status } : {}),
+        ...(q !== undefined ? { query: q } : {}),
       },
     );
     return Response.json({

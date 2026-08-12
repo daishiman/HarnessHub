@@ -61,6 +61,23 @@ function toDisplaySettingsResponse(row: {
   return parsed.success ? parsed.data : { theme: 'system', density: 'comfortable', language: 'ja' };
 }
 
+async function toCoefficientsResponse(
+  users: UsersRepo,
+  context: RepositoryContext,
+  row: Awaited<ReturnType<HearingIntakeRepository['getCoefficients']>>,
+): Promise<TenantCoefficientsResponse> {
+  const isSystemUpdater = row.updatedBy === 'system' || row.updatedBy === 'system-default';
+  const updater = isSystemUpdater ? null : await users.findById(context, row.updatedBy);
+  const displayName = updater?.name.trim() || updater?.email.trim() || null;
+  return {
+    annual_hours: row.annualHours,
+    minutes_per_run: row.minutesPerRun,
+    sheet_reduction_rate: row.sheetReductionRate,
+    updated_by: row.updatedBy,
+    ...(displayName === null ? {} : { updated_by_name: displayName }),
+  };
+}
+
 const SALARY_POLICY: PiiFieldPolicy = { field: 'salary', sensitivity: 'admin_only' };
 
 /** pii-salary-contract.test.ts が固定する変換。role が workspace-admin 以上なら admin viewer 扱い。 */
@@ -77,8 +94,19 @@ export interface UserOrgAdminServiceDeps {
 }
 
 export interface UserOrgAdminService {
-  listUsers(context: RepositoryContext, viewerRole: ViewerRole, actorId: string): Promise<UserListResponse>;
-  exportUsers(context: RepositoryContext): Promise<readonly UserExportRow[]>;
+  /** `options.query` は氏名・部署の部分一致 (`?q=`)。絞り込みは repository の SQL 側で行う。 */
+  listUsers(
+    context: RepositoryContext,
+    viewerRole: ViewerRole,
+    actorId: string,
+    options?: { readonly query?: string },
+  ): Promise<UserListResponse>;
+  /**
+   * `options.query` は一覧と同じ絞り込み。書き出しにも同じ条件を通すのは、画面に
+   * 「一覧を CSV で書き出す」と書いてあるため — 絞り込んだ一覧を見ながら押した結果が
+   * 全件になると、ラベルと結果が食い違う。
+   */
+  exportUsers(context: RepositoryContext, options?: { readonly query?: string }): Promise<readonly UserExportRow[]>;
   getUser(context: RepositoryContext, id: string, viewerRole: ViewerRole, actorId: string): Promise<UserDetail | null>;
   updateUser(context: RepositoryContext, id: string, request: UpdateUserRequest, actorId: string): Promise<UserDetail>;
   getMe(context: RepositoryContext, userId: string): Promise<MeResponse | null>;
@@ -137,9 +165,11 @@ function toListItemBase(row: UserRow, salary: number | string | null): Record<st
 
 export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOrgAdminService {
   return {
-    async listUsers(context, viewerRole, actorId) {
+    async listUsers(context, viewerRole, actorId, options) {
       const viewer = toPiiViewer(viewerRole);
-      const rows = await deps.users.list(context);
+      const rows = await deps.users.list(context, {
+        ...(options?.query === undefined ? {} : { query: options.query }),
+      });
       const items = await Promise.all(
         rows.map(async (row) => {
           const salary = await resolveSalaryDisplay(deps.users, context, row, viewer);
@@ -161,8 +191,10 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
       return { items, next_cursor: null };
     },
 
-    async exportUsers(context) {
-      const rows = await deps.users.list(context);
+    async exportUsers(context, options) {
+      const rows = await deps.users.list(context, {
+        ...(options?.query === undefined ? {} : { query: options.query }),
+      });
       return rows.map((row) => {
         // ciphertext の有無だけを渡し、salary を復号しない。共通 export guard は viewer を受けず常にマスクする。
         const masked = maskPiiForExport(toListItemBase(row, row.salary), [SALARY_POLICY]);
@@ -318,12 +350,7 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
 
     async getCoefficients(context) {
       const row = await deps.coefficients.getCoefficients(context);
-      return {
-        annual_hours: row.annualHours,
-        minutes_per_run: row.minutesPerRun,
-        sheet_reduction_rate: row.sheetReductionRate,
-        updated_by: row.updatedBy,
-      };
+      return toCoefficientsResponse(deps.users, context, row);
     },
 
     async updateCoefficients(context, request, actorId) {
@@ -355,12 +382,7 @@ export function createUserOrgAdminService(deps: UserOrgAdminServiceDeps): UserOr
         emailEnabled: settings.emailEnabled,
         auditEventId: auditEvent.id,
       });
-      return {
-        annual_hours: row.annualHours,
-        minutes_per_run: row.minutesPerRun,
-        sheet_reduction_rate: row.sheetReductionRate,
-        updated_by: row.updatedBy,
-      };
+      return toCoefficientsResponse(deps.users, context, row);
     },
   };
 }

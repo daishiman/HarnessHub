@@ -49,9 +49,22 @@ export function createScopedCrud(adapter: CoreAdapter, table: SQLiteTable): Scop
   const [idKey, idCol] = idEntry;
   const [tenantKey, tenantCol] = tenantEntry;
   const createdAtEntry = entryByDbName('created_at');
+  const workspaceEntry = entryByDbName('workspace_id');
 
-  const scopeWhere = (context: RepositoryContext, id?: string) =>
-    id === undefined ? eq(tenantCol, context.tenantId) : and(eq(tenantCol, context.tenantId), eq(idCol, id));
+  const scopeWhere = (context: RepositoryContext, id?: string) => {
+    const predicates = [eq(tenantCol, context.tenantId)];
+    if (context.workspaceId !== undefined) {
+      if (workspaceEntry === undefined) {
+        throw new RepositoryError(
+          'invalid-context',
+          `${tableName} は workspace_id を持たないため Workspace scope を適用できません`,
+        );
+      }
+      predicates.push(eq(workspaceEntry[1], context.workspaceId));
+    }
+    if (id !== undefined) predicates.push(eq(idCol, id));
+    return and(...predicates);
+  };
 
   return {
     async insert(context, values) {

@@ -5,7 +5,7 @@
  * ここが緑でないと、後続の 4a2z (レスポンシブ検査) / xaa3 (VRT) の計測結果は
  * すべて信用できない。ハーネスは「検査の土台」なので土台自身を先に固定する。
  */
-import { AppShell, Card, NavList, PageHeader, SidebarLayout, Stack } from '@harness-hub/ui';
+import { AppShell, Card, NavList, ScreenHeader, SidebarLayout, Stack } from '@harness-hub/ui';
 import { describe, expect, it } from 'vitest';
 
 import { renderDocument, viewportPresets, withBrowserSession } from './browser-harness.js';
@@ -17,7 +17,7 @@ const sampleBody = (
         <NavList items={[{ href: '/docs', label: 'ドキュメント' }]} label="主要ナビゲーション" currentHref="/docs" />
       }
     >
-      <PageHeader title="ドキュメント" description="共通とテナントの文書" />
+      <ScreenHeader title="ドキュメント" description="共通とテナントの文書" />
       <Stack gap={5}>
         <Card title="最近の更新">本文</Card>
       </Stack>

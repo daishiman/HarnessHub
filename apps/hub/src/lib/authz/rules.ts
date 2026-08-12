@@ -47,6 +47,7 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'sheets.regenerate': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
   'builds.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'builds.stage_change': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+  'projects.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.create': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'projects.update': { minRole: 'owner', requiredScope: null, credential: SESSION, selfOnly: false },
   // CWV probe は `/catalog` と同 UI が読む read endpoint だけを middleware で許可し、

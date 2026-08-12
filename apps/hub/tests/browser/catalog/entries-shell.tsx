@@ -54,8 +54,8 @@ export const shellCatalogEntries: readonly CatalogEntry[] = [
         currentName="営業ワークスペース"
         switchLabel="ワークスペースを切り替える"
         options={[
-          { href: '/w/sales', label: '営業ワークスペース', current: true },
-          { href: '/w/cs', label: 'カスタマーサクセス', current: false },
+          { href: '/w/sales', label: '営業ワークスペース', isIdentifier: false, current: true },
+          { href: '/w/cs', label: 'カスタマーサクセス', isIdentifier: false, current: false },
         ]}
       />
     ),

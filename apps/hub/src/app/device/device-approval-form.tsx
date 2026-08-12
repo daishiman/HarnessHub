@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Button, Select, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Panel, ScreenHeader, Select, Stack, TextInput } from '@harness-hub/ui';
 import { type FormEvent, type ReactNode, useState } from 'react';
 
 import { TENANT_HEADER, WORKSPACE_HEADER } from '../../middleware-contract.js';
@@ -63,12 +63,15 @@ export async function submitDeviceApproval(
 export interface DeviceApprovalFormProps {
   readonly tenantId: string;
   readonly workspaceIds: readonly string[];
+  /** session に含まれる表示専用の名前。選択値と API 送信値は常に workspace ID のまま。 */
+  readonly workspaceNames?: Readonly<Record<string, string>> | undefined;
   readonly initialUserCode?: string;
 }
 
 export function DeviceApprovalForm({
   tenantId,
   workspaceIds,
+  workspaceNames = {},
   initialUserCode = '',
 }: DeviceApprovalFormProps): ReactNode {
   const [userCode, setUserCode] = useState(initialUserCode);
@@ -90,34 +93,48 @@ export function DeviceApprovalForm({
 
   return (
     <section aria-labelledby="device-approval-heading">
-      <h1 id="device-approval-heading">端末を承認する</h1>
-      <p>PublisherまたはCLIに表示された8文字の確認コードを入力してください。</p>
-      <form onSubmit={onSubmit}>
-        <TextInput
-          label="確認コード"
-          description="英数字8文字です。空白やハイフンは取り除いて送信します。"
-          value={userCode}
-          onChange={(event) => setUserCode(event.currentTarget.value)}
-          autoComplete="one-time-code"
-          autoCapitalize="characters"
-          spellCheck={false}
-          inputMode="text"
-          maxLength={11}
-          required
+      <Stack gap={4}>
+        <ScreenHeader
+          id="device-approval-heading"
+          title="端末を承認する"
+          description="Publisher または CLI に表示された 8 文字の確認コードを入力してください。"
         />
-        <Select
-          label="承認するWorkspace"
-          description="この端末が操作するWorkspaceを選びます。"
-          options={workspaceIds.map((id) => ({ value: id, label: id }))}
-          value={workspaceId}
-          onChange={(event) => setWorkspaceId(event.currentTarget.value)}
-          required
-        />
-        <Button type="submit" variant="primary" loading={submitting} disabled={workspaceId.length === 0}>
-          この端末を承認
-        </Button>
-      </form>
-      {result === null ? null : <DeviceApprovalNotice result={result} />}
+        <Panel>
+          <form onSubmit={onSubmit}>
+            <Stack gap={3}>
+              <TextInput
+                label="確認コード"
+                description="英数字8文字です。空白やハイフンは取り除いて送信します。"
+                value={userCode}
+                onChange={(event) => setUserCode(event.currentTarget.value)}
+                autoComplete="one-time-code"
+                autoCapitalize="characters"
+                spellCheck={false}
+                inputMode="text"
+                maxLength={11}
+                required
+              />
+              <Select
+                label="承認するWorkspace"
+                description="この端末が操作するWorkspaceを選びます。"
+                options={workspaceIds.map((id) => ({
+                  value: id,
+                  label: workspaceNames[id] ?? `Workspace ID: ${id}`,
+                }))}
+                value={workspaceId}
+                onChange={(event) => setWorkspaceId(event.currentTarget.value)}
+                required
+              />
+              <div>
+                <Button type="submit" variant="primary" loading={submitting} disabled={workspaceId.length === 0}>
+                  この端末を承認する
+                </Button>
+              </div>
+            </Stack>
+          </form>
+        </Panel>
+        {result === null ? null : <DeviceApprovalNotice result={result} />}
+      </Stack>
     </section>
   );
 }

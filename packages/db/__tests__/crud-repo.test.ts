@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { TursoAdapter } from '../connection/turso';
 import { createScopedCrud } from '../repository/crud';
 import { createTenantsRepo } from '../repository/tenants';
-import { releases } from '../schema/core/catalog';
+import { projects, releases } from '../schema/core/catalog';
 import { workspaces } from '../schema/core/identity';
 import { idempotencyLedger } from '../schema/core/publish';
 import { auditEvents, sessionRevocations } from '../schema/core/security';
@@ -75,5 +75,50 @@ describe('updateById の異常系', () => {
     const repo = createScopedCrud(asCore(adapter), workspaces);
     await expect(repo.updateById(context, 'missing-id', { name: 'NG' })).rejects.toThrow(EntityNotFoundError);
     await expect(repo.updateById(context, 'missing-id', { name: 'NG' })).rejects.toThrow(/workspaces が見つかりません/);
+  });
+});
+
+describe('Workspace scope の強制', () => {
+  it('workspaceId を指定すると同じ tenant の別 Workspace の Project を返さない', async () => {
+    const workspaceRepo = createScopedCrud(asCore(adapter), workspaces);
+    const projectRepo = createScopedCrud(asCore(adapter), projects);
+    const workspaceA = await workspaceRepo.insert(context, { slug: 'crud-ws-a', name: 'CRUD Workspace A' });
+    const workspaceB = await workspaceRepo.insert(context, { slug: 'crud-ws-b', name: 'CRUD Workspace B' });
+    const projectA = await projectRepo.insert(context, {
+      workspaceId: workspaceA.id,
+      slug: 'crud-project-a',
+      name: 'CRUD Project A',
+      description: '',
+      ownerUserId: 'owner-a',
+      status: 'active',
+    });
+    const projectB = await projectRepo.insert(context, {
+      workspaceId: workspaceB.id,
+      slug: 'crud-project-b',
+      name: 'CRUD Project B',
+      description: '',
+      ownerUserId: 'owner-b',
+      status: 'active',
+    });
+    const workspaceAContext = createRepositoryContext({
+      tenantId: context.tenantId,
+      workspaceId: workspaceA.id as string,
+    });
+
+    expect(await projectRepo.findById(workspaceAContext, projectA.id as string)).not.toBeNull();
+    expect(await projectRepo.findById(workspaceAContext, projectB.id as string)).toBeNull();
+    expect((await projectRepo.list(workspaceAContext)).map((row) => row.id)).toEqual([projectA.id]);
+    await expect(
+      projectRepo.updateById(workspaceAContext, projectB.id as string, { name: '越境更新' }),
+    ).rejects.toThrow(EntityNotFoundError);
+  });
+
+  it('workspaceId 未指定なら従来どおり tenant 全体を読み、列が無い表への指定は拒否する', async () => {
+    const workspaceRepo = createScopedCrud(asCore(adapter), workspaces);
+    const allWorkspaces = await workspaceRepo.list(context);
+    expect(allWorkspaces.length).toBeGreaterThanOrEqual(2);
+
+    const impossibleContext = createRepositoryContext({ tenantId: context.tenantId, workspaceId: 'workspace-a' });
+    await expect(workspaceRepo.list(impossibleContext)).rejects.toThrow(/workspace_id を持たない/);
   });
 });

@@ -72,6 +72,7 @@ export {
   emailSchema,
   identifierSchema,
   isoDateTimeSchema,
+  listSearchTermSchema,
   localeSchema,
   paginationQuerySchema,
   semVerSchema,

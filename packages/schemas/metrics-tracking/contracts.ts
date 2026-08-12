@@ -143,6 +143,15 @@ export const metricsSummaryTrendPointSchema = z
   .strict();
 export type MetricsSummaryTrendPoint = z.output<typeof metricsSummaryTrendPointSchema>;
 
+/**
+ * 画面に出すランキングの件数。
+ *
+ * この値の正本はここ 1 箇所。サーバはこの件数だけを返し、画面は返ってきた順にそのまま描く。
+ * 「サーバは全件返し、画面が上位 N 件に切る」形に戻さないこと —
+ * 使わないデータの転送が対象の増加に比例して増えるうえ、母集団を画面側で数えることになる。
+ */
+export const METRICS_RANKING_LIMIT = 10;
+
 /** ハーネス別ランキングの 1 行。 */
 export const metricsSummaryRankingItemSchema = z
   .object({
@@ -172,7 +181,22 @@ export const metricsSummaryResponseSchema = z
     period: z.object(periodRange).strict(),
     kpi: metricsSummaryKpiSchema,
     trend: z.array(metricsSummaryTrendPointSchema),
-    ranking: z.array(metricsSummaryRankingItemSchema),
+    /** 削減額の大きい順、最大 `METRICS_RANKING_LIMIT` 件。画面はこの順序をそのまま描く。 */
+    ranking: z.array(metricsSummaryRankingItemSchema).max(METRICS_RANKING_LIMIT),
+    /**
+     * ランキングの母集団。`ranking` は上位だけなので、そこからは数えられない。
+     * 稼働率 (使われている割合) はこの値から出す。
+     */
+    rankingTotals: z
+      .object({
+        total: z.number().int().nonnegative(),
+        active: z.number().int().nonnegative(),
+      })
+      .strict()
+      .refine((totals) => totals.active <= totals.total, {
+        message: 'active は total 以下である必要があります',
+        path: ['active'],
+      }),
     departments: z.array(metricsSummaryDepartmentItemSchema),
   })
   .strict();

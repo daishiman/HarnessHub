@@ -1,5 +1,5 @@
 /** Web S01 の書込境界。状態機械と検査は既存 Publish API の所有物として再利用する。 */
-import type { PublishProject, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
+import type { PublishProject, PublishProjectChoice, PublishRequestView, PublishVisibility } from '@harness-hub/schemas';
 
 export interface PublishJourneyScope {
   tenantId: string;
@@ -52,6 +52,11 @@ export interface PublishJourneyProgress {
 }
 
 export interface PublishJourneyPort {
+  listProjects(
+    scope: PublishJourneyScope,
+    signal?: AbortSignal,
+  ): Promise<PublishJourneyResult<readonly PublishProjectChoice[]>>;
+
   createProject(
     scope: PublishJourneyScope,
     input: PublishProjectPreparation,

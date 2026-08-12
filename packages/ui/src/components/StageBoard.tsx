@@ -1,7 +1,7 @@
 'use client';
 
 /** かんばん風ステージボード。工程移動はメニュー操作に限り、DnD は採用しない (タッチ/キーボード同等性)。 */
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { getStatusLabel, type StatusValue } from '../i18n/status-vocabulary.js';
 import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
@@ -47,20 +47,58 @@ const riskColors: Record<StageRisk, string> = {
 
 export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): ReactNode {
   const { locale, t } = useUi();
+  const boardId = useId();
+  const labelledColumns = columns.map((column) => ({
+    ...column,
+    stageLabel: getStatusLabel('buildStage', column.stage, locale),
+  }));
 
   return (
-    <section aria-label={label} style={{ display: 'flex', gap: spaceVar(3), overflowX: 'auto' }}>
-      {columns.map((column, columnIndex) => {
-        const stageLabel = getStatusLabel('buildStage', column.stage, locale);
+    <section aria-label={label} data-hh-stage-board="">
+      {/* 狭幅用の工程 segment。radio を使うので矢印キーによる選択がブラウザ標準で成立し、
+          viewport を JavaScript で読む必要もない。カード本体は下の 1 組だけを共有する。 */}
+      <fieldset data-hh-stage-picker="">
+        <legend>{t('board.stagePicker')}</legend>
+        <div data-hh-stage-picker-options="">
+          {labelledColumns.map((column, columnIndex) => {
+            const choiceId = `${boardId}-${column.stage}-choice`;
+            return (
+              <label key={column.stage} data-hh-stage-option="" htmlFor={choiceId}>
+                <input
+                  id={choiceId}
+                  type="radio"
+                  name={`${boardId}-stage`}
+                  data-hh-stage-choice={column.stage}
+                  aria-controls={`${boardId}-${column.stage}-column`}
+                  defaultChecked={columnIndex === 0}
+                />
+                <span>{column.stageLabel}</span>
+                <span
+                  style={{ color: colorVar('textMuted') }}
+                >{`(${column.cards.length}${t('board.itemCount')})`}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
-        return (
-          <div key={column.stage} style={{ ...surfaceStyle, minWidth: '240px', padding: spaceVar(3) }}>
-            <h3 style={{ fontSize: 'var(--hh-font-size-md)', margin: 0 }}>
-              {stageLabel}
+      {/* narrow / wide で別のカード群を描かない。同じ column DOM を CSS で 1 列 / 7 列へ
+          変形するため、支援技術へ同じカードが二重に現れず hydration の分岐も生まれない。 */}
+      <div data-hh-stage-columns="">
+        {labelledColumns.map((column, columnIndex) => (
+          <section
+            key={column.stage}
+            id={`${boardId}-${column.stage}-column`}
+            data-hh-stage-column={column.stage}
+            aria-labelledby={`${boardId}-${column.stage}-heading`}
+            style={{ ...surfaceStyle, padding: spaceVar(3) }}
+          >
+            <h3 id={`${boardId}-${column.stage}-heading`} style={{ fontSize: 'var(--hh-font-size-md)', margin: 0 }}>
+              {column.stageLabel}
               <span style={{ color: colorVar('textMuted') }}>{` (${column.cards.length}${t('board.itemCount')})`}</span>
             </h3>
 
-            <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: spaceVar(2) }}>
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: spaceVar(2) }}>
               {column.cards.map((card) => {
                 const risk = card.risk ?? 'none';
                 return (
@@ -118,9 +156,9 @@ export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): Rea
             {column.cards.length === 0 ? (
               <p style={{ color: colorVar('textMuted'), fontSize: 'var(--hh-font-size-sm)' }}>{t('table.empty')}</p>
             ) : null}
-          </div>
-        );
-      })}
+          </section>
+        ))}
+      </div>
     </section>
   );
 }

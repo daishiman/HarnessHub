@@ -72,6 +72,8 @@ export const GET = withAuthz(
       if (problem === null) throw error;
       return problemResponse(problem);
     }
-    return Response.json(result);
+    // 表示側へ role 名や認可表を複製しない。API が同じ認可判定から capability を投影し、
+    // member の DOM には押しても必ず 403 になる操作を最初から出さない。
+    return Response.json({ ...result, can_manage: authz.can('builds.stage_change') });
   },
 );

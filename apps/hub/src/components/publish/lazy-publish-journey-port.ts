@@ -18,6 +18,8 @@ const loadModule = () => import('../../lib/publish-journey/index.js');
  * ここで型を書き写すと、port 契約が変わったときに委譲側だけ古いまま通ってしまう。
  */
 export const lazyHttpPublishJourneyPort: PublishJourneyPort = {
+  listProjects: async (...args: Parameters<PublishJourneyPort['listProjects']>) =>
+    (await loadModule()).httpPublishJourneyPort.listProjects(...args),
   createProject: async (...args: Parameters<PublishJourneyPort['createProject']>) =>
     (await loadModule()).httpPublishJourneyPort.createProject(...args),
   submitPackage: async (...args: Parameters<PublishJourneyPort['submitPackage']>) =>

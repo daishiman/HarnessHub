@@ -99,6 +99,8 @@ export function directoryUserFor(user: SeededUser): DirectoryUser {
     id: user.id,
     tenantId: user.tenantId,
     idpSubject: `idp-${user.email}`,
+    name: '',
+    email: user.email,
     role: user.role,
     status: 'active',
     workspaceIds: [],

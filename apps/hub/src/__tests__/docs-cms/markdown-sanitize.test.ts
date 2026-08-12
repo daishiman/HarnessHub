@@ -63,7 +63,12 @@ describe('DOCS-SEC7: Doc 本文 Markdown の sanitize (共通レンダラ)', () 
   it('DOCS-SEC7-102: S15 編集画面のプレビューも sanitize 済み HTML のみを描画する', () => {
     const editPage = resolve(process.cwd(), 'src/app/(dashboard)/docs/[id]/edit/page.tsx');
     if (!existsSync(editPage)) return;
-    const source = readFileSync(editPage, 'utf8');
+    const editImplementation = resolve(process.cwd(), 'src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx');
+    // page が初期 bundle 削減の wrapper でも、遅延読込先まで含めて sanitize 契約を検査する。
+    const source = [editPage, editImplementation]
+      .filter((file) => existsSync(file))
+      .map((file) => readFileSync(file, 'utf8'))
+      .join('\n');
     expect(source).toContain('MarkdownView');
     expect(source).not.toContain('dangerouslySetInnerHTML');
   });

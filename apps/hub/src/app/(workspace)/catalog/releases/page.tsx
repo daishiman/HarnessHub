@@ -1,7 +1,7 @@
 import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
-import { CatalogReleaseHistory } from '../../../../components/catalog/CatalogReleaseHistory.js';
+import { LazyCatalogReleaseHistory } from '../../../../components/catalog/catalog-release-history-lazy.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
@@ -38,12 +38,13 @@ export default async function CatalogReleasesPage({ searchParams }: PageProps) {
           { label: 'リリース履歴' },
         ]}
         breadcrumbsLabel="現在地"
+        sticky
       />
       <Panel flush={projectId !== ''}>
         {projectId === '' ? (
           <p style={{ margin: 0 }}>業務ツールを選ぶと、その公開履歴を表示します。</p>
         ) : (
-          <CatalogReleaseHistory scope={resolved} projectId={projectId} />
+          <LazyCatalogReleaseHistory scope={resolved} projectId={projectId} />
         )}
       </Panel>
     </>

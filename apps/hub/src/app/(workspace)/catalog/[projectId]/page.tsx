@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { CatalogDetail } from '../../../../components/catalog/CatalogDetail.js';
+import { LazyCatalogDetail } from '../../../../components/catalog/catalog-detail-lazy.js';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
 
 export const metadata: Metadata = {
@@ -19,5 +19,7 @@ interface PageProps {
 
 export default async function CatalogDetailPage({ params, searchParams }: PageProps) {
   const [{ projectId }, query, scope] = await Promise.all([params, searchParams, resolveDashboardScope()]);
-  return <CatalogDetail scope={scopeFromQuery(query, scope)} projectId={projectId} publishId={query.publish ?? null} />;
+  return (
+    <LazyCatalogDetail scope={scopeFromQuery(query, scope)} projectId={projectId} publishId={query.publish ?? null} />
+  );
 }

@@ -6,7 +6,7 @@
  */
 import { z } from 'zod';
 import { paginatedSchema } from '../src/envelope.js';
-import { identifierSchema, paginationQuerySchema } from '../src/primitives.js';
+import { identifierSchema, listSearchTermSchema, paginationQuerySchema } from '../src/primitives.js';
 
 export const feedbackTypeSchema = z.enum(['improvement', 'review', 'bug']);
 export type FeedbackType = z.output<typeof feedbackTypeSchema>;
@@ -62,6 +62,18 @@ export const feedbackListQuerySchema = paginationQuerySchema.extend({
   status: feedbackStatusSchema.optional(),
   type: feedbackTypeSchema.optional(),
   project_id: identifierSchema.optional(),
+  /**
+   * 検索対象は **受付番号 (code) と本文 (body)**。
+   *
+   * 本文を含めるのは、一覧に出ている列 (code / type / priority / status) だけでは
+   * 「どの要望か」を思い出せないため。要望を探す人が覚えているのは分類ではなく
+   * 「〇〇が遅い、と書いたやつ」であり、それは本文にしか無い。
+   *
+   * docs の一覧が本文を検索対象にしないのと扱いが違うのは、本文の性質が違うため。
+   * feedback の body は 20,000 字上限の短い申告文で、それ自体が要望の identity になる。
+   * docs の body_markdown は 200,000 字の長文で、LIKE で舐める対象ではない。
+   */
+  q: listSearchTermSchema.optional(),
 });
 export type FeedbackListQuery = z.output<typeof feedbackListQuerySchema>;
 

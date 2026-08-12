@@ -1,4 +1,7 @@
 /** base 層 CSS の契約。素の HTML 要素が token を読む状態であることを固定する。 */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { buildBaseCss } from './base-css.js';
@@ -6,6 +9,29 @@ import { focusRingDeclarations } from './focus-ring.js';
 import { breakpointTokens, buildThemeCss, mediaUp } from './tokens.js';
 
 const css = buildBaseCss();
+/** 実際に配られる成果物。生成関数の出力と別に読む (再生成し忘れをここでも踏む)。 */
+const tokensCssArtifact = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'tokens.css'), 'utf8');
+
+interface BreakpointUse {
+  readonly value: number;
+  readonly unit: string;
+}
+
+/**
+ * CSS から breakpoint の指定を、**単位を捨てずに**拾う。
+ *
+ * 対象は `@media` の条件部だけに限る (`{` の手前で切る)。`max-width: 100%` のような
+ * 通常の宣言は breakpoint ではないので、全文から拾うと本題でない値が混ざる。
+ */
+function collectBreakpointUses(source: string, feature: 'min-width' | 'max-width'): readonly BreakpointUse[] {
+  const preludes = [...source.matchAll(/@media[^{]*/g)].map((match) => match[0]);
+  return preludes.flatMap((prelude) =>
+    [...prelude.matchAll(new RegExp(`${feature}:\\s*([\\d.]+)([a-z%]*)`, 'g'))].map((match) => ({
+      value: Number(match[1]),
+      unit: match[2] ?? '',
+    })),
+  );
+}
 
 describe('buildBaseCss', () => {
   it('本文の色・背景・書体を token 変数から取る', () => {
@@ -97,6 +123,17 @@ describe('buildBaseCss', () => {
     expect(css).toContain('overflow-x: auto;');
   });
 
+  it('StageBoard は md 未満で選択工程だけ、md 以上で全工程を横並びにする', () => {
+    expect(css).toContain('[data-hh-stage-picker-options] {');
+    expect(css).toContain(
+      '[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(1) input:checked) [data-hh-stage-column]:nth-child(1)',
+    );
+    expect(css).toContain('[data-hh-stage-column] {\n  display: none;');
+    expect(css).toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
+    expect(css).toContain('[data-hh-stage-columns] {\n    display: flex;');
+    expect(css).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 240px;');
+  });
+
   /**
    * 折り返し位置を持たない長い語 (URL・識別子) は、箱の幅に関係なく外へ描かれる。
    * 矩形は親幅に収まったままなので要素の座標では検出できず、実ブラウザでも
@@ -113,13 +150,52 @@ describe('buildBaseCss', () => {
     expect(css).toContain('--hh-table-column-min:');
   });
 
-  /** 閾値を直書きすると token 側を変えても CSS が追従しない。 */
-  it('breakpoint の閾値は token 由来の値だけを使う', () => {
-    const widths = [...css.matchAll(/min-width:\s*(\d+)px/g)].map((match) => Number(match[1]));
-    expect(widths.length).toBeGreaterThan(0);
-    for (const width of widths) {
-      expect(Object.values(breakpointTokens)).toContain(width);
+  /**
+   * 閾値を直書きすると token 側を変えても CSS が追従しない。
+   *
+   * 検査対象を生成関数の出力だけにすると「実際に配られるファイル」を見ていないことになるので、
+   * コミット済みの `tokens.css` も同じ規則で通す (生成し忘れたまま直書きが残る経路を塞ぐ)。
+   * 上限側 (`mediaDown`) は境界の重なりを避けるため閾値から 0.02px 引いた値になるので、
+   * 「そのまま一致」ではなく「どれかの閾値から 0.02 引いた値」として照合する。
+   *
+   * **単位も検査対象に含める。** 塞いだ元の違反は `@media (max-width: 30rem)` で、
+   * 単位が px の値だけを拾う検査では同じ違反が戻ってきても緑のまま通る。
+   * 閾値は token 側が px で保持しているので、CSS に px 以外の breakpoint が出る正当な理由は無い。
+   */
+  it.each([
+    ['buildBaseCss() の出力', css],
+    ['コミット済みの tokens.css', tokensCssArtifact],
+  ])('%s の breakpoint 閾値は token 由来の値だけを使う', (_label, source) => {
+    const thresholds = Object.values(breakpointTokens);
+    const lower = collectBreakpointUses(source, 'min-width');
+    expect(lower.length).toBeGreaterThan(0);
+    for (const { value, unit } of lower) {
+      expect(unit).toBe('px');
+      expect(thresholds).toContain(value);
     }
+
+    const upper = collectBreakpointUses(source, 'max-width');
+    expect(upper.length).toBeGreaterThan(0);
+    for (const { value, unit } of upper) {
+      expect(unit).toBe('px');
+      expect(thresholds).toContain(Math.round(value + 0.02));
+    }
+  });
+
+  /**
+   * 上の検査が**生きている**ことを固定する。
+   *
+   * 元の違反 (`@media (max-width: 30rem)`) を合成した CSS に対して、拾えていること・
+   * 単位が px でないことの両方を確認する。ここが無いと、検査側の正規表現が
+   * 取りこぼす形に戻っても「緑だから守られている」と読めてしまう。
+   */
+  it('px 以外の単位で書かれた breakpoint を拾う (検査の空振り防止)', () => {
+    const withRem = '@media (max-width: 30rem) {\n  .x {\n    max-width: 100%;\n  }\n}';
+    const uses = collectBreakpointUses(withRem, 'max-width');
+
+    expect(uses).toEqual([{ value: 30, unit: 'rem' }]);
+    // 通常の宣言 (max-width: 100%) は @media の条件部ではないので拾わない
+    expect(uses).toHaveLength(1);
   });
 
   /** Container の左右 padding は幅で変わるので、変数として base 層が定義する。 */

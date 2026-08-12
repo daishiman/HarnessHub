@@ -134,8 +134,20 @@ describe('ShellHeader', () => {
     const form = container.querySelector('form');
     expect(form?.getAttribute('method')).toBe('get');
     expect(form?.getAttribute('action')).toBe('/search');
+    expect(screen.getByRole('banner').hasAttribute('data-hh-shell-header')).toBe(true);
     expect(container.querySelector('input[type="hidden"][name="tenant"]')?.getAttribute('value')).toBe('t1');
     expect(container.querySelector('input[name="q"]')).not.toBeNull();
+  });
+
+  it('検索の行き先が無い画面では検索欄そのものを出さない', () => {
+    const { searchAction: _a, searchLabel: _l, searchPlaceholder: _p, ...withoutSearch } = headerProps;
+    const { container } = renderWithUi(<ShellHeader {...withoutSearch} />);
+
+    // 空振りする欄を置かない。フォームも入力欄もモバイルの虫眼鏡リンクも消える
+    expect(container.querySelector('form')).toBeNull();
+    expect(container.querySelector('input[name="q"]')).toBeNull();
+    // 通知・アカウントは残る (検索が無いだけで他の入口は変わらない)
+    expect(screen.getByRole('link', { name: '通知' })).toBeDefined();
   });
 
   it('未読があるときだけ通知リンクの読み上げ名に件数を含める', () => {
@@ -187,8 +199,8 @@ describe('ShellHeader', () => {
         {...headerProps}
         workspaceSwitchLabel="ワークスペースを切り替える"
         workspaceOptions={[
-          { href: '/w/ws-1', label: 'ws-1', current: true },
-          { href: '/w/ws-2', label: 'ws-2', current: false },
+          { href: '/w/ws-1', label: 'ws-1', isIdentifier: false, current: true },
+          { href: '/w/ws-2', label: 'ws-2', isIdentifier: false, current: false },
         ]}
       />,
     );
@@ -205,14 +217,35 @@ describe('ShellHeader', () => {
     expect(screen.getByRole('link', { name: 'ws-2' }).getAttribute('href')).toBe('/w/ws-2');
   });
 
+  it('現在値と各候補の表示名 provenance を混同しない', () => {
+    const { container } = renderWithUi(
+      <ShellHeader
+        {...headerProps}
+        workspaceName="ws-1"
+        workspaceNameIsIdentifier
+        workspaceSwitchLabel="ワークスペースを切り替える"
+        workspaceOptions={[
+          { href: '/w/ws-1', label: 'ws-1', isIdentifier: true, current: true },
+          { href: '/w/ws-2', label: '企画部', isIdentifier: false, current: false },
+          { href: '/w/ws-3', label: 'ws-3', isIdentifier: true, current: false },
+        ]}
+      />,
+    );
+
+    expect(screen.getByRole('link', { name: '企画部' }).getAttribute('href')).toBe('/w/ws-2');
+    expect(screen.getByRole('link', { name: 'ワークスペース ID: ws-3' }).getAttribute('href')).toBe('/w/ws-3');
+    // 切替 summary / link の中に対話型 IdBadge (`details`) を入れない。
+    expect(container.querySelector('[data-hh-workspace-switcher] [data-hh-id-badge]')).toBeNull();
+  });
+
   it('WorkspaceSwitcher は desktop-only に閉じず、モバイルでも同じ server-only UI を使う', () => {
     const { container } = renderWithUi(
       <ShellHeader
         {...headerProps}
         workspaceSwitchLabel="ワークスペースを切り替える"
         workspaceOptions={[
-          { href: '/w/ws-1', label: 'ws-1', current: true },
-          { href: '/w/ws-2', label: 'ws-2', current: false },
+          { href: '/w/ws-1', label: 'ws-1', isIdentifier: false, current: true },
+          { href: '/w/ws-2', label: 'ws-2', isIdentifier: false, current: false },
         ]}
       />,
     );
@@ -226,7 +259,7 @@ describe('ShellHeader', () => {
       <ShellHeader
         {...headerProps}
         workspaceSwitchLabel="ワークスペースを切り替える"
-        workspaceOptions={[{ href: '/w/ws-1', label: 'ws-1', current: true }]}
+        workspaceOptions={[{ href: '/w/ws-1', label: 'ws-1', isIdentifier: false, current: true }]}
       />,
     );
 
@@ -371,6 +404,25 @@ describe('buildShellCss', () => {
     }
   });
 
+  it('mobile は shell → screen → filter の順に実測 offset を積み、desktop は shell 分を外す', () => {
+    const css = buildShellCss();
+
+    expect(css).toContain('--hh-shell-header-offset: var(--hh-shell-header-height, 56px);');
+    expect(css).toContain(
+      '--hh-screen-header-offset: calc(var(--hh-shell-header-offset) + var(--hh-screen-header-height, 0px));',
+    );
+    expect(css).toContain(`${mediaUp('md')} {`);
+    expect(css).toContain('--hh-shell-header-offset: 0px;');
+  });
+
+  it('mobile footer は通常フローのまま固定タブの余白を取り、desktop は本文外に残す', () => {
+    const css = buildShellCss();
+
+    expect(css).toContain('margin-block-end: calc(var(--hh-control-height) + env(safe-area-inset-bottom, 0px));');
+    expect(css).toContain('.hh-shell__main {\n    overflow-y: auto;');
+    expect(css).toContain('.hh-shell__body > footer {\n    margin-block-end: 0;');
+  });
+
   it('現在地を色だけで示さない (太字と縦棒も併用する)', () => {
     const css = buildShellCss();
 
@@ -405,8 +457,8 @@ describe('シェルの axe 検査', () => {
           {...headerProps}
           workspaceSwitchLabel="ワークスペースを切り替える"
           workspaceOptions={[
-            { href: '/w/ws-1', label: 'ws-1', current: true },
-            { href: '/w/ws-2', label: 'ws-2', current: false },
+            { href: '/w/ws-1', label: 'ws-1', isIdentifier: false, current: true },
+            { href: '/w/ws-2', label: 'ws-2', isIdentifier: false, current: false },
           ]}
         />
       ),

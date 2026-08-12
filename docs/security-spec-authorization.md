@@ -80,6 +80,7 @@ member  <  owner  <  workspace-admin  <  provider-admin
 | `sheets.status_change` / `sheets.regenerate` | シート状態 | workspace-admin |
 | `builds.read` | 工程ボード閲覧 | member |
 | `builds.stage_change` | 工程操作 | workspace-admin |
+| `projects.read` | 現在の Workspace の Project 名一覧 | member |
 | `projects.create` | Project 作成 (作成者を owner に固定) | member |
 | `projects.update` | Project 情報変更 | owner |
 | `harnesses.read` / `harnesses.install` | カタログ閲覧・安定版の導入/ダウンロード descriptor 発行 | member |

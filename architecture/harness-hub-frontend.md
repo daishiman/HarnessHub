@@ -277,3 +277,17 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 - 正本は [frontend](../system-spec/frontend.md) / [ui-ux](../system-spec/ui-ux.md)。
   受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
   [build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。
+
+## 2026-08-12 表示名 / 情報設計 / UI 一貫性 (MVP wave)
+
+要約: 表示名 (optional claims + IdBadge)、ListState / FilterBar / `q` 検索、
+`DateTimeText` 相対併記、screen-pattern gate、metrics `rankingTotals`。
+詳細・判断理由・検証結果は受領書を正本とする
+（[ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)）。
+製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と
+[UI foundation guide](../docs/frontend-ui-foundation-spec.md)。
+
+PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過した metrics・詳細・編集など9画面と、
+上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
+`StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
+画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。

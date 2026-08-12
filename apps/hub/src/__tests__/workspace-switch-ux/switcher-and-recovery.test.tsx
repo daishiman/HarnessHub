@@ -99,6 +99,17 @@ describe('受入 1・3: 切替 UI を出す条件', () => {
     expect(html).toContain(`href="${workspaceEntryPath('ws-2', '/catalog/releases').replaceAll('&', '&amp;')}"`);
   });
 
+  /**
+   * 名前が引けた Workspace だけ名前で出す。引けないものを候補から落とすと、
+   * 名称未設定の Workspace へ切り替えられなくなり、表示の都合が到達可否になってしまう。
+   */
+  it('名前が分かる候補は名前で、分からない候補は識別子のまま出す', () => {
+    const options = workspaceSwitcherOptions(['ws-1', 'ws-2'], 'ws-1', undefined, { 'ws-1': '営業部' });
+
+    expect(options.map((option) => option.label)).toEqual(['営業部', 'ws-2']);
+    expect(options.map((option) => option.isIdentifier)).toEqual([false, true]);
+  });
+
   it('所属 1 件以下では候補そのものを作らない (UI 側の判定と二重化しない)', () => {
     expect(workspaceSwitcherOptions(['ws-1'], 'ws-1')).toEqual([]);
     expect(workspaceSwitcherOptions([], null)).toEqual([]);

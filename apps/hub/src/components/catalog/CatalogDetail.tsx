@@ -8,7 +8,18 @@
  * 最初のバンドルに含めると、閲覧しかしない利用者にまで転送量と実行時間を負担させる (G13)。
  */
 import type { CatalogDetail as CatalogDetailView } from '@harness-hub/schemas';
-import { DegradedBanner, ErrorState, Skeleton, StatusChip, Tabs } from '@harness-hub/ui';
+import {
+  DefinitionList,
+  DegradedBanner,
+  ErrorState,
+  Panel,
+  ScreenHeader,
+  Skeleton,
+  Stack,
+  StatusChip,
+  Tabs,
+  TagRow,
+} from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import type { CatalogFailure, CatalogPort, CatalogScope } from '../../lib/catalog/index.js';
@@ -79,44 +90,60 @@ export function CatalogDetail({
   const capabilities = failure === null ? null : catalogCapabilities(failure.kind);
   const degraded = capabilities?.canBrowse === true;
   const visibleDetail = loadedDetailKey === detailKey ? detail : null;
+  const listHref = `/catalog?tenant=${encodeURIComponent(scope.tenantId)}&workspace=${encodeURIComponent(scope.workspaceId)}`;
 
   // 401/403/契約不正では、initialDetail や以前の成功応答を残さない。
   // 「Hub 障害時の stale 表示」と「現在の利用者に閲覧権限が無い」は別の境界である。
   if (failure !== null && capabilities?.canBrowse === false) {
-    return <ErrorState description={failure.message} />;
+    return (
+      <article>
+        <ScreenHeader
+          title="業務ツール詳細"
+          breadcrumbs={[{ href: listHref, label: '業務ツール' }, { label: '詳細' }]}
+          breadcrumbsLabel="現在地"
+          sticky
+        />
+        <ErrorState description={failure.message} />
+      </article>
+    );
   }
 
   if (visibleDetail === null) {
     // Skeleton は aria-hidden の装飾なので、読み込み状態の告知は呼び出し側が持つ
     return (
-      <div aria-busy="true">
-        <p aria-live="polite">業務ツールの詳細を読み込んでいます。</p>
-        <Skeleton lines={4} />
-      </div>
+      <article>
+        <ScreenHeader
+          title="業務ツール詳細"
+          breadcrumbs={[{ href: listHref, label: '業務ツール' }, { label: '詳細' }]}
+          breadcrumbsLabel="現在地"
+          sticky
+        />
+        <div aria-busy="true">
+          <p aria-live="polite">業務ツールの詳細を読み込んでいます。</p>
+          <Skeleton lines={4} />
+        </div>
+      </article>
     );
   }
 
   const overview = (
-    <div>
-      <p>{visibleDetail.summary}</p>
-      <dl>
-        <dt>種別</dt>
-        <dd>{visibleDetail.target === 'skill' ? 'Skill' : 'Web アプリ'}</dd>
-        <dt>公開範囲</dt>
-        <dd>{visibleDetail.visibility === 'workspace' ? 'Workspace 全体' : '自分のみ'}</dd>
-        <dt>現在の版</dt>
-        <dd>{visibleDetail.stable_version ?? '未公開'}</dd>
-        <dt>状態</dt>
-        <dd>
-          {visibleDetail.release_status === null ? (
-            '未公開'
-          ) : (
-            <StatusChip domain="release" status={visibleDetail.release_status} />
-          )}
-        </dd>
-        <dt>導入数</dt>
-        <dd>{visibleDetail.download_count}</dd>
-      </dl>
+    <Stack gap={4}>
+      <p style={{ margin: 0 }}>{visibleDetail.summary}</p>
+      {/* 対象そのものの属性なので、比較のための表ではなく定義リストで並べる (§5-1 の写し方)。
+          生の <dl> を画面ごとに書くと余白と折り返しがばらつくため共通部品に寄せる */}
+      <DefinitionList
+        label="このツールの基本情報"
+        columns={2}
+        items={[
+          { term: '種別', description: visibleDetail.target === 'skill' ? 'Skill' : 'Web アプリ' },
+          {
+            term: '公開範囲',
+            description: visibleDetail.visibility === 'workspace' ? 'Workspace 全体' : '自分のみ',
+          },
+          { term: '最新の版', description: visibleDetail.stable_version ?? 'まだ公開されていません' },
+          { term: '導入された数', description: `${visibleDetail.download_count} 件` },
+        ]}
+      />
       <CatalogInstallPanel
         scope={scope}
         projectId={visibleDetail.project_id}
@@ -124,7 +151,7 @@ export function CatalogDetail({
         degraded={degraded}
         port={port}
       />
-    </div>
+    </Stack>
   );
 
   const items = [
@@ -154,9 +181,30 @@ export function CatalogDetail({
 
   return (
     <article>
-      {degraded ? <DegradedBanner description={failure?.message} /> : null}
-      <h1>{visibleDetail.name}</h1>
-      <Tabs label="業務ツールの詳細" items={items} defaultActiveId="overview" />
+      {/* 公開状態は本文をスクロールしても見えている必要があるため、
+          裸の <p> ではなく sticky な画面見出しの中に置く */}
+      <ScreenHeader
+        title={visibleDetail.name}
+        description={visibleDetail.summary}
+        breadcrumbs={[{ href: listHref, label: '業務ツール' }, { label: visibleDetail.name }]}
+        breadcrumbsLabel="現在地"
+        sticky
+        tags={
+          <TagRow label="公開の状態">
+            {visibleDetail.release_status === null ? (
+              <span>まだ公開されていません</span>
+            ) : (
+              <StatusChip domain="release" status={visibleDetail.release_status} />
+            )}
+          </TagRow>
+        }
+      />
+      <Stack gap={4}>
+        {degraded ? <DegradedBanner description={failure?.message} /> : null}
+        <Panel flush>
+          <Tabs label="業務ツールの詳細" items={items} defaultActiveId="overview" />
+        </Panel>
+      </Stack>
     </article>
   );
 }

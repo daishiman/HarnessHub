@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 import {
   BUILD_STAGE_ORDER,
   buildListQuerySchema,
+  buildListResponseSchema,
   buildStageSchema,
   buildStageTransitionRequestSchema,
   buildStageTransitionResponseSchema,
@@ -110,5 +111,16 @@ describe('BPB-SCHEMA: 応答契約', () => {
   it('一覧 query の limit は既定 50 で、範囲外を弾く', () => {
     expect(buildListQuerySchema.parse({})).toMatchObject({ limit: 50 });
     expect(buildListQuerySchema.safeParse({ limit: 1_000 }).success).toBe(false);
+  });
+
+  it('一覧は route が算出した工程操作 capability を任意で返せる', () => {
+    expect(buildListResponseSchema.safeParse({ items: [buildItem], next_cursor: null, can_manage: true }).success).toBe(
+      true,
+    );
+    // 旧 consumer との段階的互換を保ち、省略時は client が false として扱う。
+    expect(buildListResponseSchema.safeParse({ items: [buildItem], next_cursor: null }).success).toBe(true);
+    expect(
+      buildListResponseSchema.safeParse({ items: [buildItem], next_cursor: null, can_manage: 'yes' }).success,
+    ).toBe(false);
   });
 });

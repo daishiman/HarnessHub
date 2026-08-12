@@ -16,6 +16,7 @@ export type {
   MetricsSummaryTrendPoint,
 } from './contracts.js';
 export {
+  METRICS_RANKING_LIMIT,
   metricsDateSchema,
   metricsEventIngestRequestSchema,
   metricsEventIngestResponseSchema,

@@ -127,6 +127,30 @@ describe('buildThemeCss', () => {
     expect(css).toContain("[data-theme='auto']");
   });
 
+  /**
+   * スクロールバー・select の展開部・日付ピッカー・フォーム部品の枠はブラウザが描くので、
+   * `--hh-color-*` を読まない。`color-scheme` を宣言しないと、dark 配色の画面に
+   * 明色の部品だけが残る。**3 系統すべてで宣言されていること**を検査する
+   * (1 つでも欠けると、その設定を選んでいる利用者にだけ破綻が出る)。
+   */
+  it.each([
+    ['light', "[data-theme='light'] {\n  color-scheme: light;\n}"],
+    ['dark', 'color-scheme: dark;\n}'],
+    ['auto の既定側', "[data-theme='auto'] {\n  color-scheme: light;\n}"],
+  ])('%s で color-scheme を宣言する', (_label, expected) => {
+    expect(css).toContain(expected);
+  });
+
+  it('auto は OS が dark のときだけ color-scheme を dark へ上書きする', () => {
+    const media = css.slice(css.indexOf('@media (prefers-color-scheme: dark)'));
+    expect(media).toContain("[data-theme='auto'] {");
+    expect(media).toContain('color-scheme: dark;');
+    // 上書きが先に来ると既定側の light に負ける。順序も固定する
+    expect(css.indexOf("[data-theme='auto'] {\n  color-scheme: light;\n}")).toBeLessThan(
+      css.indexOf('@media (prefers-color-scheme: dark)'),
+    );
+  });
+
   it('表示密度は data-density 属性で切り替える', () => {
     expect(css).toContain("[data-density='compact'] {");
     expect(css).toContain('--hh-control-height: 36px;');

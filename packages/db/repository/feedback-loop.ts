@@ -14,6 +14,7 @@ import type { RepositoryContext } from '../src/types';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import { createFeedbackQueueRepository, type FeedbackQueueRepository } from './feedback-loop-queue';
+import { containsTermInAny } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
 
@@ -39,6 +40,8 @@ export interface ListFeedbacksInput {
   readonly status?: FeedbackStatus;
   readonly type?: FeedbackRow['type'];
   readonly projectId?: string;
+  /** 受付番号 (code) か本文 (body) に含まれる語での絞り込み。対象の根拠は契約側 (feedbackListQuerySchema) に記載。 */
+  readonly query?: string;
   readonly cursor?: string;
   readonly limit: number;
 }
@@ -212,6 +215,10 @@ export function createFeedbackRepository(adapter: CoreAdapter): FeedbackReposito
       if (input.status !== undefined) predicates.push(eq(feedbacks.status, input.status));
       if (input.type !== undefined) predicates.push(eq(feedbacks.type, input.type));
       if (input.projectId !== undefined) predicates.push(eq(feedbacks.projectId, input.projectId));
+      if (input.query !== undefined) {
+        const search = containsTermInAny(input.query, [feedbacks.code, feedbacks.body]);
+        if (search !== undefined) predicates.push(search);
+      }
       if (input.cursor !== undefined) predicates.push(lt(feedbacks.id, input.cursor));
 
       const rows = await adapter.client
