@@ -123,7 +123,7 @@ describe('受入 1: Web だけで投入から導入案内まで到達できる',
     expect(screen.getByLabelText(/説明/)).toBeDefined();
     expect(screen.getByLabelText(/公開範囲/)).toBeDefined();
     expect(screen.getByLabelText(/パッケージ \(ZIP\)/)).toBeDefined();
-    expect(screen.getByText(/Web アプリとしての公開には Publisher CLI が必要/)).toBeDefined();
+    expect(screen.getByText(/Web アプリの公開には Publisher CLI が必要/)).toBeDefined();
   });
 
   it('WOP-W-003: 公開 ID を状態確認へ伝播し、H7 未成立の導入リンクを成功扱いで出さない', async () => {

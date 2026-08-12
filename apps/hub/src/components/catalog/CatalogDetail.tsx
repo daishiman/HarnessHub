@@ -135,7 +135,7 @@ export function CatalogDetail({
         label="このツールの基本情報"
         columns={2}
         items={[
-          { term: '種別', description: visibleDetail.target === 'skill' ? 'ハーネス' : 'Web アプリ' },
+          { term: '種別', description: visibleDetail.target === 'skill' ? 'Skill' : 'Web アプリ' },
           {
             term: '公開範囲',
             description: visibleDetail.visibility === 'workspace' ? 'Workspace 全体' : '自分のみ',

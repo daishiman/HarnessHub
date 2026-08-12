@@ -32,7 +32,7 @@ export default async function CatalogPage({ searchParams }: PageProps) {
       <ScreenHeader
         id="catalog-heading"
         title="業務ツール"
-        description="Workspace で公開されているハーネスと Web アプリを探して導入できます。"
+        description="Workspace で公開されている Skill と Web アプリを探して導入できます。"
         actions={
           <>
             {/* CLI を持たない利用者の主導線 (受入 1)。一覧から公開へ入れるようにする */}

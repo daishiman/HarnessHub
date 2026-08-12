@@ -88,7 +88,7 @@ export function PublishWizardOutcome({
         <Alert
           tone="warning"
           title="導入経路はまだ利用できません"
-          description="ハーネスの配布方式を決める Stage 0 technical gate (H7) が未成立です。Hub への公開記録は完了していますが、誤った導入コマンドや利用不能なリンクは表示しません。H7 成立後、この公開状態から導入案内へ接続します。"
+          description="Skill の配布方式を決める Stage 0 technical gate (H7) が未成立です。Hub への公開記録は完了していますが、誤った導入コマンドや利用不能なリンクは表示しません。H7 成立後、この公開状態から導入案内へ接続します。"
         />
       ) : null}
     </section>

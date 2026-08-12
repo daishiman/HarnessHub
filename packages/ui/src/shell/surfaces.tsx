@@ -104,7 +104,12 @@ export interface ActionLinkProps {
  * 「新規作成」などは遷移なので `<a>` のままにする。`<button>` + `router.push` にすると
  * 新しいタブで開く・URL をコピーするといったブラウザの当たり前が使えなくなる。
  */
-export function ActionLink({ href, variant = 'secondary', openInNewTab = false, children }: ActionLinkProps): ReactNode {
+export function ActionLink({
+  href,
+  variant = 'secondary',
+  openInNewTab = false,
+  children,
+}: ActionLinkProps): ReactNode {
   const primary = variant === 'primary';
 
   return (
