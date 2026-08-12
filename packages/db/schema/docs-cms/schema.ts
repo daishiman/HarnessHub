@@ -42,10 +42,16 @@ export const documents = sqliteTable(
     excerptSource: text('excerpt_source', { enum: DOCUMENT_FIELD_SOURCES }).notNull().default('auto'),
     /** JSON。例 `{"imageCount":2,"hasTable":true,"hasCode":false}`。常にサーバ側で自動算出する。 */
     assetSummary: text('asset_summary'),
+    /**
+     * 予約公開日時 (epoch ms)。状態値は増やさず、`status='draft' AND publish_at IS NOT NULL`
+     * を「予約中」として導出する。公開・予約解除後は null に戻す。
+     */
+    publishAt: integer('publish_at'),
   },
   (t) => [
     index('documents_tenant_scope_updated_idx').on(t.tenantId, t.scope, t.updatedAt),
     index('documents_scope_updated_idx').on(t.scope, t.updatedAt),
+    index('documents_publish_due_idx').on(t.status, t.publishAt, t.id),
     uniqueIndex('documents_tenant_external_key_uidx').on(t.tenantId, t.externalSource, t.externalDocumentId),
   ],
 );

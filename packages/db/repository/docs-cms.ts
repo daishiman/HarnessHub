@@ -9,7 +9,7 @@
  * AI 下書きキュー (kind=doc_draft) は hearing-intake-queue.ts の汎用 claim/complete/fail を
  * 再利用し、CAS/lease の実装を複製しない (AD-4)。
  */
-import { and, desc, eq, lt, or, type SQL, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, isNotNull, isNull, lt, lte, or, type SQL, sql } from 'drizzle-orm';
 
 import { documents } from '../schema/docs-cms/schema';
 import { aiJobs } from '../schema/hearing-intake/schema';
@@ -51,6 +51,7 @@ export interface DocumentRow {
   readonly excerpt: string | null;
   readonly excerptSource: DocumentFieldSource;
   readonly assetSummary: string | null;
+  readonly publishAt: number | null;
 }
 
 export interface ExternalDocumentRow extends DocumentRow {
@@ -110,6 +111,7 @@ export interface CreateDocumentInput {
   readonly excerpt?: string | null;
   readonly excerptSource?: DocumentFieldSource;
   readonly assetSummary?: string | null;
+  readonly publishAt?: number | null;
 }
 
 export interface UpdateDocumentInput {
@@ -124,6 +126,7 @@ export interface UpdateDocumentInput {
   readonly excerpt?: string | null;
   readonly excerptSource?: DocumentFieldSource;
   readonly assetSummary?: string | null;
+  readonly publishAt?: number | null;
 }
 
 export interface ListDocumentsInput {
@@ -143,11 +146,25 @@ export interface DocumentPage {
   readonly nextCursor: string | null;
 }
 
+export interface PublishedDueDocument {
+  readonly id: string;
+  readonly tenantId: string;
+}
+
+export interface PublishDueDocumentsResult {
+  readonly publishedCount: number;
+  readonly hasMore: boolean;
+  /** 呼び出し側が tenant 単位の append-only 監査を記録するための最小情報。 */
+  readonly publishedDocuments: readonly PublishedDueDocument[];
+}
+
 export interface DocsCmsRepository {
   listDocuments(context: RepositoryContext, input: ListDocumentsInput): Promise<DocumentPage>;
   getDocument(context: RepositoryContext, id: string): Promise<DocumentRow | null>;
   createDocument(context: RepositoryContext, input: CreateDocumentInput): Promise<DocumentRow>;
   updateDocument(context: RepositoryContext, id: string, input: UpdateDocumentInput): Promise<DocumentRow>;
+  /** 日次 cron 用。予約日時と ID の安定順で、上限付き・再実行安全に公開する。 */
+  publishDueDocuments(now: number, limit?: number): Promise<PublishDueDocumentsResult>;
   getExternalDocument(
     context: RepositoryContext,
     source: string,
@@ -185,6 +202,26 @@ function transactional(adapter: CoreAdapter) {
 }
 
 const DOC_DRAFT_EXPECT = { kind: 'doc_draft' as const, refType: 'document' };
+const DEFAULT_PUBLISH_DUE_LIMIT = 100;
+const MAX_PUBLISH_DUE_LIMIT = 100;
+
+function assertFuturePublishAt(publishAt: number | null | undefined, now: number): void {
+  if (publishAt === undefined || publishAt === null) return;
+  if (!Number.isSafeInteger(publishAt) || publishAt <= now) {
+    throw new RepositoryError('invalid-context', 'publishAt は現在より未来の epoch ms である必要があります');
+  }
+}
+
+function normalizePublishDueLimit(limit: number | undefined): number {
+  const normalized = limit ?? DEFAULT_PUBLISH_DUE_LIMIT;
+  if (!Number.isSafeInteger(normalized) || normalized < 1 || normalized > MAX_PUBLISH_DUE_LIMIT) {
+    throw new RepositoryError(
+      'invalid-context',
+      `予約公開の limit は 1 以上 ${MAX_PUBLISH_DUE_LIMIT} 以下の整数である必要があります`,
+    );
+  }
+  return normalized;
+}
 
 function docDraftWriteback(): QueueWriteback {
   return {
@@ -196,6 +233,7 @@ function docDraftWriteback(): QueueWriteback {
           bodyMarkdown: parsed.body_markdown ?? '',
           updatedAt: now,
           updatedBy: 'ai-worker',
+          publishAt: null,
           externalContentHash: null,
           externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
         };
@@ -265,6 +303,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
         transactional(adapter).transaction(async (tx) => {
           const db = tx.client as CoreDb;
           const now = serverNow();
+          assertFuturePublishAt(input.publishAt, now);
           const id = newUlid(now);
           const base = {
             id,
@@ -288,6 +327,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
             excerpt: input.excerpt ?? null,
             excerptSource: input.excerptSource ?? 'auto',
             assetSummary: input.assetSummary ?? null,
+            publishAt: input.publishAt ?? null,
           } satisfies DocumentRow;
           await db.insert(documents).values(base);
           return base;
@@ -300,6 +340,10 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
         transactional(adapter).transaction(async (tx) => {
           const db = tx.client as CoreDb;
           const now = serverNow();
+          assertFuturePublishAt(input.publishAt, now);
+          if (input.status === 'published' && input.publishAt != null) {
+            throw new RepositoryError('invalid-context', 'published と未来の publishAt は同時に指定できません');
+          }
           const existingRows = await db
             .select()
             .from(documents)
@@ -318,9 +362,25 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           if (input.excerpt !== undefined) patch.excerpt = input.excerpt;
           if (input.excerptSource !== undefined) patch.excerptSource = input.excerptSource;
           if (input.assetSummary !== undefined) patch.assetSummary = input.assetSummary;
+          const titleChanged = input.title !== undefined && input.title !== existing.title;
+          const bodyChanged = input.bodyMarkdown !== undefined && input.bodyMarkdown !== existing.bodyMarkdown;
+
+          // 明示的な公開/非公開は予約を解除する。予約日時の明示設定は draft に戻す。
+          // title/body の実変更だけがあり予約指定が無い場合は、古い内容のまま予約公開されないよう解除する。
+          if (input.status !== undefined) {
+            patch.publishAt = null;
+          } else if (input.publishAt !== undefined) {
+            patch.publishAt = input.publishAt;
+            if (input.publishAt !== null) patch.status = 'draft';
+          } else if (titleChanged || bodyChanged) {
+            patch.publishAt = null;
+          }
+
+          const nextStatus = patch.status ?? existing.status;
+          const nextPublishAt = patch.publishAt === undefined ? existing.publishAt : patch.publishAt;
           if (
             existing.externalSource !== null &&
-            (input.title !== undefined || input.bodyMarkdown !== undefined || input.status !== undefined)
+            (titleChanged || bodyChanged || nextStatus !== existing.status || nextPublishAt !== existing.publishAt)
           ) {
             if (existing.externalRevision === null) {
               throw new RepositoryError('invalid-context', '外部同期文書のrevisionがありません');
@@ -341,6 +401,69 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
           const row = updated[0] as DocumentRow | undefined;
           if (row === undefined) throw new RepositoryError('conflict', 'ドキュメントが同時に更新されました');
           return row;
+        }),
+      );
+    },
+
+    async publishDueDocuments(now, requestedLimit) {
+      if (!Number.isSafeInteger(now) || now < 0) {
+        throw new RepositoryError('invalid-context', '予約公開の now は非負の epoch ms である必要があります');
+      }
+      const limit = normalizePublishDueLimit(requestedLimit);
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const candidates = await db
+            .select({
+              id: documents.id,
+              tenantId: documents.tenantId,
+              publishAt: documents.publishAt,
+              externalRevision: documents.externalRevision,
+            })
+            .from(documents)
+            .where(and(eq(documents.status, 'draft'), isNotNull(documents.publishAt), lte(documents.publishAt, now)))
+            .orderBy(asc(documents.publishAt), asc(documents.id))
+            .limit(limit + 1);
+
+          const batch = candidates.slice(0, limit);
+          const publishedDocuments: PublishedDueDocument[] = [];
+          for (const candidate of batch) {
+            if (candidate.publishAt === null) continue;
+            const revisionCondition =
+              candidate.externalRevision === null
+                ? isNull(documents.externalRevision)
+                : eq(documents.externalRevision, candidate.externalRevision);
+            const updated = await db
+              .update(documents)
+              .set({
+                status: 'published',
+                publishAt: null,
+                updatedAt: now,
+                updatedBy: 'scheduled-publish-cron',
+                externalContentHash: null,
+                externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
+              })
+              .where(
+                and(
+                  eq(documents.id, candidate.id),
+                  eq(documents.tenantId, candidate.tenantId),
+                  eq(documents.status, 'draft'),
+                  eq(documents.publishAt, candidate.publishAt),
+                  lte(documents.publishAt, now),
+                  revisionCondition,
+                ),
+              )
+              .returning({ id: documents.id, tenantId: documents.tenantId });
+            const row = updated[0];
+            if (row !== undefined) publishedDocuments.push(row);
+          }
+
+          return {
+            publishedCount: publishedDocuments.length,
+            // CAS miss は次の反復で再評価する。不要でも高々 1 回余分に空 batch を実行するだけで安全。
+            hasMore: candidates.length > limit || publishedDocuments.length < batch.length,
+            publishedDocuments,
+          };
         }),
       );
     },
@@ -443,6 +566,7 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
               title: input.title,
               bodyMarkdown: input.bodyMarkdown,
               status: 'draft',
+              publishAt: null,
               externalContentHash: contentHash,
               externalRevision: existing.externalRevision + 1,
               ...(existing.thumbnailSource === 'auto'

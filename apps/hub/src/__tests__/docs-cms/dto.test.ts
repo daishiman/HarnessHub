@@ -29,6 +29,7 @@ const ROW: DocumentRow = {
   excerpt: null,
   excerptSource: 'auto',
   assetSummary: null,
+  publishAt: null,
 };
 
 const ROW_WITH_METADATA: DocumentRow = {
@@ -62,6 +63,7 @@ describe('DOCS-DTO: toDocumentDetail', () => {
       excerpt: null,
       excerpt_source: 'auto',
       asset_summary: null,
+      publish_at: null,
     });
   });
 
@@ -96,6 +98,7 @@ describe('DOCS-DTO: toDocumentListItem', () => {
       excerpt: null,
       excerpt_source: 'auto',
       asset_summary: null,
+      publish_at: null,
     });
   });
 });

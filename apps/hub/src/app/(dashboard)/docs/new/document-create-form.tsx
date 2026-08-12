@@ -1,11 +1,12 @@
 'use client';
 
 import type { DocumentDetail, DocumentScope } from '@harness-hub/schemas';
-import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, Textarea, TextInput } from '@harness-hub/ui';
+import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useCallback, useRef, useState } from 'react';
 import { usePendingDocumentImages } from '../../../../components/docs/use-pending-document-images.js';
 import { extractApiErrorMessage } from '../../../../features/docs-cms/api-error.js';
+import { parsePublishAtInput } from '../../../../features/docs-cms/form-fields.js';
 import { parseTagsInput } from '../../../../features/docs-cms/tags.js';
 
 const MarkdownEditor = dynamic(
@@ -18,9 +19,11 @@ const MarkdownEditor = dynamic(
 interface DocumentCreateFormProps {
   readonly tenantId: string;
   readonly workspaceId: string;
+  /** `docs.write_common` を持つ role のときだけ「共通」スコープを選べる。 */
+  readonly canWriteCommon: boolean;
 }
 
-export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateFormProps): ReactNode {
+export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: DocumentCreateFormProps): ReactNode {
   const { register: registerPendingImage, settleAfterSave: settlePendingImages } = usePendingDocumentImages(
     tenantId,
     workspaceId,
@@ -29,9 +32,10 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
   const [category, setCategory] = useState('');
-  const [tags, setTags] = useState('');
+  const [tagsInput, setTagsInput] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [excerpt, setExcerpt] = useState('');
+  const [publishAtInput, setPublishAtInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   // 画像を先に足された場合の暗黙下書き作成 (ensureDraftId) が払い出した id。
@@ -120,11 +124,14 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
 
     setSaving(true);
     try {
+      const publishAt = parsePublishAtInput(publishAtInput);
+      if (!publishAt.ok) throw new Error(publishAt.message);
       const metadata = {
         category: category.trim() === '' ? null : category.trim(),
-        tags: parseTagsInput(tags),
+        tags: parseTagsInput(tagsInput),
         thumbnail_url: thumbnailUrl.trim() === '' ? null : thumbnailUrl.trim(),
         excerpt: excerpt.trim() === '' ? null : excerpt.trim(),
+        publish_at: publishAt.value,
       };
       // 画像追加のタイミングで下書きが既にできているなら、それを更新する
       // (ここで新規作成すると、画像だけが古い下書きに残ったまま孤立する)
@@ -162,33 +169,53 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
           label="スコープ"
           value={scope}
           onChange={(event) => setScope(event.target.value as DocumentScope)}
-          options={[
-            { value: 'tenant', label: 'テナント' },
-            { value: 'common', label: '共通 (要 provider-admin 権限)' },
-          ]}
+          options={
+            canWriteCommon
+              ? [
+                  { value: 'tenant', label: 'テナント' },
+                  { value: 'common', label: '共通 (provider-admin)' },
+                ]
+              : [{ value: 'tenant', label: 'テナント' }]
+          }
         />
         <TextInput label="タイトル" required value={title} onChange={(event) => setTitle(event.target.value)} />
+        <TextInput
+          label="カテゴリ"
+          description="1つの分類名を入力します。空欄なら未分類です。"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        />
+        <TextInput
+          label="タグ"
+          description="カンマ区切りで複数入力できます。"
+          value={tagsInput}
+          onChange={(event) => setTagsInput(event.target.value)}
+        />
+        <TextInput
+          label="サムネイル画像 URL"
+          description="空欄なら本文の最初の画像を自動採用します。本文への画像追加は下のエディタから行えます。"
+          value={thumbnailUrl}
+          onChange={(event) => setThumbnailUrl(event.target.value)}
+        />
+        <TextInput
+          label="要約"
+          description="空欄なら本文から自動生成します。"
+          value={excerpt}
+          onChange={(event) => setExcerpt(event.target.value)}
+        />
+        <TextInput
+          label="予約公開日時"
+          description="未来の日時を指定すると、下書きとして保存され、日次処理で公開されます。空欄なら予約しません。"
+          type="datetime-local"
+          value={publishAtInput}
+          onChange={(event) => setPublishAtInput(event.target.value)}
+        />
         <MarkdownEditor
           label="本文"
           value={bodyMarkdown}
           onValueChange={setBodyMarkdown}
           rows={16}
           onImageUpload={uploadImage}
-        />
-        <TextInput label="カテゴリ" value={category} onChange={(event) => setCategory(event.target.value)} />
-        <TextInput label="タグ (カンマ区切り)" value={tags} onChange={(event) => setTags(event.target.value)} />
-        <TextInput
-          label="サムネイル画像 URL"
-          description="空欄のときは本文の最初の画像から自動生成します。"
-          value={thumbnailUrl}
-          onChange={(event) => setThumbnailUrl(event.target.value)}
-        />
-        <Textarea
-          label="要約"
-          description="空欄のときは本文から自動要約します。"
-          rows={3}
-          value={excerpt}
-          onChange={(event) => setExcerpt(event.target.value)}
         />
         <div>
           <Button type="submit" disabled={saving}>

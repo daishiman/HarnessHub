@@ -223,3 +223,16 @@ control-plane DB、schema migration、保存形式、export、restore、デー�
 - 画像実体は既存 `tenant_data_objects` (kind=`hearing_screenshot`) の封筒暗号化を再利用する。
 - backup/restore・tenant isolation・table registry に両テーブルを結線する。
 - 詳細正本: `docs/backend-spec.md` §2.3。
+
+## 2026-08-12 Docs CMS additive data contract
+
+- `documents` の分類/card列、外部同期自然キー/hash/revision列に、nullable `publish_at` を純増する。
+  `scheduled` enumや別tableは作らず、既存行は `publish_at=NULL` のまま意味を変えない。
+- migration手順は固定番号でなくcurrent Drizzle journalを正本にする。2026-08-12統合時点の最新ordinalは
+  `0014`だが、dry-run pending → apply → 再dry-run `pending=0` を配備gateとする。
+- 予約公開はdefault/max 100件、`publish_at ASC,id ASC`、各行CASのstable/bounded batch。
+  `{publishedCount,hasMore,publishedDocuments:[{id,tenantId}]}`を返し、状態・publish_at clear・updated fields・
+  外部revisionはrepository transactionで揃える。Hubは返却文書ごとにactor=`system`の文書監査eventを
+  順次追記し、監査失敗をジョブ失敗として観測する（DB更新との原子性は主張しない）。
+- Docs画像実体はR2の`docs/{tenantId}/{documentId}/{imageId}`、DB/Markdownは認証付き内部URLだけを保持する。
+  詳細正本: `docs/backend-spec.md` §2.3/§7、feat-docs-cms ADR §1/§8。

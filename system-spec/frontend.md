@@ -181,3 +181,12 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - S12 は生成結果の閲覧に加え、スクリーンショット添付と Claude Code 引き渡しトークン発行 UI を持つ。
 - 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
 - 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。
+
+## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
+
+- `documents.publish_at` を nullable epoch ms として純増する。`scheduled` enum は追加しない。
+- 表示状態: `published` / `draft+future publish_at`=予約中 / それ以外の draft=非公開。
+- 予約公開 cron は default/max 100・`publish_at ASC,id ASC`・行 CAS。監査 action=`docs.scheduled_publish`。
+- 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
+  `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
+- 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。

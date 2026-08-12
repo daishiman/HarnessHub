@@ -14,6 +14,7 @@ import {
   type DragEvent as ReactDragEvent,
   type ReactNode,
   useCallback,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -69,9 +70,30 @@ export function slugify(text: string): string {
 }
 
 /**
- * GitHub 風 alert 構文 `> [!POINT]` / `> [!ATTENTION]` を検出し、blockquote を
- * `hh-callout` 要素 (data-callout="point"|"attention") へ変換する remark プラグイン。
- * unist-util-visit を新規依存に足さず、素朴な再帰で mdast を歩く。
+ * コールアウトの種類。記事作成者が「どの種類の強調枠か」を選べるようにするための単位。
+ * 追加は `CALLOUT_KIND_LIST` (このファイル内、markdownComponents より前) に 1 行足すだけでよい。
+ */
+export type CalloutKind = 'point' | 'attention' | 'warning' | 'note';
+
+/** remark 記法 `[!KIND]` の KIND 部分に許可する文字列 (大文字小文字は問わない)。 */
+const CALLOUT_KIND_TOKENS: Record<CalloutKind, string> = {
+  point: 'POINT',
+  attention: 'ATTENTION',
+  warning: 'WARNING',
+  note: 'NOTE',
+};
+
+const CALLOUT_KIND_PATTERN = Object.values(CALLOUT_KIND_TOKENS).join('|');
+
+/**
+ * GitHub 風 alert 構文 `> [!POINT]` / `> [!ATTENTION]` / `> [!WARNING]` / `> [!NOTE]` を検出し、
+ * blockquote を `hh-callout` 要素 (data-callout="point"|"attention"|"warning"|"note") へ変換する
+ * remark プラグイン。unist-util-visit を新規依存に足さず、素朴な再帰で mdast を歩く。
+ *
+ * 後方互換: `[!POINT]` `[!ATTENTION]` は docs-cms 導入当初からの記法で、既存記事に書かれたままの
+ * 形で今後も同じ構文として認識し続ける (見た目=色は今回の変更で調整済みだが、構文自体は不変)。
+ * 未知の `[!〜]` 記法 (例: 将来削除された種類の残骸) は変換せず、ただの blockquote として描画する
+ * ので、記事が壊れて表示できなくなることはない。
  */
 function remarkCallouts() {
   return (tree: MdastNode) => {
@@ -92,7 +114,7 @@ function remarkCallouts() {
     const firstText = first.children[0];
     if (firstText?.type !== 'text' || typeof firstText.value !== 'string') return;
 
-    const match = /^\[!(POINT|ATTENTION)\]\s*/i.exec(firstText.value);
+    const match = new RegExp(`^\\[!(${CALLOUT_KIND_PATTERN})\\]\\s*`, 'i').exec(firstText.value);
     if (!match) return;
 
     firstText.value = firstText.value.slice(match[0].length);
@@ -123,23 +145,72 @@ function extractText(node: ReactNode): string {
   return '';
 }
 
-const calloutStyle: Record<'point' | 'attention', CSSProperties> = {
+/**
+ * コールアウトの種類ごとの色・アイコン・ラベルキー。
+ * 依頼された 4 パターン (注意=赤系 / ポイント=青系 / 補足=グレー系 / 警告=黄系) にそれぞれ割り当てる。
+ * `attention` の色は今回の改修で warning (黄) から danger (赤) へ変えている。変えたのは色だけで、
+ * `[!ATTENTION]` という記法自体は変えていないため既存記事は書き直し不要 (remarkCallouts のコメント参照)。
+ */
+const calloutStyle: Record<CalloutKind, CSSProperties> = {
   point: {
     background: colorVar('primarySoft'),
     borderLeft: `4px solid ${colorVar('primary')}`,
     color: colorVar('text'),
   },
   attention: {
+    background: colorVar('dangerSoft'),
+    borderLeft: `4px solid ${colorVar('danger')}`,
+    color: colorVar('text'),
+  },
+  warning: {
     background: colorVar('warningSoft'),
     borderLeft: `4px solid ${colorVar('warning')}`,
     color: colorVar('text'),
   },
+  note: {
+    background: colorVar('neutralSoft'),
+    borderLeft: `4px solid ${colorVar('borderStrong')}`,
+    color: colorVar('text'),
+  },
 };
 
-function Callout({ kind, children }: { kind: 'point' | 'attention'; children: ReactNode }): ReactNode {
+const calloutIcon: Record<CalloutKind, string> = {
+  point: '💡',
+  attention: '⚠️',
+  warning: '🚨',
+  note: '📝',
+};
+
+const calloutLabelKey: Record<
+  CalloutKind,
+  'editor.insertPoint' | 'editor.insertAttention' | 'editor.insertWarning' | 'editor.insertNote'
+> = {
+  point: 'editor.insertPoint',
+  attention: 'editor.insertAttention',
+  warning: 'editor.insertWarning',
+  note: 'editor.insertNote',
+};
+
+/** ツールバーのコールアウトメニューに出す順序。追加した種類はここへ足す。 */
+const CALLOUT_KIND_LIST: readonly CalloutKind[] = ['point', 'attention', 'warning', 'note'];
+
+/** ツールバーからコールアウトを挿入するときの、選択範囲が空の場合に入るプレースホルダー文言。 */
+const CALLOUT_PLACEHOLDER: Record<CalloutKind, string> = {
+  point: 'ポイント',
+  attention: '注意事項',
+  warning: '警告事項',
+  note: '補足事項',
+};
+
+/** 未知の kind 文字列 (旧データや想定外の値) が来ても安全な既定値 (point) へ倒す。 */
+function normalizeCalloutKind(value: unknown): CalloutKind {
+  return value === 'attention' || value === 'warning' || value === 'note' || value === 'point' ? value : 'point';
+}
+
+function Callout({ kind, children }: { kind: CalloutKind; children: ReactNode }): ReactNode {
   const { t } = useUi();
-  const icon = kind === 'point' ? '💡' : '⚠️';
-  const label = kind === 'point' ? t('editor.insertPoint') : t('editor.insertAttention');
+  const icon = calloutIcon[kind];
+  const label = t(calloutLabelKey[kind]);
   return (
     <div
       role="note"
@@ -157,55 +228,6 @@ function Callout({ kind, children }: { kind: 'point' | 'attention'; children: Re
       <span aria-hidden="true">{icon}</span>
       <div style={{ flex: 1 }}>{children}</div>
     </div>
-  );
-}
-
-/** タグ/バッジ用の小さな共通の角丸ピル。 */
-export type BadgeTone = 'neutral' | 'primary' | 'info' | 'warning';
-
-export interface BadgeProps {
-  children: ReactNode;
-  tone?: BadgeTone;
-  style?: CSSProperties;
-}
-
-const badgeToneStyle: Record<BadgeTone, CSSProperties> = {
-  neutral: {
-    background: colorVar('surfaceMuted'),
-    color: colorVar('textMuted'),
-    border: `1px solid ${colorVar('border')}`,
-  },
-  primary: {
-    background: colorVar('primarySoft'),
-    color: colorVar('primary'),
-    border: `1px solid ${colorVar('primarySoft')}`,
-  },
-  info: { background: colorVar('infoSoft'), color: colorVar('infoCyan'), border: `1px solid ${colorVar('infoSoft')}` },
-  warning: {
-    background: colorVar('warningSoft'),
-    color: colorVar('warning'),
-    border: `1px solid ${colorVar('warningSoft')}`,
-  },
-};
-
-export function Badge({ children, tone = 'neutral', style }: BadgeProps): ReactNode {
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: spaceVar(1),
-        padding: `2px ${spaceVar(2)}`,
-        borderRadius: radiusVar('full'),
-        fontSize: 'var(--hh-font-size-sm)',
-        lineHeight: 'var(--hh-line-height-tight)',
-        whiteSpace: 'nowrap',
-        ...badgeToneStyle[tone],
-        ...style,
-      }}
-    >
-      {children}
-    </span>
   );
 }
 
@@ -305,6 +327,43 @@ function LightboxImage({ src, alt }: { src?: string | undefined; alt?: string | 
   );
 }
 
+/**
+ * 画像の横並び配置。
+ *
+ * 記法は「新しい構文を覚えなくてよい」ことを優先し、独自の `:::` コンテナ構文は導入していない。
+ * Markdown の素の挙動として、画像だけの行を空行を挟まずに連続して書くと 1 つの段落
+ * (画像ノード + 改行の空白テキストノードの並び) になる。この段落を検出し、
+ * 画像 1 枚だけの段落は従来どおり単独表示 (p タグの特殊処理、下の p ハンドラ参照)、
+ * 画像が複数ある段落はこの ImageGroup で横並びのレスポンシブな行として描画する。
+ *
+ * レスポンシブ対応: flex-wrap で画面幅に応じて自動的に折り返す。
+ * 各画像の flex-basis を 240px にしているため、幅が足りない画面 (スマートフォンなど) では
+ * 自然に縦積みへ戻り、崩れない。メディアクエリを個別に足す必要はない。
+ */
+function ImageGroup({ children }: { children?: ReactNode }): ReactNode {
+  const items = (Array.isArray(children) ? children : [children]).filter(
+    (child) => !(typeof child === 'string' && child.trim().length === 0),
+  );
+  return (
+    <div
+      data-hh-image-group=""
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: spaceVar(2),
+        margin: `${spaceVar(2)} 0`,
+      }}
+    >
+      {items.map((child, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: 画像グループは並び替え/挿入操作を持たない静的表示なので index で十分
+        <div key={index} style={{ flex: '1 1 240px', minWidth: 0 }}>
+          {child}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function TableWrapper({ children }: { children?: ReactNode }): ReactNode {
   return (
     <div style={{ overflowX: 'auto', margin: `${spaceVar(2)} 0` }}>
@@ -376,21 +435,32 @@ function markdownComponents(): Components {
     img: ({ src, alt }) => <LightboxImage src={typeof src === 'string' ? src : undefined} alt={alt} />,
     pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
     table: ({ children }) => <TableWrapper>{children}</TableWrapper>,
-    // 画像単独の段落 (`![alt](src)` だけの行) は remark-rehype が <p> で包むが、
-    // LightboxImage は <figure>/ボタン/Modal (dialog/h2 等のブロック要素) を持つため、
-    // そのまま <p> の子にすると HTML として不正なネスト (p > figure, p > div など) になり
-    // Next.js の hydration エラーを引き起こす。画像だけの段落は <p> をやめて素通しする。
+    // 画像だけの段落 (`![alt](src)` だけの行、または空行を挟まず連続する複数行) は
+    // remark-rehype が <p> で包むが、LightboxImage は <figure>/ボタン/Modal
+    // (dialog/h2 等のブロック要素) を持つため、そのまま <p> の子にすると HTML として
+    // 不正なネスト (p > figure, p > div など) になり Next.js の hydration エラーを引き起こす。
+    // 画像だけの段落は <p> をやめて素通しする。
+    // 画像が複数 (空行なしで連続する `![alt](src)` の並び) あれば、横並び表示の ImageGroup へ回す
+    // (「画像グループ挿入」記法。詳細は ImageGroup のコメント参照)。
     p: ({ node, children, ...rest }) => {
-      const onlyChild = node?.children?.length === 1 ? node.children[0] : undefined;
-      if (onlyChild !== undefined && onlyChild.type === 'element' && onlyChild.tagName === 'img') {
+      const nonWhitespaceChildren = (node?.children ?? []).filter(
+        (child) => !(child.type === 'text' && (child as { value?: string }).value?.trim() === ''),
+      );
+      const isAllImages =
+        nonWhitespaceChildren.length > 0 &&
+        nonWhitespaceChildren.every((child) => child.type === 'element' && child.tagName === 'img');
+      if (isAllImages && nonWhitespaceChildren.length === 1) {
         return <>{children}</>;
+      }
+      if (isAllImages && nonWhitespaceChildren.length > 1) {
+        return <ImageGroup>{children}</ImageGroup>;
       }
       return <p {...rest}>{children}</p>;
     },
     // react-markdown の Components 型はカスタムタグ名 (hh-callout) を静的に型付けできないため any 経由で追加する
     ...({
       'hh-callout': ({ node, children }: { node?: { properties?: Record<string, unknown> }; children?: ReactNode }) => {
-        const kind = node?.properties?.dataCallout === 'attention' ? 'attention' : 'point';
+        const kind = normalizeCalloutKind(node?.properties?.dataCallout);
         return <Callout kind={kind}>{children}</Callout>;
       },
       // biome-ignore lint/suspicious/noExplicitAny: react-markdown の Components 型はカスタムタグ名を型付けできない
@@ -477,8 +547,27 @@ export function MarkdownEditor({
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [calloutMenuOpen, setCalloutMenuOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const calloutMenuRef = useRef<HTMLDivElement>(null);
   const toolbarId = useId();
+
+  useEffect(() => {
+    if (!calloutMenuOpen) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (calloutMenuRef.current?.contains(event.target as Node)) return;
+      setCalloutMenuOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setCalloutMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [calloutMenuOpen]);
 
   const applyInsert = useCallback(
     (before: string, after: string, placeholder: string) => {
@@ -494,6 +583,14 @@ export function MarkdownEditor({
       });
     },
     [value, onValueChange],
+  );
+
+  const insertCallout = useCallback(
+    (kind: CalloutKind) => {
+      applyInsert(`\n> [!${CALLOUT_KIND_TOKENS[kind]}]\n> `, '\n', CALLOUT_PLACEHOLDER[kind]);
+      setCalloutMenuOpen(false);
+    },
+    [applyInsert],
   );
 
   const insertImageMarkdown = useCallback(
@@ -527,6 +624,43 @@ export function MarkdownEditor({
       }
     },
     [onImageUpload, insertImageMarkdown, t],
+  );
+
+  /**
+   * 複数ファイルを順番にアップロードし、空行を挟まず連続した Markdown 画像記法として
+   * 1 回でまとめて挿入する (横並び表示になる記法。ImageGroup のコメント参照)。
+   * 1 枚ずつ `insertImageMarkdown` を呼ぶと、直前の挿入がまだ state に反映されないうちに
+   * 次の挿入が古い `value` を読んでしまい、後勝ちで前の画像が消えることがあるため、
+   * 全件アップロードを待ってから 1 回で挿入する。
+   */
+  const uploadGroupFiles = useCallback(
+    async (files: readonly File[]) => {
+      if (onImageUpload === undefined || files.length === 0) return;
+      setUploadError(null);
+      setUploading(true);
+      try {
+        const snippets: string[] = [];
+        for (const file of files) {
+          const result = await onImageUpload(file);
+          snippets.push(`![${file.name.replace(/\.[^.]+$/, '')}](${result.url})`);
+        }
+        const el = textareaRef.current;
+        const position = el ? el.selectionStart : value.length;
+        const snippet = snippets.join('\n');
+        const next = value.slice(0, position) + snippet + value.slice(position);
+        onValueChange(next);
+        const cursor = position + snippet.length;
+        requestAnimationFrame(() => {
+          el?.focus();
+          el?.setSelectionRange(cursor, cursor);
+        });
+      } catch {
+        setUploadError(t('editor.imageUploadFailed'));
+      } finally {
+        setUploading(false);
+      }
+    },
+    [onImageUpload, value, onValueChange, t],
   );
 
   const handleDrop = useCallback(
@@ -565,6 +699,16 @@ export function MarkdownEditor({
     [uploadFile],
   );
 
+  const groupFileInputRef = useRef<HTMLInputElement>(null);
+  const handleGroupFilePick = useCallback(
+    (event: ReactChangeEvent<HTMLInputElement>) => {
+      const files = [...(event.target.files ?? [])];
+      event.target.value = '';
+      if (files.length > 0) void uploadGroupFiles(files);
+    },
+    [uploadGroupFiles],
+  );
+
   return (
     <div style={{ display: 'grid', gap: spaceVar(2) }}>
       <div
@@ -591,6 +735,15 @@ export function MarkdownEditor({
         <Button
           type="button"
           variant="ghost"
+          disabled={onImageUpload === undefined || uploading}
+          loading={uploading}
+          onClick={() => groupFileInputRef.current?.click()}
+        >
+          {t('editor.insertImageGroup')}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
           onClick={() => applyInsert('\n| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 値1 | 値2 | 値3 |\n', '', '')}
         >
           {t('editor.insertTable')}
@@ -605,20 +758,80 @@ export function MarkdownEditor({
         >
           {t('editor.insertToggle')}
         </Button>
-        <Button type="button" variant="ghost" onClick={() => applyInsert('\n> [!POINT]\n> ', '\n', 'ポイント')}>
-          {t('editor.insertPoint')}
-        </Button>
-        <Button type="button" variant="ghost" onClick={() => applyInsert('\n> [!ATTENTION]\n> ', '\n', '注意事項')}>
-          {t('editor.insertAttention')}
-        </Button>
+        <div ref={calloutMenuRef} style={{ position: 'relative' }}>
+          <Button
+            type="button"
+            variant="ghost"
+            aria-haspopup="menu"
+            aria-expanded={calloutMenuOpen}
+            onClick={() => setCalloutMenuOpen((open) => !open)}
+          >
+            {t('editor.insertCallout')}
+          </Button>
+          {calloutMenuOpen ? (
+            <div
+              role="menu"
+              aria-label={t('editor.calloutMenu')}
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                zIndex: 1,
+                marginTop: spaceVar(1),
+                minWidth: 160,
+                display: 'grid',
+                padding: spaceVar(1),
+                borderRadius: radiusVar('md'),
+                border: `1px solid ${colorVar('border')}`,
+                background: colorVar('surface'),
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+              }}
+            >
+              {CALLOUT_KIND_LIST.map((kind) => (
+                <button
+                  key={kind}
+                  type="button"
+                  role="menuitem"
+                  data-hh-focusable=""
+                  onClick={() => insertCallout(kind)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: spaceVar(2),
+                    padding: `${spaceVar(1)} ${spaceVar(2)}`,
+                    border: 'none',
+                    borderRadius: radiusVar('sm'),
+                    background: 'transparent',
+                    color: colorVar('text'),
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <span aria-hidden="true">{calloutIcon[kind]}</span>
+                  {t(calloutLabelKey[kind])}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
         {onImageUpload === undefined ? null : (
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp,image/gif"
-            style={{ display: 'none' }}
-            onChange={handleFilePick}
-          />
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              style={{ display: 'none' }}
+              onChange={handleFilePick}
+            />
+            <input
+              ref={groupFileInputRef}
+              type="file"
+              multiple
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              style={{ display: 'none' }}
+              onChange={handleGroupFilePick}
+            />
+          </>
         )}
       </div>
       {uploading ? (
