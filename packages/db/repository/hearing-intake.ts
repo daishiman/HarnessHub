@@ -55,6 +55,8 @@ export interface HearingSheetRow {
   readonly title: string;
   readonly applicantUserId: string;
   readonly applicantName: string;
+  /** JIT provisioning 直後は `applicantName` が空文字なので、表示名の代替として一緒に読む。 */
+  readonly applicantEmail: string;
   readonly department: string | null;
   readonly status: HearingSheetStatus;
   readonly formJson: string;
@@ -127,12 +129,14 @@ function transactional(adapter: CoreAdapter) {
 function asSheetRow(row: {
   readonly sheet: typeof hearingSheets.$inferSelect;
   readonly applicantName: string;
+  readonly applicantEmail: string;
   readonly aiJobStatus: HearingQueueStatus | null;
   readonly aiJobResultJson: string | null;
 }): HearingSheetRow {
   return {
     ...row.sheet,
     applicantName: row.applicantName,
+    applicantEmail: row.applicantEmail,
     aiJobStatus: row.aiJobStatus,
     aiJobResultJson: row.aiJobResultJson,
   };
@@ -145,6 +149,7 @@ async function findSheetOn(db: CoreDb, context: RepositoryContext, id: string): 
     .select({
       sheet: hearingSheets,
       applicantName: users.name,
+      applicantEmail: users.email,
       aiJobStatus: aiJobs.status,
       aiJobResultJson: aiJobs.resultJson,
     })
@@ -351,6 +356,7 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
         .select({
           sheet: hearingSheets,
           applicantName: users.name,
+          applicantEmail: users.email,
           aiJobStatus: aiJobs.status,
           aiJobResultJson: aiJobs.resultJson,
         })
