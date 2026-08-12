@@ -7,7 +7,7 @@ import { type ReactNode, useMemo } from 'react';
 import { extractHeadingOutline } from '../../../../features/docs-cms/content-analysis.js';
 
 const MarkdownView = dynamic(
-  () => import('../../../../components/docs/markdown-view.js').then((module) => module.MarkdownView),
+  () => import('../../../../components/docs/markdown-view.js').then((module) => module.DocsMarkdownView),
   { loading: () => <p aria-live="polite">本文を読み込んでいます…</p> },
 );
 

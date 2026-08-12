@@ -7,7 +7,7 @@ import { type FormEvent, type ReactNode, useCallback, useRef, useState } from 'r
 import { usePendingDocumentImages } from '../../../../components/docs/use-pending-document-images.js';
 
 const MarkdownEditor = dynamic(
-  () => import('../../../../components/docs/markdown-editor.js').then((module) => module.MarkdownEditor),
+  () => import('../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
   {
     loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
   },
