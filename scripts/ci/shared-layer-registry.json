@@ -197,6 +197,14 @@
       {
         "path": "apps/hub/src/app/signin/workspace/route.ts",
         "reason": "active workspace を確定させる受け口。withAuthz は scope 確定済みを前提とするため、scope 未確定そのものを解消するこの経路には適用できない (適用すると missing_tenant_scope で自分自身を弾き、複数 workspace 所属者が復帰不能になる)。代わりに route 自身が session cookie の署名・期限・status=active を検証し、claims の workspace_ids に無い ID は cookie にしない fail-closed 実装 (feat-post-signin-scope-routing)"
+      },
+      {
+        "path": "apps/hub/src/app/api/hearing/[token]/route.ts",
+        "reason": "トークン付き共有URL方式 (feat-hearing-intake 追加要件)。session を持たない Claude Code / 依頼者が直接叩く前提の設計で、device flow と同様に認証前に到達する。無効・期限切れ・失効・存在しないトークンをすべて同じ 404 に畳んで資源の存在を伏せ、tenantId/workspaceId/sheetId はトークン検証が返した値のみを正本にする (要求側の申告値は使わない)"
+      },
+      {
+        "path": "apps/hub/src/app/api/hearing/[token]/screenshots/[screenshotId]/route.ts",
+        "reason": "上記と同じトークン付き共有URL方式のスクリーンショット中継。R2の実URL/署名付きURLを外へ出さず、常にこの app が復号済みバイト列を中継する。screenshot の sheetId がトークンの sheetId と一致することも必ず検査する"
       }
     ]
   }

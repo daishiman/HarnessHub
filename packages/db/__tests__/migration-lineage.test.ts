@@ -6,6 +6,8 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { describe, expect, it } from 'vitest';
 import { splitMigrationSql } from '../backup/ddl';
+import { allTables } from '../schema/index';
+import { assertTableRegistryParity } from '../scripts/table-registry-parity';
 import { schemaDdl } from './support/schema-harness';
 
 const PKG_ROOT = join(import.meta.dirname, '..');
@@ -110,6 +112,11 @@ describe('DMDB-T07 single migration lineage', () => {
 });
 
 describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', () => {
+  it('テーブル集合 parity gate は registry の欠落・過剰をどちらも検知する (negative control)', () => {
+    expect(() => assertTableRegistryParity(['a', 'b'], ['a'])).toThrow(/missingFromRegistry=b/);
+    expect(() => assertTableRegistryParity(['a'], ['a', 'orphan'])).toThrow(/extraInRegistry=orphan/);
+  });
+
   it.skipIf(!existsSync(MIGRATIONS_DIR))(
     'migration SQL 適用結果のスキーマ形状が barrel 導出 DDL と一致する',
     async () => {
@@ -122,10 +129,13 @@ describe('DMDB-T13 canonical migration と schema harness の同値 (P08 後)', 
       const fromMigrations = introspect(migrationStatements);
       const fromHarness = introspect(await schemaDdl());
       expect(fromMigrations).toStrictEqual(fromHarness);
+      expect(() => assertTableRegistryParity(Object.keys(fromMigrations), Object.keys(allTables))).not.toThrow();
       // テーブル総数は「barrel へ足したのに migration を生成し忘れた」を検知する tripwire。
       // 31 → 32: production smoke fixture lease 台帳 (migration 0009 / HarnessHub-aauo)。
       // 32 → 33: workspace 単位の Notion 連携 (migration 0010 / HarnessHub-hrux)。
-      expect(Object.keys(fromMigrations)).toHaveLength(33);
+      // 33 → 35: hearing_screenshots / hearing_share_tokens (migration 0011、ヒアリングシート
+      // スクリーンショット添付・受け渡しトークンの追加要件)。
+      expect(Object.keys(fromMigrations)).toHaveLength(35);
     },
   );
 });

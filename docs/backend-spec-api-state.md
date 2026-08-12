@@ -39,20 +39,39 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 | Method Path | 最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/sheets` | member | 基本 12 項目 + 任意の用途プロファイル 11 項目を提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
+| `POST /api/v1/sheets` | member | ウィザード 30 項目提出 → HS コード発行、status=`received`、試算 snapshot 保存、AiJob(`sheet_generation`) 投入、受付通知 |
 | `GET /api/v1/sheets` | member | 一覧 (filter: status/department/q, cursor)。member/owner は `applicant_user_id = principal.user_id` の自分のシートだけ、workspace-admin は自テナント全件。item は `id, code, status, title, domain, department, people, hours, applicant{name}, updated_at` を返す |
 | `GET /api/v1/sheets/:id` | member | 詳細。自分のシートまたは admin のみ。`form_snapshot, estimate_snapshot, generated_sections{overview, issue, feature_tags, estimated_effect}, applicant, department, created_at, ai_job_status, build_ref, publish_request_ref` を返す。salary 原値は返さない |
 | `PATCH /api/v1/sheets/:id` | workspace-admin | status 遷移 (§5.2)。監査 event |
 | `POST /api/v1/sheets/:id/regenerate` | workspace-admin | AiJob 再投入 (status→`generating`) |
 
-**FormData 最大 23 項目 (mockup 実測の必須 12 項目 + skill-intake プラグイン由来の任意プロフィール 11 項目。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority, usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, trueProblem, knowledgeAssets`
+**FormData 30 項目 (mockup 実測の必須 12 項目 + skill-intake プラグイン由来の用途プロファイル 9 項目 + 任意の情報源/真の課題 2 項目 + 依頼者追加要件由来の要望パターン系 7 項目。ラベル和訳は表示層)**: `taskName, company, applicant, domain, issue, tools, hours, people, salary, features, output, priority, usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, informationSources, trueProblem, knowledgeAssets, requestPatterns, integrationTools, integrationToolsOther, automationDescription, existingDataSources, existingDataSourcesOther, referenceUrls`
 
-- 用途プロファイル 11 項目は 6 軸プロファイル(熟練度/役割/文脈/制約/動機/共有意図)と 5 軸シート(出力先/情報源/共有相手/真の課題/ナレッジ資産)を意味を混ぜずに保持する。選択項目の既定値は置かず、未回答は `null`、複数入力の回答済み 0 件は空配列として保存する。
-- `form_snapshot` は request schema から直接派生させず、`schemaVersion=2` の永続化契約へ変換して保存する。読取時は version 2 に加え、`schemaVersion=1` の V1、および履歴上の無版 11 項目 form_json・salary を含む無版 12 項目 form_json を V1 として正規化し、salary は破棄する。処理待ちの旧 `sheet_generation` payload にも同じ dual-read を適用する。既存の JSON 列を使うため DB migration は不要。
+- 用途プロファイル 9 項目 (`usagePurpose`〜`knowledgeAssets`) は skill-intake プラグイン(`.claude/agents/skill-intake-user-profiler.md` 等)が集める 6 軸プロファイル(熟練度/役割/文脈/制約/動機/共有意図)と 5 軸シート(出力先/情報源/共有相手/真の課題/ナレッジ資産)のうちクリックで完結できる軸を選択式・複数選択で取り込んだもの。未回答を選べない項目を残さないため、`informationSources`/`trueProblem` を除く全軸に `unknown`(不明・わからない)を選択肢として持つ。自由記述は `shareTarget`(共有相手)と `knowledgeAssets`(ナレッジ資産、改行区切り)のみ。
+- `informationSources`(情報源、複数)・`trueProblem`(真の課題、自由記述)の 2 項目のみ任意で、未回答は `null`、複数入力の回答済み 0 件は空配列として保存し両者を区別する。
+- 要望パターン系 7 項目 (`requestPatterns`〜`referenceUrls`) は「よくある要望パターン」選択・連携先ツール・参考 URL 一覧を保持する。
+- `form_snapshot` は request schema から直接派生させず、現行 `schemaVersion=3` の永続化契約へ変換して保存する。読取時は version 3 に加え、version 2 (nullable プロファイル + informationSources/trueProblem)・初期 version 2 (informationSources/trueProblem 未実装)・`schemaVersion=1` の V1・履歴上の無版 11 項目 form_json・salary を含む無版 12 項目 form_json のすべてを dual-read で正規化する。プロファイル軸は `unknown`、`informationSources`/`trueProblem` は `null`、要望パターン系は空配列へ補完し、salary は破棄する。処理待ちの旧 `sheet_generation` payload にも同じ dual-read を適用する。既存の JSON 列を使うため DB migration は不要。
 
 - `applicant` は表示用の自由入力を保存するが、認可の所有者判定は改ざん可能な form 値でなく session の `principal.user_id` を `applicant_user_id` へ固定して行う。
 - status の保存値は §5.2 の `received/generating/review/completed`。mock の「下書き」は `received` の旧表示とみなし、統一 UI ラベルは「受付」。
 - PDF は独立した非認可 API を作らず、認可済み詳細 DTO を frontend-spec §3.2 の印刷表示へ再利用する。
+
+### 4.3.1 ヒアリングシート スクリーンショット・Claude Code への引き渡し (token-URL 方式)
+
+| Method Path | 最小 role | 概要 |
+|---|---|---|
+| `POST /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | multipart (`file, title, linkedItem?, note?`)。PNG/JPEG/WebP のみ・50 MiB 以下。申告 MIME と先頭バイトの両方を検証する。tenant_data と同じ R2 bucket・暗号化機構を再利用し、メタデータのみ DB へ登録 |
+| `GET /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | 添付済みスクリーンショット一覧 (`id, title, linked_item, note, size_bytes, content_type, created_at`) |
+| `GET /api/v1/sheets/:id/screenshots/:screenshotId` | member (`selfOnly`) | 認証済みの画像ダウンロード。PNG/JPEG/WebP を再検査し、`attachment` / `nosniff` / `no-store` で返す |
+| `DELETE /api/v1/sheets/:id/screenshots/:screenshotId` | member (`selfOnly`) | 削除。`screenshotId` が別 sheet に属する場合は 404 (存在秘匿) |
+| `POST /api/v1/sheets/:id/handoff-tokens` | member (`selfOnly`) | `audience`(`harness_creator` / `system_orchestrator`) を指定してトークン付き共有 URL を発行。TTL 7日。平文トークンはこのレスポンスでしか返さない (SHA-256 ハッシュのみ保存)。`instruction_text`(Claude Code へそのまま貼り付けられる誘導文) を同時に生成。監査 event (`hearing_share_token.issued`) |
+| `GET /api/v1/sheets/:id/handoff-tokens` | member (`selfOnly`) | 発行済みトークン一覧 (`id, audience, expires_at, last_accessed_at, access_count, revoked_at, created_at`)。平文トークンは含まない |
+| `PATCH /api/v1/sheets/:id/handoff-tokens/:tokenId` | member (`selfOnly`) | 手動無効化 (revoke)。CAS (compare-and-swap) で二重無効化を安全に無害化し `{ id, revoked: true }` を返す。存在しない/他 sheet の `tokenId` は 404。監査 event (`hearing_share_token.revoked`) |
+| `GET /api/hearing/:token` | なし (トークンのみが唯一の境界) | 公開ヒアリング内容取得 API。`hearingSharePayloadSchema` 形 (`sheet_code, audience, form_snapshot, estimate_snapshot, generated_sections, reference_urls, screenshots[], handoff_text, expires_at`) を返す。無効・期限切れ・失効・存在しないトークンはすべて同一の undifferentiated 404 (推測攻撃で有効/無効を区別させない)。アクセスのたびに `access_count`/`last_accessed_at` を記録 (best-effort・失敗しても本処理は継続) |
+| `GET /api/hearing/:token/screenshots/:screenshotId` | なし (トークンのみが唯一の境界) | 同一トークンでスコープされたスクリーンショット中継配信 (`content-disposition: attachment`, `X-Content-Type-Options: nosniff`)。raw R2 URL は公開せず、必ずこのアプリ経由で復号・中継する。`screenshotId` がトークンの sheet に属さない場合は 404 |
+
+- セキュリティ要件: 公開 middleware は `/api/hearing/:token` とその screenshot 子経路の形だけを通し、広い prefix 免除はしない。トークンは SHA-256 ハッシュのみ保存し、依頼者が `PATCH .../handoff-tokens/:tokenId` でいつでも手動無効化できる。`access_count` / `last_accessed_at` は best-effort の利用状況メタデータであり、追記専用の監査ログとは呼ばない。時刻値は全て epoch ms に統一する。画像配信も同じトークンでスコープし、誰でも見られる固定 URL にはしない。
+- `POST /api/v1/sheets/:id/handoff-tokens` の応答 (`token` / `url` / `instruction_text`) は発行直後の 1 回しか返さない。再表示 API は提供しない。
 
 ### 4.4 構築パイプライン (pipeline board)
 

@@ -229,3 +229,10 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+
+## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
+
+- sheets API は FormData 28 項目を受け付け、screenshots / handoff-tokens を sheet 配下の子資源として公開する。
+- 公開共有は `GET /api/hearing/:token` (session なし)。token は SHA-256 ハッシュのみ保存し、
+  無効・期限切れ・失効は同一 404 に畳む。
+- 詳細は `docs/backend-spec-api-state.md` §4.3.1。本追記は REST+zod 単一ソースと deny-by-default 認可の枠内。

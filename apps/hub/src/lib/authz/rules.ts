@@ -172,6 +172,16 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'tenant-data.read_content': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'tenant-data.delete': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
 
+  // feat-hearing-intake 追加要件 (トークン付き共有URL方式)。
+  // screenshots / handoff-tokens はどちらも「自分が作った sheet」に対してのみ扱える運用が
+  // 自然なため、`sheets.read_own`/`sheets.create` と同型 (selfOnly: true, minRole: member)。
+  'sheets.screenshots.upload': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.screenshots.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.screenshots.delete': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.issue': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.revoke': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+
   // feat-notion-integration (設定画面の Notion 連携)。workspace 単位の共有設定であり
   // 個人の資源ではないため selfOnly は使わない (`tenant-data.*` と同様)。
   // 読取り (「開く」導線を出すための存在確認を含む) は member — 通常業務で参照するだけなので

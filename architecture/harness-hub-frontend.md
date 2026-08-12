@@ -291,3 +291,8 @@ PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過
 上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
 `StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
 画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。
+
+## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
+
+S10 を8画面(28項目)へ分割し、S12 に引き渡し/screenshot/token UI を追加。
+詳細は `docs/frontend-spec.md` と feature information-design / 受領書を正本とする。

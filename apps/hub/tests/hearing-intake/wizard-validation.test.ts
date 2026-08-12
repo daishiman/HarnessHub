@@ -31,30 +31,31 @@ const VALID_FORM: HearingSheetFormInput = {
   informationSources: ['会計システム'],
   trueProblem: '単純転記に時間を奪われ、例外判断へ集中できないこと',
   knowledgeAssets: ['経理マニュアル'],
+  requestPatterns: ['unknown'],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
-  it('全 23 項目が有効なら各ステップと最終確認を通す', () => {
-    for (const index of [0, 1, 2, 3, 4]) {
+  it('全 28 項目が有効なら 8 画面の各ステップと最終確認を通す', () => {
+    for (const index of [0, 1, 2, 3, 4, 5, 6, 7]) {
       expect(hearingIntakeStepIsValid(VALID_FORM, index)).toBe(true);
     }
   });
 
-  it('任意 profile は null を許容し、null と回答済み 0 件を区別する', () => {
+  it('informationSources/trueProblem は null を許容し、null と回答済み 0 件を区別する', () => {
     expect(
       hearingIntakeStepIsValid(
         {
           ...VALID_FORM,
-          usagePurpose: null,
-          shareTarget: null,
           informationSources: null,
           trueProblem: null,
-          knowledgeAssets: null,
         },
         2,
       ),
     ).toBe(true);
-    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: [], knowledgeAssets: [] }, 2)).toBe(true);
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, informationSources: [] }, 2)).toBe(true);
   });
 
   it('共有相手は 200 文字を通し 201 文字を用途プロファイル step で止める', () => {
@@ -96,9 +97,9 @@ describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
     expect(
       hearingIntakeStepIsValid(
         { ...VALID_FORM, features: 'a'.repeat(HEARING_SHEET_FORM_LIMITS.requiredTextLength + 1) },
-        3,
+        5,
       ),
     ).toBe(false);
-    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 4)).toBe(false);
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 7)).toBe(false);
   });
 });

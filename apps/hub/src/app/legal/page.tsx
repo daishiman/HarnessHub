@@ -5,7 +5,9 @@
  * S18 配下に置く」)。middleware 側は `PUBLIC_PATH_PREFIXES` に `/legal` を追加済みで、
  * この画面自体は role 分岐・データ取得を一切持たない (静的コンテンツのみ、SEC9: salary 等 PII を含めない)。
  *
- * 認可判定をこの画面に持ち込まない (他画面と同じ理由: 判定点を増やさない)。
+ * 表示シェル (HubShell / PublicShell) の出し分けは `layout.tsx` が持つ (このファイルでは持たない)。
+ * page.tsx が HubShell 等の client 部品を直接 import すると、その CSS/JS が `/legal/page` の
+ * manifest entry に直接乗り、G13 client JS 予算ゲートの実測を押し上げる (layout.tsx のコメント参照)。
  *
  * 本文はこのファイルに書かない。`legal-content.ts` の 1 か所だけを差し替えれば
  * 文面が入れ替わるようにしてある (条の数が増減しても画面側の修正は不要)。
@@ -18,7 +20,6 @@
 import { ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
-import { PublicShell } from '../../components/shell/public-shell.js';
 import { LegalArticle } from './legal-article.js';
 import { LEGAL_DOCUMENTS } from './legal-content.js';
 
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function LegalPage() {
   return (
-    <PublicShell>
+    <>
       <style>{'@media print { [data-print-exclude] { display: none !important; } }'}</style>
       <article aria-labelledby="legal-heading">
         {/* 説明文は全画面共通で「この画面で何ができるか」を 1 行で出す (docs/frontend-ui-foundation-spec.md) */}
@@ -62,6 +63,6 @@ export default function LegalPage() {
           <LegalArticle key={entry.slug} entry={entry} first={index === 0} />
         ))}
       </article>
-    </PublicShell>
+    </>
   );
 }

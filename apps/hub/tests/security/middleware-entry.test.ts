@@ -197,6 +197,31 @@ describe('middleware の decision と NextResponse の対応', () => {
     expect(response.headers.get('x-middleware-next')).toBe('1');
   });
 
+  it('hearing share の正確な 2 形状だけを未認証で route へ委譲する', async () => {
+    const token = 'Abc_123-opaque-token-value-0123456789abcdef';
+    const screenshotId = '0'.repeat(26);
+
+    for (const pathname of [`/api/hearing/${token}`, `/api/hearing/${token}/screenshots/${screenshotId}`]) {
+      const response = await loaded.denyAll.middleware(requestFor(pathname));
+      expect(response.status).toBe(200);
+      expect(response.headers.get('x-middleware-next')).toBe('1');
+    }
+  });
+
+  it('hearing share の未知の子 route は middleware で 401 に閉じる', async () => {
+    const token = 'Abc_123-opaque-token-value-0123456789abcdef';
+    for (const pathname of [
+      '/api/hearing',
+      `/api/hearing/${token}/screenshots`,
+      `/api/hearing/${token}/screenshots/id/metadata`,
+      `/api/hearing/${token}/admin`,
+    ]) {
+      const response = await loaded.denyAll.middleware(requestFor(pathname));
+      expect(response.status).toBe(401);
+      await expect(response.json()).resolves.toEqual({ error: 'unauthenticated' });
+    }
+  });
+
   it('拒否理由と status を JSON 応答へそのまま写す', async () => {
     const { middleware } = loaded.secured;
     const cookie = await sessionCookie();

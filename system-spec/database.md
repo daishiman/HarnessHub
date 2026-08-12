@@ -123,3 +123,10 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 ## 最新ドキュメント出典
 
 - (このカテゴリに割り当てた取得済みドキュメントなし。全体出典は index.md 参照)
+
+## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
+
+- migration `0010_hearing-intake-screenshots-and-share-tokens.sql` で
+  `hearing_screenshots` と `hearing_share_tokens` を追加する。
+- 画像 blob は `tenant_data_objects` を再利用し、hearing 側はメタデータと token 境界だけを持つ。
+- 詳細は `docs/backend-spec.md` §2.3。

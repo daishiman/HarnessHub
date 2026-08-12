@@ -19,6 +19,7 @@ import { createAuditRepo } from '../repository/audit';
 import { ENCRYPTED_COLUMN_PATTERN } from '../repository/crypto';
 import { createTenantDataRepo } from '../repository/tenant-data';
 import { createTenantsRepo } from '../repository/tenants';
+import { hearingScreenshots, hearingShareTokens } from '../schema/hearing-intake/schema';
 import { allTables } from '../schema/index';
 import { tenantDataObjects } from '../schema/tenant-data/schema';
 import { seedTwoTenants, type TwoTenantsFixture } from './fixtures/two-tenants';
@@ -44,11 +45,13 @@ afterAll(() => {
 });
 
 describe('DMDB-T06 export artifact の暗号断面', () => {
-  it('Studio 拡張の tenant_data object と削除 tombstone も日次 export に含める', () => {
+  it('Studio 拡張の tenant_data と hearing共有2表を日次 export に含める', () => {
     const { header, rowsByTable } = parseExportArtifact(artifact);
     expect(Object.keys(header.tables).sort()).toStrictEqual(Object.keys(allTables).sort());
     expect(rowsByTable.get('tenant_data_objects')).toHaveLength(2);
     expect(rowsByTable.get('tenant_data_tombstones')).toHaveLength(2);
+    expect(rowsByTable.get('hearing_screenshots')).toHaveLength(2);
+    expect(rowsByTable.get('hearing_share_tokens')).toHaveLength(2);
   });
 
   it('export 成果物に salary / client_secret の平文が一切現れない (常にマスク相当)', () => {
@@ -90,6 +93,9 @@ describe('DMDB-T06 restore round-trip', () => {
       expect(report.chainOk).toBe(true);
       expect(report.header?.tables.users).toBe(2);
       expect(report.restoredCounts.audit_events).toBe(4); // 2 tenants × 2 events
+      const restoredShareTokens = await target.client.select().from(hearingShareTokens);
+      expect(restoredShareTokens).toHaveLength(2);
+      expect(restoredShareTokens.every((row) => row.revokedAt !== null)).toBe(true);
     } finally {
       target.close();
     }
@@ -165,6 +171,11 @@ describe('DMDB-T06 restore round-trip', () => {
       expect(report.tombstonesApplied).toBeGreaterThanOrEqual(3);
       const restored = await target.client.select().from(tenantDataObjects).where(eq(tenantDataObjects.id, deleted.id));
       expect(restored).toHaveLength(0);
+      const restoredScreenshotMetadata = await target.client
+        .select()
+        .from(hearingScreenshots)
+        .where(eq(hearingScreenshots.tenantDataObjectId, deleted.id));
+      expect(restoredScreenshotMetadata).toHaveLength(0);
     } finally {
       target.close();
     }
@@ -313,15 +324,16 @@ describe('P13 production migration / smoke CLI', () => {
     // 0008 metrics-tracking + build-pipeline-board /
     // 0009 production smoke fixture lease 台帳 / 0010 Notion 連携 /
     // 0011 docs-cms のカード表示・自動分類列追加 (category/tags/thumbnail/excerpt/asset_summary) /
-    // 0012 外部 Markdown 同期
+    // 0012 外部 Markdown 同期 /
+    // 0013 hearing_screenshots / hearing_share_tokens (ヒアリングシート添付・受け渡しトークン)
     const dryRun = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url, '--dry-run']).trim());
-    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 13, applied: 0, pending: 13 });
+    expect(dryRun).toMatchObject({ ok: true, dryRun: true, journal: 14, applied: 0, pending: 14 });
 
     const first = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 13 });
+    expect(first).toMatchObject({ ok: true, appliedBefore: 0, appliedAfter: 14 });
 
     const second = JSON.parse(runCli('scripts/migrate-deploy.ts', ['--url', url]).trim());
-    expect(second).toMatchObject({ ok: true, appliedBefore: 13, appliedAfter: 13 });
+    expect(second).toMatchObject({ ok: true, appliedBefore: 14, appliedAfter: 14 });
     // 既定 5s では tsx の起動 3 回だけで超過し、実装が正しくても timeout で赤くなる
     // (「落ちたら再実行」を招いてゲートの信頼性を失うため、他の CLI テストと同じ枠を与える)。
   }, 120_000);

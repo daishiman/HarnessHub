@@ -27,6 +27,14 @@ function optionalListIsValid(entries: readonly string[] | null, maxItems: number
   );
 }
 
+function knowledgeAssetsAreValid(assets: readonly string[]): boolean {
+  return (
+    assets.length >= 1 &&
+    assets.length <= HEARING_SHEET_FORM_LIMITS.knowledgeAssets &&
+    assets.every((asset) => textWithinLimit(asset, HEARING_SHEET_FORM_LIMITS.shortTextLength))
+  );
+}
+
 function hasOption<T extends string>(options: readonly { readonly value: T }[], value: unknown): value is T {
   return typeof value === 'string' && options.some((option) => option.value === value);
 }
@@ -46,15 +54,25 @@ function optionalListValidationError(
   return undefined;
 }
 
+/** informationSources はまだウィザード UI が未実装のため任意 (null 許容) のまま。 */
 export function informationSourcesValidationError(sources: readonly string[] | null): string | undefined {
   return optionalListValidationError('情報源', sources, HEARING_SHEET_FORM_LIMITS.informationSources);
 }
 
-export function knowledgeAssetsValidationError(assets: readonly string[] | null): string | undefined {
-  return optionalListValidationError('ナレッジ資産', assets, HEARING_SHEET_FORM_LIMITS.knowledgeAssets);
+export function knowledgeAssetsValidationError(assets: readonly string[]): string | undefined {
+  if (assets.length > HEARING_SHEET_FORM_LIMITS.knowledgeAssets) {
+    return `ナレッジ資産は ${HEARING_SHEET_FORM_LIMITS.knowledgeAssets} 件以内で入力してください。`;
+  }
+  if (assets.some((asset) => asset.trim().length > HEARING_SHEET_FORM_LIMITS.shortTextLength)) {
+    return `ナレッジ資産は 1 件あたり ${HEARING_SHEET_FORM_LIMITS.shortTextLength} 文字以内で入力してください。`;
+  }
+  return undefined;
 }
 
-/** StepWizard の「次へ」と最終 POST 直前が共有する入力判定。 */
+/**
+ * 8 画面ウィザードの「次へ」と最終 POST 直前が共有する入力判定。
+ * 画面 index は S10 information-design の 0..7 と一致する。
+ */
 export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex: number): boolean {
   switch (stepIndex) {
     case 0:
@@ -77,27 +95,40 @@ export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex:
       );
     case 2:
       return (
-        (form.usagePurpose === null || hasOption(USAGE_PURPOSE_OPTIONS, form.usagePurpose)) &&
-        (form.expertise === null || hasOption(EXPERTISE_OPTIONS, form.expertise)) &&
-        (form.role === null || hasOption(ROLE_OPTIONS, form.role)) &&
-        (form.context === null || hasOption(CONTEXT_OPTIONS, form.context)) &&
-        (form.motivation === null || hasOption(MOTIVATION_OPTIONS, form.motivation)) &&
-        (form.sharingIntent === null || hasOption(SHARING_INTENT_OPTIONS, form.sharingIntent)) &&
-        (form.constraintTags === null ||
-          (form.constraintTags.length <= CONSTRAINT_TAG_OPTIONS.length &&
-            form.constraintTags.every((tag) => hasOption(CONSTRAINT_TAG_OPTIONS, tag)))) &&
-        optionalTextWithinLimit(form.shareTarget, HEARING_SHEET_FORM_LIMITS.shortTextLength) &&
+        hasOption(USAGE_PURPOSE_OPTIONS, form.usagePurpose) &&
+        hasOption(EXPERTISE_OPTIONS, form.expertise) &&
+        hasOption(ROLE_OPTIONS, form.role) &&
+        hasOption(CONTEXT_OPTIONS, form.context) &&
+        hasOption(MOTIVATION_OPTIONS, form.motivation) &&
+        hasOption(SHARING_INTENT_OPTIONS, form.sharingIntent) &&
+        form.constraintTags.length <= CONSTRAINT_TAG_OPTIONS.length &&
+        form.constraintTags.every((tag) => hasOption(CONSTRAINT_TAG_OPTIONS, tag)) &&
+        textWithinLimit(form.shareTarget, HEARING_SHEET_FORM_LIMITS.shortTextLength) &&
         optionalListIsValid(form.informationSources, HEARING_SHEET_FORM_LIMITS.informationSources) &&
         optionalTextWithinLimit(form.trueProblem, HEARING_SHEET_FORM_LIMITS.requiredTextLength) &&
-        optionalListIsValid(form.knowledgeAssets, HEARING_SHEET_FORM_LIMITS.knowledgeAssets)
+        knowledgeAssetsAreValid(form.knowledgeAssets)
       );
     case 3:
+      return (
+        (!form.requestPatterns.includes('integration') ||
+          (form.integrationTools.length >= 1 &&
+            (!form.integrationTools.includes('other') ||
+              textWithinLimit(form.integrationToolsOther ?? '', HEARING_SHEET_FORM_LIMITS.shortTextLength)))) &&
+        (!form.requestPatterns.includes('data_digitization') ||
+          (form.existingDataSources.length >= 1 &&
+            (!form.existingDataSources.includes('other') ||
+              textWithinLimit(form.existingDataSourcesOther ?? '', HEARING_SHEET_FORM_LIMITS.shortTextLength))))
+      );
+    case 4:
+      return true;
+    case 5:
       return (
         textWithinLimit(form.features, HEARING_SHEET_FORM_LIMITS.requiredTextLength) &&
         textWithinLimit(form.output, HEARING_SHEET_FORM_LIMITS.requiredTextLength)
       );
-    case 4:
-      return [0, 1, 2, 3].every((index) => hearingIntakeStepIsValid(form, index));
+    case 6:
+    case 7:
+      return [0, 1, 2, 3, 4, 5].every((index) => hearingIntakeStepIsValid(form, index));
     default:
       return false;
   }

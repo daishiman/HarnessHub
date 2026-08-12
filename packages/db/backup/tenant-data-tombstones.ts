@@ -2,9 +2,11 @@
 // 決定論的 manifest。R2 実体は削除時に既に物理削除されるため、ここは DB 参照の再出現を防ぐ。
 
 import { and, eq } from 'drizzle-orm';
-import type { CoreAdapter } from '../repository/db';
+import type { CoreAdapter, CoreDb } from '../repository/db';
+import { hearingScreenshots } from '../schema/hearing-intake/schema';
 import { tenantDataObjects } from '../schema/tenant-data/schema';
 import { tenantDataTombstones } from '../schema/tenant-data/tombstones';
+import { isTransactionalAdapter } from '../src/adapter';
 import type { ParsedArtifact } from './export';
 
 export const TENANT_DATA_TOMBSTONE_MANIFEST_FORMAT = 'harness-hub-tenant-data-tombstone-manifest';
@@ -127,10 +129,27 @@ export async function applyTenantDataTombstoneManifest(
 ): Promise<number> {
   const normalized = normalizeManifest(manifest);
   for (const tombstone of normalized.tombstones) {
-    await target.client.insert(tenantDataTombstones).values(tombstone).onConflictDoNothing();
-    await target.client
-      .delete(tenantDataObjects)
-      .where(and(eq(tenantDataObjects.id, tombstone.objectId), eq(tenantDataObjects.tenantId, tombstone.tenantId)));
+    const applyOne = async (db: CoreDb): Promise<void> => {
+      await db.insert(tenantDataTombstones).values(tombstone).onConflictDoNothing();
+      // 古い snapshot に screenshot metadata があっても、対応する暗号化 object が tombstone 済みなら
+      // dangling metadata を残さない。同一objectIdでも別tenantの行は消さない。
+      await db
+        .delete(hearingScreenshots)
+        .where(
+          and(
+            eq(hearingScreenshots.tenantDataObjectId, tombstone.objectId),
+            eq(hearingScreenshots.tenantId, tombstone.tenantId),
+          ),
+        );
+      await db
+        .delete(tenantDataObjects)
+        .where(and(eq(tenantDataObjects.id, tombstone.objectId), eq(tenantDataObjects.tenantId, tombstone.tenantId)));
+    };
+    if (isTransactionalAdapter(target)) {
+      await target.transaction((tx) => applyOne(tx.client));
+    } else {
+      await applyOne(target.client);
+    }
   }
   return normalized.tombstones.length;
 }
