@@ -12,8 +12,8 @@ iteration: null
 title: "bd issue 74 件の external_ref が graph に存在しない node を指し、うち 22 件が C28 で parity_manifest_missing に落ちる"
 owners: ["daishiman"]
 created_at: "2026-07-25T02:57:00Z"
-updated_at: "2026-07-28T02:18:00Z"
-status: "draft"
+updated_at: "2026-08-12T06:39:08.767831Z"
+status: "done"
 depends_on: []
 related_nodes: []
 resource_scope: [".dev-graph/state/graph.json","plugins/dev-graph/scripts/bd-bridge.py","plugins/dev-graph/scripts/build-parity-manifest.py","issues/"]
@@ -44,7 +44,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-12T05:22:04Z","evidence_refs":["issues/sys-bd-external-ref-orphan-nodes-20260725.md"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-25T02:57:00Z","missing_sections":[],"status":"complete"}
 ---
 

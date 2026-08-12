@@ -12,8 +12,8 @@ iteration: null
 title: "所属が 90 件を超えると、名前を落としてもサインインできない"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T17:24:17.377271Z"
-status: "active"
+updated_at: "2026-08-12T06:47:29.517989Z"
+status: "done"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/lib/auth/session.ts","apps/hub/src/lib/auth/jwt.ts","apps/hub/src/lib/auth/config.ts"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-12T05:41:08Z","evidence_refs":["issues/session-cookie-workspace-ids-ceiling-20260812.md","apps/hub/tests/auth-tenancy/session-cookie-ceiling.test.ts"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-12T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

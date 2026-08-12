@@ -101,8 +101,15 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 ## MVP 実装着地 (2026-08-10)
 
-- Beads: `HarnessHub-9am`（P01 closed、P02 in_progress、P03〜P13 は merge 後に順次）
+- Beads: `HarnessHub-9am`（P01〜P03 closed / reconciled、P04〜P13 は実装以降）
 - package digest: `sha256:30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6`
 - 実装: builds/stage API、7 工程ボード UI（path `/builds`）、admin 限定遷移 + 監査、PublishRequest 接続
 - 仕様反映: [mvp-implementation-spec-reflection-receipt.md](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)
 - 最終レビュー: [mvp-final-review.md](../docs/features/feat-build-pipeline-board/mvp-final-review.md)
+
+## P03 独立設計レビュー着地 (2026-08-12 / `HarnessHub-9am.3`)
+
+- `docs/features/feat-build-pipeline-board/design-review-notes.md` を取り込み、landed ADR (PR #694) を正本として supersede 関係を固定した。
+- F-1/F-3/F-4 と F-2 原指摘（`publish_request_id` 設定経路不在）は landed ADR で解決済み。
+- PATCH 関連付けと publish 遷移の transaction atomicity は **別途 P04/P05 確認事項**（F-2 再オープンではない）。
+

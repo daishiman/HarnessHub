@@ -64,6 +64,54 @@ chmod +x \
 
 git config core.hooksPath "$HOOKS_DIR"
 
+# beads の Dolt 同期は git remote の refs/dolt/* を使うが、既定の fetch refspec は
+# +refs/heads/*:refs/remotes/origin/* だけで refs/dolt/* を一切引かない。ローカルに
+# refs/dolt/data が 1 本も無い状態の push は「リモートに既にある chunk」を知らず全
+# table file を送ろうとするため、addTableFiles / updateManifestAddFiles が肥大して
+# HTTP 400 になる (HarnessHub-jab2)。git config と refs は全 worktree 共通なので、
+# 新しい clone の hook 設置と同じ「clone ごとに 1 回」の経路でここも揃える。
+DOLT_REFSPEC='+refs/dolt/*:refs/dolt/*'
+DOLT_DATA_REF='refs/dolt/data'
+DOLT_DATA_REFSPEC='+refs/dolt/data:refs/dolt/data'
+if git config --get remote.origin.url >/dev/null 2>&1; then
+  # refspec を追加するだけでは、今回の clone に baseline ref は生えない。初回だけ
+  # remote の存在を確認して exact ref を取得し、以後は通常の fetch に任せる。
+  if git show-ref --verify --quiet "$DOLT_DATA_REF"; then
+    echo "[install-git-hooks] $DOLT_DATA_REF はローカルに存在します (remote 照会不要)"
+  else
+    echo "[install-git-hooks] origin の $DOLT_DATA_REF を確認します"
+    if DOLT_REMOTE_DATA="$(git ls-remote origin "$DOLT_DATA_REF")"; then
+      if [ -z "$DOLT_REMOTE_DATA" ]; then
+        echo "[install-git-hooks] origin に $DOLT_DATA_REF が無いため初回取得は省略しました"
+      else
+        echo "[install-git-hooks] $DOLT_DATA_REF を origin から初回取得します"
+        if ! git fetch origin "$DOLT_DATA_REFSPEC"; then
+          echo "[install-git-hooks] ERROR: origin から $DOLT_DATA_REF を取得できませんでした" >&2
+          exit 1
+        fi
+        if ! git show-ref --verify --quiet "$DOLT_DATA_REF"; then
+          echo "[install-git-hooks] ERROR: fetch 成功後も $DOLT_DATA_REF が存在しません" >&2
+          exit 1
+        fi
+        echo "[install-git-hooks] $DOLT_DATA_REF の初回取得を確認しました"
+      fi
+    else
+      echo "[install-git-hooks] ERROR: origin の $DOLT_DATA_REF を照会できませんでした" >&2
+      exit 1
+    fi
+  fi
+
+  if git config --get-all remote.origin.fetch 2>/dev/null | grep -qxF "$DOLT_REFSPEC"; then
+    echo "[install-git-hooks] remote.origin.fetch は refs/dolt/* を既に引いています"
+  else
+    git config --add remote.origin.fetch "$DOLT_REFSPEC"
+    echo "[install-git-hooks] remote.origin.fetch へ $DOLT_REFSPEC を追加しました"
+    echo "[install-git-hooks]   (以後の通常 fetch で Dolt baseline を維持するため)"
+  fi
+else
+  echo "[install-git-hooks] remote origin が無いため refs/dolt/* の refspec 追加は省略しました"
+fi
+
 echo "[install-git-hooks] core.hooksPath=$HOOKS_DIR 設定完了"
 echo "[install-git-hooks] 全 worktree 共通の有効 hooks:"
 ls -1 "$HOOKS_DIR" | grep -v -E '^(lib|scripts)$' | sed 's/^/  - /'

@@ -165,7 +165,64 @@ push 時は beads の `pre-push` hook が Dolt 同期を試みる。conservative
 git push --no-verify -u origin <branch>
 ```
 
-## 5. よくある誤り
+## 5. `bd dolt push` が HTTP 400 で失敗する
+
+`bd dolt pull` は成功するのに `bd dolt push` だけが `addTableFiles` / `updateManifestAddFiles` の `unknown push error` (HTTP 400) で落ちる場合、**認証ではなく差分計算の基準（baseline＝「どこまで送ってあるか」の目印）が無いことを疑う**（HarnessHub-jab2）。
+
+### 5.1 何が起きているか
+
+Dolt の push は「リモートに既にある chunk（データの塊）」を差し引いて、足りないぶんだけを送る。その判断材料がローカルの `refs/dolt/data` である。ところが git の既定 fetch refspec（refspec＝どの ref をどこへ引くかの指定）は次の 1 本しかなく、`refs/dolt/*` を一切引かない。
+
+```
++refs/heads/*:refs/remotes/origin/*
+```
+
+そのため、Dolt ref をまだ取得していない **新しい clone** ではローカルに `refs/dolt/data` が 1 本も存在しないことがある。この状態の push は「リモートには何も無い」と見なして全 table file を送ろうとするため、manifest 更新が肥大して 400 になる。
+
+`git worktree` で追加した worktree は、元の clone と git common dir（全 worktree が共有する Git 管理領域）を使う。`refs/dolt/data` と `remote.origin.fetch` も共有されるため、**worktree の追加だけで ref や refspec が消えることはない**。ただし hook bundle や merge driver など、このリポジトリ固有の配線を確認する文脈では installer の再実行に意味がある。
+
+### 5.2 診断
+
+```bash
+# リモート側には ref がある
+git ls-remote origin 'refs/dolt/*'
+
+# ローカル側は 0 本 → 本節の症状
+git for-each-ref 'refs/dolt/*'
+
+# 既定 refspec しか無いことを確認する
+git config --get-all remote.origin.fetch
+```
+
+### 5.3 新しい clone の初期化・復旧・恒久化
+
+新しい clone で Beads を初期化するときの正規経路は、公式が推奨する `bd bootstrap` である。これは `origin` の `refs/dolt/data` を自動検出し、Dolt DB と将来の push / pull 用 remote を安全に構成する。
+
+```bash
+bd bootstrap --dry-run
+bd bootstrap --yes
+```
+
+既存の Beads DB があり、ローカルの baseline ref だけが欠けている場合は、次の 1 回の fetch で復旧できる。
+
+基準を 1 本引けば、通常の（force なしの）push がそのまま通る。
+
+```bash
+git fetch origin '+refs/dolt/data:refs/dolt/data'
+bd dolt push
+```
+
+`scripts/install-git-hooks.sh` は正規の `bd bootstrap` を置き換えるものではなく、既存 remote の baseline を補完する安全網である。`origin` がありローカル ref が無いときだけ remote を照会し、remote ref が存在すれば exact ref を 1 回取得して存在を再確認する。さらに `remote.origin.fetch` へ `+refs/dolt/*:refs/dolt/*` を追加し、以降の通常の `git fetch origin` で baseline を維持する。remote に ref 自体がまだ無い新規 repository は正常にスキップし、照会・取得に失敗した場合は中途半端な成功として扱わず停止する。
+
+この設定は clone 内の全 worktree で共有されるため、worktree ごとの再追加は不要である。既に設定済みなら追記しない（冪等＝何回実行しても結果が同じ）。hook・ガード・merge driver 等の配線確認として installer を再実行することはできる。
+
+```bash
+bash scripts/install-git-hooks.sh
+```
+
+**`.beads/config.yaml` の `sync.remote` が HTTPS で `remote.origin.url` が SSH でも、本症状の原因ではない。** 実測では SSH のまま push が成功しているため、この食い違いを理由に config を書き換えないこと。
+
+## 6. よくある誤り
 
 | 誤り | 何が起きるか | 正しい対処 |
 | --- | --- | --- |
@@ -174,11 +231,14 @@ git push --no-verify -u origin <branch>
 | jsonl を編集して DB が直ると思う | DB は変わらない。次の export で上書きされる | DB の変更は `bd-bridge.py` 経由で行う |
 | 検証せず commit | 壊れた JSONL や id 重複が混入する | 3.4 の検証を必ず通す |
 | stash を放置 | 同種のコンフリクトが反復する | 3.6 で確認のうえ drop する |
+| push 400 を認証エラーと決めつける | config を書き換えても直らず、force push に逃げる | 5.2 でローカル `refs/dolt/data` の有無を先に見る |
 
 ## 関連
 
 - `.beads/README.md` — Beads 一般の使い方
 - `bd prime` — ワークフロー全体のコンテキスト
 - [SYNC_CONCEPTS.md](https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md) — 同期アーキテクチャとアンチパターン
+- [DOLT.md](https://github.com/gastownhall/beads/blob/main/docs/DOLT.md) — `bd bootstrap` を含む公式の Dolt 初期化・同期手順
 - `plugins/dev-graph/scripts/bd-bridge.py` — beads 変更の単一経路
 - `plugins/dev-graph/hooks/guard-graph-schema.py` — 経路強制の実装
+- `scripts/install-git-hooks.sh` — clone ごとの hook 設置と `refs/dolt/*` refspec の恒久化（§5.3）

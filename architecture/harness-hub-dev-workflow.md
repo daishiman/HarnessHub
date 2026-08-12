@@ -279,3 +279,12 @@ build path の authority は独立 evaluator の native completion、resume path
 `run-skill-rubric-governance` が生成する `proposals/*.md` は、評価結果と改善候補を保持する証拠であり、採用・棄却・保留を決める authority（決定権）ではない。未判断 draft を保存するときは、同じ変更で Beads と dev-graph issue を結び、提案 path、未判断項目、close 条件を durable handoff（次の作業者が消えない形で引き継げる記録）として残す。commit や draft PR は保存・レビュー導線に限定し、human triage 完了前に issue を close しない。
 
 これは `system-spec/dev-workflow.md` が継承する P13 write-back、scope separation、未完了項目の課題化を今回の rubric 提案へ適用したもので、新しい製品 component や runtime 契約は追加しない。`system-spec/spec-state.json` と確定章は変更せず、既存の [実装 writeback 索引](../system-spec/index.md#実装-writeback-索引-確定章への追記ではない) から `specs/` 追補と受領書へ接続する。今回の境界と残作業は [仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md) を正とする。
+
+## 文書内リンク integrity と Beads Dolt baseline (2026-08-12)
+
+製品 runtime 契約は変更しない。開発品質ゲートと Beads 同期の clone 初期化のみを追記する。
+
+- **文書内リンク**: `scripts/lint-doc-internal-link-integrity.py` は Markdown 本文の repo 内 path 参照を、未追跡文書を含む source-aware 走査と git 追跡済み target 限定、さらに base tree の fingerprint ratchet で検査する (`HarnessHub-j7a4`)。既存違反の縮退は `HarnessHub-wenp`。
+- **Beads Dolt**: `scripts/install-git-hooks.sh` が `refs/dolt/data` の初回取得と `+refs/dolt/*:refs/dolt/*` refspec を冪等に補完する。正規初期化は `bd bootstrap`、installer は安全網 (`HarnessHub-jab2`)。手順は [beads-operations-runbook](../docs/beads-operations-runbook.md) §5。
+- 判断と検証の索引: [wt-1-6 仕様反映受領書](../docs/features/feat-hub-foundation/wt-1-6-ops-governance-final-review-spec-reflection-receipt.md)。
+

@@ -11,8 +11,8 @@ target_date: null
 iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:10:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+created_at: "2026-08-10T13:41:31Z"
+updated_at: "2026-08-12T07:13:07.200133Z"
 status: "active"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P06"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
@@ -31,8 +31,8 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-07-acceptance.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-10T13:41:31Z","origin_kind":"system-dev-planner","source_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-07-acceptance.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.87
 classification_reason: "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p07.md","confidence":0.87}]

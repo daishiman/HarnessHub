@@ -12,9 +12,9 @@ iteration: null
 title: "required-info回答をwriterで決定論的に接地検査する"
 owners: ["daishiman"]
 created_at: "2026-08-11T07:05:25Z"
-updated_at: "2026-08-11T07:10:30.998059Z"
+updated_at: "2026-08-12T07:21:17.762484Z"
 status: "active"
-depends_on: ["spec-harness-hub-information-design-addendum"]
+depends_on: []
 related_nodes: ["spec-harness-hub-information-design-addendum"]
 resource_scope: ["plugins/system-spec-harness/skills/run-system-spec-elicit/references/spec-state-contract.md","plugins/system-spec-harness/scripts/apply-spec-transition.py","plugins/system-spec-harness/scripts/validate-coverage-matrix.py","plugins/system-spec-harness/skills/run-system-spec-elicit/tests"]
 purpose: "required-infoの質問順とprose gateだけでなく、回答・理由・依存完了をspec-state writerがfail-closedで検査する"

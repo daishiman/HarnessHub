@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント一覧に master-detail が要るかを実測で決める"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-12T00:00:00Z"
-status: "active"
+updated_at: "2026-08-12T06:42:39.387427Z"
+status: "done"
 depends_on: []
 related_nodes: []
 resource_scope: ["docs/features/feat-docs-cms/information-design/S15.md","apps/hub/src/app/(dashboard)/docs/document-list.tsx"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"open"}
+completion_evidence: {"completed_at":"2026-08-12T05:21:46Z","evidence_refs":["docs/features/feat-docs-cms/information-design/S15.md"],"policy":"manual","reconciled_at":"2026-08-12T06:33:00Z","source":"reconciliation","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-12T00:00:00Z","missing_sections":[],"status":"complete"}
 ---
 

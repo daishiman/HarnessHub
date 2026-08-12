@@ -11,12 +11,12 @@ target_date: null
 iteration: null
 title: "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認"
 owners: ["daishiman"]
-created_at: "2026-07-19T14:10:56Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
+created_at: "2026-08-10T13:41:31Z"
+updated_at: "2026-08-12T07:13:35.992146Z"
 status: "active"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P07"]
-related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
-resource_scope: ["docs/features/feat-build-pipeline-board/refactoring-migration-note.md","packages/db/schema/build-pipeline/"]
+related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend","feat-hearing-intake","feat-domain-model-db"]
+resource_scope: ["docs/features/feat-build-pipeline-board/refactoring-migration-note.md","packages/db/migrations/","packages/db/migrations/meta/","packages/db/__tests__/migration-lineage.test.ts"]
 purpose: "feat-build-pipeline-board の P08 を実行する: リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認"
 goal: "content-addressed published task spec の全責務・受入条件・検証・rollbackを満たし、再実行可能な証跡を残す"
 scope_in: ["docs/features/feat-build-pipeline-board/refactoring-migration-note.md","packages/db/schema/build-pipeline/"]
@@ -31,8 +31,8 @@ template_id: "task"
 template_version: "1.1.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/plan-findings.json"}
-source_lineage: {"imported_at":"2026-07-19T14:10:56Z","origin_kind":"system-dev-planner","source_digest":"e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/e14cceb426097994f4ba32885ed65ac825b5ce60e3a3a552f1ef1fe146e879b9/task-specs/phase-08-refactoring-migration.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","evaluator":"system-dev-plan-evaluator","evidence_ref":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/plan-findings.json"}
+source_lineage: {"imported_at":"2026-08-10T13:41:31Z","origin_kind":"system-dev-planner","source_digest":"30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6","source_path":".dev-graph/plans/generations/feature-package-feat-build-pipeline-board/30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6/task-specs/phase-08-refactoring-migration.md","source_plugin":"system-dev-planner","source_version":"0.1.0"}
 classification_confidence: 0.85
 classification_reason: "P05 で追加した Build スキーマ定義から migration ファイルを生成し既存 publish_requests テーブルへの FK 参照を含めて後方互換性を確認する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)"
 classification_candidates: [{"artifact_kind":"task","candidate_path":"tasks/feat-build-pipeline-board/sys-build-pipeline-board-p08.md","confidence":0.85}]
