@@ -16,6 +16,13 @@ import {
 } from '../auth-tenancy/index.js';
 
 export const publisherCredentialRecordSchema = z.object({
+  /** refresh tokenを送ってよい唯一のHub origin。path・query・credentialは保存しない。 */
+  hub_origin: z
+    .string()
+    .url()
+    .refine((value) => new URL(value).protocol === 'https:' && new URL(value).origin === value, {
+      message: 'hub_origin はpathを含まないHTTPS originである必要があります',
+    }),
   tenant_slug: tenantSlugSchema,
   workspace_id: z.string().min(1),
   refresh_token: refreshTokenSchema,

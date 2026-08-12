@@ -64,7 +64,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 | `deployment_references` | id, project_id, channel_id, release_id, url, provider(`cloudflare`), orphan_candidate BOOL, registered_by, last_health_at | web_app 出口。orphan_candidate は §7.2 準拠 |
 | `catalog_entries` | id, tenant_id, workspace_id, project_id UNIQUE, visibility(`private/workspace`), summary, tags_json, dl_count, published_at | `public` は Stage 5 まで非対象 (mockup 分析 §6-4) |
 | `publish_requests` | id, tenant_id, workspace_id, project_id, channel_id, status(§5.1 の 9 値), verdict(`green/yellow/red`), findings_json, release_id, requested_by, idempotency_key | **同一 channel の非終端 request は 1 件** (partial UNIQUE index で直列化, qa-009) |
-| `publisher_tokens` | id, tenant_id, workspace_id, user_id, device_name(nullable), refresh_token_hash, scopes_json, family_id, last_used_at, expires_at, revoked_at, created_at | access token は短命 JWT で発行のみ (保存しない、TTL 15 分)。refresh は SHA-256 ハッシュ保存・TTL 90 日・**CAS rotation 必須**・**再利用検知で family 全失効** (security-spec §2.2)。`scopes_json` の値域は `publish:write`/`metrics:write`/`feedback:write`/`aijob:process` の 4 種。失効導線は Hub Web (qa-008) |
+| `publisher_tokens` | id, tenant_id, workspace_id, user_id, device_name(nullable), refresh_token_hash, scopes_json, family_id, last_used_at, expires_at, revoked_at, created_at | access token は短命 JWT で発行のみ (保存しない、TTL 15 分)。refresh は SHA-256 ハッシュ保存・TTL 90 日・**CAS rotation 必須**・**再利用検知で family 全失効** (security-spec §2.2)。`scopes_json` の現行値域は `publish:write`/`metrics:write`/`feedback:write`/`aijob:process`/`docs:write` の 5 種。失効導線は Hub Web (qa-008) |
 | `device_authorizations` | id, tenant_id, device_code_hash, user_code, user_id, workspace_id, scopes_json, device_name, status(`pending/approved/denied/consumed`), attempts, interval_sec, last_polled_at, expires_at, created_at | Device Flow (qa-008)。期限切れは `expires_at` から導出し、user_code 試行回数・poll 間隔・approve/consume は期待状態と attempts を含む CAS（比較して一致した時だけ更新）で競合を拒否する |
 | `audit_events` | id, tenant_id, workspace_id, actor_type(`user/publisher_token/system`), actor_id, action, entity_type, entity_id, summary_json, created_at, **seq**, **prev_hash**, **event_hash** | **append-only** (UPDATE/DELETE 禁止)。対象 action は §3.8。**hash chain (テナント単位)** で改竄検知 — UNIQUE(tenant_id, seq)、計算式と検証は security-spec §5.4。`summary_json` に値そのもの (salary 金額・secret・token) を書かない |
 | `encryption_keys` | id, purpose(`salary/idp_secret`), key_version, dek_wrapped, status(`active/retiring/retired`), created_at, retired_at | **封筒暗号化の DEK 保管** (KEK で wrap)。UNIQUE(purpose, key_version)。`active` は purpose ごとに 1 件。DEK 平文は保存しない (security-spec §4.1.1) |
@@ -75,11 +75,13 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 | テーブル | 主な列 | 制約・備考 |
 |---|---|---|
-| `hearing_sheets` | id, tenant_id, workspace_id, code(`HS-xxxx`), title, applicant_user_id, department, status(§5.2), form_json, estimate_json, ai_job_id, generated_doc_ids_json, build_id | code はテナント別連番。estimate_json は提出時のサーバ側試算 snapshot |
+| `hearing_sheets` | id, tenant_id, workspace_id, code(`HS-xxxx`), title, applicant_user_id, department, status(§5.2), form_json, estimate_json, ai_job_id, generated_doc_ids_json, build_id | code はテナント別連番。estimate_json は提出時のサーバ側試算 snapshot。form_json は FormData 28 項目から salary を除いた snapshot (2026-08-12) |
+| `hearing_screenshots` | id, tenant_id, workspace_id, sheet_id, tenant_data_object_id, title, linked_item, note, content_type, created_by, created_at | スクリーンショットのメタのみ。実体は `tenant_data_objects` (kind=`hearing_screenshot`) が暗号化保管する (2026-08-12 追補) |
+| `hearing_share_tokens` | id, tenant_id, workspace_id, sheet_id, audience, token_hash, expires_at, revoked_at, last_accessed_at, access_count, created_by_user_id, created_at | Claude Code 引き渡し用。平文 token は保存せず SHA-256 のみ。TTL 7 日・手動 revoke (2026-08-12 追補) |
 | `builds` | id, tenant_id, workspace_id, sheet_id NULL, feedback_id NULL, project_id, title, stage(§5.3 の 7 値), risk(`ok/warn`), eta_date, assignee_user_id, publish_request_id, note | 起点は Sheet/Feedback のどちらか一方 (`CHECK` + 非 NULL 値の partial UNIQUE。各起点 = 1 Build)。公開工程は PublishRequest へ接続し二重実装しない (B4) |
 | `build_stage_events` | id, build_id, from_stage, to_stage, actor_user_id, created_at | append-only (ボード履歴表示用。監査は audit_events にも記録) |
 | `feedbacks` | id, tenant_id, workspace_id, code(`FR-xxx`), project_id, type(`improvement/review/bug`), priority(`high/medium/low`), source(`harness/manual`), body, status(§5.4), ai_response, ai_job_id, created_by | CLI 発 (`harness feedback`) と Web フォームは同一テーブル・同一キュー (B6)。mock の「改善要望/レビュー依頼/バグ報告」と優先度に対応 |
-| `documents` | id, code(`DOC-xx`), scope(`common/tenant`), tenant_id (common は NULL), category, title, body_md, status(`draft/published`), updated_by | common は provider-admin のみ書込・全テナント読取専用 (SEC3 例外)。category は自由文字列 + 推奨プリセット (使い方/FAQ/構想・戦略/セキュリティ/経理/CS 等 — mockup 実測) |
+| `documents` | id, tenant_id, scope(`common/tenant`), title, body_markdown, status(`draft/published`), publish_at, category, tags, thumbnail_url/source, excerpt/source, asset_summary, external_source/document_id/content_hash/revision, created/updated_by, created/updated_at | `tenant_id` は common でも保持し、可視性は repository の `scope='common' OR tenant_id=:context` で強制する。`publish_at` は nullable epoch ms の純増列で、`scheduled` は保存せず `status='draft' AND publish_at > now` から導出する。分類・カード情報、内部画像、外部同期 revision/ETag の詳細は §4.8 |
 | `notifications` | id, tenant_id, user_id, kind, title, body, link_path, read_at, created_at | アプリ内通知が正本、メールは補助 (D6) |
 | `metrics_events` | id, tenant_id, workspace_id, project_id, user_id, run_count, client_context_json, idempotency_key, server_received_at | **append-only**。UNIQUE(tenant_id, idempotency_key)。時間・金額の自己申告は受けない (SEC5)。**生データは無期限 DB 保持** (ユーザー決定 qa-031)。Turso 無料枠使用量を保守運用の監視対象とし、圧迫時は保持期間導入を R4-reopen で再検討 |
 | `metrics_rollups` | id, tenant_id, period(`week/month`), period_start, dim(`tenant/department/user/project`), dim_key, run_count, saved_minutes, saved_amount_jpy, computed_at | UNIQUE(tenant_id, period, period_start, dim, dim_key)。金額換算はサーバのみ (B3) |
@@ -154,7 +156,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 ### 3.8 監査対象 action (SEC6 = 既存 I8 + Studio 追加)
 
-`project.create / project.update / publish.request / publish.package_upload / publish.submit / publish.approve / publish.reject / publish.cancel / channel.promote / channel.rollback / release.suspend / deployment.register / sheet.status_change / build.stage_change / doc.create / doc.update / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
+`project.create / project.update / publish.request / publish.package_upload / publish.submit / publish.approve / publish.reject / publish.cancel / channel.promote / channel.rollback / release.suspend / deployment.register / sheet.status_change / build.stage_change / docs.create / docs.update / docs.external_sync / docs.image.upload / docs.image.delete / docs.scheduled_publish / user.role_change / user.salary_change / coefficient.change / token.revoke / feedback.status_change / ai_job.complete`
 
 **security-spec で追加**: `user.salary_read` (PII 読取の記録) / `idp.connection_change` / `token.reuse_detected` / `provider.cross_tenant_access` (provider-admin の越境は読取も記録 — security-spec §3.1.3) / `token.refresh_race` (refresh rotation の CAS 敗北。並行提示されたことの観測性 — security-spec §5.2)。記録するのは変更の**事実**であり、値そのもの (salary 金額・secret・token) は書かない (security-spec §5.2)。action 数は固定値として別管理せず、この列挙を正本にする。
 
@@ -234,6 +236,7 @@ sheetEstimate   = 月間工数(hours) × 対象人数(people) × sheet_reduction
 | orphan_candidate 通知 | 日次 | 一定期間滞留で admin へ通知 (§7.2) |
 | DB backup | 日次 | export → R2 (qa-019 既定)。四半期 restore drill。**salary は常にマスク** (security-spec §4.2) |
 | token/認可コード掃除 | 日次 | 期限切れ device_authorizations・revoked token の物理削除 |
+| ドキュメント予約公開 | 日次 | `status='draft' AND publish_at <= scheduledAt` を `publish_at ASC, id ASC` の安定順で default/max 100 件だけ公開し、処理済み行の `publish_at` を NULL に戻す。repository は `{publishedCount, hasMore, publishedDocuments:[{id,tenantId}]}` を返し、各行 CAS で競合を除外する。呼出側は返却文書ごとに actor=`system` / action=`docs.scheduled_publish` を既存監査へ記録する |
 | **監査 chain 検証** | 日次 | テナントごとに `audit_events` の hash chain 全体を再計算し、不一致・seq 欠番を検出したら provider-admin へ通知 (security-spec §5.4.4) |
 | **metrics 異常検知** | 日次 | ユーザー別実行回数が過去 4 週中央値の 10 倍超で `metrics.anomaly` 通知 (ブロックはしない。security-spec §6.4) |
 
@@ -266,7 +269,7 @@ sheetEstimate   = 月間工数(hours) × 対象人数(people) × sheet_reduction
 | 7 | テナント IdP client_secret | **DB へ封筒暗号化保存 (KEK/DEK)** (ユーザー選択) | §2.2 `idp_connections` を `client_secret_ref` → `client_secret_enc` へ変更。**「secret は環境 binding のみ」原則は Hub 自身の静的 secret に限定**し、テナント由来の動的 secret は本方式とする (環境 binding ではテナント追加のたびに再デプロイが必要になり C1/C2 に反するため) |
 | 8 | 監査の改竄防止 | **アプリ層 append-only + hash chain (テナント単位)** (ユーザー選択) | §2.2 `audit_events` に `seq`/`prev_hash`/`event_hash` 追加。§7 に日次 chain 検証 cron 追加 |
 | 9 | 暗号鍵ローテーション | **封筒暗号化 (KEK/DEK)** (ユーザー選択) | §2.2 に `encryption_keys` 追加。KEK 更新が DEK re-wrap のみで済み全行再暗号化が不要 |
-| 10 | ingest 認証 | **Device Flow token を scope 分離** (ユーザー選択) | §2.2 `publisher_tokens.scopes_json` の値域を 4 scope に確定。ingest 用 token に `publish:write` を含めない |
+| 10 | ingest 認証 | **Device Flow token を scope 分離** (ユーザー選択) | §2.2 `publisher_tokens.scopes_json` は当時4 scopeで確定。2026-08-12の外部Docs同期要件で `docs:write` を追加し、現行は5 scope。ingest 用 token に `publish:write`/`docs:write` を含めない |
 | 11 | rate limit / TTL 数値 | **security-spec §7.2/§2 で確定** (ユーザー選択: 先送りを解消) | §3.7 の「数値は feature P02 で確定」を解消。P02 は実測に基づく調整のみ |
 | 12 | ASVS 到達目標 | **L1 全面 + 認証/セッション/認可/データ保護/監査/暗号のみ L2 相当** (ユーザー選択) | security-spec §8.1。`targets` に `owasp-asvs` を追加し version は C02 で取得 |
 | 13 | dev/demo 認証 | **提供者の Google Workspace を dev tenant の OIDC に** (ユーザー選択) | §3.2。dev 専用 provider を実装せず CI で禁止検査 |

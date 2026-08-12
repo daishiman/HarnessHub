@@ -6,6 +6,7 @@
  * ここに並べることで、その 4 類型の見た目が VRT の網に入る。
  */
 import {
+  Badge,
   Button,
   CardGrid,
   CursorPager,
@@ -102,6 +103,16 @@ export const informationCatalogEntries: readonly CatalogEntry[] = [
         />
         <TextInput label="キーワード" value="" onChange={() => undefined} description="名前と説明から探します。" />
       </FilterBar>
+    ),
+  },
+  {
+    name: 'Badge',
+    group: 'data',
+    // docs-cms のカテゴリ・タグ・状態表示など、短いラベルを添えるだけの汎用見本。
+    render: () => (
+      <p>
+        <Badge tone="info">下書き</Badge> <Badge tone="primary">公開済み</Badge> <Badge>タグ</Badge>
+      </p>
     ),
   },
   {

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "6df021f9-cb60-41f8-94c2-4310251090cb",
+  "id": "bbf0c90a-4f18-4f45-bac5-9ed4b230830f",
   "prevId": "a0b292b9-9df4-4105-b7cd-cf768bc32223",
   "tables": {
     "build_stage_events": {
@@ -1915,23 +1915,46 @@
           "notNull": false,
           "autoincrement": false
         },
-        "tags_json": {
-          "name": "tags_json",
+        "tags": {
+          "name": "tags",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "eyecatch_image_url": {
-          "name": "eyecatch_image_url",
+        "thumbnail_url": {
+          "name": "thumbnail_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "publish_at": {
-          "name": "publish_at",
-          "type": "integer",
+        "thumbnail_source": {
+          "name": "thumbnail_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'auto'"
+        },
+        "excerpt": {
+          "name": "excerpt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "excerpt_source": {
+          "name": "excerpt_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'auto'"
+        },
+        "asset_summary": {
+          "name": "asset_summary",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -1952,14 +1975,6 @@
           "columns": [
             "scope",
             "updated_at"
-          ],
-          "isUnique": false
-        },
-        "documents_publish_at_idx": {
-          "name": "documents_publish_at_idx",
-          "columns": [
-            "status",
-            "publish_at"
           ],
           "isUnique": false
         }

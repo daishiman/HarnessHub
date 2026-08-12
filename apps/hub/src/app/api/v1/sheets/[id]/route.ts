@@ -1,13 +1,10 @@
 import { createRepositoryContext } from '@harness-hub/db';
 import { problemDetails, updateSheetStatusRequestSchema } from '@harness-hub/schemas';
 
+import { resolveSheetResource, type SheetParams } from '../../../../../features/hearing-intake/authz-resource.js';
 import { parseJsonRequest, problemResponse } from '../../../../../features/hearing-intake/http.js';
 import { hearingIntakeRuntime } from '../../../../../features/hearing-intake/runtime.js';
-import { authRuntime, requestScopedResource, withAuthz } from '../../../../../lib/authz/index.js';
-
-interface SheetParams {
-  readonly id: string;
-}
+import { authRuntime, withAuthz } from '../../../../../lib/authz/index.js';
 
 function repositoryContext(tenantId: string, workspaceId: string | null, actorId: string) {
   return createRepositoryContext({
@@ -17,26 +14,11 @@ function repositoryContext(tenantId: string, workspaceId: string | null, actorId
   });
 }
 
-async function resolveSheet(request: Request, params: SheetParams, principal: { readonly userId: string }) {
-  const base = requestScopedResource(request, { type: 'hearing_sheet', id: params.id });
-  if (base === null) return null;
-  const row = await hearingIntakeRuntime().repository.findSheet(
-    createRepositoryContext({ tenantId: base.tenantId }),
-    params.id,
-  );
-  if (row === null) return { ...base, ownerUserId: principal.userId };
-  return {
-    ...base,
-    workspaceId: row.workspaceId,
-    ownerUserId: row.applicantUserId,
-  };
-}
-
 export const GET = withAuthz<SheetParams>(
   {
     action: 'sheets.read_own',
     deps: () => authRuntime().authz,
-    resolveResource: resolveSheet,
+    resolveResource: resolveSheetResource,
   },
   async (_request, authz, params) => {
     const detail = await hearingIntakeRuntime().service.getSheet({
@@ -54,7 +36,7 @@ export const PATCH = withAuthz<SheetParams>(
   {
     action: 'sheets.status_change',
     deps: () => authRuntime().authz,
-    resolveResource: resolveSheet,
+    resolveResource: resolveSheetResource,
   },
   async (request, authz, params) => {
     const parsed = await parseJsonRequest(request, updateSheetStatusRequestSchema);

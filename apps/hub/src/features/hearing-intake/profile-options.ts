@@ -13,19 +13,21 @@ interface ProfileOption<T extends string> {
   readonly label: string;
 }
 
-export const PROFILE_UNANSWERED_LABEL = '未回答';
+const UNKNOWN = { value: 'unknown', label: '不明・わからない' } as const;
 
 export const USAGE_PURPOSE_OPTIONS = [
   { value: 'app_development', label: 'アプリ開発' },
   { value: 'harness_development', label: 'ハーネス開発' },
   { value: 'system_development', label: 'システム開発' },
   { value: 'other', label: 'その他' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingUsagePurpose>[];
 
 export const EXPERTISE_OPTIONS = [
   { value: 'novice', label: '非技術' },
   { value: 'intermediate', label: '中級' },
   { value: 'expert', label: '上級' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingExpertise>[];
 
 export const ROLE_OPTIONS = [
@@ -33,6 +35,7 @@ export const ROLE_OPTIONS = [
   { value: 'employee', label: '会社員' },
   { value: 'executive', label: '経営者' },
   { value: 'creator', label: 'クリエイター' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingRole>[];
 
 export const CONTEXT_OPTIONS = [
@@ -40,6 +43,7 @@ export const CONTEXT_OPTIONS = [
   { value: 'personal', label: '個人' },
   { value: 'study', label: '学習' },
   { value: 'hobby', label: '趣味' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingContext>[];
 
 export const MOTIVATION_OPTIONS = [
@@ -47,6 +51,7 @@ export const MOTIVATION_OPTIONS = [
   { value: 'quality', label: '品質' },
   { value: 'learning', label: '学習' },
   { value: 'branding', label: 'ブランディング' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingMotivation>[];
 
 export const SHARING_INTENT_OPTIONS = [
@@ -54,6 +59,7 @@ export const SHARING_INTENT_OPTIONS = [
   { value: 'small_group', label: '少人数' },
   { value: 'public', label: '不特定多数' },
   { value: 'customer', label: '顧客' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingSharingIntent>[];
 
 export const CONSTRAINT_TAG_OPTIONS = [
@@ -61,6 +67,7 @@ export const CONSTRAINT_TAG_OPTIONS = [
   { value: 'budget', label: '予算' },
   { value: 'authority', label: '権限' },
   { value: 'knowledge', label: '知識' },
+  UNKNOWN,
 ] as const satisfies readonly ProfileOption<HearingConstraintTag>[];
 
 function labelsFrom<T extends string>(options: readonly ProfileOption<T>[]): Readonly<Record<T, string>> {

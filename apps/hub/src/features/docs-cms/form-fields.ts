@@ -13,16 +13,28 @@ export function parseTagsInput(raw: string): readonly string[] {
 }
 
 /** タグ配列をカンマ区切りの1行テキストへ戻す (編集画面の初期値表示用)。 */
-export function tagsToInput(tags: readonly string[]): string {
-  return tags.join(', ');
+export function tagsToInput(tags: readonly string[] | null): string {
+  return (tags ?? []).join(', ');
 }
 
-/** `<input type="datetime-local">` の値 (ローカル時刻文字列, 空欄可) を epoch ms へ変換する。空欄は null (予約なし)。 */
-export function publishAtInputToEpochMs(raw: string): number | null {
-  if (raw.trim().length === 0) return null;
-  const parsed = new Date(raw);
-  if (Number.isNaN(parsed.getTime())) return null;
-  return parsed.getTime();
+export type PublishAtInputResult =
+  | { readonly ok: true; readonly value: number | null }
+  | { readonly ok: false; readonly message: string };
+
+/**
+ * datetime-local の構文と「未来であること」を一度に検査する。
+ * 空欄と不正値を同じ null に潰すと、入力ミスが「予約解除」として保存されるため区別する。
+ */
+export function parsePublishAtInput(raw: string, now = Date.now()): PublishAtInputResult {
+  if (raw.trim().length === 0) return { ok: true, value: null };
+  const value = new Date(raw).getTime();
+  if (!Number.isSafeInteger(value)) {
+    return { ok: false, message: '予約公開日時を正しい形式で入力してください。' };
+  }
+  if (value <= now) {
+    return { ok: false, message: '予約公開日時には、現在より後の日時を指定してください。' };
+  }
+  return { ok: true, value };
 }
 
 /** epoch ms を `<input type="datetime-local">` の値へ戻す (編集画面の初期値表示用)。null は空欄。 */

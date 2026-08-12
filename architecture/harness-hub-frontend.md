@@ -291,3 +291,17 @@ PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過
 上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
 `StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
 画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。
+
+## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
+
+S10 を8画面(28項目)へ分割し、S12 に引き渡し/screenshot/token UI を追加。
+詳細は `docs/frontend-spec.md` と feature information-design / 受領書を正本とする。
+
+## 2026-08-12 S15 Docs CMS rich surface
+
+- S15一覧はscope/status/category/tag/titleを絞り、thumbnail/category/tags/excerpt/asset badgesを
+  4列table（narrowはcard collection）のtitle列へ集約する。「予約中」はdraft+future publish_atの派生badge。
+- Markdown editorは認証付き画像upload/drag&drop/pasteとpending cleanupを持つ。Markdown code/blockquote装飾は
+  `[data-hh-markdown]` scopeの生成token CSSだけに置く。
+- 詳細はlg以上でsticky目次、狭幅で折りたたみ目次を使い、renderer heading IDと同じslug採番を共有する。
+- 詳細正本: `docs/features/feat-docs-cms/information-design/S15*.md` と `docs-new.md`。

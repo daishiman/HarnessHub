@@ -50,6 +50,7 @@ architecture_refs: [arch-harness-hub-backend, arch-harness-hub-security]
 - AD-4 は access token (15 分, サーバ非保存) と refresh token (90 日 rotation) を macOS Keychain / Windows Credential Manager にのみ保存し、平文ファイル・環境変数・リポジトリへの保存経路を作らないと定める。
 - docs/security-spec-authentication.md §2.2 の数値契約 (device_code TTL 10 分・SHA-256 ハッシュ保存・user_code 8 文字 Crockford Base32・access token 15 分・refresh token 90 日 rotation・再利用検知で family 全失効) と AD-4 の記述は一致する。
 - scope を publish:write / metrics:write / feedback:write / aijob:process の 4 種の最小権限とする quality_constraint `device-flow-auth-os-credential-storage-qa008-qa041` の原文と AD-4 は一致する (AD-6 の帰結で `feedback:write` を追加要求するが、これは既定の 4 種の枠内であり逸脱ではない)。
+- 2026-08-12の外部Docs同期では、初回レビュー時の4種を履歴として残しつつ `docs:write` を第5の専用scopeとして追加した。Docs CLIへ他scopeを同梱しないため、AD-4の最小権限原則は維持される。
 - AD-4 は「`auth/` に OS 別 credential adapter を実装し、`cli/`・`core/`・`deploy/` は抽象インターフェースのみに依存する」としており、平文ファイル・環境変数への保存経路を作らない設計上の裏付け (adapter 境界への隔離) がある。
 - 判定: **合格**。
 

@@ -215,3 +215,29 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 
 正本は [backend](../system-spec/backend.md)。詳細 ADR は各 feature の
 `docs/features/*/architecture-decision-record.md`。
+
+## 2026-08-12 hearing-intake 用途プロファイル / 共有トークン (MVP)
+
+**Beads**: `HarnessHub-370h` / graph node `issue-hearing-intake-pr705-elegant-review-20260812` / PR #705
+
+- FormData を 28 項目へ拡張し、`POST /api/v1/sheets` は用途プロファイル・依頼パターン・参考 URL を受け付ける。
+- 認証付き追加 API: `.../screenshots` (CRUD 最小) と `.../handoff-tokens` (発行/一覧/revoke)。
+- 公開 API: `GET /api/hearing/:token` と screenshot 中継。session なし。無効トークンは undifferentiated 404。
+- 認可: 公開経路は middleware 例外として exact path のみ。token_hash 照合後の sheet scope を正本とする。
+- 詳細正本: `docs/backend-spec-api-state.md` §4.3 / §4.3.1。feature ADR 追補は
+  `docs/features/feat-hearing-intake/architecture-decision-record.md` AD-2。
+
+## 2026-08-12 Docs CMS rich editing / scheduled publish / external sync
+
+- 既存 `draft/published` を維持し、予約中は `draft + future publish_at` から導出する。未来でない日時・
+  不正形式・`published`との同時指定は422、future指定時はdraftへ導出する。手動の`status`指定（同値再送を含む）、
+  title/bodyの実変更、AI書戻し、force sync、cron公開は予約をclearする。
+- 一覧/APIはcategory/tag、safe thumbnail、auto/manual excerpt、asset summaryを保持する。内部画像は
+  document/tenant認可付き同一origin routeでR2を中継し、raw object URLを公開しない。
+- 外部Markdown同期はDevice Flowの`docs:write`、自然キー、ETag/If-Match、単調revision CASを使う。
+  Hub側のmanual分類・thumbnail・excerptを外部本文で上書きしない。
+- 日次予約公開はdefault/max 100件、`publish_at ASC,id ASC`、各行CASで
+  `{publishedCount,hasMore,publishedDocuments}`を返す。repositoryが状態・revisionを更新した後、Hubは返却文書ごとに
+  actor=`system`の監査を順次追記する。監査失敗はジョブ失敗として記録するが、DB更新との原子性は主張しない。
+- 詳細正本: `docs/backend-spec-api-state.md` §4.8/§4.8.1、
+  `docs/features/feat-docs-cms/architecture-decision-record.md` §8.1。

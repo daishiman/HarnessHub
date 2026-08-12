@@ -12,16 +12,16 @@ iteration: "Studio 拡張"
 title: "Studio: ヒアリング intake (ウィザード・シート管理・AI 生成キュー)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T07:37:57.233774Z"
+updated_at: "2026-08-12T12:00:00Z"
 status: "active"
 depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
 resource_scope: ["features/feat-hearing-intake.md"]
-purpose: "業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)"
-goal: "非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態"
-scope_in: ["S10 ヒアリングウィザード (4 ステップ・自動試算表示)","HearingSheet/FormData エンティティ + 受付番号採番","AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領","S11 シート一覧 / S12 シート詳細 (status 変更は admin)","ステップウィザード共通部品の消費"]
+purpose: "業務課題から業務ツールが生まれる入口として、S10 のヒアリングウィザード (上位4大工程を8画面に分割・削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理・スクリーンショット添付・Claude Code 引き渡しトークンを提供する (I11, J4)"
+goal: "非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) でき、用途プロファイルと引き渡し手段まで一連で扱える状態"
+scope_in: ["S10 ヒアリングウィザード (上位4大工程を8画面に分割・FormData 28項目・自動試算表示)","HearingSheet/FormData エンティティ + 受付番号採番","AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領","S11 シート一覧 / S12 シート詳細 (status 変更は admin)","スクリーンショット添付 (hearing_screenshots) とトークン付き公開共有 (hearing_share_tokens /api/hearing/:token)","ステップウィザード共通部品の消費"]
 scope_out: ["AI 実行基盤のサーバ側実装 (D5 で不採用)","構築工程の進行管理 (feat-build-pipeline-board)"]
-acceptance: ["ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)","AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない","シート本文の Markdown が sanitize 済みで描画される (SEC7)"]
+acceptance: ["ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)","AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない","シート本文の Markdown が sanitize 済みで描画される (SEC7)","S12 からスクリーンショット添付と引き渡しトークン発行ができ、無効トークンは同一 404 に畳まれる"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data"]
 parent_feature: null
 feature_package_id: null
@@ -54,20 +54,21 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 
 ## 目的
 
-業務課題から業務ツールが生まれる入口として、S10 の 4 ステップウィザード (削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理を提供する (I11, J4)
+業務課題から業務ツールが生まれる入口として、S10 のヒアリングウィザード (上位4大工程を8画面に分割・削減試算付き)・受付番号採番・D5 pull 型 AI キューによるヒアリングシート生成・S11/S12 のシート管理・スクリーンショット添付・Claude Code 引き渡しトークンを提供する (I11, J4)
 
 ## 到達状態
 
-非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) できる状態
+非エンジニアがウィザードで課題を登録すると受付番号が発番され、AI キュー (D5) 経由で生成されたシートが S11/S12 に反映され status 管理 (admin) でき、用途プロファイルと引き渡し手段まで一連で扱える状態
 
 ## スコープ
 
 **対象 (in):**
 
-- S10 ヒアリングウィザード (4 ステップ・自動試算表示)
+- S10 ヒアリングウィザード (上位4大工程を8画面に分割・FormData 28項目・自動試算表示)
 - HearingSheet/FormData エンティティ + 受付番号採番
 - AI 処理キュー (D5 pull 型) のジョブ投入・生成結果の書戻し受領
 - S11 シート一覧 / S12 シート詳細 (status 変更は admin)
+- スクリーンショット添付 (`hearing_screenshots`) とトークン付き公開共有 (`hearing_share_tokens` / `GET /api/hearing/:token`)
 - ステップウィザード共通部品の消費
 
 **対象外 (out):**
@@ -80,6 +81,14 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - ウィザード完了で受付番号が発番され「生成中」状態が表示される (非同期 UI パターン)
 - AI キューのジョブが pull→書戻しで完結しサーバ側 AI 課金が発生しない
 - シート本文の Markdown が sanitize 済みで描画される (SEC7)
+- S12 からスクリーンショット添付と引き渡しトークン発行ができ、無効トークンは同一 404 に畳まれる
+
+## MVP 追補 (2026-08-12 / HarnessHub-370h / PR #705)
+
+- FormData を 12→21→28 項目へ拡張 (用途プロファイル・依頼パターン・参考 URL)。
+- S10 は system-spec の4大工程を維持したまま、入力負荷低減のため **8 画面** に分割する。
+- S12 に引き渡し用テキスト、スクリーンショット、Claude Code 向けトークン発行を追加する。
+- 旧 snapshot は読取時だけ互換 decoder で補完し、新規入力の厳格検証は緩めない。
 
 ## アーキテクチャ参照
 

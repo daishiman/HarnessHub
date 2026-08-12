@@ -14,8 +14,11 @@ reviewed_at: 2026-08-12
 
 | 内容 | 優先度 | 備考 |
 |---|---|---|
-| 予約公開は最大24時間程度ずれる | 中 | 新しい cron trigger を増やさず既存の日次バッチに相乗りしているため (Cloudflare Free プランの上限がアカウント単位で共有される制約)。即時性が要る場合は専用トリガーの新設を検討 |
-| アイキャッチ画像は URL 入力のみ (ファイルアップロード不可) | 低 | 画像を保存する仕組み (R2 等) を別途用意すれば、貼り付けアップロードに対応できる |
+| 予約公開は通常最大24時間程度ずれる | 中 | 新しい cron trigger を増やさず既存の日次バッチに相乗りしているため。stable/bounded batch と `hasMore` の観測は実装済みだが、分単位の即時公開が必要ならアカウント全体の trigger 残枠を確認して専用頻度を再設計する |
+| 外部Markdown同期は画像転送を扱わない | 低 | Hub画面のMarkdown editorからの画像upload（PNG/JPEG/WebP/GIF、R2、認証付き内部URL）は実装済み。Claude Code/Codex同期v1は本文/titleだけで、repository相対画像をHubへ複製しない |
+
+「アイキャッチ画像はURL入力のみ（ファイルupload不可）」という旧記述は撤回した。現在は本文への画像貼付・
+drag/drop・button uploadとpending画像回収を提供し、サムネイルは内部画像pathまたは安全なhttp(s) URLを受理する。
 
 ## 一覧の見かた
 

@@ -113,8 +113,10 @@ describe('PT2-C reuse-detection による family 全失効', () => {
     };
     const endpoint = async () => ({ status: 400, body: { error: 'invalid_grant' } });
 
-    await expect(refreshOrClear(store, 'acme', 'used-up-refresh-token-0123456789ab', endpoint)).rejects.toThrow();
-    expect(clearToken).toHaveBeenCalledWith('acme');
+    await expect(
+      refreshOrClear(store, 'https://hub.example.com', 'acme', 'used-up-refresh-token-0123456789ab', endpoint),
+    ).rejects.toThrow();
+    expect(clearToken).toHaveBeenCalledWith('https://hub.example.com', 'acme');
   });
 });
 
@@ -132,6 +134,7 @@ describe('PT2-D OS 資格情報域への保存・平文非保存', () => {
   }
 
   const record: PublisherCredentialRecord = {
+    hub_origin: 'https://hub.example.com',
     tenant_slug: 'acme',
     workspace_id: 'ws-1',
     refresh_token: 'a'.repeat(32),
@@ -170,5 +173,9 @@ describe('PT2-E scope 最小権限', () => {
 
   it('feedback サブコマンドは feedback:write のみを追加要求する (AD-6)', () => {
     expect(scopesForCommand('feedback')).toEqual(['feedback:write']);
+  });
+
+  it('docs サブコマンドは docs:write だけを要求する', () => {
+    expect(scopesForCommand('docs')).toEqual(['docs:write']);
   });
 });

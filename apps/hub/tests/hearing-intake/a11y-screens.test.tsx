@@ -47,7 +47,7 @@ async function violationsOf(): Promise<readonly string[]> {
 }
 
 // ---------------------------------------------------------------------------
-// S10: ヒアリングウィザード (5 ステップ / FormData 最大 23 項目)
+// S10: ヒアリングウィザード (4 大工程 / 8 画面 / FormData 28 項目)
 // ---------------------------------------------------------------------------
 
 interface WizardField {
@@ -56,7 +56,7 @@ interface WizardField {
   readonly type: string;
 }
 
-/** AD-8 の step 割り当て。最後の確認 step は入力欄を持たない。 */
+/** AD-8 の主要入力工程を最小fixtureで再現。実装の8画面/28項目はHI-A11Y-101とschema契約で検査する。 */
 const WIZARD_FIELD_STEPS: readonly { readonly title: string; readonly fields: readonly WizardField[] }[] = [
   {
     title: '基本情報',
@@ -78,22 +78,6 @@ const WIZARD_FIELD_STEPS: readonly { readonly title: string; readonly fields: re
     ],
   },
   {
-    title: '用途プロファイル',
-    fields: [
-      { name: 'usagePurpose', label: '用途', type: 'text' },
-      { name: 'expertise', label: '熟練度', type: 'text' },
-      { name: 'role', label: '役割', type: 'text' },
-      { name: 'context', label: '文脈', type: 'text' },
-      { name: 'motivation', label: '動機', type: 'text' },
-      { name: 'sharingIntent', label: '共有意図', type: 'text' },
-      { name: 'constraintTags', label: '制約', type: 'text' },
-      { name: 'shareTarget', label: '共有相手', type: 'text' },
-      { name: 'informationSources', label: '情報源', type: 'text' },
-      { name: 'trueProblem', label: '真の課題', type: 'text' },
-      { name: 'knowledgeAssets', label: 'ナレッジ資産', type: 'text' },
-    ],
-  },
-  {
     title: '要望',
     fields: [
       { name: 'features', label: 'ほしい機能', type: 'text' },
@@ -110,13 +94,7 @@ const WIZARD_STEPS = [
     content: (
       <>
         {fields.map((field) => (
-          <TextInput
-            key={field.name}
-            name={field.name}
-            label={field.label}
-            type={field.type}
-            required={title !== '用途プロファイル'}
-          />
+          <TextInput key={field.name} name={field.name} label={field.label} type={field.type} required />
         ))}
       </>
     ),
@@ -236,15 +214,15 @@ function SheetDetail(): ReactNode {
 // ---------------------------------------------------------------------------
 
 describe('HI-A11Y: S10-S12 の共通部品構成に axe 違反が無い (AD-8)', () => {
-  it('HI-A11Y-001: S10 ウィザード構成に axe 違反が無く、5 ステップ 23 項目が描画される', async () => {
+  it('HI-A11Y-001: S10 の4大工程fixtureにaxe違反が無く、旧来12項目のラベル契約を維持する', async () => {
     mountScreen(<StepWizard label="ヒアリングシート作成" steps={WIZARD_STEPS} />);
 
     expect(await violationsOf()).toEqual([]);
 
     // 空 DOM で緑化しないための実在確認 (Goodhart 対策)
-    expect(document.querySelectorAll('li[aria-current], ol li')).toHaveLength(5);
-    // FormData 最大 23 項目が 4 つの入力 step へ過不足なく割り当てられている (AD-8 の step 割り当て表)
-    expect(WIZARD_FIELD_STEPS.reduce((total, step) => total + step.fields.length, 0)).toBe(23);
+    expect(document.querySelectorAll('li[aria-current], ol li')).toHaveLength(4);
+    // 既存12項目のラベル契約が3つの主要入力工程へ過不足なく割り当てられている
+    expect(WIZARD_FIELD_STEPS.reduce((total, step) => total + step.fields.length, 0)).toBe(12);
     // StepWizard は現在 step のみ描画するので、DOM 上の入力欄数は step1 の 4 項目と一致する
     expect(document.querySelectorAll('input')).toHaveLength(WIZARD_FIELD_STEPS[0]?.fields.length ?? 0);
     for (const input of document.querySelectorAll('input')) {
@@ -325,6 +303,8 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
   it('HI-A11Y-101: hearing-intake の実コンポーネントに axe 違反が 0 件', async () => {
     mountScreen(<HearingIntakeWizard tenantId="tenant-a" workspaceId="ws-1" />);
     expect(await violationsOf()).toEqual([]);
+    // 4大工程を8画面へ展開する現行フローを実DOMで固定する。
+    expect(document.querySelectorAll('ol li')).toHaveLength(8);
     expect(document.querySelectorAll('input')).toHaveLength(4);
   });
 

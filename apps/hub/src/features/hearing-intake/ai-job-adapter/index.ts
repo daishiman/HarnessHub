@@ -2,9 +2,9 @@
 
 import type { AiJobRow } from '@harness-hub/db';
 import {
+  decodeStoredSheetGenerationPayload,
   type HearingSheetEstimate,
   type HearingSheetFormSnapshot,
-  normalizeHearingSheetFormSnapshot,
   type PulledAiJob,
   pulledAiJobSchema,
   type SheetGenerationPayload,
@@ -31,19 +31,11 @@ export function buildSheetGenerationPayload(input: {
 }
 
 export function toPulledJob(row: AiJobRow): PulledAiJob {
-  const rawPayload = JSON.parse(row.payloadJson) as {
-    readonly sheet_id?: unknown;
-    readonly sheet_code?: unknown;
-    readonly form?: unknown;
-    readonly estimate?: unknown;
-  };
+  const payload = decodeStoredSheetGenerationPayload(JSON.parse(row.payloadJson) as unknown);
   return pulledAiJobSchema.parse({
     id: row.id,
     kind: row.kind,
-    payload: {
-      ...rawPayload,
-      form: normalizeHearingSheetFormSnapshot(rawPayload.form),
-    },
+    payload,
     lease_expires_at: row.leaseExpiresAt,
   });
 }

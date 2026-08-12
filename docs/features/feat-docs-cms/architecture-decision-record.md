@@ -34,9 +34,16 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend]
 | `scope` | text enum(`common`,`tenant`) | NOT NULL | B7/qa-024 の確定スコープ値 |
 | `title` | text (1–200) | NOT NULL | |
 | `body_markdown` | text (≤200,000) | NOT NULL | sanitize は描画側 (`MarkdownView`) の責務。DB には生 Markdown を保存する (既存 `hearingSheets.formJson` と同じく「保存は生、描画時に共通レンダラで sanitize」方針) |
-| `status` | text enum(`draft`,`published`) | NOT NULL default `draft` | AI 下書き生成直後は `draft`。admin が明示的に確定させるまで一覧の既定表示から除外できるようにするための最小限の編集ワークフロー状態 (ADR 決定事項。要件には無いが AI 下書きが未レビューのまま公開扱いになる事故を防ぐ最小構成) |
+| `status` | text enum(`draft`,`published`) | NOT NULL default `draft` | AI 下書き生成直後は `draft`。`scheduled` は保存値に追加せず、`draft` + 未来の `publish_at` から導出する |
+| `publish_at` | integer (epoch ms) | NULL | 予約公開日時。additive（純増）列。NULL は予約なし。future のみ API で受理する |
+| `category` / `tags` | text / JSON text | NULL | 分類と最大 20 件のタグ。一覧は category 完全一致、tag は JSON 配列要素の完全一致で絞る |
+| `thumbnail_url` / `thumbnail_source` | text / enum(`auto`,`manual`) | NULL / NOT NULL | 認証済み内部画像 path または安全な http(s) URL。手動値は本文更新で上書きしない |
+| `excerpt` / `excerpt_source` | text / enum(`auto`,`manual`) | NULL / NOT NULL | 一覧要約。手動値は本文更新で上書きしない |
+| `asset_summary` | JSON text | NULL | `imageCount/hasTable/hasCode` を本文から常にサーバ算出する |
+| `external_source` / `external_document_id` | text | NULL | tenant + 外部自然キー。両方を持つ外部同期文書だけ一意 index の対象になる |
+| `external_content_hash` / `external_revision` | text / integer | NULL | 同期済み内容 hash と ETag/CAS の単調増加 revision。Hub 側実変更後は hash を NULL にして `modified` を表す |
 | `created_by` / `updated_by` | text (user id) | NOT NULL | |
-| `created_at` / `updated_at` | integer (epoch seconds) | NOT NULL | |
+| `created_at` / `updated_at` | integer (epoch ms) | NOT NULL | |
 
 Index: `documents_tenant_scope_updated_idx (tenant_id, scope, updated_at)`, `documents_scope_updated_idx (scope, updated_at)`（scope 絞り込みと更新日時参照用）。一覧のページング順序は ULID の `id DESC` とし、`cursor` は最後に返した `id` を使う。編集で `updated_at` が変わってもページ送りの重複・欠落を起こさないためである。
 
@@ -46,10 +53,10 @@ Index: `documents_tenant_scope_updated_idx (tenant_id, scope, updated_at)`, `doc
 
 | 画面 | path | 権限 | 内容 |
 |---|---|---|---|
-| 一覧 | `apps/hub/src/app/(dashboard)/docs/page.tsx` | member (閲覧) | tenant scope doc (自 tenant) + common scope doc の一覧。title/scope バッジ/status バッジ/updated_at。検索・scope フィルタ |
-| 閲覧 | `apps/hub/src/app/(dashboard)/docs/[id]/page.tsx` | member (閲覧) | `MarkdownView` で sanitize 済み本文を描画。scope='tenant' は他 tenant からアクセス不可 (404) |
-| 編集 | `apps/hub/src/app/(dashboard)/docs/[id]/edit/page.tsx` | admin のみ (tenant scope→workspace-admin, common scope→provider-admin) | `MarkdownEditor` (write/preview タブ)。「AI 下書き生成」ボタンを併設 |
-| 新規作成 | `apps/hub/src/app/(dashboard)/docs/new/page.tsx` | admin のみ | scope 選択 (workspace-admin は tenant のみ選択可、provider-admin は common も選択可) + `MarkdownEditor` |
+| 一覧 | `apps/hub/src/app/(dashboard)/docs/page.tsx` | member (閲覧) | tenant scope doc (自 tenant) + common scope doc の一覧。scope/status/category/tag/title を絞り込み、thumbnail/category/tags/excerpt/assets/source/予約日時をタイトル列へ要約表示。wide/middle は表、narrow は card collection |
+| 閲覧 | `apps/hub/src/app/(dashboard)/docs/[id]/page.tsx` | member (閲覧) | `MarkdownView` で sanitize 済み本文を描画。lg 以上は追従目次、狭幅は折りたたみ目次。scope='tenant' は他 tenant からアクセス不可 (404) |
+| 編集 | `apps/hub/src/app/(dashboard)/docs/[id]/edit/page.tsx` | admin のみ (tenant scope→workspace-admin, common scope→provider-admin) | title/status/category/tags/thumbnail/excerpt/publish_at + image upload 対応 `MarkdownEditor`。保存済み本文との比較を併設 |
+| 新規作成 | `apps/hub/src/app/(dashboard)/docs/new/page.tsx` | admin のみ | scope 選択 + `MarkdownEditor`。最初の画像貼付時は暗黙 draft を一度だけ作り、保存後の本文に未参照の pending 画像を残さない |
 
 UI 側の admin 判定は表示制御のみ (ボタンの出し分け)。実際の許可判定は必ず B7 API 側の認可単一ミドルウェアで行う (UI 側の非表示は防御の多層化であって認可の代替ではない)。
 
@@ -66,6 +73,10 @@ zod スキーマ: `packages/schemas/docs-cms/contracts.ts`。命名は既存 `he
 | `POST /api/v1/docs` | `docs.write_tenant` (workspace-admin, 最低ゲート) | body の `scope==='common'` の場合、handler 内で `authz.can('docs.write_common')` を追加チェックし、false なら `AuthzError('insufficient_role', 403)` を投げる (`with-authz.ts` の `AuthzContext.can` — 「同じ principal/resource に対する追加 capability の照会」という設計意図の範囲内の用法) | |
 | `PATCH /api/v1/docs/:id` | `docs.write_tenant` (workspace-admin, 最低ゲート) | resolveResource は `resource.tenantId` を header 申告値のまま解決する (上記 GET と同じ不変条件)。対象 doc を repository で先読みし `scope==='common'` なら `authz.can('docs.write_common')` を追加チェック | 監査 event 記録 (§5) |
 | `POST /api/v1/docs/:id/draft` | `docs.write_tenant` (workspace-admin, 最低ゲート) | 同上 (`scope==='common'` は `docs.write_common` 追加チェック) | `ai_jobs` へ `kind=doc_draft` で enqueue するのみ。結果反映は共通 pull/complete 経路 (§4) |
+| `POST /api/v1/docs/:id/images` | `docs.write_tenant` | common は `docs.write_common` 追加チェック | 許可 MIME + magic bytes + size 上限を検証し R2 へ保存。raw R2 URL は返さない |
+| `GET /api/v1/docs/:id/images/:imageId` | `docs.read` | document/tenant 境界 | session 必須の同一 origin 画像を `private, no-store` / `nosniff` で中継 |
+| `DELETE /api/v1/docs/:id/images/:imageId` | `docs.write_tenant` | common は `docs.write_common` 追加チェック | pending/orphan 画像の明示回収 |
+| `GET/PUT /api/v1/docs/imports/:source/:externalId` | `docs.external_sync` + Bearer `docs:write` | 自 tenant の tenant doc だけ | 自然キー upsert、ETag/If-Match/revision CAS。common・画像転送・自動公開は scope 外 |
 
 **設計決定 (P03 レビュー対応)**: 当初案は `scope==='common'` のとき `resource.tenantId` を doc の実 tenant_id から `ctx.tenantId` へ差し替える設計だったが、これは `with-authz.ts`/`resource.ts` が明示的に禁止する「`resource.tenantId` に principal 側の値を写す」パターンに該当し、provider-admin が他 tenant 作成の common doc へアクセスした際に `provider.cross_tenant_access` 監査が恒常的に発火しなくなる副作用があった (P03 独立レビューで指摘)。上記の「`resource.tenantId` は常に header 申告値のまま、common 可視性は repository 層の `OR` 条件だけで担保する」設計に変更し、この問題を構造的に解消した。
 
@@ -98,7 +109,7 @@ docDraftResultSchema: { body_markdown: string (≤200000) }
 - route handler (`pull/route.ts`, `[id]/complete/route.ts`) は `job.kind` に応じて adapter を分岐する:
   - `sheet_generation` → 既存 `features/hearing-intake/ai-job-adapter`
   - `doc_draft` → 新設 `apps/hub/src/features/docs-cms/ai-job-adapter/index.ts` (`buildDocDraftPayload`, `toPulledDocDraftJob`, `serializeDocDraftResult`)
-- complete 時、`doc_draft` の場合は `documents` テーブルへ `body_markdown` を書き戻し `status` は `draft` のまま維持 (admin が編集画面で確認後、明示的に `PATCH .../status=published` する運用。将来 status 遷移 API が必要なら別 task)
+- complete 時、`doc_draft` の場合は `documents` テーブルへ `body_markdown` を書き戻し `status` は `draft` のまま維持し、`publish_at` を NULL にする。外部同期文書なら `external_content_hash=NULL` と revision 増加も同じ CAS 書込みへ含める
 
 ### 4.3 認可
 
@@ -119,6 +130,9 @@ docDraftResultSchema: { body_markdown: string (≤200000) }
 |---|---|---|---|
 | `docs.create` | `document` | `POST /api/v1/docs` 成功時 | `{ scope, title_length }` |
 | `docs.update` | `document` | `PATCH /api/v1/docs/:id` 成功時 (AI 下書き結果の書戻しによる更新は `ai_job.complete` 監査で代替し、二重記録しない) | `{ scope, fields_changed: string[] }` |
+| `docs.external_sync` | `document` | 外部同期 PUT が created/updated/unchanged を確定した時 | `{ source, external_document_id, revision, outcome }`（本文なし） |
+| `docs.image.upload` / `docs.image.delete` | `document` | 内部画像の保存/回収成功時 | `{ image_id, credential }`（画像本体なし） |
+| `docs.scheduled_publish` | `document` | cron が期限到来 draft を公開し、repository が返した文書ごと | `{ credential: 'system', run_key }`（本文なし） |
 
 `ai-jobs/[id]/complete/route.ts` は既に `ai_job.complete` action で監査記録済み (`ref_type='document'` が乗るだけ) のため、doc_draft 結果の書戻し自体に追加の監査 action は不要 — 既存の汎用 job 完了監査で SEC6 の「AI 下書き生成」トレーサビリティを満たす。人間による確定編集 (`PATCH`) だけを `docs.update` として区別する。
 
@@ -131,13 +145,49 @@ docDraftResultSchema: { body_markdown: string (≤200000) }
 ## 7. Markdown sanitize (SEC7) の消費点
 
 - 保存: `body_markdown` は生 Markdown のまま DB へ保存する
-- 描画: 一覧のプレビューは持たず、詳細/編集画面のみ `packages/ui` の `MarkdownView` (rehype-sanitize, `dangerouslySetInnerHTML` 不使用) を `dynamic import` で SSR 回避しつつ使用する (`hearing-sheet-detail.tsx` と同型)
+- 描画: 一覧は sanitize 済み excerpt だけを持ち、詳細/編集画面は `packages/ui` の `MarkdownView` (rehype-sanitize, `dangerouslySetInnerHTML` 不使用) を使用する。`pre`/inline `code`/`blockquote` の装飾は `[data-hh-markdown]` scope の token CSS に限定し、他画面の素の要素へ広げない
 - editor: `MarkdownEditor` (write/preview タブ) をそのまま使用し、独自 textarea 実装を作らない
 
 ## 8. Rollout / Rollback
 
-- Rollout: 本 ADR を P03 独立設計レビューへ引き継ぐ
-- Rollback: P03 で却下された場合、本ファイルへ却下理由を追記し設計を再確定する
+### 8.1 予約公開の状態・clear 契約
+
+`scheduled` は永続化しない。表示状態は次の順で導出する。
+
+| 保存値 | 派生表示 |
+|---|---|
+| `status='published'` | 公開 |
+| `status='draft' AND publish_at > now` | 予約中 |
+| `status='draft'` かつ上記以外 | 非公開 |
+
+`publish_at` の非 NULL 入力は future epoch ms だけを受理し、現在以前・不正形式・`status='published'`との
+同時指定は 422 problem+json。future指定時は`draft`へ導出する。次の操作は未レビュー内容を古い予約で
+公開しないため `publish_at=NULL` を同じ write に含める。
+
+- 手動の`status`指定（同値再送を含む）
+- 保存済み値と異なるタイトル/本文への変更（同値再送は除く）。ただし同じrequestで新しいfuture `publish_at`
+  を明示した場合はその予約を採用して`draft`にする
+- AI 下書きの本文書戻し
+- CLI の明示 `--force true` による外部版の反映
+- cron の期限到来公開
+
+分類・タグ・サムネイル・要約だけの変更と外部同期の `unchanged` は予約を保持する。予約 repository
+`publishDueDocuments(now, limit?)` は`limit` default/max=100、`publish_at ASC, id ASC`の安定順で
+`limit+1`候補を読み、各行CASで処理する。返却は
+`{publishedCount,hasMore,publishedDocuments:[{id,tenantId}]}`。
+repository は処理済み各文書の status・publish_at・updated fields・外部 revision を同一transactionで更新し、
+Hubは返却文書ごとにactor=`system` / action=`docs.scheduled_publish`を既存監査へ順次記録する。監査追記は
+DB更新と同一transactionではないため、失敗時は`docs_scheduled_publish_audit_failed`を構造化ログへ残して
+ジョブを失敗扱いにし、件数ログだけで完全成功と誤認しない。
+日次相乗りの追加遅延は通常24時間未満だが、失敗/backlog時のSLAではない。
+
+### 8.2 Rollout / Rollback
+
+- Rollout: migration の固定ファイル名や件数を手順へ埋め込まず、current Drizzle journal（2026-08-12
+  統合時点の最新 ordinal は `0014`）の dry-run が示す pending を DB 先行で適用し、再 dry-run の
+  `pending=0` を確認してから Worker を配備する。
+- Rollback: additive 列/index や R2 object を逆 migration で削除せず、Hub Worker を直前版へ戻して
+  新規 Docs 操作を止める。予約行、外部 revision、監査 event、未完了 AI job は原因調査・再試行のため保持する。
 
 ## 9. 参照情報
 

@@ -9,13 +9,14 @@
  * AI 下書きキュー (kind=doc_draft) は hearing-intake-queue.ts の汎用 claim/complete/fail を
  * 再利用し、CAS/lease の実装を複製しない (AD-4)。
  */
-import { and, desc, eq, isNotNull, lt, lte, or, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, isNotNull, isNull, lt, lte, or, type SQL, sql } from 'drizzle-orm';
 
 import { documents } from '../schema/docs-cms/schema';
 import { aiJobs } from '../schema/hearing-intake/schema';
 import { isTransactionalAdapter } from '../src/adapter';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { canonicalJson, sha256Hex } from './bytes';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import type { AiJobRow, QueueWriteback } from './hearing-intake-queue';
@@ -26,6 +27,7 @@ import { newUlid } from './ulid';
 
 export type DocumentScope = 'common' | 'tenant';
 export type DocumentStatus = 'draft' | 'published';
+export type DocumentFieldSource = 'auto' | 'manual';
 
 export interface DocumentRow {
   readonly id: string;
@@ -34,15 +36,67 @@ export interface DocumentRow {
   readonly title: string;
   readonly bodyMarkdown: string;
   readonly status: DocumentStatus;
+  readonly externalSource: string | null;
+  readonly externalDocumentId: string | null;
+  readonly externalContentHash: string | null;
+  readonly externalRevision: number | null;
   readonly createdBy: string;
   readonly updatedBy: string;
   readonly createdAt: number;
   readonly updatedAt: number;
   readonly category: string | null;
-  /** JSON 文字列表現 (`["a","b"]`)。配列への変換は features/docs-cms/dto.ts が行う。 */
-  readonly tagsJson: string | null;
-  readonly eyecatchImageUrl: string | null;
+  readonly tags: string | null;
+  readonly thumbnailUrl: string | null;
+  readonly thumbnailSource: DocumentFieldSource;
+  readonly excerpt: string | null;
+  readonly excerptSource: DocumentFieldSource;
+  readonly assetSummary: string | null;
   readonly publishAt: number | null;
+}
+
+export interface ExternalDocumentRow extends DocumentRow {
+  readonly externalSource: string;
+  readonly externalDocumentId: string;
+  readonly externalRevision: number;
+}
+
+export type ExternalDocumentSyncOutcome = 'created' | 'updated' | 'unchanged';
+
+export interface SyncExternalDocumentInput {
+  readonly source: string;
+  readonly externalDocumentId: string;
+  readonly title: string;
+  readonly bodyMarkdown: string;
+  /** #707と同じ本文解析器が算出したauto派生値。manual値はrepositoryが保持する。 */
+  readonly autoThumbnailUrl: string | null;
+  readonly autoExcerpt: string | null;
+  readonly assetSummary: string;
+  readonly actorId: string;
+  readonly expectedRevision?: number;
+}
+
+export interface ExternalDocumentSyncResult {
+  readonly outcome: ExternalDocumentSyncOutcome;
+  readonly document: ExternalDocumentRow;
+}
+
+export class ExternalDocumentPreconditionError extends RepositoryError {
+  readonly reason: 'required' | 'stale' | 'missing';
+  readonly current: ExternalDocumentRow | null;
+
+  constructor(reason: 'required' | 'stale' | 'missing', current: ExternalDocumentRow | null) {
+    super(
+      'conflict',
+      reason === 'required'
+        ? 'If-Match が必要です'
+        : reason === 'missing'
+          ? 'If-Match の対象ドキュメントが存在しません'
+          : 'If-Match が現在のrevisionと一致しません',
+    );
+    this.name = 'ExternalDocumentPreconditionError';
+    this.reason = reason;
+    this.current = current;
+  }
 }
 
 export interface CreateDocumentInput {
@@ -51,8 +105,12 @@ export interface CreateDocumentInput {
   readonly bodyMarkdown: string;
   readonly actorId: string;
   readonly category?: string | null;
-  readonly tagsJson?: string | null;
-  readonly eyecatchImageUrl?: string | null;
+  readonly tags?: string | null;
+  readonly thumbnailUrl?: string | null;
+  readonly thumbnailSource?: DocumentFieldSource;
+  readonly excerpt?: string | null;
+  readonly excerptSource?: DocumentFieldSource;
+  readonly assetSummary?: string | null;
   readonly publishAt?: number | null;
 }
 
@@ -62,17 +120,23 @@ export interface UpdateDocumentInput {
   readonly status?: DocumentStatus;
   readonly actorId: string;
   readonly category?: string | null;
-  readonly tagsJson?: string | null;
-  readonly eyecatchImageUrl?: string | null;
+  readonly tags?: string | null;
+  readonly thumbnailUrl?: string | null;
+  readonly thumbnailSource?: DocumentFieldSource;
+  readonly excerpt?: string | null;
+  readonly excerptSource?: DocumentFieldSource;
+  readonly assetSummary?: string | null;
   readonly publishAt?: number | null;
 }
 
 export interface ListDocumentsInput {
   readonly scope?: DocumentScope;
   readonly status?: DocumentStatus;
-  readonly category?: string;
   /** タイトルに含まれる語での絞り込み。対象を title だけにする理由は契約側 (documentListQuerySchema) に記載。 */
   readonly query?: string;
+  readonly category?: string;
+  /** tags JSON 配列の要素に対する完全一致。 */
+  readonly tag?: string;
   readonly cursor?: string;
   readonly limit: number;
 }
@@ -82,18 +146,34 @@ export interface DocumentPage {
   readonly nextCursor: string | null;
 }
 
+export interface PublishedDueDocument {
+  readonly id: string;
+  readonly tenantId: string;
+}
+
+export interface PublishDueDocumentsResult {
+  readonly publishedCount: number;
+  readonly hasMore: boolean;
+  /** 呼び出し側が tenant 単位の append-only 監査を記録するための最小情報。 */
+  readonly publishedDocuments: readonly PublishedDueDocument[];
+}
+
 export interface DocsCmsRepository {
   listDocuments(context: RepositoryContext, input: ListDocumentsInput): Promise<DocumentPage>;
   getDocument(context: RepositoryContext, id: string): Promise<DocumentRow | null>;
   createDocument(context: RepositoryContext, input: CreateDocumentInput): Promise<DocumentRow>;
   updateDocument(context: RepositoryContext, id: string, input: UpdateDocumentInput): Promise<DocumentRow>;
-  /**
-   * 予約公開 (publish_at <= now の draft) を published へ一括昇格する。cron (worker/cron.ts) 専用。
-   * tenant 境界の外までまとめて処理する必要があるため、`RepositoryContext` を取らない
-   * (通常の read/write と違い、これは単一テナントの操作ではなくシステムジョブ)。
-   * 昇格した件数を返す (cron の実行ログに残すため)。
-   */
-  publishScheduledDocuments(now: number): Promise<number>;
+  /** 日次 cron 用。予約日時と ID の安定順で、上限付き・再実行安全に公開する。 */
+  publishDueDocuments(now: number, limit?: number): Promise<PublishDueDocumentsResult>;
+  getExternalDocument(
+    context: RepositoryContext,
+    source: string,
+    externalDocumentId: string,
+  ): Promise<ExternalDocumentRow | null>;
+  syncExternalDocument(
+    context: RepositoryContext,
+    input: SyncExternalDocumentInput,
+  ): Promise<ExternalDocumentSyncResult>;
   claimNextDocDraftJob(
     context: RepositoryContext,
     tokenId: string,
@@ -122,6 +202,26 @@ function transactional(adapter: CoreAdapter) {
 }
 
 const DOC_DRAFT_EXPECT = { kind: 'doc_draft' as const, refType: 'document' };
+const DEFAULT_PUBLISH_DUE_LIMIT = 100;
+const MAX_PUBLISH_DUE_LIMIT = 100;
+
+function assertFuturePublishAt(publishAt: number | null | undefined, now: number): void {
+  if (publishAt === undefined || publishAt === null) return;
+  if (!Number.isSafeInteger(publishAt) || publishAt <= now) {
+    throw new RepositoryError('invalid-context', 'publishAt は現在より未来の epoch ms である必要があります');
+  }
+}
+
+function normalizePublishDueLimit(limit: number | undefined): number {
+  const normalized = limit ?? DEFAULT_PUBLISH_DUE_LIMIT;
+  if (!Number.isSafeInteger(normalized) || normalized < 1 || normalized > MAX_PUBLISH_DUE_LIMIT) {
+    throw new RepositoryError(
+      'invalid-context',
+      `予約公開の limit は 1 以上 ${MAX_PUBLISH_DUE_LIMIT} 以下の整数である必要があります`,
+    );
+  }
+  return normalized;
+}
 
 function docDraftWriteback(): QueueWriteback {
   return {
@@ -129,7 +229,14 @@ function docDraftWriteback(): QueueWriteback {
       table: documents,
       buildSet: (job, now) => {
         const parsed = JSON.parse(job.resultJson ?? '{}') as { body_markdown?: string };
-        return { bodyMarkdown: parsed.body_markdown ?? '', updatedAt: now, updatedBy: 'ai-worker' };
+        return {
+          bodyMarkdown: parsed.body_markdown ?? '',
+          updatedAt: now,
+          updatedBy: 'ai-worker',
+          publishAt: null,
+          externalContentHash: null,
+          externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
+        };
       },
       buildWhere: (context, job) => and(eq(documents.tenantId, context.tenantId), eq(documents.id, job.refId)) as SQL,
       conflictMessage: 'AI job の ref_id と現在の document が一致しません',
@@ -145,10 +252,22 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
       const predicates = [visibilityCondition(context)];
       if (input.scope !== undefined) predicates.push(eq(documents.scope, input.scope));
       if (input.status !== undefined) predicates.push(eq(documents.status, input.status));
-      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
       if (input.query !== undefined) {
         const search = containsTermInAny(input.query, [documents.title]);
         if (search !== undefined) predicates.push(search);
+      }
+      if (input.category !== undefined) predicates.push(eq(documents.category, input.category));
+      if (input.tag !== undefined) {
+        // LIKE では `API` が `GraphAPI` にも当たる。json_valid を先に置いて既存の壊れた値は
+        // fail-closed で非一致とし、json_each の配列要素単位で完全一致させる。
+        predicates.push(
+          sql`EXISTS (
+            SELECT 1 FROM json_each(
+              CASE WHEN json_valid(${documents.tags}) THEN ${documents.tags} ELSE '[]' END
+            ) AS tag_item
+            WHERE tag_item.value = ${input.tag}
+          )`,
+        );
       }
       // ULID primary key is monotonic, so it is a stable cursor even when a document's
       // updated_at changes while the user is paging.  Ordering by updated_at here would
@@ -184,43 +303,34 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
         transactional(adapter).transaction(async (tx) => {
           const db = tx.client as CoreDb;
           const now = serverNow();
+          assertFuturePublishAt(input.publishAt, now);
           const id = newUlid(now);
-          const category = input.category ?? null;
-          const tagsJson = input.tagsJson ?? null;
-          const eyecatchImageUrl = input.eyecatchImageUrl ?? null;
-          const publishAt = input.publishAt ?? null;
-          await db.insert(documents).values({
+          const base = {
             id,
             tenantId: context.tenantId,
             scope: input.scope,
             title: input.title,
             bodyMarkdown: input.bodyMarkdown,
-            status: 'draft',
+            status: 'draft' as const,
+            externalSource: null,
+            externalDocumentId: null,
+            externalContentHash: null,
+            externalRevision: null,
             createdBy: input.actorId,
             updatedBy: input.actorId,
             createdAt: now,
             updatedAt: now,
-            category,
-            tagsJson,
-            eyecatchImageUrl,
-            publishAt,
-          });
-          return {
-            id,
-            tenantId: context.tenantId,
-            scope: input.scope,
-            title: input.title,
-            bodyMarkdown: input.bodyMarkdown,
-            status: 'draft',
-            createdBy: input.actorId,
-            updatedBy: input.actorId,
-            createdAt: now,
-            updatedAt: now,
-            category,
-            tagsJson,
-            eyecatchImageUrl,
-            publishAt,
+            category: input.category ?? null,
+            tags: input.tags ?? null,
+            thumbnailUrl: input.thumbnailUrl ?? null,
+            thumbnailSource: input.thumbnailSource ?? 'auto',
+            excerpt: input.excerpt ?? null,
+            excerptSource: input.excerptSource ?? 'auto',
+            assetSummary: input.assetSummary ?? null,
+            publishAt: input.publishAt ?? null,
           } satisfies DocumentRow;
+          await db.insert(documents).values(base);
+          return base;
         }),
       );
     },
@@ -230,37 +340,267 @@ export function createDocsCmsRepository(adapter: CoreAdapter): DocsCmsRepository
         transactional(adapter).transaction(async (tx) => {
           const db = tx.client as CoreDb;
           const now = serverNow();
+          assertFuturePublishAt(input.publishAt, now);
+          if (input.status === 'published' && input.publishAt != null) {
+            throw new RepositoryError('invalid-context', 'published と未来の publishAt は同時に指定できません');
+          }
+          const existingRows = await db
+            .select()
+            .from(documents)
+            .where(and(visibilityCondition(context), eq(documents.id, id)))
+            .limit(1);
+          const existing = existingRows[0] as DocumentRow | undefined;
+          if (existing === undefined) throw new EntityNotFoundError('documents', id);
           const patch: Partial<typeof documents.$inferInsert> = { updatedAt: now, updatedBy: input.actorId };
           if (input.title !== undefined) patch.title = input.title;
           if (input.bodyMarkdown !== undefined) patch.bodyMarkdown = input.bodyMarkdown;
           if (input.status !== undefined) patch.status = input.status;
           if (input.category !== undefined) patch.category = input.category;
-          if (input.tagsJson !== undefined) patch.tagsJson = input.tagsJson;
-          if (input.eyecatchImageUrl !== undefined) patch.eyecatchImageUrl = input.eyecatchImageUrl;
-          if (input.publishAt !== undefined) patch.publishAt = input.publishAt;
+          if (input.tags !== undefined) patch.tags = input.tags;
+          if (input.thumbnailUrl !== undefined) patch.thumbnailUrl = input.thumbnailUrl;
+          if (input.thumbnailSource !== undefined) patch.thumbnailSource = input.thumbnailSource;
+          if (input.excerpt !== undefined) patch.excerpt = input.excerpt;
+          if (input.excerptSource !== undefined) patch.excerptSource = input.excerptSource;
+          if (input.assetSummary !== undefined) patch.assetSummary = input.assetSummary;
+          const titleChanged = input.title !== undefined && input.title !== existing.title;
+          const bodyChanged = input.bodyMarkdown !== undefined && input.bodyMarkdown !== existing.bodyMarkdown;
 
-          const updated = await db
-            .update(documents)
-            .set(patch)
-            .where(and(visibilityCondition(context), eq(documents.id, id)))
-            .returning();
+          // 明示的な公開/非公開は予約を解除する。予約日時の明示設定は draft に戻す。
+          // title/body の実変更だけがあり予約指定が無い場合は、古い内容のまま予約公開されないよう解除する。
+          if (input.status !== undefined) {
+            patch.publishAt = null;
+          } else if (input.publishAt !== undefined) {
+            patch.publishAt = input.publishAt;
+            if (input.publishAt !== null) patch.status = 'draft';
+          } else if (titleChanged || bodyChanged) {
+            patch.publishAt = null;
+          }
+
+          const nextStatus = patch.status ?? existing.status;
+          const nextPublishAt = patch.publishAt === undefined ? existing.publishAt : patch.publishAt;
+          if (
+            existing.externalSource !== null &&
+            (titleChanged || bodyChanged || nextStatus !== existing.status || nextPublishAt !== existing.publishAt)
+          ) {
+            if (existing.externalRevision === null) {
+              throw new RepositoryError('invalid-context', '外部同期文書のrevisionがありません');
+            }
+            patch.externalContentHash = null;
+            patch.externalRevision = existing.externalRevision + 1;
+          }
+
+          const writeCondition =
+            existing.externalRevision === null
+              ? and(visibilityCondition(context), eq(documents.id, id))
+              : and(
+                  visibilityCondition(context),
+                  eq(documents.id, id),
+                  eq(documents.externalRevision, existing.externalRevision),
+                );
+          const updated = await db.update(documents).set(patch).where(writeCondition).returning();
           const row = updated[0] as DocumentRow | undefined;
-          if (row === undefined) throw new EntityNotFoundError('documents', id);
+          if (row === undefined) throw new RepositoryError('conflict', 'ドキュメントが同時に更新されました');
           return row;
         }),
       );
     },
 
-    async publishScheduledDocuments(now) {
-      return guardedWrite(adapter, async () => {
-        const db = adapter.client;
-        const updated = await db
-          .update(documents)
-          .set({ status: 'published', updatedAt: now, updatedBy: 'scheduled-publish-cron' })
-          .where(and(eq(documents.status, 'draft'), isNotNull(documents.publishAt), lte(documents.publishAt, now)))
-          .returning({ id: documents.id });
-        return updated.length;
-      });
+    async publishDueDocuments(now, requestedLimit) {
+      if (!Number.isSafeInteger(now) || now < 0) {
+        throw new RepositoryError('invalid-context', '予約公開の now は非負の epoch ms である必要があります');
+      }
+      const limit = normalizePublishDueLimit(requestedLimit);
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const candidates = await db
+            .select({
+              id: documents.id,
+              tenantId: documents.tenantId,
+              publishAt: documents.publishAt,
+              externalRevision: documents.externalRevision,
+            })
+            .from(documents)
+            .where(and(eq(documents.status, 'draft'), isNotNull(documents.publishAt), lte(documents.publishAt, now)))
+            .orderBy(asc(documents.publishAt), asc(documents.id))
+            .limit(limit + 1);
+
+          const batch = candidates.slice(0, limit);
+          const publishedDocuments: PublishedDueDocument[] = [];
+          for (const candidate of batch) {
+            if (candidate.publishAt === null) continue;
+            const revisionCondition =
+              candidate.externalRevision === null
+                ? isNull(documents.externalRevision)
+                : eq(documents.externalRevision, candidate.externalRevision);
+            const updated = await db
+              .update(documents)
+              .set({
+                status: 'published',
+                publishAt: null,
+                updatedAt: now,
+                updatedBy: 'scheduled-publish-cron',
+                externalContentHash: null,
+                externalRevision: sql<number>`CASE WHEN ${documents.externalRevision} IS NULL THEN NULL ELSE ${documents.externalRevision} + 1 END`,
+              })
+              .where(
+                and(
+                  eq(documents.id, candidate.id),
+                  eq(documents.tenantId, candidate.tenantId),
+                  eq(documents.status, 'draft'),
+                  eq(documents.publishAt, candidate.publishAt),
+                  lte(documents.publishAt, now),
+                  revisionCondition,
+                ),
+              )
+              .returning({ id: documents.id, tenantId: documents.tenantId });
+            const row = updated[0];
+            if (row !== undefined) publishedDocuments.push(row);
+          }
+
+          return {
+            publishedCount: publishedDocuments.length,
+            // CAS miss は次の反復で再評価する。不要でも高々 1 回余分に空 batch を実行するだけで安全。
+            hasMore: candidates.length > limit || publishedDocuments.length < batch.length,
+            publishedDocuments,
+          };
+        }),
+      );
+    },
+
+    async getExternalDocument(context, source, externalDocumentId) {
+      const rows = await adapter.client
+        .select()
+        .from(documents)
+        .where(
+          and(
+            eq(documents.tenantId, context.tenantId),
+            eq(documents.externalSource, source),
+            eq(documents.externalDocumentId, externalDocumentId),
+          ),
+        )
+        .limit(1);
+      return (rows[0] as ExternalDocumentRow | undefined) ?? null;
+    },
+
+    async syncExternalDocument(context, input) {
+      const contentHash = await sha256Hex(canonicalJson({ title: input.title, body_markdown: input.bodyMarkdown }));
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const now = serverNow();
+          const existingRows = await db
+            .select()
+            .from(documents)
+            .where(
+              and(
+                eq(documents.tenantId, context.tenantId),
+                eq(documents.externalSource, input.source),
+                eq(documents.externalDocumentId, input.externalDocumentId),
+              ),
+            )
+            .limit(1);
+          let existing = existingRows[0] as ExternalDocumentRow | undefined;
+
+          if (existing === undefined) {
+            if (input.expectedRevision !== undefined) {
+              throw new ExternalDocumentPreconditionError('missing', null);
+            }
+            const id = newUlid(now);
+            const inserted = await db
+              .insert(documents)
+              .values({
+                id,
+                tenantId: context.tenantId,
+                scope: 'tenant',
+                title: input.title,
+                bodyMarkdown: input.bodyMarkdown,
+                status: 'draft',
+                externalSource: input.source,
+                externalDocumentId: input.externalDocumentId,
+                externalContentHash: contentHash,
+                externalRevision: 1,
+                thumbnailUrl: input.autoThumbnailUrl,
+                thumbnailSource: 'auto',
+                excerpt: input.autoExcerpt,
+                excerptSource: 'auto',
+                assetSummary: input.assetSummary,
+                createdBy: input.actorId,
+                updatedBy: input.actorId,
+                createdAt: now,
+                updatedAt: now,
+              })
+              .onConflictDoNothing()
+              .returning();
+            const created = inserted[0] as ExternalDocumentRow | undefined;
+            if (created !== undefined) return { outcome: 'created', document: created };
+
+            const racedRows = await db
+              .select()
+              .from(documents)
+              .where(
+                and(
+                  eq(documents.tenantId, context.tenantId),
+                  eq(documents.externalSource, input.source),
+                  eq(documents.externalDocumentId, input.externalDocumentId),
+                ),
+              )
+              .limit(1);
+            existing = racedRows[0] as ExternalDocumentRow | undefined;
+            if (existing === undefined) throw new RepositoryError('conflict', '外部文書の作成競合を解決できません');
+          }
+
+          if (existing.externalContentHash === contentHash) {
+            return { outcome: 'unchanged', document: existing };
+          }
+          if (input.expectedRevision === undefined) {
+            throw new ExternalDocumentPreconditionError('required', existing);
+          }
+          if (input.expectedRevision !== existing.externalRevision) {
+            throw new ExternalDocumentPreconditionError('stale', existing);
+          }
+
+          const updatedRows = await db
+            .update(documents)
+            .set({
+              title: input.title,
+              bodyMarkdown: input.bodyMarkdown,
+              status: 'draft',
+              publishAt: null,
+              externalContentHash: contentHash,
+              externalRevision: existing.externalRevision + 1,
+              ...(existing.thumbnailSource === 'auto'
+                ? { thumbnailUrl: input.autoThumbnailUrl, thumbnailSource: 'auto' as const }
+                : {}),
+              ...(existing.excerptSource === 'auto'
+                ? { excerpt: input.autoExcerpt, excerptSource: 'auto' as const }
+                : {}),
+              assetSummary: input.assetSummary,
+              updatedBy: input.actorId,
+              updatedAt: now,
+            })
+            .where(
+              and(
+                eq(documents.tenantId, context.tenantId),
+                eq(documents.id, existing.id),
+                eq(documents.externalRevision, existing.externalRevision),
+              ),
+            )
+            .returning();
+          const updated = updatedRows[0] as ExternalDocumentRow | undefined;
+          if (updated === undefined) {
+            const currentRows = await db
+              .select()
+              .from(documents)
+              .where(and(eq(documents.tenantId, context.tenantId), eq(documents.id, existing.id)))
+              .limit(1);
+            const current = currentRows[0] as ExternalDocumentRow | undefined;
+            if (current === undefined) throw new EntityNotFoundError('documents', existing.id);
+            throw new ExternalDocumentPreconditionError('stale', current);
+          }
+          return { outcome: 'updated', document: updated };
+        }),
+      );
     },
 
     claimNextDocDraftJob(context, tokenId, leaseMilliseconds) {

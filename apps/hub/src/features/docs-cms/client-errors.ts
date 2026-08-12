@@ -16,16 +16,25 @@ export function canWriteDocument(role: SessionRole | null, scope: DocumentScope)
 /**
  * client 側 fetch のエラーメッセージ抽出。
  *
- * サーバは problem+json (`title`/`detail`) で失敗理由を返しているのに、
+ * サーバは problem+json (`detail`/`errors[].message`/`title`) で失敗理由を返しているのに、
  * 各画面が `throw new Error('保存できませんでした。')` のような固定文言で握りつぶすと、
  * 権限不足 (403) もバリデーション失敗 (422) も同じ表示になり、利用者は原因を判断できない。
- * `builds/build-board.tsx` の既存パターンに合わせ、problem の detail/title をそのまま出す。
+ * `builds/build-board.tsx` の既存パターンに合わせ、最も具体的な problem の理由を出す。
  */
 export async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
   if (response.status === 403) return '権限が不足しているため、この操作はできません。';
   try {
-    const problem = (await response.json()) as { readonly detail?: string; readonly title?: string };
-    return problem.detail ?? problem.title ?? fallback;
+    const problem = (await response.json()) as {
+      readonly detail?: string;
+      readonly title?: string;
+      readonly errors?: readonly { readonly message?: string }[];
+    };
+    return (
+      problem.errors?.find((error) => error.message !== undefined)?.message ??
+      problem.detail ??
+      problem.title ??
+      fallback
+    );
   } catch {
     return fallback;
   }

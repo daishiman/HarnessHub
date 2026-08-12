@@ -202,6 +202,34 @@ code, pre, kbd, samp {
   font-size: var(--hh-font-size-sm);
 }
 
+[data-hh-markdown] pre {
+  margin: 0;
+  padding: var(--hh-space-3);
+  overflow-x: auto;
+  background: var(--hh-color-surface-muted);
+  border: 1px solid var(--hh-color-border);
+  border-radius: var(--hh-radius-sm);
+}
+
+[data-hh-markdown] pre code {
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+[data-hh-markdown] :not(pre) > code {
+  padding: 0.125em 0.375em;
+  background: var(--hh-color-surface-muted);
+  border: 1px solid var(--hh-color-border);
+  border-radius: var(--hh-radius-sm);
+}
+
+[data-hh-markdown] blockquote {
+  padding-inline-start: var(--hh-space-3);
+  border-inline-start: 3px solid var(--hh-color-border-strong);
+  color: var(--hh-color-text-muted);
+}
+
 a {
   color: var(--hh-color-primary);
   text-decoration: underline;

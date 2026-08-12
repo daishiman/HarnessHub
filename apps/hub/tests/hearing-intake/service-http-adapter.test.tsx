@@ -1,5 +1,6 @@
 import type { AiJobRow, HearingIntakeRepository, HearingSheetRow, RepositoryContext } from '@harness-hub/db';
 import {
+  CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
   createHearingSheetFormSnapshot,
   createSheetRequestSchema,
   generatedSectionsSchema,
@@ -160,7 +161,7 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
 
     expect(storedForm).not.toContain('salary');
     expect(queuedPayload).not.toContain('salary');
-    expect(JSON.parse(storedForm)).toMatchObject({ schemaVersion: 2 });
+    expect(JSON.parse(storedForm)).toMatchObject({ schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION });
     expect(JSON.parse(queuedPayload)).toMatchObject({
       sheet_id: 'sheet-1',
       sheet_code: 'HS-0001',
@@ -226,7 +227,7 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
     expect(listSheets).toHaveBeenLastCalledWith(CONTEXT, { limit: 10 });
   });
 
-  it('旧 11/12 項目 form_json を一覧・詳細で version 1 と未回答へ安全に読み上げる', async () => {
+  it('保存済み旧 11/12 項目 form_json を一覧・詳細で現行形式 (unknown/未回答) へ安全に正規化する', async () => {
     for (const legacy of [LEGACY_FORM_SNAPSHOT, { ...LEGACY_FORM_SNAPSHOT, salary: FORM.salary }]) {
       const legacyRow = { ...SHEET_ROW, formJson: JSON.stringify(legacy) };
       const service = createHearingIntakeService(
@@ -245,15 +246,16 @@ describe('HI-SVC: service の提出・参照・管理操作', () => {
           query: { limit: 20 },
         }),
       ).resolves.toMatchObject({ items: [{ domain: '経理', people: 5, hours: 40 }] });
-      await expect(service.getSheet({ context: CONTEXT, id: 'sheet-1' })).resolves.toMatchObject({
-        form_snapshot: {
-          schemaVersion: 1,
-          usagePurpose: null,
-          informationSources: null,
-          trueProblem: null,
-          knowledgeAssets: null,
-        },
+
+      const detail = await service.getSheet({ context: CONTEXT, id: 'sheet-1' });
+      expect(detail?.form_snapshot).toMatchObject({
+        usagePurpose: 'unknown',
+        informationSources: null,
+        trueProblem: null,
+        knowledgeAssets: ['不明・わからない'],
+        requestPatterns: [],
       });
+      expect(detail?.form_snapshot).not.toHaveProperty('salary');
     }
   });
 
@@ -329,7 +331,7 @@ describe('HI-ADAPTER: 共通キューとの wire 変換', () => {
     expect(parseGenerationResult('{"unexpected":true}')).toBeNull();
   });
 
-  it('処理待ちの旧 11/12 項目 AI payload も version 1 と未回答へ正規化する', () => {
+  it('処理待ちの旧 11/12 項目 AI payload も現行形式 (unknown/未回答) へ正規化する', () => {
     for (const legacy of [LEGACY_FORM_SNAPSHOT, { ...LEGACY_FORM_SNAPSHOT, salary: FORM.salary }]) {
       const legacyJob = {
         ...JOB_ROW,
@@ -341,17 +343,15 @@ describe('HI-ADAPTER: 共通キューとの wire 変換', () => {
         }),
       };
 
-      expect(toPulledJob(legacyJob)).toMatchObject({
-        payload: {
-          form: {
-            schemaVersion: 1,
-            usagePurpose: null,
-            informationSources: null,
-            trueProblem: null,
-            knowledgeAssets: null,
-          },
-        },
+      const pulled = toPulledJob(legacyJob);
+      expect(pulled.payload.form).toMatchObject({
+        usagePurpose: 'unknown',
+        informationSources: null,
+        trueProblem: null,
+        knowledgeAssets: ['不明・わからない'],
+        requestPatterns: [],
       });
+      expect(pulled.payload.form).not.toHaveProperty('salary');
     }
   });
 });

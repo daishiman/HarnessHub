@@ -89,6 +89,11 @@ const EXPECTED_EXEMPTIONS = [
   // scope 未確定を解消する route。withAuthz() は scope 確定済みを前提とするため、
   // これに wrapper を掛けると自分自身を missing_tenant_scope で弾いてしまう (ADR AD-4 の表を参照)。
   'apps/hub/src/app/signin/workspace/route.ts',
+  // トークン付き共有URL方式 (feat-hearing-intake 追加要件)。session を持たない Claude Code /
+  // 依頼者が直接叩く前提の設計で、認証前に到達する構造は device flow と同型。
+  // 境界はここが唯一で、無効/期限切れ/失効/存在しないトークンをすべて同じ 404 に畳んで存在を伏せる。
+  'apps/hub/src/app/api/hearing/[token]/route.ts',
+  'apps/hub/src/app/api/hearing/[token]/screenshots/[screenshotId]/route.ts',
 ];
 
 /**

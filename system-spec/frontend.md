@@ -173,3 +173,11 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - 表示名 / 一覧一貫性 / 相対日時 / list `q` は presentation・既存 list の加算契約。認可 claim と deny 規則は不変のため **R4-reopen 不要**。
 - PR #700 の route-local 遅延読込と sticky 計測の配置限定は client 境界の最適化であり、API・認可・DB・route 意味を変えない。新規 qa 番号なし、R4-reopen 不要。
 - 判断と証跡の正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+
+## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
+
+- S10 ヒアリングウィザードは、確定済みの4大工程 (基本情報/業務詳細/要件/確認) を維持したまま、
+  入力負荷低減のため **8 画面** へ分割する (28 項目)。
+- S12 は生成結果の閲覧に加え、スクリーンショット添付と Claude Code 引き渡しトークン発行 UI を持つ。
+- 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
+- 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。

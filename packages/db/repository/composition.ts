@@ -58,6 +58,8 @@ import {
   createDocsCmsRepository as createDocsCmsRepositoryLeaf,
   type DocsCmsRepository as DocsCmsRepositoryShape,
   type DocumentRow as DocumentRowShape,
+  ExternalDocumentPreconditionError as ExternalDocumentPreconditionErrorLeaf,
+  type ExternalDocumentRow as ExternalDocumentRowShape,
 } from './docs-cms';
 import {
   createFeedbackRepository as createFeedbackRepositoryLeaf,
@@ -71,6 +73,16 @@ import {
   type HearingSheetRow as HearingSheetRowShape,
   type TenantCoefficientRow as TenantCoefficientRowShape,
 } from './hearing-intake';
+import {
+  createHearingScreenshotsRepo,
+  type HearingScreenshotRow as HearingScreenshotRowShape,
+  type HearingScreenshotsRepo,
+} from './hearing-screenshots';
+import {
+  createHearingShareTokensRepo,
+  type HearingShareTokenRow as HearingShareTokenRowShape,
+  type HearingShareTokensRepo,
+} from './hearing-share-tokens';
 import {
   createHearingSmokeDbProbe as createHearingSmokeDbProbeLeaf,
   type HearingSmokeDbProbe as HearingSmokeDbProbeShape,
@@ -160,6 +172,7 @@ export type TenantCoefficientRow = TenantCoefficientRowShape;
 export type HearingIntakeRepository = HearingIntakeRepositoryShape;
 export type DocsCmsRepository = DocsCmsRepositoryShape;
 export type DocumentRow = DocumentRowShape;
+export type ExternalDocumentRow = ExternalDocumentRowShape;
 export type FeedbackRow = FeedbackRowShape;
 export type FeedbackRepository = FeedbackRepositoryShape;
 export type BuildRow = BuildRowShape;
@@ -213,6 +226,10 @@ export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;
 export type TenantDataObjectPage = TenantDataObjectPageShape;
 export type { TenantDataRepo };
+export type HearingScreenshotRow = HearingScreenshotRowShape;
+export type { HearingScreenshotsRepo };
+export type HearingShareTokenRow = HearingShareTokenRowShape;
+export type { HearingShareTokensRepo };
 // feat-notion-integration。mode の値域は zod 側 (@harness-hub/schemas) が単一ソースを持つため、
 // ここでは行の型と入出力の型だけを公開する (他 studio extension と同じ理由)。
 export type NotionIntegrationRow = NotionIntegrationRowShape;
@@ -255,6 +272,7 @@ export const InvalidStageTransitionError = InvalidStageTransitionErrorLeaf;
 export const StageCasConflictError = StageCasConflictErrorLeaf;
 export const PublishRequestNotPublishedError = PublishRequestNotPublishedErrorLeaf;
 export const MetricsIdempotencyKeyReuseError = MetricsIdempotencyKeyReuseErrorLeaf;
+export const ExternalDocumentPreconditionError = ExternalDocumentPreconditionErrorLeaf;
 
 /** P13 smoke の schema 非公開 DB probe。アプリ層に table 定義を渡さない。 */
 export function createPublishSmokeDbProbe(adapter: CoreAdapter): PublishSmokeDbProbe {
@@ -357,6 +375,24 @@ export function createTenantDataRepository(input: TenantDataRepositoryInput): Te
     createTenantDataRegistry(input.bucket),
     createAuditRepo(input.adapter),
   );
+}
+
+/**
+ * ヒアリングシート添付スクリーンショットの repository facade (feat-hearing-intake 追加要件)。
+ * `TenantDataRepositoryInput` と同じ bucket 依存を要求する — 実体の暗号化・格納は
+ * `createTenantDataRepository` と全く同じ機序 (kind='hearing_screenshot') を内部で使い回すため、
+ * 呼び出し側に「2 系統の R2 bucket を用意する」ような誤解を生ませない。
+ */
+export function createHearingScreenshotsRepository(input: TenantDataRepositoryInput): HearingScreenshotsRepo {
+  return createHearingScreenshotsRepo(input.adapter, createTenantDataRepository(input));
+}
+
+/**
+ * ヒアリング結果受け渡し用トークンの repository facade (feat-hearing-intake 追加要件、API 方式)。
+ * bucket を要求しない (トークン自体は R2 を持たず、DB 行のみ)。
+ */
+export function createHearingShareTokensRepository(adapter: CoreAdapter): HearingShareTokensRepo {
+  return createHearingShareTokensRepo(adapter);
 }
 
 /**

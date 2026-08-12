@@ -4,7 +4,9 @@
 
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
-export const TENANT_DATA_OBJECT_KINDS = ['knowledge_doc', 'run_input', 'run_output'] as const;
+// 'hearing_screenshot' はヒアリングシートの添付画像 (feat-hearing-intake 追加要件)。
+// 暗号化・R2 格納・削除の機序を tenant_data_objects からそのまま再利用し、別テーブルを作らない。
+export const TENANT_DATA_OBJECT_KINDS = ['knowledge_doc', 'run_input', 'run_output', 'hearing_screenshot'] as const;
 
 export const tenantDataObjects = sqliteTable(
   'tenant_data_objects',
