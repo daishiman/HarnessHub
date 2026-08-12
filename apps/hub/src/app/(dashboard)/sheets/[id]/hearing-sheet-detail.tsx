@@ -17,6 +17,10 @@ import {
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { DateTimeText } from '../../../../components/format/date-time-text.js';
+import {
+  buildHarnessCreatorHandoff,
+  buildSystemOrchestratorHandoff,
+} from '../../../../features/hearing-intake/export-adapter/index.js';
 
 const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
   loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
@@ -44,6 +48,66 @@ const AI_JOB_STATUS_LABELS: Readonly<Record<NonNullable<SheetDetail['ai_job_stat
   failed: '生成に失敗（再試行待ち）',
   dead: '生成を完了できませんでした',
 };
+
+/**
+ * 引き渡し用テキストの 1 ブロック。プレーンテキスト表示 (`<pre>`) のみで、
+ * HTML としてはレンダリングしない (MarkdownView の sanitize 契約 HI-SEC7 に抵触しないため)。
+ * クリップボード API が失敗しても例外を投げっぱなしにせず、エラー表示へフォールバックする。
+ */
+function HandoffBlock({ title, text }: { readonly title: string; readonly text: string }): ReactNode {
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle');
+
+  const copy = useCallback(async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyState('copied');
+      window.setTimeout(() => setCopyState('idle'), 2_000);
+    } catch {
+      setCopyState('error');
+    }
+  }, [text]);
+
+  return (
+    <section aria-label={title}>
+      <div
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: 'var(--hh-space-3)',
+          justifyContent: 'space-between',
+          marginBottom: 'var(--hh-space-2)',
+        }}
+      >
+        <h3 style={{ margin: 0 }}>{title}</h3>
+        <Button type="button" variant="secondary" onClick={() => void copy()}>
+          {copyState === 'copied' ? 'コピーしました' : 'コピー'}
+        </Button>
+      </div>
+      <div aria-live="polite">
+        {copyState === 'error' ? (
+          <Alert
+            tone="danger"
+            title="コピーに失敗しました"
+            description="クリップボードへのアクセスが許可されていない可能性があります。下のテキストを選択して手動でコピーしてください。"
+          />
+        ) : null}
+      </div>
+      <pre
+        style={{
+          background: 'var(--hh-color-surface)',
+          border: '1px solid var(--hh-color-border)',
+          borderRadius: 'var(--hh-radius-sm)',
+          overflowX: 'auto',
+          padding: 'var(--hh-space-3)',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        }}
+      >
+        {text}
+      </pre>
+    </section>
+  );
+}
 
 export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDetailProps): ReactNode {
   const [sheet, setSheet] = useState<SheetDetail | null>(null);
@@ -265,6 +329,27 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
             ]}
           />
         </Panel>
+
+        <div data-print-exclude="">
+          <Panel
+            title="引き渡し用テキスト"
+            description="次の作業へそのまま貼り付けられる形式でまとめています。プレーンテキストなのでコピー先の書式は崩れません。"
+          >
+            <Stack gap={4}>
+              <HandoffBlock
+                title="HarnessCreator 向け"
+                text={buildHarnessCreatorHandoff({ formSnapshot: sheet.form_snapshot, generatedSections: sections })}
+              />
+              <HandoffBlock
+                title="システム開発向け"
+                text={buildSystemOrchestratorHandoff({
+                  formSnapshot: sheet.form_snapshot,
+                  generatedSections: sections,
+                })}
+              />
+            </Stack>
+          </Panel>
+        </div>
 
         {sheet.can_manage ? (
           <div data-print-exclude="">
