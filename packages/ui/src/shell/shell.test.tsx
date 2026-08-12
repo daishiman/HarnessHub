@@ -376,6 +376,25 @@ describe('Panel / ScreenHeader / ActionLink', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'シート詳細' })).toBeDefined();
     expect(screen.getByRole('link', { name: '新規作成' }).getAttribute('href')).toBe('/sheets/new');
   });
+
+  it('ActionLink は明示時だけ別タブを安全に開く', () => {
+    renderWithUi(
+      <>
+        <ActionLink href="/device" openInNewTab>
+          Device 承認
+        </ActionLink>
+        <ActionLink href="/sheets/new">新規作成</ActionLink>
+      </>,
+    );
+
+    const externalFlow = screen.getByRole('link', { name: 'Device 承認' });
+    expect(externalFlow.getAttribute('target')).toBe('_blank');
+    expect(externalFlow.getAttribute('rel')).toBe('noopener noreferrer');
+
+    const sameTab = screen.getByRole('link', { name: '新規作成' });
+    expect(sameTab.getAttribute('target')).toBeNull();
+    expect(sameTab.getAttribute('rel')).toBeNull();
+  });
 });
 
 describe('buildShellCss', () => {

@@ -87,6 +87,14 @@ export interface ActionLinkProps {
   href: string;
   /** 見た目の強さ。既定は控えめな枠線つき。 */
   variant?: 'primary' | 'secondary' | undefined;
+  /**
+   * true の場合、別タブで開く (`target="_blank"`)。
+   *
+   * 遷移先が今の画面と別の文脈 (別のワークスペース外フローなど) に切り替わり、
+   * 今の入力状態やナビゲーションを保ったまま行き来したい場合に使う。
+   * 既定 (false) は同一タブ遷移で、「新規作成」など画面そのものを差し替える操作に使う。
+   */
+  openInNewTab?: boolean | undefined;
   children: ReactNode;
 }
 
@@ -96,12 +104,19 @@ export interface ActionLinkProps {
  * 「新規作成」などは遷移なので `<a>` のままにする。`<button>` + `router.push` にすると
  * 新しいタブで開く・URL をコピーするといったブラウザの当たり前が使えなくなる。
  */
-export function ActionLink({ href, variant = 'secondary', children }: ActionLinkProps): ReactNode {
+export function ActionLink({
+  href,
+  variant = 'secondary',
+  openInNewTab = false,
+  children,
+}: ActionLinkProps): ReactNode {
   const primary = variant === 'primary';
 
   return (
     <a
       href={href}
+      target={openInNewTab ? '_blank' : undefined}
+      rel={openInNewTab ? 'noopener noreferrer' : undefined}
       data-hh-focusable=""
       data-variant={variant}
       style={{
