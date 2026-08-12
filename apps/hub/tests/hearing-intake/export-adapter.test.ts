@@ -10,7 +10,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildHarnessCreatorHandoff,
+  buildHarnessCreatorHandoffInstruction,
   buildSystemOrchestratorHandoff,
+  buildSystemOrchestratorHandoffInstruction,
   type GeneratedSections,
 } from '../../src/features/hearing-intake/export-adapter/index.js';
 
@@ -36,6 +38,10 @@ const BASE_FORM_SNAPSHOT: HearingSheetFormSnapshot = {
   constraintTags: ['time', 'budget'],
   shareTarget: 'チーム内の経理担当',
   knowledgeAssets: ['経理マニュアル v3', '過去の仕訳ルール一覧'],
+  requestPatterns: [],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 const GENERATED_SECTIONS: GeneratedSections = {
@@ -111,7 +117,8 @@ describe('HI-EXPORT: HarnessCreator 向け引き渡しテキスト', () => {
     });
     const text = buildHarnessCreatorHandoff({ formSnapshot: legacy, generatedSections: null });
 
-    expect(text).toContain('未回答（旧形式のシート）');
+    // 旧 11 項目は decode 時に usagePurpose=unknown 等へ補完する。推測ラベルは出さない。
+    expect(text).toContain('不明・わからない');
     expect(text).not.toMatch(/undefined|null/);
     expect(text).not.toContain('アプリ開発');
   });
@@ -166,5 +173,30 @@ describe('HI-EXPORT: システム開発向け引き渡しテキスト', () => {
     const text = buildSystemOrchestratorHandoff({ formSnapshot: BASE_FORM_SNAPSHOT, generatedSections: null });
 
     expect(text).not.toMatch(/salary|年収/i);
+  });
+});
+
+describe('HI-EXPORT: トークン付き共有URL方式の誘導文 (instruction_text)', () => {
+  const SHARE_URL = 'https://hub.example.com/api/hearing/tok_abc123';
+
+  it('HI-EXPORT-010: HarnessCreator 向け誘導文はトークンURLを含む', () => {
+    const text = buildHarnessCreatorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(text).toContain(SHARE_URL);
+  });
+
+  it('HI-EXPORT-011: システム開発向け誘導文はトークンURLを含む', () => {
+    const text = buildSystemOrchestratorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(text).toContain(SHARE_URL);
+  });
+
+  it('HI-EXPORT-012: audience ごとに誘導文の文面が異なる', () => {
+    const harnessText = buildHarnessCreatorHandoffInstruction({ shareUrl: SHARE_URL });
+    const systemText = buildSystemOrchestratorHandoffInstruction({ shareUrl: SHARE_URL });
+
+    expect(harnessText).not.toBe(systemText);
+    expect(harnessText).toContain('HarnessCreator');
+    expect(systemText).toContain('開発計画');
   });
 });

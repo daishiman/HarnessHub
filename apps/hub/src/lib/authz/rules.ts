@@ -161,6 +161,16 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   'tenant-data.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'tenant-data.read_content': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'tenant-data.delete': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+
+  // feat-hearing-intake 追加要件 (トークン付き共有URL方式)。
+  // screenshots / handoff-tokens はどちらも「自分が作った sheet」に対してのみ扱える運用が
+  // 自然なため、`sheets.read_own`/`sheets.create` と同型 (selfOnly: true, minRole: member)。
+  'sheets.screenshots.upload': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.screenshots.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.screenshots.delete': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.issue': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
+  'sheets.handoff_tokens.revoke': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: true },
 };
 
 export function findActionRule(action: string): ActionRule | null {

@@ -72,6 +72,8 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.hearingSheets,
       hearingIntake.aiJobs,
       hearingIntake.displayCodeCounters,
+      hearingIntake.hearingScreenshots,
+      hearingIntake.hearingShareTokens,
       hearingIntake.tenantCoefficients,
       tenantData.tenantDataObjects,
       tenantDataTombstones.tenantDataTombstones,

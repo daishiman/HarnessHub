@@ -140,18 +140,24 @@ claim token・tenant・`ref_type/ref_id` の一致は repository の CAS
 
 | 画面 | route | 最小 role | 消費 API | 共通部品 | 主要素 |
 |---|---|---|---|---|---|
-| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 4 ステップ + 完了パネル |
+| **S10** ヒアリングウィザード | `/sheets/new` | member | `POST /api/v1/sheets` | `StepWizard` (packages/ui) | 上位4大工程を8画面に分割 + 完了パネル |
 | **S11** シート一覧 | `/sheets` | member | `GET /api/v1/sheets` | `DataTable` | 6 列 / モバイルはカード |
-| **S12** シート詳細 | `/sheets/[id]` | member | `GET /api/v1/sheets/:id`、admin: `PATCH`・`POST :id/regenerate` | `MarkdownView` | 生成本文 + snapshot + メタ |
+| **S12** シート詳細 | `/sheets/[id]` | member | `GET /api/v1/sheets/:id`、admin: `PATCH`・`POST :id/regenerate`、screenshots / handoff-tokens | `MarkdownView` | 生成本文 + snapshot + 引き渡し + 添付 |
 
-### S10: 4 ステップの割り当て (FormData 12 項目)
+### S10: 8 画面の割り当て (FormData 28 項目 / 2026-08-12 追補)
 
-| step | 項目 | 検証 |
+上位仕様の4大工程 (基本情報 → 業務詳細 → 要件 → 確認) は維持する。入力負荷を下げるため実画面を次の8画面へ分割する。
+
+| 画面 | 項目 | 検証 |
 |---|---|---|
-| Step1 基本 | `taskName, company, applicant, domain` | step 単位 validation (必須) |
-| Step2 現状 | `issue, tools, hours, people, salary` | `hours`/`people`/`salary` は数値範囲検査 |
-| Step3 要望 | `features, output, priority` | 必須 + enum |
-| Step4 確認 + 試算 | 全項目の確認表示 | **時間削減の参考表示のみ・金額なし** (AD-6) |
+| 1 基本情報 | `taskName, company, applicant, domain` | step 単位 validation (必須) |
+| 2 現状 | `issue, tools, hours, people, salary` | `hours`/`people`/`salary` は数値範囲検査 |
+| 3 用途プロファイル | `usagePurpose, expertise, role, context, motivation, sharingIntent, constraintTags, shareTarget, knowledgeAssets` | 単一選択は `unknown` 初期値。`shareTarget`/`knowledgeAssets` 必須 |
+| 4 よくある要望パターン | `requestPatterns` と条件付き `integrationTools*` / `automationDescription` / `existingDataSources*` | 親パターン未選択時は条件付き項目を送らない |
+| 5 参考URL・添付 | `referenceUrls` (最大10)。screenshot 自体は S12 で扱う | URL 形式・件数上限 |
+| 6 要望 | `features, output, priority` | 必須 + enum |
+| 7 整理・まとめ | 全入力の再掲 + 時間削減の参考値 | **金額なし** (AD-6) |
+| 8 確認 | 送信意思の最終確認 | 送信前の意思確認 |
 
 - 進捗表示・戻る/次へ・キーボード操作・step 単位 validation は `packages/ui` の `StepWizard` (`StepWizardProps` / `WizardStep`) が担保する。**独自ウィザードを実装しない** (qa-022)。
 - 途中状態は `sessionStorage` に保持し、誤離脱ダイアログを出す。

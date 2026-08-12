@@ -37,7 +37,10 @@ export function knowledgeAssetsValidationError(assets: readonly string[]): strin
   return undefined;
 }
 
-/** StepWizard の「次へ」と最終 POST 直前が共有する入力判定。 */
+/**
+ * 8 画面ウィザードの「次へ」と最終 POST 直前が共有する入力判定。
+ * 画面 index は S10 information-design の 0..7 と一致する。
+ */
 export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex: number): boolean {
   switch (stepIndex) {
     case 0:
@@ -73,11 +76,25 @@ export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex:
       );
     case 3:
       return (
+        (!form.requestPatterns.includes('integration') ||
+          (form.integrationTools.length >= 1 &&
+            (!form.integrationTools.includes('other') ||
+              textWithinLimit(form.integrationToolsOther ?? '', HEARING_SHEET_FORM_LIMITS.shortTextLength)))) &&
+        (!form.requestPatterns.includes('data_digitization') ||
+          (form.existingDataSources.length >= 1 &&
+            (!form.existingDataSources.includes('other') ||
+              textWithinLimit(form.existingDataSourcesOther ?? '', HEARING_SHEET_FORM_LIMITS.shortTextLength))))
+      );
+    case 4:
+      return true;
+    case 5:
+      return (
         textWithinLimit(form.features, HEARING_SHEET_FORM_LIMITS.requiredTextLength) &&
         textWithinLimit(form.output, HEARING_SHEET_FORM_LIMITS.requiredTextLength)
       );
-    case 4:
-      return [0, 1, 2, 3].every((index) => hearingIntakeStepIsValid(form, index));
+    case 6:
+    case 7:
+      return [0, 1, 2, 3, 4, 5].every((index) => hearingIntakeStepIsValid(form, index));
     default:
       return false;
   }

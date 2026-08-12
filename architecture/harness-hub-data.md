@@ -214,3 +214,12 @@ control-plane DB、schema migration、保存形式、export、restore、デー�
 - 正本は [database](../system-spec/database.md)、実装受領は
   [metrics 受領書](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
   [build-pipeline 受領書](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。
+
+## 2026-08-12 hearing-intake screenshots / share tokens (MVP)
+
+**Beads**: `HarnessHub-370h` / migration `0010_hearing-intake-screenshots-and-share-tokens.sql`
+
+- 追加テーブル: `hearing_screenshots` (メタ) / `hearing_share_tokens` (token_hash のみ)。
+- 画像実体は既存 `tenant_data_objects` (kind=`hearing_screenshot`) の封筒暗号化を再利用する。
+- backup/restore・tenant isolation・table registry に両テーブルを結線する。
+- 詳細正本: `docs/backend-spec.md` §2.3。

@@ -14,6 +14,7 @@ import type { CoreAdapter } from '../../repository/db';
 import { createDocsCmsRepository } from '../../repository/docs-cms';
 import { createFeedbackRepository } from '../../repository/feedback-loop';
 import { createHearingIntakeRepository } from '../../repository/hearing-intake';
+import { createHearingShareTokensRepo } from '../../repository/hearing-share-tokens';
 import { createIdpConnectionsRepo } from '../../repository/idp';
 import { createMetricsTrackingRepository } from '../../repository/metrics-tracking';
 import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../../repository/misc';
@@ -27,7 +28,7 @@ import { catalogEntries, deploymentReferences, projects } from '../../schema/cor
 import { userSettings, workspaces } from '../../schema/core/identity';
 import { deviceAuthorizations, publisherTokens, publishRequests } from '../../schema/core/publish';
 import { smokeFixtureLeases } from '../../schema/core/smoke';
-import { tenantCoefficients } from '../../schema/hearing-intake/schema';
+import { hearingScreenshots, tenantCoefficients } from '../../schema/hearing-intake/schema';
 import { tenantDataObjects } from '../../schema/tenant-data/schema';
 import { tenantDataTombstones } from '../../schema/tenant-data/tombstones';
 import { createRepositoryContext } from '../../src/context';
@@ -244,7 +245,7 @@ async function seedTenant(
   });
 
   const hearing = createHearingIntakeRepository(adapter);
-  await hearing.createSheetAndEnqueue(context, {
+  const hearingSheet = await hearing.createSheetAndEnqueue(context, {
     workspaceId,
     title: `Fixture hearing ${slug}`,
     applicantUserId: user.id,
@@ -344,14 +345,40 @@ async function seedTenant(
     id: tenantDataId,
     tenantId: tenant.id,
     workspaceId,
-    kind: 'knowledge_doc',
-    title: `Fixture doc ${slug}`,
-    r2Key: `tenant/${tenant.id}/${workspaceId}/knowledge_doc/${tenantDataId}`,
+    kind: 'hearing_screenshot',
+    title: `Fixture screenshot ${slug}`,
+    r2Key: `tenant/${tenant.id}/${workspaceId}/hearing_screenshot/${tenantDataId}`,
     sizeBytes: 128,
     contentHash: await sha256Hex(new TextEncoder().encode(`tenant-data-${slug}`)),
     encKeyVersion: tenantDataKeyVersion,
     uploadedBy: user.id,
     createdAt: Date.now(),
+  });
+
+  // hearing_screenshots は tenant_data_objects と sheet の双方を参照する薄い metadata 行。
+  // fixture でも同じ依存閉包を作り、backup/restore と tenant 分離検査が2表を実データで通るようにする。
+  await adapter.client.insert(hearingScreenshots).values({
+    id: newUlid(),
+    tenantId: tenant.id,
+    workspaceId,
+    sheetId: hearingSheet.id,
+    tenantDataObjectId: tenantDataId,
+    title: `Fixture screenshot ${slug}`,
+    linkedItem: 'issue',
+    note: `Fixture screenshot note ${slug}`,
+    contentType: 'image/png',
+    createdBy: user.id,
+    createdAt: Date.now(),
+  });
+
+  await createHearingShareTokensRepo(adapter).create(context, {
+    id: newUlid(),
+    workspaceId,
+    sheetId: hearingSheet.id,
+    audience: 'harness_creator',
+    tokenHash: await sha256Hex(`hearing-share-token-${slug}`),
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    createdByUserId: user.id,
   });
 
   // tombstone: 過去に削除された tenant_data の痕跡 (TC-8 backup restore 検証が読む対象)。

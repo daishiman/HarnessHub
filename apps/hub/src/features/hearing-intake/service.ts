@@ -4,8 +4,8 @@ import {
   type CreateSheetResponse,
   createHearingSheetFormSnapshot,
   createSheetResponseSchema,
+  decodeStoredHearingSheetFormSnapshot,
   type HearingSheetStatus,
-  normalizeHearingSheetFormSnapshot,
   type SheetDetail,
   type SheetListQuery,
   type SheetListResponse,
@@ -57,7 +57,7 @@ function parseJson<T>(value: string): T {
 }
 
 function toListItem(row: HearingSheetRow) {
-  const form = normalizeHearingSheetFormSnapshot(parseJson(row.formJson));
+  const form = decodeStoredHearingSheetFormSnapshot(parseJson(row.formJson));
   return {
     id: row.id,
     code: row.code,
@@ -74,7 +74,7 @@ function toListItem(row: HearingSheetRow) {
 
 function toDetail(row: HearingSheetRow): SheetDetail {
   const result = parseGenerationResult(row.aiJobResultJson);
-  const form = normalizeHearingSheetFormSnapshot(parseJson(row.formJson));
+  const form = decodeStoredHearingSheetFormSnapshot(parseJson(row.formJson));
   return sheetDetailSchema.parse({
     id: row.id,
     code: row.code,

@@ -28,11 +28,15 @@ const VALID_FORM: HearingSheetFormInput = {
   constraintTags: [],
   shareTarget: 'チーム内',
   knowledgeAssets: ['経理マニュアル'],
+  requestPatterns: ['unknown'],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
-  it('全 21 項目が有効なら各ステップと最終確認を通す', () => {
-    for (const index of [0, 1, 2, 3, 4]) {
+  it('全 28 項目が有効なら 8 画面の各ステップと最終確認を通す', () => {
+    for (const index of [0, 1, 2, 3, 4, 5, 6, 7]) {
       expect(hearingIntakeStepIsValid(VALID_FORM, index)).toBe(true);
     }
   });
@@ -62,9 +66,9 @@ describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
     expect(
       hearingIntakeStepIsValid(
         { ...VALID_FORM, features: 'a'.repeat(HEARING_SHEET_FORM_LIMITS.requiredTextLength + 1) },
-        3,
+        5,
       ),
     ).toBe(false);
-    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 4)).toBe(false);
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 7)).toBe(false);
   });
 });

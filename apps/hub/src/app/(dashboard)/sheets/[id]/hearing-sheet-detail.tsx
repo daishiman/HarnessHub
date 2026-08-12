@@ -17,6 +17,8 @@ import {
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { DateTimeText } from '../../../../components/format/date-time-text.js';
+import { HandoffTokensPanel } from '../../../../features/hearing-intake/components/handoff-tokens-panel.js';
+import { ScreenshotsPanel } from '../../../../features/hearing-intake/components/screenshots-panel.js';
 import {
   buildHarnessCreatorHandoff,
   buildSystemOrchestratorHandoff,
@@ -349,6 +351,14 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
               />
             </Stack>
           </Panel>
+        </div>
+
+        <div data-print-exclude="">
+          <ScreenshotsPanel id={id} tenantId={tenantId} workspaceId={workspaceId} />
+        </div>
+
+        <div data-print-exclude="">
+          <HandoffTokensPanel id={id} tenantId={tenantId} workspaceId={workspaceId} />
         </div>
 
         {sheet.can_manage ? (

@@ -72,6 +72,16 @@ import {
   type TenantCoefficientRow as TenantCoefficientRowShape,
 } from './hearing-intake';
 import {
+  createHearingScreenshotsRepo,
+  type HearingScreenshotRow as HearingScreenshotRowShape,
+  type HearingScreenshotsRepo,
+} from './hearing-screenshots';
+import {
+  createHearingShareTokensRepo,
+  type HearingShareTokenRow as HearingShareTokenRowShape,
+  type HearingShareTokensRepo,
+} from './hearing-share-tokens';
+import {
   createHearingSmokeDbProbe as createHearingSmokeDbProbeLeaf,
   type HearingSmokeDbProbe as HearingSmokeDbProbeShape,
   type HearingSmokeJobSnapshot as HearingSmokeJobSnapshotShape,
@@ -207,6 +217,10 @@ export type TenantDataUploadInput = TenantDataUploadInputShape;
 export type TenantDataListInput = TenantDataListInputShape;
 export type TenantDataObjectPage = TenantDataObjectPageShape;
 export type { TenantDataRepo };
+export type HearingScreenshotRow = HearingScreenshotRowShape;
+export type { HearingScreenshotsRepo };
+export type HearingShareTokenRow = HearingShareTokenRowShape;
+export type { HearingShareTokensRepo };
 
 /** Studio feature も leaf factory を直接公開せず、この facade からだけ組み立てる。 */
 export function createHearingIntakeRepository(adapter: CoreAdapter): HearingIntakeRepository {
@@ -346,4 +360,22 @@ export function createTenantDataRepository(input: TenantDataRepositoryInput): Te
     createTenantDataRegistry(input.bucket),
     createAuditRepo(input.adapter),
   );
+}
+
+/**
+ * ヒアリングシート添付スクリーンショットの repository facade (feat-hearing-intake 追加要件)。
+ * `TenantDataRepositoryInput` と同じ bucket 依存を要求する — 実体の暗号化・格納は
+ * `createTenantDataRepository` と全く同じ機序 (kind='hearing_screenshot') を内部で使い回すため、
+ * 呼び出し側に「2 系統の R2 bucket を用意する」ような誤解を生ませない。
+ */
+export function createHearingScreenshotsRepository(input: TenantDataRepositoryInput): HearingScreenshotsRepo {
+  return createHearingScreenshotsRepo(input.adapter, createTenantDataRepository(input));
+}
+
+/**
+ * ヒアリング結果受け渡し用トークンの repository facade (feat-hearing-intake 追加要件、API 方式)。
+ * bucket を要求しない (トークン自体は R2 を持たず、DB 行のみ)。
+ */
+export function createHearingShareTokensRepository(adapter: CoreAdapter): HearingShareTokensRepo {
+  return createHearingShareTokensRepo(adapter);
 }

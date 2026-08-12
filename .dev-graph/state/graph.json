@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1554,
+  "graph_revision": 1558,
   "nodes": [
     {
       "acceptance": [
@@ -59233,6 +59233,148 @@
       "title": "uypz 複数監査 dispatch schema 1.2 最終レビュー handoff",
       "tracker_binding": "beads",
       "updated_at": "2026-08-11T07:39:51Z"
+    },
+    {
+      "acceptance": [
+        "30思考法すべての分析結果が揃う",
+        "公開共有・画像・トークン・tenant 認可の安全境界がテストで固定される",
+        "schema・DB・repository・API・UI・仕様の依存鎖が整合する",
+        "関連 typecheck・test・lint が成功する",
+        "矛盾なし・漏れなし・整合性あり・依存関係整合がすべて PASS"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-370h",
+        "linked_at": "2026-08-12T06:17:42.806262Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hearing-intake-pr705-elegant-review-20260812.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "PR と作業ツリーの具体的な実装欠陥を修正・検証する単一のレビュー改善課題。",
+      "completion_evidence": {
+        "completed_at": "2026-08-12T06:55:26Z",
+        "evidence_refs": [
+          "issues/hearing-intake-pr705-elegant-review-20260812.md",
+          "apps/hub/tests/hearing-intake/contracts-compatibility.test.ts",
+          "apps/hub/tests/hearing-intake/public-hearing-route.test.ts",
+          "apps/hub/tests/hearing-intake/safe-image.test.ts",
+          "apps/hub/tests/hearing-intake/handoff-routes.test.ts",
+          "apps/hub/tests/hearing-intake/wizard-structure.test.ts",
+          "packages/db/__tests__/hearing-share-repositories.test.ts",
+          "packages/db/__tests__/migration-lineage.test.ts",
+          "packages/db/__tests__/backup-restore.test.ts"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-12T06:56:00Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "15aa5fa85e2b0d16eef1e65590b542ac7531a92f528a8a4b88924aa152bc8b52",
+        "evaluator": "2026-08-12 の思考リセット後30思考法レビュー",
+        "evidence_ref": "issues/hearing-intake-pr705-elegant-review-20260812.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-12T00:00:00Z",
+      "depends_on": [],
+      "domain": "fullstack",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hearing-intake-pr705-elegant-review-20260812.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "30思考法の分析結果を反映し、矛盾なし・漏れなし・整合性あり・依存関係整合の4条件をすべて満たす。",
+      "graph_node_id": "issue-hearing-intake-pr705-elegant-review-20260812",
+      "implementation_readiness": {
+        "checked_at": "2026-08-12T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [
+        {
+          "base_branch": "main",
+          "closing_reference_verified": false,
+          "head_branch": "feat/hearing-intake-usage-axes",
+          "linked_at": "2026-08-12T06:00:00Z",
+          "merge_commit_sha": null,
+          "merged_at": null,
+          "pr_number": 705,
+          "repo": "daishiman/HarnessHub",
+          "state": "open",
+          "url": "https://github.com/daishiman/HarnessHub/pull/705"
+        }
+      ],
+      "purpose": "現在の PR と作業ツリーに含まれるヒアリング intake 拡張を、先入観なしで多角的に再検証し、安全で最小複雑性の実装へ整える。",
+      "related_nodes": [],
+      "resource_scope": [
+        "apps/hub/src/features/hearing-intake/",
+        "apps/hub/src/app/api/hearing/",
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/app/(dashboard)/sheets/",
+        "packages/schemas/hearing-intake/",
+        "packages/db/schema/hearing-intake/",
+        "packages/db/repository/hearing-screenshots.ts",
+        "packages/db/repository/hearing-share-tokens.ts"
+      ],
+      "scope_in": [
+        "PR #705 の変更",
+        "現在の未コミット・未追跡のヒアリング intake 拡張",
+        "検出欠陥の実装修正と回帰テスト",
+        "関連仕様の実装状態への同期"
+      ],
+      "scope_out": [
+        "成果物の削除",
+        "他 PR・他機能の無関係な変更",
+        "本番デプロイと外部サービス mutation"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-12T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-12",
+      "status": "closed",
+      "tags": [
+        "hearing-intake",
+        "security",
+        "elegant-review",
+        "pr-705"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "PR #705 と未コミット拡張を30思考法で再検証し整合させる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-12T06:58:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

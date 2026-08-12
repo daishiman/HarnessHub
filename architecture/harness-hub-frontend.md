@@ -291,3 +291,12 @@ PR #700 の G13（画面ごとの初期 client JS 予算）回復では、超過
 上限まで364 bytesだった公開画面の client 本体を route-local `next/dynamic` へ分離した。共通 shell に置いていた
 `StickyHeaderOffset` も、sticky filter/table を持つ画面だけへ移した。API、認可、DB、
 画面状態の意味は変えず、screen-pattern gate が動的 import 先まで辿ることで検査閉包を維持する。
+
+## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
+
+**Beads**: `HarnessHub-370h`
+
+- S10 は system-spec の4大工程を維持したまま **8 画面** に分割 (FormData 28 項目)。
+- S12 に引き渡し用テキスト・スクリーンショット・Claude Code 向けトークン発行パネルを追加。
+- wizard 実装は `hearing-intake-wizard-{model,state,steps}.tsx` へ責務分割し、共通 `StepWizard` を消費する。
+- 詳細正本: `docs/frontend-spec.md` §3.2、`docs/features/feat-hearing-intake/information-design/S10.md` / `S12.md`。

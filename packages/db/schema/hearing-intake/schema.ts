@@ -83,6 +83,60 @@ export const displayCodeCounters = sqliteTable(
   (t) => [primaryKey({ columns: [t.tenantId, t.kind] })],
 );
 
+/**
+ * ヒアリングシート添付スクリーンショットのメタデータ (feat-hearing-intake 追加要件)。
+ * 実体 (暗号化 blob) は `tenant_data_objects` (kind='hearing_screenshot') が持つ。
+ * ここは「どのシートのどの項目に紐づく画像か」と content_type (tenant_data_objects には無い) だけを持つ。
+ */
+export const hearingScreenshots = sqliteTable(
+  'hearing_screenshots',
+  {
+    id: text('id').primaryKey(),
+    tenantId: text('tenant_id').notNull(),
+    workspaceId: text('workspace_id').notNull(),
+    sheetId: text('sheet_id').notNull(),
+    tenantDataObjectId: text('tenant_data_object_id').notNull(),
+    title: text('title').notNull(),
+    linkedItem: text('linked_item'),
+    note: text('note'),
+    contentType: text('content_type').notNull(),
+    createdBy: text('created_by').notNull(),
+    createdAt: integer('created_at').notNull(),
+  },
+  (t) => [
+    uniqueIndex('hearing_screenshots_tenant_data_object_uq').on(t.tenantDataObjectId),
+    index('hearing_screenshots_tenant_sheet_created_idx').on(t.tenantId, t.sheetId, t.createdAt),
+  ],
+);
+
+/**
+ * ヒアリング結果の受け渡し用トークン (feat-hearing-intake 追加要件、API 方式)。
+ * device_authorizations/publisher_tokens (auth-tenancy) と同じ CAS 方針: token 本体はハッシュのみ保存し、
+ * 失効は `revoked_at IS NULL` を条件にした compare-and-swap で行う (二重失効・再利用を並行要求から守る)。
+ */
+export const hearingShareTokens = sqliteTable(
+  'hearing_share_tokens',
+  {
+    id: text('id').primaryKey(),
+    tenantId: text('tenant_id').notNull(),
+    workspaceId: text('workspace_id').notNull(),
+    sheetId: text('sheet_id').notNull(),
+    audience: text('audience', { enum: ['harness_creator', 'system_orchestrator'] }).notNull(),
+    /** token は SHA-256 ハッシュのみ保存する (平文は発行応答にしか存在しない)。 */
+    tokenHash: text('token_hash').notNull(),
+    expiresAt: integer('expires_at').notNull(),
+    revokedAt: integer('revoked_at'),
+    lastAccessedAt: integer('last_accessed_at'),
+    accessCount: integer('access_count').notNull().default(0),
+    createdByUserId: text('created_by_user_id').notNull(),
+    createdAt: integer('created_at').notNull(),
+  },
+  (t) => [
+    uniqueIndex('hearing_share_tokens_token_hash_uq').on(t.tokenHash),
+    index('hearing_share_tokens_tenant_sheet_created_idx').on(t.tenantId, t.sheetId, t.createdAt),
+  ],
+);
+
 /** サーバ試算へ注入する tenant 別係数。未登録 tenant は adapter の既定値を使う。 */
 export const tenantCoefficients = sqliteTable('tenant_coefficients', {
   tenantId: text('tenant_id').primaryKey(),

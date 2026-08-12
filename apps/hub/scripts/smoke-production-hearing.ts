@@ -53,6 +53,10 @@ const FORM_INPUT: CreateSheetRequest = {
   constraintTags: [],
   shareTarget: 'チーム内',
   knowledgeAssets: ['過去の議事録テンプレート'],
+  requestPatterns: [],
+  integrationTools: [],
+  existingDataSources: [],
+  referenceUrls: [],
 };
 
 /** worker が返す生成結果。S12 詳細まで往復することを確認するため固定値にする。 */

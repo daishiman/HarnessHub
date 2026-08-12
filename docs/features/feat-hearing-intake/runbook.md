@@ -9,15 +9,17 @@ feature_package_id: feature-package/feat-hearing-intake
 
 ## S10〜S12の日常運用
 
-1. memberは `/sheets/new` の4ステップ12項目を入力する。
+1. memberは `/sheets/new` の8画面ウィザード (FormData 28項目) を入力する。上位の4大工程 (基本情報/業務詳細/要件/確認) は維持し、用途プロファイル・依頼パターン・参考URLを含む。
 2. 送信成功時に `HS-xxxx` と「生成中」を確認する。年収は試算だけに使われ保存されない。
 3. workerはDevice Flow token (`aijob:process`) で `/api/v1/ai-jobs/pull` を呼ぶ。
 4. 生成成功時は `/complete`、失敗時は `/fail` へ同じclaim tokenで書き戻す。
 5. S11 `/sheets` で状態を確認し、S12 `/sheets/[id]` でsanitize済みMarkdownを読む。
-6. status変更と再生成はworkspace-admin以上だけが行う。memberへ管理操作を代行させない。
+6. S12 でスクリーンショットを添付できる (PNG/JPEG/WebP)。Claude Code への引き渡しはトークン発行後に表示される指示文を1回だけコピーする。失効は S12 の無効化操作。
+7. status変更と再生成はworkspace-admin以上だけが行う。memberへ管理操作を代行させない。
 
 S11/S12は`generating`の間だけ30秒ごとに再取得する。Markdownの安全確認は共通
 `MarkdownView` が担うため、運用者がHTMLを手で除去したりDBのraw Markdownを書き換えたりしない。
+公開経路 `GET /api/hearing/:token` は session を持たない。無効・期限切れ・失効トークンはすべて同一404にする。
 
 ## AIキュー滞留監視 (qa-027)
 
@@ -61,6 +63,9 @@ pnpm check:client-bundle
 pnpm --filter @harness-hub/hub exec vitest run tests/hearing-intake
 ```
 
-本番migrationを先にdry-runし、新規4テーブルが適用対象であることを確認する。反映後は
-テストtenantで提出→pull→complete→S12表示までをsmokeする。失敗時は新規受付を止め、
-直前のHub Worker versionへ戻す。未完了jobは削除せず、原因修正後にlease再取得または再生成する。
+本番migrationを先にdry-runし、hearing 系テーブル
+(`hearing_sheets` / `ai_jobs` / `display_code_counters` / `tenant_coefficients` /
+`hearing_screenshots` / `hearing_share_tokens`) が適用対象であることを確認する。反映後は
+テストtenantで提出→pull→complete→S12表示→screenshot添付→handoff token発行までをsmokeする。
+失敗時は新規受付を止め、直前のHub Worker versionへ戻す。未完了jobは削除せず、原因修正後に
+lease再取得または再生成する。

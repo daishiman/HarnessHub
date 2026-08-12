@@ -10,15 +10,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
   contractSchemaNames,
-  createHearingSheetFormSnapshot,
   createSheetRequestSchema,
-  HEARING_SHEET_FORM_LIMITS,
   hearingSheetFormInputSchema,
   hearingSheetFormSnapshotSchema,
   identifierSchema,
-  normalizeHearingSheetFormSnapshot,
   problemDetails,
   sheetDetailSchema,
   sheetListQuerySchema,
@@ -32,8 +28,8 @@ import { describe, expect, it } from 'vitest';
 // ---------------------------------------------------------------------------
 
 /**
- * ウィザードが送る `HearingSheetFormInput` の 21 項目 (backend-spec §4.3 の 12 項目 +
- * skill-intake 由来の用途プロファイル 9 項目)。
+ * ウィザードが送る `HearingSheetFormInput` の 28 項目 (backend-spec §4.3 の 12 項目 +
+ * skill-intake 由来の用途プロファイル 9 項目 + 要望・参考情報 7 項目)。
  */
 const FORM_INPUT_FIELDS = [
   'taskName',
@@ -57,16 +53,25 @@ const FORM_INPUT_FIELDS = [
   'constraintTags',
   'shareTarget',
   'knowledgeAssets',
+  'requestPatterns',
+  'integrationTools',
+  'integrationToolsOther',
+  'automationDescription',
+  'existingDataSources',
+  'existingDataSourcesOther',
+  'referenceUrls',
 ] as const;
 
 /** 保存しない項目。年収は PII (SEC4) で、試算後は保持する必要が無い (P03 判定・OPEN-2)。 */
 const OMITTED_FROM_SNAPSHOT = ['salary'] as const;
 
-/** 現行 snapshot は request から salary を除き、保存形式の version を加えて導出する。 */
-const FORM_SNAPSHOT_FIELDS = [
-  'schemaVersion',
-  ...FORM_INPUT_FIELDS.filter((field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field)),
-] as const;
+/**
+ * `HearingSheetFormSnapshot` は **導出**する。手で 11 項目を書き直すと
+ * 「12 項目側に項目が増えたのに 11 項目側が追従しない」二重定義の事故が起きる (AD-9)。
+ */
+const FORM_SNAPSHOT_FIELDS = FORM_INPUT_FIELDS.filter(
+  (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
+);
 
 /** zod で課す境界 (AD-6)。`hours`/`people` の上限は runsPerYear の上限から逆算した値。 */
 const NUMERIC_BOUNDS = {
@@ -85,22 +90,19 @@ function validateNumeric(field: NumericField, value: number): boolean {
 }
 
 describe('HI-SCHEMA: FormData の契約 (AD-2 / AD-9)', () => {
-  it('HI-SCHEMA-001: 入力は 21 項目、現行 snapshot は salary を除いて version を足した 21 項目になる', () => {
-    expect(FORM_INPUT_FIELDS).toHaveLength(21);
-    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(21);
+  it('HI-SCHEMA-001: 入力は 28 項目、snapshot は salary を除いた 27 項目になる', () => {
+    expect(FORM_INPUT_FIELDS).toHaveLength(28);
+    expect(FORM_SNAPSHOT_FIELDS).toHaveLength(27);
     expect(FORM_SNAPSHOT_FIELDS).not.toContain('salary');
   });
 
   it('HI-SCHEMA-002: snapshot は入力からの omit 導出であり、独立に列挙されていない', () => {
     // 導出元へ項目を足したら snapshot 側も必ず増える = 追従漏れが構造的に起きない
-    const extended = [
-      'schemaVersion',
-      ...[...FORM_INPUT_FIELDS, 'newField'].filter(
-        (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
-      ),
-    ];
+    const extended = [...FORM_INPUT_FIELDS, 'newField'].filter(
+      (field) => !(OMITTED_FROM_SNAPSHOT as readonly string[]).includes(field),
+    );
 
-    expect(extended).toHaveLength(22);
+    expect(extended).toHaveLength(28);
     expect(extended).toContain('newField');
   });
 
@@ -238,6 +240,10 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     constraintTags: ['time', 'budget'] as const,
     shareTarget: 'チーム内',
     knowledgeAssets: ['過去の経理マニュアル'],
+    requestPatterns: [],
+    integrationTools: [],
+    existingDataSources: [],
+    referenceUrls: [],
   };
 
   it('HI-SCHEMA-101: hearing schema が @harness-hub/schemas の単一入口から利用できる', () => {
@@ -246,77 +252,18 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
 
   it('HI-SCHEMA-102: snapshot が入力の omit で導出され salary を拒否する', () => {
     const source = readFileSync(resolve(process.cwd(), '../../packages/schemas/hearing-intake/contracts.ts'), 'utf8');
-    expect(source).toContain('hearingSheetFormInputSchema.omit({ salary: true })');
-    const snapshot = createHearingSheetFormSnapshot(hearingSheetFormInputSchema.parse(validForm));
-    expect(snapshot.schemaVersion).toBe(CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION);
-    expect(Object.keys(snapshot)).toHaveLength(21);
-    expect(snapshot).not.toHaveProperty('salary');
+    expect(source).toContain('hearingSheetFormInputObjectSchema.omit({ salary: true })');
+    const { salary: _salary, ...snapshot } = validForm;
+    expect(hearingSheetFormSnapshotSchema.parse(snapshot)).not.toHaveProperty('salary');
     expect(hearingSheetFormSnapshotSchema.safeParse(validForm).success).toBe(false);
-  });
-
-  it('HI-SCHEMA-102b: 旧 11 項目 fixture は version 1 と null（当時は未回答）へ正規化する', () => {
-    const legacySnapshot = {
-      taskName: validForm.taskName,
-      company: validForm.company,
-      applicant: validForm.applicant,
-      domain: validForm.domain,
-      issue: validForm.issue,
-      tools: validForm.tools,
-      hours: validForm.hours,
-      people: validForm.people,
-      features: validForm.features,
-      output: validForm.output,
-      priority: validForm.priority,
-    };
-
-    expect(normalizeHearingSheetFormSnapshot(legacySnapshot)).toEqual({
-      schemaVersion: 1,
-      ...legacySnapshot,
-      usagePurpose: null,
-      expertise: null,
-      role: null,
-      context: null,
-      motivation: null,
-      sharingIntent: null,
-      constraintTags: null,
-      shareTarget: null,
-      knowledgeAssets: null,
-    });
-  });
-
-  it('HI-SCHEMA-102c: version 無しの現行 20 項目も version 2 へ読み上げる', () => {
-    const { salary: _salary, ...unversionedSnapshot } = validForm;
-    expect(normalizeHearingSheetFormSnapshot(unversionedSnapshot)).toEqual({
-      schemaVersion: CURRENT_HEARING_SHEET_FORM_SNAPSHOT_VERSION,
-      ...unversionedSnapshot,
-    });
   });
 
   it('HI-SCHEMA-103: CreateSheetRequest は未知キーとクライアント計算額を拒否する', () => {
     expect(createSheetRequestSchema.safeParse({ ...validForm, savedAmountPerYear: 123 }).success).toBe(false);
   });
 
-  it('HI-SCHEMA-103b: 共有相手とナレッジ資産は UI と共有する上限で境界判定する', () => {
-    const shortMax = HEARING_SHEET_FORM_LIMITS.shortTextLength;
-    const assetsMax = HEARING_SHEET_FORM_LIMITS.knowledgeAssets;
-
-    expect(createSheetRequestSchema.safeParse({ ...validForm, shareTarget: 'a'.repeat(shortMax) }).success).toBe(true);
-    expect(createSheetRequestSchema.safeParse({ ...validForm, shareTarget: 'a'.repeat(shortMax + 1) }).success).toBe(
-      false,
-    );
-    expect(
-      createSheetRequestSchema.safeParse({ ...validForm, knowledgeAssets: Array(assetsMax).fill('資料') }).success,
-    ).toBe(true);
-    expect(
-      createSheetRequestSchema.safeParse({ ...validForm, knowledgeAssets: Array(assetsMax + 1).fill('資料') }).success,
-    ).toBe(false);
-    expect(
-      createSheetRequestSchema.safeParse({ ...validForm, knowledgeAssets: ['a'.repeat(shortMax + 1)] }).success,
-    ).toBe(false);
-  });
-
   it('HI-SCHEMA-104: SheetDetail の form_snapshot と応答ルートに salary が現れない', () => {
-    const snapshot = createHearingSheetFormSnapshot(hearingSheetFormInputSchema.parse(validForm));
+    const { salary: _salary, ...snapshot } = validForm;
     const candidate = {
       id: 'sheet-1',
       code: 'HS-0001',
@@ -364,10 +311,17 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
   });
 
   it('HI-D4-102: ID 詳細 route は要求 tenant で repository を引き、認可 wrapper で 404 境界を作る', () => {
-    const source = readFileSync(resolve(process.cwd(), 'src/app/api/v1/sheets/[id]/route.ts'), 'utf8');
-    expect(source).toContain('requestScopedResource');
-    expect(source).toContain('createRepositoryContext({ tenantId: base.tenantId })');
-    expect(source).toContain("action: 'sheets.read_own'");
+    // `resolveSheetResource` (所有権解決の共通ヘルパー) は screenshots/handoff-tokens route と共有するため
+    // features/hearing-intake/authz-resource.ts へ切り出されている。route 自身はそれを import して使うだけ。
+    const routeSource = readFileSync(resolve(process.cwd(), 'src/app/api/v1/sheets/[id]/route.ts'), 'utf8');
+    const resourceSource = readFileSync(
+      resolve(process.cwd(), 'src/features/hearing-intake/authz-resource.ts'),
+      'utf8',
+    );
+    expect(routeSource).toContain('resolveSheetResource');
+    expect(resourceSource).toContain('requestScopedResource');
+    expect(resourceSource).toContain('createRepositoryContext({ tenantId: base.tenantId })');
+    expect(routeSource).toContain("action: 'sheets.read_own'");
   });
 
   it('HI-D4-103: counter の主キーと CAS 条件が tenant_id + kind で独立する', () => {

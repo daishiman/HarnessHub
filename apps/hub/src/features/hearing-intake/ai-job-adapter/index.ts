@@ -2,6 +2,7 @@
 
 import type { AiJobRow } from '@harness-hub/db';
 import {
+  decodeStoredSheetGenerationPayload,
   type HearingSheetEstimate,
   type HearingSheetFormSnapshot,
   type PulledAiJob,
@@ -30,10 +31,11 @@ export function buildSheetGenerationPayload(input: {
 }
 
 export function toPulledJob(row: AiJobRow): PulledAiJob {
+  const payload = decodeStoredSheetGenerationPayload(JSON.parse(row.payloadJson) as unknown);
   return pulledAiJobSchema.parse({
     id: row.id,
     kind: row.kind,
-    payload: JSON.parse(row.payloadJson) as unknown,
+    payload,
     lease_expires_at: row.leaseExpiresAt,
   });
 }

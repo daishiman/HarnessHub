@@ -215,3 +215,14 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 
 正本は [backend](../system-spec/backend.md)。詳細 ADR は各 feature の
 `docs/features/*/architecture-decision-record.md`。
+
+## 2026-08-12 hearing-intake 用途プロファイル / 共有トークン (MVP)
+
+**Beads**: `HarnessHub-370h` / graph node `issue-hearing-intake-pr705-elegant-review-20260812` / PR #705
+
+- FormData を 28 項目へ拡張し、`POST /api/v1/sheets` は用途プロファイル・依頼パターン・参考 URL を受け付ける。
+- 認証付き追加 API: `.../screenshots` (CRUD 最小) と `.../handoff-tokens` (発行/一覧/revoke)。
+- 公開 API: `GET /api/hearing/:token` と screenshot 中継。session なし。無効トークンは undifferentiated 404。
+- 認可: 公開経路は middleware 例外として exact path のみ。token_hash 照合後の sheet scope を正本とする。
+- 詳細正本: `docs/backend-spec-api-state.md` §4.3 / §4.3.1。feature ADR 追補は
+  `docs/features/feat-hearing-intake/architecture-decision-record.md` AD-2。

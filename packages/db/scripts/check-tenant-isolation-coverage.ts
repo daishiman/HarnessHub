@@ -8,12 +8,21 @@ import { join } from 'node:path';
 import { getTableColumns } from 'drizzle-orm';
 import type { SQLiteColumn } from 'drizzle-orm/sqlite-core';
 import { allTables, TENANT_SCOPE_EXEMPT } from '../schema/index';
+import { assertTableRegistryParity, canonicalMigrationTableNames } from './table-registry-parity';
 
 const PKG_ROOT = join(import.meta.dirname, '..');
 
 function fail(message: string): never {
   console.error(`[check:tenant-isolation-coverage] NG: ${message}`);
   process.exit(1);
+}
+
+// allTables 自身から期待集合を作るだけでは、registry への登録漏れを正常と誤認する。
+// canonical migration の実テーブル集合を独立入力にして、backup/isolation の依存閉包を先に検証する。
+try {
+  assertTableRegistryParity(canonicalMigrationTableNames(join(PKG_ROOT, 'migrations')), Object.keys(allTables));
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
 }
 
 const scoped: string[] = [];
@@ -76,6 +85,8 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   encryption_keys: 'cipher.ensureActiveDek',
   tenant_data_objects: 'tenantDataObjects',
   tenant_data_tombstones: 'tenantDataTombstones',
+  hearing_screenshots: 'hearingScreenshots',
+  hearing_share_tokens: 'createHearingShareTokensRepo',
 };
 const uncovered = scoped.filter((name) => {
   const symbol = SYMBOL_BY_TABLE[name];

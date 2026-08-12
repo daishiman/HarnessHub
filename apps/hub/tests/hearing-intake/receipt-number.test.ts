@@ -207,6 +207,10 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
           constraintTags: [],
           shareTarget: 'チーム内',
           knowledgeAssets: ['経理マニュアル'],
+          requestPatterns: [],
+          integrationTools: [],
+          existingDataSources: [],
+          referenceUrls: [],
         },
       }),
     ).resolves.toEqual({ id: 'sheet-1', code: 'HS-0001', status: 'generating' });

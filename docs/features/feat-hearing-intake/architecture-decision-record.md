@@ -18,7 +18,7 @@ architecture_refs: [arch-harness-hub-frontend, arch-harness-hub-backend, arch-ha
 | id | 決定 | 対応する quality_constraint / acceptance |
 |---|---|---|
 | [AD-1](#1-ad-1-hearing-固有テーブルは本-feature-が定義し共通-ai_jobs-は汎用契約として最初の-consumer-が永続化する) | `hearing_sheets` / 採番・係数は本 feature が所有する。`ai_jobs` は共通契約を保った汎用テーブルとして同じ migration lineage へ載せる | 全件の前提 |
-| [AD-2](#2-ad-2-formdata-はテーブルではなく-hearing_sheetsform_json-の値オブジェクトである) | FormData は独立テーブルを持たず `hearing_sheets.form_json` に埋め込む (`salary` を除く 11 項目) | hearing-sheet-entities-and-receipt-number / tenant-scope-d4-new-entities |
+| [AD-2](#2-ad-2-formdata-はテーブルではなく-hearing_sheetsform_json-の値オブジェクトである) | FormData は独立テーブルを持たず `hearing_sheets.form_json` に埋め込む (`salary` を除く snapshot。2026-08-12 時点は 27 項目) | hearing-sheet-entities-and-receipt-number / tenant-scope-d4-new-entities |
 | [AD-3](#3-ad-3-受付番号-hs-コード-は-display_code_counters-の同一トランザクション内-increment-で採番する) | HS コードは `display_code_counters` の CAS increment でテナント別連番を発番する | hearing-sheet-entities-and-receipt-number |
 | [AD-4](#4-ad-4-ai-キューは共通-ai_jobs-の-kindsheet_generation-を消費するだけで-schema-を複製しない) | feature 固有 AiJob schema / `kind=hearing` を作らない。consumer adapter のみ実装する | ai-queue-pull-type-d5 |
 | [AD-5](#5-ad-5-post-apiv1sheets-は-試算-→-snapshot-保存-→-enqueue-を単一トランザクションで実行する) | 試算のサーバ実行・snapshot 保存・AiJob enqueue・採番を 1 トランザクションに束ねる | estimate-server-computed-only / async-ui-pattern-hearing-wizard |
@@ -78,6 +78,8 @@ requirements-baseline §3.1 は scope_in に「HearingSheet/**FormData** エン�
 ### 判断
 
 FormData は独立テーブルを持たない。`hearing_sheets.form_json` (TEXT) に格納される**値オブジェクト**として設計し、型の正本は `packages/schemas/hearing-intake/` の zod スキーマに置く。
+
+**2026-08-12 追補 (HarnessHub-370h / PR #705):** 入力は FormData 28 項目、保存 snapshot は `salary` を除く 27 項目。旧 11 項目 snapshot は読取時だけ `storedHearingSheetFormSnapshotSchema` で `unknown` / 空配列へ補完する。用途プロファイル・依頼パターン・参考 URL を含む。スクリーンショット実体は `tenant_data_objects`、メタは `hearing_screenshots`、公開共有は `hearing_share_tokens` (token ハッシュのみ) が担う。
 
 ### 根拠
 
