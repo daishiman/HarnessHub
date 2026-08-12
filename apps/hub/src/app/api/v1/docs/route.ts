@@ -1,7 +1,17 @@
 import { createRepositoryContext } from '@harness-hub/db';
 import { createDocumentRequestSchema, documentListQuerySchema } from '@harness-hub/schemas';
 
-import { toDocumentDetail, toDocumentListItem } from '../../../../features/docs-cms/dto.js';
+import {
+  extractExcerpt,
+  extractFirstImageUrl,
+  summarizeAssets,
+} from '../../../../features/docs-cms/content-analysis.js';
+import {
+  assetSummaryToStorage,
+  tagsToStorage,
+  toDocumentDetail,
+  toDocumentListItem,
+} from '../../../../features/docs-cms/dto.js';
 import { parseJsonRequest, problemResponse } from '../../../../features/docs-cms/http.js';
 import { docsCmsRuntime } from '../../../../features/docs-cms/runtime.js';
 import { AuthzError, authRuntime, requestScopedResource, withAuthz } from '../../../../lib/authz/index.js';
@@ -19,7 +29,7 @@ export const GET = withAuthz(
       const { problemDetailsFromZodError } = await import('@harness-hub/schemas');
       return problemResponse(problemDetailsFromZodError(parsed.error, { instance: url.pathname }));
     }
-    const { limit, cursor, scope, status, q } = parsed.data;
+    const { limit, cursor, scope, status, q, category, tag } = parsed.data;
     const page = await docsCmsRuntime().repository.listDocuments(
       createRepositoryContext({ tenantId: authz.resource.tenantId }),
       {
@@ -28,6 +38,8 @@ export const GET = withAuthz(
         ...(scope !== undefined ? { scope } : {}),
         ...(status !== undefined ? { status } : {}),
         ...(q !== undefined ? { query: q } : {}),
+        ...(category !== undefined ? { category } : {}),
+        ...(tag !== undefined ? { tag } : {}),
       },
     );
     return Response.json({
@@ -52,13 +64,29 @@ export const POST = withAuthz(
       throw new AuthzError('insufficient_role', 403);
     }
 
+    // thumbnail_url/excerpt はリクエストに明示されていればそれを 'manual' 採用、無ければ本文から自動算出する。
+    // category/tags は完全手動項目 (自動抽出しない, 残課題に記載)。asset_summary は常に自動算出。
+    const body = parsed.data.body_markdown;
+    const thumbnailUrl =
+      parsed.data.thumbnail_url !== undefined ? parsed.data.thumbnail_url : extractFirstImageUrl(body);
+    const thumbnailSource = parsed.data.thumbnail_url !== undefined ? ('manual' as const) : ('auto' as const);
+    const excerpt = parsed.data.excerpt !== undefined ? parsed.data.excerpt : extractExcerpt(body);
+    const excerptSource = parsed.data.excerpt !== undefined ? ('manual' as const) : ('auto' as const);
+
     const created = await docsCmsRuntime().repository.createDocument(
       createRepositoryContext({ tenantId: authz.resource.tenantId, actorId: authz.principal.userId }),
       {
         scope: parsed.data.scope,
         title: parsed.data.title,
-        bodyMarkdown: parsed.data.body_markdown,
+        bodyMarkdown: body,
         actorId: authz.principal.userId,
+        category: parsed.data.category ?? null,
+        tags: tagsToStorage(parsed.data.tags) ?? null,
+        thumbnailUrl,
+        thumbnailSource,
+        excerpt,
+        excerptSource,
+        assetSummary: assetSummaryToStorage(summarizeAssets(body)),
       },
     );
 
