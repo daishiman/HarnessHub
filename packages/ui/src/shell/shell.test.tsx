@@ -392,6 +392,17 @@ describe('buildShellCss', () => {
     expect(css).toContain('grid-template-columns: 220px minmax(0, 1fr);');
   });
 
+  it('開閉トグルは mobile で隠し、サイドバーが現れる md 以上でだけ表示する', () => {
+    const css = buildShellCss();
+    const mobileRule = '[data-hh-sidebar-toggle] {\n  display: none;\n}';
+    const desktopRule = `${mediaUp('md')} {\n  [data-hh-sidebar-toggle] {\n    display: inline-flex;\n  }\n}`;
+
+    expect(css).toContain(mobileRule);
+    expect(css).toContain(desktopRule);
+    // mobile-first: 既定の非表示を定義した後で md 以上だけ上書きする。
+    expect(css.indexOf(mobileRule)).toBeLessThan(css.indexOf(desktopRule));
+  });
+
   it('閾値は breakpointTokens だけを使い、px を直書きしない (spec §2)', () => {
     const css = buildShellCss();
 

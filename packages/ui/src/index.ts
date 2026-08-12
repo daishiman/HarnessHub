@@ -146,13 +146,13 @@ export type { ShellAccountLink, ShellHeaderProps } from './shell/ShellHeader.js'
 export { ShellHeader } from './shell/ShellHeader.js';
 export type { ShellNavGroup, ShellSidebarProps } from './shell/ShellSidebar.js';
 export { ShellSidebar } from './shell/ShellSidebar.js';
-export type { SidebarCollapseProviderProps, SidebarToggleButtonProps } from './shell/sidebar-collapse.js';
-export { SidebarCollapseProvider, SidebarToggleButton } from './shell/sidebar-collapse.js';
 export { StickyHeaderOffset } from './shell/StickyHeaderOffset.js';
 // 顕著度 (lead / context / metadata) の 3 段。画面側で独自の並べ方を書くときもここから読む
 export type { Salience } from './shell/salience.js';
 export { salienceLevels, salienceStyle } from './shell/salience.js';
 export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
+export type { SidebarCollapseProviderProps, SidebarToggleButtonProps } from './shell/sidebar-collapse.js';
+export { SidebarCollapseProvider, SidebarToggleButton } from './shell/sidebar-collapse.js';
 export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
 export type { ShellWorkspaceOption, WorkspaceSwitcherProps } from './shell/WorkspaceSwitcher.js';

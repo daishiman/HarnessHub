@@ -25,7 +25,9 @@ function renderToggle(): void {
 }
 
 function hostCollapsedAttr(): string | null {
-  return screen.getByTestId('host').closest('[data-hh-sidebar-collapsed]')?.getAttribute('data-hh-sidebar-collapsed') ?? null;
+  return (
+    screen.getByTestId('host').closest('[data-hh-sidebar-collapsed]')?.getAttribute('data-hh-sidebar-collapsed') ?? null
+  );
 }
 
 beforeEach(() => {
@@ -41,7 +43,10 @@ describe('SidebarCollapseProvider / SidebarToggleButton', () => {
     renderToggle();
 
     expect(hostCollapsedAttr()).toBe('false');
-    expect(screen.getByRole('button', { name: 'サイドバーを閉じる' }).getAttribute('aria-pressed')).toBe('false');
+    const button = screen.getByRole('button', { name: 'サイドバーを閉じる' });
+    expect(button.getAttribute('aria-pressed')).toBe('false');
+    // 表示プロパティを inline style に戻すと、mobile の CSS `display: none` より強くなる。
+    expect(button.style.display).toBe('');
   });
 
   it('押すたびに開閉状態が反転し、localStorage に保存する', async () => {

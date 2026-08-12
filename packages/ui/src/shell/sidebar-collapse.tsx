@@ -92,7 +92,7 @@ export interface SidebarToggleButtonProps {
   expandedLabel: string;
   /** 折りたたみ中に読み上げる操作名 (「サイドバーを開く」など)。 */
   collapsedLabel: string;
-  /** md 以上でだけ出す (`hh-shell__desktop-only` 等) ためのクラス名。省略可。 */
+  /** consumer が追加の装飾を与える場合のクラス名。表示幅の契約は `buildShellCss()` が持つ。 */
   className?: string | undefined;
 }
 
@@ -115,7 +115,6 @@ export function SidebarToggleButton({ expandedLabel, collapsedLabel, className }
       onClick={toggle}
       title={label}
       style={{
-        display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         minWidth: 'var(--hh-control-height)',
