@@ -24,21 +24,21 @@ import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpe
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
 const MarkdownEditor = dynamic(
-  () => import('../../../../../components/docs/markdown-editor.js').then((module) => module.MarkdownEditor),
+  () => import('../../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
   {
     loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
   },
 );
 
 const MarkdownView = dynamic(
-  () => import('../../../../../components/docs/markdown-view.js').then((module) => module.MarkdownView),
+  () => import('../../../../../components/docs/markdown-view.js').then((module) => module.DocsMarkdownView),
   {
     loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
   },
 );
 
 const ScreenHeader = dynamic(
-  () => import('../../../../../components/docs/screen-header.js').then((module) => module.ScreenHeader),
+  () => import('../../../../../components/docs/screen-header.js').then((module) => module.DocsScreenHeader),
   {
     ssr: false,
     loading: () => <p aria-live="polite">編集画面を読み込んでいます…</p>,
