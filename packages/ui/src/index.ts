@@ -151,6 +151,8 @@ export { StickyHeaderOffset } from './shell/StickyHeaderOffset.js';
 export type { Salience } from './shell/salience.js';
 export { salienceLevels, salienceStyle } from './shell/salience.js';
 export { buildShellCss, shellSidebarCollapsedWidth, shellSidebarWidth } from './shell/shell-css.js';
+export type { SidebarToggleButtonProps } from './shell/sidebar-collapse.js';
+export { SidebarToggleButton } from './shell/sidebar-collapse.js';
 export type { ActionLinkProps, PanelProps, ScreenHeaderProps } from './shell/surfaces.js';
 export { ActionLink, Panel, ScreenHeader } from './shell/surfaces.js';
 export type { ShellWorkspaceOption, WorkspaceSwitcherProps } from './shell/WorkspaceSwitcher.js';
