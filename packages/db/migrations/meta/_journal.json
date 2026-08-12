@@ -71,6 +71,13 @@
       "when": 1786375120959,
       "tag": "0009_smoke-fixture-leases",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1786508075298,
+      "tag": "0010_notion-integration",
+      "breakpoints": true
     }
   ]
 }

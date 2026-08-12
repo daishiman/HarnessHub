@@ -18,6 +18,7 @@ import * as docsCms from './docs-cms/schema';
 import * as feedbackLoop from './feedback-loop/schema';
 import * as hearingIntake from './hearing-intake/schema';
 import * as metricsTracking from './metrics-tracking/schema';
+import * as notionIntegration from './notion-integration/schema';
 import * as tenantData from './tenant-data/schema';
 import * as tenantDataTombstones from './tenant-data/tombstones';
 
@@ -34,6 +35,7 @@ export * from './docs-cms/schema';
 export * from './feedback-loop/schema';
 export * from './hearing-intake/schema';
 export * from './metrics-tracking/schema';
+export * from './notion-integration/schema';
 export * from './tenant-data/schema';
 export * from './tenant-data/tombstones';
 
@@ -75,6 +77,7 @@ export const studioTables: Readonly<Record<string, SQLiteTable>> = Object.freeze
       hearingIntake.tenantCoefficients,
       tenantData.tenantDataObjects,
       tenantDataTombstones.tenantDataTombstones,
+      notionIntegration.notionIntegrations,
       docsCms.documents,
       feedbackLoop.feedbacks,
       builds.builds,
