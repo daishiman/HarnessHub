@@ -12,7 +12,7 @@ iteration: "Studio 拡張"
 title: "Studio: 構築パイプライン可視化 (7 工程ボード)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-07-28T04:18:24Z"
+updated_at: "2026-08-13T02:00:00Z"
 status: "active"
 depends_on: ["feat-auth-tenancy","feat-domain-model-db","feat-hearing-intake","feat-hub-foundation"]
 related_nodes: []
@@ -112,4 +112,20 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - `docs/features/feat-build-pipeline-board/design-review-notes.md` を取り込み、landed ADR (PR #694) を正本として supersede 関係を固定した。
 - F-1/F-3/F-4 と F-2 原指摘（`publish_request_id` 設定経路不在）は landed ADR で解決済み。
 - PATCH 関連付けと publish 遷移の transaction atomicity は **別途 P04/P05 確認事項**（F-2 再オープンではない）。
+
+## P04–P12 検証パッケージ着地 (2026-08-13 / MVP final review)
+
+- Beads: `HarnessHub-9am.4`〜`.12`（P04/P06–P12 を done、P05/P13 は残課題）
+- 成果物:
+  - [test-design.md](../docs/features/feat-build-pipeline-board/test-design.md) (P04)
+  - [test-run-report.md](../docs/features/feat-build-pipeline-board/test-run-report.md) (P06)
+  - [acceptance-report.md](../docs/features/feat-build-pipeline-board/acceptance-report.md) (P07)
+  - [refactoring-migration-note.md](../docs/features/feat-build-pipeline-board/refactoring-migration-note.md) (P08)
+  - [quality-assurance-report.md](../docs/features/feat-build-pipeline-board/quality-assurance-report.md) (P09)
+  - [final-review-notes.md](../docs/features/feat-build-pipeline-board/final-review-notes.md) (P10)
+  - [evidence/index.md](../docs/features/feat-build-pipeline-board/evidence/index.md) (P11)
+  - [runbook.md](../docs/features/feat-build-pipeline-board/runbook.md) (P12)
+- 追加テスト: `apps/hub/src/__tests__/build-pipeline-board/authz-shared-table-consistency.test.ts` (B9 共有認可表)
+- 現行実装面: **3 endpoint**（`GET /builds`, `GET /builds/:id`, `POST /builds/:id/stage`）。ADR 目標の 5 endpoint 完成は P05 残課題。
+- 仕様反映受領: [p04-p12-final-review-spec-reflection-receipt.md](../docs/features/feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md)
 

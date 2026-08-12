@@ -212,6 +212,10 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 - 工程は 7 値の隣接遷移のみ。stage 変更は workspace-admin 以上 + audit +
   `build_stage_events` を同一 transaction で確定する。
 - `publish` への遷移は同一 scope の PublishRequest が `published` のときだけ許す。
+- **MVP 面 (2026-08-13)**: 上記 3 endpoint が実装正本。ADR 目標の `POST /api/v1/builds`
+  (manual recovery) と `PATCH /api/v1/builds/:id` (metadata) は未実装 residual。
+  検証パッケージ: [P04–P12 受領書](../docs/features/feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md)。
+  運用: [runbook](../docs/features/feat-build-pipeline-board/runbook.md)。
 
 正本は [backend](../system-spec/backend.md)。詳細 ADR は各 feature の
 `docs/features/*/architecture-decision-record.md`。

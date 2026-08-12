@@ -276,8 +276,7 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
   期間 filter は URL search params を正本とする。
 - S13 は共有 `StageBoard` を消費し、admin のみ工程操作 UI を出す。axe 0 を focused test で固定する。
 - 正本は [frontend](../system-spec/frontend.md) / [ui-ux](../system-spec/ui-ux.md)。
-  受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md) と
-  [build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)。
+  受領は [metrics](../docs/features/feat-metrics-tracking/mvp-implementation-spec-reflection-receipt.md)・[build-pipeline](../docs/features/feat-build-pipeline-board/mvp-implementation-spec-reflection-receipt.md)・[P04–P12](../docs/features/feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md)。
 
 ## 2026-08-12 表示名 / 情報設計 / UI 一貫性 (MVP wave)
 

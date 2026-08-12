@@ -12,7 +12,7 @@ iteration: null
 title: "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T07:12:20.951696Z"
+updated_at: "2026-08-12T22:33:12.308196Z"
 status: "active"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P04"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend","feat-hearing-intake","feat-publish-pipeline","feat-hub-foundation","feat-auth-tenancy","feat-domain-model-db"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":null,"evidence_refs":["docs/features/feat-build-pipeline-board/final-review-notes.md","docs/features/feat-build-pipeline-board/refactoring-migration-note.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"manual","status":"in_progress"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
@@ -71,3 +71,7 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - rerun: published task spec 内の `validate-system-plan.py --repo-root . --staging .` は repository root から解決できない。再検証は世代非依存の `python3 plugins/system-dev-planner/scripts/validate-system-plan.py --repo-root . --feature-package feature-package/feat-build-pipeline-board` を使い、current pointer から現行世代を再解決する。
 - completion: linked PR merge authorityとdefault-branch reconciliationを満たすまでdurable doneにしない。
 - source integrity: task spec SHA-256またはpackage digestが変わった場合は実行せず、current pointerから再解決する。
+
+## Final review note (2026-08-13)
+
+MVP 実装は PR #694/#701 で 3 endpoint（GET list/detail + POST stage）まで着地済み。ADR 目標の POST collection / PATCH item・対応認可 rule・delta migration は未実装のため formal close は保留。P04/P06–P12 の検証パッケージは現行 3 endpoint 面で記録済み。

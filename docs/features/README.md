@@ -19,7 +19,7 @@ source: docs/system-design-overview.md#構築優先順位
 | **P2** | **[feat-publish-pipeline](../../features/feat-publish-pipeline.md) ([baseline](feat-publish-pipeline/requirements-baseline.md))** | package 取込、検査、immutable Release、stable pointer | P0 |
 | **P2** | **[feat-publisher-plugin](../../features/feat-publisher-plugin.md)** | CLI 取込の主経路、Web upload wizard との受け渡し | publish-pipeline |
 | **P2** | **[feat-dual-catalog-web](../../features/feat-dual-catalog-web.md)** | **S01 upload/一覧 → S02 管理・install/download → S03 公開状態** | publish-pipeline + Stage 0 distribution gate |
-| **P2** | **[feat-build-pipeline-board](../../features/feat-build-pipeline-board.md) ([baseline](feat-build-pipeline-board/requirements-baseline.md))** | S13 の 7 工程。publish 工程は PublishRequest を参照 | publish-pipeline + hearing-intake |
+| **P2** | **[feat-build-pipeline-board](../../features/feat-build-pipeline-board.md) ([baseline](feat-build-pipeline-board/requirements-baseline.md))** · [runbook](feat-build-pipeline-board/runbook.md) · [P04–P12 受領](feat-build-pipeline-board/p04-p12-final-review-spec-reflection-receipt.md) | S13 の 7 工程（MVP=3 endpoint）。publish 工程は PublishRequest を参照 | publish-pipeline + hearing-intake |
 | P3 | [feat-feedback-loop](../../features/feat-feedback-loop.md) ([baseline](feat-feedback-loop/requirements-baseline.md)) | S14 改善要望の受付・レビュー・AI 応答 | publish-pipeline |
 | P3 | [feat-docs-cms](../../features/feat-docs-cms.md) ([baseline](feat-docs-cms/requirements-baseline.md)) | S15 文書一覧/閲覧/編集・AI 下書き | P0 + Markdown 共通層 |
 | P4 | [feat-user-org-admin](../../features/feat-user-org-admin.md) ([baseline](feat-user-org-admin/requirements-baseline.md)) | S17/S18、係数・PII ガード。高度な管理 UI は後段 | P0 |
