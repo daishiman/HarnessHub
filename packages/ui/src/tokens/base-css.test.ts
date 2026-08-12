@@ -11,6 +11,10 @@ import { breakpointTokens, buildThemeCss, mediaUp } from './tokens.js';
 const css = buildBaseCss();
 /** 実際に配られる成果物。生成関数の出力と別に読む (再生成し忘れをここでも踏む)。 */
 const tokensCssArtifact = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'tokens.css'), 'utf8');
+const stageBoardCssSources = [
+  ['buildBaseCss() の出力', css],
+  ['コミット済みの tokens.css', tokensCssArtifact],
+] as const;
 
 interface BreakpointUse {
   readonly value: number;
@@ -124,28 +128,40 @@ describe('buildBaseCss', () => {
   });
 
   /**
-   * md 以上/lg 以上を固定 flex 列 + overflow-x: auto にすると、7 工程ぶんの幅が
-   * 画面に入らない限り常に横スクロールが出る (HarnessHub 構築パイプラインボードの
-   * 横スクロール問題)。列数を画面幅ごとに grid で固定して折り返すことで、
-   * どの画面幅でも横スクロールなしに全工程を見渡せるようにする。
+   * 生成元と配布成果物の双方へ同じ viewport 契約を当てる。
+   * 片方だけを見ると、実装を直して tokens.css の再生成を忘れた場合に回帰を検出できない。
    */
-  it('StageBoard は md 未満で選択工程だけ、md 以上は grid で折り返して全工程を横スクロールなしに表示する', () => {
-    expect(css).toContain('[data-hh-stage-picker-options] {');
-    expect(css).toContain(
-      '[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(1) input:checked) [data-hh-stage-column]:nth-child(1)',
-    );
-    expect(css).toContain('[data-hh-stage-column] {\n  display: none;');
-    expect(css).toContain(`${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;`);
-    expect(css).toContain(
-      '[data-hh-stage-columns] {\n    display: grid;\n    grid-template-columns: repeat(3, minmax(0, 1fr));',
-    );
-    expect(css).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 0;');
-    expect(css).toContain(
-      `${mediaUp('lg')} {\n  [data-hh-stage-columns] {\n    grid-template-columns: repeat(4, minmax(0, 1fr));`,
-    );
-    expect(css).not.toMatch(
-      /\[data-hh-stage-columns\] \{\s*display: flex;\s*gap: var\(--hh-space-3\);\s*overflow-x: auto;/,
-    );
+  describe.each(stageBoardCssSources)('StageBoard のレスポンシブ契約: %s', (_label, source) => {
+    it('mobile は工程ピッカーを残し、選択した 1 工程だけを表示する', () => {
+      expect(source).toContain('[data-hh-stage-picker-options] {');
+      expect(source).toContain('[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}');
+
+      for (let stage = 1; stage <= 7; stage += 1) {
+        expect(source).toContain(
+          `[data-hh-stage-board]:has([data-hh-stage-option]:nth-child(${stage}) input:checked) [data-hh-stage-column]:nth-child(${stage}) {\n  display: block;\n}`,
+        );
+      }
+    });
+
+    it('md はピッカーを隠し、全工程を 3 カラムで折り返す', () => {
+      expect(source).toContain(
+        `${mediaUp('md')} {\n  [data-hh-stage-picker] {\n    display: none;\n  }\n  [data-hh-stage-columns] {\n    display: grid;\n    grid-template-columns: repeat(3, minmax(0, 1fr));`,
+      );
+      expect(source).toContain('[data-hh-stage-column] {\n    display: block;\n    min-width: 0;\n  }');
+    });
+
+    it('lg は全工程を 4 カラムで折り返す', () => {
+      expect(source).toContain(
+        `${mediaUp('lg')} {\n  [data-hh-stage-columns] {\n    grid-template-columns: repeat(4, minmax(0, 1fr));`,
+      );
+    });
+
+    it('工程カラムの器へ横スクロールを戻さない', () => {
+      expect(source).not.toMatch(/\[data-hh-stage-columns\] \{[^}]*overflow-x:/);
+      expect(source).not.toMatch(
+        /\[data-hh-stage-columns\] \{\s*display: flex;\s*gap: var\(--hh-space-3\);\s*overflow-x: auto;/,
+      );
+    });
   });
 
   /**
