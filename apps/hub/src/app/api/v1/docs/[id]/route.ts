@@ -4,6 +4,7 @@ import { problemDetails, updateDocumentRequestSchema } from '@harness-hub/schema
 import {
   extractExcerpt,
   extractFirstImageUrl,
+  resolveUpdatedDerivedField,
   summarizeAssets,
 } from '../../../../../features/docs-cms/content-analysis.js';
 import { assetSummaryToStorage, tagsToStorage, toDocumentDetail } from '../../../../../features/docs-cms/dto.js';
@@ -61,18 +62,18 @@ export const PATCH = withAuthz<DocParams>(
     const effectiveBody = parsed.data.body_markdown ?? existing.bodyMarkdown;
     const bodyChanged = parsed.data.body_markdown !== undefined;
 
-    const thumbnailPatch =
-      parsed.data.thumbnail_url !== undefined
-        ? { thumbnailUrl: parsed.data.thumbnail_url, thumbnailSource: 'manual' as const }
-        : bodyChanged
-          ? { thumbnailUrl: extractFirstImageUrl(effectiveBody), thumbnailSource: 'auto' as const }
-          : {};
-    const excerptPatch =
-      parsed.data.excerpt !== undefined
-        ? { excerpt: parsed.data.excerpt, excerptSource: 'manual' as const }
-        : bodyChanged
-          ? { excerpt: extractExcerpt(effectiveBody), excerptSource: 'auto' as const }
-          : {};
+    const thumbnail = resolveUpdatedDerivedField({
+      requested: parsed.data.thumbnail_url,
+      currentSource: existing.thumbnailSource,
+      bodyChanged,
+      derive: () => extractFirstImageUrl(effectiveBody),
+    });
+    const excerpt = resolveUpdatedDerivedField({
+      requested: parsed.data.excerpt,
+      currentSource: existing.excerptSource,
+      bodyChanged,
+      derive: () => extractExcerpt(effectiveBody),
+    });
 
     const updated = await docsCmsRuntime().repository.updateDocument(
       createRepositoryContext({ tenantId: authz.resource.tenantId, actorId: authz.principal.userId }),
@@ -83,8 +84,8 @@ export const PATCH = withAuthz<DocParams>(
         ...(parsed.data.status === undefined ? {} : { status: parsed.data.status }),
         ...(parsed.data.category === undefined ? {} : { category: parsed.data.category }),
         ...(parsed.data.tags === undefined ? {} : { tags: tagsToStorage(parsed.data.tags) ?? null }),
-        ...thumbnailPatch,
-        ...excerptPatch,
+        ...(thumbnail === null ? {} : { thumbnailUrl: thumbnail.value, thumbnailSource: thumbnail.source }),
+        ...(excerpt === null ? {} : { excerpt: excerpt.value, excerptSource: excerpt.source }),
         ...(bodyChanged ? { assetSummary: assetSummaryToStorage(summarizeAssets(effectiveBody)) } : {}),
         actorId: authz.principal.userId,
       },

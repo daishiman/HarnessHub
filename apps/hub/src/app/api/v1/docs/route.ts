@@ -4,6 +4,7 @@ import { createDocumentRequestSchema, documentListQuerySchema } from '@harness-h
 import {
   extractExcerpt,
   extractFirstImageUrl,
+  resolveInitialDerivedField,
   summarizeAssets,
 } from '../../../../features/docs-cms/content-analysis.js';
 import {
@@ -67,11 +68,8 @@ export const POST = withAuthz(
     // thumbnail_url/excerpt はリクエストに明示されていればそれを 'manual' 採用、無ければ本文から自動算出する。
     // category/tags は完全手動項目 (自動抽出しない, 残課題に記載)。asset_summary は常に自動算出。
     const body = parsed.data.body_markdown;
-    const thumbnailUrl =
-      parsed.data.thumbnail_url !== undefined ? parsed.data.thumbnail_url : extractFirstImageUrl(body);
-    const thumbnailSource = parsed.data.thumbnail_url !== undefined ? ('manual' as const) : ('auto' as const);
-    const excerpt = parsed.data.excerpt !== undefined ? parsed.data.excerpt : extractExcerpt(body);
-    const excerptSource = parsed.data.excerpt !== undefined ? ('manual' as const) : ('auto' as const);
+    const thumbnail = resolveInitialDerivedField(parsed.data.thumbnail_url, () => extractFirstImageUrl(body));
+    const excerpt = resolveInitialDerivedField(parsed.data.excerpt, () => extractExcerpt(body));
 
     const created = await docsCmsRuntime().repository.createDocument(
       createRepositoryContext({ tenantId: authz.resource.tenantId, actorId: authz.principal.userId }),
@@ -82,10 +80,10 @@ export const POST = withAuthz(
         actorId: authz.principal.userId,
         category: parsed.data.category ?? null,
         tags: tagsToStorage(parsed.data.tags) ?? null,
-        thumbnailUrl,
-        thumbnailSource,
-        excerpt,
-        excerptSource,
+        thumbnailUrl: thumbnail.value,
+        thumbnailSource: thumbnail.source,
+        excerpt: excerpt.value,
+        excerptSource: excerpt.source,
         assetSummary: assetSummaryToStorage(summarizeAssets(body)),
       },
     );

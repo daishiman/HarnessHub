@@ -28,6 +28,38 @@ export function extractFirstImageUrl(markdown: string): string | null {
   return match?.[1] ?? null;
 }
 
+export interface DerivedDocumentField {
+  readonly value: string | null;
+  readonly source: 'auto' | 'manual';
+}
+
+/** 作成時は文字列だけを手動値とし、未指定/null は本文由来の自動値へ揃える。 */
+export function resolveInitialDerivedField(
+  requested: string | null | undefined,
+  derive: () => string | null,
+): DerivedDocumentField {
+  return requested == null ? { value: derive(), source: 'auto' } : { value: requested, source: 'manual' };
+}
+
+/**
+ * 更新時の派生欄を解決する。
+ * - 未指定 + 既存 manual: 本文が変わっても保持
+ * - 未指定 + 既存 auto: 本文変更時だけ再計算
+ * - 文字列: manual へ変更
+ * - 明示 null: auto へ戻して現在本文から再計算
+ */
+export function resolveUpdatedDerivedField(input: {
+  readonly requested: string | null | undefined;
+  readonly currentSource: 'auto' | 'manual';
+  readonly bodyChanged: boolean;
+  readonly derive: () => string | null;
+}): DerivedDocumentField | null {
+  if (input.requested === null) return { value: input.derive(), source: 'auto' };
+  if (input.requested !== undefined) return { value: input.requested, source: 'manual' };
+  if (!input.bodyChanged || input.currentSource === 'manual') return null;
+  return { value: input.derive(), source: 'auto' };
+}
+
 /** インライン Markdown 装飾 (強調/リンク/コード/画像) を剥がしてプレーンテキストへ落とす。 */
 function stripInlineMarkdown(text: string): string {
   return text

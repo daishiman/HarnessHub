@@ -66,4 +66,34 @@ describe('DOCS-DB: documents repository', () => {
       new Set([...firstPage.items, ...secondPage.items, ...thirdPage.items].map((document) => document.id)),
     ).toEqual(new Set(created.map((document) => document.id)));
   });
+
+  it('DOCS-TAG-001: tag は JSON 配列要素の完全一致で絞り込む', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    await repository.createDocument(context, {
+      scope: 'tenant',
+      title: 'API ガイド',
+      bodyMarkdown: '',
+      actorId: context.actorId ?? 'missing-actor',
+      tags: JSON.stringify(['API', '設計']),
+    });
+    await repository.createDocument(context, {
+      scope: 'tenant',
+      title: 'GraphAPI ガイド',
+      bodyMarkdown: '',
+      actorId: context.actorId ?? 'missing-actor',
+      tags: JSON.stringify(['GraphAPI']),
+    });
+    await repository.createDocument(context, {
+      scope: 'tenant',
+      title: '旧形式の壊れたタグ',
+      bodyMarkdown: '',
+      actorId: context.actorId ?? 'missing-actor',
+      tags: 'not-json',
+    });
+
+    const page = await repository.listDocuments(context, { limit: 50, tag: 'API' });
+
+    expect(page.items.map((row) => row.title)).toStrictEqual(['API ガイド']);
+  });
 });

@@ -36,6 +36,7 @@ export function TableOfContents({ entries }: TableOfContentsProps): ReactNode {
   // 見出し数が変わったとき (別文書へ遷移したときなど) は張り直す。
   useEffect(() => {
     if (entries.length === 0) return;
+    if (typeof IntersectionObserver === 'undefined') return;
 
     const targets = entries
       .map((entry) => document.getElementById(entry.slug))

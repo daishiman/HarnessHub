@@ -1,7 +1,7 @@
 import { Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import { resolveDashboardScope, scopeFromQuery } from '../../../../lib/routing/dashboard-scope.js';
-import { FeedbackForm } from './feedback-form.js';
+import { FeedbackFormLazy } from './feedback-form-lazy.js';
 
 export const metadata: Metadata = {
   title: '改善要望を報告 | Harness Hub',
@@ -27,7 +27,7 @@ export default async function FeedbackNewPage({ searchParams }: PageProps) {
         breadcrumbsLabel="現在地"
       />
       <Panel>
-        <FeedbackForm tenantId={tenantId} workspaceId={workspaceId} />
+        <FeedbackFormLazy tenantId={tenantId} workspaceId={workspaceId} />
       </Panel>
     </>
   );

@@ -4,7 +4,7 @@
  * Markdown の表示と編集。sanitize 済み AST のみを描画し、生 HTML の埋め込みを一切許さない (SEC7)。
  *
  * feat: docs-cms-rich-editing でブロック構成型の編集 UI (ツールバー) とレンダリング拡張
- * (コールアウト/トグル開閉/コピー付きコードブロック/画像ライトボックス/表ラッパー/バッジ) を追加した。
+ * (コールアウト/トグル開閉/コピー付きコードブロック/画像ライトボックス/表ラッパー) を追加した。
  * docs-cms 専用ではなく共通コンポーネントとして再利用できる形にしている。
  */
 import {
@@ -160,7 +160,7 @@ function Callout({ kind, children }: { kind: 'point' | 'attention'; children: Re
   );
 }
 
-/** タグ/バッジ用の小さな共通の角丸ピル。カテゴリ・タグ表示や画像枚数バッジ等で使い回す。 */
+/** タグ/バッジ用の小さな共通の角丸ピル。 */
 export type BadgeTone = 'neutral' | 'primary' | 'info' | 'warning';
 
 export interface BadgeProps {

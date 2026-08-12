@@ -20,21 +20,31 @@ import {
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
 import { NotionOpenLink } from '../../../../../components/notion/notion-open-link.js';
+import { usePendingDocumentImages } from '../../../../../components/docs/use-pending-document-images.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope } from '../../../dashboard-scope-context.js';
 
-const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
-  loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
-});
+const MarkdownEditor = dynamic(
+  () => import('../../../../../components/docs/markdown-editor.js').then((module) => module.MarkdownEditor),
+  {
+    loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
+  },
+);
 
-const MarkdownView = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownView), {
-  loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
-});
+const MarkdownView = dynamic(
+  () => import('../../../../../components/docs/markdown-view.js').then((module) => module.MarkdownView),
+  {
+    loading: () => <p aria-live="polite">本文を読み込んでいます…</p>,
+  },
+);
 
-const ScreenHeader = dynamic(() => import('@harness-hub/ui').then((module) => module.ScreenHeader), {
-  ssr: false,
-  loading: () => <p aria-live="polite">編集画面を読み込んでいます…</p>,
-});
+const ScreenHeader = dynamic(
+  () => import('../../../../../components/docs/screen-header.js').then((module) => module.ScreenHeader),
+  {
+    ssr: false,
+    loading: () => <p aria-live="polite">編集画面を読み込んでいます…</p>,
+  },
+);
 
 interface PageProps {
   readonly params: Promise<{ readonly id: string }>;
@@ -52,6 +62,10 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const query = use(searchParams);
   const scope = useDashboardScope();
   const { tenantId, workspaceId } = scopeFromQuery(query, scope);
+  const { register: registerPendingImage, settleAfterSave: settlePendingImages } = usePendingDocumentImages(
+    tenantId,
+    workspaceId,
+  );
 
   const [saved, setSaved] = useState<DocumentDetail | null>(null);
   const [title, setTitle] = useState('');
@@ -97,10 +111,11 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
         body: file,
       });
       if (!response.ok) throw new Error('画像をアップロードできませんでした。');
-      const uploaded = (await response.json()) as { readonly url: string };
+      const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
+      registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
     },
-    [id, tenantId, workspaceId],
+    [id, tenantId, workspaceId, registerPendingImage],
   );
 
   const save = async (): Promise<void> => {
@@ -116,6 +131,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
       setError(null);
+      await settlePendingImages(doc.body_markdown);
       window.location.assign(`/docs/${id}?tenant=${tenantId}&workspace=${workspaceId}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '保存できませんでした。');

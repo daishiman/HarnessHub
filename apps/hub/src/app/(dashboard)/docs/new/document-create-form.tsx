@@ -4,10 +4,14 @@ import type { DocumentDetail, DocumentScope } from '@harness-hub/schemas';
 import { Alert, Button, type MarkdownImageUploadResult, Select, Stack, TextInput } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useCallback, useRef, useState } from 'react';
+import { usePendingDocumentImages } from '../../../../components/docs/use-pending-document-images.js';
 
-const MarkdownEditor = dynamic(() => import('@harness-hub/ui').then((module) => module.MarkdownEditor), {
-  loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
-});
+const MarkdownEditor = dynamic(
+  () => import('../../../../components/docs/markdown-editor.js').then((module) => module.MarkdownEditor),
+  {
+    loading: () => <p aria-live="polite">Markdown エディタを読み込んでいます…</p>,
+  },
+);
 
 interface DocumentCreateFormProps {
   readonly tenantId: string;
@@ -15,6 +19,10 @@ interface DocumentCreateFormProps {
 }
 
 export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateFormProps): ReactNode {
+  const { register: registerPendingImage, settleAfterSave: settlePendingImages } = usePendingDocumentImages(
+    tenantId,
+    workspaceId,
+  );
   const [scope, setScope] = useState<DocumentScope>('tenant');
   const [title, setTitle] = useState('');
   const [bodyMarkdown, setBodyMarkdown] = useState('');
@@ -83,10 +91,11 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
         body: file,
       });
       if (!response.ok) throw new Error('画像をアップロードできませんでした。');
-      const uploaded = (await response.json()) as { readonly url: string };
+      const uploaded = (await response.json()) as { readonly image_id: string; readonly url: string };
+      registerPendingImage({ documentId: id, imageId: uploaded.image_id, url: uploaded.url });
       return { url: uploaded.url };
     },
-    [ensureDraftId, tenantId, workspaceId],
+    [ensureDraftId, tenantId, workspaceId, registerPendingImage],
   );
 
   const submit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -112,6 +121,7 @@ export function DocumentCreateForm({ tenantId, workspaceId }: DocumentCreateForm
               if (!response.ok) throw new Error('作成できませんでした。');
               return (await response.json()) as DocumentDetail;
             })();
+      await settlePendingImages(created.body_markdown);
       window.location.assign(`/docs/${created.id}?tenant=${tenantId}&workspace=${workspaceId}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '作成できませんでした。');

@@ -2,7 +2,7 @@ import { ActionLink, Panel, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { resolveDashboardScope, scopeFromQuery } from '../../../lib/routing/dashboard-scope.js';
-import { DocumentList } from './document-list.js';
+import { DocumentListLazy } from './document-list-lazy.js';
 
 export const metadata: Metadata = {
   title: 'ドキュメント一覧 | Harness Hub',
@@ -35,7 +35,7 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
         }
       />
       <Panel flush>
-        <DocumentList tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
+        <DocumentListLazy tenantId={tenantId} workspaceId={workspaceId} initialQuery={initialQuery} />
       </Panel>
     </>
   );

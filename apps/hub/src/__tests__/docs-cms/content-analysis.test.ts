@@ -8,6 +8,8 @@ import {
   extractFirstImageUrl,
   extractHeadingOutline,
   extractTitleCandidate,
+  resolveInitialDerivedField,
+  resolveUpdatedDerivedField,
   summarizeAssets,
 } from '../../features/docs-cms/content-analysis.js';
 
@@ -128,5 +130,53 @@ describe('DOCS-CA: summarizeAssets', () => {
 
   it('DOCS-CA-019: 単一行の表記法だけでは表ありと判定しない (ヘッダー行のみでは表とみなさない)', () => {
     expect(summarizeAssets('| 単独行 |').hasTable).toBe(false);
+  });
+});
+
+describe('DOCS-CA: manual/auto 派生欄', () => {
+  it('DOCS-CA-020: 本文更新だけでは既存 manual 値を上書きしない', () => {
+    expect(
+      resolveUpdatedDerivedField({
+        requested: undefined,
+        currentSource: 'manual',
+        bodyChanged: true,
+        derive: () => '自動値',
+      }),
+    ).toBeNull();
+  });
+
+  it('DOCS-CA-021: 明示 null は auto へ戻し、更新後本文から再計算する', () => {
+    expect(
+      resolveUpdatedDerivedField({
+        requested: null,
+        currentSource: 'manual',
+        bodyChanged: false,
+        derive: () => '再計算値',
+      }),
+    ).toEqual({ value: '再計算値', source: 'auto' });
+  });
+
+  it('DOCS-CA-022: auto 値は本文更新時だけ再計算する', () => {
+    expect(
+      resolveUpdatedDerivedField({
+        requested: undefined,
+        currentSource: 'auto',
+        bodyChanged: true,
+        derive: () => '新しい自動値',
+      }),
+    ).toEqual({ value: '新しい自動値', source: 'auto' });
+    expect(
+      resolveUpdatedDerivedField({
+        requested: undefined,
+        currentSource: 'auto',
+        bodyChanged: false,
+        derive: () => '呼ばれない値',
+      }),
+    ).toBeNull();
+  });
+
+  it('DOCS-CA-023: 作成時は文字列を manual、null/未指定を auto として扱う', () => {
+    expect(resolveInitialDerivedField('手動値', () => '自動値')).toEqual({ value: '手動値', source: 'manual' });
+    expect(resolveInitialDerivedField(null, () => '自動値')).toEqual({ value: '自動値', source: 'auto' });
   });
 });
