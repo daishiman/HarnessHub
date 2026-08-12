@@ -77,8 +77,14 @@ CSS の media query に 768px などを直接増やさず、`mediaUp()` また�
 ### 4. overlay と取り消せない操作
 
 - 閲覧・編集の重なりには `Modal`、モバイルの操作面には `BottomSheet` を使う。どちらも focus trap、Esc、focus 復帰、scroll lock を共有する。
+- これらは既定で背景クリック・Escape・閉じる操作から閉じる。未保存の入力を持つ場合は
+  `dismissible=false` とし、保存または破棄確認を伴う明示操作以外では閉じない。
 - 実行確認、とくに削除・再生成・下書き破棄には `ConfirmDialog` を使い、`reversible` で取り消せるか必ず表示する。
-- ボトムタブの「その他」は modal ではなく `details/summary` disclosure。背景を遮らないため focus trap は使わず、標準 Tab 順を保つ。
+- ボトムタブの「その他」、Workspace 切替、アカウントメニューは modal ではなく
+  `details/summary` disclosure。背景を遮らないため focus trap は使わず、標準 Tab 順を保つ。
+  一時的な navigation disclosure は同時に 1 つだけ開き、外側クリック・Escape・別 disclosure の
+  開始で閉じる。Escape では開閉元へフォーカスを戻し、外側クリックではクリック先から
+  フォーカスを奪わない。本文中の `details`（長文の開閉）はこの排他契約の対象外とする。
 
 ### 5. 表と狭い画面
 

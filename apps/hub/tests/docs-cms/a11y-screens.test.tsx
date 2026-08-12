@@ -8,7 +8,8 @@
 import type { SessionRole } from '@harness-hub/schemas';
 import { UiProvider } from '@harness-hub/ui';
 import axe from 'axe-core';
-import type { ReactNode } from 'react';
+import { act, type ReactNode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import DocumentEditPage from '../../src/app/(dashboard)/docs/[id]/edit/page.js';
@@ -83,6 +84,38 @@ describe('DOCS-A11Y: docs-cms 実画面の初期状態に axe 違反が無い', 
     // カードで並べる一覧なので、読み込み状態が読み上げに伝わることを確かめる (型の割当は docs/screen-inventory.md)
     expect(document.querySelector('[aria-live="polite"]')?.textContent).toContain('読み込');
     expect(document.querySelector('form[aria-label="ドキュメントの絞り込み"]')).not.toBeNull();
+  });
+
+  it('DOCS-A11Y-009: 作成可能者の 0 件表示と初回作成 CTA に axe 違反が 0 件', async () => {
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(async () => Response.json({ items: [], next_cursor: null })),
+    );
+    document.title = 'ドキュメント';
+    const main = document.createElement('main');
+    document.body.replaceChildren(main);
+    const root = createRoot(main);
+
+    try {
+      await act(async () => {
+        root.render(
+          <UiProvider>
+            <DocumentList tenantId="tenant-a" workspaceId="ws-1" sessionRole="workspace-admin" canCreateDocument />
+          </UiProvider>,
+        );
+      });
+      for (let attempt = 0; attempt < 20; attempt += 1) {
+        if (document.body.textContent?.includes('最初のドキュメントを作成')) break;
+        await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+      }
+
+      expect(document.body.textContent).toContain('最初のドキュメントを作成');
+      expect(await violationsOf()).toEqual([]);
+    } finally {
+      await act(async () => root.unmount());
+      vi.unstubAllGlobals();
+    }
   });
 
   it('DOCS-A11Y-002: ドキュメント詳細の初期状態 (読み込み中) に axe 違反が 0 件', async () => {

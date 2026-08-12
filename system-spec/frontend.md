@@ -190,3 +190,10 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
   `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
 - 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。
+
+## 2026-08-13 MVP 実装追記 (disclosure / dismissible / Docs empty)
+
+- 共通シェルの navigation disclosure は server-first の `details` + 開閉専用 client island。
+  切替リンクは素の `<a>` による document 遷移を維持し、client router を使わない。
+- Modal / BottomSheet の `dismissible` で未保存破棄を防ぐ。公開 API / DB / 認可は不変。
+- S15 一覧 empty は権限別 CTA と絞込解除を分離。正本は UI 基盤追補と S15 情報設計シート。

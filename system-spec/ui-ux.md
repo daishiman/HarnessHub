@@ -174,3 +174,10 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 - DateTimeText（相対併記）、ListState / FilterBar、screen-pattern gate は UI 契約の追補。新規 qa 番号なし。R4-reopen 不要。
 - route-local 遅延読込は既存画面の初期JSだけを減らし、loading文言と操作契約を維持する。screen-pattern gate は動的 import 先も検査するため、新規 qa 番号なし。R4-reopen 不要。
 - 正本: [ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)。
+
+## Post-compile writeback: disclosure / dismissible / Docs empty (2026-08-13)
+
+- navigation disclosure（Workspace 切替・アカウント・モバイル「その他」）は `details/summary` を土台に、外側クリック・Escape・別メニュー排他だけを小さな client island が担う。modal 契約・focus trap は適用しない。新規 qa 番号なし。R4-reopen 不要。
+- Modal / BottomSheet は既定 light dismiss。未保存面は `dismissible=false` で背景・Escape・閉じる操作を遮断する。公開 API / 認可 / DB は不変。
+- S15 一覧 0 件は「真の 0 件」と「絞込 0 件」を分け、作成権限に応じた CTA または絞込解除を出す。
+- 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-012/013、[受領書](../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。

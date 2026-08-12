@@ -75,7 +75,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | 部品 | ベース | 一括担保する a11y/品質 | 主な消費画面 |
 |---|---|---|---|
 | Button / Input / Select / Checkbox / Radio / Textarea | shadcn/ui | ラベル紐付け・focus-visible・44px タップ域 (§6.1) | 全画面 |
-| Modal / ConfirmDialog / BottomSheet / navigation disclosure | 自作 (`packages/ui`) | modal は focus trap・Esc・focus 復帰・scroll lock、破壊操作は可逆性明示、navigation disclosure は標準 Tab 順 (qa-207) | 全画面 |
+| Modal / ConfirmDialog / BottomSheet / navigation disclosure | 自作 (`packages/ui`) | modal は focus trap・Esc・focus 復帰・scroll lock、破壊操作は可逆性明示、navigation disclosure は標準 Tab 順 + 外側/Escape/別メニューで排他的に閉鎖 | 全画面 |
 | Tabs / Badge (状態チップ) / Toast / Skeleton / Tooltip | shadcn/ui | 状態語彙統一 (§2.4)・aria-live=polite・CLS 抑制 | 全画面 |
 | DataTable (ソート・cursor ページング・カード化応答) | shadcn Table + 自作 | th scope・ソート aria-sort・モバイルでカードリスト化 (§6.3) | S01/S04/S06/S11/S14/S15/S17 |
 | KPI カード / LineChart / BarChart / DonutChart / Sparkline | 自作 SVG | role="img" + aria-label + 「表で見る」代替テーブル切替・SSR 描画 | S09/S12/S16/S17 |
@@ -83,7 +83,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | StageBoard (かんばん) / StageSegment (モバイル) | 自作 | 工程チップ+件数バッジ・risk 表示・DnD 不採用 (操作はメニュー。タッチ/キーボード同等性) | S13 |
 | MarkdownView / MarkdownEditor (textarea+プレビュー) | react-markdown + 自作 | XSS sanitize (SEC7)・プレビュータブ | S12/S14/S15 |
 | InlineEditTable | 自作 | 編集はモバイルでシートへ昇格 (§6.3) | S17/S04 |
-| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-only、client JS 0)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
+| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-first + 開閉専用の小さな client island)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
 | DegradedBanner (縮退) / EmptyState / ErrorState | 自作 | 「導入済みツールはそのまま使えます」(qa-019)・平易な日本語+次の一手 (qa-018) | 全画面 |
 
 ### 2.3 SVG チャート契約
@@ -108,7 +108,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ### 3.0 共通シェル (feat-hub-foundation)
 
 - **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
-- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-only UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
+- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
 ### 3.1 画面×API マップ (データ取得の正本)

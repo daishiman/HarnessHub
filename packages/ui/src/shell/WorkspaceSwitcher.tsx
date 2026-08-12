@@ -1,9 +1,8 @@
 /**
  * ヘッダー常設の Workspace 切替 UI (frontend-spec §3.0 / feat-workspace-switch-ux 受入 1・3)。
  *
- * **client JS を 1 バイトも増やさない**のが設計上の要件。この部品はシェルに載る = 全 route の
- * First Load JS に効くため、`'use client'` にすると G13 (120 KiB/route) を全画面で押し上げる。
- * したがって開閉は `<details>`、切替は素の `<a>` に閉じる (キーボード操作はブラウザ実装に乗る)。
+ * 開閉は `<details>`、切替は素の `<a>` を土台にする。外側クリック・Escape・別メニューとの
+ * 排他的な開閉だけを共通の小さな client island に閉じ込め、部品全体は Server Component のまま保つ。
  *
  * `<a>` を Next の `Link` にしないのは意図的。client 側遷移による router cache の RSC ペイロード
  * (= 旧 scope で描いた木) の再利用を避ける。時間的な旧 scope 非表示はリンク先が最初に返す
@@ -16,6 +15,7 @@ import type { CSSProperties, ReactNode } from 'react';
 
 import { IdBadge } from '../components/IdBadge.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
+import { TransientDisclosure } from './TransientDisclosure.js';
 
 export interface ShellWorkspaceOption {
   /** 切替先の href。組み立ては呼び出し側 (アプリ) の責務。この層は route を知らない。 */
@@ -136,7 +136,7 @@ export function WorkspaceSwitcher(props: WorkspaceSwitcherProps): ReactNode {
   return (
     <div style={wrapperStyle}>
       <span style={captionStyle}>{label}</span>
-      <details data-hh-workspace-switcher="">
+      <TransientDisclosure data-hh-workspace-switcher="">
         <summary aria-label={switchLabel} style={summaryStyle}>
           <span style={currentNameStyle}>
             {currentIsIdentifier ? <IdentifierLabel value={currentName} label={label} /> : currentName}
@@ -160,7 +160,7 @@ export function WorkspaceSwitcher(props: WorkspaceSwitcherProps): ReactNode {
             </li>
           ))}
         </ul>
-      </details>
+      </TransientDisclosure>
     </div>
   );
 }
