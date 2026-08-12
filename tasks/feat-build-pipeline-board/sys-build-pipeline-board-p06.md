@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T07:12:44.354101Z"
-status: "active"
+updated_at: "2026-08-12T16:53:01Z"
+status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P05"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/__tests__/build-pipeline-board/","docs/features/feat-build-pipeline-board/test-run-report.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/test-run-report.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"final-review-wt-7","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 

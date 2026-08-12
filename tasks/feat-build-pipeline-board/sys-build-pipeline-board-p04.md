@@ -12,8 +12,8 @@ iteration: null
 title: "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T07:11:53.899749Z"
-status: "active"
+updated_at: "2026-08-12T16:53:01Z"
+status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P03"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/src/app/api/v1/builds/","apps/hub/src/__tests__/build-pipeline-board/","packages/schemas/build-pipeline-board/contracts.test.ts","packages/db/__tests__/build-stage-transition.test.ts","packages/db/__tests__/migration-lineage.test.ts","docs/features/feat-build-pipeline-board/test-design.md"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/test-design.md","apps/hub/src/__tests__/build-pipeline-board/authz-shared-table-consistency.test.ts"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"final-review-wt-7","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
