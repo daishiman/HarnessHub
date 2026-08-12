@@ -10,6 +10,7 @@ import { act, createElement, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // route wrapper はbundle分割だけを担うため、保存契約は遅延読込先の実装本体で検証する。
+import { DocumentDetailContent } from '../../app/(dashboard)/docs/[id]/document-detail-content.js';
 import DocumentEditPage from '../../app/(dashboard)/docs/[id]/edit/document-edit-page.js';
 import DocumentDetailPage from '../../app/(dashboard)/docs/[id]/page.js';
 import { DocumentList } from '../../app/(dashboard)/docs/document-list.js';
@@ -98,6 +99,39 @@ async function findButtonByText(text: string): Promise<HTMLButtonElement> {
     await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
   }
   throw new Error(`${text} ボタンがありません`);
+}
+
+/** ラベル文言から FormField が結線した input/textarea を見つける (FormField の htmlFor/id 配線に依存)。 */
+function fieldByLabel<T extends HTMLInputElement | HTMLTextAreaElement>(
+  scope: HTMLElement,
+  labelText: string,
+): T {
+  const label = [...scope.querySelectorAll('label')].find((candidate) => candidate.textContent?.startsWith(labelText));
+  if (label === undefined) throw new Error(`${labelText} のラベルがありません`);
+  const forId = label.getAttribute('for');
+  if (forId === null) throw new Error(`${labelText} のラベルに for がありません`);
+  const control = document.getElementById(forId);
+  if (control === null) throw new Error(`${labelText} の入力欄がありません`);
+  return control as T;
+}
+
+async function fillField(input: HTMLInputElement | HTMLTextAreaElement, value: string): Promise<void> {
+  const prototype = input instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  const valueSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
+  if (valueSetter === undefined) throw new Error('value setter がありません');
+  await act(async () => {
+    valueSetter.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
+/** dynamic() import の解決を待つ (next/dynamic の module 解決は microtask だけでは終わらないため)。 */
+async function waitUntil(predicate: () => boolean): Promise<void> {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    if (predicate()) return;
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 0)));
+  }
+  if (!predicate()) throw new Error('条件が満たされないまま待機がタイムアウトしました');
 }
 
 beforeEach(() => {
@@ -251,6 +285,29 @@ describe('DOCS-UI: DocumentCreateForm の作成', () => {
 
     expect(container.textContent).toContain('タイトルは1文字以上で入力してください。');
   });
+
+  it('DOCS-UI-012: カテゴリ・タグ・サムネイル・要約を入力すると作成リクエストへ含まれる', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(DOC, { status: 201 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentCreateForm tenantId="tenant-a" workspaceId="ws-1" />);
+    await fillTitle(container, '導入ガイド');
+
+    await fillField(fieldByLabel(container, 'カテゴリ'), '運用');
+    await fillField(fieldByLabel(container, 'タグ'), 'セットアップ, 手順書');
+    await fillField(fieldByLabel(container, 'サムネイル画像 URL'), 'https://example.com/thumb.png');
+    await fillField(fieldByLabel(container, '要約'), '導入手順の要約です。');
+
+    const form = container.querySelector('form');
+    if (form === null) throw new Error('作成 form がありません');
+    await act(async () => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    await flush();
+
+    const body = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body ?? '{}')) as Record<string, unknown>;
+    expect(body.category).toBe('運用');
+    expect(body.tags).toEqual(['セットアップ', '手順書']);
+    expect(body.thumbnail_url).toBe('https://example.com/thumb.png');
+    expect(body.excerpt).toBe('導入手順の要約です。');
+  });
 });
 
 describe('DOCS-UI: DocumentDetailPage の表示', () => {
@@ -337,5 +394,108 @@ describe('DOCS-UI: DocumentEditPage の保存', () => {
 
     expect(container.textContent).toContain('読み込みエラー');
     expect(container.textContent).toContain('network error');
+  });
+
+  it('DOCS-UI-013: カテゴリ・タグ・サムネイル・要約を編集すると保存リクエストへ含まれる', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === '/api/v1/me/notion-integration') return jsonResponse(null);
+      return jsonResponse(DOC);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(
+      <DocumentEditPage
+        params={resolved({ id: 'doc-1' })}
+        searchParams={resolved({ tenant: 'tenant-a', workspace: 'ws-1' })}
+      />,
+    );
+    expect(container.textContent).toContain(DOC.title);
+
+    await fillField(fieldByLabel(container, 'カテゴリ'), '運用');
+    await fillField(fieldByLabel(container, 'タグ'), 'セットアップ, 手順書');
+    await fillField(fieldByLabel(container, 'サムネイル画像 URL'), 'https://example.com/thumb.png');
+    await fillField(fieldByLabel(container, '要約'), '導入手順の要約です。');
+
+    const saveButton = await findButtonByText('保存する');
+    await act(async () => saveButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await flush();
+
+    const patchCall = fetchMock.mock.calls.find(
+      (call) => String(call[0]) === `/api/v1/docs/${DOC.id}` && (call[1] as RequestInit | undefined)?.method === 'PATCH',
+    );
+    if (patchCall === undefined) throw new Error('PATCH リクエストが送信されていません');
+    const body = JSON.parse(String((patchCall[1] as RequestInit).body)) as Record<string, unknown>;
+    expect(body.category).toBe('運用');
+    expect(body.tags).toEqual(['セットアップ', '手順書']);
+    expect(body.thumbnail_url).toBe('https://example.com/thumb.png');
+    expect(body.excerpt).toBe('導入手順の要約です。');
+  });
+});
+
+describe('DOCS-UI: DocumentDetailContent のタグ・カテゴリ表示', () => {
+  it('DOCS-UI-014: カテゴリ・タグ・要約があるとバッジと本文が描画される', async () => {
+    await render(
+      <DocumentDetailContent
+        bodyMarkdown="# 見出し\n\n本文。"
+        category="運用"
+        tags={['セットアップ', '手順書']}
+        excerpt="導入手順の要約です。"
+      />,
+    );
+    await waitUntil(() => container.textContent?.includes('運用') === true);
+
+    expect(container.textContent).toContain('運用');
+    expect(container.textContent).toContain('セットアップ');
+    expect(container.textContent).toContain('手順書');
+    expect(container.textContent).toContain('導入手順の要約です。');
+  });
+
+  it('DOCS-UI-015: カテゴリ・タグが無いとバッジ領域を出さない', async () => {
+    await render(<DocumentDetailContent bodyMarkdown="本文。" category={null} tags={null} excerpt={null} />);
+    await waitUntil(() => container.querySelector('[data-hh-doc-layout]') !== null);
+
+    expect(container.querySelector('[data-hh-tag-row]')).toBeNull();
+  });
+});
+
+describe('DOCS-UI: DocumentEditPanel (一覧からの分類編集)', () => {
+  it('DOCS-UI-016: 一覧からパネルを開いてカテゴリ・タグを編集すると PATCH される', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url === `/api/v1/docs/${LIST_RESPONSE.items[0]?.id}` && init?.method === 'PATCH') {
+        return jsonResponse({ ...LIST_RESPONSE.items[0], category: '運用強化' });
+      }
+      return jsonResponse(LIST_RESPONSE);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    await render(<DocumentList tenantId="tenant-a" workspaceId="ws-1" />);
+
+    const openButton = await findButtonByText('分類・要約を編集');
+    await act(async () => openButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    await waitUntil(() => container.querySelector('[data-hh-doc-edit-panel]') !== null);
+
+    // 一覧の絞り込みバーにも同名の「カテゴリ」欄があるため、container 全体ではなく
+    // 開いた編集パネルの中だけを探す (でないと絞り込みバー側の欄を誤って掴んでしまう)。
+    const panel = container.querySelector('[data-hh-doc-edit-panel]');
+    if (panel === null) throw new Error('編集パネルが見つかりません');
+    const categoryInput = fieldByLabel(panel as HTMLElement, 'カテゴリ');
+    await fillField(categoryInput, '運用強化');
+    // React はネイティブの blur (非 bubbling) ではなく focusout を拾って onBlur へ変換するため、
+    // 実際の利用者操作 (フォーカスを外す) と同じ経路を dispatch する。
+    await act(async () => categoryInput.dispatchEvent(new FocusEvent('focusout', { bubbles: true })));
+    await flush();
+
+    const patchCall = fetchMock.mock.calls.find(
+      (call) =>
+        String(call[0]) === `/api/v1/docs/${LIST_RESPONSE.items[0]?.id}` &&
+        (call[1] as RequestInit | undefined)?.method === 'PATCH',
+    );
+    if (patchCall === undefined) throw new Error('PATCH リクエストが送信されていません');
+    const body = JSON.parse(String((patchCall[1] as RequestInit).body)) as Record<string, unknown>;
+    expect(body.category).toBe('運用強化');
+
+    const closeButton = [...container.querySelectorAll('button')].find((button) => button.textContent === '閉じる');
+    if (closeButton === undefined) throw new Error('閉じるボタンがありません');
+    await act(async () => closeButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
   });
 });
