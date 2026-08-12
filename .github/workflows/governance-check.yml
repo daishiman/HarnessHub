@@ -97,7 +97,7 @@ jobs:
       # path 単位 allowlist は置かず (dangling はすべて単なるバグで、恒久例外にしない)、
       # 総件数の上限だけを固定する。件数は減る方向にしか動かさないこと。
       - name: "lint doc internal link integrity (md 本文の dangling path 参照を件数 ratchet で遮断)"
-        run: python3 scripts/lint-doc-internal-link-integrity.py --repo-root . --max-violations 308
+        run: python3 scripts/lint-doc-internal-link-integrity.py --repo-root . --max-violations 302
         continue-on-error: false
       - name: "lint mechanism-knowledge boundary (qa-070 仕組みへの repo 固有ナレッジ hard-code 遮断)"
         run: python3 scripts/lint-mechanism-knowledge-boundary.py --repo-root .

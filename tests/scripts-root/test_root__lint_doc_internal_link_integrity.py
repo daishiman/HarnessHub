@@ -31,9 +31,12 @@ SPEC = importlib.util.spec_from_file_location("lint_doc_internal_link_integrity_
 MOD = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MOD)
 
-# 実 repo の現行 baseline (HarnessHub-j7a4 時点の実測)。allowlist を置かず件数だけで
-# ratchet する方針のため、この上限は「減る方向にしか動かさない」。
-REAL_REPO_MAX_VIOLATIONS = 308
+# 実 repo の現行 baseline。allowlist を置かず件数だけで ratchet する方針のため、
+# この上限は「減る方向にしか動かさない」。CI (governance-check.yml) と local gate
+# (run-ci-checks.sh) に書く --max-violations と同じ値に保つこと。
+# 308 (2026-08-11 初回) -> 302 (2026-08-12, HarnessHub-9am.3 の merge で
+# design-review-notes.md が実在化し、それを指していた 6 件が解消)。
+REAL_REPO_MAX_VIOLATIONS = 302
 
 
 def _git(repo: Path, *args: str) -> None:

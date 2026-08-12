@@ -128,4 +128,13 @@ path 単位 allowlist は置かない。dangling はいずれも単なるバグ�
 
 段階解消は参照先 top-level 単位で行う。最大母数の tests/ (101 件) は「文書が主張する test file が存在しない」型であり、test の実在確認と併せて別課題で扱う。
 
+### ratchet 引き締め記録
+
+上限は実測が下回った時点で必ず引き下げる。引き下げないと「違反が減った」状態が上限に吸収され、次の増加を検出できなくなる。lint 自身も実測が上限を下回ったとき NOTE で引き下げを促す。
+
+| 日付 | 上限 | 実測 | 引き下げの契機 |
+| --- | --- | --- | --- |
+| 2026-08-11 | 308 | 308 (565 文書 / 5307 参照) | baseline 初回測定 |
+| 2026-08-12 | **302** | 302 (568 文書 / 5321 参照) | `HarnessHub-9am.3` で `docs/features/feat-build-pipeline-board/design-review-notes.md` を merge。同ファイルが存在しないために dangling 判定されていた参照 6 件が解消した |
+
 test は `tests/scripts-root/test_root__lint_doc_internal_link_integrity.py` に 37 件。gate liveness は実在 path のみの状態で exit 0、dangling を 1 件仕込むと exit 1 へ反転することを固定している。
