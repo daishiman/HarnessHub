@@ -22,6 +22,13 @@ export interface ShellAccountLink {
 }
 
 export interface ShellHeaderProps {
+  /**
+   * サイドバー開閉トグル (`SidebarToggleButton`) を差し込む場合に渡す。
+   * ShellHeader 自身は開閉の仕組み (`SidebarCollapseProvider`) を知らず、
+   * 描画済みの部品を受け取って先頭に置くだけにしてある。開閉が要らない画面
+   * (サイドバー自体を持たない場面) では省略すればよい。
+   */
+  sidebarToggle?: ReactNode | undefined;
   /** 表示中のワークスペース名。テナント越境の誤操作を防ぐため常に見せる。 */
   workspaceName: string;
   /** ワークスペース欄の見出し語 (「ワークスペース」など)。 */
@@ -108,6 +115,7 @@ const menuLinkStyle: CSSProperties = {
 
 export function ShellHeader(props: ShellHeaderProps): ReactNode {
   const {
+    sidebarToggle,
     workspaceName,
     workspaceLabel,
     workspaceOptions,
@@ -135,6 +143,10 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
 
   return (
     <header data-hh-shell-header="" style={barStyle}>
+      {/* サイドバーが折りたたまれてもここだけは常設なので、押し戻せる場所を失わない。
+          サイドバーが実在する md 以上でだけ出す (トグル自体のクラスは buildShellCss 側で持つ)。 */}
+      {sidebarToggle}
+
       {/* viewport で隠さず、同じ server-only 部品を全幅で使う。client JS を増やさず、
           desktop / mobile の双方から Workspace を認識・切替できる。 */}
       <div style={{ flex: '0 1 12rem', minWidth: 0 }}>
