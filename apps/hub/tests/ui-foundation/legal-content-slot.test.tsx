@@ -8,6 +8,7 @@
  * それらしく並ぶので「規約が載っている」と読めてしまい、欠陥に見えない。
  */
 import { UiProvider } from '@harness-hub/ui';
+import { fireEvent, render as renderDom, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -81,5 +82,21 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
       expect(html).not.toContain(entry.lead);
       for (const section of entry.sections) expect(html).not.toContain(section.heading);
     }
+  });
+
+  it('LEGALSLOT-07: タブを選ぶと対応する文書だけを表示する', () => {
+    renderDom(
+      <UiProvider>
+        <LegalPage />
+      </UiProvider>,
+    );
+
+    const privacyTab = screen.getByRole('tab', { name: 'プライバシーポリシー' });
+    fireEvent.click(privacyTab);
+
+    expect(privacyTab.getAttribute('aria-selected')).toBe('true');
+    const panelId = privacyTab.getAttribute('aria-controls');
+    expect(panelId).not.toBeNull();
+    expect(document.getElementById(panelId ?? '')?.textContent).toContain('プライバシーポリシー');
   });
 });

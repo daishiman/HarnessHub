@@ -18,7 +18,7 @@ export interface LegalSection {
 }
 
 export interface LegalDocument {
-  /** タブ切り替えの識別子・見出し内リンクの飛び先に使う (`#legal-tab-<slug>`)。 */
+  /** タブ切り替えの安定した識別子。URL フラグメントではなく `Tabs` の item id に使う。 */
   readonly slug: string;
   /** 画面に出す見出し。 */
   readonly title: string;
