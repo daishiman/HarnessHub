@@ -21,6 +21,7 @@ function render(node: ReactNode): string {
 }
 
 const draft: LegalDocument = {
+  slug: 'terms',
   title: '利用規約',
   approved: false,
   revisedOn: null,
@@ -33,14 +34,14 @@ const approved: LegalDocument = { ...draft, approved: true, revisedOn: '2026-09-
 
 describe('LEGALSLOT: /legal の本文差し込み口', () => {
   it('LEGALSLOT-01: 確認前は「準備中」とだけ出す', () => {
-    const html = render(<LegalArticle entry={draft} first />);
+    const html = render(<LegalArticle entry={draft} />);
     expect(html).toContain('準備中です');
   });
 
   it('LEGALSLOT-02: 確認前は本文 (前置き・条見出し・段落) を一切描画しない', () => {
     // 断り書きを添えて本文を出すのでは足りない。断り書きは、載っている文章が
     // 読まれるのを止めないため、確認前の文面は DOM に存在させないことで固定する。
-    const html = render(<LegalArticle entry={draft} first />);
+    const html = render(<LegalArticle entry={draft} />);
     expect(html).not.toContain(draft.lead);
     for (const section of draft.sections) {
       expect(html).not.toContain(section.heading);
@@ -49,7 +50,7 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
   });
 
   it('LEGALSLOT-03: 確認済みにすると本文が出て、準備中の断りが消える (画面側を直さずに切り替わる)', () => {
-    const html = render(<LegalArticle entry={approved} first />);
+    const html = render(<LegalArticle entry={approved} />);
     expect(html).not.toContain('準備中です');
     expect(html).toContain(approved.lead);
     expect(html).toContain('第1条 (適用)');
@@ -58,7 +59,7 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
 
   it('LEGALSLOT-04: 改定日は確認前でも黙らず、未確定だと書く', () => {
     // 規約は「いつ時点の内容に同意したのか」が分からないと同意の対象にならない。
-    expect(render(<LegalArticle entry={draft} first />)).toContain('改定日: 未確定');
+    expect(render(<LegalArticle entry={draft} />)).toContain('改定日: 未確定');
   });
 
   it('LEGALSLOT-05: 条を増やしても画面側の修正なしで全て描画される', () => {
@@ -66,7 +67,7 @@ describe('LEGALSLOT: /legal の本文差し込み口', () => {
       ...approved,
       sections: [...approved.sections, { heading: '第2条 (追加)', paragraphs: ['あとから足した条。'] }],
     };
-    const html = render(<LegalArticle entry={extended} first />);
+    const html = render(<LegalArticle entry={extended} />);
     expect(html).toContain('第2条 (追加)');
     expect(html).toContain('あとから足した条。');
   });

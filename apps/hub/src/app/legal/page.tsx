@@ -9,9 +9,16 @@
  *
  * 本文はこのファイルに書かない。`legal-content.ts` の 1 か所だけを差し替えれば
  * 文面が入れ替わるようにしてある (条の数が増減しても画面側の修正は不要)。
+ *
+ * 利用規約とプライバシーポリシーは `Tabs` で 1 文書ずつ切り替える表示にしている
+ * (UI/UX 改善: 2 文書を同じページに縦積みすると、読みたい方に辿り着くまで
+ * スクロールする必要があった)。ルーティングを 2 画面に分けるのではなく
+ * 同一ページ内のタブにしたのは、この画面が role 分岐もデータ取得も持たない
+ * 純粋な静的コンテンツで、ルートを増やすと `PUBLIC_PATH_PREFIXES` などの
+ * 判定点がその分増えるため (上記のコメントと同じ理由)。
  */
 
-import { ScreenHeader } from '@harness-hub/ui';
+import { ScreenHeader, Tabs } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { PublicShell } from '../../components/shell/public-shell.js';
@@ -31,12 +38,17 @@ export default function LegalPage() {
         <ScreenHeader
           id="legal-heading"
           title="利用規約・プライバシーポリシー"
-          description="Harness Hub をご利用いただく際の条件と、取り扱う情報についての方針です。"
+          description="読みたい文書をタブで切り替えられます。"
         />
 
-        {LEGAL_DOCUMENTS.map((entry, index) => (
-          <LegalArticle key={entry.title} entry={entry} first={index === 0} />
-        ))}
+        <Tabs
+          label="利用規約・プライバシーポリシーの切り替え"
+          items={LEGAL_DOCUMENTS.map((entry) => ({
+            id: entry.slug,
+            label: entry.title,
+            content: <LegalArticle entry={entry} />,
+          }))}
+        />
       </article>
     </PublicShell>
   );

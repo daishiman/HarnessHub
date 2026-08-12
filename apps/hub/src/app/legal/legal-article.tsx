@@ -4,6 +4,11 @@
  * page.tsx から切り出しているのは、Next.js の page ファイルに部品を同居させると
  * テストから直接呼べる形にならないため。ここが「本文の差し込み口」の受け皿で、
  * 文言は一切持たず `legal-content.ts` から受け取ったものだけを出す。
+ *
+ * 表示は `Tabs` (page.tsx) で 1 文書ずつ切り替える。利用規約とプライバシーポリシーを
+ * 同じ縦スクロールに並べると、条文が増えたときに目的の文書へ辿り着くまでの
+ * スクロール量が増える一方だったため (HarnessHub UI/UX 改善)。タブ内は
+ * 1 文書だけなので、複数 Panel を積む前提だった余白調整 (`first` 分岐) は不要になった。
  */
 import { Alert, Panel } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
@@ -17,15 +22,9 @@ function revisionLine(entry: LegalDocument): string {
   return `改定日: ${year}年${Number(month)}月${Number(day)}日`;
 }
 
-export function LegalArticle({
-  entry,
-  first = false,
-}: {
-  readonly entry: LegalDocument;
-  readonly first?: boolean;
-}): ReactNode {
+export function LegalArticle({ entry }: { readonly entry: LegalDocument }): ReactNode {
   return (
-    <Panel title={entry.title} style={first ? undefined : { marginBlockStart: 'var(--hh-space-4)' }}>
+    <Panel title={entry.title}>
       {/*
         確認が取れていない文面は「断り書きを添えて出す」のではなく、出さない。
         断り書きは、載っている文章が読まれるのを止めない。条番号つきの本文が

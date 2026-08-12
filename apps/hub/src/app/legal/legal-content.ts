@@ -18,6 +18,8 @@ export interface LegalSection {
 }
 
 export interface LegalDocument {
+  /** タブ切り替えの識別子・見出し内リンクの飛び先に使う (`#legal-tab-<slug>`)。 */
+  readonly slug: string;
   /** 画面に出す見出し。 */
   readonly title: string;
   /**
@@ -36,6 +38,7 @@ export interface LegalDocument {
 }
 
 export const TERMS_OF_SERVICE: LegalDocument = {
+  slug: 'terms',
   title: '利用規約',
   approved: false,
   revisedOn: null,
@@ -61,6 +64,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
 };
 
 export const PRIVACY_POLICY: LegalDocument = {
+  slug: 'privacy',
   title: 'プライバシーポリシー',
   approved: false,
   revisedOn: null,
