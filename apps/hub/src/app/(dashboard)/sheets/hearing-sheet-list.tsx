@@ -17,6 +17,7 @@ import {
 import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
+import { extractApiErrorMessage } from '../../../features/hearing-intake/client-error.js';
 import { FILTER_STORAGE_KEYS, useRememberedFilters } from '../../../lib/list/remembered-filters.js';
 
 interface HearingSheetListProps {
@@ -90,7 +91,7 @@ export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: H
           'x-harness-workspace-id': workspaceId,
         },
       });
-      if (!response.ok) throw new Error('一覧を取得できませんでした。');
+      if (!response.ok) throw new Error(await extractApiErrorMessage(response, '一覧を取得できませんでした。'));
       const body = (await response.json()) as SheetListResponse;
       const completed = body.items.find(
         (row) =>
