@@ -17,11 +17,13 @@
 import {
   AppShell,
   Button,
+  buildShellCss,
   Card,
   DataTable,
   NavList,
   ScreenHeader,
   SidebarLayout,
+  SidebarToggleButton,
   Stack,
   StageBoard,
   UiProvider,
@@ -124,12 +126,52 @@ const routes = [
       </UiProvider>
     ),
   },
+  {
+    path: '/sidebar-toggle',
+    title: 'サイドバー開閉トグル',
+    body: (
+      <>
+        <style>{buildShellCss()}</style>
+        <div className="hh-shell">
+          <aside className="hh-shell__sidebar">主要ナビゲーション</aside>
+          <div className="hh-shell__body">
+            <header>
+              <SidebarToggleButton
+                expandedLabel="サイドバーを閉じる"
+                collapsedLabel="サイドバーを開く"
+                icon={<span aria-hidden="true">menu</span>}
+              />
+            </header>
+            <main className="hh-shell__main">本文</main>
+          </div>
+        </div>
+      </>
+    ),
+  },
 ];
 
 /** WCAG 2.2 の 2.5.8。comfortable 密度の操作部品はこれを下回らない。 */
 const MIN_TAP_TARGET_PX = 44;
 
 describe('レスポンシブ崩れ検査', () => {
+  it('サイドバー開閉トグルは mobile で隠れ、md 以上でだけ表示される', async () => {
+    await withBrowserSession({ routes }, async (session) => {
+      await session.goto('/sidebar-toggle', viewportPresets.mobile);
+      const [mobileToggle] = await session.measure('[data-hh-sidebar-toggle]', ['display']);
+      const [mobileSidebar] = await session.measure('.hh-shell__sidebar', ['display']);
+
+      expect(mobileToggle?.styles.display).toBe('none');
+      expect(mobileSidebar?.styles.display).toBe('none');
+
+      await session.setViewport(viewportPresets.tablet);
+      const [desktopToggle] = await session.measure('[data-hh-sidebar-toggle]', ['display']);
+      const [desktopSidebar] = await session.measure('.hh-shell__sidebar', ['display']);
+
+      expect(desktopToggle?.styles.display).toBe('inline-flex');
+      expect(desktopSidebar?.styles.display).not.toBe('none');
+    });
+  });
+
   it.each(Object.entries(viewportPresets))('%s 幅で横方向オーバーフローが出ない', async (_name, viewport) => {
     await withBrowserSession({ routes }, async (session) => {
       await session.goto('/dense', viewport);
