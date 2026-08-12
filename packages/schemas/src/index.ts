@@ -14,6 +14,8 @@ export * from '../feedback-loop/index.js';
 export * from '../hearing-intake/index.js';
 // feat-metrics-tracking の契約 schema。同上の理由でここから再エクスポートする。
 export * from '../metrics-tracking/index.js';
+// feat-notion-integration の契約 schema。同上の理由でここから再エクスポートする。
+export * from '../notion-integration/index.js';
 // feat-publish-pipeline の契約 schema。auth-tenancy と同じ理由でここから再エクスポートする。
 export * from '../publish-pipeline/index.js';
 // feat-publisher-plugin の契約 schema。同上の理由でここから再エクスポートする。

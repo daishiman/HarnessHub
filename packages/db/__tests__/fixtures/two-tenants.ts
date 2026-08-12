@@ -17,6 +17,7 @@ import { createHearingIntakeRepository } from '../../repository/hearing-intake';
 import { createIdpConnectionsRepo } from '../../repository/idp';
 import { createMetricsTrackingRepository } from '../../repository/metrics-tracking';
 import { createIdempotencyLedgerRepo, createSessionRevocationsRepo } from '../../repository/misc';
+import { createNotionIntegrationRepo } from '../../repository/notion-integration';
 import { createPackagesRepo } from '../../repository/packages';
 import { createReleasesRepo } from '../../repository/releases';
 import { createTenantsRepo } from '../../repository/tenants';
@@ -88,6 +89,14 @@ async function seedTenant(
     salary,
     role: 'workspace-admin',
     status: 'active',
+  });
+
+  const notionIntegration = createNotionIntegrationRepo(adapter, cipher);
+  await notionIntegration.upsert(context, {
+    workspaceId,
+    mode: 'url',
+    pageUrl: `https://www.notion.so/fixture-${slug}`,
+    apiKey: null,
   });
 
   await adapter.client.insert(tenantCoefficients).values({

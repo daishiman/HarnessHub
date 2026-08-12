@@ -137,7 +137,11 @@ describe('LISTERG: 一覧の使い勝手', () => {
     document.body.replaceChildren();
     const reopened = await mount(createElement(DocumentList, { tenantId: 't', workspaceId: 'w' }));
 
-    expect(requested.every((url) => url.includes('scope=common'))).toBe(true);
+    // DocumentList には Notion の付随導線もある。絞り込み契約は docs 一覧 API だけで判定し、
+    // 別の関心事の GET を一覧クエリと誤認しない。
+    const reopenedDocsRequests = requested.filter((url) => url.startsWith('/api/v1/docs?'));
+    expect(reopenedDocsRequests.length).toBeGreaterThan(0);
+    expect(reopenedDocsRequests.every((url) => url.includes('scope=common'))).toBe(true);
     expect(reopened.querySelector<HTMLSelectElement>('select')?.value).toBe('common');
     expect(reopened.querySelector('[data-hh-applied-filter-chip]')?.textContent).toContain('スコープ: 共通');
   });
