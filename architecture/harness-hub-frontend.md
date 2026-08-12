@@ -292,7 +292,8 @@ PR #700 の G13 回復では超過画面の client 本体を route-local `next/d
 
 ## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
 
-S10 を8画面へ分割し S12 に引き渡し UI を追加。正本は frontend-spec。
+S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表示を追加。
+作成時添付ステージングと profile enum 加算を含む。正本は frontend-spec。
 
 ## 2026-08-12 S15 Docs CMS rich surface
 

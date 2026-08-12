@@ -26,6 +26,9 @@ const USAGE_PURPOSE_LABELS: Readonly<Record<HearingSheetFormSnapshot['usagePurpo
   app_development: 'アプリ開発',
   harness_development: 'ハーネス開発',
   system_development: 'システム開発',
+  data_analysis: 'データ分析',
+  document_creation: '資料・ドキュメント作成',
+  customer_support: '問い合わせ対応',
   other: 'その他',
   unknown: UNKNOWN_LABEL,
 };
@@ -42,6 +45,8 @@ const ROLE_LABELS: Readonly<Record<HearingSheetFormSnapshot['role'], string>> = 
   employee: '会社員',
   executive: '経営者',
   creator: 'クリエイター',
+  team_lead: 'チームリーダー',
+  freelancer: 'フリーランス',
   unknown: UNKNOWN_LABEL,
 };
 
@@ -50,6 +55,8 @@ const CONTEXT_LABELS: Readonly<Record<HearingSheetFormSnapshot['context'], strin
   personal: '個人',
   study: '学習',
   hobby: '趣味',
+  side_business: '副業',
+  nonprofit: '非営利活動',
   unknown: UNKNOWN_LABEL,
 };
 
@@ -58,6 +65,8 @@ const MOTIVATION_LABELS: Readonly<Record<HearingSheetFormSnapshot['motivation'],
   quality: '品質',
   learning: '学習',
   branding: 'ブランディング',
+  cost_reduction: 'コスト削減',
+  risk_reduction: 'リスク低減',
   unknown: UNKNOWN_LABEL,
 };
 
@@ -66,6 +75,8 @@ const SHARING_INTENT_LABELS: Readonly<Record<HearingSheetFormSnapshot['sharingIn
   small_group: '少人数',
   public: '不特定多数',
   customer: '顧客',
+  department: '部門内',
+  partner_company: '取引先',
   unknown: UNKNOWN_LABEL,
 };
 
@@ -78,9 +89,11 @@ const CONSTRAINT_TAG_LABELS: Readonly<Record<HearingSheetFormSnapshot['constrain
 };
 
 const PRIORITY_LABELS: Readonly<Record<HearingSheetFormSnapshot['priority'], string>> = {
+  urgent: '緊急',
   high: '高',
   medium: '中',
   low: '低',
+  someday: 'いつか対応',
 };
 
 const REQUEST_PATTERN_LABELS: Readonly<Record<HearingSheetFormSnapshot['requestPatterns'][number], string>> = {

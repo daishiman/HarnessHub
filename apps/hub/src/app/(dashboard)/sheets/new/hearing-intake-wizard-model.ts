@@ -86,6 +86,9 @@ export const USAGE_PURPOSE_OPTIONS: readonly SelectOption<HearingSheetFormInput[
   { value: 'app_development', label: 'アプリ開発' },
   { value: 'harness_development', label: 'ハーネス開発' },
   { value: 'system_development', label: 'システム開発' },
+  { value: 'data_analysis', label: 'データ分析' },
+  { value: 'document_creation', label: '資料・ドキュメント作成' },
+  { value: 'customer_support', label: '問い合わせ対応' },
   { value: 'other', label: 'その他' },
   UNKNOWN_OPTION,
 ];
@@ -102,6 +105,8 @@ export const ROLE_OPTIONS: readonly SelectOption<HearingSheetFormInput['role']>[
   { value: 'employee', label: '会社員' },
   { value: 'executive', label: '経営者' },
   { value: 'creator', label: 'クリエイター' },
+  { value: 'team_lead', label: 'チームリーダー' },
+  { value: 'freelancer', label: 'フリーランス' },
   UNKNOWN_OPTION,
 ];
 
@@ -110,6 +115,8 @@ export const CONTEXT_OPTIONS: readonly SelectOption<HearingSheetFormInput['conte
   { value: 'personal', label: '個人' },
   { value: 'study', label: '学習' },
   { value: 'hobby', label: '趣味' },
+  { value: 'side_business', label: '副業' },
+  { value: 'nonprofit', label: '非営利活動' },
   UNKNOWN_OPTION,
 ];
 
@@ -118,6 +125,8 @@ export const MOTIVATION_OPTIONS: readonly SelectOption<HearingSheetFormInput['mo
   { value: 'quality', label: '品質' },
   { value: 'learning', label: '学習' },
   { value: 'branding', label: 'ブランディング' },
+  { value: 'cost_reduction', label: 'コスト削減' },
+  { value: 'risk_reduction', label: 'リスク低減' },
   UNKNOWN_OPTION,
 ];
 
@@ -126,7 +135,18 @@ export const SHARING_INTENT_OPTIONS: readonly SelectOption<HearingSheetFormInput
   { value: 'small_group', label: '少人数' },
   { value: 'public', label: '不特定多数' },
   { value: 'customer', label: '顧客' },
+  { value: 'department', label: '部門内' },
+  { value: 'partner_company', label: '取引先' },
   UNKNOWN_OPTION,
+];
+
+/** 実務では5段階が一般的なため urgent(緊急)/someday(いつか対応) を high/medium/low の既存3段に追加した。 */
+export const PRIORITY_OPTIONS: readonly SelectOption<HearingSheetFormInput['priority']>[] = [
+  { value: 'urgent', label: '緊急' },
+  { value: 'high', label: '高' },
+  { value: 'medium', label: '中' },
+  { value: 'low', label: '低' },
+  { value: 'someday', label: 'いつか対応' },
 ];
 
 export const USAGE_PURPOSE_LABELS = labelsFromOptions(USAGE_PURPOSE_OPTIONS);
@@ -137,6 +157,9 @@ export const MOTIVATION_LABELS = labelsFromOptions(MOTIVATION_OPTIONS);
 export const SHARING_INTENT_LABELS = labelsFromOptions(SHARING_INTENT_OPTIONS);
 export const CONSTRAINT_TAG_LABELS = labelsFromOptions(CONSTRAINT_TAG_OPTIONS);
 export const REQUEST_PATTERN_LABELS = labelsFromOptions(REQUEST_PATTERN_OPTIONS);
+export const PRIORITY_LABELS = labelsFromOptions(PRIORITY_OPTIONS);
+export const INTEGRATION_TOOL_LABELS = labelsFromOptions(INTEGRATION_TOOL_OPTIONS);
+export const EXISTING_DATA_SOURCE_LABELS = labelsFromOptions(EXISTING_DATA_SOURCE_OPTIONS);
 
 export function toggleWithExclusiveValue<T extends string>(current: readonly T[], next: T, exclusiveValue: T): T[] {
   if (next === exclusiveValue) return current.includes(exclusiveValue) ? [] : [exclusiveValue];
@@ -238,7 +261,6 @@ export function canProceedAtStep(form: HearingSheetFormInput, activeIndex: numbe
             (!form.existingDataSources.includes('other') || requiredText(form.existingDataSourcesOther ?? '')))),
       true,
       requiredText(form.features) && requiredText(form.output),
-      true,
       true,
     ][activeIndex] ?? false
   );

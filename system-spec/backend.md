@@ -232,10 +232,16 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 
 ## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
 
-- sheets API は FormData 28 項目を受け付け、screenshots / handoff-tokens を sheet 配下の子資源として公開する。
+- sheets API は FormData 30 項目を受け付け、screenshots / handoff-tokens を sheet 配下の子資源として公開する。
 - 公開共有は `GET /api/hearing/:token` (session なし)。token は SHA-256 ハッシュのみ保存し、
   無効・期限切れ・失効は同一 404 に畳む。
 - 詳細は `docs/backend-spec-api-state.md` §4.3.1。本追記は REST+zod 単一ソースと deny-by-default 認可の枠内。
+
+## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul)
+
+- FormData / snapshot のフィールド数は維持し、profile・priority の **enum 値だけ加算** (既存値の削除・改名なし)。
+- 添付 content-type はクライアント事前検証とサーバ signature 検査の双方で画像/動画/CSV/Excel・25MB 上限。
+- API path 集合と認可モデルは不変。詳細は `packages/schemas/hearing-intake/contracts.ts`。
 
 ## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
 

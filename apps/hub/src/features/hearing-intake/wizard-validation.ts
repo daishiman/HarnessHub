@@ -70,8 +70,9 @@ export function knowledgeAssetsValidationError(assets: readonly string[]): strin
 }
 
 /**
- * 8 画面ウィザードの「次へ」と最終 POST 直前が共有する入力判定。
- * 画面 index は S10 information-design の 0..7 と一致する。
+ * 7 画面ウィザードの「次へ」と最終 POST 直前が共有する入力判定。
+ * 画面 index は S10 information-design の 0..6 と一致する
+ * (元は「整理・まとめ」「確認」の2画面だったが重複のため1画面に統合した)。
  */
 export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex: number): boolean {
   switch (stepIndex) {
@@ -127,7 +128,6 @@ export function hearingIntakeStepIsValid(form: HearingSheetFormInput, stepIndex:
         textWithinLimit(form.output, HEARING_SHEET_FORM_LIMITS.requiredTextLength)
       );
     case 6:
-    case 7:
       return [0, 1, 2, 3, 4, 5].every((index) => hearingIntakeStepIsValid(form, index));
     default:
       return false;

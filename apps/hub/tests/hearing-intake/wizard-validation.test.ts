@@ -38,8 +38,8 @@ const VALID_FORM: HearingSheetFormInput = {
 };
 
 describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
-  it('全 28 項目が有効なら 8 画面の各ステップと最終確認を通す', () => {
-    for (const index of [0, 1, 2, 3, 4, 5, 6, 7]) {
+  it('全 30 項目が有効なら 7 画面の各ステップと最終確認を通す', () => {
+    for (const index of [0, 1, 2, 3, 4, 5, 6]) {
       expect(hearingIntakeStepIsValid(VALID_FORM, index)).toBe(true);
     }
   });
@@ -100,6 +100,6 @@ describe('HI-WIZARD-VALIDATION: POST 前の schema 境界', () => {
         5,
       ),
     ).toBe(false);
-    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 7)).toBe(false);
+    expect(hearingIntakeStepIsValid({ ...VALID_FORM, salary: 100_000_001 }, 6)).toBe(false);
   });
 });

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { type ReactNode, useEffect, useState } from 'react';
 
 import { hearingIntakeStepIsValid } from '../../../../features/hearing-intake/wizard-validation.js';
+import { uploadStagedAttachments, useStagedAttachments } from './hearing-intake-wizard-attachments.js';
 import { canProceedAtStep, INITIAL_HEARING_FORM } from './hearing-intake-wizard-model.js';
 import { useHearingWizardFormState } from './hearing-intake-wizard-state.js';
 import { buildHearingIntakeSteps } from './hearing-intake-wizard-steps.js';
@@ -24,10 +25,13 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
   const draftStorageKey = `${STORAGE_KEY}:${tenantId}:${workspaceId}`;
   const formState = useHearingWizardFormState();
   const { form, restoreDraft } = formState;
+  const attachmentsState = useStagedAttachments();
   const [activeIndex, setActiveIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<CreateSheetResponse | null>(null);
+  // 添付アップロードが一部失敗しても、シート作成自体は成功として扱う (依頼者要件: 実装を複雑にしすぎない)。
+  const [attachmentFailures, setAttachmentFailures] = useState<readonly string[]>([]);
   // 入力途中で離脱すると下書きが消えるため、確認を挟んでから一覧へ戻す (§P6 / qa-013)
   const [exitOpen, setExitOpen] = useState(false);
 
@@ -54,11 +58,11 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
     return () => window.removeEventListener('beforeunload', warn);
   }, [created, form]);
 
-  const steps = buildHearingIntakeSteps(formState);
+  const steps = buildHearingIntakeSteps(formState, attachmentsState);
   const canProceed = canProceedAtStep(form, activeIndex);
 
   const submit = async (): Promise<void> => {
-    if (!hearingIntakeStepIsValid(form, 7)) {
+    if (!hearingIntakeStepIsValid(form, 6)) {
       setError('入力内容に上限超過または未入力があります。各ステップを確認してください。');
       return;
     }
@@ -77,6 +81,12 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
       });
       if (!response.ok) throw new Error('送信できませんでした。入力内容と接続を確認してください。');
       const body = (await response.json()) as CreateSheetResponse;
+      // シート作成が成功した直後に、ステージング済みの添付ファイルを順番にアップロードする。
+      // 一部失敗しても、シート作成自体は取り消さず、失敗したファイル名だけ完了画面で知らせる。
+      if (attachmentsState.attachments.length > 0) {
+        const summary = await uploadStagedAttachments(body.id, attachmentsState.attachments, tenantId, workspaceId);
+        setAttachmentFailures(summary.failed.map((failure) => failure.fileName));
+      }
       setCreated(body);
       sessionStorage.removeItem(draftStorageKey);
     } catch (cause) {
@@ -99,6 +109,13 @@ export function HearingIntakeWizard({ tenantId, workspaceId }: HearingIntakeWiza
               title={`シート番号 ${created.code}`}
               description="シート本文の作成を開始しました。完了を待たずに別の作業へ移れます。"
             />
+            {attachmentFailures.length === 0 ? null : (
+              <Alert
+                tone="warning"
+                title="一部の添付ファイルをアップロードできませんでした"
+                description={`シート自体は正常に作成されています。以下のファイルはシート詳細画面から改めて添付してください: ${attachmentFailures.join('、')}`}
+              />
+            )}
             <TagRow label="受付したシートの状態">
               <StatusChip domain="sheet" status={created.status} />
             </TagRow>
