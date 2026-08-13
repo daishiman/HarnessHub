@@ -41,16 +41,17 @@ import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from
  * loadable ランタイムだけが増える (実測 2026-08-13: /settings/auth が +573 bytes 悪化した)。
  * 効くのはこの位置 — 親が client である境界の内側だけである。
  *
- * `ssr: false` を選べるのは、この画面が **SSR で何も描かない** ため。接続一覧も setup 情報も
- * mount 後の fetch で入るので、server 側の出力は元から「読み込み中です。」しかない。
- * SSR 出力を失わずに初期 chunk だけを削れる、数少ない条件が揃っている。
+ * `ssr: false` は付けない。初期 chunk から外す効果は `dynamic()` 自体が生むもので、
+ * `ssr: false` はそこに寄与しない。一方で `ssr: false` を付けると Next の client ランタイム
+ * (mount 判定) に依存するようになり、jsdom の試験環境で読込が解決しないことがある
+ * (実測 2026-08-14: CI の ERRSPLIT-03 だけが接続一覧を掴めず落ちた)。
+ * この画面は接続一覧も setup 情報も mount 後の fetch で入るため、SSR 出力は元から
+ * 「読み込み中です。」しかなく、`ssr: false` を外しても失うものが無い。
  */
 const SetupPanel = dynamic(() => import('./oidc-connection-panels.js').then((mod) => mod.SetupPanel), {
-  ssr: false,
   loading: () => <p style={{ margin: 0 }}>読み込み中です。</p>,
 });
 const ConnectionCard = dynamic(() => import('./oidc-connection-panels.js').then((mod) => mod.ConnectionCard), {
-  ssr: false,
   loading: () => <p style={{ margin: 0 }}>読み込み中です。</p>,
 });
 
