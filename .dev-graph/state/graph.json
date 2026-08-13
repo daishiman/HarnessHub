@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1594,
+  "graph_revision": 1603,
   "nodes": [
     {
       "acceptance": [
@@ -8896,12 +8896,15 @@
       "classification_confidence": 0.88,
       "classification_reason": "P03 で承認された設計に基づき P05 実装の受入契約となるテストスタブを作成する P04 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/test-design.md",
+          "apps/hub/src/__tests__/build-pipeline-board/authz-shared-table-consistency.test.ts"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -8975,7 +8978,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -8987,7 +8990,7 @@
       "template_version": "1.1.0",
       "title": "テストファースト設計 — 工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離のテストスタブ作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:11:53.899749Z"
+      "updated_at": "2026-08-12T22:32:23.186134Z"
     },
     {
       "acceptance": [
@@ -9017,10 +9020,13 @@
       "classification_reason": "P03 承認済み設計と P04 テストスタブに基づき S13 実装・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event を実装する P05 タスク",
       "completion_evidence": {
         "completed_at": null,
-        "evidence_refs": [],
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/final-review-notes.md",
+          "docs/features/feat-build-pipeline-board/refactoring-migration-note.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
         "status": "in_progress"
       },
       "confirmation_evidence": {
@@ -9119,7 +9125,7 @@
       "template_version": "1.1.0",
       "title": "実装 — S13 パイプラインボード・Build スキーマ・工程操作 API・PublishRequest 接続・監査 event の実装",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:12:20.951696Z"
+      "updated_at": "2026-08-12T22:33:12.308196Z"
     },
     {
       "acceptance": [
@@ -9148,12 +9154,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "P04 のテストスタブ (工程遷移 admin 限定/監査記録/PublishRequest 整合/tenant 分離/B9 共有認可表) を P05 実装に対して実行し結果を記録する P06 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/test-run-report.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9224,7 +9232,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9236,7 +9244,7 @@
       "template_version": "1.1.0",
       "title": "テスト実行 — 単体/結合/工程遷移認可/PublishRequest 整合/tenant 分離テストの実行と結果記録",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:12:44.354101Z"
+      "updated_at": "2026-08-12T22:33:53.195338Z"
     },
     {
       "acceptance": [
@@ -9265,12 +9273,14 @@
       "classification_confidence": 0.87,
       "classification_reason": "P06 のテスト結果を goal-spec の acceptance 3 項目に照らして受入判定する P07 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/acceptance-report.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9335,7 +9345,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9347,7 +9357,7 @@
       "template_version": "1.1.0",
       "title": "受入 — goal-spec acceptance 3 項目の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:13:07.200133Z"
+      "updated_at": "2026-08-12T22:34:34.494659Z"
     },
     {
       "acceptance": [
@@ -9375,12 +9385,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P05 で追加した Build スキーマ定義から migration ファイルを生成し既存 publish_requests テーブルへの FK 参照を含めて後方互換性を確認する P08 タスク (feature-execution-package-contract.md により P08 は N/A 判定時も常設される)",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/refactoring-migration-note.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9451,7 +9463,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9463,7 +9475,7 @@
       "template_version": "1.1.0",
       "title": "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:13:35.992146Z"
+      "updated_at": "2026-08-12T22:35:16.504591Z"
     },
     {
       "acceptance": [
@@ -9492,12 +9504,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P06 テスト結果と P08 migration 結果を踏まえ CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の充足を確認する P09 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/quality-assurance-report.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9568,7 +9582,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9580,7 +9594,7 @@
       "template_version": "1.1.0",
       "title": "品質保証 — CI 品質ゲート (axe/tenant 分離/工程操作認可/PublishRequest 整合) の確認",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:14:06.376324Z"
+      "updated_at": "2026-08-12T22:35:59.020030Z"
     },
     {
       "acceptance": [
@@ -9609,12 +9623,14 @@
       "classification_confidence": 0.86,
       "classification_reason": "P01-P09 の成果物を根拠に goal-spec の quality_constraints 6 件の充足を独立した視点で最終判定する P10 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/final-review-notes.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9679,7 +9695,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9691,7 +9707,7 @@
       "template_version": "1.1.0",
       "title": "最終独立レビュー — quality_constraints 6 件の充足判定",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:14:28.003350Z"
+      "updated_at": "2026-08-12T22:36:40.132097Z"
     },
     {
       "acceptance": [
@@ -9720,12 +9736,14 @@
       "classification_confidence": 0.84,
       "classification_reason": "P06/P07/P09/P10 の検証結果を再現可能な証跡として索引化する P11 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/evidence/index.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9790,7 +9808,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9802,7 +9820,7 @@
       "template_version": "1.1.0",
       "title": "エビデンス収集 — 再現可能な検証証跡の集約",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:14:50.779377Z"
+      "updated_at": "2026-08-12T22:37:25.731086Z"
     },
     {
       "acceptance": [
@@ -9830,12 +9848,14 @@
       "classification_confidence": 0.85,
       "classification_reason": "P11 のエビデンスを踏まえ S13 運用手順・工程操作監査運用・PublishRequest 接続監視を runbook 化する P12 タスク",
       "completion_evidence": {
-        "completed_at": null,
-        "evidence_refs": [],
+        "completed_at": "2026-08-12T16:53:01Z",
+        "evidence_refs": [
+          "docs/features/feat-build-pipeline-board/runbook.md"
+        ],
         "policy": "manual",
-        "reconciled_at": null,
-        "source": null,
-        "status": "in_progress"
+        "reconciled_at": "2026-08-12T16:53:01Z",
+        "source": "manual",
+        "status": "done"
       },
       "confirmation_evidence": {
         "evaluated_digest": "30497959f1a517481e8ea8a52429e27f1bcc381331375543a1c370638e7cabf6",
@@ -9900,7 +9920,7 @@
         "source_version": "0.1.0"
       },
       "start_date": null,
-      "status": "active",
+      "status": "done",
       "tags": [
         "feat-build-pipeline-board",
         "studio-extension",
@@ -9913,7 +9933,7 @@
       "template_version": "1.1.0",
       "title": "ドキュメント/運用 — S13 運用手順・工程操作監査運用・PublishRequest 接続監視の runbook 作成",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-12T07:15:27.764003Z"
+      "updated_at": "2026-08-12T22:38:32.397238Z"
     },
     {
       "acceptance": [

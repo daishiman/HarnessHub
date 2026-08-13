@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — Build テーブルマイグレーション生成と後方互換性確認"
 owners: ["daishiman"]
 created_at: "2026-08-10T13:41:31Z"
-updated_at: "2026-08-12T07:13:35.992146Z"
-status: "active"
+updated_at: "2026-08-12T22:35:16.504591Z"
+status: "done"
 depends_on: ["SYS-BUILD-PIPELINE-BOARD-P07"]
 related_nodes: ["feat-build-pipeline-board","arch-harness-hub-frontend","arch-harness-hub-backend","feat-hearing-intake","feat-domain-model-db"]
 resource_scope: ["docs/features/feat-build-pipeline-board/refactoring-migration-note.md","packages/db/migrations/","packages/db/migrations/meta/","packages/db/__tests__/migration-lineage.test.ts"]
@@ -43,7 +43,7 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"in_progress"}
+completion_evidence: {"completed_at":"2026-08-12T16:53:01Z","evidence_refs":["docs/features/feat-build-pipeline-board/refactoring-migration-note.md"],"policy":"manual","reconciled_at":"2026-08-12T16:53:01Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections":[],"status":"complete"}
 ---
 
