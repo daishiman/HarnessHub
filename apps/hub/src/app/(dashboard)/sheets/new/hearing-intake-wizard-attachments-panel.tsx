@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Button, Stack, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Stack, TextInput, Tile } from '@harness-hub/ui';
 import { type ChangeEvent, type ClipboardEvent, type ReactNode, useCallback, useRef } from 'react';
 
 import { ATTACHMENT_ACCEPTED_FILE_EXTENSIONS } from '../../../../features/hearing-intake/attachment-validation.js';
@@ -68,23 +68,17 @@ export function AttachmentStagingPanel({ state }: { readonly state: StagedAttach
             ペースト専用領域。クリック操作の意味を持たないが、button要素はネイティブに
             フォーカス可能・aria-label対応なため、非対話要素へ tabIndex を付ける a11y 警告を避けられる。
           */}
-          <button
+          <Tile
+            as="button"
+            dashed
+            tone="muted"
             type="button"
             aria-label="ここにフォーカスしてスクリーンショットなどの画像を貼り付けできます"
             onPaste={handlePaste}
-            style={{
-              background: 'none',
-              border: '1px dashed var(--hh-color-border)',
-              borderRadius: 'var(--hh-radius-sm)',
-              color: 'var(--hh-color-text-muted)',
-              cursor: 'text',
-              padding: 'var(--hh-space-3)',
-              textAlign: 'center',
-              width: '100%',
-            }}
+            style={{ cursor: 'text', textAlign: 'center', width: '100%' }}
           >
             ここをクリックしてフォーカスしてから、画像を貼り付け（Ctrl+V / Cmd+V）できます
-          </button>
+          </Tile>
           {state.rejectionMessages.length === 0 ? null : (
             <Alert
               tone="danger"
@@ -100,14 +94,7 @@ export function AttachmentStagingPanel({ state }: { readonly state: StagedAttach
       ) : (
         <ul style={{ display: 'grid', gap: 'var(--hh-space-2)', listStyle: 'none', margin: 0, padding: 0 }}>
           {state.attachments.map((attachment) => (
-            <li
-              key={attachment.localId}
-              style={{
-                border: '1px solid var(--hh-color-border)',
-                borderRadius: 'var(--hh-radius-sm)',
-                padding: 'var(--hh-space-3)',
-              }}
-            >
+            <Tile as="li" key={attachment.localId}>
               <Stack gap={2}>
                 <strong>
                   {attachment.file.name}（{formatFileSize(attachment.file.size)}）
@@ -131,7 +118,7 @@ export function AttachmentStagingPanel({ state }: { readonly state: StagedAttach
                   </Button>
                 </div>
               </Stack>
-            </li>
+            </Tile>
           ))}
         </ul>
       )}

@@ -39,7 +39,8 @@ function collectBreakpointUses(source: string, feature: 'min-width' | 'max-width
 
 describe('buildBaseCss', () => {
   it('本文の色・背景・書体を token 変数から取る', () => {
-    expect(css).toContain('background: var(--hh-color-bg);');
+    // 最下層は面の 3 段の一番奥 (pageBg)。アプリ本体はこの上へ浮かせる
+    expect(css).toContain('background: var(--hh-color-page-bg);');
     expect(css).toContain('color: var(--hh-color-text);');
     expect(css).toContain('font-family: var(--hh-font-family);');
   });

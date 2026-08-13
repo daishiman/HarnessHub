@@ -59,7 +59,18 @@ describe('meetsTextContrast', () => {
     expect(meetsTextContrast('#0958d9', '#ffffff')).toBe(true);
   });
 
-  it('mockup 実測の #1677ff は白背景で不合格 (token を濃色段へ寄せた理由)', () => {
+  it('明るすぎる色は白背景で不合格になる (token を濃色段へ寄せる根拠)', () => {
     expect(meetsTextContrast('#1677ff', '#ffffff')).toBe(false);
+  });
+
+  /**
+   * デザインシステム仕様書のアンバー原案 #b45309 を、本リポジトリで #aa4e09 へ
+   * 濃くした理由をここで機械的に固定する。原案は light の bg (#f1f1ef) 上で 4.44:1 しか
+   * 出ず、本文色として使うと WCAG AA (4.5:1) を割る。仕様書の色そのものではなく
+   * 「アンバーを状態色に使う」という考え方の方を採り、値は contrast 契約に合わせて調整した。
+   */
+  it('アンバーは仕様原案のままでは light 背景で不合格、濃色側へ寄せると合格する', () => {
+    expect(meetsTextContrast('#b45309', '#f1f1ef')).toBe(false);
+    expect(meetsTextContrast('#aa4e09', '#f1f1ef')).toBe(true);
   });
 });

@@ -9,7 +9,7 @@
  */
 import type { CSSProperties, ReactNode } from 'react';
 
-import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
+import { actionBaseStyle, actionVariantStyles, colorVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { screenHeaderStickyInset } from './sticky-stack.js';
 
 export interface PanelProps {
@@ -43,8 +43,10 @@ export function Panel({
   const Heading = `h${headingLevel}` as const;
   const hasHeader = title !== undefined || actions !== undefined;
 
+  // 角丸は surfaceStyle の card (10px) をそのまま使う。ここで上書きすると
+  // DataCard や KpiCard と 2px ずれ、同じ「カード」が 2 種類あるように見える。
   return (
-    <section style={{ ...surfaceStyle, borderRadius: radiusVar('card'), ...style }}>
+    <section style={{ ...surfaceStyle, ...style }}>
       {hasHeader ? (
         <div
           style={{
@@ -110,8 +112,8 @@ export function ActionLink({
   openInNewTab = false,
   children,
 }: ActionLinkProps): ReactNode {
-  const primary = variant === 'primary';
-
+  // 見た目は Button と同じ定義を共有する。ここに独自の角丸や字の太さを書くと、
+  // 「新規作成」(リンク) と「保存」(ボタン) が並んだときだけ形が揃わない。
   return (
     <a
       href={href}
@@ -119,21 +121,7 @@ export function ActionLink({
       rel={openInNewTab ? 'noopener noreferrer' : undefined}
       data-hh-focusable=""
       data-variant={variant}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: spaceVar(2),
-        minHeight: 'var(--hh-control-height)',
-        padding: `0 ${spaceVar(4)}`,
-        borderRadius: radiusVar('sm'),
-        fontSize: 'var(--hh-font-size-md)',
-        fontWeight: 'var(--hh-font-weight-bold)',
-        textDecoration: 'none',
-        color: primary ? colorVar('onPrimary') : colorVar('text'),
-        background: primary ? colorVar('primary') : colorVar('surface'),
-        border: `1px solid ${primary ? colorVar('primary') : colorVar('borderStrong')}`,
-      }}
+      style={{ ...actionBaseStyle, ...actionVariantStyles[variant] }}
     >
       {children}
     </a>

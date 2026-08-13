@@ -190,10 +190,18 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 
 ## Post-compile writeback: 配色仕様書 v2 (2026-08-13)
 
-- 見た目の正本をグラファイト × アンバー、IBM Plex Sans + Noto Sans JP + JetBrains Mono へ更新する。
-- `breakpointTokens` は `md=640` / `lg=1024`。shell の sidebar / ボトムタブ契約は維持し、閾値の px だけを差し替える。
-- 公開 API / DB / 認可は不変。新規 qa 番号なし。確定質疑 qa-226 の「md=768」逐語は本 writeback と [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014 が実装正本として上書きする。R4-reopen は follow-up。
+- 見た目の正本をグラファイト × アンバー、IBM Plex Sans + 日本語システムフォント + JetBrains Mono へ更新する。AI専用色は持たず、アンバー `accent` は動作中専用とする。
+- `breakpointTokens` は `md=641` / `lg=1025`。shell の sidebar / ボトムタブ契約は維持し、「〜640 / 641〜1024 / 1025〜」を重複なく表す。
+- 公開 API / DB / 認可は不変。新規 qa 番号なし。確定質疑 qa-226 の「md=768」逐語は本 writeback と [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014 が実装正本として上書きする。
 - 正本: [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
+## Post-compile writeback: 共通ヘッダー履歴・現在地 (2026-08-13)
+
+- 認証後の全業務画面は共通 `ShellHeader` に戻る/進むを 1 組だけ持ち、現在 route の画面タイトルを wide / middle / narrow の全帯で表示する。
+- narrow では Workspace 文脈を上段、履歴・タイトル・必要操作を下段に分け、360px でも履歴 2 操作を各 44px、タイトルを 48px 以上で保つ。
+- ブラウザ履歴操作だけを小さな client island とし、シェル・route title 解決・本文は server-first のまま維持する。履歴の有無を誤推定して無効化せず、ブラウザの標準動作へ委ねる。
+- route title は exact → dynamic → 最長一致 nav fallback の順に解決する。公開 shell、`ScreenHeader`、ボトムタブには同じ操作を重複配置しない。
+- 公開 API / DB / 認可 / Cloudflare deploy unit は不変。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-015 / AC-UIF-017。
 
 ## Post-compile writeback: 着地ダッシュボード (2026-08-13 / HarnessHub-1cno)
 

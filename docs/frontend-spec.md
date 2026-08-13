@@ -26,7 +26,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | i18n | 自作 typed 辞書 (ja 正本・en 後追い) | 依存ゼロ。enum→表示ラベル写像 (backend-spec §2.1) と状態語彙統一 (qa-021) を同一 module に集約 |
 | Markdown | react-markdown + remark-gfm + rehype-sanitize | sanitize 済み HTML のみ描画 (SEC7/qa-022)。allowlist 方式。`dangerouslySetInnerHTML` は sanitizer 出力以外全面禁止 |
 | アイコン | lucide-react (tree-shakeable SVG) | mockup の Material Symbols は同義アイコンへ写像 (フォント読込を避け CWV 温存) |
-| フォント | IBM Plex Sans + Noto Sans JP + JetBrains Mono (next/font self-host, display swap, preload なし) | 英数字は Plex、日本語は Noto、ID/ログは等幅。lang 分岐せず 1 つの font-family で字形単位フォールバック |
+| フォント | IBM Plex Sans (欧文 UI) + JetBrains Mono (ID・ログ・数値) を next/font self-host。**和文は Web フォントを読まず**ヒラギノ角ゴ / 游ゴシックへ fallback | Harness Studio デザインシステム §3。和文 Web フォントは数 MB あり subset も切れないため First Load 予算 (§8) を超える。旧 Noto Sans JP 構成は `preload: false` を強いられ「あとから字が入れ替わる」体験になっていた |
 
 - **ルーティング (App Router)**: 画面 ID は [docs/screen-inventory.md](screen-inventory.md) 準拠。
 
@@ -54,19 +54,27 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ## 2. デザインシステム (packages/ui)
 
-### 2.1 design tokens (mockup 実測 → semantic 写像)
+### 2.1 design tokens (Harness Studio デザインシステム「グラファイト × アンバー」)
 
-| semantic token | light 値 (配色仕様書 v2 / token 正本) | 用途 |
-|---|---|---|
-| `--primary` / `--primary-hover` | `#232326` / `#3a3a3f` | 主操作・リンク・アクティブ状態 (グラファイト) |
-| `--accent-ai` | `#b45309` | 動作中専用 (実行中・ヒアリング中)。主要 CTA には使わない |
-| `--success` / `--warning` / `--danger` | `#166534` / `#92580a` / `#b91c1c` | 完了 / 要確認 / 破壊・エラー |
-| `--info-cyan` / `--magenta` | `#3f5b66` / `#6b3b4a` | チャート系列・タグ |
-| `--bg` / `--surface` / `--border` | `#f1f1ef` / `#ffffff` / `#d9d9d5` | 背景・カード・罫線 |
+配色の考え方は **無彩色で構造を作り、有彩色は状態にだけ使う**。値の正本は `packages/ui/src/tokens/tokens.ts` であり、本表は用途の説明。
 
-- **コントラスト**: 文字用途は 4.5:1 以上を token 段階で保証 (qa-018)。`contrastRequirements` が機械検証する。チャート系列色も同順で固定し、色のみに依存しない (形状/ラベル併記)。`prefers-contrast: more` では枠線を `border-strong` へ差し替え幅を 2px にする。
-- **ダークテーマ**: 全 semantic token を `[data-theme=dark]` で再定義。`auto` は `prefers-color-scheme` 追従。テーマ・表示密度 (comfortable/compact)・言語は `user_settings` (PATCH /me) が正本、変更はローカル即時反映 + 保存。
-- **ブレークポイント**: `breakpointTokens` 正本 — `sm 480 / md 640 / lg 1024`。**< md (640px) = スマホサイズ仕様 (§6) を適用**。サイドバー常設は ≥ lg、md〜lg はサイドバー折りたたみ (アイコンのみ)。
+| semantic token | light 値 | dark 値 | 用途 |
+|---|---|---|---|
+| `--hh-color-page-bg` / `--hh-color-bg` / `--hh-color-surface` | `#e2e2df` / `#f1f1ef` / `#ffffff` | `#121215` / `#1a1a1e` / `#242429` | 面の 3 段。外枠 → 本文背景 → カード。段が潰れると影のない境界が読めなくなる |
+| `--hh-color-surface-muted` / `--border` / `--border-strong` | `#e9e9e6` / `#d9d9d5` / `#868683` | `#2e2e34` / `#3f3f46` / `#77777e` | 沈んだ面 (サイドバー)・罫線・操作部品の輪郭 |
+| `--hh-color-text` / `--text-muted` | `#141417` / `#5c5c62` | `#fafafa` / `#b0b0b8` | 本文・補助文 |
+| `--hh-color-primary` / `--primary-hover` / `--primary-soft` | `#232326` / `#3a3a3f` / `#e5e5e2` | `#fafafa` / `#d4d4d8` / `#32323a` | 主操作 (グラファイト)。**青ではない** — CTA を色で叫ばず、面と太さで示す |
+| `--hh-color-accent` / `--accent-soft` | `#aa4e09` / `#f7ecd9` | `#fbbf6d` / `#33240d` | **アンバー = 「いま動いている」専用**。生成中・検査中・公開処理中・不定進捗。CTA や装飾に使わない |
+| `--hh-color-neutral` / `--neutral-soft` | `#52525b` / `#e6e6e3` | `#c0c0c8` / `#33333a` | 下書き・非推奨など「まだ何も起きていない」状態 |
+| `--hh-color-success` / `--warning` / `--danger` | `#166534` / `#92580a` / `#b91c1c` | `#6ee7a0` / `#f2c464` / `#fca5a0` | 完了 / 要注意 / 失敗・破壊的操作 |
+| `--hh-color-info-cyan` / `--magenta` | `#006d75` / `#a3125f` | `#5cdbd3` / `#ff85c0` | **チャート系列とタグに限定**。6 系列を明度差だけで区別できないため有彩色を許す |
+
+- **AI 専用色を持たない**: 旧 `--accent-ai` (紫) は廃止した。利用者から見れば AI 生成中も公開処理中も「待っている状態」であり、`accent` (動作中) へ統合する。「AI が作った」ことは色ではなくラベルで示す。
+- **コントラスト**: 文字用途 4.5:1・非文字 3:1 を **token 段階で機械保証** (`contrastRequirements` + `tokens.test.ts`。qa-018/shared-layers §1)。デザインシステム原案から意図的に外した値が 3 つある — light `accent` は原案 `#b45309` が bg 上 4.44:1 で不足するため `#aa4e09` へ、`border-strong` は light `#c4c4bf` / dark `#52525b` が 3:1 に届かないため濃色側へ寄せた。**契約が原案に優先する**。
+- **面・角丸・影**: 角丸は外枠 `frame 14px` > カード `card 10px` > 操作部品 `md 8px` > 小物 `sm 4px` の 4 段だけを使い、入れ子の関係を形だけで読めるようにする。旧 `lg 12px` は `card` と `frame` の中間で面の段を割る原因になるため、token の値ごと削除済み (型が 4 段+`full` を強制する)。影は `--hh-shadow-frame` (外枠を浮かせる) と `--hh-shadow-raised` (下から迫り上がるシート) の 2 種のみ。
+- **ダークテーマ**: 全 semantic token を `[data-theme=dark]` で再定義し、3 分岐すべてで `color-scheme` を宣言する。`auto` は `prefers-color-scheme` 追従。テーマ・表示密度 (comfortable/compact)・言語は `user_settings` (PATCH /me) が正本、変更はローカル即時反映 + 保存。
+- **ブレークポイント**: 正本は `breakpointTokens` = `sm 480 / md 641 / lg 1025`。デザインシステム §4 の 3 区分 (〜640 / 641〜1024 / 1025〜) に対応する。640/1024 でなく 641/1025 を min-width に取るのは、`max-width: 640` と `min-width: 640` が 640px ちょうどで二重に当たる 1px の重なりを避けるため。**< md (641px) = スマホサイズ仕様 (§6) を適用**。サイドバー常設 (212px) は ≥ lg、md〜lg はアイコンのみ 68px。`sm 480` は narrow 内の layout step (FilterBar 等) で、区分を 4 つに増やす意味は持たない。
+- **タイポグラフィ**: 本文は **16px を下回らない**。デザインシステム原案は 13〜14px だが、本システムは和文が主で字形が複雑なうえ、WCAG 1.4.4 の 200% 拡大に耐える必要がある。「密度を上げたい」要求は density token (compact) 側で受ける。
 
 ### 2.2 部品一覧 (実装 owner: feat-hub-foundation)
 
@@ -81,7 +89,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | StageBoard (かんばん) / StageSegment (モバイル) | 自作 | 工程チップ+件数バッジ・risk 表示・DnD 不採用 (操作はメニュー。タッチ/キーボード同等性) | S13 |
 | MarkdownView / MarkdownEditor (textarea+プレビュー) | react-markdown + 自作 | XSS sanitize (SEC7)・プレビュータブ | S12/S14/S15 |
 | InlineEditTable | 自作 | 編集はモバイルでシートへ昇格 (§6.3) | S17/S04 |
-| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-first + 開閉専用の小さな client island)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
+| HistoryNavigation / NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | ブラウザ履歴の戻る/進む、未読バッジ・Workspace 切替 (server-first + 開閉専用の小さな client island)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
 | DegradedBanner (縮退) / EmptyState / ErrorState | 自作 | 「導入済みツールはそのまま使えます」(qa-019)・平易な日本語+次の一手 (qa-018) | 全画面 |
 
 ### 2.3 SVG チャート契約
@@ -93,20 +101,22 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 | ドメイン enum (backend-spec §5) | 表示 (ja) | token |
 |---|---|---|
-| sheet: `received / generating / review / completed` | 受付 / 生成中 / レビュー待ち / 完了 | info / accent-ai / warning / success |
-| build stage 7 値 `hearing…publish` | ヒアリング / 要件定義 / 設計 / 構築 / テスト / レビュー / 公開 | 進行=primary・risk warn=warning |
+| sheet: `received / generating / review / completed` | 受付 / 生成中 / レビュー待ち / 完了 | info / **running** / warning / success |
+| build stage 7 値 `hearing…publish` | ヒアリング / 要件定義 / 設計 / 構築 / テスト / レビュー / 公開 | hearing=**running**・進行=primary・risk warn=warning |
 | feedback: `open / in_progress / resolved` | 未対応 / 対応中 / 対応済み | danger / warning / success |
 | publish: `Draft…Published/Failed` (9 値) | 下書き / 検査中 / 要修正 / 承認待ち / 承認済み / 公開処理中 / 公開済み / 失敗 ほか | 対応 token |
 | release: `available / suspended / deprecated` | 公開中 / 停止中 / 非推奨 | success / danger / border |
 
 - UI 表示ラベルはこの辞書が唯一の写像点 (backend-spec §2.1)。画面内へのハードコード禁止。
+- tone は 8 種 (`neutral / primary / running / success / warning / danger / info / magenta`)。tone → 色 token の対応表も同じ module (`statusToneColors`) が持つ。**`running` は「処理が動いている」だけを指し、AI かどうかでは割り当てない**。状態チップの輪郭は文字色の 35% まで薄める (塗りが意味の主役、輪郭は境界の補助。100% だと「押せるもの」に見える)。
 
 ## 3. 画面仕様 (S01-S18 + 共通シェル)
 
 ### 3.0 共通シェル (feat-hub-foundation)
 
-- **デスクトップ (≥ lg)**: 左サイドバー 212px 固定 + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみ (68px) に折りたたみ。現在地は最長一致 1 件だけ (`resolveCurrentNavTarget`)。
-- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
+- **アプリ外枠 (≥ md)**: body に `page-bg` を敷き、シェル本体を `space-3` の余白・角丸 14px・1px 輪郭・`--hh-shadow-frame` で一段浮かせる (デザインシステム §7)。高さの引き算は変数 1 つ (`--hh-shell-frame-inset`) に閉じ、本体・body・サイドバーでずれないようにする。**モバイルでは外枠を付けない** — 狭い画面では外周の余白が本文幅を削るだけで、「浮いている」情報が可読性の損失に見合わない。
+- **デスクトップ (≥ lg)**: 左サイドバー 212px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (履歴の戻る/進む・動的な現在地タイトル・WorkspaceSwitcher・必要な画面だけの検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
+- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは Workspace 文脈の上段と、アイコンだけの戻る/進む、1行省略可能な画面タイトル (360px でも幅 48px 以上)、必要時の検索アイコン、通知、アバターを置く下段に分ける。履歴 navigation は全画面で 1 組だけとし、各 `ScreenHeader` やボトムタブへ複製しない。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
 ### 3.1 画面×API マップ (データ取得の正本)
@@ -208,7 +218,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ## 6. スマホサイズ (モバイル) 画面仕様 (qa-035 — 本書が新規確定する正本)
 
-詳細本文 (原則 / ナビ / 変換パターン / 画面別挙動 / タッチ) は行数制約のため [frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) を正本とする。viewport **< 640px (`breakpointTokens.md`)**、タップ 44×44pt、`P1〜P10` は responsive pattern ID であり情報顕著度 `lead / context / metadata` とは別語彙。profile 割当は [screen-inventory](screen-inventory.md)。
+詳細本文 (原則 / ナビ / 変換パターン / 画面別挙動 / タッチ) は行数制約のため [frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) を正本とする。viewport **< 641px (md 未満)**、タップ 44×44pt、`P1〜P10` は responsive pattern ID であり情報顕著度 `lead / context / metadata` とは別語彙。profile 割当は [screen-inventory](screen-inventory.md)。
 
 ## 7. i18n・表示辞書 (自作 typed 辞書 = qa-034)
 

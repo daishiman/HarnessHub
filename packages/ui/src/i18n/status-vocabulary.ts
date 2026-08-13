@@ -2,14 +2,22 @@
 import type { ColorTokenName } from '../tokens/token-names.js';
 import type { UiLocale } from './dictionaries.js';
 
-/** 状態チップの意味づけ。色そのものではなく「意味」を指す。 */
-export type StatusTone = 'neutral' | 'primary' | 'accentAi' | 'success' | 'warning' | 'danger' | 'info' | 'magenta';
+/**
+ * 状態チップの意味づけ。色そのものではなく「意味」を指す。
+ *
+ * `running` は「実行中・処理が動いている」を指す唯一の tone で、状態専用アンバー
+ * (`accent`) に対応する。旧 `accentAi` (AI 専用の紫) を置き換えたもので、
+ * **AI かどうかではなく動作中かどうか**で割り当てる — AI 生成中も公開処理中も
+ * 利用者から見れば「待っている状態」であり、区別する必要がないため
+ * (Harness Studio デザインシステム §1「AI 機能を特別扱いしない」)。
+ */
+export type StatusTone = 'neutral' | 'primary' | 'running' | 'success' | 'warning' | 'danger' | 'info' | 'magenta';
 
 /** tone → 色 token。文字色と背景色の組は tokens の contrastRequirements で 4.5:1 が保証されている。 */
 export const statusToneColors: Record<StatusTone, { foreground: ColorTokenName; background: ColorTokenName }> = {
-  neutral: { foreground: 'textMuted', background: 'neutralSoft' },
+  neutral: { foreground: 'neutral', background: 'neutralSoft' },
   primary: { foreground: 'primary', background: 'primarySoft' },
-  accentAi: { foreground: 'accentAi', background: 'accentAiSoft' },
+  running: { foreground: 'accent', background: 'accentSoft' },
   success: { foreground: 'success', background: 'successSoft' },
   warning: { foreground: 'warning', background: 'warningSoft' },
   danger: { foreground: 'danger', background: 'dangerSoft' },
@@ -31,12 +39,12 @@ const entry = (tone: StatusTone, ja: string, en: string): StatusEntry => ({ tone
 export const statusVocabulary = {
   sheet: {
     received: entry('info', '受付', 'Received'),
-    generating: entry('accentAi', '生成中', 'Generating'),
+    generating: entry('running', '生成中', 'Generating'),
     review: entry('warning', 'レビュー待ち', 'In review'),
     completed: entry('success', '完了', 'Completed'),
   },
   buildStage: {
-    hearing: entry('primary', 'ヒアリング', 'Hearing'),
+    hearing: entry('running', 'ヒアリング', 'Hearing'),
     requirements: entry('primary', '要件定義', 'Requirements'),
     design: entry('primary', '設計', 'Design'),
     build: entry('primary', '構築', 'Build'),
@@ -51,11 +59,11 @@ export const statusVocabulary = {
   },
   publish: {
     draft: entry('neutral', '下書き', 'Draft'),
-    inspecting: entry('accentAi', '検査中', 'Inspecting'),
+    inspecting: entry('running', '検査中', 'Inspecting'),
     needs_fix: entry('warning', '要修正', 'Needs fix'),
     approval_pending: entry('warning', '承認待ち', 'Awaiting approval'),
     approved: entry('primary', '承認済み', 'Approved'),
-    publishing: entry('accentAi', '公開処理中', 'Publishing'),
+    publishing: entry('running', '公開処理中', 'Publishing'),
     published: entry('success', '公開済み', 'Published'),
     rejected: entry('danger', '却下', 'Rejected'),
     failed: entry('danger', '失敗', 'Failed'),

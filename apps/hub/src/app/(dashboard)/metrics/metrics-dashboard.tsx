@@ -132,7 +132,7 @@ export function MetricsDashboard({ tenantId, workspaceId, initialRange }: Metric
           />
         }
         onSubmit={applyRange}
-        style={{ borderBlockEnd: 'none', borderRadius: 'var(--hh-radius-lg)' }}
+        variant="card"
         // ボタンの語彙は全画面で「絞り込む」に揃える。ここだけ「この期間で集計する」だと、
         // 同じ形の帯なのに操作名が違う画面ができ、利用者が毎回読み直すことになる。
         actions={

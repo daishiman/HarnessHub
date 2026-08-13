@@ -79,8 +79,8 @@ export function BottomSheet({ open, title, dismissible = true, onClose, children
           flexDirection: 'column',
           background: colorVar('surface'),
           color: colorVar('text'),
-          borderStartStartRadius: radiusVar('lg'),
-          borderStartEndRadius: radiusVar('lg'),
+          borderStartStartRadius: radiusVar('frame'),
+          borderStartEndRadius: radiusVar('frame'),
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >

@@ -30,7 +30,8 @@
     "check:bundle": "pnpm --filter @harness-hub/hub run check:bundle",
     "check:client-bundle": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:client-bundle && pnpm --filter @harness-hub/hub run check:client-bundle",
     "check:dynamic-routes": "node scripts/ci/check-required-package-script.mjs apps/hub/package.json check:dynamic-routes && pnpm --filter @harness-hub/hub run check:dynamic-routes",
-    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm check:worker-secrets && pnpm check:auth && pnpm lint && pnpm typecheck && pnpm build && pnpm --filter @harness-hub/hub run build:worker && pnpm test && pnpm check:tenant-isolation && pnpm check:auth-release-contract && pnpm check:secrets && pnpm check:ddl && pnpm check:tenant-isolation-coverage && pnpm check:connection-isolation && pnpm check:drift && pnpm check:a11y && pnpm check:bundle && pnpm check:client-bundle && pnpm check:dynamic-routes",
+    "check:ui-hardcoding": "node --test scripts/ci/check-ui-hardcoding.test.mjs && node scripts/ci/check-ui-hardcoding.mjs",
+    "verify": "pnpm check:pnpm && pnpm check:duplicates && pnpm check:worker-secrets && pnpm check:auth && pnpm lint && pnpm typecheck && pnpm build && pnpm --filter @harness-hub/hub run build:worker && pnpm test && pnpm check:tenant-isolation && pnpm check:auth-release-contract && pnpm check:secrets && pnpm check:ddl && pnpm check:tenant-isolation-coverage && pnpm check:connection-isolation && pnpm check:drift && pnpm check:a11y && pnpm check:bundle && pnpm check:client-bundle && pnpm check:dynamic-routes && pnpm check:ui-hardcoding",
     "preinstall": "npx --yes only-allow pnpm"
   },
   "devDependencies": {

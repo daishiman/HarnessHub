@@ -30,6 +30,8 @@ export interface ShellHeaderProps {
    * (サイドバー自体を持たない場面) では省略すればよい。
    */
   sidebarToggle?: ReactNode | undefined;
+  /** browser 履歴操作の client island (`HistoryNavigation`) を差し込む slot。 */
+  historyNavigation?: ReactNode | undefined;
   /** 表示中のワークスペース名。テナント越境の誤操作を防ぐため常に見せる。 */
   workspaceName: string;
   /** ワークスペース欄の見出し語 (「ワークスペース」など)。 */
@@ -43,7 +45,7 @@ export interface ShellHeaderProps {
   workspaceSwitchLabel?: string | undefined;
   /** `workspaceName` が表示名ではなく識別子のとき true (`WorkspaceSwitcher` と同じ扱い)。 */
   workspaceNameIsIdentifier?: boolean | undefined;
-  /** モバイルで表示する画面タイトル (§6.2)。 */
+  /** 現在の画面タイトル。全 viewport で表示し、長い場合は省略する。 */
   screenTitle?: string | undefined;
   /**
    * 検索フォームの送信先。
@@ -82,11 +84,7 @@ const barStyle: CSSProperties = {
   position: 'sticky',
   top: 0,
   zIndex: 20,
-  display: 'flex',
-  alignItems: 'center',
-  gap: spaceVar(3),
   minHeight: shellHeaderMinHeight,
-  padding: `0 ${spaceVar(4)}`,
   background: colorVar('surface'),
   borderBlockEnd: `1px solid ${colorVar('border')}`,
 };
@@ -117,6 +115,7 @@ const menuLinkStyle: CSSProperties = {
 export function ShellHeader(props: ShellHeaderProps): ReactNode {
   const {
     sidebarToggle,
+    historyNavigation,
     workspaceName,
     workspaceLabel,
     workspaceOptions,
@@ -147,10 +146,11 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
       {/* サイドバーが折りたたまれてもここだけは常設なので、押し戻せる場所を失わない。
           サイドバーが実在する md 以上でだけ出す (トグル自体のクラスは buildShellCss 側で持つ)。 */}
       {sidebarToggle}
+      {historyNavigation}
 
       {/* viewport で隠さず、同じ server-first UI を全幅で使う。開閉専用の小さな
           client island だけを共有し、desktop / mobile の双方から Workspace を認識・切替できる。 */}
-      <div style={{ flex: '0 1 12rem', minWidth: 0 }}>
+      <div className="hh-shell__workspace-context" style={{ flex: '0 1 12rem', minWidth: 0 }}>
         <WorkspaceSwitcher
           label={workspaceLabel}
           currentName={workspaceName}
@@ -162,9 +162,10 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
 
       {screenTitle === undefined ? null : (
         <div
-          className="hh-shell__mobile-only"
+          data-hh-screen-title=""
+          className="hh-shell__screen-title"
           style={{
-            flex: 1,
+            flex: '1 1 10rem',
             minWidth: 0,
             fontWeight: 'var(--hh-font-weight-bold)',
             whiteSpace: 'nowrap',
@@ -180,7 +181,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
           「壊れている」と読まれるため、置かない方が正確に伝わる。
           欄が無いときは残りの部品の右寄せだけを余白で引き継ぐ */}
       {searchAction === undefined ? (
-        <div aria-hidden style={{ flex: 1 }} />
+        <div className="hh-shell__title-spacer" aria-hidden style={{ flex: 1 }} />
       ) : (
         <>
           <form
@@ -190,7 +191,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
             // <search> 要素へ置き換えるまでの繋ぎで、支援技術からの到達性は同じ。
             aria-label={searchLabel}
             className="hh-shell__desktop-only"
-            style={{ flex: 1, maxWidth: '480px', marginInlineStart: 'auto' }}
+            style={{ flex: '1 1 12rem', minWidth: 0, maxWidth: '480px', marginInlineStart: 'auto' }}
           >
             {Object.entries(searchHiddenFields ?? {}).map(([name, value]) => (
               <input key={name} type="hidden" name={name} value={value} />
@@ -239,7 +240,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
 
           {/* モバイルは検索アイコンのみ。押すと検索画面へ移る (§6.2) */}
           <a
-            className="hh-shell__mobile-only"
+            className="hh-shell__mobile-only hh-shell__mobile-search"
             href={searchAction}
             aria-label={searchLabel}
             data-hh-focusable=""
@@ -251,6 +252,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
       )}
 
       <a
+        className="hh-shell__notifications"
         href={notificationsHref}
         data-hh-focusable=""
         aria-label={hasUnread ? `${notificationsLabel} (${unreadCount} ${unreadLabel})` : notificationsLabel}
@@ -279,7 +281,7 @@ export function ShellHeader(props: ShellHeaderProps): ReactNode {
         ) : null}
       </a>
 
-      <TransientDisclosure style={{ position: 'relative' }}>
+      <TransientDisclosure className="hh-shell__account" style={{ position: 'relative' }}>
         <summary
           data-hh-focusable=""
           aria-label={accountMenuLabel}

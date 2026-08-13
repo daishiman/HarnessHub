@@ -12,6 +12,7 @@ import {
   Stack,
   StageBoard,
   StatusChip,
+  Thumbnail,
 } from '@harness-hub/ui';
 
 import type { CatalogEntry } from './entries.js';
@@ -22,6 +23,13 @@ interface DemoRow {
   owner: string;
   status: string;
 }
+
+/** Thumbnail 見本の被写体。外部依存を作らないよう data URI の SVG に固定する。 */
+const SAMPLE_IMAGE =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="#3f3f46"/><circle cx="40" cy="40" r="20" fill="#f59e0b"/></svg>',
+  );
 
 const demoRows: readonly DemoRow[] = [
   { id: '1', name: '見積もり作成支援', owner: '営業部', status: '公開中' },
@@ -128,6 +136,18 @@ export const dataCatalogEntries: readonly CatalogEntry[] = [
     name: 'MarkdownView',
     group: 'data',
     render: () => <MarkdownView content={'## 見出し\n\n- 箇条書き 1\n- 箇条書き 2\n\n本文です。'} />,
+  },
+  {
+    name: 'Thumbnail',
+    group: 'data',
+    // src はネットワークに出ない inline SVG にする。外部 URL を撮ると、
+    // 相手側の都合で画素が変わり VRT が「たまに落ちる検査」に退化する。
+    render: () => (
+      <Stack gap={2} direction="horizontal">
+        <Thumbnail src={SAMPLE_IMAGE} />
+        <Thumbnail src={SAMPLE_IMAGE} size="block" width="compact" />
+      </Stack>
+    ),
   },
   {
     name: 'KpiCard',

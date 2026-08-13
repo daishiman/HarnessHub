@@ -46,7 +46,10 @@ export function ProgressBar({ label, value, style }: ProgressBarProps): ReactNod
         style={{
           width: clamped === undefined ? '100%' : `${clamped}%`,
           height: '100%',
-          background: clamped === undefined ? colorVar('accentAi') : colorVar('primary'),
+          // 進捗が読めない (不定) ときは「動作中」なのでアンバー、
+          // 割合が読めるときは通常の進行なのでグラファイト。
+          // アンバーを状態表現だけに限る規則 (デザインシステム §2) の実装点のひとつ。
+          background: clamped === undefined ? colorVar('accent') : colorVar('primary'),
           transition: 'width 200ms ease',
         }}
       />

@@ -1,0 +1,172 @@
+{
+  "skill_name": "run-elegant-review",
+  "skill_kind": "run",
+  "build_mode": "update",
+  "skill_path": "plugins/harness-creator/skills/run-elegant-review",
+  "source_docs": [
+    "plugins/harness-creator/skills/run-elegant-review/SKILL.md",
+    "plugins/harness-creator/skills/run-elegant-review/workflow-manifest.json",
+    "plugins/harness-creator/skills/run-build-skill/references/content-review-protocol.md",
+    "plugins/harness-creator/skills/assign-skill-design-evaluator/references/rubric.json",
+    "eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration/verdict.json"
+  ],
+  "context_map_decision": {
+    "map": "run-build-skill content-review と run-elegant-review resource map の交差部分",
+    "task_category": "existing run skill contract update + distribution parity + independent content review",
+    "selected_docs": [
+      "plugins/harness-creator/skills/run-elegant-review/SKILL.md",
+      "plugins/harness-creator/skills/run-elegant-review/workflow-manifest.json",
+      "plugins/harness-creator/skills/run-build-skill/references/content-review-protocol.md",
+      "plugins/harness-creator/skills/assign-skill-design-evaluator/references/rubric.json",
+      "eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration/verdict.json"
+    ]
+  },
+  "design_model": {
+    "intent": "思考リセット、30思考法の9/9/12並列分析、4条件改善を、配布面ごとの機能差を偽装せず再現可能に実行する",
+    "contract": "Phase1 payload、Phase2 30件findings、Phase3最小patch、scorecard、4条件verdictをschemaとsingle-writerで接続する",
+    "boundary": "Phase1/2はread-only、Phase3だけwrite可。独立scopeの並列割当はorchestrator、各executorは再帰起動せずcommitは明示opt-inのみ",
+    "execution": "SKILL.md、workflow-manifest、3 phase prompt、5 agent adapter、deterministic validator/builder",
+    "feedback": "focused pytest、prompt/agent lint、30思考法review、別context content-review、pre-push gate"
+  },
+  "doc_coverage": [
+    {"doc":"02-skill-structure","status":"PASS","evidence":"SKILL.md + references/prompts/scripts/schemas のprogressive disclosure構造"},
+    {"doc":"03-frontmatter","status":"PASS","evidence":"validate-frontmatter.py PASS"},
+    {"doc":"04-invocation-permissions","status":"PASS","evidence":"SKILL allowed-tools とexecutor toolsを責務に合わせて最小化"},
+    {"doc":"05-layering","status":"PASS","evidence":"Skill→orchestrator→forked agents→scriptsの依存方向をworkflow-manifestへ固定"},
+    {"doc":"06-classification-naming","status":"PASS","evidence":"run-elegant-review name/kind/prefixをlint-skill-nameで検査"},
+    {"doc":"07-progressive-disclosure","status":"PASS","evidence":"詳細契約をreferences/prompts/schemasへ分離"},
+    {"doc":"08-skill-writing-guidelines","status":"PASS","evidence":"Purpose、Output Contract、Gotchas、Reading Orderを維持"},
+    {"doc":"09-evaluation-orchestration","status":"PASS","evidence":"Phase1→Phase2→Phase3 gateとproposer!=approverを実装"},
+    {"doc":"10-subagents-hooks-integration","status":"PASS","evidence":"5 agent adapter、pre-push content review、observable hookを接続"},
+    {"doc":"11-templates","status":"PASS","evidence":"findings/review templatesをresource mapと存在検査で被覆"},
+    {"doc":"13-checklists","status":"PASS","evidence":"各phase promptの停止条件とSKILL checklistを機械signalへ写像"},
+    {"doc":"14-dynamic-context-injection","status":"PASS","evidence":"targetとreview_workspaceを固定pathでなく入力変数として扱う"},
+    {"doc":"15-official-source-notes","status":"N/A","reason":"外部Web資料を今回の更新入力に使用していない"},
+    {"doc":"16-official-skills-reference","status":"PASS","evidence":"Claude/Codex capability差をnative surface表へ明記"},
+    {"doc":"26-meta-skill-dogfooding","status":"PASS","evidence":"run-elegant-review自身を別contextのcontent-review対象に含めた"},
+    {"doc":"27-rubric-governance-runbook","status":"PASS","evidence":"rubricは変更せず1.3.0 hashをpin"},
+    {"doc":"28-script-execution-model","status":"PASS","evidence":"schema/validator/builderをPython stdlib境界で明示"},
+    {"doc":"29-multi-project-rubric-composition","status":"PASS","evidence":"L0+L2 deep-merge composition hashを独立評価で確認"},
+    {"doc":"30-paradigm-analogy-map","status":"PASS","evidence":"30思考法をcanonical catalogと9/9/12 laneへ写像"},
+    {"doc":"31-output-routing-adapter-architecture","status":"PASS","evidence":"plugin正本からClaude hardlinkとCodex capability表へ配布"},
+    {"doc":"32-creator-kit-implementation-ledger","status":"PASS","evidence":"resource map、manifest、distribution parity testへ反映"},
+    {"doc":"33-change-governance","status":"PASS","evidence":"commit_authorized=false既定と独立approverを固定"},
+    {"doc":"34-plugin-governance-roadmap","status":"PASS","evidence":"repo-internal/local-only境界をmanifestへ維持"},
+    {"doc":"35-meta-harness-feedback-loop","status":"PASS","evidence":"C1-C4 failure observableと最大3反復を接続"}
+  ],
+  "build_flow_coverage": [
+    {"step":"problem-definition","status":"PASS","evidence":"Beads HarnessHub-y67o とユーザー提供のelegant-review契約"},
+    {"step":"execution-layer","status":"PASS","evidence":"SKILL.md#実行フロー"},
+    {"step":"classification","status":"PASS","evidence":"frontmatter kind=run"},
+    {"step":"naming","status":"PASS","evidence":"name=run-elegant-review とdirectory一致"},
+    {"step":"frontmatter","status":"PASS","evidence":"validate-frontmatter.py PASS"},
+    {"step":"body","status":"PASS","evidence":"Purpose、入出力、Phase gate、Gotchasが非空"},
+    {"step":"support-files","status":"PASS","evidence":"resource-mapが全runtime scripts/schemas/templatesを被覆"},
+    {"step":"permissions-hooks","status":"PASS","evidence":"executorのgit read-only監査権限とpre-push gateを検証"},
+    {"step":"validation","status":"PASS","evidence":"focused package regression pytest 1010件、agent/prompt lint、distribution parity"},
+    {"step":"operation-improvement","status":"PASS","evidence":"別context reviewerのC1/C4所見をTDDで修正し再評価へ接続"}
+  ],
+  "layer_decisions": [
+    {"layer":"Skill","decision":"use","reason":"利用者入口と3phase契約を保持","placement_evidence":"plugins/harness-creator/skills/run-elegant-review/SKILL.md","fallback":"同SKILLをrepository-localで直接起動","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":false},
+    {"layer":"Subagent","decision":"use","reason":"思考リセットと3 lane独立性、proposer/approver分離に必要","placement_evidence":"plugins/harness-creator/agents/elegant-*.md","fallback":"対応surfaceが無い製品ではplugin skill内team orchestration","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":false},
+    {"layer":"Hook","decision":"use","reason":"stale content-reviewをpre-pushでfail-closed検出","placement_evidence":"scripts/lint-content-review.py","fallback":"手動で同lintを実行","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":true},
+    {"layer":"MCP","decision":"skip","reason":"repository内artifactとsubagentで完結","placement_evidence":"workflow-manifest external依存なし","fallback":"local filesystemとAgent surfaceを使用","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":true},
+    {"layer":"CLI","decision":"use","reason":"pytestとvalidatorを再現可能に実行","placement_evidence":"validation_commandsとpre-push script","fallback":"個別Python scriptを直接実行","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":true},
+    {"layer":"script","decision":"use","reason":"coverage、scorecard、verdictをLLM自己申告から分離","placement_evidence":"skills/run-elegant-review/scripts","fallback":"schema検査をfail-closedで停止","dependency_direction_ok":true,"macos_stdlib_ok":true,"deterministic":true}
+  ],
+  "pattern_decisions": [
+    {"decision":"use","pattern_ref":"single-writer materialization","reason":"並列agentの同一成果物競合を防ぐ","reuse_target":"全phaseのrun artifact"},
+    {"decision":"use","pattern_ref":"orchestrator-owned conditional fan-out","reason":"独立改善を並列化しつつexecutor再帰とwrite scope競合を防ぐ","reuse_target":"Phase3 independent findings"},
+    {"decision":"use","pattern_ref":"commit opt-in","reason":"評価workflowの副作用を利用者権限に従属させる","reuse_target":"Phase3 git boundary"}
+  ],
+  "reproducibility_gates": {
+    "lint": "PASS",
+    "evaluator": "N/A",
+    "elegant_review": "PASS",
+    "governance": "PASS"
+  },
+  "four_conditions": {"C1":"PASS","C2":"PASS","C3":"PASS","C4":"PASS"},
+  "variant_support": {
+    "prefix": "run",
+    "role_suffix": "reviewer",
+    "subagent": "five forked agent adapters with orchestrator-owned fan-out",
+    "hook": "pre-push content-review and observable emit"
+  },
+  "script_execution_model": {
+    "contexts": ["A","B","C","D","E"],
+    "responsibility_matrix": "Skill=orchestration; prompt=phase judgment; agent=forked work; script=deterministic validation/materialization",
+    "priority_order": "phase-order and schema validation before improvement; verdict after revalidation",
+    "permission_boundary": "Phase1/2 read-only; Phase3 scoped write; git commit only when authorized",
+    "scripts": [
+      {"path":"plugins/harness-creator/skills/run-elegant-review/scripts/validate-paradigm-coverage.py","type":"python-stdlib-validator","allowed_contexts":["A","B","C","D","E"],"frontmatter_status":"PASS"},
+      {"path":"plugins/harness-creator/skills/run-elegant-review/scripts/build-paradigm-scorecard.py","type":"python-stdlib-builder","allowed_contexts":["A","B","C","D","E"],"frontmatter_status":"PASS"},
+      {"path":"plugins/harness-creator/skills/run-elegant-review/scripts/build-verdict.py","type":"python-stdlib-builder","allowed_contexts":["A","B","C","D","E"],"frontmatter_status":"PASS"}
+    ]
+  },
+  "governance_model": {
+    "rubric_version": "1.3.0",
+    "rubric_hash": "6e1843e5204accb8c76c96bf0d8189dafff6d51f2d182096424fcb6c6bfd3d0d",
+    "proposal_required": "false: rubric自体は変更していない",
+    "impact_assessment": "run-elegant-review package、5 agent adapter、Claude/Codex distribution surface",
+    "roles": {"proposer":"Phase3 executor","reviewer":"independent focused evaluator","approver":"separate evaluator or human","tooling":"deterministic validators"},
+    "newly_failing_count": 0
+  },
+  "dogfooding_model": {
+    "artifact_type": "skill",
+    "adapter": "run-build-skill incremental content-review",
+    "forked_evaluator": "assign-skill-design-evaluator in separate context",
+    "eval_log_path": "eval-log/harness-creator/run-elegant-review",
+    "recursive_checks": ["focused contract tests","agent/prompt lint","30-method review","content-review verdict freshness"]
+  },
+  "rubric_composition_model": {
+    "status": "PASS",
+    "ordered_refs": ["ref-skill-design-rubric@1.3.0","assign-skill-design-evaluator/references/rubric.json@1.3.0"],
+    "merge_strategy": "deep-merge",
+    "conflict_policy": "most-specific-wins",
+    "composition_hash_evidence": "5fc9367d9fbe9f950311b3d689a312224ab589e42ed7e59246ad3a9881eadfea"
+  },
+  "paradigm_analogy_model": {
+    "status": "PASS",
+    "primary_analogy": "compiler pipeline with independent analyzers and one linker",
+    "matched_skill_concept": "reset→parallel lenses→single materialization→scoped improvement",
+    "limits": "semantic findings still require independent LLM judgment",
+    "placement_decision": "orchestrator owns phase gates and materialization; agents return scoped payloads"
+  },
+  "output_routing_model": {
+    "status": "PASS",
+    "task_kind": "repository-local design review",
+    "payload_schema_version": "run-elegant-review v2 schemas",
+    "route_ref": "workflow-manifest phase output contracts",
+    "adapter_registry_ref": "references/resource-map.yaml and native-surface-operations.md",
+    "fallback": "unsupported native surfaces use plugin skill orchestration or explicit unsupported state",
+    "secret_boundary": "PII/secrets are masked and never copied into findings"
+  },
+  "prompt_generation_model": {
+    "policy_resolution": {"brief_policy":"required","resolved_policy":"required","resolved_via":"kind=run with three phase responsibilities"},
+    "per_responsibility": [
+      {"id":"R1-phase1-reset","name":"fresh-context reset observation","owner_agent":"elegant-reset-observer","layer_yaml_path":"plugins/harness-creator/skills/run-elegant-review/prompts/R1-phase1-reset.md","path_convention":"skill-local-v1","layers_generated":["L1","L2","L3","L4","L5","L6","L7"],"lint_status":"PASS","iteration_count":1,"escalation":"none"},
+      {"id":"R2-phase2-parallel","name":"9/9/12 independent paradigm analysis","owner_agent":"three analyst adapters","layer_yaml_path":"plugins/harness-creator/skills/run-elegant-review/prompts/R2-phase2-parallel.md","path_convention":"skill-local-v1","layers_generated":["L1","L2","L3","L4","L5","L6","L7"],"lint_status":"PASS","iteration_count":2,"escalation":"none"},
+      {"id":"R3-phase3-execute","name":"orchestrator-scoped improvement execution","owner_agent":"elegant-improvement-executor","layer_yaml_path":"plugins/harness-creator/skills/run-elegant-review/prompts/R3-phase3-execute.md","path_convention":"skill-local-v1","layers_generated":["L1","L2","L3","L4","L5","L6","L7"],"lint_status":"PASS","iteration_count":2,"escalation":"none"}
+    ],
+    "anchor_coverage": {"agent_files_checked":["plugins/harness-creator/agents/elegant-reset-observer.md","plugins/harness-creator/agents/elegant-logical-structural-analyst.md","plugins/harness-creator/agents/elegant-meta-divergent-analyst.md","plugins/harness-creator/agents/elegant-system-strategic-analyst.md","plugins/harness-creator/agents/elegant-improvement-executor.md"],"missing_anchors":[],"extra_anchors":[]}
+  },
+  "prompt_provenance": {
+    "prompt_creator_invocation": true,
+    "source_contract_ref": "plugins/prompt-creator/skills/run-prompt-creator-7layer/references/seven-layer-format.md",
+    "content_lint": {"mode":"prompt","status":"PASS","evidence":"lint-agent-prompt-content.py --mode prompt --plugins-dir plugins/harness-creator: 33 files PASS"}
+  },
+  "feedback_contract": {
+    "max_iterations": 3,
+    "criteria": [
+      {"id":"IN1","loop_scope":"inner","text":"30思考法usedが正本30名称と一意一致しskipが空","verify_by":"script"},
+      {"id":"IN2","loop_scope":"inner","text":"SubAgent payloadとseverity/condition signalがschema列挙に収まる","verify_by":"lint"},
+      {"id":"OUT1","loop_scope":"outer","text":"C1-C4全PASSまたはforce-passせずhuman reviewへ移る","verify_by":"elegant-review"},
+      {"id":"OUT2","loop_scope":"outer","text":"proposerとapproverを別contextへ分離する","verify_by":"evaluator"}
+    ],
+    "hook_triggers": ["PostToolUse:Edit|Write","Stop","pre-push"]
+  },
+  "variable_contract": [
+    {"name":"{{TARGET}}","meaning":"レビュー対象plugin/skill/repository","default":"caller input target","required":true,"not_applicable_when":"never","source_trace":"SKILL.md#入力契約"},
+    {"name":"{{REVIEW_WORKSPACE}}","meaning":"run固有成果物の作業領域","default":"OS temp root配下のrun directory","required":true,"not_applicable_when":"dry-runでもfindingsを生成するためnever","source_trace":"references/orchestration-flow.md#作業領域"}
+  ]
+}

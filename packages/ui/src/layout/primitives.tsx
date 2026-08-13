@@ -4,9 +4,9 @@
  * すべて server component (`'use client'` を付けない) にしてある。ここに状態を持たせると
  * 全画面が client bundle に載り、First Load JS 予算 (120KiB) を骨格だけで食い潰すため。
  */
-import type { CSSProperties, ElementType, ReactNode } from 'react';
+import type { CSSProperties, ElementType, HTMLAttributes, ReactNode } from 'react';
 
-import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
+import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 
 /** 本文の最大行長。可読性の上限 (約 90 字) を超えないための段階。 */
 export const containerSizes = {
@@ -119,10 +119,7 @@ export function Card({ children, title, description, actions, as: Tag = 'section
   return (
     <Tag
       style={{
-        background: colorVar('surface'),
-        color: colorVar('text'),
-        border: `1px solid ${colorVar('border')}`,
-        borderRadius: radiusVar('card'),
+        ...surfaceStyle,
         padding: spaceVar(5),
         ...style,
       }}
@@ -144,6 +141,66 @@ export function Card({ children, title, description, actions, as: Tag = 'section
           {actions}
         </Stack>
       )}
+      {children}
+    </Tag>
+  );
+}
+
+export interface TileProps extends Omit<HTMLAttributes<HTMLElement>, 'className'> {
+  children: ReactNode;
+  /**
+   * 描画する要素。既定は `div`。
+   * 一覧の 1 件なら `li`、整形済みテキストなら `pre` のように、意味に合う要素を渡す
+   * (見た目のために意味を歪めない)。
+   */
+  as?: ElementType | undefined;
+  /** 輪郭を破線にする。まだ中身が無い受け皿 (貼り付け領域・ドロップ領域) を表す。 */
+  dashed?: boolean | undefined;
+  /**
+   * 文字の強さ。`muted` は「まだ何も無い」「補足」の囲みで、本文より一段淡くする。
+   * 画面側で `color: var(--hh-color-text-muted)` を書かせないための口。
+   */
+  tone?: 'default' | 'muted' | undefined;
+  /**
+   * `as="button"` のときだけ意味を持つ。既定の `submit` でフォームが暴発しないよう、
+   * 呼び出し側が明示できるようにしている (`Button` と同じ作法)。
+   */
+  type?: 'button' | undefined;
+  style?: CSSProperties | undefined;
+}
+
+/**
+ * カードの**中**に置く小さな囲み。
+ *
+ * `Card` / `Panel` が「画面の中の 1 つの関心事」を表すのに対し、`Tile` は
+ * 「その関心事の中の 1 件」を表す。角丸を親より 1 段小さい `md` にしてあるのは、
+ * 入れ子の内側ほど丸みが小さいと包含関係が形だけで読めるため (デザインシステム §3)。
+ *
+ * これが無かったあいだ、添付ファイル一覧・スクリーンショット一覧・引用ブロックなどが
+ * それぞれ `border: 1px solid ... + border-radius: ... + padding: ...` を書き起こしており、
+ * 同じ「1 件の囲み」なのに画面ごとに角丸と余白が違っていた。
+ */
+export function Tile({
+  children,
+  as: Tag = 'div',
+  dashed = false,
+  tone = 'default',
+  style,
+  ...rest
+}: TileProps): ReactNode {
+  return (
+    <Tag
+      {...rest}
+      style={{
+        // 背景は継承する (親の面の上に「1 件の囲み」を線だけで描く)
+        background: 'transparent',
+        border: `1px ${dashed ? 'dashed' : 'solid'} ${colorVar('border')}`,
+        borderRadius: radiusVar('md'),
+        padding: spaceVar(3),
+        color: tone === 'muted' ? colorVar('textMuted') : 'inherit',
+        ...style,
+      }}
+    >
       {children}
     </Tag>
   );

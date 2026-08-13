@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1605,
+  "graph_revision": 1609,
   "nodes": [
     {
       "acceptance": [
@@ -60955,6 +60955,128 @@
     },
     {
       "acceptance": [
+        "Phase1思考リセットを経由する",
+        "30思考法全件のcoverageを機械検証する",
+        "キット正本とClaude/Codex/Agents配布面を整合する",
+        "デザインシステムを実装・仕様・テスト・CIで一致させる",
+        "4条件をすべてPASSする",
+        "PRをsquash統合しローカルmainを最新化する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-y67o",
+        "linked_at": "2026-08-13T07:21:30Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-agent-kit-elegant-design-integration-20260813.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "既存Webアプリとエージェントキットを横断する単一の整合改善課題。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-13T07:20:00Z",
+      "depends_on": [],
+      "domain": "platform-ui",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-agent-kit-elegant-design-integration-20260813.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "30思考法を全適用して4条件をPASSさせ、検証済み変更をPR経由でmainへ統合する。",
+      "graph_node_id": "issue-agent-kit-elegant-design-integration-20260813",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T07:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "共有された最新キットと Harness Studio の設計思想を、既存成果物を消さずに HarnessHub の正本・配布面・実装・文書・CIへ整合する。",
+      "related_nodes": [],
+      "resource_scope": [
+        "plugins/harness-creator/skills/run-elegant-review/",
+        "plugins/harness-creator/agents/elegant-*.md",
+        ".claude/",
+        ".codex/",
+        ".agents/",
+        "packages/ui/",
+        "apps/hub/",
+        "architecture/",
+        "docs/",
+        ".github/workflows/ci.yml"
+      ],
+      "scope_in": [
+        "思考リセットと30思考法レビュー",
+        "エージェントキット正本と配布面の整合",
+        "Graphite × Amber UI/UXの実装・仕様・テスト・CI整合",
+        "PR作成・リモート統合・ローカルmain同期"
+      ],
+      "scope_out": [
+        "成果物の物理削除",
+        "本番Cloudflare公開",
+        "公開API・DB・認可の意味変更",
+        "無関係な別課題の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T07:20:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "draft",
+      "tags": [
+        "elegant-review",
+        "agent-kit",
+        "design-system",
+        "ui-ux"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "最新エージェントキットとデザインシステム改善を全配布面へ整合する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-13T07:21:30Z"
+    },
+    {
+      "acceptance": [
         "対象差分だけが commit される",
         "task package 品質ゲートが pass",
         "focused UI/Hub tests が pass",
@@ -61077,6 +61199,125 @@
       "title": "配色仕様書 v2 を共通トークンへ反映する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T10:00:00Z"
+    },
+    {
+      "acceptance": [
+        "Graphite × Amber の用途が token・仕様・実装で一致する",
+        "641/1025 breakpoint と 44px 操作域が実ブラウザ検査を通る",
+        "30思考法の最終判定で4条件が全てPASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "frontend"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-design-system.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/harness-hub-design-system.md",
+          "confidence": 0.42
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "製品横断のUI token・共通部品・responsive・品質ゲートの責務境界を所有するため architecture/frontend に分類する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "2cfa9d5999e571ffe278826b09b7c7090bb66ca2f86c41598324efe43bea72fa",
+        "evaluator": "run-elegant-review (30 paradigms / strict coverage)",
+        "evidence_ref": "eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration/verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T09:30:00Z",
+      "depends_on": [
+        "arch-harness-hub-frontend"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/harness-hub-design-system.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Light/Dark/auto、レスポンシブ、アクセシビリティ、共通ヘッダーを矛盾なく実装・検査できる設計境界を維持する",
+      "graph_node_id": "arch-harness-hub-design-system",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T09:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Graphite × Amber の視覚判断を token・共通部品・画面・品質ゲートの一方向依存へ固定する",
+      "related_nodes": [
+        "spec-harness-hub-ui-foundation-addendum",
+        "spec-harness-hub-information-design-addendum",
+        "issue-agent-kit-elegant-design-integration-20260813"
+      ],
+      "resource_scope": [
+        "architecture/harness-hub-design-system.md"
+      ],
+      "scope_in": [
+        "色・書体・角丸・影・breakpoint の token 契約",
+        "共通 shell と画面部品の依存方向",
+        "コントラスト・VRT・画面ハードコードの品質ゲート"
+      ],
+      "scope_out": [
+        "業務 API と DB schema",
+        "認証認可ルール",
+        "Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T09:10:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "ui",
+        "graphite-amber",
+        "accessibility",
+        "responsive"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "Harness Hub デザインシステム アーキテクチャ",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-13T09:30:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

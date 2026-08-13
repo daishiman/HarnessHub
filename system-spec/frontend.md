@@ -208,7 +208,7 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 
 ## 2026-08-13 MVP 実装追記 (配色仕様書 v2)
 
-- token 正本: グラファイト primary、アンバー `accentAi`、書体 3 種、`md=640` / `lg=1024`、sidebar 212/68、`radius.card=10`。
+- token 正本: グラファイト `primary`、動作中専用アンバー `accent`、IBM Plex Sans + 日本語システムフォント + JetBrains Mono、`md=641` / `lg=1025`、sidebar 212/68、`radius.card=10`。
 - root layout が `--font-*` を配り、`tokens.css` が値を持つ。公開 API / DB / 認可は不変。
 - 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
 

@@ -1,7 +1,7 @@
 'use client';
 
 import type { HearingScreenshot } from '@harness-hub/schemas';
-import { Alert, Button, Panel, Stack, TextInput } from '@harness-hub/ui';
+import { Alert, Button, Panel, Stack, TextInput, Tile } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -162,16 +162,14 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
         ) : (
           <ul style={{ display: 'grid', gap: 'var(--hh-space-2)', listStyle: 'none', margin: 0, padding: 0 }}>
             {items.map((item) => (
-              <li
+              <Tile
+                as="li"
                 key={item.id}
                 style={{
                   alignItems: 'center',
-                  border: '1px solid var(--hh-color-border)',
-                  borderRadius: 'var(--hh-radius-sm)',
                   display: 'flex',
                   gap: 'var(--hh-space-3)',
                   justifyContent: 'space-between',
-                  padding: 'var(--hh-space-3)',
                 }}
               >
                 <span>
@@ -194,7 +192,7 @@ export function ScreenshotsPanel({ id: sheetId, tenantId, workspaceId }: Hearing
                     削除
                   </Button>
                 </span>
-              </li>
+              </Tile>
             ))}
           </ul>
         )}

@@ -9,7 +9,7 @@
  * 完全に一致させてある (同じ slugify + 同じ重複解決規則) ため、ここのリンクは
  * MarkdownView が実際に描く id へそのまま当たる。
  */
-import { Button, mediaUp } from '@harness-hub/ui';
+import { Button, mediaUp, Tile } from '@harness-hub/ui';
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import type { HeadingOutlineEntry } from '../../../../features/docs-cms/content-analysis.js';
 
@@ -146,18 +146,7 @@ export function TableOfContents({ entries }: TableOfContentsProps): ReactNode {
         <Button type="button" variant="secondary" aria-expanded={!collapsed} onClick={() => setCollapsed((v) => !v)}>
           {collapsed ? '目次を開く' : '目次を閉じる'}
         </Button>
-        {collapsed ? null : (
-          <div
-            style={{
-              marginBlockStart: 'var(--hh-space-2)',
-              padding: 'var(--hh-space-3)',
-              border: '1px solid var(--hh-color-border)',
-              borderRadius: 'var(--hh-radius-md)',
-            }}
-          >
-            {list}
-          </div>
-        )}
+        {collapsed ? null : <Tile style={{ marginBlockStart: 'var(--hh-space-2)' }}>{list}</Tile>}
       </div>
     </>
   );

@@ -70,7 +70,7 @@ export function ConfirmDialog({
           ...surfaceStyle,
           width: 'min(480px, 100%)',
           padding: spaceVar(5),
-          borderRadius: radiusVar('lg'),
+          borderRadius: radiusVar('frame'),
         }}
       >
         <h2 id={titleId} style={{ margin: 0, fontSize: 'var(--hh-font-size-lg)' }}>

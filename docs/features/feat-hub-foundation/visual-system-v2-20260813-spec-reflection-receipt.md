@@ -45,8 +45,8 @@ beads_ids:
 
 ## 5. 実装レビュー結果
 
-- 色はグラファイト × アンバー。`accentAi` は動作中専用。
-- 書体 3 種を `next/font` で self-host し、root layout が CSS 変数を配る。
+- 色はグラファイト × アンバー。AI専用色は廃止し、`accent` は動作中専用。
+- IBM Plex Sans / JetBrains Mono を `next/font` で self-host し、日本語はシステムフォントへ落とす。root layout が CSS 変数を全画面へ配る。
 - `resolveCurrentNavTarget` を Sidebar / MobileTabBar へ配線し、`/metrics` と `/metrics/usage` の二重現在地を止めた。
 - Card / Panel だけ `radius.card=10px`。他の `md` 消費者は動かさない。
 - 無関係な skill kit / installer 差分は commit しない。
@@ -64,7 +64,7 @@ x64 Node では `@rollup/rollup-darwin-x64` が無く Vitest を起動できな�
 
 ## 7. 残課題
 
-1. qa-226 の md=768 逐語を R4-reopen する。
+1. qa-226 の md=768 逐語は FR-UIF-003 の `md=641` により上書き済み。
 2. Linux VRT baseline の再取得。
 3. 本番デプロイ後の実画面確認。
 
@@ -76,4 +76,4 @@ x64 Node では `@rollup/rollup-darwin-x64` が無く Vitest を起動できな�
 
 ### 専門向け
 
-`packages/ui` の semantic token を Option A（グラファイト × アンバー）へ置換し、`breakpointTokens` を 480/640/1024 にした。nav 現在地は prefix 一致のまま最長一致へ畳む。仕様は addendum + post-compile writeback で還流し、confirmed QA セルの reopen は follow-up。
+`packages/ui` の semantic token を Option A（グラファイト × アンバー）へ置換し、`breakpointTokens` を 480/641/1025 にした。nav 現在地は prefix 一致のまま最長一致へ畳む。仕様は addendum + post-compile writeback へ還流した。

@@ -83,8 +83,9 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 
 - `FR-UIF-001`: `packages/ui` は `AppShell`、`Container`、`SidebarLayout`、`Stack`、`Card`、`ScreenHeader`、`NavList` を単一の公開 contract として所有する。画面上部の見出し帯は `FR-UIF-009` と同じ `ScreenHeader` を唯一の正とし、同じ役割の部品を 2 つ公開しない (`ScreenHeader` 導入前の `PageHeader` は廃止済み)。
 - `FR-UIF-002`: `apps/hub` は root layout で `@harness-hub/ui/tokens.css` を一度だけ import し、route ごとに token や shell を再定義しない。生成元は `buildTokenCssArtifact()`、コミット済み CSS との一致は自動検査する。
-- `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=640`、`lg=1024` とする。検査 viewport 360 / 768 / 1280 は回帰幅であり token ではない。
-- `FR-UIF-014`: 配色はグラファイト × アンバー。`primary` は無彩色、`accentAi` は動作中専用。書体は IBM Plex Sans + Noto Sans JP + JetBrains Mono。Card / Panel の角は `radiusTokens.card` (10px)。`prefers-contrast: more` では枠線を `border-strong` かつ 2px にする。nav 現在地は全グループ横断の最長一致 1 件 (`resolveCurrentNavTarget`)。
+- `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=641`、`lg=1025` とする。`md` / `lg` は「〜640 / 641〜1024 / 1025〜」を min-width で重複なく表現する値であり、検査 viewport 360 / 768 / 1280 は各帯の回帰幅であって token ではない。
+- `FR-UIF-014`: 配色はグラファイト × アンバー。`primary` は無彩色、`accent` は動作中専用で、AI専用色を持たない。英数字は IBM Plex Sans、日本語はヒラギノ角ゴ・游ゴシック等のシステムフォント、ID/ログは JetBrains Mono。Card / Panel の角は `radiusTokens.card` (10px)。`prefers-contrast: more` では枠線を `border-strong` かつ 2px にする。nav 現在地は全グループ横断の最長一致 1 件 (`resolveCurrentNavTarget`)。
+- `FR-UIF-015`: 認証後の全業務画面は共通 `ShellHeader` にブラウザ履歴の「戻る」「進む」を 1 組だけ持ち、現在 route の画面タイトルを全 viewport で表示する。履歴操作だけを小さな client island に閉じ、`history.length` では判定できない進む履歴を誤って disabled にしない。タイトルは exact route を dynamic route より先に解決し、未登録 route だけ最長一致の nav 領域名へ落とす。公開 shell と各 `ScreenHeader` へ重複配置しない。
 - `FR-UIF-004`: `DataTable` は `data-hh-scroll-x` の局所容器で横幅を受け止め、文書全体を横スクロールさせない。
 - `FR-UIF-005`: root / dashboard / workspace は `loading.tsx`、`error.tsx`、`not-found.tsx` を持ち、root は `global-error.tsx` も持つ。
 - `FR-UIF-006`: catalog は layout / form / feedback / data / chart / navigation / overlay の 7 分類を light / dark で描画する。
@@ -186,6 +187,7 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 - [x] `AC-UIF-014`: route surface の pattern と実装印は screen-pattern gate で突き合わせ、判定件数 0 と違反 0 を区別する。
 - [x] `AC-UIF-015`: navigation disclosure が外側クリック・Escape・別メニュー開始で閉じ、Escape のフォーカス復帰と外側クリック先のフォーカス維持が unit test で通る。
 - [x] `AC-UIF-016`: `dismissible=false` の Modal / BottomSheet は背景・Escape・閉じるボタンから閉じられず、未保存内容を暗黙破棄しないことが unit test で通る。
+- [x] `AC-UIF-017`: 共通業務ヘッダーに名前付きの履歴 navigation が 1 件だけあり、44px の「戻る」「進む」、route 固有タイトル、最長一致 fallback、axe 違反 0 を unit / Hub 結合テストで固定する。
 
 ## 2026-08-12 UI MVP wave 追補
 

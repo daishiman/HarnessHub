@@ -28,10 +28,9 @@ import { PUBLISH_WIZARD_HREF, PUBLISH_WIZARD_LINK_LABEL } from '../../lib/routin
 
 // next/font はビルド時変換が前提で、テスト実行時には解決できない
 vi.mock('next/font/google', () => ({
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
   Inter: () => ({ className: 'inter', variable: '--font-inter' }),
-  Noto_Sans_JP: () => ({ className: 'noto', variable: '--font-noto' }),
-  IBM_Plex_Sans: () => ({ className: 'plex', variable: '--font-ibm-plex-sans' }),
-  JetBrains_Mono: () => ({ className: 'jetbrains', variable: '--font-jetbrains-mono' }),
+  IBM_Plex_Sans: () => ({ className: 'noto', variable: '--font-noto' }),
 }));
 
 // vitest の globals を使わない設定なので、DOM の後片付けは明示的に行う

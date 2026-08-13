@@ -156,7 +156,7 @@ graph TD
 - `intent`: `scan` (対象/状態を見つける) / `compare` (複数対象を突合する) / `compose` (入力・変更を完了する) / `monitor` (時間変化・進捗を見る)
 - `density`: `comfortable` / `balanced` / `compact`。機能を削ってよい度合いではない。
 - `pattern`: [UI 基盤の使い方と検証](frontend-ui-foundation-spec.md#0-部品を選ぶ前に情報設計を済ませる) の open-world registry にある id または hybrid。`table / card-collection / list / grid / form / wizard / timeline-stepper / board / chart+table / tree / master-detail` は初期値であり閉じた集合ではない。
-- breakpoint は `narrow < 640px`、`middle = 640〜1023px`、`wide >= 1024px` の profile 名を用いる。UI 基盤 `breakpointTokens` の `480px` は narrow 内の layout step として使い、profile を4区分には増やさない。境界値の正本は UI 基盤 `breakpointTokens` (`480 / 640 / 1024`) とする。検査 viewport 360 / 768 / 1280 は回帰幅であり token そのものではない。
+- breakpoint は `narrow <= 640px`、`middle = 641〜1024px`、`wide >= 1025px` の profile 名を用いる (Harness Studio デザインシステム §4 の 3 区分)。UI 基盤 `breakpointTokens` の `480px` は narrow 内の layout step として使い、profile を4区分には増やさない。境界値の正本は UI 基盤 `breakpointTokens` (`480 / 641 / 1025`) とする。
 
 | ID / surface | role | task-mode | wide / middle profile (`intent · density · pattern`) | narrow profile (`intent · density · pattern`) | breakpoint をまたいで保持する能力 |
 |---|---|---|---|---|---|

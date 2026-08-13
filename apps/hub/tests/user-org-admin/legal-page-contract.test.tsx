@@ -42,17 +42,10 @@ vi.mock('next/headers', () => ({
 // next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
 // HubShell 経由の描画を見たいだけなので、CSS 変数名だけを返す薄い偽物へ差し替える。
 vi.mock('next/font/google', () => ({
-  Noto_Sans_JP: () => ({
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
+  IBM_Plex_Sans: () => ({
     variable: 'hh-test-font',
     className: 'hh-test-font-class',
-  }),
-  IBM_Plex_Sans: () => ({
-    variable: 'hh-test-font-plex',
-    className: 'hh-test-font-plex-class',
-  }),
-  JetBrains_Mono: () => ({
-    variable: 'hh-test-font-mono',
-    className: 'hh-test-font-mono-class',
   }),
 }));
 vi.mock('../../src/lib/auth/session.js', async () => {

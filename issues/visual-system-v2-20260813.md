@@ -53,7 +53,7 @@ implementation_readiness: {"checked_at":"2026-08-13T00:00:00Z","missing_sections
 
 ## 背景と問題
 
-いまの画面は青い主色と紫の AI 色、Noto Sans JP だけの書体、768/1120 の折り返し幅を正本にしていた。新しい見た目の指定（無彩色の主色、動作中だけの琥珀色、英数字と日本語と等幅の 3 書体、640/1024）とずれていた。
+いまの画面は青い主色と紫の AI 色、Noto Sans JP だけの書体、768/1120 の折り返し幅を正本にしていた。新しい見た目の指定（無彩色の主色、動作中だけの琥珀色、欧文・日本語・等幅の役割分離、641/1025）とずれていた。
 
 ## 現在の挙動
 
@@ -65,8 +65,8 @@ implementation_readiness: {"checked_at":"2026-08-13T00:00:00Z","missing_sections
 ## 期待する挙動
 
 - 主操作はグラファイト。琥珀色は「実行中・ヒアリング中」だけ。
-- 英数字 IBM Plex Sans、日本語 Noto Sans JP、ID/ログは JetBrains Mono。
-- `md=640` / `lg=1024`、sidebar 212/68、Card/Panel 角 10px。
+- 英数字 IBM Plex Sans、日本語はシステムフォント、ID/ログは JetBrains Mono。
+- `md=641` / `lg=1025`、sidebar 212/68、Card/Panel 角 10px。
 - 現在地は最長一致の 1 件だけ。
 
 ## 再現手順またはユースケース

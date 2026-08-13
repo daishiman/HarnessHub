@@ -212,10 +212,9 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 
 - `packages/ui` を AppShell、layout primitive、design token、focus ring、base CSS の owner とし、`apps/hub` は root layout で一度だけ base CSS を注入する consumer とする。
 - App Router の root / dashboard / workspace は loading / error / not-found を共通画面状態へ接続し、root は global-error も持つ。403 は再認証導線へ潰さない。
-- responsive の数値正本は `breakpointTokens` (`480 / 640 / 1024`)。表の超過は局所 scroll で受け、document overflow は実 Chromium で拒否する。検査幅 360 / 768 / 1280 は回帰用。
-- 配色はグラファイト × アンバー。英数字 IBM Plex Sans、日本語 Noto Sans JP、等幅 JetBrains Mono。Card/Panel 角は `radius.card` 10px。nav 現在地は最長一致 1 件。
-- jsdom に加え Browser Mode + Playwright で 44px / 36px 操作域と catalog light/dark VRT を検査する。baseline は OS 単位。
-- 規範は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、受領は [visual-system-v2 受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+- responsive の数値正本は `breakpointTokens` (`480 / 641 / 1025`。2026-08-13 に `480 / 768 / 1120` から改訂)。表の超過は局所 scroll container で受け、document 全体の overflow は実 Chromium で拒否する。
+- jsdom gate に加え、Vitest Browser Mode + Playwright で 360 / 768 / 1280px、44px / 36px 操作域、catalog light/dark VRT を検査する。検査幅は breakpoint の値ではなく代表端末幅であり、改訂後は 360=narrow・768=middle (アイコンサイドバー)・1280=wide (フルサイドバー) の 3 帯を 1 本ずつ踏む位置づけになる。baseline は OS 単位とし CPU architecture では分けない。
+- 規範契約は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、仕様反映経路は [受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を正とする。
 
 ## 2026-08-08 共通 HubShell・page surface 境界
 
@@ -283,10 +282,8 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 
 要約: 表示名 (optional claims + IdBadge)、ListState / FilterBar / `q` 検索、
 `DateTimeText` 相対併記、screen-pattern gate、metrics `rankingTotals`。
-詳細・判断理由・検証結果は受領書を正本とする
-（[ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)）。
-製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と
-[UI foundation guide](../docs/frontend-ui-foundation-spec.md)。
+詳細・判断理由・検証結果は受領書（[ui-mvp-wave-20260812-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/ui-mvp-wave-20260812-spec-reflection-receipt.md)）を正本とする。
+製品契約の追記は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) と [UI foundation guide](../docs/frontend-ui-foundation-spec.md)。
 
 PR #700 の G13 回復では超過画面の client 本体を route-local `next/dynamic` へ分離し、
 `StickyHeaderOffset` も sticky 画面だけへ移した。API/認可/DB 意味は不変。
@@ -298,3 +295,6 @@ S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表
 
 ## 2026-08-12 S15 Docs CMS rich surface
 - 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。0件は権限別作成CTA/絞込解除。画像/Markdown は S15 正本。
+
+## 2026-08-13 デザインシステム改訂 (グラファイト × アンバー)
+- 視覚言語の境界は [デザインシステム アーキテクチャ](harness-hub-design-system.md) を正とする。breakpoint 数値正本は `480 / 641 / 1025` へ改訂。

@@ -16,6 +16,7 @@ import {
   ScreenHeader,
   StatusChip,
   TagRow,
+  Thumbnail,
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
@@ -153,20 +154,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
             },
           ]}
         />
-        {doc.thumbnail_url === null ? null : (
-          // biome-ignore lint/performance/noImgElement: 認証必須の同一origin画像と任意の外部画像の両方を扱う
-          <img
-            src={doc.thumbnail_url}
-            alt=""
-            style={{
-              display: 'block',
-              maxWidth: '100%',
-              height: 'auto',
-              marginBlockStart: 'var(--hh-space-3)',
-              borderRadius: 'var(--hh-radius-md)',
-            }}
-          />
-        )}
+        {doc.thumbnail_url === null ? null : <Thumbnail src={doc.thumbnail_url} size="block" spacingBefore="section" />}
       </Panel>
       {/* 本文は遅延境界内でも共通 MarkdownView のみで描画する (DOCS-SEC7-101)。 */}
       <DocumentDetailContent
