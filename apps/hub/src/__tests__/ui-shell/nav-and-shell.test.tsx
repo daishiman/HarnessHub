@@ -30,6 +30,7 @@ vi.mock('next/font/google', () => ({
 
 const { HubShell } = await import('../../components/shell/hub-shell.js');
 const navItems = await import('../../components/shell/nav-items.js');
+const routeTitles = await import('../../components/shell/route-titles.js');
 
 const APP_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../app');
 const SCOPE = { tenantId: 'tenant-a', workspaceId: 'ws-1' } as const;
@@ -72,6 +73,41 @@ function renderShell(currentHref?: string): void {
 }
 
 describe('UIS-NAV: 導線の定義', () => {
+  it('UIS-NAV-000: 業務シェルの全 route を現在地タイトルへ決定論的に解決する', () => {
+    const cases = [
+      ['/dashboard', 'ホーム'],
+      ['/catalog', '業務ツール'],
+      ['/catalog/publish', 'Skill を公開する'],
+      ['/catalog/releases', 'リリース履歴'],
+      ['/catalog/tool-1', '業務ツール詳細'],
+      ['/builds', '構築パイプライン'],
+      ['/docs', 'ドキュメント'],
+      ['/docs/new', 'ドキュメントを作成'],
+      ['/docs/doc-1', 'ドキュメント詳細'],
+      ['/docs/doc-1/edit', 'ドキュメントを編集'],
+      ['/feedback', '改善要望フィードバック'],
+      ['/feedback/new', '改善要望を報告'],
+      ['/feedback/fb-1', 'フィードバック詳細'],
+      ['/metrics', '効果測定ダッシュボード'],
+      ['/metrics/usage', '使用状況・削減効果'],
+      ['/sheets', 'ヒアリングシート'],
+      ['/sheets/new', '業務の困りごとを登録'],
+      ['/sheets/hs-1', 'ヒアリングシート詳細'],
+      ['/users', 'ユーザー管理'],
+      ['/users/user-1', 'ユーザー詳細'],
+      ['/settings/account', 'アカウント設定'],
+      ['/settings/auth', '認証設定 — 顧客所有 Google OAuth'],
+      ['/settings/coefficients', '見積係数設定'],
+      ['/settings/notion', 'Notion連携'],
+      ['/legal', '利用規約・プライバシーポリシー'],
+    ] as const;
+
+    for (const [href, expected] of cases) {
+      expect(routeTitles.resolveShellScreenTitle(`${href}?tenant=t1#section`)).toBe(expected);
+    }
+    expect(routeTitles.resolveShellScreenTitle('/unknown')).toBeUndefined();
+  });
+
   it('UIS-NAV-001: scope はクエリへ引き継がれ、空の値は載せない', () => {
     expect(navItems.scopedHref('/sheets', SCOPE, true)).toBe('/sheets?tenant=tenant-a&workspace=ws-1');
     expect(navItems.scopedHref('/users', SCOPE, false)).toBe('/users?tenant=tenant-a');
@@ -262,11 +298,19 @@ describe('UIS-SHELL: HubShell の描画', () => {
     expect(document.body.textContent).toContain('ワークスペース管理者');
   });
 
-  it('UIS-SHELL-006: 現在地からモバイルヘッダーの画面名を補う (§6.2)', () => {
+  it('UIS-SHELL-006: 現在地から全幅ヘッダーの画面名を補う (§6.2)', () => {
     renderShell('/sheets/hs-1');
 
     const header = document.querySelector('header');
-    expect(header?.querySelector('.hh-shell__mobile-only')?.textContent).toBe('ヒアリングシート');
+    expect(header?.querySelector('[data-hh-screen-title]')?.textContent).toBe('ヒアリングシート詳細');
+  });
+
+  it('UIS-SHELL-006b: 入れ子 route は最も具体的な現在地タイトルを出す', () => {
+    renderShell('/metrics/usage');
+
+    const title = document.querySelector('[data-hh-screen-title]');
+    expect(title?.textContent).toBe('使用状況・削減効果');
+    expect(title?.textContent).not.toBe('ダッシュボード');
   });
 
   it('UIS-SHELL-007: サインアウトは既存の NextAuth route を指す', () => {

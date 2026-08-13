@@ -9,7 +9,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axe, { type Result } from 'axe-core';
 import type { ReactNode } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   ActionLink,
@@ -17,6 +17,7 @@ import {
   breakpointTokens,
   buildShellCss,
   Card,
+  HistoryNavigation,
   isCurrentNav,
   isResolvedCurrentNav,
   MobileTabBar,
@@ -90,22 +91,22 @@ describe('isCurrentNav', () => {
 });
 
 describe('resolveCurrentNavTarget', () => {
-  const items: readonly ShellNavItem[] = [
+  const items = [
     { href: '/metrics', label: 'ダッシュボード', icon: 'dashboard' },
     { href: '/metrics/usage', label: '使用状況', icon: 'tracking' },
     { href: '/sheets', label: 'シート', icon: 'sheet' },
-  ];
+  ] as const satisfies readonly ShellNavItem[];
 
   it('入れ子パスでは最も長い一致だけを現在地にする', () => {
     expect(resolveCurrentNavTarget(items, '/metrics/usage')).toBe('/metrics/usage');
-    expect(isResolvedCurrentNav(items[0]!, '/metrics/usage')).toBe(false);
-    expect(isResolvedCurrentNav(items[1]!, '/metrics/usage')).toBe(true);
+    expect(isResolvedCurrentNav(items[0], '/metrics/usage')).toBe(false);
+    expect(isResolvedCurrentNav(items[1], '/metrics/usage')).toBe(true);
   });
 
   it('祖先だけのパスでは祖先を現在地にする', () => {
     expect(resolveCurrentNavTarget(items, '/metrics')).toBe('/metrics');
-    expect(isResolvedCurrentNav(items[0]!, '/metrics')).toBe(true);
-    expect(isResolvedCurrentNav(items[1]!, '/metrics')).toBe(false);
+    expect(isResolvedCurrentNav(items[0], '/metrics')).toBe(true);
+    expect(isResolvedCurrentNav(items[1], '/metrics')).toBe(false);
   });
 });
 
@@ -266,10 +267,22 @@ describe('ShellHeader', () => {
     expect(document.activeElement).toBe(search);
   });
 
-  it('モバイル向けの画面タイトルを出せる', () => {
-    renderWithUi(<ShellHeader {...headerProps} screenTitle="ヒアリングシート" />);
+  it('画面タイトルを全幅で出し、長い文字列はヘッダー内で省略できる', () => {
+    const { container } = renderWithUi(<ShellHeader {...headerProps} screenTitle="ヒアリングシート" />);
 
-    expect(screen.getByText('ヒアリングシート')).toBeDefined();
+    const title = screen.getByText('ヒアリングシート');
+    expect(title.hasAttribute('data-hh-screen-title')).toBe(true);
+    expect(title.classList.contains('hh-shell__mobile-only')).toBe(false);
+    expect(title.style.minWidth).toBe('0');
+    expect(title.style.textOverflow).toBe('ellipsis');
+    expect(container.querySelector('[data-hh-screen-title]')).toBe(title);
+  });
+
+  it('履歴ナビゲーションを server-first ヘッダーの slot に差し込める', () => {
+    renderWithUi(<ShellHeader {...headerProps} historyNavigation={<HistoryNavigation />} />);
+
+    const header = screen.getByRole('banner');
+    expect(within(header).getByRole('navigation', { name: 'ページ履歴' })).toBeDefined();
   });
 
   it('切替候補が無ければ Workspace は表示だけで、操作の存在を主張しない', () => {
@@ -351,6 +364,43 @@ describe('ShellHeader', () => {
     );
 
     expect(screen.queryByLabelText('ワークスペースを切り替える')).toBeNull();
+  });
+});
+
+describe('HistoryNavigation', () => {
+  it('戻る/進むを常時操作可能な 44px Graphite ボタンで提供する', () => {
+    renderWithUi(<HistoryNavigation />);
+
+    const navigation = screen.getByRole('navigation', { name: 'ページ履歴' });
+    const back = within(navigation).getByRole('button', { name: '戻る' });
+    const forward = within(navigation).getByRole('button', { name: '進む' });
+
+    expect(back.getAttribute('title')).toBe('戻る');
+    expect(forward.getAttribute('title')).toBe('進む');
+    expect(back.getAttribute('disabled')).toBeNull();
+    expect(forward.getAttribute('disabled')).toBeNull();
+    expect(back.className).toBe('hh-shell__history-button');
+    const shellCss = buildShellCss();
+    expect(shellCss).toContain('min-width: var(--hh-control-height)');
+    expect(shellCss).toContain('min-height: var(--hh-control-height)');
+    expect(shellCss).toContain('color: var(--hh-color-primary)');
+    expect(back.querySelector('[data-icon="arrowLeft"]')).not.toBeNull();
+    expect(forward.querySelector('[data-icon="arrowRight"]')).not.toBeNull();
+  });
+
+  it('window.history の戻る/進むだけを client island から呼ぶ', async () => {
+    const user = userEvent.setup();
+    const back = vi.spyOn(window.history, 'back').mockImplementation(() => undefined);
+    const forward = vi.spyOn(window.history, 'forward').mockImplementation(() => undefined);
+    renderWithUi(<HistoryNavigation />);
+
+    await user.click(screen.getByRole('button', { name: '戻る' }));
+    await user.click(screen.getByRole('button', { name: '進む' }));
+
+    expect(back).toHaveBeenCalledOnce();
+    expect(forward).toHaveBeenCalledOnce();
+    back.mockRestore();
+    forward.mockRestore();
   });
 });
 
@@ -655,6 +705,7 @@ describe('buildShellCss', () => {
 describe('シェルの axe 検査', () => {
   const scenarios: Array<[string, () => ReactNode]> = [
     ['ShellSidebar', () => <ShellSidebar items={navItems} currentHref="/sheets" label="主要ナビゲーション" />],
+    ['HistoryNavigation', () => <HistoryNavigation />],
     ['ShellHeader', () => <ShellHeader {...headerProps} unreadCount={2} accountRoleLabel="管理者" />],
     [
       'ShellHeader + WorkspaceSwitcher',

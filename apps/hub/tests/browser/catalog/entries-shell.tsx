@@ -9,6 +9,7 @@ import {
   BottomSheet,
   Button,
   ConfirmDialog,
+  HistoryNavigation,
   Icon,
   MobileTabBar,
   Modal,
@@ -31,6 +32,11 @@ const shellNavItems = [
 ] as const satisfies readonly ShellNavItem[];
 
 export const shellCatalogEntries: readonly CatalogEntry[] = [
+  {
+    name: 'HistoryNavigation',
+    group: 'navigation',
+    render: () => <HistoryNavigation />,
+  },
   {
     name: 'ShellSidebar',
     group: 'navigation',
@@ -67,6 +73,7 @@ export const shellCatalogEntries: readonly CatalogEntry[] = [
     group: 'navigation',
     render: () => (
       <ShellHeader
+        historyNavigation={<HistoryNavigation />}
         workspaceName="営業ワークスペース"
         workspaceLabel="ワークスペース"
         screenTitle="ヒアリングシート"

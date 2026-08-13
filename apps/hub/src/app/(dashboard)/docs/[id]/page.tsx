@@ -154,9 +154,7 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
             },
           ]}
         />
-        {doc.thumbnail_url === null ? null : (
-          <Thumbnail src={doc.thumbnail_url} size="block" spacingBefore="section" />
-        )}
+        {doc.thumbnail_url === null ? null : <Thumbnail src={doc.thumbnail_url} size="block" spacingBefore="section" />}
       </Panel>
       {/* 本文は遅延境界内でも共通 MarkdownView のみで描画する (DOCS-SEC7-101)。 */}
       <DocumentDetailContent

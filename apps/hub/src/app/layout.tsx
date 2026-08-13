@@ -12,8 +12,7 @@
 import '@harness-hub/ui/tokens.css';
 import { UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 import { ibmPlexSans, jetBrainsMono } from './fonts.js';
 
@@ -25,8 +24,7 @@ export const metadata: Metadata = {
 const appFontStyle = {
   '--hh-font-family':
     "var(--font-ibm-plex-sans), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  '--hh-font-family-mono':
-    "var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
+  '--hh-font-family-mono': "var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
 } as CSSProperties;
 
 export default function RootLayout({ children }: { children: ReactNode }) {

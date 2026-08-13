@@ -89,7 +89,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | StageBoard (かんばん) / StageSegment (モバイル) | 自作 | 工程チップ+件数バッジ・risk 表示・DnD 不採用 (操作はメニュー。タッチ/キーボード同等性) | S13 |
 | MarkdownView / MarkdownEditor (textarea+プレビュー) | react-markdown + 自作 | XSS sanitize (SEC7)・プレビュータブ | S12/S14/S15 |
 | InlineEditTable | 自作 | 編集はモバイルでシートへ昇格 (§6.3) | S17/S04 |
-| NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | 未読バッジ・Workspace 切替 (server-first + 開閉専用の小さな client island)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
+| HistoryNavigation / NotificationBell / WorkspaceSwitcher / SearchCommand | 自作 | ブラウザ履歴の戻る/進む、未読バッジ・Workspace 切替 (server-first + 開閉専用の小さな client island)・provider-admin のみテナント切替・検索 (GET /search) | 共通シェル |
 | DegradedBanner (縮退) / EmptyState / ErrorState | 自作 | 「導入済みツールはそのまま使えます」(qa-019)・平易な日本語+次の一手 (qa-018) | 全画面 |
 
 ### 2.3 SVG チャート契約
@@ -115,8 +115,8 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 ### 3.0 共通シェル (feat-hub-foundation)
 
 - **アプリ外枠 (≥ md)**: body に `page-bg` を敷き、シェル本体を `space-3` の余白・角丸 14px・1px 輪郭・`--hh-shadow-frame` で一段浮かせる (デザインシステム §7)。高さの引き算は変数 1 つ (`--hh-shell-frame-inset`) に閉じ、本体・body・サイドバーでずれないようにする。**モバイルでは外枠を付けない** — 狭い画面では外周の余白が本文幅を削るだけで、「浮いている」情報が可読性の損失に見合わない。
-- **デスクトップ (≥ lg)**: 左サイドバー 212px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
-- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
+- **デスクトップ (≥ lg)**: 左サイドバー 212px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (履歴の戻る/進む・動的な現在地タイトル・WorkspaceSwitcher・必要な画面だけの検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
+- **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは Workspace 文脈の上段と、アイコンだけの戻る/進む、1行省略可能な画面タイトル (360px でも幅 48px 以上)、必要時の検索アイコン、通知、アバターを置く下段に分ける。履歴 navigation は全画面で 1 組だけとし、各 `ScreenHeader` やボトムタブへ複製しない。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
 ### 3.1 画面×API マップ (データ取得の正本)

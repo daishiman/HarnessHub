@@ -115,6 +115,71 @@ export function buildShellCss(): string {
   display: revert;
 }
 
+/* 360px でも履歴 2 操作 (各 44px) と現在地を読めるよう、mobile ヘッダーは
+   文脈 (workspace) と操作列を 2 段に分ける。アイコンを縮めて詰め込まず、
+   タップ領域とタイトルの最小可読幅を両方守る。md 以上では元の 1 段へ戻す。 */
+[data-hh-shell-header] {
+  display: grid;
+  grid-template-columns: auto minmax(48px, 1fr) auto auto auto;
+  grid-template-areas:
+    'workspace workspace workspace workspace workspace'
+    'history title search notifications account';
+  align-items: center;
+  gap: var(--hh-space-1);
+  padding: var(--hh-space-1) var(--hh-space-2);
+}
+
+.hh-shell__workspace-context {
+  grid-area: workspace;
+}
+
+.hh-shell__history-navigation {
+  grid-area: history;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--hh-space-1);
+}
+
+.hh-shell__history-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--hh-control-height);
+  min-height: var(--hh-control-height);
+  padding: 0;
+  color: var(--hh-color-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--hh-radius-full);
+  cursor: pointer;
+}
+
+.hh-shell__history-navigation [data-icon] {
+  font-size: var(--hh-font-size-lg);
+  line-height: 1;
+}
+
+.hh-shell__screen-title {
+  grid-area: title;
+}
+
+.hh-shell__mobile-search {
+  grid-area: search;
+}
+
+.hh-shell__notifications {
+  grid-area: notifications;
+}
+
+.hh-shell__account {
+  grid-area: account;
+}
+
+.hh-shell__title-spacer {
+  display: none;
+}
+
 .hh-shell__tabbar {
   position: fixed;
   inset-inline: 0;
@@ -229,6 +294,16 @@ export function buildShellCss(): string {
 
 /* --- md 以上: サイドバー常設。ボトムタブは畳む --- */
 ${mediaUp('md')} {
+  [data-hh-shell-header] {
+    display: flex;
+    gap: var(--hh-space-3);
+    padding: 0 var(--hh-space-4);
+  }
+
+  .hh-shell__title-spacer {
+    display: block;
+  }
+
   .hh-shell {
     grid-template-columns: ${shellSidebarCollapsedWidth} minmax(0, 1fr);
     /* md 以上は main 自体がスクロールコンテナ。ShellHeader はその外側なので、
@@ -286,7 +361,12 @@ ${mediaUp('md')} {
     display: revert;
   }
 
-  .hh-shell__mobile-only,
+  .hh-shell__mobile-only {
+    /* icon button は 44px を保つため inline style で inline-flex を持つ。
+       viewport の表示契約だけはそれより強くし、desktop に同じ検索導線を二重表示しない。 */
+    display: none !important;
+  }
+
   .hh-shell__tabbar {
     display: none;
   }

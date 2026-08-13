@@ -30,7 +30,11 @@ export function TextButton(props: TextButtonProps): ReactNode {
   const { tone = 'primary', type = 'button', disabled, children, ref, ...untrustedRest } = props;
   // JavaScript 呼出し・型の迂回で style/className が渡されても、canonical 表現を壊さない。
   // 局所の必要性は tone 等の意味的 prop として部品契約へ昇格させる。
-  const { style: _ignoredStyle, className: _ignoredClassName, ...rest } = untrustedRest as typeof untrustedRest & {
+  const {
+    style: _ignoredStyle,
+    className: _ignoredClassName,
+    ...rest
+  } = untrustedRest as typeof untrustedRest & {
     style?: unknown;
     className?: unknown;
   };

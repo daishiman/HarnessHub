@@ -11,9 +11,11 @@
 import type { SessionRole } from '@harness-hub/schemas';
 import {
   buildShellCss,
+  HistoryNavigation,
   Icon,
-  isCurrentNav,
+  isResolvedCurrentNav,
   MobileTabBar,
+  resolveCurrentNavTarget,
   ShellFooter,
   ShellHeader,
   ShellSidebar,
@@ -35,6 +37,7 @@ import {
   secondaryNavItems,
   sidebarNavGroups,
 } from './nav-items.js';
+import { resolveShellScreenTitle } from './route-titles.js';
 import { workspaceSwitcherOptions } from './workspace-switcher-items.js';
 
 /**
@@ -103,10 +106,14 @@ export function HubShell({
   const secondary = secondaryNavItems(scope, accountRole);
   const dashboard = dashboardNavItem(scope);
   const more = [dashboard, ...insightNavItems(scope), ...secondary];
-  // layout は route ごとの画面名を持たないため、未指定時は現在地に一致する
-  // top-level 導線の名前を使う。詳細画面でも「どの領域にいるか」がモバイルで失われない。
+  const allNavItems = [...primary, ...more];
+  const resolvedNavTarget = resolveCurrentNavTarget(allNavItems, currentHref);
+  // route 固有の現在地名を最優先し、まだ title catalog にない将来の配下 route だけ
+  // nav の領域名へ落とす。最長一致を使うので `/metrics/usage` を `/metrics` と誤認しない。
   const resolvedScreenTitle =
-    screenTitle ?? [...primary, ...more].find((item) => isCurrentNav(item, currentHref))?.label;
+    screenTitle ??
+    resolveShellScreenTitle(currentHref) ??
+    allNavItems.find((item) => isResolvedCurrentNav(item, resolvedNavTarget))?.label;
   // 検索欄の有無・行き先・文言は 1 回の判定でまとめて決まる (nav-items の headerSearch)。
   // 対象を持たない画面では null になり、ヘッダーから検索欄ごと消える。
   const search = headerSearch(scope, currentHref);
@@ -145,6 +152,7 @@ export function HubShell({
                 icon={<Icon name="menu" />}
               />
             }
+            historyNavigation={<HistoryNavigation />}
             workspaceName={scope.workspaceId === '' ? '未選択' : (currentWorkspaceName ?? scope.workspaceId)}
             workspaceLabel="ワークスペース"
             // 名前が引けたときだけ名前の体裁で出す。引けないまま ULID を名前の位置へ置くと

@@ -20,8 +20,10 @@ import {
   buildShellCss,
   Card,
   DataTable,
+  HistoryNavigation,
   NavList,
   ScreenHeader,
+  ShellHeader,
   SidebarLayout,
   SidebarToggleButton,
   Stack,
@@ -148,12 +150,58 @@ const routes = [
       </>
     ),
   },
+  {
+    path: '/shell-header',
+    title: '共通ヘッダー',
+    body: (
+      <UiProvider>
+        <style>{buildShellCss()}</style>
+        <ShellHeader
+          historyNavigation={<HistoryNavigation />}
+          workspaceName="営業ワークスペース"
+          workspaceLabel="ワークスペース"
+          screenTitle="使用状況・削減効果"
+          searchAction="/sheets"
+          searchLabel="ヒアリングシートを検索"
+          searchPlaceholder="HS コード・業務名で探す"
+          notificationsHref="/settings/account"
+          notificationsLabel="通知設定"
+          unreadLabel="未読"
+          accountName="山田 太郎"
+          accountMenuLabel="アカウントメニュー"
+          accountLinks={[{ href: '/settings/account', label: 'アカウント設定' }]}
+          signOutHref="/api/auth/signout"
+          signOutLabel="サインアウト"
+        />
+      </UiProvider>
+    ),
+  },
 ];
 
 /** WCAG 2.2 の 2.5.8。comfortable 密度の操作部品はこれを下回らない。 */
 const MIN_TAP_TARGET_PX = 44;
 
 describe('レスポンシブ崩れ検査', () => {
+  it.each(Object.entries(viewportPresets))(
+    '共通ヘッダーは %s 幅で履歴操作・現在地を保ち、画面全体を横へ押し出さない',
+    async (name, viewport) => {
+      await withBrowserSession({ routes }, async (session) => {
+        await session.goto('/shell-header', viewport);
+
+        const metrics = await session.documentMetrics();
+        const historyTargets = await session.measure('nav[aria-label="ページ履歴"] button');
+        const [title] = await session.measure('[data-hh-screen-title]');
+        const [mobileSearch] = await session.measure('.hh-shell__mobile-search', ['display']);
+
+        expect(metrics.overflowsHorizontally).toBe(false);
+        expect(historyTargets).toHaveLength(2);
+        expect(historyTargets.every((target) => target.box.width >= 44 && target.box.height >= 44)).toBe(true);
+        expect(title?.box.width).toBeGreaterThanOrEqual(48);
+        expect(mobileSearch?.styles.display === 'none').toBe(name !== 'mobile');
+      });
+    },
+  );
+
   it('サイドバー開閉トグルは mobile で隠れ、md 以上でだけ表示される', async () => {
     await withBrowserSession({ routes }, async (session) => {
       await session.goto('/sidebar-toggle', viewportPresets.mobile);

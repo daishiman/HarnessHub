@@ -133,6 +133,8 @@ export type {
 export { Card, Container, containerSizes, Stack, Tile } from './layout/primitives.js';
 export type { BottomSheetProps } from './shell/BottomSheet.js';
 export { BottomSheet } from './shell/BottomSheet.js';
+// --- 共通シェル ----------------------------------------------------------
+export { HistoryNavigation } from './shell/HistoryNavigation.js';
 // --- 情報の並べ方 (型の選定は specs/harness-hub-information-design-addendum.md の registry、
 //     画面ごとの割当は docs/screen-inventory.md、部品への写し方は frontend-ui-foundation-spec §5-1) ---
 export type {
@@ -148,7 +150,6 @@ export type {
 export { CardGrid, DataCard, DefinitionList, FilterBar, LiveStatus, TagRow } from './shell/information.js';
 export type { MobileTabBarProps } from './shell/MobileTabBar.js';
 export { MobileTabBar, mobileTabPrimarySlots } from './shell/MobileTabBar.js';
-// --- 共通シェル ----------------------------------------------------------
 export type { ShellNavItem } from './shell/nav-model.js';
 export { isCurrentNav, isResolvedCurrentNav, resolveCurrentNavTarget } from './shell/nav-model.js';
 export type { ShellFooterLink, ShellFooterProps } from './shell/ShellFooter.js';
