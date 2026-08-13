@@ -71,7 +71,7 @@ implementation_readiness: {"checked_at":"2026-08-02T00:00:00Z","missing_sections
 ## 要約
 
 - 本 feature は**新機能の追加ではなく統合修正**である。`authorize()` の判定規則そのものは `feat-auth-tenancy` が、業務画面自体は既存 feature が既に所有しており、本 feature は「既にデプロイ済みのコードどうしの結線欠落」だけを埋める。
-- 結線対象は 2 系統。(a) scope 解決の入力を明示ヘッダー（API・機械クライアント）と session の active tenant/workspace（ブラウザ通常遷移）の 2 系統に広げ、同一の `authorize()` へ収束させる。(b) サインイン後の着地先を `callbackUrl` 固定値 `/` から「遷移元 path → 既定着地 `/sheets`」の解決へ置き換える。
+- 結線対象は 2 系統。(a) scope 解決の入力を明示ヘッダー（API・機械クライアント）と session の active tenant/workspace（ブラウザ通常遷移）の 2 系統に広げ、同一の `authorize()` へ収束させる。(b) サインイン後の着地先を `callbackUrl` 固定値 `/` から「遷移元 path → 既定着地 `/dashboard`」の解決へ置き換える（着地値は appr-034 による後続更新）。
 - 非退行の絶対条件は 3 つ。判定順（public 判定 → 認証 → スコープ一意性 → tenant 一致 → workspace 所属）を変えない、どちらの scope 入力も無いときは従来どおり `missing_tenant_scope` とする、戻り先の解決結果にも通常の `authorize()` を適用して redirect を認可の迂回路にしない。
 - readiness は 13/13 complete、missing section 0 件。四 gate（C11 graph schema / source digest / system plan / generation lineage）は同一 snapshot digest で全て exit 0。handoff は発行済み。
 
@@ -103,7 +103,7 @@ published task spec が正本であり、`tasks/feat-post-signin-scope-routing/*
 | 3 | 両方とも存在しない場合は従来どおり `missing_tenant_scope` とする（deny-by-default 非退行） | P05 | P06 / P09 |
 | 4 | 両経路を同一の `authorize()` へ収束させ、判定を二重実装しない | P02 / P05 | P08 |
 | 5 | session への active workspace 束縛と、切替のたびの所属再検証 | P05 | P06 / P09 |
-| 6 | サインイン後の着地先解決: `callbackUrl` の固定値 `/` を廃止し、遷移元 path → 既定着地 `/sheets` の順で解決する | P05 | P06 / P07 |
+| 6 | サインイン後の着地先解決: `callbackUrl` の固定値 `/` を廃止し、遷移元 path → 既定着地 `/dashboard` の順で解決する | P05 | P06 / P07 |
 | 7 | 既定着地を単一定数から解決し、画面ごとに散らさない | P05 / P08 | P08 |
 | 8 | 戻り先を同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative（`//`）は既定着地へ落とす（open redirect 防止） | P05 | P06 / P09 |
 | 9 | 戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない | P05 | P06 / P09 |
@@ -115,7 +115,7 @@ acceptance は P04 で実行可能なテスト ID として定義し、P06 で�
 
 | # | 受入条件 | ID 定義 | 実行 | 判定 |
 |---|---|---|---|---|
-| 1 | 遷移元が無いサインイン成功で `/sheets` に着地し、`/` に留まらない | P04 | P06 | P07 |
+| 1 | 遷移元が無いサインイン成功で `/dashboard` に着地し、`/` に留まらない | P04 | P06 | P07 |
 | 2 | 戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる | P04 | P06 | P07 |
 | 3 | 認証済み session で `/` を開くと既定着地へ redirect される | P04 | P06 | P07 |
 | 4 | 業務画面 6 種が通常のブラウザ操作で 403 `missing_tenant_scope` にならない | P04 | P06 | P07 |

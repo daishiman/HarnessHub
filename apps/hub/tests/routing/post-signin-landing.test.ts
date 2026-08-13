@@ -38,7 +38,7 @@ describe('TID-LAND: 着地先解決の入力分類', () => {
     expect(resolvePostSigninLanding('http://user@evil.com')).toBe(DEFAULT_POST_SIGNIN_LANDING);
   });
 
-  it('既定着地の定数値は /sheets (画面ごとに散らさない単一定数)', () => {
-    expect(DEFAULT_POST_SIGNIN_LANDING).toBe('/sheets');
+  it('既定着地の定数値は /dashboard (画面ごとに散らさない単一定数)', () => {
+    expect(DEFAULT_POST_SIGNIN_LANDING).toBe('/dashboard');
   });
 });

@@ -291,6 +291,11 @@ export function HearingSheetList({ tenantId, workspaceId, initialQuery = '' }: H
           // 「上位が抜けている」と読まれてしまうため、範囲を先に断っておく。
           // 部品に持たせているのは、カード表示のときだけ断りが消えるのを防ぐため
           note="並べ替えはこのページに表示中の分が対象です (広い画面では列の見出しから、狭い画面では並び替えの選択欄から操作できます)。"
+          // レビュー待ちを要対応として強調する。ai_job_status (failed/dead) も強調対象に
+          // したいが、一覧 API のレスポンス型 (SheetListItem) にこのフィールドが無く、
+          // 詳細取得用の別スキーマにしか無いため現状は対象外 (該当シートは詳細画面で確認する)
+          rowAttention={(row) => row.status === 'review'}
+          rowAttentionLabel="要対応"
         />
       </ListState>
       <CursorPager

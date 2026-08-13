@@ -24,6 +24,8 @@ status: "accepted_with_release_pending"
 
 # SYS-POST-SIGNIN-SCOPE-P13 仕様反映受領書
 
+> **履歴注記 (2026-08-13):** 本受領書の `/sheets` は 2026-08-03 時点の反映内容を保存したもの。現行の既定着地は後続の appr-034 により `/dashboard` であり、この履歴値で上書きしない。
+
 ## 結論
 
 今回の変更は、既に確定していた「サインイン後は `/sheets` へ着地し、browser session

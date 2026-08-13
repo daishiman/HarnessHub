@@ -28,7 +28,7 @@ import {
   buildStageTransitionResponseSchema,
 } from '@harness-hub/schemas';
 
-import { fallbackBuildTitle, toBuildListItem, toBuildStageEvent } from './dto.js';
+import { computeBuildRisk, fallbackBuildTitle, toBuildListItem, toBuildStageEvent } from './dto.js';
 import { InvalidBuildCursorError } from './errors.js';
 
 /**
@@ -76,6 +76,25 @@ export interface BuildPipelineBoardService {
     readonly actorUserId: string;
     readonly request: BuildStageTransitionRequest;
   }): Promise<BuildStageTransitionResponse>;
+  /**
+   * ホーム集約向け。要対応件数と直近更新 N 件を 1 度に返す。
+   *
+   * risk は DB 列でなく `dto.ts` の `computeBuildRisk` によるその場算出値 (停滞日数由来) なので、
+   * SQL で件数を絞れない。本人が触った Build だけを取得し、risk を JS 側でカウントする
+   * (1 workspace の Build 件数は S13 ボードの表示限界を前提にしており、listBuilds と同じ制約)。
+   * 要対応件数は `risk:'blocked'` のみを数える (`'warn'` は次点として recentItems 側で見せる)。
+   */
+  getActionableSummary(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId: string;
+    readonly actorUserId: string;
+    readonly recentLimit: number;
+  }): Promise<BuildActionableSummary>;
+}
+
+export interface BuildActionableSummary {
+  readonly actionableCount: number;
+  readonly recentItems: readonly BuildListItem[];
 }
 
 export interface BuildPipelineBoardServiceOptions {
@@ -176,6 +195,22 @@ export function createBuildPipelineBoardService(
         build: toBuildListItem(result.build, await resolveTitle(input.context, result.build), now()),
         event: toBuildStageEvent(result.event),
       });
+    },
+
+    async getActionableSummary(input) {
+      const nowMillis = now();
+      const touchedFilter = { workspaceId: input.workspaceId, actorUserId: input.actorUserId };
+      const [recentRows, allTouchedRows] = await Promise.all([
+        repository.listRecentTouchedBuilds(input.context, { ...touchedFilter, limit: input.recentLimit }),
+        repository.listRecentTouchedBuilds(input.context, touchedFilter),
+      ]);
+      const items = await toItems(input.context, recentRows, nowMillis);
+      // 件数は recent の上限に左右されず、本人が触った全 Build のうち停止中だけを数える。
+      // 題名は件数算出に不要なので、全件の title 解決は行わない。
+      const actionableCount = allTouchedRows.filter(
+        (row) => computeBuildRisk(row.stage, row.updatedAt, nowMillis) === 'blocked',
+      ).length;
+      return { actionableCount, recentItems: items };
     },
   };
 }

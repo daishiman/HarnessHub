@@ -30,7 +30,7 @@ scope の入力系統が2系統（明示ヘッダー / session の active tenant
 3. 両方とも存在しない場合は従来どおり `missing_tenant_scope` とする（deny-by-default の非退行 = 後退させない）。
 4. 両経路を同一の `authorize()` へ収束させ、判定を二重実装しない。
 5. session への active workspace 束縛（今どのワークスペースを使っているかの紐付け）と、切替のたびの所属再検証。
-6. サインイン後の着地先解決: `callbackUrl` の固定値 `"/"` を廃止し、遷移元 path → 既定着地 `/sheets` の順で解決する。
+6. サインイン後の着地先解決: `callbackUrl` の固定値 `"/"` を廃止し、遷移元 path → 既定着地 `/dashboard` の順で解決する（appr-034 による後続更新）。
 7. 既定着地を単一定数から解決し、画面ごとに散らさない。
 8. 戻り先を同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative（`//` で始まる形式）は既定着地へ落とす（open redirect 防止 = 外部サイトへ誘導されるのを防ぐ）。
 9. 戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない。
@@ -47,7 +47,7 @@ scope の入力系統が2系統（明示ヘッダー / session の active tenant
 
 ## 5. Acceptance（受入条件、8件）
 
-1. 遷移元が無いサインイン成功で `/sheets` に着地し、`/` に留まらない。
+1. 遷移元が無いサインイン成功で `/dashboard` に着地し、`/` に留まらない。
 2. 戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる。
 3. 認証済み session で `/` を開くと既定着地へ redirect される。
 4. 業務画面6種が通常のブラウザ操作で `403 missing_tenant_scope` にならない。
@@ -61,7 +61,7 @@ scope の入力系統が2系統（明示ヘッダー / session の active tenant
 1. `authz-decision-order-and-deny-by-default-non-regression` — `authorize()` の判定順「public判定→認証→スコープ一意性→tenant一致→workspace所属」を変更しない。deny-by-default を後退させない。
 2. `scope-resolution-two-inputs-ambiguous-rejection` — scope 解決は明示ヘッダーと session の2入力を受け取り、不一致は `ambiguous_scope` として拒否する。
 3. `session-active-workspace-binding-membership-revalidation` — session への active workspace 束縛は、都度 principal の所属一覧（workspaceIds）と照合し、所属を外れた値は無効化する（fail-closed = 疑わしきは拒否）。
-4. `post-signin-landing-resolution-single-default-constant` — 既定着地 `/sheets` は単一定数として定義し、複数箇所に重複定義しない。
+4. `post-signin-landing-resolution-single-default-constant` — 既定着地 `/dashboard` は単一定数として定義し、複数箇所に重複定義しない。
 5. `open-redirect-prevention-same-origin-relative-only` — 戻り先の検証は同一 origin の相対 path のみを許可する形で実装する。
 6. `integration-fix-not-new-capability-cross-feature-boundary` — 本 feature は新機能を追加するのではなく既存実装間の結線を修正するものであり、`authorize()` の判定規則自体・業務画面本体・Workspace 選択 UI・Web 公開ウィザード導線には踏み込まない。
 

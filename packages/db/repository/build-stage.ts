@@ -15,7 +15,7 @@
  * - **publish 状態機械そのものの操作。** publish 工程へ進めてよいかを既存 `PublishRequest` に**問い合わせる**
  *   だけで、`publish_requests` は一切書き換えない (二重状態を作らない / B4)。
  */
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, max } from 'drizzle-orm';
 import { buildStageEvents } from '../schema/build-pipeline/schema';
 import { BUILD_STAGES, builds } from '../schema/builds/schema';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
@@ -128,6 +128,11 @@ export interface BuildStageRepository {
   transitionStage(context: RepositoryContext, input: TransitionStageInput): Promise<StageTransitionResult>;
   /** 1 build の工程履歴 (古い順)。 */
   listStageEvents(context: RepositoryContext, buildId: string): Promise<BuildStageEventRow[]>;
+  /** 本人の工程操作 event が新しい Build だけを返す。workspace 全件を本人の履歴として扱わない。 */
+  listRecentTouchedBuilds(
+    context: RepositoryContext,
+    filter: { readonly workspaceId: string; readonly actorUserId: string; readonly limit?: number },
+  ): Promise<readonly BuildRow[]>;
   /** S13 パイプラインボードの読取。7 工程ぶんの列を `BUILD_STAGES` の順で返す。 */
   listBoard(context: RepositoryContext, filter: { readonly workspaceId: string }): Promise<BuildBoardColumnRows[]>;
 }
@@ -228,6 +233,43 @@ export function createBuildStageRepository(adapter: CoreAdapter): BuildStageRepo
         .where(and(...conditions))
         .orderBy(asc(buildStageEvents.occurredAt), asc(buildStageEvents.id));
       return rows as BuildStageEventRow[];
+    },
+
+    async listRecentTouchedBuilds(context, filter) {
+      if (context.workspaceId !== undefined && context.workspaceId !== filter.workspaceId) {
+        throw new RepositoryError('invalid-context', 'context と filter の workspaceId が一致しません');
+      }
+      const lastTouched = max(buildStageEvents.occurredAt).as('last_touched_at');
+      const touchedQuery = adapter.client
+        .select({ buildId: buildStageEvents.buildId, lastTouched })
+        .from(buildStageEvents)
+        .where(
+          and(
+            eq(buildStageEvents.tenantId, context.tenantId),
+            eq(buildStageEvents.workspaceId, filter.workspaceId),
+            eq(buildStageEvents.actorUserId, filter.actorUserId),
+          ),
+        )
+        .groupBy(buildStageEvents.buildId)
+        .orderBy(desc(lastTouched));
+      const touched = filter.limit === undefined ? await touchedQuery : await touchedQuery.limit(filter.limit);
+      const ids = touched.map((row) => row.buildId);
+      if (ids.length === 0) return [];
+      const rows = (await adapter.client
+        .select()
+        .from(builds)
+        .where(
+          and(
+            eq(builds.tenantId, context.tenantId),
+            eq(builds.workspaceId, filter.workspaceId),
+            inArray(builds.id, ids),
+          ),
+        )) as BuildRow[];
+      const byId = new Map(rows.map((row) => [row.id, row]));
+      return ids.flatMap((id) => {
+        const row = byId.get(id);
+        return row === undefined ? [] : [row];
+      });
     },
 
     async listBoard(context, filter) {

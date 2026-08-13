@@ -97,8 +97,8 @@ def test_current_inventory_is_a_bijection_with_implemented_routes() -> None:
     assert len(surface_ids) == len(set(surface_ids)), "duplicate current surface ID"
     assert len(implemented_routes) == len(set(implemented_routes)), "duplicate page route"
     assert set(inventory_routes) == set(implemented_routes)
-    # /settings/notion (HarnessHub-hrux) を追加したため、現行画面は 27 件。
-    assert len(current) == 27
+    # /dashboard (S00.LANDING, feat-hub-foundation) を追加したため、現行画面は 28 件。
+    assert len(current) == 28
 
 
 def test_surface_profiles_have_complete_controlled_fields() -> None:

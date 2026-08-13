@@ -60,7 +60,7 @@ export interface DataTableColumn<TRow> {
   salience?: Salience;
 }
 
-export interface DataTableProps<TRow> {
+interface DataTableBaseProps<TRow> {
   /** 表題。スクリーンリーダーが表の目的を読み上げるために必須。 */
   caption: string;
   /** 表題を視覚的にのみ隠す。 */
@@ -102,7 +102,22 @@ export interface DataTableProps<TRow> {
    * ここへ渡す (書き分けると、カード表示のときだけ注記が消える)。
    */
   note?: ReactNode;
+  /**
+   * 行を「要対応」として視覚的に強調する判定。省略時は強調しない。
+   * 色だけに頼らないよう、強調行には支援技術向けの説明文 (`rowAttentionLabel`) も併せて
+   * 名指し列の先頭に差し込む (WCAG 1.4.1 Use of Color)。
+   */
 }
+
+type DataTableAttentionProps<TRow> =
+  | { readonly rowAttention?: undefined; readonly rowAttentionLabel?: never }
+  | {
+      readonly rowAttention: (row: TRow) => boolean;
+      /** 強調行に付ける支援技術向けの説明文。判定と必須ペア。 */
+      readonly rowAttentionLabel: string;
+    };
+
+export type DataTableProps<TRow> = DataTableBaseProps<TRow> & DataTableAttentionProps<TRow>;
 
 const cellStyle: CSSProperties = {
   padding: `var(--hh-row-padding-y) ${spaceVar(3)}`,
@@ -148,6 +163,20 @@ function stickyBodyCellStyle<TRow>(columns: readonly DataTableColumn<TRow>[], in
   };
 }
 
+/**
+ * 要対応行の視覚強調スタイル。
+ *
+ * 色だけに頼らない設計は呼び出し側で担保済み (a11y ラベルを別途差し込む) なので、
+ * ここでは見た目の強さだけを決める。他の行との差が伝わる強さにしつつ、
+ * 表全体が「強調だらけ」に見えない (Phase 2: 一様に強くすると何も目立たなくなる) こと。
+ */
+function attentionRowStyle(): CSSProperties {
+  // border / box-shadow は table-row (<tr>) には描画されない (CSS 2.1 の table model の仕様)。
+  // <li> (カード) 側では効くが、<tr> 側では静かに無視されて背景だけの差になり、
+  // 2 つの見た目が食い違う。両方で確実に効く background だけに絞る。
+  return { background: colorVar('warningSoft') };
+}
+
 /** 次に押したときのソート方向。同じ列なら反転、別の列なら昇順から。 */
 function nextSort(current: DataTableSort | undefined, columnKey: string): DataTableSort {
   if (current?.columnKey === columnKey && current.direction === 'ascending') {
@@ -171,6 +200,8 @@ export function DataTable<TRow>({
   stickyHeader = false,
   narrowAs = 'table',
   note,
+  rowAttention,
+  rowAttentionLabel,
 }: DataTableProps<TRow>): ReactNode {
   const t = useUiText();
   // 同じ画面に一覧が 2 つ並んでも、狭い画面の並べ替え欄とそのラベルが取り違わないようにする
@@ -339,22 +370,29 @@ export function DataTable<TRow>({
                   ))}
                 </tr>
               ))
-            : sortedRows.map((row) => (
-                <tr key={rowKey(row)}>
-                  {columns.map((column, columnIndex) => (
-                    <td
-                      key={column.key}
-                      style={{
-                        ...cellStyle,
-                        textAlign: column.align ?? 'start',
-                        ...stickyBodyCellStyle(columns, columnIndex),
-                      }}
-                    >
-                      {column.render ? column.render(row) : column.value?.(row)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+            : sortedRows.map((row) => {
+                const attention = rowAttention?.(row) ?? false;
+                return (
+                  <tr key={rowKey(row)} style={attention ? attentionRowStyle() : undefined}>
+                    {columns.map((column, columnIndex) => (
+                      <td
+                        key={column.key}
+                        style={{
+                          ...cellStyle,
+                          textAlign: column.align ?? 'start',
+                          ...stickyBodyCellStyle(columns, columnIndex),
+                        }}
+                      >
+                        {/* 色だけに頼らず、名指し列の先頭に強調理由を読み上げさせる */}
+                        {attention && columnIndex === 0 ? (
+                          <span style={visuallyHidden}>{rowAttentionLabel}: </span>
+                        ) : null}
+                        {column.render ? column.render(row) : column.value?.(row)}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
           {!loading && sortedRows.length === 0 ? (
             <tr>
               <td colSpan={columns.length} style={{ ...cellStyle, color: colorVar('textMuted') }}>
@@ -464,19 +502,28 @@ export function DataTable<TRow>({
                   />
                 </li>
               ))
-            : sortedRows.map((row) => (
-                <li key={rowKey(row)}>
-                  <DataCard
-                    // 見出しにしない。表とカードは常に両方 DOM にあるので、ここを見出しにすると
-                    // 表を見ている広い画面でも、隠れているカードぶんの見出しが目次に並ぶ
-                    headingLevel="none"
-                    title={titleColumn === undefined ? null : cellOf(titleColumn, row)}
-                    lead={itemsOf(row, 'lead')}
-                    context={itemsOf(row, 'context')}
-                    meta={itemsOf(row, 'metadata')}
-                  />
-                </li>
-              ))}
+            : sortedRows.map((row) => {
+                const attention = rowAttention?.(row) ?? false;
+                return (
+                  <li key={rowKey(row)} style={attention ? attentionRowStyle() : undefined}>
+                    <DataCard
+                      // 見出しにしない。表とカードは常に両方 DOM にあるので、ここを見出しにすると
+                      // 表を見ている広い画面でも、隠れているカードぶんの見出しが目次に並ぶ
+                      headingLevel="none"
+                      title={
+                        <>
+                          {/* 色だけに頼らず、カードの見出しの前に強調理由を読み上げさせる */}
+                          {attention ? <span style={visuallyHidden}>{rowAttentionLabel}: </span> : null}
+                          {titleColumn === undefined ? null : cellOf(titleColumn, row)}
+                        </>
+                      }
+                      lead={itemsOf(row, 'lead')}
+                      context={itemsOf(row, 'context')}
+                      meta={itemsOf(row, 'metadata')}
+                    />
+                  </li>
+                );
+              })}
         </CardGrid>
       )}
     </div>

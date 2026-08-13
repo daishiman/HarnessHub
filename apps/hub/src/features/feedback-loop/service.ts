@@ -60,6 +60,21 @@ export interface FeedbackLoopService {
     readonly id: string;
     readonly status: FeedbackStatus;
   }): Promise<FeedbackDetail>;
+  /**
+   * ホーム集約向け。要対応件数(open かつ high)と直近更新 N 件を 1 度に返す。
+   * home-dashboard/service.ts が権限確認後に呼ぶ内部集約用で、公開 API route は持たない。
+   */
+  getActionableSummary(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId?: string;
+    readonly actorUserId: string;
+    readonly recentLimit: number;
+  }): Promise<FeedbackActionableSummary>;
+}
+
+export interface FeedbackActionableSummary {
+  readonly actionableCount: number;
+  readonly recentItems: readonly FeedbackListItem[];
 }
 
 function toListItem(row: FeedbackRow): FeedbackListItem {
@@ -158,6 +173,14 @@ export function createFeedbackLoopService(
         }
       }
       return toDetail(row);
+    },
+
+    async getActionableSummary(input) {
+      const [actionableCount, recentRows] = await Promise.all([
+        repository.countActionable(input.context, input.workspaceId, input.actorUserId),
+        repository.listRecentUpdated(input.context, input.recentLimit, input.workspaceId, input.actorUserId),
+      ]);
+      return { actionableCount, recentItems: recentRows.map(toListItem) };
     },
   };
 }

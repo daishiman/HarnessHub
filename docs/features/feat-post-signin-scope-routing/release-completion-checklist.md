@@ -17,8 +17,8 @@ layer: feature-release
   3. 二重申告・明示ヘッダーと session の不一致 (`ambiguous_scope`, 403)
   4. tenant 越境 (`tenant_mismatch`, 403)
   5. workspace 非所属 (`workspace_not_member`, 403)
-  6. 正常到達（`/sheets` へ着地、または安全な `returnTo` の同一 origin 相対 path へ着地）
-- [ ] open redirect 防止（絶対 URL・スキーム付き・`//host`・backslash trick の戻り先が既定着地 `/sheets` へフォールバックすること）を本番で確認する
+  6. 正常到達（`/dashboard` へ着地、または安全な `returnTo` の同一 origin 相対 path へ着地）
+- [ ] open redirect 防止（絶対 URL・スキーム付き・`//host`・backslash trick の戻り先が既定着地 `/dashboard` へフォールバックすること）を本番で確認する
 - [ ] acceptance record（本チェックリスト）に実測値付きで pass を追記する
 
 1 件でも欠けたまま `HarnessHub-3sjj.13`、親 Beads、dev-graph node を完了にしない。

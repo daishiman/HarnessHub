@@ -1,7 +1,7 @@
 /**
  * TID-PNAV-01〜06: 共通シェルのナビゲーション導線 (`nav-items.ts`) の href 生成契約。
  *
- * ログイン後の着地先 (`/sheets`、URL クエリなし) から URL 直打ち以外で他画面へ
+ * ログイン後の着地先 (`/dashboard`、URL クエリなし) から URL 直打ち以外で他画面へ
  * 遷移できない状態を防ぐのがこのテストの目的。守るべき契約は 2 つある。
  *
  * 1. 主要導線が全て 1 本ずつ出ること (リンクが欠けると再びその画面へ到達不能になる)
@@ -22,12 +22,15 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { type ShellScope, sidebarNavItems } from '../../src/components/shell/nav-items.js';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../../src/lib/routing/post-signin-landing.js';
 
 function linksOf(tenantId: string, workspaceId: string): ReadonlyMap<string, string> {
   const scope: ShellScope = { tenantId, workspaceId };
   return new Map(sidebarNavItems(scope, 'provider-admin').map((item) => [item.label, item.href]));
 }
 
+/** ホーム。「業務」グループの先頭に固定 (ボトムタブの主要 4 枠には含めない)。 */
+const HOME_SCOPED = ['ホーム'] as const;
 /** scope を引き継ぐ導線 (workspace 単位の画面)。並びは利用頻度順。 */
 const WORKSPACE_SCOPED = ['ヒアリングシート', '業務ツール', 'ドキュメント', '改善要望'] as const;
 /** 分析系 (S09/S13/S16)。集計対象が workspace 単位なので workspace も引き継ぐ。 */
@@ -42,6 +45,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
     const links = linksOf('tenant-a', 'ws-1');
 
     expect([...links.keys()]).toEqual([
+      ...HOME_SCOPED,
       ...WORKSPACE_SCOPED,
       ...INSIGHT_SCOPED,
       ...TENANT_SCOPED,
@@ -60,6 +64,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
   it('TID-PNAV-02: workspace 単位の画面へは tenant と workspace の両方を引き継ぐ', () => {
     const links = linksOf('tenant-a', 'ws-1');
 
+    expect(links.get('ホーム')).toBe(`${DEFAULT_POST_SIGNIN_LANDING}?tenant=tenant-a&workspace=ws-1`);
     expect(links.get('ヒアリングシート')).toBe('/sheets?tenant=tenant-a&workspace=ws-1');
     expect(links.get('ドキュメント')).toBe('/docs?tenant=tenant-a&workspace=ws-1');
     expect(links.get('改善要望')).toBe('/feedback?tenant=tenant-a&workspace=ws-1');
@@ -86,6 +91,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
     // session フォールバックへ落ちなくなる。空なら付けない、が正しい。
     const links = linksOf('', '');
 
+    expect(links.get('ホーム')).toBe(DEFAULT_POST_SIGNIN_LANDING);
     expect(links.get('ヒアリングシート')).toBe('/sheets');
     expect(links.get('ユーザー管理')).toBe('/users');
   });
@@ -93,6 +99,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
   it('TID-PNAV-05: tenant のみ解決済み (複数 workspace 所属で workspace 未確定) -> tenant だけ引き継ぐ', () => {
     const links = linksOf('tenant-a', '');
 
+    expect(links.get('ホーム')).toBe(`${DEFAULT_POST_SIGNIN_LANDING}?tenant=tenant-a`);
     expect(links.get('ヒアリングシート')).toBe('/sheets?tenant=tenant-a');
     expect(links.get('ユーザー管理')).toBe('/users?tenant=tenant-a');
   });

@@ -5,6 +5,8 @@ layer: feature-quality
 
 # 受入判定 — feat-post-signin-scope-routing
 
+> **履歴注記 (2026-08-13):** 本書の `/sheets` は 2026-08-03 の実測結果を保存した履歴値である。現行の既定着地は後続の appr-034 と正規 contract により `/dashboard`。現在値の根拠には本書でなく `DEFAULT_POST_SIGNIN_LANDING` と正規 contract を使う。
+
 > P07 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-07-acceptance.md`
 > 判定根拠: [test-run-record.md](./test-run-record.md) が記録した P06 実行済み証跡のみ。計画中の作業・未実行のテスト・文書上の宣言は根拠にしない。
 

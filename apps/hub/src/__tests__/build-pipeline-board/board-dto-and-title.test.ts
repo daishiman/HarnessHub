@@ -89,6 +89,7 @@ function stubRepository(rows: readonly BuildRow[]) {
   return {
     listBoard: async () => [{ stage: 'design' as const, builds: rows }],
     listStageEvents: async () => [],
+    listRecentTouchedBuilds: async () => rows,
     transitionStage: async () => {
       throw new Error('この test では遷移を呼ばない');
     },
@@ -179,6 +180,30 @@ describe('BPB-SVC: 一覧の cursor ページング', () => {
 
     const page = await service.listBuilds({ context: CONTEXT, workspaceId: 'ws-a1', query: { limit: 10 } });
     expect(page.items[0]?.title).toBe(fallbackBuildTitle(buildRow({ sheetId: 'sheet-1' })));
+  });
+
+  it('BPB-SVC-007: 要対応件数は recentLimit で欠けず、最近項目だけを上限内へ絞る', async () => {
+    const rows = [
+      buildRow({ id: 'blocked-1', updatedAt: NOW - 20 * DAY }),
+      buildRow({ id: 'blocked-2', updatedAt: NOW - 15 * DAY }),
+      buildRow({ id: 'healthy', updatedAt: NOW }),
+    ];
+    const repository = {
+      ...stubRepository(rows),
+      listRecentTouchedBuilds: async (_context: RepositoryContext, filter: { readonly limit?: number | undefined }) =>
+        filter.limit === undefined ? rows : rows.slice(0, filter.limit),
+    };
+    const service = createBuildPipelineBoardService(repository, { now: () => NOW });
+
+    const summary = await service.getActionableSummary({
+      context: CONTEXT,
+      workspaceId: 'ws-a1',
+      actorUserId: 'user-1',
+      recentLimit: 1,
+    });
+
+    expect(summary.actionableCount).toBe(2);
+    expect(summary.recentItems.map((item) => item.id)).toEqual(['blocked-1']);
   });
 });
 

@@ -187,3 +187,9 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 - Modal / BottomSheet は既定 light dismiss。未保存面は `dismissible=false` で背景・Escape・閉じる操作を遮断する。公開 API / 認可 / DB は不変。
 - S15 一覧 0 件は「真の 0 件」と「絞込 0 件」を分け、作成権限に応じた CTA または絞込解除を出す。
 - 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-012/013、[受領書](../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。
+
+## Post-compile writeback: 着地ダッシュボード (2026-08-13 / HarnessHub-1cno)
+
+- サインイン後の唯一の着地面は `/dashboard`。読む順は要対応 → 業務開始導線 → 本人の最近。分析 KPI は出さない。
+- visible=false の機能は件数 0・recent 空を型で強制し、0 件として見せない。
+- 新規 qa 番号なし。R4-reopen 不要。正本: [情報設計](../docs/features/feat-hub-foundation/information-design/dashboard.md)、[受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。

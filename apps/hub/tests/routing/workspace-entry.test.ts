@@ -98,7 +98,7 @@ describe('選択値の受理', () => {
       `${WORKSPACE_ENTRY_PATH}?workspace=ws-2&${WORKSPACE_RETURN_TO_QUERY_PARAM}=%2Fcatalog%2Freleases`,
     );
     expect(workspaceEntryPath('ws-2', '//evil.example')).toBe(
-      `${WORKSPACE_ENTRY_PATH}?workspace=ws-2&${WORKSPACE_RETURN_TO_QUERY_PARAM}=%2Fsheets`,
+      `${WORKSPACE_ENTRY_PATH}?workspace=ws-2&${WORKSPACE_RETURN_TO_QUERY_PARAM}=${encodeURIComponent(DEFAULT_POST_SIGNIN_LANDING)}`,
     );
   });
 });
@@ -136,7 +136,7 @@ describe(`GET ${WORKSPACE_ENTRY_PATH}`, () => {
     const html = await response.text();
 
     expect(response.status).toBe(200);
-    expect(html).toContain('content="0;url=/sheets"');
+    expect(html).toContain(`content="0;url=${DEFAULT_POST_SIGNIN_LANDING}"`);
     expect(html).not.toContain('evil.example');
     expect(html).not.toContain('<script>');
   });

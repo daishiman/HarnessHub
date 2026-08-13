@@ -1,7 +1,7 @@
 'use client';
 
 /** かんばん風ステージボード。工程移動はメニュー操作に限り、DnD は採用しない (タッチ/キーボード同等性)。 */
-import { type ReactNode, useId } from 'react';
+import { type CSSProperties, type ReactNode, useId } from 'react';
 import { getStatusLabel, type StatusValue } from '../i18n/status-vocabulary.js';
 import { colorVar, radiusVar, spaceVar, surfaceStyle } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
@@ -36,7 +36,7 @@ export interface StageBoardProps {
 const riskLabels: Record<StageRisk, { ja: string; en: string }> = {
   none: { ja: 'リスクなし', en: 'No risk' },
   warn: { ja: '注意', en: 'Warning' },
-  blocked: { ja: '停止中', en: 'Blocked' },
+  blocked: { ja: '要対応: 停止中', en: 'Action required: Blocked' },
 };
 
 const riskColors: Record<StageRisk, string> = {
@@ -44,6 +44,21 @@ const riskColors: Record<StageRisk, string> = {
   warn: colorVar('warning'),
   blocked: colorVar('danger'),
 };
+
+/** 装飾目的ではなく、色弱・グレースケール環境でも risk の種類を区別できるようにする記号。 */
+const riskIcons: Record<StageRisk, string> = { none: '', warn: '▲', blocked: '■' };
+
+/** カードの外枠。risk が無い/低いカードとの差が伝わる強さにしつつ、列全体が強調だらけにならない程度に抑える。 */
+function riskCardStyle(risk: StageRisk): CSSProperties {
+  const base = { border: `1px solid ${colorVar('border')}`, borderRadius: radiusVar('sm'), padding: spaceVar(2) };
+  if (risk === 'none') return base;
+  return {
+    ...base,
+    border: `1px solid ${riskColors[risk]}`,
+    borderInlineStart: `4px solid ${riskColors[risk]}`,
+    background: risk === 'blocked' ? colorVar('dangerSoft') : colorVar('warningSoft'),
+  };
+}
 
 export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): ReactNode {
   const { locale, t } = useUi();
@@ -102,14 +117,7 @@ export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): Rea
               {column.cards.map((card) => {
                 const risk = card.risk ?? 'none';
                 return (
-                  <li
-                    key={card.id}
-                    style={{
-                      border: `1px solid ${colorVar('border')}`,
-                      borderRadius: radiusVar('sm'),
-                      padding: spaceVar(2),
-                    }}
-                  >
+                  <li key={card.id} style={riskCardStyle(risk)}>
                     <p style={{ margin: 0 }}>{card.title}</p>
                     {card.meta ? (
                       <p style={{ margin: 0, color: colorVar('textMuted'), fontSize: 'var(--hh-font-size-sm)' }}>
@@ -119,6 +127,8 @@ export function StageBoard({ label, columns, onMoveCard }: StageBoardProps): Rea
 
                     {risk === 'none' ? null : (
                       <p style={{ margin: 0, color: riskColors[risk], fontSize: 'var(--hh-font-size-sm)' }}>
+                        {/* 記号は色の補助。意味は隣のラベル文言 (注意/停止中) が正本なので aria-hidden */}
+                        <span aria-hidden="true">{riskIcons[risk]} </span>
                         {riskLabels[risk][locale]}
                       </p>
                     )}

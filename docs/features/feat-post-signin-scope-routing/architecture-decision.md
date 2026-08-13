@@ -45,12 +45,12 @@ layer: feature-design
 
 ## 決定3: 既定着地の単一定数化
 
-**決定:** `apps/hub/src/lib/routing/post-signin-landing.ts`（新設）に `export const DEFAULT_POST_SIGNIN_LANDING = '/sheets'` を1箇所だけ定義する。`apps/hub/src/app/page.tsx`（認証済み redirect）と `tenant-oidc-signin-form.tsx`（戻り先解決）はこの定数を import して使う。
+**決定:** `apps/hub/src/lib/routing/post-signin-landing.ts` に `DEFAULT_POST_SIGNIN_LANDING = '/dashboard'` を1箇所だけ定義する。`apps/hub/src/app/page.tsx`（認証済み redirect）と `tenant-oidc-signin-form.tsx`（戻り先解決）はこの定数を import して使う。値は後続の appr-034 で `/sheets` から更新されたが、単一定数化の決定は維持する。
 
 **根拠:** quality constraint `post-signin-landing-resolution-single-default-constant` により複数箇所への重複定義を禁止されている。
 
 **却下案:**
-- 案「各画面が個別に `'/sheets'` をハードコードする」→ 却下。画面追加のたびに既定着地がずれるリスクがあり、quality constraint に反する。
+- 案「各画面が既定着地を個別にハードコードする」→ 却下。画面追加のたびに既定着地がずれるリスクがあり、quality constraint に反する。
 
 ## 決定4: 同一 origin 相対 path 制限（open redirect 防止）の実装方式
 

@@ -13,6 +13,7 @@ import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SESSION_COOKIE_NAME } from '../../src/lib/auth/config.js';
 import { ACTIVE_WORKSPACE_COOKIE_NAME } from '../../src/lib/auth/session.js';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../../src/lib/routing/post-signin-landing.js';
 import { authorize } from '../../src/middleware/authz.js';
 import { TENANT_HEADER, WORKSPACE_HEADER } from '../../src/middleware/scope.js';
 import type { Principal } from '../../src/shared/auth/index.js';
@@ -96,7 +97,7 @@ describe('TID-INT-01〜03: `/` (HomePage) の session redirect 結線', () => {
     expect(html).toContain('action="/signin"');
   });
 
-  it('TID-INT-02: 認証済み session で `/` を開くと既定着地 (/sheets) へ redirect される', async () => {
+  it('TID-INT-02: 認証済み session で `/` を開くと既定着地 (/dashboard) へ redirect される', async () => {
     onlySessionCookie('valid-token');
     verifySessionToken.mockResolvedValue({
       ok: true,
@@ -105,7 +106,7 @@ describe('TID-INT-01〜03: `/` (HomePage) の session redirect 結線', () => {
 
     await expect(renderHome()).rejects.toThrow('NEXT_REDIRECT');
 
-    expect(redirectMock).toHaveBeenCalledExactlyOnceWith('/sheets');
+    expect(redirectMock).toHaveBeenCalledExactlyOnceWith(DEFAULT_POST_SIGNIN_LANDING);
   });
 
   it('session token が不正 (期限切れ等) なら redirect せず、再サインインの入口を出す', async () => {

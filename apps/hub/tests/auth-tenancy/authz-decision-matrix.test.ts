@@ -126,6 +126,9 @@ const EXPECTED_MATRIX: Readonly<Record<string, Readonly<Record<MatrixColumn, boo
   // API キーを含む workspace 共有設定の変更は workspace-admin 以上に限る。
   'notion-integration.read': MEMBER_UP,
   'notion-integration.write': ADMIN_UP,
+  // ホーム画面集約: 到達可否は member 以上。機能別の閲覧可否は route 側で
+  // sessionActionVisible により個別判定する (rules.ts のコメント参照)。
+  'dashboard.summary_read': MEMBER_UP,
 };
 
 const COLUMNS: readonly MatrixColumn[] = ['member', 'owner', 'workspace-admin', 'provider-admin'];

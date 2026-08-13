@@ -220,4 +220,43 @@ describe('FL-DB: feedback_response AI queue (claim/lease-expiry/fail) の実 DB 
       status: 'processing',
     });
   });
+
+  it('countActionable は open かつ high の件数だけを tenant/workspace 境界内で数える', async () => {
+    const actor = await seedActor('actionable');
+    const other = await seedActor('actionable-other');
+    const repo = createFeedbackRepository(asCore(adapter));
+
+    const openHigh = await repo.createAndEnqueue(actor.context, {
+      ...createInput(actor, '至急対応してほしい'),
+      priority: 'high',
+    });
+    await repo.createAndEnqueue(actor.context, { ...createInput(actor, '低優先度'), priority: 'low' });
+    const resolvedHigh = await repo.createAndEnqueue(actor.context, {
+      ...createInput(actor, '対応済み'),
+      priority: 'high',
+    });
+    await repo.updateFeedbackStatus(actor.context, resolvedHigh.id, 'resolved');
+
+    // 別 tenant の open&high は数えない。
+    await repo.createAndEnqueue(other.context, { ...createInput(other, '他社の至急対応'), priority: 'high' });
+
+    expect(await repo.countActionable(actor.context, undefined, actor.userId)).toBe(1);
+    expect(await repo.countActionable(actor.context, actor.workspaceId, actor.userId)).toBe(1);
+    expect(await repo.countActionable(other.context, undefined, other.userId)).toBe(1);
+    expect(openHigh.priority).toBe('high');
+  });
+
+  it('listRecentUpdated は tenant 内の直近更新順に limit 件だけ返す', async () => {
+    const actor = await seedActor('recent');
+    const repo = createFeedbackRepository(asCore(adapter));
+    const first = await repo.createAndEnqueue(actor.context, createInput(actor, '1件目'));
+    const second = await repo.createAndEnqueue(actor.context, createInput(actor, '2件目'));
+    const third = await repo.createAndEnqueue(actor.context, createInput(actor, '3件目'));
+    // 先に作った 1 件目を最後に更新し直し、更新順が createdAt 順と一致しないことを確認する。
+    await repo.updateFeedbackStatus(actor.context, first.id, 'in_progress');
+
+    const recent = await repo.listRecentUpdated(actor.context, 2, actor.workspaceId, actor.userId);
+    expect(recent.map((row) => row.id)).toEqual([first.id, third.id]);
+    expect(second.id).not.toBe(third.id);
+  });
 });
