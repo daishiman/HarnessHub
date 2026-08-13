@@ -128,7 +128,11 @@ describe('production coverage smoke script', () => {
 
     expect(source).toContain("id: 'O5'");
     expect(source).toContain('returnTo=');
-    expect(source).toContain('value="/sheets"');
+    expect(source).toContain('isSafeSameOriginRelativePath');
+    // 業務上の既定画面は post-signin-landing.ts の正本だけが持つ。smoke へ複製すると
+    // 正常な着地変更を障害と誤判定し、Worker を不要にrollbackする。
+    expect(source).not.toContain('value="/sheets"');
+    expect(source).not.toContain('value="/dashboard"');
     // 「HTML に文字列が出現しない」ではなく「遷移に使われる属性へ入らない」を条件にしている。
     expect(source).toContain('navigable ${attribute} attribute');
   });

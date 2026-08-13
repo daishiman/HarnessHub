@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-
 // 実行用 CLI は Node が直接読める ESM として置くため、型をこのテスト境界で明示する。
 // @ts-expect-error JavaScript CLI に対応する declaration file は意図的に持たない
 import { runOidcSmoke as runOidcSmokeUntyped } from '../../scripts/smoke-production-oidc.mjs';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../../src/lib/routing/post-signin-landing.js';
 
 type SmokeResult = {
   readonly ok: boolean;
@@ -60,15 +60,15 @@ function authorizationLocation(overrides: Record<string, string> = {}) {
 const HOSTILE_RETURN_TO = 'https://oidc-smoke-open-redirect.invalid/steal';
 
 /**
- * O5 が観測する SSR 済みサインインページ。実装が正しいときは callbackUrl が既定の `/sheets`
- * に落ちている。App Router は router state として query をそのまま payload へ載せるため、
+ * O5 が観測する SSR 済みサインインページ。実装が正しいときは callbackUrl が正本の既定着地へ
+ * 落ちている。App Router は router state として query をそのまま payload へ載せるため、
  * 敵対的 returnTo の**文字列自体**は正常応答にも現れる (それは失敗条件ではない)。
  */
 function signinPageResponse(body?: string) {
   const html =
     body ??
     `<html><body><script>self.__next_f.push([1,"returnTo=${HOSTILE_RETURN_TO}"])</script>` +
-      '<form method="post"><input type="hidden" name="callbackUrl" value="/sheets" />' +
+      `<form method="post"><input type="hidden" name="callbackUrl" value="${DEFAULT_POST_SIGNIN_LANDING}" />` +
       '<button type="submit">Google でログイン</button></form></body></html>';
   return new Response(html, { status: 200, headers: { 'content-type': 'text/html' } });
 }
@@ -167,7 +167,7 @@ describe('production OIDC start-flow smoke', () => {
   it.each([
     [
       '遷移に使われる属性へ素通しされた returnTo',
-      `<form><input name="callbackUrl" value="/sheets" /><a href="${HOSTILE_RETURN_TO}">続ける</a></form>`,
+      `<form><input name="callbackUrl" value="${DEFAULT_POST_SIGNIN_LANDING}" /><a href="${HOSTILE_RETURN_TO}">続ける</a></form>`,
       'hostile returnTo reached a navigable href attribute',
     ],
     [
@@ -176,9 +176,14 @@ describe('production OIDC start-flow smoke', () => {
       'callbackUrl input was missing',
     ],
     [
-      '既定の遷移先が /sheets ではない',
+      'callbackUrl が外部URL',
       `<form><input name="callbackUrl" value="${HOSTILE_RETURN_TO}" /></form>`,
-      'server-rendered callbackUrl was not the safe default /sheets',
+      'server-rendered callbackUrl was not a safe same-origin relative path',
+    ],
+    [
+      'callbackUrl がprotocol-relative URL',
+      '<form><input name="callbackUrl" value="//evil.example/steal" /></form>',
+      'server-rendered callbackUrl was not a safe same-origin relative path',
     ],
   ])('%s を拒否する', async (_name, html, message) => {
     const fetchImpl = successfulFetch(authorizationLocation(), signinPageResponse(html));
