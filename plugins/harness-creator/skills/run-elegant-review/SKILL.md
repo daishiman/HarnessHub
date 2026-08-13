@@ -237,7 +237,7 @@ CONST_002（30 種全使用）は緩和しない。全30種が finding を出し
 
 - **担当**: `elegant-improvement-executor`（必要時 `delegate-codex-skill-review` へ委譲、B5）
 - **入力**: Phase 2 全 SubAgent の findings 集約
-- **操作**: 依存 DAG 生成（`paradigm_findings[].issues[].location + depends_on` から自動構築）→ 優先順位決定（`issues[].severity`: critical > high > medium > low）→ 独立対象は並列・依存ありは直列で改善 → `auto_fixable=true` は最小 patch 適用 / `false` は提案のみ → 4 条件再検証（max_iter=3）。git commit は `commit_authorized=true` の明示時だけ行う
+- **操作**: 依存 DAG 生成（`paradigm_findings[].issues[].location + depends_on` から自動構築）→ 優先順位決定（`issues[].severity`: critical > high > medium > low）→ orchestrator が独立対象を非重複 write scope の executor へ並列割当し、依存ありは直列化（各 executor は再帰起動しない）→ `auto_fixable=true` は最小 patch 適用 / `false` は提案のみ → 4 条件再検証（max_iter=3）。run成果物の materialize は orchestrator だけが行い、git commit は `commit_authorized=true` の明示時だけ行う
 - **出力**: `schemas/findings.schema.json` 準拠の `findings.json` 最終版 + 改善 PR ブランチ
 - **完了判定 signal**: 4 条件 PASS（contradiction/omission/inconsistency/dependency_break 全て 0 件）
 - **失敗時アクション**:

@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1607,
+  "graph_revision": 1609,
   "nodes": [
     {
       "acceptance": [
@@ -61199,6 +61199,125 @@
       "title": "配色仕様書 v2 を共通トークンへ反映する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T10:00:00Z"
+    },
+    {
+      "acceptance": [
+        "Graphite × Amber の用途が token・仕様・実装で一致する",
+        "641/1025 breakpoint と 44px 操作域が実ブラウザ検査を通る",
+        "30思考法の最終判定で4条件が全てPASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-testing-qa"
+      ],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "frontend"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/harness-hub-design-system.md",
+          "confidence": 0.99
+        },
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/harness-hub-design-system.md",
+          "confidence": 0.42
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "製品横断のUI token・共通部品・responsive・品質ゲートの責務境界を所有するため architecture/frontend に分類する",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "2cfa9d5999e571ffe278826b09b7c7090bb66ca2f86c41598324efe43bea72fa",
+        "evaluator": "run-elegant-review (30 paradigms / strict coverage)",
+        "evidence_ref": "eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration/verdict.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T09:30:00Z",
+      "depends_on": [
+        "arch-harness-hub-frontend"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/harness-hub-design-system.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "Light/Dark/auto、レスポンシブ、アクセシビリティ、共通ヘッダーを矛盾なく実装・検査できる設計境界を維持する",
+      "graph_node_id": "arch-harness-hub-design-system",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T09:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Graphite × Amber の視覚判断を token・共通部品・画面・品質ゲートの一方向依存へ固定する",
+      "related_nodes": [
+        "spec-harness-hub-ui-foundation-addendum",
+        "spec-harness-hub-information-design-addendum",
+        "issue-agent-kit-elegant-design-integration-20260813"
+      ],
+      "resource_scope": [
+        "architecture/harness-hub-design-system.md"
+      ],
+      "scope_in": [
+        "色・書体・角丸・影・breakpoint の token 契約",
+        "共通 shell と画面部品の依存方向",
+        "コントラスト・VRT・画面ハードコードの品質ゲート"
+      ],
+      "scope_out": [
+        "業務 API と DB schema",
+        "認証認可ルール",
+        "Cloudflare deploy unit"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T09:10:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "ui",
+        "graphite-amber",
+        "accessibility",
+        "responsive"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "Harness Hub デザインシステム アーキテクチャ",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-13T09:30:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

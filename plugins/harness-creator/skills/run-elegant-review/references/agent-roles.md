@@ -30,11 +30,11 @@
 - 入力: 集約された findings.json
 - 出力: patched target + updated findings.json + 4-condition gate結果
 - 完了条件: C1〜C4 すべて PASS、または loop=3 到達でエスカレーション
-- 並列対応: 独立パッチは並列適用可
+- 並列対応: orchestrator が独立パッチを非重複 write scope の複数 executor へ割り当てる。各 executor は再帰起動しない
 - 変数化責務: 固有名詞・固定パス・固定URL・固定ownerを、変数・テンプレート・config example へ昇格する
 
 ## 独立性原則
 - Phase2 の3エージェントは互いの中間出力を参照しない
-- Agent5 のみが全findingsを統合
+- orchestrator が全findingsを統合し、Agent5 は割り当て済み scope だけを改善する
 - Phase1/2 SubAgent は payload のみ返し、run directory への materialize は orchestrator だけが行う (single-writer)
 - git commit は `commit_authorized=true` の明示時だけ許可し、既定は patch まで

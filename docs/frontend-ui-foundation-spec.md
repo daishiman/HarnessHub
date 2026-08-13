@@ -235,7 +235,7 @@ sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見
 `apps/hub/tests/browser/catalog/entries*.tsx` に entry を追加するときは分類を付け、light / dark の両方で意味が通る fixture にする。1 ファイル 500 行を超えないよう、surface 群ごとに分ける。時刻・乱数・外部 API 応答など毎回変わる値を snapshot に入れない。
 
 公開部品を足したら **必ず entry を追加する**。載せ忘れるとその部品だけが視覚回帰の網から静かに外れるため、
-`tests/ci/catalog-coverage.test.ts` が `index.ts` と突き合わせて落とす。entry 名は公開部品名と完全一致させる。
+`apps/hub/tests/ci/catalog-coverage.test.ts` が `index.ts` と突き合わせて落とす。entry 名は公開部品名と完全一致させる。
 
 VRT が落ちた場合は actual / diff を目で確認する。意図した変更なら対応 OS の baseline を更新し、意図しない変更なら実装を直す。CPU architecture 差だけで baseline を分けない。
 

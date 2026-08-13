@@ -13,7 +13,7 @@
 | layers_covered | [L1, L2, L3, L4, L5, L6, L7] |
 | output_schema | ./schemas/phase-output.schema.json#/definitions/phase3_output |
 | reproducible | true (validation 必須 / 同 findings + iter で同 patch 順) |
-| parallel | conditional (独立 finding は Agent Team 並列、依存ありは直列) |
+| parallel | conditional (orchestrator が非重複 scope を並列割当、各 executor は単独実行) |
 
 ## Layer 1: 基本定義層 (不変原則)
 
@@ -80,8 +80,9 @@
 ### 3.2 外部ツール / API
 - Edit / Write (最小スコープ)
 - `scripts/validate-paradigm-coverage.py` 等 (validation_commands)
-- Agent Team: 独立 finding は SubAgent 並列起動、依存 finding は直列 (依存関係整合を保つ)
-- Codex 委譲 (任意): 大規模 patch / 専門領域は `delegate-codex-skill-review` 経由で外部委譲可能
+- `git diff` / `git grep` (scope と残存 literal の read-only 監査)
+- 並列化は orchestrator が所有する。独立 finding は非重複 write scope の executor へ並列割当し、依存 finding は直列化する。executor 自身は SubAgent を再帰起動しない
+- Codex 委譲判定も orchestrator が所有し、executor は割り当て済み scope だけを処理する
 
 ## Layer 4: 共通ポリシー層
 
@@ -126,7 +127,7 @@
 
 ### 5.4 実行方式 (固定手順を持たない動的生成ループ)
 **固定手順禁止**。完了チェックリストと `convergence-policy.json` の Δneg/Δpos 閾値を唯一の停止条件とし、状況に応じて手順をその都度設計・実行・自己評価する。例示 (網羅でない):
-- 未充足項目を特定 (未解消 finding / 未実行検証) → 解消候補手順を立案 (severity 順グルーピング / 独立 finding の SubAgent 並列起動 / 最小パッチ適用 / validation_commands 実行 / 収束判定 / verdict emit のいずれか)
+- 未充足項目を特定 (未解消 finding / 未実行検証) → 解消候補手順を立案 (severity 順グルーピング / 受領 scope の最小パッチ適用 / validation_commands 実行 / 収束判定 / verdict emit のいずれか)
 - 実行し `changed_paths` / `validation_commands` を更新 → 閾値で自己評価
 - 未達なら次周回 (上限: max_iterations=3)
 - 到達後も C1-C4 未達なら `convergence_status: human_escalate` を選択 (`force_pass` 禁止)
@@ -140,7 +141,7 @@
 ### 6.2 ハンドオフ / 並列性
 - 前 phase 受領元: phase2-parallel の `findings.json`
 - 次 phase 提供先: run-elegant-review 完了レポート / `verdict.json`
-- 並列: 独立 finding は Agent Team で SubAgent 並列、依存ありは直列 (依存関係整合を保つ)、Codex 委譲は任意
+- 並列: orchestrator が独立 finding を非重複 scope の executor へ並列割当し、依存ありは直列化する。executor は再帰起動せず、Codex 委譲も orchestrator が判断する
 
 ## Layer 7: UI / 提示層
 

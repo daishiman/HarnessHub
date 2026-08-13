@@ -113,7 +113,7 @@
       "steps": [
         "step0: DAG 生成 (findings[].location + depends_on または paradigm_findings[].issues[].location + depends_on から依存グラフ構築、B3)",
         "step1: issues[].severity 優先順位 (critical > high > medium > low)。4条件 signal は condition_signal/fail_counts で別管理",
-        "step2: 独立対象 parallel / 依存あり serial",
+        "step2: orchestrator が独立対象を非重複 write scope の executor へ parallel 割当 / 依存あり serial。各 executor は再帰起動しない",
         "step3: pre-phase3.patch 記録後に最小パッチを適用。git commit は commit_authorized=true の明示時だけ許可し、既定は patch まで",
         "step4: 4 条件再検証 (max_iter=options.max_iterations, default 3)",
         "step5: verdict.json を schemas/verdict.schema.json 準拠で生成",

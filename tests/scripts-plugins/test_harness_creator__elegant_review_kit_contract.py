@@ -37,6 +37,23 @@ def test_thought_method_allocation_is_exact_9_9_12_and_why_belongs_to_agent4():
     )
 
 
+def test_phase2_prompt_goal_uses_the_canonical_9_9_12_lane_allocation():
+    prompt = (KIT / "prompts" / "R2-phase2-parallel.md").read_text()
+    assert "(9 / 10 / 11)" not in prompt
+    assert "担当思考法 (9 / 9 / 12)" in prompt
+
+
+def test_phase3_executor_permissions_cover_git_audit_without_recursive_agents():
+    agent = (ROOT / "plugins" / "harness-creator" / "agents" / "elegant-improvement-executor.md").read_text()
+    prompt = (KIT / "prompts" / "R3-phase3-execute.md").read_text()
+
+    frontmatter = agent.split("---", 2)[1]
+    assert "Bash(git diff *)" in frontmatter
+    assert "Bash(git grep *)" in frontmatter
+    assert "executor 自身は SubAgent を再帰起動しない" in prompt
+    assert "並列化は orchestrator が所有" in prompt
+
+
 def test_manifest_is_single_writer_and_git_is_explicit_opt_in_only():
     manifest = json.loads((KIT / "workflow-manifest.json").read_text())
     assert "skip_thought_methods" not in manifest["input_contract"]["options"]

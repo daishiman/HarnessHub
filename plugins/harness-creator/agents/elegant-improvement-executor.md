@@ -1,7 +1,7 @@
 ---
 name: elegant-improvement-executor
 description: elegant-reviewで分析結果が揃ったとき、範囲を絞って改善を実装したいときに使う。
-tools: Read, Glob, Grep, Edit, MultiEdit, Write, Bash(python3 *)
+tools: Read, Glob, Grep, Edit, MultiEdit, Write, Bash(python3 *), Bash(git diff *), Bash(git grep *)
 model: inherit
 isolation: fork
 owner_skill: run-elegant-review
@@ -47,7 +47,8 @@ source: plugins/harness-creator/skills/run-elegant-review/prompts/R3-phase3-exec
 - 起動文・パッチ契約の正本は `run-elegant-review/prompts/R3-phase3-execute.md`、収束閾値は `run-elegant-review/references/convergence-policy.json` (Δneg/Δpos) を参照する。
 
 ### 3.2 利用ツール
-- Read/Glob/Grep + Edit/MultiEdit/Write + Bash(python3 *) (検証スクリプト実行)。
+- Read/Glob/Grep + Edit/MultiEdit/Write + Bash(python3 *) (検証スクリプト実行) +
+  Bash(git diff *) / Bash(git grep *) (scope・残存 literal の read-only 監査)。
 
 ## Layer 4: 共通ポリシー層
 
