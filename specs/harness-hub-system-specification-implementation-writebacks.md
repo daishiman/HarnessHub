@@ -206,6 +206,12 @@ N/A: 今回の分冊に伴う製品判断はない。
 - unit / fixture の parallel canary PASS は defensive hardening であり、正式 evaluator の parallel 許可ではない。fresh live-trial 完了まで `1 message = 1 foreground fork` を維持する。
 - 新しい利用者要求・`spec-state.json` セル変更・製品 API / DB / 認証 / UI / deploy unit は無い。`system-spec/` 確定章は reopen せず、architecture と [uypz 受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md) に内部契約を記録する。
 
+## 配色仕様書 v2 writeback (2026-08-13)
+
+- 見た目契約（色・書体・breakpoint・sidebar 幅・カード角・nav 最長一致）を UI 基盤追補へ戻す。製品 API / DB / 認可 / deploy unit は非変更。
+- 確定質疑 qa-226 の md=768 逐語は未 reopen。実装正本は本変更の token と [UI 基盤追補](harness-hub-ui-foundation-addendum.md) FR-UIF-003/014。
+- 判断と検証は [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
 ## hearing-sheet-overhaul writeback (2026-08-12 / `HarnessHub-a70b`)
 
 - S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。

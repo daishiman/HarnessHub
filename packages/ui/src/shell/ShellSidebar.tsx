@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
-import { isCurrentNav, type ShellNavItem } from './nav-model.js';
+import { isResolvedCurrentNav, resolveCurrentNavTarget, type ShellNavItem } from './nav-model.js';
 
 export interface ShellNavGroup {
   /**
@@ -47,6 +47,10 @@ export function ShellSidebar({ groups, items, currentHref, label, brand }: Shell
   // 分岐を残すと「分類ありのときだけ余白が違う」といったずれが後から入り込む。
   const resolvedGroups: readonly ShellNavGroup[] = groups ?? [{ title: label, items: items ?? [] }];
   const grouped = groups !== undefined;
+  const resolvedTarget = resolveCurrentNavTarget(
+    resolvedGroups.flatMap((group) => group.items),
+    currentHref,
+  );
 
   return (
     <nav className="hh-shell__sidebar" aria-label={label}>
@@ -77,7 +81,7 @@ export function ShellSidebar({ groups, items, currentHref, label, brand }: Shell
             ) : null}
             <ul style={listStyle} aria-labelledby={grouped ? `hh-nav-group-${slugify(group.title)}` : undefined}>
               {group.items.map((item) => {
-                const current = isCurrentNav(item, currentHref);
+                const current = isResolvedCurrentNav(item, resolvedTarget);
                 return (
                   <li key={item.href}>
                     <a

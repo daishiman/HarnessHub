@@ -212,9 +212,10 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 
 - `packages/ui` を AppShell、layout primitive、design token、focus ring、base CSS の owner とし、`apps/hub` は root layout で一度だけ base CSS を注入する consumer とする。
 - App Router の root / dashboard / workspace は loading / error / not-found を共通画面状態へ接続し、root は global-error も持つ。403 は再認証導線へ潰さない。
-- responsive の数値正本は `breakpointTokens` (`480 / 768 / 1120`)。表の超過は局所 scroll container で受け、document 全体の overflow は実 Chromium で拒否する。
-- jsdom gate に加え、Vitest Browser Mode + Playwright で 360 / 768 / 1280px、44px / 36px 操作域、catalog light/dark VRT を検査する。baseline は OS 単位とし CPU architecture では分けない。
-- 規範契約は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、仕様反映経路は [受領書](../docs/features/feat-hub-foundation/ui-foundation-spec-reflection-receipt.md) を正とする。
+- responsive の数値正本は `breakpointTokens` (`480 / 640 / 1024`)。表の超過は局所 scroll で受け、document overflow は実 Chromium で拒否する。検査幅 360 / 768 / 1280 は回帰用。
+- 配色はグラファイト × アンバー。英数字 IBM Plex Sans、日本語 Noto Sans JP、等幅 JetBrains Mono。Card/Panel 角は `radius.card` 10px。nav 現在地は最長一致 1 件。
+- jsdom に加え Browser Mode + Playwright で 44px / 36px 操作域と catalog light/dark VRT を検査する。baseline は OS 単位。
+- 規範は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、受領は [visual-system-v2 受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
 
 ## 2026-08-08 共通 HubShell・page surface 境界
 

@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 
 import { Icon } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
-import { isCurrentNav, type ShellNavItem } from './nav-model.js';
+import { isResolvedCurrentNav, resolveCurrentNavTarget, type ShellNavItem } from './nav-model.js';
 import { TransientDisclosure } from './TransientDisclosure.js';
 
 /** ボトムタブに置ける主要 slot の数 (「その他」を除く)。 */
@@ -45,13 +45,14 @@ export function MobileTabBar({
   // slot 数を型で縛れないので、あふれた分は捨てずに「その他」へ送る
   const primary = items.slice(0, mobileTabPrimarySlots);
   const overflow = [...items.slice(mobileTabPrimarySlots), ...moreItems];
+  const resolvedTarget = resolveCurrentNavTarget([...primary, ...overflow], currentHref);
 
-  const moreIsCurrent = overflow.some((item) => isCurrentNav(item, currentHref));
+  const moreIsCurrent = overflow.some((item) => isResolvedCurrentNav(item, resolvedTarget));
 
   return (
     <nav className="hh-shell__tabbar" aria-label={label}>
       {primary.map((item) => {
-        const current = isCurrentNav(item, currentHref);
+        const current = isResolvedCurrentNav(item, resolvedTarget);
         return (
           <a
             key={item.href}
@@ -85,7 +86,7 @@ export function MobileTabBar({
           <p style={moreTitleStyle}>{moreLabel}</p>
           <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {overflow.map((item) => {
-              const current = isCurrentNav(item, currentHref);
+              const current = isResolvedCurrentNav(item, resolvedTarget);
               return (
                 <li key={item.href}>
                   <a

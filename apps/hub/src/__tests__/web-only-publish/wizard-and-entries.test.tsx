@@ -30,6 +30,8 @@ import { PUBLISH_WIZARD_HREF, PUBLISH_WIZARD_LINK_LABEL } from '../../lib/routin
 vi.mock('next/font/google', () => ({
   Inter: () => ({ className: 'inter', variable: '--font-inter' }),
   Noto_Sans_JP: () => ({ className: 'noto', variable: '--font-noto' }),
+  IBM_Plex_Sans: () => ({ className: 'plex', variable: '--font-ibm-plex-sans' }),
+  JetBrains_Mono: () => ({ className: 'jetbrains', variable: '--font-jetbrains-mono' }),
 }));
 
 // vitest の globals を使わない設定なので、DOM の後片付けは明示的に行う

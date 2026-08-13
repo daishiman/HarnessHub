@@ -25,6 +25,14 @@ vi.mock('next/font/google', () => ({
     variable: 'hh-test-font',
     className: 'hh-test-font-class',
   }),
+  IBM_Plex_Sans: () => ({
+    variable: 'hh-test-font-plex',
+    className: 'hh-test-font-plex-class',
+  }),
+  JetBrains_Mono: () => ({
+    variable: 'hh-test-font-mono',
+    className: 'hh-test-font-mono-class',
+  }),
 }));
 
 const { HubShell } = await import('../../components/shell/hub-shell.js');

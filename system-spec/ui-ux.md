@@ -188,6 +188,13 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 - S15 一覧 0 件は「真の 0 件」と「絞込 0 件」を分け、作成権限に応じた CTA または絞込解除を出す。
 - 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-012/013、[受領書](../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。
 
+## Post-compile writeback: 配色仕様書 v2 (2026-08-13)
+
+- 見た目の正本をグラファイト × アンバー、IBM Plex Sans + Noto Sans JP + JetBrains Mono へ更新する。
+- `breakpointTokens` は `md=640` / `lg=1024`。shell の sidebar / ボトムタブ契約は維持し、閾値の px だけを差し替える。
+- 公開 API / DB / 認可は不変。新規 qa 番号なし。確定質疑 qa-226 の「md=768」逐語は本 writeback と [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014 が実装正本として上書きする。R4-reopen は follow-up。
+- 正本: [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
 ## Post-compile writeback: 着地ダッシュボード (2026-08-13 / HarnessHub-1cno)
 
 - サインイン後の唯一の着地面は `/dashboard`。読む順は要対応 → 業務開始導線 → 本人の最近。分析 KPI は出さない。

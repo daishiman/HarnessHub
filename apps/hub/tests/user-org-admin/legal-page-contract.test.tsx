@@ -46,6 +46,14 @@ vi.mock('next/font/google', () => ({
     variable: 'hh-test-font',
     className: 'hh-test-font-class',
   }),
+  IBM_Plex_Sans: () => ({
+    variable: 'hh-test-font-plex',
+    className: 'hh-test-font-plex-class',
+  }),
+  JetBrains_Mono: () => ({
+    variable: 'hh-test-font-mono',
+    className: 'hh-test-font-mono-class',
+  }),
 }));
 vi.mock('../../src/lib/auth/session.js', async () => {
   const actual = await vi.importActual<typeof import('../../src/lib/auth/session.js')>('../../src/lib/auth/session.js');

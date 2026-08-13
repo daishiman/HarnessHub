@@ -14,6 +14,8 @@ import { UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import { ibmPlexSans, jetBrainsMono, notoSansJp } from './fonts';
+
 export const metadata: Metadata = {
   title: 'Harness Hub',
   description: 'Harness Hub の実行基盤',
@@ -22,7 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // WCAG 2.2 AA (qa-018): html の lang 指定は axe の html-has-lang 対象
-    <html lang="ja">
+    // next/font の `variable` は、対応する CSS カスタムプロパティ (--font-*) を
+    // この className を持つ要素の配下でだけ有効にする。tokens.ts の fontFamily/fontFamilyMono
+    // がこの変数を参照するので、ここで配らないと自前配信フォントが 1 つも当たらない。
+    <html lang="ja" className={`${notoSansJp.variable} ${ibmPlexSans.variable} ${jetBrainsMono.variable}`}>
       {/* stylesheet は import から Next が <head> へ注入するため、ここで <head> を書かない。
           テナント固有の色などを動的に流し込む要件が出たら、文字列連結で <style> を復活させず
           body へ style 属性で CSS 変数を上書きする (静的部分のキャッシュ性を保ったまま差分だけ可変にできる) */}

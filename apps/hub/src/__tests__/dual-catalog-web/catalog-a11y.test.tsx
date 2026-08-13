@@ -30,6 +30,8 @@ import RootLayout from '../../app/layout.js';
 // 骨格の検査が目的なので、CSS 変数名だけを返す薄い偽物へ差し替える。
 vi.mock('next/font/google', () => ({
   Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+  IBM_Plex_Sans: () => ({ variable: 'hh-test-font-plex', className: 'hh-test-font-plex-class' }),
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
 }));
 
 /** catalog は (workspace) 配下。本番と同じく業務シェルが main ランドマークを持つ。 */

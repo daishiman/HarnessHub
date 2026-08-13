@@ -69,15 +69,16 @@ export type ColorTokenName = (typeof colorTokenNames)[number];
  * この値を literal として埋め込む。ここを唯一の正本にすることで、
  * 「CSS のあちこちに 768px が直書きされ、片方だけ変わる」状態を防ぐ。
  *
- * 段階の根拠:
+ * 段階の根拠 (HarnessHub 配色仕様書 v2 §3 のタブレット 640 / デスクトップ 1024 に合わせて
+ * md/lg を補正。sm は仕様書に対応値が無く、既存の根拠のまま維持する):
  *   sm 480 … 縦持ちスマホ (360px) と横持ち/小型タブレットの境目
- *   md 768 … ナビゲーションを横へ出せるようになる幅 (SidebarLayout の 2 カラム化点)
- *   lg 1120 … Container standard の最大幅。これ以上広げても行長が伸びるだけ
+ *   md 640 … ナビゲーションを横へ出せるようになる幅 (SidebarLayout の 2 カラム化点)
+ *   lg 1024 … Container standard の実質最大幅。これ以上広げても行長が伸びるだけ
  */
 export const breakpointTokens = {
   sm: 480,
-  md: 768,
-  lg: 1120,
+  md: 640,
+  lg: 1024,
 } as const;
 export type BreakpointName = keyof typeof breakpointTokens;
 

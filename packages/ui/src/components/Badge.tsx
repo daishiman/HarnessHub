@@ -13,6 +13,16 @@ export interface BadgeProps {
   style?: CSSProperties;
 }
 
+/**
+ * 縁取りはトーンの主色を 30% だけ混ぜた色にする (HarnessHub 配色仕様書 v2 §7)。
+ * `soft` 背景と同色の枠線は視覚的に消えてしまうため、`color-mix()` で
+ * 主色を薄く効かせ、背景との段差を作る。未対応ブラウザは `border-color` が
+ * 無効値として無視され、`border-width/style` 由来の 1px 実線だけが残る
+ * (contrastRequirements は背景と文字色の組にしか掛からないため安全側に倒れる)。
+ */
+const toneBorder = (colorName: 'primary' | 'infoCyan' | 'warning'): string =>
+  `1px solid color-mix(in srgb, ${colorVar(colorName)} 30%, transparent)`;
+
 const badgeToneStyle: Record<BadgeTone, CSSProperties> = {
   neutral: {
     background: colorVar('surfaceMuted'),
@@ -22,13 +32,13 @@ const badgeToneStyle: Record<BadgeTone, CSSProperties> = {
   primary: {
     background: colorVar('primarySoft'),
     color: colorVar('primary'),
-    border: `1px solid ${colorVar('primarySoft')}`,
+    border: toneBorder('primary'),
   },
-  info: { background: colorVar('infoSoft'), color: colorVar('infoCyan'), border: `1px solid ${colorVar('infoSoft')}` },
+  info: { background: colorVar('infoSoft'), color: colorVar('infoCyan'), border: toneBorder('infoCyan') },
   warning: {
     background: colorVar('warningSoft'),
     color: colorVar('warning'),
-    border: `1px solid ${colorVar('warningSoft')}`,
+    border: toneBorder('warning'),
   },
 };
 

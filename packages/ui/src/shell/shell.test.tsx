@@ -16,7 +16,9 @@ import {
   breakpointTokens,
   buildShellCss,
   isCurrentNav,
+  isResolvedCurrentNav,
   MobileTabBar,
+  resolveCurrentNavTarget,
   mediaUp,
   mobileTabPrimarySlots,
   Panel,
@@ -85,12 +87,48 @@ describe('isCurrentNav', () => {
   });
 });
 
+describe('resolveCurrentNavTarget', () => {
+  const items: readonly ShellNavItem[] = [
+    { href: '/metrics', label: 'ダッシュボード', icon: 'dashboard' },
+    { href: '/metrics/usage', label: '使用状況', icon: 'tracking' },
+    { href: '/sheets', label: 'シート', icon: 'sheet' },
+  ];
+
+  it('入れ子パスでは最も長い一致だけを現在地にする', () => {
+    expect(resolveCurrentNavTarget(items, '/metrics/usage')).toBe('/metrics/usage');
+    expect(isResolvedCurrentNav(items[0]!, '/metrics/usage')).toBe(false);
+    expect(isResolvedCurrentNav(items[1]!, '/metrics/usage')).toBe(true);
+  });
+
+  it('祖先だけのパスでは祖先を現在地にする', () => {
+    expect(resolveCurrentNavTarget(items, '/metrics')).toBe('/metrics');
+    expect(isResolvedCurrentNav(items[0]!, '/metrics')).toBe(true);
+    expect(isResolvedCurrentNav(items[1]!, '/metrics')).toBe(false);
+  });
+});
+
 describe('ShellSidebar', () => {
   it('現在地のリンクにだけ aria-current を付ける', () => {
     renderWithUi(<ShellSidebar items={navItems} currentHref="/sheets/abc" label="主要ナビゲーション" />);
 
     expect(screen.getByRole('link', { name: /シート/ }).getAttribute('aria-current')).toBe('page');
     expect(screen.getByRole('link', { name: /ダッシュボード/ }).getAttribute('aria-current')).toBeNull();
+  });
+
+  it('入れ子の nav があるとき祖先と子孫の両方を現在地にしない', () => {
+    renderWithUi(
+      <ShellSidebar
+        items={[
+          { href: '/metrics', label: '分析ダッシュボード', icon: 'dashboard' },
+          { href: '/metrics/usage', label: '使用状況', icon: 'tracking' },
+        ]}
+        currentHref="/metrics/usage"
+        label="分析"
+      />,
+    );
+
+    expect(screen.getByRole('link', { name: /使用状況/ }).getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('link', { name: /分析ダッシュボード/ }).getAttribute('aria-current')).toBeNull();
   });
 
   it('件数バッジは 0 より大きいときだけ出す', () => {
@@ -477,9 +515,9 @@ describe('buildShellCss', () => {
     expect(css).toContain('grid-template-columns: minmax(0, 1fr);');
     // md で折りたたみサイドバー、lg で展開
     expect(css).toContain(`${mediaUp('md')} {`);
-    expect(css).toContain('grid-template-columns: 64px minmax(0, 1fr);');
+    expect(css).toContain('grid-template-columns: 68px minmax(0, 1fr);');
     expect(css).toContain(`${mediaUp('lg')} {`);
-    expect(css).toContain('grid-template-columns: 220px minmax(0, 1fr);');
+    expect(css).toContain('grid-template-columns: 212px minmax(0, 1fr);');
   });
 
   it('開閉トグルは mobile で隠し、サイドバーが現れる md 以上でだけ表示する', () => {

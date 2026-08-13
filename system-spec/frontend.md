@@ -206,6 +206,12 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - Modal / BottomSheet の `dismissible` で未保存破棄を防ぐ。公開 API / DB / 認可は不変。
 - S15 一覧 empty は権限別 CTA と絞込解除を分離。正本は UI 基盤追補と S15 情報設計シート。
 
+## 2026-08-13 MVP 実装追記 (配色仕様書 v2)
+
+- token 正本: グラファイト primary、アンバー `accentAi`、書体 3 種、`md=640` / `lg=1024`、sidebar 212/68、`radius.card=10`。
+- root layout が `--font-*` を配り、`tokens.css` が値を持つ。公開 API / DB / 認可は不変。
+- 正本: [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md)、[受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
 ## 2026-08-13 MVP 実装追記 (着地 `/dashboard` / HarnessHub-1cno)
 
 - 既定着地は `DEFAULT_POST_SIGNIN_LANDING = /dashboard`。S00.LANDING が本人の最近作業と既存業務導線を出す。
