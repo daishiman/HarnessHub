@@ -118,7 +118,7 @@ export function Modal({
           maxHeight: 'calc(100vh - 2 * var(--hh-space-5))',
           display: 'flex',
           flexDirection: 'column',
-          borderRadius: radiusVar('lg'),
+          borderRadius: radiusVar('frame'),
         }}
       >
         <div

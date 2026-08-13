@@ -21,7 +21,8 @@ import { describe, expect, it, vi } from 'vitest';
 // next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
 // シェルの配線を見たいだけなので、CSS 変数名だけを返す薄い偽物へ差し替える。
 vi.mock('next/font/google', () => ({
-  Noto_Sans_JP: () => ({
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
+  IBM_Plex_Sans: () => ({
     variable: 'hh-test-font',
     className: 'hh-test-font-class',
   }),

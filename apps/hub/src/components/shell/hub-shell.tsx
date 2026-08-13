@@ -21,7 +21,6 @@ import {
 } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
-import { notoSansJp } from '../../app/fonts.js';
 import {
   accountMenuLinks,
   dashboardNavItem,
@@ -116,11 +115,7 @@ export function HubShell({
     <>
       {/* レスポンシブ規則は 1 枚の CSS に閉じる。React 19 は body 内の style も head へ巻き上げる */}
       <style>{buildShellCss()}</style>
-      {/* 本文フォントの実体を token の族名へ差し込む。token 定義側 (packages/ui) は
-          「Noto Sans JP を使う」とだけ言っており、どこから読むかはアプリの責務 */}
-      <style>{`.hh-shell { --hh-font-family: var(--font-noto-sans-jp), system-ui, -apple-system, 'Segoe UI', sans-serif; font-family: var(--hh-font-family); }`}</style>
-
-      <div className={`hh-shell ${notoSansJp.variable}`}>
+      <div className="hh-shell">
         {/* ブロックスキップ (WCAG 2.4.1)。見た目は base 層が focus 時だけ出す。
               position:absolute なのでグリッドの列を消費しない */}
         <a data-hh-skip-link="" href={`#${MAIN_ANCHOR_ID}`}>

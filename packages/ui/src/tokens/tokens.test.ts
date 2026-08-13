@@ -14,6 +14,8 @@ import {
   densityTokens,
   mediaUp,
   radiusTokens,
+  relativeLuminance,
+  shadowTokens,
   spacingTokens,
   themeNames,
   typographyTokens,
@@ -59,6 +61,32 @@ describe('colorTokens', () => {
       }
     }
   });
+
+  /**
+   * デザインシステム §2「面は 3 段」の機械検証。
+   * light は外枠 (pageBg) が最も暗く、カード (surface) が最も明るい。dark はその逆。
+   * 3 段の明度が潰れると、影を持たない面同士の境界が読めなくなる。
+   */
+  it('面の階層は pageBg / bg / surface の 3 段で、テーマごとに向きが揃っている', () => {
+    const light = colorTokens.light;
+    expect(relativeLuminance(light.pageBg)).toBeLessThan(relativeLuminance(light.bg));
+    expect(relativeLuminance(light.bg)).toBeLessThan(relativeLuminance(light.surface));
+
+    const dark = colorTokens.dark;
+    expect(relativeLuminance(dark.pageBg)).toBeLessThan(relativeLuminance(dark.bg));
+    expect(relativeLuminance(dark.bg)).toBeLessThan(relativeLuminance(dark.surface));
+  });
+
+  /**
+   * 旧構成の AI 専用色 (accentAi) は廃止した。「AI が作った」ではなく「いま動いている」で
+   * 色を配る方針 (デザインシステム §1) の後戻りを防ぐため、名前の復活をここで止める。
+   */
+  it('AI 専用色を持たない (accent は状態色であって AI 印ではない)', () => {
+    for (const theme of themeNames) {
+      expect(Object.keys(colorTokens[theme]).filter((token) => token.startsWith('accentAi'))).toEqual([]);
+    }
+    expect(colorTokens.light.accent).toBeDefined();
+  });
 });
 
 describe('チャート系列色', () => {
@@ -87,6 +115,33 @@ describe('寸法 token', () => {
   it('角丸と書体の token を公開している', () => {
     expect(radiusTokens.full).toBe('9999px');
     expect(typographyTokens.fontSizeMd).toBe('16px');
+  });
+
+  /** デザインシステム §7 の外枠 14px / カード 10px。段が潰れると入れ子の階層が読めなくなる。 */
+  it('角丸は外枠 > カード の順に大きい', () => {
+    expect(radiusTokens.frame).toBe('14px');
+    expect(radiusTokens.card).toBe('10px');
+    expect(Number.parseInt(radiusTokens.frame, 10)).toBeGreaterThan(Number.parseInt(radiusTokens.card, 10));
+  });
+
+  /** 影は「外枠を浮かせる」「下から迫り上がる面」の 2 種だけ。増やすと面の階層が曖昧になる。 */
+  it('影 token は frame と raised の 2 種', () => {
+    expect(Object.keys(shadowTokens).sort()).toEqual(['frame', 'raised']);
+  });
+
+  /**
+   * 本文 16px を維持する。デザインシステム原案は 13-14px だが、本リポジトリは
+   * 日本語が主で字形が複雑なうえ、WCAG 1.4.4 の 200% 拡大に耐える必要がある。
+   * 「密度を上げる」考え方は density token (compact) 側で受ける。
+   */
+  it('本文は 16px を下回らない (和文可読性と 200% 拡大の担保)', () => {
+    expect(Number.parseInt(typographyTokens.fontSizeMd, 10)).toBeGreaterThanOrEqual(16);
+  });
+
+  /** 英数字は IBM Plex Sans、等幅は JetBrains Mono (デザインシステム §3)。 */
+  it('書体族はデザインシステムの 2 系統を先頭に置く', () => {
+    expect(typographyTokens.fontFamily).toContain('IBM Plex Sans');
+    expect(typographyTokens.fontFamilyMono).toContain('JetBrains Mono');
   });
 
   it('comfortable の操作部品は 44px のタップ域を確保する', () => {

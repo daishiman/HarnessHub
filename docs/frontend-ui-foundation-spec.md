@@ -58,9 +58,10 @@ Web 画面を「毎回ちがう材料で作る」のではなく、同じレゴ�
 | 色・余白・文字・密度 | `packages/ui/src/tokens/tokens.ts` |
 | focus ring | `packages/ui/src/tokens/focus-ring.ts` |
 | base CSS | `packages/ui/src/tokens/base-css.ts` |
-| breakpoint | `breakpointTokens` (`480 / 768 / 1120`) |
+| breakpoint | `breakpointTokens` (`480 / 641 / 1025`) |
+| 角丸・影 | `radiusTokens` (frame 14 > card 10 > md 8 > sm 4 の 4 段 + `full`。旧 `lg` は token ごと削除済み) / `shadowTokens` (`frame` / `raised` の 2 種のみ) |
 
-CSS の media query に 768px などを直接増やさず、`mediaUp()` または base CSS generator を通す。light / dark の文字色は 4.5:1、操作部品の輪郭は 3:1 を token test で確認する。
+CSS の media query に px を直接増やさず、`mediaUp()` / `mediaDown()` または base CSS generator を通す。light / dark の文字色は 4.5:1、操作部品の輪郭は 3:1 を token test で確認する。`md 641` / `lg 1025` はデザインシステム §4 の 3 区分 (〜640 / 641〜1024 / 1025〜) の min-width 表現で、640/1024 を両方の向きに使うと 1px 分の帯が二重に当たるため 1 を足してある。`sm 480` は narrow 内の layout step であり、区分を 4 つに増やす意味は持たない。色は「無彩色で構造・有彩色は状態」で、アンバー (`accent`) は**動作中**専用 (AI 専用色は持たない)。
 
 ### 3. 状態の選び方
 
@@ -143,7 +144,7 @@ sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見
 ```
 
 - 見出しは `ScreenHeader` が `<h1>` を持つ。画面側で生の `<h1>` を書かない。
-- 操作は `Button` / `ActionLink` を使う。生の `<button>` を置かない。
+- 操作は `Button` / `ActionLink` / `TextButton` を使う。生の `<button>` を置かない（§5-9）。
 - 絞り込みフォームは `FilterBar` に入れる。画面ごとに `display: flex` を書き起こさない。
   「絞り込む」ボタンで確定する画面は `onSubmit` を渡し、帯そのものを `<form>` にする
   (外に `<form>`・中に `role="group"` と二重にすると、同じ名前のまとまりが 2 回読み上げられる)。
@@ -209,9 +210,32 @@ sticky の重なり順は ヘッダー 20 > 画面ヘッダー 15 > 表の列見
   LIKE の `%` / `_` を利用者入力として扱わない（ESCAPE）。
 - 検索対象列は各 domain の query schema JSDoc が正本。placeholder 文言と一致させる。
 
+### 5-9. 面と操作の共通部品（画面で style を書かないための受け皿）
+
+色・角丸・影・breakpoint を画面が決めると、テーマ切替とコントラスト保証が「この画面のこのボタンだけ」
+という形で部分的に壊れる。壊れ方が局所的なので目視では見つからない。次の対応表で必ず部品へ寄せる。
+
+| 画面がやりたいこと | 使う部品 | 補足 |
+| --- | --- | --- |
+| 面を 1 段置く | `Card` / `Panel` | 角丸は `card` 段。画面側で `borderRadius` を書かない |
+| カードの内側にもう 1 段（添付 1 件・目次・整形済みテキスト） | `Tile` | `dashed` は「まだ空・ここに置ける」、`tone="muted"` は補助情報 |
+| 押せるもの | `Button variant` | `primary` / `secondary` / `danger` / `ghost` |
+| 遷移するもの | `ActionLink variant` | `Button` と同じ style 定義を共有し、見た目が必ず一致する |
+| 文章や表のセルに混ぜる小さな操作 | `TextButton tone` | 見た目はリンク・意味はボタン。`<p>` の中に置いても妥当な HTML |
+| 画像のサムネイル | `Thumbnail size` | `inline` は一覧の行頭、`block` は詳細。`alt` の既定は空（装飾扱い） |
+| 帯ではなくカードとして出す絞り込み | `FilterBar variant="card"` | 画面側で `borderRadius` を上書きしない |
+
+**判断の順序**: 既存の部品で足りない → 画面で style を書く、ではなく → **部品に variant を足す**。
+画面が視覚を触りたくなったら、それは部品の表現力不足という信号として扱う。
+逸脱は CI ゲート `check:ui-hardcoding` (G17) が落とす。詳細は
+[デザインシステム アーキテクチャ](../architecture/harness-hub-design-system.md) §1。
+
 ### 6. catalog と VRT
 
 `apps/hub/tests/browser/catalog/entries*.tsx` に entry を追加するときは分類を付け、light / dark の両方で意味が通る fixture にする。1 ファイル 500 行を超えないよう、surface 群ごとに分ける。時刻・乱数・外部 API 応答など毎回変わる値を snapshot に入れない。
+
+公開部品を足したら **必ず entry を追加する**。載せ忘れるとその部品だけが視覚回帰の網から静かに外れるため、
+`tests/ci/catalog-coverage.test.ts` が `index.ts` と突き合わせて落とす。entry 名は公開部品名と完全一致させる。
 
 VRT が落ちた場合は actual / diff を目で確認する。意図した変更なら対応 OS の baseline を更新し、意図しない変更なら実装を直す。CPU architecture 差だけで baseline を分けない。
 

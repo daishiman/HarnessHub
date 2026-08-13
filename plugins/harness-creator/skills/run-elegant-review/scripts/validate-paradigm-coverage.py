@@ -123,7 +123,7 @@ EXPECTED_META: dict[int, tuple[str, str, str]] = {
     23: ("plus-sum", "F-strategic", "elegant-system-strategic-analyst"),
     24: ("value-proposition", "F-strategic", "elegant-system-strategic-analyst"),
     25: ("strategic", "F-strategic", "elegant-system-strategic-analyst"),
-    26: ("why", "A-logical", "elegant-logical-structural-analyst"),
+    26: ("why", "G-problem", "elegant-system-strategic-analyst"),
     27: ("kaizen", "G-problem", "elegant-system-strategic-analyst"),
     28: ("hypothesis", "G-problem", "elegant-system-strategic-analyst"),
     29: ("issue", "G-problem", "elegant-system-strategic-analyst"),
@@ -152,11 +152,14 @@ def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[b
         if not isinstance(pid, int):
             errors.append(f"paradigm_findings[{idx}].paradigm_id is not int")
             continue
+        if pid in by_id:
+            errors.append(f"duplicate paradigm_id: {pid}")
+            continue
         by_id[pid] = item
 
     coverage = data.get("thought_method_coverage")
-    skipped_by_method: dict[str, str] = {}
     used_methods: set[str] = set()
+    canonical_methods = {meta[0] for meta in EXPECTED_META.values()}
     if coverage is None:
         errors.append("missing thought_method_coverage")
     elif not isinstance(coverage, dict):
@@ -172,35 +175,27 @@ def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[b
         skipped = coverage.get("skipped_with_reason", [])
         if not isinstance(skipped, list):
             errors.append("thought_method_coverage.skipped_with_reason must be a list")
-        else:
-            for idx, item in enumerate(skipped):
-                if not isinstance(item, dict):
-                    errors.append(f"skipped_with_reason[{idx}] must be object")
-                    continue
-                method = str(item.get("method", "")).strip()
-                reason = str(item.get("reason", "")).strip()
-                if not method or not reason:
-                    errors.append(f"skipped_with_reason[{idx}] requires method and reason")
-                    continue
-                skipped_by_method[method] = reason
-        covered_count = len(used_methods) + len(skipped_by_method)
-        if covered_count != 30:
+        elif skipped:
+            errors.append("thought_method_coverage.skipped_with_reason must be empty; all 30 methods are required")
+        if (
+            not isinstance(used, list)
+            or len(used) != 30
+            or len(used_methods) != 30
+            or used_methods != canonical_methods
+        ):
             errors.append(
-                "thought_method_coverage.used + skipped_with_reason must cover 30 distinct methods"
+                "thought_method_coverage.used must contain exactly 30 unique canonical methods"
             )
-        overlap = used_methods & set(skipped_by_method)
-        if overlap:
-            errors.append(f"thought_method_coverage used/skipped overlap: {sorted(overlap)}")
 
     missing = []
     for pid in PARADIGMS:
         expected_name = EXPECTED_META[pid][0]
-        if pid not in by_id and expected_name not in skipped_by_method:
+        if pid not in by_id:
             missing.append(pid)
         if pid in by_id and coverage is not None and expected_name not in used_methods:
             errors.append(f"paradigm {pid}: finding exists but method missing from coverage.used")
     if missing:
-        errors.append(f"missing paradigm_findings ids without skip_reason: {missing}")
+        errors.append(f"missing paradigm_findings ids: {missing}")
 
     valid_conditions = set(SIGNAL_TO_CONDITION.values())
     valid_severities = {"critical", "high", "medium", "low"}
@@ -221,6 +216,10 @@ def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[b
         if not isinstance(matrix, dict):
             errors.append(f"paradigm {pid}: condition_matrix must cover C1-C4")
         else:
+            issue_conditions: set[str] = set()
+            for issue in issues:
+                if isinstance(issue, dict) and issue.get("condition") in valid_conditions:
+                    issue_conditions.add(issue["condition"])
             for cond in ("C1", "C2", "C3", "C4"):
                 verdict = matrix.get(cond)
                 if not isinstance(verdict, dict):
@@ -232,6 +231,14 @@ def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[b
                 evidence = verdict.get("evidence")
                 if not isinstance(evidence, list) or not any(str(x).strip() for x in evidence):
                     errors.append(f"paradigm {pid}: condition_matrix.{cond}.evidence must contain non-empty text")
+                if status == "PASS" and cond in issue_conditions:
+                    errors.append(
+                        f"paradigm {pid}: condition_matrix.{cond}=PASS conflicts with issues-derived FAIL"
+                    )
+                if status in {"FAIL", "PARTIAL"} and cond not in issue_conditions:
+                    errors.append(
+                        f"paradigm {pid}: condition_matrix.{cond}={status} requires a matching issue"
+                    )
         if not isinstance(issues, list):
             errors.append(f"paradigm {pid}: issues must be a list")
             continue
@@ -279,11 +286,22 @@ def validate_structured_json(path: Path, strict_signal: bool = False) -> tuple[b
         if not isinstance(var, dict):
             errors.append(f"variable_abstraction[{idx}] must be object")
             continue
-        for key in ("concrete_value", "variable_name", "source_trace"):
+        for key in (
+            "concrete_value",
+            "name",
+            "meaning",
+            "default",
+            "required",
+            "not_applicable_when",
+            "source_trace",
+        ):
             if key not in var:
                 errors.append(f"variable_abstraction[{idx}] missing {key}")
-        if not str(var.get("variable_name", "")).startswith("{{"):
-            errors.append(f"variable_abstraction[{idx}].variable_name must be template variable")
+        name = str(var.get("name", ""))
+        if not (name.startswith("{{") and name.endswith("}}")):
+            errors.append(f"variable_abstraction[{idx}].name must be template variable")
+        if "required" in var and not isinstance(var["required"], bool):
+            errors.append(f"variable_abstraction[{idx}].required must be boolean")
 
     for warn in warnings:
         print(f"WARN: {warn}", file=sys.stderr)
@@ -324,7 +342,7 @@ def main(argv: list[str]) -> int:
             for err in errors:
                 print(err, file=sys.stderr)
             return 1
-        print("OK: all 30 paradigms covered with structured findings")
+        print("OK: exactly 30 unique paradigms used with structured findings; skips=0")
         return 0
 
     text = extract_text(path)

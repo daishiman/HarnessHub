@@ -12,12 +12,22 @@
 import '@harness-hub/ui/tokens.css';
 import { UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
+import type { CSSProperties } from 'react';
 import type { ReactNode } from 'react';
+
+import { ibmPlexSans, jetBrainsMono } from './fonts.js';
 
 export const metadata: Metadata = {
   title: 'Harness Hub',
   description: 'Harness Hub の実行基盤',
 };
+
+const appFontStyle = {
+  '--hh-font-family':
+    "var(--font-ibm-plex-sans), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  '--hh-font-family-mono':
+    "var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
+} as CSSProperties;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -26,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       {/* stylesheet は import から Next が <head> へ注入するため、ここで <head> を書かない。
           テナント固有の色などを動的に流し込む要件が出たら、文字列連結で <style> を復活させず
           body へ style 属性で CSS 変数を上書きする (静的部分のキャッシュ性を保ったまま差分だけ可変にできる) */}
-      <body>
+      <body className={`${ibmPlexSans.variable} ${jetBrainsMono.variable}`} style={appFontStyle}>
         {/*
           root layout は骨格 (lang / token 供給 / 設定 Context) だけを持ち、ここでは
           ランドマークを作らない。header / main / スキップリンクは領域ごとに 1 つだけ置く:

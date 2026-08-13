@@ -27,8 +27,16 @@ export type Density = (typeof densityNames)[number];
  * 色 token の名前一覧。値 (hex) は tokens.ts の `colorTokens` が持つ。
  * 名前と値を別モジュールにしても取りこぼしが起きないよう、tokens.ts 側の
  * light/dark は `satisfies Record<ColorTokenName, string>` で全数を型検査する。
+ *
+ * 命名の方針 (Harness Studio デザインシステム / Option A グラファイト × アンバー):
+ *   主色 `primary` は無彩色 (グラファイト) で、有彩の `accent` (アンバー) は
+ *   **状態表現専用**。旧 `accentAi` / `accentAiSoft` / `onAccentAi` は
+ *   「AI 機能を特別扱いしない」方針により廃止し、`accent` 系へ統合した
+ *   (AI 専用色を置くこと自体が "AI っぽさ" の正体だったため)。
+ *   `accent` を主要 CTA に使ってはならない — CTA は常に `primary`。
  */
 export const colorTokenNames = [
+  'pageBg',
   'bg',
   'surface',
   'surfaceMuted',
@@ -40,9 +48,10 @@ export const colorTokenNames = [
   'primaryHover',
   'primarySoft',
   'onPrimary',
-  'accentAi',
-  'accentAiSoft',
-  'onAccentAi',
+  'accent',
+  'accentSoft',
+  'onAccent',
+  'neutral',
   'success',
   'successSoft',
   'warning',
@@ -69,15 +78,22 @@ export type ColorTokenName = (typeof colorTokenNames)[number];
  * この値を literal として埋め込む。ここを唯一の正本にすることで、
  * 「CSS のあちこちに 768px が直書きされ、片方だけ変わる」状態を防ぐ。
  *
- * 段階の根拠:
- *   sm 480 … 縦持ちスマホ (360px) と横持ち/小型タブレットの境目
- *   md 768 … ナビゲーションを横へ出せるようになる幅 (SidebarLayout の 2 カラム化点)
- *   lg 1120 … Container standard の最大幅。これ以上広げても行長が伸びるだけ
+ * 段階の根拠 (Harness Studio デザインシステム §4 のレスポンシブ表を正本とする):
+ *   sm 480 … 縦持ちスマホ (360px) と横持ちの境目。デザインシステムの 3 区分には
+ *            現れない**モバイル内部の下位閾値**で、FilterBar が 1 列へ落ちる点だけに使う。
+ *            ここを 640 に寄せると 480〜640px でボタンの上に不要な空きが出るため残す。
+ *   md 641 … 〜640px = モバイル (サイドバー非表示 + 下部固定タブバー) の直上。
+ *            641px からタブレット = サイドバーをアイコンのみ 68px で常設する。
+ *   lg 1025 … 1025px 以上がデスクトップ = フルサイドバー (212px, アイコン + ラベル)。
+ *
+ * 641 / 1025 という半端な値は「〜640 / 641〜1024 / 1025〜」という仕様の区切りを
+ * min-width だけで表現した結果である。640 や 1024 にすると境界の 1px が
+ * 両方の区分に属してしまい、どちらの見た目になるかが宣言順に依存する。
  */
 export const breakpointTokens = {
   sm: 480,
-  md: 768,
-  lg: 1120,
+  md: 641,
+  lg: 1025,
 } as const;
 export type BreakpointName = keyof typeof breakpointTokens;
 
@@ -101,10 +117,16 @@ export function mediaDown(name: BreakpointName): string {
 /**
  * チャートの系列色の順序 (固定)。
  * 色だけに依存させないため、部品側で形状・ラベルを必ず併記する。
+ *
+ * 「有彩色は状態表現のみ」の原則の唯一の例外がここ。系列を隣と見分けるには
+ * 色相差が要り、無彩色の濃淡だけでは 6 系列を区別できないため、
+ * `infoCyan` / `magenta` は**チャートとタグ以外に使わない**という制約付きで残す。
+ * 先頭 2 系列を `primary` (グラファイト) → `accent` (アンバー) にして、
+ * 系列が 2 本までのグラフは基調色だけで描き切れるようにしている。
  */
 export const chartSeriesTokens = [
   'primary',
-  'accentAi',
+  'accent',
   'infoCyan',
   'warning',
   'magenta',

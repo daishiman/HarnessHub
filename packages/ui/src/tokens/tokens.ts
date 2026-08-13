@@ -25,93 +25,113 @@ export {
 } from './token-names.js';
 
 /**
- * light の色 token。
+ * light の色 token (Harness Studio デザインシステム Option A「グラファイト × アンバー」)。
  *
- * mockup 実測値 (frontend-spec §2.1) のうち `--primary #1677ff` `--success #52c41a`
- * `--warning #fa8c16` `--danger #ff4d4f` は、白文字・白背景いずれでも 4.5:1 に届かない
- * (実測 3.3〜4.1:1)。shared-layers §1 は「コントラスト比 4.5:1 以上を **token 段階で保証**」を
- * 求めているため、**文字と塗りに使う段は同系のより濃い段へ寄せ**、mockup の明るい色は
- * 装飾用の `*Soft` 背景側に残す。この対応関係は `contrastRequirements` が機械検証する。
+ * 設計の核は 3 つ。
+ *   1. **主色は無彩色 (グラファイト)**。CI/ビルドツールらしい硬質さを出し、
+ *      紫・ネオン・グラデーションを使わないことで "AI っぽさ" を排除する。
+ *   2. **アンバー `accent` は状態専用**。「実行中」「ヒアリング中」など動作中の表現だけに使い、
+ *      主要 CTA には使わない (CTA は `primary`)。
+ *   3. **AI 機能を特別扱いしない**。旧 `accentAi` (紫) は廃止した。
+ *
+ * デザインシステム記載値からの逸脱は 2 つだけで、いずれも「文字・境界のコントラストを
+ * token 段階で機械保証する」(shared-layers §1) という本リポジトリ側の既存契約を優先した結果である。
+ * 逸脱は `contrastRequirements` が機械検証するので、値を戻すとテストが落ちる。
+ *   - `accent`: 仕様値 `#b45309` は surface (白) では 5.02:1 だが bg `#f1f1ef` 上で 4.44:1 と
+ *     AA を割る。同色相のまま 1 段暗い `#aa4e09` にして bg 上でも 4.88:1 を確保した。
+ *   - `borderStrong`: 仕様値 `#c4c4bf` は surface 上 1.75:1 で、WCAG 1.4.11 (非テキスト 3:1) を
+ *     大きく下回る。入力欄の輪郭が見えないことを意味するため `#868683` へ寄せた
+ *     (弱い面 `surfaceMuted` の上でちょうど 3.00:1)。仕様側の淡い罫線は装飾用の `border` が担う。
  */
 const lightColors = {
-  /**
-   * 画面全体の背景。無彩色グレーではなく `primary` と同系の青みをわずかに帯びた
-   * グレー (blue-tinted neutral) にして、ブランドカラーとの一貫性を保つ
-   * (HarnessHub 配色統一: グレー多用による暗く沈んだ印象の解消)。
-   */
-  bg: '#f2f5fb',
+  /** アプリ外周 (アプリ外枠の外側)。面 `surface` との間に 3 段の明度差を作る一番外の段 */
+  pageBg: '#e2e2df',
+  /** メイン領域の背景 */
+  bg: '#f1f1ef',
   /** カード・パネルの面 */
   surface: '#ffffff',
-  /** 面の中の弱い区画 (テーブル header 等) */
-  surfaceMuted: '#eaf0f9',
+  /** サイドバー等の沈んだ面・面の中の弱い区画 (テーブル header 等) */
+  surfaceMuted: '#e9e9e6',
   /** 装飾的な罫線 (3:1 を要求しない) */
-  border: '#c7d3e6',
-  /** 入力欄の輪郭など、操作部品の境界 (弱い面 `surfaceMuted` の上でも 3:1 を満たす濃さにする) */
-  borderStrong: '#66768f',
+  border: '#d9d9d5',
+  /** 入力欄の輪郭・ホバー境界線 (弱い面 `surfaceMuted` の上でも 3:1 を満たす濃さにする) */
+  borderStrong: '#868683',
   /** 本文 */
-  text: '#1a2233',
-  /** 補足文 */
-  textMuted: '#57647d',
-  /** 主操作の塗り・リンク文字 */
-  primary: '#0958d9',
-  primaryHover: '#003eb3',
-  primarySoft: '#e6f4ff',
+  text: '#141417',
+  /** 補足文・キャプション */
+  textMuted: '#5c5c62',
+  /** ボタン・アクティブ要素・リンク文字 (グラファイト) */
+  primary: '#232326',
+  primaryHover: '#3a3a3f',
+  primarySoft: '#e5e5e2',
   onPrimary: '#ffffff',
-  /** AI 関連 (生成中・AI 回答・下書き) */
-  accentAi: '#531dab',
-  accentAiSoft: '#f9f0ff',
-  onAccentAi: '#ffffff',
-  /** 完了・Green 判定 */
-  success: '#237804',
-  successSoft: '#f6ffed',
-  /** Yellow 判定・warn リスク */
-  warning: '#ad4e00',
-  warningSoft: '#fff7e6',
-  /** 破壊的操作・Red 判定・エラー */
-  danger: '#cf1322',
-  dangerHover: '#a8071a',
-  dangerSoft: '#fff1f0',
+  /** 状態専用アンバー (実行中・ヒアリング中)。主要 CTA には使わない */
+  accent: '#aa4e09',
+  accentSoft: '#f7ecd9',
+  onAccent: '#ffffff',
+  /** 下書き・中立 */
+  neutral: '#52525b',
+  /** 稼働中・完了 */
+  success: '#166534',
+  successSoft: '#ddefe3',
+  /** 構築中・要確認 */
+  warning: '#92580a',
+  warningSoft: '#f3e8d3',
+  /** 破壊的操作・エラー */
+  danger: '#b91c1c',
+  dangerHover: '#911616',
+  dangerSoft: '#f6e2e0',
   onDanger: '#ffffff',
-  /** チャート系列・タグ */
+  /** チャート系列・タグ専用 (UI の面・文字には使わない) */
   infoCyan: '#006d75',
-  infoSoft: '#e6fffb',
-  magenta: '#c41d7f',
-  magentaSoft: '#fff0f6',
-  /** 中立チップの背景 (面の中の弱い区画 `surfaceMuted` と同じ青みグレーで揃える) */
-  neutralSoft: '#eaf0f9',
-  /** フォーカスリング。色のみに依存しないよう輪郭形状も併用する */
-  focusRing: '#0958d9',
+  infoSoft: '#e0f2f1',
+  magenta: '#a3125f',
+  magentaSoft: '#f6e3ed',
+  /** 中立チップの背景 */
+  neutralSoft: '#e6e6e3',
+  /** フォーカスリング。有彩色に頼らずグラファイトで示し、輪郭形状も併用する */
+  focusRing: '#232326',
 } as const satisfies Record<ColorTokenName, string>;
 
+/**
+ * dark の色 token。
+ *
+ * 白黒を反転させるが**役割は同じ**。背景 (`bg`) → 面 (`surface`) → 沈んだ面 (`surfaceMuted`)
+ * の 3 段階の明度差を必ず保ち、黒を沈めすぎない。`borderStrong` だけは仕様値 `#52525b` が
+ * surface 上 2.00:1 で非テキスト 3:1 を満たさないため `#77777e` へ持ち上げている
+ * (light 側と同じ理由)。
+ */
 const darkColors: Record<ColorTokenName, string> = {
-  bg: '#11141c',
-  surface: '#1a1f2b',
-  surfaceMuted: '#212736',
-  border: '#2c3446',
-  borderStrong: '#7a8bab',
-  text: '#e7ebf5',
-  textMuted: '#9aa8c2',
-  primary: '#4096ff',
-  primaryHover: '#69b1ff',
-  primarySoft: '#111a2c',
-  onPrimary: '#14161a',
-  accentAi: '#b37feb',
-  accentAiSoft: '#1a1325',
-  onAccentAi: '#14161a',
-  success: '#95de64',
-  successSoft: '#162312',
-  warning: '#ffc069',
-  warningSoft: '#2b1d11',
-  danger: '#ff7875',
-  dangerHover: '#ff9c99',
-  dangerSoft: '#2a1215',
-  onDanger: '#14161a',
+  pageBg: '#121215',
+  bg: '#1a1a1e',
+  surface: '#242429',
+  surfaceMuted: '#2e2e34',
+  border: '#3f3f46',
+  borderStrong: '#77777e',
+  text: '#fafafa',
+  textMuted: '#b0b0b8',
+  primary: '#fafafa',
+  primaryHover: '#d4d4d8',
+  primarySoft: '#32323a',
+  onPrimary: '#141417',
+  accent: '#fbbf6d',
+  accentSoft: '#33240d',
+  onAccent: '#1c1305',
+  neutral: '#c0c0c8',
+  success: '#6ee7a0',
+  successSoft: '#1a3323',
+  warning: '#f2c464',
+  warningSoft: '#362a15',
+  danger: '#fca5a0',
+  dangerHover: '#ffc9c6',
+  dangerSoft: '#3b201f',
+  onDanger: '#1c1305',
   infoCyan: '#5cdbd3',
   infoSoft: '#112123',
   magenta: '#ff85c0',
   magentaSoft: '#291321',
-  neutralSoft: '#212736',
-  focusRing: '#69b1ff',
+  neutralSoft: '#33333a',
+  focusRing: '#fafafa',
 };
 
 /** テーマ別の色 token。 */
@@ -133,19 +153,61 @@ export const spacingTokens = {
 } as const;
 export type SpacingTokenName = keyof typeof spacingTokens;
 
-/** 角丸。 */
+/**
+ * 角丸。段階は Harness Studio デザインシステム §7 のコンポーネント表に対応する。
+ *   sm 4px … 入力欄内部の小片・コードブロック
+ *   md 8px … ボタン
+ *   card 10px … Harness カード等の一覧要素
+ *   lg 12px … シート・モーダル (モバイルのアプリ外枠上端もここ)
+ *   frame 14px … アプリ外枠
+ *   full … ステータスバッジのピル型
+ */
 export const radiusTokens = {
   sm: '4px',
   md: '8px',
-  lg: '12px',
+  card: '10px',
+  // 段は sm / md / card / frame の 4 つだけ。旧 `lg: 12px` は card と frame の中間に立ち、
+  // 同じ役割の面が画面ごとに 10px と 12px へ割れる原因だったため削除した。
+  // 値を残しておくと型が通ってしまい、5 段目がいつでも復活する。
+  frame: '14px',
   full: '9999px',
 } as const;
 export type RadiusTokenName = keyof typeof radiusTokens;
 
-/** タイポグラフィ。本文 16px を基準に、12px 未満は使わない。 */
+/**
+ * 影 (elevation)。無彩色基調では明度差だけで階層を作りにくいため、
+ * アプリ外枠と迫り上がるシートにだけ影を許す。色は持たず不透明度だけで表現し、
+ * dark でも同じ宣言が使えるようにしている (dark で白い影を敷くと霞んで見えるため)。
+ */
+export const shadowTokens = {
+  /** アプリ外枠 */
+  frame: '0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06)',
+  /** モバイルの「その他」シートなど、下から迫り上がる面 */
+  raised: '0 -8px 24px rgb(0 0 0 / 0.18)',
+} as const;
+export type ShadowTokenName = keyof typeof shadowTokens;
+
+/**
+ * タイポグラフィ。本文 16px を基準に、12px 未満は使わない。
+ *
+ * 書体は Harness Studio デザインシステム §3 に従い 2 系統に分ける。
+ *   - `fontFamily`: UI 英数字を IBM Plex Sans、日本語はシステムフォント (ヒラギノ角ゴ /
+ *     游ゴシック) が受け持つ。英数字だけを Plex に寄せると和欧混植で字面が揃うため、
+ *     日本語 Web フォント (IBM Plex Sans JP) は読み込みサイズを理由に採用しない。
+ *   - `fontFamilyMono`: Harness ID・タグ・ログ・ステータスバッジを JetBrains Mono。
+ *     識別子を等幅にすることで、桁数の違いが目で分かるようにする。
+ * どちらも SIL Open Font License 1.1 (商用可・クレジット不要)。
+ * 読み込みは self-host subset + `display: swap` (Workers 制約と CWV のため CDN 直参照はしない)。
+ *
+ * 本文サイズをデザインシステムの 13〜14px でなく 16px のままにしているのは、
+ * 本リポジトリが日本語を主言語とし、かつ WCAG 1.4.4 の 200% 拡大時の破綻を避けるため。
+ * デザインシステム側の 13〜14px は英数字 UI を前提にした値であり、
+ * 日本語では同じ級数でも字面が小さく見える (この差は §3 の「日本語本文」欄と整合する)。
+ */
 export const typographyTokens = {
-  fontFamily: "'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  fontFamilyMono: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
+  fontFamily:
+    "'IBM Plex Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  fontFamilyMono: "'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
   fontSizeXs: '12px',
   fontSizeSm: '14px',
   fontSizeMd: '16px',
@@ -192,9 +254,12 @@ export const contrastRequirements: readonly ContrastRequirement[] = [
   { foreground: 'primary', background: 'primarySoft', minRatio: AA_CONTRAST_TEXT, usage: '主状態チップの文字' },
   { foreground: 'onPrimary', background: 'primary', minRatio: AA_CONTRAST_TEXT, usage: '主ボタンの文字' },
   { foreground: 'onPrimary', background: 'primaryHover', minRatio: AA_CONTRAST_TEXT, usage: '主ボタン hover の文字' },
-  { foreground: 'accentAi', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: 'AI 関連の文字' },
-  { foreground: 'accentAi', background: 'accentAiSoft', minRatio: AA_CONTRAST_TEXT, usage: 'AI チップの文字' },
-  { foreground: 'onAccentAi', background: 'accentAi', minRatio: AA_CONTRAST_TEXT, usage: 'AI 塗りの文字' },
+  { foreground: 'accent', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '実行中状態の文字' },
+  { foreground: 'accent', background: 'bg', minRatio: AA_CONTRAST_TEXT, usage: '背景上の実行中状態の文字' },
+  { foreground: 'accent', background: 'accentSoft', minRatio: AA_CONTRAST_TEXT, usage: '実行中チップの文字' },
+  { foreground: 'onAccent', background: 'accent', minRatio: AA_CONTRAST_TEXT, usage: '実行中塗りの文字' },
+  { foreground: 'neutral', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '下書き・中立の文字' },
+  { foreground: 'neutral', background: 'neutralSoft', minRatio: AA_CONTRAST_TEXT, usage: '中立チップの文字' },
   { foreground: 'success', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '完了の文字' },
   { foreground: 'success', background: 'successSoft', minRatio: AA_CONTRAST_TEXT, usage: '完了チップの文字' },
   { foreground: 'warning', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '警告の文字' },
@@ -259,6 +324,7 @@ export function buildThemeCss(): string {
       colorBlock('light'),
       declarations(spacingTokens, 'space'),
       declarations(radiusTokens, 'radius'),
+      declarations(shadowTokens, 'shadow'),
       declarations(typographyTokens),
       declarations(densityTokens.comfortable),
       // 分岐そのものは base-css.ts が literal で持つ。ここに出すのは、部品や app 側が

@@ -143,7 +143,7 @@ export function UsageSavingsReport({ tenantId, workspaceId, range }: UsageSaving
             <AppliedFilterChips items={[{ label: '業務ツール', value: displayHarness(harnessId) }]} />
           )
         }
-        style={{ borderBlockEnd: 'none', borderRadius: 'var(--hh-radius-lg)' }}
+        variant="card"
         onSubmit={(event) => {
           event.preventDefault();
           setHarnessId(draftHarnessId);

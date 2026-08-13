@@ -10,7 +10,7 @@
  * 2. 例外の中身を画面へ出さないこと。Next は本番で message を伏せるが、開発時の
  *    文面をそのまま出す実装にすると内部構造が漏れる経路が残る。
  */
-import { Container, ErrorState } from '@harness-hub/ui';
+import { Button, Container, ErrorState } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
 import { ForbiddenScreen } from './screen-states.js';
@@ -54,9 +54,9 @@ export function ErrorScreen({ error, reset }: ErrorScreenProps): ReactNode {
         title="表示できませんでした"
         description="通信または処理でエラーが発生しました。時間をおいて、もう一度お試しください。"
         nextAction={
-          <button type="button" onClick={reset}>
+          <Button variant="primary" onClick={reset}>
             再試行する
-          </button>
+          </Button>
         }
       />
     </Container>

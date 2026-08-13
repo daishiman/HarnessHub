@@ -41,7 +41,9 @@ import {
   StepWizard,
   Tabs,
   Textarea,
+  TextButton,
   TextInput,
+  Tile,
   ToastProvider,
   UiProvider,
 } from '@harness-hub/ui';
@@ -98,6 +100,18 @@ export const catalogEntries: readonly CatalogEntry[] = [
       <Card title="カードの見出し" description="補足説明" actions={<Button variant="ghost">操作</Button>}>
         本文が入る。
       </Card>
+    ),
+  },
+  {
+    name: 'Tile',
+    group: 'layout',
+    render: () => (
+      <Stack gap={2}>
+        <Tile>カードの内側に置く 1 段小さい面。添付や目次の 1 件分。</Tile>
+        <Tile dashed tone="muted">
+          破線は「まだ何も無い / ここに置ける」を表す。
+        </Tile>
+      </Stack>
     ),
   },
   // 見出し帯の正は ScreenHeader 1 つ (FR-UIF-001)。以前はここに PageHeader も並べていたが、
@@ -233,6 +247,19 @@ export const catalogEntries: readonly CatalogEntry[] = [
         <ActionLink href="/sheets" variant="secondary">
           一覧へ戻る
         </ActionLink>
+      </Stack>
+    ),
+  },
+  {
+    // ActionLink の対 (見た目はリンク・意味はボタン)。並べて撮ることで、
+    // 「遷移するのか、その場で何か起きるのか」の描き分けが崩れたら差分に出る。
+    name: 'TextButton',
+    group: 'form',
+    render: () => (
+      <Stack gap={2} direction="horizontal">
+        <TextButton>編集する</TextButton>
+        <TextButton tone="danger">削除する</TextButton>
+        <TextButton tone="muted">閉じる</TextButton>
       </Stack>
     ),
   },

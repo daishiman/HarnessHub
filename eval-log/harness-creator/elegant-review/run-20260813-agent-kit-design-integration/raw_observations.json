@@ -1,0 +1,88 @@
+{
+  "purpose": "run-elegant-review の実行パッケージ、配布面、現在の未コミット UI・デザインシステム・文書・CI 差分を読み取り専用で観察し、別途統合済みの PR #721 を独立した基準として区別した事実記録を後続工程へ渡す。",
+  "scope": {
+    "in_scope": [
+      "plugins/harness-creator/skills/run-elegant-review 配下の34ファイル",
+      "plugins/harness-creator/agents/elegant-*.md の5ファイル",
+      ".claude・.codex・.agents にある skill、agent、plugin、hook の配布面",
+      "git status と未コミット差分に現れた UI、design token、共通部品、画面、文書、テスト、CI",
+      "2026-08-13 に統合済みの GitHub PR #721"
+    ],
+    "out_of_scope": [
+      "採点、判定、改善案、パッチ作成",
+      "ファイルの作成・編集・削除",
+      "git commit、checkout、merge、rebase、push などの更新操作",
+      "本番公開、API・DB・認可の変更",
+      "ブラウザ描画やテスト実行による挙動確認",
+      "対象外の未コミット作業の所有者・意図の断定"
+    ]
+  },
+  "stakeholders": [
+    "Harness Hub の利用者",
+    "Harness Hub の UI・アクセシビリティ担当者",
+    "harness-creator plugin の保守担当者",
+    "run-elegant-review を呼び出す skill・command の利用者",
+    "Claude Code・Codex・Agents 配布面の運用担当者",
+    "CI とデザインシステムの保守担当者",
+    "team-platform"
+  ],
+  "first_impressions": [
+    "観察対象は単一文書ではなく、skill 本体、5つの薄い agent アダプター、配布 symlink、hook、schema、script、template を含む実行パッケージである。",
+    "run-elegant-review 関連ファイル自体には未コミット差分がなく、現在の dirty state は UI 基盤とその利用画面・文書・CI に集中している。",
+    "現在の dirty state は PR #721 の単純な再現ではなく、同じ視覚方針を扱いながら breakpoint、和文フォント、状態色、角丸、共通部品、静的検査を追加または変更した別作業として見える。",
+    "配布面は同形ではなく、Claude 側は直接 symlink、Agents 側は repo-internal plugin 登録、Codex 側は Beads hook 設定のみが観察できる。",
+    "UI 差分は token 値、共通部品、画面利用箇所、仕様文書、catalog、単体テスト、CI を同時に横断している。"
+  ],
+  "facts_vs_assumptions": {
+    "facts": [
+      "run-elegant-review 配下には34ファイル、合計4529行があり、SKILL.md、3つの phase prompt、schema、reference、script、template、example、workflow-manifest を含む。",
+      "5つの elegant agent は owner_skill と phase_id を持ち、prompt や schema を正本として参照する薄いアダプターとして記述されている。",
+      "親 skill の allowed-tools には Read、Write、Edit、Bash、Agent が含まれ、Phase 1 prompt は当該フェーズを read-only と定めている。",
+      ".claude/skills/run-elegant-review と .claude/agents/elegant-*.md の計6件は plugins/harness-creator 配下への追跡済み symbolic link である。",
+      ".agents/plugins/marketplace.json は harness-creator を local、repo-internal、distributable=false、installation=AVAILABLE として登録し、利用条件に user-install、user-enable、user-hook-trust を列挙している。",
+      ".codex/config.toml は hooks=true、.codex/hooks.json は Beads の SessionStart・Prompt・Compact hook を定義しており、run-elegant-review または elegant agent の直接配置は観察されなかった。",
+      "対象 skill・agent・.claude・.codex・.agents に対する git diff の変更ファイル数は0件だった。",
+      "作業ツリーには追跡済み52ファイルの変更と未追跡4ファイルがあり、追跡済み差分は969追加・572削除だった。",
+      "未追跡ファイルは design system architecture、TextButton、Thumbnail、check-ui-hardcoding script の4件だった。",
+      "現在の差分は light/dark の graphite 系 token、動作中専用 amber、neutral tone、frame/card/md/sm の角丸、frame/raised の影を定義している。",
+      "現在の breakpoint 値は sm=480、md=641、lg=1025で、和文は system font、欧文は IBM Plex Sans、等幅用途は JetBrains Mono と記述されている。",
+      "現在の画面差分は独自の badge、button、thumbnail、surface 装飾を Badge、TextButton、Thumbnail、Tile、Panel、FilterBar variant へ置き換えている。",
+      "現在の package.json と ci.yml は check:ui-hardcoding を追加し、画面層の raw color、独自 surface、px media query、素の button を検出対象としている。",
+      "PR #721 は2026-08-13T04:51:25Zに main へ統合され、merge commit は b8edb583ea1ede3a2fdc80daa5590c2e327a3ffb である。",
+      "PR #721 は graphite × amber、IBM Plex Sans・Noto Sans JP・JetBrains Mono、sm=480・md=640・lg=1024、sidebar 212/68、navigation の最長一致を扱っている。",
+      "現在の HEAD は d373c75ff08c262bf23aecdcfa3efd507a800592 で、PR #721 の merge commit を含まず、両者の merge-base は現在の HEAD だった。",
+      "PR #721 の本文は本番公開、公開 API・DB・権限変更、Linux VRT 再取得を含めていないと記載している。"
+    ],
+    "assumptions": [
+      "未追跡4ファイルは変更済みコード・文書・CIから参照されているため、同じ UI 作業の一部と推測されるが、git status だけでは所有者や確定スコープを証明できない。",
+      "現在の dirty state は PR #721 の視覚基準を再適用しつつ詳細を更新する意図に見えるが、未コミット作業の正式な issue や依頼文は今回の観察入力に含まれていない。",
+      "Codex 利用者が .agents の marketplace 登録経由で harness-creator を利用できる可能性はあるが、現在の .codex ファイルだけでは実行時の skill 公開状態を確認できない。",
+      "UI 利用者への見た目・操作感の変化が想定されるが、Phase 1 ではブラウザ描画やテストを実行していないため実際の表示結果は未確認である。"
+    ]
+  },
+  "concrete_values_to_abstract": [
+    {"value": "/Users/dm/orca/workspaces/HarnessHub/wt-4-4", "kind": "fixed-path"},
+    {"value": "plugins/harness-creator/skills/run-elegant-review", "kind": "fixed-path"},
+    {"value": "plugins/harness-creator/agents/elegant-*.md", "kind": "fixed-path"},
+    {"value": ".claude/skills/run-elegant-review", "kind": "fixed-path"},
+    {"value": ".claude/agents/elegant-*.md", "kind": "fixed-path"},
+    {"value": ".claude/logs/meta-harness.jsonl", "kind": "fixed-path"},
+    {"value": ".codex/hooks.json", "kind": "fixed-path"},
+    {"value": ".agents/plugins/marketplace.json", "kind": "fixed-path"},
+    {"value": "team-platform", "kind": "fixed-owner"},
+    {"value": "harness-creator", "kind": "proper-noun"},
+    {"value": "run-elegant-review", "kind": "proper-noun"},
+    {"value": "Graphite × Amber", "kind": "proper-noun"},
+    {"value": "IBM Plex Sans", "kind": "proper-noun"},
+    {"value": "JetBrains Mono", "kind": "proper-noun"},
+    {"value": "Noto Sans JP", "kind": "proper-noun"},
+    {"value": "https://github.com/daishiman/HarnessHub/pull/721", "kind": "fixed-url"},
+    {"value": "sm=480, md=641, lg=1025", "kind": "other"},
+    {"value": "PR #721 baseline: sm=480, md=640, lg=1024", "kind": "other"},
+    {"value": "frame=14px, card=10px, md=8px, sm=4px", "kind": "other"},
+    {"value": "#232326", "kind": "other"},
+    {"value": "#aa4e09", "kind": "other"},
+    {"value": "max_iterations=3", "kind": "other"},
+    {"value": "shared_state.md max 200 characters", "kind": "other"}
+  ]
+}

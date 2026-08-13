@@ -10,6 +10,7 @@ import type {
 } from '@harness-hub/schemas';
 import {
   ActionLink,
+  Badge,
   Button,
   CursorPager,
   DataTable,
@@ -20,10 +21,12 @@ import {
   ScopeChip,
   Select,
   StickyHeaderOffset,
+  TextButton,
   TextInput,
+  Thumbnail,
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
-import { type CSSProperties, type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { type AppliedFilter, AppliedFilterChips } from '../../../components/filter/applied-filter-chips.js';
 import { DateTimeText } from '../../../components/format/date-time-text.js';
 import { NotionOpenLink } from '../../../components/notion/notion-open-link.js';
@@ -66,34 +69,6 @@ function publicStatusLabel(status: DocumentStatus): string {
   return status === 'published' ? '公開' : '非公開';
 }
 
-type DocumentBadgeTone = 'neutral' | 'primary' | 'info' | 'warning';
-
-const documentBadgeColors: Record<DocumentBadgeTone, CSSProperties> = {
-  neutral: { background: 'var(--hh-color-surface-muted)', color: 'var(--hh-color-text-muted)' },
-  primary: { background: 'var(--hh-color-primary-soft)', color: 'var(--hh-color-primary)' },
-  info: { background: 'var(--hh-color-info-soft)', color: 'var(--hh-color-info-cyan)' },
-  warning: { background: 'var(--hh-color-warning-soft)', color: 'var(--hh-color-warning)' },
-};
-
-function DocumentBadge({ children, tone = 'neutral' }: { children: ReactNode; tone?: DocumentBadgeTone }): ReactNode {
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        padding: '2px var(--hh-space-2)',
-        border: '1px solid var(--hh-color-border)',
-        borderRadius: 'var(--hh-radius-full)',
-        fontSize: 'var(--hh-font-size-sm)',
-        lineHeight: 'var(--hh-line-height-tight)',
-        whiteSpace: 'nowrap',
-        ...documentBadgeColors[tone],
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
 /**
  * asset_summary は「無い」ことがあり得る (画像・表・コードのどれも含まない本文)。
  * API 契約上は null だが、一覧のフィクスチャや将来のクエリ簡略化で undefined も
@@ -109,9 +84,9 @@ function assetBadges(summary: AssetSummary | null | undefined): ReactNode {
   return (
     <>
       {items.map((label) => (
-        <DocumentBadge key={label} tone="neutral">
+        <Badge key={label} tone="neutral">
           {label}
-        </DocumentBadge>
+        </Badge>
       ))}
     </>
   );
@@ -147,45 +122,31 @@ function DocumentTitleCell({
 
   return (
     <span style={{ display: 'inline-flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--hh-space-2)' }}>
-      {doc.thumbnail_url == null ? null : (
-        // サムネイルは R2 由来の認証必須 URL で next/image の外部ローダー許可リスト対象ではないため素の img を使う
-        // biome-ignore lint/performance/noImgElement: 認可付き取得を最適化より優先する (上記コメント参照)
-        <img
-          src={doc.thumbnail_url}
-          alt=""
-          style={{
-            width: '2.5rem',
-            height: '2.5rem',
-            objectFit: 'cover',
-            borderRadius: 'var(--hh-radius-sm)',
-            flexShrink: 0,
-          }}
-        />
-      )}
+      {doc.thumbnail_url == null ? null : <Thumbnail src={doc.thumbnail_url} />}
       <span style={{ display: 'inline-flex', flexDirection: 'column', gap: 'var(--hh-space-1)', minWidth: 0 }}>
         <a href={href} data-hh-focusable="" style={{ color: 'var(--hh-color-primary)' }}>
           {doc.title}
         </a>
         <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 'var(--hh-space-1)' }}>
           {doc.category == null ? null : (
-            <DocumentBadge key="category" tone="info">
+            <Badge key="category" tone="info">
               {doc.category}
-            </DocumentBadge>
+            </Badge>
           )}
           {manuallyEdited ? (
-            <DocumentBadge key="manual" tone="warning">
+            <Badge key="manual" tone="warning">
               編集済み
-            </DocumentBadge>
+            </Badge>
           ) : null}
           {scheduled ? (
-            <DocumentBadge key="scheduled" tone="warning">
+            <Badge key="scheduled" tone="warning">
               予約公開: <DateTimeText value={doc.publish_at} />
-            </DocumentBadge>
+            </Badge>
           ) : null}
           {(doc.tags ?? []).map((tag) => (
-            <DocumentBadge key={tag} tone="neutral">
+            <Badge key={tag} tone="neutral">
               {tag}
-            </DocumentBadge>
+            </Badge>
           ))}
           {assetBadges(doc.asset_summary)}
         </span>
@@ -204,23 +165,9 @@ function DocumentTitleCell({
           </span>
         )}
         {canEdit ? (
-          <button
-            type="button"
-            data-hh-focusable=""
-            aria-expanded={editing}
-            onClick={onToggleEdit}
-            style={{
-              alignSelf: 'flex-start',
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              color: 'var(--hh-color-primary)',
-              fontSize: 'var(--hh-font-size-sm)',
-              cursor: 'pointer',
-            }}
-          >
+          <TextButton aria-expanded={editing} onClick={onToggleEdit}>
             {editing ? '編集を閉じる' : '分類・要約を編集'}
-          </button>
+          </TextButton>
         ) : null}
       </span>
     </span>
@@ -373,7 +320,7 @@ export function DocumentList({
             ? '予約公開'
             : publicStatusLabel(row.status),
         render: (row: DocumentListItem) => (
-          <DocumentBadge
+          <Badge
             tone={
               row.status === 'draft' && row.publish_at !== null && row.publish_at > Date.now()
                 ? 'warning'
@@ -385,7 +332,7 @@ export function DocumentList({
             {row.status === 'draft' && row.publish_at !== null && row.publish_at > Date.now()
               ? '予約公開'
               : publicStatusLabel(row.status)}
-          </DocumentBadge>
+          </Badge>
         ),
       },
       {

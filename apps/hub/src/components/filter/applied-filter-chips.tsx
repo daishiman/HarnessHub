@@ -1,4 +1,4 @@
-import { TagRow } from '@harness-hub/ui';
+import { Badge, TagRow } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 
 export interface AppliedFilter {
@@ -21,22 +21,13 @@ export function AppliedFilterChips({ items }: AppliedFilterChipsProps): ReactNod
   return (
     <TagRow label="適用中の絞り込み条件">
       {items.map((item) => (
-        <span
-          key={item.label}
-          data-hh-applied-filter-chip=""
-          style={{
-            alignItems: 'center',
-            background: 'var(--hh-color-surface-muted)',
-            border: '1px solid var(--hh-color-border)',
-            borderRadius: 'var(--hh-radius-full)',
-            display: 'inline-flex',
-            fontSize: 'var(--hh-font-size-sm)',
-            gap: 'var(--hh-space-1)',
-            padding: 'var(--hh-space-1) var(--hh-space-2)',
-          }}
-        >
-          <strong>{item.label}:</strong> {item.value}
-        </span>
+        // ピルの形は共通の Badge が持つ。ここで書き起こしていたぶん、同じ画面に並ぶ
+        // 状態チップ (StatusChip) と余白・境界線がわずかに違っていた。
+        <Badge key={item.label} tone="neutral">
+          <span data-hh-applied-filter-chip="">
+            <strong>{item.label}:</strong> {item.value}
+          </span>
+        </Badge>
       ))}
     </TagRow>
   );

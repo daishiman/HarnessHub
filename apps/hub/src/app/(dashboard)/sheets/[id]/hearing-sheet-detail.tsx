@@ -13,6 +13,7 @@ import {
   Stack,
   StatusChip,
   TagRow,
+  Tile,
 } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
@@ -116,19 +117,17 @@ function HandoffBlock({ title, text }: { readonly title: string; readonly text: 
           />
         ) : null}
       </div>
-      <pre
+      <Tile
+        as="pre"
         style={{
           background: 'var(--hh-color-surface)',
-          border: '1px solid var(--hh-color-border)',
-          borderRadius: 'var(--hh-radius-sm)',
           overflowX: 'auto',
-          padding: 'var(--hh-space-3)',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
         }}
       >
         {text}
-      </pre>
+      </Tile>
     </section>
   );
 }

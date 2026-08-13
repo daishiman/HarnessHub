@@ -249,7 +249,6 @@ export function DataCard({
     <article
       style={{
         ...surfaceStyle,
-        borderRadius: radiusVar('lg'),
         padding: spaceVar(4),
         display: 'flex',
         flexDirection: 'column',
@@ -366,6 +365,16 @@ export interface FilterBarProps {
    * (見出し帯の高さは画面ごとに違うため、固定値を書かない)。
    */
   sticky?: boolean | undefined;
+  /**
+   * 帯の見え方。
+   *
+   * - `bar` (既定): 本文の幅いっぱいに敷いて下辺の線で本文と切る。表が続く一覧画面向け。
+   * - `card`: 角丸のカードとして独立させる。下に表ではなくカードや図が並ぶ画面向け
+   *   (帯だけ角が立っていると、下のカード群と縁が揃わず「別の層」に見えるため)。
+   *
+   * 画面側で `style` に角丸を書いて作り分けていたものを prop へ引き上げたもの。
+   */
+  variant?: 'bar' | 'card' | undefined;
   style?: CSSProperties | undefined;
 }
 
@@ -389,12 +398,15 @@ export function FilterBar({
   actions,
   appliedChips,
   sticky = false,
+  variant = 'bar',
   style,
 }: FilterBarProps): ReactNode {
   const barStyle: CSSProperties = {
     padding: spaceVar(4),
     background: colorVar('surfaceMuted'),
-    borderBlockEnd: `1px solid ${colorVar('border')}`,
+    ...(variant === 'card'
+      ? { border: `1px solid ${colorVar('border')}`, borderRadius: radiusVar('card') }
+      : { borderBlockEnd: `1px solid ${colorVar('border')}` }),
     ...(sticky
       ? {
           position: 'sticky',

@@ -178,6 +178,10 @@ jobs:
           pnpm --filter @harness-hub/schemas run check:drift
       - name: G9 axe a11y (部品単体 + 画面結合の 2 段)
         run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/hub run test:a11y
+      # 画面が自分で色・角丸・影・breakpoint を決めると、テーマ切替とコントラスト保証が
+      # 「この画面のこのボタンだけ」という形で部分的に壊れる。目視では追い切れないので静的に落とす。
+      - name: G17 画面層の視覚ハードコーディング検査 (design system 一元管理)
+        run: pnpm check:ui-hardcoding
       # 画面状態 (読込中/エラー/見つからない) の敷き漏れは実行時まで表に出ず、
       # テストも緑のまま通る。route group 単位で静的に落とす。
       - name: G15 画面状態の敷き漏れ検査 (loading / error / not-found)

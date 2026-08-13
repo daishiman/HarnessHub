@@ -7,7 +7,8 @@ sources: [docs/mockups/harness-studio-v2.html, system-spec/00-requirements-defin
 # Harness Studio mockup 分析 (v2) — 画面・機能・アーキテクチャ必要要素
 
 > **来歴 (provenance)**: 原本 = `/Users/dm/Downloads/Harness Studio (2).html` (2026-07-17 受領、sha256: `5de0227c91629152733a69cd05bbdef4f5eeb6912290246c9db59dc2b1f6d3da`)。リポジトリ保存先 = [harness-studio-v2.html](harness-studio-v2.html) (ブラウザで開けば自己展開して動作)。展開済みソース = [harness-studio-v2-extracted/](harness-studio-v2-extracted/)。
-> **位置づけ**: この mockup を Harness Hub の **UI/UX の到達目標 (target design)** とする (ユーザー指示 2026-07-17: 「これを生成するためのアーキテクチャ、タスク、UI、UX のドキュメント…すべての内容を構築できるように」)。ダミーデータ (田中太郎・議事録要約ジェネレータ等) は機能の意味付けを示すサンプル値。
+> **位置づけ**: この mockup は Harness Hub の**画面インベントリと情報の並び**の出発点である (ユーザー指示 2026-07-17: 「これを生成するためのアーキテクチャ、タスク、UI、UX のドキュメント…すべての内容を構築できるように」)。ダミーデータ (田中太郎・議事録要約ジェネレータ等) は機能の意味付けを示すサンプル値。
+> **視覚言語は 2026-08-13 に置き換わった (重要)**: 配色・タイポグラフィ・breakpoint・面の作り方の正本は Harness Studio デザインシステム「グラファイト × アンバー」であり、[frontend-spec §2.1](../frontend-spec.md) と `packages/ui/src/tokens/tokens.ts` を参照する。本 mockup の青主色 (`#1677ff`) と AI 専用の紫 (`#722ed1`)、Noto Sans JP、Tailwind 既定 breakpoint は**すべて現行仕様ではない**。本書のうち有効なのは「どの画面に何の情報が載るか」であり、色と寸法は読み替えないこと。
 
 ## 1. 画面インベントリ (mockup 実測: 17 画面 + 共通シェル)
 

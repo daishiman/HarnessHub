@@ -13,6 +13,14 @@ import {
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
 
+/**
+ * チップの下地 (デザインシステム §7「ステータスバッジ」)。
+ *
+ * 仕様原案は 11px・等幅・大文字だが、本リポジトリの状態ラベルは「生成中」「承認待ち」の
+ * ような和文で、等幅化も大文字化も効かず、11px では字形が潰れて読めない。
+ * そこで原案の**狙い**である「本文より一段小さく・太く・締まった塊に見せる」だけを採り、
+ * 寸法は和文が読める sm (14px) + 太字 + わずかな字間で表現する。
+ */
 const baseChipStyle: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
@@ -20,6 +28,8 @@ const baseChipStyle: CSSProperties = {
   padding: `2px ${spaceVar(2)}`,
   borderRadius: radiusVar('full'),
   fontSize: 'var(--hh-font-size-sm)',
+  fontWeight: 600,
+  letterSpacing: '0.02em',
   lineHeight: 'var(--hh-line-height-tight)',
   whiteSpace: 'nowrap',
 };
@@ -29,7 +39,11 @@ function toneStyle(tone: StatusTone): CSSProperties {
   return {
     color: colorVar(foreground),
     background: colorVar(background),
-    border: `1px solid ${colorVar(foreground)}`,
+    // 輪郭は文字色をそのまま引くのではなく 35% まで薄める (デザインシステム §7)。
+    // 100% のままだと輪郭が文字と同じ強さで主張し、チップが「押せるもの」に見えてしまう。
+    // 塗り (background) が意味の主役で、輪郭は面の境界を示す補助という役割分担にする。
+    // color-mix で薄めているので、テーマ切替時も token の色を追従して 1 か所で決まる。
+    border: `1px solid color-mix(in srgb, ${colorVar(foreground)} 35%, transparent)`,
   };
 }
 

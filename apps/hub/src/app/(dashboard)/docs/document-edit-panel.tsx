@@ -1,7 +1,7 @@
 'use client';
 
 import type { DocumentListItem } from '@harness-hub/schemas';
-import { Button, LiveStatus, Textarea, TextInput } from '@harness-hub/ui';
+import { Button, LiveStatus, Panel, Stack, Textarea, TextInput } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { extractApiErrorMessage } from '../../../features/docs-cms/api-error.js';
 import { parseTagsInput, tagsToInputValue } from '../../../features/docs-cms/tags.js';
@@ -89,60 +89,57 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
   );
 
   return (
-    <div
-      data-hh-doc-edit-panel=""
-      style={{
-        background: 'var(--hh-color-surface)',
-        border: '1px solid var(--hh-color-border)',
-        borderRadius: 'var(--hh-radius-lg)',
-        padding: 'var(--hh-space-4)',
-        display: 'grid',
-        gap: 'var(--hh-space-3)',
-        marginTop: 'var(--hh-space-3)',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <strong>『{doc.title}』を編集</strong>
-        <Button type="button" variant="ghost" onClick={onClose}>
-          閉じる
-        </Button>
-      </div>
-      <TextInput
-        label="カテゴリ"
-        value={draft.category}
-        onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}
-        onBlur={() => void commitIfChanged({})}
-      />
-      <TextInput
-        label="タグ (カンマ区切り)"
-        value={draft.tags}
-        onChange={(event) => setDraft((current) => ({ ...current, tags: event.target.value }))}
-        onBlur={() => void commitIfChanged({})}
-      />
-      <TextInput
-        label="サムネイル画像 URL"
-        description="空欄で保存すると、本文の最初の画像から自動生成へ戻します。"
-        value={draft.thumbnailUrl}
-        onChange={(event) => setDraft((current) => ({ ...current, thumbnailUrl: event.target.value }))}
-        onBlur={() => void commitIfChanged({})}
-      />
-      <Textarea
-        label="要約"
-        description="空欄で保存すると、本文からの自動要約へ戻します。"
-        rows={3}
-        value={draft.excerpt}
-        onChange={(event) => setDraft((current) => ({ ...current, excerpt: event.target.value }))}
-        onBlur={() => void commitIfChanged({})}
-      />
-      <LiveStatus visible>
-        {saveState === 'saving'
-          ? '保存しています…'
-          : saveState === 'saved'
-            ? '保存しました'
-            : saveState === 'error'
-              ? errorMessage
-              : ''}
-      </LiveStatus>
+    // 面の装飾 (背景・輪郭・角丸・内側の余白) は Panel に任せる。ここで書き起こすと
+    // 一覧に並ぶ他のカードと角丸が 2px ずれ、同じ層のものに見えなくなる。
+    <div data-hh-doc-edit-panel="" style={{ marginTop: 'var(--hh-space-3)' }}>
+      <Panel
+        title={`『${doc.title}』を編集`}
+        headingLevel={3}
+        actions={
+          <Button type="button" variant="ghost" onClick={onClose}>
+            閉じる
+          </Button>
+        }
+      >
+        <Stack gap={3}>
+          <TextInput
+            label="カテゴリ"
+            value={draft.category}
+            onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}
+            onBlur={() => void commitIfChanged({})}
+          />
+          <TextInput
+            label="タグ (カンマ区切り)"
+            value={draft.tags}
+            onChange={(event) => setDraft((current) => ({ ...current, tags: event.target.value }))}
+            onBlur={() => void commitIfChanged({})}
+          />
+          <TextInput
+            label="サムネイル画像 URL"
+            description="空欄で保存すると、本文の最初の画像から自動生成へ戻します。"
+            value={draft.thumbnailUrl}
+            onChange={(event) => setDraft((current) => ({ ...current, thumbnailUrl: event.target.value }))}
+            onBlur={() => void commitIfChanged({})}
+          />
+          <Textarea
+            label="要約"
+            description="空欄で保存すると、本文からの自動要約へ戻します。"
+            rows={3}
+            value={draft.excerpt}
+            onChange={(event) => setDraft((current) => ({ ...current, excerpt: event.target.value }))}
+            onBlur={() => void commitIfChanged({})}
+          />
+          <LiveStatus visible>
+            {saveState === 'saving'
+              ? '保存しています…'
+              : saveState === 'saved'
+                ? '保存しました'
+                : saveState === 'error'
+                  ? errorMessage
+                  : ''}
+          </LiveStatus>
+        </Stack>
+      </Panel>
     </div>
   );
 }

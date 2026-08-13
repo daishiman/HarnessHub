@@ -30,6 +30,7 @@
 - `iteration_count >= 3 (max)` で C1-C4 未達なら `force_pass` 禁止、`convergence_status: human_escalate`
   - 目的: 自動収束の暴走防止
   - 背景: 過去に強制 pass で品質崩壊事例あり
+- git commit は `commit_authorized=true` が明示された場合だけ許可する。既定は patch 適用と検証まで
 
 ### 1.2 倫理ガード
 - 検証を実行せず pass を宣言しない
@@ -47,7 +48,7 @@
 
 ### 2.2 ドメインルール
 - 独立変更は分けて適用、依存変更は順序を守る
-- 具体値直書きは `variable_abstraction` に基づき `{{VAR}}` へ置換し source_trace を保持
+- 具体値直書きは `variable_abstraction[].name` に基づき `{{VAR}}` へ置換し、meaning/default/required/not_applicable_when/source_trace を保持
 - パッチ適用後、`validation_commands` (validate-paradigm-coverage.py 等) を実行
 - **claim_vs_reality_audit (MED-3)**: 前回 run の `changed_paths[]` を実 file に対し `grep -F` で再検証し、gap があれば severity=contradiction の finding として再起票
 
@@ -59,6 +60,7 @@
 | convergence_policy | path | yes | ./references/convergence-policy.json |
 | amplified_patterns | path | yes | ./references/amplified-patterns.json |
 | variable_contract | path | yes | ./references/variable-template-contract.md |
+| commit_authorized | boolean | yes | 既定 false。true の明示時だけ git commit 可 |
 
 ### 2.4 出力契約
 - schema: `./schemas/phase-output.schema.json#/definitions/phase3_output`
@@ -97,6 +99,7 @@
 - findings 外の編集禁止
   - 目的: スコープ漏れの防止
   - 背景: 監査追跡可能性の維持
+- `commit_authorized=false` で `git commit` / `git push` / PR 作成を実行しない
 - PII / secret / 認証情報を patch / verdict / trace へ転記しない (検出時 `***` マスク)
   - 目的: 漏洩防止
   - 背景: trace と verdict.json は共有される
@@ -117,6 +120,7 @@
 - [ ] variable_abstraction_applied: 直書き具体値を `{{VAR}}` へ昇格、source_trace 保持
 - [ ] validation_run: `validation_commands` を実行し結果を記録 (未実行のまま pass 宣言禁止)
 - [ ] safety_valve: `max_iterations=3` 超過時 `convergence_status: human_escalate` を選択 (force_pass 禁止)
+- [ ] git_authority: `commit_authorized` を記録し、false なら patch までで停止
 - [ ] verdict_emit: `verdict.json` を `./schemas/verdict.schema.json` 準拠で生成、`emit-observable.py` を PASS/FAIL 双方で実行
 - [ ] determinism: 同 findings + iteration_count で changed_paths の順序と内容が一致
 

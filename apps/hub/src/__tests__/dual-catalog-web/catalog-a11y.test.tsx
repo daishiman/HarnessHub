@@ -29,7 +29,8 @@ import RootLayout from '../../app/layout.js';
 // next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
 // 骨格の検査が目的なので、CSS 変数名だけを返す薄い偽物へ差し替える。
 vi.mock('next/font/google', () => ({
-  Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
+  IBM_Plex_Sans: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
 }));
 
 /** catalog は (workspace) 配下。本番と同じく業務シェルが main ランドマークを持つ。 */
@@ -182,6 +183,17 @@ async function flushAsync(): Promise<void> {
     });
   }
 }
+
+describe('RootLayout の全画面フォント契約', () => {
+  it('HubShell を通らない公開画面にも IBM Plex / JetBrains Mono の変数を供給する', () => {
+    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement('p', null, '公開画面')));
+
+    expect(html).toContain('hh-test-font');
+    expect(html).toContain('hh-test-font-mono');
+    expect(html).toContain('--hh-font-family:var(--font-ibm-plex-sans)');
+    expect(html).toContain('--hh-font-family-mono:var(--font-jetbrains-mono)');
+  });
+});
 
 /**
  * 詳細画面の公開状態タブを開き、中身が現れるまで待つ。

@@ -13,8 +13,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ActionLink,
+  Button,
   breakpointTokens,
   buildShellCss,
+  Card,
   isCurrentNav,
   MobileTabBar,
   mediaUp,
@@ -466,6 +468,40 @@ describe('Panel / ScreenHeader / ActionLink', () => {
     expect(sameTab.getAttribute('target')).toBeNull();
     expect(sameTab.getAttribute('rel')).toBeNull();
   });
+
+  it('ActionLink と Button は同じ variant なら見た目が完全に一致する', () => {
+    // 「押せるもの」の形は 1 か所 (internal/style の actionBaseStyle) が決める。
+    // 片方だけを直せる状態に戻すと、リンク型ボタンだけ角丸や太さがずれる。
+    renderWithUi(
+      <>
+        <ActionLink href="/sheets/new" variant="primary">
+          新規作成
+        </ActionLink>
+        <Button variant="primary">保存</Button>
+      </>,
+    );
+
+    const link = screen.getByRole('link', { name: '新規作成' }) as HTMLAnchorElement;
+    const button = screen.getByRole('button', { name: '保存' }) as HTMLButtonElement;
+
+    for (const property of ['border-radius', 'font-weight', 'min-height', 'padding', 'background', 'color', 'border']) {
+      expect(link.style.getPropertyValue(property), property).toBe(button.style.getPropertyValue(property));
+    }
+  });
+
+  it('面の角丸はカード段で統一され、部品ごとにずれない', () => {
+    renderWithUi(
+      <>
+        <Panel title="パネル">本文</Panel>
+        <Card title="カード">本文</Card>
+      </>,
+    );
+
+    const panel = screen.getByRole('heading', { name: 'パネル' }).closest('section');
+    const card = screen.getByRole('heading', { name: 'カード' }).closest('section');
+    expect(panel?.style.borderRadius).toBe('var(--hh-radius-card)');
+    expect(card?.style.borderRadius).toBe('var(--hh-radius-card)');
+  });
 });
 
 describe('buildShellCss', () => {
@@ -477,9 +513,9 @@ describe('buildShellCss', () => {
     expect(css).toContain('grid-template-columns: minmax(0, 1fr);');
     // md で折りたたみサイドバー、lg で展開
     expect(css).toContain(`${mediaUp('md')} {`);
-    expect(css).toContain('grid-template-columns: 64px minmax(0, 1fr);');
+    expect(css).toContain('grid-template-columns: 68px minmax(0, 1fr);');
     expect(css).toContain(`${mediaUp('lg')} {`);
-    expect(css).toContain('grid-template-columns: 220px minmax(0, 1fr);');
+    expect(css).toContain('grid-template-columns: 212px minmax(0, 1fr);');
   });
 
   it('開閉トグルは mobile で隠し、サイドバーが現れる md 以上でだけ表示する', () => {
@@ -518,20 +554,49 @@ describe('buildShellCss', () => {
     expect(css).toContain('--hh-shell-header-offset: 0px;');
   });
 
-  it('mobile footer は通常フローのまま固定タブの余白を取り、desktop は本文外に残す', () => {
+  it('mobile は本文塊ごと固定タブ + セーフエリア分の余白を取り、desktop では 0 に戻す', () => {
     const css = buildShellCss();
 
-    expect(css).toContain('margin-block-end: calc(var(--hh-control-height) + env(safe-area-inset-bottom, 0px));');
+    // 余白は main と footer に二重掛けせず、両者を包む body へ 1 回だけ置く
+    expect(css).toContain('padding-block-end: calc(76px + env(safe-area-inset-bottom, 0px));');
     expect(css).toContain('.hh-shell__main {\n    overflow-y: auto;');
-    expect(css).toContain('.hh-shell__body > footer {\n    margin-block-end: 0;');
+    expect(css).toContain('.hh-shell__body {\n    padding-block-end: 0;');
   });
 
-  it('現在地を色だけで示さない (太字と縦棒も併用する)', () => {
+  it('md 以上ではアプリ本体を外枠として浮かせ、mobile では全幅に張り付ける', () => {
+    const css = buildShellCss();
+    const [mobilePart, desktopPart] = css.split(`${mediaUp('md')} {`);
+
+    // 外枠は md 以上でだけ現れる。狭い画面で余白を削らないため
+    expect(mobilePart).not.toContain('border-radius: var(--hh-radius-frame)');
+    expect(desktopPart).toContain('border-radius: var(--hh-radius-frame);');
+    expect(desktopPart).toContain('box-shadow: var(--hh-shadow-frame);');
+    // 高さの引き算は変数 1 つに閉じる (本体・body・サイドバーでずれないこと)
+    expect(desktopPart).toContain('--hh-shell-frame-inset: var(--hh-space-3);');
+    expect(
+      [...css.matchAll(/calc\(100vh - var\(--hh-shell-frame-inset\) \* 2\)/g)].length,
+      '本体・body・サイドバーの 3 か所が同じ式を使う',
+    ).toBe(3);
+  });
+
+  it('現在地を色だけで示さない (面の持ち上げ・輪郭・太字も併用する)', () => {
     const css = buildShellCss();
 
     expect(css).toContain("aria-current='page'");
     expect(css).toContain('font-weight: var(--hh-font-weight-bold)');
-    expect(css).toContain('box-shadow: inset 3px 0 0 0 var(--hh-color-primary)');
+    // サイドバー: surface へ持ち上げ + 輪郭。色を失っても形で現在地が読める
+    expect(css).toContain('background: var(--hh-color-surface);\n  color: var(--hh-color-text);');
+    expect(css).toContain('border: 1px solid var(--hh-color-border);');
+    // タブバー: 高さが足りず面の持ち上げが読めないので色 + 太字 + aria-current
+    expect(css).toContain(".hh-shell__tabbar .hh-shell__nav-link[aria-current='page'] {");
+    expect(css).toContain('color: var(--hh-color-accent);');
+  });
+
+  it('影は有限集合の token だけを使い、共通シェルにも直接値を増やさない', () => {
+    const css = buildShellCss();
+
+    expect(css).not.toMatch(/box-shadow:\s*0\s/);
+    expect(css.match(/box-shadow:\s*var\(--hh-shadow-(?:frame|raised)\)/g)?.length).toBeGreaterThan(0);
   });
 
   it('「その他」パネルは 5 番目の slot ではなくタブバー全幅を使う', () => {

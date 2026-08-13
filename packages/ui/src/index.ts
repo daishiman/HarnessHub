@@ -88,8 +88,12 @@ export type { TabItem, TabsProps } from './components/Tabs.js';
 export { Tabs } from './components/Tabs.js';
 export type { TextareaProps } from './components/Textarea.js';
 export { Textarea } from './components/Textarea.js';
+export type { TextButtonProps } from './components/TextButton.js';
+export { TextButton } from './components/TextButton.js';
 export type { TextInputProps } from './components/TextInput.js';
 export { TextInput } from './components/TextInput.js';
+export type { ThumbnailProps } from './components/Thumbnail.js';
+export { Thumbnail } from './components/Thumbnail.js';
 export type { ToastContextValue, ToastItem, ToastOptions, ToastProviderProps } from './components/Toast.js';
 export { ToastProvider, useToast } from './components/Toast.js';
 export type { UiLocale, UiMessageKey } from './i18n/dictionaries.js';
@@ -124,8 +128,9 @@ export type {
   ContainerSize,
   StackGap,
   StackProps,
+  TileProps,
 } from './layout/primitives.js';
-export { Card, Container, containerSizes, Stack } from './layout/primitives.js';
+export { Card, Container, containerSizes, Stack, Tile } from './layout/primitives.js';
 export type { BottomSheetProps } from './shell/BottomSheet.js';
 export { BottomSheet } from './shell/BottomSheet.js';
 // --- 情報の並べ方 (型の選定は specs/harness-hub-information-design-addendum.md の registry、
@@ -206,6 +211,7 @@ export {
   mediaDown,
   mediaUp,
   radiusTokens,
+  shadowTokens,
   spacingTokens,
   themeNames,
   typographyTokens,

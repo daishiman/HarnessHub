@@ -5,7 +5,7 @@ import type {
   HearingShareTokenListItem,
   IssueHearingShareTokenResponse,
 } from '@harness-hub/schemas';
-import { Alert, Button, DataTable, type DataTableColumn, Panel, Stack } from '@harness-hub/ui';
+import { Alert, Button, DataTable, type DataTableColumn, Panel, Stack, Textarea } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -78,20 +78,9 @@ function IssuedTokenBlock({ issued }: { readonly issued: IssueHearingShareTokenR
           description="クリップボードへアクセスできません。下のテキストを選択して手動でコピーしてください。"
         />
       ) : null}
-      <textarea
-        readOnly
-        value={issued.instruction_text}
-        rows={6}
-        style={{
-          background: 'var(--hh-color-surface)',
-          border: '1px solid var(--hh-color-border)',
-          borderRadius: 'var(--hh-radius-sm)',
-          fontFamily: 'inherit',
-          padding: 'var(--hh-space-3)',
-          resize: 'vertical',
-          width: '100%',
-        }}
-      />
+      {/* 共通の Textarea に寄せる。素の <textarea> を書き起こしていたぶん見た目が
+          他の入力欄とずれていたうえ、ラベルが無く支援技術から名前を読めなかった。 */}
+      <Textarea label="引き継ぎ指示文" hideLabel readOnly value={issued.instruction_text} rows={6} />
     </section>
   );
 }

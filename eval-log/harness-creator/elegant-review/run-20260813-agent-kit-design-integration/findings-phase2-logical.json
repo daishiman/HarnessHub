@@ -1,0 +1,105 @@
+{
+  "agent": "elegant-logical-structural-analyst",
+  "paradigm_findings": [
+    {
+      "paradigm_id": 1,
+      "paradigm_name": "critical",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["architecture/harness-hub-design-system.md は accent を実行中状態専用とする一方、packages/ui/src/shell/shell-css.ts は現在のモバイルナビ項目にも使用する。"],
+      "condition_matrix": {"C1":{"verdict":"FAIL","evidence":["accent の排他的用途と実装用途が矛盾する。"]},"C2":{"verdict":"PASS","evidence":["用途規則と実装を確認した。"]},"C3":{"verdict":"PASS","evidence":["accentAi 除去は一貫する。"]},"C4":{"verdict":"PASS","evidence":["参照トークンは定義済み。"]}},
+      "issues": [{"condition":"C1","condition_signal":"contradiction","severity":"critical","description":"実行中状態専用の accent がナビ選択状態にも流用される。","recommended_intervention":"現在タブは中立な選択表現にし、accent を実行中状態へ限定する。"}],
+      "score": 0.46
+    },
+    {
+      "paradigm_id": 2,
+      "paradigm_name": "deduction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["影は frame と raised の二種類だけという規則に対し、packages/ui/src/shell/shell-css.ts に無名 box-shadow がある。"],
+      "condition_matrix": {"C1":{"verdict":"FAIL","evidence":["閉じた影トークン集合に第三の直接値がある。"]},"C2":{"verdict":"PASS","evidence":["許容集合は明示済み。"]},"C3":{"verdict":"PASS","evidence":["定義済み影は対応する。"]},"C4":{"verdict":"PASS","evidence":["既存影トークンは利用可能。"]}},
+      "issues": [{"condition":"C1","condition_signal":"contradiction","severity":"critical","description":"許容外の影がシェルCSSに直接記述される。","recommended_intervention":"既存トークンへ写像するか、規則とトークンを同時更新する。"}],
+      "score": 0.50
+    },
+    {
+      "paradigm_id": 3,
+      "paradigm_name": "induction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["check-ui-hardcoding.mjs は二つの apps/*/src だけを走査し、共通UI層と検出器fixtureを対象にしない。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["検査ルール間に矛盾はない。"]},"C2":{"verdict":"FAIL","evidence":["共通UI層とfixtureが欠落する。"]},"C3":{"verdict":"PARTIAL","evidence":["機械保証という文書表現を走査範囲が満たさない。"]},"C4":{"verdict":"PASS","evidence":["CI呼出経路は存在する。"]}},
+      "issues": [{"condition":"C2","condition_signal":"omission","severity":"high","description":"G17が共通UI層と検出器fixtureを網羅しない。","recommended_intervention":"共通UI層を対象に加え、陽性・陰性fixtureを固定する。"}],
+      "score": 0.61
+    },
+    {
+      "paradigm_id": 4,
+      "paradigm_name": "abduction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["フォント変数クラスが root layout から HubShell だけへ移り、PublicShell配下へ到達しない。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["各部品単体に自己矛盾はない。"]},"C2":{"verdict":"PASS","evidence":["依存経路を追跡した。"]},"C3":{"verdict":"PARTIAL","evidence":["HubShell内だけ仕様に沿う。"]},"C4":{"verdict":"FAIL","evidence":["公開面からフォント変数への依存が切れる。"]}},
+      "issues": [{"condition":"C4","condition_signal":"dependency_break","severity":"high","description":"PublicShell配下がセルフホストフォント設定へ到達できない。","recommended_intervention":"全画面共通祖先でフォント変数を提供し統合テストを追加する。"}],
+      "score": 0.45
+    },
+    {
+      "paradigm_id": 5,
+      "paradigm_name": "vertical",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["現HEADは統合済みPR #721を含まず、作業差分・PR #721・system-specでbreakpoint契約が三系列に分かれる。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["各資料は個別には一値を明示する。"]},"C2":{"verdict":"PARTIAL","evidence":["正本仕様への反映記録がない。"]},"C3":{"verdict":"FAIL","evidence":["三系列でbreakpointが一致しない。"]},"C4":{"verdict":"PARTIAL","evidence":["統合順序が未確定。"]}},
+      "issues": [{"condition":"C3","condition_signal":"inconsistency","severity":"critical","description":"マージ済み基準を含まない枝で別breakpoint契約が導入され三重帳簿になる。","recommended_intervention":"PR #721を統合後、唯一の契約へ仕様・token・testを揃える。"}],
+      "score": 0.34
+    },
+    {
+      "paradigm_id": 6,
+      "paradigm_name": "decomposition",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["Phase2の入力・出力契約がprompt、workflow manifest、agent定義で異なる。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["各文書は局所的には読める。"]},"C2":{"verdict":"PARTIAL","evidence":["必要データは分散して記載される。"]},"C3":{"verdict":"PASS","evidence":["思考法IDとagent名は対応する。"]},"C4":{"verdict":"FAIL","evidence":["handoff契約が文書ごとに異なる。"]}},
+      "issues": [{"condition":"C4","condition_signal":"dependency_break","severity":"high","description":"Phase2境界の入力ファイルと出力schemaが一致しない。","recommended_intervention":"正式handoff契約を一つに定め全正本を揃える。"}],
+      "score": 0.40
+    },
+    {
+      "paradigm_id": 7,
+      "paradigm_name": "mece",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["resource mapは実在scriptを網羅せず、templates/findings.jsonは必須condition_matrixを欠く。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["列挙項目間に重複はない。"]},"C2":{"verdict":"FAIL","evidence":["script目録とtemplate必須項目が欠落する。"]},"C3":{"verdict":"PARTIAL","evidence":["schemaへtemplateが追随しない。"]},"C4":{"verdict":"PASS","evidence":["列挙済みscriptは存在する。"]}},
+      "issues": [{"condition":"C2","condition_signal":"omission","severity":"high","description":"正式目録と同梱findings雛形が不完全である。","recommended_intervention":"全運用scriptを登録し、templateへC1-C4 matrixを追加する。"}],
+      "score": 0.36
+    },
+    {
+      "paradigm_id": 8,
+      "paradigm_name": "two-axis",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["Claudeは直接symlink、Agentsは条件付きplugin、Codexはskill plugin discoveryで、配置と即時実行性が異なる。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["各配布方式に自己矛盾はない。"]},"C2":{"verdict":"FAIL","evidence":["クライアント別能力表がない。"]},"C3":{"verdict":"PASS","evidence":["Claude symlinkはagent名に対応する。"]},"C4":{"verdict":"PARTIAL","evidence":["Agentsは有効化、Codexはplugin discoveryに依存する。"]}},
+      "issues": [{"condition":"C2","condition_signal":"omission","severity":"high","description":"クライアント別の配置状態と実行前提が明文化されない。","recommended_intervention":"Claude・Agents・Codexの能力表を定義する。"}],
+      "score": 0.57
+    },
+    {
+      "paradigm_id": 9,
+      "paradigm_name": "process",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["Phase3はgit操作を要求するが権限入力がなく、build-verdict.pyは生産者のないrun_statusを参照する。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["修正・検証・判定の順序は明確。"]},"C2":{"verdict":"PASS","evidence":["工程自体は文書上にある。"]},"C3":{"verdict":"PARTIAL","evidence":["verdict入力がschemaと揃わない。"]},"C4":{"verdict":"FAIL","evidence":["要求操作のauthorityと完了status供給元がない。"]}},
+      "issues": [{"condition":"C4","condition_signal":"dependency_break","severity":"high","description":"Phase3のgit authorityとverdict入力契約が工程要件を満たさない。","recommended_intervention":"git操作権限入力を追加し、完了状態を既存条件から導出する。"}],
+      "score": 0.29
+    },
+    {
+      "paradigm_id": 26,
+      "paradigm_name": "why",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": ["why法はtaxonomy上G-problemだが、validator・scorecard・templateは担当agentのA-logicalをcategoryへ転記する。"],
+      "condition_matrix": {"C1":{"verdict":"PASS","evidence":["why法の定義自体は一貫する。"]},"C2":{"verdict":"PASS","evidence":["why法は全成果物に存在する。"]},"C3":{"verdict":"FAIL","evidence":["taxonomyと機械成果物のcategoryが不一致。"]},"C4":{"verdict":"PASS","evidence":["旧割当上の参照は解決する。"]}},
+      "issues": [{"condition":"C3","condition_signal":"inconsistency","severity":"critical","description":"why法の分類と担当agentが混同される。","recommended_intervention":"paradigm 26をG-problemかつsystem analystへ統一する。"}],
+      "score": 0.33
+    }
+  ]
+}

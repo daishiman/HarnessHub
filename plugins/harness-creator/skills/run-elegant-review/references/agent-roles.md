@@ -10,8 +10,8 @@
 ## Agent 2: elegant-logical-structural-analyst (Phase2 並列)
 - 役割: 論理分析+構造分解で対象を解剖
 - 入力: Agent1出力
-- 出力: paradigm_findings[] (10 paradigms分、各 finding の issues[] で C1〜C4 を表現)
-- 担当思考法 (10): 批判的思考/演繹思考/帰納的思考/アブダクション/垂直思考/要素分解/MECE/2軸思考/プロセス思考/why思考
+- 出力: paradigm_findings[] payload (9 paradigms分、各 finding の issues[] で C1〜C4 を表現)
+- 担当思考法 (9): 批判的思考/演繹思考/帰納的思考/アブダクション/垂直思考/要素分解/MECE/2軸思考/プロセス思考
 
 ## Agent 3: elegant-meta-divergent-analyst (Phase2 並列)
 - 役割: メタ抽象+発想拡張で別視点を生成
@@ -22,8 +22,8 @@
 ## Agent 4: elegant-system-strategic-analyst (Phase2 並列)
 - 役割: システム+戦略+問題解決で全体最適と実行性を評価
 - 入力: Agent1出力
-- 出力: paradigm_findings[] (11 paradigms分、各 finding の issues[] で C1〜C4 を表現)
-- 担当思考法 (11): システム思考/因果関係分析/因果ループ/トレードオン思考/プラスサム思考/価値提案思考/戦略的思考/改善思考/仮説思考/論点思考/KJ法
+- 出力: paradigm_findings[] payload (12 paradigms分、各 finding の issues[] で C1〜C4 を表現)
+- 担当思考法 (12): システム思考/因果関係分析/因果ループ/トレードオン思考/プラスサム思考/価値提案思考/戦略的思考/why思考/改善思考/仮説思考/論点思考/KJ法（why は G-problem）
 
 ## Agent 5: elegant-improvement-executor (Phase3)
 - 役割: findings を取り込みパッチを生成・適用
@@ -36,3 +36,5 @@
 ## 独立性原則
 - Phase2 の3エージェントは互いの中間出力を参照しない
 - Agent5 のみが全findingsを統合
+- Phase1/2 SubAgent は payload のみ返し、run directory への materialize は orchestrator だけが行う (single-writer)
+- git commit は `commit_authorized=true` の明示時だけ許可し、既定は patch まで

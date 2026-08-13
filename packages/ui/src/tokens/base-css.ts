@@ -33,7 +33,10 @@ const resetRules = [
     'body {',
     '  margin: 0;',
     '  min-height: 100vh;',
-    '  background: var(--hh-color-bg);',
+    // 最下層は面の 3 段のうち最も奥の pageBg (デザインシステム §2)。
+    // アプリ本体はこの上に一段浮かぶので、外周にわずかに覗く暗い縁が「土台」になる。
+    // 本体を敷いていない画面 (エラー画面など) でも、bg との差は 1 段だけなので違和感が出ない。
+    '  background: var(--hh-color-page-bg);',
     '  color: var(--hh-color-text);',
     '  font-family: var(--hh-font-family);',
     '  font-size: var(--hh-font-size-md);',
@@ -215,8 +218,10 @@ const responsiveRules = [
   [
     `${mediaUp('md')} {`,
     '  [data-hh-sidebar-layout] {',
-    // ナビ列は伸縮させ、本文列は minmax(0, 1fr) で「はみ出しても広がらない」を明示する
-    '    grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);',
+    // ナビ列は伸縮させ、本文列は minmax(0, 1fr) で「はみ出しても広がらない」を明示する。
+    // 上限 212px はシェルのサイドバー幅 (shellSidebarWidth) と同じ値。画面内に
+    // シェルのナビとページ内の副ナビが並んだとき、2 本の縦線が別々の幅に見えないようにする。
+    '    grid-template-columns: minmax(160px, 212px) minmax(0, 1fr);',
     '  }',
     '}',
   ].join('\n'),
@@ -406,7 +411,7 @@ const stageBoardRules = [
   '[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}',
   selectedStageColumnRules,
   [
-    // 1120px 未満は工程 picker + 選択中の 1 列を維持する。タブレット幅へ 7 列を
+    // lg (1025px) 未満は工程 picker + 選択中の 1 列を維持する。タブレット幅へ 7 列を
     // 無理に詰めると可読性が落ち、複数行に折り返すと工程の一方向性が崩れるためである。
     // desktop でのみ、正本の 7 工程を 1 行のままコンテナ幅へ収める。
     `${mediaUp('lg')} {`,

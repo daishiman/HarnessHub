@@ -1,0 +1,1402 @@
+{
+  "version": 1,
+  "target": {
+    "type": "custom",
+    "path": "plugins/harness-creator/skills/run-elegant-review + HarnessHub design system",
+    "reviewed_at": "2026-08-13T07:40:00Z"
+  },
+  "loop_count": 0,
+  "paradigm_findings": [
+    {
+      "paradigm_id": 1,
+      "paradigm_name": "critical",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "architecture/harness-hub-design-system.md は accent を実行中状態専用とする一方、packages/ui/src/shell/shell-css.ts は現在のモバイルナビ項目にも使用する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "FAIL",
+          "evidence": [
+            "accent の排他的用途と実装用途が矛盾する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "用途規則と実装を確認した。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "accentAi 除去は一貫する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "参照トークンは定義済み。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C1",
+          "condition_signal": "contradiction",
+          "severity": "critical",
+          "description": "実行中状態専用の accent がナビ選択状態にも流用される。",
+          "recommended_intervention": "現在タブは中立な選択表現にし、accent を実行中状態へ限定する。"
+        }
+      ],
+      "score": 0.46
+    },
+    {
+      "paradigm_id": 2,
+      "paradigm_name": "deduction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "影は frame と raised の二種類だけという規則に対し、packages/ui/src/shell/shell-css.ts に無名 box-shadow がある。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "FAIL",
+          "evidence": [
+            "閉じた影トークン集合に第三の直接値がある。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "許容集合は明示済み。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "定義済み影は対応する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "既存影トークンは利用可能。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C1",
+          "condition_signal": "contradiction",
+          "severity": "critical",
+          "description": "許容外の影がシェルCSSに直接記述される。",
+          "recommended_intervention": "既存トークンへ写像するか、規則とトークンを同時更新する。"
+        }
+      ],
+      "score": 0.50
+    },
+    {
+      "paradigm_id": 3,
+      "paradigm_name": "induction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "check-ui-hardcoding.mjs は二つの apps/*/src だけを走査し、共通UI層と検出器fixtureを対象にしない。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "検査ルール間に矛盾はない。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "共通UI層とfixtureが欠落する。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "機械保証という文書表現を走査範囲が満たさない。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "CI呼出経路は存在する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "G17が共通UI層と検出器fixtureを網羅しない。",
+          "recommended_intervention": "共通UI層を対象に加え、陽性・陰性fixtureを固定する。"
+        }
+      ],
+      "score": 0.61
+    },
+    {
+      "paradigm_id": 4,
+      "paradigm_name": "abduction",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "フォント変数クラスが root layout から HubShell だけへ移り、PublicShell配下へ到達しない。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "各部品単体に自己矛盾はない。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "依存経路を追跡した。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "HubShell内だけ仕様に沿う。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "公開面からフォント変数への依存が切れる。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "PublicShell配下がセルフホストフォント設定へ到達できない。",
+          "recommended_intervention": "全画面共通祖先でフォント変数を提供し統合テストを追加する。"
+        }
+      ],
+      "score": 0.45
+    },
+    {
+      "paradigm_id": 5,
+      "paradigm_name": "vertical",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "現HEADは統合済みPR #721を含まず、作業差分・PR #721・system-specでbreakpoint契約が三系列に分かれる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "各資料は個別には一値を明示する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "正本仕様への反映記録がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "三系列でbreakpointが一致しない。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "統合順序が未確定。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C3",
+          "condition_signal": "inconsistency",
+          "severity": "critical",
+          "description": "マージ済み基準を含まない枝で別breakpoint契約が導入され三重帳簿になる。",
+          "recommended_intervention": "PR #721を統合後、唯一の契約へ仕様・token・testを揃える。"
+        }
+      ],
+      "score": 0.34
+    },
+    {
+      "paradigm_id": 6,
+      "paradigm_name": "decomposition",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "Phase2の入力・出力契約がprompt、workflow manifest、agent定義で異なる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "各文書は局所的には読める。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "必要データは分散して記載される。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "思考法IDとagent名は対応する。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "handoff契約が文書ごとに異なる。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "Phase2境界の入力ファイルと出力schemaが一致しない。",
+          "recommended_intervention": "正式handoff契約を一つに定め全正本を揃える。"
+        }
+      ],
+      "score": 0.40
+    },
+    {
+      "paradigm_id": 7,
+      "paradigm_name": "mece",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "resource mapは実在scriptを網羅せず、templates/findings.jsonは必須condition_matrixを欠く。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "列挙項目間に重複はない。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "script目録とtemplate必須項目が欠落する。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "schemaへtemplateが追随しない。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "列挙済みscriptは存在する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "正式目録と同梱findings雛形が不完全である。",
+          "recommended_intervention": "全運用scriptを登録し、templateへC1-C4 matrixを追加する。"
+        }
+      ],
+      "score": 0.36
+    },
+    {
+      "paradigm_id": 8,
+      "paradigm_name": "two-axis",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "Claudeは直接symlink、Agentsは条件付きplugin、Codexはskill plugin discoveryで、配置と即時実行性が異なる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "各配布方式に自己矛盾はない。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "クライアント別能力表がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "Claude symlinkはagent名に対応する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "Agentsは有効化、Codexはplugin discoveryに依存する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "クライアント別の配置状態と実行前提が明文化されない。",
+          "recommended_intervention": "Claude・Agents・Codexの能力表を定義する。"
+        }
+      ],
+      "score": 0.57
+    },
+    {
+      "paradigm_id": 9,
+      "paradigm_name": "process",
+      "category": "B-structural",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "Phase3はgit操作を要求するが権限入力がなく、build-verdict.pyは生産者のないrun_statusを参照する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "修正・検証・判定の順序は明確。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "工程自体は文書上にある。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "verdict入力がschemaと揃わない。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "要求操作のauthorityと完了status供給元がない。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "Phase3のgit authorityとverdict入力契約が工程要件を満たさない。",
+          "recommended_intervention": "git操作権限入力を追加し、完了状態を既存条件から導出する。"
+        }
+      ],
+      "score": 0.29
+    },
+    {
+      "paradigm_id": 10,
+      "paradigm_name": "meta",
+      "category": "C-meta",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "findings schemaはcondition_matrixを必須化するが、scorecardとverdict builderはissuesだけから判定し、不一致を検出しない。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "思考法metaは一致する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "C1-C4項目は要求される。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "同じ4条件が二経路で表現される。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "参照先は存在する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C3",
+          "condition_signal": "inconsistency",
+          "severity": "critical",
+          "description": "condition_matrixとissues由来verdictの二重帳簿を同期しない。",
+          "recommended_intervention": "一つの観測集合からmatrixとverdictを導出する。"
+        }
+      ],
+      "score": 0.38
+    },
+    {
+      "paradigm_id": 11,
+      "paradigm_name": "abstraction",
+      "category": "C-meta",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "UIの4層モデルは再利用可能だが、G17のrootと例外は個別値へ固定される。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "4層は矛盾しない。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行対象は列挙済み。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "各層へ同方針を反映する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "localとCIへ接続済み。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition_signal": "smell",
+          "severity": "low",
+          "description": "G17が固定SCREEN_ROOTSとALLOWLISTに閉じる。",
+          "recommended_intervention": "走査rootと規則を設定へ抽出する。"
+        }
+      ],
+      "score": 0.82
+    },
+    {
+      "paradigm_id": 12,
+      "paradigm_name": "double-loop",
+      "category": "C-meta",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "PR #721の最長一致navigation契約が現HEADに未統合で、単純prefix判定へ戻る。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行規則単体は明確。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "baselineと差分を比較した。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "既解消の二重現在地問題を再導入する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "原因は分岐差と特定できる。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C3",
+          "condition_signal": "inconsistency",
+          "severity": "critical",
+          "description": "PR #721で得た最長一致契約が後続変更へ保持されない。",
+          "recommended_intervention": "最長一致resolverと回帰テストを統合する。"
+        }
+      ],
+      "score": 0.32
+    },
+    {
+      "paradigm_id": 13,
+      "paradigm_name": "brainstorming",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "UIハードコード防止にはAST、Stylelint、import境界、fixture test等の選択肢があるが、行regexへ早期収束する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行規則は矛盾しない。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "宣言対象は実装済み。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "文書禁止一覧に対応する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "CIへ接続済み。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition_signal": "smell",
+          "severity": "low",
+          "description": "検出方式の比較記録がなくregexの限界が残らない。",
+          "recommended_intervention": "候補を精度・依存・時間で比較し決定記録を残す。"
+        }
+      ],
+      "score": 0.69
+    },
+    {
+      "paradigm_id": 14,
+      "paradigm_name": "lateral",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "G17は行単位でbare buttonを検査するため、複数行JSXの開始タグを見逃す。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "禁止規則は一貫する。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "改行位置で検出漏れが起きる。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "禁止は文書と一致する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "呼出経路は成立する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "行regexは複数行JSXのbare buttonを見逃す。",
+          "recommended_intervention": "AST検査または複数行fixtureでscannerを修正する。"
+        }
+      ],
+      "score": 0.46
+    },
+    {
+      "paradigm_id": 15,
+      "paradigm_name": "paradox",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "画面が視覚値を決めない契約に対し、TextButtonとThumbnailは呼出側styleを最後に展開して上書きを許す。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "FAIL",
+          "evidence": [
+            "中央固定と無制限style APIが矛盾する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "不足部品は追加済み。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "共通部品化の方向は一致する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "部品は公開・登録済み。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C1",
+          "condition_signal": "contradiction",
+          "severity": "critical",
+          "description": "無制限style escape hatchが中央集約を自己否定する。",
+          "recommended_intervention": "意味的variantと限定layout propsへ置換する。"
+        }
+      ],
+      "score": 0.41
+    },
+    {
+      "paradigm_id": 16,
+      "paradigm_name": "analogy",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "Claudeはskillと5 agentをsymlinkするが、Codex plugin manifestはskillを公開しagent native surfaceはunsupportedである。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "製品制約は明示される。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "各surfaceを区別する。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "配布方針はmanifestと一致する。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "Codex側にnative agent adapterがない。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "5-agent orchestrationをCodex native surfaceでは再現できない。",
+          "recommended_intervention": "skill内のteam orchestration契約をCodex経路として明示する。"
+        }
+      ],
+      "score": 0.44
+    },
+    {
+      "paradigm_id": 17,
+      "paradigm_name": "if",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "appsが増えてもG17のSCREEN_ROOTSはhubとpublisherの固定2件で、新規appは無検査になる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行2rootは同一規則。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "新規appを自動包含しない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行2appは方針に沿う。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "現行rootは存在する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "新規appがfail-openで検査外になる。",
+          "recommended_intervention": "workspace catalogからrootを自動導出しfail-closedにする。"
+        }
+      ],
+      "score": 0.39
+    },
+    {
+      "paradigm_id": 18,
+      "paradigm_name": "naive",
+      "category": "D-divergent",
+      "agent": "elegant-meta-divergent-analyst",
+      "observations": [
+        "G17のCI入口とpackage scriptは追跡差分だが、実装scriptとfixtureは未追跡または欠落する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "名称は一致する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "文書に規則は説明される。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "scanner規則は文書に対応する。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "追跡済み入口が未追跡scriptへ依存する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "CI入口・実装・負のcontrolが原子的変更になっていない。",
+          "recommended_intervention": "scriptとfixtureを同じ変更単位へ含める。"
+        }
+      ],
+      "score": 0.35
+    },
+    {
+      "paradigm_id": 19,
+      "paradigm_name": "systems",
+      "category": "E-system",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "Phase1成果物の生成主体と保存先がreset agent、R1、manifest、orchestration-flowで分岐する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "FAIL",
+          "evidence": [
+            "書き手と保存先が一致しない。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "一意なmaterialize契約がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "複数正本が部分的に異なる。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "handoffが保存先解釈に依存する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C1",
+          "condition_signal": "contradiction",
+          "severity": "critical",
+          "description": "Phase1成果物の生成主体と保存先が複数正本で分岐する。",
+          "recommended_intervention": "orchestratorを唯一のmaterialize主体にし、保存先をrun directoryへ統一する。"
+        }
+      ],
+      "score": 0.42
+    },
+    {
+      "paradigm_id": 20,
+      "paradigm_name": "causal",
+      "category": "E-system",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "現HEADはPR #721を含まず、同じ配色・書体・breakpoint・文書領域へ未コミット差分が重なる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "変更集合は区別できる。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "採否対応表がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "値の位置づけが未確定。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "統合済みbaseline未包含の枝で同領域を編集する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C4",
+          "condition_signal": "dependency_break",
+          "severity": "high",
+          "description": "PR #721 baselineとの統合依存が未解決である。",
+          "recommended_intervention": "baselineとの採否を固定し、取り込み後の木をpatch基準にする。"
+        }
+      ],
+      "score": 0.48
+    },
+    {
+      "paradigm_id": 21,
+      "paradigm_name": "causal-loop",
+      "category": "E-system",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "token・共通部品・画面置換・test・G17は局所ハードコードを共通層へ戻す調整ループを作る。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "中央集約と禁止が同方向。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "G17自身の反転試験がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "文書と実装が連続する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "依存方向は一方向。"
+          ]
+        }
+      },
+      "issues": [],
+      "score": 0.82
+    },
+    {
+      "paradigm_id": 22,
+      "paradigm_name": "trade-on",
+      "category": "F-strategic",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "Graphite × Amberの意図を保ちながら、contrast、和文可読性、font payload、responsive境界の両立理由を記録する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "逸脱値と理由を同時記録する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "主要両立条件を対象化する。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "実装値の優先根拠を共有する。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "PR #721との差は統合判断に依存する。"
+          ]
+        }
+      },
+      "issues": [],
+      "score": 0.87
+    },
+    {
+      "paradigm_id": 23,
+      "paradigm_name": "plus-sum",
+      "category": "F-strategic",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "共通部品は利用者の一貫性、開発者の再実装削減、CIの検査可能な境界を同時に与える。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "利用者品質と保守性を両立する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "配布面の同一条件receiptがない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PASS",
+          "evidence": [
+            "公開・利用・catalog・文書が同方向。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "配布方式に差がある。"
+          ]
+        }
+      },
+      "issues": [],
+      "score": 0.76
+    },
+    {
+      "paradigm_id": 24,
+      "paradigm_name": "value-proposition",
+      "category": "F-strategic",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "variable-template-contractが要求するmeaning・required・not_applicable_whenをfindings schemaが表現しない。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "目的は同じだが属性が異なる。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "requiredと不適用条件を保証できない。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "参照契約とschemaが一致しない。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "Phase3が契約外情報に依存する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C3",
+          "condition_signal": "inconsistency",
+          "severity": "critical",
+          "description": "変数再利用契約と出力schemaが一致しない。",
+          "recommended_intervention": "meaning・required・not_applicable_whenをschemaとPhase2出力へ追加する。"
+        }
+      ],
+      "score": 0.38
+    },
+    {
+      "paradigm_id": 25,
+      "paradigm_name": "strategic",
+      "category": "F-strategic",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "Phase3は自動commitを予定する一方、repo policyは明示権限なしのcommit・pushを禁止する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "FAIL",
+          "evidence": [
+            "自動commitと上位規約が衝突する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "authority入力がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "git policyとskill副作用契約が不一致。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "実行可否が暗黙権限に依存する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C1",
+          "condition_signal": "contradiction",
+          "severity": "critical",
+          "description": "Phase3の自動commit契約がrepositoryのgit権限モデルと衝突する。",
+          "recommended_intervention": "既定を未commit patchまでとし、明示authority時だけgit操作する。"
+        }
+      ],
+      "score": 0.31
+    },
+    {
+      "paradigm_id": 26,
+      "paradigm_name": "why",
+      "category": "A-logical",
+      "agent": "elegant-logical-structural-analyst",
+      "observations": [
+        "why法はtaxonomy上G-problemだが、validator・scorecard・templateは担当agentのA-logicalをcategoryへ転記する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "why法の定義自体は一貫する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PASS",
+          "evidence": [
+            "why法は全成果物に存在する。"
+          ]
+        },
+        "C3": {
+          "verdict": "FAIL",
+          "evidence": [
+            "taxonomyと機械成果物のcategoryが不一致。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "旧割当上の参照は解決する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C3",
+          "condition_signal": "inconsistency",
+          "severity": "critical",
+          "description": "why法の分類と担当agentが混同される。",
+          "recommended_intervention": "paradigm 26をG-problemかつsystem analystへ統一する。"
+        }
+      ],
+      "score": 0.33
+    },
+    {
+      "paradigm_id": 27,
+      "paradigm_name": "kaizen",
+      "category": "G-problem",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "G17はpackageとCIへ結線されるが、検査器を反転させるfixture testがない。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "意図と結線は一致する。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "detector liveness testがない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "fixture確認済みの文書主張を追跡できない。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "packageからCIへの依存は成立する。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "G17のlivenessを固定する違反fixture testがない。",
+          "recommended_intervention": "4規則の隔離fixtureと終了code testを追加する。"
+        }
+      ],
+      "score": 0.46
+    },
+    {
+      "paradigm_id": 28,
+      "paradigm_name": "hypothesis",
+      "category": "G-problem",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "視覚判断を共通層へ集約し画面ハードコードを拒否する中心仮説にtoken test、shell test、catalog、G17を配置する。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "仮説と観測点が対応する。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "G17故障時の反証がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "Phase2時点ではテスト未実行。"
+          ]
+        },
+        "C4": {
+          "verdict": "PASS",
+          "evidence": [
+            "検証依存が明示される。"
+          ]
+        }
+      },
+      "issues": [],
+      "score": 0.78
+    },
+    {
+      "paradigm_id": 29,
+      "paradigm_name": "issue",
+      "category": "G-problem",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "核心論点はPR #721を基準にするか現在差分が具体値とCIを含めて置換するかのbaseline reconciliationである。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PASS",
+          "evidence": [
+            "変更集合は区別される。"
+          ]
+        },
+        "C2": {
+          "verdict": "FAIL",
+          "evidence": [
+            "keep・replace・defer判断がない。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "baselineとの関係が未定義。"
+          ]
+        },
+        "C4": {
+          "verdict": "FAIL",
+          "evidence": [
+            "patch基準とmerge順が未決定。"
+          ]
+        }
+      },
+      "issues": [
+        {
+          "condition": "C2",
+          "condition_signal": "omission",
+          "severity": "high",
+          "description": "PR #721と現在差分の採否表がない。",
+          "recommended_intervention": "breakpoint・font・navigation・radius・receipt・VRTの採否を記録する。"
+        }
+      ],
+      "score": 0.44
+    },
+    {
+      "paradigm_id": 30,
+      "paradigm_name": "kj",
+      "category": "G-problem",
+      "agent": "elegant-system-strategic-analyst",
+      "observations": [
+        "証拠はhandoff、配布、baseline、UI共通層、test/CI、authorityの6島へ集約できる。"
+      ],
+      "condition_matrix": {
+        "C1": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "handoffとauthorityに衝突がある。"
+          ]
+        },
+        "C2": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "採否表とliveness testが不足。"
+          ]
+        },
+        "C3": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "schemaとgit規約にずれがある。"
+          ]
+        },
+        "C4": {
+          "verdict": "PARTIAL",
+          "evidence": [
+            "配布・handoff・merge依存が未確定。"
+          ]
+        }
+      },
+      "issues": [],
+      "score": 0.58
+    }
+  ],
+  "thought_method_coverage": {
+    "total": 30,
+    "used": [
+      "critical",
+      "deduction",
+      "induction",
+      "abduction",
+      "vertical",
+      "decomposition",
+      "mece",
+      "two-axis",
+      "process",
+      "meta",
+      "abstraction",
+      "double-loop",
+      "brainstorming",
+      "lateral",
+      "paradox",
+      "analogy",
+      "if",
+      "naive",
+      "systems",
+      "causal",
+      "causal-loop",
+      "trade-on",
+      "plus-sum",
+      "value-proposition",
+      "strategic",
+      "why",
+      "kaizen",
+      "hypothesis",
+      "issue",
+      "kj"
+    ],
+    "skipped_with_reason": []
+  },
+  "four_conditions": {
+    "C1": {
+      "verdict": "FAIL",
+      "evidence": [
+        "accent・shadow・style escape hatch・Phase handoff・git authorityに矛盾を検出。"
+      ]
+    },
+    "C2": {
+      "verdict": "FAIL",
+      "evidence": [
+        "G17の走査範囲・liveness fixture・baseline採否表・resource mapに漏れを検出。"
+      ]
+    },
+    "C3": {
+      "verdict": "FAIL",
+      "evidence": [
+        "why taxonomy、breakpoint baseline、condition判定、variable contractに不整合を検出。"
+      ]
+    },
+    "C4": {
+      "verdict": "FAIL",
+      "evidence": [
+        "PR #721未統合、Phase handoff、PublicShell font、配布surfaceに依存断裂を検出。"
+      ]
+    }
+  },
+  "variable_abstraction": [
+    {
+      "concrete_value": "plugins/harness-creator/skills/run-elegant-review",
+      "variable_name": "{{target_path}}",
+      "default_value": "レビュー対象",
+      "source_trace": "Phase1 raw_observations.json"
+    },
+    {
+      "concrete_value": "eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration",
+      "variable_name": "{{review_workspace}}",
+      "default_value": "実行単位のreview directory",
+      "source_trace": "Phase1 raw_observations.json"
+    },
+    {
+      "concrete_value": "max_iterations=3",
+      "variable_name": "{{MAX_ITERATIONS}}",
+      "default_value": "3",
+      "source_trace": "workflow-manifest.json"
+    }
+  ],
+  "total_score": 0.4956666666666667
+}

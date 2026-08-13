@@ -1,11 +1,12 @@
 'use client';
 
 /** ボタン。用途 (主操作/副操作/破壊的操作) を variant で表し、色だけに意味を持たせない。 */
-import type { ButtonHTMLAttributes, CSSProperties, ReactNode, Ref } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 
-import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
+import { type ActionVariant, actionBaseStyle, actionVariantStyles } from '../internal/style.js';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
+/** 押せるものの意味づけは `<button>` / `<a>` で共通 (internal/style.ts が正本)。 */
+export type ButtonVariant = ActionVariant;
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
   variant?: ButtonVariant;
@@ -13,29 +14,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   loading?: boolean;
   ref?: Ref<HTMLButtonElement>;
 }
-
-const variantStyles: Record<ButtonVariant, CSSProperties> = {
-  primary: {
-    background: colorVar('primary'),
-    color: colorVar('onPrimary'),
-    border: `1px solid ${colorVar('primary')}`,
-  },
-  secondary: {
-    background: colorVar('surface'),
-    color: colorVar('text'),
-    border: `1px solid ${colorVar('borderStrong')}`,
-  },
-  danger: {
-    background: colorVar('danger'),
-    color: colorVar('onDanger'),
-    border: `1px solid ${colorVar('danger')}`,
-  },
-  ghost: {
-    background: 'transparent',
-    color: colorVar('primary'),
-    border: '1px solid transparent',
-  },
-};
 
 /**
  * `type` は既定で `button`。フォーム内の意図しない submit を防ぐため、
@@ -61,17 +39,9 @@ export function Button({
       disabled={disabled === true || loading}
       aria-busy={loading || undefined}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: spaceVar(2),
-        minHeight: 'var(--hh-control-height)',
-        padding: `0 ${spaceVar(4)}`,
-        borderRadius: radiusVar('sm'),
-        fontSize: 'var(--hh-font-size-md)',
-        fontFamily: 'inherit',
+        ...actionBaseStyle,
         cursor: disabled === true || loading ? 'not-allowed' : 'pointer',
-        ...variantStyles[variant],
+        ...actionVariantStyles[variant],
         ...style,
       }}
     >
