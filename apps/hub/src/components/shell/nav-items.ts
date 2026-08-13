@@ -14,6 +14,7 @@ import type { SessionRole } from '@harness-hub/schemas';
 import type { ShellNavGroup, ShellNavItem } from '@harness-hub/ui';
 
 import { sessionActionVisible } from '../../lib/authz/index.js';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../../lib/routing/post-signin-landing.js';
 
 export interface ShellScope {
   readonly tenantId: string;
@@ -27,6 +28,19 @@ export function scopedHref(path: string, scope: ShellScope, includeWorkspace: bo
   if (includeWorkspace && scope.workspaceId !== '') params.set('workspace', scope.workspaceId);
   const query = params.toString();
   return query === '' ? path : `${path}?${query}`;
+}
+
+/**
+ * 正規着地 `/dashboard` への導線。`primaryNavItems` (ボトムタブと共有、4 枠固定) には混ぜず、
+ * サイドバーの「業務」グループの先頭にだけ足す (`sidebarNavGroups` 参照)。
+ * モバイルでは「その他」へ含める。
+ */
+export function dashboardNavItem(scope: ShellScope): ShellNavItem {
+  return {
+    href: scopedHref(DEFAULT_POST_SIGNIN_LANDING, scope, true),
+    label: 'ホーム',
+    icon: 'home',
+  };
 }
 
 /**
@@ -158,7 +172,7 @@ export function sidebarNavItems(scope: ShellScope, role: SessionRole | null): re
  */
 export function sidebarNavGroups(scope: ShellScope, role: SessionRole | null): readonly ShellNavGroup[] {
   return [
-    { title: '業務', items: primaryNavItems(scope) },
+    { title: '業務', items: [dashboardNavItem(scope), ...primaryNavItems(scope)] },
     { title: '分析', items: insightNavItems(scope) },
     { title: '管理', items: secondaryNavItems(scope, role) },
   ].filter((group) => group.items.length > 0);

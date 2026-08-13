@@ -60,6 +60,22 @@ export interface HearingIntakeService {
     readonly status: HearingSheetStatus;
   }): Promise<SheetDetail>;
   regenerate(input: { readonly context: RepositoryContext; readonly id: string }): Promise<SheetDetail>;
+  /**
+   * ホーム集約向け。要対応件数(review + 生成失敗)と直近更新 N 件を 1 度に返す。
+   * home-dashboard/service.ts が権限確認後に呼ぶ内部集約用で、公開 API route は持たない。
+   */
+  getActionableSummary(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId?: string;
+    readonly actorUserId: string;
+    readonly readAllActionable: boolean;
+    readonly recentLimit: number;
+  }): Promise<HearingActionableSummary>;
+}
+
+export interface HearingActionableSummary {
+  readonly actionableCount: number;
+  readonly recentItems: readonly ReturnType<typeof toListItem>[];
 }
 
 const noNotification: ReceiptNotificationPort = {
@@ -182,6 +198,27 @@ export function createHearingIntakeService(
 
     async regenerate(input) {
       return toDetail(await repository.regenerate(input.context, input.id));
+    },
+
+    async getActionableSummary(input) {
+      const [actionableCount, recentRows] = await Promise.all([
+        repository.countActionable(
+          input.context,
+          input.workspaceId,
+          input.readAllActionable ? undefined : input.actorUserId,
+        ),
+        repository.listRecentUpdated(input.context, input.recentLimit, input.workspaceId, input.actorUserId),
+      ]);
+      // listSheets と同じ理由 (行 152 のコメント参照): 1 行の decode 失敗でホーム全体を落とさない。
+      const recentItems: ReturnType<typeof toListItem>[] = [];
+      for (const row of recentRows) {
+        try {
+          recentItems.push(toListItem(row));
+        } catch (error) {
+          console.error('[hearing-intake] getActionableSummary: skip malformed row', { sheetId: row.id, error });
+        }
+      }
+      return { actionableCount, recentItems };
     },
   };
 }

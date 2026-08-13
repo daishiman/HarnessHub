@@ -133,6 +133,8 @@ function repository(overrides: Partial<HearingIntakeRepository> = {}): HearingIn
     failSheetGenerationJob: vi.fn(async () => {
       throw new Error('not used');
     }),
+    countActionable: vi.fn(async () => 0),
+    listRecentUpdated: vi.fn(async () => []),
     ...overrides,
   };
 }

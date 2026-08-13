@@ -24,8 +24,10 @@ import type { ReactNode } from 'react';
 import { notoSansJp } from '../../app/fonts.js';
 import {
   accountMenuLinks,
+  dashboardNavItem,
   footerLinks,
   headerSearch,
+  insightNavItems,
   notificationsHref,
   primaryNavItems,
   type ShellScope,
@@ -100,10 +102,12 @@ export function HubShell({
   // 現在の Workspace 名。名前が引けなければ識別子をそのまま出し、識別子の見せ方へ落とす。
   const currentWorkspaceName = scope.workspaceId === '' ? undefined : names[scope.workspaceId];
   const secondary = secondaryNavItems(scope, accountRole);
+  const dashboard = dashboardNavItem(scope);
+  const more = [dashboard, ...insightNavItems(scope), ...secondary];
   // layout は route ごとの画面名を持たないため、未指定時は現在地に一致する
   // top-level 導線の名前を使う。詳細画面でも「どの領域にいるか」がモバイルで失われない。
   const resolvedScreenTitle =
-    screenTitle ?? [...primary, ...secondary].find((item) => isCurrentNav(item, currentHref))?.label;
+    screenTitle ?? [...primary, ...more].find((item) => isCurrentNav(item, currentHref))?.label;
   // 検索欄の有無・行き先・文言は 1 回の判定でまとめて決まる (nav-items の headerSearch)。
   // 対象を持たない画面では null になり、ヘッダーから検索欄ごと消える。
   const search = headerSearch(scope, currentHref);
@@ -127,7 +131,14 @@ export function HubShell({
           groups={sidebarNavGroups(scope, accountRole)}
           currentHref={currentHref}
           label="主要ナビゲーション"
-          brand={<strong style={{ fontSize: 'var(--hh-font-size-md)' }}>Harness Hub</strong>}
+          brand={
+            <a
+              href={dashboard.href}
+              style={{ fontSize: 'var(--hh-font-size-md)', fontWeight: 700, color: 'inherit', textDecoration: 'none' }}
+            >
+              Harness Hub
+            </a>
+          }
         />
 
         <div className="hh-shell__body">
@@ -174,20 +185,14 @@ export function HubShell({
             */}
           {/* scope が変わったら本文の subtree を作り直す。時間的な旧 scope 非表示は
                 `/signin/workspace` の server intermediate response が担い、key は再利用防止の第二防壁。 */}
-          <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId} ${scope.workspaceId}`}>
+          <main className="hh-shell__main" id={MAIN_ANCHOR_ID} key={`${scope.tenantId}\u0000${scope.workspaceId}`}>
             {children}
           </main>
 
           <ShellFooter label="フッター情報" links={footerLinks} />
         </div>
 
-        <MobileTabBar
-          items={primary}
-          moreItems={secondary}
-          currentHref={currentHref}
-          label="画面切替"
-          moreLabel="その他"
-        />
+        <MobileTabBar items={primary} moreItems={more} currentHref={currentHref} label="画面切替" moreLabel="その他" />
       </div>
     </>
   );

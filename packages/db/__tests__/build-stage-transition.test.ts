@@ -321,4 +321,93 @@ describe('BPB-DB: tenant 分離 (D4)', () => {
       code: 'invalid-context',
     });
   });
+
+  it('listRecentTouchedBuilds は本人の工程操作だけを新しい順・limit内で返す', async () => {
+    const alpha = await seedTenant('recent-alpha');
+    const beta = await seedTenant('recent-beta');
+    const buildsRepo = createBuildsRepository(asCore(adapter));
+    const secondBuild = await buildsRepo.findOrCreateBuildForFeedback(
+      alpha.context,
+      { id: 'fb-recent-alpha-2', workspaceId: alpha.workspaceId, type: 'improvement' },
+      'design',
+    );
+    await adapter.client.insert(buildStageEvents).values([
+      {
+        id: 'recent-alpha-1',
+        tenantId: alpha.tenantId,
+        workspaceId: alpha.workspaceId,
+        buildId: alpha.buildId,
+        fromStage: 'design',
+        toStage: 'build',
+        actorUserId: alpha.userId,
+        reason: null,
+        occurredAt: 1_000,
+        createdAt: 1_000,
+      },
+      {
+        id: 'recent-alpha-2',
+        tenantId: alpha.tenantId,
+        workspaceId: alpha.workspaceId,
+        buildId: secondBuild.id,
+        fromStage: 'design',
+        toStage: 'build',
+        actorUserId: alpha.userId,
+        reason: null,
+        occurredAt: 2_000,
+        createdAt: 2_000,
+      },
+      {
+        id: 'recent-other-actor',
+        tenantId: alpha.tenantId,
+        workspaceId: alpha.workspaceId,
+        buildId: alpha.buildId,
+        fromStage: 'build',
+        toStage: 'test',
+        actorUserId: beta.userId,
+        reason: null,
+        occurredAt: 3_000,
+        createdAt: 3_000,
+      },
+      {
+        id: 'recent-other-tenant',
+        tenantId: beta.tenantId,
+        workspaceId: beta.workspaceId,
+        buildId: beta.buildId,
+        fromStage: 'design',
+        toStage: 'build',
+        actorUserId: alpha.userId,
+        reason: null,
+        occurredAt: 4_000,
+        createdAt: 4_000,
+      },
+    ]);
+
+    const repo = createBuildStageRepository(asCore(adapter));
+    await expect(
+      repo.listRecentTouchedBuilds(alpha.context, {
+        workspaceId: 'ws-other',
+        actorUserId: alpha.userId,
+        limit: 2,
+      }),
+    ).rejects.toMatchObject({ code: 'invalid-context' });
+
+    expect(
+      (
+        await repo.listRecentTouchedBuilds(alpha.context, {
+          workspaceId: alpha.workspaceId,
+          actorUserId: alpha.userId,
+          limit: 1,
+        })
+      ).map((row) => row.id),
+    ).toEqual([secondBuild.id]);
+    expect(
+      (
+        await repo.listRecentTouchedBuilds(alpha.context, {
+          workspaceId: alpha.workspaceId,
+          actorUserId: alpha.userId,
+          limit: 2,
+        })
+      ).map((row) => row.id),
+    ).toEqual([secondBuild.id, alpha.buildId]);
+  });
 });

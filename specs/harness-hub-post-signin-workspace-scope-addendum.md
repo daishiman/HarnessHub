@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub サインイン後 Workspace スコープ導線 仕様追補"
 owners: ["daishiman"]
 created_at: "2026-08-02T04:58:10Z"
-updated_at: "2026-08-10T18:00:00+09:00"
+updated_at: "2026-08-13T11:15:00+09:00"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["spec-harness-hub-requirements","arch-harness-hub-frontend","arch-harness-hub-security"]
@@ -21,7 +21,7 @@ purpose: "ログイン後に業務画面へ到達できない実装未結線を�
 goal: "qa-135/qa-136/qa-137 を実装計画が参照できる単一の仕様境界として維持する"
 scope_in: ["サインイン後の着地先と戻り先の安全性","ブラウザ通常遷移での tenant/workspace scope 解決","active workspace の選択と切替","CLI 非依存の Web 完結公開導線","Device 承認画面の位置づけと行き止まり回避","scope 不足時の利用者向け表現と回復導線"]
 scope_out: ["authorize() の判定順・role 判定の変更","catalog/sheets API 実装と DB schema の変更","PublishRequest 状態機械と検査実装の owner 変更","サイドバー 9 項目の段階表示契約の変更"]
-acceptance: ["遷移元が無いサインイン成功で /sheets へ着地し / に留まらない","絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる (open redirect 防止)","業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない","明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否する","両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)","所属 workspace 1 件は選択画面を挟まず 2 件以上は選択後に本来の遷移先へ進む","CLI を使わず Hub Web だけで公開→状態確認→導入案内まで到達できる","確認コードを持たない /device 到達者へ S01 公開ウィザードの導線が提示される","Web 公開経路の権限境界が CLI 経路と同一で広い権限を持たない","Device 確認コードの 5 制約 (8 文字/10 分/5 回失敗/再利用不可/期限切れ再開始) が非退行"]
+acceptance: ["遷移元が無いサインイン成功で /dashboard へ着地し / に留まらない","絶対 URL・スキーム付き・protocol-relative の戻り先は既定着地へ落ちる (open redirect 防止)","業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない","明示ヘッダーと session scope が不一致なら ambiguous_scope で拒否する","両方の scope 入力が無い場合は missing_tenant_scope のまま (deny-by-default 非退行)","所属 workspace 1 件は選択画面を挟まず 2 件以上は選択後に本来の遷移先へ進む","CLI を使わず Hub Web だけで公開→状態確認→導入案内まで到達できる","確認コードを持たない /device 到達者へ S01 公開ウィザードの導線が提示される","Web 公開経路の権限境界が CLI 経路と同一で広い権限を持たない","Device 確認コードの 5 制約 (8 文字/10 分/5 回失敗/再利用不可/期限切れ再開始) が非退行"]
 architecture_refs: ["arch-harness-hub-frontend","arch-harness-hub-security"]
 parent_feature: null
 feature_package_id: null
@@ -70,7 +70,7 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 
 1. サインイン成功後の戻り先が `/` 固定 — `apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx:83`
 2. `/` は稼働確認だけを表示する — `apps/hub/src/app/page.tsx:1`
-3. 仕様上はダッシュボード完成前の `/` を `/sheets` へ送ることになっている — `docs/frontend-spec.md:297`
+3. 当初仕様ではダッシュボード完成前の `/` を `/sheets` へ送ることになっていた（現在は後続の appr-034 により `/dashboard`）— `docs/frontend-spec.md` §10
 4. 認可は業務画面にテナント情報を要求するが、通常のブラウザ遷移では該当ヘッダーが付与されない — `apps/hub/src/middleware/authz.ts:68`
 
 利用者の操作誤りではなく実装の未結線である。
@@ -93,8 +93,8 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 
 ### A. サインイン後の着地先 (qa-135 【1】【2】)
 
-- `callbackUrl` の固定値 `"/"` を廃止し、(a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/sheets` の順で解決する。
-- 既定着地は単一の定数から解決し、画面ごとに散らさない。`docs/frontend-spec.md` §10 の段階運用 (S09 ダッシュボード完成後に `/dashboard` へ切替) に従う。
+- `callbackUrl` の固定値 `"/"` を廃止し、(a) サインイン開始時に保存した遷移元 path、(b) 無ければ既定着地 `/dashboard` の順で解決する。
+- 既定着地は単一の定数から解決し、画面ごとに散らさない。着地内容は後続の正規 contract `harness-hub-post-signin-landing-observability-contract.md` に従う。
 - 戻り先は **同一 origin の相対 path のみ許可**する。絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす (open redirect 防止)。
 - `/` は未認証時のみ稼働確認表示を維持する。認証済み session がある場合は既定着地へ redirect し、`/` を認証済み利用者の終着点にしない。稼働確認の正本は `/health` とする。
 
@@ -155,7 +155,7 @@ implementation_readiness: {"checked_at":"2026-08-02T04:58:10Z","missing_sections
 
 ## 受入基準
 
-1. サインイン成功後、遷移元がなければ `/sheets` に着地する。`/` には留まらない。
+1. サインイン成功後、遷移元がなければ `/dashboard` に着地する。`/` には留まらない。
 2. 戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず、既定着地へ落ちる。
 3. 所属 workspace 1 件の利用者は選択画面を経ずに業務画面へ到達する。
 4. 所属 workspace 2 件以上の利用者は Workspace 選択後に本来の遷移先へ進む。

@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { TenantOidcConnection } from '../../src/lib/auth/index.js';
+import { DEFAULT_POST_SIGNIN_LANDING } from '../../src/lib/routing/post-signin-landing.js';
 import { createInMemoryOidcConnections, oidcConnection } from './support/in-memory-ports.js';
 
 const { notFound, authRuntime } = vi.hoisted(() => ({
@@ -94,9 +95,9 @@ describe('サインイン画面の接続解決', () => {
     expect(html).toContain('method="post"');
     expect(html).toContain('name="csrfToken"');
     expect(html).toContain('name="callbackUrl"');
-    // SSR 初期値は既定着地 (`/sheets`)。旧仕様の固定値 "/" は業務画面へ届かない不具合だった
+    // SSR 初期値は既定着地 (`/dashboard`)。旧仕様の固定値 "/" は業務画面へ届かない不具合だった
     // (feat-post-signin-scope-routing)。client mount 後は returnTo に応じて useEffect が更新する
-    expect(html).toContain('value="/sheets"');
+    expect(html).toContain(`value="${DEFAULT_POST_SIGNIN_LANDING}"`);
   });
 
   it('エラー状態には必ずランディングへの入力し直し導線を出す (行き止まりにしない)', async () => {

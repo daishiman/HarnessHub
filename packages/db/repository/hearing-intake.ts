@@ -4,7 +4,7 @@
  * 全メソッドが RepositoryContext を要求し、hearing_sheets / ai_jobs の検索条件へ
  * tenant_id を必ず注入する。claim/complete/fail は transaction 内の CAS で状態を進める。
  */
-import { and, desc, eq, lt, type SQL } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, lt, or, type SQL } from 'drizzle-orm';
 
 import { users } from '../schema/core/identity';
 import { DEFAULT_TENANT_COEFFICIENT_VALUES } from '../schema/hearing-intake/coefficient-defaults';
@@ -101,6 +101,18 @@ export interface HearingIntakeRepository extends HearingQueueRepository {
   createSheetAndEnqueue(context: RepositoryContext, input: CreateHearingSheetInput): Promise<HearingSheetRow>;
   listSheets(context: RepositoryContext, input: ListHearingSheetsInput): Promise<HearingSheetPage>;
   findSheet(context: RepositoryContext, id: string): Promise<HearingSheetRow | null>;
+  /**
+   * ホーム集約向け「要対応件数」。`status:'review'`(見積確認待ち) または
+   * `ai_job_status:'failed'/'dead'`(生成失敗) のいずれかに該当する件数を返す。
+   */
+  countActionable(context: RepositoryContext, workspaceId?: string, applicantUserId?: string): Promise<number>;
+  /** 着地画面向け「最近の動き」。指定した本人の直近更新 N 件だけを返す。 */
+  listRecentUpdated(
+    context: RepositoryContext,
+    limit: number,
+    workspaceId: string | undefined,
+    applicantUserId: string,
+  ): Promise<readonly HearingSheetRow[]>;
   updateSheetStatus(
     context: RepositoryContext,
     id: string,
@@ -376,6 +388,44 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
 
     async findSheet(context, id) {
       return findSheetOn(adapter.client, context, id);
+    },
+
+    async countActionable(context, workspaceId, applicantUserId) {
+      const predicates: SQL[] = [eq(hearingSheets.tenantId, context.tenantId)];
+      if (context.workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, context.workspaceId));
+      if (workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, workspaceId));
+      if (applicantUserId !== undefined) predicates.push(eq(hearingSheets.applicantUserId, applicantUserId));
+      predicates.push(or(eq(hearingSheets.status, 'review'), inArray(aiJobs.status, ['failed', 'dead'])) as SQL);
+
+      const rows = await adapter.client
+        .select({ value: count() })
+        .from(hearingSheets)
+        .leftJoin(aiJobs, and(eq(aiJobs.tenantId, hearingSheets.tenantId), eq(aiJobs.id, hearingSheets.aiJobId)))
+        .where(and(...predicates));
+      return rows[0]?.value ?? 0;
+    },
+
+    async listRecentUpdated(context, limit, workspaceId, applicantUserId) {
+      const predicates: SQL[] = [eq(hearingSheets.tenantId, context.tenantId)];
+      if (context.workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, context.workspaceId));
+      if (workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, workspaceId));
+      predicates.push(eq(hearingSheets.applicantUserId, applicantUserId));
+
+      const rows = await adapter.client
+        .select({
+          sheet: hearingSheets,
+          applicantName: users.name,
+          applicantEmail: users.email,
+          aiJobStatus: aiJobs.status,
+          aiJobResultJson: aiJobs.resultJson,
+        })
+        .from(hearingSheets)
+        .innerJoin(users, and(eq(users.tenantId, hearingSheets.tenantId), eq(users.id, hearingSheets.applicantUserId)))
+        .leftJoin(aiJobs, and(eq(aiJobs.tenantId, hearingSheets.tenantId), eq(aiJobs.id, hearingSheets.aiJobId)))
+        .where(and(...predicates))
+        .orderBy(desc(hearingSheets.updatedAt))
+        .limit(limit);
+      return rows.map(asSheetRow);
     },
 
     async updateSheetStatus(context, id, status) {

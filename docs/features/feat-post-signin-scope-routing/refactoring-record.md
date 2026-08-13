@@ -5,6 +5,8 @@ layer: feature-quality
 
 # リファクタリングと移行記録 — feat-post-signin-scope-routing
 
+> **履歴注記 (2026-08-13):** `/sheets` は当時の棚卸し結果を示す履歴値。単一定数化の構造は維持したまま、現行値は appr-034 により `/dashboard` へ更新済み。
+
 > P08 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-08-refactoring-migration.md`
 > 目的: scope 解決の分岐と既定着地の定数を集約し、経路ごとの二重実装と path 直書きを排除する。
 

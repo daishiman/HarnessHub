@@ -36,7 +36,7 @@ serves_goals: [G1, G4, G5]
 
 【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /dashboard へ落ちることを SSR 応答で検査する。
 
 【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 
@@ -182,7 +182,7 @@ serves_goals: [G1, G4, G5]
 
 【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。
 
-【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /sheets へ落ちることを SSR 応答で検査する。
+【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /dashboard へ落ちることを SSR 応答で検査する。
 
 【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。
 

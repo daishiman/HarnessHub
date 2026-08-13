@@ -9,7 +9,7 @@
     "両方とも存在しない場合は従来どおり missing_tenant_scope とする (deny-by-default 非退行)",
     "両経路を同一の authorize() へ収束させ、判定を二重実装しない",
     "session への active workspace 束縛と、切替のたびの所属再検証",
-    "サインイン後の着地先解決: callbackUrl の固定値 \"/\" を廃止し、遷移元 path -> 既定着地 /sheets の順で解決する",
+    "サインイン後の着地先解決: callbackUrl の固定値 \"/\" を廃止し、遷移元 path -> 既定着地 /dashboard の順で解決する",
     "既定着地を単一定数から解決し、画面ごとに散らさない",
     "戻り先を同一 origin の相対 path のみに制限し、絶対 URL・スキーム付き・protocol-relative (//) は既定着地へ落とす (open redirect 防止)",
     "戻り先の解決結果にも通常の authorize() を適用し、redirect を認可の迂回路にしない",
@@ -24,7 +24,7 @@
     "Device Flow 確認コード制約の変更 (現行維持)"
   ],
   "acceptance": [
-    "遷移元が無いサインイン成功で /sheets に着地し、/ に留まらない",
+    "遷移元が無いサインイン成功で /dashboard に着地し、/ に留まらない",
     "戻り先に絶対 URL・スキーム付き・protocol-relative を与えても外部へ遷移せず既定着地へ落ちる",
     "認証済み session で / を開くと既定着地へ redirect される",
     "業務画面 6 種が通常のブラウザ操作で 403 missing_tenant_scope にならない",

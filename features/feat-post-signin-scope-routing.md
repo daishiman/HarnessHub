@@ -73,8 +73,8 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
    - 切替のたびに所属を再検証し、session 保持値を所属検証の代替に使わない
 
 3. **サインイン後の着地先解決**
-   - `callbackUrl` 固定値 `"/"` を廃止し、(a) 遷移元 path → (b) 既定着地 `/sheets` の順で解決
-   - 既定着地は単一定数から解決し画面ごとに散らさない
+   - `callbackUrl` 固定値 `"/"` を廃止し、(a) 遷移元 path → (b) 既定着地の順で解決
+   - 既定着地は単一定数から解決し画面ごとに散らさない。現行値は appr-034 / HarnessHub-1cno により `/dashboard`（本 feature 着手時の値は `/sheets`）
    - 戻り先は同一 origin の相対 path のみ許可。絶対 URL・スキーム付き・protocol-relative (`//`) は既定着地へ落とす
    - 戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない
 
@@ -125,7 +125,14 @@ implementation_readiness: {"checked_at":"2026-08-02T05:45:00Z","missing_sections
 
 ## Production acceptance (2026-08-08 / `HarnessHub-p0lr`)
 
-- OIDC smoke O5 は敵対的な外部 `returnTo` が遷移属性へ入らず、安全な既定 `/sheets` へ落ちることを本番 SSR 応答で検査する。
+- OIDC smoke O5 は敵対的な外部 `returnTo` が遷移属性へ入らず、安全な既定へ落ちることを本番 SSR 応答で検査する。2026-08-08 時点の既定は `/sheets`。現行の既定は appr-034 / HarnessHub-1cno により `/dashboard`。
 - coverage smoke S1〜S8 は scope の欠落・衝突・越境・credential/scope 不足を HTTP status + error code で検査する。
 - main `35a10b87` / hub-ci run `31253674292` で OIDC O5 と coverage S1〜S8 が SUCCESS。provider-admin 越境の設計差は `HarnessHub-stmx` へ分離し、本 feature の production acceptance とは別に追跡する。
 - PR #681 / #682 の default-branch reconciliation を 2026-08-10 に確認し、`SYS-POST-SIGNIN-SCOPE-P13` の durable completion evidence を記録した。
+
+## 2026-08-13 writeback (`HarnessHub-1cno`)
+
+- 着地先の**値**だけを `/dashboard` へ揃える。scope 2 系統、`ambiguous_scope`、open redirect 防止、`authorize()` 判定順は不変。
+- 着地画面本体は S00.LANDING。S09 KPI は前倒ししない。
+- 歴史的受入「遷移元が無いサインイン成功で `/sheets` に着地」は本 feature 完了時点の記録として残し、現行契約は qa-170 / observability contract を正本とする。
+- 受領: [elegant-home-review-20260813-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。

@@ -37,8 +37,11 @@ function stubFetch(handler: (url: string) => unknown): void {
 const headerTexts = (container: HTMLElement): string[] =>
   [...container.querySelectorAll('thead th')].map((cell) => (cell.textContent ?? '').replace(/↕.*$/, ''));
 
+/** 先頭列には要対応行だけ、視覚的に隠したラベル ("要対応: ") が前置される。並び確認の対象外なので剥がす。 */
 const columnTexts = (container: HTMLElement, index: number): string[] =>
-  [...container.querySelectorAll('tbody tr')].map((row) => row.querySelectorAll('td')[index]?.textContent ?? '');
+  [...container.querySelectorAll('tbody tr')].map((row) =>
+    (row.querySelectorAll('td')[index]?.textContent ?? '').replace(/^要対応: /, ''),
+  );
 
 async function clickHeader(container: HTMLElement, header: string): Promise<void> {
   const target = [...container.querySelectorAll('thead th')].find((cell) => cell.textContent?.includes(header));

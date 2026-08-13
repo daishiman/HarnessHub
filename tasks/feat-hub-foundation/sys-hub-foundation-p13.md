@@ -142,3 +142,9 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - Modal / BottomSheet は `dismissible` で未保存破棄を防ぐ。
 - Docs S15 empty は権限別 CTA と絞込解除。受領は
   [ui-disclosure-empty-state-20260813-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/ui-disclosure-empty-state-20260813-spec-reflection-receipt.md)。
+
+## 2026-08-13 着地ダッシュボード (`HarnessHub-1cno`)
+
+- 公開単位: `issue-elegant-home-review-20260813`。exact-13 に 14 個目は追加しない。P13 後 writeback。
+- 既定着地 `/dashboard` と S00.LANDING を実装結線する。S09 KPI は前倒ししない。
+- 受領: [elegant-home-review-20260813-spec-reflection-receipt.md](../../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。

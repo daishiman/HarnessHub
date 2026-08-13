@@ -62,12 +62,12 @@ layer: feature-operations
 
 ## 着地先が想定外の画面になる場合 (open redirect 防止の副作用)
 
-- **通常の解決順**: サインイン開始時の `returnTo` が同一 origin の相対 path ならその path、無いまたは無効なら既定着地 `/sheets` を使う。
+- **通常の解決順**: サインイン開始時の `returnTo` が同一 origin の相対 path ならその path、無いまたは無効なら既定着地 `/dashboard` を使う。
 - **`/` の現在の挙動 (2026-08-08)**:
   - 未認証 → テナント ID 入力（稼働確認 Alert 付き）。`/signin` 経由で `/{slug}/signin` へ。
-  - 認証済み + scope 確定 → 既定着地 `/sheets` へ redirect。
+  - 認証済み + scope 確定 → 既定着地 `/dashboard` へ redirect。
   - 認証済み + 複数 Workspace 未選択 → Workspace 選択 UI（行き止まりにしない）。
-- **症状**: サインイン後、期待した戻り先ではなく既定着地 (`/sheets`) へ飛ばされる。
+- **症状**: サインイン後、期待した戻り先ではなく既定着地 (`/dashboard`) へ飛ばされる。
 - **原因**: `resolvePostSigninLanding()` (`apps/hub/src/lib/routing/post-signin-landing.ts`) は同一 origin の相対 path 以外の戻り先を全て既定着地へフォールバックする (絶対 URL・スキーム付き・protocol-relative・バックスラッシュトリック・資格情報付き URL を含む)。これは bug ではなく open redirect 防止の設計上の挙動。
 - **確認手順**: 戻り先として渡された値が `/` から始まる相対 path かどうかを確認する。外部リンクや旧 URL からの遷移で絶対 URL 形式の戻り先が渡されていないか確認する。
 - **対応**: 呼び出し元 (戻り先を組み立てる箇所) を同一 origin の相対 path に修正する。フォールバック自体を緩めない (`quality-assurance-record.md` 検査2で fail-closed であることを実測済み)。

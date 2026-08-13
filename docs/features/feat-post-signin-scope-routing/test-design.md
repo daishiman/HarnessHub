@@ -39,20 +39,20 @@ layer: feature-design
 
 | Test ID | 入力(`returnTo`) | 期待結果 | 対応 acceptance / 設計レビュー対応 |
 |---|---|---|---|
-| TID-LAND-01 | `null` / `undefined`（遷移元なし） | `DEFAULT_POST_SIGNIN_LANDING`（`/sheets`） | 1 |
+| TID-LAND-01 | `null` / `undefined`（遷移元なし） | `DEFAULT_POST_SIGNIN_LANDING`（`/dashboard`） | 1 |
 | TID-LAND-02 | `/sheets/new`（同一 origin 相対 path） | そのまま採用 | — |
-| TID-LAND-03 | `https://evil.com/phish`（絶対URL） | `/sheets` へフォールバック | 2 |
-| TID-LAND-04 | `javascript:alert(1)`（スキーム付き） | `/sheets` へフォールバック | 2 |
-| TID-LAND-05 | `//evil.com`（protocol-relative） | `/sheets` へフォールバック | 2（design-review 指摘1） |
-| TID-LAND-06 | `/\evil.com`（バックスラッシュトリック） | `/sheets` へフォールバック | 2（design-review 指摘1） |
-| TID-LAND-07 | `http://user@evil.com`（資格情報付きURL） | `/sheets` へフォールバック | 2（design-review 指摘1） |
+| TID-LAND-03 | `https://evil.com/phish`（絶対URL） | `/dashboard` へフォールバック | 2 |
+| TID-LAND-04 | `javascript:alert(1)`（スキーム付き） | `/dashboard` へフォールバック | 2 |
+| TID-LAND-05 | `//evil.com`（protocol-relative） | `/dashboard` へフォールバック | 2（design-review 指摘1） |
+| TID-LAND-06 | `/\evil.com`（バックスラッシュトリック） | `/dashboard` へフォールバック | 2（design-review 指摘1） |
+| TID-LAND-07 | `http://user@evil.com`（資格情報付きURL） | `/dashboard` へフォールバック | 2（design-review 指摘1） |
 
 ## 4. 結合・回帰テスト
 
 | Test ID | シナリオ | 期待結果 | 対応 acceptance |
 |---|---|---|---|
-| TID-INT-01 | 遷移元なしでサインイン成功 | `/sheets` に着地する（`/` に留まらない） | 1 |
-| TID-INT-02 | 認証済み session で `/` を開く | `/sheets` へ redirect される | 3 |
+| TID-INT-01 | 遷移元なしでサインイン成功 | `/dashboard` に着地する（`/` に留まらない） | 1 |
+| TID-INT-02 | 認証済み session で `/` を開く | `/dashboard` へ redirect される | 3 |
 | TID-INT-03 | 未認証で `/` を開く | 稼働確認表示のまま（redirect されない） | — |
 | TID-INT-04 | 業務画面6種（`/sheets`, `/sheets/new`, `/sheets/{id}`, `/catalog`, `/catalog/releases`, `/catalog/{id}`）へ session scope のみで通常アクセス | いずれも `403 missing_tenant_scope` にならない | 4 |
 | TID-INT-05 | 着地先解決の結果へ実際に redirect した後、その path への再アクセス | 通常の `authorize()` 判定が適用される（迂回しない） | 8 |
@@ -61,7 +61,7 @@ layer: feature-design
 
 | # | Acceptance | 対応 Test ID |
 |---|---|---|
-| 1 | 遷移元が無いサインイン成功で /sheets に着地し、/ に留まらない | TID-LAND-01, TID-INT-01 |
+| 1 | 遷移元が無いサインイン成功で /dashboard に着地し、/ に留まらない | TID-LAND-01, TID-INT-01 |
 | 2 | 戻り先に絶対URL・スキーム付き・protocol-relativeを与えても外部へ遷移せず既定着地へ落ちる | TID-LAND-03〜07 |
 | 3 | 認証済みsessionで/を開くと既定着地へredirectされる | TID-INT-02 |
 | 4 | 業務画面6種が通常のブラウザ操作で403 missing_tenant_scopeにならない | TID-SCOPE-02〜04, TID-INT-04 |

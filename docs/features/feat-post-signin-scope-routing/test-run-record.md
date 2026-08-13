@@ -5,6 +5,8 @@ layer: feature-quality
 
 # テスト実行記録 — feat-post-signin-scope-routing
 
+> **履歴注記 (2026-08-13):** 本書の `/sheets` は 2026-08-03 に実行したテストの入力・期待値を改変せず保存したもの。現行の既定着地は `/dashboard` であり、現行テストは `DEFAULT_POST_SIGNIN_LANDING` を参照する。
+
 > P06 成果物。正本: `.dev-graph/plans/generations/feature-package-feat-post-signin-scope-routing/ecbd1cbf87d9f34a5a8b88c455b1e17e6dddf9f8a9069381403ec78556181efa/task-specs/phase-06-test-run.md`
 > 前提: [test-design.md](./test-design.md) が定義した全テスト ID を実装・実行した結果を固定する。
 

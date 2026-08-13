@@ -48,6 +48,7 @@ elicitation（要件ヒアリング）確定後に実装へ落とした契約の
 | catalog G13 headroom と token 葉 module | `frontend.md` / `ui-ux` の First Load JS 予算 | [frontend-spec §8](../docs/frontend-spec.md) / [frontend architecture](../architecture/harness-hub-frontend.md) / [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md) | `feat-dual-catalog-web` / `HarnessHub-vwxc` |
 | required-check 台帳と verification tier 未配線明示 | `dev-workflow.md` qa-216 の tier / gate 強制 | [dev-workflow architecture](../architecture/harness-hub-dev-workflow.md) / [2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-ic7w`・`HarnessHub-xcl3`・`HarnessHub-sl6o` |
 | 複数監査 dispatch 台帳 schema 1.2（製品要求の reopen なし） | 開発品質 follow-up（利用者要求・QA セル変更なし） | 製品章は非変更。内部契約は [dev-workflow architecture](../architecture/harness-hub-dev-workflow.md) / [uypz 受領書](../docs/features/feat-dev-pipeline-improvement/uypz-audit-fork-schema12-spec-reflection-receipt.md) | `feat-dev-pipeline-improvement` / `HarnessHub-uypz`（fresh live-trial まで open） |
+| サインイン後の既定着地を `/dashboard` に実装結線 | `frontend.md` qa-170 / `ui-ux.md` qa-171（値は確定済み。実装と派生文書の現行値を揃える） | [着地 observability 契約](../specs/harness-hub-post-signin-landing-observability-contract.md) / [受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md) | `feat-hub-foundation` / `HarnessHub-1cno` |
 
 ## 全体ドキュメント出典 (未割当参照)
 

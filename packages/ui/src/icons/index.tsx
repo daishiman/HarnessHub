@@ -17,6 +17,7 @@ import type { ReactNode, SVGProps } from 'react';
  * ヘッダー・フッター・モーダルで必要になる操作アイコンだけを持つ。
  */
 export const iconNames = [
+  'home',
   'dashboard',
   'hearing',
   'sheet',
@@ -46,6 +47,12 @@ export type IconName = (typeof iconNames)[number];
  * `d` 属性の羅列にせず要素の配列で持つのは、円や線を混ぜたい図形があるため。
  */
 const iconPaths: Record<IconName, ReactNode> = {
+  home: (
+    <>
+      <path d="M4 11l8-7 8 7" />
+      <path d="M6 9.5V20a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1V9.5" />
+    </>
+  ),
   dashboard: (
     <>
       <rect x="3" y="3" width="7" height="9" rx="1" />
