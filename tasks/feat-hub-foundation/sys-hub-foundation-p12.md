@@ -111,6 +111,12 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 旧 PrimaryNav の到達性契約は HubShell と `nav-items.ts` へ移管した。運用時の一次切り分けは post-signin runbook、実装者向けの使い分けは `docs/frontend-ui-foundation-spec.md` を正とする。
 - 仕様影響・品質ゲート・Beads / PR の受領証跡は [共通シェル仕様反映受領書](../../docs/features/feat-hub-foundation/hub-shell-page-surface-spec-reflection-receipt.md) に集約する。
 
+## 配色仕様書 v2 の文書追補 (2026-08-13)
+
+- 閉じた exact-13 に 14 個目の task は追加せず、post-closeout の見た目契約 writeback として記録する。
+- 色・書体・breakpoint・サイドバー幅・カード角・nav 最長一致を docs / specs / architecture / features へ戻した。
+- 受領証跡は [visual-system-v2 受領書](../../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
 ## 画面情報設計の文書追補 (2026-08-11 / `HarnessHub-f6ix`)
 
 - 閉じた exact-13 に 14 個目の task は追加せず、post-closeout の文書/仕様 writeback として記録する。

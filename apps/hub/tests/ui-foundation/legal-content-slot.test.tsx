@@ -26,6 +26,8 @@ vi.mock('next/headers', () => ({
 // (HubShell 分岐が使われなくても import は評価されるため、常に偽物へ差し替える)。
 vi.mock('next/font/google', () => ({
   Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
+  IBM_Plex_Sans: () => ({ variable: 'hh-test-font-plex', className: 'hh-test-font-plex-class' }),
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
 }));
 
 const { default: LegalPage } = await import('../../src/app/legal/page.js');

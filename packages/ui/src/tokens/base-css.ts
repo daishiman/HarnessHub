@@ -406,7 +406,7 @@ const stageBoardRules = [
   '[data-hh-stage-column] {\n  display: none;\n  min-width: 0;\n}',
   selectedStageColumnRules,
   [
-    // 1120px 未満は工程 picker + 選択中の 1 列を維持する。タブレット幅へ 7 列を
+    // 1024px 未満は工程 picker + 選択中の 1 列を維持する。タブレット幅へ 7 列を
     // 無理に詰めると可読性が落ち、複数行に折り返すと工程の一方向性が崩れるためである。
     // desktop でのみ、正本の 7 工程を 1 行のままコンテナ幅へ収める。
     `${mediaUp('lg')} {`,
@@ -490,6 +490,23 @@ const motionRules = [
 ].join('\n');
 
 /**
+ * OS のコントラスト強調設定を尊重する (HarnessHub 配色仕様書 v2 §8 / WCAG 対応方針)。
+ * `--hh-color-border` を、既に 3:1 契約 (非文字コントラスト) を満たす `border-strong` の値へ
+ * 差し替えるだけにしてあるのは、新しい色を増やすと token 契約 (`contrastRequirements`) の
+ * 検証対象が二重化するため。枠線幅も 2px に太らせ、輪郭そのものを見つけやすくする。
+ */
+const contrastRules = [
+  '@media (prefers-contrast: more) {',
+  '  :root {',
+  '    --hh-color-border: var(--hh-color-border-strong);',
+  '  }',
+  '  :where(button, input, select, textarea, [data-hh-focusable]) {',
+  '    border-width: 2px;',
+  '  }',
+  '}',
+].join('\n');
+
+/**
  * base 層の CSS を組み立てる。`buildThemeCss()` と同じく引数を取らず token 定数だけから
  * 生成する閉じた関数で、外部入力の混入経路を持たない (`<style>` へ直接流す前提のため重要)。
  */
@@ -514,5 +531,6 @@ export function buildBaseCss(): string {
     // ネイティブの操作要素にもフォーカスリングを与える。data-hh-focusable 版と宣言は共通。
     focusRingRule(':where(a, button, input, select, textarea, summary, [tabindex]):focus-visible'),
     motionRules,
+    contrastRules,
   ].join('\n\n');
 }

@@ -14,7 +14,7 @@ reviewed_at: 2026-08-11
 
 ### 6.1 原則
 
-- 適用条件: viewport **< 768px (md 未満)**。native アプリは作らない (frontend 章の対象外理由を維持) — 本節は web のレスポンシブ仕様である。
+- 適用条件: viewport **< 640px (md 未満。`breakpointTokens.md`)**。native アプリは作らない (frontend 章の対象外理由を維持) — 本節は web のレスポンシブ仕様である。
 - タップターゲット **44×44pt 以上** (HIG doctrine anchor)。主要操作は画面下半分 (親指到達域) に配置。
 - `100dvh` 基準・`env(safe-area-inset-*)` 対応 (ノッチ/ホームバー)。入力フォント 16px 以上 (iOS 自動ズーム防止)。
 - 横スクロールは §6.3 で明示した箇所のみ許可 (それ以外の水平オーバーフローは欠陥として扱う)。

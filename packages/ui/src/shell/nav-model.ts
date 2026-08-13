@@ -35,6 +35,32 @@ export function isCurrentNav(item: ShellNavItem, currentHref: string | undefined
   return current.startsWith(`${target}/`);
 }
 
+/**
+ * 複数の nav 項目が同時に `isCurrentNav` を満たす場合 (あるnav項目の href が
+ * 別の nav 項目の配下パスになっている。例: `/metrics` と `/metrics/usage`) に、
+ * 最も長く一致した 1 件だけを現在地として選ぶ。
+ *
+ * 全 nav グループを横断した項目一覧を渡すこと。グループ単位で個別に呼ぶと、
+ * 別グループにある祖先パスの項目と二重に一致したままになる。
+ */
+export function resolveCurrentNavTarget(
+  items: readonly ShellNavItem[],
+  currentHref: string | undefined,
+): string | undefined {
+  let best: string | undefined;
+  for (const item of items) {
+    if (!isCurrentNav(item, currentHref)) continue;
+    const target = stripQuery(item.href);
+    if (best === undefined || target.length > best.length) best = target;
+  }
+  return best;
+}
+
+/** `resolveCurrentNavTarget` が選んだ現在地と、この項目自身の href が一致するか。 */
+export function isResolvedCurrentNav(item: ShellNavItem, resolvedTarget: string | undefined): boolean {
+  return resolvedTarget !== undefined && stripQuery(item.href) === resolvedTarget;
+}
+
 function stripQuery(href: string): string {
   const cut = href.search(/[?#]/);
   const path = cut === -1 ? href : href.slice(0, cut);

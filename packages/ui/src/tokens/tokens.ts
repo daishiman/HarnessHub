@@ -33,85 +33,97 @@ export {
  * 求めているため、**文字と塗りに使う段は同系のより濃い段へ寄せ**、mockup の明るい色は
  * 装飾用の `*Soft` 背景側に残す。この対応関係は `contrastRequirements` が機械検証する。
  */
+/**
+ * Option A「グラファイト × アンバー」。無彩色 (グラファイト) を基調にし、
+ * 唯一の有彩アクセント `accentAi` (アンバー) は「実行中・ヒアリング中」など
+ * 動作中の状態表現に限定する。AI 機能専用の色相 (紫・青など) は割り当てない
+ * ことで「AI っぽさ」を出さない、が設計意図の核 (HarnessHub 配色仕様書 v2)。
+ */
 const lightColors = {
-  /**
-   * 画面全体の背景。無彩色グレーではなく `primary` と同系の青みをわずかに帯びた
-   * グレー (blue-tinted neutral) にして、ブランドカラーとの一貫性を保つ
-   * (HarnessHub 配色統一: グレー多用による暗く沈んだ印象の解消)。
-   */
-  bg: '#f2f5fb',
+  /** アプリ外周・メイン領域の背景 */
+  bg: '#f1f1ef',
   /** カード・パネルの面 */
   surface: '#ffffff',
-  /** 面の中の弱い区画 (テーブル header 等) */
-  surfaceMuted: '#eaf0f9',
+  /** 面の中の弱い区画 (サイドバー・テーブル header 等) */
+  surfaceMuted: '#e9e9e6',
   /** 装飾的な罫線 (3:1 を要求しない) */
-  border: '#c7d3e6',
-  /** 入力欄の輪郭など、操作部品の境界 (弱い面 `surfaceMuted` の上でも 3:1 を満たす濃さにする) */
-  borderStrong: '#66768f',
+  border: '#d9d9d5',
+  /**
+   * 入力欄の輪郭など、操作部品の境界。仕様書の指定値 (#c4c4bf) は
+   * `surface`/`surfaceMuted` 双方で 3:1 を満たさなかったため、
+   * token 契約 (`contrastRequirements`) を満たす濃さへ補正している。
+   */
+  borderStrong: '#84848a',
   /** 本文 */
-  text: '#1a2233',
-  /** 補足文 */
-  textMuted: '#57647d',
-  /** 主操作の塗り・リンク文字 */
-  primary: '#0958d9',
-  primaryHover: '#003eb3',
-  primarySoft: '#e6f4ff',
+  text: '#141417',
+  /** 補足文・中立チップの文字 */
+  textMuted: '#5c5c62',
+  /** 主操作の塗り・アクティブ要素 (グラファイト) */
+  primary: '#232326',
+  primaryHover: '#3a3a3f',
+  primarySoft: '#e3e3e0',
   onPrimary: '#ffffff',
-  /** AI 関連 (生成中・AI 回答・下書き) */
-  accentAi: '#531dab',
-  accentAiSoft: '#f9f0ff',
+  /**
+   * 状態専用アクセント (アンバー)。「実行中」「ヒアリング中」等の動作中表現
+   * 専用で、主要 CTA には使わない。AI ヒアリングパネルの HEARING タグもこの
+   * 色を使い、AI 専用の別色は持たない。
+   */
+  accentAi: '#b45309',
+  accentAiSoft: '#fbf3e2',
   onAccentAi: '#ffffff',
-  /** 完了・Green 判定 */
-  success: '#237804',
-  successSoft: '#f6ffed',
-  /** Yellow 判定・warn リスク */
-  warning: '#ad4e00',
-  warningSoft: '#fff7e6',
-  /** 破壊的操作・Red 判定・エラー */
-  danger: '#cf1322',
-  dangerHover: '#a8071a',
-  dangerSoft: '#fff1f0',
+  /** 稼働中・完了 */
+  success: '#166534',
+  successSoft: '#ddefe3',
+  /** 構築中・要確認 */
+  warning: '#92580a',
+  warningSoft: '#f3e8d3',
+  /** 破壊的操作・エラー */
+  danger: '#b91c1c',
+  dangerHover: '#8f1717',
+  dangerSoft: '#f6e2e0',
   onDanger: '#ffffff',
-  /** チャート系列・タグ */
-  infoCyan: '#006d75',
-  infoSoft: '#e6fffb',
-  magenta: '#c41d7f',
-  magentaSoft: '#fff0f6',
-  /** 中立チップの背景 (面の中の弱い区画 `surfaceMuted` と同じ青みグレーで揃える) */
-  neutralSoft: '#eaf0f9',
+  /** チャート系列 (仕様書は近彩度のグラファイト系で統一するため、識別用に控えめな彩度で補完) */
+  infoCyan: '#3f5b66',
+  infoSoft: '#e3ebed',
+  magenta: '#6b3b4a',
+  magentaSoft: '#efe2e6',
+  /** 下書き・中立チップの背景 */
+  neutralSoft: '#e6e6e3',
   /** フォーカスリング。色のみに依存しないよう輪郭形状も併用する */
-  focusRing: '#0958d9',
+  focusRing: '#232326',
 } as const satisfies Record<ColorTokenName, string>;
 
 const darkColors: Record<ColorTokenName, string> = {
-  bg: '#11141c',
-  surface: '#1a1f2b',
-  surfaceMuted: '#212736',
-  border: '#2c3446',
-  borderStrong: '#7a8bab',
-  text: '#e7ebf5',
-  textMuted: '#9aa8c2',
-  primary: '#4096ff',
-  primaryHover: '#69b1ff',
-  primarySoft: '#111a2c',
-  onPrimary: '#14161a',
-  accentAi: '#b37feb',
-  accentAiSoft: '#1a1325',
-  onAccentAi: '#14161a',
-  success: '#95de64',
-  successSoft: '#162312',
-  warning: '#ffc069',
-  warningSoft: '#2b1d11',
-  danger: '#ff7875',
-  dangerHover: '#ff9c99',
-  dangerSoft: '#2a1215',
-  onDanger: '#14161a',
-  infoCyan: '#5cdbd3',
-  infoSoft: '#112123',
-  magenta: '#ff85c0',
-  magentaSoft: '#291321',
-  neutralSoft: '#212736',
-  focusRing: '#69b1ff',
+  bg: '#1a1a1e',
+  surface: '#242429',
+  surfaceMuted: '#2e2e34',
+  border: '#3f3f46',
+  // 仕様書の指定値 (#52525b) は 3:1 契約を満たさず、同じ理由で補正
+  borderStrong: '#8a8a92',
+  text: '#fafafa',
+  textMuted: '#b0b0b8',
+  // 白黒反転 (役割は light と同じ)
+  primary: '#fafafa',
+  primaryHover: '#d4d4d8',
+  primarySoft: '#2e2e34',
+  onPrimary: '#141417',
+  accentAi: '#fbbf6d',
+  accentAiSoft: '#362a15',
+  onAccentAi: '#1c1305',
+  success: '#6ee7a0',
+  successSoft: '#1a3323',
+  warning: '#f2c464',
+  warningSoft: '#362a15',
+  danger: '#fca5a0',
+  dangerHover: '#ffb9b5',
+  dangerSoft: '#3b201f',
+  onDanger: '#1c1305',
+  infoCyan: '#9db8c2',
+  infoSoft: '#26333a',
+  magenta: '#c98fa3',
+  magentaSoft: '#332229',
+  neutralSoft: '#33333a',
+  focusRing: '#fafafa',
 };
 
 /** テーマ別の色 token。 */
@@ -139,13 +151,27 @@ export const radiusTokens = {
   md: '8px',
   lg: '12px',
   full: '9999px',
+  /** カード専用 (HarnessHub 配色仕様書 v2 §6)。既存の 4 段階と揃えず単独値にするのは、
+   * `md` を 10px へ寄せると Alert/Toast/Markdown コードブロックなど他の `md` 消費者まで
+   * 一緒にずれてしまうため。カードだけが 8px でも 12px でもない仕様書指定値を持つ。 */
+  card: '10px',
 } as const;
 export type RadiusTokenName = keyof typeof radiusTokens;
 
 /** タイポグラフィ。本文 16px を基準に、12px 未満は使わない。 */
 export const typographyTokens = {
-  fontFamily: "'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  fontFamilyMono: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
+  /**
+   * UI 英数字は IBM Plex Sans、日本語グリフは Noto Sans JP へ字形単位でフォールバックする
+   * (lang 分岐なしで 1 つの font-family 宣言に両方を並べる)。両方とも next/font/google の
+   * self-host (apps/hub/src/app/fonts.ts) が `--font-*` へ実体を供給する。consumer 側で
+   * その variable class が無い場合 (Storybook 等) は `var(--x, fallback)` の第 2 引数が効き、
+   * 未設定でも font-family 宣言自体は壊れない。
+   */
+  fontFamily:
+    "var(--font-ibm-plex-sans, 'IBM Plex Sans'), var(--font-noto-sans-jp, 'Noto Sans JP'), system-ui, -apple-system, 'Segoe UI', sans-serif",
+  /** Harness ID・タグ・ログ表示用。 */
+  fontFamilyMono:
+    "var(--font-jetbrains-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
   fontSizeXs: '12px',
   fontSizeSm: '14px',
   fontSizeMd: '16px',

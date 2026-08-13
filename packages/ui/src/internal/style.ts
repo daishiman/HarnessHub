@@ -18,7 +18,7 @@ export const seriesColorVar = (index: number): string =>
 export const spaceVar = (step: 1 | 2 | 3 | 4 | 5 | 6 | 7): string => `var(--hh-space-${step})`;
 
 /** 角丸 token の参照。 */
-export const radiusVar = (size: 'sm' | 'md' | 'lg' | 'full'): string => `var(--hh-radius-${size})`;
+export const radiusVar = (size: 'sm' | 'md' | 'lg' | 'card' | 'full'): string => `var(--hh-radius-${size})`;
 
 /**
  * 視覚的には隠すがスクリーンリーダーには読ませる。

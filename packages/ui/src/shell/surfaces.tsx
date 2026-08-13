@@ -44,7 +44,7 @@ export function Panel({
   const hasHeader = title !== undefined || actions !== undefined;
 
   return (
-    <section style={{ ...surfaceStyle, borderRadius: radiusVar('lg'), ...style }}>
+    <section style={{ ...surfaceStyle, borderRadius: radiusVar('card'), ...style }}>
       {hasHeader ? (
         <div
           style={{

@@ -58,9 +58,11 @@ Web 画面を「毎回ちがう材料で作る」のではなく、同じレゴ�
 | 色・余白・文字・密度 | `packages/ui/src/tokens/tokens.ts` |
 | focus ring | `packages/ui/src/tokens/focus-ring.ts` |
 | base CSS | `packages/ui/src/tokens/base-css.ts` |
-| breakpoint | `breakpointTokens` (`480 / 768 / 1120`) |
+| breakpoint | `breakpointTokens` (`480 / 640 / 1024`) |
+| 面の角 | Card / Panel は `radiusTokens.card` (10px)。他部品の `md`/`lg` は動かさない |
+| 書体 | IBM Plex Sans + Noto Sans JP + JetBrains Mono。root layout が `--font-*` を配る |
 
-CSS の media query に 768px などを直接増やさず、`mediaUp()` または base CSS generator を通す。light / dark の文字色は 4.5:1、操作部品の輪郭は 3:1 を token test で確認する。
+CSS の media query に 640px などを直接増やさず、`mediaUp()` または base CSS generator を通す。light / dark の文字色は 4.5:1、操作部品の輪郭は 3:1 を token test で確認する。
 
 ### 3. 状態の選び方
 

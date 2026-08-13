@@ -26,7 +26,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 | i18n | 自作 typed 辞書 (ja 正本・en 後追い) | 依存ゼロ。enum→表示ラベル写像 (backend-spec §2.1) と状態語彙統一 (qa-021) を同一 module に集約 |
 | Markdown | react-markdown + remark-gfm + rehype-sanitize | sanitize 済み HTML のみ描画 (SEC7/qa-022)。allowlist 方式。`dangerouslySetInnerHTML` は sanitizer 出力以外全面禁止 |
 | アイコン | lucide-react (tree-shakeable SVG) | mockup の Material Symbols は同義アイコンへ写像 (フォント読込を避け CWV 温存) |
-| フォント | Noto Sans JP (next/font self-host, subset, display swap) | mockup 実測 (496 箇所) 準拠 |
+| フォント | IBM Plex Sans + Noto Sans JP + JetBrains Mono (next/font self-host, display swap, preload なし) | 英数字は Plex、日本語は Noto、ID/ログは等幅。lang 分岐せず 1 つの font-family で字形単位フォールバック |
 
 - **ルーティング (App Router)**: 画面 ID は [docs/screen-inventory.md](screen-inventory.md) 準拠。
 
@@ -56,19 +56,17 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ### 2.1 design tokens (mockup 実測 → semantic 写像)
 
-| semantic token | light 値 (mockup 実測) | 用途 |
+| semantic token | light 値 (配色仕様書 v2 / token 正本) | 用途 |
 |---|---|---|
-| `--primary` / `--primary-hover` | `#1677ff` / `#4096ff` | 主操作・リンク・アクティブ状態 |
-| `--accent-ai` | `#722ed1` | AI 関連 (生成中・AI 回答・下書き) |
-| `--success` / `--success-text` | `#52c41a` / `#389e0d` | 完了・Green 判定 |
-| `--warning` | `#fa8c16` | Yellow 判定・warn リスク |
-| `--danger` / `--danger-text` | `#ff4d4f` / `#cf1322` | 破壊的操作・Red/エラー |
-| `--info-cyan` / `--magenta` | `#13c2c2` / `#eb2f96` | チャート系列・タグ |
-| `--bg` / `--surface` / `--border` | `#f5f7fa` / `#ffffff` / `#d9d9d9` (弱: `#f0f0f0`) | 背景・カード・罫線 |
+| `--primary` / `--primary-hover` | `#232326` / `#3a3a3f` | 主操作・リンク・アクティブ状態 (グラファイト) |
+| `--accent-ai` | `#b45309` | 動作中専用 (実行中・ヒアリング中)。主要 CTA には使わない |
+| `--success` / `--warning` / `--danger` | `#166534` / `#92580a` / `#b91c1c` | 完了 / 要確認 / 破壊・エラー |
+| `--info-cyan` / `--magenta` | `#3f5b66` / `#6b3b4a` | チャート系列・タグ |
+| `--bg` / `--surface` / `--border` | `#f1f1ef` / `#ffffff` / `#d9d9d5` | 背景・カード・罫線 |
 
-- **コントラスト**: 文字用途は 4.5:1 以上を token 段階で保証 (qa-018)。`--primary` を小さい文字に使う場合は text 用濃色段 (`--primary-text`) を別 token で持つ。チャート系列色も同順で固定し、色のみに依存しない (形状/ラベル併記)。
+- **コントラスト**: 文字用途は 4.5:1 以上を token 段階で保証 (qa-018)。`contrastRequirements` が機械検証する。チャート系列色も同順で固定し、色のみに依存しない (形状/ラベル併記)。`prefers-contrast: more` では枠線を `border-strong` へ差し替え幅を 2px にする。
 - **ダークテーマ**: 全 semantic token を `[data-theme=dark]` で再定義。`auto` は `prefers-color-scheme` 追従。テーマ・表示密度 (comfortable/compact)・言語は `user_settings` (PATCH /me) が正本、変更はローカル即時反映 + 保存。
-- **ブレークポイント**: Tailwind 既定を採用 — `sm 640 / md 768 / lg 1024 / xl 1280`。**< md (768px) = スマホサイズ仕様 (§6) を適用**。サイドバー常設は ≥ lg、md〜lg はサイドバー折りたたみ (アイコンのみ)。
+- **ブレークポイント**: `breakpointTokens` 正本 — `sm 480 / md 640 / lg 1024`。**< md (640px) = スマホサイズ仕様 (§6) を適用**。サイドバー常設は ≥ lg、md〜lg はサイドバー折りたたみ (アイコンのみ)。
 
 ### 2.2 部品一覧 (実装 owner: feat-hub-foundation)
 
@@ -107,7 +105,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ### 3.0 共通シェル (feat-hub-foundation)
 
-- **デスクトップ (≥ lg)**: 左サイドバー 220px 固定 9 項目 (ダッシュボード/ヒアリング/シート/パイプライン/ハーネス/フィードバック/ドキュメント/トラッキング/ユーザー管理[admin]) + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみに折りたたみ。
+- **デスクトップ (≥ lg)**: 左サイドバー 212px 固定 + ヘッダ (WorkspaceSwitcher・検索・通知ベル・アバターメニュー[account/legal/サインアウト])。md〜lg はサイドバーをアイコンのみ (68px) に折りたたみ。現在地は最長一致 1 件だけ (`resolveCurrentNavTarget`)。
 - **モバイル (< md)**: §6.2 のボトムタブ+その他シート。ヘッダは WorkspaceSwitcher+画面タイトル+検索アイコン+アバター。WorkspaceSwitcher は desktop/mobile 同一の server-first UI（所属1件は現在値のみ、2件以上は details+素のリンク、現在値非リンク、安全 `returnTo`、旧 scope を含まない中間文書後に遷移）。開閉専用の client island は外側クリック・Escape・別メニュー開始だけを扱い、切替自体は document 遷移を維持する。詳細は [Workspace 切替実装メモ](features/feat-workspace-switch-ux/implementation-notes.md)。
 - 縮退バナー・トースト container・確認 Dialog はシェル層に常駐。role 表示 (qa-005) はアバターメニュー内。
 
@@ -210,7 +208,7 @@ sources: [system-spec/frontend.md, system-spec/ui-ux.md, system-spec/00-requirem
 
 ## 6. スマホサイズ (モバイル) 画面仕様 (qa-035 — 本書が新規確定する正本)
 
-詳細本文 (原則 / ナビ / 変換パターン / 画面別挙動 / タッチ) は行数制約のため [frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) を正本とする。viewport **< 768px**、タップ 44×44pt、`P1〜P10` は responsive pattern ID であり情報顕著度 `lead / context / metadata` とは別語彙。profile 割当は [screen-inventory](screen-inventory.md)。
+詳細本文 (原則 / ナビ / 変換パターン / 画面別挙動 / タッチ) は行数制約のため [frontend-responsive-mobile-spec.md](frontend-responsive-mobile-spec.md) を正本とする。viewport **< 640px (`breakpointTokens.md`)**、タップ 44×44pt、`P1〜P10` は responsive pattern ID であり情報顕著度 `lead / context / metadata` とは別語彙。profile 割当は [screen-inventory](screen-inventory.md)。
 
 ## 7. i18n・表示辞書 (自作 typed 辞書 = qa-034)
 

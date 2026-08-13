@@ -8,7 +8,7 @@
  * JS の resize 監視を使わないのは、サーバ描画と初回描画がずれる (hydration mismatch)
  * のを避けるためと、シェルは全画面に載るので追加の client JS を持たせたくないため。
  *
- * 閾値の正本は `breakpointTokens` (480 / 768 / 1120)。ここで px を直書きせず必ず
+ * 閾値の正本は `breakpointTokens` (480 / 640 / 1024)。ここで px を直書きせず必ず
  * `mediaUp()` を通す (frontend-ui-foundation-spec §2)。既定をスマホ表示にして
  * `mediaUp()` で広げる mobile-first にしてあるのは、`mediaUp()` が min-width しか
  * 作らないためで、max-width の規則を残すと閾値の直書きがここへ戻ってしまうから。
@@ -23,10 +23,10 @@ import {
   shellHeaderOffsetVariable,
 } from './sticky-stack.js';
 
-/** サイドバー常設幅 (mockup 実測値, frontend-spec §3.0)。 */
-export const shellSidebarWidth = '220px';
+/** サイドバー常設幅 (HarnessHub 配色仕様書 v2 §4)。 */
+export const shellSidebarWidth = '212px';
 /** md〜lg の折りたたみ幅 (アイコンのみ)。44px のタップ域 + 左右余白。 */
-export const shellSidebarCollapsedWidth = '64px';
+export const shellSidebarCollapsedWidth = '68px';
 
 /**
  * シェル CSS を組み立てる。

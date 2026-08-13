@@ -122,7 +122,7 @@ export function Card({ children, title, description, actions, as: Tag = 'section
         background: colorVar('surface'),
         color: colorVar('text'),
         border: `1px solid ${colorVar('border')}`,
-        borderRadius: radiusVar('md'),
+        borderRadius: radiusVar('card'),
         padding: spaceVar(5),
         ...style,
       }}
