@@ -273,7 +273,7 @@ describe('ShellHeader', () => {
     const title = screen.getByText('ヒアリングシート');
     expect(title.hasAttribute('data-hh-screen-title')).toBe(true);
     expect(title.classList.contains('hh-shell__mobile-only')).toBe(false);
-    expect(title.style.minWidth).toBe('0');
+    expect(Number.parseFloat(title.style.minWidth)).toBe(0);
     expect(title.style.textOverflow).toBe('ellipsis');
     expect(container.querySelector('[data-hh-screen-title]')).toBe(title);
   });
