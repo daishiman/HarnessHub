@@ -57,6 +57,22 @@ function assertNonEmptyQuery(url, name) {
   if (!url.searchParams.get(name)?.trim()) throw new Error(`authorization redirect: ${name} was missing`);
 }
 
+function callbackUrlInputValue(html) {
+  const inputTags = html.match(/<input\b[^>]*>/gi) ?? [];
+  const callbackInput = inputTags.find((tag) => /\bname=(["'])callbackUrl\1/i.test(tag));
+  if (!callbackInput) return null;
+  return callbackInput.match(/\bvalue=(["'])(.*?)\1/i)?.[2] ?? '';
+}
+
+function isSafeSameOriginRelativePath(value, origin) {
+  if (!value.startsWith('/') || value.startsWith('//')) return false;
+  try {
+    return new URL(value, origin).origin === origin;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * @param {{
  *   origin: string;
@@ -147,7 +163,8 @@ export async function runOidcSmoke({ origin: rawOrigin, tenant: rawTenant, fetch
   /*
    * O5: サインイン後の遷移先に外部 URL を差し込めないこと (open redirect / HarnessHub-p0lr)。
    *
-   * `resolvePostSigninLanding` は「`/` 始まり かつ 同一 origin」以外を既定の `/sheets` へ落とす。
+   * `resolvePostSigninLanding` は「`/` 始まり かつ 同一 origin」以外を安全な既定着地へ落とす。
+   * 具体的な業務画面名はアプリ側の単一定数が持ち、production smoke には複製しない。
    * ただし呼び出しは client の useEffect の中にあるため、**HTTP から観測できるのは SSR 済み HTML だけ**
    * であり、hydration 後の再解決までは本 smoke では見ない (そこは unit test の担当)。
    * ここで押さえるのは「悪意ある returnTo が SSR 応答へ素通しで載らない」ことの本番実測。
@@ -157,11 +174,12 @@ export async function runOidcSmoke({ origin: rawOrigin, tenant: rawTenant, fetch
   const signinPageResponse = await fetchImpl(signinPageUrl, { headers: { accept: 'text/html' }, redirect: 'manual' });
   assertStatus(signinPageResponse, [200], 'signin page');
   const signinHtml = await signinPageResponse.text();
-  if (!signinHtml.includes('name="callbackUrl"')) {
+  const renderedCallbackUrl = callbackUrlInputValue(signinHtml);
+  if (renderedCallbackUrl === null) {
     throw new Error('post-signin landing: callbackUrl input was missing from the rendered sign-in page');
   }
-  if (!signinHtml.includes('value="/sheets"')) {
-    throw new Error('post-signin landing: server-rendered callbackUrl was not the safe default /sheets');
+  if (!isSafeSameOriginRelativePath(renderedCallbackUrl, origin)) {
+    throw new Error('post-signin landing: server-rendered callbackUrl was not a safe same-origin relative path');
   }
   // 「HTML 中に文字列が一切現れないこと」は検査条件にしない: App Router は router state (URL と
   // クエリ) を RSC payload へ載せるため、実装が正しくても returnTo の文字列自体は出現しうる。
