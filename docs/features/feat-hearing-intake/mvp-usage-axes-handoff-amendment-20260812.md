@@ -20,10 +20,10 @@ content-addressed のため改変しない。本ファイルは P01〜P13 を上
 
 | 領域 | 変更 |
 |---|---|
-| FormData | 12 → 21 → 28 項目 (用途プロファイル・依頼パターン・参考 URL) |
+| FormData | 12 → 21 → 30 項目 (用途プロファイル・依頼パターン・参考 URL。保存 snapshot は salary 除く 29) |
 | S10 UI | 上位4大工程を維持したまま 8 画面分割 |
 | S12 UI | 引き渡し用テキスト / screenshots / handoff tokens |
-| DB | `hearing_screenshots` / `hearing_share_tokens` (migration 0010) |
+| DB | `hearing_screenshots` / `hearing_share_tokens` (migration 0013) |
 | 公開境界 | `GET /api/hearing/:token` (+ screenshot 中継) |
 
 ## 品質ゲート

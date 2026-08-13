@@ -98,6 +98,13 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - S12「申請時の入力と試算」で form_snapshot を論理グループ別に全項目表示する。
 - 詳細と handoff の正本: [mvp-sheet-overhaul-handoff-amendment-20260812.md](../docs/features/feat-hearing-intake/mvp-sheet-overhaul-handoff-amendment-20260812.md)
 
+## MVP 追補 (2026-08-13 / HarnessHub-hodi / 公開共有の整合)
+
+- 添付の正本を画像 50 MiB から **allowlist 8 種・25 MiB** へ揃える。経路名 `screenshots` は維持する。
+- FormData は 30 項目、保存 snapshot は `salary` を除く 29 項目。migration 番号は `0013`。
+- 公開 token 経路に token 非依存の pre-DB rate limit (IP 240 req/min) を置く。
+- 詳細: [pr709-remediation-spec-reflection-receipt.md](../docs/features/feat-hearing-intake/pr709-remediation-spec-reflection-receipt.md)
+
 ## アーキテクチャ参照
 
 - [arch-harness-hub-frontend](../architecture/harness-hub-frontend.md)

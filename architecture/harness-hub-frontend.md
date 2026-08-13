@@ -291,7 +291,14 @@ PR #700 の G13 回復では超過画面の client 本体を route-local `next/d
 ## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
 
 S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表示を追加。
-作成時添付ステージングと profile enum 加算を含む。正本は frontend-spec。
+作成時添付ステージング (画像/動画/CSV/Excel・25MB) と profile enum 加算を含む。正本は frontend-spec。
+
+## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
+
+ログイン済み `HubShell` が `UiPreferencesHydrator` で
+`GET /api/v1/me/display-settings` を読み、root `UiProvider` の theme / density / locale を復元する。
+公開画面では本人設定 API を呼ばない。取得失敗時は既定値を維持しシェルを落とさない。
+製品契約は既存の `user_settings` 正本を実装へ揃えたものであり、配色トークンは不変。
 
 ## 2026-08-12 S15 Docs CMS rich surface
 - 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。0件は権限別作成CTA/絞込解除。画像/Markdown は S15 正本。

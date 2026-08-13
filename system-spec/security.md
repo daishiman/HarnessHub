@@ -119,6 +119,14 @@ serves_goals: [G4, G5, G1]
     - 競合時の428/412処理とrevision管理が増える
 - 資するゴール: G4, G5, G1
 
+## 2026-08-13 MVP 実装追記 (公開 hearing share の pre-DB 上限 / HarnessHub-hodi)
+
+- 認証なしの `GET /api/hearing/:token` とその screenshot 中継は、token 解決より前に
+  client IP 単位 240 req/min を置く。無効 token でも DB read を走らせない。
+- 鍵に token を含めない。429 の出方から token の存否は読めない。
+- 解決後は token row ID 単位で payload 120 / screenshot 60 req/min。
+- 数値の正本は `docs/security-spec-request-controls.md` §7.2。方式・鍵の変更は R4-reopen。
+
 ## 最新ドキュメント出典
 
 | 対象 | バージョン | 公式発行元 | 出典URL | 取得 | 最新確認 |

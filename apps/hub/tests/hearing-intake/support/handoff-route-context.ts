@@ -296,8 +296,12 @@ export async function buildAuthedRequest(method: string, path: string, options: 
   return new Request(`${BASE}${path}`, { method, headers, ...(body === undefined ? {} : { body }) });
 }
 
-export function buildPublicRequest(path: string): Request {
-  return new Request(`${BASE}${path}`);
+/**
+ * 公開経路 (認証なし) の要求。`headers` は pre-resolve rate limit の client 判定
+ * (`cf-connecting-ip` / `x-forwarded-for`) を差し替えるために使う。
+ */
+export function buildPublicRequest(path: string, headers: Readonly<Record<string, string>> = {}): Request {
+  return new Request(`${BASE}${path}`, { headers: new Headers(headers) });
 }
 
 export function params<T>(value: T): { readonly params: Promise<T> } {

@@ -60,9 +60,9 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 | Method Path | 最小 role | 概要 |
 |---|---|---|
-| `POST /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | multipart (`file, title, linkedItem?, note?`)。PNG/JPEG/WebP のみ・50 MiB 以下。申告 MIME と先頭バイトの両方を検証する。tenant_data と同じ R2 bucket・暗号化機構を再利用し、メタデータのみ DB へ登録 |
-| `GET /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | 添付済みスクリーンショット一覧 (`id, title, linked_item, note, size_bytes, content_type, created_at`) |
-| `GET /api/v1/sheets/:id/screenshots/:screenshotId` | member (`selfOnly`) | 認証済みの画像ダウンロード。PNG/JPEG/WebP を再検査し、`attachment` / `nosniff` / `no-store` で返す |
+| `POST /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | multipart (`file, title, linkedItem?, note?`)。**添付 (attachments) allowlist 8 種**・**25 MiB 以下**。申告 MIME と先頭バイトの両方を検証する。tenant_data と同じ R2 bucket・暗号化機構を再利用し、メタデータのみ DB へ登録 |
+| `GET /api/v1/sheets/:id/screenshots` | member (`selfOnly`) | 添付一覧 (`id, title, linked_item, note, size_bytes, content_type, created_at`) |
+| `GET /api/v1/sheets/:id/screenshots/:screenshotId` | member (`selfOnly`) | 認証済みの添付ダウンロード。allowlist と signature を再検査し、`attachment` / `nosniff` / `no-store` で返す |
 | `DELETE /api/v1/sheets/:id/screenshots/:screenshotId` | member (`selfOnly`) | 削除。`screenshotId` が別 sheet に属する場合は 404 (存在秘匿) |
 | `POST /api/v1/sheets/:id/handoff-tokens` | member (`selfOnly`) | `audience`(`harness_creator` / `system_orchestrator`) を指定してトークン付き共有 URL を発行。TTL 7日。平文トークンはこのレスポンスでしか返さない (SHA-256 ハッシュのみ保存)。`instruction_text`(Claude Code へそのまま貼り付けられる誘導文) を同時に生成。監査 event (`hearing_share_token.issued`) |
 | `GET /api/v1/sheets/:id/handoff-tokens` | member (`selfOnly`) | 発行済みトークン一覧 (`id, audience, expires_at, last_accessed_at, access_count, revoked_at, created_at`)。平文トークンは含まない |
@@ -70,8 +70,9 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 | `GET /api/hearing/:token` | なし (トークンのみが唯一の境界) | 公開ヒアリング内容取得 API。`hearingSharePayloadSchema` 形 (`sheet_code, audience, form_snapshot, estimate_snapshot, generated_sections, reference_urls, screenshots[], handoff_text, expires_at`) を返す。無効・期限切れ・失効・存在しないトークンはすべて同一の undifferentiated 404 (推測攻撃で有効/無効を区別させない)。アクセスのたびに `access_count`/`last_accessed_at` を記録 (best-effort・失敗しても本処理は継続) |
 | `GET /api/hearing/:token/screenshots/:screenshotId` | なし (トークンのみが唯一の境界) | 同一トークンでスコープされたスクリーンショット中継配信 (`content-disposition: attachment`, `X-Content-Type-Options: nosniff`)。raw R2 URL は公開せず、必ずこのアプリ経由で復号・中継する。`screenshotId` がトークンの sheet に属さない場合は 404 |
 
-- セキュリティ要件: 公開 middleware は `/api/hearing/:token` とその screenshot 子経路の形だけを通し、広い prefix 免除はしない。トークンは SHA-256 ハッシュのみ保存し、依頼者が `PATCH .../handoff-tokens/:tokenId` でいつでも手動無効化できる。`access_count` / `last_accessed_at` は best-effort の利用状況メタデータであり、追記専用の監査ログとは呼ばない。時刻値は全て epoch ms に統一する。画像配信も同じトークンでスコープし、誰でも見られる固定 URL にはしない。
+- セキュリティ要件: 公開 middleware は `/api/hearing/:token` とその screenshot 子経路の形だけを通し、広い prefix 免除はしない。トークンは SHA-256 ハッシュのみ保存し、依頼者が `PATCH .../handoff-tokens/:tokenId` でいつでも手動無効化できる。`access_count` / `last_accessed_at` は best-effort の利用状況メタデータであり、追記専用の監査ログとは呼ばない。時刻値は全て epoch ms に統一する。添付配信も同じトークンでスコープし、誰でも見られる固定 URL にはしない。公開経路は **token 解決より前** に client IP 単位 240 req/min の上限を置き、無効 token でも DB read を誘発させない。解決後は token row ID 単位で payload 120 / screenshot 60 req/min。1 段目の鍵に token を含めない (429 の出方から token の存否を読めないようにする)。超過は `429` + `Retry-After` / `RateLimit-*`。
 - `POST /api/v1/sheets/:id/handoff-tokens` の応答 (`token` / `url` / `instruction_text`) は発行直後の 1 回しか返さない。再表示 API は提供しない。
+- **添付 (attachments) の正本定義 (2026-08-13 / HarnessHub-hodi)**: 経路名と DB テーブル名は歴史的経緯で `screenshots` / `hearing_screenshots` のままだが、扱う対象は画像限定ではなく**業務の根拠になる添付一般**である。allowlist は `image/png` / `image/jpeg` / `image/webp` / `video/mp4` / `video/quicktime` / `text/csv` / `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` (xlsx) / `application/vnd.ms-excel` (xls) の **8 種**、上限は **25 MiB** (`ATTACHMENT_MAX_UPLOAD_BYTES`)。tenant-data の 50 MiB より絞ってあるのは、この経路が認証なしの公開中継 (`GET /api/hearing/:token/screenshots/:id`) に接続しており、1 リンクあたりの転送費用の上振れを抑えるためである。allowlist と signature 検査は upload 境界と公開中継の**両方**で走る (`safe-attachment.ts` が単一の正本)。値の変更は同ファイルと本節を必ず同時に更新すること。
 
 ### 4.4 構築パイプライン (pipeline board)
 

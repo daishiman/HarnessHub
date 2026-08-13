@@ -217,10 +217,11 @@ control-plane DB、schema migration、保存形式、export、restore、デー�
 
 ## 2026-08-12 hearing-intake screenshots / share tokens (MVP)
 
-**Beads**: `HarnessHub-370h` / migration `0010_hearing-intake-screenshots-and-share-tokens.sql`
+**Beads**: `HarnessHub-370h` / migration `0013_hearing-intake-screenshots-and-share-tokens.sql`
 
 - 追加テーブル: `hearing_screenshots` (メタ) / `hearing_share_tokens` (token_hash のみ)。
-- 画像実体は既存 `tenant_data_objects` (kind=`hearing_screenshot`) の封筒暗号化を再利用する。
+- 添付実体は既存 `tenant_data_objects` (kind=`hearing_screenshot`) の封筒暗号化を再利用する。
+  テーブル名は `screenshots` だが対象は画像限定ではなく allowlist 8 種・25 MiB。
 - backup/restore・tenant isolation・table registry に両テーブルを結線する。
 - 詳細正本: `docs/backend-spec.md` §2.3。
 

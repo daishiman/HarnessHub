@@ -23,7 +23,10 @@ import { GET as getShareRoute } from '../../src/app/api/hearing/[token]/route.js
 import { GET as getShareScreenshotRoute } from '../../src/app/api/hearing/[token]/screenshots/[screenshotId]/route.js';
 import { sha256Hex } from '../../src/lib/auth/jwt.js';
 import { setHearingShareRuntimeForTest } from '../../src/lib/hearing-share/index.js';
-import { setHearingShareRateLimiterForTest } from '../../src/lib/hearing-share/rate-limit.js';
+import {
+  setHearingSharePreResolveRateLimiterForTest,
+  setHearingShareRateLimiterForTest,
+} from '../../src/lib/hearing-share/rate-limit.js';
 import {
   buildPublicRequest,
   buildSheetRow,
@@ -44,6 +47,8 @@ beforeEach(() => {
   hearingIntakeHolder.current = createInMemoryHearingIntakeRuntime([buildSheetRow({ id: 'sheet-1' })]);
   share = createInMemoryHearingShareRuntime();
   setHearingShareRuntimeForTest(share);
+  // 1 段目 (token 非依存) も毎回戻す。module global なので test 間で残量が漏れる。
+  setHearingSharePreResolveRateLimiterForTest(null);
   setHearingShareRateLimiterForTest('payload', null);
   setHearingShareRateLimiterForTest('screenshot', null);
   // `readAuthRuntimeEnv` は canonicalOrigin だけでなく全キーを fail-closed で要求する。
@@ -59,6 +64,7 @@ beforeEach(() => {
 afterEach(() => {
   hearingIntakeHolder.current = null;
   setHearingShareRuntimeForTest(null);
+  setHearingSharePreResolveRateLimiterForTest(null);
   setHearingShareRateLimiterForTest('payload', null);
   setHearingShareRateLimiterForTest('screenshot', null);
   delete process.env.AUTH_SESSION_SECRET;

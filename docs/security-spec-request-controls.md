@@ -166,6 +166,9 @@ report-uri /api/v1/csp-report
 | `DELETE /api/v1/tenant-data/objects/:id` | tenant + principal | **20 / 分** | 不可逆な物理削除の濫用防止 |
 | 一般 API (session) | user | **120 / 分** | 画面のポーリング (publish 2 秒 / ボード 30 秒) を阻害しない上限 |
 | `POST /api/v1/csp-report` | IP | **30 / 分** | report の氾濫防止 |
+| `GET /api/hearing/:token` および screenshot 中継 (token 解決前) | IP | **240 / 分** | 無効 token による DB read 増幅と総当たりを止める。鍵に token を含めない |
+| `GET /api/hearing/:token` (token 解決後) | token row ID | **120 / 分** | 正当な共有リンク 1 枚の読取。1 段目より狭い |
+| `GET /api/hearing/:token/screenshots/:id` (token 解決後) | token row ID | **60 / 分** | 公開中継の転送費用を抑える |
 | 超過時 | `429` + `Retry-After` (RFC 9457 形式) | — |
 | 調整 | feature P02 は**実測に基づく調整のみ**。方式・鍵の変更は R4-reopen | S-D3 |
 

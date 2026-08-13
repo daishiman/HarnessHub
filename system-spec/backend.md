@@ -232,10 +232,19 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 
 ## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
 
-- sheets API は FormData 30 項目を受け付け、screenshots / handoff-tokens を sheet 配下の子資源として公開する。
+- sheets API は FormData 30 項目を受け付け (保存 snapshot は `salary` を除く 29 項目)、
+  screenshots / handoff-tokens を sheet 配下の子資源として公開する。
 - 公開共有は `GET /api/hearing/:token` (session なし)。token は SHA-256 ハッシュのみ保存し、
   無効・期限切れ・失効は同一 404 に畳む。
 - 詳細は `docs/backend-spec-api-state.md` §4.3.1。本追記は REST+zod 単一ソースと deny-by-default 認可の枠内。
+
+## 2026-08-13 MVP 実装追記 (HarnessHub-hodi / 公開共有の pre-DB 上限)
+
+- 公開経路は **2 段の rate limit** を持つ。1 段目は token 解決より前に client IP だけで数え、
+  無効 token による DB read 増幅と総当たりを止める (240 req/min)。鍵に token を含めない。
+- 2 段目は検証後の token row ID で payload 120 / screenshot 60 req/min。既存の
+  undifferentiated 404 契約は変えない。
+- 添付の正本は画像限定ではなく allowlist 8 種・25 MiB。詳細は `docs/backend-spec-api-state.md` §4.3.1。
 
 ## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul)
 

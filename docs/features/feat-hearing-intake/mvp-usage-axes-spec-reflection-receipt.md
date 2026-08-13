@@ -24,9 +24,9 @@ tenant 分離の枠内での具体化として記録する。
 
 | 層 | 反映先 | 内容 |
 |---|---|---|
-| docs | `docs/backend-spec.md` / `docs/backend-spec-api-state.md` / `docs/frontend-spec.md` / information-design S10・S12 / runbook / ADR | FormData 28、screenshots/handoff API、8 画面、運用手順 |
+| docs | `docs/backend-spec.md` / `docs/backend-spec-api-state.md` / `docs/frontend-spec.md` / information-design S10・S12 / runbook / ADR | FormData 30 (snapshot 29)、screenshots/handoff API、8 画面、運用手順 |
 | features | `features/feat-hearing-intake.md` | purpose/scope/acceptance と MVP 追補節 |
-| system-spec | `frontend.md` / `backend.md` / `database.md` 章末追記 | 8 画面・公開 token・0010 migration |
+| system-spec | `frontend.md` / `backend.md` / `database.md` 章末追記 | 8 画面・公開 token・0013 migration |
 | architecture | `harness-hub-{frontend,backend,data}.md` 章末追記 | 同上の実装 writeback |
 | tasks | `docs/features/feat-hearing-intake/mvp-usage-axes-handoff-amendment-20260812.md` | promoted package を改変せず追補投影 |
 | specs | 本 PR では詳細正本を `docs/` に置き、compiled system specification の全文再生成は行わない | MVP 最小方針。意味差分は docs + system-spec 章末で追跡可能 |

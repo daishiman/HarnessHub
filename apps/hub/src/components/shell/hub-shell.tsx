@@ -38,6 +38,7 @@ import {
   sidebarNavGroups,
 } from './nav-items.js';
 import { resolveShellScreenTitle } from './route-titles.js';
+import { UiPreferencesHydrator } from './ui-preferences-hydrator.js';
 import { workspaceSwitcherOptions } from './workspace-switcher-items.js';
 
 /**
@@ -120,6 +121,7 @@ export function HubShell({
 
   return (
     <>
+      <UiPreferencesHydrator tenantId={scope.tenantId} />
       {/* レスポンシブ規則は 1 枚の CSS に閉じる。React 19 は body 内の style も head へ巻き上げる */}
       <style>{buildShellCss()}</style>
       <div className="hh-shell">
