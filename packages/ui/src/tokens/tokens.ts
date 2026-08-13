@@ -170,7 +170,8 @@ export const typographyTokens = {
   fontFamily:
     "var(--font-ibm-plex-sans, 'IBM Plex Sans'), var(--font-noto-sans-jp, 'Noto Sans JP'), system-ui, -apple-system, 'Segoe UI', sans-serif",
   /** Harness ID・タグ・ログ表示用。 */
-  fontFamilyMono: "var(--font-jetbrains-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
+  fontFamilyMono:
+    "var(--font-jetbrains-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
   fontSizeXs: '12px',
   fontSizeSm: '14px',
   fontSizeMd: '16px',
