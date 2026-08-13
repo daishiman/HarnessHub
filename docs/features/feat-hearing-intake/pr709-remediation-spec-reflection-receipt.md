@@ -36,7 +36,7 @@ migration 番号の正本を実装と同じ値にすること。
 | `specs/` | compiled system specification へ 2026-08-13 追記 |
 | `architecture/` | `harness-hub-{backend,data,security}.md` |
 | `features/` | `feat-hearing-intake.md` 追補 |
-| `tasks/` | promoted package 非改変。handoff 追補を追加 |
+| `tasks/` | promoted package 非改変。task 層の追補は `docs/features/feat-hearing-intake/pr709-remediation-handoff-amendment-20260813.md` |
 | `docs/` | backend-spec / api-state / security-spec-request-controls / frontend-spec / 本受領書 |
 
 ## 4. R4-reopen 不要の理由
