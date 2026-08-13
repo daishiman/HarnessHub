@@ -21,9 +21,24 @@ recorded_at: 2026-08-13
 ## 2. 結論
 
 - **仕様・設計影響: あり (`reflected`)**。製品 API / DB / 認可の意味は変えていない。
-- 既存 frontend-spec の「`user_settings` が正本」を、ログイン済みシェルの起動時 GET 復元として明示した。
-- 実装は `HubShell` 上の `UiPreferencesHydrator` が `GET /api/v1/me/display-settings` を読む。
-- 公開画面では本人設定 API を呼ばない。取得失敗時もシェルは落ちない。
+- 既存 frontend-spec の「`user_settings` が正本」を、初期描画時点でサーバ値を適用する契約として明示した。
+- 実装は root layout が `resolveUiPreferences()` (`src/lib/routing/display-preferences.ts`) でサーバ側から
+  `user_settings` を解決し、`UiProvider` の `defaultPreferences` へ渡す。client からの後追い取得は行わない。
+- 公開画面では本人設定を引かない (未認証は `undefined` = 既定値)。取得失敗時もシェルは落ちない。
+
+### 2026-08-13 改訂: client 後追い取得からサーバ解決へ切り替えた
+
+初版は `HubShell` 上の client 部品 `UiPreferencesHydrator` が `GET /api/v1/me/display-settings` を
+読む形だったが、次の 2 点により本 PR 内でサーバ解決へ差し替えた。
+
+1. **配色のちらつき**: 初期描画が既定テーマで出てから設定値へ切り替わるため、再読込のたびに一瞬白く光る。
+2. **client bundle の退行**: 上書き専用の client 部品を 1 つ足したことで webpack が `@harness-hub/ui` を
+   別 chunk へ割り、その chunk が `(dashboard)` / `(workspace)` 配下の全 route の First Load JS に載った。
+   実測 (2026-08-13, PR #724 CI) で **+3856 bytes / route**、G13 予算ゲートが
+   `/settings/auth` `/docs/[id]` `/users` `/users/[id]` の 4 route で超過した。
+
+`UiProvider` は元から `defaultPreferences` を受ける契約を持つため、サーバ値はそこへ直接渡せば足りる。
+API path / schema / 認可は初版から変えていない。
 
 ## 3. 正規反映先
 

@@ -14,6 +14,7 @@ import { UiProvider } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 import type { CSSProperties, ReactNode } from 'react';
 
+import { resolveUiPreferences } from '../lib/routing/display-preferences.js';
 import { ibmPlexSans, jetBrainsMono } from './fonts.js';
 
 export const metadata: Metadata = {
@@ -27,7 +28,12 @@ const appFontStyle = {
   '--hh-font-family-mono': "var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
 } as CSSProperties;
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // 保存済みの表示設定はサーバで解決して初期値として渡す。client から後追い fetch すると
+  // 再読込のたびに既定テーマが一瞬見えるうえ、上書き専用の client 部品が共通 chunk を割る
+  // (経緯は lib/routing/display-preferences.ts のコメント)。未認証なら undefined = 既定値。
+  const preferences = await resolveUiPreferences();
+
   return (
     // WCAG 2.2 AA (qa-018): html の lang 指定は axe の html-has-lang 対象
     <html lang="ja">
@@ -42,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           - 公開画面 (/ , /legal , /device , サインイン等) … components/shell/public-shell.tsx
           root でも包むと業務画面で main が入れ子になり、支援技術の本文ジャンプが壊れる。
         */}
-        <UiProvider>{children}</UiProvider>
+        <UiProvider defaultPreferences={preferences}>{children}</UiProvider>
       </body>
     </html>
   );

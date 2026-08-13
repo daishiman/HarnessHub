@@ -30,11 +30,29 @@ import type {
   OidcConnectionTestResponse,
 } from '@harness-hub/schemas';
 import { Alert, Button, CardGrid, EmptyState, LiveStatus, Panel, Stack, TextInput } from '@harness-hub/ui';
+import dynamic from 'next/dynamic';
 import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 
-import { ConnectionCard, SetupPanel } from './oidc-connection-panels.js';
-
-export { ConnectionCard, SetupPanel } from './oidc-connection-panels.js';
+/**
+ * 表示部品を **client component の内側から** 遅延読込する (G13 client 予算)。
+ *
+ * server component 側で `next/dynamic` を掛けても効かない。App Router では RSC が client 部品を
+ * 既に別 chunk へ分けており、`ssr: false` も server では使えないため、chunk は route entry に載ったまま
+ * loadable ランタイムだけが増える (実測 2026-08-13: /settings/auth が +573 bytes 悪化した)。
+ * 効くのはこの位置 — 親が client である境界の内側だけである。
+ *
+ * `ssr: false` を選べるのは、この画面が **SSR で何も描かない** ため。接続一覧も setup 情報も
+ * mount 後の fetch で入るので、server 側の出力は元から「読み込み中です。」しかない。
+ * SSR 出力を失わずに初期 chunk だけを削れる、数少ない条件が揃っている。
+ */
+const SetupPanel = dynamic(() => import('./oidc-connection-panels.js').then((mod) => mod.SetupPanel), {
+  ssr: false,
+  loading: () => <p style={{ margin: 0 }}>読み込み中です。</p>,
+});
+const ConnectionCard = dynamic(() => import('./oidc-connection-panels.js').then((mod) => mod.ConnectionCard), {
+  ssr: false,
+  loading: () => <p style={{ margin: 0 }}>読み込み中です。</p>,
+});
 
 const ENDPOINT = '/api/v1/admin/oidc-connections';
 

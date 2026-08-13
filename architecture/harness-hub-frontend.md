@@ -294,4 +294,4 @@ S10 を7画面へ分割し S12 に引き渡し UI・form_snapshot 全項目・�
 
 ## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
 
-ログイン済み `HubShell` の `UiPreferencesHydrator` が `GET /api/v1/me/display-settings` で theme / density / locale を復元する。公開面では本人設定 API を読まず、失敗時もシェルは落とさない。配色トークンは不変。
+root layout が `resolveUiPreferences()` でサーバ側から `user_settings` を読み、theme / density / locale を `UiProvider` の初期値として渡す。client からの後追い取得は行わない (初期描画のちらつきと、client 部品追加による共通 chunk 分割を避けるため)。未認証・取得失敗では既定値へ落とし、シェルは落とさない。配色トークンは不変。

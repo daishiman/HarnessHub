@@ -56,7 +56,7 @@ describe('apps/hub 画面結合の a11y', () => {
     // HomePage は async server component (cookies() で session を読む) なので、
     // 関数を渡すのではなく await した ReactNode を渡す (signin/page.tsx のテストと同じ理由)
     const html = renderToStaticMarkup(
-      createElement(RootLayout, null, await HomePage({ searchParams: Promise.resolve({}) })),
+      await RootLayout({ children: await HomePage({ searchParams: Promise.resolve({}) }) }),
     );
     mountScreen(html);
 
@@ -67,7 +67,7 @@ describe('apps/hub 画面結合の a11y', () => {
 
   it('検査対象の DOM が実際に描画されている (空ページを緑にしない)', async () => {
     const html = renderToStaticMarkup(
-      createElement(RootLayout, null, await HomePage({ searchParams: Promise.resolve({}) })),
+      await RootLayout({ children: await HomePage({ searchParams: Promise.resolve({}) }) }),
     );
     mountScreen(html);
 
@@ -86,11 +86,9 @@ describe('apps/hub 画面結合の a11y', () => {
     );
 
     const html = renderToStaticMarkup(
-      createElement(
-        RootLayout,
-        null,
-        await HomePage({ searchParams: Promise.resolve({ [TENANT_ERROR_QUERY_PARAM]: '1' }) }),
-      ),
+      await RootLayout({
+        children: await HomePage({ searchParams: Promise.resolve({ [TENANT_ERROR_QUERY_PARAM]: '1' }) }),
+      }),
     );
     mountScreen(html);
 
@@ -120,7 +118,7 @@ describe('apps/hub 画面結合の a11y', () => {
 
     try {
       const html = renderToStaticMarkup(
-        createElement(RootLayout, null, await HomePage({ searchParams: Promise.resolve({}) })),
+        await RootLayout({ children: await HomePage({ searchParams: Promise.resolve({}) }) }),
       );
       mountScreen(html);
 
@@ -140,7 +138,7 @@ describe('apps/hub 画面結合の a11y', () => {
       workspaceNames: { 'workspace-a': '営業部' },
       initialUserCode: 'ABCD1234',
     });
-    const html = renderToStaticMarkup(createElement(RootLayout, null, screen));
+    const html = renderToStaticMarkup(await RootLayout({ children: screen }));
     mountScreen(html);
 
     const results = await axe.run(document);

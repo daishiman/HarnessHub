@@ -5,22 +5,9 @@
  * sheets 系画面のような server wrapper + client companion への分割は、その要求と両立しないためここでは採らない。
  */
 import type { DocumentDetail } from '@harness-hub/schemas';
-import {
-  Alert,
-  Badge,
-  Button,
-  DefinitionList,
-  LiveStatus,
-  Panel,
-  ScopeChip,
-  ScreenHeader,
-  StatusChip,
-  TagRow,
-  Thumbnail,
-} from '@harness-hub/ui';
+import { Alert, Badge, Button, LiveStatus, ScopeChip, ScreenHeader, StatusChip, TagRow } from '@harness-hub/ui';
 import dynamic from 'next/dynamic';
 import { type ReactNode, use, useCallback, useEffect, useState } from 'react';
-import { DateTimeText } from '../../../../components/format/date-time-text.js';
 import { canWriteDocument, extractErrorMessage } from '../../../../features/docs-cms/client-errors.js';
 import { scopeFromQuery } from '../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope, useSessionRole } from '../../dashboard-scope-context.js';
@@ -131,38 +118,8 @@ export default function DocumentDetailPage({ params, searchParams }: PageProps):
           ) : undefined
         }
       />
-      <Panel title="分類と公開設定">
-        <DefinitionList
-          label="分類と公開設定"
-          columns={2}
-          items={[
-            { term: 'カテゴリ', description: doc.category ?? '未分類' },
-            { term: 'タグ', description: (doc.tags ?? []).length > 0 ? (doc.tags ?? []).join('、') : 'タグなし' },
-            {
-              term: '予約公開',
-              description: doc.publish_at === null ? '設定なし' : <DateTimeText value={doc.publish_at} />,
-              hint: scheduled ? '日次の予約公開処理で公開されます (最大24時間程度かかる場合があります)。' : undefined,
-            },
-            { term: '要約', description: doc.excerpt ?? '要約なし' },
-            {
-              term: '要約の設定',
-              description: doc.excerpt_source === 'manual' ? '手動' : '本文から自動生成',
-            },
-            {
-              term: 'サムネイルの設定',
-              description: doc.thumbnail_source === 'manual' ? '手動' : '本文の最初の画像から自動設定',
-            },
-          ]}
-        />
-        {doc.thumbnail_url === null ? null : <Thumbnail src={doc.thumbnail_url} size="block" spacingBefore="section" />}
-      </Panel>
       {/* 本文は遅延境界内でも共通 MarkdownView のみで描画する (DOCS-SEC7-101)。 */}
-      <DocumentDetailContent
-        bodyMarkdown={doc.body_markdown}
-        category={doc.category}
-        tags={doc.tags}
-        excerpt={doc.excerpt}
-      />
+      <DocumentDetailContent detail={doc} scheduled={scheduled} />
     </article>
   );
 }

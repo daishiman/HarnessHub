@@ -16,7 +16,7 @@ updated_at: "2026-08-13T12:19:29Z"
 status: "done"
 depends_on: []
 related_nodes: ["feat-hub-foundation"]
-resource_scope: ["issues/dark-mode-persistence-reload-20260813.md","apps/hub/src/components/shell/ui-preferences-hydrator.tsx","apps/hub/src/components/shell/hub-shell.tsx","apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"]
+resource_scope: ["issues/dark-mode-persistence-reload-20260813.md","apps/hub/src/lib/routing/display-preferences.ts","apps/hub/src/app/layout.tsx","apps/hub/src/components/shell/hub-shell.tsx","apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"]
 purpose: "ログイン済み利用者が表示設定で選んだダークモードを、画面再読み込み後もサーバ保存値から復元できるようにする。"
 goal: "ダークモードを選んで保存した利用者が再読み込みしてもダーク表示のままで、表示密度と言語の保存契約も壊れない状態にする。"
 scope_in: ["保存済み user_settings の表示設定をログイン済み画面へ復元する経路","ダークテーマの保存から再読み込みまでを固定する回帰テスト","既存の light / system、表示密度、言語設定との整合"]
@@ -43,9 +43,10 @@ github_publication: {"labels":[],"milestone":null,"mode":"local_only","project_a
 github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
-completion_evidence: {"completed_at":"2026-08-13T12:19:29Z","evidence_refs":["beads:HarnessHub-sj20","apps/hub/src/components/shell/ui-preferences-hydrator.tsx","apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"],"policy":"manual","reconciled_at":"2026-08-13T12:19:29Z","source":"manual","status":"done"}
+completion_evidence: {"completed_at":"2026-08-13T12:19:29Z","evidence_refs":["beads:HarnessHub-sj20","apps/hub/src/lib/routing/display-preferences.ts","apps/hub/src/app/layout.tsx","apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"],"policy":"manual","reconciled_at":"2026-08-13T12:19:29Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-13T11:59:50Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # 概要
 
@@ -101,5 +102,39 @@ implementation_readiness: {"checked_at":"2026-08-13T11:59:50Z","missing_sections
 
 ## 検証証跡
 
-- コマンド/テスト: テーマ復元の Vitest は修正前に reload 後 `auto` で RED、修正後は 2/2 PASS。共通シェル・アカウント設定・アクセシビリティの関連 Vitest は 40 PASS / 1 todo、client bundle budget は 12 PASS。Hub typecheck と対象 3 ファイルの Biome も PASS。
-- 証跡 path: `apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx`、`apps/hub/src/components/shell/ui-preferences-hydrator.tsx`
+- コマンド/テスト: テーマ復元の Vitest は修正前に reload 後 `auto` で RED、修正後は PASS。
+  2026-08-13 の設計差し替え (client 後追い取得 → サーバ解決) 後は hub 全体で 209 files / 2207 PASS + 8 todo、
+  `check:client-bundle` は violations 0 (超過 route なし)、`typecheck` / `lint` とも PASS。
+  2026-08-14 の遅延読込追加後も 209 files / 2207 PASS + 8 todo、`check:client-bundle` violations 0。
+  main 比の増分は `/settings/auth` −696、`/docs/[id]` −853、`/users` +439、`/users/[id]` +439 bytes。
+- 証跡 path: `apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx`、
+  `apps/hub/src/lib/routing/display-preferences.ts`、`apps/hub/src/app/layout.tsx`
+
+### 2026-08-13 追記: 実装経路の差し替え
+
+初版の client 部品 UiPreferencesHydrator (shell 配下で後追い fetch していたもの) は削除した。
+理由は client 境界を 1 つ足したことで webpack が `@harness-hub/ui` を別 chunk へ割り、
+`(dashboard)` / `(workspace)` 配下の全 route の First Load JS が +3856 bytes 増えて
+G13 予算ゲートが 4 route (`/settings/auth` `/docs/[id]` `/users` `/users/[id]`) で超過したため。
+現行は root layout がサーバで解決し `UiProvider` の `defaultPreferences` へ渡す。
+差し替え後の増分は main 比 +152〜+426 bytes / route に収まり、chunk 構成は main と同一である。
+
+### 2026-08-14 追記: 予算の余白を戻すための遅延読込
+
+差し替え後も `/settings/auth` と `/docs/[id]` は main 時点で予算残り 153〜189 bytes しかなく、
++373 bytes の増分を吸収できずゲートが赤になった。原因はこの変更ではなく先に積み上がった消費なので
+(警告帯 HarnessHub-5vlq が想定した誤帰属そのもの)、予算そのものは動かさず消費側を削った。
+
+- `oidc-connection-admin.tsx`: `SetupPanel` / `ConnectionCard` を `next/dynamic` + `ssr: false` で遅延化 (−1069 bytes)。
+  この画面は一覧も setup 情報も mount 後の fetch で入るため、SSR 出力を失わずに初期 chunk だけを削れる。
+- `/docs/[id]`: 取得解決後にしか描かれない「分類と公開設定」を、既存の遅延境界
+  `document-detail-content.tsx` へ移設 (−853 bytes)。新しい chunk を増やさずに page chunk から外れる。
+
+`next/dynamic` を **server component 側へ掛けても効かない**ことは実測で確認した
+(`settings/auth/page.tsx` に適用したところ +573 bytes の悪化)。App Router では RSC が client 部品を
+既に別 chunk へ分けているため chunk は route entry に載ったままで、loadable ランタイムだけが増える。
+効くのは client 境界の内側だけである。
+
+なお計測ゲート自体の過大計測も疑って検証したが、`.next/server/app/_not-found.html` が実際に要求する
+`<script src>` 集合と `check-client-bundle.mjs` の計上集合を突き合わせた結果、差分は
+`/_not-found` 疑似 route 固有の 1 件だけで、過大計測は無かった。ゲートは正しく測っている。

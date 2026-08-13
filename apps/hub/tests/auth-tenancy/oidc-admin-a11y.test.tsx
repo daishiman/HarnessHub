@@ -17,11 +17,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  ConnectionCard,
-  parseWorkspaceDomainInput,
-  SetupPanel,
-} from '../../src/app/(dashboard)/settings/auth/oidc-connection-admin.js';
+import { parseWorkspaceDomainInput } from '../../src/app/(dashboard)/settings/auth/oidc-connection-admin.js';
+// 部品は panels 側から直接読む。admin 側は G13 予算のため `next/dynamic` 経由で持つので、
+// admin 経由で import し直すと loadable の placeholder が返り、a11y 検査が空 DOM を緑にしてしまう。
+import { ConnectionCard, SetupPanel } from '../../src/app/(dashboard)/settings/auth/oidc-connection-panels.js';
 import RootLayout, { metadata } from '../../src/app/layout.js';
 
 // next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない (nav-and-shell と同じ理由)
@@ -96,7 +95,7 @@ function formatViolations(violations: readonly axe.Result[]): string {
  * 部品だけ裸で描画すると h3 が最初の見出しになり、実配信では起きない `heading-order` が出る。
  * 逆に骨格を省くと、その違反を「無視してよい既知の差分」として抑制する運用が始まってしまう。
  */
-function renderAndAudit(
+async function renderAndAudit(
   screen: ReturnType<typeof createElement>,
   options: { readonly inSection?: boolean } = {},
 ): Promise<string> {
@@ -115,7 +114,9 @@ function renderAndAudit(
     createElement('h1', { id: 'auth-settings-heading' }, '認証設定 — 顧客所有 Google OAuth'),
     body,
   );
-  const html = renderToStaticMarkup(createElement(RootLayout, null, page));
+  // RootLayout は保存済み表示設定をサーバで解決する async server component なので、
+  // 関数を渡さず await した ReactNode を渡す (HomePage を描くテストと同じ理由)。
+  const html = renderToStaticMarkup(await RootLayout({ children: page }));
   mountScreen(html);
   return axe.run(document).then((results) => {
     expect(formatViolations(results.violations)).toBe('');

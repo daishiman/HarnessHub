@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1617,
+  "graph_revision": 1618,
   "nodes": [
     {
       "acceptance": [
@@ -61468,7 +61468,8 @@
         "completed_at": "2026-08-13T12:19:29Z",
         "evidence_refs": [
           "beads:HarnessHub-sj20",
-          "apps/hub/src/components/shell/ui-preferences-hydrator.tsx",
+          "apps/hub/src/lib/routing/display-preferences.ts",
+          "apps/hub/src/app/layout.tsx",
           "apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"
         ],
         "policy": "manual",
@@ -61519,11 +61520,10 @@
       ],
       "resource_scope": [
         "issues/dark-mode-persistence-reload-20260813.md",
+        "apps/hub/src/lib/routing/display-preferences.ts",
         "apps/hub/src/app/layout.tsx",
-        "apps/hub/src/app/(dashboard)/settings/account/account-settings.tsx",
-        "packages/ui/src/theme/UiProvider.tsx",
-        "packages/ui/src/theme/UiProvider.test.tsx",
-        "apps/hub/tests/ui-foundation/"
+        "apps/hub/src/components/shell/hub-shell.tsx",
+        "apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"
       ],
       "scope_in": [
         "保存済み user_settings の表示設定をログイン済み画面へ復元する経路",

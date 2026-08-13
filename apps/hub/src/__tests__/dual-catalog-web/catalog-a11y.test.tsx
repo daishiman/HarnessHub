@@ -136,21 +136,21 @@ function mountDocument(html: string, title: string): void {
 async function renderScreen(screen: ReactElement, title: string): Promise<Root> {
   // root layout は骨格を持たない (公開画面と業務画面で骨格が違うため)。
   // 業務画面の main / nav / footer は HubShell が持つので、本番と同じ入れ子で描画する。
+  // RootLayout は保存済み表示設定をサーバで解決する async server component なので、
+  // 要素として渡さず await して ReactNode を取り出す。
   mountDocument(
     renderToStaticMarkup(
-      createElement(
-        RootLayout,
-        null,
-        // HubShellProps は children を必須で要求するため、createElement の可変長引数ではなく
-        // JSX の入れ子で渡す (createElement 経路だと props 側に children が無いと型が合わない)
-        <HubShell
-          accountName="user-1"
-          accountRole="member"
-          scope={{ tenantId: SCOPE_QUERY.tenant, workspaceId: SCOPE_QUERY.workspace }}
-        >
-          {screen}
-        </HubShell>,
-      ),
+      await RootLayout({
+        children: (
+          <HubShell
+            accountName="user-1"
+            accountRole="member"
+            scope={{ tenantId: SCOPE_QUERY.tenant, workspaceId: SCOPE_QUERY.workspace }}
+          >
+            {screen}
+          </HubShell>
+        ),
+      }),
     ),
     title,
   );
@@ -185,8 +185,8 @@ async function flushAsync(): Promise<void> {
 }
 
 describe('RootLayout の全画面フォント契約', () => {
-  it('HubShell を通らない公開画面にも IBM Plex / JetBrains Mono の変数を供給する', () => {
-    const html = renderToStaticMarkup(createElement(RootLayout, null, createElement('p', null, '公開画面')));
+  it('HubShell を通らない公開画面にも IBM Plex / JetBrains Mono の変数を供給する', async () => {
+    const html = renderToStaticMarkup(await RootLayout({ children: createElement('p', null, '公開画面') }));
 
     expect(html).toContain('hh-test-font');
     expect(html).toContain('hh-test-font-mono');
