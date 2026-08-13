@@ -83,7 +83,8 @@ implementation_readiness: {"checked_at":"2026-08-08T07:16:25Z","missing_sections
 
 - `FR-UIF-001`: `packages/ui` は `AppShell`、`Container`、`SidebarLayout`、`Stack`、`Card`、`ScreenHeader`、`NavList` を単一の公開 contract として所有する。画面上部の見出し帯は `FR-UIF-009` と同じ `ScreenHeader` を唯一の正とし、同じ役割の部品を 2 つ公開しない (`ScreenHeader` 導入前の `PageHeader` は廃止済み)。
 - `FR-UIF-002`: `apps/hub` は root layout で `@harness-hub/ui/tokens.css` を一度だけ import し、route ごとに token や shell を再定義しない。生成元は `buildTokenCssArtifact()`、コミット済み CSS との一致は自動検査する。
-- `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=768`、`lg=1120` とする。
+- `FR-UIF-003`: 数値の正本を `breakpointTokens` の `sm=480`、`md=641`、`lg=1025` とする。`md` / `lg` は「〜640 / 641〜1024 / 1025〜」を min-width で重複なく表現する値であり、検査 viewport 360 / 768 / 1280 は各帯の回帰幅であって token ではない。
+- `FR-UIF-014`: 配色はグラファイト × アンバー。`primary` は無彩色、`accent` は動作中専用で、AI専用色を持たない。英数字は IBM Plex Sans、日本語はヒラギノ角ゴ・游ゴシック等のシステムフォント、ID/ログは JetBrains Mono。Card / Panel の角は `radiusTokens.card` (10px)。`prefers-contrast: more` では枠線を `border-strong` かつ 2px にする。nav 現在地は全グループ横断の最長一致 1 件 (`resolveCurrentNavTarget`)。
 - `FR-UIF-004`: `DataTable` は `data-hh-scroll-x` の局所容器で横幅を受け止め、文書全体を横スクロールさせない。
 - `FR-UIF-005`: root / dashboard / workspace は `loading.tsx`、`error.tsx`、`not-found.tsx` を持ち、root は `global-error.tsx` も持つ。
 - `FR-UIF-006`: catalog は layout / form / feedback / data / chart / navigation / overlay の 7 分類を light / dark で描画する。
@@ -164,7 +165,7 @@ N/A: 新しい queue、event producer / consumer、delivery、ordering、DLQ は
 
 - 既存画面は一括置換せず、Catalog、signin、device approval、primary navigation から共通 contract へ移行する。
 - `PrimaryNav` の最小シェルは `HubShell` と `nav-items.ts` へ置き換える。既存の tenant/workspace query 伝搬と route 到達性テストを後継へ移し、旧実装を併存させない。
-- viewport は 360x800、768x1024、1280x800、VRT は 1024x768 とする。
+- 検査 viewport は 360x800、768x1024、1280x800、VRT は 1024x768 とする（token の md/lg とは別契約）。
 - 問題時は実装・route 配線・baseline・CI workflow を同一変更単位で revert し、baseline だけを更新して不具合を隠さない。
 
 ## テストと受入条件

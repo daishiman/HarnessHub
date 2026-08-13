@@ -183,6 +183,12 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - system-spec-harness へ `information-design` knowledge と blocking required-info `screen-information-priority` を追加し、`frontend-arch` より先に確定する収集順を固定した。
 - 公開 API、DB schema、認可判定、Cloudflare deploy unit は非変更。writer による required-info 回答の決定論接地は follow-up `HarnessHub-9wdm`。検証と残課題は [仕様反映受領書](../docs/features/feat-hub-foundation/information-design-spec-reflection-receipt.md) を参照する。
 
+## Post-closeout 配色仕様書 v2 (2026-08-13)
+
+- 画面の色をグラファイト × アンバーへ揃え、英数字 IBM Plex Sans / 日本語はヒラギノ角ゴ・游ゴシック等のシステムフォント / 等幅 JetBrains Mono とする。Web フォントは小さい latin subset の 2 種だけを self-host する。
+- breakpoint 正本を `480 / 641 / 1025`、常設サイドバー 212px、折りたたみ 68px、Card/Panel 角 10px とする。nav 現在地は最長一致 1 件。
+- 公開 API、DB、認可、deploy unit は非変更。正本は [UI 基盤追補](../specs/harness-hub-ui-foundation-addendum.md) FR-UIF-003/014、受領は [visual-system-v2 受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
+
 ## Post-closeout UI MVP wave (2026-08-12)
 
 - 表示名 (氏名/Workspace/Project)、IdBadge、ListState、FilterBar、route surface 台帳、information-design sheet、color-scheme を一括で揃えた。
@@ -205,4 +211,3 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - 着地画面は本人の最近作業と既存業務導線を出し、S09 分析 KPI は出さない。`dashboard.summary_read` は到達可否だけで、機能ごとの閲覧は既存 own/all 契約に従う。
 - 公開 API の新規は集約 GET `/api/v1/dashboard/summary` のみ。DB schema・role 階層は非変更。
 - 受領: [elegant-home-review-20260813-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
-

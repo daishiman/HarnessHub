@@ -150,7 +150,7 @@ export type { MobileTabBarProps } from './shell/MobileTabBar.js';
 export { MobileTabBar, mobileTabPrimarySlots } from './shell/MobileTabBar.js';
 // --- 共通シェル ----------------------------------------------------------
 export type { ShellNavItem } from './shell/nav-model.js';
-export { isCurrentNav } from './shell/nav-model.js';
+export { isCurrentNav, isResolvedCurrentNav, resolveCurrentNavTarget } from './shell/nav-model.js';
 export type { ShellFooterLink, ShellFooterProps } from './shell/ShellFooter.js';
 export { ShellFooter } from './shell/ShellFooter.js';
 export type { ShellAccountLink, ShellHeaderProps } from './shell/ShellHeader.js';

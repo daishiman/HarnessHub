@@ -15,7 +15,7 @@ import type { OidcConnectionSetup, OidcConnectionSummary } from '@harness-hub/sc
 import axe from 'axe-core';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   ConnectionCard,
@@ -23,6 +23,12 @@ import {
   SetupPanel,
 } from '../../src/app/(dashboard)/settings/auth/oidc-connection-admin.js';
 import RootLayout, { metadata } from '../../src/app/layout.js';
+
+// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない (nav-and-shell と同じ理由)
+vi.mock('next/font/google', () => ({
+  IBM_Plex_Sans: () => ({ variable: 'hh-test-font-plex', className: 'hh-test-font-plex-class' }),
+  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
+}));
 
 /** 画面へ出てはいけない値。last4 (`0001`) とは別物にしてある。 */
 const FULL_SECRET = 'goog-secret-should-not-render';

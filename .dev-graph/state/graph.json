@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1606,
+  "graph_revision": 1607,
   "nodes": [
     {
       "acceptance": [
@@ -61074,6 +61074,131 @@
       "title": "最新エージェントキットとデザインシステム改善を全配布面へ整合する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T07:21:30Z"
+    },
+    {
+      "acceptance": [
+        "対象差分だけが commit される",
+        "task package 品質ゲートが pass",
+        "focused UI/Hub tests が pass",
+        "仕様反映受領書がある",
+        "draft PR が base=main で開いている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/visual-system-v2-20260813.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "見た目契約の実装と最終レビュー・仕様反映・draft PR を束ねる独立 issue",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "9a715dbe180ca85acf117afa19c0b0a3b94b165d75f358ca9a41ddb61588a538",
+        "evaluator": "final-review-mvp",
+        "evidence_ref": "docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T00:00:00Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/visual-system-v2-20260813.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "グラファイト×アンバーの見た目契約が token / shell / 仕様 / Beads / draft PR で一致する",
+      "graph_node_id": "issue-visual-system-v2-20260813",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "配色仕様書 v2 の色・書体・幅・角・現在地判定を共通 UI 契約へ揃え、仕様と draft PR を同じ正本にする",
+      "related_nodes": [
+        "feat-hub-foundation",
+        "arch-harness-hub-frontend",
+        "spec-harness-hub-ui-foundation-addendum"
+      ],
+      "resource_scope": [
+        "packages/ui/src/tokens/",
+        "packages/ui/src/shell/",
+        "packages/ui/src/components/Badge.tsx",
+        "packages/ui/src/layout/primitives.tsx",
+        "apps/hub/src/app/fonts.ts",
+        "apps/hub/src/app/layout.tsx",
+        "docs/",
+        "specs/",
+        "architecture/",
+        "features/",
+        "tasks/",
+        "system-spec/",
+        "issues/visual-system-v2-20260813.md"
+      ],
+      "scope_in": [
+        "design token の色・書体・breakpoint・radius.card",
+        "sidebar 幅と nav 最長一致",
+        "docs/features/system-spec/architecture/tasks への仕様反映",
+        "main 統合と base main の draft PR"
+      ],
+      "scope_out": [
+        "公開 API / DB schema / 認可判定の変更",
+        "Cloudflare 本番デプロイ",
+        "Linux VRT baseline 再取得",
+        "qa-226 の R4-reopen"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "packages/ui/src/tokens/tokens.ts",
+        "source_plugin": "manual-final-review",
+        "source_version": "0.1.0"
+      },
+      "start_date": "2026-08-13",
+      "status": "active",
+      "tags": [
+        "ui-foundation",
+        "design-system",
+        "visual-system",
+        "tokens",
+        "mvp"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "配色仕様書 v2 を共通トークンへ反映する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-13T10:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
