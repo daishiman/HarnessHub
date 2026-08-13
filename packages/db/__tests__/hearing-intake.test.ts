@@ -250,4 +250,49 @@ describe('HI-DB: 受付番号・sheet snapshot・共通 AI queue の実 DB 往�
     expect(failedStatus).toBe('dead');
     expect((await repo.findSheet(actor.context, sheet.id))?.status).toBe('received');
   });
+
+  it('countActionable は review または ai_job dead の件数だけを tenant/workspace 境界内で数える', async () => {
+    const actor = await seedActor('actionable');
+    const other = await seedActor('actionable-other');
+    const repo = createHearingIntakeRepository(asCore(adapter));
+
+    // review: 生成完了して見積確認待ちになった 1 件。
+    const reviewSheet = await repo.createSheetAndEnqueue(actor.context, createInput(actor, '見積確認待ち'));
+    const claimedForReview = await repo.claimNextSheetGenerationJob(actor.context, 'token-review');
+    await repo.completeSheetGenerationJob(actor.context, claimedForReview?.id ?? '', 'token-review', RESULT);
+
+    // dead: 3 回失敗させた 1 件 (ai_job_status のみが対象で sheet 自体は received に戻る)。
+    await repo.createSheetAndEnqueue(actor.context, createInput(actor, '生成失敗'));
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      const claimed = await repo.claimNextSheetGenerationJob(actor.context, 'token-dead');
+      await repo.failSheetGenerationJob(actor.context, claimed?.id ?? '', 'token-dead', `failure ${attempt}`);
+    }
+
+    // generating のまま (未処理) の 1 件は対象外。
+    await repo.createSheetAndEnqueue(actor.context, createInput(actor, '処理中'));
+
+    // 別 tenant の review は数えない。
+    const otherReview = await repo.createSheetAndEnqueue(other.context, createInput(other, '他社の見積確認待ち'));
+    const claimedOther = await repo.claimNextSheetGenerationJob(other.context, 'token-other');
+    await repo.completeSheetGenerationJob(other.context, claimedOther?.id ?? '', 'token-other', RESULT);
+
+    expect(await repo.countActionable(actor.context)).toBe(2);
+    expect(await repo.countActionable(actor.context, actor.workspaceId)).toBe(2);
+    expect(await repo.countActionable(other.context)).toBe(1);
+    expect(reviewSheet.id).not.toBe(otherReview.id);
+  });
+
+  it('listRecentUpdated は tenant 内の直近更新順に limit 件だけ返す', async () => {
+    const actor = await seedActor('recent');
+    const repo = createHearingIntakeRepository(asCore(adapter));
+    const first = await repo.createSheetAndEnqueue(actor.context, createInput(actor, '1件目'));
+    const second = await repo.createSheetAndEnqueue(actor.context, createInput(actor, '2件目'));
+    const third = await repo.createSheetAndEnqueue(actor.context, createInput(actor, '3件目'));
+    // 先に作った 1 件目を最後に更新し直し、更新順が createdAt 順と一致しないことを確認する。
+    await repo.updateSheetStatus(actor.context, first.id, 'review');
+
+    const recent = await repo.listRecentUpdated(actor.context, 2, actor.workspaceId, actor.userId);
+    expect(recent.map((row) => row.id)).toEqual([first.id, third.id]);
+    expect(second.id).not.toBe(third.id);
+  });
 });

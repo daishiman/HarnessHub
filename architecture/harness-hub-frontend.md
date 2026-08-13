@@ -113,7 +113,7 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 
 **差分追記 (2026-08-08 / `feat-post-signin-scope-routing` / RSC scope シェル)**:
 
-- サインイン後の既定着地 (`DEFAULT_POST_SIGNIN_LANDING` = `/sheets`) は URL クエリを持たない。
+- サインイン後の既定着地 (`DEFAULT_POST_SIGNIN_LANDING` = `/dashboard`) は URL クエリを持たない。
   `(dashboard)` / `(workspace)` 配下の Server Component は
   `apps/hub/src/lib/routing/dashboard-scope.ts` の `resolveDashboardScope()` で
   session から tenant/workspace を解決し、page は `query ?? session` の順で API へ渡す。
@@ -196,7 +196,7 @@ Hub Web の画面構成、状態遷移、ナビゲーション、アクセシビ
 
 ## 2026-08-02 サインイン後スコープと Web 完結導線
 
-- サインイン後の遷移先は、保存済みの安全な相対 path、なければ単一の既定値 `/sheets` の順で
+- サインイン後の遷移先は、保存済みの安全な相対 path、なければ単一の既定値 `/dashboard` の順で
   解決する。外部 URL と protocol-relative path は既定値へ落とし、解決後にも既存の
   `authorize()` を通す。
 - ブラウザ業務画面の tenant/workspace scope は session の active 値から server 側で解決する。

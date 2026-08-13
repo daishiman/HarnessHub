@@ -234,7 +234,7 @@ OIDC/Device Flow の本人確認と、tenant/workspace 行レベル scope を分
 - 両系統が存在して workspace の申告が不一致の場合は `ambiguous_scope` で拒否する。どちらも
   存在しない場合は従来どおり `missing_tenant_scope` とする (deny-by-default 非退行)。
 - サインイン後の戻り先は同一 origin の相対 path のみ許可し、絶対 URL・スキーム付き・
-  protocol-relative・バックスラッシュトリックは既定着地 (`/sheets`) へ落とす (open redirect 防止)。
+  protocol-relative・バックスラッシュトリックは既定着地 (`/dashboard`) へ落とす (open redirect 防止)。
   戻り先の解決結果にも通常の `authorize()` を適用し、redirect を認可の迂回路にしない。
 - 詳細は [system-spec/auth.md](../system-spec/auth.md) の `qa-137`、
   製品契約は [spec-post-signin-workspace-scope](../specs/harness-hub-post-signin-workspace-scope-addendum.md)

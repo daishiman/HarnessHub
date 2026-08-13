@@ -4,7 +4,7 @@
  * hearing-intake.ts と同じ構造: 全メソッドが RepositoryContext を要求し tenant_id (と指定時は
  * workspace_id) を WHERE 句へ強制注入する (D4)。code 採番は display_code_counters kind='FR' を使う。
  */
-import { and, desc, eq, lt, type SQL } from 'drizzle-orm';
+import { and, count, desc, eq, lt, type SQL } from 'drizzle-orm';
 import { userSettings, users } from '../schema/core/identity';
 import { type FEEDBACK_STATUSES, feedbacks } from '../schema/feedback-loop/schema';
 import { aiJobs, displayCodeCounters } from '../schema/hearing-intake/schema';
@@ -56,6 +56,15 @@ export interface FeedbackRepository extends FeedbackQueueRepository {
   listFeedbacks(context: RepositoryContext, input: ListFeedbacksInput): Promise<FeedbackPage>;
   findFeedback(context: RepositoryContext, id: string): Promise<FeedbackRow | null>;
   updateFeedbackStatus(context: RepositoryContext, id: string, status: FeedbackStatus): Promise<FeedbackRow>;
+  /** ホーム集約向け「要対応件数」。`status:'open'` かつ `priority:'high'` の件数を返す。 */
+  countActionable(context: RepositoryContext, workspaceId: string | undefined, createdBy: string): Promise<number>;
+  /** 着地画面向け「最近の動き」。作成者本人の直近更新 N 件だけを返す。 */
+  listRecentUpdated(
+    context: RepositoryContext,
+    limit: number,
+    workspaceId: string | undefined,
+    createdBy: string,
+  ): Promise<readonly FeedbackRow[]>;
   /**
    * resolved 通知の email channel 判定に使う既存 `user_settings.notify_feedback` の読み取り専用参照
    * (D6/B8/SEC9)。行が無い場合は列の default (true) を返す。
@@ -253,6 +262,37 @@ export function createFeedbackRepository(adapter: CoreAdapter): FeedbackReposito
         if (updated === null) throw new EntityNotFoundError('feedbacks', id);
         return updated;
       });
+    },
+
+    async countActionable(context, workspaceId, createdBy) {
+      const predicates: SQL[] = [
+        eq(feedbacks.tenantId, context.tenantId),
+        eq(feedbacks.status, 'open'),
+        eq(feedbacks.priority, 'high'),
+        eq(feedbacks.createdBy, createdBy),
+      ];
+      if (context.workspaceId !== undefined) predicates.push(eq(feedbacks.workspaceId, context.workspaceId));
+      if (workspaceId !== undefined) predicates.push(eq(feedbacks.workspaceId, workspaceId));
+
+      const rows = await adapter.client
+        .select({ value: count() })
+        .from(feedbacks)
+        .where(and(...predicates));
+      return rows[0]?.value ?? 0;
+    },
+
+    async listRecentUpdated(context, limit, workspaceId, createdBy) {
+      const predicates: SQL[] = [eq(feedbacks.tenantId, context.tenantId), eq(feedbacks.createdBy, createdBy)];
+      if (context.workspaceId !== undefined) predicates.push(eq(feedbacks.workspaceId, context.workspaceId));
+      if (workspaceId !== undefined) predicates.push(eq(feedbacks.workspaceId, workspaceId));
+
+      const rows = await adapter.client
+        .select()
+        .from(feedbacks)
+        .where(and(...predicates))
+        .orderBy(desc(feedbacks.updatedAt))
+        .limit(limit);
+      return rows as FeedbackRow[];
     },
 
     async getNotifyFeedbackPreference(context, userId) {

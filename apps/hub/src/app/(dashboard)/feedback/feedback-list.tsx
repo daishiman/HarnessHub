@@ -119,6 +119,12 @@ export function FeedbackList({ tenantId, workspaceId, initialQuery = '' }: Feedb
 
   // 0 件のときの言い方を分ける。絞り込み結果の 0 件に「まだありません」は誤解を生む
   const hasFilters = filters.status !== '' || filters.type !== '' || filters.query !== '';
+
+  /** 要対応 = 未対応 かつ 優先度高。すぐに手を付けないと放置される声。 */
+  const isActionable = (row: FeedbackListItem): boolean => row.status === 'open' && row.priority === 'high';
+  // 要対応を先頭へ固定する。絞り込み適用中は「この条件で絞った結果がこの順」という
+  // 意味を壊さないよう固定をやめ、API の返す順のまま出す (列見出しでの並べ替えも同じ理由で優先させる)
+  const displayRows = hasFilters ? rows : [...rows].sort((a, b) => Number(isActionable(b)) - Number(isActionable(a)));
   const appliedFilters: readonly AppliedFilter[] = [
     ...(filters.status === '' ? [] : [{ label: '状態', value: STATUS_LABELS[filters.status] }]),
     ...(filters.type === '' ? [] : [{ label: '種別', value: feedbackTypeLabels[filters.type] }]),
@@ -295,7 +301,7 @@ export function FeedbackList({ tenantId, workspaceId, initialQuery = '' }: Feedb
           <DataTable
             caption="フィードバック一覧"
             columns={columns}
-            rows={rows}
+            rows={displayRows}
             rowKey={(row) => row.id}
             loading={loading}
             stickyHeader
@@ -303,6 +309,8 @@ export function FeedbackList({ tenantId, workspaceId, initialQuery = '' }: Feedb
             // 並べ替えは取得済みの 25 件の中だけで効く。全件が並ぶと誤解されると
             // 「上位が抜けている」と読まれてしまうため、範囲を先に断っておく
             note="並べ替えはこのページに表示中の分が対象です (広い画面では列の見出しから、狭い画面では並び替えの選択欄から操作できます)。"
+            rowAttention={isActionable}
+            rowAttentionLabel="要対応"
           />
         </ListState>
       </div>

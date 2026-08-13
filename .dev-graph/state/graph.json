@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1603,
+  "graph_revision": 1604,
   "nodes": [
     {
       "acceptance": [
@@ -60821,6 +60821,137 @@
       "title": "ヒアリングシート作成 UX 刷新 (7画面・enum 拡張・添付ステージング・詳細全項目表示)",
       "tracker_binding": "beads",
       "updated_at": "2026-08-12T14:04:00Z"
+    },
+    {
+      "acceptance": [
+        "遷移元のないサインイン成功で承認済みの着地routeへ遷移する",
+        "着地画面は本人が最後に触った項目を種別横断で提示しKPIを通常表示しない",
+        "memberとworkspace-adminの閲覧範囲が既存のown/all契約と一致する",
+        "visible=falseのsectionは件数0かつrecent空を型と実行時schemaで強制する",
+        "モバイルとデスクトップの両方から着地面へ戻れる",
+        "対象テスト・型検査・lint・buildがPASSする",
+        "検証4条件がすべてPASSする"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security",
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-1cno",
+        "linked_at": "2026-08-13T01:37:32Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-elegant-home-review-20260813.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "変更中の既存Webアプリにおける仕様・認可・UI・テストの不整合を是正する単一の改善issue。",
+      "completion_evidence": {
+        "completed_at": "2026-08-13T02:26:12Z",
+        "evidence_refs": [
+          "apps/hub/src/__tests__/home-dashboard/summary-route.test.ts",
+          "apps/hub/src/__tests__/home-dashboard/home-dashboard-render.test.tsx",
+          "issues/sys-elegant-home-review-20260813.md"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-13T02:26:12Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-13T01:36:41.452373Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-elegant-home-review-20260813.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "承認済み着地契約と実装・仕様・テストを一致させ、矛盾なし・漏れなし・整合性あり・依存関係整合の4条件をすべてPASSにする。",
+      "graph_node_id": "issue-elegant-home-review-20260813",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現在変更中の着地画面を30種の思考法で再検証した結果、承認済みの /dashboard・自分が最後に触ったもの・KPIなしという契約との不整合、認可境界と型不変条件の不足が見つかったため、既存変更を破棄せず正しい契約へ収束させる。",
+      "related_nodes": [
+        "spec-post-signin-landing-observability",
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/(dashboard)/dashboard/",
+        "apps/hub/src/app/api/v1/dashboard/",
+        "apps/hub/src/features/home-dashboard/",
+        "apps/hub/src/lib/routing/post-signin-landing.ts",
+        "packages/db/repository/",
+        "packages/ui/src/components/DataTable.tsx",
+        "docs/screen-inventory.md"
+      ],
+      "scope_in": [
+        "着地routeと画面内容の承認済み契約への整合",
+        "本人の最近の作業と既存業務導線の実装",
+        "認可・tenant/workspace分離・DTO不変条件のテスト",
+        "共通UIの強調表示型契約とモバイル復帰導線の改善",
+        "関連する仕様台帳の一括更新"
+      ],
+      "scope_out": [
+        "成果物の削除",
+        "S09のKPI・推移・ランキング機能の前倒し",
+        "認証方式・role階層の変更",
+        "commit・push・本番公開"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "specs/harness-hub-post-signin-landing-observability-contract.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "closed",
+      "tags": [
+        "home-dashboard",
+        "elegant-review",
+        "authorization",
+        "ui-ux"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "変更中の着地ダッシュボードを承認済み契約へ整合しエレガントに改善する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-13T02:28:20.416734Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

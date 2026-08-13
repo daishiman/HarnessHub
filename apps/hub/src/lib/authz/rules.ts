@@ -190,6 +190,13 @@ export const ACTION_RULES: Readonly<Record<string, ActionRule>> = {
   // これはテナントのログイン経路そのものではなく、あくまで 1 ワークスペースの外部連携設定のため)。
   'notion-integration.read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
   'notion-integration.write': { minRole: 'workspace-admin', requiredScope: null, credential: SESSION, selfOnly: false },
+
+  // ホーム画面集約 (design-judgment/ux-design §9)。resource は workspace 単位の1つに
+  // まとめ (sheets/feedback/builds を跨ぐため個別 resource は取れない)、route 到達自体は
+  // member まで許す。機能ごとの表示可否は home-dashboard/service.ts が
+  // `sessionActionVisible(role, 'sheets.read_all' | 'feedback.read' | 'builds.read')` で
+  // 個別判定し、権限のない機能のデータをレスポンスへ混入させない。
+  'dashboard.summary_read': { minRole: 'member', requiredScope: null, credential: SESSION, selfOnly: false },
 };
 
 export function findActionRule(action: string): ActionRule | null {

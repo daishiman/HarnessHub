@@ -199,3 +199,10 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - **VRT Linux baseline 更新経路**: `ui-visual.yml` の `update_baseline` が失敗時も manifest + 画像 artifact を回収し、更新 run 自体は必ず失敗させる (`HarnessHub-7mc6` 残手順の安全化)。
 - 製品 API / DB / 認可 / deploy unit は非変更。
 
+## Post-closeout 着地ダッシュボード (2026-08-13 / `HarnessHub-1cno`)
+
+- 閉じた exact-13 に 14 個目の task は追加しない。appr-034 / qa-170 で確定済みの既定着地 `/dashboard` を実装結線する writeback とする。
+- 着地画面は本人の最近作業と既存業務導線を出し、S09 分析 KPI は出さない。`dashboard.summary_read` は到達可否だけで、機能ごとの閲覧は既存 own/all 契約に従う。
+- 公開 API の新規は集約 GET `/api/v1/dashboard/summary` のみ。DB schema・role 階層は非変更。
+- 受領: [elegant-home-review-20260813-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
+

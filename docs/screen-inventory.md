@@ -33,6 +33,7 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 | current | S07.SIGNIN | `/[tenant_slug]/signin` | public | transit | comfortable | form | form | form | public-header | `docs/features/feat-auth-tenancy/information-design/S07.md` | `apps/hub/tests/auth-tenancy/signin-page.test.tsx` | — |
 | current | S08.DEVICE | `/device` | signed-in member+ (`device.approve`) | input | comfortable | form | form | form | public-header | `docs/features/feat-auth-tenancy/information-design/S08.md` | `apps/hub/tests/auth-tenancy/device-approval-ui.test.ts` | — |
 | current | S18.LEGAL | `/legal` | public | read | comfortable | content | content | content | public-header | `docs/features/feat-user-org-admin/information-design/legal.md` | `apps/hub/tests/user-org-admin/legal-page-contract.test.tsx` | — |
+| current | S00.LANDING | `/dashboard` | member+ read (本人の recent。visible=false な機能は除外) | scan | balanced | grid+list | grid+list | grid+list | shell+screen | `docs/features/feat-hub-foundation/information-design/dashboard.md` | `apps/hub/src/__tests__/home-dashboard/home-dashboard-render.test.tsx` | — |
 | current | S01.LIST | `/catalog` | member+ read | scan | balanced | table | table | card-collection | shell+screen+filter+table | `docs/features/feat-dual-catalog-web/information-design/S01.md` | `apps/hub/src/__tests__/dual-catalog-web/catalog-a11y.test.tsx` | — |
 | current | S02.DETAIL | `/catalog/[projectId]` | member+ read / owner+ mutation | inspect | comfortable | detail | detail | detail | shell+screen | `docs/features/feat-dual-catalog-web/information-design/S02.md` | `apps/hub/src/__tests__/dual-catalog-web/catalog-a11y.test.tsx` | — |
 | current | S01.PUBLISH | `/catalog/publish` | owner+ (`publish.request`) | input | comfortable | wizard | wizard | wizard | shell+screen+stepper | `docs/features/feat-publish-pipeline/information-design/S01-publish.md` | `apps/hub/src/__tests__/web-only-publish/wizard-and-entries.test.tsx` | — |
@@ -56,14 +57,13 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 | current | S18.NOTION | `/settings/notion` | member+ read / workspace-admin+ mutation | manage | comfortable | definition-list+form | definition-list+form | definition-list+form | shell+screen | `docs/features/feat-user-org-admin/information-design/S18-notion.md` | `apps/hub/src/__tests__/notion-integration/notion-settings.test.tsx` | HarnessHub-hrux |
 | current | S04.AUTH | `/settings/auth` | provider-admin | manage | comfortable | timeline-stepper+form | timeline-stepper+form | timeline-stepper+form | shell+screen | `docs/features/feat-dual-catalog-web/information-design/S04.md` | `apps/hub/tests/auth-tenancy/oidc-admin-a11y.test.tsx` | — |
 | current | S10.COEFFICIENTS | `/settings/coefficients` | workspace-admin+ | manage | comfortable | definition-list+form | definition-list+form | definition-list+form | shell+screen | `docs/features/feat-hearing-intake/information-design/settings-coefficients.md` | `apps/hub/tests/routing/coefficients-settings.test.tsx` | — |
-| planned | S09-L.DASHBOARD | `/dashboard` | member+ | monitor | balanced | grid+list | grid+list | grid+list | shell+screen | `docs/features/feat-post-signin-scope-routing/information-design/S07-L.md` | planned: current default landing is `/sheets` | HarnessHub-3sjj |
 <!-- ROUTE_SURFACES_END -->
 
 #### Current / planned 境界と承認事項
 
 | 論点 | Current | Planned / historical | Decision ref |
 |---|---|---|---|
-| サインイン後の既定着地 | `DEFAULT_POST_SIGNIN_LANDING = /sheets`。`/dashboard` route は存在しない | S09-L `/dashboard` を新設する案。製品承認と別実装が必要 | HarnessHub-3sjj |
+| サインイン後の既定着地 | `DEFAULT_POST_SIGNIN_LANDING = /dashboard`。S00.LANDING が本人の最近と業務導線を表示する | S09 の分析 KPI は `/metrics` のまま別 surface | HarnessHub-1cno |
 | 公開ウィザード | S01.PUBLISH は `/catalog/publish` の独立 page | S01 上の modal に戻す記述は historical。自動的に modal 化しない | HarnessHub-nqo5 |
 | Device 承認 role | API `device.approve` は signed-in `member+` | owner 限定は未承認の role 変更。引き締めは別の製品判断 | HarnessHub-nqo5 |
 | Release 履歴 | S04.RELEASES は project 指定後の read-only table / card | rollback 操作と master-detail は現行 surface に無い。実装済みと扱わない | HarnessHub-nqo5 |
@@ -86,7 +86,6 @@ review_evidence: eval-log/elegant-review/harness-hub-information-design-20260811
 | ID | 画面 | 主な role | Stage | 優先度 | 担当 feature | mock id |
 |---|---|---|---|---|---|---|
 | S09 | ダッシュボード (KPI・推移・完了率・ランキング・部門別削減) | member 以上 | 拡張 | P5 (低) | feat-metrics-tracking | dashboard |
-| S09-L | **planned 着地ダッシュボード** (`/dashboard` 案。current の既定着地は `/sheets`) | member 以上 | 拡張 | **planned (製品承認待ち)** | feat-post-signin-scope-routing 系 | HarnessHub-3sjj |
 | S10 | ハーネス ヒアリング (4 大工程を7画面に分割したウィザード・削減試算・作成時添付) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |
 | S11 | ヒアリングシート一覧 | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheets |
 | S12 | ヒアリングシート詳細 (status 変更は admin) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheet-detail |

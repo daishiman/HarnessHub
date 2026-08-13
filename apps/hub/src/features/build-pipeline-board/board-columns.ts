@@ -24,10 +24,16 @@ export const BUILD_TYPE_LABELS: Readonly<Record<BuildType, string>> = {
   bug: '不具合',
 };
 
+/** リスクが高いものほど先に読ませる並び順。同じリスクどうしは元の順 (更新順) を保つ。 */
+const RISK_WEIGHT: Readonly<Record<BuildListItem['risk'], number>> = { blocked: 0, warn: 1, none: 2 };
+
 /**
  * 一覧 (`BuildListItem[]`) を S13 のボード列へ詰め直す。
  * 空の工程も列として残す — 残さないと workspace ごとに列位置がずれ、
  * 「design 列だと思って押したら test だった」という誤操作が起きる。
+ *
+ * 列内の並びは risk 優先 (blocked → warn → none)。停止中の案件は列の下の方に
+ * 埋もれると気付かれず放置されるため、列を開いた瞬間に一番上へ来るようにする。
  */
 export function toBoardColumnsView(
   items: readonly BuildListItem[],
@@ -37,6 +43,7 @@ export function toBoardColumnsView(
     stage,
     cards: items
       .filter((item) => item.stage === stage)
-      .map((item) => ({ id: item.id, title: item.title, meta: BUILD_TYPE_LABELS[item.type], risk: item.risk })),
+      .map((item) => ({ id: item.id, title: item.title, meta: BUILD_TYPE_LABELS[item.type], risk: item.risk }))
+      .sort((a, b) => RISK_WEIGHT[a.risk ?? 'none'] - RISK_WEIGHT[b.risk ?? 'none']),
   }));
 }

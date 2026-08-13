@@ -178,6 +178,16 @@ describe('StageBoard', () => {
     expect(screen.getByText('注意')).toBeDefined();
   });
 
+  it('blocked は一覧と同じ「要対応」語彙で読み上げる', () => {
+    renderWithUi(
+      <StageBoard
+        label="パイプライン"
+        columns={[{ stage: 'build', cards: [{ id: 'blocked', title: '停止案件', risk: 'blocked' }] }]}
+      />,
+    );
+    expect(screen.getByText('要対応: 停止中')).toBeDefined();
+  });
+
   it('移動ハンドラが無ければ操作ボタンを出さない (閲覧専用)', () => {
     renderWithUi(<StageBoard label="パイプライン" columns={boardColumns} />);
     expect(screen.queryByRole('button')).toBeNull();

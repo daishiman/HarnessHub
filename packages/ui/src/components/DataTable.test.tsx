@@ -3,7 +3,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DataTable, type DataTableColumn, InlineEditTable } from '../index.js';
+import { DataTable, type DataTableColumn, type DataTableProps, InlineEditTable } from '../index.js';
 import { renderWithUi } from '../test-utils.js';
 
 /**
@@ -40,6 +40,17 @@ const bodyTexts = (columnIndex: number): string[] =>
   [...document.querySelectorAll('tbody tr')].map((row) => row.querySelectorAll('td')[columnIndex]?.textContent ?? '');
 
 describe('DataTable', () => {
+  it('rowAttention と読み上げlabelは型で必須ペアになる', () => {
+    // @ts-expect-error rowAttentionLabel の無い強調判定は undefined を読み上げうるため拒否する
+    const invalid: DataTableProps<Row> = {
+      caption: '一覧',
+      columns,
+      rows,
+      rowKey: (row) => row.id,
+      rowAttention: () => true,
+    };
+    expect(invalid.rowAttentionLabel).toBeUndefined();
+  });
   it('caption で表の目的を伝える', () => {
     renderWithUi(<DataTable caption="利用者一覧" columns={columns} rows={rows} rowKey={(row) => row.id} />);
     expect(screen.getByRole('table', { name: '利用者一覧' })).toBeDefined();

@@ -6,7 +6,7 @@
  * バックスラッシュを使ったホスト解釈トリックは、前方一致チェックだけでは見逃す場合があるため。
  */
 
-export const DEFAULT_POST_SIGNIN_LANDING = '/sheets';
+export const DEFAULT_POST_SIGNIN_LANDING = '/dashboard';
 
 /** 判定用の内部 base origin。実在ホストと衝突しない予約済みドメインを使う (RFC 2606)。 */
 const RESOLUTION_BASE_ORIGIN = 'http://post-signin-landing.invalid';

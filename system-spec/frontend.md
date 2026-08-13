@@ -205,3 +205,9 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
   切替リンクは素の `<a>` による document 遷移を維持し、client router を使わない。
 - Modal / BottomSheet の `dismissible` で未保存破棄を防ぐ。公開 API / DB / 認可は不変。
 - S15 一覧 empty は権限別 CTA と絞込解除を分離。正本は UI 基盤追補と S15 情報設計シート。
+
+## 2026-08-13 MVP 実装追記 (着地 `/dashboard` / HarnessHub-1cno)
+
+- 既定着地は `DEFAULT_POST_SIGNIN_LANDING = /dashboard`。S00.LANDING が本人の最近作業と既存業務導線を出す。
+- S09 分析 KPI は `/metrics` のまま。着地の「要対応」は運用キューであり推移・ランキングではない。
+- 新規 qa 番号なし。R4-reopen 不要。正本は qa-170 / qa-171 と [受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
