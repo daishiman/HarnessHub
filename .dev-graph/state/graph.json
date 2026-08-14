@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1618,
+  "graph_revision": 1622,
   "nodes": [
     {
       "acceptance": [
@@ -61676,6 +61676,227 @@
       "title": "PR #709 後始末として公開共有の仕様と pre-DB 上限を揃える",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T13:00:00Z"
+    },
+    {
+      "acceptance": [
+        "主要 route の CPU time (p50/p95/max) が観測値として記録されている",
+        "主要 route の 1 request あたりサブリクエスト数が記録されている",
+        "10ms / 50 件の上限に対する余裕が route ごとに判定されている",
+        "超過する route があれば対策課題が別途起票されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-qjf6",
+        "linked_at": "2026-08-14T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/cloudflare-free-tier-runtime-limits-20260814.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "無料枠の実行時上限に収まるかを実測で確かめる、運用基盤の調査課題。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "25336301a446ef12a6256d6d31dda89a814edb96a8c211eacddd1e349b678e65",
+        "evaluator": "PR #724 CI 対応時の wrangler dry-run 実測と Cloudflare 公式上限の突合",
+        "evidence_ref": "apps/hub/wrangler.jsonc"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T00:04:43.238090Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/cloudflare-free-tier-runtime-limits-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "主要 route ごとの CPU time とサブリクエスト数を観測し、無料枠上限に対する余裕を記録した状態にする。",
+      "graph_node_id": "issue-cloudflare-free-tier-runtime-limits-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Cloudflare 無料枠で本番運用できるかを、設定では決まらない実行時上限の実測で確かめる。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "issues/cloudflare-free-tier-runtime-limits-20260814.md"
+      ],
+      "scope_in": [
+        "デプロイ後の observability からの CPU time 分布取得",
+        "主要 route のサブリクエスト数計測",
+        "上限に対する余裕の記録"
+      ],
+      "scope_out": [
+        "超過が判明した route の最適化実装",
+        "有料プランへの移行判断",
+        "wrangler.jsonc の設定変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "draft",
+      "tags": [
+        "cloudflare",
+        "workers",
+        "free-tier",
+        "observability",
+        "performance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Cloudflare 無料枠の CPU 10ms/req とサブリクエスト 50/req をデプロイ後に実測する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T00:09:31.341484Z"
+    },
+    {
+      "acceptance": [
+        "lint-doc-internal-link-integrity が違反 0 件で PASS する",
+        "PUSH_SKIP_CI を使わずに pre-push が通る",
+        "是正が表記の付け替えか参照の削除かを違反ごとに区別して記録している"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-tipx",
+        "linked_at": "2026-08-14T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/doc-internal-link-integrity-backlog-20260814.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "品質ゲートが恒常的に赤のまま放置されている、文書側の技術的負債。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "8947d6c299fafdb2d95892606b940258758c1ff3d84916453ed69d6ad192e2c1",
+        "evaluator": "PR #724 の pre-push で FAIL を観測し、git stash による baseline 比較で既存不良と確認",
+        "evidence_ref": "scripts/lint-doc-internal-link-integrity.py"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T00:07:17.875341Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/doc-internal-link-integrity-backlog-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "lint-doc-internal-link-integrity が違反 0 件で PASS し、pre-push を迂回せずに push できる状態にする。",
+      "graph_node_id": "issue-doc-internal-link-integrity-backlog-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "pre-push ゲートが常時赤で、新しい違反を混入させても気づけない状態を解消する。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "issues/doc-internal-link-integrity-backlog-20260814.md"
+      ],
+      "scope_in": [
+        "repo root 相対でない参照表記の是正 (160 件)",
+        "実在しない参照の削除・付け替え (194 件)",
+        "再発防止の許容リスト方針の決定"
+      ],
+      "scope_out": [
+        "リンタ自体の判定規則の変更",
+        "文書の内容そのものの改稿"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "draft",
+      "tags": [
+        "lint",
+        "documentation",
+        "pre-push",
+        "technical-debt"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "doc-internal-link-integrity の既存違反 354 件を解消し pre-push ゲートを緑に戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T00:10:10.555691Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

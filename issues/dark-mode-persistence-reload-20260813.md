@@ -107,6 +107,8 @@ implementation_readiness: {"checked_at":"2026-08-13T11:59:50Z","missing_sections
   `check:client-bundle` は violations 0 (超過 route なし)、`typecheck` / `lint` とも PASS。
   2026-08-14 の遅延読込追加後も 209 files / 2207 PASS + 8 todo、`check:client-bundle` violations 0。
   main 比の増分は `/settings/auth` −696、`/docs/[id]` −853、`/users` +439、`/users/[id]` +439 bytes。
+  PR #724 の CI は 7b1a6030 で全緑 (build & test / catalog 固有ゲート (client JS 予算) / 静的ゲート /
+  verify / change-category-guard / dev-pipeline-lint がいずれも SUCCESS)。
 - 証跡 path: `apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx`、
   `apps/hub/src/lib/routing/display-preferences.ts`、`apps/hub/src/app/layout.tsx`
 
@@ -125,7 +127,7 @@ G13 予算ゲートが 4 route (`/settings/auth` `/docs/[id]` `/users` `/users/[
 +373 bytes の増分を吸収できずゲートが赤になった。原因はこの変更ではなく先に積み上がった消費なので
 (警告帯 HarnessHub-5vlq が想定した誤帰属そのもの)、予算そのものは動かさず消費側を削った。
 
-- `oidc-connection-admin.tsx`: `SetupPanel` / `ConnectionCard` を `next/dynamic` + `ssr: false` で遅延化 (−1069 bytes)。
+- `oidc-connection-admin.tsx`: `SetupPanel` / `ConnectionCard` を `next/dynamic` で遅延化 (−1069 bytes)。
   この画面は一覧も setup 情報も mount 後の fetch で入るため、SSR 出力を失わずに初期 chunk だけを削れる。
 - `/docs/[id]`: 取得解決後にしか描かれない「分類と公開設定」を、既存の遅延境界
   `document-detail-content.tsx` へ移設 (−853 bytes)。新しい chunk を増やさずに page chunk から外れる。
@@ -138,3 +140,17 @@ G13 予算ゲートが 4 route (`/settings/auth` `/docs/[id]` `/users` `/users/[
 なお計測ゲート自体の過大計測も疑って検証したが、`.next/server/app/_not-found.html` が実際に要求する
 `<script src>` 集合と `check-client-bundle.mjs` の計上集合を突き合わせた結果、差分は
 `/_not-found` 疑似 route 固有の 1 件だけで、過大計測は無かった。ゲートは正しく測っている。
+
+#### `ssr: false` を付けてはいけない
+
+初版では遅延化に `ssr: false` を添えたが、CI の ERRSPLIT-03
+(`apps/hub/tests/ui-foundation/error-state-split.test.tsx`) だけが接続一覧を掴めず落ち続けた。
+手元では coverage 付き単体でも全 209 file でも緑で、待ちを増やしても CI の結果は
+`1 failed | 208 passed` から 1 バイトも動かなかった。緑のまま動いている
+`document-detail-content.tsx` の `dynamic()` との差は `ssr: false` の有無だけである。
+`ssr: false` は Next の client ランタイム (mount 判定) に依存するため、jsdom では
+読込が解決しないことがある。
+
+初期 chunk から外す効果は `dynamic()` 自体が生むもので、`ssr: false` は寄与しない
+(実測: `/settings/auth` は 121420 → 121414 bytes、差は 6 bytes)。この画面は SSR 出力が
+元から「読み込み中です。」だけなので、外して失うものも無い。外した結果 CI は全緑になった。
