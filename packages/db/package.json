@@ -38,6 +38,7 @@
     "restore:control-plane": "tsx scripts/restore-control-plane.ts",
     "migrate:deploy": "tsx scripts/migrate-deploy.ts",
     "smoke:production": "tsx scripts/smoke-production.ts",
+    "bootstrap:tenant": "tsx scripts/bootstrap-tenant.ts",
     "seed:local": "tsx scripts/seed-local.ts",
     "session:local": "tsx scripts/issue-local-session.ts"
   },

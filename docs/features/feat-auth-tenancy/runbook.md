@@ -16,6 +16,9 @@ feature_context_digest: sha256:8ac2258f5c7d0d198374ebc66e51157b0af87fa9ff858a4fc
 
 事故対応と定期監視を扱う。テナント受け入れ時の OIDC provider 登録は
 [runbook-oidc-provider-onboarding.md](./runbook-oidc-provider-onboarding.md) を参照する。
+本番に最初の tenant / workspace / workspace-admin がまだ無いときは、先に
+[本番テナント bootstrap](./production-tenant-bootstrap-runbook.md) を使う。
+画面から新規テナントを作る経路は無い。
 
 | # | 手順 | 使う場面 |
 | --- | --- | --- |

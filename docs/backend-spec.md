@@ -52,7 +52,7 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 | テーブル | 主な列 | 制約・備考 |
 |---|---|---|
-| `tenants` | id, slug, name, plan, status(`active/suspended`), created_at | slug UNIQUE。課金・IdP 設定の境界 |
+| `tenants` | id, slug, name, plan, status(`active/suspended`), created_at | slug UNIQUE。課金・IdP 設定の境界。本番初回行は bootstrap-tenant CLI のみ（画面経路なし） |
 | `idp_connections` | id, tenant_id, issuer_url, client_id, **client_secret_enc**, scopes | **封筒暗号化 (KEK/DEK) で DB 保存** (security-spec §4.3)。テナント IdP secret は顧客ごとに動的に増えるため環境 binding では C1/C2 に反する。「secret は環境 binding のみ」原則は Hub 自身の静的 secret を対象とし、テナント由来の動的 secret は本方式で保護する |
 | `workspaces` | id, tenant_id, slug, name | UNIQUE(tenant_id, slug)。**共有・カタログの境界 (権限の強さは tenant、到達可否は `user_workspaces` の所属)** (security-spec §3.1.2) |
 | `users` / `user_workspaces` | users: id, tenant_id, idp_subject, email, name, department, **salary (PII, 年収 JPY)**, role, status, last_login_at / 所属: tenant_id, user_id, workspace_id, created_at | users は UNIQUE(tenant_id, idp_subject)。**owner は role 列ではなく `projects.owner_user_id` による関係 role**。所属は PK(tenant_id,user_id,workspace_id) とし、別テナントの同じ ID を衝突させず session の `workspace_ids` と Workspace 到達可否の正本にする |

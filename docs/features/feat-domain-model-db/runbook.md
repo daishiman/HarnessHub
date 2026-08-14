@@ -73,6 +73,13 @@ rm -rf "$WORK_DIR"
 - 2026-07-25 の実走で、Turso の SQL dump は `turso db create --from-dump` へ渡すと Turso CLI 1.0.30 で 0 table のまま成功表示になることを確認済み。**復元できたように見えて中身が空になる経路**があるため、成功判定は CLI の exit code ではなく上記 report の `ok` / `chainOk` で行う。
 - §1 の手動 export をそのまま検証する場合は 1) を飛ばして 2) から 3) を実行する (`$WORK_DIR/export.jsonl` が既にある状態)。この最短経路は DMDB-T14 が CI で毎 PR 実走している。
 
+## 2.1 本番最初のテナント投入
+
+`seed-local` は同じ slug を消して作り直すので本番禁止。本番の最初の
+tenant / workspace / 管理者所属は
+[`bootstrap-tenant`](../feat-auth-tenancy/production-tenant-bootstrap-runbook.md)
+だけを使う。既存 name / plan は上書きせず、無い行だけを足す。
+
 ## 3. migration 積み増し手順 (Studio 拡張 feature 向け)
 
 正本: [refactoring-migration-note.md](./refactoring-migration-note.md) §3。要点:
