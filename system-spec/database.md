@@ -126,10 +126,12 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 
 ## 2026-08-12 MVP 実装追記 (feat-hearing-intake / HarnessHub-370h)
 
-- migration `0010_hearing-intake-screenshots-and-share-tokens.sql` で
+- migration `0013_hearing-intake-screenshots-and-share-tokens.sql` で
   `hearing_screenshots` と `hearing_share_tokens` を追加する。
-- 画像 blob は `tenant_data_objects` を再利用し、hearing 側はメタデータと token 境界だけを持つ。
-- 詳細は `docs/backend-spec.md` §2.3。
+- 添付 blob は `tenant_data_objects` を再利用し、hearing 側はメタデータと token 境界だけを持つ。
+  テーブル名は歴史的経緯で `screenshots` だが、扱う対象は画像限定ではなく allowlist 8 種
+  (PNG/JPEG/WebP/MP4/MOV/CSV/xlsx/xls)・25 MiB 以下である。
+- 詳細は `docs/backend-spec.md` §2.3 と `docs/backend-spec-api-state.md` §4.3.1。
 
 ## 2026-08-12 MVP 実装追記 (feat-docs-cms blog essentials / HarnessHub-zkcl)
 

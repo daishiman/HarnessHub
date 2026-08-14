@@ -288,13 +288,10 @@ catalog adapter は HTTP error を分類してから response schema を遅延�
 PR #700 の G13 回復では超過画面の client 本体を route-local `next/dynamic` へ分離し、
 `StickyHeaderOffset` も sticky 画面だけへ移した。API/認可/DB 意味は不変。
 
-## 2026-08-12 hearing-intake ウィザード / 引き渡し UI (MVP)
+## 2026-08-12 hearing-intake / S15 / 配色 (MVP)
 
-S10 を7画面へ分割し S12 に引き渡し UI と form_snapshot 全項目表示を追加。
-作成時添付ステージングと profile enum 加算を含む。正本は frontend-spec。
+S10 を7画面へ分割し S12 に引き渡し UI・form_snapshot 全項目・作成時添付 (画像/動画/CSV/Excel・25MB) を追加。S15 一覧は category/tag/thumbnail/excerpt/予約 badge と権限別 empty CTA。配色境界は [デザインシステム](harness-hub-design-system.md)、breakpoint 正本は `480 / 641 / 1025`。
 
-## 2026-08-12 S15 Docs CMS rich surface
-- 一覧は category/tag と thumbnail/excerpt/予約 badge を集約。0件は権限別作成CTA/絞込解除。画像/Markdown は S15 正本。
+## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
 
-## 2026-08-13 デザインシステム改訂 (グラファイト × アンバー)
-- 視覚言語の境界は [デザインシステム アーキテクチャ](harness-hub-design-system.md) を正とする。breakpoint 数値正本は `480 / 641 / 1025` へ改訂。
+root layout が `resolveUiPreferences()` でサーバ側から `user_settings` を読み、theme / density / locale を `UiProvider` の初期値として渡す。client からの後追い取得は行わない (初期描画のちらつきと、client 部品追加による共通 chunk 分割を避けるため)。未認証・取得失敗では既定値へ落とし、シェルは落とさない。配色トークンは不変。

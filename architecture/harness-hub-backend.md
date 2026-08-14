@@ -224,10 +224,14 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
 
 **Beads**: `HarnessHub-370h` / graph node `issue-hearing-intake-pr705-elegant-review-20260812` / PR #705
 
-- FormData を 28 項目へ拡張し、`POST /api/v1/sheets` は用途プロファイル・依頼パターン・参考 URL を受け付ける。
+- FormData を 30 項目へ拡張し (保存 snapshot は `salary` を除く 29 項目)、`POST /api/v1/sheets` は用途プロファイル・依頼パターン・参考 URL を受け付ける。
 - 認証付き追加 API: `.../screenshots` (CRUD 最小) と `.../handoff-tokens` (発行/一覧/revoke)。
 - 公開 API: `GET /api/hearing/:token` と screenshot 中継。session なし。無効トークンは undifferentiated 404。
 - 認可: 公開経路は middleware 例外として exact path のみ。token_hash 照合後の sheet scope を正本とする。
+- 公開経路の rate limit は 2 段。token 解決より前に IP 単位 240 req/min
+  (`checkHearingSharePreResolveRateLimit`)、解決後に token row ID 単位で payload 120 /
+  screenshot 60 req/min。1 段目の鍵に token を含めない (429 を存否 oracle にしない)。
+- 添付は allowlist 8 種・25 MiB。経路名 `screenshots` は歴史的経緯。
 - 詳細正本: `docs/backend-spec-api-state.md` §4.3 / §4.3.1。feature ADR 追補は
   `docs/features/feat-hearing-intake/architecture-decision-record.md` AD-2。
 

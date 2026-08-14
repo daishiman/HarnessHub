@@ -21,7 +21,10 @@ import {
 import { recordShareTokenAccess, resolveShareToken } from '../../../../features/hearing-intake/public-share.js';
 import { readAuthRuntimeEnv } from '../../../../lib/authz/index.js';
 import { hearingShareRuntime } from '../../../../lib/hearing-share/index.js';
-import { checkHearingShareRateLimit } from '../../../../lib/hearing-share/rate-limit.js';
+import {
+  checkHearingSharePreResolveRateLimit,
+  checkHearingShareRateLimit,
+} from '../../../../lib/hearing-share/rate-limit.js';
 
 interface TokenParams {
   readonly token: string;
@@ -33,8 +36,14 @@ function notFound(): Response {
   return new Response(null, { status: 404, headers: { 'cache-control': 'no-store' } });
 }
 
-export async function GET(_request: Request, context?: { readonly params: Promise<TokenParams> }): Promise<Response> {
+export async function GET(request: Request, context?: { readonly params: Promise<TokenParams> }): Promise<Response> {
   const params = (await context?.params) ?? { token: '' };
+
+  // token に依存しない上限を **DB read より前** に置く。ここを後ろへ動かすと、無効 token を
+  // 投げるだけで DB read を無制限に誘発でき、増幅型 DoS と token 総当たりが両方通る。
+  const preResolveLimit = checkHearingSharePreResolveRateLimit(request, Date.now());
+  if (preResolveLimit.rejection !== null) return preResolveLimit.rejection;
+
   const resolved = await resolveShareToken(params.token);
   if (resolved === null) return notFound();
 

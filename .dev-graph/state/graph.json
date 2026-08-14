@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1612,
+  "graph_revision": 1622,
   "nodes": [
     {
       "acceptance": [
@@ -61436,6 +61436,467 @@
       "title": "本番OIDCスモークの着地契約ドリフトを解消する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-13T10:22:00Z"
+    },
+    {
+      "acceptance": [
+        "ログイン済み利用者がテーマを dark に変更すると display-settings API へ保存される",
+        "保存後にページを再読み込みしても data-theme と実効テーマが dark になる",
+        "light と system の選択、表示密度、言語の既存挙動を維持する",
+        "設定取得に失敗しても公開画面やアプリ全体を操作不能にしない",
+        "原因を再現するテストが修正前に失敗し、修正後に関連テストが通る"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-sj20",
+        "linked_at": "2026-08-13T12:03:41Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/dark-mode-persistence-reload-20260813.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "ログイン済み利用者の保存済み表示設定が再読み込みで失われる、再現可能なフロントエンド状態復元の不具合。",
+      "completion_evidence": {
+        "completed_at": "2026-08-13T12:19:29Z",
+        "evidence_refs": [
+          "beads:HarnessHub-sj20",
+          "apps/hub/src/lib/routing/display-preferences.ts",
+          "apps/hub/src/app/layout.tsx",
+          "apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-13T12:19:29Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "107d8a1564587c3605ec952c85d0dd6b65c892f7abe22b3c55a2daf6ae0f89fa",
+        "evaluator": "利用者の本番再現報告と RootLayout / AccountSettings のコード確認",
+        "evidence_ref": "apps/hub/src/app/layout.tsx"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T11:59:50Z",
+      "depends_on": [],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/dark-mode-persistence-reload-20260813.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "ダークモードを選んで保存した利用者が再読み込みしてもダーク表示のままで、表示密度と言語の保存契約も壊れない状態にする。",
+      "graph_node_id": "issue-dark-mode-persistence-reload-20260813",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T11:59:50Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "ログイン済み利用者が表示設定で選んだダークモードを、画面再読み込み後もサーバ保存値から復元できるようにする。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "issues/dark-mode-persistence-reload-20260813.md",
+        "apps/hub/src/lib/routing/display-preferences.ts",
+        "apps/hub/src/app/layout.tsx",
+        "apps/hub/src/components/shell/hub-shell.tsx",
+        "apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"
+      ],
+      "scope_in": [
+        "保存済み user_settings の表示設定をログイン済み画面へ復元する経路",
+        "ダークテーマの保存から再読み込みまでを固定する回帰テスト",
+        "既存の light / system、表示密度、言語設定との整合"
+      ],
+      "scope_out": [
+        "配色トークンや画面デザインの変更",
+        "認証方式・認可ルール・DBスキーマの変更",
+        "本番デプロイとリモートへの push"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T11:59:50Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "done",
+      "tags": [
+        "bug",
+        "theme",
+        "dark-mode",
+        "user-settings",
+        "reload"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "保存したダークモードが再読み込み後も維持されるようにする",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-13T12:19:29Z"
+    },
+    {
+      "acceptance": [
+        "公開経路は token 解決より前に IP 単位 240 req/min で止まり、無効 token では DB read が走らない",
+        "有効 token と無効 token の 429 応答が一致する",
+        "添付の正本が allowlist 8 種・25 MiB である",
+        "FormData 30 / snapshot 29 / migration 0013 が docs・system-spec・architecture で一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security",
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-hodi",
+        "linked_at": "2026-08-13T13:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/hearing-intake-pr709-remediation-20260813.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "マージ済み公開共有の仕様ドリフトと pre-DB rate limit 欠落を直す再現可能な backend 不具合。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "76e38518a857923c6c8a6fa7341a679e4a49844a7b0bf02e852b2222ab80db11",
+        "evaluator": "PR #709 後の実装と仕様差分の照合",
+        "evidence_ref": "apps/hub/src/lib/hearing-share/rate-limit.ts"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T13:00:00Z",
+      "depends_on": [],
+      "domain": "backend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/hearing-intake-pr709-remediation-20260813.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "無効 token でも DB read が増幅せず、仕様書の添付・件数・migration 番号が実装と一致している状態にする。",
+      "graph_node_id": "issue-hearing-intake-pr709-remediation-20260813",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T13:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "マージ済み PR #709 のあとで、公開共有リンクの回数制限を token 解決より前に置き、添付・FormData・migration 番号の正本を実装と同じ値に揃える。",
+      "related_nodes": [
+        "feat-hearing-intake"
+      ],
+      "resource_scope": [
+        "issues/hearing-intake-pr709-remediation-20260813.md",
+        "apps/hub/src/lib/hearing-share/rate-limit.ts",
+        "apps/hub/src/app/api/hearing/[token]/route.ts",
+        "docs/backend-spec-api-state.md"
+      ],
+      "scope_in": [
+        "token 非依存の pre-DB rate limit と回帰テスト",
+        "添付 allowlist 8 種・25 MiB の正本化",
+        "FormData 30 / snapshot 29 / migration 0013 の表記揃え"
+      ],
+      "scope_out": [
+        "公開 token の 404 畳み方の変更",
+        "認可 role 階層の変更",
+        "/legal の scope 分離",
+        "本番デプロイ"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T13:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-13",
+      "status": "active",
+      "tags": [
+        "bug",
+        "hearing-intake",
+        "rate-limit",
+        "share-token",
+        "attachments"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "PR #709 後始末として公開共有の仕様と pre-DB 上限を揃える",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-13T13:00:00Z"
+    },
+    {
+      "acceptance": [
+        "主要 route の CPU time (p50/p95/max) が観測値として記録されている",
+        "主要 route の 1 request あたりサブリクエスト数が記録されている",
+        "10ms / 50 件の上限に対する余裕が route ごとに判定されている",
+        "超過する route があれば対策課題が別途起票されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-qjf6",
+        "linked_at": "2026-08-14T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/cloudflare-free-tier-runtime-limits-20260814.md",
+          "confidence": 0.95
+        }
+      ],
+      "classification_confidence": 0.95,
+      "classification_reason": "無料枠の実行時上限に収まるかを実測で確かめる、運用基盤の調査課題。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "25336301a446ef12a6256d6d31dda89a814edb96a8c211eacddd1e349b678e65",
+        "evaluator": "PR #724 CI 対応時の wrangler dry-run 実測と Cloudflare 公式上限の突合",
+        "evidence_ref": "apps/hub/wrangler.jsonc"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T00:04:43.238090Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/cloudflare-free-tier-runtime-limits-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "主要 route ごとの CPU time とサブリクエスト数を観測し、無料枠上限に対する余裕を記録した状態にする。",
+      "graph_node_id": "issue-cloudflare-free-tier-runtime-limits-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Cloudflare 無料枠で本番運用できるかを、設定では決まらない実行時上限の実測で確かめる。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "issues/cloudflare-free-tier-runtime-limits-20260814.md"
+      ],
+      "scope_in": [
+        "デプロイ後の observability からの CPU time 分布取得",
+        "主要 route のサブリクエスト数計測",
+        "上限に対する余裕の記録"
+      ],
+      "scope_out": [
+        "超過が判明した route の最適化実装",
+        "有料プランへの移行判断",
+        "wrangler.jsonc の設定変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "draft",
+      "tags": [
+        "cloudflare",
+        "workers",
+        "free-tier",
+        "observability",
+        "performance"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Cloudflare 無料枠の CPU 10ms/req とサブリクエスト 50/req をデプロイ後に実測する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T00:09:31.341484Z"
+    },
+    {
+      "acceptance": [
+        "lint-doc-internal-link-integrity が違反 0 件で PASS する",
+        "PUSH_SKIP_CI を使わずに pre-push が通る",
+        "是正が表記の付け替えか参照の削除かを違反ごとに区別して記録している"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-tipx",
+        "linked_at": "2026-08-14T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/doc-internal-link-integrity-backlog-20260814.md",
+          "confidence": 0.97
+        }
+      ],
+      "classification_confidence": 0.97,
+      "classification_reason": "品質ゲートが恒常的に赤のまま放置されている、文書側の技術的負債。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "8947d6c299fafdb2d95892606b940258758c1ff3d84916453ed69d6ad192e2c1",
+        "evaluator": "PR #724 の pre-push で FAIL を観測し、git stash による baseline 比較で既存不良と確認",
+        "evidence_ref": "scripts/lint-doc-internal-link-integrity.py"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T00:07:17.875341Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/doc-internal-link-integrity-backlog-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "lint-doc-internal-link-integrity が違反 0 件で PASS し、pre-push を迂回せずに push できる状態にする。",
+      "graph_node_id": "issue-doc-internal-link-integrity-backlog-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "pre-push ゲートが常時赤で、新しい違反を混入させても気づけない状態を解消する。",
+      "related_nodes": [
+        "feat-hub-foundation"
+      ],
+      "resource_scope": [
+        "issues/doc-internal-link-integrity-backlog-20260814.md"
+      ],
+      "scope_in": [
+        "repo root 相対でない参照表記の是正 (160 件)",
+        "実在しない参照の削除・付け替え (194 件)",
+        "再発防止の許容リスト方針の決定"
+      ],
+      "scope_out": [
+        "リンタ自体の判定規則の変更",
+        "文書の内容そのものの改稿"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "draft",
+      "tags": [
+        "lint",
+        "documentation",
+        "pre-push",
+        "technical-debt"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "doc-internal-link-integrity の既存違反 354 件を解消し pre-push ゲートを緑に戻す",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T00:10:10.555691Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",

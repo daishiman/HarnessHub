@@ -168,6 +168,13 @@ pnpm 強制 CI → wrangler deploy が自動化され、/health・監視・SLO 9
 - G13 は 95% 警告帯を持ち、構造的 headroom は `HarnessHub-vwxc`（2026-08-11 で catalog 全 route 95% 未満を達成）。
 - 受入の再計測・navigation VRT は `HarnessHub-2fo1` / `HarnessHub-preq` を参照する。
 
+## 2026-08-13 表示設定の再読み込み復元 (`HarnessHub-sj20`)
+
+- ログイン済み `HubShell` が保存済み `user_settings` を `GET /api/v1/me/display-settings` で復元する。
+- 公開画面では本人設定 API を読まない。取得失敗時もシェルは操作可能なまま。
+- 公開 API / DB schema / 認可判定は非変更。受領は
+  [dark-mode-persistence-20260813-spec-reflection-receipt.md](../docs/features/feat-hub-foundation/dark-mode-persistence-20260813-spec-reflection-receipt.md)。
+
 ## Post-closeout ローカル開発ランタイム信頼性 (2026-08-11 / `HarnessHub-bmhq`)
 
 - macOS ローカル画面試験の sqld / Next.js を、固定 absolute state と launchd + supervisor の二段監視で再現可能にした。

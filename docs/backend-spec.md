@@ -75,8 +75,8 @@ packages/db         Drizzle スキーマ + リポジトリ層
 
 | テーブル | 主な列 | 制約・備考 |
 |---|---|---|
-| `hearing_sheets` | id, tenant_id, workspace_id, code(`HS-xxxx`), title, applicant_user_id, department, status(§5.2), form_json, estimate_json, ai_job_id, generated_doc_ids_json, build_id | code はテナント別連番。estimate_json は提出時のサーバ側試算 snapshot。form_json は FormData 28 項目から salary を除いた snapshot (2026-08-12) |
-| `hearing_screenshots` | id, tenant_id, workspace_id, sheet_id, tenant_data_object_id, title, linked_item, note, content_type, created_by, created_at | スクリーンショットのメタのみ。実体は `tenant_data_objects` (kind=`hearing_screenshot`) が暗号化保管する (2026-08-12 追補) |
+| `hearing_sheets` | id, tenant_id, workspace_id, code(`HS-xxxx`), title, applicant_user_id, department, status(§5.2), form_json, estimate_json, ai_job_id, generated_doc_ids_json, build_id | code はテナント別連番。estimate_json は提出時のサーバ側試算 snapshot。form_json は FormData 30 項目から salary を除いた 29 項目の snapshot (2026-08-12) |
+| `hearing_screenshots` | id, tenant_id, workspace_id, sheet_id, tenant_data_object_id, title, linked_item, note, content_type, created_by, created_at | 添付 (attachments) のメタのみ。テーブル名は歴史的経緯で `screenshots` だが画像限定ではなく allowlist 8 種を扱う (backend-spec-api-state §4.3.1)。実体は `tenant_data_objects` (kind=`hearing_screenshot`) が暗号化保管する (2026-08-12 追補) |
 | `hearing_share_tokens` | id, tenant_id, workspace_id, sheet_id, audience, token_hash, expires_at, revoked_at, last_accessed_at, access_count, created_by_user_id, created_at | Claude Code 引き渡し用。平文 token は保存せず SHA-256 のみ。TTL 7 日・手動 revoke (2026-08-12 追補) |
 | `builds` | id, tenant_id, workspace_id, sheet_id NULL, feedback_id NULL, project_id, title, stage(§5.3 の 7 値), risk(`ok/warn`), eta_date, assignee_user_id, publish_request_id, note | 起点は Sheet/Feedback のどちらか一方 (`CHECK` + 非 NULL 値の partial UNIQUE。各起点 = 1 Build)。公開工程は PublishRequest へ接続し二重実装しない (B4) |
 | `build_stage_events` | id, build_id, from_stage, to_stage, actor_user_id, created_at | append-only (ボード履歴表示用。監査は audit_events にも記録) |

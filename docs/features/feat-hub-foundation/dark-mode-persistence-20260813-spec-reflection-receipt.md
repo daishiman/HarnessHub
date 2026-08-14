@@ -1,0 +1,71 @@
+---
+status: recorded
+layer: feature-spec-reflection
+spec_impact: reflected
+reviewed_at: 2026-08-13
+feature_node_ids:
+  - feat-hub-foundation
+dev_graph_node_id: issue-dark-mode-persistence-reload-20260813
+beads_ids:
+  - HarnessHub-sj20
+recorded_at: 2026-08-13
+---
+
+# 表示設定の再読み込み復元 — 仕様反映受領書
+
+## 1. 依頼と目的
+
+ログイン済み利用者がダークモードを保存しても再読み込みで戻る不具合を直す。
+既存契約 (`user_settings` が正本) を実装へ揃える。
+
+## 2. 結論
+
+- **仕様・設計影響: あり (`reflected`)**。製品 API / DB / 認可の意味は変えていない。
+- 既存 frontend-spec の「`user_settings` が正本」を、初期描画時点でサーバ値を適用する契約として明示した。
+- 実装は root layout が `resolveUiPreferences()` (`src/lib/routing/display-preferences.ts`) でサーバ側から
+  `user_settings` を解決し、`UiProvider` の `defaultPreferences` へ渡す。client からの後追い取得は行わない。
+- 公開画面では本人設定を引かない (未認証は `undefined` = 既定値)。取得失敗時もシェルは落ちない。
+
+### 2026-08-13 改訂: client 後追い取得からサーバ解決へ切り替えた
+
+初版は `HubShell` 上の client 部品 `UiPreferencesHydrator` が `GET /api/v1/me/display-settings` を
+読む形だったが、次の 2 点により本 PR 内でサーバ解決へ差し替えた。
+
+1. **配色のちらつき**: 初期描画が既定テーマで出てから設定値へ切り替わるため、再読込のたびに一瞬白く光る。
+2. **client bundle の退行**: 上書き専用の client 部品を 1 つ足したことで webpack が `@harness-hub/ui` を
+   別 chunk へ割り、その chunk が `(dashboard)` / `(workspace)` 配下の全 route の First Load JS に載った。
+   実測 (2026-08-13, PR #724 CI) で **+3856 bytes / route**、G13 予算ゲートが
+   `/settings/auth` `/docs/[id]` `/users` `/users/[id]` の 4 route で超過した。
+
+`UiProvider` は元から `defaultPreferences` を受ける契約を持つため、サーバ値はそこへ直接渡せば足りる。
+API path / schema / 認可は初版から変えていない。
+
+## 3. 正規反映先
+
+| 層 | 反映 |
+|---|---|
+| `system-spec/` | `frontend.md` 章末追記。R4-reopen なし |
+| `specs/` | compiled system specification へ 2026-08-13 追記 |
+| `architecture/` | `harness-hub-frontend.md` |
+| `features/` | `feat-hub-foundation.md` 追補 |
+| `tasks/` | promoted package 非改変。task 層の追補は本受領書と issue 本文 |
+| `docs/` | `frontend-spec.md` §2.1 / 本受領書 |
+
+## 4. R4-reopen 不要の理由
+
+1. 表示設定 API の path / schema / 認可は変えていない。
+2. 配色トークン・density・locale の値域は変えていない。
+3. 未ログイン画面の既定 (`auto`) は維持する。
+4. 新規 qa 番号は不要。既存契約の実装ギャップ解消である。
+
+## 5. 品質ゲート (MVP 最小)
+
+| ゲート | 結果 |
+|---|---|
+| `validate-system-plan.py` feat-hub-foundation | PASS（baseline exemption、digest 8735bb16、violations 0） |
+| display-theme-persistence focused tests | 2 PASS |
+
+## 6. 残課題
+
+- 本番ブラウザでの目視 (MVP では Vitest を正)
+- 共通シェルへの hydrator 追加による client bundle 余白 (`HarnessHub-a7tk` / `HarnessHub-gs7d`)

@@ -178,9 +178,17 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 
 - S10 ヒアリングウィザードは、確定済みの4大工程 (基本情報/業務詳細/要件/確認) を維持したまま、
   入力負荷低減のため画面分割する (FormData 30 項目)。
-- S12 は生成結果の閲覧に加え、スクリーンショット添付と Claude Code 引き渡しトークン発行 UI を持つ。
+- S12 は生成結果の閲覧に加え、添付 (画像/動画/CSV/Excel・25MB) と Claude Code 引き渡しトークン発行 UI を持つ。
 - 画面詳細の正本は `docs/frontend-spec.md` と feature information-design シート。
 - 本追記は製品 UI 契約の additive な具体化であり、desktop client 構成 (qa-007) や shell 契約 (qa-227) は不変。
+
+## 2026-08-13 MVP 実装追記 (表示設定の再読み込み復元 / HarnessHub-sj20)
+
+- ログイン済み共通シェル (`HubShell`) は起動時に `GET /api/v1/me/display-settings` で
+  保存済み theme / density / language を `UiProvider` へ復元する。
+- root layout は未ログイン画面も包むため、本人設定 API は公開面では読まない。
+- 既存契約 (`user_settings` が正本、公開 API / DB / 認可は不変) の実装ギャップ解消であり、
+  新規 qa 番号なし。R4-reopen 不要。
 
 ## 2026-08-12 MVP 実装追記 (hearing-sheet-overhaul / issue-hearing-sheet-overhaul-20260812)
 

@@ -10,7 +10,10 @@ import { createRepositoryContext, EntityNotFoundError } from '@harness-hub/db';
 
 import { recordShareTokenAccess, resolveShareToken } from '../../../../../../features/hearing-intake/public-share.js';
 import { hearingShareRuntime } from '../../../../../../lib/hearing-share/index.js';
-import { checkHearingShareRateLimit } from '../../../../../../lib/hearing-share/rate-limit.js';
+import {
+  checkHearingSharePreResolveRateLimit,
+  checkHearingShareRateLimit,
+} from '../../../../../../lib/hearing-share/rate-limit.js';
 import { createSafeAttachmentDownloadResponse } from '../../../../../../lib/hearing-share/safe-attachment.js';
 
 interface ScreenshotTokenParams {
@@ -23,10 +26,15 @@ function notFound(): Response {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context?: { readonly params: Promise<ScreenshotTokenParams> },
 ): Promise<Response> {
   const params = (await context?.params) ?? { token: '', screenshotId: '' };
+
+  // payload 経路と同じく、token に依存しない上限を DB read より前に置く。
+  const preResolveLimit = checkHearingSharePreResolveRateLimit(request, Date.now());
+  if (preResolveLimit.rejection !== null) return preResolveLimit.rejection;
+
   const resolved = await resolveShareToken(params.token);
   if (resolved === null) return notFound();
 

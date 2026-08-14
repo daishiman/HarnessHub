@@ -475,3 +475,12 @@ Metrics Tracking と Build Pipeline Board の MVP 実装索引は
 ## 開発時の検証 tier
 
 差分から `mvp / standard / critical` を導出する開発品質契約は [検証 tier 仕様追補](harness-hub-verification-tiering-addendum.md) を正とする。
+
+## 2026-08-13 hearing 公開共有 / 表示設定復元 (HarnessHub-hodi / HarnessHub-sj20)
+
+- 公開 hearing share は token 解決前に IP 単位 240 req/min を置き、解決後は token row ID 単位で payload 120 / screenshot 60 req/min。鍵に token を含めない。
+- 添付の正本は allowlist 8 種・25 MiB。migration 番号は `0013`。FormData は 30 項目 (snapshot 29)。
+- ログイン済みシェルは `GET /api/v1/me/display-settings` で theme / density / language を再読み込み後も復元する。公開面では本人設定 API を読まない。
+- 詳細正本は `docs/backend-spec-api-state.md` §4.3.1、`docs/security-spec-request-controls.md` §7.2、`docs/frontend-spec.md` §2.1。受領は
+  [hodi](../docs/features/feat-hearing-intake/pr709-remediation-spec-reflection-receipt.md) と
+  [sj20](../docs/features/feat-hub-foundation/dark-mode-persistence-20260813-spec-reflection-receipt.md)。

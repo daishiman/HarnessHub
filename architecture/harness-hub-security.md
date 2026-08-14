@@ -180,6 +180,15 @@ OIDC/Device Flow の本人確認と、tenant/workspace 行レベル scope を分
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。
 
+**差分追記 (2026-08-13 / `HarnessHub-hodi`)**:
+
+- 公開 hearing share は token 解決より前に IP 単位 240 req/min の上限を置く。
+  無効 token でも `findValidByTokenHash` を走らせない。鍵に token を含めないため、
+  429 の出方から token の存否は読めない。
+- 解決後は既存どおり token row ID 単位で payload 120 / screenshot 60 req/min。
+- 正本は [request-controls](../docs/security-spec-request-controls.md) §7.2 と
+  [backend-spec-api-state](../docs/backend-spec-api-state.md) §4.3.1。
+
 ## Risks and verification
 
 正本章 (system-spec/security.md, system-spec/auth.md) の該当節を参照。feature 分解時に本節へ差分追記する (全書換禁止・要件 C18/C19)。

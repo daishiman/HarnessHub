@@ -30,6 +30,13 @@ async function mount(node: ReactNode): Promise<HTMLElement> {
   await act(async () => {
     createRoot(container).render(createElement(UiProvider, null, node));
   });
+  // `next/dynamic` の遅延読込は、束ね済みでも最低 1 マイクロタスク遅れて解決する。
+  // render の act 1 ラウンドだけでは placeholder のまま残ることがあり、
+  // 実行環境の速さで結果が割れる (手元は緑・CI は ERRSPLIT-03 が赤になった)。
+  // ここで確実に解決まで進めてから検証する。
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
   return container;
 }
 

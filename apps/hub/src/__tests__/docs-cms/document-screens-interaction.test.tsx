@@ -845,10 +845,14 @@ describe('DOCS-UI: DocumentDetailContent のタグ・カテゴリ表示', () => 
   it('DOCS-UI-021: カテゴリ・タグ・要約があるとバッジと本文が描画される', async () => {
     await render(
       <DocumentDetailContent
-        bodyMarkdown="# 見出し\n\n本文。"
-        category="運用"
-        tags={['セットアップ', '手順書']}
-        excerpt="導入手順の要約です。"
+        detail={{
+          ...DOC,
+          body_markdown: '# 見出し\n\n本文。',
+          category: '運用',
+          tags: ['セットアップ', '手順書'],
+          excerpt: '導入手順の要約です。',
+        }}
+        scheduled={false}
       />,
     );
     await waitUntil(() => container.textContent?.includes('運用') === true);
@@ -860,7 +864,7 @@ describe('DOCS-UI: DocumentDetailContent のタグ・カテゴリ表示', () => 
   });
 
   it('DOCS-UI-022: カテゴリ・タグが無いとバッジ領域を出さない', async () => {
-    await render(<DocumentDetailContent bodyMarkdown="本文。" category={null} tags={null} excerpt={null} />);
+    await render(<DocumentDetailContent detail={{ ...DOC, body_markdown: '本文。' }} scheduled={false} />);
     await waitUntil(() => container.querySelector('[data-hh-doc-layout]') !== null);
 
     expect(container.querySelector('[data-hh-tag-row]')).toBeNull();
