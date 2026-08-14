@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1622,
+  "graph_revision": 1625,
   "nodes": [
     {
       "acceptance": [
@@ -61897,6 +61897,133 @@
       "title": "doc-internal-link-integrity の既存違反 354 件を解消し pre-push ゲートを緑に戻す",
       "tracker_binding": "beads",
       "updated_at": "2026-08-14T00:10:10.555691Z"
+    },
+    {
+      "acceptance": [
+        "フォント取得経路に限定した保証名と説明に統一される",
+        "Hub の実ビルド入力 root ごとに存在と非 0 件走査が確認され、禁止指定子で検査が失敗する",
+        "font・license・manifest の破損・欠落・重複を負のテストが検出する",
+        "CI とローカルが同一のフォント検査入口を実行する",
+        "変更固有の lint・typecheck・test・build が成功し、4 条件が PASS する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-infrastructure"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-1555",
+        "linked_at": "2026-08-14T03:48:52Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/sys-hub-font-build-dependency-hardening-20260814.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "本番デプロイを停止させた Google Fonts のビルド時取得と、その恒久対策の保証範囲・検査欠落を追跡する独立 issue",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T04:31:38Z",
+        "evidence_refs": [
+          "apps/hub/scripts/check-font-assets.mjs",
+          "apps/hub/scripts/check-google-font-build-fetch.test.mjs",
+          "apps/hub/tests/ui-foundation/vendored-fonts.test.ts",
+          ".github/workflows/ci.yml"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-14T04:31:38Z",
+        "source": "reconciliation",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T03:43:46Z",
+      "depends_on": [],
+      "domain": "infrastructure",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/sys-hub-font-build-dependency-hardening-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "フォント経路が Google Fonts の可用性に依存せず、ビルド入力全体で再導入を拒否し、台帳改ざんと検査対象 0 件を必ず失敗させる",
+      "graph_node_id": "issue-hub-font-build-dependency-hardening-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T03:43:46Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Google Fonts 障害で Hub のビルドと本番デプロイが停止する因果経路を除去し、保証の説明・走査範囲・検査の生存証明を実装と一致させる",
+      "related_nodes": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-infrastructure"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/fonts.ts",
+        "apps/hub/src/assets/fonts",
+        "apps/hub/scripts/check-build-network-independence.mjs",
+        "apps/hub/scripts/vendor-fonts.mjs",
+        "apps/hub/tests/ui-foundation/vendored-fonts.test.ts",
+        "apps/hub/package.json",
+        ".github/workflows/ci.yml"
+      ],
+      "scope_in": [
+        "next/font/local と同梱 WOFF2 の整合性確認",
+        "next/font/google 再導入禁止ゲートの責務名・走査範囲・負のテストの整合",
+        "フォント・ライセンス・manifest の完全性検査",
+        "CI とローカル検査入口の整合"
+      ],
+      "scope_out": [
+        "全てのビルド時ネットワーク I/O の汎用静的検出",
+        "Google Fonts 以外の既存外部依存の一括排除",
+        "既存の日本語パス起因テスト失敗の修正",
+        "commit・push・deploy"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T03:43:46Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "hub",
+        "fonts",
+        "build-reliability",
+        "ci"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Hub フォントのビルド時外部依存対策の保証範囲と検査経路を整合する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T04:31:38Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
