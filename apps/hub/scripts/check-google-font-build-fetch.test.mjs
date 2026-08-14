@@ -1,13 +1,16 @@
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { afterEach, test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { discoverWorkspaceSourceRoots, evaluateSourceRoots, getExitCode } from './check-google-font-build-fetch.mjs';
 
 const temporaryDirectories = [];
 const forbiddenSpecifier = ['next/font', 'google'].join('/');
+const here = dirname(fileURLToPath(import.meta.url));
+const repositoryRoot = resolve(here, '..', '..', '..');
 
 function makeTemporaryRepository() {
   const root = mkdtempSync(join(tmpdir(), 'google-font-build-fetch-'));
@@ -90,4 +93,16 @@ test('安全な root は合格し、宣言 root が空または欠落なら fail
   assert.equal(failClosed.empty_root_count, 1);
   assert.equal(failClosed.missing_root_count, 1);
   assert.equal(getExitCode(failClosed), 1);
+});
+
+test('static-gates の G18 は依存インストール前でも実行できる Node 入口を使う', () => {
+  const workflow = readFileSync(join(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
+  const g18 = workflow.match(/- name: G18 Google Fonts build fetch 禁止 \/ 同梱フォント台帳の突合\n\s+run: ([^\n]+)/);
+
+  assert.ok(g18, 'G18 の実行ステップが存在すること');
+  assert.equal(
+    g18[1].trim(),
+    'node apps/hub/scripts/check-font-assets.mjs --json-dir ../../artifacts',
+    '依存インストール前の static-gates では pnpm ではなく Node 集約入口を直接実行すること',
+  );
 });
