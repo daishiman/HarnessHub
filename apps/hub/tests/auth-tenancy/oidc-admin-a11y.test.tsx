@@ -15,19 +15,13 @@ import type { OidcConnectionSetup, OidcConnectionSummary } from '@harness-hub/sc
 import axe from 'axe-core';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { parseWorkspaceDomainInput } from '../../src/app/(dashboard)/settings/auth/oidc-connection-admin.js';
 // 部品は panels 側から直接読む。admin 側は G13 予算のため `next/dynamic` 経由で持つので、
 // admin 経由で import し直すと loadable の placeholder が返り、a11y 検査が空 DOM を緑にしてしまう。
 import { ConnectionCard, SetupPanel } from '../../src/app/(dashboard)/settings/auth/oidc-connection-panels.js';
 import RootLayout, { metadata } from '../../src/app/layout.js';
-
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない (nav-and-shell と同じ理由)
-vi.mock('next/font/google', () => ({
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font-plex', className: 'hh-test-font-plex-class' }),
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-}));
 
 /** 画面へ出てはいけない値。last4 (`0001`) とは別物にしてある。 */
 const FULL_SECRET = 'goog-secret-should-not-render';

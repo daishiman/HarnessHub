@@ -19,6 +19,9 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    // next/font の偽物は既定設定と同じ 1 箇所 (vitest.setup.ts) から供給する。
+    // ここを外すと browser 経路だけモック無しになり、Next コンパイラ前提の import で落ちる
+    setupFiles: ['./vitest.setup.ts'],
     include: ['tests/browser/**/*.browser.test.ts', 'tests/browser/**/*.browser.test.tsx'],
     // ブラウザ起動と描画待ちは既定の 5 秒に収まらない。
     testTimeout: 120_000,

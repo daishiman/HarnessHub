@@ -93,6 +93,19 @@ jobs:
             echo "detector が意図的違反を検出できていません (ゲートの故障)"; exit 1
           fi
           echo "detector 実効性チェック完了 (exit=$code)"
+      # G18: Google Fonts の build 時 fetch 経路だけを外部可用性から切り離す。
+      #
+      # `next/font/google` は next build の最中に fonts.gstatic.com からフォントを取りに行く。
+      # 実際にその取得が失敗して `Failed to compile.` → `wrangler deploy` job ごと停止した。
+      # 実体は repository へ同梱 (apps/hub/src/assets/fonts/) し、ここでは
+      #   (a) Google Fonts build fetch の書き方が復活していないか
+      #   (b) 同梱物が台帳 (sha256) と一致するか
+      # を見る。これは build 全体の network independence を保証するゲートではない。
+      #
+      # root の package script をローカル verify と CI の共通入口とし、
+      # self-test / 本走査 / 同梱物照合の結線がドリフトしないようにする。
+      - name: G18 Google Fonts build fetch 禁止 / 同梱フォント台帳の突合
+        run: pnpm check:font-assets -- --json-dir ../../artifacts
       # workflow が要求する secret / variable と台帳 (actions-secrets-registry.json) の乖離を落とす。
       # 散文の台帳は書いた翌日には腐るので、突合そのものをゲートにする (HarnessHub-fnzl)。
       # ここでは --live を付けない。実投入状況の確認は gh 認証が要るため runbook §1 2-d の手動運用。

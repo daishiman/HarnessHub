@@ -22,10 +22,6 @@ vi.mock('next/headers', () => ({
   cookies: async () => ({ get: () => undefined }),
   headers: async () => ({ get: () => null }),
 }));
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
-}));
 
 const { default: LegalPage } = await import('../../src/app/legal/page.js');
 
