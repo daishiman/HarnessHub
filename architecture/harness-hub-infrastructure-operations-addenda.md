@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub infrastructure 運用追補"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-10T00:00:00Z"
+updated_at: "2026-08-15T00:00:00Z"
 status: "active"
 depends_on: ["arch-harness-hub-infrastructure"]
-related_nodes: ["spec-harness-hub-requirements","spec-harness-hub-verification-tiering-20260809","issue-audit-fork-ledger-forgery-20260728","issue-shared-layers-registry-baseline-drift-20260724"]
+related_nodes: ["spec-harness-hub-requirements","spec-harness-hub-verification-tiering-20260809","issue-audit-fork-ledger-forgery-20260728","issue-shared-layers-registry-baseline-drift-20260724","issue-production-tenant-bootstrap-readiness-20260814"]
 resource_scope: ["architecture/harness-hub-infrastructure-operations-addenda.md","architecture/harness-hub-infrastructure.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","package.json","docs/shared-layers.md"]
 purpose: "infrastructure 本体を300行以下に保ちながら確定済み運用・CI 品質判断の追跡性を維持する"
 goal: "SLO、OAuth rollout、deploy 鮮度、CI/local gate 同値の各判断から親 architecture、system-spec、受領書へ到達できる"
@@ -196,6 +196,18 @@ sqld readiness 後に Next.js を開始する。両 server は loopback だけ�
 workspace scope 付き `/api/v1/sheets` の3件応答までを分けて行う。Cookie 発行は read-only とし、
 seed 再投入を復旧手順にしない。詳細は [運用手順](../docs/features/feat-hub-foundation/local-development.md) と
 [仕様反映受領書](../docs/features/feat-hub-foundation/local-dev-runtime-reliability-spec-reflection-receipt.md) を参照する。
+
+## 2026-08-15 本番テナント bootstrap の運用境界
+
+本番 control-plane の最初の `tenants` / `workspaces` / 管理者所属は、
+`packages/db` の `bootstrap-tenant` CLI だけが書く。`seed-local` の
+削除再作成は本番禁止。既定は dry-run で、`--apply` のときだけ書く。
+
+管理者指定は利用者行を作らない。先に本人のサインイン（JIT の `member`）が必要で、
+role 昇格と `user_workspaces` 追加と監査 append は同一 transaction に閉じる。
+公開 API と schema は増やさない。手順は
+[bootstrap runbook](../docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md)、
+判断は [s8oe 受領書](../docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md)。
 
 ## 2026-08-11 system-spec 移行後 backfill 境界
 

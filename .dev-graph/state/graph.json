@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1622,
+  "graph_revision": 1631,
   "nodes": [
     {
       "acceptance": [
@@ -1071,7 +1071,10 @@
       "project_id": "harness-hub",
       "pull_request_linkages": [],
       "purpose": "テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する",
-      "related_nodes": [],
+      "related_nodes": [
+        "issue-production-tenant-bootstrap-readiness-20260814",
+        "task-production-tenant-bootstrap-handoff-20260815"
+      ],
       "resource_scope": [
         "features/feat-auth-tenancy.md"
       ],
@@ -1106,7 +1109,7 @@
       "template_version": "1.0.0",
       "title": "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)",
       "tracker_binding": "beads",
-      "updated_at": "2026-08-02T23:36:46Z"
+      "updated_at": "2026-08-15T00:00:00Z"
     },
     {
       "acceptance": [
@@ -55025,7 +55028,8 @@
         "issue-audit-fork-ledger-forgery-20260728",
         "issue-rubric-proposal-20260806-review",
         "task-rubric-proposal-retention-final-review-handoff-20260810",
-        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810"
+        "doc-rubric-proposal-retention-spec-reflection-receipt-20260810",
+        "issue-production-tenant-bootstrap-readiness-20260814"
       ],
       "resource_scope": [
         "specs/harness-hub-system-specification-implementation-writebacks.md",
@@ -55063,7 +55067,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub システム要件仕様 — 実装 writeback 分冊",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T04:20:00Z"
+      "updated_at": "2026-08-15T00:00:00Z"
     },
     {
       "acceptance": [
@@ -55142,7 +55146,8 @@
         "spec-harness-hub-requirements",
         "spec-harness-hub-verification-tiering-20260809",
         "issue-audit-fork-ledger-forgery-20260728",
-        "issue-shared-layers-registry-baseline-drift-20260724"
+        "issue-shared-layers-registry-baseline-drift-20260724",
+        "issue-production-tenant-bootstrap-readiness-20260814"
       ],
       "resource_scope": [
         "architecture/harness-hub-infrastructure-operations-addenda.md",
@@ -55185,7 +55190,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub infrastructure 運用追補",
       "tracker_binding": "none",
-      "updated_at": "2026-08-10T00:00:00Z"
+      "updated_at": "2026-08-15T00:00:00Z"
     },
     {
       "acceptance": [
@@ -61897,6 +61902,469 @@
       "title": "doc-internal-link-integrity の既存違反 354 件を解消し pre-push ゲートを緑に戻す",
       "tracker_binding": "beads",
       "updated_at": "2026-08-14T00:10:10.555691Z"
+    },
+    {
+      "acceptance": [
+        "同じ入力を複数回適用してもtenant/workspace/membership/監査イベントが重複しない",
+        "監査append失敗後の再実行で欠落監査が補われるか、未回復を明示して成功扱いにしない",
+        "membership追加とrole変更を異なる監査actionで帰属できる",
+        "slug・email・planの不正値をDB書込前に拒否する",
+        "dry-runとfocused testが本番秘密値なしで再現できる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-s8oe",
+        "linked_at": "2026-08-14T12:54:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/production-tenant-bootstrap-readiness-20260814.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "未追跡の本番運用CLIを既存10件から分離し、独立した所有・受入境界で追跡する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": "packages/db/__tests__/bootstrap-tenant.test.ts"
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-14T12:50:00Z",
+      "depends_on": [],
+      "domain": "operations",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/production-tenant-bootstrap-readiness-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "dry-run、適用、部分失敗、再実行の各経路でデータと監査が収束し、不正なslug・email・planを本番DBへ入れない。",
+      "graph_node_id": "issue-production-tenant-bootstrap-readiness-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T12:50:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本番の最初のテナントと管理者を安全に作る唯一のCLIを、失敗後も監査可能で再実行できる状態へする。",
+      "related_nodes": [
+        "issue-cloudflare-free-tier-runtime-limits-20260814",
+        "SYS-TENANT-DATA-RETENTION-P13",
+        "task-production-tenant-bootstrap-handoff-20260815",
+        "doc-production-tenant-bootstrap-runbook-20260815",
+        "doc-s8oe-spec-reflection-receipt-20260815"
+      ],
+      "resource_scope": [
+        "packages/db/scripts/bootstrap-tenant-core.ts",
+        "packages/db/scripts/bootstrap-tenant.ts",
+        "packages/db/__tests__/bootstrap-tenant.test.ts",
+        "packages/db/package.json"
+      ],
+      "scope_in": [
+        "入力の正規化と検証",
+        "冪等なtenant/workspace/membership作成",
+        "role変更とmembership変更の監査帰属",
+        "部分成功後の再実行で監査を再収束させる検査"
+      ],
+      "scope_out": [
+        "本番データへの実適用",
+        "秘密値の投入",
+        "テナント削除",
+        "既存テナント名・planの上書き"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T12:50:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "draft",
+      "tags": [
+        "tenant",
+        "bootstrap",
+        "production",
+        "audit",
+        "idempotency"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "本番テナント bootstrap CLI の監査・冪等性・入力検証を完成する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "focused test と typecheck が PASS",
+        "仕様写し先と無変更理由が受領書にある",
+        "本番 apply を残課題として明示する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data",
+        "arch-harness-hub-infrastructure-operations-addenda"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-s8oe",
+        "linked_at": "2026-08-15T00:00:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-auth-tenancy/production-tenant-bootstrap-handoff.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "closed feature の exact-13 を手編集せず、運用 CLI の公開前統合だけを補助 task で記録する。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [
+          "packages/db/__tests__/bootstrap-tenant.test.ts"
+        ],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": "manual",
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "1c470ab897723e75094f875109361cbaee6f43f087a91a83edf2f16d346d7318",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00Z",
+      "depends_on": [
+        "issue-production-tenant-bootstrap-readiness-20260814"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "tasks/feat-auth-tenancy/production-tenant-bootstrap-handoff.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "受入条件と仕様反映判断が同じ Beads ID / graph node を指し、本番未適用が成功と混同されない。",
+      "graph_node_id": "task-production-tenant-bootstrap-handoff-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "凍結済み auth-tenancy exact-13 を改変せず、bootstrap CLI の最終レビュー・仕様写し・draft PR を追跡する。",
+      "related_nodes": [
+        "issue-production-tenant-bootstrap-readiness-20260814",
+        "feat-auth-tenancy",
+        "arch-harness-hub-infrastructure-operations-addenda",
+        "spec-harness-hub-system-specification-implementation-writebacks"
+      ],
+      "resource_scope": [
+        "packages/db/scripts/bootstrap-tenant-core.ts",
+        "packages/db/scripts/bootstrap-tenant.ts",
+        "packages/db/__tests__/bootstrap-tenant.test.ts",
+        "packages/db/package.json",
+        "docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md",
+        "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "最終レビュー",
+        "仕様影響判断",
+        "品質ゲート",
+        "Beads と draft PR の追跡"
+      ],
+      "scope_out": [
+        "本番 Turso への実適用",
+        "tenant 削除",
+        "既存 name/plan の上書き",
+        "exact-13 の再計画"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "tenant",
+        "bootstrap",
+        "auth-tenancy",
+        "handoff"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.0.0",
+      "title": "本番テナント bootstrap CLI の最終レビューと仕様写しの補助記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "手順が秘密値なしで再現できる",
+        "画面経路が無いことが明記される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-data"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "運用手順は document として docs/features へ置く。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "f4f17d9dec2fff09bd90a0b5ab62ee91821814c3351c07da57058ad47691d09f",
+        "evaluator": "final-review",
+        "evidence_ref": "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00Z",
+      "depends_on": [
+        "issue-production-tenant-bootstrap-readiness-20260814"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "dry-run 既定の CLI 手順と失敗時の再実行が運用者に届く。",
+      "graph_node_id": "doc-production-tenant-bootstrap-runbook-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "operations",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "本番最初の tenant / workspace / workspace-admin を画面なしで作る手順を固定する。",
+      "related_nodes": [
+        "issue-production-tenant-bootstrap-readiness-20260814",
+        "feat-auth-tenancy"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md"
+      ],
+      "scope_in": [
+        "dry-run",
+        "apply",
+        "再実行",
+        "失敗時の扱い"
+      ],
+      "scope_out": [
+        "本番秘密値の投入",
+        "seed-local"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "tenant",
+        "bootstrap",
+        "operations"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "本番テナント bootstrap 運用手順",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-15T00:00:00Z"
+    },
+    {
+      "acceptance": [
+        "各層の反映または無変更理由がある",
+        "Beads ID と graph node が一致する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-infrastructure-operations-addenda"
+      ],
+      "artifact_kind": "document",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "document",
+          "candidate_path": "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "仕様反映受領書は document として feature docs へ置く。",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "not_applicable"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b1336af955c7cbc66dbc5ec329637f74d376646aa9f673023dfe35917d7b4eec",
+        "evaluator": "final-review",
+        "evidence_ref": "packages/db/__tests__/bootstrap-tenant.test.ts"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00Z",
+      "depends_on": [
+        "issue-production-tenant-bootstrap-readiness-20260814"
+      ],
+      "domain": "operations",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "確定章 reopen なしで運用契約が追跡できる。",
+      "graph_node_id": "doc-s8oe-spec-reflection-receipt-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "layer": "feature-spec-reflection",
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "bootstrap CLI の仕様影響判断と写し先を HEAD に残す。",
+      "related_nodes": [
+        "issue-production-tenant-bootstrap-readiness-20260814",
+        "feat-auth-tenancy",
+        "spec-harness-hub-system-specification-implementation-writebacks"
+      ],
+      "resource_scope": [
+        "docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md"
+      ],
+      "scope_in": [
+        "影響判断",
+        "写し先",
+        "検証結果",
+        "残課題"
+      ],
+      "scope_out": [
+        "本番 apply"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "tenant",
+        "bootstrap",
+        "spec-reflection"
+      ],
+      "target_date": null,
+      "template_id": "document",
+      "template_version": "1.0.0",
+      "title": "本番テナント bootstrap CLI 仕様反映受領書",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-15T00:00:00Z"
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
