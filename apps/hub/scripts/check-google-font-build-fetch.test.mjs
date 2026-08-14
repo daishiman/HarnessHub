@@ -106,3 +106,9 @@ test('static-gates の G18 は依存インストール前でも実行できる N
     '依存インストール前の static-gates では pnpm ではなく Node 集約入口を直接実行すること',
   );
 });
+
+test('同梱ライセンス本文は checkout 環境にかかわらず LF へ固定する', () => {
+  const attributes = readFileSync(join(repositoryRoot, '.gitattributes'), 'utf8');
+
+  assert.match(attributes, /^apps\/hub\/src\/assets\/fonts\/\*\.txt text eol=lf$/m);
+});
