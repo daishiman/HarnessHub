@@ -12,13 +12,6 @@ import { LAST_TENANT_COOKIE_NAME, TENANT_ERROR_QUERY_PARAM } from '../../src/lib
 
 const { getCookie, verifySessionToken } = vi.hoisted(() => ({ getCookie: vi.fn(), verifySessionToken: vi.fn() }));
 
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない (nav-and-shell と同じ理由)
-vi.mock('next/font/google', () => ({
-  Noto_Sans_JP: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font-plex', className: 'hh-test-font-plex-class' }),
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-}));
-
 // HomePage は cookies() を読む server component。request scope の外で描くこの検査では、
 // cookie の有無を mock で与えて「どの分岐の DOM を検査しているか」を明示する
 vi.mock('next/headers', () => ({ cookies: async () => ({ get: getCookie }) }));

@@ -26,13 +26,6 @@ import CatalogListPage from '../../app/(workspace)/catalog/page.js';
 import CatalogReleasesPage from '../../app/(workspace)/catalog/releases/page.js';
 import RootLayout from '../../app/layout.js';
 
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
-// 骨格の検査が目的なので、CSS 変数名だけを返す薄い偽物へ差し替える。
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
-}));
-
 /** catalog は (workspace) 配下。本番と同じく業務シェルが main ランドマークを持つ。 */
 const { HubShell } = await import('../../components/shell/hub-shell.js');
 
@@ -188,8 +181,10 @@ describe('RootLayout の全画面フォント契約', () => {
   it('HubShell を通らない公開画面にも IBM Plex / JetBrains Mono の変数を供給する', async () => {
     const html = renderToStaticMarkup(await RootLayout({ children: createElement('p', null, '公開画面') }));
 
-    expect(html).toContain('hh-test-font');
-    expect(html).toContain('hh-test-font-mono');
+    // 偽物 (vitest.setup.ts) は fonts.ts が渡す CSS 変数名から class 名を導出する。
+    // sans / mono を取り違えていれば、ここで別々の名前として現れないので検出できる。
+    expect(html).toContain('hh-test-font-ibm-plex-sans');
+    expect(html).toContain('hh-test-font-jetbrains-mono');
     expect(html).toContain('--hh-font-family:var(--font-ibm-plex-sans)');
     expect(html).toContain('--hh-font-family-mono:var(--font-jetbrains-mono)');
   });

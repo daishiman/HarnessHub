@@ -39,15 +39,6 @@ vi.mock('next/headers', () => ({
   cookies: async () => ({ get: getCookie }),
   headers: async () => ({ get: getHeader }),
 }));
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない。
-// HubShell 経由の描画を見たいだけなので、CSS 変数名だけを返す薄い偽物へ差し替える。
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  IBM_Plex_Sans: () => ({
-    variable: 'hh-test-font',
-    className: 'hh-test-font-class',
-  }),
-}));
 vi.mock('../../src/lib/auth/session.js', async () => {
   const actual = await vi.importActual<typeof import('../../src/lib/auth/session.js')>('../../src/lib/auth/session.js');
   return { ...actual, verifySessionToken };

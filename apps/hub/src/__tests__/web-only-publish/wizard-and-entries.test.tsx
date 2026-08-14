@@ -26,13 +26,6 @@ import { PublishWizard } from '../../components/publish/PublishWizard.js';
 import type { PublishJourneyPort, PublishJourneyResult } from '../../lib/publish-journey/index.js';
 import { PUBLISH_WIZARD_HREF, PUBLISH_WIZARD_LINK_LABEL } from '../../lib/routing/publish-wizard-entry.js';
 
-// next/font はビルド時変換が前提で、テスト実行時には解決できない
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  Inter: () => ({ className: 'inter', variable: '--font-inter' }),
-  IBM_Plex_Sans: () => ({ className: 'noto', variable: '--font-noto' }),
-}));
-
 // vitest の globals を使わない設定なので、DOM の後片付けは明示的に行う
 afterEach(cleanup);
 
