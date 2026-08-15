@@ -123,15 +123,15 @@ function seedId(logicalKey: string): string;
 
 ### 4.1.1 新規に扱うテーブルと削除順の決め方
 
-既存 seed が扱うのは上記 15 テーブルである。§10 の enum 129 値を網羅するには、次の 14 テーブルを新たに扱う必要がある。
+既存 seed が扱うのは上記 15 テーブルである。§10 の enum 132 値を網羅するには、次の 15 テーブルを新たに扱う必要がある。
 
-`builds` / `buildStageEvents` / `packages` / `deploymentReferences` / `deviceAuthorizations` / `encryptionKeys` / `smokeFixtureLeases` / `documents` / `feedbacks` / `aiJobs` / `hearingShareTokens` / `metricsRollups` / `notionIntegrations` / `tenantDataObjects`
+`builds` / `buildStageEvents` / `packages` / `deploymentReferences` / `deviceAuthorizations` / `encryptionKeys` / `smokeFixtureLeases` / `documents` / `feedbacks` / `aiJobs` / `hearingShareTokens` / `metricsRollups` / `mutationCreateIdempotency` / `notionIntegrations` / `tenantDataObjects`
 
 削除順は人手で並べず、次の規則で決める。
 
 | # | 規則 |
 |---|---|
-| O1 | 対象テーブルの集合は定義ファイルから導出し、既存 15 テーブルと新規 14 テーブルを同じ出所で扱う |
+| O1 | 対象テーブルの集合は定義ファイルから導出し、既存 15 テーブルと新規 15 テーブルを同じ出所で扱う |
 | O2 | 削除順は schema の外部キー参照関係から位相順序 (参照する側が先、参照される側が後) で導出する |
 | O3 | 位相順序が一意に定まらない場合はテーブル名の辞書順で安定化し、実行ごとに順序が変わらないようにする |
 | O4 | 参照関係に循環がある場合は停止し、順序を推測で決めない |

@@ -7,15 +7,9 @@
 import { readdirSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 
+import { COVERAGE_MATRIX, ROUTE_STATES, type RouteCoverage, type RouteState } from '@harness-hub/db';
 import type { Browser, BrowserContext, Page } from 'playwright';
 import { chromium } from 'playwright';
-
-import {
-  COVERAGE_MATRIX,
-  ROUTE_STATES,
-  type RouteCoverage,
-  type RouteState,
-} from '../../../../packages/db/scripts/demo-coverage/coverage-matrix.js';
 
 export const REAL_APP_AUDIT_WIDTHS = [360, 768, 1280] as const;
 export const REAL_APP_AUDIT_THEMES = ['light', 'dark'] as const;
@@ -196,7 +190,12 @@ export async function auditRealAppKeys(options: AuditRealAppKeysOptions): Promis
   let executedKeyCount = 0;
 
   try {
-    browser = await chromium.launch();
+    // 既定は Playwright 同梱の Chromium。CI はそれを使う。
+    // 手元では同梱 Chromium を取得できない環境 (CDN 到達不可・arch 不一致) があるため、
+    // `HUB_BROWSER_AUDIT_CHANNEL=chrome` のときだけ導入済みの Chrome へ切り替えられるようにする。
+    // どちらも Blink なので、この監査が見る幾何 (はみ出し・重なり・折返し) の判定は変わらない。
+    const channel = process.env.HUB_BROWSER_AUDIT_CHANNEL?.trim();
+    browser = await chromium.launch(channel !== undefined && channel !== '' ? { channel } : {});
     context = await browser.newContext({
       reducedMotion: 'reduce',
       extraHTTPHeaders: { ...options.extraHTTPHeaders },
@@ -212,8 +211,21 @@ export async function auditRealAppKeys(options: AuditRealAppKeysOptions): Promis
         unreachable.push({ key: formatAuditKey(key), status: result.status, reason: result.reason });
         continue;
       }
+      // 検出中に画面が遷移すると評価 context ごと消える。1 キーの計測失敗で全 144 キーを
+      // 落とすと「違反 0」と「測れなかった」の区別が付かなくなるため、未実行として記録し先へ進む。
+      let keyViolations: UiIntegrityViolation[];
+      try {
+        keyViolations = await collectUiIntegrityViolations(page, key);
+      } catch (cause) {
+        unreachable.push({
+          key: formatAuditKey(key),
+          status: null,
+          reason: cause instanceof Error ? cause.message : String(cause),
+        });
+        continue;
+      }
       executedKeyCount += 1;
-      violations.push(...(await collectUiIntegrityViolations(page, key)));
+      violations.push(...keyViolations);
     }
   } finally {
     await context?.close();
@@ -241,13 +253,24 @@ function parseOrigin(value: string): URL {
   return origin;
 }
 
-function parseCookies(cookieHeader: string, origin: URL): Parameters<BrowserContext['addCookies']>[0] {
-  return cookieHeader.split(';').flatMap((part) => {
+/** Playwright が受け付ける cookie 1 件の型。分岐ごとに形が違うため明示して union 推論の崩れを防ぐ。 */
+type AuditCookie = Parameters<BrowserContext['addCookies']>[0][number];
+
+function parseCookies(cookieHeader: string, origin: URL): AuditCookie[] {
+  return cookieHeader.split(';').flatMap<AuditCookie>((part) => {
     const separator = part.indexOf('=');
     if (separator <= 0) return [];
     const name = part.slice(0, separator).trim();
     const value = part.slice(separator + 1).trim();
-    return name === '' ? [] : [{ name, value, url: origin.origin }];
+    if (name === '') return [];
+    // `__Host-` / `__Secure-` 接頭辞は cookie 名そのものが属性を約束する規約で、
+    // ブラウザは secure を満たさない設定を拒否する (`__Host-` は加えて path=/ と domain 無指定)。
+    // url だけを渡すと domain 付き・secure なしとして解釈されるため、Hub の
+    // `__Host-harness-hub.session` を addCookies できない。接頭辞の約束をそのまま属性へ写す。
+    if (name.startsWith('__Host-') || name.startsWith('__Secure-')) {
+      return [{ name, value, domain: origin.hostname, path: '/', secure: true, sameSite: 'Lax' as const }];
+    }
+    return [{ name, value, url: origin.origin }];
   });
 }
 
@@ -268,6 +291,11 @@ async function openAuditKey(
     if (!response.ok()) {
       return { reachable: false, status: response.status(), reason: `HTTP ${response.status()}` };
     }
+
+    // 認証済み画面は load 後にクライアント側で遷移することがある (scope 解決後の replace など)。
+    // 遷移途中の DOM を測ると実行 context が評価中に破棄されるため、通信が落ち着くまで待つ。
+    // 落ち着かない画面 (polling を持つ画面) もあるので、待てなかったこと自体は失敗にしない。
+    await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => undefined);
 
     // 実アプリは DB の表示設定で theme を解決する。監査の軸だけは明示値を優先し、
     // token 正本の data-theme 切替を実 DOM に対して行う。

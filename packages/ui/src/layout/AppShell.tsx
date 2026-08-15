@@ -4,7 +4,7 @@
  * これを共通化しない場合、route group ごとにヘッダの高さや本文の余白が食い違い、
  * 画面遷移のたびに内容が上下へずれる。「アプリらしさ」の大半はこの一貫性から来る。
  */
-import type { CSSProperties, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 
 import { colorVar, spaceVar, touchTargetStyle } from '../internal/style.js';
 import { Container, type ContainerSize } from './primitives.js';
@@ -100,7 +100,7 @@ export interface NavListItem {
   label: string;
 }
 
-export interface NavListProps {
+export interface NavListProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'aria-label' | 'children'> {
   items: readonly NavListItem[];
   /** landmark の名前。同一ページに nav が複数あるとき区別に使う。 */
   label: string;
@@ -113,9 +113,9 @@ export interface NavListProps {
  * これが無いと apps 側がリンク一覧を直接組み立てることになり、
  * `packages/ui` を経由しない色・余白の指定が app に生えて token の単一正本が崩れる。
  */
-export function NavList({ items, label, currentHref }: NavListProps): ReactNode {
+export function NavList({ items, label, currentHref, ...navProps }: NavListProps): ReactNode {
   return (
-    <nav aria-label={label}>
+    <nav {...navProps} aria-label={label}>
       <ul data-hh-unstyled-list="" style={{ display: 'flex', flexWrap: 'wrap', gap: spaceVar(1), margin: 0 }}>
         {items.map((item) => {
           const current = currentHref !== undefined && currentHref === item.href;

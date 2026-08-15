@@ -66,6 +66,8 @@ export const DOMAIN_ENUMS: readonly DomainEnum[] = [
   },
   { table: 'metrics_rollups', column: 'period', values: ['daily', 'weekly'] },
   { table: 'metrics_rollups', column: 'dimension', values: ['tenant', 'harness', 'department', 'user'] },
+  { table: 'mutation_create_idempotency', column: 'resource', values: ['documents', 'sheets'] },
+  { table: 'mutation_create_idempotency', column: 'operation', values: ['create'] },
   { table: 'notion_integrations', column: 'mode', values: ['url', 'api_key'] },
   { table: 'packages', column: 'kind', values: ['skills-package'] },
   { table: 'projects', column: 'status', values: ['active', 'suspended', 'archived'] },

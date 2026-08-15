@@ -1,7 +1,7 @@
 // T2: ドメイン enum 全値の網羅 (test-design.md §3.2)。
 //
 // schema の enum は `enum: ['a','b']` のリテラルと `enum: BUILD_STAGES` の定数参照が混在するため、
-// ソースの静的 grep では 40 カラム中 19 しか拾えない。drizzle の実行時 API で読むこと。
+// ソースの静的 grep では定数参照の enum を取りこぼす。drizzle の実行時 API で読むこと。
 import { getTableColumns, getTableName, is, sql } from 'drizzle-orm';
 import { SQLiteTable } from 'drizzle-orm/sqlite-core';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -12,8 +12,8 @@ import { asCore, createLibsqlTestDb } from '../support/test-db';
 import { loadPendingModule } from './support/pending-module';
 
 /** ADR §10 の実測値。 */
-const EXPECTED_ENUM_COLUMNS = 40;
-const EXPECTED_ENUM_VALUES = 129;
+const EXPECTED_ENUM_COLUMNS = 42;
+const EXPECTED_ENUM_VALUES = 132;
 
 interface EnumColumn {
   table: string;
@@ -76,12 +76,12 @@ beforeAll(async () => {
 });
 
 describe('T2: enum 全値網羅 (定義)', () => {
-  it('T2-1: 宣言が 40 カラム / 129 値である', () => {
+  it('T2-1: 宣言が 42 カラム / 132 値である', () => {
     expect(declared).toHaveLength(EXPECTED_ENUM_COLUMNS);
     expect(declared.reduce((total, entry) => total + entry.values.length, 0)).toBe(EXPECTED_ENUM_VALUES);
   });
 
-  it('T2-1: schema の実測も 40 カラム / 129 値である (ADR §10 の前提が今も成り立つ)', () => {
+  it('T2-1: schema の実測も 42 カラム / 132 値である (ADR §10 の前提が今も成り立つ)', () => {
     const measured = measureSchemaEnums();
     expect(measured).toHaveLength(EXPECTED_ENUM_COLUMNS);
     expect(measured.reduce((total, entry) => total + entry.values.length, 0)).toBe(EXPECTED_ENUM_VALUES);

@@ -1,6 +1,6 @@
 // 網羅確認用デモデータの投入 (ADR §3 / §5 / §6)。
 //
-// 28 route × 5 状態 × ドメイン enum 全 129 値を、決定論 ID と固定時刻だけで作る。
+// 28 route × 5 状態 × ドメイン enum 全 132 値を、決定論 ID と固定時刻だけで作る。
 // 実行時刻・乱数を一切使わないので、何度実行しても、いつ実行しても同じ行になる (T3)。
 //
 // 冪等性の作り方は「テナント境界で消してから入れ直す」である。UPSERT を積み上げると、
@@ -248,6 +248,9 @@ export async function seedDemoCoverage(options: SeedOptions): Promise<SeedSummar
     db.insert(schema.notionIntegrations).values(chunk),
   );
   counts.documents = await insertAll(documentRows(), (chunk) => db.insert(schema.documents).values(chunk));
+  counts.mutation_create_idempotency = await insertAll(mutationCreateIdempotencyRows(), (chunk) =>
+    db.insert(schema.mutationCreateIdempotency).values(chunk),
+  );
   counts.feedbacks = await insertAll(feedbackRows(), (chunk) => db.insert(schema.feedbacks).values(chunk));
   counts.builds = await insertAll(buildRows(), (chunk) => db.insert(schema.builds).values(chunk));
   counts.build_stage_events = await insertAll(buildStageEventRows(), (chunk) =>
@@ -275,6 +278,9 @@ async function purge(db: CoreAdapter['client']): Promise<void> {
   await db.delete(schema.metricsEvents).where(inArray(schema.metricsEvents.tenantId, TENANT_IDS));
   await db.delete(schema.metricsRollups).where(inArray(schema.metricsRollups.tenantId, TENANT_IDS));
   await db.delete(schema.feedbacks).where(inArray(schema.feedbacks.tenantId, TENANT_IDS));
+  await db
+    .delete(schema.mutationCreateIdempotency)
+    .where(inArray(schema.mutationCreateIdempotency.tenantId, TENANT_IDS));
   await db.delete(schema.documents).where(inArray(schema.documents.tenantId, TENANT_IDS));
   await db.delete(schema.notionIntegrations).where(inArray(schema.notionIntegrations.tenantId, TENANT_IDS));
   await db.delete(schema.tenantDataTombstones).where(inArray(schema.tenantDataTombstones.tenantId, TENANT_IDS));
@@ -1177,6 +1183,39 @@ function documentRows(): (typeof schema.documents.$inferInsert)[] {
     createdAt: at(165 + index),
     updatedAt: at(165 + index),
   }));
+}
+
+function mutationCreateIdempotencyRows(): (typeof schema.mutationCreateIdempotency.$inferInsert)[] {
+  return [
+    {
+      tenantId: TENANT.main,
+      workspaceId: WORKSPACE.main,
+      resource: 'documents',
+      operation: 'create',
+      key: 'demo-create-document',
+      payloadHash: `hash:${DOCUMENT.tenantDraft}`,
+      resourceId: DOCUMENT.tenantDraft,
+      responseStatus: 201,
+      responseHeadersJson: JSON.stringify({ location: `/docs/${DOCUMENT.tenantDraft}` }),
+      responseBody: JSON.stringify({ id: DOCUMENT.tenantDraft }),
+      expiresAt: at(DAY),
+      createdAt: at(170),
+    },
+    {
+      tenantId: TENANT.main,
+      workspaceId: WORKSPACE.main,
+      resource: 'sheets',
+      operation: 'create',
+      key: 'demo-create-sheet',
+      payloadHash: `hash:${pick(SHEET, 3)}`,
+      resourceId: pick(SHEET, 3),
+      responseStatus: 201,
+      responseHeadersJson: JSON.stringify({ location: `/sheets/${pick(SHEET, 3)}` }),
+      responseBody: JSON.stringify({ id: pick(SHEET, 3) }),
+      expiresAt: at(DAY),
+      createdAt: at(171),
+    },
+  ];
 }
 
 function feedbackRows(): (typeof schema.feedbacks.$inferInsert)[] {

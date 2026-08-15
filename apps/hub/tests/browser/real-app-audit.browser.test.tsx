@@ -71,7 +71,9 @@ describe('実アプリ browser runner の契約', () => {
         keys: [key],
       });
 
-      expect(requestedPaths).toEqual(['/legal']);
+      // Chrome はページ本体とは別に favicon を自動取得する場合がある。
+      // 監査対象の遷移先だけを固定し、ブラウザ実装の補助リソース差と分離する。
+      expect(requestedPaths.filter((path) => path !== '/favicon.ico')).toEqual(['/legal']);
       expect(report.requestedKeyCount).toBe(1);
       expect(report.executedKeyCount).toBe(1);
       expect(report.unreachable).toEqual([]);

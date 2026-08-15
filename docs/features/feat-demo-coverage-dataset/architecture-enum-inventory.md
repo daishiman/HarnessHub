@@ -6,7 +6,7 @@ feature_id: feat-demo-coverage-dataset
 updated_at: "2026-08-15"
 ---
 
-## 10. ドメイン enum 全値 (実測 40 カラム / 129 値)
+## 10. ドメイン enum 全値 (実測 42 カラム / 132 値)
 
 `packages/db/schema/**/*.ts` の実測結果である。検査 3 (A2) の入力となる。
 
@@ -50,10 +50,12 @@ updated_at: "2026-08-15"
 | hearing-intake | `hearingShareTokens.audience` | harness_creator / system_orchestrator | 2 |
 | metrics-tracking | `metricsRollups.period` | daily / weekly | 2 |
 | metrics-tracking | `metricsRollups.dimension` | tenant / harness / department / user | 4 |
+| mutation-safety | `mutationCreateIdempotency.resource` | documents / sheets | 2 |
+| mutation-safety | `mutationCreateIdempotency.operation` | create | 1 |
 | notion-integration | `notionIntegrations.mode` | url / api_key | 2 |
 | tenant-data | `tenantDataObjects.kind` | knowledge_doc / run_input / run_output / hearing_screenshot | 4 |
 
-合計: 40 カラム / 129 値。
+合計: 42 カラム / 132 値。
 
 ### 10.1 動作前提と衝突する enum 値の扱い
 

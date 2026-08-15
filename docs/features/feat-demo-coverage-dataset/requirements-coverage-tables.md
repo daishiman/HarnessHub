@@ -72,9 +72,9 @@ A7 の機械検査は、全 140 セル (28 route × 5 状態) が「適用」か
 | N6 | 単一ドキュメントの表示・編集で、一覧のページング境界を持たない |
 | N7 | 認証済み利用者が必ず 1 件以上存在するため 0 件が成立しない |
 
-## 7. ドメイン enum 一覧 (実測 40 カラム / 129 値)
+## 7. ドメイン enum 一覧 (実測 42 カラム / 132 値)
 
-`packages/db/schema/**/*.ts` を実測した結果である。A2 の機械検査は、以下の全 129 値が seed 後の DB に最低 1 件ずつ存在することを判定する。
+`packages/db/schema/**/*.ts` を実測した結果である。A2 の機械検査は、以下の全 132 値が seed 後の DB に最低 1 件ずつ存在することを判定する。
 
 ### 7.1 build-pipeline
 
@@ -169,6 +169,13 @@ A7 の機械検査は、全 140 セル (28 route × 5 状態) が「適用」か
 | `metricsRollups.period` | daily / weekly (2) |
 | `metricsRollups.dimension` | tenant / harness / department / user (4) |
 
+### 7.11.1 mutation-safety
+
+| テーブル.カラム | 値 (件数) |
+|---|---|
+| `mutationCreateIdempotency.resource` | documents / sheets (2) |
+| `mutationCreateIdempotency.operation` | create (1) |
+
 ### 7.12 notion-integration
 
 | テーブル.カラム | 値 (件数) |
@@ -183,7 +190,7 @@ A7 の機械検査は、全 140 セル (28 route × 5 状態) が「適用」か
 
 ### 7.14 上流仕様との差分 (記録)
 
-正本 task spec (`phase-01-requirements.md`) の背景節は、enum の対象を `packages/db/schema/core/catalog.ts` と `packages/db/schema/core/publish.ts` の 9 カラムに限定して記述していた。本書作成時に全 schema を実測したところ、対象は 40 カラム / 129 値であった。goal-spec の受入条件 A2 は「各ドメインモデルの enum ステータスが全値」と定めており、特定 2 ファイルへの限定を含まない。したがって本書は実測 40 カラム / 129 値を正本とし、後続 phase もこの範囲を対象とする。
+正本 task spec (`phase-01-requirements.md`) の背景節は、enum の対象を `packages/db/schema/core/catalog.ts` と `packages/db/schema/core/publish.ts` の 9 カラムに限定して記述していた。現行の全 schema を実測すると、対象は 42 カラム / 132 値である。goal-spec の受入条件 A2 は「各ドメインモデルの enum ステータスが全値」と定めており、特定 2 ファイルへの限定を含まない。したがって本書は実測 42 カラム / 132 値を正本とし、後続 phase もこの範囲を対象とする。
 
 ## 8. 長文パターンの規約
 

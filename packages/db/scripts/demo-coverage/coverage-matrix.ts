@@ -7,8 +7,6 @@
 // 画面が増えたときに表も黙って増え、「状態の割り当てを考え忘れた」ことを検知できなくなる。
 // 実測集合との一致は T1-7 が別経路で突き合わせる。
 
-import { seedId } from './seed-id';
-
 export const ROUTE_STATES = ['empty', 'single', 'bulk', 'longText', 'error'] as const;
 export type RouteState = (typeof ROUTE_STATES)[number];
 
@@ -56,15 +54,40 @@ const STATE_REACH: Record<RouteState, { fixtures: readonly string[]; operation?:
   error: { fixtures: ['tenant/suspended/0001'], operation: '停止テナントの資源を要求する' },
 };
 
-/** 詳細画面の URL に埋める決定論 ID。表と seed が同じ論理キーを見ていることの担保でもある。 */
+/**
+ * 詳細画面の URL に埋める決定論 ID。表と seed が同じ論理キーを見ていることの担保でもある。
+ *
+ * ここで `seedId()` を呼ばず確定値を直接置いているのは、この表が `@harness-hub/db` の公開 API
+ * (`src/index.ts`) から出ており、Edge Runtime の middleware まで届くためである。`seed-id.ts` は
+ * `node:crypto` を使うので、import すると middleware の build が UnhandledSchemeError で落ちる。
+ * 値が `seedId(<論理キー>)` と一致することは `__tests__/seed-coverage/coverage-matrix.test.ts` が
+ * 機械検査するので、論理キーを変えたときの取り残しはテストで落ちる。
+ */
 const DEMO = {
   tenantSlug: 'demo',
-  projectId: seedId('project/active/0001'),
-  documentId: seedId('document/tenant-published/0001'),
-  feedbackId: seedId('feedback/open/0001'),
-  sheetId: seedId('hearing-sheet/completed/0001'),
-  userId: seedId('user/member/0001'),
+  /** seedId('project/active/0001') */
+  projectId: '5MESXC670Q78A7MMMDXZVH3S6S',
+  /** seedId('document/tenant-published/0001') */
+  documentId: '07JBX1XEMRY7QAEX3C2BZ8HXBM',
+  /** seedId('feedback/open/0001') */
+  feedbackId: '23RK79TWQSKVKE890HY56KFXDY',
+  /** seedId('hearing-sheet/completed/0001') */
+  sheetId: '0JWEE6BZ9X72KHY5ECHPBKWDY6',
+  /** seedId('user/member/0001') */
+  userId: '5WMVZRDFGS5XQAJJY933AXS1K2',
 } as const;
+
+/** `DEMO` の各 ID がどの論理キー由来かの正本。テストが `seedId()` と突き合わせる。 */
+export const DEMO_ID_SOURCE_KEYS = {
+  projectId: 'project/active/0001',
+  documentId: 'document/tenant-published/0001',
+  feedbackId: 'feedback/open/0001',
+  sheetId: 'hearing-sheet/completed/0001',
+  userId: 'user/member/0001',
+} as const satisfies Record<Exclude<keyof typeof DEMO, 'tenantSlug'>, string>;
+
+/** テストが事前計算値を突き合わせるための公開点。表の利用者は URL 済みの値だけを見ればよい。 */
+export const DEMO_IDS: Readonly<Record<keyof typeof DEMO_ID_SOURCE_KEYS, string>> = DEMO;
 
 interface RouteSpec {
   readonly screenCode: string;

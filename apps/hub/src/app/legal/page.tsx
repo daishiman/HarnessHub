@@ -40,12 +40,12 @@ export default function LegalPage() {
           description="Harness Hub をご利用いただく際の条件と、取り扱う情報についての方針です。"
         />
 
-        <div data-print-exclude="" style={{ marginBlockEnd: 'var(--hh-space-4)' }}>
-          <NavList
-            label="このページの文書"
-            items={LEGAL_DOCUMENTS.map((entry) => ({ href: `#${entry.slug}`, label: entry.title }))}
-          />
-        </div>
+        <NavList
+          data-print-exclude=""
+          style={{ marginBlockEnd: 'var(--hh-space-4)' }}
+          label="このページの文書"
+          items={LEGAL_DOCUMENTS.map((entry) => ({ href: `#${entry.slug}`, label: entry.title }))}
+        />
 
         {LEGAL_DOCUMENTS.map((entry, index) => (
           <LegalArticle key={entry.slug} entry={entry} first={index === 0} />

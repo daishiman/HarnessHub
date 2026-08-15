@@ -61,8 +61,8 @@ ADR に §10.1 (動作前提と衝突する enum 値の扱い) と §10.2 (画�
 
 | 検証 | 結果 |
 |---|---|
-| enum 一覧が実測と一致するか | 40 カラム / 129 値が `packages/db/schema/**` の実測と一致 |
-| 上流仕様との差分が記録されているか | 正本 task spec は enum を core 2 ファイル (9 カラム) に限定していたが、受入条件 A2 は限定を含まない。実測 40 カラムを正本とする判断が `requirements-baseline.md` §7.14 に記録されている |
+| enum 一覧が実測と一致するか | 42 カラム / 132 値が `packages/db/schema/**` の実測と一致 |
+| 上流仕様との差分が記録されているか | 正本 task spec は enum を core 2 ファイル (9 カラム) に限定していたが、受入条件 A2 は限定を含まない。実測 42 カラムを正本とする判断が `requirements-baseline.md` §7.14 に記録されている |
 
 ### 3.3 論点 3: 冪等性の実現方式 — 第 1 周 不適合 → 反映後 適合 (pass)
 
@@ -70,7 +70,7 @@ ADR に §10.1 (動作前提と衝突する enum 値の扱い) と §10.2 (画�
 
 **指摘 C: 新規に扱うテーブルの削除順が未定義。**
 
-既存 `seed-local.ts` が扱うのは 15 テーブルであり、その削除順は実測として ADR に記録されていた。一方 enum 129 値を網羅するには 14 テーブルを新たに扱う必要がある (`builds` / `buildStageEvents` / `packages` / `deploymentReferences` / `deviceAuthorizations` / `encryptionKeys` / `smokeFixtureLeases` / `documents` / `feedbacks` / `aiJobs` / `hearingShareTokens` / `metricsRollups` / `notionIntegrations` / `tenantDataObjects`)。この 14 テーブルの外部キー依存順が定まっておらず、実装者が順序を推測する余地が残っていた。削除順を誤ると外部キー制約で実行が落ちるか、削除漏れが冪等性を壊す。
+既存 `seed-local.ts` が扱うのは 15 テーブルであり、その削除順は実測として ADR に記録されていた。一方 enum 132 値を網羅するには 15 テーブルを新たに扱う必要がある (`builds` / `buildStageEvents` / `packages` / `deploymentReferences` / `deviceAuthorizations` / `encryptionKeys` / `smokeFixtureLeases` / `documents` / `feedbacks` / `aiJobs` / `hearingShareTokens` / `metricsRollups` / `mutationCreateIdempotency` / `notionIntegrations` / `tenantDataObjects`)。この 15 テーブルの外部キー依存順が定まっておらず、実装者が順序を推測する余地が残っていた。削除順を誤ると外部キー制約で実行が落ちるか、削除漏れが冪等性を壊す。
 
 **指摘 D: 論理キー衝突の検証方法が未定義。**
 

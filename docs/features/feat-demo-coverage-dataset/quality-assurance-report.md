@@ -19,7 +19,7 @@ layer: feature-evidence
 | G2 | テスト + カバレッジ | `pnpm --filter @harness-hub/db test`<br>(= `vitest run --coverage`) | 全件 pass / 4 指標とも 80% 以上 | 49 files 388 tests pass / 91.77-87.51-88.52-91.77 | **pass** |
 | G3 | 型検査 | `tsc --noEmit` | エラー 0 件 | 0 件 | **pass** |
 | G4 | route×状態 未カバー 0 件 | `packages/db/scripts/verify-demo-coverage-matrix.ts` | exit 0 | exit 0 / 未割当 0 件 | **pass** |
-| G5 | enum 全値網羅 | T2 (`enum-coverage.test.ts`) | 未使用値 0 件 | 40 カラム 129 値すべて 1 行以上 | **pass** |
+| G5 | enum 全値網羅 | T2 (`enum-coverage.test.ts`) | 未使用値 0 件 | 42 カラム 132 値すべて 1 行以上 | **pass** |
 | G6 | 冪等性 | T3 (`idempotency.test.ts`) | 2 回実行後のダイジェスト一致 | 一致 (CLI 実測でも差分 0 行) | **pass** |
 | G7 | ローカル専用ガード拒否 | T4 (`local-guard.test.ts`) | 非ローカル URL が非 0 終了 | exit 2 | **pass** |
 
@@ -93,7 +93,7 @@ pnpm --filter @harness-hub/db exec tsx packages/db/scripts/verify-demo-coverage-
 
 | ゲート | 内容 | fail-closed の効き方 |
 |---|---|---|
-| G5 enum 全値 | 宣言 40 カラム / 129 値と schema の実定義が一致 (T2-1, T2-2)、投入後の DB に全値が 1 行以上 (T2-3) | 宣言を schema から自動導出していないため、schema に enum が増えれば T2-1/T2-2 が落ちる |
+| G5 enum 全値 | 宣言 42 カラム / 132 値と schema の実定義が一致 (T2-1, T2-2)、投入後の DB に全値が 1 行以上 (T2-3) | 宣言を schema から自動導出していないため、schema に enum が増えれば T2-1/T2-2 が落ちる |
 | G6 冪等性 | 2 回実行後の全テーブルダイジェストが一致 (T3-1)、件数も一致 (T3-2)、時刻列が実行時刻に依存しない (T3-5) | 行数比較ではなく内容ハッシュ比較。CLI 実測でもダンプ差分 0 行 |
 | G7 ローカル専用ガード | 非ローカル URL が exit 2 (T4-1)、拒否時に DB を変更しない (T4-2)、ローカル URL は誤って拒否されない (T4-3) | T4-3 があるため「常に拒否する」実装では緑にならない。T4-4 が判定ロジックの再実装も禁じている |
 

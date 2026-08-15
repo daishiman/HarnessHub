@@ -47,13 +47,24 @@ function collectRoutesFromApp(dir: string, segments: string[] = []): string[] {
 }
 
 let matrix: RouteCoverage[];
+let demoIds: Record<string, string>;
+let demoIdSourceKeys: Record<string, string>;
+let seedId: (logicalKey: string) => string;
 
 beforeAll(async () => {
-  const loaded = await loadPendingModule<{ COVERAGE_MATRIX: RouteCoverage[] }>(
-    'scripts/demo-coverage/coverage-matrix.ts',
-    ['COVERAGE_MATRIX'],
-  );
+  const loaded = await loadPendingModule<{
+    COVERAGE_MATRIX: RouteCoverage[];
+    DEMO_IDS: Record<string, string>;
+    DEMO_ID_SOURCE_KEYS: Record<string, string>;
+  }>('scripts/demo-coverage/coverage-matrix.ts', ['COVERAGE_MATRIX', 'DEMO_IDS', 'DEMO_ID_SOURCE_KEYS']);
   matrix = loaded.COVERAGE_MATRIX;
+  demoIds = loaded.DEMO_IDS;
+  demoIdSourceKeys = loaded.DEMO_ID_SOURCE_KEYS;
+  const idModule = await loadPendingModule<{ seedId: (logicalKey: string) => string }>(
+    'scripts/demo-coverage/seed-id.ts',
+    ['seedId'],
+  );
+  seedId = idModule.seedId;
 });
 
 describe('T1: route × 状態 対応表', () => {
@@ -108,6 +119,16 @@ describe('T1: route × 状態 対応表', () => {
     const cells = matrix.flatMap((coverage) => ROUTE_STATES.map((state) => coverage.states[state]));
     expect(cells.filter((cell) => cell?.kind === 'applicable')).toHaveLength(EXPECTED_APPLICABLE);
     expect(cells.filter((cell) => cell?.kind === 'notApplicable')).toHaveLength(EXPECTED_NOT_APPLICABLE);
+  });
+
+  // 表は `@harness-hub/db` の公開 API から Edge Runtime の middleware まで届くため、`node:crypto` を使う
+  // seed-id.ts を import できない (build が UnhandledSchemeError で落ちる)。そこで表側は確定値を直に持ち、
+  // 「その確定値が seedId(論理キー) と同じか」をここで突き合わせる。論理キー変更時の取り残しをここで落とす。
+  it('T1-8: DEMO の事前計算 ID が seedId(論理キー) と一致する', () => {
+    const drift = Object.entries(demoIdSourceKeys)
+      .filter(([field, logicalKey]) => demoIds[field] !== seedId(logicalKey))
+      .map(([field, logicalKey]) => `${field}: ${demoIds[field]} != seedId('${logicalKey}')=${seedId(logicalKey)}`);
+    expect(drift).toEqual([]);
   });
 
   it('T1-7: route 集合が page.tsx の実測集合と一致する', () => {
