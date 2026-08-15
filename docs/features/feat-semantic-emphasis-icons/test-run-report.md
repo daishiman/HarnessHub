@@ -77,7 +77,7 @@ OK: ui-text-emoji 適合 (検査 534 file, root packages/ui/src, apps/hub/src)
 
 ### 2.2 意図的な絵文字混入サンプル — fail すること
 
-一時ツリーへ `packages/ui/src/probe.ts` を置き、本文を `export const label = '🎉 done';` とした。
+一時ツリーへ packages/ui/src/probe.ts (probe 専用の実在しないパス) を置き、本文を `export const label = '🎉 done';` とした。
 
 ```bash
 python3 scripts/lint-ui-text-emoji.py --repo-root "$probe" --root packages/ui/src

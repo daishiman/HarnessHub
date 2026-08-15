@@ -79,8 +79,8 @@ run: pnpm --filter @harness-hub/ui run test:a11y && pnpm --filter @harness-hub/h
 
 | 対象 | command | 実測 |
 | --- | --- | --- |
-| 部品単体 (packages/ui) | `vitest run src/a11y` | **30 passed** |
-| 画面結合 (apps/hub) | `vitest run tests/a11y` | **5 passed** (1 file / 230ms) |
+| 部品単体 (packages/ui) | `vitest run packages/ui/src/a11y` | **30 passed** |
+| 画面結合 (apps/hub) | `vitest run apps/hub/tests/a11y` | **5 passed** (1 file / 230ms) |
 
 callout の `role="note"` / `aria-label` / `data-hh-callout` は `Markdown.test.tsx` (30 件) が
 固定しており、axe の自動検出可能な違反はゼロ。

@@ -1,5 +1,6 @@
 {
-  "graph_revision": 1632,
+  "edges": [],
+  "graph_revision": 1634,
   "nodes": [
     {
       "acceptance": [
@@ -64435,7 +64436,7 @@
           "packages/db/__tests__/mutation-safety-repositories.test.ts",
           "apps/hub/tests/card-mutation-safety/http-contract.test.ts",
           "tests/test_card_feature_contracts.py",
-          "packages/db/migrations/0017_card-mutation-safety.sql",
+          "packages/db/migrations/0015_card-mutation-safety.sql",
           "beads:HarnessHub-6oi5"
         ],
         "policy": "manual",
@@ -64509,7 +64510,7 @@
         "packages/db/schema/docs-cms/schema.ts",
         "packages/db/schema/hearing-intake/schema.ts",
         "packages/db/schema/mutation-safety/schema.ts",
-        "packages/db/migrations/0017_card-mutation-safety.sql"
+        "packages/db/migrations/0015_card-mutation-safety.sql"
       ],
       "scope_in": [
         "Docs / Sheets の通常 POST に Idempotency-Key を必須化し、フォームを開いた時点で発行した UUID v4 を成功/ネットワーク失敗後の再送で同じまま使うプロトコル",
@@ -65372,6 +65373,5 @@
     }
   ],
   "repository_id": "github:daishiman/HarnessHub",
-  "schema_version": "1.0.0",
-  "edges": []
+  "schema_version": "1.0.0"
 }

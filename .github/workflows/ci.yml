@@ -81,25 +81,11 @@ jobs:
         run: |
           mkdir -p artifacts
           python3 scripts/lint-ui-text-emoji.py --repo-root . --json > artifacts/ui-text-emoji.json
-      # 上の lint が判定を失っても緑になる無音の失効を防ぐ。意図的に絵文字を置いた
-      # 一時ツリーで非ゼロ終了しなければ、ゲートが壊れているとみなして落とす。
-      # --root を明示するのは、probe ツリーに既定 root の apps/hub/src が無く、
-      # 省略すると「root 不在の設定エラー (exit 2)」で非ゼロになり、絵文字を
-      # 検出できたかを問えなくなるため。exit 1 (違反検出) だけを合格とする。
+      # 上の lint が判定を失っても緑になる無音の失効を防ぐ。probe ツリーの組み立てと
+      # 期待 exit の判定は lint 自身の --self-test が持つ。shell 手続きを CI にだけ置くと
+      # run-ci-checks.sh から同じ検査を呼べず、lint-ci-local-check-parity が落ちる。
       - name: G19 detector 実効性 (意図的な絵文字を検出できること)
-        run: |
-          probe="$(mktemp -d)"
-          mkdir -p "$probe/packages/ui/src"
-          printf "export const label = '\xF0\x9F\x8E\x89 done';\n" > "$probe/packages/ui/src/probe.ts"
-          set +e
-          python3 scripts/lint-ui-text-emoji.py --repo-root "$probe" --root packages/ui/src > /dev/null 2>&1
-          code=$?
-          set -e
-          rm -rf "$probe"
-          if [ "$code" -ne 1 ]; then
-            echo "絵文字 lint が意図的違反を検出できていません (期待 exit=1, 実際 exit=$code)"; exit 1
-          fi
-          echo "絵文字 lint 実効性チェック完了 (exit=$code)"
+        run: python3 scripts/lint-ui-text-emoji.py --self-test
       # feat-publish-pipeline P08/P09: test が green でも公開経路から secret scan の合成が
       # 外れたり、Hub が packages/db の schema 内部へ直接依存したりする退行を静的に遮断する。
       - name: G15 publish pipeline 境界・検査結線ゲート (I2 / qa-006 / owner 境界)

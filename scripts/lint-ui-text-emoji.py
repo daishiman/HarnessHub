@@ -20,10 +20,11 @@ feat-semantic-emphasis-icons の fail-closed lint。共通 UI 層と Hub の画�
 
 usage:
   python3 scripts/lint-ui-text-emoji.py [--repo-root PATH] [--root REL ...] [--json]
+  python3 scripts/lint-ui-text-emoji.py --self-test
 
 exit code:
-  0 違反なし
-  1 絵文字を検出 (fail-closed)
+  0 違反なし (--self-test では detector 実効性 OK)
+  1 絵文字を検出 (fail-closed。--self-test では detector が壊れている)
   2 設定エラー (対象 root 不在など)
 
 CONVENTIONS: stdlib only.
@@ -31,8 +32,11 @@ CONVENTIONS: stdlib only.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 # 既定の検査対象。共通 UI 層 (部品) と Hub の画面層 (文言・空状態文言) の両方を見る。
@@ -132,8 +136,69 @@ def evaluate(repo_root: Path, files: list[Path]) -> list[str]:
     return violations
 
 
+def self_test() -> int:
+    """detector 実効性: 意図的な絵文字を検出でき、テキスト表示記号は見逃すこと。
+
+    lint 本体だけを CI に置くと、判定ロジックが空になっても「違反 0 件」で緑になる
+    (無音の失効)。その失効を検出する手段を lint 自身の中に持たせる。
+    一時ツリーを script 内で組み立てるので、CI と `run-ci-checks.sh` の双方から
+    同じ 1 コマンドで呼べる (CI にしか無い検査を作らない)。
+    """
+    def probe_exit(probe: Path) -> int:
+        """probe ツリーへ lint 本体をかけ、exit code だけを取る。
+
+        内側の実行が出す「FAIL: ...」は probe に対する期待どおりの結果なので、
+        CI ログで本物の違反と読み間違えないよう握りつぶす。
+        """
+        sink = io.StringIO()
+        with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
+            return main(["--repo-root", str(probe), "--root", "packages/ui/src"])
+
+    failures: list[str] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        probe = Path(tmp)
+        root = probe / "packages" / "ui" / "src"
+        root.mkdir(parents=True)
+
+        # 1. Emoji_Presentation=Yes を検出する
+        (root / "probe.ts").write_text(
+            "export const label = '\U0001F389 done';\n", encoding="utf-8"
+        )
+        code = probe_exit(probe)
+        if code != 1:
+            failures.append(f"絵文字 (U+1F389) を検出できていない (期待 exit=1, 実際 exit={code})")
+
+        # 2. U+FE0F 付きの異体字も検出する
+        (root / "probe.ts").write_text(
+            "export const warn = '⚠️ attention';\n", encoding="utf-8"
+        )
+        code = probe_exit(probe)
+        if code != 1:
+            failures.append(f"異体字絵文字 (U+26A0 U+FE0F) を検出できていない (期待 exit=1, 実際 exit={code})")
+
+        # 3. テキスト表示記号は違反にしない (誤検出で lint が骨抜きにされるのを防ぐ)
+        (root / "probe.ts").write_text(
+            "// 変換 → 表示 ▲ ■ ▾\nexport const arrow = '→';\n", encoding="utf-8"
+        )
+        code = probe_exit(probe)
+        if code != 0:
+            failures.append(f"テキスト表示記号を誤検出している (期待 exit=0, 実際 exit={code})")
+
+    if failures:
+        for line in failures:
+            print(f"VIOLATION: ui-text-emoji-self-test: {line}", file=sys.stderr)
+        print(f"FAIL: ui-text-emoji detector 実効性 ({len(failures)} 件)", file=sys.stderr)
+        return 1
+    print("OK: ui-text-emoji detector 実効性 (3 checks)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--self-test", action="store_true",
+        help="detector が意図的な絵文字を検出できることを確認する (無音の失効検出)",
+    )
     parser.add_argument("--repo-root", default=".", help="リポジトリルート (既定: cwd)")
     parser.add_argument(
         "--root", action="append", default=None, metavar="REL",
@@ -141,6 +206,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--json", action="store_true", help="JSON で結果を出力する")
     args = parser.parse_args(argv)
+
+    if args.self_test:
+        return self_test()
 
     repo_root = Path(args.repo_root).resolve()
     if not repo_root.is_dir():

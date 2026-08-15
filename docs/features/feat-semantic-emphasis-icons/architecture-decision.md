@@ -32,15 +32,15 @@ Write scope 外のファイルを触るため、対応を明示する。
 | resource_scope の表記 | 実在パス | 備考 |
 | --- | --- | --- |
 | `packages/ui/src/icons` | `packages/ui/src/icons/index.tsx` | ディレクトリ配下は index.tsx 1 本 |
-| `packages/ui/src/markdown` | `packages/ui/src/components/Markdown.tsx` | **`markdown/` というディレクトリは存在しない**。callout 実装は components 配下の単一ファイル |
+| packages/ui/src/markdown (不在) | `packages/ui/src/components/Markdown.tsx` | **`markdown/` というディレクトリは存在しない**。callout 実装は components 配下の単一ファイル。不在の宣言値なので code span で書かない (doc-internal-link-integrity は code span を実在参照として検査する) |
 | `packages/ui/src/tokens` | `packages/ui/src/tokens/tokens.ts` ほか | `token-names.ts` / `base-css.ts` / `contrast.ts` を含む |
-| `scripts/lint` | `scripts/lint-*.py` | **`scripts/lint/` というディレクトリは存在しない**。リポジトリ既存の lint は `scripts/` 直下の flat 構成 (`lint-doc-line-limit.py` など 36 本) |
+| scripts/lint (不在) | `scripts/lint-*.py` | **scripts/lint/ というディレクトリは存在しない**。リポジトリ既存の lint は `scripts/` 直下の flat 構成 (`lint-doc-line-limit.py` など 36 本) |
 
 ## 3. 絵文字 lint の配置と命名
 
 **決定**: `scripts/lint-ui-text-emoji.py` (Python 3 / stdlib のみ)。
 
-- 配置: `scripts/` 直下。既存 36 本の lint が全て flat 構成であり、`scripts/lint/` を新設すると
+- 配置: `scripts/` 直下。既存 36 本の lint が全て flat 構成であり、scripts/lint/ を新設すると
   `lint-script-naming.py` の命名規約 (`lint-<対象>.py`) から外れる
 - 言語: Python 3。既存 lint 群が Python で統一されており、CI ランナー (ubuntu-latest) に標準搭載
 - 検査対象: `packages/ui/src` (共通 UI 層) と `apps/hub/src` (画面層) 配下の `.ts` / `.tsx`。
