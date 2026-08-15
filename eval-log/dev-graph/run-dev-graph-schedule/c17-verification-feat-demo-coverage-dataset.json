@@ -1,0 +1,73 @@
+{
+  "independent_ready_set": {
+    "features": [
+      "feat-demo-coverage-dataset"
+    ],
+    "tasks": [
+      "SYS-DEMO-COVERAGE-DATASET-P01"
+    ]
+  },
+  "implementation_ready_set": {
+    "features": [
+      "feat-demo-coverage-dataset"
+    ],
+    "tasks": [
+      "SYS-DEMO-COVERAGE-DATASET-P01"
+    ]
+  },
+  "match": true,
+  "lease_path": "/Users/dm/dev/dev/個人開発/HarnessHub/.git/dev-graph/leases.json",
+  "active_lease_nodes": [],
+  "batch_resource_conflicts": [],
+  "mixed_feature_task_batch": false,
+  "exclusion_reasons": {
+    "SYS-DEMO-COVERAGE-DATASET-P02": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P01']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P03": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P02']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P04": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P03']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P05": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P04']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P06": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P05']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P07": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P06']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P08": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P07']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P09": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P08']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P10": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P09']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P11": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P10']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P12": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P11']",
+      "edge_parity_unconfirmed"
+    ],
+    "SYS-DEMO-COVERAGE-DATASET-P13": [
+      "unmet_depends_on=['SYS-DEMO-COVERAGE-DATASET-P12']",
+      "edge_parity_unconfirmed"
+    ]
+  }
+}

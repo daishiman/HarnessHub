@@ -12,8 +12,8 @@ iteration: null
 title: "取得の失敗と操作の失敗を分けて出す (残り 4 画面)"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-12T03:37:39Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/app/(dashboard)/settings/coefficients","apps/hub/src/app/(dashboard)/settings/auth","apps/hub/src/app/(dashboard)/settings/account","apps/hub/src/app/(dashboard)/users","packages/ui/src/components/ListState.tsx"]

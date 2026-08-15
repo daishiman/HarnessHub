@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — S01/S02/S03/S04画面構成・install descriptor取得・ポーリング契約・marketplace.json生成方式・CWVバンドル予算の決定"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-08T08:01:59Z"
+status: "closed"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P01"]
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["docs/features/feat-dual-catalog-web/architecture-decision-record.md"]

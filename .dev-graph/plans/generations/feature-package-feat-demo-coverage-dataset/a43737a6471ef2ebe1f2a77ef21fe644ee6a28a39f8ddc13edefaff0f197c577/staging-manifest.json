@@ -1,0 +1,34 @@
+{
+  "canonical_digest": "sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+  "files": {
+    "feature-package.json": "fc173b8be7bad0ce79ebe2490d62b3964dcf2a5d1d67491e68400b946d5c07f8",
+    "system-build-handoff.json": "5bbe24562845bba31a0ad9b21f79e3f2556368f1f993a54c062bcda987181def",
+    "task-graph.json": "ec72930d146962b0544967a3082f3147ae1d5c953e7331596b179bb552c2ab79",
+    "task-specs/phase-01-requirements.md": "a623d0315ba068f686144e29dac98b367cefa33c3a027c02c88bac192b622932",
+    "task-specs/phase-02-architecture.md": "bb9110ae4f8e65bdd942f528ce09fba8b8ba40edc7ed29be08821f1f86fc2dc3",
+    "task-specs/phase-03-design-review.md": "095e3a23621cc3e4a24b35b3ada2908933b0c01b75be49a31919fa710b867ee4",
+    "task-specs/phase-04-test-design.md": "1f5954675b6b32baf02d0c8fe522c1e521ed20b7972a2fb8319f7f6bb39fafed",
+    "task-specs/phase-05-implementation.md": "7daf6ebd100754878c159508fd9f634fc580998523c719aade810f3eadfbe86e",
+    "task-specs/phase-06-test-run.md": "68c9d512f676d83fcbfff17082348070ecd6266c54249eab0d9954e9675a56c7",
+    "task-specs/phase-07-acceptance.md": "e151f10c056afbb1e1f344089b38abae61ce0670e986bbd3c0ae5267fd2b33dc",
+    "task-specs/phase-08-refactoring-migration.md": "25d4da10a1881cf6c08324fe96a457023d3750589801185caf53a08efeddd12c",
+    "task-specs/phase-09-quality-assurance.md": "b317f2db59496651ea4c0fa36cf5802bb0fbf1819f581041a959bbdd39e1e8e4",
+    "task-specs/phase-10-final-review.md": "53563296ebe623484ed817694d111bc8b029987e9f72d76056f344121ad4b97b",
+    "task-specs/phase-11-evidence.md": "2cdac34dbc53523dae3833f735b8ad911287db0f06a6e75dfd06615a3704054d",
+    "task-specs/phase-12-documentation-operations.md": "f39f5c2c51f9c72dd9cc70b1bdd1bed273aaaed7d91861aa2018a833efd08c81",
+    "task-specs/phase-13-release-deploy.md": "5827c73bbd2d92e9b54792eb24f80a430248a2e9683170de0445970c11436bfe",
+    "workstream-inventory.json": "0d84719c1bbd861a18ff74117a839e5d69564be179ca0c7c400b2fab80c0ee68"
+  },
+  "handoff_contract": {
+    "manifest_is_commit_point": true,
+    "path": "system-build-handoff.json",
+    "schema_version": "1.0.0",
+    "self_reference_policy": "handoff hash and final digest are manifest-only",
+    "sha256": "5bbe24562845bba31a0ad9b21f79e3f2556368f1f993a54c062bcda987181def",
+    "source_canonical_digest": "sha256:df22452c453aacd6b6ee62642a6cebf7dd11c632e422211b3d05dda180fbbec9"
+  },
+  "handoff_contract_note": "system-build-handoff.json 未生成のため sha256 と source_canonical_digest は確定できない。main-loop が C14 実行後に本 file を再確定する。",
+  "parent_feature": "feat-demo-coverage-dataset",
+  "schema_version": "1.0.0"
+}

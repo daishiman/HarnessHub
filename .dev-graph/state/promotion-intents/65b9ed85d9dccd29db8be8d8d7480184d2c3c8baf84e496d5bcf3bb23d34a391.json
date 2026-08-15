@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "status": "completed",
+  "staging": ".dev-graph/staging/feature-package-feat-demo-coverage-dataset",
+  "destination": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "digest": "sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+  "package_slug": "feature-package-feat-demo-coverage-dataset",
+  "generation_id": "a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "supersedes": null,
+  "receipt": ".dev-graph/plans/generations/feature-package-feat-demo-coverage-dataset/a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577/atomic-promotion-receipt.json",
+  "completed_at": "2026-08-14T13:38:08Z"
+}

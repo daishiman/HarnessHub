@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリングと移行 — しきい値の単一定数化と既存 check 系列への整列"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:13:51.467085Z"
-status: "active"
+updated_at: "2026-08-08T01:58:31Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P07"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["apps/hub/scripts/check-deploy-freshness.mjs","apps/hub/src/app/api/health"]

@@ -4,7 +4,7 @@
  */
 import type { ReactNode } from 'react';
 
-import { colorVar, spaceVar } from '../internal/style.js';
+import { colorVar, spaceVar, touchTargetStyle } from '../internal/style.js';
 
 export interface ShellFooterLink {
   href: string;
@@ -53,7 +53,7 @@ export function ShellFooter({ label, links, note }: ShellFooterProps): ReactNode
               <a
                 href={link.href}
                 data-hh-focusable=""
-                style={{ color: colorVar('textMuted') }}
+                style={{ ...touchTargetStyle, color: colorVar('textMuted') }}
                 {...(link.external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
               >
                 {link.label}

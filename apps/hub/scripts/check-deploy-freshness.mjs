@@ -16,6 +16,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /**
  * 乖離を許容する上限 (分)。しきい値はこの 1 箇所だけが正本で、CI からは
@@ -174,7 +175,8 @@ async function main() {
   }
 }
 
-// import されたとき (test) は実行しない
-if (process.argv[1] && import.meta.url === `file://${process.argv[1]}`) {
+// import されたとき (test) は実行しない。URL 文字列の直接比較は、
+// ワークツリーの path に日本語や空白があると percent-encode 差で常に false になる。
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   await main();
 }

@@ -54,7 +54,7 @@ sources: [system-spec/backend.md, system-spec/database.md, system-spec/auth.md, 
 
 - `applicant` は表示用の自由入力を保存するが、認可の所有者判定は改ざん可能な form 値でなく session の `principal.user_id` を `applicant_user_id` へ固定して行う。
 - status の保存値は §5.2 の `received/generating/review/completed`。mock の「下書き」は `received` の旧表示とみなし、統一 UI ラベルは「受付」。
-- PDF は独立した非認可 API を作らず、認可済み詳細 DTO を frontend-spec §3.2 の印刷表示へ再利用する。
+- PDF は独立した非認可 API を作らない。認可済み詳細 DTO と print stylesheet は残すが、製品所有の印刷ボタン / `window.print` 起動は 2026-08-15 時点で出さない（frontend-spec §3.2 / `HarnessHub-s36m`）。
 
 ### 4.3.1 ヒアリングシート スクリーンショット・Claude Code への引き渡し (token-URL 方式)
 

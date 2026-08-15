@@ -12,9 +12,9 @@ iteration: null
 title: "リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:14:11Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
-depends_on: ["SYS-FEEDBACK-LOOP-P12"]
+updated_at: "2026-08-13T08:45:22Z"
+status: "closed"
+depends_on: ["SYS-FEEDBACK-LOOP-P12","issue-authz-provider-admin-edge-route-mismatch-20260808"]
 related_nodes: ["feat-feedback-loop","arch-harness-hub-backend","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/src/app/api/v1/feedback/","docs/features/feat-feedback-loop/release-notes.md","packages/db/schema/feedback-loop/","packages/schemas/feedback-loop/"]
 purpose: "feat-feedback-loop の P13 を実行する: リリース/デプロイ — Cloudflare Workers 本番反映とスモークテスト"

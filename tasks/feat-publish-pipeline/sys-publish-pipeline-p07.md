@@ -12,8 +12,8 @@ iteration: null
 title: "受入 — goal-spec acceptance 3 項目の確認"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:40:37.785745Z"
-status: "active"
+updated_at: "2026-08-07T02:52:05Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P06"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/acceptance-record.md"]

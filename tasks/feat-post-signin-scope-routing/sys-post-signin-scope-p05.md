@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — scope 解決への session 系統追加・active workspace 束縛・着地先解決関数の新設とサインイン後遷移の結線"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:52:18.369769Z"
-status: "active"
+updated_at: "2026-08-04T07:32:02Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P04"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/lib/authz/resource.ts","apps/hub/src/lib/authz/types.ts","apps/hub/src/middleware/authz.ts","apps/hub/src/lib/auth/session.ts","apps/hub/src/lib/routing/post-signin-landing.ts","apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx","apps/hub/src/app/page.tsx"]

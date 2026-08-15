@@ -12,8 +12,8 @@ iteration: null
 title: "dev-graph: schedule-graph.py が bd ready に entry の無い beads node を沈黙除外する"
 owners: ["daishiman"]
 created_at: "2026-08-03T00:00:00Z"
-updated_at: "2026-08-04T01:34:10Z"
-status: "active"
+updated_at: "2026-08-08T05:03:35Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow","spec-harness-hub-requirements","issue-schedule-blocked-exclusion-unreported-20260728"]
 resource_scope: ["plugins/dev-graph/scripts/schedule-graph.py","plugins/dev-graph/scripts/schedule_graph_nodes.py","plugins/dev-graph/tests/test_schedule_beads_ready_entry_absent_reporting.py","plugins/dev-graph/tests/test_runtime_coverage.py","plugins/dev-graph/references/schedule-graph-contract.md","plugins/dev-graph/plugin-composition.yaml","scripts/lint-script-naming.py","eval-log/dev-graph/run-dev-graph-schedule/criteria-test/scenario-verdict.json","eval-log/dev-graph/run-dev-graph-schedule/live-trial/20260806T010001Z-xz0u-c15r5/verdict.json","system-spec/spec-state.json","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-dev-pipeline-improvement.md","tasks/task-schedule-beads-ready-entry-absent-reporting-20260803.md","docs/features/feat-dev-pipeline-improvement/xz0u-ready-payload-entry-absent-spec-reflection-receipt.md","eval-log/coverage/scripts/plugins-dev-graph-scripts-schedule_graph_nodes.py.json"]

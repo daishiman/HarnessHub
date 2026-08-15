@@ -12,8 +12,8 @@ iteration: null
 title: "受入判定 — goal-spec acceptance 5 件の実測証跡による判定"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:13:18.155316Z"
-status: "active"
+updated_at: "2026-08-08T01:58:29Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P06"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/acceptance-report.md"]

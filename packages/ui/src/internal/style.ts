@@ -49,6 +49,19 @@ export const visuallyHidden: CSSProperties = {
 };
 
 /**
+ * 文字だけのナビゲーションでも 44px 角の操作域を保つ。
+ * 表示密度の `--hh-control-height` は compact で 36px へ下がるが、
+ * タップ領域は視覚密度と切り分けて縮めない。
+ */
+export const touchTargetStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minBlockSize: '44px',
+  minInlineSize: '44px',
+};
+
+/**
  * 面 (カード・パネル) の共通装飾。**すべての面はこれを起点にする**。
  * 部品ごとに background / border / radius を書き直すと、同じ「カード」が
  * 画面によって 8px だったり 12px だったりする不統一が生まれる。

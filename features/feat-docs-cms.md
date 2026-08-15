@@ -12,8 +12,8 @@ iteration: "Studio 拡張"
 title: "Studio: ドキュメント CMS (common/tenant スコープ・AI 下書き)"
 owners: ["daishiman"]
 created_at: "2026-07-17T10:44:09Z"
-updated_at: "2026-08-02T20:51:00.109559Z"
-status: "active"
+updated_at: "2026-08-10T06:29:43Z"
+status: "closed"
 depends_on: ["feat-hub-foundation","feat-domain-model-db","feat-auth-tenancy"]
 related_nodes: []
 resource_scope: ["features/feat-docs-cms.md"]

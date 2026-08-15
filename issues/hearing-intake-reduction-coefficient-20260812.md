@@ -12,8 +12,8 @@ iteration: null
 title: "削減時間の見積り係数 0.35 が画面に直書きされている"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T15:50:36.312253Z"
-status: "active"
+updated_at: "2026-08-12T00:40:54Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx"]

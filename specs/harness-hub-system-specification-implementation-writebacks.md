@@ -219,6 +219,12 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 公開 API、DB schema、role 語彙、JIT の `member` 固定は変更しない。確定章は reopen せず、本分冊と運用追補へ写す。
 - 正本の接続は [database](../system-spec/database.md) / [auth](../system-spec/auth.md)、判断と検証は [仕様反映受領書](../docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md)。
 
+## UI 崩れ縦切り writeback (2026-08-15 / `HarnessHub-s36m`)
+
+- 確認用データ、実ブラウザ監査の母数分離、意味境界改行、製品所有印刷導線 0 件、公開操作域 44px を実装した。
+- 確定章 `ui-ux.md` / `testing-qa.md` の web セルは reopen しない。qa-226 / qa-217 を消す compile 差分は採用しない。
+- 正本は architecture の testing-qa / frontend / design-system 章末と [仕様反映受領書](../docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md)。
+
 ## hearing-sheet-overhaul writeback (2026-08-12 / `HarnessHub-a70b`)
 
 - S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。

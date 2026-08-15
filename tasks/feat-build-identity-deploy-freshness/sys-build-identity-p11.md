@@ -12,8 +12,8 @@ iteration: null
 title: "証跡固定 — source digest と再実行コマンドの保存"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:15:28.302690Z"
-status: "active"
+updated_at: "2026-08-08T01:58:36Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P10"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/evidence.md"]

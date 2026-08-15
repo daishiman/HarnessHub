@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-demo-coverage-dataset",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "1.0.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "13 task spec 間・workstream-inventory.json・task-graph.json・system-build-handoff.json の write_scope / 成果物 / Workstream applicability / depends_on の宣言に矛盾はない。今回の変更 (workstream-inventory.json の graph_node_registration.graph_node_id を大文字 task.id へ揃えた差分) は他ファイルへ波及しておらず、task-graph.json / task-specs / system-build-handoff.json の参照整合に矛盾を生んでいないことを自前 python で再確認した。file_path (tasks/feat-demo-coverage-dataset/sys-demo-coverage-dataset-pNN.md、小文字) は変更されておらず、graph_node_id (大文字) との併存規約が全13件で一貫している。",
+      "evidence": [
+        "task-specs/phase-01-requirements.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-08-refactoring-migration.md",
+        "task-specs/phase-13-release-deploy.md",
+        "workstream-inventory.json",
+        "task-graph.json",
+        "system-build-handoff.json",
+        "gate:dag-cycle-and-cross-file-depends-on-check"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "P01..P13 の exact 13 が揃い、全 spec が同一 16 section テンプレートを持つ (前回評価時から task-specs は無変更)。task-specs/phase-07-acceptance.md は goal-spec acceptance 7 件全てを列挙し 1 対 1 で受入判定する構成になっている。scope_in 8 件は要件 (P01)・設計 (P02)・テスト設計 (P04)・実装 (P05)・受入 (P07)・最終レビュー (P10)・runbook (P12) の各 phase に意味的に配分されている。",
+      "evidence": [
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-01-requirements.md",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-10-final-review.md",
+        "task-specs/phase-12-documentation-operations.md",
+        "gate:deterministic-validation"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "parent_feature=feat-demo-coverage-dataset、feature_package_id=feature-package/feat-demo-coverage-dataset、node id SYS-DEMO-COVERAGE-DATASET-P01..P13 が全成果物で一致する。workstream-inventory.json の graph_node_registration.graph_node_id は 13 entry すべてで対応する task.id と完全一致 (大文字) しており、C11 (promote-system-plan.py:301-304) が要求する node_id==task.id 契約を満たすことを自前 python で個別に再現・確認した。file_path は tasks/<parent_feature>/<file>.md パターンおよび tasks/feat-demo-coverage-dataset/ prefix 要件 (同 script:306-316) も全13件で充足。registration の parent_feature/feature_package_id/phase_ref も task 側と全件一致 (同 script:317-319 相当の検査)。system-build-handoff.json の source_inputs 記載 per-file SHA-256 16 件はいずれも実ファイルと一致 (自前 hashlib 実測)。staging-manifest.json の canonical_digest (sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577) は validate-system-plan.py の validated_digest と一致。handoff_contract.source_canonical_digest と handoff 側 source_manifest.canonical_digest_before_handoff も一致。source_feature_digest (sha256:fffd1ddd...) は feature-package.json / system-build-handoff.json 双方で一致。repo_identity (github:daishiman/HarnessHub) は .dev-graph/config.json・system-build-handoff.json・実際の git remote で一致。",
+      "evidence": [
+        "feature-package.json",
+        "system-build-handoff.json",
+        "workstream-inventory.json",
+        "task-graph.json",
+        "staging-manifest.json"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は 13 node の DAG で P01→P02→...→P13 の単純な直列依存のみを持ち、循環は0 (自前 python での topological sort で全 13 node を消化)。同一 depends_on が workstream-inventory.json / task-graph.json / system-build-handoff.json execution_tasks の三者で完全一致することを再確認済み。graph_node_id の大文字化はこの依存構造 (id ベースの depends_on 参照) に影響を与えていない。",
+      "evidence": [
+        "task-graph.json",
+        "workstream-inventory.json",
+        "system-build-handoff.json",
+        "gate:dag-cycle-and-cross-file-depends-on-check"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        "/Users/dm/orca/workspaces/HarnessHub/uiの崩れ",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-demo-coverage-dataset"
+      ],
+      "stdout": "{\n  \"schema_version\": \"1.0.0\",\n  \"status\": \"pass\",\n  \"validated_digest\": \"sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577\",\n  \"feature_package_id\": \"feature-package/feat-demo-coverage-dataset\",\n  \"parent_feature\": \"feat-demo-coverage-dataset\",\n  \"phase_refs\": [\n    \"P01\",\n    \"P02\",\n    \"P03\",\n    \"P04\",\n    \"P05\",\n    \"P06\",\n    \"P07\",\n    \"P08\",\n    \"P09\",\n    \"P10\",\n    \"P11\",\n    \"P12\",\n    \"P13\"\n  ],\n  \"contract_version\": \"1.3.0\",\n  \"contract_baseline_exemption\": false,\n  \"test_strategy_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.2.0\"\n  },\n  \"rerun_command_contract\": {\n    \"mode\": \"enforced\",\n    \"contract_version\": \"1.3.0\",\n    \"enforced_from\": \"1.3.0\"\n  },\n  \"violations\": []\n}",
+      "exit_code": 0
+    },
+    {
+      "id": "dag-cycle-and-cross-file-depends-on-check",
+      "name": "custom-dag-and-crossfile-check",
+      "conditions": [
+        "C1",
+        "C4"
+      ],
+      "command": [
+        "python3",
+        "-c",
+        "import json; from collections import deque; tg=json.load(open('task-graph.json')); wi=json.load(open('workstream-inventory.json')); handoff=json.load(open('system-build-handoff.json')); nodes={n['id']: n for n in tg['nodes']}; ids=list(nodes.keys()); indeg={i:0 for i in ids}; adj={i:[] for i in ids}; [ (adj[d].append(i), indeg.__setitem__(i, indeg[i]+1)) for i in ids for d in nodes[i]['depends_on'] ]; q=deque([i for i in ids if indeg[i]==0]); visited=[]\nwhile q:\n x=q.popleft(); visited.append(x)\n for y in adj[x]:\n  indeg[y]-=1\n  if indeg[y]==0: q.append(y)\nassert len(visited)==len(ids)==13\nwi_ids=[t['id'] for t in wi['tasks']]; h_ids=[t['task_id'] for t in handoff['execution_tasks']]\nassert set(wi_ids)==set(ids)==set(h_ids)\nfor i in ids:\n tg_dep=nodes[i]['depends_on']; wi_dep=next(t['depends_on'] for t in wi['tasks'] if t['id']==i); h_dep=next(t['depends_on'] for t in handoff['execution_tasks'] if t['task_id']==i)\n assert tg_dep==wi_dep==h_dep, i\nprint('no cycle; 13 nodes; depends_on cross-file consistent')"
+      ],
+      "stdout": "no cycle; 13 nodes; depends_on cross-file consistent",
+      "exit_code": 0
+    },
+    {
+      "id": "c11-graph-node-registration-contract-check",
+      "name": "reproduce-promote-system-plan-registration-checks",
+      "conditions": [
+        "C3"
+      ],
+      "command": [
+        "python3",
+        "-c",
+        "import json, re\nwi = json.load(open('workstream-inventory.json'))\nok=True\nfor t in wi['tasks']:\n    reg = t['graph_node_registration']\n    if reg.get('graph_node_id') != t.get('id'):\n        print('ID_MISMATCH', t['id']); ok=False\n    for f in ('parent_feature','feature_package_id','phase_ref'):\n        if reg.get(f) != t.get(f):\n            print('FIELD_MISMATCH', t['id'], f); ok=False\n    fp = reg['file_path']\n    if re.fullmatch(r'tasks/[A-Za-z0-9._-]+/[^/]+\\.md', fp) is None:\n        print('BAD_PATTERN', t['id'], fp); ok=False\n    if not fp.startswith(f\"tasks/{t['parent_feature']}/\"):\n        print('BAD_PREFIX', t['id'], fp); ok=False\nprint('all ok' if ok else 'issues found')"
+      ],
+      "stdout": "all ok",
+      "exit_code": 0
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "fc173b8be7bad0ce79ebe2490d62b3964dcf2a5d1d67491e68400b946d5c07f8"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "5bbe24562845bba31a0ad9b21f79e3f2556368f1f993a54c062bcda987181def"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "ec72930d146962b0544967a3082f3147ae1d5c953e7331596b179bb552c2ab79"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "a623d0315ba068f686144e29dac98b367cefa33c3a027c02c88bac192b622932"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "bb9110ae4f8e65bdd942f528ce09fba8b8ba40edc7ed29be08821f1f86fc2dc3"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "095e3a23621cc3e4a24b35b3ada2908933b0c01b75be49a31919fa710b867ee4"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "1f5954675b6b32baf02d0c8fe522c1e521ed20b7972a2fb8319f7f6bb39fafed"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "7daf6ebd100754878c159508fd9f634fc580998523c719aade810f3eadfbe86e"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "68c9d512f676d83fcbfff17082348070ecd6266c54249eab0d9954e9675a56c7"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e151f10c056afbb1e1f344089b38abae61ce0670e986bbd3c0ae5267fd2b33dc"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "25d4da10a1881cf6c08324fe96a457023d3750589801185caf53a08efeddd12c"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "b317f2db59496651ea4c0fa36cf5802bb0fbf1819f581041a959bbdd39e1e8e4"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "53563296ebe623484ed817694d111bc8b029987e9f72d76056f344121ad4b97b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "2cdac34dbc53523dae3833f735b8ad911287db0f06a6e75dfd06615a3704054d"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "f39f5c2c51f9c72dd9cc70b1bdd1bed273aaaed7d91861aa2018a833efd08c81"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "5827c73bbd2d92e9b54792eb24f80a430248a2e9683170de0445970c11436bfe"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "0d84719c1bbd861a18ff74117a839e5d69564be179ca0c7c400b2fab80c0ee68"
+    },
+    {
+      "path": "staging-manifest.json",
+      "sha256": "52ad3aa48ff30b5eb836fdcb06971316436d563d14737885b05c1400879a8a6d"
+    }
+  ],
+  "staleness_rule": "evaluated_inputs のいずれか1件でも sha256 が実測と異なる状態になったら本 findings は無効。特に staging-manifest.json の canonical_digest が sha256:a43737a6471ef2ebe1f2a77ef21fe644ee6a28a39f8ddc13edefaff0f197c577 から変化した場合、gate_results[0].stdout の validated_digest がこれと一致しなくなった場合、または workstream-inventory.json の13件いずれかで graph_node_registration.graph_node_id != task.id となる回帰が生じた場合は再評価が必須。",
+  "findings": []
+}

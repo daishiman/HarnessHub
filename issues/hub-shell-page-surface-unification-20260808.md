@@ -12,8 +12,8 @@ iteration: null
 title: "Harness Hub 共通シェル・全ページ表面の統一"
 owners: ["daishiman"]
 created_at: "2026-08-08T10:30:00Z"
-updated_at: "2026-08-08T11:46:34.607947Z"
-status: "active"
+updated_at: "2026-08-10T09:45:06Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-hub-foundation","feat-post-signin-scope-routing","spec-harness-hub-ui-foundation-addendum","arch-harness-hub-frontend"]
 resource_scope: ["apps/hub/","packages/ui/","system-spec/","specs/harness-hub-ui-foundation-addendum.md","architecture/harness-hub-frontend.md","features/feat-hub-foundation.md","features/feat-post-signin-scope-routing.md","tasks/feat-hub-foundation/","docs/","issues/hub-shell-page-surface-unification-20260808.md"]

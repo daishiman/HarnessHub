@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメントと運用 — 画面遷移仕様の更新と scope 未解決時の運用手順整備"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:56:00.327920Z"
-status: "active"
+updated_at: "2026-08-04T07:32:57Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P11"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/frontend-spec.md","docs/user-journeys.md","docs/features/feat-post-signin-scope-routing/operations-runbook.md"]

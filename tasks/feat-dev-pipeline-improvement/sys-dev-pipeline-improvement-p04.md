@@ -12,8 +12,8 @@ iteration: null
 title: "テスト設計 — lint script 群と冪等 migration の回帰テスト設計"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:23:58.797752Z"
-status: "active"
+updated_at: "2026-08-08T02:53:28Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P03"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/test-plan.md"]

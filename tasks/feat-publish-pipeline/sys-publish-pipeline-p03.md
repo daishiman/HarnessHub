@@ -12,8 +12,8 @@ iteration: null
 title: "独立設計レビュー — スキーマ owner 境界・状態機械設計・検査 pipeline 設計の妥当性確認"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:38:21.799250Z"
-status: "active"
+updated_at: "2026-08-07T02:51:35Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P02"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/design-review-notes.md"]

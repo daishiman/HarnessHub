@@ -12,8 +12,8 @@ iteration: null
 title: "/catalog/[projectId] の G13 予算残 598 バイトを構造的に広げる"
 owners: ["daishiman"]
 created_at: "2026-08-08T08:00:00Z"
-updated_at: "2026-08-10T11:49:00Z"
-status: "active"
+updated_at: "2026-08-11T12:08:11Z"
+status: "closed"
 depends_on: ["issue-catalog-route-bundle-headroom-20260810"]
 related_nodes: ["issue-hub-cwv-tbt-over-budget-20260724"]
 resource_scope: ["apps/hub/scripts/check-client-bundle.mjs","apps/hub/src/app/(workspace)/catalog","apps/hub/src/components/catalog","apps/hub/src/components/publish","apps/hub/tests/ci/client-bundle-budget.test.ts"]

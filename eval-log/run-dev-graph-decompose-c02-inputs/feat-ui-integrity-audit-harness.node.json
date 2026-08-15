@@ -1,0 +1,129 @@
+{
+  "node": {
+    "graph_node_id": "feat-ui-integrity-audit-harness",
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "title": "実ブラウザによる全画面 UI 崩れ自動検査基盤 (28 route × 3 幅 × 2 テーマ)",
+    "project_id": "harness-hub",
+    "domain": "testing-qa",
+    "status": "draft",
+    "owners": [
+      "daishiman"
+    ],
+    "tags": [
+      "macro-feature",
+      "testing-qa",
+      "browser-test",
+      "ui-integrity",
+      "S1"
+    ],
+    "priority": "high",
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-14T00:00:00Z",
+    "updated_at": "2026-08-14T00:00:00Z",
+    "depends_on": [
+      "feat-demo-coverage-dataset"
+    ],
+    "related_nodes": [
+      "feat-demo-coverage-dataset",
+      "feat-dev-pipeline-improvement"
+    ],
+    "resource_scope": [
+      "tests/browser",
+      "apps/hub/src/app",
+      "packages/ui/src"
+    ],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "features/feat-ui-integrity-audit-harness.md",
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "generated",
+      "source_plugin": "dev-graph",
+      "source_path": "system-spec/testing-qa.md",
+      "source_version": null,
+      "source_digest": "bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b",
+      "imported_at": "2026-08-14T00:00:00Z"
+    },
+    "classification_confidence": 0.9,
+    "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+    "classification_candidates": [
+      {
+        "artifact_kind": "feature",
+        "confidence": 0.9,
+        "candidate_path": "features/feat-ui-integrity-audit-harness.md"
+      }
+    ],
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "purpose": "UI 崩れは利用者が偶然見つけた 1 箇所しか把握できておらず、他に崩れがあるかを誰も把握していない。28 画面 × 3 幅 × 2 テーマ = 168 通りを目視で毎回確認する運用は続かないため、崩れの発見を実ブラウザでの自動検査へ移し、再発を検知し続けられる状態にする。",
+    "goal": "対象 28 route を 360 / 768 / 1280 px の 3 幅 × light / dark の 2 テーマで実ブラウザ描画し、横方向の溢れ 0 件・タップ域 44px 未満 0 件・意図しない折返し 0 件を判定して、違反があれば非 0 終了で落ちる検査が CI 専用 job として実行できる状態。",
+    "scope_in": [
+      "検査対象 28 route の一覧の確定と、route 一覧が実装から乖離したときに検知する仕組み",
+      "実ブラウザ (headless) での 3 幅 (360/768/1280) × 2 テーマ (light/dark) の描画",
+      "横方向の溢れ検出 (scrollWidth が clientWidth を超える要素の検出)",
+      "タップ域検出 (対話可能要素の実測サイズが 44px 未満のものの検出)",
+      "意図しない折返しの検出 (単語・語句の途中で行が割れている箇所の検出)",
+      "違反時に非 0 終了する判定と、違反箇所を route/幅/テーマ/要素で特定できる報告",
+      "`pnpm test:browser` としての実行入口",
+      "CI 専用 job としての配線 (通常の単体テスト経路を遅くしない)",
+      "seed 済みデータ (feat-demo-coverage-dataset) を入力とした状態別の検査"
+    ],
+    "scope_out": [
+      "検出された崩れの是正 (feat-ui-layout-remediation の担当)",
+      "確認用データそのものの整備 (feat-demo-coverage-dataset の担当)",
+      "スクリーンショット差分 (visual regression) による見た目の凍結",
+      "アクセシビリティ全般の監査 (本 feature はタップ域に限る)",
+      "パフォーマンス計測",
+      "テーマパレットの追加 (feat-theme-palette-catalog の担当。本 feature は検査軸をテーマ数へ一般化するに留める)"
+    ],
+    "acceptance": [
+      "検査が 28 route すべてを 3 幅 × 2 テーマで描画し、検査済み組合せ数が 168 に一致する",
+      "既知の崩れ (サイドバー「使用状況・削減効果」の語中折返し) を是正前の状態で検出できる",
+      "横方向に溢れる要素を含む route が 1 つでもあれば非 0 終了する",
+      "対話可能要素の実測サイズが 44px 未満のとき非 0 終了する",
+      "違反報告が route・幅・テーマ・要素セレクタを特定できる粒度を持つ",
+      "`pnpm test:browser` で実行でき、CI 専用 job として通常のテスト経路から分離されている",
+      "route 一覧が実装の route と乖離したとき検査が非 0 終了する (検査漏れを緑にしない)"
+    ],
+    "architecture_refs": [
+      "arch-harness-hub-testing-qa",
+      "arch-harness-hub-design-system",
+      "arch-harness-hub-frontend"
+    ],
+    "beads_linkage": null,
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "implementation_readiness": {
+      "checked_at": "2026-08-14T00:00:00Z",
+      "missing_sections": [],
+      "status": "incomplete"
+    }
+  }
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "設計レビュー — 情報露出・deploy 直後の誤検出・CI 依存の 3 リスク検証"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:11:09.297425Z"
-status: "active"
+updated_at: "2026-08-08T01:58:23Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P02"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/design-review.md"]

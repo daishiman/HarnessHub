@@ -1,0 +1,127 @@
+{
+  "node": {
+    "graph_node_id": "feat-feedback-image-attachment",
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "title": "改善要望への画像添付 (スクリーンショットを含む・動画は対象外)",
+    "project_id": "harness-hub",
+    "domain": "ui-ux",
+    "status": "draft",
+    "owners": [
+      "daishiman"
+    ],
+    "tags": [
+      "macro-feature",
+      "ui-ux",
+      "feedback",
+      "attachment",
+      "S4"
+    ],
+    "priority": "medium",
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-14T00:00:00Z",
+    "updated_at": "2026-08-15T13:37:01Z",
+    "depends_on": [
+      "feat-feedback-loop"
+    ],
+    "related_nodes": [
+      "feat-tenant-data-retention",
+      "feat-workspace-governance"
+    ],
+    "resource_scope": [
+      "apps/hub/src/app",
+      "apps/hub/src/components",
+      "apps/hub/src/db"
+    ],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "features/feat-feedback-image-attachment.md",
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "generated",
+      "source_plugin": "dev-graph",
+      "source_path": "system-spec/ui-ux.md",
+      "source_version": null,
+      "source_digest": "df3a55215acaabb543e3dd5288f893470f928e2fb44622fef177ac540880e39f",
+      "imported_at": "2026-08-15T13:37:01Z"
+    },
+    "classification_confidence": 0.9,
+    "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+    "classification_candidates": [
+      {
+        "artifact_kind": "feature",
+        "confidence": 0.9,
+        "candidate_path": "features/feat-feedback-image-attachment.md"
+      }
+    ],
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "purpose": "改善要望が文章だけで届くため、UI の崩れのように「見れば一目で分かる」問題を文章で再現する負担が報告者にかかり、受け手も再現に時間を要している。画面の状態をそのまま添えられるようにして、報告と再現の間にある翻訳を無くす。動画は容量を理由に利用者が明示的に対象外とした。",
+    "goal": "改善要望の投稿時に画像 (スクリーンショットを含む) を添付でき、添付された画像が要望の閲覧時に表示され、テナント境界を越えて参照されない状態。",
+    "scope_in": [
+      "改善要望投稿時の画像添付 (選択・貼り付け・ドラッグ&ドロップの受入方式の決定)",
+      "受け入れる画像形式とサイズ上限の決定",
+      "添付画像の保存先と、要望本体との関連付け",
+      "要望閲覧時の添付画像の表示",
+      "テナント境界を越えた添付画像の参照を拒否する認可",
+      "添付画像のデータ保持期間の既存方針への接続",
+      "添付失敗時 (形式違反・容量超過・保存失敗) の利用者への提示"
+    ],
+    "scope_out": [
+      "動画の添付 (利用者が容量を理由に明示的に対象外とした)",
+      "画像内の個人情報の自動マスキング",
+      "画像の編集・注釈付与",
+      "改善要望の起票・一覧・状態遷移そのもの (feat-feedback-loop の担当)",
+      "アプリ内からの画面キャプチャ機能の実装 (利用者が撮った画像の添付を範囲とする)",
+      "添付画像の全文検索・類似画像検索"
+    ],
+    "acceptance": [
+      "改善要望の投稿時に画像を添付でき、投稿後に要望と関連付いて保存される",
+      "要望の閲覧時に添付画像が表示される",
+      "許可外の形式または上限超過のファイルが拒否され、理由が利用者に提示される",
+      "他テナントの添付画像への参照が認可で拒否される",
+      "動画ファイルが受け付けられず、対象外である旨が利用者に提示される",
+      "添付画像がテナントのデータ保持方針の対象として扱われる",
+      "添付なしの改善要望が従来どおり投稿でき非退行である"
+    ],
+    "architecture_refs": [
+      "arch-harness-hub-frontend",
+      "arch-harness-hub-backend",
+      "arch-harness-hub-security"
+    ],
+    "beads_linkage": null,
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "implementation_readiness": {
+      "checked_at": "2026-08-14T00:00:00Z",
+      "missing_sections": [],
+      "status": "incomplete"
+    }
+  }
+}

@@ -12,8 +12,8 @@ iteration: null
 title: "VRT の Linux 版 baseline を更新する"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-13T08:45:57Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-ui-vrt-navigation-baseline-drift-20260810"]
 resource_scope: ["apps/hub/tests/browser/__vrt__","apps/hub/tests/browser/vrt.ts",".github/workflows/ui-visual.yml"]

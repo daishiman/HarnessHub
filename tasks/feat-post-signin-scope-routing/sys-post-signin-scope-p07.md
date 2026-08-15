@@ -12,8 +12,8 @@ iteration: null
 title: "受入判定 — goal-spec acceptance 8 件の実測証跡による判定"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:53:21.807658Z"
-status: "active"
+updated_at: "2026-08-04T07:32:18Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P06"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/acceptance-record.md"]

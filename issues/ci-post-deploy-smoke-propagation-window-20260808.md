@@ -12,8 +12,8 @@ iteration: null
 title: "post-deploy smoke が配信伝播完了前に走る窓を塞ぐ"
 owners: ["daishiman"]
 created_at: "2026-08-08T00:00:00Z"
-updated_at: "2026-08-08T06:00:11.313290Z"
-status: "active"
+updated_at: "2026-08-08T07:47:14Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-build-identity-deploy-freshness","spec-post-signin-landing-observability"]
 resource_scope: [".github/workflows/ci.yml","scripts/ci/assert-served-version.mjs","apps/hub/tests/ci/production-auth-gates.test.ts","apps/hub/tests/ci/smoke-version-recheck.test.ts","docs/infrastructure-spec.md","docs/features/feat-post-signin-landing-surface/landing-observability-investigation.md"]

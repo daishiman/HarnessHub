@@ -93,6 +93,7 @@ export function insightNavItems(scope: ShellScope): readonly ShellNavItem[] {
     {
       href: scopedHref('/metrics/usage', scope, true),
       label: '使用状況・削減効果',
+      labelSegments: ['使用状況・', '削減効果'],
       icon: 'tracking',
     },
   ];

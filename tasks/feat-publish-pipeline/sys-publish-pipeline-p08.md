@@ -12,8 +12,8 @@ iteration: null
 title: "リファクタリング/マイグレーション — Python→TypeScript 検査 pipeline 移植の最終整理と CI 恒久検査確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:41:09.138651Z"
-status: "active"
+updated_at: "2026-08-07T02:52:07Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P07"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: [".github/workflows/ci.yml","apps/hub/scripts/check-db-schema-boundary.mjs","apps/hub/scripts/check-publish-boundary-gates.mjs","apps/hub/scripts/check-publish-inspection-gate.mjs","docs/features/feat-publish-pipeline/refactoring-migration-note.md","packages/inspection/"]
