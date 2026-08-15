@@ -124,3 +124,4 @@ beads から GitHub への push-only 投影が生んだ 490 件規模の open is
 
 - `plugins/dev-graph/templates/repo-config.example.json` と `plugins/system-dev-planner/assets/default-project-config.json` の既定値は `bd_github_push_only` のままである。新規リポジトリの既定を `none` へ寄せるかは、テンプレート利用側への影響評価が要るため本 task の scope 外とする。
 - 定期 reconcile を実装して push-only を安全に再開する選択肢は未着手。現時点では `none` で足りている。
+- `execution-tracker-contract.md` の編集により `run-dev-graph-decompose` / `run-dev-graph-sync` の live-trial verdict が stale-sha となった。挙動面は変えていないが digest は意味を読まないため区別できない。再 trial は MVP 方針により本変更の scope 外とし、`PUSH_SKIP_CI=1` で push した。
