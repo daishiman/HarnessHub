@@ -141,3 +141,11 @@ businessの重要なruleと用語をmodel/code/会話で一致させ、複雑性
 - 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
   `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
 - 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。
+
+## 2026-08-15 MVP 実装追記 (feat-card-mutation-safety / HarnessHub-6oi5)
+
+- migration `0015_card-mutation-safety.sql` で `mutation_create_idempotency` を追加し、
+  `documents.entity_revision` と `hearing_sheets.entity_revision` を default 1 で純増する。
+- 冪等台帳の主キーは tenant_id + workspace_id + resource + operation + key。
+  Docs 本体は workspace 列を持たないが、作成要求の冪等 scope は workspace を含む。
+- 外部同期の `external_revision` とは別カラム。既存 import CAS の意味は変えない。

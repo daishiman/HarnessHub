@@ -71,6 +71,7 @@ const SYMBOL_BY_TABLE: Record<string, string> = {
   audit_events: 'createAuditRepo',
   session_revocations: 'createSessionRevocationsRepo',
   idempotency_ledger: 'createIdempotencyLedgerRepo',
+  mutation_create_idempotency: 'createDocumentIdempotent',
   smoke_fixture_leases: 'smokeFixtureLeases',
   hearing_sheets: 'createHearingIntakeRepository',
   ai_jobs: 'createHearingIntakeRepository',

@@ -182,7 +182,15 @@ describe('HI-EST: 試算のサーバ計算限定 (SEC5) と §6.2 との一致',
   it('HI-EST-103: service は提出時の結果を estimateJson に保存し、読取時に再計算しない', () => {
     const source = readFileSync(resolve(process.cwd(), 'src/features/hearing-intake/service.ts'), 'utf8');
     expect(source).toContain('estimateJson: JSON.stringify(estimate)');
-    expect(source.match(/estimateHearingSheet\(/g)).toHaveLength(1);
+    // 提出経路 (createSheet / createSheetIdempotent) だけが試算を実行し、読取経路は保存済み値を返す。
+    const submitBoundary = source.indexOf('async createSheet(input)');
+    const readBoundary = source.indexOf('async listSheets(input)');
+    expect(submitBoundary).toBeGreaterThan(-1);
+    expect(readBoundary).toBeGreaterThan(submitBoundary);
+    const submitPaths = source.slice(submitBoundary, readBoundary);
+    const readPaths = source.slice(readBoundary);
+    expect(submitPaths.match(/estimateHearingSheet\(/g)).toHaveLength(2);
+    expect(readPaths).not.toContain('estimateHearingSheet(');
     expect(source).not.toMatch(/savedHoursPerYear\s*[*+/=-]/);
   });
 

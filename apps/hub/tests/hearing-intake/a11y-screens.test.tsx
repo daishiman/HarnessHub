@@ -347,7 +347,8 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     );
     expect(detail).toContain("sheet.ai_job_status === 'dead'");
     expect(detail).toContain('生成を完了できませんでした');
-    expect(repository).toContain("status: 'received'");
+    // dead 時は completed を保ったまま、それ以外を received へ差し戻す (CASE 式で表現)。
+    expect(repository).toContain("ELSE 'received' END");
   });
 
   it('HI-A11Y-107: 非同期 status は aria-live で通知される', () => {

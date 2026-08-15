@@ -12,10 +12,10 @@ iteration: null
 title: "Harness Hub システム要件仕様 — 実装 writeback 分冊"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-10T04:20:00Z"
+updated_at: "2026-08-15T00:00:00Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
-related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810"]
+related_nodes: ["arch-harness-hub-dev-workflow","issue-audit-fork-ledger-forgery-20260728","issue-rubric-proposal-20260806-review","task-rubric-proposal-retention-final-review-handoff-20260810","doc-rubric-proposal-retention-spec-reflection-receipt-20260810","issue-production-tenant-bootstrap-readiness-20260814"]
 resource_scope: ["specs/harness-hub-system-specification-implementation-writebacks.md","specs/harness-hub-system-specification.md","system-spec/index.md","docs/features/feat-dev-pipeline-improvement/audit-ledger-transition-c19-final-review-20260808.md","docs/features/feat-dev-pipeline-improvement/rubric-proposal-retention-final-review-spec-reflection-receipt.md","tasks/feat-dev-pipeline-improvement/sys-dev-pipeline-improvement-rubric-proposal-retention-final-review-handoff.md"]
 purpose: "総合仕様を500行以下に保ちながら既存の実装 writeback と正本・受領書の参照関係を維持する"
 goal: "分冊後も各実装確定事項から system-spec 正本と仕様反映受領書へ追跡できる"
@@ -212,6 +212,13 @@ N/A: 今回の分冊に伴う製品判断はない。
 - 確定質疑 qa-226 の md=768 逐語は未 reopen。実装正本は本変更の token と [UI 基盤追補](harness-hub-ui-foundation-addendum.md) FR-UIF-003/014。
 - 判断と検証は [受領書](../docs/features/feat-hub-foundation/visual-system-v2-20260813-spec-reflection-receipt.md)。
 
+## 本番テナント bootstrap CLI writeback (2026-08-15 / `HarnessHub-s8oe`)
+
+- 画面と JIT は最初の tenant / workspace / `workspace-admin` を作れない。本番の唯一経路は dry-run 既定の `bootstrap-tenant` CLI とする。
+- 既存行の name / plan は上書きせず、無い行だけを足す。role 変更・所属追加・監査は 1 transaction。監査失敗は成功扱いにしない。
+- 公開 API、DB schema、role 語彙、JIT の `member` 固定は変更しない。確定章は reopen せず、本分冊と運用追補へ写す。
+- 正本の接続は [database](../system-spec/database.md) / [auth](../system-spec/auth.md)、判断と検証は [仕様反映受領書](../docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md)。
+
 ## UI 崩れ縦切り writeback (2026-08-15 / `HarnessHub-s36m`)
 
 - 確認用データ、実ブラウザ監査の母数分離、意味境界改行、製品所有印刷導線 0 件、公開操作域 44px を実装した。
@@ -223,3 +230,14 @@ N/A: 今回の分冊に伴う製品判断はない。
 - S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。
 - 製品 API path・tenant 認可・AI キュー kind・DB テーブル集合は不変。フィールド数 FormData 30 / snapshot 29 を維持。
 - 詳細正本は `docs/frontend-spec.md` と [仕様反映受領書](../docs/features/feat-hearing-intake/mvp-sheet-overhaul-spec-reflection-receipt.md)。
+
+## 成果物カード一覧 / 強調アイコン / 編集安全化 writeback (2026-08-15)
+
+- ui-ux / frontend / security へ qa-232 / qa-233 / qa-234 を確定反映した。一覧のカード既定・
+  カードブロック記法・編集/プレビュー 2 ペインは仕様として確定し、製品実装は list-shell /
+  block-authoring が後続する。
+- 強調表現は絵文字を使わず、packages/ui の inline SVG と semantic token に限定する。
+  絵文字混入は CI G19 で fail-closed。
+- Docs / Sheets 通常 CRUD は Idempotency-Key と entity revision ETag/If-Match を純増する。
+  Catalog / PublishRequest と外部 import 専用 revision は非変更。
+- 判断と検証は [仕様反映受領書](../docs/features/feat-semantic-emphasis-icons/card-family-20260815-spec-reflection-receipt.md)。

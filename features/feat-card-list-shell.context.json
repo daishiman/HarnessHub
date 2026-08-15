@@ -1,0 +1,70 @@
+{
+  "graph_node_id": "feat-card-list-shell",
+  "artifact_kind": "feature",
+  "purpose": "現状 (current) の Docs / Sheets / Catalog 一覧は wide table 中心で、q の検索対象・絞込状態の復元・状態別件数がカード一覧の契約を満たさない。テーブルの比較性を残しつつ、3 一覧を中身が見える共通カード shell へ移行する。",
+  "goal": "到達状態 (target、未実装): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
+  "scope_in": [
+    "Docs / Sheets / Catalog の 3 一覧に、カードグリッドを既定とする共通 shell と可視ラベル付き card/table view mode 切替を導入する",
+    "カードとテーブルは既存 DataTable column model の列定義・value・ソート語彙を再利用し、同じ行の別表現とする",
+    "URL query が tab / q / filter の唯一の正本。共有・再読込・戻る/進むで復元し、sessionStorage は view mode だけを記憶する",
+    "状態写像は Docs: published=published, draft=draft, null=unknown、Sheets: received|generating|review=active, completed=completed, null=unknown、Catalog: available=available, suspended|deprecated=suspended, null=unknown。unknown は『すべて』だけに含めて状態不明の可視ラベルを出す",
+    "status_counts は認可後、q と非状態 filter 適用後、選択中状態と cursor 適用前の集合から集計し、権限外と別 page の件数を混同しない",
+    "既存の q パラメータ名と URL / 認可境界を維持し、server-side 検索を title / body / tags の OR、その他の filter と AND に拡張する",
+    "既存の excerpt は保存済みの表示用要約 (手動/自動 source 付き) としてカード lead に再利用し、null 時だけ body から揮発的に補う。別の永続 lead / 検索コピーは作らない",
+    "認可を repository query の最初の境界で適用し、権限外の行を items、status_counts、検索対象、cache のどこにも出さない",
+    "既存 q と認可契約は不変だが、status_counts と title/body/tags 検索のための additive response / repository behavior は変更可能とする",
+    "Docs の一覧 / 詳細 / 編集 / 作成は同じ shell・カード階層・操作位置へ統一し、Sheets / Catalog は実在する面だけに同じ shell / 構造を適用する"
+  ],
+  "scope_out": [
+    "DataTable の削除。比較・列ソート・選択・一括操作の到達手段として残す",
+    "Sheets / Catalog に存在しない編集・作成・削除面を新設すること",
+    "Markdown 本文のカードブロック記法と draft preview (これは feat-card-block-authoring の責務)",
+    "POST 再送・PATCH 競合のデータ安全契約 (これは feat-card-mutation-safety の責務)",
+    "semantic icon / color token の供給元の実装 (これは feat-semantic-emphasis-icons の責務)",
+    "既存の q パラメータ名、画面 URL、認可ルールの置換、および新しい永続 excerpt / lead / 検索 index の追加"
+  ],
+  "acceptance": [
+    "Docs / Sheets / Catalog の 3 一覧がカードグリッドを既定で表示し、可視ラベル付き切替でテーブル表示へ移れる",
+    "カードとテーブルが同一 DataTable column model から値を取り、テーブル側の比較・絞込・選択・一括操作が保たれる",
+    "tab / q / filter を URL query だけから共有・再読込・戻る/進むで復元でき、sessionStorage の filter 値に結果が左右されない",
+    "view mode だけは sessionStorage から再訪時に復元され、URL の絞込状態を上書きしない",
+    "Docs / Sheets / Catalog の status mapping と null=unknown が単体テストで固定され、unknown が個別状態 tab に誤分類されない",
+    "status_counts が認可後かつ cursor 適用前の集合から返り、権限外の行と別 page の件数を含まない",
+    "既存の q で title / body / tags のいずれかに一致する行が返り、状態・その他 filter と AND 合成される",
+    "既存 excerpt がカード lead として使われ、excerpt=null の場合も永続コピーを増やさずに詳細へ到達できる",
+    "Docs の 4 面は共通構造となり、Sheets / Catalog は既存面だけが共通 shell を使い、存在しない CRUD route を追加しない",
+    "真の 0 件と絞込後 0 件が異なる空状態で表示され、適用中条件を解除する chip がある"
+  ],
+  "architecture_refs": [
+    "arch-harness-hub-frontend",
+    "arch-harness-hub-design-system"
+  ],
+  "depends_on": [
+    "feat-card-mutation-safety",
+    "feat-semantic-emphasis-icons"
+  ],
+  "resource_scope": [
+    "packages/ui/src/components/DataTable.tsx",
+    "packages/ui/src/components/DataTable.test.tsx",
+    "apps/hub/src/app/(dashboard)/docs/page.tsx",
+    "apps/hub/src/app/(dashboard)/docs/document-list.tsx",
+    "apps/hub/src/app/(dashboard)/docs/[id]/page.tsx",
+    "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
+    "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
+    "apps/hub/src/app/(dashboard)/sheets/page.tsx",
+    "apps/hub/src/app/(dashboard)/sheets/hearing-sheet-list.tsx",
+    "apps/hub/src/app/(dashboard)/sheets/[id]/hearing-sheet-detail.tsx",
+    "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx",
+    "apps/hub/src/app/(workspace)/catalog/page.tsx",
+    "apps/hub/src/components/catalog/CatalogList.tsx",
+    "apps/hub/src/app/api/v1/docs/route.ts",
+    "apps/hub/src/app/api/v1/sheets/route.ts",
+    "packages/db/repository/docs-cms.ts",
+    "packages/db/repository/hearing-intake.ts",
+    "packages/db/schema/docs-cms/schema.ts",
+    "packages/db/schema/hearing-intake/schema.ts",
+    "apps/hub/src/lib/catalog/marketplace.ts",
+    "apps/hub/src/lib/catalog/response-schemas.ts"
+  ],
+  "updated_at": "2026-08-14T21:55:26Z"
+}

@@ -13,15 +13,18 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/verdict.json",
-      "observed": "current branch の fresh live trial 20260808T131000Z-o4zi-exh-c03r2 は overall=PASS、nudge=0、gate=0。literal Skill 呼出し3回、apply の import 1/export 1、確認 dry-run の changes=0、graph/remote/snapshot と stable IDs の不変を fresh independent evaluator が再実測して PASS。behavior closure digest=651c03238581ce8d71ad3e4e8dabbc628d2cee25cc4b83e0bf9362ccf583de03。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/verdict.json",
+      "observed": "execution-tracker-contract.md の §1 改訂で behavior closure digest が変わったため再実走した fresh live trial 20260815T015641Z-mx65-c03 は overall=PASS、nudge=0、gate=0。literal Skill 呼出し3回、apply (pass2) の import 1/export 1、確認 dry-run (pass3) の changes=0・converged=true・write_count=0、graph/remote/snapshot の SHA-256 と stable IDs (issue number 1 / item_id PVTI_lADOFixture001 / field_id PVTF_Status001 / option_id OPT_InProgress001) の不変を fresh independent evaluator が実値から再実測して PASS。behavior closure digest=6dc036d8b439683d83929cb910ec74d40be9bae74611bc3ddda22134f443a03c。",
       "scenario_id": "C03-OUT1-positive-second-sync-zero",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260808T131000Z-o4zi-exh-c03r2/independent-verification.json"
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/goal-evaluation.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/pass2.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/pass3.json",
+        "eval-log/dev-graph/run-dev-graph-sync/live-trial/20260815T015641Z-mx65-c03/post-apply.sha"
       ],
       "verify_by": "live-trial"
     },
@@ -115,7 +118,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260807-ci-c03",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260815-mx65-c03",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C03",

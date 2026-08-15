@@ -39,6 +39,12 @@ export interface ReceiptNotificationPort {
   }): Promise<void>;
 }
 
+interface CreateWireResponse {
+  readonly status: number;
+  readonly headers: Readonly<Record<string, string>>;
+  readonly body: string;
+}
+
 export interface HearingIntakeService {
   createSheet(input: {
     readonly context: RepositoryContext;
@@ -46,6 +52,21 @@ export interface HearingIntakeService {
     readonly applicantUserId: string;
     readonly request: CreateSheetRequest;
   }): Promise<CreateSheetResponse>;
+  createSheetIdempotent(input: {
+    readonly context: RepositoryContext;
+    readonly workspaceId: string;
+    readonly applicantUserId: string;
+    readonly request: CreateSheetRequest;
+    readonly idempotency: { readonly key: string; readonly payloadHash: string };
+    readonly buildResponse: (response: CreateSheetResponse, expiresAt: number) => CreateWireResponse;
+  }): Promise<
+    | {
+        readonly outcome: 'created' | 'replayed';
+        readonly expiresAt: number;
+        readonly wireResponse: CreateWireResponse;
+      }
+    | { readonly outcome: 'conflict'; readonly expiresAt: number }
+  >;
   listSheets(input: {
     readonly context: RepositoryContext;
     readonly workspaceId?: string;
@@ -59,6 +80,15 @@ export interface HearingIntakeService {
     readonly id: string;
     readonly status: HearingSheetStatus;
   }): Promise<SheetDetail>;
+  updateSheetStatusCas(input: {
+    readonly context: RepositoryContext;
+    readonly id: string;
+    readonly status: HearingSheetStatus;
+    readonly expectedRevision: number;
+  }): Promise<
+    | { readonly outcome: 'updated'; readonly detail: SheetDetail }
+    | { readonly outcome: 'conflict'; readonly current: SheetDetail | null }
+  >;
   regenerate(input: { readonly context: RepositoryContext; readonly id: string }): Promise<SheetDetail>;
   /**
    * ホーム集約向け。要対応件数(review + 生成失敗)と直近更新 N 件を 1 度に返す。
@@ -86,10 +116,19 @@ function parseJson<T>(value: string): T {
   return JSON.parse(value) as T;
 }
 
+function logMalformedStoredRow(operation: 'listSheets' | 'getActionableSummary', error: unknown): void {
+  console.error('[hearing-intake] malformed stored row skipped', {
+    correlationId: crypto.randomUUID(),
+    operation,
+    errorName: error instanceof Error ? error.name : 'UnknownError',
+  });
+}
+
 function toListItem(row: HearingSheetRow) {
   const form = decodeStoredHearingSheetFormSnapshot(parseJson(row.formJson));
   return {
     id: row.id,
+    revision: row.entityRevision,
     code: row.code,
     status: row.status,
     title: row.title,
@@ -107,6 +146,7 @@ function toDetail(row: HearingSheetRow): SheetDetail {
   const form = decodeStoredHearingSheetFormSnapshot(parseJson(row.formJson));
   return sheetDetailSchema.parse({
     id: row.id,
+    revision: row.entityRevision,
     code: row.code,
     status: row.status,
     title: row.title,
@@ -152,7 +192,59 @@ export function createHearingIntakeService(
       } catch {
         // 通知は transaction 外の補助経路。失敗しても提出は成功のまま返す (AD-5)。
       }
-      return createSheetResponseSchema.parse({ id: row.id, code: row.code, status: row.status });
+      return createSheetResponseSchema.parse({
+        id: row.id,
+        revision: row.entityRevision,
+        code: row.code,
+        status: row.status,
+      });
+    },
+
+    async createSheetIdempotent(input) {
+      const coefficients = await repository.getCoefficients(input.context);
+      const estimate = estimateHearingSheet(input.request, coefficients);
+      const form = createHearingSheetFormSnapshot(input.request);
+      const result = await repository.createSheetAndEnqueueIdempotent(
+        input.context,
+        {
+          workspaceId: input.workspaceId,
+          title: form.taskName,
+          applicantUserId: input.applicantUserId,
+          formJson: JSON.stringify(form),
+          estimateJson: JSON.stringify(estimate),
+          buildPayloadJson: (sheetId: string, sheetCode: string) =>
+            JSON.stringify(buildSheetGenerationPayload({ sheetId, sheetCode, form, estimate })),
+        },
+        input.idempotency,
+        (sheet, expiresAt) =>
+          input.buildResponse(
+            createSheetResponseSchema.parse({
+              id: sheet.id,
+              revision: sheet.entityRevision,
+              code: sheet.code,
+              status: sheet.status,
+            }),
+            expiresAt,
+          ),
+      );
+      if (result.outcome === 'conflict') return result;
+      if (result.outcome === 'created') {
+        try {
+          await notifications.notifyReceipt({
+            tenantId: input.context.tenantId,
+            userId: input.applicantUserId,
+            sheetId: result.sheet.id,
+            code: result.sheet.code,
+          });
+        } catch {
+          // 通知は受付 transaction 外の補助経路。失敗は作成結果を取り消さない。
+        }
+      }
+      return {
+        outcome: result.outcome,
+        expiresAt: result.expiresAt,
+        wireResponse: result.wireResponse,
+      };
     },
 
     async listSheets(input) {
@@ -174,7 +266,7 @@ export function createHearingIntakeService(
         try {
           items.push(toListItem(row));
         } catch (error) {
-          console.error('[hearing-intake] listSheets: skip malformed row', { sheetId: row.id, error });
+          logMalformedStoredRow('listSheets', error);
         }
       }
       return sheetListResponseSchema.parse({
@@ -196,6 +288,21 @@ export function createHearingIntakeService(
       return toDetail(row);
     },
 
+    async updateSheetStatusCas(input) {
+      if (input.status !== 'review' && input.status !== 'completed') {
+        throw new Error('管理者が手動変更できる状態は review または completed だけです');
+      }
+      const result = await repository.updateSheetStatusCas(
+        input.context,
+        input.id,
+        input.status,
+        input.expectedRevision,
+      );
+      return result.outcome === 'updated'
+        ? { outcome: 'updated' as const, detail: toDetail(result.sheet) }
+        : { outcome: 'conflict' as const, current: result.current === null ? null : toDetail(result.current) };
+    },
+
     async regenerate(input) {
       return toDetail(await repository.regenerate(input.context, input.id));
     },
@@ -215,7 +322,7 @@ export function createHearingIntakeService(
         try {
           recentItems.push(toListItem(row));
         } catch (error) {
-          console.error('[hearing-intake] getActionableSummary: skip malformed row', { sheetId: row.id, error });
+          logMalformedStoredRow('getActionableSummary', error);
         }
       }
       return { actionableCount, recentItems };

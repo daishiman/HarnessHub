@@ -41,6 +41,41 @@ async function seedActor() {
 }
 
 describe('DOCS-DB: documents repository', () => {
+  it('CARD-MUTATION-DOCS-CAS-001: concurrent entity revision CAS accepts exactly one update', async () => {
+    const context = await seedActor();
+    const repository = createDocsCmsRepository(asCore(adapter));
+    const created = await repository.createDocument(context, {
+      scope: 'tenant',
+      title: 'CAS target',
+      bodyMarkdown: 'first',
+      actorId: context.actorId ?? 'missing-actor',
+    });
+    expect(created.entityRevision).toBe(1);
+
+    const results = await Promise.all([
+      repository.updateDocumentCas(
+        context,
+        created.id,
+        { bodyMarkdown: 'winner a', actorId: context.actorId ?? 'missing-actor' },
+        created.entityRevision,
+      ),
+      repository.updateDocumentCas(
+        context,
+        created.id,
+        { bodyMarkdown: 'winner b', actorId: context.actorId ?? 'missing-actor' },
+        created.entityRevision,
+      ),
+    ]);
+
+    expect(results.filter((result) => result.outcome === 'updated')).toHaveLength(1);
+    expect(results.filter((result) => result.outcome === 'conflict')).toHaveLength(1);
+    expect(await repository.getDocument(context, created.id)).toMatchObject({ entityRevision: 2 });
+    expect(results.find((result) => result.outcome === 'conflict')).toMatchObject({
+      outcome: 'conflict',
+      current: { entityRevision: 2 },
+    });
+  });
+
   it('DOCS-PAGE-001: ULID cursor advances without repeating the first page', async () => {
     const context = await seedActor();
     const repository = createDocsCmsRepository(asCore(adapter));

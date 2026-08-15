@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub frontend アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:35:59Z"
-updated_at: "2026-08-11T06:57:48.545354Z"
+updated_at: "2026-08-14T11:52:38.903869Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements","spec-harness-hub-information-design-addendum"]
 related_nodes: ["arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow","spec-post-signin-workspace-scope"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"b53b524b60b5e6105d061df1f21573ed20097eef691f03013adda05e77b279a4","evaluator":"validate-coverage-matrix.py --require-complete + 30思考法の情報設計依存レビュー","evidence_ref":"eval-log/elegant-review/harness-hub-information-design-20260811/review.md"}
-source_lineage: {"imported_at":"2026-08-02T12:15:00Z","origin_kind":"system-spec-harness","source_digest":"48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+source_lineage: {"imported_at":"2026-08-14T00:45:00Z","origin_kind":"system-spec-harness","source_digest":"689bf1b0b1ce59beece2307a8cc59e75587e50c40c98bf94c887b1f212207053","source_path":"system-spec/frontend.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-frontend.md","confidence":0.95}]
@@ -53,11 +53,11 @@ implementation_readiness: {"checked_at":"2026-07-17T00:35:59Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/frontend.md](../system-spec/frontend.md) (sha256: `d44652f33f2ca180…`)
-- [system-spec/ui-ux.md](../system-spec/ui-ux.md) (sha256: `d6d58903cbefc22a…`)
+- [system-spec/frontend.md](../system-spec/frontend.md) (sha256: `689bf1b0b1ce59be…`)
+- [system-spec/ui-ux.md](../system-spec/ui-ux.md) (sha256: `df3a55215acaabb5…`)
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py` → **PASS** (`system-spec/spec-state.json`)
-- 取込日時: 2026-08-02T08:12:28Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-14T00:45:00Z / plugin: system-spec-harness v0.1.0
 
 ## 要件定義書 (上位概念)
 

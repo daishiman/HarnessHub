@@ -562,6 +562,7 @@ export type CreateSheetRequest = z.output<typeof createSheetRequestSchema>;
 export const createSheetResponseSchema = z
   .object({
     id: identifierSchema,
+    revision: z.number().int().positive(),
     code: z.string().regex(/^HS-\d{4,}$/),
     status: z.literal('generating'),
   })
@@ -578,6 +579,7 @@ export const sheetApplicantSchema = z
 export const sheetListItemSchema = z
   .object({
     id: identifierSchema,
+    revision: z.number().int().positive(),
     code: z.string().regex(/^HS-\d{4,}$/),
     status: hearingSheetStatusSchema,
     title: shortText,
@@ -642,6 +644,7 @@ export type SheetGenerationResult = z.output<typeof sheetGenerationResultSchema>
 export const sheetDetailSchema = z
   .object({
     id: identifierSchema,
+    revision: z.number().int().positive(),
     code: z.string().regex(/^HS-\d{4,}$/),
     status: hearingSheetStatusSchema,
     title: shortText,

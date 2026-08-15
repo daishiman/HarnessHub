@@ -54,6 +54,7 @@ import type { DocsAssetsBucketLike } from '../../features/docs-cms/image-runtime
 const VIEWER = testUser('tenant-b-viewer', { tenantId: TENANT_B, workspaceIds: [] });
 const COMMON_DOC: DocumentRow = {
   id: 'doc-common',
+  entityRevision: 1,
   tenantId: TENANT_A,
   scope: 'common',
   title: '共通ガイド',
@@ -88,7 +89,9 @@ function repositoryFor(row: DocumentRow | null, contexts: RepositoryContext[]): 
       return row;
     },
     createDocument: unsupported,
+    createDocumentIdempotent: unsupported,
     updateDocument: unsupported,
+    updateDocumentCas: unsupported,
     publishDueDocuments: unsupported,
     getExternalDocument: unsupported,
     syncExternalDocument: unsupported,

@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { UiProvider } from '@harness-hub/ui';
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { workspaceSwitcherOptions } from '../../components/shell/workspace-switcher-items.js';
 import { renderDenyNavigationPage } from '../../lib/routing/deny-navigation.js';
@@ -28,12 +28,6 @@ import {
   WORKSPACE_RECOVERY_HREF,
   workspaceRecoveryNotice,
 } from '../../lib/routing/workspace-recovery.js';
-
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない (nav-and-shell と同じ理由)
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
-}));
 
 const { HubShell } = await import('../../components/shell/hub-shell.js');
 const { ScopeUnresolvedScreen } = await import('../../components/screen-states.js');

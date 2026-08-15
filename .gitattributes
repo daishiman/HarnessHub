@@ -20,3 +20,9 @@ eval-log/**/live-trial/**/evidence/edited-template.md whitespace=-blank-at-eof
 # 自動解決できる。docs/beads-operations-runbook.md #3 の手動解消手順は非対応ケース
 # (union では拾えない壊れた JSONL 等) のフォールバックとして残す。
 .beads/interactions.jsonl merge=union
+
+# フォントライセンスは byte 数と SHA-256 を台帳照合するため、OS の
+# core.autocrlf 設定にかかわらず checkout 後の改行を LF に固定する。
+apps/hub/src/assets/fonts/*.txt text eol=lf
+apps/hub/src/assets/fonts/*.json text eol=lf
+apps/hub/src/assets/fonts/*.woff2 binary

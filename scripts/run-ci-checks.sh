@@ -73,6 +73,10 @@ run "lint-portability-knowledge-optin"     python3 scripts/lint-portability-know
 # 永久 skip される (= 検査が存在しないのと同じ緑)。CI 側 governance-check.yml と同一実装。
 run "lint-workflow-step-guard --self-test" python3 scripts/lint-workflow-step-guard.py --self-test
 run "lint-workflow-step-guard"             python3 scripts/lint-workflow-step-guard.py
+# feat-semantic-emphasis-icons G19。共通 UI 層と画面層への絵文字混入を遮断する。
+# --self-test は「判定ロジックが空になっても違反 0 件で緑」という無音の失効を検出する。
+run "lint-ui-text-emoji --self-test"       python3 scripts/lint-ui-text-emoji.py --self-test
+run "lint-ui-text-emoji"                   python3 scripts/lint-ui-text-emoji.py --repo-root . --json
 run "lint-ci-local-check-parity"           python3 scripts/lint-ci-local-check-parity.py
 # 必須ゲート台帳↔実 workflow の parity (HarnessHub-ic7w)。read-only・外部依存なしの静的検査で、
 # gh 認証を要する --check-protection は付けない (認証不在が緑になる経路を作らない)。

@@ -38,6 +38,7 @@ function parseAssetSummary(raw: string | null): AssetSummary | null {
 function shared(row: DocumentRow) {
   return {
     id: row.id,
+    revision: row.entityRevision,
     scope: row.scope,
     title: row.title,
     status: row.status,

@@ -1,0 +1,22 @@
+{
+  "npm_package": "@hookform/resolvers",
+  "payload": {
+    "dist-tags": {
+      "beta": "2.0.0-beta.17",
+      "latest": "5.7.1",
+      "next": "1.0.0-rc.2",
+      "release-1.x": "1.3.8"
+    },
+    "homepage": "https://react-hook-form.com",
+    "license": "MIT",
+    "repository.url": "git+https://github.com/react-hook-form/resolvers.git",
+    "time.modified": "2026-08-02T06:14:53.671Z",
+    "version": "5.7.1"
+  },
+  "registry": "https://registry.npmjs.org",
+  "retrieval_channel": "npm-registry",
+  "retrieval_command": "pnpm view @hookform/resolvers <field> --json",
+  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+  "retrieved_at": "2026-08-13T12:59:40Z",
+  "target_id": "hookform-resolvers"
+}

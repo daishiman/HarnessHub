@@ -26,6 +26,7 @@ function docsAccessToken(): string {
 const RESPONSE: ExternalDocumentSyncResponse = {
   document: {
     id: 'doc_1',
+    revision: 1,
     scope: 'tenant',
     title: '設計書',
     body_markdown: '# 本文',

@@ -12,10 +12,10 @@ iteration: "Stage 1"
 title: "認証・マルチテナント基盤 (Auth.js OIDC + row-level scope + Device Flow)"
 owners: ["daishiman"]
 created_at: "2026-07-17T00:38:30Z"
-updated_at: "2026-08-02T23:36:46Z"
+updated_at: "2026-08-15T00:00:00Z"
 status: "closed"
 depends_on: ["feat-hub-foundation","feat-domain-model-db"]
-related_nodes: []
+related_nodes: ["issue-production-tenant-bootstrap-readiness-20260814","task-production-tenant-bootstrap-handoff-20260815"]
 resource_scope: ["features/feat-auth-tenancy.md"]
 purpose: "テナント別 OIDC (Auth.js) と role 4 種、全 API への Tenant/Workspace スコープ強制 (D4 row-level-scope)、Publisher 向け OAuth Device Flow を確立する"
 goal: "2 テナント同時稼働で認可の越境が分離テストにより 0 件と証明され、Device Flow で token 取得・失効が動作する状態"
@@ -115,6 +115,15 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
   を参照する。
 - この時点では本番設定・OIDC 登録・デプロイ・スモークは未実施だった。後続結果は次節を正とする。
 
+## 実装反映 (2026-08-15 / HarnessHub-s8oe)
+
+- 本番の最初の tenant / workspace / workspace-admin は画面経路が無い。
+  `packages/db` の bootstrap-tenant CLI を唯一の投入口とした。
+- 既存 name / plan は上書きしない。監査失敗時は role / 所属を残さない。
+- 確定済みの role 語彙と JIT `member` 固定は維持する。詳細は
+  [bootstrap runbook](../docs/features/feat-auth-tenancy/production-tenant-bootstrap-runbook.md) と
+  [仕様反映受領書](../docs/features/feat-auth-tenancy/s8oe-spec-reflection-receipt.md)。
+
 ## 実装・本番反映 (2026-07-30 / SYS-AUTH-TENANCY-P13)
 
 - 現行 production rollout は Google OIDC と HarnessHub (`tenant_slug=harness-hub`)
@@ -202,4 +211,3 @@ implementation_readiness: {"checked_at":"2026-07-19T13:26:55Z","missing_sections
 - 実測: 所属 95 件 (4085 バイト) が境界。96 件超は serializer が throw せず返す（browser 破棄は本 test 外）。
 - 方式変更（都度 DB / server store / cookie 分割 等）は後続 `HarnessHub-oewu`。本変更は契約変更ではなく測定の固定。
 - 証跡: `apps/hub/tests/auth-tenancy/session-cookie-ceiling.test.ts`、issue `issue-session-cookie-workspace-ids-ceiling-20260812`。
-

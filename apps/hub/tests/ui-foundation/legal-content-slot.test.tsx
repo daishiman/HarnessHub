@@ -22,12 +22,6 @@ vi.mock('next/headers', () => ({
   cookies: async () => ({ get: () => undefined }),
   headers: async () => ({ get: () => null }),
 }));
-// next/font はビルド時にフォントを取得する仕組みで、テストプロセスでは動かない
-// (HubShell 分岐が使われなくても import は評価されるため、常に偽物へ差し替える)。
-vi.mock('next/font/google', () => ({
-  JetBrains_Mono: () => ({ variable: 'hh-test-font-mono', className: 'hh-test-font-mono-class' }),
-  IBM_Plex_Sans: () => ({ variable: 'hh-test-font', className: 'hh-test-font-class' }),
-}));
 
 const { default: LegalPage } = await import('../../src/app/legal/page.js');
 

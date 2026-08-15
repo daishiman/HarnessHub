@@ -13,18 +13,22 @@
     },
     "OUT1": {
       "evidence_kind": "live-trial",
-      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/verdict.json",
-      "observed": "fresh exhaustive live trial 20260808T190000Z-o4zi-c14r11 は overall=PASS、actual model=claude-opus-5、nudge=0、gate=0。fresh 独立 evaluator が transcript と canonical store から target Skill 正確に 2 回、Task/Agent 0 回、両 fixture の 5 feature + 2 architecture の非循環 DAG、永続 beads/none binding、唯一の昇格候補と draft 除外 4 件、実測 external before/after の一致、mutation-suppressed adapter dry-run、confirmation evidence 再計算、stdin negative controls、append-only goal-seek 2 行、final_check→status→DONE の順序を確認した。",
+      "live_trial_verdict_ref": "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/verdict.json",
+      "observed": "execution-tracker-contract.md の §1 改訂で behavior closure digest が変わったため再実走した fresh live trial 20260815T015744Z-mx65-c14 は overall=PASS、actual model=claude-opus-5、nudge=0、gate=0。fresh independent evaluator が最終 graph から実値を再計算し、両 fixture の 5 feature + 2 architecture が非循環 DAG で max_inter_feature_depends_on_per_feature=3 (閾値 3 以下)、永続 tracker_binding が fixture-beads 側 7 node すべて beads / fixture-none 側 7 node すべて none、github 不可達を schema allOf[15]/allOf[10] の実ファイルで確認、昇格候補は feat-account-login の 1 件のみで draft 除外 4 件、graph_revision 0→8 で空 run ではないこと、confirmation_evidence の再計算値 (beads=ab54e39c… / none=7b5fec87…) の一致、external before/after の完全一致、mutation-suppressed adapter dry-run、stdin 経路の preview で fixture 内 preview ファイル 0 件、負制御 2 種が validator に exit 1 で棄却されることを確認した。literal Skill 呼出しちょうど 2 回・Task/Agent 0 回。behavior closure digest=6bb56c46ad512e32ccd8c7f542c7e29e68e5ef868a7f2ac512946d04faf14ca0。",
       "scenario_id": "C14-OUT1-positive-macro-decomposition-r15",
       "status": "PASS",
       "test_refs": [
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/verdict.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/transcript.jsonl",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/out/status.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/independent-verification.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/pre-state.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/external-before.json",
-        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260808T190000Z-o4zi-c14r11/external-after.json"
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/verdict.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/transcript.jsonl",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/out/status.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/goal-evaluation.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/independent-verification.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/pre-state.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/external-before.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/external-after.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/preview-receipt-beads.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/preview-receipt-none.json",
+        "eval-log/dev-graph/run-dev-graph-decompose/live-trial/20260815T015744Z-mx65-c14/adapter-dryrun.json"
       ],
       "verify_by": "live-trial"
     },
@@ -92,7 +96,7 @@
   },
   "iteration_limit": 3,
   "loop_scope": "both",
-  "reviewer": "fresh-independent-live-trial-evaluator-20260808-o4zi-c14r11",
+  "reviewer": "fresh-independent-live-trial-evaluator-20260815-mx65-c14",
   "schema_version": "1.1.0",
   "target": {
     "component_id": "C14",

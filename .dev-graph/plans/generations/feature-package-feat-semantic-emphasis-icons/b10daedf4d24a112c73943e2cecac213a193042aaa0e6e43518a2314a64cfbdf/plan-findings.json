@@ -1,0 +1,244 @@
+{
+  "schema_version": "1.0.0",
+  "plan_dir": ".dev-graph/staging/feature-package-feat-semantic-emphasis-icons/run-20260814-emphasis-icons",
+  "evaluator": {
+    "name": "assign-system-dev-plan-evaluator",
+    "version": "0.1.0",
+    "context": "fork"
+  },
+  "evaluated_digest": "sha256:b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+  "verdict": "PASS",
+  "conditions": {
+    "C1": {
+      "id": "C1",
+      "status": "PASS",
+      "summary": "goal-spec.json 再読で quality_constraints 5 件・scope_out 4 件との矛盾なしを再確認した。source_lineage 除去後も feature context の purpose/goal/scope_in/scope_out/acceptance の文言は goal-spec.json へ逐語一致で複製されており、13 task の全 phase 記述との矛盾は検出されなかった。scope_out 4 事項 (配色仕様書 v2 改訂・feat-card-list-shell の情報構造/機能追加・feat-card-block-authoring の Markdown カードブロック記法・公開API/DB schema/認可/Cloudflare deploy unit) が P01/P05/P08 のスコープ外節で一貫記載され混入 0 件",
+      "evidence": [
+        "task-specs/phase-01-requirements.md#スコープ外",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-03-design-review.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md#スコープ外",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-08-refactoring-migration.md#スコープ外",
+        "task-specs/phase-09-quality-assurance.md",
+        "task-specs/phase-10-final-review.md",
+        "task-specs/phase-11-evidence.md",
+        "task-specs/phase-12-documentation-operations.md",
+        "task-specs/phase-13-release-deploy.md"
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "status": "PASS",
+      "summary": "source_lineage 除去による出所情報の二重喪失がないことを goal-spec.json#lineage で確認した。lineage 配列に system-spec/spec-state.json のエントリが独立に存在し、qa-232 (ui-ux/web, state=確定)・qa-233 (frontend/web, state=確定) への参照と『qa-232【5 強調表示とアイコン】・qa-233【6 アイコン】が本 feature の purpose/goal/acceptance の出所』という digest_note が feature context の source_lineage 除去後も goal-spec.json 側に維持されている (main-loop 是正後は spec-state.json entry の digest_note が features/feat-semantic-emphasis-icons.md frontmatter の source_lineage.source_digest を出所正本として参照する記述に更新されている。本 agent はこの frontmatter 実ファイルまでは直接 Read しておらず、goal-spec.json の記述を通じて確認した)。quality_constraints 5 件それぞれに source (qa-232/qa-233 の見出し) が個別付与され、13 本の task-specs 全件 (grep で一致 13/13) が qa-232 または qa-233 へ trace している。acceptance 5 件は P01〜P13 の baseline 節に複製され、P04 (テストスタブ)・P06 (実行)・P07 (5項目個別受入記録)・P10 (quality_constraints 5件充足判定) で追跡される。確認済み回答の要件見出し (【2 カードの情報顕著度】【5 強調表示とアイコン】【6 アイコン】) は quality_constraints の id (state-value-visible-label-qa232-2 / emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3) として個別に切り出され goal と P01/P02/P05/P07/P08/P09/P10 の受け入れ条件へ意味反映されている",
+      "evidence": [
+        "task-specs/phase-01-requirements.md",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-03-design-review.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-08-refactoring-migration.md",
+        "task-specs/phase-09-quality-assurance.md",
+        "task-specs/phase-10-final-review.md",
+        "task-specs/phase-11-evidence.md",
+        "task-specs/phase-12-documentation-operations.md",
+        "task-specs/phase-13-release-deploy.md"
+      ]
+    },
+    "C3": {
+      "id": "C3",
+      "status": "PASS",
+      "summary": "canonical digest sha256:b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf を validate-system-plan.py --staging <generation-dir> で計 2 回 (goal-spec.json 是正前・是正後) 独立再実行し、いずれも status=pass / validated_digest 一致 / violations=[] / phase_refs 13 件を確認した。goal-spec.json は staging-manifest.json#files に含まれないため、その内容更新は canonical digest に影響しないことを実測で確認した。staging-manifest.json の files ハッシュを generation dir 実測 (shasum -a 256) と突合し、feature-package.json/task-graph.json/workstream-inventory.json/system-build-handoff.json/task-specs 13件すべて一致を確認した。features/feat-semantic-emphasis-icons.context.json のキー集合は exact 9 キー (graph_node_id, artifact_kind, purpose, goal, scope_in, scope_out, acceptance, architecture_refs, updated_at) ちょうどであり source_lineage は存在しない。graph_node_id は feat-semantic-emphasis-icons と一致。旧 digest 990214c38c9d43928026ddc4f5eea3d3e40b50ebc0f817593ff7d129556fbd94 の staging 配下残存は grep で 0 件。旧 canonical eb0240b0... は再評価前 (旧版) の本 plan-findings.json 自身にのみ存在していた stale 値であり、本更新で置換済み",
+      "evidence": [
+        "gate:deterministic-validation#validated_digest=sha256:b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "staging-manifest.json#canonical_digest",
+        "feature-package.json#source_feature_digest",
+        "system-build-handoff.json",
+        "task-graph.json",
+        "workstream-inventory.json",
+        "task-specs/phase-01-requirements.md",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-03-design-review.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-08-refactoring-migration.md",
+        "task-specs/phase-09-quality-assurance.md",
+        "task-specs/phase-10-final-review.md",
+        "task-specs/phase-11-evidence.md",
+        "task-specs/phase-12-documentation-operations.md",
+        "task-specs/phase-13-release-deploy.md"
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "status": "PASS",
+      "summary": "task-graph.json は 13 node・12 edge の単純直列前方依存 (SYS-EMPHASIS-ICONS-P01→P02→…→P13、各 node の depends_on は直前 1 件のみ、P01 は空)。後方 edge・分岐・cross-feature edge なし、非巡回であることを目視でグラフ走査し確認。feature-package.json/task-graph.json/staging-manifest.json の phase_refs はいずれも P01〜P13 の 13 件ちょうどで一致。全 task-specs の write scope を grep で走査し、絶対パス (/Users/... 等) やリポジトリ外参照は検出されなかった (repository boundary 遵守)。validator 独立再実行も exit0",
+      "evidence": [
+        "task-graph.json#nodes[*].depends_on",
+        "feature-package.json#phase_refs",
+        "staging-manifest.json#files",
+        "gate:deterministic-validation#DAG検査",
+        "task-specs/phase-01-requirements.md",
+        "task-specs/phase-02-architecture.md",
+        "task-specs/phase-03-design-review.md",
+        "task-specs/phase-04-test-design.md",
+        "task-specs/phase-05-implementation.md",
+        "task-specs/phase-06-test-run.md",
+        "task-specs/phase-07-acceptance.md",
+        "task-specs/phase-08-refactoring-migration.md",
+        "task-specs/phase-09-quality-assurance.md",
+        "task-specs/phase-10-final-review.md",
+        "task-specs/phase-11-evidence.md",
+        "task-specs/phase-12-documentation-operations.md",
+        "task-specs/phase-13-release-deploy.md"
+      ]
+    }
+  },
+  "gate_results": [
+    {
+      "id": "deterministic-validation",
+      "name": "validate-system-plan",
+      "command": [
+        "python3",
+        "plugins/system-dev-planner/scripts/validate-system-plan.py",
+        "--repo-root",
+        ".",
+        "--staging",
+        ".dev-graph/staging/feature-package-feat-semantic-emphasis-icons/run-20260814-emphasis-icons"
+      ],
+      "exit_code": 0,
+      "conditions": [
+        "C1",
+        "C2",
+        "C3",
+        "C4"
+      ],
+      "stdout": "{\"schema_version\": \"1.0.0\", \"status\": \"pass\", \"validated_digest\": \"sha256:b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf\", \"feature_package_id\": \"feature-package/feat-semantic-emphasis-icons\", \"parent_feature\": \"feat-semantic-emphasis-icons\", \"phase_refs\": [\"P01\",\"P02\",\"P03\",\"P04\",\"P05\",\"P06\",\"P07\",\"P08\",\"P09\",\"P10\",\"P11\",\"P12\",\"P13\"], \"contract_version\": \"1.3.0\", \"contract_baseline_exemption\": false, \"test_strategy_contract\": {\"mode\": \"enforced\", \"contract_version\": \"1.3.0\", \"enforced_from\": \"1.2.0\"}, \"rerun_command_contract\": {\"mode\": \"enforced\", \"contract_version\": \"1.3.0\", \"enforced_from\": \"1.3.0\"}, \"violations\": []}"
+    }
+  ],
+  "evaluated_inputs": [
+    {
+      "path": "staging-manifest.json",
+      "sha256": "08a3f2d0da95ebc84eae4bb6dd4d5cae81ab3e58d53e08033c663fce9a1ba0e0"
+    },
+    {
+      "path": "feature-package.json",
+      "sha256": "e0a5d8d1eb2b131bb55c5b87256978d04b54482edbd3a0ede45aa9d4bfcb6a02"
+    },
+    {
+      "path": "system-build-handoff.json",
+      "sha256": "449abf930aca15a8e2de3fa5543d11fcf228815cf810a6c7982a5505b2ba3595"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "bb9c90d6d65f6249061508573e4c501f50d75f1b7880f3bcdd329c899168c180"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "c33d54021771616d2a71f1c6886e20525f47720e8a7b0ce36c3d5e223b6e918c"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "b4ed13446c8fe8b27de8279f25d4abefc36b038c0cc03e696308605df032e12a"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "abde688a0c719acd4bc5102e3e7c9877b365e34d9388d6bf726d69e06a2ee85d"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "ab44829b4c3e1f8de4ad6d8291db5b1e9fd1dbba71c10ed0ba83dbf67839c906"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "8265d3c76f3c660cd770bef5cd15dc8d3de03e57969ce95d1fd350a0db4af79c"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "856eafb481c32e971697ee43c49c00493e0042c42620983b59d1eee50ac7bbf5"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "fc0d4ce8c7498537ee7213b5cff42558a9ee5ae2594fea5687abce6de59d01cc"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "776b670a41c2c5f1c983af5afe4d54aae008b5627a45e5960153358eca852f57"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "71d446e4f479159e5c355839b7b72653ec76e497f2e561ce86587e5d4569e0e0"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "ebfbf81a1fa3f426a133376de2b51b2913a8107c93621fdcf637070a4fc3ec05"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "0e4138c47a9639f110dae2015091894d180d1de2f911a65db63a54ca4aa19448"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "16b6d7b8280a2d67ca594a2b32766198c674686745bb7bd2dfef8cd1d2c4fdd5"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "65dea327e24a2cfa7117824e3d21db50b968dabad8ebbb719fbd19c0c13cbcfe"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "e4b05c2b31f27e16f29134350df846ea88df8aa546a73fe1306804dabb34fdee"
+    }
+  ],
+  "staleness_rule": "evaluated_digest が staging-manifest.json の canonical_digest と一致しない場合、本 findings は stale であり promotion の根拠に使用できない (再評価必須)",
+  "findings": [
+    {
+      "severity": "info",
+      "bucket": "verified/digest-transition-clean",
+      "observation": "feature context digest の切替 (sha256:990214c... → sha256:61a52810...) に伴う staging 内旧値残存を grep で確認した。旧 feature context digest (990214c38c9d43928026ddc4f5eea3d3e40b50ebc0f817593ff7d129556fbd94) は staging generation 配下に 0 件。旧 canonical digest (eb0240b0...) は再評価前 (旧版) の plan-findings.json 自身にのみ存在し、本更新で新 canonical digest (b10daedf...) に完全置換した。staging-manifest.json の canonical_digest / feature-package.json の source_feature_digest / goal-spec.json の feature_context_digest はすべて新値 sha256:61a52810...(context) / sha256:b10daedf...(canonical) で一致している",
+      "evidence": [
+        "grep -rl 990214c $S -> 0件",
+        "staging-manifest.json#canonical_digest",
+        "feature-package.json#source_feature_digest",
+        "goal-spec.json#feature_context_digest (manifest files 外参照。今回の再読で sha256=cd55fcf63123a0b321e780afe3dcb927502ed07ab20171a936bdaafd485f4252 と実測)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/source-lineage-not-lost",
+      "observation": "features/*.context.json から source_lineage キーを除去したことで出所情報 (spec-state.json への参照・qa_refs) が二重に失われていないかを検証した。goal-spec.json#lineage[2] (path=system-spec/spec-state.json) に qa-232/qa-233 への参照と、両 QA が本 feature の purpose/goal/acceptance の出所であることを示す digest_note が独立して存在し、feature context 側の source_lineage 除去後もこの出所情報は goal-spec.json 側で保持されている。二重喪失は検出されなかった。main-loop による是正で、spec-state.json entry の digest_note は『context.json の source_lineage フィールドと一致』という失効した記述から『features/feat-semantic-emphasis-icons.md frontmatter の source_lineage.source_digest フィールドを出所正本として参照する』記述へ更新されており、9 キー exact-set 契約と整合する状態になっていることを goal-spec.json の再読で確認した (frontmatter 実ファイルの独立 Read までは行っていない)",
+      "evidence": [
+        "goal-spec.json#lineage[2].digest_note (是正後の再読で確認。manifest files 外参照)",
+        "goal-spec.json#quality_constraints[*].source (manifest files 外参照)",
+        "features/feat-semantic-emphasis-icons.context.json (9 キーちょうど、source_lineage なし。staging 外参照。sha256=61a528100c82ccf593dd1ba3a0303374aba208a2dedace4df7126cfae4f9bab9)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "corrected/architecture-refs-digest",
+      "observation": "旧版 findings で low finding として指摘した goal-spec.json#verification.digest_match_architecture_files=false は、main-loop の是正後に true へ更新された。本 agent は是正後の architecture_refs 2 件 (harness-hub-design-system.md, harness-hub-frontend.md) を shasum -a 256 で独立実測し、goal-spec.json#lineage 記載値 (design-system: e638bf237eaf324a87f9ced13afa2090344b4c1a75fe3a8d7d81f4fab887568b / frontend: 853f9fb0a7452c729ec4d4a00a531fb1ac1e12e0f6f002b7586e0dd3f3b3d544) と一致することを確認した。is-corrected扱いとし severity を low から info へ変更する",
+      "evidence": [
+        "shasum -a 256 architecture/harness-hub-design-system.md -> e638bf237eaf324a87f9ced13afa2090344b4c1a75fe3a8d7d81f4fab887568b (実測一致)",
+        "shasum -a 256 architecture/harness-hub-frontend.md -> 853f9fb0a7452c729ec4d4a00a531fb1ac1e12e0f6f002b7586e0dd3f3b3d544 (実測一致)",
+        "goal-spec.json#verification.digest_match_architecture_files=true (manifest files 外参照)"
+      ]
+    },
+    {
+      "severity": "info",
+      "bucket": "verified/exact-13-and-dag",
+      "observation": "phase_refs が P01〜P13 の 13 件ちょうどであること (feature-package.json, task-graph.json, staging-manifest.json の3箇所で一致)、task-graph.json が 13 node・各 node の depends_on が直前 1 node のみ (P01 は空) の単純直列 12 edge であり非巡回であることを目視でグラフ走査し確認した。全 13 task-specs が qa-232 または qa-233 へ grep で一致 (13/13) し、trace の欠落は検出されなかった",
+      "evidence": [
+        "task-graph.json#nodes",
+        "feature-package.json#phase_refs",
+        "staging-manifest.json#files",
+        "grep -l qa-232|qa-233 task-specs/*.md -> 13件"
+      ]
+    }
+  ]
+}

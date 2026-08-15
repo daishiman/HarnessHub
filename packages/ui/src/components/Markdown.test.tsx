@@ -149,6 +149,21 @@ describe('MarkdownView のブロック UI 拡張', () => {
     expect(note.textContent).toContain('補足です');
   });
 
+  it.each([
+    ['POINT', 'point', 'lightbulb'],
+    ['ATTENTION', 'attention', 'alertTriangle'],
+    ['WARNING', 'warning', 'alertOctagon'],
+    ['NOTE', 'note', 'infoCircle'],
+  ])('[!%s] のしるしを絵文字ではなく %s 専用の SVG アイコンで描く', (marker, kind, iconName) => {
+    const { container } = renderWithUi(<MarkdownView content={`> [!${marker}]\n> 本文`} />);
+
+    const note = screen.getByRole('note');
+    expect(note.getAttribute('data-hh-callout')).toBe(kind);
+    expect(note.querySelector(`svg[data-icon="${iconName}"]`)).not.toBeNull();
+    // 絵文字はフォント依存で字形も色も端末任せになるため、本文以外の文字が混ざらないことを固定する。
+    expect(container.textContent?.trim()).toBe('本文');
+  });
+
   it('未知の [!〜] 記法は変換せず、ただの引用として壊れずに描画する', () => {
     renderWithUi(<MarkdownView content={'> [!MYSTERY]\n> 何かの記法です'} />);
 

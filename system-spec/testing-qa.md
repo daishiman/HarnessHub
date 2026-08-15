@@ -3,7 +3,7 @@ status: confirmed
 category: testing-qa
 aggregate: 確定
 spec_cells: [testing-qa.web, testing-qa.mobile, testing-qa.tablet, testing-qa.desktop-windows, testing-qa.desktop-linux, testing-qa.desktop-macos]
-serves_goals: [G1, G4, G5]
+serves_goals: [G1, G5]
 ---
 
 # テスト戦略・品質保証 (testing-qa)
@@ -15,7 +15,7 @@ serves_goals: [G1, G4, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-217 |
+| Web (web) | 確定 | 確定質疑: qa-242 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリを持たず、モバイル端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の mobile 行と同根拠)。テスト実行は web 行 (CI) と desktop-windows/desktop-macos 行 (作者ローカル) でカバーする |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリを持たず、タブレット端末を開発者クライアント/テスト実行環境として使わない (dev-workflow の tablet 行と同根拠)。テスト実行は web 行と desktop-windows/desktop-macos 行でカバーする |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-211 |
@@ -24,11 +24,13 @@ serves_goals: [G1, G4, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-217 (対応セル: web)
+### qa-242 (対応セル: web)
 
-**質問**: testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。
+**質問**: testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。 (是正版: サインインページ O5 の安全な既定を実装の /dashboard へ揃える)
 
-**回答**: 【本 entry の位置づけ】
+**回答**: [是正版・2026-08-13] 本 entry は qa-217 の是正版である。qa-217 は「サインインページ O5 の安全な既定」を /sheets と記していたが、実装は PR #720 (d373c75f『サインイン後の着地を /dashboard に揃え本人の最近作業を出す』) により /dashboard へ変更済みで、仕様側だけが取り残されていた。利用者の 2026-08-13 の判断「実装に合わせて仕様を是正」に従い、当該 1 箇所を /dashboard へ改めた。qa-217 の逐語は改変せず残し、testing-qa/web の確定はこの entry を参照先とする。O5 以外の記載は qa-217 と同一である。
+
+【本 entry の位置づけ】
 本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
 
 ===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====
@@ -172,9 +174,11 @@ serves_goals: [G1, G4, G5]
 
 #### 本章での適用
 
-##### 確定内容 qa-217 (対応セル: web)
+##### 確定内容 qa-242 (対応セル: web)
 
-- 確定要件: 【本 entry の位置づけ】
+- 確定要件: [是正版・2026-08-13] 本 entry は qa-217 の是正版である。qa-217 は「サインインページ O5 の安全な既定」を /sheets と記していたが、実装は PR #720 (d373c75f『サインイン後の着地を /dashboard に揃え本人の最近作業を出す』) により /dashboard へ変更済みで、仕様側だけが取り残されていた。利用者の 2026-08-13 の判断「実装に合わせて仕様を是正」に従い、当該 1 箇所を /dashboard へ改めた。qa-217 の逐語は改変せず残し、testing-qa/web の確定はこの entry を参照先とする。O5 以外の記載は qa-217 と同一である。
+
+【本 entry の位置づけ】
 本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。
 
 ===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====
@@ -240,7 +244,7 @@ serves_goals: [G1, G4, G5]
 
 【4. tier 語彙の正本 (2026-08-09 補正)】
 検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。
-- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 設計解釈の記録経路: `dialogue`
 - 原則: 層別の責務配分 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念`)
   - 採否: `applied`
   - 章固有の根拠: production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。
@@ -281,7 +285,7 @@ serves_goals: [G1, G4, G5]
   - トレードオフ:
     - 変更 path と package の対応台帳を正確に保つ必要がある
     - 複数層へまたがる変更は focused test だけに収まらない
-- 資するゴール: G1, G4, G5
+- 資するゴール: G1, G5
 
 ## 最新ドキュメント出典
 
