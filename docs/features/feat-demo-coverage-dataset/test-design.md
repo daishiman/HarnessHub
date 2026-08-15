@@ -89,7 +89,7 @@ T2-3 は結合テストとして扱い、一時ファイルの libSQL へ `seedD
 | T4-1 | 非ローカル URL の拒否 | `libsql://` / `https://` / `http://192.0.2.1` を渡した CLI 実行が終了コード 2 で終わる |
 | T4-2 | 書き込み 0 | 拒否された実行の前後で対象 DB のファイルサイズと内容が変化しない |
 | T4-3 | ローカル URL の受理 | `file:` / `http://127.0.0.1` / `http://localhost` が拒否されない |
-| T4-4 | 判定の非再実装 | `seed-coverage.ts` が `./local-session` から `isLocalDatabaseUrl` を import しており、コメント行と `console.*` 行を除いた本体に URL の形を判定する文字列 (`libsql:` / `http://` / `127.0.0.1` / `localhost` / `'file:`) を持たない (ADR §8.2 の G4) |
+| T4-4 | 判定の非再実装 | `packages/db/scripts/seed-coverage.ts` が既存の local-session モジュールから `isLocalDatabaseUrl` を import しており、本体に URL の形を判定する文字列を持たない (ADR §8.2 の G4) |
 
 T4-1 は子プロセス実行で終了コードを見る。T4-4 は実装ソースの静的検査とする。
 

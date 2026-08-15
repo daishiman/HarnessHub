@@ -45,7 +45,7 @@ P05 の write scope (`seed-coverage.ts` / `verify-demo-coverage-matrix.ts` / `de
 
 ### 2.2 seed は既存 schema の消費者であり、定義者ではない
 
-`seed-coverage.ts` は表定義を自前で持たない。schema barrel (`packages/db/schema/index`) を唯一の入力として CREATE 文を導出する。
+`packages/db/scripts/seed-coverage.ts` は表定義を自前で持たない。schema barrel (`packages/db/schema/index.ts`) を唯一の入力として CREATE 文を導出する。
 
 ```ts
 /** schema barrel を唯一の入力として CREATE 文を導出する (canonical migration に依存しない)。 */
@@ -56,7 +56,7 @@ async function schemaDdl(): Promise<string[]> {
 }
 ```
 
-投入本体 (`demo-coverage/seed.ts`) も `import * as schema from '../../schema/index'` で既存定義を参照するだけである。したがって schema 側に新しい表・カラム・enum 値を要求していない。
+投入本体 (`packages/db/scripts/demo-coverage/seed.ts`) も schema barrel を import するだけである。したがって schema 側に新しい表・カラム・enum 値を要求していない。
 
 この向きは検査でも固定されている。`DOMAIN_ENUMS` の宣言 (40 カラム / 129 値) が schema の実定義と完全一致することを T2-2 が突き合わせており、seed のために enum を増やしていれば不一致として落ちる。
 
@@ -70,7 +70,7 @@ seed は 4 つの専用テナント (`tenant/main` / `suspended` / `empty` / `se
 
 ### 2.4 リファクタリング対象がない
 
-本 feature は既存モジュールの内部構造を作り替えていない。既存ファイルへの変更は `vitest.config.ts` の `coverage.include` に 1 行足しただけで、振る舞いの変更を伴わない。新規コードはすべて `scripts/demo-coverage/` と `__tests__/seed-coverage/` に閉じており、既存の repository/schema 層から参照されていない (依存の向きは新規 → 既存の一方向)。
+本 feature は既存モジュールの内部構造を作り替えていない。既存ファイルへの変更は `vitest.config.ts` の `coverage.include` に 1 行足しただけで、振る舞いの変更を伴わない。新規コードはすべて `packages/db/scripts/demo-coverage/` と `__tests__/seed-coverage/` に閉じており、既存の repository/schema 層から参照されていない (依存の向きは新規 → 既存の一方向)。
 
 ## 3. 将来 migration が必要になる条件
 

@@ -99,7 +99,7 @@ pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts   
 
 | 対象 | Stmts | Branch | Funcs | Lines |
 |---|---|---|---|---|
-| `scripts/demo-coverage/` 全体 | 99.77 | 99.01 | 100 | 99.77 |
+| `packages/db/scripts/demo-coverage/` 全体 | 99.77 | 99.01 | 100 | 99.77 |
 | ├ `boundaries.ts` | 100 | 100 | 100 | 100 |
 | ├ `coverage-matrix.ts` | 100 | 100 | 100 | 100 |
 | ├ `enums.ts` | 100 | 100 | 100 | 100 |
@@ -114,7 +114,7 @@ pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts   
 
 本 run で `scripts/demo-coverage/**/*.ts` を `vitest.config.ts` の `coverage.include` へ追加した。参照されなくなった宣言が残っても誰も気付かない状態を避けるためである。
 
-一方、CLI 2 本 (`scripts/seed-coverage.ts` / `scripts/verify-demo-coverage-matrix.ts`) は計測対象に含めていない。T4 がこれらを**子プロセスとして起動**して終了コードを実測する設計のため、vitest のプロセス内カバレッジ計測には原理的に載らないからである。include に加えると実行されているのに 0% と表示され、閾値を割って全体が赤くなる。この 2 本の挙動は、カバレッジ率ではなく §4 の終了コード実測と §5 の出力実測で担保している。
+一方、CLI 2 本 (`packages/db/scripts/seed-coverage.ts` / `packages/db/scripts/verify-demo-coverage-matrix.ts`) は計測対象に含めていない。T4 がこれらを**子プロセスとして起動**して終了コードを実測する設計のため、vitest のプロセス内カバレッジ計測には原理的に載らないからである。include に加えると実行されているのに 0% と表示され、閾値を割って全体が赤くなる。この 2 本の挙動は、カバレッジ率ではなく §4 の終了コード実測と §5 の出力実測で担保している。
 
 ## 7. 計画検証
 

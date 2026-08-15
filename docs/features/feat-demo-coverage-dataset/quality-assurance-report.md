@@ -18,7 +18,7 @@ layer: feature-evidence
 | G1 | 静的検査 (lint) | `pnpm --filter @harness-hub/db lint` | エラー 0 件 | 158 ファイル / 0 件 | **pass** |
 | G2 | テスト + カバレッジ | `pnpm --filter @harness-hub/db test`<br>(= `vitest run --coverage`) | 全件 pass / 4 指標とも 80% 以上 | 49 files 388 tests pass / 91.77-87.51-88.52-91.77 | **pass** |
 | G3 | 型検査 | `tsc --noEmit` | エラー 0 件 | 0 件 | **pass** |
-| G4 | route×状態 未カバー 0 件 | `tsx scripts/verify-demo-coverage-matrix.ts` | exit 0 | exit 0 / 未割当 0 件 | **pass** |
+| G4 | route×状態 未カバー 0 件 | `packages/db/scripts/verify-demo-coverage-matrix.ts` | exit 0 | exit 0 / 未割当 0 件 | **pass** |
 | G5 | enum 全値網羅 | T2 (`enum-coverage.test.ts`) | 未使用値 0 件 | 40 カラム 129 値すべて 1 行以上 | **pass** |
 | G6 | 冪等性 | T3 (`idempotency.test.ts`) | 2 回実行後のダイジェスト一致 | 一致 (CLI 実測でも差分 0 行) | **pass** |
 | G7 | ローカル専用ガード拒否 | T4 (`local-guard.test.ts`) | 非ローカル URL が非 0 終了 | exit 2 | **pass** |
@@ -53,7 +53,7 @@ All files   |   91.77 |    87.51 |   88.52 |   91.77 |
 | 対象 | Stmts | Branch | Funcs | Lines | 閾値 |
 |---|---|---|---|---|---|
 | パッケージ全体 | 91.77 | 87.51 | 88.52 | 91.77 | 80 |
-| `scripts/demo-coverage/` | 99.77 | 99.01 | 100 | 99.77 | 80 |
+| `packages/db/scripts/demo-coverage/` | 99.77 | 99.01 | 100 | 99.77 | 80 |
 | └ `seed.ts` | 99.66 | 98.92 | 100 | 99.66 | — |
 
 4 指標すべて閾値 80% を上回る。`seed.ts` の未到達 2 箇所 (54-55, 144-145 行) は配列長を超える索引や解決不能な値に対する防御的 throw で、正常系から到達しない。
@@ -71,7 +71,7 @@ pnpm --filter @harness-hub/db typecheck    # = tsc --noEmit
 ### G4 route × 状態の未カバー 0 件
 
 ```bash
-pnpm --filter @harness-hub/db exec tsx scripts/verify-demo-coverage-matrix.ts   # exit 0
+pnpm --filter @harness-hub/db exec tsx packages/db/scripts/verify-demo-coverage-matrix.ts   # 注意: 実行時 cwd は packages/db。正本 path は packages/db/scripts/verify-demo-coverage-matrix.ts
 ```
 
 ```
@@ -114,8 +114,8 @@ python3 plugins/system-dev-planner/scripts/validate-system-plan.py \
 
 | 種別 | 件数 | 対象 | 対応 |
 |---|---|---|---|
-| `format` | 7 | `__tests__/seed-coverage/` 6 ファイル、`scripts/demo-coverage/fixtures.ts` | `biome check --write` で整形を適用 |
-| `lint/suspicious/useIterableCallbackReturn` | 1 | `scripts/verify-demo-coverage-matrix.ts:33` | `forEach` のコールバックが `Set.add` の戻り値を返していた。`for` ループへ書き換え |
+| `format` | 7 | `__tests__/seed-coverage/` 6 ファイル、`packages/db/scripts/demo-coverage/fixtures.ts` | `biome check --write` で整形を適用 |
+| `lint/suspicious/useIterableCallbackReturn` | 1 | `packages/db/scripts/verify-demo-coverage-matrix.ts` | `forEach` のコールバックが `Set.add` の戻り値を返していた。`for` ループへ書き換え |
 
 ```diff
 - patterns.forEach((_pattern, index) => keys.add(seriesKey(`long-text/${kind}`, index + 1)));

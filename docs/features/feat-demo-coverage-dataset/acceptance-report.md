@@ -8,7 +8,7 @@ layer: feature-evidence
 goal-spec の acceptance 7 項目を、P06 の実行結果 (`test-run-report.md`) に照らして 1 対 1 で判定した記録である。判定の根拠は P06 で実測した値だけを使い、この文書では新たなテスト実行を行わない。
 
 - 判定日: 2026-08-15
-- 判定対象: `packages/db/scripts/seed-coverage.ts` / `scripts/verify-demo-coverage-matrix.ts` / `scripts/demo-coverage/**`
+- 判定対象: `packages/db/scripts/seed-coverage.ts` / `packages/db/scripts/verify-demo-coverage-matrix.ts` / `packages/db/scripts/demo-coverage/**`
 - 根拠: `docs/features/feat-demo-coverage-dataset/test-run-report.md` (P06) / `route-state-matrix.md` (P05)
 - **判定結果: 7 項目すべて pass。fail 0 件。差し戻し 0 件。**
 
