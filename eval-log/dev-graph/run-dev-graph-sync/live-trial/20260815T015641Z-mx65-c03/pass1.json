@@ -1,0 +1,43 @@
+{
+  "applied": [],
+  "changes": 2,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-08-15T01:59:51.574619Z",
+  "exports": [
+    {
+      "alias": "planning",
+      "binding": "github",
+      "field": "status",
+      "field_id": "PVTF_Status001",
+      "item_id": "PVTI_lADOFixture001",
+      "kind": "project-field-update",
+      "node": "LT-TASK-001",
+      "option_id": "OPT_InProgress001",
+      "project_field": "Status",
+      "project_id": "PVT_kwDOFixture001",
+      "value": "In Progress",
+      "value_type": "single_select"
+    }
+  ],
+  "graph_sha256_after": "7c504a64ee3934885b3dae00717eb03b3945348f5989123fc61a10ae2a1cb1ba",
+  "graph_sha256_before": "7c504a64ee3934885b3dae00717eb03b3945348f5989123fc61a10ae2a1cb1ba",
+  "imports": [
+    {
+      "field": "title",
+      "from": "Validate isolated live trial",
+      "node": "LT-TASK-001",
+      "to": "Validate isolated live trial (updated remotely r7)"
+    }
+  ],
+  "mode": "dry-run",
+  "ok": true,
+  "parity_manifest": null,
+  "pending_retry": [],
+  "remote_sha256_after": "755865fa0c55144591c533250e2c66af5437bef9de2b715b0c31a2e9eea2a493",
+  "remote_sha256_before": "755865fa0c55144591c533250e2c66af5437bef9de2b715b0c31a2e9eea2a493",
+  "snapshot_sha256_after": "37e836e6813a911ac4f3cb1d86beb9b9d21cc96e9aca35a6e67c2eba98025387",
+  "snapshot_sha256_before": "37e836e6813a911ac4f3cb1d86beb9b9d21cc96e9aca35a6e67c2eba98025387",
+  "tombstones": [],
+  "write_count": 0
+}

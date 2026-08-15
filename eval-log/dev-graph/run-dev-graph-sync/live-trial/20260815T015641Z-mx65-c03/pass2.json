@@ -1,0 +1,135 @@
+{
+  "applied": [
+    {
+      "node": "LT-TASK-001",
+      "receipt": {
+        "artifact_sha256_after": "c975f883700f1e6ea08a5cb3bcb71eb4b160ac4eaac65871592b18e6693748b5",
+        "body_source": "preserved",
+        "file_path": "tasks/LT-TASK-001.md",
+        "graph_node_id": "LT-TASK-001",
+        "graph_revision_after": 2,
+        "graph_revision_before": 1,
+        "graph_sha256_after": "589ec825ace9ee6f43e143a99e6ab555af568b0c7ef8502bb6a860a9ce87ad9a",
+        "graph_sha256_before": "7c504a64ee3934885b3dae00717eb03b3945348f5989123fc61a10ae2a1cb1ba",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "replaced_body_lines": null,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local"
+    },
+    {
+      "node": "LT-TASK-001",
+      "receipt": {
+        "fixture": true,
+        "ok": true,
+        "operation": {
+          "alias": "planning",
+          "binding": "github",
+          "field": "status",
+          "field_id": "PVTF_Status001",
+          "item_id": "PVTI_lADOFixture001",
+          "kind": "project-field-update",
+          "node": "LT-TASK-001",
+          "option_id": "OPT_InProgress001",
+          "project_field": "Status",
+          "project_id": "PVT_kwDOFixture001",
+          "value": "In Progress",
+          "value_type": "single_select"
+        }
+      },
+      "type": "external"
+    },
+    {
+      "alias": "planning",
+      "node": "LT-TASK-001",
+      "receipt": {
+        "artifact_sha256_after": "83bebe0ea48e565d46828e1be6acef858865e11804c500bf6208556a4921a168",
+        "body_source": "preserved",
+        "file_path": "tasks/LT-TASK-001.md",
+        "graph_node_id": "LT-TASK-001",
+        "graph_revision_after": 3,
+        "graph_revision_before": 2,
+        "graph_sha256_after": "54b63252e5172112746266ce0f033311dcd215a17e79a58cec886af33bdc2aff",
+        "graph_sha256_before": "589ec825ace9ee6f43e143a99e6ab555af568b0c7ef8502bb6a860a9ce87ad9a",
+        "idempotent": false,
+        "operation": "updated",
+        "owner": "C02/run-dev-graph-node",
+        "recovered_interrupted_transaction": false,
+        "replaced_body_lines": null,
+        "status": "applied",
+        "write_count": 2
+      },
+      "type": "local_project_linkage"
+    },
+    {
+      "receipt": {
+        "dependency_gaps": [],
+        "generated_at": "2026-08-15T02:00:06Z",
+        "graph_node_count": 1,
+        "graph_sha256": "54b63252e5172112746266ce0f033311dcd215a17e79a58cec886af33bdc2aff",
+        "manifest_path": "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json",
+        "node_count": 0,
+        "ok": true,
+        "source_graph_digest": "sha256:26e15c378b0eff0ba72f2b4ad21a92590ae597771b645be5ec789b862b3875e7",
+        "unlinked": [],
+        "write_count": 1
+      },
+      "type": "parity_manifest"
+    }
+  ],
+  "changes": 2,
+  "conflicts": [],
+  "converged": false,
+  "executed_at": "2026-08-15T02:00:06.214780Z",
+  "exports": [
+    {
+      "alias": "planning",
+      "binding": "github",
+      "field": "status",
+      "field_id": "PVTF_Status001",
+      "item_id": "PVTI_lADOFixture001",
+      "kind": "project-field-update",
+      "node": "LT-TASK-001",
+      "option_id": "OPT_InProgress001",
+      "project_field": "Status",
+      "project_id": "PVT_kwDOFixture001",
+      "value": "In Progress",
+      "value_type": "single_select"
+    }
+  ],
+  "graph_sha256_after": "54b63252e5172112746266ce0f033311dcd215a17e79a58cec886af33bdc2aff",
+  "graph_sha256_before": "7c504a64ee3934885b3dae00717eb03b3945348f5989123fc61a10ae2a1cb1ba",
+  "imports": [
+    {
+      "field": "title",
+      "from": "Validate isolated live trial",
+      "node": "LT-TASK-001",
+      "to": "Validate isolated live trial (updated remotely r7)"
+    }
+  ],
+  "mode": "apply",
+  "ok": true,
+  "parity_manifest": {
+    "dependency_gaps": [],
+    "generated_at": "2026-08-15T02:00:06Z",
+    "graph_node_count": 1,
+    "graph_sha256": "54b63252e5172112746266ce0f033311dcd215a17e79a58cec886af33bdc2aff",
+    "manifest_path": "eval-log/dev-graph/run-dev-graph-schedule/parity-manifest.json",
+    "node_count": 0,
+    "ok": true,
+    "source_graph_digest": "sha256:26e15c378b0eff0ba72f2b4ad21a92590ae597771b645be5ec789b862b3875e7",
+    "unlinked": [],
+    "write_count": 1
+  },
+  "pending_retry": [],
+  "remote_sha256_after": "a9e294c005bdce1cf7c354e447f164831759a6938bed7005ae4fc3a1e9fdbbed",
+  "remote_sha256_before": "755865fa0c55144591c533250e2c66af5437bef9de2b715b0c31a2e9eea2a493",
+  "snapshot_sha256_after": "ae94bd6d69d42cc03ff81b628c75dc3c5833c7198ca8d77592f04d8c316eb53f",
+  "snapshot_sha256_before": "37e836e6813a911ac4f3cb1d86beb9b9d21cc96e9aca35a6e67c2eba98025387",
+  "tombstones": [],
+  "write_count": 4
+}
