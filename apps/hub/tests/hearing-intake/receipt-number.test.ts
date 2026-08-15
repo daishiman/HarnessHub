@@ -115,10 +115,7 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
 
   const createSheetAndEnqueueIdempotentSource = () => {
     const source = repositorySource();
-    return source.slice(
-      source.indexOf('async createSheetAndEnqueueIdempotent('),
-      source.indexOf('async listSheets('),
-    );
+    return source.slice(source.indexOf('async createSheetAndEnqueueIdempotent('), source.indexOf('async listSheets('));
   };
 
   it('HI-CODE-101: counter CAS が transaction callback 内で tenant/kind/nextValue を比較する', () => {
