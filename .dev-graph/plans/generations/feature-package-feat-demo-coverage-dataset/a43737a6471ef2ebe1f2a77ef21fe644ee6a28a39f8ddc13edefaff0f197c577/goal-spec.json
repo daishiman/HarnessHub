@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-demo-coverage-dataset",
+  "feature_context_digest": "sha256:fffd1ddd4841cd50675ff48dea77f4788059ca468e7895c73ce73bbc020fa6c3",
+  "purpose": "画面を開いても空か 1 件しか無いため、大量件数での折返し・長文での横溢れ・エラー時の描画といった崩れが最も出やすい状態が一度も観測されていない。UI 崩れの自動検査に食わせる状態を先に用意しないと、データが薄いことによる「崩れていない」という偽の合格が出る。網羅的な確認用データを正本として整備し、全画面・全状態を人も機械も同じ入力で再現できるようにする。",
+  "goal": "ローカル DB へ投入するだけで、対象 28 route のそれぞれについて 空 / 1 件 / 大量 (50 件以上) / 長文 / エラー の5 状態と、各ドメインの enum ステータス全値が画面上で再現でき、同じ seed を二度流しても結果が一致する状態。",
+  "scope_in": [
+    "対象 28 route と、各 route が描画する状態 (空/1件/大量50件以上/長文/エラー) の対応表の確定",
+    "各ドメインモデルの enum ステータス全値を最低 1 件ずつ含む fixture の定義",
+    "長文パターン (日本語の折返しが起きる見出し・説明文・タグ名) の明示的な収録",
+    "大量パターン (一覧の仮想化・ページング境界を跨ぐ 50 件以上) の収録",
+    "エラー状態 (取得失敗・権限不足・未同期) を画面から再現する手段",
+    "seed の冪等性 (二度流しても同じ状態に収束する) の担保",
+    "ローカル以外の DB URL を拒否する既存ガードの維持",
+    "seed 済み状態から特定 route の特定状態へ到達する手順の文書化"
+  ],
+  "scope_out": [
+    "本番・staging データベースへの投入 (ローカル専用ガードを緩めない)",
+    "実ブラウザ検査そのもの (feat-ui-integrity-audit-harness の担当)",
+    "UI 崩れの是正 (feat-ui-layout-remediation の担当)",
+    "顧客実データの取込み・匿名化",
+    "パフォーマンス負荷試験用の大規模データ (本 feature は表示網羅が目的で負荷が目的ではない)"
+  ],
+  "acceptance": [
+    "seed 投入後、28 route それぞれについて 5 状態 (空/1件/大量/長文/エラー) へ到達する手順が存在し実行できる",
+    "各ドメインモデルの enum ステータスが全値、最低 1 件ずつ seed に含まれる (未使用値 0 件を機械検査する)",
+    "大量パターンが 50 件以上で、一覧のページング境界を跨ぐ",
+    "長文パターンが日本語の折返しを実際に発生させる長さを持つ",
+    "同じ seed を連続 2 回実行し、投入後の状態が一致する",
+    "ローカル以外の DB URL を指定した seed 実行が非 0 終了で拒否される",
+    "route × 状態の対応表に未カバーの組が 0 件であることを機械検査する"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-demo-coverage-dataset.context.json",
+      "feature_id": "feat-demo-coverage-dataset",
+      "exists": true,
+      "sha256": "fffd1ddd4841cd50675ff48dea77f4788059ca468e7895c73ce73bbc020fa6c3",
+      "digest_status": "verified",
+      "digest_note": "team-lead 提示の feature digest (sha256:fffd1ddd4841cd50675ff48dea77f4788059ca468e7895c73ce73bbc020fa6c3) は .dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールドと一致することを Read で確認済みだが、本ファイル自体を独立にハッシュ化して裏取りはしていない。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "system-spec/index.md",
+      "exists": true,
+      "sha256": "6ae3c50ab240b930c07f1f0d320f29269728c21f8ed00256d9a514ab046e0fb5",
+      "digest_status": "verified",
+      "digest_note": "frontmatter: kind: index (章一覧・集約状態マトリクスの正本索引)。Read で実在・内容確認済み。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "system-spec/00-requirements-definition.md",
+      "exists": true,
+      "sha256": "bbe0b4f884b193c2f3e046c75d7ff2121264c4bcf26689129eb0be2b1df35f13",
+      "digest_status": "verified",
+      "digest_note": "frontmatter: status: confirmed, category: requirements-definition。Read で実在・内容確認済み。frontmatter に digest フィールドは記載されていない。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "system-spec/testing-qa.md",
+      "exists": true,
+      "sha256": "bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b",
+      "digest_status": "verified",
+      "digest_note": "frontmatter: status: confirmed, category: testing-qa。qa-236 が本 feature の直接根拠 (確認用データは 28 route x 状態 x enum 全値を網羅、という利用者確定回答)。repo 内には本ファイルを指す digest がすでに2種類記録されており矛盾がある: features/feat-demo-coverage-dataset.md の source_lineage.source_digest = bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b、architecture/harness-hub-testing-qa.md の confirmation_evidence.evaluated_digest / source_lineage.source_digest = 15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7。どちらも本 agent が計算したものではなく転記もしていない。main-loop の実測時にこの矛盾の解消 (どちらが現行内容と一致するか) も併せて確認が必要。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "system-spec/database.md",
+      "exists": true,
+      "sha256": "b416537c8ffe8875c84af6c89061bae0bf7a19ca51049f6f4b453c4c28e5d81a",
+      "digest_status": "verified",
+      "digest_note": "依頼メッセージで指定された system-spec/data.md は repo に存在しないため、architecture/harness-hub-data.md の frontmatter (scope_in: [\"system-spec/database.md\"]) が正本として参照する system-spec/database.md へ差し替えた。team-lead の path 指定誤りである旨は別途報告済み。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "architecture/harness-hub-data.md",
+      "exists": true,
+      "sha256": "59ab28e8ae21056c3b8739c8e7bebde2a41496a51a4cca54b9515f96a85461fe",
+      "digest_status": "verified",
+      "digest_note": "graph_node_id=arch-harness-hub-data、confirmation_status=confirmed、evaluation_status=pass。frontmatter に記録されている digest (confirmation_evidence.evaluated_digest = bda6fe3fb33ce9aaa79d6b29701c63e0b5803917b9bfcf797c72409fe365de36、source_lineage.source_digest = 9ee58696d797a2fc235f290c4bdc77c3f16001080b39d341dd0cc8778eebafcb) はいずれも正本 system-spec/database.md 側の digest であり、wrapper ファイルである本ファイル自体の sha256 ではない。本ファイル自体の digest は repo のどこにも記録されておらず、main-loop の実測を要する。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    },
+    {
+      "path": "architecture/harness-hub-testing-qa.md",
+      "exists": true,
+      "sha256": "a07e8c94726379cf5b280a00e90e651e2163b1baebdba2146ebf88529fcefc7b",
+      "digest_status": "verified",
+      "digest_note": "graph_node_id=arch-harness-hub-testing-qa、confirmation_status=confirmed、evaluation_status=pass。frontmatter に記録されている digest (confirmation_evidence.evaluated_digest / source_lineage.source_digest = 15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7) は正本 system-spec/testing-qa.md 側の digest であり、wrapper ファイルである本ファイル自体の sha256 ではない。本ファイル自体の digest は repo のどこにも記録されておらず、main-loop の実測を要する。 [main-loop 実測 2026-08-14: sha256 を hashlib で直接計算し補完]"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "path_discrepancy_note": "依頼で指定された system-spec/data.md は repo に存在しない。architecture/harness-hub-data.md の scope_in と整合する system-spec/database.md へ差し替えた。team-lead へ確認依頼済み。 [main-loop 承認: database.md が正。指定誤りは team-lead 側]",
+    "digest_recomputation_status": "verified (main-loop が全 lineage entry の sha256 を実測)",
+    "digest_source_conflict_note": "system-spec/testing-qa.md について repo 内既存記録に2種類の異なる digest (bb7f4936... と 15d8e29b...) が存在し、main-loop の実測時にどちらが現行内容と一致するか要確認。",
+    "system_spec_source_status": "testing-qa.md / database.md / 00-requirements-definition.md ともに frontmatter status: confirmed。system-spec/index.md の集約状態サマリでも testing-qa・database は「確定」に列挙されている。",
+    "notes_ja": true,
+    "status": "goal-spec-complete"
+  },
+  "extracted_at": "2026-08-14T13:10:00Z"
+}

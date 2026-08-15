@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub testing-qa アーキテクチャ (system-spec 取込)"
 owners: ["daishiman"]
 created_at: "2026-07-24T12:35:34Z"
-updated_at: "2026-08-09T00:00:00Z"
+updated_at: "2026-08-15T01:45:07.831833Z"
 status: "active"
 depends_on: ["spec-harness-hub-requirements"]
 related_nodes: ["arch-harness-hub-frontend","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security","arch-harness-hub-infrastructure","arch-harness-hub-dev-workflow"]
@@ -31,8 +31,8 @@ template_id: "architecture"
 template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
-confirmation_evidence: {"evaluated_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","evaluator":"validate-coverage-matrix.py --require-complete (qa-217)","evidence_ref":"system-spec/testing-qa.md"}
-source_lineage: {"imported_at":"2026-08-09T00:00:00Z","origin_kind":"system-spec-harness","source_digest":"15d8e29b3bb327bc9e758986542dfbd0a0b95f5b109e09f737b383a2fc8c6dc7","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
+confirmation_evidence: {"evaluated_digest":"bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b","evaluator":"validate-coverage-matrix.py --require-complete (qa-236)","evidence_ref":"system-spec/testing-qa.md"}
+source_lineage: {"imported_at":"2026-08-14T14:10:00Z","origin_kind":"system-spec-harness","source_digest":"bb7f49362cd1ded1d01d1dd25023533bb066d799b9d0375180310087768d1d3b","source_path":"system-spec/testing-qa.md","source_plugin":"system-spec-harness","source_version":"0.1.0"}
 classification_confidence: 0.95
 classification_reason: "system-spec-harness 確定章の R3-import 正規取込 (confirmed + evaluator PASS)"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-testing-qa.md","confidence":0.95}]
@@ -44,7 +44,7 @@ github_project_linkages: []
 pull_request_linkages: []
 execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
-implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections":[],"status":"complete"}
+implementation_readiness: {"checked_at":"2026-08-14T14:10:00Z","missing_sections":[],"status":"complete"}
 ---
 
 # Harness Hub testing-qa アーキテクチャ (system-spec 取込)
@@ -53,10 +53,10 @@ implementation_readiness: {"checked_at":"2026-07-24T12:35:34Z","missing_sections
 
 ## 正本 (source of truth)
 
-- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `15d8e29b3bb327bc…` (完全値は frontmatter source_lineage.source_digest))
+- [system-spec/testing-qa.md](../system-spec/testing-qa.md) (sha256: `bb7f49362cd1ded1…` (完全値は frontmatter source_lineage.source_digest))
 
 - confirmation: `confirmed` / evaluator: `validate-coverage-matrix.py --require-complete` → **PASS** (`system-spec/spec-state.json`)
-- 取込日時: 2026-08-07T12:30:00Z / plugin: system-spec-harness v0.1.0
+- 取込日時: 2026-08-14T14:10:00Z / plugin: system-spec-harness v0.1.0
 
 ## 要件定義書 (上位概念)
 
@@ -298,3 +298,58 @@ elegant-review の signal は `contradiction / omission / inconsistency / depend
 
 - system-spec provenance / C19 受理境界の詳細は [testing-qa provenance C19 追補](../docs/features/feat-dev-pipeline-improvement/testing-qa-provenance-c19-addenda.md) を参照する。
 - 2026-08-10 publish smoke (`HarnessHub-pf5o`) は Device Flow 短命 token で CI 結線。S3 `needs_fix` は次の channel 競合検査より先に cancel して active slot を解放する。cancel 後は DB status 再確認と観測 `channel_slot_released` で slot 返却を固定し、service 層は `needs_fix` 占有の T4-A を持つ。2026-08-11 cancel 回収 (`HarnessHub-aauo`) は `smoke_fixture_leases` を削除 authority とし best-effort `if: always()` と独立 sweeper で再試行する（SLA なし、本番 force-cancel 証跡は未取得）。詳細は [production coverage smoke 追補](../specs/harness-hub-production-coverage-smoke-addendum.md)、[channel slot 検証受領書](../docs/features/feat-hub-foundation/production-smoke-channel-slot-verification-spec-reflection-receipt.md)、[2026-08-11 受領書](../docs/features/feat-dual-catalog-web/mvp-ops-reliability-20260811-spec-reflection-receipt.md)。
+
+## 2026-08-14 UI 崩れ検査と確認用データの取込 (qa-236)
+
+確定章 [system-spec/testing-qa.md](../system-spec/testing-qa.md) の web セル確定質疑が qa-217 から `qa-236` へ更新された。本節は参照索引であり、内容の正本は確定章側にある。
+
+- **実ブラウザ検査 (qa-236)**: 全画面の表示崩れ再発防止として、Chromium 実ブラウザで 28 route × 3 幅 (360 / 768 / 1280) × 2 テーマ = 168 通りを走査し、横溢れ・タップ域・折返し位置を機械判定する検査を **CI 専用 job** として追加する。
+- **確認用データの網羅範囲 (qa-236)**: 28 route 全部 × 状態 (空 / 1 件 / 大量 50+ / 長文 / エラー) × 各 enum ステータス全値を網羅する確認用データセットを用意する。
+- 本設計を実装する macro feature は `feat-demo-coverage-dataset` (確認用データ)、`feat-ui-integrity-audit-harness` (検査ハーネス)、`feat-ui-layout-remediation` (是正) が所有する。
+- qa-076〜qa-217 の層別方針・カバレッジ品質ゲート・tier 別実行契約は全面維持する (qa-236 はその上へ UI 検査層を重ねる)。
+
+## 2026-08-15 確認用データセットの実装結果 writeback (feat-demo-coverage-dataset / P13)
+
+qa-236 が要求した「28 route × 5 状態 × enum 全値の確認用データ」は macro feature `feat-demo-coverage-dataset` (P01〜P13) で実装を完了した。本節は設計判断の変更ではなく、**実行結果と、その結果から確定した運用上の制約**の記録である。上の 2026-08-14 節 (qa-236 の設計内容) は変更しない。
+
+### 実装された機械検査可能物
+
+| 実装物 | 役割 |
+|---|---|
+| `packages/db/scripts/demo-coverage/coverage-matrix.ts` | 28 route × 5 状態の対応表の**正本**。到達手順 (actor / URL / 操作 / 必要 fixture) を機械可読な形で持つ |
+| `packages/db/scripts/seed-coverage.ts` | 投入 CLI。ローカル DB 専用 (`file:` / `127.0.0.1` / `localhost` のみ受理) |
+| `packages/db/scripts/verify-demo-coverage-matrix.ts` | 未カバー 0 件の検査 CLI。DB へ接続せず、対応表と fixture 宣言を突き合わせる |
+| `packages/db/__tests__/seed-coverage/` | T1〜T6 (冪等性・ローカル専用ガード・enum 全値ほか) の検査 |
+
+### 実行結果 (P06 / P07 / P09 / P10 実測)
+
+- **網羅**: 140 セル (28 route × 5 状態) = 適用 105 + 非適用 35 + 未割当 0。未カバー 0 件。
+- **投入実績**: 35 テーブル / 637 件。二度目以降の実行でもダンプ差分 0 行 (冪等)。
+- **ローカル専用ガード**: 非ローカル URL (`libsql://...`) は exit 2 で拒否。URL 判定は他のどの引数検査よりも先に実行する。
+- **品質ゲート**: G1〜G7 全件 pass。カバレッジ 4 指標とも 80% 以上。
+
+### 設計判断として固定した点 (改善知見)
+
+1. **route 一覧は自動導出しない。** `apps/hub` の `page.tsx` から対応表を自動生成すると、画面が増えたときに表も黙って増え「状態の割り当てを考え忘れた」ことを検知できなくなる。表は手で書き写し、実在 route 集合との一致を**検査で**担保する。
+2. **「非適用」を理由記号 N1〜N7 で固定した。** 「原理的にその状態が起きない画面」と「手を抜いた画面」を区別できないと、未カバー 0 件という指標が意味を失う。理由記号を機械検査の対象に含めることでこれを防いでいる (Goodhart 対策)。
+3. **保証範囲の境界。** 本 feature は「到達手順とデータが揃っていること」までを保証し、**画面を実際に開いて崩れがないこと**は保証しない。後者は `feat-ui-integrity-audit-harness` の責務である。
+
+### 後続 feature への前提提供
+
+`feat-ui-integrity-audit-harness` は次を前提にできる (詳細は [エビデンス索引](../docs/features/feat-demo-coverage-dataset/evidence/index.md))。
+
+- 28 route × 5 状態の到達手順が機械可読な形で存在する。
+- その到達手順が指す fixture は実在する (表だけ埋まって画面が空、は検査が検出する)。
+- 同じ seed を何度実行しても同じ状態になるため、監査を繰り返しても前提データが変動しない。
+
+人手でなぞる場合の手順は [runbook](../docs/features/feat-demo-coverage-dataset/runbook.md)、close-out 判定は [リリースノート](../docs/features/feat-demo-coverage-dataset/release-notes.md) を参照する。
+
+## 2026-08-15 UI 崩れ縦切りの実装結果 writeback (HarnessHub-s36m)
+
+`feat-ui-integrity-audit-harness` と `feat-ui-layout-remediation` の MVP 縦切りを実装した。本節は qa-076〜qa-217 を置き換えない。重ねる契約だけを記録する。
+
+- **母数の分離**: route 28、applicable state 105、runtime 168 は別の数である。どれかが 0 件または不足なら fail-closed。5 合成 fixture は detector の生存確認に使い、28 実 route の合格証拠に数えない。
+- **実走の境界**: 代表公開キー（`/legal` × 360 × light）は実行できる。認証が必要な 144 キーは、未実行のまま `blocked` とし PASS にしない。
+- **検出器**: 横溢れ、44px 未満操作域、`data-hh-meaning-segment` 内改行を実ブラウザで測る。
+- **是正の境界**: 意味セグメント改行と製品所有印刷 action の除去、公開シェルの 44px は今回の範囲。全ページ印刷は `HarnessHub-wx4h`。
+- 判断と検証の正本は [仕様反映受領書](../docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md)。

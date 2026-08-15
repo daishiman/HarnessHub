@@ -295,3 +295,11 @@ S10 を7画面へ分割し S12 に引き渡し UI・form_snapshot 全項目・�
 ## 2026-08-13 表示設定の再読み込み復元 (HarnessHub-sj20)
 
 root layout が `resolveUiPreferences()` でサーバ側から `user_settings` を読み、theme / density / locale を `UiProvider` の初期値として渡す。client からの後追い取得は行わない (初期描画のちらつきと、client 部品追加による共通 chunk 分割を避けるため)。未認証・取得失敗では既定値へ落とし、シェルは落とさない。配色トークンは不変。
+
+## 2026-08-15 意味境界改行・印刷導線・公開操作域 (HarnessHub-s36m)
+
+- Hub のナビ項目は完全な `label` を正本とし、折ってよい位置だけを任意の `labelSegments` で渡す。「使用状況・削減効果」は `['使用状況・', '削減効果']`。
+- 共通サイドバーは `data-hh-meaning-segment` を描き、segment 内は nowrap、1280px フルサイドバー（幅 212px）では宣言済みラベルだけを縦に積む。360px はフルサイドバーを要求せず、モバイル「その他」から完全 label へ到達する。
+- hearing detail の製品所有「印刷」ボタンと `window.print` 起動を除去する。`data-print-exclude` と print stylesheet、revision conflict / CAS は残す。
+- 公開シェルの brand、`NavList`、フッター、Alert の次の一手は共通 `touchTargetStyle` で 44px を保つ。legal ページの生リンク一覧は `NavList` へ統合する。
+- 正本は [受領書](../docs/features/feat-ui-integrity-audit-harness/ui-integrity-remediation-slice-spec-reflection-receipt.md)。

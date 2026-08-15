@@ -86,9 +86,10 @@ describe('HI-SEC7: シート本文 Markdown の sanitize', () => {
     expect(source).toContain('sections.estimated_effect');
   });
 
-  it('HI-SEC7-103: 印刷は同じ認可済み DOM を window.print し、PDF API を作らない', () => {
+  it('HI-SEC7-103: 製品所有の印刷 action を持たず、既存の印刷用 DOM と stylesheet は保つ', () => {
     const source = detailSource();
-    expect(source).toContain('window.print()');
+    expect(source).not.toContain('window.print()');
+    expect(source).not.toMatch(/<Button[^>]*>[\s\S]*?印刷[\s\S]*?<\/Button>/);
     expect(source).toContain('data-print-exclude');
     const routeFiles = readFileSync(resolve(process.cwd(), 'src/app/(dashboard)/sheets/[id]/page.tsx'), 'utf8');
     expect(routeFiles).toContain('@media print');

@@ -6,7 +6,7 @@
  */
 import type { CSSProperties, ReactNode } from 'react';
 
-import { colorVar, spaceVar } from '../internal/style.js';
+import { colorVar, spaceVar, touchTargetStyle } from '../internal/style.js';
 import { Container, type ContainerSize } from './primitives.js';
 
 export interface AppShellProps {
@@ -74,6 +74,7 @@ export function AppShell({
             <a
               href={brandHref}
               style={{
+                ...touchTargetStyle,
                 color: colorVar('text'),
                 fontWeight: 'var(--hh-font-weight-bold)',
                 fontSize: 'var(--hh-font-size-lg)',
@@ -125,7 +126,7 @@ export function NavList({ items, label, currentHref }: NavListProps): ReactNode 
                 // 現在地を色だけで示すと 1.4.1 に反するため、aria-current と枠でも示す。
                 aria-current={current ? 'page' : undefined}
                 style={{
-                  display: 'block',
+                  ...touchTargetStyle,
                   padding: `${spaceVar(2)} ${spaceVar(3)}`,
                   minHeight: 'var(--hh-control-height)',
                   borderRadius: 'var(--hh-radius-sm)',
