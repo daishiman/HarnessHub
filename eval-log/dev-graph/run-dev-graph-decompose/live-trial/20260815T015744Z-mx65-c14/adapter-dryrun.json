@@ -1,0 +1,85 @@
+{
+  "beads": {
+    "command": "bd-bridge.py --op create --repo-root <fixture-beads> --graph-node-id feat-account-login --dry-run",
+    "env": {
+      "DEV_GRAPH_BD": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/bd"
+    },
+    "exit_code": 0,
+    "external_write_count": 0,
+    "graph_node_ids": [
+      "feat-account-login"
+    ],
+    "registration_registered": true,
+    "response": {
+      "dry_run_preview": {
+        "expected_depends_on": [],
+        "graph_node_id": "feat-account-login",
+        "op": "create",
+        "registration": {
+          "graph_node_count": 7,
+          "graph_node_ids": [
+            "feat-account-login"
+          ],
+          "registered": true,
+          "unregistered": []
+        },
+        "repo_root": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/fixture-beads",
+        "scan_refs": false,
+        "verify_parity": false
+      },
+      "op": "create",
+      "version": "1.1.0",
+      "workspace_identity": {
+        "attributes": {
+          "database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+          "prefix": "lt",
+          "schema_version": "1.1.0"
+        },
+        "workspace_id": "bdw_b6aa1d3c43a26becd18395dc"
+      }
+    },
+    "shim_database_path_exists": false,
+    "shim_version_stdout": "bd version 1.1.0",
+    "shim_where_json": {
+      "database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+      "prefix": "lt",
+      "schema_version": "1.1.0"
+    }
+  },
+  "github_issue": {
+    "command": "gh-bridge.py --op issue-create --repo fixture/offline --title ... --dry-run",
+    "exit_code": 0,
+    "external_write_count": 0,
+    "mutation_suppressed": true,
+    "response": {
+      "dry_run": true,
+      "mutation_suppressed": true,
+      "op": "issue-create",
+      "preview": {
+        "body": "dry-run only",
+        "op": "issue-create",
+        "repo": "fixture/offline",
+        "title": "C14 live-trial reachability probe",
+        "value_type": "single_select"
+      }
+    }
+  },
+  "github_projects": {
+    "command": "gh-bridge.py --op project-item-add --project-id PVT_fixture --content-id I_fixture --dry-run",
+    "exit_code": 0,
+    "external_write_count": 0,
+    "mutation_suppressed": true,
+    "response": {
+      "dry_run": true,
+      "mutation_suppressed": true,
+      "op": "project-item-add",
+      "preview": {
+        "content_id": "I_fixture",
+        "op": "project-item-add",
+        "project_id": "PVT_fixture",
+        "value_type": "single_select"
+      }
+    }
+  },
+  "note": "route reachability only: every adapter returned exit 0 with a preview payload; no real bd/gh CLI or network was invoked"
+}
