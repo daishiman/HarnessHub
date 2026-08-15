@@ -62,6 +62,8 @@ export const colorTokenNames = [
   'onDanger',
   'infoCyan',
   'infoSoft',
+  'infoBlue',
+  'infoBlueSoft',
   'magenta',
   'magentaSoft',
   'neutralSoft',

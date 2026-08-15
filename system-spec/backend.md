@@ -260,3 +260,13 @@ consumerとproviderの独立変更を支える安定した契約を作り、再�
 - 分類 (category/tags)・thumbnail/excerpt の auto/manual 契約と clear 規則の正本は
   `docs/features/feat-docs-cms/architecture-decision-record.md` §1/§8 と `docs/backend-spec.md`。
 - 本追記は docs CMS 既存枠 (tenant 分離・admin 編集・sanitize) の具体化であり、auth role 階層は不変。
+
+## 2026-08-15 MVP 実装追記 (feat-card-mutation-safety / HarnessHub-6oi5)
+
+- Docs / Sheets の通常 POST は UUID v4 の `Idempotency-Key` を必須とする。scope は
+  tenant + workspace + resource + operation。同一 key・同一 payload hash は 24h 以内の
+  保存済み status / headers / body を replay し、異 payload は 422、欠落・不正は 400。
+- 通常 GET/POST/PATCH は `"docs-N"` / `"sheets-N"` の entity revision ETag を返す。
+  PATCH は `If-Match` 必須。不一致は現行 representation 付き 412。自動 merge はしない。
+- 外部 import 専用 `docs-import-*` / `externalRevision` は通常 CRUD に流用しない。
+- Catalog / PublishRequest の既存冪等契約は対象外。一覧 UI と Markdown カード本文も対象外。

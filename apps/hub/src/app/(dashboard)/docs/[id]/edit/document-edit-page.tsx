@@ -25,6 +25,7 @@ import { extractApiErrorMessage } from '../../../../../features/docs-cms/api-err
 import { canWriteDocument } from '../../../../../features/docs-cms/client-errors.js';
 import { parsePublishAtInput, publishAtToInput } from '../../../../../features/docs-cms/form-fields.js';
 import { parseTagsInput, tagsToInputValue } from '../../../../../features/docs-cms/tags.js';
+import { entityIfMatch, readRevisionConflict } from '../../../../../lib/http/mutation-client.js';
 import { scopeFromQuery } from '../../../../../lib/routing/dashboard-scope-helpers.js';
 import { useDashboardScope, useSessionRole } from '../../../dashboard-scope-context.js';
 
@@ -83,6 +84,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
   const [publishAtInput, setPublishAtInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [conflictCurrent, setConflictCurrent] = useState<DocumentDetail | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -101,6 +103,7 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
       setThumbnailUrl(doc.thumbnail_url ?? '');
       setExcerpt(doc.excerpt ?? '');
       setPublishAtInput(publishAtToInput(doc.publish_at));
+      setConflictCurrent(null);
       setError(null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'ドキュメントを取得できませんでした。');
@@ -182,12 +185,20 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
       const response = await fetch(`/api/v1/docs/${id}`, {
         method: 'PATCH',
         credentials: 'same-origin',
-        headers: headers(tenantId, workspaceId),
+        headers: { ...headers(tenantId, workspaceId), 'if-match': entityIfMatch('docs', saved.revision) },
         body: JSON.stringify(body),
       });
+      const conflict = await readRevisionConflict<DocumentDetail>(response.clone());
+      if (conflict !== null) {
+        setSaved(conflict.current);
+        setConflictCurrent(conflict.current);
+        setError(`${conflict.message} 未保存の入力は保持しています。`);
+        return;
+      }
       if (!response.ok) throw new Error(await extractApiErrorMessage(response, '保存できませんでした。'));
       const doc = (await response.json()) as DocumentDetail;
       setSaved(doc);
+      setConflictCurrent(null);
       setError(null);
       await settlePendingImages(doc.body_markdown);
       window.location.assign(`/docs/${id}?tenant=${tenantId}&workspace=${workspaceId}`);
@@ -240,6 +251,18 @@ export default function DocumentEditPage({ params, searchParams }: PageProps): R
 
       <Stack gap={4}>
         {error === null ? null : <Alert tone="danger" title="操作エラー" description={error} />}
+        {conflictCurrent === null ? null : (
+          <Alert
+            tone="warning"
+            title="他の更新があります"
+            description={`現在のタイトルは「${conflictCurrent.title}」です。未保存の入力は保持しています。`}
+            action={
+              <Button type="button" variant="secondary" onClick={() => void save()} disabled={saving}>
+                現在の内容に対して再試行
+              </Button>
+            }
+          />
+        )}
 
         {/* 連携済みなら編集画面からも Notion を開けるようにする (S18 Notion連携) */}
         <NotionOpenLink tenantId={tenantId} workspaceId={workspaceId} />

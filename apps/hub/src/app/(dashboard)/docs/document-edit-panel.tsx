@@ -1,10 +1,11 @@
 'use client';
 
 import type { DocumentListItem } from '@harness-hub/schemas';
-import { Button, LiveStatus, Panel, Stack, Textarea, TextInput } from '@harness-hub/ui';
+import { Alert, Button, LiveStatus, Panel, Stack, Textarea, TextInput } from '@harness-hub/ui';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { extractApiErrorMessage } from '../../../features/docs-cms/api-error.js';
 import { parseTagsInput, tagsToInputValue } from '../../../features/docs-cms/tags.js';
+import { entityIfMatch, readRevisionConflict } from '../../../lib/http/mutation-client.js';
 
 interface EditDraft {
   readonly category: string;
@@ -13,7 +14,7 @@ interface EditDraft {
   readonly excerpt: string;
 }
 
-type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'conflict';
 
 function toDraft(doc: DocumentListItem): EditDraft {
   return {
@@ -37,12 +38,16 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
   const [draft, setDraft] = useState<EditDraft>(() => toDraft(doc));
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [conflictCurrent, setConflictCurrent] = useState<DocumentListItem | null>(null);
   const committedRef = useRef<EditDraft>(toDraft(doc));
+  const revisionRef = useRef(doc.revision);
 
   useEffect(() => {
     const next = toDraft(doc);
     committedRef.current = next;
+    revisionRef.current = doc.revision;
     setDraft(next);
+    setConflictCurrent(null);
   }, [doc]);
 
   const commitIfChanged = useCallback(
@@ -68,14 +73,26 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
           credentials: 'same-origin',
           headers: {
             'content-type': 'application/json',
+            'if-match': entityIfMatch('docs', revisionRef.current),
             'x-harness-tenant-id': tenantId,
             'x-harness-workspace-id': workspaceId,
           },
           body: JSON.stringify(body),
         });
+        const conflict = await readRevisionConflict<DocumentListItem>(response.clone());
+        if (conflict !== null) {
+          committedRef.current = toDraft(conflict.current);
+          revisionRef.current = conflict.current.revision;
+          setConflictCurrent(conflict.current);
+          setErrorMessage(`${conflict.message} 未保存の入力は保持しています。`);
+          setSaveState('conflict');
+          return;
+        }
         if (!response.ok) throw new Error(await extractApiErrorMessage(response, '保存できませんでした。'));
         const updated = (await response.json()) as DocumentListItem;
         committedRef.current = toDraft(updated);
+        revisionRef.current = updated.revision;
+        setConflictCurrent(null);
         onSaved(updated);
         setErrorMessage('');
         setSaveState('saved');
@@ -102,6 +119,13 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
         }
       >
         <Stack gap={3}>
+          {conflictCurrent === null ? null : (
+            <Alert
+              tone="warning"
+              title="他の更新があります"
+              description={`現在のカテゴリは「${conflictCurrent.category ?? '未分類'}」です。未保存の入力は保持しています。`}
+            />
+          )}
           <TextInput
             label="カテゴリ"
             value={draft.category}
@@ -138,6 +162,13 @@ export function DocumentEditPanel({ doc, tenantId, workspaceId, onSaved, onClose
                   ? errorMessage
                   : ''}
           </LiveStatus>
+          {saveState === 'conflict' ? (
+            <div>
+              <Button type="button" variant="secondary" onClick={() => void commitIfChanged({})}>
+                現在の内容に対して再試行
+              </Button>
+            </div>
+          ) : null}
         </Stack>
       </Panel>
     </div>

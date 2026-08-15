@@ -27,6 +27,8 @@ export const documents = sqliteTable(
     externalContentHash: text('external_content_hash'),
     /** ETagの単調増加version。外部文書だけ正整数を持つ。 */
     externalRevision: integer('external_revision'),
+    /** 通常 CRUD / 自動書戻しが共有する representation 版。外部同期版とは独立。 */
+    entityRevision: integer('entity_revision').notNull().default(1),
     createdBy: text('created_by').notNull(),
     updatedBy: text('updated_by').notNull(),
     createdAt: integer('created_at').notNull(),

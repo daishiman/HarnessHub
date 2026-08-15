@@ -233,12 +233,36 @@ async function seedTenant(
   });
 
   const docsCms = createDocsCmsRepository(adapter);
-  await docsCms.createDocument(context, {
-    scope: 'tenant',
-    title: `Fixture doc ${slug}`,
-    bodyMarkdown: `# Fixture doc ${slug}`,
-    actorId: user.id,
-  });
+  // tenant scope の分離を DB の一意制約で固定する。key は A/B で意図的に同じだが、
+  // tenant_id が PK scope に入るため両方が created になる。
+  await docsCms.createDocumentIdempotent(
+    createRepositoryContext({ tenantId: tenant.id, workspaceId, actorId: user.id }),
+    {
+      scope: 'tenant',
+      title: `Fixture doc ${slug}`,
+      bodyMarkdown: `# Fixture doc ${slug}`,
+      actorId: user.id,
+    },
+    {
+      key: '00000000-0000-4000-8000-000000000001',
+      payloadHash: await sha256Hex(`fixture-doc-${slug}`),
+    },
+    (document, expiresAt) => ({
+      status: 201,
+      headers: {
+        'cache-control': 'no-store',
+        'content-type': 'application/json; charset=utf-8',
+        etag: `"docs-${document.id}-${document.entityRevision}"`,
+        'idempotency-expires-at': String(expiresAt),
+      },
+      body: JSON.stringify({ id: document.id, revision: document.entityRevision }),
+    }),
+    {
+      actorType: 'user',
+      actorId: user.id,
+      summary: { credential: 'fixture', scope: 'tenant' },
+    },
+  );
 
   const revocations = createSessionRevocationsRepo(adapter);
   await revocations.revokeAll(context);

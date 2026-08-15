@@ -249,3 +249,11 @@ Route Handler、入力検証、OpenAPI、状態遷移、共通エラー契約を
   actor=`system`の監査を順次追記する。監査失敗はジョブ失敗として記録するが、DB更新との原子性は主張しない。
 - 詳細正本: `docs/backend-spec-api-state.md` §4.8/§4.8.1、
   `docs/features/feat-docs-cms/architecture-decision-record.md` §8.1。
+
+## 2026-08-15 カード編集の安全化 writeback (feat-card-mutation-safety)
+
+- 通常 Docs / Sheets CRUD は共通 HTTP helper (`apps/hub/src/lib/http/mutation-safety.ts`)
+  と repository の原子 claim / CAS に閉じる。handler 後段で台帳を書く形にはしない。
+- 既存 create/edit caller はフォーム開始時の UUID v4 を再送で維持し、412 後も未保存 draft を保つ。
+- 詳細正本: `features/feat-card-mutation-safety.md` と
+  `docs/features/feat-card-mutation-safety/spec-reflection-receipt.md`。

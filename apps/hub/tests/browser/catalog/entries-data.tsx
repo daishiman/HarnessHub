@@ -135,7 +135,28 @@ export const dataCatalogEntries: readonly CatalogEntry[] = [
   {
     name: 'MarkdownView',
     group: 'data',
-    render: () => <MarkdownView content={'## 見出し\n\n- 箇条書き 1\n- 箇条書き 2\n\n本文です。'} />,
+    render: () => (
+      <MarkdownView
+        content={[
+          '## 見出し',
+          '',
+          '- 箇条書き 1',
+          '- 箇条書き 2',
+          '',
+          '> [!POINT]',
+          '> ポイントの見本',
+          '',
+          '> [!ATTENTION]',
+          '> 注意の見本',
+          '',
+          '> [!WARNING]',
+          '> 警告の見本',
+          '',
+          '> [!NOTE]',
+          '> 補足の見本',
+        ].join('\n')}
+      />
+    ),
   },
   {
     name: 'Thumbnail',

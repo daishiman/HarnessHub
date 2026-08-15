@@ -84,6 +84,7 @@ export type ExternalDocumentSyncRequest = z.output<typeof externalDocumentSyncRe
 export const documentDetailSchema = z
   .object({
     id: identifierSchema,
+    revision: z.number().int().positive(),
     scope: documentScopeSchema,
     title: titleSchema,
     body_markdown: bodyMarkdownSchema,
@@ -151,7 +152,9 @@ export const createDocumentRequestSchema = z
     tags: tagsSchema.nullable().optional(),
     thumbnail_url: thumbnailUrlSchema.nullable().optional(),
     excerpt: excerptSchema.nullable().optional(),
-    publish_at: futurePublishAtSchema.optional(),
+    // 作成時点の未来判定は repository が行う。schema で Date.now() と比較すると、
+    // 24h 内の冪等 replay 時に同じ publish_at が過去になって保存済み応答を再生できない。
+    publish_at: publishAtSchema.optional(),
   })
   .strict();
 export type CreateDocumentRequest = z.output<typeof createDocumentRequestSchema>;

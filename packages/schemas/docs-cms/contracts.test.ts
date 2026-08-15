@@ -25,6 +25,7 @@ describe('DOCS-CONTRACT: image URL', () => {
     expect(
       documentDetailSchema.safeParse({
         id: 'doc-1',
+        revision: 1,
         scope: 'tenant',
         title: '画像付き文書',
         body_markdown: '',
@@ -69,9 +70,11 @@ describe('DOCS-CONTRACT: scheduled publishing', () => {
   });
 
   it('現在以前の予約と scheduled status を拒否する', () => {
+    // create の現在時刻判定は、保存済み冪等応答を 24h 内に replay できるよう repository の
+    // winner branch で行う。schema は epoch の形だけを保証する。
     expect(
       createDocumentRequestSchema.safeParse({ scope: 'tenant', title: '過去', publish_at: Date.now() - 1 }).success,
-    ).toBe(false);
+    ).toBe(true);
     expect(updateDocumentRequestSchema.safeParse({ publish_at: Date.now() }).success).toBe(false);
     expect(updateDocumentRequestSchema.safeParse({ status: 'scheduled' }).success).toBe(false);
     expect(
@@ -81,6 +84,31 @@ describe('DOCS-CONTRACT: scheduled publishing', () => {
 });
 
 describe('external document sync contracts', () => {
+  it('normal document representation requires a positive entity revision', () => {
+    const base = {
+      id: 'doc-1',
+      scope: 'tenant' as const,
+      title: '改訂版',
+      body_markdown: '',
+      status: 'draft' as const,
+      created_by: 'user-1',
+      updated_by: 'user-1',
+      created_at: 1,
+      updated_at: 1,
+      category: null,
+      tags: null,
+      thumbnail_url: null,
+      thumbnail_source: 'auto' as const,
+      excerpt: null,
+      excerpt_source: 'auto' as const,
+      asset_summary: null,
+      publish_at: null,
+    };
+    expect(documentDetailSchema.safeParse({ ...base, revision: 1 }).success).toBe(true);
+    expect(documentDetailSchema.safeParse(base).success).toBe(false);
+    expect(documentDetailSchema.safeParse({ ...base, revision: 0 }).success).toBe(false);
+  });
+
   it('accepts a safe source, sha256 id and bounded Markdown payload', () => {
     expect(externalDocumentSourceSchema.parse('claude-code')).toBe('claude-code');
     expect(externalDocumentIdSchema.parse('a'.repeat(64))).toHaveLength(64);

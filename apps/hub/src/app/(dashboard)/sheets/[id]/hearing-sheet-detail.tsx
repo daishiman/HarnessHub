@@ -24,6 +24,7 @@ import {
   buildHarnessCreatorHandoff,
   buildSystemOrchestratorHandoff,
 } from '../../../../features/hearing-intake/export-adapter/index.js';
+import { entityIfMatch, readRevisionConflict } from '../../../../lib/http/mutation-client.js';
 import {
   CONSTRAINT_TAG_LABELS,
   CONTEXT_LABELS,
@@ -138,6 +139,8 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   const [actionError, setActionError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [completionNotice, setCompletionNotice] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<HearingSheetStatus | null>(null);
+  const [hasRevisionConflict, setHasRevisionConflict] = useState(false);
   // 再生成は既存の本文を作り直す取り消しにくい操作なので、実行前に必ず確認を挟む (§P6)
   const [regenerateOpen, setRegenerateOpen] = useState(false);
   const previousStatus = useRef<SheetDetail['status'] | null>(null);
@@ -172,18 +175,33 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
   }, [load, sheet?.status]);
 
   const patchStatus = async (status: HearingSheetStatus): Promise<void> => {
+    if (sheet === null) return;
+    setPendingStatus(status);
+    setHasRevisionConflict(false);
     setSaving(true);
     setActionError(null);
     try {
       const response = await fetch(`/api/v1/sheets/${id}`, {
         method: 'PATCH',
         credentials: 'same-origin',
-        headers: headers(tenantId, workspaceId),
+        headers: { ...headers(tenantId, workspaceId), 'if-match': entityIfMatch('sheets', sheet.revision) },
         body: JSON.stringify({ status }),
       });
+      const conflict = await readRevisionConflict<SheetDetail>(response.clone());
+      if (conflict !== null) {
+        setSheet(conflict.current);
+        setHasRevisionConflict(true);
+        setActionError(
+          `${conflict.message} ${status === 'completed' ? '完了' : 'レビュー'}への変更はまだ保存されていません。`,
+        );
+        return;
+      }
       if (!response.ok) throw new Error(await extractApiErrorMessage(response, '状態を変更できませんでした。'));
       setSheet((await response.json()) as SheetDetail);
+      setPendingStatus(null);
+      setHasRevisionConflict(false);
     } catch (cause) {
+      setHasRevisionConflict(false);
       setActionError(cause instanceof Error ? cause.message : '状態を変更できませんでした。');
     } finally {
       setSaving(false);
@@ -260,6 +278,23 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
         ) : null}
         {loadError === null ? null : <Alert tone="danger" title="更新エラー" description={loadError} />}
         {actionError === null ? null : <Alert tone="danger" title="操作エラー" description={actionError} />}
+        {!hasRevisionConflict || pendingStatus === null ? null : (
+          <Alert
+            tone="warning"
+            title="他の更新があります"
+            description={`${pendingStatus === 'completed' ? '完了' : 'レビュー'}への変更はまだ保存されていません。現在の内容を確認して再試行できます。`}
+            action={
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => void patchStatus(pendingStatus)}
+                disabled={saving}
+              >
+                現在の内容に対して再試行
+              </Button>
+            }
+          />
+        )}
         {sheet.ai_job_status === 'dead' ? (
           <Alert
             tone="warning"
@@ -520,7 +555,7 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
               >
                 <Select
                   label="状態"
-                  value={sheet.status === 'completed' ? 'completed' : 'review'}
+                  value={(pendingStatus ?? sheet.status) === 'completed' ? 'completed' : 'review'}
                   onChange={(event) => void patchStatus(event.target.value as HearingSheetStatus)}
                   options={[
                     { value: 'review', label: 'レビュー待ち' },

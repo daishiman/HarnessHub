@@ -28,6 +28,8 @@ export const hearingSheets = sqliteTable(
     aiJobId: text('ai_job_id'),
     generatedDocIdsJson: text('generated_doc_ids_json'),
     buildId: text('build_id'),
+    /** 通常 CRUD / AI queue 書戻し / 再生成が共有する representation 版。 */
+    entityRevision: integer('entity_revision').notNull().default(1),
     createdAt: integer('created_at').notNull(),
     updatedAt: integer('updated_at').notNull(),
   },

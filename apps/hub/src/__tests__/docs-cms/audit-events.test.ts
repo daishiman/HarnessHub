@@ -59,12 +59,14 @@ describe('DOCS-AUDIT: AuditLogger 経由の記録契約', () => {
 
   const DOCS_ROUTE_DIR = resolve(process.cwd(), 'src/app/api/v1/docs');
 
-  it('DOCS-AUDIT-101: POST /api/v1/docs は成功時に action=docs.create を記録する', () => {
+  it('DOCS-AUDIT-101: POST /api/v1/docs は作成と監査を同一repository transactionへ委譲する', () => {
     const routeFile = resolve(DOCS_ROUTE_DIR, 'route.ts');
     if (!existsSync(routeFile)) return;
     const source = readFileSync(routeFile, 'utf8');
-    expect(source).toContain('audit.record');
-    expect(source).toContain("'docs.create'");
+    expect(source).toContain('createDocumentIdempotent');
+    expect(source).toContain('actorType:');
+    expect(source).toContain('summary:');
+    expect(source).not.toContain('authz.audit.record');
   });
 
   it('DOCS-AUDIT-102: PATCH /api/v1/docs/:id は成功時に action=docs.update を記録する', () => {

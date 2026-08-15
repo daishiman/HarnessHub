@@ -15,7 +15,7 @@ serves_goals: [G4, G5, G1]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-231 |
+| Web (web) | 確定 | 確定質疑: qa-234 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。ブラウザ経由アクセスのセキュリティは web 行でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-231 |
@@ -24,7 +24,23 @@ serves_goals: [G4, G5, G1]
 
 ## 確定内容 (質疑録)
 
-### qa-231 (対応セル: web, desktop-windows, desktop-macos)
+### qa-234 (対応セル: web)
+
+**質問**: カードブロック記法が生成する新要素を描画するために Markdown sanitize allowlist をどう変更し、security/web の XSS 防御契約をどう確定するか。
+
+**回答**: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) に伴う sanitize 差分である。qa-231 の security/web 既存契約 (Device Flow の 15 分短命 access token、docs:write scope 分離、tenant 越境禁止、Docs API の自然キーと ETag/If-Match、監査へ本文を入れない、同期対象 path 境界) は、以下の差分以外を全面維持する。
+
+【1 allowlist 差分】Markdown の sanitize schema (allowlist 方式) の tagNames へ `hh-cards` と `hh-card` の 2 要素を追加し、attributes へは `hh-cards` の data-cols 1 属性だけを追加する。data-cols の値域は 2 と 3 に限定し、範囲外は remark plugin 側で正規化して落とす。class・style・id・on* を含むその他の属性は追加しない。
+
+【2 生 HTML 不許可の維持】既定 schema による script / style / iframe / form / input / on* 属性・危険 protocol の除去と、GFM タスクリスト用 input を閉じている既存判断は維持する。今回追加する 2 要素は、利用者が生 HTML として直接書いた場合も同じ allowlist を通るため、属性を上記 1 つに限定して意味のある副作用を持たせない。
+
+【3 画像】カード内画像は既存の画像取り扱い契約 (R2 + tenant 別封筒暗号化、外部 URL 埋め込みの可否、即時完全削除ポリシー) を変更しない。カードブロックは画像の配置方法を変えるだけで、保存先・暗号化・削除の契約に触れない。
+
+【4 回帰固定】追加した allowlist は Markdown の既存 sanitize テストへ、許可 2 要素が通ること と script / iframe / on* 属性が除去され続けること を同一テストで固定する。allowlist を緩める変更は security 章のレビュー対象という既存規約を維持し、schema を公開して差分を追える状態も維持する。
+
+【5 不変】認証・認可・監査・秘密材料の扱いは本件で変更しない。公開 API と DB schema も変更しない。
+
+### qa-231 (対応セル: desktop-windows, desktop-macos)
 
 **質問**: Claude CodeやCodexで作成したドキュメントをHarness HubへAPI反映する追加要件について、既存の認証・セキュリティ・backend・database契約をどう更新するか。
 
@@ -93,7 +109,27 @@ serves_goals: [G4, G5, G1]
 
 #### 本章での適用
 
-##### 確定内容 qa-231 (対応セル: web, desktop-windows, desktop-macos)
+##### 確定内容 qa-234 (対応セル: web)
+
+- 確定要件: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) に伴う sanitize 差分である。qa-231 の security/web 既存契約 (Device Flow の 15 分短命 access token、docs:write scope 分離、tenant 越境禁止、Docs API の自然キーと ETag/If-Match、監査へ本文を入れない、同期対象 path 境界) は、以下の差分以外を全面維持する。
+
+【1 allowlist 差分】Markdown の sanitize schema (allowlist 方式) の tagNames へ `hh-cards` と `hh-card` の 2 要素を追加し、attributes へは `hh-cards` の data-cols 1 属性だけを追加する。data-cols の値域は 2 と 3 に限定し、範囲外は remark plugin 側で正規化して落とす。class・style・id・on* を含むその他の属性は追加しない。
+
+【2 生 HTML 不許可の維持】既定 schema による script / style / iframe / form / input / on* 属性・危険 protocol の除去と、GFM タスクリスト用 input を閉じている既存判断は維持する。今回追加する 2 要素は、利用者が生 HTML として直接書いた場合も同じ allowlist を通るため、属性を上記 1 つに限定して意味のある副作用を持たせない。
+
+【3 画像】カード内画像は既存の画像取り扱い契約 (R2 + tenant 別封筒暗号化、外部 URL 埋め込みの可否、即時完全削除ポリシー) を変更しない。カードブロックは画像の配置方法を変えるだけで、保存先・暗号化・削除の契約に触れない。
+
+【4 回帰固定】追加した allowlist は Markdown の既存 sanitize テストへ、許可 2 要素が通ること と script / iframe / on* 属性が除去され続けること を同一テストで固定する。allowlist を緩める変更は security 章のレビュー対象という既存規約を維持し、schema を公開して差分を追える状態も維持する。
+
+【5 不変】認証・認可・監査・秘密材料の扱いは本件で変更しない。公開 API と DB schema も変更しない。
+- 設計解釈の記録経路: `dialogue`
+- 原則: Least privilege / deny by default (allowlist の最小拡張) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: カード描画に必要な 2 要素 1 属性だけを allowlist へ足し、class・style・id・on* を意図的に除外した。生 HTML 経由で同名要素を書かれても副作用を持てないため、表現の追加が攻撃面の拡大へ直結しない。
+  - トレードオフ:
+    - カードの見た目を利用者が本文側から細かく調整できず、調整は packages/ui の実装変更を要する
+    - 将来カードへ属性を足すたびに security 章のレビューが必要になる
+##### 確定内容 qa-231 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: [出所] 利用者の2026-08-12の明示要望『Claude Codeの方で作成したドキュメントをこちらのシステムのドキュメントの方に送信できるようにもしておいてほしい』『APIでこちらの方に反映させる』を追加要件として確定する。qa-073（Device Flow数値・保存先）、qa-161/qa-162（Web認証・セキュリティ）、qa-228（backend）、qa-229（database）の既存契約は、以下の差分以外を全面維持する。
 

@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "parent_feature": "feat-semantic-emphasis-icons",
+  "feature_context_digest": "sha256:61a528100c82ccf593dd1ba3a0303374aba208a2dedace4df7126cfae4f9bab9",
+  "purpose": "強調したい箇所が絵文字で表現されていると、意味が字形の見た目に依存し、配色仕様書 v2 の semantic color token とも結びつかない。強調の意味を、色・形・可視ラベルの 3 つで一貫して担わせる。",
+  "goal": "callout と一覧・カードの状態表現が packages/ui 所有の inline SVG アイコンと semantic color token だけで表され、絵文字の混入が lint で検出されて入らない状態にする。",
+  "scope_in": [
+    "callout 4 種 ([!POINT] / [!ATTENTION] / [!WARNING] / [!NOTE]) の種別表現を inline SVG アイコン + semantic color token で表す",
+    "一覧・カードの状態表現を同じ token 体系へ揃える",
+    "色だけで意味を区別せず、アイコン形状か可視ラベルを必ず併置する規則の実装",
+    "UI 文言・callout ラベル・空状態文言への絵文字混入を検出する lint と、その CI 組込 (fail-closed)",
+    "packages/ui のアイコンモジュールを唯一の供給元とする所有境界"
+  ],
+  "scope_out": [
+    "配色仕様書 v2 そのものの改訂",
+    "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+    "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+    "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更"
+  ],
+  "acceptance": [
+    "callout 4 種が絵文字を用いず、種別ごとに異なる inline SVG アイコンと semantic color token で描き分けられる",
+    "状態・日時・金額・PII・略語の表現でアイコンだけに意味を担わせず、可視ラベルが併置される",
+    "UI 文言・callout ラベル・空状態文言に絵文字を入れた変更が lint で検出され CI が落ちる",
+    "アイコンが packages/ui のアイコンモジュール以外から供給されていない",
+    "ライトモードで強調ブロックの背景がグレー系ではなく semantic token 由来の配色になっている"
+  ],
+  "lineage": [
+    {
+      "path": "features/feat-semantic-emphasis-icons.context.json",
+      "feature_id": "feat-semantic-emphasis-icons",
+      "exists": true,
+      "sha256": "61a528100c82ccf593dd1ba3a0303374aba208a2dedace4df7126cfae4f9bab9",
+      "digest_status": "verified",
+      "digest_note": "team-lead (呼び出し元) から digest 値 (sha256:61a528100c82ccf593dd1ba3a0303374aba208a2dedace4df7126cfae4f9bab9) として提供された。この値は main-loop が shasum -a 256 で実測し、.dev-graph/locks/system-dev-plan-lock.json の feature_digest フィールド (同一値) および feature_id フィールド (feat-semantic-emphasis-icons) と一致することを Read で確認済みである。本 agent は Read/Write/Glob/Grep のみ保有し sha256 を計算する exec ツールを持たないため、独立再計算は行っていない。"
+    },
+    {
+      "path": "architecture/harness-hub-design-system.md",
+      "exists": true,
+      "sha256": "e638bf237eaf324a87f9ced13afa2090344b4c1a75fe3a8d7d81f4fab887568b",
+      "digest_status": "verified",
+      "digest_note": "main-loop が shasum -a 256 で実測し記入した。"
+    },
+    {
+      "path": "architecture/harness-hub-frontend.md",
+      "exists": true,
+      "sha256": "853f9fb0a7452c729ec4d4a00a531fb1ac1e12e0f6f002b7586e0dd3f3b3d544",
+      "digest_status": "verified",
+      "digest_note": "main-loop が shasum -a 256 で実測し記入した。"
+    },
+    {
+      "path": "system-spec/spec-state.json",
+      "exists": true,
+      "sha256": "dbbd08788007feb6a8923a47ec8edbf8b20ac6153853d661da13d78140b7cdff",
+      "digest_status": "verified",
+      "digest_note": "main-loop が shasum -a 256 で実測し、features/feat-semantic-emphasis-icons.md frontmatter の source_lineage.source_digest フィールド (同一値) と一致することを確認済み。出所情報の正本は graph node の frontmatter 側であり、context.json は 9 キー exact-set 契約のため source_lineage を持たない。qa-232 (ui-ux/web, state=確定) と qa-233 (frontend/web, state=確定) の本文を Read で直接確認し、qa-232【5 強調表示とアイコン】と qa-233【6 アイコン】が本 feature の purpose/goal/acceptance の出所であることを確認した。本 agent は sha256 を計算する exec ツールを持たないため、独立再計算は行っていない。system-spec/spec-state.json 自体は読み取りのみで書き換えていない。"
+    }
+  ],
+  "quality_constraints": [
+    {
+      "id": "emoji-ban-semantic-token-qa232-5",
+      "summary": "強調表現 (callout 4 種・一覧/カードの状態表現) は絵文字を使わず、配色仕様書 v2 の semantic color token と packages/ui 所有の inline SVG アイコンだけで行う。色だけで意味を区別せず、必ずアイコン形状か可視ラベルを併置する (既存の「色だけで系列を区別しない」契約と同型)",
+      "source": "system-spec/spec-state.json qa-232 【5 強調表示とアイコン】"
+    },
+    {
+      "id": "icon-lint-ci-fail-closed-qa233-6",
+      "summary": "アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言への絵文字混入は lint で検出し、CI へ fail-closed で組み込む",
+      "source": "system-spec/spec-state.json qa-233 【6 アイコン】"
+    },
+    {
+      "id": "icon-ownership-boundary-qa233-3",
+      "summary": "カードグリッド等の一覧部品と同じく、アイコンモジュールも packages/ui が単一で所有し apps/hub 側で再実装しない",
+      "source": "system-spec/spec-state.json qa-233 【3 一覧部品の共通化】(所有境界の同型適用)"
+    },
+    {
+      "id": "design-system-token-and-contrast-gate",
+      "summary": "色・書体・角丸・影・breakpoint の token 契約と、コントラスト・VRT・画面ハードコードの品質ゲートは architecture/harness-hub-design-system.md が一方向依存で固定する。ライトモードの強調ブロック背景は semantic token 由来の配色とし、token 外のグレー系配色を用いない",
+      "source": "architecture/harness-hub-design-system.md scope_in (色・書体・角丸・影・breakpoint の token 契約; コントラスト・VRT・画面ハードコードの品質ゲート)"
+    },
+    {
+      "id": "state-value-visible-label-qa232-2",
+      "summary": "カードの lead / context / metadata の情報顕著度階層のうち、状態・日時・金額・PII・略語は可視ラベルを既定とし、アイコンだけに意味を担わせない",
+      "source": "system-spec/spec-state.json qa-232 【2 カードの情報顕著度】"
+    }
+  ],
+  "verification": {
+    "id_match": true,
+    "context_match": true,
+    "digest_match_specs_file": true,
+    "digest_match_architecture_files": true,
+    "feature_context_digest_verified": true,
+    "system_spec_source_status": "確定 (qa-232: ui-ux/web state=確定; qa-233: frontend/web state=確定。system-spec/spec-state.json を Read で直接確認)",
+    "notes_ja": true,
+    "status": "complete",
+    "digest_recomputed_by": "elicitor agent は exec ツールを持たないため独立再計算を行わなかったが、main-loop が全 lineage entry を shasum -a 256 で実測した。feature_context_digest は lock の feature_digest と一致。architecture 2 ファイル (harness-hub-design-system.md / harness-hub-frontend.md) も実測値が lineage の sha256 と一致することを確認済みのため digest_match_architecture_files を true へ是正した"
+  },
+  "extracted_at": "2026-08-14T00:10:00Z"
+}
