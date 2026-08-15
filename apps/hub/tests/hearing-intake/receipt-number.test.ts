@@ -103,12 +103,27 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
   const repositorySource = () =>
     readFileSync(resolve(process.cwd(), '../../packages/db/repository/hearing-intake.ts'), 'utf8');
 
+  // 実装は createSheetAndEnqueue の直後に冪等版を持つ。切り出し終端を隣のメソッド宣言へ固定し、
+  // 後続メソッドの追加で範囲へ別実装が混入しないようにする。
+  const createSheetAndEnqueueSource = () => {
+    const source = repositorySource();
+    return source.slice(
+      source.indexOf('async createSheetAndEnqueue('),
+      source.indexOf('async createSheetAndEnqueueIdempotent('),
+    );
+  };
+
+  const createSheetAndEnqueueIdempotentSource = () => {
+    const source = repositorySource();
+    return source.slice(
+      source.indexOf('async createSheetAndEnqueueIdempotent('),
+      source.indexOf('async listSheets('),
+    );
+  };
+
   it('HI-CODE-101: counter CAS が transaction callback 内で tenant/kind/nextValue を比較する', () => {
     const source = repositorySource();
-    const createMethod = source.slice(
-      source.indexOf('async createSheetAndEnqueue'),
-      source.indexOf('async listSheets'),
-    );
+    const createMethod = createSheetAndEnqueueSource();
     expect(createMethod).toContain('transaction(async (tx)');
     expect(source).toContain('eq(displayCodeCounters.tenantId, tenantId)');
     expect(source).toContain("eq(displayCodeCounters.kind, 'HS')");
@@ -126,8 +141,7 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
   });
 
   it('HI-CODE-103: createSheetAndEnqueue が counter/sheet/job/status 更新を 1 transaction に束ねる', () => {
-    const source = repositorySource();
-    const method = source.slice(source.indexOf('async createSheetAndEnqueue'), source.indexOf('async listSheets'));
+    const method = createSheetAndEnqueueSource();
     expect(method).toContain('issueReceiptNumber(db');
     expect(method).toContain('db.insert(hearingSheets)');
     expect(method).toContain('db.insert(aiJobs)');
@@ -135,9 +149,16 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
     expect(method.match(/transaction\(/g)).toHaveLength(1);
   });
 
+  it('HI-CODE-103b: 冪等版も同じ 1 transaction 境界を保つ', () => {
+    const method = createSheetAndEnqueueIdempotentSource();
+    expect(method).toContain('issueReceiptNumber(db');
+    expect(method).toContain('db.insert(hearingSheets)');
+    expect(method).toContain('db.insert(aiJobs)');
+    expect(method.match(/transaction\(/g)).toHaveLength(1);
+  });
+
   it('HI-CODE-104: payload/enqueue 失敗は transaction の外で握り潰されない', () => {
-    const source = repositorySource();
-    const method = source.slice(source.indexOf('async createSheetAndEnqueue'), source.indexOf('async listSheets'));
+    const method = createSheetAndEnqueueSource();
     expect(method).toContain('input.buildPayloadJson(id, code)');
     expect(method).not.toContain('catch');
     expect(method).not.toContain('finally');
@@ -159,6 +180,7 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
       aiJobId: 'job-1',
       generatedDocIdsJson: null,
       buildId: null,
+      entityRevision: 1,
       createdAt: 1,
       updatedAt: 1,
       aiJobStatus: 'queued',
@@ -215,6 +237,6 @@ describe('HI-CODE: 受付番号の採番 (AD-3)', () => {
           referenceUrls: [],
         },
       }),
-    ).resolves.toEqual({ id: 'sheet-1', code: 'HS-0001', status: 'generating' });
+    ).resolves.toEqual({ id: 'sheet-1', revision: 1, code: 'HS-0001', status: 'generating' });
   });
 });

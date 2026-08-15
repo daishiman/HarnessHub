@@ -81,7 +81,7 @@ const MIGRATIONS = [
   '0004_auth-tenancy-customer-managed-oidc-lifecycle.sql',
   '0005_common_stepford_cuckoos.sql',
   '0006_tenant-data-retention.sql',
-  '0017_card-mutation-safety.sql',
+  '0015_card-mutation-safety.sql',
 ];
 
 let adapter: Awaited<ReturnType<typeof createTursoClient>>;
