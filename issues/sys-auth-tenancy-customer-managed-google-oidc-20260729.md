@@ -12,8 +12,8 @@ iteration: null
 title: "顧客持ち込みGoogle OAuthクライアントの管理機能を実装する"
 owners: ["daishiman"]
 created_at: "2026-07-28T23:10:15Z"
-updated_at: "2026-07-28T23:16:51.876731Z"
-status: "active"
+updated_at: "2026-08-08T05:23:07Z"
+status: "closed"
 depends_on: ["issue-auth-tenancy-shared-google-oidc-20260729"]
 related_nodes: ["feat-auth-tenancy","arch-harness-hub-security","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/","apps/hub/src/lib/auth/","apps/hub/src/lib/authz/","packages/schemas/auth-tenancy/","packages/db/repository/idp.ts","packages/db/schema/core/identity.ts","packages/db/migrations/","docs/features/feat-auth-tenancy/"]

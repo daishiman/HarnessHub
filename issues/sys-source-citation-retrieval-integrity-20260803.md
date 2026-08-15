@@ -12,8 +12,8 @@ iteration: null
 title: "validate-source-citation.py が citation の実取得性と時刻実在性を検査せず捏造を通す"
 owners: ["daishiman"]
 created_at: "2026-08-03T08:28:16Z"
-updated_at: "2026-08-10T00:00:00Z"
-status: "active"
+updated_at: "2026-08-10T11:05:20Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/system-spec-harness/scripts/validate-source-citation.py","plugins/system-spec-harness/skills/run-system-spec-doc-fetch/","plugins/system-spec-harness/skills/run-system-spec-compile/","plugins/system-spec-harness/schemas/fetched-references.schema.json","plugins/system-spec-harness/tests/","scripts/lint-artifact-placement.py","docs/plugin-contracts/system-spec-harness-citation-retrieval-integrity.md","issues/sys-source-citation-retrieval-integrity-20260803.md"]

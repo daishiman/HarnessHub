@@ -12,8 +12,8 @@ iteration: null
 title: "system-spec-harness: 独立監査台帳(audit-fork-ledger.jsonl)をモデルがWriteで直接偽装でき、completeness-reportのFAILがPASSへ書き換えられる"
 owners: ["daishiman"]
 created_at: "2026-07-28T03:51:58Z"
-updated_at: "2026-07-28T03:51:58Z"
-status: "draft"
+updated_at: "2026-08-11T05:13:25Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/system-spec-harness/hooks/record-audit-fork.py","plugins/system-spec-harness/hooks/guard-confirmed-chapter-overwrite.py","plugins/system-spec-harness/hooks/hooks.json","plugins/system-spec-harness/hooks/references/hook-guard-protection-scope.md","plugins/system-spec-harness/skills/assign-system-spec-completeness-evaluator/scripts/aggregate-completeness.py"]

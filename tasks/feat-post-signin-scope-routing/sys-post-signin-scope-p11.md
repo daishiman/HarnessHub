@@ -12,8 +12,8 @@ iteration: null
 title: "証跡固定 — source digest と再実行コマンドの保存"
 owners: ["daishiman"]
 created_at: "2026-08-02T12:47:00Z"
-updated_at: "2026-08-04T03:55:28.399151Z"
-status: "active"
+updated_at: "2026-08-04T07:32:49Z"
+status: "closed"
 depends_on: ["SYS-POST-SIGNIN-SCOPE-P10"]
 related_nodes: ["feat-post-signin-scope-routing","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-post-signin-scope-routing/evidence-record.md"]

@@ -12,8 +12,8 @@ iteration: null
 title: "遮断レイテンシ test が絶対時間 1.0s を代理指標にしており並列負荷で偽陽性になる"
 owners: ["daishiman"]
 created_at: "2026-07-28T06:23:05Z"
-updated_at: "2026-08-04T03:59:56.419451Z"
-status: "draft"
+updated_at: "2026-08-04T07:17:08Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/dev-graph/tests"]

@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — PublishRequest API・状態機械・検査 pipeline (packages/inspection)・R2 upload・promote/rollback・監査 event 記録"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:39:32.288442Z"
-status: "active"
+updated_at: "2026-08-07T02:52:00Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P04"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["apps/hub/src/app/api/v1/channels/","apps/hub/src/app/api/v1/projects/[id]/deployment/","apps/hub/src/app/api/v1/projects/[id]/releases/","apps/hub/src/app/api/v1/publish/","apps/hub/src/app/api/v1/releases/[id]/suspend/","apps/hub/src/lib/publish/","apps/hub/src/lib/publish/auth-principal.ts","packages/inspection/","packages/schemas/publish-pipeline/"]

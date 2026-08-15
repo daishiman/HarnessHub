@@ -1,0 +1,136 @@
+{
+  "schema": "run-dev-graph-requirements/readiness-matrix/1.0.0",
+  "generated_at": "2026-08-14T14:23:40Z",
+  "feature_id": "feat-demo-coverage-dataset",
+  "snapshot_digest": "sha256:a46a36a726823e3b55cd679e572d6095a5d55bc6304a990e90f96193015d670b",
+  "nodes": [
+    {
+      "graph_node_id": "feat-demo-coverage-dataset",
+      "artifact_kind": "feature",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "arch-harness-hub-data",
+      "artifact_kind": "architecture",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "arch-harness-hub-testing-qa",
+      "artifact_kind": "architecture",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    },
+    {
+      "graph_node_id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "artifact_kind": "task",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "implementation_readiness": "complete",
+      "missing_sections": []
+    }
+  ]
+}

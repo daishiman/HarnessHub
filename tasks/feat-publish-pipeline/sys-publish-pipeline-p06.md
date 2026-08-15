@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 状態機械 property test・検査 pipeline 挙動同値テスト・直列化/監査テストの実行と結果記録"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:40:06.286747Z"
-status: "active"
+updated_at: "2026-08-07T02:52:02Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P05"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["apps/hub/tests/publish-pipeline/","apps/hub/src/app/api/v1/publish/","apps/hub/src/lib/publish/auth-principal.ts","docs/features/feat-publish-pipeline/test-run-results.md","packages/schemas/publish-pipeline/"]

@@ -12,8 +12,8 @@ iteration: null
 title: "効果測定の上位ランキングを画面側で切っている (件数が増えると破綻する)"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T16:51:06.717350Z"
-status: "active"
+updated_at: "2026-08-12T00:53:03Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/features/metrics-tracking/view-model.ts","apps/hub/src/app/(dashboard)/metrics/metrics-dashboard.tsx"]

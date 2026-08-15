@@ -12,8 +12,8 @@ iteration: null
 title: "requirements_foundation の U1-U9 source-index が qa_log に存在しない"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:46:13.693333Z"
-status: "draft"
+updated_at: "2026-08-11T13:54:21Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["system-spec/spec-state.json","plugins/system-spec-harness/scripts/validate-coverage-matrix.py"]

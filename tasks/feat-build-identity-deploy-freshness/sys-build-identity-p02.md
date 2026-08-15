@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ決定 — commit 識別子の埋込経路・公開読出経路・鮮度判定の所在"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:10:37.074865Z"
-status: "active"
+updated_at: "2026-08-08T01:58:21Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P01"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/architecture-decision.md"]

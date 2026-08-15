@@ -12,8 +12,8 @@ iteration: null
 title: "resource-map deep card 不足の解消 (ui-ux/infrastructure/dev-workflow) と backend card 順整列"
 owners: ["daishiman"]
 created_at: "2026-07-22T08:27:25Z"
-updated_at: "2026-07-22T08:27:25Z"
-status: "draft"
+updated_at: "2026-08-11T05:13:37Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

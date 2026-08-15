@@ -12,8 +12,8 @@ iteration: null
 title: "識別子ではなく人が読める表示名を出す"
 owners: ["daishiman"]
 created_at: "2026-08-11T00:00:00Z"
-updated_at: "2026-08-11T10:45:30Z"
-status: "active"
+updated_at: "2026-08-12T03:44:36Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/components/shell/hub-shell.tsx","packages/ui/src/shell/ShellHeader.tsx","packages/ui/src/shell/WorkspaceSwitcher.tsx","packages/ui/src/components/IdBadge.tsx"]

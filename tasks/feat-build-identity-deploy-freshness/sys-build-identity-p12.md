@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメントと運用 — 稼働ビルドの確認手順と鮮度警告時の対応手順"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:15:59.603486Z"
-status: "active"
+updated_at: "2026-08-08T01:58:38Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P11"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["docs/features/feat-build-identity-deploy-freshness/operations.md","docs"]

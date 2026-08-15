@@ -12,8 +12,8 @@ iteration: null
 title: "サインイン後のスコープ解決とルーティング結線"
 owners: ["daishiman"]
 created_at: "2026-08-02T05:05:00Z"
-updated_at: "2026-08-08T12:35:34.200652Z"
-status: "active"
+updated_at: "2026-08-10T06:29:53Z"
+status: "closed"
 depends_on: []
 related_nodes: ["spec-post-signin-workspace-scope","feat-auth-tenancy","feat-dual-catalog-web","spec-harness-hub-ui-foundation-addendum","issue-hub-shell-page-surface-unification-20260808","issue-hub-root-500-signin-20260808","arch-harness-hub-frontend","arch-harness-hub-security"]
 resource_scope: ["features/feat-post-signin-scope-routing.md","apps/hub/src/middleware.ts","apps/hub/src/middleware/authz.ts","apps/hub/src/lib/routing/dashboard-scope.ts","apps/hub/src/lib/routing/post-signin-landing.ts","apps/hub/src/lib/routing/signin-entry.ts","apps/hub/src/lib/routing/workspace-entry.ts","apps/hub/src/lib/routing/deny-navigation.ts","apps/hub/src/lib/routing/pathname-header.ts","apps/hub/src/components/shell/","apps/hub/src/app/(dashboard)/layout.tsx","apps/hub/src/app/(workspace)/layout.tsx","apps/hub/src/app/[tenant_slug]/signin/tenant-oidc-signin-form.tsx","apps/hub/src/app/page.tsx","apps/hub/src/app/signin/route.ts","apps/hub/src/app/signin/workspace/route.ts","apps/hub/scripts/check-dynamic-routes.mjs"]

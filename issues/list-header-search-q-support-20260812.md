@@ -12,8 +12,8 @@ iteration: null
 title: "ドキュメント・改善要望・利用者の一覧が検索語を受け取れない"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T16:51:53.476323Z"
-status: "active"
+updated_at: "2026-08-12T00:30:23Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["apps/hub/src/components/shell/nav-items.ts","apps/hub/src/app/(dashboard)/docs/document-list.tsx","apps/hub/src/app/(dashboard)/feedback/feedback-list.tsx","apps/hub/src/app/(dashboard)/users/user-list.tsx"]

@@ -12,8 +12,8 @@ iteration: null
 title: "OR-003残置195件を正規writerで一括整合する"
 owners: ["daishiman"]
 created_at: "2026-08-12T07:25:30Z"
-updated_at: "2026-08-12T07:28:55.256144Z"
-status: "active"
+updated_at: "2026-08-12T15:32:18Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-lint-open-residue-ci-red-20260725"]
 resource_scope: [".dev-graph/state/graph.json","issues/","tasks/","plugins/dev-graph/scripts/lint-open-residue.py"]

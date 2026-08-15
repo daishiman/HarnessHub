@@ -12,8 +12,8 @@ iteration: null
 title: "運用文書化 — 棚卸し GC と close-loop の sync 運用組込み手順"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:29:14.118964Z"
-status: "active"
+updated_at: "2026-08-08T02:53:56Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P11"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["docs/features/feat-dev-pipeline-improvement/operations.md"]

@@ -12,8 +12,8 @@ iteration: null
 title: "provider-admin 越境の edge 遮断と route 層監査契約の不整合を解消する"
 owners: ["daishiman"]
 created_at: "2026-08-08T09:00:00Z"
-updated_at: "2026-08-10T00:00:00Z"
-status: "draft"
+updated_at: "2026-08-13T08:44:27Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-production-smoke-coverage-gaps-20260808"]
 resource_scope: ["apps/hub/src/middleware/authz.ts","apps/hub/src/lib/authz/with-authz.ts","apps/hub/scripts/smoke-production-coverage.ts","apps/hub/src/__tests__/feedback-loop"]

@@ -12,8 +12,8 @@ iteration: null
 title: "findings の condition を condition_signal から導出して二重帳簿を根絶する"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:44:58.373225Z"
-status: "draft"
+updated_at: "2026-08-12T01:27:57Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/harness-creator/skills/run-elegant-review/schemas/findings.schema.json","plugins/harness-creator/skills/run-elegant-review/scripts/build-verdict.py","plugins/harness-creator/skills/run-elegant-review/scripts/validate-paradigm-coverage.py"]

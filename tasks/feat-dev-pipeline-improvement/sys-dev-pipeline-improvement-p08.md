@@ -12,8 +12,8 @@ iteration: null
 title: "移行 — eval-log 再配置と 94 findings への disposition 遡及付与 (冪等)"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:26:07.993893Z"
-status: "active"
+updated_at: "2026-08-08T02:53:43Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P07"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/","plugin-plans/","eval-log/dev-graph/pipeline-improvement/migration-receipt.json"]

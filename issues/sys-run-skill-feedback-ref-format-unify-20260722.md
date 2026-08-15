@@ -12,8 +12,8 @@ iteration: null
 title: "run-skill-feedback の ../../../../ 参照記法を repo root 相対へ統一する"
 owners: ["daishiman"]
 created_at: "2026-07-21T19:11:55Z"
-updated_at: "2026-07-21T19:11:55Z"
-status: "draft"
+updated_at: "2026-08-11T13:51:49Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-bd-external-ref-orphan-nodes-20260725","issue-orphan-external-ref-backlog-disposition-20260726"]
 resource_scope: []

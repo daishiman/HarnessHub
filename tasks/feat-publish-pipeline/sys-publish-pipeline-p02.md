@@ -12,8 +12,8 @@ iteration: null
 title: "アーキテクチャ設計 — PublishRequest 状態機械実装方式・検査 pipeline 共有パッケージ・R2/監査/認可 consumer 境界確定"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:37:50.064630Z"
-status: "active"
+updated_at: "2026-08-07T02:51:32Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P01"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-data","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/architecture-decision-record.md"]
