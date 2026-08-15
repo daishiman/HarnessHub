@@ -8,6 +8,7 @@ import { usePendingDocumentImages } from '../../../../components/docs/use-pendin
 import { extractApiErrorMessage } from '../../../../features/docs-cms/api-error.js';
 import { parsePublishAtInput } from '../../../../features/docs-cms/form-fields.js';
 import { parseTagsInput } from '../../../../features/docs-cms/tags.js';
+import { entityIfMatch, newIdempotencyKey, readRevisionConflict } from '../../../../lib/http/mutation-client.js';
 
 const MarkdownEditor = dynamic(
   () => import('../../../../components/docs/markdown-editor.js').then((module) => module.DocsMarkdownEditor),
@@ -38,10 +39,12 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
   const [publishAtInput, setPublishAtInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [conflictCurrent, setConflictCurrent] = useState<DocumentDetail | null>(null);
+  const idempotencyKeyRef = useRef(newIdempotencyKey());
   // 画像を先に足された場合の暗黙下書き作成 (ensureDraftId) が払い出した id。
   // ref にするのは、連続してすばやく画像を貼ったときに 2 重に下書きを作らせないため
   // (state の更新は非同期なので、直後の 2 回目の呼び出しにまだ反映されない)
-  const draftIdRef = useRef<string | null>(null);
+  const draftRef = useRef<{ readonly id: string; readonly revision: number } | null>(null);
   const draftCreationRef = useRef<Promise<string> | null>(null);
 
   const createDocument = useCallback(
@@ -51,6 +54,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
         credentials: 'same-origin',
         headers: {
           'content-type': 'application/json',
+          'idempotency-key': idempotencyKeyRef.current,
           'x-harness-tenant-id': tenantId,
           'x-harness-workspace-id': workspaceId,
         },
@@ -68,7 +72,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
    * という順序を利用者に強いない (原則: 画像追加はいつでも・迷わず にできる)。
    */
   const ensureDraftId = useCallback(async (): Promise<string> => {
-    if (draftIdRef.current !== null) return draftIdRef.current;
+    if (draftRef.current !== null) return draftRef.current.id;
     if (draftCreationRef.current !== null) return draftCreationRef.current;
 
     const creation = createDocument({
@@ -76,7 +80,7 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
       title: title.trim() === '' ? '無題のドキュメント' : title,
       body_markdown: bodyMarkdown,
     }).then((created) => {
-      draftIdRef.current = created.id;
+      draftRef.current = { id: created.id, revision: created.revision };
       return created.id;
     });
     draftCreationRef.current = creation;
@@ -135,20 +139,28 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
       };
       // 画像追加のタイミングで下書きが既にできているなら、それを更新する
       // (ここで新規作成すると、画像だけが古い下書きに残ったまま孤立する)
+      const draft = draftRef.current;
       const created =
-        draftIdRef.current === null
+        draft === null
           ? await createDocument({ scope, title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata })
           : await (async () => {
-              const response = await fetch(`/api/v1/docs/${draftIdRef.current}`, {
+              const response = await fetch(`/api/v1/docs/${draft.id}`, {
                 method: 'PATCH',
                 credentials: 'same-origin',
                 headers: {
                   'content-type': 'application/json',
+                  'if-match': entityIfMatch('docs', draft.revision),
                   'x-harness-tenant-id': tenantId,
                   'x-harness-workspace-id': workspaceId,
                 },
                 body: JSON.stringify({ title: trimmedTitle, body_markdown: bodyMarkdown, ...metadata }),
               });
+              const conflict = await readRevisionConflict<DocumentDetail>(response.clone());
+              if (conflict !== null) {
+                draftRef.current = { id: conflict.current.id, revision: conflict.current.revision };
+                setConflictCurrent(conflict.current);
+                throw new Error(`${conflict.message} 未保存の入力は保持しています。`);
+              }
               if (!response.ok) throw new Error(await extractApiErrorMessage(response, '作成できませんでした。'));
               return (await response.json()) as DocumentDetail;
             })();
@@ -165,6 +177,13 @@ export function DocumentCreateForm({ tenantId, workspaceId, canWriteCommon }: Do
       {/* 入力欄どうしの間隔は Stack に任せる。各画面で margin を書くと欄の密度がばらつく */}
       <Stack gap={4}>
         {error === null ? null : <Alert tone="danger" title="作成エラー" description={error} />}
+        {conflictCurrent === null ? null : (
+          <Alert
+            tone="warning"
+            title="保存先が更新されました"
+            description={`現在のタイトル: ${conflictCurrent.title}。未保存の入力は保持しています。もう一度「作成する」を押すと現在値に対して再試行します。`}
+          />
+        )}
         <Select
           label="スコープ"
           value={scope}

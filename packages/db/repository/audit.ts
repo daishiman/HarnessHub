@@ -22,7 +22,7 @@ export interface AuditEventInput {
   readonly entityType: string;
   readonly entityId: string;
   /** 値そのもの (salary 金額・secret・token) を含めないこと (§5.2)。変更の事実のみを書く。 */
-  readonly summary: Record<string, unknown>;
+  readonly summary: Readonly<Record<string, unknown>>;
 }
 
 export interface AuditEventRow {
@@ -93,41 +93,44 @@ export interface AuditRepo {
   ): Promise<AuditEventRow[]>;
 }
 
-export function createAuditRepo(adapter: CoreAdapter): AuditRepo {
-  async function appendOnce(db: CoreDb, context: RepositoryContext, event: AuditEventInput) {
-    const last = await db
-      .select({ seq: auditEvents.seq, eventHash: auditEvents.eventHash })
-      .from(auditEvents)
-      .where(eq(auditEvents.tenantId, context.tenantId))
-      .orderBy(desc(auditEvents.seq))
-      .limit(1);
+/** 既存 transaction 内で audit hash chain の次行を決定する共通 primitive。INSERT 自体は呼出し側の write gate 内で行う。 */
+export async function prepareAuditAppendOn(db: CoreDb, context: RepositoryContext, event: AuditEventInput) {
+  const last = await db
+    .select({ seq: auditEvents.seq, eventHash: auditEvents.eventHash })
+    .from(auditEvents)
+    .where(eq(auditEvents.tenantId, context.tenantId))
+    .orderBy(desc(auditEvents.seq))
+    .limit(1);
 
-    const seq = (last[0]?.seq ?? 0) + 1;
-    const prevHash = last[0]?.eventHash ?? GENESIS_HASH;
-    const summaryJson = canonicalJson(event.summary);
-    const createdAt = serverNow();
-    const base = {
-      tenantId: context.tenantId,
-      seq,
-      actorType: event.actorType,
-      actorId: event.actorId,
-      action: event.action,
-      entityType: event.entityType,
-      entityId: event.entityId,
-      summaryJson,
-      createdAt,
-    };
-    const eventHash = await computeEventHash({ ...base, prevHash });
-    const rows = await db
-      .insert(auditEvents)
-      .values({
-        id: newUlid(),
-        workspaceId: event.workspaceId ?? null,
-        prevHash,
-        eventHash,
-        ...base,
-      })
-      .returning();
+  const seq = (last[0]?.seq ?? 0) + 1;
+  const prevHash = last[0]?.eventHash ?? GENESIS_HASH;
+  const summaryJson = canonicalJson(event.summary);
+  const createdAt = serverNow();
+  const base = {
+    tenantId: context.tenantId,
+    seq,
+    actorType: event.actorType,
+    actorId: event.actorId,
+    action: event.action,
+    entityType: event.entityType,
+    entityId: event.entityId,
+    summaryJson,
+    createdAt,
+  };
+  const eventHash = await computeEventHash({ ...base, prevHash });
+  return {
+    id: newUlid(),
+    workspaceId: event.workspaceId ?? null,
+    prevHash,
+    eventHash,
+    ...base,
+  };
+}
+
+export function createAuditRepo(adapter: CoreAdapter): AuditRepo {
+  async function appendAuditOn(db: CoreDb, context: RepositoryContext, event: AuditEventInput) {
+    const values = await prepareAuditAppendOn(db, context, event);
+    const rows = await db.insert(auditEvents).values(values).returning();
     return rows[0] as AuditEventRow;
   }
 
@@ -147,9 +150,9 @@ export function createAuditRepo(adapter: CoreAdapter): AuditRepo {
         adapter,
         async () => {
           if (isTransactionalAdapter(adapter)) {
-            return adapter.transaction((tx) => appendOnce(tx.client, context, event));
+            return adapter.transaction((tx) => appendAuditOn(tx.client, context, event));
           }
-          return appendOnce(adapter.client, context, event);
+          return appendAuditOn(adapter.client, context, event);
         },
         isRetryableConflict,
       );

@@ -72,6 +72,7 @@ const BASE_ESTIMATE_JSON = JSON.stringify({
 
 export function buildSheetRow(overrides: Partial<HearingSheetRow> = {}): HearingSheetRow {
   return {
+    entityRevision: 1,
     id: 'sheet-1',
     tenantId: TENANT_A,
     workspaceId: WORKSPACE_A1,

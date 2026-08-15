@@ -377,6 +377,7 @@ describe('HI-SCHEMA / HI-D4: P05 実装後の受入契約', () => {
     const { salary: _salary, ...snapshot } = validForm;
     const candidate = {
       id: 'sheet-1',
+      revision: 1,
       code: 'HS-0001',
       status: 'review',
       title: validForm.taskName,

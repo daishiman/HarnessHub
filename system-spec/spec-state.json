@@ -122,14 +122,13 @@
     "ui-ux": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-226",
+        "qa_ref": "qa-232",
         "serves_goals": [
           "G1",
           "G2",
           "G3",
           "G5"
-        ],
-        "approval_ref": "appr-043"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -161,7 +160,7 @@
     "security": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-231",
+        "qa_ref": "qa-234",
         "serves_goals": [
           "G4",
           "G5"
@@ -276,14 +275,13 @@
     "frontend": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-227",
+        "qa_ref": "qa-233",
         "serves_goals": [
           "G1",
           "G2",
           "G3",
           "G5"
-        ],
-        "approval_ref": "appr-043"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -396,13 +394,11 @@
     "testing-qa": {
       "web": {
         "state": "確定",
-        "qa_ref": "qa-217",
+        "qa_ref": "qa-242",
         "serves_goals": [
           "G1",
-          "G4",
           "G5"
-        ],
-        "approval_ref": "appr-041"
+        ]
       },
       "mobile": {
         "state": "対象外",
@@ -2771,6 +2767,1404 @@
           ]
         }
       ]
+    },
+    {
+      "id": "qa-232",
+      "question": "ヒアリングシート・成果物・ドキュメントの一覧をテーブル既定からカード + タブ + 検索へ再構成し、ドキュメント本文をカードブロック (2列/3列) で構成でき、編集とプレビューを横並び (狭幅はタブ切替) にする追加要望を、ui-ux/web の現行契約へどう統合して確定するか。",
+      "answer": "[出所] 利用者の2026-08-13の明示要望「一覧表で確認する際に、テーブル形式だと見にくい」「おしゃれなブログプラットフォームのように、タブや検索機能、見やすいカードタイプなどを活用して、より魅力的な形式に再構築したい」「この要望はヒアリングシートだけでなく、成果物やドキュメントなど、全ての関連資料に共通して適用されます」「強調したいポイントは絵文字ではなく、今回の構成に合った色合いや形のアイコンを使って表示する」「画像やカードで、ブロックごとに表示させる形で、カードが2つ並ぶようなドキュメントを作成できる構成にしてほしい」「編集も容易に行えるよう、2行や3行でカードを繋げるような構成で生成できる」「ドキュメントの管理方法（管理、一覧、詳細確認、編集など）も同様の形式で実現したい」「成果物を書いたのとプレビューっていうのを横並びに並ぶようにしてほしい。ただし、ちょっとちっちゃなものだったり、モニターのサイズによっては、それを今のように切り替える、タブで切り替えるっていうような形でもOK」を追加要件として確定する。qa-226 の【1 共通UI基盤】〜【6 図表と操作】、2026-08-11 の画面情報設計追補、および 2026-08-12〜13 の post-compile writeback (UI MVP wave / disclosure・dismissible・Docs empty / 配色仕様書 v2 / 共通ヘッダー履歴・現在地 / 着地ダッシュボード) は、以下の差分以外を全面維持する。\n\n【1 一覧の既定表現】ヒアリングシート・成果物 (Catalog)・ドキュメントの各一覧は既定をカードグリッドとし、テーブルは廃止せず同一データの表示切替として常時提供する。切替は可視ラベル付きの 2 値コントロール (カード / テーブル) とし、選択は既存の remembered-filters と同じ粒度で利用者ごとに記憶する。カード既定化は「見にくさ」の解消のためであり、情報設計追補の禁止事項どおり、比較・絞込・選択・一括操作・完全値への到達を落としてはならない。それらを要する操作はテーブル表示で必ず到達可能とし、カード表示でも lead からの詳細遷移で同じ値へ到達させる。\n\n【2 カードの情報顕著度】カードは lead / context / metadata の 3 階層を守る。lead はタイトルと現在状態、context は本文先頭から抽出した平文要約と scope・カテゴリ・タグ、metadata は更新日時 (相対併記の DateTimeText)・作成者・付随物件数とする。状態・日時・金額・PII・略語は可視ラベルを既定とし、アイコンだけに意味を担わせない。\n\n【3 タブ】各一覧は状態軸のタブを持つ。ドキュメントは 公開 / 非公開 / すべて、ヒアリングシートは 対応中 / 完了 / すべて、成果物は 公開中 / 停止 / すべて を既定集合とする。タブは既存 filter の別表現であり、新しい認可軸を作らない。選択は URL query へ反映し、共有・再読込・戻る操作で復元できること。0 件表示は「真の 0 件」と「絞込 0 件」を分ける既存 S15 契約 (FR-UIF-012/013) を継承する。\n\n【4 検索】各一覧は可視ラベル付きの検索入力を持ち、既存の server-side `q` 契約 (タイトル・本文・タグを対象) をそのまま使う。公開 API へ新しい検索パラメータを追加しない。共通ヘッダー検索から `?q=` で遷移したときにその語で絞り込まれた状態で開く既存契約を維持する。検索・タブ・filter は AND で合成し、適用中の条件は解除可能な chip として明示する。\n\n【5 強調表示とアイコン】強調に絵文字を使わない。既存 callout (`[!POINT]` / `[!ATTENTION]` / `[!WARNING]` / `[!NOTE]`) の種別表現、および一覧・カードの状態表現は、配色仕様書 v2 の semantic color token と packages/ui 所有の inline SVG アイコンだけで行う。色だけで意味を区別せず、必ずアイコン形状か可視ラベルを併置する (既存の「色だけで系列を区別しない」契約と同型)。\n\n【6 カードブロック本文】ドキュメント本文は、段落・見出しに加えてカードブロックを構成単位として持てる。1 行に 2 枚または 3 枚のカードを並べ、行を縦に積み重ねられる。各カードは見出し・本文・画像・リンクを任意に持つ。狭幅では列数によらず 1 列へ縦積みし、読み順は記述順を保つ。カードは装飾ではなく意味の区切りであり、見出しレベルの階層と目次を壊さない。\n\n【7 記法と編集容易性】カードブロックは新しい保存形式を導入せず、既存 Markdown 本文内のコンテナ記法として表す。手で読め手で書ける平文であること、既存の外部 Docs API 同期 (qa-231) が Markdown ファイルのまま同期できることを必須条件とする。編集画面はツールバーから「2 列カード行」「3 列カード行」の雛形を挿入でき、挿入後は通常の Markdown として編集できる。\n\n【8 編集とプレビュー】ドキュメントの新規作成・編集画面は、`lg` (1025px) 以上で編集ペインとプレビューペインを横並び 2 ペインとし、`lg` 未満では同じ 2 面をタブ切替とする。両形態で編集内容とプレビューは同一 sanitize 経路の結果を表示し、表示差を作らない。未保存面の離脱抑止は既存の `dismissible=false` 契約に従う。\n\n【9 管理面の一貫性】一覧 / 詳細 / 編集 / 作成の 4 面は、ドキュメント・ヒアリングシート・成果物で同じ構造 (ScreenHeader + タブ + 検索 + カードグリッド → 詳細 → 編集) を共有する。公開 API / DB schema / 認可判定 / Cloudflare deploy unit は本件で変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "利用文脈先行の情報顕著度設計 (lead / context / metadata)",
+          "applicability": "applied",
+          "rationale": "「テーブルが見にくい」という訴えを見た目の刷新へ直訳せず、カードの 3 階層と可視ラベル必須を先に固定し、比較・一括操作・完全値到達をテーブル表示で保持する条件を付けた。装飾の後付けと保存項目の直写の両方を防いだ。",
+          "tradeoffs": [
+            "同一データに対しカードとテーブルの 2 表現を維持する実装・テスト費用が増える",
+            "カード既定では一覧内での横断比較が弱く、比較タスクは表示切替を挟む操作が 1 手増える"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "知覚可能・操作可能・理解可能・堅牢 (POUR)",
+          "applicability": "applied",
+          "rationale": "強調を絵文字から semantic token + inline SVG アイコンへ移すにあたり、色単独で意味を担わせずアイコン形状か可視ラベルの併置を必須にし、タブ・検索状態を URL へ載せて再現・共有・戻る操作を保った。編集/プレビューも幅に応じて 2 ペインとタブへ分岐させ、狭幅で到達不能な面を作らない。",
+          "tradeoffs": [
+            "アイコン 1 つごとに意味・ラベル・コントラストの検証項目が増える",
+            "URL query を単一の真実にするため、状態追加のたびに query 契約の後方互換を管理する必要がある"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-233",
+      "question": "qa-232 で確定したカード一覧・タブ・検索・カードブロック本文・編集/プレビュー 2 ペインを、frontend/web の実装契約としてどう確定するか。",
+      "answer": "[出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) を実装層へ落とした契約である。qa-227 の frontend/web 既存契約 (Next.js App Router + TypeScript + pnpm、@opennextjs/cloudflare 上の SSR、server-first、packages/ui 所有の共通部品、route-local 遅延読込境界) は、以下の差分以外を全面維持する。\n\n【1 カードブロック記法】カードブロックは remark のコンテナ記法 `:::cards cols=2` の内側に `:::card` を並べる入れ子で表す。`cols` は 2 と 3 のみ受理し、未知の値・未閉じブロックは描画時に通常段落へ縮退させて例外を投げない。実装は packages/ui の Markdown 実装が所有する remark plugin とし、apps/hub 側で再実装しない (既存 callout plugin と同じ所在・同じ方式)。\n\n【2 生成要素と段組】plugin は `hh-cards` (属性 data-cols) と `hh-card` のカスタム要素を生成し、React の components map で CSS grid へ描画する。段組は `lg` (1025px) 以上で指定 cols 列、`md` (641px) 以上 `lg` 未満で 2 列を上限、`md` 未満で 1 列とする。列数が減っても DOM 順序は記述順のまま保ち、読み上げ順と視覚順を一致させる。\n\n【3 一覧部品の共通化】カードグリッド・表示切替・タブは packages/ui の共通部品として実装し、docs / sheets / catalog の 3 画面が同一部品を使う。既存 DataTable は削除せずテーブル表示側で継続利用する。ListState・FilterBar・AppliedFilterChips・CursorPager の既存契約は変更しない。\n\n【4 状態の単一の真実】タブ・検索語・filter は URL query を単一の真実とし、同じ状態を client state に二重で持たない。既存 remembered-filters には表示形態 (カード / テーブル) のみを追加で記憶させる。\n\n【5 編集/プレビュー】2 ペインと 1 面タブの切替は CSS で行い、`lg` 未満は既存 Tabs 部品で 2 面を切り替える。プレビューは編集中の client 側でも表示側と同じ MarkdownView を使い、sanitize schema を共有して表示差を作らない。Markdown の重量依存は既存の dynamic import 境界 (markdown-view / markdown-editor の薄い公開境界) を維持し、docs 以外の画面の初期 client chunk を増やさない。\n\n【6 アイコン】アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言に絵文字を混入させない。絵文字混入は lint で検出する。\n\n【7 不変】公開 API・DB schema・認可判定・Cloudflare deploy unit は変更しない。server-first と既存の screen-pattern gate、情報設計シート・screen-inventory profile 更新の PR 要件も維持する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "依存の方向と所有境界の固定",
+          "applicability": "applied",
+          "rationale": "カードブロックの記法解釈と描画を packages/ui の Markdown 実装へ一箇所で所有させ、apps/hub 側の再実装を禁じた。一覧のカード・タブ・切替も共通部品化し、docs / sheets / catalog の 3 画面で規則が分岐するのを防いだ。",
+          "tradeoffs": [
+            "packages/ui の公開面が広がり、破壊的変更時の影響範囲が 3 画面へ同時に及ぶ",
+            "画面固有の微調整を共通部品の option として吸収する必要があり、option 過多になりやすい"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "堅牢性 (不正入力での縮退と読み上げ順の保持)",
+          "applicability": "applied",
+          "rationale": "未知の cols や未閉じブロックを例外にせず通常段落へ縮退させ、利用者の手書き Markdown が文書全体の描画を壊さないようにした。段組が減っても DOM 順を記述順に保ち、視覚順と読み上げ順の乖離を作らない。",
+          "tradeoffs": [
+            "記法ミスが目立たず、意図した段組にならないまま気付きにくい",
+            "縮退経路のぶんレンダリングの分岐とテストケースが増える"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-234",
+      "question": "カードブロック記法が生成する新要素を描画するために Markdown sanitize allowlist をどう変更し、security/web の XSS 防御契約をどう確定するか。",
+      "answer": "[出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) に伴う sanitize 差分である。qa-231 の security/web 既存契約 (Device Flow の 15 分短命 access token、docs:write scope 分離、tenant 越境禁止、Docs API の自然キーと ETag/If-Match、監査へ本文を入れない、同期対象 path 境界) は、以下の差分以外を全面維持する。\n\n【1 allowlist 差分】Markdown の sanitize schema (allowlist 方式) の tagNames へ `hh-cards` と `hh-card` の 2 要素を追加し、attributes へは `hh-cards` の data-cols 1 属性だけを追加する。data-cols の値域は 2 と 3 に限定し、範囲外は remark plugin 側で正規化して落とす。class・style・id・on* を含むその他の属性は追加しない。\n\n【2 生 HTML 不許可の維持】既定 schema による script / style / iframe / form / input / on* 属性・危険 protocol の除去と、GFM タスクリスト用 input を閉じている既存判断は維持する。今回追加する 2 要素は、利用者が生 HTML として直接書いた場合も同じ allowlist を通るため、属性を上記 1 つに限定して意味のある副作用を持たせない。\n\n【3 画像】カード内画像は既存の画像取り扱い契約 (R2 + tenant 別封筒暗号化、外部 URL 埋め込みの可否、即時完全削除ポリシー) を変更しない。カードブロックは画像の配置方法を変えるだけで、保存先・暗号化・削除の契約に触れない。\n\n【4 回帰固定】追加した allowlist は Markdown の既存 sanitize テストへ、許可 2 要素が通ること と script / iframe / on* 属性が除去され続けること を同一テストで固定する。allowlist を緩める変更は security 章のレビュー対象という既存規約を維持し、schema を公開して差分を追える状態も維持する。\n\n【5 不変】認証・認可・監査・秘密材料の扱いは本件で変更しない。公開 API と DB schema も変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default (allowlist の最小拡張)",
+          "applicability": "applied",
+          "rationale": "カード描画に必要な 2 要素 1 属性だけを allowlist へ足し、class・style・id・on* を意図的に除外した。生 HTML 経由で同名要素を書かれても副作用を持てないため、表現の追加が攻撃面の拡大へ直結しない。",
+          "tradeoffs": [
+            "カードの見た目を利用者が本文側から細かく調整できず、調整は packages/ui の実装変更を要する",
+            "将来カードへ属性を足すたびに security 章のレビューが必要になる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-235",
+      "question": "カード型一覧を前提にしたとき、モバイル下部タブバーの 5 スロット (主要 4 + 「その他」1 固定) へどの画面を割り当てるか。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「ダッシュボード/シート/ドキュメント/フィードバック」。\n\n提示した 3 案は (a) ダッシュボード/シート/ドキュメント/フィードバック、(b) ダッシュボード/シート/ドキュメント/検索、(c) シート/ドキュメント/フィードバック/ユーザー管理 で、(a) を推奨として提示し利用者が (a) を選んだ。\n\n【1 主要 4 枠】ダッシュボード・ヒアリングシート・ドキュメント・フィードバックの 4 つを主要スロットへ置く。今回のカード型一覧はヒアリングシートとドキュメントの双方に効くため、この 2 つを主要枠から外さない。\n\n【2 その他 1 枠】ユーザー管理・設定・トラッキングなど残りのサイドバー項目は 5 つ目の「その他」シートへ回す。MobileTabBar の実装 (packages/ui/src/shell/MobileTabBar.tsx) は主要枠あふれ分を捨てずに「その他」へ送るため、割当変更で項目が消える事故は起きない。\n\n【3 不採用理由】(b) は検索を主要枠へ上げるがフィードバックの未読バッジがタブバーから消え気づきにくくなる。(c) はダッシュボードを落として管理系を上げるため、一般メンバーには使わない枠が 1 つ増える。\n\n【4 不変】サイドバー 9 項目そのもの、デスクトップ/タブレットのサイドバー表示規則 (md 641 / lg 1025)、および各画面の URL は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "情報の優先順位付け (頻度と主タスクで前面配置を決める)",
+          "applicability": "applied",
+          "rationale": "端末幅が最も狭いモバイルでは同時に見せられる入口が 5 つしかないため、日次で触る 4 つを主要枠へ固定し、頻度の低い管理系を「その他」へ降ろした。今回の主題であるカード型一覧が効く 2 画面 (シート・ドキュメント) を必ず主要枠に含める制約を明示した。",
+          "tradeoffs": [
+            "横断検索が主要枠に入らないため、モバイルでの検索到達に 1 タップ余分にかかる",
+            "管理者ロールはユーザー管理へ毎回「その他」経由でアクセスすることになる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-236",
+      "question": "RBAC の役割 (member/owner/workspace-admin/provider-admin) を、カード型一覧の画面へどう投影するか。権限のない項目を一覧に出すか隠すか。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「権限のないものは一覧から消す」。\n\n提示した 3 案は (a) 見えるが押すと拒否理由を出す (AI 推奨)、(b) 権限のないものは一覧から消す、(c) カードは出し操作ボタンだけ隠す で、利用者は AI 推奨の (a) ではなく (b) を選んだ。この選択を仕様の正とする。\n\n【1 一覧の投影規則】カード一覧・検索結果・タブごとの件数表示のいずれも、実効ロール (EffectiveRole = member|owner|workspace-admin|provider-admin) で閲覧権限を持つ対象だけを含める。権限のない対象はカードを描画せず、件数にも数えない。\n\n【2 判定の単一箇所】採否判定は既存の apps/hub/src/lib/authz (ROLE_ORDER・EffectiveRole) だけを根拠にし、画面側でロール文字列を直接比較しない。一覧の絞り込みは取得段階で行い、取得後にクライアントで隠す実装にしない (隠しただけでは本文が転送されるため)。\n\n【3 直接 URL アクセス】一覧から消えた対象へ URL を直接叩いた場合は、既存の insufficient_role 経路で拒否理由付きの応答を返す。一覧からの不可視化は詳細画面の認可を代替しない。\n\n【4 選択の帰結として受け入れる点】同じ画面でもロールにより件数が変わるため、「同僚には見えるのに自分には無い」という差分の調査は詳細画面の拒否応答か監査ログを根拠に行う。この不便は利用者判断として受け入れる。\n\n【5 不変】ロールの定義・昇格規則・テナント越境禁止は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Deny by default / 認可判定の単一箇所化",
+          "applicability": "applied",
+          "rationale": "一覧の絞り込みを取得段階で行い、判定根拠を既存 authz モジュールへ一本化した。クライアント側で描画だけ抑える実装を明示的に禁じ、不可視化が本文の非転送を伴うようにした。一覧不可視化と詳細画面の認可を独立に成立させ、前者を後者の代替にしない点も固定した。",
+          "tradeoffs": [
+            "ロールごとに一覧件数が変わるため、権限差の調査導線が画面上に無く監査ログ依存になる",
+            "取得段階での絞り込みはキャッシュをロール別に分ける必要があり、共有キャッシュの効率が落ちる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-237",
+      "question": "カードから開いた編集画面で 2 人が同じドキュメントを同時に編集したとき、更新の衝突をどう扱うか。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「ETag + If-Match で衝突検知」(AI 推奨と一致)。\n\n提示した 3 案は (a) ETag + If-Match で衝突検知 (AI 推奨)、(b) 後勝ち (衝突検知なし)、(c) 編集ロック (開いた人が占有) で、利用者が (a) を選んだ。\n\n【1 方式】読み取り時にサーバーが ETag を返し、更新時にクライアントが If-Match で同じ値を送る。サーバー側で現在の版と一致しなければ更新せず 412 を返す (CAS = Compare-And-Swap)。\n\n【2 既存実装の踏襲】apps/hub/src/features/docs-cms/external-sync.ts の externalDocumentEtag(revision) が既に \"docs-import-<n>\" 形式の ETag を発行し、revisionFromIfMatch が If-Match を解釈している。新方式を作らず、この形をカード経由の編集を含む全 CRUD 経路へ広げる。版番号を応答ボディへ別途持たせない。\n\n【3 画面挙動】412 を受けた画面は入力内容を破棄せず、「他の人が更新しました」と、こちらの下書きと現在版の差分を出して、上書き/取り込みを利用者に選ばせる。自動マージはしない。\n\n【4 適用範囲】ドキュメント本文・ヒアリングシートの回答の更新経路に適用する。閲覧・検索・タブ切替は対象外。\n\n【5 不変】公開 API の URL 形・DB schema・認可境界は変更しない。ETag の値の作り方も既存のまま変えない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念",
+          "principle": "HTTP の条件付き要求による楽観的並行制御 (独自の版管理を作らない)",
+          "applicability": "applied",
+          "rationale": "既に docs-cms が持つ ETag/If-Match をそのまま全編集経路へ広げ、ボディ内 version フィールドという第二の版表現を作らないことを明示した。412 時に入力を破棄せず差分提示に留め、自動マージを禁じることで、機械が黙って片方の変更を選ぶ事態を避けた。",
+          "tradeoffs": [
+            "利用者は衝突時に差分を読んで判断する必要があり、保存が 1 手で終わらない場合がある",
+            "ETag を revision 由来の文字列に固定するため、本文以外のメタ更新でも版が進み不要な 412 が出得る"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-238",
+      "question": "カード一覧からの作成・保存操作で、二重送信や再送によりカードが 2 枚できるのをどう防ぐか (冪等キーの発行方式)。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「クライアントが UUID を発行しヘッダで送る」(AI 推奨と一致)。\n\n提示した 3 案は (a) クライアントが UUID を発行しヘッダで送る (AI 推奨)、(b) サーバーが内容のハッシュで判定、(c) 冪等キーを使わない で、利用者が (a) を選んだ。\n\n【1 発行時点】フォーム (作成ダイアログ・カード追加) を開いた時点でクライアントが UUID v4 を 1 つ作り、その画面から出る作成要求のヘッダへ載せる。送信ボタンの連打もブラウザ/回線都合の再送も同じキーになるため、サーバー側で 1 件に収束する。\n\n【2 既存実装との整合】apps/hub/src/shared/aijob と features/metrics-tracking が既に idempotencyKey という同名の概念を持つため、新しい名前・新しい機序を作らず同じ語彙に揃える。\n\n【3 内容ハッシュを採らない理由】(b) は「意図的に同じ内容のカードを 2 枚作る」(テンプレートからの複製) が不可能になる。カード型一覧は複製起点の利用を想定するため採らない。\n\n【4 適用範囲】新規作成 (POST) に適用する。更新は qa-237 の ETag + If-Match が衝突を扱うため、冪等キーを重ねない。\n\n【5 不変】公開 API の URL 形・DB schema・認可境界は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/api-design-patterns.md#中核概念",
+          "principle": "冪等性 (再送安全な書込みインタフェース)",
+          "applicability": "applied",
+          "rationale": "キーの発行時点をフォームを開いた瞬間に固定することで、連打も自動再送も同一キーに落ちるようにした。既存 idempotencyKey と語彙を揃えて第二の機序を作らず、更新側は ETag が担うため冪等キーを重ねない責務分担も明示した。",
+          "tradeoffs": [
+            "クライアントがキーを保持するため、フォーム状態を失うと再送が別作成として通る",
+            "サーバーはキーの保持期間を決める必要があり、期間外の再送は重複を防げない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-239",
+      "question": "カードの押し出し文 (lead) や検索索引に本文の抜粋を複製して保持するか。ヒアリングシートには PII が入り得る。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「複製せず参照先から都度読む」(AI 推奨と一致)。\n\n提示した 3 案は (a) 複製せず参照先から都度読む (AI 推奨)、(b) 抜粋を複製し削除時に連動させる、(c) 抜粋を持たずタイトルとメタ情報だけ で、利用者が (a) を選んだ。\n\n【1 方針】カードの lead・検索用索引・一覧のキャッシュのいずれにも、本文の抜粋を独立した永続コピーとして持たない。表示のたびに本文の正本から読み、抜粋はその場で切り出す。\n\n【2 理由】削除依頼を受けたとき「どこに何枚コピーがあるか」を追わずに済み、消す対象が常に 1 本になる。連動削除の実装漏れがそのまま PII 残存にならない。\n\n【3 (c) を採らない理由】タイトルとメタ情報だけではカード型一覧の主目的である「中身が見える」が損なわれ、今回の要望と正面から衝突する。\n\n【4 帰結として受け入れる点】一覧表示のたびに本文を読むため、(b) と比べ取得コストが上がる。必要なら期限付きの揮発キャッシュで緩和するが、その場合も永続層へ書かない。\n\n【5 不変】本文の保存先・テナント別封筒暗号化・即時完全削除ポリシー・監査へ本文を入れない既存契約は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "機密データの複製を作らない (削除可能性を単一正本で担保する)",
+          "applicability": "applied",
+          "rationale": "抜粋の永続コピーを作らないことで、削除依頼への対応が単一正本の削除で閉じるようにした。連動削除という「実装漏れが即 PII 残存になる」経路を仕様段階で消し、緩和策としての揮発キャッシュも永続層へ書かない条件付きに限定した。",
+          "tradeoffs": [
+            "一覧表示のたびに本文の正本を読むため取得コストが上がる",
+            "全文検索を索引なしで賄うと件数増加時に応答が劣化し、将来は索引側の PII 取扱いを別途決める必要がある"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-240",
+      "question": "カードのサムネイル (カバー画像) をどこに置くか。R2 の既存経路を使うか、カード専用の縮小画像を新設するか。",
+      "answer": "[利用者一次入力・2026-08-13 の対話] 選択: 「既存の R2 経路をそのまま使う」(AI 推奨と一致)。\n\n提示した 3 案は (a) 既存の R2 経路をそのまま使う (AI 推奨)、(b) カード専用のサムネイルを生成し R2 へ保存、(c) 画像を使わずアイコンと色で表現 で、利用者が (a) を選んだ。\n\n[補足・同対話内での事実確認] 利用者から「R2 のスクリーンショットはテスト (Playwright) 用か、そうなら R2 を使うな」との確認があった。実装を確認した結果、R2 上のスクリーンショットは hearing_screenshot 種別すなわち **利用者がヒアリングシートへ添付する画面キャプチャ** であり、テスト用ではない。Playwright/VRT の描画結果は apps/hub/tests/browser/vrt.ts が artifacts/vrt/ (ローカルおよび CI アーティファクト) へ書いており、R2 参照は 0 件である。この事実確認を経ても選択 (a) は維持された。\n\n【1 方針】カードのカバー画像は apps/hub/src/app/api/v1/docs/[id]/images の既存経路が返す画像を参照するだけとし、新しいバケットも新しい保存経路も作らない。\n\n【2 理由】保存先が 1 箇所に留まるため、取得権限の検証・暗号化・削除の各契約を既存のまま流用でき、検証箇所が増えない。\n\n【3 (b) を採らない理由】縮小画像の生成パイプラインと、生成失敗時の再生成運用が新規に必要になる。転送量の利得に対して MVP では過剰。\n\n【4 (c) を採らない理由】図版を持つドキュメントでその図版を一覧から見せられない。ただしカバー画像が無いカードはアイコンと色で表現するため、(c) の表現自体は既定の見た目として併存する。\n\n【5 テスト成果物の非混在】VRT を含むテスト由来の画像を R2 へ保存しない。テスト成果物の置き場は artifacts/ 配下に限る。\n\n【6 不変】R2 のバケット構成・テナント別封筒暗号化・即時完全削除ポリシー・署名付き取得の既存契約は変更しない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "攻撃面と検証箇所を増やさない (既存の保護済み経路を再利用する)",
+          "applicability": "applied",
+          "rationale": "新規バケット・新規保存経路を作らず既存の docs 画像経路を参照に留めることで、取得権限・暗号化・削除の検証箇所を 1 箇所に保った。あわせてテスト由来成果物を R2 へ入れない境界を明文化し、本番データ置き場に検証用データが混ざる経路を仕様段階で塞いだ。",
+          "tradeoffs": [
+            "原寸画像を一覧で参照するため、カードが多い画面では転送量が大きくなる",
+            "将来サムネイル生成を入れる際は、既存経路との二重管理を避ける再設計が要る"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-241",
+      "question": "qa-218 の出典表示「appr-042 に逐語収録」は、当該 approval_log entry の実体と一致しているか。一致しない場合の正しい出典は何か。",
+      "answer": "[訂正索引・2026-08-13] qa-218 の出典表示は誤りである。qa-218 は「appr-042 に逐語収録」と記載しているが、appr-042 は要約の承認記録であり、当該論点の利用者逐語を収録していない。\n\n【1 訂正内容】qa-218 の当該論点について、利用者の一次逐語は appr-042 には存在しない。よって qa-218 の当該記載は根拠として使えない。\n\n【2 逐語の正本】本件を含む 6 論点 (モバイル 5 スロット割当・RBAC 役割投影・CAS 楽観制御・冪等キー・PII 非複製・画像配置) の利用者逐語は、2026-08-13 の対話で改めて取得し、qa-235 から qa-240 に source.kind=user-dialogue として収録した。以後はこれらを一次根拠とする。\n\n【3 既登録の逐語を改変しない】spec-state-contract の「既登録 entry の逐語は改変せず、分離索引を新規 entry として追記する」に従い、qa-218 の本文は書き換えず、本 entry を訂正索引として追記する。\n\n【4 再発防止】approval_log の要約承認を、論点ごとの逐語の代替として引用しない。承認は「要約に同意した」記録であり、個別論点の回答原文ではない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/open-world-knowledge-lifecycle.md#中核概念",
+          "principle": "根拠の追跡可能性 (誤った出典を上書きせず訂正索引で可視化する)",
+          "applicability": "applied",
+          "rationale": "qa-218 の本文を書き換えると「かつて誤った出典で確定していた」事実自体が消え、同種の誤りが再発しても検出できない。訂正索引を別 entry として追記し、正しい逐語の所在 (qa-235〜qa-240) を明示することで、履歴を残したまま参照先を切り替えた。",
+          "tradeoffs": [
+            "qa-218 を単体で読むと誤った出典表示のままに見えるため、常に本 entry と併読する必要がある",
+            "訂正が entry 追加で表現されるため、論点数に対して qa_log の件数が増える"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-242",
+      "question": "testing-qa.web の full / critical 表記ずれを、閉じた tier 語彙とどう整合させるか。 (是正版: サインインページ O5 の安全な既定を実装の /dashboard へ揃える)",
+      "answer": "[是正版・2026-08-13] 本 entry は qa-217 の是正版である。qa-217 は「サインインページ O5 の安全な既定」を /sheets と記していたが、実装は PR #720 (d373c75f『サインイン後の着地を /dashboard に揃え本人の最近作業を出す』) により /dashboard へ変更済みで、仕様側だけが取り残されていた。利用者の 2026-08-13 の判断「実装に合わせて仕様を是正」に従い、当該 1 箇所を /dashboard へ改めた。qa-217 の逐語は改変せず残し、testing-qa/web の確定はこの entry を参照先とする。O5 以外の記載は qa-217 と同一である。\n\n【本 entry の位置づけ】\n本 entry は qa-215 を全面継承し、tier 語彙を mvp / standard / critical に統一した自己完結版である。仕様章 (compile-spec-doc.py) は確定セルの現 qa_ref に対応する節だけを出力するため、追補のみを持つ entry でセルを再確定すると、基礎となる契約本文が章から消える。章が仕様の中核を語らなくなるのを防ぐため、追補を重ねるときは基礎契約を丸ごと引き継いだ統合 entry を作る。以下、統合元ごとに節を分ける。\n\n===== production coverage smoke (統合元: qa-205 / `HarnessHub-p0lr`) =====\nユーザーの 2026-08-08 最終レビュー・仕様反映指示を明示承認として、既存の test pyramid、production rollout、credential 最小権限、rollback 契約を全面維持し、次の production coverage smoke 契約を追加確定する。\n\n【1. 実行順序】Worker deploy、health、配信版 identity / freshness、OIDC・既存 data・hearing smoke の後に coverage smoke を毎デプロイ実行する。coverage smoke の失敗は既存 smoke と同じ rollback 判断へ入力し、deploy freshness または配信版再確認だけで停止した場合は未実行 smoke を失敗と誤認して rollback しない。\n\n【2. scope 判定】S1-S8 として unauthenticated、missing_tenant_scope、ambiguous_scope、tenant mismatch の存在秘匿 404、workspace 非所属、Bearer credential 不許可、scope 不足、provider-admin 越境の route 到達と監査を検査する。S8 は HTTP 200/204 に加え、対象 actor・tenant・workspace・requested action に一致する `provider.cross_tenant_access` の baseline=0 / delta=1 を要求する。サインインページ O5 は外部 returnTo が callbackUrl・href・action・content の遷移位置へ入らず、安全な既定 /dashboard へ落ちることを SSR 応答で検査する。\n\n【3. Feedback / Docs】Feedback は create、service read、AI pull、complete writeback、status 遷移を同じ使い捨て tenant で往復し、Docs は document 作成、doc_draft enqueue、pull、complete writeback、別 tenant 非可視、Bearer read 拒否を往復する。session-only action は新しい Google OIDC secret を追加せず route と同じ server code と production DB adapter で実行し、HTTP 側では Bearer credential の拒否を実測する。token 経路は本番 Device Flow の access token を使う。\n\n【4. 隔離と後始末】2 個の使い捨て tenant を作り、成功・失敗にかかわらず feedbacks、documents、builds を含む関連行を削除して残数 0 を確認する。secret 値、token、本文をログへ出さない。\n\n【5. 完了境界】HarnessHub-stmx は案(a)を採用し、edge が provider-admin の API 越境を route へ委譲し、`withAuthz` が最終認可と監査を担う契約へ統一した。ローカル実装と回帰テストが緑でも、新 SHA の production smoke で S8 の 200/204、監査 baseline=0 / delta=1、cleanup 残数0を確認するまで stmx と関連 P13 task を完了扱いにしない。smoke:publish-production は HarnessHub-pf5o で本番 Device Flow の短命 publish:write token を取得する方式へ統一し、新規 PUBLISH_ACCESS_TOKEN と権限台帳更新なしで CI へ fail-closed 結線する。publish cleanup が完了した場合だけ identity tenant を削除する。\n\n【6. 製品境界】coverage smoke基盤は外部API、DB schema、UI、Cloudflare deploy unitを変更しない。後続stmxが変更するのはprovider-admin API越境のedge委譲だけで、routeの既存action規則・監査契約へ収束させる。その他の変更は品質ゲート、使い捨て試験データのcleanup、CI rollback判断への証拠追加に限定する。\n\n【旧契約の実測 (2026-08-08)】main `35a10b87` / hub-ci run `31253674292` で coverage smoke が `status: pass`、S1〜S8 / F1〜F5 / D1〜D6 SUCCESS、使い捨て 2 tenant の残存行 0 を確認した。ただし当該 S8 は edge 404・監査0という修正前挙動の診断であり、stmx 案(a)の本番成功証拠ではない。案(a)はローカル実装済み・新SHAの本番未検証である。\n\n===== tier 別必須ゲート集合と被覆の取りこぼし防止 (統合元: qa-210) =====\n【当該 entry の質問】タスク管理・要件定義・タスク仕様書 (exact-13) の各成果物について、完了条件を全ゲート PASS から tier 別の必須集合へ変えるとき、被覆の取りこぼしをどう防ぎますか?\n\nユーザーの 2026-08-08 レビュー・仕様反映指示を明示承認として、qa-134 の task 仕様書の世代非依存 rerun command 契約と qa-076〜qa-132 の testing-qa.web 契約を全面維持したまま、成果物側の readiness 判定を tier 別へ変更する契約を追加確定する。\n\n【1. タスク管理 (bd / dev-graph)】task の close 条件を全ゲート PASS ではなく、算出 tier の blocking 集合の PASS とする。advisory 結果は close を妨げず、finding があれば deferred-verification issue として当該 task に blocks でない関連辺で紐づける。deferred issue が 0 件生成された場合と advisory を実行しなかった場合を同じ 0 に潰さず、zero_attribution (not-run / run-and-clean / downgraded) を記録して区別する。\n\n【2. 要件定義 (dev-graph requirements readiness)】readiness 判定を tier 別の必須項目集合へ変える。mvp の必須は 受入基準・影響範囲 (変更する path 集合)・検証コマンド の 3 項目のみとし、それ以外の項目は任意として不足を readiness 不成立にしない。standard は加えて 非機能要件・依存関係、critical は従来の全項目を必須とする。任意扱いにした項目は空欄のまま放置せず deferred-verification issue へ落とす。\n\n【3. タスク仕様書 (exact-13)】intra-feature DAG が壊れるため 13 package の骨格 (P01-P13 の存在と依存辺) は tier に依らず維持する。一方 promotion 条件は tier 別とし、mvp では実装に直接必要なコア package の本文完成のみを必須とする。本文未完の package は空欄ではなく deferred_body として理由と再開コマンド付きで明示し、同名の deferred-verification issue を持つ。feature epic の rollup gate は exact-13 closed を要求し続けるが、deferred_body を持つ package は closed 到達前に本文を埋める必要があるため、MVP の高速化と最終的な完全性が両立する。\n\n【4. 完成度 evaluator の aspect 分離】assign-system-spec-completeness-evaluator の 6 aspect を、tier=mvp / standard では foundation_trace と matrix_coverage を blocking、doc_freshness・design_knowledge_reflection・decision_guidance・prompt_quality を advisory とする。tier=critical では従来どおり 6 aspect 全てを blocking とする。advisory の FAIL は verdict を FAIL にせず ADVISORY_FAIL として区別し、deferred-verification issue を起票する。依存 version の世代落ちのような時間経過由来の finding が MVP 実装を止める現状の詰まりは、この分離で解消する。\n\n【5. 回帰と証跡】tier 別 readiness の正負例、deferred_body を含む package の validate/projection、zero_attribution の 3 値、advisory FAIL が verdict を落とさないこと、deferred issue 起票失敗時の fail-closed を自動テストする。結果と仕様反映範囲を受領書および Beads notes へ残す。\n\n【再採番・rebase 追記 (2026-08-09)】本 entry は当初 qa-146 として起票したが、並行セッションが 同一番号を別論点 (サインイン後のスコープ解決とルーティング結線) で先に確定させていたため qa-210 へ 再採番した。回答内容は変更していない。本文が「維持する」と述べる既存契約の参照点は、main 取込後の 最新確定 (dev-workflow.web=qa-199 / testing-qa.web=qa-205) まで含めて読むこと。本 entry はそれらを 覆さず、その上へ tier 別の検証深度契約を重ねる。\n\n===== blocking 軸と execution 軸の分離 (統合元: qa-213) =====\n【当該 entry の質問】web セルの検査は現状「実行する / しない」の 2 値で語られているが、advisory 検査を実行したまま blocking 集合だけ縮めても wall-clock は縮まない (F-0003)。検査の扱いをどう表現し直すべきか。\n\n【1. execution 軸の導入 (施策3)】\n検査の扱いを「blocking か advisory か」の 1 軸で語るのをやめ、**blocking 軸と execution 軸の 2 軸**で表現する。\n\n- `blocking` 軸: `blocking` | `advisory`。失敗が run を止めるかどうかだけを決める。\n- `execution` 軸: `sync` | `async` | `skip`。いつ実行するか (あるいは実行しないか) を決める。\n\n| execution | 意味 | wall-clock への寄与 |\n|---|---|---|\n| `sync` | 当該 run の中で実行し、完了を待つ | 加算される |\n| `async` | 実行はするが完了を待たず、結果は後続 run か issue で回収する | 加算されない |\n| `skip` | この tier では実行しない | 加算されない |\n\n従来「advisory にして高速化する」と述べていた箇所は、実際には `blocking=advisory, execution=sync` を意味しており、待ち時間は一切減っていなかった。高速化を意図する場合は `execution` を `async` か `skip` へ落とすこと。`blocking` を緩めるのは失敗時の停止可否を変えるだけで、速度の施策ではない。\n\n【2. tier ごとの既定】\n- mvp: 主要検査は `sync`、重い横断検査 (E2E・full matrix・rubric 全周) は `async`。`skip` は「この tier で恒久的に不要」と説明できるものだけに限る。\n- standard: 全検査 `sync`。\n- critical: 全検査 `sync` かつ全て `blocking`。\n\n`async` にした検査は `tier-decision.json` の `checks[].disposition` を `deferred` とし、`deferred_issue_refs` に回収先 issue を必ず持たせる (qa-212【1】と同一契約)。`async` は「後で必ず実行する」約束であり、回収先のない `async` は実質 `skip` なので、そう書くこと。\n\n【3. 適用範囲】\n本 entry は testing-qa の web セルに対する契約である。desktop-windows / desktop-macos は qa-211 の契約 (検証深度の tier 別契約) を維持し、execution 軸は web の実測で有効性を確認してから展開する。先に全 platform へ広げない理由は、`async` の回収機構が未実装であり、回収されない `deferred` を 3 platform 分同時に生むリスクを避けるためである。\n\n【4. tier 語彙の正本 (2026-08-09 補正)】\n検証 tier の閉じた語彙は `mvp` / `standard` / `critical` の 3 値だけとする。qa-213 に残っていた `full` は `critical` の旧表記であり、新規の第 4 tier ではない。台帳・CLI・CI・仕様本文では `critical` だけを生成・受理し、過去記録の `full` を読む必要がある場合だけ legacy alias として `critical` へ正規化する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "層別の責務配分",
+          "applicability": "applied",
+          "rationale": "production coverage smoke、tier 別 readiness、exact-13、完成度 evaluator をそれぞれの境界と責務で検証し、主要経路だけを E2E に担わせる契約に適用した。",
+          "tradeoffs": [
+            "複数の検査層と証跡を横断して整合させる必要がある",
+            "境界の分類を誤ると必要な回帰が deferred 側へ漏れる"
+          ]
+        },
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/test-strategy.md#中核概念",
+          "principle": "テストサイズ (実行環境の制約)",
+          "applicability": "applied",
+          "rationale": "blocking 軸と execution 軸を分離し、mvp の重い検査を async、standard / critical を sync として wall-clock と risk を別々に制御する判断に適用した。",
+          "tradeoffs": [
+            "async 検査は merge 後に失敗を発見する可能性がある",
+            "回収先のない deferred を拒否する fail-closed 実装が必要になる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-243",
+      "question": "qa-241 の design_applications が指す knowledge_ref `open-world-knowledge-lifecycle.md#中核概念` は実在するか。実在しない場合の正しい参照先は何か。",
+      "answer": "[訂正索引・2026-08-13] qa-241 の knowledge_ref は誤りである。\n\n【1 誤りの内容】qa-241 は knowledge_ref に `plugins/system-spec-harness/skills/ref-system-design-knowledge/references/open-world-knowledge-lifecycle.md#中核概念` を指定しているが、(a) 当該ファイルに「中核概念」という見出しは存在せず (実在見出しは 目的 / 責務境界 / Lifecycle / Project candidate 最小形 / 停止条件)、(b) 当該ファイルは knowledge-catalog.json が列挙する deep knowledge card ではなく、知識候補の lifecycle を定める運用文書である。解決不能なポインタで設計知識の適用を主張した状態だった。\n\n【2 正しい参照先】本論点 (誤った出典を上書きせず訂正索引として可視化し、再発を仕組みの欠落として記録する) に対応する実在カードは `plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md` の「中核概念」節であり、そこに逐語で存在する原則は「トイル削減とポストモーテム」(障害後は非難でなく仕組みの欠落として記録する) および「観測可能性」(稼働中の実体の由来を外部から確認でき、症状から原因へ辿れる状態を保つ) である。\n\n【3 既登録を改変しない】spec-state-contract の「既登録 entry の逐語は改変せず、分離索引を新規 entry として追記する」に従い、qa-241 本文は書き換えず、本 entry を訂正索引として追記する。以後 qa-241 の設計適用は本 entry の knowledge_ref を正とする。\n\n【4 再発防止】knowledge_ref はファイル実在・anchor 見出し実在・knowledge-catalog 所属の 3 点を満たすものだけを指定する。この 3 検査を validate-coverage-matrix.py の design_applications 検査へ追加する課題を別途起票する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "トイル削減とポストモーテム",
+          "applicability": "applied",
+          "rationale": "誤った knowledge_ref を静かに書き換えると「解決不能なポインタで設計知識の適用を主張していた」という事実自体が消え、機械ゲートが anchor 実在を検査しないという仕組みの欠落も可視化されない。訂正索引を別 entry として追記し、欠落している検査を起票対象として明示することで、非難ではなく仕組みの是正として記録した。",
+          "tradeoffs": [
+            "qa-241 を単体で読むと誤った knowledge_ref のままに見えるため、常に本 entry と併読する必要がある",
+            "訂正が entry 追加で表現されるため、論点数に対して qa_log の件数が増える"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-244",
+      "question": "requirements_foundation の U3 (ゴール) の現行確定値は何で、その利用者一次根拠はどこにあるか。qa-foundation-u3 の記載との差はどう説明されるか。",
+      "answer": "[現行 source-index・2026-08-13] U3 の現行確定値は G1-G5 の 5 件である。\n\n【1 現行値 (spec-state.json の requirements_foundation.goals と逐語一致)】\nG1 非エンジニアの作者が、提供者の代理作業なし・Git 操作ゼロで公開・更新・rollback を自走できる\nG2 公開された業務ツールを owner 以外の同僚が見つけて追加・利用し、業務での再利用が成立する (North Star)\nG3 Claude Code / Codex 契約のない社員にも Web App 出口でブラウザから成果が届く\nG4 Workspace 管理者が承認・監査・公開停止を行え、shadow IT 化せず統制点が一元化される\nG5 導入されたハーネスの利用実態と削減効果 (時間・金額換算) が可視化され、フィードバック→AI 対応→再公開の改善ループが定着する\n\n【2 利用者一次根拠】(a) 2026-07-16 の初回承認 = appr-001 / qa-foundation-u3 (当時の 4 ゴール)。(b) 2026-07-17 の改訂承認 = appr-005 / qa-030「U1-U9 改訂要約 (G5 追加・U7 scope.in の Studio 拡張 6 領域・scope.out の非採用 3 点・I10-I14 追加) への明示承認」。(c) 2026-07-18 の中立再確認 = appr-007 / qa-046「AskUserQuestion 3 ラウンドによる requirements_foundation 改訂の承認: C4 を保持前提へ改訂・U6 stakeholders から『顧客の情報システム/セキュリティ部門』を削除・G5 文言をユーザー個別追認」。\n\n【3 qa-foundation-u3 との差の説明】qa-foundation-u3 は 2026-07-16 時点の 4 ゴール (G1 作者の自己完結 publish / G2 統制と安全性の担保 / G3 既存資産の再利用による最小工数 / G4 複数顧客への同時展開基盤) を逐語で記録している。その後 appr-005 で G5 が追加され、appr-007 で G2/G3 を含むゴール群の文言が現行の形へ改訂・追認された。既登録 entry の逐語は改変しないという契約に従い、qa-foundation-u3 は当時の記録として保存し、本 entry を現行値の source-index とする。\n\n【4 以後の参照規則】U3 の現行値を参照する場合は本 entry を一次索引とし、qa-foundation-u3 は 2026-07-16 時点の履歴として読む。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "上位概念 U3 の現行値が、どの承認 (appr-001 → appr-005 → appr-007) を経て今の文言になったかを外部から辿れる状態にした。初回記録だけが索引として残っていると、現行ゴールと索引の文言不一致が「どちらが正しいか判断できない」形で残り、症状 (不一致) から原因 (改訂の未索引化) へ辿れない。",
+          "tradeoffs": [
+            "同一の U に対する索引 entry が複数になり、参照時に最新の索引を選ぶ手間が増える",
+            "改訂のたびに現行値の索引を追記する運用負荷が生じる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-245",
+      "question": "requirements_foundation の U8 (制約) の現行確定値は何で、qa-foundation-u8 に無い C4 の利用者一次根拠はどこにあるか。",
+      "answer": "[現行 source-index・2026-08-13] U8 の現行確定値は C1-C4 の 4 件である。\n\n【1 現行値 (spec-state.json の requirements_foundation.constraints と逐語一致)】\nC1 開発体制: 実装・運用は提供者 1 名 + AI (Claude Code / Codex) のみ。運用負荷の低さと保守性を技術選定の最優先基準とする\nC2 インフラコスト: 固定費を極小化する (従量課金・無料枠優先)。顧客 Workspace 数が増えても固定費が比例して増えないこと\nC3 既存資産再利用: harness-creator / package contract / package check / marketplace catalog / version・cache 処理 / review workflow を Publisher 内部の quality engine として再利用する (§15)\nC4 データ保持境界 (2026-07-18 改訂・appr-007): Hub は顧客の業務ナレッジ/ドキュメントとハーネス実行の入出力データを保持できる (保存 = R2 + テナント別封筒暗号化 [purpose=tenant_data]・削除 = ユーザー操作/解約時の即時完全削除・アクセスは認可 MW 通過後のみ復号・監査 event 記録)\n\n【2 C4 の利用者一次根拠】appr-001 の承認補足「非保持境界 (§6.2) を制約 C4 として追加する回答を反映」で C4 が非保持前提として最初に追加され、2026-07-18 の中立再確認 (appr-007 / qa-046) で「C4 を保持前提へ改訂」が明示承認された。現行文言はこの改訂後の値である。\n\n【3 qa-foundation-u8 との差の説明】qa-foundation-u8 は C1-C3 のみを逐語で記録しており、C4 を含まない。既登録 entry の逐語は改変しないという契約に従い qa-foundation-u8 は保存し、本 entry を現行値の source-index とする。\n\n【4 以後の参照規則】U8 の現行値を参照する場合は本 entry を一次索引とし、C4 の改訂経緯は appr-001 の補足と appr-007 を併読する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Data lifecycle",
+          "applicability": "applied",
+          "rationale": "C4 は「保持しない」から「保持できる」への改訂であり、保持を認める代わりにテナント別封筒暗号化・認可 MW 通過後のみ復号・即時完全削除・監査 event という条件を同時に固定している。索引が C1-C3 だけで止まっていると、この条件付き許可の存在自体が上位概念から辿れなくなり、後続の技術決定が条件を落として「保持できる」だけを引き継ぐ余地が生じる。",
+          "tradeoffs": [
+            "制約の記述が長くなり、条件の一部だけを引用した誤読が起きやすい",
+            "改訂前後で正反対の前提になるため、過去の決定を読む際に時点の確認が必須になる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-246",
+      "question": "requirements_foundation の U9 (承認) の現行 approval_ref は何か。qa-foundation-u9 が記す appr-001 との関係はどうなっているか。",
+      "answer": "[現行 source-index・2026-08-13] U9 の現行 approval_ref は appr-007 である。\n\n【1 現行値】spec-state.json の requirements_foundation.approval_ref = \"appr-007\"、confirmed = true。\n\n【2 承認の系列】(a) appr-001 (2026-07-16): U1-U9 要約への初回承認。AskUserQuestion で「承認する」を選択。補足として非保持境界を C4 へ追加、マルチテナント論理分離を Stage 1 スコープへ含める判断を記録。(b) appr-005 (2026-07-17): U1-U9 改訂要約 (G5 追加・U7 scope.in の Studio 拡張 6 領域・scope.out の非採用 3 点・I10-I14 追加) への明示承認。質疑証跡 qa-030。(c) appr-007 (2026-07-18): 中立再確認 (AskUserQuestion 3 ラウンド) による改訂承認。C4 を保持前提へ改訂・U6 stakeholders から『顧客の情報システム/セキュリティ部門』を削除・G5 文言をユーザー個別追認。C06 監査指摘 (誘導質問 6 件・上位概念遡及性 2 件) への対応。\n\n【3 qa-foundation-u9 との差の説明】qa-foundation-u9 は appr-001 を記録しており、これは 2026-07-16 時点では正しい。その後 2 度の改訂承認を経て現行 approval_ref は appr-007 になった。既登録 entry の逐語は改変しないという契約に従い qa-foundation-u9 は保存し、本 entry を現行値の source-index とする。\n\n【4 以後の参照規則】U1-U9 の承認根拠を参照する場合は appr-007 を一次とし、appr-001 / appr-005 は改訂前の履歴として読む。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "承認が 3 世代 (appr-001 → appr-005 → appr-007) にわたって更新されているのに索引が初代のみを指していると、現行仕様が「いつ・何に対する同意で成立しているか」を外部から確認できない。承認系列を索引として明示し、現行 approval_ref と履歴を区別して辿れる状態にした。",
+          "tradeoffs": [
+            "承認が増えるたびに索引の追記が必要になる",
+            "履歴が長くなると、どの承認がどの改訂に対応するかの読み解きに手間がかかる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-247",
+      "question": "意思決定 D9-D12 (サーバ状態管理 / フォーム実装 / アクセシビリティ検査 / チャート実装方式) について、利用者はどの選択肢を選んだか。その一次入力はどこにあるか。",
+      "answer": "[利用者選択の逐語記録・2026-08-13] 利用者は AskUserQuestion の選択肢から「実装に合わせて仕様を是正 (推奨)」を選択した。\n\n【1 問われた内容】仕様書の frontend 章に記載されていた 4 件の技術選定 (『(4) サーバ状態 = TanStack Query v5』『(7) フォーム = react-hook-form + zodResolver』、および意思決定表に未登録のまま実装されていた axe-core による CI ゲートと自作 inline SVG チャート) が、実装の実測値 (package.json に TanStack Query と react-hook-form の依存が 0 件、axe-core と packages/ui/src/charts が実在) と食い違っていた。この乖離を「仕様に合わせて実装を変える」か「実装に合わせて仕様を是正する」かを問うた。\n\n【2 利用者の選択 (逐語)】「実装に合わせて仕様を是正（推奨）」\n\n【3 選択の帰結】この選択に基づき、D9 = server-components-fetch (TanStack Query 不採用)、D10 = native-form-zod-boundary (react-hook-form 不採用)、D11 = axe-core-ci-gate (採用の明示登録)、D12 = inline-svg-in-house (自作 inline SVG の明示登録) を decisions[] へ登録した。D9/D10 は仕様側の記載を不採用として是正するもの、D11/D12 は既に実装済みの方式を意思決定表へ追認登録するものである。いずれも新規の導入作業を伴わない。\n\n【4 同一機会の別論点】同じ 2026-08-13 の対話では、既存債務の扱いについて「今ここで解消する (推奨)」も選択されている。ヒアリング 6 論点の逐語は qa-235〜qa-240 に別 entry として収録済みであり、本 entry は D9-D12 の選択のみを論点とする。\n\n【5 以後の参照規則】D9-D12 の user_decision は本 entry を qa_ref とし、選択の実在を spec-state.json 内で裏取りできる状態にする。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Dependency Rule",
+          "applicability": "applied",
+          "rationale": "4 件はいずれも「外側の実装詳細 (ライブラリ採否) を、内側の仕様がどう記述するか」の問題である。仕様が実装に存在しないライブラリを名指ししたまま残ると、後続の実装者が仕様を根拠に依存を追加し、内側 (要件) が外側 (ライブラリ選定) に引きずられる。実装実測に合わせて仕様を是正することで、依存の向きを要件→実装に保った。",
+          "tradeoffs": [
+            "仕様の記述が実装の現状追認になり、あるべき姿を先に定める力が弱まる",
+            "将来ライブラリを採用する場合は、この決定を明示的に再オープンする手順が必要になる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-248",
+      "question": "qa-244 (U3 現行 source-index) と qa-245 (U8 現行 source-index) が『2026-07-18 の中立再確認』の根拠として引用する qa-046 は正しい参照先か。誤りである場合、正しい参照先はどれか",
+      "answer": "誤りである。正しい参照先は qa-047 である。qa-047 は『C06 監査指摘 (誘導質問 6 件・上位概念遡及性 2 件) への対応として各決定を中立形式で個別再確認した結果』を記録した entry であり、AskUserQuestion 3 ラウンド (2026-07-18) の逐語として『G5 文言をユーザーが「一致する (このまま確定)」と個別追認』『C4 改訂 = 非保持境界を「保持前提で再設計」へ変更』『qa-030 の rf 改訂 = scope.in 6 領域・scope.out 3 点・I10-I14 を個別見直し選択肢の提示のうえ全て維持』を含む。一方 qa-046 は『C4 改訂 (業務データ保持) の security (web) への反映は?』という別論点の entry であり、保護資産追加・T14/T15 追加・ASVS 到達目標拡張という security 章の delta を記録したものである。qa_log の既登録逐語は改変しない契約に従い、qa-244・qa-245 の本文は不変のまま保持し、本 entry を訂正索引 (correction record) とする。U3 (ゴール) と U8 (制約) の 2026-07-18 中立再確認へ遡及する際は、qa-046 ではなく qa-047 を参照すること。承認系列上の位置づけは appr-007 (qa-046・qa-047・qa-048 を含む 2026-07-18 の一連の確定) で変わらない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "索引が指す先を辿れば実際の一次逐語へ到達できる状態を、索引そのものの訂正記録として保つ。誤った qa-id を指したままの索引は、監査者が『根拠がある』と読めてしまう一方で実体へ到達できないため、遡及可能性が名目だけになる。訂正を別 entry として外から観測できる形に残すことで、索引の健全性自体を検査対象にできる。",
+          "tradeoffs": [
+            "qa_log の entry 数が増え、U3/U8 の遡及に qa-244/qa-245 → qa-248 → qa-047 の 2 段跳びが必要になる",
+            "既登録本文を直さない契約を守る以上、誤った引用は本文中に残り続ける (訂正索引の存在を見落とすと誤読が再発しうる)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-249",
+      "question": "requirements_foundation の U7 (スコープ境界) の現行値は、どの利用者一次入力へ遡及できるか",
+      "answer": "現行 U7 の scope.in 12 項目・scope.out 10 項目は、次の 3 世代の利用者一次入力の累積である。【第 1 世代 (appr-001 / 2026-07-16)】qa-foundation-u7 の逐語『U7=マルチテナントの論理分離を Stage 1 から実装 (Stage 0-2 を仕様化スコープ、Stage 3 以降は除外)』。現行 scope.in の『Stage 0』『Stage 1』『Stage 2』『マルチテナント論理分離を Stage 1 から実装する』と scope.out の『共通 Runtime Connector (Stage 5 の条件付き拡張)』『独自 Cloudflare deployment engine (Stage 3 の条件付き拡張)』『Hook・script・binary の自動公開 (Stage 5 の review 経路)』『公開 marketplace・SNS・ランキング・収益分配 (Stage 5 以降)』はこの世代に対応する。【第 2 世代 (appr-005 / 2026-07-17)】qa-030 でユーザーが AskUserQuestion により『承認する』を選択。scope.in へ Studio 拡張 6 領域 (効果測定ダッシュボード / Web ヒアリング intake / 構築パイプライン 7 工程ボード / フィードバックループ / ドキュメント CMS / ユーザー管理・アカウント設定) を追加し、scope.out へ『パスワードログイン・2FA の自前実装』『visibility=public の公開範囲』『plugin install ./zip 手動配布の正式経路化』の 3 点を追加した。qa-030 は複数論点を 1 質問へ束ねた entry であるため、C06 監査の指摘を受けて 2026-07-18 に qa-047 で個別再確認を行い、逐語『qa-030 の rf 改訂 = scope.in 6 領域・scope.out 3 点・I10-I14 (個別見直し選択肢を提示のうえ全て維持)』のとおりユーザーが全て維持を再選択した。【第 3 世代 (appr-007 / 2026-07-18)】C4 改訂に伴い scope.in へ『顧客業務データの保持 (業務ナレッジ/ドキュメントとハーネス実行の入出力データを R2 + テナント別封筒暗号化で保管し、即時完全削除ポリシーで管理する)』を追加し、scope.out へ『顧客業務システムの接続 credential の保管 (C4 改訂でも保持対象外。ユーザー選択 2026-07-18)』を追加した。この世代の利用者一次逐語は qa-047 (中立再確認・変更 2: C4 改訂) にあり、技術的な反映内容は qa-045 (database)・qa-046 (security)・qa-048 (AiJob pull 権限) が受けている。本 entry は U7 の現行値に対する分離 source-index であり、qa-foundation-u7・qa-030・qa-047 の既登録逐語は一切改変していない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Entities / Use Cases",
+          "applicability": "applied",
+          "rationale": "U7 の scope.in は Stage 0-2 の中核機能と Studio 拡張 6 領域という use case の集合として拡張されてきた。どの use case がどの承認世代で入ったかを世代別に索引することで、scope 拡張の一次根拠を use case 単位で辿れるようにし、『いつのまにか広がったスコープ』を構造的に検出できる状態にする。",
+          "tradeoffs": [
+            "世代別索引は 1 entry に 3 世代分をまとめるため、1 entry = 1 論点の粒度が『U7 の現行値の出所』という単位まで粗くなる",
+            "qa-030 が束ね質問である事実は消えず、scope.in/out の個別項目まで 1 質問 1 論点で分解した索引は依然として存在しない (再分解が必要になれば追加の分離索引を要する)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-250",
+      "question": "requirements_foundation の U4 (定量目標 O1-O4) の現行値は、どの一次根拠へ遡及できるか (qa-foundation-u4 / qa-013 の O2・O3 は現行値と別内容であるため)",
+      "answer": "| H1 | 非エンジニアがpublish commandからGit操作ゼロで公開を完了できるか | Stage 0 shadow publishの観察とStage 1実測 | Git操作ゼロで完了した割合、validation成功率 | 一般作者の80%が提供者の代理作業なしで公開完了 | Stage 1開始後の初回計測 |\n| H4 | 公開したSkillを30日以内に別の社員が再利用するか | Stage 0-1の手動計測（§13.4） | 30日以内の他者再利用率 | 公開Projectの30%以上で他者再利用が成立 | Stage 1運用中 |\n| H5 | Web App出口によってClaude Code非利用者まで利用が広がるか | Stage 0-1の利用者確認 | Web Appを非Claude利用者が利用した割合 | 非AI利用者の実利用が1件以上のWorkspaceが過半 | Stage 1運用中 |\n| H8 | 1公開当たりの提供者支援時間を、事業として成立する水準へ下げられるか | Stage 0-1の相談時間計測 | 1公開当たりの提供者支援時間（§13.4） | 卒業後の定常運用で1公開当たり15分未満（§11.1と同値の仮置き）、かつoffice hour収入（§11.3）で支援時間を回収できる | Stage 1卒業判定時 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "937a0334ff3df5374eec208ccf82f412a7e5da005ee6422bfd7b7a8f072b1c68"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "U4 の O1-O4 はいずれも『何を測るか (指標)』と『どこを合格とするか (目標値)』の対で定義されており、仮説レジスタ §19 の判定指標・仮の合格ラインと逐語対応する。指標と目標値を同じ一次資料へ接地させることで、目標値だけが後から独り歩きして測定手段を失う事態を防ぐ。合格ラインが Stage 0 実測で更新される仮置きであることも原文に明記されており、目標を固定値ではなく改訂前提の SLO として扱える。",
+          "tradeoffs": [
+            "一次根拠が qa_log 内の対話ではなく外部書面 (概念文書 §19) にあるため、書面が改訂されると sha256 が不一致となり索引の再作成が必要になる",
+            "O1-O4 の文言は §19 の逐語そのままではなく要約されているため、対応関係の判断 (O1=H1 / O2=H4 / O3=H5 / O4=H8) は qa-016 の正本決定に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-251",
+      "question": "requirements_foundation の U1 (essential_purpose) の現行値のうち、初代逐語 qa-foundation-u1 に含まれない詳述部分 (提供者の手離れや事業収益を自己解決の帰結として位置付ける) は、どの一次根拠へ遡及できるか",
+      "answer": "ユーザーが解決物を作る\n  → Hubが公開の複雑さを引き受ける\n  → 利用者に合わせた出口へ届ける\n  → 提供者は教育と有料助言に集中する\n```\n\nHubが統合するのはruntimeではなく、公開に必要な管理情報である。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 2.3 改善後の中心命題",
+        "sha256": "cf8b0b7e00fda7d139676df97ec2663951a51b5d5f9e8bd53524e2ad08ea3264"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Screaming architecture",
+          "applicability": "applied",
+          "rationale": "U1 の現行値は『非エンジニアの自己解決』を中心に置き、提供者の手離れと事業収益をその帰結として従属させている。この主従関係は §2.3 の中心命題の連鎖 (作る → Hub が公開の複雑さを引き受ける → 出口へ届ける → 提供者は教育と有料助言に集中する) と逐語対応する。目的の主従が一次資料の構造からそのまま読み取れる状態にしておくことで、後続の技術判断が『提供者の効率化』を主目的に読み替える drift を防ぐ。",
+          "tradeoffs": [
+            "一次根拠が qa_log 内の対話ではなく外部書面にあるため、§2.3 が改訂されると sha256 が不一致となり索引の再作成が必要になる",
+            "初代逐語 qa-foundation-u1 の短い表現と現行値の詳述の対応判断は本索引の記述に依存し、機械検査で自動確認できない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-252",
+      "question": "requirements_foundation の U2 (background) の現行値が明示的に参照する doc/harness-hub-platform-concept.md §2.2 の障壁認識は、書面上どう記録されているか (未検証前提としての扱いを含む)",
+      "answer": "今回、利用者が明示した障壁は、2. のユーザー作成Skill / Pluginを公開・共有する基盤の欠如である。1を先に作ると構築・運用範囲が広がる一方、Git公開の難しさを直接解決できない。\n\nこの障壁認識は口頭ヒアリングに基づく未検証前提であり、実施日・対象者数・記録を伴う一次資料は存在しない（従来案との比較経緯はBeads `harness-ny2`に記録がある）。そのため、この前提自体を§19の仮説H0としてStage 0で再確認する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 2.2 第一印象で見つかった問題",
+        "sha256": "ecc6524db7a86c988370db15ae90ccb72e319432ecd522f5882960efc91f02be"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "U2 の背景は『口頭ヒアリングに基づく未検証前提であり、実施日・対象者数・記録を伴う一次資料は存在しない』と原文が自ら保証の弱さを開示し、仮説 H0 として Stage 0 で再確認する経路まで指定している。背景を確定事実として扱わず、保証の度合いと再検証経路をセットで索引することで、未検証の前提の上に確定仕様を積み上げる事態を避ける。",
+          "tradeoffs": [
+            "背景が未検証前提である以上、U2 に依拠する下位判断は H0 の判定結果によって見直しが必要になりうる",
+            "書面根拠の逐語を索引するだけでは『再確認が実際に行われたか』は追跡できず、Stage 0 の判定記録を別途 approval_log へ結ぶ必要がある"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-253",
+      "question": "requirements_foundation の U5 (success_criteria) の現行値『2 社以上の顧客 Workspace で Hub が同時稼働し、それぞれの Workspace で公開 (G1) と owner 以外の再利用 (G2) が成立していること (二値判定)』は、どの利用者一次入力へ遡及できるか",
+      "answer": "2 世代の利用者一次入力の合成である。【第 1 世代 (appr-001 / 2026-07-16)】qa-foundation-u5 の逐語『U5=複数顧客での同時稼働 (2 社以上の顧客 Workspace で同時稼働している状態を成功とする)』。現行値の『2 社以上の顧客 Workspace で Hub が同時稼働し』および『二値判定』はこの世代に対応し、閾値・判定方式ともに変更されていない。【第 2 世代 (appr-005 / 2026-07-17 および appr-007 / 2026-07-18)】現行値が追加で参照する G1 (非エンジニアが自走して公開できる) と G2 (公開されたものを同僚が再利用する = North Star) は、qa-foundation-u3 を初代とし qa-030 (AskUserQuestion で『承認する』を選択) を経て qa-047 の中立再確認 (G5 文言をユーザーが『一致する (このまま確定)』と個別追認) で現行形に至った goals である。すなわち U5 の現行値は『同時稼働』という第 1 世代の成功条件に、第 2 世代で確定した G1/G2 を成立判定の内訳として明示的に接続したものであり、成功基準そのものの水準を引き上げてはいない。判定主体 (提供者代表) と根拠記録の義務は doc/harness-hub-platform-concept.md §19 の『判定は承認者 (提供者代表) が行い、判定結果と根拠を本書の改訂として記録する』に対応する。本 entry は U5 の現行値に対する分離 source-index であり、qa-foundation-u5・qa-030・qa-047 の既登録逐語は一切改変していない。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "U5 は『何をもって成功とするか』の判定条件であり、指標 (2 社以上の同時稼働・各 Workspace での G1 と G2 の成立) と判定方式 (二値) の対で定義されている。U4 の O1-O4 が段階的な達成度を測る目標であるのに対し、U5 は事業としての成立可否を一度だけ判定する基準であるため、両者を別 entry の索引として分離し、目標値と成功基準が混同されない状態を保つ。",
+          "tradeoffs": [
+            "二値判定は達成/未達の間の状態を表現できず、1 社のみ稼働といった中間状態の評価は U4 の O1-O4 側へ委ねることになる",
+            "G1/G2 を成立判定の内訳に取り込んだため、G1/G2 の文言が改訂されると U5 の判定内容も連動して変わる (改訂時は本索引の再作成が必要)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-254",
+      "question": "requirements_foundation の U6 (stakeholders) の現行 4 項目 (作者 / 利用者 / Workspace 管理者 / 提供者) の責任範囲は、どの一次根拠へ遡及できるか",
+      "answer": "| ユーザー | 課題選定、作成、業務上の正しさ、公開判断、継続owner |\n| Claude Code / Codex | code・Skill生成、local test、修正支援、wrangler CLIの実行 |\n| Publisher | package化、検査、deploy（作者local sessionでのCLIスクリプト実行）、公開処理 |\n| Hub | catalog、version、権限、承認、rollback、監査 |\n| Cloudflare等 | Web App runtime、D1 / KV / R2 |\n| Workspace管理者 | 初回Cloudflare接続、公開範囲・resource作成の確認・承認、ownerの再割当。便益: shadow ITの可視化、監査履歴、統制点の一元化 |\n| 顧客の情報システム / セキュリティ部門 | Hub導入の審査、監査mirror（§7.1）の要否判断 |\n| 提供者 | 導入教育、有料助言、Platform自体の運用、配布adapterの外部仕様追随（§13.5） |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 11.2 責任分界",
+        "sha256": "6b8db2d92945b352777a556d2844013525e0c154f9b7c01689d3942551d8dd6d"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "§11.2 の責任分界は主体ごとに持つ権限と負う責任を列挙し、Workspace 管理者に公開範囲・承認・owner 再割当の統制を集約する一方、提供者には credential を預けず個別アプリの運用主体にもしないと明示している。U6 の stakeholders をこの表へ接地させることで、各主体の権限が『必要な範囲に限る』形で定義されている根拠を保ち、後から提供者側へ権限が滲み出す設計を検出できるようにする。",
+          "tradeoffs": [
+            "現行 U6 は §11.2 の 8 主体のうち 4 主体へ集約しているため、Claude Code / Codex・Publisher・Hub・Cloudflare 等の責任行との対応は本索引の記述に依存する",
+            "2026-07-18 の qa-047【変更 3】で『顧客の情報システム / セキュリティ部門』を U6 から削除しているため、§11.2 の当該行は書面に残るが U6 の現行値には含まれない (書面と foundation の意図的な差分)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-255",
+      "question": "requirements_foundation の U5 (success_criteria) に対応する利用者一次入力の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "U5=複数顧客での同時稼働 (2 社以上の顧客 Workspace で同時稼働している状態を成功とする)。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "観測可能性",
+          "applicability": "applied",
+          "rationale": "先行する qa-253 は U5 の現行値を『第 1 世代の同時稼働条件に第 2 世代の G1/G2 を接続したもの』と説明したが、この世代合成の判断は AI による解釈であり、逐語の一次根拠ではない。本 entry は解釈を一切含まず、qa-foundation-u5 (appr-001 / 2026-07-16) の利用者逐語だけを U5 の一次根拠として切り出す。解釈と一次逐語を別 entry へ分離することで、監査者が『どこまでが利用者の言葉で、どこからが AI の接続か』を entry 単位で識別できる状態にする。G1/G2 の逐語は U3 の管轄であり qa-244 が索引する (本 entry では扱わない)。",
+          "tradeoffs": [
+            "解釈を落とした結果、本 entry 単体では現行値の後半 (G1/G2 の成立を内訳とする記述) の出所が分からず、qa-244 と併読する必要がある",
+            "『2 社以上』という閾値は利用者の口頭選択であり、書面の一次資料が存在しないため sha256 による機械検証ができない (対話由来である以上これは不可避)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-256",
+      "question": "requirements_foundation の U5 (success_criteria) 末尾の『判定は提供者代表が行い、根拠を記録する』という判定主体・記録義務は、どの一次根拠へ遡及できるか",
+      "answer": "次の実証結果が揃うまでは、フルプラットフォームを構築しない。判定は承認者（提供者代表）が行い、判定結果と根拠を本書の改訂として記録する。合格ラインの数値はすべて仮置きであり、Stage 0の実測で更新する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "1958d733a005ff4e815cfc26883c8ae35d573803bf42079ee51d4b3e0460714b"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "成功基準は『誰が判定するか』と『判定の根拠をどこへ残すか』が定まって初めて検証可能になる。§19 冒頭は判定者を承認者 (提供者代表) に固定し、判定結果と根拠を本書の改訂として記録する義務を課しており、U5 末尾の記述はこれに逐語対応する。判定主体を明示しておくことで、成功の宣言が誰の裁量でも行える状態になるのを防ぐ。",
+          "tradeoffs": [
+            "判定者が提供者代表 1 名に集中するため、自己評価の偏りを外部から検証する仕組みは別途必要になる",
+            "根拠の記録先が『本書の改訂』であるため、spec-state 側の approval_log と概念文書の改訂履歴という 2 系統を突き合わせる運用が要る"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-257",
+      "question": "requirements_foundation の U3 (goals) の第 1 世代 (appr-001 / 2026-07-16) に対応する利用者一次入力の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "U3=提示した 4 ゴールを全て選択 (G1 作者の自己完結 publish / G2 統制と安全性の担保 / G3 既存資産の再利用による最小工数 / G4 複数顧客への同時展開基盤)。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Entities / Use Cases",
+          "applicability": "applied",
+          "rationale": "ゴールは use case 層が満たすべき目的そのものであり、技術選定より先に固定されるべき最内層の関心である。本 entry は U3 の第 1 世代を『利用者が何を選択したか』の逐語だけに切り出し、後続世代で加わった G5 や文言整形と混ざらないようにする。世代を分離しておくことで、どの技術決定がどの世代のゴールへ資するかを serves_goals から一意に辿れる。",
+          "tradeoffs": [
+            "世代ごとに entry が増えるため、U3 の全体像を掴むには複数 entry を読む必要がある",
+            "第 1 世代のゴール文言は現行 G1-G5 と語彙が異なるため、対応関係の説明は別 entry (qa-244) に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-258",
+      "question": "requirements_foundation の U3 へ G5 を追加した改訂要約 (2026-07-17 / appr-005 / 質疑証跡 qa-030) に対する利用者の選択の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "承認する",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "G5 は『利用実態と削減効果が可視化される』という測定可能な状態をゴールへ持ち込む項目で、後続の効果測定 ingest / 週次 rollup / KPI 集計という指標設計の起点になる。その追加が AI の提案ではなく利用者の明示選択であることを、選択肢ラベルの逐語 1 語だけで機械検証可能な形に固定する。",
+          "tradeoffs": [
+            "『承認する』は束ね質問 (G5 追加・scope.in 6 領域・scope.out 3 点・I10-I14) への一括承認であり、G5 単独の合意強度はこの entry だけでは示せない (単独の追認は qa-259 が担う)",
+            "選択肢ラベルが短いため、何を承認したかの復元は question 側の記述に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-259",
+      "question": "requirements_foundation の U3 の G5 文言に対する個別追認 (2026-07-18 / appr-007 / 質疑証跡 qa-047) で利用者が選んだ選択肢の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "一致する (このまま確定)",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "束ね承認 (qa-258) だけでは G5 単独の合意強度を主張できないため、中立再確認の場で G5 文言そのものを対象とした個別追認の逐語を独立 entry として残す。束ね承認と個別追認の 2 段で、ゴール文言が AI 起草のまま確定していないことを示す証跡になる。",
+          "tradeoffs": [
+            "個別追認は文言の一致確認であって、G5 の達成手段や測定方法まで合意した証拠にはならない",
+            "追認時点 (2026-07-18) 以降に G5 文言を変更した場合、本 entry は stale になるため再追認が必要になる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-260",
+      "question": "requirements_foundation の U7 (scope) の第 1 世代 (appr-001 / 2026-07-16) に対応する利用者一次入力の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "U7=マルチテナントの論理分離を Stage 1 から実装 (Stage 0-2 を仕様化スコープ、Stage 3 以降は除外)。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "スコープ境界は『既定では対象外、明示したものだけ対象』という否定側を既定に置く構造で初めて drift を防げる。第 1 世代の逐語は Stage 3 以降を明示的に除外しており、現行 scope.out の Stage 3/5 条件付き拡張 4 項目はこの既定拒否の系として説明できる。逐語を独立させることで、後続世代の追加分と既定拒否の起点を取り違えないようにする。",
+          "tradeoffs": [
+            "Stage 番号による境界指定はロードマップ改訂で意味がずれうるため、Stage 定義側 (§14) の改訂時に再照合が要る",
+            "第 1 世代の逐語は 1 文しかなく、現行の scope.in 12 項目・scope.out 10 項目への展開根拠は後続世代の entry に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-261",
+      "question": "requirements_foundation の U7 の scope.in へ Studio 拡張 6 領域を、scope.out へ非採用 3 点を追加した改訂 (2026-07-17 / appr-005 / 質疑証跡 qa-030) に対する利用者の選択の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "承認する",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "段階適用と復旧",
+          "applicability": "applied",
+          "rationale": "scope.in への 6 領域追加は Stage 1-2 の実装量を一段膨らませる変更で、段階適用の刻み幅そのものを変える。その変更が利用者の明示選択に基づくことを逐語で固定し、AI が mockup から読み取った範囲を勝手にスコープへ繰り入れた形になっていないことを示す。scope.out の 3 点 (パスワードログイン自前実装・visibility=public・zip 手動配布の正式化) も同じ選択で退けられている。",
+          "tradeoffs": [
+            "『承認する』は G5 追加と I10-I14 を含む束ね質問への一括選択であり、scope 変更単独の合意強度はこの entry だけでは示せない",
+            "6 領域それぞれの優先順位や着手順は本選択に含まれず、別途 decompose 側で決める必要がある"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-262",
+      "question": "requirements_foundation の U8 (constraints) の第 1 世代 (appr-001 / 2026-07-16) に対応する利用者一次入力の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "U8=個人+AI のみの開発体制 (C1)・インフラコスト最小化 (C2)・既存資産 (harness-creator 等) の再利用前提 (C3)。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "トイル削減とポストモーテム",
+          "applicability": "applied",
+          "rationale": "C1 の『個人 + AI のみ』という体制制約は、運用負荷が人手で吸収できない前提を置くため、手作業の常時監視を要する設計を最初から選べないことを意味する。第 1 世代の逐語を独立させることで、C1-C3 が利用者の申告した制約であり、AI が保守性を理由に後付けした規範ではないことを示す。",
+          "tradeoffs": [
+            "第 1 世代の逐語は C1-C3 を短い列挙で述べるだけで、現行 constraints の詳細文言 (最優先基準・固定費が比例しないこと・再利用対象の列挙) までは含まない",
+            "C4 は第 1 世代に存在せず、非保持境界 (appr-001 時) から保持前提 (appr-007) への改訂経緯は別 entry に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-263",
+      "question": "requirements_foundation の U8 の C4 が保持前提へ改訂された後も維持している非保持境界 (顧客業務システムの接続 credential と Web App runtime を持たない) は、どの書面根拠へ遡及できるか",
+      "answer": "- 個別Skillのローカル実行runtime\n- Web Appの本番runtime\n- 顧客側DBの実データ\n- 顧客側Cloudflare secret\n- 個別アプリの保守運用責任\n- 会話全文や業務入力の自動収集",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 6.2 Hubが持たないもの",
+        "sha256": "93e21121fd28decc5451826086e08026939c3ba5f31c0185059b48270db125c1"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Data lifecycle",
+          "applicability": "applied",
+          "rationale": "C4 改訂 (appr-007) で保持側が業務ナレッジと実行入出力へ拡張された一方、非保持側は §6.2 の列挙が書面根拠として不変のまま残る。『顧客側Cloudflare secret』が接続 credential 非保持に、『Web Appの本番runtime』が runtime 境界に逐語対応するため、改訂で何が動き何が動かなかったかを書面の側から機械検証できる。保持と非保持の線引きを保持側の記述だけで説明すると、非保持が単なる未実装なのか設計上の恒久境界なのか区別できなくなる。",
+          "tradeoffs": [
+            "§6.2 は『会話全文や業務入力の自動収集』も持たないものへ挙げており、C4 改訂で保持対象へ入った実行入出力データとの線引きは『自動収集か、利用者の明示操作による保存か』の区別に依存する (この区別自体は書面に明示されていない)",
+            "書面の改訂で §6.2 の列挙が変われば本 entry は stale になるため、コンセプト文書の改訂時に sha256 の再照合が要る"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-264",
+      "question": "requirements_foundation の U7 (scope) の第 3 世代 (2026-07-18 / appr-007 / 質疑証跡 qa-047) で scope.in へ『顧客業務データの保持』を追加する契機となった利用者の選択の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "保持前提で再設計",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "第 1 世代 (qa-260) の既定拒否に対して、第 3 世代は保持側へ明示的に踏み出す変更であり、スコープを広げる方向の唯一の判断である。広げる側の判断こそ利用者の逐語で固定しないと、AI が『必要だから』でスコープを拡張した形と区別できない。選択肢ラベル 1 語だけを切り出すことで、統合説明文を介さずに scope.in 12 項目目の起点を機械検証できる。",
+          "tradeoffs": [
+            "利用者の選択は『保持するか否か』の境界判断までで、保存方式 (R2 + テナント別封筒暗号化) と削除ポリシー (即時完全削除) の具体は AI 設計 (qa-045 / qa-046) であり本 entry の逐語には含まれない",
+            "同じ選択が U8 の C4 改訂 (qa-265) の根拠でもあるため、scope 境界と制約のどちらの論点として読むかは question 側の記述に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-265",
+      "question": "requirements_foundation の U8 (constraints) の C4 が『Hub は顧客の業務ナレッジ/ドキュメントとハーネス実行の入出力データを保持できる』へ改訂された (2026-07-18 / appr-007 / 質疑証跡 qa-047) 際の利用者の選択の逐語は何か (解釈・統合説明を含まない引用のみ)",
+      "answer": "保持前提で再設計",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Data lifecycle",
+          "applicability": "applied",
+          "rationale": "C4 は『何を保持しないか』から『何を保持できるか』へ反転した唯一の制約で、この反転が保護資産一覧の拡張 (qa-046 の T14 / T15 追加) と暗号化・削除設計 (qa-045) を丸ごと引き起こしている。反転の起点を利用者の逐語 1 語へ固定することで、下流の設計 delta 群が AI の判断で始まったのではないことを示す。非保持側の継続 (credential / Web App runtime) は書面根拠 qa-263 が別途担う。",
+          "tradeoffs": [
+            "保存方式・削除ポリシー・暗号鍵運用の具体は利用者の選択に含まれず、qa-045 / qa-046 の AI 設計に依存する (この entry はその設計の妥当性を保証しない)",
+            "『保持前提で再設計』という選択は保持対象の範囲を業務ナレッジと実行入出力に限定する語を含まないため、限定の根拠は qa-047 の記述に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-266",
+      "question": "requirements_foundation の U4 (objectives) の O1『一般作者の公開自走率 80% (仮説 H1)』に対応する書面根拠の逐語 (単一行) は何か",
+      "answer": "| H1 | 非エンジニアがpublish commandからGit操作ゼロで公開を完了できるか | Stage 0 shadow publishの観察とStage 1実測 | Git操作ゼロで完了した割合、validation成功率 | 一般作者の80%が提供者の代理作業なしで公開完了 | Stage 1開始後の初回計測 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "231e40a188641cdbabaa20e37503500d92679589ec5907798e63fbc7ed57baa3"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "O1 の measure『代理作業なし・Git 操作ゼロで公開完了した一般作者の割合 ≥ 80%』は、H1 行の判定指標『Git操作ゼロで完了した割合』と仮の合格ライン『一般作者の80%が提供者の代理作業なしで公開完了』へ 1 対 1 で対応する。§19 の表 11 行のうち objectives へ昇格したのは、判定指標と数値の合格ラインが揃っている行に限られる (H1/H4/H5/H8)。H0/H2/H9 は合格ラインが『主因の過半』『上回る』『少数に留まる』といった相対比較で SLO の目標値にならず、H3/H6/H7 は Stage 0 の技術ゲート (先へ進むか否かの前提条件) で成果目標ではなく、H10 は本文が『閾値なし』と明記している。",
+          "tradeoffs": [
+            "合格ラインは本書自身が『すべて仮置き・Stage 0 の実測で更新する』と宣言しているため、O1 の 80% は測定開始まで暫定値である",
+            "H1 の判定時期が『Stage 1 開始後の初回計測』であり、Stage 0 の段階では O1 の達成可否を判定できない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-267",
+      "question": "requirements_foundation の U4 (objectives) の O2『30 日以内の他者再利用 30% (仮説 H4)』に対応する書面根拠の逐語 (単一行) は何か",
+      "answer": "| H4 | 公開したSkillを30日以内に別の社員が再利用するか | Stage 0-1の手動計測（§13.4） | 30日以内の他者再利用率 | 公開Projectの30%以上で他者再利用が成立 | Stage 1運用中 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "2914dd0d2abc70ad6f5aef943eed1550a06cd6f22c1878fa5ec2fd444dba4823"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "O2 は G2 (North Star = 同僚による再利用の成立) を数値化した唯一の目標で、H4 行の判定指標『30日以内の他者再利用率』と合格ライン『公開Projectの30%以上』へ逐語対応する。再利用は公開の副次効果ではなく本構想の中心命題側の成果であるため、測定手段 (Stage 0-1 の手動計測) が手作業であっても objectives へ入れている。",
+          "tradeoffs": [
+            "測定が手動計測であるため、Stage 1 で自動計測へ移す際に定義のずれ (何をもって再利用とするか) が生じうる",
+            "30 日という窓は本書に根拠の説明がなく、Stage 0 実測での更新対象に含まれる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-268",
+      "question": "requirements_foundation の U4 (objectives) の O3『非 AI 利用者の実利用成立 (仮説 H5)』に対応する書面根拠の逐語 (単一行) は何か",
+      "answer": "| H5 | Web App出口によってClaude Code非利用者まで利用が広がるか | Stage 0-1の利用者確認 | Web Appを非Claude利用者が利用した割合 | 非AI利用者の実利用が1件以上のWorkspaceが過半 | Stage 1運用中 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "ad26094681a2f7e05b523c50ee60ca2a0630737c7f704b273c04546c26c50aa6"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "O3 は G3 (AI 契約のない社員へブラウザ出口で成果が届く) の成立可否を測る目標で、H5 行の判定指標『Web Appを非Claude利用者が利用した割合』へ対応する。合格ラインが『1 件以上の Workspace が過半』という二段構造 (件数の閾値と Workspace 割合) であるため、O3 の measure でも『各顧客 Workspace で 1 件以上』と件数側を主指標に取り直している。",
+          "tradeoffs": [
+            "『1 件以上』は成立の有無を見る最小閾値で、利用の定着度は測れない (定着は G5 側の効果測定に委ねる)",
+            "本書の合格ラインは Workspace の過半を要求するが、O3 の measure は各 Workspace を対象にしており、集計単位が本書より厳しい方向へずれている"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-269",
+      "question": "requirements_foundation の U4 (objectives) の O4『1 公開当たり提供者支援時間 15 分未満 (仮説 H8)』に対応する書面根拠の逐語 (単一行) は何か",
+      "answer": "| H8 | 1公開当たりの提供者支援時間を、事業として成立する水準へ下げられるか | Stage 0-1の相談時間計測 | 1公開当たりの提供者支援時間（§13.4） | 卒業後の定常運用で1公開当たり15分未満（§11.1と同値の仮置き）、かつoffice hour収入（§11.3）で支援時間を回収できる | Stage 1卒業判定時 |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 19. 実装前に検証する仮説",
+        "sha256": "4ed58525d787ff01920856e0775bdb83e8d94048f4f2cf554663022de0614313"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "トイル削減とポストモーテム",
+          "applicability": "applied",
+          "rationale": "O4 は C1 (提供者 1 名 + AI のみ) の制約が破綻しない上限を数値で定めた目標で、H8 行の合格ライン『1公開当たり15分未満』と回収条件 (office hour 収入) へ逐語対応する。提供者の手作業時間そのものを指標に置くため、Publisher の自動化がどれだけ成立したかを間接的に測る役割も持つ。",
+          "tradeoffs": [
+            "支援時間の計測が相談時間の手動記録に依存するため、記録漏れが目標達成を過大評価する方向に働く",
+            "合格ラインが 15 分という時間軸と office hour 収入という金額軸の 2 条件で、片方だけ満たす状態の扱いは本書に定めがない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-270",
+      "question": "requirements_foundation の U3 (goals) の G1『非エンジニアの作者が、提供者の代理作業なし・Git 操作ゼロで公開・更新・rollback を自走できる』という詳述文言は、どの書面根拠へ遡及できるか",
+      "answer": "- 一般利用者はGitHubアカウントを必要としない。\n- 一般利用者はbranch、commit、push、PR、CI、mergeを操作しない。\n- 一般利用者はversion番号とcachebusterを編集しない。\n- 公開処理が失敗しても、現在の安定版は利用可能なままにする。\n- Releaseは変更せず、TargetChannelごとの安定版pointerの切り替えで更新・rollbackする。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 4.3 不変条件",
+        "sha256": "385043792619132a205e64a7e036d40833c93af97b423344f02cc51df6efaeba"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Screaming architecture",
+          "applicability": "applied",
+          "rationale": "G1 の『Git 操作ゼロ』は §4.3 の 2 行目 (branch/commit/push/PR/CI/merge を操作しない) と 1 行目 (GitHub アカウント不要) に、『更新・rollback を自走できる』は 5 行目 (Release を変更せず stable pointer の切り替えで更新・rollback する) に逐語対応する。§4.3 が『不変条件』として列挙している点が重要で、これらは達成目標ではなく設計が満たし続けねばならない前提として書面に置かれている。G1 はこの不変条件を利用者視点のゴール文へ言い換えたものである。",
+          "tradeoffs": [
+            "§4.3 は『一般利用者』を主語にしており、G1 の『非エンジニアの作者』とは語が異なる (作者と利用者の区別は §4.1 の呼び方定義に依存する)",
+            "『提供者の代理作業なし』に直接対応する行は §4.3 に無く、その部分は O1 の書面根拠 (qa-266 の H1 行『提供者の代理作業なしで公開完了』) が担う"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-271",
+      "question": "requirements_foundation の U3 (goals) の G2『公開された業務ツールを owner 以外の同僚が見つけて追加・利用し、業務での再利用が成立する (North Star)』という詳述文言は、どの書面根拠へ遡及できるか",
+      "answer": "> ユーザーが自分で作った業務ツールを、提供者の個別作業なしで同僚が再利用できた数。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 13.1 初期North Star",
+        "sha256": "fb76b5c9730e5573202014aa443ca3e942cdf3c67d4afcae3f1705b63623ed39"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/site-reliability-engineering.md#中核概念",
+          "principle": "SLI/SLO",
+          "applicability": "applied",
+          "rationale": "G2 が (North Star) と注記されている根拠はこの §13.1 の見出しと引用文そのもので、『業務ツール』『提供者の個別作業なし』『同僚が再利用』の 3 要素が G2 の文言へ逐語で対応する。North Star は単一の主指標を選ぶ設計判断であり、他のゴール (G1/G3/G4/G5) はこの指標を成立させるための手段側に位置づけられる。O2 (qa-267 の H4 行) がこのゴールの数値目標側を担う。",
+          "tradeoffs": [
+            "§13.1 の定義は『数』を指標に取るが、G2 の文言は『再利用が成立する』という状態表現で、目標値を含まない (数値側は O2 に分離されている)",
+            "『見つけて追加・利用し』という発見の段階は §13.1 の引用文に無く、§13.1 直後の認定基準 (owner 以外が Skill を追加または Web App を起動する) に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-272",
+      "question": "requirements_foundation の U3 (goals) の G3『Claude Code / Codex 契約のない社員にも Web App 出口でブラウザから成果が届く』という詳述文言は、どの書面根拠へ遡及できるか",
+      "answer": "   - **Web App**: Claude Code契約のない社員もブラウザから使う。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 1. エグゼクティブサマリー",
+        "sha256": "8b488b78f0b997329fd8877aa24508fac534a4f8b1e3a20e560c0e13222bbc88"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Ports and Adapters / DIP",
+          "applicability": "applied",
+          "rationale": "G3 は 2 つの公開出口 (Skill / Harness と Web App) のうち Web App 側が担う到達範囲を述べたもので、§1 の中心設計 6 の下位項目に逐語対応する。出口を 2 系統に分けて同じ管理面から選ばせる構造は、配布経路を差し替え可能な adapter として扱う設計であり、AI 製品の契約有無という外部条件を利用者側の前提から切り離す。",
+          "tradeoffs": [
+            "書面は『Claude Code契約のない社員』とし Codex に言及しないが、G3 は『Claude Code / Codex 契約のない』へ範囲を広げている (Codex を含む拡張は他の書面箇所と spec-state 側の決定に依存する)",
+            "『成果が届く』という表現は書面の『ブラウザから使う』より広く、利用の成立まで含むかは O3 (qa-268 の H5 行) の測定定義に委ねられる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-273",
+      "question": "requirements_foundation の U3 (goals) の G4 のうち『Workspace 管理者が承認・監査・公開停止を行え』という担当範囲は、どの書面根拠へ遡及できるか",
+      "answer": "3. Hubは検査、版管理、承認、配布、公開停止、rollbackを担当する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 1. エグゼクティブサマリー",
+        "sha256": "eb17c20ec957e71d7dfcda743c4b974f5d8b462430613bf19e07d779e986db80"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "G4 が挙げる承認・公開停止は、§1 の中心設計 3 が Hub の担当として列挙する 6 機能のうちの 2 つに逐語対応する。承認と公開停止を Hub 側の機能として持つことで、危険度の高い package を既定で通さない (§9 の Green/Yellow/Red 区分) 運用が管理者の操作だけで成立する。監査の側面は §6.1 の共通情報 (qa-274) が担う。",
+          "tradeoffs": [
+            "書面は主語を Hub とし『Workspace 管理者が行える』という主体の限定を含まないため、権限主体の確定は spec-state 側の role 決定 (qa-005 の 4 role) に依存する",
+            "§1 の列挙は担当機能の宣言であって、承認フローの粒度 (Yellow のみ承認必須か等) は §9 の区分に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-274",
+      "question": "requirements_foundation の U3 (goals) の G4 のうち『shadow IT 化せず統制点が一元化される』という状態は、どの書面根拠へ遡及できるか",
+      "answer": "共通で持つ情報は次に限定する。\n\n- Workspace\n- Project、owner、説明\n- Release、target、公開状態\n- visibility、承認、監査履歴\n- CatalogEntry\n- validation結果\n- TargetChannelごとのstable release pointer\n- rollback履歴\n- Web App URLまたはSkill package reference",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 6.1 共通Control Plane",
+        "sha256": "28de78456a3dd7d4b8baad8c08ec8024022a61bc4e783d1a2034931ec9eec942"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Threat modeling",
+          "applicability": "applied",
+          "rationale": "統制点の一元化は『どの情報が 1 箇所に集まるか』で定義される。§6.1 は共通 Control Plane が持つ情報を visibility・承認・監査履歴・公開状態・rollback 履歴を含む 10 項目へ限定して列挙しており、公開と統制の判断材料がここに集約されることが G4 の後半の逐語根拠になる。列挙が『次に限定する』と閉じた形である点も重要で、統制情報の集約と §6.2 の非保持境界 (qa-263) が対になって攻撃面を画定する。",
+          "tradeoffs": [
+            "書面は『shadow IT』の語を用いておらず、統制点の一元化がその抑止になるという因果は本 entry の解釈側の主張である",
+            "共通情報を 1 箇所へ集めることは統制を容易にする一方、その 1 箇所が侵害されたときの影響範囲を大きくする (テナント分離と監査 hash chain で緩和する設計は qa-042 / qa-046 に依存する)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-275",
+      "question": "qa-244 および qa-253 が U3 (goals) の G1-G4 の現行詳述文言の根拠として appr-007 / qa-047 の中立再確認を挙げている記述は正しいか (訂正索引)",
+      "answer": "誤りである。qa-047 の中立再確認 (2026-07-18 / appr-007) が U3 について個別追認した対象は G5 の文言のみで、G1-G4 の詳述文言は対象に含まれない。qa-244 の『(c) 2026-07-18 の中立再確認 = appr-007 / qa-046』という帰属も誤りで、qa-046 は security (web) への C4 反映質疑であり U3 とは無関係である。qa-244 / qa-253 の当該記述は本 entry で訂正し、両 entry の逐語は監査証跡として改変しない。G1-G4 の現行詳述文言の一次根拠は、qa-270 (G1 = 4.3 不変条件)・qa-271 (G2 = 13.1 初期North Star)・qa-272 (G3 = 1. エグゼクティブサマリーの Web App 出口)・qa-273 / qa-274 (G4 = 1. エグゼクティブサマリーの中心設計 3 と 6.1 共通Control Plane) の書面根拠 5 件へ遡及する。第 1 世代の短ラベル (qa-foundation-u3 / qa-257) から現行詳述文言への言い換えは、この書面根拠に基づく。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "誤帰属を残したまま新しい根拠だけを足すと、後続の監査が『どちらの記述を信じるか』を判定できない。qa_log の論点分離契約が既存 entry の逐語を不変とする以上、誤りの打ち消しは訂正索引の新規追記でしか行えない。本 entry は誤帰属の内容と正しい遡及先を 1 対 1 で対応させ、G1-G4 の根拠が書面 5 件に移ったことを明示する。",
+          "tradeoffs": [
+            "訂正索引が増えると U3 の根拠を辿るのに読むべき entry 数が増える (qa-foundation-u3 → qa-257 → qa-270〜274 → 本 entry の連鎖になる)",
+            "本 entry 自身は逐語引用ではなく訂正の記述であるため、機械検証できるのは参照先 entry の実在と書面 5 件の sha256 一致までで、訂正判断の妥当性は評価者の意味層に委ねられる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-276",
+      "question": "requirements_foundation の U6 (stakeholders) の作者行『作者: 顧客企業の非エンジニア社員。JTBD: 自分の業務課題を AI と自分で解決し、解決物を同僚へ届けたい』の JTBD 記述は、どの書面根拠へ遡及できるか",
+      "answer": "ユーザーが解決物を作る\n  → Hubが公開の複雑さを引き受ける\n  → 利用者に合わせた出口へ届ける\n  → 提供者は教育と有料助言に集中する",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 2.3 改善後の中心命題",
+        "sha256": "cb7e6adab1ca505f37156eb577b009d709934901bb10f8adcd5e0dc79200db5e"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Entities / Use Cases",
+          "applicability": "applied",
+          "rationale": "U6 の JTBD は『解決物を作る』(自分の業務課題を自分で解決する) と『利用者に合わせた出口へ届ける』(同僚へ届けたい) の 2 段に逐語対応し、その間に立つ『Hubが公開の複雑さを引き受ける』が作者の非エンジニア性を前提に置く根拠になる。JTBD の語自体は書面に無く R0-foundation の抽出手法 (Jobs To Be Done) 側の語彙だが、job の中身 (誰が何を成し遂げたいか) はこの中心命題 4 行が一次根拠である。作者を use case の主体として固定することで、Hub の機能はこの job を成立させる手段側に位置づく。",
+          "tradeoffs": [
+            "書面の主語は『ユーザー』で、U6 が使う『作者』への言い換えは §4.2 の内部用語定義に依存する (§4.1 は利用者向けの呼び方だけを定め、作者/利用者の役割語は §4.2 側にある)",
+            "『AI と自分で解決し』の AI 協働の部分はこの 4 行に明示が無く、§2.2 の問題認識と §5.2 の作者主動線に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-277",
+      "question": "U3 の G4『Workspace 管理者が承認・監査・公開停止を行え』は、書面 §1 中心設計 3 の主語が『Hub』であるため主体が一致しない (qa-273 の trade-off に記載)。権限主体を Workspace 管理者とする書面根拠は別に存在するか (補足索引)",
+      "answer": "品質起因の公開停止は、ownerまたはWorkspace管理者が実行できる。利用者が低品質・不具合を報告する導線は業務ツール詳細（§12）に置き、「低品質→信頼低下」の負ループを遮断する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 9.3 Red: 初期対象外",
+        "sha256": "1d3d6e27f190fb8bb56b5c0df6a02f03055fcad3f074a5d1ae96e75435be6c4c"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "qa-273 が引いた §1 中心設計 3 は Hub が担う機能の列挙であって権限主体を定めない。主体側の書面根拠は本行で、公開停止の実行主体を owner または Workspace 管理者へ限定している。承認側の主体は §9.2 の見出し『Yellow: 管理者承認』が担う。この 2 箇所により、G4 の『Workspace 管理者が承認・公開停止を行え』は機能 (§1) と主体 (§9.2/§9.3) の 2 層の書面根拠へ分解して遡及できる。qa-273 の逐語と trade-off は改変せず、主体の不一致だけを本 entry が補う。",
+          "tradeoffs": [
+            "本行は品質起因の公開停止に限定した記述であり、セキュリティ起因や規約違反による停止の主体は書面に明示が無く、role 決定 (qa-005 の 4 role) に依存する",
+            "『ownerまたはWorkspace管理者』と owner を併記しているため、G4 が Workspace 管理者だけを主体として述べている点は書面より狭い (owner 自身による停止は G1 の自走の系として読む必要がある)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-278",
+      "question": "C06 監査が誘導質問と指摘した 6 件 (qa-014 / qa-028 / qa-029 / qa-030 / qa-031 / qa-034) は、その後どのように扱われたか。各 entry から扱いの結論へ遡る索引はどれか",
+      "answer": "6 件はいずれも取り消し・再質問による置換ではなく、qa-047 (2026-07-18 / AskUserQuestion 3 ラウンド / 承認 appr-007) の中立再確認で個別に再提示され、利用者が改めて選択した結果として維持された。中立再確認の形式は『現行決定の弱点を明示し代替案を等価提示・AI 推奨の前置きなし』であり、qa-047 の answer が論点ごとの再選択結果 (D5 pull 型キュー / D6 Resend Free / qa-031 論点 1 ポーリング統一 / qa-034 論点 1-4 / qa-030 の rf 改訂) を逐語で保持している。誘導形式で登録された 6 件の question 文言そのものは監査証跡として改変せず、様式の是正は appr-006 以降の質問に適用する。したがって各 entry の効力は『初出時の誘導形式のまま確定した決定』ではなく『qa-047 の中立再確認を経た決定』として読む。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "誘導質問の是正には『質問文を書き換える』『決定を取り消して再質問する』『中立形式で再確認して結果を記録する』の 3 択があり、qa_log が append-only である以上、取れるのは 3 番目だけである。ところが qa-047 は自身が 6 件を参照する側であり、qa-014 等の各 entry からは qa-047 へ辿る手がかりが無く、entry 単体を読んだ監査者には誘導のまま確定したように見える。本 entry は 6 件と qa-047 を 1 対 1 で結ぶ逆方向の索引を与え、中立性の検証を entry 単位で閉じられるようにする。",
+          "tradeoffs": [
+            "索引は 6 件を一括して扱うため、個々の論点が中立再提示でどこまで踏み込んで再検討されたかの粒度は qa-047 の answer を読まないと判定できない",
+            "『様式の是正は appr-006 以降に適用』という運用は、appr-005 以前の質問文が誘導形式のまま残ることを許容しており、質問様式の機械検査は現状どの validator にも存在しない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-279",
+      "question": "requirements_foundation の U9 (concrete_intents) の I1「公開を 1 操作にする (/harness-hub:publish または自然言語)。branch / commit / PR / CI / merge / version / cache を利用者から隠す」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "| 初心者には難しい操作 | Hub内部の処理 | 利用者表示 |\n| --- | --- | --- |\n| branch作成 | 一時PublishRequestを生成 | 検査中 |\n| commit / push | immutable artifactを保存 | 検査中 |\n| Pull Request | policy判定またはWorkspace承認request | 承認待ち |\n| CI確認 | package検査、secret scan、試験install/build | 修正が必要 / 公開準備完了 |\n| merge | stable pointerへ昇格 | 公開済み |\n| version更新 | 差分とcontent hashから自動採番 | 更新1、更新2等 |\n| cache更新 | immutable URLとcatalog pointerを自動更新 | 追加可能 / 更新あり |\n| rollback | stable pointerを以前のReleaseへ戻す | 前の版へ戻しました |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 7.1 Git工程の置き換え",
+        "sha256": "da301aeb47ec78fa288b9ff817ff1fd1f019dbd764ca17d38e1ff6e36c92eb0d"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念",
+          "principle": "デプロイパイプライン",
+          "applicability": "applied",
+          "rationale": "「公開を 1 操作にする」の実体は、§7.1 の表が左列 (初心者には難しい操作) の 8 工程を右列 (利用者表示) の状態語へ 1 対 1 で写像していることそのものである。branch / commit / PR / CI / merge / version / cache の 7 語が左列に閉じ込められ、利用者側には現れない。これは工程を消したのではなく、段階の連なりとして内部に保持したまま利用者の操作面から外した設計であり、手動操作を承認点 (Yellow の管理者承認) に限定する点も表の 3 行目に対応する。",
+          "tradeoffs": [
+            "表は 8 工程を列挙するが「1 操作」という語自体は §7.1 に無く、I1 の「1 操作」は §7.1 の表と §8.1 の publish フロー (qa-284 が引く 2 操作の抽象化) の合成である",
+            "/harness-hub:publish というコマンド名は §8.1 のフロー図が出典で、§7.1 の表には現れない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-280",
+      "question": "requirements_foundation の U9 (concrete_intents) の I2「static validation・secret scan・policy 判定 (Green 自動公開、Yellow / Red は Needs Fix 差し戻し)」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "共通:\n\n- ownerと公開範囲\n- secret・個人情報の混入\n- 必須説明、入力、出力、利用条件\n- 対象adapterとの互換性\n- sampleまたはpreview\n- 2版目以降の場合のrollback先",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 7.3 最小検査",
+        "sha256": "0ecff188161718378219e1d94e10fa734acaaf1724f1095dfe6bbbf41e3e9e68"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "§7.3 の共通検査 6 項目が I2 の「static validation・secret scan」の逐語根拠である。とくに 2 行目「secret・個人情報の混入」が secret scan に、1 行目「ownerと公開範囲」が policy 判定の入力に対応する。判定不能・不適合を Needs Fix へ差し戻す構造は deny by default そのもので、検査を通過した Green だけが自動公開へ進む。",
+          "tradeoffs": [
+            "Green / Yellow / Red の 3 区分そのものは §9 が定義しており、§7.3 は検査項目の列挙に留まる (区分と検査の接続は qa-007 系の確定に依存する)",
+            "§7.3 末尾は「業務要件、法令適合性、情報セキュリティ全体を保証するものではない」と免責しており、I2 の検査は公開可否の技術ゲートであって安全性の保証ではない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-281",
+      "question": "requirements_foundation の U9 (concrete_intents) の I3「immutable Release + TargetChannel 別 stable pointer による atomic な公開・更新・rollback」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "`PublishRequest`の処理状態、`Release`の公開状態、安定版pointerの操作を分離する。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 7.2 公開処理と公開版の状態",
+        "sha256": "2f8c182be070e66867dca16b8143e6c7d5e16953dbbcd8926f11e72040f584cb"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念",
+          "principle": "一度だけビルドして昇格させる",
+          "applicability": "applied",
+          "rationale": "§7.2 冒頭の一文が、I3 の「immutable Release + TargetChannel 別 stable pointer」の設計上の核である。PublishRequest (処理状態)・Release (公開状態)・pointer (操作) を分離することで、Release 実体を作り直さずに pointer だけを動かして更新と rollback を成立させる。同 section 後段の「`Rolled Back`はRelease状態ではない。過去Releaseを安定版へ再昇格するpointer操作」がこの分離の帰結を明示する。",
+          "tradeoffs": [
+            "「immutable」の語は §7.2 冒頭には無く、§7.1 の表 2 行目「immutable artifactを保存」と §8.1 の「immutable version保存」に依存する",
+            "atomic 性は Skill と Web App で強度が異なり、§7.2 は Web App について「完全に atomic にはできない」と明記している (orphan_candidate の扱いは qa-283 の Web App 出口側の論点)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-282",
+      "question": "requirements_foundation の U9 (concrete_intents) の I4「Workspace Catalog (業務ツール一覧・詳細・「追加する」「Web アプリを開く」導線・低品質報告導線)」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "AI用ツール:\n\n```text\nHubまたはClaude Code / Codexの一覧で見つける\n  → 「追加する」\n  → ネイティブ環境で使う\n```\n\nWeb App:\n\n```text\nHubの一覧で見つける\n  → 「Webアプリを開く」\n  → Browserで使う",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 5.3 利用者の動線",
+        "sha256": "0b8f6b0a536bfc9966c152e3e16cfcd13f8201726f5a444653ec6ec7ba68fac2"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "一貫性と標準準拠",
+          "applicability": "applied",
+          "rationale": "§5.3 は AI 用ツールと Web App の 2 経路を、いずれも「一覧で見つける → 1 つのボタン → 使う」という同一の 3 段構造で記述する。I4 の Catalog が「追加する」「Web アプリを開く」の 2 導線を持つのは、出口が違っても利用者の操作形が変わらないようにするためであり、同じ意味を同じ位置・同じ操作で表す設計に対応する。",
+          "tradeoffs": [
+            "§5.3 は一覧と導線だけを示し、I4 が挙げる「詳細」画面と「低品質報告導線」は §9.3 と §12 に依存する (報告導線の書面根拠は qa-277 が引く §9.3)",
+            "2 経路を同形に見せることは、出口の性質差 (ネイティブ環境で動くか browser で開くか) を利用者から隠す側面を持ち、選択基準は §8.3 の表に委ねられる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-283",
+      "question": "requirements_foundation の U9 (concrete_intents) の I5「Web App 出口: 作者 local session で Publisher が wrangler CLI をスクリプト実行し、Hub は URL 登録・公開範囲検査・health 確認のみ担う」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "deployの主経路は、Publisherが内部で実行するCloudflare CLI（wrangler）とAPIのスクリプト実行である。実行主体は作者のlocal session（Claude Code / Codexがwranglerを実行する）であり、Hub backendはdeployを実行しない（§6）。Cloudflare MCPは主経路に採用しない。MCP serverは不要なツール群が混入し、実行可能な操作の範囲を監査しづらいためである（HH-D13。代替案としての位置付けは§16.1）。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 8.2 B: Web App",
+        "sha256": "4f4f59b1d49c781de456ccf403674cb54ccd70c81848581606cae176f7dd00cd"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "§8.2 のこの段落が I5 の逐語根拠で、3 点を同時に定める。(1) deploy の実行主体は作者の local session である、(2) Hub backend は deploy を実行しない、(3) Cloudflare MCP を主経路にしない。理由として書面が挙げるのは「不要なツール群が混入し、実行可能な操作の範囲を監査しづらい」ことであり、実行権限を必要最小の経路へ絞る判断そのものである。Hub 側に残る責務が URL 登録・公開範囲検査・health 確認だけになるのはこの帰結。",
+          "tradeoffs": [
+            "Hub の責務が「URL 登録・公開範囲検査・health 確認のみ」である逐語は §6 冒頭の実行境界の段落にあり、本 answer の段落は deploy 主経路の側だけを定める",
+            "MCP を排する判断は監査容易性を根拠とするが、CLI スクリプト実行が監査可能である前提 (実行コマンド・引数・exit code の記録) は §6 側の記述に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-284",
+      "question": "requirements_foundation の U9 (concrete_intents) の I6「URL 型 marketplace (native source) または Bootstrap Installer による Git レス配布・更新 (一般利用者に GitHub アカウントを要求しない)」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "2. **Bootstrap Installer（完全Gitレス配布）**: package（zip）をCloudflare R2 / Workersに置き、初回に1回だけ導入するBootstrap Installer（CLIスクリプト）がfetch・展開・更新する。利用者にGitHubアカウントもgit remoteも要求しない。既存§8.1のBootstrap Installerの役割をこの方式として具体化する。\n",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### 8.1 A: Skill / Harness",
+        "sha256": "f9642b1a3cc81ca5c95fcb621b015abf348b250dba2e8abd7089445e2e63950d"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念",
+          "principle": "Ports and Adapters / DIP",
+          "applicability": "applied",
+          "rationale": "I6 が 2 経路を併記するのは、§8.1 が native source (URL 型 marketplace) を第 1 候補としつつ、その制約 (plugin 本体 source が Git ベース限定・private Git は利用者認証が必要) が §4.3 の不変条件と衝突する場合の代替として Bootstrap Installer を置いているためである。配布経路を差し替え可能な adapter として扱い、内側 (公開する package という概念) を経路の違いから独立させている。",
+          "tradeoffs": [
+            "本 answer は 2 経路のうち Bootstrap Installer 側の逐語であり、native source 側の制約 (a)(b) は同 section の 1. 項に分かれている (1 論点 1 逐語のため分離した)",
+            "どちらを使うかは Stage 0 の technical gate で確定する未決事項であり (qa-287 が引く H7)、I6 の「または」は現時点で解消されていない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-285",
+      "question": "requirements_foundation の U9 (concrete_intents) の I7「マルチ Workspace 論理分離と顧客既存 IdP / SSO への認証委譲 (Hub 独自アカウント基盤を作らない)」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "Hub Web自身の認証は新規に作らず、顧客Workspaceの既存IdP / SSOへ委譲する（§10.2）。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "## 6. 推奨アーキテクチャ",
+        "sha256": "7cd7e8d1d056b355e8edf38392de015695e4c8f3e015a25f7cb3758a7aa6cbf7"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Secure defaults and usable security",
+          "applicability": "applied",
+          "rationale": "§6 のこの一文が I7 の「顧客既存 IdP / SSO への認証委譲 (Hub 独自アカウント基盤を作らない)」の逐語根拠である。認証を顧客側の既存基盤へ委譲すると、MFA・パスワード運用・退職者の失効といった維持コストの高い control を顧客が既に運用している仕組みへ載せられる。Hub が独自アカウントを持つと、これらを Hub 側で再実装したうえ既定を安全に保ち続ける責任も負う。",
+          "tradeoffs": [
+            "マルチ Workspace の論理分離は本文に含まれず、§6.1 の共通 Control Plane が持つ情報の第 1 項「Workspace」と §10.2 の member 認証行 (557 行目) に依存する",
+            "委譲先の IdP が弱い設定 (MFA 未強制等) の場合、Hub 側から強度を引き上げる手段が書面に無い"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-286",
+      "question": "requirements_foundation の U9 (concrete_intents) の I8「Stage 2 Governance: 管理者 approval queue・granular RBAC・formal audit log・export」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "- 管理者approval queue（有効化とともに§7.2の`Approval Pending`経路を開放する）\n- granular visibilityとrole管理\n- formal audit logとexport\n- Yellow review\n- update通知",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### Stage 2: Workspace Governance",
+        "sha256": "378fe2e10a59e1e469d3e33da76e098e30e30f4559eb4493c0ba703e605c2247"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Defense in depth",
+          "applicability": "applied",
+          "rationale": "§14 Stage 2 の 5 項目が I8 の逐語根拠である。approval queue (事前の予防)・granular visibility と role 管理 (権限の粒度)・formal audit log と export (事後の検出)・Yellow review (人手の検査層)・update 通知 (伝達層) が、それぞれ独立した層として並ぶ。単一の control の失敗が統制全体の失敗にならない構成であり、Stage 1 の Green 自動公開だけでは持てない層を段階的に足す設計になっている。",
+          "tradeoffs": [
+            "Stage 2 の開始条件は §13.5 の「Workspace Governance」行に委ねられており、I8 がいつ有効になるかは本 answer からは判定できない",
+            "`Approval Pending` 経路は Stage 2 の有効化まで到達しない状態であり (§7.2 の MVP サブセット)、I8 は Stage 1 時点では設計上の予約に留まる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-287",
+      "question": "requirements_foundation の U9 (concrete_intents) の I9「Stage 0 technical gate: URL 型 marketplace / Bootstrap Installer / wrangler 公開の成立検証 (H3 / H6 / H7) と Stage 1 開始条件の判定」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "Stage 1の開始条件は、native source（URL型marketplace）またはBootstrap Installerのどちらかで、別ユーザーがWorkspaceのSkillを追加・更新できることを実証済みであること（H7の成立）。",
+      "source": {
+        "kind": "written-requirements",
+        "path": "doc/harness-hub-platform-concept.md",
+        "section": "### Stage 0: Discovery Pilot and Technical Gate",
+        "sha256": "57416bd905edec75bb15e00ebc1a8e6480e7d6cbedd4aa8648d9df78b6073245"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/continuous-delivery.md#中核概念",
+          "principle": "段階反映と逆操作",
+          "applicability": "applied",
+          "rationale": "I9 の「Stage 1 開始条件の判定」の逐語根拠が本文である。native source か Bootstrap Installer の**どちらか**で「別ユーザーが Workspace の Skill を追加・更新できる」ことを実証済みであることを条件とし、成立を H7 の成立として定義する。同 section の失敗分岐が「双方が不成立なら Stage 1 へ進まず配布方式を再設計する」と逆操作まで定めており、段階を進める条件と戻す条件が対になっている。",
+          "tradeoffs": [
+            "H3 / H6 (wrangler による Web App 公開) の検証は同 section の別行にあり、本 answer は H7 の判定条件だけを含む (I9 は 3 仮説を束ねるため、H3/H6 側は同 section 738 行目に依存する)",
+            "「実証済み」の判定主体と証跡の形式は書面に定めが無く、Stage 0 の記録運用に委ねられる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-288",
+      "question": "requirements_foundation の U9 (concrete_intents) の I11「ヒアリング intake: S10 の 4 ステップウィザード → 受付番号採番 → D5 pull 型 AI キューでヒアリングシート生成 (S11/S12) → S13 の 7 工程パイプラインで構築進行を可視化」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "| S10 | ハーネス ヒアリング (4 大工程を7画面に分割したウィザード・削減試算・作成時添付) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | form |\n| S11 | ヒアリングシート一覧 | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheets |\n| S12 | ヒアリングシート詳細 (status 変更は admin) | member 以上 | 拡張 | **P1 (最優先)** | feat-hearing-intake | sheet-detail |\n| S13 | 構築パイプライン (7 工程ボード) | member 以上 (操作 admin) | 拡張 | **P2 (最優先)** | feat-build-pipeline-board | pipeline |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "docs/screen-inventory.md",
+        "section": "### Harness Studio mockup 由来の追加画面 (2026-07-17 反映。根拠: [mockups/harness-studio-v2-analysis.md](mockups/harness-studio-v2-analysis.md))",
+        "sha256": "0c21450540d18064195fd80781f457b62e3447be257a18771be0009bdd9937b4"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "工程順序",
+          "applicability": "applied",
+          "rationale": "I11 の「S10 の 4 ステップウィザード → 受付番号採番 → S11/S12 → S13 の 7 工程パイプライン」は、本表の S10-S13 の 4 行に逐語対応する。S10 行が「4 大工程を7画面に分割したウィザード」、S13 行が「構築パイプライン (7 工程ボード)」である。達成タスク (ヒアリングを出す) から情報候補・グループ・表示モデルへ降りる順で画面が分かれており、入力 (S10)・走査 (S11)・詳細 (S12)・進行監視 (S13) がタスク単位で分離されている。",
+          "tradeoffs": [
+            "本表は画面の存在と優先度を定めるが、I11 が挙げる「D5 pull 型 AI キュー」は画面一覧の範囲外で、qa-047 の D5 再確認に依存する",
+            "S10 の「4 大工程」と「7 画面」の対応関係そのものは本表に無く、feat-hearing-intake の information-design 文書に降りる"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-289",
+      "question": "requirements_foundation の U9 (concrete_intents) の I12「フィードバックループ: CLI (claude harness feedback) + Web フォーム (S14) の 2 経路受付 → AI 対応 (D5) → 修正版 publish → update 通知」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "| S14 | 改善要望・レビュー (一覧 + Web フォーム) | member 以上 | 拡張 | P3 | feat-feedback-loop | feedback |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "docs/screen-inventory.md",
+        "section": "### Harness Studio mockup 由来の追加画面 (2026-07-17 反映。根拠: [mockups/harness-studio-v2-analysis.md](mockups/harness-studio-v2-analysis.md))",
+        "sha256": "0a08e334631e0e177b0c6ac886e95783ee700bc0f313cd87bf2d7ae7d3b02366"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念",
+          "principle": "利用者の制御と回復",
+          "applicability": "applied",
+          "rationale": "I12 の「Web フォーム (S14)」側の逐語根拠が本行で、S14 を「改善要望・レビュー (一覧 + Web フォーム)」と定める。公開された業務ツールに不具合があったとき、利用者が次の一手 (報告する) を持てることが、§9.3 が言う「低品質→信頼低下」の負ループの遮断にあたる。報告後の状態 (対応中・修正版公開) を追える一覧が同じ画面に置かれるため、報告が投げっぱなしにならない。",
+          "tradeoffs": [
+            "CLI 経路 (claude harness feedback) は本行に無く、I12 の 2 経路のうち片方だけが本 answer で接地する",
+            "「AI 対応 (D5)」の部分は画面一覧の範囲外で、D5 の決定 (qa-047 の pull 型キュー) に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-290",
+      "question": "requirements_foundation の U9 (concrete_intents) の I13「ドキュメント CMS (S15): common/tenant スコープの Markdown 文書 (共通レンダラで XSS sanitize)・AI 下書き (D5)」という文言は、どの一次根拠へ遡及できるか (per-item source-index)",
+      "answer": "| S15 | ドキュメント (一覧/閲覧/編集・AI 下書き) | 閲覧 member / 編集 admin | 拡張 | P3 | feat-docs-cms | docs, doc-view, doc-edit |",
+      "source": {
+        "kind": "written-requirements",
+        "path": "docs/screen-inventory.md",
+        "section": "### Harness Studio mockup 由来の追加画面 (2026-07-17 反映。根拠: [mockups/harness-studio-v2-analysis.md](mockups/harness-studio-v2-analysis.md))",
+        "sha256": "e6839fb05c780c52efbd6a61c6666fda3569dd0a7c3c99ca4662662459ec43f6"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "表示モデル",
+          "applicability": "applied",
+          "rationale": "I13 の「ドキュメント CMS (S15)」の逐語根拠が本行である。S15 が「一覧/閲覧/編集・AI 下書き」の 3 面 + 生成を持ち、閲覧は member・編集は admin と可視性が role で分かれる。正本の Markdown (domain model) から表示 (view model) への変換を共通レンダラ 1 箇所に閉じる設計は、この role 別可視性と表記変換を 1 箇所で担保するためであり、XSS sanitize もその変換点に置かれる。",
+          "tradeoffs": [
+            "common / tenant スコープの区別は本行に無く、feat-docs-cms の information-design 文書と S15.LIST 行の権限記述に依存する",
+            "共通レンダラでの XSS sanitize は本行に現れず、I13 のこの部分は security-spec 側の確定に依存する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-291",
+      "question": "qa-241 の design_applications が参照する knowledge_ref (open-world-knowledge-lifecycle.md#中核概念) は実在するか。実在しない場合、単一 writer 契約のもとで是正できるか (訂正索引)",
+      "answer": "[出所: appr-037 (d) に従い明記する。本 entry は appr-037/appr-038 で委任された『コードまたは公式一次資料を読めば第三者が検証できる技術的事実の確定・訂正』として AI が記入したものであり、利用者の逐語ではない。完成度 evaluator (C05) の high finding を受けた対応。]\n\n【1 事実】qa-241 の knowledge_ref は実在しない。参照先 plugins/system-spec-harness/skills/ref-system-design-knowledge/references/open-world-knowledge-lifecycle.md の見出しは『## 目的』『## 責務境界』『## Lifecycle』の 3 つで、『## 中核概念』は存在しない。さらに同ファイルは knowledge-catalog.json に登録された知識カード 11 件 (clean-code / design-patterns / ddd / clean-architecture / api-design-patterns / secure-by-design / usability-accessibility / information-design / test-strategy / continuous-delivery / site-reliability-engineering) に含まれず、lifecycle 運用文書である。したがって file 実在・anchor 実在・カタログ所属の 3 点のうち 2 点を満たさない。\n\n【2 正しい参照先】qa-241 の論点 (誤った出典を上書きせず訂正索引で可視化し、事後に検証できる状態を保つ) に対応する実在の知識カード原則は、secure-by-design.md#中核概念 の『Assurance』(abuse-case test、dependency/provenance、review、logging、incident exercise で control の実効性を検証する) である。以後 qa-241 の設計解釈を読むときは、この参照へ読み替える。\n\n【3 是正できない理由】qa-241 自身の knowledge_ref を書き換えることは、単一 writer 契約のもとで不可能である。set-qa-design-applications は provenance の無い既存 design_applications を『対話経路』として保護し、差し替えも撤去も TransitionError で拒否する (state_transition_matrix.py の set_qa_design_applications、実測で確認)。legacy_backfill が許されるのは legacy_exempt: true と非空理由を持つ entry に限られ、qa-241 はこれに該当しない。よって取りうる手段は本訂正索引の追記だけである。\n\n【4 残る欠陥】(a) qa-241 の knowledge_ref は dangling のまま残る。(b) validate-coverage-matrix.py の design_applications 検査は knowledge_ref の file 実在・anchor 見出し実在・カタログ所属のいずれも検査していないため、この dangling は決定論ゲートを通過する。(c) writer には対話経路の design_application を訂正する経路が無く、誤りが判明しても構造上直せない。(a)(b)(c) はいずれも plugin 側の課題であり、dev-graph の issue node として起票する。",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "参照の正しさを保証する control が、書込時点に無く (writer が anchor 実在を検査しない)、事後の決定論ゲートにも無い (validator が検査しない) 状態では、誤った参照は独立監査の人手でしか見つからない。実際 qa-241 の dangling は C05 の 2 回の評価を経て初めて検出された。本 entry は control の欠落そのものを記録に残し、どの層に検査を足せば同型の欠陥が機械検出できるかを (b)(c) として特定する。訂正索引という手段を選んだのは是正の第一希望だからではなく、単一 writer 契約が他の手段を許さないためであり、その制約自体を【3】に明記して評価者が手段の妥当性を独立に判定できるようにした。",
+          "tradeoffs": [
+            "qa-241 を単体で読むと dangling な knowledge_ref のままに見えるため、本 entry と併読しない限り誤った参照先へ辿り着く",
+            "writer の保護契約 (対話経路の design_application を不変とする) は、誤りの訂正まで一律に禁じる方向へ効いており、履歴保全と正確性のどちらを優先するかの判断が entry 追記の側へ固定されている",
+            "本 entry が指摘する 3 つの欠陥 (a)(b)(c) の是正は plugin 側の変更を要し、本仕様書のスコープでは閉じない"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-292",
+      "question": "C05 完成度 evaluator の gap 2 (appr-034〜039 で 5 回連続して先頭選択肢が採択されており順序バイアスが疑われる) を受け、サインイン後の既定着地を中立形式で再照会した。中立化の条件は (i)「(推奨)」ラベルを全選択肢から外す (ii) 前回先頭に置いた選択肢 (AI が予期する側) を先頭に置かない (iii) 全選択肢へ「得られること／生じること」を対称に記す、の 3 点である。利用者の再選択はどうなったか",
+      "answer": "ダッシュボード /dashboard を維持",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "工程順序",
+          "applicability": "applied",
+          "rationale": "サインイン後の着地先は、利用者が業務のどの工程から画面へ入るかを決める。/sheets はヒアリング工程の入口に固定され、/dashboard は工程を選ばせる分岐点として機能する。中立条件下でも /dashboard が選ばれたことは、利用者が単一工程への固定ではなく工程選択の起点を求めていることを示し、S09 前倒しの実装量増加を了解したうえでの選好であることが appr-034 と本 entry の 2 回の独立測定で確認された。",
+          "tradeoffs": [
+            "本 entry が確認したのは選択の不変性であって選択の妥当性ではない。/dashboard が実利用で機能するかは O1/O3 の実測 (Stage 0-1) に委ねられ、ここでは判定できない",
+            "選択肢を 3 番目に置いたことで末尾効果 (recency) が働いた可能性は排除できていない。順序効果の完全な排除には選択肢集合の無作為化が要るが、対話回数の制約から 1 回の反転提示に留めている"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-293",
+      "question": "appr-035 で決めたダッシュボードの中身 3 点 (最近の作業＝種別横断／テナント表示＝常時表示＋切替／稼働状況＝異常時のみ) は、3 問とも先頭選択肢に「(推奨)」ラベルが付いた状態で先頭が選ばれていた。前回先頭の選択肢を末尾へ移し推奨ラベルを外した中立条件で問い直した結果はどうなったか",
+      "answer": "自分が最後に触ったものを種別横断で／常時表示＋切替もできる／通常時は出さず、異常時だけ出す",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念",
+          "principle": "表示優先度",
+          "applicability": "applied",
+          "rationale": "3 問はいずれも「何を常に見せ、何を条件付きで見せ、何を見せないか」という表示優先度の配分である。中立条件で 3 問とも同じ配分が選ばれたことは、(a) 作業の続きへ戻る導線を最上位に置く (b) 所属文脈は常時可視だが操作は副次に置く (c) 基盤の稼働状況は例外時のみ昇格させる、という一貫した優先度規則が利用者側に存在することを示す。個別の 3 択の一致ではなく規則の一貫性が読み取れる点が、この再測定の意味である。",
+          "tradeoffs": [
+            "(c) の「異常時だけ出す」は異常の判定基準 (どの依存先をどの間隔で見るか) を別途定める必要があり、その定義自体は本 entry では確定していない",
+            "3 問を 1 entry にまとめているため論点分離契約 (1 entry = 1 論点) の境界にある。ここでは 3 問が「ダッシュボードの表示優先度」という単一の再測定として実施された点を根拠に 1 entry としているが、個別論点の追跡が要るときは分離索引を追記する"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-294",
+      "question": "appr-038 では「AI が利用者確認なしに検証可能な技術的事実を記録へ記入する委任」を維持すると決めていたが、appr-039 が自認した順序バイアスを受けて中立条件 (推奨ラベルなし・現状維持案を先頭に置かない・得失の対称記述) で再照会したところ、利用者は「範囲を狭める」を選んだ。委任の新しい線引きはどこに引かれるか",
+      "answer": "範囲を狭める",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Least privilege / deny by default",
+          "applicability": "applied",
+          "rationale": "委任は AI が利用者の確認なしに正本へ書き込める権限であり、権限は既定で最小に置き必要な範囲だけ明示的に開ける。appr-037/038 の委任は『検証可能な技術的事実』という広い語で開いており、実際には記録形式の設計判断 (qa-291 で訂正索引を作るという判断など) までこの語の下で実行されていた。中立条件下で利用者が縮小を選んだことを受け、AI は次の線引きを本 entry で明文化する。\n\n【委任を維持する範囲 (確認なしで記入してよい)】コードまたは公式一次資料を読めば第三者が同一の結論へ到達できる事実の確定・訂正に限る。具体的には (a) ファイル・見出し・関数・フラグの実在および不在 (b) 実装の挙動 (writer が何を拒否するか等の実測結果) (c) sha256・行番号・件数などの機械的に再計算できる値 (d) 既存 entry 間の参照関係の誤りの指摘。\n\n【委任から外し都度確認へ戻す範囲】(e) 記録形式・監査対応の設計判断 (訂正索引を作るか既存を残すか、どの粒度で entry を分けるか) (f) 統制・権限・責任分界に関する判断 (g) 既存の決定や承認の効力に関する判断 (どの entry を正とするか、承認を上書きするか) (h) 製品仕様・優先順位に関する判断。\n\nこの線引きの根拠は『第三者が独立に検証して同じ答えに至るか』の一点であり、(a)-(d) は到達するが (e)-(h) は評価者の価値判断が入るため到達しない。",
+          "tradeoffs": [
+            "本 entry で AI が示した (a)-(h) の線引きそのものは利用者の逐語ではなく AI の提案である。利用者の逐語は『範囲を狭める』の 4 文字であり、線引きの具体化は次回の照会で追認を得るまで暫定として扱う (この記入自体は縮小後の (d)『既存 entry 間の参照関係』ではなく (e)『記録形式の設計判断』に当たるため、本来は確認を要する。縮小の決定を記録に残さないまま次の照会へ進むほうが不可逆な欠落を生むと判断して先に記入し、暫定である旨をここに明示する)",
+            "qa-291 (qa-241 の訂正索引) は縮小後の基準では (e) に該当し、確認なしの記入は許されなかった。既に記入済みの entry を遡って取り消す経路は writer に無いため、当該 entry は縮小前の委任の下で作られた記録として残る"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qa-295",
+      "question": "appr-039 では「完成度 evaluator が総合 FAIL のまま decompose 以降へ進む」ことを承認していたが、同 entry 自身がその照会を順序バイアスの実例として自認していた。中立条件で再照会したところ利用者は「是正できる項目が尽きるまで spec で止まる」を選んだ。dev-graph 11 verb の実行方針はどうなるか",
+      "answer": "是正できる項目が尽きるまで spec で止まる",
+      "source": {
+        "kind": "user-dialogue"
+      },
+      "design_applications": [
+        {
+          "knowledge_ref": "plugins/system-spec-harness/skills/ref-system-design-knowledge/references/secure-by-design.md#中核概念",
+          "principle": "Assurance",
+          "applicability": "applied",
+          "rationale": "appr-039 は『FAIL の内訳は打てる手が無いものだけ』という AI 側の判定を前提に先へ進む承認を求めていたが、その前提は誤りであった。実際には gap 1 (U9 の per-item source-index 12 件欠落) と gap 4 (qa-241 の dangling anchor) は spec 工程内で是正でき、本セッションで qa-279〜291 として是正済みである。gap 2 (順序バイアス) も本 approval の中立再確認で是正した。ゲートの FAIL を承認で迂回する運用は、ゲートが検出した欠陥のうち是正可能なものまで一緒に通過させるため、ゲート自体の意味を失わせる。中立条件下の利用者の選択はこの原則側に立っており、dev-graph 11 verb は verb 2 (spec) で停止し、verb 3 (decompose) 以降は実行しない。",
+          "tradeoffs": [
+            "残る gap には spec 工程で是正できないものが含まれる (validator への検査追加、runtime ゲートの実装、principle のフィールド分離など plugin 側の改修)。これらを verb 6 (node) の issue として起票する経路自体が verb 3 以降の停止によって塞がれるため、issue 候補は本セッションの報告として親へ handoff し、起票は停止解除後に行う",
+            "『是正できる項目が尽きる』の判定主体は現状 AI であり、尽きたことを機械的に確認する手段が無い。C05 evaluator の再実行で総合 PASS になれば尽きたと言えるが、PASS に至らない場合に『残りは是正不能』という判定が正しいかは再び AI の申告に依存する"
+          ]
+        }
+      ]
     }
   ],
   "approval_log": [
@@ -2941,6 +4335,10 @@
     {
       "id": "appr-043",
       "note": "[appr-043] 2026-08-10、elegant-reviewで提示した推奨案3点への利用者の明示承認。\n\n[逐語] 「推奨案3点を承認。」\n\n[承認対象]\n1. HearingSheet確定時にProjectをサーバ側で作成・関連付けし、Build/Metricsはtrusted resolverからproject_idを取得する。\n2. Build書込みは当面Tursoのみ正式対応し、D1はstate+event+auditのall-or-nothing同等性が証明されるまでfail-closedで無効にする。\n3. 完了率=期間末時点の完了HearingSheet数/対象HearingSheet総数、利用率=期間内1回以上使われた公開済みHarness数/対象公開済みHarness総数、分母0は「—」、anomalyは過去4完了週が揃う場合だけ・中央値0は対象外、S09=/dashboard、S16=/tracking、SVG直下の同値表は常に利用可能とする。\n\n[技術的具体化] 両分母は各ownerの期間末snapshotとする。Metrics rollupのTurso transaction/D1 write無効は既存P01のTurso primaryと同じall-or-nothing境界を適用する帰結である。"
+    },
+    {
+      "id": "appr-044",
+      "note": "[appr-044] 2026-08-13、C05 完成度 evaluator の gap 2 (appr-034〜039 の 5 回連続先頭選択肢採択 = 順序バイアス疑い) に対する中立再確認の記録。AI は appr-039 が自認した規律違反 (「AI が結果として予期していた選択肢を先頭に置いた」) への直接の対応として、中立化の 3 条件 — (i)「(推奨)」ラベルを全選択肢から外す (ii) 前回先頭に置いた選択肢 (AI が予期する側) を先頭に置かない (iii) 全選択肢へ「得られること／生じること」を対称に記す — を適用し、2 ラウンド計 7 問を再提示した。\n\nappr-039 の「総合 FAIL のまま decompose 以降へ進む」承認を根拠に先へ進むことは、appr-039 自身が誘導だったと自認している以上「誘導で得た同意で誘導の指摘を回避する」循環になるため、先に本再確認を行った。\n\n===== ラウンド 1 (4 問) の結果 =====\n(1) サインイン後に最初に開く画面 → 「ダッシュボード /dashboard を維持」 (appr-034 と同一。選択肢は 3 番目に配置)\n(2) ダッシュボードの中身 3 点 (appr-035) → 「3 点とも問い直したい」\n(3) AI が利用者確認なしに技術的事実を記録へ記入する委任 (appr-038) → 「範囲を狭める」★ appr-038 の「委任を維持する」から反転\n(4) 完成度 evaluator が総合 FAIL のときの進行 → 「是正できる項目が尽きるまで spec で止まる」★ appr-039 の「decompose 以降へ進む」から反転\n\n===== ラウンド 2 (3 問・(2) を受けた再照会) の結果 =====\nいずれも前回先頭だった選択肢を末尾へ移して再提示した。\n(5) 最近の作業に何を並べるか → 「自分が最後に触ったものを種別横断で」 (appr-035 と同一。末尾配置)\n(6) テナント／ワークスペースの見せ方 → 「常時表示＋切替もできる」 (appr-035 と同一。末尾配置)\n(7) 稼働状況の扱い → 「通常時は出さず、異常時だけ出す」 (appr-035 と同一。末尾配置)\n\n===== 判定 =====\n順序を反転しても不変だったのは (1)(5)(6)(7) の 4 問、反転したのは (3)(4) の 2 問である。したがって「5 回連続の先頭採択」は一律の順序バイアスではなく、製品仕様に関する決定 (着地画面・ダッシュボードの中身) は順序に依存しない実質的選好、記録運用に関する決定 (委任範囲・FAIL 時の進行) は順序に依存していた、と切り分けられる。後者 2 件は本 approval により appr-038 / appr-039 の効力を上書きする。\n\n本 approval は appr-034〜039 の逐語を改変しない (qa_log / approval_log は append-only)。各 entry の効力は「初出時の提示条件のまま確定した決定」ではなく「appr-044 の中立再確認を経た決定」として読む。"
     }
   ],
   "reopen_log": [
@@ -4694,6 +6092,268 @@
           "G5"
         ]
       }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "2026-08-13 の利用者要望により、ヒアリングシート・成果物・ドキュメントの各一覧をテーブル既定からカード + タブ + 検索の閲覧面へ再構成し、ドキュメント本文をカードブロック (2列/3列) で構成できる編集体験と、編集/プレビュー横並び (狭幅はタブ切替) を確定するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-226",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "2026-08-13 の利用者要望により、一覧のカード表現・タブ・検索、カードブロック Markdown 記法のレンダリング、編集/プレビュー 2 ペイン (狭幅タブ切替) の実装契約を frontend へ確定するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-227",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "security",
+      "platform": "web",
+      "reason": "2026-08-13 の利用者要望により、カードブロック記法が生成する新しい要素・属性を Markdown sanitize allowlist へ追加する必要があり、XSS 防御契約の差分を確定するため",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-231",
+        "serves_goals": [
+          "G4",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "compile による章再生成で system-spec/ui-ux.md 末尾の post-compile writeback 追記 (UI MVP wave 2026-08-12) が失われたため、追記を復元する目的で一時的に再オープンする。仕様内容の変更ではなく、qa-232/qa-233 で確定した内容はそのまま再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "compile による章再生成で system-spec/frontend.md 末尾の post-compile writeback 追記 (UI MVP wave 2026-08-12) が失われたため、追記を復元する目的で一時的に再オープンする。仕様内容の変更ではなく、qa-232/qa-233 で確定した内容はそのまま再確定する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "D9-D12 登録に伴う再 compile が ui-ux.md 末尾の実装 writeback 追補 (UI MVP wave 2026-08-12 / disclosure・dismissible・Docs empty 2026-08-13) を削除したため、追補を復元する目的で一時的に再オープンする。仕様内容の変更ではない。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "D9-D12 登録に伴う再 compile が frontend.md 末尾の実装 writeback 追補 (UI MVP wave 2026-08-12) を削除したため、追補を復元する目的で一時的に再オープンする。仕様内容の変更ではない。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "testing-qa",
+      "platform": "web",
+      "reason": "qa-217 のサインインページ O5 の安全な既定が /sheets のままで、実装 (PR #720 / d373c75f) の /dashboard と乖離していた。利用者判断「実装に合わせて仕様を是正」に従い、是正版 qa-242 を参照先へ切り替えるため再オープンする。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-217",
+        "serves_goals": [
+          "G1",
+          "G4",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "testing-qa の qa-242 反映のための再 compile が ui-ux.md 末尾の実装 writeback 追補を再び削除するため、追補復元の目的で一時的に再オープンする。仕様内容の変更ではない。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "testing-qa の qa-242 反映のための再 compile が frontend.md 末尾の実装 writeback 追補を再び削除するため、追補復元の目的で一時的に再オープンする。仕様内容の変更ではない。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "compile 再生成で失われた post-compile 追補 (実装 writeback) を章末へ復元するため一時的に再オープンする。セル内容の変更は伴わない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "compile 再生成で失われた post-compile 追補 (実装 writeback) を章末へ復元するため一時的に再オープンする。セル内容の変更は伴わない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "章 frontmatter の serves_goals から G3 が欠落しているため、spec-state の確定値 [G1,G2,G3,G5] に合わせて 1 行だけ是正する",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "compile 再実行後の post-compile 追補 (実装 writeback) を章末へ復元するため。spec-state のセル内容自体は変更しない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "compile 再実行後の post-compile 追補 (実装 writeback) を章末へ復元するため。spec-state のセル内容自体は変更しない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "frontend",
+      "platform": "web",
+      "reason": "compile 再実行 (qa-243〜qa-256 反映) 後に post-compile 追補を章末へ復元するため。spec-state のセル内容は変更しない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-233",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "web",
+      "reason": "compile 再実行 (qa-243〜qa-256 反映) 後に post-compile 追補を章末へ復元するため。spec-state のセル内容は変更しない",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-232",
+        "serves_goals": [
+          "G1",
+          "G2",
+          "G3",
+          "G5"
+        ]
+      }
+    },
+    {
+      "category": "ui-ux",
+      "platform": "desktop-windows",
+      "reason": "C05 完成度 evaluator の差し戻し (medium): system-spec/ui-ux.md の追補ブロック内に 確定内容 qa-007 が逐語重複して混入しているため、章の重複ブロック削除を行う目的で当該セルを再オープンする。仕様内容の変更は行わず、削除後に同一 qa_ref (qa-007) で再確定する。",
+      "from": "確定",
+      "discarded": {
+        "qa_ref": "qa-007",
+        "serves_goals": [
+          "G1"
+        ]
+      }
     }
   ],
   "category_aggregate": {
@@ -4794,6 +6454,18 @@
     },
     {
       "target_id": "wcag-2-2"
+    },
+    {
+      "target_id": "tanstack-query"
+    },
+    {
+      "target_id": "react-hook-form"
+    },
+    {
+      "target_id": "hookform-resolvers"
+    },
+    {
+      "target_id": "axe-core"
     }
   ],
   "requirements_foundation": {
@@ -5951,14 +7623,410 @@
         "confirmed_at": "2026-07-24T21:11:57+09:00",
         "note": "AskUserQuestion で「採用する (推奨)」を選択 (2026-07-24)。completeness evaluator (completeness-report-20260724-qa074.json) の medium 指摘『testing-library の接地欠如』への確定対応。Vitest + Playwright + Testing Library の 3 点構成を正式採用"
       }
+    },
+    {
+      "id": "D9",
+      "question": "カード型一覧・検索・タブ切替のサーバ状態 (一覧データ・件数・絞り込み結果) を、専用のクライアント状態ライブラリで扱うか、Server Components と Route Handler への fetch で扱うか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G2",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "server-components-fetch",
+          "label": "Server Components + Route Handler への fetch (専用ライブラリを持たない・現行実装)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "追加依存 0。Next.js 16 と既存 Route Handler だけで完結するため、金銭コストも First Load JS への追加も 0 バイト"
+          },
+          "free_tier_limits": "なし (追加依存なし)",
+          "goal_fit": "一覧の絞り込み条件を URL クエリへ書き出す現行方式 (document-list.tsx の query.set) と噛み合い、絞り込み結果が共有可能な URL になる。カード型一覧の主機能である検索・タブ切替がそのままブックマーク・共有・戻る操作で再現できる",
+          "security_fit": "データ取得がサーバ側に留まり、権限で絞った結果だけがクライアントへ渡る。qa-236 の『権限のないものは一覧から消す』を取得段階で満たせる",
+          "pros": [
+            "追加依存が 0 で First Load JS 予算 (120KiB) を消費しない",
+            "絞り込み状態が URL に載るため共有・履歴・戻るが自然に効く",
+            "取得段階で権限絞り込みができ、本文をクライアントへ渡さずに済む",
+            "現行 apps/hub の全一覧画面が既にこの方式で、移行コストが 0"
+          ],
+          "cons": [
+            "同一データの再取得の重複排除やバックグラウンド再検証を自前で書く必要がある",
+            "楽観的更新 (保存前に画面を先に更新する) の仕組みが標準では無い"
+          ],
+          "risks": [
+            "クライアント側キャッシュを持たないため、タブ切替のたびに再取得が走り体感が鈍る可能性がある (URL 単位のルーターキャッシュで緩和する)"
+          ],
+          "lock_in": "低 (Next.js の標準機構のみで、独自 API 面を持たない)",
+          "ops_burden": "低 (追加の依存更新・破壊的変更追従が不要)",
+          "evidence_refs": [
+            "https://nextjs.org/docs"
+          ]
+        },
+        {
+          "id": "tanstack-query-v5",
+          "label": "TanStack Query v5 (@tanstack/react-query) をサーバ状態管理として導入",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MIT)。金銭コスト 0 円。ただしクライアントバンドルへ数十 KiB 級の追加があり、First Load JS 予算 120KiB の一部を恒常的に占有する"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "再取得の重複排除・バックグラウンド再検証・楽観的更新が標準で得られる。一方でカード一覧の絞り込みがコンポーネント内部状態へ寄りやすく、URL 共有可能性を保つには追加の同期実装が要る",
+          "security_fit": "取得自体はクライアントから行うため、権限絞り込みをサーバー側で確実に行う設計規律が別途必要になる",
+          "pros": [
+            "キャッシュ・再検証・重複排除・楽観的更新が既製で揃う",
+            "クライアント主導の高頻度更新画面では体感が良い"
+          ],
+          "cons": [
+            "First Load JS 予算を恒常的に消費する",
+            "現行 apps/hub にこの依存は存在せず、全一覧画面の書き換えが要る",
+            "絞り込み状態を URL へ載せる現行方針と二重管理になりやすい"
+          ],
+          "risks": [
+            "サーバ状態の正本がクライアントキャッシュ側にも生まれ、qa-239 の『PII の複製を作らない』方針と衝突しうる"
+          ],
+          "lock_in": "中 (useQuery/useMutation の API 面が画面全体へ広がると剥がしにくい)",
+          "ops_burden": "中 (メジャー更新の追従とキャッシュ設定の運用が増える)",
+          "evidence_refs": [
+            "https://tanstack.com/query"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "server-components-fetch",
+        "rationale": "現行 apps/hub には @tanstack/react-query の依存が 1 件も無く (package.json 実測)、全一覧画面が既に Server Components + Route Handler + URL クエリで実装されている。仕様側の『(4) サーバ状態 = TanStack Query v5』という記載だけが実装と乖離していた。今回の変更は表示形式の刷新であり、データ取得機構の入替を伴わない。加えて追加依存 0 が First Load JS 予算 120KiB を守り、取得段階での権限絞り込み (qa-236) と PII 非複製 (qa-239) の双方に整合する。",
+        "comparison_basis": {
+          "goal_fit": "絞り込み状態の URL 共有可能性と、既存一覧画面の書換量で比較",
+          "tco": "両案とも金銭コスト 0 円のため、First Load JS 予算の消費量と移行コストで比較",
+          "security": "権限絞り込みを取得段階で行えるか (サーバー側に留まるか) で比較",
+          "operations": "依存更新の追従負荷とキャッシュ設定の運用で比較",
+          "lock_in": "画面全体へ広がる API 面の有無で比較"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-08-13T12:59:38Z",
+        "caveats": [
+          "再取得の重複排除とバックグラウンド再検証は標準で得られないため、タブ切替の体感が問題になる場合はルーターキャッシュの設定で先に対処し、ライブラリ導入は最後の手段とする",
+          "楽観的更新を必要とする画面が将来出た場合は、その画面に限定して再検討する (全画面一律の導入はしない)",
+          "本決定は『TanStack Query が劣る』という評価ではなく、現行実装と要件に対して追加依存が正当化されないという判断である"
+        ]
+      },
+      "user_decision": {
+        "option_id": "server-components-fetch",
+        "confirmed_at": "2026-08-13T22:30:00+09:00",
+        "note": "AskUserQuestion で「実装に合わせて仕様を是正 (推奨)」を選択 (2026-08-13)。completeness evaluator の decision-registry-omission 指摘への確定対応。仕様の『(4) サーバ状態 = TanStack Query v5』という記載を不採用として是正し、現行の Server Components + Route Handler 方式を正とする。利用者選択の逐語は qa-247 に収録 (source.kind=user-dialogue)",
+        "qa_ref": "qa-247"
+      }
+    },
+    {
+      "id": "D10",
+      "question": "カード作成・編集フォームの入力管理とバリデーションを、専用フォームライブラリで扱うか、素の form 要素と Route Handler 側の zod 検証で扱うか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G3",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "native-form-zod-boundary",
+          "label": "素の form 要素 + Route Handler 境界での zod 検証 (専用ライブラリを持たない・現行実装)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "追加依存 0。既に全 API 境界で使用している zod 4.4.3 と @harness-hub/schemas を再利用するのみで、金銭コストも First Load JS への追加も 0 バイト"
+          },
+          "free_tier_limits": "なし (追加依存なし)",
+          "goal_fit": "検証規則の正本が @harness-hub/schemas の zod スキーマ 1 箇所に留まり、画面側とサーバー側で規則が食い違わない。カード作成フォームが増えても検証規則の複製が生じない",
+          "security_fit": "検証がサーバー境界で必ず実行される。クライアント側検証を通過しても、境界の zod が最終判定を持つため、検証の抜け道が構造的に作れない",
+          "pros": [
+            "追加依存 0 で First Load JS 予算 (120KiB) を消費しない",
+            "検証規則の正本が zod スキーマ 1 箇所に閉じる",
+            "サーバー境界の検証が必須経路になり、クライアント検証の迂回で不正データが通らない",
+            "現行 apps/hub の全フォームが既にこの方式で、移行コストが 0"
+          ],
+          "cons": [
+            "フィールド単位のリアルタイム検証表示を自前で書く必要がある",
+            "複雑な動的フォーム (行の追加削除等) の状態管理を手書きすることになる"
+          ],
+          "risks": [
+            "フォームが複雑化すると各画面で入力状態管理が個別実装になり、書き方が揃わなくなる可能性がある"
+          ],
+          "lock_in": "低 (標準の form 要素と zod のみで、独自 API 面を持たない)",
+          "ops_burden": "低 (追加の依存更新・破壊的変更追従が不要)",
+          "evidence_refs": [
+            "https://zod.dev/"
+          ]
+        },
+        {
+          "id": "react-hook-form-zod-resolver",
+          "label": "react-hook-form + @hookform/resolvers の zodResolver を導入",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MIT)。金銭コスト 0 円。ただし本体 react-hook-form 7.85.0 と @hookform/resolvers 5.7.1 の 2 パッケージがクライアントバンドルへ加わり、First Load JS 予算 120KiB の一部を占有する"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "フィールド単位のリアルタイム検証と動的フォームの状態管理が既製で得られ、zodResolver により zod スキーマをそのまま流用できる。ただしカード一覧の刷新で必要になるフォームは作成・編集の 2 種で、複雑な動的フォームを含まない",
+          "security_fit": "クライアント側検証が加わるだけでサーバー境界の zod 検証は依然必要。検証が 2 箇所に増えるため、規則が乖離しないよう zodResolver で同一スキーマを共有する規律が必須になる",
+          "pros": [
+            "フィールド単位のリアルタイム検証表示が既製で得られる",
+            "非制御コンポーネント主体で再描画が少なく、大きなフォームで有利",
+            "zodResolver で既存 zod スキーマをそのまま使える"
+          ],
+          "cons": [
+            "2 パッケージ分の First Load JS を恒常的に消費する",
+            "現行 apps/hub にこの依存は存在せず、既存フォームとの二重方式になる",
+            "本体 8 系がプレリリース段階 (8.0.0-beta.3) で、メジャー移行の追従が将来必要"
+          ],
+          "risks": [
+            "既存フォームを移行しないまま部分導入すると、フォームの書き方が 2 通り併存して保守が分岐する"
+          ],
+          "lock_in": "中 (useForm/register の API 面がフォーム全体へ広がると剥がしにくい)",
+          "ops_burden": "中 (本体と resolvers の 2 パッケージのメジャー更新追従が必要)",
+          "evidence_refs": [
+            "https://react-hook-form.com"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "native-form-zod-boundary",
+        "rationale": "現行 apps/hub には react-hook-form も @hookform/resolvers も依存が 1 件も無く (package.json 実測)、全フォームが素の form 要素と Route Handler 境界の zod 検証で実装されている。仕様側の『(7) フォーム = react-hook-form + zodResolver』という記載だけが実装と乖離していた。今回のカード型一覧の刷新で必要になるフォームは作成・編集の 2 種で、動的な行追加削除のような複雑な状態管理を含まない。追加依存 0 が First Load JS 予算 120KiB を守り、検証規則の正本を zod スキーマ 1 箇所に保つ現行の利点も維持できる。",
+        "comparison_basis": {
+          "goal_fit": "今回必要なフォームの複雑さと、検証規則の正本が何箇所になるかで比較",
+          "tco": "両案とも金銭コスト 0 円のため、First Load JS 予算の消費量と移行コストで比較",
+          "security": "サーバー境界での検証が必須経路として残るか、規則の乖離が起きうるかで比較",
+          "operations": "依存パッケージ数とメジャー更新の追従負荷で比較",
+          "lock_in": "フォーム全体へ広がる API 面の有無で比較"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-08-13T12:59:39Z",
+        "caveats": [
+          "フィールド単位のリアルタイム検証は自前実装になるため、表示方法を packages/ui 側の共通部品へ寄せて画面ごとの書き方の分岐を防ぐ",
+          "将来、動的な行追加削除を伴う複雑なフォームが必要になった場合は、その画面に限定して再検討する (全フォーム一律の導入はしない)",
+          "本決定は『react-hook-form が劣る』という評価ではなく、現行実装と今回必要なフォームの複雑さに対して追加依存が正当化されないという判断である"
+        ]
+      },
+      "user_decision": {
+        "option_id": "native-form-zod-boundary",
+        "confirmed_at": "2026-08-13T22:30:00+09:00",
+        "note": "AskUserQuestion で「実装に合わせて仕様を是正 (推奨)」を選択 (2026-08-13)。completeness evaluator の decision-registry-omission 指摘への確定対応。仕様の『(7) フォーム = react-hook-form + zodResolver』という記載を不採用として是正し、現行の素の form + 境界 zod 検証を正とする。利用者選択の逐語は qa-247 に収録 (source.kind=user-dialogue)",
+        "qa_ref": "qa-247"
+      }
+    },
+    {
+      "id": "D11",
+      "question": "カード型一覧・タブ・検索の刷新でアクセシビリティ (支援技術やキーボードで使えること) の回帰をどう防ぐか。自動検査を CI のリリース条件に置くか、目視レビューに委ねるか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "axe-core-ci-gate",
+          "label": "axe-core をコンポーネントテストへ組み込み、違反 0 を CI のリリース条件にする (現行実装)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "OSS (MPL-2.0)。金銭コスト 0 円。テスト専用依存のため本番バンドルへは 1 バイトも入らない。CI 実行時間の増加はコンポーネント単位検査のため軽微"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "カード・タブ・検索という今回の刷新は role とラベルの構造を作り直すため、対話可能要素の名前欠落やコントラスト不足が入り込みやすい。自動検査を必須ゲートに置くことで、表示形式の変更が支援技術での利用可能性を静かに壊す事態を防げる",
+          "security_fit": "テスト専用依存で本番の攻撃面に影響しない",
+          "pros": [
+            "テスト専用依存で本番バンドルを増やさない",
+            "コンポーネント単位で高速に回り、回帰を PR の時点で止められる",
+            "現行 apps/hub (^4.10.2) と packages/ui (^4.12.1) に既に導入済みで、追加コスト 0",
+            "既に catalog-a11y・board-a11y 等の複数テストで実運用されており、書き方の前例がある"
+          ],
+          "cons": [
+            "自動検査で検出できるのは機械判定可能な違反に限られ、読み上げ順序の妥当性など人手の確認は別途必要",
+            "ルールセットが版ごとに増減するため、版を上げると既存コードが新たに違反判定されうる"
+          ],
+          "risks": [
+            "『違反 0』の意味が採用版に依存するため、版を固定せず更新すると CI が突然赤くなる (版固定と更新時の差分確認で回避する)"
+          ],
+          "lock_in": "低 (テストコード側の呼出しのみで、本番コードは axe に依存しない)",
+          "ops_burden": "低 (版固定と更新時の差分確認のみ)",
+          "evidence_refs": [
+            "https://www.deque.com/axe/"
+          ]
+        },
+        {
+          "id": "manual-review-only",
+          "label": "自動検査を持たず、WCAG 2.2 準拠を目視レビューとチェックリストで担保する",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "ツール費用 0 円。ただしレビュー工数が画面数に比例して増え続ける"
+          },
+          "free_tier_limits": "なし",
+          "goal_fit": "読み上げ順序や文言の妥当性といった機械判定できない観点まで見られる。一方で機械判定可能な違反 (名前欠落・コントラスト不足) の見落としが人的ミスとして残り、画面数が増えるほど漏れが増える",
+          "security_fit": "依存の追加なし",
+          "pros": [
+            "機械判定できない観点まで評価できる",
+            "追加依存が一切ない"
+          ],
+          "cons": [
+            "検出がレビュー時点まで遅れ、修正コストが上がる",
+            "画面数に比例して工数が増え、回帰の再発を止める仕組みにならない",
+            "既に導入済みの axe-core を捨てることになり、既存 a11y テストの書き直しが必要"
+          ],
+          "risks": [
+            "リリース条件が人の注意力に依存し、繁忙時に最初に省略される"
+          ],
+          "lock_in": "なし",
+          "ops_burden": "高 (画面数に比例したレビュー工数)",
+          "evidence_refs": [
+            "https://www.w3.org/TR/WCAG22/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "axe-core-ci-gate",
+        "rationale": "axe-core は既に apps/hub (^4.10.2) と packages/ui (^4.12.1) へ導入済みで、catalog-a11y・board-a11y・home-dashboard-render など複数のテストで実運用されている (package.json とテストファイル実測)。仕様側にこの採用判断が意思決定表として記録されていなかっただけである。今回の刷新はカード・タブ・検索という role とラベルの構造を作り直す変更であり、機械判定可能な回帰が最も入り込みやすい種類の変更にあたる。テスト専用依存で本番バンドルを増やさず、既存資産をそのまま使えるため、追加コストなしにリリース条件を維持できる。",
+        "comparison_basis": {
+          "goal_fit": "role とラベルの構造を作り直す変更に対して、回帰を検出できる時点の早さで比較",
+          "tco": "両案とも金銭コスト 0 円のため、本番バンドルへの影響と継続工数で比較",
+          "security": "両案とも本番の攻撃面に影響しない",
+          "operations": "画面数増加に対する工数の伸び方で比較",
+          "lock_in": "本番コードが検査ツールに依存するかで比較"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-08-13T12:59:41Z",
+        "caveats": [
+          "自動検査は機械判定可能な違反しか見ないため、読み上げ順序や文言の妥当性は人手の確認を併用する (自動検査の合格を『アクセシブルである』の証明として扱わない)",
+          "ルールセットは版ごとに増減するため、CI では版を固定し、更新時に新規違反の差分を確認してから上げる",
+          "本決定は既存実装の追認であり、新規の導入作業は発生しない"
+        ]
+      },
+      "user_decision": {
+        "option_id": "axe-core-ci-gate",
+        "confirmed_at": "2026-08-13T22:30:00+09:00",
+        "note": "AskUserQuestion で「実装に合わせて仕様を是正 (推奨)」を選択 (2026-08-13)。completeness evaluator の decision-registry-omission 指摘への確定対応。既に導入済みの axe-core による CI ゲートを意思決定表へ明示登録し、実装と仕様の対応関係を回復する。利用者選択の逐語は qa-247 に収録 (source.kind=user-dialogue)",
+        "qa_ref": "qa-247"
+      }
+    },
+    {
+      "id": "D12",
+      "question": "カード内および一覧に添えるグラフ (件数推移・構成比・KPI) を、外部チャートライブラリで描くか、design token を使った自作の inline SVG で描くか",
+      "status": "confirmed",
+      "serves_goals": [
+        "G1",
+        "G2",
+        "G5"
+      ],
+      "options": [
+        {
+          "id": "inline-svg-in-house",
+          "label": "design token に基づく自作の inline SVG チャート (packages/ui/src/charts/・現行実装)",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "追加依存 0。既存の BarChart/LineChart/DonutChart/KpiCard/ChartFrame と scale.ts を使うのみで、金銭コストも First Load JS への追加も 0 バイト"
+          },
+          "free_tier_limits": "なし (追加依存なし)",
+          "goal_fit": "系列色が chartSeriesTokens (primary/accent/infoCyan/warning/magenta/success) に固定され、カードの配色と同じ token 体系から描かれる。今回の要望である『絵文字ではなく構成に合った色合いと形』を、グラフ側でも同じ根拠で満たせる",
+          "security_fit": "追加依存が無く、サプライチェーン上の攻撃面が増えない。SVG は本文由来の文字列を属性へ埋め込まない構造で描く",
+          "pros": [
+            "追加依存 0 で First Load JS 予算 (120KiB) を消費しない",
+            "系列色が design token と同じ正本から来るため、テーマ切替 (light/dark) と自動的に整合する",
+            "色だけに依存させない規律 (形状・ラベル併記) を部品側で強制できる",
+            "既に 4 種のチャート部品と目盛り計算 (scale.ts) が実装・テスト済みで、移行コストが 0"
+          ],
+          "cons": [
+            "対応するグラフ種別が実装済みの 4 種に限られ、新種別は自作が必要",
+            "ズーム・ツールチップ等の高度な対話機能は既製で得られない"
+          ],
+          "risks": [
+            "複雑な可視化要求が来た際に自作コストが跳ね上がる (その時点で個別に外部ライブラリを再検討する)"
+          ],
+          "lock_in": "なし (自リポジトリ内の実装)",
+          "ops_burden": "低 (外部依存の更新追従が不要)",
+          "evidence_refs": [
+            "https://www.w3.org/TR/WCAG22/"
+          ]
+        },
+        {
+          "id": "external-chart-library",
+          "label": "外部チャートライブラリ (Recharts / Chart.js 等) を導入する",
+          "cost_model": {
+            "category": "free",
+            "amount": 0,
+            "currency": "JPY",
+            "billing_period": "month",
+            "tco": "主要な候補はいずれも OSS で金銭コスト 0 円。ただしクライアントバンドルへ数十〜百 KiB 級の追加があり、First Load JS 予算 120KiB を単独で圧迫しうる"
+          },
+          "free_tier_limits": "なし (OSS)",
+          "goal_fit": "グラフ種別が豊富で、対話機能も既製で得られる。一方で系列色の既定値がライブラリ固有のパレットになり、design token 体系との整合を保つには全系列を上書きする設定作業が要る",
+          "security_fit": "依存が増える分サプライチェーン上の攻撃面が広がる",
+          "pros": [
+            "グラフ種別が豊富で、新種別の追加コストが低い",
+            "ツールチップ・凡例・ズーム等の対話機能が既製"
+          ],
+          "cons": [
+            "First Load JS 予算を単独で大きく圧迫しうる",
+            "既定パレットが design token と別体系で、テーマ切替との整合を自前で維持する必要がある",
+            "現行 packages/ui にこの依存は存在せず、既存 4 部品との二重方式になる"
+          ],
+          "risks": [
+            "色だけで系列を区別する既定表示のまま使うと、色覚特性や単色印刷で意味が失われる (部品側の規律が効かなくなる)"
+          ],
+          "lock_in": "中 (チャート定義の記法がライブラリ固有になる)",
+          "ops_burden": "中 (メジャー更新の追従とパレット上書き設定の維持)",
+          "evidence_refs": [
+            "https://www.w3.org/TR/WCAG22/"
+          ]
+        }
+      ],
+      "recommendation": {
+        "option_id": "inline-svg-in-house",
+        "rationale": "packages/ui/src/charts/ に BarChart・LineChart・DonutChart・KpiCard・ChartFrame と目盛り計算 (scale.ts) が既に実装・テスト済みで、外部チャートライブラリの依存は 1 件も無い (package.json 実測)。仕様側にこの採用判断が意思決定表として記録されていなかっただけである。系列色が token-names.ts の chartSeriesTokens に固定されているため、カードの配色と同じ正本から描かれ、light/dark 切替とも自動的に整合する。今回の要望である『絵文字ではなく構成に合った色と形』を、コールアウトのアイコンとグラフの系列で同じ根拠から満たせる点が決め手である。",
+        "comparison_basis": {
+          "goal_fit": "系列色が design token と同じ正本から来るか、テーマ切替と整合するかで比較",
+          "tco": "両案とも金銭コスト 0 円のため、First Load JS 予算の消費量と移行コストで比較",
+          "security": "サプライチェーン上の攻撃面が増えるかで比較",
+          "operations": "外部依存の更新追従とパレット整合の維持工数で比較",
+          "lock_in": "チャート定義の記法がライブラリ固有になるかで比較"
+        },
+        "confidence": "high",
+        "latest_checked_at": "2026-08-13T12:59:41Z",
+        "caveats": [
+          "対応種別が実装済みの 4 種に限られるため、これを超える可視化要求が出た時点で外部ライブラリを個別に再検討する (今回の刷新では 4 種で足りる)",
+          "自作である以上、色だけに依存させない規律 (形状・ラベル併記) は部品側のテストで固定し続ける必要がある",
+          "本決定は既存実装の追認であり、新規の導入作業は発生しない"
+        ]
+      },
+      "user_decision": {
+        "option_id": "inline-svg-in-house",
+        "confirmed_at": "2026-08-13T22:30:00+09:00",
+        "note": "AskUserQuestion で「実装に合わせて仕様を是正 (推奨)」を選択 (2026-08-13)。completeness evaluator の decision-registry-omission 指摘への確定対応。既に実装済みの inline SVG チャート方式を意思決定表へ明示登録し、実装と仕様の対応関係を回復する。利用者選択の逐語は qa-247 に収録 (source.kind=user-dialogue)",
+        "qa_ref": "qa-247"
+      }
     }
   ],
   "knowledge_candidates": [],
   "hearing_progress": {
-    "loop_count": 1,
+    "loop_count": 2,
     "next_question": null,
     "complete": true,
-    "max_loops": 1
+    "max_loops": 5
   },
   "design_application_contract_version": "1.0"
 }

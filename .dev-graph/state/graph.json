@@ -1,5 +1,5 @@
 {
-  "graph_revision": 1637,
+  "graph_revision": 1638,
   "nodes": [
     {
       "acceptance": [
@@ -197,9 +197,9 @@
         "未確定章の取込"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-02T12:15:00Z",
+        "imported_at": "2026-08-14T00:45:00Z",
         "origin_kind": "system-spec-harness",
-        "source_digest": "48100e2bd54aca5787d04687a5e22607dffdfe34497755b1f24ec296f68bb873",
+        "source_digest": "689bf1b0b1ce59beece2307a8cc59e75587e50c40c98bf94c887b1f212207053",
         "source_path": "system-spec/frontend.md",
         "source_plugin": "system-spec-harness",
         "source_version": "0.1.0"
@@ -215,7 +215,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub frontend アーキテクチャ (system-spec 取込)",
       "tracker_binding": "none",
-      "updated_at": "2026-08-11T06:57:48.545354Z"
+      "updated_at": "2026-08-14T11:52:38.903869Z"
     },
     {
       "acceptance": [
@@ -61301,10 +61301,10 @@
         "Cloudflare deploy unit"
       ],
       "source_lineage": {
-        "imported_at": "2026-08-13T09:10:00Z",
+        "imported_at": "2026-08-14T00:45:00Z",
         "origin_kind": "manual",
-        "source_digest": null,
-        "source_path": null,
+        "source_digest": "4b4fd8c1e74bf53708d2160d5e254efb9338bc89d23f2d1cb2295ec98aff2f44",
+        "source_path": "docs/frontend-spec.md",
         "source_plugin": null,
         "source_version": null
       },
@@ -61322,7 +61322,7 @@
       "template_version": "1.0.0",
       "title": "Harness Hub デザインシステム アーキテクチャ",
       "tracker_binding": "none",
-      "updated_at": "2026-08-13T09:30:00Z"
+      "updated_at": "2026-08-14T00:45:00Z"
     },
     {
       "acceptance": [
@@ -62492,6 +62492,2883 @@
       "title": "Hub フォントのビルド時外部依存対策の保証範囲と検査経路を整合する",
       "tracker_binding": "beads",
       "updated_at": "2026-08-14T04:31:38Z"
+    },
+    {
+      "acceptance": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md に goal-spec.json の purpose/goal/scope_in 5 件/scope_out 4 件/acceptance 5 件が逐語一致で転記されている",
+        "quality_constraints 5 件 (emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3 / design-system-token-and-contrast-gate / state-value-visible-label-qa232-2) が個別の充足条件として書き下されている",
+        "既存実装 (packages/ui/src/icons/index.tsx の callout 4 アイコン、packages/ui/src/components/Markdown.tsx の remarkCallouts、packages/ui/src/tokens/tokens.ts の infoBlue/infoBlueSoft) が『すでに存在する部分』として明記され、本 feature の残作業が絵文字 lint 未整備・一覧/カード状態表現の token 監査・可視ラベル併置監査に限定されることが要件として確定している"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.1",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P01 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P01",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P01",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "本 feature の受入可能な要件ベースラインを確定し、P02 以降の全 task が同一の合意事項 (絵文字禁止の対象範囲・既存実装の再利用範囲・quality_constraints 5 件の充足条件) を参照できる状態にする。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの作成 (本 task は要件確定のみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-01-requirements.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p01"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "要件ベースライン確定 — 絵文字禁止 semantic token/icon 表現の要件確定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:00:30Z"
+    },
+    {
+      "acceptance": [
+        "architecture-decision.md に、既存の packages/ui/src/icons/index.tsx (Icon コンポーネント・iconNames)・packages/ui/src/components/Markdown.tsx (CalloutKind/remarkCallouts/Callout)・packages/ui/src/tokens/tokens.ts (infoBlue/infoBlueSoft 等) を変更せず再利用する範囲が明記されている",
+        "絵文字 lint の配置先スクリプト名 (scripts/lint- prefix の flat 構成に合わせた命名) と、CI ワークフロー (.github/workflows/ci.yml の static-gates 相当ジョブ) への fail-closed 組込み位置が決定されている",
+        "resource_scope の packages/ui/src/markdown という表記が実際には packages/ui/src/components/Markdown.tsx を指すこと、scripts/lint という表記が実際には scripts/lint- prefix のフラットなスクリプト群を指すことが、実在パスとの対応として明記されている",
+        "一覧・カードの状態表現 (Badge.tsx 等) を同じ token 体系へ揃えるための監査範囲 (対象コンポーネント一覧) が決定されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.2",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P02 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P01"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P02",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P02",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "既存の callout/icon/token 実装 (packages/ui/src/icons/index.tsx, packages/ui/src/components/Markdown.tsx, packages/ui/src/tokens/tokens.ts) を変更せず再利用する範囲と、絵文字 lint の配置・CI 組込み位置、一覧・カード状態表現の token 統一監査範囲を決定する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/architecture-decision.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/architecture-decision.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの作成 (本 task は設計決定のみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-02-architecture.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p02"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "アーキテクチャ設計 — 既存 callout/icon/token 実装の再利用範囲と絵文字 lint の配置・CI 組込み位置の決定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:00:38Z"
+    },
+    {
+      "acceptance": [
+        "design-review.md に P02 の architecture-decision.md の内容に対する独立レビュー結果 (合格/要修正の判定と根拠) が記録されている",
+        "絵文字 lint の検査対象範囲 (UI 文言・callout ラベル・空状態文言) が scope_in の記述と過不足なく一致することが確認されている",
+        "packages/ui を唯一のアイコン供給元とする所有境界が、apps/hub 側で再実装や別アイコンライブラリ導入をしない制約として明記され、レビューで承認されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.3",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P03 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P02"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P03",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P03",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "P02 のアーキテクチャ決定を、lint 検査対象範囲・所有境界・token 適用範囲の 3 点について独立にレビューし、P04 以降が実装可能な状態まで確定する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/design-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/design-review.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの作成 (本 task はレビューのみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-03-design-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p03"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "独立設計レビュー — lint 検査対象範囲・所有境界・token 適用範囲の妥当性確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:00:49Z"
+    },
+    {
+      "acceptance": [
+        "絵文字 lint の失敗系 (絵文字混入時に非ゼロ終了) と成功系 (混入なしで正常終了) のテストスタブが scripts/lint-ui-text-emoji.test.ts に作成されている",
+        "callout 4 種それぞれで異なる Icon name と calloutStyle トークンが適用されることを確認するテストスタブが packages/ui/src/components/Markdown.test.tsx に作成されている",
+        "ライトモードで callout point/note の背景色が infoBlueSoft (グレー系トークンではない) になることを確認するテストスタブが作成されている",
+        "状態・日時・金額・PII・略語の表現でアイコン単体ではなく可視ラベルが併置されることを確認するテストスタブが作成されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.4",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P04 の単一責務 (quality) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P03"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P04",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P04",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "絵文字 lint・callout 描き分け・可視ラベル併置・ライトモード背景の 4 点について、実装前に失敗する検証可能なテストスタブを用意し、P05 の実装対象を確定する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "scripts/lint-ui-text-emoji.test.ts",
+        "packages/ui/src/components/Markdown.test.tsx",
+        "packages/ui/src/tokens/tokens.test.ts"
+      ],
+      "scope_in": [
+        "scripts/lint-ui-text-emoji.test.ts",
+        "packages/ui/src/components/Markdown.test.tsx",
+        "packages/ui/src/tokens/tokens.test.ts"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "テスト対象の実装 (P05 が所有)",
+        "テストの実行 (P06 が所有)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-04-test-design.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テストファースト設計 — 絵文字 lint・callout 描き分け・可視ラベル併置・ライトモード背景のテストスタブ作成",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:01:02Z"
+    },
+    {
+      "acceptance": [
+        "scripts/lint-ui-text-emoji.py が packages/ui/src 配下の文言・callout ラベル・空状態文言中の絵文字を検出し、検出時に非ゼロ終了する",
+        ".github/workflows/ci.yml の static-gates 相当ジョブに絵文字 lint が fail-closed で組み込まれている (lint 未実行では CI が成功しない)",
+        "一覧・カードの状態表現 (Badge.tsx 等) が packages/ui/src/tokens/tokens.ts の semantic token のみで色付けされ、token 外の色指定が残っていない",
+        "P04 のテストスタブが実装に対して green で通過する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.5",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P05 の単一責務 (frontend) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P04"
+      ],
+      "domain": "frontend",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P05",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P05",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "P02 の決定と P04 のテストスタブに従い、絵文字 lint script・CI fail-closed 組込み・一覧/カード状態表現の token 統一・可視ラベル併置の 4 点を実装する。既存の callout/icon/token 実装は変更しない。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "scripts/lint-ui-text-emoji.py",
+        ".github/workflows/ci.yml",
+        "packages/ui/src/components/Badge.tsx"
+      ],
+      "scope_in": [
+        "scripts/lint-ui-text-emoji.py",
+        ".github/workflows/ci.yml",
+        "packages/ui/src/components/Badge.tsx"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "テストの実行 (P06 が所有)",
+        "既存の callout/icon/token 実装 (packages/ui/src/icons/index.tsx, packages/ui/src/components/Markdown.tsx, packages/ui/src/tokens/tokens.ts) の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-05-implementation.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "frontend",
+        "phase-p05"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "実装 — 絵文字 lint script・CI fail-closed 組込み・一覧/カード状態表現の token 統一・可視ラベル併置の実装",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:01:12Z"
+    },
+    {
+      "acceptance": [
+        "P04 で作成したテストスタブと P05 の実装に対する単体テストの実行結果 (pass/fail 件数) が test-run-report.md に記録されている",
+        "scripts/lint-ui-text-emoji.py を意図的な絵文字混入サンプルに対して実行した結果 (fail する) と、混入なしサンプルに対して実行した結果 (pass する) が記録されている",
+        "callout の a11y 属性 (role/aria-label) とライトモード背景のコントラスト測定結果が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.6",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P06 の単一責務 (quality) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P05"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P06",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P06",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "P04 のテストスタブと P05 の実装に対して、単体・lint・a11y・コントラストの各テストを実行し、結果を再実行可能な形で記録する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/test-run-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/test-run-report.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの修正 (不合格の場合は P05 へ差し戻す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-06-test-run.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "テスト実行 — 単体/lint/a11y/コントラストテストの実行と結果記録",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:03:50Z"
+    },
+    {
+      "acceptance": [
+        "goal-spec.json の acceptance 5 項目それぞれについて、充足の根拠 (対応する実装ファイル・テスト結果) が acceptance-review.md に個別に記録されている",
+        "5 項目全てが充足と判定され、未充足の項目がある場合はその項目が明示され P05/P06 への差し戻しが記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.7",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P07 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P06"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P07",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P07",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "goal-spec.json の acceptance 5 項目それぞれについて、P01〜P06 の成果物とテスト結果を根拠に充足を確認する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/acceptance-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/acceptance-review.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの修正 (不合格の場合は P05/P06 へ差し戻す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-07-acceptance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p07"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "受入 — goal-spec acceptance 5 項目の確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:04:51Z"
+    },
+    {
+      "acceptance": [
+        "refactor-migration-note.md に、本 feature が公開 API・DB schema・認可判定・Cloudflare deploy unit を変更しない scope_out 対象であり、リファクタリング/マイグレーション作業が不要であることが明記されている",
+        "P05 で行った Badge.tsx 等の token 置換が、既存の呼び出し側インターフェース (props) を変更しない非破壊的変更であることが確認されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.8",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P08 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P07"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P08",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P08",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "本 feature が公開 API・DB schema・認可判定・Cloudflare deploy unit を変更しないことを確認し、P05 の token 置換が既存の呼び出し側インターフェースを破壊しない非破壊的変更であることを記録する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/refactor-migration-note.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/refactor-migration-note.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "schema マイグレーションの実施 (本 feature は scope_out のため実施しない)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-08-refactoring-migration.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p08"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リファクタリング/マイグレーション — N/A (DB schema 変更なし)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:05:57Z"
+    },
+    {
+      "acceptance": [
+        "絵文字 lint が CI 上で fail-closed に機能していること (lint step 自体が skip/失敗した場合も CI 全体が失敗すること) が quality-gate-report.md に記録されている",
+        "callout の a11y (axe 等) とライトモード背景のコントラスト・VRT (Visual Regression Test) 相当の確認結果が記録されている",
+        "quality_constraints 5 件それぞれについて CI 品質ゲートでの充足確認結果が記録されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.9",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P09 の単一責務 (quality) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P08"
+      ],
+      "domain": "quality",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P09",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P09",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "絵文字 lint の CI 上での fail-closed 動作、callout の a11y、ライトモード背景のコントラスト・VRT 相当の品質ゲートが機能していることを確認する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの修正 (未充足ゲートがある場合は P05/P06 へ差し戻す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-09-quality-assurance.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "品質保証 — CI 品質ゲート (絵文字 lint fail-closed/axe/コントラスト/VRT) の確認",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:12:08Z"
+    },
+    {
+      "acceptance": [
+        "final-review.md に quality_constraints 5 件 (emoji-ban-semantic-token-qa232-5 / icon-lint-ci-fail-closed-qa233-6 / icon-ownership-boundary-qa233-3 / design-system-token-and-contrast-gate / state-value-visible-label-qa232-2) それぞれの充足判定 (合格/不合格) と根拠が記録されている",
+        "P01〜P09 の全成果物 (requirements-baseline.md 〜 quality-gate-report.md) への参照リンクが final-review.md に列挙されている",
+        "5 件全てが合格と判定されている (不合格がある場合は当該フェーズへの差し戻しが final-review.md に明記されている)"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.10",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P10 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P09"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P10",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P10",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "quality_constraints 5 件それぞれについて最終的な独立判定を行い、P01〜P09 の全成果物を参照可能な状態にまとめる。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/final-review.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/final-review.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの修正 (不合格項目は該当フェーズへ差し戻す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-10-final-review.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p10"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "最終独立レビュー — quality_constraints 5 件の充足判定",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:13:11Z"
+    },
+    {
+      "acceptance": [
+        "evidence-bundle.md に P06 のテスト実行ログ、P09 の CI 品質ゲート実行結果、絵文字 lint の実行コマンドと出力が再実行可能な形式 (コマンド全文+出力抜粋) で集約されている",
+        "各証跡が生成された日時・実行環境 (ローカル/CI) が記録され、第三者が同じコマンドで再現できる状態になっている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.11",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P11 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P10"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P11",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P11",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "P06 のテスト実行ログと P09 の CI 品質ゲート実行結果、絵文字 lint の実行コマンドと出力を、第三者が再実行できる形式で集約する。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/evidence-bundle.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/evidence-bundle.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "不足証跡の再実行そのもの (不足がある場合は P06/P09 へ差し戻す)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-11-evidence.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:15:07Z"
+    },
+    {
+      "acceptance": [
+        "runbook.md に、新しい callout 種別やアイコンを packages/ui/src/icons/index.tsx へ追加する際の手順 (iconNames への追加・iconPaths への SVG 追加・aria-label 方針) が記載されている",
+        "絵文字 lint (scripts/lint-ui-text-emoji.py) が誤検知した場合の対処手順と、CI で fail した場合の切り分け手順が記載されている",
+        "packages/ui を唯一のアイコン供給元とする所有境界 (apps/hub 側で新規アイコンライブラリを追加しない旨) が運用ルールとして明記されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.12",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P12 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P11"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P12",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P12",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "新しい callout 種別・アイコンの追加手順、絵文字 lint の運用手順、packages/ui を唯一の供給元とする所有境界を runbook として運用へ引き渡す。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/runbook.md"
+      ],
+      "scope_in": [
+        "docs/features/feat-semantic-emphasis-icons/runbook.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "実装コードの変更 (本 task は運用文書の作成のみ)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-12-documentation-operations.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "ドキュメント/運用 — アイコン追加手順・絵文字 lint 運用・所有境界の runbook 作成",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:16:31Z"
+    },
+    {
+      "acceptance": [
+        "P01〜P12 の全成果物が揃い、P10 final-review.md で quality_constraints 5 件が全て合格判定されていることを前提にリリース可否が判定されている",
+        "features/feat-semantic-emphasis-icons.md と .context.json に本 feature の実装完了状態 (絵文字 lint 稼働・token 統一・可視ラベル併置) が書き戻されている",
+        "architecture/harness-hub-design-system.md へ、ライトモード強調ブロック背景が semantic token 由来であることの確定事項が書き戻されている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n.13",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P13 の単一責務 (documentation) を実行する task",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "in_progress"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P12"
+      ],
+      "domain": "documentation",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "content-addressed published task spec の全責務・受入条件・検証・rollback を満たし、再実行可能な証跡を残す",
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P13",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "phase_ref": "P13",
+      "priority": null,
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "pull_request_linkages": [],
+      "purpose": "本 feature の成果をいつでも反映できる状態に確定し、P01〜P12 で得た判断と改善点を確定仕様と architecture へ書き戻して次の外側ループへ引き継ぐ。deploy そのものの実行は本 feature の scope_out であり、本 task は行わない。",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "features/feat-semantic-emphasis-icons.md",
+        "features/feat-semantic-emphasis-icons.context.json",
+        "architecture/harness-hub-design-system.md"
+      ],
+      "scope_in": [
+        "features/feat-semantic-emphasis-icons.md",
+        "features/feat-semantic-emphasis-icons.context.json",
+        "architecture/harness-hub-design-system.md"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂 (architecture/harness-hub-design-system.md の所有)",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更",
+        "本番 deploy の実行 (feature context の scope_out。運用操作であり本 feature の成果物ではない)",
+        "確定仕様の既存章の改変 (追補のみ許可)"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T23:31:45Z",
+        "origin_kind": "system-dev-planner",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-13-release-deploy.md",
+        "source_plugin": "system-dev-planner",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p13"
+      ],
+      "target_date": null,
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:25:37Z"
+    },
+    {
+      "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "C02 でのみ登録する"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "architecture",
+      "artifact_subtypes": [
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "architecture",
+          "candidate_path": "architecture/system-spec-overview.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が確定した architecture context の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-13T22:33:06Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-13T22:33:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "5b82af4dfafcea3acab4bbfb1b34a8b3b7f924dfa9c1c506ffa659a8a3ae0cb0",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T22:33:06Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "architecture/system-spec-overview.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様由来の architecture context を feature から参照できる状態。",
+      "graph_node_id": "arch-system-spec-overview",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T22:33:06Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の architecture context を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/00-requirements-definition.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec requirements artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:33:06Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "408f576f25e8e60f2fa9a148c7e37e2e566d2335066327a6c57a44d42eee1de9",
+        "source_path": "system-spec/00-requirements-definition.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "architecture",
+      "template_version": "1.0.0",
+      "title": "system-spec architecture overview",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-13T22:33:06Z"
+    },
+    {
+      "acceptance": [
+        ":::cards cols=2 / cols=3 と :::card で作った行を縦に積め、大画面・中幅・狭幅の列数が契約どおりに変わる",
+        "列数が変わっても DOM 順は記述順を保ち、読上げ順と視覚順が一致する",
+        "未知 cols、未閉じ、不正嵌套は safe degradation してドキュメント全体を描画でき、編集時は非 blocking 警告から修正場所が分かる",
+        "sanitize 後に hh-cards / hh-card と正規化済み data-cols だけが残り、script / iframe / style / class / id / on* は除去される",
+        "カードが見出しレベルと TOC を壊さず、複数画像は既存 ImageGroup の操作と読上げ契約を維持する",
+        "大画面の 2 ペインと狭幅の Tabs が同じ MarkdownView / sanitize 経路を使い、同じ draft の出力が一致する",
+        "保存済み preview が baseline、editor preview が draft とラベルで区別され、第 3 の preview と別 renderer が存在しない",
+        "toolbar から 2 列 / 3 列の雛形を挿入し、その後は通常 Markdown として編集・外部 Docs 同期できる",
+        "カード内画像が既存 Docs image API / R2 を通り、VRT baseline の path / bytes が runtime 本文や object に混入しない",
+        "docs 以外の初期 client chunk が増えず、markdown-view / markdown-editor の dynamic import 境界が保たれる"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security",
+        "arch-harness-hub-design-system"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-card-block-authoring.md",
+          "confidence": 0.93
+        }
+      ],
+      "classification_confidence": 0.93,
+      "classification_reason": "C14 マクロ分解 (qa-232【6,7,8】・qa-233【1,2,5】・qa-234 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-13T22:39:59Z",
+      "depends_on": [
+        "feat-card-mutation-safety",
+        "feat-semantic-emphasis-icons"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-card-block-authoring.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "到達状態 (target、未実装): 既存 Markdown.tsx の MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、:::cards container を同一 sanitize 経路で描画する。編集中は大画面は 2 ペイン、狭幅は Tabs とし、記法ミスで本文全体を壊さない。",
+      "graph_node_id": "feat-card-block-authoring",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T22:39:59Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現状 (current) の MarkdownEditor は edit/preview Tabs を持ち、編集画面には別途、保存済み本文の preview がある。しかし 2 列・3 列の意味あるカード container、大画面の同時編集、不正記法の警告契約は未実装である。既存の安全な Markdown 経路を広げ、本文をカード単位で構成できるようにする。",
+      "related_nodes": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-security",
+        "arch-harness-hub-design-system",
+        "feat-docs-cms"
+      ],
+      "resource_scope": [
+        "packages/ui/src/components/Markdown.tsx",
+        "packages/ui/src/components/Markdown.test.tsx",
+        "packages/ui/src/components/Tabs.tsx",
+        "apps/hub/src/components/docs/markdown-view.ts",
+        "apps/hub/src/components/docs/markdown-editor.ts",
+        "apps/hub/src/app/(dashboard)/docs/[id]/document-detail-content.tsx",
+        "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
+        "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
+        "apps/hub/src/app/api/v1/docs/[id]/images/route.ts",
+        "apps/hub/src/app/api/v1/docs/[id]/images/[imageId]/route.ts",
+        "apps/hub/src/features/docs-cms/image-service.ts",
+        "apps/hub/tests/browser"
+      ],
+      "scope_in": [
+        "packages/ui/src/components/Markdown.tsx の既存 MarkdownView / ImageGroup / MarkdownEditor / Tabs を拡張し、別 renderer を作らない",
+        ":::cards cols=2|3 の内側に :::card を並べる container 記法、DOM 記述順、大画面 2/3 列・中幅最大 2 列・狭幅 1 列のレスポンシブ描画を実装する",
+        "hh-cards / hh-card と data-cols=2|3 だけを sanitize allowlist に加え、script / iframe / style / class / id / on* は引き続き除去する",
+        "未知 cols、未閉じ、不正な嵌套は例外を投げず通常 Markdown へ safe degradation し、編集中だけ保存を妨げない非 blocking 警告を表示する",
+        "draft の編集/preview は大画面は 2 ペインで同時表示し、狭幅は Tabs で同じ 2 面を切り替える。両方の preview は同一 MarkdownView を使う",
+        "既存の保存済み preview は『現在保存され、他の利用者が見る内容』の baseline、MarkdownEditor preview は未保存 draft の結果とする。同じ draft を表す第 3 の preview は追加しない",
+        "2 列 / 3 列の雛形挿入と、invalid syntax の場所・修正方法を示す非 blocking 警告を MarkdownEditor の既存 toolbar / status 領域に加える",
+        "カード内画像は既存 Docs image API / R2 と ImageGroup のアップロード・参照契約だけを使い、新しい保存先を作らない",
+        "VRT baseline は test-only の比較証跡とし、runtime の画像カタログ・Docs image API / R2 object・Markdown 本文へ混在させない",
+        "markdown-view / markdown-editor の dynamic import 境界、見出し/TOC 際層、sanitize 回帰、未保存面の離脱抑止を維持する"
+      ],
+      "scope_out": [
+        "Markdown 以外の新しい本文保存形式、任意 HTML、class / style の allowlist 開放",
+        "画像の新しい保存先・暗号化・削除契約、および VRT baseline の runtime asset 転用",
+        "一覧カードと status_counts (これは feat-card-list-shell の責務)",
+        "Idempotency-Key、entity revision、412 競合応答 (これは feat-card-mutation-safety の責務)",
+        "semantic icon / color token の供給元の実装 (これは feat-semantic-emphasis-icons の責務)",
+        "保存済み baseline と draft preview 以外の第 3 の preview renderer"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:39:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "dbbd08788007feb6a8923a47ec8edbf8b20ac6153853d661da13d78140b7cdff",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "card-ui",
+        "markdown",
+        "remark",
+        "sanitize",
+        "editor",
+        "preview"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "カードブロック本文記法と編集/プレビュー 2 ペイン",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T21:55:26Z"
+    },
+    {
+      "acceptance": [
+        "Docs / Sheets / Catalog の 3 一覧がカードグリッドを既定で表示し、可視ラベル付き切替でテーブル表示へ移れる",
+        "カードとテーブルが同一 DataTable column model から値を取り、テーブル側の比較・絞込・選択・一括操作が保たれる",
+        "tab / q / filter を URL query だけから共有・再読込・戻る/進むで復元でき、sessionStorage の filter 値に結果が左右されない",
+        "view mode だけは sessionStorage から再訪時に復元され、URL の絞込状態を上書きしない",
+        "Docs / Sheets / Catalog の status mapping と null=unknown が単体テストで固定され、unknown が個別状態 tab に誤分類されない",
+        "status_counts が認可後かつ cursor 適用前の集合から返り、権限外の行と別 page の件数を含まない",
+        "既存の q で title / body / tags のいずれかに一致する行が返り、状態・その他 filter と AND 合成される",
+        "既存 excerpt がカード lead として使われ、excerpt=null の場合も永続コピーを増やさずに詳細へ到達できる",
+        "Docs の 4 面は共通構造となり、Sheets / Catalog は既存面だけが共通 shell を使い、存在しない CRUD route を追加しない",
+        "真の 0 件と絞込後 0 件が異なる空状態で表示され、適用中条件を解除する chip がある"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-design-system"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-card-list-shell.md",
+          "confidence": 0.93
+        }
+      ],
+      "classification_confidence": 0.93,
+      "classification_reason": "C14 マクロ分解 (qa-232【1-4,9】・qa-233【3,4】・qa-235・qa-236・qa-239・qa-240 から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": null,
+        "evaluator": null,
+        "evidence_ref": null
+      },
+      "confirmation_status": "draft",
+      "created_at": "2026-08-13T22:39:59Z",
+      "depends_on": [
+        "feat-card-mutation-safety",
+        "feat-semantic-emphasis-icons"
+      ],
+      "domain": "ui-ux",
+      "evaluation_status": "pending",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-card-list-shell.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "到達状態 (target、未実装): Docs / Sheets / Catalog の 3 一覧はカードグリッドを既定とし、同じ DataTable column model からテーブル表示へ切り替えられる。tab / q / filter は URL query から完全に復元でき、認可済み集合の status_counts と cursor page が同じ契約で返る。",
+      "graph_node_id": "feat-card-list-shell",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T22:39:59Z",
+        "missing_sections": [],
+        "status": "incomplete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現状 (current) の Docs / Sheets / Catalog 一覧は wide table 中心で、q の検索対象・絞込状態の復元・状態別件数がカード一覧の契約を満たさない。テーブルの比較性を残しつつ、3 一覧を中身が見える共通カード shell へ移行する。",
+      "related_nodes": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-design-system",
+        "feat-docs-cms",
+        "feat-hearing-intake",
+        "feat-dual-catalog-web"
+      ],
+      "resource_scope": [
+        "packages/ui/src/components/DataTable.tsx",
+        "packages/ui/src/components/DataTable.test.tsx",
+        "apps/hub/src/app/(dashboard)/docs/page.tsx",
+        "apps/hub/src/app/(dashboard)/docs/document-list.tsx",
+        "apps/hub/src/app/(dashboard)/docs/[id]/page.tsx",
+        "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
+        "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/page.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/hearing-sheet-list.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/[id]/hearing-sheet-detail.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx",
+        "apps/hub/src/app/(workspace)/catalog/page.tsx",
+        "apps/hub/src/components/catalog/CatalogList.tsx",
+        "apps/hub/src/app/api/v1/docs/route.ts",
+        "apps/hub/src/app/api/v1/sheets/route.ts",
+        "packages/db/repository/docs-cms.ts",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/schema/docs-cms/schema.ts",
+        "packages/db/schema/hearing-intake/schema.ts",
+        "apps/hub/src/lib/catalog/marketplace.ts",
+        "apps/hub/src/lib/catalog/response-schemas.ts"
+      ],
+      "scope_in": [
+        "Docs / Sheets / Catalog の 3 一覧に、カードグリッドを既定とする共通 shell と可視ラベル付き card/table view mode 切替を導入する",
+        "カードとテーブルは既存 DataTable column model の列定義・value・ソート語彙を再利用し、同じ行の別表現とする",
+        "URL query が tab / q / filter の唯一の正本。共有・再読込・戻る/進むで復元し、sessionStorage は view mode だけを記憶する",
+        "状態写像は Docs: published=published, draft=draft, null=unknown、Sheets: received|generating|review=active, completed=completed, null=unknown、Catalog: available=available, suspended|deprecated=suspended, null=unknown。unknown は『すべて』だけに含めて状態不明の可視ラベルを出す",
+        "status_counts は認可後、q と非状態 filter 適用後、選択中状態と cursor 適用前の集合から集計し、権限外と別 page の件数を混同しない",
+        "既存の q パラメータ名と URL / 認可境界を維持し、server-side 検索を title / body / tags の OR、その他の filter と AND に拡張する",
+        "既存の excerpt は保存済みの表示用要約 (手動/自動 source 付き) としてカード lead に再利用し、null 時だけ body から揮発的に補う。別の永続 lead / 検索コピーは作らない",
+        "認可を repository query の最初の境界で適用し、権限外の行を items、status_counts、検索対象、cache のどこにも出さない",
+        "既存 q と認可契約は不変だが、status_counts と title/body/tags 検索のための additive response / repository behavior は変更可能とする",
+        "Docs の一覧 / 詳細 / 編集 / 作成は同じ shell・カード階層・操作位置へ統一し、Sheets / Catalog は実在する面だけに同じ shell / 構造を適用する"
+      ],
+      "scope_out": [
+        "DataTable の削除。比較・列ソート・選択・一括操作の到達手段として残す",
+        "Sheets / Catalog に存在しない編集・作成・削除面を新設すること",
+        "Markdown 本文のカードブロック記法と draft preview (これは feat-card-block-authoring の責務)",
+        "POST 再送・PATCH 競合のデータ安全契約 (これは feat-card-mutation-safety の責務)",
+        "semantic icon / color token の供給元の実装 (これは feat-semantic-emphasis-icons の責務)",
+        "既存の q パラメータ名、画面 URL、認可ルールの置換、および新しい永続 excerpt / lead / 検索 index の追加"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:39:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "dbbd08788007feb6a8923a47ec8edbf8b20ac6153853d661da13d78140b7cdff",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "draft",
+      "tags": [
+        "card-ui",
+        "list-shell",
+        "tabs",
+        "search",
+        "rbac",
+        "responsive"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "一覧のカード型シェル (カードグリッド既定・表示切替・状態タブ・検索)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T21:55:26Z"
+    },
+    {
+      "acceptance": [
+        "Docs / Sheets の POST で同じ Idempotency-Key・scope・canonical payload hash を同時送信しても対象は 1 件だけ作成され、初回完了後の再送は保存済み status / headers / body を mapper の再実行なしで replay する",
+        "同じ Idempotency-Key の payload を変えると 422、key を省略または不正にすると 400 となり、業務行は作成されない",
+        "同じ key でも tenant / workspace / resource / operation のどれかが異なれば衝突せず、24h 経過後の扱いが決定論テストで固定される",
+        "Docs / Sheets の GET/POST/PATCH response が通常 entity revision ETag を返し、PATCH が If-Match を必須とする",
+        "同じ revision を使う同時 PATCH は 1 件だけが成功して revision を増やし、もう1件は後勝ち上書きせず現行 representation / ETag 付き 412 を返す",
+        "412 後も既存 Docs / Sheets caller は未保存 draft を保持し、現行値の表示と利用者の明示的再試行を可能にし、自動 merge を実行しない",
+        "外部 import route だけが docs-import-<n> を受理し、通常 Docs / Sheets CRUD はその ETag を受理せず別の entity revision を使う",
+        "Docs の作成行・replay wire snapshot・docs.create 監査は同一 DB transaction で確定し、一部だけの commit を許さない",
+        "Catalog / PublishRequest の idempotency・release/publish 状態契約は変化せず、カード一覧の表示構造と Markdown カード本文は変更しない"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-card-mutation-safety.md",
+          "confidence": 0.9
+        }
+      ],
+      "classification_confidence": 0.9,
+      "classification_reason": "C14 マクロ分解 (qa-237・qa-238 から導出)",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T00:54:09Z",
+        "evidence_refs": [
+          "packages/db/__tests__/mutation-safety-repositories.test.ts",
+          "apps/hub/tests/card-mutation-safety/http-contract.test.ts",
+          "tests/test_card_feature_contracts.py",
+          "packages/db/migrations/0015_card-mutation-safety.sql",
+          "beads:HarnessHub-6oi5"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:54:42Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "06f577ed18ed1d8ef590e56ea593d599a9375d87b7cc947229065c8b7f8daed8",
+        "evaluator": "implement-mutation-safety-tdd",
+        "evidence_ref": "packages/db/__tests__/mutation-safety-repositories.test.ts"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T22:39:59Z",
+      "depends_on": [],
+      "domain": "data-safety",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-card-mutation-safety.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "到達状態 (achieved): Docs / Sheets の通常 POST は tenant / workspace / resource / operation 複合スコープの 24h 冪等台帳で原子的に response replay され、通常 GET/POST/PATCH は外部 import と分離した entity revision ETag/If-Match CAS を使う。",
+      "graph_node_id": "feat-card-mutation-safety",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T23:42:26Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "現状 (current) の Docs / Sheets 通常 CRUD は必須 Idempotency-Key と汎用 entity revision CAS を持たない。Docs には外部 import 専用の docs-import-<n> ETag があるが、通常の編集版ではない。再送の重複作成と古い表示からの後勝ち上書きを、UI と独立したデータ安全基盤で防ぐ。",
+      "related_nodes": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security",
+        "feat-docs-cms",
+        "feat-hearing-intake"
+      ],
+      "resource_scope": [
+        "apps/hub/src/app/api/v1/docs/route.ts",
+        "apps/hub/src/app/api/v1/docs/[id]/route.ts",
+        "apps/hub/src/app/api/v1/sheets/route.ts",
+        "apps/hub/src/app/api/v1/sheets/[id]/route.ts",
+        "apps/hub/src/app/(dashboard)/docs/new/document-create-form.tsx",
+        "apps/hub/src/app/(dashboard)/docs/document-edit-panel.tsx",
+        "apps/hub/src/app/(dashboard)/docs/[id]/edit/document-edit-page.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/new/hearing-intake-wizard.tsx",
+        "apps/hub/src/app/(dashboard)/sheets/[id]/hearing-sheet-detail.tsx",
+        "apps/hub/src/features/docs-cms/dto.ts",
+        "apps/hub/src/features/hearing-intake/service.ts",
+        "apps/hub/src/lib/http",
+        "packages/schemas/docs-cms",
+        "packages/schemas/hearing-intake",
+        "packages/db/repository/docs-cms.ts",
+        "packages/db/repository/hearing-intake.ts",
+        "packages/db/repository/hearing-intake-queue.ts",
+        "packages/db/repository/mutation-safety.ts",
+        "packages/db/schema/docs-cms/schema.ts",
+        "packages/db/schema/hearing-intake/schema.ts",
+        "packages/db/schema/mutation-safety/schema.ts",
+        "packages/db/migrations/0015_card-mutation-safety.sql"
+      ],
+      "scope_in": [
+        "Docs / Sheets の通常 POST に Idempotency-Key を必須化し、フォームを開いた時点で発行した UUID v4 を成功/ネットワーク失敗後の再送で同じまま使うプロトコル",
+        "Idempotency-Key の scope=tenant + workspace + resource + operation、TTL=24h、request の canonical payload hash、HTTP status / headers / body を復元できる response snapshot を共通台帳で扱う。idempotency-replayed ヘッダーのfalse/trueだけは初回/再生を示す outcome 依存の例外とする",
+        "同 key + 同 canonical payload hash は保存済み response replay、同 key + 異 payload は 422、Idempotency-Key 欠落/不正は 400 を返し、業務行作成前に fail-closed に止める",
+        "documents / hearing_sheets に正の整数の汎用 entity revision を追加し、通常 CRUD の additive schema / API / repository 変更で ETag / If-Match と応答 DTO へ公開する",
+        "PATCH は認可 route の workspace 境界の内側で、Docs=(common または tenant の既存 visibility) + resource id + expected revision、Sheets=tenant + workspace + resource id + expected revision の条件で原子更新する。成功時に revision を 1 増加し、不一致は現行 representation / ETag 付き 412 CAS を返す",
+        "Docs import 専用 docs-import-<n> と externalRevision / revisionFromIfMatch は外部同期 route だけに残し、通常 CRUD に流用しない。通常 entity revision と別 namespace / 別カラムで保つ",
+        "412 後に client の未保存入力を破棄せず、現行 representation と自分の draft から差分表示と明示的な再試行を可能にする応答契約。自動 merge はしない",
+        "本 feature は list-shell / block-authoring の UI feature に依存しないが、既存 Docs 作成/編集・Sheets 作成/状態変更 caller の必須 header と 412 draft 保持契約は所有する。list-shell の一覧表示構造と block-authoring の Markdown 本文は別 feature のままとする",
+        "Docs / Sheets の representation を書き換える AI writeback、予約公開、外部同期、status 変更、regenerate、queue completion/dead の全経路で entity revision を増加する"
+      ],
+      "scope_out": [
+        "Docs import 専用 docs-import-<n> ETag の意味・形式・externalRevision 状態機械の変更",
+        "Catalog / PublishRequest は対象外。それぞれの既存 idempotency 契約と publish/release 状態機械を維持する",
+        "リアルタイム共同編集 (CRDT / OT / WebSocket) と自動 3-way merge",
+        "カード一覧の表示構造、Markdown container 記法、semantic icon の実装",
+        "既存の認可ルール、tenant / workspace 所有境界、およびリソース別の業務状態遷移の置換"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:39:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "dbbd08788007feb6a8923a47ec8edbf8b20ac6153853d661da13d78140b7cdff",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "idempotency",
+        "etag",
+        "conflict",
+        "docs-cms",
+        "reliability"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "カード編集の二重送信と更新衝突の安全化 (冪等キー + ETag/If-Match)",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-15T00:55:35.784176Z"
+    },
+    {
+      "acceptance": [
+        "callout 4 種が絵文字を用いず、種別ごとに異なる inline SVG アイコンと semantic color token で描き分けられる",
+        "状態・日時・金額・PII・略語の表現でアイコンだけに意味を担わせず、可視ラベルが併置される",
+        "UI 文言・callout ラベル・空状態文言に絵文字を入れた変更が lint で検出され CI が落ちる",
+        "アイコンが packages/ui のアイコンモジュール以外から供給されていない",
+        "ライトモードで強調ブロックの背景がグレー系ではなく semantic token 由来の配色になっている"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "artifact_kind": "feature",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xo7n",
+        "linked_at": "2026-08-14T03:40:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "feature",
+          "candidate_path": "features/feat-semantic-emphasis-icons.md",
+          "confidence": 0.92
+        }
+      ],
+      "classification_confidence": 0.92,
+      "classification_reason": "C14 マクロ分解 (qa-232【5】・qa-233【6】から導出)",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T22:39:59Z",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "features/feat-semantic-emphasis-icons.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "callout と一覧・カードの状態表現が packages/ui 所有の inline SVG アイコンと semantic color token だけで表され、絵文字の混入が lint で検出されて入らない状態にする。",
+      "graph_node_id": "feat-semantic-emphasis-icons",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T00:20:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "強調したい箇所が絵文字で表現されていると、意味が字形の見た目に依存し、配色仕様書 v2 の semantic color token とも結びつかない。強調の意味を、色・形・可視ラベルの 3 つで一貫して担わせる。",
+      "related_nodes": [
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend",
+        "feat-docs-cms"
+      ],
+      "resource_scope": [
+        "packages/ui/src/icons",
+        "packages/ui/src/markdown",
+        "packages/ui/src/tokens",
+        "scripts/lint"
+      ],
+      "scope_in": [
+        "callout 4 種 ([!POINT] / [!ATTENTION] / [!WARNING] / [!NOTE]) の種別表現を inline SVG アイコン + semantic color token で表す",
+        "一覧・カードの状態表現を同じ token 体系へ揃える",
+        "色だけで意味を区別せず、アイコン形状か可視ラベルを必ず併置する規則の実装",
+        "UI 文言・callout ラベル・空状態文言への絵文字混入を検出する lint と、その CI 組込 (fail-closed)",
+        "packages/ui のアイコンモジュールを唯一の供給元とする所有境界"
+      ],
+      "scope_out": [
+        "配色仕様書 v2 そのものの改訂",
+        "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+        "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+        "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:39:59Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "dbbd08788007feb6a8923a47ec8edbf8b20ac6153853d661da13d78140b7cdff",
+        "source_path": "system-spec/spec-state.json",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "closed",
+      "tags": [
+        "card-ui",
+        "design-system",
+        "iconography",
+        "accessibility",
+        "lint"
+      ],
+      "target_date": null,
+      "template_id": "feature",
+      "template_version": "1.0.0",
+      "title": "強調表現の絵文字廃止と semantic アイコン・配色への一本化",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T11:31:21Z"
+    },
+    {
+      "acceptance": [
+        "catalog の MarkdownView entry が [!POINT] / [!ATTENTION] / [!WARNING] / [!NOTE] を含む",
+        "VRT 実行時に callout が被写体として撮影される"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-xere",
+        "linked_at": "2026-08-14T12:30:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/callout-vrt-catalog-coverage-20260814.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "catalog entry が見出しと箇条書きだけで callout 記法を含まず、VRT を実行しても callout の視覚回帰を検出できない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "feat-semantic-emphasis-icons P09/P10 の品質ゲート確認で検出",
+        "evidence_ref": "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T11:30:00Z",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/callout-vrt-catalog-coverage-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "catalog の MarkdownView entry が callout 4 種を含み、VRT の被写体になる状態にする",
+      "graph_node_id": "issue-callout-vrt-catalog-coverage-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T11:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "callout の視覚回帰が VRT を実行しても検出できない被覆ギャップを埋める",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons"
+      ],
+      "resource_scope": [
+        "apps/hub/tests/browser/catalog"
+      ],
+      "scope_in": [
+        "apps/hub/tests/browser/catalog/entries-data.tsx の MarkdownView entry へ callout 4 種を追加",
+        "基準画像の更新"
+      ],
+      "scope_out": [
+        "ui-visual.yml の起動条件 (opt-in) の変更",
+        "callout の意匠そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T11:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "vrt",
+        "markdown",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "VRT catalog へ callout 記法 4 種を追加し視覚回帰の被覆へ入れる",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T12:55:16.415253Z"
+    },
+    {
+      "acceptance": [
+        "同 key・同 scope・同 payload の同時 POST で業務行が1件だけ作成され response が replay される",
+        "同 key の異 payload は422、key 欠落/不正は400、scope は tenant/workspace/resource/operation の全要素を含む",
+        "Docs / Sheets の GET/POST/PATCH が entity revision ETag を返し、PATCH は If-Match を必須とする",
+        "同 revision の同時 PATCH は1件だけ成功し、敗者は現行 representation / ETag 付き412になる",
+        "外部 import ETag と通常 entity ETag の相互非受理と Catalog / PublishRequest 非変更が回帰で固定される"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-6oi5",
+        "linked_at": "2026-08-14T23:08:27Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/card-mutation-safety-implementation-20260815.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "親タスクが feat-card-mutation-safety 1件の製品実装を明示指定した",
+      "completion_evidence": {
+        "completed_at": "2026-08-15T00:54:09Z",
+        "evidence_refs": [
+          "features/feat-card-mutation-safety.md",
+          "packages/db/__tests__/mutation-safety-repositories.test.ts",
+          "apps/hub/tests/card-mutation-safety/http-contract.test.ts",
+          "tests/test_card_feature_contracts.py",
+          "beads:HarnessHub-6oi5"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-15T00:55:35Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "36925c7f1d98c33c04655bac3c6ef2be4a2d396ca5a1104bfb015cdae1c87bd2",
+        "evaluator": "parent-task-implement-mutation-safety-20260815",
+        "evidence_ref": "features/feat-card-mutation-safety.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T23:04:55Z",
+      "depends_on": [],
+      "domain": "data-safety",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/card-mutation-safety-implementation-20260815.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "scope 付き 24h 冪等台帳による response replay と、tenant/workspace 所有境界内の原子 entity revision CAS を、API/repository/実 DB テストで証明する",
+      "graph_node_id": "issue-card-mutation-safety-implementation-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T23:04:55Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "Docs / Sheets の通常 CRUD で二重作成と古い表示からの後勝ち上書きを防ぎ、外部 import 専用 revision と分離したデータ安全基盤を作る",
+      "related_nodes": [
+        "feat-card-mutation-safety",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security",
+        "feat-docs-cms",
+        "feat-hearing-intake"
+      ],
+      "resource_scope": [
+        "features/feat-card-mutation-safety.md",
+        "apps/hub/src/app/api/v1/docs/",
+        "apps/hub/src/app/api/v1/sheets/",
+        "apps/hub/src/features/docs-cms/",
+        "apps/hub/src/features/hearing-intake/",
+        "apps/hub/src/lib/http/",
+        "apps/hub/src/app/(dashboard)/docs/",
+        "apps/hub/src/app/(dashboard)/sheets/",
+        "packages/schemas/docs-cms/",
+        "packages/schemas/hearing-intake/",
+        "apps/hub/src/lib/publish/idempotency.ts",
+        "packages/db/repository/",
+        "packages/db/schema/",
+        "packages/db/migrations/",
+        "apps/hub/src/__tests__/"
+      ],
+      "scope_in": [
+        "Docs / Sheets 通常 POST の Idempotency-Key 必須化・canonical payload hash・24h TTL・response replay",
+        "tenant + workspace + resource + operation を必ず含む scope 契約と、同時同 key で1件だけ作成する原子性",
+        "documents / hearing_sheets の通常 entity revision と ETag / If-Match CAS",
+        "412 で現行 representation と ETag を返す競合契約",
+        "docs-import-* / externalRevision と通常 entity revision の非干渉回帰",
+        "既存 Docs 作成/編集・Sheets 作成/状態変更 caller の Idempotency-Key / If-Match 配線と412後の未保存 draft 保持",
+        "Docs 作成の業務行・wire snapshot・append-only audit を同一 DB transaction で確定"
+      ],
+      "scope_out": [
+        "Catalog / PublishRequest の状態機械と既存冪等契約",
+        "カード一覧の表示構造と Markdown カード本文（既存 mutation caller の安全配線は対象内）",
+        "外部 import 専用 docs-import-* / externalRevision の意味変更",
+        "commit・push・PR・deploy"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T23:04:55Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": "features/feat-card-mutation-safety.md",
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "active",
+      "tags": [
+        "card-mutation-safety",
+        "idempotency",
+        "etag",
+        "cas",
+        "tdd"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "Docs / Sheets の冪等 POST と entity revision CAS を実装する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T23:08:39Z"
+    },
+    {
+      "acceptance": [
+        "部品追加時に色以外の識別手段 (テキスト・記号・アイコン形状) の併置を確認する観点が明文化されている"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-eag1",
+        "linked_at": "2026-08-14T12:30:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/color-only-state-review-rule-20260814.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "色だけに意味を担わせていないことは axe が検出できる違反ではなく、新規部品の色単独表現は自動検出できない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "feat-semantic-emphasis-icons P09/P10 の品質ゲート確認で検出",
+        "evidence_ref": "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T11:30:00Z",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/color-only-state-review-rule-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "部品追加時に色以外の識別手段の有無を確認する観点が architecture/harness-hub-design-system.md に明記された状態にする",
+      "graph_node_id": "issue-color-only-state-review-rule-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T11:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "色だけに意味を担わせる新規部品の混入を、自動検出できない領域としてレビュー観点で受け止める",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons"
+      ],
+      "resource_scope": [
+        "architecture/harness-hub-design-system.md"
+      ],
+      "scope_in": [
+        "architecture/harness-hub-design-system.md へのレビュー観点の追記"
+      ],
+      "scope_out": [
+        "axe ルールの追加 (自動検出は不可能)",
+        "既存部品の意匠変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T11:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "accessibility",
+        "review",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "新規部品の色単独表現をレビュー観点として design-system.md へ明文化する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T12:56:03.905958Z"
+    },
+    {
+      "acceptance": [
+        "30種の思考法すべての分析結果が揃っている",
+        "成果物カードとドキュメントの作成・管理要件が各featureの単一責務へ割り当てられている",
+        "意図的投影と不要な重複が区別され、後者が整理されている",
+        "カード関連3仕様が矛盾なし・漏れなし・整合性あり・依存関係整合を満たす",
+        "関連する静的検証と差分検査が成功する"
+      ],
+      "architecture_refs": [
+        "arch-harness-hub-frontend",
+        "arch-harness-hub-backend",
+        "arch-harness-hub-security",
+        "arch-harness-hub-design-system"
+      ],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-mlvc",
+        "linked_at": "2026-08-14T21:47:49.689279Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/elegant-card-review-20260815.md",
+          "confidence": 0.99
+        }
+      ],
+      "classification_confidence": 0.99,
+      "classification_reason": "利用者がカード関連変更の網羅性確認と重複整理を明示的に依頼した",
+      "completion_evidence": {
+        "completed_at": "2026-08-14T22:08:51Z",
+        "evidence_refs": [
+          "features/feat-card-list-shell.md",
+          "features/feat-card-block-authoring.md",
+          "features/feat-card-mutation-safety.md",
+          "tests/test_card_feature_contracts.py"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-14T22:08:51Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "50f573ce2dd900c7fe35369cc1481a844fbaeee0c0674c410b7c9fcc6b276dc8",
+        "evaluator": "user-request-2026-08-15",
+        "evidence_ref": "issues/elegant-card-review-20260815.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-15T00:00:00+09:00",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/elegant-card-review-20260815.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "30種の思考法による独立分析を統合し、カード関連3仕様が矛盾なし・漏れなし・整合性あり・依存関係整合の4条件を満たす状態にする",
+      "graph_node_id": "issue-elegant-card-review-20260815",
+      "implementation_readiness": {
+        "checked_at": "2026-08-15T00:00:00+09:00",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "high",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "成果物カードとドキュメントの作成・管理要件を漏れなく反映し、責務の重複と現状認識の矛盾を除いて実行可能な機能仕様へ整える",
+      "related_nodes": [
+        "feat-card-list-shell",
+        "feat-card-block-authoring",
+        "feat-card-mutation-safety",
+        "feat-semantic-emphasis-icons"
+      ],
+      "resource_scope": [
+        "features/feat-card-list-shell.md",
+        "features/feat-card-block-authoring.md",
+        "features/feat-card-mutation-safety.md"
+      ],
+      "scope_in": [
+        "qa-232〜qa-240とカード関連3仕様の対応確認",
+        "成果物カード・ドキュメント作成・管理導線の責務境界明確化",
+        "現状と到達状態の分離",
+        "管理された投影と除去すべき重複の区別",
+        "依存順序・検証責務・handoffの明文化"
+      ],
+      "scope_out": [
+        "カード関連3 featureの製品実装",
+        "既存成果物の削除",
+        "公開・merge・本番deploy"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-15T00:00:00+09:00",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-15",
+      "status": "closed",
+      "tags": [
+        "card-ui",
+        "spec-review",
+        "deduplication",
+        "elegant-review"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "カード関連仕様を30思考法で再検証し作成・管理範囲と重複を整える",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T22:09:39.130299Z"
+    },
+    {
+      "acceptance": [
+        "apps/hub/src へ inline SVG を置いた変更で CI が落ちる",
+        "アイコンライブラリを package.json へ足した変更で CI が落ちる",
+        "lint 自身の判定能力喪失を検出するテストがある"
+      ],
+      "architecture_refs": [],
+      "artifact_kind": "issue",
+      "artifact_subtypes": [],
+      "beads_linkage": {
+        "bd_issue_id": "HarnessHub-pbrl",
+        "linked_at": "2026-08-14T12:30:00Z",
+        "sync_state": "linked"
+      },
+      "classification_candidates": [
+        {
+          "artifact_kind": "issue",
+          "candidate_path": "issues/icon-ownership-boundary-lint-20260814.md",
+          "confidence": 0.98
+        }
+      ],
+      "classification_confidence": 0.98,
+      "classification_reason": "G17 の check-ui-hardcoding は色やサイズなど視覚値を見るもので SVG の実装元を見ないため、所有境界の退行がどのゲートにも掛からない",
+      "completion_evidence": {
+        "completed_at": null,
+        "evidence_refs": [],
+        "policy": "manual",
+        "reconciled_at": null,
+        "source": null,
+        "status": "open"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "evaluator": "feat-semantic-emphasis-icons P09/P10 の品質ゲート確認で検出",
+        "evidence_ref": "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-14T11:30:00Z",
+      "depends_on": [],
+      "domain": "ui-ux",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "issues/icon-ownership-boundary-lint-20260814.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "apps/hub 側での inline SVG によるアイコン再実装が CI で検出され落ちる状態にする",
+      "graph_node_id": "issue-icon-ownership-boundary-lint-20260814",
+      "implementation_readiness": {
+        "checked_at": "2026-08-14T11:30:00Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "daishiman"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": "medium",
+      "project_id": "harness-hub",
+      "pull_request_linkages": [],
+      "purpose": "アイコンの供給元を packages/ui/src/icons に限る所有境界を、実測ではなく CI ゲートで守らせる",
+      "related_nodes": [
+        "feat-semantic-emphasis-icons"
+      ],
+      "resource_scope": [
+        "scripts/lint",
+        "apps/hub/src",
+        ".github/workflows/ci.yml"
+      ],
+      "scope_in": [
+        "apps/hub/src の <svg> リテラル検出",
+        "lucide / react-icons / heroicons / @tabler/icons の import 検出",
+        "static-gates への結線",
+        "検出ロジック自体のテスト (G17 / G18 と同形の二重化)"
+      ],
+      "scope_out": [
+        "packages/ui 側の SVG 定義の制限",
+        "アイコン意匠そのものの変更"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-14T11:30:00Z",
+        "origin_kind": "manual",
+        "source_digest": null,
+        "source_path": null,
+        "source_plugin": null,
+        "source_version": null
+      },
+      "start_date": "2026-08-14",
+      "status": "active",
+      "tags": [
+        "design-system",
+        "iconography",
+        "lint",
+        "ci",
+        "follow-up"
+      ],
+      "target_date": null,
+      "template_id": "issue",
+      "template_version": "1.0.0",
+      "title": "所有境界 lint: apps/hub 側の inline SVG アイコン再実装を検出する",
+      "tracker_binding": "beads",
+      "updated_at": "2026-08-14T12:54:30.297011Z"
+    },
+    {
+      "acceptance": [
+        "source lineage と evaluator evidence を保持する",
+        "architecture node を参照する"
+      ],
+      "architecture_refs": [
+        "arch-system-spec-overview"
+      ],
+      "artifact_kind": "specification",
+      "artifact_subtypes": [
+        "api",
+        "backend",
+        "data",
+        "security"
+      ],
+      "beads_linkage": null,
+      "classification_candidates": [
+        {
+          "artifact_kind": "specification",
+          "candidate_path": "specs/system-spec-index.md",
+          "confidence": 1.0
+        }
+      ],
+      "classification_confidence": 1.0,
+      "classification_reason": "system-spec-harness が compile した specification index の import。",
+      "completion_evidence": {
+        "completed_at": "2026-08-13T22:33:06Z",
+        "evidence_refs": [
+          "system-spec/completeness-report.json"
+        ],
+        "policy": "manual",
+        "reconciled_at": "2026-08-13T22:33:06Z",
+        "source": "manual",
+        "status": "done"
+      },
+      "confirmation_evidence": {
+        "evaluated_digest": "5b82af4dfafcea3acab4bbfb1b34a8b3b7f924dfa9c1c506ffa659a8a3ae0cb0",
+        "evaluator": "system-spec-harness/assign-system-spec-completeness-evaluator",
+        "evidence_ref": "system-spec/completeness-report.json"
+      },
+      "confirmation_status": "confirmed",
+      "created_at": "2026-08-13T22:33:06Z",
+      "depends_on": [],
+      "domain": "system-spec",
+      "evaluation_status": "pass",
+      "execution_contexts": [],
+      "feature_package_id": null,
+      "file_path": "specs/system-spec-index.md",
+      "github_project_linkages": [],
+      "github_publication": {
+        "labels": [],
+        "milestone": null,
+        "mode": "local_only",
+        "project_aliases": []
+      },
+      "goal": "仕様と architecture context を source lineage 付きで結ぶ。",
+      "graph_node_id": "spec-system-spec-index",
+      "implementation_readiness": {
+        "checked_at": "2026-08-13T22:33:06Z",
+        "missing_sections": [],
+        "status": "complete"
+      },
+      "issue_linkage": null,
+      "iteration": null,
+      "owners": [
+        "system-spec-harness"
+      ],
+      "parent_feature": null,
+      "phase_ref": null,
+      "priority": null,
+      "project_id": "system-spec-import",
+      "pull_request_linkages": [],
+      "purpose": "確定済み system-spec の index を参照可能にする。",
+      "related_nodes": [],
+      "resource_scope": [
+        "system-spec/index.md",
+        "system-spec/completeness-report.json"
+      ],
+      "scope_in": [
+        "confirmed system-spec index artifact"
+      ],
+      "scope_out": [
+        "confirmed artifacts are not rewritten by this adapter"
+      ],
+      "source_lineage": {
+        "imported_at": "2026-08-13T22:33:06Z",
+        "origin_kind": "system-spec-harness",
+        "source_digest": "a30f863d5ee66f3c91e4845987a5f708cbd058f8c5e255814ec8cebe40948eae",
+        "source_path": "system-spec/index.md",
+        "source_plugin": "system-spec-harness",
+        "source_version": "0.1.0"
+      },
+      "start_date": null,
+      "status": "active",
+      "tags": [
+        "system-spec",
+        "source-lineage",
+        "imported"
+      ],
+      "target_date": null,
+      "template_id": "specification",
+      "template_version": "1.0.0",
+      "title": "system-spec compiled specification",
+      "tracker_binding": "none",
+      "updated_at": "2026-08-13T22:33:06Z"
     },
     {
       "acceptance": [

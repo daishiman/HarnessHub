@@ -224,3 +224,14 @@ N/A: 今回の分冊に伴う製品判断はない。
 - S10 を 7 画面へ統合し、profile/priority enum を既存値破壊なしで加算する。作成時添付ステージングと S12 form_snapshot 全項目表示、S17 email/最終ログイン表示を含む。
 - 製品 API path・tenant 認可・AI キュー kind・DB テーブル集合は不変。フィールド数 FormData 30 / snapshot 29 を維持。
 - 詳細正本は `docs/frontend-spec.md` と [仕様反映受領書](../docs/features/feat-hearing-intake/mvp-sheet-overhaul-spec-reflection-receipt.md)。
+
+## 成果物カード一覧 / 強調アイコン / 編集安全化 writeback (2026-08-15)
+
+- ui-ux / frontend / security へ qa-232 / qa-233 / qa-234 を確定反映した。一覧のカード既定・
+  カードブロック記法・編集/プレビュー 2 ペインは仕様として確定し、製品実装は list-shell /
+  block-authoring が後続する。
+- 強調表現は絵文字を使わず、packages/ui の inline SVG と semantic token に限定する。
+  絵文字混入は CI G19 で fail-closed。
+- Docs / Sheets 通常 CRUD は Idempotency-Key と entity revision ETag/If-Match を純増する。
+  Catalog / PublishRequest と外部 import 専用 revision は非変更。
+- 判断と検証は [仕様反映受領書](../docs/features/feat-semantic-emphasis-icons/card-family-20260815-spec-reflection-receipt.md)。

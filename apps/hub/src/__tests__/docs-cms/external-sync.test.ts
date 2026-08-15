@@ -12,5 +12,6 @@ describe('DOCS-EXT HTTP precondition helpers', () => {
     expect(revisionFromIfMatch(null)).toBeUndefined();
     expect(revisionFromIfMatch('*')).toBeNull();
     expect(revisionFromIfMatch('W/"docs-import-1"')).toBeNull();
+    expect(revisionFromIfMatch('"docs-1"')).toBeNull();
   });
 });

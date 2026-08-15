@@ -1,0 +1,54 @@
+{
+  "graph_node_id": "feat-semantic-emphasis-icons",
+  "artifact_kind": "feature",
+  "purpose": "強調したい箇所が絵文字で表現されていると、意味が字形の見た目に依存し、配色仕様書 v2 の semantic color token とも結びつかない。強調の意味を、色・形・可視ラベルの 3 つで一貫して担わせる。",
+  "goal": "callout と一覧・カードの状態表現が packages/ui 所有の inline SVG アイコンと semantic color token だけで表され、絵文字の混入が lint で検出されて入らない状態にする。",
+  "scope_in": [
+    "callout 4 種 ([!POINT] / [!ATTENTION] / [!WARNING] / [!NOTE]) の種別表現を inline SVG アイコン + semantic color token で表す",
+    "一覧・カードの状態表現を同じ token 体系へ揃える",
+    "色だけで意味を区別せず、アイコン形状か可視ラベルを必ず併置する規則の実装",
+    "UI 文言・callout ラベル・空状態文言への絵文字混入を検出する lint と、その CI 組込 (fail-closed)",
+    "packages/ui のアイコンモジュールを唯一の供給元とする所有境界"
+  ],
+  "scope_out": [
+    "配色仕様書 v2 そのものの改訂",
+    "各画面の情報構造・機能追加 (feat-card-list-shell の担当)",
+    "Markdown のカードブロック記法 (feat-card-block-authoring の担当)",
+    "公開 API・DB schema・認可判定・Cloudflare deploy unit の変更"
+  ],
+  "acceptance": [
+    "callout 4 種が絵文字を用いず、種別ごとに異なる inline SVG アイコンと semantic color token で描き分けられる",
+    "状態・日時・金額・PII・略語の表現でアイコンだけに意味を担わせず、可視ラベルが併置される",
+    "UI 文言・callout ラベル・空状態文言に絵文字を入れた変更が lint で検出され CI が落ちる",
+    "アイコンが packages/ui のアイコンモジュール以外から供給されていない",
+    "ライトモードで強調ブロックの背景がグレー系ではなく semantic token 由来の配色になっている"
+  ],
+  "architecture_refs": [
+    "architecture/harness-hub-design-system.md",
+    "architecture/harness-hub-frontend.md"
+  ],
+  "implementation_status": {
+    "state": "implemented",
+    "completed_at": "2026-08-14T11:22:36Z",
+    "acceptance_met": [true, true, true, true, true],
+    "summary": "callout 4 種を inline SVG アイコン (lightbulb / alertTriangle / alertOctagon / infoCircle) と semantic color token へ移行し、絵文字混入 lint を CI の static-gates へ G19 として fail-closed に結線した。ライトモードの強調ブロック背景は infoBlueSoft / dangerSoft / warningSoft で、グレー系 (primarySoft / neutralSoft) を使わない。",
+    "gate": {
+      "id": "G19",
+      "job": "static-gates",
+      "script": "scripts/lint-ui-text-emoji.py",
+      "detector_liveness": "意図的に絵文字を置いた probe に対し exit 1 ちょうどを要求する 2 ステップ目を持ち、lint 自身の失効を検出する"
+    },
+    "residual_risks": [
+      "apps/hub 側の inline SVG 再実装を検出する所有境界 lint が存在しない",
+      "catalog の MarkdownView entry に callout 記法が無く、VRT (opt-in) を回しても callout の視覚回帰は検出できない",
+      "新規部品が色だけで状態を表す退行は axe では検出できない"
+    ],
+    "evidence_refs": [
+      "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md",
+      "docs/features/feat-semantic-emphasis-icons/final-review.md",
+      "docs/features/feat-semantic-emphasis-icons/evidence-bundle.md",
+      "docs/features/feat-semantic-emphasis-icons/runbook.md"
+    ]
+  },
+  "updated_at": "2026-08-14T11:22:36Z"
+}

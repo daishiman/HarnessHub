@@ -62,7 +62,7 @@ import {
   splitMigrationSql,
 } from '@harness-hub/db';
 import type { HearingRole } from '@harness-hub/schemas';
-import { GET as detailRoute } from '../../src/app/api/v1/sheets/[id]/route.js';
+import { GET as detailRoute, PATCH as updateRoute } from '../../src/app/api/v1/sheets/[id]/route.js';
 import { POST as createRoute, GET as listRoute } from '../../src/app/api/v1/sheets/route.js';
 import { buildSessionClaims, SESSION_COOKIE_NAME, signSessionToken } from '../../src/lib/auth/index.js';
 
@@ -81,6 +81,7 @@ const MIGRATIONS = [
   '0004_auth-tenancy-customer-managed-oidc-lifecycle.sql',
   '0005_common_stepford_cuckoos.sql',
   '0006_tenant-data-retention.sql',
+  '0015_card-mutation-safety.sql',
 ];
 
 let adapter: Awaited<ReturnType<typeof createTursoClient>>;
@@ -205,6 +206,7 @@ describe.each([
         cookie,
         origin: 'https://hub.example.com',
         'content-type': 'application/json',
+        'idempotency-key': crypto.randomUUID(),
         'x-harness-tenant-id': actor.tenantId,
         'x-harness-workspace-id': actor.workspaceId,
       },
@@ -213,6 +215,7 @@ describe.each([
     const createResponse = await createRoute(createRequest);
     const created = (await createResponse.json()) as { readonly id: string };
     expect(createResponse.status).toBe(201);
+    expect(createResponse.headers.get('etag')).toBe('"sheets-1"');
 
     const listRequest = new Request('https://hub.example.com/api/v1/sheets?limit=25', {
       headers: {
@@ -235,8 +238,10 @@ describe.each([
     });
     const detailResponse = await detailRoute(detailRequest, { params: Promise.resolve({ id: created.id }) });
     expect(detailResponse.status).toBe(200);
-    const detailBody = (await detailResponse.json()) as { readonly id: string };
+    expect(detailResponse.headers.get('etag')).toBe('"sheets-1"');
+    const detailBody = (await detailResponse.json()) as { readonly id: string; readonly revision: number };
     expect(detailBody.id).toBe(created.id);
+    expect(detailBody.revision).toBe(1);
   });
 });
 
@@ -256,7 +261,12 @@ describe('初回サインイン直後の利用者 (users.name が空文字)', ()
     const createResponse = await createRoute(
       new Request('https://hub.example.com/api/v1/sheets', {
         method: 'POST',
-        headers: { ...headers, origin: 'https://hub.example.com', 'content-type': 'application/json' },
+        headers: {
+          ...headers,
+          origin: 'https://hub.example.com',
+          'content-type': 'application/json',
+          'idempotency-key': crypto.randomUUID(),
+        },
         body: JSON.stringify(createSheetBody('employee')),
       }),
     );
@@ -291,7 +301,12 @@ describe('初回サインイン直後の利用者 (users.name が空文字)', ()
     const createResponse = await createRoute(
       new Request('https://hub.example.com/api/v1/sheets', {
         method: 'POST',
-        headers: { ...headers, origin: 'https://hub.example.com', 'content-type': 'application/json' },
+        headers: {
+          ...headers,
+          origin: 'https://hub.example.com',
+          'content-type': 'application/json',
+          'idempotency-key': crypto.randomUUID(),
+        },
         body: JSON.stringify(createSheetBody('employee')),
       }),
     );
@@ -303,5 +318,130 @@ describe('初回サインイン直後の利用者 (users.name が空文字)', ()
       readonly items: readonly { readonly applicant: { readonly name: string } }[];
     };
     expect(listBody.items[0]?.applicant.name).toBe(actor.userId);
+  });
+});
+
+describe('CARD-MUTATION-SHEETS-HTTP: idempotent create and entity revision CAS', () => {
+  it('requires UUID v4, replays concurrent same-key POST, and rejects changed payload', async () => {
+    const actor = await seedActor('mutation-sheet-post', 'workspace-admin');
+    const cookie = await sessionCookie(actor);
+    const commonHeaders = {
+      cookie,
+      origin: 'https://hub.example.com',
+      'content-type': 'application/json',
+      'x-harness-tenant-id': actor.tenantId,
+      'x-harness-workspace-id': actor.workspaceId,
+    };
+    const request = (key: string | null, title = '請求書処理') => {
+      const headers = new Headers(commonHeaders);
+      if (key !== null) headers.set('idempotency-key', key);
+      return new Request('https://hub.example.com/api/v1/sheets', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ ...createSheetBody('employee'), taskName: title }),
+      });
+    };
+
+    expect((await createRoute(request(null))).status).toBe(400);
+    expect((await createRoute(request('not-a-uuid'))).status).toBe(400);
+    const oversizedRequest = request(crypto.randomUUID());
+    oversizedRequest.headers.set('content-length', '250001');
+    expect((await createRoute(oversizedRequest)).status).toBe(413);
+
+    const key = crypto.randomUUID();
+    const [first, second] = await Promise.all([createRoute(request(key)), createRoute(request(key))]);
+    const [firstBody, secondBody] = await Promise.all([first.text(), second.text()]);
+    expect([first.status, second.status]).toEqual([201, 201]);
+    expect(firstBody).toBe(secondBody);
+    expect(first.headers.get('etag')).toBe('"sheets-1"');
+    expect(second.headers.get('etag')).toBe('"sheets-1"');
+    expect([first.headers.get('idempotency-replayed'), second.headers.get('idempotency-replayed')].sort()).toEqual([
+      'false',
+      'true',
+    ]);
+    expect(first.headers.get('idempotency-key-expires-at')).toBe(second.headers.get('idempotency-key-expires-at'));
+
+    const created = JSON.parse(firstBody) as { readonly id: string };
+    const patchHeaders = new Headers(commonHeaders);
+    patchHeaders.set('if-match', '"sheets-1"');
+    const updated = await updateRoute(
+      new Request(`https://hub.example.com/api/v1/sheets/${created.id}`, {
+        method: 'PATCH',
+        headers: patchHeaders,
+        body: JSON.stringify({ status: 'review' }),
+      }),
+      { params: Promise.resolve({ id: created.id }) },
+    );
+    expect(updated.status).toBe(200);
+
+    const replayAfterUpdate = await createRoute(request(key));
+    expect(replayAfterUpdate.status).toBe(201);
+    expect(replayAfterUpdate.headers.get('etag')).toBe('"sheets-1"');
+    expect(replayAfterUpdate.headers.get('idempotency-replayed')).toBe('true');
+    expect(await replayAfterUpdate.text()).toBe(firstBody);
+    expect((await createRoute(request(key, '別業務'))).status).toBe(422);
+
+    const listResponse = await listRoute(
+      new Request('https://hub.example.com/api/v1/sheets?limit=25', {
+        headers: {
+          cookie,
+          'x-harness-tenant-id': actor.tenantId,
+          'x-harness-workspace-id': actor.workspaceId,
+        },
+      }),
+    );
+    const list = (await listResponse.json()) as { readonly items: readonly unknown[] };
+    expect(list.items).toHaveLength(1);
+  });
+
+  it('returns ETags and a scoped current representation for stale PATCH', async () => {
+    const actor = await seedActor('mutation-sheet-cas', 'workspace-admin');
+    const cookie = await sessionCookie(actor);
+    const headers = {
+      cookie,
+      origin: 'https://hub.example.com',
+      'content-type': 'application/json',
+      'idempotency-key': crypto.randomUUID(),
+      'x-harness-tenant-id': actor.tenantId,
+      'x-harness-workspace-id': actor.workspaceId,
+    };
+    const createdResponse = await createRoute(
+      new Request('https://hub.example.com/api/v1/sheets', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(createSheetBody('employee')),
+      }),
+    );
+    const created = (await createdResponse.json()) as { readonly id: string; readonly revision: number };
+    expect(created).toMatchObject({ revision: 1 });
+    expect(createdResponse.headers.get('etag')).toBe('"sheets-1"');
+
+    const patch = (ifMatch: string | null, status: 'review' | 'completed') => {
+      const patchHeaders = new Headers(headers);
+      patchHeaders.delete('idempotency-key');
+      if (ifMatch === null) patchHeaders.delete('if-match');
+      else patchHeaders.set('if-match', ifMatch);
+      return updateRoute(
+        new Request(`https://hub.example.com/api/v1/sheets/${created.id}`, {
+          method: 'PATCH',
+          headers: patchHeaders,
+          body: JSON.stringify({ status }),
+        }),
+        { params: Promise.resolve({ id: created.id }) },
+      );
+    };
+
+    expect((await patch(null, 'review')).status).toBe(428);
+    expect((await patch('"docs-1"', 'review')).status).toBe(400);
+    const winner = await patch('"sheets-1"', 'review');
+    expect(winner.status).toBe(200);
+    expect(winner.headers.get('etag')).toBe('"sheets-2"');
+    const stale = await patch('"sheets-1"', 'completed');
+    expect(stale.status).toBe(412);
+    expect(stale.headers.get('etag')).toBe('"sheets-2"');
+    await expect(stale.json()).resolves.toMatchObject({
+      error: 'revision_conflict',
+      current: { id: created.id, status: 'review', revision: 2 },
+    });
   });
 });

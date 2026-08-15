@@ -24,8 +24,10 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 
+import { Icon, type IconName } from '../icons/index.js';
 import { colorVar, radiusVar, spaceVar } from '../internal/style.js';
 import { useUi } from '../theme/UiProvider.js';
+import type { ColorTokenName } from '../tokens/token-names.js';
 import { Button } from './Button.js';
 import { Modal } from './Modal.js';
 import { Tabs } from './Tabs.js';
@@ -147,14 +149,19 @@ function extractText(node: ReactNode): string {
 
 /**
  * コールアウトの種類ごとの色・アイコン・ラベルキー。
- * 依頼された 4 パターン (注意=赤系 / ポイント=青系 / 補足=グレー系 / 警告=黄系) にそれぞれ割り当てる。
- * `attention` の色は今回の改修で warning (黄) から danger (赤) へ変えている。変えたのは色だけで、
+ * 依頼された 4 パターン (注意=赤系 / ポイント=青系 / 補足=薄い青系 / 警告=黄系) にそれぞれ割り当てる。
+ * `attention` の色は過去の改修で warning (黄) から danger (赤) へ変えている。変えたのは色だけで、
  * `[!ATTENTION]` という記法自体は変えていないため既存記事は書き直し不要 (remarkCallouts のコメント参照)。
+ *
+ * `point` / `note` の面はかつて `primarySoft` / `neutralSoft` だった。`primary` が無彩色の
+ * グラファイトなので light では両者がほぼ同じグレー (#e5e5e2 / #e6e6e3) になり、読み物の中で
+ * 「要点」と「ただの引用」が見分けられなかった。専用の `infoBlueSoft` へ寄せて青系に統一し、
+ * 従属関係 (point = 主 / note = 副) は枠線の濃さとアイコンの形で表す。
  */
 const calloutStyle: Record<CalloutKind, CSSProperties> = {
   point: {
-    background: colorVar('primarySoft'),
-    borderLeft: `4px solid ${colorVar('primary')}`,
+    background: colorVar('infoBlueSoft'),
+    borderLeft: `4px solid ${colorVar('infoBlue')}`,
     color: colorVar('text'),
   },
   attention: {
@@ -168,17 +175,21 @@ const calloutStyle: Record<CalloutKind, CSSProperties> = {
     color: colorVar('text'),
   },
   note: {
-    background: colorVar('neutralSoft'),
+    background: colorVar('infoBlueSoft'),
     borderLeft: `4px solid ${colorVar('borderStrong')}`,
     color: colorVar('text'),
   },
 };
 
-const calloutIcon: Record<CalloutKind, string> = {
-  point: '💡',
-  attention: '⚠️',
-  warning: '🚨',
-  note: '📝',
+/**
+ * アイコンの図形と色。色は面の枠線と揃え、**形だけでも 4 種を区別できる**ようにする
+ * (色覚特性や単色印刷で色が落ちても意味が残るようにするため)。
+ */
+const calloutIcon: Record<CalloutKind, { name: IconName; color: ColorTokenName }> = {
+  point: { name: 'lightbulb', color: 'infoBlue' },
+  attention: { name: 'alertTriangle', color: 'danger' },
+  warning: { name: 'alertOctagon', color: 'warning' },
+  note: { name: 'infoCircle', color: 'textMuted' },
 };
 
 const calloutLabelKey: Record<
@@ -225,8 +236,10 @@ function Callout({ kind, children }: { kind: CalloutKind; children: ReactNode })
         ...calloutStyle[kind],
       }}
     >
-      <span aria-hidden="true">{icon}</span>
-      <div style={{ flex: 1 }}>{children}</div>
+      <span style={{ color: colorVar(icon.color), display: 'flex', flexShrink: 0, paddingTop: '2px' }}>
+        <Icon name={icon.name} size={18} />
+      </span>
+      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
     </div>
   );
 }
@@ -807,7 +820,9 @@ export function MarkdownEditor({
                     cursor: 'pointer',
                   }}
                 >
-                  <span aria-hidden="true">{calloutIcon[kind]}</span>
+                  <span style={{ color: colorVar(calloutIcon[kind].color), display: 'flex' }}>
+                    <Icon name={calloutIcon[kind].name} size={16} />
+                  </span>
                   {t(calloutLabelKey[kind])}
                 </button>
               ))}

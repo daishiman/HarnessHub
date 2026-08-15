@@ -4,7 +4,7 @@
  * 全メソッドが RepositoryContext を要求し、hearing_sheets / ai_jobs の検索条件へ
  * tenant_id を必ず注入する。claim/complete/fail は transaction 内の CAS で状態を進める。
  */
-import { and, count, desc, eq, inArray, lt, or, type SQL } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, lt, lte, or, type SQL, sql } from 'drizzle-orm';
 
 import { users } from '../schema/core/identity';
 import { DEFAULT_TENANT_COEFFICIENT_VALUES } from '../schema/hearing-intake/coefficient-defaults';
@@ -15,9 +15,11 @@ import {
   hearingSheets,
   tenantCoefficients,
 } from '../schema/hearing-intake/schema';
+import { mutationCreateIdempotency } from '../schema/mutation-safety/schema';
 import { isTransactionalAdapter } from '../src/adapter';
 import { EntityNotFoundError, RepositoryError } from '../src/errors';
 import type { RepositoryContext } from '../src/types';
+import { canonicalJson } from './bytes';
 import { guardedWrite } from './conflict';
 import type { CoreAdapter, CoreDb } from './db';
 import {
@@ -25,6 +27,16 @@ import {
   type HearingQueueRepository,
   type HearingQueueStatus,
 } from './hearing-intake-queue';
+import {
+  buildMutationWireResponse,
+  cleanupExpiredMutationIdempotency,
+  type IdempotentCreateResult,
+  type MutationIdempotencyInput,
+  type MutationWireResponseBuilder,
+  mutationIdempotencyScope,
+  parseMutationWireResponse,
+  prepareMutationIdempotency,
+} from './mutation-safety';
 import { containsTermInAny } from './search';
 import { serverNow } from './time';
 import { newUlid } from './ulid';
@@ -64,6 +76,7 @@ export interface HearingSheetRow {
   readonly aiJobId: string | null;
   readonly generatedDocIdsJson: string | null;
   readonly buildId: string | null;
+  readonly entityRevision: number;
   readonly createdAt: number;
   readonly updatedAt: number;
   readonly aiJobStatus: HearingQueueStatus | null;
@@ -99,6 +112,12 @@ export interface HearingIntakeRepository extends HearingQueueRepository {
   getCoefficients(context: RepositoryContext): Promise<TenantCoefficientRow>;
   updateCoefficients(context: RepositoryContext, input: UpdateTenantCoefficientsInput): Promise<TenantCoefficientRow>;
   createSheetAndEnqueue(context: RepositoryContext, input: CreateHearingSheetInput): Promise<HearingSheetRow>;
+  createSheetAndEnqueueIdempotent(
+    context: RepositoryContext,
+    input: CreateHearingSheetInput,
+    idempotency: MutationIdempotencyInput,
+    buildResponse: MutationWireResponseBuilder<HearingSheetRow>,
+  ): Promise<IdempotentCreateResult<HearingSheetRow, 'sheet'>>;
   listSheets(context: RepositoryContext, input: ListHearingSheetsInput): Promise<HearingSheetPage>;
   findSheet(context: RepositoryContext, id: string): Promise<HearingSheetRow | null>;
   /**
@@ -118,6 +137,15 @@ export interface HearingIntakeRepository extends HearingQueueRepository {
     id: string,
     status: Extract<HearingSheetStatus, 'review' | 'completed'>,
   ): Promise<HearingSheetRow>;
+  updateSheetStatusCas(
+    context: RepositoryContext,
+    id: string,
+    status: Extract<HearingSheetStatus, 'review' | 'completed'>,
+    expectedEntityRevision: number,
+  ): Promise<
+    | { readonly outcome: 'updated'; readonly sheet: HearingSheetRow }
+    | { readonly outcome: 'conflict'; readonly current: HearingSheetRow | null }
+  >;
   regenerate(context: RepositoryContext, id: string): Promise<HearingSheetRow>;
 }
 
@@ -318,6 +346,7 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
             aiJobId: null,
             generatedDocIdsJson: null,
             buildId: null,
+            entityRevision: 1,
             createdAt: now,
             updatedAt: now,
           });
@@ -338,6 +367,128 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
           const created = await findSheetOn(db, context, id);
           if (created === null) throw new EntityNotFoundError('hearing_sheets', id);
           return created;
+        }),
+      );
+    },
+
+    async createSheetAndEnqueueIdempotent(context, input, idempotencyInput, buildResponse) {
+      if (context.workspaceId === undefined || context.workspaceId !== input.workspaceId) {
+        throw new RepositoryError(
+          'invalid-context',
+          '冪等作成では context と作成対象の workspaceId が必須かつ一致する必要があります',
+        );
+      }
+      const idempotency = prepareMutationIdempotency(context, 'sheets', idempotencyInput);
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const scope = mutationIdempotencyScope(idempotency);
+          await cleanupExpiredMutationIdempotency(db, idempotency.now, (where) =>
+            db.delete(mutationCreateIdempotency).where(where),
+          );
+          await db
+            .delete(mutationCreateIdempotency)
+            .where(and(scope, lte(mutationCreateIdempotency.expiresAt, idempotency.now)));
+
+          const now = serverNow();
+          const id = newUlid(now);
+          const claimed = await db
+            .insert(mutationCreateIdempotency)
+            .values({
+              tenantId: idempotency.tenantId,
+              workspaceId: idempotency.workspaceId,
+              resource: idempotency.resource,
+              operation: idempotency.operation,
+              key: idempotency.key,
+              payloadHash: idempotency.payloadHash,
+              resourceId: id,
+              responseStatus: null,
+              responseHeadersJson: null,
+              responseBody: null,
+              expiresAt: idempotency.expiresAt,
+              createdAt: idempotency.now,
+            })
+            .onConflictDoNothing()
+            .returning({ key: mutationCreateIdempotency.key });
+
+          if (claimed.length === 0) {
+            const existingRows = await db.select().from(mutationCreateIdempotency).where(scope).limit(1);
+            const existing = existingRows[0];
+            if (existing === undefined) throw new RepositoryError('conflict', '冪等作成 claim の競合を解決できません');
+            if (existing.payloadHash !== idempotency.payloadHash) {
+              return { outcome: 'conflict' as const, expiresAt: existing.expiresAt };
+            }
+            return {
+              outcome: 'replayed' as const,
+              expiresAt: existing.expiresAt,
+              wireResponse: parseMutationWireResponse(existing),
+            };
+          }
+
+          const code = await issueReceiptNumber(db, context.tenantId);
+          const applicantRows = await db
+            .select({ department: users.department })
+            .from(users)
+            .where(and(eq(users.tenantId, context.tenantId), eq(users.id, input.applicantUserId)))
+            .limit(1);
+          if (applicantRows[0] === undefined) throw new EntityNotFoundError('users', input.applicantUserId);
+
+          await db.insert(hearingSheets).values({
+            id,
+            tenantId: context.tenantId,
+            workspaceId: input.workspaceId,
+            code,
+            title: input.title,
+            applicantUserId: input.applicantUserId,
+            department: applicantRows[0].department,
+            status: 'received',
+            formJson: input.formJson,
+            estimateJson: input.estimateJson,
+            aiJobId: null,
+            generatedDocIdsJson: null,
+            buildId: null,
+            entityRevision: 1,
+            createdAt: now,
+            updatedAt: now,
+          });
+          const job = enqueueValues({
+            tenantId: context.tenantId,
+            workspaceId: input.workspaceId,
+            refId: id,
+            payloadJson: input.buildPayloadJson(id, code),
+            now,
+          });
+          await db.insert(aiJobs).values(job);
+          await db
+            .update(hearingSheets)
+            .set({ aiJobId: job.id, status: 'generating', updatedAt: now })
+            .where(
+              and(
+                eq(hearingSheets.tenantId, context.tenantId),
+                eq(hearingSheets.workspaceId, input.workspaceId),
+                eq(hearingSheets.id, id),
+              ),
+            );
+
+          const sheet = await findSheetOn(db, context, id);
+          if (sheet === null) throw new EntityNotFoundError('hearing_sheets', id);
+          const wireResponse = buildMutationWireResponse(buildResponse, sheet, idempotency.expiresAt);
+          const ledgerRows = await db
+            .update(mutationCreateIdempotency)
+            .set({
+              responseStatus: wireResponse.status,
+              responseHeadersJson: canonicalJson(wireResponse.headers),
+              responseBody: wireResponse.body,
+            })
+            .where(scope)
+            .returning({ key: mutationCreateIdempotency.key });
+          if (ledgerRows.length !== 1) throw new RepositoryError('conflict', '冪等作成結果を保存できません');
+          return {
+            outcome: 'created' as const,
+            sheet,
+            expiresAt: idempotency.expiresAt,
+            wireResponse,
+          };
         }),
       );
     },
@@ -434,7 +585,11 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
         if (context.workspaceId !== undefined) predicates.push(eq(hearingSheets.workspaceId, context.workspaceId));
         const rows = await adapter.client
           .update(hearingSheets)
-          .set({ status, updatedAt: serverNow() })
+          .set({
+            status,
+            updatedAt: serverNow(),
+            entityRevision: sql<number>`${hearingSheets.entityRevision} + 1`,
+          })
           .where(and(...predicates))
           .returning({ id: hearingSheets.id });
         if (rows[0] === undefined) throw new EntityNotFoundError('hearing_sheets', id);
@@ -442,6 +597,42 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
         if (updated === null) throw new EntityNotFoundError('hearing_sheets', id);
         return updated;
       });
+    },
+
+    async updateSheetStatusCas(context, id, status, expectedEntityRevision) {
+      if (context.workspaceId === undefined) {
+        throw new RepositoryError('invalid-context', 'sheet CAS には workspaceId が必要です');
+      }
+      if (!Number.isSafeInteger(expectedEntityRevision) || expectedEntityRevision < 1) {
+        throw new RepositoryError('invalid-context', 'expectedEntityRevision は正の整数である必要があります');
+      }
+      return guardedWrite(adapter, () =>
+        transactional(adapter).transaction(async (tx) => {
+          const db = tx.client as CoreDb;
+          const rows = await db
+            .update(hearingSheets)
+            .set({
+              status,
+              updatedAt: serverNow(),
+              entityRevision: sql<number>`${hearingSheets.entityRevision} + 1`,
+            })
+            .where(
+              and(
+                eq(hearingSheets.tenantId, context.tenantId),
+                eq(hearingSheets.workspaceId, context.workspaceId as string),
+                eq(hearingSheets.id, id),
+                eq(hearingSheets.entityRevision, expectedEntityRevision),
+              ),
+            )
+            .returning({ id: hearingSheets.id });
+          if (rows[0] !== undefined) {
+            const sheet = await findSheetOn(db, context, id);
+            if (sheet === null) return { outcome: 'conflict' as const, current: null };
+            return { outcome: 'updated' as const, sheet };
+          }
+          return { outcome: 'conflict' as const, current: await findSheetOn(db, context, id) };
+        }),
+      );
     },
 
     async regenerate(context, id) {
@@ -474,16 +665,25 @@ export function createHearingIntakeRepository(adapter: CoreAdapter): HearingInta
             now,
           });
           await db.insert(aiJobs).values(job);
-          await db
+          const updatedSheet = await db
             .update(hearingSheets)
-            .set({ aiJobId: job.id, status: 'generating', updatedAt: now })
+            .set({
+              aiJobId: job.id,
+              status: 'generating',
+              updatedAt: now,
+              entityRevision: sheet.entityRevision + 1,
+            })
             .where(
               and(
                 eq(hearingSheets.tenantId, context.tenantId),
                 eq(hearingSheets.workspaceId, sheet.workspaceId),
                 eq(hearingSheets.id, sheet.id),
+                eq(hearingSheets.entityRevision, sheet.entityRevision),
               ),
-            );
+            )
+            .returning({ id: hearingSheets.id });
+          if (updatedSheet.length === 0)
+            throw new RepositoryError('conflict', 'hearing sheet の再生成 CAS に失敗しました');
           const updated = await findSheetOn(db, context, sheet.id);
           if (updated === null) throw new EntityNotFoundError('hearing_sheets', sheet.id);
           return updated;

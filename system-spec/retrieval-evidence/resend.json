@@ -1,24 +1,40 @@
 {
-  "allowed_domains": [
-    "resend.com"
-  ],
-  "findings": [
-    "Free: $0/mo で 3,000 通/月、かつ 100 通/日の日次上限あり。domain 1 件",
-    "Pro: $20/mo で 50,000 通/月 (超過 $0.90/1,000通)。domain 10 件",
-    "Scale: $90/mo で 100,000 通/月 以上の段階制。dedicated IP は $30/mo",
-    "To / CC / BCC の複数宛先はそれぞれ別の 1 通として計上される",
-    "有料プランに日次送信上限は無い",
-    "marketing plan は送信数ではなく contact 数課金 (Free 1,000 contacts)"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Resend pricing plans emails per month",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://resend.com/pricing",
-    "https://resend.com/docs/knowledge-base/what-is-resend-pricing",
-    "https://resend.com/changelog/pay-as-you-go-pricing",
-    "https://resend.com/blog/new-free-tier"
-  ],
-  "target_id": "resend"
+ "allowed_domains": [
+  "resend.com"
+ ],
+ "findings": [
+  "Free: $0/mo で 3,000 通/月、かつ 100 通/日の日次上限あり。domain 1 件",
+  "Pro: $20/mo で 50,000 通/月 (超過 $0.90/1,000通)。domain 10 件",
+  "Scale: $90/mo で 100,000 通/月 以上の段階制。dedicated IP は $30/mo",
+  "To / CC / BCC の複数宛先はそれぞれ別の 1 通として計上される",
+  "有料プランに日次送信上限は無い",
+  "marketing plan は送信数ではなく contact 数課金 (Free 1,000 contacts)"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:31Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "価格ページに更新日表記なし。無料枠 (3,000 通/月・100 通/日) の記載構成に前回照合からの変化なし。",
+   "page_last_updated_extracted": [],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:30Z",
+   "response_body_sha256": "a20a80d95a78629df63237a929c47a2291312c968cefc647d7dc5c9a87e6d0eb",
+   "response_bytes": 492119,
+   "response_last_modified_header": null,
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Resend pricing plans emails per month",
+ "retrieved_at": "2026-08-07T03:30:09Z",
+ "returned_official_urls": [
+  "https://resend.com/pricing",
+  "https://resend.com/docs/knowledge-base/what-is-resend-pricing",
+  "https://resend.com/changelog/pay-as-you-go-pricing",
+  "https://resend.com/blog/new-free-tier"
+ ],
+ "target_id": "resend"
 }

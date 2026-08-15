@@ -1,23 +1,41 @@
 {
-  "allowed_domains": [
-    "developers.cloudflare.com"
-  ],
-  "findings": [
-    "課金は 保存量 + Class A (状態変更系・高価) + Class B (読取系) の 3 軸",
-    "DeleteObject / DeleteBucket / AbortMultipartUpload は無料操作",
-    "egress は R2 直・Workers API・S3 API・r2.dev いずれも無料",
-    "storage class は Standard (既定) と Infrequent Access (取出料 + 最低 30 日課金)",
-    "無料枠の例示値: 10 GB-month storage / 1M Class A / 10M Class B per month",
-    "権限不足 (HTTP 401) の要求は課金されない"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Cloudflare R2 pricing storage Class A Class B operations",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://developers.cloudflare.com/r2/pricing/",
-    "https://developers.cloudflare.com/r2/buckets/storage-classes/",
-    "https://developers.cloudflare.com/changelog/post/2026-05-11-r2-data-catalog-pricing-announced/"
-  ],
-  "target_id": "cloudflare-r2"
+ "allowed_domains": [
+  "developers.cloudflare.com"
+ ],
+ "findings": [
+  "課金は 保存量 + Class A (状態変更系・高価) + Class B (読取系) の 3 軸",
+  "DeleteObject / DeleteBucket / AbortMultipartUpload は無料操作",
+  "egress は R2 直・Workers API・S3 API・r2.dev いずれも無料",
+  "storage class は Standard (既定) と Infrequent Access (取出料 + 最低 30 日課金)",
+  "無料枠の例示値: 10 GB-month storage / 1M Class A / 10M Class B per month",
+  "権限不足 (HTTP 401) の要求は課金されない"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:29Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "ページ表示 \"Last updated Aug 7, 2026\" を本文から直接抽出。record の last_updated が May 28, 2026 のままだったため本回で更新した (C08 F3)。",
+   "page_last_updated_extracted": [
+    "Last updated Aug 7, 2026|</"
+   ],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:29Z",
+   "response_body_sha256": "865d883ec5b1bebffceff960415a84c60293236735603c70eed660874878e41f",
+   "response_bytes": 147338,
+   "response_last_modified_header": null,
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Cloudflare R2 pricing storage Class A Class B operations",
+ "retrieved_at": "2026-08-07T03:30:09Z",
+ "returned_official_urls": [
+  "https://developers.cloudflare.com/r2/pricing/",
+  "https://developers.cloudflare.com/r2/buckets/storage-classes/",
+  "https://developers.cloudflare.com/changelog/post/2026-05-11-r2-data-catalog-pricing-announced/"
+ ],
+ "target_id": "cloudflare-r2"
 }

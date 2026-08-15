@@ -1,18 +1,22 @@
 {
-  "allowed_domains": [
-    "tailwindcss.com"
-  ],
-  "findings": [
-    "公式アップグレードガイドは Tailwind CSS v4 系への移行手順を正本として提供している",
-    "現行ガイドのページ表示は v4.3 である",
-    "v4 は Safari 16.4、Chrome 111、Firefox 128 以降のブラウザ機能を前提とする",
-    "移行では設定・依存・CSS 構文の互換性を個別に確認する必要がある"
-  ],
-  "retrieval_channel": "WebSearch/WebFetch",
-  "retrieval_method_disclosure": "公式 host に限定して検索し、公式アップグレードガイド本文を取得・確認した。",
-  "retrieved_at": "2026-08-10T11:54:59Z",
-  "returned_official_urls": [
-    "https://tailwindcss.com/docs/upgrade-guide"
-  ],
-  "target_id": "tailwindcss-v4"
+ "npm_package": "tailwindcss",
+ "payload": {
+  "dist-tags": {
+   "insiders": "0.0.0-insiders.b9286a7",
+   "latest": "4.3.3",
+   "next": "4.0.0",
+   "v3-lts": "3.4.19"
+  },
+  "homepage": "https://tailwindcss.com",
+  "license": "MIT",
+  "repository.url": "https://github.com/tailwindlabs/tailwindcss.git",
+  "time.modified": "2026-08-13T11:12:26.974Z",
+  "version": "4.3.3"
+ },
+ "registry": "https://registry.npmjs.org",
+ "retrieval_channel": "npm-registry",
+ "retrieval_command": "pnpm view tailwindcss <field> --json",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を pnpm CLI 経由で直接照会した実応答を証跡とする。HTML ドキュメントページ本文の取得ではない。",
+ "retrieved_at": "2026-08-13T13:51:46Z",
+ "target_id": "tailwindcss-v4"
 }

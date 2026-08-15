@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-226 |
+| Web (web) | 確定 | 確定質疑: qa-232 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリは作らない。モバイルブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリは作らない。タブレットブラウザ閲覧は web 行のレスポンシブ対応でカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,29 +24,29 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-226 (対応セル: web)
+### qa-232 (対応セル: web)
 
-**質問**: ui-ux/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
+**質問**: ヒアリングシート・成果物・ドキュメントの一覧をテーブル既定からカード + タブ + 検索へ再構成し、ドキュメント本文をカードブロック (2列/3列) で構成でき、編集とプレビューを横並び (狭幅はタブ切替) にする追加要望を、ui-ux/web の現行契約へどう統合して確定するか。
 
-**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
+**回答**: [出所] 利用者の2026-08-13の明示要望「一覧表で確認する際に、テーブル形式だと見にくい」「おしゃれなブログプラットフォームのように、タブや検索機能、見やすいカードタイプなどを活用して、より魅力的な形式に再構築したい」「この要望はヒアリングシートだけでなく、成果物やドキュメントなど、全ての関連資料に共通して適用されます」「強調したいポイントは絵文字ではなく、今回の構成に合った色合いや形のアイコンを使って表示する」「画像やカードで、ブロックごとに表示させる形で、カードが2つ並ぶようなドキュメントを作成できる構成にしてほしい」「編集も容易に行えるよう、2行や3行でカードを繋げるような構成で生成できる」「ドキュメントの管理方法（管理、一覧、詳細確認、編集など）も同様の形式で実現したい」「成果物を書いたのとプレビューっていうのを横並びに並ぶようにしてほしい。ただし、ちょっとちっちゃなものだったり、モニターのサイズによっては、それを今のように切り替える、タブで切り替えるっていうような形でもOK」を追加要件として確定する。qa-226 の【1 共通UI基盤】〜【6 図表と操作】、2026-08-11 の画面情報設計追補、および 2026-08-12〜13 の post-compile writeback (UI MVP wave / disclosure・dismissible・Docs empty / 配色仕様書 v2 / 共通ヘッダー履歴・現在地 / 着地ダッシュボード) は、以下の差分以外を全面維持する。
 
-【1 共通UI基盤】
-Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
+【1 一覧の既定表現】ヒアリングシート・成果物 (Catalog)・ドキュメントの各一覧は既定をカードグリッドとし、テーブルは廃止せず同一データの表示切替として常時提供する。切替は可視ラベル付きの 2 値コントロール (カード / テーブル) とし、選択は既存の remembered-filters と同じ粒度で利用者ごとに記憶する。カード既定化は「見にくさ」の解消のためであり、情報設計追補の禁止事項どおり、比較・絞込・選択・一括操作・完全値への到達を落としてはならない。それらを要する操作はテーブル表示で必ず到達可能とし、カード表示でも lead からの詳細遷移で同じ値へ到達させる。
 
-【2 画面とnavigation】
-正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
+【2 カードの情報顕著度】カードは lead / context / metadata の 3 階層を守る。lead はタイトルと現在状態、context は本文先頭から抽出した平文要約と scope・カテゴリ・タグ、metadata は更新日時 (相対併記の DateTimeText)・作成者・付随物件数とする。状態・日時・金額・PII・略語は可視ラベルを既定とし、アイコンだけに意味を担わせない。
 
-【3 閲覧権限】
-S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
+【3 タブ】各一覧は状態軸のタブを持つ。ドキュメントは 公開 / 非公開 / すべて、ヒアリングシートは 対応中 / 完了 / すべて、成果物は 公開中 / 停止 / すべて を既定集合とする。タブは既存 filter の別表現であり、新しい認可軸を作らない。選択は URL query へ反映し、共有・再読込・戻る操作で復元できること。0 件表示は「真の 0 件」と「絞込 0 件」を分ける既存 S15 契約 (FR-UIF-012/013) を継承する。
 
-【4 KPI】
-完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
+【4 検索】各一覧は可視ラベル付きの検索入力を持ち、既存の server-side `q` 契約 (タイトル・本文・タグを対象) をそのまま使う。公開 API へ新しい検索パラメータを追加しない。共通ヘッダー検索から `?q=` で遷移したときにその語で絞り込まれた状態で開く既存契約を維持する。検索・タブ・filter は AND で合成し、適用中の条件は解除可能な chip として明示する。
 
-【5 anomaly】
-同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
+【5 強調表示とアイコン】強調に絵文字を使わない。既存 callout (`[!POINT]` / `[!ATTENTION]` / `[!WARNING]` / `[!NOTE]`) の種別表現、および一覧・カードの状態表現は、配色仕様書 v2 の semantic color token と packages/ui 所有の inline SVG アイコンだけで行う。色だけで意味を区別せず、必ずアイコン形状か可視ラベルを併置する (既存の「色だけで系列を区別しない」契約と同型)。
 
-【6 図表と操作】
-chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
+【6 カードブロック本文】ドキュメント本文は、段落・見出しに加えてカードブロックを構成単位として持てる。1 行に 2 枚または 3 枚のカードを並べ、行を縦に積み重ねられる。各カードは見出し・本文・画像・リンクを任意に持つ。狭幅では列数によらず 1 列へ縦積みし、読み順は記述順を保つ。カードは装飾ではなく意味の区切りであり、見出しレベルの階層と目次を壊さない。
+
+【7 記法と編集容易性】カードブロックは新しい保存形式を導入せず、既存 Markdown 本文内のコンテナ記法として表す。手で読め手で書ける平文であること、既存の外部 Docs API 同期 (qa-231) が Markdown ファイルのまま同期できることを必須条件とする。編集画面はツールバーから「2 列カード行」「3 列カード行」の雛形を挿入でき、挿入後は通常の Markdown として編集できる。
+
+【8 編集とプレビュー】ドキュメントの新規作成・編集画面は、`lg` (1025px) 以上で編集ペインとプレビューペインを横並び 2 ペインとし、`lg` 未満では同じ 2 面をタブ切替とする。両形態で編集内容とプレビューは同一 sanitize 経路の結果を表示し、表示差を作らない。未保存面の離脱抑止は既存の `dismissible=false` 契約に従う。
+
+【9 管理面の一貫性】一覧 / 詳細 / 編集 / 作成の 4 面は、ドキュメント・ヒアリングシート・成果物で同じ構造 (ScreenHeader + タブ + 検索 + カードグリッド → 詳細 → 編集) を共有する。公開 API / DB schema / 認可判定 / Cloudflare deploy unit は本件で変更しない。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -96,7 +96,7 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 
 - 自動検査の合格を適合と読み替え、実際には到達できない導線を見逃す (自動検査が捕捉できるのは達成基準の一部)。
 - 一貫性を絶対視して、当該画面に固有の重要な差異まで平板化する。
-- 情報を出し切ることを可視性と誤解し、優先度の無い画面にして判断を遅らせる。
+- 情報を出し切ることを可視性と誤解し、優先度の無い画面にして判断を遅らせる (取捨と優先度付けの工程は `information-design.md`)。
 - コントラストや文字サイズをブランド表現より後回しにし、後から情報階層ごと作り直す。
 - 「アクセシビリティ対応済み」を機能名として扱い、対象利用者・支援技術・確認方法を記録しない。
 
@@ -108,51 +108,93 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 
 ---
 
+### Information Design (画面情報設計) — deep knowledge card
+
+- 出典カード: `ref-system-design-knowledge/references/information-design.md`
+
+#### 目的
+
+画面へ載せる情報を利用文脈から逆算し、取捨・グループ化・優先順位付け・表示加工・表現形式を一体で決める。見栄えだけでなく、対象利用者が必要な情報と操作を発見し、正確に理解し、目的を完了できる情報構造を作る。
+
+#### 解決する問題
+
+- データモデルの項目集合を表示モデルへ直写し、利用目的と無関係な項目まで同じ強さで並べる。
+- 表・カード・リスト・グリッドを固定レパートリーまたは流行として選び、役割や反復頻度に合わない操作密度を強制する。
+- ラベル・罫線・説明文を一律に付けるか一律に外し、意味の明示と冗長さを画面文脈で判定しない。
+- 近接・整列・余白・区切り・アイコン・画像が共通の視覚文法を持たず、見た目の飾りと意味の手掛かりが競合する。
+- 保存値をそのまま表示するか、表示層で独自計算し、正本値・表示値・利用者が読んだ意味が食い違う。
+- 設計判断を静的な完成図だけで確定し、実利用での発見時間・完了・誤操作・回復を測らない。
+
+#### 適用条件
+
+- 人が情報を読み、判断し、入力または操作する画面・通知・ダッシュボード・対話フローを設計する。
+- 新規画面だけでなく、情報は揃っているのに発見・理解・操作へ時間がかかる既存画面を改善する。
+- 利用者と利用環境を完全には確定できなくても、未知を仮説として記録し、実データまたは利用観測で更新できる。
+- design token や既存 component がある場合も、component 適用前に情報構造と意味関係を確定する。
+
+#### 非適用条件
+
+- 機械だけが消費する API 応答・イベント・ログの契約は、このカードの視覚表現を直接適用せず、対応する契約/データ設計知識を使う。ただし人が読む管理ビューには適用する。
+- 法令・監査・安全要件が表示内容と正確値を固定する場合、その情報を削除仮説に含めない。可読性は順序・グループ・段階開示・代替表現で改善する。
+- pattern registry の候補に一次資料、適用条件、検証可能性が無い段階では、推奨 pattern として昇格せず探索候補に留める。
+
+#### トレードオフ・失敗モード
+
+- 理解の速さと、熟練者の一覧比較・一括操作・高頻度処理は競合し得る。A/Bいずれかの様式を正解にせず、同じ情報の密度 variant や役割別 view を実測で選ぶ。
+- ラベル削除を美観ルールとして適用し、フォームの見えるラベル、accessible name、項目間の意味関係、翻訳時の明確さを失う。
+- 余白を増やせば読みやすいと決めつけ、大量反復操作のスクロール量と視線移動を増やす。逆に区切り線を増やし、すべての境界を同じ強さにする。
+- アイコンだけで操作を表し、文化差・学習差・拡大表示・支援技術で意味が伝わらない。画像の強調が主情報を押し下げ、代替テキストや読込失敗時の情報を欠く。
+- 相対時刻や短縮識別子を便利な表示として固定し、監査、同名識別、タイムゾーン境界、期限直前で正確値へ到達できなくする。
+- 表示加工を業務値の導出まで広げ、複数 client で結果がずれる。逆に加工を避け、保存形式の解釈を利用者へ押し付ける。
+- 固定上限を「ベストプラクティス」として全画面へ転用し、実データの長文、多言語、拡大表示、将来 pattern を排除する。
+- analytics のクリック数だけを価値と読み替え、完了の質、誤操作、回復、非利用者、支援技術の困難を見落とす。計測のために個人情報を過剰収集しない。
+- 情報設計の結論を完成画像か実装コードだけに残し、pattern選定、削除仮説、正確値への導線、検証結果を次の変更で再利用できない。
+
+#### goalへの寄与
+
+- 文脈プロファイルと表示 model を要件へ接続し、レビューを「好み」ではなく、対象タスク・誤操作コスト・アクセシビリティとの整合検査に変える。
+- 削除を可逆な仮説として扱うため、冗長さを減らしつつ、意味や安全性を失った場合に根拠を持って戻せる。
+- 視覚文法と意味構造を同時に設計し、見た目、DOM/支援技術、操作結果の三者を一貫させる。
+- open-world registry と実利用指標により、既存 pattern の機械適用では対応できない内容でも、発見・評価・再利用・鮮度監査の仕組みで改善を続けられる。
+
+---
+
 #### 本章での適用
 
-##### 確定内容 qa-226 (対応セル: web)
+##### 確定内容 qa-232 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-218〜qa-222のうち矛盾しない契約を統合した現行正本である。
+- 確定要件: [出所] 利用者の2026-08-13の明示要望「一覧表で確認する際に、テーブル形式だと見にくい」「おしゃれなブログプラットフォームのように、タブや検索機能、見やすいカードタイプなどを活用して、より魅力的な形式に再構築したい」「この要望はヒアリングシートだけでなく、成果物やドキュメントなど、全ての関連資料に共通して適用されます」「強調したいポイントは絵文字ではなく、今回の構成に合った色合いや形のアイコンを使って表示する」「画像やカードで、ブロックごとに表示させる形で、カードが2つ並ぶようなドキュメントを作成できる構成にしてほしい」「編集も容易に行えるよう、2行や3行でカードを繋げるような構成で生成できる」「ドキュメントの管理方法（管理、一覧、詳細確認、編集など）も同様の形式で実現したい」「成果物を書いたのとプレビューっていうのを横並びに並ぶようにしてほしい。ただし、ちょっとちっちゃなものだったり、モニターのサイズによっては、それを今のように切り替える、タブで切り替えるっていうような形でもOK」を追加要件として確定する。qa-226 の【1 共通UI基盤】〜【6 図表と操作】、2026-08-11 の画面情報設計追補、および 2026-08-12〜13 の post-compile writeback (UI MVP wave / disclosure・dismissible・Docs empty / 配色仕様書 v2 / 共通ヘッダー履歴・現在地 / 着地ダッシュボード) は、以下の差分以外を全面維持する。
 
-【1 共通UI基盤】
-Webはmd=768pxを境界にdesktopのsidebar+header+content+footerとmobileのheader+主要slot+その他を使い分ける。ScreenHeader、Panel、ConfirmDialog、Modal、BottomSheet、light/dark、comfortable/compact、contrast、responsive overflowの既存契約を維持する。空状態・読込中・権限不足・取得失敗を別状態として表現し、seed dataは実測と区別できるラベルを必須とする。
+【1 一覧の既定表現】ヒアリングシート・成果物 (Catalog)・ドキュメントの各一覧は既定をカードグリッドとし、テーブルは廃止せず同一データの表示切替として常時提供する。切替は可視ラベル付きの 2 値コントロール (カード / テーブル) とし、選択は既存の remembered-filters と同じ粒度で利用者ごとに記憶する。カード既定化は「見にくさ」の解消のためであり、情報設計追補の禁止事項どおり、比較・絞込・選択・一括操作・完全値への到達を落としてはならない。それらを要する操作はテーブル表示で必ず到達可能とし、カード表示でも lead からの詳細遷移で同じ値へ到達させる。
 
-【2 画面とnavigation】
-正規routeはS09=/dashboard、S13=/pipeline、S16=/tracking。desktop sidebarはdashboard / sheets / pipeline / catalog / docs / feedback / tracking / users / settingsの業務順とする。mobile主要navigationは既存正本のdashboard / harness / sheets / notifications / その他を維持し、pipeline / tracking / users等は「その他」から到達可能にする。未実装routeは表示せず、実装と認可が揃った時点だけ露出する。
+【2 カードの情報顕著度】カードは lead / context / metadata の 3 階層を守る。lead はタイトルと現在状態、context は本文先頭から抽出した平文要約と scope・カテゴリ・タグ、metadata は更新日時 (相対併記の DateTimeText)・作成者・付随物件数とする。状態・日時・金額・PII・略語は可視ラベルを既定とし、アイコンだけに意味を担わせない。
 
-【3 閲覧権限】
-S09/S16のtenant・harness・department・project集計はmember以上が閲覧できる。user次元の金額だけをusers.read_salaryを持つworkspace-admin/provider-adminへ限定する。pipelineはmemberも閲覧可、工程変更はworkspace-admin以上。role projectionはdeny-by-defaultとする。
+【3 タブ】各一覧は状態軸のタブを持つ。ドキュメントは 公開 / 非公開 / すべて、ヒアリングシートは 対応中 / 完了 / すべて、成果物は 公開中 / 停止 / すべて を既定集合とする。タブは既存 filter の別表現であり、新しい認可軸を作らない。選択は URL query へ反映し、共有・再読込・戻る操作で復元できること。0 件表示は「真の 0 件」と「絞込 0 件」を分ける既存 S15 契約 (FR-UIF-012/013) を継承する。
 
-【4 KPI】
-完了率は、期間末snapshotの対象HearingSheet総数を分母、同snapshotでstatus=completedの件数を分子とする。利用率は、期間末snapshotの対象公開済みHarness総数を分母、その集合のうち期間内に1回以上利用されたHarness数を分子とする。分母ownerはそれぞれHearingSheetとCatalog/Releaseであり、Metrics eventだけから分母を作らない。分母0は0%でなく「—」を表示する。
+【4 検索】各一覧は可視ラベル付きの検索入力を持ち、既存の server-side `q` 契約 (タイトル・本文・タグを対象) をそのまま使う。公開 API へ新しい検索パラメータを追加しない。共通ヘッダー検索から `?q=` で遷移したときにその語で絞り込まれた状態で開く既存契約を維持する。検索・タブ・filter は AND で合成し、適用中の条件は解除可能な chip として明示する。
 
-【5 anomaly】
-同一user・scopeの過去4完了週が全て揃い、その中央値が0でない場合だけ10倍超を評価する。履歴不足と中央値0は評価不能として区別し、異常なしへ潰さない。通知専用でingestを止めない。
+【5 強調表示とアイコン】強調に絵文字を使わない。既存 callout (`[!POINT]` / `[!ATTENTION]` / `[!WARNING]` / `[!NOTE]`) の種別表現、および一覧・カードの状態表現は、配色仕様書 v2 の semantic color token と packages/ui 所有の inline SVG アイコンだけで行う。色だけで意味を区別せず、必ずアイコン形状か可視ラベルを併置する (既存の「色だけで系列を区別しない」契約と同型)。
 
-【6 図表と操作】
-chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系列を区別しない。各SVG直後に同じ数値・単位・期間・系列名を持つ同値HTML tableを初期DOMへ常時配置し、JavaScript・追加通信・tooltip・展開操作なしで読めるようにする。pipelineの7工程はdrag-and-dropを唯一の操作にせず、各cardの明示actionとConfirmDialogから遷移する。
+【6 カードブロック本文】ドキュメント本文は、段落・見出しに加えてカードブロックを構成単位として持てる。1 行に 2 枚または 3 枚のカードを並べ、行を縦に積み重ねられる。各カードは見出し・本文・画像・リンクを任意に持つ。狭幅では列数によらず 1 列へ縦積みし、読み順は記述順を保つ。カードは装飾ではなく意味の区切りであり、見出しレベルの階層と目次を壊さない。
+
+【7 記法と編集容易性】カードブロックは新しい保存形式を導入せず、既存 Markdown 本文内のコンテナ記法として表す。手で読め手で書ける平文であること、既存の外部 Docs API 同期 (qa-231) が Markdown ファイルのまま同期できることを必須条件とする。編集画面はツールバーから「2 列カード行」「3 列カード行」の雛形を挿入でき、挿入後は通常の Markdown として編集できる。
+
+【8 編集とプレビュー】ドキュメントの新規作成・編集画面は、`lg` (1025px) 以上で編集ペインとプレビューペインを横並び 2 ペインとし、`lg` 未満では同じ 2 面をタブ切替とする。両形態で編集内容とプレビューは同一 sanitize 経路の結果を表示し、表示差を作らない。未保存面の離脱抑止は既存の `dismissible=false` 契約に従う。
+
+【9 管理面の一貫性】一覧 / 詳細 / 編集 / 作成の 4 面は、ドキュメント・ヒアリングシート・成果物で同じ構造 (ScreenHeader + タブ + 検索 + カードグリッド → 詳細 → 編集) を共有する。公開 API / DB schema / 認可判定 / Cloudflare deploy unit は本件で変更しない。
 - 設計解釈の記録経路: `dialogue`
+- 原則: 利用文脈先行の情報顕著度設計 (lead / context / metadata) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 「テーブルが見にくい」という訴えを見た目の刷新へ直訳せず、カードの 3 階層と可視ラベル必須を先に固定し、比較・一括操作・完全値到達をテーブル表示で保持する条件を付けた。装飾の後付けと保存項目の直写の両方を防いだ。
+  - トレードオフ:
+    - 同一データに対しカードとテーブルの 2 表現を維持する実装・テスト費用が増える
+    - カード既定では一覧内での横断比較が弱く、比較タスクは表示切替を挟む操作が 1 手増える
 - 原則: 知覚可能・操作可能・理解可能・堅牢 (POUR) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: 同値表を初期DOMへ常在させ、分母0と評価不能理由を明示して、色・JavaScript・推測に依存せず同じ判断へ到達可能にした。
+  - 章固有の根拠: 強調を絵文字から semantic token + inline SVG アイコンへ移すにあたり、色単独で意味を担わせずアイコン形状か可視ラベルの併置を必須にし、タブ・検索状態を URL へ載せて再現・共有・戻る操作を保った。編集/プレビューも幅に応じて 2 ペインとタブへ分岐させ、狭幅で到達不能な面を作らない。
   - トレードオフ:
-    - 縦方向の情報量が増える
-    - SVGと表の同値性をcontract testで維持する必要がある
-
-##### 追補 (2026-08-11 / 画面情報設計 / `HarnessHub-f6ix`)
-
-- qa-226 と UI 基盤契約 (shell / surface / 状態 / responsive) は全面維持する。本追補は *どの部品を使うか* の後段に、*何を載せ・何を省き・何を強調するか* の情報設計層を積む。
-- mockup (`harness-studio-v2`) は確定済み画面の初期 visual/reference であり、画面横断の情報設計規範の正本ではない。規範正本は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、実装手順は [画面情報設計ガイド](../docs/frontend-information-design-guide.md)、`role × task-mode × breakpoint` profile 割当の SSOT は [screen-inventory](../docs/screen-inventory.md)。
-- 情報顕著度は `lead / context / metadata`。構築 phase の P0〜P5 および frontend-spec のレスポンシブ pattern P1〜P10 と語彙を混ぜない。
-- ラベルの一律全外しを禁止し、form control・初見/破壊操作・状態・金額・日時・PII・略語は可視ラベルを既定とする。狭幅への pattern 変換でも比較・filter・選択・一括操作・完全値への到達を落とさない。
-- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
-- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
-  - 採否: `applied`
-  - 章固有の根拠: 利用文脈先行の 10 工程と要素別意味契約を製品規範へ固定し、保存項目の直写や装飾の後付けを防ぐ。
-  - トレードオフ:
-    - 新画面・情報設計変更 PR に情報設計シートと profile 更新が必須になる
-    - profile/pattern の将来 machine gate は未実装で、現行は manual gate + 既存 UI 基盤 gate を使う
-
+    - アイコン 1 つごとに意味・ラベル・コントラストの検証項目が増える
+    - URL query を単一の真実にするため、状態追加のたびに query 契約の後方互換を管理する必要がある
 ##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
@@ -208,3 +250,18 @@ chartはpackages/ui所有のserver-rendered inline SVGとし、色だけで系�
 - サインイン後の唯一の着地面は `/dashboard`。読む順は要対応 → 業務開始導線 → 本人の最近。分析 KPI は出さない。
 - visible=false の機能は件数 0・recent 空を型で強制し、0 件として見せない。
 - 新規 qa 番号なし。R4-reopen 不要。正本: [情報設計](../docs/features/feat-hub-foundation/information-design/dashboard.md)、[受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
+
+
+## Post-compile writeback: 画面情報設計 (2026-08-11 / `HarnessHub-f6ix`)
+
+- qa-226 と UI 基盤契約 (shell / surface / 状態 / responsive) は全面維持する。本追補は *どの部品を使うか* の後段に、*何を載せ・何を省き・何を強調するか* の情報設計層を積む。
+- mockup (`harness-studio-v2`) は確定済み画面の初期 visual/reference であり、画面横断の情報設計規範の正本ではない。規範正本は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、実装手順は [画面情報設計ガイド](../docs/frontend-information-design-guide.md)、`role × task-mode × breakpoint` profile 割当の SSOT は [screen-inventory](../docs/screen-inventory.md)。
+- 情報顕著度は `lead / context / metadata`。構築 phase の P0〜P5 および frontend-spec のレスポンシブ pattern P1〜P10 と語彙を混ぜない。
+- ラベルの一律全外しを禁止し、form control・初見/破壊操作・状態・金額・日時・PII・略語は可視ラベルを既定とする。狭幅への pattern 変換でも比較・filter・選択・一括操作・完全値への到達を落とさない。
+- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
+- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
+  - 採否: `applied`
+  - 章固有の根拠: 利用文脈先行の 10 工程と要素別意味契約を製品規範へ固定し、保存項目の直写や装飾の後付けを防ぐ。
+  - トレードオフ:
+    - 新画面・情報設計変更 PR に情報設計シートと profile 更新が必須になる
+    - profile/pattern の将来 machine gate は未実装で、現行は manual gate + 既存 UI 基盤 gate を使う

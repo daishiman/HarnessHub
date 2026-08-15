@@ -15,7 +15,7 @@ serves_goals: [G1, G2, G3, G5]
 
 | プラットフォーム | 状態 | 根拠 |
 |---|---|---|
-| Web (web) | 確定 | 確定質疑: qa-227 |
+| Web (web) | 確定 | 確定質疑: qa-233 |
 | モバイル (mobile) | 対象外 | 理由: native モバイルアプリなし。モバイルブラウザ表示は web 行のレスポンシブでカバー |
 | タブレット (tablet) | 対象外 | 理由: native タブレットアプリなし。タブレットブラウザ表示は web 行のレスポンシブでカバー |
 | デスクトップ (Windows) (desktop-windows) | 確定 | 確定質疑: qa-007 |
@@ -24,29 +24,25 @@ serves_goals: [G1, G2, G3, G5]
 
 ## 確定内容 (質疑録)
 
-### qa-227 (対応セル: web)
+### qa-233 (対応セル: web)
 
-**質問**: frontend/webの承認済み現行契約を、旧値と訂正文を併記せず一つの無矛盾な仕様として統合するとどうなるか。
+**質問**: qa-232 で確定したカード一覧・タブ・検索・カードブロック本文・編集/プレビュー 2 ペインを、frontend/web の実装契約としてどう確定するか。
 
-**回答**: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-219〜qa-223のうち矛盾しない契約を統合した現行正本である。
+**回答**: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) を実装層へ落とした契約である。qa-227 の frontend/web 既存契約 (Next.js App Router + TypeScript + pnpm、@opennextjs/cloudflare 上の SSR、server-first、packages/ui 所有の共通部品、route-local 遅延読込境界) は、以下の差分以外を全面維持する。
 
-【1 shellとroute】
-/dashboard、/pipeline、/trackingを既存(dashboard) route groupのHubShell配下へ置き、routeごとにshellを再定義しない。/pipeline/[buildId]をBuild個票とする。現行/metricsと/metrics/usageは移行時の互換redirectに限り、新規link・navigation・canonical URLは正規routeだけを生成する。main landmarkは単一、SessionRole投影はdeny-by-default、x-hh-pathnameは内部利用に限定する。
+【1 カードブロック記法】カードブロックは remark のコンテナ記法 `:::cards cols=2` の内側に `:::card` を並べる入れ子で表す。`cols` は 2 と 3 のみ受理し、未知の値・未閉じブロックは描画時に通常段落へ縮退させて例外を投げない。実装は packages/ui の Markdown 実装が所有する remark plugin とし、apps/hub 側で再実装しない (既存 callout plugin と同じ所在・同じ方式)。
 
-【2 所有境界】
-StatTile、LineChart、BarChart、DonutChart、StageBoard、StageColumn、StageCard、StepWizardの視覚・操作contractはpackages/uiが所有する。apps/hubはroute、tenant/workspace scope、session identity、認可済みserver data取得を結線する。packages/uiはHub domain型をimportせず、表示用response modelだけを受ける。principalへproject_idを追加せず、backendのtrusted resolver結果だけを使用する。
+【2 生成要素と段組】plugin は `hh-cards` (属性 data-cols) と `hh-card` のカスタム要素を生成し、React の components map で CSS grid へ描画する。段組は `lg` (1025px) 以上で指定 cols 列、`md` (641px) 以上 `lg` 未満で 2 列を上限、`md` 未満で 1 列とする。列数が減っても DOM 順序は記述順のまま保ち、読み上げ順と視覚順を一致させる。
 
-【3 server-first取得】
-S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、生eventの画面内集計を禁止する。期間filterはURL search paramsを正本とし、client stateや表示側再計算を正本にしない。
+【3 一覧部品の共通化】カードグリッド・表示切替・タブは packages/ui の共通部品として実装し、docs / sheets / catalog の 3 画面が同一部品を使う。既存 DataTable は削除せずテーブル表示側で継続利用する。ListState・FilterBar・AppliedFilterChips・CursorPager の既存契約は変更しない。
 
-【4 KPI DTO】
-完了率と利用率は別DTOとし、numerator、denominator、period、snapshotAt、nullable rate、reasonを持つ。完了率は期間末HearingSheet snapshot、利用率は期間末公開済みHarness snapshotと期間内rollupの共通部分を使う。ranking件数を利用率の分母にするactiveHarnessRatio型の実装は禁止する。denominator=0はrate=null、reason=denominator_emptyとし、UIで「—」へ写像する。
+【4 状態の単一の真実】タブ・検索語・filter は URL query を単一の真実とし、同じ状態を client state に二重で持たない。既存 remembered-filters には表示形態 (カード / テーブル) のみを追加で記憶させる。
 
-【5 anomaly DTO】
-過去4完了週が揃い中央値が0でない場合だけ評価値を返す。insufficient_historyとzero_medianを別reasonとし、正常値0へ変換しない。
+【5 編集/プレビュー】2 ペインと 1 面タブの切替は CSS で行い、`lg` 未満は既存 Tabs 部品で 2 面を切り替える。プレビューは編集中の client 側でも表示側と同じ MarkdownView を使い、sanitize schema を共有して表示差を作らない。Markdown の重量依存は既存の dynamic import 境界 (markdown-view / markdown-editor の薄い公開境界) を維持し、docs 以外の画面の初期 client chunk を増やさない。
 
-【6 chart contract】
-各inline SVG componentは同一response modelからSVGと直後の同値HTML tableを描画する。表は初期HTMLに常在し、JavaScriptや利用者操作なしで読める。server側とclient側で同じ数値を二重計算しない。
+【6 アイコン】アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言に絵文字を混入させない。絵文字混入は lint で検出する。
+
+【7 不変】公開 API・DB schema・認可判定・Cloudflare deploy unit は変更しない。server-first と既存の screen-pattern gate、情報設計シート・screen-inventory profile 更新の PR 要件も維持する。
 
 ### qa-007 (対応セル: desktop-windows, desktop-macos)
 
@@ -108,50 +104,36 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 
 #### 本章での適用
 
-##### 確定内容 qa-227 (対応セル: web)
+##### 確定内容 qa-233 (対応セル: web)
 
-- 確定要件: [出所] 利用者の2026-08-10逐語回答「推奨案3点を承認。」（appr-043）と、既存確定qa-219〜qa-223のうち矛盾しない契約を統合した現行正本である。
+- 確定要件: [出所] 利用者の2026-08-13の明示要望 (qa-232 と同一の逐語) を実装層へ落とした契約である。qa-227 の frontend/web 既存契約 (Next.js App Router + TypeScript + pnpm、@opennextjs/cloudflare 上の SSR、server-first、packages/ui 所有の共通部品、route-local 遅延読込境界) は、以下の差分以外を全面維持する。
 
-【1 shellとroute】
-/dashboard、/pipeline、/trackingを既存(dashboard) route groupのHubShell配下へ置き、routeごとにshellを再定義しない。/pipeline/[buildId]をBuild個票とする。現行/metricsと/metrics/usageは移行時の互換redirectに限り、新規link・navigation・canonical URLは正規routeだけを生成する。main landmarkは単一、SessionRole投影はdeny-by-default、x-hh-pathnameは内部利用に限定する。
+【1 カードブロック記法】カードブロックは remark のコンテナ記法 `:::cards cols=2` の内側に `:::card` を並べる入れ子で表す。`cols` は 2 と 3 のみ受理し、未知の値・未閉じブロックは描画時に通常段落へ縮退させて例外を投げない。実装は packages/ui の Markdown 実装が所有する remark plugin とし、apps/hub 側で再実装しない (既存 callout plugin と同じ所在・同じ方式)。
 
-【2 所有境界】
-StatTile、LineChart、BarChart、DonutChart、StageBoard、StageColumn、StageCard、StepWizardの視覚・操作contractはpackages/uiが所有する。apps/hubはroute、tenant/workspace scope、session identity、認可済みserver data取得を結線する。packages/uiはHub domain型をimportせず、表示用response modelだけを受ける。principalへproject_idを追加せず、backendのtrusted resolver結果だけを使用する。
+【2 生成要素と段組】plugin は `hh-cards` (属性 data-cols) と `hh-card` のカスタム要素を生成し、React の components map で CSS grid へ描画する。段組は `lg` (1025px) 以上で指定 cols 列、`md` (641px) 以上 `lg` 未満で 2 列を上限、`md` 未満で 1 列とする。列数が減っても DOM 順序は記述順のまま保ち、読み上げ順と視覚順を一致させる。
 
-【3 server-first取得】
-S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、生eventの画面内集計を禁止する。期間filterはURL search paramsを正本とし、client stateや表示側再計算を正本にしない。
+【3 一覧部品の共通化】カードグリッド・表示切替・タブは packages/ui の共通部品として実装し、docs / sheets / catalog の 3 画面が同一部品を使う。既存 DataTable は削除せずテーブル表示側で継続利用する。ListState・FilterBar・AppliedFilterChips・CursorPager の既存契約は変更しない。
 
-【4 KPI DTO】
-完了率と利用率は別DTOとし、numerator、denominator、period、snapshotAt、nullable rate、reasonを持つ。完了率は期間末HearingSheet snapshot、利用率は期間末公開済みHarness snapshotと期間内rollupの共通部分を使う。ranking件数を利用率の分母にするactiveHarnessRatio型の実装は禁止する。denominator=0はrate=null、reason=denominator_emptyとし、UIで「—」へ写像する。
+【4 状態の単一の真実】タブ・検索語・filter は URL query を単一の真実とし、同じ状態を client state に二重で持たない。既存 remembered-filters には表示形態 (カード / テーブル) のみを追加で記憶させる。
 
-【5 anomaly DTO】
-過去4完了週が揃い中央値が0でない場合だけ評価値を返す。insufficient_historyとzero_medianを別reasonとし、正常値0へ変換しない。
+【5 編集/プレビュー】2 ペインと 1 面タブの切替は CSS で行い、`lg` 未満は既存 Tabs 部品で 2 面を切り替える。プレビューは編集中の client 側でも表示側と同じ MarkdownView を使い、sanitize schema を共有して表示差を作らない。Markdown の重量依存は既存の dynamic import 境界 (markdown-view / markdown-editor の薄い公開境界) を維持し、docs 以外の画面の初期 client chunk を増やさない。
 
-【6 chart contract】
-各inline SVG componentは同一response modelからSVGと直後の同値HTML tableを描画する。表は初期HTMLに常在し、JavaScriptや利用者操作なしで読める。server側とclient側で同じ数値を二重計算しない。
+【6 アイコン】アイコンは packages/ui のアイコンモジュールが持つ inline SVG のみを使う。UI 文言・callout ラベル・空状態文言に絵文字を混入させない。絵文字混入は lint で検出する。
+
+【7 不変】公開 API・DB schema・認可判定・Cloudflare deploy unit は変更しない。server-first と既存の screen-pattern gate、情報設計シート・screen-inventory profile 更新の PR 要件も維持する。
 - 設計解釈の記録経路: `dialogue`
-- 原則: Dependency Rule (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
+- 原則: 依存の方向と所有境界の固定 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/clean-architecture.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: snapshotとrollupの結合をserver-side ownerに置き、packages/uiへ同一表示modelだけを渡してKPI policyをclient実装から内側へ保った。
+  - 章固有の根拠: カードブロックの記法解釈と描画を packages/ui の Markdown 実装へ一箇所で所有させ、apps/hub 側の再実装を禁じた。一覧のカード・タブ・切替も共通部品化し、docs / sheets / catalog の 3 画面で規則が分岐するのを防いだ。
   - トレードオフ:
-    - server response modelが増える
-    - 互換redirectを一時保守する必要がある
-
-##### 追補 (2026-08-11 / 画面情報設計 / `HarnessHub-f6ix`)
-
-- qa-227 と既存 frontend 契約 (App Router / packages/ui consumer / server-first / SEC5 表示専用) は全面維持する。本追補は画面実装の *情報構造の決め方* を固定する。
-- mockup は実装方式の正本でも、画面横断の情報設計規範の正本でもない。規範は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、詳細画面契約は [docs/frontend-spec.md](../docs/frontend-spec.md) §3.6、profile 割当は [screen-inventory](../docs/screen-inventory.md) のみを SSOT とする。
-- 画面設計の工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」。表・カード・フォームの確定を最初に置かない。
-- 情報顕著度 `lead / context / metadata` とレスポンシブ変換 pattern `P1〜P10` は別語彙である。`title` 属性だけへ絶対日時・完全識別子を隠さず、キーボード/タッチで到達できる開示を使う。
-- system-spec-harness 側では `screen-information-priority` を blocking required-info とし、`frontend-arch` より先に確定する (UI なしは理由付き N/A)。item 別回答の writer 接地検査は follow-up `HarnessHub-9wdm`。
-- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
-- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
+    - packages/ui の公開面が広がり、破壊的変更時の影響範囲が 3 画面へ同時に及ぶ
+    - 画面固有の微調整を共通部品の option として吸収する必要があり、option 過多になりやすい
+- 原則: 堅牢性 (不正入力での縮退と読み上げ順の保持) (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
   - 採否: `applied`
-  - 章固有の根拠: frontend architecture 確定の前に画面情報の優先と意味契約を固定し、部品選定とデータ直写が設計を主導するのを防ぐ。
+  - 章固有の根拠: 未知の cols や未閉じブロックを例外にせず通常段落へ縮退させ、利用者の手書き Markdown が文書全体の描画を壊さないようにした。段組が減っても DOM 順を記述順に保ち、視覚順と読み上げ順の乖離を作らない。
   - トレードオフ:
-    - 生成時の収集順序が長くなり、UI あり案件では情報設計 9 項目が必須になる
-    - 既存画面は一括改修せず、改修対象だけを追補へ寄せる
-
+    - 記法ミスが目立たず、意図した段組にならないまま気付きにくい
+    - 縮退経路のぶんレンダリングの分岐とテストケースが増える
 ##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
 
 - 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
@@ -225,3 +207,30 @@ S09/S16は確定済みrollupとowner snapshotをserver componentで取得し、�
 - 既定着地は `DEFAULT_POST_SIGNIN_LANDING = /dashboard`。S00.LANDING が本人の最近作業と既存業務導線を出す。
 - S09 分析 KPI は `/metrics` のまま。着地の「要対応」は運用キューであり推移・ランキングではない。
 - 新規 qa 番号なし。R4-reopen 不要。正本は qa-170 / qa-171 と [受領書](../docs/features/feat-hub-foundation/elegant-home-review-20260813-spec-reflection-receipt.md)。
+
+
+## Post-compile writeback: 画面情報設計 (2026-08-11 / `HarnessHub-f6ix`)
+
+- qa-227 と既存 frontend 契約 (App Router / packages/ui consumer / server-first / SEC5 表示専用) は全面維持する。本追補は画面実装の *情報構造の決め方* を固定する。
+- mockup は実装方式の正本でも、画面横断の情報設計規範の正本でもない。規範は [画面情報設計追補](../specs/harness-hub-information-design-addendum.md)、詳細画面契約は [docs/frontend-spec.md](../docs/frontend-spec.md) §3.6、profile 割当は [screen-inventory](../docs/screen-inventory.md) のみを SSOT とする。
+- 画面設計の工程順序は「利用文脈 → 取捨 → 要素別意味判定 → グループ化 → 顕著度 → 表示加工 → パターン選定 → 配置 → 機能追加 → 意味装飾」。表・カード・フォームの確定を最初に置かない。
+- 情報顕著度 `lead / context / metadata` とレスポンシブ変換 pattern `P1〜P10` は別語彙である。`title` 属性だけへ絶対日時・完全識別子を隠さず、キーボード/タッチで到達できる開示を使う。
+- system-spec-harness 側では `screen-information-priority` を blocking required-info とし、`frontend-arch` より先に確定する (UI なしは理由付き N/A)。item 別回答の writer 接地検査は follow-up `HarnessHub-9wdm`。
+- 公開 API / DB schema / 認可判定 / Cloudflare deploy unit は変更しない。
+- 原則: Information Design (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/information-design.md`)
+  - 採否: `applied`
+  - 章固有の根拠: frontend architecture 確定の前に画面情報の優先と意味契約を固定し、部品選定とデータ直写が設計を主導するのを防ぐ。
+  - トレードオフ:
+    - 生成時の収集順序が長くなり、UI あり案件では情報設計 9 項目が必須になる
+    - 既存画面は一括改修せず、改修対象だけを追補へ寄せる
+
+##### 確定内容 qa-007 (対応セル: desktop-windows, desktop-macos)
+
+- 確定要件: ユーザー直接指定: Next.js + TypeScript、パッケージマネージャは pnpm (npm 不使用、packageManager フィールドで pin)。Hub Web は Next.js App Router を Workers 上 (@opennextjs/cloudflare) で SSR し、初期 4 画面 (業務ツール一覧 / 詳細 / 公開状態・修正内容 / Workspace 設定・Release 履歴) をレスポンシブ実装。作者向けクライアントは専用 desktop GUI を作らず、Claude Code / Codex plugin (slash command + skill + スクリプト) を Publisher の操作面とする (§5.1: Web に会話型 Creator を作らない)。
+- 設計解釈の記録経路: `legacy_backfill` (`set-qa-design-applications`)
+- 原則: 一貫性と標準準拠 (`plugins/system-spec-harness/skills/ref-system-design-knowledge/references/usability-accessibility.md#中核概念`)
+  - 採否: `applied`
+  - 章固有の根拠: 利用者向け画面は responsive な Next.js Web に統一し、作者向け操作面は既存の Claude Code / Codex plugin 規約へ揃えることで、専用 desktop GUI という別操作体系を増やさない判断に適用した。
+  - トレードオフ:
+    - 作者は terminal と plugin 操作を学ぶ必要がある
+    - OS native GUI 固有の操作性は提供しない

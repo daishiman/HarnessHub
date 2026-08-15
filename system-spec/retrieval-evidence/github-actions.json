@@ -1,25 +1,41 @@
 {
-  "allowed_domains": [
-    "docs.github.com"
-  ],
-  "findings": [
-    "workflow は .github/workflows 配下の .yml/.yaml で定義する",
-    "trigger は on キー。branches/tags 系は glob pattern を受ける",
-    "後続 step への環境変数受け渡しは GITHUB_ENV への追記 (生成 step 自身には反映されない)",
-    "custom action の metadata は action.yml (action.yaml も可、action.yml が推奨)",
-    "reference は Workflow syntax / Events / Workflow commands / Contexts / Metadata syntax 等へ分割されている"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "GitHub Actions workflow syntax documentation",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions",
-    "https://docs.github.com/en/actions",
-    "https://docs.github.com/en/actions/reference",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands",
-    "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"
-  ],
-  "target_id": "github-actions"
+ "allowed_domains": [
+  "docs.github.com"
+ ],
+ "findings": [
+  "workflow は .github/workflows 配下の .yml/.yaml で定義する",
+  "trigger は on キー。branches/tags 系は glob pattern を受ける",
+  "後続 step への環境変数受け渡しは GITHUB_ENV への追記 (生成 step 自身には反映されない)",
+  "custom action の metadata は action.yml (action.yaml も可、action.yml が推奨)",
+  "reference は Workflow syntax / Events / Workflow commands / Contexts / Metadata syntax 等へ分割されている"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:28Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "ページ本文に \"Last updated\" 表記なし。本文内の最新日付は 2026-03-10。世代落ちなし。",
+   "page_last_updated_extracted": [],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:28Z",
+   "response_body_sha256": "0584c11ef64f338bbd50711c56a18bd5866c887b0c2258e41e75277c28e6a6e1",
+   "response_bytes": 435889,
+   "response_last_modified_header": null,
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "GitHub Actions workflow syntax documentation",
+ "retrieved_at": "2026-08-07T03:30:09Z",
+ "returned_official_urls": [
+  "https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions",
+  "https://docs.github.com/en/actions",
+  "https://docs.github.com/en/actions/reference",
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts",
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands",
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"
+ ],
+ "target_id": "github-actions"
 }
