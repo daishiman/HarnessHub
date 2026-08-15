@@ -66,7 +66,7 @@ describe('TID-PNAV: 共通シェルのナビゲーション href 生成', () => 
 
   it('TID-PNAV-01c: 使用状況の導線は完全 label と意味境界の宣言を別々に保つ', () => {
     const item = sidebarNavItems({ tenantId: 'tenant-a', workspaceId: 'ws-1' }, 'provider-admin').find((candidate) =>
-      candidate.href.startsWith('/metrics/usage'),
+      candidate.href.startsWith('/tracking'),
     );
 
     expect(item?.label).toBe('使用状況・削減効果');
