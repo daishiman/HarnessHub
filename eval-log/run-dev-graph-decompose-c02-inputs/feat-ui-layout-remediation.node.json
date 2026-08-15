@@ -1,0 +1,130 @@
+{
+  "node": {
+    "graph_node_id": "feat-ui-layout-remediation",
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "title": "全画面の UI 崩れ是正と折返し位置の意図化・印刷導線の非表示",
+    "project_id": "harness-hub",
+    "domain": "ui-ux",
+    "status": "draft",
+    "owners": [
+      "daishiman"
+    ],
+    "tags": [
+      "macro-feature",
+      "ui-ux",
+      "layout",
+      "line-break",
+      "print",
+      "S1",
+      "S2",
+      "S3"
+    ],
+    "priority": "high",
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-14T00:00:00Z",
+    "updated_at": "2026-08-14T00:00:00Z",
+    "depends_on": [
+      "feat-ui-integrity-audit-harness"
+    ],
+    "related_nodes": [
+      "feat-demo-coverage-dataset",
+      "feat-ui-integrity-audit-harness",
+      "feat-post-signin-landing-surface"
+    ],
+    "resource_scope": [
+      "apps/hub/src/app",
+      "apps/hub/src/components",
+      "packages/ui/src"
+    ],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "features/feat-ui-layout-remediation.md",
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "generated",
+      "source_plugin": "dev-graph",
+      "source_path": "system-spec/ui-ux.md",
+      "source_version": null,
+      "source_digest": "8b9c1ca3e35c6a8a5e4eecf510aec342e4ccbd2dbca78c6c091196e058bcfa99",
+      "imported_at": "2026-08-14T00:00:00Z"
+    },
+    "classification_confidence": 0.9,
+    "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+    "classification_candidates": [
+      {
+        "artifact_kind": "feature",
+        "confidence": 0.9,
+        "candidate_path": "features/feat-ui-layout-remediation.md"
+      }
+    ],
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "purpose": "サイドバーの「使用状況・削減効果」が語の途中で `削減効` と `果` に割れるなど、折返し位置が意味の切れ目と一致していない箇所が画面全体に散在している。折返しを禁止すると狭い画面で横に溢れるだけで症状が移動するため、折返しを許したまま位置を意図した箇所へ固定し、同種の箇所を全画面で洗い出して揃える。あわせて、現時点で用途の無い印刷導線を利用者の判断により非表示にする。",
+    "goal": "自動検査 (feat-ui-integrity-audit-harness) が検出した全画面の崩れが 0 件になり、複数行になる文言が意味の切れ目で折り返され、印刷導線が利用者から見えない状態。",
+    "scope_in": [
+      "自動検査が検出した横溢れ・タップ域不足・意図しない折返しの全件是正",
+      "折返し位置の意図化 (語中で割れる文言を意味の切れ目で 2 行にする)",
+      "同種の折返し問題の全画面での洗い出しと、発見箇所の一覧化",
+      "折返し位置の指定手段を共通 UI 側へ寄せ、画面ごとの場当たり対応にしない",
+      "印刷導線 (印刷画面・印刷ボタン) の非表示化",
+      "非表示にした印刷導線が経路として残らないことの確認",
+      "全ページ印刷を将来課題として課題トラッカーへ起票 (実装はしない)"
+    ],
+    "scope_out": [
+      "全ページ印刷の実装 (将来課題として起票のみ)",
+      "検査基盤そのものの実装 (feat-ui-integrity-audit-harness の担当)",
+      "配色・テーマの変更 (feat-theme-palette-catalog の担当)",
+      "情報設計・画面構成の変更 (崩れの是正であり再設計ではない)",
+      "新規画面の追加",
+      "折返しを nowrap で禁止する方針 (利用者が明示的に 2 行表現を求めたため採らない)"
+    ],
+    "acceptance": [
+      "自動検査が全 28 route × 3 幅 × 2 テーマで横溢れ 0 件・タップ域違反 0 件・意図しない折返し 0 件を報告する",
+      "サイドバーの「使用状況・削減効果」が 360px 幅で `使用状況・` / `削減効果` の 2 行に折り返される",
+      "語中で割れていた文言の一覧が作成され、全件について是正後の折返し位置が記録されている",
+      "折返し位置の指定が共通 UI 側の仕組みで行われ、画面ごとの個別 CSS の複製になっていない",
+      "印刷導線が全画面から表示されず、直接 URL でも印刷画面へ到達しない",
+      "全ページ印刷が将来課題として課題トラッカーに起票され、本 feature の完了条件から外れている",
+      "是正によって既存の自動検査・単体テストが非退行である"
+    ],
+    "architecture_refs": [
+      "arch-harness-hub-design-system",
+      "arch-harness-hub-frontend"
+    ],
+    "beads_linkage": null,
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "implementation_readiness": {
+      "checked_at": "2026-08-14T00:00:00Z",
+      "missing_sections": [],
+      "status": "incomplete"
+    }
+  }
+}

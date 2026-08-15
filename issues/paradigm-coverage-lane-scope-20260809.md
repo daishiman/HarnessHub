@@ -12,8 +12,8 @@ iteration: null
 title: "validate-paradigm-coverage に lane 単位の検査モードが無い"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:45:34.768254Z"
-status: "draft"
+updated_at: "2026-08-12T01:28:02Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["plugins/harness-creator/skills/run-elegant-review/scripts/validate-paradigm-coverage.py"]

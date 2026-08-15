@@ -1,0 +1,134 @@
+{
+  "node": {
+    "graph_node_id": "feat-docs-live-authoring",
+    "artifact_kind": "feature",
+    "artifact_subtypes": [],
+    "title": "ドキュメント作成の Notion 型化 (ライブ Markdown・カテゴリ/タグ・全画面幅)",
+    "project_id": "harness-hub",
+    "domain": "ui-ux",
+    "status": "draft",
+    "owners": [
+      "daishiman"
+    ],
+    "tags": [
+      "macro-feature",
+      "ui-ux",
+      "docs",
+      "editor",
+      "taxonomy",
+      "S7"
+    ],
+    "priority": "medium",
+    "start_date": null,
+    "target_date": null,
+    "iteration": null,
+    "created_at": "2026-08-14T00:00:00Z",
+    "updated_at": "2026-08-15T13:37:01Z",
+    "depends_on": [
+      "feat-docs-cms"
+    ],
+    "related_nodes": [
+      "feat-user-org-admin",
+      "feat-workspace-governance",
+      "feat-classification-vocabulary-parity"
+    ],
+    "resource_scope": [
+      "apps/hub/src/app",
+      "apps/hub/src/components",
+      "apps/hub/src/db",
+      "packages/ui/src"
+    ],
+    "parent_feature": null,
+    "feature_package_id": null,
+    "phase_ref": null,
+    "file_path": "features/feat-docs-live-authoring.md",
+    "template_id": "feature",
+    "template_version": "1.0.0",
+    "confirmation_status": "draft",
+    "evaluation_status": "pending",
+    "confirmation_evidence": {
+      "evaluator": null,
+      "evidence_ref": null,
+      "evaluated_digest": null
+    },
+    "source_lineage": {
+      "origin_kind": "generated",
+      "source_plugin": "dev-graph",
+      "source_path": "system-spec/ui-ux.md",
+      "source_version": null,
+      "source_digest": "df3a55215acaabb543e3dd5288f893470f928e2fb44622fef177ac540880e39f",
+      "imported_at": "2026-08-15T13:37:01Z"
+    },
+    "classification_confidence": 0.9,
+    "classification_reason": "C14 マクロ分解 (確定 system-spec と 2026-08-14 の利用者要望 S1-S8 から導出)",
+    "classification_candidates": [
+      {
+        "artifact_kind": "feature",
+        "confidence": 0.9,
+        "candidate_path": "features/feat-docs-live-authoring.md"
+      }
+    ],
+    "issue_linkage": null,
+    "tracker_binding": "beads",
+    "purpose": "ドキュメント作成が、編集とプレビューの往復・分類語彙の後付け・Card 枠に閉じた狭い執筆領域という3 つの摩擦を抱えており、書く行為そのものが妨げられている。書いた内容がその場で結果として見え、分類が最初から用意され、画面幅を使って書ける状態にして、執筆を中断させない。",
+    "goal": "ドキュメント作成画面が、Markdown 記述をその場で変換表示する単一の編集領域を持ち、初期装備のカテゴリ・タグから選択でき (管理者は追加でき)、Card 枠に閉じない全画面幅で編集できる状態。",
+    "scope_in": [
+      "編集とプレビューを分けない単一領域でのライブ Markdown 変換",
+      "対応する Markdown 記法の範囲の決定",
+      "カテゴリ・タグの初期語彙の定義と初期投入",
+      "一般利用者は既存のカテゴリ・タグから選択のみ可能とする権限",
+      "管理者によるカテゴリ・タグの追加",
+      "カテゴリ・タグとドキュメントの関連付けと、それによる絞り込み",
+      "Card 枠に閉じない全画面幅の編集レイアウト",
+      "全画面幅レイアウトが自動検査 (feat-ui-integrity-audit-harness) の横溢れ判定を満たすこと",
+      "長文ドキュメントのスクロール時の編集領域の挙動"
+    ],
+    "scope_out": [
+      "複数人の同時編集 (リアルタイム共同編集)",
+      "ブロック単位のドラッグ&ドロップ並べ替え",
+      "データベースビュー・ボード等の Notion 固有の高機能",
+      "ドキュメントの保存・版管理・公開そのもの (feat-docs-cms の担当)",
+      "カテゴリ・タグの語彙統制ポリシー (feat-classification-vocabulary-parity の担当)",
+      "画像・ファイルの本文への埋め込み",
+      "既存ドキュメントの記法一括移行"
+    ],
+    "acceptance": [
+      "編集領域に Markdown を入力すると、別画面へ切り替えることなくその場で変換結果が表示される",
+      "対応記法の一覧が定義され、対応外記法の扱いが決まっている",
+      "初期状態でカテゴリとタグが選択可能な語彙として存在する",
+      "一般利用者がカテゴリ・タグを新規追加できず、選択のみ可能である",
+      "管理者がカテゴリ・タグを追加でき、追加後に一般利用者が選択できる",
+      "ドキュメント作成画面が Card 枠に閉じず全画面幅を使う",
+      "全画面幅レイアウトが 360/768/1280 の 3 幅で横溢れ 0 件である",
+      "カテゴリ・タグでドキュメントを絞り込める"
+    ],
+    "architecture_refs": [
+      "arch-harness-hub-frontend",
+      "arch-harness-hub-design-system",
+      "arch-harness-hub-backend"
+    ],
+    "beads_linkage": null,
+    "github_publication": {
+      "labels": [],
+      "milestone": null,
+      "mode": "local_only",
+      "project_aliases": []
+    },
+    "github_project_linkages": [],
+    "pull_request_linkages": [],
+    "execution_contexts": [],
+    "completion_evidence": {
+      "completed_at": null,
+      "evidence_refs": [],
+      "policy": "manual",
+      "reconciled_at": null,
+      "source": null,
+      "status": "not_applicable"
+    },
+    "implementation_readiness": {
+      "checked_at": "2026-08-14T00:00:00Z",
+      "missing_sections": [],
+      "status": "incomplete"
+    }
+  }
+}

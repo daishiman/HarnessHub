@@ -12,8 +12,8 @@ iteration: null
 title: "catalog 全 route の G13 警告帯を解消し 5% 以上の余裕を作る"
 owners: ["daishiman"]
 created_at: "2026-08-10T11:41:26Z"
-updated_at: "2026-08-10T11:53:00Z"
-status: "active"
+updated_at: "2026-08-11T05:13:29Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-catalog-detail-bundle-headroom-20260808","issue-root-layout-theme-css-long-task-20260808","issue-hub-cwv-tbt-over-budget-20260724"]
 resource_scope: ["packages/ui/src/i18n","packages/ui/src/components/Chip.tsx","packages/ui/src/index.ts","apps/hub/src/components/catalog","apps/hub/src/components/publish","apps/hub/scripts/check-client-bundle.mjs"]

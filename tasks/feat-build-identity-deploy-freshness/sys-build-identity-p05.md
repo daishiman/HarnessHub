@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — build 時の commit 識別子埋込・認証なし読出経路・鮮度検査 script"
 owners: ["daishiman"]
 created_at: "2026-08-07T12:10:05Z"
-updated_at: "2026-08-07T14:12:13.043716Z"
-status: "active"
+updated_at: "2026-08-08T01:58:26Z"
+status: "closed"
 depends_on: ["SYS-BUILD-IDENTITY-P04"]
 related_nodes: ["feat-build-identity-deploy-freshness","arch-harness-hub-infrastructure","arch-harness-hub-testing-qa"]
 resource_scope: ["apps/hub/src/app/api/health","apps/hub/scripts/check-deploy-freshness.mjs",".github/workflows/ci.yml"]

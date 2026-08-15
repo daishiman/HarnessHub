@@ -12,8 +12,8 @@ iteration: null
 title: "register-package 再実行が projection 6 項目差で同一 digest を拒否する"
 owners: ["daishiman"]
 created_at: "2026-07-27T21:24:33.65077Z"
-updated_at: "2026-08-02T21:53:58.380741Z"
-status: "active"
+updated_at: "2026-08-08T05:03:40Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-dev-pipeline-improvement"]
 resource_scope: ["plugins/dev-graph/scripts/register-package.py","plugins/dev-graph/lib/registration_projection.py","plugins/dev-graph/scripts/upsert-node.py","plugins/dev-graph/tests/test_register_package.py","plugins/dev-graph/tests/register_package_test_support.py","plugins/dev-graph/tests/test_register_package_projection_idempotency.py","issues/sys-register-package-projection-idempotency-drift-20260728.md","docs/features/feat-dev-pipeline-improvement/register-package-projection-idempotency-spec-reflection-receipt.md"]

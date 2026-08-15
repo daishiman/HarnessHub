@@ -9,10 +9,10 @@ priority: "high"
 start_date: "2026-08-13"
 target_date: null
 iteration: null
-title: "保存したダークモードが再読み込み後も維持されるようにする"
+title: "保存したダークモードをリロード後も維持する"
 owners: ["daishiman"]
 created_at: "2026-08-13T11:59:50Z"
-updated_at: "2026-08-13T12:19:29Z"
+updated_at: "2026-08-13T12:42:37Z"
 status: "done"
 depends_on: []
 related_nodes: ["feat-hub-foundation"]
@@ -46,7 +46,6 @@ execution_contexts: []
 completion_evidence: {"completed_at":"2026-08-13T12:19:29Z","evidence_refs":["beads:HarnessHub-sj20","apps/hub/src/lib/routing/display-preferences.ts","apps/hub/src/app/layout.tsx","apps/hub/tests/user-org-admin/display-theme-persistence.test.tsx"],"policy":"manual","reconciled_at":"2026-08-13T12:19:29Z","source":"manual","status":"done"}
 implementation_readiness: {"checked_at":"2026-08-13T11:59:50Z","missing_sections":[],"status":"complete"}
 ---
-
 
 # 概要
 

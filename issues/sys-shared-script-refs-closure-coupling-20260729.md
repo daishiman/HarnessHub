@@ -12,8 +12,8 @@ iteration: null
 title: "同一 plugin 内の共有 script を複数 skill が script_refs 宣言し 1 ファイル変更で live-trial 証跡が同時失効する"
 owners: ["daishiman"]
 created_at: "2026-07-28T21:40:43Z"
-updated_at: "2026-08-04T04:00:27.875270Z"
-status: "draft"
+updated_at: "2026-08-14T15:29:20Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-live-trial-verdict-staleness-hook-closure-20260726","issue-bd-external-ref-orphan-nodes-20260725"]
 resource_scope: ["plugins/dev-graph/scripts/bd-bridge.py","plugins/harness-creator/skills/run-skill-live-trial/scripts/live-trial-verdict.py"]

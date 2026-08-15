@@ -12,8 +12,8 @@ iteration: null
 title: "本番OIDCスモークの着地契約ドリフトを解消する"
 owners: ["daishiman"]
 created_at: "2026-08-13T10:20:00Z"
-updated_at: "2026-08-13T10:22:00Z"
-status: "draft"
+updated_at: "2026-08-13T11:42:29Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-elegant-home-review-20260813","spec-post-signin-landing-observability"]
 resource_scope: ["apps/hub/scripts/smoke-production-oidc.mjs","apps/hub/tests/auth-tenancy/production-oidc-smoke.test.ts","apps/hub/tests/hub-foundation/production-coverage-smoke-script.test.ts"]

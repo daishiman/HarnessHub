@@ -9,10 +9,10 @@ priority: "medium"
 start_date: "2026-08-09"
 target_date: null
 iteration: null
-title: "dev-workflow.md【3】の『selector 未実装』記述が実装後に stale"
+title: "dev-workflow【3】の『selector 未実装』記述が実装後に stale"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:44:23.009147Z"
+updated_at: "2026-08-09T04:14:46Z"
 status: "closed"
 depends_on: []
 related_nodes: []

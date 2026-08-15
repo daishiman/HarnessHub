@@ -12,8 +12,8 @@ iteration: null
 title: "テスト実行 — 回帰テスト全件と lint 実測の記録"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:25:03.595970Z"
-status: "active"
+updated_at: "2026-08-08T02:53:36Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P05"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["eval-log/dev-graph/pipeline-improvement/test-run-p06.json"]

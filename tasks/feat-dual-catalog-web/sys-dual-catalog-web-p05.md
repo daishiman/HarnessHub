@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — S01/S02/S03/S04画面実装・marketplace.json出力パイプライン・配布経路連携・axe CI組込・CWVバンドル最適化・ポーリング実装"
 owners: ["daishiman"]
 created_at: "2026-07-19T14:13:14Z"
-updated_at: "2026-07-26T01:39:34.074446Z"
-status: "active"
+updated_at: "2026-08-08T08:31:24Z"
+status: "closed"
 depends_on: ["SYS-DUAL-CATALOG-WEB-P04"]
 related_nodes: ["feat-dual-catalog-web","arch-harness-hub-frontend","arch-harness-hub-backend"]
 resource_scope: ["apps/hub/src/app/(workspace)/catalog/","apps/hub/src/components/catalog/","apps/hub/src/lib/catalog/","apps/hub/src/app/marketplace.json/route.ts","packages/schemas/dual-catalog-web/",".github/workflows/hub-web-quality-gate.yml","docs/features/feat-dual-catalog-web/implementation-notes.md"]

@@ -9,12 +9,12 @@ priority: "medium"
 start_date: "2026-08-09"
 target_date: null
 iteration: null
-title: "select-verification-tier の算出結果を消費する経路が無い"
+title: "verification tier を下流 CI step の起動・blocking 切替へ配線する"
 owners: ["daishiman"]
 created_at: "2026-08-09T00:00:00Z"
-updated_at: "2026-08-09T03:43:45.518537Z"
+updated_at: "2026-08-11T00:33:07Z"
 status: "draft"
-depends_on: []
+depends_on: ["issue-governance-gate-not-required-check-20260809"]
 related_nodes: []
 resource_scope: ["scripts/select-verification-tier.py",".github/workflows/governance-check.yml","system-spec/dev-workflow.md"]
 purpose: "算出済み tier を run へ記録・適用し、tiering 仕様の目的 (1 周の所要時間短縮) を実際に達成する。"

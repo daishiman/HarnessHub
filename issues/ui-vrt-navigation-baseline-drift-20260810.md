@@ -12,8 +12,8 @@ iteration: null
 title: "navigation VRT の WorkspaceSwitcher 差分を確定する"
 owners: ["daishiman"]
 created_at: "2026-08-10T11:41:26Z"
-updated_at: "2026-08-10T11:48:16Z"
-status: "active"
+updated_at: "2026-08-12T03:37:50Z"
+status: "closed"
 depends_on: []
 related_nodes: ["issue-root-layout-theme-css-long-task-20260808","issue-ui-foundation-final-review-20260808"]
 resource_scope: ["apps/hub/tests/browser/catalog/entries-shell.tsx","apps/hub/tests/browser/__vrt__","apps/hub/tests/browser/vrt.ts","packages/ui/src/shell/WorkspaceSwitcher.tsx"]

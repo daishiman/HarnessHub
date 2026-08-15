@@ -12,8 +12,8 @@ iteration: null
 title: "実装 — lint script 3 本・handoff schema・eval-log 規約・task template 追記・CI 配線"
 owners: ["daishiman"]
 created_at: "2026-07-25T16:38:15Z"
-updated_at: "2026-08-04T03:24:31.527301Z"
-status: "active"
+updated_at: "2026-08-08T02:53:31Z"
+status: "closed"
 depends_on: ["SYS-DEV-PIPELINE-IMPROVEMENT-P04"]
 related_nodes: ["feat-dev-pipeline-improvement","arch-harness-hub-dev-workflow"]
 resource_scope: ["plugins/dev-graph/scripts/lint-open-residue.py","plugins/dev-graph/scripts/lint-eval-log-layout.py","plugins/dev-graph/scripts/lint-handoff-disposition.py","plugins/dev-graph/schemas/improvement-handoff.schema.json","plugins/dev-graph/tests/test_lint_open_residue.py","plugins/dev-graph/tests/test_lint_eval_log_layout.py","plugins/dev-graph/tests/test_lint_handoff_disposition.py","eval-log/README.md",".dev-graph/templates/task.md",".github/workflows/dev-pipeline-lint.yml","plugins/spec-drift-guardian/"]

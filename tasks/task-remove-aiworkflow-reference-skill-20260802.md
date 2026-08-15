@@ -12,8 +12,8 @@ iteration: null
 title: "aiworkflow 依存の外部参考 Skill を削除し有効な CLI 契約を移設する"
 owners: ["daishiman"]
 created_at: "2026-08-02T03:57:41Z"
-updated_at: "2026-08-02T04:39:00Z"
-status: "active"
+updated_at: "2026-08-08T05:03:24Z"
+status: "closed"
 depends_on: []
 related_nodes: ["feat-doc-governance-portability","arch-harness-hub-dev-workflow","spec-harness-hub-requirements"]
 resource_scope: ["doc/参考Skill/skill-creator/","plugins/harness-creator/skills/delegate-codex-skill-review/references/","plugins/plugin-dev-planner/skills/run-plugin-dev-plan/references/phase-lifecycle.md","doc/マルチ企業展開/クリーンアップ計画.md","doc/マルチ企業展開/移管計画.md","doc/ClaudeCodeスキルの設計書/23a-prefix-driven-internal-structure.md","scripts/lint-legacy-plugin-name.py","system-spec/dev-workflow.md","specs/harness-hub-system-specification.md","architecture/harness-hub-dev-workflow.md","features/feat-doc-governance-portability.md","tasks/task-remove-aiworkflow-reference-skill-20260802.md","docs/features/feat-doc-governance-portability/aiworkflow-reference-cleanup-spec-reflection-receipt.md"]

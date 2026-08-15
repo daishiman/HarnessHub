@@ -12,8 +12,8 @@ iteration: null
 title: "暗い配色のとき、ブラウザ標準の部品が明るいまま出る"
 owners: ["daishiman"]
 created_at: "2026-08-12T00:00:00Z"
-updated_at: "2026-08-11T15:52:39.243560Z"
-status: "active"
+updated_at: "2026-08-12T03:37:43Z"
+status: "closed"
 depends_on: []
 related_nodes: []
 resource_scope: ["packages/ui/src/tokens/tokens.ts","packages/ui/src/tokens/base-css.ts"]

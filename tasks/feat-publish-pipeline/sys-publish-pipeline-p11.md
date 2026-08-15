@@ -12,8 +12,8 @@ iteration: null
 title: "再現可能な証跡 — P06/P07/P09/P10 の証跡集約と再現手順の確立"
 owners: ["daishiman"]
 created_at: "2026-07-30T12:25:36Z"
-updated_at: "2026-08-04T03:42:42.872478Z"
-status: "active"
+updated_at: "2026-08-07T02:52:36Z"
+status: "closed"
 depends_on: ["SYS-PUBLISH-PIPELINE-P10"]
 related_nodes: ["feat-publish-pipeline","arch-harness-hub-backend","arch-harness-hub-security"]
 resource_scope: ["docs/features/feat-publish-pipeline/evidence-summary.md"]
