@@ -159,6 +159,29 @@ describe('ShellSidebar', () => {
     expect(link.getAttribute('title')).toBe('ドキュメント');
   });
 
+  it('完全なリンク名を保ったまま、明示された意味分節だけを改行候補として描画する', () => {
+    renderWithUi(
+      <ShellSidebar
+        items={[
+          {
+            href: '/metrics/usage',
+            label: '使用状況・削減効果',
+            labelSegments: ['使用状況・', '削減効果'],
+            icon: 'tracking',
+          },
+        ]}
+        label="ナビ"
+      />,
+    );
+
+    const link = screen.getByRole('link', { name: '使用状況・削減効果' });
+    const segments = link.querySelectorAll('[data-hh-meaning-segment]');
+    expect(link.getAttribute('aria-label')).toBe('使用状況・削減効果');
+    expect(link.getAttribute('title')).toBe('使用状況・削減効果');
+    expect(link.textContent).toBe('使用状況・削減効果');
+    expect([...segments].map((segment) => segment.textContent)).toEqual(['使用状況・', '削減効果']);
+  });
+
   it('ブランド表示を上部に置ける', () => {
     renderWithUi(<ShellSidebar items={navItems} label="ナビ" brand={<span>Harness Hub</span>} />);
 

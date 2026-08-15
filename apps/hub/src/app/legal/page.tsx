@@ -17,7 +17,7 @@
  * URL の共有・ブラウザ内検索・ページ全体の印刷をそのまま使える。
  */
 
-import { ScreenHeader } from '@harness-hub/ui';
+import { NavList, ScreenHeader } from '@harness-hub/ui';
 import type { Metadata } from 'next';
 
 import { LegalArticle } from './legal-article.js';
@@ -40,24 +40,12 @@ export default function LegalPage() {
           description="Harness Hub をご利用いただく際の条件と、取り扱う情報についての方針です。"
         />
 
-        <nav aria-label="このページの文書" data-print-exclude="">
-          <ul
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 'var(--hh-space-3)',
-              margin: '0 0 var(--hh-space-4)',
-              padding: 0,
-              listStyle: 'none',
-            }}
-          >
-            {LEGAL_DOCUMENTS.map((entry) => (
-              <li key={entry.slug}>
-                <a href={`#${entry.slug}`}>{entry.title}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <NavList
+          data-print-exclude=""
+          style={{ marginBlockEnd: 'var(--hh-space-4)' }}
+          label="このページの文書"
+          items={LEGAL_DOCUMENTS.map((entry) => ({ href: `#${entry.slug}`, label: entry.title }))}
+        />
 
         {LEGAL_DOCUMENTS.map((entry, index) => (
           <LegalArticle key={entry.slug} entry={entry} first={index === 0} />

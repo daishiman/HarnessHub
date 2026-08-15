@@ -8,6 +8,11 @@ import type { IconName } from '../icons/index.js';
 
 export interface ShellNavItem {
   href: string;
+  /**
+   * 表示ラベルを意味のまとまりで分ける場合の任意宣言。
+   * リンク名の正本は常に `label` で、これは共通サイドバーの改行境界だけを与える。
+   */
+  labelSegments?: readonly [string, ...string[]] | undefined;
   label: string;
   icon: IconName;
   /** 未読などの件数バッジ。0 と undefined は出さない。 */

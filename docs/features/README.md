@@ -25,6 +25,9 @@ source: docs/system-design-overview.md#構築優先順位
 | P4 | [feat-user-org-admin](../../features/feat-user-org-admin.md) ([baseline](feat-user-org-admin/requirements-baseline.md)) | S17/S18、係数・PII ガード。高度な管理 UI は後段 | P0 |
 | P4/P5 | [feat-metrics-tracking](../../features/feat-metrics-tracking.md) ([baseline](feat-metrics-tracking/requirements-baseline.md)) | P4=S16 ingest/rollup、P5=S09 dashboard 仕上げ | user-org-admin |
 | P5 | [feat-workspace-governance](../../features/feat-workspace-governance.md) | S05/S06、承認キュー・監査閲覧・高度な RBAC UI | dual-catalog-web + auth-tenancy |
+| 横断 QA | [feat-demo-coverage-dataset](feat-demo-coverage-dataset/requirements-baseline.md) | 28 route × 5 状態の確認用データ（ローカル専用） | domain-model-db |
+| 横断 QA | [feat-ui-integrity-audit-harness](feat-ui-integrity-audit-harness/requirements-baseline.md) | 実 route 契約の UI 崩れ監査（168 キー、0 件は PASS にしない） | demo-coverage-dataset |
+| 横断 QA | [feat-ui-layout-remediation](feat-ui-layout-remediation/requirements-baseline.md) | 意味境界改行・製品所有印刷の非表示・44px 操作域 | ui-integrity-audit-harness |
 
 ## 優先 slice の受け入れ境界
 

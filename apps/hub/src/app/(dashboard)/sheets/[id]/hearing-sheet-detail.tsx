@@ -264,11 +264,6 @@ export function HearingSheetDetail({ id, tenantId, workspaceId }: HearingSheetDe
               <StatusChip domain="sheet" status={sheet.status} />
             </TagRow>
           }
-          actions={
-            <Button type="button" variant="secondary" onClick={() => window.print()}>
-              印刷
-            </Button>
-          }
         />
       </div>
 

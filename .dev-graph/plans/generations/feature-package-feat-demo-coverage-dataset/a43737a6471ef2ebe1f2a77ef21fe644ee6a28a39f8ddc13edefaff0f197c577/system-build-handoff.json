@@ -1,0 +1,232 @@
+{
+  "digest_contract": {
+    "algorithm": "sha256",
+    "final_manifest_digest_scope": "all manifest files including handoff; manifest itself excluded",
+    "handoff_digest_location": "staging-manifest.json#files/system-build-handoff.json",
+    "self_reference_policy": "handoff omits its own digest and final manifest digest",
+    "source_digest_scope": "source_inputs only; handoff and manifest excluded"
+  },
+  "execution_tasks": [
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [],
+      "phase_ref": "P01",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P01",
+      "task_spec_path": "task-specs/phase-01-requirements.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P01"
+      ],
+      "phase_ref": "P02",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P02",
+      "task_spec_path": "task-specs/phase-02-architecture.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P02"
+      ],
+      "phase_ref": "P03",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P03",
+      "task_spec_path": "task-specs/phase-03-design-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P03"
+      ],
+      "phase_ref": "P04",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P04",
+      "task_spec_path": "task-specs/phase-04-test-design.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P04"
+      ],
+      "phase_ref": "P05",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P05",
+      "task_spec_path": "task-specs/phase-05-implementation.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P05"
+      ],
+      "phase_ref": "P06",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P06",
+      "task_spec_path": "task-specs/phase-06-test-run.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P06"
+      ],
+      "phase_ref": "P07",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P07",
+      "task_spec_path": "task-specs/phase-07-acceptance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P07"
+      ],
+      "phase_ref": "P08",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P08",
+      "task_spec_path": "task-specs/phase-08-refactoring-migration.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P08"
+      ],
+      "phase_ref": "P09",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P09",
+      "task_spec_path": "task-specs/phase-09-quality-assurance.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P09"
+      ],
+      "phase_ref": "P10",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P10",
+      "task_spec_path": "task-specs/phase-10-final-review.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P10"
+      ],
+      "phase_ref": "P11",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P11",
+      "task_spec_path": "task-specs/phase-11-evidence.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P11"
+      ],
+      "phase_ref": "P12",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P12",
+      "task_spec_path": "task-specs/phase-12-documentation-operations.md"
+    },
+    {
+      "build_target_kind": "application-code",
+      "depends_on": [
+        "SYS-DEMO-COVERAGE-DATASET-P12"
+      ],
+      "phase_ref": "P13",
+      "task_id": "SYS-DEMO-COVERAGE-DATASET-P13",
+      "task_spec_path": "task-specs/phase-13-release-deploy.md"
+    }
+  ],
+  "identity": {
+    "feature_id": "feat-demo-coverage-dataset",
+    "feature_package_id": "feature-package/feat-demo-coverage-dataset",
+    "parent_feature": "feat-demo-coverage-dataset",
+    "repository_id": "github:daishiman/HarnessHub",
+    "source_feature_digest": "sha256:fffd1ddd4841cd50675ff48dea77f4788059ca468e7895c73ce73bbc020fa6c3"
+  },
+  "kind": "system-build-handoff",
+  "p01_entry_gate": {
+    "operator": "all",
+    "required_statuses": [
+      "done",
+      "closed"
+    ],
+    "selector": "parent_feature.depends_on"
+  },
+  "registration_request": {
+    "consumer": "dev-graph/C02",
+    "owner": "system-dev-planner/C11",
+    "path": "dev-graph-registration.json",
+    "promotion_receipt": {
+      "owner": "system-dev-planner/C11",
+      "path": "atomic-promotion-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "registration_receipt": {
+      "owner": "dev-graph/C02",
+      "path": "dev-graph-registration-receipt.json",
+      "produced_by_this_component": false,
+      "status": "not-emitted"
+    },
+    "status": "deferred-until-promotion"
+  },
+  "schema_version": "1.0.0",
+  "source_inputs": [
+    {
+      "path": "feature-package.json",
+      "sha256": "fc173b8be7bad0ce79ebe2490d62b3964dcf2a5d1d67491e68400b946d5c07f8"
+    },
+    {
+      "path": "workstream-inventory.json",
+      "sha256": "0d84719c1bbd861a18ff74117a839e5d69564be179ca0c7c400b2fab80c0ee68"
+    },
+    {
+      "path": "task-graph.json",
+      "sha256": "ec72930d146962b0544967a3082f3147ae1d5c953e7331596b179bb552c2ab79"
+    },
+    {
+      "path": "task-specs/phase-01-requirements.md",
+      "sha256": "a623d0315ba068f686144e29dac98b367cefa33c3a027c02c88bac192b622932"
+    },
+    {
+      "path": "task-specs/phase-02-architecture.md",
+      "sha256": "bb9110ae4f8e65bdd942f528ce09fba8b8ba40edc7ed29be08821f1f86fc2dc3"
+    },
+    {
+      "path": "task-specs/phase-03-design-review.md",
+      "sha256": "095e3a23621cc3e4a24b35b3ada2908933b0c01b75be49a31919fa710b867ee4"
+    },
+    {
+      "path": "task-specs/phase-04-test-design.md",
+      "sha256": "1f5954675b6b32baf02d0c8fe522c1e521ed20b7972a2fb8319f7f6bb39fafed"
+    },
+    {
+      "path": "task-specs/phase-05-implementation.md",
+      "sha256": "7daf6ebd100754878c159508fd9f634fc580998523c719aade810f3eadfbe86e"
+    },
+    {
+      "path": "task-specs/phase-06-test-run.md",
+      "sha256": "68c9d512f676d83fcbfff17082348070ecd6266c54249eab0d9954e9675a56c7"
+    },
+    {
+      "path": "task-specs/phase-07-acceptance.md",
+      "sha256": "e151f10c056afbb1e1f344089b38abae61ce0670e986bbd3c0ae5267fd2b33dc"
+    },
+    {
+      "path": "task-specs/phase-08-refactoring-migration.md",
+      "sha256": "25d4da10a1881cf6c08324fe96a457023d3750589801185caf53a08efeddd12c"
+    },
+    {
+      "path": "task-specs/phase-09-quality-assurance.md",
+      "sha256": "b317f2db59496651ea4c0fa36cf5802bb0fbf1819f581041a959bbdd39e1e8e4"
+    },
+    {
+      "path": "task-specs/phase-10-final-review.md",
+      "sha256": "53563296ebe623484ed817694d111bc8b029987e9f72d76056f344121ad4b97b"
+    },
+    {
+      "path": "task-specs/phase-11-evidence.md",
+      "sha256": "2cdac34dbc53523dae3833f735b8ad911287db0f06a6e75dfd06615a3704054d"
+    },
+    {
+      "path": "task-specs/phase-12-documentation-operations.md",
+      "sha256": "f39f5c2c51f9c72dd9cc70b1bdd1bed273aaaed7d91861aa2018a833efd08c81"
+    },
+    {
+      "path": "task-specs/phase-13-release-deploy.md",
+      "sha256": "5827c73bbd2d92e9b54792eb24f80a430248a2e9683170de0445970c11436bfe"
+    }
+  ],
+  "source_manifest": {
+    "canonical_digest_before_handoff": "sha256:df22452c453aacd6b6ee62642a6cebf7dd11c632e422211b3d05dda180fbbec9",
+    "path": "staging-manifest.json",
+    "sha256_before_handoff": "573a0c92f042286ee6f6d0f87157648a720d69cbc3bc3d53bffcb5e84c4484a7"
+  }
+}

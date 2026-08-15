@@ -120,6 +120,19 @@ export {
 // tenant_coefficients の既定値。画面側が同じ数値を書き写していないかをテストで突き合わせるため、
 // 型だけでなく値として公開する (実体は schema/hearing-intake/coefficient-defaults.ts)
 export { DEFAULT_TENANT_COEFFICIENT_VALUES } from '../schema/hearing-intake/coefficient-defaults';
+// route × 状態 の確認用対応表 (実体は scripts/demo-coverage/coverage-matrix.ts)。
+// seed とブラウザ監査が同じ表を正本にするために公開する。監査側が route/state を書き写すと
+// 「seed した状態」と「開いて確かめる状態」が別々に育つため、入口をここへ寄せる。
+// 実体は Node.js API に依存しない純データなので、driver 境界を汚さない。
+export {
+  COVERAGE_MATRIX,
+  NOT_APPLICABLE_REASONS,
+  type NotApplicableReason,
+  type ReachStep,
+  ROUTE_STATES,
+  type RouteCoverage,
+  type RouteState,
+} from '../scripts/demo-coverage/coverage-matrix';
 export {
   assertSupportedDriver,
   DATABASE_DRIVERS,

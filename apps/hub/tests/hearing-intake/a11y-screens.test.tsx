@@ -371,12 +371,13 @@ describe('HI-A11Y: P05 実装後の受入契約', () => {
     expect(service).toContain('input.readAll ? {} : { applicantUserId: input.applicantUserId }');
   });
 
-  it('HI-A11Y-110: 印刷 DOM は salary と操作領域を除外する', () => {
+  it('HI-A11Y-110: 印刷 DOM は salary と操作領域を除外し、製品所有の印刷 action は持たない', () => {
     const source = detailSource();
     const printable = source.slice(source.indexOf('return ('), source.lastIndexOf(');'));
     expect(printable).not.toContain('form_snapshot.salary');
     expect(printable).toContain('data-print-exclude');
-    expect(source).toContain('window.print()');
+    expect(source).not.toContain('window.print()');
+    expect(source).not.toMatch(/<Button[^>]*>[\s\S]*?印刷[\s\S]*?<\/Button>/);
   });
 
   it('HI-A11Y-111: S11 は正本の filter・全文検索・cursor ページングを API query へ渡す', () => {
