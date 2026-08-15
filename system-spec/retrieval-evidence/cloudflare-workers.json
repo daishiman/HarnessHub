@@ -1,23 +1,41 @@
 {
-  "allowed_domains": [
-    "developers.cloudflare.com"
-  ],
-  "findings": [
-    "Workers Paid は account あたり最低 $5/月。Workers / Pages Functions / Workers KV / Hyperdrive / Durable Objects の利用を含む",
-    "Free の 100,000 requests/day 上限は Paid には無い",
-    "CPU time は既定 30 秒、Paid では limits.cpu_ms で最大 5 分 (300,000ms) まで引上げ可",
-    "network 待ち (fetch / KV read / DB query) は CPU time に算入されない",
-    "isolate あたり memory 上限 128MB (超過は Error 1102)",
-    "Workers は cache より前段で走るため、cache hit の要求も課金対象"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Cloudflare Workers pricing paid plan limits",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://developers.cloudflare.com/workers/platform/pricing/",
-    "https://developers.cloudflare.com/workers/platform/limits/",
-    "https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/"
-  ],
-  "target_id": "cloudflare-workers"
+ "allowed_domains": [
+  "developers.cloudflare.com"
+ ],
+ "findings": [
+  "Workers Paid は account あたり最低 $5/月。Workers / Pages Functions / Workers KV / Hyperdrive / Durable Objects の利用を含む",
+  "Free の 100,000 requests/day 上限は Paid には無い",
+  "CPU time は既定 30 秒、Paid では limits.cpu_ms で最大 5 分 (300,000ms) まで引上げ可",
+  "network 待ち (fetch / KV read / DB query) は CPU time に算入されない",
+  "isolate あたり memory 上限 128MB (超過は Error 1102)",
+  "Workers は cache より前段で走るため、cache hit の要求も課金対象"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:29Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "ページ表示 \"Last updated Jul 7, 2026\" を本文から直接抽出。record の last_updated (Jul 7, 2026) と一致し世代落ちなし。C08 F6 で是正対象漏れと指摘された target。",
+   "page_last_updated_extracted": [
+    "Last updated Jul 7, 2026|</"
+   ],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:29Z",
+   "response_body_sha256": "c584a936401037a995ee4cabe8cbb74cd19547d0c1e71c31884aa3037d35bd46",
+   "response_bytes": 299198,
+   "response_last_modified_header": null,
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Cloudflare Workers pricing paid plan limits",
+ "retrieved_at": "2026-08-07T03:30:09Z",
+ "returned_official_urls": [
+  "https://developers.cloudflare.com/workers/platform/pricing/",
+  "https://developers.cloudflare.com/workers/platform/limits/",
+  "https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/"
+ ],
+ "target_id": "cloudflare-workers"
 }

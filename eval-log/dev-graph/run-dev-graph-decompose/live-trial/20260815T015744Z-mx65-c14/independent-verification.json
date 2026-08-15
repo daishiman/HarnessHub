@@ -1,0 +1,957 @@
+{
+  "observation_1_acyclic_dag_within_declared_granularity_threshold": {
+    "beads": {
+      "acyclic": true,
+      "architecture_count": 2,
+      "feature_count": 5,
+      "inter_feature_depends_on": {
+        "feat-account-login": [],
+        "feat-admin-progress-report": [
+          "feat-account-login",
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-deadline-notification": [
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-personal-dashboard": [
+          "feat-account-login",
+          "feat-work-assignment"
+        ],
+        "feat-work-assignment": [
+          "feat-account-login"
+        ]
+      },
+      "measured_max": 3,
+      "within_threshold": true
+    },
+    "declared_granularity_threshold": {
+      "max_value": 3,
+      "metric": "max_inter_feature_depends_on_per_feature"
+    },
+    "measured_from": "each fixture's persisted .dev-graph/state/graph.json",
+    "none": {
+      "acyclic": true,
+      "architecture_count": 2,
+      "feature_count": 5,
+      "inter_feature_depends_on": {
+        "feat-account-login": [],
+        "feat-admin-progress-report": [
+          "feat-account-login",
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-deadline-notification": [
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-personal-dashboard": [
+          "feat-account-login",
+          "feat-work-assignment"
+        ],
+        "feat-work-assignment": [
+          "feat-account-login"
+        ]
+      },
+      "measured_max": 3,
+      "within_threshold": true
+    },
+    "phase_task_contamination": {
+      "phase_ref_values_beads": [
+        "None"
+      ],
+      "phase_ref_values_none": [
+        "None"
+      ],
+      "task_nodes_beads": [],
+      "task_nodes_none": []
+    }
+  },
+  "observation_2_draft_features_publish_zero_with_distinct_reasons": {
+    "distinct_reason_codes": [
+      "suppressed_by_draft_gate",
+      "binding_route_unreachable_by_schema",
+      "candidate_present_but_projection_not_executed_in_this_run"
+    ],
+    "per_fixture": [
+      {
+        "fixture": "beads",
+        "run_wrote_for_real": true,
+        "zeros": [
+          {
+            "figure": "issues published for pre-evaluation draft features",
+            "reason": "4 件の実生成 draft feature が confirmation_status=draft / evaluation_status=pending / readiness=incomplete のままなので publication gate が投影対象から外した。",
+            "reason_code": "suppressed_by_draft_gate",
+            "subjects": [
+              "feat-work-assignment",
+              "feat-personal-dashboard",
+              "feat-deadline-notification",
+              "feat-admin-progress-report"
+            ],
+            "value": 0
+          },
+          {
+            "figure": "issues published through the github binding",
+            "reason": "macro-only run の node は artifact_kind=feature/architecture かつ github_publication.mode=local_only。graph-node.schema.json allOf[15] は tracker_binding=github に mode=issue|issue_and_projects を要求し、allOf[10] はその mode を artifact_kind=issue|task に限るため、github binding の宣言は graph 着地前に拒否される。",
+            "reason_code": "binding_route_unreachable_by_schema",
+            "subjects": [],
+            "value": 0
+          },
+          {
+            "figure": "issues published for the live publication candidate",
+            "reason": "live candidate は ['feat-account-login'] の 1 件が実在する。0 は候補不在ではなく、本 run が tracker projection を実行せず adapter dry-run で経路到達性だけを示したため。",
+            "reason_code": "candidate_present_but_projection_not_executed_in_this_run",
+            "subjects": [
+              "feat-account-login"
+            ],
+            "value": 0
+          }
+        ]
+      },
+      {
+        "fixture": "none",
+        "run_wrote_for_real": true,
+        "zeros": [
+          {
+            "figure": "issues published for pre-evaluation draft features",
+            "reason": "4 件の実生成 draft feature が confirmation_status=draft / evaluation_status=pending / readiness=incomplete のままなので publication gate が投影対象から外した。",
+            "reason_code": "suppressed_by_draft_gate",
+            "subjects": [
+              "feat-work-assignment",
+              "feat-personal-dashboard",
+              "feat-deadline-notification",
+              "feat-admin-progress-report"
+            ],
+            "value": 0
+          },
+          {
+            "figure": "issues published through the github binding",
+            "reason": "macro-only run の node は artifact_kind=feature/architecture かつ github_publication.mode=local_only。graph-node.schema.json allOf[15] は tracker_binding=github に mode=issue|issue_and_projects を要求し、allOf[10] はその mode を artifact_kind=issue|task に限るため、github binding の宣言は graph 着地前に拒否される。",
+            "reason_code": "binding_route_unreachable_by_schema",
+            "subjects": [],
+            "value": 0
+          },
+          {
+            "figure": "issues published for the live publication candidate",
+            "reason": "live candidate は ['feat-account-login'] の 1 件が実在する。0 は候補不在ではなく、本 run が tracker projection を実行せず adapter dry-run で経路到達性だけを示したため。",
+            "reason_code": "candidate_present_but_projection_not_executed_in_this_run",
+            "subjects": [
+              "feat-account-login"
+            ],
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "reason_codes_are_not_interchangeable": true
+  },
+  "observation_3_exclusion_is_a_gate_decision_not_an_empty_run": {
+    "beads": {
+      "candidate_count": 1,
+      "candidates": [
+        "feat-account-login"
+      ],
+      "draft_excluded": [
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-work-assignment",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-personal-dashboard",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-deadline-notification",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-admin-progress-report",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        }
+      ],
+      "draft_excluded_count": 4,
+      "run_actually_wrote": {
+        "graph_revision": [
+          0,
+          8
+        ],
+        "graph_sha256": [
+          "b759b93846eba42bf9e25713ee116d80d85dc6870c031b5990f54eac9228d322",
+          "a7cbfa183aa01ff48a9bd23f6d8ad8830dc073761b13be5eac86bafe22ce0cce"
+        ],
+        "local_files_created": 29,
+        "node_count": [
+          0,
+          7
+        ]
+      },
+      "sole_candidate": true
+    },
+    "none": {
+      "candidate_count": 1,
+      "candidates": [
+        "feat-account-login"
+      ],
+      "draft_excluded": [
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-work-assignment",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-personal-dashboard",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-deadline-notification",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-admin-progress-report",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        }
+      ],
+      "draft_excluded_count": 4,
+      "run_actually_wrote": {
+        "graph_revision": [
+          0,
+          8
+        ],
+        "graph_sha256": [
+          "47e6eea5c7e52e14effc2a64c806e2c91372a055e76d469e3660299d3cc9b7d5",
+          "adcf1a3818a43db6b391b7224c5d59656db9c394e0662b9f5064f7e12d21b25d"
+        ],
+        "local_files_created": 26,
+        "node_count": [
+          0,
+          7
+        ]
+      },
+      "sole_candidate": true
+    }
+  },
+  "observation_4_binding_routes_derived_from_persisted_tracker_binding": {
+    "beads_run": {
+      "persisted_github_publication_modes": [
+        "local_only"
+      ],
+      "persisted_tracker_bindings": [
+        "beads"
+      ],
+      "publication_route": "beads (C28 create/dep-add), github_publication local_only"
+    },
+    "derivation": "each figure below is read from tracker_binding persisted in that run's graph store, not from the CLI argument",
+    "github_binding_unreachable_for_macro_only_run": {
+      "reachable": false,
+      "rule_allOf_10": {
+        "if": {
+          "properties": {
+            "github_publication": {
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "issue",
+                    "issue_and_projects"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "artifact_kind": {
+              "enum": [
+                "issue",
+                "task"
+              ]
+            },
+            "confirmation_status": {
+              "const": "confirmed"
+            },
+            "evaluation_status": {
+              "const": "pass"
+            },
+            "implementation_readiness": {
+              "properties": {
+                "status": {
+                  "const": "complete"
+                }
+              }
+            }
+          }
+        }
+      },
+      "rule_allOf_15": {
+        "if": {
+          "properties": {
+            "tracker_binding": {
+              "const": "github"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "beads_linkage": {
+              "const": null
+            },
+            "github_publication": {
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "issue",
+                    "issue_and_projects"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "schema_file": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+      "why": "未 publish の macro node は github_publication.mode=local_only。allOf[15] が tracker_binding=github に mode=issue|issue_and_projects を要求するため local_only の まま github を宣言すると拒否され、mode を上げると allOf[10] が artifact_kind を issue|task に限るので feature/architecture では満たせない。"
+    },
+    "none_run": {
+      "persisted_github_publication_modes": [
+        "local_only"
+      ],
+      "persisted_tracker_bindings": [
+        "none"
+      ],
+      "publication_route": "none (local graph only)"
+    },
+    "routes_differ": true
+  },
+  "observation_5_write_counts_differenced_from_before_and_after_state": {
+    "adapter_dry_runs_route_reachability_only": {
+      "beads": {
+        "exit_code": 0,
+        "external_write_count": 0,
+        "registration_registered": true,
+        "shim": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/bd",
+        "shim_database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+        "shim_database_path_exists": false
+      },
+      "github_issue": {
+        "exit_code": 0,
+        "external_write_count": 0,
+        "mutation_suppressed": true
+      },
+      "github_projects": {
+        "exit_code": 0,
+        "external_write_count": 0,
+        "mutation_suppressed": true
+      },
+      "note": "exit 0 + preview payload; an adapter error is not treated as reachability evidence",
+      "receipt_file": "adapter-dryrun.json"
+    },
+    "external_after": {
+      "basis": "isolated fixture plus mutation-suppressed adapter previews",
+      "beads_database_exists": false,
+      "beads_database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+      "beads_issue_count": 0,
+      "beads_local_artifacts": [],
+      "github_issue_count": 0,
+      "projects_item_count": 0
+    },
+    "external_before": {
+      "basis": "isolated fixture plus mutation-suppressed adapter previews",
+      "beads_database_exists": false,
+      "beads_database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+      "beads_issue_count": 0,
+      "beads_local_artifacts": [],
+      "github_issue_count": 0,
+      "projects_item_count": 0
+    },
+    "external_diff_zero": true,
+    "external_snapshot_command": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/external-snapshot.py",
+    "external_snapshot_command_used_before_and_after": [
+      "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+      "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/external-snapshot.py"
+    ],
+    "local": {
+      "beads": {
+        "content_changed": [
+          ".dev-graph/state/graph.json"
+        ],
+        "created": [
+          ".dev-graph/cache/staging/apply-order.json",
+          ".dev-graph/cache/staging/arch-portal-experience.body.md",
+          ".dev-graph/cache/staging/arch-portal-experience.node.json",
+          ".dev-graph/cache/staging/arch-portal-platform.body.md",
+          ".dev-graph/cache/staging/arch-portal-platform.node.json",
+          ".dev-graph/cache/staging/c14-macro-contract.json",
+          ".dev-graph/cache/staging/feat-account-login.body.md",
+          ".dev-graph/cache/staging/feat-account-login.node.json",
+          ".dev-graph/cache/staging/feat-account-login.promote.json",
+          ".dev-graph/cache/staging/feat-admin-progress-report.body.md",
+          ".dev-graph/cache/staging/feat-admin-progress-report.node.json",
+          ".dev-graph/cache/staging/feat-deadline-notification.body.md",
+          ".dev-graph/cache/staging/feat-deadline-notification.node.json",
+          ".dev-graph/cache/staging/feat-personal-dashboard.body.md",
+          ".dev-graph/cache/staging/feat-personal-dashboard.node.json",
+          ".dev-graph/cache/staging/feat-work-assignment.body.md",
+          ".dev-graph/cache/staging/feat-work-assignment.node.json",
+          ".dev-graph/state/.graph.json.register.lock",
+          "architecture/arch-portal-experience.md",
+          "architecture/arch-portal-platform.md",
+          "eval-log/c14-feature-evaluation-receipt.json",
+          "eval-log/run-dev-graph-decompose-goal-spec.json",
+          "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+          "eval-log/run-dev-graph-decompose-progress.json",
+          "features/feat-account-login.md",
+          "features/feat-admin-progress-report.md",
+          "features/feat-deadline-notification.md",
+          "features/feat-personal-dashboard.md",
+          "features/feat-work-assignment.md"
+        ],
+        "local_write_count": 30,
+        "removed": []
+      },
+      "none": {
+        "content_changed": [
+          ".dev-graph/state/graph.json"
+        ],
+        "created": [
+          ".dev-graph/cache/staging/apply-order.json",
+          ".dev-graph/cache/staging/arch-portal-experience.body.md",
+          ".dev-graph/cache/staging/arch-portal-experience.node.json",
+          ".dev-graph/cache/staging/arch-portal-platform.body.md",
+          ".dev-graph/cache/staging/arch-portal-platform.node.json",
+          ".dev-graph/cache/staging/c14-macro-contract.json",
+          ".dev-graph/cache/staging/feat-account-login.body.md",
+          ".dev-graph/cache/staging/feat-account-login.node.json",
+          ".dev-graph/cache/staging/feat-account-login.promote.json",
+          ".dev-graph/cache/staging/feat-admin-progress-report.body.md",
+          ".dev-graph/cache/staging/feat-admin-progress-report.node.json",
+          ".dev-graph/cache/staging/feat-deadline-notification.body.md",
+          ".dev-graph/cache/staging/feat-deadline-notification.node.json",
+          ".dev-graph/cache/staging/feat-personal-dashboard.body.md",
+          ".dev-graph/cache/staging/feat-personal-dashboard.node.json",
+          ".dev-graph/cache/staging/feat-work-assignment.body.md",
+          ".dev-graph/cache/staging/feat-work-assignment.node.json",
+          ".dev-graph/state/.graph.json.register.lock",
+          "architecture/arch-portal-experience.md",
+          "architecture/arch-portal-platform.md",
+          "eval-log/c14-feature-evaluation-receipt.json",
+          "features/feat-account-login.md",
+          "features/feat-admin-progress-report.md",
+          "features/feat-deadline-notification.md",
+          "features/feat-personal-dashboard.md",
+          "features/feat-work-assignment.md"
+        ],
+        "local_write_count": 27,
+        "removed": []
+      }
+    },
+    "method": "pre-state.json (captured before the first target Skill) vs the same rglob/sha256 snapshot taken now",
+    "preview_validated_before_first_graph_write": {
+      "beads": {
+        "find_diff": 0,
+        "find_files_after_preview": 28,
+        "find_files_before_preview": 28,
+        "first_graph_write_started_at": "2026-08-15T02:07:20.034331000Z",
+        "preview_exit_code": 0,
+        "preview_precedes_write": true,
+        "preview_valid": true,
+        "preview_validator_finished_at": "2026-08-15T02:06:56.695969000Z"
+      },
+      "none": {
+        "find_diff": 0,
+        "find_files_after_preview": 25,
+        "find_files_before_preview": 25,
+        "first_graph_write_started_at": "2026-08-15T02:08:24.411270000Z",
+        "preview_exit_code": 0,
+        "preview_precedes_write": true,
+        "preview_valid": true,
+        "preview_validator_finished_at": "2026-08-15T02:08:13.705000000Z"
+      },
+      "path": "stdin (--graph -)",
+      "preview_files_created_inside_managed_repository": 0
+    },
+    "preview_validated_through_stdin": true,
+    "temporary_files_inside_managed_repository": 0
+  },
+  "observation_6_confirmation_evidence_recomputed_from_persisted_node": {
+    "all_match": true,
+    "beads": [
+      {
+        "graph_node_id": "feat-account-login",
+        "is_placeholder_hex": false,
+        "matches": true,
+        "recomputed_from_persisted_node": "ab54e39c2d6c9f793501605cb38a4ae96b6f3146fbe84c6edffae17ff1ac5083",
+        "recorded_evaluated_digest": "ab54e39c2d6c9f793501605cb38a4ae96b6f3146fbe84c6edffae17ff1ac5083"
+      }
+    ],
+    "method": "sha256(json.dumps({k:v for k,v in node.items() if k!='confirmation_evidence'}, ensure_ascii=False, sort_keys=True, separators=(',',':')))",
+    "none": [
+      {
+        "graph_node_id": "feat-account-login",
+        "is_placeholder_hex": false,
+        "matches": true,
+        "recomputed_from_persisted_node": "7b5fec87be733658fdfb8a22b76b4c993213a87f1dbbdbe64b8ff8af779ff81c",
+        "recorded_evaluated_digest": "7b5fec87be733658fdfb8a22b76b4c993213a87f1dbbdbe64b8ff8af779ff81c"
+      }
+    ]
+  },
+  "observation_7_gate_violations_rejected_by_canonical_validator": {
+    "all_rejected": true,
+    "controls": {
+      "beads": {
+        "blocked_draft_feature_with_publication_intent": {
+          "exit_code": 1,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "beads_publication",
+                "detail": "beads requires local_only",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.artifact_kind: not in enum ['issue', 'task']",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.confirmation_status: expected const 'confirmed'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.evaluation_status: expected const 'pass'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.github_publication.mode: expected const 'local_only'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-deadline-notification"
+              }
+            ]
+          }
+        },
+        "evaluation_pass_without_readiness_complete": {
+          "exit_code": 1,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "active_not_ready",
+                "detail": "active requires confirmed/pass/complete",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.missing_sections: too many items",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login"
+              }
+            ]
+          }
+        }
+      },
+      "none": {
+        "blocked_draft_feature_with_publication_intent": {
+          "exit_code": 1,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "schema_violation",
+                "detail": "$.artifact_kind: not in enum ['issue', 'task']",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.confirmation_status: expected const 'confirmed'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.evaluation_status: expected const 'pass'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.github_publication.mode: expected const 'local_only'",
+                "node": "feat-deadline-notification"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-deadline-notification"
+              }
+            ]
+          }
+        },
+        "evaluation_pass_without_readiness_complete": {
+          "exit_code": 1,
+          "report": {
+            "implementation_readiness": "incomplete",
+            "missing_sections": [],
+            "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+            "valid": false,
+            "violations": [
+              {
+                "code": "active_not_ready",
+                "detail": "active requires confirmed/pass/complete",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.missing_sections: too many items",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login"
+              },
+              {
+                "code": "schema_violation",
+                "detail": "$.implementation_readiness.status: expected const 'complete'",
+                "node": "feat-account-login"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "path": "stdin (--graph -)",
+    "synthesised_from": "this run's final persisted graph, mutated in memory only",
+    "validator": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/scripts/validate-graph-schema.py"
+  },
+  "per_fixture_measurements": {
+    "beads": {
+      "acyclic": true,
+      "architecture_ids": [
+        "arch-portal-experience",
+        "arch-portal-platform"
+      ],
+      "candidate_count": 1,
+      "candidates": [
+        "feat-account-login"
+      ],
+      "canonical_store_validation": {
+        "exit_code": 0,
+        "report": {
+          "implementation_readiness": "complete",
+          "missing_sections": [],
+          "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+          "valid": true,
+          "violations": []
+        }
+      },
+      "digest_checks": [
+        {
+          "graph_node_id": "feat-account-login",
+          "is_placeholder_hex": false,
+          "matches": true,
+          "recomputed_from_persisted_node": "ab54e39c2d6c9f793501605cb38a4ae96b6f3146fbe84c6edffae17ff1ac5083",
+          "recorded_evaluated_digest": "ab54e39c2d6c9f793501605cb38a4ae96b6f3146fbe84c6edffae17ff1ac5083"
+        }
+      ],
+      "draft_excluded": [
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-work-assignment",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-personal-dashboard",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-deadline-notification",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-admin-progress-report",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        }
+      ],
+      "draft_excluded_count": 4,
+      "feature_ids": [
+        "feat-account-login",
+        "feat-admin-progress-report",
+        "feat-deadline-notification",
+        "feat-personal-dashboard",
+        "feat-work-assignment"
+      ],
+      "graph_revision_after": 8,
+      "graph_revision_before": 0,
+      "graph_sha256_after": "a7cbfa183aa01ff48a9bd23f6d8ad8830dc073761b13be5eac86bafe22ce0cce",
+      "graph_sha256_before": "b759b93846eba42bf9e25713ee116d80d85dc6870c031b5990f54eac9228d322",
+      "inter_feature_depends_on": {
+        "feat-account-login": [],
+        "feat-admin-progress-report": [
+          "feat-account-login",
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-deadline-notification": [
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-personal-dashboard": [
+          "feat-account-login",
+          "feat-work-assignment"
+        ],
+        "feat-work-assignment": [
+          "feat-account-login"
+        ]
+      },
+      "local_files_content_changed": [
+        ".dev-graph/state/graph.json"
+      ],
+      "local_files_created": [
+        ".dev-graph/cache/staging/apply-order.json",
+        ".dev-graph/cache/staging/arch-portal-experience.body.md",
+        ".dev-graph/cache/staging/arch-portal-experience.node.json",
+        ".dev-graph/cache/staging/arch-portal-platform.body.md",
+        ".dev-graph/cache/staging/arch-portal-platform.node.json",
+        ".dev-graph/cache/staging/c14-macro-contract.json",
+        ".dev-graph/cache/staging/feat-account-login.body.md",
+        ".dev-graph/cache/staging/feat-account-login.node.json",
+        ".dev-graph/cache/staging/feat-account-login.promote.json",
+        ".dev-graph/cache/staging/feat-admin-progress-report.body.md",
+        ".dev-graph/cache/staging/feat-admin-progress-report.node.json",
+        ".dev-graph/cache/staging/feat-deadline-notification.body.md",
+        ".dev-graph/cache/staging/feat-deadline-notification.node.json",
+        ".dev-graph/cache/staging/feat-personal-dashboard.body.md",
+        ".dev-graph/cache/staging/feat-personal-dashboard.node.json",
+        ".dev-graph/cache/staging/feat-work-assignment.body.md",
+        ".dev-graph/cache/staging/feat-work-assignment.node.json",
+        ".dev-graph/state/.graph.json.register.lock",
+        "architecture/arch-portal-experience.md",
+        "architecture/arch-portal-platform.md",
+        "eval-log/c14-feature-evaluation-receipt.json",
+        "eval-log/run-dev-graph-decompose-goal-spec.json",
+        "eval-log/run-dev-graph-decompose-intermediate.jsonl",
+        "eval-log/run-dev-graph-decompose-progress.json",
+        "features/feat-account-login.md",
+        "features/feat-admin-progress-report.md",
+        "features/feat-deadline-notification.md",
+        "features/feat-personal-dashboard.md",
+        "features/feat-work-assignment.md"
+      ],
+      "local_files_removed": [],
+      "local_write_count": 30,
+      "max_inter_feature_depends_on_per_feature": 3,
+      "node_count_after": 7,
+      "node_count_before": 0,
+      "persisted_beads_linkage_non_null": [],
+      "persisted_github_publication_modes": [
+        "local_only"
+      ],
+      "persisted_issue_linkage_non_null": [],
+      "persisted_tracker_bindings": [
+        "beads"
+      ],
+      "phase_ref_values": [
+        "None"
+      ],
+      "repo_root": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/fixture-beads",
+      "task_nodes": []
+    },
+    "none": {
+      "acyclic": true,
+      "architecture_ids": [
+        "arch-portal-experience",
+        "arch-portal-platform"
+      ],
+      "candidate_count": 1,
+      "candidates": [
+        "feat-account-login"
+      ],
+      "canonical_store_validation": {
+        "exit_code": 0,
+        "report": {
+          "implementation_readiness": "complete",
+          "missing_sections": [],
+          "schema": "/Users/dm/orca/workspaces/HarnessHub/issueの整理/plugins/dev-graph/schemas/graph-node.schema.json",
+          "valid": true,
+          "violations": []
+        }
+      },
+      "digest_checks": [
+        {
+          "graph_node_id": "feat-account-login",
+          "is_placeholder_hex": false,
+          "matches": true,
+          "recomputed_from_persisted_node": "7b5fec87be733658fdfb8a22b76b4c993213a87f1dbbdbe64b8ff8af779ff81c",
+          "recorded_evaluated_digest": "7b5fec87be733658fdfb8a22b76b4c993213a87f1dbbdbe64b8ff8af779ff81c"
+        }
+      ],
+      "draft_excluded": [
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-work-assignment",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-personal-dashboard",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-deadline-notification",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        },
+        {
+          "confirmation_status": "draft",
+          "evaluation_status": "pending",
+          "graph_node_id": "feat-admin-progress-report",
+          "implementation_readiness": "incomplete",
+          "status": "draft"
+        }
+      ],
+      "draft_excluded_count": 4,
+      "feature_ids": [
+        "feat-account-login",
+        "feat-admin-progress-report",
+        "feat-deadline-notification",
+        "feat-personal-dashboard",
+        "feat-work-assignment"
+      ],
+      "graph_revision_after": 8,
+      "graph_revision_before": 0,
+      "graph_sha256_after": "adcf1a3818a43db6b391b7224c5d59656db9c394e0662b9f5064f7e12d21b25d",
+      "graph_sha256_before": "47e6eea5c7e52e14effc2a64c806e2c91372a055e76d469e3660299d3cc9b7d5",
+      "inter_feature_depends_on": {
+        "feat-account-login": [],
+        "feat-admin-progress-report": [
+          "feat-account-login",
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-deadline-notification": [
+          "feat-personal-dashboard",
+          "feat-work-assignment"
+        ],
+        "feat-personal-dashboard": [
+          "feat-account-login",
+          "feat-work-assignment"
+        ],
+        "feat-work-assignment": [
+          "feat-account-login"
+        ]
+      },
+      "local_files_content_changed": [
+        ".dev-graph/state/graph.json"
+      ],
+      "local_files_created": [
+        ".dev-graph/cache/staging/apply-order.json",
+        ".dev-graph/cache/staging/arch-portal-experience.body.md",
+        ".dev-graph/cache/staging/arch-portal-experience.node.json",
+        ".dev-graph/cache/staging/arch-portal-platform.body.md",
+        ".dev-graph/cache/staging/arch-portal-platform.node.json",
+        ".dev-graph/cache/staging/c14-macro-contract.json",
+        ".dev-graph/cache/staging/feat-account-login.body.md",
+        ".dev-graph/cache/staging/feat-account-login.node.json",
+        ".dev-graph/cache/staging/feat-account-login.promote.json",
+        ".dev-graph/cache/staging/feat-admin-progress-report.body.md",
+        ".dev-graph/cache/staging/feat-admin-progress-report.node.json",
+        ".dev-graph/cache/staging/feat-deadline-notification.body.md",
+        ".dev-graph/cache/staging/feat-deadline-notification.node.json",
+        ".dev-graph/cache/staging/feat-personal-dashboard.body.md",
+        ".dev-graph/cache/staging/feat-personal-dashboard.node.json",
+        ".dev-graph/cache/staging/feat-work-assignment.body.md",
+        ".dev-graph/cache/staging/feat-work-assignment.node.json",
+        ".dev-graph/state/.graph.json.register.lock",
+        "architecture/arch-portal-experience.md",
+        "architecture/arch-portal-platform.md",
+        "eval-log/c14-feature-evaluation-receipt.json",
+        "features/feat-account-login.md",
+        "features/feat-admin-progress-report.md",
+        "features/feat-deadline-notification.md",
+        "features/feat-personal-dashboard.md",
+        "features/feat-work-assignment.md"
+      ],
+      "local_files_removed": [],
+      "local_write_count": 27,
+      "max_inter_feature_depends_on_per_feature": 3,
+      "node_count_after": 7,
+      "node_count_before": 0,
+      "persisted_beads_linkage_non_null": [],
+      "persisted_github_publication_modes": [
+        "local_only"
+      ],
+      "persisted_issue_linkage_non_null": [],
+      "persisted_tracker_bindings": [
+        "none"
+      ],
+      "phase_ref_values": [
+        "None"
+      ],
+      "repo_root": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/fixture-none",
+      "task_nodes": []
+    }
+  }
+}

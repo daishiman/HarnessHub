@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+  "parent_feature": "feat-semantic-emphasis-icons",
+  "nodes": [
+    {
+      "id": "SYS-EMPHASIS-ICONS-P01",
+      "graph_node_id": "sys-emphasis-icons-p01",
+      "title": "要件ベースライン確定 — 絵文字禁止 semantic token/icon 表現の要件確定",
+      "phase_ref": "P01",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": []
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P02",
+      "graph_node_id": "sys-emphasis-icons-p02",
+      "title": "アーキテクチャ設計 — 既存 callout/icon/token 実装の再利用範囲と絵文字 lint の配置・CI 組込み位置の決定",
+      "phase_ref": "P02",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P01"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P03",
+      "graph_node_id": "sys-emphasis-icons-p03",
+      "title": "独立設計レビュー — lint 検査対象範囲・所有境界・token 適用範囲の妥当性確認",
+      "phase_ref": "P03",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P02"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P04",
+      "graph_node_id": "sys-emphasis-icons-p04",
+      "title": "テストファースト設計 — 絵文字 lint・callout 描き分け・可視ラベル併置・ライトモード背景のテストスタブ作成",
+      "phase_ref": "P04",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P03"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P05",
+      "graph_node_id": "sys-emphasis-icons-p05",
+      "title": "実装 — 絵文字 lint script・CI fail-closed 組込み・一覧/カード状態表現の token 統一・可視ラベル併置の実装",
+      "phase_ref": "P05",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P04"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P06",
+      "graph_node_id": "sys-emphasis-icons-p06",
+      "title": "テスト実行 — 単体/lint/a11y/コントラストテストの実行と結果記録",
+      "phase_ref": "P06",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P05"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P07",
+      "graph_node_id": "sys-emphasis-icons-p07",
+      "title": "受入 — goal-spec acceptance 5 項目の確認",
+      "phase_ref": "P07",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P06"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P08",
+      "graph_node_id": "sys-emphasis-icons-p08",
+      "title": "リファクタリング/マイグレーション — N/A (DB schema 変更なし)",
+      "phase_ref": "P08",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P07"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P09",
+      "graph_node_id": "sys-emphasis-icons-p09",
+      "title": "品質保証 — CI 品質ゲート (絵文字 lint fail-closed/axe/コントラスト/VRT) の確認",
+      "phase_ref": "P09",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P08"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P10",
+      "graph_node_id": "sys-emphasis-icons-p10",
+      "title": "最終独立レビュー — quality_constraints 5 件の充足判定",
+      "phase_ref": "P10",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P09"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P11",
+      "graph_node_id": "sys-emphasis-icons-p11",
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "phase_ref": "P11",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P10"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P12",
+      "graph_node_id": "sys-emphasis-icons-p12",
+      "title": "ドキュメント/運用 — アイコン追加手順・絵文字 lint 運用・所有境界の runbook 作成",
+      "phase_ref": "P12",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P11"]
+    },
+    {
+      "id": "SYS-EMPHASIS-ICONS-P13",
+      "graph_node_id": "sys-emphasis-icons-p13",
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "phase_ref": "P13",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "depends_on": ["SYS-EMPHASIS-ICONS-P12"]
+    }
+  ]
+}

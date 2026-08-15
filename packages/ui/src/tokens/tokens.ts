@@ -85,6 +85,13 @@ const lightColors = {
   /** チャート系列・タグ専用 (UI の面・文字には使わない) */
   infoCyan: '#006d75',
   infoSoft: '#e0f2f1',
+  /**
+   * 本文コールアウト (ポイント・補足) 専用のブルー。
+   * `primary` が無彩色グラファイトなので `primarySoft` を本文の注記面に使うと、
+   * light では `neutralSoft` と見分けが付かないグレーの箱になる。
+   */
+  infoBlue: '#1d4ed8',
+  infoBlueSoft: '#e7effb',
   magenta: '#a3125f',
   magentaSoft: '#f6e3ed',
   /** 中立チップの背景 */
@@ -128,6 +135,8 @@ const darkColors: Record<ColorTokenName, string> = {
   onDanger: '#1c1305',
   infoCyan: '#5cdbd3',
   infoSoft: '#112123',
+  infoBlue: '#93c5fd',
+  infoBlueSoft: '#152845',
   magenta: '#ff85c0',
   magentaSoft: '#291321',
   neutralSoft: '#33333a',
@@ -270,6 +279,9 @@ export const contrastRequirements: readonly ContrastRequirement[] = [
   { foreground: 'onDanger', background: 'dangerHover', minRatio: AA_CONTRAST_TEXT, usage: '破壊的操作 hover の文字' },
   { foreground: 'infoCyan', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: '情報の文字' },
   { foreground: 'infoCyan', background: 'infoSoft', minRatio: AA_CONTRAST_TEXT, usage: '情報チップの文字' },
+  { foreground: 'infoBlue', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト見出しの文字' },
+  { foreground: 'infoBlue', background: 'infoBlueSoft', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト面上の見出し' },
+  { foreground: 'text', background: 'infoBlueSoft', minRatio: AA_CONTRAST_TEXT, usage: 'コールアウト面上の本文' },
   { foreground: 'magenta', background: 'surface', minRatio: AA_CONTRAST_TEXT, usage: 'タグの文字' },
   { foreground: 'magenta', background: 'magentaSoft', minRatio: AA_CONTRAST_TEXT, usage: 'タグチップの文字' },
   { foreground: 'borderStrong', background: 'surface', minRatio: AA_CONTRAST_NON_TEXT, usage: '入力欄の輪郭' },

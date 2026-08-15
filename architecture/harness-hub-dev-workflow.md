@@ -288,3 +288,13 @@ build path の authority は独立 evaluator の native completion、resume path
 - **Beads Dolt**: `scripts/install-git-hooks.sh` が `refs/dolt/data` の初回取得と `+refs/dolt/*:refs/dolt/*` refspec を冪等に補完する。正規初期化は `bd bootstrap`、installer は安全網 (`HarnessHub-jab2`)。手順は [beads-operations-runbook](../docs/beads-operations-runbook.md) §5。
 - 判断と検証の索引: [wt-1-6 仕様反映受領書](../docs/features/feat-hub-foundation/wt-1-6-ops-governance-final-review-spec-reflection-receipt.md)。
 
+## GitHub issue ミラーの退役と tracker 判定軸 (2026-08-15 / `HarnessHub-mx65`)
+
+製品 runtime 契約は変更しない。開発タスクの tracker 権威関係のみを是正する。
+
+- **判定軸の是正**: `execution_tracker.mode` を選ぶ軸は repository の公開範囲ではなく「実行タスクを誰が起票し誰が読むか」である。public であっても起票が owner と AI エージェントだけなら既定の `beads` / `local_only` を選ぶ。正本は [execution-tracker-contract §1](../plugins/dev-graph/references/execution-tracker-contract.md)。
+- **ミラーの退役**: `execution_tracker.beads.github_mirror` を `bd_github_push_only` から `none` へ変更した。push-only は逆流路を持たず、bd 側の close が GitHub へ伝わらないため乖離が単調増加する。実測で open 490 件のうち 444 件が完了済みまたは役目終了だった。
+- **収束方法**: 契約 §1 の migration 節に従い close で収束させ、物理削除はしない。beads の `external_ref` が GitHub issue の URL を参照しており、削除するとリンクが解決不能になる。正規経路は `gh-bridge.py --op issue-close`。
+- **GitHub Issues の残存用途**: CI からの自動通知 (`update-yaml-spec.yml`) と、public repository としての外部受付窓口に限定する。運用手順は [beads-operations-runbook §1.1](../docs/beads-operations-runbook.md)。
+- 判断と検証の索引: [mx65 仕様反映受領書](../docs/features/feat-dev-pipeline-improvement/mx65-github-issue-mirror-retirement-spec-reflection-receipt.md)。
+

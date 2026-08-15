@@ -12,7 +12,7 @@ iteration: null
 title: "Harness Hub デザインシステム アーキテクチャ"
 owners: ["daishiman"]
 created_at: "2026-08-13T09:30:00Z"
-updated_at: "2026-08-13T09:30:00Z"
+updated_at: "2026-08-14T00:45:00Z"
 status: "active"
 depends_on: ["arch-harness-hub-frontend"]
 related_nodes: ["spec-harness-hub-ui-foundation-addendum","spec-harness-hub-information-design-addendum","issue-agent-kit-elegant-design-integration-20260813"]
@@ -32,7 +32,7 @@ template_version: "1.0.0"
 confirmation_status: "confirmed"
 evaluation_status: "pass"
 confirmation_evidence: {"evaluated_digest":"2cfa9d5999e571ffe278826b09b7c7090bb66ca2f86c41598324efe43bea72fa","evaluator":"run-elegant-review (30 paradigms / strict coverage)","evidence_ref":"eval-log/harness-creator/elegant-review/run-20260813-agent-kit-design-integration/verdict.json"}
-source_lineage: {"imported_at":"2026-08-13T09:10:00Z","origin_kind":"manual","source_digest":null,"source_path":null,"source_plugin":null,"source_version":null}
+source_lineage: {"imported_at":"2026-08-14T00:45:00Z","origin_kind":"manual","source_digest":"4b4fd8c1e74bf53708d2160d5e254efb9338bc89d23f2d1cb2295ec98aff2f44","source_path":"docs/frontend-spec.md","source_plugin":null,"source_version":null}
 classification_confidence: 0.99
 classification_reason: "製品横断のUI token・共通部品・responsive・品質ゲートの責務境界を所有するため architecture/frontend に分類する"
 classification_candidates: [{"artifact_kind":"architecture","candidate_path":"architecture/harness-hub-design-system.md","confidence":0.99},{"artifact_kind":"document","candidate_path":"docs/harness-hub-design-system.md","confidence":0.42}]
@@ -46,6 +46,7 @@ execution_contexts: []
 completion_evidence: {"completed_at":null,"evidence_refs":[],"policy":"manual","reconciled_at":null,"source":null,"status":"not_applicable"}
 implementation_readiness: {"checked_at":"2026-08-13T09:30:00Z","missing_sections":[],"status":"complete"}
 ---
+
 
 # Architecture overview
 
@@ -180,6 +181,20 @@ token/unit/axe/browser/VRT/bundle gateと30思考法の4条件判定を通し、
 - 有彩色の例外はチャート系列とタグのみ (`infoCyan` / `magenta`)。6 系列を明度差だけで
   区別することは不可能なため、用途を限定して許容する。
 
+**強調ブロック (callout) の面は semantic token 由来とし、グレー系を使わない。**
+
+| 種別 | 面 | 枠線・アイコン | アイコン形状 |
+|---|---|---|---|
+| point | `infoBlueSoft` | `infoBlue` | `lightbulb` |
+| attention | `dangerSoft` | `danger` | `alertTriangle` |
+| warning | `warningSoft` | `warning` | `alertOctagon` |
+| note | `infoBlueSoft` | `borderStrong` | `infoCircle` |
+
+かつて point / note が使っていた `primarySoft` (#e5e5e2) と `neutralSoft` (#e6e6e3) は
+無彩色グラファイト由来でほぼ同じグレーになり、「要点」と「補足」が面の色では見分けられなかった。
+面を青系に統一し、従属関係 (point = 主 / note = 副) は枠線の濃さとアイコン形状で表す。
+**強調は絵文字で表さない** — 絵文字は字形も色も端末任せで、contrast 契約の外側に出るため。
+
 ### 3. 面の 3 段と外枠
 
 `pageBg` (最も奥) → `bg` (本文背景) → `surface` (カード) の 3 段で奥行きを作る。
@@ -247,3 +262,13 @@ md 以上ではアプリ本体を角丸 14px + 1px 輪郭 + `shadow-frame` で�
   有限集合を固定する。ゲート自身は新規 app、複数行 JSX、正常画面の隔離 fixture を毎回実行する。
 - `catalog-coverage.test.ts` — 公開部品を足してカタログ (VRT の被写体) へ載せ忘れたら fail。
   載せ忘れた部品だけが視覚回帰の網から静かに外れるのを防ぐ。
+- 部品追加のレビュー観点: 状態・種別・強調を **色だけで** 伝えない。色覚特性や単色印刷で色差が
+  落ちても、テキスト・記号・アイコン形状のいずれかが残ること。axe は色単独表現を検出できないため、
+  この観点は自動ゲートではなくレビューで見る。
+- `lint-ui-text-emoji.py` (G19) — `packages/ui/src` と `apps/hub/src` に絵文字が入ったら fail。
+  判定は Unicode `Emoji_Presentation=Yes` と U+FE0F 付きに限り、矢印・幾何記号は素通りさせる
+  (誤検出する lint は allowlist で骨抜きにされ、ゲートとして死ぬため)。**同じジョブに detector
+  実効性ステップを置き、意図的に絵文字を置いた probe で exit 1 ちょうどでなければ落とす。**
+  lint 本体だけでは、判定ロジックが空になった失効を「違反 0 件」として緑で素通りさせてしまう。
+  exit を 0/1/2 (適合/違反/設定エラー) の 3 値に分けてあるのは、この判定を
+  「非ゼロなら合格」でなく「exit 1 ちょうど」へ狭めるためである。

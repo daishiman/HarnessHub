@@ -11,6 +11,7 @@ import { HearingSheetDetail } from '../../src/app/(dashboard)/sheets/[id]/hearin
 
 const DETAIL: SheetDetail = {
   id: 'sheet-1',
+  revision: 1,
   code: 'HS-0001',
   status: 'review',
   title: '請求処理',

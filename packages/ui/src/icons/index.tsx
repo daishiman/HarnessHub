@@ -38,6 +38,12 @@ export const iconNames = [
   'download',
   'externalLink',
   'plus',
+  // 本文コールアウト 4 種。絵文字はフォント依存で字形も色も端末任せになるため、
+  // 形 (電球 / 三角 / 八角 / 丸) で種類を、色で強さを伝える stroke アイコンに置き換えている。
+  'lightbulb',
+  'alertTriangle',
+  'alertOctagon',
+  'infoCircle',
 ] as const;
 
 export type IconName = (typeof iconNames)[number];
@@ -168,6 +174,34 @@ const iconPaths: Record<IconName, ReactNode> = {
     </>
   ),
   plus: <path d="M12 5v14M5 12h14" />,
+  lightbulb: (
+    <>
+      <path d="M9 17h6" />
+      <path d="M10 20h4" />
+      <path d="M12 3a6 6 0 0 0-3.5 10.9c.3.2.5.6.5 1V15h6v-.1c0-.4.2-.8.5-1A6 6 0 0 0 12 3z" />
+    </>
+  ),
+  alertTriangle: (
+    <>
+      <path d="M12 4.5L21 19.5H3L12 4.5z" />
+      <path d="M12 10v4" />
+      <path d="M12 17h.01" />
+    </>
+  ),
+  alertOctagon: (
+    <>
+      <path d="M8.4 3h7.2L21 8.4v7.2L15.6 21H8.4L3 15.6V8.4L8.4 3z" />
+      <path d="M12 8v5" />
+      <path d="M12 16h.01" />
+    </>
+  ),
+  infoCircle: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5" />
+      <path d="M12 8h.01" />
+    </>
+  ),
 };
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name' | 'children'> {

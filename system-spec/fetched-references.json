@@ -26,15 +26,15 @@
     },
     {
       "target_id": "pnpm",
-      "retrieved_at": "2026-08-07T03:25:42Z",
+      "retrieved_at": "2026-08-13T13:51:46Z",
       "source_url": "https://github.com/pnpm/pnpm/releases",
       "official_publisher": "pnpm maintainers",
       "official_host": "github.com",
-      "version": "11.20.0",
-      "latest_checked_at": "2026-08-07T03:25:42Z",
+      "version": "11.21.0",
+      "latest_checked_at": "2026-08-13T15:44:48Z",
       "evidence_ref": "system-spec/retrieval-evidence/pnpm.json",
-      "evidence_sha256": "5e5276ec743ff97e9238e05baac6b0e947c210c6f01360bc3580624b57c68542",
-      "summary": "pnpm 公式 GitHub organization の Releases (REST API releases/latest) で現行安定版 v11.16.0 (published 2026-07-22T20:36:06Z, prerelease=false) を確認した。pnpm は依存を content-addressable store に一元保存してディスク・時間効率を高め、symlink ベースの非フラットな node_modules で宣言外依存へのアクセスを抑止する。本プロジェクトの唯一のパッケージマネージャとして pnpm を使用し npm は使用しない。補記 (2026-07-22T22:53:47Z 再照合): v11.16.0 は 2026-07-22T20:36:06Z 公開直後のため、公開直後の外部照合では npm dist-tags latest が 11.15.1 のまま (npm index 遅延) だったが、再照合で GitHub releases/latest=v11.16.0 と npm dist-tags latest=11.16.0 の 2 経路一致を確認した。裏取り生証跡 (2026-07-22T23:24:40Z 一次 GET、全 HTTP 200): GET https://registry.npmjs.org/-/package/pnpm/dist-tags のレスポンス断片 {\"latest\":\"11.16.0\",\"next-11\":\"11.16.0\",\"latest-11\":\"11.16.0\"}、GET https://api.github.com/repos/pnpm/pnpm/releases/latest のレスポンス断片 {\"tag_name\":\"v11.16.0\",\"published_at\":\"2026-07-22T20:36:06Z\",\"prerelease\":false}。npm registry (dist-tags) と GitHub releases の 2 一次ソースが 11.16.0 で一致。\n\n鮮度再照合 (2026-08-07T03:25:42Z): 公式配布 registry (registry.npmjs.org) を `pnpm view pnpm <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-08-05T20:19:08.464Z。"
+      "evidence_sha256": "dd43f50a2a5edab607d075adb7a1787c5e80a637d685162473df0f3f388d6a0a",
+      "summary": "pnpm の現行安定版は v11.21.0 (published 2026-08-09T14:25:31Z, prerelease=false)。pnpm は依存を content-addressable store に一元保存してディスク・時間効率を高め、symlink ベースの非フラットな node_modules で宣言外依存へのアクセスを抑止する。本プロジェクトの唯一のパッケージマネージャとして pnpm を使用し npm は使用しない。[訂正 (C08 独立監査 finding F1・2026-08-13)] 本 record の旧 summary は冒頭と「裏取り生証跡」段落で v11.16.0 を現行安定版として現在形で述べていた。これは 2026-07-22 時点の照合結果であり、2026-08-13T13:51:46Z に version フィールドを 11.21.0 へ更新した際に散文側を更新し忘れた残骸である。playwright / nextjs と完全に同型の欠陥で、version フィールドは正しいため決定論ゲート (C13) では検出できず、散文だけを読む実装判断者が 5 マイナー落ちの 11.16.0 を pin しうる状態だった。以下の 2026-07-22 段落は当時の照合履歴として残す。\n\n補記 (2026-07-22T22:53:47Z 再照合・当時の記録): v11.16.0 は 2026-07-22T20:36:06Z 公開直後のため、公開直後の外部照合では npm dist-tags latest が 11.15.1 のまま (npm index 遅延) だったが、再照合で GitHub releases/latest=v11.16.0 と npm dist-tags latest=11.16.0 の 2 経路一致を確認した。裏取り生証跡 (2026-07-22T23:24:40Z 一次 GET、全 HTTP 200): GET https://registry.npmjs.org/-/package/pnpm/dist-tags のレスポンス断片 {\"latest\":\"11.16.0\",\"next-11\":\"11.16.0\",\"latest-11\":\"11.16.0\"}、GET https://api.github.com/repos/pnpm/pnpm/releases/latest のレスポンス断片 {\"tag_name\":\"v11.16.0\",\"published_at\":\"2026-07-22T20:36:06Z\",\"prerelease\":false}。npm registry (dist-tags) と GitHub releases の 2 一次ソースが 11.16.0 で一致。\n\n鮮度再照合 (2026-08-13T13:51:46Z): 公式配布 registry (registry.npmjs.org) を `pnpm view pnpm <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。dist-tags.latest=11.21.0、registry 上の最終更新は 2026-08-12T14:41:53.852Z。前回記録 11.20.0 からの世代落ちを解消した。\n\n鮮度再照合 (2026-08-13T15:44:48Z / request 開始 2026-08-13T15:44:47Z): 公式配布 registry へ一次 GET (https://registry.npmjs.org/-/package/pnpm/dist-tags, HTTP 200)。dist-tags.latest=11.21.0 と GitHub releases の v11.21.0 (published 2026-08-09T14:25:31Z / prerelease=false) の 2 一次ソース一致を確認した。v12.0.0-rc.4 は prerelease。"
     },
     {
       "target_id": "zod",
@@ -54,11 +54,11 @@
       "source_url": "https://docs.github.com/en/actions",
       "official_publisher": "GitHub, Inc.",
       "official_host": "docs.github.com",
-      "last_updated": "2026-08-07 (取得日。ページ本文に最終更新日の明示なし)",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "2026-08-13 (再照合日。ページ本文に最終更新日の明示なし。本文内の最新日付は 2026-03-10)",
+      "latest_checked_at": "2026-08-13T15:44:28Z",
       "evidence_ref": "system-spec/retrieval-evidence/github-actions.json",
-      "evidence_sha256": "a47d43febc4743be9bb9069b5ba83271260ea0a551378e17fe595c80e8cd99bf",
-      "summary": "GitHub Actions はリポジトリ内で CI/CD ワークフローを自動化・実行する機能。GitHub-hosted / self-hosted ランナーで実行し、Workflow syntax・トリガー・Limits が Reference に体系化されている。Hub の test → wrangler deploy の CI/CD に使用 (公開リポジトリ/無料枠内)。無料枠の具体的分数は本ページに記載がなく、Billing and usage 配下での確認が別途必要。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `docs.github.com` へ限定した WebSearch (query=\"GitHub Actions workflow syntax documentation\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "e5282c839f0dd55d04ca1f6caf1e9e39f93c93b543583fedcf4749c6b557c289",
+      "summary": "GitHub Actions はリポジトリ内で CI/CD ワークフローを自動化・実行する機能。GitHub-hosted / self-hosted ランナーで実行し、Workflow syntax・トリガー・Limits が Reference に体系化されている。Hub の test → wrangler deploy の CI/CD に使用 (公開リポジトリ/無料枠内)。無料枠の具体的分数は本ページに記載がなく、Billing and usage 配下での確認が別途必要。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `docs.github.com` へ限定した WebSearch (query=\"GitHub Actions workflow syntax documentation\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:28Z / request 開始 2026-08-13T15:44:28Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 435889 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ本文に \"Last updated\" 表記は無く、本文内の最新日付は 2026-03-10。C08 F7 の指摘により last_updated を再照合日基準へ更新した。"
     },
     {
       "target_id": "turso",
@@ -66,11 +66,11 @@
       "source_url": "https://turso.tech/pricing",
       "official_publisher": "Turso",
       "official_host": "turso.tech",
-      "last_updated": "2026-08-07 (取得日。ページ内に明示の更新日なし)",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "2026-08-13 (再照合日。ページ内に明示の更新日なし)",
+      "latest_checked_at": "2026-08-13T15:44:29Z",
       "evidence_ref": "system-spec/retrieval-evidence/turso.json",
-      "evidence_sha256": "ccd6a391d8cf5d337f474c2c290524e61ba8d9c727ca9ca8c5480a7c86bbb4d3",
-      "summary": "Free プランは $0 でデータベース 100 個・ストレージ 5GB・月間読取 5 億行・月間書込 1,000 万行・Point-In-Time Restore 1 日・クレジットカード不要。上位は Developer $4.99/月〜。公式 docs では SQLite 完全後方互換 (Fully backwards compatible with SQLite) と明記。Hub control-plane DB として採用し、SQLite 方言互換を保って Cloudflare D1 への退避経路を温存する (D2 決定のヘッジ条件)。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `turso.tech` へ限定した WebSearch (query=\"Turso pricing plans database\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "f40ce094ecab9ad0f7622f9d56f84b28454b26c4a6414b7193e9b1baf8bfadb9",
+      "summary": "Free プランは $0 でデータベース 100 個・ストレージ 5GB・月間読取 5 億行・月間書込 1,000 万行・Point-In-Time Restore 1 日・クレジットカード不要。上位は Developer $4.99/月〜。公式 docs では SQLite 完全後方互換 (Fully backwards compatible with SQLite) と明記。Hub control-plane DB として採用し、SQLite 方言互換を保って Cloudflare D1 への退避経路を温存する (D2 決定のヘッジ条件)。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `turso.tech` へ限定した WebSearch (query=\"Turso pricing plans database\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:29Z / request 開始 2026-08-13T15:44:28Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 136709 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。価格ページに更新日表記は無く、無料枠の記載構成に前回照合からの変化なし。"
     },
     {
       "target_id": "drizzle-orm",
@@ -102,11 +102,11 @@
       "source_url": "https://code.claude.com/docs/en/plugin-marketplaces",
       "official_publisher": "Anthropic",
       "official_host": "code.claude.com",
-      "last_updated": "2026-08-07 (取得日。ページ本文に最終更新日の明示なし。2026-07-30 の直接取得時のローカル CLI 実測は 2.1.220)",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "2026-08-13 (再照合日。ページ本文に最終更新日の明示なし)",
+      "latest_checked_at": "2026-08-13T15:44:32Z",
       "evidence_ref": "system-spec/retrieval-evidence/claude-code-plugins.json",
-      "evidence_sha256": "83d880b157f4212f5d47c3ba85fed083808bb4dd20bc2ca81282818bd8109fca",
-      "summary": "2026-07-30 に Anthropic 公式 plugin marketplace 文書を HTTP 200 で再取得し、ローカル Claude Code 2.1.220 で再照合した。plugin source は relative path・github・git URL・git-subdir・npm を正式サポートする。現行 git-subdir は url/path を必須とし、ref/sha で固定でき、sparse partial clone で monorepo の subdirectory を取得する。これは旧 H7 実測の『github source の path/subdir が無視される』前提に対する実質的な仕様追加である。remote URL 型 marketplace が marketplace.json のみを取得して相対 path source を解決できない制約は継続する。H7 再検証または Publisher 実装着手時は本ページと changelog を再照合し、git-subdir 経路を macOS/Windows で install→details→skill 実行まで再試験する。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `code.claude.com` へ限定した WebSearch (query=\"Claude Code plugin marketplaces documentation\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "035accbeac29974f62b450c820ad2a604b85b8c4cc3e1b43b1c28536befbff9e",
+      "summary": "2026-07-30 に Anthropic 公式 plugin marketplace 文書を HTTP 200 で再取得し、ローカル Claude Code 2.1.220 で再照合した。plugin source は relative path・github・git URL・git-subdir・npm を正式サポートする。現行 git-subdir は url/path を必須とし、ref/sha で固定でき、sparse partial clone で monorepo の subdirectory を取得する。これは旧 H7 実測の『github source の path/subdir が無視される』前提に対する実質的な仕様追加である。remote URL 型 marketplace が marketplace.json のみを取得して相対 path source を解決できない制約は継続する。H7 再検証または Publisher 実装着手時は本ページと changelog を再照合し、git-subdir 経路を macOS/Windows で install→details→skill 実行まで再試験する。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `code.claude.com` へ限定した WebSearch (query=\"Claude Code plugin marketplaces documentation\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:32Z / request 開始 2026-08-13T15:44:32Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 1246441 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。C08 F8 で鮮度未確認と指摘された target。本回が初の一次 GET 再照合で、ページ本文に最終更新日の明示は無い。"
     },
     {
       "target_id": "cloudflare-workers",
@@ -114,23 +114,23 @@
       "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "official_publisher": "Cloudflare, Inc.",
       "official_host": "developers.cloudflare.com",
-      "last_updated": "Jul 7, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得))",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "Jul 7, 2026 (ページ表示 \"Last updated\" を 2026-08-13T15:44:29Z の一次 GET で本文から直接抽出)",
+      "latest_checked_at": "2026-08-13T15:44:29Z",
       "evidence_ref": "system-spec/retrieval-evidence/cloudflare-workers.json",
-      "evidence_sha256": "65ba2209fc3c58c8f12ea9f49055795eceadec071905a09ca2310df514f24dcb",
-      "summary": "Workers Free プランは 100,000 リクエスト/日・1 呼出あたり CPU 10ms・static assets への配信は無料かつ無制限。Workers KV (読取 10 万/日)・Durable Objects (10 万 req/日・SQL 5GB)・Hyperdrive 等も Free プランに含まれる。Hub backend (Next.js on Workers) の無料枠運用の根拠。Standard (Paid $5/月) は 1,000 万 req/月込み。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare Workers pricing paid plan limits\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "ad03ad453c146ffa5b4e48fab72f4ce3885c5122ab98f46b5b308bb4c4bc9660",
+      "summary": "Workers Free プランは 100,000 リクエスト/日・1 呼出あたり CPU 10ms・static assets への配信は無料かつ無制限。Workers KV (読取 10 万/日)・Durable Objects (10 万 req/日・SQL 5GB)・Hyperdrive 等も Free プランに含まれる。Hub backend (Next.js on Workers) の無料枠運用の根拠。Standard (Paid $5/月) は 1,000 万 req/月込み。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare Workers pricing paid plan limits\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:29Z / request 開始 2026-08-13T15:44:29Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 299198 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ表示 \"Last updated Jul 7, 2026\" を本文から直接抽出し、record の値と一致することを確認した。C08 F6 の指摘 (C05 の 11 件リストから漏れ、免責文が残ったまま未再照合) への対応。"
     },
     {
       "target_id": "wrangler",
-      "retrieved_at": "2026-08-07T03:26:24Z",
+      "retrieved_at": "2026-08-13T13:51:46Z",
       "source_url": "https://github.com/cloudflare/workers-sdk/releases",
       "official_publisher": "Cloudflare, Inc.",
       "official_host": "github.com",
-      "version": "4.119.0",
-      "latest_checked_at": "2026-08-07T03:26:24Z",
+      "version": "4.122.0",
+      "latest_checked_at": "2026-08-13T15:44:47Z",
       "evidence_ref": "system-spec/retrieval-evidence/wrangler.json",
-      "evidence_sha256": "250644875aed8d31f2b9bfa79610d1d10b7a3bda2ef36fe743987665dfef11ca",
-      "summary": "Wrangler は Cloudflare Developer Platform の公式 CLI。2026-07-30 に Cloudflare 公式 install/update 文書 (last updated 2026-07-21) と公式 workers-sdk GitHub Releases、npm registry を再照合し、wrangler@4.115.0 (published 2026-07-28T19:42:23Z) と dist-tag latest=4.115.0 の一致を確認した。Cloudflare は project-local install によりチームで同じ版を使い、必要時に rollback できる運用を推奨する。本リポジトリは frozen lockfile の解決版を CI/deploy の固定点とし、Wrangler 更新は依存更新として明示し、worker build/dry-run と deploy 関連ゲートを通してから採用する。\n\n鮮度再照合 (2026-08-07T03:26:24Z): 公式配布 registry (registry.npmjs.org) を `pnpm view wrangler <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-08-05T12:31:37.049Z。"
+      "evidence_sha256": "8c90f9e0efbac39d6c9e904f02777c1ffc4b7d9a70768803e46f7c98336eb4c0",
+      "summary": "Wrangler は Cloudflare Developer Platform の公式 CLI。2026-07-30 に Cloudflare 公式 install/update 文書 (last updated 2026-07-21) と公式 workers-sdk GitHub Releases、npm registry を再照合し、wrangler@4.115.0 (published 2026-07-28T19:42:23Z) と dist-tag latest=4.115.0 の一致を確認した。Cloudflare は project-local install によりチームで同じ版を使い、必要時に rollback できる運用を推奨する。本リポジトリは frozen lockfile の解決版を CI/deploy の固定点とし、Wrangler 更新は依存更新として明示し、worker build/dry-run と deploy 関連ゲートを通してから採用する。\n\n鮮度再照合 (2026-08-13T13:51:46Z): 公式配布 registry (registry.npmjs.org) を `pnpm view wrangler <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。dist-tags.latest=4.122.0、registry 上の最終更新は 2026-08-12T14:22:46.716Z。前回記録 4.119.0 からの世代落ちを解消した。\n\n鮮度再照合 (2026-08-13T15:44:47Z / request 開始 2026-08-13T15:44:47Z): 公式配布 registry へ一次 GET (https://registry.npmjs.org/-/package/wrangler/dist-tags, HTTP 200)。dist-tags.latest=4.122.0 と GitHub releases の wrangler@4.122.0 (published 2026-08-12T14:20:44Z / prerelease=false) の 2 一次ソース一致を確認した (C08 F10 対応)。"
     },
     {
       "target_id": "cloudflare-r2",
@@ -138,11 +138,11 @@
       "source_url": "https://developers.cloudflare.com/r2/pricing/",
       "official_publisher": "Cloudflare, Inc.",
       "official_host": "developers.cloudflare.com",
-      "last_updated": "May 28, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得))",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "Aug 7, 2026 (ページ表示 \"Last updated\" を 2026-08-13T15:44:29Z の一次 GET で本文から直接抽出)",
+      "latest_checked_at": "2026-08-13T15:44:29Z",
       "evidence_ref": "system-spec/retrieval-evidence/cloudflare-r2.json",
-      "evidence_sha256": "21b50d6eb77f24e6bfdf802e5a04398c15deca0d2b9661c71dd4e34d8646a04a",
-      "summary": "R2 の Free tier は毎月 Storage 10 GB-month・Class A 操作 100 万 req・Class B 操作 1,000 万 req で、egress (帯域) 課金なし。immutable PackageRegistry (SkillPackage 保存) と DB 日次バックアップ保存先として採用する根拠。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare R2 pricing storage Class A Class B operations\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "90160b4e3114ba0dd4e0701d7d5c26252cc0ff3f3ded24e678da8884724573b0",
+      "summary": "R2 の Free tier は毎月 Storage 10 GB-month・Class A 操作 100 万 req・Class B 操作 1,000 万 req で、egress (帯域) 課金なし。immutable PackageRegistry (SkillPackage 保存) と DB 日次バックアップ保存先として採用する根拠。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare R2 pricing storage Class A Class B operations\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:29Z / request 開始 2026-08-13T15:44:29Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 147338 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ表示 \"Last updated Aug 7, 2026\" を本文から直接抽出。C08 F3 の指摘により、last_updated を旧値 May 28, 2026 から更新し「再確認できていない」旨の免責文を除去した。"
     },
     {
       "target_id": "cloudflare-d1",
@@ -150,11 +150,11 @@
       "source_url": "https://developers.cloudflare.com/d1/platform/pricing/",
       "official_publisher": "Cloudflare, Inc.",
       "official_host": "developers.cloudflare.com",
-      "last_updated": "Apr 21, 2026 (2026-07-22 の直接取得時に確認したページ表示日。今回の WebSearch 経路ではページ本文の日付表示を再確認できていない (要 WebFetch/直接取得))",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "Apr 21, 2026 (ページ表示 \"Last updated\" を 2026-08-13T15:44:30Z の一次 GET で本文から直接抽出)",
+      "latest_checked_at": "2026-08-13T15:44:30Z",
       "evidence_ref": "system-spec/retrieval-evidence/cloudflare-d1.json",
-      "evidence_sha256": "72601dbb13c17dd16b7bdf8096265d9af7bab89b06f842bc56b13b2f945816ee",
-      "summary": "D1 Free プランは行読取 500 万/日・行書込 10 万/日・ストレージ計 5GB。FAQ に『D1 は常に Free プランを持つか』の項があり、無料での試作継続が明言されている。顧客 Web App の標準 DB (HH-D14) および Turso からの退避先 (D2 ヘッジ) としての根拠。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare D1 pricing rows read written storage limits\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "12dee4c457871a5623b5c77b91482233435188b5d0ef2903a3eecbb7fff1e202",
+      "summary": "D1 Free プランは行読取 500 万/日・行書込 10 万/日・ストレージ計 5GB。FAQ に『D1 は常に Free プランを持つか』の項があり、無料での試作継続が明言されている。顧客 Web App の標準 DB (HH-D14) および Turso からの退避先 (D2 ヘッジ) としての根拠。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `developers.cloudflare.com` へ限定した WebSearch (query=\"Cloudflare D1 pricing rows read written storage limits\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:30Z / request 開始 2026-08-13T15:44:29Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 128962 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ表示 \"Last updated Apr 21, 2026\" を本文から直接抽出し、record の値と一致することを確認した。C08 F5 の指摘により免責文の残骸を除去した。"
     },
     {
       "target_id": "opennext-cloudflare",
@@ -163,10 +163,10 @@
       "official_publisher": "OpenNext (OSS)",
       "official_host": "opennext.js.org",
       "version": "1.20.2",
-      "latest_checked_at": "2026-08-07T03:26:30Z",
+      "latest_checked_at": "2026-08-13T15:44:47Z",
       "evidence_ref": "system-spec/retrieval-evidence/opennext-cloudflare.json",
-      "evidence_sha256": "9f79bea62d08f028743583a47aac462d0f7c7d402d755252e57ed9dc71f0d734",
-      "summary": "@opennextjs/cloudflare は Next.js の Node.js runtime を用いて Workers へデプロイする adapter。対応バージョンは Next.js 16 の全 minor/patch と 14/15 の最新 minor (14 は 2026Q1 でサポート終了予定)。App Router・Route Handlers・SSG/SSR・Middleware をサポート。重要な制約: Worker サイズ上限が Free プラン 3 MiB / Paid 10 MiB のため、費用ゼロ制約下では bundle サイズ管理が必須リスクとなる (D1 決定の caveat に追加)。鮮度再照合 (2026-07-22): GitHub releases REST API を直接 GET し、現行版 v1.20.2 (published 2026-07-21T17:40:58Z) を npm dist-tags latest=1.20.2 との複数一次ソース一致で確認 (C08 2026-07-18 指摘の一次 GET 照合 follow-up 完了)。裏取り生証跡 (2026-07-22T23:24:40Z 一次 GET、全 HTTP 200): GET https://registry.npmjs.org/-/package/@opennextjs%2fcloudflare/dist-tags のレスポンス全文 {\"latest\":\"1.20.2\"}、GET https://api.github.com/repos/opennextjs/opennextjs-cloudflare/releases/latest のレスポンス断片 {\"tag_name\":\"@opennextjs/cloudflare@1.20.2\",\"published_at\":\"2026-07-21T17:40:58Z\",\"prerelease\":false}。npm registry (dist-tags) と GitHub releases の 2 一次ソースが 1.20.2 で一致。\n\n鮮度再照合 (2026-08-07T03:26:30Z): 公式配布 registry (registry.npmjs.org) を `pnpm view @opennextjs/cloudflare <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-07-21T17:40:56.463Z。"
+      "evidence_sha256": "fb0bf46ebf067571de860929821d7ed68f4275ac2e615e5afdd5896e345b83ca",
+      "summary": "@opennextjs/cloudflare は Next.js の Node.js runtime を用いて Workers へデプロイする adapter。対応バージョンは Next.js 16 の全 minor/patch と 14/15 の最新 minor (14 は 2026Q1 でサポート終了予定)。App Router・Route Handlers・SSG/SSR・Middleware をサポート。重要な制約: Worker サイズ上限が Free プラン 3 MiB / Paid 10 MiB のため、費用ゼロ制約下では bundle サイズ管理が必須リスクとなる (D1 決定の caveat に追加)。鮮度再照合 (2026-07-22): GitHub releases REST API を直接 GET し、現行版 v1.20.2 (published 2026-07-21T17:40:58Z) を npm dist-tags latest=1.20.2 との複数一次ソース一致で確認 (C08 2026-07-18 指摘の一次 GET 照合 follow-up 完了)。裏取り生証跡 (2026-07-22T23:24:40Z 一次 GET、全 HTTP 200): GET https://registry.npmjs.org/-/package/@opennextjs%2fcloudflare/dist-tags のレスポンス全文 {\"latest\":\"1.20.2\"}、GET https://api.github.com/repos/opennextjs/opennextjs-cloudflare/releases/latest のレスポンス断片 {\"tag_name\":\"@opennextjs/cloudflare@1.20.2\",\"published_at\":\"2026-07-21T17:40:58Z\",\"prerelease\":false}。npm registry (dist-tags) と GitHub releases の 2 一次ソースが 1.20.2 で一致。\n\n鮮度再照合 (2026-08-07T03:26:30Z): 公式配布 registry (registry.npmjs.org) を `pnpm view @opennextjs/cloudflare <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-07-21T17:40:56.463Z。\n\n鮮度再照合 (2026-08-13T15:44:47Z / request 開始 2026-08-13T15:44:47Z): 公式配布 registry へ一次 GET (https://registry.npmjs.org/-/package/@opennextjs%2fcloudflare/dist-tags, HTTP 200)。dist-tags.latest=1.20.2。version フィールドと一致し世代落ちなし。"
     },
     {
       "target_id": "resend",
@@ -174,11 +174,11 @@
       "source_url": "https://resend.com/pricing",
       "official_publisher": "Resend, Inc.",
       "official_host": "resend.com",
-      "last_updated": "2026-08-07 (取得日。ページ内に明示の更新日なし)",
-      "latest_checked_at": "2026-08-07T03:30:09Z",
+      "last_updated": "2026-08-13 (再照合日。ページ内に明示の更新日なし)",
+      "latest_checked_at": "2026-08-13T15:44:31Z",
       "evidence_ref": "system-spec/retrieval-evidence/resend.json",
-      "evidence_sha256": "bd774ed667590a693905f57f9e8ef8cbef9159dcac77c01d0ff0b86c322dbb9d",
-      "summary": "Resend はトランザクションメール送信 API。Free プランは 3,000 通/月・100 通/日・独自ドメイン 1 件 (送受信合算。複数宛先は宛先数分カウント。無料プランは超過時オーバーエイジなしで送信不可)。Hub の通知ディスパッチ (D6 確定) はこの無料枠内で生成完了・レビュー結果・週次サマリを送信する。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `resend.com` へ限定した WebSearch (query=\"Resend pricing plans emails per month\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。"
+      "evidence_sha256": "2041fbb2e4121bdc4b9099c2d6952f22cfa79bfdbd9bb98addd995404c3f28f7",
+      "summary": "Resend はトランザクションメール送信 API。Free プランは 3,000 通/月・100 通/日・独自ドメイン 1 件 (送受信合算。複数宛先は宛先数分カウント。無料プランは超過時オーバーエイジなしで送信不可)。Hub の通知ディスパッチ (D6 確定) はこの無料枠内で生成完了・レビュー結果・週次サマリを送信する。\n\n鮮度再照合 (2026-08-07T03:30:09Z): 公式 host `resend.com` へ限定した WebSearch (query=\"Resend pricing plans emails per month\") を取得経路とし、返却された公式 URL 群と 読み取れた事実のみを証跡に残した (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。\n\n鮮度再照合 (2026-08-13T15:44:31Z / request 開始 2026-08-13T15:44:30Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 492119 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。価格ページに更新日表記は無く、無料枠 (3,000 通/月・100 通/日) の記載構成に前回照合からの変化なし。"
     },
     {
       "target_id": "owasp-asvs",
@@ -223,10 +223,10 @@
       "official_publisher": "Microsoft",
       "official_host": "playwright.dev",
       "version": "1.62.1",
-      "latest_checked_at": "2026-08-07T03:26:57Z",
+      "latest_checked_at": "2026-08-13T15:44:47Z",
       "evidence_ref": "system-spec/retrieval-evidence/playwright.json",
-      "evidence_sha256": "2bab094c8809cd6c55bd1d6423de7828e07df46dae24ae6685783a5f3615c208",
-      "summary": "Playwright は Microsoft 製のクロスブラウザ E2E テストフレームワークで、現行版は v1.61.1 (2026-06-23 公開、v1.61 で WebAuthn パスキー用仮想認証や Ubuntu 26.04 対応を追加)。v1.57 以降は Chromium ではなく Chrome for Testing ビルド上で動作する。取得は WebFetch 不可環境のため公式ドメイン限定の WebSearch (playwright.dev / github.com/microsoft/playwright) で確認した\n\n鮮度再照合 (2026-08-07T03:26:57Z): 公式配布 registry (registry.npmjs.org) を `pnpm view playwright <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-08-06T18:36:59.867Z。"
+      "evidence_sha256": "e60211f7baf1e945693c65e4ed6c387dd78d71cb4f5226110b8998fdc30f772a",
+      "summary": "Playwright は Microsoft 製のクロスブラウザ E2E テストフレームワークで、現行版は v1.62.1。v1.61 (2026-06-23 公開) で WebAuthn パスキー用仮想認証や Ubuntu 26.04 対応を追加した。v1.57 以降は Chromium ではなく Chrome for Testing ビルド上で動作する。取得は WebFetch 不可環境のため公式ドメイン限定の WebSearch (playwright.dev / github.com/microsoft/playwright) で確認した\n\n鮮度再照合 (2026-08-07T03:26:57Z): 公式配布 registry (registry.npmjs.org) を `pnpm view playwright <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。registry 上の最終更新は 2026-08-06T18:36:59.867Z。\n[訂正 (C05 完成度 evaluator 差し戻し・2026-08-13)] 本 record の summary 冒頭は「現行版は v1.61.1 (2026-06-23 公開)」と記述しており、本回でその冒頭文自体を v1.62.1 へ書き換えた。旧記述は 2026-08-07 の再照合で version フィールドを 1.62.1 へ更新した際に散文側を更新し忘れた残骸である。現行安定版は v1.62.1。version フィールドは正しかったため決定論ゲート (C13) では検出できず、散文を読む実装判断者だけが旧世代 v1.61.1 を現行版と誤認する形の欠陥だった (nextjs record で 2026-08-07 に是正した同型欠陥の再発)。v1.61 の記述 (WebAuthn パスキー用仮想認証・Ubuntu 26.04 対応) と v1.57 以降の Chrome for Testing ビルド上動作は、いずれも 1.62.1 でも維持されている事実として残す。\n\n鮮度再照合 (2026-08-13T15:44:47Z / request 開始 2026-08-13T15:44:46Z): 公式配布 registry へ一次 GET (https://registry.npmjs.org/-/package/playwright/dist-tags, HTTP 200)。dist-tags.latest=1.62.1。version フィールドと一致し世代落ちなし (next=1.63.0-alpha-2026-08-13 は alpha tag)。"
     },
     {
       "target_id": "testing-library",
@@ -247,10 +247,11 @@
       "official_publisher": "Vercel, Inc.",
       "official_host": "nextjs.org",
       "version": "16 (改名は 16.0 で導入。middleware.ts は deprecated)",
-      "latest_checked_at": "2026-08-07T07:17:12Z",
+      "last_updated": "August 3, 2026 (ページ表示 \"Last updated\" を 2026-08-13T15:44:31Z の一次 GET で本文から直接抽出)",
+      "latest_checked_at": "2026-08-13T15:44:31Z",
       "evidence_ref": "system-spec/retrieval-evidence/nextjs-proxy.json",
-      "evidence_sha256": "3911be8e616968079b9083d8f2e47e89ee8c290472e5c036205919e21a785eb3",
-      "summary": "Next.js 16 における middleware.ts → proxy.ts の改名と実行 runtime の変更。qa-172 (着地不達の原因究明) は middleware の実行モデルを中核根拠に置くため、その一次資料として取得した。\n【本 repository への適用判定】apps/hub の依存は next ^15.5.21 であり、現時点で proxy.ts への改名は適用されない。したがって apps/hub/src/middleware.ts が middleware.ts のままであることは着地不達の原因ではない。C08 監査の finding-1 は「実装が旧 middleware.ts のままなら着地不達の直接原因になり得る」と述べたが、採用版が 15 系である以上この因果は成立しない。\nただし 2 点が本 feature に効く。(1) Next 15 の middleware は既定で edge runtime で走るため、Node.js API と環境値の可視性が route handler 側と異なる。これは 「秘密の読み方が層をまたいで不揃い」という機序 (契約 E-1) の背景そのものである。(2) 公式が proxy を「完全な session / 認可の解決手段ではない」と明記している以上、middleware/proxy 層だけに認証判定を寄せる設計は上流意図に反する。16 系へ上げる際は runtime が nodejs 固定へ変わるため、環境値の読み出し経路が変化する点を移行時の検査対象とする。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。"
+      "evidence_sha256": "0ac5fb1972d36a0acd9e33aa341ba7045119a6109018e37598160270e3028ca2",
+      "summary": "Next.js 16 における middleware.ts → proxy.ts の改名と実行 runtime の変更。qa-172 (着地不達の原因究明) は middleware の実行モデルを中核根拠に置くため、その一次資料として取得した。\n【本 repository への適用判定】apps/hub の依存は next ^15.5.21 であり、現時点で proxy.ts への改名は適用されない。したがって apps/hub/src/middleware.ts が middleware.ts のままであることは着地不達の原因ではない。C08 監査の finding-1 は「実装が旧 middleware.ts のままなら着地不達の直接原因になり得る」と述べたが、採用版が 15 系である以上この因果は成立しない。\nただし 2 点が本 feature に効く。(1) Next 15 の middleware は既定で edge runtime で走るため、Node.js API と環境値の可視性が route handler 側と異なる。これは 「秘密の読み方が層をまたいで不揃い」という機序 (契約 E-1) の背景そのものである。(2) 公式が proxy を「完全な session / 認可の解決手段ではない」と明記している以上、middleware/proxy 層だけに認証判定を寄せる設計は上流意図に反する。16 系へ上げる際は runtime が nodejs 固定へ変わるため、環境値の読み出し経路が変化する点を移行時の検査対象とする。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。\n\n鮮度再照合 (2026-08-13T15:44:31Z / request 開始 2026-08-13T15:44:31Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 1279701 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ表示 \"Last updated August 3, 2026\" を本文から直接抽出した。"
     },
     {
       "target_id": "cloudflare-workers-secrets",
@@ -258,11 +259,11 @@
       "source_url": "https://developers.cloudflare.com/workers/configuration/secrets/",
       "official_publisher": "Cloudflare, Inc.",
       "official_host": "developers.cloudflare.com",
-      "last_updated": "2026-08-07 (取得日。WebSearch 経路のためページ本文の更新日表示は未確認)",
-      "latest_checked_at": "2026-08-07T07:17:12Z",
+      "last_updated": "Jul 3, 2026 (ページ表示 \"Last updated\" を 2026-08-13T15:44:32Z の一次 GET で本文から直接抽出)",
+      "latest_checked_at": "2026-08-13T15:44:32Z",
       "evidence_ref": "system-spec/retrieval-evidence/cloudflare-workers-secrets.json",
-      "evidence_sha256": "64133d219de1711ef8f299906c3e683df220db7d5d0dc17c2b3a0e01ad599f00",
-      "summary": "Cloudflare Workers の secret 供給・可視性の一次資料。qa-172 の機序「秘密が process.env に現れない」の根拠として取得した。\n【本 feature への直接の含意】3 点ある。\n(1) secret は書込専用のため、「投入済みだが読めていない」のか「未投入」なのかを値の目視では区別できない。本 feature の未解決事項 1 (本番で秘密が未投入なのか読めていないのか未確認) は、この仕様上、観測を実装する (契約 E-3) 以外に判別手段が無い。\n(2) cloudflare:workers から env を import すれば request handler の外からもsecret を読める。これは契約 E-1 (環境値の解決層を 1 つにする) の実装選択肢を増やすが、契約 E-2 (module 最上位で環境値に依存する構築をしない) を免除しない。読めること自体と、読んだ結果を module 生存期間ずっと固定してよいかは別問題であり、後から secret を投入し直しても反映されない欠陥は E-2 を守らない限り残る。\n(3) wrangler の secrets.required を宣言すると deploy 時に不足 secret が検証され、不足があれば deploy が失敗する。本不具合は「secret が無いまま deploy が成功し、実行時に静かに deny-all へ縮退した」形であり、この宣言があればdeploy の時点で止められた。継続検証 V6 の検査点として、実行時の観測 (E-3) だけでなくこの deploy 時ゲートの導入を含める。\n(4) secret は environment 間で継承されない。preview / production を分ける場合、片方だけ投入されている状態が同じ症状を生む。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。"
+      "evidence_sha256": "827f1ed020e64cc4d2273c19585f93a26ac6e3acfa18e170edd6dbebc8a56f22",
+      "summary": "Cloudflare Workers の secret 供給・可視性の一次資料。qa-172 の機序「秘密が process.env に現れない」の根拠として取得した。\n【本 feature への直接の含意】3 点ある。\n(1) secret は書込専用のため、「投入済みだが読めていない」のか「未投入」なのかを値の目視では区別できない。本 feature の未解決事項 1 (本番で秘密が未投入なのか読めていないのか未確認) は、この仕様上、観測を実装する (契約 E-3) 以外に判別手段が無い。\n(2) cloudflare:workers から env を import すれば request handler の外からもsecret を読める。これは契約 E-1 (環境値の解決層を 1 つにする) の実装選択肢を増やすが、契約 E-2 (module 最上位で環境値に依存する構築をしない) を免除しない。読めること自体と、読んだ結果を module 生存期間ずっと固定してよいかは別問題であり、後から secret を投入し直しても反映されない欠陥は E-2 を守らない限り残る。\n(3) wrangler の secrets.required を宣言すると deploy 時に不足 secret が検証され、不足があれば deploy が失敗する。本不具合は「secret が無いまま deploy が成功し、実行時に静かに deny-all へ縮退した」形であり、この宣言があればdeploy の時点で止められた。継続検証 V6 の検査点として、実行時の観測 (E-3) だけでなくこの deploy 時ゲートの導入を含める。\n(4) secret は environment 間で継承されない。preview / production を分ける場合、片方だけ投入されている状態が同じ症状を生む。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。\n\n鮮度再照合 (2026-08-13T15:44:32Z / request 開始 2026-08-13T15:44:31Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 222409 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。ページ表示 \"Last updated Jul 3, 2026\" を本文から直接抽出。C08 F4 の指摘により、取得日を保持していた last_updated をページ表示日へ更新した。"
     },
     {
       "target_id": "opennext-cloudflare-env-vars",
@@ -271,22 +272,23 @@
       "official_publisher": "OpenNext (OSS)",
       "official_host": "opennext.js.org",
       "version": "1.20.2 (@opennextjs/cloudflare の現行版)",
-      "latest_checked_at": "2026-08-07T07:17:12Z",
+      "last_updated": "2026-05-20 (HTTP Last-Modified: Wed, 20 May 2026 10:26:07 GMT)",
+      "latest_checked_at": "2026-08-13T15:44:32Z",
       "evidence_ref": "system-spec/retrieval-evidence/opennext-cloudflare-env-vars.json",
-      "evidence_sha256": "e0d3a3c386b5628e097a94c52b797160f75bf02f9084e80ef7b3808a375104e1",
-      "summary": "@opennextjs/cloudflare における環境値・binding・secret の解決経路の一次資料。qa-172 の中核根拠である getCloudflareContext() の env 解決について取得した。\n【C08 finding-2 への回答】監査は「環境変数 (vars/secrets) は context の env では取得できず process.env でのみ利用可能」という相違があると述べたが、公式 how-to はこの区別を local 開発の文脈で述べている。すなわち next dev 配下では .dev.vars / wrangler config の値が env に現れないため Next.js の .env を使え、という指示であり、deploy 済み Worker 上で secret が env から読めないという意味ではない。本 repository の吸収層 (apps/hub/src/app/health/runtime-env.ts) は getCloudflareContext().env を第一経路とし失敗時に process.env へ落とす形であり、この公式指針と整合する。したがって吸収層の設計自体は正しく、欠陥は「認証に関わる 2 箇所がその吸収層を通っていない」ことに限定される (契約 E-1)。\n【追加で効く事実】公式が deploy 時の --keep-vars を推奨している。dashboard 側で投入した値が deploy で消える経路が存在するということであり、「一度は動いていたのに、ある deploy 以降だけ縮退する」形の再発があり得る。未解決事項 1 (いつから縮退しているか未確認) の候補原因として記録する。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。"
+      "evidence_sha256": "2cb14bf104fce8276b029334b119036eec2338e46d093248ca48c2face301a7b",
+      "summary": "@opennextjs/cloudflare における環境値・binding・secret の解決経路の一次資料。qa-172 の中核根拠である getCloudflareContext() の env 解決について取得した。\n【C08 finding-2 への回答】監査は「環境変数 (vars/secrets) は context の env では取得できず process.env でのみ利用可能」という相違があると述べたが、公式 how-to はこの区別を local 開発の文脈で述べている。すなわち next dev 配下では .dev.vars / wrangler config の値が env に現れないため Next.js の .env を使え、という指示であり、deploy 済み Worker 上で secret が env から読めないという意味ではない。本 repository の吸収層 (apps/hub/src/app/health/runtime-env.ts) は getCloudflareContext().env を第一経路とし失敗時に process.env へ落とす形であり、この公式指針と整合する。したがって吸収層の設計自体は正しく、欠陥は「認証に関わる 2 箇所がその吸収層を通っていない」ことに限定される (契約 E-1)。\n【追加で効く事実】公式が deploy 時の --keep-vars を推奨している。dashboard 側で投入した値が deploy で消える経路が存在するということであり、「一度は動いていたのに、ある deploy 以降だけ縮退する」形の再発があり得る。未解決事項 1 (いつから縮退しているか未確認) の候補原因として記録する。\n\n取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と、その応答から読み取れた事実だけを記録する。\n\n鮮度再照合 (2026-08-13T15:44:32Z / request 開始 2026-08-13T15:44:32Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 132613 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。HTTP Last-Modified = Wed, 20 May 2026 10:26:07 GMT。世代落ちなし。"
     },
     {
       "target_id": "tailwindcss-v4",
-      "retrieved_at": "2026-08-10T11:54:59Z",
+      "retrieved_at": "2026-08-13T13:51:46Z",
       "source_url": "https://tailwindcss.com/docs/upgrade-guide",
       "official_publisher": "Tailwind Labs",
       "official_host": "tailwindcss.com",
-      "version": "4.3",
-      "latest_checked_at": "2026-08-10T11:54:59Z",
+      "version": "4.3.3",
+      "latest_checked_at": "2026-08-13T13:51:46Z",
       "evidence_ref": "system-spec/retrieval-evidence/tailwindcss-v4.json",
-      "evidence_sha256": "bbd08e7540b826ff95e64fc53d837a9f535ea17f1fe93650110b19c5d24d7c34",
-      "summary": "Tailwind CSS v4 の公式アップグレードガイドを確認した。現行ガイド表示は v4.3。v4 は Safari 16.4、Chrome 111、Firefox 128 以降を前提とするため、Hub の採用判断ではブラウザ対応範囲と移行互換性を同時に検証する。"
+      "evidence_sha256": "c5f5ff82bdf3fb96a3b52f43bebae0dd96e4695e0dca966f6240cae18e781787",
+      "summary": "Tailwind CSS v4 の公式アップグレードガイドを確認した。現行ガイド表示は v4.3。v4 は Safari 16.4、Chrome 111、Firefox 128 以降を前提とするため、Hub の採用判断ではブラウザ対応範囲と移行互換性を同時に検証する。\n\n鮮度再照合 (2026-08-13T13:51:46Z): 公式配布 registry (registry.npmjs.org) を `pnpm view tailwindcss <field> --json` で直接照会した実応答を証跡とする (WebFetch 未提供・curl 不許可のため HTML 本文の逐語取得は行っていない)。dist-tags.latest=4.3.3、registry 上の最終更新は 2026-08-13T11:12:26.974Z。前回記録 4.3 からの世代落ちを解消した。"
     },
     {
       "target_id": "shadcn-ui",
@@ -320,10 +322,58 @@
       "official_host": "www.w3.org",
       "version": "2.2",
       "last_updated": "2024-12-12",
-      "latest_checked_at": "2026-08-10T11:54:59Z",
+      "latest_checked_at": "2026-08-13T15:44:32Z",
       "evidence_ref": "system-spec/retrieval-evidence/wcag-2-2.json",
-      "evidence_sha256": "858040cebbf287df5aba0c5236602a0e39ae723e34ffae1bc82eb4614e82eca1",
-      "summary": "W3C Recommendation の WCAG 2.2 を確認した。知覚可能・操作可能・理解可能・堅牢の4原則と検証可能な達成基準を、Hub のアクセシビリティ要件と同値表の受入基準に使う。"
+      "evidence_sha256": "e201655cf9ffc91b29cdc59a2f17576fbee994ab37fe58453fb6e7fe7facf342",
+      "summary": "W3C Recommendation の WCAG 2.2 を確認した。知覚可能・操作可能・理解可能・堅牢の4原則と検証可能な達成基準を、Hub のアクセシビリティ要件と同値表の受入基準に使う。\n\n鮮度再照合 (2026-08-13T15:44:32Z / request 開始 2026-08-13T15:44:32Z): 公式 host へ python3 urllib.request で一次 GET し HTTP 200 を確認した (応答 512457 bytes・本文 SHA-256 は evidence の freshness_rechecks に記録)。HTTP Last-Modified = Thu, 12 Dec 2024 10:36:22 GMT。W3C Recommendation 2.2 のままで後継勧告なし。"
+    },
+    {
+      "target_id": "tanstack-query",
+      "retrieved_at": "2026-08-13T12:59:38Z",
+      "source_url": "https://tanstack.com/query",
+      "official_publisher": "TanStack (Tanner Linsley ほかメンテナ)",
+      "official_host": "tanstack.com",
+      "version": "5.101.4",
+      "latest_checked_at": "2026-08-13T12:59:38Z",
+      "evidence_ref": "system-spec/retrieval-evidence/tanstack-query.json",
+      "evidence_sha256": "39351afa4b0d64dc29b7e56bb741460de96bbef21b5614d426e7925018063e67",
+      "summary": "TanStack Query は React 等向けのサーバ状態 (server state) 管理ライブラリ。確定記載「(4) サーバ状態 = TanStack Query v5」の裏取りとして、公式配布 registry の @tanstack/react-query dist-tags を照会し latest=5.101.4 (prerelease サフィックス無し) を v5 系の現行安定版として確認した。同時点の他 tag は alpha=5.0.0-alpha.91 / beta=5.0.0-beta.35 / rc=5.0.0-rc.16 / previous=4.44.0 で、いずれも latest とは別枠。registry 上の最終更新は 2026-07-21T13:04:07.845Z。採用系列 v5 は latest と一致しており、実装着手・依存更新時に 最新 patch を再照合する。取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を `pnpm view <pkg> <field> --json` で直接照会した実応答を証跡とする (公式ドキュメント HTML 本文の逐語取得は行っていない)。source_url は当該 registry 応答の publisher 申告 homepage フィールドが指す公式ドキュメントサイトである。"
+    },
+    {
+      "target_id": "react-hook-form",
+      "retrieved_at": "2026-08-13T12:59:39Z",
+      "source_url": "https://react-hook-form.com",
+      "official_publisher": "react-hook-form メンテナ (Beier Luo)",
+      "official_host": "react-hook-form.com",
+      "version": "7.85.0",
+      "latest_checked_at": "2026-08-13T12:59:39Z",
+      "evidence_ref": "system-spec/retrieval-evidence/react-hook-form.json",
+      "evidence_sha256": "e38e7a418db50a54fac2c35d5ad9fdbd35f25dc3a0b60318aa42377ff89d86a0",
+      "summary": "react-hook-form は非制御コンポーネント主体の React フォームライブラリ。確定記載「(7) フォーム = react-hook-form + zodResolver」の裏取りとして、公式配布 registry の react-hook-form dist-tags を照会し latest=7.85.0 を現行安定版として確認した。同時点の next=7.60.0-next.0 / alpha=8.0.0-alpha.5 / beta=8.0.0-beta.3 は latest とは別枠の tag であり、8 系はまだ prerelease 段階である。registry 上の最終更新は 2026-08-08T01:14:56.515Z。zodResolver は本体ではなく別パッケージ @hookform/resolvers が提供するため、target_id=hookform-resolvers として別 record で裏取りしている。取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を `pnpm view <pkg> <field> --json` で直接照会した実応答を証跡とする (公式ドキュメント HTML 本文の逐語取得は行っていない)。source_url は当該 registry 応答の publisher 申告 homepage フィールドが指す公式ドキュメントサイトである。"
+    },
+    {
+      "target_id": "hookform-resolvers",
+      "retrieved_at": "2026-08-13T12:59:40Z",
+      "source_url": "https://react-hook-form.com",
+      "official_publisher": "react-hook-form メンテナ (Beier Luo)",
+      "official_host": "react-hook-form.com",
+      "version": "5.7.1",
+      "latest_checked_at": "2026-08-13T12:59:40Z",
+      "evidence_ref": "system-spec/retrieval-evidence/hookform-resolvers.json",
+      "evidence_sha256": "f59c78d62fe1358a82dbf06d5a5f22a7706a1ac3718da592065df44db928ab50",
+      "summary": "@hookform/resolvers は react-hook-form 公式の外部バリデーションスキーマ結合パッケージで、確定記載「(7) フォーム = react-hook-form + zodResolver」の zodResolver 実体を提供する。公式配布 registry の dist-tags を照会し latest=5.7.1 を現行安定版として確認した。同時点の next=1.0.0-rc.2 / beta=2.0.0-beta.17 / release-1.x=1.3.8 は latest とは別枠の旧系列/prerelease tag。registry 上の最終更新は 2026-08-02T06:14:53.671Z。publisher 申告 homepage は 本体 react-hook-form と同一の react-hook-form.com であり、本 record の source_url もそれに従う。zod 側の版は target_id=zod の record を参照する。取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を `pnpm view <pkg> <field> --json` で直接照会した実応答を証跡とする (公式ドキュメント HTML 本文の逐語取得は行っていない)。source_url は当該 registry 応答の publisher 申告 homepage フィールドが指す公式ドキュメントサイトである。"
+    },
+    {
+      "target_id": "axe-core",
+      "retrieved_at": "2026-08-13T12:59:41Z",
+      "source_url": "https://www.deque.com/axe/",
+      "official_publisher": "Deque Systems, Inc.",
+      "official_host": "www.deque.com",
+      "version": "4.13.0",
+      "latest_checked_at": "2026-08-13T12:59:41Z",
+      "evidence_ref": "system-spec/retrieval-evidence/axe-core.json",
+      "evidence_sha256": "9111e8e0d79c25fe43c9e71e4af90bdd6c2dbf4ce45dfa427f7bcc887327a122",
+      "summary": "axe-core は Deque Systems が開発するアクセシビリティ自動検査エンジンで、確定記載「axe-core の違反 0」を CI の リリース条件とする根拠技術。公式配布 registry の dist-tags を照会し latest=4.13.0 を現行安定版として確認した。同時点の next=4.13.0-canary.71c4683 は canary tag、patch=4.0.3 は旧系列 tag であり latest とは別枠。registry 上の 最終更新は 2026-08-06T14:09:34.517Z、ライセンスは MPL-2.0。ルールセットは版ごとに増減するため「違反 0」の判定は 採用版に依存する (CI では版を固定し、更新時に差分を再確認する)。取得経路の開示: 当セッションは WebFetch 未提供・curl 不許可のため、公式配布 registry (registry.npmjs.org) を `pnpm view <pkg> <field> --json` で直接照会した実応答を証跡とする (公式ドキュメント HTML 本文の逐語取得は行っていない)。source_url は当該 registry 応答の publisher 申告 homepage フィールドが指す公式ドキュメントサイトである。"
     }
   ]
 }

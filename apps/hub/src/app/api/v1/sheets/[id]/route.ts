@@ -5,6 +5,15 @@ import { resolveSheetResource, type SheetParams } from '../../../../../features/
 import { parseJsonRequest, problemResponse } from '../../../../../features/hearing-intake/http.js';
 import { hearingIntakeRuntime } from '../../../../../features/hearing-intake/runtime.js';
 import { authRuntime, withAuthz } from '../../../../../lib/authz/index.js';
+import {
+  entityJsonResponse,
+  MutationRequestError,
+  mutationErrorResponse,
+  parseEntityIfMatch,
+  revisionConflictResponse,
+} from '../../../../../lib/http/mutation-safety.js';
+
+const SHEET_STATUS_JSON_MAX_BYTES = 16_000;
 
 function repositoryContext(tenantId: string, workspaceId: string | null, actorId: string) {
   return createRepositoryContext({
@@ -28,7 +37,10 @@ export const GET = withAuthz<SheetParams>(
     if (detail === null) {
       return problemResponse(problemDetails({ title: 'シートが見つかりません', status: 404 }));
     }
-    return Response.json({ ...detail, can_manage: authz.can('sheets.status_change') });
+    return entityJsonResponse(
+      { ...detail, can_manage: authz.can('sheets.status_change') },
+      { namespace: 'sheets', revision: detail.revision },
+    );
   },
 );
 
@@ -39,7 +51,16 @@ export const PATCH = withAuthz<SheetParams>(
     resolveResource: resolveSheetResource,
   },
   async (request, authz, params) => {
-    const parsed = await parseJsonRequest(request, updateSheetStatusRequestSchema);
+    let expectedRevision: number;
+    try {
+      expectedRevision = parseEntityIfMatch(request.headers.get('if-match'), 'sheets');
+    } catch (error) {
+      if (error instanceof MutationRequestError) return mutationErrorResponse(error);
+      throw error;
+    }
+    const parsed = await parseJsonRequest(request, updateSheetStatusRequestSchema, {
+      maxBytes: SHEET_STATUS_JSON_MAX_BYTES,
+    });
     if (!parsed.ok) return parsed.response;
     if (parsed.data.status !== 'review' && parsed.data.status !== 'completed') {
       return problemResponse(
@@ -50,11 +71,25 @@ export const PATCH = withAuthz<SheetParams>(
         }),
       );
     }
-    const detail = await hearingIntakeRuntime().service.updateSheetStatus({
+    const result = await hearingIntakeRuntime().service.updateSheetStatusCas({
       context: repositoryContext(authz.resource.tenantId, authz.resource.workspaceId, authz.principal.userId),
       id: params.id,
       status: parsed.data.status,
+      expectedRevision,
     });
+    if (result.outcome === 'conflict') {
+      if (result.current === null) {
+        return problemResponse(problemDetails({ title: 'シートが見つかりません', status: 404 }));
+      }
+      return revisionConflictResponse(
+        { ...result.current, can_manage: true },
+        {
+          namespace: 'sheets',
+          revision: result.current.revision,
+        },
+      );
+    }
+    const detail = result.detail;
     await authRuntime().authz.audit.record({
       actorSubject: authz.principal.userId,
       tenantId: authz.resource.tenantId,
@@ -64,6 +99,6 @@ export const PATCH = withAuthz<SheetParams>(
       resourceId: params.id,
       metadata: { status: parsed.data.status, credential: authz.principal.credential },
     });
-    return Response.json({ ...detail, can_manage: true });
+    return entityJsonResponse({ ...detail, can_manage: true }, { namespace: 'sheets', revision: detail.revision });
   },
 );

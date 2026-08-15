@@ -1,24 +1,40 @@
 {
-  "allowed_domains": [
-    "turso.tech"
-  ],
-  "findings": [
-    "Free (Starter): 5GB storage / 500M rows read per month / 10M rows written per month",
-    "Developer: $4.99/mo。旧 Hobby ($9/mo) を置換。AWS region 限定",
-    "Scaler / Pro / Enterprise の上位段があり、有料プラン全体で database 数は無制限",
-    "embedded database としての利用は無償",
-    "料金体系は複数回変更されており、確定値は turso.tech/pricing の再確認が必要"
-  ],
-  "retrieval_channel": "web-search-official-host-restricted",
-  "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
-  "retrieval_query": "Turso pricing plans database",
-  "retrieved_at": "2026-08-07T03:30:09Z",
-  "returned_official_urls": [
-    "https://turso.tech/pricing",
-    "https://turso.tech/blog/turso-cloud-debuts-the-new-developer-plan",
-    "https://turso.tech/blog/unlimited-databases-are-here",
-    "https://turso.tech/blog/turso-introduces-new-hobby-plan-for-9-dollar-a-month",
-    "https://turso.tech/what-is-turso"
-  ],
-  "target_id": "turso"
+ "allowed_domains": [
+  "turso.tech"
+ ],
+ "findings": [
+  "Free (Starter): 5GB storage / 500M rows read per month / 10M rows written per month",
+  "Developer: $4.99/mo。旧 Hobby ($9/mo) を置換。AWS region 限定",
+  "Scaler / Pro / Enterprise の上位段があり、有料プラン全体で database 数は無制限",
+  "embedded database としての利用は無償",
+  "料金体系は複数回変更されており、確定値は turso.tech/pricing の再確認が必要"
+ ],
+ "freshness_rechecks": [
+  {
+   "checked_at": "2026-08-13T15:44:29Z",
+   "http_status": 200,
+   "method": "python3 urllib.request GET (User-Agent 明示)",
+   "observation": "価格ページに更新日表記なし。無料枠の記載構成に前回照合からの変化なし。",
+   "page_last_updated_extracted": [],
+   "reason": "C08 独立監査 (2026-08-13 / verdict FAIL) の finding F6/F8/F9/F10 対応。F9 (先行 recheck の checked_at 12 件が 2026-08-13T15:34:43Z で秒まで一括一致し実測でない) を受け、同じ照合を request 単位の実測時刻付きで再実行し、先行エントリを本エントリへ差し替えた。",
+   "request_started_at": "2026-08-13T15:44:28Z",
+   "response_body_sha256": "2dd858bf69a4c68c59c783e3fa86391f0f6403f35804ade122dba5f622adf08b",
+   "response_bytes": 136709,
+   "response_last_modified_header": null,
+   "retrieval_channel": "primary-http-get",
+   "url": ""
+  }
+ ],
+ "retrieval_channel": "web-search-official-host-restricted",
+ "retrieval_method_disclosure": "当セッションは WebFetch 未提供・curl 不許可のため、公式 host へ限定した WebSearch (allowed_domains 指定) を取得経路とした。HTML 本文の逐語取得ではなく、公式 host が返した URL 群と要約から読み取れた事実だけを記録する。retrieved_at は本 record 作成時に読んだ実時刻で、同一 turn 内で発行した検索の記録時刻 (個別応答の受信時刻ではない)。",
+ "retrieval_query": "Turso pricing plans database",
+ "retrieved_at": "2026-08-07T03:30:09Z",
+ "returned_official_urls": [
+  "https://turso.tech/pricing",
+  "https://turso.tech/blog/turso-cloud-debuts-the-new-developer-plan",
+  "https://turso.tech/blog/unlimited-databases-are-here",
+  "https://turso.tech/blog/turso-introduces-new-hobby-plan-for-9-dollar-a-month",
+  "https://turso.tech/what-is-turso"
+ ],
+ "target_id": "turso"
 }

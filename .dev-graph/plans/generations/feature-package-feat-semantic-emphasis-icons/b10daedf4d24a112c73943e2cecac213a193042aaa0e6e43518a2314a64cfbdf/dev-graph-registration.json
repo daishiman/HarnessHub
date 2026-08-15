@@ -1,0 +1,1214 @@
+{
+  "schema_version": "1.0.0",
+  "source_digest": "sha256:b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+  "promotion_receipt": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/atomic-promotion-receipt.json",
+  "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+  "parent_feature": "feat-semantic-emphasis-icons",
+  "expected_count": 13,
+  "phase_refs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "binding_intents": {
+    "SYS-EMPHASIS-ICONS-P01": "beads",
+    "SYS-EMPHASIS-ICONS-P02": "beads",
+    "SYS-EMPHASIS-ICONS-P03": "beads",
+    "SYS-EMPHASIS-ICONS-P04": "beads",
+    "SYS-EMPHASIS-ICONS-P05": "beads",
+    "SYS-EMPHASIS-ICONS-P06": "beads",
+    "SYS-EMPHASIS-ICONS-P07": "beads",
+    "SYS-EMPHASIS-ICONS-P08": "beads",
+    "SYS-EMPHASIS-ICONS-P09": "beads",
+    "SYS-EMPHASIS-ICONS-P10": "beads",
+    "SYS-EMPHASIS-ICONS-P11": "beads",
+    "SYS-EMPHASIS-ICONS-P12": "beads",
+    "SYS-EMPHASIS-ICONS-P13": "beads"
+  },
+  "nodes": [
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P01",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "要件ベースライン確定 — 絵文字禁止 semantic token/icon 表現の要件確定",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p01"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/requirements-baseline.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P01",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-01-requirements.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P01 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p01.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P02",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "アーキテクチャ設計 — 既存 callout/icon/token 実装の再利用範囲と絵文字 lint の配置・CI 組込み位置の決定",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p02"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P01"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/architecture-decision.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P02",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-02-architecture.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P02 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p02.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P03",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "独立設計レビュー — lint 検査対象範囲・所有境界・token 適用範囲の妥当性確認",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p03"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P02"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/design-review.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P03",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-03-design-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P03 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p03.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P04",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テストファースト設計 — 絵文字 lint・callout 描き分け・可視ラベル併置・ライトモード背景のテストスタブ作成",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p04"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P03"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "scripts/lint-ui-text-emoji.test.ts",
+        "packages/ui/src/components/Markdown.test.tsx",
+        "packages/ui/src/tokens/tokens.test.ts"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P04",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-04-test-design.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P04 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p04.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P05",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "実装 — 絵文字 lint script・CI fail-closed 組込み・一覧/カード状態表現の token 統一・可視ラベル併置の実装",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "frontend",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "frontend",
+        "phase-p05"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P04"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "scripts/lint-ui-text-emoji.py",
+        ".github/workflows/ci.yml",
+        "packages/ui/src/components/Badge.tsx"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P05",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-05-implementation.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P05 の単一責務 (frontend) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p05.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P06",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "テスト実行 — 単体/lint/a11y/コントラストテストの実行と結果記録",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p06"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P05"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/test-run-report.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P06",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-06-test-run.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P06 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p06.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P07",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "受入 — goal-spec acceptance 5 項目の確認",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p07"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P06"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/acceptance-review.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P07",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-07-acceptance.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P07 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p07.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P08",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リファクタリング/マイグレーション — N/A (DB schema 変更なし)",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p08"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P07"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/refactor-migration-note.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P08",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-08-refactoring-migration.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P08 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p08.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P09",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "品質保証 — CI 品質ゲート (絵文字 lint fail-closed/axe/コントラスト/VRT) の確認",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "quality",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "quality",
+        "phase-p09"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P08"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/quality-gate-report.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P09",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-09-quality-assurance.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P09 の単一責務 (quality) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p09.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P10",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "最終独立レビュー — quality_constraints 5 件の充足判定",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p10"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P09"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/final-review.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P10",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-10-final-review.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P10 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p10.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P11",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "エビデンス収集 — 再現可能な検証証跡の集約",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p11"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P10"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/evidence-bundle.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P11",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-11-evidence.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P11 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p11.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P12",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "ドキュメント/運用 — アイコン追加手順・絵文字 lint 運用・所有境界の runbook 作成",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p12"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P11"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "docs/features/feat-semantic-emphasis-icons/runbook.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P12",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-12-documentation-operations.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P12 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p12.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    },
+    {
+      "graph_node_id": "SYS-EMPHASIS-ICONS-P13",
+      "artifact_kind": "task",
+      "artifact_subtypes": [],
+      "title": "リリース判定と確定仕様・アーキテクチャへの書き戻し",
+      "project_id": "feature-package-feat-semantic-emphasis-icons",
+      "domain": "documentation",
+      "status": "active",
+      "owners": [
+        "daishiman"
+      ],
+      "tags": [
+        "feat-semantic-emphasis-icons",
+        "macro-feature",
+        "documentation",
+        "phase-p13"
+      ],
+      "priority": null,
+      "start_date": null,
+      "target_date": null,
+      "iteration": null,
+      "created_at": "2026-08-13T23:31:45Z",
+      "updated_at": "2026-08-13T23:31:45Z",
+      "depends_on": [
+        "SYS-EMPHASIS-ICONS-P12"
+      ],
+      "related_nodes": [
+        "feat-semantic-emphasis-icons",
+        "arch-harness-hub-design-system",
+        "arch-harness-hub-frontend"
+      ],
+      "resource_scope": [
+        "features/feat-semantic-emphasis-icons.md",
+        "features/feat-semantic-emphasis-icons.context.json",
+        "architecture/harness-hub-design-system.md"
+      ],
+      "parent_feature": "feat-semantic-emphasis-icons",
+      "feature_package_id": "feature-package/feat-semantic-emphasis-icons",
+      "phase_ref": "P13",
+      "file_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md",
+      "template_id": "task",
+      "template_version": "1.1.0",
+      "confirmation_status": "confirmed",
+      "evaluation_status": "pass",
+      "confirmation_evidence": {
+        "evaluator": "system-dev-plan-evaluator",
+        "evidence_ref": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/plan-findings.json",
+        "evaluated_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf"
+      },
+      "source_lineage": {
+        "origin_kind": "system-dev-planner",
+        "source_plugin": "system-dev-planner",
+        "source_path": ".dev-graph/plans/generations/feature-package-feat-semantic-emphasis-icons/b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf/task-specs/phase-13-release-deploy.md",
+        "source_version": "0.1.0",
+        "source_digest": "b10daedf4d24a112c73943e2cecac213a193042aaa0e6e43518a2314a64cfbdf",
+        "imported_at": "2026-08-13T23:31:45Z"
+      },
+      "classification_confidence": 0.9,
+      "classification_reason": "goal-spec.json を入力に P13 の単一責務 (documentation) を実行する task",
+      "classification_candidates": [
+        {
+          "artifact_kind": "task",
+          "confidence": 0.9,
+          "candidate_path": "tasks/feat-semantic-emphasis-icons/sys-emphasis-icons-p13.md"
+        }
+      ],
+      "github_publication": {
+        "mode": "local_only",
+        "project_aliases": [],
+        "labels": [],
+        "milestone": null
+      },
+      "issue_linkage": null,
+      "tracker_binding": "repo-config-default",
+      "beads_linkage": null,
+      "github_project_linkages": [],
+      "pull_request_linkages": [],
+      "execution_contexts": [],
+      "completion_evidence": {
+        "policy": "linked_pr_merged_all",
+        "status": "in_progress",
+        "source": null,
+        "completed_at": null,
+        "reconciled_at": null,
+        "evidence_refs": []
+      },
+      "implementation_readiness": {
+        "status": "complete",
+        "missing_sections": [],
+        "checked_at": "2026-08-14T00:20:00Z"
+      }
+    }
+  ]
+}
