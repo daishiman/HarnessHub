@@ -1,0 +1,182 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-decompose",
+  "args": "社内向けの業務ポータルを作りたい。利用者は自分のアカウントでログインでき、ログイン後のダッシュボードで自分に割り当てられた作業と期限を一覧できる。期限が近い作業は通知として届き、管理者は全社の進捗を集計したレポートを閲覧できる。 --repo-root <contained-fixture-repo>",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "goal_evaluation": {
+    "evidence_ref": "goal-evaluation.json",
+    "sha256": "9f1d3a243712b64ef9b4ad00b5d552956bf7315ac4fa3f08dbc9529b83a043dd",
+    "result": "PASS",
+    "blockers": [],
+    "evaluator": {
+      "mode": "fresh-independent-context",
+      "id": "fresh-eval-c14-out1-r15-20260815"
+    },
+    "transcript_sha256": "f0eb94e714dc6180b567c730863fd3708ff960839015cd8194eab0e545141aa2",
+    "evidence_refs": [
+      "transcript.jsonl",
+      "independent-verification.json",
+      "pre-state.json",
+      "external-before.json",
+      "external-after.json",
+      "preview-receipt-beads.json",
+      "preview-receipt-none.json",
+      "adapter-dryrun.json",
+      "fixture-beads/.dev-graph/state/graph.json",
+      "fixture-none/.dev-graph/state/graph.json",
+      "fixture-beads/eval-log/run-dev-graph-decompose-goal-spec.json",
+      "fixture-beads/eval-log/run-dev-graph-decompose-intermediate.jsonl",
+      "fixture-beads/eval-log/run-dev-graph-decompose-progress.json",
+      "out/status.json",
+      "task.md"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-decompose"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "6bb56c46ad512e32ccd8c7f542c7e29e68e5ef868a7f2ac512946d04faf14ca0",
+  "transcript_sha256": "f0eb94e714dc6180b567c730863fd3708ff960839015cd8194eab0e545141aa2",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.233",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 382.76798582077026
+  },
+  "scenario_id": "C14-OUT1-positive-macro-decomposition-r15",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C14-OUT1-positive-macro-decomposition-r15",
+    "required_observations": [
+      "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold.max_value measured by declared_granularity_threshold.metric",
+      "in a run that writes for real, pre-evaluation draft features publish zero issues, and every zero carries the reason it is zero, so suppression by the draft gate is never reported interchangeably with a binding route the configuration disables or with the absence of a live candidate",
+      "at least one actual produced draft feature remains excluded while one actual produced feature advanced to confirmed, evaluation-pass and readiness-complete becomes the sole publication candidate, so the exclusion is a decision of the implementation publication gate and not a side effect of a run that wrote nothing anywhere",
+      "the beads and none bindings are exercised as two separate runs whose recorded publication routes differ, while the github binding is recorded as unreachable for a macro-only run together with the schema rule that makes it unreachable, and every binding's figure is derived from the tracker binding actually persisted in the run's graph rather than from an argument supplied to the audit, so no binding's measurement is one value restated from the audit's own input",
+      "the local, Beads, GitHub and Projects write counts are derived by differencing repository state captured before and after the run rather than restated from the skill's own report, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository",
+      "the confirmation_evidence of every promoted feature is recomputed from the final persisted node content excluding only confirmation_evidence and matches, so a placeholder digest or a node edited after evaluation is rejected",
+      "gate violations synthesised from this run's final graph are rejected by the canonical schema validator, so the publication gate is falsifiable on the same data rather than inferred from a run where no forbidden publication happened"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the produced feature and architecture nodes form an acyclic DAG whose inter-feature depends_on stays within declared_granularity_threshold.max_value measured by declared_granularity_threshold.metric",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 2,
+        "observation": "in a run that writes for real, pre-evaluation draft features publish zero issues, and every zero carries the reason it is zero, so suppression by the draft gate is never reported interchangeably with a binding route the configuration disables or with the absence of a live candidate",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 3,
+        "observation": "at least one actual produced draft feature remains excluded while one actual produced feature advanced to confirmed, evaluation-pass and readiness-complete becomes the sole publication candidate, so the exclusion is a decision of the implementation publication gate and not a side effect of a run that wrote nothing anywhere",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 4,
+        "observation": "the beads and none bindings are exercised as two separate runs whose recorded publication routes differ, while the github binding is recorded as unreachable for a macro-only run together with the schema rule that makes it unreachable, and every binding's figure is derived from the tracker binding actually persisted in the run's graph rather than from an argument supplied to the audit, so no binding's measurement is one value restated from the audit's own input",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 5,
+        "observation": "the local, Beads, GitHub and Projects write counts are derived by differencing repository state captured before and after the run rather than restated from the skill's own report, and the preview graph is validated through the stdin path so no temporary file is created inside the managed repository",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 6,
+        "observation": "the confirmation_evidence of every promoted feature is recomputed from the final persisted node content excluding only confirmation_evidence and matches, so a placeholder digest or a node edited after evaluation is rejected",
+        "evidence_ref": "independent-verification.json"
+      },
+      {
+        "index": 7,
+        "observation": "gate violations synthesised from this run's final graph are rejected by the canonical schema validator, so the publication gate is falsifiable on the same data rather than inferred from a run where no forbidden publication happened",
+        "evidence_ref": "independent-verification.json"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "<want> --repo-root <contained-fixture-repo>",
+      "template_flags": [
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": true,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [
+        "upsert-node.py --input",
+        "confirmation_status",
+        "evaluation_status",
+        "implementation_readiness",
+        "confirmation_evidence",
+        "evaluated_digest",
+        "sort_keys=True",
+        "separators=(',', ':')"
+      ],
+      "forbidden_fragments": [
+        "--operation apply-lifecycle-request"
+      ],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    },
+    "invocation_contract": {
+      "forbidden_invoked_skills": [],
+      "present_forbidden_invoked_skills": [],
+      "matches": true
+    },
+    "resource_budget": {
+      "max_total_tokens": 5000000,
+      "max_wall_clock_s": 600
+    },
+    "resource_usage": {
+      "wall_clock_s": 382.76798582077026,
+      "poll_state_ref": "poll-state.json",
+      "poll_state_sha256": "87a2690672a9cb4731e8ca622abce48da5695d3c20a10ea92326f85b03d5e94f",
+      "tokens": {
+        "input_tokens": 74,
+        "cache_creation_input_tokens": 91786,
+        "cache_read_input_tokens": 3011787,
+        "output_tokens": 23638,
+        "total_tokens": 3127285,
+        "assistant_messages": 37,
+        "assistant_message_ids": 37,
+        "invalid_or_missing_usage_messages": 0,
+        "idless_assistant_records": 0,
+        "transcript_files": 1,
+        "measured": true
+      },
+      "violations": []
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "fresh-eval-c14-out1-r15-20260815"
+  },
+  "transcript_sha256": "f0eb94e714dc6180b567c730863fd3708ff960839015cd8194eab0e545141aa2",
+  "evidence_refs": [
+    "transcript.jsonl",
+    "independent-verification.json",
+    "pre-state.json",
+    "external-before.json",
+    "external-after.json",
+    "preview-receipt-beads.json",
+    "preview-receipt-none.json",
+    "adapter-dryrun.json",
+    "fixture-beads/.dev-graph/state/graph.json",
+    "fixture-none/.dev-graph/state/graph.json",
+    "fixture-beads/eval-log/run-dev-graph-decompose-goal-spec.json",
+    "fixture-beads/eval-log/run-dev-graph-decompose-intermediate.jsonl",
+    "fixture-beads/eval-log/run-dev-graph-decompose-progress.json",
+    "out/status.json",
+    "task.md"
+  ]
+}

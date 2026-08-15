@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "blockers": [],
+  "evaluator": {
+    "mode": "fresh-independent-context",
+    "id": "fresh-eval-C03-OUT1-20260815"
+  },
+  "transcript_sha256": "1c5e3a5ca6e338911011087ad824ab00893d4798060f56313f4e66df4ffaea9c",
+  "evidence_refs": [
+    "transcript.jsonl",
+    "pass1.json",
+    "pass2.json",
+    "pass3.json",
+    "post-apply.sha",
+    "post-pass3.sha",
+    "out/status.json",
+    "task.md",
+    "fixture-repo/.dev-graph/state/graph.json",
+    "fixture-repo/.dev-graph/state/sync-snapshot.json",
+    "fixture-repo/.dev-graph/remote.json",
+    "fixture-repo/eval-log/run-dev-graph-sync-goal-spec.json",
+    "fixture-repo/eval-log/run-dev-graph-sync-progress.json",
+    "fixture-repo/eval-log/run-dev-graph-sync-intermediate.jsonl"
+  ]
+}

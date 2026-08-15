@@ -99,7 +99,7 @@ open 490 件のうち 444 件は既に終わっていた。原因は「送るだ
 
 - `plugins/dev-graph/templates/repo-config.example.json` と `plugins/system-dev-planner/assets/default-project-config.json` の既定値は `bd_github_push_only` のままである。新規リポジトリの既定を `none` へ寄せるかはテンプレート利用側への影響評価が必要で、本変更の scope 外とした。
 - 定期 reconcile を実装して push-only を安全に再開する選択肢は未着手。現時点では `none` で足りている。
-- **live-trial 証跡の再取得が必要**: `execution-tracker-contract.md` を編集したことで、これを参照する `run-dev-graph-decompose` と `run-dev-graph-sync` の behavior closure digest が変わり、既存 verdict が stale-sha となった。本変更は §1 の決定表（人間が読む判定基準）だけを直しており skill の挙動面は変えていないが、digest は意味を読まないため区別できない。これは証跡の不正な緑化を防ぐ fail-closed 設計の正しい動作であり、誤検知として抑止しない。MVP 方針により本変更では再 trial を行わず、`PUSH_SKIP_CI=1` で push した。CI で同じ違反が再検出される。解消は対象 2 skill への `run-skill-live-trial` 実行と verdict 保存による。
+- **live-trial 証跡の再取得（解消済み）**: `execution-tracker-contract.md` を編集したことで、これを参照する `run-dev-graph-decompose` と `run-dev-graph-sync` の behavior closure digest が変わり、既存 verdict が stale-sha となった。本変更は §1 の決定表（人間が読む判定基準）だけを直しており skill の挙動面は変えていないが、digest は意味を読まないため区別できない。これは証跡の不正な緑化を防ぐ fail-closed 設計の正しい動作であり、誤検知として抑止しなかった。対象 2 skill を `run-skill-live-trial` で再実走し、`20260815T015641Z-mx65-c03`（sync）と `20260815T015744Z-mx65-c14`（decompose）の新 verdict を取得した。いずれも overall=PASS で、fresh independent evaluator が graph・snapshot・binding・digest を実値から再計算して判定している。criteria receipt の `live_trial_verdict_ref` を新 run へ差し替え、`lint-live-trial-verdict.py --all` は `[OK] 9 verdict(s) verified`、`test_skill_criteria_evidence.py` は 22 passed。両 trial とも fixture と workdir を scratchpad に隔離し、実行後に `git status --short` で本体汚染ゼロを確認した。
 
 ## 決定事項
 

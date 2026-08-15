@@ -1,0 +1,150 @@
+{
+  "target_skill": "dev-graph:run-dev-graph-sync",
+  "args": "--repo-root /private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015641Z-mx65-c03/fixture-repo --dry-run --apply",
+  "requested_model": "",
+  "actual_model": [
+    "claude-opus-5"
+  ],
+  "nudge_count": 0,
+  "gate_response_count": 0,
+  "goal_verdict": {
+    "result": "PASS",
+    "blockers": []
+  },
+  "goal_evaluation": {
+    "evidence_ref": "goal-evaluation.json",
+    "sha256": "47527ff5bd757c63f2cb3b876695ea8046f537667f240978c7d67e3719dfc221",
+    "result": "PASS",
+    "blockers": [],
+    "evaluator": {
+      "mode": "fresh-independent-context",
+      "id": "fresh-eval-C03-OUT1-20260815"
+    },
+    "transcript_sha256": "1c5e3a5ca6e338911011087ad824ab00893d4798060f56313f4e66df4ffaea9c",
+    "evidence_refs": [
+      "transcript.jsonl",
+      "pass1.json",
+      "pass2.json",
+      "pass3.json",
+      "post-apply.sha",
+      "post-pass3.sha",
+      "out/status.json",
+      "task.md",
+      "fixture-repo/.dev-graph/state/graph.json",
+      "fixture-repo/.dev-graph/state/sync-snapshot.json",
+      "fixture-repo/.dev-graph/remote.json",
+      "fixture-repo/eval-log/run-dev-graph-sync-goal-spec.json",
+      "fixture-repo/eval-log/run-dev-graph-sync-progress.json",
+      "fixture-repo/eval-log/run-dev-graph-sync-intermediate.jsonl"
+    ]
+  },
+  "invoked_skills": [
+    "dev-graph:run-dev-graph-sync"
+  ],
+  "missing_goal_seek_artifacts": [],
+  "goal_seek_evidence_violations": [],
+  "overall": {
+    "launch": "PASS",
+    "completion": "PASS",
+    "goal_fit": "PASS",
+    "verdict": "PASS"
+  },
+  "skill_dir_tree_sha": "6dc036d8b439683d83929cb910ec74d40be9bae74611bc3ddda22134f443a03c",
+  "transcript_sha256": "1c5e3a5ca6e338911011087ad824ab00893d4798060f56313f4e66df4ffaea9c",
+  "scenario_origin": "synthetic",
+  "environment": {
+    "claude_version": "2.1.233",
+    "tmux": true,
+    "transcript_layer": "jsonl",
+    "permissions_mode": "bypassPermissions"
+  },
+  "tier": "live",
+  "downgrade_reason": null,
+  "timeline": {
+    "boot_s": null,
+    "poll_exit": "DONE",
+    "wall_clock_s": 285.8845148086548
+  },
+  "scenario_id": "C03-OUT1-positive-second-sync-zero",
+  "scenario_contract": {
+    "scenario_file": "plugins/dev-graph/tests/fixtures/live-trial-positive-scenarios.json",
+    "scenario_id": "C03-OUT1-positive-second-sync-zero",
+    "required_observations": [
+      "the first sync applies the expected import and export",
+      "the second sync reports imports changes=0 and exports changes=0",
+      "stable IDs and snapshots are unchanged on the second run"
+    ],
+    "observed": [
+      {
+        "index": 1,
+        "observation": "the first sync applies the expected import and export",
+        "evidence_ref": "pass2.json"
+      },
+      {
+        "index": 2,
+        "observation": "the second sync reports imports changes=0 and exports changes=0",
+        "evidence_ref": "pass3.json"
+      },
+      {
+        "index": 3,
+        "observation": "stable IDs and snapshots are unchanged on the second run",
+        "evidence_ref": "post-apply.sha"
+      }
+    ],
+    "unobserved": [],
+    "args_divergence": {
+      "task_args_template": "--repo-root <contained-fixture-repo> と続けて --dry-run / --apply / 確認 --dry-run の 3 パスを同じ入力で回す (決定論 remote は fixture 内 .dev-graph/remote.json)",
+      "template_flags": [
+        "--apply",
+        "--dry-run",
+        "--repo-root"
+      ],
+      "actual_flags": [
+        "--apply",
+        "--dry-run",
+        "--repo-root"
+      ],
+      "missing_flags": [],
+      "extra_flags": [],
+      "matches": true
+    },
+    "task_contract": {
+      "declared": false,
+      "task_file": "task.md",
+      "task_file_exists": true,
+      "required_fragments": [],
+      "forbidden_fragments": [],
+      "missing_required_fragments": [],
+      "present_forbidden_fragments": [],
+      "matches": true
+    },
+    "invocation_contract": {
+      "forbidden_invoked_skills": [],
+      "present_forbidden_invoked_skills": [],
+      "matches": true
+    },
+    "resource_budget": {
+      "max_total_tokens": 5000000,
+      "max_wall_clock_s": 600
+    },
+    "resource_usage": {
+      "wall_clock_s": 285.8845148086548,
+      "poll_state_ref": "poll-state.json",
+      "poll_state_sha256": "1b987199166029096c1266f30dc59d7132855e674ec0fb4024f5b649fa965c14",
+      "tokens": {
+        "input_tokens": 54,
+        "cache_creation_input_tokens": 66708,
+        "cache_read_input_tokens": 1719646,
+        "output_tokens": 18088,
+        "total_tokens": 1804496,
+        "assistant_messages": 27,
+        "assistant_message_ids": 27,
+        "invalid_or_missing_usage_messages": 0,
+        "idless_assistant_records": 0,
+        "transcript_files": 1,
+        "measured": true
+      },
+      "violations": []
+    }
+  }
+}

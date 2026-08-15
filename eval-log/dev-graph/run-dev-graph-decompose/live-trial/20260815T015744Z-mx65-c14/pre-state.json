@@ -1,0 +1,45 @@
+{
+  "beads": {
+    "git_status": [],
+    "graph_revision": 0,
+    "graph_sha256": "b759b93846eba42bf9e25713ee116d80d85dc6870c031b5990f54eac9228d322",
+    "managed_files": [
+      ".dev-graph/config.json",
+      ".dev-graph/state/graph.json",
+      "architecture/.gitkeep",
+      "docs/.gitkeep",
+      "features/.gitkeep",
+      "issues/.gitkeep",
+      "specs/.gitkeep",
+      "system-spec/.gitkeep",
+      "tasks/.gitkeep"
+    ],
+    "node_count": 0
+  },
+  "external": {
+    "basis": "isolated fixture plus mutation-suppressed adapter previews",
+    "beads_database_exists": false,
+    "beads_database_path": "/private/tmp/claude-501/-Users-dm-orca-workspaces-HarnessHub-issue---/d644473e-e080-4321-9a75-e5ff62feb1dd/scratchpad/lt/20260815T015744Z-mx65-c14/support/absent-beads/live-trial.db",
+    "beads_issue_count": 0,
+    "beads_local_artifacts": [],
+    "github_issue_count": 0,
+    "projects_item_count": 0
+  },
+  "none": {
+    "git_status": [],
+    "graph_revision": 0,
+    "graph_sha256": "47e6eea5c7e52e14effc2a64c806e2c91372a055e76d469e3660299d3cc9b7d5",
+    "managed_files": [
+      ".dev-graph/config.json",
+      ".dev-graph/state/graph.json",
+      "architecture/.gitkeep",
+      "docs/.gitkeep",
+      "features/.gitkeep",
+      "issues/.gitkeep",
+      "specs/.gitkeep",
+      "system-spec/.gitkeep",
+      "tasks/.gitkeep"
+    ],
+    "node_count": 0
+  }
+}

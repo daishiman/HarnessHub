@@ -124,4 +124,4 @@ beads から GitHub への push-only 投影が生んだ 490 件規模の open is
 
 - `plugins/dev-graph/templates/repo-config.example.json` と `plugins/system-dev-planner/assets/default-project-config.json` の既定値は `bd_github_push_only` のままである。新規リポジトリの既定を `none` へ寄せるかは、テンプレート利用側への影響評価が要るため本 task の scope 外とする。
 - 定期 reconcile を実装して push-only を安全に再開する選択肢は未着手。現時点では `none` で足りている。
-- `execution-tracker-contract.md` の編集により `run-dev-graph-decompose` / `run-dev-graph-sync` の live-trial verdict が stale-sha となった。挙動面は変えていないが digest は意味を読まないため区別できない。再 trial は MVP 方針により本変更の scope 外とし、`PUSH_SKIP_CI=1` で push した。
+- `execution-tracker-contract.md` の編集により `run-dev-graph-decompose` / `run-dev-graph-sync` の live-trial verdict が stale-sha となった件は解消済み。挙動面は変えていないが digest は意味を読まないため区別できず、fail-closed の正しい動作として抑止せず、両 skill を `run-skill-live-trial` で再実走した。新 verdict は `20260815T015641Z-mx65-c03`（sync）と `20260815T015744Z-mx65-c14`（decompose）で、いずれも overall=PASS。criteria receipt の `live_trial_verdict_ref` を新 run へ差し替え、`lint-live-trial-verdict.py --all` と `test_skill_criteria_evidence.py` の緑を確認した。
