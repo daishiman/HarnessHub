@@ -67,6 +67,17 @@ async function clickButton(container: HTMLElement, text: string): Promise<void> 
   });
 }
 
+/** useEffect → fetch → state 更新が完了するまで、描画条件を act 内で待つ。 */
+async function waitForRender(condition: () => boolean, description: string): Promise<void> {
+  const deadline = Date.now() + 2_000;
+  while (!condition()) {
+    if (Date.now() >= deadline) throw new Error(`${description} が描画されませんでした`);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+  }
+}
+
 describe('ERRSPLIT: 取得の失敗と操作の失敗を分けて出す', () => {
   beforeEach(() => {
     vi.unstubAllGlobals();
@@ -156,11 +167,16 @@ describe('ERRSPLIT: 取得の失敗と操作の失敗を分けて出す', () => 
     );
     const container = await mount(createElement(OidcConnectionAdmin, { tenantId: 'tenant-a' }));
 
+    // このシナリオの前提は「一覧取得は成功済みで、後続の登録だけが失敗する」こと。
+    // fetch effect の完了前に submit すると、CPU 速度次第でまだ loading 中の DOM を検査してしまう。
+    const connectionSelector = '[aria-label="接続 client-1.apps.googleusercontent.com"]';
+    await waitForRender(() => container.querySelector(connectionSelector) !== null, '既存の OIDC 接続');
+
     await submitForm(container, 'Google OAuth client の登録');
 
     expect(container.textContent).toContain('操作に失敗しました。');
     // 登録に失敗しても、既に登録済みの接続は見えたままにする
-    expect(container.querySelector('[aria-label="接続 client-1.apps.googleusercontent.com"]')).not.toBeNull();
+    expect(container.querySelector(connectionSelector)).not.toBeNull();
     expect(container.textContent).not.toContain('接続一覧を取得できませんでした。');
     expect(container.textContent).not.toContain('登録済みの接続はまだありません');
   });
